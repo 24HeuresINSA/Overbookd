@@ -68,28 +68,28 @@ class RequestedTeamRepresentation implements RequestedTeam {
 export class FtTimeSpanResponseDto implements TimeSpan {
   @ApiProperty({
     required: true,
-    description: 'The id of the timespan',
+    description: 'The id of the time span',
     type: Number,
   })
   id: number;
 
   @ApiProperty({
     required: true,
-    description: 'The start of the timespan',
+    description: 'The start of the time span',
     type: Date,
   })
   start: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The end of the timespan',
+    description: 'The end of the time span',
     type: Date,
   })
   end: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The requested teams during timespan',
+    description: 'The requested teams during time span',
     type: RequestedTeamRepresentation,
     isArray: true,
   })
@@ -102,14 +102,14 @@ export class TimeSpanWithFtResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'The ft of the timespan',
+    description: 'The ft of the time span',
     type: SimplifiedFTRepresentation,
   })
   ft: SimplifiedFT;
 
   @ApiProperty({
     required: true,
-    description: "Indicate if some volunteer's are assigned on the timespan",
+    description: "Indicate if some volunteer's are assigned on the time span",
     type: Boolean,
   })
   hasFriendsAssigned: boolean;
@@ -163,7 +163,7 @@ export class TimespanWithAssigneesResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'Volunteer required on this timespan',
+    description: 'Volunteer required on this time span',
     type: AssigneeRepresentation,
     isArray: true,
   })
@@ -171,7 +171,7 @@ export class TimespanWithAssigneesResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'Volunteer assigned on this timespan as team member',
+    description: 'Volunteer assigned on this time span as team member',
     type: TimespanAssigneeRepresentation,
     isArray: true,
   })

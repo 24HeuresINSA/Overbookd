@@ -1,9 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
+import { buildVolunteerDisplayName } from 'src/utils/volunteer';
+import { Period } from 'src/volunteer-availability/domain/period.model';
 import { TaskRepository } from './domain/planning';
 import { JsonStoredTask } from './domain/storedTask';
-import { Injectable } from '@nestjs/common';
-import { Period } from 'src/volunteer-availability/domain/period.model';
-import { buildVolunteerDisplayName } from 'src/utils/volunteer';
 
 type DatabaseStoredTask = {
   start: Date;
@@ -98,7 +98,7 @@ export class PrismaTaskRepository implements TaskRepository {
   ): JsonStoredTask {
     const { name, description, id, location } = task.timeWindow.ft;
     const assignees = assignments
-      .filter(({ timeSpan: timespan }) => timespan.timeWindow.ftId === id)
+      .filter(({ timeSpan }) => timeSpan.timeWindow.ftId === id)
       .map(({ timeSpan: { start, end }, assignee }) => {
         const name = buildVolunteerDisplayName(assignee);
         return {

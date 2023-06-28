@@ -40,12 +40,12 @@ export const TaskPriorities = {
 
 export type TaskPriority = keyof typeof TaskPriorities;
 
-export interface FtTimespanParameters {
+export interface FtTimeSpanParameters {
   hasPriority: boolean;
   category?: TaskCategory;
 }
 
-export interface SimplifiedFT extends FtTimespanParameters {
+export interface SimplifiedFT extends FtTimeSpanParameters {
   id: number;
   name: string;
 }
@@ -56,89 +56,89 @@ export interface RequestedTeam {
   assignmentCount: number;
 }
 
-export interface FtTimespan {
+export interface FtTimeSpan {
   id: number;
   start: Date;
   end: Date;
 }
 
-export interface FtTimespanWithRequestedTeams extends FtTimespan {
+export interface FtTimeSpanWithRequestedTeams extends FtTimeSpan {
   requestedTeams: RequestedTeam[];
 }
 
-export interface FtTimespanEvent extends FtTimespan {
+export interface FtTimeSpanEvent extends FtTimeSpan {
   name: string;
   color: string;
   timed: boolean;
 }
 
-export interface AvailableTimespan extends FtTimespanWithRequestedTeams {
+export interface AvailableTimeSpan extends FtTimeSpanWithRequestedTeams {
   ft: SimplifiedFT;
   hasFriendsAssigned: boolean;
 }
 
-export interface TimespanAssignee extends User {
+export interface TimeSpanAssignee extends User {
   teams: string[];
   assignedTeam: string;
   friends: User[];
 }
 
-export interface TimespanWithAssignees extends FtTimespanWithRequestedTeams {
+export interface TimeSpanWithAssignees extends FtTimeSpanWithRequestedTeams {
   ft: {
     id: number;
     name: string;
     location: string;
   };
   requiredVolunteers: User[];
-  assignees: TimespanAssignee[];
+  assignees: TimeSpanAssignee[];
 }
 
-export interface FtWithTimespan extends SimplifiedFT {
-  timespans: FtTimespanWithRequestedTeams[];
+export interface FtWithTimeSpan extends SimplifiedFT {
+  timeSpans: FtTimeSpanWithRequestedTeams[];
 }
 
-export function getRequiredTeamsInFt(ft: FtWithTimespan): string[] {
-  const teams = ft.timespans.flatMap((timespan) =>
-    timespan.requestedTeams.map((team) => team.code)
+export function getRequiredTeamsInFt(ft: FtWithTimeSpan): string[] {
+  const teams = ft.timeSpans.flatMap((timeSpan) =>
+    timeSpan.requestedTeams.map((team) => team.code)
   );
   return [...new Set(teams)];
 }
 
-export function castAvailableTimespansWithDate(
-  timespansWithFt: HttpStringified<AvailableTimespan[]>
-): AvailableTimespan[] {
-  return timespansWithFt.map((timespanWithFt) =>
-    castAvailableTimespanWithDate(timespanWithFt)
+export function castAvailableTimeSpansWithDate(
+  timeSpansWithFt: HttpStringified<AvailableTimeSpan[]>
+): AvailableTimeSpan[] {
+  return timeSpansWithFt.map((timeSpanWithFt) =>
+    castAvailableTimeSpanWithDate(timeSpanWithFt)
   );
 }
 
-export function castAvailableTimespanWithDate(
-  timespanWithFt: HttpStringified<AvailableTimespan>
-): AvailableTimespan {
+export function castAvailableTimeSpanWithDate(
+  timeSpanWithFt: HttpStringified<AvailableTimeSpan>
+): AvailableTimeSpan {
   return {
-    ...timespanWithFt,
-    start: new Date(timespanWithFt.start),
-    end: new Date(timespanWithFt.end),
+    ...timeSpanWithFt,
+    start: new Date(timeSpanWithFt.start),
+    end: new Date(timeSpanWithFt.end),
   };
 }
 
-export function castFtsWithTimespansWithDate(
-  ftWithTimespans: HttpStringified<FtWithTimespan[]>
-): FtWithTimespan[] {
-  return ftWithTimespans.map((ftWithTimespan) =>
-    castFtWithTimespansWithDate(ftWithTimespan)
+export function castFtsWithTimeSpansWithDate(
+  ftWithTimeSpans: HttpStringified<FtWithTimeSpan[]>
+): FtWithTimeSpan[] {
+  return ftWithTimeSpans.map((ftWithTimeSpan) =>
+    castFtWithTimeSpansWithDate(ftWithTimeSpan)
   );
 }
 
-export function castFtWithTimespansWithDate(
-  ftWithTimespan: HttpStringified<FtWithTimespan>
-): FtWithTimespan {
+export function castFtWithTimeSpansWithDate(
+  ftWithTimeSpan: HttpStringified<FtWithTimeSpan>
+): FtWithTimeSpan {
   return {
-    ...ftWithTimespan,
-    timespans: ftWithTimespan.timespans.map((timespan) => ({
-      ...timespan,
-      start: new Date(timespan.start),
-      end: new Date(timespan.end),
+    ...ftWithTimeSpan,
+    timeSpans: ftWithTimeSpan.timeSpans.map((timeSpan) => ({
+      ...timeSpan,
+      start: new Date(timeSpan.start),
+      end: new Date(timeSpan.end),
     })),
   };
 }

@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 
-const resource = "/timespan";
+const resource = "/timeSpan";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -11,31 +11,31 @@ export default {
   getTimeSpanByFTID(context: Context, FTID: string) {
     return context.$axios.get(`${resource}/user/FT/${FTID}`);
   },
-  assignUserToTimespan(context: Context, timespanId: string, userId: string) {
-    return context.$axios.post(`${resource}/${timespanId}/assigned/${userId}`);
+  assignUserToTimeSpan(context: Context, timeSpanId: string, userId: string) {
+    return context.$axios.post(`${resource}/${timeSpanId}/assigned/${userId}`);
   },
-  unassignUserFromTimespan(context: Context, timespanId: string) {
-    return context.$axios.post(`${resource}/${timespanId}/unassign`);
+  unassignUserFromTimeSpan(context: Context, timeSpanId: string) {
+    return context.$axios.post(`${resource}/${timeSpanId}/unassign`);
   },
-  getAvailableTimespansForUser(context: Context, userId: string) {
+  getAvailableTimeSpansForUser(context: Context, userId: string) {
     return context.$axios.get(`${resource}/available/${userId}`);
   },
-  getUserAssignedTimespans(context: Context, userId: string) {
+  getUserAssignedTimeSpans(context: Context, userId: string) {
     return context.$axios.get(`${resource}/user/${userId}`);
   },
-  getUserAssignedToSameTimespan(context: Context, timespanId: string) {
-    return context.$axios.get(`${resource}/user/affected/${timespanId}`);
+  getUserAssignedToSameTimeSpan(context: Context, timeSpanId: string) {
+    return context.$axios.get(`${resource}/user/affected/${timeSpanId}`);
   },
   getAvailableUserForTimeSpan(
     context: Context,
-    timespanId: string,
+    timeSpanId: string,
     bypass: boolean = false
   ) {
     return context.$axios.get(
-      `${resource}/availableUserByTimespan/${timespanId}?bypass=${bypass}`
+      `${resource}/availableUserByTimespan/${timeSpanId}?bypass=${bypass}`
     );
   },
-  getTotalNumberOfTimespansAndAssignedTimespansByFTID(
+  getTotalNumberOfTimeSpansAndAssignedTimeSpansByFTID(
     context: Context,
     FTID: string
   ) {
@@ -44,7 +44,7 @@ export default {
   getRolesByFT(context: Context) {
     return context.$axios.get(`${resource}/rolesByFT`);
   },
-  deleteTimespan(context: Context, timespanId: string) {
-    return context.$axios.delete(`${resource}/${timespanId}`);
+  deleteTimeSpan(context: Context, timeSpanId: string) {
+    return context.$axios.delete(`${resource}/${timeSpanId}`);
   },
 };

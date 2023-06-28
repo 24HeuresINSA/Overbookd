@@ -42,12 +42,12 @@ export class AssignmentRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The id of the timespan',
+    description: 'The id of the time span',
     type: Number,
   })
   @IsNumber()
   @IsPositive()
-  timespanId: number;
+  timeSpanId: number;
 }
 
 export class UpdateAssignedTeamRequestDto {

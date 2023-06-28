@@ -12,14 +12,14 @@ import {
   getAssignmentModeFromRoute,
 } from "~/utils/models/assignment";
 import {
-  AvailableTimespan,
-  FtTimespan,
-  FtTimespanWithRequestedTeams,
-  FtWithTimespan,
-  TimespanWithAssignees,
-  castAvailableTimespansWithDate,
-  castFtsWithTimespansWithDate,
-} from "~/utils/models/ftTimespan";
+  AvailableTimeSpan,
+  FtTimeSpan,
+  FtTimeSpanWithRequestedTeams,
+  FtWithTimeSpan,
+  TimeSpanWithAssignees,
+  castAvailableTimeSpansWithDate,
+  castFtsWithTimeSpansWithDate,
+} from "~/utils/models/ftTimeSpan";
 import { Period, castPeriods } from "~/utils/models/period";
 import {
   User,
@@ -37,12 +37,12 @@ type AssignmentParameters = {
 type AssignmentRequest = {
   volunteerId: number;
   teamCode: string;
-  timespanId: number;
+  timeSpanId: number;
 };
 
 export type BulkAssignmentRequest = {
   volunteers: { id: number; teamCode: string }[];
-  timespanId: number;
+  timeSpanId: number;
 };
 
 export type AssignmentStats = {
@@ -57,19 +57,19 @@ const AvailabilityRepo = RepoFactory.VolunteerAvailabilityRepository;
 
 export const state = () => ({
   volunteers: [] as Volunteer[],
-  timespans: [] as AvailableTimespan[],
-  fts: [] as FtWithTimespan[],
+  timeSpans: [] as AvailableTimeSpan[],
+  fts: [] as FtWithTimeSpan[],
 
   selectedVolunteer: null as Volunteer | null,
   selectedVolunteerFriends: [] as User[],
-  selectedTimespan: null as FtTimespanWithRequestedTeams | null,
-  selectedFt: null as FtWithTimespan | null,
-  selectedFtTimespans: [] as FtTimespanWithRequestedTeams[],
+  selectedTimeSpan: null as FtTimeSpanWithRequestedTeams | null,
+  selectedFt: null as FtWithTimeSpan | null,
+  selectedFtTimeSpans: [] as FtTimeSpanWithRequestedTeams[],
 
   taskAssignment: TaskAssignment.init(),
 
-  hoverTimespan: null as AvailableTimespan | null,
-  timespanToDisplayDetails: null as TimespanWithAssignees | null,
+  hoverTimeSpan: null as AvailableTimeSpan | null,
+  timeSpanToDisplayDetails: null as TimeSpanWithAssignees | null,
 
   stats: [] as AssignmentStats[],
 });
@@ -87,16 +87,16 @@ export const mutations = mutationTree(state, {
     state.volunteers = volunteers;
   },
 
-  SET_TIMESPANS(state, timespansWithFt: AvailableTimespan[]) {
-    state.timespans = timespansWithFt;
+  SET_TIMESPANS(state, timeSpansWithFt: AvailableTimeSpan[]) {
+    state.timeSpans = timeSpansWithFt;
   },
 
-  SET_FTS(state, ftWithTimespans: FtWithTimespan[]) {
-    state.fts = ftWithTimespans;
+  SET_FTS(state, ftWithTimeSpans: FtWithTimeSpan[]) {
+    state.fts = ftWithTimeSpans;
   },
 
-  SET_FT_TIMESPANS(state, timespans: FtTimespanWithRequestedTeams[]) {
-    state.selectedFtTimespans = timespans;
+  SET_FT_TIMESPANS(state, timeSpans: FtTimeSpanWithRequestedTeams[]) {
+    state.selectedFtTimeSpans = timeSpans;
   },
 
   SET_SELECTED_VOLUNTEER(state, volunteer: Volunteer) {
@@ -107,27 +107,27 @@ export const mutations = mutationTree(state, {
     state.selectedVolunteerFriends = friends;
   },
 
-  SET_SELECTED_TIMESPAN(state, timespan: FtTimespanWithRequestedTeams) {
-    state.selectedTimespan = timespan;
+  SET_SELECTED_TIMESPAN(state, timeSpan: FtTimeSpanWithRequestedTeams) {
+    state.selectedTimeSpan = timeSpan;
   },
 
-  SET_TIMESPAN_TO_DISPLAY_DETAILS(state, timespan: TimespanWithAssignees) {
-    state.timespanToDisplayDetails = timespan;
+  SET_TIMESPAN_TO_DISPLAY_DETAILS(state, timeSpan: TimeSpanWithAssignees) {
+    state.timeSpanToDisplayDetails = timeSpan;
   },
 
-  SET_SELECTED_FT(state, ft: FtWithTimespan) {
+  SET_SELECTED_FT(state, ft: FtWithTimeSpan) {
     state.selectedFt = ft;
   },
 
-  SET_HOVER_TIMESPAN(state, timespan: AvailableTimespan | null) {
-    state.hoverTimespan = timespan;
+  SET_HOVER_TIMESPAN(state, timeSpan: AvailableTimeSpan | null) {
+    state.hoverTimeSpan = timeSpan;
   },
 
   START_TIMESPAN_ASSIGNMENT_WITH_VOLUNTEER(state, volunteer: Volunteer) {
-    if (!state.selectedFt || !state.selectedTimespan) return;
+    if (!state.selectedFt || !state.selectedTimeSpan) return;
 
     const candidate = new AssignmentCandidate(volunteer);
-    const teamRequests = state.selectedTimespan.requestedTeams.map(
+    const teamRequests = state.selectedTimeSpan.requestedTeams.map(
       ({ assignmentCount, code, quantity }) => ({
         quantity,
         teamCode: code,
@@ -136,7 +136,7 @@ export const mutations = mutationTree(state, {
     );
 
     state.taskAssignment = TaskAssignment.init({
-      ...state.selectedTimespan,
+      ...state.selectedTimeSpan,
       name: state.selectedFt.name,
     })
       .withRemaingTeamRequests(teamRequests)
@@ -225,7 +225,7 @@ export const actions = actionTree(
 
     setSelectedVolunteer({ commit, dispatch }, volunteer: Volunteer) {
       commit("SET_SELECTED_VOLUNTEER", volunteer);
-      dispatch("fetchTimespansForVolunteer", volunteer.id);
+      dispatch("fetchTimeSpansForVolunteer", volunteer.id);
       dispatch(
         "volunteerAvailability/fetchVolunteerAvailabilities",
         volunteer.id,
@@ -242,19 +242,19 @@ export const actions = actionTree(
       });
     },
 
-    setSelectedTimespan({ commit, dispatch, state }, timespan: FtTimespan) {
-      const selectedTimespan = state.selectedFtTimespans.find(
-        (selectedTimespan) => selectedTimespan.id === timespan.id
+    setSelectedTimeSpan({ commit, dispatch, state }, timeSpan: FtTimeSpan) {
+      const selectedTimeSpan = state.selectedFtTimeSpans.find(
+        (selectedTimeSpan) => selectedTimeSpan.id === timeSpan.id
       );
-      if (!selectedTimespan) return;
+      if (!selectedTimeSpan) return;
       commit("SET_SELECTED_TIMESPAN", {
-        ...timespan,
-        requestedTeams: selectedTimespan.requestedTeams,
+        ...timeSpan,
+        requestedTeams: selectedTimeSpan.requestedTeams,
       });
-      dispatch("fetchVolunteersForTimespan", timespan.id);
+      dispatch("fetchVolunteersForTimeSpan", timeSpan.id);
     },
 
-    setSelectedFt({ commit }, ft: FtWithTimespan) {
+    setSelectedFt({ commit }, ft: FtWithTimeSpan) {
       commit("SET_SELECTED_FT", ft);
     },
 
@@ -262,35 +262,35 @@ export const actions = actionTree(
       commit("SET_VOLUNTEERS", volunteers);
     },
 
-    async fetchFtsWithTimespans({ commit }) {
-      const res = await safeCall(this, AssignmentRepo.getFtWithTimespans(this));
+    async fetchFtsWithTimeSpans({ commit }) {
+      const res = await safeCall(this, AssignmentRepo.getFtWithTimeSpans(this));
       if (!res) return;
-      commit("SET_FTS", castFtsWithTimespansWithDate(res.data));
+      commit("SET_FTS", castFtsWithTimeSpansWithDate(res.data));
     },
 
-    async fetchTimespansWithStats({ commit }, ftId: number) {
+    async fetchTimeSpansWithStats({ commit }, ftId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getTimespansWithStats(this, ftId)
+        AssignmentRepo.getTimeSpansWithStats(this, ftId)
       );
       if (!res) return;
-      const timespans = convertToTimespans(res.data);
-      commit("SET_FT_TIMESPANS", timespans);
+      const timeSpans = convertToTimeSpans(res.data);
+      commit("SET_FT_TIMESPANS", timeSpans);
     },
 
-    async fetchTimespansForVolunteer({ commit }, volunteerId: number) {
+    async fetchTimeSpansForVolunteer({ commit }, volunteerId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getTimespansForVolunteer(this, volunteerId)
+        AssignmentRepo.getTimeSpansForVolunteer(this, volunteerId)
       );
       if (!res) return;
-      commit("SET_TIMESPANS", castAvailableTimespansWithDate(res.data));
+      commit("SET_TIMESPANS", castAvailableTimeSpansWithDate(res.data));
     },
 
-    async fetchVolunteersForTimespan({ commit }, timespanId: number) {
+    async fetchVolunteersForTimeSpan({ commit }, timeSpanId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getVolunteersForTimespan(this, timespanId)
+        AssignmentRepo.getVolunteersForTimeSpan(this, timeSpanId)
       );
       if (!res) return;
       commit("SET_VOLUNTEERS", res.data);
@@ -307,8 +307,8 @@ export const actions = actionTree(
       dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
     },
 
-    setHoverTimespan({ commit }, timespan: AvailableTimespan | null) {
-      commit("SET_HOVER_TIMESPAN", timespan);
+    setHoverTimeSpan({ commit }, timeSpan: AvailableTimeSpan | null) {
+      commit("SET_HOVER_TIMESPAN", timeSpan);
     },
 
     startAssignment({ commit, dispatch }, volunteer: Volunteer) {
@@ -337,7 +337,7 @@ export const actions = actionTree(
               AssignmentRepo.getAvailableFriends(
                 this,
                 volunteer.id,
-                state.selectedTimespan?.id ?? 0
+                state.selectedTimeSpan?.id ?? 0
               )
             )
         ),
@@ -372,11 +372,11 @@ export const actions = actionTree(
 
     async saveAssignment(
       { dispatch },
-      { volunteerId, timespanId, teamCode }: AssignmentRequest
+      { volunteerId, timeSpanId, teamCode }: AssignmentRequest
     ) {
       const bulkRequest = {
         volunteers: [{ id: volunteerId, teamCode }],
-        timespanId,
+        timeSpanId,
       };
       const res = await safeCall(
         this,
@@ -387,7 +387,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchTimespansForVolunteer", volunteerId);
+      dispatch("fetchTimepansForVolunteer", volunteerId);
       dispatch("fetchVolunteers");
       dispatch("fetchSelectedVolunteerPlanning", volunteerId);
     },
@@ -407,29 +407,29 @@ export const actions = actionTree(
         return;
       }
       commit("SET_SELECTED_VOLUNTEER", null);
-      await dispatch("fetchTimespansWithStats", state.selectedFt?.id);
-      const updatedTimespan = state.selectedFtTimespans.find(
-        (timespan) => timespan.id === state.selectedTimespan?.id
+      await dispatch("fetchTimeSpansWithStats", state.selectedFt?.id);
+      const updatedTimeSpan = state.selectedFtTimeSpans.find(
+        (timeSpan) => timeSpan.id === state.selectedTimeSpan?.id
       );
-      if (!updatedTimespan) return;
-      dispatch("setSelectedTimespan", updatedTimespan);
+      if (!updatedTimeSpan) return;
+      dispatch("setSelectedTimeSpan", updatedTimeSpan);
     },
 
     async unassignVolunteer(
       { state, dispatch },
-      { timespanId, assigneeId }: { timespanId: number; assigneeId: number }
+      { timeSpanId, assigneeId }: { timeSpanId: number; assigneeId: number }
     ) {
       const res = await safeCall(
         this,
-        AssignmentRepo.unassign(this, timespanId, assigneeId),
+        AssignmentRepo.unassign(this, timeSpanId, assigneeId),
         {
           successMessage: "Le bénévole a été désaffecté 🥳",
           errorMessage: "Le bénévole n'a pas pu être désaffecté 😢",
         }
       );
       if (!res) return;
-      dispatch("restoreStateAfterTimespanDetailsUpdate", {
-        timespanId,
+      dispatch("restoreStateAfterTimeSpanDetailsUpdate", {
+        timeSpanId,
         volunteerId: state.selectedVolunteer?.id,
       });
     },
@@ -462,21 +462,21 @@ export const actions = actionTree(
       dispatch("retrieveVolunteerRelatedData", lastCandidate.volunteer.id);
     },
 
-    async fetchTimespanDetails({ commit }, timespanId: number) {
+    async fetchTimeSpanDetails({ commit }, timeSpanId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getTimespanDetails(this, timespanId)
+        AssignmentRepo.getTimeSpanDetails(this, timeSpanId)
       );
       if (!res) return;
-      const timespan = convertToTimespanWithAssignees(res.data);
-      commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timespan);
+      const timeSpan = convertToTimeSpanWithAssignees(res.data);
+      commit("SET_TIMESPAN_TO_DISPLAY_DETAILS", timeSpan);
     },
 
-    restoreStateAfterTimespanDetailsUpdate(
+    restoreStateAfterTimeSpanDetailsUpdate(
       { state, dispatch },
-      { timespanId, volunteerId }: { timespanId: number; volunteerId?: number }
+      { timeSpanId, volunteerId }: { timeSpanId: number; volunteerId?: number }
     ) {
-      dispatch("fetchTimespanDetails", timespanId);
+      dispatch("fetchTimeSpanDetails", timeSpanId);
 
       const route = this.$router.currentRoute.fullPath;
       const isOrgaTaskMode =
@@ -484,18 +484,18 @@ export const actions = actionTree(
 
       if (isOrgaTaskMode && volunteerId) {
         dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
-        dispatch("fetchTimespansForVolunteer", volunteerId);
+        dispatch("fetchTimeSpansForVolunteer", volunteerId);
         return;
       }
-      dispatch("fetchTimespansWithStats", state.selectedFt?.id);
-      dispatch("fetchVolunteersForTimespan", timespanId);
+      dispatch("fetchTimeSpansWithStats", state.selectedFt?.id);
+      dispatch("fetchVolunteersForTimeSpan", timeSpanId);
     },
 
     async updateAssignedTeam(
       { state, dispatch },
-      { timespanId, assigneeId, team }: UpdateAssignedTeam
+      { timeSpanId, assigneeId, team }: UpdateAssignedTeam
     ) {
-      const data = { timespanId, assigneeId, team };
+      const data = { timeSpanId, assigneeId, team };
       const res = await safeCall(
         this,
         AssignmentRepo.updateAssignedTeam(this, data),
@@ -505,8 +505,8 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("restoreStateAfterTimespanDetailsUpdate", {
-        timespanId,
+      dispatch("restoreStateAfterTimeSpanDetailsUpdate", {
+        timeSpanId,
         volunteerId: state.selectedVolunteer?.id,
       });
     },
@@ -519,22 +519,22 @@ export const actions = actionTree(
   }
 );
 
-function convertToTimespans(
-  timespans: HttpStringified<FtTimespanWithRequestedTeams>[]
-): FtTimespanWithRequestedTeams[] {
-  return timespans.map((timespan) => ({
-    ...timespan,
-    start: new Date(timespan.start),
-    end: new Date(timespan.end),
+function convertToTimeSpans(
+  timeSpans: HttpStringified<FtTimeSpanWithRequestedTeams>[]
+): FtTimeSpanWithRequestedTeams[] {
+  return timeSpans.map((timeSpan) => ({
+    ...timeSpan,
+    start: new Date(timeSpan.start),
+    end: new Date(timeSpan.end),
   }));
 }
 
-function convertToTimespanWithAssignees(
-  timespan: HttpStringified<TimespanWithAssignees>
-): TimespanWithAssignees {
+function convertToTimeSpanWithAssignees(
+  timeSpan: HttpStringified<TimeSpanWithAssignees>
+): TimeSpanWithAssignees {
   return {
-    ...timespan,
-    start: new Date(timespan.start),
-    end: new Date(timespan.end),
+    ...timeSpan,
+    start: new Date(timeSpan.start),
+    end: new Date(timeSpan.end),
   };
 }

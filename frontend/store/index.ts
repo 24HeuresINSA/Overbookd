@@ -6,10 +6,6 @@ import * as catalog from "./catalog";
 import * as charismaPeriod from "./charismaPeriod";
 import * as config from "./config";
 import * as configuration from "./configuration";
-import * as conflict from "./conflict";
-import * as dialog from "./dialog";
-import * as equipment from "./equipment";
-import * as equipmentProposal from "./equipmentProposal";
 import * as FA from "./FA";
 import * as FT from "./FT";
 import * as gearRequest from "./gearRequest";
@@ -21,7 +17,6 @@ import * as publishAnimation from "./publishAnimation";
 import * as signa from "./signa";
 import * as stats from "./stats";
 import * as team from "./team";
-import * as timeslot from "./timeslot";
 import * as transaction from "./transaction";
 import * as user from "./user";
 import * as volunteerAvailability from "./volunteerAvailability";
@@ -47,7 +42,6 @@ export const accessorType = getAccessorType({
   mutations,
   actions,
   modules: {
-    dialog,
     notif,
     config,
     user,
@@ -55,12 +49,8 @@ export const accessorType = getAccessorType({
     FA,
     FT,
     team,
-    timeslot,
     location,
-    equipment,
-    equipmentProposal,
     assignment,
-    conflict,
     catalog,
     configuration,
     signa,

@@ -276,10 +276,10 @@ export class FtReviewsService {
 
   private createNestedTimespansWithAssignments(timespans: Timespan[]) {
     return timespans.map((data) => {
-      const { assignments, ...timespan } = data;
+      const { assignments, ...timeSpan } = data;
       return this.prisma.ftTimeSpan.create({
         data: {
-          ...timespan,
+          ...timeSpan,
           assignments: {
             create: assignments,
           },

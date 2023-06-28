@@ -58,7 +58,7 @@ export class AvailableVolunteerResponseDto
 {
   @ApiProperty({
     required: false,
-    description: 'Has friends available on the same timespan',
+    description: 'Has friends available on the same time span',
     type: Boolean,
   })
   friendAvailable: boolean;
@@ -71,7 +71,7 @@ export class AvailableVolunteerResponseDto
   isRequestedOnSamePeriod: boolean;
 
   @ApiProperty({
-    description: 'Has friends assigned on the same timespan',
+    description: 'Has friends assigned on the same time span',
     type: Boolean,
   })
   hasFriendAssigned: boolean;

@@ -1,12 +1,9 @@
 import authRepo from "~/repositories/authRepo";
-import equipmentRepo from "~/repositories/equipementRepo";
 import transactionRepo from "~/repositories/transactionRepo";
 import { AssignmentRepository } from "./assignmentRepo";
 import { CategoryRepository, GearsRepository } from "./catalog.repository";
 import { CharismaPeriodRepository } from "./charismaPeriodRepo";
 import configurationRepo from "./configurationRepo";
-import conflictsRepo from "./conflictsRepo";
-import equipmentProposalRepo from "./equipmentProposalRepo";
 import faRepo from "./faRepo";
 import ftRepo from "./ftRepo";
 import { GearRequestRepository } from "./gearRequestRepo";
@@ -15,7 +12,6 @@ import locationRepo from "./locationRepo";
 import permissionRepo from "./permissionRepo";
 import signaLocationRepo from "./signaLocationRepo";
 import teamRepo from "./teamRepo";
-import timeslotRepo from "./timeslotRepo";
 import userRepo from "./userRepo";
 import { OrgaNeedsRepository } from "./orgaNeedsRepo";
 import { VolunteerAvailabilityRepository } from "./volunteerAvailabilityRepo";
@@ -26,13 +22,9 @@ const repositories = {
   user: userRepo,
   transaction: transactionRepo,
   FA: faRepo,
-  equipment: equipmentRepo,
   FT: ftRepo,
-  timeslot: timeslotRepo,
   location: locationRepo,
   authRepo: authRepo,
-  equipmentProposal: equipmentProposalRepo,
-  Conflict: conflictsRepo,
   team: teamRepo,
   gear: GearsRepository,
   category: CategoryRepository,
@@ -57,12 +49,8 @@ export const RepoFactory = {
   userRepo,
   faRepo,
   ftRepo,
-  equipmentRepo,
-  timeslotRepo,
   locationRepo,
   authRepo,
-  equipmentProposalRepo,
-  conflictsRepo,
   teamRepo,
   GearsRepository,
   CategoryRepository,

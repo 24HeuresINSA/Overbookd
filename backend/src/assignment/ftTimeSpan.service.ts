@@ -193,14 +193,14 @@ export class FtTimeSpanService {
     timeSpanId: number,
   ): Promise<TimeSpanWithAssignees> {
     const select = this.buildTimeSpanWithAssigneesSelection(timeSpanId);
-    const timespan = await this.prisma.ftTimeSpan.findFirst({
+    const timeSpan = await this.prisma.ftTimeSpan.findFirst({
       where: {
         id: timeSpanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select,
     });
-    return this.formatTimeSpanWithDetails(timespan);
+    return this.formatTimeSpanWithDetails(timeSpan);
   }
 
   async findTimeSpanWithFtAndAssignment(
@@ -247,10 +247,10 @@ export class FtTimeSpanService {
     return this.formatAvailableForVolunteerTimeSpans(timeSpans, friends);
   }
 
-  async getTaskCategory(timespanId: number): Promise<TaskCategory | null> {
+  async getTaskCategory(timeSpanId: number): Promise<TaskCategory | null> {
     const ftTimespan = await this.prisma.ftTimeSpan.findFirst({
       where: {
-        id: timespanId,
+        id: timeSpanId,
         timeWindow: WHERE_FT_EXISTS_AND_READY,
       },
       select: {
@@ -266,7 +266,7 @@ export class FtTimeSpanService {
       },
     });
     if (!ftTimespan) {
-      throw new NotFoundException(`Créneau ${timespanId} non trouvé`);
+      throw new NotFoundException(`Créneau ${timeSpanId} non trouvé`);
     }
     return ftTimespan.timeWindow.ft.category;
   }
@@ -498,9 +498,9 @@ export class FtTimeSpanService {
   }
 
   private formatTimeSpanWithDetails(
-    timespan: DatabaseTimeSpanWithAssignees,
+    timeSpan: DatabaseTimeSpanWithAssignees,
   ): TimeSpanWithAssignees {
-    const { id, start, end, assignments, timeWindow } = timespan;
+    const { id, start, end, assignments, timeWindow } = timeSpan;
     const { teamRequests } = timeWindow;
     const ft = {
       id: timeWindow.ft.id,
@@ -527,12 +527,12 @@ export class FtTimeSpanService {
 function convertToTimeSpan(
   teamRequests: DatabaseRequestedTeam[],
 ): (value: DatabaseTimeSpanWithAssignedTeamMembers) => TimeSpan {
-  return ({ assignments, ...timespan }) => {
+  return ({ assignments, ...timeSpan }) => {
     const requestedTeams = teamRequests.map((teamRequest) =>
       convertToRequestedTeam(teamRequest, assignments),
     );
     return {
-      ...timespan,
+      ...timeSpan,
       requestedTeams,
     };
   };

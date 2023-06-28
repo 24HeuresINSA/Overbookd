@@ -76,11 +76,11 @@ export class VolunteerService {
   }
 
   async findAvailableVolunteersForFtTimespan(
-    timespanId: number,
+    timeSpanId: number,
   ): Promise<AvailableVolunteer[]> {
     const [ftCategory, ftTimespan] = await Promise.all([
-      this.ftTimeSpan.getTaskCategory(timespanId),
-      this.ftTimeSpan.findTimeSpanWithFtAndAssignment(timespanId),
+      this.ftTimeSpan.getTaskCategory(timeSpanId),
+      this.ftTimeSpan.findTimeSpanWithFtAndAssignment(timeSpanId),
     ]);
     const select = {
       ...this.buildAssignableVolunteersSelection(ftTimespan, ftCategory),
@@ -97,12 +97,12 @@ export class VolunteerService {
   }
 
   async findAvailableVolunteerFriendsForFtTimespan(
-    timespanId: number,
+    timeSpanId: number,
     volunteerId: number,
   ): Promise<Volunteer[]> {
     const [ftCategory, ftTimeSpan] = await Promise.all([
-      this.ftTimeSpan.getTaskCategory(timespanId),
-      this.ftTimeSpan.findTimeSpanWithFt(timespanId),
+      this.ftTimeSpan.getTaskCategory(timeSpanId),
+      this.ftTimeSpan.findTimeSpanWithFt(timeSpanId),
     ]);
     const select = this.buildAssignableVolunteersSelection(
       ftTimeSpan,

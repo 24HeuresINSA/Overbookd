@@ -1,4 +1,4 @@
-import { actionTree, mutationTree, getterTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
@@ -8,8 +8,8 @@ import { Team } from "~/utils/models/team";
 import {
   TimelineEvent,
   TimelineFt,
+  TimelineTimeSpan,
   TimelineTimeWindow,
-  TimelineTimespan,
 } from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -177,15 +177,15 @@ function castTimelineTimeWindowWithDate(
   return {
     ...timeWindow,
     ...castPeriod(timeWindow),
-    timespans: timeWindow.timespans.map(castTimelineTimespanWithDate),
+    timeSpans: timeWindow.timeSpans.map(castTimelineTimeSpanWithDate),
   };
 }
 
-function castTimelineTimespanWithDate(
-  timespan: HttpStringified<TimelineTimespan>
-): TimelineTimespan {
+function castTimelineTimeSpanWithDate(
+  timeSpan: HttpStringified<TimelineTimeSpan>
+): TimelineTimeSpan {
   return {
-    ...timespan,
-    ...castPeriod(timespan),
+    ...timeSpan,
+    ...castPeriod(timeSpan),
   };
 }
