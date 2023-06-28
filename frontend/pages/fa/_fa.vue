@@ -22,8 +22,6 @@
         </div>
       </div>
       <FestivalEventSummary class="summary" />
-      import FeedbackCard from
-      "~/components/organisms/festivalEvent/FeedbackCard.vue";
     </div>
     <v-container class="container fa">
       <FAGeneralCard id="general" />
