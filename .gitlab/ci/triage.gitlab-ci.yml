@@ -1,6 +1,6 @@
 triage:
   stage: triage
-  image: ruby:2.7
+  image: ruby:3.0
   script:
     - gem install gitlab-triage
     - |
