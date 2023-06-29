@@ -93,6 +93,7 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
+    "coverageProvider": "v8",
     "coverageReporters": [
       "html",
       "text",
