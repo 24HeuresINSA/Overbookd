@@ -104,7 +104,7 @@ import {
   AssignmentCandidate,
   Task,
   TaskAssignment,
-} from "~/domain/timespan-assignment/timespanAssignment";
+} from "~/domain/timespan-assignment/timeSpanAssignment";
 import {
   PlanningEvent,
   convertTaskToPlanningEvent,
