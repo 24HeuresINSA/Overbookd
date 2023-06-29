@@ -43,7 +43,13 @@
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
 import { Fa } from "~/utils/models/FA";
-import { FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
+import {
+  BROUILLON,
+  FTSimplified,
+  FTStatus,
+  FTStatusLabel,
+  ftStatusLabel,
+} from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ChildFTCard",
@@ -69,7 +75,7 @@ export default Vue.extend({
       return status.toLowerCase();
     },
     getStatusLabel(status: FTStatus): FTStatusLabel {
-      return FTStatusLabel[status];
+      return ftStatusLabel.get(status) ?? BROUILLON;
     },
     openNewFTDialog() {
       this.isNewFTDialogOpen = true;

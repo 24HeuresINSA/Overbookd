@@ -22,8 +22,8 @@
 import Vue from "vue";
 import { getFAValidationStatus } from "~/utils/festivalEvent/faUtils";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
-import { FA, FAStatusLabel } from "~/utils/models/FA";
-import { FT, FTStatusLabel } from "~/utils/models/ft";
+import { Fa, FAStatusLabel } from "~/utils/models/FA";
+import { FT, FTStatusLabel, ftStatusLabel, BROUILLON } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
 
@@ -37,7 +37,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {
@@ -56,7 +56,7 @@ export default Vue.extend({
     // TODO : Crée un StatusLabel commun (dans un nouveau model Status ?)
     statusLabel(): FAStatusLabel | FTStatusLabel {
       if (this.isFA) return FAStatusLabel[this.mFA.status];
-      return FTStatusLabel[this.mFT.status];
+      return ftStatusLabel.get(this.mFT.status) ?? BROUILLON;
     },
     validators(): Team[] {
       if (this.isFA) return this.$accessor.team.faValidators;

@@ -71,7 +71,7 @@ export default Vue.extend({
     },
     faTimeWindows(): CalendarEvent[] {
       const animationTimeWindows: CalendarEvent[] = (
-        this.$accessor.FA.mFA.time_windows ?? []
+        this.$accessor.FA.mFA.timeWindows ?? []
       ).map((timeWindow) => ({
         start: timeWindow.start,
         end: timeWindow.end,

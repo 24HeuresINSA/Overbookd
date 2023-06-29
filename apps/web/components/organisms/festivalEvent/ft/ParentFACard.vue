@@ -24,7 +24,7 @@ import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FASimplified } from "~/utils/models/FA";
+import { FaSimplified } from "~/utils/models/FA";
 import { FT, FTCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -46,7 +46,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateParentFA(fa: FASimplified | null) {
+    updateParentFA(fa: FaSimplified | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
       this.$accessor.FT.updateFT(updatedFT);
       if (fa) this.$accessor.FA.fetchGearRequests(fa.id);

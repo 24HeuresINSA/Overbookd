@@ -176,7 +176,7 @@ import {
   isTaskRefusedBy,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FA, Status } from "~/utils/models/FA";
+import { Fa, Status } from "~/utils/models/FA";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
   FtTimespanParameters,
@@ -219,7 +219,7 @@ export default Vue.extend({
     selectedValidator: {} as Team,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {

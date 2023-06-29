@@ -87,7 +87,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    shouldUpdateCategory() {
+    shouldUpdateCategory(): boolean {
       return this.category || this.gear.category;
     },
   },
@@ -117,13 +117,13 @@ export default Vue.extend({
       this.name = "";
       this.category = undefined;
     },
-    closeDialog() {
+    closeDialog(): void {
       this.$emit("close-dialog");
     },
-    updatePonctualUsage(ponctualUsage: boolean | null) {
+    updatePonctualUsage(ponctualUsage: boolean | null): void {
       this.isPonctualUsage = ponctualUsage ?? false;
     },
-    updateConsumableStatus(consumable: boolean | null) {
+    updateConsumableStatus(consumable: boolean | null): void {
       this.isConsumable = consumable ?? false;
     },
   },

@@ -16,13 +16,26 @@ export enum FTStatus {
   READY = "READY",
 }
 
-export enum FTStatusLabel {
-  DRAFT = "Brouillon",
-  REFUSED = "Refusée",
-  SUBMITTED = "Soumise à validation",
-  VALIDATED = "Validée",
-  READY = "Prête à affectation",
-}
+export const BROUILLON = "Brouillon";
+const REFUSEE = "Refusée";
+const SOUMISE_A_VALIDATION = "Soumise à validation";
+const VALIDEE = "Validée";
+const PRETE_POUR_AFFECTATION = "Prête à affectation";
+
+export type FTStatusLabel =
+  | typeof BROUILLON
+  | typeof REFUSEE
+  | typeof SOUMISE_A_VALIDATION
+  | typeof VALIDEE
+  | typeof PRETE_POUR_AFFECTATION;
+
+export const ftStatusLabel = new Map<FTStatus, FTStatusLabel>([
+  [FTStatus.DRAFT, BROUILLON],
+  [FTStatus.REFUSED, REFUSEE],
+  [FTStatus.SUBMITTED, SOUMISE_A_VALIDATION],
+  [FTStatus.VALIDATED, VALIDEE],
+  [FTStatus.READY, PRETE_POUR_AFFECTATION],
+]);
 
 export enum FTCardType {
   GENERAL = "GENERAL",

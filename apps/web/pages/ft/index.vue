@@ -24,12 +24,12 @@
                   <v-list-item-title>Tous</v-list-item-title>
                 </v-list-item>
                 <v-list-item
-                  v-for="status in statuses"
+                  v-for="[status, label] in statuses"
                   :key="status"
                   :value="status"
                 >
                   <v-list-item-title>
-                    {{ getStatusLabel(status) }}
+                    {{ label }}
                   </v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
@@ -169,6 +169,7 @@ import {
   FTSimplified,
   FTStatus,
   FTStatusLabel,
+  ftStatusLabel,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { MyUserInformation, User } from "~/utils/models/user";
@@ -249,8 +250,8 @@ export default Vue.extend({
         );
       });
     },
-    statuses(): FTStatus[] {
-      return Object.values(FTStatus);
+    statuses(): [FTStatus, FTStatusLabel][] {
+      return [...ftStatusLabel.entries()];
     },
     isAdmin(): boolean {
       return this.$accessor.user.hasPermission("admin");
@@ -258,7 +259,7 @@ export default Vue.extend({
     canAffect(): boolean {
       return this.$accessor.user.hasPermission("can-affect");
     },
-    validators() {
+    validators(): Team[] {
       return this.$accessor.team.ftValidators;
     },
     deletedFTTextClass(): string {
@@ -312,7 +313,7 @@ export default Vue.extend({
 
     fuzzyFindFT(search?: string): FTSimplified[] {
       if (!search) return this.FTs;
-      const fuse = new Fuse(this.FTs, {
+      const fuse = new Fuse<FTSimplified>(this.FTs, {
         keys: ["name", "id"],
         threshold: 0.2,
       });
@@ -339,10 +340,6 @@ export default Vue.extend({
     displayUsername(user: User | null): string {
       if (!user) return "";
       return formatUsername(user);
-    },
-
-    getStatusLabel(status: FTStatus): FTStatusLabel {
-      return FTStatusLabel[status];
     },
 
     async fetchFTs() {

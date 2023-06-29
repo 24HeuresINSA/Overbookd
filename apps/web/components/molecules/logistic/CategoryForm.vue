@@ -74,10 +74,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    shouldUpdateParent() {
+    shouldUpdateParent(): boolean {
       return this.parent || this.category.parent;
     },
-    shouldUpdateOwner() {
+    shouldUpdateOwner(): boolean {
       return this.owner || this.category.owner;
     },
   },
@@ -90,14 +90,14 @@ export default Vue.extend({
     await this.spreadCategory(this.category);
   },
   methods: {
-    async spreadCategory({ name, owner, parent }: Category) {
+    async spreadCategory({ name, owner, parent }: Category): Promise<void> {
       this.name = name;
       this.owner = owner;
       this.parent = parent
         ? await this.$accessor.catalog.fetchCategory(parent)
         : undefined;
     },
-    async createOrUpdateCategory() {
+    async createOrUpdateCategory(): Promise<void> {
       const category = this.buildCategoryForm();
 
       const action = this.category.id
@@ -124,7 +124,7 @@ export default Vue.extend({
     async getCategory(categoryId: number): Promise<Category | undefined> {
       return this.$accessor.catalog.fetchCategory(categoryId);
     },
-    closeDialog() {
+    closeDialog(): void {
       this.$emit("close-dialog");
     },
   },
