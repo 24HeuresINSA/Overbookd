@@ -81,16 +81,16 @@ import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWind
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import {
-getFAValidationStatusWithMultipleTeams,
-hasAllValidations,
-hasAtLeastOneValidation,
-isAnimationValidatedBy,
+  getFAValidationStatusWithMultipleTeams,
+  hasAllValidations,
+  hasAtLeastOneValidation,
+  isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
-FA,
-FaCardType,
-FaTimeWindow,
-TimeWindowType,
+  FA,
+  FaCardType,
+  FaTimeWindow,
+  TimeWindowType,
 } from "~/utils/models/fa";
 import { Period } from "~/utils/models/gearRequests";
 import { MyUserInformation, User } from "~/utils/models/user";

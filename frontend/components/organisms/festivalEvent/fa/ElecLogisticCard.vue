@@ -60,15 +60,15 @@
 import Vue from "vue";
 import ElecLogisticForm from "~/components/molecules/festivalEvent/logistic/ElecLogisticForm.vue";
 import {
-getFAValidationStatus,
-isAnimationValidatedBy,
+  getFAValidationStatus,
+  isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
-ElectricityType,
-ElectricityTypeLabel,
-ElectricityTypeWithLabel,
-FA,
-FaElectricityNeed,
+  ElectricityType,
+  ElectricityTypeLabel,
+  ElectricityTypeWithLabel,
+  FA,
+  FaElectricityNeed,
 } from "~/utils/models/fa";
 
 const headers = [

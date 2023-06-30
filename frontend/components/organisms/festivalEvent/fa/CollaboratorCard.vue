@@ -60,14 +60,14 @@
 import Vue from "vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
-getFAValidationStatus,
-isAnimationValidatedBy,
+  getFAValidationStatus,
+  isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
-Collaborator,
-FA,
-FaCardType,
-FaCollaborator,
+  Collaborator,
+  FA,
+  FaCardType,
+  FaCollaborator,
 } from "~/utils/models/fa";
 
 export default Vue.extend({
