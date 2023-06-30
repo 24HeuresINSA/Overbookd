@@ -1,4 +1,4 @@
-import { FaSimplified } from "../models/FA";
+import { FaSimplified } from "../models/fa";
 import { FT, FTTimeWindow } from "../models/ft";
 import { SignaLocation } from "../models/signaLocation";
 import { Team } from "../models/team";

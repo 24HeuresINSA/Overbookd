@@ -176,7 +176,7 @@ import {
   isTaskRefusedBy,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FA, FaStatus } from "~/utils/models/FA";
+import { Fa, FaStatus } from "~/utils/models/fa";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
   FtTimeSpanParameters,
@@ -186,9 +186,9 @@ import { Team } from "~/utils/models/team";
 import { MyUserInformation, User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
+import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
 import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
-import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",
@@ -219,7 +219,7 @@ export default Vue.extend({
     selectedValidator: {} as Team,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {

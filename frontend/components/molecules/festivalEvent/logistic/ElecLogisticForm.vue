@@ -48,7 +48,7 @@ import {
   ElectricityTypeLabel,
   ElectricityTypeWithLabel,
   FaElectricityNeed,
-} from "~/utils/models/FA";
+} from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({

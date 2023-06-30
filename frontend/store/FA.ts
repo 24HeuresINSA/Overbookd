@@ -27,7 +27,7 @@ import {
   SortedStoredGearRequests,
   TimeWindowType,
   castFaWithDate,
-} from "~/utils/models/FA";
+} from "~/utils/models/fa";
 import {
   FaFeedback,
   FaFeedbackSubjectType,

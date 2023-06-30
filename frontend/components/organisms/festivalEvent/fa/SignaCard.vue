@@ -96,14 +96,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
+import { Fa, FaCardType, FaSignaNeed, SignaType } from "~/utils/models/fa";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { isNumber, min } from "~/utils/rules/inputRules";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import { FA, FaCardType, FaSignaNeed, SignaType } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "SignaCard",
@@ -131,7 +131,7 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     signalisations(): FaSignaNeed[] {

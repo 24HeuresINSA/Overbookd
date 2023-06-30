@@ -14,7 +14,7 @@ import {
   SitePublishAnimation,
   SitePublishAnimationCreation,
   SitePublishAnimationWithFa,
-} from "~/utils/models/FA";
+} from "~/utils/models/fa";
 import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
   GearRequest,

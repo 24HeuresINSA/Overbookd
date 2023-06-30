@@ -133,7 +133,7 @@ model Permission {
 }
 
 model TeamPermission {
-  team           Team       @relation(fields: [teamCode], references: [code])
+  team           Team       @relation(fields: [teamCode], references: [code], onDelete: Cascade)
   teamCode       String     @map("team_code")
   permission     Permission @relation(fields: [permissionName], references: [name], onDelete: Cascade)
   permissionName String     @map("permission_name")
@@ -145,11 +145,10 @@ model TeamPermission {
 
 model TimeSlot {
   id             Int              @id @default(autoincrement())
-  groupName      String           @map("group_name")
+  name           String           @map("slot_name")
   start          DateTime
   end            DateTime
   charisma       Int
-  isHardOnly     Boolean          @default(false) @map("is_hard_only")
   Availabilities Availability[]
   isDeleted      Boolean          @default(false) @map("is_deleted")
 

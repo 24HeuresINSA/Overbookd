@@ -1,5 +1,5 @@
 import { HttpStringified } from "../types/http";
-import { FaSimplified } from "./FA";
+import { FaSimplified } from "./fa";
 import { FtFeedback } from "./feedback";
 import { FtTimeSpan } from "./ftTimeSpan";
 import { Period } from "./period";

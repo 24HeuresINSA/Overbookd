@@ -53,7 +53,7 @@ import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
 } from "~/utils/festivalEvent/faUtils";
-import { FA } from "~/utils/models/FA";
+import { Fa } from "~/utils/models/fa";
 import { Period } from "~/utils/models/gearRequests";
 
 export default Vue.extend({
@@ -64,7 +64,7 @@ export default Vue.extend({
     isUpdateDialogOpen: false,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     gearRequestRentalPeriods(): Period[] {

@@ -450,11 +450,10 @@ export default {
 
       // filter by payed contributions
       if (this.filters.hasPayedContributions !== undefined) {
-        if (this.filters.hasPayedContributions) {
-          mUsers = mUsers.filter((user) => user.hasPayedContributions);
-        } else {
-          mUsers = mUsers.filter((user) => !user.hasPayedContributions);
-        }
+        mUsers = mUsers.filter(
+          (user) =>
+            user.hasPayedContributions === this.filters.hasPayedContributions
+        );
         this.options.page = 1; // reset page
       }
 

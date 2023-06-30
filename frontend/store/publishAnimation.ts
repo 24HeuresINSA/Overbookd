@@ -1,7 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { SitePublishAnimationWithFa } from "~/utils/models/FA";
+import { SitePublishAnimationWithFa } from "~/utils/models/fa";
 
 export const state = () => ({
   publishAnimations: [] as SitePublishAnimationWithFa[],

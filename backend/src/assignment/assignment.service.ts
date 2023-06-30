@@ -118,7 +118,7 @@ export class AssignmentService {
 
     const teamRequestId = this.retrieveTeamRequestId(timeSpan, teamCode);
     return {
-      timeSpanId: timeSpanId,
+      timeSpanId,
       teamRequestId,
       assigneeId: id,
     };
@@ -146,7 +146,7 @@ export class AssignmentService {
     return this.prisma.assignment.update({
       where: {
         timeSpanId_assigneeId: {
-          timeSpanId: timeSpanId,
+          timeSpanId,
           assigneeId,
         },
       },

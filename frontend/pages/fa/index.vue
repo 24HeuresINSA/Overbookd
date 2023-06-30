@@ -95,11 +95,7 @@
             {{ item.Team ? item.Team.name : "" }}
           </template>
           <template #[`item.userInCharge`]="{ item }">
-            {{
-              item.userInCharge
-                ? item.userInCharge.firstname + " " + item.userInCharge.lastname
-                : ""
-            }}
+            {{ formatUsername(item.userInCharge) }}
           </template>
           <template #[`item.action`]="{ item }">
             <tr>
@@ -167,7 +163,7 @@
 <script>
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { FaStatus } from "~/utils/models/FA";
+import { FaStatus } from "~/utils/models/fa";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default {
@@ -426,6 +422,10 @@ export default {
       const regex = new RegExp(/undefined/i, "g");
       const parsedCSV = csv.replace(regex, "");
       this.download("exportSigna.csv", parsedCSV);
+    },
+    formatUsername(user) {
+      if (!user) return "";
+      return formatUsername(user);
     },
   },
 };

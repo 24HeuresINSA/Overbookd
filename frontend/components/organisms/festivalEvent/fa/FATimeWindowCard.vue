@@ -75,25 +75,25 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
-import FATimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowForm.vue";
-import {
-  getFAValidationStatusWithMultipleTeams,
-  isAnimationValidatedBy,
-  hasAtLeastOneValidation,
-  hasAllValidations,
-} from "~/utils/festivalEvent/faUtils";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import FATimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowForm.vue";
+import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import {
+getFAValidationStatusWithMultipleTeams,
+hasAllValidations,
+hasAtLeastOneValidation,
+isAnimationValidatedBy,
+} from "~/utils/festivalEvent/faUtils";
+import {
+FA,
+FaCardType,
+FaTimeWindow,
+TimeWindowType,
+} from "~/utils/models/fa";
 import { Period } from "~/utils/models/gearRequests";
 import { MyUserInformation, User } from "~/utils/models/user";
-import {
-  FA,
-  FaCardType,
-  FaTimeWindow,
-  TimeWindowType,
-} from "~/utils/models/FA";
 
 interface IdentifiableTimeWindow extends FaTimeWindow {
   key: string;

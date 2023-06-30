@@ -62,13 +62,16 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import { FA, FaCardType } from "~/utils/models/FA";
-import {
-  isAnimationValidatedBy,
-  getFAValidationStatus,
-} from "~/utils/festivalEvent/faUtils";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import { SitePublishAnimationCategoryType } from "~/utils/models/FA";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/festivalEvent/faUtils";
+import {
+  Fa,
+  FaCardType,
+  SitePublishAnimationCategoryType,
+} from "~/utils/models/fa";
 
 export default Vue.extend({
   name: "FADetailCard",
@@ -80,7 +83,7 @@ export default Vue.extend({
     isPublishable: false,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValidatedByOwner(): boolean {

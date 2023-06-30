@@ -387,7 +387,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      dispatch("fetchTimepansForVolunteer", volunteerId);
+      dispatch("fetchTimeSpansForVolunteer", volunteerId);
       dispatch("fetchVolunteers");
       dispatch("fetchSelectedVolunteerPlanning", volunteerId);
     },

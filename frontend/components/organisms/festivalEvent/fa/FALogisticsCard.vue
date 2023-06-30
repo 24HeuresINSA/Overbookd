@@ -40,7 +40,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { Gear } from "~/utils/models/catalog.model";
-import { FA, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
+import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
@@ -69,7 +69,7 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValid(): boolean {

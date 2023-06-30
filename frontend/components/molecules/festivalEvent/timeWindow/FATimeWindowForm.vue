@@ -171,14 +171,14 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { formatDate } from "~/utils/date/dateUtils";
 import {
   hasAllValidations,
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { formatDate } from "~/utils/date/dateUtils";
+import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/fa";
 import { MyUserInformation, User } from "~/utils/models/user";
-import { FA, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
 
 interface BrakeDownDate {
   year: number;
@@ -222,7 +222,7 @@ export default Vue.extend({
     matosOwners: ["matos", "barrieres", "elec"],
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     type(): TimeWindowType {

@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FaSimplified } from "~/utils/models/FA";
+import { FaSimplified } from "~/utils/models/fa";
 
 interface SearchFAData {
   loading: boolean;

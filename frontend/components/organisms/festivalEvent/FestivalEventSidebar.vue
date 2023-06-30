@@ -22,7 +22,7 @@
 import Vue from "vue";
 import { getFAValidationStatus } from "~/utils/festivalEvent/faUtils";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
-import { FA, FaStatusLabel } from "~/utils/models/FA";
+import { Fa, FaStatusLabel } from "~/utils/models/fa";
 import { FT, FTStatusLabel } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
@@ -37,7 +37,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {

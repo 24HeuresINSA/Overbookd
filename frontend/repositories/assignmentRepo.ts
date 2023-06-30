@@ -81,7 +81,7 @@ export class AssignmentRepository {
 
   static updateAssignedTeam(
     context: Context,
-    { timeSpanId: timeSpanId, assigneeId, team }: UpdateAssignedTeam
+    { timeSpanId, assigneeId, team }: UpdateAssignedTeam
   ) {
     return context.$axios.patch<HttpStringified<AssignmentResponse>>(
       `${this.basePath}/ft-timespans/${timeSpanId}/assignees/${assigneeId}/affected-team`,
