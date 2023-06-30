@@ -1,7 +1,7 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CreateFa,
-  FA,
+  Fa,
   FaCollaborator,
   FaElectricityNeed,
   FaGeneralUpdate,
@@ -31,7 +31,7 @@ type Context = { $axios: NuxtAxiosInstance };
 
 export default {
   getAllFAs(context: Context, search?: SearchFa) {
-    return context.$axios.get<HttpStringified<FA>[]>(resource, {
+    return context.$axios.get<HttpStringified<Fa>[]>(resource, {
       params: search,
     });
   },
@@ -41,7 +41,7 @@ export default {
   },
 
   createNewFA(context: Context, FA: CreateFa) {
-    return context.$axios.post<HttpStringified<FA>>(resource, FA);
+    return context.$axios.post<HttpStringified<Fa>>(resource, FA);
   },
 
   deleteFA(context: Context, id: number) {
@@ -53,7 +53,7 @@ export default {
   },
 
   updateFA(context: Context, id: number, FA: FaGeneralUpdate) {
-    return context.$axios.post<HttpStringified<FA>>(resource + `/${id}`, FA);
+    return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, FA);
   },
 
   updateFACollaborators(
