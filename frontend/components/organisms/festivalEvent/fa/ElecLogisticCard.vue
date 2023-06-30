@@ -67,7 +67,7 @@ import {
   ElectricityType,
   ElectricityTypeLabel,
   ElectricityTypeWithLabel,
-  FA,
+  Fa,
   FaElectricityNeed,
 } from "~/utils/models/fa";
 
@@ -92,7 +92,7 @@ export default Vue.extend({
     selectedIndex: null as number | null,
   }),
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     electricityNeeds(): FaElectricityNeed[] {

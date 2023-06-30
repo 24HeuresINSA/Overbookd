@@ -87,7 +87,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
-  FA,
+  Fa,
   FaCardType,
   FaTimeWindow,
   TimeWindowType,
@@ -141,7 +141,7 @@ export default Vue.extend({
 
       return [...animationTimeWindows, ...gearTimeWindows];
     },
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     isValidatedByAnimOwner(): boolean {
