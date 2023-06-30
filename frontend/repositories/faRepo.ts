@@ -37,7 +37,7 @@ export default {
   },
 
   getFAById(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<FA>>(resource + `/${id}`);
+    return context.$axios.get<HttpStringified<Fa>>(resource + `/${id}`);
   },
 
   createNewFA(context: Context, FA: CreateFa) {
