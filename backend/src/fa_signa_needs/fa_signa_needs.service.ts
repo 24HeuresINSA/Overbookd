@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FaSignaNeed } from '@prisma/client';
-import { ExportSignaNeeds, EXPORT_SIGNA_SELECT } from 'src/fa/fa_types';
+import { EXPORT_SIGNA_SELECT, ExportSignaNeeds } from 'src/fa/faTypes';
 import { PrismaService } from '../prisma.service';
 import { CreateFaSignaNeedDto } from './dto/create-fa_signa_need.dto';
 
