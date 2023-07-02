@@ -8,11 +8,11 @@ import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/create-fa.dto';
 import { FaStatus } from './fa.model';
 import {
-    ALL_FA_SELECT,
-    AllFaResponse,
-    COMPLETE_FA_SELECT,
-    FaIdResponse,
-    FaResponse,
+  ALL_FA_SELECT,
+  AllFaResponse,
+  COMPLETE_FA_SELECT,
+  FaIdResponse,
+  FaResponse,
 } from './faTypes';
 
 export interface SearchFa {

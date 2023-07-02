@@ -1,47 +1,47 @@
 import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    HttpCode,
-    Param,
-    ParseIntPipe,
-    Patch,
-    Post,
-    Query,
-    Request,
-    UseGuards,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
-    ApiBadRequestResponse,
-    ApiBearerAuth,
-    ApiBody,
-    ApiForbiddenResponse,
-    ApiNotFoundResponse,
-    ApiParam,
-    ApiQuery,
-    ApiResponse,
-    ApiTags,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { Fa } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { StatsPayload } from 'src/common/services/stats.service';
 import {
-    ApprovedGearRequest,
-    GearSeekerType,
+  ApprovedGearRequest,
+  GearSeekerType,
 } from 'src/gear-requests/gearRequests.model';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
-    ExistingPeriodGearRequestFormRequestDto,
-    GearRequestFormRequestDto,
-    NewPeriodGearRequestFormRequestDto,
+  ExistingPeriodGearRequestFormRequestDto,
+  GearRequestFormRequestDto,
+  NewPeriodGearRequestFormRequestDto,
 } from '../gear-requests/dto/gearRequestFormRequest.dto';
 import {
-    ApprovedGearRequestResponseDto,
-    GearRequestResponseDto,
+  ApprovedGearRequestResponseDto,
+  GearRequestResponseDto,
 } from '../gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { GearRequestsService } from '../gear-requests/gearRequests.service';
