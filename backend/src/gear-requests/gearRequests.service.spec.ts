@@ -3,10 +3,10 @@ import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
 import { faStatuses } from '../fa/fa.model';
 import { formatDateWithMinutes } from '../utils/date';
 import {
-    APPROVED,
-    GearRequest,
-    GearSeekerType,
-    PENDING,
+  APPROVED,
+  GearRequest,
+  GearSeekerType,
+  PENDING,
 } from './gearRequests.model';
 import { GearRequestsService } from './gearRequests.service';
 import { InMemoryAnimationRepository } from './repositories/animation.repository.inmemory';

@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-    FaReview,
-    FaReviewTeam,
-    FaStatus,
-    LiteFaResponse,
-    Team,
-    UserNameWithId,
-    faStatuses,
+  FaReview,
+  FaReviewTeam,
+  FaStatus,
+  LiteFaResponse,
+  Team,
+  UserNameWithId,
+  faStatuses,
 } from '../fa.model';
 
 export class LiteFaResponseDto implements LiteFaResponse {

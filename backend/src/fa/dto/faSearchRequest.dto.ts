@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
-    IsBoolean,
-    IsEnum,
-    IsOptional,
-    ValidationArguments,
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  ValidationArguments,
 } from 'class-validator';
 import { FaStatus, faStatuses } from '../fa.model';
 import { SearchFa } from '../fa.service';

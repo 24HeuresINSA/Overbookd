@@ -3,16 +3,16 @@ import { TimeSpanBase } from 'src/assignment/types/ftTimeSpanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { FtStatus, esftStatus } from '../ft.model';
 import {
-    CompleteFtResponse,
-    Feedback,
-    LiteFtResponse,
-    MinimalFa,
-    Review,
-    SignaLocation,
-    Team,
-    TeamRequest,
-    TimeWindow,
-    UserNameWithId,
+  CompleteFtResponse,
+  Feedback,
+  LiteFtResponse,
+  MinimalFa,
+  Review,
+  SignaLocation,
+  Team,
+  TeamRequest,
+  TimeWindow,
+  UserNameWithId,
 } from '../ftTypes';
 
 class TimeWindowRepresentation implements TimeWindow {

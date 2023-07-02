@@ -7,12 +7,12 @@ import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import {
-    TeamWithNestedPermissions,
-    retrievePermissions,
+  TeamWithNestedPermissions,
+  retrievePermissions,
 } from '../team/utils/permissions';
 import {
-    formatAssignmentAsTask,
-    formatRequirementAsTask,
+  formatAssignmentAsTask,
+  formatRequirementAsTask,
 } from '../utils/assignment';
 import { getPeriodDuration } from '../utils/duration';
 import { UserCreationDto } from './dto/userCreation.dto';

@@ -1,9 +1,9 @@
 import { faStatuses } from '../../fa/fa.model';
 import { AnimationAlreadyValidatedError } from '../animations/animation.error';
 import {
-    GearRequestIdentifierSeeker,
-    GearSeeker,
-    GearSeekerType,
+  GearRequestIdentifierSeeker,
+  GearSeeker,
+  GearSeekerType,
 } from '../gearRequests.model';
 import { AnimationRepository, TaskRepository } from '../gearRequests.service';
 import { TaskAlreadyValidatedError } from '../tasks/task.error';
