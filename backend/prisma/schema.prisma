@@ -193,8 +193,7 @@ enum FaStatus {
 model Fa {
   id                     Int                     @id @default(autoincrement())
   name                   String                  @db.VarChar(255)
-  faType                 FaType?                 @map("fa_type")
-  type                   String?                 @db.VarChar(255)
+  type                   FaType?                 
   team                   Team?                   @relation(fields: [teamId], references: [id])
   teamId                 Int?                    @map("team_id")
   userInCharge           User?                   @relation(fields: [userInChargeId], references: [id], name: "in_charge")
@@ -202,7 +201,7 @@ model Fa {
   createdAt              DateTime?               @default(now()) @map("created_at")
   location               SignaLocation?          @relation(fields: [locationId], references: [id])
   locationId             Int?                    @map("location_id")
-  status                 FaStatus?               @default(DRAFT)
+  status                 FaStatus                @default(DRAFT)
   description            String?                 @db.Text
   securityNeed           String?                 @db.Text @map("security_need")
   isPassRequired         Boolean?                @db.Boolean @map("is_pass_required")

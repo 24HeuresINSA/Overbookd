@@ -113,9 +113,9 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: false,
     description: 'The water flow required of the fa',
-    type: String,
+    type: Number,
   })
-  waterFlowRequired?: string;
+  waterFlowRequired?: number;
 
   @ApiProperty({
     required: false,

@@ -24,18 +24,12 @@ export class FaService {
     private readonly statsService: StatsService,
   ) {}
 
-  /**     **/
-  /** GET **/
-  /**     **/
-
   async findAll(search: SearchFa): Promise<AllFaResponse[] | null> {
     const where = this.buildFindCondition(search);
     return this.prisma.fa.findMany({
       where,
       select: ALL_FA_SELECT,
-      orderBy: {
-        id: 'asc',
-      },
+      orderBy: { id: 'asc' },
     });
   }
 
@@ -49,12 +43,8 @@ export class FaService {
   async getFaStats(): Promise<StatsPayload[]> {
     const fa = await this.prisma.fa.groupBy({
       by: ['teamId', 'status'],
-      where: {
-        isDeleted: false,
-      },
-      _count: {
-        status: true,
-      },
+      where: { isDeleted: false },
+      _count: { status: true },
     });
     const teams = await this.prisma.team.findMany({});
     const transformedFa = fa.map((fa) => ({
@@ -63,10 +53,6 @@ export class FaService {
     }));
     return this.statsService.stats(transformedFa);
   }
-
-  /**      **/
-  /** POST **/
-  /**      **/
 
   async update(
     id: number,
@@ -167,9 +153,7 @@ export class FaService {
         isDeleted: false,
       },
       orderBy: { id: 'desc' },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
   }
 
@@ -180,9 +164,7 @@ export class FaService {
         isDeleted: false,
       },
       orderBy: { id: 'asc' },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
   }
 
