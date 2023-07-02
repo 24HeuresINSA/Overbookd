@@ -55,17 +55,29 @@ export default Vue.extend({
       switch (this.owner) {
         case "matos":
           return this.$accessor.FA.matosGearRequests.reduce(
-            uniqueGearReducer<"FA">,
+            (
+              gearRequests: GearRequest<"FA">[],
+              gearRequest: GearRequest<"FA">
+            ): GearRequest<"FA">[] =>
+              uniqueGearReducer(gearRequests, gearRequest),
             [] as GearRequest<"FA">[]
           );
         case "elec":
           return this.$accessor.FA.elecGearRequests.reduce(
-            uniqueGearReducer<"FA">,
+            (
+              gearRequests: GearRequest<"FA">[],
+              gearRequest: GearRequest<"FA">
+            ): GearRequest<"FA">[] =>
+              uniqueGearReducer(gearRequests, gearRequest),
             [] as GearRequest<"FA">[]
           );
         case "barrieres":
           return this.$accessor.FA.barrieresGearRequests.reduce(
-            uniqueGearReducer<"FA">,
+            (
+              gearRequests: GearRequest<"FA">[],
+              gearRequest: GearRequest<"FA">
+            ): GearRequest<"FA">[] =>
+              uniqueGearReducer(gearRequests, gearRequest),
             [] as GearRequest<"FA">[]
           );
         default:

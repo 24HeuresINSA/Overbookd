@@ -48,9 +48,12 @@ export default Vue.extend({
         : [...commonHeaders, actionHeader];
     },
     gearRequests(): GearRequest<"FT">[] {
-      return this.$accessor.FT.gearRequests.reduce(
-        uniqueGearReducer<"FT">,
-        [] as GearRequest<"FT">[]
+      return this.$accessor.FT.gearRequests.reduce<GearRequest<"FT">[]>(
+        (
+          gearRequests: GearRequest<"FT">[],
+          gearRequest: GearRequest<"FT">
+        ): GearRequest<"FT">[] => uniqueGearReducer(gearRequests, gearRequest),
+        []
       );
     },
   },
