@@ -74,7 +74,7 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
 
     return {
       ...WHERE_VALIDATED_USER,
-      is_deleted: false,
+      isDeleted: false,
       availabilities,
       assignments,
     };

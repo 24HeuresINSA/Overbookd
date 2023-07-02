@@ -29,9 +29,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<JwtPayload> {
-    const findUserCondition = {
-      email,
-    };
+    const findUserCondition = { email };
     const user = await this.userService.getUserPassword(findUserCondition);
     if (await this.isInvalidUser(user, password)) {
       throw new UnauthorizedException('Email ou mot de passe invalid');
@@ -47,7 +45,7 @@ export class AuthService {
                 code: true,
                 permissions: {
                   select: {
-                    permission_name: true,
+                    permissionName: true,
                   },
                 },
               },
@@ -75,35 +73,35 @@ export class AuthService {
   async login({
     email,
     password,
-  }: UserCredentials): Promise<{ access_token: string }> {
+  }: UserCredentials): Promise<{ accessToken: string }> {
     const jwtPayload = await this.validateUser(email, password);
     return {
-      access_token: this.jwtService.sign(jwtPayload),
+      accessToken: this.jwtService.sign(jwtPayload),
     };
   }
 
   async forgot({ email }: UserEmail): Promise<void> {
     const user = await this.prisma.user.findFirst({
-      where: { email, is_deleted: false },
+      where: { email, isDeleted: false },
     });
 
     if (!user) return;
 
-    const reset_token = randomBytes(20).toString('hex');
+    const resetToken = randomBytes(20).toString('hex');
     const expirationDate = new Date(Date.now() + ONE_HOUR);
 
     const userDatabaseUpdate = this.prisma.user.update({
       where: { email },
       data: {
-        reset_password_token: reset_token,
-        reset_password_expires: expirationDate,
+        resetPasswordToken: resetToken,
+        resetPasswordExpires: expirationDate,
       },
     });
 
     const sendMailToUSer = this.mailService.mailResetPassword({
       email: email,
       firstname: user.firstname,
-      token: reset_token,
+      token: resetToken,
     });
 
     await Promise.all([userDatabaseUpdate, sendMailToUSer]);
@@ -120,8 +118,8 @@ export class AuthService {
 
     const user = await this.prisma.user.findFirst({
       where: {
-        reset_password_token: token,
-        reset_password_expires: {
+        resetPasswordToken: token,
+        resetPasswordExpires: {
           gte: new Date(),
         },
       },
@@ -135,8 +133,8 @@ export class AuthService {
       where: { email: user.email },
       data: {
         password: await this.hashingUtilsService.hash(password),
-        reset_password_token: null,
-        reset_password_expires: null,
+        resetPasswordToken: null,
+        resetPasswordExpires: null,
       },
     });
   }

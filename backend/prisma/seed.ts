@@ -12,16 +12,16 @@ const slugify = new SlugifyService();
 async function insertOrUpdateCategory(
   name: string,
   teams: Team[],
-  parent?: { id: number; path: string; owner_id: number },
+  parent?: { id: number; path: string; ownerId: number },
 ) {
   const parentId = parent?.id;
   const path = parent
     ? `${parent.path}->${slugify.slugify(name)}`
     : slugify.slugify(name);
   const owner = parent
-    ? { id: parent.owner_id }
+    ? { id: parent.ownerId }
     : teams.find((team) => team.code === name.toLocaleLowerCase());
-  const ownerPart = owner ? { owner_id: owner.id } : {};
+  const ownerPart = owner ? { ownerId: owner.id } : {};
   const category = { name, path, parent: parentId, ...ownerPart };
   return prisma.catalogCategory.upsert({
     create: category,
@@ -32,7 +32,7 @@ async function insertOrUpdateCategory(
 
 function insertOrUpdateGear(name: string, categoryId: number) {
   const slug = slugify.slugify(name);
-  const gear = { name, slug, category_id: categoryId };
+  const gear = { name, slug, categoryId };
   return prisma.catalogGear.upsert({
     create: gear,
     update: gear,
@@ -347,7 +347,7 @@ async function main() {
 
       const teams = databaseTeams
         .filter((team) => teamNames.split(',').includes(team.code))
-        .map((team) => ({ team_id: team.id }));
+        .map((team) => ({ teamId: team.id }));
 
       const email = `${user}@24h.me`;
 
@@ -385,7 +385,7 @@ async function main() {
       const {
         id: categoryId,
         path: categoryPath,
-        owner_id,
+        ownerId,
       } = await insertOrUpdateCategory(name, databaseTeams);
       const gearsInsert = gears
         ? gears?.map((name) => {
@@ -402,7 +402,7 @@ async function main() {
               await insertOrUpdateCategory(subCategory.name, databaseTeams, {
                 id: categoryId,
                 path: categoryPath,
-                owner_id,
+                ownerId,
               });
             return Promise.all(
               subCategory.gears.map((gear) => {

@@ -20,9 +20,9 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
-  FtWithTimespan,
+  FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 import { sortTeamsForAssignment } from "~/utils/models/team";
 
 export default Vue.extend({
@@ -30,7 +30,7 @@ export default Vue.extend({
   components: { TeamChip },
   props: {
     ft: {
-      type: Object as () => FtWithTimespan,
+      type: Object as () => FtWithTimeSpan,
       required: true,
     },
   },

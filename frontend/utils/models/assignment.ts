@@ -16,7 +16,7 @@ export interface Volunteer extends User {
 }
 
 export interface UpdateAssignedTeam {
-  timespanId: number;
+  timeSpanId: number;
   assigneeId: number;
   team: string;
 }

@@ -5,12 +5,12 @@
       <p>
         Veuillez séléctionner l'orga dont vous souhaitez exporter le planning
       </p>
-      <SearchUser v-model="selected_user" class="selector" />
+      <SearchUser v-model="selectedUser" class="selector" />
       <div class="buttons">
         <v-btn
           color="success"
           class="btn"
-          :disabled="selected_user === undefined"
+          :disabled="selectedUser === undefined"
           @click="generatePlanning"
         >
           Générer<v-icon right dark> mdi-cog </v-icon>
@@ -80,7 +80,7 @@ export default {
   components: { Loader, SearchUser },
   data() {
     return {
-      selected_user: undefined,
+      selectedUser: undefined,
       uniquePlanning: undefined,
       multiplePlanning: [],
       isLoading: false,
@@ -97,7 +97,7 @@ export default {
       this.uniquePlanning = undefined;
       this.multiplePlanning = [];
       await planningRepo
-        .createPlanning(this, this.selected_user.id)
+        .createPlanning(this, this.selectedUser.id)
         .then((res) => {
           if (res) {
             this.uniquePlanning = res.data;

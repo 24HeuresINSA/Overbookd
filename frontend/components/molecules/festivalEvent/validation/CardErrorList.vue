@@ -11,15 +11,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FA, FaCardType, FaStatus } from "~/utils/models/FA";
+import { Fa, FaCardType, FaStatus } from "~/utils/models/fa";
 import { FT, FTCardType, FTStatus } from "~/utils/models/ft";
 import {
-  generalErrors,
+  collaboratorErrors,
   detailErrors,
+  generalErrors,
+  securityErrors,
   signaErrors,
   timeWindowsErrors,
-  securityErrors,
-  collaboratorErrors,
 } from "~/utils/rules/faValidationRules";
 import {
   ftDetailErrors,
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): FA {
+    mFA(): Fa {
       return this.$accessor.FA.mFA;
     },
     mFT(): FT {

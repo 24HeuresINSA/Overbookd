@@ -96,7 +96,7 @@ export interface FaSimplified {
   status: FaStatus;
 }
 
-export interface FA extends FaSimplified {
+export interface Fa extends FaSimplified {
   type?: FaType;
   teamId?: number;
   userInChargeId?: number;
@@ -120,7 +120,7 @@ export interface FA extends FaSimplified {
   fts: FTSimplified[];
 }
 
-export type CreateFa = Pick<FA, "name">;
+export type CreateFa = Pick<Fa, "name">;
 
 export interface FaCollaborator {
   collaborator: Collaborator;
@@ -237,7 +237,7 @@ export interface SortedStoredGearRequests {
   elec: StoredGearRequest<"FA">[];
 }
 
-export function castFaWithDate(fa: HttpStringified<FA>): FA {
+export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
   const timeWindows = fa.timeWindows?.map(castTimeWindowWithDate) ?? [];
   const createdAt = fa.createdAt ? new Date(fa.createdAt) : undefined;
   const feedbacks = fa.feedbacks?.map(castFeedbackWithDate) ?? [];

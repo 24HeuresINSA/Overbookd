@@ -2,18 +2,18 @@
   <OverCalendar
     v-model="calendarMarker"
     :title="ftName"
-    :events="timespans"
+    :events="timeSpans"
     :hour-to-scroll-to="hourToScrollTo"
   >
-    <template #event="{ event: timespan }">
+    <template #event="{ event: timeSpan }">
       <div
         class="event underline-on-hover"
-        :class="{ highlight: timespan.id === selectedTimespanId }"
-        @click="selectTimespan(timespan)"
+        :class="{ highlight: timeSpan.id === selectedTimeSpanId }"
+        @click="selectTimeSpan(timeSpan)"
         @mouseup.middle="openSelectedFtInNewTab()"
-        @contextmenu.prevent="selectTimespanToDisplayDetails(timespan.id)"
+        @contextmenu.prevent="selectTimeSpanToDisplayDetails(timeSpan.id)"
       >
-        {{ timespan.name }}
+        {{ timeSpan.name }}
       </div>
     </template>
   </OverCalendar>
@@ -23,11 +23,11 @@
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
-  FtTimespanEvent,
-  FtTimespanWithRequestedTeams,
-  FtWithTimespan,
+  FtTimeSpanEvent,
+  FtTimeSpanWithRequestedTeams,
+  FtWithTimeSpan,
   RequestedTeam,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
   name: "TaskOrgaCalendar",
@@ -36,7 +36,7 @@ export default Vue.extend({
     calendarMarker: new Date(),
   }),
   computed: {
-    selectedFt(): FtWithTimespan | null {
+    selectedFt(): FtWithTimeSpan | null {
       return this.$accessor.assignment.selectedFt;
     },
     ftName(): string {
@@ -48,35 +48,35 @@ export default Vue.extend({
     manifDate(): Date {
       return new Date(this.$accessor.config.getConfig("event_date"));
     },
-    timespans(): FtTimespanEvent[] {
-      return this.$accessor.assignment.selectedFtTimespans.flatMap((timespan) =>
-        this.mapTimespanToEvent(timespan)
+    timeSpans(): FtTimeSpanEvent[] {
+      return this.$accessor.assignment.selectedFtTimeSpans.flatMap((timeSpan) =>
+        this.mapTimeSpanToEvent(timeSpan)
       );
     },
-    selectedTimespanId(): number | null {
-      return this.$accessor.assignment.selectedTimespan?.id ?? null;
+    selectedTimeSpanId(): number | null {
+      return this.$accessor.assignment.selectedTimeSpan?.id ?? null;
     },
     hourToScrollTo(): number | null {
-      return this.timespans.at(0)?.start.getHours() ?? null;
+      return this.timeSpans.at(0)?.start.getHours() ?? null;
     },
   },
   mounted() {
     this.calendarMarker = this.manifDate;
   },
   methods: {
-    selectTimespan(timespan: FtTimespanEvent) {
-      this.$accessor.assignment.setSelectedTimespan(timespan);
+    selectTimeSpan(timeSpan: FtTimeSpanEvent) {
+      this.$accessor.assignment.setSelectedTimeSpan(timeSpan);
     },
-    selectTimespanToDisplayDetails(timespanId: number) {
-      this.$emit("display-timespan-details", timespanId);
+    selectTimeSpanToDisplayDetails(timeSpanId: number) {
+      this.$emit("display-time-span-details", timeSpanId);
     },
-    mapTimespanToEvent(
-      timespan: FtTimespanWithRequestedTeams
-    ): FtTimespanEvent[] {
-      return timespan.requestedTeams.map((team) => ({
-        ...timespan,
-        start: new Date(timespan.start),
-        end: new Date(timespan.end),
+    mapTimeSpanToEvent(
+      timeSpan: FtTimeSpanWithRequestedTeams
+    ): FtTimeSpanEvent[] {
+      return timeSpan.requestedTeams.map((team) => ({
+        ...timeSpan,
+        start: new Date(timeSpan.start),
+        end: new Date(timeSpan.end),
         name: this.buildEventName(team),
         timed: true,
         color: this.defineEventColor(team),

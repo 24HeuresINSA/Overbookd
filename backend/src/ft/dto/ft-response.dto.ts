@@ -13,7 +13,7 @@ import {
   TimeWindow,
   UserNameWithId,
 } from '../ftTypes';
-import { TimespanBase } from 'src/assignment/types/ftTimespanTypes';
+import { TimeSpanBase } from 'src/assignment/types/ftTimeSpanTypes';
 
 class TimeWindowRepresentation implements TimeWindow {
   id: number;
@@ -22,7 +22,7 @@ class TimeWindowRepresentation implements TimeWindow {
   sliceTime?: number;
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
-  timespans: TimespanBase[];
+  timeSpans: TimeSpanBase[];
 }
 
 export class CompleteFtResponseDto implements CompleteFtResponse {

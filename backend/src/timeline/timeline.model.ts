@@ -6,12 +6,12 @@ export interface TimelineFa {
   team: string;
 }
 
-export type TimelineTimespan = Period & {
+export type TimelineTimeSpan = Period & {
   id: number;
 };
 
 export type TimelineTimeWindow = Period & {
-  timespans: TimelineTimespan[];
+  timeSpans: TimelineTimeSpan[];
 };
 
 export interface TimelineFt {

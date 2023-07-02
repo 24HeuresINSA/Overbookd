@@ -66,26 +66,26 @@
 import Vue from "vue";
 import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistic/LogisticTimeWindow.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
+import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
+import FestivalEventSummary from "~/components/organisms/festivalEvent/FestivalEventSummary.vue";
 import ChildFTCard from "~/components/organisms/festivalEvent/fa/ChildFTCard.vue";
 import CollaboratorCard from "~/components/organisms/festivalEvent/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/festivalEvent/fa/ElecLogisticCard.vue";
 import FADetailCard from "~/components/organisms/festivalEvent/fa/FADetailCard.vue";
 import FAGeneralCard from "~/components/organisms/festivalEvent/fa/FAGeneralCard.vue";
+import FALogisticsCard from "~/components/organisms/festivalEvent/fa/FALogisticsCard.vue";
+import FATimeWindowCard from "~/components/organisms/festivalEvent/fa/FATimeWindowCard.vue";
 import SecurityCard from "~/components/organisms/festivalEvent/fa/SecurityCard.vue";
 import SignaCard from "~/components/organisms/festivalEvent/fa/SignaCard.vue";
-import FATimeWindowCard from "~/components/organisms/festivalEvent/fa/FATimeWindowCard.vue";
 import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
-import FestivalEventSummary from "~/components/organisms/festivalEvent/FestivalEventSummary.vue";
-import FALogisticsCard from "~/components/organisms/festivalEvent/fa/FALogisticsCard.vue";
-import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
+import { Fa } from "~/utils/models/fa";
 import { Team } from "~/utils/models/team";
-import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
 import { MyUserInformation } from "~/utils/models/user";
-import { FA } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "Fa",
@@ -120,7 +120,7 @@ export default Vue.extend({
     FA(): any {
       return this.$accessor.FA;
     },
-    mFA(): FA {
+    mFA(): Fa {
       return this.FA.mFA;
     },
     me(): MyUserInformation {

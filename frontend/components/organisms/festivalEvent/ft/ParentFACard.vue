@@ -18,13 +18,13 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchFA from "~/components/atoms/field/search/SearchFA.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import CompleteLogisticsTable from "~/components/molecules/festivalEvent/logistic/CompleteLogisticsTable.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FASimplified } from "~/utils/models/FA";
+import { FaSimplified } from "~/utils/models/fa";
 import { FT, FTCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
@@ -46,7 +46,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateParentFA(fa: FASimplified | null) {
+    updateParentFA(fa: FaSimplified | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
       this.$accessor.FT.updateFT(updatedFT);
       if (fa) this.$accessor.FA.fetchGearRequests(fa.id);

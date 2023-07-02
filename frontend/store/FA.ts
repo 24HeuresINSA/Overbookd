@@ -12,7 +12,7 @@ import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import {
   Collaborator,
   CreateFa,
-  FA,
+  Fa,
   FaCollaborator,
   FaElectricityNeed,
   FaPageId,
@@ -27,7 +27,7 @@ import {
   SortedStoredGearRequests,
   TimeWindowType,
   castFaWithDate,
-} from "~/utils/models/FA";
+} from "~/utils/models/fa";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
@@ -48,12 +48,12 @@ import { sendNotification } from "./catalog";
 const repo = RepoFactory.faRepo;
 
 export const state = () => ({
-  FAs: [] as FA[],
+  FAs: [] as Fa[],
   mFA: {
     status: FaStatus.DRAFT,
     name: "",
     fts: [] as FTSimplified[],
-  } as FA,
+  } as Fa,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: -1,
@@ -100,7 +100,7 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_FA(state, fa: Partial<FA>) {
+  SET_FA(state, fa: Partial<Fa>) {
     state.mFA = { ...state.mFA, ...fa };
   },
 
@@ -108,7 +108,7 @@ export const mutations = mutationTree(state, {
     state.mFA = {
       status: FaStatus.DRAFT,
       name: "",
-    } as FA;
+    } as Fa;
   },
 
   UPDATE_STATUS({ mFA }, status: FaStatus) {
@@ -116,8 +116,8 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_FA({ mFA }, { key, value }) {
-    if (typeof mFA[key as keyof FA] !== "undefined") {
-      mFA[key as keyof FA] = value as never;
+    if (typeof mFA[key as keyof Fa] !== "undefined") {
+      mFA[key as keyof Fa] = value as never;
     }
   },
 
@@ -270,11 +270,11 @@ export const mutations = mutationTree(state, {
     mFA.feedbacks = feedbacks;
   },
 
-  SET_FAS(state, fas: FA[]) {
+  SET_FAS(state, fas: Fa[]) {
     state.FAs = fas;
   },
 
-  ADD_FA({ FAs }, fa: FA) {
+  ADD_FA({ FAs }, fa: Fa) {
     FAs.push(fa);
   },
 
@@ -304,7 +304,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setFA({ commit }, FA: FA) {
+    setFA({ commit }, FA: Fa) {
       commit("SET_FA", FA);
     },
 
@@ -438,11 +438,11 @@ export const actions = actionTree(
 
     refuse: async function (
       { dispatch, commit, state },
-      { validator_id, message, author }
+      { validatorId, message, author }
     ) {
       commit("UPDATE_STATUS", FaStatus.REFUSED);
       const body: FaValidationBody = {
-        teamId: validator_id,
+        teamId: validatorId,
       };
       await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
       const feedback: FaFeedback = {

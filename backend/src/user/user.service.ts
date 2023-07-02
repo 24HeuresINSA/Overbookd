@@ -9,16 +9,16 @@ import {
   TeamWithNestedPermissions,
   retrievePermissions,
 } from '../team/utils/permissions';
-import { UserCreationDto } from './dto/userCreation.dto';
-import { UserModificationDto } from './dto/userModification.dto';
-import { Username } from './dto/userName.dto';
-import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
-import { getPeriodDuration } from '../utils/duration';
-import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
 } from '../utils/assignment';
+import { getPeriodDuration } from '../utils/duration';
+import { UserCreationDto } from './dto/userCreation.dto';
+import { UserModificationDto } from './dto/userModification.dto';
+import { Username } from './dto/userName.dto';
+import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
+import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 
 const SELECT_USER = {
   email: true,
@@ -30,16 +30,16 @@ const SELECT_USER = {
   phone: true,
   department: true,
   comment: true,
-  reset_password_token: true,
-  reset_password_expires: true,
-  has_payed_contributions: true,
+  resetPasswordToken: true,
+  resetPasswordExpires: true,
+  hasPayedContributions: true,
   year: true,
   pp: true,
   charisma: true,
   balance: true,
-  created_at: true,
-  updated_at: true,
-  is_deleted: true,
+  createdAt: true,
+  updatedAt: true,
+  isDeleted: true,
 };
 
 export const SELECT_USER_TEAMS = {
@@ -62,7 +62,7 @@ const SELECT_USER_TEAMS_AND_PERMISSIONS = {
           code: true,
           permissions: {
             select: {
-              permission_name: true,
+              permissionName: true,
             },
           },
         },
@@ -102,7 +102,7 @@ export const SELECT_FT_USER_REQUESTS_BY_USER_ID = {
 };
 
 export const SELECT_VOLUNTEER_ASSIGNMENTS = {
-  timespan: {
+  timeSpan: {
     select: {
       start: true,
       end: true,
@@ -113,7 +113,7 @@ export const SELECT_VOLUNTEER_ASSIGNMENTS = {
       },
     },
   },
-  timespanId: true,
+  timeSpanId: true,
 };
 
 export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
@@ -121,7 +121,7 @@ export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
 };
 
 export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
-  timespan: {
+  timeSpan: {
     select: {
       start: true,
       end: true,
@@ -158,7 +158,7 @@ export type UserPasswordOnly = Pick<User, 'password'>;
 
 export type VolunteerTask = Period & {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
-  timespanId?: number;
+  timeSpanId?: number;
 };
 @Injectable()
 export class UserService {
@@ -253,7 +253,7 @@ export class UserService {
       where: {
         users: {
           some: {
-            user_id: id,
+            userId: id,
           },
         },
       },
@@ -292,8 +292,8 @@ export class UserService {
     if (!payload.teamId) return newUser;
 
     const addTeamData: Prisma.UserTeamUncheckedCreateInput = {
-      team_id: payload.teamId,
-      user_id: newUser.id,
+      teamId: payload.teamId,
+      userId: newUser.id,
     };
 
     await this.prisma.userTeam.create({
@@ -315,7 +315,7 @@ export class UserService {
       delete userData.charisma;
     }
     if (!this.canUpdateContributionPayment(author)) {
-      delete userData.has_payed_contributions;
+      delete userData.hasPayedContributions;
     }
 
     const user = await this.prisma.user.update({
@@ -332,7 +332,7 @@ export class UserService {
   async deleteUser(id: number): Promise<void> {
     const deleteUser = this.prisma.user.update({
       where: { id },
-      data: { is_deleted: true },
+      data: { isDeleted: true },
       select: { id: true },
     });
 
@@ -354,9 +354,9 @@ export class UserService {
   }
 
   static formatAssignmentStats(assignments: DatabaseVolunteerAssignmentStat[]) {
-    const stats = assignments.reduce((stats, { timespan }) => {
-      const category = timespan.timeWindow.ft.category;
-      const durationToAdd = getPeriodDuration(timespan);
+    const stats = assignments.reduce((stats, { timeSpan }) => {
+      const category = timeSpan.timeWindow.ft.category;
+      const durationToAdd = getPeriodDuration(timeSpan);
       const previousDuration = stats.get(category)?.duration ?? 0;
       const duration = previousDuration + durationToAdd;
       stats.set(category, { category, duration });

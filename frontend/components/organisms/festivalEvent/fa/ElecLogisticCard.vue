@@ -58,18 +58,18 @@
 
 <script lang="ts">
 import Vue from "vue";
+import ElecLogisticForm from "~/components/molecules/festivalEvent/logistic/ElecLogisticForm.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import {
-  ElectricityTypeWithLabel,
   ElectricityType,
   ElectricityTypeLabel,
+  ElectricityTypeWithLabel,
   Fa,
   FaElectricityNeed,
-} from "~/utils/models/FA";
-import ElecLogisticForm from "~/components/molecules/festivalEvent/logistic/ElecLogisticForm.vue";
+} from "~/utils/models/fa";
 
 const headers = [
   { text: "Type de raccordement", value: "electricityType" },

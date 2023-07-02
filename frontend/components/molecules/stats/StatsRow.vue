@@ -43,10 +43,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team";
-import { StatsPayload } from "~/utils/models/stats";
-import { FaStatusLabel } from "~/utils/models/FA";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
+import { FaStatusLabel } from "~/utils/models/fa";
+import { StatsPayload } from "~/utils/models/stats";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   components: {

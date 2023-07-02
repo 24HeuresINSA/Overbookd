@@ -34,7 +34,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { Fa } from "~/utils/models/FA";
+import { Fa } from "~/utils/models/fa";
 
 export default Vue.extend({
   name: "WaterLogisticCard",

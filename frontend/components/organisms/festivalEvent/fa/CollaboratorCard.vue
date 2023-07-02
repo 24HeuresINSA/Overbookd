@@ -58,6 +58,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
@@ -67,8 +68,7 @@ import {
   Fa,
   FaCardType,
   FaCollaborator,
-} from "~/utils/models/FA";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+} from "~/utils/models/fa";
 
 export default Vue.extend({
   name: "CollaboratorCard",

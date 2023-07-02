@@ -42,7 +42,7 @@
 <script lang="ts">
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
-import { Fa } from "~/utils/models/FA";
+import { Fa } from "~/utils/models/fa";
 import { FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({

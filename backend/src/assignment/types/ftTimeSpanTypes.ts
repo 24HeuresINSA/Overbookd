@@ -13,7 +13,7 @@ export interface DatabaseRequestedTeam {
   };
 }
 
-export type TimespanBase = {
+export type TimeSpanBase = {
   id: number;
   start: Date;
   end: Date;
@@ -21,20 +21,20 @@ export type TimespanBase = {
 
 export type AssignmentAsTeamMember = { teamRequest: { teamCode: string } };
 
-export interface DatabaseTimespanWithAssignedTeamMembers extends TimespanBase {
+export interface DatabaseTimeSpanWithAssignedTeamMembers extends TimeSpanBase {
   assignments: AssignmentAsTeamMember[];
 }
 
-export interface Timespan extends TimespanBase {
+export interface TimeSpan extends TimeSpanBase {
   requestedTeams: RequestedTeam[];
 }
 
 export interface DatabaseTimeWindow {
   teamRequests: DatabaseRequestedTeam[];
-  timespans: DatabaseTimespanWithAssignedTeamMembers[];
+  timeSpans: DatabaseTimeSpanWithAssignedTeamMembers[];
 }
 
-export interface DatabaseTimespanWithFt {
+export interface DatabaseTimeSpanWithFt {
   id: number;
   start: Date;
   end: Date;
@@ -46,7 +46,7 @@ export interface DatabaseTimespanWithFt {
       category: TaskCategory;
     };
     _count: {
-      timespans: number;
+      timeSpans: number;
     };
     teamRequests: DatabaseRequestedTeam[];
   };
@@ -59,8 +59,8 @@ type AssignedAsTeamMember = AssignmentAsTeamMember & {
   };
 };
 
-export type DatabaseTimespanWithFtAndAssignees = Omit<
-  DatabaseTimespanWithFt,
+export type DatabaseTimeSpanWithFtAndAssignees = Omit<
+  DatabaseTimeSpanWithFt,
   'assignments'
 > & {
   assignments: AssignedAsTeamMember[];
@@ -100,7 +100,7 @@ export type DatabaseAssignmentsAsTeamMember = {
   assignee: DatabaseAssigneeWithTeams;
 };
 
-export type DatabaseTimespanWithAssignees = TimespanBase & {
+export type DatabaseTimeSpanWithAssignees = TimeSpanBase & {
   assignments: DatabaseAssignmentsAsTeamMember[];
   timeWindow: {
     teamRequests: DatabaseRequestedTeam[];
@@ -114,13 +114,13 @@ export type DatabaseTimespanWithAssignees = TimespanBase & {
   };
 };
 
-export interface DatabaseFtWithTimespans {
+export interface DatabaseFtWithTimeSpans {
   id: number;
   name: string;
   hasPriority: boolean;
   category: TaskCategory;
   timeWindows: {
-    timespans: {
+    timeSpans: {
       id: number;
       start: Date;
       end: Date;
@@ -137,27 +137,27 @@ export interface SimplifiedFT {
   category: TaskCategory;
 }
 
-export type TimespanWithFt = Timespan & {
+export type TimeSpanWithFt = TimeSpan & {
   ft: SimplifiedFT;
 };
 
-export type AvailableTimespan = TimespanWithFt & {
+export type AvailableTimeSpan = TimeSpanWithFt & {
   hasFriendsAssigned: boolean;
 };
 
-export type TimespanWithFtAndAssignees = TimespanWithFt & {
+export type TimeSpanWithFtAndAssignees = TimeSpanWithFt & {
   assignees: number[];
 };
 
-export type FtWithTimespan = SimplifiedFT & {
-  timespans: Timespan[];
+export type FtWithTimeSpan = SimplifiedFT & {
+  timeSpans: TimeSpan[];
 };
 
 export type Assignee = DataBaseAssignee & {
   teams: string[];
 };
 
-export type TimespanAssignee = Assignee & {
+export type TimeSpanAssignee = Assignee & {
   assignedTeam: string;
   friends: Assignee[];
 };
@@ -168,16 +168,16 @@ export type FtWithLocation = {
   location: string;
 };
 
-export type TimespanWithAssignees = Timespan & {
+export type TimeSpanWithAssignees = TimeSpan & {
   ft: FtWithLocation;
   requiredVolunteers: Assignee[];
-  assignees: TimespanAssignee[];
+  assignees: TimeSpanAssignee[];
 };
 
 const COUNT_TIMESPANS = {
   _count: {
     select: {
-      timespans: true,
+      timeSpans: true,
     },
   },
 };
@@ -247,7 +247,7 @@ export const SELECT_FT_WITH_TIMESPANS = {
   category: true,
   timeWindows: {
     select: {
-      timespans: {
+      timeSpans: {
         select: {
           id: true,
           start: true,

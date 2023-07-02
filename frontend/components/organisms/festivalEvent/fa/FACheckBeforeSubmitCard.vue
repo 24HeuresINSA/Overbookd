@@ -131,25 +131,25 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Fa, SortedStoredGearRequests } from "~/utils/models/fa";
 import {
-  hasAtLeastOneError,
-  hasAtLeastOneWarning,
-  generalErrors,
+  collaboratorErrors,
+  collaboratorWarnings,
   detailErrors,
   detailWarnings,
+  elecWarnings,
+  gearRequestErrors,
+  gearRequestWarnings,
+  generalErrors,
+  hasAtLeastOneError,
+  hasAtLeastOneWarning,
+  securityErrors,
+  securityWarnings,
   signaErrors,
   signaWarnings,
   timeWindowsErrors,
-  securityErrors,
-  securityWarnings,
-  collaboratorErrors,
-  collaboratorWarnings,
-  gearRequestErrors,
-  gearRequestWarnings,
-  elecWarnings,
   waterWarnings,
 } from "~/utils/rules/faValidationRules";
-import { Fa, SortedStoredGearRequests } from "~/utils/models/FA";
 
 export default Vue.extend({
   name: "FACheckBeforeSubmitCard",

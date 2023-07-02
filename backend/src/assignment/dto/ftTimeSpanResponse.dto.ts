@@ -2,15 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TaskCategory } from '@prisma/client';
 import {
   Assignee,
-  AvailableTimespan as AvailableTimespan,
+  AvailableTimeSpan,
   FtWithLocation,
-  FtWithTimespan,
+  FtWithTimeSpan,
   RequestedTeam,
   SimplifiedFT,
-  Timespan,
-  TimespanAssignee,
-  TimespanWithAssignees,
-} from '../types/ftTimespanTypes';
+  TimeSpan,
+  TimeSpanAssignee,
+  TimeSpanWithAssignees,
+} from '../types/ftTimeSpanTypes';
 
 class SimplifiedFTRepresentation implements SimplifiedFT {
   @ApiProperty({
@@ -65,67 +65,67 @@ class RequestedTeamRepresentation implements RequestedTeam {
   assignmentCount: number;
 }
 
-export class FtTimespanResponseDto implements Timespan {
+export class FtTimeSpanResponseDto implements TimeSpan {
   @ApiProperty({
     required: true,
-    description: 'The id of the timespan',
+    description: 'The id of the time span',
     type: Number,
   })
   id: number;
 
   @ApiProperty({
     required: true,
-    description: 'The start of the timespan',
+    description: 'The start of the time span',
     type: Date,
   })
   start: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The end of the timespan',
+    description: 'The end of the time span',
     type: Date,
   })
   end: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The requested teams during timespan',
+    description: 'The requested teams during time span',
     type: RequestedTeamRepresentation,
     isArray: true,
   })
   requestedTeams: RequestedTeam[];
 }
 
-export class TimespanWithFtResponseDto
-  extends FtTimespanResponseDto
-  implements AvailableTimespan
+export class TimeSpanWithFtResponseDto
+  extends FtTimeSpanResponseDto
+  implements AvailableTimeSpan
 {
   @ApiProperty({
     required: true,
-    description: 'The ft of the timespan',
+    description: 'The ft of the time span',
     type: SimplifiedFTRepresentation,
   })
   ft: SimplifiedFT;
 
   @ApiProperty({
     required: true,
-    description: "Indicate if some volunteer's are assigned on the timespan",
+    description: "Indicate if some volunteer's are assigned on the time span",
     type: Boolean,
   })
   hasFriendsAssigned: boolean;
 }
 
-export class FtWithTimespansResponseDto
+export class FtWithTimeSpansResponseDto
   extends SimplifiedFTRepresentation
-  implements FtWithTimespan
+  implements FtWithTimeSpan
 {
   @ApiProperty({
     required: true,
-    description: 'The ft timespans',
-    type: FtTimespanResponseDto,
+    description: 'The ft time spans',
+    type: FtTimeSpanResponseDto,
     isArray: true,
   })
-  timespans: FtTimespanResponseDto[];
+  timeSpans: FtTimeSpanResponseDto[];
 }
 
 class FtWithLocationRepresentation implements FtWithLocation {
@@ -142,17 +142,17 @@ class AssigneeRepresentation implements Assignee {
   teams: string[];
 }
 
-class TimespanAssigneeRepresentation
+class TimeSpanAssigneeRepresentation
   extends AssigneeRepresentation
-  implements TimespanAssignee
+  implements TimeSpanAssignee
 {
   assignedTeam: string;
   friends: AssigneeRepresentation[];
 }
 
-export class TimespanWithAssigneesResponseDto
-  extends FtTimespanResponseDto
-  implements TimespanWithAssignees
+export class TimeSpanWithAssigneesResponseDto
+  extends FtTimeSpanResponseDto
+  implements TimeSpanWithAssignees
 {
   @ApiProperty({
     required: true,
@@ -163,7 +163,7 @@ export class TimespanWithAssigneesResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'Volunteer required on this timespan',
+    description: 'Volunteer required on this time span',
     type: AssigneeRepresentation,
     isArray: true,
   })
@@ -171,9 +171,9 @@ export class TimespanWithAssigneesResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'Volunteer assigned on this timespan as team member',
-    type: TimespanAssigneeRepresentation,
+    description: 'Volunteer assigned on this time span as team member',
+    type: TimeSpanAssigneeRepresentation,
     isArray: true,
   })
-  assignees: TimespanAssignee[];
+  assignees: TimeSpanAssignee[];
 }

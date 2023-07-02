@@ -171,14 +171,14 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { formatDate } from "~/utils/date/dateUtils";
 import {
   hasAllValidations,
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { formatDate } from "~/utils/date/dateUtils";
-import { MyUserInformation } from "~/utils/models/user";
-import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/FA";
+import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/fa";
+import { MyUserInformation, User } from "~/utils/models/user";
 
 interface BrakeDownDate {
   year: number;
@@ -360,7 +360,12 @@ export default Vue.extend({
       this.isConfirmationDialogOpen = true;
     },
     resetLogValidations() {
-      this.$accessor.FA.resetLogValidations({ author: this.me });
+      const author: User = {
+        id: this.me.id,
+        firstname: this.me.firstname,
+        lastname: this.me.lastname,
+      };
+      this.$accessor.FA.resetLogValidations(author);
       this.confirmTimeWindow();
     },
     closeAllDialogs() {

@@ -76,7 +76,7 @@
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/Data";
-import { SitePublishAnimationWithFa } from "~/utils/models/FA";
+import { SitePublishAnimationWithFa } from "~/utils/models/fa";
 import { PeriodWithId } from "~/utils/models/period";
 
 interface Comcom {

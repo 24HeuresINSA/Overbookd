@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FASimplified } from "~/utils/models/FA";
+import { FaSimplified } from "~/utils/models/fa";
 
 interface SearchFAData {
   loading: boolean;
@@ -40,7 +40,7 @@ export default Vue.extend({
       default: "Chercher une FA",
     },
     fa: {
-      type: Object as () => FASimplified | null,
+      type: Object as () => FaSimplified | null,
       default: () => null,
     },
     boxed: {
@@ -67,10 +67,10 @@ export default Vue.extend({
     this.$accessor.FA.fetchFAs();
   },
   methods: {
-    propagateEvent(fa: FASimplified | null) {
+    propagateEvent(fa: FaSimplified | null) {
       this.$emit("change", fa);
     },
-    displayFAInformation({ id, name }: FASimplified): string {
+    displayFAInformation({ id, name }: FaSimplified): string {
       return `${id} - ${name}`;
     },
   },

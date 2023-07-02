@@ -45,12 +45,12 @@ export class TransactionCreationDto {
     description: 'The date of the transaction',
     default: new Date(),
   })
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty({
     required: false,
     description: 'If the transaction has been deleted',
     default: true,
   })
-  is_deleted: boolean;
+  isDeleted: boolean;
 }

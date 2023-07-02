@@ -75,7 +75,7 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
 import { Volunteer } from "~/utils/models/assignment";
-import { FtWithTimespan } from "~/utils/models/ftTimespan";
+import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
 import { sortTeamsForAssignment } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
 
@@ -95,7 +95,7 @@ export default Vue.extend({
     formattedUserInformations(): string {
       return `${formatUsername(this.volunteer)} | ${this.volunteer.charisma}`;
     },
-    selectedFt(): FtWithTimespan | null {
+    selectedFt(): FtWithTimeSpan | null {
       return this.$accessor.assignment.selectedFt;
     },
     assignmentStats(): string {

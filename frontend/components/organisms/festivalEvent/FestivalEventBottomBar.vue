@@ -142,13 +142,13 @@
           <h3>Sélectionne le type et la priorité des créneaux</h3>
         </v-card-text>
         <v-select
-          v-model="timespanParameters.category"
+          v-model="timeSpanParameters.category"
           class="category-list"
           label="Catégorie"
           :items="categories"
         ></v-select>
         <v-switch
-          v-model="timespanParameters.hasPriority"
+          v-model="timeSpanParameters.hasPriority"
           class="switch-priority"
           label="Créneaux prioritaires"
         ></v-switch>
@@ -176,19 +176,19 @@ import {
   isTaskRefusedBy,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { Fa, FaStatus } from "~/utils/models/FA";
+import { Fa, FaStatus } from "~/utils/models/fa";
 import { FT, FTStatus } from "~/utils/models/ft";
 import {
-  FtTimespanParameters,
+  FtTimeSpanParameters,
   TaskCategories,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 import { Team } from "~/utils/models/team";
 import { MyUserInformation, User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
+import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
 import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
 import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
-import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",
@@ -210,10 +210,10 @@ export default Vue.extend({
     isRefuseDialogOpen: false,
     isReadyForAssignmentDialogOpen: false,
     categories: Object.values(TaskCategories),
-    timespanParameters: {
+    timeSpanParameters: {
       hasPriority: false,
       category: TaskCategories.AUCUNE,
-    } as FtTimespanParameters,
+    } as FtTimeSpanParameters,
     refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
@@ -371,9 +371,9 @@ export default Vue.extend({
       const author = this.meAsUser;
       if (this.isFA) {
         const payload = {
-          validator_id: validator.id,
-          user_id: this.me.id,
-          team_name: validator.name,
+          validatorId: validator.id,
+          userId: this.me.id,
+          teamName: validator.name,
           author,
         };
         return this.$accessor.FA.validate(payload);
@@ -388,7 +388,7 @@ export default Vue.extend({
       const author = this.meAsUser;
       if (this.isFA) {
         const payload = {
-          validator_id: validator.id,
+          validatorId: validator.id,
           message: this.refuseComment,
           author,
         };
@@ -410,12 +410,12 @@ export default Vue.extend({
     },
     switchReadyForAssignment() {
       this.isReadyForAssignmentDialogOpen = false;
-      if (this.timespanParameters.category === TaskCategories.AUCUNE) {
-        this.timespanParameters.category = undefined;
+      if (this.timeSpanParameters.category === TaskCategories.AUCUNE) {
+        this.timeSpanParameters.category = undefined;
       }
       this.$accessor.FT.switchToReadyForAssignment({
         author: this.meAsUser,
-        timespanParameters: this.timespanParameters,
+        timeSpanParameters: this.timeSpanParameters,
       });
     },
     checkBeforeSubmitForReview() {

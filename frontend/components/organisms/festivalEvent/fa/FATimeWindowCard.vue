@@ -75,25 +75,25 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import FATimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowForm.vue";
+import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
+import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import {
   getFAValidationStatusWithMultipleTeams,
-  isAnimationValidatedBy,
-  hasAtLeastOneValidation,
   hasAllValidations,
+  hasAtLeastOneValidation,
+  isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { Period } from "~/utils/models/gearRequests";
-import { MyUserInformation } from "~/utils/models/user";
 import {
   Fa,
   FaCardType,
   FaTimeWindow,
   TimeWindowType,
-} from "~/utils/models/FA";
+} from "~/utils/models/fa";
+import { Period } from "~/utils/models/gearRequests";
+import { MyUserInformation, User } from "~/utils/models/user";
 
 interface IdentifiableTimeWindow extends FaTimeWindow {
   key: string;
@@ -178,7 +178,12 @@ export default Vue.extend({
       this.isConfirmationDialogOpen = true;
     },
     resetLogValidations() {
-      this.$accessor.FA.resetLogValidations({ author: this.me });
+      const author: User = {
+        id: this.me.id,
+        firstname: this.me.firstname,
+        lastname: this.me.lastname,
+      };
+      this.$accessor.FA.resetLogValidations(author);
       this.deleteTimeframe();
     },
     deleteTimeframe() {

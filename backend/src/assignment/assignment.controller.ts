@@ -26,20 +26,20 @@ import {
   UpdateAssignedTeamRequestDto,
 } from './dto/assignmentRequest.dto';
 import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
+import { AssignmentStatsResponseDto } from './dto/assignmentsStatsResponse.dto';
 import {
-  FtTimespanResponseDto,
-  FtWithTimespansResponseDto,
-  TimespanWithAssigneesResponseDto,
-  TimespanWithFtResponseDto,
-} from './dto/ftTimespanResponse.dto';
+  FtTimeSpanResponseDto,
+  FtWithTimeSpansResponseDto,
+  TimeSpanWithAssigneesResponseDto,
+  TimeSpanWithFtResponseDto,
+} from './dto/ftTimeSpanResponse.dto';
 import {
   AvailableVolunteerResponseDto,
   VolunteerResponseDto,
 } from './dto/volunteerResponse.dto';
-import { FtTimespanService } from './ftTimespan.service';
-import { Timespan, TimespanWithAssignees } from './types/ftTimespanTypes';
+import { FtTimeSpanService } from './ftTimeSpan.service';
+import { TimeSpan, TimeSpanWithAssignees } from './types/ftTimeSpanTypes';
 import { VolunteerService } from './volunteer.service';
-import { AssignmentStatsResponseDto } from './dto/assignmentsStatsResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('assignments')
@@ -54,7 +54,7 @@ export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
     private readonly volunteerService: VolunteerService,
-    private readonly ftTimespanService: FtTimespanService,
+    private readonly ftTimeSpanService: FtTimeSpanService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -77,12 +77,12 @@ export class AssignmentController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get all valid ft with timespans',
+    description: 'Get all valid ft with time spans',
     isArray: true,
-    type: FtWithTimespansResponseDto,
+    type: FtWithTimeSpansResponseDto,
   })
-  findAllFtTimespans(): Promise<FtWithTimespansResponseDto[]> {
-    return this.ftTimespanService.findAllFtsWithTimespans();
+  findAllFtTimeSpans(): Promise<FtWithTimeSpansResponseDto[]> {
+    return this.ftTimeSpanService.findAllFtsWithTimeSpans();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -105,14 +105,14 @@ export class AssignmentController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get ft with timespans and stats',
+    description: 'Get ft with time spans and stats',
     isArray: true,
-    type: FtTimespanResponseDto,
+    type: FtTimeSpanResponseDto,
   })
-  findFtTimespans(
+  findFtTimeSpans(
     @Param('ftId', ParseIntPipe) ftId: number,
-  ): Promise<Timespan[]> {
-    return this.ftTimespanService.findTimespansForFt(ftId);
+  ): Promise<TimeSpan[]> {
+    return this.ftTimeSpanService.findTimeSpansForFt(ftId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -121,67 +121,67 @@ export class AssignmentController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get ft timespans available for volunteer',
+    description: 'Get ft time spans available for volunteer',
     isArray: true,
-    type: TimespanWithFtResponseDto,
+    type: TimeSpanWithFtResponseDto,
   })
-  findFtTimespansAvailableForVolunteer(
+  findFtTimeSpansAvailableForVolunteer(
     @Param('volunteerId', ParseIntPipe) volunteerId: number,
-  ): Promise<TimespanWithFtResponseDto[]> {
-    return this.ftTimespanService.findTimespansWithFtWhereVolunteerIsAssignableTo(
+  ): Promise<TimeSpanWithFtResponseDto[]> {
+    return this.ftTimeSpanService.findTimeSpansWithFtWhereVolunteerIsAssignableTo(
       volunteerId,
     );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('ft-timespans/:timespanId/volunteers')
+  @Get('ft-timespans/:timeSpanId/volunteers')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get volunteers available for ft timespan',
+    description: 'Get volunteers available for ft time span',
     isArray: true,
     type: AvailableVolunteerResponseDto,
   })
-  findAvailableVolunteersForFtTimespan(
-    @Param('timespanId', ParseIntPipe) timespanId: number,
+  findAvailableVolunteersForFtTimeSpan(
+    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
   ): Promise<AvailableVolunteerResponseDto[]> {
-    return this.volunteerService.findAvailableVolunteersForFtTimespan(
-      timespanId,
+    return this.volunteerService.findAvailableVolunteersForFtTimeSpan(
+      timeSpanId,
     );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Get('ft-timespans/:timespanId')
+  @Get('ft-timespans/:timeSpanId')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get timespan details',
-    type: TimespanWithAssigneesResponseDto,
+    description: 'Get time span details',
+    type: TimeSpanWithAssigneesResponseDto,
   })
-  findTimespanDetails(
-    @Param('timespanId', ParseIntPipe) timespanId: number,
-  ): Promise<TimespanWithAssignees> {
-    return this.ftTimespanService.findTimespanWithAssignees(timespanId);
+  findTimeSpanDetails(
+    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
+  ): Promise<TimeSpanWithAssignees> {
+    return this.ftTimeSpanService.findTimeSpanWithAssignees(timeSpanId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Get('ft-timespans/:timespanId/volunteers/:volunteerId/available-friends')
+  @Get('ft-timespans/:timeSpanId/volunteers/:volunteerId/available-friends')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: "Get volunteer's friends available for ft timespan",
+    description: "Get volunteer's friends available for ft time span",
     isArray: true,
     type: VolunteerResponseDto,
   })
-  findAvailableVolunteerFriendsForFtTimespan(
-    @Param('timespanId', ParseIntPipe) timespanId: number,
+  findAvailableVolunteerFriendsForFtTimeSpan(
+    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
     @Param('volunteerId', ParseIntPipe) volunteerId: number,
   ): Promise<VolunteerResponseDto[]> {
-    return this.volunteerService.findAvailableVolunteerFriendsForFtTimespan(
-      timespanId,
+    return this.volunteerService.findAvailableVolunteerFriendsForFtTimeSpan(
+      timeSpanId,
       volunteerId,
     );
   }
@@ -192,39 +192,39 @@ export class AssignmentController {
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Affect volunteers to timespan as team member',
+    description: 'Affect volunteers to time span as team member',
     type: AssignmentResponseDto,
   })
-  assignVolunteerToTimespan(
-    @Body() { volunteers, timespanId }: AssignmentRequestDto,
+  assignVolunteerToTimeSpan(
+    @Body() { volunteers, timeSpanId }: AssignmentRequestDto,
   ): Promise<AssignmentResponseDto[]> {
-    return this.assignmentService.assignVolunteersToTimespan(
+    return this.assignmentService.assignVolunteersToTimeSpan(
       volunteers,
-      timespanId,
+      timeSpanId,
     );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Delete('ft-timespans/:timespanId/volunteers/:assigneeId')
+  @Delete('ft-timespans/:timeSpanId/volunteers/:assigneeId')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Unaffect volunteers from timespan',
+    description: 'Unaffect volunteers from time span',
   })
-  unassignVolunteerToTimespan(
-    @Param('timespanId', ParseIntPipe) timespanId: number,
+  unassignVolunteerToTimeSpan(
+    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
     @Param('assigneeId', ParseIntPipe) assigneeId: number,
   ) {
-    return this.assignmentService.unassignVolunteerToTimespan(
+    return this.assignmentService.unassignVolunteerToTimeSpan(
       assigneeId,
-      timespanId,
+      timeSpanId,
     );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('can-affect')
-  @Patch('ft-timespans/:timespanId/assignees/:assigneeId/affected-team')
+  @Patch('ft-timespans/:timeSpanId/assignees/:assigneeId/affected-team')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -232,12 +232,12 @@ export class AssignmentController {
     type: AssignmentResponseDto,
   })
   updateAssignedTeam(
-    @Param('timespanId', ParseIntPipe) timespanId: number,
+    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
     @Param('assigneeId', ParseIntPipe) assigneeId: number,
     @Body() { team }: UpdateAssignedTeamRequestDto,
   ): Promise<AssignmentResponseDto> {
     return this.assignmentService.updateAssignedTeam(
-      timespanId,
+      timeSpanId,
       assigneeId,
       team,
     );

@@ -1,16 +1,16 @@
 <template>
-  <div class="timespan-list" @mouseleave="hoverTimespan(null)">
+  <div class="timespan-list" @mouseleave="hoverTimeSpan(null)">
     <v-virtual-scroll
-      :items="timespans"
+      :items="timeSpans"
       item-height="70"
       class="virtual-scroll"
     >
       <template #default="{ item }">
-        <v-list-item :key="item.id" @mouseover="hoverTimespan(item)">
-          <TimespanResume
-            :timespan="item"
+        <v-list-item :key="item.id" @mouseover="hoverTimeSpan(item)">
+          <TimeSpanResume
+            :time-span="item"
             @selected-team="(team) => assign(item.id, team)"
-          ></TimespanResume>
+          ></TimeSpanResume>
         </v-list-item>
       </template>
     </v-virtual-scroll>
@@ -20,16 +20,16 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { AvailableTimespan } from "~/utils/models/ftTimespan";
-import TimespanResume from "../resume/TimespanResume.vue";
+import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
+import TimeSpanResume from "../resume/TimeSpanResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
-  name: "FtTimespanList",
-  components: { TimespanResume },
+  name: "FtTimeSpanList",
+  components: { TimeSpanResume },
   props: {
-    timespans: {
-      type: Array as () => AvailableTimespan[],
+    timeSpans: {
+      type: Array as () => AvailableTimeSpan[],
       required: true,
       default: () => [],
     },
@@ -43,14 +43,14 @@ export default Vue.extend({
     formatDate(date: Date) {
       return formatDateWithMinutes(date);
     },
-    hoverTimespan(timespan: AvailableTimespan | null) {
-      this.$accessor.assignment.setHoverTimespan(timespan);
+    hoverTimeSpan(timeSpan: AvailableTimeSpan | null) {
+      this.$accessor.assignment.setHoverTimeSpan(timeSpan);
     },
-    assign(timespanId: number, teamCode: string) {
+    assign(timeSpanId: number, teamCode: string) {
       if (!this.selectedVolunteer) return;
       const volunteerId = this.selectedVolunteer.id;
       this.$accessor.assignment.saveAssignment({
-        timespanId,
+        timeSpanId,
         teamCode,
         volunteerId,
       });

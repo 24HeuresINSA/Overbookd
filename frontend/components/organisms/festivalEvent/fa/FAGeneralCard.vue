@@ -49,14 +49,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, FaCardType, FaType } from "~/utils/models/FA";
-import {
-  isAnimationValidatedBy,
-  getFAValidationStatus,
-} from "~/utils/festivalEvent/faUtils";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import { User } from "~/utils/models/user";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/festivalEvent/faUtils";
+import { Fa, FaCardType, FaType } from "~/utils/models/fa";
 import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FAGeneralCard",

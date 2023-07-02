@@ -2,18 +2,18 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { AssignmentStats, BulkAssignmentRequest } from "~/store/assignment";
 import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment";
 import {
-  AvailableTimespan,
-  FtTimespanWithRequestedTeams,
-  FtWithTimespan,
-  TimespanWithAssignees,
-} from "~/utils/models/ftTimespan";
+  AvailableTimeSpan,
+  FtTimeSpanWithRequestedTeams,
+  FtWithTimeSpan,
+  TimeSpanWithAssignees,
+} from "~/utils/models/ftTimeSpan";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
 type AssignmentResponse = {
   assigneeId: number;
-  timespanId: number;
+  timeSpanId: number;
   teamRequestId: number;
 };
 
@@ -26,27 +26,27 @@ export class AssignmentRepository {
     );
   }
 
-  static getFtWithTimespans(context: Context) {
-    return context.$axios.get<HttpStringified<FtWithTimespan[]>>(
+  static getFtWithTimeSpans(context: Context) {
+    return context.$axios.get<HttpStringified<FtWithTimeSpan[]>>(
       `${this.basePath}/ft-timespans`
     );
   }
 
-  static getTimespansWithStats(context: Context, ftId: number) {
-    return context.$axios.get<HttpStringified<FtTimespanWithRequestedTeams[]>>(
+  static getTimeSpansWithStats(context: Context, ftId: number) {
+    return context.$axios.get<HttpStringified<FtTimeSpanWithRequestedTeams[]>>(
       `${this.basePath}/ft/${ftId}`
     );
   }
 
-  static getTimespansForVolunteer(context: Context, volunteerId: number) {
-    return context.$axios.get<HttpStringified<AvailableTimespan[]>>(
+  static getTimeSpansForVolunteer(context: Context, volunteerId: number) {
+    return context.$axios.get<HttpStringified<AvailableTimeSpan[]>>(
       `${this.basePath}/volunteer/${volunteerId}/ft-timespans`
     );
   }
 
-  static getVolunteersForTimespan(context: Context, timespanId: number) {
+  static getVolunteersForTimeSpan(context: Context, timeSpanId: number) {
     return context.$axios.get<HttpStringified<Volunteer[]>>(
-      `${this.basePath}/ft-timespans/${timespanId}/volunteers`
+      `${this.basePath}/ft-timespans/${timeSpanId}/volunteers`
     );
   }
 
@@ -57,34 +57,34 @@ export class AssignmentRepository {
     );
   }
 
-  static unassign(context: Context, timespanId: number, assigneeId: number) {
+  static unassign(context: Context, timeSpanId: number, assigneeId: number) {
     return context.$axios.delete<void>(
-      `${this.basePath}/ft-timespans/${timespanId}/volunteers/${assigneeId}`
+      `${this.basePath}/ft-timespans/${timeSpanId}/volunteers/${assigneeId}`
     );
   }
 
   static getAvailableFriends(
     context: Context,
     volunteerId: number,
-    timespanId: number
+    timeSpanId: number
   ) {
     return context.$axios.get<HttpStringified<Volunteer[]>>(
-      `${this.basePath}/ft-timespans/${timespanId}/volunteers/${volunteerId}/available-friends`
+      `${this.basePath}/ft-timespans/${timeSpanId}/volunteers/${volunteerId}/available-friends`
     );
   }
 
-  static getTimespanDetails(context: Context, timespanId: number) {
-    return context.$axios.get<HttpStringified<TimespanWithAssignees>>(
-      `${this.basePath}/ft-timespans/${timespanId}`
+  static getTimeSpanDetails(context: Context, timeSpanId: number) {
+    return context.$axios.get<HttpStringified<TimeSpanWithAssignees>>(
+      `${this.basePath}/ft-timespans/${timeSpanId}`
     );
   }
 
   static updateAssignedTeam(
     context: Context,
-    { timespanId, assigneeId, team }: UpdateAssignedTeam
+    { timeSpanId, assigneeId, team }: UpdateAssignedTeam
   ) {
     return context.$axios.patch<HttpStringified<AssignmentResponse>>(
-      `${this.basePath}/ft-timespans/${timespanId}/assignees/${assigneeId}/affected-team`,
+      `${this.basePath}/ft-timespans/${timeSpanId}/assignees/${assigneeId}/affected-team`,
       { team }
     );
   }

@@ -8,9 +8,9 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-export class TimespanParametersDto {
+export class TimeSpanParametersDto {
   @ApiProperty({
-    description: 'Is the timespan a priority timespan?',
+    description: 'Is the time span a priority timeSpan?',
     example: true,
     type: Boolean,
   })

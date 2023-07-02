@@ -10,12 +10,12 @@ interface DatabaseFT {
   hasPriority?: boolean;
 }
 
-type DatabaseTimespan = Period & {
+type DatabaseTimeSpan = Period & {
   id: number;
 };
 
 interface DatabaseTimeWindow extends Period {
-  timespans: DatabaseTimespan[];
+  timeSpans: DatabaseTimeSpan[];
 }
 
 interface DatabaseTimeline {
@@ -63,7 +63,7 @@ export class TimelineService {
   }
 
   private buildFtsSelection(start: Date, end: Date) {
-    const timeWindowSelection = this.buildTimeWindowsWithTimespansSelection(
+    const timeWindowSelection = this.buildTimeWindowsWithTimeSpansSelection(
       start,
       end,
     );
@@ -76,7 +76,7 @@ export class TimelineService {
     };
   }
 
-  private buildTimeWindowsWithTimespansSelection(start: Date, end: Date) {
+  private buildTimeWindowsWithTimeSpansSelection(start: Date, end: Date) {
     const overlapPeriodCondition = this.buildOverlapPeriodCondition(start, end);
     return {
       timeWindows: {
@@ -84,7 +84,7 @@ export class TimelineService {
         select: {
           start: true,
           end: true,
-          timespans: {
+          timeSpans: {
             where: overlapPeriodCondition,
             select: {
               start: true,
@@ -102,7 +102,7 @@ export class TimelineService {
     return {
       timeWindows: {
         some: {
-          timespans: { some: overlapPeriodCondition },
+          timeSpans: { some: overlapPeriodCondition },
         },
       },
     };

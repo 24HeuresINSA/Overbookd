@@ -4,16 +4,16 @@ import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
 import { SELECT_USER_TEAMS } from 'src/user/user.service';
+import { getPeriodDuration } from 'src/utils/duration';
 import { AssignmentService } from './assignment.service';
-import { FtTimespanService, SELECT_FRIENDS } from './ftTimespan.service';
+import { FtTimeSpanService, SELECT_FRIENDS } from './ftTimeSpan.service';
+import { TimeSpanWithFt } from './types/ftTimeSpanTypes';
 import {
   AvailableVolunteer,
   DatabaseVolunteer,
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
 } from './types/volunteerTypes';
-import { getPeriodDuration } from 'src/utils/duration';
-import { TimespanWithFt } from './types/ftTimespanTypes';
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -21,7 +21,7 @@ export const WHERE_VALIDATED_USER = {
       team: {
         permissions: {
           some: {
-            permission_name: 'validated-user',
+            permissionName: 'validated-user',
           },
         },
       },
@@ -39,7 +39,7 @@ const SELECT_VOLUNTEER = {
 };
 
 const SELECT_TIMESPAN_PERIOD = {
-  timespan: {
+  timeSpan: {
     select: {
       start: true,
       end: true,
@@ -57,13 +57,13 @@ const SELECT_ASSIGNMENTS_PERIOD = {
 export class VolunteerService {
   constructor(
     private prisma: PrismaService,
-    private ftTimespan: FtTimespanService,
+    private ftTimeSpan: FtTimeSpanService,
   ) {}
 
   async findAllVolunteers(): Promise<Volunteer[]> {
     const volunteers = await this.prisma.user.findMany({
       where: {
-        is_deleted: false,
+        isDeleted: false,
         ...WHERE_VALIDATED_USER,
       },
       select: {
@@ -75,40 +75,40 @@ export class VolunteerService {
     return this.formatVolunteers(volunteers);
   }
 
-  async findAvailableVolunteersForFtTimespan(
-    timespanId: number,
+  async findAvailableVolunteersForFtTimeSpan(
+    timeSpanId: number,
   ): Promise<AvailableVolunteer[]> {
-    const [ftCategory, ftTimespan] = await Promise.all([
-      this.ftTimespan.getTaskCategory(timespanId),
-      this.ftTimespan.findTimespanWithFtAndAssignment(timespanId),
+    const [ftCategory, ftTimeSpan] = await Promise.all([
+      this.ftTimeSpan.getTaskCategory(timeSpanId),
+      this.ftTimeSpan.findTimeSpanWithFtAndAssignment(timeSpanId),
     ]);
     const select = {
-      ...this.buildAssignableVolunteersSelection(ftTimespan, ftCategory),
+      ...this.buildAssignableVolunteersSelection(ftTimeSpan, ftCategory),
       ...SELECT_FRIENDS,
     };
-    const where = this.buildAssignableVolunteersCondition(ftTimespan);
+    const where = this.buildAssignableVolunteersCondition(ftTimeSpan);
 
     const volunteers = await this.prisma.user.findMany({
       select,
       where,
       orderBy: { charisma: 'desc' },
     });
-    return this.formatAvailableVolunteers(volunteers, ftTimespan.assignees);
+    return this.formatAvailableVolunteers(volunteers, ftTimeSpan.assignees);
   }
 
-  async findAvailableVolunteerFriendsForFtTimespan(
-    timespanId: number,
+  async findAvailableVolunteerFriendsForFtTimeSpan(
+    timeSpanId: number,
     volunteerId: number,
   ): Promise<Volunteer[]> {
-    const [ftCategory, ftTimespan] = await Promise.all([
-      this.ftTimespan.getTaskCategory(timespanId),
-      this.ftTimespan.findTimespanWithFt(timespanId),
+    const [ftCategory, ftTimeSpan] = await Promise.all([
+      this.ftTimeSpan.getTaskCategory(timeSpanId),
+      this.ftTimeSpan.findTimeSpanWithFt(timeSpanId),
     ]);
     const select = this.buildAssignableVolunteersSelection(
-      ftTimespan,
+      ftTimeSpan,
       ftCategory,
     );
-    const isAssignable = this.buildAssignableVolunteersCondition(ftTimespan);
+    const isAssignable = this.buildAssignableVolunteersCondition(ftTimeSpan);
     const isFriend = this.buildIsVolunteerFriendCondition(volunteerId);
 
     const volunteers = await this.prisma.user.findMany({
@@ -130,8 +130,8 @@ export class VolunteerService {
     };
   }
 
-  private buildAssignableVolunteersCondition(ftTimespan: TimespanWithFt) {
-    const requestedTeamCodes = ftTimespan.requestedTeams
+  private buildAssignableVolunteersCondition(ftTimeSpan: TimeSpanWithFt) {
+    const requestedTeamCodes = ftTimeSpan.requestedTeams
       .filter(({ quantity, assignmentCount }) => quantity > assignmentCount)
       .map((team) => team.code);
     const assignableTeams = requestedTeamCodes.flatMap((tc) =>
@@ -141,17 +141,17 @@ export class VolunteerService {
     const team = TeamService.buildIsMemberOfCondition(teams);
     const availabilities =
       AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(
-        ftTimespan,
+        ftTimeSpan,
       );
 
     const assignments =
       AssignmentService.buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition(
-        ftTimespan,
+        ftTimeSpan,
       );
 
     return {
       ...WHERE_VALIDATED_USER,
-      is_deleted: false,
+      isDeleted: false,
       team,
       availabilities,
       assignments,
@@ -159,21 +159,19 @@ export class VolunteerService {
   }
 
   private buildAssignableVolunteersSelection(
-    ftTimespan: TimespanWithFt,
+    ftTimeSpan: TimeSpanWithFt,
     category: TaskCategory | null,
   ) {
     const assignablebleVolunteerCondition =
-      this.buildAssignableVolunteersCondition(ftTimespan);
+      this.buildAssignableVolunteersCondition(ftTimeSpan);
 
     const SELECT_ASSIGNMENTS_PERIOD_BY_CATEGORY = {
       assignments: {
         select: SELECT_TIMESPAN_PERIOD,
         where: {
-          timespan: {
+          timeSpan: {
             timeWindow: {
-              ft: {
-                category,
-              },
+              ft: { category },
             },
           },
         },
@@ -194,8 +192,8 @@ export class VolunteerService {
           ftUserRequests: {
             where: {
               ftTimeWindows: {
-                start: { lt: ftTimespan.end },
-                end: { gt: ftTimespan.start },
+                start: { lt: ftTimeSpan.end },
+                end: { gt: ftTimeSpan.start },
               },
             },
           },
@@ -219,7 +217,7 @@ export class VolunteerService {
 
   private formatVolunteer(volunteer: DatabaseVolunteer): Volunteer {
     const assignmentDuration = volunteer.assignments.reduce(
-      (acc, assignment) => acc + getPeriodDuration(assignment.timespan),
+      (acc, assignment) => acc + getPeriodDuration(assignment.timeSpan),
       0,
     );
 

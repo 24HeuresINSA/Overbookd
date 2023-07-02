@@ -1,6 +1,6 @@
 import { HttpStringified } from "../types/http";
 import { FTStatus } from "./ft";
-import { TaskCategory } from "./ftTimespan";
+import { TaskCategory } from "./ftTimeSpan";
 import { Notification } from "./repo";
 
 const Departments = {
@@ -59,7 +59,7 @@ export interface UserCreation extends DisplayedUser {
 
 export interface UserModification
   extends Omit<UserCreation, "password" | "teamId"> {
-  has_payed_contributions: boolean;
+  hasPayedContributions: boolean;
   pp?: string;
   charisma: number;
 }
@@ -71,14 +71,14 @@ export interface CompleteUser extends User {
   phone: string;
   department?: Department;
   comment?: string;
-  has_payed_contributions: boolean;
+  hasPayedContributions: boolean;
   year?: Year;
   pp?: string;
   charisma: number;
   balance: number;
-  created_at: Date;
-  updated_at: Date;
-  is_deleted: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
   team: string[];
 
   // This is not in the API response, but is used in the frontend
@@ -108,7 +108,7 @@ export interface Task {
 
 export interface VolunteerTask extends Period {
   ft: Task;
-  timespanId?: number;
+  timeSpanId?: number;
 }
 
 export interface VolunteerAssignmentStat {
@@ -129,7 +129,7 @@ export function castToUserModification(
     department: user.department,
     year: user.year || undefined,
     comment: user.comment || undefined,
-    has_payed_contributions: user.has_payed_contributions || false,
+    hasPayedContributions: user.hasPayedContributions || false,
     pp: user.pp || undefined,
     charisma: +user.charisma,
   };
@@ -141,8 +141,8 @@ export function castUserWithDate(
   return {
     ...user,
     birthdate: new Date(user.birthdate),
-    created_at: new Date(user.created_at),
-    updated_at: new Date(user.updated_at),
+    createdAt: new Date(user.createdAt),
+    updatedAt: new Date(user.updatedAt),
   };
 }
 
@@ -156,8 +156,8 @@ export function castUserWithPermissionsWithDate(
   return {
     ...user,
     birthdate: new Date(user.birthdate),
-    created_at: new Date(user.created_at),
-    updated_at: new Date(user.updated_at),
+    createdAt: new Date(user.createdAt),
+    updatedAt: new Date(user.updatedAt),
   };
 }
 

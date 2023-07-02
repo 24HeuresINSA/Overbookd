@@ -84,7 +84,7 @@ export class UserController {
     type: Array,
   })
   getUsers(): Promise<Partial<User>[]> {
-    return this.userService.users({ where: { is_deleted: false } });
+    return this.userService.users({ where: { isDeleted: false } });
   }
 
   @UseGuards(JwtAuthGuard)

@@ -44,11 +44,11 @@ import {
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-} from "~/utils/models/ftTimespan";
+} from "~/utils/models/ftTimeSpan";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: "FtTimespanFilters",
+  name: "FtTimeSpanFilters",
   components: { SearchTeams },
   props: {
     type: {

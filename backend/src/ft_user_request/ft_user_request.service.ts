@@ -121,7 +121,7 @@ export class FtUserRequestService {
       select: { assigneeId: true },
       where: {
         assigneeId: userId,
-        timespan: {
+        timeSpan: {
           start: { lt: end },
           end: { gt: start },
           timeWindow: { NOT: { ftId } },

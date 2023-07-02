@@ -23,7 +23,7 @@ import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CompleteFtResponseDto } from 'src/ft/dto/ft-response.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { TimespanParametersDto } from './dto/timespanParameters.dto';
+import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { FtReviewsService } from './ft_reviews.service';
 
@@ -108,13 +108,13 @@ export class FtReviewsController {
     required: true,
   })
   @ApiBody({
-    type: TimespanParametersDto,
-    description: 'Timespan parameters',
+    type: TimeSpanParametersDto,
+    description: 'Time span parameters',
   })
   assignmentApproval(
     @Param('ftId', ParseIntPipe) ftId: number,
     @Request() req: RequestWithUserPayload,
-    @Body() timeSpanParameters: TimespanParametersDto,
+    @Body() timeSpanParameters: TimeSpanParametersDto,
   ): Promise<CompleteFtResponseDto | null> {
     return this.ftReviewsService.assignmentApproval(
       ftId,

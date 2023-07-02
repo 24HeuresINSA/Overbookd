@@ -2,11 +2,11 @@
   <div class="timespan-card" @click="teamSelectShortcut()">
     <div
       class="timespan-card-data"
-      @contextmenu.prevent="openFtInNewTab(timespan.ft.id)"
+      @contextmenu.prevent="openFtInNewTab(timeSpan.ft.id)"
     >
       <div class="timespan-details">
         <div class="timespan-name">
-          <span>{{ timespan.ft.id }} - {{ timespan.ft.name }}</span>
+          <span>{{ timeSpan.ft.id }} - {{ timeSpan.ft.name }}</span>
         </div>
         <div class="timespan-remaining-team-requests">
           <span v-for="request in remaingTeamRequests" :key="request.code">
@@ -16,7 +16,7 @@
       </div>
       <div class="timespan-teams">
         <TeamChip
-          v-for="requestedTeam of timespan.requestedTeams"
+          v-for="requestedTeam of timeSpan.requestedTeams"
           :key="requestedTeam.code"
           :team="requestedTeam.code"
           with-name
@@ -28,7 +28,7 @@
       <v-tooltip top>
         <template #activator="{ on, attrs }">
           <v-icon
-            v-if="timespan.hasFriendsAssigned"
+            v-if="timeSpan.hasFriendsAssigned"
             small
             color="green"
             v-bind="attrs"
@@ -47,25 +47,25 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { AvailableTimespan } from "~/utils/models/ftTimespan";
+import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
-  name: "TimespanResume",
+  name: "TimeSpanResume",
   components: { TeamChip },
   props: {
-    timespan: {
-      type: Object as () => AvailableTimespan,
+    timeSpan: {
+      type: Object as () => AvailableTimeSpan,
       required: true,
     },
   },
   computed: {
     remaingTeamRequests(): { code: string; quantity: number }[] {
-      const timespan = this.$accessor.assignment.timespans.find(
-        ({ id }) => id === this.timespan.id
+      const timeSpan = this.$accessor.assignment.timeSpans.find(
+        ({ id }) => id === this.timeSpan.id
       );
-      if (!timespan) return [];
+      if (!timeSpan) return [];
 
-      return timespan.requestedTeams
+      return timeSpan.requestedTeams
         .filter(({ assignmentCount, quantity }) => assignmentCount < quantity)
         .map(({ code, assignmentCount, quantity }) => ({
           code,
@@ -78,8 +78,8 @@ export default Vue.extend({
       window.open(`/ft/${ftId}`, "_blank");
     },
     teamSelectShortcut() {
-      if (this.timespan.requestedTeams.length !== 1) return;
-      const team = this.timespan.requestedTeams.at(0)?.code;
+      if (this.timeSpan.requestedTeams.length !== 1) return;
+      const team = this.timeSpan.requestedTeams.at(0)?.code;
       if (!team) return;
       this.selectTeam(team);
     },

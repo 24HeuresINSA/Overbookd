@@ -13,7 +13,7 @@ import {
   FTUpdate,
   FTUserRequestUpdate,
 } from "~/utils/models/ft";
-import { FtTimespanParameters } from "~/utils/models/ftTimespan";
+import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
   GearRequestCreation,
   GearRequestUpdate,
@@ -74,11 +74,11 @@ export default {
   switchToReadyForAssignment(
     context: Context,
     ftId: number,
-    timespanParameters: FtTimespanParameters
+    timeSpanParameters: FtTimeSpanParameters
   ) {
     return context.$axios.post<HttpStringified<FT>>(
       `${resource}/${ftId}/assignment-approval`,
-      timespanParameters
+      timeSpanParameters
     );
   },
   deleteFTReview(context: Context, ftId: number, teamCode: string) {

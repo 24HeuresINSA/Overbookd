@@ -5,12 +5,12 @@ import {
 import { VolunteerTask } from 'src/user/user.service';
 
 export function formatAssignmentAsTask({
-  timespan,
-  timespanId,
+  timeSpan,
+  timeSpanId,
 }: DatabaseAssignment): VolunteerTask {
-  const { start, end } = timespan;
-  const { ft } = timespan.timeWindow;
-  return { start, end, ft, timespanId };
+  const { start, end } = timeSpan;
+  const { ft } = timeSpan.timeWindow;
+  return { start, end, ft, timeSpanId };
 }
 
 export function formatRequirementAsTask({

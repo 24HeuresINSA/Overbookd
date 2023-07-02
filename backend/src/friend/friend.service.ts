@@ -42,7 +42,7 @@ export class FriendService {
             },
           },
         },
-        is_deleted: false,
+        isDeleted: false,
       },
     });
   }

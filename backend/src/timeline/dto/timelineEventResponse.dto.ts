@@ -3,8 +3,8 @@ import {
   TimelineEvent,
   TimelineFa,
   TimelineFt,
+  TimelineTimeSpan,
   TimelineTimeWindow,
-  TimelineTimespan,
 } from '../timeline.model';
 
 class TimelineFaDto implements TimelineFa {
@@ -30,24 +30,24 @@ class TimelineFaDto implements TimelineFa {
   team: string;
 }
 
-class TimelineTimespanDto implements TimelineTimespan {
+class TimelineTimeSpanDto implements TimelineTimeSpan {
   @ApiProperty({
     required: true,
-    description: 'The start date of the Timespan',
+    description: 'The start date of the time span',
     type: Date,
   })
   start: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The end date of the Timespan',
+    description: 'The end date of the time span',
     type: Date,
   })
   end: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The id of the Timespan',
+    description: 'The id of the time span',
     type: Number,
   })
   id: number;
@@ -70,11 +70,11 @@ class TimelineTimeWindowDto implements TimelineTimeWindow {
 
   @ApiProperty({
     required: true,
-    description: 'The timespans of the TimeWindow',
-    type: TimelineTimespanDto,
+    description: 'The time spans of the TimeWindow',
+    type: TimelineTimeSpanDto,
     isArray: true,
   })
-  timespans: TimelineTimespan[];
+  timeSpans: TimelineTimeSpan[];
 }
 
 class TimelineFtDto implements TimelineFt {
