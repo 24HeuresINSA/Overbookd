@@ -740,7 +740,7 @@ export const actions = actionTree(
       return createdGearRequest;
     },
 
-    async removeGearRelatedGearRequest({ commit, state }, gearId: number) {
+    async removeRelatedGearRequest({ commit, state }, gearId: number) {
       const removals = await Promise.all(
         state.gearRequests
           .filter((gearRequest) => gearRequest.gear.id === gearId)

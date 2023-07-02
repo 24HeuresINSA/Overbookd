@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="gearRequest">
+  <v-data-table :headers="headers" :items="gearRequests">
     <template #item.name="{ item }">
       {{ item.gear.name }}
     </template>
@@ -47,7 +47,7 @@ export default Vue.extend({
         ? [...commonHeaders, driveHeader]
         : [...commonHeaders, actionHeader];
     },
-    gearRequest(): GearRequest<"FT">[] {
+    gearRequests(): GearRequest<"FT">[] {
       return this.$accessor.FT.gearRequests.reduce(
         uniqueGearReducer<"FT">,
         [] as GearRequest<"FT">[]
@@ -56,7 +56,7 @@ export default Vue.extend({
   },
   methods: {
     deleteGear(gear: Gear) {
-      this.$accessor.FT.removeGearRelatedGearRequest(gear.id);
+      this.$accessor.FT.removeRelatedGearRequest(gear.id);
     },
   },
 });

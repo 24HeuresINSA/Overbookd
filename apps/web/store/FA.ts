@@ -750,7 +750,7 @@ export const actions = actionTree(
       dispatch("fetchGearRequests");
     },
 
-    async removeGearRelatedGearRequest({ commit, state }, gearId: number) {
+    async removeRelatedGearRequest({ commit, state }, gearId: number) {
       await Promise.all(
         state.gearRequests
           .filter((gearRequest) => gearRequest.gear.id === gearId)
