@@ -318,19 +318,17 @@ export const actions = actionTree(
     },
 
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
-      const [
-        userRequestsRes,
-        assignmentRes,
-        availabilitiesRes,
-        ...volunteerFriendsRes
-      ] = await Promise.all([
-        safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
-        safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
-        safeCall(
-          this,
-          AvailabilityRepo.getVolunteerAvailabilities(this, volunteerId)
-        ),
-        ...state.taskAssignment.candidateToRetrieveFriendsFor.map(
+      const [userRequestsRes, assignmentRes, availabilitiesRes] =
+        await Promise.all([
+          safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
+          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
+          safeCall(
+            this,
+            AvailabilityRepo.getVolunteerAvailabilities(this, volunteerId)
+          ),
+        ]);
+      const volunteerFriendsRes = await Promise.all(
+        state.taskAssignment.candidateToRetrieveFriendsFor.map(
           ({ volunteer }) =>
             safeCall(
               this,
@@ -340,8 +338,8 @@ export const actions = actionTree(
                 state.selectedTimespan?.id ?? 0
               )
             )
-        ),
-      ]);
+        )
+      );
       const tasks = castVolunteerTaskWithDate([
         ...(userRequestsRes?.data ?? []),
         ...(assignmentRes?.data ?? []),
