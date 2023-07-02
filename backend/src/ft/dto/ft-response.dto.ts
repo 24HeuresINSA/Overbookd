@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import {
-  CompleteFtResponse,
-  Feedback,
-  LiteFtResponse,
-  MinimalFa,
-  Review,
-  SignaLocation,
-  Team,
-  TeamRequest,
-  TimeWindow,
-  UserNameWithId,
-} from '../ftTypes';
 import { TimeSpanBase } from 'src/assignment/types/ftTimeSpanTypes';
-import { FtStatus, ftStatus } from '../ft.model';
+import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
+import { FtStatus, esftStatus } from '../ft.model';
+import {
+    CompleteFtResponse,
+    Feedback,
+    LiteFtResponse,
+    MinimalFa,
+    Review,
+    SignaLocation,
+    Team,
+    TeamRequest,
+    TimeWindow,
+    UserNameWithId,
+} from '../ftTypes';
 
 class TimeWindowRepresentation implements TimeWindow {
   id: number;
@@ -43,7 +43,7 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: ftStatus,
+    enum: esftStatus,
   })
   status: FtStatus;
 
@@ -146,7 +146,7 @@ export class LiteFtResponseDto implements LiteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: ftStatus,
+    enum: esftStatus,
   })
   status: FtStatus;
 

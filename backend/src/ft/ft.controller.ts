@@ -1,64 +1,64 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Put,
-  Query,
-  Request,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Put,
+    Query,
+    Request,
+    UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
+    ApiBadRequestResponse,
+    ApiBearerAuth,
+    ApiBody,
+    ApiForbiddenResponse,
+    ApiNotFoundResponse,
+    ApiParam,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
 } from '@nestjs/swagger';
+import { RequestWithUserPayload } from 'src/app.controller';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { StatsPayload } from 'src/common/services/stats.service';
 import { GearRequestsApproveFormRequestDto } from 'src/gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
-  ExistingPeriodGearRequestFormRequestDto,
-  GearRequestFormRequestDto,
-  NewPeriodGearRequestFormRequestDto,
+    ExistingPeriodGearRequestFormRequestDto,
+    GearRequestFormRequestDto,
+    NewPeriodGearRequestFormRequestDto,
 } from 'src/gear-requests/dto/gearRequestFormRequest.dto';
 import {
-  ApprovedGearRequestResponseDto,
-  GearRequestResponseDto,
+    ApprovedGearRequestResponseDto,
+    GearRequestResponseDto,
 } from 'src/gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from 'src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import {
-  ApprovedGearRequest,
-  GearSeekerType,
+    ApprovedGearRequest,
+    GearSeekerType,
 } from 'src/gear-requests/gearRequests.model';
 import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateFtDto } from './dto/create-ft.dto';
-import {
-  CompleteFtResponseDto,
-  LiteFtResponseDto,
-} from './dto/ft-response.dto';
-import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
 import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
+import { CreateFtDto } from './dto/create-ft.dto';
+import {
+    CompleteFtResponseDto,
+    LiteFtResponseDto,
+} from './dto/ft-response.dto';
+import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
+import { esftStatus } from './ft.model';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
-import { RequestWithUserPayload } from 'src/app.controller';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { ftStatus } from './ft.model';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -113,7 +113,7 @@ export class FtController {
     name: 'status',
     required: false,
     type: String,
-    enum: ftStatus,
+    enum: esftStatus,
     description: 'Get FTs with a specific status',
   })
   findAll(

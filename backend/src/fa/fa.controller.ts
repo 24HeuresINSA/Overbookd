@@ -44,14 +44,15 @@ import {
 } from '../gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { GearRequestsService } from '../gear-requests/gearRequests.service';
-import { CreateFaDto } from './dto/create-fa.dto';
+import { CompleteFaResponseDto } from './dto/completeFaResponse.dto';
+import { CreateFaDto } from './dto/createFa.dto';
 import { FASearchRequestDto } from './dto/faSearchRequest.dto';
-import { UpdateFaDto } from './dto/update-fa.dto';
+import { LiteFaResponseDto } from './dto/liteFaResponse.dto';
+import { UpdateFaDto } from './dto/updateFa.dto';
 import { validationDto } from './dto/validation.dto';
+import { CompleteFaResponse, LiteFaResponse } from './fa.model';
 import { FaService } from './fa.service';
 import { FaIdResponse } from './faTypes';
-import { CompleteFaResponseDto } from './dto/completeFaResponse.dto';
-import { LiteFaResponseDto } from './dto/liteFaResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -80,7 +81,7 @@ export class FaController {
     description: 'Create a new fa',
     type: Promise<CompleteFaResponseDto>,
   })
-  create(@Body() FA: CreateFaDto): Promise<CompleteFaResponseDto> {
+  create(@Body() FA: CreateFaDto): Promise<CompleteFaResponse> {
     return this.faService.create(FA);
   }
 
@@ -91,7 +92,7 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get all fa',
-    type: Array,
+    type: Promise<LiteFaResponseDto[]>,
   })
   @ApiQuery({
     name: 'isDeleted',
@@ -101,7 +102,7 @@ export class FaController {
   })
   findAll(
     @Query() searchRequest: FASearchRequestDto,
-  ): Promise<LiteFaResponseDto[]> {
+  ): Promise<LiteFaResponse[]> {
     return this.faService.findAll(searchRequest);
   }
 
@@ -127,9 +128,7 @@ export class FaController {
     description: 'Get a fa',
     type: Promise<CompleteFaResponseDto>,
   })
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<CompleteFaResponseDto> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<CompleteFaResponse> {
     return this.faService.findOne(id);
   }
 
@@ -149,7 +148,7 @@ export class FaController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaDto,
-  ): Promise<CompleteFaResponseDto> {
+  ): Promise<CompleteFaResponse> {
     return this.faService.update(id, updateFaDto);
   }
 
@@ -160,7 +159,6 @@ export class FaController {
   @ApiResponse({
     status: 204,
     description: 'Delete a fa',
-    type: CompleteFaResponseDto,
   })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.faService.remove(id);

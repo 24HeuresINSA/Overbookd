@@ -50,7 +50,7 @@ export class TransactionController {
   })
   getUserTransactions(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<TransactionWithSenderAndReceiver[] | null> {
+  ): Promise<TransactionWithSenderAndReceiver[]> {
     return this.transactionService.getUserTransactions(id);
   }
 
@@ -64,7 +64,7 @@ export class TransactionController {
   })
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
-  ): Promise<TransactionWithSenderAndReceiver[] | null> {
+  ): Promise<TransactionWithSenderAndReceiver[]> {
     const { userId } = request.user;
     return this.transactionService.getUserTransactions(userId);
   }

@@ -1,7 +1,7 @@
 import { FaFeedbackSubjectType } from 'src/fa-feedback/faFeedback.model';
-import { ElectricityType } from 'src/fa_electricity_needs/faElectricityNeed.model';
-import { SignaType } from 'src/fa_signa_needs/faSignaNeed.model';
-import { SitePublishAnimationCategoryType } from 'src/fa_site_publish_animation/sitePublishAnimation.model';
+import { ElectricityType } from 'src/fa_electricity_need/faElectricityNeed.model';
+import { SignaType } from 'src/fa_signa_need/faSignaNeed.model';
+import { SitePublishAnimationCategoryType } from 'src/fa_site_publish_animation/faSitePublishAnimation.model';
 import { FtStatus } from 'src/ft/ft.model';
 
 const DRAFT = 'DRAFT';
@@ -9,7 +9,7 @@ const SUBMITTED = 'SUBMITTED';
 const VALIDATED = 'VALIDATED';
 const REFUSED = 'REFUSED';
 
-export const faStatus: Record<FaStatus, FaStatus> = {
+export const faStatuses: Record<FaStatus, FaStatus> = {
   DRAFT,
   SUBMITTED,
   VALIDATED,
@@ -22,38 +22,38 @@ export type FaStatus =
   | typeof VALIDATED
   | typeof REFUSED;
 
-const Concert = 'Concert';
-const Course = 'Course';
-const Divertissement = 'Divertissement';
-const Initiation = 'Initiation';
-const Tournoi = 'Tournoi';
-const Vente = 'Vente';
-const Prevention = 'Prevention';
-const Spectacle = 'Spectacle';
-const Autre = 'Autre';
+const CONCERT = 'Concert';
+const COURSE = 'Course';
+const DIVERTISSEMENT = 'Divertissement';
+const INITIATION = 'Initiation';
+const TOURNOI = 'Tournoi';
+const VENTE = 'Vente';
+const PREVENTION = 'Prevention';
+const SPECTACLE = 'Spectacle';
+const AUTRE = 'Autre';
 
-export const faType: Record<FaType, FaType> = {
-  Concert,
-  Course,
-  Divertissement,
-  Initiation,
-  Tournoi,
-  Vente,
-  Prevention,
-  Spectacle,
-  Autre,
+export const faTypes: Record<FaType, FaType> = {
+  Concert: CONCERT,
+  Course: COURSE,
+  Divertissement: DIVERTISSEMENT,
+  Initiation: INITIATION,
+  Tournoi: TOURNOI,
+  Vente: VENTE,
+  Prevention: PREVENTION,
+  Spectacle: SPECTACLE,
+  Autre: AUTRE,
 };
 
 export type FaType =
-  | typeof Concert
-  | typeof Course
-  | typeof Divertissement
-  | typeof Initiation
-  | typeof Tournoi
-  | typeof Vente
-  | typeof Prevention
-  | typeof Spectacle
-  | typeof Autre;
+  | typeof CONCERT
+  | typeof COURSE
+  | typeof DIVERTISSEMENT
+  | typeof INITIATION
+  | typeof TOURNOI
+  | typeof VENTE
+  | typeof PREVENTION
+  | typeof SPECTACLE
+  | typeof AUTRE;
 
 export class SignaLocation {
   id: number;

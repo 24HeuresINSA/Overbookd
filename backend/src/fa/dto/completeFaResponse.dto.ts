@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  BaseFt,
-  CompleteFaResponse,
-  FaCollaborator,
-  FaElectricityNeed,
-  FaFeedback,
-  FaReview,
-  FaSignaNeed,
-  FaStatus,
-  FaTimeWindow,
-  FaType,
-  SignaLocation,
-  SitePublishAnimation,
-  Team,
-  UserNameWithId,
-  faStatus,
-  faType,
+    BaseFt,
+    CompleteFaResponse,
+    FaCollaborator,
+    FaElectricityNeed,
+    FaFeedback,
+    FaReview,
+    FaSignaNeed,
+    FaStatus,
+    FaTimeWindow,
+    FaType,
+    SignaLocation,
+    SitePublishAnimation,
+    Team,
+    UserNameWithId,
+    faStatuses,
+    faTypes,
 } from '../fa.model';
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
@@ -36,7 +36,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the fa',
-    enum: faStatus,
+    enum: faStatuses,
   })
   status: FaStatus;
 
@@ -50,7 +50,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: false,
     description: 'The type of the fa',
-    enum: faType,
+    enum: faTypes,
   })
   type?: FaType;
 

@@ -4,7 +4,7 @@ const VALIDATED = 'VALIDATED';
 const REFUSED = 'REFUSED';
 const READY = 'READY';
 
-export const ftStatus: Record<FtStatus, FtStatus> = {
+export const ftStatuses: Record<FtStatus, FtStatus> = {
   DRAFT,
   SUBMITTED,
   VALIDATED,

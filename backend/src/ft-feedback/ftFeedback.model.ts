@@ -4,7 +4,7 @@ const VALIDATED = 'VALIDATED';
 const COMMENT = 'COMMENT';
 const READY = 'READY';
 
-export const ftFeedbackSubjectType: Record<
+export const ftFeedbackSubjectTypes: Record<
   FtFeedbackSubjectType,
   FtFeedbackSubjectType
 > = {

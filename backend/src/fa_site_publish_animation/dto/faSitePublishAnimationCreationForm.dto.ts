@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
-import { LiteSitePublishAnimation } from '../interfaces';
+import { LiteSitePublishAnimation } from '../faSitePublishAnimation.model';
 import { FaSitePublishAnimationFormRequestDto } from './faSitePublishAnimationFormRequest.dto';
 
 type LiteSitePublishAnimationWithFaId = LiteSitePublishAnimation & {

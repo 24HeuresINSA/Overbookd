@@ -55,7 +55,7 @@ export class CollaboratorController {
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
     @Body() createCollaborator: CreateCollaboratorDto[],
-  ): Promise<Collaborator[] | null> {
+  ): Promise<Collaborator[]> {
     return this.collaboratorService.upsert(faId, createCollaborator);
   }
 
@@ -90,7 +90,7 @@ export class CollaboratorController {
     status: 200,
     description: 'Get all collaborators',
   })
-  findAll(): Promise<Collaborator[] | null> {
+  findAll(): Promise<Collaborator[]> {
     return this.collaboratorService.findAll();
   }
 

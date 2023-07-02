@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateFaDto } from './dto/update-fa.dto';
+import { UpdateFaDto } from './dto/updateFa.dto';
 import { validationDto } from './dto/validation.dto';
 
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { PrismaService } from '../prisma.service';
-import { CreateFaDto } from './dto/create-fa.dto';
+import { CreateFaDto } from './dto/createFa.dto';
 import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
 import {
   COMPLETE_FA_SELECT,
@@ -39,7 +39,7 @@ export class FaService {
       select: COMPLETE_FA_SELECT,
     });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    return this.formatFaResponseCollaborator(fa);
+    return this.formatFaWithCollaboratorResponse(fa);
   }
 
   async getFaStats(): Promise<StatsPayload[]> {
@@ -63,11 +63,11 @@ export class FaService {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    await this.prisma.fa.update({
+    return this.prisma.fa.update({
       where: { id },
       data: updatefaDto,
+      select: COMPLETE_FA_SELECT,
     });
-    return this.findOne(id);
   }
 
   async create(faCreation: CreateFaDto): Promise<CompleteFaResponse> {
@@ -75,7 +75,7 @@ export class FaService {
       data: faCreation,
       select: COMPLETE_FA_SELECT,
     });
-    return this.formatFaResponseCollaborator(fa);
+    return this.formatFaWithCollaboratorResponse(fa);
   }
 
   async remove(id: number) {
@@ -195,7 +195,7 @@ export class FaService {
     });
   }
 
-  private formatFaResponseCollaborator(
+  private formatFaWithCollaboratorResponse(
     fa: DatabaseCompleteFaResponse,
   ): CompleteFaResponse {
     return {

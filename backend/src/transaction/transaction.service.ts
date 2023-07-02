@@ -62,7 +62,7 @@ export class TransactionService {
 
   async getUserTransactions(
     userId: number,
-  ): Promise<TransactionWithSenderAndReceiver[] | null> {
+  ): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
       select: SELECT_TRANSACTION,
       where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },

@@ -7,7 +7,7 @@ import { Collaborator } from '@prisma/client';
 export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<Collaborator[] | null> {
+  async findAll(): Promise<Collaborator[]> {
     return this.prisma.collaborator.findMany();
   }
 
@@ -20,7 +20,7 @@ export class CollaboratorService {
   async upsert(
     faId: number,
     collab: CreateCollaboratorDto[],
-  ): Promise<Collaborator[] | null> {
+  ): Promise<Collaborator[]> {
     const operations = collab.map((coll) => {
       const col = coll.collaborator;
       if (col.id) {

@@ -4,25 +4,25 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { FtUserRequestService } from 'src/ft_user_request/ft_user_request.service';
 import { PrismaService } from '../prisma.service';
+import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { CreateFtDto } from './dto/create-ft.dto';
 import {
   CompleteFtResponseDto,
   LiteFtResponseDto,
 } from './dto/ft-response.dto';
-import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
+import { FtStatus, ftStatuses } from './ft.model';
 import {
   COMPLETE_FT_SELECT,
   FtIdResponse,
   LITE_FT_SELECT,
   TimeWindow,
 } from './ftTypes';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { FtStatus, ftStatus } from './ft.model';
+import { FtUserRequestService } from 'src/ft_user_request/ftUserRequest.service';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -66,7 +66,7 @@ export class FtService {
     return this.convertFTtoApiContract(createdFt);
   }
 
-  async findAll(search: SearchFt): Promise<LiteFtResponseDto[] | null> {
+  async findAll(search: SearchFt): Promise<LiteFtResponseDto[]> {
     return this.prisma.ft.findMany({
       where: {
         isDeleted: search.isDeleted,
@@ -140,7 +140,7 @@ export class FtService {
     const submittedFt = await this.prisma.ft.update({
       where: { id },
       data: {
-        status: ftStatus.SUBMITTED,
+        status: ftStatuses.SUBMITTED,
         reviewerId,
       },
       select: COMPLETE_FT_SELECT,
@@ -151,7 +151,7 @@ export class FtService {
   async remove(id: number) {
     this.logger.log(`Trying to delete FT #${id}`);
     const ft = await this.prisma.ft.findFirst({
-      where: { id, NOT: { status: ftStatus.READY } },
+      where: { id, NOT: { status: ftStatuses.READY } },
     });
 
     if (!ft) {
@@ -271,7 +271,7 @@ export class FtService {
     return this.prisma.ft.findFirst({
       where: {
         id,
-        NOT: { status: { in: [ftStatus.READY, ftStatus.VALIDATED] } },
+        NOT: { status: { in: [ftStatuses.READY, ftStatuses.VALIDATED] } },
       },
       select: { reviewerId: true },
     });

@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import {
-  IsBoolean,
-  IsEnum,
-  IsOptional,
-  ValidationArguments,
+    IsBoolean,
+    IsEnum,
+    IsOptional,
+    ValidationArguments,
 } from 'class-validator';
+import { FtStatus, esftStatus } from '../ft.model';
 import { SearchFt } from '../ft.service';
-import { FtStatus, ftStatus } from '../ft.model';
 
 export class FTSearchRequestDto implements SearchFt {
   @ApiProperty({
@@ -22,12 +22,12 @@ export class FTSearchRequestDto implements SearchFt {
   @ApiProperty({
     required: false,
     description: 'FT status',
-    enum: ftStatus,
+    enum: esftStatus,
   })
   @IsOptional()
-  @IsEnum(ftStatus, {
+  @IsEnum(esftStatus, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(ftStatus)}`,
+      `${va.property} must be one of ${Object.values(esftStatus)}`,
   })
   status?: FtStatus;
 }

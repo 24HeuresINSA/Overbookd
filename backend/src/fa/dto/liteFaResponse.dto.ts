@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  FaReview,
-  FaReviewTeam,
-  FaStatus,
-  LiteFaResponse,
-  Team,
-  UserNameWithId,
-  faStatus,
+    FaReview,
+    FaReviewTeam,
+    FaStatus,
+    LiteFaResponse,
+    Team,
+    UserNameWithId,
+    faStatuses,
 } from '../fa.model';
 
 export class LiteFaResponseDto implements LiteFaResponse {
@@ -27,7 +27,7 @@ export class LiteFaResponseDto implements LiteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the fa',
-    enum: faStatus,
+    enum: faStatuses,
   })
   status: FaStatus;
 

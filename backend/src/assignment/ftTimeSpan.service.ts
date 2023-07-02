@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TaskCategory } from '@prisma/client';
+import { esftStatus } from 'src/ft/ft.model';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
@@ -8,35 +9,34 @@ import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
 import { SELECT_BASE_TIMESPAN } from './assignment.service';
 import {
-  Assignee,
-  AssignmentAsTeamMember,
-  AvailableTimeSpan,
-  DatabaseAssigneeWithFriends,
-  DatabaseAssigneeWithTeams,
-  DatabaseAssignmentsAsTeamMember,
-  DatabaseFtWithTimeSpans,
-  DatabaseRequestedTeam,
-  DatabaseTimeSpanWithAssignedTeamMembers,
-  DatabaseTimeSpanWithAssignees,
-  DatabaseTimeSpanWithFt,
-  DatabaseTimeSpanWithFtAndAssignees,
-  DatabaseTimeWindow,
-  FtWithTimeSpan,
-  RequestedTeam,
-  SELECT_FT_WITH_TIMESPANS,
-  SELECT_TIMESPAN_WITH_FT,
-  SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
-  TimeSpan,
-  TimeSpanAssignee,
-  TimeSpanWithAssignees,
-  TimeSpanWithFt,
-  TimeSpanWithFtAndAssignees,
+    Assignee,
+    AssignmentAsTeamMember,
+    AvailableTimeSpan,
+    DatabaseAssigneeWithFriends,
+    DatabaseAssigneeWithTeams,
+    DatabaseAssignmentsAsTeamMember,
+    DatabaseFtWithTimeSpans,
+    DatabaseRequestedTeam,
+    DatabaseTimeSpanWithAssignedTeamMembers,
+    DatabaseTimeSpanWithAssignees,
+    DatabaseTimeSpanWithFt,
+    DatabaseTimeSpanWithFtAndAssignees,
+    DatabaseTimeWindow,
+    FtWithTimeSpan,
+    RequestedTeam,
+    SELECT_FT_WITH_TIMESPANS,
+    SELECT_TIMESPAN_WITH_FT,
+    SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
+    TimeSpan,
+    TimeSpanAssignee,
+    TimeSpanWithAssignees,
+    TimeSpanWithFt,
+    TimeSpanWithFtAndAssignees,
 } from './types/ftTimeSpanTypes';
-import { ftStatus } from 'src/ft/ft.model';
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
-  status: ftStatus.READY,
+  status: esftStatus.READY,
 };
 
 const WHERE_FT_EXISTS_AND_READY = {
