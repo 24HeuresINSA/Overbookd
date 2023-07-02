@@ -60,7 +60,7 @@ export class SignaLocation {
   name: string;
 }
 
-export class UserName {
+class UserName {
   firstname: string;
   lastname: string;
   nickname?: string;
