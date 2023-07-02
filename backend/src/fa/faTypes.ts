@@ -37,6 +37,7 @@ export const COMPLETE_FA_SELECT = {
   numberOfPass: true,
   waterNeed: true,
   waterFlowRequired: true,
+  isDeleted: true,
   collaborators: {
     select: {
       collaborator: {
@@ -101,16 +102,14 @@ export const COMPLETE_FA_SELECT = {
       createdAt: true,
       author: {
         select: {
-          id: true,
           firstname: true,
           lastname: true,
         },
       },
     },
   },
-  faSitePublishAnimation: {
+  sitePublishAnimation: {
     select: {
-      faId: true,
       photoLink: true,
       isFlagship: true,
       description: true,

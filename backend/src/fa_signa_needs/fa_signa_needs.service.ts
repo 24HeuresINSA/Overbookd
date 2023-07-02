@@ -14,7 +14,7 @@ export class FaSignaNeedsService {
     return Promise.all(
       createFaSignaNeedDto.map(async (faSignaNeed) => {
         if (faSignaNeed.id) {
-          return await this.prisma.faSignaNeed.update({
+          return this.prisma.faSignaNeed.update({
             where: {
               id: faSignaNeed.id,
             },
@@ -24,7 +24,7 @@ export class FaSignaNeedsService {
             },
           });
         } else {
-          return await this.prisma.faSignaNeed.create({
+          return this.prisma.faSignaNeed.create({
             data: {
               ...faSignaNeed,
               faId,
@@ -36,17 +36,17 @@ export class FaSignaNeedsService {
   }
 
   async findAll(): Promise<FaSignaNeed[] | null> {
-    return await this.prisma.faSignaNeed.findMany();
+    return this.prisma.faSignaNeed.findMany();
   }
 
   async findOne(id: number): Promise<FaSignaNeed | null> {
-    return await this.prisma.faSignaNeed.findUnique({
+    return this.prisma.faSignaNeed.findUnique({
       where: { id },
     });
   }
 
   async remove(id: number): Promise<FaSignaNeed | null> {
-    return await this.prisma.faSignaNeed.delete({
+    return this.prisma.faSignaNeed.delete({
       where: { id },
     });
   }

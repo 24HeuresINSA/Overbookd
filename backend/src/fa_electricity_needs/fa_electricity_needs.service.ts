@@ -8,11 +8,11 @@ export class FaElectricityNeedsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<FaElectricityNeed[] | null> {
-    return await this.prisma.faElectricityNeed.findMany();
+    return this.prisma.faElectricityNeed.findMany();
   }
 
   async findOne(id: number): Promise<FaElectricityNeed | null> {
-    return await this.prisma.faElectricityNeed.findUnique({
+    return this.prisma.faElectricityNeed.findUnique({
       where: { id },
     });
   }
@@ -37,7 +37,7 @@ export class FaElectricityNeedsService {
   }
 
   async remove(id: number): Promise<FaElectricityNeed> {
-    return await this.prisma.faElectricityNeed.delete({
+    return this.prisma.faElectricityNeed.delete({
       where: { id },
     });
   }

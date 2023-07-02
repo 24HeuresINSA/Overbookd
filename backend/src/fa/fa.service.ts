@@ -1,18 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Fa } from '@prisma/client';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/create-fa.dto';
-import { FaStatus } from './fa.model';
+import { CompleteFaResponse, FaStatus } from './fa.model';
 import {
   ALL_FA_SELECT,
   AllFaResponse,
   COMPLETE_FA_SELECT,
   FaIdResponse,
-  FaResponse,
 } from './faTypes';
 
 export interface SearchFa {
@@ -41,11 +39,9 @@ export class FaService {
     });
   }
 
-  async findOne(id: number): Promise<FaResponse | null> {
+  async findOne(id: number): Promise<CompleteFaResponse | null> {
     return this.prisma.fa.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
       select: COMPLETE_FA_SELECT,
     });
   }
@@ -75,7 +71,7 @@ export class FaService {
   async update(
     id: number,
     updatefaDto: UpdateFaDto,
-  ): Promise<FaResponse | null> {
+  ): Promise<CompleteFaResponse | null> {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
@@ -83,19 +79,17 @@ export class FaService {
       where: { id },
       data: updatefaDto,
     });
-    return await this.findOne(id);
+    return this.findOne(id);
   }
 
-  async create(fa: CreateFaDto): Promise<FaResponse | null> {
+  async create(fa: CreateFaDto): Promise<CompleteFaResponse> {
     return this.prisma.fa.create({ data: fa, select: COMPLETE_FA_SELECT });
   }
 
-  async remove(id: number): Promise<Fa | null> {
-    return this.prisma.fa.update({
+  async remove(id: number) {
+    await this.prisma.fa.update({
       where: { id },
-      data: {
-        isDeleted: true,
-      },
+      data: { isDeleted: true },
     });
   }
 

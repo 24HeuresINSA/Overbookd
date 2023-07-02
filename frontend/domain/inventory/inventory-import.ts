@@ -46,7 +46,7 @@ export class InventoryImport {
   ) => Promise<InventoryRecord | ManualInventoryRecordError | undefined> {
     return async (manualRecord) => {
       try {
-        return await manualRecord.toInventoryRecord();
+        return manualRecord.toInventoryRecord();
       } catch (e) {
         if (e instanceof ManualInventoryRecordError) return e;
         return undefined;

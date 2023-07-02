@@ -44,7 +44,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
   async addCategory(category: Omit<Category, 'id'>): Promise<Category> {
     try {
       const data = this.buildUpsertData(category);
-      return await this.prismaService.catalogCategory.create({
+      return this.prismaService.catalogCategory.create({
         select: this.SELECT_CATEGORY,
         data,
       });

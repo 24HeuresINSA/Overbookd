@@ -13,7 +13,7 @@ export class FaTimeWindowsService {
     return Promise.all(
       tWindows.map(async (tWindow) => {
         if (tWindow.id) {
-          return await this.prisma.faTimeWindow.update({
+          return this.prisma.faTimeWindow.update({
             where: { id: tWindow.id },
             data: {
               ...tWindow,
@@ -21,7 +21,7 @@ export class FaTimeWindowsService {
             },
           });
         } else {
-          return await this.prisma.faTimeWindow.create({
+          return this.prisma.faTimeWindow.create({
             data: {
               ...tWindow,
               faId,
@@ -33,17 +33,17 @@ export class FaTimeWindowsService {
   }
 
   async findAll(): Promise<FaTimeWindow[] | null> {
-    return await this.prisma.faTimeWindow.findMany();
+    return this.prisma.faTimeWindow.findMany();
   }
 
   async findOne(id: number): Promise<FaTimeWindow | null> {
-    return await this.prisma.faTimeWindow.findUnique({
+    return this.prisma.faTimeWindow.findUnique({
       where: { id },
     });
   }
 
   async remove(id: number): Promise<FaTimeWindow | null> {
-    return await this.prisma.faTimeWindow.delete({
+    return this.prisma.faTimeWindow.delete({
       where: { id },
     });
   }

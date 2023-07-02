@@ -1,47 +1,46 @@
 import {
-    Body,
-    Controller,
-    Delete,
-    Get,
-    HttpCode,
-    Param,
-    ParseIntPipe,
-    Patch,
-    Post,
-    Query,
-    Request,
-    UseGuards,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import {
-    ApiBadRequestResponse,
-    ApiBearerAuth,
-    ApiBody,
-    ApiForbiddenResponse,
-    ApiNotFoundResponse,
-    ApiParam,
-    ApiQuery,
-    ApiResponse,
-    ApiTags,
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiNotFoundResponse,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
-import { Fa } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { StatsPayload } from 'src/common/services/stats.service';
 import {
-    ApprovedGearRequest,
-    GearSeekerType,
+  ApprovedGearRequest,
+  GearSeekerType,
 } from 'src/gear-requests/gearRequests.model';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
-    ExistingPeriodGearRequestFormRequestDto,
-    GearRequestFormRequestDto,
-    NewPeriodGearRequestFormRequestDto,
+  ExistingPeriodGearRequestFormRequestDto,
+  GearRequestFormRequestDto,
+  NewPeriodGearRequestFormRequestDto,
 } from '../gear-requests/dto/gearRequestFormRequest.dto';
 import {
-    ApprovedGearRequestResponseDto,
-    GearRequestResponseDto,
+  ApprovedGearRequestResponseDto,
+  GearRequestResponseDto,
 } from '../gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { GearRequestsService } from '../gear-requests/gearRequests.service';
@@ -50,7 +49,8 @@ import { FASearchRequestDto } from './dto/faSearchRequest.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 import { FaService } from './fa.service';
-import { AllFaResponse, FaIdResponse, FaResponse } from './faTypes';
+import { AllFaResponse, FaIdResponse } from './faTypes';
+import { CompleteFaResponseDto } from './dto/faResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -73,18 +73,20 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post()
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Create a new fa',
-    type: Promise<Fa | null>,
+    type: Promise<CompleteFaResponseDto>,
   })
-  create(@Body() FA: CreateFaDto): Promise<FaResponse | null> {
+  create(@Body() FA: CreateFaDto): Promise<CompleteFaResponseDto> {
     return this.faService.create(FA);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get()
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get all fa',
@@ -105,6 +107,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get('stats')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get FA stats',
@@ -117,22 +120,26 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get a fa',
-    type: Promise<Fa | null>,
+    type: Promise<CompleteFaResponseDto | null>,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<FaResponse | null> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CompleteFaResponseDto | null> {
     return this.faService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':id')
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
-    type: Promise<Fa | null>,
+    type: Promise<CompleteFaResponseDto | null>,
   })
   @ApiBody({
     description: 'Update a fa',
@@ -141,19 +148,20 @@ export class FaController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaDto,
-  ): Promise<FaResponse | null> {
+  ): Promise<CompleteFaResponseDto | null> {
     return this.faService.update(id, updateFaDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete a fa',
-    type: Promise<Fa | null>,
+    type: CompleteFaResponseDto,
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<Fa | null> {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.faService.remove(id);
   }
 
@@ -233,6 +241,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id/previous')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get the previous fa',
@@ -247,6 +256,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id/next')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get the next fa',
@@ -261,6 +271,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':id/gear-requests')
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Creating a new gear request',
@@ -289,6 +300,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id/gear-requests')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get animation gear requests',
@@ -354,6 +366,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Update an existing gear request',
