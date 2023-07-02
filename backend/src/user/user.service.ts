@@ -19,7 +19,7 @@ import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
-import { ftStatus } from 'src/ft/ft.model';
+import { ftStatus } from '../ft/ft.model';
 
 const SELECT_USER = {
   email: true,
