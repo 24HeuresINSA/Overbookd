@@ -48,13 +48,6 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   description: string;
 
   @ApiProperty({
-    required: true,
-    description: 'fa delete status',
-    type: Boolean,
-  })
-  isDeleted: boolean;
-
-  @ApiProperty({
     required: false,
     description: 'The type of the fa',
     enum: faType,
@@ -177,7 +170,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
     description: 'The site publish animation of the fa',
     type: SitePublishAnimation,
   })
-  sitePublishAnimation: SitePublishAnimation;
+  faSitePublishAnimation: SitePublishAnimation;
 
   @ApiProperty({
     required: true,

@@ -49,8 +49,9 @@ import { FASearchRequestDto } from './dto/faSearchRequest.dto';
 import { UpdateFaDto } from './dto/update-fa.dto';
 import { validationDto } from './dto/validation.dto';
 import { FaService } from './fa.service';
-import { AllFaResponse, FaIdResponse } from './faTypes';
-import { CompleteFaResponseDto } from './dto/faResponse.dto';
+import { FaIdResponse } from './faTypes';
+import { CompleteFaResponseDto } from './dto/completeFaResponse.dto';
+import { LiteFaResponseDto } from './dto/liteFaResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -100,7 +101,7 @@ export class FaController {
   })
   findAll(
     @Query() searchRequest: FASearchRequestDto,
-  ): Promise<AllFaResponse[] | null> {
+  ): Promise<LiteFaResponseDto[]> {
     return this.faService.findAll(searchRequest);
   }
 
@@ -124,11 +125,11 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get a fa',
-    type: Promise<CompleteFaResponseDto | null>,
+    type: Promise<CompleteFaResponseDto>,
   })
   findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<CompleteFaResponseDto | null> {
+  ): Promise<CompleteFaResponseDto> {
     return this.faService.findOne(id);
   }
 
@@ -139,7 +140,7 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
-    type: Promise<CompleteFaResponseDto | null>,
+    type: Promise<CompleteFaResponseDto>,
   })
   @ApiBody({
     description: 'Update a fa',
@@ -148,7 +149,7 @@ export class FaController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaDto,
-  ): Promise<CompleteFaResponseDto | null> {
+  ): Promise<CompleteFaResponseDto> {
     return this.faService.update(id, updateFaDto);
   }
 

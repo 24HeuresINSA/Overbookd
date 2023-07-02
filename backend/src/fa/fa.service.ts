@@ -5,12 +5,12 @@ import { validationDto } from './dto/validation.dto';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/create-fa.dto';
-import { CompleteFaResponse, FaStatus } from './fa.model';
+import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
 import {
-  ALL_FA_SELECT,
-  AllFaResponse,
   COMPLETE_FA_SELECT,
+  DatabaseCompleteFaResponse,
   FaIdResponse,
+  LITE_FA_SELECT,
 } from './faTypes';
 
 export interface SearchFa {
@@ -24,20 +24,22 @@ export class FaService {
     private readonly statsService: StatsService,
   ) {}
 
-  async findAll(search: SearchFa): Promise<AllFaResponse[] | null> {
+  async findAll(search: SearchFa): Promise<LiteFaResponse[]> {
     const where = this.buildFindCondition(search);
     return this.prisma.fa.findMany({
       where,
-      select: ALL_FA_SELECT,
+      select: LITE_FA_SELECT,
       orderBy: { id: 'asc' },
     });
   }
 
-  async findOne(id: number): Promise<CompleteFaResponse | null> {
-    return this.prisma.fa.findUnique({
+  async findOne(id: number): Promise<CompleteFaResponse> {
+    const fa = await this.prisma.fa.findUnique({
       where: { id },
       select: COMPLETE_FA_SELECT,
     });
+    if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
+    return this.formatFaResponseCollaborator(fa);
   }
 
   async getFaStats(): Promise<StatsPayload[]> {
@@ -57,7 +59,7 @@ export class FaService {
   async update(
     id: number,
     updatefaDto: UpdateFaDto,
-  ): Promise<CompleteFaResponse | null> {
+  ): Promise<CompleteFaResponse> {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
@@ -68,8 +70,12 @@ export class FaService {
     return this.findOne(id);
   }
 
-  async create(fa: CreateFaDto): Promise<CompleteFaResponse> {
-    return this.prisma.fa.create({ data: fa, select: COMPLETE_FA_SELECT });
+  async create(faCreation: CreateFaDto): Promise<CompleteFaResponse> {
+    const fa = await this.prisma.fa.create({
+      data: faCreation,
+      select: COMPLETE_FA_SELECT,
+    });
+    return this.formatFaResponseCollaborator(fa);
   }
 
   async remove(id: number) {
@@ -113,9 +119,9 @@ export class FaService {
     ]);
   }
 
-  async removeFaValidation(fa_id: number, team_id: number): Promise<void> {
-    await this.checkFaExistence(fa_id);
-    await this.removeValidationFromTeam(fa_id, team_id);
+  async removeFaValidation(faId: number, teamId: number): Promise<void> {
+    await this.checkFaExistence(faId);
+    await this.removeValidationFromTeam(faId, teamId);
   }
 
   async refusefa(
@@ -187,5 +193,18 @@ export class FaService {
         teamId,
       },
     });
+  }
+
+  private formatFaResponseCollaborator(
+    fa: DatabaseCompleteFaResponse,
+  ): CompleteFaResponse {
+    return {
+      ...fa,
+      // collaborator = the first collaborator if exists
+      collaborator:
+        fa.collaborators.length > 0
+          ? fa.collaborators[0].collaborator
+          : undefined,
+    };
   }
 }

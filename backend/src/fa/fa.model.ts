@@ -129,6 +129,10 @@ export class FaReview {
   team: Team;
 }
 
+export class FaReviewTeam {
+  team: Team;
+}
+
 export class SitePublishAnimation {
   photoLink?: string;
   description?: string;
@@ -141,7 +145,6 @@ export interface CompleteFaResponse {
   name: string;
   status: FaStatus;
   description: string;
-  isDeleted: boolean;
   type?: FaType;
   team?: Team;
   userInCharge?: UserNameWithId;
@@ -158,6 +161,17 @@ export interface CompleteFaResponse {
   faRefuse: FaReview[];
   feedbacks: FaFeedback[];
   timeWindows: FaTimeWindow[];
-  sitePublishAnimation: SitePublishAnimation;
+  faSitePublishAnimation: SitePublishAnimation;
   fts: BaseFt[];
+}
+
+export interface LiteFaResponse {
+  id: number;
+  name: string;
+  status: FaStatus;
+  isDeleted: boolean;
+  team?: Team;
+  userInCharge?: UserNameWithId;
+  faValidation: FaReviewTeam[];
+  faRefuse: FaReviewTeam[];
 }
