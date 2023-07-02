@@ -5,9 +5,7 @@
       :src="user.profilePictureBlob"
       max-height="250px"
     />
-    <v-card-title
-      >{{ user.firstname }} {{ user.lastname }} ({{ user.nickname }})
-    </v-card-title>
+    <v-card-title>{{ formatUserNameWithNickname(user) }} </v-card-title>
     <v-card-subtitle>
       <OverChips :roles="user.team"></OverChips>
     </v-card-subtitle>
@@ -21,6 +19,7 @@
 import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "TrombinoscopeCard",
@@ -39,6 +38,7 @@ export default Vue.extend({
     getProfilePictureBlob(user: CompleteUserWithPermissions) {
       return this.$accessor.user.setProfilePicture(user);
     },
+    formatUserNameWithNickname,
   },
 });
 </script>

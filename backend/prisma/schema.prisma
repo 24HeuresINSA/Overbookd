@@ -62,7 +62,7 @@ model User {
   resetPasswordExpires  DateTime?   @map("reset_password_expires")
   hasPayedContributions Boolean     @default(false) @map("has_payed_contributions")
   year                  Year?
-  profilePictue         String?
+  profilePicture        String?     @map("profile_picture")
   charisma              Float       @default(0)
   balance               Float       @default(0)
   password              String      @default("")

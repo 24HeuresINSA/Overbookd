@@ -13,8 +13,7 @@
         ></v-img>
         <v-card-title>
           Joyeux anniv 🥳
-          {{ userBornToday.firstname }}
-          {{ userBornToday.lastname }} ({{ userBornToday.nickname }})
+          {{ formatUserNameWithNickname(userBornToday) }}
         </v-card-title>
       </v-card>
     </v-container>
@@ -34,6 +33,7 @@
 import Vue from "vue";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "Trombinoscope",
@@ -64,6 +64,7 @@ export default Vue.extend({
     hasProfilePicture(user: CompleteUserWithPermissions): boolean {
       return user.profilePicture !== undefined;
     },
+    formatUserNameWithNickname,
   },
 });
 </script>

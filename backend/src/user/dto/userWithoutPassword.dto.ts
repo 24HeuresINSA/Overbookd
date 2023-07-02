@@ -75,7 +75,7 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
     type: String,
     required: false,
   })
-  reset_password_token: string | null;
+  resetPasswordToken: string | null;
 
   @ApiProperty({
     name: 'reset_password_expires',
@@ -83,14 +83,14 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
     type: String,
     required: false,
   })
-  reset_password_expires: Date | null;
+  resetPasswordExpires: Date | null;
 
   @ApiProperty({
     name: 'has_payed_contributions',
     description: 'User contribution payment',
     type: Boolean,
   })
-  has_payed_contributions: boolean;
+  hasPayedContributions: boolean;
 
   @ApiProperty({
     name: 'year',
@@ -127,19 +127,19 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
     description: 'User creation date',
     type: Date,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @ApiProperty({
     name: 'updated_at',
     description: 'User update date',
     type: Date,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @ApiProperty({
     name: 'is_deleted',
     description: 'User deletion status',
     type: Boolean,
   })
-  is_deleted: boolean;
+  isDeleted: boolean;
 }
