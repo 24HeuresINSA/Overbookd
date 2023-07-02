@@ -388,7 +388,7 @@ export class UserController {
     type: UserWithoutPasswordDto,
   })
   @ApiBody({
-    description: 'Add a profile picture to a user',
+    description: 'Profile picture file',
     type: FileUploadDto,
   })
   defineProfilePicture(

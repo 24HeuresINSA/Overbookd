@@ -47,10 +47,10 @@ export default Vue.extend({
         (user: CompleteUserWithPermissions) => {
           if (user.birthdate) {
             const today = new Date();
-            const someDate = new Date(user.birthdate);
+            const birthdate = new Date(user.birthdate);
             return (
-              someDate.getDate() === today.getDate() &&
-              someDate.getMonth() === today.getMonth()
+              birthdate.getDate() === today.getDate() &&
+              birthdate.getMonth() === today.getMonth()
             );
           }
         }
