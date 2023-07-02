@@ -29,7 +29,7 @@ declare module "vue/types/vue" {
     $accessor: typeof accessorType;
     $safeCall: typeof safeCall;
     $auth: Auth;
-    $store: Store<unknown>;
+    $store: Store<any>;
   }
 }
 
