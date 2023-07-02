@@ -63,7 +63,7 @@ export default Vue.extend({
       required: true,
     },
     dataset: {
-      type: Array<any>,
+      type: Array as () => StatsPayload[],
       required: true,
     },
   },
@@ -126,29 +126,27 @@ export default Vue.extend({
       return FAStatusLabel;
     },
     teamStats(): StatsPayload[] {
-      return this.dataset.filter(
-        (teamStat): teamStat is StatsPayload => teamStat.teamCode
-      );
+      return this.dataset;
     },
   },
   methods: {
     team(teamCode: string): Team | undefined {
       return this.$accessor.team.getTeamByCode(teamCode);
     },
-    history(teamCode: string): number {
+    history(teamCode: string): number | undefined {
       if (this.name === "FT") {
-        return this.historyFT.get(teamCode) ?? NaN;
+        return this.historyFT.get(teamCode);
       }
 
-      return this.historyFA.get(teamCode) ?? NaN;
+      return this.historyFA.get(teamCode);
     },
     displayHistory(teamCode: string): string {
       const lastYearValue = this.history(teamCode);
-      return Number.isNaN(lastYearValue) ? "N/A" : lastYearValue.toString();
+      return lastYearValue ? lastYearValue.toString() : "N/A";
     },
     historyPercentage(stats: StatsPayload): string {
       const lastYearCount = this.history(stats.teamCode);
-      if (Number.isNaN(lastYearCount) || lastYearCount === 0) {
+      if (!lastYearCount || lastYearCount === 0) {
         return "N/A";
       }
 
