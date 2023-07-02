@@ -97,7 +97,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.pp {
+.profilePicture {
   border-radius: 50%;
 }
 </style>

@@ -28,7 +28,7 @@ export default Vue.extend({
   props: {
     user: { type: Object as () => CompleteUserWithPermissions, required: true },
   },
-  created() {
+  mounted() {
     if (!this.hasProfilePicture(this.user)) return;
     this.getProfilePictureBlob(this.user);
   },

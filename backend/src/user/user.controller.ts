@@ -57,9 +57,12 @@ import {
   VolunteerAssignmentStatResponseDto,
 } from './dto/volunteerAssignment.dto';
 import { ProfilePictureService } from './profilePicture.service';
-import { UserWithTeamAndPermission, UserWithoutPassword } from './user.model';
-import { MyUserInformation, UserService } from './user.service';
-
+import {
+  MyUserInformation,
+  UserWithTeamAndPermission,
+  UserWithoutPassword,
+} from './user.model';
+import { UserService } from './user.service';
 @ApiTags('user')
 @Controller('user')
 export class UserController {

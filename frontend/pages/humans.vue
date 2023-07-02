@@ -311,12 +311,6 @@ export default {
       return this.$accessor.user.hasPermission(permission);
     },
 
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
-    },
-
     openInformationDialog(user) {
       this.$accessor.user.setSelectedUser(user);
       this.isUserDialogOpen = true;

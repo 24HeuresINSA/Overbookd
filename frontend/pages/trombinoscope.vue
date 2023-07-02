@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <v-container
+    <v-container
       v-if="userBornToday"
       style="display: flex; justify-content: center"
     >
@@ -17,11 +17,15 @@
           {{ userBornToday.lastname }} ({{ userBornToday.nickname }})
         </v-card-title>
       </v-card>
-    </v-container> -->
+    </v-container>
     <div class="volunteers">
-      <v-lazy v-for="user in users" :key="user.id">
-        <TrombinoscopeCard :user="user" />
-      </v-lazy>
+      <div v-for="user in users" :key="user.id">
+        <v-sheet min-height="250">
+          <v-lazy>
+            <TrombinoscopeCard :user="user" />
+          </v-lazy>
+        </v-sheet>
+      </div>
     </div>
   </div>
 </template>
@@ -55,6 +59,11 @@ export default Vue.extend({
   },
   created() {
     if (!this.users.length) this.$accessor.user.fetchUsers();
+  },
+  methods: {
+    hasProfilePicture(user: CompleteUserWithPermissions): boolean {
+      return user.profilePicture !== undefined;
+    },
   },
 });
 </script>

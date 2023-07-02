@@ -295,7 +295,8 @@ export const actions = actionTree(
     },
 
     getProfilePicture(_, user: CompleteUserWithPermissions) {
-      if (user.profilePictureBlob) return undefined;
+      if (!user.profilePicture) return undefined;
+      if (user.profilePictureBlob) return user.profilePictureBlob;
 
       return RepoFactory.userRepo.getProfilePicture(this, user.id);
     },
