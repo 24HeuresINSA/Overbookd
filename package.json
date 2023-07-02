@@ -11,6 +11,20 @@
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono"
   },
+  "packageManager": "pnpm@8.6.5",
+  "pnpm": {
+    "overrides": {
+      "@nuxt/typescript-build": {
+        "webpack": "^4.46.0",
+        "ts-loader": {
+          "webpack": "^4.46.0"
+        },
+        "fork-ts-checker-webpack-plugin": {
+          "webpack": "^4.46.0"
+        }
+      }
+    }
+  },
   "engines": {
     "node": ">=16",
     "pnpm": ">=8"
