@@ -7,7 +7,7 @@
     />
     <v-card-title>{{ formatUserNameWithNickname(user) }} </v-card-title>
     <v-card-subtitle>
-      <OverChips :roles="user.team"></OverChips>
+      <TeamChip v-for="team of user.team" :key="team" :team="team" />
     </v-card-subtitle>
     <v-card-text style="overflow-y: hidden">
       {{ user.comment }}
@@ -17,13 +17,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
 
 export default Vue.extend({
   name: "TrombinoscopeCard",
-  components: { OverChips },
+  components: { TeamChip },
   props: {
     user: { type: Object as () => CompleteUserWithPermissions, required: true },
   },
