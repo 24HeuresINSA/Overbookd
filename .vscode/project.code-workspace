@@ -48,10 +48,14 @@
       "animation",
       "FT",
       "Availabilities",
-      "Affect"
+      "Affect",
+      "trombinoscope"
     ],
     "cSpell.enabled": false,
-    "colorize.languages": ["javascript", "json"],
+    "colorize.languages": [
+      "javascript",
+      "json"
+    ],
     "files.watcherExclude": {
       "**/.git/objects/**": true,
       "**/.git/subtree-cache/**": true,
@@ -64,6 +68,5 @@
     },
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
-    "editor.codeActionsOnSave": ["source.organizeImports"]
   }
 }

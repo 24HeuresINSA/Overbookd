@@ -3,13 +3,7 @@
     <ProfilePictureDialog />
     <v-card v-if="me">
       <v-container class="d-flex flex-no-wrap">
-        <v-img
-          v-if="hasProfilePicture"
-          :src="me.profilePictureBlob"
-          max-width="80px"
-          max-height="80px"
-          class="profilePicture"
-        ></v-img>
+        <ProfilePicture :user="me" class="profilePicture" />
         <div>
           <v-card-title class="pt-2">
             Bonsoir
@@ -50,11 +44,12 @@
 import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
+import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "UserCard",
-  components: { OverChips, ProfilePictureDialog },
+  components: { OverChips, ProfilePictureDialog, ProfilePicture },
   props: {
     user: {
       type: Object,
@@ -77,9 +72,6 @@ export default Vue.extend({
     friends(): number {
       return this.$accessor.user.mFriends.length;
     },
-    hasProfilePicture(): boolean {
-      return this.me.profilePicture !== undefined;
-    },
   },
 
   mounted() {
@@ -99,5 +91,7 @@ export default Vue.extend({
 <style scoped>
 .profilePicture {
   border-radius: 50%;
+  max-width: 80px;
+  max-height: 80px;
 }
 </style>

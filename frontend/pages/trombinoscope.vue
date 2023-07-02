@@ -4,12 +4,10 @@
       v-if="userBornToday"
       style="display: flex; justify-content: center"
     >
-      <v-card color="#FFD700" max-width="400px" max-height="400px">
+      <v-card color="#FFD700" class="userBornToday">
         <v-img
           v-show="hasProfilePicture(userBornToday)"
           :src="userBornToday.profilePictureBlob"
-          max-width="400px"
-          max-height="350px"
         ></v-img>
         <v-card-title>
           Joyeux anniv 🥳
@@ -21,7 +19,7 @@
       <div v-for="user in users" :key="user.id">
         <v-sheet min-height="250">
           <v-lazy>
-            <TrombinoscopeCard :user="user" />
+            <TrombinoscopeCard :user="user" class="trombinoscopeCard" />
           </v-lazy>
         </v-sheet>
       </div>
@@ -45,14 +43,12 @@ export default Vue.extend({
     userBornToday() {
       return this.$accessor.user.users.find(
         (user: CompleteUserWithPermissions) => {
-          if (user.birthdate) {
-            const today = new Date();
-            const birthdate = new Date(user.birthdate);
-            return (
-              birthdate.getDate() === today.getDate() &&
-              birthdate.getMonth() === today.getMonth()
-            );
-          }
+          const today = new Date();
+          const birthdate = new Date(user.birthdate);
+          return (
+            birthdate.getDate() === today.getDate() &&
+            birthdate.getMonth() === today.getMonth()
+          );
         }
       );
     },
@@ -62,16 +58,26 @@ export default Vue.extend({
   },
   methods: {
     hasProfilePicture(user: CompleteUserWithPermissions): boolean {
-      return user.profilePicture !== undefined;
+      return user.profilePicture !== null;
     },
     formatUserNameWithNickname,
   },
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .volunteers {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.userBornToday {
+  max-width: 400px;
+  max-height: 400px;
+}
+
+.trombinoscopeCard {
+  margin: 5px;
+  height: 300px;
 }
 </style>
