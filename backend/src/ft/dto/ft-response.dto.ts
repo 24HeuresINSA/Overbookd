@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus } from '@prisma/client';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import {
   CompleteFtResponse,
@@ -14,6 +13,7 @@ import {
   UserNameWithId,
 } from '../ftTypes';
 import { TimeSpanBase } from 'src/assignment/types/ftTimeSpanTypes';
+import { FtStatus, ftStatus } from '../ft.model';
 
 class TimeWindowRepresentation implements TimeWindow {
   id: number;
@@ -43,7 +43,7 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: FtStatus,
+    enum: ftStatus,
   })
   status: FtStatus;
 
@@ -146,7 +146,7 @@ export class LiteFtResponseDto implements LiteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: FtStatus,
+    enum: ftStatus,
   })
   status: FtStatus;
 

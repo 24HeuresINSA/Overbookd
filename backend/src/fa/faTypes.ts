@@ -37,7 +37,7 @@ export const COMPLETE_FA_SELECT = {
   numberOfPass: true,
   waterNeed: true,
   waterFlowRequired: true,
-  faCollaborators: {
+  collaborators: {
     select: {
       collaborator: {
         select: {
@@ -74,7 +74,7 @@ export const COMPLETE_FA_SELECT = {
       team: TEAM_SELECT,
     },
   },
-  faElectricityNeeds: {
+  electricityNeeds: {
     select: {
       id: true,
       electricityType: true,
@@ -84,7 +84,7 @@ export const COMPLETE_FA_SELECT = {
       comment: true,
     },
   },
-  faSignaNeeds: {
+  signaNeeds: {
     select: {
       id: true,
       signaType: true,

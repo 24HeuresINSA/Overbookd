@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsDefined,
+  IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
-  IsNumber,
-  IsEnum,
-  ValidationArguments,
-  IsDefined,
   Min,
+  ValidationArguments,
 } from 'class-validator';
-import { SignaType } from '../faSignaNeedTypes';
+import { SignaType, signaType } from '../faSignaNeed.model';
 
 export class CreateFaSignaNeedDto {
   @ApiProperty({
@@ -23,12 +23,12 @@ export class CreateFaSignaNeedDto {
   @ApiProperty({
     required: true,
     description: 'The type of signalisation',
-    enum: SignaType,
+    enum: signaType,
   })
   @IsDefined()
-  @IsEnum(SignaType, {
+  @IsEnum(signaType, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(SignaType)}`,
+      `${va.property} must be one of ${Object.values(signaType)}`,
   })
   signaType: SignaType;
 

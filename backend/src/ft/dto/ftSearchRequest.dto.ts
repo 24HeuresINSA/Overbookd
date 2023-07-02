@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus } from '@prisma/client';
 import { Transform } from 'class-transformer';
 import {
   IsBoolean,
@@ -8,6 +7,7 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import { SearchFt } from '../ft.service';
+import { FtStatus, ftStatus } from '../ft.model';
 
 export class FTSearchRequestDto implements SearchFt {
   @ApiProperty({
@@ -22,12 +22,12 @@ export class FTSearchRequestDto implements SearchFt {
   @ApiProperty({
     required: false,
     description: 'FT status',
-    enum: FtStatus,
+    enum: ftStatus,
   })
   @IsOptional()
-  @IsEnum(FtStatus, {
+  @IsEnum(ftStatus, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(FtStatus)}`,
+      `${va.property} must be one of ${Object.values(ftStatus)}`,
   })
   status?: FtStatus;
 }

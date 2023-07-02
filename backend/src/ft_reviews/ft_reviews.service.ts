@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FtReview, FtStatus, ReviewStatus } from '@prisma/client';
+import { FtReview, ReviewStatus } from '@prisma/client';
 import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { faStatus } from 'src/fa/fa.model';
 import { CreateFtFeedbackDto } from 'src/ft-feedback/dto/createFtFeedback.dto';
@@ -16,6 +16,8 @@ import { PrismaService } from '../prisma.service';
 import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewsDto } from './dto/upsertFtReviews.dto';
 import { TimeSpansGenerator } from './timeSpansGenerator';
+import { FtStatus, ftStatus } from 'src/ft/ft.model';
+import { ftFeedbackSubjectType } from 'src/ft-feedback/ftFeedback.model';
 
 @Injectable()
 export class FtReviewsService {
@@ -78,10 +80,10 @@ export class FtReviewsService {
       update: completeReview,
     });
 
-    this.logger.log(`Updating FT #${ftId} status to ${FtStatus.REFUSED}`);
+    this.logger.log(`Updating FT #${ftId} status to ${ftStatus.REFUSED}`);
     const updateStatus = this.prisma.ft.update({
       where: { id: ftId },
-      data: { status: FtStatus.REFUSED },
+      data: { status: ftStatus.REFUSED },
       select: COMPLETE_FT_SELECT,
     });
 
@@ -109,7 +111,7 @@ export class FtReviewsService {
     const updateStatusCategoryPriority = this.prisma.ft.update({
       where: { id: ftId },
       data: {
-        status: FtStatus.READY,
+        status: ftStatus.READY,
         category: timeSpanParameters.category,
         hasPriority: timeSpanParameters.hasPriority,
       },
@@ -122,7 +124,7 @@ export class FtReviewsService {
 
     const feedback: CreateFtFeedbackDto = {
       comment: 'Prête pour affectation !',
-      subject: FtStatus.READY,
+      subject: ftFeedbackSubjectType.READY,
       authorId: userId,
       createdAt: new Date(),
     };
@@ -170,7 +172,7 @@ export class FtReviewsService {
 
     // +1 because the review is not yet created
     if (ftValidatedReviewsCount + 1 >= ftValidatorsCount) {
-      return FtStatus.VALIDATED;
+      return ftStatus.VALIDATED;
     }
     return null;
   }
@@ -179,7 +181,7 @@ export class FtReviewsService {
     if (!ft) {
       throw new NotFoundException('FT introuvable');
     }
-    if (ft.status !== FtStatus.VALIDATED) {
+    if (ft.status !== ftStatus.VALIDATED) {
       throw new BadRequestException('FT non validée');
     }
     if (ft.fa.status !== faStatus.VALIDATED) {
@@ -194,7 +196,7 @@ export class FtReviewsService {
     if (!ft) {
       throw new NotFoundException('FT introuvable');
     }
-    if (ft.status === FtStatus.READY) {
+    if (ft.status === ftStatus.READY) {
       throw new BadRequestException('FT prete pour affectation');
     }
 
@@ -252,7 +254,7 @@ export class FtReviewsService {
       throw new NotFoundException('FT introuvable');
     }
 
-    if (ft.status !== FtStatus.READY) {
+    if (ft.status !== ftStatus.READY) {
       return;
     }
 

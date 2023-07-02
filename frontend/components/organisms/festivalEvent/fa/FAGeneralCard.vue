@@ -24,20 +24,24 @@
           :disabled="isValidatedByOwner"
           @change="onChange('type', $event)"
         ></v-select>
-        <SearchTeam
-          :team="mFA.teamId"
-          label="Équipe"
-          :boxed="false"
+        <v-select
+          :value="mFA.teamId"
+          label="Equipe"
+          :items="teams"
+          item-value="id"
+          item-text="name"
           :disabled="isValidatedByOwner"
-          @change="onChange('teamId', $event.id)"
-        ></SearchTeam>
-        <SearchUser
-          :user="mFA.userInChargeId"
+          @change="onChange('teamId', $event)"
+        ></v-select>
+        <v-autocomplete
+          :value="mFA.userInChargeId"
           label="Responsable"
-          :boxed="false"
+          :items="users"
+          item-value="id"
+          :item-text="displayUsername"
           :disabled="isValidatedByOwner"
-          @change="onChange('userInChargeId', $event.id)"
-        ></SearchUser>
+          @change="onChange('userInChargeId', $event)"
+        ></v-autocomplete>
       </v-form>
     </v-card-text>
   </v-card>
@@ -51,13 +55,12 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { Fa, FaCardType, FaType } from "~/utils/models/fa";
+import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
-import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 
 export default Vue.extend({
   name: "FAGeneralCard",
-  components: { CardErrorList, SearchUser, SearchTeam },
+  components: { CardErrorList },
   data: () => ({
     owner: "humain",
     cardType: FaCardType.GENERAL,
@@ -65,6 +68,9 @@ export default Vue.extend({
   computed: {
     mFA(): Fa {
       return this.$accessor.FA.mFA;
+    },
+    teams(): Team[] {
+      return this.$accessor.team.allTeams;
     },
     allTypes(): string[] {
       return Object.values(FaType);

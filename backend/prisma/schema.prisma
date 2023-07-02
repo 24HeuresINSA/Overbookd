@@ -212,9 +212,9 @@ model Fa {
   isDeleted              Boolean                 @default(false) @map("is_deleted")
   faValidation           FaValidation[]
   faRefuse               FaRefuse[]
-  faCollaborators        FaCollaborator[]
-  faElectricityNeeds     FaElectricityNeed[]
-  faSignaNeeds           FaSignaNeed[]
+  collaborators          FaCollaborator[]
+  electricityNeeds       FaElectricityNeed[]
+  signaNeeds             FaSignaNeed[]
   feedbacks              FaFeedback[]
   timeWindows            FaTimeWindow[]
   gearRequests           GearRequest[]           @relation("gear-request-animation")

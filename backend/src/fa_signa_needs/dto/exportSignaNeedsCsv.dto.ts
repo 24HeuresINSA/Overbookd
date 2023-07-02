@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SignaType } from '../faSignaNeedTypes';
+import { SignaType, signaType } from '../faSignaNeed.model';
 
 export class FaSignaNeedsExportCsvDto {
   @ApiProperty({
@@ -10,7 +10,7 @@ export class FaSignaNeedsExportCsvDto {
 
   @ApiProperty({
     description: 'Type of the signa',
-    enum: SignaType,
+    enum: signaType,
   })
   signaType: SignaType;
 

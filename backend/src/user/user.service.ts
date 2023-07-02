@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, FtStatus, Prisma, TaskCategory, User } from '@prisma/client';
+import { Ft, Prisma, TaskCategory, User } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
@@ -19,6 +19,7 @@ import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
+import { ftStatus } from 'src/ft/ft.model';
 
 const SELECT_USER = {
   email: true,
@@ -117,7 +118,7 @@ export const SELECT_VOLUNTEER_ASSIGNMENTS = {
 };
 
 export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
-  ft: { isDeleted: false, NOT: { status: FtStatus.READY } },
+  ft: { isDeleted: false, NOT: { status: ftStatus.READY } },
 };
 
 export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {

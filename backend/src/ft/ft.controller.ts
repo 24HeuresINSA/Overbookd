@@ -24,7 +24,6 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FtStatus } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { StatsPayload } from 'src/common/services/stats.service';
@@ -59,6 +58,7 @@ import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
 import { RequestWithUserPayload } from 'src/app.controller';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
+import { ftStatus } from './ft.model';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -113,7 +113,7 @@ export class FtController {
     name: 'status',
     required: false,
     type: String,
-    enum: FtStatus,
+    enum: ftStatus,
     description: 'Get FTs with a specific status',
   })
   findAll(

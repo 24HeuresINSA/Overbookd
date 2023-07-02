@@ -4,7 +4,6 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FtStatus } from '@prisma/client';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { FtUserRequestService } from 'src/ft_user_request/ft_user_request.service';
@@ -23,6 +22,7 @@ import {
   TimeWindow,
 } from './ftTypes';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
+import { FtStatus, ftStatus } from './ft.model';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -140,7 +140,7 @@ export class FtService {
     const submittedFt = await this.prisma.ft.update({
       where: { id },
       data: {
-        status: FtStatus.SUBMITTED,
+        status: ftStatus.SUBMITTED,
         reviewerId,
       },
       select: COMPLETE_FT_SELECT,
@@ -151,7 +151,7 @@ export class FtService {
   async remove(id: number) {
     this.logger.log(`Trying to delete FT #${id}`);
     const ft = await this.prisma.ft.findFirst({
-      where: { id, NOT: { status: FtStatus.READY } },
+      where: { id, NOT: { status: ftStatus.READY } },
     });
 
     if (!ft) {
@@ -271,7 +271,7 @@ export class FtService {
     return this.prisma.ft.findFirst({
       where: {
         id,
-        NOT: { status: { in: [FtStatus.READY, FtStatus.VALIDATED] } },
+        NOT: { status: { in: [ftStatus.READY, ftStatus.VALIDATED] } },
       },
       select: { reviewerId: true },
     });
