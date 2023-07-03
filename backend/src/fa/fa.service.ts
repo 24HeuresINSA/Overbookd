@@ -63,7 +63,7 @@ export class FaService {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    const updatedFa = this.prisma.fa.update({
+    const updatedFa = await this.prisma.fa.update({
       where: { id },
       data: updatefaDto,
       select: COMPLETE_FA_SELECT,

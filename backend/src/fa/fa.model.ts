@@ -65,13 +65,13 @@ export class SignaLocationRepresentation implements SignaLocation {
   name: string;
 }
 
-export interface UserName {
+interface UserName {
   firstname: string;
   lastname: string;
   nickname?: string;
 }
 
-export class UserNameRepresentation implements UserName {
+class UserNameRepresentation implements UserName {
   firstname: string;
   lastname: string;
   nickname?: string;
