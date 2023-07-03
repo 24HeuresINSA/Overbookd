@@ -54,17 +54,17 @@ export default Vue.extend({
     gearRequest(): GearRequest<"FA">[] {
       switch (this.owner) {
         case "matos":
-          return this.$accessor.FA.matosGearRequests.reduce(
+          return this.$accessor.fa.matosGearRequests.reduce(
             uniqueGearReducer<"FA">,
             [] as GearRequest<"FA">[]
           );
         case "elec":
-          return this.$accessor.FA.elecGearRequests.reduce(
+          return this.$accessor.fa.elecGearRequests.reduce(
             uniqueGearReducer<"FA">,
             [] as GearRequest<"FA">[]
           );
         case "barrieres":
-          return this.$accessor.FA.barrieresGearRequests.reduce(
+          return this.$accessor.fa.barrieresGearRequests.reduce(
             uniqueGearReducer<"FA">,
             [] as GearRequest<"FA">[]
           );
@@ -75,7 +75,7 @@ export default Vue.extend({
   },
   methods: {
     deleteGear(gear: Gear) {
-      this.$accessor.FA.removeGearRelatedGearRequest(gear.id);
+      this.$accessor.fa.removeGearRelatedGearRequest(gear.id);
     },
   },
 });

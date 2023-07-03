@@ -47,6 +47,7 @@ export const COMPLETE_FA_SELECT = {
     select: {
       collaborator: {
         select: {
+          id: true,
           firstname: true,
           lastname: true,
           phone: true,

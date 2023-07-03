@@ -10,13 +10,6 @@
     >
     <v-card-text>
       <v-form @submit.prevent="">
-        <!--
-        <v-switch
-          :value="waterNeed.waterFlowRequired"
-          label="Besoin d'eau"
-          @change="onChange('waterFlowRequired', $event)"
-        ></v-switch>
-        -->
         <v-text-field
           :value="mFA.waterNeed"
           label="Desctiption du besoin en eau"
@@ -43,7 +36,7 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
@@ -55,7 +48,7 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      this.$accessor.FA.updateFA({ key: key, value: value });
+      this.$accessor.fa.updateFA({ key: key, value: value });
     },
   },
 });

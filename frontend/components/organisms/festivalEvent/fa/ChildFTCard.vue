@@ -43,7 +43,7 @@
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
 import { Fa } from "~/utils/models/fa";
-import { FTSimplified, FTStatus, FTStatusLabel } from "~/utils/models/ft";
+import { FtSimplified, FtStatus, FtStatusLabel } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ChildFTCard",
@@ -58,18 +58,18 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
-    childFTs(): FTSimplified[] {
+    childFTs(): FtSimplified[] {
       return this.mFA.fts;
     },
   },
   methods: {
-    getFTStatus(status: FTStatus): string {
+    getFTStatus(status: FtStatus): string {
       return status.toLowerCase();
     },
-    getStatusLabel(status: FTStatus): FTStatusLabel {
-      return FTStatusLabel[status];
+    getStatusLabel(status: FtStatus): FtStatusLabel {
+      return FtStatusLabel[status];
     },
     openNewFTDialog() {
       this.isNewFTDialogOpen = true;

@@ -177,7 +177,7 @@ import {
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
 import { Fa, FaStatus } from "~/utils/models/fa";
-import { FT, FTStatus } from "~/utils/models/ft";
+import { Ft, FtStatus } from "~/utils/models/ft";
 import {
   FtTimeSpanParameters,
   TaskCategories,
@@ -220,10 +220,10 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isFA(): boolean {
       return this.festivalEvent === "FA";
@@ -272,7 +272,7 @@ export default Vue.extend({
       if (this.isFA) {
         return hasAtLeastOneError(
           this.mFA,
-          this.$accessor.FA.allSortedGearRequests
+          this.$accessor.fa.allSortedGearRequests
         );
       }
       return hasAtLeastOneFTError(this.mFT);
@@ -284,22 +284,22 @@ export default Vue.extend({
     isDraft(): boolean {
       return this.isFA
         ? this.mFA.status === FaStatus.DRAFT
-        : this.mFT.status === FTStatus.DRAFT;
+        : this.mFT.status === FtStatus.DRAFT;
     },
     isSubmitted(): boolean {
       return this.isFA
         ? this.mFA.status === FaStatus.SUBMITTED
-        : this.mFT.status === FTStatus.SUBMITTED;
+        : this.mFT.status === FtStatus.SUBMITTED;
     },
     isRefused(): boolean {
       return this.isFA
         ? this.mFA.status === FaStatus.REFUSED
-        : this.mFT.status === FTStatus.REFUSED;
+        : this.mFT.status === FtStatus.REFUSED;
     },
     isValidated(): boolean {
       return this.isFA
         ? this.mFA.status === FaStatus.VALIDATED
-        : this.mFT.status === FTStatus.VALIDATED;
+        : this.mFT.status === FtStatus.VALIDATED;
     },
     isSubmittedOrRefused(): boolean {
       return this.isSubmitted || this.isRefused;
@@ -351,13 +351,13 @@ export default Vue.extend({
     shouldValidateGearRequests(validator: Team) {
       if (this.isFA) {
         return (
-          this.$accessor.FA.gearRequests.filter(
+          this.$accessor.fa.gearRequests.filter(
             (gr) => gr.gear.owner?.code === validator.code
           ).length > 0
         );
       }
       return (
-        this.$accessor.FT.gearRequests.filter(
+        this.$accessor.ft.gearRequests.filter(
           (gr) => gr.gear.owner?.code === validator.code
         ).length > 0
       );
@@ -376,10 +376,10 @@ export default Vue.extend({
           teamName: validator.name,
           author,
         };
-        return this.$accessor.FA.validate(payload);
+        return this.$accessor.fa.validate(payload);
       }
       const payload = { author, team: validator };
-      return this.$accessor.FT.validate(payload);
+      return this.$accessor.ft.validate(payload);
     },
     async refuse(validator: Team) {
       if (this.isValidated && !this.isConfirmationDialogOpen) {
@@ -392,14 +392,14 @@ export default Vue.extend({
           message: this.refuseComment,
           author,
         };
-        await this.$accessor.FA.refuse(payload);
+        await this.$accessor.fa.refuse(payload);
       } else {
         const payload = {
           author,
           team: validator,
           message: this.refuseComment,
         };
-        await this.$accessor.FT.refuse(payload);
+        await this.$accessor.ft.refuse(payload);
       }
       this.refuseComment = "";
       this.isRefuseDialogOpen = false;
@@ -413,14 +413,14 @@ export default Vue.extend({
       if (this.timeSpanParameters.category === TaskCategories.AUCUNE) {
         this.timeSpanParameters.category = undefined;
       }
-      this.$accessor.FT.switchToReadyForAssignment({
+      this.$accessor.ft.switchToReadyForAssignment({
         author: this.meAsUser,
         timeSpanParameters: this.timeSpanParameters,
       });
     },
     checkBeforeSubmitForReview() {
       const hasError = this.isFA
-        ? hasAtLeastOneError(this.mFA, this.$accessor.FA.allSortedGearRequests)
+        ? hasAtLeastOneError(this.mFA, this.$accessor.fa.allSortedGearRequests)
         : hasAtLeastOneFTError(this.mFT);
       if (this.isDraft && hasError) return (this.isValidationDialogOpen = true);
       this.submit();
@@ -429,11 +429,11 @@ export default Vue.extend({
       this.isValidationDialogOpen = false;
       const author = this.meAsUser;
       if (this.isFA)
-        return this.$accessor.FA.submitForReview({
+        return this.$accessor.fa.submitForReview({
           faId: this.id,
           author,
         });
-      return this.$accessor.FT.submitForReview(author);
+      return this.$accessor.ft.submitForReview(author);
     },
     validatorValidationStatus(validator: Team) {
       if (this.isFA) {
@@ -458,15 +458,15 @@ export default Vue.extend({
       this.selectedValidator = validator;
     },
     save() {
-      this.$accessor.FA.save();
+      this.$accessor.fa.save();
     },
     previousPage() {
-      if (this.isFA) return this.$accessor.FA.previousPage();
-      return this.$accessor.FT.previousPage();
+      if (this.isFA) return this.$accessor.fa.previousPage();
+      return this.$accessor.ft.previousPage();
     },
     nextPage() {
-      if (this.isFA) return this.$accessor.FA.nextPage();
-      return this.$accessor.FT.nextPage();
+      if (this.isFA) return this.$accessor.fa.nextPage();
+      return this.$accessor.ft.nextPage();
     },
   },
 });

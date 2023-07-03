@@ -65,10 +65,10 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     gearRequestRentalPeriods(): Period[] {
-      return this.$accessor.FA.gearRequestRentalPeriods;
+      return this.$accessor.fa.gearRequestRentalPeriods;
     },
     noGearPeriod(): boolean {
       return this.gearRequestRentalPeriods.length === 0;

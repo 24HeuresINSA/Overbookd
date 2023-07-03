@@ -31,7 +31,7 @@ export default Vue.extend({
   }),
   computed: {
     gearRequests(): StoredGearRequest<"FA">[] {
-      return this.$accessor.FA.uniqueByGearGearRequests;
+      return this.$accessor.fa.uniqueByGearGearRequests;
     },
   },
 });

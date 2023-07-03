@@ -73,7 +73,7 @@ export default Vue.extend({
   computed: {
     elecNeed(): FaElectricityNeed | undefined {
       if (this.index === -1) return undefined;
-      return this.$accessor.FA.mFA?.faElectricityNeeds?.[this.index];
+      return this.$accessor.fa.mFA?.electricityNeeds?.[this.index];
     },
     mElecNeed(): FaElectricityNeed {
       return {

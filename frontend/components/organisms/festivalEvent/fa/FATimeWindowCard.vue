@@ -126,11 +126,11 @@ export default Vue.extend({
   computed: {
     timeWindowsList(): IdentifiableTimeWindow[] {
       const animationTimeWindows =
-        this.$accessor.FA.mFA.timeWindows
+        this.$accessor.fa.mFA.timeWindows
           ?.map(this.convertToIdentifiableTimeWindow)
           ?.filter((tw) => tw.type === TimeWindowType.ANIM) ?? [];
 
-      const gearTimeWindows = this.$accessor.FA.gearRequestRentalPeriods.map(
+      const gearTimeWindows = this.$accessor.fa.gearRequestRentalPeriods.map(
         (period, index) => {
           return this.convertToIdentifiableTimeWindow(
             { ...period, type: TimeWindowType.MATOS },
@@ -142,7 +142,7 @@ export default Vue.extend({
       return [...animationTimeWindows, ...gearTimeWindows];
     },
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     isValidatedByAnimOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.animOwner);
@@ -183,7 +183,7 @@ export default Vue.extend({
         firstname: this.me.firstname,
         lastname: this.me.lastname,
       };
-      this.$accessor.FA.resetLogValidations(author);
+      this.$accessor.fa.resetLogValidations(author);
       this.deleteTimeframe();
     },
     deleteTimeframe() {
@@ -191,31 +191,31 @@ export default Vue.extend({
         const index = this.retrieveAnimationTimeWindowIndex(
           this.selectedTimeWindow
         );
-        return this.$accessor.FA.deleteTimeWindow(index);
+        return this.$accessor.fa.deleteTimeWindow(index);
       }
-      return this.$accessor.FA.removeGearRequestRentalPeriod(
+      return this.$accessor.fa.removeGearRequestRentalPeriod(
         this.selectedTimeWindow as Period
       );
     },
     addTimeWindow(timeWindow: FaTimeWindow) {
       if (timeWindow.type === TimeWindowType.ANIM) {
-        return this.$accessor.FA.addTimeWindow(timeWindow);
+        return this.$accessor.fa.addTimeWindow(timeWindow);
       }
-      this.$accessor.FA.addGearRequestRentalPeriod(timeWindow);
+      this.$accessor.fa.addGearRequestRentalPeriod(timeWindow);
     },
     updateTimeWindow(timeWindow: FaTimeWindow) {
       if (timeWindow.type === TimeWindowType.ANIM) {
         return this.updateAnimationTimeWindow(timeWindow);
       }
       if (!timeWindow.id) return;
-      this.$accessor.FA.updateGearPeriod(timeWindow as Period);
+      this.$accessor.fa.updateGearPeriod(timeWindow as Period);
     },
     deleteTimeWindow(timeWindow: IdentifiableTimeWindow) {
       if (timeWindow.type === TimeWindowType.ANIM) {
         const index = this.retrieveAnimationTimeWindowIndex(timeWindow);
-        return this.$accessor.FA.deleteTimeWindow(index);
+        return this.$accessor.fa.deleteTimeWindow(index);
       }
-      return this.$accessor.FA.removeGearRequestRentalPeriod(
+      return this.$accessor.fa.removeGearRequestRentalPeriod(
         timeWindow as Period
       );
     },
@@ -229,7 +229,7 @@ export default Vue.extend({
       const index = this.retrieveAnimationTimeWindowIndex(
         this.selectedTimeWindow
       );
-      this.$accessor.FA.updateTimeWindow({
+      this.$accessor.fa.updateTimeWindow({
         index,
         timeWindow,
       });
@@ -238,7 +238,7 @@ export default Vue.extend({
       timeWindowId: number,
       timeWindowType: TimeWindowType
     ): number {
-      return this.$accessor.FA.mFA.timeWindows!.findIndex(
+      return this.$accessor.fa.mFA.timeWindows!.findIndex(
         (tw) => tw.id === timeWindowId && tw.type === timeWindowType
       );
     },

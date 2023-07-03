@@ -63,12 +63,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import {
-  Collaborator,
-  Fa,
-  FaCardType,
-  FaCollaborator,
-} from "~/utils/models/fa";
+import { Collaborator, Fa, FaCardType } from "~/utils/models/fa";
 
 export default Vue.extend({
   name: "CollaboratorCard",
@@ -80,16 +75,10 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
-    },
-    collaborators(): FaCollaborator[] {
-      return this.mFA.faCollaborators ?? [];
+      return this.$accessor.fa.mFA;
     },
     collaborator(): Collaborator {
-      if (this.collaborators.length > 0) {
-        return this.collaborators[0].collaborator;
-      }
-      return {};
+      return this.mFA.collaborator ?? {};
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
@@ -115,7 +104,7 @@ export default Vue.extend({
   watch: {
     collaborators: {
       handler() {
-        if (this.collaborators.length > 0) {
+        if (this.mFA.collaborator) {
           this.isCollaboratorRequired = true;
         }
       },
@@ -127,31 +116,21 @@ export default Vue.extend({
       if (!this.isCollaboratorRequired) {
         this.deleteCollaborator();
       } else {
-        this.addCollaborator();
+        this.createCollaborator();
       }
     },
     onChange(key: string, value: any) {
       this.updateCollaborator(key, value);
     },
-    addCollaborator() {
-      const newCollaborator: FaCollaborator = {
-        collaborator: {
-          firstname: "",
-          lastname: "",
-          phone: "",
-        },
-      };
-      this.$accessor.FA.addCollaborator(newCollaborator);
-    },
     updateCollaborator(key: string, value: any) {
-      this.$accessor.FA.updateCollaborator({
+      this.$accessor.fa.updateCollaborator({
         index: 0,
         key: key,
         value: value,
       });
     },
     deleteCollaborator() {
-      this.$accessor.FA.deleteCollaborator(0);
+      this.$accessor.fa.deleteCollaborator(0);
     },
   },
 });

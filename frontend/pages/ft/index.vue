@@ -164,11 +164,11 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/Data";
 import {
-  FT,
-  FTSearch,
-  FTSimplified,
-  FTStatus,
-  FTStatusLabel,
+  Ft,
+  FtSearch,
+  FtSimplified,
+  FtStatus,
+  FtStatusLabel,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { MyUserInformation, User } from "~/utils/models/user";
@@ -176,7 +176,7 @@ import { formatUsername } from "~/utils/user/userUtils";
 
 interface Data {
   headers: Header[];
-  selectedFT: FT | undefined;
+  selectedFT: Ft | undefined;
   isDeleteDialogOpen: boolean;
   isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
@@ -187,7 +187,7 @@ interface Data {
     team: Team | undefined;
     myFTs: boolean;
     isDeleted: boolean;
-    status: FTStatus | undefined;
+    status: FtStatus | undefined;
     myFTsToReview: boolean;
   };
 }
@@ -230,13 +230,13 @@ export default Vue.extend({
     me(): MyUserInformation {
       return this.$accessor.user.me;
     },
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
-    FTs(): FTSimplified[] {
-      return this.$accessor.FT.FTs;
+    FTs(): FtSimplified[] {
+      return this.$accessor.ft.FTs;
     },
-    filteredFTs(): FTSimplified[] {
+    filteredFTs(): FtSimplified[] {
       const { search, team, myFTs, status, myFTsToReview } = this.filters;
 
       const res = this.fuzzyFindFT(search);
@@ -249,8 +249,8 @@ export default Vue.extend({
         );
       });
     },
-    statuses(): FTStatus[] {
-      return Object.values(FTStatus);
+    statuses(): FtStatus[] {
+      return Object.values(FtStatus);
     },
     isAdmin(): boolean {
       return this.$accessor.user.hasPermission("admin");
@@ -286,31 +286,31 @@ export default Vue.extend({
   },
 
   methods: {
-    filterFTByTeam(teamSearched?: Team): (ft: FTSimplified) => boolean {
+    filterFTByTeam(teamSearched?: Team): (ft: FtSimplified) => boolean {
       return teamSearched
         ? (ft) => ft.team?.code === teamSearched.code
         : () => true;
     },
 
-    filterFTByOwnership(searchMyFTs: boolean): (ft: FTSimplified) => boolean {
+    filterFTByOwnership(searchMyFTs: boolean): (ft: FtSimplified) => boolean {
       return searchMyFTs
         ? (ft) => ft.userInCharge?.id === this.me.id
         : () => true;
     },
 
-    filterFTByStatus(statusSearched?: FTStatus): (ft: FTSimplified) => boolean {
+    filterFTByStatus(statusSearched?: FtStatus): (ft: FtSimplified) => boolean {
       return statusSearched ? (ft) => ft.status === statusSearched : () => true;
     },
 
     filterFTByReviewer(
       searchMyFTsToReview: boolean
-    ): (ft: FTSimplified) => boolean {
+    ): (ft: FtSimplified) => boolean {
       return searchMyFTsToReview
         ? (ft) => ft.reviewer?.id === this.me.id
         : () => true;
     },
 
-    fuzzyFindFT(search?: string): FTSimplified[] {
+    fuzzyFindFT(search?: string): FtSimplified[] {
       if (!search) return this.FTs;
       const fuse = new Fuse(this.FTs, {
         keys: ["name", "id"],
@@ -328,11 +328,11 @@ export default Vue.extend({
       return this.$accessor.user.hasPermission(permission);
     },
 
-    getFTStatus(status: FTStatus): string {
+    getFTStatus(status: FtStatus): string {
       return status.toLowerCase();
     },
 
-    getValidatorStatus(ft: FT, validator: Team) {
+    getValidatorStatus(ft: Ft, validator: Team) {
       return getFTValidationStatus(ft, validator.code).toLowerCase();
     },
 
@@ -341,38 +341,38 @@ export default Vue.extend({
       return formatUsername(user);
     },
 
-    getStatusLabel(status: FTStatus): FTStatusLabel {
-      return FTStatusLabel[status];
+    getStatusLabel(status: FtStatus): FtStatusLabel {
+      return FtStatusLabel[status];
     },
 
     async fetchFTs() {
-      const searchParams: FTSearch = {
+      const searchParams: FtSearch = {
         isDeleted: this.filters.isDeleted,
         status: this.filters.status,
       };
-      await this.$accessor.FT.fetchFTs(searchParams);
+      await this.$accessor.ft.fetchFTs(searchParams);
     },
 
-    preDeleteFT(ft: FT) {
+    preDeleteFT(ft: Ft) {
       this.selectedFT = ft;
       this.isDeleteDialogOpen = true;
     },
 
     async deleteFT() {
       if (!this.selectedFT) return;
-      await this.$accessor.FT.deleteFT(this.selectedFT);
+      await this.$accessor.ft.deleteFT(this.selectedFT);
       this.isDeleteDialogOpen = false;
       this.selectedFT = undefined;
     },
 
-    preRestoreFT(ft: FT) {
+    preRestoreFT(ft: Ft) {
       this.selectedFT = ft;
       this.isRestoreDialogOpen = true;
     },
 
     async restoreFT() {
       if (!this.selectedFT) return;
-      await this.$accessor.FT.restoreFT(this.selectedFT);
+      await this.$accessor.ft.restoreFT(this.selectedFT);
       this.isRestoreDialogOpen = false;
       this.selectedFT = undefined;
     },

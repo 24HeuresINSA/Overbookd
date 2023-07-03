@@ -7,25 +7,25 @@ import * as charismaPeriod from "./charismaPeriod";
 import * as config from "./config";
 import * as configuration from "./configuration";
 import * as dialog from "./dialog";
-import * as FA from "./FA";
-import * as FT from "./FT";
+import * as fa from "./fa";
+import * as ft from "./ft";
 import * as gearRequest from "./gearRequest";
 import * as inventory from "./inventory";
 import * as location from "./location";
+import * as needHelp from "./needHelp";
 import * as notif from "./notif";
+import * as orgaNeeds from "./orgaNeeds";
 import * as permission from "./permission";
+import * as planning from "./planning";
 import * as publishAnimation from "./publishAnimation";
 import * as signa from "./signa";
 import * as stats from "./stats";
 import * as team from "./team";
+import * as theme from "./theme";
+import * as timeline from "./timeline";
 import * as transaction from "./transaction";
 import * as user from "./user";
 import * as volunteerAvailability from "./volunteerAvailability";
-import * as theme from "./theme";
-import * as planning from "./planning";
-import * as orgaNeeds from "./orgaNeeds";
-import * as timeline from "./timeline";
-import * as needHelp from "./needHelp";
 
 export const state = () => ({});
 
@@ -48,8 +48,8 @@ export const accessorType = getAccessorType({
     config,
     user,
     transaction,
-    FA,
-    FT,
+    fa,
+    ft,
     team,
     location,
     assignment,

@@ -22,9 +22,9 @@ import FestivalEventBottomBar from "~/components/organisms/festivalEvent/Festiva
 import FestivalEventSidebar from "~/components/organisms/festivalEvent/FestivalEventSidebar.vue";
 import FTDetailCard from "~/components/organisms/festivalEvent/ft/FTDetailCard.vue";
 import FTGeneralCard from "~/components/organisms/festivalEvent/ft/FTGeneralCard.vue";
+import FTLogisticsCard from "~/components/organisms/festivalEvent/ft/FTLogisticsCard.vue";
 import FTTimeWindowCard from "~/components/organisms/festivalEvent/ft/FTTimeWindowCard.vue";
 import ParentFACard from "~/components/organisms/festivalEvent/ft/ParentFACard.vue";
-import FTLogisticsCard from "~/components/organisms/festivalEvent/ft/FTLogisticsCard.vue";
 
 export default Vue.extend({
   name: "FT",
@@ -41,7 +41,7 @@ export default Vue.extend({
   },
   computed: {
     mFT() {
-      return this.$accessor.FT.mFT;
+      return this.$accessor.ft.mFT;
     },
     ftId(): number {
       return +this.$route.params.ft;
@@ -53,7 +53,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.FT.fetchFT(this.ftId);
+    await this.$accessor.ft.fetchFT(this.ftId);
 
     if (this.mFT.id !== this.ftId) {
       alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");

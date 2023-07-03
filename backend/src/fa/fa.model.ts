@@ -105,6 +105,7 @@ export class TeamRepresentation implements Team {
 }
 
 export interface FaCollaborator {
+  id: number;
   firstname?: string;
   lastname?: string;
   phone?: string;
@@ -114,6 +115,7 @@ export interface FaCollaborator {
 }
 
 export class FaCollaboratorRepresentation implements FaCollaborator {
+  id: number;
   firstname?: string;
   lastname?: string;
   phone?: string;

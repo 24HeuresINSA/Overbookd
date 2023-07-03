@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FT, FTCreation } from "~/utils/models/ft";
+import { Ft, FtCreation } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "NewFTCard",
@@ -27,19 +27,19 @@ export default Vue.extend({
     ftName: "",
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
   },
   methods: {
     async createNewFT() {
       if (!this.ftName) return;
-      const blankFT: FTCreation = {
+      const blankFT: FtCreation = {
         name: this.ftName,
         parentFaId: this.faId,
       };
 
-      await this.$accessor.FT.createFT(blankFT);
+      await this.$accessor.ft.createFT(blankFT);
       if (!this.mFT?.id) return;
 
       this.$emit("close-dialog");

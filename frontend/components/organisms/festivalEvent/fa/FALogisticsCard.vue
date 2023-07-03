@@ -70,18 +70,18 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     isValid(): boolean {
       return Boolean(
         this.gear &&
           parseInt(this.quantity) >= 1 &&
-          this.$accessor.FA.gearRequestRentalPeriods.length > 0 &&
+          this.$accessor.fa.gearRequestRentalPeriods.length > 0 &&
           !this.isValidatedByOwner
       );
     },
     timeWindow(): FaTimeWindow | undefined {
-      return this.$accessor.FA.mFA.timeWindows?.find(
+      return this.$accessor.fa.mFA.timeWindows?.find(
         (tw) => tw.type === TimeWindowType.MATOS
       );
     },
@@ -98,7 +98,7 @@ export default Vue.extend({
     },
     addGear() {
       if (!this.gear) return;
-      return this.$accessor.FA.addGearRequestForAllRentalPeriods({
+      return this.$accessor.fa.addGearRequestForAllRentalPeriods({
         gearId: this.gear.id,
         quantity: parseInt(this.quantity, 10),
       });

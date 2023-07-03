@@ -288,7 +288,7 @@ export default {
     async initStore() {
       await this.$accessor.user.fetchUser();
       await this.$accessor.timeslot.fetchTimeslots();
-      await this.$accessor.FT.fetchAll();
+      await this.$accessor.ft.fetchAll();
     },
     isCpUseful(item) {
       return (
@@ -403,7 +403,7 @@ export default {
 
     getStatic(plan) {
       let statics = 0;
-      const Fts = this.$accessor.FT.Fts;
+      const Fts = this.$accessor.ft.Fts;
       plan.slots.forEach((slot) => {
         const ft = Fts.find((e) => e.count === slot.count);
         if (ft.general.areTimeframesStatic) {

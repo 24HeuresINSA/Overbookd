@@ -93,10 +93,10 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     electricityNeeds(): FaElectricityNeed[] {
-      return this.mFA.faElectricityNeeds ?? [];
+      return this.mFA.electricityNeeds ?? [];
     },
     electricityType(): string[] {
       return Object.values(ElectricityType);
@@ -132,17 +132,17 @@ export default Vue.extend({
       this.isEditDialogOpen = true;
     },
     addElectricityNeed(elecNeed: FaElectricityNeed) {
-      this.$accessor.FA.addElectricityNeed(elecNeed);
+      this.$accessor.fa.addElectricityNeed(elecNeed);
     },
     updateElectricityNeed(elecNeed: FaElectricityNeed) {
       if (this.selectedIndex === null) return;
-      this.$accessor.FA.updateElectricityNeed({
+      this.$accessor.fa.updateElectricityNeed({
         index: this.selectedIndex,
         elecNeed,
       });
     },
     deleteElectricityNeed(index: number) {
-      this.$accessor.FA.deleteElectricityNeed(index);
+      this.$accessor.fa.deleteElectricityNeed(index);
     },
   },
 });

@@ -132,16 +132,16 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     signalisations(): FaSignaNeed[] {
-      return this.mFA.faSignaNeeds ?? [];
+      return this.mFA.signaNeeds ?? [];
     },
     signaType(): string[] {
       return Object.values(SignaType);
     },
     currentLocations(): SignaLocation | undefined {
-      const locationId = this.$accessor.FA.mFA.locationId;
+      const locationId = this.$accessor.fa.mFA.location?.id;
       if (!locationId) return undefined;
       return this.$accessor.signa.getLocationById(locationId);
     },
@@ -182,19 +182,19 @@ export default Vue.extend({
         comment: this.newSignalisation.comment,
       };
 
-      this.$accessor.FA.addSignaNeed(newSigna);
+      this.$accessor.fa.addSignaNeed(newSigna);
       this.isSignaFormOpen = false;
       this.newSignalisation = { type: "", text: "", comment: "" };
     },
     updateSignalisationCount(index: number, count: number) {
-      this.$accessor.FA.updateSignaNeedCount({ index, count });
+      this.$accessor.fa.updateSignaNeedCount({ index, count });
     },
     async deleteSignalisation(index: number) {
-      await this.$accessor.FA.deleteSignaNeed(index);
+      await this.$accessor.fa.deleteSignaNeed(index);
     },
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      this.$accessor.FA.updateFA({ key: key, value: value });
+      this.$accessor.fa.updateFA({ key: key, value: value });
     },
   },
 });

@@ -1,6 +1,8 @@
 <template>
   <v-card :class="validationStatus">
     <CardErrorList :type="cardType" />
+    import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+    import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter
@@ -24,24 +26,20 @@
           :disabled="isValidatedByOwner"
           @change="onChange('type', $event)"
         ></v-select>
-        <v-select
-          :value="mFA.teamId"
-          label="Equipe"
-          :items="teams"
-          item-value="id"
-          item-text="name"
+        <SearchTeam
+          :team="mFA.team"
+          label="Équipe"
+          :boxed="false"
           :disabled="isValidatedByOwner"
-          @change="onChange('teamId', $event)"
-        ></v-select>
-        <v-autocomplete
-          :value="mFA.userInChargeId"
+          @change="onChange('teamId', $event.id)"
+        ></SearchTeam>
+        <SearchUser
+          :user="mFA.userInCharge"
           label="Responsable"
-          :items="users"
-          item-value="id"
-          :item-text="displayUsername"
+          :boxed="false"
           :disabled="isValidatedByOwner"
-          @change="onChange('userInChargeId', $event)"
-        ></v-autocomplete>
+          @change="onChange('userInChargeId', $event.id)"
+        ></SearchUser>
       </v-form>
     </v-card-text>
   </v-card>
@@ -57,17 +55,19 @@ import {
 import { Fa, FaCardType, FaType } from "~/utils/models/fa";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 
 export default Vue.extend({
   name: "FAGeneralCard",
-  components: { CardErrorList },
+  components: { CardErrorList, SearchUser, SearchTeam },
   data: () => ({
     owner: "humain",
     cardType: FaCardType.GENERAL,
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     teams(): Team[] {
       return this.$accessor.team.allTeams;
@@ -93,7 +93,7 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      this.$accessor.FA.updateFA({ key: key, value: value });
+      this.$accessor.fa.updateFA({ key: key, value: value });
     },
     displayUsername({ firstname, lastname }: User): string {
       return `${firstname} ${lastname}`;

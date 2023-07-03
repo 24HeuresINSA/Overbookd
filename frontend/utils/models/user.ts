@@ -1,5 +1,5 @@
 import { HttpStringified } from "../types/http";
-import { FTStatus } from "./ft";
+import { FtStatus } from "./ft";
 import { TaskCategory } from "./ftTimeSpan";
 import { Notification } from "./repo";
 
@@ -104,7 +104,7 @@ interface Period {
 export interface Task {
   id: number;
   name: string;
-  status: FTStatus;
+  status: FtStatus;
 }
 
 export interface VolunteerTask extends Period {

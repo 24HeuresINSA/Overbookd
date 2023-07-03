@@ -1,24 +1,24 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
-  FT,
-  FTCreation,
-  FTPageId,
-  FTSearch,
-  FTSimplified,
-  FTTeamRequest,
-  FTTeamRequestUpdate,
-  FTTimeWindow,
-  FTTimeWindowUpdate,
-  FTUpdate,
-  FTUserRequestUpdate,
+    Ft,
+    FtCreation,
+    FtPageId,
+    FtSearch,
+    FtSimplified,
+    FtTeamRequest,
+    FtTeamRequestUpdate,
+    FtTimeWindow,
+    FtTimeWindowUpdate,
+    FtUpdate,
+    FtUserRequestUpdate,
 } from "~/utils/models/ft";
 import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
-  GearRequestCreation,
-  GearRequestUpdate,
-  GearRequestWithDrive,
-  StoredGearRequest,
+    GearRequestCreation,
+    GearRequestUpdate,
+    GearRequestWithDrive,
+    StoredGearRequest,
 } from "~/utils/models/gearRequests";
 import { Period } from "~/utils/models/period";
 import { Reviewer } from "~/utils/models/review";
@@ -30,22 +30,22 @@ const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
-  getAllFTs(context: Context, search?: FTSearch) {
-    return context.$axios.get<HttpStringified<FTSimplified>[]>(resource, {
+  getAllFTs(context: Context, search?: FtSearch) {
+    return context.$axios.get<HttpStringified<FtSimplified>[]>(resource, {
       params: search,
     });
   },
   getFT(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<FT>>(`${resource}/${id}`);
+    return context.$axios.get<HttpStringified<Ft>>(`${resource}/${id}`);
   },
-  createFT(context: Context, ft: FTCreation) {
-    return context.$axios.post<HttpStringified<FT>>(resource, ft);
+  createFT(context: Context, ft: FtCreation) {
+    return context.$axios.post<HttpStringified<Ft>>(resource, ft);
   },
   getFtStats(context: Context) {
     return context.$axios.get<StatsPayload>(resource + "/stats");
   },
-  updateFT(context: Context, ft: FTUpdate) {
-    return context.$axios.patch<HttpStringified<FT>>(
+  updateFT(context: Context, ft: FtUpdate) {
+    return context.$axios.patch<HttpStringified<Ft>>(
       `${resource}/${ft.id}`,
       ft
     );
@@ -55,18 +55,18 @@ export default {
   },
 
   submitFT(context: Context, ftId: number) {
-    return context.$axios.patch<HttpStringified<FT>>(
+    return context.$axios.patch<HttpStringified<Ft>>(
       `${resource}/${ftId}/submit`
     );
   },
   validateFT(context: Context, ftId: number, reviewer: Reviewer) {
-    return context.$axios.post<HttpStringified<FT>>(
+    return context.$axios.post<HttpStringified<Ft>>(
       `${resource}/${ftId}/validation`,
       reviewer
     );
   },
   refuseFT(context: Context, ftId: number, reviewer: Reviewer) {
-    return context.$axios.post<HttpStringified<FT>>(
+    return context.$axios.post<HttpStringified<Ft>>(
       `${resource}/${ftId}/refusal`,
       reviewer
     );
@@ -76,7 +76,7 @@ export default {
     ftId: number,
     timeSpanParameters: FtTimeSpanParameters
   ) {
-    return context.$axios.post<HttpStringified<FT>>(
+    return context.$axios.post<HttpStringified<Ft>>(
       `${resource}/${ftId}/assignment-approval`,
       timeSpanParameters
     );
@@ -86,19 +86,19 @@ export default {
   },
 
   getPreviousFT(context: Context, id: number) {
-    return context.$axios.get<FTPageId>(resource + `/${id}/previous`);
+    return context.$axios.get<FtPageId>(resource + `/${id}/previous`);
   },
 
   getNextFT(context: Context, id: number) {
-    return context.$axios.get<FTPageId>(resource + `/${id}/next`);
+    return context.$axios.get<FtPageId>(resource + `/${id}/next`);
   },
 
   updateFTTimeWindow(
     context: Context,
     ftId: number,
-    timeWindow: FTTimeWindowUpdate
+    timeWindow: FtTimeWindowUpdate
   ) {
-    return context.$axios.post<HttpStringified<FTTimeWindow>>(
+    return context.$axios.post<HttpStringified<FtTimeWindow>>(
       `${resource}/${ftId}/time-windows`,
       timeWindow
     );
@@ -111,7 +111,7 @@ export default {
     context: Context,
     ftId: number,
     twId: number,
-    userRequests: FTUserRequestUpdate[]
+    userRequests: FtUserRequestUpdate[]
   ) {
     return context.$axios.post<HttpStringified<User[]>>(
       `${resource}/${ftId}/time-windows/${twId}/user-requests`,
@@ -133,9 +133,9 @@ export default {
     context: Context,
     ftId: number,
     twId: number,
-    teamRequests: FTTeamRequestUpdate[]
+    teamRequests: FtTeamRequestUpdate[]
   ) {
-    return context.$axios.post<HttpStringified<FTTeamRequest[]>>(
+    return context.$axios.post<HttpStringified<FtTeamRequest[]>>(
       `${resource}/${ftId}/time-windows/${twId}/team-requests`,
       teamRequests
     );

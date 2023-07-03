@@ -26,6 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { formatDate } from "~/utils/date/dateUtils";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
@@ -34,7 +35,6 @@ import {
   FtFeedbackSubjectType,
 } from "~/utils/models/feedback";
 import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user";
-import { formatDate } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
   name: "FeedbackCard",
@@ -63,10 +63,10 @@ export default Vue.extend({
       );
     },
     faFeedbacks(): FaFeedback[] {
-      return this.$accessor.FA.mFA.feedbacks ?? [];
+      return this.$accessor.fa.mFA.feedbacks ?? [];
     },
     fatFeedbacks(): FtFeedback[] {
-      return this.$accessor.FT.mFT.feedbacks;
+      return this.$accessor.ft.mFT.feedbacks;
     },
     me(): MyUserInformation {
       return this.$accessor.user.me;
@@ -93,7 +93,7 @@ export default Vue.extend({
           author,
           createdAt: new Date(),
         };
-        await this.$accessor.FA.addFeedback(feedback);
+        await this.$accessor.fa.addFeedback(feedback);
       } else {
         const feedback: FtFeedback = {
           subject: FtFeedbackSubjectType.COMMENT,
@@ -101,7 +101,7 @@ export default Vue.extend({
           author,
           createdAt: new Date(),
         };
-        await this.$accessor.FT.addFeedback(feedback);
+        await this.$accessor.ft.addFeedback(feedback);
       }
       this.comment = "";
     },

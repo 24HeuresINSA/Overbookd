@@ -1,8 +1,8 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
+  Collaborator,
   CreateFa,
   Fa,
-  FaCollaborator,
   FaElectricityNeed,
   FaGeneralUpdate,
   FaPageId,
@@ -30,21 +30,21 @@ const resource = "/fa";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {
-  getAllFAs(context: Context, search?: SearchFa) {
+  getAllFas(context: Context, search?: SearchFa) {
     return context.$axios.get<HttpStringified<Fa>[]>(resource, {
       params: search,
     });
   },
 
-  getFAById(context: Context, id: number) {
+  getFaById(context: Context, id: number) {
     return context.$axios.get<HttpStringified<Fa>>(resource + `/${id}`);
   },
 
-  createNewFA(context: Context, FA: CreateFa) {
+  createNewFa(context: Context, FA: CreateFa) {
     return context.$axios.post<HttpStringified<Fa>>(resource, FA);
   },
 
-  deleteFA(context: Context, id: number) {
+  deleteFa(context: Context, id: number) {
     return context.$axios.delete<void>(`${resource}/${id}`);
   },
 
@@ -52,28 +52,16 @@ export default {
     return context.$axios.get<StatsPayload>(resource + "/stats");
   },
 
-  updateFA(context: Context, id: number, FA: FaGeneralUpdate) {
-    return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, FA);
+  updateFa(context: Context, id: number, fa: FaGeneralUpdate) {
+    return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, fa);
   },
 
-  updateFACollaborators(
-    context: Context,
-    id: number,
-    collaborators: FaCollaborator[]
-  ) {
-    return context.$axios.post(`/collaborator/${id}`, collaborators);
+  updateCollaborator(context: Context, id: number, collaborator: Collaborator) {
+    return context.$axios.post(`/collaborator/${id}`, collaborator);
   },
 
-  deleteFACollaborators(context: Context, id: number) {
-    return context.$axios.delete(`/collaborator/${id}`);
-  },
-
-  updateFASignaNeeds(
-    context: Context,
-    id: number,
-    fa_signa_needs: FaSignaNeed[]
-  ) {
-    return context.$axios.post(`/fa-signa-needs/${id}`, fa_signa_needs);
+  updateFASignaNeeds(context: Context, id: number, signaNeeds: FaSignaNeed[]) {
+    return context.$axios.post(`/fa-signa-needs/${id}`, signaNeeds);
   },
 
   deleteFASignaNeeds(context: Context, id: number) {
@@ -98,12 +86,9 @@ export default {
   updateFAElectricityNeeds(
     context: Context,
     id: number,
-    electricity_needs: FaElectricityNeed[]
+    electricityNeeds: FaElectricityNeed[]
   ) {
-    return context.$axios.post(
-      `/fa-electricity-needs/${id}`,
-      electricity_needs
-    );
+    return context.$axios.post(`/fa-electricity-needs/${id}`, electricityNeeds);
   },
 
   deleteFAElectricityNeeds(context: Context, id: number) {

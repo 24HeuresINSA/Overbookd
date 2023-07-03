@@ -155,13 +155,13 @@ export default Vue.extend({
   name: "FACheckBeforeSubmitCard",
   computed: {
     FA(): any {
-      return this.$accessor.FA;
+      return this.$accessor.fa;
     },
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     allSortedGearRequests(): SortedStoredGearRequests {
-      return this.$accessor.FA.allSortedGearRequests;
+      return this.$accessor.fa.allSortedGearRequests;
     },
 
     hasAtLeatOneError(): boolean {

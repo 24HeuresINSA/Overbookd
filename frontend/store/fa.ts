@@ -13,7 +13,6 @@ import {
   Collaborator,
   CreateFa,
   Fa,
-  FaCollaborator,
   FaElectricityNeed,
   FaPageId,
   FaSignaNeed,
@@ -25,7 +24,6 @@ import {
   SitePublishAnimation,
   SitePublishAnimationCreation,
   SortedStoredGearRequests,
-  TimeWindowType,
   castFaWithDate,
 } from "~/utils/models/fa";
 import {
@@ -33,7 +31,7 @@ import {
   FaFeedbackSubjectType,
   FeedbackCreation,
 } from "~/utils/models/feedback";
-import { FT, FTSimplified } from "~/utils/models/ft";
+import { Ft, FtSimplified } from "~/utils/models/ft";
 import {
   GearRequest,
   GearRequestCreation,
@@ -52,7 +50,7 @@ export const state = () => ({
   mFA: {
     status: FaStatus.DRAFT,
     name: "",
-    fts: [] as FTSimplified[],
+    fts: [] as FtSimplified[],
   } as Fa,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
@@ -69,13 +67,6 @@ export const getters = getterTree(state, {
   barrieresGearRequests(state) {
     return state.gearRequests.filter(
       (gr) => gr.gear.owner?.code === "barrieres"
-    );
-  },
-  animationTimeWindows(state): FaTimeWindow[] {
-    return (
-      state.mFA.timeWindows?.filter(
-        (timeWindow) => timeWindow.type === TimeWindowType.ANIM
-      ) ?? []
     );
   },
   gearRequestRentalPeriods(state): Period[] {
@@ -127,20 +118,20 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
-    if (!mFA.faSignaNeeds) mFA.faSignaNeeds = [];
-    mFA.faSignaNeeds?.push(signaNeed);
+    if (!mFA.signaNeeds) mFA.signaNeeds = [];
+    mFA.signaNeeds?.push(signaNeed);
   },
 
   UPDATE_SIGNA_NEED_COUNT({ mFA }, { index, count }) {
-    const existingSignaNeeds = mFA.faSignaNeeds?.at(index);
+    const existingSignaNeeds = mFA.signaNeeds?.at(index);
     if (existingSignaNeeds) {
       existingSignaNeeds.count = Number(count);
     }
   },
 
   DELETE_SIGNA_NEED({ mFA }, index: number) {
-    const minimumList = mFA.faSignaNeeds ?? [];
-    mFA.faSignaNeeds = removeItemAtIndex(minimumList, index);
+    const minimumList = mFA.signaNeeds ?? [];
+    mFA.signaNeeds = removeItemAtIndex(minimumList, index);
   },
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
@@ -161,38 +152,26 @@ export const mutations = mutationTree(state, {
     mFA.timeWindows = removeItemAtIndex(minimumList, index);
   },
 
-  ADD_COLLABORATOR({ mFA }, collaborator: FaCollaborator) {
-    if (!mFA.faCollaborators) mFA.faCollaborators = [];
-    mFA.faCollaborators?.push(collaborator);
-  },
-
-  UPDATE_COLLABORATOR({ mFA }, { index, key, value }) {
-    if (!mFA.faCollaborators || !mFA.faCollaborators[index]) return;
-    mFA.faCollaborators[index].collaborator[key as keyof Collaborator] =
-      value as never;
-  },
-
-  DELETE_COLLABORATOR({ mFA }, index: number) {
-    const minimumList = mFA.faCollaborators ?? [];
-    mFA.faCollaborators = removeItemAtIndex(minimumList, index);
+  UPDATE_COLLABORATOR({ mFA }, collaborator: Collaborator) {
+    mFA.collaborator = collaborator;
   },
 
   ADD_ELECTRICITY_NEED({ mFA }, elecNeed: FaElectricityNeed) {
-    if (!mFA.faElectricityNeeds) mFA.faElectricityNeeds = [];
-    mFA.faElectricityNeeds?.push(elecNeed);
+    if (!mFA.electricityNeeds) mFA.electricityNeeds = [];
+    mFA.electricityNeeds?.push(elecNeed);
   },
 
   UPDATE_ELECTRICITY_NEED(
     { mFA },
     { index, elecNeed }: { index: number; elecNeed: FaElectricityNeed }
   ) {
-    const minimumList = mFA.faElectricityNeeds ?? [];
-    mFA.faElectricityNeeds = updateItemToList(minimumList, index, elecNeed);
+    const minimumList = mFA.electricityNeeds ?? [];
+    mFA.electricityNeeds = updateItemToList(minimumList, index, elecNeed);
   },
 
   DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
-    const minimumList = mFA.faElectricityNeeds ?? [];
-    mFA.faElectricityNeeds = removeItemAtIndex(minimumList, index);
+    const minimumList = mFA.electricityNeeds ?? [];
+    mFA.electricityNeeds = removeItemAtIndex(minimumList, index);
   },
 
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest<"FA">) {
@@ -296,7 +275,7 @@ export const mutations = mutationTree(state, {
     mFA.faSitePublishAnimation = undefined;
   },
 
-  ADD_FT({ mFA }, ft: FT) {
+  ADD_FT({ mFA }, ft: Ft) {
     mFA.fts = [...mFA.fts, ft];
   },
 });
@@ -314,7 +293,7 @@ export const actions = actionTree(
 
     getAndSet: async function ({ commit }, id: number) {
       const [resFA, resGearRequests] = await Promise.all([
-        safeCall(this, repo.getFAById(this, id)),
+        safeCall(this, repo.getFaById(this, id)),
         safeCall(this, repo.getGearRequests(this, id)),
       ]);
       if (!resGearRequests || !resFA) return null;
@@ -350,23 +329,23 @@ export const actions = actionTree(
     save: async function ({ dispatch, state }) {
       const allPromise = [];
       allPromise.push(
-        RepoFactory.faRepo.updateFA(this, state.mFA.id, state.mFA)
+        RepoFactory.faRepo.updateFa(this, state.mFA.id, state.mFA)
       );
-      if (state.mFA.faCollaborators) {
+      if (state.mFA.collaborator) {
         allPromise.push(
-          RepoFactory.faRepo.updateFACollaborators(
+          RepoFactory.faRepo.updateCollaborator(
             this,
             state.mFA.id,
-            state.mFA.faCollaborators
+            state.mFA.collaborator
           )
         );
       }
-      if (state.mFA.faSignaNeeds) {
+      if (state.mFA.signaNeeds) {
         allPromise.push(
           RepoFactory.faRepo.updateFASignaNeeds(
             this,
             state.mFA.id,
-            state.mFA.faSignaNeeds
+            state.mFA.signaNeeds
           )
         );
       }
@@ -379,12 +358,12 @@ export const actions = actionTree(
           )
         );
       }
-      if (state.mFA.faElectricityNeeds) {
+      if (state.mFA.electricityNeeds) {
         allPromise.push(
           RepoFactory.faRepo.updateFAElectricityNeeds(
             this,
             state.mFA.id,
-            state.mFA.faElectricityNeeds
+            state.mFA.electricityNeeds
           )
         );
       }
@@ -555,7 +534,7 @@ export const actions = actionTree(
     },
 
     async deleteSignaNeed({ commit, state }, index: number) {
-      const currentSignaNeedId = state.mFA.faSignaNeeds?.at(index)?.id;
+      const currentSignaNeedId = state.mFA.signaNeeds?.at(index)?.id;
       if (currentSignaNeedId) {
         await safeCall(
           this,
@@ -587,24 +566,31 @@ export const actions = actionTree(
       commit("DELETE_TIME_WINDOW", index);
     },
 
-    addCollaborator({ commit }, collaborator: FaCollaborator) {
-      commit("ADD_COLLABORATOR", collaborator);
-    },
-
     updateCollaborator({ commit }, { index, key, value }) {
       commit("UPDATE_COLLABORATOR", { index, key, value });
     },
 
-    async deleteCollaborator({ commit, state }, index: number) {
-      const collaboratorId =
-        state.mFA.faCollaborators?.at(index)?.collaborator?.id;
-      if (collaboratorId) {
-        await safeCall(
+    async clearCollaborator({ commit, state }) {
+      const collaboratorId = state.mFA.collaborator?.id;
+      if (!collaboratorId) return;
+      const emptyCollaborator: Collaborator = {
+        firstname: undefined,
+        lastname: undefined,
+        email: undefined,
+        phone: undefined,
+        company: undefined,
+        comment: undefined,
+      };
+      const res = await safeCall(
+        this,
+        RepoFactory.faRepo.updateCollaborator(
           this,
-          RepoFactory.faRepo.deleteFACollaborators(this, collaboratorId)
-        );
-      }
-      commit("DELETE_COLLABORATOR", index);
+          collaboratorId,
+          emptyCollaborator
+        )
+      );
+      if (!res) return;
+      commit("UPDATE_COLLABORATOR", res.data);
     },
 
     addElectricityNeed({ commit }, elecNeed: FaElectricityNeed) {
@@ -617,7 +603,7 @@ export const actions = actionTree(
 
     async deleteElectricityNeed({ commit, state }, index: number) {
       const currentElectricityNeedId =
-        state.mFA.faElectricityNeeds?.at(index)?.id;
+        state.mFA.electricityNeeds?.at(index)?.id;
       if (currentElectricityNeedId) {
         await safeCall(
           this,
@@ -846,7 +832,7 @@ export const actions = actionTree(
     async fetchFAs({ commit }, search?: SearchFa) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.getAllFAs(this, search),
+        RepoFactory.faRepo.getAllFas(this, search),
         {
           errorMessage: "Impossible de charger les FAs",
         }
@@ -859,7 +845,7 @@ export const actions = actionTree(
     async createFa({ commit, dispatch }, fa: CreateFa) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.createNewFA(this, fa),
+        RepoFactory.faRepo.createNewFa(this, fa),
         {
           successMessage: "FA créée 🥳",
           errorMessage: "FA non créée 😢",
@@ -874,7 +860,7 @@ export const actions = actionTree(
     async deleteFA({ commit }, faId: number) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.deleteFA(this, faId),
+        RepoFactory.faRepo.deleteFa(this, faId),
         {
           successMessage: "FA supprimée 🥳",
           errorMessage: "FA non supprimée 😢",

@@ -23,18 +23,18 @@ import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FT, FTCardType } from "~/utils/models/ft";
+import { Ft, FtCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "FTDetailCard",
   components: { RichEditor, CardErrorList },
   data: () => ({
     owner: "humain",
-    cardType: FTCardType.DETAIL,
+    cardType: FtCardType.DETAIL,
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isValidatedByOwner(): boolean {
       return isTaskValidatedBy(this.mFT.reviews, this.owner);
@@ -54,8 +54,8 @@ export default Vue.extend({
       if (this.mFT.description === description) return;
       return this.updateFT({ description: description.trim() });
     },
-    updateFT(ftChunk: Partial<FT>) {
-      this.$accessor.FT.updateFT({ ...this.mFT, ...ftChunk });
+    updateFT(ftChunk: Partial<Ft>) {
+      this.$accessor.ft.updateFT({ ...this.mFT, ...ftChunk });
     },
   },
 });

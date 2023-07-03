@@ -3,46 +3,46 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 import {
-  generateGearRequestCreationBuilder,
-  isSameGearRequest,
-  isSimilarGearRequest,
-  isSimilarPeriod,
-  splitGearRequest,
-  uniqueByGearReducer,
-  uniqueGearRequestPeriodsReducer,
-  uniquePeriodsReducer,
+    generateGearRequestCreationBuilder,
+    isSameGearRequest,
+    isSimilarGearRequest,
+    isSimilarPeriod,
+    splitGearRequest,
+    uniqueByGearReducer,
+    uniqueGearRequestPeriodsReducer,
+    uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
 import {
-  Feedback,
-  FeedbackCreation,
-  FtFeedback,
-  FtFeedbackSubjectType,
+    Feedback,
+    FeedbackCreation,
+    FtFeedback,
+    FtFeedbackSubjectType,
 } from "~/utils/models/feedback";
 import {
-  FT,
-  FTCreation,
-  FTPageId,
-  FTSearch,
-  FTSimplified,
-  FTStatus,
-  FTTeamRequest,
-  FTTeamRequestUpdate,
-  FTTimeWindow,
-  FTUserRequest,
-  FTUserRequestUpdate,
-  castFTWithDate,
-  castTimeWindowWithDate,
-  getTimeWindowWithoutRequests,
-  toUpdateFT,
+    Ft,
+    FtCreation,
+    FtPageId,
+    FtSearch,
+    FtSimplified,
+    FtStatus,
+    FtTeamRequest,
+    FtTeamRequestUpdate,
+    FtTimeWindow,
+    FtUserRequest,
+    FtUserRequestUpdate,
+    castFTWithDate,
+    castTimeWindowWithDate,
+    getTimeWindowWithoutRequests,
+    toUpdateFT,
 } from "~/utils/models/ft";
 import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
-  GearRequestCreation,
-  GearRequestWithDrive,
-  Period,
-  StoredGearRequest,
-  castGearRequestWithDate,
+    GearRequestCreation,
+    GearRequestWithDrive,
+    Period,
+    StoredGearRequest,
+    castGearRequestWithDate,
 } from "~/utils/models/gearRequests";
 import { Review, Reviewer } from "~/utils/models/review";
 import { Team } from "~/utils/models/team";
@@ -52,8 +52,8 @@ import { formatUsername } from "~/utils/user/userUtils";
 const repo = RepoFactory.ftRepo;
 
 export const state = () => ({
-  mFT: defaultState() as FT,
-  FTs: [] as FTSimplified[],
+  mFT: defaultState() as Ft,
+  FTs: [] as FtSimplified[],
   gearRequests: [] as StoredGearRequest<"FT">[],
   localGearRequestRentalPeriodId: -1,
 });
@@ -85,19 +85,19 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  UPDATE_SELECTED_FT(state, ft: Partial<FT>) {
+  UPDATE_SELECTED_FT(state, ft: Partial<Ft>) {
     state.mFT = { ...state.mFT, ...ft };
   },
 
   RESET_FT(state) {
-    state.mFT = defaultState() as FT;
+    state.mFT = defaultState() as Ft;
   },
 
-  SET_FTS(state, fts: FTSimplified[]) {
+  SET_FTS(state, fts: FtSimplified[]) {
     state.FTs = fts;
   },
 
-  ADD_FT({ FTs }, ft: FT) {
+  ADD_FT({ FTs }, ft: Ft) {
     FTs.push(ft);
   },
 
@@ -105,17 +105,17 @@ export const mutations = mutationTree(state, {
     state.FTs = state.FTs.filter((ft) => ft.id !== ftId);
   },
 
-  ADD_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+  ADD_TIME_WINDOW({ mFT }, timeWindow: FtTimeWindow) {
     mFT.timeWindows = [...mFT.timeWindows, timeWindow];
   },
 
-  UPDATE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+  UPDATE_TIME_WINDOW({ mFT }, timeWindow: FtTimeWindow) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
     mFT.timeWindows = updateItemToList(mFT.timeWindows, index, timeWindow);
   },
 
-  DELETE_TIME_WINDOW({ mFT }, timeWindow: FTTimeWindow) {
+  DELETE_TIME_WINDOW({ mFT }, timeWindow: FtTimeWindow) {
     mFT.timeWindows = mFT.timeWindows.filter((tw) => tw.id !== timeWindow.id);
   },
 
@@ -124,7 +124,7 @@ export const mutations = mutationTree(state, {
     {
       timeWindowId,
       userRequests,
-    }: { timeWindowId: number; userRequests: FTUserRequest[] }
+    }: { timeWindowId: number; userRequests: FtUserRequest[] }
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
@@ -143,7 +143,7 @@ export const mutations = mutationTree(state, {
     {
       timeWindowId,
       teamRequests,
-    }: { timeWindowId: number; teamRequests: FTTeamRequest[] }
+    }: { timeWindowId: number; teamRequests: FtTeamRequest[] }
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
@@ -162,7 +162,7 @@ export const mutations = mutationTree(state, {
     {
       timeWindow,
       userRequest,
-    }: { timeWindow: FTTimeWindow; userRequest: FTUserRequest }
+    }: { timeWindow: FtTimeWindow; userRequest: FtUserRequest }
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
@@ -180,7 +180,7 @@ export const mutations = mutationTree(state, {
     {
       timeWindow,
       teamRequest,
-    }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
+    }: { timeWindow: FtTimeWindow; teamRequest: FtTeamRequest }
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
@@ -258,7 +258,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setFT({ commit }, ft: FT) {
+    setFT({ commit }, ft: Ft) {
       commit("UPDATE_SELECTED_FT", ft);
     },
 
@@ -282,7 +282,7 @@ export const actions = actionTree(
       dispatch("FA/fetchGearRequests", ft.fa.id, { root: true });
     },
 
-    async fetchFTs({ commit }, search?: FTSearch) {
+    async fetchFTs({ commit }, search?: FtSearch) {
       const res = await safeCall(this, repo.getAllFTs(this, search), {
         errorMessage: "Impossible de charger les FTs",
       });
@@ -290,7 +290,7 @@ export const actions = actionTree(
       commit("SET_FTS", res.data);
     },
 
-    async createFT({ commit, dispatch }, ft: FTCreation) {
+    async createFT({ commit, dispatch }, ft: FtCreation) {
       const res = await safeCall(this, repo.createFT(this, ft), {
         successMessage: "FT créée 🥳",
         errorMessage: "FT non créée 😢",
@@ -302,7 +302,7 @@ export const actions = actionTree(
       dispatch("setFT", { ...defaultState(), ...createdFT, id: res.data.id });
     },
 
-    async updateFT({ commit }, ft: FT) {
+    async updateFT({ commit }, ft: Ft) {
       const ftToUpdate = toUpdateFT(ft);
       const res = await safeCall(this, repo.updateFT(this, ftToUpdate), {
         successMessage: "FT sauvegardée 🥳",
@@ -314,7 +314,7 @@ export const actions = actionTree(
       commit("UPDATE_SELECTED_FT", updatedFT);
     },
 
-    async deleteFT({ commit }, ft: FT) {
+    async deleteFT({ commit }, ft: Ft) {
       const res = await safeCall(this, repo.deleteFT(this, ft.id), {
         successMessage: "FT supprimée 🥳",
       });
@@ -322,13 +322,13 @@ export const actions = actionTree(
       commit("DELETE_FT", ft.id);
     },
 
-    async restoreFT({ commit, dispatch }, ft: FT) {
+    async restoreFT({ commit, dispatch }, ft: Ft) {
       const restoredFT = { ...ft, isDeleted: false };
       dispatch("updateFT", restoredFT);
       commit("DELETE_FT", ft.id);
     },
 
-    async addTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
+    async addTimeWindow({ commit, state }, timeWindow: FtTimeWindow) {
       const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
         this,
@@ -434,7 +434,7 @@ export const actions = actionTree(
     },
 
     async previousPage({ state }) {
-      const res = await safeCall<FTPageId>(
+      const res = await safeCall<FtPageId>(
         this,
         repo.getPreviousFT(this, state.mFT.id),
         {
@@ -454,7 +454,7 @@ export const actions = actionTree(
     },
 
     async nextPage({ state }) {
-      const res = await safeCall<FTPageId>(
+      const res = await safeCall<FtPageId>(
         this,
         repo.getNextFT(this, state.mFT.id),
         {
@@ -475,7 +475,7 @@ export const actions = actionTree(
 
     async updateTimeWindow(
       { commit, dispatch, state },
-      timeWindow: FTTimeWindow
+      timeWindow: FtTimeWindow
     ) {
       const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
@@ -507,14 +507,14 @@ export const actions = actionTree(
 
     async updateTimeWindowRequirements(
       { commit, state },
-      timeWindow: FTTimeWindow
+      timeWindow: FtTimeWindow
     ) {
       if (!timeWindow.id) return;
-      const adaptedUserRequests: FTUserRequestUpdate[] =
+      const adaptedUserRequests: FtUserRequestUpdate[] =
         timeWindow.userRequests.map((ur) => ({
           userId: ur.user.id,
         }));
-      const adaptedTeamRequests: FTTeamRequestUpdate[] =
+      const adaptedTeamRequests: FtTeamRequestUpdate[] =
         timeWindow.teamRequests.map((tr) => ({
           teamCode: tr.team.code,
           quantity: tr.quantity,
@@ -567,7 +567,7 @@ export const actions = actionTree(
       {
         timeWindow,
         userRequest,
-      }: { timeWindow: FTTimeWindow; userRequest: FTUserRequest }
+      }: { timeWindow: FtTimeWindow; userRequest: FtUserRequest }
     ) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
@@ -592,7 +592,7 @@ export const actions = actionTree(
       {
         timeWindow,
         teamRequest,
-      }: { timeWindow: FTTimeWindow; teamRequest: FTTeamRequest }
+      }: { timeWindow: FtTimeWindow; teamRequest: FtTeamRequest }
     ) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
@@ -612,7 +612,7 @@ export const actions = actionTree(
       commit("DELETE_TEAM_REQUEST", { timeWindow, teamRequest });
     },
 
-    async deleteTimeWindow({ commit, state }, timeWindow: FTTimeWindow) {
+    async deleteTimeWindow({ commit, state }, timeWindow: FtTimeWindow) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
         this,
@@ -931,10 +931,10 @@ export const actions = actionTree(
   }
 );
 
-function defaultState(): Omit<FT, "id"> {
+function defaultState(): Omit<Ft, "id"> {
   return {
     name: "",
-    status: FTStatus.DRAFT,
+    status: FtStatus.DRAFT,
     description: "",
     isStatic: false,
     timeWindows: [],

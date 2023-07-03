@@ -62,7 +62,7 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
@@ -75,7 +75,7 @@ export default Vue.extend({
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
       if (key === "numberOfPass") value = parseInt(value);
-      this.$accessor.FA.updateFA({ key: key, value: value });
+      this.$accessor.fa.updateFA({ key: key, value: value });
     },
   },
 });

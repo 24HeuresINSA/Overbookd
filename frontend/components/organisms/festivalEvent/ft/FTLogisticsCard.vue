@@ -39,7 +39,7 @@ import {
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
 import { Gear } from "~/utils/models/catalog.model";
-import { FT } from "~/utils/models/ft";
+import { Ft } from "~/utils/models/ft";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
@@ -60,14 +60,14 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isValid(): boolean {
       return Boolean(
         this.gear &&
           parseInt(this.quantity) >= 1 &&
-          this.$accessor.FT.gearRequestRentalPeriods.length > 0 &&
+          this.$accessor.ft.gearRequestRentalPeriods.length > 0 &&
           !this.isValidatedByMatos
       );
     },
@@ -89,11 +89,11 @@ export default Vue.extend({
         quantity: parseInt(this.quantity, 10),
       };
       if (this.gear.isConsumable) {
-        return this.$accessor.FT.addConsumableGearRequestForAllRentalPeriods(
+        return this.$accessor.ft.addConsumableGearRequestForAllRentalPeriods(
           gearRequestCreation
         );
       }
-      return this.$accessor.FT.addGearRequestForAllRentalPeriods(
+      return this.$accessor.ft.addGearRequestForAllRentalPeriods(
         gearRequestCreation
       );
     },

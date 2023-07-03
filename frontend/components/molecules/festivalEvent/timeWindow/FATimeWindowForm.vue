@@ -223,7 +223,7 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     type(): TimeWindowType {
       return this.timeWindow?.type ?? this.timeWindowType;
@@ -365,7 +365,7 @@ export default Vue.extend({
         firstname: this.me.firstname,
         lastname: this.me.lastname,
       };
-      this.$accessor.FA.resetLogValidations(author);
+      this.$accessor.fa.resetLogValidations(author);
       this.confirmTimeWindow();
     },
     closeAllDialogs() {

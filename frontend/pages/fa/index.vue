@@ -206,7 +206,7 @@ export default {
   }),
   computed: {
     FAs() {
-      return this.$accessor.FA.FAs;
+      return this.$accessor.fa.FAs;
     },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
@@ -262,7 +262,7 @@ export default {
       const status =
         this.selectedStatus === "" ? undefined : this.selectedStatus;
       const search = { isDeleted: this.isDeletedFilter, status };
-      await this.$accessor.FA.fetchFAs(search);
+      await this.$accessor.fa.fetchFAs(search);
     },
     preDelete(fa) {
       this.mFA = fa;
@@ -334,14 +334,14 @@ export default {
       const FA = {
         name: this.faName,
       };
-      await this.$accessor.FA.createFa(FA);
-      const savedFA = this.$accessor.FA.mFA;
+      await this.$accessor.fa.createFa(FA);
+      const savedFA = this.$accessor.fa.mFA;
       if (savedFA.id) {
         await this.$router.push({ path: "fa/" + savedFA.id });
       }
     },
     async deleteFA() {
-      await this.$accessor.FA.deleteFA(this.mFA.id);
+      await this.$accessor.fa.deleteFA(this.mFA.id);
       this.isDeleteFAOpen = false;
       this.mFA = undefined;
     },
@@ -405,7 +405,7 @@ export default {
       this.download("passsecu.csv", parsedCSV);
     },
     async exportCsvSigna() {
-      const signa_needs = await this.$accessor.FA.getSignaNeedsForCsv();
+      const signa_needs = await this.$accessor.fa.getSignaNeedsForCsv();
       const csvHeader = "Numero FA;Nom FA;Type;Texte;Nombre;Commentaire;";
       const csvRows = signa_needs.map((signa_need) => {
         const rowData = [
