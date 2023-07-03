@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateFaDto } from './dto/updateFa.dto';
-import { validationDto } from './dto/validation.dto';
+import { ValidationDto } from './dto/validation.dto';
 
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { PrismaService } from '../prisma.service';
@@ -89,7 +89,7 @@ export class FaService {
   async validatefa(
     userId: number,
     faId: number,
-    body: validationDto,
+    body: ValidationDto,
   ): Promise<void> {
     const teamId = body.teamId;
     await this.checkFaExistence(faId);
@@ -128,7 +128,7 @@ export class FaService {
   async refusefa(
     userId: number,
     faId: number,
-    body: validationDto,
+    body: ValidationDto,
   ): Promise<void> {
     const teamId = body.teamId;
     await this.checkFaExistence(faId);

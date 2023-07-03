@@ -9,7 +9,7 @@ import {
 import { FaStatus, faStatuses } from '../fa.model';
 import { SearchFa } from '../fa.service';
 
-export class FASearchRequestDto implements SearchFa {
+export class FaSearchRequestDto implements SearchFa {
   @ApiProperty({
     required: false,
     description: 'FA delete status',

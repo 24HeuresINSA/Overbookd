@@ -1,55 +1,55 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Post,
-  Query,
-  Request,
-  UseGuards,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    Param,
+    ParseIntPipe,
+    Patch,
+    Post,
+    Query,
+    Request,
+    UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiBearerAuth,
-  ApiBody,
-  ApiForbiddenResponse,
-  ApiNotFoundResponse,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
+    ApiBadRequestResponse,
+    ApiBearerAuth,
+    ApiBody,
+    ApiForbiddenResponse,
+    ApiNotFoundResponse,
+    ApiParam,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
 } from '@nestjs/swagger';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { StatsPayload } from 'src/common/services/stats.service';
 import {
-  ApprovedGearRequest,
-  GearSeekerType,
+    ApprovedGearRequest,
+    GearSeekerType,
 } from 'src/gear-requests/gearRequests.model';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
-  ExistingPeriodGearRequestFormRequestDto,
-  GearRequestFormRequestDto,
-  NewPeriodGearRequestFormRequestDto,
+    ExistingPeriodGearRequestFormRequestDto,
+    GearRequestFormRequestDto,
+    NewPeriodGearRequestFormRequestDto,
 } from '../gear-requests/dto/gearRequestFormRequest.dto';
 import {
-  ApprovedGearRequestResponseDto,
-  GearRequestResponseDto,
+    ApprovedGearRequestResponseDto,
+    GearRequestResponseDto,
 } from '../gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { GearRequestsService } from '../gear-requests/gearRequests.service';
 import { CompleteFaResponseDto } from './dto/completeFaResponse.dto';
 import { CreateFaDto } from './dto/createFa.dto';
-import { FASearchRequestDto } from './dto/faSearchRequest.dto';
+import { FaSearchRequestDto } from './dto/faSearchRequest.dto';
 import { LiteFaResponseDto } from './dto/liteFaResponse.dto';
 import { UpdateFaDto } from './dto/updateFa.dto';
-import { validationDto } from './dto/validation.dto';
+import { ValidationDto } from './dto/validation.dto';
 import { CompleteFaResponse, LiteFaResponse } from './fa.model';
 import { FaService } from './fa.service';
 import { FaIdResponse } from './faTypes';
@@ -102,7 +102,7 @@ export class FaController {
     description: 'Get FAs that are deleted',
   })
   findAll(
-    @Query() searchRequest: FASearchRequestDto,
+    @Query() searchRequest: FaSearchRequestDto,
   ): Promise<LiteFaResponse[]> {
     return this.faService.findAll(searchRequest);
   }
@@ -181,7 +181,7 @@ export class FaController {
   })
   validate(
     @Request() request: RequestWithUserPayload,
-    @Body() teamId: validationDto,
+    @Body() teamId: ValidationDto,
     @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
     const userId = request.user.userId ?? request.user.id;
@@ -231,7 +231,7 @@ export class FaController {
   })
   refuse(
     @Request() request: RequestWithUserPayload,
-    @Body() validationForm: validationDto,
+    @Body() validationForm: ValidationDto,
     @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
     const userId = request.user.userId ?? request.user.id;

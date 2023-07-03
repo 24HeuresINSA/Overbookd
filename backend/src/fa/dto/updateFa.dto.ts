@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
-  IsDateString,
   IsDefined,
   IsEnum,
   IsNotEmpty,
@@ -34,15 +33,6 @@ export class UpdateFaDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The creation date of the fa',
-    default: new Date(),
-  })
-  @IsOptional()
-  @IsDateString()
-  createdAt?: Date;
 
   @ApiProperty({
     required: false,
