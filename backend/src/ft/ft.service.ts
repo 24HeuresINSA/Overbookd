@@ -11,7 +11,6 @@ import { FtUserRequestService } from 'src/ft_user_request/ftUserRequest.service'
 import { PrismaService } from '../prisma.service';
 import { CreateFtDto } from './dto/createFt.dto';
 import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
-import { ReviewerResponseDto } from './dto/reviewerResponse.dto';
 import { UpdateFtDto } from './dto/updateFt.dto';
 import { FtStatus, ftStatuses } from './ft.model';
 import {
@@ -20,6 +19,7 @@ import {
   LITE_FT_SELECT,
   TimeWindow,
 } from './ftTypes';
+import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;

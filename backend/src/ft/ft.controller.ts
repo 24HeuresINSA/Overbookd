@@ -50,12 +50,12 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/createFt.dto';
 import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
-import { ReviewerFormRequestDto } from './dto/reviewerFormRequest.dto';
-import { ReviewerResponseDto } from './dto/reviewerResponse.dto';
 import { UpdateFtDto } from './dto/updateFt.dto';
 import { ftStatuses } from './ft.model';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
+import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
+import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('ft')
