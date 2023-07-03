@@ -247,10 +247,10 @@ export interface CompleteFaResponse {
   signaNeeds: FaSignaNeed[];
   faValidation: FaReview[];
   faRefuse: FaReview[];
-  feedbacks: FaFeedbackRepresentation[];
-  timeWindows: FaTimeWindowRepresentation[];
+  feedbacks: FaFeedback[];
+  timeWindows: FaTimeWindow[];
   faSitePublishAnimation: SitePublishAnimation;
-  fts: BaseFtRepresentation[];
+  fts: BaseFt[];
 }
 
 export interface LiteFaResponse {
