@@ -43,7 +43,6 @@ export const COMPLETE_FA_SELECT = {
   isPassRequired: true,
   numberOfPass: true,
   waterNeed: true,
-  waterFlowRequired: true,
   collaborators: {
     select: {
       collaborator: {

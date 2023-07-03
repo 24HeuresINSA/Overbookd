@@ -116,13 +116,6 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
 
   @ApiProperty({
     required: false,
-    description: 'The water flow required of the fa',
-    type: Number,
-  })
-  waterFlowRequired?: number;
-
-  @ApiProperty({
-    required: false,
     description: 'The collaborator of the fa',
     type: FaCollaboratorRepresentation,
   })

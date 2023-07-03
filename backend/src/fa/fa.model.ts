@@ -241,7 +241,6 @@ export interface CompleteFaResponse {
   isPassRequired: boolean;
   numberOfPass?: number;
   waterNeed?: string;
-  waterFlowRequired?: number;
   collaborator?: FaCollaborator;
   electricityNeeds: FaElectricityNeed[];
   signaNeeds: FaSignaNeed[];

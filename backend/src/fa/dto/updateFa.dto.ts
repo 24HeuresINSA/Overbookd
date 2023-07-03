@@ -141,13 +141,4 @@ export class UpdateFaDto {
   @IsOptional()
   @IsString()
   waterNeed?: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The waterflow needed',
-  })
-  @IsOptional()
-  @IsNumber()
-  @Min(1)
-  waterFlowRequired?: number;
 }
