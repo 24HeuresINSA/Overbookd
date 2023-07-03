@@ -5,123 +5,124 @@
   services:
     - name: docker:dind
       command: ["--experimental"]
+  before_script:
+    - apk update
+    - apk add jq
+    - VERSION=$(jq -r '.version' ./${APP_PATH}/package.json)
+    - APP_NAME=$(jq -r '.name' ./${APP_PATH}/package.json)
   needs: []
 
 .pre-build:
   extends: .docker
   script:
-    - docker build --target installer --tag $CI_REGISTRY_IMAGE/$SCOPE:installer ./$SCOPE
-    - docker save $CI_REGISTRY_IMAGE/$SCOPE:installer > ${SCOPE}_installer.tar
+    - docker build --target installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:installer ./$APP_PATH
+    - docker save $CI_REGISTRY_IMAGE/$APP_NAME:installer > ${APP_NAME}_installer.tar
 
-frontend_docker_pre_build:
+'@overbookd/web docker pre build':
   extends: .pre-build
   variables:
-    SCOPE: frontend
+    APP_PATH: apps/web
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - frontend/**/*
+        - ${APP_PATH}/**/*
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - ${APP_PATH}/**/*
     - when: never
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
-      - ${SCOPE}_installer.tar
+      - ${APP_NAME}_installer.tar
     policy: push
 
 .docker-build:
   extends: .docker
-  before_script:
-    - apk update
-    - apk add jq
-    - VERSION=$(jq -r '.version' ./${SCOPE}/package.json)
   script:
-    - docker load -i ${SCOPE}_installer.tar
-    - docker build --cache-from $CI_REGISTRY_IMAGE/$SCOPE:installer --tag $CI_REGISTRY_IMAGE/$SCOPE:$TAG --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$SCOPE
-    - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${SCOPE}:${TAG} ${CI_REGISTRY_IMAGE}/${SCOPE}:${VERSION_TAG_PREFIX}${VERSION}
+    - docker load -i ${APP_NAME}_installer.tar
+    - docker build --cache-from $CI_REGISTRY_IMAGE/$APP_NAME:installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:$TAG --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$APP_PATH
+    - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${APP_NAME}:${TAG} ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION_TAG_PREFIX}${VERSION}
   after_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA
+    - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
 
   artifacts:
     paths:
       - ${BASE_IMAGE}.tar
     expire_in: 1 hour
 
-preprod_frontend_docker_build:
+'preprod @overbookd/web docker build':
   extends: .docker-build
-  needs: ["frontend_docker_pre_build"]
+  needs: ["@overbookd/web docker pre build"]
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
-      - ${SCOPE}_installer.tar
+      - ${APP_NAME}_installer.tar
     policy: pull
   variables:
-    SCOPE: frontend
+    APP_PATH: apps/web
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: pre-prod
     BASE_URL: $BASE_URL_PREPROD
-    BASE_IMAGE: frontend_pre-prod
+    BASE_IMAGE: "@overbookd/web_pre-prod"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - frontend/**/*
+        - ${APP_PATH}/**/*
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - ${APP_PATH}/**/*
     - when: never
 
-prod_frontend_docker_build:
+'prod @overbookd/web docker build':
   extends: .docker-build
-  needs: ["frontend_docker_pre_build"]
+  needs: ["@overbookd/web docker pre build"]
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
-      - ${SCOPE}_installer.tar
+      - ${APP_NAME}_installer.tar
     policy: pull
   variables:
-    SCOPE: frontend
+    APP_PATH: app/web
     VERSION_TAG_PREFIX: ""
     TAG: latest
     BASE_URL: $BASE_URL_PROD
-    BASE_IMAGE: frontend_prod
+    BASE_IMAGE: "@overbookd/web_prod"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - ${APP_PATH}/**/*
     - when: never
 
-backend_docker_build:
+'prod @overbookd/api docker build':
   extends: .docker-build
   variables:
-    SCOPE: backend
+    APP_PATH: app/api
     BASE_URL: $BASE_URL_PROD
-    BASE_IMAGE: backend
+    BASE_IMAGE: '@overbookd/api'
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - backend/**/*
+        - ${APP_PATH}/**/*
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - backend/**/*
+        - ${APP_PATH/**/*
     - when: never
   script:
-    - docker build --tag $CI_REGISTRY_IMAGE/$SCOPE:latest --tag $CI_REGISTRY_IMAGE/$SCOPE:$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod --tag $CI_REGISTRY_IMAGE/$SCOPE:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$SCOPE:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$SCOPE
-    - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${SCOPE}:latest ${CI_REGISTRY_IMAGE}/${SCOPE}:${VERSION} ${CI_REGISTRY_IMAGE}/${SCOPE}:pre-prod ${CI_REGISTRY_IMAGE}/${SCOPE}:pre-prod_${VERSION}
+    - docker build --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$APP_PATH
+    - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${APP_NAME}:latest ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION} ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod_${VERSION}
   artifacts:
     paths:
       - ${BASE_IMAGE}.tar
