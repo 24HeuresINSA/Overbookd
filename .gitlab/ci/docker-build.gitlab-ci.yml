@@ -18,7 +18,7 @@
     - docker build --target installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:installer ./$APP_PATH
     - docker save $CI_REGISTRY_IMAGE/$APP_NAME:installer > ${APP_NAME}_installer.tar
 
-'@overbookd/web docker pre build':
+"@overbookd/web_docker_pre_build":
   extends: .pre-build
   variables:
     APP_PATH: apps/web
@@ -55,9 +55,9 @@
       - ${BASE_IMAGE}.tar
     expire_in: 1 hour
 
-'preprod @overbookd/web docker build':
+"preprod_@overbookd/web_docker_build":
   extends: .docker-build
-  needs: ["@overbookd/web docker pre build"]
+  needs: ["@overbookd/web_docker_pre_build"]
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
@@ -80,9 +80,9 @@
         - ${APP_PATH}/**/*
     - when: never
 
-'prod @overbookd/web docker build':
+"prod_@overbookd/web_docker_build":
   extends: .docker-build
-  needs: ["@overbookd/web docker pre build"]
+  needs: ["@overbookd/web_docker_pre_build"]
   cache:
     key: $CI_COMMIT_REF_SLUG
     paths:
@@ -102,12 +102,12 @@
         - ${APP_PATH}/**/*
     - when: never
 
-'prod @overbookd/api docker build':
+'@overbookd/api_docker_build':
   extends: .docker-build
   variables:
     APP_PATH: app/api
     BASE_URL: $BASE_URL_PROD
-    BASE_IMAGE: '@overbookd/api'
+    BASE_IMAGE: "@overbookd/api"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
