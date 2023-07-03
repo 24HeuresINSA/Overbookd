@@ -199,9 +199,8 @@ export class FaService {
   private formatFaWithCollaboratorResponse(
     fa: DatabaseCompleteFaResponse,
   ): CompleteFaResponse {
-    return {
-      ...fa,
-      collaborator: fa.collaborators.at(0)
-    };
+    const collaborator = fa.collaborators.at(0).collaborator;
+    delete fa.collaborators;
+    return { ...fa, collaborator };
   }
 }

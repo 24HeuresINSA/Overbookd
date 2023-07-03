@@ -55,22 +55,40 @@ export type FaType =
   | typeof SPECTACLE
   | typeof AUTRE;
 
-export class SignaLocation {
+export interface SignaLocation {
   id: number;
   name: string;
 }
 
-class UserName {
+export class SignaLocationRepresentation implements SignaLocation {
+  id: number;
+  name: string;
+}
+
+export interface UserName {
   firstname: string;
   lastname: string;
   nickname?: string;
 }
 
-export class UserNameWithId extends UserName {
+export class UserNameRepresentation implements UserName {
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+}
+
+export interface UserNameWithId extends UserName {
   id: number;
 }
 
-export class Team {
+export class UserNameWithIdRepresentation
+  extends UserNameRepresentation
+  implements UserNameWithId
+{
+  id: number;
+}
+
+export interface Team {
   id: number;
   name: string;
   color: string;
@@ -78,8 +96,15 @@ export class Team {
   code: string;
 }
 
-export class FaCollaborator {
+export class TeamRepresentation implements Team {
   id: number;
+  name: string;
+  color: string;
+  icon: string;
+  code: string;
+}
+
+export interface FaCollaborator {
   firstname?: string;
   lastname?: string;
   phone?: string;
@@ -88,7 +113,16 @@ export class FaCollaborator {
   comment?: string;
 }
 
-export class FaElectricityNeed {
+export class FaCollaboratorRepresentation implements FaCollaborator {
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
+  email?: string;
+  company?: string;
+  comment?: string;
+}
+
+export interface FaElectricityNeed {
   id: number;
   electricityType: ElectricityType;
   device?: string;
@@ -97,7 +131,16 @@ export class FaElectricityNeed {
   comment?: string;
 }
 
-export class FaSignaNeed {
+export class FaElectricityNeedRepresentation implements FaElectricityNeed {
+  id: number;
+  electricityType: ElectricityType;
+  device?: string;
+  power: number;
+  count: number;
+  comment?: string;
+}
+
+export interface FaSignaNeed {
   id: number;
   signaType: SignaType;
   text: string;
@@ -105,35 +148,80 @@ export class FaSignaNeed {
   comment?: string;
 }
 
-export class FaFeedback {
+export class FaSignaNeedRepresentation implements FaSignaNeed {
+  id: number;
+  signaType: SignaType;
+  text: string;
+  count: number;
+  comment?: string;
+}
+
+export interface FaFeedback {
   comment: string;
   createdAt: Date;
   author: UserName;
   subject: FaFeedbackSubjectType;
 }
 
-export class FaTimeWindow {
+export class FaFeedbackRepresentation implements FaFeedback {
+  comment: string;
+  createdAt: Date;
+  author: UserNameRepresentation;
+  subject: FaFeedbackSubjectType;
+}
+
+export interface FaTimeWindow {
   id: number;
   start: Date;
   end: Date;
 }
 
-export class BaseFt {
+export class FaTimeWindowRepresentation implements FaTimeWindow {
+  id: number;
+  start: Date;
+  end: Date;
+}
+
+export interface BaseFt {
   id: number;
   name: string;
   status: FtStatus;
 }
 
-export class FaReview {
+export class BaseFtRepresentation implements BaseFt {
+  id: number;
+  name: string;
+  status: FtStatus;
+}
+
+export interface FaReview {
   user: UserName;
   team: Team;
 }
 
-export class FaReviewTeam {
+export class FaReviewRepresentation implements FaReview {
+  user: UserNameRepresentation;
+  team: TeamRepresentation;
+}
+
+export interface FaReviewTeam {
   team: Team;
 }
 
-export class SitePublishAnimation {
+export class FaReviewTeamRepresentation implements FaReviewTeam {
+  team: TeamRepresentation;
+}
+
+export interface SitePublishAnimation {
+  photoLink?: string;
+  description?: string;
+  isFlagship?: boolean;
+  categories?: SitePublishAnimationCategoryType[];
+}
+
+export class SitePublishAnimationRepresentation
+  implements SitePublishAnimation
+{
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
@@ -159,10 +247,10 @@ export interface CompleteFaResponse {
   signaNeeds: FaSignaNeed[];
   faValidation: FaReview[];
   faRefuse: FaReview[];
-  feedbacks: FaFeedback[];
-  timeWindows: FaTimeWindow[];
+  feedbacks: FaFeedbackRepresentation[];
+  timeWindows: FaTimeWindowRepresentation[];
   faSitePublishAnimation: SitePublishAnimation;
-  fts: BaseFt[];
+  fts: BaseFtRepresentation[];
 }
 
 export interface LiteFaResponse {

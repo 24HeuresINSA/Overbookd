@@ -1,19 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   BaseFt,
+  BaseFtRepresentation,
   CompleteFaResponse,
   FaCollaborator,
+  FaCollaboratorRepresentation,
   FaElectricityNeed,
+  FaElectricityNeedRepresentation,
   FaFeedback,
+  FaFeedbackRepresentation,
   FaReview,
+  FaReviewRepresentation,
   FaSignaNeed,
+  FaSignaNeedRepresentation,
   FaStatus,
   FaTimeWindow,
+  FaTimeWindowRepresentation,
   FaType,
   SignaLocation,
+  SignaLocationRepresentation,
   SitePublishAnimation,
+  SitePublishAnimationRepresentation,
   Team,
+  TeamRepresentation,
   UserNameWithId,
+  UserNameWithIdRepresentation,
   faStatuses,
   faTypes,
 } from '../fa.model';
@@ -57,21 +68,21 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: false,
     description: 'The team of the fa',
-    type: Team,
+    type: TeamRepresentation,
   })
   team?: Team;
 
   @ApiProperty({
     required: false,
     description: 'The user in charge of the fa',
-    type: UserNameWithId,
+    type: UserNameWithIdRepresentation,
   })
   userInCharge?: UserNameWithId;
 
   @ApiProperty({
     required: false,
     description: 'The location of the fa',
-    type: SignaLocation,
+    type: SignaLocationRepresentation,
   })
   location?: SignaLocation;
 
@@ -113,14 +124,14 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: false,
     description: 'The collaborator of the fa',
-    type: FaCollaborator,
+    type: FaCollaboratorRepresentation,
   })
   collaborator?: FaCollaborator;
 
   @ApiProperty({
     required: true,
     description: 'The electricity needs of the fa',
-    type: FaElectricityNeed,
+    type: FaElectricityNeedRepresentation,
     isArray: true,
   })
   electricityNeeds: FaElectricityNeed[];
@@ -128,7 +139,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The signa needs of the fa',
-    type: FaSignaNeed,
+    type: FaSignaNeedRepresentation,
     isArray: true,
   })
   signaNeeds: FaSignaNeed[];
@@ -136,7 +147,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The validations of the fa',
-    type: FaReview,
+    type: FaReviewRepresentation,
     isArray: true,
   })
   faValidation: FaReview[];
@@ -144,7 +155,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The refusals of the fa',
-    type: FaReview,
+    type: FaReviewRepresentation,
     isArray: true,
   })
   faRefuse: FaReview[];
@@ -152,7 +163,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The feedabcks of the fa',
-    type: FaFeedback,
+    type: FaFeedbackRepresentation,
     isArray: true,
   })
   feedbacks: FaFeedback[];
@@ -160,7 +171,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The time windows of the fa',
-    type: FaTimeWindow,
+    type: FaTimeWindowRepresentation,
     isArray: true,
   })
   timeWindows: FaTimeWindow[];
@@ -168,14 +179,14 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The site publish animation of the fa',
-    type: SitePublishAnimation,
+    type: SitePublishAnimationRepresentation,
   })
   faSitePublishAnimation: SitePublishAnimation;
 
   @ApiProperty({
     required: true,
     description: 'The fts of the fa',
-    type: BaseFt,
+    type: BaseFtRepresentation,
     isArray: true,
   })
   fts: BaseFt[];
