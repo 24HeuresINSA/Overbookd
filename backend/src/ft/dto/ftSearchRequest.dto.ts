@@ -6,7 +6,7 @@ import {
   IsOptional,
   ValidationArguments,
 } from 'class-validator';
-import { FtStatus, esftStatus } from '../ft.model';
+import { FtStatus, ftStatuses } from '../ft.model';
 import { SearchFt } from '../ft.service';
 
 export class FTSearchRequestDto implements SearchFt {
@@ -22,12 +22,12 @@ export class FTSearchRequestDto implements SearchFt {
   @ApiProperty({
     required: false,
     description: 'FT status',
-    enum: esftStatus,
+    enum: ftStatuses,
   })
   @IsOptional()
-  @IsEnum(esftStatus, {
+  @IsEnum(ftStatuses, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(esftStatus)}`,
+      `${va.property} must be one of ${Object.values(ftStatuses)}`,
   })
   status?: FtStatus;
 }

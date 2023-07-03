@@ -56,7 +56,7 @@ import {
 } from './dto/ft-response.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
 import { UpdateFtDto } from './dto/update-ft.dto';
-import { esftStatus } from './ft.model';
+import { ftStatuses } from './ft.model';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
 
@@ -113,7 +113,7 @@ export class FtController {
     name: 'status',
     required: false,
     type: String,
-    enum: esftStatus,
+    enum: ftStatuses,
     description: 'Get FTs with a specific status',
   })
   findAll(

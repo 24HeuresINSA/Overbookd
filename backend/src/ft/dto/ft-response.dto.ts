@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TimeSpanBase } from 'src/assignment/types/ftTimeSpanTypes';
 import { UserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { FtStatus, esftStatus } from '../ft.model';
+import { FtStatus, ftStatuses } from '../ft.model';
 import {
   CompleteFtResponse,
   Feedback,
@@ -43,7 +43,7 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: esftStatus,
+    enum: ftStatuses,
   })
   status: FtStatus;
 
@@ -146,7 +146,7 @@ export class LiteFtResponseDto implements LiteFtResponse {
   @ApiProperty({
     required: true,
     description: 'The status of the ft',
-    enum: esftStatus,
+    enum: ftStatuses,
   })
   status: FtStatus;
 

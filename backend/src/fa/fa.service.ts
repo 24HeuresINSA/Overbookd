@@ -63,11 +63,12 @@ export class FaService {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    return this.prisma.fa.update({
+    const updatedFa = this.prisma.fa.update({
       where: { id },
       data: updatefaDto,
       select: COMPLETE_FA_SELECT,
     });
+    return this.formatFaWithCollaboratorResponse(updatedFa);
   }
 
   async create(faCreation: CreateFaDto): Promise<CompleteFaResponse> {
@@ -200,11 +201,7 @@ export class FaService {
   ): CompleteFaResponse {
     return {
       ...fa,
-      // collaborator = the first collaborator if exists
-      collaborator:
-        fa.collaborators.length > 0
-          ? fa.collaborators[0].collaborator
-          : undefined,
+      collaborator: fa.collaborators.at(0)
     };
   }
 }

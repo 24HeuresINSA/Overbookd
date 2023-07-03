@@ -79,7 +79,7 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Create a new fa',
-    type: Promise<CompleteFaResponseDto>,
+    type: CompleteFaResponseDto,
   })
   create(@Body() FA: CreateFaDto): Promise<CompleteFaResponse> {
     return this.faService.create(FA);
@@ -92,7 +92,8 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get all fa',
-    type: Promise<LiteFaResponseDto[]>,
+    isArray: true,
+    type: LiteFaResponseDto,
   })
   @ApiQuery({
     name: 'isDeleted',
@@ -126,7 +127,7 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get a fa',
-    type: Promise<CompleteFaResponseDto>,
+    type: CompleteFaResponseDto,
   })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<CompleteFaResponse> {
     return this.faService.findOne(id);
@@ -139,7 +140,7 @@ export class FaController {
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
-    type: Promise<CompleteFaResponseDto>,
+    type: CompleteFaResponseDto,
   })
   @ApiBody({
     description: 'Update a fa',

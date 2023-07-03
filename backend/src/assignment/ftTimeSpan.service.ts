@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TaskCategory } from '@prisma/client';
-import { esftStatus } from 'src/ft/ft.model';
+import { ftStatuses } from 'src/ft/ft.model';
 import { PrismaService } from 'src/prisma.service';
 import { TeamService } from 'src/team/team.service';
 import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
@@ -36,7 +36,7 @@ import {
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
-  status: esftStatus.READY,
+  status: ftStatuses.READY,
 };
 
 const WHERE_FT_EXISTS_AND_READY = {
