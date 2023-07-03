@@ -9,12 +9,9 @@ import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { FtUserRequestService } from 'src/ft_user_request/ftUserRequest.service';
 import { PrismaService } from '../prisma.service';
-import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { CreateFtDto } from './dto/createFt.dto';
-import {
-  CompleteFtResponseDto,
-  LiteFtResponseDto,
-} from './dto/ftResponse.dto';
+import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
+import { ReviewerResponseDto } from './dto/reviewerResponse.dto';
 import { UpdateFtDto } from './dto/updateFt.dto';
 import { FtStatus, ftStatuses } from './ft.model';
 import {
