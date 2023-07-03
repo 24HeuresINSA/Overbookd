@@ -7,14 +7,15 @@ import {
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
+import { FtUserRequestService } from 'src/ft_user_request/ftUserRequest.service';
 import { PrismaService } from '../prisma.service';
 import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
-import { CreateFtDto } from './dto/create-ft.dto';
+import { CreateFtDto } from './dto/createFt.dto';
 import {
   CompleteFtResponseDto,
   LiteFtResponseDto,
-} from './dto/ft-response.dto';
-import { UpdateFtDto } from './dto/update-ft.dto';
+} from './dto/ftResponse.dto';
+import { UpdateFtDto } from './dto/updateFt.dto';
 import { FtStatus, ftStatuses } from './ft.model';
 import {
   COMPLETE_FT_SELECT,
@@ -22,7 +23,6 @@ import {
   LITE_FT_SELECT,
   TimeWindow,
 } from './ftTypes';
-import { FtUserRequestService } from 'src/ft_user_request/ftUserRequest.service';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;

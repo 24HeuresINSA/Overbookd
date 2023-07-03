@@ -31,16 +31,16 @@ export class FaSignaNeedController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faID')
+  @Post(':faId')
   @ApiBody({
     type: CreateFaSignaNeedDto,
     isArray: true,
   })
   upsert(
-    @Param('faID', ParseIntPipe) faID: string,
+    @Param('faId', ParseIntPipe) faId: number,
     @Body() createFaSignaNeedDto: CreateFaSignaNeedDto[],
   ) {
-    return this.faSignaNeedService.upsert(+faID, createFaSignaNeedDto);
+    return this.faSignaNeedService.upsert(faId, createFaSignaNeedDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -57,8 +57,8 @@ export class FaSignaNeedController {
     name: 'id',
     type: Number,
   })
-  findOne(@Param('id') id: string) {
-    return this.faSignaNeedService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.faSignaNeedService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -77,7 +77,7 @@ export class FaSignaNeedController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.faSignaNeedService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.faSignaNeedService.remove(id);
   }
 }

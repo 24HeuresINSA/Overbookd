@@ -13,7 +13,7 @@ import { FaElectricityNeed } from '@prisma/client';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto';
+import { CreateFaElectricityNeedDto } from './dto/createFaElectricityNeed.dto';
 import { FaElectricityNeedService } from './faElectricityNeed.service';
 
 @ApiBearerAuth()
@@ -26,14 +26,14 @@ export class FaElectricityNeedController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faID')
+  @Post(':faId')
   @ApiBody({ type: [CreateFaElectricityNeedDto] })
   upsert(
-    @Param('faID', ParseIntPipe) faID: string,
+    @Param('faId', ParseIntPipe) faId: number,
     @Body() createFaElectricityNeedDto: CreateFaElectricityNeedDto[],
   ): Promise<FaElectricityNeed[]> {
     return this.faElectricityNeedService.upsert(
-      +faID,
+      faId,
       createFaElectricityNeedDto,
     );
   }
@@ -48,14 +48,16 @@ export class FaElectricityNeedController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<FaElectricityNeed | null> {
-    return this.faElectricityNeedService.findOne(+id);
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FaElectricityNeed | null> {
+    return this.faElectricityNeedService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.faElectricityNeedService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.faElectricityNeedService.remove(id);
   }
 }

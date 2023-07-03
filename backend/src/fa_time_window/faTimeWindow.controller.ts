@@ -50,14 +50,14 @@ export class FaTimeWindowController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<FaTimeWindow | null> {
-    return this.faTimeWindowService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<FaTimeWindow | null> {
+    return this.faTimeWindowService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<void> {
-    return this.faTimeWindowService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.faTimeWindowService.remove(id);
   }
 }

@@ -1,28 +1,28 @@
 import { Period } from 'src/gear-requests/gearRequests.model';
 
-const Divertissement = 'Divertissement';
-const Culture = 'Culture';
-const Sport = 'Sport';
-const Enfant = 'Enfant';
-const Autre = 'Autre';
+const DIVERTISSEMENT = 'Divertissement';
+const CULTURE = 'Culture';
+const SPORT = 'Sport';
+const ENFANT = 'Enfant';
+const AUTRE = 'Autre';
 
 export const sitePublishAnimationCategoryTypes: Record<
   SitePublishAnimationCategoryType,
   SitePublishAnimationCategoryType
 > = {
-  Divertissement,
-  Culture,
-  Sport,
-  Enfant,
-  Autre,
+  Divertissement: DIVERTISSEMENT,
+  Culture: CULTURE,
+  Sport: SPORT,
+  Enfant: ENFANT,
+  Autre: AUTRE,
 };
 
 export type SitePublishAnimationCategoryType =
-  | typeof Divertissement
-  | typeof Culture
-  | typeof Sport
-  | typeof Enfant
-  | typeof Autre;
+  | typeof DIVERTISSEMENT
+  | typeof CULTURE
+  | typeof SPORT
+  | typeof ENFANT
+  | typeof AUTRE;
 
 export interface SitePublishAnimationFa {
   id: number;

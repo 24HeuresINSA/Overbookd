@@ -21,8 +21,8 @@ import {
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ftTimeWindowsResponseDto } from './dto/ftTimeWindowsResponse.dto';
-import { UpsertFtTimeWindowsDto } from './dto/upsertFtTimeWindows.dto';
+import { ftTimeWindowResponseDto } from './dto/ftTimeWindowResponse.dto';
+import { UpsertFtTimeWindowDto } from './dto/upsertFtTimeWindow.dto';
 import { FtTimeWindowService } from './ftTimeWindow.service';
 
 @ApiBearerAuth()
@@ -46,7 +46,7 @@ export class FtTimeWindowController {
   @ApiResponse({
     status: 201,
     description: 'The ft time windows have been successfully upserted.',
-    type: ftTimeWindowsResponseDto,
+    type: ftTimeWindowResponseDto,
     isArray: true,
   })
   @ApiParam({
@@ -56,13 +56,13 @@ export class FtTimeWindowController {
     required: true,
   })
   @ApiBody({
-    type: UpsertFtTimeWindowsDto,
+    type: UpsertFtTimeWindowDto,
     description: 'FT time window to upsert',
   })
   upsert(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Body() upsertFtTimeWindowsDto: UpsertFtTimeWindowsDto,
-  ): Promise<ftTimeWindowsResponseDto> {
+    @Body() upsertFtTimeWindowsDto: UpsertFtTimeWindowDto,
+  ): Promise<ftTimeWindowResponseDto> {
     this.logger.log(`Inserting or updating timewindow for FT#${ftId}`);
     return this.ftTimeWindowService.upsert(ftId, upsertFtTimeWindowsDto);
   }

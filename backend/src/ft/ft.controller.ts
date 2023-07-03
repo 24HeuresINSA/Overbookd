@@ -47,15 +47,15 @@ import {
 import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
 import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
-import { CreateFtDto } from './dto/create-ft.dto';
+import { CreateFtDto } from './dto/createFt.dto';
 import {
   CompleteFtResponseDto,
   LiteFtResponseDto,
-} from './dto/ft-response.dto';
+} from './dto/ftResponse.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
-import { UpdateFtDto } from './dto/update-ft.dto';
+import { ReviewerFormRequestDto } from './dto/reviewerFormRequest.dto';
+import { UpdateFtDto } from './dto/updateFt.dto';
 import { ftStatuses } from './ft.model';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';

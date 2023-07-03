@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { ftTimeWindowsResponseDto as ftTimeWindowResponseDto } from './dto/ftTimeWindowsResponse.dto';
-import { UpsertFtTimeWindowsDto as UpsertFtTimeWindowDto } from './dto/upsertFtTimeWindows.dto';
+import { ftTimeWindowResponseDto } from './dto/ftTimeWindowResponse.dto';
+import { UpsertFtTimeWindowDto } from './dto/upsertFtTimeWindow.dto';
 
 @Injectable()
 export class FtTimeWindowService {

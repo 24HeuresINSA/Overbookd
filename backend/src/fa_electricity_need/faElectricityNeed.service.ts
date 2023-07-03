@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FaElectricityNeed } from '@prisma/client';
 import { PrismaService } from 'src/prisma.service';
-import { CreateFaElectricityNeedDto } from './dto/create-fa_electricity_need.dto';
+import { CreateFaElectricityNeedDto } from './dto/createFaElectricityNeed.dto';
 
 @Injectable()
 export class FaElectricityNeedService {

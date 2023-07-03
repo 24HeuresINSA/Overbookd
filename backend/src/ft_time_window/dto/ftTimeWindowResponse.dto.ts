@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { FtTimeWindow } from '@prisma/client';
 
-export class ftTimeWindowsResponseDto implements FtTimeWindow {
+export class ftTimeWindowResponseDto implements FtTimeWindow {
   @ApiProperty({
     required: true,
     description: 'The id of the ft time window',

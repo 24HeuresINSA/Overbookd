@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsNumber, IsOptional, Min } from 'class-validator';
 
-export class UpsertFtTimeWindowsDto {
+export class UpsertFtTimeWindowDto {
   @ApiProperty({
     required: false,
     type: Number,

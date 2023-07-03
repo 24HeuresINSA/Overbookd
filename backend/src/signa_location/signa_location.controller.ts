@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
@@ -39,24 +40,24 @@ export class SignaLocationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.signaLocationService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.signaLocationService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('orga')
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateSignaLocationDto: UpdateSignaLocationDto,
   ) {
-    return this.signaLocationService.update(+id, updateSignaLocationDto);
+    return this.signaLocationService.update(id, updateSignaLocationDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('manage-location')
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.signaLocationService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.signaLocationService.remove(id);
   }
 }

@@ -20,6 +20,7 @@ export interface DatabaseCompleteFaResponse
     collaborator: FaCollaborator;
   }[];
 }
+
 const USER_IN_CHARGE_SELECT = {
   select: {
     id: true,
