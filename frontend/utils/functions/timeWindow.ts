@@ -1,7 +1,7 @@
 import {
-    FtTimeWindow,
-    FtTimeWindowSortFunction,
-    SortableTimeWindowHeader,
+  FtTimeWindow,
+  FtTimeWindowSortFunction,
+  SortableTimeWindowHeader,
 } from "../models/ft";
 
 export function sortOnStart(

@@ -1,24 +1,24 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
-    Ft,
-    FtCreation,
-    FtPageId,
-    FtSearch,
-    FtSimplified,
-    FtTeamRequest,
-    FtTeamRequestUpdate,
-    FtTimeWindow,
-    FtTimeWindowUpdate,
-    FtUpdate,
-    FtUserRequestUpdate,
+  Ft,
+  FtCreation,
+  FtPageId,
+  FtSearch,
+  FtSimplified,
+  FtTeamRequest,
+  FtTeamRequestUpdate,
+  FtTimeWindow,
+  FtTimeWindowUpdate,
+  FtUpdate,
+  FtUserRequestUpdate,
 } from "~/utils/models/ft";
 import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
-    GearRequestCreation,
-    GearRequestUpdate,
-    GearRequestWithDrive,
-    StoredGearRequest,
+  GearRequestCreation,
+  GearRequestUpdate,
+  GearRequestWithDrive,
+  StoredGearRequest,
 } from "~/utils/models/gearRequests";
 import { Period } from "~/utils/models/period";
 import { Reviewer } from "~/utils/models/review";

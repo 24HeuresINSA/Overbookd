@@ -3,46 +3,46 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
 import {
-    generateGearRequestCreationBuilder,
-    isSameGearRequest,
-    isSimilarGearRequest,
-    isSimilarPeriod,
-    splitGearRequest,
-    uniqueByGearReducer,
-    uniqueGearRequestPeriodsReducer,
-    uniquePeriodsReducer,
+  generateGearRequestCreationBuilder,
+  isSameGearRequest,
+  isSimilarGearRequest,
+  isSimilarPeriod,
+  splitGearRequest,
+  uniqueByGearReducer,
+  uniqueGearRequestPeriodsReducer,
+  uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
 import { updateItemToList } from "~/utils/functions/list";
 import {
-    Feedback,
-    FeedbackCreation,
-    FtFeedback,
-    FtFeedbackSubjectType,
+  Feedback,
+  FeedbackCreation,
+  FtFeedback,
+  FtFeedbackSubjectType,
 } from "~/utils/models/feedback";
 import {
-    Ft,
-    FtCreation,
-    FtPageId,
-    FtSearch,
-    FtSimplified,
-    FtStatus,
-    FtTeamRequest,
-    FtTeamRequestUpdate,
-    FtTimeWindow,
-    FtUserRequest,
-    FtUserRequestUpdate,
-    castFTWithDate,
-    castTimeWindowWithDate,
-    getTimeWindowWithoutRequests,
-    toUpdateFT,
+  Ft,
+  FtCreation,
+  FtPageId,
+  FtSearch,
+  FtSimplified,
+  FtStatus,
+  FtTeamRequest,
+  FtTeamRequestUpdate,
+  FtTimeWindow,
+  FtUserRequest,
+  FtUserRequestUpdate,
+  castFTWithDate,
+  castTimeWindowWithDate,
+  getTimeWindowWithoutRequests,
+  toUpdateFT,
 } from "~/utils/models/ft";
 import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
-    GearRequestCreation,
-    GearRequestWithDrive,
-    Period,
-    StoredGearRequest,
-    castGearRequestWithDate,
+  GearRequestCreation,
+  GearRequestWithDrive,
+  Period,
+  StoredGearRequest,
+  castGearRequestWithDate,
 } from "~/utils/models/gearRequests";
 import { Review, Reviewer } from "~/utils/models/review";
 import { Team } from "~/utils/models/team";
