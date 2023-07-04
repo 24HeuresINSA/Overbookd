@@ -1,16 +1,15 @@
 <template>
   <div>
-    <v-container
-      v-if="userBornToday"
-      style="display: flex; justify-content: center"
-    >
-      <v-card color="#FFD700" class="userBornToday">
-        <v-img
-          v-show="hasProfilePicture(userBornToday)"
-          :src="userBornToday.profilePictureBlob"
-        ></v-img>
+    <v-container v-show="usersBornToday.length" class="userBornToday">
+      <v-card
+        v-for="userBornToday in usersBornToday"
+        :key="userBornToday.id"
+        class="userBornToday__card"
+        color="#FFD700"
+      >
+        <profilePicture :user="userBornToday" />
         <v-card-title>
-          Joyeux anniv 🥳
+          Joyeux anniv 🥳 <br />
           {{ formatUserNameWithNickname(userBornToday) }}
         </v-card-title>
       </v-card>
@@ -32,16 +31,17 @@ import Vue from "vue";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import profilePicture from "~/components/atoms/card/ProfilePicture.vue";
 
 export default Vue.extend({
   name: "Trombinoscope",
-  components: { TrombinoscopeCard },
+  components: { TrombinoscopeCard, profilePicture },
   computed: {
     users() {
       return this.$accessor.user.users;
     },
-    userBornToday() {
-      return this.$accessor.user.users.find(
+    usersBornToday() {
+      return this.$accessor.user.users.filter(
         (user: CompleteUserWithPermissions) => {
           const today = new Date();
           const birthdate = new Date(user.birthdate);
@@ -56,10 +56,12 @@ export default Vue.extend({
   created() {
     if (!this.users.length) this.$accessor.user.fetchUsers();
   },
+  mounted() {
+    this.usersBornToday.forEach((user: CompleteUserWithPermissions) => {
+      this.$accessor.user.setProfilePicture(user);
+    });
+  },
   methods: {
-    hasProfilePicture(user: CompleteUserWithPermissions): boolean {
-      return user.profilePicture !== null;
-    },
     formatUserNameWithNickname,
   },
 });
@@ -72,8 +74,32 @@ export default Vue.extend({
 }
 
 .userBornToday {
-  max-width: 400px;
-  max-height: 400px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.userBornToday__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 5px;
+  width: 15%;
+  height: 80%;
+
+  .userProfilePicture {
+    max-height: 50%;
+  }
+
+  .defaultProfilePicture {
+    justify-self: center;
+  }
+  .v-card__title {
+    flex-grow: 1;
+    justify-self: flex-end;
+  }
 }
 
 .trombinoscopeCard {
