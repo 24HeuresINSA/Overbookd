@@ -7,7 +7,7 @@
     - pnpm i --filter ${PNPM_WORKSPACE}
     - pnpm run --filter ${PNPM_WORKSPACE} build:ci
 
-'@overbookd/api_build':
+overbookd/api_build:
   extends: .build
   needs: [install]
   rules:
@@ -18,7 +18,7 @@
   variables:
     PNPM_WORKSPACE: '@overbookd/api'
 
-'@overbookd/web_build':
+overbookd/web_build:
   extends: .build
   needs: [install]
   rules:

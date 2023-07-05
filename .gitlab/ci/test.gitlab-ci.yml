@@ -7,7 +7,7 @@
     - pnpm i
     - pnpm run --filter ${PNPM_WORKSPACE} test:ci
 
-'@overbookd/api_test':
+overbookd/api_test:
   extends: .test
   needs: [install]
   rules:
@@ -25,7 +25,7 @@
         coverage_format: cobertura
         path: apps/api/coverage/cobertura-coverage.xml
 
-'@overbookd/web_test':
+overbookd/web_test:
   extends: .test
   needs: [install]
   rules:

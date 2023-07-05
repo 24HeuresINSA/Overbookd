@@ -53,7 +53,7 @@ secret_detection:
     - pnpm i
   
 
-'@overbookd/web_lint':
+overbookd/web_lint:
   extends: .lint
   needs: [install]
   rules:
@@ -66,7 +66,7 @@ secret_detection:
     - "git commit -am 'style(Front): ✍ Linted frontend files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
-'@overbookd/api_lint':
+overbookd/api_lint:
   extends: .lint
   needs: [install]
   rules:
@@ -80,7 +80,7 @@ secret_detection:
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
 
-'@overbookd/api_prune':
+overbookd/api_prune:
   extends: .check
   image: node:16-alpine
   needs: [install]

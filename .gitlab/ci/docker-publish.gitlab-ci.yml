@@ -15,7 +15,7 @@
     - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$TAG
     - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG
 
-"preprod_@overbookd/api_publish":
+preprod_overbookd/api_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -24,14 +24,14 @@
       changes:
         - ${APP_PATH}/**/*
     - when: never
-  needs: ["@overbookd/api_docker_build", "@overbookd/api_scan"]
+  needs: [overbookd/api_docker_build, overbookd/api_scan]
   variables:
     APP_PATH: apps/api
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: "pre-prod"
     BASE_IMAGE: "@overbookd/api"
 
-"preprod_@overbookd/web_publish":
+preprod_overbookd/web_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -40,14 +40,14 @@
       changes:
         - ${APP_PATH}/**/*
     - when: never
-  needs: ["preprod_@overbookd/web_docker_build", "@overbookd/web_scan"]
+  needs: [preprod_overbookd/web_docker_build, overbookd/web_scan]
   variables:
     APP_PATH: apps/web
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: "pre-prod"
     BASE_IMAGE: "@overbookd/web_pre-prod"
 
-"prod_@overbookd/api_publish":
+prod_overbookd/api_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -58,14 +58,14 @@
       when: manual
       allow_failure: true
     - when: never
-  needs: ["@overbookd/api_docker_build", "@overbookd/api_scan"]
+  needs: [overbookd/api_docker_build, overbookd/api_scan]
   variables:
     APP_PATH: apps/api
     VERSION_TAG_PREFIX: ""
     TAG: "latest"
     BASE_IMAGE: "@overbookd/api"
 
-"prod_@overbookd/web_publish":
+prod_overbookd/web_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -76,7 +76,7 @@
       when: manual
       allow_failure: true
     - when: never
-  needs: ["prod_@overbookd/web_docker_build", "@overbookd/web_scan"]
+  needs: [prod_overbookd/web_docker_build, overbookd/web_scan]
   variables:
     APP_PATH: apps/web
     VERSION_TAG_PREFIX: ""
