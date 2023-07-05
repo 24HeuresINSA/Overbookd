@@ -184,6 +184,12 @@ export default {
           to: "/",
         },
         {
+          icon: "mdi-image",
+          title: "Trombinoscope",
+          permission: "hard",
+          to: "/trombinoscope",
+        },
+        {
           icon: "mdi-chart-bubble",
           title: "Fiches Activités",
           permission: "hard",

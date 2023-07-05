@@ -10,7 +10,7 @@ export enum Years {
   VIEUX = 'VIEUX',
   AUTRE = 'AUTRE',
 }
-export enum Departements {
+export enum Departments {
   TC = 'TC',
   IF = 'IF',
   GE = 'GE',

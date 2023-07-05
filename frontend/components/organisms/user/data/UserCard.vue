@@ -3,13 +3,7 @@
     <ProfilePictureDialog />
     <v-card v-if="me">
       <v-container class="d-flex flex-no-wrap">
-        <v-img
-          v-if="me.pp"
-          :src="getPPUrl() + 'api/user/pp/' + me.pp"
-          max-width="80px"
-          max-height="80px"
-          class="pp"
-        ></v-img>
+        <ProfilePicture :user="me" class="profilePicture" />
         <div>
           <v-card-title class="pt-2">
             Bonsoir
@@ -21,9 +15,9 @@
         </div>
       </v-container>
       <v-card-actions class="d-flex justify-start">
-        <v-btn text max-width="300px" @click="openPPDialog()"
+        <v-btn text max-width="300px" @click="openProfilePictureDialog()"
           >📸
-          {{ me.pp ? `Mettre à jour` : `Ajouter` }}
+          {{ me.profilePicture ? `Mettre à jour` : `Ajouter` }}
         </v-btn>
       </v-card-actions>
       <v-card-text>
@@ -50,11 +44,12 @@
 import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
+import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "UserCard",
-  components: { OverChips, ProfilePictureDialog },
+  components: { OverChips, ProfilePictureDialog, ProfilePicture },
   props: {
     user: {
       type: Object,
@@ -81,23 +76,22 @@ export default Vue.extend({
 
   mounted() {
     this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
+    if (!this.me.profilePicture) return;
+    this.$accessor.user.setMyProfilePicture();
   },
 
   methods: {
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
-    },
-    openPPDialog() {
-      this.$store.dispatch("dialog/openDialog", "pp");
+    openProfilePictureDialog() {
+      this.$store.dispatch("dialog/openDialog", "profilePicture");
     },
   },
 });
 </script>
 
 <style scoped>
-.pp {
+.profilePicture {
   border-radius: 50%;
+  max-width: 80px;
+  max-height: 80px;
 }
 </style>

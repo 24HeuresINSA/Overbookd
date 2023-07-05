@@ -2,10 +2,17 @@
   <v-dialog v-model="toggled" max-width="600">
     <v-card>
       <v-card-text>
-        <v-file-input v-model="PP"> </v-file-input>
+        <v-file-input
+          v-model="profilePicture"
+          :rules="rules"
+          label="Photo de profil"
+          prepend-icon="mdi-camera"
+          accept="image/png, image/jpeg"
+          show-size
+        />
       </v-card-text>
       <v-card-actions>
-        <v-btn text @click="uploadPP()">Enregistrer</v-btn>
+        <v-btn text @click="uploadProfilePicture()">Enregistrer</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -13,16 +20,23 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { RepoFactory } from "~/repositories/repoFactory";
-import { safeCall } from "~/utils/api/calls";
+
+const MAX_SIZE = 1024 * 1024 * 2;
 
 export default Vue.extend({
   name: "ProfilePictureDialog",
-  data() {
-    return {
-      PP: undefined as undefined | File,
-    };
-  },
+  data: () => ({
+    profilePicture: undefined as File | undefined,
+    rules: [
+      (value?: File) => !!value || "Une photo vide c'est pas une photo",
+      (value?: File) => (value?.size ?? 0) < MAX_SIZE || "Moins de 2 Mb stp 🙏",
+      (value?: File) => {
+        const extensions = ["image/png", "image/jpeg", "image/gif"];
+        const isSupportedFile = !!value && extensions.includes(value.type);
+        return isSupportedFile || "Seulement des images (png, jpeg ou gif)";
+      },
+    ],
+  }),
   computed: {
     type() {
       return this.$accessor.dialog.type;
@@ -35,7 +49,7 @@ export default Vue.extend({
     },
     toggled: {
       get: function (): boolean | unknown {
-        if (this.type == "pp") {
+        if (this.type == "profilePicture") {
           return this.open;
         }
         if (!this.open) {
@@ -51,22 +65,19 @@ export default Vue.extend({
     },
   },
   methods: {
-    uploadPP: async function () {
-      if (this.me && this.PP) {
-        let form = new FormData();
-        form.append("files", this.PP, this.PP.name);
-        form.append("id", this.me.id.toString());
-        const res = await safeCall(
-          this.$store,
-          RepoFactory.userRepo.addPP(this, form)
-        );
-        if (res) {
-          this.$accessor.notif.pushNotification({
-            message: "Photo ajoutée, rafraîchis la page pour la voir.",
-          });
-          this.$accessor.dialog.closeDialog();
-        }
+    async uploadProfilePicture() {
+      if (!this.me || !this.profilePicture) {
+        return;
       }
+      const profilePictureForm = new FormData();
+      profilePictureForm.append(
+        "file",
+        this.profilePicture,
+        this.profilePicture.name
+      );
+      await this.$accessor.user.addProfilePicture(profilePictureForm);
+      this.$accessor.user.setMyProfilePicture();
+      this.$store.dispatch("dialog/closeDialog");
     },
   },
 });

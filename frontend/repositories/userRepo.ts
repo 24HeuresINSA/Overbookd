@@ -3,12 +3,12 @@ import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
-  VolunteerTask,
+  MyUserInformation,
   User,
   UserCreation,
   UserModification,
-  MyUserInformation,
   VolunteerAssignmentStat,
+  VolunteerTask,
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
@@ -47,8 +47,33 @@ export default {
   transfer(context: Context, data: Transfer) {
     return context.$axios.post(`${resource}/transfer`, data);
   },
-  addPP(context: Context, data: any) {
-    return context.$axios.post(`${resource}/pp`, data);
+  async addProfilePicture(context: Context, profilePicture: FormData) {
+    return context.$axios.post<HttpStringified<CompleteUser>>(
+      `${resource}/me/profile-picture`,
+      profilePicture
+    );
+  },
+  async getProfilePicture(
+    context: Context,
+    userId: number
+  ): Promise<string | undefined> {
+    const token = context.$axios.defaults.headers.common["Authorization"];
+    if (!token) return undefined;
+
+    const response = await fetch(
+      `${process.env.BASE_URL}user/${userId}/profile-picture`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
+
+    if (response.status !== 200) return undefined;
+
+    const url = URL.createObjectURL(await response.blob());
+    return url;
   },
   updateNotifications(context: Context, userId: string, data: Notification[]) {
     return context.$axios.put(`${resource}/${userId}`, data);

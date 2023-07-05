@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.16.4-rc.10",
+  "version": "1.16.4-rc.11",
   "description": "Backend pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -51,6 +51,7 @@
     "html-to-pdfmake": "^2.4.22",
     "ics": "^3.2.0",
     "jsdom": "^22.1.0",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
@@ -70,6 +71,7 @@
     "@types/html-to-pdfmake": "^2.4.1",
     "@types/jest": "28.1.8",
     "@types/node": "^20.3.3",
+    "@types/multer": "^1.4.7",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
     "@types/pdfmake": "^0.2.2",

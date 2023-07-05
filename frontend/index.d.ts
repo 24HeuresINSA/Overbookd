@@ -1,6 +1,6 @@
+import { safeCall } from "utils/api/calls";
 import Vue from "vue";
 import { accessorType } from "~/store";
-import { safeCall } from "utils/api/calls";
 
 interface AuthOptions {
   data: any;

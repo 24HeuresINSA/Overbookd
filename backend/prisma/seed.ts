@@ -1,7 +1,7 @@
 import { Prisma, PrismaClient, Team } from '@prisma/client';
 import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
-import { Departements, Years } from '../src/user/dto/common';
+import { Departments, Years } from '../src/user/dto/common';
 import { categoriesAndGears } from './seeders/gears';
 import { permissions } from './seeders/permissions';
 import { signaLocations } from './seeders/signa-locations';
@@ -358,7 +358,7 @@ async function main() {
         nickname: '',
         birthdate: new Date(1990, 1, 1),
         phone: '0612345678',
-        department: Departements.TC,
+        department: Departments.TC,
         year: Years.A1,
         password: hashPassword,
         team: {

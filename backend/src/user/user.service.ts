@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, Prisma, TaskCategory, User } from '@prisma/client';
+import { Ft, Prisma, TaskCategory } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 import { ftStatuses } from '../ft/ft.model';
@@ -20,8 +20,14 @@ import { UserModificationDto } from './dto/userModification.dto';
 import { Username } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
+import {
+  MyUserInformation,
+  UserPasswordOnly,
+  UserWithTeamAndPermission,
+  UserWithoutPassword,
+} from './user.model';
 
-const SELECT_USER = {
+export const SELECT_USER = {
   email: true,
   firstname: true,
   lastname: true,
@@ -35,7 +41,7 @@ const SELECT_USER = {
   resetPasswordExpires: true,
   hasPayedContributions: true,
   year: true,
-  pp: true,
+  profilePicture: true,
   charisma: true,
   balance: true,
   createdAt: true,
@@ -55,7 +61,7 @@ export const SELECT_USER_TEAMS = {
   },
 };
 
-const SELECT_USER_TEAMS_AND_PERMISSIONS = {
+export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
   team: {
     select: {
       team: {
@@ -139,23 +145,10 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   },
 };
 
-export type UserWithoutPassword = Omit<User, 'password'>;
-
-export type UserWithTeamAndPermission = UserWithoutPassword & {
-  team: string[];
-  permissions: string[];
-};
-
-export type MyUserInformation = UserWithTeamAndPermission & {
-  tasksCount: number;
-};
-
 type DatabaseMyUserInformation = UserWithoutPassword & {
   team: TeamWithNestedPermissions[];
   _count: { assignments: number };
 };
-
-export type UserPasswordOnly = Pick<User, 'password'>;
 
 export type VolunteerTask = Period & {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
@@ -201,7 +194,7 @@ export class UserService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return this.getUserWithTeamAndPermission(updatedUser);
+    return UserService.getUserWithTeamAndPermission(updatedUser);
   }
 
   async users(params: {
@@ -224,7 +217,7 @@ export class UserService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return users.map((user) => this.getUserWithTeamAndPermission(user));
+    return users.map((user) => UserService.getUserWithTeamAndPermission(user));
   }
 
   async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
@@ -327,7 +320,7 @@ export class UserService {
       data: userData,
       where: { id: targetUserId },
     });
-    return this.getUserWithTeamAndPermission(user);
+    return UserService.getUserWithTeamAndPermission(user);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -373,7 +366,7 @@ export class UserService {
     };
   }
 
-  private getUserWithTeamAndPermission(
+  static getUserWithTeamAndPermission(
     user: UserWithoutPassword & {
       team: TeamWithNestedPermissions[];
     },
@@ -394,7 +387,7 @@ export class UserService {
   ): MyUserInformation {
     const { _count, ...userWithoutCount } = user;
     const userWithTeamAndPermission =
-      this.getUserWithTeamAndPermission(userWithoutCount);
+      UserService.getUserWithTeamAndPermission(userWithoutCount);
     return {
       ...userWithTeamAndPermission,
       tasksCount: _count.assignments,

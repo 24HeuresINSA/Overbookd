@@ -1,101 +1,112 @@
 <template>
   <div>
-    <v-container
-      v-if="userBornToday"
-      style="display: flex; justify-content: center"
-    >
+    <v-container v-show="usersBornToday.length" class="userBornToday">
       <v-card
+        v-for="userBornToday in usersBornToday"
+        :key="userBornToday.id"
+        class="userBornToday__card"
         color="#FFD700"
-        style="margin: 20px"
-        max-width="400px"
-        max-height="400px"
       >
-        <v-img
-          v-if="userBornToday.pp"
-          :src="getPPUrl() + 'api/user/pp/' + userBornToday.pp"
-          max-width="400px"
-          max-height="350px"
-        ></v-img>
+        <ProfilePicture :user="userBornToday" />
         <v-card-title>
-          Joyeux annif 🥳 {{ userBornToday.nickname }} ({{
-            userBornToday.firstname
-          }}
-          {{ userBornToday.lastname }})
+          <p>Joyeux anniv 🥳</p>
+          <p>{{ formatUserNameWithNickname(userBornToday) }}</p>
         </v-card-title>
       </v-card>
     </v-container>
-    <v-container
-      style="
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      "
-    >
-      <v-card
-        v-for="(user, i) in users"
-        :key="i"
-        style="margin: 5px"
-        max-width="250px"
-      >
-        <v-img
-          v-if="user.pp"
-          :src="getPPUrl() + 'api/user/pp/' + user.pp"
-          max-height="250px"
-        ></v-img>
-        <v-card-title
-          >{{ user.nickname }} ({{ user.firstname }} {{ user.lastname }})
-        </v-card-title>
-        <v-card-subtitle>
-          <OverChips :roles="user.team"></OverChips>
-        </v-card-subtitle>
-        <v-card-text style="overflow-y: hidden">
-          {{ user.comment }}
-        </v-card-text>
-      </v-card>
-    </v-container>
+    <div class="volunteers">
+      <div v-for="user in users" :key="user.id">
+        <v-sheet min-height="250">
+          <v-lazy>
+            <TrombinoscopeCard :user="user" class="trombinoscopeCard" />
+          </v-lazy>
+        </v-sheet>
+      </div>
+    </div>
   </div>
 </template>
 
-<script>
-import OverChips from "~/components/atoms/chip/OverChips.vue";
-export default {
+<script lang="ts">
+import Vue from "vue";
+import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
+import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+
+export default Vue.extend({
   name: "Trombinoscope",
-  components: { OverChips },
-  data: () => ({
-    users: [],
-    userBornToday: undefined,
-  }),
-
-  async mounted() {
-    if (this.$accessor.user.hasPermission("hard")) {
-      this.users = (await this.$axios.get("/user")).data;
-      this.userBornToday = this.users.find((user) => {
-        if (user.birthdate) {
-          const birthday = new Date(user.birthdate);
-          return this.isToday(birthday);
+  components: { TrombinoscopeCard, ProfilePicture },
+  computed: {
+    users() {
+      return this.$accessor.user.users;
+    },
+    usersBornToday() {
+      return this.$accessor.user.users.filter(
+        (user: CompleteUserWithPermissions) => {
+          const today = new Date();
+          const birthdate = new Date(user.birthdate);
+          return (
+            birthdate.getDate() === today.getDate() &&
+            birthdate.getMonth() === today.getMonth()
+          );
         }
-      });
-    } else {
-      await this.$router.push({
-        path: "/",
-      });
-    }
-  },
-
-  methods: {
-    isToday(someDate) {
-      const today = new Date();
-      return (
-        someDate.getDate() === today.getDate() &&
-        someDate.getMonth() === today.getMonth()
       );
     },
-    getPPUrl() {
-      return process.env.NODE_ENV === "development"
-        ? "http://localhost:2424/"
-        : "";
-    },
   },
-};
+  created() {
+    if (!this.users.length) this.$accessor.user.fetchUsers();
+  },
+  mounted() {
+    this.usersBornToday.forEach((user: CompleteUserWithPermissions) => {
+      this.$accessor.user.setProfilePicture(user);
+    });
+  },
+  methods: {
+    formatUserNameWithNickname,
+  },
+});
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.volunteers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.userBornToday {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+}
+
+.userBornToday__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 5px;
+  width: 15%;
+  height: 80%;
+
+  .userProfilePicture {
+    max-height: 50%;
+  }
+
+  .defaultProfilePicture {
+    justify-self: center;
+  }
+  .v-card__title {
+    flex-grow: 1;
+    justify-self: flex-end;
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.trombinoscopeCard {
+  margin: 5px;
+  height: 300px;
+}
+</style>
