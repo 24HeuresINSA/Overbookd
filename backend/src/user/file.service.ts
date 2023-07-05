@@ -17,7 +17,8 @@ export class FileService {
 
   deleteFile(fileName: string): void {
     const filePath = join(process.cwd(), '/public/', fileName);
-    if (!existsSync(filePath)) return; // nosemgrep
+    // nosemgrep
+    if (!existsSync(filePath)) return;
     // nosemgrep
     return unlink(filePath, (err) => {
       if (err)
@@ -31,7 +32,8 @@ export class FileService {
     if (!existsSync(filePath)) {
       throw new NotFoundException('Profile picture not found');
     }
-    const file = createReadStream(filePath); // nosemgrep
+    // nosemgrep
+    const file = createReadStream(filePath);
     return new StreamableFile(file);
   }
 }
