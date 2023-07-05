@@ -7,10 +7,10 @@
         class="userBornToday__card"
         color="#FFD700"
       >
-        <profilePicture :user="userBornToday" />
+        <ProfilePicture :user="userBornToday" />
         <v-card-title>
-          Joyeux anniv 🥳 <br />
-          {{ formatUserNameWithNickname(userBornToday) }}
+          <span>Joyeux anniv 🥳</span>
+          <span>{{ formatUserNameWithNickname(userBornToday) }}</span>
         </v-card-title>
       </v-card>
     </v-container>
@@ -31,11 +31,11 @@ import Vue from "vue";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
 import { CompleteUserWithPermissions } from "~/utils/models/user";
 import { formatUserNameWithNickname } from "~/utils/user/userUtils";
-import profilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 
 export default Vue.extend({
   name: "Trombinoscope",
-  components: { TrombinoscopeCard, profilePicture },
+  components: { TrombinoscopeCard, ProfilePicture },
   computed: {
     users() {
       return this.$accessor.user.users;
