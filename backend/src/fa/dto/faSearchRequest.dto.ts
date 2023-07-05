@@ -6,10 +6,10 @@ import {
   IsOptional,
   ValidationArguments,
 } from 'class-validator';
+import { FaStatus, faStatuses } from '../fa.model';
 import { SearchFa } from '../fa.service';
-import { faStatus, FaStatus } from '../fa.model';
 
-export class FASearchRequestDto implements SearchFa {
+export class FaSearchRequestDto implements SearchFa {
   @ApiProperty({
     required: false,
     description: 'FA delete status',
@@ -22,12 +22,12 @@ export class FASearchRequestDto implements SearchFa {
   @ApiProperty({
     required: false,
     description: 'FA status',
-    enum: faStatus,
+    enum: faStatuses,
   })
   @IsOptional()
-  @IsEnum(faStatus, {
+  @IsEnum(faStatuses, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(faStatus)}`,
+      `${va.property} must be one of ${Object.values(faStatuses)}`,
   })
   status?: FaStatus;
 }

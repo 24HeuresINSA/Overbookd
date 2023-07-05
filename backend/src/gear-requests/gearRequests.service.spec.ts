@@ -1,6 +1,7 @@
-import { formatDateWithMinutes } from '../utils/date';
 import { Gear } from '../catalog/interfaces';
 import { InMemoryGearRepository } from '../catalog/repositories/in-memory';
+import { faStatuses } from '../fa/fa.model';
+import { formatDateWithMinutes } from '../utils/date';
 import {
   APPROVED,
   GearRequest,
@@ -12,8 +13,7 @@ import { InMemoryAnimationRepository } from './repositories/animation.repository
 import { InMemoryGearRequestRepository } from './repositories/gearRequest.repository.inmemory';
 import { InMemoryPeriodRepository } from './repositories/period.repository.inmemory';
 import { InMemoryTaskRepository } from './repositories/task.repository.inmemory';
-import { Task, taskStatus } from './tasks/task.model';
-import { faStatus } from '../fa/fa.model';
+import { Task, taskStatuses } from './tasks/task.model';
 
 const MAGASIN = 'Magasin';
 
@@ -38,28 +38,28 @@ const MAY_23 = {
 const CHATEAU_GONFLABLE = {
   id: 1,
   name: 'Chateau Gonflable',
-  status: faStatus.DRAFT,
+  status: faStatuses.DRAFT,
 };
-const KRAVMAGA = { id: 2, name: 'Kravmaga', status: faStatus.DRAFT };
+const KRAVMAGA = { id: 2, name: 'Kravmaga', status: faStatuses.DRAFT };
 const BAR_DECOUVERTE = {
   id: 3,
   name: 'Bar Decouverte',
-  status: faStatus.VALIDATED,
+  status: faStatuses.VALIDATED,
 };
 const INSTALLER_CHATEAU_GONFLABLE: Task = {
   id: 1,
   name: 'Installer le Chateau Gonflable',
-  status: taskStatus.DRAFT,
+  status: taskStatuses.DRAFT,
 };
 const GARDIENNER_CHATEAU_GONFLABLE: Task = {
   id: 2,
   name: 'Gardienner le Chateau Gonflable',
-  status: taskStatus.VALIDATED,
+  status: taskStatuses.VALIDATED,
 };
 const DEMONTER_CHATEAU_GONFLABLE: Task = {
   id: 3,
   name: 'Demonter le Chateau Gonflable',
-  status: taskStatus.READY,
+  status: taskStatuses.READY,
 };
 
 const TABLE: Gear = {

@@ -24,7 +24,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FtStatus } from '@prisma/client';
+import { RequestWithUserPayload } from 'src/app.controller';
+import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { StatsPayload } from 'src/common/services/stats.service';
@@ -46,19 +47,15 @@ import {
 import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
 import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateFtDto } from './dto/create-ft.dto';
-import {
-  CompleteFtResponseDto,
-  LiteFtResponseDto,
-} from './dto/ft-response.dto';
+import { CreateFtDto } from './dto/createFt.dto';
+import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
-import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
-import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
-import { UpdateFtDto } from './dto/update-ft.dto';
+import { UpdateFtDto } from './dto/updateFt.dto';
+import { ftStatuses } from './ft.model';
 import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
-import { RequestWithUserPayload } from 'src/app.controller';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
+import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
+import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -113,7 +110,7 @@ export class FtController {
     name: 'status',
     required: false,
     type: String,
-    enum: FtStatus,
+    enum: ftStatuses,
     description: 'Get FTs with a specific status',
   })
   findAll(

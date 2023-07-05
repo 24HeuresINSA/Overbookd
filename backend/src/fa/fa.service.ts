@@ -1,19 +1,17 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Fa } from '@prisma/client';
-import { UpdateFaDto } from './dto/update-fa.dto';
-import { validationDto } from './dto/validation.dto';
+import { UpdateFaDto } from './dto/updateFa.dto';
+import { ValidationDto } from './dto/validation.dto';
 
 import { StatsPayload, StatsService } from 'src/common/services/stats.service';
 import { PrismaService } from '../prisma.service';
-import { CreateFaDto } from './dto/create-fa.dto';
+import { CreateFaDto } from './dto/createFa.dto';
+import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
 import {
-  AllFaResponse,
-  ALL_FA_SELECT,
   COMPLETE_FA_SELECT,
+  DatabaseCompleteFaResponse,
   FaIdResponse,
-  FaResponse,
-} from './fa_types';
-import { FaStatus } from './fa.model';
+  LITE_FA_SELECT,
+} from './faTypes';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -26,39 +24,29 @@ export class FaService {
     private readonly statsService: StatsService,
   ) {}
 
-  /**     **/
-  /** GET **/
-  /**     **/
-
-  async findAll(search: SearchFa): Promise<AllFaResponse[] | null> {
+  async findAll(search: SearchFa): Promise<LiteFaResponse[]> {
     const where = this.buildFindCondition(search);
     return this.prisma.fa.findMany({
       where,
-      select: ALL_FA_SELECT,
-      orderBy: {
-        id: 'asc',
-      },
+      select: LITE_FA_SELECT,
+      orderBy: { id: 'asc' },
     });
   }
 
-  async findOne(id: number): Promise<FaResponse | null> {
-    return this.prisma.fa.findUnique({
-      where: {
-        id,
-      },
+  async findOne(id: number): Promise<CompleteFaResponse> {
+    const fa = await this.prisma.fa.findUnique({
+      where: { id },
       select: COMPLETE_FA_SELECT,
     });
+    if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
+    return this.formatFaWithCollaboratorResponse(fa);
   }
 
   async getFaStats(): Promise<StatsPayload[]> {
     const fa = await this.prisma.fa.groupBy({
       by: ['teamId', 'status'],
-      where: {
-        isDeleted: false,
-      },
-      _count: {
-        status: true,
-      },
+      where: { isDeleted: false },
+      _count: { status: true },
     });
     const teams = await this.prisma.team.findMany({});
     const transformedFa = fa.map((fa) => ({
@@ -68,41 +56,40 @@ export class FaService {
     return this.statsService.stats(transformedFa);
   }
 
-  /**      **/
-  /** POST **/
-  /**      **/
-
   async update(
     id: number,
     updatefaDto: UpdateFaDto,
-  ): Promise<FaResponse | null> {
+  ): Promise<CompleteFaResponse> {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    await this.prisma.fa.update({
+    const updatedFa = await this.prisma.fa.update({
       where: { id },
       data: updatefaDto,
+      select: COMPLETE_FA_SELECT,
     });
-    return await this.findOne(id);
+    return this.formatFaWithCollaboratorResponse(updatedFa);
   }
 
-  async create(fa: CreateFaDto): Promise<FaResponse | null> {
-    return this.prisma.fa.create({ data: fa, select: COMPLETE_FA_SELECT });
+  async create(faCreation: CreateFaDto): Promise<CompleteFaResponse> {
+    const fa = await this.prisma.fa.create({
+      data: faCreation,
+      select: COMPLETE_FA_SELECT,
+    });
+    return this.formatFaWithCollaboratorResponse(fa);
   }
 
-  async remove(id: number): Promise<Fa | null> {
-    return this.prisma.fa.update({
+  async remove(id: number) {
+    await this.prisma.fa.update({
       where: { id },
-      data: {
-        isDeleted: true,
-      },
+      data: { isDeleted: true },
     });
   }
 
   async validatefa(
     userId: number,
     faId: number,
-    body: validationDto,
+    body: ValidationDto,
   ): Promise<void> {
     const teamId = body.teamId;
     await this.checkFaExistence(faId);
@@ -133,15 +120,15 @@ export class FaService {
     ]);
   }
 
-  async removeFaValidation(fa_id: number, team_id: number): Promise<void> {
-    await this.checkFaExistence(fa_id);
-    await this.removeValidationFromTeam(fa_id, team_id);
+  async removeFaValidation(faId: number, teamId: number): Promise<void> {
+    await this.checkFaExistence(faId);
+    await this.removeValidationFromTeam(faId, teamId);
   }
 
   async refusefa(
     userId: number,
     faId: number,
-    body: validationDto,
+    body: ValidationDto,
   ): Promise<void> {
     const teamId = body.teamId;
     await this.checkFaExistence(faId);
@@ -173,9 +160,7 @@ export class FaService {
         isDeleted: false,
       },
       orderBy: { id: 'desc' },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
   }
 
@@ -186,9 +171,7 @@ export class FaService {
         isDeleted: false,
       },
       orderBy: { id: 'asc' },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
   }
 
@@ -211,5 +194,13 @@ export class FaService {
         teamId,
       },
     });
+  }
+
+  private formatFaWithCollaboratorResponse(
+    databaseFa: DatabaseCompleteFaResponse,
+  ): CompleteFaResponse {
+    const { collaborators, ...fa } = databaseFa;
+    const collaborator = collaborators.at(0).collaborator;
+    return { ...fa, collaborator };
   }
 }

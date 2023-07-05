@@ -1,4 +1,4 @@
-import { faStatus } from '../../fa/fa.model';
+import { faStatuses } from '../../fa/fa.model';
 import { AnimationAlreadyValidatedError } from '../animations/animation.error';
 import {
   GearRequestIdentifierSeeker,
@@ -7,7 +7,7 @@ import {
 } from '../gearRequests.model';
 import { AnimationRepository, TaskRepository } from '../gearRequests.service';
 import { TaskAlreadyValidatedError } from '../tasks/task.error';
-import { taskStatus } from '../tasks/task.model';
+import { taskStatuses } from '../tasks/task.model';
 
 export interface GearSeekerRegistery {
   getSeeker(id: number): Promise<GearSeeker | undefined>;
@@ -29,7 +29,7 @@ export class AnimationGearSeekerRegistery implements GearSeekerRegistery {
 
   async checkSeekerInteractionPossibility(id: number): Promise<void> {
     const animation = await this.animationRepository.getAnimation(id);
-    if (animation.status === faStatus.VALIDATED)
+    if (animation.status === faStatuses.VALIDATED)
       throw new AnimationAlreadyValidatedError(id);
   }
 
@@ -55,7 +55,7 @@ export class TaskGearSeekerRegistery implements GearSeekerRegistery {
 
   async checkSeekerInteractionPossibility(id: number): Promise<void> {
     const task = await this.taskRepository.getTask(id);
-    if ([taskStatus.VALIDATED, taskStatus.READY].includes(task.status))
+    if ([taskStatuses.VALIDATED, taskStatuses.READY].includes(task.status))
       throw new TaskAlreadyValidatedError(id, task.status);
   }
 

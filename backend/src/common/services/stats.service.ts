@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { FtStatus } from '@prisma/client';
 import { groupBy } from '../util/group-by';
 import { FaStatus } from 'src/fa/fa.model';
+import { FtStatus } from 'src/ft/ft.model';
 
 export type StatsPayload = {
   teamCode: string;

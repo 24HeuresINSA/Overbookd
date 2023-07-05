@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Period } from 'src/gear-requests/gearRequests.model';
-import { SitePublishAnimation, SitePublishAnimationFa } from '../interfaces';
+import {
+  SitePublishAnimation,
+  SitePublishAnimationFa,
+} from '../faSitePublishAnimation.model';
 import { LiteSitePublishAnimationResponseDto } from './liteSitePublishAnimationResponse.dto';
 
 class SitePublishAnimationFaRepresentation implements SitePublishAnimationFa {

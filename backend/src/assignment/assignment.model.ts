@@ -1,4 +1,4 @@
-import { FtStatus } from '@prisma/client';
+import { FtStatus } from 'src/ft/ft.model';
 import { Period } from 'src/volunteer-availability/domain/period.model';
 
 type DatabaseFt = {

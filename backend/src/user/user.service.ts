@@ -1,7 +1,8 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, FtStatus, Prisma, TaskCategory, User } from '@prisma/client';
+import { Ft, Prisma, TaskCategory, User } from '@prisma/client';
 import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
 import { Period } from 'src/volunteer-availability/domain/period.model';
+import { ftStatuses } from '../ft/ft.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
@@ -117,7 +118,7 @@ export const SELECT_VOLUNTEER_ASSIGNMENTS = {
 };
 
 export const ACTIVE_NOT_ASSIGNED_FT_CONDITION = {
-  ft: { isDeleted: false, NOT: { status: FtStatus.READY } },
+  ft: { isDeleted: false, NOT: { status: ftStatuses.READY } },
 };
 
 export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {

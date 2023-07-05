@@ -6,22 +6,23 @@ import { AppService } from './app.service';
 import { AssignmentModule } from './assignment/assignment.module';
 import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
-import { CharismaPeriodModule } from './charisma_period/charisma_period.module';
+import { CharismaPeriodModule } from './charisma_period/charismaPeriod.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigurationModule } from './configuration/configuration.module';
+import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
 import { FaModule } from './fa/fa.module';
-import { FaElectricityNeedsModule } from './fa_electricity_needs/fa_electricity_needs.module';
-import { FaSignaNeedsModule } from './fa_signa_needs/fa_signa_needs.module';
-import { FaSitePublishAnimationModule } from './fa_site_publish_animation/fa_site_publish_animation.module';
-import { FaTimeWindowsModule } from './fa_time_windows/fa_time_windows.module';
+import { FaElectricityNeedModule } from './fa_electricity_need/faElectricityNeed.module';
+import { FaSignaNeedModule } from './fa_signa_need/faSignaNeed.module';
+import { FaSitePublishAnimationModule } from './fa_site_publish_animation/faSitePublishAnimation.module';
+import { FaTimeWindowModule } from './fa_time_window/faTimeWindow.module';
 import { FriendModule } from './friend/friend.module';
 import { FtFeedbackModule } from './ft-feedback/ftFeedback.module';
 import { FtModule } from './ft/ft.module';
-import { FtReviewsModule } from './ft_reviews/ft_reviews.module';
-import { FtTeamRequestModule } from './ft_team_request/ft_team_request.module';
-import { FtTimeWindowsModule } from './ft_time_windows/ft_time_windows.module';
-import { FtUserRequestModule } from './ft_user_request/ft_user_request.module';
+import { FtReviewModule } from './ft_review/ftReview.module';
+import { FtTeamRequestModule } from './ft_team_request/ftTeamRequest.module';
+import { FtTimeWindowModule } from './ft_time_window/ftTimeWindow.module';
+import { FtUserRequestModule } from './ft_user_request/ftUserRequest.module';
 import { GearRequestsModule } from './gear-requests/gearRequests.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
@@ -38,7 +39,6 @@ import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
 import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning.module';
-import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
 
 @Module({
   imports: [
@@ -69,10 +69,10 @@ import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
         },
       },
     }),
-    FaSignaNeedsModule,
+    FaSignaNeedModule,
     FaFeedbackModule,
-    FaTimeWindowsModule,
-    FaElectricityNeedsModule,
+    FaTimeWindowModule,
+    FaElectricityNeedModule,
     CatalogModule,
     CatalogModule,
     ConfigurationModule,
@@ -81,11 +81,11 @@ import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
     PermissionModule,
     InventoryModule,
     FtModule,
-    FtTimeWindowsModule,
+    FtTimeWindowModule,
     GearRequestsModule,
     FtFeedbackModule,
     FtUserRequestModule,
-    FtReviewsModule,
+    FtReviewModule,
     FtTeamRequestModule,
     CharismaPeriodModule,
     VolunteerAvailabilityModule,

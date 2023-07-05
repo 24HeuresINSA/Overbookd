@@ -113,7 +113,7 @@ export class TeamService {
   }
 
   private async fetchExistingTeams(teams: string[]): Promise<Team[]> {
-    return await this.prisma.team.findMany({
+    return this.prisma.team.findMany({
       where: {
         code: { in: teams },
       },

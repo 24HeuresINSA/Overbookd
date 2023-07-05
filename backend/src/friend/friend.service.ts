@@ -14,7 +14,7 @@ export class FriendService {
     nickname: true,
   };
 
-  async findUserFriends(id: number): Promise<FriendResponseDto[] | null> {
+  async findUserFriends(id: number): Promise<FriendResponseDto[]> {
     const friends = await this.prisma.friend.findMany({
       where: {
         requestorId: id,

@@ -12,8 +12,6 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -25,15 +23,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Fa } from '@prisma/client';
+import { Permission } from 'src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { StatsPayload } from 'src/common/services/stats.service';
+import {
+  ApprovedGearRequest,
+  GearSeekerType,
+} from 'src/gear-requests/gearRequests.model';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateFaDto } from './dto/create-fa.dto';
-import { FASearchRequestDto } from './dto/faSearchRequest.dto';
-import { UpdateFaDto } from './dto/update-fa.dto';
-import { validationDto } from './dto/validation.dto';
-import { FaService } from './fa.service';
-import { AllFaResponse, FaIdResponse, FaResponse } from './fa_types';
 import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
@@ -46,11 +44,15 @@ import {
 } from '../gear-requests/dto/gearRequestResponse.dto';
 import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import { GearRequestsService } from '../gear-requests/gearRequests.service';
-import { StatsPayload } from 'src/common/services/stats.service';
-import {
-  ApprovedGearRequest,
-  GearSeekerType,
-} from 'src/gear-requests/gearRequests.model';
+import { CompleteFaResponseDto } from './dto/completeFaResponse.dto';
+import { CreateFaDto } from './dto/createFa.dto';
+import { FaSearchRequestDto } from './dto/faSearchRequest.dto';
+import { LiteFaResponseDto } from './dto/liteFaResponse.dto';
+import { UpdateFaDto } from './dto/updateFa.dto';
+import { ValidationDto } from './dto/validation.dto';
+import { CompleteFaResponse, LiteFaResponse } from './fa.model';
+import { FaService } from './fa.service';
+import { FaIdResponse } from './faTypes';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -73,22 +75,25 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post()
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Create a new fa',
-    type: Promise<Fa | null>,
+    type: CompleteFaResponseDto,
   })
-  create(@Body() FA: CreateFaDto): Promise<FaResponse | null> {
+  create(@Body() FA: CreateFaDto): Promise<CompleteFaResponse> {
     return this.faService.create(FA);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get()
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get all fa',
-    type: Array,
+    isArray: true,
+    type: LiteFaResponseDto,
   })
   @ApiQuery({
     name: 'isDeleted',
@@ -97,14 +102,15 @@ export class FaController {
     description: 'Get FAs that are deleted',
   })
   findAll(
-    @Query() searchRequest: FASearchRequestDto,
-  ): Promise<AllFaResponse[] | null> {
+    @Query() searchRequest: FaSearchRequestDto,
+  ): Promise<LiteFaResponse[]> {
     return this.faService.findAll(searchRequest);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get('stats')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get FA stats',
@@ -117,22 +123,24 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get a fa',
-    type: Promise<Fa | null>,
+    type: CompleteFaResponseDto,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<FaResponse | null> {
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<CompleteFaResponse> {
     return this.faService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':id')
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Update a fa',
-    type: Promise<Fa | null>,
+    type: CompleteFaResponseDto,
   })
   @ApiBody({
     description: 'Update a fa',
@@ -141,19 +149,19 @@ export class FaController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaDto,
-  ): Promise<FaResponse | null> {
+  ): Promise<CompleteFaResponse> {
     return this.faService.update(id, updateFaDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete a fa',
-    type: Promise<Fa | null>,
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<Fa | null> {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.faService.remove(id);
   }
 
@@ -173,7 +181,7 @@ export class FaController {
   })
   validate(
     @Request() request: RequestWithUserPayload,
-    @Body() teamId: validationDto,
+    @Body() teamId: ValidationDto,
     @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
     const userId = request.user.userId ?? request.user.id;
@@ -223,7 +231,7 @@ export class FaController {
   })
   refuse(
     @Request() request: RequestWithUserPayload,
-    @Body() validationForm: validationDto,
+    @Body() validationForm: ValidationDto,
     @Param('id', ParseIntPipe) faId: number,
   ): Promise<void> {
     const userId = request.user.userId ?? request.user.id;
@@ -233,6 +241,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id/previous')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get the previous fa',
@@ -247,6 +256,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id/next')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get the next fa',
@@ -261,6 +271,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':id/gear-requests')
+  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Creating a new gear request',
@@ -289,6 +300,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id/gear-requests')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get animation gear requests',
@@ -354,6 +366,7 @@ export class FaController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Update an existing gear request',

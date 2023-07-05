@@ -10,7 +10,7 @@ const VALIDATED = 'VALIDATED';
 const REFUSED = 'REFUSED';
 const READY = 'READY';
 
-export const taskStatus: Record<TaskStatus, TaskStatus> = {
+export const taskStatuses: Record<TaskStatus, TaskStatus> = {
   DRAFT,
   SUBMITTED,
   VALIDATED,
