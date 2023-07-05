@@ -1,7 +1,7 @@
 import { TEAM_SELECT } from '../team/team.service';
 import { CompleteFaResponse, FaCollaborator } from './fa.model';
 
-export type ExportSignaNeeds = {
+export type ExportSignaNeed = {
   faId: number;
   faName: string;
   signaType: string;

@@ -6,18 +6,16 @@ const SPORT = 'Sport';
 const ENFANT = 'Enfant';
 const AUTRE = 'Autre';
 
-export const sitePublishAnimationCategoryTypes: Record<
-  SitePublishAnimationCategoryType,
-  SitePublishAnimationCategoryType
-> = {
-  Divertissement: DIVERTISSEMENT,
-  Culture: CULTURE,
-  Sport: SPORT,
-  Enfant: ENFANT,
-  Autre: AUTRE,
-};
+export const animationCategories: Record<AnimationCategory, AnimationCategory> =
+  {
+    Divertissement: DIVERTISSEMENT,
+    Culture: CULTURE,
+    Sport: SPORT,
+    Enfant: ENFANT,
+    Autre: AUTRE,
+  };
 
-export type SitePublishAnimationCategoryType =
+export type AnimationCategory =
   | typeof DIVERTISSEMENT
   | typeof CULTURE
   | typeof SPORT
@@ -39,5 +37,5 @@ export interface LiteSitePublishAnimation {
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
-  categories?: SitePublishAnimationCategoryType[];
+  categories?: AnimationCategory[];
 }

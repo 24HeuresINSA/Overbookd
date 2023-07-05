@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import {
-  SitePublishAnimationCategoryType,
-  sitePublishAnimationCategoryTypes,
+  AnimationCategory,
+  LiteSitePublishAnimation,
+  animationCategories,
 } from '../faSitePublishAnimation.model';
-import { LiteSitePublishAnimation } from '../faSitePublishAnimation.model';
 
 export class FaSitePublishAnimationFormRequestDto
   implements LiteSitePublishAnimation
@@ -36,9 +36,9 @@ export class FaSitePublishAnimationFormRequestDto
   @ApiProperty({
     required: true,
     description: 'The categories of the animation',
-    enum: sitePublishAnimationCategoryTypes,
+    enum: animationCategories,
     isArray: true,
   })
   @IsOptional()
-  categories?: SitePublishAnimationCategoryType[];
+  categories?: AnimationCategory[];
 }

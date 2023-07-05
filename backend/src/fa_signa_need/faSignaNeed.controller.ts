@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { ExportSignaNeeds as ExportSignaNeed } from 'src/fa/faTypes';
+import { ExportSignaNeed } from 'src/fa/faTypes';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFaSignaNeedDto } from './dto/createFaSignaNeed.dto';
 import { FaSignaNeedExportCsvDto } from './dto/exportSignaNeedCsv.dto';

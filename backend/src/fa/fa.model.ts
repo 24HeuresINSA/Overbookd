@@ -1,7 +1,7 @@
 import { FaFeedbackSubjectType } from 'src/fa-feedback/faFeedback.model';
 import { ElectricityType } from 'src/fa_electricity_need/faElectricityNeed.model';
 import { SignaType } from 'src/fa_signa_need/faSignaNeed.model';
-import { SitePublishAnimationCategoryType } from 'src/fa_site_publish_animation/faSitePublishAnimation.model';
+import { AnimationCategory } from 'src/fa_site_publish_animation/faSitePublishAnimation.model';
 import { FtStatus } from 'src/ft/ft.model';
 
 const DRAFT = 'DRAFT';
@@ -216,7 +216,7 @@ export interface SitePublishAnimation {
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
-  categories?: SitePublishAnimationCategoryType[];
+  categories?: AnimationCategory[];
 }
 
 export class SitePublishAnimationRepresentation
@@ -225,7 +225,7 @@ export class SitePublishAnimationRepresentation
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
-  categories?: SitePublishAnimationCategoryType[];
+  categories?: AnimationCategory[];
 }
 
 export interface CompleteFaResponse {

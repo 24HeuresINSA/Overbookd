@@ -376,19 +376,19 @@ model FaSitePublishAnimation {
   photoLink   String                                 @db.Text @default("") @map("photo_link")
   description String                                 @db.Text @default("")
   isFlagship  Boolean                            @default(false) @map("is_flagship")
-  categories  SitePublishAnimationCategoryType[]
+  categories  AnimationCategory[]
 
   @@map("fa_site_publish_animation")
 }
 
-enum SitePublishAnimationCategoryType {
+enum AnimationCategory {
   Divertissement
   Culture
   Sport
   Enfant
   Autre
 
-  @@map("site_publish_animation_category_type")
+  @@map("animation_category")
 }
 
 model FaTimeWindow {

@@ -16,7 +16,7 @@ import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
 import { COMPLETE_FT_SELECT, TimeSpan } from 'src/ft/ftTypes';
 import { PrismaService } from '../prisma.service';
 import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
-import { UpsertFtReviewsDto as UpsertFtReviewDto } from './dto/upsertFtReview.dto';
+import { UpsertFtReviewDto } from './dto/upsertFtReview.dto';
 import { TimeSpansGenerator } from './timeSpansGenerator';
 
 @Injectable()

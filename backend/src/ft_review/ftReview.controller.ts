@@ -24,7 +24,7 @@ import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
 import { CompleteFtResponseDto } from 'src/ft/dto/ftResponse.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
-import { UpsertFtReviewsDto } from './dto/upsertFtReview.dto';
+import { UpsertFtReviewDto } from './dto/upsertFtReview.dto';
 import { FtReviewService } from './ftReview.service';
 
 @ApiBearerAuth()
@@ -55,12 +55,12 @@ export class FtReviewController {
     required: true,
   })
   @ApiBody({
-    type: UpsertFtReviewsDto,
+    type: UpsertFtReviewDto,
     description: 'FT to validate',
   })
   validateFt(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
+    @Body() upsertFtReviewsDto: UpsertFtReviewDto,
   ): Promise<CompleteFtResponseDto | null> {
     return this.ftReviewService.validateFt(ftId, upsertFtReviewsDto);
   }
@@ -81,12 +81,12 @@ export class FtReviewController {
     required: true,
   })
   @ApiBody({
-    type: UpsertFtReviewsDto,
+    type: UpsertFtReviewDto,
     description: 'FT to refuse',
   })
   refuseFt(
     @Param('ftId', ParseIntPipe) ftId: number,
-    @Body() upsertFtReviewsDto: UpsertFtReviewsDto,
+    @Body() upsertFtReviewsDto: UpsertFtReviewDto,
     @Request() req: RequestWithUserPayload,
   ): Promise<CompleteFtResponseDto | null> {
     return this.ftReviewService.refuseFt(ftId, upsertFtReviewsDto, req.user);
