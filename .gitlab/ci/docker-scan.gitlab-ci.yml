@@ -29,7 +29,7 @@ container_scanning:
   after_script:
     - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685416/tags/$CI_COMMIT_SHORT_SHA"'
 
-"@overbookd/api_scan":
+'@overbookd/api_scan':
   extends: container_scanning
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
@@ -40,7 +40,7 @@ container_scanning:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - ${APP_PATH}/**/*
-  needs: ["@overbookd/api_docker_build"]
+  needs: ['@overbookd/api_docker_build']
   variables:
     APP_PATH: apps/api
     CS_IMAGE: $CI_REGISTRY_IMAGE/${APP_NAME}:$CI_COMMIT_SHORT_SHA
