@@ -118,7 +118,7 @@
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - ${APP_PATH/**/*
+        - ${APP_PATH}/**/*
     - when: never
   script:
     - docker build --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION ./$APP_PATH
