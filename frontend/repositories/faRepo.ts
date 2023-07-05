@@ -56,8 +56,19 @@ export default {
     return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, fa);
   },
 
-  updateCollaborator(context: Context, id: number, collaborator: Collaborator) {
-    return context.$axios.post(`/collaborator/${id}`, collaborator);
+  updateCollaborator(
+    context: Context,
+    faId: number,
+    collaborator: Collaborator
+  ) {
+    return context.$axios.post(
+      `${resource}/${faId}/collaborator`,
+      collaborator
+    );
+  },
+
+  deleteCollaborator(context: Context, faId: number) {
+    return context.$axios.delete(`${resource}/${faId}/collaborator`);
   },
 
   updateFASignaNeeds(context: Context, id: number, signaNeeds: FaSignaNeed[]) {

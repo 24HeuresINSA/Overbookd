@@ -1,4 +1,4 @@
-import { FaSimplified } from "../models/fa";
+import { BaseFa } from "../models/fa";
 import { Ft, FtTimeWindow } from "../models/ft";
 import { SignaLocation } from "../models/signaLocation";
 import { Team } from "../models/team";
@@ -35,7 +35,7 @@ export function ftGeneralErrors(ft: Ft): string[] {
   ].filter((error): error is string => error !== true);
 }
 
-function hasParentFA(fa?: FaSimplified): string | boolean {
+function hasParentFA(fa?: BaseFa): string | boolean {
   return Boolean(fa) || "La tâche doit avoir une FA asscoiée.";
 }
 export function ftParentFAErrors(ft: Ft): string[] {

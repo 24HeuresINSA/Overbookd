@@ -156,6 +156,10 @@ export const mutations = mutationTree(state, {
     mFA.collaborator = collaborator;
   },
 
+  DELETE_COLLABORATOR({ mFA }) {
+    mFA.collaborator = undefined;
+  },
+
   ADD_ELECTRICITY_NEED({ mFA }, elecNeed: FaElectricityNeed) {
     if (!mFA.electricityNeeds) mFA.electricityNeeds = [];
     mFA.electricityNeeds?.push(elecNeed);
@@ -566,31 +570,22 @@ export const actions = actionTree(
       commit("DELETE_TIME_WINDOW", index);
     },
 
-    updateCollaborator({ commit }, { index, key, value }) {
-      commit("UPDATE_COLLABORATOR", { index, key, value });
-    },
-
-    async clearCollaborator({ commit, state }) {
-      const collaboratorId = state.mFA.collaborator?.id;
-      if (!collaboratorId) return;
-      const emptyCollaborator: Collaborator = {
-        firstname: undefined,
-        lastname: undefined,
-        email: undefined,
-        phone: undefined,
-        company: undefined,
-        comment: undefined,
-      };
+    async updateCollaborator({ commit, state }, collaborator: Collaborator) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.updateCollaborator(
-          this,
-          collaboratorId,
-          emptyCollaborator
-        )
+        RepoFactory.faRepo.updateCollaborator(this, state.mFA.id, collaborator)
       );
       if (!res) return;
       commit("UPDATE_COLLABORATOR", res.data);
+    },
+
+    async deleteCollaborator({ commit, state }) {
+      const res = await safeCall(
+        this,
+        RepoFactory.faRepo.deleteCollaborator(this, state.mFA.id)
+      );
+      if (!res) return;
+      commit("DELETE_COLLABORATOR");
     },
 
     addElectricityNeed({ commit }, elecNeed: FaElectricityNeed) {

@@ -166,6 +166,9 @@ export interface FaTimeWindow {
   start: Date;
   end: Date;
 }
+export interface FaTimeWindowWithType extends FaTimeWindow {
+  type: TimeWindowType;
+}
 
 export interface FaGeneralUpdate {
   name: string;

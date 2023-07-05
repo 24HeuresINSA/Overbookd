@@ -177,7 +177,7 @@ import {
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { Fa, FaTimeWindow, TimeWindowType } from "~/utils/models/fa";
+import { Fa, FaTimeWindowWithType, TimeWindowType } from "~/utils/models/fa";
 import { MyUserInformation, User } from "~/utils/models/user";
 
 interface BrakeDownDate {
@@ -228,7 +228,7 @@ export default Vue.extend({
     type(): TimeWindowType {
       return this.timeWindow?.type ?? this.timeWindowType;
     },
-    mTimeWindow(): FaTimeWindow {
+    mTimeWindow(): FaTimeWindowWithType {
       return {
         type: this.type,
         ...this.timeWindow,
