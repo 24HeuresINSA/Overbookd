@@ -9,8 +9,8 @@
       >
         <ProfilePicture :user="userBornToday" />
         <v-card-title>
-          <span>Joyeux anniv 🥳</span>
-          <span>{{ formatUserNameWithNickname(userBornToday) }}</span>
+          <p>Joyeux anniv 🥳</p>
+          <p>{{ formatUserNameWithNickname(userBornToday) }}</p>
         </v-card-title>
       </v-card>
     </v-container>
@@ -99,6 +99,9 @@ export default Vue.extend({
   .v-card__title {
     flex-grow: 1;
     justify-self: flex-end;
+    p {
+      margin: 0;
+    }
   }
 }
 
