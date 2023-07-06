@@ -15,14 +15,14 @@
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$TAG
     - docker push $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG
 
-preprod_backend_publish:
+preprod_overbookd-api_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
     - when: never
   needs: ["backend_docker_build", "backend_scan"]
   variables:
@@ -31,14 +31,14 @@ preprod_backend_publish:
     TAG: "pre-prod"
     BASE_IMAGE: "backend"
 
-preprod_frontend_publish:
+preprod_overbookd-web_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
     - when: never
   needs: ["preprod_frontend_docker_build", "frontend_scan"]
   variables:
@@ -47,14 +47,14 @@ preprod_frontend_publish:
     TAG: "pre-prod"
     BASE_IMAGE: "frontend_pre-prod"
 
-prod_backend_publish:
+prod_overbookd-api_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
       when: manual
       allow_failure: true
     - when: never
@@ -65,14 +65,14 @@ prod_backend_publish:
     TAG: "latest"
     BASE_IMAGE: backend
 
-prod_frontend_publish:
+prod_overbookd-web_publish:
   extends: .docker-publish
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
       when: manual
       allow_failure: true
     - when: never
