@@ -7,43 +7,41 @@ container_scanning:
   before_script:
     - sudo apt update
     - sudo apt install curl -y
-    - sudo apt install jq -y
-    - APP_NAME=$(jq -r '.name' ./${APP_PATH}/package.json)
 
-overbookd/web_scan:
+frontend_scan:
   extends: container_scanning
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - ${APP_PATH}/**/*
+        - frontend/**/*
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - ${APP_PATH}/**/*
-  needs: [preprod_overbookd/web_docker_build]
+        - frontend/**/*
+  needs: ["preprod_frontend_docker_build"]
   variables:
-    APP_PATH: apps/web
-    CS_IMAGE: $CI_REGISTRY_IMAGE/${APP_NAME}:$CI_COMMIT_SHORT_SHA
-    CS_DOCKERFILE_PATH: "${APP_PATH}/Dockerfile"
+    CS_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
+    CS_DOCKERFILE_PATH: "frontend/Dockerfile"
+    SCOPE: frontend
   after_script:
     - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685416/tags/$CI_COMMIT_SHORT_SHA"'
 
-overbookd/api_scan:
+backend_scan:
   extends: container_scanning
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - ${APP_PATH}/**/*
+        - backend/**/*
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - ${APP_PATH}/**/*
-  needs: [overbookd/api_docker_build]
+        - backend/**/*
+  needs: ["backend_docker_build"]
   variables:
-    APP_PATH: apps/api
-    CS_IMAGE: $CI_REGISTRY_IMAGE/${APP_NAME}:$CI_COMMIT_SHORT_SHA
-    CS_DOCKERFILE_PATH: "${APP_PATH}/Dockerfile"
+    CS_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
+    CS_DOCKERFILE_PATH: "backend/Dockerfile"
+    SCOPE: backend
   after_script:
     - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685488/tags/$CI_COMMIT_SHORT_SHA"'
