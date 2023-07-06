@@ -22,10 +22,6 @@ const USER_IN_CHARGE_SELECT = {
   },
 };
 
-const SELECT_COLLABORATOR = {
-  select: COLLABORATOR_SELECTION,
-};
-
 export const COMPLETE_FA_SELECT = {
   id: true,
   name: true,
@@ -40,7 +36,9 @@ export const COMPLETE_FA_SELECT = {
   isPassRequired: true,
   numberOfPass: true,
   waterNeed: true,
-  collaborator: SELECT_COLLABORATOR,
+  collaborator: {
+    select: COLLABORATOR_SELECTION,
+  },
   faValidation: {
     select: {
       user: {
