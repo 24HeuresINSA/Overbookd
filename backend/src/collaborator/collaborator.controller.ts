@@ -43,7 +43,7 @@ export class CollaboratorController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get a collaborator',
+    description: 'Get a collaborator by fa id',
     type: CollaboratorFormRequestDto,
   })
   @ApiParam({
@@ -89,7 +89,7 @@ export class CollaboratorController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a collaborator by id',
+    description: 'Delete a collaborator by fa id',
   })
   @ApiParam({
     name: 'faId',
