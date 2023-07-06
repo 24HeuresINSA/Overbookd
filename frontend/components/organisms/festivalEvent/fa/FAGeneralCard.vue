@@ -1,8 +1,6 @@
 <template>
   <v-card :class="validationStatus">
     <CardErrorList :type="cardType" />
-    import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-    import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
     <v-card-title>Général</v-card-title>
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter

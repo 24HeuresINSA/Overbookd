@@ -42,7 +42,7 @@ export default {
     return context.$axios.post<HttpStringified<Ft>>(resource, ft);
   },
   getFtStats(context: Context) {
-    return context.$axios.get<StatsPayload>(resource + "/stats");
+    return context.$axios.get<StatsPayload>(`${resource}/stats`);
   },
   updateFT(context: Context, ft: FtUpdate) {
     return context.$axios.patch<HttpStringified<Ft>>(
@@ -86,11 +86,11 @@ export default {
   },
 
   getPreviousFT(context: Context, id: number) {
-    return context.$axios.get<FtPageId>(resource + `/${id}/previous`);
+    return context.$axios.get<FtPageId>(`${resource}/${id}/previous`);
   },
 
   getNextFT(context: Context, id: number) {
-    return context.$axios.get<FtPageId>(resource + `/${id}/next`);
+    return context.$axios.get<FtPageId>(`${resource}/${id}/next`);
   },
 
   updateFTTimeWindow(
@@ -227,7 +227,7 @@ export default {
 
   // old requests
   getOrgaRequis(context: Context) {
-    return context.$axios.get(resource + "/orga-requis");
+    return context.$axios.get(`${resource}/orga-requis`);
   },
   myPlanning(context: Context, userId: string) {
     return context.$axios.get(`${resource}/orga-requis/${userId}`);
