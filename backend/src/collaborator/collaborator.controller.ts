@@ -10,7 +10,6 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
-import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -23,27 +22,29 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from 'src/auth/permissions-auth.decorator';
 import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { Collaborator } from '@prisma/client';
+import { CollaboratorFormRequestDto } from './dto/collaboratorFormRequest.dto';
+import { Collaborator } from './collaborator.model';
 
 @ApiBearerAuth()
-@ApiTags('collaborator')
-@Controller('collaborator')
+@ApiTags('fa')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@Controller('fa')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faId')
+  @Get(':faId/collaborator')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Upsert a collaborator by id',
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "Can't find a requested resource",
+    description: 'Get a collaborator',
+    type: CollaboratorFormRequestDto,
   })
   @ApiParam({
     name: 'faId',
@@ -51,57 +52,52 @@ export class CollaboratorController {
     description: 'FA id',
     required: true,
   })
-  @ApiBody({ type: [CreateCollaboratorDto] })
+  findOne(
+    @Param('faId', ParseIntPipe) faId: number,
+  ): Promise<Collaborator | null> {
+    return this.collaboratorService.findOne(faId);
+  }
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Post(':faId/collaborator')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Upsert a collaborator by fa id',
+    type: CollaboratorFormRequestDto,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    description: 'Update the collaborator of fa',
+    type: CollaboratorFormRequestDto,
+  })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body() createCollaborator: CreateCollaboratorDto[],
-  ): Promise<Collaborator[]> {
-    return this.collaboratorService.upsert(faId, createCollaborator);
+    @Body() collaborator: CollaboratorFormRequestDto,
+  ): Promise<Collaborator> {
+    return this.collaboratorService.upsert(faId, collaborator);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Delete(':id')
+  @Delete(':faId/collaborator')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete a collaborator by id',
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
-    name: 'id',
+    name: 'faId',
     type: Number,
-    description: 'Collaborator id',
+    description: 'FA id',
     required: true,
   })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.collaboratorService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: 'Get all collaborators',
-  })
-  findAll(): Promise<Collaborator[]> {
-    return this.collaboratorService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id')
-  @ApiResponse({
-    status: 200,
-    description: 'Get a collaborator',
-  })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Collaborator | null> {
-    return this.collaboratorService.findOne(id);
+  remove(@Param('faId', ParseIntPipe) faId: number): Promise<void> {
+    return this.collaboratorService.remove(faId);
   }
 }

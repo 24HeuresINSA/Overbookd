@@ -1,60 +1,45 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
-  IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
-  IsNumber,
-  ValidateNested,
-  IsDefined,
   IsPhoneNumber,
   IsEmail,
 } from 'class-validator';
 
-class Collaborator {
-  @ApiProperty({
-    required: false,
-    description: 'The id of the collaborator',
-  })
-  @IsNumber()
-  @IsOptional()
-  id?: number;
-
+export class CollaboratorFormRequestDto {
   @ApiProperty({
     required: true,
     description: 'The firstname of the collaborator',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(30)
-  firstname: string;
+  firstname?: string;
 
   @ApiProperty({
     required: true,
     description: 'The lastname of the collaborator',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @MaxLength(30)
-  lastname: string;
+  lastname?: string;
 
   @ApiProperty({
     required: true,
     description: 'The phone number of the collaborator',
   })
-  @IsDefined()
-  @IsNotEmpty()
+  @IsOptional()
   @IsPhoneNumber('FR')
-  phone: string;
+  phone?: string;
 
   @ApiProperty({
     required: false,
     description: 'The email of the collaborator',
   })
-  @IsDefined()
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email?: string;
 
   @ApiProperty({
@@ -73,14 +58,4 @@ class Collaborator {
   @IsString()
   @IsOptional()
   comment?: string;
-}
-
-export class CreateCollaboratorDto {
-  @ApiProperty({
-    required: true,
-    description: 'The collaborator',
-  })
-  @Type(() => Collaborator)
-  @ValidateNested()
-  collaborator: Collaborator;
 }
