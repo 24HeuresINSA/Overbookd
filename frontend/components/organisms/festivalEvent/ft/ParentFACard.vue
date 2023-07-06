@@ -24,19 +24,19 @@ import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
-import { FaSimplified } from "~/utils/models/fa";
-import { FT, FTCardType } from "~/utils/models/ft";
+import { BaseFa } from "~/utils/models/fa";
+import { Ft, FtCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ParentFACard",
   components: { SearchFA, CompleteLogisticsTable, CardErrorList },
   data: () => ({
     owner: "humain",
-    cardType: FTCardType.PARENT_FA,
+    cardType: FtCardType.PARENT_FA,
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isValidatedByOwner(): boolean {
       return isTaskValidatedBy(this.mFT.reviews, this.owner);
@@ -46,10 +46,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    updateParentFA(fa: FaSimplified | null) {
+    updateParentFA(fa: BaseFa | null) {
       const updatedFT = { ...this.mFT, fa: fa ?? undefined };
-      this.$accessor.FT.updateFT(updatedFT);
-      if (fa) this.$accessor.FA.fetchGearRequests(fa.id);
+      this.$accessor.ft.updateFT(updatedFT);
+      if (fa) this.$accessor.fa.fetchGearRequests(fa.id);
     },
   },
 });

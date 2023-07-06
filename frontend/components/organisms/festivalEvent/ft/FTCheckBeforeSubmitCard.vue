@@ -55,8 +55,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Ft } from "~/utils/models/ft";
 
-import { FT } from "~/utils/models/ft";
 import {
   ftDetailErrors,
   ftGeneralErrors,
@@ -68,8 +68,8 @@ import {
 export default Vue.extend({
   name: "FTCheckBeforeSubmitCard",
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     hasAtLeatOneError(): boolean {
       return hasAtLeastOneFTError(this.mFT);

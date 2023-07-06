@@ -74,10 +74,10 @@ import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.v
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {
-  FTTeamRequest,
-  FTTimeWindow,
-  FTUserRequest,
-  FTUserRequestImpl,
+  FtTeamRequest,
+  FtTimeWindow,
+  FtUserRequest,
+  FtUserRequestImpl,
 } from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
@@ -98,11 +98,11 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    newUserRequests: [] as FTUserRequest[],
-    newTeamRequests: [] as FTTeamRequest[],
+    newUserRequests: [] as FtUserRequest[],
+    newTeamRequests: [] as FtTeamRequest[],
 
-    savedUserRequests: [] as FTUserRequest[],
-    savedTeamRequests: [] as FTTeamRequest[],
+    savedUserRequests: [] as FtUserRequest[],
+    savedTeamRequests: [] as FtTeamRequest[],
 
     quantity: 1,
     selectedTeam: null as Team | null,
@@ -115,16 +115,16 @@ export default Vue.extend({
     hasChanges: false,
   }),
   computed: {
-    allUserRequests(): FTUserRequest[] {
+    allUserRequests(): FtUserRequest[] {
       return [
-        ...this.savedUserRequests.map(FTUserRequestImpl.build),
+        ...this.savedUserRequests.map(FtUserRequestImpl.build),
         ...this.newUserRequests,
       ];
     },
-    allTeamRequests(): FTTeamRequest[] {
+    allTeamRequests(): FtTeamRequest[] {
       return [...this.savedTeamRequests, ...this.newTeamRequests];
     },
-    mTimeWindow(): FTTimeWindow {
+    mTimeWindow(): FtTimeWindow {
       return {
         ...this.timeWindow,
         userRequests: this.allUserRequests,
@@ -179,7 +179,7 @@ export default Vue.extend({
     },
     addTeamRequest() {
       if (!this.selectedTeam) return;
-      const teamRequest: FTTeamRequest = {
+      const teamRequest: FtTeamRequest = {
         quantity: +this.quantity,
         team: this.selectedTeam,
       };
@@ -189,7 +189,7 @@ export default Vue.extend({
     },
     addUserRequest() {
       if (!this.selectedUser) return;
-      const userRequest = FTUserRequestImpl.build({
+      const userRequest = FtUserRequestImpl.build({
         user: {
           id: this.selectedUser.id,
           firstname: this.selectedUser.firstname,
@@ -203,55 +203,55 @@ export default Vue.extend({
       this.selectedUser = null;
       this.hasChanges = true;
     },
-    async deleteTeamRequest(teamRequest: FTTeamRequest) {
+    async deleteTeamRequest(teamRequest: FtTeamRequest) {
       if (!this.isSavedTeamRequest(teamRequest)) {
         this.removeTeamRequestFromNewOnes(teamRequest);
         return;
       }
-      await this.$accessor.FT.deleteTeamRequest({
+      await this.$accessor.ft.deleteTeamRequest({
         timeWindow: this.timeWindow,
         teamRequest,
       });
       this.removeTeamRequestFromSavedOnes(teamRequest);
     },
-    removeTeamRequestFromNewOnes(teamRequest: FTTeamRequest) {
+    removeTeamRequestFromNewOnes(teamRequest: FtTeamRequest) {
       this.newTeamRequests = this.newTeamRequests.filter(
         ({ team }) => team.code !== teamRequest.team.code
       );
     },
-    removeTeamRequestFromSavedOnes(teamRequest: FTTeamRequest) {
+    removeTeamRequestFromSavedOnes(teamRequest: FtTeamRequest) {
       this.savedTeamRequests = this.savedTeamRequests.filter(
         ({ team }) => team.code !== teamRequest.team.code
       );
     },
-    async deleteUserRequest(userRequest: FTUserRequest) {
+    async deleteUserRequest(userRequest: FtUserRequest) {
       if (!this.isSavedUserRequest(userRequest)) {
         this.removeUserRequestFromNewOnes(userRequest);
         return;
       }
-      await this.$accessor.FT.deleteUserRequest({
+      await this.$accessor.ft.deleteUserRequest({
         timeWindow: this.timeWindow,
         userRequest,
       });
       this.removeUserRequestFromSavedOnes(userRequest);
     },
-    removeUserRequestFromNewOnes(userRequest: FTUserRequest) {
+    removeUserRequestFromNewOnes(userRequest: FtUserRequest) {
       this.newUserRequests = this.newUserRequests.filter(
         ({ user }) => user.id !== userRequest.user.id
       );
     },
-    removeUserRequestFromSavedOnes(userRequest: FTUserRequest) {
+    removeUserRequestFromSavedOnes(userRequest: FtUserRequest) {
       this.savedUserRequests = this.savedUserRequests.filter(
         ({ user }) => user.id !== userRequest.user.id
       );
     },
 
-    isSavedTeamRequest(teamRequest: FTTeamRequest): boolean {
+    isSavedTeamRequest(teamRequest: FtTeamRequest): boolean {
       return this.savedTeamRequests.some(
         (savedTeamRequest) => savedTeamRequest.team.id === teamRequest.team.id
       );
     },
-    isSavedUserRequest(userRequest: FTUserRequest): boolean {
+    isSavedUserRequest(userRequest: FtUserRequest): boolean {
       return this.savedUserRequests.some(
         (savedUserRequest) => savedUserRequest.user.id === userRequest.user.id
       );

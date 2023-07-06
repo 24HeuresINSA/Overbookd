@@ -84,7 +84,7 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
@@ -106,16 +106,16 @@ export default Vue.extend({
   methods: {
     onChange(key: string, value: any) {
       if (typeof value === "string") value = value.trim();
-      this.$accessor.FA.updateFA({ key: key, value: value });
+      this.$accessor.fa.updateFA({ key: key, value: value });
     },
     onChangePublishAnimation(key: string, value: any) {
       if (key === "description" || key === "photoLink") value = value.trim();
-      this.$accessor.FA.updatePublishAnimation({ key, value });
+      this.$accessor.fa.updatePublishAnimation({ key, value });
     },
     switchPublishAnimation(value: boolean) {
-      if (value) return this.$accessor.FA.createPublishAnimation();
+      if (value) return this.$accessor.fa.createPublishAnimation();
       if (this.mFA.faSitePublishAnimation) {
-        return this.$accessor.FA.deletePublishAnimation();
+        return this.$accessor.fa.deletePublishAnimation();
       }
     },
   },

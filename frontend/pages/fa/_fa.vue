@@ -118,7 +118,7 @@ export default Vue.extend({
 
   computed: {
     FA(): any {
-      return this.$accessor.FA;
+      return this.$accessor.fa;
     },
     mFA(): Fa {
       return this.FA.mFA;
@@ -141,7 +141,7 @@ export default Vue.extend({
   },
 
   async mounted() {
-    await this.$accessor.FA.getAndSet(this.faId);
+    await this.$accessor.fa.getAndSet(this.faId);
     if (this.mFA.id !== this.faId) {
       alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
       await this.$router.push({

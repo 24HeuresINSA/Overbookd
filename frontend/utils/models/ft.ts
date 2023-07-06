@@ -1,5 +1,5 @@
 import { HttpStringified } from "../types/http";
-import { FaSimplified } from "./fa";
+import { BaseFa } from "./fa";
 import { FtFeedback } from "./feedback";
 import { FtTimeSpan } from "./ftTimeSpan";
 import { Period } from "./period";
@@ -8,7 +8,7 @@ import { SignaLocation } from "./signaLocation";
 import { Team } from "./team";
 import { User } from "./user";
 
-export enum FTStatus {
+export enum FtStatus {
   DRAFT = "DRAFT",
   REFUSED = "REFUSED",
   SUBMITTED = "SUBMITTED",
@@ -16,7 +16,7 @@ export enum FTStatus {
   READY = "READY",
 }
 
-export enum FTStatusLabel {
+export enum FtStatusLabel {
   DRAFT = "Brouillon",
   REFUSED = "Refusée",
   SUBMITTED = "Soumise à validation",
@@ -24,7 +24,7 @@ export enum FTStatusLabel {
   READY = "Prête à affectation",
 }
 
-export enum FTCardType {
+export enum FtCardType {
   GENERAL = "GENERAL",
   PARENT_FA = "PARENT_FA",
   DETAIL = "DETAIL",
@@ -32,34 +32,34 @@ export enum FTCardType {
   LOGISTICS = "LOGISTICS",
 }
 
-interface FTBase {
+interface BaseFt {
+  id: number;
   name: string;
-  status: FTStatus;
+  status: FtStatus;
 }
 
-export interface FTCreation {
+export interface FtCreation {
   name: string;
   parentFaId?: number;
 }
 
-export interface FT extends FTBase {
-  id: number;
+export interface Ft extends BaseFt {
   description: string;
   team?: Team;
   userInCharge?: User;
   isStatic: boolean;
-  fa?: FaSimplified;
+  fa?: BaseFa;
   location?: SignaLocation;
 
-  timeWindows: FTTimeWindow[];
+  timeWindows: FtTimeWindow[];
   reviews: Review[];
   feedbacks: FtFeedback[];
   isDeleted: boolean;
   reviewer?: User;
 }
 
-export type FTSimplified = Pick<
-  FT,
+export type FtSimplified = Pick<
+  Ft,
   | "id"
   | "name"
   | "fa"
@@ -70,9 +70,9 @@ export type FTSimplified = Pick<
   | "reviewer"
 >;
 
-export interface FTUpdate
+export interface FtUpdate
   extends Pick<
-    FT,
+    Ft,
     "id" | "name" | "status" | "isStatic" | "description" | "isDeleted"
   > {
   parentFaId: number | null;
@@ -81,26 +81,26 @@ export interface FTUpdate
   locationId: number | null;
 }
 
-export interface FTSearch {
+export interface FtSearch {
   isDeleted?: boolean;
-  status?: FTStatus;
+  status?: FtStatus;
 }
 
-export interface FTPageId {
+export interface FtPageId {
   id: number;
 }
 
-export interface FTTimeWindow {
+export interface FtTimeWindow {
   id?: number;
   start: Date;
   end: Date;
   sliceTime: number | null;
-  userRequests: FTUserRequest[];
-  teamRequests: FTTeamRequest[];
+  userRequests: FtUserRequest[];
+  teamRequests: FtTeamRequest[];
   timeSpans: FtTimeSpan[];
 }
 
-export interface FTTimeWindowUpdate {
+export interface FtTimeWindowUpdate {
   id?: number;
   start: Date;
   end: Date;
@@ -109,10 +109,10 @@ export interface FTTimeWindowUpdate {
 
 export type SortableTimeWindowHeader = "startDate" | "endDate";
 
-export type FTTimeWindowSortFunction = (
-  timeWindows: FTTimeWindow[],
+export type FtTimeWindowSortFunction = (
+  timeWindows: FtTimeWindow[],
   desc: boolean
-) => FTTimeWindow[];
+) => FtTimeWindow[];
 
 interface AlsoRequiredByFt {
   id: number;
@@ -120,14 +120,14 @@ interface AlsoRequiredByFt {
   period: Period;
 }
 
-export interface FTUserRequest {
+export interface FtUserRequest {
   user: User;
   alsoRequestedBy: AlsoRequiredByFt[];
   isAvailable: boolean;
   isAlreadyAssigned: boolean;
 }
 
-export class FTUserRequestImpl implements FTUserRequest {
+export class FtUserRequestImpl implements FtUserRequest {
   user: User;
   alsoRequestedBy: AlsoRequiredByFt[];
   isAvailable: boolean;
@@ -138,40 +138,40 @@ export class FTUserRequestImpl implements FTUserRequest {
     alsoRequestedBy,
     isAvailable,
     isAlreadyAssigned,
-  }: FTUserRequest) {
+  }: FtUserRequest) {
     this.user = user;
     this.alsoRequestedBy = alsoRequestedBy;
     this.isAvailable = isAvailable;
     this.isAlreadyAssigned = isAlreadyAssigned;
   }
 
-  static build(userRequest: FTUserRequest): FTUserRequestImpl {
-    return new FTUserRequestImpl(userRequest);
+  static build(userRequest: FtUserRequest): FtUserRequestImpl {
+    return new FtUserRequestImpl(userRequest);
   }
 }
 
-export interface FTTeamRequest {
+export interface FtTeamRequest {
   quantity: number;
   team: Team;
 }
 
-export interface FTTeamRequestUpdate extends Omit<FTTeamRequest, "team"> {
+export interface FtTeamRequestUpdate extends Omit<FtTeamRequest, "team"> {
   teamCode: string;
 }
 
-export interface FTUserRequestUpdate {
+export interface FtUserRequestUpdate {
   userId: number;
 }
 
-export function castFTWithDate(ft: HttpStringified<FT>): FT {
+export function castFTWithDate(ft: HttpStringified<Ft>): Ft {
   const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
   const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
   return { ...ft, timeWindows, feedbacks };
 }
 
 export function castTimeWindowWithDate(
-  timeWindow: HttpStringified<FTTimeWindow>
-): FTTimeWindow {
+  timeWindow: HttpStringified<FtTimeWindow>
+): FtTimeWindow {
   return {
     ...timeWindow,
     start: new Date(timeWindow.start),
@@ -197,7 +197,7 @@ export function getTimeWindowWithoutRequests({
   start,
   end,
   sliceTime,
-}: FTTimeWindow): FTTimeWindowUpdate {
+}: FtTimeWindow): FtTimeWindowUpdate {
   return { id, start, end, sliceTime };
 }
 
@@ -212,7 +212,7 @@ export function toUpdateFT({
   team,
   location,
   isDeleted,
-}: FT): FTUpdate {
+}: Ft): FtUpdate {
   return {
     id,
     name,
@@ -236,7 +236,7 @@ export function toSimplifiedFT({
   team,
   userInCharge,
   reviewer,
-}: FT): FTSimplified {
+}: Ft): FtSimplified {
   return {
     id,
     name,
@@ -250,8 +250,8 @@ export function toSimplifiedFT({
 }
 
 export function castUserRequestWithDate(
-  userRequest: HttpStringified<FTUserRequest>
-): FTUserRequest {
+  userRequest: HttpStringified<FtUserRequest>
+): FtUserRequest {
   return {
     ...userRequest,
     alsoRequestedBy: userRequest.alsoRequestedBy.map(

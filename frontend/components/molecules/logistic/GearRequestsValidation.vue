@@ -127,8 +127,8 @@ export default Vue.extend({
     },
     gearRequestsToApprove(): StoredGearRequest[] {
       const gearRequests: StoredGearRequest[] = this.isFA
-        ? this.$accessor.FA.gearRequests
-        : this.$accessor.FT.gearRequests;
+        ? this.$accessor.fa.gearRequests
+        : this.$accessor.ft.gearRequests;
       return gearRequests.filter(
         (gr) => gr.gear.owner?.code === this.validator.code
       );
@@ -149,19 +149,19 @@ export default Vue.extend({
         drive,
       };
       if (isFAStoredGearRequest(payload)) {
-        return this.$accessor.FA.setDriveToGearRequest(payload);
+        return this.$accessor.fa.setDriveToGearRequest(payload);
       }
       if (isFTStoredGearRequest(payload)) {
-        return this.$accessor.FT.setDriveToGearRequest(payload);
+        return this.$accessor.ft.setDriveToGearRequest(payload);
       }
     },
 
     removeGearRequest(gearRequest: StoredGearRequest) {
       if (isFAStoredGearRequest(gearRequest)) {
-        return this.$accessor.FA.removeGearRequest(gearRequest);
+        return this.$accessor.fa.removeGearRequest(gearRequest);
       }
       if (isFTStoredGearRequest(gearRequest)) {
-        return this.$accessor.FT.removeGearRequest(gearRequest);
+        return this.$accessor.ft.removeGearRequest(gearRequest);
       }
     },
 
@@ -170,8 +170,8 @@ export default Vue.extend({
         (gr): gr is GearRequestWithDrive<"FA" | "FT"> => Boolean(gr.drive)
       );
       const validation = this.isFA
-        ? this.$accessor.FA.validateGearRequests(gearRequests)
-        : this.$accessor.FT.validateGearRequests(gearRequests);
+        ? this.$accessor.fa.validateGearRequests(gearRequests)
+        : this.$accessor.ft.validateGearRequests(gearRequests);
       await validation;
       this.$emit("close-dialog");
     },

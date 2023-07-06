@@ -1,10 +1,10 @@
-import { FaSimplified } from "../models/fa";
-import { FT, FTTimeWindow } from "../models/ft";
+import { BaseFa } from "../models/fa";
+import { Ft, FtTimeWindow } from "../models/ft";
 import { SignaLocation } from "../models/signaLocation";
 import { Team } from "../models/team";
 import { User } from "../models/user";
 
-export function hasAtLeastOneFTError(mFT: FT): boolean {
+export function hasAtLeastOneFTError(mFT: Ft): boolean {
   const errors = [
     ...ftGeneralErrors(mFT),
     ...ftParentFAErrors(mFT),
@@ -26,7 +26,7 @@ function hasUserInCharge(user?: User): string | boolean {
 function hasLocation(location?: SignaLocation): string | boolean {
   return Boolean(location) || "La tâche doit avoir un lieu.";
 }
-export function ftGeneralErrors(ft: FT): string[] {
+export function ftGeneralErrors(ft: Ft): string[] {
   return [
     hasName(ft.name),
     hasTeam(ft.team),
@@ -35,10 +35,10 @@ export function ftGeneralErrors(ft: FT): string[] {
   ].filter((error): error is string => error !== true);
 }
 
-function hasParentFA(fa?: FaSimplified): string | boolean {
+function hasParentFA(fa?: BaseFa): string | boolean {
   return Boolean(fa) || "La tâche doit avoir une FA asscoiée.";
 }
-export function ftParentFAErrors(ft: FT): string[] {
+export function ftParentFAErrors(ft: Ft): string[] {
   return [hasParentFA(ft.fa)].filter(
     (error): error is string => error !== true
   );
@@ -50,21 +50,21 @@ function hasDescription(description: string): string | boolean {
     "La tâche doit avoir une description."
   );
 }
-export function ftDetailErrors(ft: FT): string[] {
+export function ftDetailErrors(ft: Ft): string[] {
   return [hasDescription(ft.description)].filter(
     (error): error is string => error !== true
   );
 }
 
 function hasAtLeastOneTimeWindow(
-  timeWindows: FTTimeWindow[]
+  timeWindows: FtTimeWindow[]
 ): string | boolean {
   return (
     timeWindows.length > 0 || "La tâche doit avoir au moins une plage horaire."
   );
 }
 function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
-  timeWindows: FTTimeWindow[]
+  timeWindows: FtTimeWindow[]
 ): string | boolean {
   return (
     timeWindows.every(
@@ -72,7 +72,7 @@ function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
     ) || "Tu as des créneaux sans demande de bénévole."
   );
 }
-export function ftTimeWindowsErrors(ft: FT): string[] {
+export function ftTimeWindowsErrors(ft: Ft): string[] {
   return [
     hasAtLeastOneTimeWindow(ft.timeWindows),
     hasAtLeastOneUserOrTeamRequestPerTimeWindow(ft.timeWindows),

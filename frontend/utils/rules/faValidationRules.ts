@@ -1,16 +1,17 @@
 import {
   Collaborator,
   Fa,
-  FaCollaborator,
   FaElectricityNeed,
   FaSignaNeed,
   FaTimeWindow,
   FaType,
   SitePublishAnimation,
   SortedStoredGearRequests,
-  TimeWindowType,
 } from "../models/fa";
 import { GearRequest } from "../models/gearRequests";
+import { SignaLocation } from "../models/signaLocation";
+import { Team } from "../models/team";
+import { User } from "../models/user";
 
 export function hasAtLeastOneError(
   mFA: Fa,
@@ -49,18 +50,18 @@ function hasName(value: string | undefined): string | boolean {
 export function hasType(value: FaType | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un type.";
 }
-export function hasTeam(value: number | undefined): string | boolean {
+export function hasTeam(value: Team | undefined): string | boolean {
   return value !== null || "L'animation doit avoir une team.";
 }
-export function hasInCharge(value: number | undefined): string | boolean {
+export function hasInCharge(value: User | undefined): string | boolean {
   return value !== null || "L'animation doit avoir un responsable.";
 }
 export function generalErrors(fa: Fa): string[] {
   return [
     hasName(fa.name),
     hasType(fa.type),
-    hasTeam(fa.teamId),
-    hasInCharge(fa.userInChargeId),
+    hasTeam(fa.team),
+    hasInCharge(fa.userInCharge),
   ].filter((error): error is string => error !== true);
 }
 
@@ -110,7 +111,7 @@ export function detailWarnings(fa: Fa): string[] {
   ].filter((warning): warning is string => warning !== true);
 }
 
-export function hasLocation(value: number | undefined): string | boolean {
+export function hasLocation(value?: SignaLocation): string | boolean {
   return Boolean(value) || "L'animation n'a pas de localisation.";
 }
 export function hasSignaNeeds(
@@ -131,12 +132,12 @@ export function hasSignaNeedsWithQuantityHigherThanZero(
 }
 export function signaErrors(fa: Fa): string[] {
   return [
-    hasLocation(fa.locationId),
-    hasSignaNeedsWithQuantityHigherThanZero(fa.faSignaNeeds),
+    hasLocation(fa.location),
+    hasSignaNeedsWithQuantityHigherThanZero(fa.signaNeeds),
   ].filter((error): error is string => error !== true);
 }
 export function signaWarnings(fa: Fa): string[] {
-  return [hasSignaNeeds(fa.faSignaNeeds)].filter(
+  return [hasSignaNeeds(fa.signaNeeds)].filter(
     (warning): warning is string => warning !== true
   );
 }
@@ -145,10 +146,7 @@ export function hasAtLeastOneAnimationTimeWindow(
   timeWindows: FaTimeWindow[] | undefined
 ): string | boolean {
   return (
-    (timeWindows &&
-      timeWindows.filter(
-        (timeWindow) => timeWindow.type === TimeWindowType.ANIM
-      ).length > 0) ||
+    (timeWindows && timeWindows.length > 0) ||
     "L'animation doit avoir au moins une plage horaire."
   );
 }
@@ -189,16 +187,13 @@ export function securityWarnings(fa: Fa): string[] {
 }
 
 export function isCollaboratorNotEmpty(
-  collaborators: FaCollaborator[] | undefined
+  collaborator: Collaborator | undefined
 ): string | boolean {
-  return (
-    (collaborators && collaborators?.length > 0) ||
-    "Cette animation n'a pas de prestataire."
-  );
+  return Boolean(collaborator) || "Cette animation n'a pas de prestataire.";
 }
 export function hasCollaboratorMandatoryFieldsFilled(fa: Fa): string | boolean {
-  if (isCollaboratorNotEmpty(fa.faCollaborators) !== true) return true;
-  const { firstname, lastname, phone } = getCollaborator(fa.faCollaborators)!;
+  if (isCollaboratorNotEmpty(fa.collaborator) !== true) return true;
+  const { firstname, lastname, phone } = fa.collaborator!;
   const hasMandatoryFieldsFilled = Boolean(firstname && lastname && phone);
   return (
     hasMandatoryFieldsFilled ||
@@ -216,11 +211,7 @@ export function hasCollaboratorOptionalFieldsFilled(
     "Les informations optionnelles du prestataire sont incomplètes."
   );
 }
-function getCollaborator(
-  collaborators: FaCollaborator[] | undefined
-): Collaborator | undefined {
-  return collaborators?.[0]?.collaborator;
-}
+
 export function collaboratorErrors(fa: Fa): string[] {
   return [hasCollaboratorMandatoryFieldsFilled(fa)].filter(
     (error): error is string => error !== true
@@ -228,8 +219,8 @@ export function collaboratorErrors(fa: Fa): string[] {
 }
 export function collaboratorWarnings(fa: Fa): string[] {
   return [
-    isCollaboratorNotEmpty(fa.faCollaborators),
-    hasCollaboratorOptionalFieldsFilled(getCollaborator(fa.faCollaborators)),
+    isCollaboratorNotEmpty(fa.collaborator),
+    hasCollaboratorOptionalFieldsFilled(fa.collaborator),
   ].filter((warning): warning is string => warning !== true);
 }
 
@@ -309,7 +300,7 @@ export function hasElecNeeds(
   );
 }
 export function elecWarnings(fa: Fa): string[] {
-  return [hasElecNeeds(fa.faElectricityNeeds)].filter(
+  return [hasElecNeeds(fa.electricityNeeds)].filter(
     (warning): warning is string => warning !== true
   );
 }

@@ -14,43 +14,40 @@
           :value="collaborator.firstname"
           label="Prénom de l'intervenant*"
           :disabled="isValidatedByOwner"
-          @change="onChange('firstname', $event)"
+          @change="updateFirstname($event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.lastname"
           label="Nom de l'intervenant*"
           :disabled="isValidatedByOwner"
-          @change="onChange('lastname', $event)"
+          @change="updateLastname($event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.phone"
           label="Téléphone*"
           :rules="rulePhone"
           :disabled="isValidatedByOwner"
-          @change="onChange('phone', $event)"
-        >
-        </v-text-field>
+          @change="updatePhone($event)"
+        ></v-text-field>
         <v-text-field
           :value="collaborator.email"
           label="E-mail"
           :rules="ruleEmail"
           :disabled="isValidatedByOwner"
-          @change="onChange('email', $event)"
+          @change="updateEmail($event)"
         ></v-text-field>
         <v-text-field
           :value="collaborator.company"
           label="Société"
           :disabled="isValidatedByOwner"
-          @change="onChange('company', $event)"
-        >
-        </v-text-field>
+          @change="updateCollaborator($event)"
+        ></v-text-field>
         <v-text-field
           :value="collaborator.comment"
           label="Commentaire"
           :disabled="isValidatedByOwner"
-          @change="onChange('comment', $event)"
-        >
-        </v-text-field>
+          @change="updateComment($event)"
+        ></v-text-field>
       </v-form>
     </v-card-text>
   </v-card>
@@ -63,12 +60,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import {
-  Collaborator,
-  Fa,
-  FaCardType,
-  FaCollaborator,
-} from "~/utils/models/fa";
+import { Collaborator, Fa, FaCardType } from "~/utils/models/fa";
 
 export default Vue.extend({
   name: "CollaboratorCard",
@@ -80,16 +72,17 @@ export default Vue.extend({
   }),
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
-    },
-    collaborators(): FaCollaborator[] {
-      return this.mFA.faCollaborators ?? [];
+      return this.$accessor.fa.mFA;
     },
     collaborator(): Collaborator {
-      if (this.collaborators.length > 0) {
-        return this.collaborators[0].collaborator;
+      if (!this.mFA.collaborator) {
+        return {
+          firstname: "",
+          lastname: "",
+          phone: "",
+        };
       }
-      return {};
+      return this.mFA.collaborator;
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
@@ -112,46 +105,43 @@ export default Vue.extend({
       ];
     },
   },
-  watch: {
-    collaborators: {
-      handler() {
-        if (this.collaborators.length > 0) {
-          this.isCollaboratorRequired = true;
-        }
-      },
-      deep: true,
-    },
+  mounted() {
+    if (this.mFA.collaborator) {
+      this.isCollaboratorRequired = true;
+    }
   },
   methods: {
     onSwitch() {
       if (!this.isCollaboratorRequired) {
         this.deleteCollaborator();
-      } else {
-        this.addCollaborator();
       }
     },
-    onChange(key: string, value: any) {
-      this.updateCollaborator(key, value);
+    updateFirstname(firstname: string) {
+      this.updateCollaborator({ firstname: firstname.trim() });
     },
-    addCollaborator() {
-      const newCollaborator: FaCollaborator = {
-        collaborator: {
-          firstname: "",
-          lastname: "",
-          phone: "",
-        },
-      };
-      this.$accessor.FA.addCollaborator(newCollaborator);
+    updateLastname(lastname: string) {
+      this.updateCollaborator({ lastname: lastname.trim() });
     },
-    updateCollaborator(key: string, value: any) {
-      this.$accessor.FA.updateCollaborator({
-        index: 0,
-        key: key,
-        value: value,
+    updatePhone(phone: string) {
+      this.updateCollaborator({ firstname: phone.trim() });
+    },
+    updateEmail(email: string) {
+      this.updateCollaborator({ email: email.trim() });
+    },
+    updateCompany(company: string) {
+      this.updateCollaborator({ firstname: company.trim() });
+    },
+    updateComment(comment: string) {
+      this.updateCollaborator({ comment: comment.trim() });
+    },
+    updateCollaborator(collaboratorChunk: Partial<Collaborator>) {
+      this.$accessor.fa.updateCollaborator({
+        ...this.collaborator,
+        ...collaboratorChunk,
       });
     },
     deleteCollaborator() {
-      this.$accessor.FA.deleteCollaborator(0);
+      this.$accessor.fa.deleteCollaborator();
     },
   },
 });

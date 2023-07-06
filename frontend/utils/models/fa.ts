@@ -1,10 +1,11 @@
 import { HttpStringified } from "../types/http";
 import { FaFeedback } from "./feedback";
-import { FTSimplified } from "./ft";
+import { FtSimplified } from "./ft";
 import { StoredGearRequest } from "./gearRequests";
 import { PeriodWithId } from "./period";
+import { SignaLocation } from "./signaLocation";
 import { Team } from "./team";
-import { DisplayedUser } from "./user";
+import { DisplayedUser, User } from "./user";
 
 export enum FaStatus {
   DRAFT = "DRAFT",
@@ -83,48 +84,41 @@ export enum FaCardType {
 }
 
 export enum SitePublishAnimationCategoryType {
-  Divertissement = "Divertissement",
-  Culture = "Culture",
-  Sport = "Sport",
-  Enfant = "Enfant",
-  Autre = "Autre",
+  DIVERTISSEMENT = "Divertissement",
+  CULTURE = "Culture",
+  SPORT = "Sport",
+  ENFANT = "Enfant",
+  AUTRE = "Autre",
 }
 
-export interface FaSimplified {
+export interface BaseFa {
   id: number;
   name: string;
   status: FaStatus;
 }
 
-export interface Fa extends FaSimplified {
+export interface Fa extends BaseFa {
+  description: string;
   type?: FaType;
-  teamId?: number;
-  userInChargeId?: number;
-  createdAt?: Date;
-  locationId?: number;
-  description?: string;
+  team?: Team;
+  userInCharge?: User;
+  location?: SignaLocation;
   securityNeed?: string;
-  isPassRequired?: boolean;
+  isPassRequired: boolean;
   numberOfPass?: number;
   waterNeed?: string;
-  waterFlowRequired?: string;
-  isDeleted?: boolean;
-  faCollaborators?: FaCollaborator[];
-  faValidation?: FaValidation[];
-  faRefuse?: FaRefuse[];
-  faElectricityNeeds?: FaElectricityNeed[];
-  faSignaNeeds?: FaSignaNeed[];
-  feedbacks?: FaFeedback[];
-  timeWindows?: FaTimeWindow[];
+  collaborator?: Collaborator;
+  electricityNeeds: FaElectricityNeed[];
+  signaNeeds: FaSignaNeed[];
+  faValidation: FaReview[];
+  faRefuse: FaReview[];
+  feedbacks: FaFeedback[];
+  timeWindows: FaTimeWindow[];
   faSitePublishAnimation?: SitePublishAnimation;
-  fts: FTSimplified[];
+  fts: FtSimplified[];
 }
 
 export type CreateFa = Pick<Fa, "name">;
-
-export interface FaCollaborator {
-  collaborator: Collaborator;
-}
 
 export interface Collaborator {
   id?: number;
@@ -147,7 +141,6 @@ export type FaRefuse = FaReview;
 
 export interface FaElectricityNeed {
   id?: number;
-  faId?: number;
   electricityType: ElectricityType;
   device?: string;
   power: number;
@@ -170,9 +163,11 @@ export interface FaSignaNeedsExportCsv extends Omit<FaSignaNeed, "id"> {
 
 export interface FaTimeWindow {
   id?: number;
-  type: TimeWindowType;
   start: Date;
   end: Date;
+}
+export interface FaTimeWindowWithType extends FaTimeWindow {
+  type: TimeWindowType;
 }
 
 export interface FaGeneralUpdate {
@@ -180,7 +175,6 @@ export interface FaGeneralUpdate {
   type?: string;
   teamId?: number;
   userInChargeId?: number;
-  createdAt?: Date;
   locationId?: number;
   status: FaStatus;
   description?: string;
@@ -239,11 +233,9 @@ export interface SortedStoredGearRequests {
 
 export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
   const timeWindows = fa.timeWindows?.map(castTimeWindowWithDate) ?? [];
-  const createdAt = fa.createdAt ? new Date(fa.createdAt) : undefined;
   const feedbacks = fa.feedbacks?.map(castFeedbackWithDate) ?? [];
   return {
     ...fa,
-    createdAt,
     timeWindows,
     feedbacks,
   };

@@ -12,7 +12,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Fa, FaCardType, FaStatus } from "~/utils/models/fa";
-import { FT, FTCardType, FTStatus } from "~/utils/models/ft";
+import { Ft, FtCardType, FtStatus } from "~/utils/models/ft";
 import {
   collaboratorErrors,
   detailErrors,
@@ -42,10 +42,10 @@ export default Vue.extend({
   },
   computed: {
     mFA(): Fa {
-      return this.$accessor.FA.mFA;
+      return this.$accessor.fa.mFA;
     },
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isFA(): boolean {
       return this.festivalEvent === "FA";
@@ -74,15 +74,15 @@ export default Vue.extend({
     },
     ftErrors(): string[] {
       switch (this.type) {
-        case FTCardType.GENERAL:
+        case FtCardType.GENERAL:
           return ftGeneralErrors(this.mFT);
-        case FTCardType.PARENT_FA:
+        case FtCardType.PARENT_FA:
           return ftParentFAErrors(this.mFT);
-        case FTCardType.DETAIL:
+        case FtCardType.DETAIL:
           return ftDetailErrors(this.mFT);
-        case FTCardType.TIME_WINDOW:
+        case FtCardType.TIME_WINDOW:
           return ftTimeWindowsErrors(this.mFT);
-        case FTCardType.LOGISTICS:
+        case FtCardType.LOGISTICS:
           return [];
         default:
           return [];
@@ -96,8 +96,8 @@ export default Vue.extend({
         );
       }
       return (
-        this.mFT.status === FTStatus.SUBMITTED ||
-        this.mFT.status === FTStatus.REFUSED
+        this.mFT.status === FtStatus.SUBMITTED ||
+        this.mFT.status === FtStatus.REFUSED
       );
     },
     hasError(): boolean {

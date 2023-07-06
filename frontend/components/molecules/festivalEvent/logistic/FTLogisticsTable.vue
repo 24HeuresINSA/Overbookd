@@ -48,7 +48,7 @@ export default Vue.extend({
         : [...commonHeaders, actionHeader];
     },
     gearRequest(): GearRequest<"FT">[] {
-      return this.$accessor.FT.gearRequests.reduce(
+      return this.$accessor.ft.gearRequests.reduce(
         uniqueGearReducer<"FT">,
         [] as GearRequest<"FT">[]
       );
@@ -56,7 +56,7 @@ export default Vue.extend({
   },
   methods: {
     deleteGear(gear: Gear) {
-      this.$accessor.FT.removeGearRelatedGearRequest(gear.id);
+      this.$accessor.ft.removeGearRelatedGearRequest(gear.id);
     },
   },
 });

@@ -53,18 +53,18 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FTTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowTable.vue";
-import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import FTTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowForm.vue";
-import { FT, FTCardType, FTTimeWindow } from "~/utils/models/ft";
+import FTTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowTable.vue";
 import FTVolunteerRequirementForm from "~/components/molecules/festivalEvent/timeWindow/FTVolunteerRequirementForm.vue";
+import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFTValidationStatusWithMultipleTeams,
   hasAllFTValidations,
   hasAtLeastOneFTValidation,
 } from "~/utils/festivalEvent/ftUtils";
-import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { Ft, FtCardType, FtTimeWindow } from "~/utils/models/ft";
 
 enum ConfirmationType {
   ADD = "Ajout",
@@ -89,18 +89,18 @@ export default Vue.extend({
   },
   data: () => ({
     owners: ["humain", "matos"],
-    cardType: FTCardType.TIME_WINDOW,
+    cardType: FtCardType.TIME_WINDOW,
 
     isAddDialogOpen: false,
     isEditTimeDialogOpen: false,
     isEditVolunteerDialogOpen: false,
     isConfirmationDialogOpen: false,
     confirmationType: ConfirmationType.ADD,
-    selectedTimeWindow: null as FTTimeWindow | null,
+    selectedTimeWindow: null as FtTimeWindow | null,
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isValidatedByOwners(): boolean {
       return hasAllFTValidations(this.mFT.reviews, this.owners);
@@ -143,50 +143,50 @@ export default Vue.extend({
     },
   },
   methods: {
-    addTimeWindow(timeWindow: FTTimeWindow) {
+    addTimeWindow(timeWindow: FtTimeWindow) {
       if (this.isConfirmationNeeded) {
         this.confirmationType = ConfirmationType.ADD;
         this.selectedTimeWindow = timeWindow;
         return this.openConfirmationDialog();
       }
 
-      this.$accessor.FT.addTimeWindow(timeWindow);
-      this.$accessor.FT.addGearRequestRentalPeriod({
+      this.$accessor.ft.addTimeWindow(timeWindow);
+      this.$accessor.ft.addGearRequestRentalPeriod({
         start: timeWindow.start,
         end: timeWindow.end,
       });
       this.closeAddDialog();
     },
-    updateTimeWindow(timeWindow: FTTimeWindow) {
+    updateTimeWindow(timeWindow: FtTimeWindow) {
       if (this.isConfirmationNeeded) {
         this.confirmationType = ConfirmationType.UPDATE;
         this.selectedTimeWindow = timeWindow;
         return this.openConfirmationDialog();
       }
 
-      this.$accessor.FT.updateTimeWindow(timeWindow);
+      this.$accessor.ft.updateTimeWindow(timeWindow);
       this.closeAllEditDialogs();
     },
-    updateRequirements(timeWindow: FTTimeWindow) {
-      this.$accessor.FT.updateTimeWindowRequirements(timeWindow);
+    updateRequirements(timeWindow: FtTimeWindow) {
+      this.$accessor.ft.updateTimeWindowRequirements(timeWindow);
       this.closeAllEditDialogs();
     },
-    deleteTimeWindow(timeWindow: FTTimeWindow) {
+    deleteTimeWindow(timeWindow: FtTimeWindow) {
       if (this.isConfirmationNeeded) {
         this.confirmationType = ConfirmationType.DELETE;
         this.selectedTimeWindow = timeWindow;
         return this.openConfirmationDialog();
       }
 
-      this.$accessor.FT.deleteTimeWindow(timeWindow);
-      this.$accessor.FT.removeGearRequestRentalPeriod({
+      this.$accessor.ft.deleteTimeWindow(timeWindow);
+      this.$accessor.ft.removeGearRequestRentalPeriod({
         start: timeWindow.start,
         end: timeWindow.end,
       });
     },
     resetValidations() {
       if (!this.selectedTimeWindow) return;
-      this.$accessor.FT.resetValidations();
+      this.$accessor.ft.resetValidations();
 
       switch (this.confirmationType) {
         case ConfirmationType.ADD:
@@ -208,11 +208,11 @@ export default Vue.extend({
     closeAddDialog() {
       this.isAddDialogOpen = false;
     },
-    openEditTimeDialog(timeWindow: FTTimeWindow) {
+    openEditTimeDialog(timeWindow: FtTimeWindow) {
       this.selectedTimeWindow = timeWindow;
       this.isEditTimeDialogOpen = true;
     },
-    openEditVolunteerDialog(timeWindow: FTTimeWindow) {
+    openEditVolunteerDialog(timeWindow: FtTimeWindow) {
       this.selectedTimeWindow = timeWindow;
       this.isEditVolunteerDialogOpen = true;
     },

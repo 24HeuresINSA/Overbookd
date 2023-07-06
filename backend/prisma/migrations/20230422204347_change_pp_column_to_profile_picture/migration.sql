@@ -5,5 +5,5 @@
 
 */
 -- AlterTable
-ALTER TABLE "user" DROP COLUMN "pp",
+ALTER TABLE "User" DROP COLUMN "pp",
 ADD COLUMN     "profile_picture" TEXT;

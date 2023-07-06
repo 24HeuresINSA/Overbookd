@@ -1,13 +1,13 @@
 import {
-  FTTimeWindow,
-  FTTimeWindowSortFunction,
+  FtTimeWindow,
+  FtTimeWindowSortFunction,
   SortableTimeWindowHeader,
 } from "../models/ft";
 
 export function sortOnStart(
-  timeWindows: FTTimeWindow[],
+  timeWindows: FtTimeWindow[],
   desc: boolean
-): FTTimeWindow[] {
+): FtTimeWindow[] {
   return timeWindows.sort((a, b) => {
     const order = desc ? -1 : 1;
     return (a.start.getTime() - b.start.getTime()) * order;
@@ -15,9 +15,9 @@ export function sortOnStart(
 }
 
 export function sortOnEnd(
-  timeWindows: FTTimeWindow[],
+  timeWindows: FtTimeWindow[],
   desc: boolean
-): FTTimeWindow[] {
+): FtTimeWindow[] {
   return timeWindows.sort((a, b) => {
     const order = desc ? -1 : 1;
     return (a.end.getTime() - b.end.getTime()) * order;
@@ -26,7 +26,7 @@ export function sortOnEnd(
 
 export const ftTimeWindowsSorts = new Map<
   SortableTimeWindowHeader,
-  FTTimeWindowSortFunction
+  FtTimeWindowSortFunction
 >([
   ["startDate", sortOnStart],
   ["endDate", sortOnEnd],

@@ -32,10 +32,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import FTTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FTTimeSpanDetails.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarEvent } from "~/utils/models/calendar";
-import { FTStatus, FTTimeWindow } from "~/utils/models/ft";
-import FTTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FTTimeSpanDetails.vue";
+import { FtStatus, FtTimeWindow } from "~/utils/models/ft";
 
 type Event = CalendarEvent & {
   timeSpanId?: number;
@@ -71,7 +71,7 @@ export default Vue.extend({
     },
     faTimeWindows(): CalendarEvent[] {
       const animationTimeWindows: CalendarEvent[] = (
-        this.$accessor.FA.mFA.timeWindows ?? []
+        this.$accessor.fa.mFA.timeWindows ?? []
       ).map((timeWindow) => ({
         start: timeWindow.start,
         end: timeWindow.end,
@@ -81,7 +81,7 @@ export default Vue.extend({
       }));
 
       const gearTimeWindows: CalendarEvent[] =
-        this.$accessor.FA.gearRequestRentalPeriods.map(
+        this.$accessor.fa.gearRequestRentalPeriods.map(
           (gearRequestRentalPeriod) => ({
             start: gearRequestRentalPeriod.start,
             end: gearRequestRentalPeriod.end,
@@ -94,8 +94,8 @@ export default Vue.extend({
       return [...animationTimeWindows, ...gearTimeWindows];
     },
     ftEvents(): Event[] {
-      const timeWindows = this.$accessor.FT.mFT.timeWindows ?? [];
-      if (this.$accessor.FT.mFT.status !== FTStatus.READY) {
+      const timeWindows = this.$accessor.ft.mFT.timeWindows ?? [];
+      if (this.$accessor.ft.mFT.status !== FtStatus.READY) {
         return timeWindows.map(({ start, end }) => ({
           start,
           end,
@@ -136,7 +136,7 @@ export default Vue.extend({
       this.$accessor.assignment.fetchTimeSpanDetails(event.timeSpanId);
       this.displayTimeSpanDetailsDialog = true;
     },
-    getTimeSpanEvents(timeWindows: FTTimeWindow[]): Event[] {
+    getTimeSpanEvents(timeWindows: FtTimeWindow[]): Event[] {
       return timeWindows.flatMap(({ timeSpans }) =>
         timeSpans.map(({ id, start, end }) => ({
           timeSpanId: id,

@@ -68,11 +68,11 @@ import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
 import { ftTimeWindowsSorts } from "~/utils/functions/timeWindow";
 import {
-  FT,
-  FTTeamRequest,
-  FTTimeWindow,
-  FTUserRequest,
-  FTUserRequestImpl,
+  Ft,
+  FtTeamRequest,
+  FtTimeWindow,
+  FtUserRequest,
+  FtUserRequestImpl,
   SortableTimeWindowHeader,
 } from "~/utils/models/ft";
 
@@ -96,13 +96,13 @@ export default Vue.extend({
     ],
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
-    timeWindows(): FTTimeWindow[] {
+    timeWindows(): FtTimeWindow[] {
       return this.mFT.timeWindows.map((timeWindow) => ({
         ...timeWindow,
-        userRequests: timeWindow.userRequests.map(FTUserRequestImpl.build),
+        userRequests: timeWindow.userRequests.map(FtUserRequestImpl.build),
       }));
     },
     shouldDisplayVolunteerEdition(): boolean {
@@ -121,26 +121,26 @@ export default Vue.extend({
       const minutes = Math.round((float - hours) * 60);
       return `${hours}h${minutes ? minutes : ""}`;
     },
-    editTimeWindow(timeWindow: FTTimeWindow) {
+    editTimeWindow(timeWindow: FtTimeWindow) {
       this.$emit("update-time", timeWindow);
     },
-    editVolunteer(timeWindow: FTTimeWindow) {
+    editVolunteer(timeWindow: FtTimeWindow) {
       this.$emit("update-volunteer", timeWindow);
     },
-    deleteTimeWindow(timeWindow: FTTimeWindow) {
+    deleteTimeWindow(timeWindow: FtTimeWindow) {
       this.$emit("delete", timeWindow);
     },
-    deleteUserRequest(timeWindow: FTTimeWindow, userRequest: FTUserRequest) {
-      this.$accessor.FT.deleteUserRequest({ timeWindow, userRequest });
+    deleteUserRequest(timeWindow: FtTimeWindow, userRequest: FtUserRequest) {
+      this.$accessor.ft.deleteUserRequest({ timeWindow, userRequest });
     },
-    deleteTeamRequest(timeWindow: FTTimeWindow, teamRequest: FTTeamRequest) {
-      this.$accessor.FT.deleteTeamRequest({ timeWindow, teamRequest });
+    deleteTeamRequest(timeWindow: FtTimeWindow, teamRequest: FtTeamRequest) {
+      this.$accessor.ft.deleteTeamRequest({ timeWindow, teamRequest });
     },
-    updateTimeWindow(timeWindow: FTTimeWindow) {
-      this.$accessor.FT.updateTimeWindow(timeWindow);
+    updateTimeWindow(timeWindow: FtTimeWindow) {
+      this.$accessor.ft.updateTimeWindow(timeWindow);
     },
     sortTimeWindows(
-      timeWindows: FTTimeWindow[],
+      timeWindows: FtTimeWindow[],
       sortsBy: SortableTimeWindowHeader[],
       sortsDesc: boolean[]
     ) {

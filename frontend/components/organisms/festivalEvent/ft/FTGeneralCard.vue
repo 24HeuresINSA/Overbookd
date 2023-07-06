@@ -42,29 +42,29 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FT, FTCardType } from "~/utils/models/ft";
-import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { User } from "~/utils/models/user";
-import { Team } from "~/utils/models/team";
-import { SignaLocation } from "~/utils/models/signaLocation";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festivalEvent/ftUtils";
+import { Ft, FtCardType } from "~/utils/models/ft";
+import { SignaLocation } from "~/utils/models/signaLocation";
+import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "FTGeneralCard",
   components: { SearchUser, SearchSignaLocation, SearchTeam, CardErrorList },
   data: () => ({
     owner: "humain",
-    cardType: FTCardType.GENERAL,
+    cardType: FtCardType.GENERAL,
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
     isValidatedByOwner(): boolean {
       return isTaskValidatedBy(this.mFT.reviews, this.owner);
@@ -89,8 +89,8 @@ export default Vue.extend({
     updateIsStatic(isStatic: boolean | null) {
       return this.updateFT({ isStatic: isStatic === true });
     },
-    updateFT(ftChunk: Partial<FT>) {
-      this.$accessor.FT.updateFT({ ...this.mFT, ...ftChunk });
+    updateFT(ftChunk: Partial<Ft>) {
+      this.$accessor.ft.updateFT({ ...this.mFT, ...ftChunk });
     },
   },
 });

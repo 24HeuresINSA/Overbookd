@@ -43,7 +43,7 @@
 import Vue from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { formatDate, getHourDiff } from "~/utils/date/dateUtils";
-import { FT, FTTimeWindow } from "~/utils/models/ft";
+import { Ft, FtTimeWindow } from "~/utils/models/ft";
 
 interface FTTimeWindowFormData {
   start?: Date;
@@ -72,10 +72,10 @@ export default Vue.extend({
     sliceTime: 2,
   }),
   computed: {
-    mFT(): FT {
-      return this.$accessor.FT.mFT;
+    mFT(): Ft {
+      return this.$accessor.ft.mFT;
     },
-    mTimeWindow(): FTTimeWindow {
+    mTimeWindow(): FtTimeWindow {
       return {
         id: this.timeWindow?.id ?? undefined,
         start: this.startOrManifDate,
