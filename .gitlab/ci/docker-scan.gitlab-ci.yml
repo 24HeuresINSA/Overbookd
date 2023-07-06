@@ -8,17 +8,17 @@ container_scanning:
     - sudo apt update
     - sudo apt install curl -y
 
-frontend_scan:
+overbookd-web_scan:
   extends: container_scanning
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
   needs: ["preprod_frontend_docker_build"]
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
@@ -27,17 +27,17 @@ frontend_scan:
   after_script:
     - 'curl --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN" --request "DELETE" "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/registry/repositories/2685416/tags/$CI_COMMIT_SHORT_SHA"'
 
-backend_scan:
+overbookd-api_scan:
   extends: container_scanning
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
-        - backend/**/*
+        - apps/api/**/*
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
   needs: ["backend_docker_build"]
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
