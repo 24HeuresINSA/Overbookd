@@ -19,7 +19,7 @@ overbookd-web_scan:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
-  needs: ["preprod_frontend_docker_build"]
+  needs: ["preprod_overbookd-web_docker_build"]
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHORT_SHA
     CS_DOCKERFILE_PATH: "frontend/Dockerfile"
@@ -38,7 +38,7 @@ overbookd-api_scan:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/api/**/*
-  needs: ["backend_docker_build"]
+  needs: ["overbookd-api_docker_build"]
   variables:
     CS_IMAGE: $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA
     CS_DOCKERFILE_PATH: "backend/Dockerfile"

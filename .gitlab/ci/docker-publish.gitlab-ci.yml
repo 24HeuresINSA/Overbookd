@@ -24,7 +24,7 @@ preprod_overbookd-api_publish:
       changes:
         - apps/api/**/*
     - when: never
-  needs: ["backend_docker_build", "overbookd-api_scan"]
+  needs: ["overbookd-api_docker_build", "overbookd-api_scan"]
   variables:
     SCOPE: backend
     VERSION_TAG_PREFIX: "pre-prod_"
@@ -40,7 +40,7 @@ preprod_overbookd-web_publish:
       changes:
         - apps/web/**/*
     - when: never
-  needs: ["preprod_frontend_docker_build", "overbookd-web_scan"]
+  needs: ["preprod_overbookd-web_docker_build", "overbookd-web_scan"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: "pre-prod_"
@@ -58,7 +58,7 @@ prod_overbookd-api_publish:
       when: manual
       allow_failure: true
     - when: never
-  needs: ["backend_docker_build", "overbookd-api_scan"]
+  needs: ["overbookd-api_docker_build", "overbookd-api_scan"]
   variables:
     SCOPE: backend
     VERSION_TAG_PREFIX: ""
@@ -76,7 +76,7 @@ prod_overbookd-web_publish:
       when: manual
       allow_failure: true
     - when: never
-  needs: ["prod_frontend_docker_build", "overbookd-web_scan"]
+  needs: ["prod_overbookd-web_docker_build", "overbookd-web_scan"]
   variables:
     SCOPE: frontend
     VERSION_TAG_PREFIX: ""
