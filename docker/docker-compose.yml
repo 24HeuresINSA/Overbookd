@@ -69,8 +69,8 @@ services:
       - overbookd_net-api
       - traefik-public
     volumes:
-      - ./docker/data/dev/images:/app/images
-      - ./apps/api:/overbookd/api
+      - ./data/dev/images:/app/images
+      - ../apps/api:/overbookd/apps/api
     environment:
       DOMAIN: ${OVERBOOKD_DOMAIN}
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
@@ -129,7 +129,7 @@ services:
       context: ../
       dockerfile: apps/web/Dockerfile.dev
     volumes:
-      - ./apps/web:/overbookd/web
+      - ../apps/web:/overbookd/apps/web
     environment:
       - BASE_URL
     restart: unless-stopped

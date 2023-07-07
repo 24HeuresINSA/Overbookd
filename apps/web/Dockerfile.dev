@@ -1,6 +1,6 @@
 FROM node:16-alpine
 
-WORKDIR /overbookd/web
+WORKDIR /overbookd
 
 RUN npm install -g pnpm
 RUN pnpm --version
@@ -10,6 +10,8 @@ RUN pnpm fetch
 
 ADD ./ ./
 RUN pnpm install -r --offline --filter '@overbookd/web'
+
+WORKDIR /overbookd/apps/web
 
 ENV HOST=0.0.0.0
 

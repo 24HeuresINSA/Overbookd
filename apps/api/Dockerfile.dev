@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-WORKDIR /overbookd/api
+WORKDIR /overbookd
 
 RUN npm install -g pnpm
 RUN pnpm --version
@@ -13,6 +13,8 @@ ADD ./ ./
 RUN pnpm install -r --offline --filter '@overbookd/api'
 
 RUN pnpm --filter '@overbookd/api' run build
+
+WORKDIR /overbookd/apps/api
 
 EXPOSE 3000
 
