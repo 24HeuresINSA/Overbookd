@@ -8,7 +8,7 @@ dist
 Dockerfile
 Dockerfile.dev
 .dockerignore
+images
 docker
 tools
 backups-files
-apps/api

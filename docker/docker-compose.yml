@@ -55,12 +55,12 @@ services:
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.users=user:$$apr1$$mv/7eBGq$$blXoet7kdjDve702x5gLx/"
 
-  backend:
-    container_name: overbookd_backend
+  api:
+    container_name: overbookd_api
     user: ${MY_UID}:${MY_GID}
     build:
-      context: ../backend
-      dockerfile: Dockerfile.dev
+      context: ../
+      dockerfile: apps/api/Dockerfile.dev
     restart: unless-stopped
     platform: linux/x86_64
     ports:
@@ -69,8 +69,8 @@ services:
       - overbookd_net-api
       - traefik-public
     volumes:
-      - ./data/dev/images:/app/images
-      - ../backend:/overbookd/backend
+      - ./docker/data/dev/images:/app/images
+      - ./apps/api:/overbookd/api
     environment:
       DOMAIN: ${OVERBOOKD_DOMAIN}
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
@@ -87,6 +87,7 @@ services:
       - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
       - "traefik.http.routers.dev-back.middlewares=api-strip"
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+
   postgresql:
     container_name: overbookd_postgresql
     image: postgres:14
@@ -121,14 +122,14 @@ services:
       - "traefik.http.routers.dev-adminer.middlewares=adminer-strip"
       - "traefik.http.middlewares.adminer-strip.stripprefix.prefixes=/adminer"
 
-  frontend:
-    container_name: overbookd_frontend
+  web:
+    container_name: overbookd_web
     user: ${MY_UID}:${MY_GID}
     build:
-      context: ../frontend
-      dockerfile: Dockerfile.dev
+      context: ../
+      dockerfile: apps/web/Dockerfile.dev
     volumes:
-      - ../frontend:/overbookd/frontend
+      - ./apps/web:/overbookd/web
     environment:
       - BASE_URL
     restart: unless-stopped
