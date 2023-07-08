@@ -6,16 +6,19 @@ RUN npm install -g pnpm
 RUN pnpm --version
 COPY pnpm-lock.yaml ./
 
-
 RUN pnpm fetch
 
-ADD ./ ./
+ADD pnpm-workspace.yaml ./
+ADD package.json ./
+
+WORKDIR /overbookd/apps/api
+ADD apps/api/ ./
+
+WORKDIR /overbookd
 RUN pnpm install -r --offline --filter '@overbookd/api'
 
 RUN pnpm --filter '@overbookd/api' run build
 
-WORKDIR /overbookd/apps/api
-
 EXPOSE 3000
 
-CMD ["sh", "-c", "pnpm --filter '@overbookd/api' run start:dev"]
+CMD ["sh", "-c", "pnpm -r --filter '@overbookd/api' run start:dev"]

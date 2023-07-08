@@ -8,13 +8,17 @@ COPY pnpm-lock.yaml ./
 
 RUN pnpm fetch
 
-ADD ./ ./
-RUN pnpm install -r --offline --filter '@overbookd/web'
+ADD pnpm-workspace.yaml ./
+ADD package.json ./
 
 WORKDIR /overbookd/apps/web
+ADD apps/web/ ./
+
+WORKDIR /overbookd
+RUN pnpm install -r --offline --filter '@overbookd/web'
 
 ENV HOST=0.0.0.0
 
 EXPOSE 1234
 
-CMD ["sh", "-c", "NUXT_TELEMETRY_DISABLED=1 pnpm --filter '@overbookd/web' run dev"]
+CMD ["sh", "-c", "NUXT_TELEMETRY_DISABLED=1 pnpm -r --filter '@overbookd/web' run dev"]
