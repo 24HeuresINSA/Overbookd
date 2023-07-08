@@ -197,6 +197,9 @@ importers:
       '@nuxtjs/pwa':
         specifier: ^3.3.5
         version: 3.3.5
+      '@nuxtjs/vuetify':
+        specifier: ^1.12.3
+        version: 1.12.3(vue@2.7.14)(webpack@4.46.0)
       '@tiptap/pm':
         specifier: ^2.0.3
         version: 2.0.3(@tiptap/core@2.0.3)
@@ -258,9 +261,6 @@ importers:
       '@nuxtjs/eslint-module':
         specifier: ^3.1.0
         version: 3.1.0(eslint@7.32.0)(webpack@4.46.0)
-      '@nuxtjs/vuetify':
-        specifier: ^1.12.3
-        version: 1.12.3(vue@2.7.14)(webpack@4.46.0)
       '@types/jest':
         specifier: ^29.5.2
         version: 29.5.2
@@ -3120,7 +3120,7 @@ packages:
       - sharp
       - vue
       - webpack
-    dev: true
+    dev: false
 
   /@nuxtjs/youch@4.2.3:
     resolution: {integrity: sha512-XiTWdadTwtmL/IGkNqbVe+dOlT+IMvcBu7TvKI7plWhVQeBCQ9iKhk3jgvVWFyiwL2yHJDlEwOM5v9oVES5Xmw==}
@@ -6102,7 +6102,7 @@ packages:
 
   /callsite@1.0.0:
     resolution: {integrity: sha512-0vdNRFXn5q+dtOqjfFtmtlI9N2eVZ7LMyEV2iKC5mEEFvSg/69Ml6b/WU2qF8W1nLRa0wiSrDT3Y5jOHZCwKPQ==}
-    dev: true
+    dev: false
 
   /callsites@2.0.0:
     resolution: {integrity: sha512-ksWePWBloaWPxJYQ8TL0JHvtci6G5QTKwQ95RcWAa/lzoAKuAOflGdAK92hpHXjkwb8zLxoLNUoNYZgVsaJzvQ==}
@@ -7437,7 +7437,7 @@ packages:
     resolution: {integrity: sha512-2LPqkLeu8XWHU8qNCS3kcF6sCcb5zIzvWaAHYSvPfwhdd7mHuah29NssMzrTYyHN4F5oFy2ko9OBYxegtU0FEw==}
     dependencies:
       callsite: 1.0.0
-    dev: true
+    dev: false
 
   /decimal.js@10.4.3:
     resolution: {integrity: sha512-VBBaLc1MgL5XpzgIP7ny5Z6Nx3UrRkIViUkPUdtl9aya5amy3De1gsUUSB1g3+3sExYNjCAsAznmukyxCb1GRA==}
@@ -9039,7 +9039,7 @@ packages:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
       webpack: 4.46.0
-    dev: true
+    dev: false
 
   /file-saver@2.0.5:
     resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
@@ -11890,7 +11890,6 @@ packages:
   /klona@2.0.6:
     resolution: {integrity: sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==}
     engines: {node: '>= 8'}
-    dev: true
 
   /last-call-webpack-plugin@3.0.0:
     resolution: {integrity: sha512-7KI2l2GIZa9p2spzPIVZBYyNKkN+e/SQPpnjlTiPhdbDW3F86tdKKELxKpzJ5sgU19wQWsACULZmpTPYHeWO5w==}
@@ -15841,7 +15840,7 @@ packages:
       schema-utils: 3.3.0
       semver: 7.5.3
       webpack: 4.46.0
-    dev: true
+    dev: false
 
   /sass-loader@10.4.1(sass@1.63.6)(webpack@4.46.0):
     resolution: {integrity: sha512-aX/iJZTTpNUNx/OSYzo2KsjIUQHqvWsAhhUijFjAPdZTEhstjZI9zTNvkTTwsx+uNUJqUwOw5gacxQMx4hJxGQ==}
@@ -15874,7 +15873,7 @@ packages:
     hasBin: true
     dependencies:
       chokidar: 3.5.3
-    dev: true
+    dev: false
 
   /sass@1.63.6:
     resolution: {integrity: sha512-MJuxGMHzaOW7ipp+1KdELtqKbfAWbH7OLIdoSMnVe3EXPMTmxTmlaZDCTsgIpPCs3w99lLo9/zDKkOrJuT5byw==}
@@ -18101,7 +18100,7 @@ packages:
       vue: 2.7.14
       vuetify: 2.6.15(vue@2.7.14)
       webpack: 4.46.0
-    dev: true
+    dev: false
 
   /vuetify@2.6.15(vue@2.7.14):
     resolution: {integrity: sha512-2a6sBSHzivXgi9pZMyHuzTgMyInCkj/BrVwTnoCa1Y/Dnfwj7lkWzgKQDScbGVK0q4vJ+YHoBBrLOmnhz1R0YA==}
@@ -18109,7 +18108,7 @@ packages:
       vue: ^2.6.4
     dependencies:
       vue: 2.7.14
-    dev: true
+    dev: false
 
   /vuex@3.6.2(vue@2.7.14):
     resolution: {integrity: sha512-ETW44IqCgBpVomy520DT5jf8n0zoCac+sxWnn+hMe/CzaSejb/eVw2YToiXYX+Ex/AuHHia28vWTq4goAexFbw==}
