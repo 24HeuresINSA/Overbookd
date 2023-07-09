@@ -1,26 +1,31 @@
-FROM node:16-alpine AS installer
+FROM node:18-alpine AS installer
 
-WORKDIR /overbookd/backend
+WORKDIR /overbookd
 
-COPY package*.json ./
+RUN npm install -g pnpm
+RUN pnpm --version
+COPY pnpm-lock.yaml ./
 
-RUN npm ci --silent
+RUN pnpm fetch
+
+ADD pnpm-workspace.yaml ./
+ADD package.json ./
+
+WORKDIR /overbookd/apps/api
+ADD apps/api/ ./
+
+WORKDIR /overbookd
+RUN pnpm install -r --offline --filter '@overbookd/api'
 
 FROM installer AS builder
 
-COPY . .
+RUN pnpm --filter '@overbookd/api' run build:ci
 
-RUN npx prisma generate
-
-RUN npm run build
-
-RUN npm prune --production
-
-FROM node:16-alpine
+FROM node:18-alpine
 
 ARG VERSION
 
-LABEL org.24heures.overbookd.image.title="Overbookd-backend" \
+LABEL org.24heures.overbookd.image.title="Overbookd-api" \
   org.24heures.overbookd.image.documentation="https://gitlab.com/24-heures-insa/overbookd-mono/-/wikis/home" \
   org.24heures.overbookd.image.licenses="https://gitlab.com/24-heures-insa/overbookd-mono/-/blob/main/LICENSE" \
   org.24heures.overbookd.image.source="https://gitlab.com/24-heures-insa/overbookd-mono" \
@@ -33,12 +38,12 @@ USER node
 
 WORKDIR /app/dist
 
-COPY --chown=node:node --from=builder /overbookd/backend/dist /app/dist
-COPY --chown=node:node --from=builder /overbookd/backend/node_modules ./node_modules
-COPY --chown=node:node --from=builder /overbookd/backend/prisma ./prisma
+COPY --chown=node:node --from=builder /overbookd/apps/api/dist /app/dist
+COPY --chown=node:node --from=builder /overbookd/apps/api/node_modules ./node_modules
+COPY --chown=node:node --from=builder /overbookd/apps/api/prisma ./prisma
 
 EXPOSE 3000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:3000/"]
 
-CMD [  "npm", "run", "start:migrate:prod" ]
+CMD [  "sh", "-c", "pnpm -r --filter '@overbookd/api' run start:migrate:prod" ]
