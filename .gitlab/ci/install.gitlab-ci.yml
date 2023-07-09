@@ -1,34 +1,16 @@
-.install:
+install:
+  extends: .setup-pnpm
   stage: install
-  image: node:16-alpine
-  interruptible: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/api/**/*
+    - when: never
   script:
-    - npm ci --silent
-
-backend_install:
-  extends: .install
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - backend/**/*
-    - when: never
-  before_script:
-    - cd backend
+    - pnpm i
   artifacts:
     paths:
-      - backend/node_modules
-    expire_in: 1 hour
-
-frontend_install:
-  extends: .install
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - frontend/**/*
-    - when: never
-  before_script:
-    - cd frontend
-  artifacts:
-    paths:
-      - frontend/node_modules
+      - .pnpm-store
+      - pnpm-lock.yaml
+      - node_modules
     expire_in: 1 hour

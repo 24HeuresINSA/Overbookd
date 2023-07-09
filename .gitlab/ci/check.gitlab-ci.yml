@@ -47,45 +47,53 @@ secret_detection:
     - git remote add ssh_origin "git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git"
     - git fetch --all
     - git checkout -b $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME ssh_origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm i
+  
 
-frontend_lint:
+overbookd/web_lint:
   extends: .lint
-  needs: [frontend_install]
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - frontend/**/*
+        - apps/web/**/*
     - when: never
   script:
-    - cd frontend
-    - npm run lint
+    - pnpm run --filter @overbookd/web lint
     - "git commit -am 'style(Front): ✍ Linted frontend files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
-backend_lint:
+overbookd/api_lint:
   extends: .lint
-  needs: [backend_install]
+  image: node:18-alpine
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
     - when: never
   script:
-    - cd backend
-    - npm run lint
+    - pnpm run --filter @overbookd/api lint
     - "git commit -am 'style(Back): ✍ Linted backend files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
 
-backend_ts-prune:
+overbookd/api_prune:
   extends: .check
-  image: node:16-alpine
-  needs: [backend_install]
+  image: node:18-alpine
+  needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - backend/**/*
+        - apps/api/**/*
     - when: never
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm i
   script:
-    - cd backend
-    - npm run find-deadcode
+    - pnpm run --filter @overbookd/api find-deadcode

@@ -41,7 +41,7 @@ case $1 in
         "--prisma"|"-p")
                 echo "Prisma command dev containers"
                 echo "-----------------------------"
-                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose.yml -p dev --env-file $SCRIPT_DIR/dev.env exec backend $2
+                MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f $SCRIPT_DIR/docker-compose.yml -p dev --env-file $SCRIPT_DIR/dev.env exec api sh -c "cd apps/api && $2"
                 ;;
         "--bash")
                 echo "Bash command dev containers"
