@@ -55,7 +55,7 @@ export default Vue.extend({
         ): GearRequest<"FT">[] => uniqueGearReducer(gearRequests, gearRequest),
         []
       );
-    }
+    },
   },
   methods: {
     deleteGear(gear: Gear) {

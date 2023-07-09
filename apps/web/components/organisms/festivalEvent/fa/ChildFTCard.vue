@@ -43,7 +43,13 @@
 import Vue from "vue";
 import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
 import { Fa } from "~/utils/models/fa";
-import { FtSimplified, FtStatus, FtStatusLabel, ftStatusLabels, BROUILLON } from "~/utils/models/ft";
+import {
+  FtSimplified,
+  FtStatus,
+  FtStatusLabel,
+  ftStatusLabels,
+  BROUILLON,
+} from "~/utils/models/ft";
 
 export default Vue.extend({
   name: "ChildFTCard",

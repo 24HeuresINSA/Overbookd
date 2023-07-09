@@ -23,7 +23,12 @@ import Vue from "vue";
 import { getFAValidationStatus } from "~/utils/festivalEvent/faUtils";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Fa, FaStatusLabel } from "~/utils/models/fa";
-import { FtStatusLabel, Ft, ftStatusLabels, BROUILLON } from "~/utils/models/ft";
+import {
+  FtStatusLabel,
+  Ft,
+  ftStatusLabels,
+  BROUILLON,
+} from "~/utils/models/ft";
 import { Team } from "~/utils/models/team";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
 

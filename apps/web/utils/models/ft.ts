@@ -37,7 +37,6 @@ export const ftStatusLabels = new Map<FtStatus, FtStatusLabel>([
   [FtStatus.READY, PRETE_POUR_AFFECTATION],
 ]);
 
-
 export enum FtCardType {
   GENERAL = "GENERAL",
   PARENT_FA = "PARENT_FA",
