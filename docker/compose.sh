@@ -49,12 +49,6 @@ case $1 in
                 docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16-alpine sh
                 ;;
 
-        "--updateVersion" | "-uv")
-                echo "Bash update version dev containers"
-                echo "----------------------------------"
-                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/ node:16-alpine sh -c "pnpm --recursive --filter '{apps/**}' run prerelease"
-                ;;
-
         "--traefik"|"-t") 
                 echo "create traefik network"
                 echo "----------------------"

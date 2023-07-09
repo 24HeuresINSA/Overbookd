@@ -12,7 +12,16 @@
         "url": "https://gitlab.com/24-heures-insa/overbookd-mono"
     },
     "scripts": {
-        "preinstall": "npx only-allow pnpm"
+        "db:exec": "./docker/compose.sh --prisma",
+        "dev:build": "./docker/compose.sh --build",
+        "dev:down": "./docker/compose.sh --down",
+        "dev:init": "./docker/compose.sh --traefik && pnpm dev:build",
+        "dev:logs": "./docker/compose.sh --logs",
+        "dev:restart": "./docker/compose.sh --restart",
+        "dev:start": "./docker/compose.sh --start",
+        "dev:stop": "./docker/compose.sh --stop",
+        "preinstall": "npx only-allow pnpm",
+        "prerelease": "pnpm --recursive --filter '{apps/**}' run prerelease"
     },
     "packageManager": "pnpm@8.6.6",
     "engines": {
