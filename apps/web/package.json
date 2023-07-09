@@ -24,6 +24,7 @@
     "generate": "nuxt-ts generate",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
     "lint": "pnpm run lint:js",
+    "prerelease": "pnpm version prerelease --preid=rc",
     "test": "jest",
     "test:ci": "jest --collectCoverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
     "test:watch": "jest --watch"

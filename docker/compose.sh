@@ -52,7 +52,7 @@ case $1 in
         "--updateVersion" | "-uv")
                 echo "Bash update version dev containers"
                 echo "----------------------------------"
-                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/app node:16-alpine sh -c "(cd /app/backend && npm version prerelease --preid=rc) && ( cd /app/frontend && npm version prerelease --preid=rc)"
+                docker run --rm -it --user $(id -g $USER):$(id -u $USER) -v $SCRIPT_DIR/..:/ node:16-alpine sh -c "pnpm --recursive --filter '{apps/**}' run prerelease"
                 ;;
 
         "--traefik"|"-t") 
