@@ -8,12 +8,12 @@
   before_script:
     - apk update
     - apk add jq
-    - VERSION_TAG=${VERSION_TAG_PREFIX}$(jq -r '.version' ./${SCOPE}/package.json)
+    - VERSION_TAG=${VERSION_TAG_PREFIX}$(jq -r '.version' ./${APP_PATH}/package.json)
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker load -i ${BASE_IMAGE}.tar
-    - docker push $CI_REGISTRY_IMAGE/$SCOPE:$TAG
-    - docker push $CI_REGISTRY_IMAGE/$SCOPE:$VERSION_TAG
+    - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$TAG
+    - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG
 
 preprod_overbookd-api_publish:
   extends: .docker-publish
@@ -26,10 +26,11 @@ preprod_overbookd-api_publish:
     - when: never
   needs: ["overbookd-api_docker_build", "overbookd-api_scan"]
   variables:
-    SCOPE: backend
+    APP_PATH: apps/api
+    APP_NAME: api
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: "pre-prod"
-    BASE_IMAGE: "backend"
+    BASE_IMAGE: "api"
 
 preprod_overbookd-web_publish:
   extends: .docker-publish
@@ -42,10 +43,11 @@ preprod_overbookd-web_publish:
     - when: never
   needs: ["preprod_overbookd-web_docker_build", "overbookd-web_scan"]
   variables:
-    SCOPE: frontend
+    APP_PATH: apps/web
+    APP_NAME: web
     VERSION_TAG_PREFIX: "pre-prod_"
     TAG: "pre-prod"
-    BASE_IMAGE: "frontend_pre-prod"
+    BASE_IMAGE: "web_pre-prod"
 
 prod_overbookd-api_publish:
   extends: .docker-publish
@@ -60,10 +62,11 @@ prod_overbookd-api_publish:
     - when: never
   needs: ["overbookd-api_docker_build", "overbookd-api_scan"]
   variables:
-    SCOPE: backend
+    APP_PATH: apps/api
+    APP_NAME: api
     VERSION_TAG_PREFIX: ""
     TAG: "latest"
-    BASE_IMAGE: backend
+    BASE_IMAGE: api
 
 prod_overbookd-web_publish:
   extends: .docker-publish
@@ -78,7 +81,8 @@ prod_overbookd-web_publish:
     - when: never
   needs: ["prod_overbookd-web_docker_build", "overbookd-web_scan"]
   variables:
-    SCOPE: frontend
+    APP_PATH: apps/web
+    APP_NAME: web
     VERSION_TAG_PREFIX: ""
     TAG: "latest"
-    BASE_IMAGE: "frontend_prod"
+    BASE_IMAGE: "web_prod"
