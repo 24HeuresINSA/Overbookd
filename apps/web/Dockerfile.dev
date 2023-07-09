@@ -21,4 +21,4 @@ ENV HOST=0.0.0.0
 
 EXPOSE 1234
 
-CMD ["sh", "-c", "NUXT_TELEMETRY_DISABLED=1 pnpm -r --filter '@overbookd/web' run dev"]
+CMD ["sh", "-c", "pnpm install -r --offline --filter '@overbookd/web' && NUXT_TELEMETRY_DISABLED=1 pnpm -r --filter '@overbookd/web' run dev"]
