@@ -1,20 +1,29 @@
 FROM node:18-alpine
 
 WORKDIR /overbookd
+RUN chown node:node /overbookd
 
-RUN npm install -g pnpm
+RUN corepack enable
+RUN corepack prepare pnpm@latest-8 --activate
+
+USER node
+RUN pnpm config set store-dir .pnpm-store
 RUN pnpm --version
-COPY pnpm-lock.yaml ./
+COPY --chown=node:node pnpm-lock.yaml ./
 
 RUN pnpm fetch
 
-ADD pnpm-workspace.yaml ./
-ADD package.json ./
+ADD --chown=node:node pnpm-workspace.yaml ./
+ADD --chown=node:node package.json ./
 
 WORKDIR /overbookd/apps/api
-ADD apps/api/ ./
+USER root
+RUN chown node:node /overbookd/apps
+RUN chown node:node /overbookd/apps/api
+ADD --chown=node:node apps/api/ ./
 
 WORKDIR /overbookd
+USER node
 RUN pnpm install --recursive --offline --filter '@overbookd/api'
 
 RUN pnpm --recursive --filter '@overbookd/api' run build

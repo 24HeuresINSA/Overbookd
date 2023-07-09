@@ -1,24 +1,35 @@
 FROM node:16-alpine
 
 WORKDIR /overbookd
+RUN chown node:node /overbookd
 
-RUN npm install -g pnpm
+RUN corepack enable
+RUN corepack prepare pnpm@latest-8 --activate
+
+USER node
+RUN pnpm config set store-dir .pnpm-store
 RUN pnpm --version
-COPY pnpm-lock.yaml ./
+COPY --chown=node:npde pnpm-lock.yaml ./
 
 RUN pnpm fetch
 
-ADD pnpm-workspace.yaml ./
-ADD package.json ./
+ADD --chown=node:node pnpm-workspace.yaml ./
+ADD --chown=node:node package.json ./
 
 WORKDIR /overbookd/apps/web
-ADD apps/web/ ./
+USER root
+RUN chown node:node /overbookd/apps
+RUN chown node:node /overbookd/apps/web
+ADD --chown=node:node apps/web/ ./
 
 WORKDIR /overbookd
+USER node
 RUN pnpm install --recursive --offline --filter '@overbookd/web'
+
+RUN pnpm --recursive --filter '@overbookd/web' run build
 
 ENV HOST=0.0.0.0
 
 EXPOSE 1234
 
-CMD ["sh", "-c", "pnpm install --recursive --offline --filter '@overbookd/web' && NUXT_TELEMETRY_DISABLED=1 pnpm --recursive --filter '@overbookd/web' run dev"]
+CMD ["sh", "-c", "pnpm --recursive --filter '@overbookd/web' run dev"]
