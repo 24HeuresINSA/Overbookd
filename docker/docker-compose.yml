@@ -59,18 +59,14 @@ services:
     container_name: overbookd_api
     user: ${MY_UID}:${MY_GID}
     build:
-      context: ../
-      dockerfile: apps/api/Dockerfile.dev
+      context: .
     restart: unless-stopped
     platform: linux/x86_64
-    ports:
-      - 2424:3000
     networks:
       - overbookd_net-api
       - traefik-public
     volumes:
-      - ./data/dev/images:/app/images
-      - ../apps/api:/overbookd/apps/api
+      - ../:/overbookd
     environment:
       DOMAIN: ${OVERBOOKD_DOMAIN}
       DATABASE_URL: postgresql://${OVERBOOKD_DATABASE_USERNAME}:${OVERBOOKD_DATABASE_PASSWORD}@overbookd_postgresql:5432/${OVERBOOKD_DATABASE_NAME}
@@ -87,6 +83,16 @@ services:
       - "traefik.http.routers.dev-back.rule=(Host(`overbookd.${DOMAIN}`) && PathPrefix(`/api`))"
       - "traefik.http.routers.dev-back.middlewares=api-strip"
       - "traefik.http.middlewares.api-strip.stripprefix.prefixes=/api"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cd /overbookd
+        pnpm config set store-dir .pnpm-store
+        pnpm fetch
+        pnpm --recursive --filter '@overbookd/api' run build
+        pnpm install --recursive --offline --filter '@overbookd/api'
+        pnpm --recursive --filter '@overbookd/api' run start:dev
 
   postgresql:
     container_name: overbookd_postgresql
@@ -111,8 +117,6 @@ services:
       - traefik-public
     environment:
       ADMINER_DEFAULT_SERVER: overbookd_postgresql
-    ports:
-      - 8080:8080
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-adminer.tls=true"
@@ -126,20 +130,27 @@ services:
     container_name: overbookd_web
     user: ${MY_UID}:${MY_GID}
     build:
-      context: ../
-      dockerfile: apps/web/Dockerfile.dev
+      context: .
     volumes:
-      - ../apps/web:/overbookd/apps/web
+      - ../:/overbookd
     environment:
       - BASE_URL
+      - HOST=0.0.0.0
     restart: unless-stopped
     networks:
       - traefik-public
-    ports:
-      - 3000:3000
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dev-front.entrypoints=websecure"
       - "traefik.http.services.dev-front.loadbalancer.server.port=3000"
       - "traefik.http.routers.dev-front.rule=Host(`overbookd.${DOMAIN}`)"
       - "traefik.http.routers.dev-front.tls=true"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cd /overbookd
+        pnpm config set store-dir .pnpm-store
+        pnpm fetch
+        pnpm install --recursive --offline --filter '@overbookd/web'
+        pnpm --recursive --filter '@overbookd/web' run dev

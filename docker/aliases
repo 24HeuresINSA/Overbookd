@@ -1,0 +1,3 @@
+alias ll='ls -alh'
+alias api='cd /overbookd/apps/api'
+alias web='cd /overbookd/apps/web'

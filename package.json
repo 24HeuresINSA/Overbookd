@@ -12,14 +12,15 @@
         "url": "https://gitlab.com/24-heures-insa/overbookd-mono"
     },
     "scripts": {
-        "db:exec": "./docker/compose.sh --prisma",
-        "dev:build": "./docker/compose.sh --build",
-        "dev:down": "./docker/compose.sh --down",
-        "dev:init": "./docker/compose.sh --traefik && pnpm dev:build",
-        "dev:logs": "./docker/compose.sh --logs",
-        "dev:restart": "./docker/compose.sh --restart",
-        "dev:start": "./docker/compose.sh --start",
-        "dev:stop": "./docker/compose.sh --stop",
+        "db:exec": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env exec api sh -c \"cd /overbookd/apps/api && npx $npm_config_command\"",
+        "dev:build": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env up -d --build",
+        "dev:down": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env down",
+        "dev:init": "docker network create traefik-public && pnpm dev:build",
+        "dev:logs": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env logs --tail 100 -f",
+        "dev:restart": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env restart",
+        "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env up -d",
+        "dev:stop": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env stop",
+        "dev:bash": "[ ! \"$(docker image ls | grep overbookd-bash)\" ] && docker build --tag overbookd-bash ./docker/ || docker run --rm --name overbookd-bash --interactive --tty --user $(id -g $USER):$(id -u $USER) -v ./:/app overbookd-bash sh --login",
         "preinstall": "npx only-allow pnpm",
         "prerelease": "pnpm --recursive --filter '{apps/**}' run prerelease"
     },

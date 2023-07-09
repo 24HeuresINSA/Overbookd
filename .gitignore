@@ -36,7 +36,8 @@ npm-debug.log
 
 # IDE
 .vscode/*
-!.vscode/project.code-workspace
+!.vscode/settings.json
+!.vscode/extensions.json
 .dist
 .idea
 
