@@ -11,6 +11,8 @@ RUN pnpm fetch
 ADD pnpm-workspace.yaml ./
 ADD package.json ./
 
+RUN echo "node-linker=hoisted" >> .npmrc
+
 WORKDIR /overbookd/apps/api
 ADD apps/api/ ./
 
@@ -42,7 +44,7 @@ USER node
 WORKDIR /app/dist
 
 COPY --chown=node:node --from=builder /overbookd/apps/api/dist /app/dist
-COPY --chown=node:node --from=builder /overbookd/apps/api/node_modules ./node_modules
+COPY --chown=node:node --from=builder /overbookd/node_modules ./node_modules
 COPY --chown=node:node --from=builder /overbookd/apps/api/prisma ./prisma
 
 EXPOSE 3000
