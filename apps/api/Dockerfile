@@ -34,6 +34,9 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
 
 ENV NODE_ENV production
 
+RUN npm install -g pnpm
+RUN pnpm --version
+
 USER node
 
 WORKDIR /app/dist
