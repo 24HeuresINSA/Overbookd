@@ -3,8 +3,6 @@ import {
   BaseFt,
   BaseFtRepresentation,
   CompleteFaResponse,
-  FaCollaborator,
-  FaCollaboratorRepresentation,
   FaElectricityNeed,
   FaElectricityNeedRepresentation,
   FaFeedback,
@@ -28,6 +26,10 @@ import {
   faStatuses,
   faTypes,
 } from '../fa.model';
+import {
+  Collaborator,
+  CollaboratorRepresentation,
+} from 'src/collaborator/collaborator.model';
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
@@ -117,9 +119,9 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: false,
     description: 'The collaborator of the fa',
-    type: FaCollaboratorRepresentation,
+    type: CollaboratorRepresentation,
   })
-  collaborator?: FaCollaborator;
+  collaborator?: Collaborator;
 
   @ApiProperty({
     required: true,
