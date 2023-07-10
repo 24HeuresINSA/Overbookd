@@ -90,8 +90,8 @@ services:
         cd /overbookd
         pnpm config set store-dir .pnpm-store
         pnpm fetch
+        pnpm install
         pnpm --recursive --filter '@overbookd/api' run build
-        pnpm install --recursive --offline --filter '@overbookd/api'
         pnpm --recursive --filter '@overbookd/api' run start:dev
 
   postgresql:
@@ -152,5 +152,5 @@ services:
         cd /overbookd
         pnpm config set store-dir .pnpm-store
         pnpm fetch
-        pnpm install --recursive --offline --filter '@overbookd/web'
+        pnpm install
         pnpm --recursive --filter '@overbookd/web' run dev
