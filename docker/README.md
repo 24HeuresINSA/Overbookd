@@ -4,18 +4,19 @@ Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev 
 
 ## Les alias de commande sont dans le package.json root
 
-Avec npm, tu peux lancer les containers Docker pour le dev. Il se base sur les scripts du fichier `package.json` à la racine du projet.
+Avec `pnpm`, tu peux lancer les containers Docker pour le dev. Il se base sur les scripts du fichier `package.json` à la racine du projet.
 
 ```bash
-npm run dev:start : start dev containers
-npm run dev:stop : stop dev containers
-npm run dev:restart : restart dev containers
-npm run dev:down : stop dev containers
-npm run dev:logs : show dev containers logs
-npm run dev:build : build dev containers
-npm run db:exec --command='[prisma command]': run prisma command in backend container. Example: npm run db:exec --command='prisma generate'
-npm run dev:bash : run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
-npm run prerelease : update version as realese-candidate (rc) of backend and frontend
+pnpm dev:init : setup traefik network and init dev containers
+pnpm dev:start : start dev containers
+pnpm dev:stop : stop dev containers
+pnpm dev:restart : restart dev containers
+pnpm dev:down : stop dev containers
+pnpm dev:logs : show dev containers logs
+pnpm dev:build : build dev containers
+pnpm db:exec --command='[prisma command]': run prisma command in backend container. Example: npm run db:exec --command='prisma generate'
+pnpm dev:bash : run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
+pnpm prerelease : update version as realese-candidate (rc) of api and web
 ```
 
 ## Les fichiers nécessaires
