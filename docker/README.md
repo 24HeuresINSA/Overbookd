@@ -15,7 +15,7 @@ pnpm dev:down : stop dev containers
 pnpm dev:logs : show dev containers logs
 pnpm dev:build : build dev containers
 pnpm db:exec '[prisma command]': run prisma command in api container. Example: npm run db:exec 'prisma generate'
-pnpm dev:bash : run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
+pnpm dev:bash : run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /overbookd
 pnpm prerelease : update version as realese-candidate (rc) of api and web
 ```
 
