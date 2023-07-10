@@ -12,7 +12,7 @@
         "url": "https://gitlab.com/24-heures-insa/overbookd-mono"
     },
     "scripts": {
-        "db:exec": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env exec api sh -c \"cd /overbookd/apps/api && npx $npm_config_command\"",
+        "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
         "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",
         "dev:clean": "pnpm dev:down && rm -rf node_modules .pnpm-store apps/**/node_modules && docker system prune --all",
         "dev:down": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env down",
