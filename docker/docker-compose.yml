@@ -58,8 +58,7 @@ services:
   api:
     container_name: overbookd_api
     user: ${MY_UID}:${MY_GID}
-    build:
-      context: .
+    image: overbookd:dev
     restart: unless-stopped
     platform: linux/x86_64
     networks:
@@ -129,8 +128,7 @@ services:
   web:
     container_name: overbookd_web
     user: ${MY_UID}:${MY_GID}
-    build:
-      context: .
+    image: overbookd:dev
     volumes:
       - ../:/overbookd
     environment:
