@@ -34,9 +34,7 @@
         <v-btn @click="sendResetRequest()">Valider</v-btn>
       </v-container>
     </v-form>
-    <v-snackbar v-model="snack.active" :timeout="snack.timeout">
-      {{ snack.feedbackMessage }}
-    </v-snackbar>
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -45,9 +43,11 @@ import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { Snack } from "~/utils/models/snack";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
   name: "ForgotPassword",
+  components: { SnackNotificationContainer },
   auth: false,
   layout: "none",
   data: () => ({
@@ -68,15 +68,14 @@ export default Vue.extend({
           token: this.$route.params.token,
           password: this.password,
           password2: this.password2,
-        })
+        }),
+        {
+          successMessage: "Password changé, redirection au login...",
+          messageDuration: 10000,
+        }
       );
-      if (!res) {
-        return this.snack.display(
-          "Ca n'a pas marché, peut-etre que le lien est expiré..."
-        );
-      }
 
-      this.snack.display("Password changé, redirection au login...");
+      if (!res) return;
       setTimeout(async () => {
         await this.$router.push({
           path: "/",

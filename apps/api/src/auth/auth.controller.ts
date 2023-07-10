@@ -43,7 +43,7 @@ export class AuthController {
     return this.authService.login(userCredentials);
   }
 
-  @Throttle(2, 5)
+  @Throttle(2, 60)
   @ApiBody({
     description:
       "Route pour la premiere partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
@@ -57,7 +57,7 @@ export class AuthController {
     return this.authService.forgot(user);
   }
 
-  @Throttle(2, 5)
+  @Throttle(2, 60)
   @ApiBody({
     description:
       'Route pour la seconde partie procedure de reset de mot de passe, enregistre le nouveau mot de passe',
