@@ -1,7 +1,0 @@
-FROM node:16-alpine
-
-WORKDIR /overbookd/backend
-
-EXPOSE 3000
-
-CMD ["sh", "-c", "npm i && npm run build && npm run start:dev"]

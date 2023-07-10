@@ -1,0 +1,8 @@
+.setup-pnpm:
+  image: node:16-alpine
+  interruptible: true
+  before_script:
+    - corepack enable
+    - corepack prepare pnpm@latest-8 --activate
+    - pnpm config set store-dir .pnpm-store
+    - pnpm --version

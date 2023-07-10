@@ -11,7 +11,8 @@ pids
 lib-cov
 
 # Coverage directory used by tools like istanbul
-coverage
+**/coverage
+**/junit.xml
 
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -35,7 +36,8 @@ npm-debug.log
 
 # IDE
 .vscode/*
-!.vscode/project.code-workspace
+!.vscode/settings.json
+!.vscode/extensions.json
 .dist
 .idea
 
@@ -48,3 +50,5 @@ dist
 .triage-policies.yml
 /backend/dist/
 /backend/node_modules/
+
+.pnpm-store

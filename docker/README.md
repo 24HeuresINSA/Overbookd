@@ -2,22 +2,21 @@
 
 Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev avec Docker.
 
-## Le script `compose.sh`
+## Les alias de commande sont dans le package.json root
 
-Le script `compose.sh` permet de lancer les containers Docker pour le dev. Il se base sur des options que voici (elles sont toujours affichable avec `./compose.sh --help` ou `./compose.sh -h`):
+Avec `pnpm`, tu peux lancer les containers Docker pour le dev. Il se base sur les scripts du fichier `package.json` à la racine du projet.
 
 ```bash
-Usage: ./compose.sh [option]
---traefik|-t : Create traefik network
---start|-s: start dev containers
---stop: stop dev containers
---restart|-r: restart dev containers
---down|-d: stop dev containers
---logs|-l: show dev containers logs
---build|-b: build dev containers
---prisma|-p: run prisma command in backend container. Example: ./compose.sh --prisma 'npx prisma migrate dev'
---bash|-b: run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /app
---updateVersion|-uv: update version as realese-candidate (rc) of backend and frontend
+pnpm dev:init : setup traefik network and init dev containers
+pnpm dev:start : start dev containers
+pnpm dev:stop : stop dev containers
+pnpm dev:restart : restart dev containers
+pnpm dev:down : stop dev containers
+pnpm dev:logs : show dev containers logs
+pnpm dev:build : build dev containers
+pnpm db:exec '[prisma command]': run prisma command in api container. Example: npm run db:exec 'prisma generate'
+pnpm dev:bash : run interactive bash terminal in onetime node container. To install dependancies for example. Overbookd folder is mounted in /overbookd
+pnpm prerelease : update version as realese-candidate (rc) of api and web
 ```
 
 ## Les fichiers nécessaires
@@ -56,10 +55,3 @@ Tous les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo 
 - Le back : <https://overbookd.traefik.me/api>
 - Swagger : <https://overbookd.traefik.me/api/swagger>
 - Adminer : <https://overbookd.traefik.me/adminer/>, petit lien magique pour autofill <https://overbookd.traefik.me/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
-
-#### Avec localhost
-
-- Le front : <http://localhost:3000>
-- Le back : <http://localhost:2424>
-- Swagger : <http://localhost:2424/swagger>
-- Adminer : <http://localhost:8080>, petit lien magique pour autofill <http://localhost:8080/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
