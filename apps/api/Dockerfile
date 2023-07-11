@@ -16,11 +16,15 @@ RUN echo "node-linker=hoisted" >> .npmrc
 WORKDIR /overbookd/apps/api
 ADD apps/api/ ./
 
+WORKDIR /overbookd/libraries
+ADD libraries/ ./
+
 WORKDIR /overbookd
-RUN pnpm install --recursive --offline --filter '@overbookd/api'
+RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 
 FROM installer AS builder
 
+ADD tsconfig.json ./
 RUN pnpm --filter '@overbookd/api' run build:ci
 
 FROM node:18-alpine

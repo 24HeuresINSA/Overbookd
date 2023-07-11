@@ -14,8 +14,11 @@ ADD package.json ./
 WORKDIR /overbookd/apps/web
 ADD apps/web/ ./
 
+WORKDIR /overbookd/libraries
+ADD libraries/ ./
+
 WORKDIR /overbookd
-RUN pnpm install --recursive --offline --filter '@overbookd/web'
+RUN pnpm install --recursive --offline --filter '@overbookd/web...'
 
 FROM installer AS builder
 
