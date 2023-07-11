@@ -1,0 +1,33 @@
+{
+  "name": "@overbookd/period",
+  "version": "1.0.0",
+  "description": "Gestion des periodes pour overbookd",
+  "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
+  "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
+  "license": "Apache-2.0",
+  "private": true,
+  "main": "build/index.js",
+  "bugs": {
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
+    "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
+    "directory": "apps/web"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "echo 'No tests'"
+  },
+  "keywords": [
+    "period"
+  ],
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=8"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}

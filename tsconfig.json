@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020", "ES2022"],
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "sourceMap": true,
+    "declaration": true,
+    "strict": true,
+    "noImplicitAny": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": false,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "emitDeclarationOnly": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@overbookd/api": ["./apps/api/src"],
+      "@overbookd/period": ["./libraries/period/src"],
+      "@overbookd/web": ["./apps/web/src"],
+    }
+  },
+  "exclude": ["**/dist", "**/node_modules", "**/build"]
+}
