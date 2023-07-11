@@ -43,7 +43,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { InventoryGroupedRecord } from "~/store/inventory";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 
 interface InventoryListingData {
   headers: Header[];

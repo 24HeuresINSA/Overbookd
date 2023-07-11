@@ -23,7 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import { Volunteer } from "~/utils/models/needHelp";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/userUtils";
 

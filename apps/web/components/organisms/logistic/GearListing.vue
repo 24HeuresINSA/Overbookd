@@ -82,7 +82,7 @@
 import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalog";
 import { Category, Gear } from "~/utils/models/catalog.model";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import { Team } from "~/utils/models/team";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
