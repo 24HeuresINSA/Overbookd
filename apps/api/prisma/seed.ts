@@ -449,6 +449,19 @@ async function main() {
     create: sgConfig,
   });
 
+  const eventDateConfig: Prisma.ConfigurationUncheckedCreateInput = {
+    key: 'eventDate',
+    value: {
+      start: new Date().toUTCString(),
+    },
+  };
+  console.log('Creating of event date config');
+  await prisma.configuration.upsert({
+    where: { key: 'eventDate' },
+    update: eventDateConfig,
+    create: eventDateConfig,
+  });
+
   const locations = await Promise.all(
     signaLocations.map(({ name }) =>
       prisma.signaLocation.create({ data: { name } }),

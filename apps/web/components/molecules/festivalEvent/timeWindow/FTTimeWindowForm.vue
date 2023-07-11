@@ -122,7 +122,7 @@ export default Vue.extend({
       return false;
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate"));
+      return new Date(this.$accessor.configuration.get("eventDate").start);
     },
     displayedManifDate(): string {
       return `vendredi ${formatDate(this.manifDate)}`;
