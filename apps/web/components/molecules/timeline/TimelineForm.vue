@@ -33,9 +33,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Period } from "@overbookd/period";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
-import { Period } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({

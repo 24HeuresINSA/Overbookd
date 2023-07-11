@@ -1,5 +1,5 @@
+import { Period } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
-import { Period } from "./period";
 
 export interface CharismaPeriod extends Period {
   name: string;

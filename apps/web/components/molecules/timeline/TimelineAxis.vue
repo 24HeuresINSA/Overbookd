@@ -15,8 +15,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Period } from "@overbookd/period";
 import { formatDateWithHoursAndMinutesOnly } from "~/utils/date/dateUtils";
-import { Period, getPeriodDuration } from "~/utils/models/period";
+import { getPeriodDuration } from "~/utils/models/period";
 
 const NB_MARKERS = 9;
 

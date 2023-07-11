@@ -1,3 +1,4 @@
+import { Period as BasePeriod } from "@overbookd/period";
 import { isSamePeriod } from "../availabilities/period";
 import {
   GearRequest,
@@ -8,8 +9,6 @@ import {
   SortableGearRequestHeader,
   StoredGearRequest,
 } from "../models/gearRequests";
-
-import { Period as BasePeriod } from "../models/period";
 import { updateItemToList } from "./list";
 
 export function uniqueGearRequestPeriodsReducer(

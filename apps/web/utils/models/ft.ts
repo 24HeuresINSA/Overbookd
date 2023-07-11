@@ -1,8 +1,8 @@
+import { Period } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { BaseFa } from "./fa";
 import { FtFeedback } from "./feedback";
 import { FtTimeSpan } from "./ftTimeSpan";
-import { Period } from "./period";
 import { Review } from "./review";
 import { SignaLocation } from "./signaLocation";
 import { Team } from "./team";

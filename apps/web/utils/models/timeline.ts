@@ -1,4 +1,4 @@
-import { Period } from "./period";
+import { Period } from "@overbookd/period";
 
 export interface TimelineFa {
   id: number;

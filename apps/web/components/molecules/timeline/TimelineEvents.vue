@@ -46,9 +46,9 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Period } from "@overbookd/period";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FTTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FTTimeSpanDetails.vue";
-import { Period } from "~/utils/models/period";
 import {
   TimelineEvent,
   TimelineFt,

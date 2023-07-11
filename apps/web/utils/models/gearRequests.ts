@@ -1,6 +1,6 @@
+import { Period as GeneralPeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { Gear } from "./catalog.model";
-import { Period as GeneralPeriod } from "./period";
 
 export interface BaseGearRequestCreation {
   gearId: number;

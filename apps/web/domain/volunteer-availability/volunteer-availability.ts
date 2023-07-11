@@ -1,5 +1,5 @@
+import { Period } from "@overbookd/period";
 import { ONE_HOUR_IN_MS } from "../../utils/date/dateUtils";
-import { Period } from "../../utils/models/period";
 import { SHIFT_HOURS_UTC } from "../../utils/shift/shift";
 import {
   AvailabilityMinimumPeriodDurationError,

@@ -1,4 +1,4 @@
-import { Period } from "../models/period";
+import { Period } from "@overbookd/period";
 import { isPartyShift } from "../shift/shift";
 
 export function isSamePeriod(period: Period): (value: Period) => boolean {

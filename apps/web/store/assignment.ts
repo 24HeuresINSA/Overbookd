@@ -1,4 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Period } from "@overbookd/period";
 import {
   AssignmentCandidate,
   TaskAssignment,
@@ -20,7 +21,7 @@ import {
   castAvailableTimeSpansWithDate,
   castFtsWithTimeSpansWithDate,
 } from "~/utils/models/ftTimeSpan";
-import { Period, castPeriods } from "~/utils/models/period";
+import { castPeriods } from "~/utils/models/period";
 import {
   User,
   VolunteerAssignmentStat,

@@ -11,13 +11,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
+import { Period } from "@overbookd/period";
 import { CalendarUser } from "~/utils/models/calendar";
 import {
   PlanningEvent,
   convertTaskToPlanningEvent,
 } from "~/domain/common/planning-events";
-import { Period } from "~/utils/models/period";
+import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
 
 export default Vue.extend({
   name: "CalendarList",

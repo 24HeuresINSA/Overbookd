@@ -1,10 +1,11 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Period } from "@overbookd/period";
 import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
 import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { AvailabilityRegistery } from "~/domain/volunteer-availability/volunteer-availability.registery";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { castPeriods, Period } from "~/utils/models/period";
+import { castPeriods } from "~/utils/models/period";
 import { HttpStringified } from "~/utils/types/http";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;

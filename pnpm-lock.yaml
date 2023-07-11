@@ -206,6 +206,9 @@ importers:
       '@nuxtjs/vuetify':
         specifier: ^1.12.3
         version: 1.12.3(vue@2.7.14)(webpack@4.46.0)
+      '@overbookd/period':
+        specifier: workspace:*
+        version: link:../../libraries/period
       '@tiptap/pm':
         specifier: ^2.0.3
         version: 2.0.3(@tiptap/core@2.0.3)
@@ -351,6 +354,12 @@ importers:
       webpack:
         specifier: ^4.46.0
         version: 4.46.0
+
+  libraries/period:
+    devDependencies:
+      typescript:
+        specifier: ^5.1.6
+        version: 5.1.6
 
 packages:
 
