@@ -26,9 +26,7 @@ export default {
   update(context: Context, config: Configuration) {
     return context.$axios.put<HttpStringified<Configuration>>(
       `${resource}/${config.key}`,
-      {
-        value: config.value,
-      }
+      { value: config.value }
     );
   },
 };
