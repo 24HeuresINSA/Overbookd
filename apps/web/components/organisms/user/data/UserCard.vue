@@ -31,10 +31,6 @@
         <h3 class="mt-1">🗣 {{ me.tasksCount }} tâches affectées</h3>
 
         <OverChips :roles="me.team"></OverChips>
-
-        <v-progress-linear
-          :value="((me.charisma ?? 0) / maxCharisma) * 100"
-        ></v-progress-linear>
       </v-card-text>
     </v-card>
   </div>
@@ -59,12 +55,6 @@ export default Vue.extend({
     },
   },
 
-  data() {
-    return {
-      maxCharisma: 1500,
-    };
-  },
-
   computed: {
     me(): MyUserInformation {
       return this.$accessor.user.me;
@@ -75,7 +65,6 @@ export default Vue.extend({
   },
 
   mounted() {
-    this.maxCharisma = this.$accessor.config.getConfig("max_charisma");
     if (!this.me.profilePicture) return;
     this.$accessor.user.setMyProfilePicture();
   },

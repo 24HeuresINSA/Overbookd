@@ -127,10 +127,6 @@ export class ConfigService {
           "Remplis tes disponibilités, plus tu as de points de charisme, plus tu as de chances de faire parti de l'aventure. Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à tous tes créneaux et te laisserons du temps pour te reposer et profiter du festival ! Les créneaux oranges ne sont plus modifiables une fois cochés.",
       },
       {
-        key: 'max_charisma',
-        value: 1500,
-      },
-      {
         key: 'ft_validators',
         value: ['humain', 'log'],
       },
