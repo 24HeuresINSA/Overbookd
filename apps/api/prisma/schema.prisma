@@ -432,7 +432,6 @@ model CatalogGear {
 model Configuration {
   key       String  @id @unique
   value     Json
-  isDeleted Boolean @default(false) @map("is_deleted")
 
   @@map("configuration")
 }
