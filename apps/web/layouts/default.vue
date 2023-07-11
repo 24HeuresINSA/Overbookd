@@ -406,10 +406,6 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
       return this.$accessor.user.hasPermission(permission);
     },
 
-    getConfig(key) {
-      return this.$accessor.config.getConfig(key);
-    },
-
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage["theme"] = this.$vuetify.theme.dark;

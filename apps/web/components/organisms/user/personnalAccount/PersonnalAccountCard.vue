@@ -43,7 +43,7 @@
       </div>
       <v-responsive>
         <v-card-actions>
-          <v-btn v-if="areTransfersOpen" text small @click="openDialog()">
+          <v-btn text small @click="openDialog()">
             Effectuer un virement
           </v-btn>
           <v-btn text small to="/mTransactions">Mes transactions</v-btn>
@@ -68,7 +68,6 @@ export default Vue.extend({
         { text: "date", value: "createdAt" },
         { text: "montant", value: "amount", align: "end" },
       ],
-      areTransfersOpen: false,
     };
   },
   computed: {
@@ -87,8 +86,6 @@ export default Vue.extend({
   },
   async mounted() {
     await this.$accessor.transaction.fetchMTransactions();
-    this.areTransfersOpen =
-      this.$accessor.config.getConfig("are_transfers_open");
   },
   methods: {
     async openDialog(): Promise<any> {

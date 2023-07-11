@@ -46,7 +46,7 @@ export default Vue.extend({
       return `[${this.selectedFt.id}] ${this.selectedFt.name}`;
     },
     manifDate(): Date {
-      return new Date(this.$accessor.config.getConfig("event_date"));
+      return new Date(this.$accessor.configuration.get("eventDate"));
     },
     timeSpans(): FtTimeSpanEvent[] {
       return this.$accessor.assignment.selectedFtTimeSpans.flatMap((timeSpan) =>

@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Configuration } from "~/utils/models/Configuration";
+import { Configuration } from "~/utils/models/configuration";
 import { HttpStringified } from "~/utils/types/http";
 const resource = "/configuration";
 

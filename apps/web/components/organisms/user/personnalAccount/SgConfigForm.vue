@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Configuration, SgConfig } from "~/utils/models/Configuration";
+import { Configuration, SgConfig } from "~/utils/models/configuration";
 
 export default Vue.extend({
   name: "SgConfigForm",

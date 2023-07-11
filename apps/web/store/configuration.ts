@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import Vue from "vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Configuration } from "~/utils/models/Configuration";
+import { Configuration } from "~/utils/models/configuration";
 
 const configurationRepo = RepoFactory.configurationRepo;
 

@@ -58,7 +58,7 @@ export default Vue.extend({
   }),
   computed: {
     manifDate(): Date {
-      return new Date(this.$accessor.config.getConfig("event_date"));
+      return new Date(this.$accessor.configuration.get("eventDate"));
     },
     calendarType(): string {
       return window.screen.width < 750 ? "day" : "week";

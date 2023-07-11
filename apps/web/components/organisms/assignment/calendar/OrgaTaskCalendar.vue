@@ -60,7 +60,7 @@ export default Vue.extend({
       return formatUsername(this.selectedVolunteer);
     },
     manifDate(): Date {
-      return new Date(this.$accessor.config.getConfig("event_date"));
+      return new Date(this.$accessor.configuration.get("eventDate"));
     },
     availabilities(): Availability[] {
       return this.$accessor.volunteerAvailability.mAvailabilities;

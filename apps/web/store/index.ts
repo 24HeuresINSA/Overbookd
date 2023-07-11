@@ -4,7 +4,6 @@ import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 import * as assignment from "./assignment";
 import * as catalog from "./catalog";
 import * as charismaPeriod from "./charismaPeriod";
-import * as config from "./config";
 import * as configuration from "./configuration";
 import * as dialog from "./dialog";
 import * as fa from "./fa";
@@ -45,7 +44,6 @@ export const accessorType = getAccessorType({
   modules: {
     dialog,
     notif,
-    config,
     user,
     transaction,
     fa,

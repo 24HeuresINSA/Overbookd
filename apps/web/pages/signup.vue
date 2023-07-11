@@ -134,7 +134,6 @@ export default Vue.extend({
     signupData: {} as SignupFormData,
     birthdate: "",
     formSoft: false,
-    isSignupOpen: true,
   }),
 
   computed: {
@@ -162,15 +161,6 @@ export default Vue.extend({
     ruleSelectComplete(): any {
       return [(v: any) => !!v];
     },
-  },
-
-  async mounted() {
-    if (!this.isSignupOpen) {
-      alert("Les inscriptions sont fermées 😱");
-      await this.$router.push({
-        path: "/login",
-      });
-    }
   },
 
   methods: {
