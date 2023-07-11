@@ -21,6 +21,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from '../auth/permissions-auth.decorator';
 import { PermissionsGuard } from '../auth/permissions-auth.guard';
 import { Configuration, ConfigurationValue } from './configuration.model';
+import { UpsertConfigurationDto } from './dto/upsertConfiguration.dto';
 
 @ApiTags('Configuration')
 @Controller('configuration')
@@ -43,6 +44,7 @@ export class ConfigurationController {
   @ApiResponse({
     status: 200,
     description: 'Get configuration by key',
+    type: ConfigurationResponseDto,
   })
   findOne(@Param('key') key: string): Promise<Configuration> {
     return this.configurationService.findOne(key);
@@ -56,10 +58,11 @@ export class ConfigurationController {
   @ApiResponse({
     status: 200,
     description: 'Upsert configuration',
+    type: ConfigurationResponseDto,
   })
   @ApiBody({
     description: 'Upsert Configuration',
-    type: ConfigurationResponseDto,
+    type: UpsertConfigurationDto,
   })
   upsert(
     @Param('key') key: string,
@@ -70,11 +73,11 @@ export class ConfigurationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('admin')
+  @Permission('manage-config')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a configurations',
+    description: 'Delete a configuration',
   })
   @ApiParam({
     name: 'key',
