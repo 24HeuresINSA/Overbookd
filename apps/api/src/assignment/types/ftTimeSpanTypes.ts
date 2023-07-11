@@ -93,7 +93,7 @@ export type WithTeams = {
 export type DatabaseAssigneeWithFriends = DataBaseAssignee &
   DatabaseWithFriends<DataBaseAssignee & WithTeams>;
 
-export type DatabaseAssigneeWithTeams = DatabaseAssigneeWithFriends & WithTeams;
+type DatabaseAssigneeWithTeams = DatabaseAssigneeWithFriends & WithTeams;
 
 export type DatabaseAssignmentsAsTeamMember = {
   teamRequest: {
