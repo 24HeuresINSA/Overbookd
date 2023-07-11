@@ -69,8 +69,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Period } from "@overbookd/period";
 import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue";
-import { Period } from "~/utils/models/period";
 
 interface CalendarStep {
   title: string;

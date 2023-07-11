@@ -1,10 +1,11 @@
 import { actionTree, mutationTree, getterTree } from "typed-vuex";
+import { Period } from "@overbookd/period";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/needHelp";
-import { Period, castPeriod } from "~/utils/models/period";
+import { castPeriod } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
 import { DisplayedUser, castVolunteerTaskWithDate } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";

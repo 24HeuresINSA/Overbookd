@@ -1,4 +1,4 @@
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
 
 export function getPeriodDuration({ start, end }: Period): number {
   return end.getTime() - start.getTime();

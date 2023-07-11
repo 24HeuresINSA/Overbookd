@@ -1,7 +1,7 @@
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
 import { Assignment, Task, Volunteer } from '../domain/task.model';
 import { ApiProperty } from '@nestjs/swagger';
-import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
+import { PeriodDto } from '../../../src/volunteer-availability/dto/period.dto';
 
 class VolunteerRepresentation implements Volunteer {
   id: number;

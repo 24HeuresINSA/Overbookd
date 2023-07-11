@@ -4,10 +4,13 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { StatsPayload, StatsService } from 'src/common/services/stats.service';
-import { DataBaseUserRequest } from 'src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { FtUserRequestService } from 'src/ft_user_request/ftUserRequest.service';
+import { JwtUtil } from '../../src/auth/entities/JwtUtil.entity';
+import {
+  StatsPayload,
+  StatsService,
+} from '../../src/common/services/stats.service';
+import { DataBaseUserRequest } from '../../src/ft_user_request/dto/ftUserRequestResponse.dto';
+import { FtUserRequestService } from '../../src/ft_user_request/ftUserRequest.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFtDto } from './dto/createFt.dto';
 import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';

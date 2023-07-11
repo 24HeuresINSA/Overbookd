@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { VolunteerPlanningModule } from 'src/volunteer-planning/volunteer-planning.module';
+import { VolunteerPlanningModule } from '../../src/volunteer-planning/volunteer-planning.module';
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { FileService } from './file.service';

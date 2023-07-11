@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TeamRepresentation } from 'src/common/dto/gearRepresentation.dto';
+import { TeamRepresentation } from '../../common/dto/gearRepresentation.dto';
 import { Category, Team } from '../interfaces';
 
 export class CategoryResponseDto implements Category {

@@ -1,4 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { Period } from "@overbookd/period";
 import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
   Ft,
@@ -20,7 +21,6 @@ import {
   GearRequestWithDrive,
   StoredGearRequest,
 } from "~/utils/models/gearRequests";
-import { Period } from "~/utils/models/period";
 import { Reviewer } from "~/utils/models/review";
 import { StatsPayload } from "~/utils/models/stats";
 import { User } from "~/utils/models/user";

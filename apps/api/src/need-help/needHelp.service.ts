@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
 import { Volunteer } from './needHelp.model';
 
 export interface VolunteerRepository {

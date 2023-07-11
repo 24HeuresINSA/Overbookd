@@ -1,7 +1,7 @@
+import { Period } from '@overbookd/period';
 import { getPeriodDuration } from '../../utils/duration';
 import { SHIFT_HOURS_UTC } from '../../shift/shift.constant';
 import { ONE_HOUR_IN_MS } from '../../utils/date';
-import { Period } from './period.model';
 import {
   AvailabilityMinimumPeriodDurationError,
   AvailabilityPeriodsJointError,

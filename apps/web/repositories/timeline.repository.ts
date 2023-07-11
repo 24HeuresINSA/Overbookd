@@ -1,5 +1,5 @@
+import { Period } from "@overbookd/period";
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Period } from "~/utils/models/period";
 import { TimelineEvent } from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
 

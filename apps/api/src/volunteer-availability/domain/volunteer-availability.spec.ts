@@ -1,5 +1,5 @@
+import { Period } from '@overbookd/period';
 import { formatDateWithMinutes } from '../../utils/date';
-import { Period } from './period.model';
 import { Availability } from './volunteer-availability';
 import { AVAILABILITY_ERROR_MESSAGES } from './volunteer-availability.error';
 

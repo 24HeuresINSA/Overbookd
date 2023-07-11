@@ -1,5 +1,5 @@
-import { FtStatus } from 'src/ft/ft.model';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
+import { FtStatus } from '../ft/ft.model';
 
 type DatabaseFt = {
   name: string;

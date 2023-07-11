@@ -15,9 +15,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { ExportSignaNeed } from 'src/fa/faTypes';
+import { Permission } from '../auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../auth/permissions-auth.guard';
+import { ExportSignaNeed } from '../fa/faTypes';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFaSignaNeedDto } from './dto/createFaSignaNeed.dto';
 import { FaSignaNeedExportCsvDto } from './dto/exportSignaNeedCsv.dto';

@@ -17,9 +17,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Permission } from '../auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../auth/permissions-auth.guard';
 import { AssignmentService, AssignmentStats } from './assignment.service';
 import {
   AssignmentRequestDto,

@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { Ft, Prisma, TaskCategory } from '@prisma/client';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
+import { JwtUtil } from '../../src/auth/entities/JwtUtil.entity';
 import { ftStatuses } from '../ft/ft.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { MailService } from '../mail/mail.service';

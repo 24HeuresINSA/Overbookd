@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Gear } from 'src/catalog/interfaces';
-import { convertGearToApiContract } from 'src/catalog/repositories/prisma/gear.repository.prisma';
-import { PrismaService } from 'src/prisma.service';
+import { Gear } from '../../../src/catalog/interfaces';
+import { convertGearToApiContract } from '../../../src/catalog/repositories/prisma/gear.repository.prisma';
+import { PrismaService } from '../../../src/prisma.service';
 import {
   GroupedRecord,
   InventoryRecord,

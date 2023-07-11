@@ -1,7 +1,10 @@
 import { EventAttributes, createEvents } from 'ics';
+import { Period } from '@overbookd/period';
+import {
+  formatDateWithHoursAndMinutesOnly,
+  toDateArray,
+} from '../../../src/utils/date';
 import { Assignment, Task } from '../domain/task.model';
-import { formatDateWithHoursAndMinutesOnly, toDateArray } from 'src/utils/date';
-import { Period } from 'src/volunteer-availability/domain/period.model';
 import { RenderStrategy } from './renderStrategy';
 
 export class IcalRenderStrategy implements RenderStrategy {

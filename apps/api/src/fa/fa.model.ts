@@ -1,8 +1,8 @@
-import { FaFeedbackSubjectType } from 'src/fa-feedback/faFeedback.model';
-import { ElectricityType } from 'src/fa_electricity_need/faElectricityNeed.model';
-import { SignaType } from 'src/fa_signa_need/faSignaNeed.model';
-import { AnimationCategory } from 'src/fa_site_publish_animation/faSitePublishAnimation.model';
-import { FtStatus } from 'src/ft/ft.model';
+import { FaFeedbackSubjectType } from '../fa-feedback/faFeedback.model';
+import { ElectricityType } from '../fa_electricity_need/faElectricityNeed.model';
+import { SignaType } from '../fa_signa_need/faSignaNeed.model';
+import { AnimationCategory } from '../fa_site_publish_animation/faSitePublishAnimation.model';
+import { FtStatus } from '../ft/ft.model';
 
 const DRAFT = 'DRAFT';
 const SUBMITTED = 'SUBMITTED';

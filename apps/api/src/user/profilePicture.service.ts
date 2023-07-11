@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../src/prisma.service';
 import { FileService } from './file.service';
 import { UserWithTeamAndPermission } from './user.model';
 import {

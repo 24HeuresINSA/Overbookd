@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../../src/prisma.service';
 import { PeriodNotFound } from '../gearRequest.error';
 import { Period, PeriodForm } from '../gearRequests.model';
 import { PeriodRepository } from '../gearRequests.service';

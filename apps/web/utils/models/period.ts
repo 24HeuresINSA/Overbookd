@@ -1,9 +1,5 @@
+import { Period } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
-
-export interface Period {
-  start: Date;
-  end: Date;
-}
 
 export interface PeriodWithId extends Period {
   id: number;

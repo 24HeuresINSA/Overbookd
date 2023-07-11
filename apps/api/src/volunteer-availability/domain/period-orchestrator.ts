@@ -1,5 +1,5 @@
+import { Period } from '@overbookd/period';
 import { updateItemToList } from '../../utils/list';
-import { Period } from './period.model';
 import { Availability } from './volunteer-availability';
 
 export type PeriodWithError = Period & {

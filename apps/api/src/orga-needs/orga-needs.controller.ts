@@ -7,10 +7,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { OrgaNeedsService } from './orga-needs.service';
-import { Permission } from 'src/auth/permissions-auth.decorator';
+import { Permission } from '../../src/auth/permissions-auth.decorator';
 import { OrgaNeedsResponseDto } from './dto/orga-needs-response.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
+import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
 import { OrgaNeedsRequestDto } from './dto/orga-needs-request.dto';
 
 @ApiTags('orga-needs')

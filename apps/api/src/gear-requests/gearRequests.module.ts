@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { PrismaGearRepository } from 'src/catalog/repositories';
-import { CommonModule } from 'src/common/common.module';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaGearRepository } from '../../src/catalog/repositories';
+import { CommonModule } from '../../src/common/common.module';
+import { PrismaService } from '../../src/prisma.service';
 import { GearRequestsController } from './gearRequests.controller';
 import { GearRequestsService } from './gearRequests.service';
 import { PrismaAnimationRepository } from './repositories/animation.repository.prisma';

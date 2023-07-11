@@ -1,4 +1,4 @@
-import { Period } from 'src/gear-requests/gearRequests.model';
+import { Period } from '../../src/gear-requests/gearRequests.model';
 
 const DIVERTISSEMENT = 'Divertissement';
 const CULTURE = 'Culture';

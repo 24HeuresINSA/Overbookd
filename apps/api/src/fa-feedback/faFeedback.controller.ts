@@ -16,8 +16,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permission } from '../../src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFaFeedbackDto } from './dto/createFaFeedback.dto';
 import { FaFeedbackResponseDto } from './dto/faFeedbackResponse.dto';

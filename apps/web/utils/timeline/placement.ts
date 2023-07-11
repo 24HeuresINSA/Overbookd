@@ -1,4 +1,5 @@
-import { Period, getPeriodDuration } from "../models/period";
+import { Period } from "@overbookd/period";
+import { getPeriodDuration } from "../models/period";
 
 function getIdleBeforePercent(container: Period, containee: Period): number {
   const containerDuration = getPeriodDuration(container);

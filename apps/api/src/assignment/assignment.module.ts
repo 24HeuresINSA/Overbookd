@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { MailService } from 'src/mail/mail.service';
-import { UserService } from 'src/user/user.service';
-import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
+import { MailService } from '../mail/mail.service';
+import { UserService } from '../user/user.service';
+import { VolunteerAvailabilityService } from '../volunteer-availability/volunteer-availability.service';
 import { PrismaService } from '../prisma.service';
 import { AssignmentController } from './assignment.controller';
 import { AssignmentService } from './assignment.service';

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../../src/prisma.service';
 import { TaskRepository } from '../gearRequests.service';
 import { Task } from '../tasks/task.model';
 

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateFaDto } from './dto/updateFa.dto';
 import { ValidationDto } from './dto/validation.dto';
 
-import { StatsPayload, StatsService } from 'src/common/services/stats.service';
+import { StatsPayload, StatsService } from '../common/services/stats.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/createFa.dto';
 import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';

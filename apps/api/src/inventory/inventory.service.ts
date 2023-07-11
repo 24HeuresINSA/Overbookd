@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Gear } from 'src/catalog/interfaces';
+import { Gear } from '../../src/catalog/interfaces';
 import { SlugifyService } from '../common/services/slugify.service';
 
 export type LiteInventoryRecord = Omit<InventoryRecord, 'gear'>;

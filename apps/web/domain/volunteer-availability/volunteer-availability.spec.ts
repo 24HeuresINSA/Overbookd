@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
+import { Period } from "@overbookd/period";
 import { formatDateWithMinutes } from "../../utils/date/dateUtils";
-import { Period } from "~/utils/models/period";
 import { Availability } from "./volunteer-availability";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error";
 

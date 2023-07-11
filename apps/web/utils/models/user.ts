@@ -1,3 +1,4 @@
+import { Period } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { FtStatus } from "./ft";
 import { TaskCategory } from "./ftTimeSpan";
@@ -94,11 +95,6 @@ export interface CompleteUserWithPermissions extends CompleteUser {
 
 export interface MyUserInformation extends CompleteUserWithPermissions {
   tasksCount: number;
-}
-
-interface Period {
-  start: Date;
-  end: Date;
 }
 
 export interface Task {

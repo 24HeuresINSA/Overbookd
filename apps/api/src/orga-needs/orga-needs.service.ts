@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { Period } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { VolunteerAvailability } from '@prisma/client';
-import { Period } from 'src/volunteer-availability/domain/period.model';
-import { getPeriodDuration } from 'src/utils/duration';
+import { getPeriodDuration } from '../../src/utils/duration';
 
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;

@@ -4,7 +4,7 @@ import { CategoryService } from './category.service';
 import { CommonModule } from '../common/common.module';
 import { CategoryController } from './category.controller';
 import { GearController } from './gear.controller';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import {
   PrismaCategoryRepository,
   PrismaGearRepository,

@@ -1,7 +1,7 @@
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStat,
-} from 'src/user/dto/volunteerAssignment.dto';
+} from '../../user/dto/volunteerAssignment.dto';
 import { AssignmentStats } from '../assignment.service';
 import { ApiProperty } from '@nestjs/swagger';
 

@@ -6,14 +6,14 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FtReview, ReviewStatus } from '@prisma/client';
-import { JwtPayload, JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { faStatuses } from 'src/fa/fa.model';
-import { CreateFtFeedbackDto } from 'src/ft-feedback/dto/createFtFeedback.dto';
-import { ftFeedbackSubjectTypes } from 'src/ft-feedback/ftFeedback.model';
-import { CompleteFtResponseDto } from 'src/ft/dto/ftResponse.dto';
-import { FtStatus, ftStatuses } from 'src/ft/ft.model';
-import { DataBaseCompleteFt, FtService } from 'src/ft/ft.service';
-import { COMPLETE_FT_SELECT, TimeSpan } from 'src/ft/ftTypes';
+import { JwtPayload, JwtUtil } from '../../src/auth/entities/JwtUtil.entity';
+import { faStatuses } from '../../src/fa/fa.model';
+import { CreateFtFeedbackDto } from '../../src/ft-feedback/dto/createFtFeedback.dto';
+import { ftFeedbackSubjectTypes } from '../../src/ft-feedback/ftFeedback.model';
+import { CompleteFtResponseDto } from '../../src/ft/dto/ftResponse.dto';
+import { FtStatus, ftStatuses } from '../../src/ft/ft.model';
+import { DataBaseCompleteFt, FtService } from '../../src/ft/ft.service';
+import { COMPLETE_FT_SELECT, TimeSpan } from '../../src/ft/ftTypes';
 import { PrismaService } from '../prisma.service';
 import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewDto } from './dto/upsertFtReview.dto';
