@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserAccess } from './entities/userAccess.entity';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('auth')
 @Controller()
@@ -22,6 +23,7 @@ export class AuthController {
     private mailService: MailService,
   ) {}
 
+  @Throttle(10, 30)
   @Post('login')
   @ApiBody({
     description: 'Route de connection',
@@ -41,6 +43,7 @@ export class AuthController {
     return this.authService.login(userCredentials);
   }
 
+  @Throttle(2, 60)
   @ApiBody({
     description:
       "Route pour la premiere partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
@@ -54,6 +57,7 @@ export class AuthController {
     return this.authService.forgot(user);
   }
 
+  @Throttle(2, 60)
   @ApiBody({
     description:
       'Route pour la seconde partie procedure de reset de mot de passe, enregistre le nouveau mot de passe',

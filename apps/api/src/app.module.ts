@@ -39,6 +39,9 @@ import { TransactionModule } from './transaction/transaction.module';
 import { UserModule } from './user/user.module';
 import { VolunteerAvailabilityModule } from './volunteer-availability/volunteer-availability.module';
 import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuardCustom } from './throttler-custom.guard';
 
 @Module({
   imports: [
@@ -95,9 +98,22 @@ import { VolunteerPlanningModule } from './volunteer-planning/volunteer-planning
     VolunteerPlanningModule,
     TimelineModule,
     NeedHelpModule,
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 500,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, HashingUtilsService, MailService],
+  providers: [
+    AppService,
+    PrismaService,
+    HashingUtilsService,
+    MailService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuardCustom,
+    },
+  ],
   exports: [PrismaService],
 })
 export class AppModule {}

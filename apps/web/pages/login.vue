@@ -189,6 +189,13 @@ export default {
           await audio.play();
         }
       } catch (e) {
+        if (e.response.status === 429) {
+          return this.$store.dispatch("notif/pushNotification", {
+            type: "error",
+            message:
+              "Tu as essayé de te connecter trop de fois ... 👨‍💻 Attends 30 secs",
+          });
+        }
         return this.$store.dispatch("notif/pushNotification", {
           type: "error",
           message: "Ton email ou ton mot de passe est incorrect 😞",
