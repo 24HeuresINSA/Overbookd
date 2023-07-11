@@ -1,8 +1,8 @@
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
-} from 'src/assignment/assignment.model';
-import { VolunteerTask } from 'src/user/user.service';
+} from '../../src/assignment/assignment.model';
+import { VolunteerTask } from '../../src/user/user.service';
 
 export function formatAssignmentAsTask({
   timeSpan,

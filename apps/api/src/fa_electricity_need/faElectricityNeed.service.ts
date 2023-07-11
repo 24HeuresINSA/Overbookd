@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FaElectricityNeed } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { CreateFaElectricityNeedDto } from './dto/createFaElectricityNeed.dto';
 
 @Injectable()

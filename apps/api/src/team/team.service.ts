@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, Team } from '@prisma/client';
 import { SlugifyService } from '../common/services/slugify.service';
-import { PrismaService } from 'src/prisma.service';
-import { UserService } from 'src/user/user.service';
+import { PrismaService } from '../../src/prisma.service';
+import { UserService } from '../../src/user/user.service';
 import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 
 export const TEAM_SELECT = {

@@ -1,4 +1,4 @@
-import { Gear, SimplifiedCategory, Team } from 'src/catalog/interfaces';
+import { Gear, SimplifiedCategory, Team } from '../../catalog/interfaces';
 
 export class GearRepresentation implements Gear {
   id: number;

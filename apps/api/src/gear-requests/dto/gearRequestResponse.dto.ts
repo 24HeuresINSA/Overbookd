@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GearRepresentation } from 'src/common/dto/gearRepresentation.dto';
+import { GearRepresentation } from '../../../src/common/dto/gearRepresentation.dto';
 import { Gear } from '../../catalog/interfaces';
 import {
   GearRequest,

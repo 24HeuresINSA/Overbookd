@@ -75,23 +75,25 @@ type DatabaseWithFriends<T extends { id: number }> = {
   }[];
 };
 
-type DataBaseAssignee = {
+export type DataBaseAssignee = {
   id: number;
   firstname: string;
   lastname: string;
   phone: string;
 };
 
-export type DatabaseAssigneeWithFriends = DataBaseAssignee &
-  DatabaseWithFriends<DataBaseAssignee>;
-
-export type DatabaseAssigneeWithTeams = DatabaseAssigneeWithFriends & {
+export type WithTeams = {
   team: {
     team: {
       code: string;
     };
   }[];
 };
+
+export type DatabaseAssigneeWithFriends = DataBaseAssignee &
+  DatabaseWithFriends<DataBaseAssignee & WithTeams>;
+
+export type DatabaseAssigneeWithTeams = DatabaseAssigneeWithFriends & WithTeams;
 
 export type DatabaseAssignmentsAsTeamMember = {
   teamRequest: {

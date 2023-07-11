@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { FaTimeWindow } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../src/prisma.service';
 import { CreateTimeWindowDto } from './dto/createFaTimeWindow.dto';
 
 @Injectable()

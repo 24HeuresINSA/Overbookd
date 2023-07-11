@@ -1,4 +1,4 @@
-import { Gear } from 'src/catalog/interfaces';
+import { Gear } from '../../src/catalog/interfaces';
 import {
   GroupedRecord,
   InventoryRecord,

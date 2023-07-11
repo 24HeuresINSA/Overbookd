@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Gear } from 'src/catalog/interfaces';
-import { GearRepresentation } from 'src/common/dto/gearRepresentation.dto';
+import { Gear } from '../../../src/catalog/interfaces';
+import { GearRepresentation } from '../../../src/common/dto/gearRepresentation.dto';
 import { InventoryRecord } from '../inventory.service';
 
 export class InventoryRecordDto implements InventoryRecord {

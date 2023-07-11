@@ -1,4 +1,4 @@
-import { Category, Gear } from 'src/catalog/interfaces';
+import { Category, Gear } from '../../src/catalog/interfaces';
 import { SlugifyService } from '../common/services/slugify.service';
 import {
   GroupedRecord,

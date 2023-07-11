@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Period } from '@overbookd/period';
 import { Type } from 'class-transformer';
 import { IsDate, IsDefined } from 'class-validator';
-import { Period } from '../domain/period.model';
 
 export class PeriodDto implements Period {
   @ApiProperty({

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../src/prisma.service';
 import { CreateFtTeamRequestDto } from './dto/create-ft_team_request.dto';
 import { FtTeamRequestResponseDto } from './dto/ftTeamRequestResponse.dto';
 

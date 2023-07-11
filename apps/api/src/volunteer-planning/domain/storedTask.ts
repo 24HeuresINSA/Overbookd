@@ -1,4 +1,4 @@
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
 import { Assignment, Task, Volunteer } from './task.model';
 import {
   arePeriodsOverlapping,

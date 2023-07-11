@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TeamFormDto } from 'src/team/dto/teamFormRequest.dto';
+import { TeamFormDto } from '../../../src/team/dto/teamFormRequest.dto';
 
 class CompeleteTeamDto extends TeamFormDto {
   @ApiProperty({

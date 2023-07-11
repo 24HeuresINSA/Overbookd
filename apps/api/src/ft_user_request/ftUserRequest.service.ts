@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
+import { PrismaService } from '../../src/prisma.service';
+import { SELECT_USERNAME_WITH_ID } from '../../src/user/user.service';
 import { FtUserRequestDto } from './dto/ftUserRequest.dto';
 import {
   DataBaseUserRequest,

@@ -24,28 +24,28 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RequestWithUserPayload } from 'src/app.controller';
-import { JwtUtil } from 'src/auth/entities/JwtUtil.entity';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
-import { StatsPayload } from 'src/common/services/stats.service';
-import { GearRequestsApproveFormRequestDto } from 'src/gear-requests/dto/gearRequestApproveFormRequest.dto';
+import { RequestWithUserPayload } from '../../src/app.controller';
+import { JwtUtil } from '../../src/auth/entities/JwtUtil.entity';
+import { Permission } from '../../src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
+import { StatsPayload } from '../../src/common/services/stats.service';
+import { GearRequestsApproveFormRequestDto } from '../../src/gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
   GearRequestFormRequestDto,
   NewPeriodGearRequestFormRequestDto,
-} from 'src/gear-requests/dto/gearRequestFormRequest.dto';
+} from '../../src/gear-requests/dto/gearRequestFormRequest.dto';
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
-} from 'src/gear-requests/dto/gearRequestResponse.dto';
-import { GearRequestUpdateFormRequestDto } from 'src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
+} from '../../src/gear-requests/dto/gearRequestResponse.dto';
+import { GearRequestUpdateFormRequestDto } from '../../src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
 import {
   ApprovedGearRequest,
   GearSeekerType,
-} from 'src/gear-requests/gearRequests.model';
-import { GearRequestsService } from 'src/gear-requests/gearRequests.service';
-import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
+} from '../../src/gear-requests/gearRequests.model';
+import { GearRequestsService } from '../../src/gear-requests/gearRequests.service';
+import { PeriodDto } from '../../src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFtDto } from './dto/createFt.dto';
 import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';

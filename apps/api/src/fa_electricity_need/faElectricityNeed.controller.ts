@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { FaElectricityNeed } from '@prisma/client';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permission } from '../auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../auth/permissions-auth.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateFaElectricityNeedDto } from './dto/createFaElectricityNeed.dto';
 import { FaElectricityNeedService } from './faElectricityNeed.service';

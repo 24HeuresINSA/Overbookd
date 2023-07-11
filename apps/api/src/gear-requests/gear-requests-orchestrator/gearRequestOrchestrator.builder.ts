@@ -1,4 +1,4 @@
-import { GearRepository } from 'src/catalog/interfaces';
+import { GearRepository } from '../../../src/catalog/interfaces';
 import { GearSeekerType } from '../gearRequests.model';
 import {
   AnimationRepository,

@@ -20,8 +20,8 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RequestWithUserPayload } from 'src/app.controller';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { RequestWithUserPayload } from '../../src/app.controller';
+import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
 import { FriendCreationDto } from './dto/friendCreation.dto';
 import { FriendResponseDto } from './dto/friendResponse.dto';
 import { FriendService } from './friend.service';

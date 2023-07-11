@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TaskCategory } from '@prisma/client';
-import { ftStatuses } from 'src/ft/ft.model';
-import { PrismaService } from 'src/prisma.service';
-import { TeamService } from 'src/team/team.service';
-import { getUnderlyingTeams } from 'src/team/underlyingTeams.utils';
-import { SELECT_USER_TEAMS, UserService } from 'src/user/user.service';
-import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
-import { VolunteerAvailabilityService } from 'src/volunteer-availability/volunteer-availability.service';
+import { ftStatuses } from '../ft/ft.model';
+import { PrismaService } from '../prisma.service';
+import { TeamService } from '../team/team.service';
+import { getUnderlyingTeams } from '../team/underlyingTeams.utils';
+import { SELECT_USER_TEAMS, UserService } from '../user/user.service';
+import { PeriodDto } from '../volunteer-availability/dto/period.dto';
+import { VolunteerAvailabilityService } from '../volunteer-availability/volunteer-availability.service';
 import { SELECT_BASE_TIMESPAN } from './assignment.service';
 import {
   Assignee,
   AssignmentAsTeamMember,
   AvailableTimeSpan,
+  DataBaseAssignee,
   DatabaseAssigneeWithFriends,
-  DatabaseAssigneeWithTeams,
   DatabaseAssignmentsAsTeamMember,
   DatabaseFtWithTimeSpans,
   DatabaseRequestedTeam,
@@ -32,6 +32,7 @@ import {
   TimeSpanWithAssignees,
   TimeSpanWithFt,
   TimeSpanWithFtAndAssignees,
+  WithTeams,
 } from './types/ftTimeSpanTypes';
 
 const WHERE_EXISTS_AND_READY = {
@@ -109,6 +110,7 @@ const SELECT_ASSIGNEE = {
   firstname: true,
   lastname: true,
   phone: true,
+  ...SELECT_USER_TEAMS,
 };
 
 const SELECT_ASSIGNED_TEAM = {
@@ -574,7 +576,7 @@ function convertToAssignee({
   firstname,
   phone,
   team,
-}: DatabaseAssigneeWithTeams): Assignee {
+}: DataBaseAssignee & WithTeams): Assignee {
   const teams = team.map(({ team }) => team.code);
   return { id, lastname, firstname, phone, teams };
 }
@@ -592,10 +594,12 @@ function convertToTimeSpanAssignee({
   };
 }
 
-function extractDeduplicatedFriends(assignee: DatabaseAssigneeWithFriends) {
-  const friends = [
-    ...assignee.friends.map(({ requestor }) => requestor),
-    ...assignee.friendRequestors.map(({ friend }) => friend),
+function extractDeduplicatedFriends(
+  assignee: DatabaseAssigneeWithFriends,
+): Assignee[] {
+  const friends: Assignee[] = [
+    ...assignee.friends.map(({ requestor }) => convertToAssignee(requestor)),
+    ...assignee.friendRequestors.map(({ friend }) => convertToAssignee(friend)),
   ];
   return friends.reduce(deduplicateFriends, [] as Assignee[]);
 }

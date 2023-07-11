@@ -1,14 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimeSpan } from '@prisma/client';
-import { PrismaService } from 'src/prisma.service';
-import { TeamService } from 'src/team/team.service';
-import { getOtherAssignableTeams } from 'src/team/underlyingTeams.utils';
-import { VolunteerAssignmentStat } from 'src/user/dto/volunteerAssignment.dto';
+import { Period } from '@overbookd/period';
+import { PrismaService } from '../prisma.service';
+import { TeamService } from '../team/team.service';
+import { getOtherAssignableTeams } from '../team/underlyingTeams.utils';
+import { VolunteerAssignmentStat } from '../user/dto/volunteerAssignment.dto';
 import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   UserService,
-} from 'src/user/user.service';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+} from '../user/user.service';
 import { WHERE_VALIDATED_USER } from './volunteer.service';
 
 const SELECT_TEAM_REQUEST = {

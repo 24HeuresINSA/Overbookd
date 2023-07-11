@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../src/prisma.service';
 import { CreateFaFeedbackDto } from './dto/createFaFeedback.dto';
 import { FaFeedbackResponse } from './faFeedback.model';
 

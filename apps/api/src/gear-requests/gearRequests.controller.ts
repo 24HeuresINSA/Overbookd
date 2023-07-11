@@ -6,9 +6,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
+import { Permission } from '../../src/auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
 import { GearRequestResponseDto } from './dto/gearRequestResponse.dto';
 import { GearRequestsService } from './gearRequests.service';
 

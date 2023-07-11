@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
-import { Period } from 'src/volunteer-availability/domain/period.model';
+import { Period } from '@overbookd/period';
+import { PrismaService } from '../../src/prisma.service';
 import { TimelineEvent, TimelineFt } from './timeline.model';
 
 interface DatabaseFT {

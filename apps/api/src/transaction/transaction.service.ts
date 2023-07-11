@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma.service';
 import { Transaction, TransactionType } from '@prisma/client';
 import { User } from '@prisma/client';
-import { SELECT_USERNAME_WITH_ID } from 'src/user/user.service';
+import { SELECT_USERNAME_WITH_ID } from '../../src/user/user.service';
 
 type CreateTransaction = Omit<
   Transaction,

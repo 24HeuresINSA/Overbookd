@@ -1,9 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Period } from '@overbookd/period';
 import { Volunteer } from '../needHelp.model';
-import { Period } from 'src/volunteer-availability/domain/period.model';
-import { PeriodDto } from 'src/volunteer-availability/dto/period.dto';
-import { VolunteerTask } from 'src/user/user.service';
-import { VolunteerAssignmentDto } from 'src/user/dto/volunteerAssignment.dto';
+import { PeriodDto } from '../../../src/volunteer-availability/dto/period.dto';
+import { VolunteerTask } from '../../../src/user/user.service';
+import { VolunteerAssignmentDto } from '../../../src/user/dto/volunteerAssignment.dto';
 
 export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({ name: 'id', description: 'Volunteer id', type: Number })

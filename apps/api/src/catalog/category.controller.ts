@@ -23,14 +23,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CategoryFormRequestDto } from './dto/categoryFormRequest.dto';
 import { Category, CategoryTree } from './interfaces';
 import { CategoryResponseDto } from './dto/categoryResponse.dto';
 import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
 import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
-import { Permission } from 'src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from 'src/auth/permissions-auth.guard';
+import { Permission } from '../auth/permissions-auth.decorator';
+import { PermissionsGuard } from '../auth/permissions-auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('catalog')
