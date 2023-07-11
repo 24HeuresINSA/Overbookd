@@ -202,8 +202,8 @@ export default {
           to: "/ft",
         },
         {
-          icon: "mdi-account",
-          title: "Liste des Orgas",
+          icon: "mdi-account-group",
+          title: "Liste des bénévoles",
           permission: "hard",
           to: "/humans",
         },
