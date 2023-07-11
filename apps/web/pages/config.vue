@@ -36,11 +36,6 @@
     />
 
     <h2>Dispo</h2>
-    <v-text-field
-      v-model="config.max_charisma"
-      label="Charisme max"
-      type="number"
-    ></v-text-field>
     <v-textarea
       v-model="config.availabilities_description"
       label="Description des dispo"
@@ -111,7 +106,6 @@ export default {
         fb_signup_closed: undefined,
         fb_confirm_submit: undefined,
         availabilities_description: undefined,
-        max_charisma: undefined,
         isInventoryOpen: undefined,
         show_ft_in_planning: undefined,
         availabilityMoment: undefined,
@@ -138,8 +132,6 @@ export default {
       this.config.availabilities_description = this.$accessor.config.getConfig(
         "availabilities_description"
       );
-      this.config.max_charisma =
-        this.$accessor.config.getConfig("max_charisma");
       this.config.isInventoryOpen =
         this.$accessor.config.getConfig("isInventoryOpen");
       this.config.show_ft_in_planning = this.$accessor.config.getConfig(
