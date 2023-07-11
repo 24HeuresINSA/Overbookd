@@ -16,11 +16,16 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import PermissionsCard from "~/components/organisms/permission/PermissionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import DateField from "~/components/atoms/field/date/DateField.vue";
 
-export default {
+interface ConfigurationData {
+  dateEventStart?: Date;
+}
+
+export default Vue.extend({
   name: "Config",
   components: {
     PermissionsCard,
@@ -28,9 +33,11 @@ export default {
     DateField,
   },
 
-  data: () => ({
-    dateEventStart: undefined,
-  }),
+  data(): ConfigurationData {
+    return {
+      dateEventStart: undefined,
+    };
+  },
 
   head: () => ({
     title: "Admin",
@@ -48,5 +55,5 @@ export default {
       });
     },
   },
-};
+});
 </script>

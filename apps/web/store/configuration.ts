@@ -4,11 +4,11 @@ import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Configuration } from "~/utils/models/configuration";
 
-const configurationRepo = RepoFactory.configurationRepo;
+const configurationRepo = RepoFactory.ConfigurationRepository;
 
 // The state types definitions
 type State = {
-  [key: string]: Object;
+  [key: string]: any;
 };
 
 const state = (): State => Object.create(null);
@@ -45,23 +45,9 @@ export const actions = actionTree(
         successMessage: "La configuration a été sauvegardée avec succès.",
         errorMessage: "Erreur lors de la sauvegarde de la configuration.",
       });
-      if (!res) {
-        return null;
-      }
+      if (!res) return null;
 
       commit("SET_CONFIG", res.data);
-      return res;
-    },
-    update: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.update(this, config), {
-        successMessage: "La configuration a été mise à jour avec succès.",
-        errorMessage: "Erreur lors de la mise à jour de la configuration.",
-      });
-      if (!res) {
-        return null;
-      }
-      commit("SET_CONFIG", res.data);
-      return res;
     },
   }
 );

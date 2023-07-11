@@ -3,7 +3,6 @@ import transactionRepo from "~/repositories/transactionRepo";
 import { AssignmentRepository } from "./assignmentRepo";
 import { CategoryRepository, GearsRepository } from "./catalog.repository";
 import { CharismaPeriodRepository } from "./charismaPeriodRepo";
-import configurationRepo from "./configurationRepo";
 import faRepo from "./faRepo";
 import ftRepo from "./ftRepo";
 import { GearRequestRepository } from "./gearRequestRepo";
@@ -17,6 +16,7 @@ import { OrgaNeedsRepository } from "./orgaNeedsRepo";
 import { VolunteerAvailabilityRepository } from "./volunteerAvailabilityRepo";
 import { NeedHelpRepository } from "./needHelp.repository";
 import { TimelineRepository } from "./timeline.repository";
+import { ConfigurationRepository } from "./configurationRepo";
 
 const repositories = {
   user: userRepo,
@@ -28,7 +28,7 @@ const repositories = {
   team: teamRepo,
   gear: GearsRepository,
   category: CategoryRepository,
-  configuration: configurationRepo,
+  configuration: ConfigurationRepository,
   signaLocation: signaLocationRepo,
   permission: permissionRepo,
   inventoryRepository: InventoryRepository,
@@ -54,7 +54,7 @@ export const RepoFactory = {
   teamRepo,
   GearsRepository,
   CategoryRepository,
-  configurationRepo,
+  ConfigurationRepository,
   signaLocationRepo,
   permissionRepo,
   InventoryRepository,
