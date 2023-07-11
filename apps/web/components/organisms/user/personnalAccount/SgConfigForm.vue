@@ -90,7 +90,7 @@ export default Vue.extend({
           prixFutFlower: +this.tempSgConfig.prixFutFlower,
         },
       };
-      this.$accessor.configuration.update(configuration);
+      this.$accessor.configuration.save(configuration);
       this.closeDialog();
     },
     closeDialog() {

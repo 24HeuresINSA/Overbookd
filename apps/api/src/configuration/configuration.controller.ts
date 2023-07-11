@@ -10,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
 import { ConfigurationResponseDto } from './dto/configurationResponse.dto';
-import { Configuration } from '@prisma/client';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -21,7 +20,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from '../auth/permissions-auth.decorator';
 import { PermissionsGuard } from '../auth/permissions-auth.guard';
-import { ConfigurationValue } from './configuration.model';
+import { Configuration, ConfigurationValue } from './configuration.model';
 
 @ApiTags('Configuration')
 @Controller('configuration')
