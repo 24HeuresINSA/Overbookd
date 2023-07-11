@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma, Configuration } from '@prisma/client';
-import { CreateConfigurationDto } from './dto/createConfiguration.dto';
+import { Configuration } from '@prisma/client';
+import { ConfigurationValue } from './configuration.model';
 
 @Injectable()
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: CreateConfigurationDto): Promise<Configuration> {
+  async create(data: Configuration): Promise<Configuration> {
     return this.prisma.configuration.create({
       data: {
         key: data.key,
@@ -16,47 +16,31 @@ export class ConfigurationService {
     });
   }
 
-  configurations(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ConfigurationWhereUniqueInput;
-    where?: Prisma.ConfigurationWhereInput;
-    orderBy?: Prisma.ConfigurationOrderByWithRelationInput;
-    select?: Prisma.ConfigurationSelect;
-  }): Promise<Configuration[]> {
-    return this.prisma.configuration.findMany({
-      ...params,
-    });
+  async findAll(): Promise<Configuration[]> {
+    return this.prisma.configuration.findMany();
   }
 
-  findOne(key: string): Promise<Configuration> {
+  async findOne(key: string): Promise<Configuration> {
     return this.prisma.configuration.findUnique({
-      where: {
-        key,
-      },
+      where: { key },
     });
   }
 
-  upsert(param: {
-    where: Prisma.ConfigurationWhereUniqueInput;
-    data: Prisma.ConfigurationCreateInput;
-  }): Promise<Configuration> {
-    const { where, data } = param;
+  async upsert(
+    key: string,
+    { value }: ConfigurationValue,
+  ): Promise<Configuration> {
+    const configuration = { key, value };
     return this.prisma.configuration.upsert({
-      where,
-      create: data,
-      update: data,
+      where: { key },
+      create: configuration,
+      update: configuration,
     });
   }
 
-  remove(key: string) {
-    this.prisma.configuration.update({
-      where: {
-        key,
-      },
-      data: {
-        isDeleted: true,
-      },
+  async remove(key: string) {
+    await this.prisma.configuration.delete({
+      where: { key },
     });
   }
 }

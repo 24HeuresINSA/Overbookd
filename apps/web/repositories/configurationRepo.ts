@@ -16,13 +16,6 @@ export default {
     );
   },
 
-  save(context: Context, config: Configuration) {
-    return context.$axios.post<HttpStringified<Configuration>>(
-      `${resource}`,
-      config
-    );
-  },
-
   update(context: Context, config: Configuration) {
     return context.$axios.put<HttpStringified<Configuration>>(
       `${resource}/${config.key}`,
