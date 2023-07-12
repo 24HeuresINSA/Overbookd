@@ -14,7 +14,7 @@
     "scripts": {
         "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
         "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",
-        "dev:clean": "pnpm dev:down && rm -rf node_modules .pnpm-store apps/**/node_modules && docker system prune --all",
+        "dev:clean": "pnpm dev:down && rm -rf node_modules .pnpm-store apps/**/node_modules **/dist && docker system prune --all",
         "dev:down": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env down",
         "dev:init": "docker network create traefik-public && pnpm dev:build",
         "dev:logs": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env logs --tail 100 -f",
