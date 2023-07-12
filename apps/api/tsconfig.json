@@ -1,13 +1,12 @@
 {
-  "extends":"../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2022",
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,
@@ -17,7 +16,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true,
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@overbookd/period": ["../../libraries/period/src"]
+    }
   }
 }
