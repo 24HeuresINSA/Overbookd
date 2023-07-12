@@ -18,8 +18,13 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:ci": "pnpm build",
     "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
-    "test": "echo 'No tests'"
+    "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
+    "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
+    "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
+    "test": "echo 'No tests'",
+    "test:ci": "echo 'No tests'"
   },
   "keywords": [
     "period"
