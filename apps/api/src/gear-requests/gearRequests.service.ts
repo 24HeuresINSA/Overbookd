@@ -67,13 +67,15 @@ export class GearRequestsService {
     private readonly taskRepository: TaskRepository,
   ) {}
 
-  private gearOrchestratorRepositories = {
-    animation: this.animationRepository,
-    task: this.taskRepository,
-    gear: this.gearRepository,
-    gearRequest: this.gearRequestRepository,
-    period: this.periodRepository,
-  };
+  private get gearOrchestratorRepositories() {
+    return {
+      animation: this.animationRepository,
+      task: this.taskRepository,
+      gear: this.gearRepository,
+      gearRequest: this.gearRequestRepository,
+      period: this.periodRepository,
+    };
+  }
 
   async findGearRequest(gearRequestId: GearRequestIdentifier) {
     return this.gearRequestRepository.getGearRequest(gearRequestId);

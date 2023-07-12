@@ -22,20 +22,13 @@ class PeriodRepresentation implements Period {
   end: Date;
 }
 
-export class GearRequestResponseDto implements GearRequest {
+class BaseGearRequestResponseDto {
   @ApiProperty({
     required: true,
     description: 'Gear seeker',
     type: GearSeekerRepresentation,
   })
   seeker: GearSeeker;
-
-  @ApiProperty({
-    required: true,
-    description: 'Gear Request status',
-    type: String,
-  })
-  status: string;
 
   @ApiProperty({
     required: true,
@@ -57,6 +50,18 @@ export class GearRequestResponseDto implements GearRequest {
     type: PeriodRepresentation,
   })
   rentalPeriod: Period;
+}
+
+export class GearRequestResponseDto
+  extends BaseGearRequestResponseDto
+  implements GearRequest
+{
+  @ApiProperty({
+    required: true,
+    description: 'Gear Request status',
+    type: String,
+  })
+  status: string;
 
   @ApiProperty({
     required: false,
@@ -67,7 +72,7 @@ export class GearRequestResponseDto implements GearRequest {
 }
 
 export class ApprovedGearRequestResponseDto
-  extends GearRequestResponseDto
+  extends BaseGearRequestResponseDto
   implements ApprovedGearRequest
 {
   @ApiProperty({

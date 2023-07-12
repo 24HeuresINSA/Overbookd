@@ -25,7 +25,7 @@ RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 FROM installer AS builder
 
 ADD tsconfig.json ./
-RUN pnpm --filter '@overbookd/api' run build:ci
+RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
 FROM node:18-alpine
 
@@ -48,7 +48,7 @@ USER node
 WORKDIR /app/dist
 
 COPY --chown=node:node --from=builder /overbookd/apps/api/package.json ./package.json
-COPY --chown=node:node --from=builder /overbookd/apps/api/dist /app/dist
+COPY --chown=node:node --from=builder /overbookd/apps/api/dist/apps/api /app/dist
 COPY --chown=node:node --from=builder /overbookd/node_modules ./node_modules
 COPY --chown=node:node --from=builder /overbookd/apps/api/prisma ./prisma
 

@@ -407,18 +407,6 @@ function splitGearRequest(
   };
 }
 
-function convertToGearRequestCreationForm(
-  gearRequest: GearRequestWithRentalPeriodForm,
-): CreateGearRequestForm {
-  return {
-    gearId: gearRequest.gear.id,
-    seekerId: gearRequest.seeker.id,
-    quantity: gearRequest.quantity,
-    start: gearRequest.rentalPeriod.start,
-    end: gearRequest.rentalPeriod.end,
-  };
-}
-
 function isPeriodIncludeGearRequestRentalPeriod(
   period: PeriodForm,
 ): (value: GearRequest) => boolean {

@@ -90,7 +90,7 @@ services:
         pnpm config set store-dir .pnpm-store
         pnpm fetch
         pnpm install
-        pnpm --recursive --filter '@overbookd/api' run build
+        pnpm --recursive --filter '@overbookd/api...' run build
         pnpm --recursive --filter '@overbookd/api' run start:dev
 
   postgresql:
