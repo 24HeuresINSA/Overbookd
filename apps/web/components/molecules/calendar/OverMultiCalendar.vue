@@ -22,11 +22,11 @@
       <template #category="{ category }">
         <slot :category="category" name="volunteer-header">
           <div class="volunteer-header">
-            <VolunteerResumeCalendarHeader
+            <NeedHelpVolunteerResumeCalendarHeader
               v-if="retrieveVolunteer(+category)"
               :volunteer="retrieveVolunteer(+category)"
               class="volunteer-resume"
-            ></VolunteerResumeCalendarHeader>
+            ></NeedHelpVolunteerResumeCalendarHeader>
           </div>
         </slot>
       </template>
@@ -100,11 +100,11 @@ import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
-import VolunteerResumeCalendarHeader from "../need-help/VolunteerResumeCalendarHeader.vue";
+import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
 
 export default Vue.extend({
   name: "OverMultiCalendar",
-  components: { VolunteerResumeCalendarHeader },
+  components: { NeedHelpVolunteerResumeCalendarHeader },
   model: {
     prop: "startDate",
     event: "change",

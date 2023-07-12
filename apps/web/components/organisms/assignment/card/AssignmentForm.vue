@@ -33,11 +33,11 @@
                   >
                     <v-icon>mdi-chevron-left</v-icon>
                   </v-btn>
-                  <VolunteerResumeCalendarHeader
+                  <AssignmentVolunteerResumeCalendarHeader
                     v-if="retrieveVolunteer(category)"
                     :volunteer="retrieveVolunteer(category)"
                     class="volunteer-resume"
-                  ></VolunteerResumeCalendarHeader>
+                  ></AssignmentVolunteerResumeCalendarHeader>
                   <v-btn
                     v-if="isReplacable(category)"
                     icon
@@ -114,14 +114,14 @@ import { Volunteer } from "~/utils/models/assignment";
 import { CalendarUser } from "~/utils/models/calendar";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
-import VolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/VolunteerResumeCalendarHeader.vue";
+import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 
 export default Vue.extend({
   name: "AssignmentForm",
   components: {
     TeamChip,
     OverMultiCalendar,
-    VolunteerResumeCalendarHeader,
+    AssignmentVolunteerResumeCalendarHeader,
   },
   data: () => {
     return {

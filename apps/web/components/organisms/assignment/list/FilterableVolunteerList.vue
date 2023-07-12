@@ -9,13 +9,13 @@
         @change:sort="sort = $event"
       ></VolunteerFilters>
       <v-divider />
-      <VolunteerList
+      <AssignmentVolunteerList
         v-if="shouldShowVolunteerList"
         :volunteers="filteredVolunteers"
         class="volunteer-list"
         :class="isOrgaTaskMode ? 'volunteer-list--with-friend-list' : ''"
         @select-volunteer="handleVolunteerSelection"
-      ></VolunteerList>
+      ></AssignmentVolunteerList>
       <div v-else class="error-message">
         <p v-if="!selectedTimeSpan">Aucun créneau séléctionné</p>
         <p v-else>Aucun bénévole disponible pour ce créneau</p>
@@ -32,7 +32,7 @@
 <script lang="ts">
 import Vue from "vue";
 import Fuse from "fuse.js";
-import VolunteerList from "~/components/molecules/assignment/list/VolunteerList.vue";
+import AssignmentVolunteerList from "~/components/molecules/assignment/list/AssignmentVolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
 import { Team } from "~/utils/models/team";
@@ -46,7 +46,7 @@ import { FtTimeSpan } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",
-  components: { VolunteerList, FriendsDisplay, VolunteerFilters },
+  components: { AssignmentVolunteerList, FriendsDisplay, VolunteerFilters },
   data: () => ({
     teams: [] as Team[],
     volunteer: "",
