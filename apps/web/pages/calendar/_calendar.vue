@@ -68,7 +68,7 @@ export default Vue.extend({
   data: function () {
     return {
       calendarCentralDate: new Date(
-        this.$accessor.configuration.get("eventDate").start
+        this.$accessor.configuration.get("eventDate")?.start
       ),
     };
   },

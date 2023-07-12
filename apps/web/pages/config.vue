@@ -44,7 +44,7 @@ export default Vue.extend({
   },
 
   head: () => ({
-    title: "Admin",
+    title: "Config Système",
   }),
 
   async created() {

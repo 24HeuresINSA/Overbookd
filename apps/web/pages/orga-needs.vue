@@ -54,7 +54,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.start = new Date(this.$accessor.configuration.get("eventDate").start);
+    this.start = new Date(this.$accessor.configuration.get("eventDate")?.start);
     this.end = new Date(this.start.getTime() + FOUR_DAYS_IN_MS);
     this.updateStats();
   },

@@ -247,7 +247,7 @@ export default Vue.extend({
       return allTimeWindowTypes;
     },
     manifDate(): string {
-      return this.$accessor.configuration.get("eventDate").start;
+      return this.$accessor.configuration.get("eventDate")?.start;
     },
     me(): MyUserInformation {
       return this.$accessor.user.me;

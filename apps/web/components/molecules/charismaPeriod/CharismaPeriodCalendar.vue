@@ -44,7 +44,7 @@ export default Vue.extend({
       }));
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate").start);
+      return new Date(this.$accessor.configuration.get("eventDate")?.start);
     },
     maxCharisma(): number {
       return Math.max(...this.charismaPeriods.map((a) => a.charisma));

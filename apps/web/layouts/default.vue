@@ -257,7 +257,7 @@ export default {
         {
           icon: "mdi-cog",
           permission: "admin",
-          title: "Admin",
+          title: "Config Système",
           to: "/config",
         },
         {
