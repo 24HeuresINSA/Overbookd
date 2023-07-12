@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ConfigurationValueRepresentation } from '../configuration.model';
 import { IsNotEmpty, IsObject } from 'class-validator';
-import { Prisma } from '@prisma/client';
 
 export class UpsertConfigurationDto
   implements ConfigurationValueRepresentation
@@ -12,5 +11,5 @@ export class UpsertConfigurationDto
   })
   @IsObject()
   @IsNotEmpty()
-  value: Prisma.JsonValue;
+  value: object;
 }

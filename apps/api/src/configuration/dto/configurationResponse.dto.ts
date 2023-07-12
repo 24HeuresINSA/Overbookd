@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsObject, IsString } from 'class-validator';
 import { ConfigurationRepresentation } from '../configuration.model';
-import { Prisma } from '@prisma/client';
 
 export class ConfigurationResponseDto implements ConfigurationRepresentation {
   @ApiProperty({
@@ -19,5 +18,5 @@ export class ConfigurationResponseDto implements ConfigurationRepresentation {
   })
   @IsObject()
   @IsNotEmpty()
-  value: Prisma.JsonValue;
+  value: object;
 }

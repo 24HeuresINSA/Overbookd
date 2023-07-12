@@ -1,19 +1,24 @@
 import { Prisma } from '@prisma/client';
 
-export interface ConfigurationValue {
+export interface DatabaseConfiguration {
+  key: string;
   value: Prisma.JsonValue;
 }
 
+export interface ConfigurationValue {
+  value: object;
+}
+
 export class ConfigurationValueRepresentation implements ConfigurationValue {
-  value: Prisma.JsonValue;
+  value: object;
 }
 
 export interface Configuration {
   key: string;
-  value: Prisma.JsonValue;
+  value: object;
 }
 
 export class ConfigurationRepresentation implements Configuration {
   key: string;
-  value: Prisma.JsonValue;
+  value: object;
 }

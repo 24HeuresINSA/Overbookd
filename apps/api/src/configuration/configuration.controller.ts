@@ -33,7 +33,8 @@ export class ConfigurationController {
   @ApiResponse({
     status: 200,
     description: 'Get all configurations',
-    type: Promise<ConfigurationResponseDto[]>,
+    type: ConfigurationResponseDto,
+    isArray: true,
   })
   findAll(): Promise<Configuration[]> {
     return this.configurationService.findAll();

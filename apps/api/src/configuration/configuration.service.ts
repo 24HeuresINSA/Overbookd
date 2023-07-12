@@ -1,28 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Configuration, ConfigurationValue } from './configuration.model';
+import {
+  Configuration,
+  ConfigurationValue,
+  DatabaseConfiguration,
+} from './configuration.model';
 
 @Injectable()
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: Configuration): Promise<Configuration> {
-    return this.prisma.configuration.create({
+    const res = await this.prisma.configuration.create({
       data: {
         key: data.key,
         value: data.value,
       },
     });
+    return this.formatConfiguration(res);
   }
 
   async findAll(): Promise<Configuration[]> {
-    return this.prisma.configuration.findMany();
+    const res = await this.prisma.configuration.findMany();
+    return this.formatConfigurations(res);
   }
 
   async findOne(key: string): Promise<Configuration> {
-    return this.prisma.configuration.findUnique({
+    const res = await this.prisma.configuration.findUnique({
       where: { key },
     });
+    return this.formatConfiguration(res);
   }
 
   async upsert(
@@ -30,16 +37,34 @@ export class ConfigurationService {
     { value }: ConfigurationValue,
   ): Promise<Configuration> {
     const configuration = { key, value };
-    return this.prisma.configuration.upsert({
+    const res = await this.prisma.configuration.upsert({
       where: { key },
       create: configuration,
       update: configuration,
     });
+    return this.formatConfiguration(res);
   }
 
   async remove(key: string) {
     await this.prisma.configuration.delete({
       where: { key },
     });
+  }
+
+  private formatConfigurations(
+    configurations: DatabaseConfiguration[],
+  ): Configuration[] {
+    return configurations.map((configuration) =>
+      this.formatConfiguration(configuration),
+    );
+  }
+
+  private formatConfiguration(
+    configuration: DatabaseConfiguration,
+  ): Configuration {
+    return {
+      key: configuration.key,
+      value: JSON.parse(configuration.value.toString()),
+    };
   }
 }

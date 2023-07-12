@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Config admin ⚙️</h1>
+    <h1>Configuration du système ⚙️</h1>
 
     <v-img
       height="500"
