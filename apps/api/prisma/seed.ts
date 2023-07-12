@@ -452,7 +452,7 @@ async function main() {
   const eventDateConfig: Prisma.ConfigurationUncheckedCreateInput = {
     key: 'eventDate',
     value: {
-      start: new Date().toUTCString(),
+      start: new Date().toISOString(),
     },
   };
   console.log('Creating of event date config');

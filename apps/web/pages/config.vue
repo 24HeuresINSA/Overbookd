@@ -7,8 +7,12 @@
       src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
     ></v-img>
 
-    <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
-    <v-btn @click="saveDateEventStart"> Enregistrer </v-btn>
+    <div class="field-row">
+      <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
+      <v-btn class="field-row__save-btn" @click="saveDateEventStart">
+        Enregistrer
+      </v-btn>
+    </div>
 
     <PermissionsCard />
     <SnackNotificationContainer />
@@ -43,8 +47,10 @@ export default Vue.extend({
     title: "Admin",
   }),
 
-  created() {
-    this.dateEventStart = this.$accessor.configuration.get("eventDate").start;
+  async created() {
+    await this.$accessor.configuration.fetchAll();
+    const startString = this.$accessor.configuration.get("eventDate")?.start;
+    if (startString) this.dateEventStart = new Date(startString);
   },
 
   methods: {
@@ -57,3 +63,16 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.field-row {
+  padding-top: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+
+  &__save-btn {
+    margin-top: 12px;
+  }
+}
+</style>
