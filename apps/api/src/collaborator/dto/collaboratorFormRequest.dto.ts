@@ -5,34 +5,36 @@ import {
   MaxLength,
   IsPhoneNumber,
   IsEmail,
+  IsDefined,
 } from 'class-validator';
+import { CollaboratorRepresentation } from '../collaborator.model';
 
-export class CollaboratorFormRequestDto {
+export class CollaboratorDto implements CollaboratorRepresentation {
   @ApiProperty({
     required: true,
     description: 'The firstname of the collaborator',
   })
   @IsString()
-  @IsOptional()
+  @IsDefined()
   @MaxLength(30)
-  firstname?: string;
+  firstname: string;
 
   @ApiProperty({
     required: true,
     description: 'The lastname of the collaborator',
   })
   @IsString()
-  @IsOptional()
+  @IsDefined()
   @MaxLength(30)
-  lastname?: string;
+  lastname: string;
 
   @ApiProperty({
     required: true,
     description: 'The phone number of the collaborator',
   })
-  @IsOptional()
+  @IsDefined()
   @IsPhoneNumber('FR')
-  phone?: string;
+  phone: string;
 
   @ApiProperty({
     required: false,

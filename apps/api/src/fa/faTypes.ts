@@ -1,4 +1,4 @@
-import { COLLABORATOR_SELECTION } from 'src/collaborator/collaborator.service';
+import { COLLABORATOR_SELECTION } from '../collaborator/collaborator.service';
 import { TEAM_SELECT } from '../team/team.service';
 
 export type ExportSignaNeed = {

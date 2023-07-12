@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Delete,
   HttpCode,
+  Put,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import {
@@ -22,8 +23,8 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from '../auth/permissions-auth.decorator';
 import { PermissionsGuard } from '../auth/permissions-auth.guard';
-import { Collaborator } from '@prisma/client';
-import { CollaboratorFormRequestDto } from './dto/collaboratorFormRequest.dto';
+import { CollaboratorDto } from './dto/collaboratorFormRequest.dto';
+import { Collaborator } from './collaborator.model';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -44,7 +45,7 @@ export class CollaboratorController {
   @ApiResponse({
     status: 200,
     description: 'Get a collaborator by fa id',
-    type: CollaboratorFormRequestDto,
+    type: CollaboratorDto,
   })
   @ApiParam({
     name: 'faId',
@@ -57,14 +58,41 @@ export class CollaboratorController {
   ): Promise<Collaborator | null> {
     return this.collaboratorService.findOne(faId);
   }
+
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post(':faId/collaborator')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Create a collaborator by fa id',
+    type: CollaboratorDto,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    description: 'Create the collaborator of fa',
+    type: CollaboratorDto,
+  })
+  create(
+    @Param('faId', ParseIntPipe) faId: number,
+    @Body() collaborator: CollaboratorDto,
+  ): Promise<Collaborator> {
+    return this.collaboratorService.create(faId, collaborator);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Put(':faId/collaborator')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Upsert a collaborator by fa id',
-    type: CollaboratorFormRequestDto,
+    description: 'Update a collaborator by fa id',
+    type: CollaboratorDto,
   })
   @ApiParam({
     name: 'faId',
@@ -74,13 +102,13 @@ export class CollaboratorController {
   })
   @ApiBody({
     description: 'Update the collaborator of fa',
-    type: CollaboratorFormRequestDto,
+    type: CollaboratorDto,
   })
-  upsert(
+  update(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body() collaborator: CollaboratorFormRequestDto,
+    @Body() collaborator: CollaboratorDto,
   ): Promise<Collaborator> {
-    return this.collaboratorService.upsert(faId, collaborator);
+    return this.collaboratorService.update(faId, collaborator);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

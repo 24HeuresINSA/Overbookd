@@ -15,21 +15,24 @@ export const COLLABORATOR_SELECTION = {
 export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
 
-  async findOne(faId: number): Promise<Collaborator | null> {
+  findOne(faId: number): Promise<Collaborator | null> {
     return this.prisma.collaborator.findUnique({
       where: { faId },
       select: COLLABORATOR_SELECTION,
     });
   }
 
-  async upsert(
-    faId: number,
-    collaborator: Collaborator,
-  ): Promise<Collaborator> {
-    return this.prisma.collaborator.upsert({
+  create(faId: number, collaborator: Collaborator): Promise<Collaborator> {
+    return this.prisma.collaborator.create({
+      data: { faId, ...collaborator },
+      select: COLLABORATOR_SELECTION,
+    });
+  }
+
+  update(faId: number, collaborator: Collaborator): Promise<Collaborator> {
+    return this.prisma.collaborator.update({
       where: { faId },
-      create: { faId, ...collaborator },
-      update: collaborator,
+      data: collaborator,
       select: COLLABORATOR_SELECTION,
     });
   }
