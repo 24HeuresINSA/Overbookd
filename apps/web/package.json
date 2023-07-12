@@ -16,15 +16,15 @@
     "directory": "apps/web"
   },
   "scripts": {
-    "dev": "nuxt",
-    "dev:host": "nuxt --hostname '0'",
     "build": "nuxt build",
     "build:ci": "CI=1 pnpm run build",
-    "start": "nuxt-ts start",
+    "dev": "nuxt",
+    "dev:host": "nuxt --hostname '0'",
     "generate": "nuxt-ts generate",
-    "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
     "lint": "pnpm run lint:js",
-    "prerelease": "pnpm version prerelease --preid=rc",
+    "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
+    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
+    "start": "nuxt-ts start",
     "test": "jest",
     "test:ci": "jest --collectCoverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
     "test:watch": "jest --watch"

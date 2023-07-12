@@ -18,6 +18,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
     "test": "echo 'No tests'"
   },
   "keywords": [
