@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/web",
-  "version": "1.16.4-rc.17",
+  "version": "1.16.4-rc.18",
   "description": "Application web pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -16,15 +16,18 @@
     "directory": "apps/web"
   },
   "scripts": {
-    "dev": "nuxt",
-    "dev:host": "nuxt --hostname '0'",
     "build": "nuxt build",
     "build:ci": "CI=1 pnpm run build",
-    "start": "nuxt-ts start",
+    "dev": "nuxt",
+    "dev:host": "nuxt --hostname '0'",
     "generate": "nuxt-ts generate",
-    "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
     "lint": "pnpm run lint:js",
-    "prerelease": "pnpm version prerelease --preid=rc",
+    "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
+    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
+    "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
+    "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
+    "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
+    "start": "nuxt-ts start",
     "test": "jest",
     "test:ci": "jest --collectCoverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
     "test:watch": "jest --watch"
