@@ -80,7 +80,7 @@ import { sortTeamsForAssignment } from "~/utils/models/team";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "VolunteerResume",
+  name: "AssignmentVolunteerResume",
   components: { TeamChip },
   props: {
     volunteer: {

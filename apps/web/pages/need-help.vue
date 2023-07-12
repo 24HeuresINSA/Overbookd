@@ -4,7 +4,7 @@
     <p>Trouve un bénévole pour venir te donner un coup de main</p>
     <div class="need-help">
       <NeedHelpFormCard class="need" />
-      <VolunteerList class="volunteers mobile" />
+      <NeedHelpVolunteerList class="volunteers mobile" />
       <CalendarList class="volunteers desktop" />
     </div>
   </div>
@@ -14,11 +14,11 @@
 import Vue from "vue";
 import CalendarList from "~/components/molecules/need-help/CalendarList.vue";
 import NeedHelpFormCard from "~/components/molecules/need-help/NeedHelpFormCard.vue";
-import VolunteerList from "~/components/molecules/need-help/VolunteerList.vue";
+import NeedHelpVolunteerList from "~/components/molecules/need-help/NeedHelpVolunteerList.vue";
 
 export default Vue.extend({
   name: "NeedHelp",
-  components: { NeedHelpFormCard, VolunteerList, CalendarList },
+  components: { NeedHelpFormCard, NeedHelpVolunteerList, CalendarList },
 });
 </script>
 

@@ -27,7 +27,7 @@ import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "VolunteerResumeCalendarHeader",
+  name: "AssignmentVolunteerResumeCalendarHeader",
   components: { TeamChip },
   props: {
     volunteer: {

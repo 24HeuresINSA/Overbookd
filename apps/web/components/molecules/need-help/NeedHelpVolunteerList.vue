@@ -28,7 +28,7 @@ import { Volunteer } from "~/utils/models/needHelp";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "VolunteerList",
+  name: "NeedHelpVolunteerList",
   components: { TeamChip },
   computed: {
     volunteers(): Volunteer[] {

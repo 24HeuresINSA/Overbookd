@@ -7,11 +7,11 @@
         class="list"
         @click="selectVolunteer(item)"
       >
-        <VolunteerResume
+        <AssignmentVolunteerResume
           :volunteer="item"
           :class="{ 'is-selected': isSelected(item.id) }"
           class="list__volunteer"
-        ></VolunteerResume>
+        ></AssignmentVolunteerResume>
       </v-list-item>
     </template>
   </v-virtual-scroll>
@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import VolunteerResume from "~/components/molecules/assignment/resume/VolunteerResume.vue";
+import AssignmentVolunteerResume from "~/components/molecules/assignment/resume/AssignmentVolunteerResume.vue";
 import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
-  name: "VolunteerList",
-  components: { VolunteerResume },
+  name: "AssignmentVolunteerList",
+  components: { AssignmentVolunteerResume },
   props: {
     volunteers: {
       type: Array as () => Volunteer[],

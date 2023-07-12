@@ -29,7 +29,7 @@ import {
 } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "VolunteerResumeCalendarHeader",
+  name: "NeedHelpVolunteerResumeCalendarHeader",
   components: { TeamChip },
   props: {
     volunteer: {
