@@ -47,6 +47,7 @@ USER node
 
 WORKDIR /app/dist
 
+COPY --chown=node:node --from=builder /overbookd/apps/api/package.json ./package.json
 COPY --chown=node:node --from=builder /overbookd/apps/api/dist /app/dist
 COPY --chown=node:node --from=builder /overbookd/node_modules ./node_modules
 COPY --chown=node:node --from=builder /overbookd/apps/api/prisma ./prisma
@@ -55,4 +56,4 @@ EXPOSE 3000
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:3000/"]
 
-CMD [  "sh", "-c", "pnpm --recursive --filter '@overbookd/api' run start:migrate:prod" ]
+CMD [  "sh", "-c", "pnpm run start:migrate:prod" ]
