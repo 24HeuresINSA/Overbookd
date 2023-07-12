@@ -23,7 +23,7 @@ import { PermissionsGuard } from '../auth/permissions-auth.guard';
 import { Configuration, ConfigurationValue } from './configuration.model';
 import { UpsertConfigurationDto } from './dto/upsertConfiguration.dto';
 
-@ApiTags('Configuration')
+@ApiTags('configuration')
 @Controller('configuration')
 export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
