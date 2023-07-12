@@ -21,7 +21,7 @@ interface DatabaseTimeWindow extends Period {
 interface DatabaseTimeline {
   id: number;
   name: string;
-  Team: { code: string };
+  team: { code: string };
   fts: DatabaseFT[];
 }
 
@@ -47,7 +47,7 @@ export class TimelineService {
     return {
       id: true,
       name: true,
-      Team: {
+      team: {
         select: { code: true },
       },
       fts: {
@@ -123,7 +123,7 @@ function formatTimeline(timeline: DatabaseTimeline): TimelineEvent {
     fa: {
       id: timeline.id,
       name: timeline.name,
-      team: timeline.Team.code,
+      team: timeline.team.code,
     },
     fts,
   };
