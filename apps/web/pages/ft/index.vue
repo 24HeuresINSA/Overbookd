@@ -162,7 +162,7 @@ import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import {
   Ft,
   FtSearch,

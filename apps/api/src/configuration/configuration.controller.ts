@@ -6,12 +6,10 @@ import {
   Param,
   Delete,
   UseGuards,
-  Put,
   HttpCode,
 } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
-import { CreateConfigurationDto } from './dto/createConfiguration.dto';
-import { Configuration } from '@prisma/client';
+import { ConfigurationResponseDto } from './dto/configurationResponse.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,45 +20,32 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from '../auth/permissions-auth.decorator';
 import { PermissionsGuard } from '../auth/permissions-auth.guard';
-import { UpdateConfigurationDto } from './dto/updateConfigurationDto';
+import { Configuration, ConfigurationValue } from './configuration.model';
+import { UpsertConfigurationDto } from './dto/upsertConfiguration.dto';
 
-@ApiTags('Configuration')
+@ApiTags('configuration')
 @Controller('configuration')
 export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission('admin')
-  @Post()
-  @ApiResponse({
-    status: 201,
-    description: 'Return created Configuration',
-  })
-  @ApiBody({
-    description: 'Create Configuration',
-    type: CreateConfigurationDto,
-  })
-  create(
-    @Body() configurationData: CreateConfigurationDto,
-  ): Promise<Configuration> {
-    return this.configurationService.create(configurationData);
-  }
-
   @Get()
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get all configurations',
-    type: Array,
+    type: ConfigurationResponseDto,
+    isArray: true,
   })
   findAll(): Promise<Configuration[]> {
-    return this.configurationService.configurations({});
+    return this.configurationService.findAll();
   }
 
   @Get(':key')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get configuration by key',
+    type: ConfigurationResponseDto,
   })
   findOne(@Param('key') key: string): Promise<Configuration> {
     return this.configurationService.findOne(key);
@@ -69,36 +54,31 @@ export class ConfigurationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission('manage-config')
-  @Put(':key')
+  @Post(':key')
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Upsert configuration',
+    type: ConfigurationResponseDto,
   })
   @ApiBody({
-    description: 'update Configuration',
-    type: CreateConfigurationDto,
+    description: 'Upsert Configuration',
+    type: UpsertConfigurationDto,
   })
-  update(
-    @Body() configuration: UpdateConfigurationDto,
+  upsert(
     @Param('key') key: string,
+    @Body() configurationValue: ConfigurationValue,
   ): Promise<Configuration> {
-    const param = {
-      where: { key: key },
-      data: {
-        key: key,
-        value: configuration.value,
-      },
-    };
-    return this.configurationService.upsert(param);
+    return this.configurationService.upsert(key, configurationValue);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('admin')
+  @Permission('manage-config')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a configurations',
+    description: 'Delete a configuration',
   })
   @ApiParam({
     name: 'key',

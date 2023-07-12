@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Configuration, SgConfig } from "~/utils/models/Configuration";
+import { Configuration, SgConfig } from "~/utils/models/configuration";
 
 export default Vue.extend({
   name: "SgConfigForm",
@@ -90,7 +90,7 @@ export default Vue.extend({
           prixFutFlower: +this.tempSgConfig.prixFutFlower,
         },
       };
-      this.$accessor.configuration.update(configuration);
+      this.$accessor.configuration.save(configuration);
       this.closeDialog();
     },
     closeDialog() {

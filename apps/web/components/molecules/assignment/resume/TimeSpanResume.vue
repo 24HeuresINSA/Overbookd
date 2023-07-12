@@ -107,7 +107,7 @@ export default Vue.extend({
 .timespan-details {
   flex: 1;
   display: flex;
-  align-items: start;
+  align-items: flex-start;
   justify-content: space-around;
   padding-left: 8px;
   flex-direction: column;

@@ -1,34 +1,26 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Configuration } from "~/utils/models/Configuration";
+import { Configuration } from "~/utils/models/configuration";
 import { HttpStringified } from "~/utils/types/http";
-const resource = "/configuration";
 
 type Context = { $axios: NuxtAxiosInstance };
 
-export default {
-  getAll(context: Context) {
-    return context.$axios.get<HttpStringified<Configuration[]>>(`${resource}`);
-  },
+export class ConfigurationRepository {
+  private static readonly basePath = "configuration";
 
-  fetch(context: Context, key: string) {
+  static getAll(context: Context) {
+    return context.$axios.get<HttpStringified<Configuration[]>>(this.basePath);
+  }
+
+  static fetch(context: Context, key: string) {
     return context.$axios.get<HttpStringified<Configuration>>(
-      `${resource}/${key}`
+      `${this.basePath}/${key}`
     );
-  },
+  }
 
-  save(context: Context, config: Configuration) {
+  static save(context: Context, config: Configuration) {
     return context.$axios.post<HttpStringified<Configuration>>(
-      `${resource}`,
-      config
+      `${this.basePath}/${config.key}`,
+      { value: config.value }
     );
-  },
-
-  update(context: Context, config: Configuration) {
-    return context.$axios.put<HttpStringified<Configuration>>(
-      `${resource}/${config.key}`,
-      {
-        value: config.value,
-      }
-    );
-  },
-};
+  }
+}

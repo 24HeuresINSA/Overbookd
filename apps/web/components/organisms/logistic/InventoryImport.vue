@@ -79,7 +79,7 @@ import { GearRepository } from "~/domain/inventory/gear.repository";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { InventoryImport } from "~/domain/inventory/inventory-import";
 import { Gear } from "~/utils/models/catalog.model";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,

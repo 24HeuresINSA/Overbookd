@@ -257,7 +257,7 @@ export default {
         {
           icon: "mdi-cog",
           permission: "admin",
-          title: "Admin",
+          title: "Config Système",
           to: "/config",
         },
         {
@@ -404,10 +404,6 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
 
     hasPermission(permission) {
       return this.$accessor.user.hasPermission(permission);
-    },
-
-    getConfig(key) {
-      return this.$accessor.config.getConfig(key);
     },
 
     toggleTheme() {

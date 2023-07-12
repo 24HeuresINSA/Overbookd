@@ -24,7 +24,7 @@
 import Vue from "vue";
 import { uniqueGearReducer } from "~/utils/functions/gearRequest";
 import { Gear } from "~/utils/models/catalog.model";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import { GearRequest } from "~/utils/models/gearRequests";
 
 export default Vue.extend({

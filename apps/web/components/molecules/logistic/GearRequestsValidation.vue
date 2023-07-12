@@ -53,7 +53,7 @@
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { gearRequestsSorts } from "~/utils/functions/gearRequest";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import {
   GearRequest,
   GearRequestWithDrive,

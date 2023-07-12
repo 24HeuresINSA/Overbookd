@@ -1,65 +1,70 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma, Configuration } from '@prisma/client';
-import { CreateConfigurationDto } from './dto/createConfiguration.dto';
+import {
+  Configuration,
+  ConfigurationValue,
+  DatabaseConfiguration,
+} from './configuration.model';
 
 @Injectable()
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: CreateConfigurationDto): Promise<Configuration> {
-    return this.prisma.configuration.create({
+  async create(data: Configuration): Promise<Configuration> {
+    const res = await this.prisma.configuration.create({
       data: {
         key: data.key,
-        //Value is of the right type but not regonized by prisma and typescript
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
         value: data.value,
       },
     });
+    return this.formatConfiguration(res);
   }
 
-  configurations(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.ConfigurationWhereUniqueInput;
-    where?: Prisma.ConfigurationWhereInput;
-    orderBy?: Prisma.ConfigurationOrderByWithRelationInput;
-    select?: Prisma.ConfigurationSelect;
-  }): Promise<Configuration[]> {
-    return this.prisma.configuration.findMany({
-      ...params,
+  async findAll(): Promise<Configuration[]> {
+    const res = await this.prisma.configuration.findMany();
+    return this.formatConfigurations(res);
+  }
+
+  async findOne(key: string): Promise<Configuration> {
+    const res = await this.prisma.configuration.findUnique({
+      where: { key },
+    });
+    return this.formatConfiguration(res);
+  }
+
+  async upsert(
+    key: string,
+    { value }: ConfigurationValue,
+  ): Promise<Configuration> {
+    const configuration = { key, value };
+    const res = await this.prisma.configuration.upsert({
+      where: { key },
+      create: configuration,
+      update: configuration,
+    });
+    return this.formatConfiguration(res);
+  }
+
+  async remove(key: string) {
+    await this.prisma.configuration.delete({
+      where: { key },
     });
   }
 
-  findOne(key: string): Promise<Configuration> {
-    return this.prisma.configuration.findUnique({
-      where: {
-        key,
-      },
-    });
+  private formatConfigurations(
+    configurations: DatabaseConfiguration[],
+  ): Configuration[] {
+    return configurations.map((configuration) =>
+      this.formatConfiguration(configuration),
+    );
   }
 
-  upsert(param: {
-    where: Prisma.ConfigurationWhereUniqueInput;
-    data: Prisma.ConfigurationCreateInput;
-  }): Promise<Configuration> {
-    const { where, data } = param;
-    return this.prisma.configuration.upsert({
-      where,
-      create: data,
-      update: data,
-    });
-  }
-
-  remove(key: string) {
-    this.prisma.configuration.update({
-      where: {
-        key,
-      },
-      data: {
-        isDeleted: true,
-      },
-    });
+  private formatConfiguration(
+    configuration: DatabaseConfiguration,
+  ): Configuration {
+    return {
+      key: configuration.key,
+      value: JSON.parse(configuration.value.toString()),
+    };
   }
 }

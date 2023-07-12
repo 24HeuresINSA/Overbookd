@@ -8,7 +8,6 @@ import { AuthModule } from './auth/auth.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { CharismaPeriodModule } from './charisma_period/charismaPeriod.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
-import { ConfigModule } from './config/config.module';
 import { ConfigurationModule } from './configuration/configuration.module';
 import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
 import { FaModule } from './fa/fa.module';
@@ -50,7 +49,6 @@ import { ThrottlerGuardCustom } from './throttler-custom.guard';
     HashingUtilsModule,
     TeamModule,
     TransactionModule,
-    ConfigModule,
     FaModule,
     CollaboratorModule,
     MailerModule.forRoot({

@@ -75,7 +75,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { Header } from "~/utils/models/Data";
+import { Header } from "~/utils/models/dataTable";
 import { SitePublishAnimationWithFa } from "~/utils/models/fa";
 import { PeriodWithId } from "~/utils/models/period";
 

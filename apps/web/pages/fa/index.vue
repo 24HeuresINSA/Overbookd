@@ -268,9 +268,6 @@ export default {
       this.mFA = fa;
       this.isDeleteFAOpen = true;
     },
-    getConfig(key) {
-      return this.$accessor.config.getConfig(key);
-    },
     filterBySelectedTeam(FAs, team) {
       if (!team) {
         return FAs;

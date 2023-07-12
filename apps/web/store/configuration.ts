@@ -1,78 +1,60 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import Vue from "vue";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Configuration } from "~/utils/models/Configuration";
+import { updateItemToList } from "~/utils/functions/list";
+import { Configuration } from "~/utils/models/configuration";
 
-const configurationRepo = RepoFactory.configurationRepo;
+const configurationRepo = RepoFactory.ConfigurationRepository;
 
-// The state types definitions
-type State = {
-  [key: string]: Object;
-};
+const state = () => ({
+  configurations: [] as Configuration[],
+});
 
-const state = (): State => Object.create(null);
+export const getters = getterTree(state, {
+  get: (state) => (key: string) => {
+    return state.configurations.find((c) => c.key === key)?.value;
+  },
+});
 
 export const mutations = mutationTree(state, {
-  SET_CONFIG(state, config: Configuration) {
-    Vue.set(state, config.key, config.value);
+  SET_ALL_CONFIG(state, configurations: Configuration[]) {
+    state.configurations = configurations;
+  },
+
+  SET_CONFIG(state, configuration: Configuration) {
+    const index = state.configurations.findIndex(
+      (c) => c.key === configuration.key
+    );
+    const configurations =
+      index !== -1
+        ? updateItemToList(state.configurations, index, configuration)
+        : [...state.configurations, configuration];
+    state.configurations = configurations;
   },
 });
 
 export const actions = actionTree(
   { state },
   {
-    fetchAll: async function ({ commit }) {
+    async fetchAll({ commit }) {
       const res = await safeCall(this, configurationRepo.getAll(this));
-      if (!res) {
-        return null;
-      }
-      res.data.forEach((config) => {
-        commit("SET_CONFIG", config);
-      });
-      return res;
+      if (!res) return;
+      commit("SET_ALL_CONFIG", res.data);
     },
-    fetch: async function ({ commit }, key: string) {
-      const res = await safeCall(this, configurationRepo.fetch(this, key));
-      if (!res) {
-        return null;
-      }
-      commit("SET_CONFIG", res.data);
-      return res;
-    },
-    save: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.save(this, config), {
-        successMessage: "La configuration a été sauvegardée avec succès.",
-        errorMessage: "Erreur lors de la sauvegarde de la configuration.",
-      });
-      if (!res) {
-        return null;
-      }
 
+    async fetch({ commit }, key: string) {
+      const res = await safeCall(this, configurationRepo.fetch(this, key));
+      if (!res) return;
       commit("SET_CONFIG", res.data);
-      return res;
     },
-    update: async function ({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.update(this, config), {
-        successMessage: "La configuration a été mise à jour avec succès.",
-        errorMessage: "Erreur lors de la mise à jour de la configuration.",
+
+    async save({ commit }, config: Configuration) {
+      const res = await safeCall(this, configurationRepo.save(this, config), {
+        successMessage: "La configuration a été sauvegardée avec succès ✅",
+        errorMessage: "Erreur lors de la sauvegarde de la configuration ❌",
       });
-      if (!res) {
-        return null;
-      }
+      if (!res) return;
       commit("SET_CONFIG", res.data);
-      return res;
     },
   }
 );
-
-export const getters = getterTree(state, {
-  get: (state: State) => (key: string) => {
-    for (const [k, value] of Object.entries(state)) {
-      if (k === key) {
-        return value;
-      }
-    }
-    return undefined;
-  },
-});

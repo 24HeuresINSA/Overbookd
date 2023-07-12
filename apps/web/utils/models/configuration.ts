@@ -7,5 +7,5 @@ export type SgConfig = {
 
 export interface Configuration {
   key: string;
-  value: Object;
+  value: any;
 }
