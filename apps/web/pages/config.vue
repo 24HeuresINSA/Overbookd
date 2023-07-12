@@ -7,6 +7,7 @@
       src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
     ></v-img>
 
+    <h2>Date de début de la manif</h2>
     <div class="field-row">
       <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
       <v-btn class="field-row__save-btn" @click="saveDateEventStart">
@@ -65,8 +66,11 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+h2 {
+  margin-top: 20px;
+}
+
 .field-row {
-  padding-top: 20px;
   display: flex;
   gap: 20px;
   justify-content: space-between;
