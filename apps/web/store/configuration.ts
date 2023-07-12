@@ -1,6 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
+import { updateItemToList } from "~/utils/functions/list";
 import { Configuration } from "~/utils/models/configuration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
@@ -24,8 +25,11 @@ export const mutations = mutationTree(state, {
     const index = state.configurations.findIndex(
       (c) => c.key === configuration.key
     );
-    if (index !== -1) state.configurations[index] = configuration;
-    else state.configurations.push(configuration);
+    const configurations =
+      index !== -1
+        ? updateItemToList(state.configurations, index, configuration)
+        : [...state.configurations, configuration];
+    state.configurations = configurations;
   },
 });
 
@@ -46,8 +50,8 @@ export const actions = actionTree(
 
     async save({ commit }, config: Configuration) {
       const res = await safeCall(this, configurationRepo.save(this, config), {
-        successMessage: "La configuration a été sauvegardée avec succès.",
-        errorMessage: "Erreur lors de la sauvegarde de la configuration.",
+        successMessage: "La configuration a été sauvegardée avec succès ✅",
+        errorMessage: "Erreur lors de la sauvegarde de la configuration ❌",
       });
       if (!res) return;
       commit("SET_CONFIG", res.data);
