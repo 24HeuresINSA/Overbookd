@@ -14,7 +14,7 @@
         <span class="icon-detail">{{ validator.name }}</span>
       </div>
     </div>
-    <FestivalEventSummary class="summary" festival-event="FT" />
+    <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
   </div>
 </template>
 
