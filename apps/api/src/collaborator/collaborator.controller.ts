@@ -24,7 +24,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from '../auth/permissions-auth.decorator';
 import { PermissionsGuard } from '../auth/permissions-auth.guard';
 import { CollaboratorFormRequestDto } from './dto/collaboratorFormRequest.dto';
-import { Collaborator } from './collaborator.model';
+import { CollaboratorWithId } from './collaborator.model';
 import { CollaboratorResponseDto } from './dto/collaboratorResponse.dto';
 
 @ApiBearerAuth()
@@ -49,7 +49,7 @@ export class CollaboratorController {
     type: CollaboratorResponseDto,
     isArray: true,
   })
-  findAll(): Promise<Collaborator[]> {
+  findAll(): Promise<CollaboratorWithId[]> {
     return this.collaboratorService.findAll();
   }
 
@@ -68,7 +68,9 @@ export class CollaboratorController {
     description: 'collaborator id',
     required: true,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Collaborator | null> {
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CollaboratorWithId | null> {
     return this.collaboratorService.findOne(id);
   }
 
@@ -87,7 +89,7 @@ export class CollaboratorController {
   })
   create(
     @Body() collaboratorData: CollaboratorFormRequestDto,
-  ): Promise<Collaborator> {
+  ): Promise<CollaboratorWithId> {
     return this.collaboratorService.create(collaboratorData);
   }
 
@@ -113,7 +115,7 @@ export class CollaboratorController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() collaboratorData: CollaboratorFormRequestDto,
-  ): Promise<Collaborator> {
+  ): Promise<CollaboratorWithId> {
     return this.collaboratorService.update(id, collaboratorData);
   }
 
@@ -133,5 +135,77 @@ export class CollaboratorController {
   })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.collaboratorService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Post('fa/:faId')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Create a collaborator and link it to a fa',
+    type: Promise<CollaboratorResponseDto>,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    description: 'Create a collaborator',
+    type: CollaboratorFormRequestDto,
+  })
+  createAndLinkToFa(
+    @Param('faId', ParseIntPipe) faId: number,
+    @Body() collaboratorData: CollaboratorFormRequestDto,
+  ): Promise<CollaboratorWithId> {
+    return this.collaboratorService.createAndLinkToFa(faId, collaboratorData);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Post(':collaboratorId/fa/:faId')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Link a collaborator to a fa',
+    type: Promise<CollaboratorResponseDto>,
+  })
+  @ApiParam({
+    name: 'collaboratorId',
+    type: Number,
+    description: 'collaborator id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  linkToFa(
+    @Param('collaboratorId', ParseIntPipe) collaboratorId: number,
+    @Param('faId', ParseIntPipe) faId: number,
+  ): Promise<CollaboratorWithId> {
+    return this.collaboratorService.linkToFa(faId, collaboratorId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Delete('fa/:faId')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Unlink a collaborator from a fa',
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  unlinkFromFa(@Param('faId', ParseIntPipe) faId: number): Promise<void> {
+    return this.collaboratorService.unlinkFromFa(faId);
   }
 }

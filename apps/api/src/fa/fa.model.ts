@@ -1,4 +1,4 @@
-import { Collaborator } from '../collaborator/collaborator.model';
+import { CollaboratorWithId } from '../collaborator/collaborator.model';
 import { FaFeedbackSubjectType } from '../fa-feedback/faFeedback.model';
 import { ElectricityType } from '../fa_electricity_need/faElectricityNeed.model';
 import { SignaType } from '../fa_signa_need/faSignaNeed.model';
@@ -224,7 +224,7 @@ export interface CompleteFaResponse {
   isPassRequired: boolean;
   numberOfPass?: number;
   waterNeed?: string;
-  collaborator?: Collaborator;
+  collaborator?: CollaboratorWithId;
   electricityNeeds: FaElectricityNeed[];
   signaNeeds: FaSignaNeed[];
   faValidation: FaReview[];

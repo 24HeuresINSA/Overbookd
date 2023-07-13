@@ -173,7 +173,7 @@ export class FaService {
     return { isDeleted, ...statusCondition };
   }
 
-  private async checkFaExistence(id: number): Promise<void> {
+  async checkFaExistence(id: number): Promise<void> {
     const fa = await this.prisma.fa.findUnique({
       where: { id },
     });
