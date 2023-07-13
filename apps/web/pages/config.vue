@@ -50,8 +50,8 @@ export default Vue.extend({
 
   async created() {
     await this.$accessor.configuration.fetchAll();
-    const startString = this.$accessor.configuration.get("eventDate")?.start;
-    if (startString) this.dateEventStart = new Date(startString);
+    const eventDate = this.$accessor.configuration.get("eventDate");
+    if (eventDate) this.dateEventStart = eventDate?.start;
   },
 
   methods: {

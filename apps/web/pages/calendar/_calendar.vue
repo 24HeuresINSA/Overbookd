@@ -101,9 +101,7 @@ export default Vue.extend({
       return this.$accessor.user.hasPermission("can-affect");
     },
     manifDate(): Date {
-      const startDate = this.$accessor.configuration.get("eventDate")?.start;
-      if (!startDate) return new Date();
-      return new Date(startDate);
+      return this.$accessor.configuration.eventStartDate;
     },
   },
   async created() {

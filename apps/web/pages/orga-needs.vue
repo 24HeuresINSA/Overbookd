@@ -55,8 +55,7 @@ export default Vue.extend({
   },
   async mounted() {
     await this.$accessor.configuration.fetch("eventDate");
-    const startDate = this.$accessor.configuration.get("eventDate")?.start;
-    this.start = startDate ? new Date(startDate) : new Date();
+    this.start = this.$accessor.configuration.eventStartDate;
 
     this.end = new Date(this.start.getTime() + FOUR_DAYS_IN_MS);
     this.updateStats();

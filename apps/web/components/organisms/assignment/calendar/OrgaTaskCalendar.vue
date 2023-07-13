@@ -60,9 +60,7 @@ export default Vue.extend({
       return formatUsername(this.selectedVolunteer);
     },
     manifDate(): Date {
-      const startDate = this.$accessor.configuration.get("eventDate")?.start;
-      if (!startDate) return new Date();
-      return new Date(startDate);
+      return this.$accessor.configuration.eventStartDate;
     },
     availabilities(): Availability[] {
       return this.$accessor.volunteerAvailability.mAvailabilities;

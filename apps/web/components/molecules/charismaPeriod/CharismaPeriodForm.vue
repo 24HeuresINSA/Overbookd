@@ -82,9 +82,7 @@ export default Vue.extend({
       return this.charismaPeriod !== null;
     },
     manifDate(): Date {
-      const startDate = this.$accessor.configuration.get("eventDate")?.start;
-      if (!startDate) return new Date();
-      return new Date(startDate);
+      return this.$accessor.configuration.eventStartDate;
     },
     startOrManifDate(): Date {
       return this.start ?? this.manifDate;
