@@ -15,3 +15,14 @@ export class CollaboratorRepresentation implements Collaborator {
   company?: string;
   comment?: string;
 }
+
+export interface CollaboratorWithId extends Collaborator {
+  id: number;
+}
+
+export class CollaboratorWithIdRepresentation
+  extends CollaboratorRepresentation
+  implements CollaboratorWithId
+{
+  id: number;
+}

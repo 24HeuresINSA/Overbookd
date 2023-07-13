@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Collaborator } from './collaborator.model';
+import { Collaborator, CollaboratorWithId } from './collaborator.model';
 
-export const COLLABORATOR_SELECTION = {
+export const COLLABORATOR_WITH_ID_SELECTION = {
+  id: true,
   firstname: true,
   lastname: true,
   phone: true,
@@ -15,31 +16,40 @@ export const COLLABORATOR_SELECTION = {
 export class CollaboratorService {
   constructor(private prisma: PrismaService) {}
 
-  findOne(faId: number): Promise<Collaborator | null> {
+  findAll(): Promise<Collaborator[]> {
+    return this.prisma.collaborator.findMany({
+      select: COLLABORATOR_WITH_ID_SELECTION,
+    });
+  }
+
+  findOne(id: number): Promise<Collaborator | null> {
     return this.prisma.collaborator.findUnique({
-      where: { faId },
-      select: COLLABORATOR_SELECTION,
+      where: { id },
+      select: COLLABORATOR_WITH_ID_SELECTION,
     });
   }
 
-  create(faId: number, collaborator: Collaborator): Promise<Collaborator> {
+  create(collaboratorData: Collaborator): Promise<CollaboratorWithId> {
     return this.prisma.collaborator.create({
-      data: { faId, ...collaborator },
-      select: COLLABORATOR_SELECTION,
+      data: collaboratorData,
+      select: COLLABORATOR_WITH_ID_SELECTION,
     });
   }
 
-  update(faId: number, collaborator: Collaborator): Promise<Collaborator> {
+  update(
+    id: number,
+    collaboratorData: Collaborator,
+  ): Promise<CollaboratorWithId> {
     return this.prisma.collaborator.update({
-      where: { faId },
-      data: collaborator,
-      select: COLLABORATOR_SELECTION,
+      where: { id },
+      data: collaboratorData,
+      select: COLLABORATOR_WITH_ID_SELECTION,
     });
   }
 
-  async remove(faId: number): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.prisma.collaborator.delete({
-      where: { faId },
+      where: { id },
     });
   }
 }

@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl", "darwin-arm64"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "darwin-arm64"]
 }
 
 datasource db {
@@ -215,7 +215,8 @@ model Fa {
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
-  collaborator           Collaborator?
+  collaborator           Collaborator?           @relation(fields: [collaboratorId], references: [id])
+  collaboratorId         Int?
 
   @@map("fa")
 }
@@ -272,15 +273,14 @@ model SignaLocation {
 }
 
 model Collaborator {
-  fa        Fa      @relation(fields: [faId], references: [id], onDelete: Cascade)
-  faId      Int     @id @map("fa_id")
+  id        Int     @id @default(autoincrement())
   firstname String  @db.VarChar(30)
   lastname  String  @db.VarChar(30)
   phone     String  @db.VarChar(30)
   email     String? @db.VarChar(60)
   company   String? @db.VarChar(30)
   comment   String? @db.Text
-  
+  fas       Fa[]
 
   @@unique([firstname, lastname])
   @@map("collaborator")
@@ -419,8 +419,8 @@ model CatalogGear {
 }
 
 model Configuration {
-  key       String  @id @unique
-  value     Json
+  key   String @id @unique
+  value Json
 
   @@map("configuration")
 }

@@ -6,10 +6,21 @@ import {
   IsPhoneNumber,
   IsEmail,
   IsDefined,
+  IsNumber,
 } from 'class-validator';
-import { CollaboratorRepresentation } from '../collaborator.model';
+import { CollaboratorWithIdRepresentation } from '../collaborator.model';
 
-export class CollaboratorFormRequestDto implements CollaboratorRepresentation {
+export class CollaboratorResponseDto
+  implements CollaboratorWithIdRepresentation
+{
+  @ApiProperty({
+    required: true,
+    description: 'The id of the collaborator',
+  })
+  @IsNumber()
+  @IsDefined()
+  id: number;
+
   @ApiProperty({
     required: true,
     description: 'The firstname of the collaborator',

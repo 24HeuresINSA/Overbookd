@@ -27,7 +27,7 @@ import {
   faTypes,
 } from '../fa.model';
 import { CollaboratorRepresentation } from '../../collaborator/collaborator.model';
-import { CollaboratorDto } from '../../collaborator/dto/collaboratorFormRequest.dto';
+import { CollaboratorFormRequestDto } from '../../collaborator/dto/collaboratorFormRequest.dto';
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
@@ -119,7 +119,7 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
     description: 'The collaborator of the fa',
     type: CollaboratorRepresentation,
   })
-  collaborator?: CollaboratorDto;
+  collaborator?: CollaboratorFormRequestDto;
 
   @ApiProperty({
     required: true,

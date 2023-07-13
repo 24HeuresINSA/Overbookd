@@ -23,109 +23,115 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Permission } from '../auth/permissions-auth.decorator';
 import { PermissionsGuard } from '../auth/permissions-auth.guard';
-import { CollaboratorDto } from './dto/collaboratorFormRequest.dto';
+import { CollaboratorFormRequestDto } from './dto/collaboratorFormRequest.dto';
 import { Collaborator } from './collaborator.model';
+import { CollaboratorResponseDto } from './dto/collaboratorResponse.dto';
 
 @ApiBearerAuth()
-@ApiTags('fa')
+@ApiTags('collaborator')
+@Controller('collaborator')
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('fa')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Get(':faId/collaborator')
+  @Get()
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get a collaborator by fa id',
-    type: CollaboratorDto,
+    description: 'Get all collaborators',
+    type: CollaboratorResponseDto,
+    isArray: true,
   })
-  @ApiParam({
-    name: 'faId',
-    type: Number,
-    description: 'FA id',
-    required: true,
-  })
-  findOne(
-    @Param('faId', ParseIntPipe) faId: number,
-  ): Promise<Collaborator | null> {
-    return this.collaboratorService.findOne(faId);
+  findAll(): Promise<Collaborator[]> {
+    return this.collaboratorService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faId/collaborator')
+  @Get(':id')
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Get a collaborator',
+    type: CollaboratorResponseDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'collaborator id',
+    required: true,
+  })
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Collaborator | null> {
+    return this.collaboratorService.findOne(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Create a collaborator by fa id',
-    type: CollaboratorDto,
-  })
-  @ApiParam({
-    name: 'faId',
-    type: Number,
-    description: 'FA id',
-    required: true,
+    description: 'Create a collaborator',
+    type: CollaboratorResponseDto,
   })
   @ApiBody({
-    description: 'Create the collaborator of fa',
-    type: CollaboratorDto,
+    description: 'Create a collaborator',
+    type: CollaboratorFormRequestDto,
   })
   create(
-    @Param('faId', ParseIntPipe) faId: number,
-    @Body() collaborator: CollaboratorDto,
+    @Body() collaboratorData: CollaboratorFormRequestDto,
   ): Promise<Collaborator> {
-    return this.collaboratorService.create(faId, collaborator);
+    return this.collaboratorService.create(collaboratorData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Put(':faId/collaborator')
+  @Put(':id')
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Update a collaborator by fa id',
-    type: CollaboratorDto,
+    description: 'Update a collaborator',
+    type: CollaboratorResponseDto,
   })
   @ApiParam({
-    name: 'faId',
+    name: 'id',
     type: Number,
-    description: 'FA id',
+    description: 'collaborator id',
     required: true,
   })
   @ApiBody({
-    description: 'Update the collaborator of fa',
-    type: CollaboratorDto,
+    description: 'Update a collaborator',
+    type: CollaboratorFormRequestDto,
   })
   update(
-    @Param('faId', ParseIntPipe) faId: number,
-    @Body() collaborator: CollaboratorDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() collaboratorData: CollaboratorFormRequestDto,
   ): Promise<Collaborator> {
-    return this.collaboratorService.update(faId, collaborator);
+    return this.collaboratorService.update(id, collaboratorData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Delete(':faId/collaborator')
+  @Delete(':id')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a collaborator by fa id',
+    description: 'Remove a collaborator',
   })
   @ApiParam({
-    name: 'faId',
+    name: 'id',
     type: Number,
-    description: 'FA id',
+    description: 'collaborator id',
     required: true,
   })
-  remove(@Param('faId', ParseIntPipe) faId: number): Promise<void> {
-    return this.collaboratorService.remove(faId);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.collaboratorService.remove(id);
   }
 }

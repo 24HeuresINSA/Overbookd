@@ -1,4 +1,4 @@
-import { COLLABORATOR_SELECTION } from '../collaborator/collaborator.service';
+import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
 import { TEAM_SELECT } from '../team/team.service';
 
 export type ExportSignaNeed = {
@@ -37,7 +37,7 @@ export const COMPLETE_FA_SELECT = {
   numberOfPass: true,
   waterNeed: true,
   collaborator: {
-    select: COLLABORATOR_SELECTION,
+    select: COLLABORATOR_WITH_ID_SELECTION,
   },
   faValidation: {
     select: {
