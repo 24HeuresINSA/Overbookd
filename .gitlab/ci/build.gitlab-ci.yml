@@ -4,8 +4,8 @@
   interruptible: true
   image: node:16-alpine
   script:
-    - pnpm i --filter ${PNPM_WORKSPACE}
-    - pnpm run --filter ${PNPM_WORKSPACE} build:ci
+    - pnpm i --filter "${PNPM_WORKSPACE}..."
+    - pnpm run --filter "${PNPM_WORKSPACE}..." build:ci
 
 overbookd/api_build:
   extends: .build
@@ -17,7 +17,7 @@ overbookd/api_build:
         - apps/api/**/*
     - when: never
   variables:
-    PNPM_WORKSPACE: '@overbookd/api'
+    PNPM_WORKSPACE: "@overbookd/api"
 
 overbookd/web_build:
   extends: .build
@@ -28,4 +28,4 @@ overbookd/web_build:
         - apps/web/**/*
     - when: never
   variables:
-    PNPM_WORKSPACE: '@overbookd/web'
+    PNPM_WORKSPACE: "@overbookd/web"

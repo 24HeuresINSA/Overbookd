@@ -5,7 +5,7 @@
   image: node:16-alpine
   script:
     - pnpm i
-    - pnpm run --filter ${PNPM_WORKSPACE} test:ci
+    - pnpm run --filter "${PNPM_WORKSPACE}..." test:ci
 
 overbookd/api_test:
   extends: .test
@@ -16,7 +16,7 @@ overbookd/api_test:
         - apps/api/**/*
     - when: never
   variables:
-    PNPM_WORKSPACE: '@overbookd/api'
+    PNPM_WORKSPACE: "@overbookd/api"
   artifacts:
     when: always
     reports:
@@ -34,7 +34,7 @@ overbookd/web_test:
         - apps/web/**/*
     - when: never
   variables:
-    PNPM_WORKSPACE: '@overbookd/web'
+    PNPM_WORKSPACE: "@overbookd/web"
   artifacts:
     when: always
     reports:
