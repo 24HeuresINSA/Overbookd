@@ -58,7 +58,6 @@ import SignaCard from "~/components/organisms/festivalEvent/fa/SignaCard.vue";
 import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
 import FestivalEventSidebar from "~/components/organisms/festivalEvent/FestivalEventSidebar.vue";
 import { Fa } from "~/utils/models/fa";
-import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "Fa",
@@ -80,21 +79,9 @@ export default Vue.extend({
     FeedbackCard,
   },
 
-  data: () => ({
-    statusTrad: new Map<string, string>([
-      ["DRAFT", "Brouillon"],
-      ["SUBMITTED", "Soumise à validation"],
-      ["REFUSED", "Refusée"],
-      ["VALIDATED", "Validée"],
-    ]),
-  }),
-
   computed: {
     mFA(): Fa {
       return this.$accessor.fa.mFA;
-    },
-    me(): MyUserInformation {
-      return this.$accessor.user.me;
     },
     faId(): number {
       return +this.$route.params.fa;
