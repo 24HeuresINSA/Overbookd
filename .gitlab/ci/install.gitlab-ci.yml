@@ -4,7 +4,9 @@ install:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - apps/api/**/*
+        - apps/**/*
+        - libraries/**/*
+        - domains/**/*
     - when: never
   script:
     - pnpm i

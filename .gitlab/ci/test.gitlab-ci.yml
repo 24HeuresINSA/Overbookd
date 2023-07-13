@@ -16,7 +16,7 @@ overbookd/api_test:
         - apps/api/**/*
     - when: never
   variables:
-    PNPM_WORKSPACE: '@overbookd/api'
+    PNPM_WORKSPACE: "@overbookd/api"
   artifacts:
     when: always
     reports:
@@ -34,7 +34,7 @@ overbookd/web_test:
         - apps/web/**/*
     - when: never
   variables:
-    PNPM_WORKSPACE: '@overbookd/web'
+    PNPM_WORKSPACE: "@overbookd/web"
   artifacts:
     when: always
     reports:
