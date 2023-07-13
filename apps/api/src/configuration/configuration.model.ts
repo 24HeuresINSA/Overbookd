@@ -1,10 +1,3 @@
-import { Prisma } from '@prisma/client';
-
-export interface DatabaseConfiguration {
-  key: string;
-  value: Prisma.JsonValue;
-}
-
 export interface ConfigurationValue {
   value: any;
 }
