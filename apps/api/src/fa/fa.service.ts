@@ -7,6 +7,11 @@ import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/createFa.dto';
 import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
 import { COMPLETE_FA_SELECT, FaIdResponse, LITE_FA_SELECT } from './faTypes';
+import {
+  CollaboratorWithId,
+  CollaboratorWithOptionalIdRepresentation,
+} from '../collaborator/collaborator.model';
+import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -166,6 +171,51 @@ export class FaService {
       orderBy: { id: 'asc' },
       select: { id: true },
     });
+  }
+
+  addCollaborator(
+    id: number,
+    collaborator: CollaboratorWithOptionalIdRepresentation,
+  ): Promise<CollaboratorWithId> {
+    const { id: collaboratorId, ...collaboratorData } = collaborator;
+
+    const collaboratorPayload = {
+      ...collaboratorData,
+      fas: { connect: { id } },
+    };
+
+    return this.prisma.collaborator.upsert({
+      where: { id: collaboratorId ?? -1 },
+      create: collaboratorPayload,
+      update: collaboratorPayload,
+      select: COLLABORATOR_WITH_ID_SELECTION,
+    });
+  }
+
+  async removeCollaborator(id: number): Promise<void> {
+    const fa = await this.prisma.fa.findFirst({
+      where: { id },
+      select: { collaboratorId: true },
+    });
+    const collaboratorId = fa.collaboratorId;
+    if (!collaboratorId) {
+      throw new NotFoundException(`fa with id ${id} has no collaborator`);
+    }
+
+    const faCount = await this.prisma.fa.count({
+      where: { collaboratorId },
+    });
+
+    await this.prisma.fa.update({
+      where: { id },
+      data: { collaborator: { disconnect: true } },
+    });
+
+    if (faCount === 0) {
+      await this.prisma.collaborator.delete({
+        where: { id: collaboratorId },
+      });
+    }
   }
 
   private buildFindCondition({ isDeleted, status }: SearchFa) {

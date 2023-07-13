@@ -1,4 +1,4 @@
-export interface Collaborator {
+interface Collaborator {
   firstname: string;
   lastname: string;
   phone: string;
@@ -7,7 +7,7 @@ export interface Collaborator {
   comment?: string;
 }
 
-export class CollaboratorRepresentation implements Collaborator {
+class CollaboratorRepresentation implements Collaborator {
   firstname: string;
   lastname: string;
   phone: string;
@@ -16,7 +16,18 @@ export class CollaboratorRepresentation implements Collaborator {
   comment?: string;
 }
 
-export interface CollaboratorWithId extends Collaborator {
+interface CollaboratorWithOptionalId extends Collaborator {
+  id?: number;
+}
+
+export class CollaboratorWithOptionalIdRepresentation
+  extends CollaboratorRepresentation
+  implements CollaboratorWithOptionalId
+{
+  id?: number;
+}
+
+export interface CollaboratorWithId extends CollaboratorWithOptionalId {
   id: number;
 }
 

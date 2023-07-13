@@ -6,13 +6,24 @@ import {
   IsPhoneNumber,
   IsEmail,
   IsDefined,
+  IsNumber,
 } from 'class-validator';
-import { CollaboratorRepresentation } from '../collaborator.model';
+import { CollaboratorWithOptionalIdRepresentation } from '../collaborator.model';
 
-export class CollaboratorFormRequestDto implements CollaboratorRepresentation {
+export class CollaboratorFormRequestDto
+  implements CollaboratorWithOptionalIdRepresentation
+{
   @ApiProperty({
     required: true,
-    description: 'The firstname of the collaborator',
+    description: 'The collaborator id',
+  })
+  @IsNumber()
+  @IsOptional()
+  id?: number;
+
+  @ApiProperty({
+    required: true,
+    description: 'The collaborator firstname',
   })
   @IsString()
   @IsDefined()
@@ -21,7 +32,7 @@ export class CollaboratorFormRequestDto implements CollaboratorRepresentation {
 
   @ApiProperty({
     required: true,
-    description: 'The lastname of the collaborator',
+    description: 'The collaborator lastname',
   })
   @IsString()
   @IsDefined()
@@ -30,7 +41,7 @@ export class CollaboratorFormRequestDto implements CollaboratorRepresentation {
 
   @ApiProperty({
     required: true,
-    description: 'The phone number of the collaborator',
+    description: 'The collaborator phone number',
   })
   @IsDefined()
   @IsPhoneNumber('FR')
@@ -38,7 +49,7 @@ export class CollaboratorFormRequestDto implements CollaboratorRepresentation {
 
   @ApiProperty({
     required: false,
-    description: 'The email of the collaborator',
+    description: 'The collaborator email',
   })
   @IsEmail()
   @IsOptional()
@@ -46,7 +57,7 @@ export class CollaboratorFormRequestDto implements CollaboratorRepresentation {
 
   @ApiProperty({
     required: false,
-    description: 'The company of the collaborator',
+    description: 'The collaborator company',
   })
   @IsString()
   @IsOptional()
