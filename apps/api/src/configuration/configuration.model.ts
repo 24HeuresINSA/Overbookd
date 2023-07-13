@@ -6,19 +6,19 @@ export interface DatabaseConfiguration {
 }
 
 export interface ConfigurationValue {
-  value: object;
+  value: any;
 }
 
 export class ConfigurationValueRepresentation implements ConfigurationValue {
-  value: object;
+  value: any;
 }
 
 export interface Configuration {
   key: string;
-  value: object;
+  value: any;
 }
 
 export class ConfigurationRepresentation implements Configuration {
   key: string;
-  value: object;
+  value: any;
 }

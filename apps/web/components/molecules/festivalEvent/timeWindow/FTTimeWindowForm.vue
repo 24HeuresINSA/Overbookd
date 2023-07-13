@@ -122,7 +122,9 @@ export default Vue.extend({
       return false;
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate")?.start);
+      const startDate = this.$accessor.configuration.get("eventDate")?.start;
+      if (!startDate) return new Date();
+      return new Date(startDate);
     },
     displayedManifDate(): string {
       return `vendredi ${formatDate(this.manifDate)}`;
@@ -133,7 +135,8 @@ export default Vue.extend({
       this.updateLocalVariable();
     },
   },
-  async mounted() {
+  async created() {
+    await this.$accessor.configuration.fetch("eventDate");
     this.updateLocalVariable();
   },
   methods: {

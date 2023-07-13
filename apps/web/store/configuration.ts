@@ -22,6 +22,7 @@ export const mutations = mutationTree(state, {
   },
 
   SET_CONFIG(state, configuration: Configuration) {
+    if (!state.configurations) state.configurations = [];
     const index = state.configurations.findIndex(
       (c) => c.key === configuration.key
     );

@@ -53,8 +53,11 @@ export default Vue.extend({
       return this.$accessor.orgaNeeds.stats;
     },
   },
-  mounted() {
-    this.start = new Date(this.$accessor.configuration.get("eventDate")?.start);
+  async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
+    const startDate = this.$accessor.configuration.get("eventDate")?.start;
+    this.start = startDate ? new Date(startDate) : new Date();
+
     this.end = new Date(this.start.getTime() + FOUR_DAYS_IN_MS);
     this.updateStats();
   },

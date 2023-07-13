@@ -265,6 +265,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
     this.updateLocalVariable();
   },
   methods: {

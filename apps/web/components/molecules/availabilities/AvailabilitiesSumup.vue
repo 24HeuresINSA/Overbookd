@@ -50,7 +50,9 @@ export default Vue.extend({
   }),
   computed: {
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate")?.start);
+      const startDate = this.$accessor.configuration.get("eventDate")?.start;
+      if (!startDate) return new Date();
+      return new Date(startDate);
     },
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.calendarMarker);
@@ -80,6 +82,7 @@ export default Vue.extend({
     this.calendarMarker = this.manifDate;
   },
   async created() {
+    await this.$accessor.configuration.fetch("eventDate");
     await this.fetchAvailabilities();
   },
   methods: {

@@ -60,7 +60,9 @@ export default Vue.extend({
       return formatUsername(this.selectedVolunteer);
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate")?.start);
+      const startDate = this.$accessor.configuration.get("eventDate")?.start;
+      if (!startDate) return new Date();
+      return new Date(startDate);
     },
     availabilities(): Availability[] {
       return this.$accessor.volunteerAvailability.mAvailabilities;
@@ -93,7 +95,8 @@ export default Vue.extend({
       this.calendarMarker = this.hoverTimeSpan?.start || this.manifDate;
     },
   },
-  mounted() {
+  async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
     this.calendarMarker = this.manifDate;
   },
   methods: {
