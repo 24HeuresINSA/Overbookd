@@ -167,7 +167,7 @@ export class UserService {
 
   async getById(id: number): Promise<MyUserInformation | null> {
     const user = await this.prisma.user.findUnique({
-      where: { id: id },
+      where: { id },
       select: {
         ...SELECT_USER,
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
