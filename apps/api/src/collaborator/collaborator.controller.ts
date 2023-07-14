@@ -14,8 +14,8 @@ import { CollaboratorWithId } from './collaborator.model';
 import { CollaboratorResponseDto } from './dto/collaboratorResponse.dto';
 
 @ApiBearerAuth()
-@ApiTags('collaborator')
-@Controller('collaborator')
+@ApiTags('collaborators')
+@Controller('collaborators')
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
 })
