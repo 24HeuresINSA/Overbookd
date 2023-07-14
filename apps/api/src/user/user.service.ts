@@ -198,7 +198,7 @@ export class UserService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return UserService.getUserWithTeamAndPermission(updatedUser);
+    return UserService.getUserWithTeamsAndPermissions(updatedUser);
   }
 
   async getAll(): Promise<UserPersonnalData[]> {
@@ -381,7 +381,7 @@ export class UserService {
       data: userData,
       where: { id: targetUserId },
     });
-    return UserService.getUserWithTeamAndPermission(user);
+    return UserService.getUserWithTeamsAndPermissions(user);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -420,7 +420,7 @@ export class UserService {
     return [...stats.values()];
   }
 
-  static getUserWithTeamAndPermission(
+  static getUserWithTeamsAndPermissions(
     user: DatabaseUserWithTeamsAndPermissions,
   ): UserWithTeamsAndPermissions {
     const teams = user.teams.map((t) => t.team.code);
@@ -448,7 +448,7 @@ export class UserService {
   ): MyUserInformation {
     const { _count, ...userWithoutCount } = user;
     const userWithTeamAndPermission =
-      UserService.getUserWithTeamAndPermission(userWithoutCount);
+      UserService.getUserWithTeamsAndPermissions(userWithoutCount);
     return {
       ...userWithTeamAndPermission,
       tasksCount: _count.assignments,

@@ -13,7 +13,7 @@ export class ProfilePictureService {
   constructor(
     private readonly fileService: FileService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   private async getProfilePicture(userId: number): Promise<string | null> {
     const { profilePicture } = await this.prisma.user.findUnique({
@@ -41,7 +41,7 @@ export class ProfilePictureService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return UserService.getUserWithTeamAndPermission(user);
+    return UserService.getUserWithTeamsAndPermissions(user);
   }
 
   async streamProfilePicture(userId: number): Promise<StreamableFile> {
