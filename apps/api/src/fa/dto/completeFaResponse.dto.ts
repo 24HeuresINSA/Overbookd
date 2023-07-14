@@ -26,7 +26,7 @@ import {
   faStatuses,
   faTypes,
 } from '../fa.model';
-import { CollaboratorWithIdRepresentation } from '../../collaborator/collaborator.model';
+import { CollaboratorWithId } from '../../collaborator/collaborator.model';
 import { CollaboratorResponseDto } from '../../collaborator/dto/collaboratorResponse.dto';
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
@@ -117,9 +117,9 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: false,
     description: 'The collaborator of the fa',
-    type: CollaboratorWithIdRepresentation,
+    type: CollaboratorResponseDto,
   })
-  collaborator?: CollaboratorResponseDto;
+  collaborator?: CollaboratorWithId;
 
   @ApiProperty({
     required: true,
