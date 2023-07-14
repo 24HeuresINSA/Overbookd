@@ -193,29 +193,10 @@ export class FaService {
   }
 
   async removeCollaborator(id: number): Promise<void> {
-    const fa = await this.prisma.fa.findFirst({
-      where: { id },
-      select: { collaboratorId: true },
-    });
-    const collaboratorId = fa.collaboratorId;
-    if (!collaboratorId) {
-      throw new NotFoundException(`fa with id ${id} has no collaborator`);
-    }
-
-    const faCount = await this.prisma.fa.count({
-      where: { collaboratorId },
-    });
-
     await this.prisma.fa.update({
       where: { id },
       data: { collaborator: { disconnect: true } },
     });
-
-    if (faCount === 0) {
-      await this.prisma.collaborator.delete({
-        where: { id: collaboratorId },
-      });
-    }
   }
 
   private buildFindCondition({ isDeleted, status }: SearchFa) {
