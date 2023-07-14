@@ -22,7 +22,7 @@ export class FaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly statsService: StatsService,
-  ) {}
+  ) { }
 
   async findAll(search: SearchFa): Promise<LiteFaResponse[]> {
     const where = this.buildFindCondition(search);
@@ -204,7 +204,7 @@ export class FaService {
     return { isDeleted, ...statusCondition };
   }
 
-  async checkFaExistence(id: number): Promise<void> {
+  private async checkFaExistence(id: number): Promise<void> {
     const fa = await this.prisma.fa.findUnique({
       where: { id },
     });
