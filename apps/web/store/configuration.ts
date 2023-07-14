@@ -6,7 +6,7 @@ import { Configuration } from "~/utils/models/configuration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
-const state = () => ({
+export const state = () => ({
   configurations: [] as Configuration[],
 });
 
