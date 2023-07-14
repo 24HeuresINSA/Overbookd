@@ -98,7 +98,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="users"
+        :items="consummers"
         style="width: 100%"
         disable-pagination
         hide-default-footer
@@ -160,9 +160,7 @@
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import SgConfigForm from "~/components/organisms/user/personnalAccount/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
-import { RepoFactory } from "~/repositories/repoFactory";
 import transactionRepo from "../repositories/transactionRepo";
-const { safeCall } = require("../utils/api/calls");
 
 export default {
   name: "SG",
@@ -209,6 +207,18 @@ export default {
   }),
 
   computed: {
+    consummers() {
+      return this.$accessor.user.personalAccountConsumers.map(
+        ({ firstname, lastname, nickname, id, balance }) => ({
+          firstname,
+          lastname,
+          nickname,
+          id,
+          balance,
+          newConsumption: 0,
+        })
+      );
+    },
     totalConsumptions() {
       let totalConsumptions = 0;
       this.users.forEach((user) => {
@@ -300,17 +310,9 @@ export default {
   async mounted() {
     if (this.hasPermission("manage-cp")) {
       await this.$accessor.configuration.fetch("sg");
+      await this.$accessor.user.fetchPersonnalAccountConsummers();
+      this.users = this.consummers;
       this.ready = true;
-      await safeCall(this.$store, RepoFactory.userRepo.getAllUsers(this)).then(
-        (res) => {
-          this.users = res.data.filter((user) => this.isUserWithCP(user));
-        }
-      );
-      this.users.forEach((user) => {
-        if (user.balance) {
-          this.totalCPBalance += +user.balance;
-        }
-      });
     } else {
       await this.$router.push({
         path: "/",
@@ -321,9 +323,6 @@ export default {
   methods: {
     hasPermission(permission) {
       return this.$accessor.user.hasPermission(permission);
-    },
-    isUserWithCP(user) {
-      return user.permissions.includes("cp");
     },
     isFloat(number) {
       return this.regex.float.test(number);

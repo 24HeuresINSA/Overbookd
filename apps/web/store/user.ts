@@ -4,6 +4,7 @@ import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
 import {
+  CompleteUser,
   CompleteUserWithPermissions,
   MyUserInformation,
   User,
@@ -28,6 +29,7 @@ export const state = () => ({
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
+  personalAccountConsumers: [] as CompleteUser[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -59,16 +61,8 @@ export const mutations = mutationTree(state, {
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
   },
-  SET_USERNAMES(state: UserState, data: UserV1[]) {
-    data.sort(
-      ({ username: username1 }: UserV1, { username: username2 }: UserV1) => {
-        if (username1 && username2) {
-          return username1 > username2 ? 1 : -1;
-        }
-        return 0;
-      }
-    );
-    state.usernames = data;
+  SET_PERSONNAL_ACCOUNT_CONSUMMERS(state: UserState, data: CompleteUser[]) {
+    state.personalAccountConsumers = data;
   },
   UPDATE_USER(state: UserState, data: CompleteUserWithPermissions) {
     const index = state.users.findIndex((user) => user.id === data.id);
@@ -162,11 +156,15 @@ export const actions = actionTree(
         commit("REMOVE_MY_FRIEND", friend);
       }
     },
-    async fetchUsernamesWithCP({ commit }) {
-      const res = await safeCall(this, UserRepo.getAllUsernamesWithCP(this));
-      if (res) {
-        commit("SET_USERNAMES", res.data);
-      }
+    async fetchPersonnalAccountConsummers({ commit }) {
+      const res = await safeCall(
+        this,
+        UserRepo.getAllPersonnalAccountConsummers(this)
+      );
+      if (!res) return;
+
+      const consummers = res.data.map(castUserWithDate);
+      commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
     async createUser(_, user: UserCreation): Promise<any | undefined> {
       const res = await safeCall(this, UserRepo.createUser(this, user), {

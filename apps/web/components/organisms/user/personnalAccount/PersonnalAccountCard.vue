@@ -89,7 +89,6 @@ export default Vue.extend({
   },
   methods: {
     async openDialog(): Promise<any> {
-      await this.$accessor.user.fetchUsernamesWithCP();
       this.$store.dispatch("dialog/openDialog", "transfer");
     },
 

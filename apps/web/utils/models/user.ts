@@ -70,17 +70,12 @@ export interface CompleteUser extends User {
   email: string;
   birthdate: Date;
   phone: string;
-  department?: Department;
   comment?: string;
   hasPayedContributions: boolean;
-  year?: Year;
   profilePicture?: string;
   profilePictureBlob?: string;
   charisma: number;
   balance: number;
-  createdAt: Date;
-  updatedAt: Date;
-  isDeleted: boolean;
   team: string[];
 
   // This is not in the API response, but is used in the frontend
@@ -123,8 +118,6 @@ export function castToUserModification(
     email: user.email,
     birthdate: new Date(user.birthdate),
     phone: user.phone,
-    department: user.department,
-    year: user.year || undefined,
     comment: user.comment || undefined,
     hasPayedContributions: user.hasPayedContributions || false,
     profilePicture: user.profilePicture || undefined,
@@ -138,8 +131,6 @@ export function castUserWithDate(
   return {
     ...user,
     birthdate: new Date(user.birthdate),
-    createdAt: new Date(user.createdAt),
-    updatedAt: new Date(user.updatedAt),
   };
 }
 
@@ -153,8 +144,6 @@ export function castUserWithPermissionsWithDate(
   return {
     ...user,
     birthdate: new Date(user.birthdate),
-    createdAt: new Date(user.createdAt),
-    updatedAt: new Date(user.updatedAt),
   };
 }
 
