@@ -1,28 +1,6 @@
 <template>
   <div class="main fa">
-    <div class="sidebar">
-      <h1>Fiche Activité n°{{ faId }}</h1>
-      <h2>{{ faName }}</h2>
-
-      <div id="status">
-        <span id="dot" :class="faValidationStatus"></span>
-        <h3>
-          {{
-            mFA.status ? statusTrad.get(mFA.status.toUpperCase()) : "Brouillon"
-          }}
-        </h3>
-      </div>
-
-      <div class="icons">
-        <div v-for="validator of validators" :key="validator.code" class="icon">
-          <v-icon :class="validatorValidationStatus(validator)" size="26">
-            {{ validator.icon }}
-          </v-icon>
-          <span class="icon-detail">{{ validator.name }}</span>
-        </div>
-      </div>
-      <FestivalEventSummary class="summary" />
-    </div>
+    <FestivalEventSidebar festival-event="FA" />
     <v-container class="container fa">
       <FAGeneralCard id="general" />
       <FADetailCard id="detail" />
@@ -68,7 +46,6 @@ import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistic/Lo
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
 import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
-import FestivalEventSummary from "~/components/organisms/festivalEvent/FestivalEventSummary.vue";
 import ChildFTCard from "~/components/organisms/festivalEvent/fa/ChildFTCard.vue";
 import CollaboratorCard from "~/components/organisms/festivalEvent/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/festivalEvent/fa/ElecLogisticCard.vue";
@@ -79,13 +56,8 @@ import FATimeWindowCard from "~/components/organisms/festivalEvent/fa/FATimeWind
 import SecurityCard from "~/components/organisms/festivalEvent/fa/SecurityCard.vue";
 import SignaCard from "~/components/organisms/festivalEvent/fa/SignaCard.vue";
 import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
-import {
-  getFAValidationStatus,
-  isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+import FestivalEventSidebar from "~/components/organisms/festivalEvent/FestivalEventSidebar.vue";
 import { Fa } from "~/utils/models/fa";
-import { Team } from "~/utils/models/team";
-import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
   name: "Fa",
@@ -99,7 +71,7 @@ export default Vue.extend({
     FAGeneralCard,
     FADetailCard,
     SecurityCard,
-    FestivalEventSummary,
+    FestivalEventSidebar,
     SnackNotificationContainer,
     LogisticTimeWindow,
     ChildFTCard,
@@ -107,36 +79,12 @@ export default Vue.extend({
     FeedbackCard,
   },
 
-  data: () => ({
-    statusTrad: new Map<string, string>([
-      ["DRAFT", "Brouillon"],
-      ["SUBMITTED", "Soumise à validation"],
-      ["REFUSED", "Refusée"],
-      ["VALIDATED", "Validée"],
-    ]),
-  }),
-
   computed: {
-    FA(): any {
-      return this.$accessor.fa;
-    },
     mFA(): Fa {
-      return this.FA.mFA;
-    },
-    me(): MyUserInformation {
-      return this.$accessor.user.me;
+      return this.$accessor.fa.mFA;
     },
     faId(): number {
       return +this.$route.params.fa;
-    },
-    faName(): string {
-      return this.FA.mFA.name;
-    },
-    validators(): Team[] {
-      return this.$accessor.team.faValidators;
-    },
-    faValidationStatus(): string {
-      return this.mFA.status.toLowerCase();
     },
   },
 
@@ -154,19 +102,6 @@ export default Vue.extend({
     document.title = title;
 
     this.$accessor.signa.getAllSignaLocations();
-
-    if (this.validators.length === 0) {
-      await this.$accessor.team.fetchFaValidators();
-    }
-  },
-  methods: {
-    validatorValidationStatus(validator: Team) {
-      return getFAValidationStatus(this.mFA, validator.code).toLowerCase();
-    },
-
-    isAnimationValidatedBy(validator: Team) {
-      return isAnimationValidatedBy(this.mFA, validator.code);
-    },
   },
 });
 </script>
