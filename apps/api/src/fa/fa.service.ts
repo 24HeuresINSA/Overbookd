@@ -6,12 +6,12 @@ import { StatsPayload, StatsService } from '../common/services/stats.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFaDto } from './dto/createFa.dto';
 import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
+import { COMPLETE_FA_SELECT, FaIdResponse, LITE_FA_SELECT } from './faTypes';
 import {
-  COMPLETE_FA_SELECT,
-  DatabaseCompleteFaResponse,
-  FaIdResponse,
-  LITE_FA_SELECT,
-} from './faTypes';
+  CollaboratorWithId,
+  CollaboratorWithOptionalIdRepresentation,
+} from '../collaborator/collaborator.model';
+import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -39,7 +39,7 @@ export class FaService {
       select: COMPLETE_FA_SELECT,
     });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    return this.formatFaWithCollaboratorResponse(fa);
+    return fa;
   }
 
   async getFaStats(): Promise<StatsPayload[]> {
@@ -63,20 +63,18 @@ export class FaService {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-    const updatedFa = await this.prisma.fa.update({
+    return this.prisma.fa.update({
       where: { id },
       data: updatefaDto,
       select: COMPLETE_FA_SELECT,
     });
-    return this.formatFaWithCollaboratorResponse(updatedFa);
   }
 
   async create(faCreation: CreateFaDto): Promise<CompleteFaResponse> {
-    const fa = await this.prisma.fa.create({
+    return this.prisma.fa.create({
       data: faCreation,
       select: COMPLETE_FA_SELECT,
     });
-    return this.formatFaWithCollaboratorResponse(fa);
   }
 
   async remove(id: number) {
@@ -175,6 +173,32 @@ export class FaService {
     });
   }
 
+  addCollaborator(
+    id: number,
+    collaborator: CollaboratorWithOptionalIdRepresentation,
+  ): Promise<CollaboratorWithId> {
+    const { id: collaboratorId, ...collaboratorData } = collaborator;
+
+    const collaboratorPayload = {
+      ...collaboratorData,
+      fas: { connect: { id } },
+    };
+
+    return this.prisma.collaborator.upsert({
+      where: { id: collaboratorId ?? -1 },
+      create: collaboratorPayload,
+      update: collaboratorPayload,
+      select: COLLABORATOR_WITH_ID_SELECTION,
+    });
+  }
+
+  async removeCollaborator(id: number): Promise<void> {
+    await this.prisma.fa.update({
+      where: { id },
+      data: { collaborator: { disconnect: true } },
+    });
+  }
+
   private buildFindCondition({ isDeleted, status }: SearchFa) {
     const statusCondition = status ? { status } : {};
     return { isDeleted, ...statusCondition };
@@ -194,13 +218,5 @@ export class FaService {
         teamId,
       },
     });
-  }
-
-  private formatFaWithCollaboratorResponse(
-    databaseFa: DatabaseCompleteFaResponse,
-  ): CompleteFaResponse {
-    const { collaborators, ...fa } = databaseFa;
-    const collaborator = collaborators.at(0).collaborator;
-    return { ...fa, collaborator };
   }
 }

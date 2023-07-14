@@ -53,6 +53,9 @@ import { ValidationDto } from './dto/validation.dto';
 import { CompleteFaResponse, LiteFaResponse } from './fa.model';
 import { FaService } from './fa.service';
 import { FaIdResponse } from './faTypes';
+import { CollaboratorResponseDto } from '../collaborator/dto/collaboratorResponse.dto';
+import { CollaboratorFormRequestDto } from '../collaborator/dto/collaboratorFormRequest.dto';
+import { CollaboratorWithId } from '../collaborator/collaborator.model';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -266,6 +269,50 @@ export class FaController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<FaIdResponse | null> {
     return this.faService.findNext(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Post(':id/collaborator')
+  @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Add a collaborator to a fa',
+    type: CollaboratorResponseDto,
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    description: 'Collaborator to add',
+    type: CollaboratorFormRequestDto,
+  })
+  addCollaborator(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() collaborator: CollaboratorFormRequestDto,
+  ): Promise<CollaboratorWithId> {
+    return this.faService.addCollaborator(id, collaborator);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission('hard')
+  @Delete(':id/collaborator')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'Remove a collaborator from a fa',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  removeCollaborator(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.faService.removeCollaborator(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

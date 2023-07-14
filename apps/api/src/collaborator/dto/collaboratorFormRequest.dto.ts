@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
-  IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
-  IsNumber,
-  ValidateNested,
-  IsDefined,
   IsPhoneNumber,
   IsEmail,
+  IsDefined,
+  IsNumber,
 } from 'class-validator';
+import { CollaboratorWithOptionalIdRepresentation } from '../collaborator.model';
 
-class Collaborator {
+export class CollaboratorFormRequestDto
+  implements CollaboratorWithOptionalIdRepresentation
+{
   @ApiProperty({
-    required: false,
-    description: 'The id of the collaborator',
+    required: true,
+    description: 'The collaborator id',
   })
   @IsNumber()
   @IsOptional()
@@ -23,43 +23,41 @@ class Collaborator {
 
   @ApiProperty({
     required: true,
-    description: 'The firstname of the collaborator',
+    description: 'The collaborator firstname',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsDefined()
   @MaxLength(30)
   firstname: string;
 
   @ApiProperty({
     required: true,
-    description: 'The lastname of the collaborator',
+    description: 'The collaborator lastname',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsDefined()
   @MaxLength(30)
   lastname: string;
 
   @ApiProperty({
     required: true,
-    description: 'The phone number of the collaborator',
+    description: 'The collaborator phone number',
   })
   @IsDefined()
-  @IsNotEmpty()
   @IsPhoneNumber('FR')
   phone: string;
 
   @ApiProperty({
     required: false,
-    description: 'The email of the collaborator',
+    description: 'The collaborator email',
   })
-  @IsDefined()
   @IsEmail()
-  @IsNotEmpty()
+  @IsOptional()
   email?: string;
 
   @ApiProperty({
     required: false,
-    description: 'The company of the collaborator',
+    description: 'The collaborator company',
   })
   @IsString()
   @IsOptional()
@@ -73,14 +71,4 @@ class Collaborator {
   @IsString()
   @IsOptional()
   comment?: string;
-}
-
-export class CreateCollaboratorDto {
-  @ApiProperty({
-    required: true,
-    description: 'The collaborator',
-  })
-  @Type(() => Collaborator)
-  @ValidateNested()
-  collaborator: Collaborator;
 }

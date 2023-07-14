@@ -1,5 +1,5 @@
+import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
 import { TEAM_SELECT } from '../team/team.service';
-import { CompleteFaResponse, FaCollaborator } from './fa.model';
 
 export type ExportSignaNeed = {
   faId: number;
@@ -13,13 +13,6 @@ export type ExportSignaNeed = {
 export type FaIdResponse = {
   id: number;
 };
-
-export interface DatabaseCompleteFaResponse
-  extends Omit<CompleteFaResponse, 'collaborator'> {
-  collaborators: {
-    collaborator: FaCollaborator;
-  }[];
-}
 
 const USER_IN_CHARGE_SELECT = {
   select: {
@@ -43,19 +36,8 @@ export const COMPLETE_FA_SELECT = {
   isPassRequired: true,
   numberOfPass: true,
   waterNeed: true,
-  collaborators: {
-    select: {
-      collaborator: {
-        select: {
-          firstname: true,
-          lastname: true,
-          phone: true,
-          email: true,
-          company: true,
-          comment: true,
-        },
-      },
-    },
+  collaborator: {
+    select: COLLABORATOR_WITH_ID_SELECTION,
   },
   faValidation: {
     select: {

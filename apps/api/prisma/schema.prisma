@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  binaryTargets   = ["native", "linux-musl", "darwin-arm64"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl", "darwin-arm64"]
 }
 
 datasource db {
@@ -208,7 +208,6 @@ model Fa {
   isDeleted              Boolean                 @default(false) @map("is_deleted")
   faValidation           FaValidation[]
   faRefuse               FaRefuse[]
-  collaborators          FaCollaborator[]
   electricityNeeds       FaElectricityNeed[]
   signaNeeds             FaSignaNeed[]
   feedbacks              FaFeedback[]
@@ -216,6 +215,8 @@ model Fa {
   gearRequests           GearRequest[]           @relation("gear-request-animation")
   faSitePublishAnimation FaSitePublishAnimation?
   fts                    Ft[]
+  collaborator           Collaborator?           @relation(fields: [collaboratorId], references: [id])
+  collaboratorId         Int?
 
   @@map("fa")
 }
@@ -248,17 +249,6 @@ model FaValidation {
   @@map("fa_validation")
 }
 
-model FaCollaborator {
-  fa             Fa           @relation(fields: [faId], references: [id])
-  faId           Int          @map("fa_id")
-  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id], onDelete: Cascade)
-  collaboratorId Int          @map("collaborator_id")
-  isDeleted      Boolean      @default(false) @map("is_deleted")
-
-  @@id([faId, collaboratorId])
-  @@map("fa_collaborator")
-}
-
 model FaRefuse {
   fa        Fa       @relation(fields: [faId], references: [id])
   faId      Int      @map("fa_id")
@@ -283,14 +273,14 @@ model SignaLocation {
 }
 
 model Collaborator {
-  id              Int              @id @default(autoincrement())
-  firstname       String           @db.VarChar(30)
-  lastname        String           @db.VarChar(30)
-  phone           String           @db.VarChar(30)
-  email           String?          @db.VarChar(60)
-  company         String?          @db.VarChar(30)
-  comment         String?          @db.Text
-  faCollaborators FaCollaborator[]
+  id        Int     @id @default(autoincrement())
+  firstname String  @db.VarChar(30)
+  lastname  String  @db.VarChar(30)
+  phone     String  @db.VarChar(30)
+  email     String? @db.VarChar(60)
+  company   String? @db.VarChar(30)
+  comment   String? @db.Text
+  fas       Fa[]
 
   @@unique([firstname, lastname])
   @@map("collaborator")
@@ -429,8 +419,8 @@ model CatalogGear {
 }
 
 model Configuration {
-  key       String  @id @unique
-  value     Json
+  key   String @id @unique
+  value Json
 
   @@map("configuration")
 }
