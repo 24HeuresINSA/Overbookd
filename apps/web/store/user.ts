@@ -30,6 +30,8 @@ export const state = () => ({
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
   personalAccountConsumers: [] as CompleteUser[],
+  volunteers: [] as CompleteUser[],
+  candidates: [] as CompleteUser[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -82,6 +84,12 @@ export const mutations = mutationTree(state, {
   REMOVE_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
   },
+  SET_VOLUNTEERS(state: UserState, volunteers: CompleteUser[]) {
+    state.volunteers = volunteers;
+  },
+  SET_CANDIDATES(state: UserState, candidates: CompleteUser[]) {
+    state.candidates = candidates;
+  },
 });
 
 export const getters = getterTree(state, {
@@ -122,6 +130,18 @@ export const actions = actionTree(
       if (res) {
         commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
       }
+    },
+    async fetchVolunteers({ commit }) {
+      const res = await safeCall(this, UserRepo.getVolunteers(this));
+      if (!res) return;
+      const volunteers = res.data.map(castUserWithDate);
+      commit("SET_VOLUNTEERS", volunteers);
+    },
+    async fetchCandidates({ commit }) {
+      const res = await safeCall(this, UserRepo.getCandidates(this));
+      if (!res) return;
+      const candidates = res.data.map(castUserWithDate);
+      commit("SET_CANDIDATES", candidates);
     },
     async fetchFriends({ commit }) {
       const res = await safeCall(this, UserRepo.getFriends(this));

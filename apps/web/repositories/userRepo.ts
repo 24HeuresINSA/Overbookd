@@ -35,6 +35,16 @@ export default {
       `${resource}`
     );
   },
+  getVolunteers(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+      `${resource}/volunteers`
+    );
+  },
+  getCandidates(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+      `${resource}/candidates`
+    );
+  },
   getAllPersonnalAccountConsummers(context: Context) {
     return context.$axios.get<HttpStringified<CompleteUser[]>>(
       `${resource}/personnal-account-consummers`

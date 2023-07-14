@@ -213,6 +213,48 @@ export class UserService {
     return this.formatToPersonnalData(users);
   }
 
+  async getCandidates(): Promise<UserPersonnalData[]> {
+    const users = await this.prisma.user.findMany({
+      orderBy: { id: 'asc' },
+      where: {
+        isDeleted: false,
+        teams: {
+          none: {
+            team: {
+              permissions: { some: { permissionName: 'validated-user' } },
+            },
+          },
+        },
+      },
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAMS,
+      },
+    });
+    return this.formatToPersonnalData(users);
+  }
+
+  async getVolunteers(): Promise<UserPersonnalData[]> {
+    const users = await this.prisma.user.findMany({
+      orderBy: { id: 'asc' },
+      where: {
+        isDeleted: false,
+        teams: {
+          some: {
+            team: {
+              permissions: { some: { permissionName: 'validated-user' } },
+            },
+          },
+        },
+      },
+      select: {
+        ...SELECT_USER,
+        ...SELECT_USER_TEAMS,
+      },
+    });
+    return this.formatToPersonnalData(users);
+  }
+
   async getAllPersonnalAccountConsummers(): Promise<UserWithoutPassword[]> {
     const users = await this.prisma.user.findMany({
       where: {

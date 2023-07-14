@@ -141,9 +141,9 @@
                 {{ item.charisma || 0 }}
               </template>
 
-              <template #[`item.team`]="{ item }">
+              <template #[`item.teams`]="{ item }">
                 <v-container>
-                  <OverChips :roles="item.team"></OverChips>
+                  <OverChips :roles="item.teams"></OverChips>
                 </v-container>
               </template>
             </v-data-table>
@@ -199,7 +199,7 @@ export default {
       filteredUsers: [],
       headers: [
         { text: "Prénom Nom (Surnom)", value: "firstname" },
-        { text: "Team", value: "team" },
+        { text: "Equipes", value: "teams" },
         { text: "Charisme", value: "charisma", align: "end" },
         { text: "Action", value: "action", sortable: false },
       ],
@@ -217,7 +217,7 @@ export default {
       filters: {
         search: undefined,
         teams: [],
-        isValidated: undefined,
+        isValidated: true,
         hasPayedContributions: undefined,
       },
 
@@ -240,7 +240,9 @@ export default {
 
   computed: {
     users() {
-      return this.$accessor.user.users.filter(({ isDeleted }) => !isDeleted);
+      return this.filters.isValidated
+        ? this.$accessor.user.volunteers
+        : this.$accessor.user.candidates;
     },
     teams() {
       return this.$accessor.team.allTeams;
@@ -267,13 +269,13 @@ export default {
   },
 
   async mounted() {
-    await this.$accessor.user.fetchUsers();
+    await this.$accessor.user.fetchCandidates();
+    await this.$accessor.user.fetchVolunteers();
     if (!this.hasPermission("hard")) {
       return this.$router.push({
         path: "/",
       });
     }
-    this.filters.isValidated = true; // default set to true
 
     if (this.hasPermission("manage-cp")) {
       this.headers.splice(this.headers.length - 1, 0, {
@@ -286,19 +288,20 @@ export default {
 
   methods: {
     async initStore() {
-      await this.$accessor.user.fetchUser();
+      await this.$accessor.user.fetchCandidates();
+      await this.$accessor.user.fetchVolunteers();
       await this.$accessor.timeslot.fetchTimeslots();
       await this.$accessor.ft.fetchAll();
     },
     isCpUseful(item) {
       return (
-        (item.team?.includes("hard") &&
+        (item.teams?.includes("hard") &&
           !(
-            item.team?.includes("fen") ||
-            item.team?.includes("voiture") ||
-            item.team?.includes("camion")
+            item.teams?.includes("fen") ||
+            item.teams?.includes("voiture") ||
+            item.teams?.includes("camion")
           )) ||
-        item.team?.includes("vieux")
+        item.teams?.includes("vieux")
       );
     },
     getCP(item) {
@@ -429,16 +432,6 @@ export default {
         const fuse = new Fuse(mUsers, options);
 
         mUsers = fuse.search(this.filters.search).map((e) => e.item);
-        this.options.page = 1; // reset page
-      }
-
-      // filter by not validated
-      if (this.filters.isValidated !== undefined) {
-        mUsers = mUsers.filter(
-          (user) =>
-            this.$accessor.permission.isValidated(user) ===
-            this.filters.isValidated
-        );
         this.options.page = 1; // reset page
       }
 
