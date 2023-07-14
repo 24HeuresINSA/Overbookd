@@ -17,12 +17,10 @@ import {
 import { getPeriodDuration } from '../utils/duration';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
-import { UsernameDto } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 import {
   MyUserInformation,
-  Username,
   UserPasswordOnly,
   UserPersonnalData,
   UserWithTeamsAndPermissions,
@@ -215,7 +213,7 @@ export class UserService {
     return this.formatToPersonnalData(users);
   }
 
-  async getAllPersonnalAccountConsummers(): Promise<Username[]> {
+  async getAllPersonnalAccountConsummers(): Promise<UserWithoutPassword[]> {
     const users = await this.prisma.user.findMany({
       where: {
         teams: {
@@ -232,16 +230,13 @@ export class UserService {
           },
         },
       },
-      select: {
-        firstname: true,
-        lastname: true,
-        nickname: true,
-        id: true,
-      },
+      select: SELECT_USER,
     });
-    return users
-      .map(this.getUsername)
-      .sort((a, b) => (a.username > b.username ? 1 : -1));
+    return users.sort((userA, userB) =>
+      `${userA.firstname} ${userA.lastname}`.localeCompare(
+        `${userB.firstname} ${userB.lastname}`,
+      ),
+    );
   }
 
   async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
@@ -381,13 +376,6 @@ export class UserService {
       return stats;
     }, new Map<TaskCategory, VolunteerAssignmentStat>());
     return [...stats.values()];
-  }
-
-  getUsername(user: UserWithoutPassword): UsernameDto {
-    return {
-      id: user.id,
-      username: user.firstname + ' ' + user.lastname,
-    };
   }
 
   static getUserWithTeamAndPermission(

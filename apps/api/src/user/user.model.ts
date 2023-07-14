@@ -1,8 +1,3 @@
-export type Username = {
-  username: string;
-  id: number;
-};
-
 export type UserWithoutPassword = {
   firstname: string;
   lastname: string;

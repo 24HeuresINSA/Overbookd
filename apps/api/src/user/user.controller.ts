@@ -53,7 +53,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileUploadDto } from './dto/fileUpload.dto';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
-import { UsernameDto } from './dto/userName.dto';
 import { UserWithoutPasswordDto } from './dto/userWithoutPassword.dto';
 import {
   VolunteerAssignmentDto,
@@ -65,7 +64,6 @@ import {
   UserPersonnalData,
   UserWithTeamsAndPermissions,
   UserWithoutPassword,
-  Username,
 } from './user.model';
 import { UserService } from './user.service';
 import { UserPersonnalDataDto } from './dto/userPersonnalData.dto';
@@ -197,14 +195,14 @@ export class UserController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('cp')
   @ApiBearerAuth()
-  @Get('all/cp')
+  @Get('personnal-account-consummers')
   @ApiResponse({
     status: 200,
     description: 'Get all usernames with valid CP',
-    type: UsernameDto,
+    type: UserWithoutPasswordDto,
     isArray: true,
   })
-  async getUsernamesWithValidCP(): Promise<Username[]> {
+  async getUsernamesWithValidCP(): Promise<UserWithoutPassword[]> {
     return this.userService.getAllPersonnalAccountConsummers();
   }
 
