@@ -35,7 +35,7 @@ export class FriendService {
     return this.prisma.user.findMany({
       select: this.SELECT_FRIEND,
       where: {
-        team: {
+        teams: {
           none: {
             team: {
               code: { in: nonFriendableTeams },

@@ -82,20 +82,6 @@
                 </v-col>
                 <v-col md="4">
                   <v-text-field
-                    v-model="user.year"
-                    label="Année"
-                    :disabled="!hasEditingRole"
-                  ></v-text-field>
-                </v-col>
-                <v-col md="4">
-                  <v-text-field
-                    v-model="user.department"
-                    label="Département"
-                    :disabled="!hasEditingRole"
-                  ></v-text-field>
-                </v-col>
-                <v-col md="4">
-                  <v-text-field
                     v-model="user.charisma"
                     label="Charisme"
                     type="number"

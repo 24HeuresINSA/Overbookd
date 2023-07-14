@@ -35,9 +35,6 @@ export default {
       `${resource}`
     );
   },
-  getAllUsernames(context: Context) {
-    return context.$axios.get(`${resource}/all`);
-  },
   getAllUsernamesWithCP(context: Context) {
     return context.$axios.get(`${resource}/all/cp`);
   },

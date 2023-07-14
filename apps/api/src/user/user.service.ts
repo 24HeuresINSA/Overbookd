@@ -17,13 +17,15 @@ import {
 import { getPeriodDuration } from '../utils/duration';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
-import { Username } from './dto/userName.dto';
+import { UsernameDto } from './dto/userName.dto';
 import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
 import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
 import {
   MyUserInformation,
+  Username,
   UserPasswordOnly,
-  UserWithTeamAndPermission,
+  UserPersonnalData,
+  UserWithTeamsAndPermissions,
   UserWithoutPassword,
 } from './user.model';
 
@@ -35,22 +37,15 @@ export const SELECT_USER = {
   id: true,
   birthdate: true,
   phone: true,
-  department: true,
   comment: true,
-  resetPasswordToken: true,
-  resetPasswordExpires: true,
-  hasPayedContributions: true,
-  year: true,
   profilePicture: true,
   charisma: true,
   balance: true,
-  createdAt: true,
-  updatedAt: true,
-  isDeleted: true,
+  hasPayedContributions: true,
 };
 
 export const SELECT_USER_TEAMS = {
-  team: {
+  teams: {
     select: {
       team: {
         select: {
@@ -62,7 +57,7 @@ export const SELECT_USER_TEAMS = {
 };
 
 export const SELECT_USER_TEAMS_AND_PERMISSIONS = {
-  team: {
+  teams: {
     select: {
       team: {
         select: {
@@ -146,7 +141,7 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
 };
 
 type DatabaseMyUserInformation = UserWithoutPassword & {
-  team: TeamWithNestedPermissions[];
+  teams: TeamWithNestedPermissions[];
   _count: { assignments: number };
 };
 
@@ -154,23 +149,34 @@ export type VolunteerTask = Period & {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timeSpanId?: number;
 };
+
+type DatabaseUserWithTeams = UserWithoutPassword & {
+  teams: {
+    team: {
+      code: string;
+    };
+  }[];
+};
+
+type DatabaseUserWithTeamsAndPermissions = UserWithoutPassword & {
+  teams: TeamWithNestedPermissions[];
+};
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService, private mail: MailService) {}
   private logger = new Logger('UserService');
 
-  async user(
-    findCondition: Prisma.UserWhereUniqueInput & Prisma.UserWhereInput,
-  ): Promise<MyUserInformation | null> {
+  async getById(id: number): Promise<MyUserInformation | null> {
     const user = await this.prisma.user.findUnique({
-      where: findCondition,
+      where: { id: id },
       select: {
         ...SELECT_USER,
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
         ...SELECT_USER_TASKS_COUNT,
       },
     });
-    return this.getMyUserInformation(user);
+    return this.formatToMyInformation(user);
   }
 
   async getUserPassword(
@@ -185,7 +191,7 @@ export class UserService {
   async updateUserPersonnalData(
     id: number,
     user: Partial<UserModificationDto>,
-  ): Promise<UserWithTeamAndPermission | null> {
+  ): Promise<UserWithTeamsAndPermissions | null> {
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: user,
@@ -197,27 +203,45 @@ export class UserService {
     return UserService.getUserWithTeamAndPermission(updatedUser);
   }
 
-  async users(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.UserWhereUniqueInput;
-    where?: Prisma.UserWhereInput;
-    select?: Prisma.UserSelect;
-  }): Promise<UserWithTeamAndPermission[]> {
-    const { skip, take, cursor, where } = params;
-    //get all users with their teams
+  async getAll(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
-      skip,
-      take,
-      cursor,
-      where,
       orderBy: { id: 'asc' },
+      where: { isDeleted: false },
       select: {
         ...SELECT_USER,
-        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
+        ...SELECT_USER_TEAMS,
       },
     });
-    return users.map((user) => UserService.getUserWithTeamAndPermission(user));
+    return this.formatToPersonnalData(users);
+  }
+
+  async getAllPersonnalAccountConsummers(): Promise<Username[]> {
+    const users = await this.prisma.user.findMany({
+      where: {
+        teams: {
+          some: {
+            team: {
+              permissions: {
+                some: {
+                  permission: {
+                    name: 'cp',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      select: {
+        firstname: true,
+        lastname: true,
+        nickname: true,
+        id: true,
+      },
+    });
+    return users
+      .map(this.getUsername)
+      .sort((a, b) => (a.username > b.username ? 1 : -1));
   }
 
   async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
@@ -300,7 +324,7 @@ export class UserService {
     targetUserId: number,
     userData: UserModificationDto,
     author: JwtUtil,
-  ): Promise<UserWithTeamAndPermission> {
+  ): Promise<UserWithTeamsAndPermissions> {
     if (!this.canUpdateUser(author, targetUserId)) {
       throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
     }
@@ -359,7 +383,7 @@ export class UserService {
     return [...stats.values()];
   }
 
-  getUsername(user: UserWithoutPassword): Username {
+  getUsername(user: UserWithoutPassword): UsernameDto {
     return {
       id: user.id,
       username: user.firstname + ' ' + user.lastname,
@@ -367,22 +391,29 @@ export class UserService {
   }
 
   static getUserWithTeamAndPermission(
-    user: UserWithoutPassword & {
-      team: TeamWithNestedPermissions[];
-    },
-  ): UserWithTeamAndPermission {
-    const teams = user.team.map((t) => t.team.code);
-    const permissions = retrievePermissions(user.team);
+    user: DatabaseUserWithTeamsAndPermissions,
+  ): UserWithTeamsAndPermissions {
+    const teams = user.teams.map((t) => t.team.code);
+    const permissions = retrievePermissions(user.teams);
     return user
       ? {
           ...user,
-          team: teams,
+          teams,
           permissions: [...permissions],
         }
       : undefined;
   }
 
-  private getMyUserInformation(
+  private formatToPersonnalData(
+    users: DatabaseUserWithTeams[],
+  ): UserPersonnalData[] {
+    return users.map(({ teams, ...user }) => ({
+      ...user,
+      teams: teams.map(({ team: { code } }) => code),
+    }));
+  }
+
+  private formatToMyInformation(
     user: DatabaseMyUserInformation,
   ): MyUserInformation {
     const { _count, ...userWithoutCount } = user;

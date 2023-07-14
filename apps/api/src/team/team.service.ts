@@ -121,7 +121,7 @@ export class TeamService {
   }
 
   private async checkUserExistence(id: number): Promise<void> {
-    const user = await this.userService.user({ id });
+    const user = await this.userService.getById(id);
     if (!user.id) {
       throw new NotFoundException('User not found');
     }

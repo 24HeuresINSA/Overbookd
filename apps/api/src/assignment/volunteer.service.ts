@@ -227,7 +227,7 @@ export class VolunteerService {
       lastname: volunteer.lastname,
       comment: volunteer.comment,
       charisma: volunteer.charisma,
-      teams: volunteer.team.map((t) => t.team.code),
+      teams: volunteer.teams.map((t) => t.team.code),
       assignmentDuration,
     };
   }

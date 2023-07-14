@@ -11,7 +11,10 @@ import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { retrievePermissions } from '../team/utils/permissions';
 import { UserPasswordOnly } from '../user/user.model';
-import { UserService } from '../user/user.service';
+import {
+  SELECT_USER_TEAMS_AND_PERMISSIONS,
+  UserService,
+} from '../user/user.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { JwtPayload } from './entities/JwtUtil.entity';
 
@@ -39,24 +42,11 @@ export class AuthService {
       where: { email },
       select: {
         id: true,
-        team: {
-          select: {
-            team: {
-              select: {
-                code: true,
-                permissions: {
-                  select: {
-                    permissionName: true,
-                  },
-                },
-              },
-            },
-          },
-        },
+        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    const teams = userWithPayload.team.map((t) => t.team.code);
-    const permissions = retrievePermissions(userWithPayload.team);
+    const teams = userWithPayload.teams.map((t) => t.team.code);
+    const permissions = retrievePermissions(userWithPayload.teams);
     return {
       id: userWithPayload.id,
       userId: userWithPayload.id,
