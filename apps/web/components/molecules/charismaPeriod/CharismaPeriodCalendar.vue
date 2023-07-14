@@ -44,13 +44,14 @@ export default Vue.extend({
       }));
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate")?.start);
+      return this.$accessor.configuration.eventStartDate;
     },
     maxCharisma(): number {
       return Math.max(...this.charismaPeriods.map((a) => a.charisma));
     },
   },
-  mounted() {
+  async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
     this.calendarMarker = this.manifDate;
   },
   methods: {

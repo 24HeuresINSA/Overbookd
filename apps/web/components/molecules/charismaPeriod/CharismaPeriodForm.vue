@@ -82,7 +82,7 @@ export default Vue.extend({
       return this.charismaPeriod !== null;
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate")?.start);
+      return this.$accessor.configuration.eventStartDate;
     },
     startOrManifDate(): Date {
       return this.start ?? this.manifDate;
@@ -128,6 +128,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
     this.updateLocalVariable();
   },
   methods: {

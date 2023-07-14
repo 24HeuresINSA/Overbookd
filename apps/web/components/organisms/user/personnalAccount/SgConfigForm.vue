@@ -77,6 +77,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    await this.$accessor.configuration.fetch("sg");
     this.tempSgConfig = { ...this.sgConfig };
   },
   methods: {

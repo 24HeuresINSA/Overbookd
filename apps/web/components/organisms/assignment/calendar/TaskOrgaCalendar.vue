@@ -46,7 +46,7 @@ export default Vue.extend({
       return `[${this.selectedFt.id}] ${this.selectedFt.name}`;
     },
     manifDate(): Date {
-      return new Date(this.$accessor.configuration.get("eventDate")?.start);
+      return this.$accessor.configuration.eventStartDate;
     },
     timeSpans(): FtTimeSpanEvent[] {
       return this.$accessor.assignment.selectedFtTimeSpans.flatMap((timeSpan) =>
@@ -60,7 +60,8 @@ export default Vue.extend({
       return this.timeSpans.at(0)?.start.getHours() ?? null;
     },
   },
-  mounted() {
+  async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
     this.calendarMarker = this.manifDate;
   },
   methods: {

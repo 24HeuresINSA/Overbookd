@@ -14,6 +14,11 @@ export const getters = getterTree(state, {
   get: (state) => (key: string) => {
     return state.configurations.find((c) => c.key === key)?.value;
   },
+  eventStartDate(_, getters): Date {
+    const eventStartString = getters.get("eventDate")?.start;
+    if (!eventStartString) return new Date();
+    return new Date(eventStartString);
+  },
 });
 
 export const mutations = mutationTree(state, {

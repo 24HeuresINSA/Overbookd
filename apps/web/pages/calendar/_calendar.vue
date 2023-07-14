@@ -67,9 +67,7 @@ export default Vue.extend({
   components: { OverCalendar, TeamChip, AssignmentUserStats },
   data: function () {
     return {
-      calendarCentralDate: new Date(
-        this.$accessor.configuration.get("eventDate")?.start
-      ),
+      calendarCentralDate: new Date(),
     };
   },
   computed: {
@@ -102,6 +100,9 @@ export default Vue.extend({
     shouldShowStats(): boolean {
       return this.$accessor.user.hasPermission("can-affect");
     },
+    manifDate(): Date {
+      return this.$accessor.configuration.eventStartDate;
+    },
   },
   async created() {
     const userId = +this.$route.params.calendar;
@@ -119,6 +120,9 @@ export default Vue.extend({
     if (this.shouldShowStats) {
       await this.$accessor.user.getVolunteerAssignmentStats(userId);
     }
+
+    await this.$accessor.configuration.fetch("eventDate");
+    this.calendarCentralDate = this.manifDate;
     document.title = formatUsername(this.user);
   },
   methods: {
