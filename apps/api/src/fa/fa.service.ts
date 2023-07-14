@@ -22,7 +22,7 @@ export class FaService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly statsService: StatsService,
-  ) { }
+  ) {}
 
   async findAll(search: SearchFa): Promise<LiteFaResponse[]> {
     const where = this.buildFindCondition(search);
