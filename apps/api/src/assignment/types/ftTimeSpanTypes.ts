@@ -83,7 +83,7 @@ export type DataBaseAssignee = {
 };
 
 export type WithTeams = {
-  team: {
+  teams: {
     team: {
       code: string;
     };

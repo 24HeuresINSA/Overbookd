@@ -575,10 +575,10 @@ function convertToAssignee({
   lastname,
   firstname,
   phone,
-  team,
+  teams,
 }: DataBaseAssignee & WithTeams): Assignee {
-  const teams = team.map(({ team }) => team.code);
-  return { id, lastname, firstname, phone, teams };
+  const teamCodes = teams.map(({ team }) => team.code);
+  return { id, lastname, firstname, phone, teams: teamCodes };
 }
 
 function convertToTimeSpanAssignee({

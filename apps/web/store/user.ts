@@ -162,13 +162,6 @@ export const actions = actionTree(
         commit("REMOVE_MY_FRIEND", friend);
       }
     },
-
-    async fetchUsernames({ commit }) {
-      const res = await safeCall(this, UserRepo.getAllUsernames(this));
-      if (res) {
-        commit("SET_USERNAMES", res.data);
-      }
-    },
     async fetchUsernamesWithCP({ commit }) {
       const res = await safeCall(this, UserRepo.getAllUsernamesWithCP(this));
       if (res) {
@@ -181,15 +174,6 @@ export const actions = actionTree(
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
       });
       return res;
-    },
-    async getUsername({ dispatch, state }, userID) {
-      if (state.usernames.length === 0) {
-        await dispatch("fetchUsernames");
-      }
-      const u = state.usernames.find((u) => u.id === userID);
-      if (u) {
-        return u.username;
-      }
     },
     async updateUser({ commit, state }, user: CompleteUserWithPermissions) {
       const { id, ...userData } = user;

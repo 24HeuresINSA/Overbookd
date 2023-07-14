@@ -214,7 +214,7 @@ export class FtService {
   }
 
   private async checkAssignmentValidity(taskId: number, reviewerId: number) {
-    const team = this.buildTeamCodeCondition('humain');
+    const teams = this.buildTeamCodeCondition('humain');
     const [existingTask, reviewer] = await Promise.all([
       this.prisma.ft.findFirst({
         select: { id: true },
@@ -222,7 +222,7 @@ export class FtService {
       }),
       this.prisma.user.findFirst({
         select: { id: true },
-        where: { id: reviewerId, team },
+        where: { id: reviewerId, teams },
       }),
     ]);
 
@@ -255,10 +255,10 @@ export class FtService {
   }
 
   private async findBestReviewerCandidate() {
-    const team = this.buildTeamCodeCondition('humain');
+    const teams = this.buildTeamCodeCondition('humain');
     return this.prisma.user.findFirst({
       select: { id: true },
-      where: { team },
+      where: { teams },
       orderBy: [{ ftsInReview: { _count: 'asc' } }],
     });
   }

@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserWithoutPassword } from '../user.model';
-import { Departments, Years } from './common';
 
 export class UserWithoutPasswordDto implements UserWithoutPassword {
   @ApiProperty({
@@ -54,14 +53,6 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
   phone: string;
 
   @ApiProperty({
-    name: 'department',
-    description: 'User department',
-    enum: Departments,
-    required: false,
-  })
-  department: Departments | null;
-
-  @ApiProperty({
     name: 'comment',
     description: 'User comment',
     type: String,
@@ -70,35 +61,11 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
   comment: string | null;
 
   @ApiProperty({
-    name: 'reset_password_token',
-    description: 'User reset password token',
-    type: String,
-    required: false,
-  })
-  resetPasswordToken: string | null;
-
-  @ApiProperty({
-    name: 'reset_password_expires',
-    description: 'User reset password expiration date',
-    type: String,
-    required: false,
-  })
-  resetPasswordExpires: Date | null;
-
-  @ApiProperty({
-    name: 'has_payed_contributions',
+    name: 'hasPayedContributions',
     description: 'User contribution payment',
     type: Boolean,
   })
   hasPayedContributions: boolean;
-
-  @ApiProperty({
-    name: 'year',
-    description: 'User year',
-    enum: Years,
-    required: false,
-  })
-  year: Years | null;
 
   @ApiProperty({
     name: 'profilePicture',
@@ -121,25 +88,4 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
     type: Number,
   })
   balance: number;
-
-  @ApiProperty({
-    name: 'created_at',
-    description: 'User creation date',
-    type: Date,
-  })
-  createdAt: Date;
-
-  @ApiProperty({
-    name: 'updated_at',
-    description: 'User update date',
-    type: Date,
-  })
-  updatedAt: Date;
-
-  @ApiProperty({
-    name: 'is_deleted',
-    description: 'User deletion status',
-    type: Boolean,
-  })
-  isDeleted: boolean;
 }

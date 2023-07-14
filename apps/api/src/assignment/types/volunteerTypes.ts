@@ -18,7 +18,7 @@ export interface AvailableVolunteer extends Volunteer {
 }
 
 export interface DatabaseVolunteer extends BaseVolunteer {
-  team: {
+  teams: {
     team: {
       code: string;
     };

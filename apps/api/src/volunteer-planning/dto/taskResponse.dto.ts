@@ -4,7 +4,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PeriodDto } from '../../../src/volunteer-availability/dto/period.dto';
 
 class VolunteerRepresentation implements Volunteer {
+  @ApiProperty({
+    name: 'id',
+    description: 'volunteer id',
+    type: Number,
+  })
   id: number;
+
+  @ApiProperty({
+    name: 'name',
+    description: 'volunteer name',
+    type: String,
+  })
   name: string;
 }
 

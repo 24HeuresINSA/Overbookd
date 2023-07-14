@@ -157,7 +157,7 @@ export class AssignmentService {
 
   async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
     const volunteers = await this.prisma.user.findMany({
-      where: { isDeleted: false, team: { none: { team: { code: 'hard' } } } },
+      where: { isDeleted: false, teams: { none: { team: { code: 'hard' } } } },
       select: {
         firstname: true,
         lastname: true,
@@ -232,7 +232,7 @@ export class AssignmentService {
         timeSpan,
       );
 
-    const team = this.buildVolunteerIsMemberOfTeamCondition(teamCode);
+    const teams = this.buildVolunteerIsMemberOfTeamCondition(teamCode);
 
     return this.prisma.user.findFirst({
       select: { id: true },
@@ -241,7 +241,7 @@ export class AssignmentService {
         ...WHERE_VALIDATED_USER,
         availabilities,
         assignments,
-        team,
+        teams,
       },
     });
   }

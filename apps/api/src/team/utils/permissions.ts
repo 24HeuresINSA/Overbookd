@@ -1,7 +1,6 @@
-import { Team } from '@prisma/client';
-
 export type TeamWithNestedPermissions = {
-  team: Partial<Team> & {
+  team: {
+    code: string;
     permissions: {
       permissionName: string;
     }[];
