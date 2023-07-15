@@ -13,7 +13,7 @@ export class ProfilePictureService {
   constructor(
     private readonly fileService: FileService,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   private async getProfilePicture(userId: number): Promise<string | null> {
     const { profilePicture } = await this.prisma.user.findUnique({
