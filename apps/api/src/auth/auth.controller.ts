@@ -7,21 +7,17 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { userEmailDto } from '../user/dto/userEmail.dto';
-import { MailService } from '../mail/mail.service';
+import { ForgotPasswordRequestDto } from './dto/forgotPasswordRequest.dto';
 import { AuthService } from './auth.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { LoginDto } from './dto/login.dto';
-import { UserAccess } from './entities/userAccess.entity';
+import { UserAccess } from './dto/userAccess.dto';
 import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('auth')
 @Controller()
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private mailService: MailService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Throttle(10, 30)
   @Post('login')
@@ -47,13 +43,13 @@ export class AuthController {
   @ApiBody({
     description:
       "Route pour la premiere partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
-    type: userEmailDto,
+    type: ForgotPasswordRequestDto,
   })
   @ApiNotFoundResponse({
     description: 'User not found',
   })
   @Post('forgot')
-  async forgot(@Body() user: userEmailDto) {
+  async forgot(@Body() user: ForgotPasswordRequestDto) {
     return this.authService.forgot(user);
   }
 

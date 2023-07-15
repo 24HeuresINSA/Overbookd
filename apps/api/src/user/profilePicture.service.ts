@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { PrismaService } from '../../src/prisma.service';
 import { FileService } from './file.service';
-import { UserWithTeamAndPermission } from './user.model';
+import { UserWithTeamsAndPermissions } from './user.model';
 import {
   SELECT_USER,
   SELECT_USER_TEAMS_AND_PERMISSIONS,
@@ -28,7 +28,7 @@ export class ProfilePictureService {
   async updateProfilePicture(
     userId: number,
     profilePicture: string,
-  ): Promise<UserWithTeamAndPermission> {
+  ): Promise<UserWithTeamsAndPermissions> {
     const currentProfilePicture = await this.getProfilePicture(userId);
     if (currentProfilePicture) {
       this.fileService.deleteFile(currentProfilePicture);
@@ -41,7 +41,7 @@ export class ProfilePictureService {
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
-    return UserService.getUserWithTeamAndPermission(user);
+    return UserService.getUserWithTeamsAndPermissions(user);
   }
 
   async streamProfilePicture(userId: number): Promise<StreamableFile> {

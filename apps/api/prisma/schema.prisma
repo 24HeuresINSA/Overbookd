@@ -69,8 +69,7 @@ model User {
   updatedAt             DateTime    @updatedAt @map("updated_at")
   isDeleted             Boolean     @default(false) @map("is_deleted")
 
-  team           UserTeam[]
-  Availabilities Availability[]
+  teams          UserTeam[]
 
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
@@ -139,29 +138,6 @@ model TeamPermission {
 
   @@id([teamCode, permissionName])
   @@map("team_permission")
-}
-
-model TimeSlot {
-  id             Int            @id @default(autoincrement())
-  name           String         @map("slot_name")
-  start          DateTime
-  end            DateTime
-  charisma       Int
-  Availabilities Availability[]
-  isDeleted      Boolean        @default(false) @map("is_deleted")
-
-  @@map("time_slot")
-}
-
-model Availability {
-  userId     Int      @map("user_id")
-  user       User     @relation(fields: [userId], references: [id])
-  timeSlotId Int      @map("time_slot_id")
-  timeSlot   TimeSlot @relation(fields: [timeSlotId], references: [id])
-  isDeleted  Boolean  @default(false) @map("is_deleted")
-
-  @@id([userId, timeSlotId])
-  @@map("availability")
 }
 
 model Transaction {

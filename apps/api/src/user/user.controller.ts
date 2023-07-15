@@ -25,8 +25,11 @@ import {
   ApiProduces,
   ApiResponse,
   ApiTags,
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { Request, Response } from 'express';
 import { diskStorage } from 'multer';
@@ -50,7 +53,6 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileUploadDto } from './dto/fileUpload.dto';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';
-import { Username } from './dto/userName.dto';
 import { UserWithoutPasswordDto } from './dto/userWithoutPassword.dto';
 import {
   VolunteerAssignmentDto,
@@ -59,12 +61,18 @@ import {
 import { ProfilePictureService } from './profilePicture.service';
 import {
   MyUserInformation,
-  UserWithTeamAndPermission,
+  UserPersonnalData,
+  UserWithTeamsAndPermissions,
   UserWithoutPassword,
 } from './user.model';
 import { UserService } from './user.service';
+import { UserPersonnalDataDto } from './dto/userPersonnalData.dto';
+import { MyUSerInformationDto } from './dto/myUserInformation.dto';
 @ApiTags('user')
 @Controller('user')
+@ApiBadRequestResponse({
+  description: 'Bad Request',
+})
 export class UserController {
   private readonly logger = new Logger(UserController.name);
 
@@ -80,6 +88,10 @@ export class UserController {
     description: 'Add new user',
     type: UserCreationDto,
   })
+  @ApiCreatedResponse({
+    description: 'created user',
+    type: UserWithoutPasswordDto,
+  })
   createUser(@Body() userData: UserCreationDto): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
   }
@@ -87,14 +99,61 @@ export class UserController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission('validated-user')
+  @ApiUnauthorizedResponse({
+    description: 'User dont have the right to access this route',
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
   @Get()
   @ApiResponse({
     status: 200,
     description: 'Get all users',
-    type: Array,
+    type: UserPersonnalDataDto,
+    isArray: true,
   })
-  getUsers(): Promise<Partial<User>[]> {
-    return this.userService.users({ where: { isDeleted: false } });
+  getUsers(): Promise<UserPersonnalData[]> {
+    return this.userService.getAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('validated-user')
+  @ApiUnauthorizedResponse({
+    description: 'User dont have the right to access this route',
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
+  @Get('/volunteers')
+  @ApiResponse({
+    status: 200,
+    description: 'Get all volunteers',
+    type: UserPersonnalDataDto,
+    isArray: true,
+  })
+  getVolunteers(): Promise<UserPersonnalData[]> {
+    return this.userService.getVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission('validated-user')
+  @ApiUnauthorizedResponse({
+    description: 'User dont have the right to access this route',
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
+  @Get('/candidates')
+  @ApiResponse({
+    status: 200,
+    description: 'Get all candidates',
+    type: UserPersonnalDataDto,
+    isArray: true,
+  })
+  getCandidates(): Promise<UserPersonnalData[]> {
+    return this.userService.getCandidates();
   }
 
   @UseGuards(JwtAuthGuard)
@@ -103,11 +162,12 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get a current user',
+    type: MyUSerInformationDto,
   })
   async getCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<MyUserInformation | null> {
-    return this.userService.user({ id: req.user.userId ?? req.user.id });
+    return this.userService.getById(req.user.userId ?? req.user.id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -168,65 +228,22 @@ export class UserController {
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: Partial<UserModificationDto>,
-  ): Promise<UserWithTeamAndPermission | null> {
+  ): Promise<UserWithTeamsAndPermissions | null> {
     return this.userService.updateUserPersonnalData(req.user.id, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('cp')
   @ApiBearerAuth()
-  @Get('all/cp')
+  @Get('personnal-account-consummers')
   @ApiResponse({
     status: 200,
     description: 'Get all usernames with valid CP',
-    type: Array,
+    type: UserWithoutPasswordDto,
+    isArray: true,
   })
-  async getUsernamesWithValidCP(): Promise<Username[]> {
-    const users = await this.userService.users({
-      where: {
-        team: {
-          some: {
-            team: {
-              permissions: {
-                some: {
-                  permission: {
-                    name: 'cp',
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-      select: {
-        firstname: true,
-        lastname: true,
-        id: true,
-      },
-    });
-    return users
-      .map(this.userService.getUsername)
-      .sort((a, b) => (a.username > b.username ? 1 : -1));
-  }
-
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('manage-cp')
-  @Get('all')
-  @ApiResponse({
-    status: 200,
-    description: 'Get all usernames',
-    type: Array,
-  })
-  async getAllUsernames(): Promise<Username[]> {
-    const users = await this.userService.users({
-      select: {
-        firstname: true,
-        lastname: true,
-        id: true,
-      },
-    });
-    return users.map(this.userService.getUsername);
+  async getUsernamesWithValidCP(): Promise<UserWithoutPassword[]> {
+    return this.userService.getAllPersonnalAccountConsummers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -240,7 +257,7 @@ export class UserController {
   getUserById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserWithoutPassword> {
-    return this.userService.user({ id });
+    return this.userService.getById(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -345,7 +362,7 @@ export class UserController {
     @Param('id', ParseIntPipe) targetUserId: number,
     @Body() user: UserModificationDto,
     @RequestDecorator() req: RequestWithUserPayload,
-  ): Promise<UserWithTeamAndPermission> {
+  ): Promise<UserWithTeamsAndPermissions> {
     return this.userService.updateUser(
       targetUserId,
       user,
@@ -394,7 +411,7 @@ export class UserController {
   defineProfilePicture(
     @RequestDecorator() req: RequestWithUserPayload,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<UserWithTeamAndPermission> {
+  ): Promise<UserWithTeamsAndPermissions> {
     return this.profilePictureService.updateProfilePicture(
       req.user.id,
       file.filename,

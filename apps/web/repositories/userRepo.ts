@@ -35,11 +35,20 @@ export default {
       `${resource}`
     );
   },
-  getAllUsernames(context: Context) {
-    return context.$axios.get(`${resource}/all`);
+  getVolunteers(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+      `${resource}/volunteers`
+    );
   },
-  getAllUsernamesWithCP(context: Context) {
-    return context.$axios.get(`${resource}/all/cp`);
+  getCandidates(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+      `${resource}/candidates`
+    );
+  },
+  getAllPersonnalAccountConsummers(context: Context) {
+    return context.$axios.get<HttpStringified<CompleteUser[]>>(
+      `${resource}/personnal-account-consummers`
+    );
   },
   broadcast(context: Context, data: BroadcastNotif) {
     return context.$axios.post(`${resource}/broadcast`, data);

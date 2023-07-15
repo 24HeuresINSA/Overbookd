@@ -234,7 +234,7 @@ export class OrgaNeedsService {
     const teamCondition = teams.length > 0 ? isMemberOf : isValidUser;
 
     return {
-      team: {
+      teams: {
         some: {
           team: teamCondition,
         },

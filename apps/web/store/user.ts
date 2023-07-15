@@ -4,6 +4,7 @@ import { safeCall } from "~/utils/api/calls";
 import { updateItemToList } from "~/utils/functions/list";
 import { User as UserV1 } from "~/utils/models/repo";
 import {
+  CompleteUser,
   CompleteUserWithPermissions,
   MyUserInformation,
   User,
@@ -28,6 +29,9 @@ export const state = () => ({
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
+  personalAccountConsumers: [] as CompleteUser[],
+  volunteers: [] as CompleteUser[],
+  candidates: [] as CompleteUser[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -59,16 +63,8 @@ export const mutations = mutationTree(state, {
   SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
     state.users = data;
   },
-  SET_USERNAMES(state: UserState, data: UserV1[]) {
-    data.sort(
-      ({ username: username1 }: UserV1, { username: username2 }: UserV1) => {
-        if (username1 && username2) {
-          return username1 > username2 ? 1 : -1;
-        }
-        return 0;
-      }
-    );
-    state.usernames = data;
+  SET_PERSONNAL_ACCOUNT_CONSUMMERS(state: UserState, data: CompleteUser[]) {
+    state.personalAccountConsumers = data;
   },
   UPDATE_USER(state: UserState, data: CompleteUserWithPermissions) {
     const index = state.users.findIndex((user) => user.id === data.id);
@@ -87,6 +83,12 @@ export const mutations = mutationTree(state, {
   },
   REMOVE_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
+  },
+  SET_VOLUNTEERS(state: UserState, volunteers: CompleteUser[]) {
+    state.volunteers = volunteers;
+  },
+  SET_CANDIDATES(state: UserState, candidates: CompleteUser[]) {
+    state.candidates = candidates;
   },
 });
 
@@ -129,6 +131,18 @@ export const actions = actionTree(
         commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
       }
     },
+    async fetchVolunteers({ commit }) {
+      const res = await safeCall(this, UserRepo.getVolunteers(this));
+      if (!res) return;
+      const volunteers = res.data.map(castUserWithDate);
+      commit("SET_VOLUNTEERS", volunteers);
+    },
+    async fetchCandidates({ commit }) {
+      const res = await safeCall(this, UserRepo.getCandidates(this));
+      if (!res) return;
+      const candidates = res.data.map(castUserWithDate);
+      commit("SET_CANDIDATES", candidates);
+    },
     async fetchFriends({ commit }) {
       const res = await safeCall(this, UserRepo.getFriends(this));
       if (res) {
@@ -162,18 +176,15 @@ export const actions = actionTree(
         commit("REMOVE_MY_FRIEND", friend);
       }
     },
+    async fetchPersonnalAccountConsummers({ commit }) {
+      const res = await safeCall(
+        this,
+        UserRepo.getAllPersonnalAccountConsummers(this)
+      );
+      if (!res) return;
 
-    async fetchUsernames({ commit }) {
-      const res = await safeCall(this, UserRepo.getAllUsernames(this));
-      if (res) {
-        commit("SET_USERNAMES", res.data);
-      }
-    },
-    async fetchUsernamesWithCP({ commit }) {
-      const res = await safeCall(this, UserRepo.getAllUsernamesWithCP(this));
-      if (res) {
-        commit("SET_USERNAMES", res.data);
-      }
+      const consummers = res.data.map(castUserWithDate);
+      commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
     async createUser(_, user: UserCreation): Promise<any | undefined> {
       const res = await safeCall(this, UserRepo.createUser(this, user), {
@@ -181,15 +192,6 @@ export const actions = actionTree(
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
       });
       return res;
-    },
-    async getUsername({ dispatch, state }, userID) {
-      if (state.usernames.length === 0) {
-        await dispatch("fetchUsernames");
-      }
-      const u = state.usernames.find((u) => u.id === userID);
-      if (u) {
-        return u.username;
-      }
     },
     async updateUser({ commit, state }, user: CompleteUserWithPermissions) {
       const { id, ...userData } = user;

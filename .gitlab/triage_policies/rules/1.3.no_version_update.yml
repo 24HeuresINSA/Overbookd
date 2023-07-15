@@ -31,5 +31,6 @@ resource_rules:
           comment_type: thread
           comment: |
             Hi {{author}},  
-            The version of overbookd has not been updated.
-            Make sure tu run `pnpm release:candidate` locally.  
+            The version of overbookd has not been updated.  
+            Make sure to run `pnpm release:candidate` locally.  
+            If it's already done rebase on `main` without your changes on package.json files and run it again.

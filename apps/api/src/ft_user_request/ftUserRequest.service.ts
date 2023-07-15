@@ -218,7 +218,7 @@ export class FtUserRequestService {
       select: { id: true },
       where: {
         id: { in: requestedUserIds },
-        team: {
+        teams: {
           some: {
             team: {
               permissions: {
