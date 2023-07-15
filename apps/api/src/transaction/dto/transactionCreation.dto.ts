@@ -38,7 +38,7 @@ export class TransactionCreationDto {
     required: false,
     description: 'The description of the transaction',
   })
-  context: number;
+  context: string;
 
   @ApiProperty({
     required: false,
