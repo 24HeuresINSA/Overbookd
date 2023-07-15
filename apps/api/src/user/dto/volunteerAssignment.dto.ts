@@ -6,6 +6,7 @@ import { FtStatus } from '../../../src/ft/ft.model';
 class FtRepresentation {
   id: number;
   name: string;
+  @ApiProperty({ type: String })
   status: FtStatus;
 }
 

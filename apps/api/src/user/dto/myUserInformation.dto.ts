@@ -1,19 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MyUserInformation } from '../user.model';
-import { UserPersonnalDataDto } from './userPersonnalData.dto';
+import { UserWithTeamsAndPermissionsDto } from './userWithTeamsAndPermissions.dto';
 
 export class MyUSerInformationDto
-  extends UserPersonnalDataDto
+  extends UserWithTeamsAndPermissionsDto
   implements MyUserInformation
 {
-  @ApiProperty({
-    name: 'permissions',
-    description: 'User permissions',
-    type: String,
-    isArray: true,
-  })
-  permissions: string[];
-
   @ApiProperty({
     name: 'tasksCount',
     description: 'User tasks count',

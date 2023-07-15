@@ -23,6 +23,7 @@ import {
   MyUserInformation,
   UserPasswordOnly,
   UserPersonnalData,
+  UserUpdateForm,
   UserWithTeamsAndPermissions,
   UserWithoutPassword,
 } from './user.model';
@@ -188,7 +189,7 @@ export class UserService {
 
   async updateUserPersonnalData(
     id: number,
-    user: Partial<UserModificationDto>,
+    user: UserUpdateForm,
   ): Promise<UserWithTeamsAndPermissions | null> {
     const updatedUser = await this.prisma.user.update({
       where: { id },
@@ -317,7 +318,7 @@ export class UserService {
   }
 
   async createUser(payload: UserCreationDto): Promise<UserWithoutPassword> {
-    const newUserData: Prisma.UserUncheckedCreateInput = {
+    const newUserData = {
       firstname: payload.firstname,
       lastname: payload.lastname,
       email: payload.email,
@@ -325,9 +326,7 @@ export class UserService {
       nickname: payload.nickname,
       birthdate: payload.birthdate,
       phone: payload.phone,
-      department: payload.department,
       comment: payload.comment,
-      year: payload.year,
     };
 
     const newUser = await this.prisma.user.create({
@@ -346,7 +345,7 @@ export class UserService {
 
     if (!payload.teamId) return newUser;
 
-    const addTeamData: Prisma.UserTeamUncheckedCreateInput = {
+    const addTeamData = {
       teamId: payload.teamId,
       userId: newUser.id,
     };

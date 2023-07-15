@@ -4,7 +4,6 @@ import {
   IsDateString,
   IsDefined,
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -14,9 +13,10 @@ import {
   MinLength,
   ValidationArguments,
 } from 'class-validator';
-import { Departments, OneNumber, Years, upperCaseCharacter } from './common';
+import { OneNumber, upperCaseCharacter } from './common';
+import { UserCreateForm } from '../user.model';
 
-export class UserCreationDto {
+export class UserCreationDto implements UserCreateForm {
   @ApiProperty({
     required: true,
     description: 'The firstname of the user',
@@ -79,32 +79,6 @@ export class UserCreationDto {
   @IsNumber()
   @IsNotEmpty()
   teamId?: number;
-
-  @ApiProperty({
-    required: false,
-    description: 'The departement of the user',
-    enum: Departments,
-  })
-  @IsOptional()
-  @IsDefined()
-  @IsEnum(Departments, {
-    message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Departments)}`,
-  })
-  department?: Departments;
-
-  @ApiProperty({
-    required: false,
-    description: 'The study year of the user',
-    enum: Years,
-  })
-  @IsOptional()
-  @IsDefined()
-  @IsEnum(Years, {
-    message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(Years)}`,
-  })
-  year?: Years;
 
   @ApiProperty({
     required: true,

@@ -2,17 +2,15 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsEmail,
-  IsEnum,
   IsMobilePhone,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  ValidationArguments,
 } from 'class-validator';
-import { Departments, Years } from './common';
+import { UserUpdateForm } from '../user.model';
 
-export class UserModificationDto {
+export class UserModificationDto implements UserUpdateForm {
   @ApiProperty({
     required: false,
     description: 'The firstname of the user',
@@ -65,30 +63,6 @@ export class UserModificationDto {
   @IsNotEmpty()
   @IsMobilePhone()
   phone?: string;
-
-  @ApiProperty({
-    required: false,
-    description: 'The departement of the user',
-    enum: Departments,
-  })
-  @IsOptional()
-  @IsEnum(Departments, {
-    message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Departments}`,
-  })
-  department?: Departments;
-
-  @ApiProperty({
-    required: false,
-    description: 'The study year of the user',
-    enum: Years,
-  })
-  @IsOptional()
-  @IsEnum(Years, {
-    message: (va: ValidationArguments) =>
-      `${va.property} must be one of the following values: ${Years}`,
-  })
-  year?: Years;
 
   @ApiProperty({
     required: false,

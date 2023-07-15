@@ -47,7 +47,10 @@ import {
   PdfType,
   PlanningRenderStrategy,
 } from '../../src/volunteer-planning/render/renderStrategy';
-import { SubscriptionService } from '../../src/volunteer-planning/subscription.service';
+import {
+  PlanningSubscription,
+  SubscriptionService,
+} from '../../src/volunteer-planning/subscription.service';
 import { VolunteerPlanningService } from '../../src/volunteer-planning/volunteer-planning.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { FileUploadDto } from './dto/fileUpload.dto';
@@ -68,6 +71,8 @@ import {
 import { UserService } from './user.service';
 import { UserPersonnalDataDto } from './dto/userPersonnalData.dto';
 import { MyUSerInformationDto } from './dto/myUserInformation.dto';
+import { Task } from '../volunteer-planning/domain/task.model';
+import { UserWithTeamsAndPermissionsDto } from './dto/userWithTeamsAndPermissions.dto';
 @ApiTags('user')
 @Controller('user')
 @ApiBadRequestResponse({
@@ -184,7 +189,7 @@ export class UserController {
   async getCurrentVolunteerPlanning(
     @RequestDecorator() request: RequestWithUserPayload,
     @Res() response: Response,
-  ): Promise<TaskResponseDto[]> {
+  ): Promise<Task[]> {
     const volunteerId = request.user.userId ?? request.user.id;
     const format = request.headers.accept;
     try {
@@ -213,7 +218,7 @@ export class UserController {
   })
   async getCurrentVolunteerSubscriptionPlanningLink(
     @RequestDecorator() request: RequestWithUserPayload,
-  ): Promise<VolunteerSubscriptionPlanningResponseDto> {
+  ): Promise<PlanningSubscription> {
     const volunteerId = request.user.userId ?? request.user.id;
     return this.planningSubscription.subscribe(volunteerId);
   }
@@ -223,11 +228,16 @@ export class UserController {
   @Patch('me')
   @ApiResponse({
     status: 200,
-    description: 'Update a current user',
+    description: 'Updated current user',
+    type: UserWithTeamsAndPermissionsDto,
+  })
+  @ApiBody({
+    description: 'New current user information',
+    type: UserModificationDto,
   })
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
-    @Body() userData: Partial<UserModificationDto>,
+    @Body() userData: UserModificationDto,
   ): Promise<UserWithTeamsAndPermissions | null> {
     return this.userService.updateUserPersonnalData(req.user.id, userData);
   }
@@ -253,6 +263,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get a user by id',
+    type: UserWithoutPasswordDto,
   })
   getUserById(
     @Param('id', ParseIntPipe) id: number,
@@ -355,8 +366,13 @@ export class UserController {
   @ApiBearerAuth()
   @Put(':id')
   @ApiBody({
-    description: 'Update a user by id',
+    description: 'New user information',
     type: UserModificationDto,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Updated user',
+    type: UserWithTeamsAndPermissionsDto,
   })
   updateUserById(
     @Param('id', ParseIntPipe) targetUserId: number,
@@ -424,7 +440,6 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get a users profile picture',
-    type: StreamableFile,
   })
   getProfilePicture(
     @Param('userId', ParseIntPipe) userId: number,

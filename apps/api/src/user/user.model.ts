@@ -1,15 +1,30 @@
-export type UserWithoutPassword = {
+export type UserCreateForm = {
   firstname: string;
   lastname: string;
-  nickname: string | null;
-  id: number;
+  nickname?: string | null;
+  teamId?: number;
   email: string;
   birthdate: Date;
   phone: string;
-  comment: string | null;
-  hasPayedContributions: boolean;
-  profilePicture: string | null;
-  charisma: number;
+  comment?: string | null;
+  password: string;
+};
+
+export type UserUpdateForm = {
+  firstname?: string;
+  lastname?: string;
+  nickname?: string | null;
+  email?: string;
+  birthdate?: Date;
+  phone?: string;
+  comment?: string | null;
+  hasPayedContributions?: boolean;
+  profilePicture?: string | null;
+  charisma?: number;
+};
+
+export type UserWithoutPassword = Required<UserUpdateForm> & {
+  id: number;
   balance: number;
 };
 
