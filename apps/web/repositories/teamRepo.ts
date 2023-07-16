@@ -2,7 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Team } from "~/utils/models/team";
 import { HttpStringified } from "~/utils/types/http";
 
-const resource = "/team";
+const resource = "/teams";
 type Context = { $axios: NuxtAxiosInstance };
 
 export default {

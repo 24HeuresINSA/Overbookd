@@ -20,8 +20,8 @@ import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
 import { TeamResponseDto } from './dto/teamResponse';
 import { TeamService } from './team.service';
 
-@ApiTags('team')
-@Controller('team')
+@ApiTags('teams')
+@Controller('teams')
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
