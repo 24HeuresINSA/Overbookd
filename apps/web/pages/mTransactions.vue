@@ -40,6 +40,7 @@ export default {
     );
     if (res) {
       this.mTransactions = res.data;
+      console.log(res.data);
     }
   },
 };

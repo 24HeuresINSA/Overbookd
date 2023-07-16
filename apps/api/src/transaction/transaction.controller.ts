@@ -24,8 +24,8 @@ import { RequestWithUserPayload } from '../../src/app.controller';
 import { TransactionResponseDto } from './dto/transactionResponse.dto';
 
 @ApiBearerAuth()
-@ApiTags('transaction')
-@Controller('transaction')
+@ApiTags('transactions')
+@Controller('transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
