@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AssignmentModule } from './assignment/assignment.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { CharismaPeriodModule } from './charisma_period/charismaPeriod.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
@@ -44,7 +44,7 @@ import { ThrottlerGuardCustom } from './throttler-custom.guard';
 
 @Module({
   imports: [
-    AuthModule,
+    AuthenticationModule,
     UserModule,
     HashingUtilsModule,
     TeamModule,

@@ -25,9 +25,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../../src/auth/entities/JwtUtil.entity';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
+import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { StatsPayload } from '../../src/common/services/stats.service';
 import { GearRequestsApproveFormRequestDto } from '../../src/gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
@@ -46,7 +46,7 @@ import {
 } from '../../src/gear-requests/gearRequests.model';
 import { GearRequestsService } from '../../src/gear-requests/gearRequests.service';
 import { PeriodDto } from '../../src/volunteer-availability/dto/period.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { CreateFtDto } from './dto/createFt.dto';
 import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
 import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';

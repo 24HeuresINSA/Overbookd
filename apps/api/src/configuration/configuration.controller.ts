@@ -17,9 +17,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permission } from '../auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { Configuration, ConfigurationValue } from './configuration.model';
 import { UpsertConfigurationDto } from './dto/upsertConfiguration.dto';
 

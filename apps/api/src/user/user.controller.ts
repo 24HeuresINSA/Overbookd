@@ -35,9 +35,9 @@ import { Request, Response } from 'express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../../src/auth/entities/JwtUtil.entity';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
+import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { buildVolunteerDisplayName } from '../../src/utils/volunteer';
 import { TaskResponseDto } from '../../src/volunteer-planning/dto/taskResponse.dto';
 import { VolunteerSubscriptionPlanningResponseDto } from '../../src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
@@ -52,7 +52,7 @@ import {
   SubscriptionService,
 } from '../../src/volunteer-planning/subscription.service';
 import { VolunteerPlanningService } from '../../src/volunteer-planning/volunteer-planning.service';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { FileUploadDto } from './dto/fileUpload.dto';
 import { UserCreationDto } from './dto/userCreation.dto';
 import { UserModificationDto } from './dto/userModification.dto';

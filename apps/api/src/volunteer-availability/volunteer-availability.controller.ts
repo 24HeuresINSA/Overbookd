@@ -19,9 +19,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { PeriodDto } from './dto/period.dto';
 import { VolunteerAvailabilityService } from './volunteer-availability.service';
 

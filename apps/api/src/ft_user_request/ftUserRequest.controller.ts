@@ -17,9 +17,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { FtUserRequestDto } from './dto/ftUserRequest.dto';
 import { FtUserRequestResponseDto } from './dto/ftUserRequestResponse.dto';
 import { FtUserRequestService } from './ftUserRequest.service';

@@ -3,16 +3,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MailService } from '../mail/mail.service';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
 import { UserService } from '../user/user.service';
-import { AuthService } from './auth.service';
+import { AuthenticationService } from './authentication.service';
 import { PrismaService } from '../prisma.service';
 
 describe('AuthService', () => {
-  let service: AuthService;
+  let service: AuthenticationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AuthService,
+        AuthenticationService,
         {
           provide: UserService,
           useValue: {
@@ -50,7 +50,7 @@ describe('AuthService', () => {
       ],
     }).compile();
 
-    service = module.get<AuthService>(AuthService);
+    service = module.get<AuthenticationService>(AuthenticationService);
   });
 
   it('should be defined', () => {

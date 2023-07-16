@@ -7,8 +7,8 @@ import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthenticationController } from './authentication.controller';
+import { AuthenticationService } from './authentication.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 
@@ -23,14 +23,14 @@ import { JwtStrategy } from './jwt.strategy';
     HashingUtilsModule,
   ],
   providers: [
-    AuthService,
+    AuthenticationService,
     JwtStrategy,
     HashingUtilsService,
     UserService,
     PrismaService,
     MailService,
   ],
-  exports: [AuthService],
-  controllers: [AuthController],
+  exports: [AuthenticationService],
+  controllers: [AuthenticationController],
 })
-export class AuthModule {}
+export class AuthenticationModule {}

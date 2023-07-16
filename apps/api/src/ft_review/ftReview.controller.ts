@@ -19,10 +19,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { CompleteFtResponseDto } from '../../src/ft/dto/ftResponse.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { TimeSpanParametersDto } from './dto/timeSpanParameters.dto';
 import { UpsertFtReviewDto } from './dto/upsertFtReview.dto';
 import { FtReviewService } from './ftReview.service';

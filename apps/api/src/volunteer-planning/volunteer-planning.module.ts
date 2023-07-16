@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { VolunteerPlanningService } from './volunteer-planning.service';
 import { PrismaTaskRepository } from './task.repository.prisma';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from '../../src/auth/constants';
+import { jwtConstants } from '../authentication/constants';
 import { VolunteerPlanningController } from './volunteer-planning.controller';
 import { SecretService } from './secret.service';
 import { SubscriptionService } from './subscription.service';
