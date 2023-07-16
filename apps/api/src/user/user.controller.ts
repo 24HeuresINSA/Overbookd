@@ -73,8 +73,8 @@ import { UserPersonnalDataDto } from './dto/userPersonnalData.dto';
 import { MyUSerInformationDto } from './dto/myUserInformation.dto';
 import { Task } from '../volunteer-planning/domain/task.model';
 import { UserWithTeamsAndPermissionsDto } from './dto/userWithTeamsAndPermissions.dto';
-@ApiTags('user')
-@Controller('user')
+@ApiTags('users')
+@Controller('users')
 @ApiBadRequestResponse({
   description: 'Bad Request',
 })
