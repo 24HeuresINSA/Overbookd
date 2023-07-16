@@ -6,9 +6,21 @@ import {
 } from '../faSitePublishAnimation.model';
 import { LiteSitePublishAnimationResponseDto } from './liteSitePublishAnimationResponse.dto';
 
-class SitePublishAnimationFaRepresentation implements SitePublishAnimationFa {
+class PeriodRepresentation implements Period {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({})
+  start: Date;
+  @ApiProperty({})
+  end: Date;
+}
+
+class SitePublishAnimationFaRepresentation implements SitePublishAnimationFa {
+  @ApiProperty({})
+  id: number;
+  @ApiProperty({})
   name: string;
+  @ApiProperty({ isArray: true, type: PeriodRepresentation })
   timeWindows: Period[];
 }
 

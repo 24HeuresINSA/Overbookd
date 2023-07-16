@@ -56,6 +56,8 @@ import { FaIdResponse } from './faTypes';
 import { CollaboratorResponseDto } from '../collaborator/dto/collaboratorResponse.dto';
 import { CollaboratorFormRequestDto } from '../collaborator/dto/collaboratorFormRequest.dto';
 import { CollaboratorWithId } from '../collaborator/collaborator.model';
+import { StatsResponseDto } from './dto/statsResponse.dto';
+import { FollowingFaResponseDto } from './dto/followingFaResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -117,7 +119,8 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get FA stats',
-    type: Promise<StatsPayload[]>,
+    isArray: true,
+    type: StatsResponseDto,
   })
   getFaStats(): Promise<StatsPayload[]> {
     return this.faService.getFaStats();
@@ -248,7 +251,7 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get the previous fa',
-    type: Promise<FaIdResponse | null>,
+    type: FollowingFaResponseDto,
   })
   findPrevious(
     @Param('id', ParseIntPipe) id: number,
@@ -263,7 +266,7 @@ export class FaController {
   @ApiResponse({
     status: 200,
     description: 'Get the next fa',
-    type: Promise<FaIdResponse | null>,
+    type: FollowingFaResponseDto,
   })
   findNext(
     @Param('id', ParseIntPipe) id: number,

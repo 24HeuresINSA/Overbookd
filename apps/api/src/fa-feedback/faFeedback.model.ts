@@ -9,6 +9,16 @@ export type FaFeedbackSubjectType =
   | typeof VALIDATED
   | typeof COMMENT;
 
+export const subjectTypes: Record<
+  FaFeedbackSubjectType,
+  FaFeedbackSubjectType
+> = {
+  REFUSED: REFUSED,
+  SUBMIT: SUBMIT,
+  VALIDATED: VALIDATED,
+  COMMENT: COMMENT,
+};
+
 export class FaFeedbackAuthor {
   firstname: string;
   lastname: string;

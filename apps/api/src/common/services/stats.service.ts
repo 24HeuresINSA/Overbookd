@@ -3,12 +3,14 @@ import { groupBy } from '../util/group-by';
 import { FaStatus } from '../../fa/fa.model';
 import { FtStatus } from '../../ft/ft.model';
 
+export type StatusCount = {
+  status: FaStatus | FtStatus;
+  count: number;
+};
+
 export type StatsPayload = {
   teamCode: string;
-  status: {
-    status: FaStatus | FtStatus;
-    count: number;
-  }[];
+  status: StatusCount[];
   total: number;
 };
 
