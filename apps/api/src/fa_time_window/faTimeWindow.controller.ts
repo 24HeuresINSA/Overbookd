@@ -3,19 +3,21 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FaTimeWindow } from '@prisma/client';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { CreateTimeWindowDto } from './dto/createFaTimeWindow.dto';
 import { FaTimeWindowService } from './faTimeWindow.service';
+import { FaTimeWindowRepresentation } from '../fa/fa.model';
 
 @ApiBearerAuth()
 @ApiTags('time-windows')
@@ -27,6 +29,7 @@ export class FaTimeWindowController {
   @Permission('hard')
   @Post(':faId')
   @ApiBody({ type: CreateTimeWindowDto, isArray: true })
+  @ApiResponse({ status: 201, isArray: true, type: FaTimeWindowRepresentation })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
     @Body(
@@ -43,6 +46,7 @@ export class FaTimeWindowController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get()
+  @ApiResponse({ status: 200, isArray: true, type: FaTimeWindowRepresentation })
   findAll(): Promise<FaTimeWindow[]> {
     return this.faTimeWindowService.findAll();
   }
@@ -50,6 +54,7 @@ export class FaTimeWindowController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Get(':id')
+  @ApiResponse({ status: 200, type: FaTimeWindowRepresentation })
   findOne(@Param('id', ParseIntPipe) id: number): Promise<FaTimeWindow | null> {
     return this.faTimeWindowService.findOne(id);
   }
@@ -57,6 +62,8 @@ export class FaTimeWindowController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':id')
+  @HttpCode(204)
+  @ApiResponse({ status: 204 })
   remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.faTimeWindowService.remove(id);
   }
