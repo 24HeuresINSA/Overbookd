@@ -15,7 +15,7 @@ export class TransactionResponseDto
   implements TransactionWithSenderAndReceiver
 {
   id: number;
-  @ApiProperty({ type: String })
+  @ApiProperty({ enum: TransactionType })
   type: TransactionType;
   amount: number;
   context: string;
