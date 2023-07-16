@@ -28,7 +28,11 @@ const SELECT_TRANSACTION = {
   isDeleted: true,
 };
 
-type TransactionUser = Pick<User, 'id' | 'lastname' | 'firstname'>;
+export type TransactionUser = {
+  id: number;
+  firstname: string;
+  lastname: string;
+};
 
 export type TransactionWithSenderAndReceiver = Omit<
   Transaction,

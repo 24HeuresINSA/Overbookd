@@ -35,6 +35,7 @@ class AssignmentRepresentation implements Assignment {
   })
   volunteers: Volunteer[];
 }
+
 export class TaskResponseDto implements Task {
   @ApiProperty({
     name: 'name',

@@ -21,6 +21,7 @@ import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
 import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
 import { Permission } from '../../src/auth/permissions-auth.decorator';
 import { RequestWithUserPayload } from '../../src/app.controller';
+import { TransactionResponseDto } from './dto/transactionResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('transaction')
@@ -34,7 +35,8 @@ export class TransactionController {
   @ApiResponse({
     status: 200,
     description: 'Get all transactions',
-    type: Array,
+    isArray: true,
+    type: TransactionResponseDto,
   })
   getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.transactionService.getAllTransactions();
@@ -46,7 +48,8 @@ export class TransactionController {
   @ApiResponse({
     status: 200,
     description: 'Get all transactions of a user',
-    type: Array,
+    type: TransactionResponseDto,
+    isArray: true,
   })
   getUserTransactions(
     @Param('id', ParseIntPipe) id: number,
@@ -60,7 +63,8 @@ export class TransactionController {
   @ApiResponse({
     status: 200,
     description: 'Get all transactions of self',
-    type: Array,
+    type: TransactionResponseDto,
+    isArray: true,
   })
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
@@ -75,6 +79,7 @@ export class TransactionController {
   @ApiResponse({
     status: 200,
     description: 'Get a transaction by id',
+    type: TransactionResponseDto,
   })
   getTransactionById(
     @Param('id', ParseIntPipe) id: number,
@@ -89,6 +94,11 @@ export class TransactionController {
     description: 'Create a transaction',
     type: TransactionCreationDto,
   })
+  @ApiResponse({
+    status: 201,
+    description: 'Generated transaction',
+    type: TransactionResponseDto,
+  })
   createTransaction(
     @Body() transactionData: Transaction,
     @Request() request: RequestWithUserPayload,
@@ -100,6 +110,17 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('manage-cp')
   @Post('sg')
+  @ApiBody({
+    description: 'transactions to generate',
+    isArray: true,
+    type: TransactionCreationDto,
+  })
+  @ApiResponse({
+    description: 'generated transactions',
+    status: 201,
+    type: TransactionResponseDto,
+    isArray: true,
+  })
   addSgTransaction(
     @Body() transactionData: Transaction[],
   ): Promise<TransactionWithSenderAndReceiver[]> {
