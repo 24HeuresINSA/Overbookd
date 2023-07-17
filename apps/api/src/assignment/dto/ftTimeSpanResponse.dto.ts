@@ -138,6 +138,7 @@ class AssigneeRepresentation implements Assignee {
   id: number;
   firstname: string;
   lastname: string;
+  @ApiProperty({ example: '0601020304' })
   phone: string;
   teams: string[];
 }

@@ -5,6 +5,7 @@ export class emailTestDto {
   @ApiProperty({
     required: true,
     description: 'The email of the receiver',
+    example: 'john@doe.com',
   })
   @IsDefined()
   @IsEmail()
