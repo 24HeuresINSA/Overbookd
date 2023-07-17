@@ -23,7 +23,7 @@
       <template #[`item.to`]="{ item }">
         {{
           item.type == "TRANSFER" || item.type == "DEPOSIT"
-            ? getFullName(item.user_to)
+            ? getFullName(item.userTo)
             : ""
         }}
       </template>
@@ -31,7 +31,7 @@
       <template #[`item.from`]="{ item }">
         {{
           item.type == "TRANSFER" || item.type == "EXPENSE"
-            ? getFullName(item.user_from)
+            ? getFullName(item.userFrom)
             : ""
         }}
       </template>

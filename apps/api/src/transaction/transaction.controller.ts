@@ -17,15 +17,15 @@ import {
 import { Transaction } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionCreationDto } from './dto/transactionCreation.dto';
-import { JwtAuthGuard } from '../../src/auth/jwt-auth.guard';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
 import { RequestWithUserPayload } from '../../src/app.controller';
 import { TransactionResponseDto } from './dto/transactionResponse.dto';
 
 @ApiBearerAuth()
-@ApiTags('transaction')
-@Controller('transaction')
+@ApiTags('transactions')
+@Controller('transactions')
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 

@@ -12,7 +12,7 @@ import {
 } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
-const resource = "/user";
+const resource = "/users";
 
 type Context = { $axios: NuxtAxiosInstance };
 

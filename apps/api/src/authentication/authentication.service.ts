@@ -23,7 +23,7 @@ type UserEmail = Pick<User, 'email'>;
 const ONE_HOUR = 3600000;
 
 @Injectable()
-export class AuthService {
+export class AuthenticationService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,

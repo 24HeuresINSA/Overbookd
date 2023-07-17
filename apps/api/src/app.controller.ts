@@ -5,12 +5,12 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { JwtAuthGuard } from './authentication/jwt-auth.guard';
 import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
-import { Permission } from './auth/permissions-auth.decorator';
-import { PermissionsGuard } from './auth/permissions-auth.guard';
-import { JwtPayload } from './auth/entities/JwtUtil.entity';
+import { Permission } from './authentication/permissions-auth.decorator';
+import { PermissionsGuard } from './authentication/permissions-auth.guard';
+import { JwtPayload } from './authentication/entities/JwtUtil.entity';
 import { Request } from 'express';
 
 /**

@@ -15,10 +15,10 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Permission } from '../auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../auth/permissions-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { ExportSignaNeed } from '../fa/faTypes';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { CreateFaSignaNeedDto } from './dto/createFaSignaNeed.dto';
 import { FaSignaNeedExportCsvDto } from './dto/exportSignaNeedCsv.dto';
 import { FaSignaNeedService } from './faSignaNeed.service';

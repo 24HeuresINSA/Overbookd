@@ -8,16 +8,16 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ForgotPasswordRequestDto } from './dto/forgotPasswordRequest.dto';
-import { AuthService } from './auth.service';
+import { AuthenticationService } from './authentication.service';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { LoginDto } from './dto/login.dto';
 import { UserAccess } from './dto/userAccess.dto';
 import { Throttle } from '@nestjs/throttler';
 
-@ApiTags('auth')
+@ApiTags('authentication')
 @Controller()
-export class AuthController {
-  constructor(private authService: AuthService) {}
+export class AuthenticationController {
+  constructor(private authService: AuthenticationService) {}
 
   @Throttle(10, 30)
   @Post('login')

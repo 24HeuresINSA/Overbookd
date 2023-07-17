@@ -23,15 +23,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Permission } from '../auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../auth/permissions-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { StatsPayload } from '../common/services/stats.service';
 import {
   ApprovedGearRequest,
   GearSeekerType,
 } from '../gear-requests/gearRequests.model';
 import { RequestWithUserPayload } from '../app.controller';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,

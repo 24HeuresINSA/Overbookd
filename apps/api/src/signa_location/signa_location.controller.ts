@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Permission } from '../../src/auth/permissions-auth.decorator';
-import { PermissionsGuard } from '../../src/auth/permissions-auth.guard';
+import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
+import { Permission } from '../authentication/permissions-auth.decorator';
+import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { CreateSignaLocationDto } from './dto/create-signa_location.dto';
 import { UpdateSignaLocationDto } from './dto/update-signa_location.dto';
 import { SignaLocationService } from './signa_location.service';
