@@ -8,9 +8,9 @@ export class OrgaNeedsRepository {
   private static readonly basePath = "orga-needs";
 
   static fetchStats(context: Context, periodAndTeams: OrgaNeedsRequest) {
-    return context.$axios.post<HttpStringified<OrgaNeedsResponse[]>>(
+    return context.$axios.get<HttpStringified<OrgaNeedsResponse[]>>(
       this.basePath,
-      periodAndTeams
+      { params: periodAndTeams }
     );
   }
 }
