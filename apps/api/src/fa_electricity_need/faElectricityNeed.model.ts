@@ -22,3 +22,17 @@ export type ElectricityType =
   | typeof P17_63A_TRI
   | typeof P17_63A_TETRA
   | typeof P17_125A_TETRA;
+
+export const electricityTypes: Record<ElectricityType, ElectricityType> = {
+  PC16_Prise_classique: PC16_Prise_classique,
+  P17_16A_MONO: P17_16A_MONO,
+  P17_16A_TRI: P17_16A_TRI,
+  P17_16A_TETRA: P17_16A_TETRA,
+  P17_32A_MONO: P17_32A_MONO,
+  P17_32A_TRI: P17_32A_TRI,
+  P17_32A_TETRA: P17_32A_TETRA,
+  P17_63A_MONO: P17_63A_MONO,
+  P17_63A_TRI: P17_63A_TRI,
+  P17_63A_TETRA: P17_63A_TETRA,
+  P17_125A_TETRA: P17_125A_TETRA,
+};

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Post,
@@ -121,6 +122,7 @@ export class FaSitePublishAnimationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Delete(':faId')
+  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: 'Delete a fa site publish animation',

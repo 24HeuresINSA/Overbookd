@@ -1,9 +1,19 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { CollaboratorWithId } from '../collaborator/collaborator.model';
-import { FaFeedbackSubjectType } from '../fa-feedback/faFeedback.model';
-import { ElectricityType } from '../fa_electricity_need/faElectricityNeed.model';
-import { SignaType } from '../fa_signa_need/faSignaNeed.model';
-import { AnimationCategory } from '../fa_site_publish_animation/faSitePublishAnimation.model';
-import { FtStatus } from '../ft/ft.model';
+import {
+  FaFeedbackSubjectType,
+  subjectTypes,
+} from '../fa-feedback/faFeedback.model';
+import {
+  ElectricityType,
+  electricityTypes,
+} from '../fa_electricity_need/faElectricityNeed.model';
+import { SignaType, signaTypes } from '../fa_signa_need/faSignaNeed.model';
+import {
+  AnimationCategory,
+  animationCategories,
+} from '../fa_site_publish_animation/faSitePublishAnimation.model';
+import { FtStatus, ftStatuses } from '../ft/ft.model';
 
 const DRAFT = 'DRAFT';
 const SUBMITTED = 'SUBMITTED';
@@ -62,7 +72,9 @@ export interface SignaLocation {
 }
 
 export class SignaLocationRepresentation implements SignaLocation {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({})
   name: string;
 }
 
@@ -73,8 +85,11 @@ interface UserName {
 }
 
 class UserNameRepresentation implements UserName {
+  @ApiProperty({})
   firstname: string;
+  @ApiProperty({})
   lastname: string;
+  @ApiProperty({ required: false })
   nickname?: string;
 }
 
@@ -86,6 +101,7 @@ export class UserNameWithIdRepresentation
   extends UserNameRepresentation
   implements UserNameWithId
 {
+  @ApiProperty({})
   id: number;
 }
 
@@ -98,10 +114,15 @@ export interface Team {
 }
 
 export class TeamRepresentation implements Team {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({})
   name: string;
+  @ApiProperty({})
   color: string;
+  @ApiProperty({})
   icon: string;
+  @ApiProperty({})
   code: string;
 }
 
@@ -115,11 +136,17 @@ export interface FaElectricityNeed {
 }
 
 export class FaElectricityNeedRepresentation implements FaElectricityNeed {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({ enum: electricityTypes })
   electricityType: ElectricityType;
+  @ApiProperty({ required: false })
   device?: string;
+  @ApiProperty({})
   power: number;
+  @ApiProperty({})
   count: number;
+  @ApiProperty({ required: false })
   comment?: string;
 }
 
@@ -132,10 +159,15 @@ export interface FaSignaNeed {
 }
 
 export class FaSignaNeedRepresentation implements FaSignaNeed {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({ enum: signaTypes })
   signaType: SignaType;
+  @ApiProperty({})
   text: string;
+  @ApiProperty({})
   count: number;
+  @ApiProperty({ required: false })
   comment?: string;
 }
 
@@ -147,9 +179,13 @@ export interface FaFeedback {
 }
 
 export class FaFeedbackRepresentation implements FaFeedback {
+  @ApiProperty({})
   comment: string;
+  @ApiProperty({})
   createdAt: Date;
-  author: UserNameRepresentation;
+  @ApiProperty({ type: UserNameRepresentation })
+  author: UserName;
+  @ApiProperty({ enum: subjectTypes })
   subject: FaFeedbackSubjectType;
 }
 
@@ -160,8 +196,11 @@ export interface FaTimeWindow {
 }
 
 export class FaTimeWindowRepresentation implements FaTimeWindow {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({})
   start: Date;
+  @ApiProperty({})
   end: Date;
 }
 
@@ -172,8 +211,11 @@ export interface BaseFt {
 }
 
 export class BaseFtRepresentation implements BaseFt {
+  @ApiProperty({})
   id: number;
+  @ApiProperty({})
   name: string;
+  @ApiProperty({ enum: ftStatuses })
   status: FtStatus;
 }
 
@@ -183,8 +225,10 @@ export interface FaReview {
 }
 
 export class FaReviewRepresentation implements FaReview {
-  user: UserNameRepresentation;
-  team: TeamRepresentation;
+  @ApiProperty({ type: UserNameRepresentation })
+  user: UserName;
+  @ApiProperty({ type: TeamRepresentation })
+  team: Team;
 }
 
 export interface FaReviewTeam {
@@ -192,7 +236,8 @@ export interface FaReviewTeam {
 }
 
 export class FaReviewTeamRepresentation implements FaReviewTeam {
-  team: TeamRepresentation;
+  @ApiProperty({ type: TeamRepresentation })
+  team: Team;
 }
 
 export interface SitePublishAnimation {
@@ -205,9 +250,13 @@ export interface SitePublishAnimation {
 export class SitePublishAnimationRepresentation
   implements SitePublishAnimation
 {
+  @ApiProperty({})
   photoLink?: string;
+  @ApiProperty({})
   description?: string;
+  @ApiProperty({})
   isFlagship?: boolean;
+  @ApiProperty({ enum: animationCategories })
   categories?: AnimationCategory[];
 }
 
