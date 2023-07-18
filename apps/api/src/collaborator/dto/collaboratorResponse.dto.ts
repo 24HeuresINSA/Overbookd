@@ -42,6 +42,7 @@ export class CollaboratorResponseDto
   @ApiProperty({
     required: true,
     description: 'The phone number of the collaborator',
+    example: '0601020304',
   })
   @IsDefined()
   @IsPhoneNumber('FR')
@@ -50,6 +51,7 @@ export class CollaboratorResponseDto
   @ApiProperty({
     required: false,
     description: 'The email of the collaborator',
+    example: 'john@doe.com',
   })
   @IsEmail()
   @IsOptional()

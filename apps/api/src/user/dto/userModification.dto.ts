@@ -41,6 +41,7 @@ export class UserModificationDto implements UserUpdateForm {
   @ApiProperty({
     required: false,
     description: 'The email of the user',
+    example: 'john@doe.com',
   })
   @IsOptional()
   @IsEmail()
@@ -58,6 +59,7 @@ export class UserModificationDto implements UserUpdateForm {
   @ApiProperty({
     required: false,
     description: 'The phone number of the user',
+    example: '0601020304',
   })
   @IsOptional()
   @IsNotEmpty()

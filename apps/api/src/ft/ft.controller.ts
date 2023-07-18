@@ -56,6 +56,8 @@ import { FtService } from './ft.service';
 import { FtIdResponse } from './ftTypes';
 import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
 import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
+import { StatsResponseDto } from '../fa/dto/statsResponse.dto';
+import { FollowingFtResponseDto } from './dto/followingFtResponse.dto';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -125,7 +127,8 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'Get FT stats',
-    type: Promise<StatsPayload[]>,
+    isArray: true,
+    type: StatsResponseDto,
   })
   getFtStats(): Promise<StatsPayload[]> {
     return this.ftService.getFtStats();
@@ -230,7 +233,7 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'Get the previous ft',
-    type: Promise<FtIdResponse | null>,
+    type: FollowingFtResponseDto,
   })
   findPrevious(
     @Param('id', ParseIntPipe) id: number,
@@ -244,7 +247,7 @@ export class FtController {
   @ApiResponse({
     status: 200,
     description: 'Get the next ft',
-    type: Promise<FtIdResponse | null>,
+    type: FollowingFtResponseDto,
   })
   findNext(
     @Param('id', ParseIntPipe) id: number,

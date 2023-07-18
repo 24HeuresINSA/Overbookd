@@ -46,6 +46,7 @@ export class UserCreationDto implements UserCreateForm {
   @ApiProperty({
     required: true,
     description: 'The email of the user',
+    example: 'john@doe.com',
   })
   @IsDefined()
   @IsEmail()
@@ -65,6 +66,7 @@ export class UserCreationDto implements UserCreateForm {
   @ApiProperty({
     required: true,
     description: 'The phone number of the user',
+    example: '0601020304',
   })
   @IsDefined()
   @IsNotEmpty()

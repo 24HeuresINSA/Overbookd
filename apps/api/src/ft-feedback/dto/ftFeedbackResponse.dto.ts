@@ -4,7 +4,13 @@ import {
   FtFeedbackAuthor,
   FtFeedbackResponse,
   FtFeedbackSubjectType,
+  ftFeedbackSubjectTypes,
 } from '../ftFeedback.model';
+
+class FtFeedbackAuthorRepresentation implements FtFeedbackAuthor {
+  firstname: string;
+  lastname: string;
+}
 
 export class FtFeedbackResponseDto implements FtFeedbackResponse {
   @ApiProperty({
@@ -17,7 +23,7 @@ export class FtFeedbackResponseDto implements FtFeedbackResponse {
 
   @ApiProperty({
     required: true,
-    type: FtFeedbackAuthor,
+    type: FtFeedbackAuthorRepresentation,
     description: 'The author of feedback',
   })
   @IsNumber()
@@ -33,8 +39,8 @@ export class FtFeedbackResponseDto implements FtFeedbackResponse {
 
   @ApiProperty({
     required: true,
-    type: String,
     description: 'The subject of feedback',
+    enum: ftFeedbackSubjectTypes,
   })
   @IsString()
   subject: FtFeedbackSubjectType;

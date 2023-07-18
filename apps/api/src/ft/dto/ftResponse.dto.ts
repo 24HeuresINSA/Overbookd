@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TimeSpanBase } from '../../../src/assignment/types/ftTimeSpanTypes';
-import { UserRequest } from '../../../src/ft_user_request/dto/ftUserRequestResponse.dto';
+import {
+  FtUserRequestResponseDto,
+  UserRequest,
+} from '../../../src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { FtStatus, ftStatuses } from '../ft.model';
 import {
   CompleteFtResponse,
@@ -12,17 +15,86 @@ import {
   Team,
   TeamRequest,
   TimeWindow,
+  UserName,
   UserNameWithId,
 } from '../ftTypes';
+import { SignaLocationRepresentation, faStatuses } from '../../fa/fa.model';
+import { FaStatus } from '@prisma/client';
+import {
+  FtFeedbackSubjectType,
+  ftFeedbackSubjectTypes,
+} from '../../ft-feedback/ftFeedback.model';
+import { ReviewStatus, reviewStatuses } from '../../ft_review/ftReview.model';
+
+class Author implements UserName {
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+}
+
+class FeedbackRepresentation implements Feedback {
+  id: number;
+  comment: string;
+  @ApiProperty({ enum: ftFeedbackSubjectTypes })
+  subject: FtFeedbackSubjectType;
+  authorId: number;
+  createdAt: Date;
+  @ApiProperty({ type: Author })
+  author: UserName;
+}
+
+class RequestedUser implements UserNameWithId {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+}
+
+class TeamRepresentation implements Team {
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
+  code: string;
+}
+
+class TeamRequestRepresentation implements TeamRequest {
+  quantity: number;
+  @ApiProperty({ type: TeamRepresentation })
+  team: Team;
+}
+
+class TimeSpanRepresentation implements TimeSpanBase {
+  id: number;
+  start: Date;
+  end: Date;
+}
 
 class TimeWindowRepresentation implements TimeWindow {
   id: number;
   start: Date;
   end: Date;
   sliceTime?: number;
+  @ApiProperty({ isArray: true, type: FtUserRequestResponseDto })
   userRequests: UserRequest[];
+  @ApiProperty({ isArray: true, type: TeamRequestRepresentation })
   teamRequests: TeamRequest[];
+  @ApiProperty({ isArray: true, type: TimeSpanRepresentation })
   timeSpans: TimeSpanBase[];
+}
+
+class ReviewRepresentation implements Review {
+  @ApiProperty({ enum: reviewStatuses })
+  status: ReviewStatus;
+  @ApiProperty({ type: TeamRepresentation })
+  team: Team;
+}
+
+class MinimalFaRepresentation implements MinimalFa {
+  id: number;
+  name: string;
+  @ApiProperty({ enum: faStatuses })
+  status: FaStatus;
 }
 
 export class CompleteFtResponseDto implements CompleteFtResponse {
@@ -64,7 +136,7 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
   @ApiProperty({
     required: false,
     description: 'The location of the ft',
-    type: SignaLocation,
+    type: SignaLocationRepresentation,
   })
   location: SignaLocation | null;
 
@@ -79,7 +151,7 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     required: true,
     description: 'All feedbacks of the ft',
     isArray: true,
-    type: Feedback,
+    type: FeedbackRepresentation,
   })
   feedbacks: Feedback[];
 
@@ -95,35 +167,35 @@ export class CompleteFtResponseDto implements CompleteFtResponse {
     required: true,
     description: 'All the reviews of the ft',
     isArray: true,
-    type: Review,
+    type: ReviewRepresentation,
   })
   reviews: Review[];
 
   @ApiProperty({
     required: false,
     description: 'The team in charge of the ft',
-    type: Team,
+    type: TeamRepresentation,
   })
   team: Team | null;
 
   @ApiProperty({
     required: false,
     description: 'The user in charge of the ft',
-    type: UserNameWithId,
+    type: RequestedUser,
   })
   userInCharge: UserNameWithId | null;
 
   @ApiProperty({
     required: true,
     description: 'The parent fa of the ft',
-    type: MinimalFa,
+    type: MinimalFaRepresentation,
   })
   fa: MinimalFa | null;
 
   @ApiProperty({
     required: false,
     description: 'The user in charge of the ft review',
-    type: UserNameWithId,
+    type: RequestedUser,
   })
   reviewer?: UserNameWithId;
 }
@@ -153,21 +225,21 @@ export class LiteFtResponseDto implements LiteFtResponse {
   @ApiProperty({
     required: false,
     description: 'The user in charge of the ft',
-    type: UserNameWithId,
+    type: RequestedUser,
   })
   userInCharge: UserNameWithId | null;
 
   @ApiProperty({
     required: false,
     description: 'The team in charge of the ft',
-    type: Team,
+    type: TeamRepresentation,
   })
   team: Team | null;
 
   @ApiProperty({
     required: true,
     description: 'The parent fa of the ft',
-    type: MinimalFa,
+    type: MinimalFaRepresentation,
   })
   fa: MinimalFa | null;
 
@@ -175,14 +247,14 @@ export class LiteFtResponseDto implements LiteFtResponse {
     required: true,
     description: 'The reviews of the ft',
     isArray: true,
-    type: Review,
+    type: ReviewRepresentation,
   })
   reviews: Review[];
 
   @ApiProperty({
     required: false,
     description: 'The user in charge of the ft review',
-    type: UserNameWithId,
+    type: RequestedUser,
   })
   reviewer?: UserNameWithId;
 }

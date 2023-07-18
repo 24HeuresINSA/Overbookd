@@ -15,7 +15,11 @@ export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({ description: 'Volunteer lastname', type: String })
   lastname: string;
 
-  @ApiProperty({ description: 'Volunteer phone number', type: String })
+  @ApiProperty({
+    description: 'Volunteer phone number',
+    type: String,
+    example: '0601020304',
+  })
   phone: string;
 
   @ApiProperty({

@@ -14,16 +14,29 @@ export type DataBaseUserRequest = Pick<UserRequest, 'user'> & {
   ftTimeWindowsId: number;
 };
 
+class RequestedUser implements UserNameWithId {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+}
+
+class PeriodRepresentation implements PeriodForm {
+  start: Date;
+  end: Date;
+}
+
 class AlsoRequestedByFTRepresentation implements AlsoRequestedByFT {
   id: number;
   name: string;
+  @ApiProperty({ type: PeriodRepresentation })
   period: PeriodForm;
 }
 
 export class FtUserRequestResponseDto implements UserRequest {
   @ApiProperty({
     description: 'The user requested on the time window',
-    type: UserNameWithId,
+    type: RequestedUser,
     required: true,
   })
   user: UserNameWithId;

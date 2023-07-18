@@ -42,6 +42,7 @@ export class CollaboratorFormRequestDto
   @ApiProperty({
     required: true,
     description: 'The collaborator phone number',
+    example: '0601020304',
   })
   @IsDefined()
   @IsPhoneNumber('FR')

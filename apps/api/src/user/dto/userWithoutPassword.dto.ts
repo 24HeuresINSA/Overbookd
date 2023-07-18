@@ -35,6 +35,7 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
     name: 'email',
     description: 'User email',
     type: String,
+    example: 'john@doe.com',
   })
   email: string;
 
@@ -49,6 +50,7 @@ export class UserWithoutPasswordDto implements UserWithoutPassword {
     name: 'phone',
     description: 'User phone number',
     type: String,
+    example: '0601020304',
   })
   phone: string;
 
