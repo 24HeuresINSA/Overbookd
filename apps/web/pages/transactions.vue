@@ -80,7 +80,7 @@ export default {
   methods: {
     search(id) {
       this.filteredTransactions = this.transactions.filter((t) => {
-        return t.user_from.id === id || t.user_to.id === id;
+        return t.userFrom.id === id || t.userTo.id === id;
       });
     },
     clear() {

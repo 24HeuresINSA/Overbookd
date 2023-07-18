@@ -34,12 +34,13 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
-import { Transfer, User } from "~/utils/models/repo";
+import { Transfer } from "~/utils/models/repo";
+import { CompleteUser } from "~/utils/models/user";
 import { TMapState } from "~/utils/types/store";
 
 type UserAutocompleteItem = {
   text?: string;
-  value: Partial<User>;
+  value: Partial<CompleteUser>;
 };
 
 export default Vue.extend({
@@ -83,11 +84,24 @@ export default Vue.extend({
       },
     },
     userList(): UserAutocompleteItem[] {
-      return this.$accessor.user.usernames.map((user) => ({
-        text: user.username ?? "",
-        value: user,
-      }));
+      return this.$accessor.user.personalAccountConsumers.map(
+        ({ firstname, lastname, id }) => {
+          const username = `${firstname} ${lastname}`;
+          const value: Partial<CompleteUser> = {
+            firstname,
+            lastname,
+            id,
+          };
+          return {
+            text: username,
+            value,
+          };
+        }
+      );
     },
+  },
+  mounted() {
+    this.$accessor.user.fetchPersonnalAccountConsummers();
   },
   methods: {
     async transferMoney(): Promise<any> {

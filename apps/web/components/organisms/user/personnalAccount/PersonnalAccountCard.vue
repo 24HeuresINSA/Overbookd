@@ -97,7 +97,7 @@ export default Vue.extend({
         case "DEPOSIT":
           return false;
         case "TRANSFER":
-          return transaction.user_from.id === this.me.id;
+          return transaction.userFrom.id === this.me.id;
         case "EXPENSE":
           return true;
         default:
