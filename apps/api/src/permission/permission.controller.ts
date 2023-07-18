@@ -26,8 +26,8 @@ import { PermissionLinkDto } from './dto/permissionLink.dto';
 import { PermissionResponseDto } from './dto/permissionResponse.dto';
 import { PermissionService } from './permission.service';
 
-@ApiTags('permission')
-@Controller('permission')
+@ApiTags('permissions')
+@Controller('permissions')
 @ApiBadRequestResponse({
   description: 'Request is not formated as expected',
 })
@@ -92,7 +92,6 @@ export class PermissionController {
   @ApiResponse({
     status: 204,
     description: 'Delete a permission',
-    type: PermissionResponseDto,
   })
   async deletePermission(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.permissionService.deletePermission(id);

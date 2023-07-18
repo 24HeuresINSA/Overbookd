@@ -55,9 +55,9 @@ export class ConfigurationController {
   @ApiBearerAuth()
   @Permission('manage-config')
   @Post(':key')
-  @HttpCode(200)
+  @HttpCode(201)
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Upsert configuration',
     type: ConfigurationResponseDto,
   })

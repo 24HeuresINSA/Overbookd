@@ -26,7 +26,7 @@ export class PermissionResponseDto {
     name: 'teams',
     description: 'The teams that have this permission',
     isArray: true,
-    type: Number,
+    type: String,
   })
   teams: string[];
 }

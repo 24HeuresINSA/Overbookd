@@ -7,7 +7,7 @@ import { getPeriodDuration } from '../../src/utils/duration';
 const ONE_MINUTE_IN_MS = 60 * 1000;
 const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
 
-export interface OrgaNeedsRequest {
+interface OrgaNeedsRequest {
   start: Date;
   end: Date;
   teams: string[];

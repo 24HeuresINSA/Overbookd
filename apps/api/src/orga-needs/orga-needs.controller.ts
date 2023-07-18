@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, Query, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -11,7 +12,6 @@ import { Permission } from '../authentication/permissions-auth.decorator';
 import { OrgaNeedsResponseDto } from './dto/orga-needs-response.dto';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { OrgaNeedsRequestDto } from './dto/orga-needs-request.dto';
 
 @ApiTags('orga-needs')
 @Controller('orga-needs')
@@ -27,7 +27,7 @@ export class OrgaNeedsController {
   constructor(private readonly orgaNeedsService: OrgaNeedsService) {}
 
   @Permission('hard')
-  @Post()
+  @Get()
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -35,9 +35,28 @@ export class OrgaNeedsController {
     type: OrgaNeedsResponseDto,
     isArray: true,
   })
+  @ApiQuery({
+    name: 'start',
+    required: true,
+    type: Date,
+  })
+  @ApiQuery({
+    name: 'end',
+    required: true,
+    type: Date,
+  })
+  @ApiQuery({
+    name: 'teams',
+    required: false,
+    type: String,
+    isArray: true,
+  })
   async getOrgaNeeds(
-    @Body() periodAndTeams: OrgaNeedsRequestDto,
+    @Query('start') start: Date,
+    @Query('end') end: Date,
+    @Query('teams') teams?: string[],
   ): Promise<OrgaNeedsResponseDto[]> {
+    const periodAndTeams = { start, end, teams: teams ?? [] };
     return this.orgaNeedsService.computeOrgaStats(periodAndTeams);
   }
 }
