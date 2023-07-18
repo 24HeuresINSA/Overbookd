@@ -70,7 +70,7 @@ export default {
     if (!token) return undefined;
 
     const response = await fetch(
-      `${process.env.BASE_URL}user/${userId}/profile-picture`,
+      `${process.env.BASE_URL}${resource}/${userId}/profile-picture`,
       {
         method: "GET",
         headers: {

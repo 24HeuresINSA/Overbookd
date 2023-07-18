@@ -96,7 +96,7 @@ export default Vue.extend({
       if (notification.data) {
         //TODO: RepoFactory + safeCall
         await this.$axios
-          .post(`/user/friends`, {
+          .post(`/users/friends`, {
             from: this.me.id,
             to: notification.data,
           })
