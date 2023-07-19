@@ -1,4 +1,5 @@
 import { mutationTree, getterTree, actionTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
 import {
   InventoryRecord,
   LiteInventoryRecord,
@@ -6,7 +7,6 @@ import {
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
 import { RepoFactory } from "~/repositories/repoFactory";
-import { updateItemToList } from "~/utils/functions/list";
 
 const inventoryRepository = RepoFactory.InventoryRepository;
 

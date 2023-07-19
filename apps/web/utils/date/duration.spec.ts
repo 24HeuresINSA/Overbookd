@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals";
+import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "@overbookd/period";
 import { Duration } from "./duration";
-import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "./dateUtils";
 
 describe("duration", () => {
   describe.each`

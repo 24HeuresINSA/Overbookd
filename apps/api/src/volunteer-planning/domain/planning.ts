@@ -1,4 +1,4 @@
-import { updateItemToList } from '../../utils/list';
+import { updateItemToList } from '@overbookd/list';
 import { JsonStoredTask, StoredTask } from './storedTask';
 import { Task } from './task.model';
 

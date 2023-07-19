@@ -1,4 +1,4 @@
-import { updateItemToList } from "../../utils/functions/list";
+import { updateItemToList } from "@overbookd/list";
 import { Gear } from "~/utils/models/catalog.model";
 
 export interface Record {

@@ -19,6 +19,9 @@ ADD apps/api/ ./
 WORKDIR /overbookd/libraries
 ADD libraries/ ./
 
+WORKDIR /overbookd/domains
+ADD domains/ ./
+
 WORKDIR /overbookd
 RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 

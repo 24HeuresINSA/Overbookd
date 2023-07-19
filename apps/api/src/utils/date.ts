@@ -1,7 +1,5 @@
 import { DateArray } from 'ics';
 
-export const ONE_HOUR_IN_MS = 60 * 60 * 1000;
-
 export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',

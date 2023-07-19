@@ -1,4 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
@@ -12,7 +13,6 @@ import {
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
-import { updateItemToList } from "~/utils/functions/list";
 import {
   Feedback,
   FeedbackCreation,

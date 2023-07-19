@@ -1,4 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
@@ -8,7 +9,6 @@ import {
   uniqueByGearReducer,
   uniquePeriodsReducer,
 } from "~/utils/functions/gearRequest";
-import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
 import {
   Collaborator,
   CreateFa,

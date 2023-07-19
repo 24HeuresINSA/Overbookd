@@ -1,4 +1,4 @@
-import { beforeEach, describe, it, expect } from "@jest/globals";
+import { beforeEach, describe, it, expect } from "vitest";
 import { Availability } from "./volunteer-availability";
 import { AvailabilityRegistery } from "./volunteer-availability.registery";
 

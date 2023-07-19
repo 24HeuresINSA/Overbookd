@@ -1,4 +1,4 @@
-import { updateItemToList } from '../../utils/list';
+import { updateItemToList } from '@overbookd/list';
 import { GearRequestNotFound } from '../gearRequest.error';
 import {
   APPROVED,

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { removeItemAtIndex, updateItemToList } from '@overbookd/list';
 import { GearReferenceCodeService } from '../../gearReferenceCode.service';
 import { GearNotFoundException } from '../../catalog.service';
 import {
@@ -7,7 +8,6 @@ import {
   GearRepository,
   SearchGear,
 } from '../../interfaces';
-import { removeItemAtIndex, updateItemToList } from '../../../utils/list';
 
 class GearSearchBuilder {
   private ownerCondition = true;

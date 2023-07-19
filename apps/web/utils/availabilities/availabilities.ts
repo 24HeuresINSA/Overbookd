@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
+import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
 import { setDateHour } from "../date/dateUtils";
 import { isPartyShift } from "../shift/shift";
 import {

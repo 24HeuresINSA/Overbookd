@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { updateItemToList } from "../../utils/functions/list";
+import { updateItemToList } from "@overbookd/list";
 import { Availability } from "./volunteer-availability";
 import { AvailabilityError } from "./volunteer-availability.error";
 

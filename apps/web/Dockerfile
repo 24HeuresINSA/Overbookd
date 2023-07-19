@@ -17,6 +17,9 @@ ADD apps/web/ ./
 WORKDIR /overbookd/libraries
 ADD libraries/ ./
 
+WORKDIR /overbookd/domains
+ADD domains/ ./
+
 WORKDIR /overbookd
 RUN pnpm install --recursive --offline --filter '@overbookd/web...'
 

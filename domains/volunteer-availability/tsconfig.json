@@ -4,7 +4,6 @@
     "../../tsconfig.library-import"
   ],
   "compilerOptions": {
-    "rootDir": "./src",
     "outDir": "./dist",
   }
 }

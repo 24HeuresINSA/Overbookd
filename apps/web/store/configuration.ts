@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { updateItemToList } from "~/utils/functions/list";
 import { Configuration } from "~/utils/models/configuration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;

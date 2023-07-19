@@ -14,7 +14,9 @@
     "paths": {
       "~/*": ["./*"],
       "@/*": ["./*"],
-      "@overbookd/period": ["../../libraries/period/src"]
+      "@overbookd/list": ["../../libraries/list/src"],
+      "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/volunteer-availability": ["../../domains/volunteer-availability/src"]
     },
     "types": [
       "@nuxt/types",

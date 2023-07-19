@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { removeItemAtIndex, updateItemToList } from '../../../utils/list';
+import { removeItemAtIndex, updateItemToList } from '@overbookd/list';
 import {
   Category,
   CategoryAlreadyExists,

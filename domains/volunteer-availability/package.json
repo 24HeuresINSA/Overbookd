@@ -1,7 +1,7 @@
 {
-  "name": "@overbookd/period",
-  "version": "1.0.0-rc.1",
-  "description": "Gestion des periodes pour overbookd",
+  "name": "@overbookd/volunteer-availability",
+  "version": "1.0.0-rc.0",
+  "description": "Gestion des disponibilités des bénévoles pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "libraries/period"
+    "directory": "domains/volunteer-availability"
   },
   "scripts": {
     "build": "tsc",
@@ -23,17 +23,23 @@
     "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "echo 'No tests'",
-    "test:ci": "echo 'No tests'"
+    "test": "vitest'",
+    "test:ci": "vitest --coverage --reporters=default --reporters=junit"
   },
   "keywords": [
-    "period"
+    "availability",
+    "domain"
   ],
   "engines": {
     "node": ">=16",
     "pnpm": ">=8"
   },
+  "dependencies": {
+    "@overbookd/list": "workspace:*",
+    "@overbookd/period": "workspace:*"
+  },
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "vitest": "^0.33.0"
   }
 }
