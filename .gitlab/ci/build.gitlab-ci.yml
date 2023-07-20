@@ -29,3 +29,25 @@ overbookd/web_build:
     - when: never
   variables:
     PNPM_WORKSPACE: "@overbookd/web"
+
+overbookd/libraries_build:
+  extends: .build
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - libraries/**/*
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "{libraries/**}"
+
+overbookd/domains_build:
+  extends: .build
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - domains/**/*
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "{domains/**}"
