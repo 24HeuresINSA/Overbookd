@@ -1,5 +1,5 @@
 import { actionTree, mutationTree, getterTree } from "typed-vuex";
-import { Period, ONE_HOUR_IN_MS, QUARTER_IN_MS  } from "@overbookd/period";
+import { Period, ONE_HOUR_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";

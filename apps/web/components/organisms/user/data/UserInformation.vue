@@ -147,9 +147,9 @@
 </template>
 
 <script>
+import { removeItemAtIndex } from "@overbookd/list";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { removeItemAtIndex } from "~/utils/functions/list";
 import { isNumber, min } from "~/utils/rules/inputRules";
 import {
   formatPhoneLink,

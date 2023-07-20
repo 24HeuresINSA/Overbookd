@@ -21,7 +21,7 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
-import { moveAtFirstIndex } from "~/utils/functions/list";
+import { moveAtFirstIndex } from "@overbookd/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
 import { formatUsername } from "~/utils/user/userUtils";

@@ -1,6 +1,10 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Period } from "@overbookd/period";
-import { PeriodOrchestrator, Availability, AvailabilityRegistery } from "@overbookd/volunteer-availability";
+import {
+  PeriodOrchestrator,
+  Availability,
+  AvailabilityRegistery,
+} from "@overbookd/volunteer-availability";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriods } from "~/utils/models/period";
