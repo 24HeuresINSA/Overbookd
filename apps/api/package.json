@@ -19,7 +19,7 @@
     "prebuild": "rimraf dist",
     "build": "npx prisma generate && nest build",
     "build:ci": "pnpm run build",
-    "find-deadcode": "ts-prune --error",
+    "find-deadcode": "ts-prune --error --ignore 'domains|libraries'",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "start": "nest start --preserveWatchOutput",
