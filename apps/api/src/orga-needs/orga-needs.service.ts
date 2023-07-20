@@ -195,9 +195,7 @@ export class OrgaNeedsService {
     return Array(numberOfIntervals)
       .fill({})
       .map((_, index) => {
-        const start = new Date(
-          period.start.getTime() + index * QUARTER_IN_MS,
-        );
+        const start = new Date(period.start.getTime() + index * QUARTER_IN_MS);
         const end = new Date(start.getTime() + QUARTER_IN_MS);
         return { start, end };
       });
