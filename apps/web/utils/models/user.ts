@@ -4,34 +4,6 @@ import { FtStatus } from "./ft";
 import { TaskCategory } from "./ftTimeSpan";
 import { Notification } from "./repo";
 
-const Departments = {
-  TC: "TC",
-  IF: "IF",
-  GE: "GE",
-  GM: "GM",
-  GI: "GI",
-  GCU: "GCU",
-  GEN: "GEN",
-  SGM: "SGM",
-  BS: "BS",
-  FIMI: "FIMI",
-  AUTRE: "AUTRE",
-};
-
-type Department = keyof typeof Departments;
-
-const Years = {
-  A1: "A1",
-  A2: "A2",
-  A3: "A3",
-  A4: "A4",
-  A5: "A5",
-  VIEUX: "VIEUX",
-  AUTRE: "AUTRE",
-};
-
-type Year = keyof typeof Years;
-
 export interface DisplayedUser {
   firstname: string;
   lastname: string;
@@ -76,7 +48,7 @@ export interface CompleteUser extends User {
   profilePictureBlob?: string;
   charisma: number;
   balance: number;
-  team: string[];
+  teams: string[];
 
   // This is not in the API response, but is used in the frontend
   notifications: Notification[];

@@ -248,10 +248,10 @@ export default Vue.extend({
     mValidators(): Team[] {
       if (!this.validators) return [];
       // admin has all the validators powers
-      if (this.me.team.includes("admin")) return this.validators;
+      if (this.me.teams.includes("admin")) return this.validators;
 
       return this.validators.filter((validator: Team) =>
-        this.me.team.includes(validator.code)
+        this.me.teams.includes(validator.code)
       );
     },
     teamsThatNotValidateYet(): Team[] {

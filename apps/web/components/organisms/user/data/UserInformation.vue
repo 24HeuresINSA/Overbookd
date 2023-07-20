@@ -8,7 +8,7 @@
             {{ formatUserNameWithNickname }}
           </v-card-title>
           <v-card-text>
-            <OverChips :roles="selectedUser.team" />
+            <OverChips :roles="selectedUser.teams" />
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newTeam"
@@ -217,7 +217,7 @@ export default {
       return this.$accessor.user.me.id === this.selectedUser.id;
     },
     isHard() {
-      return (this.selectedUser.team ?? []).includes("hard");
+      return (this.selectedUser.teams ?? []).includes("hard");
     },
     teams() {
       return this.$accessor.team.allTeams;
@@ -252,11 +252,11 @@ export default {
       this.$accessor.user.updateSelectedUserTeams(teams);
     },
     computeTeams() {
-      const teamIndex = this.selectedUser.team.indexOf(this.newTeam);
+      const teamIndex = this.selectedUser.teams.indexOf(this.newTeam);
       if (teamIndex !== -1) {
-        return removeItemAtIndex(this.selectedUser.team, teamIndex);
+        return removeItemAtIndex(this.selectedUser.teams, teamIndex);
       }
-      return [...this.selectedUser.team, this.newTeam];
+      return [...this.selectedUser.teams, this.newTeam];
     },
     async savePersonnalData() {
       await this.$accessor.user.updateUser(this.user);
@@ -265,8 +265,8 @@ export default {
     async saveAvailabilities() {
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
         this.user.id
-      ),
-        this.fetchUser(this.user.id);
+      );
+      this.fetchUser(this.user.id);
     },
     deleteUser() {
       this.$accessor.user.deleteUser(this.user.id);
