@@ -5,7 +5,7 @@
   image: node:16-alpine
   script:
     - pnpm i
-    - pnpm run --filter ${PNPM_WORKSPACE} test:ci
+    - pnpm --filter ${PNPM_WORKSPACE} run test:ci
 
 overbookd/api_test:
   extends: .test
@@ -42,3 +42,25 @@ overbookd/web_test:
       coverage_report:
         coverage_format: cobertura
         path: apps/web/coverage/cobertura-coverage.xml
+
+overbookd/libraries_test:
+  extends: .test
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - libraries/**/*
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "{libraries/**}"
+
+overbookd/domains_test:
+  extends: .test
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - domains/**/*
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "{domains/**}"

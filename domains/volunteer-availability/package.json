@@ -24,7 +24,7 @@
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
     "test": "vitest --config ../../vitest.config.ts",
-    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=default --reporter=junit --watch=false"
+    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
   },
   "keywords": [
     "availability",
