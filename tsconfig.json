@@ -7,21 +7,21 @@
     "isolatedModules": true,
     "sourceMap": true,
     "declaration": true,
+    "declarationMap": true,
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noUncheckedIndexedAccess": false,
     "noImplicitReturns": false,
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
     "emitDeclarationOnly": true,
     "resolveJsonModule": true,
     "paths": {
       "@overbookd/api": ["./apps/api/src"],
+      "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/web": ["./apps/web/src"],
     }
   },
-  "exclude": ["**/dist", "**/node_modules", "**/build"]
+  "exclude": ["**/dist", "**/node_modules", "**/build", "**/*.spec.ts"]
 }
