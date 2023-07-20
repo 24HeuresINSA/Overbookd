@@ -29,7 +29,9 @@ ARG BASE_URL
 
 ENV BASE_URL=$BASE_URL
 
-RUN pnpm --filter '@overbookd/web' run build:ci
+ADD tsconfig.library-import.json ./
+ADD tsconfig.package.json ./
+RUN pnpm --filter '@overbookd/web...' run build:ci
 
 FROM node:16-alpine
 
