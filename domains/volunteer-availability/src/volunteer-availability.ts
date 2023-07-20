@@ -1,4 +1,4 @@
-import { ONE_HOUR_IN_MS, Period } from "@overbookd/period";
+import { Period, TWO_HOURS_IN_MS } from "@overbookd/period";
 import { SHIFT_HOURS_UTC } from "./shift.constant";
 import {
   AvailabilityMinimumPeriodDurationError,
@@ -6,8 +6,6 @@ import {
   AvailabilityPeriodTimelineError,
   AvailabilityStartError,
 } from "./volunteer-availability.error";
-
-const TWO_HOURS_IN_MS = 2 * ONE_HOUR_IN_MS;
 
 export class Availability {
   public start: Date;
