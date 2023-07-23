@@ -8,8 +8,8 @@ stages:
   - unconfidentializer
   - install
   - check
-  - test
   - build
+  - test
   - docker-build
   - docker-scan
   - docker-publish

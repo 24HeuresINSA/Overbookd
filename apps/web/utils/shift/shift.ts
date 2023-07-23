@@ -1,8 +1,4 @@
-export const SHIFT_HOURS_UTC = {
-  DAY: 8,
-  NIGHT: 4,
-  PARTY: 16,
-};
+import { SHIFT_HOURS_UTC } from "@overbookd/volunteer-availability";
 
 export const SHIFT_HOURS = {
   DAY: SHIFT_HOURS_UTC.DAY + 2,

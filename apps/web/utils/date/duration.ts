@@ -1,4 +1,4 @@
-import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "./dateUtils";
+import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "@overbookd/period";
 
 export class Duration {
   private constructor(private readonly milliseconds: number) {}

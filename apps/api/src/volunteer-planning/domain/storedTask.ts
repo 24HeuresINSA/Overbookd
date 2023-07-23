@@ -1,4 +1,5 @@
 import { Period } from '@overbookd/period';
+import { removeItemAtIndex } from '@overbookd/list';
 import { Assignment, Task, Volunteer } from './task.model';
 import {
   arePeriodsOverlapping,
@@ -6,7 +7,6 @@ import {
   includesOtherPeriod,
 } from '../../utils/period';
 import { getPeriodDuration } from '../../utils/duration';
-import { removeItemAtIndex } from '../../utils/list';
 
 type Assignee = { period: Period; id: number; name: string };
 

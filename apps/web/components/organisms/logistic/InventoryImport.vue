@@ -74,6 +74,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { removeItemAtIndex } from "@overbookd/list";
 import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
 import { GearRepository } from "~/domain/inventory/gear.repository";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
@@ -85,7 +86,6 @@ import {
   ManualInventoryRecordError,
 } from "~/domain/inventory/manual-inventory-record";
 import InventoryRecordForm from "../../molecules/logistic/InventoryRecordForm.vue";
-import { removeItemAtIndex } from "~/utils/functions/list";
 
 interface InventoryData {
   inventoryRecords: InventoryRecord[];

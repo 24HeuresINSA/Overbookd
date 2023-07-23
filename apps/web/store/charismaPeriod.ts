@@ -1,11 +1,11 @@
 import { actionTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
 import {
   castCharismaPeriodsWithDate,
   castCharismaPeriodWithDate,
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charismaPeriod";
-import { updateItemToList } from "~/utils/functions/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 

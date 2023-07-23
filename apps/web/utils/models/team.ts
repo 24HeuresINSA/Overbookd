@@ -1,4 +1,4 @@
-import { moveAtFirstIndex } from "../functions/list";
+import { moveAtFirstIndex } from "@overbookd/list";
 
 export interface Team {
   id: number;

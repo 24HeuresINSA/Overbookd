@@ -1,9 +1,8 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Period } from "@overbookd/period";
+import { Period, TWO_HOURS_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { ONE_HOUR_IN_MS, QUARTER_IN_MS } from "~/utils/date/dateUtils";
 import { castPeriod } from "~/utils/models/period";
 import { Team } from "~/utils/models/team";
 import {
@@ -13,8 +12,6 @@ import {
   TimelineTimeWindow,
 } from "~/utils/models/timeline";
 import { HttpStringified } from "~/utils/types/http";
-
-const TWO_HOURS_IN_MS = ONE_HOUR_IN_MS * 2;
 
 const timelineRepo = RepoFactory.TimelineRepository;
 

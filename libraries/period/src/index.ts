@@ -1,1 +1,2 @@
-export * from './period'
+export * from "./duration.constant";
+export * from "./period";

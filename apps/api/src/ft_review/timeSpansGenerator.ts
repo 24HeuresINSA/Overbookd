@@ -1,6 +1,6 @@
 import { DataBaseUserRequest } from '../../src/ft_user_request/dto/ftUserRequestResponse.dto';
 import { TimeSpan, TimeWindow } from '../ft/ftTypes';
-import { ONE_HOUR_IN_MS } from '../utils/date';
+import { ONE_HOUR_IN_MS } from '@overbookd/period';
 import { getPeriodDuration } from '../utils/duration';
 
 type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {

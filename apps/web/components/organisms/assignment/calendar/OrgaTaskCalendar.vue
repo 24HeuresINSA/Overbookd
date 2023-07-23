@@ -28,10 +28,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Availability } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
-import { Availability } from "~/domain/volunteer-availability/volunteer-availability";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { Volunteer } from "~/utils/models/assignment";

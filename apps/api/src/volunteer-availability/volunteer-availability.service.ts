@@ -1,11 +1,12 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
-import { ONE_HOUR_IN_MS, formatDateWithMinutes } from '../utils/date';
+import { ONE_HOUR_IN_MS } from '@overbookd/period';
 import {
   PeriodOrchestrator,
   PeriodWithError,
-} from './domain/period-orchestrator';
+} from '@overbookd/volunteer-availability';
+import { PrismaService } from '../prisma.service';
+import { formatDateWithMinutes } from '../utils/date';
 import { PeriodDto } from './dto/period.dto';
 
 @Injectable()

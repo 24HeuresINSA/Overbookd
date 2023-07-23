@@ -1,5 +1,5 @@
 import { Period } from "@overbookd/period";
-import { removeItemAtIndex, updateItemToList } from "~/utils/functions/list";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { Volunteer } from "~/utils/models/assignment";
 import { VolunteerTask } from "~/utils/models/user";
 import { getUnderlyingTeams } from "./underlying-teams";

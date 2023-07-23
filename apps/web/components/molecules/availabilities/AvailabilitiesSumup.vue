@@ -22,8 +22,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Period } from "@overbookd/period";
+import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { PeriodOrchestrator } from "~/domain/volunteer-availability/period-orchestrator";
 import {
   hasAvailabilityPeriodError,
   isAvailabilityPeriodSelected,

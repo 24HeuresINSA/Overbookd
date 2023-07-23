@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/api",
-  "version": "1.16.4-rc.25",
+  "version": "1.16.4-rc.26",
   "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -19,7 +19,7 @@
     "prebuild": "rimraf dist",
     "build": "npx prisma generate && nest build",
     "build:ci": "pnpm run build",
-    "find-deadcode": "ts-prune --error",
+    "find-deadcode": "ts-prune --error --ignore 'domains|libraries'",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "start": "nest start --preserveWatchOutput",
@@ -46,7 +46,9 @@
     "@nestjs/passport": "^10.0.0",
     "@nestjs/platform-express": "^9.4.3",
     "@nestjs/swagger": "^7.0.12",
+    "@overbookd/list": "workspace:^",
     "@overbookd/period": "workspace:^",
+    "@overbookd/volunteer-availability": "workspace:^",
     "@nestjs/throttler": "^4.2.1",
     "@prisma/client": "^4.16.2",
     "bcrypt": "^5.1.0",
@@ -101,8 +103,7 @@
     "ts-loader": "^9.4.4",
     "ts-node": "^10.0.0",
     "ts-prune": "^0.10.3",
-    "tsconfig-paths": "4.2.0",
-    "typescript": "^5.1.6"
+    "tsconfig-paths": "4.2.0"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

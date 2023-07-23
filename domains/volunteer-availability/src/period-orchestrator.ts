@@ -1,6 +1,6 @@
-import { Period } from '@overbookd/period';
-import { updateItemToList } from '../../utils/list';
-import { Availability } from './volunteer-availability';
+import { Period } from "@overbookd/period";
+import { updateItemToList } from "@overbookd/list";
+import { Availability } from "./volunteer-availability";
 
 export type PeriodWithError = Period & {
   message: string;
@@ -65,7 +65,7 @@ export class PeriodOrchestrator {
       })
       .map((period) => ({
         ...period,
-        message: 'La période doit durer au moins 2 heures',
+        message: "La période doit durer au moins 2 heures",
       }));
   }
 
@@ -76,7 +76,7 @@ export class PeriodOrchestrator {
   private mergePeriods(periods: Period[]): Period[] {
     if (!this.canMergeAtLeastOnePeriod(periods)) return periods;
     return this.mergePeriods(
-      periods.reduce(PeriodOrchestrator.reduceToMergedPeriods, [] as Period[]),
+      periods.reduce(PeriodOrchestrator.reduceToMergedPeriods, [] as Period[])
     );
   }
 
@@ -86,21 +86,21 @@ export class PeriodOrchestrator {
 
   private static reduceToMergedPeriods(
     periods: Period[],
-    period: Period,
+    period: Period
   ): Period[] {
     const mergeablePeriodIndex = periods.findIndex(
-      PeriodOrchestrator.isFollowingPeriod(period),
+      PeriodOrchestrator.isFollowingPeriod(period)
     );
     if (mergeablePeriodIndex === -1) return [...periods, period];
     return PeriodOrchestrator.mergePeriodToPeriodList(
       periods,
       mergeablePeriodIndex,
-      period,
+      period
     );
   }
 
   private static isMergeableFromOneOf(
-    periods: Period[],
+    periods: Period[]
   ): (value: Period, index: number) => boolean {
     return (period, startIndex) => {
       return periods
@@ -112,7 +112,7 @@ export class PeriodOrchestrator {
   private static mergePeriodToPeriodList(
     periods: Period[],
     mergeablePeriodIndex: number,
-    period: Period,
+    period: Period
   ) {
     const mergeablePeriod = periods.at(mergeablePeriodIndex);
 
@@ -122,14 +122,14 @@ export class PeriodOrchestrator {
       start: new Date(
         Math.min(
           new Date(mergeablePeriod.start).getTime(),
-          new Date(period.start).getTime(),
-        ),
+          new Date(period.start).getTime()
+        )
       ),
       end: new Date(
         Math.max(
           new Date(mergeablePeriod.end).getTime(),
-          new Date(period.end).getTime(),
-        ),
+          new Date(period.end).getTime()
+        )
       ),
     };
     return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);

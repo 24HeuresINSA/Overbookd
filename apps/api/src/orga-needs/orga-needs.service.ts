@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Period } from '@overbookd/period';
+import { Period, QUARTER_IN_MS } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { VolunteerAvailability } from '@prisma/client';
 import { getPeriodDuration } from '../../src/utils/duration';
-
-const ONE_MINUTE_IN_MS = 60 * 1000;
-const FIFTEEN_MINUTES_IN_MS = 15 * ONE_MINUTE_IN_MS;
 
 interface OrgaNeedsRequest {
   start: Date;
@@ -192,16 +189,14 @@ export class OrgaNeedsService {
 
   private buildOrgaNeedsIntervals(period: Period): Period[] {
     const numberOfIntervals = Math.floor(
-      getPeriodDuration(period) / FIFTEEN_MINUTES_IN_MS,
+      getPeriodDuration(period) / QUARTER_IN_MS,
     );
 
     return Array(numberOfIntervals)
       .fill({})
       .map((_, index) => {
-        const start = new Date(
-          period.start.getTime() + index * FIFTEEN_MINUTES_IN_MS,
-        );
-        const end = new Date(start.getTime() + FIFTEEN_MINUTES_IN_MS);
+        const start = new Date(period.start.getTime() + index * QUARTER_IN_MS);
+        const end = new Date(start.getTime() + QUARTER_IN_MS);
         return { start, end };
       });
   }
