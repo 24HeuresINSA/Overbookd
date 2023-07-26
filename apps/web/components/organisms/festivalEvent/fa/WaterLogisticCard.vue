@@ -14,7 +14,7 @@
           :value="mFA.waterNeed"
           label="Desctiption du besoin en eau"
           :disabled="isValidatedByOwner"
-          @change="onChange('waterNeed', $event)"
+          @change="updateWaterNeed($event)"
         ></v-text-field>
       </v-form>
     </v-card-text>
@@ -46,9 +46,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      this.$accessor.fa.updateFA({ key: key, value: value });
+    updateWaterNeed(waterNeed: string) {
+      this.$accessor.fa.updateFa({ ...this.mFA, waterNeed: waterNeed.trim() });
     },
   },
 });

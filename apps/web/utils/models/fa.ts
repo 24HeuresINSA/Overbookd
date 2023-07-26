@@ -120,6 +120,23 @@ export interface Fa extends BaseFa {
 
 export type CreateFa = Pick<Fa, "name">;
 
+export interface FaGeneralUpdate
+  extends Pick<
+    Fa,
+    | "id"
+    | "name"
+    | "description"
+    | "type"
+    | "securityNeed"
+    | "isPassRequired"
+    | "numberOfPass"
+    | "waterNeed"
+  > {
+  teamId: number | null;
+  userInChargeId: number | null;
+  locationId: number | null;
+}
+
 export interface Collaborator {
   id?: number;
   firstname?: string;
@@ -168,23 +185,6 @@ export interface FaTimeWindow {
 }
 export interface FaTimeWindowWithType extends FaTimeWindow {
   type: TimeWindowType;
-}
-
-export interface FaGeneralUpdate {
-  name: string;
-  type?: string;
-  teamId?: number;
-  userInChargeId?: number;
-  locationId?: number;
-  status: FaStatus;
-  description?: string;
-  isPublishable?: boolean;
-  securityNeed?: string;
-  isPassRequired?: boolean;
-  numberOfPass?: number;
-  waterNeed?: string;
-  waterFlowRequired?: string;
-  isDeleted?: boolean;
 }
 
 export interface FaValidationBody {
@@ -263,5 +263,33 @@ function castFeedbackWithDate(
   return {
     ...feedback,
     createdAt: createdAt,
+  };
+}
+
+export function toUpdateFa({
+  id,
+  name,
+  description,
+  type,
+  userInCharge,
+  team,
+  location,
+  securityNeed,
+  isPassRequired,
+  numberOfPass,
+  waterNeed,
+}: Fa): HttpStringified<FaGeneralUpdate> {
+  return {
+    id,
+    name,
+    description,
+    type,
+    userInChargeId: userInCharge?.id ?? null,
+    teamId: team?.id ?? null,
+    locationId: location?.id ?? null,
+    securityNeed,
+    isPassRequired,
+    numberOfPass,
+    waterNeed,
   };
 }
