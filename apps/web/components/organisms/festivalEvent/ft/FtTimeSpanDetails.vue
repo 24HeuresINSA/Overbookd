@@ -74,7 +74,7 @@ import { User } from "~/utils/models/user";
 import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "FTTimeSpanDetails",
+  name: "FtTimeSpanDetails",
   components: { TeamChip },
   computed: {
     timeSpan(): TimeSpanWithAssignees | null {

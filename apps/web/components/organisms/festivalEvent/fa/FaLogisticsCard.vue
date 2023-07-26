@@ -44,7 +44,7 @@ import { Fa } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: "FALogisticsCard",
+  name: "FaLogisticsCard",
   components: { FALogisticsTable, SearchGear },
   props: {
     title: {

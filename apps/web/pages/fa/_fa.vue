@@ -2,10 +2,10 @@
   <div class="main fa">
     <FestivalEventSidebar festival-event="FA" />
     <v-container class="container fa">
-      <FAGeneralCard id="general" />
-      <FADetailCard id="detail" />
+      <FaGeneralCard id="general" />
+      <FaDetailCard id="detail" />
       <SignaCard id="signa" />
-      <FATimeWindowCard id="timewindow" />
+      <FaTimeWindowCard id="timewindow" />
       <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
@@ -15,17 +15,17 @@
         <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
       </h4>
       <LogisticTimeWindow />
-      <FALogisticsCard
+      <FaLogisticsCard
         title="Matos"
         owner="matos"
         :ponctual-usage-gear="false"
       />
-      <FALogisticsCard
+      <FaLogisticsCard
         title="Barrières"
         owner="barrieres"
         :ponctual-usage-gear="false"
       />
-      <FALogisticsCard
+      <FaLogisticsCard
         title="Matos Elec / Eau"
         owner="elec"
         :ponctual-usage-gear="false"
@@ -33,7 +33,7 @@
       <ElecLogisticCard id="elec" />
       <WaterLogisticCard id="water" />
       <FeedbackCard id="feedback" />
-      <ChildFTCard id="ft" />
+      <ChildFtCard id="ft" />
     </v-container>
     <FestivalEventBottomBar festival-event="FA" />
     <SnackNotificationContainer />
@@ -46,13 +46,13 @@ import LogisticTimeWindow from "~/components/molecules/festivalEvent/logistic/Lo
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
 import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
-import ChildFTCard from "~/components/organisms/festivalEvent/fa/ChildFTCard.vue";
+import ChildFtCard from "~/components/organisms/festivalEvent/fa/ChildFtCard.vue";
 import CollaboratorCard from "~/components/organisms/festivalEvent/fa/CollaboratorCard.vue";
 import ElecLogisticCard from "~/components/organisms/festivalEvent/fa/ElecLogisticCard.vue";
-import FADetailCard from "~/components/organisms/festivalEvent/fa/FADetailCard.vue";
-import FAGeneralCard from "~/components/organisms/festivalEvent/fa/FAGeneralCard.vue";
-import FALogisticsCard from "~/components/organisms/festivalEvent/fa/FALogisticsCard.vue";
-import FATimeWindowCard from "~/components/organisms/festivalEvent/fa/FATimeWindowCard.vue";
+import FaDetailCard from "~/components/organisms/festivalEvent/fa/FaDetailCard.vue";
+import FaGeneralCard from "~/components/organisms/festivalEvent/fa/FaGeneralCard.vue";
+import FaLogisticsCard from "~/components/organisms/festivalEvent/fa/FaLogisticsCard.vue";
+import FaTimeWindowCard from "~/components/organisms/festivalEvent/fa/FaTimeWindowCard.vue";
 import SecurityCard from "~/components/organisms/festivalEvent/fa/SecurityCard.vue";
 import SignaCard from "~/components/organisms/festivalEvent/fa/SignaCard.vue";
 import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
@@ -64,17 +64,17 @@ export default Vue.extend({
   components: {
     ElecLogisticCard,
     SignaCard,
-    FALogisticsCard,
-    FATimeWindowCard,
+    FaLogisticsCard,
+    FaTimeWindowCard,
     CollaboratorCard,
     WaterLogisticCard,
-    FAGeneralCard,
-    FADetailCard,
+    FaGeneralCard,
+    FaDetailCard,
     SecurityCard,
     FestivalEventSidebar,
     SnackNotificationContainer,
     LogisticTimeWindow,
-    ChildFTCard,
+    ChildFtCard,
     FestivalEventBottomBar,
     FeedbackCard,
   },

@@ -127,7 +127,7 @@
     </v-btn>
 
     <v-dialog v-model="isNewFTDialogOpen" width="600">
-      <NewFTCard />
+      <NewFtCard />
     </v-dialog>
 
     <v-dialog v-model="isDeleteDialogOpen" width="600">
@@ -159,7 +159,7 @@
 import Fuse from "fuse.js";
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
+import NewFtCard from "~/components/molecules/festivalEvent/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
 import { Header } from "~/utils/models/dataTable";
@@ -195,7 +195,7 @@ interface Data {
 
 export default Vue.extend({
   name: "Ft",
-  components: { SnackNotificationContainer, SearchTeam, NewFTCard },
+  components: { SnackNotificationContainer, SearchTeam, NewFtCard },
   data(): Data {
     return {
       headers: [

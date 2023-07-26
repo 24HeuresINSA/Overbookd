@@ -85,7 +85,7 @@ import { isNumber, min } from "~/utils/rules/inputRules";
 import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: "FTVolunteerRequirementForm",
+  name: "FtVolunteerRequirementForm",
   components: { SearchTeam, SearchUser, VolunteerRequestChip },
   model: {
     prop: "timeWindow",

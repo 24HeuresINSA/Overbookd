@@ -2,11 +2,11 @@
   <div class="main">
     <FestivalEventSidebar festival-event="FT" />
     <v-container class="container ft">
-      <FTGeneralCard id="general" />
-      <ParentFACard id="fa" />
-      <FTDetailCard id="detail" />
-      <FTTimeWindowCard id="timewindow" />
-      <FTLogisticsCard id="matos" title="Matos" />
+      <FtGeneralCard id="general" />
+      <ParentFaCard id="fa" />
+      <FtDetailCard id="detail" />
+      <FtTimeWindowCard id="timewindow" />
+      <FtLogisticsCard id="matos" title="Matos" />
       <FeedbackCard id="feedback" form="FT" />
     </v-container>
     <FestivalEventBottomBar festival-event="FT" />
@@ -20,21 +20,21 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
 import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
 import FestivalEventSidebar from "~/components/organisms/festivalEvent/FestivalEventSidebar.vue";
-import FTDetailCard from "~/components/organisms/festivalEvent/ft/FTDetailCard.vue";
-import FTGeneralCard from "~/components/organisms/festivalEvent/ft/FTGeneralCard.vue";
-import FTLogisticsCard from "~/components/organisms/festivalEvent/ft/FTLogisticsCard.vue";
-import FTTimeWindowCard from "~/components/organisms/festivalEvent/ft/FTTimeWindowCard.vue";
-import ParentFACard from "~/components/organisms/festivalEvent/ft/ParentFACard.vue";
+import FtDetailCard from "~/components/organisms/festivalEvent/ft/FtDetailCard.vue";
+import FtGeneralCard from "~/components/organisms/festivalEvent/ft/FtGeneralCard.vue";
+import FtLogisticsCard from "~/components/organisms/festivalEvent/ft/FtLogisticsCard.vue";
+import FtTimeWindowCard from "~/components/organisms/festivalEvent/ft/FtTimeWindowCard.vue";
+import ParentFaCard from "~/components/organisms/festivalEvent/ft/ParentFaCard.vue";
 
 export default Vue.extend({
   name: "FT",
   components: {
     FestivalEventSidebar,
-    FTGeneralCard,
-    ParentFACard,
-    FTDetailCard,
-    FTTimeWindowCard,
-    FTLogisticsCard,
+    FtGeneralCard,
+    ParentFaCard,
+    FtDetailCard,
+    FtTimeWindowCard,
+    FtLogisticsCard,
     SnackNotificationContainer,
     FeedbackCard,
     FestivalEventBottomBar,

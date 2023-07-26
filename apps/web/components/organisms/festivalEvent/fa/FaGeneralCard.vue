@@ -57,7 +57,7 @@ import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 
 export default Vue.extend({
-  name: "FAGeneralCard",
+  name: "FaGeneralCard",
   components: { CardErrorList, SearchUser, SearchTeam },
   data: () => ({
     owner: "humain",

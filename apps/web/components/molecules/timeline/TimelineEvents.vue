@@ -39,7 +39,7 @@
       </div>
     </div>
     <v-dialog v-model="displayTimeSpanDetailsDialog" width="1000px">
-      <FTTimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
+      <FtTimeSpanDetails @close-dialog="closeTimeSpanDetailsDialog" />
     </v-dialog>
   </div>
 </template>
@@ -48,7 +48,7 @@
 import Vue from "vue";
 import { Period } from "@overbookd/period";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import FTTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FTTimeSpanDetails.vue";
+import FtTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FtTimeSpanDetails.vue";
 import {
   TimelineEvent,
   TimelineFt,
@@ -59,7 +59,7 @@ import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 
 export default Vue.extend({
   name: "TimelineEvents",
-  components: { TeamChip, FTTimeSpanDetails },
+  components: { TeamChip, FtTimeSpanDetails },
   data: () => {
     return {
       displayTimeSpanDetailsDialog: false,

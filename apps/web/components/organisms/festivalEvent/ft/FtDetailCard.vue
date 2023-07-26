@@ -26,7 +26,7 @@ import {
 import { Ft, FtCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: "FTDetailCard",
+  name: "FtDetailCard",
   components: { RichEditor, CardErrorList },
   data: () => ({
     owner: "humain",

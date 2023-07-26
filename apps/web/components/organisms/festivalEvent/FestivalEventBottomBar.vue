@@ -85,16 +85,16 @@
     </div>
 
     <v-dialog v-model="isValidationDialogOpen" width="600">
-      <FACheckBeforeSubmitCard
+      <FaCheckBeforeSubmitCard
         v-if="isFA"
         @close-dialog="isValidationDialogOpen = false"
         @submit="submit"
-      ></FACheckBeforeSubmitCard>
-      <FTCheckBeforeSubmitCard
+      ></FaCheckBeforeSubmitCard>
+      <FtCheckBeforeSubmitCard
         v-else
         @close-dialog="isValidationDialogOpen = false"
         @submit="submit"
-      ></FTCheckBeforeSubmitCard>
+      ></FtCheckBeforeSubmitCard>
     </v-dialog>
 
     <v-dialog v-model="gearRequestApprovalDialog" max-width="1000px">
@@ -187,14 +187,14 @@ import { MyUserInformation, User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
 import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
-import FACheckBeforeSubmitCard from "./fa/FACheckBeforeSubmitCard.vue";
-import FTCheckBeforeSubmitCard from "./ft/FTCheckBeforeSubmitCard.vue";
+import FaCheckBeforeSubmitCard from "./fa/FaCheckBeforeSubmitCard.vue";
+import FtCheckBeforeSubmitCard from "./ft/FtCheckBeforeSubmitCard.vue";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",
   components: {
-    FTCheckBeforeSubmitCard,
-    FACheckBeforeSubmitCard,
+    FtCheckBeforeSubmitCard,
+    FaCheckBeforeSubmitCard,
     ConfirmationMessage,
     GearRequestsValidation,
   },

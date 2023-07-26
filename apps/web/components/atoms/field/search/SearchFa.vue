@@ -24,12 +24,12 @@
 import Vue from "vue";
 import { BaseFa } from "~/utils/models/fa";
 
-interface SearchFAData {
+interface SearchFaData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: "SearchFA",
+  name: "SearchFa",
   model: {
     prop: "fa",
     event: "change",
@@ -52,7 +52,7 @@ export default Vue.extend({
       default: false,
     },
   },
-  data(): SearchFAData {
+  data(): SearchFaData {
     return {
       loading: false,
     };

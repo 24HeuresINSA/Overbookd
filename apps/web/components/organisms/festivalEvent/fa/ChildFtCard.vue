@@ -34,14 +34,14 @@
       </v-card-actions>
     </v-card>
     <v-dialog v-model="isNewFTDialogOpen" width="600">
-      <NewFTCard :fa-id="mFA.id" />
+      <NewFtCard :fa-id="mFA.id" />
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import NewFTCard from "~/components/molecules/festivalEvent/creation/NewFTCard.vue";
+import NewFtCard from "~/components/molecules/festivalEvent/creation/NewFtCard.vue";
 import { Fa } from "~/utils/models/fa";
 import {
   FtSimplified,
@@ -52,8 +52,8 @@ import {
 } from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: "ChildFTCard",
-  components: { NewFTCard },
+  name: "ChildFtCard",
+  components: { NewFtCard },
   data: () => ({
     headers: [
       { text: "Numéro", value: "id" },

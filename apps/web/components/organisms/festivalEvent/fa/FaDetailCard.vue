@@ -74,7 +74,7 @@ import {
 } from "~/utils/models/fa";
 
 export default Vue.extend({
-  name: "FADetailCard",
+  name: "FaDetailCard",
   components: { RichEditor, CardErrorList },
   data: () => ({
     owner: "humain",
