@@ -5,11 +5,11 @@
       <v-card-title>Créneaux</v-card-title>
 
       <v-card-text>
-        <FATimeWindowTable
+        <FaTimeWindowTable
           :disabled="isValidatedByOwners"
           @update="openEditDialog"
           @delete="deleteTimeWindow"
-        ></FATimeWindowTable>
+        ></FaTimeWindowTable>
       </v-card-text>
 
       <v-card-actions>
@@ -23,18 +23,18 @@
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <FATimeWindowForm
+      <FaTimeWindowForm
         @change="addTimeWindow"
         @close-dialog="closeTimeWindowDialog"
-      ></FATimeWindowForm>
+      ></FaTimeWindowForm>
     </v-dialog>
 
     <v-dialog v-model="isEditDialogOpen" max-width="600">
-      <FATimeWindowForm
+      <FaTimeWindowForm
         :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
         @close-dialog="closeTimeWindowDialog"
-      ></FATimeWindowForm>
+      ></FaTimeWindowForm>
     </v-dialog>
 
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600">
@@ -55,8 +55,8 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FATimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowForm.vue";
-import FATimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowTable.vue";
+import FaTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FaTimeWindowForm.vue";
+import FaTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FaTimeWindowTable.vue";
 import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
@@ -80,11 +80,11 @@ interface IdentifiableTimeWindow extends FaTimeWindowWithType {
 }
 
 export default Vue.extend({
-  name: "FATimeWindowCard",
+  name: "FaTimeWindowCard",
   components: {
-    FATimeWindowTable,
+    FaTimeWindowTable,
     FestivalEventCalendar,
-    FATimeWindowForm,
+    FaTimeWindowForm,
     CardErrorList,
     ConfirmationMessage,
   },

@@ -43,7 +43,7 @@ import { Ft } from "~/utils/models/ft";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: "FTLogisticsCard",
+  name: "FtLogisticsCard",
   components: { FTLogisticsTable, SearchGear },
   props: {
     title: {

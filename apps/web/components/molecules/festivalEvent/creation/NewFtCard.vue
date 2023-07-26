@@ -16,7 +16,7 @@ import Vue from "vue";
 import { Ft, FtCreation } from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: "NewFTCard",
+  name: "NewFtCard",
   props: {
     faId: {
       type: Number,

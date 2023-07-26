@@ -45,7 +45,7 @@ import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { formatDate, getHourDiff } from "~/utils/date/dateUtils";
 import { Ft, FtTimeWindow } from "~/utils/models/ft";
 
-interface FTTimeWindowFormData {
+interface FtTimeWindowFormData {
   start?: Date;
   end?: Date;
   toSlice: boolean;
@@ -53,7 +53,7 @@ interface FTTimeWindowFormData {
 }
 
 export default Vue.extend({
-  name: "FTTimeWindowForm",
+  name: "FtTimeWindowForm",
   components: { DateTimeField },
   model: {
     prop: "timeWindow",
@@ -65,7 +65,7 @@ export default Vue.extend({
       default: () => null,
     },
   },
-  data: (): FTTimeWindowFormData => ({
+  data: (): FtTimeWindowFormData => ({
     start: undefined,
     end: undefined,
     toSlice: false,

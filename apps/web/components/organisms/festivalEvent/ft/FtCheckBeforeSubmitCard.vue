@@ -66,7 +66,7 @@ import {
 } from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
-  name: "FTCheckBeforeSubmitCard",
+  name: "FtCheckBeforeSubmitCard",
   computed: {
     mFT(): Ft {
       return this.$accessor.ft.mFT;

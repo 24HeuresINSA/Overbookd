@@ -64,7 +64,7 @@ import {
 import { Fa, FaTimeWindowWithType, TimeWindowType } from "~/utils/models/fa";
 import { MyUserInformation, User } from "~/utils/models/user";
 
-interface FATimeWindowFormData {
+interface FaTimeWindowFormData {
   start?: Date;
   end?: Date;
   type: TimeWindowType;
@@ -74,7 +74,7 @@ interface FATimeWindowFormData {
 }
 
 export default Vue.extend({
-  name: "FATimeWindowForm",
+  name: "FaTimeWindowForm",
   components: { DateTimeField, ConfirmationMessage },
   model: {
     prop: "timeWindow",
@@ -86,7 +86,7 @@ export default Vue.extend({
       default: () => null,
     },
   },
-  data: (): FATimeWindowFormData => ({
+  data: (): FaTimeWindowFormData => ({
     start: undefined,
     end: undefined,
     type: TimeWindowType.ANIM,

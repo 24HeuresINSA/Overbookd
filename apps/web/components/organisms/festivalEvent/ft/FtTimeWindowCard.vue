@@ -4,12 +4,12 @@
       <CardErrorList festival-event="FT" :type="cardType" />
       <v-card-title>Créneau</v-card-title>
       <v-card-text>
-        <FTTimeWindowTable
+        <FtTimeWindowTable
           :disabled="isValidatedByOwners"
           @update-time="openEditTimeDialog"
           @update-volunteer="openEditVolunteerDialog"
           @delete="deleteTimeWindow"
-        ></FTTimeWindowTable>
+        ></FtTimeWindowTable>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -21,22 +21,22 @@
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="700">
-      <FTTimeWindowForm @change="addTimeWindow" />
+      <FtTimeWindowForm @change="addTimeWindow" />
     </v-dialog>
 
     <v-dialog v-model="isEditTimeDialogOpen" max-width="700">
-      <FTTimeWindowForm
+      <FtTimeWindowForm
         :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
-      ></FTTimeWindowForm>
+      ></FtTimeWindowForm>
     </v-dialog>
 
     <v-dialog v-model="isEditVolunteerDialogOpen" max-width="700">
-      <FTVolunteerRequirementForm
+      <FtVolunteerRequirementForm
         :time-window="selectedTimeWindow"
         @close-dialog="closeAllEditDialogs"
         @change="updateRequirements"
-      ></FTVolunteerRequirementForm>
+      ></FtVolunteerRequirementForm>
     </v-dialog>
 
     <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
@@ -54,9 +54,9 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FTTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowForm.vue";
-import FTTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FTTimeWindowTable.vue";
-import FTVolunteerRequirementForm from "~/components/molecules/festivalEvent/timeWindow/FTVolunteerRequirementForm.vue";
+import FtTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FtTimeWindowForm.vue";
+import FtTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FtTimeWindowTable.vue";
+import FtVolunteerRequirementForm from "~/components/molecules/festivalEvent/timeWindow/FtVolunteerRequirementForm.vue";
 import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
@@ -78,12 +78,12 @@ interface ConfirmationDialogData {
 }
 
 export default Vue.extend({
-  name: "FTTimeWindowCard",
+  name: "FtTimeWindowCard",
   components: {
-    FTTimeWindowTable,
+    FtTimeWindowTable,
     FestivalEventCalendar,
-    FTTimeWindowForm,
-    FTVolunteerRequirementForm,
+    FtTimeWindowForm,
+    FtVolunteerRequirementForm,
     CardErrorList,
     ConfirmationMessage,
   },

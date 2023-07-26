@@ -34,7 +34,7 @@ import { faTimeWindowsSorts } from "~/utils/functions/timeWindow";
 import { Fa, FaTimeWindow } from "~/utils/models/fa";
 
 export default Vue.extend({
-  name: "FTTimeWindowTable",
+  name: "FaTimeWindowTable",
   props: {
     disabled: {
       type: Boolean,

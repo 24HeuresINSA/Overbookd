@@ -56,7 +56,7 @@ import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 
 export default Vue.extend({
-  name: "FTGeneralCard",
+  name: "FtGeneralCard",
   components: { SearchUser, SearchSignaLocation, SearchTeam, CardErrorList },
   data: () => ({
     owner: "humain",

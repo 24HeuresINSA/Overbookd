@@ -152,7 +152,7 @@ import {
 } from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
-  name: "FACheckBeforeSubmitCard",
+  name: "FaCheckBeforeSubmitCard",
   computed: {
     FA(): any {
       return this.$accessor.fa;

@@ -79,7 +79,7 @@ import {
 } from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: "FTTimeWindowTable",
+  name: "FtTimeWindowTable",
   components: { VolunteerRequestChip },
   props: {
     disabled: {
