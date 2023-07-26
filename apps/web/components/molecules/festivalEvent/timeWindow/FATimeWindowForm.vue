@@ -2,150 +2,33 @@
   <div>
     <v-card class="form-card">
       <v-card-title>
-        <span class="headline">Ajouter un créneau</span>
+        <span class="headline">
+          {{ isEditForm ? "Modifier" : "Ajouter" }} un créneau
+        </span>
       </v-card-title>
 
-      <v-select
-        v-if="timeWindowsType.length > 0"
-        v-model="timeWindowType"
-        type="select"
-        label="Type"
-        :items="timeWindowsType"
-        class="row"
-      ></v-select>
-
-      <h3 class="subtitle">Début du créneau</h3>
-      <div class="row">
-        <v-menu
-          v-model="menuDateStart"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
-              v-model="formatDateStart"
-              label="Date de début"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              class="text-date"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="dateStart"
-            :max="formatDateEnd ? dateEnd : ''"
-            first-day-of-week="1"
-            @input="closeStartDatePicker"
-          ></v-date-picker>
-        </v-menu>
-
-        <v-menu
-          ref="menuTimeStart"
-          v-model="menuTimeStart"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          :return-value.sync="timeStart"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
-              v-model="timeStart"
-              label="Heure de début"
-              prepend-icon="mdi-clock-time-four-outline"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-time-picker
-            v-if="menuTimeStart"
-            v-model="timeStart"
-            :allowed-minutes="allowedStep"
-            format="24hr"
-            scrollable
-            full-width
-            :max="dateStart == dateEnd ? timeEnd : ''"
-            @click:minute="saveMenuTime($refs.menuTimeStart, timeStart)"
-          ></v-time-picker>
-        </v-menu>
-      </div>
-
-      <h3 class="subtitle">Fin du créneau</h3>
-      <div class="row">
-        <v-menu
-          v-model="menuDateEnd"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
-              v-model="formatDateEnd"
-              label="Date de fin"
-              prepend-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              class="text-date"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            v-model="dateEnd"
-            :min="formatDateStart ? dateStart : ''"
-            first-day-of-week="1"
-            @input="closeEndDatePicker"
-          ></v-date-picker>
-        </v-menu>
-
-        <v-menu
-          ref="menuTimeEnd"
-          v-model="menuTimeEnd"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          :return-value.sync="timeEnd"
-          transition="scale-transition"
-          offset-y
-          max-width="290px"
-          min-width="290px"
-        >
-          <template #activator="{ on, attrs }">
-            <v-text-field
-              v-model="timeEnd"
-              label="Heure de fin"
-              prepend-icon="mdi-clock-time-four-outline"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-time-picker
-            v-if="menuTimeEnd"
-            v-model="timeEnd"
-            :allowed-minutes="allowedStep"
-            format="24hr"
-            scrollable
-            full-width
-            :min="dateStart == dateEnd ? timeStart : ''"
-            @click:minute="saveMenuTime($refs.menuTimeEnd, timeEnd)"
-          ></v-time-picker>
-        </v-menu>
-      </div>
       <v-card-text>
-        Les activités en journée se passent entre 11h et 18h.
+        <h3>Type de créneau</h3>
+        <v-select
+          v-if="timeWindowsType.length > 0"
+          v-model="type"
+          type="select"
+          :items="timeWindowsType"
+          class="type-select"
+        ></v-select>
+
+        <h3>Début du créneau</h3>
+        <DateTimeField v-model="start" label="Début"></DateTimeField>
+
+        <h3>Fin du créneau</h3>
+        <DateTimeField v-model="end" label="Fin"></DateTimeField>
+
+        <span> Les activités en journée se passent entre 11h et 18h. </span>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="checkIfConfirmTimeWindow">
+        <v-btn color="blue darken-1" text @click="checkNeedForConfirmation">
           {{ timeWindow ? "Modifier" : "Ajouter" }}
         </v-btn>
       </v-card-actions>
@@ -170,8 +53,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import { formatDate } from "~/utils/date/dateUtils";
 import {
   hasAllValidations,
   hasAtLeastOneValidation,
@@ -180,17 +63,18 @@ import {
 import { Fa, FaTimeWindowWithType, TimeWindowType } from "~/utils/models/fa";
 import { MyUserInformation, User } from "~/utils/models/user";
 
-interface BrakeDownDate {
-  year: number;
-  month: number;
-  day: number;
-  hour: number;
-  minute: number;
+interface FATimeWindowFormData {
+  start?: Date;
+  end?: Date;
+  type: TimeWindowType;
+  isConfirmationDialogOpen: boolean;
+  animOwner: string;
+  matosOwners: string[];
 }
 
 export default Vue.extend({
   name: "FATimeWindowForm",
-  components: { ConfirmationMessage },
+  components: { DateTimeField, ConfirmationMessage },
   model: {
     prop: "timeWindow",
     event: "change",
@@ -201,20 +85,10 @@ export default Vue.extend({
       default: () => null,
     },
   },
-  data: () => ({
-    dateStart: "",
-    dateEnd: "",
-    timeStart: "",
-    timeEnd: "",
-    timeWindowType: "",
-
-    formatDateStart: "",
-    formatDateEnd: "",
-
-    menuDateStart: false,
-    menuTimeStart: false,
-    menuDateEnd: false,
-    menuTimeEnd: false,
+  data: (): FATimeWindowFormData => ({
+    start: undefined,
+    end: undefined,
+    type: TimeWindowType.ANIM,
 
     isConfirmationDialogOpen: false,
 
@@ -225,15 +99,11 @@ export default Vue.extend({
     mFA(): Fa {
       return this.$accessor.fa.mFA;
     },
-    type(): TimeWindowType {
-      return this.timeWindow?.type ?? this.timeWindowType;
-    },
     mTimeWindow(): FaTimeWindowWithType {
       return {
         type: this.type,
-        ...this.timeWindow,
-        start: new Date(this.dateStart + " " + this.timeStart),
-        end: new Date(this.dateEnd + " " + this.timeEnd),
+        start: this.startOrManifDate,
+        end: this.endOrManifDate,
       };
     },
     timeWindowsType(): string[] {
@@ -246,8 +116,14 @@ export default Vue.extend({
       }
       return allTimeWindowTypes;
     },
-    manifDate(): string {
-      return this.$accessor.configuration.get("eventDate")?.start;
+    startOrManifDate(): Date {
+      return this.start ?? this.manifDate;
+    },
+    endOrManifDate(): Date {
+      return this.end ?? this.manifDate;
+    },
+    manifDate(): Date {
+      return this.$accessor.configuration.eventStartDate;
     },
     me(): MyUserInformation {
       return this.$accessor.user.me;
@@ -257,6 +133,25 @@ export default Vue.extend({
     },
     isValidatedByMatosOwners(): boolean {
       return hasAllValidations(this.mFA, this.matosOwners);
+    },
+    isEditForm(): boolean {
+      return this.timeWindow !== null;
+    },
+    isFormInvalid(): boolean {
+      const requiredFieldsFilled = this.start && this.end;
+      if (!requiredFieldsFilled) {
+        this.showErrorMessage("❌ Tu dois compléter tous les champs !");
+        return true;
+      }
+
+      const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
+      if (!startBeforeEnd) {
+        this.showErrorMessage(
+          "❌ La date de début doit être avant la date de fin !"
+        );
+        return true;
+      }
+      return false;
     },
   },
   watch: {
@@ -269,89 +164,26 @@ export default Vue.extend({
     this.updateLocalVariable();
   },
   methods: {
-    allowedStep(m: number): boolean {
-      return m % 15 === 0;
-    },
-    setStart(startDate: Date) {
-      const { date, formatDate, time } = this.buildLocalDateValues(startDate);
-
-      this.dateStart = date;
-      this.formatDateStart = formatDate;
-      this.timeStart = time;
-    },
-    setEnd(endDate: Date) {
-      const { date, formatDate, time } = this.buildLocalDateValues(endDate);
-
-      this.dateEnd = date;
-      this.formatDateEnd = formatDate;
-      this.timeEnd = time;
-    },
-    buildLocalDateValues(date: Date) {
-      const brakeDownDate = this.breakDownDate(date);
-      const rawDate = this.buildRawDate(brakeDownDate);
-      return {
-        date: rawDate,
-        formatDate: this.formatDate(rawDate),
-        time: this.buildRawTime(brakeDownDate),
-      };
-    },
-
-    breakDownDate(date: Date): BrakeDownDate {
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const day = date.getDate();
-      const hour = date.getHours();
-      const minute = date.getMinutes();
-      return {
-        year,
-        month,
-        day,
-        hour,
-        minute,
-      };
-    },
-    buildRawDate({ year, month, day }: BrakeDownDate): string {
-      return `${year}-${month < 10 ? "0" + month : month}-${
-        day < 10 ? "0" + day : day
-      }`;
-    },
-    buildRawTime({ hour, minute }: BrakeDownDate): string {
-      return `${hour < 10 ? "0" + hour : hour}:${
-        minute < 10 ? "0" + minute : minute
-      }`;
-    },
     updateLocalVariable() {
-      if (!this.timeWindow) {
-        return this.clearLocalVariable();
-      }
-      const start = new Date(this.timeWindow.start);
-      const end = new Date(this.timeWindow.end);
+      if (!this.timeWindow) return this.clearLocalVariable();
 
-      this.setStart(start);
-      this.setEnd(end);
-      this.timeWindowType = this.timeWindow.type;
+      this.start = this.timeWindow.start;
+      this.end = this.timeWindow.end;
+      this.type = this.timeWindow.type;
     },
     clearLocalVariable() {
-      this.dateStart = this.manifDate;
-      this.dateEnd = this.manifDate;
-      this.timeStart = "";
-      this.timeEnd = "";
-
-      this.formatDateStart = "";
-      this.formatDateEnd = "";
-      this.timeWindowType = this.timeWindowsType?.[0] ?? "";
-    },
-    formatDate(date: string): string {
-      return formatDate(date);
+      this.start = this.manifDate;
+      this.end = this.manifDate;
+      this.type = TimeWindowType.ANIM;
     },
     confirmTimeWindow() {
-      if (this.formIsInvalid()) return;
+      if (this.isFormInvalid) return;
 
       this.$emit("change", this.mTimeWindow);
       this.$emit("close-dialog");
       this.clearLocalVariable();
     },
-    checkIfConfirmTimeWindow() {
+    checkNeedForConfirmation() {
       const logTeamCodes = ["matos", "barrieres", "elec"];
       const isMatosTimeframe = this.type === TimeWindowType.MATOS;
       const shouldAskConfirmation =
@@ -374,37 +206,8 @@ export default Vue.extend({
       this.isConfirmationDialogOpen = false;
       this.$emit("close-dialog");
     },
-    formIsInvalid(): boolean {
-      if (
-        !this.mTimeWindow.type ||
-        !this.formatDateStart ||
-        !this.formatDateEnd ||
-        !this.dateStart ||
-        !this.timeStart ||
-        !this.dateEnd ||
-        !this.timeEnd
-      ) {
-        this.showErrorMessage();
-        return true;
-      }
-      return false;
-    },
-    showErrorMessage() {
-      return this.$store.dispatch("notif/pushNotification", {
-        type: "error",
-        message: "❌ Tu dois compléter tous les champs !",
-      });
-    },
-    saveMenuTime(menu: any, time: string) {
-      menu.save(time);
-    },
-    closeStartDatePicker() {
-      this.menuDateStart = false;
-      this.formatDateStart = this.formatDate(this.dateStart);
-    },
-    closeEndDatePicker() {
-      this.menuDateEnd = false;
-      this.formatDateEnd = this.formatDate(this.dateEnd);
+    showErrorMessage(message: string) {
+      return this.$accessor.notif.pushNotification({ message });
     },
   },
 });
@@ -415,17 +218,8 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
 
-  .subtitle {
-    margin: 10px 24px 0 24px;
-  }
-
-  .row {
-    display: flex;
-    margin: 0 24px;
-  }
-
-  .time-row .text-date {
-    margin-right: 30px;
+  .type-select {
+    padding-top: 0;
   }
 }
 </style>

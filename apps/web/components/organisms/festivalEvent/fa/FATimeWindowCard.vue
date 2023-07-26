@@ -4,36 +4,6 @@
       <CardErrorList :type="cardType" />
       <v-card-title>Créneaux</v-card-title>
 
-      <v-data-table
-        :headers="headers"
-        :items="timeWindowsList"
-        dense
-        item-key="key"
-        :items-per-page="-1"
-        sort-by="dateStart"
-      >
-        <template #[`item.startDate`]="{ item }">
-          {{ formatDate(item.start) }}
-        </template>
-        <template #[`item.endDate`]="{ item }">
-          {{ formatDate(item.end) }}
-        </template>
-        <template #[`item.action`]="{ item }">
-          <div>
-            <v-btn v-if="isEditable(item)" icon @click="openUpdateModal(item)">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="isEditable(item)"
-              icon
-              @click="confirmToDeleteTimeframe(item)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </template>
-      </v-data-table>
-
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn v-if="!isValidatedByOwners" text @click="isAddDialogOpen = true"

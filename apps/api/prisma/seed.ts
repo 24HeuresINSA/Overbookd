@@ -449,10 +449,12 @@ async function main() {
     create: sgConfig,
   });
 
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
   const eventDateConfig: Prisma.ConfigurationUncheckedCreateInput = {
     key: 'eventDate',
     value: {
-      start: new Date().toISOString(),
+      start: currentDate.toISOString(),
     },
   };
   console.log('Creating of event date config');
