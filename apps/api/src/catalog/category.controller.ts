@@ -34,11 +34,20 @@ import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('catalog')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiUnauthorizedResponse({
+  description: "User don't have the right to access this route",
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@ApiNotFoundResponse({
+  description: "Can't find a requested resource",
+})
 @Controller('categories')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
-@ApiUnauthorizedResponse({
-  description: 'User must be authenticated',
-})
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
@@ -87,12 +96,6 @@ export class CategoryController {
     description: 'Get a specific category',
     type: CategoryResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
   @ApiParam({
     name: 'id',
     type: Number,
@@ -134,12 +137,6 @@ export class CategoryController {
     description: 'Creating a new category',
     type: CategoryResponseDto,
   })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
   create(@Body() categoryForm: CategoryFormRequestDto): Promise<Category> {
     return this.categoryService.create(categoryForm);
   }
@@ -151,15 +148,6 @@ export class CategoryController {
     status: 200,
     description: 'Updating a category',
     type: CategoryResponseDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Request is not formated as expected',
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
   })
   @ApiParam({
     name: 'id',
