@@ -4,41 +4,19 @@
       <CardErrorList :type="cardType" />
       <v-card-title>Créneaux</v-card-title>
 
-      <v-data-table
-        :headers="headers"
-        :items="timeWindowsList"
-        dense
-        item-key="key"
-        :items-per-page="-1"
-        sort-by="dateStart"
-      >
-        <template #[`item.startDate`]="{ item }">
-          {{ formatDate(item.start) }}
-        </template>
-        <template #[`item.endDate`]="{ item }">
-          {{ formatDate(item.end) }}
-        </template>
-        <template #[`item.action`]="{ item }">
-          <div>
-            <v-btn v-if="isEditable(item)" icon @click="openUpdateModal(item)">
-              <v-icon>mdi-pencil</v-icon>
-            </v-btn>
-            <v-btn
-              v-if="isEditable(item)"
-              icon
-              @click="confirmToDeleteTimeframe(item)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-          </div>
-        </template>
-      </v-data-table>
+      <v-card-text>
+        <FATimeWindowTable
+          :disabled="isValidatedByOwners"
+          @update="openEditDialog"
+          @delete="deleteTimeWindow"
+        ></FATimeWindowTable>
+      </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn v-if="!isValidatedByOwners" text @click="isAddDialogOpen = true"
-          >Ajouter un créneau</v-btn
-        >
+        <v-btn v-if="!isValidatedByOwners" text @click="openAddDialog">
+          Ajouter un créneau
+        </v-btn>
       </v-card-actions>
 
       <FestivalEventCalendar />
@@ -47,18 +25,19 @@
     <v-dialog v-model="isAddDialogOpen" max-width="600">
       <FATimeWindowForm
         @change="addTimeWindow"
-        @close-dialog="isAddDialogOpen = false"
+        @close-dialog="closeTimeWindowDialog"
       ></FATimeWindowForm>
     </v-dialog>
 
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <FATimeWindowForm
-        v-model="selectedTimeWindow"
+        :time-window="selectedTimeWindow"
         @change="updateTimeWindow"
-        @close-dialog="isEditDialogOpen = false"
+        @close-dialog="closeTimeWindowDialog"
       ></FATimeWindowForm>
     </v-dialog>
-    <v-dialog v-model="isConfirmationDialogOpen" max-width="600px">
+
+    <v-dialog v-model="isConfirmationDialogOpen" max-width="600">
       <ConfirmationMessage
         @close-dialog="isConfirmationDialogOpen = false"
         @confirm="resetLogValidations"
@@ -77,6 +56,7 @@
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import FATimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowForm.vue";
+import FATimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FATimeWindowTable.vue";
 import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
@@ -102,6 +82,7 @@ interface IdentifiableTimeWindow extends FaTimeWindowWithType {
 export default Vue.extend({
   name: "FATimeWindowCard",
   components: {
+    FATimeWindowTable,
     FestivalEventCalendar,
     FATimeWindowForm,
     CardErrorList,
@@ -113,8 +94,8 @@ export default Vue.extend({
     cardType: FaCardType.TIME_WINDOW,
     headers: [
       { text: "Type", value: "type" },
-      { text: "Date de début", value: "startDate" },
-      { text: "Date de fin", value: "endDate" },
+      { text: "Date de début", value: "start" },
+      { text: "Date de fin", value: "end" },
       { text: "Action", value: "action" },
     ],
     isAddDialogOpen: false,
@@ -179,7 +160,7 @@ export default Vue.extend({
       this.selectedTimeWindow = timeWindow;
 
       if (!shouldAskConfirmation) return this.deleteTimeframe();
-      this.isConfirmationDialogOpen = true;
+      this.openConfirmationDialog();
     },
     resetLogValidations() {
       const author: User = {
@@ -229,14 +210,7 @@ export default Vue.extend({
         : this.destructTimeWindowKeyToFindIndex(timeWindow!);
     },
     updateAnimationTimeWindow(timeWindow: FaTimeWindowWithType) {
-      if (!this.selectedTimeWindow) return;
-      const index = this.retrieveAnimationTimeWindowIndex(
-        this.selectedTimeWindow
-      );
-      this.$accessor.fa.updateTimeWindow({
-        index,
-        timeWindow,
-      });
+      this.$accessor.fa.updateTimeWindow(timeWindow);
     },
     findAnimationTimeWindowIndexByIdAndType(timeWindowId: number): number {
       return this.$accessor.fa.mFA.timeWindows!.findIndex(
@@ -248,9 +222,22 @@ export default Vue.extend({
     ): number {
       return parseInt(timeWindow.key.split("_")[1]);
     },
-    openUpdateModal(timeWindow: IdentifiableTimeWindow) {
+    openEditDialog(timeWindow: IdentifiableTimeWindow) {
       this.selectedTimeWindow = timeWindow;
       this.isEditDialogOpen = true;
+    },
+    openAddDialog() {
+      this.isAddDialogOpen = true;
+    },
+    closeTimeWindowDialog() {
+      this.isAddDialogOpen = false;
+      this.isEditDialogOpen = false;
+    },
+    openConfirmationDialog() {
+      this.isConfirmationDialogOpen = true;
+    },
+    closeConfirmationDialog() {
+      this.isConfirmationDialogOpen = false;
     },
     isAnimationTimeWindow(timeWindow: FaTimeWindowWithType): boolean {
       return timeWindow.type === TimeWindowType.ANIM;

@@ -139,11 +139,9 @@ export const mutations = mutationTree(state, {
     mFA.timeWindows?.push(timeWindow);
   },
 
-  UPDATE_TIME_WINDOW(
-    { mFA },
-    { index, timeWindow }: { index: number; timeWindow: FaTimeWindow }
-  ) {
+  UPDATE_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
     const minimumList = mFA.timeWindows ?? [];
+    const index = minimumList.findIndex((tw) => tw.id === timeWindow.id);
     mFA.timeWindows = updateItemToList(minimumList, index, timeWindow);
   },
 
@@ -552,11 +550,8 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", timeWindow);
     },
 
-    updateTimeWindow(
-      { commit },
-      { index, timeWindow }: { index: number; timeWindow: FaTimeWindow }
-    ) {
-      commit("UPDATE_TIME_WINDOW", { index, timeWindow });
+    updateTimeWindow({ commit }, timeWindow: FaTimeWindow) {
+      commit("UPDATE_TIME_WINDOW", timeWindow);
     },
 
     async deleteTimeWindow({ commit, state }, index: number) {

@@ -32,7 +32,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="blue darken-1" text @click="confirmTimeWindows">
+      <v-btn color="blue darken-1" text @click="confirmTimeWindow">
         {{ isEditForm ? "Modifier" : "Ajouter" }}
       </v-btn>
     </v-card-actions>
@@ -151,16 +151,13 @@ export default Vue.extend({
       this.toSlice = false;
       this.sliceTime = 2;
     },
-    confirmTimeWindows() {
+    confirmTimeWindow() {
       if (this.isFormInvalid) return;
       this.$emit("change", this.mTimeWindow);
       if (!this.isEditForm) this.clearLocalVariable();
     },
     showErrorMessage(message: string) {
-      return this.$store.dispatch("notif/pushNotification", {
-        type: "error",
-        message,
-      });
+      return this.$accessor.notif.pushNotification({ message });
     },
   },
 });
