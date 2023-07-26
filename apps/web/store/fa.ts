@@ -332,7 +332,6 @@ export const actions = actionTree(
 
     save: async function ({ dispatch, state }) {
       const allPromise = [];
-      allPromise.push(repo.updateFa(this, state.mFA as any));
       if (state.mFA.collaborator) {
         allPromise.push(
           repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator)
@@ -354,19 +353,6 @@ export const actions = actionTree(
             this,
             state.mFA.id,
             state.mFA.electricityNeeds
-          )
-        );
-      }
-      if (state.mFA.faSitePublishAnimation) {
-        const publishAnimation = {
-          ...state.mFA.faSitePublishAnimation,
-          faId: state.mFA.id,
-        };
-        allPromise.push(
-          repo.updatePublishAnimation(
-            this,
-            publishAnimation.faId,
-            publishAnimation
           )
         );
       }
