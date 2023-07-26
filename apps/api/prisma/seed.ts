@@ -361,7 +361,7 @@ async function main() {
         department: Departments.TC,
         year: Years.A1,
         password: hashPassword,
-        team: {
+        teams: {
           create: teams,
         },
       };
