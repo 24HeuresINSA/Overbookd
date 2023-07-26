@@ -66,14 +66,16 @@ import Vue from "vue";
 import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { isTaskValidatedBy } from "~/utils/festivalEvent/ftUtils";
-import { ftTimeWindowsSorts } from "~/utils/functions/timeWindow";
+import {
+  SortableTimeWindowHeader,
+  ftTimeWindowsSorts,
+} from "~/utils/functions/timeWindow";
 import {
   Ft,
   FtTeamRequest,
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-  SortableTimeWindowHeader,
 } from "~/utils/models/ft";
 
 export default Vue.extend({

@@ -220,6 +220,11 @@ export interface SitePublishAnimationWithFa
   };
 }
 
+export type FaTimeWindowSortFunction = (
+  timeWindows: FaTimeWindow[],
+  desc: boolean
+) => FaTimeWindow[];
+
 export interface ElectricityTypeWithLabel {
   type: ElectricityType;
   label: ElectricityTypeLabel;

@@ -8,14 +8,15 @@
       </v-card-title>
 
       <v-card-text>
-        <h3>Type de créneau</h3>
-        <v-select
-          v-if="timeWindowsType.length > 0"
-          v-model="type"
-          type="select"
-          :items="timeWindowsType"
-          class="type-select"
-        ></v-select>
+        <div v-if="!isEditForm && timeWindowsType.length > 0">
+          <h3>Type de créneau</h3>
+          <v-select
+            v-model="type"
+            type="select"
+            :items="timeWindowsType"
+            class="type-select"
+          ></v-select>
+        </div>
 
         <h3>Début du créneau</h3>
         <DateTimeField v-model="start" label="Début"></DateTimeField>

@@ -21,7 +21,7 @@
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="700">
-      <FTTimeWindowForm @change="addTimeWindow"></FTTimeWindowForm>
+      <FTTimeWindowForm @change="addTimeWindow" />
     </v-dialog>
 
     <v-dialog v-model="isEditTimeDialogOpen" max-width="700">

@@ -120,8 +120,6 @@ export interface FtTimeWindowUpdate {
   sliceTime: number | null;
 }
 
-export type SortableTimeWindowHeader = "startDate" | "endDate";
-
 export type FtTimeWindowSortFunction = (
   timeWindows: FtTimeWindow[],
   desc: boolean
