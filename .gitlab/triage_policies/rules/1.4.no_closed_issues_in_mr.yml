@@ -4,6 +4,7 @@ resource_rules:
       - name: find all opened MR and no closed issues
         conditions:
           state: opened
+          draft: false
           ruby: |
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
             MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
