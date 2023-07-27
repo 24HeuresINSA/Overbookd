@@ -298,8 +298,8 @@ export const actions = actionTree(
     },
 
     async updateFa({ commit }, fa: Fa) {
-      const ftToUpdate = toUpdateFa(fa);
-      const res = await safeCall(this, repo.updateFa(this, ftToUpdate), {
+      const faToUpdate = toUpdateFa(fa);
+      const res = await safeCall(this, repo.updateFa(this, faToUpdate), {
         successMessage: "FA sauvegardée 🥳",
         errorMessage: "FA non sauvegardée 😢",
       });
@@ -307,6 +307,11 @@ export const actions = actionTree(
       if (!res) return;
       const updatedFT = castFaWithDate(res.data);
       commit("UPDATE_SELECTED_FA", updatedFT);
+    },
+
+    async updateFaChunk({ state }, faChunk: Partial<Fa>) {
+      const fa = { ...state.mFA, ...faChunk };
+      this.dispatch("updateFa", fa);
     },
 
     async deleteFA({ commit }, faId: number) {

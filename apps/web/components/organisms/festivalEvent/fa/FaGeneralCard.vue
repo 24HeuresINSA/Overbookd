@@ -79,19 +79,16 @@ export default Vue.extend({
   },
   methods: {
     updateName(name: string) {
-      return this.updateFa({ name: name.trim() });
+      return this.$accessor.fa.updateFaChunk({ name: name.trim() });
     },
     updateType(type?: FaType) {
-      return this.updateFa({ type });
+      return this.$accessor.fa.updateFaChunk({ type });
     },
     updateTeam(team?: Team) {
-      return this.updateFa({ team });
+      return this.$accessor.fa.updateFaChunk({ team });
     },
     updateUserInCharge(userInCharge?: User) {
-      return this.updateFa({ userInCharge });
-    },
-    updateFa(faChunk: Partial<Fa>) {
-      this.$accessor.fa.updateFa({ ...this.mFA, ...faChunk });
+      return this.$accessor.fa.updateFaChunk({ userInCharge });
     },
   },
 });

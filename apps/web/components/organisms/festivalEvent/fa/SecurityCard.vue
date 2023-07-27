@@ -72,7 +72,7 @@ export default Vue.extend({
   },
   methods: {
     updateIsPassRequired(isPassRequired: boolean) {
-      return this.updateFa({
+      return this.$accessor.fa.updateFaChunk({
         isPassRequired,
         numberOfPass: isPassRequired ? this.mFA.numberOfPass : undefined,
       });
@@ -80,13 +80,12 @@ export default Vue.extend({
     updateNumberOfPass(numberOfPassString: string) {
       const numberOfPass = parseInt(numberOfPassString, 10);
       if (numberOfPass === this.mFA.numberOfPass || numberOfPass < 1) return;
-      return this.updateFa({ numberOfPass });
+      return this.$accessor.fa.updateFaChunk({ numberOfPass });
     },
     updateSecurityNeed(securityNeed: string) {
-      return this.updateFa({ securityNeed: securityNeed.trim() });
-    },
-    updateFa(faChunk: Partial<Fa>) {
-      this.$accessor.fa.updateFa({ ...this.mFA, ...faChunk });
+      return this.$accessor.fa.updateFaChunk({
+        securityNeed: securityNeed.trim(),
+      });
     },
   },
 });

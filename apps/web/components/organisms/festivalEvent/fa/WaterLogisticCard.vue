@@ -47,7 +47,7 @@ export default Vue.extend({
   },
   methods: {
     updateWaterNeed(waterNeed: string) {
-      this.$accessor.fa.updateFa({ ...this.mFA, waterNeed: waterNeed.trim() });
+      this.$accessor.fa.updateFaChunk({ waterNeed: waterNeed.trim() });
     },
   },
 });

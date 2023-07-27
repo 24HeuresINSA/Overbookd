@@ -106,10 +106,9 @@ export default Vue.extend({
   },
   methods: {
     updateFaDescription(description: string) {
-      return this.updateFa({ description: description.trim() });
-    },
-    updateFa(faChunk: Partial<Fa>) {
-      this.$accessor.fa.updateFa({ ...this.mFA, ...faChunk });
+      return this.$accessor.fa.updateFaChunk({
+        description: description.trim(),
+      });
     },
     updatePublishAnimationDescription(description: string) {
       return this.updatePublishAnimation({ description: description.trim() });
