@@ -77,7 +77,7 @@ export default {
   },
 
   router: {
-    middleware: ["auth", "user", "team"],
+    middleware: ["auth", "user", "team", "routing"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
