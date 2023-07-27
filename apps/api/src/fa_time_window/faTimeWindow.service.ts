@@ -18,7 +18,7 @@ export class FaTimeWindowService {
     const timeWindowToUpdate = { ...timeWindow, faId };
 
     return this.prisma.faTimeWindow.upsert({
-      where: { id: timeWindow.id },
+      where: { id: timeWindow?.id ?? -1 },
       create: timeWindowToUpdate,
       update: timeWindowToUpdate,
       select: SELECT_TIME_WINDOW,

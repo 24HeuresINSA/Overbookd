@@ -575,10 +575,7 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", timeWindow);
     },
 
-    async createAnimationTimeWindow(
-      { commit, state },
-      timeWindow: FaTimeWindow
-    ) {
+    async addAnimationTimeWindow({ commit, state }, timeWindow: FaTimeWindow) {
       const res = await safeCall(
         this,
         repo.updateAnimationTimeWindow(this, state.mFA.id, timeWindow),

@@ -58,6 +58,7 @@
         </v-btn>
       </div>
     </template>
+    <template #no-data> Aucun créneau ajouté </template>
   </v-data-table>
 </template>
 

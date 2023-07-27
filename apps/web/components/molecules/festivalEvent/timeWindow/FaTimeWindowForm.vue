@@ -61,7 +61,7 @@ import {
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
-import { Fa, FaTimeWindowWithType, TimeWindowType } from "~/utils/models/fa";
+import { Fa, TimeWindowType } from "~/utils/models/fa";
 import { MyUserInformation, User } from "~/utils/models/user";
 
 interface FaTimeWindowFormData {
@@ -99,13 +99,6 @@ export default Vue.extend({
   computed: {
     mFA(): Fa {
       return this.$accessor.fa.mFA;
-    },
-    mTimeWindow(): FaTimeWindowWithType {
-      return {
-        type: this.type,
-        start: this.startOrManifDate,
-        end: this.endOrManifDate,
-      };
     },
     timeWindowsType(): string[] {
       const allTimeWindowTypes = Object.values(TimeWindowType);
@@ -180,7 +173,14 @@ export default Vue.extend({
     confirmTimeWindow() {
       if (this.isFormInvalid) return;
 
-      this.$emit("change", this.mTimeWindow);
+      const timeWindow = {
+        id: this.timeWindow?.id,
+        start: this.startOrManifDate,
+        end: this.endOrManifDate,
+        type: this.type,
+      };
+
+      this.$emit("change", timeWindow);
       this.$emit("close-dialog");
       this.clearLocalVariable();
     },
