@@ -7,7 +7,7 @@ import Vue from "vue";
 import UserCalendar from "~/components/organisms/planning/UserCalendar.vue";
 
 export default Vue.extend({
-  name: "Calendar",
+  name: "Planning",
   components: { UserCalendar },
   computed: {
     userId(): number {

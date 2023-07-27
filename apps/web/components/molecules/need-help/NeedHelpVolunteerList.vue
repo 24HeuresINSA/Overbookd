@@ -68,7 +68,7 @@ export default Vue.extend({
       return formatPhoneLink(phone);
     },
     openCalendarInNewTab(volunteerId: number) {
-      window.open(`/calendar/${volunteerId}`, "_blank");
+      window.open(`/planning/${volunteerId}`, "_blank");
     },
   },
 });

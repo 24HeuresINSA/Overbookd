@@ -89,7 +89,7 @@ export default Vue.extend({
       this.$emit("delete-user-request", this.userRequest);
     },
     redirectToCalendar() {
-      window.open(`/calendar/${this.userRequest.user.id}`);
+      window.open(`/planning/${this.userRequest.user.id}`);
     },
   },
 });

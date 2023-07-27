@@ -111,7 +111,7 @@ export default Vue.extend({
   },
   methods: {
     openCalendar() {
-      window.open(`/calendar/${this.volunteer.id}`, "_blank");
+      window.open(`/planning/${this.volunteer.id}`, "_blank");
     },
   },
 });

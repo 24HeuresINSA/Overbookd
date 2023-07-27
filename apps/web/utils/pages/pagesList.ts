@@ -44,7 +44,7 @@ export const pages: Page[] = [
     icon: "mdi-calendar-clock",
     title: "Planning",
     permission: "hard",
-    to: `/calendar`,
+    to: `/planning`,
   },
   {
     icon: "mdi-clock-edit",
