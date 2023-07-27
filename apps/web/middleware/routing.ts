@@ -1,30 +1,9 @@
-const pages = [
-  {
-    name: "calendar",
-    permission: "validated-user",
-  },
-  {
-    name: "humans",
-    permission: "hard",
-  },
-  {
-    name: "fa",
-    permission: "admin",
-  },
-  {
-    name: "fa-fa",
-    permission: "hard",
-  },
-  {
-    name: "assignment-orga-task",
-    permission: "can-affect",
-  },
-];
+import { pages } from "../utils/pages/pagesList";
 
 export default async function (context: any) {
-  const pageName = context.route.name;
-  const currentPage = pages.find((page) => page.name === pageName);
-  if (!currentPage) return;
+  const pagePath = context.route.path;
+  const currentPage = pages.find((page) => page.to.startsWith(pagePath));
+  if (!currentPage?.permission) return;
 
   const hasPermission = context.store.$accessor.user.hasPermission(
     currentPage.permission
