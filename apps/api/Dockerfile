@@ -54,6 +54,7 @@ WORKDIR /overbookd
 
 COPY --chown=node:node --from=builder /overbookd/node_modules /overbookd/apps/api/node_modules
 COPY --chown=node:node --from=builder /overbookd/apps/api/dist/apps/api /overbookd/apps/api
+COPY --chown=node:node --from=builder /overbookd/apps/api/prisma /overbookd/apps/api/prisma
 COPY --chown=node:node --from=builder /overbookd/apps/api/node_modules/@overbookd /overbookd/apps/api/node_modules/@overbookd
 COPY --chown=node:node --from=builder /overbookd/libraries /overbookd/libraries
 COPY --chown=node:node --from=builder /overbookd/domains /overbookd/domains
