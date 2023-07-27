@@ -10,14 +10,9 @@ export default Vue.extend({
   name: "Calendar",
   components: { UserCalendar },
   computed: {
-    userId() {
+    userId(): number {
       return this.$accessor.user.me.id;
     },
-  },
-  async created() {
-    if (!this.$accessor.user.hasPermission("hard")) {
-      return this.$router.push({ path: "/" });
-    }
   },
 });
 </script>

@@ -10,12 +10,12 @@ export default Vue.extend({
   name: "Calendar",
   components: { UserCalendar },
   computed: {
-    userId() {
+    userId(): number {
       return +this.$route.params.calendar;
     },
   },
   async created() {
-    if (!this.$accessor.user.hasPermission("hard") || isNaN(this.userId)) {
+    if (isNaN(this.userId)) {
       return this.$router.push({ path: "/" });
     }
   },
