@@ -12,6 +12,7 @@
         <SearchSignaLocation
           :location="currentLocation"
           label="Lieu"
+          :boxed="false"
           :disabled="isValidatedByOwner"
           @change="updateLocation($event)"
         ></SearchSignaLocation>

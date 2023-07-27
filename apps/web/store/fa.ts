@@ -309,9 +309,9 @@ export const actions = actionTree(
       commit("UPDATE_SELECTED_FA", updatedFT);
     },
 
-    async updateFaChunk({ state }, faChunk: Partial<Fa>) {
+    async updateFaChunk({ state, dispatch }, faChunk: Partial<Fa>) {
       const fa = { ...state.mFA, ...faChunk };
-      this.dispatch("updateFa", fa);
+      dispatch("updateFa", fa);
     },
 
     async deleteFA({ commit }, faId: number) {
