@@ -11,11 +11,11 @@ export default Vue.extend({
   components: { UserCalendar },
   computed: {
     userId() {
-      return +this.$route.params.calendar;
+      return this.$accessor.user.me.id;
     },
   },
   async created() {
-    if (!this.$accessor.user.hasPermission("hard") || isNaN(this.userId)) {
+    if (!this.$accessor.user.hasPermission("hard")) {
       return this.$router.push({ path: "/" });
     }
   },

@@ -7,7 +7,7 @@
         </v-col>
 
         <v-col v-if="hasPermission('validated-user')" cols="12" sm="6" md="8">
-          <PlanningCard />
+          <PlanningDownloadCard />
         </v-col>
 
         <v-col v-else cols="12" sm="6" md="8">
@@ -65,7 +65,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import PersonnalAccountCard from "~/components/organisms/user/personnalAccount/PersonnalAccountCard.vue";
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentEditionCard from "~/components/organisms/user/data/CommentEditionCard.vue";
-import PlanningCard from "~/components/organisms/planning/PlanningCard.vue";
+import PlanningDownloadCard from "~/components/organisms/planning/PlanningDownloadCard.vue";
 
 export default {
   components: {
@@ -74,7 +74,7 @@ export default {
     PersonnalAccountCard,
     FriendsCard,
     CommentEditionCard,
-    PlanningCard,
+    PlanningDownloadCard,
   },
 
   computed: {
