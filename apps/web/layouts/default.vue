@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { pages as pagesList } from "~/utils/pages/pagesList.ts";
+import { pages } from "~/utils/pages/pagesList.ts";
 const { version } = require("../package.json");
 
 const AUTHORS = [
@@ -182,7 +182,7 @@ export default {
       right: true,
       rightDrawer: false,
       title: "Overbookd",
-      pages: pagesList,
+      pages,
     };
   },
 
