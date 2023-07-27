@@ -335,6 +335,9 @@ export const actions = actionTree(
       dispatch("save");
     },
 
+    /**
+     * @deprecated use specific functions to send requests
+     */
     save: async function ({ dispatch, state }) {
       const allPromise = [];
       if (state.mFA.collaborator) {
