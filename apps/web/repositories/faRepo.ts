@@ -80,19 +80,19 @@ export default {
     return context.$axios.delete(`/fa-signa-needs/${id}`);
   },
 
-  updateFATimeWindows(
+  updateAnimationTimeWindow(
     context: Context,
-    id: number,
-    timeWindows: FaTimeWindow[]
+    faId: number,
+    timeWindow: FaTimeWindow
   ) {
-    return context.$axios.post<HttpStringified<FaTimeWindow>[]>(
-      `/time-windows/${id}`,
-      timeWindows
+    return context.$axios.post<HttpStringified<FaTimeWindow>>(
+      `${resource}/${faId}/time-windows`,
+      timeWindow
     );
   },
 
-  deleteFATimeWindows(context: Context, id: number) {
-    return context.$axios.delete(`/time-windows/${id}`);
+  deleteAnimationTimeWindow(context: Context, faId: number, twId: number) {
+    return context.$axios.delete(`${resource}/${faId}/time-windows/${twId}`);
   },
 
   updateFAElectricityNeeds(

@@ -23,6 +23,7 @@ import {
   SearchFa,
   SitePublishAnimation,
   SortedStoredGearRequests,
+  castFaTimeWindowWithDate,
   castFaWithDate,
   simplifyCompleteFa,
   toUpdateFa,
@@ -127,19 +128,17 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
-    if (!mFA.timeWindows) mFA.timeWindows = [];
-    mFA.timeWindows?.push(timeWindow);
+    mFA.timeWindows = [...mFA.timeWindows, timeWindow];
   },
 
   UPDATE_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
-    const minimumList = mFA.timeWindows ?? [];
-    const index = minimumList.findIndex((tw) => tw.id === timeWindow.id);
-    mFA.timeWindows = updateItemToList(minimumList, index, timeWindow);
+    const index = mFA.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
+    if (index === -1) return;
+    mFA.timeWindows = updateItemToList(mFA.timeWindows, index, timeWindow);
   },
 
-  DELETE_TIME_WINDOW({ mFA }, index: number) {
-    const minimumList = mFA.timeWindows ?? [];
-    mFA.timeWindows = removeItemAtIndex(minimumList, index);
+  DELETE_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
+    mFA.timeWindows = mFA.timeWindows.filter((tw) => tw.id !== timeWindow.id);
   },
 
   UPDATE_COLLABORATOR({ mFA }, collaborator: Collaborator) {
@@ -361,11 +360,6 @@ export const actions = actionTree(
           repo.updateFASignaNeeds(this, state.mFA.id, state.mFA.signaNeeds)
         );
       }
-      if (state.mFA.timeWindows) {
-        allPromise.push(
-          repo.updateFATimeWindows(this, state.mFA.id, state.mFA.timeWindows)
-        );
-      }
       if (state.mFA.electricityNeeds) {
         allPromise.push(
           repo.updateFAElectricityNeeds(
@@ -581,19 +575,55 @@ export const actions = actionTree(
       commit("ADD_TIME_WINDOW", timeWindow);
     },
 
-    updateTimeWindow({ commit }, timeWindow: FaTimeWindow) {
-      commit("UPDATE_TIME_WINDOW", timeWindow);
+    async createAnimationTimeWindow(
+      { commit, state },
+      timeWindow: FaTimeWindow
+    ) {
+      const res = await safeCall(
+        this,
+        repo.updateAnimationTimeWindow(this, state.mFA.id, timeWindow),
+        {
+          successMessage: "Créneau créé 🥳",
+          errorMessage: "Créneau non créé 😢",
+        }
+      );
+      if (!res) return;
+      const savedTimeWindow = castFaTimeWindowWithDate(res.data);
+      commit("ADD_TIME_WINDOW", savedTimeWindow);
     },
 
-    async deleteTimeWindow({ commit, state }, index: number) {
-      const currentTimeWindowId = state.mFA.timeWindows?.at(index)?.id;
-      if (currentTimeWindowId) {
-        await safeCall(
-          this,
-          repo.deleteFATimeWindows(this, currentTimeWindowId)
-        );
-      }
-      commit("DELETE_TIME_WINDOW", index);
+    async updateAnimationTimeWindow(
+      { state, commit },
+      timeWindow: FaTimeWindow
+    ) {
+      const res = await safeCall(
+        this,
+        repo.updateAnimationTimeWindow(this, state.mFA.id, timeWindow),
+        {
+          successMessage: "Créneau modifié 🥳",
+          errorMessage: "Créneau non modifié 😢",
+        }
+      );
+      if (!res) return;
+      const savedTimeWindow = castFaTimeWindowWithDate(res.data);
+      commit("UPDATE_TIME_WINDOW", savedTimeWindow);
+    },
+
+    async deleteAnimationTimeWindow(
+      { commit, state },
+      timeWindow: FaTimeWindow
+    ) {
+      if (!timeWindow?.id) return;
+      const res = await safeCall(
+        this,
+        repo.deleteAnimationTimeWindow(this, state.mFA.id, timeWindow.id),
+        {
+          successMessage: "Créneau supprimé 🥳",
+          errorMessage: "Créneau non supprimé 😢",
+        }
+      );
+      if (!res) return;
+      commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
     async updateCollaborator({ commit, state }, collaborator: Collaborator) {

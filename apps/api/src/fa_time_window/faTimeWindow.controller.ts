@@ -2,69 +2,90 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   HttpCode,
   Param,
-  ParseArrayPipe,
   ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FaTimeWindow } from '@prisma/client';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CreateTimeWindowDto } from './dto/createFaTimeWindow.dto';
+import { FaTimeWindowFormRequestDto } from './dto/faTimeWindowFormRequest.dto';
 import { FaTimeWindowService } from './faTimeWindow.service';
-import { FaTimeWindowRepresentation } from '../fa/fa.model';
+import { FaTimeWindowResponseDto } from './dto/faTimeWindowResponse.dto';
+import { FaTimeWindow } from './faTimeWindow.model';
 
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
-@ApiTags('time-windows')
-@Controller('time-windows')
+@ApiTags('fa')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@Controller('fa')
 export class FaTimeWindowController {
   constructor(private readonly faTimeWindowService: FaTimeWindowService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faId')
-  @ApiBody({ type: CreateTimeWindowDto, isArray: true })
-  @ApiResponse({ status: 201, isArray: true, type: FaTimeWindowRepresentation })
+  @Post(':faId/time-windows')
+  @ApiResponse({
+    status: 201,
+    description: 'The fa time window have been successfully upserted.',
+    type: FaTimeWindowResponseDto,
+    isArray: true,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    type: FaTimeWindowFormRequestDto,
+    description: 'FA time window to upsert',
+  })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body(
-      new ParseArrayPipe({
-        items: CreateTimeWindowDto,
-        whitelist: true,
-      }),
-    )
-    tWindows: CreateTimeWindowDto[],
-  ): Promise<FaTimeWindow[]> {
-    return this.faTimeWindowService.upsert(faId, tWindows);
+    @Body() timeWIndow: FaTimeWindowFormRequestDto,
+  ): Promise<FaTimeWindow> {
+    return this.faTimeWindowService.upsert(faId, timeWIndow);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Get()
-  @ApiResponse({ status: 200, isArray: true, type: FaTimeWindowRepresentation })
-  findAll(): Promise<FaTimeWindow[]> {
-    return this.faTimeWindowService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id')
-  @ApiResponse({ status: 200, type: FaTimeWindowRepresentation })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<FaTimeWindow | null> {
-    return this.faTimeWindowService.findOne(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Delete(':id')
+  @Delete(':faId/time-windows/:id')
   @HttpCode(204)
-  @ApiResponse({ status: 204 })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.faTimeWindowService.remove(id);
+  @ApiResponse({
+    status: 204,
+    description: 'The fa time window have been successfully deleted.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA time window id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  remove(
+    @Param('faId', ParseIntPipe) faId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    return this.faTimeWindowService.remove(faId, id);
   }
 }
