@@ -56,7 +56,7 @@ export default Vue.extend({
     cardType: FaCardType.SECURITY,
     rules: {
       number: isNumber,
-      min: min(0),
+      min: min(1),
     },
   }),
   computed: {
