@@ -105,12 +105,19 @@ export default Vue.extend({
     },
   },
   async created() {
+    if (this.$route.params.calendar === "me") {
+      return this.$router.push({
+        path: `/calendar/${this.$accessor.user.me.id}`,
+      });
+    }
+
     const userId = +this.$route.params.calendar;
     if (!this.$accessor.user.hasPermission("hard") || isNaN(userId)) {
-      await this.$router.push({
+      return this.$router.push({
         path: "/",
       });
     }
+
     await Promise.all([
       this.$accessor.user.findUserById(userId),
       this.$accessor.user.getUserFtRequests(userId),
