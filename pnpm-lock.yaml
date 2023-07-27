@@ -382,12 +382,17 @@ importers:
 
   domains/volunteer-availability:
     dependencies:
+      '@overbookd/configuration':
+        specifier: workspace:*
+        version: link:../../libraries/configuration
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
+
+  libraries/configuration: {}
 
   libraries/list: {}
 
