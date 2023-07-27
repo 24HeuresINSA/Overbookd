@@ -4,6 +4,7 @@ resource_rules:
       - name: find all opened MR without running release:candidate command
         conditions:
           state: opened
+          wip: no
           ruby: |
             target_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:target_branch]}/package.json")
             target_branch_version = JSON.parse(target_branch_response.body)["version"]
