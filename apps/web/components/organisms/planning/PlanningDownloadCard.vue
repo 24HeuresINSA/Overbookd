@@ -89,7 +89,7 @@ import Vue from "vue";
 import { download } from "~/utils/planning/download";
 
 export default Vue.extend({
-  name: "PlanningCard",
+  name: "PlanningDownloadCard",
   computed: {
     me() {
       return this.$accessor.user.me;

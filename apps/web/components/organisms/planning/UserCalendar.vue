@@ -8,7 +8,7 @@
       <h1>{{ user?.firstname }} {{ user?.lastname }}</h1>
       <div class="ml-4">
         <TeamChip
-          v-for="team in user?.team"
+          v-for="team in user?.teams"
           :key="team"
           :team="team"
           :with-name="true"
@@ -63,8 +63,14 @@ interface CalendarEventWithFt {
 }
 
 export default Vue.extend({
-  name: "Calendar",
+  name: "UserCalendar",
   components: { OverCalendar, TeamChip, AssignmentUserStats },
+  props: {
+    userId: {
+      type: Number,
+      default: () => 0,
+    },
+  },
   data: function () {
     return {
       calendarCentralDate: new Date(),
@@ -105,20 +111,17 @@ export default Vue.extend({
     },
   },
   async created() {
-    const userId = +this.$route.params.calendar;
-    if (!this.$accessor.user.hasPermission("hard") || isNaN(userId)) {
-      await this.$router.push({
-        path: "/",
-      });
-    }
     await Promise.all([
-      this.$accessor.user.findUserById(userId),
-      this.$accessor.user.getUserFtRequests(userId),
-      this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(userId),
-      this.$accessor.user.getVolunteerAssignments(userId),
+      this.$accessor.user.findUserById(this.userId),
+      this.$accessor.user.getUserFtRequests(this.userId),
+      this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
+        this.userId
+      ),
+      this.$accessor.user.getVolunteerAssignments(this.userId),
     ]);
+
     if (this.shouldShowStats) {
-      await this.$accessor.user.getVolunteerAssignmentStats(userId);
+      await this.$accessor.user.getVolunteerAssignmentStats(this.userId);
     }
 
     await this.$accessor.configuration.fetch("eventDate");

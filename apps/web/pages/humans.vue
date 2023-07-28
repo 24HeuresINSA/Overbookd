@@ -416,8 +416,8 @@ export default {
       return statics;
     },
 
-    openCalendar(userID) {
-      window.open("/calendar/" + userID, "_blank");
+    openCalendar(userId) {
+      window.open(`/planning/${userId}`, "_blank");
     },
 
     updateFilteredUsers() {

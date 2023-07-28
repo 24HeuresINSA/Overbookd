@@ -216,7 +216,7 @@ export default Vue.extend({
       window.open(`/ft/${ftId}`, "_blank");
     },
     openCalendarInNewTab(assigneeId: number) {
-      window.open(`/calendar/${assigneeId}`, "_blank");
+      window.open(`/planning/${assigneeId}`, "_blank");
     },
     getAllVolunteerTeams(assignee: TimeSpanAssignee) {
       const underlyingTeams = getUnderlyingTeams(assignee.teams);

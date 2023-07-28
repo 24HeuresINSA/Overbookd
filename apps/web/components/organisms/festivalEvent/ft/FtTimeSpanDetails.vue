@@ -128,7 +128,7 @@ export default Vue.extend({
       this.$emit("close-dialog");
     },
     openCalendarInNewTab(assigneeId: number) {
-      window.open(`/calendar/${assigneeId}`, "_blank");
+      window.open(`/planning/${assigneeId}`, "_blank");
     },
     formatPhone(phone: string) {
       return formatUserPhone(phone);
