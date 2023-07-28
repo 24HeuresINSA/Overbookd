@@ -11,7 +11,7 @@ export default Vue.extend({
   components: { UserCalendar },
   computed: {
     userId(): number {
-      return +this.$route.params.calendar;
+      return +this.$route.params.userId;
     },
   },
   async created() {
