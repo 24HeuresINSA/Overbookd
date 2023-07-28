@@ -178,7 +178,6 @@ model Fa {
   status                 FaStatus                @default(DRAFT)
   description            String?                 @db.Text
   securityNeed           String?                 @map("security_need") @db.Text
-  isPassRequired         Boolean?                @map("is_pass_required") @db.Boolean
   numberOfPass           Int?                    @map("number_of_pass")
   waterNeed              String?                 @map("water_need") @db.Text
   isDeleted              Boolean                 @default(false) @map("is_deleted")

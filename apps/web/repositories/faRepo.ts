@@ -8,6 +8,7 @@ import {
   FaPageId,
   FaSignaNeed,
   FaSignaNeedsExportCsv,
+  FaSimplified,
   FaTimeWindow,
   FaValidationBody,
   SearchFa,
@@ -31,7 +32,7 @@ type Context = { $axios: NuxtAxiosInstance };
 
 export default {
   getAllFas(context: Context, search?: SearchFa) {
-    return context.$axios.get<HttpStringified<Fa>[]>(resource, {
+    return context.$axios.get<HttpStringified<FaSimplified>[]>(resource, {
       params: search,
     });
   },

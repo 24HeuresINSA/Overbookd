@@ -33,7 +33,6 @@ export const COMPLETE_FA_SELECT = {
   status: true,
   description: true,
   securityNeed: true,
-  isPassRequired: true,
   numberOfPass: true,
   waterNeed: true,
   collaborator: {

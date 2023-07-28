@@ -10,13 +10,13 @@
     <v-card-text>
       <v-form>
         <v-switch
-          :value="mFA.isPassRequired"
+          v-model="isPassRequired"
           label="Besoin de laissez-passer"
           :disabled="isValidatedByOwner"
-          @change="updateIsPassRequired($event)"
+          @change="clearNumberOfPass($event)"
         ></v-switch>
         <v-text-field
-          v-if="mFA.isPassRequired"
+          v-if="isPassRequired"
           :value="mFA.numberOfPass"
           label="Nombre de Pass Sécu"
           type="number"
@@ -54,6 +54,8 @@ export default Vue.extend({
   data: () => ({
     owner: "secu",
     cardType: FaCardType.SECURITY,
+
+    isPassRequired: false,
     rules: {
       number: isNumber,
       min: min(1),
@@ -70,16 +72,31 @@ export default Vue.extend({
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
+  watch: {
+    signaNeeds: {
+      handler() {
+        if (this.mFA.numberOfPass) {
+          this.isPassRequired = true;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
-    updateIsPassRequired(isPassRequired: boolean) {
-      return this.$accessor.fa.updateFaChunk({
-        isPassRequired,
-        numberOfPass: isPassRequired ? this.mFA.numberOfPass : undefined,
-      });
+    shouldUpdateNumberOfPass(numberOfPass?: number): boolean {
+      return Boolean(
+        numberOfPass &&
+          numberOfPass > 0 &&
+          numberOfPass !== this.mFA.numberOfPass
+      );
+    },
+    clearNumberOfPass(isPassRequired: boolean) {
+      if (isPassRequired) return;
+      return this.$accessor.fa.updateFaChunk({ numberOfPass: undefined });
     },
     updateNumberOfPass(numberOfPassString: string) {
       const numberOfPass = parseInt(numberOfPassString, 10);
-      if (numberOfPass === this.mFA.numberOfPass || numberOfPass < 1) return;
+      if (!this.shouldUpdateNumberOfPass(numberOfPass)) return;
       return this.$accessor.fa.updateFaChunk({ numberOfPass });
     },
     updateSecurityNeed(securityNeed: string) {

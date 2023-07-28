@@ -270,7 +270,6 @@ export interface CompleteFaResponse {
   userInCharge?: UserNameWithId;
   location?: SignaLocation;
   securityNeed?: string;
-  isPassRequired: boolean;
   numberOfPass?: number;
   waterNeed?: string;
   collaborator?: CollaboratorWithId;

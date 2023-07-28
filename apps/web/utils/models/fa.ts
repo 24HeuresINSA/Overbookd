@@ -104,7 +104,6 @@ export interface Fa extends BaseFa {
   userInCharge?: User;
   location?: SignaLocation;
   securityNeed?: string;
-  isPassRequired: boolean;
   numberOfPass?: number;
   waterNeed?: string;
   collaborator?: Collaborator;
@@ -118,23 +117,28 @@ export interface Fa extends BaseFa {
   fts: FtSimplified[];
 }
 
+export type FaSimplified = Pick<
+  Fa,
+  | "id"
+  | "name"
+  | "status"
+  | "userInCharge"
+  | "team"
+  | "faValidation"
+  | "faRefuse"
+>;
+
 export type CreateFa = Pick<Fa, "name">;
 
 export interface FaGeneralUpdate
   extends Pick<
     Fa,
-    | "id"
-    | "name"
-    | "description"
-    | "type"
-    | "securityNeed"
-    | "isPassRequired"
-    | "numberOfPass"
-    | "waterNeed"
+    "id" | "name" | "description" | "type" | "securityNeed" | "waterNeed"
   > {
   teamId: number | null;
   userInChargeId: number | null;
   locationId: number | null;
+  numberOfPass: number | null;
 }
 
 export interface Collaborator {
@@ -266,6 +270,26 @@ function castFeedbackWithDate(
   };
 }
 
+export function simplifyCompleteFa({
+  id,
+  name,
+  status,
+  userInCharge,
+  team,
+  faValidation,
+  faRefuse,
+}: Fa): FaSimplified {
+  return {
+    id,
+    name,
+    status,
+    userInCharge,
+    team,
+    faValidation,
+    faRefuse,
+  };
+}
+
 export function toUpdateFa({
   id,
   name,
@@ -275,7 +299,6 @@ export function toUpdateFa({
   team,
   location,
   securityNeed,
-  isPassRequired,
   numberOfPass,
   waterNeed,
 }: Fa): HttpStringified<FaGeneralUpdate> {
@@ -288,8 +311,7 @@ export function toUpdateFa({
     teamId: team?.id ?? null,
     locationId: location?.id ?? null,
     securityNeed,
-    isPassRequired,
-    numberOfPass,
+    numberOfPass: numberOfPass ?? null,
     waterNeed,
   };
 }

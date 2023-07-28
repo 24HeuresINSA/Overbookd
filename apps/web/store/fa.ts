@@ -16,6 +16,7 @@ import {
   FaPageId,
   FaSignaNeed,
   FaSignaNeedsExportCsv,
+  FaSimplified,
   FaStatus,
   FaTimeWindow,
   FaValidationBody,
@@ -23,6 +24,7 @@ import {
   SitePublishAnimation,
   SortedStoredGearRequests,
   castFaWithDate,
+  simplifyCompleteFa,
   toUpdateFa,
 } from "~/utils/models/fa";
 import {
@@ -47,7 +49,7 @@ import { RepoFactory } from "~/repositories/repoFactory";
 const repo = RepoFactory.faRepo;
 
 export const state = () => ({
-  FAs: [] as Fa[],
+  FAs: [] as FaSimplified[],
   mFA: defaultState() as Fa,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
@@ -245,7 +247,7 @@ export const mutations = mutationTree(state, {
     state.FAs = fas;
   },
 
-  ADD_FA({ FAs }, fa: Fa) {
+  ADD_FA({ FAs }, fa: FaSimplified) {
     FAs.push(fa);
   },
 
@@ -284,6 +286,14 @@ export const actions = actionTree(
       commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
     },
 
+    async fetchFAs({ commit }, search?: SearchFa) {
+      const res = await safeCall(this, repo.getAllFas(this, search), {
+        errorMessage: "Impossible de charger les FAs",
+      });
+      if (!res) return;
+      commit("SET_FAS", res.data);
+    },
+
     async createFa({ commit }, fa: CreateFa) {
       const res = await safeCall(this, repo.createFa(this, fa), {
         successMessage: "FA créée 🥳",
@@ -291,10 +301,11 @@ export const actions = actionTree(
       });
       if (!res) return;
 
-      const createdFa = castFaWithDate(res.data);
-      const completeFa = { ...defaultState(), ...createdFa, id: res.data.id };
-      commit("ADD_FA", createdFa);
-      commit("UPDATE_SELECTED_FA", completeFa);
+      const createdFa = { ...defaultState(), ...castFaWithDate(res.data) };
+      const simplifyFa = simplifyCompleteFa(createdFa);
+
+      commit("UPDATE_SELECTED_FA", createdFa);
+      commit("ADD_FA", simplifyFa);
     },
 
     async updateFa({ commit }, fa: Fa) {
@@ -557,9 +568,12 @@ export const actions = actionTree(
 
     async deleteSignaNeed({ commit, state }, index: number) {
       const currentSignaNeedId = state.mFA.signaNeeds?.at(index)?.id;
-      if (currentSignaNeedId) {
-        await safeCall(this, repo.deleteFASignaNeeds(this, currentSignaNeedId));
-      }
+      if (!currentSignaNeedId) return;
+      const res = await safeCall(
+        this,
+        repo.deleteFASignaNeeds(this, currentSignaNeedId)
+      );
+      if (!res) return;
       commit("DELETE_SIGNA_NEED", index);
     },
 
@@ -669,11 +683,15 @@ export const actions = actionTree(
     },
 
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
-      const res = await repo.createGearRequest(this, state.mFA.id, gearRequest);
-      sendNotification(
+      const res = await safeCall(
         this,
-        "La demande de matériel a été ajoutée avec succès ✅"
+        repo.createGearRequest(this, state.mFA.id, gearRequest),
+        {
+          successMessage: "La demande de matériel a été ajoutée avec succès ✅",
+          errorMessage: "La demande de matériel n'a pas été ajoutée ❌",
+        }
       );
+      if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
       commit("ADD_GEAR_REQUEST", createdGearRequest);
       return createdGearRequest;
@@ -824,15 +842,6 @@ export const actions = actionTree(
       commit("SET_GEAR_REQUESTS", gearRequests);
     },
 
-    async fetchFAs({ commit }, search?: SearchFa) {
-      const res = await safeCall(this, repo.getAllFas(this, search), {
-        errorMessage: "Impossible de charger les FAs",
-      });
-      if (!res) return;
-      const fas = res.data.map(castFaWithDate);
-      commit("SET_FAS", fas);
-    },
-
     async getSignaNeedsForCsv() {
       const res = await safeCall<FaSignaNeedsExportCsv[]>(
         this,
@@ -856,6 +865,5 @@ function defaultState(): Omit<Fa, "id"> {
     signaNeeds: [],
     electricityNeeds: [],
     fts: [],
-    isPassRequired: false,
   };
 }

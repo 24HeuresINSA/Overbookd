@@ -94,13 +94,6 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   securityNeed?: string;
 
   @ApiProperty({
-    required: true,
-    description: 'Pass required in the fa',
-    type: Boolean,
-  })
-  isPassRequired: boolean;
-
-  @ApiProperty({
     required: false,
     description: 'The number of pass required in the fa',
     type: Number,

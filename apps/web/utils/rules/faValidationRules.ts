@@ -157,14 +157,14 @@ export function timeWindowsErrors(fa: Fa): string[] {
 }
 
 export function hasSecurityPassNeeds(
-  value: boolean | undefined
+  value: number | undefined
 ): string | boolean {
-  return value || "Cette activité n'a pas besoin de Pass Sécu.";
+  return !value || "Cette activité n'a pas besoin de Pass Sécu.";
 }
 export function hasPassNumberHigherThanZero(fa: Fa): string | boolean {
   return (
-    !fa.isPassRequired ||
-    (fa.numberOfPass && fa.numberOfPass > 0) ||
+    !fa.numberOfPass ||
+    fa.numberOfPass > 0 ||
     "Le nombre de Pass Sécu nécessaire doit être supérieur à 0."
   );
 }
@@ -181,7 +181,7 @@ export function securityErrors(fa: Fa): string[] {
 }
 export function securityWarnings(fa: Fa): string[] {
   return [
-    hasSecurityPassNeeds(fa.isPassRequired),
+    hasSecurityPassNeeds(fa.numberOfPass),
     hasSecurityNeeds(fa.securityNeed),
   ].filter((error): error is string => error !== true);
 }

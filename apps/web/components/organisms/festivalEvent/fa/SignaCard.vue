@@ -134,7 +134,7 @@ export default Vue.extend({
       return this.$accessor.fa.mFA;
     },
     signaNeeds(): FaSignaNeed[] {
-      return this.mFA.signaNeeds ?? [];
+      return this.mFA.signaNeeds;
     },
     signaType(): string[] {
       return Object.values(SignaType);
@@ -150,7 +150,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    signalisations: {
+    signaNeeds: {
       handler() {
         if (this.signaNeeds.length > 0) {
           this.isSignaRequired = true;
