@@ -119,14 +119,6 @@ export class UpdateFaDto {
 
   @ApiProperty({
     required: false,
-    description: 'Is security pass required',
-  })
-  @IsOptional()
-  @IsBoolean()
-  isPassRequired?: boolean;
-
-  @ApiProperty({
-    required: false,
     description: 'Number of security pass if required',
   })
   @IsOptional()

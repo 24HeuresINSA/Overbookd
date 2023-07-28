@@ -5,25 +5,24 @@
     <v-card-subtitle
       >Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
       de ton activité, contacte
-      <a href="mailto:securite@24heures.org">securite@24heures.org</a
-      >.</v-card-subtitle
-    >
+      <a href="mailto:securite@24heures.org">securite@24heures.org</a>.
+    </v-card-subtitle>
     <v-card-text>
       <v-form>
         <v-switch
-          :value="mFA.isPassRequired"
+          v-model="isPassRequired"
           label="Besoin de laissez-passer"
           :disabled="isValidatedByOwner"
-          @change="onChange('isPassRequired', $event)"
+          @change="clearNumberOfPass($event)"
         ></v-switch>
         <v-text-field
-          v-if="mFA.isPassRequired"
+          v-if="isPassRequired"
           :value="mFA.numberOfPass"
           label="Nombre de Pass Sécu"
           type="number"
           :rules="[rules.number, rules.min]"
           :disabled="isValidatedByOwner"
-          @change="onChange('numberOfPass', $event)"
+          @change="updateNumberOfPass($event)"
         ></v-text-field>
       </v-form>
       <v-textarea
@@ -33,7 +32,7 @@
         rows="2"
         :disabled="isValidatedByOwner"
         prepend-icon="mdi-security"
-        @change="onChange('securityNeed', $event)"
+        @change="updateSecurityNeed($event)"
       ></v-textarea>
     </v-card-text>
   </v-card>
@@ -55,6 +54,8 @@ export default Vue.extend({
   data: () => ({
     owner: "secu",
     cardType: FaCardType.SECURITY,
+
+    isPassRequired: false,
     rules: {
       number: isNumber,
       min: min(1),
@@ -71,11 +72,37 @@ export default Vue.extend({
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
+  watch: {
+    signaNeeds: {
+      handler() {
+        if (this.mFA.numberOfPass) {
+          this.isPassRequired = true;
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      if (key === "numberOfPass") value = parseInt(value);
-      this.$accessor.fa.updateFA({ key: key, value: value });
+    shouldUpdateNumberOfPass(numberOfPass?: number): boolean {
+      return Boolean(
+        numberOfPass &&
+          numberOfPass > 0 &&
+          numberOfPass !== this.mFA.numberOfPass
+      );
+    },
+    clearNumberOfPass(isPassRequired: boolean) {
+      if (isPassRequired) return;
+      return this.$accessor.fa.updateFaChunk({ numberOfPass: undefined });
+    },
+    updateNumberOfPass(numberOfPassString: string) {
+      const numberOfPass = parseInt(numberOfPassString, 10);
+      if (!this.shouldUpdateNumberOfPass(numberOfPass)) return;
+      return this.$accessor.fa.updateFaChunk({ numberOfPass });
+    },
+    updateSecurityNeed(securityNeed: string) {
+      return this.$accessor.fa.updateFaChunk({
+        securityNeed: securityNeed.trim(),
+      });
     },
   },
 });

@@ -15,28 +15,28 @@
           :value="mFA.name"
           label="Nom de la FA"
           :disabled="isValidatedByOwner"
-          @change="onChange('name', $event)"
+          @change="updateName($event)"
         ></v-text-field>
         <v-select
           :value="mFA.type"
           label="Type"
           :items="allTypes"
           :disabled="isValidatedByOwner"
-          @change="onChange('type', $event)"
+          @change="updateType($event)"
         ></v-select>
         <SearchTeam
           :team="mFA.team"
           label="Équipe"
           :boxed="false"
           :disabled="isValidatedByOwner"
-          @change="onChange('teamId', $event.id)"
+          @change="updateTeam($event)"
         ></SearchTeam>
         <SearchUser
           :user="mFA.userInCharge"
           label="Responsable"
           :boxed="false"
           :disabled="isValidatedByOwner"
-          @change="onChange('userInChargeId', $event.id)"
+          @change="updateUserInCharge($event)"
         ></SearchUser>
       </v-form>
     </v-card-text>
@@ -51,10 +51,10 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festivalEvent/faUtils";
 import { Fa, FaCardType, FaType } from "~/utils/models/fa";
-import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
   name: "FaGeneralCard",
@@ -67,9 +67,6 @@ export default Vue.extend({
     mFA(): Fa {
       return this.$accessor.fa.mFA;
     },
-    teams(): Team[] {
-      return this.$accessor.team.allTeams;
-    },
     allTypes(): string[] {
       return Object.values(FaType);
     },
@@ -79,22 +76,19 @@ export default Vue.extend({
     validationStatus(): string {
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
-    users(): User[] {
-      return this.$accessor.user.users;
-    },
-  },
-  async mounted() {
-    if (this.users.length === 0) {
-      this.$accessor.user.fetchUsers();
-    }
   },
   methods: {
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      this.$accessor.fa.updateFA({ key: key, value: value });
+    updateName(name: string) {
+      return this.$accessor.fa.updateFaChunk({ name: name.trim() });
     },
-    displayUsername({ firstname, lastname }: User): string {
-      return `${firstname} ${lastname}`;
+    updateType(type?: FaType) {
+      return this.$accessor.fa.updateFaChunk({ type });
+    },
+    updateTeam(team?: Team) {
+      return this.$accessor.fa.updateFaChunk({ team });
+    },
+    updateUserInCharge(userInCharge?: User) {
+      return this.$accessor.fa.updateFaChunk({ userInCharge });
     },
   },
 });

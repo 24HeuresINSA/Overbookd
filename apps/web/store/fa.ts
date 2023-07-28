@@ -1,6 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
@@ -17,21 +16,23 @@ import {
   FaPageId,
   FaSignaNeed,
   FaSignaNeedsExportCsv,
+  FaSimplified,
   FaStatus,
   FaTimeWindow,
   FaValidationBody,
   SearchFa,
   SitePublishAnimation,
-  SitePublishAnimationCreation,
   SortedStoredGearRequests,
   castFaWithDate,
+  simplifyCompleteFa,
+  toUpdateFa,
 } from "~/utils/models/fa";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
   FeedbackCreation,
 } from "~/utils/models/feedback";
-import { Ft, FtSimplified } from "~/utils/models/ft";
+import { Ft } from "~/utils/models/ft";
 import {
   GearRequest,
   GearRequestCreation,
@@ -42,16 +43,14 @@ import {
 } from "~/utils/models/gearRequests";
 import { User } from "~/utils/models/user";
 import { sendNotification } from "./catalog";
+import { formatUsername } from "~/utils/user/userUtils";
+import { RepoFactory } from "~/repositories/repoFactory";
 
 const repo = RepoFactory.faRepo;
 
 export const state = () => ({
-  FAs: [] as Fa[],
-  mFA: {
-    status: FaStatus.DRAFT,
-    name: "",
-    fts: [] as FtSimplified[],
-  } as Fa,
+  FAs: [] as FaSimplified[],
+  mFA: defaultState() as Fa,
   gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: -1,
@@ -91,15 +90,8 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  SET_FA(state, fa: Partial<Fa>) {
+  UPDATE_SELECTED_FA(state, fa: Partial<Fa>) {
     state.mFA = { ...state.mFA, ...fa };
-  },
-
-  RESET_FA(state) {
-    state.mFA = {
-      status: FaStatus.DRAFT,
-      name: "",
-    } as Fa;
   },
 
   UPDATE_STATUS({ mFA }, status: FaStatus) {
@@ -255,7 +247,7 @@ export const mutations = mutationTree(state, {
     state.FAs = fas;
   },
 
-  ADD_FA({ FAs }, fa: Fa) {
+  ADD_FA({ FAs }, fa: FaSimplified) {
     FAs.push(fa);
   },
 
@@ -264,13 +256,7 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: SitePublishAnimation) {
-    mFA.faSitePublishAnimation = {
-      ...mFA.faSitePublishAnimation,
-      photoLink: publishAnimation.photoLink ?? "",
-      description: publishAnimation.description ?? "",
-      categories: publishAnimation.categories ?? [],
-      isFlagship: publishAnimation.isFlagship ?? false,
-    };
+    mFA.faSitePublishAnimation = publishAnimation;
   },
 
   DELETE_PUBLISH_ANIMATION({ mFA }) {
@@ -285,37 +271,73 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setFA({ commit }, FA: Fa) {
-      commit("SET_FA", FA);
-    },
-
-    resetFA({ commit }, payload) {
-      commit("RESET_FA", payload);
-    },
-
-    getAndSet: async function ({ commit }, id: number) {
+    async fetchFa({ commit }, id: number) {
       const [resFA, resGearRequests] = await Promise.all([
-        safeCall(this, repo.getFaById(this, id)),
+        safeCall(this, repo.getFa(this, id)),
         safeCall(this, repo.getGearRequests(this, id)),
       ]);
-      if (!resGearRequests || !resFA) return null;
+      if (!resFA || !resGearRequests) return;
 
-      const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
       const fa = castFaWithDate(resFA.data);
+      const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
+
+      commit("UPDATE_SELECTED_FA", fa);
       commit("SET_GEAR_REQUESTS", gearRequests);
-      commit("SET_FA", fa);
       commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
     },
 
-    submitForReview: async function (
-      { commit, dispatch },
-      { faId, author }: { faId: number; author: User }
-    ) {
-      if (!faId || !author) return;
-      const authorName = `${author.firstname} ${author.lastname}`;
-      const feedback: FaFeedback = {
+    async fetchFAs({ commit }, search?: SearchFa) {
+      const res = await safeCall(this, repo.getAllFas(this, search), {
+        errorMessage: "Impossible de charger les FAs",
+      });
+      if (!res) return;
+      commit("SET_FAS", res.data);
+    },
+
+    async createFa({ commit }, fa: CreateFa) {
+      const res = await safeCall(this, repo.createFa(this, fa), {
+        successMessage: "FA créée 🥳",
+        errorMessage: "FA non créée 😢",
+      });
+      if (!res) return;
+
+      const createdFa = { ...defaultState(), ...castFaWithDate(res.data) };
+      const simplifyFa = simplifyCompleteFa(createdFa);
+
+      commit("UPDATE_SELECTED_FA", createdFa);
+      commit("ADD_FA", simplifyFa);
+    },
+
+    async updateFa({ commit }, fa: Fa) {
+      const faToUpdate = toUpdateFa(fa);
+      const res = await safeCall(this, repo.updateFa(this, faToUpdate), {
+        successMessage: "FA sauvegardée 🥳",
+        errorMessage: "FA non sauvegardée 😢",
+      });
+
+      if (!res) return;
+      const updatedFT = castFaWithDate(res.data);
+      commit("UPDATE_SELECTED_FA", updatedFT);
+    },
+
+    async updateFaChunk({ state, dispatch }, faChunk: Partial<Fa>) {
+      const fa = { ...state.mFA, ...faChunk };
+      dispatch("updateFa", fa);
+    },
+
+    async deleteFA({ commit }, faId: number) {
+      const res = await safeCall(this, repo.deleteFa(this, faId), {
+        successMessage: "FA supprimée 🥳",
+        errorMessage: "FA non supprimée 😢",
+      });
+      if (!res) return;
+      commit("DELETE_FA", faId);
+    },
+
+    async submitForReview({ commit, dispatch }, author: User) {
+      const feedback = {
         subject: FaFeedbackSubjectType.SUBMIT,
-        comment: `La FA a été soumise par ${authorName}.`,
+        comment: `La FA a été soumise par ${formatUsername(author)}.`,
         author,
         createdAt: new Date(),
       };
@@ -324,66 +346,37 @@ export const actions = actionTree(
       dispatch("save");
     },
 
-    updateFA({ commit }, { key, value }) {
-      commit("UPDATE_FA", { key, value });
-    },
-
+    /**
+     * @deprecated use specific functions to send requests
+     */
     save: async function ({ dispatch, state }) {
       const allPromise = [];
-      allPromise.push(
-        RepoFactory.faRepo.updateFa(this, state.mFA.id, state.mFA)
-      );
       if (state.mFA.collaborator) {
         allPromise.push(
-          RepoFactory.faRepo.updateCollaborator(
-            this,
-            state.mFA.id,
-            state.mFA.collaborator
-          )
+          repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator)
         );
       }
       if (state.mFA.signaNeeds) {
         allPromise.push(
-          RepoFactory.faRepo.updateFASignaNeeds(
-            this,
-            state.mFA.id,
-            state.mFA.signaNeeds
-          )
+          repo.updateFASignaNeeds(this, state.mFA.id, state.mFA.signaNeeds)
         );
       }
       if (state.mFA.timeWindows) {
         allPromise.push(
-          RepoFactory.faRepo.updateFATimeWindows(
-            this,
-            state.mFA.id,
-            state.mFA.timeWindows
-          )
+          repo.updateFATimeWindows(this, state.mFA.id, state.mFA.timeWindows)
         );
       }
       if (state.mFA.electricityNeeds) {
         allPromise.push(
-          RepoFactory.faRepo.updateFAElectricityNeeds(
+          repo.updateFAElectricityNeeds(
             this,
             state.mFA.id,
             state.mFA.electricityNeeds
           )
         );
       }
-      if (state.mFA.faSitePublishAnimation) {
-        const publishAnimation = {
-          ...state.mFA.faSitePublishAnimation,
-          faId: state.mFA.id,
-        };
-        allPromise.push(
-          RepoFactory.faRepo.updatePublishAnimation(
-            this,
-            publishAnimation.faId,
-            publishAnimation
-          )
-        );
-      }
       await Promise.all(allPromise);
-      dispatch("getAndSet", state.mFA.id);
+      dispatch("fetchFa", state.mFA.id);
     },
 
     validate: async function (
@@ -406,7 +399,7 @@ export const actions = actionTree(
       }
       const body: FaValidationBody = { teamId: validatorId };
 
-      await RepoFactory.faRepo.validateFA(this, state.mFA.id, body);
+      await repo.validateFA(this, state.mFA.id, body);
       const feedback: FaFeedback = {
         subject: FaFeedbackSubjectType.VALIDATED,
         comment: `La FA a été validée par ${teamName}.`,
@@ -425,7 +418,7 @@ export const actions = actionTree(
       const body: FaValidationBody = {
         teamId: validatorId,
       };
-      await RepoFactory.faRepo.refuseFA(this, state.mFA.id, body);
+      await repo.refuseFA(this, state.mFA.id, body);
       const feedback: FaFeedback = {
         subject: FaFeedbackSubjectType.REFUSED,
         comment: `La FA a été refusée${message ? ": " + message : "."}`,
@@ -434,6 +427,48 @@ export const actions = actionTree(
       };
       dispatch("addFeedback", feedback);
       dispatch("save");
+    },
+
+    async createPublishAnimation({ commit, state }) {
+      const res = await safeCall(
+        this,
+        repo.addPublishAnimation(this, { faId: state.mFA.id }),
+        {
+          successMessage: "Info de publication créée 🥳",
+          errorMessage: "Info de publication non créée 😢",
+        }
+      );
+      if (!res) return;
+      commit("UPDATE_PUBLISH_ANIMATION", res.data);
+    },
+
+    async updatePublishAnimation(
+      { commit, state },
+      publishAnimation: SitePublishAnimation
+    ) {
+      const res = await safeCall(
+        this,
+        repo.updatePublishAnimation(this, state.mFA.id, publishAnimation),
+        {
+          successMessage: "Info de publication sauvegardée 🥳",
+          errorMessage: "Info de publication non sauvegardée 😢",
+        }
+      );
+      if (!res) return;
+      commit("UPDATE_PUBLISH_ANIMATION", publishAnimation);
+    },
+
+    async deletePublishAnimation({ commit, state }) {
+      const res = await safeCall(
+        this,
+        repo.deletePublishAnimation(this, state.mFA.id),
+        {
+          successMessage: "Info de publication supprimée 🥳",
+          errorMessage: "Info de publication non supprimée 😢",
+        }
+      );
+      if (!res) return;
+      commit("DELETE_PUBLISH_ANIMATION");
     },
 
     resetLogValidations: async function (
@@ -448,11 +483,7 @@ export const actions = actionTree(
       const teamNamesThatValidatedFA = await Promise.all(
         teamCodesThatValidatedFA.map(async (teamCode) => {
           const team = rootGetters["team/getTeamByCode"](teamCode);
-          await RepoFactory.faRepo.removeFaValidation(
-            this,
-            state.mFA.id,
-            team.id
-          );
+          await repo.removeFaValidation(this, state.mFA.id, team.id);
           return team.name;
         })
       );
@@ -537,12 +568,12 @@ export const actions = actionTree(
 
     async deleteSignaNeed({ commit, state }, index: number) {
       const currentSignaNeedId = state.mFA.signaNeeds?.at(index)?.id;
-      if (currentSignaNeedId) {
-        await safeCall(
-          this,
-          RepoFactory.faRepo.deleteFASignaNeeds(this, currentSignaNeedId)
-        );
-      }
+      if (!currentSignaNeedId) return;
+      const res = await safeCall(
+        this,
+        repo.deleteFASignaNeeds(this, currentSignaNeedId)
+      );
+      if (!res) return;
       commit("DELETE_SIGNA_NEED", index);
     },
 
@@ -559,7 +590,7 @@ export const actions = actionTree(
       if (currentTimeWindowId) {
         await safeCall(
           this,
-          RepoFactory.faRepo.deleteFATimeWindows(this, currentTimeWindowId)
+          repo.deleteFATimeWindows(this, currentTimeWindowId)
         );
       }
       commit("DELETE_TIME_WINDOW", index);
@@ -568,7 +599,7 @@ export const actions = actionTree(
     async updateCollaborator({ commit, state }, collaborator: Collaborator) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.updateCollaborator(this, state.mFA.id, collaborator)
+        repo.updateCollaborator(this, state.mFA.id, collaborator)
       );
       if (!res) return;
       commit("UPDATE_COLLABORATOR", res.data);
@@ -577,7 +608,7 @@ export const actions = actionTree(
     async deleteCollaborator({ commit, state }) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.deleteCollaborator(this, state.mFA.id)
+        repo.deleteCollaborator(this, state.mFA.id)
       );
       if (!res) return;
       commit("DELETE_COLLABORATOR");
@@ -597,10 +628,7 @@ export const actions = actionTree(
       if (currentElectricityNeedId) {
         await safeCall(
           this,
-          RepoFactory.faRepo.deleteFAElectricityNeeds(
-            this,
-            currentElectricityNeedId
-          )
+          repo.deleteFAElectricityNeeds(this, currentElectricityNeedId)
         );
       }
       commit("DELETE_ELECTRICITY_NEED", index);
@@ -655,15 +683,15 @@ export const actions = actionTree(
     },
 
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
-      const res = await RepoFactory.faRepo.createGearRequest(
+      const res = await safeCall(
         this,
-        state.mFA.id,
-        gearRequest
+        repo.createGearRequest(this, state.mFA.id, gearRequest),
+        {
+          successMessage: "La demande de matériel a été ajoutée avec succès ✅",
+          errorMessage: "La demande de matériel n'a pas été ajoutée ❌",
+        }
       );
-      sendNotification(
-        this,
-        "La demande de matériel a été ajoutée avec succès ✅"
-      );
+      if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
       commit("ADD_GEAR_REQUEST", createdGearRequest);
       return createdGearRequest;
@@ -684,7 +712,7 @@ export const actions = actionTree(
         gearRequests.map((gr) =>
           safeCall<GearRequestWithDrive<"FA">>(
             this,
-            RepoFactory.faRepo.validateGearRequest(this, state.mFA.id, gr),
+            repo.validateGearRequest(this, state.mFA.id, gr),
             {
               successMessage: "Validation effectuée ✅",
               errorMessage: "La tentative de validation n'a pas abouti",
@@ -713,7 +741,7 @@ export const actions = actionTree(
         impactedGearRequest.map((gr) =>
           safeCall(
             this,
-            RepoFactory.faRepo.deleteGearRequest(
+            repo.deleteGearRequest(
               this,
               state.mFA.id,
               gr.gear.id,
@@ -736,7 +764,7 @@ export const actions = actionTree(
           .map((gearRequest) =>
             safeCall(
               this,
-              RepoFactory.faRepo.deleteGearRequest(
+              repo.deleteGearRequest(
                 this,
                 state.mFA.id,
                 gearId,
@@ -757,12 +785,7 @@ export const actions = actionTree(
       const { seeker, gear, rentalPeriod } = gearRequest;
       const res = safeCall(
         this,
-        RepoFactory.faRepo.deleteGearRequest(
-          this,
-          seeker.id,
-          gear.id,
-          rentalPeriod.id
-        ),
+        repo.deleteGearRequest(this, seeker.id, gear.id, rentalPeriod.id),
         {
           successMessage: "La demande de matériel a été supprimée 🗑️",
           errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
@@ -787,7 +810,7 @@ export const actions = actionTree(
                   gearRequest.rentalPeriod.end === end)
             )
             .map(async (gearRequest) => {
-              const res = await RepoFactory.faRepo.updateGearRequest(
+              const res = await repo.updateGearRequest(
                 this,
                 state.mFA.id,
                 gearRequest.gear.id,
@@ -819,83 +842,28 @@ export const actions = actionTree(
       commit("SET_GEAR_REQUESTS", gearRequests);
     },
 
-    async fetchFAs({ commit }, search?: SearchFa) {
-      const res = await safeCall(
-        this,
-        RepoFactory.faRepo.getAllFas(this, search),
-        {
-          errorMessage: "Impossible de charger les FAs",
-        }
-      );
-      if (!res) return;
-      const fas = res.data.map(castFaWithDate);
-      commit("SET_FAS", fas);
-    },
-
-    async createFa({ commit, dispatch }, fa: CreateFa) {
-      const res = await safeCall(
-        this,
-        RepoFactory.faRepo.createNewFa(this, fa),
-        {
-          successMessage: "FA créée 🥳",
-          errorMessage: "FA non créée 😢",
-        }
-      );
-      if (!res) return;
-      const createdFa = castFaWithDate(res.data);
-      commit("ADD_FA", createdFa);
-      dispatch("setFA", createdFa);
-    },
-
-    async deleteFA({ commit }, faId: number) {
-      const res = await safeCall(
-        this,
-        RepoFactory.faRepo.deleteFa(this, faId),
-        {
-          successMessage: "FA supprimée 🥳",
-          errorMessage: "FA non supprimée 😢",
-        }
-      );
-      if (!res) return;
-      commit("DELETE_FA", faId);
-    },
-
-    async createPublishAnimation({ commit, state }) {
-      const publishAnimation: SitePublishAnimationCreation = {
-        faId: state.mFA.id,
-      };
-      const res = await safeCall(
-        this,
-        RepoFactory.faRepo.addPublishAnimation(this, publishAnimation)
-      );
-      if (!res) return;
-      commit("UPDATE_PUBLISH_ANIMATION", res.data);
-    },
-
-    async updatePublishAnimation({ commit, state }, { key, value }) {
-      const publishAnimation = {
-        ...state.mFA.faSitePublishAnimation,
-        [key]: value,
-      };
-      commit("UPDATE_PUBLISH_ANIMATION", publishAnimation);
-    },
-
-    async deletePublishAnimation({ commit, state }) {
-      const res = await safeCall(
-        this,
-        RepoFactory.faRepo.deletePublishAnimation(this, state.mFA.id)
-      );
-      if (!res) return;
-      commit("DELETE_PUBLISH_ANIMATION");
-    },
-
     async getSignaNeedsForCsv() {
       const res = await safeCall<FaSignaNeedsExportCsv[]>(
         this,
-        RepoFactory.faRepo.exportSignaNeedsForCsv(this)
+        repo.exportSignaNeedsForCsv(this)
       );
       if (!res) return;
       return res.data;
     },
   }
 );
+
+function defaultState(): Omit<Fa, "id"> {
+  return {
+    name: "",
+    status: FaStatus.DRAFT,
+    description: "",
+    timeWindows: [],
+    feedbacks: [],
+    faValidation: [],
+    faRefuse: [],
+    signaNeeds: [],
+    electricityNeeds: [],
+    fts: [],
+  };
+}

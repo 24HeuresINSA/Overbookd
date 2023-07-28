@@ -89,10 +89,6 @@ export const mutations = mutationTree(state, {
     state.mFT = { ...state.mFT, ...ft };
   },
 
-  RESET_FT(state) {
-    state.mFT = defaultState() as Ft;
-  },
-
   SET_FTS(state, fts: FtSimplified[]) {
     state.FTs = fts;
   },
@@ -258,14 +254,6 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    setFT({ commit }, ft: Ft) {
-      commit("UPDATE_SELECTED_FT", ft);
-    },
-
-    resetFT({ commit }) {
-      commit("RESET_FT");
-    },
-
     async fetchFT({ commit, dispatch }, id: number) {
       const [resFT, resGearRequests] = await Promise.all([
         safeCall(this, repo.getFT(this, id)),
@@ -290,7 +278,7 @@ export const actions = actionTree(
       commit("SET_FTS", res.data);
     },
 
-    async createFT({ commit, dispatch }, ft: FtCreation) {
+    async createFT({ commit }, ft: FtCreation) {
       const res = await safeCall(this, repo.createFT(this, ft), {
         successMessage: "FT créée 🥳",
         errorMessage: "FT non créée 😢",
@@ -298,8 +286,9 @@ export const actions = actionTree(
 
       if (!res) return;
       const createdFT = castFTWithDate(res.data);
+      const completeFT = { ...defaultState(), ...createdFT, id: res.data.id };
       commit("ADD_FT", createdFT);
-      dispatch("setFT", { ...defaultState(), ...createdFT, id: res.data.id });
+      commit("UPDATE_SELECTED_FT", completeFT);
     },
 
     async updateFT({ commit }, ft: Ft) {
@@ -317,6 +306,7 @@ export const actions = actionTree(
     async deleteFT({ commit }, ft: Ft) {
       const res = await safeCall(this, repo.deleteFT(this, ft.id), {
         successMessage: "FT supprimée 🥳",
+        errorMessage: "FT non supprimée 😢",
       });
       if (!res) return;
       commit("DELETE_FT", ft.id);

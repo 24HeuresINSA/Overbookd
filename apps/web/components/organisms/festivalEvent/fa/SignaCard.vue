@@ -9,22 +9,20 @@
         pour ajouter des lieux non existant dans la liste déroulante.
       </v-card-subtitle>
       <v-card-text>
-        <v-autocomplete
-          label="Lieux"
-          :value="currentLocations"
-          :items="locations"
+        <SearchSignaLocation
+          :location="currentLocation"
+          label="Lieu"
+          :boxed="false"
           :disabled="isValidatedByOwner"
-          item-text="name"
-          item-value="id"
-          @change="onChange('locationId', $event)"
-        ></v-autocomplete>
+          @change="updateLocation($event)"
+        ></SearchSignaLocation>
         <v-switch
           v-model="isSignaRequired"
           label="Besoin signa"
           :disabled="isValidatedByOwner"
         ></v-switch>
         <div v-if="isSignaRequired">
-          <v-data-table :headers="headers" :items="signalisations">
+          <v-data-table :headers="headers" :items="signaNeeds">
             <template #[`item.action`]="{ index }">
               <v-btn
                 v-if="!isValidatedByOwner"
@@ -96,6 +94,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
@@ -107,7 +106,7 @@ import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
   name: "SignaCard",
-  components: { CardErrorList },
+  components: { CardErrorList, SearchSignaLocation },
   data: () => ({
     owner: "signa",
     cardType: FaCardType.SIGNA,
@@ -134,17 +133,14 @@ export default Vue.extend({
     mFA(): Fa {
       return this.$accessor.fa.mFA;
     },
-    signalisations(): FaSignaNeed[] {
-      return this.mFA.signaNeeds ?? [];
+    signaNeeds(): FaSignaNeed[] {
+      return this.mFA.signaNeeds;
     },
     signaType(): string[] {
       return Object.values(SignaType);
     },
-    currentLocations(): SignaLocation | undefined {
+    currentLocation(): SignaLocation | undefined {
       return this.$accessor.fa.mFA.location;
-    },
-    locations(): SignaLocation[] {
-      return this.$accessor.signa.locations;
     },
     isValidatedByOwner(): boolean {
       return isAnimationValidatedBy(this.mFA, this.owner);
@@ -154,9 +150,9 @@ export default Vue.extend({
     },
   },
   watch: {
-    signalisations: {
+    signaNeeds: {
       handler() {
-        if (this.signalisations.length > 0) {
+        if (this.signaNeeds.length > 0) {
           this.isSignaRequired = true;
         }
       },
@@ -190,9 +186,8 @@ export default Vue.extend({
     async deleteSignalisation(index: number) {
       await this.$accessor.fa.deleteSignaNeed(index);
     },
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      this.$accessor.fa.updateFA({ key: key, value: value });
+    updateLocation(location: SignaLocation) {
+      this.$accessor.fa.updateFaChunk({ location });
     },
   },
 });

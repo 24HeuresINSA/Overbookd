@@ -7,7 +7,7 @@ export class Snack {
   feedbackMessage = "";
   active = false;
   constructor(t?: number) {
-    this.timeout = t || 3000;
+    this.timeout = t || 2000;
   }
 
   /**

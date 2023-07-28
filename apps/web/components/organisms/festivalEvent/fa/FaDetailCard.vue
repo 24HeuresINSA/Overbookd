@@ -14,7 +14,7 @@
           label="Description"
           :disabled="isValidatedByOwner"
           class="mb-4"
-          @change="onChange('description', $event)"
+          @change="updateFaDescription($event)"
         ></RichEditor>
         <v-switch
           v-model="isPublishable"
@@ -27,13 +27,13 @@
             :value="mFA.faSitePublishAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
             :disabled="isValidatedByOwner"
-            @change="onChangePublishAnimation('photoLink', $event)"
+            @change="updatePublishAnimationPhotoLink($event)"
           ></v-text-field>
           <v-textarea
             :value="mFA.faSitePublishAnimation?.description"
             label="Description pour le site"
             :disabled="isValidatedByOwner"
-            @change="onChangePublishAnimation('description', $event)"
+            @change="updatePublishAnimationDescription($event)"
           ></v-textarea>
           <v-combobox
             :value="mFA.faSitePublishAnimation?.categories"
@@ -44,14 +44,14 @@
             label="Categories de l'animations"
             :items="categories"
             :disabled="isValidatedByOwner"
-            @change="onChangePublishAnimation('categories', $event)"
+            @change="updatePublishAnimationCategories($event)"
           >
           </v-combobox>
           <v-switch
             :input-value="mFA.faSitePublishAnimation?.isFlagship"
             label="Anim phare qui sera mise en avant sur les réseaux sociaux"
             :disabled="isValidatedByOwner"
-            @change="onChangePublishAnimation('isFlagship', $event)"
+            @change="updatePublishAnimationIsFlagship($event)"
           ></v-switch>
         </v-form>
       </v-form>
@@ -70,6 +70,7 @@ import {
 import {
   Fa,
   FaCardType,
+  SitePublishAnimation,
   SitePublishAnimationCategoryType,
 } from "~/utils/models/fa";
 
@@ -104,13 +105,32 @@ export default Vue.extend({
     },
   },
   methods: {
-    onChange(key: string, value: any) {
-      if (typeof value === "string") value = value.trim();
-      this.$accessor.fa.updateFA({ key: key, value: value });
+    updateFaDescription(description: string) {
+      return this.$accessor.fa.updateFaChunk({
+        description: description.trim(),
+      });
     },
-    onChangePublishAnimation(key: string, value: any) {
-      if (key === "description" || key === "photoLink") value = value.trim();
-      this.$accessor.fa.updatePublishAnimation({ key, value });
+    updatePublishAnimationDescription(description: string) {
+      return this.updatePublishAnimation({ description: description.trim() });
+    },
+    updatePublishAnimationPhotoLink(photoLink: string) {
+      return this.updatePublishAnimation({ photoLink: photoLink.trim() });
+    },
+    updatePublishAnimationCategories(
+      categories: SitePublishAnimationCategoryType[]
+    ) {
+      return this.updatePublishAnimation({ categories });
+    },
+    updatePublishAnimationIsFlagship(isFlagship: boolean) {
+      return this.updatePublishAnimation({ isFlagship });
+    },
+    updatePublishAnimation(
+      faSitePublishAnimationChunk: Partial<SitePublishAnimation>
+    ) {
+      this.$accessor.fa.updatePublishAnimation({
+        ...this.mFA.faSitePublishAnimation,
+        ...faSitePublishAnimationChunk,
+      });
     },
     switchPublishAnimation(value: boolean) {
       if (value) return this.$accessor.fa.createPublishAnimation();

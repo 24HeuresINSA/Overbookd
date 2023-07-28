@@ -8,6 +8,7 @@ import {
   FaPageId,
   FaSignaNeed,
   FaSignaNeedsExportCsv,
+  FaSimplified,
   FaTimeWindow,
   FaValidationBody,
   SearchFa,
@@ -31,16 +32,16 @@ type Context = { $axios: NuxtAxiosInstance };
 
 export default {
   getAllFas(context: Context, search?: SearchFa) {
-    return context.$axios.get<HttpStringified<Fa>[]>(resource, {
+    return context.$axios.get<HttpStringified<FaSimplified>[]>(resource, {
       params: search,
     });
   },
 
-  getFaById(context: Context, id: number) {
+  getFa(context: Context, id: number) {
     return context.$axios.get<HttpStringified<Fa>>(resource + `/${id}`);
   },
 
-  createNewFa(context: Context, FA: CreateFa) {
+  createFa(context: Context, FA: CreateFa) {
     return context.$axios.post<HttpStringified<Fa>>(resource, FA);
   },
 
@@ -52,8 +53,8 @@ export default {
     return context.$axios.get<StatsPayload>(resource + "/stats");
   },
 
-  updateFa(context: Context, id: number, fa: FaGeneralUpdate) {
-    return context.$axios.post<HttpStringified<Fa>>(resource + `/${id}`, fa);
+  updateFa(context: Context, fa: FaGeneralUpdate) {
+    return context.$axios.post<HttpStringified<Fa>>(`${resource}/${fa.id}`, fa);
   },
 
   updateCollaborator(

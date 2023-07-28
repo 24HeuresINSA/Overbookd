@@ -428,11 +428,7 @@ export default Vue.extend({
     async submit() {
       this.isValidationDialogOpen = false;
       const author = this.meAsUser;
-      if (this.isFA)
-        return this.$accessor.fa.submitForReview({
-          faId: this.id,
-          author,
-        });
+      if (this.isFA) return this.$accessor.fa.submitForReview(author);
       return this.$accessor.ft.submitForReview(author);
     },
     validatorValidationStatus(validator: Team) {
