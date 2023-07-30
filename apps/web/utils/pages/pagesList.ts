@@ -20,13 +20,13 @@ export const pages: Page[] = [
   {
     icon: "mdi-chart-bubble",
     title: "Fiches Activités",
-    permission: "hard",
+    permission: "can-view-fa",
     to: "/fa",
   },
   {
     icon: "mdi-format-color-highlight",
     title: "Fiches Tâches",
-    permission: "hard",
+    permission: "can-view-ft",
     to: "/ft",
   },
   {
@@ -38,6 +38,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-clock",
     title: "Mes dispos",
+    permission: "can-enter-availabilities",
     to: "/availabilities",
   },
   {
@@ -127,7 +128,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-chart-areaspline-variant",
     title: "Stats",
-    permission: "hard",
+    permission: "can-view-stats",
     to: "/stats",
   },
 ];
