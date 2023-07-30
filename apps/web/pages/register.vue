@@ -307,6 +307,9 @@ export default Vue.extend({
     await this.$accessor.configuration.fetchAll();
 
     if (this.isRegisterFormClosed) {
+      this.$accessor.notif.pushNotification({
+        message: "Les inscriptions sont fermées pour le moment 🕐",
+      });
       this.$router.push("/login");
     }
   },

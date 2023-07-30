@@ -32,7 +32,7 @@
 <script>
 import { RepoFactory } from "~/repositories/repoFactory";
 import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
-const { safeCall } = require("../utils/api/calls");
+import { safeCall } from "~/utils/api/calls";
 
 export default {
   name: "Transactions",

@@ -61,8 +61,8 @@
 
 <script>
 import SnackNotificationContainer from "../../../molecules/snack/SnackNotificationContainer.vue";
-const { safeCall } = require("../../../../utils/api/calls");
 import { RepoFactory } from "~/repositories/repoFactory";
+import { safeCall } from "~/utils/api/calls";
 
 export default {
   name: "OverTransactions",

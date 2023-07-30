@@ -12,9 +12,7 @@
           ></v-img>
         </v-row>
         <v-row class="version justify-center">
-          <h2>
-            {{ version }}
-          </h2>
+          <h2>{{ version }}</h2>
         </v-row>
         <v-row>
           <v-text-field
@@ -52,8 +50,8 @@
           <v-btn
             color="secondary"
             elevation="2"
-            to="/register"
             class="btn btn-secondary"
+            @click="routeToRegister"
           >
             s'inscrire
           </v-btn>
@@ -90,8 +88,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import {
+  RegisterFormState,
+  registerFormStates,
+} from "@overbookd/configuration";
 
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
@@ -140,9 +143,9 @@ const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg",
 ];
-const { version } = require("../package.json");
+import { version } from "../package.json";
 
-export default {
+export default Vue.extend({
   name: "Login",
   auth: false,
   components: { SnackNotificationContainer },
@@ -156,9 +159,15 @@ export default {
     feedbackMessage: undefined,
     timeout: 5000,
     version,
-    randomURL: undefined,
+    randomURL: "",
     isDialogOpen: false,
   }),
+
+  computed: {
+    registerFormState(): RegisterFormState {
+      return this.$accessor.configuration.registerFormState;
+    },
+  },
 
   async beforeCreate() {
     if (this.$auth.loggedIn) {
@@ -166,6 +175,10 @@ export default {
         path: REDIRECT_URL,
       }); // redirect to homepage
     }
+  },
+
+  async created() {
+    await this.$accessor.configuration.fetchAll();
   },
 
   async mounted() {
@@ -188,7 +201,7 @@ export default {
           const audio = new Audio("audio/jaune.m4a");
           await audio.play();
         }
-      } catch (e) {
+      } catch (e: any) {
         if (e.response.status === 429) {
           return this.$store.dispatch("notif/pushNotification", {
             type: "error",
@@ -203,13 +216,22 @@ export default {
       }
     },
 
+    routeToRegister() {
+      if (this.registerFormState === registerFormStates.CLOSED) {
+        return this.$accessor.notif.pushNotification({
+          message: "Les inscriptions sont fermées pour le moment 🕐",
+        });
+      }
+      this.$router.push({ path: "/register" });
+    },
+
     getRandomBackgroundURL() {
       return BACKGROUNDS_URL[
         Math.floor(Math.random() * BACKGROUNDS_URL.length)
       ];
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">
