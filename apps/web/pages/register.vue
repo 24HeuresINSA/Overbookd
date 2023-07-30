@@ -111,6 +111,7 @@
               :rules="[rules.required, rules.mobilePhone]"
             ></v-text-field>
             <v-select
+              v-if="isOpenToSoft"
               v-model="teamId"
               label="Équipe"
               :items="softCreationTeams"
@@ -181,6 +182,7 @@ import {
   password,
   isSame,
 } from "~/utils/rules/inputRules";
+import { registerFormStates } from "@overbookd/configuration";
 
 interface RegisterData extends InputRulesData {
   step: number;
@@ -281,9 +283,32 @@ export default Vue.extend({
         password: this.password,
       };
     },
+    isRegisterFormClosed(): boolean {
+      return (
+        this.$accessor.configuration.registerFormState ===
+        registerFormStates.CLOSED
+      );
+    },
+    isOpenToHard(): boolean {
+      return (
+        this.$accessor.configuration.registerFormState ===
+        registerFormStates.HARD
+      );
+    },
+    isOpenToSoft(): boolean {
+      return (
+        this.$accessor.configuration.registerFormState ===
+        registerFormStates.SOFT
+      );
+    },
   },
-  mounted() {
-    this.$accessor.team.setTeamsInStore();
+  async created() {
+    await this.$accessor.team.setTeamsInStore();
+    await this.$accessor.configuration.fetchAll();
+
+    if (this.isRegisterFormClosed) {
+      this.$router.push("/login");
+    }
   },
   methods: {
     async register() {

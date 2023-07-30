@@ -225,6 +225,9 @@ importers:
       '@nuxtjs/vuetify':
         specifier: 1.12.3
         version: 1.12.3(vue@2.7.14)(webpack@4.46.0)
+      '@overbookd/configuration':
+        specifier: workspace:*
+        version: link:../../libraries/configuration
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list

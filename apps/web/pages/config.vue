@@ -7,13 +7,15 @@
       src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
     ></v-img>
 
+    <h2>Formulaire d'inscription</h2>
+    <v-select
+      v-model="registerFormState"
+      :items="registerFormStates"
+    ></v-select>
+
     <h2>Date de début de la manif</h2>
-    <div class="field-row">
-      <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
-      <v-btn class="field-row__save-btn" @click="saveDateEventStart">
-        Enregistrer
-      </v-btn>
-    </div>
+    <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
+    <v-btn class="save-btn" @click="saveDateEventStart"> Enregistrer </v-btn>
 
     <PermissionsCard />
     <SnackNotificationContainer />
@@ -25,9 +27,15 @@ import Vue from "vue";
 import PermissionsCard from "~/components/organisms/permission/PermissionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import DateField from "~/components/atoms/field/date/DateField.vue";
+import {
+  RegisterFormState,
+  registerFormStates,
+} from "@overbookd/configuration";
+import { isSameDay } from "~/utils/date/dateUtils";
 
 interface ConfigurationData {
-  dateEventStart?: Date;
+  dateEventStart: Date;
+  registerFormState: RegisterFormState;
 }
 
 export default Vue.extend({
@@ -40,7 +48,8 @@ export default Vue.extend({
 
   data(): ConfigurationData {
     return {
-      dateEventStart: undefined,
+      dateEventStart: new Date(),
+      registerFormState: registerFormStates.CLOSED,
     };
   },
 
@@ -48,17 +57,41 @@ export default Vue.extend({
     title: "Config Système",
   }),
 
+  computed: {
+    registerFormStates() {
+      return Object.values(registerFormStates);
+    },
+  },
+
   async created() {
     await this.$accessor.configuration.fetchAll();
     this.dateEventStart = this.$accessor.configuration.eventStartDate;
+    this.registerFormState = this.$accessor.configuration.registerFormState;
   },
 
   methods: {
     async saveDateEventStart() {
-      await this.$accessor.configuration.save({
-        key: "eventDate",
-        value: { start: this.dateEventStart },
-      });
+      if (
+        !isSameDay(
+          this.dateEventStart,
+          this.$accessor.configuration.eventStartDate
+        )
+      ) {
+        await this.$accessor.configuration.save({
+          key: "eventDate",
+          value: { start: this.dateEventStart },
+        });
+      }
+
+      if (
+        this.registerFormState !==
+        this.$accessor.configuration.registerFormState
+      ) {
+        await this.$accessor.configuration.save({
+          key: "registerForm",
+          value: { state: this.registerFormState },
+        });
+      }
     },
   },
 });
@@ -69,13 +102,7 @@ h2 {
   margin-top: 20px;
 }
 
-.field-row {
-  display: flex;
-  gap: 20px;
-  justify-content: space-between;
-
-  &__save-btn {
-    margin-top: 12px;
-  }
+.save-btn {
+  margin-top: 12px;
 }
 </style>

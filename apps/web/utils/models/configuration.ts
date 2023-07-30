@@ -4,8 +4,3 @@ export type SgConfig = {
   prixFutTriple: number;
   prixFutFlower: number;
 };
-
-export interface Configuration {
-  key: string;
-  value: any;
-}
