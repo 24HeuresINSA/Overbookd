@@ -1,11 +1,11 @@
 const CLOSED = 'CLOSED';
-const SOFT = 'SOFT';
-const HARD = 'HARD';
+const OPEN_TO_SOFT = 'OPEN_TO_SOFT';
+const OPEN_TO_HARD = 'OPEN_TO_HARD';
 
 export const registerFormStates: Record<RegisterFormState, RegisterFormState> = {
   CLOSED,
-  SOFT,
-  HARD,
+  OPEN_TO_SOFT,
+  OPEN_TO_HARD,
 };
 
-export type RegisterFormState = typeof CLOSED | typeof SOFT | typeof HARD;
+export type RegisterFormState = typeof CLOSED | typeof OPEN_TO_SOFT | typeof OPEN_TO_HARD;

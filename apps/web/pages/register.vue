@@ -292,13 +292,13 @@ export default Vue.extend({
     isOpenToHard(): boolean {
       return (
         this.$accessor.configuration.registerFormState ===
-        registerFormStates.HARD
+        registerFormStates.OPEN_TO_HARD
       );
     },
     isOpenToSoft(): boolean {
       return (
         this.$accessor.configuration.registerFormState ===
-        registerFormStates.SOFT
+        registerFormStates.OPEN_TO_SOFT
       );
     },
   },
