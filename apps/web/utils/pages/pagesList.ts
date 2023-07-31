@@ -85,7 +85,7 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-cog",
-    permission: "admin",
+    permission: "config-write",
     title: "Config Système",
     to: "/config",
   },
