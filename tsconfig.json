@@ -20,7 +20,7 @@
       "@overbookd/api": ["./apps/api/src"],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
-      "@overbookd/configuration": ["./libraries/configuration/src"],
+      "@overbookd/configuration": ["./domains/configuration/src"],
       "@overbookd/web": ["./apps/web/src"],
     }
   },

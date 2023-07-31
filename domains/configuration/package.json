@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/configuration",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.1",
   "description": "Gestion de la configuration pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "libraries/configuration"
+    "directory": "domains/configuration"
   },
   "scripts": {
     "build": "tsc",

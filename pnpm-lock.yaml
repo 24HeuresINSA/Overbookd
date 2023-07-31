@@ -44,6 +44,9 @@ importers:
       '@nestjs/throttler':
         specifier: 4.2.1
         version: 4.2.1(@nestjs/common@10.1.3)(@nestjs/core@10.1.3)(reflect-metadata@0.1.13)
+      '@overbookd/configuration':
+        specifier: workspace:^
+        version: link:../../domains/configuration
       '@overbookd/list':
         specifier: workspace:^
         version: link:../../libraries/list
@@ -227,7 +230,7 @@ importers:
         version: 1.12.3(vue@2.7.14)(webpack@4.46.0)
       '@overbookd/configuration':
         specifier: workspace:*
-        version: link:../../libraries/configuration
+        version: link:../../domains/configuration
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
@@ -385,9 +388,6 @@ importers:
 
   domains/volunteer-availability:
     dependencies:
-      '@overbookd/configuration':
-        specifier: workspace:*
-        version: link:../../libraries/configuration
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
@@ -395,7 +395,7 @@ importers:
         specifier: workspace:*
         version: link:../../libraries/period
 
-  libraries/configuration: {}
+  domains/configuration: {}
 
   libraries/list: {}
 
