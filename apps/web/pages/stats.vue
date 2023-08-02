@@ -33,11 +33,6 @@ export default Vue.extend({
     title: "Statistiques",
   }),
   async mounted() {
-    if (!this.$accessor.user.hasPermission("hard")) {
-      await this.$router.push({
-        path: "/",
-      });
-    }
     await this.update();
   },
   methods: {

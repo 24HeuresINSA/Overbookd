@@ -274,14 +274,6 @@ export default Vue.extend({
   },
 
   async mounted() {
-    if (!this.hasPermission("hard")) {
-      await this.$router.push({
-        path: "/",
-      });
-      this.loading = false;
-      return;
-    }
-
     await Promise.all([this.fetchFTs(), this.retrieveValidatorsIfNeeded()]);
     this.loading = false;
   },
