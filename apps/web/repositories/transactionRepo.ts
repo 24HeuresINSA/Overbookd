@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transaction, Transfer } from "~/utils/models/repo";
+import { Transaction, Transfer } from "~/utils/models/transaction";
 
 const resource = "/transactions";
 type Context = { $axios: NuxtAxiosInstance };

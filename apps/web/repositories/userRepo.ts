@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { BroadcastNotif, Notification, Transfer } from "~/utils/models/repo";
+import { Transfer } from "~/utils/models/transaction";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -50,9 +50,6 @@ export default {
       `${resource}/personnal-account-consummers`
     );
   },
-  broadcast(context: Context, data: BroadcastNotif) {
-    return context.$axios.post(`${resource}/broadcast`, data);
-  },
   transfer(context: Context, data: Transfer) {
     return context.$axios.post(`${resource}/transfer`, data);
   },
@@ -83,9 +80,6 @@ export default {
 
     const url = URL.createObjectURL(await response.blob());
     return url;
-  },
-  updateNotifications(context: Context, userId: string, data: Notification[]) {
-    return context.$axios.put(`${resource}/${userId}`, data);
   },
   updateUser(context: Context, userId: number, userData: UserModification) {
     return context.$axios.put<HttpStringified<CompleteUserWithPermissions>>(
