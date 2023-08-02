@@ -97,7 +97,7 @@ export class GearController {
   }
 
   @Post()
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -115,7 +115,7 @@ export class GearController {
   }
 
   @Put(':id')
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @ApiResponse({
     status: 200,
     description: 'Updating a gear',
@@ -144,7 +144,7 @@ export class GearController {
   }
 
   @Delete(':id')
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @HttpCode(204)
   @ApiResponse({
     status: 204,

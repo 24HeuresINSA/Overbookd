@@ -178,7 +178,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-view-planning')
+  @Permission('download-planning')
   @ApiBearerAuth()
   @Get('me/planning')
   @ApiResponse({
@@ -210,7 +210,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-view-planning')
+  @Permission('download-planning')
   @ApiBearerAuth()
   @Get('me/planning/subscribe-link')
   @ApiResponse({
@@ -306,7 +306,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @ApiBearerAuth()
   @Get(':id/planning')
   @ApiResponse({
@@ -350,7 +350,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get(':id/assignments/stats')
   @ApiResponse({
     status: 200,

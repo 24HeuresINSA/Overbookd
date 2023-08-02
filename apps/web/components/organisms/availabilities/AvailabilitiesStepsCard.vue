@@ -85,7 +85,7 @@ export default Vue.extend({
   }),
   computed: {
     isHardUser(): boolean {
-      return this.$accessor.user.hasPermission("hard");
+      return this.$accessor.user.can("hard");
     },
     softCalendarSteps(): CalendarStep[] {
       return [this.preManifStep, this.manifStep, this.postManifStep];

@@ -43,7 +43,7 @@ export default Vue.extend({
       return !this.isValidatedByOwner || this.canAffect;
     },
     canAffect(): boolean {
-      return this.$accessor.user.hasPermission("can-affect");
+      return this.$accessor.user.can("affect-volunteer");
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();

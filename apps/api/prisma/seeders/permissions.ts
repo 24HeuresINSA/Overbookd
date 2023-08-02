@@ -259,4 +259,13 @@ export const permissions = [
       },
     },
   },
+  {
+    name: 'download-planning',
+    description: 'Peut télécharger son planning',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],
+      },
+    },
+  },
 ];

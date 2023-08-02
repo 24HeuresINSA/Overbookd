@@ -30,7 +30,7 @@ export class NeedHelpController {
   constructor(private readonly needHelpService: NeedHelpService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-ask-for-help')
+  @Permission('ask-for-help')
   @Get()
   @HttpCode(200)
   @ApiQuery({

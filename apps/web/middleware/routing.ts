@@ -5,7 +5,7 @@ export default async function (context: any) {
   const currentPage = pages.find((page) => page.to.startsWith(pagePath));
   if (!currentPage?.permission) return;
 
-  const hasPermission = context.store.$accessor.user.hasPermission(
+  const hasPermission = context.store.$accessor.user.can(
     currentPage.permission
   );
   if (!hasPermission) context.redirect("/");

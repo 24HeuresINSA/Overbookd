@@ -73,7 +73,7 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -92,7 +92,7 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Put(':id')
   @HttpCode(200)
   @ApiResponse({
@@ -118,7 +118,7 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Delete(':id')
   @HttpCode(204)
   @ApiResponse({

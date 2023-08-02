@@ -81,7 +81,7 @@ export class CategoryController {
   }
 
   @Get(':id')
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @ApiResponse({
     status: 200,
     description: 'Get a specific category',
@@ -104,7 +104,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -127,7 +127,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -145,7 +145,7 @@ export class CategoryController {
   }
 
   @Put(':id')
-  @Permission('catalog-write')
+  @Permission('write-catalog')
   @HttpCode(200)
   @ApiResponse({
     status: 200,

@@ -254,10 +254,10 @@ export default Vue.extend({
       return [...ftStatusLabels.entries()];
     },
     isAdmin(): boolean {
-      return this.$accessor.user.hasPermission("admin");
+      return this.$accessor.user.can("admin");
     },
     canAffect(): boolean {
-      return this.$accessor.user.hasPermission("can-affect");
+      return this.$accessor.user.can("affect-volunteer");
     },
     validators(): Team[] {
       return this.$accessor.team.ftValidators;
@@ -318,7 +318,7 @@ export default Vue.extend({
     },
 
     hasPermission(permission: string) {
-      return this.$accessor.user.hasPermission(permission);
+      return this.$accessor.user.can(permission);
     },
 
     getFTStatus(status: FtStatus): string {

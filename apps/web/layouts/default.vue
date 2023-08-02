@@ -258,7 +258,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     },
 
     hasPermission(permission) {
-      return this.$accessor.user.hasPermission(permission);
+      return this.$accessor.user.can(permission);
     },
 
     toggleTheme() {

@@ -211,7 +211,7 @@ export default {
       return this.hasEditingRole || this.isMe;
     },
     hasEditingRole() {
-      return this.hasPermission("manage-users");
+      return this.$accessor.user.can("manage-users");
     },
     isMe() {
       return this.$accessor.user.me.id === this.selectedUser.id;
@@ -243,9 +243,6 @@ export default {
   },
 
   methods: {
-    hasPermission(permission) {
-      return this.$accessor.user.hasPermission(permission);
-    },
     addRemoveRole() {
       if (!this.newTeam) return;
       const teams = this.computeTeams();

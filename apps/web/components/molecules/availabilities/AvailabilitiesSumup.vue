@@ -68,7 +68,7 @@ export default Vue.extend({
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     isReadonly(): boolean {
-      return !this.$accessor.user.hasPermission("can-affect");
+      return !this.$accessor.user.can("affect-volunteer");
     },
   },
   watch: {

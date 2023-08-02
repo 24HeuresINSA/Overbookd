@@ -93,7 +93,7 @@ export class FtReviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Post(':ftId/assignment-approval')
   @HttpCode(201)
   @ApiResponse({

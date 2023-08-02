@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     hasPermission(permission) {
-      return this.$accessor.user.hasPermission(permission);
+      return this.$accessor.user.can(permission);
     },
 
     async logout() {

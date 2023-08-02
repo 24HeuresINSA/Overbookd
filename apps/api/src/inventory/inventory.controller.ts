@@ -44,7 +44,7 @@ import { InventoryRecord, InventoryService } from './inventory.service';
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Permission('inventory-write')
+  @Permission('write-inventory')
   @Get('')
   @ApiResponse({
     status: 200,
@@ -64,7 +64,7 @@ export class InventoryController {
     return this.inventoryService.search({ name });
   }
 
-  @Permission('inventory-write')
+  @Permission('write-inventory')
   @Post('')
   @HttpCode(201)
   @ApiResponse({
@@ -85,7 +85,7 @@ export class InventoryController {
     return this.inventoryService.setup(records);
   }
 
-  @Permission('inventory-write')
+  @Permission('write-inventory')
   @Get(':gearId')
   @ApiResponse({
     status: 200,

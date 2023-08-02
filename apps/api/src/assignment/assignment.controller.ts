@@ -58,7 +58,7 @@ export class AssignmentController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('volunteers')
   @HttpCode(200)
   @ApiResponse({
@@ -72,7 +72,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('ft-timespans')
   @HttpCode(200)
   @ApiResponse({
@@ -87,7 +87,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('stats')
   @ApiResponse({
     status: 200,
@@ -100,7 +100,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('ft/:ftId')
   @HttpCode(200)
   @ApiResponse({
@@ -116,7 +116,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('volunteer/:volunteerId/ft-timespans')
   @HttpCode(200)
   @ApiResponse({
@@ -134,7 +134,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('ft-timespans/:timeSpanId/volunteers')
   @HttpCode(200)
   @ApiResponse({
@@ -167,7 +167,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Get('ft-timespans/:timeSpanId/volunteers/:volunteerId/available-friends')
   @HttpCode(200)
   @ApiResponse({
@@ -187,7 +187,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -205,7 +205,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Delete('ft-timespans/:timeSpanId/volunteers/:assigneeId')
   @HttpCode(204)
   @ApiResponse({
@@ -223,7 +223,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Patch('ft-timespans/:timeSpanId/assignees/:assigneeId/affected-team')
   @HttpCode(200)
   @ApiResponse({

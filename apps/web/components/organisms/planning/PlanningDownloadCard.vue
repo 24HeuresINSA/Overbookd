@@ -95,7 +95,7 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     canViewPlanning(): boolean {
-      return this.$accessor.user.hasPermission("can-view-planning");
+      return this.$accessor.user.can("download-planning");
     },
     personnalLink(): string {
       return this.$accessor.planning.link ?? "";

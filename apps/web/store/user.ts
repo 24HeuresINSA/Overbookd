@@ -91,7 +91,7 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  hasPermission: (state: UserState) => (permission?: string) => {
+  can: (state: UserState) => (permission?: string) => {
     if (!permission) return true;
     return (
       state.me.permissions.includes("admin") ||

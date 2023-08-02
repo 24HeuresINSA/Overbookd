@@ -113,7 +113,7 @@ export class FtService {
     updateFtDto: UpdateFtRequestDto,
     author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
-    const canAffect = author.hasPermission('can-affect') || author.isAdmin();
+    const canAffect = author.hasPermission('affect-volunteer') || author.isAdmin();
     const ft = canAffect
       ? await this.findOne(id)
       : await this.findSubmittableFt(id);
