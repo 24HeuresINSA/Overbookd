@@ -27,7 +27,7 @@ def fetchExistingCategories():
 
 def getCategoryId(categoryName: str) -> int:
     categories = requests.get(
-        f"https://{DOMAIN}/api/categories", 
+        f"https://{DOMAIN}/api/categories",
         headers={"Authorization": f"Bearer {TOKEN}"},
         params={"name": categoryName},
         timeout=3

@@ -265,7 +265,7 @@ describe('Catalog', () => {
     `(
       `When update #$toUpdateGear.id existing gear
       with $toUpdateGear.name as name
-      with #$toUpdateGear.category as category 
+      with #$toUpdateGear.category as category
     `,
       ({ toUpdateGear, expectedSlug, expectedCategory }) => {
         it(`should update gear slug to ${expectedSlug}`, async () => {

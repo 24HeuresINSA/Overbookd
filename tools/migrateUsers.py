@@ -155,7 +155,7 @@ def getPassword(user, usersPassword):
                 return userPassword["password"]
     except KeyError:
         return "ChangeMOI"
-    
+
     return "ChangeMOI"
 
 

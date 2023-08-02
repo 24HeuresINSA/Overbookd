@@ -12,6 +12,6 @@ resource_rules:
           ruby: resource[:labels].grep(/^Priority:/).empty?
         actions:
           comment: |
-            Hi {{assignee}},  
-            No Priority labels set...  
+            Hi {{assignee}},
+            No Priority labels set...
             Please set one ~"Priority::1" ~"Priority::2" ~"Priority::3" ~"Priority::4"

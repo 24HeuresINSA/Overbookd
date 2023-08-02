@@ -23,13 +23,13 @@ pnpm prerelease : update version as realese-candidate (rc) of api and web
 
 ### Le fichier `dev.env`
 
-Contient toutes les variables d'environnement nécessaires pour le dev. Il est fourni dans se repo.  
+Contient toutes les variables d'environnement nécessaires pour le dev. Il est fourni dans se repo.
 
 ### Le fichier `assets/traefik/tls.yml`
 
-Contient les certificats TLS pour le dev. Il est fourni dans se repo.  
-Sans lui, le domaine `traefik.me` ne sera pas de confiance.  
-Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`.  
+Contient les certificats TLS pour le dev. Il est fourni dans se repo.
+Sans lui, le domaine `traefik.me` ne sera pas de confiance.
+Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`.
 
 ### Le dossier `data`
 
