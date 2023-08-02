@@ -2,11 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import {
-  Configuration,
-  RegisterFormState,
-  registerFormStates,
-} from "@overbookd/configuration";
+import { Configuration } from "@overbookd/configuration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
@@ -23,10 +19,8 @@ export const getters = getterTree(state, {
     if (!eventStartString) return new Date();
     return new Date(eventStartString);
   },
-  registerFormState(_, getters): RegisterFormState {
-    const registerFormStateString = getters.get("registerForm")?.state;
-    if (!registerFormStateString) return registerFormStates.CLOSED;
-    return registerFormStateString;
+  registerFormDescription(_, getters): string {
+    return getters.get("registerForm")?.description ?? "";
   },
 });
 

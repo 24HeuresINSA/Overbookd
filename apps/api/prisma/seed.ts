@@ -5,7 +5,7 @@ import { Departments, Years } from '../src/user/dto/common';
 import { categoriesAndGears } from './seeders/gears';
 import { permissions } from './seeders/permissions';
 import { signaLocations } from './seeders/signa-locations';
-import { Configuration, registerFormStates } from '@overbookd/configuration';
+import { Configuration } from '@overbookd/configuration';
 
 const prisma = new PrismaClient();
 const slugify = new SlugifyService();
@@ -467,9 +467,7 @@ async function main() {
   console.log('Creating of register form config');
   const registerFormConfig: Configuration = {
     key: 'registerForm',
-    value: {
-      state: registerFormStates.CLOSED,
-    },
+    value: { description: "" },
   };
   await prisma.configuration.upsert({
     where: { key: 'registerForm' },

@@ -182,7 +182,6 @@ import {
   password,
   isSame,
 } from "~/utils/rules/inputRules";
-import { registerFormStates } from "@overbookd/configuration";
 
 interface RegisterData extends InputRulesData {
   step: number;
@@ -283,35 +282,13 @@ export default Vue.extend({
         password: this.password,
       };
     },
-    isRegisterFormClosed(): boolean {
-      return (
-        this.$accessor.configuration.registerFormState ===
-        registerFormStates.CLOSED
-      );
-    },
-    isOpenToHard(): boolean {
-      return (
-        this.$accessor.configuration.registerFormState ===
-        registerFormStates.OPEN_TO_HARD
-      );
-    },
-    isOpenToSoft(): boolean {
-      return (
-        this.$accessor.configuration.registerFormState ===
-        registerFormStates.OPEN_TO_SOFT
-      );
+    registerDescription(): string {
+      return this.$accessor.configuration.registerFormDescription;
     },
   },
   async created() {
     await this.$accessor.team.setTeamsInStore();
     await this.$accessor.configuration.fetchAll();
-
-    if (this.isRegisterFormClosed) {
-      this.$accessor.notif.pushNotification({
-        message: "Les inscriptions sont fermées pour le moment 🕐",
-      });
-      this.$router.push("/login");
-    }
   },
   methods: {
     async register() {

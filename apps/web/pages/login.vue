@@ -51,7 +51,7 @@
             color="secondary"
             elevation="2"
             class="btn btn-secondary"
-            @click="routeToRegister"
+            to="/register"
           >
             s'inscrire
           </v-btn>
@@ -91,10 +91,6 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import {
-  RegisterFormState,
-  registerFormStates,
-} from "@overbookd/configuration";
 
 const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
@@ -163,22 +159,12 @@ export default Vue.extend({
     isDialogOpen: false,
   }),
 
-  computed: {
-    registerFormState(): RegisterFormState {
-      return this.$accessor.configuration.registerFormState;
-    },
-  },
-
   async beforeCreate() {
     if (this.$auth.loggedIn) {
       await this.$router.push({
         path: REDIRECT_URL,
       }); // redirect to homepage
     }
-  },
-
-  async created() {
-    await this.$accessor.configuration.fetchAll();
   },
 
   async mounted() {
@@ -214,15 +200,6 @@ export default Vue.extend({
           message: "Ton email ou ton mot de passe est incorrect 😞",
         });
       }
-    },
-
-    routeToRegister() {
-      if (this.registerFormState === registerFormStates.CLOSED) {
-        return this.$accessor.notif.pushNotification({
-          message: "Les inscriptions sont fermées pour le moment 🕐",
-        });
-      }
-      this.$router.push({ path: "/register" });
     },
 
     getRandomBackgroundURL() {
