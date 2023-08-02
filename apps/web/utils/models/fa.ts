@@ -187,6 +187,7 @@ export interface FaTimeWindow {
   start: Date;
   end: Date;
 }
+
 export interface FaTimeWindowWithType extends FaTimeWindow {
   type: TimeWindowType;
 }
@@ -241,7 +242,7 @@ export interface SortedStoredGearRequests {
 }
 
 export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
-  const timeWindows = fa.timeWindows?.map(castTimeWindowWithDate) ?? [];
+  const timeWindows = fa.timeWindows?.map(castFaTimeWindowWithDate) ?? [];
   const feedbacks = fa.feedbacks?.map(castFeedbackWithDate) ?? [];
   return {
     ...fa,
@@ -250,7 +251,7 @@ export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
   };
 }
 
-function castTimeWindowWithDate(
+export function castFaTimeWindowWithDate(
   timeWindow: HttpStringified<FaTimeWindow>
 ): FaTimeWindow {
   return {

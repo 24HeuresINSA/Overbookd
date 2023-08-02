@@ -23,6 +23,7 @@
         </v-btn>
       </div>
     </template>
+    <template #no-data> Aucun créneau ajouté </template>
   </v-data-table>
 </template>
 
@@ -31,11 +32,15 @@ import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { SortableTimeWindowHeader } from "~/utils/functions/timeWindow";
 import { faTimeWindowsSorts } from "~/utils/functions/timeWindow";
-import { Fa, FaTimeWindow } from "~/utils/models/fa";
+import { Fa, FaTimeWindowWithType } from "~/utils/models/fa";
 
 export default Vue.extend({
   name: "FaTimeWindowTable",
   props: {
+    timeWindows: {
+      type: Array as () => FaTimeWindowWithType[],
+      required: true,
+    },
     disabled: {
       type: Boolean,
       default: false,
@@ -53,22 +58,19 @@ export default Vue.extend({
     mFA(): Fa {
       return this.$accessor.fa.mFA;
     },
-    timeWindows(): FaTimeWindow[] {
-      return this.mFA.timeWindows ?? [];
-    },
   },
   methods: {
     formatDate(date: string): string {
       return formatDateWithMinutes(date);
     },
-    updateTimeWindow(timeWindow: FaTimeWindow) {
+    updateTimeWindow(timeWindow: FaTimeWindowWithType) {
       this.$emit("update", timeWindow);
     },
-    deleteTimeWindow(timeWindow: FaTimeWindow) {
+    deleteTimeWindow(timeWindow: FaTimeWindowWithType) {
       this.$emit("delete", timeWindow);
     },
     sortTimeWindows(
-      timeWindows: FaTimeWindow[],
+      timeWindows: FaTimeWindowWithType[],
       sortsBy: SortableTimeWindowHeader[],
       sortsDesc: boolean[]
     ) {

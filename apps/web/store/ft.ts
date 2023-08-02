@@ -32,8 +32,8 @@ import {
   FtUserRequest,
   FtUserRequestUpdate,
   castFTWithDate,
-  castTimeWindowWithDate,
-  getTimeWindowWithoutRequests,
+  castFtTimeWindowWithDate,
+  getFtTimeWindowWithoutRequests,
   toUpdateFT,
 } from "~/utils/models/ft";
 import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
@@ -319,7 +319,7 @@ export const actions = actionTree(
     },
 
     async addTimeWindow({ commit, state }, timeWindow: FtTimeWindow) {
-      const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
+      const adaptedTimeWindow = getFtTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
         this,
         repo.updateFTTimeWindow(this, state.mFT.id, adaptedTimeWindow),
@@ -329,7 +329,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit("ADD_TIME_WINDOW", castTimeWindowWithDate(res.data));
+      commit("ADD_TIME_WINDOW", castFtTimeWindowWithDate(res.data));
     },
 
     async submitForReview({ commit, dispatch, state }, author: User) {
@@ -467,7 +467,7 @@ export const actions = actionTree(
       { commit, dispatch, state },
       timeWindow: FtTimeWindow
     ) {
-      const adaptedTimeWindow = getTimeWindowWithoutRequests(timeWindow);
+      const adaptedTimeWindow = getFtTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
         this,
         repo.updateFTTimeWindow(this, state.mFT.id, adaptedTimeWindow),
@@ -477,7 +477,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      const savedTimeWindow = castTimeWindowWithDate(res.data);
+      const savedTimeWindow = castFtTimeWindowWithDate(res.data);
       const { teamRequests, userRequests } = timeWindow;
       const previousTimeWindow = state.mFT.timeWindows.find(
         ({ id }) => id === savedTimeWindow.id

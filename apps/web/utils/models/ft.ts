@@ -175,12 +175,12 @@ export interface FtUserRequestUpdate {
 }
 
 export function castFTWithDate(ft: HttpStringified<Ft>): Ft {
-  const timeWindows = ft.timeWindows.map(castTimeWindowWithDate);
-  const feedbacks = ft.feedbacks.map(castFeedbackWithDate);
+  const timeWindows = ft.timeWindows.map(castFtTimeWindowWithDate);
+  const feedbacks = ft.feedbacks.map(castFtFeedbackWithDate);
   return { ...ft, timeWindows, feedbacks };
 }
 
-export function castTimeWindowWithDate(
+export function castFtTimeWindowWithDate(
   timeWindow: HttpStringified<FtTimeWindow>
 ): FtTimeWindow {
   return {
@@ -193,7 +193,7 @@ export function castTimeWindowWithDate(
   };
 }
 
-function castFeedbackWithDate(
+function castFtFeedbackWithDate(
   feedback: HttpStringified<FtFeedback>
 ): FtFeedback {
   const createdAt = new Date(feedback.createdAt);
@@ -203,7 +203,7 @@ function castFeedbackWithDate(
   };
 }
 
-export function getTimeWindowWithoutRequests({
+export function getFtTimeWindowWithoutRequests({
   id,
   start,
   end,

@@ -1,50 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { FaTimeWindow } from '@prisma/client';
 import { PrismaService } from '../../src/prisma.service';
-import { CreateTimeWindowDto } from './dto/createFaTimeWindow.dto';
+import { FaTimeWindow, FaTimeWindowWithOptionalId } from './faTimeWindow.model';
+
+const SELECT_TIME_WINDOW = {
+  id: true,
+  start: true,
+  end: true,
+};
 
 @Injectable()
 export class FaTimeWindowService {
   constructor(private prisma: PrismaService) {}
   async upsert(
     faId: number,
-    tWindows: CreateTimeWindowDto[],
-  ): Promise<FaTimeWindow[]> {
-    return Promise.all(
-      tWindows.map(async (tWindow) => {
-        if (tWindow.id) {
-          return this.prisma.faTimeWindow.update({
-            where: { id: tWindow.id },
-            data: {
-              ...tWindow,
-              faId,
-            },
-          });
-        } else {
-          return this.prisma.faTimeWindow.create({
-            data: {
-              ...tWindow,
-              faId,
-            },
-          });
-        }
-      }),
-    );
-  }
+    timeWindow: FaTimeWindowWithOptionalId,
+  ): Promise<FaTimeWindow> {
+    const timeWindowToUpdate = { ...timeWindow, faId };
 
-  async findAll(): Promise<FaTimeWindow[]> {
-    return this.prisma.faTimeWindow.findMany();
-  }
-
-  async findOne(id: number): Promise<FaTimeWindow | null> {
-    return this.prisma.faTimeWindow.findUnique({
-      where: { id },
+    return this.prisma.faTimeWindow.upsert({
+      where: { id: timeWindow?.id ?? -1 },
+      create: timeWindowToUpdate,
+      update: timeWindowToUpdate,
+      select: SELECT_TIME_WINDOW,
     });
   }
 
-  async remove(id: number): Promise<void> {
-    await this.prisma.faTimeWindow.delete({
-      where: { id },
+  async remove(faId: number, id: number): Promise<void> {
+    await this.prisma.faTimeWindow.deleteMany({
+      where: {
+        AND: [{ id }, { faId }],
+      },
     });
   }
 }

@@ -6,8 +6,11 @@ import {
   IsDateString,
   IsDefined,
 } from 'class-validator';
+import { FaTimeWindowWithOptionalIdRepresentation } from '../faTimeWindow.model';
 
-export class CreateTimeWindowDto {
+export class FaTimeWindowFormRequestDto
+  implements FaTimeWindowWithOptionalIdRepresentation
+{
   @ApiProperty({
     required: false,
     description: 'The id of the need',
