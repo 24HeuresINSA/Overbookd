@@ -18,7 +18,7 @@
         </v-stepper-step>
 
         <v-stepper-content step="1">
-          {{ registerDescription } }}
+          {{ registerDescription }}
           <v-btn color="primary" @click="step = 2"> C'est parti ! 🚀 </v-btn>
           <v-btn text @click="returnToLogin"> Annuler </v-btn>
         </v-stepper-content>
@@ -277,9 +277,7 @@ export default Vue.extend({
       await this.$auth.loginWith("local", {
         data: { email: this.email, password: this.password },
       });
-      await this.$router.push({
-        path: "/",
-      });
+      this.returnToLogin();
     },
     returnToLogin() {
       this.$router.push("/login");
