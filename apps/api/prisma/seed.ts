@@ -467,7 +467,7 @@ async function main() {
   console.log('Creating of register form config');
   const registerFormConfig: Configuration = {
     key: 'registerForm',
-    value: { 
+    value: {
       description: `<p>Hello et merci d'être venu jusqu'ici ! 🤗</p>
         <p>
           Le festival des 24 heures de l'INSA n'est possible que grâce aux
@@ -488,7 +488,7 @@ async function main() {
           <br />
           Ils seront tes principaux interlocuteurs en amont et en aval du
           festival. 😎
-        </p>`
+        </p>`,
     },
   };
   await prisma.configuration.upsert({

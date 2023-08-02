@@ -2,13 +2,17 @@
   <button
     class="menu-item"
     type="button"
-    :class="{ 'is-active': isActive ? isActive() : null }"
+    :class="{
+      'is-active': isActive ? isActive() : null,
+      'without-icon': !icon,
+    }"
     :title="title"
     @click="action"
   >
-    <svg class="remix">
+    <svg v-if="icon" class="remix">
       <use :xlink:href="`${remixiconUrl}#ri-${icon}`" />
     </svg>
+    <span v-else>{{ title }}</span>
   </button>
 </template>
 
@@ -20,7 +24,8 @@ export default {
   props: {
     icon: {
       type: String,
-      required: true,
+      required: false,
+      default: null,
     },
 
     title: {
@@ -69,5 +74,9 @@ export default {
   &:hover {
     background-color: #303030;
   }
+}
+
+.without-icon {
+  width: auto;
 }
 </style>
