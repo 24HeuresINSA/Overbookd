@@ -60,13 +60,6 @@ export default {
   },
 
   async mounted() {
-    if (!this.$accessor.user.hasPermission("manage-cp")) {
-      await this.$router.push({
-        path: "/",
-      });
-      return;
-    }
-
     const res = await safeCall(
       this.$store,
       RepoFactory.transactionRepo.getTransactions(this)

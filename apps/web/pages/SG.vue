@@ -64,10 +64,7 @@
           <template v-if="mode === 'deposit'">
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
-          <v-btn
-            v-if="hasPermission('manage-cp')"
-            :disabled="!areInputsValid.res"
-            @click="saveTransactions"
+          <v-btn :disabled="!areInputsValid.res" @click="saveTransactions"
             >Enregistrer</v-btn
           >
           <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
@@ -308,22 +305,13 @@ export default {
   },
 
   async mounted() {
-    if (this.hasPermission("manage-cp")) {
-      await this.$accessor.configuration.fetch("sg");
-      await this.$accessor.user.fetchPersonnalAccountConsummers();
-      this.users = this.consummers;
-      this.ready = true;
-    } else {
-      await this.$router.push({
-        path: "/",
-      });
-    }
+    await this.$accessor.configuration.fetch("sg");
+    await this.$accessor.user.fetchPersonnalAccountConsummers();
+    this.users = this.consummers;
+    this.ready = true;
   },
 
   methods: {
-    hasPermission(permission) {
-      return this.$accessor.user.hasPermission(permission);
-    },
     isFloat(number) {
       return this.regex.float.test(number);
     },

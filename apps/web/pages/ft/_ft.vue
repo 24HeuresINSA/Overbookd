@@ -66,10 +66,6 @@ export default Vue.extend({
     document.title = this.title;
   },
   methods: {
-    hasPermission(permission: string) {
-      return this.$accessor.user.hasPermission(permission);
-    },
-
     async retrieveValidatorsIfNeeded() {
       if (this.$accessor.team.ftValidators.length) return;
       return this.$accessor.team.fetchFtValidators();

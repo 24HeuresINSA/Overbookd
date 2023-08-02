@@ -207,13 +207,6 @@ export default Vue.extend({
       return this.$accessor.team.allTeams;
     },
   },
-  async beforeCreate() {
-    if (!this.$accessor.user.hasPermission("hard")) {
-      await this.$router.push({
-        path: "/",
-      });
-    }
-  },
 });
 </script>
 
