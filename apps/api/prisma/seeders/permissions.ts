@@ -242,8 +242,8 @@ export const permissions = [
     },
   },
   {
-    name: 'availability-complete',
-    description: 'Peut compléter ses disponibilités',
+    name: 'fill-availability',
+    description: 'Peut remplir ses disponibilités',
     teams: {
       createMany: {
         data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],

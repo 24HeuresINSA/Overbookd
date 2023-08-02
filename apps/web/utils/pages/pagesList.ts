@@ -38,7 +38,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-clock",
     title: "Mes dispos",
-    permission: "availability-complete",
+    permission: "fill-availability",
     to: "/availabilities",
   },
   {
