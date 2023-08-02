@@ -64,9 +64,7 @@
           <template v-if="mode === 'deposit'">
             <label> Depot total: {{ totalConsumptions }} €</label>
           </template>
-          <v-btn
-            :disabled="!areInputsValid.res"
-            @click="saveTransactions"
+          <v-btn :disabled="!areInputsValid.res" @click="saveTransactions"
             >Enregistrer</v-btn
           >
           <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
