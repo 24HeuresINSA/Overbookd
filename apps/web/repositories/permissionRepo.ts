@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Permission, CreatePermissionForm } from "~/utils/models/Permission";
+import { Permission, CreatePermissionForm } from "~/utils/models/permission";
 
 const resource = "/permissions";
 type Context = { $axios: NuxtAxiosInstance };

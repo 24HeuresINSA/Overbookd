@@ -53,7 +53,7 @@
 <script lang="ts">
 import Vue from "vue";
 import PermissionRow from "~/components/molecules/permission/PermissionRow.vue";
-import { Permission } from "~/utils/models/Permission";
+import { Permission } from "~/utils/models/permission";
 
 export default Vue.extend({
   name: "PermissionCard",

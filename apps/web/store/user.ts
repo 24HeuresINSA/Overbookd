@@ -2,7 +2,6 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { User as UserV1 } from "~/utils/models/repo";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -23,7 +22,6 @@ const UserRepo = RepoFactory.userRepo;
 export const state = () => ({
   me: {} as MyUserInformation,
   users: [] as CompleteUserWithPermissions[],
-  usernames: [] as Partial<UserV1>[],
   selectedUser: {} as CompleteUserWithPermissions,
   selectedUserFriends: [] as User[],
   selectedUserFtRequests: [] as VolunteerTask[],
