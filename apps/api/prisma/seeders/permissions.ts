@@ -149,7 +149,7 @@ export const permissions = [
     description: 'Peut gérer la configuration',
     teams: {
       createMany: {
-        data: [{ teamCode: 'humain' }, { teamCode: 'sg' }],
+        data: [{ teamCode: 'admin' }],
       },
     },
   },
@@ -215,8 +215,8 @@ export const permissions = [
     },
   },
   {
-    name: 'fa-read',
-    description: 'Peut accéder aux FA',
+    name: 'read-fa',
+    description: 'Peut lire les FA',
     teams: {
       createMany: {
         data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
@@ -224,8 +224,8 @@ export const permissions = [
     },
   },
   {
-    name: 'ft-read',
-    description: 'Peut accéder aux FT',
+    name: 'read-ft',
+    description: 'Peut lire les FT',
     teams: {
       createMany: {
         data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
@@ -233,8 +233,8 @@ export const permissions = [
     },
   },
   {
-    name: 'stats-read',
-    description: 'Peut accéder aux stats',
+    name: 'view-stats',
+    description: 'Peut voir les stats',
     teams: {
       createMany: {
         data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],

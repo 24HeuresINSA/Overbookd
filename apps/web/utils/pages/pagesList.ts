@@ -20,13 +20,13 @@ export const pages: Page[] = [
   {
     icon: "mdi-chart-bubble",
     title: "Fiches Activités",
-    permission: "fa-read",
+    permission: "read-fa",
     to: "/fa",
   },
   {
     icon: "mdi-format-color-highlight",
     title: "Fiches Tâches",
-    permission: "ft-read",
+    permission: "read-ft",
     to: "/ft",
   },
   {
@@ -85,7 +85,7 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-cog",
-    permission: "config-write",
+    permission: "manage-config",
     title: "Config Système",
     to: "/config",
   },
@@ -128,7 +128,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-chart-areaspline-variant",
     title: "Stats",
-    permission: "stats-read",
+    permission: "view-stats",
     to: "/stats",
   },
 ];
