@@ -18,7 +18,7 @@
         </v-stepper-step>
 
         <v-stepper-content step="1">
-          {{ registerDescription }}
+          <div v-html="registerDescription"></div>
           <v-btn color="primary" @click="step = 2"> C'est parti ! 🚀 </v-btn>
           <v-btn text @click="returnToLogin"> Annuler </v-btn>
         </v-stepper-content>
@@ -91,7 +91,6 @@
               :rules="[rules.required, rules.mobilePhone]"
             ></v-text-field>
             <v-select
-              v-if="isOpenToSoft"
               v-model="teamId"
               label="Équipe"
               :items="softCreationTeams"

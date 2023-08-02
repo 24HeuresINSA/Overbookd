@@ -16,7 +16,7 @@
 
     <h2>Date de début de la manif</h2>
     <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
-    <v-btn class="save-btn" @click="saveDateEventStart"> Enregistrer </v-btn>
+    <v-btn class="save-btn" @click="save"> Enregistrer </v-btn>
 
     <PermissionsCard />
     <SnackNotificationContainer />
@@ -67,28 +67,37 @@ export default Vue.extend({
     updateRegisterFormDescription(description: string) {
       this.registerFormDescription = description;
     },
-    async saveDateEventStart() {
-      if (
-        !isSameDay(
-          this.dateEventStart,
-          this.$accessor.configuration.eventStartDate
-        )
-      ) {
-        await this.$accessor.configuration.save({
+    async save() {
+      const configurationsToSave = [];
+
+      const dateEventStartChanged = !isSameDay(
+        this.dateEventStart,
+        this.$accessor.configuration.eventStartDate
+      );
+
+      if (dateEventStartChanged) {
+        configurationsToSave.push({
           key: "eventDate",
           value: { start: this.dateEventStart },
         });
       }
 
-      if (
+      const registerFormDescriptionChanged =
         this.registerFormDescription !==
-        this.$accessor.configuration.registerFormDescription
-      ) {
-        await this.$accessor.configuration.save({
+        this.$accessor.configuration.registerFormDescription;
+
+      if (registerFormDescriptionChanged) {
+        configurationsToSave.push({
           key: "registerForm",
           value: { description: this.registerFormDescription },
         });
       }
+
+      await Promise.all(
+        configurationsToSave.map((config) =>
+          this.$accessor.configuration.save(config)
+        )
+      );
     },
   },
 });
