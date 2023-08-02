@@ -214,4 +214,40 @@ export const permissions = [
       },
     },
   },
+  {
+    name: 'fa-read',
+    description: 'Peut accéder aux FA',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
+      },
+    },
+  },
+  {
+    name: 'ft-read',
+    description: 'Peut accéder aux FT',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
+      },
+    },
+  },
+  {
+    name: 'stats-read',
+    description: 'Peut accéder aux stats',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
+      },
+    },
+  },
+  {
+    name: 'availability-complete',
+    description: 'Peut compléter ses disponibilités',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],
+      },
+    },
+  },
 ];
