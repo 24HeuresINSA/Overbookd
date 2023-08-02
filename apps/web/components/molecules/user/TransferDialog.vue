@@ -34,7 +34,7 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import { DialogState } from "~/store/dialog";
 import { UserState } from "~/store/user";
-import { Transfer } from "~/utils/models/repo";
+import { Transfer } from "~/utils/models/transaction";
 import { CompleteUser } from "~/utils/models/user";
 import { TMapState } from "~/utils/types/store";
 

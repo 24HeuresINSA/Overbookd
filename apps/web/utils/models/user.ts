@@ -2,7 +2,6 @@ import { Period } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { FtStatus } from "./ft";
 import { TaskCategory } from "./ftTimeSpan";
-import { Notification } from "./repo";
 
 export interface DisplayedUser {
   firstname: string;
@@ -19,7 +18,6 @@ export interface UserWithPermissions extends User {
 }
 
 export interface UserCreation extends DisplayedUser {
-  nickname?: string;
   email: string;
   birthdate: Date;
   phone: string;
@@ -49,9 +47,6 @@ export interface CompleteUser extends User {
   charisma: number;
   balance: number;
   teams: string[];
-
-  // This is not in the API response, but is used in the frontend
-  notifications: Notification[];
 }
 
 export interface CompleteUserWithoutId extends Omit<CompleteUser, "id"> {}

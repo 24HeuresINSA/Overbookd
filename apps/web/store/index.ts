@@ -10,7 +10,6 @@ import * as fa from "./fa";
 import * as ft from "./ft";
 import * as gearRequest from "./gearRequest";
 import * as inventory from "./inventory";
-import * as location from "./location";
 import * as needHelp from "./needHelp";
 import * as notif from "./notif";
 import * as orgaNeeds from "./orgaNeeds";
@@ -49,7 +48,6 @@ export const accessorType = getAccessorType({
     fa,
     ft,
     team,
-    location,
     assignment,
     catalog,
     configuration,

@@ -7,7 +7,6 @@ import faRepo from "./faRepo";
 import ftRepo from "./ftRepo";
 import { GearRequestRepository } from "./gearRequestRepo";
 import { InventoryRepository } from "./inventoryRepo";
-import locationRepo from "./locationRepo";
 import permissionRepo from "./permissionRepo";
 import signaLocationRepo from "./signaLocationRepo";
 import teamRepo from "./teamRepo";
@@ -23,7 +22,6 @@ const repositories = {
   transaction: transactionRepo,
   FA: faRepo,
   FT: ftRepo,
-  location: locationRepo,
   authRepo: authRepo,
   team: teamRepo,
   gear: GearsRepository,
@@ -49,7 +47,6 @@ export const RepoFactory = {
   userRepo,
   faRepo,
   ftRepo,
-  locationRepo,
   authRepo,
   teamRepo,
   GearsRepository,
