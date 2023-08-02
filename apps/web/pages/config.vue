@@ -59,7 +59,8 @@ export default Vue.extend({
   async created() {
     await this.$accessor.configuration.fetchAll();
     this.dateEventStart = this.$accessor.configuration.eventStartDate;
-    this.registerFormDescription = this.$accessor.configuration.registerFormDescription;
+    this.registerFormDescription =
+      this.$accessor.configuration.registerFormDescription;
   },
 
   methods: {
