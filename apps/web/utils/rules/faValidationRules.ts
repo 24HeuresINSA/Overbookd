@@ -296,7 +296,7 @@ export function hasElecNeeds(
 ): string | boolean {
   return (
     (elecNeeds && elecNeeds.length > 0) ||
-    "L'animation n'a pas besoin d'électricité."
+    "L'animation n'a pas besoin d'électricité ."
   );
 }
 export function elecWarnings(fa: Fa): string[] {

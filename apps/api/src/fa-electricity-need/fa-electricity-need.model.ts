@@ -43,8 +43,8 @@ export interface FaElectricityNeed {
   id: number;
   electricityType: ElectricityType;
   power: number;
-  device?: string;
-  count?: number;
+  device: string;
+  count: number;
   comment?: string;
 }
 
@@ -52,8 +52,8 @@ export interface FaElectricityNeedWithOptionalId {
   id?: number;
   electricityType: ElectricityType;
   power: number;
-  device?: string;
-  count?: number;
+  device: string;
+  count: number;
   comment?: string;
 }
 
@@ -63,9 +63,9 @@ export class FaElectricityNeedRepresentation implements FaElectricityNeed {
   @ApiProperty({ enum: electricityTypes })
   electricityType: ElectricityType;
   @ApiProperty({})
-  device: string;
-  @ApiProperty({})
   power: number;
+  @ApiProperty({})
+  device: string;
   @ApiProperty({})
   count: number;
   @ApiProperty({ required: false })
@@ -80,9 +80,9 @@ export class FaElectricityNeedWithOptionalIdRepresentation
   @ApiProperty({ enum: electricityTypes })
   electricityType: ElectricityType;
   @ApiProperty({})
-  device: string;
-  @ApiProperty({})
   power: number;
+  @ApiProperty({})
+  device: string;
   @ApiProperty({})
   count: number;
   @ApiProperty({ required: false })

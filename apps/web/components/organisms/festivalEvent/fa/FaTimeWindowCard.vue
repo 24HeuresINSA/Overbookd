@@ -13,11 +13,9 @@
         ></FaTimeWindowTable>
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions v-if="!isValidatedByOwners">
         <v-spacer></v-spacer>
-        <v-btn v-if="!isValidatedByOwners" text @click="openAddDialog">
-          Ajouter un créneau
-        </v-btn>
+        <v-btn text @click="openAddDialog"> Ajouter un créneau </v-btn>
       </v-card-actions>
 
       <FestivalEventCalendar />
@@ -88,12 +86,7 @@ export default Vue.extend({
     animOwner: "humain",
     matosOwners: ["matos", "barrieres", "elec"],
     cardType: FaCardType.TIME_WINDOW,
-    headers: [
-      { text: "Type", value: "type" },
-      { text: "Date de début", value: "start" },
-      { text: "Date de fin", value: "end" },
-      { text: "Action", value: "action" },
-    ],
+
     isAddDialogOpen: false,
     isEditDialogOpen: false,
     isConfirmationDialogOpen: false,
@@ -186,6 +179,7 @@ export default Vue.extend({
     closeTimeWindowDialog() {
       this.isAddDialogOpen = false;
       this.isEditDialogOpen = false;
+      this.selectedTimeWindow = null;
     },
     openConfirmationDialog() {
       this.isConfirmationDialogOpen = true;

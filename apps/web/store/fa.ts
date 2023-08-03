@@ -644,8 +644,8 @@ export const actions = actionTree(
         this,
         repo.updateElectricityNeed(this, state.mFA.id, electricityNeed),
         {
-          successMessage: "Besoin elec créé 🥳",
-          errorMessage: "Besoin elec non créé 😢",
+          successMessage: "Besoin d'électricité créé 🥳",
+          errorMessage: "Besoin d'électricité non créé 😢",
         }
       );
       if (!res) return;
@@ -660,8 +660,8 @@ export const actions = actionTree(
         this,
         repo.updateElectricityNeed(this, state.mFA.id, electricityNeed),
         {
-          successMessage: "Besoin elec modifié 🥳",
-          errorMessage: "Besoin elec non modifié 😢",
+          successMessage: "Besoin d'électricité modifié 🥳",
+          errorMessage: "Besoin d'électricité non modifié 😢",
         }
       );
       if (!res) return;
@@ -677,8 +677,8 @@ export const actions = actionTree(
         this,
         repo.deleteElectricityNeed(this, state.mFA.id, electricityNeed.id),
         {
-          successMessage: "Besoin elec supprimé 🥳",
-          errorMessage: "Besoin elec non supprimé 😢",
+          successMessage: "Besoin d'électricité supprimé 🥳",
+          errorMessage: "Besoin d'électricité non supprimé 😢",
         }
       );
       if (!res) return;
