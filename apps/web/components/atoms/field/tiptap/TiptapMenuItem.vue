@@ -78,5 +78,12 @@ export default {
 
 .without-icon {
   width: auto;
+  background-color: #fff;
+  color: #303030 !important;
+
+  &.is-active,
+  &:hover {
+    background-color: #cccccc;
+  }
 }
 </style>
