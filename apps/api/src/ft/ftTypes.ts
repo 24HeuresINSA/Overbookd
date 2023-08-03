@@ -1,8 +1,8 @@
 import { FaStatus, FtFeedbackSubjectType, ReviewStatus } from '@prisma/client';
 import { SELECT_BASE_TIMESPAN } from '../../src/assignment/assignment.service';
 import { TimeSpanBase } from '../../src/assignment/types/ftTimeSpanTypes';
-import { UserRequest } from '../../src/ft-user-request/dto/ftUserRequestResponse.dto';
-import { PeriodForm } from '../../src/gear-requests/gearRequests.model';
+import { UserRequest } from '../ft-user-request/dto/ft-user-request.response.dto';
+import { PeriodForm } from '../gear-request/gear-request.model';
 import { TEAM_SELECT } from '../../src/team/team.service';
 import { FtStatus } from './ft.model';
 export class SignaLocation {

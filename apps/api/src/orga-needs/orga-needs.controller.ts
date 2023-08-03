@@ -9,7 +9,7 @@ import {
 } from '@nestjs/swagger';
 import { OrgaNeedsService } from './orga-needs.service';
 import { Permission } from '../authentication/permissions-auth.decorator';
-import { OrgaNeedsResponseDto } from './dto/orga-needs-response.dto';
+import { OrgaNeedsResponseDto } from './dto/orga-needs.response.dto';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 

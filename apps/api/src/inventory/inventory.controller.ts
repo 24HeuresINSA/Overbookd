@@ -23,9 +23,9 @@ import {
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { InventoryGroupedRecordResponseDto } from './dto/inventoryGroupedRecordResponse.dto';
-import { InventoryGroupedRecordSearchRequestDto } from './dto/inventoryGroupedRecordSearchRequest.dto';
-import { InventoryRecordDto } from './dto/inventoryRecord.dto';
+import { InventoryGroupedRecordResponseDto } from './dto/inventory-grouped-record.response.dto';
+import { InventoryGroupedRecordSearchRequestDto } from './dto/inventory-grouped-record-search.request.dto';
+import { InventoryRecordDto } from './dto/inventory-record.dto';
 import { InventoryRecord, InventoryService } from './inventory.service';
 
 @Controller('inventory')

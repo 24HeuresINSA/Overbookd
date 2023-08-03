@@ -15,10 +15,10 @@ import {
   formatRequirementAsTask,
 } from '../utils/assignment';
 import { getPeriodDuration } from '../utils/duration';
-import { UserCreationDto } from './dto/userCreation.dto';
-import { UserModificationDto } from './dto/userModification.dto';
-import { VolunteerAssignmentStat } from './dto/volunteerAssignment.dto';
-import { DatabaseVolunteerAssignmentStat } from './types/volunteerAssignmentTypes';
+import { CreateUserRequestDto } from './dto/create-user.request.dto';
+import { UpdateUserRequestDto } from './dto/update-user.request.dto';
+import { VolunteerAssignmentStat } from './dto/volunteer-assignment-stat.response.dto';
+import { DatabaseVolunteerAssignmentStat } from './volunteer-assignment.model';
 import {
   MyUserInformation,
   UserPasswordOnly,
@@ -317,7 +317,7 @@ export class UserService {
     return teams.map((t) => t.code);
   }
 
-  async createUser(payload: UserCreationDto): Promise<UserWithoutPassword> {
+  async createUser(payload: CreateUserRequestDto): Promise<UserWithoutPassword> {
     const newUserData = {
       firstname: payload.firstname,
       lastname: payload.lastname,
@@ -358,7 +358,7 @@ export class UserService {
 
   async updateUser(
     targetUserId: number,
-    userData: UserModificationDto,
+    userData: UpdateUserRequestDto,
     author: JwtUtil,
   ): Promise<UserWithTeamsAndPermissions> {
     if (!this.canUpdateUser(author, targetUserId)) {

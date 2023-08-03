@@ -1,6 +1,6 @@
 import { Period } from '@overbookd/period';
-import { Volunteer } from './needHelp.model';
-import { VolunteerRepository } from './needHelp.service';
+import { Volunteer } from './need-help.model';
+import { VolunteerRepository } from './need-help.service';
 import { PrismaService } from '../../src/prisma.service';
 import { AssignmentService } from '../../src/assignment/assignment.service';
 import { WHERE_VALIDATED_USER } from '../../src/assignment/volunteer.service';

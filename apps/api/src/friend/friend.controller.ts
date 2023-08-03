@@ -22,8 +22,8 @@ import {
 } from '@nestjs/swagger';
 import { RequestWithUserPayload } from '../../src/app.controller';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { FriendCreationDto } from './dto/friendCreation.dto';
-import { FriendResponseDto } from './dto/friendResponse.dto';
+import { CreateFriendRequestDto } from './dto/create-friend.request.dto';
+import { FriendResponseDto } from './dto/friend.response.dto';
 import { FriendService } from './friend.service';
 
 @ApiBearerAuth()
@@ -83,11 +83,11 @@ export class FriendController {
   })
   @ApiBody({
     description: 'Friend id',
-    type: FriendCreationDto,
+    type: CreateFriendRequestDto,
   })
   @ApiNotFoundResponse({ description: 'Friend not found' })
   create(
-    @Body() friend: FriendCreationDto,
+    @Body() friend: CreateFriendRequestDto,
     @Request() req: RequestWithUserPayload,
   ): Promise<FriendResponseDto> {
     return this.friendService.create(req.user.id, friend.id);

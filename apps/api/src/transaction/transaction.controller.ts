@@ -16,12 +16,12 @@ import {
 } from './transaction.service';
 import { Transaction } from '@prisma/client';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TransactionCreationDto } from './dto/transactionCreation.dto';
+import { CreateTransactionRequestDto } from './dto/create-transaction.request.dto';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { TransactionResponseDto } from './dto/transactionResponse.dto';
+import { TransactionResponseDto } from './dto/transaction.response.dto';
 
 @ApiBearerAuth()
 @ApiTags('transactions')
@@ -92,7 +92,7 @@ export class TransactionController {
   @Post('transfer')
   @ApiBody({
     description: 'Create a transaction',
-    type: TransactionCreationDto,
+    type: CreateTransactionRequestDto,
   })
   @ApiResponse({
     status: 201,
@@ -113,7 +113,7 @@ export class TransactionController {
   @ApiBody({
     description: 'transactions to generate',
     isArray: true,
-    type: TransactionCreationDto,
+    type: CreateTransactionRequestDto,
   })
   @ApiResponse({
     description: 'generated transactions',

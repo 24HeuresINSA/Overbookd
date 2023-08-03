@@ -6,7 +6,7 @@ import {
 } from '@nestjs/swagger';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './authentication/jwt-auth.guard';
-import { emailTestDto } from './mail/dto/mailTest.dto';
+import { MailTestRequestDto } from './mail/dto/mail-test.request.dto';
 import { MailService } from './mail/mail.service';
 import { Permission } from './authentication/permissions-auth.decorator';
 import { PermissionsGuard } from './authentication/permissions-auth.guard';
@@ -35,7 +35,7 @@ export class AppController {
   @ApiBearerAuth()
   @ApiBody({
     description: 'Route de test pour le service mail',
-    type: emailTestDto,
+    type: MailTestRequestDto,
   })
   @ApiUnauthorizedResponse({
     description: 'User dont have the right to access this route',
@@ -43,7 +43,7 @@ export class AppController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('admin')
   @Post('mailtest')
-  async mailtest(@Body() to: emailTestDto) {
+  async mailtest(@Body() to: MailTestRequestDto) {
     return this.mailService.mailTest(to);
   }
 }

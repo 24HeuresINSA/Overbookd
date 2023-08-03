@@ -6,32 +6,32 @@ import { AppService } from './app.service';
 import { AssignmentModule } from './assignment/assignment.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { CatalogModule } from './catalog/catalog.module';
-import { CharismaPeriodModule } from './charisma-period/charismaPeriod.module';
+import { CharismaPeriodModule } from './charisma-period/charisma-period.module';
 import { CollaboratorModule } from './collaborator/collaborator.module';
 import { ConfigurationModule } from './configuration/configuration.module';
-import { FaFeedbackModule } from './fa-feedback/faFeedback.module';
+import { FaFeedbackModule } from './fa-feedback/fa-feedback.module';
 import { FaModule } from './fa/fa.module';
-import { FaElectricityNeedModule } from './fa-electricity-need/faElectricityNeed.module';
-import { FaSignaNeedModule } from './fa-signa-need/faSignaNeed.module';
-import { FaSitePublishAnimationModule } from './fa-site-publish-animation/faSitePublishAnimation.module';
-import { FaTimeWindowModule } from './fa-time-window/faTimeWindow.module';
+import { FaElectricityNeedModule } from './fa-electricity-need/fa-electricity-need.module';
+import { FaSignaNeedModule } from './fa-signa-need/fa-signa-need.module';
+import { FaSitePublishAnimationModule } from './fa-site-publish-animation/fa-site-publish-animation.module';
+import { FaTimeWindowModule } from './fa-time-window/fa-time-window.module';
 import { FriendModule } from './friend/friend.module';
-import { FtFeedbackModule } from './ft-feedback/ftFeedback.module';
+import { FtFeedbackModule } from './ft-feedback/ft-feedback.module';
 import { FtModule } from './ft/ft.module';
-import { FtReviewModule } from './ft-review/ftReview.module';
-import { FtTeamRequestModule } from './ft-team-request/ftTeamRequest.module';
-import { FtTimeWindowModule } from './ft-time-window/ftTimeWindow.module';
-import { FtUserRequestModule } from './ft-user-request/ftUserRequest.module';
-import { GearRequestsModule } from './gear-requests/gearRequests.module';
+import { FtReviewModule } from './ft-review/ft-review.module';
+import { FtTeamRequestModule } from './ft-team-request/ft-team-request.module';
+import { FtTimeWindowModule } from './ft-time-window/ft-time-window.module';
+import { FtUserRequestModule } from './ft-user-request/ft-user-request.module';
+import { GearRequestModule } from './gear-request/gear-request.module';
 import { HashingUtilsModule } from './hashing-utils/hashing-utils.module';
 import { HashingUtilsService } from './hashing-utils/hashing-utils.service';
 import { InventoryModule } from './inventory/inventory.module';
 import { MailService } from './mail/mail.service';
-import { NeedHelpModule } from './need-help/needHelp.module';
+import { NeedHelpModule } from './need-help/need-help.module';
 import { OrgaNeedsModule } from './orga-needs/orga-needs.module';
 import { PermissionModule } from './permission/permission.module';
 import { PrismaService } from './prisma.service';
-import { SignaLocationModule } from './signa-location/signa_location.module';
+import { SignaLocationModule } from './signa-location/signa-location.module';
 import { TeamModule } from './team/team.module';
 import { TimelineModule } from './timeline/timeline.module';
 import { TransactionModule } from './transaction/transaction.module';
@@ -83,7 +83,7 @@ import { ThrottlerGuardCustom } from './throttler-custom.guard';
     InventoryModule,
     FtModule,
     FtTimeWindowModule,
-    GearRequestsModule,
+    GearRequestModule,
     FtFeedbackModule,
     FtUserRequestModule,
     FtReviewModule,

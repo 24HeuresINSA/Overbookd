@@ -21,9 +21,9 @@ import {
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { PermissionFormDto } from './dto/permissionForm.dto';
-import { PermissionLinkDto } from './dto/permissionLink.dto';
-import { PermissionResponseDto } from './dto/permissionResponse.dto';
+import { PermissionRequestDto } from './dto/permission.request.dto';
+import { PermissionLinkResponseDto } from './dto/permission-link.response.dto';
+import { PermissionResponseDto } from './dto/permission.response.dto';
 import { PermissionService } from './permission.service';
 
 @ApiTags('permissions')
@@ -60,7 +60,7 @@ export class PermissionController {
     type: PermissionResponseDto,
   })
   async createPermission(
-    @Body() payload: PermissionFormDto,
+    @Body() payload: PermissionRequestDto,
   ): Promise<PermissionResponseDto> {
     return this.permissionService.createPermission(payload);
   }
@@ -78,7 +78,7 @@ export class PermissionController {
   })
   async updatePermission(
     @Param('id', ParseIntPipe) id: number,
-    @Body() payload: PermissionFormDto,
+    @Body() payload: PermissionRequestDto,
   ): Promise<PermissionResponseDto> {
     return this.permissionService.updatePermission(id, payload);
   }
@@ -106,11 +106,11 @@ export class PermissionController {
   @ApiResponse({
     status: 201,
     description: 'Link a permission with different teams',
-    type: PermissionLinkDto,
+    type: PermissionLinkResponseDto,
   })
   async updatePermissionTeams(
     @Param('id', ParseIntPipe) id: number,
-    @Body() payload: PermissionLinkDto,
+    @Body() payload: PermissionLinkResponseDto,
   ): Promise<PermissionResponseDto> {
     return this.permissionService.linkPermissionToTeam(id, payload.teamCodes);
   }

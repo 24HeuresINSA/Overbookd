@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TaskCategory } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { TeamService } from '../team/team.service';
-import { getOtherAssignableTeams } from '../team/underlyingTeams.utils';
+import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
 import { SELECT_USER_TEAMS } from '../user/user.service';
 import { getPeriodDuration } from '../utils/duration';
 import { AssignmentService } from './assignment.service';

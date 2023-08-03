@@ -3,8 +3,8 @@ import { FtTeamRequest, FtTimeSpan } from '@prisma/client';
 import { Period } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { TeamService } from '../team/team.service';
-import { getOtherAssignableTeams } from '../team/underlyingTeams.utils';
-import { VolunteerAssignmentStat } from '../user/dto/volunteerAssignment.dto';
+import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
+import { VolunteerAssignmentStat } from '../user/dto/volunteer-assignment-stat.response.dto';
 import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   UserService,

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../src/prisma.service';
-import { FriendResponseDto } from './dto/friendResponse.dto';
-import { FriendWithData } from './friend.types';
+import { FriendResponseDto } from './dto/friend.response.dto';
+import { FriendWithData } from './friend.model';
 
 @Injectable()
 export class FriendService {

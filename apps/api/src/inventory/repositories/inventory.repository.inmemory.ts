@@ -3,7 +3,7 @@ import {
   InventoryRecord,
   InventoryRepository,
 } from '../inventory.service';
-import { InventoryGroupedRecord } from '../inventoryGroupedRecord';
+import { InventoryGroupedRecord } from '../inventory-grouped-record';
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   private records: InventoryRecord[];

@@ -1,0 +1,106 @@
+import { Injectable } from '@nestjs/common';
+import { Period } from '@prisma/client';
+import { PrismaService } from '../prisma.service';
+import { CreateFaSitePublishAnimationRequestDto } from './dto/create-fa-site-publish-animation.request.dto';
+import { UpdateFaSitePublishAnimationRequestDto } from './dto/update-fa-site-publish-animation.request.dto';
+import {
+  LiteSitePublishAnimation,
+  SitePublishAnimation,
+  SitePublishAnimationFa,
+} from './fa-site-publish-animation.model';
+
+type DatabaseSitePublishAnimationFa = Omit<
+  SitePublishAnimationFa,
+  'timeWindows'
+> & {
+  timeWindows: Period[];
+};
+
+type DatabaseSitePublishAnimation = Omit<SitePublishAnimation, 'fa'> & {
+  fa: DatabaseSitePublishAnimationFa;
+};
+
+function convertToSitePublishAnimation(
+  publishAnimation: DatabaseSitePublishAnimation,
+): SitePublishAnimation {
+  return {
+    ...publishAnimation,
+    fa: {
+      id: publishAnimation.fa.id,
+      name: publishAnimation.fa.name,
+      timeWindows: publishAnimation.fa.timeWindows,
+    },
+  };
+}
+
+@Injectable()
+export class FaSitePublishAnimationService {
+  constructor(private prisma: PrismaService) {}
+
+  private readonly SELECT_LITE_PUBLISH_ANIMATION = {
+    isFlagship: true,
+    description: true,
+    photoLink: true,
+    categories: true,
+  };
+
+  private readonly SELECT_PUBLISH_ANIMATION = {
+    ...this.SELECT_LITE_PUBLISH_ANIMATION,
+    fa: {
+      select: {
+        id: true,
+        name: true,
+        timeWindows: {
+          select: {
+            id: true,
+            start: true,
+            end: true,
+          },
+        },
+      },
+    },
+  };
+
+  async create(
+    createFaSitePublishAnimation: CreateFaSitePublishAnimationRequestDto,
+  ): Promise<LiteSitePublishAnimation | null> {
+    return this.prisma.faSitePublishAnimation.create({
+      data: { ...createFaSitePublishAnimation },
+      select: this.SELECT_LITE_PUBLISH_ANIMATION,
+    });
+  }
+
+  async update(
+    faId: number,
+    updateFaSitePublishAnimation: UpdateFaSitePublishAnimationRequestDto,
+  ): Promise<LiteSitePublishAnimation | null> {
+    return this.prisma.faSitePublishAnimation.update({
+      where: { faId },
+      data: { ...updateFaSitePublishAnimation },
+      select: this.SELECT_LITE_PUBLISH_ANIMATION,
+    });
+  }
+
+  async findAll(): Promise<SitePublishAnimation[]> {
+    const publishAnimations = await this.prisma.faSitePublishAnimation.findMany(
+      {
+        orderBy: { faId: 'asc' },
+        select: this.SELECT_PUBLISH_ANIMATION,
+      },
+    );
+    return publishAnimations.map(convertToSitePublishAnimation);
+  }
+
+  async findOne(faId: number): Promise<LiteSitePublishAnimation | null> {
+    return this.prisma.faSitePublishAnimation.findUnique({
+      where: { faId },
+      select: this.SELECT_LITE_PUBLISH_ANIMATION,
+    });
+  }
+
+  async remove(faId: number): Promise<void> {
+    await this.prisma.faSitePublishAnimation.delete({
+      where: { faId },
+    });
+  }
+}

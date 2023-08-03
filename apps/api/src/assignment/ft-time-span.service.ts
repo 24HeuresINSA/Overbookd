@@ -3,7 +3,7 @@ import { TaskCategory } from '@prisma/client';
 import { ftStatuses } from '../ft/ft.model';
 import { PrismaService } from '../prisma.service';
 import { TeamService } from '../team/team.service';
-import { getUnderlyingTeams } from '../team/underlyingTeams.utils';
+import { getUnderlyingTeams } from '../team/underlying-teams.utils';
 import { SELECT_USER_TEAMS, UserService } from '../user/user.service';
 import { PeriodDto } from '../volunteer-availability/dto/period.dto';
 import { VolunteerAvailabilityService } from '../volunteer-availability/volunteer-availability.service';
