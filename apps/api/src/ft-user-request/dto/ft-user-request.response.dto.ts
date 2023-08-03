@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AlsoRequestedByFT, UserNameWithId } from '../../ft/ftTypes';
+import { AlsoRequestedByFT, UserNameWithId } from '../../ft/ft-types';
 import { Period } from '@overbookd/period';
 
 export interface UserRequest {
