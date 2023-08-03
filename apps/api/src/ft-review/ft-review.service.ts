@@ -262,7 +262,7 @@ export class FtReviewService {
     }
 
     const user = new JwtUtil(jwtPayload);
-    if (!user.isAdmin() && !user.hasPermission('affect-volunteer')) {
+    if (!user.isAdmin() && !user.can('affect-volunteer')) {
       throw new ForbiddenException(
         'Seuls les utilisateurs avec la permission affect-volunteer peuvent refuser une FT avec le statut READY',
       );

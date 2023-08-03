@@ -19,10 +19,10 @@ export class JwtUtil implements JwtPayload {
   }
 
   isAdmin(): boolean {
-    return this.hasPermission('admin');
+    return this.can('admin');
   }
 
-  hasPermission(permission: string): boolean {
+  can(permission: string): boolean {
     return this.permissions.includes(permission);
   }
 }

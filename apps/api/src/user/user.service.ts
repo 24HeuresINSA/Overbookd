@@ -457,17 +457,17 @@ export class UserService {
   }
 
   private canUpdateCharisma(author: JwtUtil): boolean {
-    return author.isAdmin() || author.hasPermission('manage-users');
+    return author.isAdmin() || author.can('manage-users');
   }
 
   private canUpdateContributionPayment(author: JwtUtil): boolean {
-    return author.isAdmin() || author.hasPermission('manage-cp');
+    return author.isAdmin() || author.can('manage-cp');
   }
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
     return (
       author.isAdmin() ||
-      author.hasPermission('manage-users') ||
+      author.can('manage-users') ||
       author.id === targetUserId
     );
   }
