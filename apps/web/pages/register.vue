@@ -276,7 +276,7 @@ export default Vue.extend({
       await this.$auth.loginWith("local", {
         data: { email: this.email, password: this.password },
       });
-      this.returnToLogin();
+      this.$router.push("/");
     },
     returnToLogin() {
       this.$router.push("/login");
