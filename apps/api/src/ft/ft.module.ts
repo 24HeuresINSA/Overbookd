@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CommonModule } from '../../src/common/common.module';
-import { FtUserRequestService } from '../../src/ft_user_request/ftUserRequest.service';
+import { FtUserRequestService } from '../../src/ft-user-request/ftUserRequest.service';
 import { GearRequestsModule } from '../../src/gear-requests/gearRequests.module';
 import { PrismaService } from '../prisma.service';
 import { FtController } from './ft.controller';

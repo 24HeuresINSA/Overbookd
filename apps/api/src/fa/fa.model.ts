@@ -7,12 +7,12 @@ import {
 import {
   ElectricityType,
   electricityTypes,
-} from '../fa_electricity_need/faElectricityNeed.model';
-import { SignaType, signaTypes } from '../fa_signa_need/faSignaNeed.model';
+} from '../fa-electricity-need/faElectricityNeed.model';
+import { SignaType, signaTypes } from '../fa-signa-need/faSignaNeed.model';
 import {
   AnimationCategory,
   animationCategories,
-} from '../fa_site_publish_animation/faSitePublishAnimation.model';
+} from '../fa-site-publish-animation/faSitePublishAnimation.model';
 import { FtStatus, ftStatuses } from '../ft/ft.model';
 
 const DRAFT = 'DRAFT';

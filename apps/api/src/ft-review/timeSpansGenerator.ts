@@ -1,4 +1,4 @@
-import { DataBaseUserRequest } from '../../src/ft_user_request/dto/ftUserRequestResponse.dto';
+import { DataBaseUserRequest } from '../../src/ft-user-request/dto/ftUserRequestResponse.dto';
 import { TimeSpan, TimeWindow } from '../ft/ftTypes';
 import { ONE_HOUR_IN_MS } from '@overbookd/period';
 import { getPeriodDuration } from '../utils/duration';

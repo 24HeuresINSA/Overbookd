@@ -3,7 +3,7 @@ import { TimeSpanBase } from '../../../src/assignment/types/ftTimeSpanTypes';
 import {
   FtUserRequestResponseDto,
   UserRequest,
-} from '../../../src/ft_user_request/dto/ftUserRequestResponse.dto';
+} from '../../../src/ft-user-request/dto/ftUserRequestResponse.dto';
 import { FtStatus, ftStatuses } from '../ft.model';
 import {
   CompleteFtResponse,
@@ -24,7 +24,7 @@ import {
   FtFeedbackSubjectType,
   ftFeedbackSubjectTypes,
 } from '../../ft-feedback/ftFeedback.model';
-import { ReviewStatus, reviewStatuses } from '../../ft_review/ftReview.model';
+import { ReviewStatus, reviewStatuses } from '../../ft-review/ftReview.model';
 
 class Author implements UserName {
   firstname: string;

@@ -4,7 +4,7 @@ import { FtService } from '../../src/ft/ft.service';
 import { PrismaService } from '../prisma.service';
 import { FtReviewController } from './ftReview.controller';
 import { FtReviewService } from './ftReview.service';
-import { FtUserRequestService } from '../../src/ft_user_request/ftUserRequest.service';
+import { FtUserRequestService } from '../../src/ft-user-request/ftUserRequest.service';
 
 @Module({
   imports: [CommonModule],
