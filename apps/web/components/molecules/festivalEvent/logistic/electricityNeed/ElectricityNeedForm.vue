@@ -12,7 +12,7 @@
         v-model="electricityType"
         type="select"
         label="Type de prise*"
-        :items="electricityTypeLabels"
+        :items="electricityTypeLabelList"
         item-value="type"
         item-text="label"
       ></v-select>
@@ -48,8 +48,8 @@
 import Vue from "vue";
 import {
   ElectricityType,
-  ElectricityTypeLabel,
   ElectricityTypeWithLabel,
+  electricityTypeLabels,
 } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
@@ -92,17 +92,13 @@ export default Vue.extend({
     isEditForm(): boolean {
       return this.electricityNeed !== null;
     },
-    electricityTypeLabels(): ElectricityTypeWithLabel[] {
-      const elecTypeLabels: ElectricityTypeWithLabel[] = Object.keys(
-        ElectricityTypeLabel
-      ).map((type) => {
+    electricityTypeLabelList(): ElectricityTypeWithLabel[] {
+      return Object.keys(electricityTypeLabels).map((type) => {
         return {
           type: type as ElectricityType,
-          label:
-            ElectricityTypeLabel[type as keyof typeof ElectricityTypeLabel],
+          label: electricityTypeLabels[type as ElectricityType],
         };
       });
-      return elecTypeLabels;
     },
     isFormInvalid(): boolean {
       return Boolean(

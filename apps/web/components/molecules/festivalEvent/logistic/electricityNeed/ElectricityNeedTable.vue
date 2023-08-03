@@ -28,10 +28,9 @@
 import Vue from "vue";
 import {
   ElectricityType,
-  ElectricityTypeLabel,
-  ElectricityTypeWithLabel,
   Fa,
   FaElectricityNeed,
+  electricityTypeLabels,
 } from "~/utils/models/fa";
 
 export default Vue.extend({
@@ -64,28 +63,10 @@ export default Vue.extend({
     mFA(): Fa {
       return this.$accessor.fa.mFA;
     },
-    electricityType(): string[] {
-      return Object.values(ElectricityType);
-    },
-    electricityTypeLabels(): ElectricityTypeWithLabel[] {
-      const elecTypeLabels: ElectricityTypeWithLabel[] = Object.keys(
-        ElectricityTypeLabel
-      ).map((type) => {
-        return {
-          type: type as ElectricityType,
-          label:
-            ElectricityTypeLabel[type as keyof typeof ElectricityTypeLabel],
-        };
-      });
-      return elecTypeLabels;
-    },
   },
   methods: {
     getElectricityTypeLabel(type: ElectricityType): string {
-      return (
-        this.electricityTypeLabels.find((label) => label.type === type)
-          ?.label || ""
-      );
+      return electricityTypeLabels[type as ElectricityType];
     },
     updateElectricityNeed(electricityNeed: FaElectricityNeed) {
       this.$emit("update", electricityNeed);

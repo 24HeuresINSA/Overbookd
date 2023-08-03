@@ -21,33 +21,46 @@ export enum FaStatusLabel {
   VALIDATED = "Validée",
 }
 
-export enum ElectricityType {
-  PC16 = "PC16_Prise_classique",
-  P17_16A_MONO = "P17_16A_MONO",
-  P17_16A_TRI = "P17_16A_TRI",
-  P17_16A_TETRA = "P17_16A_TETRA",
-  P17_32A_MONO = "P17_32A_MONO",
-  P17_32A_TRI = "P17_32A_TRI",
-  P17_32A_TETRA = "P17_32A_TETRA",
-  P17_63A_MONO = "P17_63A_MONO",
-  P17_63A_TRI = "P17_63A_TRI",
-  P17_63A_TETRA = "P17_63A_TETRA",
-  P17_125A_TETRA = "P17_125A_TETRA",
-}
+const PC16_Prise_classique = "PC16_Prise_classique";
+const P17_16A_MONO = "P17_16A_MONO";
+const P17_16A_TRI = "P17_16A_TRI";
+const P17_16A_TETRA = "P17_16A_TETRA";
+const P17_32A_MONO = "P17_32A_MONO";
+const P17_32A_TRI = "P17_32A_TRI";
+const P17_32A_TETRA = "P17_32A_TETRA";
+const P17_63A_MONO = "P17_63A_MONO";
+const P17_63A_TRI = "P17_63A_TRI";
+const P17_63A_TETRA = "P17_63A_TETRA";
+const P17_125A_TETRA = "P17_125A_TETRA";
 
-export enum ElectricityTypeLabel {
-  PC16_Prise_classique = "Prise classique (PC16)",
-  P17_16A_MONO = "16A Mono (P17_16A_MONO)",
-  P17_16A_TRI = "16A Tri (P17_16A_TRI)",
-  P17_16A_TETRA = "16A Tetra (P17_16A_TETRA)",
-  P17_32A_MONO = "32A Mono (P17_32A_MONO)",
-  P17_32A_TRI = "32A Tri (P17_32A_TRI)",
-  P17_32A_TETRA = "32A Tetra (P17_32A_TETRA)",
-  P17_63A_MONO = "63A Mono (P17_63A_MONO)",
-  P17_63A_TRI = "63A Tri (P17_63A_TRI)",
-  P17_63A_TETRA = "63A Tetra (P17_63A_TETRA)",
-  P17_125A_TETRA = "125A Tetra (P17_125A_TETRA)",
-}
+export type ElectricityType =
+  | typeof PC16_Prise_classique
+  | typeof P17_16A_MONO
+  | typeof P17_16A_TRI
+  | typeof P17_16A_TETRA
+  | typeof P17_32A_MONO
+  | typeof P17_32A_TRI
+  | typeof P17_32A_TETRA
+  | typeof P17_63A_MONO
+  | typeof P17_63A_TRI
+  | typeof P17_63A_TETRA
+  | typeof P17_125A_TETRA;
+
+export const electricityTypeLabels = {
+  PC16_Prise_classique: "Prise classique (PC16)",
+  P17_16A_MONO: "16A Mono (P17_16A_MONO)",
+  P17_16A_TRI: "16A Tri (P17_16A_TRI)",
+  P17_16A_TETRA: "16A Tetra (P17_16A_TETRA)",
+  P17_32A_MONO: "32A Mono (P17_32A_MONO)",
+  P17_32A_TRI: "32A Tri (P17_32A_TRI)",
+  P17_32A_TETRA: "32A Tetra (P17_32A_TETRA)",
+  P17_63A_MONO: "63A Mono (P17_63A_MONO)",
+  P17_63A_TRI: "63A Tri (P17_63A_TRI)",
+  P17_63A_TETRA: "63A Tetra (P17_63A_TETRA)",
+  P17_125A_TETRA: "125A Tetra (P17_125A_TETRA)",
+};
+
+type ElectricityTypeLabel = (typeof electricityTypeLabels)[ElectricityType];
 
 export enum SignaType {
   BANNIERE = "BANNIERE",
