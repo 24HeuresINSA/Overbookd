@@ -1,7 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import {  PublicAnimationWithFa } from "~/utils/models/fa";
+import { PublicAnimationWithFa } from "~/utils/models/fa";
 
 export const state = () => ({
   publicAnimations: [] as PublicAnimationWithFa[],
@@ -10,10 +10,7 @@ export const state = () => ({
 export type PublicAnimationState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_PUBLIC_ANIMATIONS(
-    state,
-    publicAnimations: PublicAnimationWithFa[]
-  ) {
+  SET_PUBLIC_ANIMATIONS(state, publicAnimations: PublicAnimationWithFa[]) {
     state.publicAnimations = publicAnimations;
   },
 });

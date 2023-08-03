@@ -216,8 +216,7 @@ export interface PublicAnimation {
   categories?: PublicAnimationCategoryType[];
 }
 
-export interface PublicAnimationWithFa
-  extends Required<PublicAnimation> {
+export interface PublicAnimationWithFa extends Required<PublicAnimation> {
   fa: {
     id: number;
     name: string;

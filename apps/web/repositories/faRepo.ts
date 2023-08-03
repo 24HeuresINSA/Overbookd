@@ -182,7 +182,8 @@ export default {
     publicAnimation: PublicAnimationCreation
   ) {
     return context.$axios.post<PublicAnimation>(
-      `public-animation`, publicAnimation
+      `public-animation`,
+      publicAnimation
     );
   },
 
@@ -192,7 +193,8 @@ export default {
     publicAnimation: PublicAnimation
   ) {
     return context.$axios.put<PublicAnimation>(
-      `public-animation/${id}`, publicAnimation
+      `public-animation/${id}`,
+      publicAnimation
     );
   },
 
@@ -201,9 +203,7 @@ export default {
   },
 
   getAllPublicAnimations(context: Context) {
-    return context.$axios.get<PublicAnimationWithFa[]>(
-      `public-animation`
-    );
+    return context.$axios.get<PublicAnimationWithFa[]>(`public-animation`);
   },
 
   validateGearRequest(

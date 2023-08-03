@@ -116,17 +116,13 @@ export default Vue.extend({
     updatePublicAnimationPhotoLink(photoLink: string) {
       return this.updatePublicAnimation({ photoLink: photoLink.trim() });
     },
-    updatePublicAnimationCategories(
-      categories: PublicAnimationCategoryType[]
-    ) {
+    updatePublicAnimationCategories(categories: PublicAnimationCategoryType[]) {
       return this.updatePublicAnimation({ categories });
     },
     updatePublicAnimationIsFlagship(isFlagship: boolean) {
       return this.updatePublicAnimation({ isFlagship });
     },
-    updatePublicAnimation(
-      publicAnimationChunk: Partial<PublicAnimation>
-    ) {
+    updatePublicAnimation(publicAnimationChunk: Partial<PublicAnimation>) {
       this.$accessor.fa.updatePublicAnimation({
         ...this.mFA.publicAnimation,
         ...publicAnimationChunk,
