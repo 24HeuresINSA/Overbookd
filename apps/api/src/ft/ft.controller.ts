@@ -25,39 +25,42 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { StatsPayload } from '../../src/common/services/stats.service';
-import { GearRequestsApproveFormRequestDto } from '../../src/gear-requests/dto/gearRequestApproveFormRequest.dto';
+import { ApproveGearRequestRequestDto } from '../gear-request/dto/approve-gear-request.request.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
-  GearRequestFormRequestDto,
+  GearRequestRequestDto,
   NewPeriodGearRequestFormRequestDto,
-} from '../../src/gear-requests/dto/gearRequestFormRequest.dto';
+} from '../gear-request/dto/gear-request.request.dto';
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
-} from '../../src/gear-requests/dto/gearRequestResponse.dto';
-import { GearRequestUpdateFormRequestDto } from '../../src/gear-requests/dto/gearRequestUpdateFormRequest.dto';
+} from '../gear-request/dto/gear-request.response.dto';
+import { UpdateGearRequestRequestDto } from '../gear-request/dto/update-gear-request.request.dto';
 import {
   ApprovedGearRequest,
   GearSeekerType,
-} from '../../src/gear-requests/gearRequests.model';
-import { GearRequestsService } from '../../src/gear-requests/gearRequests.service';
+} from '../gear-request/gear-request.model';
+import { GearRequestService } from '../gear-request/gear-request.service';
 import { PeriodDto } from '../../src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CreateFtDto } from './dto/createFt.dto';
-import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
-import { FTSearchRequestDto } from './dto/ftSearchRequest.dto';
-import { UpdateFtDto } from './dto/updateFt.dto';
+import { CreateFtRequestDto } from './dto/create-ft.request.dto';
+import {
+  CompleteFtResponseDto,
+  LiteFtResponseDto,
+} from './dto/ft.response.dto';
+import { FTSearchRequestDto } from './dto/ft-search.request.dto';
+import { UpdateFtRequestDto } from './dto/update-ft.request.dto';
 import { ftStatuses } from './ft.model';
 import { FtService } from './ft.service';
-import { FtIdResponse } from './ftTypes';
-import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
-import { ReviewerFormRequestDto } from './dto/ReviewerFormRequest.dto';
-import { StatsResponseDto } from '../fa/dto/statsResponse.dto';
-import { FollowingFtResponseDto } from './dto/followingFtResponse.dto';
+import { FtIdResponse } from './ft-types';
+import { ReviewerResponseDto } from './dto/reviewer.response.dto';
+import { ReviewerRequestDto } from './dto/reviewer.request.dto';
+import { StatsResponseDto } from '../fa/dto/stats.response.dto';
+import { FollowingFtResponseDto } from './dto/following-ft.response.dto';
 
 @ApiBearerAuth()
 @ApiTags('ft')
@@ -71,7 +74,7 @@ import { FollowingFtResponseDto } from './dto/followingFtResponse.dto';
 export class FtController {
   constructor(
     private readonly ftService: FtService,
-    private readonly gearRequestService: GearRequestsService,
+    private readonly gearRequestService: GearRequestService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -89,7 +92,9 @@ export class FtController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
+  create(
+    @Body() ft: CreateFtRequestDto,
+  ): Promise<CompleteFtResponseDto | null> {
     return this.ftService.create(ft);
   }
 
@@ -167,7 +172,7 @@ export class FtController {
   })
   @ApiBody({
     description: 'Updated ft',
-    type: UpdateFtDto,
+    type: UpdateFtRequestDto,
   })
   @ApiParam({
     name: 'id',
@@ -180,7 +185,7 @@ export class FtController {
   })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateFtDto: UpdateFtDto,
+    @Body() updateFtDto: UpdateFtRequestDto,
     @Request() req: RequestWithUserPayload,
   ): Promise<CompleteFtResponseDto | null> {
     return this.ftService.update(id, updateFtDto, new JwtUtil(req.user));
@@ -269,7 +274,7 @@ export class FtController {
     description: 'Task id',
     required: true,
   })
-  @ApiBody({ type: GearRequestFormRequestDto })
+  @ApiBody({ type: GearRequestRequestDto })
   addGearRequest(
     @Param('id', ParseIntPipe) id: number,
     @Body()
@@ -401,7 +406,7 @@ export class FtController {
     @Param('taskId', ParseIntPipe) taskId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
     @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
-    @Body() gearRequestForm: GearRequestUpdateFormRequestDto,
+    @Body() gearRequestForm: UpdateGearRequestRequestDto,
   ): Promise<GearRequestResponseDto> {
     return this.gearRequestService.updateTaskRequest(
       taskId,
@@ -445,7 +450,7 @@ export class FtController {
     @Param('taskId', ParseIntPipe) taskId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
     @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
-    @Body() approveForm: GearRequestsApproveFormRequestDto,
+    @Body() approveForm: ApproveGearRequestRequestDto,
   ): Promise<ApprovedGearRequest> {
     const gearRequestId = {
       seeker: { type: GearSeekerType.Task, id: taskId },
@@ -476,11 +481,11 @@ export class FtController {
   })
   @ApiBody({
     description: 'Reviewer to assign',
-    type: ReviewerFormRequestDto,
+    type: ReviewerRequestDto,
   })
   assignReviewer(
     @Param('taskId', ParseIntPipe) taskId: number,
-    @Body() reviewerForm: ReviewerFormRequestDto,
+    @Body() reviewerForm: ReviewerRequestDto,
   ): Promise<ReviewerResponseDto> {
     return this.ftService.assignReviewer(taskId, reviewerForm.id);
   }

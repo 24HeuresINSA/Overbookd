@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Period, QUARTER_IN_MS } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { VolunteerAvailability } from '@prisma/client';
-import { getPeriodDuration } from '../../src/utils/duration';
+import { getPeriodDuration } from '../utils/duration';
 
 interface OrgaNeedsRequest {
   start: Date;

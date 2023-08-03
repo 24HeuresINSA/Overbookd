@@ -35,33 +35,33 @@ import { Request, Response } from 'express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { buildVolunteerDisplayName } from '../../src/utils/volunteer';
-import { TaskResponseDto } from '../../src/volunteer-planning/dto/taskResponse.dto';
-import { VolunteerSubscriptionPlanningResponseDto } from '../../src/volunteer-planning/dto/volunterSubscriptionPlanningResponse.dto';
+import { TaskResponseDto } from '../volunteer-planning/dto/task.response.dto';
+import { VolunteerSubscriptionPlanningResponseDto } from '../volunteer-planning/dto/volunter-subscription-planning.response.dto';
 import {
   IcalType,
   JsonType,
   PdfType,
   PlanningRenderStrategy,
-} from '../../src/volunteer-planning/render/renderStrategy';
+} from '../volunteer-planning/render/render-strategy';
 import {
   PlanningSubscription,
   SubscriptionService,
 } from '../../src/volunteer-planning/subscription.service';
 import { VolunteerPlanningService } from '../../src/volunteer-planning/volunteer-planning.service';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { FileUploadDto } from './dto/fileUpload.dto';
-import { UserCreationDto } from './dto/userCreation.dto';
-import { UserModificationDto } from './dto/userModification.dto';
-import { UserWithoutPasswordDto } from './dto/userWithoutPassword.dto';
+import { FileUploadRequestDto } from './dto/file-upload.request.dto';
+import { CreateUserRequestDto } from './dto/create-user.request.dto';
+import { UpdateUserRequestDto } from './dto/update-user.request.dto';
+import { UserWithoutPasswordResponseDto } from './dto/user-without-password.response.dto';
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
-} from './dto/volunteerAssignment.dto';
-import { ProfilePictureService } from './profilePicture.service';
+} from './dto/volunteer-assignment-stat.response.dto';
+import { ProfilePictureService } from './profile-picture.service';
 import {
   MyUserInformation,
   UserPersonnalData,
@@ -69,10 +69,10 @@ import {
   UserWithoutPassword,
 } from './user.model';
 import { UserService } from './user.service';
-import { UserPersonnalDataDto } from './dto/userPersonnalData.dto';
-import { MyUSerInformationDto } from './dto/myUserInformation.dto';
+import { UserPersonnalDataResponseDto } from './dto/user-personnal-data.response.dto';
+import { MyUSerInformationResponseDto } from './dto/my-user-information.response.dto';
 import { Task } from '../volunteer-planning/domain/task.model';
-import { UserWithTeamsAndPermissionsDto } from './dto/userWithTeamsAndPermissions.dto';
+import { UserWithTeamsAndPermissionsResponseDto } from './dto/user-with-teams-and-permissions.response.dto';
 @ApiTags('users')
 @Controller('users')
 @ApiBadRequestResponse({
@@ -91,13 +91,15 @@ export class UserController {
   @Post()
   @ApiBody({
     description: 'Add new user',
-    type: UserCreationDto,
+    type: CreateUserRequestDto,
   })
   @ApiCreatedResponse({
     description: 'created user',
-    type: UserWithoutPasswordDto,
+    type: UserWithoutPasswordResponseDto,
   })
-  createUser(@Body() userData: UserCreationDto): Promise<UserWithoutPassword> {
+  createUser(
+    @Body() userData: CreateUserRequestDto,
+  ): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
   }
 
@@ -114,7 +116,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get all users',
-    type: UserPersonnalDataDto,
+    type: UserPersonnalDataResponseDto,
     isArray: true,
   })
   getUsers(): Promise<UserPersonnalData[]> {
@@ -134,7 +136,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get all volunteers',
-    type: UserPersonnalDataDto,
+    type: UserPersonnalDataResponseDto,
     isArray: true,
   })
   getVolunteers(): Promise<UserPersonnalData[]> {
@@ -154,7 +156,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get all candidates',
-    type: UserPersonnalDataDto,
+    type: UserPersonnalDataResponseDto,
     isArray: true,
   })
   getCandidates(): Promise<UserPersonnalData[]> {
@@ -167,7 +169,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get a current user',
-    type: MyUSerInformationDto,
+    type: MyUSerInformationResponseDto,
   })
   async getCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
@@ -229,15 +231,15 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Updated current user',
-    type: UserWithTeamsAndPermissionsDto,
+    type: UserWithTeamsAndPermissionsResponseDto,
   })
   @ApiBody({
     description: 'New current user information',
-    type: UserModificationDto,
+    type: UpdateUserRequestDto,
   })
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
-    @Body() userData: UserModificationDto,
+    @Body() userData: UpdateUserRequestDto,
   ): Promise<UserWithTeamsAndPermissions | null> {
     return this.userService.updateUserPersonnalData(req.user.id, userData);
   }
@@ -249,7 +251,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get all usernames with valid CP',
-    type: UserWithoutPasswordDto,
+    type: UserWithoutPasswordResponseDto,
     isArray: true,
   })
   async getUsernamesWithValidCP(): Promise<UserWithoutPassword[]> {
@@ -263,7 +265,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Get a user by id',
-    type: UserWithoutPasswordDto,
+    type: UserWithoutPasswordResponseDto,
   })
   getUserById(
     @Param('id', ParseIntPipe) id: number,
@@ -367,16 +369,16 @@ export class UserController {
   @Put(':id')
   @ApiBody({
     description: 'New user information',
-    type: UserModificationDto,
+    type: UpdateUserRequestDto,
   })
   @ApiResponse({
     status: 200,
     description: 'Updated user',
-    type: UserWithTeamsAndPermissionsDto,
+    type: UserWithTeamsAndPermissionsResponseDto,
   })
   updateUserById(
     @Param('id', ParseIntPipe) targetUserId: number,
-    @Body() user: UserModificationDto,
+    @Body() user: UpdateUserRequestDto,
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<UserWithTeamsAndPermissions> {
     return this.userService.updateUser(
@@ -418,11 +420,11 @@ export class UserController {
   @ApiResponse({
     status: 201,
     description: 'Add a profile picture to a user',
-    type: UserWithoutPasswordDto,
+    type: UserWithoutPasswordResponseDto,
   })
   @ApiBody({
     description: 'Profile picture file',
-    type: FileUploadDto,
+    type: FileUploadRequestDto,
   })
   defineProfilePicture(
     @RequestDecorator() req: RequestWithUserPayload,

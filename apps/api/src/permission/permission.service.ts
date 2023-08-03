@@ -6,8 +6,8 @@ import {
 import { Prisma } from '@prisma/client';
 import { TeamService } from '../team/team.service';
 import { PrismaService } from '../prisma.service';
-import { PermissionFormDto } from './dto/permissionForm.dto';
-import { PermissionResponseDto } from './dto/permissionResponse.dto';
+import { PermissionRequestDto } from './dto/permission.request.dto';
+import { PermissionResponseDto } from './dto/permission.response.dto';
 
 const SELECT_PERMISSION = {
   id: true,
@@ -61,7 +61,7 @@ export class PermissionService {
   }
 
   async createPermission(
-    payload: PermissionFormDto,
+    payload: PermissionRequestDto,
   ): Promise<PermissionResponseDto> {
     try {
       const permission = await this.prisma.permission.create({
@@ -82,7 +82,7 @@ export class PermissionService {
 
   async updatePermission(
     id: number,
-    params: PermissionFormDto,
+    params: PermissionRequestDto,
   ): Promise<PermissionResponseDto> {
     const permission = await this.permissionExists(id);
     const newPermission = await this.prisma.permission.update({

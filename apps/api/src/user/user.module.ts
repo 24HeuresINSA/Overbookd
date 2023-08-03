@@ -3,7 +3,7 @@ import { VolunteerPlanningModule } from '../../src/volunteer-planning/volunteer-
 import { MailService } from '../mail/mail.service';
 import { PrismaService } from '../prisma.service';
 import { FileService } from './file.service';
-import { ProfilePictureService } from './profilePicture.service';
+import { ProfilePictureService } from './profile-picture.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

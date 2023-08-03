@@ -15,9 +15,9 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { TeamFormDto } from './dto/teamFormRequest.dto';
-import { LinkTeamToUserDto } from './dto/linkTeamUser.dto';
-import { TeamResponseDto } from './dto/teamResponse';
+import { TeamRequestDto } from './dto/team.request.dto';
+import { LinkTeamToUserDto } from './dto/link-team-user.dto';
+import { TeamResponseDto } from './dto/team.response';
 import { TeamService } from './team.service';
 
 @ApiTags('teams')
@@ -65,7 +65,7 @@ export class TeamController {
     description: 'Create a team',
     type: TeamResponseDto,
   })
-  async addTeam(@Body() payload: TeamFormDto): Promise<TeamResponseDto> {
+  async addTeam(@Body() payload: TeamRequestDto): Promise<TeamResponseDto> {
     return this.teamService.createTeam(payload);
   }
 
@@ -81,7 +81,7 @@ export class TeamController {
   })
   async updateTeam(
     @Param('id', ParseIntPipe) id: number,
-    @Body() data: TeamFormDto,
+    @Body() data: TeamRequestDto,
   ): Promise<TeamResponseDto> {
     return this.teamService.updateTeam(id, data);
   }

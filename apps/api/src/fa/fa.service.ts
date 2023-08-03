@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateFaDto } from './dto/updateFa.dto';
+import { UpdateFaRequestDto } from './dto/update-fa.request.dto';
 import { ValidationDto } from './dto/validation.dto';
 
 import { StatsPayload, StatsService } from '../common/services/stats.service';
 import { PrismaService } from '../prisma.service';
-import { CreateFaDto } from './dto/createFa.dto';
+import { CreateFaRequestDto } from './dto/create-fa.request.dto';
 import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
 import { COMPLETE_FA_SELECT, FaIdResponse, LITE_FA_SELECT } from './faTypes';
 import {
@@ -58,7 +58,7 @@ export class FaService {
 
   async update(
     id: number,
-    updatefaDto: UpdateFaDto,
+    updatefaDto: UpdateFaRequestDto,
   ): Promise<CompleteFaResponse> {
     //find the fa
     const fa = await this.prisma.fa.findUnique({ where: { id } });
@@ -70,7 +70,7 @@ export class FaService {
     });
   }
 
-  async create(faCreation: CreateFaDto): Promise<CompleteFaResponse> {
+  async create(faCreation: CreateFaRequestDto): Promise<CompleteFaResponse> {
     return this.prisma.fa.create({
       data: faCreation,
       select: COMPLETE_FA_SELECT,

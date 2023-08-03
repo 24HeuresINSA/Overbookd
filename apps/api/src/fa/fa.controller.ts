@@ -29,35 +29,35 @@ import { StatsPayload } from '../common/services/stats.service';
 import {
   ApprovedGearRequest,
   GearSeekerType,
-} from '../gear-requests/gearRequests.model';
+} from '../gear-request/gear-request.model';
 import { RequestWithUserPayload } from '../app.controller';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { GearRequestsApproveFormRequestDto } from '../gear-requests/dto/gearRequestApproveFormRequest.dto';
+import { ApproveGearRequestRequestDto } from '../gear-request/dto/approve-gear-request.request.dto';
 import {
   ExistingPeriodGearRequestFormRequestDto,
-  GearRequestFormRequestDto,
+  GearRequestRequestDto,
   NewPeriodGearRequestFormRequestDto,
-} from '../gear-requests/dto/gearRequestFormRequest.dto';
+} from '../gear-request/dto/gear-request.request.dto';
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
-} from '../gear-requests/dto/gearRequestResponse.dto';
-import { GearRequestUpdateFormRequestDto } from '../gear-requests/dto/gearRequestUpdateFormRequest.dto';
-import { GearRequestsService } from '../gear-requests/gearRequests.service';
-import { CompleteFaResponseDto } from './dto/completeFaResponse.dto';
-import { CreateFaDto } from './dto/createFa.dto';
-import { FaSearchRequestDto } from './dto/faSearchRequest.dto';
-import { LiteFaResponseDto } from './dto/liteFaResponse.dto';
-import { UpdateFaDto } from './dto/updateFa.dto';
+} from '../gear-request/dto/gear-request.response.dto';
+import { UpdateGearRequestRequestDto } from '../gear-request/dto/update-gear-request.request.dto';
+import { GearRequestService } from '../gear-request/gear-request.service';
+import { CompleteFaResponseDto } from './dto/complete-fa.response.dto';
+import { CreateFaRequestDto } from './dto/create-fa.request.dto';
+import { FaSearchRequestDto } from './dto/fa-search.request.dto';
+import { LiteFaResponseDto } from './dto/lite-fa.response.dto';
+import { UpdateFaRequestDto } from './dto/update-fa.request.dto';
 import { ValidationDto } from './dto/validation.dto';
 import { CompleteFaResponse, LiteFaResponse } from './fa.model';
 import { FaService } from './fa.service';
 import { FaIdResponse } from './faTypes';
-import { CollaboratorResponseDto } from '../collaborator/dto/collaboratorResponse.dto';
-import { CollaboratorFormRequestDto } from '../collaborator/dto/collaboratorFormRequest.dto';
+import { CollaboratorResponseDto } from '../collaborator/dto/collaborator.response.dto';
+import { CollaboratorRequestDto } from '../collaborator/dto/collaborator.request.dto';
 import { CollaboratorWithId } from '../collaborator/collaborator.model';
-import { StatsResponseDto } from './dto/statsResponse.dto';
-import { FollowingFaResponseDto } from './dto/followingFaResponse.dto';
+import { StatsResponseDto } from './dto/stats.response.dto';
+import { FollowingFaResponseDto } from './dto/following-fa.response.dto';
 
 @ApiBearerAuth()
 @ApiTags('fa')
@@ -74,7 +74,7 @@ import { FollowingFaResponseDto } from './dto/followingFaResponse.dto';
 export class FaController {
   constructor(
     private readonly faService: FaService,
-    private readonly gearRequestService: GearRequestsService,
+    private readonly gearRequestService: GearRequestService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -86,7 +86,7 @@ export class FaController {
     description: 'Create a new fa',
     type: CompleteFaResponseDto,
   })
-  create(@Body() FA: CreateFaDto): Promise<CompleteFaResponse> {
+  create(@Body() FA: CreateFaRequestDto): Promise<CompleteFaResponse> {
     return this.faService.create(FA);
   }
 
@@ -150,11 +150,11 @@ export class FaController {
   })
   @ApiBody({
     description: 'Update a fa',
-    type: UpdateFaDto,
+    type: UpdateFaRequestDto,
   })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateFaDto: UpdateFaDto,
+    @Body() updateFaDto: UpdateFaRequestDto,
   ): Promise<CompleteFaResponse> {
     return this.faService.update(id, updateFaDto);
   }
@@ -291,11 +291,11 @@ export class FaController {
   })
   @ApiBody({
     description: 'Collaborator to add',
-    type: CollaboratorFormRequestDto,
+    type: CollaboratorRequestDto,
   })
   addCollaborator(
     @Param('id', ParseIntPipe) id: number,
-    @Body() collaborator: CollaboratorFormRequestDto,
+    @Body() collaborator: CollaboratorRequestDto,
   ): Promise<CollaboratorWithId> {
     return this.faService.addCollaborator(id, collaborator);
   }
@@ -333,7 +333,7 @@ export class FaController {
     description: 'Animation id',
     required: true,
   })
-  @ApiBody({ type: GearRequestFormRequestDto })
+  @ApiBody({ type: GearRequestRequestDto })
   addGearRequest(
     @Param('id', ParseIntPipe) id: number,
     @Body()
@@ -402,7 +402,7 @@ export class FaController {
     @Param('animationId', ParseIntPipe) animationId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
     @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
-    @Body() approveForm: GearRequestsApproveFormRequestDto,
+    @Body() approveForm: ApproveGearRequestRequestDto,
   ): Promise<ApprovedGearRequest> {
     const gearRequestId = {
       seeker: { type: GearSeekerType.Animation, id: animationId },
@@ -444,7 +444,7 @@ export class FaController {
     @Param('animationId', ParseIntPipe) animationId: number,
     @Param('gearId', ParseIntPipe) gearId: number,
     @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
-    @Body() gearRequestForm: GearRequestUpdateFormRequestDto,
+    @Body() gearRequestForm: UpdateGearRequestRequestDto,
   ): Promise<GearRequestResponseDto> {
     return this.gearRequestService.updateAnimationRequest(
       animationId,

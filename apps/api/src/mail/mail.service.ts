@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { emailTestDto } from './dto/mailTest.dto';
+import { MailTestRequestDto } from './dto/mail-test.request.dto';
 
 type emailResetPassword = {
   email: string;
@@ -16,7 +16,7 @@ export class MailService {
   constructor(private readonly mailerService: MailerService) {}
   private logger = new Logger('MailService');
 
-  async mailTest({ email, username }: emailTestDto): Promise<void> {
+  async mailTest({ email, username }: MailTestRequestDto): Promise<void> {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,

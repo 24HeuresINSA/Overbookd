@@ -24,21 +24,21 @@ import { AssignmentService, AssignmentStats } from './assignment.service';
 import {
   AssignmentRequestDto,
   UpdateAssignedTeamRequestDto,
-} from './dto/assignmentRequest.dto';
-import { AssignmentResponseDto } from './dto/assignmentResponse.dto';
-import { AssignmentStatsResponseDto } from './dto/assignmentsStatsResponse.dto';
+} from './dto/assignment.request.dto';
+import { AssignmentResponseDto } from './dto/assignment.response.dto';
+import { AssignmentStatsResponseDto } from './dto/assignment-stats.response.dto';
 import {
   FtTimeSpanResponseDto,
   FtWithTimeSpansResponseDto,
   TimeSpanWithAssigneesResponseDto,
   TimeSpanWithFtResponseDto,
-} from './dto/ftTimeSpanResponse.dto';
+} from './dto/ft-time-span.response.dto';
 import {
   AvailableVolunteerResponseDto,
   VolunteerResponseDto,
-} from './dto/volunteerResponse.dto';
-import { FtTimeSpanService } from './ftTimeSpan.service';
-import { TimeSpan, TimeSpanWithAssignees } from './types/ftTimeSpanTypes';
+} from './dto/volunteer.response.dto';
+import { FtTimeSpanService } from './ft-time-span.service';
+import { TimeSpan, TimeSpanWithAssignees } from './model/ft-time-span.model';
 import { VolunteerService } from './volunteer.service';
 
 @ApiBearerAuth()

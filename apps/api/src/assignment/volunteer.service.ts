@@ -2,18 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { TaskCategory } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { TeamService } from '../team/team.service';
-import { getOtherAssignableTeams } from '../team/underlyingTeams.utils';
+import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
 import { SELECT_USER_TEAMS } from '../user/user.service';
 import { getPeriodDuration } from '../utils/duration';
 import { AssignmentService } from './assignment.service';
-import { FtTimeSpanService, SELECT_FRIENDS } from './ftTimeSpan.service';
-import { TimeSpanWithFt } from './types/ftTimeSpanTypes';
+import { FtTimeSpanService, SELECT_FRIENDS } from './ft-time-span.service';
+import { TimeSpanWithFt } from './model/ft-time-span.model';
 import {
   AvailableVolunteer,
   DatabaseVolunteer,
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
-} from './types/volunteerTypes';
+} from './model/volunteer.model';
 
 export const WHERE_VALIDATED_USER = {
   team: {

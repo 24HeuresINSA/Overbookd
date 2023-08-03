@@ -24,9 +24,9 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { CatalogService } from './catalog.service';
-import { GearFormRequestDto } from './dto/gearFormRequest.dto';
-import { GearResponseDto } from './dto/gearResponse.dto';
-import { GearSearchRequestDto } from './dto/gearSearchRequest.dto';
+import { GearFormRequestDto } from './dto/gear-form.request.dto';
+import { GearResponseDto } from './dto/gear.response.dto';
+import { GearSearchRequestDto } from './dto/gear-search.request.dto';
 import { Gear } from './interfaces';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';

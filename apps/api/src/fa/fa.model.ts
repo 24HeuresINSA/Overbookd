@@ -3,16 +3,16 @@ import { CollaboratorWithId } from '../collaborator/collaborator.model';
 import {
   FaFeedbackSubjectType,
   subjectTypes,
-} from '../fa-feedback/faFeedback.model';
+} from '../fa-feedback/fa-feedback.model';
 import {
   ElectricityType,
   electricityTypes,
-} from '../fa_electricity_need/faElectricityNeed.model';
-import { SignaType, signaTypes } from '../fa_signa_need/faSignaNeed.model';
+} from '../fa-electricity-need/fa-electricity-need.model';
+import { SignaType, signaTypes } from '../fa-signa-need/fa-signa-need.model';
 import {
   AnimationCategory,
   animationCategories,
-} from '../fa_site_publish_animation/faSitePublishAnimation.model';
+} from '../fa-site-publish-animation/fa-site-publish-animation.model';
 import { FtStatus, ftStatuses } from '../ft/ft.model';
 
 const DRAFT = 'DRAFT';

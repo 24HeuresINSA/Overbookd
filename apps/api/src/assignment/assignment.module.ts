@@ -5,7 +5,7 @@ import { VolunteerAvailabilityService } from '../volunteer-availability/voluntee
 import { PrismaService } from '../prisma.service';
 import { AssignmentController } from './assignment.controller';
 import { AssignmentService } from './assignment.service';
-import { FtTimeSpanService } from './ftTimeSpan.service';
+import { FtTimeSpanService } from './ft-time-span.service';
 import { VolunteerService } from './volunteer.service';
 
 @Module({

@@ -11,7 +11,7 @@ import {
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { TimelineEventResponseDto } from './dto/timelineEventResponse.dto';
+import { TimelineEventResponseDto } from './dto/timeline-event.response.dto';
 import { TimelineService } from './timeline.service';
 
 @ApiBearerAuth()

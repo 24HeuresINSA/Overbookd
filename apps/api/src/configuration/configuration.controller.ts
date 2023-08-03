@@ -9,7 +9,7 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { ConfigurationService } from './configuration.service';
-import { ConfigurationResponseDto } from './dto/configurationResponse.dto';
+import { ConfigurationResponseDto } from './dto/configuration.response.dto';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -21,7 +21,7 @@ import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { Configuration, ConfigurationValue } from './configuration.model';
-import { UpsertConfigurationDto } from './dto/upsertConfiguration.dto';
+import { UpsertConfigurationDto } from './dto/upsert-configuration.request.dto';
 
 @ApiTags('configuration')
 @Controller('configuration')

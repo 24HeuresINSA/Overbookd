@@ -4,25 +4,28 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import {
   StatsPayload,
   StatsService,
 } from '../../src/common/services/stats.service';
-import { DataBaseUserRequest } from '../../src/ft_user_request/dto/ftUserRequestResponse.dto';
-import { FtUserRequestService } from '../../src/ft_user_request/ftUserRequest.service';
+import { DataBaseUserRequest } from '../ft-user-request/dto/ft-user-request.response.dto';
+import { FtUserRequestService } from '../ft-user-request/ft-user-request.service';
 import { PrismaService } from '../prisma.service';
-import { CreateFtDto } from './dto/createFt.dto';
-import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ftResponse.dto';
-import { UpdateFtDto } from './dto/updateFt.dto';
+import { CreateFtRequestDto } from './dto/create-ft.request.dto';
+import {
+  CompleteFtResponseDto,
+  LiteFtResponseDto,
+} from './dto/ft.response.dto';
+import { UpdateFtRequestDto } from './dto/update-ft.request.dto';
 import { FtStatus, ftStatuses } from './ft.model';
 import {
   COMPLETE_FT_SELECT,
   FtIdResponse,
   LITE_FT_SELECT,
   TimeWindow,
-} from './ftTypes';
-import { ReviewerResponseDto } from './dto/ReviewerResponse.dto';
+} from './ft-types';
+import { ReviewerResponseDto } from './dto/reviewer.response.dto';
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -57,7 +60,7 @@ export class FtService {
 
   private readonly logger = new Logger(FtService.name);
 
-  async create(ft: CreateFtDto): Promise<CompleteFtResponseDto | null> {
+  async create(ft: CreateFtRequestDto): Promise<CompleteFtResponseDto | null> {
     const createdFt = await this.prisma.ft.create({
       data: ft,
       select: COMPLETE_FT_SELECT,
@@ -107,7 +110,7 @@ export class FtService {
 
   async update(
     id: number,
-    updateFtDto: UpdateFtDto,
+    updateFtDto: UpdateFtRequestDto,
     author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
     const canAffect = author.hasPermission('can-affect') || author.isAdmin();

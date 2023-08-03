@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { removeItemAtIndex, updateItemToList } from '@overbookd/list';
-import { GearReferenceCodeService } from '../../gearReferenceCode.service';
+import { GearReferenceCodeService } from '../../gear-reference-code.service';
 import { GearNotFoundException } from '../../catalog.service';
 import {
   Gear,

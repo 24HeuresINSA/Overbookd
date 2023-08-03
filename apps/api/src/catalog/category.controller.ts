@@ -24,11 +24,11 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CategoryFormRequestDto } from './dto/categoryFormRequest.dto';
+import { CategoryFormRequestDto } from './dto/category-form.request.dto';
 import { Category, CategoryTree } from './interfaces';
-import { CategoryResponseDto } from './dto/categoryResponse.dto';
-import { CategoryTreeResponseDto } from './dto/categoryTreeResponse.dto';
-import { CategorySearchRequestDto } from './dto/categorySearchRequest.dto';
+import { CategoryResponseDto } from './dto/category.response.dto';
+import { CategoryTreeResponseDto } from './dto/category-tree.response.dto';
+import { CategorySearchRequestDto } from './dto/category-search.request.dto';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 
