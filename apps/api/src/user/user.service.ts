@@ -317,7 +317,9 @@ export class UserService {
     return teams.map((t) => t.code);
   }
 
-  async createUser(payload: CreateUserRequestDto): Promise<UserWithoutPassword> {
+  async createUser(
+    payload: CreateUserRequestDto,
+  ): Promise<UserWithoutPassword> {
     const newUserData = {
       firstname: payload.firstname,
       lastname: payload.lastname,

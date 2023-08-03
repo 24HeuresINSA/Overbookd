@@ -13,7 +13,10 @@ import { DataBaseUserRequest } from '../ft-user-request/dto/ft-user-request.resp
 import { FtUserRequestService } from '../ft-user-request/ft-user-request.service';
 import { PrismaService } from '../prisma.service';
 import { CreateFtRequestDto } from './dto/create-ft.request.dto';
-import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ft.response.dto';
+import {
+  CompleteFtResponseDto,
+  LiteFtResponseDto,
+} from './dto/ft.response.dto';
 import { UpdateFtRequestDto } from './dto/update-ft.request.dto';
 import { FtStatus, ftStatuses } from './ft.model';
 import {

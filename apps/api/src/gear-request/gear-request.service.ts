@@ -93,9 +93,7 @@ export class GearRequestService {
     return gearRequestOrchestrator.add(createForm);
   }
 
-  async addTaskRequest(
-    createForm: CreateGearRequest,
-  ): Promise<GearRequest> {
+  async addTaskRequest(createForm: CreateGearRequest): Promise<GearRequest> {
     const gear = await this.gearRepository.getGear(createForm.gearId);
     const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
       GearSeekerType.Task,

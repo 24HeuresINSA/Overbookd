@@ -97,7 +97,9 @@ export class UserController {
     description: 'created user',
     type: UserWithoutPasswordResponseDto,
   })
-  createUser(@Body() userData: CreateUserRequestDto): Promise<UserWithoutPassword> {
+  createUser(
+    @Body() userData: CreateUserRequestDto,
+  ): Promise<UserWithoutPassword> {
     return this.userService.createUser(userData);
   }
 

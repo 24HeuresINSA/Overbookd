@@ -48,7 +48,10 @@ import { GearRequestService } from '../gear-request/gear-request.service';
 import { PeriodDto } from '../../src/volunteer-availability/dto/period.dto';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { CreateFtRequestDto } from './dto/create-ft.request.dto';
-import { CompleteFtResponseDto, LiteFtResponseDto } from './dto/ft.response.dto';
+import {
+  CompleteFtResponseDto,
+  LiteFtResponseDto,
+} from './dto/ft.response.dto';
 import { FTSearchRequestDto } from './dto/ft-search.request.dto';
 import { UpdateFtRequestDto } from './dto/update-ft.request.dto';
 import { ftStatuses } from './ft.model';
@@ -89,7 +92,9 @@ export class FtController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(@Body() ft: CreateFtRequestDto): Promise<CompleteFtResponseDto | null> {
+  create(
+    @Body() ft: CreateFtRequestDto,
+  ): Promise<CompleteFtResponseDto | null> {
     return this.ftService.create(ft);
   }
 

@@ -298,9 +298,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     return convertGearRequestToApiContract(gearRequest);
   }
 
-  private buildUpdateGearRequestData(
-    updateGearRequestForm: UpdateGearRequest,
-  ) {
+  private buildUpdateGearRequestData(updateGearRequestForm: UpdateGearRequest) {
     return {
       quantity: updateGearRequestForm.quantity,
       rentalPeriod: {
