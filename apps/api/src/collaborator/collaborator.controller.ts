@@ -11,7 +11,7 @@ import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { CollaboratorWithId } from './collaborator.model';
-import { CollaboratorResponseDto } from './dto/collaboratorResponse.dto';
+import { CollaboratorResponseDto } from './dto/collaborator.response.dto';
 
 @ApiBearerAuth()
 @ApiTags('collaborators')

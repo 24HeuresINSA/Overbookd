@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FtReview, ReviewStatus } from '@prisma/client';
-import { JwtPayload, JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtPayload, JwtUtil } from '../authentication/entities/jwt-util.entity';
 import { faStatuses } from '../../src/fa/fa.model';
 import { CreateFtFeedbackDto } from '../../src/ft-feedback/dto/createFtFeedback.dto';
 import { ftFeedbackSubjectTypes } from '../../src/ft-feedback/ftFeedback.model';

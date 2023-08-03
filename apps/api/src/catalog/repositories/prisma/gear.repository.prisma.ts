@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GearReferenceCodeService } from '../../../catalog/gearReferenceCode.service';
+import { GearReferenceCodeService } from '../../gear-reference-code.service';
 import { PrismaService } from '../../../prisma.service';
 import {
   Gear,

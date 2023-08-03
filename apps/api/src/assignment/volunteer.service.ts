@@ -6,7 +6,7 @@ import { getOtherAssignableTeams } from '../team/underlyingTeams.utils';
 import { SELECT_USER_TEAMS } from '../user/user.service';
 import { getPeriodDuration } from '../utils/duration';
 import { AssignmentService } from './assignment.service';
-import { FtTimeSpanService, SELECT_FRIENDS } from './ftTimeSpan.service';
+import { FtTimeSpanService, SELECT_FRIENDS } from './ft-time-span.service';
 import { TimeSpanWithFt } from './types/ftTimeSpanTypes';
 import {
   AvailableVolunteer,

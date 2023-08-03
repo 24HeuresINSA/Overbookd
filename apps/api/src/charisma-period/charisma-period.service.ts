@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CharismaPeriodResponseDto } from './dto/charismaPeriodResponse.dto';
-import { CreateCharismaPeriodDto } from './dto/createCharismaPeriod.dto';
-import { UpdateCharismaPeriodDto } from './dto/updateCharismaPeriod.dto';
+import { CharismaPeriodResponseDto } from './dto/charisma-period.response.dto';
+import { CreateCharismaPeriodRequestDto } from './dto/create-charisma-period.request.dto';
+import { UpdateCharismaPeriodRequestDto } from './dto/update-charisma-period.request.dto';
 
 @Injectable()
 export class CharismaPeriodService {
   constructor(private prisma: PrismaService) {}
 
   async createCharismaPeriod(
-    charismaPeriod: CreateCharismaPeriodDto,
+    charismaPeriod: CreateCharismaPeriodRequestDto,
   ): Promise<CharismaPeriodResponseDto> {
     return this.prisma.charismaPeriod.create({
       data: charismaPeriod,
@@ -18,7 +18,7 @@ export class CharismaPeriodService {
 
   async updateCharismaPeriod(
     id: number,
-    charismaPeriod: UpdateCharismaPeriodDto,
+    charismaPeriod: UpdateCharismaPeriodRequestDto,
   ): Promise<CharismaPeriodResponseDto> {
     return this.prisma.charismaPeriod.update({
       where: { id },

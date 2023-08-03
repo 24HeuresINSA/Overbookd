@@ -23,10 +23,10 @@ import {
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CharismaPeriodService } from './charismaPeriod.service';
-import { CharismaPeriodResponseDto } from './dto/charismaPeriodResponse.dto';
-import { CreateCharismaPeriodDto } from './dto/createCharismaPeriod.dto';
-import { UpdateCharismaPeriodDto } from './dto/updateCharismaPeriod.dto';
+import { CharismaPeriodService } from './charisma-period.service';
+import { CharismaPeriodResponseDto } from './dto/charisma-period.response.dto';
+import { CreateCharismaPeriodRequestDto } from './dto/create-charisma-period.request.dto';
+import { UpdateCharismaPeriodRequestDto } from './dto/update-charisma-period.request.dto';
 @ApiBearerAuth()
 @ApiTags('charisma-period')
 @ApiBadRequestResponse({
@@ -83,10 +83,10 @@ export class CharismaPeriodController {
   })
   @ApiBody({
     description: 'Charisma Period to create',
-    type: CreateCharismaPeriodDto,
+    type: CreateCharismaPeriodRequestDto,
   })
   create(
-    @Body() charismaPeriod: CreateCharismaPeriodDto,
+    @Body() charismaPeriod: CreateCharismaPeriodRequestDto,
   ): Promise<CharismaPeriodResponseDto> {
     return this.charismaPeriodService.createCharismaPeriod(charismaPeriod);
   }
@@ -107,12 +107,12 @@ export class CharismaPeriodController {
   })
   @ApiBody({
     description: 'Charisma Period to update',
-    type: UpdateCharismaPeriodDto,
+    type: UpdateCharismaPeriodRequestDto,
   })
   @ApiNotFoundResponse({ description: 'Charisma Period not found' })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() charismaPeriod: UpdateCharismaPeriodDto,
+    @Body() charismaPeriod: UpdateCharismaPeriodRequestDto,
   ): Promise<CharismaPeriodResponseDto> {
     return this.charismaPeriodService.updateCharismaPeriod(id, charismaPeriod);
   }

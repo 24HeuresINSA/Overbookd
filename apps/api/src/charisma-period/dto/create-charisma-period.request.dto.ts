@@ -8,7 +8,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class CreateCharismaPeriodDto {
+export class CreateCharismaPeriodRequestDto {
   @ApiProperty({
     required: true,
     description: 'The name of the Charisma Period',

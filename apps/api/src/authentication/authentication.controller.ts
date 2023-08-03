@@ -7,11 +7,11 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ForgotPasswordRequestDto } from './dto/forgotPasswordRequest.dto';
+import { ForgotPasswordRequestDto } from './dto/forgot-password.request.dto';
 import { AuthenticationService } from './authentication.service';
-import { ResetPasswordDto } from './dto/resetPassword.dto';
-import { LoginDto } from './dto/login.dto';
-import { UserAccess } from './dto/userAccess.dto';
+import { ResetPasswordRequestDto } from './dto/reset-password.request.dto';
+import { LoginRequestDto } from './dto/login.request.dto';
+import { UserAccessResponseDto } from './dto/user-access.response.dto';
 import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('authentication')
@@ -23,11 +23,11 @@ export class AuthenticationController {
   @Post('login')
   @ApiBody({
     description: 'Route de connection',
-    type: LoginDto,
+    type: LoginRequestDto,
   })
   @ApiCreatedResponse({
     description: 'User access token',
-    type: UserAccess,
+    type: UserAccessResponseDto,
   })
   @ApiUnauthorizedResponse({
     description: 'Wrong email or password',
@@ -35,7 +35,7 @@ export class AuthenticationController {
   @ApiBadRequestResponse({
     description: 'Bad Request',
   })
-  async login(@Body() userCredentials: LoginDto) {
+  async login(@Body() userCredentials: LoginRequestDto) {
     return this.authService.login(userCredentials);
   }
 
@@ -57,7 +57,7 @@ export class AuthenticationController {
   @ApiBody({
     description:
       'Route pour la seconde partie procedure de reset de mot de passe, enregistre le nouveau mot de passe',
-    type: ResetPasswordDto,
+    type: ResetPasswordRequestDto,
   })
   @ApiBadRequestResponse({
     description: "Password don't match or don't respect the rules",
@@ -66,7 +66,7 @@ export class AuthenticationController {
     description: 'Token expired',
   })
   @Post('reset')
-  async reset(@Body() userTokenAndPassword: ResetPasswordDto) {
+  async reset(@Body() userTokenAndPassword: ResetPasswordRequestDto) {
     return this.authService.recoverPassword(userTokenAndPassword);
   }
 }

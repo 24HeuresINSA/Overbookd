@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   SimplifiedCategoryRepresentation,
   TeamRepresentation,
-} from '../../common/dto/gearRepresentation.dto';
+} from '../../common/dto/gear-representation.dto';
 import { Gear, SimplifiedCategory, Team } from '../interfaces';
 
 export class GearResponseDto implements Gear {

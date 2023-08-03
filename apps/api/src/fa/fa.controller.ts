@@ -53,8 +53,8 @@ import { ValidationDto } from './dto/validation.dto';
 import { CompleteFaResponse, LiteFaResponse } from './fa.model';
 import { FaService } from './fa.service';
 import { FaIdResponse } from './faTypes';
-import { CollaboratorResponseDto } from '../collaborator/dto/collaboratorResponse.dto';
-import { CollaboratorFormRequestDto } from '../collaborator/dto/collaboratorFormRequest.dto';
+import { CollaboratorResponseDto } from '../collaborator/dto/collaborator.response.dto';
+import { CollaboratorRequestDto } from '../collaborator/dto/collaborator.request.dto';
 import { CollaboratorWithId } from '../collaborator/collaborator.model';
 import { StatsResponseDto } from './dto/statsResponse.dto';
 import { FollowingFaResponseDto } from './dto/followingFaResponse.dto';
@@ -291,11 +291,11 @@ export class FaController {
   })
   @ApiBody({
     description: 'Collaborator to add',
-    type: CollaboratorFormRequestDto,
+    type: CollaboratorRequestDto,
   })
   addCollaborator(
     @Param('id', ParseIntPipe) id: number,
-    @Body() collaborator: CollaboratorFormRequestDto,
+    @Body() collaborator: CollaboratorRequestDto,
   ): Promise<CollaboratorWithId> {
     return this.faService.addCollaborator(id, collaborator);
   }

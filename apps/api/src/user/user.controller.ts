@@ -35,7 +35,7 @@ import { Request, Response } from 'express';
 import { diskStorage } from 'multer';
 import { join } from 'path';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { buildVolunteerDisplayName } from '../../src/utils/volunteer';

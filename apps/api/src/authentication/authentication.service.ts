@@ -15,8 +15,8 @@ import {
   SELECT_USER_TEAMS_AND_PERMISSIONS,
   UserService,
 } from '../user/user.service';
-import { ResetPasswordDto } from './dto/resetPassword.dto';
-import { JwtPayload } from './entities/JwtUtil.entity';
+import { ResetPasswordRequestDto } from './dto/reset-password.request.dto';
+import { JwtPayload } from './entities/jwt-util.entity';
 
 type UserCredentials = Pick<User, 'email' | 'password'>;
 type UserEmail = Pick<User, 'email'>;
@@ -102,7 +102,7 @@ export class AuthenticationService {
     token,
     password,
     password2,
-  }: ResetPasswordDto): Promise<void> {
+  }: ResetPasswordRequestDto): Promise<void> {
     if (!timingSafeEqual(Buffer.from(password), Buffer.from(password2))) {
       throw new BadRequestException('The passwords are not the same');
     }

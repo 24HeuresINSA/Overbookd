@@ -4,7 +4,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import {
   StatsPayload,
   StatsService,

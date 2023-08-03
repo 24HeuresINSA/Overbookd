@@ -10,7 +10,7 @@ import { emailTestDto } from './mail/dto/mailTest.dto';
 import { MailService } from './mail/mail.service';
 import { Permission } from './authentication/permissions-auth.decorator';
 import { PermissionsGuard } from './authentication/permissions-auth.guard';
-import { JwtPayload } from './authentication/entities/JwtUtil.entity';
+import { JwtPayload } from './authentication/entities/jwt-util.entity';
 import { Request } from 'express';
 
 /**

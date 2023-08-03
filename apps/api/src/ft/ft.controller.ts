@@ -25,7 +25,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../authentication/entities/JwtUtil.entity';
+import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { StatsPayload } from '../../src/common/services/stats.service';

@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { CollaboratorWithOptionalIdRepresentation } from '../collaborator.model';
 
-export class CollaboratorFormRequestDto
+export class CollaboratorRequestDto
   implements CollaboratorWithOptionalIdRepresentation
 {
   @ApiProperty({

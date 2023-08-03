@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { OneNumber, upperCaseCharacter } from '../../user/dto/common';
 
-export class ResetPasswordDto {
+export class ResetPasswordRequestDto {
   @ApiProperty({
     required: true,
     description: 'The reset password token',
