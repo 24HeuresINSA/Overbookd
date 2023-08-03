@@ -16,7 +16,7 @@
 license_scanning:
   <<: *security
   variables:
-    LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=frontend backend"
+    LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=web api"
 
 nodejs-scan-sast:
   <<: *security
@@ -63,7 +63,7 @@ overbookd/web_lint:
     - when: never
   script:
     - pnpm run --filter @overbookd/web lint
-    - "git commit -am 'style(Front): ✍ Linted frontend files' || true"
+    - "git commit -am 'style(Web): ✍ Linted web files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
 overbookd/api_lint:
@@ -77,7 +77,7 @@ overbookd/api_lint:
     - when: never
   script:
     - pnpm run --filter @overbookd/api lint
-    - "git commit -am 'style(Back): ✍ Linted backend files' || true"
+    - "git commit -am 'style(Api): ✍ Linted api files' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
 
