@@ -17,8 +17,8 @@ import {
   FaType,
   SignaLocation,
   SignaLocationRepresentation,
-  SitePublishAnimation,
-  SitePublishAnimationRepresentation,
+  PublicAnimation,
+  PublicAnimationRepresentation,
   Team,
   TeamRepresentation,
   UserNameWithId,
@@ -165,9 +165,9 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
     required: true,
     description: 'The site publish animation of the fa',
-    type: SitePublishAnimationRepresentation,
+    type: PublicAnimationRepresentation,
   })
-  faSitePublishAnimation: SitePublishAnimation;
+  publicAnimation: PublicAnimation;
 
   @ApiProperty({
     required: true,

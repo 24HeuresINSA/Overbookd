@@ -12,9 +12,9 @@ import {
   FaTimeWindow,
   FaValidationBody,
   SearchFa,
-  SitePublishAnimation,
-  SitePublishAnimationCreation,
-  SitePublishAnimationWithFa,
+  PublicAnimation,
+  PublicAnimationCreation,
+  PublicAnimationWithFa,
 } from "~/utils/models/fa";
 import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
@@ -177,34 +177,32 @@ export default {
     );
   },
 
-  addPublishAnimation(
+  addPublicAnimation(
     context: Context,
-    publishAnimation: SitePublishAnimationCreation
+    publicAnimation: PublicAnimationCreation
   ) {
-    return context.$axios.post<SitePublishAnimation>(
-      `fa-site-publish-animation`,
-      publishAnimation
+    return context.$axios.post<PublicAnimation>(
+      `public-animation`, publicAnimation
     );
   },
 
-  updatePublishAnimation(
+  updatePublicAnimation(
     context: Context,
     id: number,
-    publishAnimation: SitePublishAnimation
+    publicAnimation: PublicAnimation
   ) {
-    return context.$axios.put<SitePublishAnimation>(
-      `fa-site-publish-animation/${id}`,
-      publishAnimation
+    return context.$axios.put<PublicAnimation>(
+      `public-animation/${id}`, publicAnimation
     );
   },
 
-  deletePublishAnimation(context: Context, id: number) {
-    return context.$axios.delete<void>(`fa-site-publish-animation/${id}`);
+  deletePublicAnimation(context: Context, id: number) {
+    return context.$axios.delete<void>(`public-animation/${id}`);
   },
 
-  getAllPublishAnimation(context: Context) {
-    return context.$axios.get<SitePublishAnimationWithFa[]>(
-      `fa-site-publish-animation`
+  getAllPublicAnimations(context: Context) {
+    return context.$axios.get<PublicAnimationWithFa[]>(
+      `public-animation`
     );
   },
 

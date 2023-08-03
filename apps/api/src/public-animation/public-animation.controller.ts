@@ -22,28 +22,28 @@ import {
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CreateFaSitePublishAnimationRequestDto } from './dto/create-fa-site-publish-animation.request.dto';
-import { UpdateFaSitePublishAnimationRequestDto } from './dto/update-fa-site-publish-animation.request.dto';
-import { LiteFaSitePublishAnimationResponseDto } from './dto/lite-fa-site-publish-animation.response.dto';
-import { FaSitePublishAnimationResponseDto } from './dto/fa-site-publish-animation.response.dto';
-import { FaSitePublishAnimationService } from './fa-site-publish-animation.service';
+import { CreatePublicAnimationRequestDto } from './dto/create-public-animation.request.dto';
+import { UpdatePublicAnimationRequestDto } from './dto/update-public-animation.request.dto';
+import { PublicAnimationResponseDto } from './dto/public-animation.response.dto';
+import { PublicAnimationWithFaResponseDto } from './dto/public-animation-with-fa.response.dto';
+import { PublicAnimationService } from './public-animation.service';
 
 @ApiBearerAuth()
 @ApiTags('fa')
-@Controller('fa-site-publish-animation')
-export class FaSitePublishAnimationController {
+@Controller('public-animation')
+export class PublicAnimationController {
   constructor(
-    private readonly faSitePublishAnimationService: FaSitePublishAnimationService,
+    private readonly publicAnimationService: PublicAnimationService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
   @Post()
-  @ApiBody({ type: CreateFaSitePublishAnimationRequestDto })
+  @ApiBody({ type: CreatePublicAnimationRequestDto })
   @ApiResponse({
     status: 201,
-    description: 'Create a new fa site publish animation',
-    type: LiteFaSitePublishAnimationResponseDto,
+    description: 'Create a new public animation',
+    type: PublicAnimationResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -51,11 +51,8 @@ export class FaSitePublishAnimationController {
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  create(
-    @Body()
-    publishAnimationForm: CreateFaSitePublishAnimationRequestDto,
-  ) {
-    return this.faSitePublishAnimationService.create(publishAnimationForm);
+  create(@Body() publicAnimation: CreatePublicAnimationRequestDto) {
+    return this.publicAnimationService.create(publicAnimation);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -63,25 +60,24 @@ export class FaSitePublishAnimationController {
   @Put(':faId')
   @ApiResponse({
     status: 200,
-    description: 'Updating a fa site publish animation',
-    type: LiteFaSitePublishAnimationResponseDto,
+    description: 'Updating a public animation',
+    type: PublicAnimationResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
   })
   @ApiNotFoundResponse({
-    description: "Can't find a site publish animation resource",
+    description: "Can't find a public animation resource",
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  @ApiBody({ type: UpdateFaSitePublishAnimationRequestDto })
+  @ApiBody({ type: UpdatePublicAnimationRequestDto })
   update(
-    @Body()
-    publishAnimationForm: UpdateFaSitePublishAnimationRequestDto,
+    @Body() publicAnimation: UpdatePublicAnimationRequestDto,
     @Param('faId', ParseIntPipe) id: number,
   ) {
-    return this.faSitePublishAnimationService.update(id, publishAnimationForm);
+    return this.publicAnimationService.update(id, publicAnimation);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -89,15 +85,15 @@ export class FaSitePublishAnimationController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'Get all fa site publish animations',
+    description: 'Get all public animations',
     isArray: true,
-    type: FaSitePublishAnimationResponseDto,
+    type: PublicAnimationWithFaResponseDto,
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  findAll(): Promise<FaSitePublishAnimationResponseDto[]> {
-    return this.faSitePublishAnimationService.findAll();
+  findAll(): Promise<PublicAnimationWithFaResponseDto[]> {
+    return this.publicAnimationService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -105,18 +101,18 @@ export class FaSitePublishAnimationController {
   @Get(':faId')
   @ApiResponse({
     status: 200,
-    description: 'Get a fa site publish animation',
+    description: 'Get a public animation',
     isArray: false,
-    type: LiteFaSitePublishAnimationResponseDto,
+    type: PublicAnimationResponseDto,
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
   @ApiNotFoundResponse({
-    description: "Can't find this site publish animation resource",
+    description: "Can't find this public animation resource",
   })
   findOne(@Param('faId', ParseIntPipe) id: number) {
-    return this.faSitePublishAnimationService.findOne(id);
+    return this.publicAnimationService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -125,7 +121,7 @@ export class FaSitePublishAnimationController {
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a fa site publish animation',
+    description: 'Delete a public animation',
   })
   @ApiBadRequestResponse({
     description: 'Request is not formated as expected',
@@ -134,6 +130,6 @@ export class FaSitePublishAnimationController {
     description: "User can't access this resource",
   })
   remove(@Param('faId', ParseIntPipe) id: number) {
-    return this.faSitePublishAnimationService.remove(id);
+    return this.publicAnimationService.remove(id);
   }
 }

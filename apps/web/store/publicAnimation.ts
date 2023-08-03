@@ -1,20 +1,20 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { SitePublishAnimationWithFa } from "~/utils/models/fa";
+import {  PublicAnimationWithFa } from "~/utils/models/fa";
 
 export const state = () => ({
-  publishAnimations: [] as SitePublishAnimationWithFa[],
+  publicAnimations: [] as PublicAnimationWithFa[],
 });
 
-export type PublishAnimationState = ReturnType<typeof state>;
+export type PublicAnimationState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_PUBLISH_ANIMATIONS(
+  SET_PUBLIC_ANIMATIONS(
     state,
-    publishAnimations: SitePublishAnimationWithFa[]
+    publicAnimations: PublicAnimationWithFa[]
   ) {
-    state.publishAnimations = publishAnimations;
+    state.publicAnimations = publicAnimations;
   },
 });
 
@@ -24,13 +24,13 @@ export const actions = actionTree(
     async fetchAllPublishAnimations({ commit }) {
       const publishAnimations = await safeCall(
         this,
-        RepoFactory.faRepo.getAllPublishAnimation(this),
+        RepoFactory.faRepo.getAllPublicAnimations(this),
         {
           errorMessage: "Probleme lors de la récuperation des animations",
         }
       );
       if (!publishAnimations) return;
-      commit("SET_PUBLISH_ANIMATIONS", publishAnimations.data);
+      commit("SET_PUBLIC_ANIMATIONS", publishAnimations.data);
     },
   }
 );

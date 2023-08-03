@@ -83,7 +83,7 @@ export enum FaCardType {
   WATER = "WATER",
 }
 
-export enum SitePublishAnimationCategoryType {
+export enum PublicAnimationCategoryType {
   DIVERTISSEMENT = "Divertissement",
   CULTURE = "Culture",
   SPORT = "Sport",
@@ -113,7 +113,7 @@ export interface Fa extends BaseFa {
   faRefuse: FaReview[];
   feedbacks: FaFeedback[];
   timeWindows: FaTimeWindow[];
-  faSitePublishAnimation?: SitePublishAnimation;
+  publicAnimation?: PublicAnimation;
   fts: FtSimplified[];
 }
 
@@ -205,19 +205,19 @@ export interface FaPageId {
   id: number;
 }
 
-export interface SitePublishAnimationCreation {
+export interface PublicAnimationCreation {
   faId: number;
 }
 
-export interface SitePublishAnimation {
+export interface PublicAnimation {
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
-  categories?: SitePublishAnimationCategoryType[];
+  categories?: PublicAnimationCategoryType[];
 }
 
-export interface SitePublishAnimationWithFa
-  extends Required<SitePublishAnimation> {
+export interface PublicAnimationWithFa
+  extends Required<PublicAnimation> {
   fa: {
     id: number;
     name: string;

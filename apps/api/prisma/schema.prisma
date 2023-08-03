@@ -188,7 +188,7 @@ model Fa {
   feedbacks              FaFeedback[]
   timeWindows            FaTimeWindow[]
   gearRequests           GearRequest[]           @relation("gear-request-animation")
-  faSitePublishAnimation FaSitePublishAnimation?
+  publicAnimation        PublicAnimation?
   fts                    Ft[]
   collaborator           Collaborator?           @relation(fields: [collaboratorId], references: [id])
   collaboratorId         Int?
@@ -333,7 +333,7 @@ model FaFeedback {
   @@map("fa_feedback")
 }
 
-model FaSitePublishAnimation {
+model PublicAnimation {
   fa          Fa                  @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId        Int                 @id @map("fa_id")
   photoLink   String              @default("") @map("photo_link") @db.Text
@@ -341,7 +341,7 @@ model FaSitePublishAnimation {
   isFlagship  Boolean             @default(false) @map("is_flagship")
   categories  AnimationCategory[]
 
-  @@map("fa_site_publish_animation")
+  @@map("public_animation")
 }
 
 enum AnimationCategory {

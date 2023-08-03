@@ -13,7 +13,7 @@ import { FaFeedbackModule } from './fa-feedback/fa-feedback.module';
 import { FaModule } from './fa/fa.module';
 import { FaElectricityNeedModule } from './fa-electricity-need/fa-electricity-need.module';
 import { FaSignaNeedModule } from './fa-signa-need/fa-signa-need.module';
-import { FaSitePublishAnimationModule } from './fa-site-publish-animation/fa-site-publish-animation.module';
+import { PublicAnimationModule } from './public-animation/public-animation.module';
 import { FaTimeWindowModule } from './fa-time-window/fa-time-window.module';
 import { FriendModule } from './friend/friend.module';
 import { FtFeedbackModule } from './ft-feedback/ft-feedback.module';
@@ -78,7 +78,7 @@ import { ThrottlerGuardCustom } from './throttler-custom.guard';
     CatalogModule,
     ConfigurationModule,
     SignaLocationModule,
-    FaSitePublishAnimationModule,
+    PublicAnimationModule,
     PermissionModule,
     InventoryModule,
     FtModule,

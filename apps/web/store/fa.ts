@@ -21,7 +21,7 @@ import {
   FaTimeWindow,
   FaValidationBody,
   SearchFa,
-  SitePublishAnimation,
+  PublicAnimation,
   SortedStoredGearRequests,
   castFaTimeWindowWithDate,
   castFaWithDate,
@@ -254,12 +254,12 @@ export const mutations = mutationTree(state, {
     state.FAs = state.FAs.filter((fa) => fa.id !== faId);
   },
 
-  UPDATE_PUBLISH_ANIMATION({ mFA }, publishAnimation: SitePublishAnimation) {
-    mFA.faSitePublishAnimation = publishAnimation;
+  UPDATE_PUBLIC_ANIMATION({ mFA }, publicAnimation: PublicAnimation) {
+    mFA.publicAnimation = publicAnimation;
   },
 
-  DELETE_PUBLISH_ANIMATION({ mFA }) {
-    mFA.faSitePublishAnimation = undefined;
+  DELETE_PUBLIC_ANIMATION({ mFA }) {
+    mFA.publicAnimation = undefined;
   },
 
   ADD_FT({ mFA }, ft: Ft) {
@@ -423,46 +423,46 @@ export const actions = actionTree(
       dispatch("save");
     },
 
-    async createPublishAnimation({ commit, state }) {
+    async createPublicAnimation({ commit, state }) {
       const res = await safeCall(
         this,
-        repo.addPublishAnimation(this, { faId: state.mFA.id }),
+        repo.addPublicAnimation(this, { faId: state.mFA.id }),
         {
           successMessage: "Info de publication créée 🥳",
           errorMessage: "Info de publication non créée 😢",
         }
       );
       if (!res) return;
-      commit("UPDATE_PUBLISH_ANIMATION", res.data);
+      commit("UPDATE_PUBLIC_ANIMATION", res.data);
     },
 
-    async updatePublishAnimation(
+    async updatePublicAnimation(
       { commit, state },
-      publishAnimation: SitePublishAnimation
+      publicAnimation: PublicAnimation
     ) {
       const res = await safeCall(
         this,
-        repo.updatePublishAnimation(this, state.mFA.id, publishAnimation),
+        repo.updatePublicAnimation(this, state.mFA.id, publicAnimation),
         {
           successMessage: "Info de publication sauvegardée 🥳",
           errorMessage: "Info de publication non sauvegardée 😢",
         }
       );
       if (!res) return;
-      commit("UPDATE_PUBLISH_ANIMATION", publishAnimation);
+      commit("UPDATE_PUBLIC_ANIMATION", publicAnimation);
     },
 
-    async deletePublishAnimation({ commit, state }) {
+    async deletePublicAnimation({ commit, state }) {
       const res = await safeCall(
         this,
-        repo.deletePublishAnimation(this, state.mFA.id),
+        repo.deletePublicAnimation(this, state.mFA.id),
         {
           successMessage: "Info de publication supprimée 🥳",
           errorMessage: "Info de publication non supprimée 😢",
         }
       );
       if (!res) return;
-      commit("DELETE_PUBLISH_ANIMATION");
+      commit("DELETE_PUBLIC_ANIMATION");
     },
 
     resetLogValidations: async function (

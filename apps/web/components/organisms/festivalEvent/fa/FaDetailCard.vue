@@ -20,23 +20,23 @@
           v-model="isPublishable"
           label="Publier sur le site / plaquette"
           :disabled="isValidatedByOwner"
-          @change="switchPublishAnimation($event)"
+          @change="switchPublicAnimation($event)"
         ></v-switch>
         <v-form v-if="isPublishable">
           <v-text-field
-            :value="mFA.faSitePublishAnimation?.photoLink"
+            :value="mFA.publicAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
             :disabled="isValidatedByOwner"
-            @change="updatePublishAnimationPhotoLink($event)"
+            @change="updatePublicAnimationPhotoLink($event)"
           ></v-text-field>
           <v-textarea
-            :value="mFA.faSitePublishAnimation?.description"
+            :value="mFA.publicAnimation?.description"
             label="Description pour le site"
             :disabled="isValidatedByOwner"
-            @change="updatePublishAnimationDescription($event)"
+            @change="updatePublicAnimationDescription($event)"
           ></v-textarea>
           <v-combobox
-            :value="mFA.faSitePublishAnimation?.categories"
+            :value="mFA.publicAnimation?.categories"
             chips
             multiple
             clearable
@@ -44,14 +44,14 @@
             label="Categories de l'animations"
             :items="categories"
             :disabled="isValidatedByOwner"
-            @change="updatePublishAnimationCategories($event)"
+            @change="updatePublicAnimationCategories($event)"
           >
           </v-combobox>
           <v-switch
-            :input-value="mFA.faSitePublishAnimation?.isFlagship"
+            :input-value="mFA.publicAnimation?.isFlagship"
             label="Anim phare qui sera mise en avant sur les réseaux sociaux"
             :disabled="isValidatedByOwner"
-            @change="updatePublishAnimationIsFlagship($event)"
+            @change="updatePublicAnimationIsFlagship($event)"
           ></v-switch>
         </v-form>
       </v-form>
@@ -70,8 +70,8 @@ import {
 import {
   Fa,
   FaCardType,
-  SitePublishAnimation,
-  SitePublishAnimationCategoryType,
+  PublicAnimation,
+  PublicAnimationCategoryType,
 } from "~/utils/models/fa";
 
 export default Vue.extend({
@@ -80,7 +80,7 @@ export default Vue.extend({
   data: () => ({
     owner: "humain",
     cardType: FaCardType.DETAIL,
-    categories: Object.values(SitePublishAnimationCategoryType),
+    categories: Object.values(PublicAnimationCategoryType),
     isPublishable: false,
   }),
   computed: {
@@ -97,7 +97,7 @@ export default Vue.extend({
   watch: {
     mFA: {
       handler() {
-        if (this.mFA.faSitePublishAnimation) {
+        if (this.mFA.publicAnimation) {
           this.isPublishable = true;
         }
       },
@@ -110,32 +110,32 @@ export default Vue.extend({
         description: description.trim(),
       });
     },
-    updatePublishAnimationDescription(description: string) {
-      return this.updatePublishAnimation({ description: description.trim() });
+    updatePublicAnimationDescription(description: string) {
+      return this.updatePublicAnimation({ description: description.trim() });
     },
-    updatePublishAnimationPhotoLink(photoLink: string) {
-      return this.updatePublishAnimation({ photoLink: photoLink.trim() });
+    updatePublicAnimationPhotoLink(photoLink: string) {
+      return this.updatePublicAnimation({ photoLink: photoLink.trim() });
     },
-    updatePublishAnimationCategories(
-      categories: SitePublishAnimationCategoryType[]
+    updatePublicAnimationCategories(
+      categories: PublicAnimationCategoryType[]
     ) {
-      return this.updatePublishAnimation({ categories });
+      return this.updatePublicAnimation({ categories });
     },
-    updatePublishAnimationIsFlagship(isFlagship: boolean) {
-      return this.updatePublishAnimation({ isFlagship });
+    updatePublicAnimationIsFlagship(isFlagship: boolean) {
+      return this.updatePublicAnimation({ isFlagship });
     },
-    updatePublishAnimation(
-      faSitePublishAnimationChunk: Partial<SitePublishAnimation>
+    updatePublicAnimation(
+      publicAnimationChunk: Partial<PublicAnimation>
     ) {
-      this.$accessor.fa.updatePublishAnimation({
-        ...this.mFA.faSitePublishAnimation,
-        ...faSitePublishAnimationChunk,
+      this.$accessor.fa.updatePublicAnimation({
+        ...this.mFA.publicAnimation,
+        ...publicAnimationChunk,
       });
     },
-    switchPublishAnimation(value: boolean) {
-      if (value) return this.$accessor.fa.createPublishAnimation();
-      if (this.mFA.faSitePublishAnimation) {
-        return this.$accessor.fa.deletePublishAnimation();
+    switchPublicAnimation(value: boolean) {
+      if (value) return this.$accessor.fa.createPublicAnimation();
+      if (this.mFA.publicAnimation) {
+        return this.$accessor.fa.deletePublicAnimation();
       }
     },
   },
