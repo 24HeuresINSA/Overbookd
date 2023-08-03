@@ -19,7 +19,7 @@ export class JwtUtil implements JwtPayload {
   }
 
   isAdmin(): boolean {
-    return this.can('admin');
+    return this.can('do-everything');
   }
 
   can(permission: string): boolean {

@@ -211,8 +211,8 @@ export default {
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
-    isAdmin() {
-      return this.$accessor.user.can("admin");
+    canViewDeletedFa() {
+      return this.$accessor.user.can("view-deleted-fa");
     },
     isSecu() {
       return this.$accessor.user.can("manage-pass-secu");

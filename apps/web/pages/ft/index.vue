@@ -35,7 +35,7 @@
               </v-list-item-group>
             </v-list>
             <v-switch
-              v-if="isAdmin"
+              v-if="canViewDeletedFa"
               v-model="filters.isDeleted"
               label="FT supprimées"
             ></v-switch>
@@ -253,8 +253,8 @@ export default Vue.extend({
     statuses(): [FtStatus, FtStatusLabel][] {
       return [...ftStatusLabels.entries()];
     },
-    isAdmin(): boolean {
-      return this.$accessor.user.can("admin");
+    canViewDeletedFa(): boolean {
+      return this.$accessor.user.can("view-deleted-fa");
     },
     canAffect(): boolean {
       return this.$accessor.user.can("affect-volunteer");
