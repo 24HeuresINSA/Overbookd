@@ -16,6 +16,7 @@
         <div class="divider" />
         <TiptapMenuItem
           title="Texte par défaut"
+          class="white-menu-item"
           :action="replaceRegisterDescriptionByTemplate"
         />
       </template>
@@ -142,5 +143,15 @@ h2 {
 
 .save-btn {
   margin-top: 12px;
+}
+
+.white-menu-item {
+  background-color: white;
+  color: black;
+
+  &.is-active,
+  &:hover {
+    background-color: #d2d2d2;
+  }
 }
 </style>

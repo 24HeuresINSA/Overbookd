@@ -57,7 +57,7 @@ export default {
   background: transparent;
   border: none;
   border-radius: 0.4rem;
-  color: #fff !important;
+  color: #fff;
   cursor: pointer;
   height: 1.75rem;
   padding: 0.25rem;
@@ -78,12 +78,5 @@ export default {
 
 .without-icon {
   width: auto;
-  background-color: #fff;
-  color: #303030 !important;
-
-  &.is-active,
-  &:hover {
-    background-color: #cccccc;
-  }
 }
 </style>
