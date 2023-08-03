@@ -254,7 +254,7 @@ export default Vue.extend({
       return [...ftStatusLabels.entries()];
     },
     canViewDeletedFa(): boolean {
-      return this.$accessor.user.can("view-deleted-fa");
+      return this.$accessor.user.can("view-deleted-ft");
     },
     canAffect(): boolean {
       return this.$accessor.user.can("affect-volunteer");
