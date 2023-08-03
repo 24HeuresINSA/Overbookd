@@ -4,10 +4,7 @@ import {
   FaFeedbackSubjectType,
   subjectTypes,
 } from '../fa-feedback/fa-feedback.model';
-import {
-  ElectricityType,
-  electricityTypes,
-} from '../fa-electricity-need/fa-electricity-need.model';
+import { FaElectricityNeed } from '../fa-electricity-need/fa-electricity-need.model';
 import { SignaType, signaTypes } from '../fa-signa-need/fa-signa-need.model';
 import {
   AnimationCategory,
@@ -124,30 +121,6 @@ export class TeamRepresentation implements Team {
   icon: string;
   @ApiProperty({})
   code: string;
-}
-
-export interface FaElectricityNeed {
-  id: number;
-  electricityType: ElectricityType;
-  device?: string;
-  power: number;
-  count: number;
-  comment?: string;
-}
-
-export class FaElectricityNeedRepresentation implements FaElectricityNeed {
-  @ApiProperty({})
-  id: number;
-  @ApiProperty({ enum: electricityTypes })
-  electricityType: ElectricityType;
-  @ApiProperty({ required: false })
-  device?: string;
-  @ApiProperty({})
-  power: number;
-  @ApiProperty({})
-  count: number;
-  @ApiProperty({ required: false })
-  comment?: string;
 }
 
 export interface FaSignaNeed {

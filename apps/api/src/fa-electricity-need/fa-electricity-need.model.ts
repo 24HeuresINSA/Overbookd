@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 const PC16_Prise_classique = 'PC16_Prise_classique';
 const P17_16A_MONO = 'P17_16A_MONO';
 const P17_16A_TRI = 'P17_16A_TRI';
@@ -36,3 +38,53 @@ export const electricityTypes: Record<ElectricityType, ElectricityType> = {
   P17_63A_TETRA: P17_63A_TETRA,
   P17_125A_TETRA: P17_125A_TETRA,
 };
+
+export interface FaElectricityNeed {
+  id: number;
+  electricityType: ElectricityType;
+  power: number;
+  device?: string;
+  count?: number;
+  comment?: string;
+}
+
+export interface FaElectricityNeedWithOptionalId {
+  id?: number;
+  electricityType: ElectricityType;
+  power: number;
+  device?: string;
+  count?: number;
+  comment?: string;
+}
+
+export class FaElectricityNeedRepresentation implements FaElectricityNeed {
+  @ApiProperty({})
+  id: number;
+  @ApiProperty({ enum: electricityTypes })
+  electricityType: ElectricityType;
+  @ApiProperty({})
+  device: string;
+  @ApiProperty({})
+  power: number;
+  @ApiProperty({})
+  count: number;
+  @ApiProperty({ required: false })
+  comment?: string;
+}
+
+export class FaElectricityNeedWithOptionalIdRepresentation
+  implements FaElectricityNeedWithOptionalId
+{
+  @ApiProperty({ required: false })
+  id?: number;
+  @ApiProperty({ enum: electricityTypes })
+  electricityType: ElectricityType;
+  @ApiProperty({})
+  device: string;
+  @ApiProperty({})
+  power: number;
+  @ApiProperty({})
+  count: number;
+  @ApiProperty({ required: false })
+  comment?: string;
+}

@@ -1,75 +1,73 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsDefined,
   IsEnum,
-  IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
+  Min,
   ValidationArguments,
 } from 'class-validator';
+import {
+  ElectricityType,
+  FaElectricityNeedWithOptionalIdRepresentation,
+  electricityTypes,
+} from '../fa-electricity-need.model';
 
-enum ElectricityType {
-  PC16 = 'PC16_Prise_classique',
-  P17_16A_MONO = 'P17_16A_MONO',
-  P17_16A_TRI = 'P17_16A_TRI',
-  P17_16A_TETRA = 'P17_16A_TETRA',
-  P17_32A_MONO = 'P17_32A_MONO',
-  P17_32A_TRI = 'P17_32A_TRI',
-  P17_32A_TETRA = 'P17_32A_TETRA',
-  P17_63A_MONO = 'P17_63A_MONO',
-  P17_63A_TRI = 'P17_63A_TRI',
-  P17_63A_TETRA = 'P17_63A_TETRA',
-  P17_125A_TETRA = 'P17_125A_TETRA',
-}
-
-export class CreateFaElectricityNeedRequestDto {
+export class FaElectricityNeedRequestDto
+  implements FaElectricityNeedWithOptionalIdRepresentation
+{
   @ApiProperty({
     required: false,
-    description: 'The id of the need',
+    description: 'The electricity need id',
   })
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   id?: number;
 
   @ApiProperty({
     required: true,
     description: 'The type of electricity',
+    example: electricityTypes.PC16_Prise_classique,
   })
-  @IsEnum(ElectricityType, {
+  @IsDefined()
+  @IsEnum(electricityTypes, {
     message: (va: ValidationArguments) =>
-      `${va.property} must be one of ${Object.values(ElectricityType)}`,
+      `${va.property} must be one of ${Object.values(electricityTypes)}`,
   })
   electricityType: ElectricityType;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The device plugged in',
   })
+  @IsDefined()
   @IsString()
-  @IsOptional()
-  device?: string;
+  device: string;
 
   @ApiProperty({
     required: true,
     description: 'The power of electricity',
   })
+  @IsDefined()
   @IsNumber()
-  @IsNotEmpty()
+  @Min(1)
   power: number;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The count of device',
   })
+  @IsDefined()
   @IsNumber()
-  @IsOptional()
-  count?: number;
+  @Min(1)
+  count: number;
 
   @ApiProperty({
     required: false,
     description: 'Amy comment about electricity',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   comment?: string;
 }

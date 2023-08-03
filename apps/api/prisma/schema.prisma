@@ -283,9 +283,9 @@ model FaElectricityNeed {
   fa              Fa              @relation(fields: [faId], references: [id])
   faId            Int             @map("fa_id")
   electricityType ElectricityType @map("electricity_type")
-  device          String?         @db.Text
+  device          String          @db.Text
   power           Int
-  count           Int?
+  count           Int
   comment         String?         @db.Text
 
   @@map("fa_electricity_need")

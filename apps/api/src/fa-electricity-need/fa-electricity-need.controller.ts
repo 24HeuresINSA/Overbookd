@@ -2,77 +2,92 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   HttpCode,
   Param,
   ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FaElectricityNeed } from '@prisma/client';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiForbiddenResponse,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CreateFaElectricityNeedRequestDto } from './dto/create-fa-electricity-need.request.dto';
 import { FaElectricityNeedService } from './fa-electricity-need.service';
-import { FaElectricityNeedRepresentation } from '../fa/fa.model';
+import { FaElectricityNeedResponseDto } from './dto/fa-electricity-need.response.dto';
+import { FaElectricityNeedRequestDto } from './dto/fa-electricity-need.request.dto';
+import { FaElectricityNeed } from './fa-electricity-need.model';
 
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 @ApiTags('fa')
-@Controller('fa-electricity-needs')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@Controller('fa')
 export class FaElectricityNeedController {
   constructor(
     private readonly faElectricityNeedService: FaElectricityNeedService,
   ) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faId')
-  @ApiBody({ type: CreateFaElectricityNeedRequestDto, isArray: true })
+  @Post(':faId/electricity-need')
   @ApiResponse({
     status: 201,
-    type: FaElectricityNeedRepresentation,
+    description: 'The fa electricity need have been successfully upserted.',
+    type: FaElectricityNeedResponseDto,
     isArray: true,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    type: FaElectricityNeedRequestDto,
+    description: 'FA electricity need to upsert',
   })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body() createFaElectricityNeedDto: CreateFaElectricityNeedRequestDto[],
-  ): Promise<FaElectricityNeed[]> {
-    return this.faElectricityNeedService.upsert(
-      faId,
-      createFaElectricityNeedDto,
-    );
+    @Body() electricityNeed: FaElectricityNeedRequestDto,
+  ): Promise<FaElectricityNeed> {
+    return this.faElectricityNeedService.upsert(faId, electricityNeed);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Get()
-  @ApiResponse({
-    status: 200,
-    type: FaElectricityNeedRepresentation,
-    isArray: true,
-  })
-  findAll(): Promise<FaElectricityNeed[]> {
-    return this.faElectricityNeedService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id')
-  @ApiResponse({ status: 200, type: FaElectricityNeedRepresentation })
-  findOne(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<FaElectricityNeed | null> {
-    return this.faElectricityNeedService.findOne(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Delete(':id')
+  @Delete(':faId/electricity-need/:id')
   @HttpCode(204)
-  @ApiResponse({ status: 204 })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.faElectricityNeedService.remove(id);
+  @ApiResponse({
+    status: 204,
+    description: 'The fa electricity need have been successfully deleted.',
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    description: 'FA electricity need id',
+    required: true,
+  })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  remove(
+    @Param('faId', ParseIntPipe) faId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    return this.faElectricityNeedService.remove(faId, id);
   }
 }

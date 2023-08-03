@@ -39,7 +39,7 @@ export class FaTimeWindowController {
   constructor(private readonly faTimeWindowService: FaTimeWindowService) {}
 
   @Permission('hard')
-  @Post(':faId/time-windows')
+  @Post(':faId/time-window')
   @ApiResponse({
     status: 201,
     description: 'The fa time window have been successfully upserted.',
@@ -64,7 +64,7 @@ export class FaTimeWindowController {
   }
 
   @Permission('hard')
-  @Delete(':faId/time-windows/:id')
+  @Delete(':faId/time-window/:id')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
