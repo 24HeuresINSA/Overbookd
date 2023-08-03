@@ -247,9 +247,7 @@ export interface PublicAnimation {
   categories?: AnimationCategory[];
 }
 
-export class PublicAnimationRepresentation
-  implements PublicAnimation
-{
+export class PublicAnimationRepresentation implements PublicAnimation {
   @ApiProperty({})
   photoLink?: string;
   @ApiProperty({})

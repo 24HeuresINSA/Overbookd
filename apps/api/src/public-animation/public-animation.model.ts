@@ -28,8 +28,7 @@ export interface PublicAnimationFa {
   timeWindows: Period[];
 }
 
-export interface PublicAnimationWithFa
-  extends Required<PublicAnimation> {
+export interface PublicAnimationWithFa extends Required<PublicAnimation> {
   fa: PublicAnimationFa;
 }
 

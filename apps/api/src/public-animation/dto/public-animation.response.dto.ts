@@ -6,9 +6,7 @@ import {
   animationCategories,
 } from '../public-animation.model';
 
-export class PublicAnimationResponseDto
-  implements PublicAnimation
-{
+export class PublicAnimationResponseDto implements PublicAnimation {
   @ApiProperty({
     required: true,
     description: 'The link to the photo',

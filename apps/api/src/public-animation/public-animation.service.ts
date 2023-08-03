@@ -9,10 +9,7 @@ import {
   PublicAnimationFa,
 } from './public-animation.model';
 
-type DatabasePublicAnimationFa = Omit<
-  PublicAnimationFa,
-  'timeWindows'
-> & {
+type DatabasePublicAnimationFa = Omit<PublicAnimationFa, 'timeWindows'> & {
   timeWindows: Period[];
 };
 
@@ -82,12 +79,10 @@ export class PublicAnimationService {
   }
 
   async findAll(): Promise<PublicAnimationWithFa[]> {
-    const publicAnimations = await this.prisma.publicAnimation.findMany(
-      {
-        orderBy: { faId: 'asc' },
-        select: this.SELECT_PUBLIC_ANIMATION_WITH_FA,
-      },
-    );
+    const publicAnimations = await this.prisma.publicAnimation.findMany({
+      orderBy: { faId: 'asc' },
+      select: this.SELECT_PUBLIC_ANIMATION_WITH_FA,
+    });
     return publicAnimations.map(convertToPublicAnimation);
   }
 
