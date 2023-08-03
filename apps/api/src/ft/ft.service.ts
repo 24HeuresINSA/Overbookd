@@ -75,9 +75,7 @@ export class FtService {
         isDeleted: search.isDeleted,
         status: search.status,
       },
-      orderBy: {
-        id: 'asc',
-      },
+      orderBy: { id: 'asc' },
       select: LITE_FT_SELECT,
     });
   }
@@ -85,24 +83,16 @@ export class FtService {
   async getFtStats(): Promise<StatsPayload[]> {
     const ft = await this.prisma.ft.groupBy({
       by: ['teamCode', 'status'],
-      where: {
-        isDeleted: false,
-      },
-      _count: {
-        status: true,
-      },
-      orderBy: {
-        teamCode: 'asc',
-      },
+      where: { isDeleted: false },
+      _count: { status: true },
+      orderBy: { teamCode: 'asc' },
     });
     return this.statsService.stats(ft);
   }
 
   async findOne(id: number): Promise<CompleteFtResponseDto | null> {
     const ft = await this.prisma.ft.findUnique({
-      where: {
-        id,
-      },
+      where: { id },
       select: COMPLETE_FT_SELECT,
     });
     return this.convertFTtoApiContract(ft);
@@ -113,7 +103,11 @@ export class FtService {
     updateFtDto: UpdateFtRequestDto,
     author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
-    const canAffect = author.hasPermission('affect-volunteer') || author.isAdmin();
+    const affectPermission = author.hasPermission('affect-volunteer');
+    const isAdmin = author.isAdmin();
+
+    const canAffect = affectPermission || isAdmin;
+
     const ft = canAffect
       ? await this.findOne(id)
       : await this.findSubmittableFt(id);
@@ -176,9 +170,7 @@ export class FtService {
         isDeleted: false,
       },
       orderBy: { id: 'desc' },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
   }
 
@@ -189,9 +181,7 @@ export class FtService {
         isDeleted: false,
       },
       orderBy: { id: 'asc' },
-      select: {
-        id: true,
-      },
+      select: { id: true },
     });
   }
 
