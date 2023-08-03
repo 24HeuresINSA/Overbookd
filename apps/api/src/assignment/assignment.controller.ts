@@ -38,7 +38,7 @@ import {
   VolunteerResponseDto,
 } from './dto/volunteer.response.dto';
 import { FtTimeSpanService } from './ft-time-span.service';
-import { TimeSpan, TimeSpanWithAssignees } from './types/ftTimeSpanTypes';
+import { TimeSpan, TimeSpanWithAssignees } from './model/ft-time-span.model';
 import { VolunteerService } from './volunteer.service';
 
 @ApiBearerAuth()

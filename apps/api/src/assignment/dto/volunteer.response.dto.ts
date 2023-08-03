@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AvailableVolunteer, Volunteer } from '../types/volunteerTypes';
+import { AvailableVolunteer, Volunteer } from '../model/volunteer.model';
 
 export class VolunteerResponseDto implements Volunteer {
   @ApiProperty({

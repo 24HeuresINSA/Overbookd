@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { TimeSpanBase } from '../../assignment/types/ftTimeSpanTypes';
+import { TimeSpanBase } from '../../assignment/model/ft-time-span.model';
 import {
   FtUserRequestResponseDto,
   UserRequest,

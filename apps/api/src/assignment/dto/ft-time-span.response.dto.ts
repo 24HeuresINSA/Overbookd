@@ -10,7 +10,7 @@ import {
   TimeSpan,
   TimeSpanAssignee,
   TimeSpanWithAssignees,
-} from '../types/ftTimeSpanTypes';
+} from '../model/ft-time-span.model';
 
 class SimplifiedFTRepresentation implements SimplifiedFT {
   @ApiProperty({

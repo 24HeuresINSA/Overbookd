@@ -14,7 +14,7 @@ import {
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
-} from '../../src/assignment/assignment.model';
+} from '../assignment/model/assignment.model';
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,

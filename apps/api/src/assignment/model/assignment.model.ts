@@ -1,5 +1,5 @@
 import { Period } from '@overbookd/period';
-import { FtStatus } from '../ft/ft.model';
+import { FtStatus } from '../../ft/ft.model';
 
 type DatabaseFt = {
   name: string;
