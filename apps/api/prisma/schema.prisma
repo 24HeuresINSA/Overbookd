@@ -284,8 +284,8 @@ model FaElectricityNeed {
   faId            Int             @map("fa_id")
   electricityType ElectricityType @map("electricity_type")
   device          String          @db.Text
-  power           Int
-  count           Int
+  power           Int             @default(1)
+  count           Int             @default(1)
   comment         String?         @db.Text
 
   @@map("fa_electricity_need")
