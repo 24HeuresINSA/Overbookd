@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsDefined, IsOptional, Min } from 'class-validator';
 import {
-  CreateGearRequestForm as CreateGearRequest,
+  CreateGearRequest,
   ExistingPeriodGearRequestForm,
   NewPeriodCreateGearRequestForm,
 } from '../gear-request.model';

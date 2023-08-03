@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AlsoRequestedByFT, UserNameWithId } from '../../ft/ftTypes';
-import { PeriodForm } from '../../gear-request/gear-request.model';
+import { Period } from '@overbookd/period';
 
 export interface UserRequest {
   user: UserNameWithId;
@@ -21,7 +21,7 @@ class RequestedUser implements UserNameWithId {
   nickname?: string;
 }
 
-class PeriodRepresentation implements PeriodForm {
+class PeriodRepresentation implements Period {
   start: Date;
   end: Date;
 }
@@ -30,7 +30,7 @@ class AlsoRequestedByFTRepresentation implements AlsoRequestedByFT {
   id: number;
   name: string;
   @ApiProperty({ type: PeriodRepresentation })
-  period: PeriodForm;
+  period: Period;
 }
 
 export class FtUserRequestResponseDto implements UserRequest {

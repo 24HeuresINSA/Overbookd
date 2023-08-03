@@ -19,7 +19,7 @@ import {
   MultiOperandGearRequest,
   Period,
   SearchGearRequest,
-  UpdateGearRequestForm,
+  UpdateGearRequest,
 } from '../gear-request.model';
 import { GearRequestRepository } from '../gear-request.service';
 
@@ -219,7 +219,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   async updateGearRequest(
     gearRequestId: GearRequestIdentifier,
-    updateGearRequestForm: UpdateGearRequestForm,
+    updateGearRequestForm: UpdateGearRequest,
   ): Promise<GearRequest> {
     const updatedGearRequest = await this.prismaUpdateGearRequest(
       gearRequestId,
@@ -230,7 +230,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
 
   private prismaUpdateGearRequest(
     gearRequestId: GearRequestIdentifier,
-    updateGearRequestForm: UpdateGearRequestForm,
+    updateGearRequestForm: UpdateGearRequest,
   ) {
     const data = this.buildUpdateGearRequestData(updateGearRequestForm);
     const where = this.buildGearRequestUniqueCondition(gearRequestId);
@@ -299,7 +299,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
   }
 
   private buildUpdateGearRequestData(
-    updateGearRequestForm: UpdateGearRequestForm,
+    updateGearRequestForm: UpdateGearRequest,
   ) {
     return {
       quantity: updateGearRequestForm.quantity,

@@ -6,8 +6,8 @@ import {
   GearRequest,
   GearRequestIdentifier,
   GearSeekerType,
-  CreateGearRequestForm,
-  UpdateGearRequestForm,
+  CreateGearRequest,
+  UpdateGearRequest,
   SearchGearRequest,
   ApprovedGearRequest,
   Period,
@@ -22,7 +22,7 @@ export interface GearRequestRepository {
   getGearRequests(gearRequestSearch: SearchGearRequest): Promise<GearRequest[]>;
   updateGearRequest(
     gearRequestId: GearRequestIdentifier,
-    updateGearRequestForm: UpdateGearRequestForm,
+    updateGearRequestForm: UpdateGearRequest,
   ): Promise<GearRequest>;
   removeGearRequest(gearRequestId: GearRequestIdentifier): Promise<void>;
   removeGearRequests(gearRequestIds: GearRequestIdentifier[]): Promise<void>;
@@ -82,7 +82,7 @@ export class GearRequestService {
   }
 
   async addAnimationRequest(
-    createForm: CreateGearRequestForm,
+    createForm: CreateGearRequest,
   ): Promise<GearRequest> {
     const gear = await this.gearRepository.getGear(createForm.gearId);
     const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
@@ -94,7 +94,7 @@ export class GearRequestService {
   }
 
   async addTaskRequest(
-    createForm: CreateGearRequestForm,
+    createForm: CreateGearRequest,
   ): Promise<GearRequest> {
     const gear = await this.gearRepository.getGear(createForm.gearId);
     const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
@@ -121,7 +121,7 @@ export class GearRequestService {
     animationId: number,
     gearId: number,
     periodId: number,
-    updateForm: UpdateGearRequestForm,
+    updateForm: UpdateGearRequest,
   ): Promise<GearRequest> {
     const gear = await this.gearRepository.getGear(gearId);
     const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(
@@ -141,7 +141,7 @@ export class GearRequestService {
     taskId: number,
     gearId: number,
     periodId: number,
-    updateForm: UpdateGearRequestForm,
+    updateForm: UpdateGearRequest,
   ): Promise<GearRequest> {
     const gear = await this.gearRepository.getGear(gearId);
     const gearRequestOrchestrator = GearRequestOrchestratorBuilder.build(

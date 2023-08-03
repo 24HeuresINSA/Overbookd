@@ -11,7 +11,7 @@ import {
   PENDING,
   Period,
   SearchGearRequest,
-  UpdateGearRequestForm,
+  UpdateGearRequest,
 } from '../gear-request.model';
 import { GearRequestRepository } from '../gear-request.service';
 
@@ -111,7 +111,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
 
   updateGearRequest(
     gearRequestId: GearRequestIdentifier,
-    updateGearRequestForm: UpdateGearRequestForm,
+    updateGearRequestForm: UpdateGearRequest,
   ): Promise<GearRequest> {
     const gearRequestIndex = this.gearRequests.findIndex(
       this.isSameGearRequest(gearRequestId),
@@ -159,7 +159,7 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
 
   private mergePreviousAndNewGearRequest(
     previousGearRequest: GearRequest,
-    updateGearRequestForm: UpdateGearRequestForm,
+    updateGearRequestForm: UpdateGearRequest,
   ): GearRequest {
     const quantity = updateGearRequestForm.quantity
       ? { quantity: updateGearRequestForm.quantity }

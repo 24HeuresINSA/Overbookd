@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDateString, IsOptional, Min } from 'class-validator';
-import { UpdateGearRequestForm as UpdateGearRequest } from '../gear-request.model';
+import { UpdateGearRequest } from '../gear-request.model';
 
 export class UpdateGearRequestRequestDto implements UpdateGearRequest {
   @ApiProperty({

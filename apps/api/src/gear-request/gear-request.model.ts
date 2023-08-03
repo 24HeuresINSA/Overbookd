@@ -50,21 +50,21 @@ export type ExistingPeriodGearRequestForm = BaseCreateGearRequestForm & {
   periodId: number;
 };
 
-export type CreateGearRequestForm =
+export type CreateGearRequest =
   | NewPeriodCreateGearRequestForm
   | ExistingPeriodGearRequestForm;
 
 export function isExistingPeriodForm(
-  value: CreateGearRequestForm,
+  value: CreateGearRequest,
 ): value is ExistingPeriodGearRequestForm {
   return Boolean((value as ExistingPeriodGearRequestForm).periodId);
 }
 
-export type UpdateGearRequestForm = Partial<
+export type UpdateGearRequest = Partial<
   Pick<NewPeriodCreateGearRequestForm, 'start' | 'end' | 'quantity'>
 >;
 
-export interface ApproveGearRequestForm {
+export interface ApproveGearRequest {
   drive: string;
 }
 

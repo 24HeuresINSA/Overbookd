@@ -1,7 +1,7 @@
 import { GearRepository } from '../../catalog/interfaces';
 import {
   buildGearRequestIdentifier,
-  CreateGearRequestForm,
+  CreateGearRequest,
   GearRequest,
   isExistingPeriodForm,
   isPeriodWithDuration,
@@ -9,7 +9,7 @@ import {
   PENDING,
   Period,
   PeriodForm,
-  UpdateGearRequestForm,
+  UpdateGearRequest,
 } from '../gear-request.model';
 import {
   GearRequestRepository,
@@ -25,7 +25,7 @@ export abstract class GearRequestOrchestrator {
     protected readonly periodRepository: PeriodRepository,
   ) {}
 
-  abstract add(form: CreateGearRequestForm): Promise<GearRequest>;
+  abstract add(form: CreateGearRequest): Promise<GearRequest>;
 
   abstract removeOnPeriod(
     taskId: number,
@@ -36,7 +36,7 @@ export abstract class GearRequestOrchestrator {
     seekerId: number,
     gearId: number,
     periodId: number,
-    form: UpdateGearRequestForm,
+    form: UpdateGearRequest,
   ): Promise<GearRequest> {
     const seeker = this.gearSeekerRegistery.buildSeekerIdentifier(seekerId);
     return this.gearRequestRepository.updateGearRequest(
@@ -49,7 +49,7 @@ export abstract class GearRequestOrchestrator {
     );
   }
 
-  protected retrieveRentalPeriod(form: CreateGearRequestForm) {
+  protected retrieveRentalPeriod(form: CreateGearRequest) {
     if (isExistingPeriodForm(form))
       return this.periodRepository.getPeriod(form.periodId);
 
@@ -58,7 +58,7 @@ export abstract class GearRequestOrchestrator {
   }
 
   protected async buildPeriodSearch(
-    form: CreateGearRequestForm,
+    form: CreateGearRequest,
   ): Promise<PeriodForm> {
     if (!isExistingPeriodForm(form)) {
       const { start, end } = form;
@@ -84,7 +84,7 @@ export abstract class GearRequestOrchestrator {
 }
 
 export class StandardGearRequest extends GearRequestOrchestrator {
-  async add(form: CreateGearRequestForm): Promise<GearRequest> {
+  async add(form: CreateGearRequest): Promise<GearRequest> {
     const { seekerId, quantity, gearId } = form;
 
     const { start, end } = await this.buildPeriodSearch(form);
@@ -236,7 +236,7 @@ export class StandardGearRequest extends GearRequestOrchestrator {
 }
 
 export class ConsumableGearRequest extends GearRequestOrchestrator {
-  async add(form: CreateGearRequestForm): Promise<GearRequest> {
+  async add(form: CreateGearRequest): Promise<GearRequest> {
     const { seekerId, quantity, gearId } = form;
 
     const gearRequestSearch = {
@@ -354,7 +354,7 @@ export class ConsumableGearRequest extends GearRequestOrchestrator {
   }
 
   private async updateGearRequestPeriod(
-    createForm: CreateGearRequestForm,
+    createForm: CreateGearRequest,
     similarGearRequest: GearRequest,
   ) {
     const { seekerId, gearId } = createForm;
