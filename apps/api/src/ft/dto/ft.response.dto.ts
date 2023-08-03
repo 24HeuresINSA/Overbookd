@@ -17,7 +17,7 @@ import {
   TimeWindow,
   UserName,
   UserNameWithId,
-} from '../ftTypes';
+} from '../ft-types';
 import { SignaLocationRepresentation, faStatuses } from '../../fa/fa.model';
 import { FaStatus } from '@prisma/client';
 import {

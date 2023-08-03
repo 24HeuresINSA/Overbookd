@@ -13,7 +13,7 @@ import { ftFeedbackSubjectTypes } from '../ft-feedback/ft-feedback.model';
 import { CompleteFtResponseDto } from '../ft/dto/ft.response.dto';
 import { FtStatus, ftStatuses } from '../ft/ft.model';
 import { DataBaseCompleteFt, FtService } from '../ft/ft.service';
-import { COMPLETE_FT_SELECT, TimeSpan } from '../ft/ftTypes';
+import { COMPLETE_FT_SELECT, TimeSpan } from '../ft/ft-types';
 import { PrismaService } from '../prisma.service';
 import { TimeSpanParametersRequestDto } from './dto/time-span-parameters.request.dto';
 import { UpsertFtReviewRequestDto } from './dto/upsert-ft-review.request.dto';

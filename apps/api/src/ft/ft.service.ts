@@ -21,7 +21,7 @@ import {
   FtIdResponse,
   LITE_FT_SELECT,
   TimeWindow,
-} from './ftTypes';
+} from './ft-types';
 import { ReviewerResponseDto } from './dto/reviewer.response.dto';
 export interface SearchFt {
   isDeleted: boolean;

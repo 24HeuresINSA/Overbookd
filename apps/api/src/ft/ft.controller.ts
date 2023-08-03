@@ -53,7 +53,7 @@ import { FTSearchRequestDto } from './dto/ft-search.request.dto';
 import { UpdateFtRequestDto } from './dto/update-ft.request.dto';
 import { ftStatuses } from './ft.model';
 import { FtService } from './ft.service';
-import { FtIdResponse } from './ftTypes';
+import { FtIdResponse } from './ft-types';
 import { ReviewerResponseDto } from './dto/reviewer.response.dto';
 import { ReviewerRequestDto } from './dto/reviewer.request.dto';
 import { StatsResponseDto } from '../fa/dto/stats.response.dto';

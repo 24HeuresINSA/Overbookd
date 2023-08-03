@@ -1,7 +1,7 @@
 import { FaStatus, FtFeedbackSubjectType, ReviewStatus } from '@prisma/client';
-import { SELECT_BASE_TIMESPAN } from '../../src/assignment/assignment.service';
+import { SELECT_BASE_TIMESPAN } from '../assignment/assignment.service';
 import { UserRequest } from '../ft-user-request/dto/ft-user-request.response.dto';
-import { TEAM_SELECT } from '../../src/team/team.service';
+import { TEAM_SELECT } from '../team/team.service';
 import { FtStatus } from './ft.model';
 import { Period } from '@overbookd/period';
 import { TimeSpanBase } from '../assignment/model/ft-time-span.model';
