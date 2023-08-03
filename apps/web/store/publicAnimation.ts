@@ -18,7 +18,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchAllPublishAnimations({ commit }) {
+    async fetchAllPublicAnimations({ commit }) {
       const publishAnimations = await safeCall(
         this,
         RepoFactory.faRepo.getAllPublicAnimations(this),
