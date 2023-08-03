@@ -16,7 +16,7 @@
 license_scanning:
   <<: *security
   variables:
-    LICENSE_FINDER_CLI_OPTS: "--aggregate_paths=apps/web apps/api"
+    LICENSE_FINDER_CLI_OPTS: "--recursive"
 
 nodejs-scan-sast:
   <<: *security
