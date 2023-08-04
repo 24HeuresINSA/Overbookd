@@ -10,8 +10,8 @@ resource_rules:
         actions:
           labels:
             - Scope::Web
-    
-    
+
+
       - name: find all merged dependabot MR and forbidden Scope::Api label
         conditions:
           state: opened

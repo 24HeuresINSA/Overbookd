@@ -13,6 +13,6 @@ resource_rules:
               interval: 3
         actions:
           comment: |
-            Hi @all,  
-            No activity in the last 3 days...  
+            Hi @all,
+            No activity in the last 3 days...
             Please close issue or reavaluate the labels

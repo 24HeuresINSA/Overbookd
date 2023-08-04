@@ -23,7 +23,7 @@ nodejs-scan-sast:
 
 semgrep-sast:
   <<: *security
-  
+
 secret_detection:
   <<: *security
 
@@ -51,7 +51,7 @@ secret_detection:
     - corepack prepare pnpm@latest-8 --activate
     - pnpm config set store-dir .pnpm-store
     - pnpm i
-  
+
 
 overbookd/web_lint:
   extends: .lint

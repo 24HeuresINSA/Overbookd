@@ -186,7 +186,7 @@ describe('Category', () => {
       ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedPath: 'electrique->grosse-tension' }} | ${undefined}
       ${{ id: 2 }}            | ${{ id: 3, expectedPath: 'cable' }}                      | ${{ id: 4, expectedPath: 'cable->grosse-tension' }}
     `(
-      `when deleting category $toDeleteCategory 
+      `when deleting category $toDeleteCategory
         with child category $childrenCategory
         with grandchild category $grandChildrenCategory`,
       ({ toDeleteCategory, childrenCategory, grandChildrenCategory }) => {

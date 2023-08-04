@@ -18,6 +18,6 @@ resource_rules:
         actions:
           comment_type: thread
           comment: |
-            Hi {{author}},  
-            The MR does not close any issue.  
+            Hi {{author}},
+            The MR does not close any issue.
             Are you sure this MR is not related to any issue?

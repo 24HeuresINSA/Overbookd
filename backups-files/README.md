@@ -16,9 +16,9 @@ sudo apt install rsync
 
 ### Info
 
-This script create backups of prod and pre-prod in tar.gz archive.  
+This script create backups of prod and pre-prod in tar.gz archive.
 You need to specify in ``backups.sh`` script the path for Overbookd. With ``OVERBOOKD_PATH`` variable.
-The archive format title is ``overbookd_AAAA-MM-DD_HH-MM-SS.tar.gz`` and all backups for more 7 days are deleted.  
+The archive format title is ``overbookd_AAAA-MM-DD_HH-MM-SS.tar.gz`` and all backups for more 7 days are deleted.
 The script have also a rsync save on another device. To get data in your, at this line of the script, change the destination.
 Add a ssh-key to work without password promt
 

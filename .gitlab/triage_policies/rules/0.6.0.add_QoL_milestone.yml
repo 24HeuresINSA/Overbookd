@@ -15,4 +15,3 @@ resource_rules:
         actions:
           comment: |
             This issue have ~"OB::QoL" label, please move this to %7 milstone or reavaluate the OB scope.
-

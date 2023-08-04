@@ -49,7 +49,7 @@ class Issue:
 
     def issuesStr(self):
         return self.issues
-    
+
     def issueID(self):
         return [json["id"] for json in self.issues]
 

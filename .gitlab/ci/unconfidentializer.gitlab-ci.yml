@@ -4,7 +4,7 @@ unconfidentializer:
   before_script:
     - apk update
     - apk add --update coreutils
-    - apk add jq 
+    - apk add jq
     - apk add curl
   script:
     - echo "Get confidential issues"

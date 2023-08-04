@@ -8,7 +8,7 @@ NC='\033[0m' # No Color
 BLUE='\033[0;34m'
 
 
-# Get all closed and merged MRs from dependabot 
+# Get all closed and merged MRs from dependabot
 CLOSED_MR=$(curl --silent --location --request GET 'https://gitlab.com/api/v4/projects/24-heures-insa%2Foverbookd-mono/merge_requests?state=closed&labels=dependencies&per_page=100&order_by=updated_at')
 
 # Filter json object to get only the source branch name
@@ -25,14 +25,14 @@ do
 
         read -p "Do you want to proceed? (y/n) " yn
 
-        case $yn in 
+        case $yn in
             [yY]es | [yY] )
                 TO_DELETE_BRANCHES="${TO_DELETE_BRANCHES} ${branch}"
                 continue;;
-            [nN]o | [nN] ) 
+            [nN]o | [nN] )
                 echo "Continue verification..."
                 continue;;
-            * ) 
+            * )
             echo "Invalid response"
             ;;
         esac
