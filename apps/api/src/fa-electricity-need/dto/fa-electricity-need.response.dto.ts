@@ -65,7 +65,7 @@ export class FaElectricityNeedResponseDto
 
   @ApiProperty({
     required: false,
-    description: 'Amy comment about electricity',
+    description: 'Any comment about electricity',
   })
   @IsOptional()
   @IsString()

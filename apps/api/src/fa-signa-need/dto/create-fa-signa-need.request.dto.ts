@@ -52,7 +52,7 @@ export class CreateFaSignaNeedRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Amy comment abput signa',
+    description: 'Any comment abput signa',
   })
   @IsOptional()
   @IsString()

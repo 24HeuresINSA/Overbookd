@@ -46,7 +46,7 @@ export type ElectricityType =
   | typeof P17_63A_TETRA
   | typeof P17_125A_TETRA;
 
-export const electricityTypeLabels = {
+export const electricityTypeLabels: Record<ElectricityType, string> = {
   PC16_Prise_classique: "Prise classique (PC16)",
   P17_16A_MONO: "16A Mono (P17_16A_MONO)",
   P17_16A_TRI: "16A Tri (P17_16A_TRI)",

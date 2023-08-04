@@ -3,7 +3,7 @@
     <v-img src="/img/log/plugs.png"></v-img>
     <v-card-title>
       <span class="headline">
-        {{ isEditForm ? "Modifier" : "Ajouter" }} un besoin d'électricité
+        {{ statusFormLabel }} un besoin d'électricité
       </span>
     </v-card-title>
 
@@ -38,7 +38,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="blue darken-1" text @click="confirmElectricityNeed">
-        {{ isEditForm ? "Modifier" : "Ajouter" }}
+        {{ statusFormLabel }}
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -89,9 +89,6 @@ export default Vue.extend({
     },
   }),
   computed: {
-    isEditForm(): boolean {
-      return this.electricityNeed !== null;
-    },
     electricityTypeLabelList(): ElectricityTypeWithLabel[] {
       return Object.keys(electricityTypeLabels).map((type) => {
         return {
@@ -104,6 +101,9 @@ export default Vue.extend({
       return Boolean(
         !this.electricityType || !this.device || !this.power || !this.count
       );
+    },
+    statusFormLabel(): string {
+      return this.electricityNeed !== null ? "Modifier" : "Ajouter";
     },
   },
   watch: {
@@ -137,7 +137,7 @@ export default Vue.extend({
         });
       }
 
-      const timeWindow = {
+      const electricityNeed = {
         id: this.electricityNeed?.id,
         electricityType: this.electricityType,
         device: this.device,
@@ -146,7 +146,7 @@ export default Vue.extend({
         comment: this.comment,
       };
 
-      this.$emit("change", timeWindow);
+      this.$emit("change", electricityNeed);
       this.$emit("close-dialog");
       this.clearLocalVariable();
     },

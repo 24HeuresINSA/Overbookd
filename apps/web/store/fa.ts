@@ -155,7 +155,7 @@ export const mutations = mutationTree(state, {
 
   UPDATE_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
     const index = mFA.electricityNeeds.findIndex(
-      (tw) => tw.id === electricityNeed.id
+      (en) => en.id === electricityNeed.id
     );
     if (index === -1) return;
     mFA.electricityNeeds = updateItemToList(
@@ -167,7 +167,7 @@ export const mutations = mutationTree(state, {
 
   DELETE_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
     mFA.electricityNeeds = mFA.electricityNeeds.filter(
-      (tw) => tw.id !== electricityNeed.id
+      (en) => en.id !== electricityNeed.id
     );
   },
 
