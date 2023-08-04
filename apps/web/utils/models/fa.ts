@@ -83,13 +83,16 @@ export enum FaCardType {
   WATER = "WATER",
 }
 
-export enum PublicAnimationCategoryType {
-  DIVERTISSEMENT = "Divertissement",
-  CULTURE = "Culture",
-  SPORT = "Sport",
-  ENFANT = "Enfant",
-  AUTRE = "Autre",
-}
+export const publicAnimationCategoryTypes = {
+  DIVERTISSEMENT: "Divertissement",
+  CULTURE: "Culture",
+  SPORT: "Sport",
+  ENFANT: "Enfant",
+  AUTRE: "Autre",
+};
+
+export type PublicAnimationCategoryType =
+  keyof typeof publicAnimationCategoryTypes;
 
 export interface BaseFa {
   id: number;

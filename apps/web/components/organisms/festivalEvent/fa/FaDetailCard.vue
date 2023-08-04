@@ -17,12 +17,12 @@
           @change="updateFaDescription($event)"
         ></RichEditor>
         <v-switch
-          v-model="isPublishable"
+          v-model="isPublicAnimation"
           label="Publier sur le site / plaquette"
           :disabled="isValidatedByOwner"
           @change="switchPublicAnimation($event)"
         ></v-switch>
-        <v-form v-if="isPublishable">
+        <v-form v-if="isPublicAnimation">
           <v-text-field
             :value="mFA.publicAnimation?.photoLink"
             label="Lien de la photo de l'activité sur le drive"
@@ -71,6 +71,7 @@ import {
   Fa,
   FaCardType,
   PublicAnimation,
+  publicAnimationCategoryTypes,
   PublicAnimationCategoryType,
 } from "~/utils/models/fa";
 
@@ -80,8 +81,8 @@ export default Vue.extend({
   data: () => ({
     owner: "humain",
     cardType: FaCardType.DETAIL,
-    categories: Object.values(PublicAnimationCategoryType),
-    isPublishable: false,
+    categories: Object.values(publicAnimationCategoryTypes),
+    isPublicAnimation: false,
   }),
   computed: {
     mFA(): Fa {
@@ -98,7 +99,7 @@ export default Vue.extend({
     mFA: {
       handler() {
         if (this.mFA.publicAnimation) {
-          this.isPublishable = true;
+          this.isPublicAnimation = true;
         }
       },
       deep: true,

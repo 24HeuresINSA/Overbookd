@@ -181,7 +181,7 @@ export default {
     context: Context,
     publicAnimation: PublicAnimationCreation
   ) {
-    return context.$axios.post<PublicAnimation>(
+    return context.$axios.post<HttpStringified<PublicAnimation>>(
       `public-animation`,
       publicAnimation
     );
@@ -192,7 +192,7 @@ export default {
     id: number,
     publicAnimation: PublicAnimation
   ) {
-    return context.$axios.put<PublicAnimation>(
+    return context.$axios.put<HttpStringified<PublicAnimation>>(
       `public-animation/${id}`,
       publicAnimation
     );
