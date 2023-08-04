@@ -14,3 +14,9 @@ repos:
       - id: conventional-pre-commit
         stages: [commit-msg]
         args: [feat, fix, major, BREAKING CHANGE, test, chore, docs, style, perf, performance, refacto, refactor]
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+    -   id: detect-secrets
+        args: ['--json']
+        exclude: pnpm-lock.yaml
