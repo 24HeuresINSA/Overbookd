@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "paths": {
-      "@overbookd/configuration": [
-        "./domains/configuration/src"
-      ],
       "@overbookd/period": [
         "./libraries/period/src"
       ],
