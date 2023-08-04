@@ -35,7 +35,7 @@
               </v-list-item-group>
             </v-list>
             <v-switch
-              v-if="canViewDeletedFa"
+              v-if="canViewDeletedFt"
               v-model="filters.isDeleted"
               label="FT supprimées"
             ></v-switch>
@@ -253,7 +253,7 @@ export default Vue.extend({
     statuses(): [FtStatus, FtStatusLabel][] {
       return [...ftStatusLabels.entries()];
     },
-    canViewDeletedFa(): boolean {
+    canViewDeletedFt(): boolean {
       return this.$accessor.user.can("view-deleted-ft");
     },
     canAffect(): boolean {
