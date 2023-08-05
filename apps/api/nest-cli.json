@@ -1,7 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/api/src",
+  "sourceRoot": "src",
+  "entryFile": "apps/api/src/main",
   "compilerOptions": {
     "plugins": [
       {
@@ -14,17 +15,17 @@
     "assets": [
       {
         "include": "**/*.ejs",
-        "outDir": "dist/src",
+        "outDir": "dist/apps/api/src",
         "watchAssets": true
       },
       {
         "include": "../fonts",
-        "outDir": "dist/fonts",
+        "outDir": "dist/apps/api/fonts",
         "watchAssets": true
       },
       {
         "include": "../assets",
-        "outDir": "dist/assets",
+        "outDir": "dist/apps/api/assets",
         "watchAssets": true
       }
     ]
