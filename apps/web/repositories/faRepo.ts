@@ -203,7 +203,9 @@ export default {
   },
 
   getAllPublicAnimations(context: Context) {
-    return context.$axios.get<PublicAnimationWithFa[]>(`public-animation`);
+    return context.$axios.get<HttpStringified<PublicAnimationWithFa[]>>(
+      `public-animation`
+    );
   },
 
   validateGearRequest(
