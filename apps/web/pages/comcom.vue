@@ -115,9 +115,9 @@ export default Vue.extend({
     sortTimeWindows(timeWindows: PeriodWithId[]): PeriodWithId[] {
       const sortedTimeWindows = [...timeWindows].sort((a, b) => {
         if (a.start === b.start) {
-          return new Date(a.end).getTime() - new Date(b.end).getTime();
+          return a.end.getTime() - b.end.getTime();
         }
-        return new Date(a.start).getTime() - new Date(b.start).getTime();
+        return a.start.getTime() - b.start.getTime();
       });
       return sortedTimeWindows;
     },

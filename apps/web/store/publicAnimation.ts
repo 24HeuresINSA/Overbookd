@@ -2,6 +2,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { PublicAnimationWithFa } from "~/utils/models/fa";
+import { HttpStringified } from "~/utils/types/http";
 
 export const state = () => ({
   publicAnimations: [] as PublicAnimationWithFa[],
@@ -19,15 +20,37 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchAllPublicAnimations({ commit }) {
-      const publishAnimations = await safeCall(
+      const res = await safeCall(
         this,
         RepoFactory.faRepo.getAllPublicAnimations(this),
         {
           errorMessage: "Probleme lors de la récuperation des animations",
         }
       );
-      if (!publishAnimations) return;
-      commit("SET_PUBLIC_ANIMATIONS", publishAnimations.data);
+      if (!res) return;
+      commit("SET_PUBLIC_ANIMATIONS", castFaPublicAnimationsWithDate(res.data));
     },
   }
 );
+
+function castFaPublicAnimationsWithDate(
+  publicAnimations: HttpStringified<PublicAnimationWithFa[]>
+): PublicAnimationWithFa[] {
+  return publicAnimations.map(castFaPublicAnimationWithDate);
+}
+
+function castFaPublicAnimationWithDate(
+  publicAnimation: HttpStringified<PublicAnimationWithFa>
+): PublicAnimationWithFa {
+  return {
+    ...publicAnimation,
+    fa: {
+      ...publicAnimation.fa,
+      timeWindows: publicAnimation.fa.timeWindows.map((tw) => ({
+        ...tw,
+        start: new Date(tw.start),
+        end: new Date(tw.end),
+      })),
+    },
+  };
+}
