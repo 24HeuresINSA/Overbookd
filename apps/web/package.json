@@ -38,6 +38,7 @@
     "@nuxtjs/pwa": "3.3.5",
     "@nuxtjs/vuetify": "1.12.3",
     "@overbookd/configuration": "workspace:*",
+    "@overbookd/registration": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",

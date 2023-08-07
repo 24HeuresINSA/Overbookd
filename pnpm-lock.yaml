@@ -53,6 +53,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period
+      '@overbookd/registration':
+        specifier: workspace:^
+        version: link:../../domains/registration
       '@overbookd/volunteer-availability':
         specifier: workspace:^
         version: link:../../domains/volunteer-availability
@@ -237,6 +240,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
+      '@overbookd/registration':
+        specifier: workspace:*
+        version: link:../../domains/registration
       '@overbookd/volunteer-availability':
         specifier: workspace:*
         version: link:../../domains/volunteer-availability
@@ -386,6 +392,10 @@ importers:
         specifier: 4.46.0
         version: 4.46.0
 
+  domains/configuration: {}
+
+  domains/registration: {}
+
   domains/volunteer-availability:
     dependencies:
       '@overbookd/list':
@@ -394,8 +404,6 @@ importers:
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
-
-  domains/configuration: {}
 
   libraries/list: {}
 

@@ -3,6 +3,7 @@ import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { Configuration } from "@overbookd/configuration";
+import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
@@ -20,7 +21,9 @@ export const getters = getterTree(state, {
     return new Date(eventStartString);
   },
   registerFormDescription(_, getters): string {
-    return getters.get("registerForm")?.description ?? "";
+    return (
+      getters.get("registerForm")?.description ?? defaultCommitmentPresentation
+    );
   },
 });
 
