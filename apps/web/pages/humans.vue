@@ -311,7 +311,7 @@ export default {
     },
 
     hasPermission(permission) {
-      return this.$accessor.user.hasPermission(permission);
+      return this.$accessor.user.can(permission);
     },
 
     openInformationDialog(user) {

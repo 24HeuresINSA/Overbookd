@@ -92,7 +92,7 @@ export class VolunteerAvailabilityController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-affect')
+  @Permission('affect-volunteer')
   @Patch(':userId')
   @HttpCode(201)
   @ApiParam({

@@ -104,7 +104,7 @@ export default Vue.extend({
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {
-      return this.$accessor.user.hasPermission("can-affect");
+      return this.$accessor.user.can("affect-volunteer");
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;

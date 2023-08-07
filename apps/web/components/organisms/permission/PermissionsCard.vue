@@ -4,7 +4,7 @@
     <v-data-table
       :headers="headers"
       :items="permissions"
-      :items-per-page="5"
+      :items-per-page="-1"
       :search="search"
       dense
     >

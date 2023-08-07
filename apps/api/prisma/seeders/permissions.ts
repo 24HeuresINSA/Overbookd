@@ -9,15 +9,6 @@ export const permissions = [
     },
   },
   {
-    name: 'config-write',
-    description: 'Utilisateurs qui peuvent écrire dans la config',
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'admin' }],
-      },
-    },
-  },
-  {
     name: 'hard',
     description: 'Uniquement les hards',
     teams: {
@@ -62,7 +53,7 @@ export const permissions = [
     },
   },
   {
-    name: 'catalog-write',
+    name: 'write-catalog',
     description: 'Peut éditer le catalogue',
     teams: {
       createMany: {
@@ -75,7 +66,7 @@ export const permissions = [
     },
   },
   {
-    name: 'catalog-read',
+    name: 'read-catalog',
     description: 'Peut voir le catalogue',
     teams: {
       createMany: {
@@ -91,7 +82,7 @@ export const permissions = [
     },
   },
   {
-    name: 'inventory-write',
+    name: 'write-inventory',
     description: "Peut éditer l'inventaire",
     teams: {
       createMany: {
@@ -136,7 +127,7 @@ export const permissions = [
     },
   },
   {
-    name: 'can-affect',
+    name: 'affect-volunteer',
     description: 'Peut affecter',
     teams: {
       createMany: {
@@ -206,8 +197,8 @@ export const permissions = [
     },
   },
   {
-    name: 'communication-read',
-    description: 'Peut accéder à la page communication',
+    name: 'read-animation-to-publish',
+    description: 'Peut voir les animations à publier',
     teams: {
       createMany: {
         data: [{ teamCode: 'communication' }],
@@ -244,6 +235,33 @@ export const permissions = [
   {
     name: 'fill-availability',
     description: 'Peut remplir ses disponibilités',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],
+      },
+    },
+  },
+  {
+    name: 'view-timeline',
+    description: 'Peut voir la timeline',
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }],
+      },
+    },
+  },
+  {
+    name: 'ask-for-help',
+    description: "Peut accéder à la demande d'aide",
+    teams: {
+      createMany: {
+        data: [{ teamCode: 'hard' }],
+      },
+    },
+  },
+  {
+    name: 'download-planning',
+    description: 'Peut télécharger son planning',
     teams: {
       createMany: {
         data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],

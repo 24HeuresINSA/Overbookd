@@ -30,7 +30,7 @@ export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('can-view-timeline')
+  @Permission('view-timeline')
   @Get()
   @HttpCode(200)
   @ApiQuery({

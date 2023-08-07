@@ -324,7 +324,7 @@ export default Vue.extend({
       return (
         !this.isFA &&
         this.isValidated &&
-        this.$accessor.user.hasPermission("can-affect")
+        this.$accessor.user.can("affect-volunteer")
       );
     },
     previousLink(): string {
