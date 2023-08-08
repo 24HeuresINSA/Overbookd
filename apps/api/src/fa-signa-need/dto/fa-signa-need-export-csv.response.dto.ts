@@ -1,34 +1,75 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SignaType, signaTypes } from '../fa-signa-need.model';
+import {
+  IsDefined,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+  ValidationArguments,
+} from 'class-validator';
+import { ExportSignaNeedRepresentation, SignaType, signaTypes } from '../fa-signa-need.model';
 
-export class FaSignaNeedExportCsvResponseDto {
+export class FaSignaNeedExportCsvResponseDto implements ExportSignaNeedRepresentation {
   @ApiProperty({
-    description: 'Name of the FA',
-    type: String,
+    required: true,
+    description: 'the fa id',
   })
+  @IsDefined()
+  @IsNumber()
+  faId: number;
+
+  @ApiProperty({
+    required: true,
+    description: 'the fa name',
+  })
+  @IsDefined()
+  @IsString()
   faName: string;
 
   @ApiProperty({
-    description: 'Type of the signa',
+    required: true,
+    description: 'The type of signalisation',
     enum: signaTypes,
+  })
+  @IsDefined()
+  @IsEnum(signaTypes, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(signaTypes)}`,
   })
   signaType: SignaType;
 
   @ApiProperty({
-    description: 'Text of the signa',
-    type: String,
+    required: true,
+    description: 'The text to display',
   })
+  @IsNotEmpty()
+  @IsString()
   text: string;
 
   @ApiProperty({
-    description: 'Count of needed signa',
-    type: Number,
+    required: true,
+    description: 'The number of signa',
   })
+  @IsDefined()
+  @IsNumber()
+  @Min(1)
   count: number;
 
   @ApiProperty({
-    description: 'Comment',
-    type: String,
+    required: false,
+    description: 'The size of signa',
   })
+  @IsOptional()
+  @IsString()
+  size?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Any comment abput signa',
+  })
+  @IsOptional()
+  @IsString()
   comment?: string;
 }

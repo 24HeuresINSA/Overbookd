@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -23,7 +24,8 @@ import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { FaSignaNeedService } from './fa-signa-need.service';
 import { FaSignaNeedResponseDto } from './dto/fa-signa-need.response.dto';
 import { UpsertFaSignaNeedRequestDto } from './dto/upsert-fa-signa-need.request.dto';
-import { FaSignaNeed } from './fa-signa-need.model';
+import { ExportSignaNeed, FaSignaNeed } from './fa-signa-need.model';
+import { FaSignaNeedExportCsvResponseDto } from './dto/fa-signa-need-export-csv.response.dto';
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -36,9 +38,7 @@ import { FaSignaNeed } from './fa-signa-need.model';
 })
 @Controller('fa')
 export class FaSignaNeedController {
-  constructor(
-    private readonly faSignaNeedService: FaSignaNeedService,
-  ) {}
+  constructor(private readonly faSignaNeedService: FaSignaNeedService) {}
 
   @Permission('hard')
   @Post(':faId/signa-need')
@@ -89,5 +89,17 @@ export class FaSignaNeedController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<void> {
     return this.faSignaNeedService.remove(faId, id);
+  }
+
+  @Permission('hard')
+  @Get('signa-need/export-csv')
+  @ApiResponse({
+    status: 200,
+    description: 'All signa needs for export',
+    type: FaSignaNeedExportCsvResponseDto,
+    isArray: true,
+  })
+  findSignaNeedsForExport(): Promise<ExportSignaNeed[]> {
+    return this.faSignaNeedService.findSignaNeedsForExport();
   }
 }

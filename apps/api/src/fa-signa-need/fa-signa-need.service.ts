@@ -1,15 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { FaSignaNeed, FaSignaNeedWithOptionalId } from './fa-signa-need.model';
-
-const SELECT_SIGNA_NEED = {
-  id: true,
-  signaType: true,
-  text: true,
-  count: true,
-  size: true,
-  comment: true,
-};
+import { ExportSignaNeed, FaSignaNeed, FaSignaNeedWithOptionalId } from './fa-signa-need.model';
+import { SELECT_SIGNA_NEED, SELECT_SIGNA_NEED_FOR_EXPORT } from './fa-signa-need.query';
 
 @Injectable()
 export class FaSignaNeedService {
@@ -35,5 +27,28 @@ export class FaSignaNeedService {
         AND: [{ id }, { faId }],
       },
     });
+  }
+
+  async findSignaNeedsForExport(): Promise<ExportSignaNeed[]> {
+    const signaNeed = await this.prisma.faSignaNeed.findMany({
+      select: SELECT_SIGNA_NEED_FOR_EXPORT,
+      where: {
+        fa: {
+          isDeleted: false,
+          faValidation: {
+            some: { team: { code: 'signa' } },
+          },
+        },
+      },
+    });
+
+    return signaNeed.map((signa) => ({
+      faId: signa.faId,
+      faName: signa.fa.name,
+      signaType: signa.signaType,
+      text: signa.text,
+      count: signa.count,
+      comment: signa.comment,
+    }));
   }
 }
