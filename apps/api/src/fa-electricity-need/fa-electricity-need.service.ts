@@ -4,15 +4,7 @@ import {
   FaElectricityNeed,
   FaElectricityNeedWithOptionalId,
 } from './fa-electricity-need.model';
-
-const SELECT_ELECTRICITY_NEED = {
-  id: true,
-  electricityType: true,
-  device: true,
-  power: true,
-  count: true,
-  comment: true,
-};
+import { SELECT_ELECTRICITY_NEED } from './fa-electricity-need.query';
 
 @Injectable()
 export class FaElectricityNeedService {
