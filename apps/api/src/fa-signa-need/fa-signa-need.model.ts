@@ -1,11 +1,11 @@
-const BANNIERE = 'BANNIERE';
-const PANCARTE = 'PANCARTE';
+const BACHE = 'BACHE';
 const PANNEAU = 'PANNEAU';
+const AFFICHE = 'AFFICHE';
 
 export const signaTypes: Record<SignaType, SignaType> = {
-  BANNIERE,
-  PANCARTE,
+  BACHE,
   PANNEAU,
+  AFFICHE,
 };
 
-export type SignaType = typeof BANNIERE | typeof PANCARTE | typeof PANNEAU;
+export type SignaType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
