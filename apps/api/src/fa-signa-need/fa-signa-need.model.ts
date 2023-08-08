@@ -38,7 +38,7 @@ export interface ExportSignaNeed {
   count: number;
   size?: string;
   comment?: string;
-};
+}
 
 export class FaSignaNeedRepresentation implements FaSignaNeed {
   @ApiProperty({})

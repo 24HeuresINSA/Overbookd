@@ -9,9 +9,15 @@ import {
   Min,
   ValidationArguments,
 } from 'class-validator';
-import { FaSignaNeedWithOptionalIdRepresentation, SignaType, signaTypes } from '../fa-signa-need.model';
+import {
+  FaSignaNeedWithOptionalIdRepresentation,
+  SignaType,
+  signaTypes,
+} from '../fa-signa-need.model';
 
-export class UpsertFaSignaNeedRequestDto implements FaSignaNeedWithOptionalIdRepresentation {
+export class UpsertFaSignaNeedRequestDto
+  implements FaSignaNeedWithOptionalIdRepresentation
+{
   @ApiProperty({
     required: false,
     description: 'The id of the need',

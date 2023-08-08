@@ -9,9 +9,15 @@ import {
   Min,
   ValidationArguments,
 } from 'class-validator';
-import { ExportSignaNeedRepresentation, SignaType, signaTypes } from '../fa-signa-need.model';
+import {
+  ExportSignaNeedRepresentation,
+  SignaType,
+  signaTypes,
+} from '../fa-signa-need.model';
 
-export class FaSignaNeedExportCsvResponseDto implements ExportSignaNeedRepresentation {
+export class FaSignaNeedExportCsvResponseDto
+  implements ExportSignaNeedRepresentation
+{
   @ApiProperty({
     required: true,
     description: 'the fa id',
