@@ -22,7 +22,7 @@ import { PermissionsGuard } from '../authentication/permissions-auth.guard';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { FaElectricityNeedService } from './fa-electricity-need.service';
 import { FaElectricityNeedResponseDto } from './dto/fa-electricity-need.response.dto';
-import { FaElectricityNeedRequestDto } from './dto/fa-electricity-need.request.dto';
+import { UpsertFaElectricityNeedRequestDto } from './dto/upsert-fa-electricity-need.request.dto';
 import { FaElectricityNeed } from './fa-electricity-need.model';
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -55,12 +55,12 @@ export class FaElectricityNeedController {
     required: true,
   })
   @ApiBody({
-    type: FaElectricityNeedRequestDto,
+    type: UpsertFaElectricityNeedRequestDto,
     description: 'FA electricity need to upsert',
   })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body() electricityNeed: FaElectricityNeedRequestDto,
+    @Body() electricityNeed: UpsertFaElectricityNeedRequestDto,
   ): Promise<FaElectricityNeed> {
     return this.faElectricityNeedService.upsert(faId, electricityNeed);
   }

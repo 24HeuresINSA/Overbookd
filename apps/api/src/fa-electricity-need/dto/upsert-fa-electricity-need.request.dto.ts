@@ -14,7 +14,7 @@ import {
   electricityTypes,
 } from '../fa-electricity-need.model';
 
-export class FaElectricityNeedRequestDto
+export class UpsertFaElectricityNeedRequestDto
   implements FaElectricityNeedWithOptionalIdRepresentation
 {
   @ApiProperty({
