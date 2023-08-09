@@ -1,6 +1,6 @@
-import { UserName, UserNameWithNickname } from "./userData";
+import { UserName } from "./userData";
 
-export interface UserCreateForm extends UserNameWithNickname {
+export interface UserCreateForm extends UserName {
   teamId?: number;
   email: string;
   birthdate: Date;
@@ -10,12 +10,11 @@ export interface UserCreateForm extends UserNameWithNickname {
 };
 
 export interface UserUpdateForm extends UserName {
-  nickname?: string | null;
   email?: string;
   birthdate?: Date;
   phone?: string;
-  comment?: string | null;
+  comment?: string;
   hasPayedContributions?: boolean;
-  profilePicture?: string | null;
+  profilePicture?: string;
   charisma?: number;
 };
