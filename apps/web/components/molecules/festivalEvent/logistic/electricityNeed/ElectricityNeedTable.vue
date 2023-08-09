@@ -5,6 +5,8 @@
     dense
     item-key="key"
     :items-per-page="-1"
+    disable-pagination
+    hide-default-footer
   >
     <template #[`item.electricityType`]="{ item }">
       {{ getElectricityTypeLabel(item.electricityType) }}
@@ -30,7 +32,7 @@ import {
   ElectricityType,
   Fa,
   FaElectricityNeed,
-  electricityTypeLabelMap,
+  electricityTypeLabels,
 } from "~/utils/models/fa";
 
 export default Vue.extend({
@@ -61,7 +63,7 @@ export default Vue.extend({
   }),
   methods: {
     getElectricityTypeLabel(type: ElectricityType): string {
-      return electricityTypeLabelMap.get(type) ?? "";
+      return electricityTypeLabels[type as ElectricityType];
     },
     updateElectricityNeed(electricityNeed: FaElectricityNeed) {
       this.$emit("update", electricityNeed);

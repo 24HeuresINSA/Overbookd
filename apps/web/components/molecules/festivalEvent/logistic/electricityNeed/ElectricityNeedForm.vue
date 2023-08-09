@@ -12,7 +12,7 @@
         v-model="electricityType"
         type="select"
         label="Type de prise*"
-        :items="electricityTypeLabels"
+        :items="electricityTypeLabelList"
         item-value="type"
         item-text="label"
       ></v-select>
@@ -22,6 +22,7 @@
       <v-text-field
         v-model="power"
         label="Puissance par appareil*"
+        type="number"
         suffix="Watts"
         :rules="[rules.number, rules.min]"
       ></v-text-field>
@@ -49,7 +50,7 @@ import Vue from "vue";
 import {
   ElectricityType,
   ElectricityTypeWithLabel,
-  electricityTypeLabelMap,
+  electricityTypeLabels,
 } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
@@ -89,15 +90,23 @@ export default Vue.extend({
     },
   }),
   computed: {
-    electricityTypeLabels(): ElectricityTypeWithLabel[] {
-      return Object.entries(electricityTypeLabelMap).map(([type, label]) => ({
-        type: type as ElectricityType,
+    electricityTypeLabelList(): ElectricityTypeWithLabel[] {
+      return Object.entries(electricityTypeLabels).map(([type, label]) => ({
+        type,
         label,
       }));
     },
     isFormInvalid(): boolean {
-      return Boolean(
-        !this.electricityType || !this.device || !this.power || !this.count
+      const isElectricityTypeInvalid = this.electricityType === undefined;
+      const isDeviceInvalid = this.device === undefined || !this.device.trim();
+      const isPowerInvalid = this.power === undefined || +this.power < 1;
+      const isCountInvalid = this.count === undefined || +this.count < 1;
+
+      return (
+        isElectricityTypeInvalid ||
+        isDeviceInvalid ||
+        isPowerInvalid ||
+        isCountInvalid
       );
     },
     statusFormLabel(): string {
