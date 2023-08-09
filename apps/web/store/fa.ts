@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
@@ -115,23 +115,14 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
-    const index = mFA.signaNeeds.findIndex(
-      (sn) => sn.id === signaNeed.id
-    );
+    const index = mFA.signaNeeds.findIndex((sn) => sn.id === signaNeed.id);
     if (index === -1) return;
-    mFA.signaNeeds = updateItemToList(
-      mFA.signaNeeds,
-      index,
-      signaNeed
-    );
+    mFA.signaNeeds = updateItemToList(mFA.signaNeeds, index, signaNeed);
   },
 
   DELETE_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
-    mFA.signaNeeds = mFA.signaNeeds.filter(
-      (sn) => sn.id !== signaNeed.id
-    );
+    mFA.signaNeeds = mFA.signaNeeds.filter((sn) => sn.id !== signaNeed.id);
   },
-
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
     mFA.timeWindows = [...mFA.timeWindows, timeWindow];
@@ -365,11 +356,6 @@ export const actions = actionTree(
           repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator)
         );
       }
-      if (state.mFA.signaNeeds) {
-        allPromise.push(
-          repo.updateFASignaNeeds(this, state.mFA.id, state.mFA.signaNeeds)
-        );
-      }
       await Promise.all(allPromise);
       dispatch("fetchFa", state.mFA.id);
     },
@@ -592,7 +578,6 @@ export const actions = actionTree(
       if (!res) return;
       commit("DELETE_SIGNA_NEED", signaNeed);
     },
-
 
     addTimeWindow({ commit }, timeWindow: FaTimeWindow) {
       commit("ADD_TIME_WINDOW", timeWindow);
