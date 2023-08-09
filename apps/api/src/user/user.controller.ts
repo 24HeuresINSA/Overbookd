@@ -61,7 +61,7 @@ import {
   VolunteerAssignmentStatResponseDto,
 } from './dto/volunteer-assignment-stat.response.dto';
 import { ProfilePictureService } from './profile-picture.service';
-import { MyUserInformation, UserPersonnalData} from '@overbookd/user';
+import { MyUserInformation, UserPersonnalData } from '@overbookd/user';
 import { UserService } from './user.service';
 import { UserPersonnalDataResponseDto } from './dto/user-personnal-data.response.dto';
 import { MyUserInformationResponseDto } from './dto/my-user-information.response.dto';

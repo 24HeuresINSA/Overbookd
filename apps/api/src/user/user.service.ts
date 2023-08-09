@@ -19,7 +19,11 @@ import { CreateUserRequestDto } from './dto/create-user.request.dto';
 import { UpdateUserRequestDto } from './dto/update-user.request.dto';
 import { VolunteerAssignmentStat } from './dto/volunteer-assignment-stat.response.dto';
 import { DatabaseVolunteerAssignmentStat } from './volunteer-assignment.model';
-import { MyUserInformation, UserPersonnalData, UserUpdateForm } from '@overbookd/user';
+import {
+  MyUserInformation,
+  UserPersonnalData,
+  UserUpdateForm,
+} from '@overbookd/user';
 import { UserPasswordOnly } from './user.model';
 
 export const SELECT_USER = {
@@ -133,23 +137,25 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   },
 };
 
-interface DatabaseMyUserInformation extends Omit<MyUserInformation, 'teams' | 'tasksCount'> {
+interface DatabaseMyUserInformation
+  extends Omit<MyUserInformation, 'teams' | 'tasksCount'> {
   teams: TeamWithNestedPermissions[];
   _count: { assignments: number };
-};
+}
 
 export interface VolunteerTask extends IProvidePeriod {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timeSpanId?: number;
-};
+}
 
-interface DatabaseUserWithTeams extends Omit<MyUserInformation, 'teams' | 'tasksCount'> {
+interface DatabaseUserWithTeams
+  extends Omit<MyUserInformation, 'teams' | 'tasksCount'> {
   teams: {
     team: {
       code: string;
     };
   }[];
-};
+}
 
 type DatabaseUserWithTeamsAndPermissions = UserWithoutPassword & {
   teams: TeamWithNestedPermissions[];
