@@ -90,9 +90,10 @@ export default Vue.extend({
   }),
   computed: {
     electricityTypeLabels(): ElectricityTypeWithLabel[] {
-      return Object.entries(electricityTypeLabelMap).map(
-        ([type, label]) =>  ({ type: type as ElectricityType, label })
-      )
+      return Object.entries(electricityTypeLabelMap).map(([type, label]) => ({
+        type: type as ElectricityType,
+        label,
+      }));
     },
     isFormInvalid(): boolean {
       return Boolean(
