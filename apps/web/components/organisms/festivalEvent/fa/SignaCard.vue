@@ -18,6 +18,7 @@
           @change="updateLocation($event)"
         ></SearchSignaLocation>
 
+        <v-card-title> Besoin de signa </v-card-title>
         <SignaNeedTable
           :signa-needs="signaNeeds"
           :disabled="isValidatedByOwner"
@@ -41,7 +42,7 @@
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <SignaNeedForm
         :signa-need="selectedSignaNeed"
-        @change="updateSignayNeed"
+        @change="updateSignaNeed"
         @close-dialog="closeEditDialog"
       ></SignaNeedForm>
     </v-dialog>

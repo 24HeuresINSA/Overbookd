@@ -5,6 +5,8 @@
     dense
     item-key="key"
     :items-per-page="-1"
+    disable-pagination
+    hide-default-footer
   >
     <template #item.action="{ item }">
       <div v-if="!disabled">

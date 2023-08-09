@@ -81,7 +81,7 @@ export default Vue.extend({
       return Object.values(SignaType);
     },
     isFormInvalid(): boolean {
-      return Boolean(!this.signaType || !this.text || !this.count);
+      return this.signaType === undefined || this.text === undefined || !this.text?.trim()  || this.count === undefined || +this.count < 1;
     },
     statusFormLabel(): string {
       return this.signaNeed !== null ? "Modifier" : "Ajouter";
@@ -121,10 +121,10 @@ export default Vue.extend({
       const signaNeed = {
         id: this.signaNeed?.id,
         signaType: this.signaType,
-        text: this.text,
+        text: this.text?.trim(),
         count: this.count ? +this.count : undefined,
-        size: this.size,
-        comment: this.comment,
+        size: this.size?.trim(),
+        comment: this.comment?.trim(),
       };
 
       this.$emit("change", signaNeed);
