@@ -23,7 +23,6 @@
         :rules="[rules.number, rules.min]"
       ></v-text-field>
 
-
       <v-text-field v-model="size"label="Taille"></v-text-field>
 
       <v-text-field v-model="comment" label="Commentaire"></v-text-field>

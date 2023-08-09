@@ -4,9 +4,9 @@
       <CardErrorList :type="cardType" />
       <v-card-title> Signa </v-card-title>
       <v-card-subtitle>
-        Contacte la signa à
+        Contacte la signa via
         <a href="mailto:signaletique@24heures.org">signaletique@24heures.org</a>
-        pour ajouter des lieux non existant dans la liste déroulante.
+        pour ajouter des lieux non existants dans la liste déroulante.
       </v-card-subtitle>
 
       <v-card-text>
@@ -18,13 +18,18 @@
           @change="updateLocation($event)"
         ></SearchSignaLocation>
 
-      </v-card-text>
         <SignaNeedTable
           :signa-needs="signaNeeds"
           :disabled="isValidatedByOwner"
           @update="openEditDialog"
           @delete="deleteSignaNeed"
         ></SignaNeedTable>
+      </v-card-text>
+
+      <v-card-actions v-if="!isValidatedByOwner">
+        <v-spacer></v-spacer>
+        <v-btn text @click="openAddDialog"> Ajouter un besoin de signa </v-btn>
+      </v-card-actions>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
