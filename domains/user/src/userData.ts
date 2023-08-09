@@ -11,20 +11,25 @@ export interface User extends UserName {
   id: number;
 };
 
-export interface UserPersonnalData extends User {
+export interface UserWithoutPassword extends User {
+  firstname: string;
+  lastname: string;
   nickname?: string;
-  email?: string;
-  birthdate?: Date;
-  phone?: string;
+  email: string;
+  birthdate: Date;
+  phone: string;
   comment?: string;
-  hasPayedContributions?: boolean;
+  hasPayedContributions: boolean;
   profilePicture?: string;
   charisma: number;
   balance: number;
+};
+
+export interface UserPersonnalData extends UserWithoutPassword {
   teams: string[];
 };
 
-export interface UserPersonnalDataWithPermissions extends UserPersonnalData {
+export interface UserWithTeamsAndPermissions extends UserPersonnalData {
   permissions: string[];
 }
 

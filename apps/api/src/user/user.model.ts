@@ -23,11 +23,6 @@ export type UserUpdateForm = {
   charisma?: number;
 };
 
-export type UserWithoutPassword = Required<UserUpdateForm> & {
-  id: number;
-  balance: number;
-};
-
 type WithTeams = {
   teams: string[];
 };
@@ -36,9 +31,9 @@ type WithPermissions = {
   permissions: string[];
 };
 
-export type UserPersonnalData = UserWithoutPassword & WithTeams;
+export type UserPersonnalData = UserUpdateForm & WithTeams;
 
-export type UserWithTeamsAndPermissions = UserWithoutPassword &
+export type UserWithTeamsAndPermissions = UserUpdateForm &
   WithTeams &
   WithPermissions;
 
