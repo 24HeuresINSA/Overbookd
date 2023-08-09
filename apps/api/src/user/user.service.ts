@@ -13,20 +13,14 @@ import {
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
-} from "../utils/assignment";
-import { getPeriodDuration } from "../utils/duration";
-import { CreateUserRequestDto } from "./dto/create-user.request.dto";
-import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
-import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.response.dto";
-import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
-import {
-  MyUserInformation,
-  UserPasswordOnly,
-  UserPersonnalData,
-  UserUpdateForm,
-  UserWithTeamsAndPermissions,
-  UserWithoutPassword,
-} from "./user.model";
+} from '../utils/assignment';
+import { getPeriodDuration } from '../utils/duration';
+import { CreateUserRequestDto } from './dto/create-user.request.dto';
+import { UpdateUserRequestDto } from './dto/update-user.request.dto';
+import { VolunteerAssignmentStat } from './dto/volunteer-assignment-stat.response.dto';
+import { DatabaseVolunteerAssignmentStat } from './volunteer-assignment.model';
+import { MyUserInformation, UserPersonnalData, UserUpdateForm } from '@overbookd/user';
+import { UserPasswordOnly } from './user.model';
 
 export const SELECT_USER = {
   email: true,
@@ -139,17 +133,17 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   },
 };
 
-type DatabaseMyUserInformation = UserWithoutPassword & {
+interface DatabaseMyUserInformation extends Omit<MyUserInformation, 'teams' | 'tasksCount'> {
   teams: TeamWithNestedPermissions[];
   _count: { assignments: number };
 };
 
-export type VolunteerTask = IProvidePeriod & {
-  ft: Pick<Ft, "id" | "name" | "status">;
+export interface VolunteerTask extends IProvidePeriod {
+  ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timeSpanId?: number;
 };
 
-type DatabaseUserWithTeams = UserWithoutPassword & {
+interface DatabaseUserWithTeams extends Omit<MyUserInformation, 'teams' | 'tasksCount'> {
   teams: {
     team: {
       code: string;
@@ -190,7 +184,7 @@ export class UserService {
   async updateUserPersonnalData(
     id: number,
     user: UserUpdateForm,
-  ): Promise<UserWithTeamsAndPermissions | null> {
+  ): Promise<MyUserInformation | null> {
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: user,
@@ -256,7 +250,7 @@ export class UserService {
     return this.formatToPersonnalData(users);
   }
 
-  async getAllPersonnalAccountConsummers(): Promise<UserWithoutPassword[]> {
+  async getAllPersonnalAccountConsummers(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
       where: {
         teams: {
@@ -317,9 +311,7 @@ export class UserService {
     return teams.map((t) => t.code);
   }
 
-  async createUser(
-    payload: CreateUserRequestDto,
-  ): Promise<UserWithoutPassword> {
+  async createUser(payload: CreateUserRequestDto): Promise<UserPersonnalData> {
     const newUserData = {
       firstname: payload.firstname,
       lastname: payload.lastname,
@@ -362,7 +354,7 @@ export class UserService {
     targetUserId: number,
     userData: UpdateUserRequestDto,
     author: JwtUtil,
-  ): Promise<UserWithTeamsAndPermissions> {
+  ): Promise<MyUserInformation> {
     if (!this.canUpdateUser(author, targetUserId)) {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
@@ -423,7 +415,7 @@ export class UserService {
 
   static getUserWithTeamsAndPermissions(
     user: DatabaseUserWithTeamsAndPermissions,
-  ): UserWithTeamsAndPermissions {
+  ): MyUserInformation {
     const teams = user.teams.map((t) => t.team.code);
     const permissions = retrievePermissions(user.teams);
     return user

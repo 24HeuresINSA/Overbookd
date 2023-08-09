@@ -12,9 +12,9 @@ import {
   Matches,
   MinLength,
   ValidationArguments,
-} from "class-validator";
-import { OneNumber, upperCaseCharacter } from "./common";
-import { UserCreateForm } from "../user.model";
+} from 'class-validator';
+import { OneNumber, upperCaseCharacter } from './common';
+import { UserCreateForm } from '@overbookd/user';
 
 export class CreateUserRequestDto implements UserCreateForm {
   @ApiProperty({

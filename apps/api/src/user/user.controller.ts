@@ -59,12 +59,9 @@ import { UpdateUserRequestDto } from './dto/update-user.request.dto';
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
-} from "./dto/volunteer-assignment-stat.response.dto";
-import { ProfilePictureService } from "./profile-picture.service";
-import {
-  MyUserInformation,
-  UserPersonnalData,
-} from './user.model';
+} from './dto/volunteer-assignment-stat.response.dto';
+import { ProfilePictureService } from './profile-picture.service';
+import { MyUserInformation, UserPersonnalData} from '@overbookd/user';
 import { UserService } from './user.service';
 import { UserPersonnalDataResponseDto } from './dto/user-personnal-data.response.dto';
 import { MyUserInformationResponseDto } from './dto/my-user-information.response.dto';
@@ -416,7 +413,7 @@ export class UserController {
   @ApiResponse({
     status: 201,
     description: 'Add a profile picture to a user',
-    type: UserPersonnalDataResponseDto,
+    type: MyUserInformationResponseDto,
   })
   @ApiBody({
     description: "Profile picture file",
@@ -425,7 +422,7 @@ export class UserController {
   defineProfilePicture(
     @RequestDecorator() req: RequestWithUserPayload,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<UserPersonnalData> {
+  ): Promise<MyUserInformation> {
     return this.profilePictureService.updateProfilePicture(
       req.user.id,
       file.filename,

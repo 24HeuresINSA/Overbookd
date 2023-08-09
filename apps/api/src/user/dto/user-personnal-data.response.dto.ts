@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserPersonnalData } from '../user.model';
+import { UserPersonnalData } from '@overbookd/user';
 
 export class UserPersonnalDataResponseDto implements UserPersonnalData
 {

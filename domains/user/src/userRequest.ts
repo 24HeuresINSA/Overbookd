@@ -9,7 +9,10 @@ export interface UserCreateForm extends UserName {
   password: string;
 };
 
-export interface UserUpdateForm extends UserName {
+export interface UserUpdateForm {
+  firstname?: string;
+  lastname?: string;
+  nickname?: string;
   email?: string;
   birthdate?: Date;
   phone?: string;
