@@ -30,7 +30,7 @@ import {
   ElectricityType,
   Fa,
   FaElectricityNeed,
-  electricityTypeLabels,
+  electricityTypeLabelMap,
 } from "~/utils/models/fa";
 
 export default Vue.extend({
@@ -61,7 +61,7 @@ export default Vue.extend({
   }),
   methods: {
     getElectricityTypeLabel(type: ElectricityType): string {
-      return electricityTypeLabels[type as ElectricityType];
+      return electricityTypeLabelMap.get(type) ?? "";
     },
     updateElectricityNeed(electricityNeed: FaElectricityNeed) {
       this.$emit("update", electricityNeed);
