@@ -1,7 +1,7 @@
 {
   "name": "@overbookd/user",
   "version": "1.0.0-rc.1",
-  "description": "Gestion utilisateurs pour overbookd",
+  "description": "Gestion des utilisateurs pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",

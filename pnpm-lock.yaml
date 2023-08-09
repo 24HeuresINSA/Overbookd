@@ -369,8 +369,8 @@ importers:
         version: 4.46.0
 
   domains/configuration: {}
-
   domains/registration: {}
+  domains/user: {}
 
   domains/volunteer-availability:
     dependencies:
