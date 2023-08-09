@@ -59,11 +59,6 @@ export default Vue.extend({
       { text: "Action", value: "action", sortable: false },
     ],
   }),
-  computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
-    },
-  },
   methods: {
     getElectricityTypeLabel(type: ElectricityType): string {
       return electricityTypeLabels[type as ElectricityType];

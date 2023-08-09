@@ -46,21 +46,19 @@ export type ElectricityType =
   | typeof P17_63A_TETRA
   | typeof P17_125A_TETRA;
 
-export const electricityTypeLabels: Record<ElectricityType, string> = {
-  PC16_Prise_classique: "Prise classique (PC16)",
-  P17_16A_MONO: "16A Mono (P17_16A_MONO)",
-  P17_16A_TRI: "16A Tri (P17_16A_TRI)",
-  P17_16A_TETRA: "16A Tetra (P17_16A_TETRA)",
-  P17_32A_MONO: "32A Mono (P17_32A_MONO)",
-  P17_32A_TRI: "32A Tri (P17_32A_TRI)",
-  P17_32A_TETRA: "32A Tetra (P17_32A_TETRA)",
-  P17_63A_MONO: "63A Mono (P17_63A_MONO)",
-  P17_63A_TRI: "63A Tri (P17_63A_TRI)",
-  P17_63A_TETRA: "63A Tetra (P17_63A_TETRA)",
-  P17_125A_TETRA: "125A Tetra (P17_125A_TETRA)",
-};
-
-type ElectricityTypeLabel = (typeof electricityTypeLabels)[ElectricityType];
+export const electricityTypeLabelMap: Map<ElectricityType, string> = new Map([
+  [PC16_Prise_classique, "Prise classique (PC16)"],
+  [P17_16A_MONO, "16A Mono (P17_16A_MONO)"],
+  [P17_16A_TRI, "16A Tri (P17_16A_TRI)"],
+  [P17_16A_TETRA, "16A Tetra (P17_16A_TETRA)"],
+  [P17_32A_MONO, "32A Mono (P17_32A_MONO)"],
+  [P17_32A_TRI, "32A Tri (P17_32A_TRI)"],
+  [P17_32A_TETRA, "32A Tetra (P17_32A_TETRA)"],
+  [P17_63A_MONO, "63A Mono (P17_63A_MONO)"],
+  [P17_63A_TRI, "63A Tri (P17_63A_TRI)"],
+  [P17_63A_TETRA, "63A Tetra (P17_63A_TETRA)"],
+  [P17_125A_TETRA, "125A Tetra (P17_125A_TETRA)"],
+]);
 
 export enum SignaType {
   BANNIERE = "BANNIERE",
@@ -247,7 +245,7 @@ export type FaTimeWindowSortFunction = (
 
 export interface ElectricityTypeWithLabel {
   type: ElectricityType;
-  label: ElectricityTypeLabel;
+  label: string;
 }
 
 export interface SortedStoredGearRequests {
