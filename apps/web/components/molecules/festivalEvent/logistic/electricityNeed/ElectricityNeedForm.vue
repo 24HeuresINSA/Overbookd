@@ -92,7 +92,7 @@ export default Vue.extend({
   computed: {
     electricityTypeLabelList(): ElectricityTypeWithLabel[] {
       return Object.entries(electricityTypeLabels).map(([type, label]) => ({
-        type,
+        type: type as ElectricityType,
         label,
       }));
     },
