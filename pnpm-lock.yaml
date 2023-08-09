@@ -250,7 +250,7 @@ importers:
         specifier: workspace:*
         version: link:../../domains/registration
       '@overbookd/user':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../domains/user
       '@overbookd/volunteer-availability':
         specifier: workspace:*
