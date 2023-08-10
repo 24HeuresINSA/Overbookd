@@ -21,8 +21,6 @@ export interface VolunteerTask extends Period {
 export interface DatabaseUserPersonalData
   extends Omit<UserPersonnalData, 'teams'> {
   teams: {
-    team: {
-      code: string;
-    };
+    team: { code: string };
   }[];
 }

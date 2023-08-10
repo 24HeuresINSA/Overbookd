@@ -161,7 +161,6 @@ export class UserService {
     return teams.map((t) => t.code);
   }
 
-  // TODO à vérifier
   async createUser(payload: UserCreateForm): Promise<UserPersonnalData> {
     const newUserData = {
       firstname: payload.firstname,
