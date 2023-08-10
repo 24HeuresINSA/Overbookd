@@ -88,7 +88,7 @@ export type AssignmentStats = {
 
 @Injectable()
 export class AssignmentService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async assignVolunteersToTimeSpan(
     volunteers: VolunteerAssignmentRequest[],

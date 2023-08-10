@@ -69,7 +69,7 @@ export class PrismaTaskRepository implements TaskRepository {
     },
   };
 
-  constructor(private readonly prismaService: PrismaService) { }
+  constructor(private readonly prismaService: PrismaService) {}
 
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,

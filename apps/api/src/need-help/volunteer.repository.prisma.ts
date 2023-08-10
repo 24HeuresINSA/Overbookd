@@ -42,7 +42,7 @@ const SELECT_VOLUNTEER = {
 
 @Injectable()
 export class PrismaVolunteerRepository implements VolunteerRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAvailableOnPeriod(period: IProvidePeriod): Promise<Volunteer[]> {
     const select = SELECT_VOLUNTEER;

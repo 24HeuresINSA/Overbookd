@@ -23,7 +23,7 @@ type TimeWindow = IProvidePeriod & {
 
 @Injectable()
 export class FtUserRequestService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   private SELECT_ALSO_REQUESTED_BY_FT = {
     ft: {

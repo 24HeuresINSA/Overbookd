@@ -27,7 +27,7 @@ interface DatabaseTimeline {
 
 @Injectable()
 export class TimelineService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getTimelines(start: Date, end: Date): Promise<TimelineEvent[]> {
     const where = this.buildTimelineCondition(start, end);

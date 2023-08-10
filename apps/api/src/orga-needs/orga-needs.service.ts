@@ -60,7 +60,7 @@ type DataBaseOrgaStats = {
 
 @Injectable()
 export class OrgaNeedsService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async computeOrgaStats(
     periodAndTeams: OrgaNeedsRequest,
@@ -238,6 +238,9 @@ export class OrgaNeedsService {
   }
 }
 
-function includedPeriods({ start, end }: IProvidePeriod): (value: IProvidePeriod) => boolean {
+function includedPeriods({
+  start,
+  end,
+}: IProvidePeriod): (value: IProvidePeriod) => boolean {
   return (period) => period.start < end && period.end > start;
 }

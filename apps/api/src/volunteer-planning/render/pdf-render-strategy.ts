@@ -15,7 +15,7 @@ import { SecurityPlan } from './pdf/security-plan';
 import { Introduction } from './pdf/introduction';
 import { RenderStrategy } from './render-strategy';
 
-class PdfException extends Error { }
+class PdfException extends Error {}
 
 const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;

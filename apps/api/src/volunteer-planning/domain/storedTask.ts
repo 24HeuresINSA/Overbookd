@@ -19,7 +19,7 @@ export type JsonStoredTask = Pick<
 };
 
 export class StoredTask {
-  constructor(private readonly storedTask: JsonStoredTask) { }
+  constructor(private readonly storedTask: JsonStoredTask) {}
 
   get start(): Date {
     return this.storedTask.period.start;
@@ -145,7 +145,10 @@ export class StoredTask {
     return this.splitOverlapingPeriods(updatedSplitedPeriods);
   }
 
-  private splitIntoPeriods(overlapedPeriod: IProvidePeriod, period: IProvidePeriod): IProvidePeriod[] {
+  private splitIntoPeriods(
+    overlapedPeriod: IProvidePeriod,
+    period: IProvidePeriod,
+  ): IProvidePeriod[] {
     const [firstStart, firstEnd, sencondStart, secondEnd] = [
       overlapedPeriod.start,
       overlapedPeriod.end,

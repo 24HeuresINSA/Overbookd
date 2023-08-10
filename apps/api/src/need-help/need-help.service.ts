@@ -11,7 +11,7 @@ export class NeedHelpService {
   constructor(
     @Inject('VOLUNTEER_REPOSITORY')
     private readonly volunteerRepo: VolunteerRepository,
-  ) { }
+  ) {}
 
   getAvailableVolunteers(period: IProvidePeriod): Promise<Volunteer[]> {
     return this.volunteerRepo.findAvailableOnPeriod(period);
