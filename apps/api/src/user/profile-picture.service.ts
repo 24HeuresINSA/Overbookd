@@ -1,11 +1,8 @@
 import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { FileService } from './file.service';
-import {
-  SELECT_USER,
-  SELECT_USER_TEAMS_AND_PERMISSIONS,
-  UserService,
-} from './user.service';
+import { SELECT_MY_USER_INFORMATION } from './user.query';
+import { UserService } from './user.service';
 import { MyUserInformation } from '@overbookd/user';
 
 @Injectable()
@@ -34,12 +31,9 @@ export class ProfilePictureService {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: { profilePicture },
-      select: {
-        ...SELECT_USER,
-        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
-      },
+      select: SELECT_MY_USER_INFORMATION,
     });
-    return UserService.getUserWithTeamsAndPermissions(user);
+    return UserService.formatToMyInformation(user);
   }
 
   async streamProfilePicture(userId: number): Promise<StreamableFile> {

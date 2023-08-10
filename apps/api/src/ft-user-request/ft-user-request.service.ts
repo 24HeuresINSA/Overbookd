@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { IProvidePeriod } from "@overbookd/period";
-import { PrismaService } from "../prisma.service";
-import { SELECT_USERNAME_WITH_ID } from "../user/user.service";
-import { FtUserRequestDto } from "./dto/ft-user-request.request.dto";
+import { Injectable } from '@nestjs/common';
+import { IProvidePeriod } from '@overbookd/period';
+import { PrismaService } from '../prisma.service';
+import { SELECT_USERNAME_WITH_ID } from '../user/user.query';
+import { FtUserRequestDto } from './dto/ft-user-request.request.dto';
 import {
   DataBaseUserRequest,
   FtUserRequestResponseDto,

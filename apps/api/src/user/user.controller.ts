@@ -224,7 +224,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Updated current user',
-    type: MyUserInformationResponseDto,
+    type: UserPersonnalDataResponseDto,
   })
   @ApiBody({
     description: "New current user information",
@@ -233,8 +233,8 @@ export class UserController {
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: UpdateUserRequestDto,
-  ): Promise<MyUserInformation | null> {
-    return this.userService.updateUserPersonnalData(req.user.id, userData);
+  ): Promise<UserPersonnalData | null> {
+    return this.userService.updateMyInformation(req.user.id, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

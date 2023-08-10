@@ -1,13 +1,14 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { TaskCategory } from "@prisma/client";
-import { ftStatuses } from "../ft/ft.model";
-import { PrismaService } from "../prisma.service";
-import { TeamService } from "../team/team.service";
-import { getUnderlyingTeams } from "../team/underlying-teams.utils";
-import { SELECT_USER_TEAMS, UserService } from "../user/user.service";
-import { PeriodDto } from "../volunteer-availability/dto/period.dto";
-import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
-import { SELECT_BASE_TIMESPAN } from "./assignment.service";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { TaskCategory } from '@prisma/client';
+import { ftStatuses } from '../ft/ft.model';
+import { PrismaService } from '../prisma.service';
+import { TeamService } from '../team/team.service';
+import { getUnderlyingTeams } from '../team/underlying-teams.utils';
+import { UserService } from '../user/user.service';
+import { SELECT_USER_TEAMS } from '../user/user.query';
+import { PeriodDto } from '../volunteer-availability/dto/period.dto';
+import { VolunteerAvailabilityService } from '../volunteer-availability/volunteer-availability.service';
+import { SELECT_BASE_TIMESPAN } from './assignment.service';
 import {
   Assignee,
   AssignmentAsTeamMember,

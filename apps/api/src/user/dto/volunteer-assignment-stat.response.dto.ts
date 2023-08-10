@@ -1,6 +1,6 @@
 import { TaskCategory } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
-import { VolunteerTask } from '../user.service';
+import { VolunteerTask } from '../user.model';
 import { FtStatus, ftStatuses } from '../../ft/ft.model';
 
 class FtRepresentation {
