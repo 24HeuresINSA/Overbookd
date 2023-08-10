@@ -234,7 +234,10 @@ export class UserController {
     @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: UpdateUserRequestDto,
   ): Promise<UserPersonnalData | null> {
-    return this.userService.updateMyInformation(req.user.id, userData);
+    return this.userService.updateMyInformation(
+      new JwtUtil(req.user),
+      userData,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -367,13 +370,13 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Updated user',
-    type: MyUserInformationResponseDto,
+    type: UserPersonnalDataResponseDto,
   })
   updateUserById(
     @Param("id", ParseIntPipe) targetUserId: number,
     @Body() user: UpdateUserRequestDto,
     @RequestDecorator() req: RequestWithUserPayload,
-  ): Promise<MyUserInformation> {
+  ): Promise<UserPersonnalData> {
     return this.userService.updateUser(
       targetUserId,
       user,

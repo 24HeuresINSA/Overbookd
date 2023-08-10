@@ -9,12 +9,11 @@ import {
   formatRequirementAsTask,
 } from '../utils/assignment';
 import { getPeriodDuration } from '../utils/duration';
-import { CreateUserRequestDto } from './dto/create-user.request.dto';
-import { UpdateUserRequestDto } from './dto/update-user.request.dto';
 import { VolunteerAssignmentStat } from './dto/volunteer-assignment-stat.response.dto';
 import { DatabaseVolunteerAssignmentStat } from './volunteer-assignment.model';
 import {
   MyUserInformation,
+  UserCreateForm,
   UserPersonnalData,
   UserUpdateForm,
 } from '@overbookd/user';
@@ -55,15 +54,17 @@ export class UserService {
   }
 
   async updateMyInformation(
-    id: number,
+    author: JwtUtil,
     user: UserUpdateForm,
-  ): Promise<UserPersonnalData | null> {
+  ): Promise<MyUserInformation | null> {
+    const filteredUserData = this.filterUpdatableUserData(author, user);
+
     const updatedUser = await this.prisma.user.update({
-      where: { id },
-      data: user,
-      select: SELECT_USER_PERSONNAL_DATA,
+      where: { id: author.id },
+      data: filteredUserData,
+      select: SELECT_MY_USER_INFORMATION,
     });
-    return UserService.formatToPersonalData(updatedUser);
+    return UserService.formatToMyInformation(updatedUser);
   }
 
   async getAll(): Promise<UserPersonnalData[]> {
@@ -161,7 +162,7 @@ export class UserService {
   }
 
   // TODO à vérifier
-  async createUser(payload: CreateUserRequestDto): Promise<UserPersonnalData> {
+  async createUser(payload: UserCreateForm): Promise<UserPersonnalData> {
     const newUserData = {
       firstname: payload.firstname,
       lastname: payload.lastname,
@@ -203,27 +204,22 @@ export class UserService {
   }
 
   async updateUser(
-    targetUserId: number,
-    userData: UpdateUserRequestDto,
+    targetId: number,
+    userData: UserUpdateForm,
     author: JwtUtil,
-  ): Promise<MyUserInformation> {
-    if (!this.canUpdateUser(author, targetUserId)) {
-      throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
+  ): Promise<UserPersonnalData> {
+    if (!this.canUpdateUser(author, targetId)) {
+      throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
     }
 
-    if (!author.can("manage-users")) {
-      delete userData.charisma;
-    }
-    if (!author.can("manage-cp")) {
-      delete userData.hasPayedContributions;
-    }
+    const filteredUserData = this.filterUpdatableUserData(author, userData);
 
     const user = await this.prisma.user.update({
-      select: SELECT_MY_USER_INFORMATION,
-      data: userData,
-      where: { id: targetUserId },
+      select: SELECT_USER_PERSONNAL_DATA,
+      data: filteredUserData,
+      where: { id: targetId },
     });
-    return UserService.formatToMyInformation(user);
+    return UserService.formatToPersonalData(user);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -288,5 +284,21 @@ export class UserService {
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
     return author.can("manage-users") || author.id === targetUserId;
+  }
+
+  private filterUpdatableUserData(
+    author: JwtUtil,
+    userData: UserUpdateForm,
+  ): UserUpdateForm {
+    const charisma = author.can('manage-users') ? userData.charisma : undefined;
+    const hasPayedContributions = author.can('manage-cp')
+      ? userData.hasPayedContributions
+      : undefined;
+
+    return {
+      ...userData,
+      charisma,
+      hasPayedContributions,
+    };
   }
 }
