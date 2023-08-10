@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
 import { setDateHour } from "../date/dateUtils";
 import { isPartyShift } from "../shift/shift";
@@ -13,8 +13,8 @@ export function isEndOfAvailabilityPeriod(hour: number): boolean {
 }
 
 export function isAvailabilityPeriodSelected(
-  selectedAvailabilities: Period[],
-  savedAvailabilities: Period[]
+  selectedAvailabilities: IProvidePeriod[],
+  savedAvailabilities: IProvidePeriod[]
 ): (date: string | Date, hour: number) => boolean {
   return (date: string | Date, hour: number) =>
     selectedAvailabilities.some(
@@ -23,7 +23,7 @@ export function isAvailabilityPeriodSelected(
 }
 
 export function isAvailabilityPeriodSaved(
-  savedAvailabilities: Period[]
+  savedAvailabilities: IProvidePeriod[]
 ): (date: string | Date, hour: number) => boolean {
   return (date: string | Date, hour: number) => {
     const updatedDate = setDateHour(new Date(date), hour);
@@ -42,8 +42,8 @@ export function hasAvailabilityPeriodError(
 }
 
 export function isPeriodIncludedByAnother(
-  period: Period
-): (value: Period) => boolean {
+  period: IProvidePeriod
+): (value: IProvidePeriod) => boolean {
   return (anotherPeriod) =>
     anotherPeriod.start.getTime() <= period.start.getTime() &&
     anotherPeriod.end.getTime() >= period.end.getTime();

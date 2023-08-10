@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { PrismaService } from '../../src/prisma.service';
 import { TimelineEvent, TimelineFt } from './timeline.model';
 
@@ -10,11 +10,11 @@ interface DatabaseFT {
   hasPriority?: boolean;
 }
 
-type DatabaseTimeSpan = Period & {
+type DatabaseTimeSpan = IProvidePeriod & {
   id: number;
 };
 
-interface DatabaseTimeWindow extends Period {
+interface DatabaseTimeWindow extends IProvidePeriod {
   timeSpans: DatabaseTimeSpan[];
 }
 
@@ -27,7 +27,7 @@ interface DatabaseTimeline {
 
 @Injectable()
 export class TimelineService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async getTimelines(start: Date, end: Date): Promise<TimelineEvent[]> {
     const where = this.buildTimelineCondition(start, end);

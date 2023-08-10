@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { SELECT_USERNAME_WITH_ID } from '../user/user.service';
 import { FtUserRequestDto } from './dto/ft-user-request.request.dto';
@@ -13,17 +13,17 @@ type UserId = {
   userId: number;
 };
 
-type PeriodWithUserRequestedIds = Period & {
+type PeriodWithUserRequestedIds = IProvidePeriod & {
   userRequests: UserId[];
 };
 
-type TimeWindow = Period & {
+type TimeWindow = IProvidePeriod & {
   ftId: number;
 };
 
 @Injectable()
 export class FtUserRequestService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   private SELECT_ALSO_REQUESTED_BY_FT = {
     ft: {
@@ -76,7 +76,7 @@ export class FtUserRequestService {
 
   private async isUserAvailable(
     userId: number,
-    period: Period,
+    period: IProvidePeriod,
   ): Promise<boolean> {
     const matchingAvailability = await this.findMatchingAvailabilities(
       userId,
@@ -87,7 +87,7 @@ export class FtUserRequestService {
 
   private async findMatchingAvailabilities(
     userId: number,
-    { start, end }: Period,
+    { start, end }: IProvidePeriod,
   ) {
     return this.prisma.volunteerAvailability.findFirst({
       select: { userId: true },
@@ -115,7 +115,7 @@ export class FtUserRequestService {
   private async findMatchingAssignment(
     userId: number,
     ftId: number,
-    { start, end }: Period,
+    { start, end }: IProvidePeriod,
   ) {
     return this.prisma.assignment.findFirst({
       select: { assigneeId: true },

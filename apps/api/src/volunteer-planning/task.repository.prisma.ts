@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { PrismaService } from '../../src/prisma.service';
 import { buildVolunteerDisplayName } from '../../src/utils/volunteer';
 import { TaskRepository } from './domain/planning';
@@ -21,7 +21,7 @@ type DatabaseStoredTask = {
 };
 
 type DatabaseAssignment = {
-  timeSpan: Period & { timeWindow: { ftId: number } };
+  timeSpan: IProvidePeriod & { timeWindow: { ftId: number } };
   assignee: { id: number; firstname: string; lastname: string };
 };
 
@@ -69,7 +69,7 @@ export class PrismaTaskRepository implements TaskRepository {
     },
   };
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService) { }
 
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,

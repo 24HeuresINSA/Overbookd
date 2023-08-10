@@ -1,7 +1,7 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 
-export interface CharismaPeriod extends Period {
+export interface CharismaPeriod extends IProvidePeriod {
   name: string;
   description: string;
   charisma: number;

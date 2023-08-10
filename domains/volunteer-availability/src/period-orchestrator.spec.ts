@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PeriodOrchestrator } from "./period-orchestrator";
+import { Period } from "@overbookd/period";
 
 describe("Period orchestrator", () => {
   describe("when there is no existing period", () => {
@@ -9,10 +10,10 @@ describe("Period orchestrator", () => {
     describe("when adding a 1 hour period", () => {
       it("should alert the user that the period is too short and should last at least 2 hours", () => {
         const periodOrchestrator = PeriodOrchestrator.init();
-        const period = {
+        const period = Period.init({
           start: new Date("2023-05-12 05:00+02:00"),
           end: new Date("2023-05-12 06:00+02:00"),
-        };
+        });
         periodOrchestrator.addPeriod(period);
         expect(periodOrchestrator.errors).toEqual([
           {
@@ -25,10 +26,10 @@ describe("Period orchestrator", () => {
     describe("when adding a 3 hours period", () => {
       it("shouldn't have any error in the report", () => {
         const periodOrchestrator = PeriodOrchestrator.init();
-        const period = {
+        const period = Period.init({
           start: new Date("2023-05-12 03:00+02:00"),
           end: new Date("2023-05-12 06:00+02:00"),
-        };
+        });
         periodOrchestrator.addPeriod(period);
         expect(periodOrchestrator.errors).toEqual([]);
       });
@@ -85,10 +86,10 @@ describe("Period orchestrator", () => {
         let periodOrchestrator: PeriodOrchestrator;
         beforeEach(() => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
-          const period = {
+          const period = Period.init({
             start: new Date("2023-05-12 04:00+02:00"),
             end: new Date("2023-05-12 05:00+02:00"),
-          };
+          });
           periodOrchestrator.addPeriod(period);
         });
         it("should not duplicate periods", () => {
@@ -113,10 +114,10 @@ describe("Period orchestrator", () => {
         let periodOrchestrator: PeriodOrchestrator;
         beforeEach(() => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
-          const period = {
+          const period = Period.init({
             start: new Date("2023-05-12 00:00+02:00"),
             end: new Date("2023-05-12 02:00+02:00"),
-          };
+          });
           periodOrchestrator.addPeriod(period);
         });
         it("shouldn't have any error in the report", () => {
@@ -144,10 +145,10 @@ describe("Period orchestrator", () => {
         let periodOrchestrator: PeriodOrchestrator;
         beforeEach(() => {
           periodOrchestrator = PeriodOrchestrator.init(periods);
-          const period = {
+          const period = Period.init({
             start: new Date("2023-05-12 06:00+02:00"),
             end: new Date("2023-05-12 08:00+02:00"),
-          };
+          });
           periodOrchestrator.addPeriod(period);
         });
         it("should inform the user that only the period from 2 to 3 is too short", () => {
@@ -178,10 +179,10 @@ describe("Period orchestrator", () => {
       describe("when removing an entire period", () => {
         it("should remove the period from availabilities", () => {
           const periodOrchestrator = PeriodOrchestrator.init(periods);
-          periodOrchestrator.removePeriod({
+          periodOrchestrator.removePeriod(Period.init({
             start: new Date("2023-05-12 02:00+02:00"),
             end: new Date("2023-05-12 03:00+02:00"),
-          });
+          }));
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(2);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             {
@@ -198,24 +199,24 @@ describe("Period orchestrator", () => {
       describe("when removing a part of a period", () => {
         it("should update impacted period", () => {
           const periodOrchestrator = PeriodOrchestrator.init(periods);
-          periodOrchestrator.removePeriod({
+          periodOrchestrator.removePeriod(Period.init({
             start: new Date("2023-05-12 05:00+02:00"),
             end: new Date("2023-05-12 06:00+02:00"),
-          });
+          }));
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(3);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
-            {
+            Period.init({
               start: new Date("2023-05-12 02:00+02:00"),
               end: new Date("2023-05-12 03:00+02:00"),
-            },
-            {
+            }),
+            Period.init({
               start: new Date("2023-05-12 04:00+02:00"),
               end: new Date("2023-05-12 05:00+02:00"),
-            },
-            {
+            }),
+            Period.init({
               start: new Date("2023-05-12 08:00+02:00"),
               end: new Date("2023-05-12 12:00+02:00"),
-            },
+            }),
           ]);
         });
       });
@@ -230,28 +231,28 @@ describe("Period orchestrator", () => {
               end: new Date("2023-05-12 14:00+02:00"),
             },
           ]);
-          periodOrchestrator.removePeriod({
+          periodOrchestrator.removePeriod(Period.init({
             start: new Date("2023-05-12 10:00+02:00"),
             end: new Date("2023-05-12 12:00+02:00"),
-          });
+          }));
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(4);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
-            {
+            Period.init({
               start: new Date("2023-05-12 02:00+02:00"),
               end: new Date("2023-05-12 03:00+02:00"),
-            },
-            {
+            }),
+            Period.init({
               start: new Date("2023-05-12 04:00+02:00"),
               end: new Date("2023-05-12 06:00+02:00"),
-            },
-            {
+            }),
+            Period.init({
               start: new Date("2023-05-12 08:00+02:00"),
               end: new Date("2023-05-12 10:00+02:00"),
-            },
-            {
+            }),
+            Period.init({
               start: new Date("2023-05-12 12:00+02:00"),
               end: new Date("2023-05-12 14:00+02:00"),
-            },
+            }),
           ]);
         });
       });

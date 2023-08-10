@@ -1,4 +1,4 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { FtStatus } from '../../ft/ft.model';
 
 type DatabaseFt = {
@@ -11,13 +11,15 @@ type WithDatabaseFt = {
   ft: DatabaseFt;
 };
 
-export type DatabaseFtUserRequest = { ftTimeWindows: Period & WithDatabaseFt };
+export type DatabaseFtUserRequest = {
+  ftTimeWindows: IProvidePeriod & WithDatabaseFt;
+};
 
 type WithDatabaseTimeWindow = {
   timeWindow: WithDatabaseFt;
 };
 
-type DatabaseTimeSpan = Period & WithDatabaseTimeWindow;
+type DatabaseTimeSpan = IProvidePeriod & WithDatabaseTimeWindow;
 
 export type DatabaseAssignment = {
   timeSpan: DatabaseTimeSpan;

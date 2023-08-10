@@ -1,9 +1,9 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { User, VolunteerTask } from "./user";
 
 export interface Volunteer extends User {
   phone: string;
   teams: string[];
-  availabilities: Period[];
+  availabilities: IProvidePeriod[];
   tasks: VolunteerTask[];
 }

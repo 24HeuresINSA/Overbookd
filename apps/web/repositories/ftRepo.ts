@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
   Ft,
@@ -189,7 +189,7 @@ export default {
   removeGearRequestRentalPeriod(
     context: Context,
     taskId: number,
-    removalPeriod: Period
+    removalPeriod: IProvidePeriod
   ) {
     return context.$axios.delete(`${resource}/${taskId}/gear-requests`, {
       data: removalPeriod,

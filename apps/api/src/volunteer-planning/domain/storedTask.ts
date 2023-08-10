@@ -1,4 +1,4 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { removeItemAtIndex } from '@overbookd/list';
 import { Assignment, Task, Volunteer } from './task.model';
 import {
@@ -8,7 +8,7 @@ import {
 } from '../../utils/period';
 import { getPeriodDuration } from '../../utils/duration';
 
-type Assignee = { period: Period; id: number; name: string };
+type Assignee = { period: IProvidePeriod; id: number; name: string };
 
 export type JsonStoredTask = Pick<
   Task,
@@ -19,7 +19,7 @@ export type JsonStoredTask = Pick<
 };
 
 export class StoredTask {
-  constructor(private readonly storedTask: JsonStoredTask) {}
+  constructor(private readonly storedTask: JsonStoredTask) { }
 
   get start(): Date {
     return this.storedTask.period.start;
@@ -77,7 +77,7 @@ export class StoredTask {
     );
   }
 
-  private get period(): Period {
+  private get period(): IProvidePeriod {
     return {
       start: this.start,
       end: this.end,
@@ -99,7 +99,7 @@ export class StoredTask {
     return this.end.getTime() === task.start.getTime();
   }
 
-  private findAssignedVolunteers(period: Period): Volunteer[] {
+  private findAssignedVolunteers(period: IProvidePeriod): Volunteer[] {
     const assignees = this.storedTask.assignees.filter((assignee) =>
       arePeriodsOverlapping([period, assignee.period]),
     );
@@ -110,21 +110,21 @@ export class StoredTask {
     return assignees.reduce(uniqueVolunteerReducer, []);
   }
 
-  private extractUniquePeriods(): Period[] {
+  private extractUniquePeriods(): IProvidePeriod[] {
     const allPeriods = [...this.storedTask.assignees, { period: this.period }];
     return allPeriods.reduce(uniquePeriodReducer, []);
   }
 
-  private splitOverlapingPeriods(periods: Period[]): Period[] {
+  private splitOverlapingPeriods(periods: IProvidePeriod[]): IProvidePeriod[] {
     return periods.reduce((splitedPeriods, period) => {
       return this.splitOverLapingPeriodsReducer(splitedPeriods, period);
     }, []);
   }
 
   private splitOverLapingPeriodsReducer(
-    splitedPeriods: Period[],
-    period: Period,
-  ): Period[] {
+    splitedPeriods: IProvidePeriod[],
+    period: IProvidePeriod,
+  ): IProvidePeriod[] {
     const overlapedPeriodIndex = splitedPeriods.findIndex((p) =>
       arePeriodsOverlapping([period, p]),
     );
@@ -145,7 +145,7 @@ export class StoredTask {
     return this.splitOverlapingPeriods(updatedSplitedPeriods);
   }
 
-  private splitIntoPeriods(overlapedPeriod: Period, period: Period): Period[] {
+  private splitIntoPeriods(overlapedPeriod: IProvidePeriod, period: IProvidePeriod): IProvidePeriod[] {
     const [firstStart, firstEnd, sencondStart, secondEnd] = [
       overlapedPeriod.start,
       overlapedPeriod.end,
@@ -177,9 +177,9 @@ function uniqueVolunteerReducer(
 }
 
 function uniquePeriodReducer(
-  periods: Period[],
-  { period }: { period: Period },
-): Period[] {
+  periods: IProvidePeriod[],
+  { period }: { period: IProvidePeriod },
+): IProvidePeriod[] {
   const existingPeriodIndex = periods.findIndex((p) =>
     areSamePeriods([period, p]),
   );

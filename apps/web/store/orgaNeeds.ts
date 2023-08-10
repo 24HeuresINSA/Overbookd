@@ -1,5 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
 import { HttpStringified } from "~/utils/types/http";
@@ -28,7 +28,7 @@ export const mutations = mutationTree(state, {
   },
 });
 
-export type OrgaNeedsRequest = Period & {
+export type OrgaNeedsRequest = IProvidePeriod & {
   teams: string[];
 };
 

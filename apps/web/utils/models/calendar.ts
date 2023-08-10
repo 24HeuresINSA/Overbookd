@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { User } from "./user";
 
 export interface CalendarEvent {
@@ -12,5 +12,5 @@ export interface CalendarEvent {
 
 export type CalendarUser = User & {
   teams: string[];
-  availabilities: Period[];
+  availabilities: IProvidePeriod[];
 };

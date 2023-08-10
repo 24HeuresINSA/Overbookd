@@ -1,4 +1,4 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { Volunteer } from './need-help.model';
 import { VolunteerRepository } from './need-help.service';
 import { PrismaService } from '../../src/prisma.service';
@@ -26,7 +26,7 @@ type DatabaseVolunteer = {
   firstname: string;
   phone: string;
   team: { team: { code: string } }[];
-  availabilities: Period[];
+  availabilities: IProvidePeriod[];
   assignments: DatabaseAssignment[];
   ftUserRequests: DatabaseFtUserRequest[];
 };
@@ -42,9 +42,9 @@ const SELECT_VOLUNTEER = {
 
 @Injectable()
 export class PrismaVolunteerRepository implements VolunteerRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async findAvailableOnPeriod(period: Period): Promise<Volunteer[]> {
+  async findAvailableOnPeriod(period: IProvidePeriod): Promise<Volunteer[]> {
     const select = SELECT_VOLUNTEER;
     const where = this.buildIsAvailableCondition(period);
 
@@ -63,7 +63,7 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
     return formatVolunteers(volunteers);
   }
 
-  private buildIsAvailableCondition(period: Period) {
+  private buildIsAvailableCondition(period: IProvidePeriod) {
     const availabilities =
       AssignmentService.buildVolunteerIsAvailableDuringPeriodCondition(period);
 

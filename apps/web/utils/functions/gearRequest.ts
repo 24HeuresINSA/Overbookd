@@ -1,4 +1,4 @@
-import { Period as BasePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { updateItemToList } from "@overbookd/list";
 import { isSamePeriod } from "../availabilities/period";
 import {
@@ -127,9 +127,9 @@ function isSameGearRequestSeeker<T extends "FA" | "FT">(
 }
 
 function isOverlappingPeriod(
-  period: BasePeriod
-): (value: BasePeriod) => boolean {
-  return (p: BasePeriod) =>
+  period: IProvidePeriod
+): (value: IProvidePeriod) => boolean {
+  return (p: IProvidePeriod) =>
     period.start.getTime() <= p.end.getTime() &&
     period.end.getTime() >= p.start.getTime();
 }
@@ -149,8 +149,8 @@ export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
 
 export function splitGearRequest<T extends "FA" | "FT">(
   gearRequest: GearRequest<T>,
-  toRemovePeriod: BasePeriod,
-  availablePeriods: BasePeriod[]
+  toRemovePeriod: IProvidePeriod,
+  availablePeriods: IProvidePeriod[]
 ): GearRequest<T>[] {
   const remainingPeriods = availablePeriods.filter(
     (period) => !isSamePeriod(toRemovePeriod)(period)

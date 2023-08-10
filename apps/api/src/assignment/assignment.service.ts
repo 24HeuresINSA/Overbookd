@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { FtTeamRequest, FtTimeSpan } from '@prisma/client';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { TeamService } from '../team/team.service';
 import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
@@ -88,7 +88,7 @@ export type AssignmentStats = {
 
 @Injectable()
 export class AssignmentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async assignVolunteersToTimeSpan(
     volunteers: VolunteerAssignmentRequest[],
@@ -219,7 +219,7 @@ export class AssignmentService {
 
   private async getVolunteer(
     volunteerId: number,
-    timeSpan: Period,
+    timeSpan: IProvidePeriod,
     teamCode: string,
   ): Promise<{ id: number } | null> {
     const availabilities =
@@ -258,7 +258,7 @@ export class AssignmentService {
   static buildVolunteerIsNotAssignedOnTaskDuringPeriodCondition({
     start,
     end,
-  }: Period) {
+  }: IProvidePeriod) {
     return {
       every: {
         NOT: [{ timeSpan: { start: { lt: end }, end: { gt: start } } }],
@@ -269,7 +269,7 @@ export class AssignmentService {
   static buildVolunteerIsAvailableDuringPeriodCondition({
     start,
     end,
-  }: Period) {
+  }: IProvidePeriod) {
     return {
       some: {
         start: { lte: start },

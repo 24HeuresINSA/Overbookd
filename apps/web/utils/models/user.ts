@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { FtStatus } from "./ft";
 import { TaskCategory } from "./ftTimeSpan";
@@ -65,7 +65,7 @@ export interface Task {
   status: FtStatus;
 }
 
-export interface VolunteerTask extends Period {
+export interface VolunteerTask extends IProvidePeriod {
   ft: Task;
   timeSpanId?: number;
 }

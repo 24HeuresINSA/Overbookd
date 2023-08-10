@@ -69,12 +69,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue";
 
 interface CalendarStep {
   title: string;
-  period: Period;
+  period: IProvidePeriod;
 }
 
 export default Vue.extend({

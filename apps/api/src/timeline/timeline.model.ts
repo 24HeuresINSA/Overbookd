@@ -1,4 +1,4 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 
 export interface TimelineFa {
   id: number;
@@ -6,11 +6,11 @@ export interface TimelineFa {
   team: string;
 }
 
-export type TimelineTimeSpan = Period & {
+export type TimelineTimeSpan = IProvidePeriod & {
   id: number;
 };
 
-export type TimelineTimeWindow = Period & {
+export type TimelineTimeWindow = IProvidePeriod & {
   timeSpans: TimelineTimeSpan[];
 };
 

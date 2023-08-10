@@ -1,4 +1,4 @@
-import { Period, TWO_HOURS_IN_MS } from "@overbookd/period";
+import { IProvidePeriod, TWO_HOURS_IN_MS } from "@overbookd/period";
 import { SHIFT_HOURS_UTC } from "./shift.constant";
 import {
   AvailabilityMinimumPeriodDurationError,
@@ -25,7 +25,7 @@ export class Availability {
     this.end = end;
   }
 
-  addPeriod(period: Period): Availability {
+  addPeriod(period: IProvidePeriod): Availability {
     if (!this.isJointedPeriod(period))
       throw new AvailabilityPeriodsJointError();
     const startTime = Math.min(
@@ -43,7 +43,7 @@ export class Availability {
     return this.isJointedPeriod({ start, end });
   }
 
-  private isJointedPeriod(period: Period): boolean {
+  private isJointedPeriod(period: IProvidePeriod): boolean {
     return this.start <= period.end && this.end >= period.start;
   }
 
@@ -65,7 +65,7 @@ export class Availability {
     );
   }
 
-  static fromPeriod(period: Period) {
+  static fromPeriod(period: IProvidePeriod) {
     return new Availability(period.start, period.end);
   }
 }

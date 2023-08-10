@@ -1,19 +1,19 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { updateItemToList } from "@overbookd/list";
 import { Availability } from "./volunteer-availability";
 
-export type PeriodWithError = Period & {
+export type PeriodWithError = IProvidePeriod & {
   message: string;
 };
 
 export class PeriodOrchestrator {
   private periods: Period[] = [];
 
-  private constructor(periods: Period[]) {
-    this.periods = periods;
+  private constructor(periods: IProvidePeriod[]) {
+    this.periods = periods.map((period) => Period.init(period));
   }
 
-  static init(periods?: Period[]) {
+  static init(periods?: IProvidePeriod[]) {
     return new PeriodOrchestrator(periods ?? []);
   }
 
@@ -23,34 +23,12 @@ export class PeriodOrchestrator {
 
   removePeriod(period: Period) {
     this.periods = this.periods.reduce((periods, currentPeriod) => {
-      const isPeriodIncluded = this.isPeriodIncludedBy(period)(currentPeriod);
+      const isPeriodIncluded = period.isIncludedBy(currentPeriod);
       if (!isPeriodIncluded) return [...periods, currentPeriod];
 
-      const splitedPeriods = this.splitPeriod(currentPeriod, period);
+      const splitedPeriods = currentPeriod.splitFrom(period);
       return [...periods, ...splitedPeriods];
     }, [] as Period[]);
-  }
-
-  private splitPeriod(currentPeriod: Period, period: Period): Period[] {
-    const pastPeriod = {
-      start: currentPeriod.start,
-      end: period.start,
-    };
-    const futurPeriod = {
-      start: period.end,
-      end: currentPeriod.end,
-    };
-    return [pastPeriod, futurPeriod].filter(PeriodOrchestrator.hasDuration);
-  }
-
-  private isPeriodIncludedBy(period: Period): (value: Period) => boolean {
-    return (p) =>
-      p.start.getTime() <= period.start.getTime() &&
-      p.end.getTime() >= period.end.getTime();
-  }
-
-  private static hasDuration(period: Period): boolean {
-    return period.start.getTime() !== period.end.getTime();
   }
 
   get errors(): PeriodWithError[] {
@@ -88,8 +66,8 @@ export class PeriodOrchestrator {
     periods: Period[],
     period: Period
   ): Period[] {
-    const mergeablePeriodIndex = periods.findIndex(
-      PeriodOrchestrator.isFollowingPeriod(period)
+    const mergeablePeriodIndex = periods.findIndex((otherPeriod) =>
+      period.isFollowedBy(otherPeriod)
     );
     if (mergeablePeriodIndex === -1) return [...periods, period];
     return PeriodOrchestrator.mergePeriodToPeriodList(
@@ -105,7 +83,7 @@ export class PeriodOrchestrator {
     return (period, startIndex) => {
       return periods
         .slice(startIndex + 1)
-        .some(PeriodOrchestrator.isFollowingPeriod(period));
+        .some((otherPeriod) => period.isFollowedBy(otherPeriod));
     };
   }
 
@@ -118,31 +96,7 @@ export class PeriodOrchestrator {
 
     if (!mergeablePeriod) return periods;
 
-    const mergedPeriod = {
-      start: new Date(
-        Math.min(
-          new Date(mergeablePeriod.start).getTime(),
-          new Date(period.start).getTime()
-        )
-      ),
-      end: new Date(
-        Math.max(
-          new Date(mergeablePeriod.end).getTime(),
-          new Date(period.end).getTime()
-        )
-      ),
-    };
+    const mergedPeriod = period.mergeWith(mergeablePeriod)
     return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
-  }
-
-  private static isFollowingPeriod(period: Period): (value: Period) => boolean {
-    return (existingPeriod) => {
-      return (
-        new Date(existingPeriod.start).getTime() <=
-          new Date(period.end).getTime() &&
-        new Date(existingPeriod.end).getTime() >=
-          new Date(period.start).getTime()
-      );
-    };
   }
 }

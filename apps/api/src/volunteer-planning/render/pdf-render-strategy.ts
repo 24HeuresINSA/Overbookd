@@ -4,7 +4,7 @@ import htmlToPdfMake from 'html-to-pdfmake';
 import { join } from 'path';
 import { Content, StyleDictionary } from 'pdfmake/interfaces';
 import { JSDOM } from 'jsdom';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import {
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
@@ -15,7 +15,7 @@ import { SecurityPlan } from './pdf/security-plan';
 import { Introduction } from './pdf/introduction';
 import { RenderStrategy } from './render-strategy';
 
-class PdfException extends Error {}
+class PdfException extends Error { }
 
 const { window } = new JSDOM();
 const NB_ASSIGNEES_PER_LINE = 4;
@@ -315,7 +315,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     return [...currentLine, ...lineFill];
   }
 
-  private extractHours(period: Period) {
+  private extractHours(period: IProvidePeriod) {
     const start = formatDateWithHoursAndMinutesOnly(period.start);
     const end = formatDateWithHoursAndMinutesOnly(period.end);
     return { text: `${start} - ${end}`, style: ['period'] };
@@ -331,7 +331,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     };
   }
 
-  private extractPeriod(period: Period): Content {
+  private extractPeriod(period: IProvidePeriod): Content {
     const start = formatDateToHumanReadable(period.start);
     const end = formatDateToHumanReadable(period.end);
     const displayPeriod = {

@@ -1,4 +1,4 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 
 export type Volunteer = {
   id: number;
@@ -6,14 +6,14 @@ export type Volunteer = {
 };
 
 export type Assignment = {
-  period: Period;
+  period: IProvidePeriod;
   volunteers: Volunteer[];
 };
 
 export type Task = {
   name: string;
   description: string;
-  period: Period;
+  period: IProvidePeriod;
   location: string;
   assignments: Assignment[];
 };

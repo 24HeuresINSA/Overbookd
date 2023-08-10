@@ -11,13 +11,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "@overbookd/period";
-import { CalendarUser } from "~/utils/models/calendar";
+import { IProvidePeriod } from "@overbookd/period";
 import {
   PlanningEvent,
   convertTaskToPlanningEvent,
 } from "~/domain/common/planning-events";
 import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
+import { CalendarUser } from "~/utils/models/calendar";
 
 export default Vue.extend({
   name: "CalendarList",
@@ -28,7 +28,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    period(): Period {
+    period(): IProvidePeriod {
       return this.$accessor.needHelp.period;
     },
     volunteers(): CalendarUser[] {

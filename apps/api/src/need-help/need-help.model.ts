@@ -1,4 +1,4 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { VolunteerTask } from '../user/user.service';
 
 export interface Volunteer {
@@ -7,6 +7,6 @@ export interface Volunteer {
   lastname: string;
   phone: string;
   teams: string[];
-  availabilities: Period[];
+  availabilities: IProvidePeriod[];
   tasks: VolunteerTask[];
 }
