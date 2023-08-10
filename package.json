@@ -1,41 +1,41 @@
 {
-    "name": "overbookd",
-    "version": "1.16.4-rc.45",
-    "main": "index.js",
-    "keywords": [],
-    "license": "Apache-2.0",
-    "description": "Logiciel de gestion du festival des 24 heures de l'INSA",
-    "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
-    "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "repository": {
-        "type": "git",
-        "url": "https://gitlab.com/24-heures-insa/overbookd-mono"
-    },
-    "scripts": {
-        "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
-        "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",
-        "dev:clean": "pnpm dev:down && rm -rf node_modules .pnpm-store apps/**/node_modules **/dist && docker system prune --all",
-        "dev:down": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env down",
-        "dev:init": "docker network create traefik-public && pnpm dev:build",
-        "dev:logs": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env logs --tail 100 -f",
-        "dev:restart": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env restart",
-        "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env up -d",
-        "dev:stop": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml -p dev --env-file ./docker/dev.env stop",
-        "dev:bash": "docker run --rm --name overbookd_bash --interactive --tty --user $(id -g $USER):$(id -u $USER) -v ./:/overbookd overbookd:dev sh --login",
-        "preinstall": "npx only-allow pnpm",
-        "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate",
-        "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major",
-        "release:minor": "git fetch -ap && pnpm version minor --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:minor",
-        "release:patch": "git fetch -ap && pnpm version patch --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:patch"
-    },
-    "packageManager": "pnpm@8.6.6",
-    "engines": {
-        "node": ">=16",
-        "pnpm": ">=8"
-    },
-    "devDependencies": {
-        "@vitest/coverage-v8": "^0.33.0",
-        "typescript": "^5.1.6",
-        "vitest": "^0.33.0"
-    }
+  "name": "overbookd",
+  "version": "1.16.4-rc.44",
+  "main": "index.js",
+  "keywords": [],
+  "license": "Apache-2.0",
+  "description": "Logiciel de gestion du festival des 24 heures de l'INSA",
+  "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
+  "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono"
+  },
+  "scripts": {
+    "db:exec": "run(){ MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/dev.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
+    "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",
+    "dev:clean": "pnpm dev:down && rm -rf node_modules .pnpm-store apps/**/node_modules **/dist && docker system prune --all",
+    "dev:down": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/dev.env down",
+    "dev:init": "docker network create traefik-public && pnpm dev:build",
+    "dev:logs": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/dev.env logs --tail 100 -f",
+    "dev:restart": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/dev.env restart",
+    "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/dev.env up -d",
+    "dev:stop": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose -f ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/dev.env stop",
+    "dev:bash": "docker run --rm --name overbookd_bash --interactive --tty --user $(id -g $USER):$(id -u $USER) -v ./:/overbookd overbookd:dev sh --login",
+    "preinstall": "npx only-allow pnpm",
+    "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate",
+    "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major",
+    "release:minor": "git fetch -ap && pnpm version minor --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:minor",
+    "release:patch": "git fetch -ap && pnpm version patch --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:patch"
+  },
+  "packageManager": "pnpm@8.6.6",
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=8"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^0.33.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.33.0"
+  }
 }
