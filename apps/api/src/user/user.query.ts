@@ -1,6 +1,6 @@
 import { ftStatuses } from '../ft/ft.model';
 
-export const SELECT_USER = {
+const SELECT_USER = {
   email: true,
   firstname: true,
   lastname: true,
