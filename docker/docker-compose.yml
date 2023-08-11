@@ -17,7 +17,7 @@ services:
       - certs:/etc/ssl/traefik
 
   traefik:
-    image: traefik:v2.3
+    image: traefik:v2.10.4
     restart: unless-stopped
     command:
       # Docker config
@@ -109,7 +109,7 @@ services:
       - ./data/dev/postgresql:/var/lib/postgresql/data
 
   adminer:
-    image: adminer
+    image: adminer:4.8.1
     restart: unless-stopped
     networks:
       - overbookd_net-api
