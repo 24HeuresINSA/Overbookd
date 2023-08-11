@@ -45,7 +45,7 @@ AND
 
 -- Change in table team maman in beboo
 UPDATE "team" SET code = 'beboo' WHERE code = 'maman';
-UPDATE "team" SET name = 'BeBoo' WHERE name = 'maman';
+UPDATE "team" SET name = 'beboo' WHERE name = 'maman';
 
 -- Remove all user team except hard, vieux, admin, fen, voiture, camion, conducteur, conducteur-fen
 DELETE FROM "user_team" WHERE
