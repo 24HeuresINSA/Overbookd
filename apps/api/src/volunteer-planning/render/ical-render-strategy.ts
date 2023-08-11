@@ -1,5 +1,5 @@
 import { EventAttributes, createEvents } from 'ics';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import {
   formatDateWithHoursAndMinutesOnly,
   toDateArray,
@@ -53,7 +53,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     return `${header}<ul>${listing}</ul>`;
   }
 
-  private generatePeriodHeader(period: Period) {
+  private generatePeriodHeader(period: IProvidePeriod) {
     const start = formatDateWithHoursAndMinutesOnly(period.start);
     const end = formatDateWithHoursAndMinutesOnly(period.end);
 

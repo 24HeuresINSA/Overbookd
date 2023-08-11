@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Period, QUARTER_IN_MS } from '@overbookd/period';
+import { IProvidePeriod, QUARTER_IN_MS } from '@overbookd/period';
 import { PrismaService } from '../prisma.service';
 import { VolunteerAvailability } from '@prisma/client';
 import { getPeriodDuration } from '../utils/duration';
@@ -43,16 +43,16 @@ const SELECT_ASSIGNED_VOLUNTEERS = {
   },
 };
 
-type RequestedVolunteersOverPeriod = Period & {
+type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
 };
 
-type AssignmentsOverPeriod = Period & {
+type AssignmentsOverPeriod = IProvidePeriod & {
   assigments: number;
 };
 
 type DataBaseOrgaStats = {
-  interval: Period;
+  interval: IProvidePeriod;
   assignments: AssignmentsOverPeriod[];
   availabilities: VolunteerAvailability[];
   requestedVolunteers: RequestedVolunteersOverPeriod[];
@@ -113,7 +113,7 @@ export class OrgaNeedsService {
 
   private countAssignedVolunteersOnInterval(
     assignments: AssignmentsOverPeriod[],
-    interval: Period,
+    interval: IProvidePeriod,
   ) {
     return assignments
       .filter(includedPeriods(interval))
@@ -122,7 +122,7 @@ export class OrgaNeedsService {
 
   private countRequestedVolunteersOnInterval(
     requestedVolunteers: RequestedVolunteersOverPeriod[],
-    interval: Period,
+    interval: IProvidePeriod,
   ) {
     return requestedVolunteers
       .filter(includedPeriods(interval))
@@ -131,7 +131,7 @@ export class OrgaNeedsService {
 
   private countAvailableVolunteersOnInterval(
     availabilities: VolunteerAvailability[],
-    interval: Period,
+    interval: IProvidePeriod,
   ) {
     return availabilities.filter(includedPeriods(interval)).length;
   }
@@ -187,7 +187,7 @@ export class OrgaNeedsService {
     }));
   }
 
-  private buildOrgaNeedsIntervals(period: Period): Period[] {
+  private buildOrgaNeedsIntervals(period: IProvidePeriod): IProvidePeriod[] {
     const numberOfIntervals = Math.floor(
       getPeriodDuration(period) / QUARTER_IN_MS,
     );
@@ -201,7 +201,7 @@ export class OrgaNeedsService {
       });
   }
 
-  private periodIncludedCondition({ start, end }: Period) {
+  private periodIncludedCondition({ start, end }: IProvidePeriod) {
     return {
       start: { lte: end },
       end: { gte: start },
@@ -238,6 +238,9 @@ export class OrgaNeedsService {
   }
 }
 
-function includedPeriods({ start, end }: Period): (value: Period) => boolean {
+function includedPeriods({
+  start,
+  end,
+}: IProvidePeriod): (value: IProvidePeriod) => boolean {
   return (period) => period.start < end && period.end > start;
 }

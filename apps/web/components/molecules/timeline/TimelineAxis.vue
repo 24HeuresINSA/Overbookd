@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { formatDateWithHoursAndMinutesOnly } from "~/utils/date/dateUtils";
 import { getPeriodDuration } from "~/utils/models/period";
 
@@ -30,7 +30,7 @@ export default Vue.extend({
     endHour(): string {
       return formatDateWithHoursAndMinutesOnly(this.$accessor.timeline.end);
     },
-    period(): Period {
+    period(): IProvidePeriod {
       return this.$accessor.timeline.period;
     },
     markers(): string[] {

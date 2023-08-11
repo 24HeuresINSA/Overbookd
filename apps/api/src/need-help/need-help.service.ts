@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { Volunteer } from './need-help.model';
 
 export interface VolunteerRepository {
-  findAvailableOnPeriod(period: Period): Promise<Volunteer[]>;
+  findAvailableOnPeriod(period: IProvidePeriod): Promise<Volunteer[]>;
 }
 
 @Injectable()
@@ -13,7 +13,7 @@ export class NeedHelpService {
     private readonly volunteerRepo: VolunteerRepository,
   ) {}
 
-  getAvailableVolunteers(period: Period): Promise<Volunteer[]> {
+  getAvailableVolunteers(period: IProvidePeriod): Promise<Volunteer[]> {
     return this.volunteerRepo.findAvailableOnPeriod(period);
   }
 }

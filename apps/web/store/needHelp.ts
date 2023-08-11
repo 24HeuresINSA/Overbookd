@@ -1,5 +1,9 @@
 import { actionTree, mutationTree, getterTree } from "typed-vuex";
-import { Period, ONE_HOUR_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
+import {
+  IProvidePeriod,
+  ONE_HOUR_IN_MS,
+  QUARTER_IN_MS,
+} from "@overbookd/period";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
@@ -41,7 +45,7 @@ export const state = (): NeedHelpState => ({
 });
 
 export const getters = getterTree(state, {
-  period(state): Period {
+  period(state): IProvidePeriod {
     return { start: state.start, end: state.end };
   },
   filteredVolunteers(state): Volunteer[] {
@@ -83,7 +87,7 @@ export const actions = actionTree(
       const volunteers = res.data.map(castVolunteerWithDate);
       commit("SET_VOLUNTEERS", volunteers);
     },
-    updatePeriod({ commit, dispatch }, { start, end }: Period) {
+    updatePeriod({ commit, dispatch }, { start, end }: IProvidePeriod) {
       commit("SET_START", start);
       commit("SET_END", end);
       dispatch("fetchVolunteers");

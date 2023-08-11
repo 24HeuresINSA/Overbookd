@@ -1,5 +1,5 @@
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 
-export function getPeriodDuration({ start, end }: Period): number {
+export function getPeriodDuration({ start, end }: IProvidePeriod): number {
   return end.getTime() - start.getTime();
 }

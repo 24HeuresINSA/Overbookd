@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { Ft, Prisma, TaskCategory } from '@prisma/client';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { JwtUtil } from '../authentication/entities/jwt-util.entity';
 import { ftStatuses } from '../ft/ft.model';
 import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
@@ -144,7 +144,7 @@ type DatabaseMyUserInformation = UserWithoutPassword & {
   _count: { assignments: number };
 };
 
-export type VolunteerTask = Period & {
+export type VolunteerTask = IProvidePeriod & {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timeSpanId?: number;
 };

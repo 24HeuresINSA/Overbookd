@@ -46,7 +46,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FtTimeSpanDetails from "~/components/organisms/festivalEvent/ft/FtTimeSpanDetails.vue";
 import {
@@ -69,7 +69,7 @@ export default Vue.extend({
     events(): TimelineEvent[] {
       return this.$accessor.timeline.filteredEvents;
     },
-    range(): Period {
+    range(): IProvidePeriod {
       return this.$accessor.timeline.period;
     },
   },
@@ -77,7 +77,7 @@ export default Vue.extend({
     this.$accessor.timeline.fetchEvents();
   },
   methods: {
-    buildTaskPeriod(task: TimelineFt): Period {
+    buildTaskPeriod(task: TimelineFt): IProvidePeriod {
       const lowestStartDate = Math.min(
         ...task.timeWindows.map(({ start }) => start.getTime())
       );
@@ -89,7 +89,7 @@ export default Vue.extend({
         end: new Date(Math.min(highestEndDate, this.range.end.getTime())),
       };
     },
-    adjustPeriodToRange(period: Period): Period {
+    adjustPeriodToRange(period: IProvidePeriod): IProvidePeriod {
       const PeriodStart = period.start.getTime();
       const rangeStart = this.range.start.getTime();
       const periodEnd = period.end.getTime();

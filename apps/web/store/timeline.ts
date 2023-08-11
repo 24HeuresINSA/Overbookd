@@ -1,5 +1,9 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Period, TWO_HOURS_IN_MS, QUARTER_IN_MS } from "@overbookd/period";
+import {
+  IProvidePeriod,
+  TWO_HOURS_IN_MS,
+  QUARTER_IN_MS,
+} from "@overbookd/period";
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
@@ -49,7 +53,7 @@ export const state = (): TimelineState => ({
 });
 
 export const getters = getterTree(state, {
-  period(state): Period {
+  period(state): IProvidePeriod {
     return { start: state.start, end: state.end };
   },
   filteredEvents(state): TimelineEvent[] {
@@ -97,7 +101,7 @@ export const actions = actionTree(
       const events = castTimelineEventsWithDate(res.data);
       commit("SET_EVENTS", events);
     },
-    updatePeriod({ commit, dispatch }, { start, end }: Period) {
+    updatePeriod({ commit, dispatch }, { start, end }: IProvidePeriod) {
       commit("SET_START", start);
       commit("SET_END", end);
       dispatch("fetchEvents");

@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { updateItemToList } from "@overbookd/list";
 import { Availability } from "./volunteer-availability";
 import { AvailabilityError } from "./volunteer-availability.error";
@@ -20,7 +20,7 @@ export class AvailabilityRegistery {
     return new AvailabilityRegistery([]);
   }
 
-  addPeriod(period: Period) {
+  addPeriod(period: IProvidePeriod) {
     const availability = this.tryCreateAvailability(period);
     const availabilitiesWithPeriodAdded = this._availabilities.map(
       this.tryAddPeriod(period)
@@ -80,7 +80,7 @@ export class AvailabilityRegistery {
     );
   }
 
-  private tryCreateAvailability(period: Period): Availability | undefined {
+  private tryCreateAvailability(period: IProvidePeriod): Availability | undefined {
     try {
       return Availability.fromPeriod(period);
     } catch (e) {
@@ -91,7 +91,7 @@ export class AvailabilityRegistery {
     }
   }
 
-  private tryAddPeriod(period: Period): (value: Availability) => Availability {
+  private tryAddPeriod(period: IProvidePeriod): (value: Availability) => Availability {
     return (availability) => {
       try {
         return availability.addPeriod(period);

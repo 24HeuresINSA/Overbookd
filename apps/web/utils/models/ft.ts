@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { BaseFa } from "./fa";
 import { FtFeedback } from "./feedback";
@@ -128,7 +128,7 @@ export type FtTimeWindowSortFunction = (
 interface AlsoRequiredByFt {
   id: number;
   name: string;
-  period: Period;
+  period: IProvidePeriod;
 }
 
 export interface FtUserRequest {

@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { ONE_HOUR_IN_MS } from '@overbookd/period';
+import { ONE_HOUR_IN_MS, Period } from '@overbookd/period';
 import {
   PeriodOrchestrator,
   PeriodWithError,
@@ -23,7 +23,7 @@ export class VolunteerAvailabilityService {
     const periodOrchestrator = PeriodOrchestrator.init(
       previousAvailabilityPeriods,
     );
-    periods.map((period) => periodOrchestrator.addPeriod(period));
+    periods.map((period) => periodOrchestrator.addPeriod(Period.init(period)));
 
     this.checkPeriodsErrors(periodOrchestrator);
 
@@ -62,7 +62,9 @@ export class VolunteerAvailabilityService {
       userId,
     );
     const periodOrchestrator = PeriodOrchestrator.init();
-    newPeriods.map((period) => periodOrchestrator.addPeriod(period));
+    newPeriods.map((period) =>
+      periodOrchestrator.addPeriod(Period.init(period)),
+    );
 
     this.checkPeriodsErrors(periodOrchestrator);
 

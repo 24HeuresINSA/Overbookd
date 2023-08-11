@@ -1,4 +1,4 @@
-import { Period as GeneralPeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
 import { Gear } from "./catalog.model";
 
@@ -25,7 +25,7 @@ export type GearRequestUpdate = Partial<
   Omit<NewPeriodGearRequestCreation, "gearId">
 >;
 
-export interface Period extends GeneralPeriod {
+export interface Period extends IProvidePeriod {
   id: number;
 }
 

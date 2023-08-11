@@ -3,7 +3,7 @@ import { SELECT_BASE_TIMESPAN } from '../assignment/assignment.service';
 import { UserRequest } from '../ft-user-request/dto/ft-user-request.response.dto';
 import { TEAM_SELECT } from '../team/team.service';
 import { FtStatus } from './ft.model';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { TimeSpanBase } from '../assignment/model/ft-time-span.model';
 export class SignaLocation {
   id: number;
@@ -109,7 +109,7 @@ export type LiteFtResponse = Pick<
 export interface AlsoRequestedByFT {
   id: number;
   name: string;
-  period: Period;
+  period: IProvidePeriod;
 }
 
 export type FtIdResponse = {

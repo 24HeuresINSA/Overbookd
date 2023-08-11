@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
@@ -67,7 +67,7 @@ export default Vue.extend({
     },
   },
   computed: {
-    savedAvailabilities(): Period[] {
+    savedAvailabilities(): IProvidePeriod[] {
       return this.$accessor.volunteerAvailability.availabilityRegistery
         .availabilities;
     },
