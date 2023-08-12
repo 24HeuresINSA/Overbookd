@@ -12,7 +12,7 @@ import { SignaType, signaTypes } from '../fa-signa-need/fa-signa-need.model';
 import {
   AnimationCategory,
   animationCategories,
-} from '../fa-site-publish-animation/fa-site-publish-animation.model';
+} from '../public-animation/public-animation.model';
 import { FtStatus, ftStatuses } from '../ft/ft.model';
 
 const DRAFT = 'DRAFT';
@@ -240,16 +240,14 @@ export class FaReviewTeamRepresentation implements FaReviewTeam {
   team: Team;
 }
 
-export interface SitePublishAnimation {
+export interface PublicAnimation {
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
   categories?: AnimationCategory[];
 }
 
-export class SitePublishAnimationRepresentation
-  implements SitePublishAnimation
-{
+export class PublicAnimationRepresentation implements PublicAnimation {
   @ApiProperty({})
   photoLink?: string;
   @ApiProperty({})
@@ -279,7 +277,7 @@ export interface CompleteFaResponse {
   faRefuse: FaReview[];
   feedbacks: FaFeedback[];
   timeWindows: FaTimeWindow[];
-  faSitePublishAnimation: SitePublishAnimation;
+  publicAnimation: PublicAnimation;
   fts: BaseFt[];
 }
 

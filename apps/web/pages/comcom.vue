@@ -1,41 +1,41 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="publishAnimations">
+    <v-data-table :headers="headers" :items="publicAnimations">
       <template #body="{ items }">
         <tbody>
-          <template v-for="publishAnimation in items">
+          <template v-for="publicAnimation in items">
             <tr>
-              <th :rowspan="publishAnimation.fa.timeWindows.length + 1">
+              <th :rowspan="publicAnimation.fa.timeWindows.length + 1">
                 <nuxt-link
-                  :to="`/fa/${publishAnimation.fa.id}`"
+                  :to="`/fa/${publicAnimation.fa.id}`"
                   class="name-text"
                 >
                   <v-chip-group>
-                    <v-chip small>{{ publishAnimation.fa.id }}</v-chip>
+                    <v-chip small>{{ publicAnimation.fa.id }}</v-chip>
                   </v-chip-group>
-                  <v-label> - {{ publishAnimation.fa.name }}</v-label>
+                  <v-label> - {{ publicAnimation.fa.name }}</v-label>
                 </nuxt-link>
               </th>
               <th
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                :rowspan="publicAnimation.fa.timeWindows.length + 1"
                 class="text-center"
               >
                 <v-btn
-                  v-show="publishAnimation.photoLink"
+                  v-show="publicAnimation.photoLink"
                   icon
-                  :href="publishAnimation.photoLink"
+                  :href="publicAnimation.photoLink"
                   target="_blank"
                 >
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
-              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
-                {{ publishAnimation.description }}
+              <td :rowspan="publicAnimation.fa.timeWindows.length + 1">
+                {{ publicAnimation.description }}
               </td>
-              <td :rowspan="publishAnimation.fa.timeWindows.length + 1">
+              <td :rowspan="publicAnimation.fa.timeWindows.length + 1">
                 <v-chip-group column>
                   <v-chip
-                    v-for="category in publishAnimation.categories"
+                    v-for="category in publicAnimation.categories"
                     :key="category"
                   >
                     {{ category }}
@@ -43,10 +43,10 @@
                 </v-chip-group>
               </td>
               <td
-                :rowspan="publishAnimation.fa.timeWindows.length + 1"
+                :rowspan="publicAnimation.fa.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-icon v-if="publishAnimation.isMajor" color="green" large>
+                <v-icon v-if="publicAnimation.isMajor" color="green" large>
                   mdi-check-circle
                 </v-icon>
                 <v-icon v-else color="red" large>mdi-close-circle</v-icon>
@@ -55,7 +55,7 @@
 
             <tr
               v-for="timeWindow in sortTimeWindows(
-                publishAnimation.fa.timeWindows
+                publicAnimation.fa.timeWindows
               )"
               :key="timeWindow.id"
             >
@@ -76,7 +76,7 @@
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import { Header } from "~/utils/models/dataTable";
-import { SitePublishAnimationWithFa } from "~/utils/models/fa";
+import { PublicAnimationWithFa } from "~/utils/models/fa";
 import { PeriodWithId } from "~/utils/models/period";
 
 interface Comcom {
@@ -101,12 +101,12 @@ export default Vue.extend({
     title: "Animations à publier",
   }),
   computed: {
-    publishAnimations(): SitePublishAnimationWithFa[] {
-      return this.$accessor.publishAnimation.publishAnimations;
+    publicAnimations(): PublicAnimationWithFa[] {
+      return this.$accessor.publicAnimation.publicAnimations;
     },
   },
   async beforeMount() {
-    this.$accessor.publishAnimation.fetchAllPublishAnimations();
+    this.$accessor.publicAnimation.fetchAllPublicAnimations();
   },
   methods: {
     formatDate(date: Date): string {
@@ -115,9 +115,9 @@ export default Vue.extend({
     sortTimeWindows(timeWindows: PeriodWithId[]): PeriodWithId[] {
       const sortedTimeWindows = [...timeWindows].sort((a, b) => {
         if (a.start === b.start) {
-          return new Date(a.end).getTime() - new Date(b.end).getTime();
+          return a.end.getTime() - b.end.getTime();
         }
-        return new Date(a.start).getTime() - new Date(b.start).getTime();
+        return a.start.getTime() - b.start.getTime();
       });
       return sortedTimeWindows;
     },

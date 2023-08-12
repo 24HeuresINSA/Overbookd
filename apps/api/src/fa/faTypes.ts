@@ -93,7 +93,7 @@ export const COMPLETE_FA_SELECT = {
       },
     },
   },
-  faSitePublishAnimation: {
+  publicAnimation: {
     select: {
       photoLink: true,
       isFlagship: true,

@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Period } from '../../gear-request/gear-request.model';
 import {
-  SitePublishAnimation,
-  SitePublishAnimationFa,
-} from '../fa-site-publish-animation.model';
-import { LiteFaSitePublishAnimationResponseDto } from './lite-fa-site-publish-animation.response.dto';
+  PublicAnimationWithFa,
+  PublicAnimationFa,
+} from '../public-animation.model';
+import { PublicAnimationResponseDto } from './public-animation.response.dto';
 
 class PeriodRepresentation implements Period {
   @ApiProperty({})
@@ -15,7 +15,7 @@ class PeriodRepresentation implements Period {
   end: Date;
 }
 
-class SitePublishAnimationFaRepresentation implements SitePublishAnimationFa {
+class PublicAnimationRepresentation implements PublicAnimationFa {
   @ApiProperty({})
   id: number;
   @ApiProperty({})
@@ -24,14 +24,14 @@ class SitePublishAnimationFaRepresentation implements SitePublishAnimationFa {
   timeWindows: Period[];
 }
 
-export class FaSitePublishAnimationResponseDto
-  extends LiteFaSitePublishAnimationResponseDto
-  implements SitePublishAnimation
+export class PublicAnimationWithFaResponseDto
+  extends PublicAnimationResponseDto
+  implements PublicAnimationWithFa
 {
   @ApiProperty({
     required: true,
     description: 'The fa linked',
-    type: SitePublishAnimationFaRepresentation,
+    type: PublicAnimationRepresentation,
   })
-  fa: SitePublishAnimationFa;
+  fa: PublicAnimationFa;
 }

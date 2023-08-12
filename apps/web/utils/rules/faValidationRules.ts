@@ -5,7 +5,7 @@ import {
   FaSignaNeed,
   FaTimeWindow,
   FaType,
-  SitePublishAnimation,
+  PublicAnimation,
   SortedStoredGearRequests,
 } from "../models/fa";
 import { GearRequest } from "../models/gearRequests";
@@ -71,29 +71,29 @@ export function hasDescription(value: string | undefined): string | boolean {
   );
 }
 export function hasDescriptionToPublish(fa: Fa): string | boolean {
-  if (!fa.faSitePublishAnimation) return true;
+  if (!fa.publicAnimation) return true;
   return (
-    !!fa.faSitePublishAnimation?.description ||
+    !!fa.publicAnimation?.description ||
     "L'animation n'a pas de description à publier sur le site."
   );
 }
 export function hasPhotoLinkToPublish(fa: Fa): string | boolean {
-  if (!fa.faSitePublishAnimation) return true;
+  if (!fa.publicAnimation) return true;
   return (
-    !!fa.faSitePublishAnimation?.photoLink ||
+    !!fa.publicAnimation?.photoLink ||
     "L'animation n'a pas de photo à publier sur le site."
   );
 }
 export function hasCategoriesToPublish(fa: Fa): string | boolean {
-  if (!fa.faSitePublishAnimation) return true;
+  if (!fa.publicAnimation) return true;
   return (
-    (fa.faSitePublishAnimation?.categories &&
-      fa.faSitePublishAnimation.categories.length > 0) ||
+    (fa.publicAnimation?.categories &&
+      fa.publicAnimation.categories.length > 0) ||
     "L'animation n'a pas de catégorie à publier sur le site."
   );
 }
 export function isPublishable(
-  value: SitePublishAnimation | undefined
+  value: PublicAnimation | undefined
 ): string | boolean {
   return !!value || "L'animation ne sera pas publiée sur le site.";
 }
@@ -107,7 +107,7 @@ export function detailErrors(fa: Fa): string[] {
 export function detailWarnings(fa: Fa): string[] {
   return [
     hasDescription(fa.description),
-    isPublishable(fa.faSitePublishAnimation),
+    isPublishable(fa.publicAnimation),
   ].filter((warning): warning is string => warning !== true);
 }
 

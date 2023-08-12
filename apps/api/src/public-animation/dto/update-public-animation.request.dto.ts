@@ -1,34 +1,35 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import {
   AnimationCategory,
-  LiteSitePublishAnimation as LiteFaSitePublishAnimation,
+  PublicAnimation,
   animationCategories,
-} from '../fa-site-publish-animation.model';
+} from '../public-animation.model';
 
-export class LiteFaSitePublishAnimationResponseDto
-  implements LiteFaSitePublishAnimation
-{
+export class UpdatePublicAnimationRequestDto implements PublicAnimation {
   @ApiProperty({
     required: true,
     description: 'The link to the photo',
-    type: String,
   })
-  photoLink: string;
+  @IsOptional()
+  @IsString()
+  photoLink?: string;
 
   @ApiProperty({
     required: false,
     description: 'Is the activty a flagship one',
   })
+  @IsOptional()
   @IsBoolean()
-  isFlagship: boolean;
+  isFlagship?: boolean;
 
   @ApiProperty({
-    required: true,
+    required: false,
     description: 'The description of the animation',
-    type: String,
   })
-  description: string;
+  @IsOptional()
+  @IsString()
+  description?: string;
 
   @ApiProperty({
     required: true,
@@ -36,5 +37,6 @@ export class LiteFaSitePublishAnimationResponseDto
     enum: animationCategories,
     isArray: true,
   })
-  categories: AnimationCategory[];
+  @IsOptional()
+  categories?: AnimationCategory[];
 }

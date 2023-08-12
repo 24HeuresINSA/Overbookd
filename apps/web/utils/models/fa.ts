@@ -83,13 +83,16 @@ export enum FaCardType {
   WATER = "WATER",
 }
 
-export enum SitePublishAnimationCategoryType {
-  DIVERTISSEMENT = "Divertissement",
-  CULTURE = "Culture",
-  SPORT = "Sport",
-  ENFANT = "Enfant",
-  AUTRE = "Autre",
-}
+export const publicAnimationCategoryTypes = {
+  DIVERTISSEMENT: "Divertissement",
+  CULTURE: "Culture",
+  SPORT: "Sport",
+  ENFANT: "Enfant",
+  AUTRE: "Autre",
+};
+
+export type PublicAnimationCategoryType =
+  keyof typeof publicAnimationCategoryTypes;
 
 export interface BaseFa {
   id: number;
@@ -113,7 +116,7 @@ export interface Fa extends BaseFa {
   faRefuse: FaReview[];
   feedbacks: FaFeedback[];
   timeWindows: FaTimeWindow[];
-  faSitePublishAnimation?: SitePublishAnimation;
+  publicAnimation?: PublicAnimation;
   fts: FtSimplified[];
 }
 
@@ -205,19 +208,18 @@ export interface FaPageId {
   id: number;
 }
 
-export interface SitePublishAnimationCreation {
+export interface PublicAnimationCreation {
   faId: number;
 }
 
-export interface SitePublishAnimation {
+export interface PublicAnimation {
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
-  categories?: SitePublishAnimationCategoryType[];
+  categories?: PublicAnimationCategoryType[];
 }
 
-export interface SitePublishAnimationWithFa
-  extends Required<SitePublishAnimation> {
+export interface PublicAnimationWithFa extends Required<PublicAnimation> {
   fa: {
     id: number;
     name: string;

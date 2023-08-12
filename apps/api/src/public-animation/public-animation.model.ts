@@ -22,18 +22,17 @@ export type AnimationCategory =
   | typeof ENFANT
   | typeof AUTRE;
 
-export interface SitePublishAnimationFa {
+export interface PublicAnimationFa {
   id: number;
   name: string;
   timeWindows: Period[];
 }
 
-export interface SitePublishAnimation
-  extends Required<LiteSitePublishAnimation> {
-  fa: SitePublishAnimationFa;
+export interface PublicAnimationWithFa extends Required<PublicAnimation> {
+  fa: PublicAnimationFa;
 }
 
-export interface LiteSitePublishAnimation {
+export interface PublicAnimation {
   photoLink?: string;
   description?: string;
   isFlagship?: boolean;
