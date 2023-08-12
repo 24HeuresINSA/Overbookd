@@ -21,7 +21,7 @@ pnpm prerelease : update version as realese-candidate (rc) of api and web
 
 ## Les fichiers nécessaires
 
-### Le fichier `dev.env`
+### Le fichier `.env`
 
 Contient toutes les variables d'environnement nécessaires pour le dev. Il est fourni dans se repo.
 
