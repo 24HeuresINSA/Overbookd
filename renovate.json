@@ -1,0 +1,97 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "group:recommended",
+    ":dependencyDashboard"
+  ],
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 0,
+  "reviewers": [
+    "LeoMouyna",
+    "titouan-joseph",
+    "LeonDumestre"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "description": "Group all dependencies from the api directory",
+      "matchFileNames": [
+        "apps/api/**"
+      ],
+      "addLabels": [
+        "Scope::Api"
+      ],
+      "groupName": "API dependencies",
+      "groupSlug": "api-dependencies"
+    },
+    {
+      "description": "Group all dependencies from the web directory",
+      "matchFileNames": [
+        "apps/web/**"
+      ],
+      "addLabels": [
+        "Scope::Web"
+      ],
+      "groupName": "Web dependencies",
+      "groupSlug": "web-dependencies"
+    },
+    {
+      "description": "Group all dependencies from the libs directory",
+      "matchFileNames": [
+        "libraries/**"
+      ],
+      "addLabels": [
+        "Scope::Libs"
+      ],
+      "groupName": "Libs dependencies",
+      "groupSlug": "libs-dependencies"
+    },
+    {
+      "description": "Group all dependencies from the domains directory",
+      "matchFileNames": [
+        "domains/**"
+      ],
+      "addLabels": [
+        "Scope::Domain"
+      ],
+      "groupName": "Domain dependencies",
+      "groupSlug": "domain-dependencies"
+    },
+    {
+      "description": "Group all gitlab-ci dependencies",
+      "matchFileNames": [
+        ".gitlab-ci.yml",
+        ".gitlab/ci/**"
+      ],
+      "addLabels": [
+        "gitlabci"
+      ],
+      "groupName": "Gitlab CI dependencies",
+      "groupSlug": "gitlab-ci-dependencies"
+    },
+    {
+      "description": "Group all Dockerfile dependencies",
+      "matchFileNames": [
+        "**/Dockerfile",
+        "**/docker-compose.yml"
+      ],
+      "addLabels": [
+        "docker"
+      ],
+      "groupName": "Dockerfile dependencies",
+      "groupSlug": "dockerfile-dependencies"
+    },
+    {
+      "matchPackageNames": [
+        "nuxt",
+        "@nuxt/typescript-build",
+        "@nuxtjs/color-mode",
+        "vue"
+      ],
+      "allowedVersions": "<3"
+    }
+  ]
+}
