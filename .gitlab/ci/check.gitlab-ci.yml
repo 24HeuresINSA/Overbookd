@@ -16,6 +16,8 @@
 
 gemnasium-dependency_scanning:
   <<: *security
+  variables:
+    DS_MAX_DEPTH: 5
 
 nodejs-scan-sast:
   <<: *security
