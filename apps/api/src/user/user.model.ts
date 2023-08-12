@@ -1,6 +1,6 @@
 import { MyUserInformation, UserPersonnalData } from '@overbookd/user';
 import { TeamWithNestedPermissions } from '../team/utils/permissions';
-import { Period } from '@overbookd/period';
+import { IProvidePeriod } from '@overbookd/period';
 import { Ft } from '@prisma/client'; // TODO do not use prisma type
 
 export type UserPasswordOnly = {
@@ -13,7 +13,7 @@ export interface DatabaseMyUserInformation
   _count: { assignments: number };
 }
 
-export interface VolunteerTask extends Period {
+export interface VolunteerTask extends IProvidePeriod {
   ft: Pick<Ft, 'id' | 'name' | 'status'>;
   timeSpanId?: number;
 }
