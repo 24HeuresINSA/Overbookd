@@ -97,7 +97,7 @@
       </div>
 
       <div v-show="hasElecWarnings">
-        <h4>Besoin d'électricité </h4>
+        <h4>Besoin d'électricité</h4>
         <ul>
           <li v-for="label in elecWarnings" :key="label">{{ label }}</li>
         </ul>

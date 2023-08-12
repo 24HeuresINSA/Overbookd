@@ -30,7 +30,6 @@
 import Vue from "vue";
 import {
   ElectricityType,
-  Fa,
   FaElectricityNeed,
   electricityTypeLabels,
 } from "~/utils/models/fa";
