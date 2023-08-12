@@ -72,11 +72,7 @@ export default {
     return context.$axios.delete(`${resource}/${faId}/collaborator`);
   },
 
-  updateSignaNeed(
-    context: Context,
-    faId: number,
-    signaNeed: FaSignaNeed
-  ) {
+  updateSignaNeed(context: Context, faId: number, signaNeed: FaSignaNeed) {
     return context.$axios.post<HttpStringified<FaSignaNeed>>(
       `${resource}/${faId}/signa-need`,
       signaNeed
@@ -84,9 +80,7 @@ export default {
   },
 
   deleteSignaNeed(context: Context, faId: number, snId: number) {
-    return context.$axios.delete(
-      `${resource}/${faId}/signa-need/${snId}`
-    );
+    return context.$axios.delete(`${resource}/${faId}/signa-need/${snId}`);
   },
 
   updateAnimationTimeWindow(

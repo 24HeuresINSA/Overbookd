@@ -1,9 +1,7 @@
 <template>
   <v-card class="form-card">
     <v-card-title>
-      <span class="headline">
-        {{ statusFormLabel }} un besoin de signa
-      </span>
+      <span class="headline"> {{ statusFormLabel }} un besoin de signa </span>
     </v-card-title>
 
     <v-card-text>
@@ -23,7 +21,7 @@
         :rules="[rules.number, rules.min]"
       ></v-text-field>
 
-      <v-text-field v-model="size"label="Taille"></v-text-field>
+      <v-text-field v-model="size" label="Taille"></v-text-field>
 
       <v-text-field v-model="comment" label="Commentaire"></v-text-field>
     </v-card-text>
@@ -38,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { SignaType, signaTypes } from "~/utils/models/fa";
+import { SignaType } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 interface SignaNeedData {
@@ -81,7 +79,13 @@ export default Vue.extend({
       return Object.values(SignaType);
     },
     isFormInvalid(): boolean {
-      return this.signaType === undefined || this.text === undefined || !this.text?.trim()  || this.count === undefined || +this.count < 1;
+      return (
+        this.signaType === undefined ||
+        this.text === undefined ||
+        !this.text?.trim() ||
+        this.count === undefined ||
+        +this.count < 1
+      );
     },
     statusFormLabel(): string {
       return this.signaNeed !== null ? "Modifier" : "Ajouter";

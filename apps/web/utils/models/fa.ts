@@ -60,7 +60,6 @@ export const electricityTypeLabels = new Map<ElectricityType, string>([
   [P17_125A_TETRA, "125A Tetra (P17 125A TETRA)"],
 ]);
 
-
 export enum SignaType {
   BACHE = "BACHE",
   PANNEAU = "PANNEAU",

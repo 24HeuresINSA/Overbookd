@@ -55,13 +55,21 @@ import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLoca
 import SignaNeedForm from "~/components/molecules/festivalEvent/logistic/signaNeed/SignaNeedForm.vue";
 import SignaNeedTable from "~/components/molecules/festivalEvent/logistic/signaNeed/SignaNeedTable.vue";
 import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
-import { getFAValidationStatus, isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
+import {
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/festivalEvent/faUtils";
 import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa";
 import { SignaLocation } from "~/utils/models/signaLocation";
 
 export default Vue.extend({
   name: "SignaCard",
-  components: { CardErrorList, SearchSignaLocation, SignaNeedTable, SignaNeedForm },
+  components: {
+    CardErrorList,
+    SearchSignaLocation,
+    SignaNeedTable,
+    SignaNeedForm,
+  },
   data: () => ({
     owner: "signa",
     cardType: FaCardType.SIGNA,
