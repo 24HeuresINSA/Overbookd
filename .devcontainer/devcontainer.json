@@ -2,7 +2,11 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-outside-of-docker-compose
 {
   "name": "overbookd dev",
-  "initializeCommand": "docker build --tag overbookd:dev ./docker && docker network ls | grep traefik-public || docker network create traefik-public",
+  "initializeCommand": {
+    "build-dev-container": "docker build --tag overbookd:dev ./docker",
+    "create-traefik-network-if-not-exist": "docker network ls | grep traefik-public || docker network create traefik-public",
+    "env-var-none-root-user": "echo \"MY_UID=$(id -u $USER)\nMY_GID=$(id -g $USER)\" >> ./docker/.env"
+  },
   "dockerComposeFile": "../docker/docker-compose.yml",
   "service": "bash",
   "workspaceFolder": "/overbookd",
@@ -40,7 +44,13 @@
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "pip install pre-commit && pre-commit install"
+  "postCreateCommand": {
+    "pre-commit-installation": "pip install pre-commit && pre-commit install"
+  },
+  "postStartCommand": {
+    "delete-my-uid-in-dot-env": "sed -i '/^MY_UID=[0-9]\\+/d' ./docker/.env",
+    "delete-my-gid-in-dot-env": "sed -i '/^MY_GID=[0-9]\\+/d' ./docker/.env"
+  }
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"
 }
