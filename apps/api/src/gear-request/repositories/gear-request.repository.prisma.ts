@@ -410,7 +410,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     toInsert,
     toUpdate,
   }: MultiOperandGearRequest): Promise<GearRequest[]> {
-    const [deletion, ...gearRequests] = await this.prismaService.$transaction([
+    const [_deletion, ...gearRequests] = await this.prismaService.$transaction([
       this.prismaRemoveGearRequests(toDelete.map(buildGearRequestIdentifier)),
       ...toInsert.map((gr) => this.prismaAddGearRequest(gr)),
       ...toUpdate.map(

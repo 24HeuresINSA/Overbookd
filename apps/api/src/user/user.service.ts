@@ -163,7 +163,10 @@ type DatabaseUserWithTeamsAndPermissions = UserWithoutPassword & {
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private mail: MailService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mail: MailService,
+  ) {}
   private logger = new Logger('UserService');
 
   async getById(id: number): Promise<MyUserInformation | null> {

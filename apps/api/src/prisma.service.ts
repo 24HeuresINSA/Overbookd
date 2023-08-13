@@ -1,5 +1,6 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -7,14 +8,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     await this.$connect();
   }
 
-  async enableShutdownHooks(app: INestApplication) {
-    this.$on('beforeExit', async () => {
-      await app.close();
-    });
-  }
   isUniqueConstraintViolation(e: Error) {
-    return (
-      e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002'
-    );
+    return e instanceof PrismaClientKnownRequestError && e.code === 'P2002';
   }
 }

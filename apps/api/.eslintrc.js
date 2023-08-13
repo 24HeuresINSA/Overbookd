@@ -23,5 +23,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     'unused-imports/no-unused-imports': 'error',
+    '@typescript-eslint/no-unused-vars': ['error', { 'varsIgnorePattern': '^_', 'ignoreRestSiblings': true }],
+    'no-unused-vars': ['error', { 'varsIgnorePattern': '^_', 'ignoreRestSiblings': true }],
   },
 };
