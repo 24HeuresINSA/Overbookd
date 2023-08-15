@@ -24,10 +24,7 @@ import { TimeSpansGenerator } from './time-spans-generator';
 
 @Injectable()
 export class FtReviewService {
-  constructor(
-    private prisma: PrismaService,
-    private ftService: FtService,
-  ) {}
+  constructor(private prisma: PrismaService, private ftService: FtService) {}
 
   private readonly logger = new Logger(FtReviewService.name);
 
