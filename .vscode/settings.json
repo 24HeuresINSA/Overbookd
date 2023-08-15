@@ -23,7 +23,8 @@
     "list",
     "period",
     "trombinoscope",
-    "renovate"
+    "renovate",
+    "devcontainer"
   ],
   "cSpell.enabled": false,
   "colorize.languages": [

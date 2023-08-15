@@ -8,4 +8,7 @@ ADD --chown=root:root --chmod=644 https://sources.debian.org/data/main/b/bash-co
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
   && apt-get -y install --no-install-recommends \
   python3-pip \
-  vim
+  vim \
+  musl-dev
+
+RUN ln -s /usr/lib/x86_64-linux-musl/libc.so /lib/libc.musl-x86_64.so.1
