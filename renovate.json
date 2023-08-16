@@ -40,7 +40,10 @@
       "groupName": "Web dependencies",
       "groupSlug": "web-dependencies",
       "matchDatasources": ["npm"],
-      "minimumReleaseAge": "3 days"
+      "minimumReleaseAge": "3 days",
+      "excludePackageNames": [
+        "axios"
+      ]
     },
     {
       "description": "Group all dependencies from the libs directory",
