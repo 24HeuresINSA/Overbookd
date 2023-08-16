@@ -8,6 +8,7 @@
       />
       <TiptapMenuItem v-else :key="index" v-bind="item" />
     </template>
+    <slot name="additional-actions" />
   </div>
 </template>
 

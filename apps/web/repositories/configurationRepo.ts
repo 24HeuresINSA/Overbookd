@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Configuration } from "~/utils/models/configuration";
 import { HttpStringified } from "~/utils/types/http";
+import { Configuration } from "@overbookd/configuration";
 
 type Context = { $axios: NuxtAxiosInstance };
 

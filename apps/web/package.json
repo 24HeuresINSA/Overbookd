@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/web",
-  "version": "1.16.4-rc.39",
+  "version": "1.16.4-rc.40",
   "description": "Application web pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -37,8 +37,10 @@
     "@nuxtjs/axios": "5.13.6",
     "@nuxtjs/pwa": "3.3.5",
     "@nuxtjs/vuetify": "1.12.3",
+    "@overbookd/configuration": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
+    "@overbookd/registration": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",
     "@tiptap/pm": "2.0.4",
     "@tiptap/starter-kit": "2.0.4",
@@ -51,9 +53,11 @@
     "nuxt": "2.17.1",
     "nuxt-typed-vuex": "0.3.1",
     "remixicon": "3.5.0",
-    "vue-chartjs": "3.5.1"
+    "vue-chartjs": "3.5.1",
+    "vue-safe-html": "2.2.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "7.22.10",
     "@babel/preset-env": "7.22.10",
     "@jest/globals": "29.6.2",
     "@nuxt/types": "2.17.1",
@@ -67,7 +71,6 @@
     "@typescript-eslint/parser": "4.33.0",
     "@vue/cli-plugin-babel": "5.0.8",
     "axios": "0.21.1",
-    "@babel/eslint-parser": "7.22.10",
     "eslint": "7.32.0",
     "eslint-config-prettier": "7.2.0",
     "eslint-plugin-cypress": "2.14.0",

@@ -5,6 +5,8 @@ import { Departments, Years } from '../src/user/dto/common';
 import { categoriesAndGears } from './seeders/gears';
 import { permissions } from './seeders/permissions';
 import { signaLocations } from './seeders/signa-locations';
+import { Configuration } from '@overbookd/configuration';
+import { defaultCommitmentPresentation } from '@overbookd/registration';
 
 const prisma = new PrismaClient();
 const slugify = new SlugifyService();
@@ -433,7 +435,7 @@ async function main() {
 
   console.log(`\n${savedPermissions.length} permissions inserted`);
 
-  const sgConfig: Prisma.ConfigurationUncheckedCreateInput = {
+  const sgConfig: Configuration = {
     key: 'sg',
     value: {
       prixFutBlonde: 0,
@@ -451,7 +453,7 @@ async function main() {
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
-  const eventDateConfig: Prisma.ConfigurationUncheckedCreateInput = {
+  const eventDateConfig: Configuration = {
     key: 'eventDate',
     value: {
       start: currentDate.toISOString(),
@@ -463,6 +465,18 @@ async function main() {
     update: eventDateConfig,
     create: eventDateConfig,
   });
+  console.log('Creating of register form config');
+  const registerFormConfig: Configuration = {
+    key: 'registerForm',
+    value: {
+      description: defaultCommitmentPresentation,
+    },
+  };
+  await prisma.configuration.upsert({
+    where: { key: 'registerForm' },
+    update: registerFormConfig,
+    create: registerFormConfig,
+  });
 
   const locations = await Promise.all(
     signaLocations.map(({ name }) =>
@@ -470,7 +484,7 @@ async function main() {
     ),
   );
 
-  console.log(`\n${locations.length} Signa Locations inserted ⛳\n`);
+  console.log(`\n${locations.length} Signa Locations inserted ⛳`);
 
   const charismaPeriodData = [];
   for (let i = 0; i < 3; i++) {
@@ -491,7 +505,7 @@ async function main() {
     ),
   );
 
-  console.log(`\n${charismaPeriods.length} Charisma Periods inserted 🎉\n`);
+  console.log(`\n${charismaPeriods.length} Charisma Periods inserted 🎉`);
 }
 main()
   .then(async () => {

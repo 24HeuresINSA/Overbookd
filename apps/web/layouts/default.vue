@@ -142,7 +142,7 @@
 
 <script>
 import { pages } from "~/utils/pages/pagesList.ts";
-const { version } = require("../package.json");
+import { version } from "../package.json";
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",

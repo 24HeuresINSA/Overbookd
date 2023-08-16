@@ -1,6 +1,10 @@
 <template>
   <div v-if="editor" class="editor">
-    <TiptapMenu class="editor__header" :editor="editor" :disabled="true" />
+    <TiptapMenu class="editor__header" :editor="editor" :disabled="true">
+      <template #additional-actions>
+        <slot name="header" />
+      </template>
+    </TiptapMenu>
     <EditorContent
       class="editor__content"
       :class="{ disabled: disabled }"

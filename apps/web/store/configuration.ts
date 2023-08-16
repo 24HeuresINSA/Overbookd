@@ -2,7 +2,8 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { Configuration } from "~/utils/models/configuration";
+import { Configuration } from "@overbookd/configuration";
+import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
@@ -18,6 +19,11 @@ export const getters = getterTree(state, {
     const eventStartString = getters.get("eventDate")?.start;
     if (!eventStartString) return new Date();
     return new Date(eventStartString);
+  },
+  registerFormDescription(_, getters): string {
+    return (
+      getters.get("registerForm")?.description ?? defaultCommitmentPresentation
+    );
   },
 });
 

@@ -20,7 +20,8 @@ import {
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { Configuration, ConfigurationValue } from './configuration.model';
+import { ConfigurationValue } from './configuration.model';
+import { Configuration } from '@overbookd/configuration';
 import { UpsertConfigurationDto } from './dto/upsert-configuration.request.dto';
 
 @ApiTags('configuration')

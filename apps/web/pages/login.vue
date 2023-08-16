@@ -12,9 +12,7 @@
           ></v-img>
         </v-row>
         <v-row class="version justify-center">
-          <h2>
-            {{ version }}
-          </h2>
+          <h2>{{ version }}</h2>
         </v-row>
         <v-row>
           <v-text-field
@@ -52,8 +50,8 @@
           <v-btn
             color="secondary"
             elevation="2"
+            class="btn btn-secondary"
             to="/register"
-            class="signup-btn btn btn-secondary"
           >
             s'inscrire
           </v-btn>
@@ -90,7 +88,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 const REDIRECT_URL = "/";
@@ -140,9 +139,9 @@ const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg",
 ];
-const { version } = require("../package.json");
+import { version } from "../package.json";
 
-export default {
+export default Vue.extend({
   name: "Login",
   auth: false,
   components: { SnackNotificationContainer },
@@ -156,7 +155,7 @@ export default {
     feedbackMessage: undefined,
     timeout: 5000,
     version,
-    randomURL: undefined,
+    randomURL: "",
     isDialogOpen: false,
   }),
 
@@ -188,7 +187,7 @@ export default {
           const audio = new Audio("audio/jaune.m4a");
           await audio.play();
         }
-      } catch (e) {
+      } catch (e: any) {
         if (e.response.status === 429) {
           return this.$store.dispatch("notif/pushNotification", {
             type: "error",
@@ -209,7 +208,7 @@ export default {
       ];
     },
   },
-};
+});
 </script>
 
 <style scoped lang="scss">

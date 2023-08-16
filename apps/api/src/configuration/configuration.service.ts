@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Configuration, ConfigurationValue } from './configuration.model';
+import { ConfigurationValue } from './configuration.model';
+import { Configuration } from '@overbookd/configuration';
 
 @Injectable()
 export class ConfigurationService {

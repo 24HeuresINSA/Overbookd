@@ -14,6 +14,8 @@
     "paths": {
       "~/*": ["./*"],
       "@/*": ["./*"],
+      "@overbookd/configuration": ["../../domains/configuration/src"],
+      "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
       "@overbookd/volunteer-availability": ["../../domains/volunteer-availability/src"]
