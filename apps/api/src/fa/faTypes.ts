@@ -1,4 +1,5 @@
 import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
+import { SELECT_ELECTRICITY_NEED } from '../fa-electricity-need/fa-electricity-need.query';
 import { TEAM_SELECT } from '../team/team.service';
 
 export type ExportSignaNeed = {
@@ -61,14 +62,7 @@ export const COMPLETE_FA_SELECT = {
     },
   },
   electricityNeeds: {
-    select: {
-      id: true,
-      electricityType: true,
-      device: true,
-      power: true,
-      count: true,
-      comment: true,
-    },
+    select: SELECT_ELECTRICITY_NEED,
   },
   signaNeeds: {
     select: {

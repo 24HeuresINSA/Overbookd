@@ -3,8 +3,6 @@ import {
   BaseFt,
   BaseFtRepresentation,
   CompleteFaResponse,
-  FaElectricityNeed,
-  FaElectricityNeedRepresentation,
   FaFeedback,
   FaFeedbackRepresentation,
   FaReview,
@@ -28,6 +26,10 @@ import {
 } from '../fa.model';
 import { CollaboratorWithId } from '../../collaborator/collaborator.model';
 import { CollaboratorResponseDto } from '../../collaborator/dto/collaborator.response.dto';
+import {
+  FaElectricityNeed,
+  FaElectricityNeedRepresentation,
+} from '../../fa-electricity-need/fa-electricity-need.model';
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({

@@ -149,22 +149,26 @@ export const mutations = mutationTree(state, {
     mFA.collaborator = undefined;
   },
 
-  ADD_ELECTRICITY_NEED({ mFA }, elecNeed: FaElectricityNeed) {
-    if (!mFA.electricityNeeds) mFA.electricityNeeds = [];
-    mFA.electricityNeeds?.push(elecNeed);
+  ADD_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
+    mFA.electricityNeeds = [...mFA.electricityNeeds, electricityNeed];
   },
 
-  UPDATE_ELECTRICITY_NEED(
-    { mFA },
-    { index, elecNeed }: { index: number; elecNeed: FaElectricityNeed }
-  ) {
-    const minimumList = mFA.electricityNeeds ?? [];
-    mFA.electricityNeeds = updateItemToList(minimumList, index, elecNeed);
+  UPDATE_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
+    const index = mFA.electricityNeeds.findIndex(
+      (en) => en.id === electricityNeed.id
+    );
+    if (index === -1) return;
+    mFA.electricityNeeds = updateItemToList(
+      mFA.electricityNeeds,
+      index,
+      electricityNeed
+    );
   },
 
-  DELETE_ELECTRICITY_NEED({ mFA }, index: number) {
-    const minimumList = mFA.electricityNeeds ?? [];
-    mFA.electricityNeeds = removeItemAtIndex(minimumList, index);
+  DELETE_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
+    mFA.electricityNeeds = mFA.electricityNeeds.filter(
+      (en) => en.id !== electricityNeed.id
+    );
   },
 
   ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest<"FA">) {
@@ -358,15 +362,6 @@ export const actions = actionTree(
       if (state.mFA.signaNeeds) {
         allPromise.push(
           repo.updateFASignaNeeds(this, state.mFA.id, state.mFA.signaNeeds)
-        );
-      }
-      if (state.mFA.electricityNeeds) {
-        allPromise.push(
-          repo.updateFAElectricityNeeds(
-            this,
-            state.mFA.id,
-            state.mFA.electricityNeeds
-          )
         );
       }
       await Promise.all(allPromise);
@@ -641,24 +636,53 @@ export const actions = actionTree(
       commit("DELETE_COLLABORATOR");
     },
 
-    addElectricityNeed({ commit }, elecNeed: FaElectricityNeed) {
-      commit("ADD_ELECTRICITY_NEED", elecNeed);
+    async addElectricityNeed(
+      { commit, state },
+      electricityNeed: FaElectricityNeed
+    ) {
+      const res = await safeCall(
+        this,
+        repo.updateElectricityNeed(this, state.mFA.id, electricityNeed),
+        {
+          successMessage: "Besoin d'électricité créé 🥳",
+          errorMessage: "Besoin d'électricité non créé 😢",
+        }
+      );
+      if (!res) return;
+      commit("ADD_ELECTRICITY_NEED", res.data);
     },
 
-    updateElectricityNeed({ commit }, { index, elecNeed }) {
-      commit("UPDATE_ELECTRICITY_NEED", { index, elecNeed });
+    async updateElectricityNeed(
+      { state, commit },
+      electricityNeed: FaElectricityNeed
+    ) {
+      const res = await safeCall(
+        this,
+        repo.updateElectricityNeed(this, state.mFA.id, electricityNeed),
+        {
+          successMessage: "Besoin d'électricité modifié 🥳",
+          errorMessage: "Besoin d'électricité non modifié 😢",
+        }
+      );
+      if (!res) return;
+      commit("UPDATE_ELECTRICITY_NEED", res.data);
     },
 
-    async deleteElectricityNeed({ commit, state }, index: number) {
-      const currentElectricityNeedId =
-        state.mFA.electricityNeeds?.at(index)?.id;
-      if (currentElectricityNeedId) {
-        await safeCall(
-          this,
-          repo.deleteFAElectricityNeeds(this, currentElectricityNeedId)
-        );
-      }
-      commit("DELETE_ELECTRICITY_NEED", index);
+    async deleteElectricityNeed(
+      { commit, state },
+      electricityNeed: FaElectricityNeed
+    ) {
+      if (!electricityNeed?.id) return;
+      const res = await safeCall(
+        this,
+        repo.deleteElectricityNeed(this, state.mFA.id, electricityNeed.id),
+        {
+          successMessage: "Besoin d'électricité supprimé 🥳",
+          errorMessage: "Besoin d'électricité non supprimé 😢",
+        }
+      );
+      if (!res) return;
+      commit("DELETE_ELECTRICITY_NEED", electricityNeed);
     },
 
     async addGearRequestRentalPeriod(

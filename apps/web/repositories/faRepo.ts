@@ -86,25 +86,30 @@ export default {
     timeWindow: FaTimeWindow
   ) {
     return context.$axios.post<HttpStringified<FaTimeWindow>>(
-      `${resource}/${faId}/time-windows`,
+      `${resource}/${faId}/time-window`,
       timeWindow
     );
   },
 
   deleteAnimationTimeWindow(context: Context, faId: number, twId: number) {
-    return context.$axios.delete(`${resource}/${faId}/time-windows/${twId}`);
+    return context.$axios.delete(`${resource}/${faId}/time-window/${twId}`);
   },
 
-  updateFAElectricityNeeds(
+  updateElectricityNeed(
     context: Context,
-    id: number,
-    electricityNeeds: FaElectricityNeed[]
+    faId: number,
+    electricityNeed: FaElectricityNeed
   ) {
-    return context.$axios.post(`/fa-electricity-needs/${id}`, electricityNeeds);
+    return context.$axios.post<HttpStringified<FaElectricityNeed>>(
+      `${resource}/${faId}/electricity-need`,
+      electricityNeed
+    );
   },
 
-  deleteFAElectricityNeeds(context: Context, id: number) {
-    return context.$axios.delete(`/fa-electricity-needs/${id}`);
+  deleteElectricityNeed(context: Context, faId: number, enId: number) {
+    return context.$axios.delete(
+      `${resource}/${faId}/electricity-need/${enId}`
+    );
   },
 
   addFAFeedback(context: Context, faId: number, feedback: FeedbackCreation) {

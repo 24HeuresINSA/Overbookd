@@ -30,7 +30,7 @@
         owner="elec"
         :ponctual-usage-gear="false"
       />
-      <ElecLogisticCard id="elec" />
+      <ElectricityNeedCard id="elec" />
       <WaterLogisticCard id="water" />
       <FeedbackCard id="feedback" />
       <ChildFtCard id="ft" />
@@ -48,7 +48,6 @@ import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue"
 import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
 import ChildFtCard from "~/components/organisms/festivalEvent/fa/ChildFtCard.vue";
 import CollaboratorCard from "~/components/organisms/festivalEvent/fa/CollaboratorCard.vue";
-import ElecLogisticCard from "~/components/organisms/festivalEvent/fa/ElecLogisticCard.vue";
 import FaDetailCard from "~/components/organisms/festivalEvent/fa/FaDetailCard.vue";
 import FaGeneralCard from "~/components/organisms/festivalEvent/fa/FaGeneralCard.vue";
 import FaLogisticsCard from "~/components/organisms/festivalEvent/fa/FaLogisticsCard.vue";
@@ -58,11 +57,11 @@ import SignaCard from "~/components/organisms/festivalEvent/fa/SignaCard.vue";
 import WaterLogisticCard from "~/components/organisms/festivalEvent/fa/WaterLogisticCard.vue";
 import FestivalEventSidebar from "~/components/organisms/festivalEvent/FestivalEventSidebar.vue";
 import { Fa } from "~/utils/models/fa";
+import ElectricityNeedCard from "~/components/organisms/festivalEvent/fa/ElectricityNeedCard.vue";
 
 export default Vue.extend({
   name: "Fa",
   components: {
-    ElecLogisticCard,
     SignaCard,
     FaLogisticsCard,
     FaTimeWindowCard,
@@ -77,6 +76,7 @@ export default Vue.extend({
     ChildFtCard,
     FestivalEventBottomBar,
     FeedbackCard,
+    ElectricityNeedCard,
   },
 
   computed: {

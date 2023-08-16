@@ -1,44 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { FaElectricityNeed } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
-import { CreateFaElectricityNeedRequestDto } from './dto/create-fa-electricity-need.request.dto';
+import {
+  FaElectricityNeed,
+  FaElectricityNeedWithOptionalId,
+} from './fa-electricity-need.model';
+import { SELECT_ELECTRICITY_NEED } from './fa-electricity-need.query';
 
 @Injectable()
 export class FaElectricityNeedService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<FaElectricityNeed[]> {
-    return this.prisma.faElectricityNeed.findMany();
-  }
-
-  async findOne(id: number): Promise<FaElectricityNeed | null> {
-    return this.prisma.faElectricityNeed.findUnique({
-      where: { id },
-    });
-  }
-
   async upsert(
     faId: number,
-    createFaElectricityNeedDto: CreateFaElectricityNeedRequestDto[],
-  ): Promise<FaElectricityNeed[]> {
-    const operations = createFaElectricityNeedDto.map((elecneeds) => {
-      const { id, ...rest } = elecneeds;
-      const data = {
-        ...rest,
-        faId,
-      };
-      return this.prisma.faElectricityNeed.upsert({
-        where: { id: id ?? -1 },
-        create: data,
-        update: data,
-      });
+    electricityNeed: FaElectricityNeedWithOptionalId,
+  ): Promise<FaElectricityNeed> {
+    const electricityNeedToUpdate = { ...electricityNeed, faId };
+
+    return this.prisma.faElectricityNeed.upsert({
+      where: { id: electricityNeed?.id ?? -1 },
+      create: electricityNeedToUpdate,
+      update: electricityNeedToUpdate,
+      select: SELECT_ELECTRICITY_NEED,
     });
-    return this.prisma.$transaction(operations);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.prisma.faElectricityNeed.delete({
-      where: { id },
+  async remove(faId: number, id: number): Promise<void> {
+    await this.prisma.faElectricityNeed.deleteMany({
+      where: {
+        AND: [{ id }, { faId }],
+      },
     });
   }
 }
