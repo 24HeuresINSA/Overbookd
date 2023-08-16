@@ -3,7 +3,7 @@ export const defaultCommitmentPresentation =
     <p>
     Le festival des 24 heures de l'INSA n'est possible que grâce aux
     plus de
-    <strong>350 bénévoles</strong> qui, comme toi, ont accepté de venir
+    <strong>400 bénévoles</strong> qui, comme toi, ont accepté de venir
     nous donner un coup de main pour préparer, organiser et faire en
     sorte que les festivaliers passent le meilleur moment possible. 🎉
     </p>
