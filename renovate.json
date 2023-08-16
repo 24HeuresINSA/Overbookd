@@ -25,7 +25,9 @@
         "Scope::Api"
       ],
       "groupName": "API dependencies",
-      "groupSlug": "api-dependencies"
+      "groupSlug": "api-dependencies",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the web directory",
@@ -36,7 +38,9 @@
         "Scope::Web"
       ],
       "groupName": "Web dependencies",
-      "groupSlug": "web-dependencies"
+      "groupSlug": "web-dependencies",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the libs directory",
@@ -47,7 +51,9 @@
         "Scope::Libs"
       ],
       "groupName": "Libs dependencies",
-      "groupSlug": "libs-dependencies"
+      "groupSlug": "libs-dependencies",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the domains directory",
@@ -58,7 +64,9 @@
         "Scope::Domain"
       ],
       "groupName": "Domain dependencies",
-      "groupSlug": "domain-dependencies"
+      "groupSlug": "domain-dependencies",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all gitlab-ci dependencies",
@@ -93,5 +101,7 @@
       ],
       "allowedVersions": "<3"
     }
-  ]
+  ],
+  "rangeStrategy": "pin",
+  "versioning": "npm"
 }
