@@ -1,4 +1,4 @@
-FROM node:18-alpine AS installer
+FROM node:20-alpine AS installer
 
 WORKDIR /overbookd
 
@@ -32,7 +32,7 @@ COPY tsconfig.package.json ./
 COPY tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 ARG VERSION
 
