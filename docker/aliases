@@ -1,3 +1,5 @@
 alias ll='ls -alh'
 alias api='cd /overbookd/apps/api'
 alias web='cd /overbookd/apps/web'
+alias logs-api='docker logs --tail 50 --follow overbookd_api'
+alias logs-web='docker logs --tail 50 --follow overbookd_web'
