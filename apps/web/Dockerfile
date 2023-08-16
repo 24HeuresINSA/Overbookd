@@ -1,4 +1,4 @@
-FROM node:16-alpine AS installer
+FROM node:20-alpine AS installer
 
 WORKDIR /overbookd
 
@@ -33,7 +33,7 @@ ADD tsconfig.library-import.json ./
 ADD tsconfig.package.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci
 
-FROM node:16-alpine
+FROM node:20-alpine
 
 ARG VERSION
 
