@@ -13,10 +13,11 @@
       when: always
     - when: never
 
-license_scanning:
+
+gemnasium-dependency_scanning:
   <<: *security
   variables:
-    LICENSE_FINDER_CLI_OPTS: "--recursive"
+    DS_MAX_DEPTH: 5
 
 nodejs-scan-sast:
   <<: *security
