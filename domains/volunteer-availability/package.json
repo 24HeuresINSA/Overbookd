@@ -32,7 +32,7 @@
   ],
   "engines": {
     "node": ">=16",
-    "pnpm": ">=8"
+    "pnpm": "8.6.12"
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",
