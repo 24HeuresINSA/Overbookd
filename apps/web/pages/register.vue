@@ -18,7 +18,7 @@
         </v-stepper-step>
 
         <v-stepper-content step="1">
-          <div v-html="registerDescription"></div>
+          <div v-safe-html="registerDescription"></div>
           <v-btn color="primary" @click="step = 2"> C'est parti ! 🚀 </v-btn>
           <v-btn text @click="returnToLogin"> Annuler </v-btn>
         </v-stepper-content>

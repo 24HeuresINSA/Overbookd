@@ -38,9 +38,9 @@
     "@nuxtjs/pwa": "3.3.5",
     "@nuxtjs/vuetify": "1.12.3",
     "@overbookd/configuration": "workspace:*",
-    "@overbookd/registration": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
+    "@overbookd/registration": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",
     "@tiptap/pm": "2.0.4",
     "@tiptap/starter-kit": "2.0.4",
@@ -53,9 +53,11 @@
     "nuxt": "2.17.1",
     "nuxt-typed-vuex": "0.3.1",
     "remixicon": "3.5.0",
-    "vue-chartjs": "3.5.1"
+    "vue-chartjs": "3.5.1",
+    "vue-safe-html": "2.2.0"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "7.22.10",
     "@babel/preset-env": "7.22.10",
     "@jest/globals": "29.6.2",
     "@nuxt/types": "2.17.1",
@@ -69,7 +71,6 @@
     "@typescript-eslint/parser": "4.33.0",
     "@vue/cli-plugin-babel": "5.0.8",
     "axios": "0.21.1",
-    "@babel/eslint-parser": "7.22.10",
     "eslint": "7.32.0",
     "eslint-config-prettier": "7.2.0",
     "eslint-plugin-cypress": "2.14.0",

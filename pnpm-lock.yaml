@@ -282,6 +282,9 @@ importers:
       vue-chartjs:
         specifier: 3.5.1
         version: 3.5.1(chart.js@2.9.4)
+      vue-safe-html:
+        specifier: 2.2.0
+        version: 2.2.0
     devDependencies:
       '@babel/eslint-parser':
         specifier: 7.22.10
@@ -18468,6 +18471,10 @@ packages:
       vue: ^2
     dependencies:
       vue: 2.7.14
+    dev: false
+
+  /vue-safe-html@2.2.0:
+    resolution: {integrity: sha512-c36p3zMXU8Sp9j3wD/A4NzjsHLDDHeW2yanc+P0im3u/74V3j1QhSnu8Ybcxm8JPekF7RIetcv/E1qdCiDFTyw==}
     dev: false
 
   /vue-server-renderer@2.7.14:
