@@ -62,7 +62,7 @@ export default Vue.extend({
   }),
   methods: {
     getElectricityTypeLabel(type: ElectricityType): string {
-      return electricityTypeLabels[type as ElectricityType];
+      return electricityTypeLabels.get(type) ?? "";
     },
     updateElectricityNeed(electricityNeed: FaElectricityNeed) {
       this.$emit("update", electricityNeed);
