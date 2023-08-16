@@ -66,7 +66,7 @@
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
     "@vue/cli-plugin-babel": "5.0.8",
-    "axios": "^0.21.1",
+    "axios": "0.21.1",
     "@babel/eslint-parser": "7.22.10",
     "eslint": "7.32.0",
     "eslint-config-prettier": "7.2.0",
@@ -115,7 +115,7 @@
     "testEnvironment": "jsdom"
   },
   "engines": {
-    "node": ">=16",
+    "node": "20.5.1",
     "pnpm": "8.6.12"
   }
 }
