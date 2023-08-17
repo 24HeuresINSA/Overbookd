@@ -65,7 +65,7 @@ export class UpsertFaSignaNeedRequestDto
 
   @ApiProperty({
     required: false,
-    description: 'Any comment abput signa',
+    description: 'Any comment about signa',
   })
   @IsOptional()
   @IsString()

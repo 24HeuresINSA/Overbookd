@@ -50,7 +50,7 @@ export class FaSignaNeedService {
     });
 
     return signaNeed.map((signa) => ({
-      faId: signa.faId,
+      faId: signa.fa.id,
       faName: signa.fa.name,
       signaType: signa.signaType,
       text: signa.text,

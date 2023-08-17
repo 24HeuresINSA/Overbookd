@@ -8,7 +8,6 @@ export const SELECT_SIGNA_NEED = {
 };
 
 export const SELECT_SIGNA_NEED_FOR_EXPORT = {
-  faId: true,
   signaType: true,
   text: true,
   count: true,
@@ -16,6 +15,7 @@ export const SELECT_SIGNA_NEED_FOR_EXPORT = {
   comment: true,
   fa: {
     select: {
+      id: true,
       name: true,
     },
   },
