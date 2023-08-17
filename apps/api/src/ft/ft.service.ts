@@ -103,10 +103,7 @@ export class FtService {
     updateFtDto: UpdateFtRequestDto,
     author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
-    const affectPermission = author.can('affect-volunteer');
-    const isAdmin = author.isAdmin();
-
-    const canAffect = affectPermission || isAdmin;
+    const canAffect = author.can('affect-volunteer');
 
     const ft = canAffect
       ? await this.findOne(id)
