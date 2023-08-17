@@ -30,7 +30,6 @@ export class ConfigurationController {
   constructor(private readonly configurationService: ConfigurationService) {}
 
   @Get()
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get all configurations',
@@ -42,7 +41,6 @@ export class ConfigurationController {
   }
 
   @Get(':key')
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: 'Get configuration by key',
@@ -56,7 +54,6 @@ export class ConfigurationController {
   @ApiBearerAuth()
   @Permission('manage-config')
   @Post(':key')
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: 'Upsert configuration',
@@ -76,6 +73,7 @@ export class ConfigurationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission('manage-config')
+  @Delete(':key')
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -85,7 +83,6 @@ export class ConfigurationController {
     name: 'key',
     description: 'Configuration key',
   })
-  @Delete(':key')
   remove(@Param('key') key: string) {
     return this.configurationService.remove(key);
   }
