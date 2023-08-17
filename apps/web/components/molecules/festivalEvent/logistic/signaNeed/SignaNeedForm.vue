@@ -40,9 +40,9 @@ import { SignaType } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 interface SignaNeedData {
-  signaType?: SignaType;
-  text?: string;
-  count?: string;
+  signaType: SignaType;
+  text: string;
+  count: string;
   size?: string;
   comment?: string;
   rules: {
@@ -64,9 +64,9 @@ export default Vue.extend({
     },
   },
   data: (): SignaNeedData => ({
-    signaType: undefined,
-    text: undefined,
-    count: undefined,
+    signaType: SignaType.AFFICHE,
+    text: "",
+    count: "1",
     size: undefined,
     comment: undefined,
     rules: {
@@ -109,9 +109,9 @@ export default Vue.extend({
       this.comment = this.signaNeed?.comment;
     },
     clearLocalVariable() {
-      this.signaType = undefined;
-      this.text = undefined;
-      this.count = undefined;
+      this.signaType = SignaType.AFFICHE;
+      this.text = "";
+      this.count = "1";
       this.size = undefined;
       this.comment = undefined;
     },
