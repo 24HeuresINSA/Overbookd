@@ -31,7 +31,7 @@ secret_detection:
 
 .lint:
   extends: .check
-  image: node:16-alpine
+  image: node:20-alpine
   before_script:
     - apk update
     - apk add openssh git
@@ -69,7 +69,7 @@ overbookd/web_lint:
 
 overbookd/api_lint:
   extends: .lint
-  image: node:18-alpine
+  image: node:20-alpine
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -84,7 +84,7 @@ overbookd/api_lint:
 
 overbookd/api_prune:
   extends: .check
-  image: node:18-alpine
+  image: node:20-alpine
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
