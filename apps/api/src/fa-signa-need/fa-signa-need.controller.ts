@@ -10,81 +10,96 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiForbiddenResponse,
   ApiParam,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Permission } from '../authentication/permissions-auth.decorator';
 import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { ExportSignaNeed } from '../fa/faTypes';
 import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CreateFaSignaNeedRequestDto } from './dto/create-fa-signa-need.request.dto';
-import { FaSignaNeedExportCsvResponseDto } from './dto/fa-signa-need-export-csv.response.dto';
 import { FaSignaNeedService } from './fa-signa-need.service';
-import { FaSignaNeedRepresentation } from '../fa/fa.model';
+import { FaSignaNeedResponseDto } from './dto/fa-signa-need.response.dto';
+import { UpsertFaSignaNeedRequestDto } from './dto/upsert-fa-signa-need.request.dto';
+import { ExportSignaNeed, FaSignaNeed } from './fa-signa-need.model';
+import { FaSignaNeedExportCsvResponseDto } from './dto/fa-signa-need-export-csv.response.dto';
 
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
 @ApiTags('fa')
-@Controller('fa-signa-needs')
+@ApiBadRequestResponse({
+  description: 'Request is not formated as expected',
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@Controller('fa')
 export class FaSignaNeedController {
   constructor(private readonly faSignaNeedService: FaSignaNeedService) {}
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Post(':faId')
-  @ApiBody({
-    type: CreateFaSignaNeedRequestDto,
+  @Post(':faId/signa-need')
+  @ApiResponse({
+    status: 201,
+    description: 'The fa signa need have been successfully upserted.',
+    type: FaSignaNeedResponseDto,
     isArray: true,
   })
-  @ApiResponse({ status: 201, type: FaSignaNeedRepresentation })
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  @ApiBody({
+    type: UpsertFaSignaNeedRequestDto,
+    description: 'FA signa need to upsert',
+  })
   upsert(
     @Param('faId', ParseIntPipe) faId: number,
-    @Body() createFaSignaNeedDto: CreateFaSignaNeedRequestDto[],
-  ) {
-    return this.faSignaNeedService.upsert(faId, createFaSignaNeedDto);
+    @Body() signaNeed: UpsertFaSignaNeedRequestDto,
+  ): Promise<FaSignaNeed> {
+    return this.faSignaNeedService.upsert(faId, signaNeed);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Get()
-  @ApiResponse({ status: 200, isArray: true, type: FaSignaNeedRepresentation })
-  findAll() {
-    return this.faSignaNeedService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id')
+  @Delete(':faId/signa-need/:id')
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: 'The fa signa need have been successfully deleted.',
+  })
   @ApiParam({
     name: 'id',
     type: Number,
+    description: 'FA signa need id',
+    required: true,
   })
-  @ApiResponse({ status: 200, type: FaSignaNeedRepresentation })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.faSignaNeedService.findOne(id);
+  @ApiParam({
+    name: 'faId',
+    type: Number,
+    description: 'FA id',
+    required: true,
+  })
+  remove(
+    @Param('faId', ParseIntPipe) faId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    return this.faSignaNeedService.remove(faId, id);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission('hard')
-  @Get('export-csv')
+  @Get('signa-need/export-csv')
   @ApiResponse({
     status: 200,
-    description: 'All signaNeeds for export',
+    description: 'All signa needs for export',
     type: FaSignaNeedExportCsvResponseDto,
     isArray: true,
   })
   findSignaNeedsForExport(): Promise<ExportSignaNeed[]> {
     return this.faSignaNeedService.findSignaNeedsForExport();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Delete(':id')
-  @HttpCode(204)
-  @ApiResponse({ status: 204 })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.faSignaNeedService.remove(id);
   }
 }

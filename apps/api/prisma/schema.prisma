@@ -292,9 +292,9 @@ model FaElectricityNeed {
 }
 
 enum SignaType {
-  BANNIERE
-  PANCARTE
+  BACHE
   PANNEAU
+  AFFICHE
 
   @@map("signa_type")
 }
@@ -306,6 +306,7 @@ model FaSignaNeed {
   signaType SignaType @map("signa_type")
   text      String    @db.Text
   count     Int       @default(1)
+  size      String?   @db.VarChar(50)
   comment   String?   @db.Text
 
   @@map("fa_signa_need")

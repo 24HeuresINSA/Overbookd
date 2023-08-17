@@ -7,8 +7,6 @@ import {
   FaFeedbackRepresentation,
   FaReview,
   FaReviewRepresentation,
-  FaSignaNeed,
-  FaSignaNeedRepresentation,
   FaStatus,
   FaTimeWindow,
   FaTimeWindowRepresentation,
@@ -27,9 +25,13 @@ import {
 import { CollaboratorWithId } from '../../collaborator/collaborator.model';
 import { CollaboratorResponseDto } from '../../collaborator/dto/collaborator.response.dto';
 import {
-  FaElectricityNeed,
   FaElectricityNeedRepresentation,
+  FaElectricityNeed,
 } from '../../fa-electricity-need/fa-electricity-need.model';
+import {
+  FaSignaNeedRepresentation,
+  FaSignaNeed,
+} from '../../fa-signa-need/fa-signa-need.model';
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({

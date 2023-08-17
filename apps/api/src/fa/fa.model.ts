@@ -5,12 +5,12 @@ import {
   subjectTypes,
 } from '../fa-feedback/fa-feedback.model';
 import { FaElectricityNeed } from '../fa-electricity-need/fa-electricity-need.model';
-import { SignaType, signaTypes } from '../fa-signa-need/fa-signa-need.model';
 import {
   AnimationCategory,
   animationCategories,
 } from '../public-animation/public-animation.model';
 import { FtStatus, ftStatuses } from '../ft/ft.model';
+import { FaSignaNeed } from '../fa-signa-need/fa-signa-need.model';
 
 const DRAFT = 'DRAFT';
 const SUBMITTED = 'SUBMITTED';
@@ -121,27 +121,6 @@ export class TeamRepresentation implements Team {
   icon: string;
   @ApiProperty({})
   code: string;
-}
-
-export interface FaSignaNeed {
-  id: number;
-  signaType: SignaType;
-  text: string;
-  count: number;
-  comment?: string;
-}
-
-export class FaSignaNeedRepresentation implements FaSignaNeed {
-  @ApiProperty({})
-  id: number;
-  @ApiProperty({ enum: signaTypes })
-  signaType: SignaType;
-  @ApiProperty({})
-  text: string;
-  @ApiProperty({})
-  count: number;
-  @ApiProperty({ required: false })
-  comment?: string;
 }
 
 export interface FaFeedback {

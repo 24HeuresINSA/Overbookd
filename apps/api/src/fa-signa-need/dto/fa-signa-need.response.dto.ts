@@ -9,16 +9,20 @@ import {
   Min,
   ValidationArguments,
 } from 'class-validator';
-import { SignaType, signaTypes } from '../fa-signa-need.model';
+import {
+  FaSignaNeedRepresentation,
+  SignaType,
+  signaTypes,
+} from '../fa-signa-need.model';
 
-export class CreateFaSignaNeedRequestDto {
+export class FaSignaNeedResponseDto implements FaSignaNeedRepresentation {
   @ApiProperty({
-    required: false,
+    required: true,
     description: 'The id of the need',
   })
-  @IsOptional()
+  @IsDefined()
   @IsNumber()
-  id?: number;
+  id: number;
 
   @ApiProperty({
     required: true,
@@ -36,9 +40,8 @@ export class CreateFaSignaNeedRequestDto {
     required: true,
     description: 'The text to display',
   })
-  @IsDefined()
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   text: string;
 
   @ApiProperty({
@@ -52,7 +55,15 @@ export class CreateFaSignaNeedRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Any comment abput signa',
+    description: 'The size of signa',
+  })
+  @IsOptional()
+  @IsString()
+  size?: string;
+
+  @ApiProperty({
+    required: false,
+    description: 'Any comment about signa',
   })
   @IsOptional()
   @IsString()

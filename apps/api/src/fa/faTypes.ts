@@ -1,15 +1,7 @@
 import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
 import { SELECT_ELECTRICITY_NEED } from '../fa-electricity-need/fa-electricity-need.query';
+import { SELECT_SIGNA_NEED } from '../fa-signa-need/fa-signa-need.query';
 import { TEAM_SELECT } from '../team/team.service';
-
-export type ExportSignaNeed = {
-  faId: number;
-  faName: string;
-  signaType: string;
-  text: string;
-  count: number;
-  comment: string;
-};
 
 export type FaIdResponse = {
   id: number;
@@ -65,13 +57,7 @@ export const COMPLETE_FA_SELECT = {
     select: SELECT_ELECTRICITY_NEED,
   },
   signaNeeds: {
-    select: {
-      id: true,
-      signaType: true,
-      text: true,
-      count: true,
-      comment: true,
-    },
+    select: SELECT_SIGNA_NEED,
   },
   feedbacks: {
     select: {
@@ -127,19 +113,6 @@ export const LITE_FA_SELECT = {
   faRefuse: {
     select: {
       team: TEAM_SELECT,
-    },
-  },
-};
-
-export const EXPORT_SIGNA_SELECT = {
-  faId: true,
-  signaType: true,
-  text: true,
-  count: true,
-  comment: true,
-  fa: {
-    select: {
-      name: true,
     },
   },
 };

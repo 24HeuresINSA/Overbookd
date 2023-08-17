@@ -10,29 +10,21 @@ import {
   ValidationArguments,
 } from 'class-validator';
 import {
-  ExportSignaNeedRepresentation,
+  FaSignaNeedWithOptionalIdRepresentation,
   SignaType,
   signaTypes,
 } from '../fa-signa-need.model';
 
-export class FaSignaNeedExportCsvResponseDto
-  implements ExportSignaNeedRepresentation
+export class UpsertFaSignaNeedRequestDto
+  implements FaSignaNeedWithOptionalIdRepresentation
 {
   @ApiProperty({
-    required: true,
-    description: 'the fa id',
+    required: false,
+    description: 'The id of the need',
   })
-  @IsDefined()
+  @IsOptional()
   @IsNumber()
-  faId: number;
-
-  @ApiProperty({
-    required: true,
-    description: 'the fa name',
-  })
-  @IsDefined()
-  @IsString()
-  faName: string;
+  id?: number;
 
   @ApiProperty({
     required: true,
