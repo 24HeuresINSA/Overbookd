@@ -457,6 +457,6 @@ export class UserService {
   }
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
-    return (author.can('manage-users') || author.id === targetUserId);
+    return author.can('manage-users') || author.id === targetUserId;
   }
 }
