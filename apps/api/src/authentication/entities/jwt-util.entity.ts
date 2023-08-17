@@ -18,12 +18,11 @@ export class JwtUtil implements JwtPayload {
     this.id = payload.id;
   }
 
-  isAdmin(): boolean {
-    return this.permissions.includes('admin');
+  private get isAdmin(): boolean {
+    return this.teams.includes('admin');
   }
 
   can(permission: string): boolean {
-    if (this.isAdmin()) return true;
-    return this.permissions.includes(permission);
+    return this.isAdmin || this.permissions.includes(permission);
   }
 }
