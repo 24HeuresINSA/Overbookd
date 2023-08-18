@@ -367,10 +367,10 @@ export class UserService {
       throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
     }
 
-    if (!this.canUpdateCharisma(author)) {
+    if (!author.can('manage-users')) {
       delete userData.charisma;
     }
-    if (!this.canUpdateContributionPayment(author)) {
+    if (!author.can('manage-cp')) {
       delete userData.hasPayedContributions;
     }
 
@@ -456,19 +456,7 @@ export class UserService {
     };
   }
 
-  private canUpdateCharisma(author: JwtUtil): boolean {
-    return author.isAdmin() || author.can('manage-users');
-  }
-
-  private canUpdateContributionPayment(author: JwtUtil): boolean {
-    return author.isAdmin() || author.can('manage-cp');
-  }
-
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
-    return (
-      author.isAdmin() ||
-      author.can('manage-users') ||
-      author.id === targetUserId
-    );
+    return author.can('manage-users') || author.id === targetUserId;
   }
 }

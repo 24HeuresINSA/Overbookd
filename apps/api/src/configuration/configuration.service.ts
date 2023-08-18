@@ -7,15 +7,6 @@ import { Configuration } from '@overbookd/configuration';
 export class ConfigurationService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: Configuration): Promise<Configuration> {
-    return this.prisma.configuration.create({
-      data: {
-        key: data.key,
-        value: data.value,
-      },
-    });
-  }
-
   findAll(): Promise<Configuration[]> {
     return this.prisma.configuration.findMany();
   }
