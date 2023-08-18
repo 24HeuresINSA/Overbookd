@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearForm } from "~/store/catalog";
+import { GearForm } from "~/store/catalog.store";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, minLength } from "~/utils/rules/inputRules";
 import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";

@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalog";
+import { GearSearchOptions } from "~/store/catalog.store";
 import { Gear } from "~/utils/models/catalog.model";
 
 interface SearchGearData {

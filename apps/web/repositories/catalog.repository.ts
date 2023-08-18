@@ -4,7 +4,7 @@ import {
   CategorySearchOptions,
   GearForm,
   GearSearchOptions,
-} from "~/store/catalog";
+} from "~/store/catalog.store";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
 
 export type Context = { $axios: NuxtAxiosInstance };

@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalog";
+import { GearSearchOptions } from "~/store/catalog.store";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/dataTable";
 import { Team } from "~/utils/models/team";

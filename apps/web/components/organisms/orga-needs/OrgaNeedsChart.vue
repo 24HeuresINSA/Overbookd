@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { OrgaNeedsResponse } from "~/store/orgaNeeds";
+import { OrgaNeedsResponse } from "~/store/orga-needs.store";
 
 type Dataset = {
   label: string;
