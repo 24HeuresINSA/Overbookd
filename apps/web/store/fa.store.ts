@@ -1,13 +1,13 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
-import { isAnimationValidatedBy } from "~/utils/festival-event/faUtils";
+import { isAnimationValidatedBy } from "~/utils/festival-event/fa.utils";
 import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
   uniqueByGearReducer,
   uniquePeriodsReducer,
-} from "~/utils/functions/gearRequest";
+} from "~/utils/functions/gear-request";
 import {
   Collaborator,
   CreateFa,
@@ -42,9 +42,9 @@ import {
   StoredGearRequest,
   castGearRequestWithDate,
 } from "~/utils/models/gear-request.model";
-import { User } from "~/utils/models/user";
+import { User } from "~/utils/models/user.model";
 import { sendNotification } from "./catalog.store";
-import { formatUsername } from "~/utils/user/userUtils";
+import { formatUsername } from "~/utils/user/user.utils";
 import { RepoFactory } from "~/repositories/repo-factory";
 
 const repo = RepoFactory.FaRepository;

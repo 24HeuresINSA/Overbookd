@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { CompleteUserWithPermissions } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "ProfilePicture",

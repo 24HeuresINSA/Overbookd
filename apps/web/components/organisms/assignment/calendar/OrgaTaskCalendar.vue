@@ -33,12 +33,12 @@ import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/dateUtils";
+import { computeNextHourDate } from "~/utils/date/date.utils";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
-import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user.model";
+import { formatUsername } from "~/utils/user/user.utils";
 
 interface CalendarItemWithTask extends CalendarEvent {
   timeSpanId?: number;

@@ -63,7 +63,7 @@ import {
   getFTValidationStatusWithMultipleTeams,
   hasAllFTValidations,
   hasAtLeastOneFTValidation,
-} from "~/utils/festival-event/ftUtils";
+} from "~/utils/festival-event/ft.utils";
 import { Ft, FtCardType, FtTimeWindow } from "~/utils/models/ft.model";
 
 enum ConfirmationType {

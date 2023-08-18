@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
 import TimeSpanResume from "../resume/TimeSpanResume.vue";
 import { Volunteer } from "~/utils/models/assignment.model";

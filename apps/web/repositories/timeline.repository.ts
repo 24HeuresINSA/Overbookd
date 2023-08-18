@@ -1,6 +1,6 @@
 import { Period } from "@overbookd/period";
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { TimelineEvent } from "~/utils/models/timeline";
+import { TimelineEvent } from "~/utils/models/timeline.model";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };

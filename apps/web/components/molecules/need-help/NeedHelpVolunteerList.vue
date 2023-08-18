@@ -25,7 +25,7 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Header } from "~/utils/models/data-table.model";
 import { Volunteer } from "~/utils/models/need-help.model";
-import { formatPhoneLink, formatUserPhone } from "~/utils/user/userUtils";
+import { formatPhoneLink, formatUserPhone } from "~/utils/user/user.utils";
 
 export default Vue.extend({
   name: "NeedHelpVolunteerList",

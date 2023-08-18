@@ -43,15 +43,15 @@ import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/dateUtils";
+import { computeNextHourDate } from "~/utils/date/date.utils";
 
 import {
   CompleteUserWithPermissions,
   Task,
   VolunteerAssignmentStat,
   VolunteerTask,
-} from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+} from "~/utils/models/user.model";
+import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 
 interface CalendarEventWithFt {

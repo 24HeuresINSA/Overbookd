@@ -22,7 +22,7 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
+} from "~/utils/festival-event/ft.utils";
 import { Ft, FtCardType } from "~/utils/models/ft.model";
 
 export default Vue.extend({

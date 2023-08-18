@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { getValidationReviews } from "~/utils/festival-event/ftUtils";
+import { getValidationReviews } from "~/utils/festival-event/ft.utils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,
@@ -12,7 +12,7 @@ import {
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
-} from "~/utils/functions/gearRequest";
+} from "~/utils/functions/gear-request";
 import {
   Feedback,
   FeedbackCreation,
@@ -45,9 +45,9 @@ import {
   castGearRequestWithDate,
 } from "~/utils/models/gear-request.model";
 import { Review, Reviewer } from "~/utils/models/review.model";
-import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+import { Team } from "~/utils/models/team.model";
+import { User } from "~/utils/models/user.model";
+import { formatUsername } from "~/utils/user/user.utils";
 
 const repo = RepoFactory.FtRepository;
 

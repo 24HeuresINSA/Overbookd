@@ -4,8 +4,8 @@ import { FtSimplified } from "./ft.model";
 import { StoredGearRequest } from "./gear-request.model";
 import { PeriodWithId } from "./period.model";
 import { SignaLocation } from "./signa-location.model";
-import { Team } from "./team";
-import { DisplayedUser, User } from "./user";
+import { Team } from "./team.model";
+import { DisplayedUser, User } from "./user.model";
 
 export enum FaStatus {
   DRAFT = "DRAFT",

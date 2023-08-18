@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 import { FaStatusLabel } from "~/utils/models/fa.model";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";

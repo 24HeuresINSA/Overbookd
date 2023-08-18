@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 interface SearchTeamData {
   loading: boolean;

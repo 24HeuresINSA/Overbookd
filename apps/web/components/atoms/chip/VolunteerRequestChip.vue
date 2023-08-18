@@ -25,7 +25,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { FtUserRequestImpl } from "~/utils/models/ft.model";
-import { formatUsername } from "~/utils/user/userUtils";
+import { formatUsername } from "~/utils/user/user.utils";
 export default Vue.extend({
   name: "VolunteerRequestChip",
   props: {

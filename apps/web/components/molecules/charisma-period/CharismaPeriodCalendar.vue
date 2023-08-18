@@ -11,7 +11,7 @@
 <script lang="ts">
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
 

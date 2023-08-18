@@ -36,7 +36,7 @@ import Vue from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "NeedHelpFormCard",

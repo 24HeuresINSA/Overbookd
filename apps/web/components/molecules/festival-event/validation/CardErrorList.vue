@@ -20,13 +20,13 @@ import {
   securityErrors,
   signaErrors,
   timeWindowsErrors,
-} from "~/utils/rules/faValidationRules";
+} from "~/utils/rules/fa-validation.rules";
 import {
   ftDetailErrors,
   ftGeneralErrors,
   ftParentFAErrors,
   ftTimeWindowsErrors,
-} from "~/utils/rules/ftValidationRules";
+} from "~/utils/rules/ft-validation.rules";
 
 export default Vue.extend({
   name: "CardErrorList",

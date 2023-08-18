@@ -1,4 +1,4 @@
-import { User } from "../models/user";
+import { User } from "../models/user.model";
 
 export function formatUsername({ firstname, lastname }: User): string {
   return `${firstname} ${lastname}`;

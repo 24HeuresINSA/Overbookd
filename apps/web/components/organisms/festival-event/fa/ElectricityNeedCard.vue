@@ -50,7 +50,7 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import { Fa, FaCardType, FaElectricityNeed } from "~/utils/models/fa.model";
 
 export default Vue.extend({

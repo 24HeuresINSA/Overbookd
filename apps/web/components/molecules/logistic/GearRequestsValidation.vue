@@ -51,8 +51,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { gearRequestsSorts } from "~/utils/functions/gearRequest";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { gearRequestsSorts } from "~/utils/functions/gear-request";
 import { Header } from "~/utils/models/data-table.model";
 import {
   GearRequest,

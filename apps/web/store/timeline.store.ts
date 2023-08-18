@@ -8,13 +8,13 @@ import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriod } from "~/utils/models/period.model";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import {
   TimelineEvent,
   TimelineFt,
   TimelineTimeSpan,
   TimelineTimeWindow,
-} from "~/utils/models/timeline";
+} from "~/utils/models/timeline.model";
 import { HttpStringified } from "~/utils/types/http";
 
 const timelineRepo = RepoFactory.TimelineRepository;

@@ -23,7 +23,7 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
+} from "~/utils/festival-event/ft.utils";
 import { BaseFa } from "~/utils/models/fa.model";
 import { Ft, FtCardType } from "~/utils/models/ft.model";
 

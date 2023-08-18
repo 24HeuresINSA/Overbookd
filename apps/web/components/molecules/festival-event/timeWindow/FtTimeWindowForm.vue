@@ -42,7 +42,7 @@
 <script lang="ts">
 import Vue from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
-import { formatDate, getHourDiff } from "~/utils/date/dateUtils";
+import { formatDate, getHourDiff } from "~/utils/date/date.utils";
 import { Ft, FtTimeWindow } from "~/utils/models/ft.model";
 
 interface FtTimeWindowFormData {

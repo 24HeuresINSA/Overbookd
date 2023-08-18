@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transaction, Transfer } from "~/utils/models/transaction";
+import { Transaction, Transfer } from "~/utils/models/transaction.model";
 
 type Context = { $axios: NuxtAxiosInstance };
 

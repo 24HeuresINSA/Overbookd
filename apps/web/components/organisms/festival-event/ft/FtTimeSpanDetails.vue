@@ -67,11 +67,11 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { TimeSpanWithAssignees } from "~/utils/models/ft-time-span.model";
-import { User } from "~/utils/models/user";
-import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
+import { User } from "~/utils/models/user.model";
+import { formatUserPhone, formatPhoneLink } from "~/utils/user/user.utils";
 
 export default Vue.extend({
   name: "FtTimeSpanDetails",

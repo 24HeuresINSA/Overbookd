@@ -59,7 +59,7 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import { Collaborator, Fa, FaCardType } from "~/utils/models/fa.model";
 
 type VuetifyRule = (value: null | string) => boolean | string;

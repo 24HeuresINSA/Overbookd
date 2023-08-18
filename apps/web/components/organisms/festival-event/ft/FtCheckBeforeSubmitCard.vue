@@ -63,7 +63,7 @@ import {
   ftParentFAErrors,
   ftTimeWindowsErrors,
   hasAtLeastOneFTError,
-} from "~/utils/rules/ftValidationRules";
+} from "~/utils/rules/ft-validation.rules";
 
 export default Vue.extend({
   name: "FtCheckBeforeSubmitCard",

@@ -37,7 +37,7 @@ import {
   TaskPriorities,
   TaskPriority,
 } from "~/utils/models/ft-time-span.model";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 
 export default Vue.extend({

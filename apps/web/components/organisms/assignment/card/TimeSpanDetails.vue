@@ -119,14 +119,14 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
-import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { UpdateAssignedTeam } from "~/utils/models/assignment.model";
 import {
   TimeSpanAssignee,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
-import { User } from "~/utils/models/user";
+import { User } from "~/utils/models/user.model";
 import { isNumber, isString } from "~/utils/types/check";
 
 export default Vue.extend({

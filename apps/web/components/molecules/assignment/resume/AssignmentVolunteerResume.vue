@@ -76,8 +76,8 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Duration } from "~/utils/date/duration";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
-import { sortTeamsForAssignment } from "~/utils/models/team";
-import { formatUsername } from "~/utils/user/userUtils";
+import { sortTeamsForAssignment } from "~/utils/models/team.model";
+import { formatUsername } from "~/utils/user/user.utils";
 
 export default Vue.extend({
   name: "AssignmentVolunteerResume",

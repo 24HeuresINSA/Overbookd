@@ -29,9 +29,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { SortableTimeWindowHeader } from "~/utils/functions/timeWindow";
-import { faTimeWindowsSorts } from "~/utils/functions/timeWindow";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { SortableTimeWindowHeader } from "~/utils/functions/time-window";
+import { faTimeWindowsSorts } from "~/utils/functions/time-window";
 import { Fa, FaTimeWindowWithType } from "~/utils/models/fa.model";
 
 export default Vue.extend({

@@ -58,7 +58,7 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa.model";
 import { SignaLocation } from "~/utils/models/signa-location.model";
 

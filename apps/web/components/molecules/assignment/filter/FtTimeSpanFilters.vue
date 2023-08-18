@@ -45,7 +45,7 @@ import {
   TaskPriorities,
   TaskPriority,
 } from "~/utils/models/ft-time-span.model";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "FtTimeSpanFilters",

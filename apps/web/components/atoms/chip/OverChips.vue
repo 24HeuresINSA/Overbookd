@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "OverChips",

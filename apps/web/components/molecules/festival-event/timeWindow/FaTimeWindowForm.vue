@@ -60,9 +60,9 @@ import {
   hasAllValidations,
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import { Fa, TimeWindowType } from "~/utils/models/fa.model";
-import { MyUserInformation, User } from "~/utils/models/user";
+import { MyUserInformation, User } from "~/utils/models/user.model";
 
 interface FaTimeWindowFormData {
   start?: Date;

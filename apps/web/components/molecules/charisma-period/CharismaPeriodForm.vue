@@ -49,7 +49,7 @@ import {
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charisma-period.model";
-import { isNumber, min, required } from "~/utils/rules/inputRules";
+import { isNumber, min, required } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "CharismaPeriodForm",

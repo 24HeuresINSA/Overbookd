@@ -26,7 +26,7 @@ import {
   formatPhoneLink,
   formatUserPhone,
   formatUsername,
-} from "~/utils/user/userUtils";
+} from "~/utils/user/user.utils";
 
 export default Vue.extend({
   name: "NeedHelpVolunteerResumeCalendarHeader",

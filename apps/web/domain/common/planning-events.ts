@@ -1,4 +1,4 @@
-import { VolunteerTask } from "~/utils/models/user";
+import { VolunteerTask } from "~/utils/models/user.model";
 import { getColorByStatus } from "./status-color";
 
 export type PlanningEvent = {

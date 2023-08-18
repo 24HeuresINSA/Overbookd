@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatLocalDate } from "~/utils/date/dateUtils";
+import { formatLocalDate } from "~/utils/date/date.utils";
 
 export default Vue.extend({
   name: "DateField",

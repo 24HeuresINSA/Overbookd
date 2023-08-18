@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
 
 export default Vue.extend({

@@ -164,7 +164,7 @@
 import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { FaStatus } from "~/utils/models/fa.model";
-import { formatUsername } from "~/utils/user/userUtils";
+import { formatUsername } from "~/utils/user/user.utils";
 
 export default {
   name: "Fa",

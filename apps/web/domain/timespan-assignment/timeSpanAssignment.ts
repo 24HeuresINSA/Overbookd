@@ -1,7 +1,7 @@
 import { Period } from "@overbookd/period";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { Volunteer } from "~/utils/models/assignment.model";
-import { VolunteerTask } from "~/utils/models/user";
+import { VolunteerTask } from "~/utils/models/user.model";
 import { getUnderlyingTeams } from "./underlying-teams";
 
 type TeamRequest = {

@@ -26,7 +26,7 @@ import Vue from "vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import { Fa } from "~/utils/models/fa.model";
 
 export default Vue.extend({

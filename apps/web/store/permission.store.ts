@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { CreatePermissionForm, Permission } from "~/utils/models/permission.model";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { CompleteUserWithPermissions } from "~/utils/models/user.model";
 
 const permissionRepo = RepoFactory.PermissionRepository;
 

@@ -27,7 +27,7 @@ import {
   TaskPriority,
   getRequiredTeamsInFt,
 } from "~/utils/models/ft-time-span.model";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({

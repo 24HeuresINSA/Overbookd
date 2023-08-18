@@ -29,8 +29,8 @@
 <script lang="ts">
 import Vue from "vue";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import { CompleteUserWithPermissions } from "~/utils/models/user.model";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 
 export default Vue.extend({

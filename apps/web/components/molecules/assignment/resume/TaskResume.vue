@@ -23,7 +23,7 @@ import {
   FtWithTimeSpan,
   getRequiredTeamsInFt,
 } from "~/utils/models/ft-time-span.model";
-import { sortTeamsForAssignment } from "~/utils/models/team";
+import { sortTeamsForAssignment } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "TaskResume",

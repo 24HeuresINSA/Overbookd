@@ -33,7 +33,7 @@ import { generateNewPeriod } from "~/utils/availabilities/period";
 import {
   formatDateWithExplicitMonth,
   setDateHour,
-} from "~/utils/date/dateUtils";
+} from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 
 export default Vue.extend({

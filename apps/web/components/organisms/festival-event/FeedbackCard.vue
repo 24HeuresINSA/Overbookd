@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDate } from "~/utils/date/dateUtils";
+import { formatDate } from "~/utils/date/date.utils";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
@@ -34,7 +34,7 @@ import {
   FtFeedback,
   FtFeedbackSubjectType,
 } from "~/utils/models/feedback.model";
-import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user";
+import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "FeedbackCard",

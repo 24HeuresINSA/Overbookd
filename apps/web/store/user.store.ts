@@ -15,7 +15,7 @@ import {
   castUserWithPermissionsWithDate,
   castUsersWithPermissionsWithDate,
   castVolunteerTaskWithDate,
-} from "~/utils/models/user";
+} from "~/utils/models/user.model";
 
 const userRepo = RepoFactory.UserRepository;
 

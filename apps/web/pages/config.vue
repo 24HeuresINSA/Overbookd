@@ -37,7 +37,7 @@ import PermissionsCard from "~/components/organisms/permission/PermissionsCard.v
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import DateField from "~/components/atoms/field/date/DateField.vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import { isSameDay } from "~/utils/date/dateUtils";
+import { isSameDay } from "~/utils/date/date.utils";
 import TiptapMenuItem from "~/components/atoms/field/tiptap/TiptapMenuItem.vue";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 

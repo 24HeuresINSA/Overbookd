@@ -41,7 +41,7 @@ import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { MyUserInformation } from "~/utils/models/user";
+import { MyUserInformation } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "UserCard",

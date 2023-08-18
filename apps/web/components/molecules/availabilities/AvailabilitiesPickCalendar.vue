@@ -51,7 +51,7 @@ import {
   formatDateDayNumber,
   computeTomorrowDate,
   setDateHour,
-} from "~/utils/date/dateUtils";
+} from "~/utils/date/date.utils";
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",

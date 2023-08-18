@@ -35,7 +35,7 @@ import Fuse from "fuse.js";
 import AssignmentVolunteerList from "~/components/molecules/assignment/list/AssignmentVolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import {
   Sort,
   Volunteer,

@@ -1,5 +1,5 @@
 import { SlugifyService } from "~/domain/common/slugify.service";
-import { DisplayedUser } from "../models/user";
+import { DisplayedUser } from "../models/user.model";
 
 export function download(planningBase64Data: string, volunteer: DisplayedUser) {
   const base64Uri = `data:application/pdf;base64,${planningBase64Data}`;

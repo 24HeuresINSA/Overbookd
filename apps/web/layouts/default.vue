@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { pages } from "~/utils/pages/pagesList.ts";
+import { pages } from "~/utils/pages/pages-list.ts";
 import { version } from "../package.json";
 
 const AUTHORS = [

@@ -149,7 +149,7 @@ import {
   signaWarnings,
   timeWindowsErrors,
   waterWarnings,
-} from "~/utils/rules/faValidationRules";
+} from "~/utils/rules/fa-validation.rules";
 
 export default Vue.extend({
   name: "FaCheckBeforeSubmitCard",

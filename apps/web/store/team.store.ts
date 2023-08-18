@@ -1,6 +1,6 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import { safeCall } from "~/utils/api/calls";
 
 const teamRepo = RepoFactory.TeamRepository;
