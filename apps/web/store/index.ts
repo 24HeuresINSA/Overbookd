@@ -1,8 +1,8 @@
 import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 
 // Import all submodules
-import * as assignment from "./assignment";
-import * as catalog from "./catalog";
+import * as assignment from "./assignment.store";
+import * as catalog from "./catalog.store";
 import * as charismaPeriod from "./charismaPeriod";
 import * as configuration from "./configuration";
 import * as dialog from "./dialog";
