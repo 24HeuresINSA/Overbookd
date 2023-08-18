@@ -102,6 +102,7 @@ export default Vue.extend({
   methods: {
     updateLocalVariable() {
       if (!this.signaNeed) return this.clearLocalVariable();
+
       this.signaType = this.signaNeed?.signaType;
       this.text = this.signaNeed?.text;
       this.count = this.signaNeed?.count;
@@ -126,7 +127,7 @@ export default Vue.extend({
         id: this.signaNeed?.id,
         signaType: this.signaType,
         text: this.text?.trim(),
-        count: this.count ? +this.count : undefined,
+        count: +this.count,
         size: this.size?.trim(),
         comment: this.comment?.trim(),
       };
