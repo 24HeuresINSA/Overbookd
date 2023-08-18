@@ -1,0 +1,45 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:security/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": [
+      "./apps/*/tsconfig.json",
+      "./domains/*/tsconfig.json",
+      "./libraries/*/tsconfig.json"
+    ]
+  },
+  "plugins": ["@typescript-eslint", "unused-imports"],
+  "rules": {
+    "quotes": [
+      "error",
+      "single",
+      { "avoidEscape": true, "allowTemplateLiterals": false }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "^_", "ignoreRestSiblings": true }
+    ],
+    "unused-imports/no-unused-imports": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "warn"
+      }
+    }
+  ]
+}

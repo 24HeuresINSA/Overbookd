@@ -11,7 +11,8 @@
     "eamodio.gitlens",
     "Prisma.prisma",
     "dbaeumer.vscode-eslint",
-    "kamikillerto.vscode-colorize"
+    "kamikillerto.vscode-colorize",
+    "rohit-gohri.format-code-action"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []
