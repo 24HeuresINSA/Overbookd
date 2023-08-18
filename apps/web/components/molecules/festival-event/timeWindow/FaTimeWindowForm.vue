@@ -60,7 +60,7 @@ import {
   hasAllValidations,
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import { Fa, TimeWindowType } from "~/utils/models/fa";
 import { MyUserInformation, User } from "~/utils/models/user";
 

@@ -44,13 +44,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import ElectricityNeedForm from "~/components/molecules/festivalEvent/logistic/electricityNeed/ElectricityNeedForm.vue";
-import ElectricityNeedTable from "~/components/molecules/festivalEvent/logistic/electricityNeed/ElectricityNeedTable.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import ElectricityNeedForm from "~/components/molecules/festival-event/logistic/electricityNeed/ElectricityNeedForm.vue";
+import ElectricityNeedTable from "~/components/molecules/festival-event/logistic/electricityNeed/ElectricityNeedTable.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import { Fa, FaCardType, FaElectricityNeed } from "~/utils/models/fa";
 
 export default Vue.extend({

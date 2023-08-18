@@ -20,8 +20,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { getFAValidationStatus } from "~/utils/festivalEvent/faUtils";
-import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
+import { getFAValidationStatus } from "~/utils/festival-event/faUtils";
+import { getFTValidationStatus } from "~/utils/festival-event/ftUtils";
 import { Fa, FaStatusLabel } from "~/utils/models/fa";
 import {
   FtStatusLabel,

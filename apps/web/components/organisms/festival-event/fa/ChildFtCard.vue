@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import NewFtCard from "~/components/molecules/festivalEvent/creation/NewFtCard.vue";
+import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import { Fa } from "~/utils/models/fa";
 import {
   FtSimplified,

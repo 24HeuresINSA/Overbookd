@@ -54,16 +54,16 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FaTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FaTimeWindowForm.vue";
-import FaTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FaTimeWindowTable.vue";
-import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import FaTimeWindowForm from "~/components/molecules/festival-event/timeWindow/FaTimeWindowForm.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
+import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import { formatDateWithMinutes } from "~/utils/date/dateUtils";
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import {
   Fa,
   FaCardType,

@@ -45,11 +45,11 @@ import Vue from "vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festivalEvent/ftUtils";
+} from "~/utils/festival-event/ftUtils";
 import { Ft, FtCardType } from "~/utils/models/ft";
 import { SignaLocation } from "~/utils/models/signaLocation";
 import { Team } from "~/utils/models/team";

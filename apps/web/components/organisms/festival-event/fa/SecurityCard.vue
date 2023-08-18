@@ -40,11 +40,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import { Fa, FaCardType } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 

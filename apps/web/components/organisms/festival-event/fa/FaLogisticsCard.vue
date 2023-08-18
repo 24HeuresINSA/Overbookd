@@ -3,7 +3,7 @@
     <v-card-title>{{ title }}</v-card-title>
     <v-card-text>
       <v-container>
-        <v-form v-if="!isValidatedByMatos" class="flex-row">
+        <v-form v-if="!isValidatedByOwner" class="flex-row">
           <v-text-field
             v-model="quantity"
             type="number"
@@ -12,7 +12,8 @@
           />
           <SearchGear
             :gear="gear"
-            :ponctual-usage="true"
+            :owner="owner"
+            :ponctual-usage="ponctualUsageGear"
             @change="updateCurrentGear"
           ></SearchGear>
           <v-btn
@@ -24,7 +25,7 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-        <FTLogisticsTable :is-disabled="isValidatedByMatos" />
+        <FALogisticsTable :owner="owner" :is-disabled="isValidatedByOwner" />
       </v-container>
     </v-card-text>
   </v-card>
@@ -33,22 +34,30 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
-import FTLogisticsTable from "~/components/molecules/festivalEvent/logistic/FTLogisticsTable.vue";
+import FALogisticsTable from "~/components/molecules/festival-event/logistic/FALogisticsTable.vue";
 import {
-  getFTValidationStatus,
-  isTaskValidatedBy,
-} from "~/utils/festivalEvent/ftUtils";
+  getFAValidationStatus,
+  isAnimationValidatedBy,
+} from "~/utils/festival-event/faUtils";
 import { Gear } from "~/utils/models/catalog.model";
-import { Ft } from "~/utils/models/ft";
+import { Fa } from "~/utils/models/fa";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: "FtLogisticsCard",
-  components: { FTLogisticsTable, SearchGear },
+  name: "FaLogisticsCard",
+  components: { FALogisticsTable, SearchGear },
   props: {
     title: {
       type: String,
       default: () => "",
+    },
+    owner: {
+      type: String,
+      default: () => "",
+    },
+    ponctualUsageGear: {
+      type: Boolean,
+      default: () => undefined,
     },
   },
   data: () => ({
@@ -60,22 +69,22 @@ export default Vue.extend({
     },
   }),
   computed: {
-    mFT(): Ft {
-      return this.$accessor.ft.mFT;
+    mFA(): Fa {
+      return this.$accessor.fa.mFA;
     },
     isValid(): boolean {
       return Boolean(
         this.gear &&
           parseInt(this.quantity) >= 1 &&
-          this.$accessor.ft.gearRequestRentalPeriods.length > 0 &&
-          !this.isValidatedByMatos
+          this.$accessor.fa.gearRequestRentalPeriods.length > 0 &&
+          !this.isValidatedByOwner
       );
     },
-    isValidatedByMatos(): boolean {
-      return isTaskValidatedBy(this.mFT.reviews, "matos");
+    isValidatedByOwner(): boolean {
+      return isAnimationValidatedBy(this.mFA, this.owner);
     },
     validationStatus(): string {
-      return getFTValidationStatus(this.mFT, "matos").toLowerCase();
+      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
   },
   methods: {
@@ -84,18 +93,10 @@ export default Vue.extend({
     },
     addGear() {
       if (!this.gear) return;
-      const gearRequestCreation = {
+      return this.$accessor.fa.addGearRequestForAllRentalPeriods({
         gearId: this.gear.id,
         quantity: parseInt(this.quantity, 10),
-      };
-      if (this.gear.isConsumable) {
-        return this.$accessor.ft.addConsumableGearRequestForAllRentalPeriods(
-          gearRequestCreation
-        );
-      }
-      return this.$accessor.ft.addGearRequestForAllRentalPeriods(
-        gearRequestCreation
-      );
+      });
     },
   },
 });

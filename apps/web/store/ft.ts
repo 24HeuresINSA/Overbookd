@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repoFactory";
 import { safeCall } from "~/utils/api/calls";
-import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
+import { getValidationReviews } from "~/utils/festival-event/ftUtils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,

@@ -18,11 +18,11 @@
 <script lang="ts">
 import Vue from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festivalEvent/ftUtils";
+} from "~/utils/festival-event/ftUtils";
 import { Ft, FtCardType } from "~/utils/models/ft";
 
 export default Vue.extend({

@@ -54,16 +54,16 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FtTimeWindowForm from "~/components/molecules/festivalEvent/timeWindow/FtTimeWindowForm.vue";
-import FtTimeWindowTable from "~/components/molecules/festivalEvent/timeWindow/FtTimeWindowTable.vue";
-import FtVolunteerRequirementForm from "~/components/molecules/festivalEvent/timeWindow/FtVolunteerRequirementForm.vue";
-import FestivalEventCalendar from "~/components/molecules/festivalEvent/timeWindow/FestivalEventCalendar.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import FtTimeWindowForm from "~/components/molecules/festival-event/timeWindow/FtTimeWindowForm.vue";
+import FtTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FtTimeWindowTable.vue";
+import FtVolunteerRequirementForm from "~/components/molecules/festival-event/timeWindow/FtVolunteerRequirementForm.vue";
+import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFTValidationStatusWithMultipleTeams,
   hasAllFTValidations,
   hasAtLeastOneFTValidation,
-} from "~/utils/festivalEvent/ftUtils";
+} from "~/utils/festival-event/ftUtils";
 import { Ft, FtCardType, FtTimeWindow } from "~/utils/models/ft";
 
 enum ConfirmationType {

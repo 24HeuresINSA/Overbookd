@@ -170,12 +170,12 @@ import {
   getFAValidationStatus,
   isAnimationRefusedBy,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import {
   getFTValidationStatus,
   isTaskRefusedBy,
   isTaskValidatedBy,
-} from "~/utils/festivalEvent/ftUtils";
+} from "~/utils/festival-event/ftUtils";
 import { Fa, FaStatus } from "~/utils/models/fa";
 import { Ft, FtStatus } from "~/utils/models/ft";
 import {

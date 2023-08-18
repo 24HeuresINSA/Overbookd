@@ -52,13 +52,13 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import SignaNeedForm from "~/components/molecules/festivalEvent/logistic/signaNeed/SignaNeedForm.vue";
-import SignaNeedTable from "~/components/molecules/festivalEvent/logistic/signaNeed/SignaNeedTable.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import SignaNeedForm from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedForm.vue";
+import SignaNeedTable from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedTable.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa";
 import { SignaLocation } from "~/utils/models/signaLocation";
 

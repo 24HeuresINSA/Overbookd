@@ -45,11 +45,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import { Fa, FaCardType, FaType } from "~/utils/models/fa";
 import { User } from "~/utils/models/user";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";

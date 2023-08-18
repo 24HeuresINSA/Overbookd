@@ -18,12 +18,12 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchFa from "~/components/atoms/field/search/SearchFa.vue";
-import CompleteLogisticsTable from "~/components/molecules/festivalEvent/logistic/CompleteLogisticsTable.vue";
-import CardErrorList from "~/components/molecules/festivalEvent/validation/CardErrorList.vue";
+import CompleteLogisticsTable from "~/components/molecules/festival-event/logistic/CompleteLogisticsTable.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festivalEvent/ftUtils";
+} from "~/utils/festival-event/ftUtils";
 import { BaseFa } from "~/utils/models/fa";
 import { Ft, FtCardType } from "~/utils/models/ft";
 

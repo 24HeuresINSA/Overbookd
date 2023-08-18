@@ -52,7 +52,7 @@ import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
-} from "~/utils/festivalEvent/faUtils";
+} from "~/utils/festival-event/faUtils";
 import { Fa } from "~/utils/models/fa";
 import { Period } from "~/utils/models/gearRequests";
 
