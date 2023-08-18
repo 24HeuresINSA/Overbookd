@@ -34,7 +34,11 @@ import {
   FtFeedback,
   FtFeedbackSubjectType,
 } from "~/utils/models/feedback.model";
-import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user.model";
+import {
+  DisplayedUser,
+  MyUserInformation,
+  User,
+} from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "FeedbackCard",

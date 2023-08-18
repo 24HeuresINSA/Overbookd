@@ -37,7 +37,10 @@ import { computeNextHourDate } from "~/utils/date/date.utils";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
-import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user.model";
+import {
+  VolunteerAssignmentStat,
+  VolunteerTask,
+} from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 
 interface CalendarItemWithTask extends CalendarEvent {

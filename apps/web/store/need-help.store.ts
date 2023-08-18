@@ -10,7 +10,10 @@ import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/need-help.model";
 import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team.model";
-import { DisplayedUser, castVolunteerTaskWithDate } from "~/utils/models/user.model";
+import {
+  DisplayedUser,
+  castVolunteerTaskWithDate,
+} from "~/utils/models/user.model";
 import { HttpStringified } from "~/utils/types/http";
 
 interface NeedHelpState {
