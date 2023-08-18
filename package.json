@@ -22,6 +22,8 @@
     "dev:start": "MY_GID=$(id --group $USER) MY_UID=$(id --user $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env up --detach certs-downloader traefik api postgresql adminer web",
     "dev:stop": "MY_GID=$(id --group $USER) MY_UID=$(id --user $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env stop",
     "dev:bash": "docker run --rm --name overbookd_bash --interactive --tty --user $(id --group $USER):$(id --user $USER) -v ./:/overbookd overbookd:dev sh --login",
+    "format": "pnpm --recursive run format",
+    "lint": "pnpm --recursive run lint",
     "preinstall": "npx only-allow pnpm",
     "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate",
     "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major",
