@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { BaseFa } from "~/utils/models/fa";
+import { BaseFa } from "~/utils/models/fa.model";
 
 interface SearchFaData {
   loading: boolean;

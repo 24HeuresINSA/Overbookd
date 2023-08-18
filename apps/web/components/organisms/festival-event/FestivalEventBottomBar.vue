@@ -176,12 +176,12 @@ import {
   isTaskRefusedBy,
   isTaskValidatedBy,
 } from "~/utils/festival-event/ftUtils";
-import { Fa, FaStatus } from "~/utils/models/fa";
-import { Ft, FtStatus } from "~/utils/models/ft";
+import { Fa, FaStatus } from "~/utils/models/fa.model";
+import { Ft, FtStatus } from "~/utils/models/ft.model";
 import {
   FtTimeSpanParameters,
   TaskCategories,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team";
 import { MyUserInformation, User } from "~/utils/models/user";
 import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";

@@ -44,7 +44,7 @@ import {
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team";
 
 export default Vue.extend({

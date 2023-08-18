@@ -77,7 +77,7 @@ import {
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-} from "~/utils/models/ft";
+} from "~/utils/models/ft.model";
 
 export default Vue.extend({
   name: "FtTimeWindowTable",

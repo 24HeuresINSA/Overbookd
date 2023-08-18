@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Volunteer } from "~/utils/models/needHelp";
+import { Volunteer } from "~/utils/models/need-help.model";
 import {
   formatPhoneLink,
   formatUserPhone,

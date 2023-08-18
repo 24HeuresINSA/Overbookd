@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Ft } from "~/utils/models/ft";
+import { Ft } from "~/utils/models/ft.model";
 
 import {
   ftDetailErrors,

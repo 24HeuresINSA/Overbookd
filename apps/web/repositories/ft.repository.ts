@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { IProvidePeriod } from "@overbookd/period";
-import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
+import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback.model";
 import {
   Ft,
   FtCreation,
@@ -13,16 +13,16 @@ import {
   FtTimeWindowUpdate,
   FtUpdate,
   FtUserRequestUpdate,
-} from "~/utils/models/ft";
-import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft.model";
+import { FtTimeSpanParameters } from "~/utils/models/ft-time-span.model";
 import {
   GearRequestCreation,
   GearRequestUpdate,
   GearRequestWithDrive,
   StoredGearRequest,
-} from "~/utils/models/gearRequests";
-import { Reviewer } from "~/utils/models/review";
-import { StatsPayload } from "~/utils/models/stats";
+} from "~/utils/models/gear-request.model";
+import { Reviewer } from "~/utils/models/review.model";
+import { StatsPayload } from "~/utils/models/stats.model";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 

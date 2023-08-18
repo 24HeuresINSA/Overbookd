@@ -3,13 +3,13 @@ import {
   AssignmentStats,
   BulkAssignmentRequest,
 } from "~/store/assignment.store";
-import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment";
+import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   FtTimeSpanWithRequestedTeams,
   FtWithTimeSpan,
   TimeSpanWithAssignees,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };

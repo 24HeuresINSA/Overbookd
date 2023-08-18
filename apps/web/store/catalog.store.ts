@@ -4,7 +4,7 @@ import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.reposit
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
-import { SnackNotif } from "~/utils/models/store";
+import { SnackNotif } from "~/utils/models/notif.model";
 
 const gearRepository = RepoFactory.GearsRepository;
 const categoryRepository = RepoFactory.CategoryRepository;

@@ -38,7 +38,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Team } from "~/utils/models/team";
-import { nextSortDirection } from "~/utils/models/assignment";
+import { nextSortDirection } from "~/utils/models/assignment.model";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 
 export default Vue.extend({

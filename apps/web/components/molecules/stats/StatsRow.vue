@@ -44,8 +44,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Team } from "~/utils/models/team";
-import { StatsPayload } from "~/utils/models/stats";
-import { FaStatusLabel } from "~/utils/models/fa";
+import { StatsPayload } from "~/utils/models/stats.model";
+import { FaStatusLabel } from "~/utils/models/fa.model";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 
 interface StatsRowData {

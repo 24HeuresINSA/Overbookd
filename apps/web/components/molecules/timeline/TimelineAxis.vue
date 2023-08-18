@@ -17,7 +17,7 @@
 import Vue from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import { formatDateWithHoursAndMinutesOnly } from "~/utils/date/dateUtils";
-import { getPeriodDuration } from "~/utils/models/period";
+import { getPeriodDuration } from "~/utils/models/period.model";
 
 const NB_MARKERS = 9;
 

@@ -24,8 +24,8 @@
 import Vue from "vue";
 import { uniqueGearReducer } from "~/utils/functions/gearRequest";
 import { Gear } from "~/utils/models/catalog.model";
-import { Header } from "~/utils/models/dataTable";
-import { GearRequest } from "~/utils/models/gearRequests";
+import { Header } from "~/utils/models/data-table.model";
+import { GearRequest } from "~/utils/models/gear-request.model";
 
 export default Vue.extend({
   name: "FTLogisticsTable",

@@ -60,7 +60,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festival-event/faUtils";
-import { Collaborator, Fa, FaCardType } from "~/utils/models/fa";
+import { Collaborator, Fa, FaCardType } from "~/utils/models/fa.model";
 
 type VuetifyRule = (value: null | string) => boolean | string;
 

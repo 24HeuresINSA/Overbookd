@@ -61,7 +61,7 @@ import {
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
 } from "~/utils/festival-event/faUtils";
-import { Fa, TimeWindowType } from "~/utils/models/fa";
+import { Fa, TimeWindowType } from "~/utils/models/fa.model";
 import { MyUserInformation, User } from "~/utils/models/user";
 
 interface FaTimeWindowFormData {

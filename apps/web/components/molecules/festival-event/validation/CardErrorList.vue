@@ -11,8 +11,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, FaCardType, FaStatus } from "~/utils/models/fa";
-import { Ft, FtCardType, FtStatus } from "~/utils/models/ft";
+import { Fa, FaCardType, FaStatus } from "~/utils/models/fa.model";
+import { Ft, FtCardType, FtStatus } from "~/utils/models/ft.model";
 import {
   collaboratorErrors,
   detailErrors,

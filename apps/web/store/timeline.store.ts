@@ -7,7 +7,7 @@ import {
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { castPeriod } from "~/utils/models/period";
+import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team";
 import {
   TimelineEvent,

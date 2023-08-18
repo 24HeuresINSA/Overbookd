@@ -39,7 +39,7 @@ import {
   isTaskValidatedBy,
 } from "~/utils/festival-event/ftUtils";
 import { Gear } from "~/utils/models/catalog.model";
-import { Ft } from "~/utils/models/ft";
+import { Ft } from "~/utils/models/ft.model";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({

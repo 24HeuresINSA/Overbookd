@@ -56,7 +56,7 @@ import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.
 import SignaCard from "~/components/organisms/festival-event/fa/SignaCard.vue";
 import WaterLogisticCard from "~/components/organisms/festival-event/fa/WaterLogisticCard.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import { Fa } from "~/utils/models/fa";
+import { Fa } from "~/utils/models/fa.model";
 import ElectricityNeedCard from "~/components/organisms/festival-event/fa/ElectricityNeedCard.vue";
 
 export default Vue.extend({

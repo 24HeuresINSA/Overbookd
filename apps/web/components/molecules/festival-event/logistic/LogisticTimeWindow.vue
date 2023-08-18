@@ -53,8 +53,8 @@ import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
 } from "~/utils/festival-event/faUtils";
-import { Fa } from "~/utils/models/fa";
-import { Period } from "~/utils/models/gearRequests";
+import { Fa } from "~/utils/models/fa.model";
+import { Period } from "~/utils/models/gear-request.model";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",

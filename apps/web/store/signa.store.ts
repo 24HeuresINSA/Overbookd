@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { SignaLocation } from "~/utils/models/signaLocation";
+import { SignaLocation } from "~/utils/models/signa-location.model";
 
 const repo = RepoFactory.SignaLocationRepository;
 

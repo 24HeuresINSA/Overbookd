@@ -34,9 +34,9 @@ import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats
 import { getColorByStatus } from "~/domain/common/status-color";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
 import { computeNextHourDate } from "~/utils/date/dateUtils";
-import { Volunteer } from "~/utils/models/assignment";
-import { CalendarEvent } from "~/utils/models/calendar";
-import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
+import { Volunteer } from "~/utils/models/assignment.model";
+import { CalendarEvent } from "~/utils/models/calendar.model";
+import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
 import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 

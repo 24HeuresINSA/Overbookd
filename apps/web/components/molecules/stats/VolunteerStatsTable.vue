@@ -35,7 +35,7 @@ import {
   TaskCategories,
   TaskCategoryEmoji,
   TaskCategoryEmojis,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import { AssignmentStats } from "~/store/assignment.store";
 import { VolunteerAssignmentStat } from "~/utils/models/user";
 import { Duration } from "~/utils/date/duration";

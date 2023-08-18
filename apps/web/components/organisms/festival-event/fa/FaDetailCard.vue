@@ -73,7 +73,7 @@ import {
   PublicAnimation,
   publicAnimationCategoryTypes,
   PublicAnimationCategoryType,
-} from "~/utils/models/fa";
+} from "~/utils/models/fa.model";
 
 export default Vue.extend({
   name: "FaDetailCard",

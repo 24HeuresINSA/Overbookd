@@ -162,7 +162,7 @@ import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { getFTValidationStatus } from "~/utils/festival-event/ftUtils";
-import { Header } from "~/utils/models/dataTable";
+import { Header } from "~/utils/models/data-table.model";
 import {
   Ft,
   FtSearch,
@@ -170,7 +170,7 @@ import {
   FtStatus,
   FtStatusLabel,
   ftStatusLabels,
-} from "~/utils/models/ft";
+} from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team";
 import { MyUserInformation, User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";

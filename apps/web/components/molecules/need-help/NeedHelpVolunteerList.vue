@@ -23,8 +23,8 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Header } from "~/utils/models/dataTable";
-import { Volunteer } from "~/utils/models/needHelp";
+import { Header } from "~/utils/models/data-table.model";
+import { Volunteer } from "~/utils/models/need-help.model";
 import { formatPhoneLink, formatUserPhone } from "~/utils/user/userUtils";
 
 export default Vue.extend({

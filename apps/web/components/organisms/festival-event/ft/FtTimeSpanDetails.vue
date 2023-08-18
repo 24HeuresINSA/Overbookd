@@ -68,8 +68,8 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
-import { Header } from "~/utils/models/dataTable";
-import { TimeSpanWithAssignees } from "~/utils/models/ftTimeSpan";
+import { Header } from "~/utils/models/data-table.model";
+import { TimeSpanWithAssignees } from "~/utils/models/ft-time-span.model";
 import { User } from "~/utils/models/user";
 import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 

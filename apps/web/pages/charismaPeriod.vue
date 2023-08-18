@@ -37,7 +37,7 @@ import CharismaPeriodTable from "~/components/molecules/charisma-period/Charisma
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-} from "~/utils/models/charismaPeriod";
+} from "~/utils/models/charisma-period.model";
 
 export default Vue.extend({
   name: "CreateCharismaPeriod",

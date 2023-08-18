@@ -27,13 +27,13 @@ import {
   castFaWithDate,
   simplifyCompleteFa,
   toUpdateFa,
-} from "~/utils/models/fa";
+} from "~/utils/models/fa.model";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
   FeedbackCreation,
-} from "~/utils/models/feedback";
-import { Ft } from "~/utils/models/ft";
+} from "~/utils/models/feedback.model";
+import { Ft } from "~/utils/models/ft.model";
 import {
   GearRequest,
   GearRequestCreation,
@@ -41,7 +41,7 @@ import {
   Period,
   StoredGearRequest,
   castGearRequestWithDate,
-} from "~/utils/models/gearRequests";
+} from "~/utils/models/gear-request.model";
 import { User } from "~/utils/models/user";
 import { sendNotification } from "./catalog.store";
 import { formatUsername } from "~/utils/user/userUtils";

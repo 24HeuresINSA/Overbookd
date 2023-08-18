@@ -45,7 +45,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType } from "~/utils/models/fa";
+import { Fa, FaCardType } from "~/utils/models/fa.model";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 export default Vue.extend({

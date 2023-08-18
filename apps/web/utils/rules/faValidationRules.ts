@@ -7,9 +7,9 @@ import {
   FaType,
   PublicAnimation,
   SortedStoredGearRequests,
-} from "../models/fa";
-import { GearRequest } from "../models/gearRequests";
-import { SignaLocation } from "../models/signaLocation";
+} from "../models/fa.model";
+import { GearRequest } from "../models/gear-request.model";
+import { SignaLocation } from "../models/signa-location.model";
 import { Team } from "../models/team";
 import { User } from "../models/user";
 

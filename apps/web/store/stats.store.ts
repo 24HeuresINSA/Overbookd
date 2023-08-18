@@ -1,7 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { StatsPayload } from "~/utils/models/stats";
+import { StatsPayload } from "~/utils/models/stats.model";
 
 export const state = () => ({
   statsFA: [] as StatsPayload[],

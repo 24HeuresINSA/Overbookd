@@ -41,8 +41,8 @@ import {
   Volunteer,
   AssignmentModes,
   getAssignmentModeFromRoute,
-} from "~/utils/models/assignment";
-import { FtTimeSpan } from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/assignment.model";
+import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",

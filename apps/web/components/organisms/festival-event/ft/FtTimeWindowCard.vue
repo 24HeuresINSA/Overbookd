@@ -64,7 +64,7 @@ import {
   hasAllFTValidations,
   hasAtLeastOneFTValidation,
 } from "~/utils/festival-event/ftUtils";
-import { Ft, FtCardType, FtTimeWindow } from "~/utils/models/ft";
+import { Ft, FtCardType, FtTimeWindow } from "~/utils/models/ft.model";
 
 enum ConfirmationType {
   ADD = "Ajout",

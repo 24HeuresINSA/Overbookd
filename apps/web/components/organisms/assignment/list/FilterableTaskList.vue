@@ -26,9 +26,9 @@ import {
   TaskCategory,
   TaskPriority,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team";
-import { TaskPriorities } from "~/utils/models/ftTimeSpan";
+import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "FilterableTaskList",

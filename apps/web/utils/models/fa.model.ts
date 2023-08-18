@@ -1,9 +1,9 @@
 import { HttpStringified } from "../types/http";
-import { FaFeedback } from "./feedback";
-import { FtSimplified } from "./ft";
-import { StoredGearRequest } from "./gearRequests";
-import { PeriodWithId } from "./period";
-import { SignaLocation } from "./signaLocation";
+import { FaFeedback } from "./feedback.model";
+import { FtSimplified } from "./ft.model";
+import { StoredGearRequest } from "./gear-request.model";
+import { PeriodWithId } from "./period.model";
+import { SignaLocation } from "./signa-location.model";
 import { Team } from "./team";
 import { DisplayedUser, User } from "./user";
 

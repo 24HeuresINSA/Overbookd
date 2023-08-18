@@ -69,8 +69,8 @@ import {
   FaCardType,
   FaTimeWindowWithType,
   TimeWindowType,
-} from "~/utils/models/fa";
-import { Period } from "~/utils/models/gearRequests";
+} from "~/utils/models/fa.model";
+import { Period } from "~/utils/models/gear-request.model";
 import { MyUserInformation, User } from "~/utils/models/user";
 
 export default Vue.extend({

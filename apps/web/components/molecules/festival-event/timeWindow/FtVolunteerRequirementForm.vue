@@ -78,7 +78,7 @@ import {
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-} from "~/utils/models/ft";
+} from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { isNumber, min } from "~/utils/rules/inputRules";

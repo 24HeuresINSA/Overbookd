@@ -42,7 +42,7 @@
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repo-factory";
-import { Snack } from "~/utils/models/snack";
+import { Snack } from "~/utils/models/snack.model";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({

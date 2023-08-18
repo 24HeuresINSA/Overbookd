@@ -131,7 +131,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, SortedStoredGearRequests } from "~/utils/models/fa";
+import { Fa, SortedStoredGearRequests } from "~/utils/models/fa.model";
 import {
   collaboratorErrors,
   collaboratorWarnings,

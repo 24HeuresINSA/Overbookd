@@ -51,7 +51,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType, FaElectricityNeed } from "~/utils/models/fa";
+import { Fa, FaCardType, FaElectricityNeed } from "~/utils/models/fa.model";
 
 export default Vue.extend({
   name: "ElectricityNeedCard",

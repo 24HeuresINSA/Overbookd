@@ -1,7 +1,7 @@
 import { mutationTree, actionTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { EventGearRequest } from "~/utils/models/gearRequests";
+import { EventGearRequest } from "~/utils/models/gear-request.model";
 
 const gearRequestRepository = RepoFactory.GearRequestRepository;
 

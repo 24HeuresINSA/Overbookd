@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Volunteer } from "~/utils/models/assignment";
+import { Volunteer } from "~/utils/models/assignment.model";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 

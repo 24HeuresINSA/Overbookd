@@ -24,8 +24,8 @@ import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festival-event/ftUtils";
-import { BaseFa } from "~/utils/models/fa";
-import { Ft, FtCardType } from "~/utils/models/ft";
+import { BaseFa } from "~/utils/models/fa.model";
+import { Ft, FtCardType } from "~/utils/models/ft.model";
 
 export default Vue.extend({
   name: "ParentFaCard",

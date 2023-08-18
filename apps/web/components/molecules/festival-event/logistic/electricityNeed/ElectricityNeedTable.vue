@@ -32,7 +32,7 @@ import {
   ElectricityType,
   FaElectricityNeed,
   electricityTypeLabels,
-} from "~/utils/models/fa";
+} from "~/utils/models/fa.model";
 
 export default Vue.extend({
   name: "ElectricityNeedTable",

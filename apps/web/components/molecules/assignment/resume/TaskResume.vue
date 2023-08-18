@@ -22,7 +22,7 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import { sortTeamsForAssignment } from "~/utils/models/team";
 
 export default Vue.extend({

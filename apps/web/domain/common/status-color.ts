@@ -1,4 +1,4 @@
-import { FtStatus } from "~/utils/models/ft";
+import { FtStatus } from "~/utils/models/ft.model";
 
 const GREY = "grey";
 const RED = "red";

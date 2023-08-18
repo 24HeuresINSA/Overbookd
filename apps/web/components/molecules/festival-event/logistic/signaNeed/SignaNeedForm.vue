@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { SignaType } from "~/utils/models/fa";
+import { SignaType } from "~/utils/models/fa.model";
 import { isNumber, min } from "~/utils/rules/inputRules";
 
 interface SignaNeedData {

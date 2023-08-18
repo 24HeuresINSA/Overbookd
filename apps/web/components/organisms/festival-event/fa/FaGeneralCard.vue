@@ -50,7 +50,7 @@ import {
   getFAValidationStatus,
   isAnimationValidatedBy,
 } from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType, FaType } from "~/utils/models/fa";
+import { Fa, FaCardType, FaType } from "~/utils/models/fa.model";
 import { User } from "~/utils/models/user";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";

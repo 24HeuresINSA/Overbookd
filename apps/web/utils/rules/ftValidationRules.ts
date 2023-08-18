@@ -1,6 +1,6 @@
-import { BaseFa } from "../models/fa";
-import { Ft, FtTimeWindow } from "../models/ft";
-import { SignaLocation } from "../models/signaLocation";
+import { BaseFa } from "../models/fa.model";
+import { Ft, FtTimeWindow } from "../models/ft.model";
+import { SignaLocation } from "../models/signa-location.model";
 import { Team } from "../models/team";
 import { User } from "../models/user";
 

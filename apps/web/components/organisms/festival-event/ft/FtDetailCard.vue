@@ -23,7 +23,7 @@ import {
   getFTValidationStatus,
   isTaskValidatedBy,
 } from "~/utils/festival-event/ftUtils";
-import { Ft, FtCardType } from "~/utils/models/ft";
+import { Ft, FtCardType } from "~/utils/models/ft.model";
 
 export default Vue.extend({
   name: "FtDetailCard",

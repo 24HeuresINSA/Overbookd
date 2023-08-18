@@ -114,7 +114,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CalendarEvent } from "~/utils/models/calendar";
+import { CalendarEvent } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
 

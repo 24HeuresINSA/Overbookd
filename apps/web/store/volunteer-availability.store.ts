@@ -7,7 +7,7 @@ import {
 } from "@overbookd/volunteer-availability";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { castPeriods } from "~/utils/models/period";
+import { castPeriods } from "~/utils/models/period.model";
 import { HttpStringified } from "~/utils/types/http";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;

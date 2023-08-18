@@ -18,7 +18,7 @@
 import Vue from "vue";
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import FilterableTimeSpanList from "~/components/organisms/assignment/list/FilterableTimeSpanList.vue";
-import { Volunteer } from "~/utils/models/assignment";
+import { Volunteer } from "~/utils/models/assignment.model";
 import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";

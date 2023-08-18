@@ -17,7 +17,7 @@ import {
   convertTaskToPlanningEvent,
 } from "~/domain/common/planning-events";
 import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
-import { CalendarUser } from "~/utils/models/calendar";
+import { CalendarUser } from "~/utils/models/calendar.model";
 
 export default Vue.extend({
   name: "CalendarList",

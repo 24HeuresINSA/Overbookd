@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FaSignaNeed } from "~/utils/models/fa";
+import { FaSignaNeed } from "~/utils/models/fa.model";
 
 export default Vue.extend({
   name: "SignaNeedTable",

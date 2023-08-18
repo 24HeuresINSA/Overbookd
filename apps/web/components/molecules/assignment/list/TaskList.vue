@@ -22,7 +22,7 @@ import Vue from "vue";
 import {
   FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 import TaskResume from "../resume/TaskResume.vue";
 
 export default Vue.extend({

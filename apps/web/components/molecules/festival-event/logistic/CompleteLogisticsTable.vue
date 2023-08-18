@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { StoredGearRequest } from "~/utils/models/gearRequests";
+import { StoredGearRequest } from "~/utils/models/gear-request.model";
 
 export default Vue.extend({
   name: "CompleteLogisticsTable",

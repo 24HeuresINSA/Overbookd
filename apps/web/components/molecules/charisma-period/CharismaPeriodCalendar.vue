@@ -12,8 +12,8 @@
 import Vue from "vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
-import { CalendarEvent } from "~/utils/models/calendar";
-import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
+import { CalendarEvent } from "~/utils/models/calendar.model";
+import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
 
 const PRIMARY_COLOR = {
   RED_LEVEL: 33,

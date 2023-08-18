@@ -7,8 +7,8 @@ import {
 import { SlugifyService } from "~/domain/common/slugify.service";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { Volunteer } from "~/utils/models/needHelp";
-import { castPeriod } from "~/utils/models/period";
+import { Volunteer } from "~/utils/models/need-help.model";
+import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team";
 import { DisplayedUser, castVolunteerTaskWithDate } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";

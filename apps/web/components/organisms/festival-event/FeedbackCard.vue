@@ -33,7 +33,7 @@ import {
   Feedback,
   FtFeedback,
   FtFeedbackSubjectType,
-} from "~/utils/models/feedback";
+} from "~/utils/models/feedback.model";
 import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user";
 
 export default Vue.extend({
