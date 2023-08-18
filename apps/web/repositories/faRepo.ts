@@ -72,12 +72,15 @@ export default {
     return context.$axios.delete(`${resource}/${faId}/collaborator`);
   },
 
-  updateFASignaNeeds(context: Context, id: number, signaNeeds: FaSignaNeed[]) {
-    return context.$axios.post(`/fa-signa-needs/${id}`, signaNeeds);
+  updateSignaNeed(context: Context, faId: number, signaNeed: FaSignaNeed) {
+    return context.$axios.post<HttpStringified<FaSignaNeed>>(
+      `${resource}/${faId}/signa-need`,
+      signaNeed
+    );
   },
 
-  deleteFASignaNeeds(context: Context, id: number) {
-    return context.$axios.delete(`/fa-signa-needs/${id}`);
+  deleteSignaNeed(context: Context, faId: number, snId: number) {
+    return context.$axios.delete(`${resource}/${faId}/signa-need/${snId}`);
   },
 
   updateAnimationTimeWindow(
@@ -231,8 +234,8 @@ export default {
   },
 
   exportSignaNeedsForCsv(context: Context) {
-    return context.$axios.get<FaSignaNeedsExportCsv[]>(
-      `/fa-signa-needs/export-csv`
+    return context.$axios.get<HttpStringified<FaSignaNeedsExportCsv[]>>(
+      `${resource}/signa-need/export-csv`
     );
   },
 };

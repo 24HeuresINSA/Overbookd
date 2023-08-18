@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
 import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
 import {
@@ -111,20 +111,17 @@ export const mutations = mutationTree(state, {
   },
 
   ADD_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
-    if (!mFA.signaNeeds) mFA.signaNeeds = [];
-    mFA.signaNeeds?.push(signaNeed);
+    mFA.signaNeeds = [...mFA.signaNeeds, signaNeed];
   },
 
-  UPDATE_SIGNA_NEED_COUNT({ mFA }, { index, count }) {
-    const existingSignaNeeds = mFA.signaNeeds?.at(index);
-    if (existingSignaNeeds) {
-      existingSignaNeeds.count = Number(count);
-    }
+  UPDATE_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
+    const index = mFA.signaNeeds.findIndex((sn) => sn.id === signaNeed.id);
+    if (index === -1) return;
+    mFA.signaNeeds = updateItemToList(mFA.signaNeeds, index, signaNeed);
   },
 
-  DELETE_SIGNA_NEED({ mFA }, index: number) {
-    const minimumList = mFA.signaNeeds ?? [];
-    mFA.signaNeeds = removeItemAtIndex(minimumList, index);
+  DELETE_SIGNA_NEED({ mFA }, signaNeed: FaSignaNeed) {
+    mFA.signaNeeds = mFA.signaNeeds.filter((sn) => sn.id !== signaNeed.id);
   },
 
   ADD_TIME_WINDOW({ mFA }, timeWindow: FaTimeWindow) {
@@ -359,11 +356,6 @@ export const actions = actionTree(
           repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator)
         );
       }
-      if (state.mFA.signaNeeds) {
-        allPromise.push(
-          repo.updateFASignaNeeds(this, state.mFA.id, state.mFA.signaNeeds)
-        );
-      }
       await Promise.all(allPromise);
       dispatch("fetchFa", state.mFA.id);
     },
@@ -547,23 +539,44 @@ export const actions = actionTree(
       commit("ADD_FEEDBACK", { ...res.data, createdAt });
     },
 
-    addSignaNeed({ commit }, signaNeed: FaSignaNeed) {
-      commit("ADD_SIGNA_NEED", signaNeed);
-    },
-
-    updateSignaNeedCount({ commit }, { index, count }) {
-      commit("UPDATE_SIGNA_NEED_COUNT", { index, count });
-    },
-
-    async deleteSignaNeed({ commit, state }, index: number) {
-      const currentSignaNeedId = state.mFA.signaNeeds?.at(index)?.id;
-      if (!currentSignaNeedId) return;
+    async addSignaNeed({ commit, state }, signaNeed: FaSignaNeed) {
       const res = await safeCall(
         this,
-        repo.deleteFASignaNeeds(this, currentSignaNeedId)
+        repo.updateSignaNeed(this, state.mFA.id, signaNeed),
+        {
+          successMessage: "Besoin de signalétique créé 🥳",
+          errorMessage: "Besoin de signalétique non créé 😢",
+        }
       );
       if (!res) return;
-      commit("DELETE_SIGNA_NEED", index);
+      commit("ADD_SIGNA_NEED", res.data);
+    },
+
+    async updateSignaNeed({ state, commit }, signaNeed: FaSignaNeed) {
+      const res = await safeCall(
+        this,
+        repo.updateSignaNeed(this, state.mFA.id, signaNeed),
+        {
+          successMessage: "Besoin de signalétique modifié 🥳",
+          errorMessage: "Besoin de signalétique non modifié 😢",
+        }
+      );
+      if (!res) return;
+      commit("UPDATE_SIGNA_NEED", res.data);
+    },
+
+    async deleteSignaNeed({ commit, state }, signaNeed: FaSignaNeed) {
+      if (!signaNeed?.id) return;
+      const res = await safeCall(
+        this,
+        repo.deleteSignaNeed(this, state.mFA.id, signaNeed.id),
+        {
+          successMessage: "Besoin de signalétique supprimé 🥳",
+          errorMessage: "Besoin de signalétique non supprimé 😢",
+        }
+      );
+      if (!res) return;
+      commit("DELETE_SIGNA_NEED", signaNeed);
     },
 
     addTimeWindow({ commit }, timeWindow: FaTimeWindow) {

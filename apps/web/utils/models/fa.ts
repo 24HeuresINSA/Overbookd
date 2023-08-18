@@ -61,9 +61,9 @@ export const electricityTypeLabels = new Map<ElectricityType, string>([
 ]);
 
 export enum SignaType {
-  BANNIERE = "BANNIERE",
+  BACHE = "BACHE",
   PANNEAU = "PANNEAU",
-  PANCARTE = "PANCARTE",
+  AFFICHE = "AFFICHE",
 }
 
 export enum FaType {
@@ -188,6 +188,7 @@ export interface FaSignaNeed {
   signaType: SignaType;
   text: string;
   count: number;
+  size?: string;
   comment?: string;
 }
 
