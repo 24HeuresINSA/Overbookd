@@ -22,7 +22,7 @@ const repositories = {
   transaction: TransactionRepository,
   FA: FaRepository,
   FT: FtRepository,
-  authRepo: AuthRepository,
+  auth: AuthRepository,
   team: TeamRepository,
   gear: GearsRepository,
   category: CategoryRepository,

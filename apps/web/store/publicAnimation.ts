@@ -1,5 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { PublicAnimationWithFa } from "~/utils/models/fa";
 import { HttpStringified } from "~/utils/types/http";
@@ -22,7 +22,7 @@ export const actions = actionTree(
     async fetchAllPublicAnimations({ commit }) {
       const res = await safeCall(
         this,
-        RepoFactory.faRepo.getAllPublicAnimations(this),
+        RepoFactory.FaRepository.getAllPublicAnimations(this),
         {
           errorMessage: "Probleme lors de la récuperation des animations",
         }

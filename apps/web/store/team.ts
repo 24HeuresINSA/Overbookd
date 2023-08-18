@@ -1,9 +1,9 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { Team } from "~/utils/models/team";
 import { safeCall } from "~/utils/api/calls";
 
-const teamRepo = RepoFactory.teamRepo;
+const teamRepo = RepoFactory.TeamRepository;
 
 // The state types definitions
 interface State {

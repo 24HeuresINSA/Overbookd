@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
 import { safeCall } from "~/utils/api/calls";
 
@@ -52,7 +52,7 @@ export default {
   async beforeMount() {
     const usersCall = await safeCall(
       this.$store,
-      RepoFactory.userRepo.getAllUsernamesWithCP(this)
+      RepoFactory.UserRepository.getAllUsernamesWithCP(this)
     );
     if (usersCall) {
       this.usernames = usersCall.data;
@@ -62,7 +62,7 @@ export default {
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.transactionRepo.getTransactions(this)
+      RepoFactory.TransactionRepository.getTransactions(this)
     );
     if (res) {
       this.transactions = res.data;

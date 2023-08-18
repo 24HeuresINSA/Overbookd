@@ -6,7 +6,7 @@ import {
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charismaPeriod";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 
 const repo = RepoFactory.CharismaPeriodRepository;

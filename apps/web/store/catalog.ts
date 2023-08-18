@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { GearRepository as InventoryGearRepository } from "~/domain/inventory/gear.repository";
 import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.repository";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
 import { SnackNotif } from "~/utils/models/store";

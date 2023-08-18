@@ -6,7 +6,7 @@ import {
 } from "~/domain/inventory/inventory-record";
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 
 const inventoryRepository = RepoFactory.InventoryRepository;
 

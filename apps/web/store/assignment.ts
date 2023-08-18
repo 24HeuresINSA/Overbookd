@@ -4,7 +4,7 @@ import {
   AssignmentCandidate,
   TaskAssignment,
 } from "~/domain/timespan-assignment/timeSpanAssignment";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
   AssignmentModes,
@@ -52,7 +52,7 @@ export type AssignmentStats = {
   stats: VolunteerAssignmentStat[];
 };
 
-const UserRepo = RepoFactory.userRepo;
+const userRepo = RepoFactory.UserRepository;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
 const AvailabilityRepo = RepoFactory.VolunteerAvailabilityRepository;
 
@@ -298,7 +298,7 @@ export const actions = actionTree(
     },
 
     async fetchSelectedVolunteerFriends({ commit }, id: number) {
-      const res = await safeCall(this, UserRepo.getUserFriends(this, id));
+      const res = await safeCall(this, userRepo.getUserFriends(this, id));
       if (!res) return;
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
     },
@@ -321,8 +321,8 @@ export const actions = actionTree(
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
       const [userRequestsRes, assignmentRes, availabilitiesRes] =
         await Promise.all([
-          safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
-          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
+          safeCall(this, userRepo.getUserFtRequests(this, volunteerId)),
+          safeCall(this, userRepo.getVolunteerAssignments(this, volunteerId)),
           safeCall(
             this,
             AvailabilityRepo.getVolunteerAvailabilities(this, volunteerId)

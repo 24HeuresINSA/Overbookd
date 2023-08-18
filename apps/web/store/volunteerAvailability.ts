@@ -5,7 +5,7 @@ import {
   Availability,
   AvailabilityRegistery,
 } from "@overbookd/volunteer-availability";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriods } from "~/utils/models/period";
 import { HttpStringified } from "~/utils/types/http";

@@ -45,9 +45,9 @@ import {
 import { User } from "~/utils/models/user";
 import { sendNotification } from "./catalog";
 import { formatUsername } from "~/utils/user/userUtils";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 
-const repo = RepoFactory.faRepo;
+const repo = RepoFactory.FaRepository;
 
 export const state = () => ({
   FAs: [] as FaSimplified[],

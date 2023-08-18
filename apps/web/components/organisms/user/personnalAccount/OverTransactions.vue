@@ -61,7 +61,7 @@
 
 <script>
 import SnackNotificationContainer from "../../../molecules/snack/SnackNotificationContainer.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 
 export default {
@@ -106,7 +106,7 @@ export default {
     async deleteTransaction(transactionID) {
       const deleteCall = await safeCall(
         this.$store,
-        RepoFactory.transactionRepo.deleteTransaction(this, transactionID)
+        RepoFactory.TransactionRepository.deleteTransaction(this, transactionID)
       );
       if (deleteCall) {
         // update on screen
