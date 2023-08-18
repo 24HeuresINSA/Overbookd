@@ -2,7 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   SignaLocation,
   SignaLocationCreate,
-} from "~/utils/models/signaLocation";
+} from "~/utils/models/signa-location.model";
 
 type Context = { $axios: NuxtAxiosInstance };
 
