@@ -26,177 +26,198 @@ import { StatsPayload } from "~/utils/models/stats";
 import { User } from "~/utils/models/user";
 import { HttpStringified } from "~/utils/types/http";
 
-const resource = "/ft";
 type Context = { $axios: NuxtAxiosInstance };
 
-export default {
-  getAllFTs(context: Context, search?: FtSearch) {
-    return context.$axios.get<HttpStringified<FtSimplified>[]>(resource, {
+export class FtRepository {
+  private static readonly basePath = "ft";
+
+  static getAllFTs(context: Context, search?: FtSearch) {
+    return context.$axios.get<HttpStringified<FtSimplified>[]>(this.basePath, {
       params: search,
     });
-  },
-  getFT(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<Ft>>(`${resource}/${id}`);
-  },
-  createFT(context: Context, ft: FtCreation) {
-    return context.$axios.post<HttpStringified<Ft>>(resource, ft);
-  },
-  getFtStats(context: Context) {
-    return context.$axios.get<StatsPayload>(`${resource}/stats`);
-  },
-  updateFT(context: Context, ft: FtUpdate) {
+  }
+
+  static getFT(context: Context, id: number) {
+    return context.$axios.get<HttpStringified<Ft>>(`${this.basePath}/${id}`);
+  }
+
+  static createFT(context: Context, ft: FtCreation) {
+    return context.$axios.post<HttpStringified<Ft>>(this.basePath, ft);
+  }
+
+  static getFtStats(context: Context) {
+    return context.$axios.get<StatsPayload>(`${this.basePath}/stats`);
+  }
+
+  static updateFT(context: Context, ft: FtUpdate) {
     return context.$axios.patch<HttpStringified<Ft>>(
-      `${resource}/${ft.id}`,
+      `${this.basePath}/${ft.id}`,
       ft
     );
-  },
-  deleteFT(context: Context, id: number) {
-    return context.$axios.delete(`${resource}/${id}`);
-  },
+  }
 
-  submitFT(context: Context, ftId: number) {
+  static deleteFT(context: Context, id: number) {
+    return context.$axios.delete(`${this.basePath}/${id}`);
+  }
+
+  static submitFT(context: Context, ftId: number) {
     return context.$axios.patch<HttpStringified<Ft>>(
-      `${resource}/${ftId}/submit`
+      `${this.basePath}/${ftId}/submit`
     );
-  },
-  validateFT(context: Context, ftId: number, reviewer: Reviewer) {
+  }
+
+  static validateFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<Ft>>(
-      `${resource}/${ftId}/validation`,
+      `${this.basePath}/${ftId}/validation`,
       reviewer
     );
-  },
-  refuseFT(context: Context, ftId: number, reviewer: Reviewer) {
+  }
+
+  static refuseFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<Ft>>(
-      `${resource}/${ftId}/refusal`,
+      `${this.basePath}/${ftId}/refusal`,
       reviewer
     );
-  },
-  switchToReadyForAssignment(
+  }
+
+  static switchToReadyForAssignment(
     context: Context,
     ftId: number,
     timeSpanParameters: FtTimeSpanParameters
   ) {
     return context.$axios.post<HttpStringified<Ft>>(
-      `${resource}/${ftId}/assignment-approval`,
+      `${this.basePath}/${ftId}/assignment-approval`,
       timeSpanParameters
     );
-  },
-  deleteFTReview(context: Context, ftId: number, teamCode: string) {
-    return context.$axios.delete(`${resource}/${ftId}/reviews/${teamCode}`);
-  },
+  }
 
-  getPreviousFT(context: Context, id: number) {
-    return context.$axios.get<FtPageId>(`${resource}/${id}/previous`);
-  },
+  static deleteFTReview(context: Context, ftId: number, teamCode: string) {
+    return context.$axios.delete(
+      `${this.basePath}/${ftId}/reviews/${teamCode}`
+    );
+  }
 
-  getNextFT(context: Context, id: number) {
-    return context.$axios.get<FtPageId>(`${resource}/${id}/next`);
-  },
+  static getPreviousFT(context: Context, id: number) {
+    return context.$axios.get<FtPageId>(`${this.basePath}/${id}/previous`);
+  }
 
-  updateFTTimeWindow(
+  static getNextFT(context: Context, id: number) {
+    return context.$axios.get<FtPageId>(`${this.basePath}/${id}/next`);
+  }
+
+  static updateFTTimeWindow(
     context: Context,
     ftId: number,
     timeWindow: FtTimeWindowUpdate
   ) {
     return context.$axios.post<HttpStringified<FtTimeWindow>>(
-      `${resource}/${ftId}/time-windows`,
+      `${this.basePath}/${ftId}/time-windows`,
       timeWindow
     );
-  },
-  deleteFTTimeWindow(context: Context, ftId: number, twId: number) {
-    return context.$axios.delete(`${resource}/${ftId}/time-windows/${twId}`);
-  },
+  }
 
-  updateFTUserRequests(
+  static deleteFTTimeWindow(context: Context, ftId: number, twId: number) {
+    return context.$axios.delete(
+      `${this.basePath}/${ftId}/time-windows/${twId}`
+    );
+  }
+
+  static updateFTUserRequests(
     context: Context,
     ftId: number,
     twId: number,
     userRequests: FtUserRequestUpdate[]
   ) {
     return context.$axios.post<HttpStringified<User[]>>(
-      `${resource}/${ftId}/time-windows/${twId}/user-requests`,
+      `${this.basePath}/${ftId}/time-windows/${twId}/user-requests`,
       userRequests
     );
-  },
-  deleteFTUserRequest(
+  }
+
+  static deleteFTUserRequest(
     context: Context,
     ftId: number,
     twId: number,
     userId: number
   ) {
     return context.$axios.delete(
-      `${resource}/${ftId}/time-windows/${twId}/user-requests/${userId}`
+      `${this.basePath}/${ftId}/time-windows/${twId}/user-requests/${userId}`
     );
-  },
+  }
 
-  updateFTTeamRequests(
+  static updateFTTeamRequests(
     context: Context,
     ftId: number,
     twId: number,
     teamRequests: FtTeamRequestUpdate[]
   ) {
     return context.$axios.post<HttpStringified<FtTeamRequest[]>>(
-      `${resource}/${ftId}/time-windows/${twId}/team-requests`,
+      `${this.basePath}/${ftId}/time-windows/${twId}/team-requests`,
       teamRequests
     );
-  },
-  deleteFTTeamRequest(
+  }
+
+  static deleteFTTeamRequest(
     context: Context,
     ftId: number,
     twId: number,
     teamCode: string
   ) {
     return context.$axios.delete(
-      `${resource}/${ftId}/time-windows/${twId}/team-requests/${teamCode}`
+      `${this.basePath}/${ftId}/time-windows/${twId}/team-requests/${teamCode}`
     );
-  },
+  }
 
-  addFTFeedback(context: Context, ftId: number, feedback: FeedbackCreation) {
+  static addFTFeedback(
+    context: Context,
+    ftId: number,
+    feedback: FeedbackCreation
+  ) {
     return context.$axios.post<HttpStringified<SavedFeedback>>(
-      `${resource}/${ftId}/feedback`,
+      `${this.basePath}/${ftId}/feedback`,
       feedback
     );
-  },
+  }
 
-  createGearRequest(
+  static createGearRequest(
     context: Context,
     taskId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
     return context.$axios.post<HttpStringified<StoredGearRequest<"FT">>>(
-      `${resource}/${taskId}/gear-requests`,
+      `${this.basePath}/${taskId}/gear-requests`,
       gearRequestCreationForm
     );
-  },
+  }
 
-  getGearRequests(context: Context, taskId: number) {
+  static getGearRequests(context: Context, taskId: number) {
     return context.$axios.get<HttpStringified<StoredGearRequest<"FT">>[]>(
-      `${resource}/${taskId}/gear-requests`
+      `${this.basePath}/${taskId}/gear-requests`
     );
-  },
+  }
 
-  deleteGearRequest(
+  static deleteGearRequest(
     context: Context,
     taskId: number,
     gearId: number,
     rentalPeriodId: number
   ) {
     return context.$axios.delete(
-      `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
+      `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
     );
-  },
+  }
 
-  removeGearRequestRentalPeriod(
+  static removeGearRequestRentalPeriod(
     context: Context,
     taskId: number,
     removalPeriod: IProvidePeriod
   ) {
-    return context.$axios.delete(`${resource}/${taskId}/gear-requests`, {
+    return context.$axios.delete(`${this.basePath}/${taskId}/gear-requests`, {
       data: removalPeriod,
     });
-  },
+  }
 
-  updateGearRequest(
+  static updateGearRequest(
     context: Context,
     taskId: number,
     gearId: number,
@@ -204,12 +225,12 @@ export default {
     gearRequestUpdateForm: GearRequestUpdate
   ) {
     return context.$axios.patch<HttpStringified<StoredGearRequest<"FT">>>(
-      `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
+      `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
     );
-  },
+  }
 
-  validateGearRequest(
+  static validateGearRequest(
     context: Context,
     taskId: number,
     gearRequest: GearRequestWithDrive<"FA" | "FT">
@@ -220,16 +241,8 @@ export default {
       drive,
     } = gearRequest;
     return context.$axios.patch<GearRequestWithDrive<"FT">>(
-      `${resource}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
+      `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
       { drive }
     );
-  },
-
-  // old requests
-  getOrgaRequis(context: Context) {
-    return context.$axios.get(`${resource}/orga-requis`);
-  },
-  myPlanning(context: Context, userId: string) {
-    return context.$axios.get(`${resource}/orga-requis/${userId}`);
-  },
-};
+  }
+}
