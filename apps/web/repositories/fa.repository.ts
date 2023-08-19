@@ -141,7 +141,7 @@ export class FaRepository {
   }
 
   static validateFA(context: Context, id: number, body: FaValidationBody) {
-    return context.$axios.post(`${this.basePath}/${id}/validation`, body);
+    return context.$axios.post<void>(`${this.basePath}/${id}/validation`, body);
   }
 
   static removeFaValidation(context: Context, faId: number, teamId: number) {
@@ -151,7 +151,7 @@ export class FaRepository {
   }
 
   static refuseFA(context: Context, id: number, body: FaValidationBody) {
-    return context.$axios.post(`${this.basePath}/${id}/refusal`, body);
+    return context.$axios.post<void>(`${this.basePath}/${id}/refusal`, body);
   }
 
   static getPreviousFa(context: Context, id: number) {

@@ -1,5 +1,4 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transfer } from "~/utils/models/transaction";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -55,10 +54,6 @@ export class UserRepository {
     return context.$axios.get<HttpStringified<CompleteUser[]>>(
       `${this.basePath}/personnal-account-consummers`
     );
-  }
-
-  static transfer(context: Context, data: Transfer) {
-    return context.$axios.post(`${this.basePath}/transfer`, data);
   }
 
   static async addProfilePicture(context: Context, profilePicture: FormData) {
