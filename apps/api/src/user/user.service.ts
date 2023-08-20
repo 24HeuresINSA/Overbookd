@@ -211,11 +211,11 @@ export class UserService {
       throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
     }
 
-    const filteredUserData = this.filterUpdatableUserData(author, userData);
+    const filteredPersonalData = this.filterUpdatableUserData(author, userData);
 
     const user = await this.prisma.user.update({
       select: SELECT_USER_PERSONNAL_DATA,
-      data: filteredUserData,
+      data: filteredPersonalData,
       where: { id: targetId },
     });
     return UserService.formatToPersonalData(user);

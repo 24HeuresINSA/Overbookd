@@ -1,4 +1,4 @@
-import { UserName } from "./userData";
+import { UserName } from "./user.model";
 
 export interface UserCreateForm extends UserName {
   teamId?: number;

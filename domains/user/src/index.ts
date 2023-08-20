@@ -1,2 +1,2 @@
-export * from "./userData";
-export * from "./userRequest";
+export * from "./user.model";
+export * from "./user-form.model";

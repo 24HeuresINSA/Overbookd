@@ -66,6 +66,7 @@ import { UserService } from './user.service';
 import { UserPersonnalDataResponseDto } from './dto/user-personnal-data.response.dto';
 import { MyUserInformationResponseDto } from './dto/my-user-information.response.dto';
 import { Task } from '../volunteer-planning/domain/task.model';
+
 @ApiTags('users')
 @Controller('users')
 @ApiBadRequestResponse({
