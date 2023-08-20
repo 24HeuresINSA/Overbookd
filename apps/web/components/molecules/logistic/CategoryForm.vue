@@ -40,7 +40,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeamVue from "~/components/atoms/field/search/SearchTeam.vue";
-import { CategoryForm } from "~/store/catalog.store";
+import { CategoryForm } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
 import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";

@@ -1,8 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import {
-  AssignmentStats,
-  BulkAssignmentRequest,
-} from "~/store/assignment.store";
+import { AssignmentStats, BulkAssignmentRequest } from "~/store/assignment";
 import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,

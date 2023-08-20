@@ -43,7 +43,7 @@ import {
   castGearRequestWithDate,
 } from "~/utils/models/gear-request.model";
 import { User } from "~/utils/models/user.model";
-import { sendNotification } from "./catalog.store";
+import { sendNotification } from "./catalog";
 import { formatUsername } from "~/utils/user/user.utils";
 import { RepoFactory } from "~/repositories/repo-factory";
 

@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CategorySearchOptions } from "~/store/catalog.store";
+import { CategorySearchOptions } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
 
 interface SearchCategoryData {

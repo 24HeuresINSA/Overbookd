@@ -1,29 +1,29 @@
 import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 
 // Import all submodules
-import * as assignment from "./assignment.store";
-import * as catalog from "./catalog.store";
-import * as charismaPeriod from "./charisma-period.store";
-import * as configuration from "./configuration.store";
-import * as dialog from "./dialog.store";
-import * as fa from "./fa.store";
-import * as ft from "./ft.store";
-import * as gearRequest from "./gear-request.store";
-import * as inventory from "./inventory.store";
-import * as needHelp from "./need-help.store";
-import * as notif from "./notif.store";
-import * as orgaNeeds from "./orga-needs.store";
-import * as permission from "./permission.store";
-import * as planning from "./planning.store";
-import * as publicAnimation from "./public-animation.store";
-import * as signa from "./signa.store";
-import * as stats from "./stats.store";
-import * as team from "./team.store";
-import * as theme from "./theme.store";
-import * as timeline from "./timeline.store";
-import * as transaction from "./transaction.store";
-import * as user from "./user.store";
-import * as volunteerAvailability from "./volunteer-availability.store";
+import * as assignment from "./assignment";
+import * as catalog from "./catalog";
+import * as charismaPeriod from "./charisma-period";
+import * as configuration from "./configuration";
+import * as dialog from "./dialog";
+import * as fa from "./fa";
+import * as ft from "./ft";
+import * as gearRequest from "./gear-request";
+import * as inventory from "./inventory";
+import * as needHelp from "./need-help";
+import * as notif from "./notif";
+import * as orgaNeeds from "./orga-needs";
+import * as permission from "./permission";
+import * as planning from "./planning";
+import * as publicAnimation from "./public-animation";
+import * as signa from "./signa";
+import * as stats from "./stats";
+import * as team from "./team";
+import * as theme from "./theme";
+import * as timeline from "./timeline";
+import * as transaction from "./transaction";
+import * as user from "./user";
+import * as volunteerAvailability from "./volunteer-availability";
 
 export const state = () => ({});
 

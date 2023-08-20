@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { InventoryRecord } from "~/domain/inventory/inventory-record";
-import { InventoryGroupedRecord } from "~/store/inventory.store";
+import { InventoryGroupedRecord } from "~/store/inventory";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
