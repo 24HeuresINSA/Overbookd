@@ -27,6 +27,11 @@ DELETE FROM "volunteer_availability";
 UPDATE "team" SET code = 'beboo' WHERE code = 'maman';
 UPDATE "team" SET name = 'BeBoo' WHERE name = 'maman';
 
+-- Add new teams : roti and benevole
+INSERT INTO "team" (code, name, color, icon) VALUES
+('roti', 'roti', '#40F6D8', 'mdi-glass-mug-variant'),
+('benevole', 'bénévole', '#09A1C4', 'mdi-account');
+
 -- Set too false all has_payed_contributions to false for all user
 UPDATE "user" SET has_payed_contributions = false;
 
