@@ -191,8 +191,8 @@ async function main() {
       icon: 'mdi-beer',
     },
     {
-      name: 'maman',
-      code: 'maman',
+      name: 'beboo',
+      code: 'beboo',
       color: '#ff66e8',
       icon: 'mdi-human-female-boy',
     },
@@ -292,6 +292,18 @@ async function main() {
       color: '#02AC18',
       icon: 'mdi-forest',
     },
+    {
+      name: 'roti',
+      code: 'roti',
+      color: '#40F6D8',
+      icon: 'mdi-glass-mug-variant',
+    },
+    {
+      name: 'bénévole',
+      code: 'benevole',
+      color: '#09A1C4',
+      icon: 'mdi-account',
+    },
   ];
 
   await Promise.all(
@@ -323,7 +335,7 @@ async function main() {
     ['bar', 'hard,orga,bar'],
     ['barrieres', 'hard,orga,barrieres'],
     ['catering', 'hard,orga,catering'],
-    ['maman', 'hard,orga,maman'],
+    ['beboo', 'hard,orga,beboo'],
     ['scene', 'hard,orga,scene'],
     ['signa', 'hard,orga,signa'],
     ['communication', 'hard,communication'],

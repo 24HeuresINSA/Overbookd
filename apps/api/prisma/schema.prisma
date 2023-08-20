@@ -69,7 +69,7 @@ model User {
   updatedAt             DateTime    @updatedAt @map("updated_at")
   isDeleted             Boolean     @default(false) @map("is_deleted")
 
-  teams          UserTeam[]
+  teams UserTeam[]
 
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
@@ -112,7 +112,7 @@ model Team {
 }
 
 model UserTeam {
-  user   User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int  @map("user_id")
   team   Team @relation(fields: [teamId], references: [id])
   teamId Int  @map("team_id")
