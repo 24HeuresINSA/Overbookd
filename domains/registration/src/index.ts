@@ -1,1 +1,1 @@
-export * from "./registration.constant";
+export * from './registration.constant';

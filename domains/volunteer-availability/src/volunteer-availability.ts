@@ -1,11 +1,11 @@
-import { IProvidePeriod, TWO_HOURS_IN_MS } from "@overbookd/period";
-import { SHIFT_HOURS_UTC } from "./shift.constant";
+import { IProvidePeriod, TWO_HOURS_IN_MS } from '@overbookd/period';
+import { SHIFT_HOURS_UTC } from './shift.constant';
 import {
   AvailabilityMinimumPeriodDurationError,
   AvailabilityPeriodsJointError,
   AvailabilityPeriodTimelineError,
   AvailabilityStartError,
-} from "./volunteer-availability.error";
+} from './volunteer-availability.error';
 
 export class Availability {
   public start: Date;
@@ -30,11 +30,11 @@ export class Availability {
       throw new AvailabilityPeriodsJointError();
     const startTime = Math.min(
       new Date(this.start).getTime(),
-      new Date(period.start).getTime()
+      new Date(period.start).getTime(),
     );
     const endTime = Math.max(
       new Date(this.end).getTime(),
-      new Date(period.end).getTime()
+      new Date(period.end).getTime(),
     );
     return new Availability(new Date(startTime), new Date(endTime));
   }

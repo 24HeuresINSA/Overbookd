@@ -1,7 +1,7 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { updateItemToList } from "@overbookd/list";
-import { Availability } from "./volunteer-availability";
-import { AvailabilityError } from "./volunteer-availability.error";
+import { IProvidePeriod } from '@overbookd/period';
+import { updateItemToList } from '@overbookd/list';
+import { Availability } from './volunteer-availability';
+import { AvailabilityError } from './volunteer-availability.error';
 
 export class AvailabilityRegistery {
   private _availabilities: Availability[] = [];
@@ -11,7 +11,7 @@ export class AvailabilityRegistery {
   }
 
   static fromAvailabilities(
-    availabilities: Availability[]
+    availabilities: Availability[],
   ): AvailabilityRegistery {
     return new AvailabilityRegistery(availabilities);
   }
@@ -23,7 +23,7 @@ export class AvailabilityRegistery {
   addPeriod(period: IProvidePeriod) {
     const availability = this.tryCreateAvailability(period);
     const availabilitiesWithPeriodAdded = this._availabilities.map(
-      this.tryAddPeriod(period)
+      this.tryAddPeriod(period),
     );
     const availabilities = availability
       ? [...availabilitiesWithPeriodAdded, availability]
@@ -41,25 +41,25 @@ export class AvailabilityRegistery {
     return this.mergeAvailabilities(
       availabilities.reduce(
         AvailabilityRegistery.reduceToMergedAvailabilities,
-        [] as Availability[]
-      )
+        [] as Availability[],
+      ),
     );
   }
 
   private canMergeAtLeastOneAvailability(
-    availabilities: Availability[]
+    availabilities: Availability[],
   ): boolean {
     return availabilities.some(
-      AvailabilityRegistery.isMergeableFromOneOf(availabilities)
+      AvailabilityRegistery.isMergeableFromOneOf(availabilities),
     );
   }
 
   private static reduceToMergedAvailabilities(
     availabilities: Availability[],
-    availability: Availability
+    availability: Availability,
   ): Availability[] {
     const mergeableAvailabilityIndex = availabilities.findIndex(
-      AvailabilityRegistery.isAvailabilityMergeableToOther(availability)
+      AvailabilityRegistery.isAvailabilityMergeableToOther(availability),
     );
     if (mergeableAvailabilityIndex === -1) {
       return [...availabilities, availability];
@@ -76,11 +76,13 @@ export class AvailabilityRegistery {
     return updateItemToList(
       availabilities,
       mergeableAvailabilityIndex,
-      mergeableAvailability
+      mergeableAvailability,
     );
   }
 
-  private tryCreateAvailability(period: IProvidePeriod): Availability | undefined {
+  private tryCreateAvailability(
+    period: IProvidePeriod,
+  ): Availability | undefined {
     try {
       return Availability.fromPeriod(period);
     } catch (e) {
@@ -91,7 +93,9 @@ export class AvailabilityRegistery {
     }
   }
 
-  private tryAddPeriod(period: IProvidePeriod): (value: Availability) => Availability {
+  private tryAddPeriod(
+    period: IProvidePeriod,
+  ): (value: Availability) => Availability {
     return (availability) => {
       try {
         return availability.addPeriod(period);
@@ -105,20 +109,20 @@ export class AvailabilityRegistery {
   }
 
   private static isAvailabilityMergeableToOther(
-    availability: Availability
+    availability: Availability,
   ): (value: Availability) => boolean {
     return (existingAvailability) =>
       existingAvailability.canMerge(availability);
   }
 
   private static isMergeableFromOneOf(
-    availabilities: Availability[]
+    availabilities: Availability[],
   ): (value: Availability, index: number) => boolean {
     return (availability, startIndex) =>
       availabilities
         .slice(startIndex + 1)
         .some(
-          AvailabilityRegistery.isAvailabilityMergeableToOther(availability)
+          AvailabilityRegistery.isAvailabilityMergeableToOther(availability),
         );
   }
 }

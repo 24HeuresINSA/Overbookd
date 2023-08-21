@@ -1,8 +1,8 @@
 export const AVAILABILITY_ERROR_MESSAGES = {
-  PERIOD_TIMELINE: "start should be before end",
-  START_HOUR: "start should be a pair hour",
-  MINIMUM_PERIOD_DURATION: "period should last at least 2 hours",
-  PERIODS_JOINT: "periods should overlap or follow to be added",
+  PERIOD_TIMELINE: 'start should be before end',
+  START_HOUR: 'start should be a pair hour',
+  MINIMUM_PERIOD_DURATION: 'period should last at least 2 hours',
+  PERIODS_JOINT: 'periods should overlap or follow to be added',
 };
 
 export class AvailabilityError extends Error {}

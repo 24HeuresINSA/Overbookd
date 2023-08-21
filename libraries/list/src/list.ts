@@ -1,7 +1,7 @@
 export function updateItemToList<T>(
   list: T[],
   index: number,
-  newValue: T
+  newValue: T,
 ): T[] {
   if (index < 0) return updateItemToList(list, list.length + index, newValue);
   return [...list.slice(0, index), newValue, ...list.slice(index + 1)];
