@@ -13,19 +13,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { formatLocalDate } from '~/utils/date/dateUtils';
+import Vue from "vue";
+import { formatLocalDate } from "~/utils/date/dateUtils";
 
 export default Vue.extend({
-  name: 'DateField',
+  name: "DateField",
   model: {
-    prop: 'date',
-    event: 'change',
+    prop: "date",
+    event: "change",
   },
   props: {
     label: {
       type: String,
-      default: 'Date',
+      default: "Date",
     },
     date: {
       type: Date,
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    dateStringified: '',
+    dateStringified: "",
   }),
   watch: {
     date() {
@@ -53,10 +53,10 @@ export default Vue.extend({
   },
   methods: {
     updateDate(date: string) {
-      this.$emit('change', new Date(date));
+      this.$emit("change", new Date(date));
     },
     stringifyDate(date?: Date | string): string {
-      if (!date) return '';
+      if (!date) return "";
       return formatLocalDate(new Date(date));
     },
   },

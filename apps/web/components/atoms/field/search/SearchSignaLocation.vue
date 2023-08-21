@@ -21,23 +21,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { SignaLocation } from '~/utils/models/signaLocation';
+import Vue from "vue";
+import { SignaLocation } from "~/utils/models/signaLocation";
 
 interface SearchLocationData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: 'SearchSignaLocation',
+  name: "SearchSignaLocation",
   model: {
-    prop: 'location',
-    event: 'change',
+    prop: "location",
+    event: "change",
   },
   props: {
     label: {
       type: String,
-      default: 'Chercher un lieu',
+      default: "Chercher un lieu",
     },
     location: {
       type: Object as () => SignaLocation | null,
@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(location: SignaLocation | null) {
-      this.$emit('change', location);
+      this.$emit("change", location);
     },
   },
 });

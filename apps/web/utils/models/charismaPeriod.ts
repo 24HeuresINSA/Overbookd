@@ -1,5 +1,5 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { HttpStringified } from '../types/http';
+import { IProvidePeriod } from "@overbookd/period";
+import { HttpStringified } from "../types/http";
 
 export interface CharismaPeriod extends IProvidePeriod {
   name: string;

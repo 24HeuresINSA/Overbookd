@@ -130,8 +130,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Fa, SortedStoredGearRequests } from '~/utils/models/fa';
+import Vue from "vue";
+import { Fa, SortedStoredGearRequests } from "~/utils/models/fa";
 import {
   collaboratorErrors,
   collaboratorWarnings,
@@ -149,10 +149,10 @@ import {
   signaWarnings,
   timeWindowsErrors,
   waterWarnings,
-} from '~/utils/rules/faValidationRules';
+} from "~/utils/rules/faValidationRules";
 
 export default Vue.extend({
-  name: 'FaCheckBeforeSubmitCard',
+  name: "FaCheckBeforeSubmitCard",
   computed: {
     mFA(): Fa {
       return this.$accessor.fa.mFA;

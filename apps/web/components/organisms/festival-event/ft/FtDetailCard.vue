@@ -16,20 +16,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import RichEditor from '~/components/atoms/field/tiptap/RichEditor.vue';
-import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
+import Vue from "vue";
+import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from '~/utils/festival-event/ftUtils';
-import { Ft, FtCardType } from '~/utils/models/ft';
+} from "~/utils/festival-event/ftUtils";
+import { Ft, FtCardType } from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: 'FtDetailCard',
+  name: "FtDetailCard",
   components: { RichEditor, CardErrorList },
   data: () => ({
-    owner: 'humain',
+    owner: "humain",
     cardType: FtCardType.DETAIL,
   }),
   computed: {
@@ -43,7 +43,7 @@ export default Vue.extend({
       return !this.isValidatedByOwner || this.canAffect;
     },
     canAffect(): boolean {
-      return this.$accessor.user.can('affect-volunteer');
+      return this.$accessor.user.can("affect-volunteer");
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();

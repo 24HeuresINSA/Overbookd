@@ -32,9 +32,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { GearSearchOptions } from '~/store/catalog';
-import { Gear } from '~/utils/models/catalog.model';
+import Vue from "vue";
+import { GearSearchOptions } from "~/store/catalog";
+import { Gear } from "~/utils/models/catalog.model";
 
 interface SearchGearData {
   gear?: Gear;
@@ -42,15 +42,15 @@ interface SearchGearData {
 }
 
 export default Vue.extend({
-  name: 'SearchGear',
+  name: "SearchGear",
   model: {
-    prop: 'gear',
-    event: 'change',
+    prop: "gear",
+    event: "change",
   },
   props: {
     label: {
       type: String,
-      default: 'Chercher du matos',
+      default: "Chercher du matos",
     },
     gear: {
       type: Object,
@@ -58,7 +58,7 @@ export default Vue.extend({
     },
     owner: {
       type: String,
-      default: '',
+      default: "",
     },
     ponctualUsage: {
       type: Boolean,
@@ -108,7 +108,7 @@ export default Vue.extend({
       this.loading = false;
     },
     propagateEvent(gear: Gear) {
-      this.$emit('change', gear);
+      this.$emit("change", gear);
     },
   },
 });

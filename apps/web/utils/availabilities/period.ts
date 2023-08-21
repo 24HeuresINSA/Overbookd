@@ -1,5 +1,5 @@
-import { IProvidePeriod, Period } from '@overbookd/period';
-import { isPartyShift } from '../shift/shift';
+import { IProvidePeriod, Period } from "@overbookd/period";
+import { isPartyShift } from "../shift/shift";
 
 export function isSamePeriod(
   period: IProvidePeriod

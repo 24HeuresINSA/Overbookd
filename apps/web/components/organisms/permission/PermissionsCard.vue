@@ -51,42 +51,42 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import PermissionRow from '~/components/molecules/permission/PermissionRow.vue';
-import { Permission } from '~/utils/models/permission';
+import Vue from "vue";
+import PermissionRow from "~/components/molecules/permission/PermissionRow.vue";
+import { Permission } from "~/utils/models/permission";
 
 export default Vue.extend({
-  name: 'PermissionCard',
+  name: "PermissionCard",
   components: {
     PermissionRow,
   },
   data() {
     return {
-      search: '',
+      search: "",
       headers: [
         {
-          text: 'Nom',
-          value: 'name',
-          width: '25%',
+          text: "Nom",
+          value: "name",
+          width: "25%",
         },
         {
-          text: 'Description',
-          value: 'description',
-          width: '25%',
+          text: "Description",
+          value: "description",
+          width: "25%",
         },
         {
-          text: 'Équipes',
-          value: 'teams',
-          width: '25%',
+          text: "Équipes",
+          value: "teams",
+          width: "25%",
         },
         {
-          text: 'Ajouter/Retirer',
-          value: 'action',
-          width: '25%',
+          text: "Ajouter/Retirer",
+          value: "action",
+          width: "25%",
         },
       ],
-      newPermissionName: '',
-      newPermissionDescription: '',
+      newPermissionName: "",
+      newPermissionDescription: "",
     };
   },
   computed: {
@@ -105,8 +105,8 @@ export default Vue.extend({
         name: this.newPermissionName,
         description: this.newPermissionDescription,
       });
-      this.newPermissionName = '';
-      this.newPermissionDescription = '';
+      this.newPermissionName = "";
+      this.newPermissionDescription = "";
     },
   },
 });

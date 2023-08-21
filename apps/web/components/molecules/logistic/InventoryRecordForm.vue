@@ -36,18 +36,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SearchGear from '~/components/atoms/field/search/SearchGear.vue';
-import { DisplayableManualInventoryRecordError } from '~/domain/inventory/manual-inventory-record';
-import { Gear } from '~/utils/models/catalog.model';
-import { InputRulesData } from '~/utils/rules/inputRules';
+import Vue from "vue";
+import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
+import { DisplayableManualInventoryRecordError } from "~/domain/inventory/manual-inventory-record";
+import { Gear } from "~/utils/models/catalog.model";
+import { InputRulesData } from "~/utils/rules/inputRules";
 
 interface InventoryRecordFormData extends InputRulesData {
   gear?: Gear;
 }
 
 export default Vue.extend({
-  name: 'InventoryRecordForm',
+  name: "InventoryRecordForm",
   components: { SearchGear },
   props: {
     inventoryError: {
@@ -55,9 +55,9 @@ export default Vue.extend({
       default: () =>
         ({
           record: {
-            gear: '',
+            gear: "",
             quantity: 0,
-            storage: '',
+            storage: "",
           },
           toInventoryRecord: () => new Error(),
         } as unknown as DisplayableManualInventoryRecordError),
@@ -84,12 +84,12 @@ export default Vue.extend({
   },
   methods: {
     closeDialog() {
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
     addToInventory() {
       if (!this.gear) return;
       const inventoryRecord = this.inventoryError.toInventoryRecord(this.gear);
-      this.$emit('add-to-inventory', inventoryRecord);
+      this.$emit("add-to-inventory", inventoryRecord);
       this.closeDialog();
     },
   },

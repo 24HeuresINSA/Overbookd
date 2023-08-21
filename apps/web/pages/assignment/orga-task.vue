@@ -15,16 +15,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import FilterableVolunteerList from '~/components/organisms/assignment/list/FilterableVolunteerList.vue';
-import FilterableTimeSpanList from '~/components/organisms/assignment/list/FilterableTimeSpanList.vue';
-import { Volunteer } from '~/utils/models/assignment';
-import OrgaTaskCalendar from '~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import TimeSpanDetails from '~/components/organisms/assignment/card/TimeSpanDetails.vue';
+import Vue from "vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
+import FilterableTimeSpanList from "~/components/organisms/assignment/list/FilterableTimeSpanList.vue";
+import { Volunteer } from "~/utils/models/assignment";
+import OrgaTaskCalendar from "~/components/organisms/assignment/calendar/OrgaTaskCalendar.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
 
 export default Vue.extend({
-  name: 'OrgaTask',
+  name: "OrgaTask",
   components: {
     FilterableVolunteerList,
     FilterableTimeSpanList,
@@ -36,7 +36,7 @@ export default Vue.extend({
     displayTimeSpanDetailsDialog: false,
   }),
   head: () => ({
-    title: 'Affect Orga-Tâche',
+    title: "Affect Orga-Tâche",
   }),
   computed: {
     volunteers(): Volunteer[] {

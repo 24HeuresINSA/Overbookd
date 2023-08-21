@@ -3,11 +3,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import UserCalendar from '~/components/organisms/planning/UserCalendar.vue';
+import Vue from "vue";
+import UserCalendar from "~/components/organisms/planning/UserCalendar.vue";
 
 export default Vue.extend({
-  name: 'Planning',
+  name: "Planning",
   components: { UserCalendar },
   computed: {
     userId(): number {
@@ -16,7 +16,7 @@ export default Vue.extend({
   },
   async created() {
     if (isNaN(this.userId)) {
-      return this.$router.push({ path: '/' });
+      return this.$router.push({ path: "/" });
     }
   },
 });

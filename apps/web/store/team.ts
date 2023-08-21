@@ -1,7 +1,7 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { Team } from '~/utils/models/team';
-import { safeCall } from '~/utils/api/calls';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { Team } from "~/utils/models/team";
+import { safeCall } from "~/utils/api/calls";
 
 const teamRepo = RepoFactory.TeamRepository;
 
@@ -44,13 +44,13 @@ export const getters = getterTree(state, {
     },
   softCreationTeams(state): Team[] {
     const teamsCodes = [
-      'bde',
-      'kfet',
-      'karna',
-      'woods',
-      'strasbourg',
-      'teckos',
-      'tendrestival',
+      "bde",
+      "kfet",
+      "karna",
+      "woods",
+      "strasbourg",
+      "teckos",
+      "tendrestival",
     ];
     return state.teams.filter((t) => teamsCodes.includes(t.code));
   },
@@ -74,19 +74,19 @@ export const actions = actionTree(
     async setTeamsInStore({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getTeams(this));
       if (!res) return;
-      commit('SET_TEAMS', res.data);
+      commit("SET_TEAMS", res.data);
     },
 
     async fetchFaValidators({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getFaValidators(this));
       if (!res) return;
-      commit('SET_FA_VALIDATORS', res.data);
+      commit("SET_FA_VALIDATORS", res.data);
     },
 
     async fetchFtValidators({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getFtValidators(this));
       if (!res) return;
-      commit('SET_FT_VALIDATORS', res.data);
+      commit("SET_FT_VALIDATORS", res.data);
     },
   },
 );

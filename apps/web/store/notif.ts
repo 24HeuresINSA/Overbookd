@@ -1,5 +1,5 @@
-import { actionTree, mutationTree } from 'typed-vuex';
-import { SnackNotif } from '~/utils/models/store';
+import { actionTree, mutationTree } from "typed-vuex";
+import { SnackNotif } from "~/utils/models/store";
 
 export const state = () => ({
   queue: [] as SnackNotif[],
@@ -29,10 +29,10 @@ export const actions = actionTree(
   { state, mutations },
   {
     pushNotification: function ({ commit }, payload: SnackNotif) {
-      commit('ADD_NOTIFICATION', payload);
+      commit("ADD_NOTIFICATION", payload);
     },
     popNotification: function ({ commit }, payload: number) {
-      commit('POP_NOTIFICATION', payload);
+      commit("POP_NOTIFICATION", payload);
     },
   }
 );

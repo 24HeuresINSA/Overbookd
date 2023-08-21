@@ -1,5 +1,5 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { User, VolunteerTask } from './user';
+import { IProvidePeriod } from "@overbookd/period";
+import { User, VolunteerTask } from "./user";
 
 export interface Volunteer extends User {
   phone: string;

@@ -161,13 +161,13 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js';
-import SearchTeam from '~/components/atoms/field/search/SearchTeam.vue';
-import { FaStatus } from '~/utils/models/fa';
-import { formatUsername } from '~/utils/user/userUtils';
+import Fuse from "fuse.js";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import { FaStatus } from "~/utils/models/fa";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default {
-  name: 'Fa',
+  name: "Fa",
   components: { SearchTeam },
   data() {
     return {
@@ -178,22 +178,22 @@ export default {
       sortDesc: false,
       page: 1,
       itemsPerPage: 4,
-      selectedStatus: '',
+      selectedStatus: "",
       selectedTeam: undefined,
       headers: [
-        { text: 'Statut', value: 'status' },
-        { text: 'Validation', value: 'validation' },
-        { text: 'Nom', value: 'name' },
-        { text: 'Equipe', value: 'Team' },
-        { text: 'Resp', value: 'userInCharge' },
-        { text: 'Action', value: 'action', sortable: false },
+        { text: "Statut", value: "status" },
+        { text: "Validation", value: "validation" },
+        { text: "Nom", value: "name" },
+        { text: "Equipe", value: "Team" },
+        { text: "Resp", value: "userInCharge" },
+        { text: "Action", value: "action", sortable: false },
       ],
       color: {
-        SUBMITTED: 'warning',
-        VALIDATED: 'green',
-        REFUSED: 'red',
-        DRAFT: 'grey',
-        undefined: 'grey',
+        SUBMITTED: "warning",
+        VALIDATED: "green",
+        REFUSED: "red",
+        DRAFT: "grey",
+        undefined: "grey",
       },
       isNewFADialogOpen: false,
       isDeleteFAOpen: false,
@@ -202,7 +202,7 @@ export default {
     };
   },
   head: () => ({
-    title: 'Fiches Activités',
+    title: "Fiches Activités",
   }),
   computed: {
     FAs() {
@@ -212,23 +212,23 @@ export default {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
     canViewDeletedFa() {
-      return this.$accessor.user.can('view-deleted-fa');
+      return this.$accessor.user.can("view-deleted-fa");
     },
     isSecu() {
-      return this.$accessor.user.can('manage-pass-secu');
+      return this.$accessor.user.can("manage-pass-secu");
     },
     isSigna() {
-      return this.$accessor.user.can('manage-location');
+      return this.$accessor.user.can("manage-location");
     },
     selectedFAs() {
       let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
       mFAs = this.filterByValidatorStatus(mFAs);
       const options = {
         // Search in `author` and in `tags` array
-        keys: ['name', 'description'],
+        keys: ["name", "description"],
       };
       const fuse = new Fuse(mFAs, options);
-      if (this.search === undefined || this.search === '') {
+      if (this.search === undefined || this.search === "") {
         return mFAs;
       }
       return fuse.search(this.search).map((e) => e.item);
@@ -246,9 +246,9 @@ export default {
     },
   },
   async mounted() {
-    if (!this.$accessor.user.can('hard')) {
+    if (!this.$accessor.user.can("hard")) {
       await this.$router.push({
-        path: '/',
+        path: "/",
       });
     }
 
@@ -260,7 +260,7 @@ export default {
   methods: {
     async fetchFas() {
       const status =
-        this.selectedStatus === '' ? undefined : this.selectedStatus;
+        this.selectedStatus === "" ? undefined : this.selectedStatus;
       const search = { isDeleted: this.isDeletedFilter, status };
       await this.$accessor.fa.fetchFAs(search);
     },
@@ -305,11 +305,11 @@ export default {
       if (status === 0) {
         return FAs;
       }
-      const s = ['', 'DRAFT', 'SUBMITTED', 'REFUSED', 'VALIDATED'];
+      const s = ["", "DRAFT", "SUBMITTED", "REFUSED", "VALIDATED"];
       FAs = FAs.map((FA) => {
         if (FA) {
           if (FA.status === undefined) {
-            FA.status = 'DRAFT';
+            FA.status = "DRAFT";
           }
         }
         return FA;
@@ -334,7 +334,7 @@ export default {
       await this.$accessor.fa.createFa(FA);
       const savedFA = this.$accessor.fa.mFA;
       if (savedFA.id) {
-        await this.$router.push({ path: 'fa/' + savedFA.id });
+        await this.$router.push({ path: "fa/" + savedFA.id });
       }
     },
     async deleteFA() {
@@ -352,18 +352,18 @@ export default {
       this.itemsPerPage = number;
     },
     getValidatorColor(fa, validator) {
-      let color = 'grey';
+      let color = "grey";
       if (fa.faValidation) {
         fa.faValidation.forEach((validation) => {
           if (Number(validation.team.id) === Number(validator.id)) {
-            color = 'green';
+            color = "green";
           }
         });
       }
       if (fa.faRefuse) {
         fa.faRefuse.forEach((validation) => {
           if (Number(validation.team.id) === Number(validator.id)) {
-            color = 'red';
+            color = "red";
           }
         });
       }
@@ -372,21 +372,21 @@ export default {
     download(filename, text) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
-      const element = document.createElement('a');
+      const element = document.createElement("a");
       element.setAttribute(
-        'href',
-        'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
       );
-      element.setAttribute('download', filename);
+      element.setAttribute("download", filename);
 
-      element.style.display = 'none';
+      element.style.display = "none";
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
     },
     async exportCsvSecu() {
       // Parse data into a CSV string to be passed to the download function
-      const csvHeader = 'Numero;Nom;Resp;Nombre_de_pass;';
+      const csvHeader = "Numero;Nom;Resp;Nombre_de_pass;";
       const csvRows = this.selectedFAs.map((fa) => {
         const rowData = [
           fa.id,
@@ -394,16 +394,16 @@ export default {
           formatUsername(fa.user_in_charge),
           fa.number_of_pass,
         ];
-        return `${rowData.join(';')}`;
+        return `${rowData.join(";")}`;
       });
-      const csv = [csvHeader, ...csvRows].join('\n');
-      const regex = new RegExp(/undefined/i, 'g');
-      const parsedCSV = csv.replace(regex, '');
-      this.download('passsecu.csv', parsedCSV);
+      const csv = [csvHeader, ...csvRows].join("\n");
+      const regex = new RegExp(/undefined/i, "g");
+      const parsedCSV = csv.replace(regex, "");
+      this.download("passsecu.csv", parsedCSV);
     },
     async exportCsvSigna() {
       const signa_needs = await this.$accessor.fa.getSignaNeedsForCsv();
-      const csvHeader = 'Numero FA;Nom FA;Type;Texte;Nombre;Commentaire;';
+      const csvHeader = "Numero FA;Nom FA;Type;Texte;Nombre;Commentaire;";
       const csvRows = signa_needs.map((signa_need) => {
         const rowData = [
           signa_need.fa_id,
@@ -413,15 +413,15 @@ export default {
           signa_need.count,
           signa_need.comment,
         ];
-        return `${rowData.join(';')}`;
+        return `${rowData.join(";")}`;
       });
-      const csv = [csvHeader, ...csvRows].join('\n');
-      const regex = new RegExp(/undefined/i, 'g');
-      const parsedCSV = csv.replace(regex, '');
-      this.download('exportSigna.csv', parsedCSV);
+      const csv = [csvHeader, ...csvRows].join("\n");
+      const regex = new RegExp(/undefined/i, "g");
+      const parsedCSV = csv.replace(regex, "");
+      this.download("exportSigna.csv", parsedCSV);
     },
     formatUsername(user) {
-      if (!user) return '';
+      if (!user) return "";
       return formatUsername(user);
     },
   },

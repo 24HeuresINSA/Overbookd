@@ -25,27 +25,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Fuse from 'fuse.js';
-import FtTimeSpanFilters from '~/components/molecules/assignment/filter/FtTimeSpanFilters.vue';
-import FtTimeSpanList from '~/components/molecules/assignment/list/FtTimeSpanList.vue';
-import { Volunteer } from '~/utils/models/assignment';
+import Vue from "vue";
+import Fuse from "fuse.js";
+import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
+import FtTimeSpanList from "~/components/molecules/assignment/list/FtTimeSpanList.vue";
+import { Volunteer } from "~/utils/models/assignment";
 import {
   AvailableTimeSpan,
   SimplifiedFT,
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-} from '~/utils/models/ftTimeSpan';
-import { Team } from '~/utils/models/team';
-import { AssignmentCandidate } from '~/domain/timespan-assignment/timeSpanAssignment';
+} from "~/utils/models/ftTimeSpan";
+import { Team } from "~/utils/models/team";
+import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 
 export default Vue.extend({
-  name: 'FilterableTimeSpanList',
+  name: "FilterableTimeSpanList",
   components: { FtTimeSpanFilters, FtTimeSpanList },
   data: () => ({
     teams: [] as Team[],
-    timeSpan: '',
+    timeSpan: "",
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
@@ -141,7 +141,7 @@ export default Vue.extend({
     ): AvailableTimeSpan[] {
       if (!search) return timeSpans;
       const fuse = new Fuse(timeSpans, {
-        keys: ['ft.id', 'ft.name'],
+        keys: ["ft.id", "ft.name"],
         threshold: 0.4,
       });
       return fuse.search(search).map((e) => e.item);

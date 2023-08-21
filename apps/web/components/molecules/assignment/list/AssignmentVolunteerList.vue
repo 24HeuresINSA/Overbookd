@@ -18,12 +18,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import AssignmentVolunteerResume from '~/components/molecules/assignment/resume/AssignmentVolunteerResume.vue';
-import { Volunteer } from '~/utils/models/assignment';
+import Vue from "vue";
+import AssignmentVolunteerResume from "~/components/molecules/assignment/resume/AssignmentVolunteerResume.vue";
+import { Volunteer } from "~/utils/models/assignment";
 
 export default Vue.extend({
-  name: 'AssignmentVolunteerList',
+  name: "AssignmentVolunteerList",
   components: { AssignmentVolunteerResume },
   props: {
     volunteers: {
@@ -38,7 +38,7 @@ export default Vue.extend({
     },
     selectVolunteer(volunteer: Volunteer): void {
       if (!volunteer) return;
-      this.$emit('select-volunteer', volunteer);
+      this.$emit("select-volunteer", volunteer);
     },
   },
 });

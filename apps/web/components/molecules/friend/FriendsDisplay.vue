@@ -25,13 +25,13 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Volunteer } from '~/utils/models/assignment';
-import { User } from '~/utils/models/user';
-import { formatUsername } from '~/utils/user/userUtils';
+import Vue from "vue";
+import { Volunteer } from "~/utils/models/assignment";
+import { User } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: 'FriendsDisplay',
+  name: "FriendsDisplay",
   computed: {
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
@@ -40,7 +40,7 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedVolunteerFriends;
     },
     title(): string {
-      const volunteerName = this.selectedVolunteer?.firstname ?? '...';
+      const volunteerName = this.selectedVolunteer?.firstname ?? "...";
       return `Amis de ${volunteerName} :`;
     },
   },
@@ -50,13 +50,13 @@ export default Vue.extend({
         (volunteer) => volunteer.id === friend.id
       );
       if (!volunteer) return;
-      this.$emit('select-volunteer', volunteer);
+      this.$emit("select-volunteer", volunteer);
     },
     formatUsername(user: User): string {
       return formatUsername(user);
     },
     openAssignmentPageInNewTab(id: number) {
-      window.open(`/assignment/orga-task?volunteer=${id}`, '_blank');
+      window.open(`/assignment/orga-task?volunteer=${id}`, "_blank");
     },
   },
 });

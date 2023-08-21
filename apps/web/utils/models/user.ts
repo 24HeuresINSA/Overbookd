@@ -1,7 +1,7 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { HttpStringified } from '../types/http';
-import { FtStatus } from './ft';
-import { TaskCategory } from './ftTimeSpan';
+import { IProvidePeriod } from "@overbookd/period";
+import { HttpStringified } from "../types/http";
+import { FtStatus } from "./ft";
+import { TaskCategory } from "./ftTimeSpan";
 
 export interface DisplayedUser {
   firstname: string;
@@ -29,7 +29,7 @@ export interface UserCreation extends DisplayedUser {
 }
 
 export interface UserModification
-  extends Omit<UserCreation, 'password' | 'teamId'> {
+  extends Omit<UserCreation, "password" | "teamId"> {
   hasPayedContributions: boolean;
   profilePicture?: string;
   charisma: number;
@@ -49,7 +49,7 @@ export interface CompleteUser extends User {
   teams: string[];
 }
 
-export interface CompleteUserWithoutId extends Omit<CompleteUser, 'id'> {}
+export interface CompleteUserWithoutId extends Omit<CompleteUser, "id"> {}
 
 export interface CompleteUserWithPermissions extends CompleteUser {
   permissions: string[];

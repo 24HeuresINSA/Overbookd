@@ -25,26 +25,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { formatDateWithMinutes } from '~/utils/date/dateUtils';
-import { Header } from '~/utils/models/dataTable';
-import { EventGearRequest, EventSeeker } from '~/utils/models/gearRequests';
+import Vue from "vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { Header } from "~/utils/models/dataTable";
+import { EventGearRequest, EventSeeker } from "~/utils/models/gearRequests";
 
 interface GearRequestListingData {
   headers: Header[];
 }
 
 export default Vue.extend({
-  name: 'GearRequestListing',
+  name: "GearRequestListing",
   data(): GearRequestListingData {
     return {
       headers: [
-        { text: 'Matos', value: 'gear' },
-        { text: 'Quantite', value: 'quantity' },
-        { text: 'Par', value: 'from' },
-        { text: 'De', value: 'start' },
-        { text: 'A', value: 'end' },
-        { text: 'Retrait', value: 'drive' },
+        { text: "Matos", value: "gear" },
+        { text: "Quantite", value: "quantity" },
+        { text: "Par", value: "from" },
+        { text: "De", value: "start" },
+        { text: "A", value: "end" },
+        { text: "Retrait", value: "drive" },
       ],
     };
   },

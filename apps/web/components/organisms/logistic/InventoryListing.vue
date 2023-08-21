@@ -41,22 +41,22 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { InventoryGroupedRecord } from '~/store/inventory';
-import { Header } from '~/utils/models/dataTable';
+import Vue from "vue";
+import { InventoryGroupedRecord } from "~/store/inventory";
+import { Header } from "~/utils/models/dataTable";
 
 interface InventoryListingData {
   headers: Header[];
   details: InventoryGroupedRecord[];
 }
 export default Vue.extend({
-  name: 'InventoryListing',
+  name: "InventoryListing",
   data: (): InventoryListingData => ({
     headers: [
-      { text: 'Matos', value: 'gear' },
-      { text: 'Quantite Totale', value: 'totalQuantity' },
-      { text: 'Lieux de stockage', value: 'storage' },
-      { text: 'Quantite', value: 'storageQuantity' },
+      { text: "Matos", value: "gear" },
+      { text: "Quantite Totale", value: "totalQuantity" },
+      { text: "Lieux de stockage", value: "storage" },
+      { text: "Quantite", value: "storageQuantity" },
     ],
     details: [],
   }),
@@ -71,7 +71,7 @@ export default Vue.extend({
   },
   methods: {
     askForInit() {
-      this.$emit('ask-init');
+      this.$emit("ask-init");
     },
     fetchDetails(expandedItem: {
       item: InventoryGroupedRecord;

@@ -31,26 +31,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import FtTimeSpanDetails from '~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue';
-import { formatDateWithExplicitMonth } from '~/utils/date/dateUtils';
-import { CalendarEvent } from '~/utils/models/calendar';
-import { VuetifyCalendar } from '~/utils/calendar/vuetify-calendar'
-import { FtStatus, FtTimeWindow } from '~/utils/models/ft';
+import Vue from "vue";
+import FtTimeSpanDetails from "~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue";
+import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
+import { CalendarEvent } from "~/utils/models/calendar";
+import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar"
+import { FtStatus, FtTimeWindow } from "~/utils/models/ft";
 
 type Event = CalendarEvent & {
   timeSpanId?: number;
 };
 
 export default Vue.extend({
-  name: 'FestivalEventCalendar',
+  name: "FestivalEventCalendar",
   components: {
     FtTimeSpanDetails,
   },
   props: {
     festivalEvent: {
       type: String,
-      default: () => 'FA',
+      default: () => "FA",
     },
   },
   data: () => ({
@@ -62,13 +62,13 @@ export default Vue.extend({
       return this.$accessor.configuration.eventStartDate;
     },
     calendarType(): string {
-      return window.screen.width < 750 ? 'day' : 'week';
+      return window.screen.width < 750 ? "day" : "week";
     },
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.value);
     },
     calendarTimeWindows(): Event[] {
-      return this.festivalEvent === 'FA' ? this.faTimeWindows : this.ftEvents;
+      return this.festivalEvent === "FA" ? this.faTimeWindows : this.ftEvents;
     },
     faTimeWindows(): CalendarEvent[] {
       const animationTimeWindows: CalendarEvent[] = (
@@ -77,7 +77,7 @@ export default Vue.extend({
         start: timeWindow.start,
         end: timeWindow.end,
         timed: true,
-        color: 'primary',
+        color: "primary",
         name: "Tenue de l'animation",
       }));
 
@@ -87,8 +87,8 @@ export default Vue.extend({
             start: gearRequestRentalPeriod.start,
             end: gearRequestRentalPeriod.end,
             timed: true,
-            color: 'secondary',
-            name: 'Utilisation du matos',
+            color: "secondary",
+            name: "Utilisation du matos",
           })
         );
 
@@ -101,8 +101,8 @@ export default Vue.extend({
           start,
           end,
           timed: true,
-          color: 'primary',
-          name: 'Tâche',
+          color: "primary",
+          name: "Tâche",
         }));
       }
       return this.getTimeSpanEvents(timeWindows);
@@ -116,7 +116,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch('eventDate');
+    await this.$accessor.configuration.fetch("eventDate");
     this.value = this.manifDate;
   },
   methods: {
@@ -143,8 +143,8 @@ export default Vue.extend({
           start,
           end,
           timed: true,
-          color: 'purple',
-          name: 'Tâche',
+          color: "purple",
+          name: "Tâche",
         }))
       );
     },

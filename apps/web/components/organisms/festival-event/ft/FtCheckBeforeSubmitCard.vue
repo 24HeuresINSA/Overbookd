@@ -54,8 +54,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Ft } from '~/utils/models/ft';
+import Vue from "vue";
+import { Ft } from "~/utils/models/ft";
 
 import {
   ftDetailErrors,
@@ -63,10 +63,10 @@ import {
   ftParentFAErrors,
   ftTimeWindowsErrors,
   hasAtLeastOneFTError,
-} from '~/utils/rules/ftValidationRules';
+} from "~/utils/rules/ftValidationRules";
 
 export default Vue.extend({
-  name: 'FtCheckBeforeSubmitCard',
+  name: "FtCheckBeforeSubmitCard",
   computed: {
     mFT(): Ft {
       return this.$accessor.ft.mFT;

@@ -1,6 +1,6 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { updateItemToList } from '@overbookd/list';
-import { isSamePeriod } from '../availabilities/period';
+import { IProvidePeriod } from "@overbookd/period";
+import { updateItemToList } from "@overbookd/list";
+import { isSamePeriod } from "../availabilities/period";
 import {
   GearRequest,
   GearRequestCreation,
@@ -9,10 +9,10 @@ import {
   Seeker,
   SortableGearRequestHeader,
   StoredGearRequest,
-} from '../models/gearRequests';
+} from "../models/gearRequests";
 
 export function uniqueGearRequestPeriodsReducer(
-  gearRequests: GearRequest<'FA' | 'FT'>[]
+  gearRequests: GearRequest<"FA" | "FT">[]
 ): Period[] {
   const rentalPeriods = gearRequests
     .filter(({ gear }) => !gear.isConsumable)
@@ -48,7 +48,7 @@ export function isSimilarPeriod(
     period.id === rentalPeriod.id || isOverlappingPeriod(period)(rentalPeriod);
 }
 
-export function uniqueGearReducer<T extends 'FA' | 'FT'>(
+export function uniqueGearReducer<T extends "FA" | "FT">(
   gearRequests: GearRequest<T>[],
   gearRequest: GearRequest<T>
 ): GearRequest<T>[] {
@@ -80,7 +80,7 @@ function isCreatedPeriod(period: Period): boolean {
   return period.id > 0;
 }
 
-export function uniqueByGearReducer<T extends 'FA' | 'FT'>(
+export function uniqueByGearReducer<T extends "FA" | "FT">(
   gearRequests: StoredGearRequest<T>[],
   gearRequest: StoredGearRequest<T>
 ): StoredGearRequest<T>[] {
@@ -91,7 +91,7 @@ export function uniqueByGearReducer<T extends 'FA' | 'FT'>(
   return [...gearRequests, gearRequest];
 }
 
-export function isSameGearRequest<T extends 'FA' | 'FT'>(
+export function isSameGearRequest<T extends "FA" | "FT">(
   gearRequest: StoredGearRequest<T>
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
@@ -104,7 +104,7 @@ export function isSameGearRequest<T extends 'FA' | 'FT'>(
   };
 }
 
-export function isSimilarGearRequest<T extends 'FA' | 'FT'>(
+export function isSimilarGearRequest<T extends "FA" | "FT">(
   gearRequest: StoredGearRequest<T>
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
@@ -120,7 +120,7 @@ export function isSimilarGearRequest<T extends 'FA' | 'FT'>(
   };
 }
 
-function isSameGearRequestSeeker<T extends 'FA' | 'FT'>(
+function isSameGearRequestSeeker<T extends "FA" | "FT">(
   seeker: Seeker<T>
 ): (value: Seeker<T>) => boolean {
   return (s: Seeker<T>) => seeker.id === s.id && seeker.type === s.type;
@@ -134,7 +134,7 @@ function isOverlappingPeriod(
     period.end.getTime() >= p.start.getTime();
 }
 
-export function isSimilarConsumableGearRequest<T extends 'FA' | 'FT'>(
+export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
   gearRequest: StoredGearRequest<T>
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
@@ -147,7 +147,7 @@ export function isSimilarConsumableGearRequest<T extends 'FA' | 'FT'>(
   };
 }
 
-export function splitGearRequest<T extends 'FA' | 'FT'>(
+export function splitGearRequest<T extends "FA" | "FT">(
   gearRequest: GearRequest<T>,
   toRemovePeriod: IProvidePeriod,
   availablePeriods: IProvidePeriod[]
@@ -208,8 +208,8 @@ export const gearRequestsSorts = new Map<
   SortableGearRequestHeader,
   GearRequestSortFunction
 >([
-  ['quantity', sortOnQuantity],
-  ['gear', sortOnGear],
-  ['startDate', sortOnRentalPeriodStart],
-  ['endDate', sortOnRentalPeriodEnd],
+  ["quantity", sortOnQuantity],
+  ["gear", sortOnGear],
+  ["startDate", sortOnRentalPeriodStart],
+  ["endDate", sortOnRentalPeriodEnd],
 ]);

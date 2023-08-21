@@ -1,41 +1,41 @@
-import { HttpStringified } from '../types/http';
-import { User } from './user';
+import { HttpStringified } from "../types/http";
+import { User } from "./user";
 
 export const TaskCategories = {
-  STATIQUE: 'STATIQUE',
-  BAR: 'BAR',
-  MANUTENTION: 'MANUTENTION',
-  FUN: 'FUN',
-  RELOU: 'RELOU',
-  AUCUNE: 'AUCUNE',
+  STATIQUE: "STATIQUE",
+  BAR: "BAR",
+  MANUTENTION: "MANUTENTION",
+  FUN: "FUN",
+  RELOU: "RELOU",
+  AUCUNE: "AUCUNE",
 };
 
 export type TaskCategory = keyof typeof TaskCategories;
 
-export type TaskCategoryEmoji = '🥶' | '🍻' | '👷' | '😂' | '🥱' | '🤷‍♂️';
+export type TaskCategoryEmoji = "🥶" | "🍻" | "👷" | "😂" | "🥱" | "🤷‍♂️";
 
 export const TaskCategoryEmojis: Record<TaskCategory, TaskCategoryEmoji> = {
-  STATIQUE: '🥶',
-  BAR: '🍻',
-  MANUTENTION: '👷',
-  FUN: '😂',
-  RELOU: '🥱',
-  AUCUNE: '🤷‍♂️',
+  STATIQUE: "🥶",
+  BAR: "🍻",
+  MANUTENTION: "👷",
+  FUN: "😂",
+  RELOU: "🥱",
+  AUCUNE: "🤷‍♂️",
 };
 
 export const TaskCategoryEmojiMap: Map<TaskCategory, TaskCategoryEmoji> =
   new Map([
-    ['STATIQUE', TaskCategoryEmojis.STATIQUE],
-    ['BAR', TaskCategoryEmojis.BAR],
-    ['MANUTENTION', TaskCategoryEmojis.MANUTENTION],
-    ['FUN', TaskCategoryEmojis.FUN],
-    ['RELOU', TaskCategoryEmojis.RELOU],
-    ['AUCUNE', TaskCategoryEmojis.AUCUNE],
+    ["STATIQUE", TaskCategoryEmojis.STATIQUE],
+    ["BAR", TaskCategoryEmojis.BAR],
+    ["MANUTENTION", TaskCategoryEmojis.MANUTENTION],
+    ["FUN", TaskCategoryEmojis.FUN],
+    ["RELOU", TaskCategoryEmojis.RELOU],
+    ["AUCUNE", TaskCategoryEmojis.AUCUNE],
   ]);
 
 export const TaskPriorities = {
-  PRIORITAIRE: 'PRIORITAIRE',
-  NON_PRIORITAIRE: 'NON PRIORITAIRE',
+  PRIORITAIRE: "PRIORITAIRE",
+  NON_PRIORITAIRE: "NON PRIORITAIRE",
 };
 
 export type TaskPriority = keyof typeof TaskPriorities;

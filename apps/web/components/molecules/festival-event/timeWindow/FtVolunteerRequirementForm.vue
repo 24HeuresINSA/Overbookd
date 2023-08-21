@@ -69,27 +69,27 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import VolunteerRequestChip from '~/components/atoms/chip/VolunteerRequestChip.vue';
-import SearchTeam from '~/components/atoms/field/search/SearchTeam.vue';
-import SearchUser from '~/components/atoms/field/search/SearchUser.vue';
+import Vue from "vue";
+import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.vue";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {
   FtTeamRequest,
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-} from '~/utils/models/ft';
-import { Team } from '~/utils/models/team';
-import { User } from '~/utils/models/user';
-import { isNumber, min } from '~/utils/rules/inputRules';
-import { formatUsername } from '~/utils/user/userUtils';
+} from "~/utils/models/ft";
+import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
+import { isNumber, min } from "~/utils/rules/inputRules";
+import { formatUsername } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: 'FtVolunteerRequirementForm',
+  name: "FtVolunteerRequirementForm",
   components: { SearchTeam, SearchUser, VolunteerRequestChip },
   model: {
-    prop: 'timeWindow',
-    event: 'change',
+    prop: "timeWindow",
+    event: "change",
   },
   props: {
     timeWindow: {
@@ -258,19 +258,19 @@ export default Vue.extend({
     },
     confirmVolunteerRequirement() {
       if (!this.hasChanges) {
-        return this.$store.dispatch('notif/pushNotification', {
-          type: 'warning',
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "warning",
           message:
             "🤔 Tu n'as pas fait de demandes, n'oublie pas d'appuyer sur +",
         });
       }
-      this.$emit('change', this.mTimeWindow);
+      this.$emit("change", this.mTimeWindow);
     },
     displayUsername(user: User): string {
       return formatUsername(user);
     },
     closeDialog() {
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
   },
 });

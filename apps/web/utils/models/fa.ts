@@ -1,37 +1,37 @@
-import { HttpStringified } from '../types/http';
-import { FaFeedback } from './feedback';
-import { FtSimplified } from './ft';
-import { StoredGearRequest } from './gearRequests';
-import { PeriodWithId } from './period';
-import { SignaLocation } from './signaLocation';
-import { Team } from './team';
-import { DisplayedUser, User } from './user';
+import { HttpStringified } from "../types/http";
+import { FaFeedback } from "./feedback";
+import { FtSimplified } from "./ft";
+import { StoredGearRequest } from "./gearRequests";
+import { PeriodWithId } from "./period";
+import { SignaLocation } from "./signaLocation";
+import { Team } from "./team";
+import { DisplayedUser, User } from "./user";
 
 export enum FaStatus {
-  DRAFT = 'DRAFT',
-  REFUSED = 'REFUSED',
-  SUBMITTED = 'SUBMITTED',
-  VALIDATED = 'VALIDATED',
+  DRAFT = "DRAFT",
+  REFUSED = "REFUSED",
+  SUBMITTED = "SUBMITTED",
+  VALIDATED = "VALIDATED",
 }
 
 export enum FaStatusLabel {
-  DRAFT = 'Brouillon',
-  REFUSED = 'Refusée',
-  SUBMITTED = 'Soumise à validation',
-  VALIDATED = 'Validée',
+  DRAFT = "Brouillon",
+  REFUSED = "Refusée",
+  SUBMITTED = "Soumise à validation",
+  VALIDATED = "Validée",
 }
 
-const PC16_Prise_classique = 'PC16_Prise_classique';
-const P17_16A_MONO = 'P17_16A_MONO';
-const P17_16A_TRI = 'P17_16A_TRI';
-const P17_16A_TETRA = 'P17_16A_TETRA';
-const P17_32A_MONO = 'P17_32A_MONO';
-const P17_32A_TRI = 'P17_32A_TRI';
-const P17_32A_TETRA = 'P17_32A_TETRA';
-const P17_63A_MONO = 'P17_63A_MONO';
-const P17_63A_TRI = 'P17_63A_TRI';
-const P17_63A_TETRA = 'P17_63A_TETRA';
-const P17_125A_TETRA = 'P17_125A_TETRA';
+const PC16_Prise_classique = "PC16_Prise_classique";
+const P17_16A_MONO = "P17_16A_MONO";
+const P17_16A_TRI = "P17_16A_TRI";
+const P17_16A_TETRA = "P17_16A_TETRA";
+const P17_32A_MONO = "P17_32A_MONO";
+const P17_32A_TRI = "P17_32A_TRI";
+const P17_32A_TETRA = "P17_32A_TETRA";
+const P17_63A_MONO = "P17_63A_MONO";
+const P17_63A_TRI = "P17_63A_TRI";
+const P17_63A_TETRA = "P17_63A_TETRA";
+const P17_125A_TETRA = "P17_125A_TETRA";
 
 export type ElectricityType =
   | typeof PC16_Prise_classique
@@ -47,59 +47,59 @@ export type ElectricityType =
   | typeof P17_125A_TETRA;
 
 export const electricityTypeLabels = new Map<ElectricityType, string>([
-  [PC16_Prise_classique, 'Prise classique (PC16)'],
-  [P17_16A_MONO, '16A Mono (P17 16A MONO)'],
-  [P17_16A_TRI, '16A Tri (P17 16A TRI)'],
-  [P17_16A_TETRA, '16A Tetra (P17 16A TETRA)'],
-  [P17_32A_MONO, '32A Mono (P17 32A MONO)'],
-  [P17_32A_TRI, '32A Tri (P17 32A TRI)'],
-  [P17_32A_TETRA, '32A Tetra (P17 32A TETRA)'],
-  [P17_63A_MONO, '63A Mono (P17 63A MONO)'],
-  [P17_63A_TRI, '63A Tri (P17 63A TRI)'],
-  [P17_63A_TETRA, '63A Tetra (P17 63A TETRA)'],
-  [P17_125A_TETRA, '125A Tetra (P17 125A TETRA)'],
+  [PC16_Prise_classique, "Prise classique (PC16)"],
+  [P17_16A_MONO, "16A Mono (P17 16A MONO)"],
+  [P17_16A_TRI, "16A Tri (P17 16A TRI)"],
+  [P17_16A_TETRA, "16A Tetra (P17 16A TETRA)"],
+  [P17_32A_MONO, "32A Mono (P17 32A MONO)"],
+  [P17_32A_TRI, "32A Tri (P17 32A TRI)"],
+  [P17_32A_TETRA, "32A Tetra (P17 32A TETRA)"],
+  [P17_63A_MONO, "63A Mono (P17 63A MONO)"],
+  [P17_63A_TRI, "63A Tri (P17 63A TRI)"],
+  [P17_63A_TETRA, "63A Tetra (P17 63A TETRA)"],
+  [P17_125A_TETRA, "125A Tetra (P17 125A TETRA)"],
 ]);
 
 export enum SignaType {
-  BACHE = 'BACHE',
-  PANNEAU = 'PANNEAU',
-  AFFICHE = 'AFFICHE',
+  BACHE = "BACHE",
+  PANNEAU = "PANNEAU",
+  AFFICHE = "AFFICHE",
 }
 
 export enum FaType {
-  Concert = 'Concert',
-  Course = 'Course',
-  Divertissement = 'Divertissement',
-  Initiation = 'Initiation',
-  Tournoi = 'Tournoi',
-  Vente = 'Vente',
-  Prevention = 'Prevention',
-  Spectacle = 'Spectacle',
-  Autre = 'Autre',
+  Concert = "Concert",
+  Course = "Course",
+  Divertissement = "Divertissement",
+  Initiation = "Initiation",
+  Tournoi = "Tournoi",
+  Vente = "Vente",
+  Prevention = "Prevention",
+  Spectacle = "Spectacle",
+  Autre = "Autre",
 }
 export enum TimeWindowType {
-  ANIM = 'ANIM',
-  MATOS = 'MATOS',
+  ANIM = "ANIM",
+  MATOS = "MATOS",
 }
 
 export enum FaCardType {
-  GENERAL = 'GENERAL',
-  DETAIL = 'DETAIL',
-  SIGNA = 'SIGNA',
-  TIME_WINDOW = 'TIME_WINDOW',
-  SECURITY = 'SECURITY',
-  COLLABORATOR = 'COLLABORATOR',
-  LOGISTICS = 'LOGISTICS',
-  ELEC = 'ELEC',
-  WATER = 'WATER',
+  GENERAL = "GENERAL",
+  DETAIL = "DETAIL",
+  SIGNA = "SIGNA",
+  TIME_WINDOW = "TIME_WINDOW",
+  SECURITY = "SECURITY",
+  COLLABORATOR = "COLLABORATOR",
+  LOGISTICS = "LOGISTICS",
+  ELEC = "ELEC",
+  WATER = "WATER",
 }
 
 export const publicAnimationCategoryTypes = {
-  DIVERTISSEMENT: 'Divertissement',
-  CULTURE: 'Culture',
-  SPORT: 'Sport',
-  ENFANT: 'Enfant',
-  AUTRE: 'Autre',
+  DIVERTISSEMENT: "Divertissement",
+  CULTURE: "Culture",
+  SPORT: "Sport",
+  ENFANT: "Enfant",
+  AUTRE: "Autre",
 };
 
 export type PublicAnimationCategoryType =
@@ -133,21 +133,21 @@ export interface Fa extends BaseFa {
 
 export type FaSimplified = Pick<
   Fa,
-  | 'id'
-  | 'name'
-  | 'status'
-  | 'userInCharge'
-  | 'team'
-  | 'faValidation'
-  | 'faRefuse'
+  | "id"
+  | "name"
+  | "status"
+  | "userInCharge"
+  | "team"
+  | "faValidation"
+  | "faRefuse"
 >;
 
-export type CreateFa = Pick<Fa, 'name'>;
+export type CreateFa = Pick<Fa, "name">;
 
 export interface FaGeneralUpdate
   extends Pick<
     Fa,
-    'id' | 'name' | 'description' | 'type' | 'securityNeed' | 'waterNeed'
+    "id" | "name" | "description" | "type" | "securityNeed" | "waterNeed"
   > {
   teamId: number | null;
   userInChargeId: number | null;
@@ -192,7 +192,7 @@ export interface FaSignaNeed {
   comment?: string;
 }
 
-export interface FaSignaNeedsExportCsv extends Omit<FaSignaNeed, 'id'> {
+export interface FaSignaNeedsExportCsv extends Omit<FaSignaNeed, "id"> {
   faName: string;
   faId: number;
 }
@@ -250,9 +250,9 @@ export interface ElectricityTypeWithLabel {
 }
 
 export interface SortedStoredGearRequests {
-  matos: StoredGearRequest<'FA'>[];
-  barrieres: StoredGearRequest<'FA'>[];
-  elec: StoredGearRequest<'FA'>[];
+  matos: StoredGearRequest<"FA">[];
+  barrieres: StoredGearRequest<"FA">[];
+  elec: StoredGearRequest<"FA">[];
 }
 
 export function castFaWithDate(fa: HttpStringified<Fa>): Fa {

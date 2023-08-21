@@ -6,19 +6,19 @@ interface BaseTransaction {
 }
 
 export interface Expense extends BaseTransaction {
-  type: 'EXPENSE';
+  type: "EXPENSE";
   from: string;
   to: null;
 }
 
 export interface Deposit extends BaseTransaction {
-  type: 'DEPOSIT';
+  type: "DEPOSIT";
   from: string;
   to: null;
 }
 
 export interface Transfer extends BaseTransaction {
-  type: 'TRANSFER';
+  type: "TRANSFER";
   from: number;
   to: number;
 }

@@ -98,26 +98,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   AssignmentCandidate,
   Task,
   TaskAssignment,
-} from '~/domain/timespan-assignment/timeSpanAssignment';
+} from "~/domain/timespan-assignment/timeSpanAssignment";
 import {
   PlanningEvent,
   convertTaskToPlanningEvent,
   createTemporaryTaskPlanningEvent,
-} from '~/domain/common/planning-events';
-import { Volunteer } from '~/utils/models/assignment';
-import { CalendarUser } from '~/utils/models/calendar';
-import { getUnderlyingTeams } from '~/domain/timespan-assignment/underlying-teams';
-import OverMultiCalendar from '~/components/molecules/calendar/OverMultiCalendar.vue';
-import AssignmentVolunteerResumeCalendarHeader from '~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue';
+} from "~/domain/common/planning-events";
+import { Volunteer } from "~/utils/models/assignment";
+import { CalendarUser } from "~/utils/models/calendar";
+import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
+import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
+import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";
 
 export default Vue.extend({
-  name: 'AssignmentForm',
+  name: "AssignmentForm",
   components: {
     TeamChip,
     OverMultiCalendar,
@@ -194,7 +194,7 @@ export default Vue.extend({
       return this.taskAssignment.getCandidate(+id)?.volunteer;
     },
     closeDialog() {
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
     getAssignableTeams(candidate?: AssignmentCandidate): string[] {
       if (!candidate) return [];

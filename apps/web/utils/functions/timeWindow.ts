@@ -1,7 +1,7 @@
-import { FaTimeWindow, FaTimeWindowSortFunction } from '../models/fa';
-import { FtTimeWindow, FtTimeWindowSortFunction } from '../models/ft';
+import { FaTimeWindow, FaTimeWindowSortFunction } from "../models/fa";
+import { FtTimeWindow, FtTimeWindowSortFunction } from "../models/ft";
 
-export type SortableTimeWindowHeader = 'startDate' | 'endDate';
+export type SortableTimeWindowHeader = "startDate" | "endDate";
 
 export function sortFtTimeWindowsOnStart(
   timeWindows: FtTimeWindow[],
@@ -27,8 +27,8 @@ export const ftTimeWindowsSorts = new Map<
   SortableTimeWindowHeader,
   FtTimeWindowSortFunction
 >([
-  ['startDate', sortFtTimeWindowsOnStart],
-  ['endDate', sortFtTimeWindowsOnEnd],
+  ["startDate", sortFtTimeWindowsOnStart],
+  ["endDate", sortFtTimeWindowsOnEnd],
 ]);
 
 export function sortFaTimeWindowsOnStart(
@@ -55,6 +55,6 @@ export const faTimeWindowsSorts = new Map<
   SortableTimeWindowHeader,
   FaTimeWindowSortFunction
 >([
-  ['startDate', sortFaTimeWindowsOnStart],
-  ['endDate', sortFaTimeWindowsOnEnd],
+  ["startDate", sortFaTimeWindowsOnStart],
+  ["endDate", sortFaTimeWindowsOnEnd],
 ]);

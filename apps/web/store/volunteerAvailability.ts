@@ -1,14 +1,14 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { Period } from '@overbookd/period';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Period } from "@overbookd/period";
 import {
   PeriodOrchestrator,
   Availability,
   AvailabilityRegistery,
-} from '@overbookd/volunteer-availability';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
-import { castPeriods } from '~/utils/models/period';
-import { HttpStringified } from '~/utils/types/http';
+} from "@overbookd/volunteer-availability";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
+import { castPeriods } from "~/utils/models/period";
+import { HttpStringified } from "~/utils/types/http";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;
 
@@ -55,20 +55,20 @@ export const actions = actionTree(
   { state },
   {
     clearVolunteerAvailabilities({ commit }) {
-      commit('SET_VOLUNTEER_AVAILABILITIES', []);
-      commit('SET_PERIOD_ORCHESTRATOR', []);
-      commit('SET_CURRENT_CHARISMA', 0);
+      commit("SET_VOLUNTEER_AVAILABILITIES", []);
+      commit("SET_PERIOD_ORCHESTRATOR", []);
+      commit("SET_CURRENT_CHARISMA", 0);
     },
     async fetchVolunteerAvailabilities({ commit, rootState }, userId: number) {
-      commit('SET_CURRENT_CHARISMA', rootState.user.me.charisma);
+      commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
 
       const res = await safeCall(
         this,
         repo.getVolunteerAvailabilities(this, userId)
       );
       if (!res) return;
-      commit('SET_VOLUNTEER_AVAILABILITIES', castToAvailabilities(res.data));
-      commit('SET_PERIOD_ORCHESTRATOR', castPeriods(res.data));
+      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
+      commit("SET_PERIOD_ORCHESTRATOR", castPeriods(res.data));
     },
 
     async updateVolunteerAvailabilities(
@@ -83,17 +83,17 @@ export const actions = actionTree(
           state.periodOrchestrator.availabilityPeriods
         ),
         {
-          successMessage: 'Disponibilitiés sauvegardées 🥳',
-          errorMessage: 'Disponibilitiés non sauvegardées 😢',
+          successMessage: "Disponibilitiés sauvegardées 🥳",
+          errorMessage: "Disponibilitiés non sauvegardées 😢",
         }
       );
       if (!res) return;
-      commit('SET_VOLUNTEER_AVAILABILITIES', castToAvailabilities(res.data));
+      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
 
-      dispatch('user/fetchUser', null, { root: true });
-      commit('SET_CURRENT_CHARISMA', rootState.user.me.charisma);
+      dispatch("user/fetchUser", null, { root: true });
+      commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
 
-      return this.$router.push({ path: '/' });
+      return this.$router.push({ path: "/" });
     },
 
     async overrideVolunteerAvailabilities({ commit, state }, userId: number) {
@@ -105,44 +105,44 @@ export const actions = actionTree(
           state.periodOrchestrator.availabilityPeriods
         ),
         {
-          successMessage: 'Disponibilitiés sauvegardées 🥳',
-          errorMessage: 'Disponibilitiés non sauvegardées 😢',
+          successMessage: "Disponibilitiés sauvegardées 🥳",
+          errorMessage: "Disponibilitiés non sauvegardées 😢",
         }
       );
       if (!res) return;
-      commit('SET_VOLUNTEER_AVAILABILITIES', castToAvailabilities(res.data));
+      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
     },
 
     async addVolunteerAvailability({ commit }, availability: Availability) {
-      commit('ADD_VOLUNTEER_AVAILABILITY', availability);
+      commit("ADD_VOLUNTEER_AVAILABILITY", availability);
     },
 
     addAvailabilityPeriod({ commit }, period: Period) {
-      commit('ADD_PERIOD_IN_PERIOD_ORCHESTRATOR', period);
+      commit("ADD_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
     },
 
     addAvailabilityPeriods({ commit }, periods: Period[]) {
       periods.map((period) => {
-        commit('ADD_PERIOD_IN_PERIOD_ORCHESTRATOR', period);
+        commit("ADD_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
       });
     },
 
     removeAvailabilityPeriod({ commit }, period: Period) {
-      commit('REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR', period);
+      commit("REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
     },
 
     removeAvailabilityPeriods({ commit }, periods: Period[]) {
       periods.map((period) => {
-        commit('REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR', period);
+        commit("REMOVE_PERIOD_IN_PERIOD_ORCHESTRATOR", period);
       });
     },
 
     incrementCharisma({ commit, state }, increment: number) {
-      commit('SET_CURRENT_CHARISMA', state.currentCharisma + increment);
+      commit("SET_CURRENT_CHARISMA", state.currentCharisma + increment);
     },
 
     decrementCharisma({ commit, state }, decrement: number) {
-      commit('SET_CURRENT_CHARISMA', state.currentCharisma - decrement);
+      commit("SET_CURRENT_CHARISMA", state.currentCharisma - decrement);
     },
   }
 );

@@ -1,4 +1,4 @@
-import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from '@overbookd/period';
+import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "@overbookd/period";
 
 export class Duration {
   private constructor(private readonly milliseconds: number) {}
@@ -17,7 +17,7 @@ export class Duration {
 
   toString(): string {
     const formattedHours = this.hours.toString();
-    const formattedMinutes = this.minutes.toString().padStart(2, '0');
+    const formattedMinutes = this.minutes.toString().padStart(2, "0");
     return `${formattedHours}h${formattedMinutes}`;
   }
 }

@@ -40,25 +40,25 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import NewFtCard from '~/components/molecules/festival-event/creation/NewFtCard.vue';
-import { Fa } from '~/utils/models/fa';
+import Vue from "vue";
+import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
+import { Fa } from "~/utils/models/fa";
 import {
   FtSimplified,
   FtStatus,
   FtStatusLabel,
   ftStatusLabels,
   BROUILLON,
-} from '~/utils/models/ft';
+} from "~/utils/models/ft";
 
 export default Vue.extend({
-  name: 'ChildFtCard',
+  name: "ChildFtCard",
   components: { NewFtCard },
   data: () => ({
     headers: [
-      { text: 'Numéro', value: 'id' },
-      { text: 'Nom', value: 'name' },
-      { text: 'Statut', value: 'status' },
+      { text: "Numéro", value: "id" },
+      { text: "Nom", value: "name" },
+      { text: "Statut", value: "status" },
     ],
     isNewFTDialogOpen: false,
   }),

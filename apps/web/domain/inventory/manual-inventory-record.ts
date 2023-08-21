@@ -1,6 +1,6 @@
-import { Gear } from '~/utils/models/catalog.model';
-import { GearRepository } from './gear.repository';
-import { InventoryRecord } from './inventory-record';
+import { Gear } from "~/utils/models/catalog.model";
+import { GearRepository } from "./gear.repository";
+import { InventoryRecord } from "./inventory-record";
 
 export class ManualInventoryRecord {
   constructor(

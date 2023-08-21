@@ -1,11 +1,11 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Period } from '@overbookd/period';
-import { HttpStringified } from '~/utils/types/http';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { Period } from "@overbookd/period";
+import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class VolunteerAvailabilityRepository {
-  private static readonly basePath = 'volunteer-availability';
+  private static readonly basePath = "volunteer-availability";
 
   static async getVolunteerAvailabilities(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<Period[]>>(

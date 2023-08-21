@@ -1,7 +1,7 @@
-import { actionTree, mutationTree } from 'typed-vuex';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { Transaction, Transfer } from '~/utils/models/transaction';
-import { safeCall } from '~/utils/api/calls';
+import { actionTree, mutationTree } from "typed-vuex";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { Transaction, Transfer } from "~/utils/models/transaction";
+import { safeCall } from "~/utils/api/calls";
 
 const transactionRepo = RepoFactory.TransactionRepository;
 
@@ -29,7 +29,7 @@ export const actions = actionTree(
         transactionRepo.getUserTransactions(this)
       );
       if (res) {
-        commit('SET_TRANSACTIONS', res.data);
+        commit("SET_TRANSACTIONS", res.data);
       }
     },
     async addTransaction({ commit }, transfer: Partial<Transfer>) {
@@ -38,7 +38,7 @@ export const actions = actionTree(
         transactionRepo.createTransfer(this, transfer)
       );
       if (res) {
-        commit('ADD_TRANSACTIONS', res.data);
+        commit("ADD_TRANSACTIONS", res.data);
         return true;
       }
       return false;

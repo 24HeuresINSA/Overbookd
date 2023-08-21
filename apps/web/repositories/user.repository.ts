@@ -1,4 +1,4 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -8,13 +8,13 @@ import {
   UserModification,
   VolunteerAssignmentStat,
   VolunteerTask,
-} from '~/utils/models/user';
-import { HttpStringified } from '~/utils/types/http';
+} from "~/utils/models/user";
+import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class UserRepository {
-  private static readonly basePath = 'users';
+  private static readonly basePath = "users";
 
   static createUser(context: Context, user: UserCreation) {
     return context.$axios.post<HttpStringified<CompleteUser>>(
@@ -70,13 +70,13 @@ export class UserRepository {
     context: Context,
     userId: number,
   ): Promise<string | undefined> {
-    const token = context.$axios.defaults.headers.common['Authorization'];
+    const token = context.$axios.defaults.headers.common["Authorization"];
     if (!token) return undefined;
 
     const response = await fetch(
       `${process.env.BASE_URL}${this.basePath}/${userId}/profile-picture`,
       {
-        method: 'GET',
+        method: "GET",
         headers: {
           Authorization: `${token}`,
         },
@@ -112,7 +112,7 @@ export class UserRepository {
   }
 
   static getFriends(context: Context) {
-    return context.$axios.get<HttpStringified<User[]>>('friends');
+    return context.$axios.get<HttpStringified<User[]>>("friends");
   }
 
   static getUserFriends(context: Context, userId: number) {
@@ -120,7 +120,7 @@ export class UserRepository {
   }
 
   static addFriend(context: Context, friendId: number) {
-    return context.$axios.post<HttpStringified<User>>('friends', {
+    return context.$axios.post<HttpStringified<User>>("friends", {
       id: friendId,
     });
   }
@@ -155,13 +155,13 @@ export class UserRepository {
 
   static getMyPdfPlanning(context: Context) {
     return context.$axios.get<string>(`${this.basePath}/me/planning`, {
-      headers: { accept: 'application/pdf' },
+      headers: { accept: "application/pdf" },
     });
   }
 
   static getPdfPlanning(context: Context, id: number) {
     return context.$axios.get<string>(`${this.basePath}/${id}/planning`, {
-      headers: { accept: 'application/pdf' },
+      headers: { accept: "application/pdf" },
     });
   }
 }

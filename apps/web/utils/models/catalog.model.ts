@@ -1,4 +1,4 @@
-import { Team } from './team';
+import { Team } from "./team";
 
 export interface Gear {
   id: number;
@@ -6,7 +6,7 @@ export interface Gear {
   isPonctualUsage: boolean;
   isConsumable: boolean;
   slug: string;
-  owner?: Pick<Team, 'code' | 'name'>;
+  owner?: Pick<Team, "code" | "name">;
   category?: {
     id: number;
     name: string;

@@ -1,5 +1,5 @@
-import { pages } from '~/utils/pages/pagesList';
-import { NuxtContext } from './nuxt-context';
+import { pages } from "~/utils/pages/pagesList";
+import { NuxtContext } from "./nuxt-context";
 
 export default async function (context: NuxtContext) {
   const pagePath = context.route.path;
@@ -9,5 +9,5 @@ export default async function (context: NuxtContext) {
   const hasPermission = context.store.$accessor.user.can(
     currentPage.permission,
   );
-  if (!hasPermission) context.redirect('/');
+  if (!hasPermission) context.redirect("/");
 }

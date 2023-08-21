@@ -35,9 +35,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { SignaType } from '~/utils/models/fa';
-import { isNumber, min } from '~/utils/rules/inputRules';
+import Vue from "vue";
+import { SignaType } from "~/utils/models/fa";
+import { isNumber, min } from "~/utils/rules/inputRules";
 
 interface SignaNeedData {
   signaType: SignaType;
@@ -52,10 +52,10 @@ interface SignaNeedData {
 }
 
 export default Vue.extend({
-  name: 'SignaNeedForm',
+  name: "SignaNeedForm",
   model: {
-    prop: 'signaNeed',
-    event: 'change',
+    prop: "signaNeed",
+    event: "change",
   },
   props: {
     signaNeed: {
@@ -65,8 +65,8 @@ export default Vue.extend({
   },
   data: (): SignaNeedData => ({
     signaType: SignaType.AFFICHE,
-    text: '',
-    count: '1',
+    text: "",
+    count: "1",
     size: undefined,
     comment: undefined,
     rules: {
@@ -88,7 +88,7 @@ export default Vue.extend({
       );
     },
     statusFormLabel(): string {
-      return this.signaNeed !== null ? 'Modifier' : 'Ajouter';
+      return this.signaNeed !== null ? "Modifier" : "Ajouter";
     },
   },
   watch: {
@@ -111,15 +111,15 @@ export default Vue.extend({
     },
     clearLocalVariable() {
       this.signaType = SignaType.AFFICHE;
-      this.text = '';
-      this.count = '1';
+      this.text = "";
+      this.count = "1";
       this.size = undefined;
       this.comment = undefined;
     },
     confirmSignaNeed() {
       if (this.isFormInvalid) {
         return this.$accessor.notif.pushNotification({
-          message: '❌ Tu dois compléter tous les champs avec une * !',
+          message: "❌ Tu dois compléter tous les champs avec une * !",
         });
       }
 
@@ -132,8 +132,8 @@ export default Vue.extend({
         comment: this.comment?.trim(),
       };
 
-      this.$emit('change', signaNeed);
-      this.$emit('close-dialog');
+      this.$emit("change", signaNeed);
+      this.$emit("close-dialog");
       this.clearLocalVariable();
     },
     showErrorMessage(message: string) {

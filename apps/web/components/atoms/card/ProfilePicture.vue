@@ -8,11 +8,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { CompleteUserWithPermissions } from '~/utils/models/user';
+import Vue from "vue";
+import { CompleteUserWithPermissions } from "~/utils/models/user";
 
 export default Vue.extend({
-  name: 'ProfilePicture',
+  name: "ProfilePicture",
   props: {
     user: { type: Object as () => CompleteUserWithPermissions, required: true },
   },

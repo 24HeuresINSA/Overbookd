@@ -38,34 +38,34 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SearchTeamVue from '~/components/atoms/field/search/SearchTeam.vue';
-import { CategoryForm } from '~/store/catalog';
-import { Category } from '~/utils/models/catalog.model';
-import SearchCategoryVue from '../../atoms/field/search/SearchCategory.vue';
-import { InputRulesData, minLength } from '~/utils/rules/inputRules';
-import { Team } from '~/utils/models/team';
+import Vue from "vue";
+import SearchTeamVue from "~/components/atoms/field/search/SearchTeam.vue";
+import { CategoryForm } from "~/store/catalog";
+import { Category } from "~/utils/models/catalog.model";
+import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
+import { InputRulesData, minLength } from "~/utils/rules/inputRules";
+import { Team } from "~/utils/models/team";
 
 interface CategoryFormData extends InputRulesData {
   name: string;
-  owner?: Pick<Team, 'code' | 'name'>;
+  owner?: Pick<Team, "code" | "name">;
   parent?: Category;
 }
 
 const nameMinLength = 3;
 
 export default Vue.extend({
-  name: 'CategoryForm',
+  name: "CategoryForm",
   components: { SearchCategoryVue, SearchTeamVue },
   props: {
     category: {
       type: Object,
-      default: () => ({ name: '', owner: undefined, parent: undefined }),
+      default: () => ({ name: "", owner: undefined, parent: undefined }),
     },
   },
   data(): CategoryFormData {
     return {
-      name: '',
+      name: "",
       owner: undefined,
       parent: undefined,
       rules: {
@@ -108,10 +108,10 @@ export default Vue.extend({
         : this.$accessor.catalog.createCategory(category);
 
       await action;
-      this.name = '';
+      this.name = "";
       this.owner = undefined;
       this.parent = undefined;
-      this.$emit('save');
+      this.$emit("save");
       this.closeDialog();
     },
     buildCategoryForm(): CategoryForm {
@@ -125,7 +125,7 @@ export default Vue.extend({
       return this.$accessor.catalog.fetchCategory(categoryId);
     },
     closeDialog(): void {
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
   },
 });

@@ -40,15 +40,15 @@
 
 <script>
 export default {
-  name: 'ShowCalendar',
+  name: "ShowCalendar",
   props: {
-    title: { type: String, default: () => '' },
+    title: { type: String, default: () => "" },
     slots: { type: Array, default: () => {} },
   },
   data() {
     return {
       showCalendar: false,
-      selectedDate: '2022-05-22',
+      selectedDate: "2022-05-22",
       events: [],
     };
   },
@@ -67,30 +67,30 @@ export default {
       }
     },
     getFormattedDate(date) {
-      const month = ('0' + (date.getMonth() + 1)).slice(-2);
-      const day = ('0' + date.getDate()).slice(-2);
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const day = ("0" + date.getDate()).slice(-2);
       const year = date.getFullYear();
-      const hour = ('0' + date.getHours()).slice(-2);
-      const min = ('0' + date.getMinutes()).slice(-2);
-      const seg = ('0' + date.getSeconds()).slice(-2);
+      const hour = ("0" + date.getHours()).slice(-2);
+      const min = ("0" + date.getMinutes()).slice(-2);
+      const seg = ("0" + date.getSeconds()).slice(-2);
       return (
-        year + '-' + month + '-' + day + ' ' + hour + ':' + min + ':' + seg
+        year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + seg
       );
     },
     getColor(type) {
       switch (type) {
-        case 'refused':
-          return 'red';
-        case 'submitted':
-          return 'orange';
-        case 'draft':
-          return 'grey';
-        case 'validated':
-          return 'success';
-        case 'affected':
-          return 'deep-purple';
+        case "refused":
+          return "red";
+        case "submitted":
+          return "orange";
+        case "draft":
+          return "grey";
+        case "validated":
+          return "success";
+        case "affected":
+          return "deep-purple";
         default:
-          return 'grey';
+          return "grey";
       }
     },
   },

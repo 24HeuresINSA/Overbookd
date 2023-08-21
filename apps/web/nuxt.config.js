@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors';
+import colors from "vuetify/es5/util/colors";
 
 export default {
   env: {
@@ -12,26 +12,26 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s',
-    title: 'Overbookd',
+    titleTemplate: "%s",
+    title: "Overbookd",
     meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
-        hid: 'description',
-        name: 'description',
-        content: 'Overbookd - Event Planning Application',
+        hid: "description",
+        name: "description",
+        content: "Overbookd - Event Planning Application",
       },
     ],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['~/assets/style.scss'],
+  css: ["~/assets/style.scss"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/chart.js', mode: 'client' },
-    { src: '~/plugins/safe-html.js', mode: 'client' },
+    { src: "~/plugins/chart.js", mode: "client" },
+    { src: "~/plugins/safe-html.js", mode: "client" },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -40,38 +40,38 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
-    '@nuxt/typescript-build',
+    "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/vuetify
-    '@nuxtjs/vuetify',
-    '@nuxtjs/color-mode',
-    'nuxt-typed-vuex',
+    "@nuxtjs/vuetify",
+    "@nuxtjs/color-mode",
+    "nuxt-typed-vuex",
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
+    "@nuxtjs/axios",
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
-    '@nuxtjs/auth-next',
+    "@nuxtjs/pwa",
+    "@nuxtjs/auth-next",
   ],
 
   auth: {
     strategies: {
       local: {
         token: {
-          property: 'accessToken',
+          property: "accessToken",
           global: true,
           required: true,
-          type: 'Bearer',
+          type: "Bearer",
         },
         user: {
           property: false,
         },
         endpoints: {
           login: {
-            url: '/login',
-            method: 'post',
+            url: "/login",
+            method: "post",
           },
           user: false,
         },
@@ -80,7 +80,7 @@ export default {
   },
 
   router: {
-    middleware: ['auth', 'user', 'team', 'routing'],
+    middleware: ["auth", "user", "team", "routing"],
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -91,13 +91,13 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'fr',
+      lang: "fr",
     },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
-    customVariables: ['~/assets/variables.scss'],
+    customVariables: ["~/assets/variables.scss"],
     theme: {
       dark: false,
       themes: {
@@ -116,7 +116,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    transpile: ['vuetify/lib', 'tiptap-vuetify'],
+    transpile: ["vuetify/lib", "tiptap-vuetify"],
     babel: {
       compact: true,
     },
@@ -127,15 +127,15 @@ export default {
     },
     optimization: {
       splitChunks: {
-        chunks: 'all',
-        automaticNameDelimiter: '.',
+        chunks: "all",
+        automaticNameDelimiter: ".",
         name: true,
         maxSize: 250_000,
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
+            name: "vendors",
+            chunks: "all",
             maxSize: 250_000,
           },
         },

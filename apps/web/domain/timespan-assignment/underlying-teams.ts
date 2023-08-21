@@ -1,4 +1,4 @@
-const UNDERLYING_TEAMS = ['hard', 'confiance', 'soft'];
+const UNDERLYING_TEAMS = ["hard", "confiance", "soft"];
 
 function findUnderlyingTeamIndex(teamCode: string) {
   return UNDERLYING_TEAMS.indexOf(teamCode);

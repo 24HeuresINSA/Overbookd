@@ -24,15 +24,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import AvailabilitiesStepsCard from '~/components/organisms/availabilities/AvailabilitiesStepsCard.vue';
+import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import AvailabilitiesStepsCard from "~/components/organisms/availabilities/AvailabilitiesStepsCard.vue";
 
 export default Vue.extend({
-  name: 'Availabilities',
+  name: "Availabilities",
   components: { AvailabilitiesStepsCard, SnackNotificationContainer },
   head: () => ({
-    title: 'Mes dispos',
+    title: "Mes dispos",
   }),
   computed: {
     userId(): number {

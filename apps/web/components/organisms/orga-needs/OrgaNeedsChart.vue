@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { OrgaNeedsResponse } from '~/store/orgaNeeds';
+import Vue from "vue";
+import { OrgaNeedsResponse } from "~/store/orgaNeeds";
 
 type Dataset = {
   label: string;
@@ -31,7 +31,7 @@ type Tooltip = {
 };
 
 export default Vue.extend({
-  name: 'OrgaNeedsChart',
+  name: "OrgaNeedsChart",
   data() {
     return {
       courbs: {
@@ -57,16 +57,16 @@ export default Vue.extend({
           ],
         },
         hover: {
-          mode: 'nearest',
+          mode: "nearest",
           intersect: true,
         },
         tooltips: {
-          mode: 'index',
-          position: 'nearest',
+          mode: "index",
+          position: "nearest",
           callbacks: {
             label: function (tooltipItem: Tooltip, data: ChartData) {
               const datasetLabel =
-                data.datasets[tooltipItem.datasetIndex].label || '';
+                data.datasets[tooltipItem.datasetIndex].label || "";
               const dataPoint = tooltipItem.yLabel;
               return `${datasetLabel}: ${dataPoint}`;
             },
@@ -98,28 +98,28 @@ export default Vue.extend({
     },
     availableVolunteers(): Dataset {
       return {
-        label: 'Bénevoles disponibles',
+        label: "Bénevoles disponibles",
         data: this.stats.map((stat) => stat.availableVolunteers),
-        backgroundColor: '#00ff0030',
-        borderColor: '#00ff00',
+        backgroundColor: "#00ff0030",
+        borderColor: "#00ff00",
         ...this.datasetOptions,
       };
     },
     requestedVolunteers(): Dataset {
       return {
-        label: 'Bénevoles demandés',
+        label: "Bénevoles demandés",
         data: this.stats.map((stat) => stat.requestedVolunteers),
-        backgroundColor: '#ff000030',
-        borderColor: '#ff0000',
+        backgroundColor: "#ff000030",
+        borderColor: "#ff0000",
         ...this.datasetOptions,
       };
     },
     assignedVolunteers(): Dataset {
       return {
-        label: 'Bénevoles assignés',
+        label: "Bénevoles assignés",
         data: this.stats.map((stat) => stat.assignedVolunteers),
-        backgroundColor: '#0000ff30',
-        borderColor: '#0000ff',
+        backgroundColor: "#0000ff30",
+        borderColor: "#0000ff",
         ...this.datasetOptions,
       };
     },

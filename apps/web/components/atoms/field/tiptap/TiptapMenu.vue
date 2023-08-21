@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import TiptapMenuItem from './TiptapMenuItem.vue';
+import TiptapMenuItem from "./TiptapMenuItem.vue";
 
 export default {
-  name: 'TiptapMenu',
+  name: "TiptapMenu",
   components: { TiptapMenuItem },
   props: {
     editor: {
@@ -28,107 +28,107 @@ export default {
     return {
       items: [
         {
-          icon: 'bold',
-          title: 'Bold',
+          icon: "bold",
+          title: "Bold",
           action: () => this.editor.chain().focus().toggleBold().run(),
-          isActive: () => this.editor.isActive('bold'),
+          isActive: () => this.editor.isActive("bold"),
         },
         {
-          icon: 'italic',
-          title: 'Italic',
+          icon: "italic",
+          title: "Italic",
           action: () => this.editor.chain().focus().toggleItalic().run(),
-          isActive: () => this.editor.isActive('italic'),
+          isActive: () => this.editor.isActive("italic"),
         },
         {
-          icon: 'strikethrough',
-          title: 'Strike',
+          icon: "strikethrough",
+          title: "Strike",
           action: () => this.editor.chain().focus().toggleStrike().run(),
-          isActive: () => this.editor.isActive('strike'),
+          isActive: () => this.editor.isActive("strike"),
         },
         {
-          icon: 'code-view',
-          title: 'Code',
+          icon: "code-view",
+          title: "Code",
           action: () => this.editor.chain().focus().toggleCode().run(),
-          isActive: () => this.editor.isActive('code'),
+          isActive: () => this.editor.isActive("code"),
         },
         {
-          icon: 'mark-pen-line',
-          title: 'Highlight',
+          icon: "mark-pen-line",
+          title: "Highlight",
           action: () => this.editor.chain().focus().toggleHighlight().run(),
-          isActive: () => this.editor.isActive('highlight'),
+          isActive: () => this.editor.isActive("highlight"),
         },
         {
-          type: 'divider',
+          type: "divider",
         },
         {
-          icon: 'h-1',
-          title: 'Heading 1',
+          icon: "h-1",
+          title: "Heading 1",
           action: () =>
             this.editor.chain().focus().toggleHeading({ level: 1 }).run(),
-          isActive: () => this.editor.isActive('heading', { level: 1 }),
+          isActive: () => this.editor.isActive("heading", { level: 1 }),
         },
         {
-          icon: 'h-2',
-          title: 'Heading 2',
+          icon: "h-2",
+          title: "Heading 2",
           action: () =>
             this.editor.chain().focus().toggleHeading({ level: 2 }).run(),
-          isActive: () => this.editor.isActive('heading', { level: 2 }),
+          isActive: () => this.editor.isActive("heading", { level: 2 }),
         },
         {
-          icon: 'paragraph',
-          title: 'Paragraph',
+          icon: "paragraph",
+          title: "Paragraph",
           action: () => this.editor.chain().focus().setParagraph().run(),
-          isActive: () => this.editor.isActive('paragraph'),
+          isActive: () => this.editor.isActive("paragraph"),
         },
         {
-          icon: 'list-unordered',
-          title: 'Bullet List',
+          icon: "list-unordered",
+          title: "Bullet List",
           action: () => this.editor.chain().focus().toggleBulletList().run(),
-          isActive: () => this.editor.isActive('bulletList'),
+          isActive: () => this.editor.isActive("bulletList"),
         },
         {
-          icon: 'list-ordered',
-          title: 'Ordered List',
+          icon: "list-ordered",
+          title: "Ordered List",
           action: () => this.editor.chain().focus().toggleOrderedList().run(),
-          isActive: () => this.editor.isActive('orderedList'),
+          isActive: () => this.editor.isActive("orderedList"),
         },
         {
-          icon: 'list-check-2',
-          title: 'Task List',
+          icon: "list-check-2",
+          title: "Task List",
           action: () => this.editor.chain().focus().toggleTaskList().run(),
-          isActive: () => this.editor.isActive('taskList'),
+          isActive: () => this.editor.isActive("taskList"),
         },
         {
-          icon: 'code-box-line',
-          title: 'Code Block',
+          icon: "code-box-line",
+          title: "Code Block",
           action: () => this.editor.chain().focus().toggleCodeBlock().run(),
-          isActive: () => this.editor.isActive('codeBlock'),
+          isActive: () => this.editor.isActive("codeBlock"),
         },
         {
-          type: 'divider',
+          type: "divider",
         },
         {
-          icon: 'double-quotes-l',
-          title: 'Blockquote',
+          icon: "double-quotes-l",
+          title: "Blockquote",
           action: () => this.editor.chain().focus().toggleBlockquote().run(),
-          isActive: () => this.editor.isActive('blockquote'),
+          isActive: () => this.editor.isActive("blockquote"),
         },
         {
-          icon: 'separator',
-          title: 'Horizontal Rule',
+          icon: "separator",
+          title: "Horizontal Rule",
           action: () => this.editor.chain().focus().setHorizontalRule().run(),
         },
         {
-          type: 'divider',
+          type: "divider",
         },
         {
-          icon: 'text-wrap',
-          title: 'Hard Break',
+          icon: "text-wrap",
+          title: "Hard Break",
           action: () => this.editor.chain().focus().setHardBreak().run(),
         },
         {
-          icon: 'format-clear',
-          title: 'Clear Format',
+          icon: "format-clear",
+          title: "Clear Format",
           action: () =>
             this.editor.chain().focus().clearNodes().unsetAllMarks().run(),
         },

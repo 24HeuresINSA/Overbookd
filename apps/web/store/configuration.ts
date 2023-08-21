@@ -1,9 +1,9 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { updateItemToList } from '@overbookd/list';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
-import { Configuration } from '@overbookd/configuration';
-import { defaultCommitmentPresentation } from '@overbookd/registration';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
+import { Configuration } from "@overbookd/configuration";
+import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
@@ -16,13 +16,13 @@ export const getters = getterTree(state, {
     return state.configurations.find((c) => c.key === key)?.value;
   },
   eventStartDate(_, getters): Date {
-    const eventStartString = getters.get('eventDate')?.start;
+    const eventStartString = getters.get("eventDate")?.start;
     if (!eventStartString) return new Date();
     return new Date(eventStartString);
   },
   registerFormDescription(_, getters): string {
     return (
-      getters.get('registerForm')?.description ?? defaultCommitmentPresentation
+      getters.get("registerForm")?.description ?? defaultCommitmentPresentation
     );
   },
 });
@@ -50,22 +50,22 @@ export const actions = actionTree(
     async fetchAll({ commit }) {
       const res = await safeCall(this, configurationRepo.getAll(this));
       if (!res) return;
-      commit('SET_ALL_CONFIG', res.data);
+      commit("SET_ALL_CONFIG", res.data);
     },
 
     async fetch({ commit }, key: string) {
       const res = await safeCall(this, configurationRepo.fetch(this, key));
       if (!res) return;
-      commit('SET_CONFIG', res.data);
+      commit("SET_CONFIG", res.data);
     },
 
     async save({ commit }, config: Configuration) {
       const res = await safeCall(this, configurationRepo.save(this, config), {
-        successMessage: 'La configuration a été sauvegardée avec succès ✅',
-        errorMessage: 'Erreur lors de la sauvegarde de la configuration ❌',
+        successMessage: "La configuration a été sauvegardée avec succès ✅",
+        errorMessage: "Erreur lors de la sauvegarde de la configuration ❌",
       });
       if (!res) return;
-      commit('SET_CONFIG', res.data);
+      commit("SET_CONFIG", res.data);
     },
   }
 );

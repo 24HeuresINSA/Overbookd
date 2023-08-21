@@ -1,14 +1,14 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-} from '~/utils/models/charismaPeriod';
-import { HttpStringified } from '~/utils/types/http';
+} from "~/utils/models/charismaPeriod";
+import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class CharismaPeriodRepository {
-  private static readonly basePath = 'charisma-period';
+  private static readonly basePath = "charisma-period";
 
   static async getCharismaPeriods(context: Context) {
     return context.$axios.get<HttpStringified<SavedCharismaPeriod[]>>(

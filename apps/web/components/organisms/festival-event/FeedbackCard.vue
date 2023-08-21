@@ -25,33 +25,33 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { formatDate } from '~/utils/date/dateUtils';
+import Vue from "vue";
+import { formatDate } from "~/utils/date/dateUtils";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
   Feedback,
   FtFeedback,
   FtFeedbackSubjectType,
-} from '~/utils/models/feedback';
-import { DisplayedUser, MyUserInformation, User } from '~/utils/models/user';
+} from "~/utils/models/feedback";
+import { DisplayedUser, MyUserInformation, User } from "~/utils/models/user";
 
 export default Vue.extend({
-  name: 'FeedbackCard',
+  name: "FeedbackCard",
   props: {
     form: {
       type: String,
-      default: () => 'FA',
+      default: () => "FA",
     },
   },
   data: () => ({
     headers: [
-      { text: 'Auteur', value: 'author' },
-      { text: 'Sujet', value: 'subject' },
-      { text: 'Commentaire', value: 'comment' },
-      { text: 'Date', value: 'createdAt' },
+      { text: "Auteur", value: "author" },
+      { text: "Sujet", value: "subject" },
+      { text: "Commentaire", value: "comment" },
+      { text: "Date", value: "createdAt" },
     ],
-    comment: '',
+    comment: "",
   }),
   computed: {
     sortedFeedbacks(): Feedback[] {
@@ -72,7 +72,7 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     isFa(): boolean {
-      return this.form === 'FA';
+      return this.form === "FA";
     },
   },
   methods: {
@@ -103,7 +103,7 @@ export default Vue.extend({
         };
         await this.$accessor.ft.addFeedback(feedback);
       }
-      this.comment = '';
+      this.comment = "";
     },
     getAuthorName(user?: DisplayedUser) {
       if (!user) return `${this.me.firstname} ${this.me.lastname}`;

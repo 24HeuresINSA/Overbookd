@@ -1,10 +1,10 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Transaction, Transfer } from '~/utils/models/transaction';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { Transaction, Transfer } from "~/utils/models/transaction";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class TransactionRepository {
-  private static readonly basePath = 'transactions';
+  private static readonly basePath = "transactions";
 
   static getTransactions(context: Context) {
     return context.$axios.get(this.basePath);

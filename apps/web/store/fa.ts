@@ -1,13 +1,13 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { updateItemToList } from '@overbookd/list';
-import { safeCall } from '~/utils/api/calls';
-import { isAnimationValidatedBy } from '~/utils/festival-event/faUtils';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
+import { safeCall } from "~/utils/api/calls";
+import { isAnimationValidatedBy } from "~/utils/festival-event/faUtils";
 import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
   uniqueByGearReducer,
   uniquePeriodsReducer,
-} from '~/utils/functions/gearRequest';
+} from "~/utils/functions/gearRequest";
 import {
   Collaborator,
   CreateFa,
@@ -27,13 +27,13 @@ import {
   castFaWithDate,
   simplifyCompleteFa,
   toUpdateFa,
-} from '~/utils/models/fa';
+} from "~/utils/models/fa";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
   FeedbackCreation,
-} from '~/utils/models/feedback';
-import { Ft } from '~/utils/models/ft';
+} from "~/utils/models/feedback";
+import { Ft } from "~/utils/models/ft";
 import {
   GearRequest,
   GearRequestCreation,
@@ -41,32 +41,32 @@ import {
   Period,
   StoredGearRequest,
   castGearRequestWithDate,
-} from '~/utils/models/gearRequests';
-import { User } from '~/utils/models/user';
-import { sendNotification } from './catalog';
-import { formatUsername } from '~/utils/user/userUtils';
-import { RepoFactory } from '~/repositories/repo-factory';
+} from "~/utils/models/gearRequests";
+import { User } from "~/utils/models/user";
+import { sendNotification } from "./catalog";
+import { formatUsername } from "~/utils/user/userUtils";
+import { RepoFactory } from "~/repositories/repo-factory";
 
 const repo = RepoFactory.FaRepository;
 
 export const state = () => ({
   FAs: [] as FaSimplified[],
   mFA: defaultState() as Fa,
-  gearRequests: [] as StoredGearRequest<'FA'>[],
+  gearRequests: [] as StoredGearRequest<"FA">[],
   localGearRequestRentalPeriods: [] as Period[],
   localGearRequestRentalPeriodId: -1,
 });
 
 export const getters = getterTree(state, {
   matosGearRequests(state) {
-    return state.gearRequests.filter((gr) => gr.gear.owner?.code === 'matos');
+    return state.gearRequests.filter((gr) => gr.gear.owner?.code === "matos");
   },
   elecGearRequests(state) {
-    return state.gearRequests.filter((gr) => gr.gear.owner?.code === 'elec');
+    return state.gearRequests.filter((gr) => gr.gear.owner?.code === "elec");
   },
   barrieresGearRequests(state) {
     return state.gearRequests.filter(
-      (gr) => gr.gear.owner?.code === 'barrieres'
+      (gr) => gr.gear.owner?.code === "barrieres"
     );
   },
   gearRequestRentalPeriods(state): Period[] {
@@ -75,10 +75,10 @@ export const getters = getterTree(state, {
     );
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
-  uniqueByGearGearRequests(state): StoredGearRequest<'FA'>[] {
+  uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
     return state.gearRequests.reduce(
       uniqueByGearReducer,
-      [] as StoredGearRequest<'FA'>[]
+      [] as StoredGearRequest<"FA">[]
     );
   },
   allSortedGearRequests(state, getters): SortedStoredGearRequests {
@@ -100,7 +100,7 @@ export const mutations = mutationTree(state, {
   },
 
   UPDATE_FA({ mFA }, { key, value }) {
-    if (typeof mFA[key as keyof Fa] !== 'undefined') {
+    if (typeof mFA[key as keyof Fa] !== "undefined") {
       mFA[key as keyof Fa] = value as never;
     }
   },
@@ -168,15 +168,15 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest<'FA'>) {
+  ADD_GEAR_REQUEST({ gearRequests }, gearRequest: StoredGearRequest<"FA">) {
     gearRequests.push(gearRequest);
   },
 
-  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<'FA'>[]) {
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<"FA">[]) {
     state.gearRequests = gearRequestsResponse;
   },
 
-  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive<'FA'>) {
+  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive<"FA">) {
     const gearRequestIndex = state.gearRequests.findIndex(
       (gr) =>
         gr.gear.id === updatedGearRequest.gear.id &&
@@ -192,7 +192,7 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  REMOVE_GEAR_REQUEST(state, gearRequest: GearRequest<'FA'>) {
+  REMOVE_GEAR_REQUEST(state, gearRequest: GearRequest<"FA">) {
     state.gearRequests = state.gearRequests.filter(
       (gr) =>
         gr.gear.id !== gearRequest.gear.id &&
@@ -202,7 +202,7 @@ export const mutations = mutationTree(state, {
 
   ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(
     state,
-    rentalPeriod: Omit<Period, 'id'>
+    rentalPeriod: Omit<Period, "id">
   ) {
     const id = state.localGearRequestRentalPeriodId;
     state.localGearRequestRentalPeriodId =
@@ -281,57 +281,57 @@ export const actions = actionTree(
       const fa = castFaWithDate(resFA.data);
       const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
 
-      commit('UPDATE_SELECTED_FA', fa);
-      commit('SET_GEAR_REQUESTS', gearRequests);
-      commit('RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS');
+      commit("UPDATE_SELECTED_FA", fa);
+      commit("SET_GEAR_REQUESTS", gearRequests);
+      commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
     },
 
     async fetchFAs({ commit }, search?: SearchFa) {
       const res = await safeCall(this, repo.getAllFas(this, search), {
-        errorMessage: 'Impossible de charger les FAs',
+        errorMessage: "Impossible de charger les FAs",
       });
       if (!res) return;
-      commit('SET_FAS', res.data);
+      commit("SET_FAS", res.data);
     },
 
     async createFa({ commit }, fa: CreateFa) {
       const res = await safeCall(this, repo.createFa(this, fa), {
-        successMessage: 'FA créée 🥳',
-        errorMessage: 'FA non créée 😢',
+        successMessage: "FA créée 🥳",
+        errorMessage: "FA non créée 😢",
       });
       if (!res) return;
 
       const createdFa = { ...defaultState(), ...castFaWithDate(res.data) };
       const simplifyFa = simplifyCompleteFa(createdFa);
 
-      commit('UPDATE_SELECTED_FA', createdFa);
-      commit('ADD_FA', simplifyFa);
+      commit("UPDATE_SELECTED_FA", createdFa);
+      commit("ADD_FA", simplifyFa);
     },
 
     async updateFa({ commit }, fa: Fa) {
       const faToUpdate = toUpdateFa(fa);
       const res = await safeCall(this, repo.updateFa(this, faToUpdate), {
-        successMessage: 'FA sauvegardée 🥳',
-        errorMessage: 'FA non sauvegardée 😢',
+        successMessage: "FA sauvegardée 🥳",
+        errorMessage: "FA non sauvegardée 😢",
       });
 
       if (!res) return;
       const updatedFT = castFaWithDate(res.data);
-      commit('UPDATE_SELECTED_FA', updatedFT);
+      commit("UPDATE_SELECTED_FA", updatedFT);
     },
 
     async updateFaChunk({ state, dispatch }, faChunk: Partial<Fa>) {
       const fa = { ...state.mFA, ...faChunk };
-      dispatch('updateFa', fa);
+      dispatch("updateFa", fa);
     },
 
     async deleteFA({ commit }, faId: number) {
       const res = await safeCall(this, repo.deleteFa(this, faId), {
-        successMessage: 'FA supprimée 🥳',
-        errorMessage: 'FA non supprimée 😢',
+        successMessage: "FA supprimée 🥳",
+        errorMessage: "FA non supprimée 😢",
       });
       if (!res) return;
-      commit('DELETE_FA', faId);
+      commit("DELETE_FA", faId);
     },
 
     async submitForReview({ commit, dispatch }, author: User) {
@@ -341,9 +341,9 @@ export const actions = actionTree(
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
-      commit('UPDATE_STATUS', FaStatus.SUBMITTED);
-      dispatch('save');
+      dispatch("addFeedback", feedback);
+      commit("UPDATE_STATUS", FaStatus.SUBMITTED);
+      dispatch("save");
     },
 
     /**
@@ -357,7 +357,7 @@ export const actions = actionTree(
         );
       }
       await Promise.all(allPromise);
-      dispatch('fetchFa', state.mFA.id);
+      dispatch("fetchFa", state.mFA.id);
     },
 
     validate: async function (
@@ -369,14 +369,14 @@ export const actions = actionTree(
         return;
       if (state.mFA.faRefuse?.length === 1) {
         if (state.mFA.faRefuse[0].team.id === validatorId) {
-          commit('UPDATE_STATUS', FaStatus.SUBMITTED);
+          commit("UPDATE_STATUS", FaStatus.SUBMITTED);
         }
       }
       const MAX_VALIDATORS = rootState.team.faValidators.length;
       // -1 car la validation est faite avant l'ajout du validateur
       if (state.mFA.faValidation?.length === MAX_VALIDATORS - 1) {
         // validated by all validators
-        commit('UPDATE_STATUS', FaStatus.VALIDATED);
+        commit("UPDATE_STATUS", FaStatus.VALIDATED);
       }
       const body: FaValidationBody = { teamId: validatorId };
 
@@ -387,27 +387,27 @@ export const actions = actionTree(
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
-      dispatch('save');
+      dispatch("addFeedback", feedback);
+      dispatch("save");
     },
 
     refuse: async function (
       { dispatch, commit, state },
       { validatorId, message, author }
     ) {
-      commit('UPDATE_STATUS', FaStatus.REFUSED);
+      commit("UPDATE_STATUS", FaStatus.REFUSED);
       const body: FaValidationBody = {
         teamId: validatorId,
       };
       await repo.refuseFA(this, state.mFA.id, body);
       const feedback: FaFeedback = {
         subject: FaFeedbackSubjectType.REFUSED,
-        comment: `La FA a été refusée${message ? ': ' + message : '.'}`,
+        comment: `La FA a été refusée${message ? ": " + message : "."}`,
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
-      dispatch('save');
+      dispatch("addFeedback", feedback);
+      dispatch("save");
     },
 
     async createPublicAnimation({ commit, state }) {
@@ -415,12 +415,12 @@ export const actions = actionTree(
         this,
         repo.addPublicAnimation(this, { faId: state.mFA.id }),
         {
-          successMessage: 'Info de publication créée 🥳',
-          errorMessage: 'Info de publication non créée 😢',
+          successMessage: "Info de publication créée 🥳",
+          errorMessage: "Info de publication non créée 😢",
         }
       );
       if (!res) return;
-      commit('UPDATE_PUBLIC_ANIMATION', res.data);
+      commit("UPDATE_PUBLIC_ANIMATION", res.data);
     },
 
     async updatePublicAnimation(
@@ -431,12 +431,12 @@ export const actions = actionTree(
         this,
         repo.updatePublicAnimation(this, state.mFA.id, publicAnimation),
         {
-          successMessage: 'Info de publication sauvegardée 🥳',
-          errorMessage: 'Info de publication non sauvegardée 😢',
+          successMessage: "Info de publication sauvegardée 🥳",
+          errorMessage: "Info de publication non sauvegardée 😢",
         }
       );
       if (!res) return;
-      commit('UPDATE_PUBLIC_ANIMATION', publicAnimation);
+      commit("UPDATE_PUBLIC_ANIMATION", publicAnimation);
     },
 
     async deletePublicAnimation({ commit, state }) {
@@ -444,32 +444,32 @@ export const actions = actionTree(
         this,
         repo.deletePublicAnimation(this, state.mFA.id),
         {
-          successMessage: 'Info de publication supprimée 🥳',
-          errorMessage: 'Info de publication non supprimée 😢',
+          successMessage: "Info de publication supprimée 🥳",
+          errorMessage: "Info de publication non supprimée 😢",
         }
       );
       if (!res) return;
-      commit('DELETE_PUBLIC_ANIMATION');
+      commit("DELETE_PUBLIC_ANIMATION");
     },
 
     resetLogValidations: async function (
       { dispatch, state, rootGetters },
       author: User
     ) {
-      const logTeamCodes = ['matos', 'barrieres', 'elec'];
+      const logTeamCodes = ["matos", "barrieres", "elec"];
       const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
         isAnimationValidatedBy(state.mFA, teamCode)
       );
       if (teamCodesThatValidatedFA.length === 0) return;
       const teamNamesThatValidatedFA = await Promise.all(
         teamCodesThatValidatedFA.map(async (teamCode) => {
-          const team = rootGetters['team/getTeamByCode'](teamCode);
+          const team = rootGetters["team/getTeamByCode"](teamCode);
           await repo.removeFaValidation(this, state.mFA.id, team.id);
           return team.name;
         })
       );
 
-      const validTeams = teamNamesThatValidatedFA.join(' et ');
+      const validTeams = teamNamesThatValidatedFA.join(" et ");
 
       const feedback: FaFeedback = {
         subject: FaFeedbackSubjectType.SUBMIT,
@@ -477,8 +477,8 @@ export const actions = actionTree(
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
-      dispatch('save');
+      dispatch("addFeedback", feedback);
+      dispatch("save");
     },
 
     async previousPage({ state }) {
@@ -493,7 +493,7 @@ export const actions = actionTree(
       if (!res.data) {
         alert("Il n'y a pas de FA avant celle-ci 😢");
         return this.$router.push({
-          path: '/fa',
+          path: "/fa",
         });
       }
       return this.$router.push({
@@ -511,9 +511,9 @@ export const actions = actionTree(
       );
       if (!res) return;
       if (!res.data) {
-        alert('🎉 Tu as atteint la dernière FA ! 🎉');
+        alert("🎉 Tu as atteint la dernière FA ! 🎉");
         return this.$router.push({
-          path: '/fa',
+          path: "/fa",
         });
       }
       return this.$router.push({
@@ -530,13 +530,13 @@ export const actions = actionTree(
         this,
         repo.addFAFeedback(this, state.mFA.id, feedbackCreation),
         {
-          successMessage: 'Commentaire ajouté 🥳',
-          errorMessage: 'Commentaire non ajouté 😢',
+          successMessage: "Commentaire ajouté 🥳",
+          errorMessage: "Commentaire non ajouté 😢",
         }
       );
       if (!res) return;
       const createdAt = new Date(res.data.createdAt);
-      commit('ADD_FEEDBACK', { ...res.data, createdAt });
+      commit("ADD_FEEDBACK", { ...res.data, createdAt });
     },
 
     async addSignaNeed({ commit, state }, signaNeed: FaSignaNeed) {
@@ -544,12 +544,12 @@ export const actions = actionTree(
         this,
         repo.updateSignaNeed(this, state.mFA.id, signaNeed),
         {
-          successMessage: 'Besoin de signalétique créé 🥳',
-          errorMessage: 'Besoin de signalétique non créé 😢',
+          successMessage: "Besoin de signalétique créé 🥳",
+          errorMessage: "Besoin de signalétique non créé 😢",
         }
       );
       if (!res) return;
-      commit('ADD_SIGNA_NEED', res.data);
+      commit("ADD_SIGNA_NEED", res.data);
     },
 
     async updateSignaNeed({ state, commit }, signaNeed: FaSignaNeed) {
@@ -557,12 +557,12 @@ export const actions = actionTree(
         this,
         repo.updateSignaNeed(this, state.mFA.id, signaNeed),
         {
-          successMessage: 'Besoin de signalétique modifié 🥳',
-          errorMessage: 'Besoin de signalétique non modifié 😢',
+          successMessage: "Besoin de signalétique modifié 🥳",
+          errorMessage: "Besoin de signalétique non modifié 😢",
         }
       );
       if (!res) return;
-      commit('UPDATE_SIGNA_NEED', res.data);
+      commit("UPDATE_SIGNA_NEED", res.data);
     },
 
     async deleteSignaNeed({ commit, state }, signaNeed: FaSignaNeed) {
@@ -571,16 +571,16 @@ export const actions = actionTree(
         this,
         repo.deleteSignaNeed(this, state.mFA.id, signaNeed.id),
         {
-          successMessage: 'Besoin de signalétique supprimé 🥳',
-          errorMessage: 'Besoin de signalétique non supprimé 😢',
+          successMessage: "Besoin de signalétique supprimé 🥳",
+          errorMessage: "Besoin de signalétique non supprimé 😢",
         }
       );
       if (!res) return;
-      commit('DELETE_SIGNA_NEED', signaNeed);
+      commit("DELETE_SIGNA_NEED", signaNeed);
     },
 
     addTimeWindow({ commit }, timeWindow: FaTimeWindow) {
-      commit('ADD_TIME_WINDOW', timeWindow);
+      commit("ADD_TIME_WINDOW", timeWindow);
     },
 
     async addAnimationTimeWindow({ commit, state }, timeWindow: FaTimeWindow) {
@@ -588,13 +588,13 @@ export const actions = actionTree(
         this,
         repo.updateAnimationTimeWindow(this, state.mFA.id, timeWindow),
         {
-          successMessage: 'Créneau créé 🥳',
-          errorMessage: 'Créneau non créé 😢',
+          successMessage: "Créneau créé 🥳",
+          errorMessage: "Créneau non créé 😢",
         }
       );
       if (!res) return;
       const savedTimeWindow = castFaTimeWindowWithDate(res.data);
-      commit('ADD_TIME_WINDOW', savedTimeWindow);
+      commit("ADD_TIME_WINDOW", savedTimeWindow);
     },
 
     async updateAnimationTimeWindow(
@@ -605,13 +605,13 @@ export const actions = actionTree(
         this,
         repo.updateAnimationTimeWindow(this, state.mFA.id, timeWindow),
         {
-          successMessage: 'Créneau modifié 🥳',
-          errorMessage: 'Créneau non modifié 😢',
+          successMessage: "Créneau modifié 🥳",
+          errorMessage: "Créneau non modifié 😢",
         }
       );
       if (!res) return;
       const savedTimeWindow = castFaTimeWindowWithDate(res.data);
-      commit('UPDATE_TIME_WINDOW', savedTimeWindow);
+      commit("UPDATE_TIME_WINDOW", savedTimeWindow);
     },
 
     async deleteAnimationTimeWindow(
@@ -623,12 +623,12 @@ export const actions = actionTree(
         this,
         repo.deleteAnimationTimeWindow(this, state.mFA.id, timeWindow.id),
         {
-          successMessage: 'Créneau supprimé 🥳',
-          errorMessage: 'Créneau non supprimé 😢',
+          successMessage: "Créneau supprimé 🥳",
+          errorMessage: "Créneau non supprimé 😢",
         }
       );
       if (!res) return;
-      commit('DELETE_TIME_WINDOW', timeWindow);
+      commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
     async updateCollaborator({ commit, state }, collaborator: Collaborator) {
@@ -637,7 +637,7 @@ export const actions = actionTree(
         repo.updateCollaborator(this, state.mFA.id, collaborator)
       );
       if (!res) return;
-      commit('UPDATE_COLLABORATOR', res.data);
+      commit("UPDATE_COLLABORATOR", res.data);
     },
 
     async deleteCollaborator({ commit, state }) {
@@ -646,7 +646,7 @@ export const actions = actionTree(
         repo.deleteCollaborator(this, state.mFA.id)
       );
       if (!res) return;
-      commit('DELETE_COLLABORATOR');
+      commit("DELETE_COLLABORATOR");
     },
 
     async addElectricityNeed(
@@ -662,7 +662,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit('ADD_ELECTRICITY_NEED', res.data);
+      commit("ADD_ELECTRICITY_NEED", res.data);
     },
 
     async updateElectricityNeed(
@@ -678,7 +678,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit('UPDATE_ELECTRICITY_NEED', res.data);
+      commit("UPDATE_ELECTRICITY_NEED", res.data);
     },
 
     async deleteElectricityNeed(
@@ -695,17 +695,17 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit('DELETE_ELECTRICITY_NEED', electricityNeed);
+      commit("DELETE_ELECTRICITY_NEED", electricityNeed);
     },
 
     async addGearRequestRentalPeriod(
       { dispatch, getters, commit },
-      rentalPeriod: Omit<Period, 'id'>
+      rentalPeriod: Omit<Period, "id">
     ) {
       const gearRequests =
-        getters.uniqueByGearGearRequests as GearRequest<'FA'>[];
+        getters.uniqueByGearGearRequests as GearRequest<"FA">[];
       if (gearRequests.length === 0) {
-        return commit('ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD', rentalPeriod);
+        return commit("ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
       }
       const { start, end } = rentalPeriod;
       const [firstGearRequest, ...otherGearRequests]: GearRequestCreation[] =
@@ -716,11 +716,11 @@ export const actions = actionTree(
           quantity: gr.quantity,
         }));
       const { rentalPeriod: savedRentalPeriod } = await dispatch(
-        'addGearRequest',
+        "addGearRequest",
         firstGearRequest
       );
       otherGearRequests.map(({ gearId, quantity }) =>
-        dispatch('addGearRequest', {
+        dispatch("addGearRequest", {
           gearId,
           quantity,
           periodId: savedRentalPeriod.id,
@@ -730,7 +730,7 @@ export const actions = actionTree(
 
     async addGearRequestForAllRentalPeriods(
       { commit, dispatch, getters },
-      { gearId, quantity }: Pick<GearRequestCreation, 'gearId' | 'quantity'>
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
@@ -741,9 +741,9 @@ export const actions = actionTree(
       ).map(generateGearRequestCreation);
 
       await Promise.all(
-        gearRequestCreationForms.map((form) => dispatch('addGearRequest', form))
+        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
-      commit('RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS');
+      commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
     },
 
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
@@ -751,40 +751,40 @@ export const actions = actionTree(
         this,
         repo.createGearRequest(this, state.mFA.id, gearRequest),
         {
-          successMessage: 'La demande de matériel a été ajoutée avec succès ✅',
+          successMessage: "La demande de matériel a été ajoutée avec succès ✅",
           errorMessage: "La demande de matériel n'a pas été ajoutée ❌",
         }
       );
       if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
-      commit('ADD_GEAR_REQUEST', createdGearRequest);
+      commit("ADD_GEAR_REQUEST", createdGearRequest);
       return createdGearRequest;
     },
 
     async setDriveToGearRequest(
       { commit },
-      gearRequest: GearRequestWithDrive<'FA'>
+      gearRequest: GearRequestWithDrive<"FA">
     ) {
-      commit('UDPATE_GEAR_REQUEST', gearRequest);
+      commit("UDPATE_GEAR_REQUEST", gearRequest);
     },
 
     async validateGearRequests(
       { state, dispatch },
-      gearRequests: GearRequestWithDrive<'FA' | 'FT'>[]
+      gearRequests: GearRequestWithDrive<"FA" | "FT">[]
     ) {
       await Promise.all(
         gearRequests.map((gr) =>
-          safeCall<GearRequestWithDrive<'FA'>>(
+          safeCall<GearRequestWithDrive<"FA">>(
             this,
             repo.validateGearRequest(this, state.mFA.id, gr),
             {
-              successMessage: 'Validation effectuée ✅',
+              successMessage: "Validation effectuée ✅",
               errorMessage: "La tentative de validation n'a pas abouti",
             }
           )
         )
       );
-      dispatch('fetchGearRequests');
+      dispatch("fetchGearRequests");
     },
 
     async removeGearRequestRentalPeriod(
@@ -793,7 +793,7 @@ export const actions = actionTree(
     ) {
       if (rentalPeriodToDelete.id > 1000) {
         return commit(
-          'REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD',
+          "REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD",
           rentalPeriodToDelete
         );
       }
@@ -812,13 +812,13 @@ export const actions = actionTree(
               gr.rentalPeriod.id
             ),
             {
-              successMessage: 'La demande de matériel a été supprimée 🗑️',
+              successMessage: "La demande de matériel a été supprimée 🗑️",
               errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
             }
           )
         )
       );
-      dispatch('fetchGearRequests');
+      dispatch("fetchGearRequests");
     },
 
     async removeRelatedGearRequest({ commit, state }, gearId: number) {
@@ -835,34 +835,34 @@ export const actions = actionTree(
                 gearRequest.rentalPeriod.id
               ),
               {
-                successMessage: 'La demande de matériel a été supprimée 🗑️',
+                successMessage: "La demande de matériel a été supprimée 🗑️",
                 errorMessage:
                   "La demande de matériel n'a pas a été supprimée ❌",
               }
             )
           )
       );
-      commit('REMOVE_GEAR_RELATED_GEAR_REQUESTS', gearId);
+      commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
 
-    async removeGearRequest({ commit }, gearRequest: StoredGearRequest<'FA'>) {
+    async removeGearRequest({ commit }, gearRequest: StoredGearRequest<"FA">) {
       const { seeker, gear, rentalPeriod } = gearRequest;
       const res = safeCall(
         this,
         repo.deleteGearRequest(this, seeker.id, gear.id, rentalPeriod.id),
         {
-          successMessage: 'La demande de matériel a été supprimée 🗑️',
+          successMessage: "La demande de matériel a été supprimée 🗑️",
           errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
         }
       );
       if (!res) return;
-      commit('REMOVE_GEAR_REQUEST', gearRequest);
+      commit("REMOVE_GEAR_REQUEST", gearRequest);
     },
 
     async updateGearPeriod({ commit, state, dispatch }, rentalPeriod: Period) {
       const { id: rentalPeriodId, start, end } = rentalPeriod;
       if (rentalPeriodId > 1000) {
-        return commit('UPDATE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD', rentalPeriod);
+        return commit("UPDATE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD", rentalPeriod);
       }
       try {
         const gearRequests = await Promise.all(
@@ -884,13 +884,13 @@ export const actions = actionTree(
               return res.data;
             })
         );
-        dispatch('fetchGearRequests');
+        dispatch("fetchGearRequests");
         if (!gearRequests.length) return;
-        sendNotification(this, 'Demandes de matériel misent a jour ✅');
+        sendNotification(this, "Demandes de matériel misent a jour ✅");
       } catch (e) {
         sendNotification(
           this,
-          'La mise a jour des demandes de matos a echouee ❌'
+          "La mise a jour des demandes de matos a echouee ❌"
         );
       }
     },
@@ -903,7 +903,7 @@ export const actions = actionTree(
       );
       if (!resGearRequests) return null;
       const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
-      commit('SET_GEAR_REQUESTS', gearRequests);
+      commit("SET_GEAR_REQUESTS", gearRequests);
     },
 
     async getSignaNeedsForCsv() {
@@ -917,11 +917,11 @@ export const actions = actionTree(
   }
 );
 
-function defaultState(): Omit<Fa, 'id'> {
+function defaultState(): Omit<Fa, "id"> {
   return {
-    name: '',
+    name: "",
     status: FaStatus.DRAFT,
-    description: '',
+    description: "",
     timeWindows: [],
     feedbacks: [],
     faValidation: [],

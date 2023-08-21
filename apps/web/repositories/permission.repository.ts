@@ -1,11 +1,11 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Permission, CreatePermissionForm } from '~/utils/models/permission';
-import { HttpStringified } from '~/utils/types/http';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { Permission, CreatePermissionForm } from "~/utils/models/permission";
+import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class PermissionRepository {
-  private static readonly basePath = 'permissions';
+  private static readonly basePath = "permissions";
 
   static getPermissions(context: Context) {
     return context.$axios.get<HttpStringified<Permission[]>>(this.basePath);

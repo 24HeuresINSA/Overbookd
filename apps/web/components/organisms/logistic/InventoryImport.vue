@@ -73,19 +73,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { removeItemAtIndex } from '@overbookd/list';
-import { CSVInventoryImportContainer } from '~/domain/inventory/csv-inventory-import-container';
-import { GearRepository } from '~/domain/inventory/gear.repository';
-import { InventoryRecord } from '~/domain/inventory/inventory-record';
-import { InventoryImport } from '~/domain/inventory/inventory-import';
-import { Gear } from '~/utils/models/catalog.model';
-import { Header } from '~/utils/models/dataTable';
+import Vue from "vue";
+import { removeItemAtIndex } from "@overbookd/list";
+import { CSVInventoryImportContainer } from "~/domain/inventory/csv-inventory-import-container";
+import { GearRepository } from "~/domain/inventory/gear.repository";
+import { InventoryRecord } from "~/domain/inventory/inventory-record";
+import { InventoryImport } from "~/domain/inventory/inventory-import";
+import { Gear } from "~/utils/models/catalog.model";
+import { Header } from "~/utils/models/dataTable";
 import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,
-} from '~/domain/inventory/manual-inventory-record';
-import InventoryRecordForm from '../../molecules/logistic/InventoryRecordForm.vue';
+} from "~/domain/inventory/manual-inventory-record";
+import InventoryRecordForm from "../../molecules/logistic/InventoryRecordForm.vue";
 
 interface InventoryData {
   inventoryRecords: InventoryRecord[];
@@ -99,23 +99,23 @@ interface InventoryData {
 }
 
 export default Vue.extend({
-  name: 'InventoryImport',
+  name: "InventoryImport",
   components: { InventoryRecordForm },
   data: (): InventoryData => {
     return {
       inventoryRecords: [],
       inventoryImportErrors: [],
       recordsHeaders: [
-        { text: 'Matos', value: 'gear' },
-        { text: 'Quantite', value: 'quantity' },
-        { text: 'Lieu de stockage', value: 'storage' },
+        { text: "Matos", value: "gear" },
+        { text: "Quantite", value: "quantity" },
+        { text: "Lieu de stockage", value: "storage" },
       ],
       errorsHeaders: [
-        { text: 'Matos', value: 'gear' },
-        { text: 'Quantite', value: 'quantity' },
-        { text: 'Lieu de stockage', value: 'storage' },
-        { text: 'Erreur detectee', value: 'message' },
-        { text: 'Action', value: 'action' },
+        { text: "Matos", value: "gear" },
+        { text: "Quantite", value: "quantity" },
+        { text: "Lieu de stockage", value: "storage" },
+        { text: "Erreur detectee", value: "message" },
+        { text: "Action", value: "action" },
       ],
       loading: false,
       selectedImportError: undefined,
@@ -186,7 +186,7 @@ export default Vue.extend({
       await this.$accessor.inventory.importInventory(this.inventoryRecords);
       this.inventoryImportErrors = [];
       this.inventoryRecords = [];
-      this.$emit('import-done');
+      this.$emit("import-done");
     },
   },
 });

@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User } from "./user";
 
 interface BaseFeedback {
   comment: string;
@@ -25,23 +25,23 @@ export interface SavedFtFeedback extends FtFeedback {
 
 export type SavedFeedback = SavedFaFeedback | SavedFtFeedback;
 
-export interface FeedbackCreation extends Omit<Feedback, 'author'> {
+export interface FeedbackCreation extends Omit<Feedback, "author"> {
   authorId: number;
 }
 
 export enum FaFeedbackSubjectType {
-  REFUSED = 'REFUSED',
-  VALIDATED = 'VALIDATED',
-  COMMENT = 'COMMENT',
-  SUBMIT = 'SUBMIT',
+  REFUSED = "REFUSED",
+  VALIDATED = "VALIDATED",
+  COMMENT = "COMMENT",
+  SUBMIT = "SUBMIT",
 }
 
 export enum FtFeedbackSubjectType {
-  REFUSED = 'REFUSED',
-  VALIDATED = 'VALIDATED',
-  COMMENT = 'COMMENT',
-  SUBMIT = 'SUBMIT',
-  READY = 'READY',
+  REFUSED = "REFUSED",
+  VALIDATED = "VALIDATED",
+  COMMENT = "COMMENT",
+  SUBMIT = "SUBMIT",
+  READY = "READY",
 }
 
 export function isSavedFeedback(

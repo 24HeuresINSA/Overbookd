@@ -30,9 +30,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Transfer } from '~/utils/models/transaction';
-import { CompleteUser, MyUserInformation } from '~/utils/models/user';
+import Vue from "vue";
+import { Transfer } from "~/utils/models/transaction";
+import { CompleteUser, MyUserInformation } from "~/utils/models/user";
 
 type UserAutocompleteItem = {
   text?: string;
@@ -40,7 +40,7 @@ type UserAutocompleteItem = {
 };
 
 export default Vue.extend({
-  name: 'TransferDialog',
+  name: "TransferDialog",
 
   data: () => {
     return {
@@ -49,8 +49,8 @@ export default Vue.extend({
           username: undefined,
           id: 0,
         },
-        amount: '0',
-        reason: '',
+        amount: "0",
+        reason: "",
         isValid: false,
       },
     };
@@ -67,7 +67,7 @@ export default Vue.extend({
     },
     toggled: {
       get: function (): boolean | unknown {
-        if (this.type == 'transfer') {
+        if (this.type == "transfer") {
           return this.open;
         }
         if (!this.open) {
@@ -77,7 +77,7 @@ export default Vue.extend({
       },
       set(val): void {
         if (!val) {
-          this.$store.dispatch('dialog/closeDialog');
+          this.$store.dispatch("dialog/closeDialog");
         }
       },
     },
@@ -107,19 +107,19 @@ export default Vue.extend({
         return;
       }
       this.toggled = false;
-      this.transfer.amount = this.transfer.amount.replace(',', '.');
+      this.transfer.amount = this.transfer.amount.replace(",", ".");
       // transaction to self...
       if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
           message:
-            'Trouve toi des amis plutôt que de faire des virements a toi même...',
+            "Trouve toi des amis plutôt que de faire des virements a toi même...",
         });
         return;
       }
 
       if (
         +this.transfer.amount <= 0 ||
-        +this.transfer.amount.toString().split('.')[1]?.length > 2
+        +this.transfer.amount.toString().split(".")[1]?.length > 2
       ) {
         this.$accessor.notif.pushNotification({
           message: "C'est plus assomaker...",
@@ -136,12 +136,12 @@ export default Vue.extend({
             to: this.transfer.user.id,
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
-          this.$emit('transaction', newTransfer.amount);
+          this.$emit("transaction", newTransfer.amount);
           //reset form data
           this.transfer = {
             user: { username: undefined, id: 0 },
-            amount: '0',
-            reason: '',
+            amount: "0",
+            reason: "",
             isValid: false,
           };
         } catch (e) {

@@ -21,23 +21,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { BaseFa } from '~/utils/models/fa';
+import Vue from "vue";
+import { BaseFa } from "~/utils/models/fa";
 
 interface SearchFaData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: 'SearchFa',
+  name: "SearchFa",
   model: {
-    prop: 'fa',
-    event: 'change',
+    prop: "fa",
+    event: "change",
   },
   props: {
     label: {
       type: String,
-      default: 'Chercher une FA',
+      default: "Chercher une FA",
     },
     fa: {
       type: Object as () => BaseFa | null,
@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(fa: BaseFa | null) {
-      this.$emit('change', fa);
+      this.$emit("change", fa);
     },
     displayFAInformation({ id, name }: BaseFa): string {
       return `${id} - ${name}`;

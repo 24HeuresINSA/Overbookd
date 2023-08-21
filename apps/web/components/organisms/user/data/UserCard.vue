@@ -37,14 +37,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import OverChips from '~/components/atoms/chip/OverChips.vue';
-import ProfilePictureDialog from '~/components/molecules/user/ProfilePictureDialog.vue';
-import ProfilePicture from '~/components/atoms/card/ProfilePicture.vue';
-import { MyUserInformation } from '~/utils/models/user';
+import Vue from "vue";
+import OverChips from "~/components/atoms/chip/OverChips.vue";
+import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
+import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import { MyUserInformation } from "~/utils/models/user";
 
 export default Vue.extend({
-  name: 'UserCard',
+  name: "UserCard",
   components: { OverChips, ProfilePictureDialog, ProfilePicture },
   props: {
     user: {
@@ -71,7 +71,7 @@ export default Vue.extend({
 
   methods: {
     openProfilePictureDialog() {
-      this.$store.dispatch('dialog/openDialog', 'profilePicture');
+      this.$store.dispatch("dialog/openDialog", "profilePicture");
     },
   },
 });

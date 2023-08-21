@@ -20,24 +20,24 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Period } from '@overbookd/period';
-import { PeriodOrchestrator } from '@overbookd/volunteer-availability';
-import OverCalendar from '~/components/molecules/calendar/OverCalendar.vue';
+import Vue from "vue";
+import { Period } from "@overbookd/period";
+import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   hasAvailabilityPeriodError,
   isAvailabilityPeriodSelected,
   isEndOfAvailabilityPeriod,
-} from '~/utils/availabilities/availabilities';
-import { generateNewPeriod } from '~/utils/availabilities/period';
+} from "~/utils/availabilities/availabilities";
+import { generateNewPeriod } from "~/utils/availabilities/period";
 import {
   formatDateWithExplicitMonth,
   setDateHour,
-} from '~/utils/date/dateUtils';
-import { isPartyShift } from '~/utils/shift/shift';
+} from "~/utils/date/dateUtils";
+import { isPartyShift } from "~/utils/shift/shift";
 
 export default Vue.extend({
-  name: 'AvailabilitiesSumup',
+  name: "AvailabilitiesSumup",
   components: { OverCalendar },
   props: {
     userId: {
@@ -68,7 +68,7 @@ export default Vue.extend({
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     isReadonly(): boolean {
-      return !this.$accessor.user.can('affect-volunteer');
+      return !this.$accessor.user.can("affect-volunteer");
     },
   },
   watch: {
@@ -80,7 +80,7 @@ export default Vue.extend({
     this.calendarMarker = this.manifDate;
   },
   async created() {
-    await this.$accessor.configuration.fetch('eventDate');
+    await this.$accessor.configuration.fetch("eventDate");
     await this.fetchAvailabilities();
   },
   methods: {

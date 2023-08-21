@@ -1,7 +1,7 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { updateItemToList } from '@overbookd/list';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -15,7 +15,7 @@ import {
   castUserWithPermissionsWithDate,
   castUsersWithPermissionsWithDate,
   castVolunteerTaskWithDate,
-} from '~/utils/models/user';
+} from "~/utils/models/user";
 
 const userRepo = RepoFactory.UserRepository;
 
@@ -94,14 +94,14 @@ export const getters = getterTree(state, {
   can: (state: UserState) => (permission?: string) => {
     if (!permission) return true;
     return (
-      state.me.permissions.includes('admin') ||
+      state.me.permissions.includes("admin") ||
       state.me.permissions.includes(permission) ||
       false
     );
   },
   validatedUsers: (state: UserState) => {
     return state.users.filter(({ permissions }) =>
-      permissions.includes('validated-user'),
+      permissions.includes("validated-user"),
     );
   },
 });
@@ -112,39 +112,39 @@ export const actions = actionTree(
     async setSelectedUser({ commit }, user: CompleteUserWithPermissions) {
       const res = await safeCall(this, userRepo.getUserFriends(this, user.id));
       if (!res) return;
-      commit('SET_SELECTED_USER_FRIENDS', res.data);
-      commit('SET_SELECTED_USER', user);
+      commit("SET_SELECTED_USER_FRIENDS", res.data);
+      commit("SET_SELECTED_USER", user);
     },
     async fetchUser({ commit }) {
       const res = await safeCall(this, userRepo.getMyUser(this), {
-        errorMessage: 'Session expirée 💨',
+        errorMessage: "Session expirée 💨",
       });
       if (res) {
-        commit('SET_USER', castUserWithDate(res.data));
+        commit("SET_USER", castUserWithDate(res.data));
       }
     },
     async fetchUsers({ commit }) {
       const res = await safeCall(this, userRepo.getAllUsers(this));
       if (res) {
-        commit('SET_USERS', castUsersWithPermissionsWithDate(res.data));
+        commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
       }
     },
     async fetchVolunteers({ commit }) {
       const res = await safeCall(this, userRepo.getVolunteers(this));
       if (!res) return;
       const volunteers = res.data.map(castUserWithDate);
-      commit('SET_VOLUNTEERS', volunteers);
+      commit("SET_VOLUNTEERS", volunteers);
     },
     async fetchCandidates({ commit }) {
       const res = await safeCall(this, userRepo.getCandidates(this));
       if (!res) return;
       const candidates = res.data.map(castUserWithDate);
-      commit('SET_CANDIDATES', candidates);
+      commit("SET_CANDIDATES", candidates);
     },
     async fetchFriends({ commit }) {
       const res = await safeCall(this, userRepo.getFriends(this));
       if (res) {
-        commit('SET_FRIENDS', res.data);
+        commit("SET_FRIENDS", res.data);
       }
     },
     async fetchMyFriends({ commit, state }) {
@@ -153,7 +153,7 @@ export const actions = actionTree(
         userRepo.getUserFriends(this, state.me.id),
       );
       if (res) {
-        commit('SET_MY_FRIENDS', res.data);
+        commit("SET_MY_FRIENDS", res.data);
       }
     },
     async addFriend({ commit }, friend: User) {
@@ -162,7 +162,7 @@ export const actions = actionTree(
         errorMessage: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
       });
       if (res) {
-        commit('ADD_MY_FRIEND', res.data);
+        commit("ADD_MY_FRIEND", res.data);
       }
     },
     async removeFriend({ commit }, friend: User) {
@@ -171,7 +171,7 @@ export const actions = actionTree(
         errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
       });
       if (res) {
-        commit('REMOVE_MY_FRIEND', friend);
+        commit("REMOVE_MY_FRIEND", friend);
       }
     },
     async fetchPersonnalAccountConsummers({ commit }) {
@@ -182,11 +182,11 @@ export const actions = actionTree(
       if (!res) return;
 
       const consummers = res.data.map(castUserWithDate);
-      commit('SET_PERSONNAL_ACCOUNT_CONSUMMERS', consummers);
+      commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
     async createUser(_, user: UserCreation): Promise<CompleteUser | undefined> {
       const res = await safeCall(this, userRepo.createUser(this, user), {
-        successMessage: '🎉 Inscription terminée, Bienvenue au 24 ! 🎉',
+        successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
       });
       if (!res) return undefined;
@@ -198,14 +198,14 @@ export const actions = actionTree(
         this,
         userRepo.updateUser(this, id, castToUserModification(userData)),
         {
-          successMessage: 'Profil mis à jour ! 🎉',
+          successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
         },
       );
       if (!res) return;
-      commit('UPDATE_USER', castUserWithPermissionsWithDate(res.data));
+      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
       if (res.data.id === state.me.id) {
-        commit('SET_USER', castUserWithDate(res.data));
+        commit("SET_USER", castUserWithDate(res.data));
       }
     },
 
@@ -214,24 +214,24 @@ export const actions = actionTree(
         this,
         userRepo.updateMyUser(this, { comment }),
         {
-          successMessage: 'Commentaire mis à jour ! 🎉',
+          successMessage: "Commentaire mis à jour ! 🎉",
           errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",
         },
       );
       if (!res) return;
-      commit('UPDATE_USER', castUserWithPermissionsWithDate(res.data));
-      commit('SET_USER', castUserWithDate(res.data));
+      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
+      commit("SET_USER", castUserWithDate(res.data));
     },
 
     async deleteUser({ commit, state, dispatch }, userId: number) {
       const res = await safeCall(this, userRepo.deleteUser(this, userId), {
-        successMessage: 'Utilisateur supprimé ! 🎉',
+        successMessage: "Utilisateur supprimé ! 🎉",
         errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
       });
       if (!res) return;
       const user = { ...state.selectedUser, isDeleted: true };
-      commit('UPDATE_USER', user);
-      if (user.id === state.me.id) dispatch('fetchUser');
+      commit("UPDATE_USER", user);
+      if (user.id === state.me.id) dispatch("fetchUser");
     },
 
     async updateSelectedUserTeams(
@@ -246,7 +246,7 @@ export const actions = actionTree(
           teams,
         ),
         {
-          successMessage: 'Equipes mises à jour ! 🎉',
+          successMessage: "Equipes mises à jour ! 🎉",
           errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
         },
       );
@@ -255,10 +255,10 @@ export const actions = actionTree(
         ...state.selectedUser,
         teams: res.data.teams,
       };
-      commit('UPDATE_USER', user);
-      commit('SET_SELECTED_USER', user);
+      commit("UPDATE_USER", user);
+      commit("SET_SELECTED_USER", user);
       if (res.data.userId === state.me.id) {
-        dispatch('fetchUser');
+        dispatch("fetchUser");
       }
     },
 
@@ -266,14 +266,14 @@ export const actions = actionTree(
       const res = await safeCall(this, userRepo.getUser(this, userId));
       if (!res) return;
       const user = { ...state.selectedUser, charisma: res.data.charisma };
-      commit('UPDATE_USER', user);
-      if (res.data.id === state.me.id) dispatch('fetchUser');
+      commit("UPDATE_USER", user);
+      if (res.data.id === state.me.id) dispatch("fetchUser");
     },
 
     async findUserById({ commit }, id: number) {
       const res = await safeCall(this, userRepo.getUser(this, id));
       if (!res) return;
-      commit('SET_SELECTED_USER', res.data);
+      commit("SET_SELECTED_USER", res.data);
     },
 
     async getUserFtRequests({ commit }, userId: number) {
@@ -284,18 +284,18 @@ export const actions = actionTree(
 
       if (!res) return;
       const periods = castVolunteerTaskWithDate(res.data);
-      commit('SET_SELECTED_USER_FT_REQUESTS', periods);
+      commit("SET_SELECTED_USER_FT_REQUESTS", periods);
     },
 
     async addProfilePicture({ commit }, profilePicture: FormData) {
       const res = await safeCall(
         this,
         userRepo.addProfilePicture(this, profilePicture),
-        { successMessage: 'Photo de profil mise à jour ! 🎉' },
+        { successMessage: "Photo de profil mise à jour ! 🎉" },
       );
 
       if (!res) return;
-      commit('SET_USER', castUserWithDate(res.data));
+      commit("SET_USER", castUserWithDate(res.data));
     },
 
     getProfilePicture(_, user: CompleteUserWithPermissions) {
@@ -307,10 +307,10 @@ export const actions = actionTree(
 
     async setMyProfilePicture({ commit, state, dispatch }) {
       const user = state.me;
-      const profilePictureBlob = await dispatch('getProfilePicture', user);
+      const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 
-      commit('SET_USER', {
+      commit("SET_USER", {
         ...state.me,
         profilePictureBlob,
       });
@@ -318,10 +318,10 @@ export const actions = actionTree(
 
     async setSelectedUserProfilePicture({ commit, state, dispatch }) {
       const user = state.selectedUser;
-      const profilePictureBlob = await dispatch('getProfilePicture', user);
+      const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 
-      commit('SET_SELECTED_USER', {
+      commit("SET_SELECTED_USER", {
         ...state.selectedUser,
         profilePictureBlob,
       });
@@ -331,10 +331,10 @@ export const actions = actionTree(
       { commit, dispatch },
       user: CompleteUserWithPermissions,
     ) {
-      const profilePictureBlob = await dispatch('getProfilePicture', user);
+      const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 
-      commit('UPDATE_USER', {
+      commit("UPDATE_USER", {
         ...user,
         profilePictureBlob,
       });
@@ -348,7 +348,7 @@ export const actions = actionTree(
 
       if (!res) return;
       const periods = castVolunteerTaskWithDate(res.data);
-      commit('SET_SELECTED_USER_ASSIGNMENT', periods);
+      commit("SET_SELECTED_USER_ASSIGNMENT", periods);
     },
 
     async getVolunteerAssignmentStats({ commit }, userId: number) {
@@ -358,7 +358,7 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      commit('SET_SELECTED_USER_ASSIGNMENT_STATS', res.data);
+      commit("SET_SELECTED_USER_ASSIGNMENT_STATS", res.data);
     },
   },
 );

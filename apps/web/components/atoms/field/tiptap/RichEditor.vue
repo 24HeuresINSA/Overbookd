@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import StarterKit from '@tiptap/starter-kit';
-import { Editor, EditorContent } from '@tiptap/vue-2';
+import StarterKit from "@tiptap/starter-kit";
+import { Editor, EditorContent } from "@tiptap/vue-2";
 
-import TiptapMenu from './TiptapMenu.vue';
+import TiptapMenu from "./TiptapMenu.vue";
 
 export default {
-  name: 'RichEditor',
+  name: "RichEditor",
   components: {
     EditorContent,
     TiptapMenu,
@@ -42,14 +42,14 @@ export default {
   },
   watch: {
     data() {
-      this.editor.commands.setContent(this.data ?? '');
+      this.editor.commands.setContent(this.data ?? "");
       this.editor.setEditable(!this.disabled);
     },
   },
   mounted() {
     this.editor = new Editor({
       extensions: [StarterKit],
-      content: this.data ?? '',
+      content: this.data ?? "",
       editable: !this.disabled,
       onBlur: () => this.update(),
     });
@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     update() {
-      this.$emit('change', this.editor.getHTML());
+      this.$emit("change", this.editor.getHTML());
     },
   },
 };

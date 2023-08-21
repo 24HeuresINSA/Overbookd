@@ -27,15 +27,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 import {
   ElectricityType,
   FaElectricityNeed,
   electricityTypeLabels,
-} from '~/utils/models/fa';
+} from "~/utils/models/fa";
 
 export default Vue.extend({
-  name: 'ElectricityNeedTable',
+  name: "ElectricityNeedTable",
   props: {
     electricityNeeds: {
       type: Array as () => FaElectricityNeed[],
@@ -49,26 +49,26 @@ export default Vue.extend({
   data: () => ({
     headers: [
       {
-        text: 'Type de raccordement',
-        value: 'electricityType',
+        text: "Type de raccordement",
+        value: "electricityType",
         sortable: false,
       },
-      { text: 'Appareil', value: 'device', sortable: false },
-      { text: 'Puissance par appareil', value: 'power', sortable: false },
-      { text: 'Nombre', value: 'count', sortable: false },
-      { text: 'Commentaire', value: 'comment', sortable: false },
-      { text: 'Action', value: 'action', sortable: false },
+      { text: "Appareil", value: "device", sortable: false },
+      { text: "Puissance par appareil", value: "power", sortable: false },
+      { text: "Nombre", value: "count", sortable: false },
+      { text: "Commentaire", value: "comment", sortable: false },
+      { text: "Action", value: "action", sortable: false },
     ],
   }),
   methods: {
     getElectricityTypeLabel(type: ElectricityType): string {
-      return electricityTypeLabels.get(type) ?? '';
+      return electricityTypeLabels.get(type) ?? "";
     },
     updateElectricityNeed(electricityNeed: FaElectricityNeed) {
-      this.$emit('update', electricityNeed);
+      this.$emit("update", electricityNeed);
     },
     deleteElectricityNeed(electricityNeed: FaElectricityNeed) {
-      this.$emit('delete', electricityNeed);
+      this.$emit("delete", electricityNeed);
     },
   },
 });

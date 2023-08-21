@@ -164,34 +164,34 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import ConfirmationMessage from '~/components/atoms/card/ConfirmationMessage.vue';
+import Vue from "vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import {
   getFAValidationStatus,
   isAnimationRefusedBy,
   isAnimationValidatedBy,
-} from '~/utils/festival-event/faUtils';
+} from "~/utils/festival-event/faUtils";
 import {
   getFTValidationStatus,
   isTaskRefusedBy,
   isTaskValidatedBy,
-} from '~/utils/festival-event/ftUtils';
-import { Fa, FaStatus } from '~/utils/models/fa';
-import { Ft, FtStatus } from '~/utils/models/ft';
+} from "~/utils/festival-event/ftUtils";
+import { Fa, FaStatus } from "~/utils/models/fa";
+import { Ft, FtStatus } from "~/utils/models/ft";
 import {
   FtTimeSpanParameters,
   TaskCategories,
-} from '~/utils/models/ftTimeSpan';
-import { Team } from '~/utils/models/team';
-import { MyUserInformation, User } from '~/utils/models/user';
-import { hasAtLeastOneError } from '~/utils/rules/faValidationRules';
-import { hasAtLeastOneFTError } from '~/utils/rules/ftValidationRules';
-import GearRequestsValidation from '../../molecules/logistic/GearRequestsValidation.vue';
-import FaCheckBeforeSubmitCard from './fa/FaCheckBeforeSubmitCard.vue';
-import FtCheckBeforeSubmitCard from './ft/FtCheckBeforeSubmitCard.vue';
+} from "~/utils/models/ftTimeSpan";
+import { Team } from "~/utils/models/team";
+import { MyUserInformation, User } from "~/utils/models/user";
+import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
+import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
+import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
+import FaCheckBeforeSubmitCard from "./fa/FaCheckBeforeSubmitCard.vue";
+import FtCheckBeforeSubmitCard from "./ft/FtCheckBeforeSubmitCard.vue";
 
 export default Vue.extend({
-  name: 'FestivalEventBottomBar',
+  name: "FestivalEventBottomBar",
   components: {
     FtCheckBeforeSubmitCard,
     FaCheckBeforeSubmitCard,
@@ -201,7 +201,7 @@ export default Vue.extend({
   props: {
     festivalEvent: {
       type: String,
-      default: () => 'FA',
+      default: () => "FA",
     },
   },
   data: () => ({
@@ -214,7 +214,7 @@ export default Vue.extend({
       hasPriority: false,
       category: TaskCategories.AUCUNE,
     } as FtTimeSpanParameters,
-    refuseComment: '',
+    refuseComment: "",
     gearRequestApprovalDialog: false,
     selectedValidator: {} as Team,
   }),
@@ -226,7 +226,7 @@ export default Vue.extend({
       return this.$accessor.ft.mFT;
     },
     isFA(): boolean {
-      return this.festivalEvent === 'FA';
+      return this.festivalEvent === "FA";
     },
     me(): MyUserInformation {
       return this.$accessor.user.me;
@@ -248,7 +248,7 @@ export default Vue.extend({
     mValidators(): Team[] {
       if (!this.validators) return [];
       // admin has all the validators powers
-      if (this.me.teams.includes('admin')) return this.validators;
+      if (this.me.teams.includes("admin")) return this.validators;
 
       return this.validators.filter((validator: Team) =>
         this.me.teams.includes(validator.code)
@@ -324,7 +324,7 @@ export default Vue.extend({
       return (
         !this.isFA &&
         this.isValidated &&
-        this.$accessor.user.can('affect-volunteer')
+        this.$accessor.user.can("affect-volunteer")
       );
     },
     previousLink(): string {
@@ -401,7 +401,7 @@ export default Vue.extend({
         };
         await this.$accessor.ft.refuse(payload);
       }
-      this.refuseComment = '';
+      this.refuseComment = "";
       this.isRefuseDialogOpen = false;
     },
     showReadyForAssignment() {

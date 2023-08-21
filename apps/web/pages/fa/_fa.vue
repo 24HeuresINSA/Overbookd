@@ -41,26 +41,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import LogisticTimeWindow from '~/components/molecules/festival-event/logistic/LogisticTimeWindow.vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import FeedbackCard from '~/components/organisms/festival-event/FeedbackCard.vue';
-import FestivalEventBottomBar from '~/components/organisms/festival-event/FestivalEventBottomBar.vue';
-import ChildFtCard from '~/components/organisms/festival-event/fa/ChildFtCard.vue';
-import CollaboratorCard from '~/components/organisms/festival-event/fa/CollaboratorCard.vue';
-import FaDetailCard from '~/components/organisms/festival-event/fa/FaDetailCard.vue';
-import FaGeneralCard from '~/components/organisms/festival-event/fa/FaGeneralCard.vue';
-import FaLogisticsCard from '~/components/organisms/festival-event/fa/FaLogisticsCard.vue';
-import FaTimeWindowCard from '~/components/organisms/festival-event/fa/FaTimeWindowCard.vue';
-import SecurityCard from '~/components/organisms/festival-event/fa/SecurityCard.vue';
-import SignaCard from '~/components/organisms/festival-event/fa/SignaCard.vue';
-import WaterLogisticCard from '~/components/organisms/festival-event/fa/WaterLogisticCard.vue';
-import FestivalEventSidebar from '~/components/organisms/festival-event/FestivalEventSidebar.vue';
-import { Fa } from '~/utils/models/fa';
-import ElectricityNeedCard from '~/components/organisms/festival-event/fa/ElectricityNeedCard.vue';
+import Vue from "vue";
+import LogisticTimeWindow from "~/components/molecules/festival-event/logistic/LogisticTimeWindow.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
+import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
+import ChildFtCard from "~/components/organisms/festival-event/fa/ChildFtCard.vue";
+import CollaboratorCard from "~/components/organisms/festival-event/fa/CollaboratorCard.vue";
+import FaDetailCard from "~/components/organisms/festival-event/fa/FaDetailCard.vue";
+import FaGeneralCard from "~/components/organisms/festival-event/fa/FaGeneralCard.vue";
+import FaLogisticsCard from "~/components/organisms/festival-event/fa/FaLogisticsCard.vue";
+import FaTimeWindowCard from "~/components/organisms/festival-event/fa/FaTimeWindowCard.vue";
+import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.vue";
+import SignaCard from "~/components/organisms/festival-event/fa/SignaCard.vue";
+import WaterLogisticCard from "~/components/organisms/festival-event/fa/WaterLogisticCard.vue";
+import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
+import { Fa } from "~/utils/models/fa";
+import ElectricityNeedCard from "~/components/organisms/festival-event/fa/ElectricityNeedCard.vue";
 
 export default Vue.extend({
-  name: 'Fa',
+  name: "Fa",
   components: {
     SignaCard,
     FaLogisticsCard,
@@ -93,12 +93,12 @@ export default Vue.extend({
     if (this.mFA.id !== this.faId) {
       alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
       await this.$router.push({
-        path: '/fa',
+        path: "/fa",
       });
     }
 
-    let title = 'FA ' + this.faId;
-    if (this.mFA.name) title += ' - ' + this.mFA.name;
+    let title = "FA " + this.faId;
+    if (this.mFA.name) title += " - " + this.mFA.name;
     document.title = title;
 
     this.$accessor.signa.getAllSignaLocations();

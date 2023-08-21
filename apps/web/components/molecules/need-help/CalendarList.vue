@@ -10,17 +10,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { IProvidePeriod } from '@overbookd/period';
+import Vue from "vue";
+import { IProvidePeriod } from "@overbookd/period";
 import {
   PlanningEvent,
   convertTaskToPlanningEvent,
-} from '~/domain/common/planning-events';
-import OverMultiCalendar from '../calendar/OverMultiCalendar.vue';
-import { CalendarUser } from '~/utils/models/calendar';
+} from "~/domain/common/planning-events";
+import OverMultiCalendar from "../calendar/OverMultiCalendar.vue";
+import { CalendarUser } from "~/utils/models/calendar";
 
 export default Vue.extend({
-  name: 'CalendarList',
+  name: "CalendarList",
   components: { OverMultiCalendar },
   data: () => {
     return {

@@ -37,24 +37,24 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SearchTeams from '~/components/atoms/field/search/SearchTeams.vue';
+import Vue from "vue";
+import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import {
   TaskCategories,
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-} from '~/utils/models/ftTimeSpan';
-import { Team } from '~/utils/models/team';
+} from "~/utils/models/ftTimeSpan";
+import { Team } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: 'FtTimeSpanFilters',
+  name: "FtTimeSpanFilters",
   components: { SearchTeams },
   props: {
     type: {
       type: String,
       required: false,
-      default: 'ft',
+      default: "ft",
     },
     listLength: {
       type: Number,
@@ -63,15 +63,15 @@ export default Vue.extend({
   },
   data: () => ({
     completed: false,
-    search: '',
+    search: "",
     teams: [] as Team[],
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
     counterLabel(): string {
-      return this.type === 'ft'
-        ? 'Nombre de FT dans la liste : '
-        : 'Nombre de créneaux dans la liste : ';
+      return this.type === "ft"
+        ? "Nombre de FT dans la liste : "
+        : "Nombre de créneaux dans la liste : ";
     },
     categoryItems(): string[] {
       return [
@@ -82,17 +82,17 @@ export default Vue.extend({
   },
   methods: {
     changeSearch(search: string) {
-      this.$emit('change:search', search);
+      this.$emit("change:search", search);
     },
     changeTeams(teams: Team[]) {
-      this.$emit('change:teams', teams);
+      this.$emit("change:teams", teams);
     },
     changeCategory(category: string) {
-      this.$emit('change:category', category);
+      this.$emit("change:category", category);
     },
     changeCompleted(state: boolean) {
       this.completed = state;
-      this.$emit('change:completed', state);
+      this.$emit("change:completed", state);
     },
   },
 });

@@ -21,14 +21,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import TeamChip from '~/components/atoms/chip/TeamChip.vue';
-import { Header } from '~/utils/models/dataTable';
-import { Volunteer } from '~/utils/models/needHelp';
-import { formatPhoneLink, formatUserPhone } from '~/utils/user/userUtils';
+import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import { Header } from "~/utils/models/dataTable";
+import { Volunteer } from "~/utils/models/needHelp";
+import { formatPhoneLink, formatUserPhone } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: 'NeedHelpVolunteerList',
+  name: "NeedHelpVolunteerList",
   components: { TeamChip },
   computed: {
     volunteers(): Volunteer[] {
@@ -39,18 +39,18 @@ export default Vue.extend({
     },
     headers(): Header[] {
       const volunteer = {
-        text: 'Bénévole',
-        value: 'volunteer',
+        text: "Bénévole",
+        value: "volunteer",
         sortable: false,
       };
       const teams = {
-        text: 'Equipes',
-        value: 'teams',
+        text: "Equipes",
+        value: "teams",
         sortable: false,
       };
       const phone = {
-        text: 'Téléphone',
-        value: 'phone',
+        text: "Téléphone",
+        value: "phone",
         sortable: false,
       };
       return [volunteer, teams, phone];
@@ -68,7 +68,7 @@ export default Vue.extend({
       return formatPhoneLink(phone);
     },
     openCalendarInNewTab(volunteerId: number) {
-      window.open(`/planning/${volunteerId}`, '_blank');
+      window.open(`/planning/${volunteerId}`, "_blank");
     },
   },
 });

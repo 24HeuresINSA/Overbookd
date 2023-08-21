@@ -31,9 +31,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { CategorySearchOptions } from '~/store/catalog';
-import { Category } from '~/utils/models/catalog.model';
+import Vue from "vue";
+import { CategorySearchOptions } from "~/store/catalog";
+import { Category } from "~/utils/models/catalog.model";
 
 interface SearchCategoryData {
   category?: Category;
@@ -41,15 +41,15 @@ interface SearchCategoryData {
 }
 
 export default Vue.extend({
-  name: 'SearchCategory',
+  name: "SearchCategory",
   model: {
-    prop: 'category',
-    event: 'change',
+    prop: "category",
+    event: "change",
   },
   props: {
     label: {
       type: String,
-      default: 'Chercher une categorie',
+      default: "Chercher une categorie",
     },
     category: {
       type: Object,
@@ -89,7 +89,7 @@ export default Vue.extend({
       this.loading = false;
     },
     propagateEvent(category: Category) {
-      this.$emit('change', category);
+      this.$emit("change", category);
     },
   },
 });

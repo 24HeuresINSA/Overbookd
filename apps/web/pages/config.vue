@@ -32,14 +32,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import PermissionsCard from '~/components/organisms/permission/PermissionsCard.vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import DateField from '~/components/atoms/field/date/DateField.vue';
-import RichEditor from '~/components/atoms/field/tiptap/RichEditor.vue';
-import { isSameDay } from '~/utils/date/dateUtils';
-import TiptapMenuItem from '~/components/atoms/field/tiptap/TiptapMenuItem.vue';
-import { defaultCommitmentPresentation } from '@overbookd/registration';
+import Vue from "vue";
+import PermissionsCard from "~/components/organisms/permission/PermissionsCard.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import DateField from "~/components/atoms/field/date/DateField.vue";
+import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
+import { isSameDay } from "~/utils/date/dateUtils";
+import TiptapMenuItem from "~/components/atoms/field/tiptap/TiptapMenuItem.vue";
+import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 interface ConfigurationData {
   dateEventStart: Date;
@@ -47,7 +47,7 @@ interface ConfigurationData {
 }
 
 export default Vue.extend({
-  name: 'Config',
+  name: "Config",
   components: {
     PermissionsCard,
     SnackNotificationContainer,
@@ -59,12 +59,12 @@ export default Vue.extend({
   data(): ConfigurationData {
     return {
       dateEventStart: new Date(),
-      registerFormDescription: '',
+      registerFormDescription: "",
     };
   },
 
   head: () => ({
-    title: 'Config Système',
+    title: "Config Système",
   }),
 
   async created() {
@@ -91,7 +91,7 @@ export default Vue.extend({
 
       if (dateEventStartChanged) {
         configurationsToSave.push({
-          key: 'eventDate',
+          key: "eventDate",
           value: { start: this.dateEventStart },
         });
       }
@@ -102,7 +102,7 @@ export default Vue.extend({
 
       if (registerFormDescriptionChanged) {
         configurationsToSave.push({
-          key: 'registerForm',
+          key: "registerForm",
           value: { description: this.registerFormDescription },
         });
       }

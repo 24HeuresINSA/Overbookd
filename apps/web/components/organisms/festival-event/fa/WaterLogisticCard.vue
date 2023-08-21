@@ -22,17 +22,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from '~/utils/festival-event/faUtils';
-import { Fa } from '~/utils/models/fa';
+} from "~/utils/festival-event/faUtils";
+import { Fa } from "~/utils/models/fa";
 
 export default Vue.extend({
-  name: 'WaterLogisticCard',
+  name: "WaterLogisticCard",
   data: () => ({
-    owner: 'elec',
+    owner: "elec",
   }),
   computed: {
     mFA(): Fa {

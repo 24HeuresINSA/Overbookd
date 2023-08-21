@@ -1,8 +1,8 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
-import { CreatePermissionForm, Permission } from '~/utils/models/permission';
-import { CompleteUserWithPermissions } from '~/utils/models/user';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
+import { CreatePermissionForm, Permission } from "~/utils/models/permission";
+import { CompleteUserWithPermissions } from "~/utils/models/user";
 
 const permissionRepo = RepoFactory.PermissionRepository;
 
@@ -22,7 +22,7 @@ export const getters = getterTree(state, {
   isValidated:
     () =>
     (user: CompleteUserWithPermissions): boolean => {
-      return user.permissions.includes('validated-user');
+      return user.permissions.includes("validated-user");
     },
 });
 
@@ -46,7 +46,7 @@ export const actions = actionTree(
     async fetchPermissions({ commit }): Promise<void> {
       const res = await safeCall(this, permissionRepo.getPermissions(this));
       if (!res) return;
-      commit('SET_PERMISSIONS', res.data);
+      commit("SET_PERMISSIONS", res.data);
     },
     async createPermission(
       { commit },
@@ -55,10 +55,10 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         permissionRepo.createPermission(this, payload),
-        { successMessage: 'Permission créée ✅' },
+        { successMessage: "Permission créée ✅" },
       );
       if (!res) return;
-      commit('ADD_PERMISSION', res.data);
+      commit("ADD_PERMISSION", res.data);
     },
     async updatePermission(
       { dispatch },
@@ -69,7 +69,7 @@ export const actions = actionTree(
         permissionRepo.updatePermission(this, payload),
       );
       if (!res) return;
-      dispatch('fetchPermissions');
+      dispatch("fetchPermissions");
     },
     async removePermission(
       { commit },
@@ -80,7 +80,7 @@ export const actions = actionTree(
         permissionRepo.removePermission(this, permissionId),
       );
       if (!res) return;
-      commit('REMOVE_PERMISSION', permissionId);
+      commit("REMOVE_PERMISSION", permissionId);
     },
     async linkPermissionToTeams(
       { dispatch },
@@ -94,7 +94,7 @@ export const actions = actionTree(
         permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes),
       );
       if (!res) return;
-      dispatch('fetchPermissions');
+      dispatch("fetchPermissions");
     },
   },
 );

@@ -1,13 +1,13 @@
-import { describe, it, expect } from '@jest/globals';
-import { GearRepository } from './gear.repository';
-import { InMemoryGearRepository } from './inmemory-gear.repository';
+import { describe, it, expect } from "@jest/globals";
+import { GearRepository } from "./gear.repository";
+import { InMemoryGearRepository } from "./inmemory-gear.repository";
 import {
   InventoryImport,
   InventoryImportContainer,
   InventoryImportRaw,
-} from './inventory-import';
-import { ManualInventoryRecord } from './manual-inventory-record';
-import { marteau, perceuse, scieCirculaire } from './test-helper';
+} from "./inventory-import";
+import { ManualInventoryRecord } from "./manual-inventory-record";
+import { marteau, perceuse, scieCirculaire } from "./test-helper";
 
 class FakeInventoryImportContainer extends InventoryImportContainer {
   constructor(
@@ -22,42 +22,42 @@ class FakeInventoryImportContainer extends InventoryImportContainer {
 }
 
 const perceuseInLocal: InventoryImportRaw = {
-  gear: 'Perceuse',
+  gear: "Perceuse",
   quantity: 2,
-  storage: 'Local',
+  storage: "Local",
 };
 
 const perceuseInConteneurH: InventoryImportRaw = {
-  gear: 'Perceuse',
+  gear: "Perceuse",
   quantity: 3,
-  storage: 'Conteneur H',
+  storage: "Conteneur H",
 };
 
 const marteauInLocal: InventoryImportRaw = {
-  gear: 'Marteau',
+  gear: "Marteau",
   quantity: 5,
-  storage: 'Local',
+  storage: "Local",
 };
 
 const marteauInCaveE: InventoryImportRaw = {
-  gear: 'Marteau',
+  gear: "Marteau",
   quantity: 3,
-  storage: 'Cave du E',
+  storage: "Cave du E",
 };
 
 const scieCirculaireInLocal: InventoryImportRaw = {
-  gear: 'Scie Circulaire',
+  gear: "Scie Circulaire",
   quantity: 1,
-  storage: 'Local',
+  storage: "Local",
 };
 
-describe('Inventory import', () => {
+describe("Inventory import", () => {
   const gearRepository = new InMemoryGearRepository([
     marteau,
     perceuse,
     scieCirculaire,
   ]);
-  describe('When importing file with only valid raws', () => {
+  describe("When importing file with only valid raws", () => {
     const importContainer = new FakeInventoryImportContainer(
       [
         perceuseInLocal,
@@ -68,7 +68,7 @@ describe('Inventory import', () => {
       ],
       gearRepository
     );
-    it('should transform all raw to InventoryRecord', async () => {
+    it("should transform all raw to InventoryRecord", async () => {
       const { records } = await InventoryImport.toRecords(importContainer);
       expect(records).toHaveLength(5);
       const marteauRecords = records.filter(
@@ -85,7 +85,7 @@ describe('Inventory import', () => {
       expect(scieCirculaireRecords).toHaveLength(1);
     });
   });
-  describe('When importing file with raws for the same gear in the same place', () => {
+  describe("When importing file with raws for the same gear in the same place", () => {
     const importContainer = new FakeInventoryImportContainer(
       [
         perceuseInLocal,
@@ -96,27 +96,27 @@ describe('Inventory import', () => {
       ],
       gearRepository
     );
-    it('should concacenate quantity for similar raws', async () => {
+    it("should concacenate quantity for similar raws", async () => {
       const { records } = await InventoryImport.toRecords(importContainer);
       expect(records).toHaveLength(3);
     });
   });
-  describe('When importing file with some invalid raws', () => {
+  describe("When importing file with some invalid raws", () => {
     const importContainer = new FakeInventoryImportContainer(
       [
         perceuseInLocal,
-        { gear: 'Matos inconnu', quantity: 15, storage: 'Local' },
+        { gear: "Matos inconnu", quantity: 15, storage: "Local" },
         marteauInLocal,
-        { gear: 'Martascie', quantity: 3, storage: 'Cave du E' },
+        { gear: "Martascie", quantity: 3, storage: "Cave du E" },
         scieCirculaireInLocal,
       ],
       gearRepository
     );
-    it('should transform only valid raws', async () => {
+    it("should transform only valid raws", async () => {
       const { records } = await InventoryImport.toRecords(importContainer);
       expect(records).toHaveLength(3);
     });
-    it('should provide raws in error', async () => {
+    it("should provide raws in error", async () => {
       const { errors } = await InventoryImport.toRecords(importContainer);
       expect(errors).toHaveLength(2);
     });

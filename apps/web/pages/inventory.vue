@@ -8,23 +8,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import InventoryImport from '~/components/organisms/logistic/InventoryImport.vue';
-import InventoryListing from '~/components/organisms/logistic/InventoryListing.vue';
+import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import InventoryImport from "~/components/organisms/logistic/InventoryImport.vue";
+import InventoryListing from "~/components/organisms/logistic/InventoryListing.vue";
 
 interface InventoryData {
   importing: boolean;
 }
 
 export default Vue.extend({
-  name: 'Inventory',
+  name: "Inventory",
   components: { InventoryImport, SnackNotificationContainer, InventoryListing },
   data: (): InventoryData => ({
     importing: false,
   }),
   head: () => ({
-    title: 'Inventaire',
+    title: "Inventaire",
   }),
   methods: {
     switchToImport() {

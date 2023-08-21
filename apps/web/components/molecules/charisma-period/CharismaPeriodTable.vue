@@ -25,20 +25,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { formatDateWithMinutes } from '~/utils/date/dateUtils';
-import { SavedCharismaPeriod } from '~/utils/models/charismaPeriod';
+import Vue from "vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
 
 export default Vue.extend({
-  name: 'CharismaPeriodTable',
+  name: "CharismaPeriodTable",
   data: () => ({
     headers: [
-      { text: 'Nom', value: 'name' },
-      { text: 'Description', value: 'description' },
-      { text: 'Début', value: 'start' },
-      { text: 'Fin', value: 'end' },
-      { text: 'Charisme/h', value: 'charisma' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: "Nom", value: "name" },
+      { text: "Description", value: "description" },
+      { text: "Début", value: "start" },
+      { text: "Fin", value: "end" },
+      { text: "Charisme/h", value: "charisma" },
+      { text: "Actions", value: "actions", sortable: false },
     ],
   }),
   computed: {
@@ -48,10 +48,10 @@ export default Vue.extend({
   },
   methods: {
     updateAvailability(charismaPeriod: SavedCharismaPeriod) {
-      this.$emit('update', charismaPeriod);
+      this.$emit("update", charismaPeriod);
     },
     deleteAvailability(charismaPeriod: SavedCharismaPeriod) {
-      this.$emit('delete', charismaPeriod);
+      this.$emit("delete", charismaPeriod);
     },
     formatDate(date: string): string {
       return formatDateWithMinutes(date);

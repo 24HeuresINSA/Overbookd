@@ -178,16 +178,16 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js';
-import OverChips from '~/components/atoms/chip/OverChips.vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import VolunteerStatsTable from '~/components/molecules/stats/VolunteerStatsTable.vue';
-import UserInformation from '~/components/organisms/user/data/UserInformation.vue';
-import { download } from '~/utils/planning/download';
-import { formatPhoneLink } from '~/utils/user/userUtils';
+import Fuse from "fuse.js";
+import OverChips from "~/components/atoms/chip/OverChips.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
+import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
+import { download } from "~/utils/planning/download";
+import { formatPhoneLink } from "~/utils/user/userUtils";
 
 export default {
-  name: 'Humans',
+  name: "Humans",
   components: {
     UserInformation,
     SnackNotificationContainer,
@@ -198,18 +198,18 @@ export default {
     return {
       filteredUsers: [],
       headers: [
-        { text: 'Prénom Nom (Surnom)', value: 'firstname' },
-        { text: 'Equipes', value: 'teams' },
-        { text: 'Charisme', value: 'charisma', align: 'end' },
-        { text: 'Action', value: 'action', sortable: false },
+        { text: "Prénom Nom (Surnom)", value: "firstname" },
+        { text: "Equipes", value: "teams" },
+        { text: "Charisme", value: "charisma", align: "end" },
+        { text: "Action", value: "action", sortable: false },
       ],
       statsHeaders: [
-        { text: 'Prénom Nom (Surnom)', value: 'firstname' },
-        { text: 'Charisme', value: 'charisma', align: 'end' },
-        { text: 'Charge', value: 'charge' },
-        { text: 'Heures affectés', value: 'hours' },
-        { text: 'Statiques', value: 'statics' },
-        { text: 'Action', value: 'action', sortable: false },
+        { text: "Prénom Nom (Surnom)", value: "firstname" },
+        { text: "Charisme", value: "charisma", align: "end" },
+        { text: "Charge", value: "charge" },
+        { text: "Heures affectés", value: "hours" },
+        { text: "Statiques", value: "statics" },
+        { text: "Action", value: "action", sortable: false },
       ],
 
       loading: false,
@@ -225,7 +225,7 @@ export default {
       isSnackbarOpen: false,
 
       newRole: undefined,
-      feedbackMessage: 'Sauvegardé 🥳',
+      feedbackMessage: "Sauvegardé 🥳",
       isModeStatsActive: false,
 
       options: { page: 1 },
@@ -235,7 +235,7 @@ export default {
   },
 
   head: () => ({
-    title: 'Liste des bénévoles',
+    title: "Liste des bénévoles",
   }),
 
   computed: {
@@ -271,17 +271,17 @@ export default {
   async mounted() {
     await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
-    if (!this.hasPermission('hard')) {
+    if (!this.hasPermission("hard")) {
       return this.$router.push({
-        path: '/',
+        path: "/",
       });
     }
 
-    if (this.hasPermission('manage-cp')) {
+    if (this.hasPermission("manage-cp")) {
       this.headers.splice(this.headers.length - 1, 0, {
-        text: 'CP',
-        value: 'balance',
-        align: 'end',
+        text: "CP",
+        value: "balance",
+        align: "end",
       });
     }
   },
@@ -295,18 +295,18 @@ export default {
     },
     isCpUseful(item) {
       return (
-        (item.teams?.includes('hard') &&
+        (item.teams?.includes("hard") &&
           !(
-            item.teams?.includes('fen') ||
-            item.teams?.includes('voiture') ||
-            item.teams?.includes('camion')
+            item.teams?.includes("fen") ||
+            item.teams?.includes("voiture") ||
+            item.teams?.includes("camion")
           )) ||
-        item.teams?.includes('vieux')
+        item.teams?.includes("vieux")
       );
     },
     getCP(item) {
       return this.isCpUseful(item)
-        ? (item.balance || 0).toFixed(2) + ' €'
+        ? (item.balance || 0).toFixed(2) + " €"
         : undefined;
     },
 
@@ -330,14 +330,14 @@ export default {
     download(filename, text) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
-      const element = document.createElement('a');
+      const element = document.createElement("a");
       element.setAttribute(
-        'href',
-        'data:text/plain;charset=utf-8,' + encodeURIComponent(text)
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
       );
-      element.setAttribute('download', filename);
+      element.setAttribute("download", filename);
 
-      element.style.display = 'none';
+      element.style.display = "none";
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
@@ -346,10 +346,10 @@ export default {
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
 
-      const lineReturnRegex = new RegExp('(\\r\\n|\\n|\\r)', 'gm');
+      const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
 
       const csvHeader =
-        'Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire';
+        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire";
 
       const csvContent = this.users.map((user) => {
         return [
@@ -365,15 +365,15 @@ export default {
           user.year,
           user.balance,
           user.hasPayedContributions,
-          user.comment?.replace(lineReturnRegex, ' ') ?? '',
-        ].join(';');
+          user.comment?.replace(lineReturnRegex, " ") ?? "",
+        ].join(";");
       });
 
-      const csv = [csvHeader, ...csvContent].join('\n');
-      const regex = new RegExp(/undefined/i, 'g');
+      const csv = [csvHeader, ...csvContent].join("\n");
+      const regex = new RegExp(/undefined/i, "g");
 
-      const parsedCSV = csv.replace(regex, '');
-      this.download('utilisateurs.csv', parsedCSV);
+      const parsedCSV = csv.replace(regex, "");
+      this.download("utilisateurs.csv", parsedCSV);
     },
 
     getCharge(plan) {
@@ -417,7 +417,7 @@ export default {
     },
 
     openCalendar(userId) {
-      window.open(`/planning/${userId}`, '_blank');
+      window.open(`/planning/${userId}`, "_blank");
     },
 
     updateFilteredUsers() {
@@ -427,7 +427,7 @@ export default {
       if (this.filters.search) {
         const options = {
           // Search in `author` and in `tags` array
-          keys: ['firstname', 'lastname', 'nickname', 'phone'],
+          keys: ["firstname", "lastname", "nickname", "phone"],
         };
         const fuse = new Fuse(mUsers, options);
 

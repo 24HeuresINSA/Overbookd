@@ -1,8 +1,8 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
-import { updateItemToList } from '@overbookd/list';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
-import { getValidationReviews } from '~/utils/festival-event/ftUtils';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
+import { getValidationReviews } from "~/utils/festival-event/ftUtils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,
@@ -12,13 +12,13 @@ import {
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
-} from '~/utils/functions/gearRequest';
+} from "~/utils/functions/gearRequest";
 import {
   Feedback,
   FeedbackCreation,
   FtFeedback,
   FtFeedbackSubjectType,
-} from '~/utils/models/feedback';
+} from "~/utils/models/feedback";
 import {
   Ft,
   FtCreation,
@@ -35,26 +35,26 @@ import {
   castFtTimeWindowWithDate,
   getFtTimeWindowWithoutRequests,
   toUpdateFT,
-} from '~/utils/models/ft';
-import { FtTimeSpanParameters } from '~/utils/models/ftTimeSpan';
+} from "~/utils/models/ft";
+import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
   GearRequestCreation,
   GearRequestWithDrive,
   Period,
   StoredGearRequest,
   castGearRequestWithDate,
-} from '~/utils/models/gearRequests';
-import { Review, Reviewer } from '~/utils/models/review';
-import { Team } from '~/utils/models/team';
-import { User } from '~/utils/models/user';
-import { formatUsername } from '~/utils/user/userUtils';
+} from "~/utils/models/gearRequests";
+import { Review, Reviewer } from "~/utils/models/review";
+import { Team } from "~/utils/models/team";
+import { User } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 const repo = RepoFactory.FtRepository;
 
 export const state = () => ({
   mFT: defaultState() as Ft,
   FTs: [] as FtSimplified[],
-  gearRequests: [] as StoredGearRequest<'FT'>[],
+  gearRequests: [] as StoredGearRequest<"FT">[],
   localGearRequestRentalPeriodId: -1,
 });
 
@@ -76,10 +76,10 @@ export const getters = getterTree(state, {
       ({ id }) => id <= state.localGearRequestRentalPeriodId
     );
   },
-  uniqueByGearGearRequests(state): StoredGearRequest<'FT'>[] {
+  uniqueByGearGearRequests(state): StoredGearRequest<"FT">[] {
     return state.gearRequests.reduce(
       uniqueByGearReducer,
-      [] as StoredGearRequest<'FT'>[]
+      [] as StoredGearRequest<"FT">[]
     );
   },
 });
@@ -201,7 +201,7 @@ export const mutations = mutationTree(state, {
     mFT.feedbacks = [...mFT.feedbacks, feedback];
   },
 
-  ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<'FT'>) {
+  ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     const index = state.gearRequests.findIndex(
       isSimilarGearRequest(gearRequest)
     );
@@ -216,7 +216,7 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<'FT'>[]) {
+  SET_GEAR_REQUESTS(state, gearRequestsResponse: StoredGearRequest<"FT">[]) {
     state.gearRequests = gearRequestsResponse;
   },
 
@@ -226,7 +226,7 @@ export const mutations = mutationTree(state, {
     );
   },
 
-  DELETE_GEAR_REQUEST(state, gearRequest: StoredGearRequest<'FT'>) {
+  DELETE_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     state.gearRequests = state.gearRequests.filter(
       (gr) => !isSameGearRequest(gearRequest)(gr)
     );
@@ -240,7 +240,7 @@ export const mutations = mutationTree(state, {
     });
   },
 
-  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive<'FT'>) {
+  UDPATE_GEAR_REQUEST(state, updatedGearRequest: GearRequestWithDrive<"FT">) {
     const gearRequestIndex = state.gearRequests.findIndex(
       (gr) =>
         gr.gear.id === updatedGearRequest.gear.id &&
@@ -263,59 +263,59 @@ export const actions = actionTree(
 
       const ft = castFTWithDate(resFT.data);
       const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
-      commit('UPDATE_SELECTED_FT', ft);
-      commit('SET_GEAR_REQUESTS', gearRequests);
+      commit("UPDATE_SELECTED_FT", ft);
+      commit("SET_GEAR_REQUESTS", gearRequests);
 
       if (!ft.fa) return;
-      dispatch('FA/fetchGearRequests', ft.fa.id, { root: true });
+      dispatch("FA/fetchGearRequests", ft.fa.id, { root: true });
     },
 
     async fetchFTs({ commit }, search?: FtSearch) {
       const res = await safeCall(this, repo.getAllFTs(this, search), {
-        errorMessage: 'Impossible de charger les FTs',
+        errorMessage: "Impossible de charger les FTs",
       });
       if (!res) return;
-      commit('SET_FTS', res.data);
+      commit("SET_FTS", res.data);
     },
 
     async createFT({ commit }, ft: FtCreation) {
       const res = await safeCall(this, repo.createFT(this, ft), {
-        successMessage: 'FT créée 🥳',
-        errorMessage: 'FT non créée 😢',
+        successMessage: "FT créée 🥳",
+        errorMessage: "FT non créée 😢",
       });
 
       if (!res) return;
       const createdFT = castFTWithDate(res.data);
       const completeFT = { ...defaultState(), ...createdFT, id: res.data.id };
-      commit('ADD_FT', createdFT);
-      commit('UPDATE_SELECTED_FT', completeFT);
+      commit("ADD_FT", createdFT);
+      commit("UPDATE_SELECTED_FT", completeFT);
     },
 
     async updateFT({ commit }, ft: Ft) {
       const ftToUpdate = toUpdateFT(ft);
       const res = await safeCall(this, repo.updateFT(this, ftToUpdate), {
-        successMessage: 'FT sauvegardée 🥳',
-        errorMessage: 'FT non sauvegardée 😢',
+        successMessage: "FT sauvegardée 🥳",
+        errorMessage: "FT non sauvegardée 😢",
       });
 
       if (!res) return;
       const updatedFT = castFTWithDate(res.data);
-      commit('UPDATE_SELECTED_FT', updatedFT);
+      commit("UPDATE_SELECTED_FT", updatedFT);
     },
 
     async deleteFT({ commit }, ft: Ft) {
       const res = await safeCall(this, repo.deleteFT(this, ft.id), {
-        successMessage: 'FT supprimée 🥳',
-        errorMessage: 'FT non supprimée 😢',
+        successMessage: "FT supprimée 🥳",
+        errorMessage: "FT non supprimée 😢",
       });
       if (!res) return;
-      commit('DELETE_FT', ft.id);
+      commit("DELETE_FT", ft.id);
     },
 
     async restoreFT({ commit, dispatch }, ft: Ft) {
       const restoredFT = { ...ft, isDeleted: false };
-      dispatch('updateFT', restoredFT);
-      commit('DELETE_FT', ft.id);
+      dispatch("updateFT", restoredFT);
+      commit("DELETE_FT", ft.id);
     },
 
     async addTimeWindow({ commit, state }, timeWindow: FtTimeWindow) {
@@ -324,23 +324,23 @@ export const actions = actionTree(
         this,
         repo.updateFTTimeWindow(this, state.mFT.id, adaptedTimeWindow),
         {
-          successMessage: 'Créneau ajouté 🥳',
-          errorMessage: 'Créneau non ajouté 😢',
+          successMessage: "Créneau ajouté 🥳",
+          errorMessage: "Créneau non ajouté 😢",
         }
       );
       if (!res) return;
-      commit('ADD_TIME_WINDOW', castFtTimeWindowWithDate(res.data));
+      commit("ADD_TIME_WINDOW", castFtTimeWindowWithDate(res.data));
     },
 
     async submitForReview({ commit, dispatch, state }, author: User) {
       const res = await safeCall(this, repo.submitFT(this, state.mFT.id), {
-        successMessage: 'FT soumise à validation 🥳',
-        errorMessage: 'FT non soumise à validation 😢',
+        successMessage: "FT soumise à validation 🥳",
+        errorMessage: "FT non soumise à validation 😢",
       });
 
       if (!res) return;
       const updatedFT = castFTWithDate(res.data);
-      commit('UPDATE_SELECTED_FT', updatedFT);
+      commit("UPDATE_SELECTED_FT", updatedFT);
 
       const authorName = formatUsername(author);
       const feedback: Feedback = {
@@ -349,7 +349,7 @@ export const actions = actionTree(
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
+      dispatch("addFeedback", feedback);
     },
 
     async validate(
@@ -360,11 +360,11 @@ export const actions = actionTree(
       const resFT = await safeCall(
         this,
         repo.validateFT(this, state.mFT.id, reviewer),
-        { successMessage: 'FT validée 🥳', errorMessage: 'FT non validée 😢' }
+        { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
-      commit('UPDATE_SELECTED_FT', updatedFT);
+      commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
         subject: FtFeedbackSubjectType.VALIDATED,
@@ -372,7 +372,7 @@ export const actions = actionTree(
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
+      dispatch("addFeedback", feedback);
     },
 
     async refuse(
@@ -383,19 +383,19 @@ export const actions = actionTree(
       const resFT = await safeCall(
         this,
         repo.refuseFT(this, state.mFT.id, reviewer),
-        { successMessage: 'FT refusée 🥳', errorMessage: 'FT non refusée 😢' }
+        { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
-      commit('UPDATE_SELECTED_FT', updatedFT);
+      commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
         subject: FtFeedbackSubjectType.REFUSED,
-        comment: `La FT a été refusée${message ? `: ${message}` : '.'}`,
+        comment: `La FT a été refusée${message ? `: ${message}` : "."}`,
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
+      dispatch("addFeedback", feedback);
     },
 
     async switchToReadyForAssignment(
@@ -408,19 +408,19 @@ export const actions = actionTree(
       const resFT = await safeCall(
         this,
         repo.switchToReadyForAssignment(this, state.mFT.id, timeSpanParameters),
-        { successMessage: 'FT prête à affectation 🥳' }
+        { successMessage: "FT prête à affectation 🥳" }
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
-      commit('UPDATE_SELECTED_FT', updatedFT);
+      commit("UPDATE_SELECTED_FT", updatedFT);
 
       const feedback: Feedback = {
         subject: FtFeedbackSubjectType.READY,
-        comment: 'Prête pour affectation !',
+        comment: "Prête pour affectation !",
         author,
         createdAt: new Date(),
       };
-      dispatch('addFeedback', feedback);
+      dispatch("addFeedback", feedback);
     },
 
     async previousPage({ state }) {
@@ -435,7 +435,7 @@ export const actions = actionTree(
       if (!res.data) {
         alert("Il n'y a pas de FT avant celle-ci 😢");
         return this.$router.push({
-          path: '/ft',
+          path: "/ft",
         });
       }
       return this.$router.push({
@@ -453,9 +453,9 @@ export const actions = actionTree(
       );
       if (!res) return;
       if (!res.data) {
-        alert('🎉 Tu as atteint la dernière FT ! 🎉');
+        alert("🎉 Tu as atteint la dernière FT ! 🎉");
         return this.$router.push({
-          path: '/ft',
+          path: "/ft",
         });
       }
       return this.$router.push({
@@ -472,8 +472,8 @@ export const actions = actionTree(
         this,
         repo.updateFTTimeWindow(this, state.mFT.id, adaptedTimeWindow),
         {
-          successMessage: 'Créneau modifié 🥳',
-          errorMessage: 'Créneau non modifié 😢',
+          successMessage: "Créneau modifié 🥳",
+          errorMessage: "Créneau non modifié 😢",
         }
       );
       if (!res) return;
@@ -482,7 +482,7 @@ export const actions = actionTree(
       const previousTimeWindow = state.mFT.timeWindows.find(
         ({ id }) => id === savedTimeWindow.id
       );
-      commit('UPDATE_TIME_WINDOW', {
+      commit("UPDATE_TIME_WINDOW", {
         ...savedTimeWindow,
         teamRequests,
         userRequests,
@@ -492,7 +492,7 @@ export const actions = actionTree(
         start: previousTimeWindow.start,
         end: previousTimeWindow.end,
       };
-      dispatch('updateGearRequestRentalPeriod', previousPeriod);
+      dispatch("updateGearRequestRentalPeriod", previousPeriod);
     },
 
     async updateTimeWindowRequirements(
@@ -520,8 +520,8 @@ export const actions = actionTree(
             adaptedUserRequests
           ),
           {
-            successMessage: 'Demandes de bénévole mises à jour 🥳',
-            errorMessage: 'Demandes de bénévoles non mises à jour 😢',
+            successMessage: "Demandes de bénévole mises à jour 🥳",
+            errorMessage: "Demandes de bénévoles non mises à jour 😢",
           }
         ),
         safeCall(
@@ -539,13 +539,13 @@ export const actions = actionTree(
         ),
       ]);
       if (resUserRequests) {
-        commit('UPDATE_USER_REQUESTS', {
+        commit("UPDATE_USER_REQUESTS", {
           timeWindowId: timeWindow.id,
           userRequests: resUserRequests.data,
         });
       }
       if (resTeamRequests) {
-        commit('UPDATE_TEAM_REQUESTS', {
+        commit("UPDATE_TEAM_REQUESTS", {
           timeWindowId: timeWindow.id,
           teamRequests: resTeamRequests.data,
         });
@@ -569,12 +569,12 @@ export const actions = actionTree(
           userRequest.user.id
         ),
         {
-          successMessage: 'Demande de bénévole supprimée 🥳',
-          errorMessage: 'Demande de bénévole non supprimée 😢',
+          successMessage: "Demande de bénévole supprimée 🥳",
+          errorMessage: "Demande de bénévole non supprimée 😢",
         }
       );
       if (!res) return;
-      commit('DELETE_USER_REQUEST', { timeWindow, userRequest });
+      commit("DELETE_USER_REQUEST", { timeWindow, userRequest });
     },
 
     async deleteTeamRequest(
@@ -599,7 +599,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      commit('DELETE_TEAM_REQUEST', { timeWindow, teamRequest });
+      commit("DELETE_TEAM_REQUEST", { timeWindow, teamRequest });
     },
 
     async deleteTimeWindow({ commit, state }, timeWindow: FtTimeWindow) {
@@ -608,12 +608,12 @@ export const actions = actionTree(
         this,
         repo.deleteFTTimeWindow(this, state.mFT.id, timeWindow.id),
         {
-          successMessage: 'Créneau supprimé 🥳',
-          errorMessage: 'Créneau non supprimé 😢',
+          successMessage: "Créneau supprimé 🥳",
+          errorMessage: "Créneau non supprimé 😢",
         }
       );
       if (!res) return;
-      commit('DELETE_TIME_WINDOW', timeWindow);
+      commit("DELETE_TIME_WINDOW", timeWindow);
     },
 
     async resetValidations({ commit, state }) {
@@ -627,7 +627,7 @@ export const actions = actionTree(
         )
       );
       if (!res || res.length !== validationReviews.length) return;
-      commit('DELETE_REVIEWS', validationReviews);
+      commit("DELETE_REVIEWS", validationReviews);
     },
 
     async addFeedback({ commit, state }, feedback: FtFeedback) {
@@ -639,18 +639,18 @@ export const actions = actionTree(
         this,
         repo.addFTFeedback(this, state.mFT.id, feedbackCreation),
         {
-          successMessage: 'Commentaire ajouté 🥳',
-          errorMessage: 'Commentaire non ajouté 😢',
+          successMessage: "Commentaire ajouté 🥳",
+          errorMessage: "Commentaire non ajouté 😢",
         }
       );
       if (!res) return;
       const createdAt = new Date(res.data.createdAt);
-      commit('ADD_FEEDBACK', { ...res.data, createdAt });
+      commit("ADD_FEEDBACK", { ...res.data, createdAt });
     },
 
     async addGearRequestForAllRentalPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, 'gearId' | 'quantity'>
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
@@ -660,13 +660,13 @@ export const actions = actionTree(
         getters.gearRequestRentalPeriods as Period[]
       ).map(generateGearRequestCreation);
       await Promise.all(
-        gearRequestCreationForms.map((form) => dispatch('addGearRequest', form))
+        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
     },
 
     async addGearRequestForAllFtPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, 'gearId' | 'quantity'>
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
@@ -675,13 +675,13 @@ export const actions = actionTree(
       const periods = uniquePeriodsReducer(getters.ftPeriods) as Period[];
       const gearRequestCreationForms = periods.map(generateGearRequestCreation);
       await Promise.all(
-        gearRequestCreationForms.map((form) => dispatch('addGearRequest', form))
+        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
       );
     },
 
     async addConsumableGearRequestForAllFtPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, 'gearId' | 'quantity'>
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
@@ -696,12 +696,12 @@ export const actions = actionTree(
         id: -1,
       };
       const gearRequestCreationForm = generateGearRequestCreation(period);
-      dispatch('addGearRequest', gearRequestCreationForm);
+      dispatch("addGearRequest", gearRequestCreationForm);
     },
 
     async addConsumableGearRequestForAllRentalPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, 'gearId' | 'quantity'>
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
@@ -712,7 +712,7 @@ export const actions = actionTree(
       ).map(generateGearRequestCreation);
       // On passe par une boucle pour éviter les pb de concurrences dans la BDD
       for (const form of gearRequestCreationForms) {
-        await dispatch('addGearRequest', form);
+        await dispatch("addGearRequest", form);
       }
     },
 
@@ -721,13 +721,13 @@ export const actions = actionTree(
         this,
         repo.createGearRequest(this, state.mFT.id, gearRequest),
         {
-          successMessage: 'La demande de matériel a été ajoutée avec succès ✅',
+          successMessage: "La demande de matériel a été ajoutée avec succès ✅",
           errorMessage: "La demande de matériel n'a pas pu etre ajoutée ❌",
         }
       );
       if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
-      commit('ADD_GEAR_REQUEST', createdGearRequest);
+      commit("ADD_GEAR_REQUEST", createdGearRequest);
       return createdGearRequest;
     },
 
@@ -745,7 +745,7 @@ export const actions = actionTree(
                 gearRequest.rentalPeriod.id
               ),
               {
-                successMessage: 'La demande de matériel a été supprimée 🗑️',
+                successMessage: "La demande de matériel a été supprimée 🗑️",
                 errorMessage:
                   "La demande de matériel n'a pas a été supprimée ❌",
               }
@@ -753,21 +753,21 @@ export const actions = actionTree(
           )
       );
       if (removals.some((res) => res === undefined)) return;
-      commit('REMOVE_GEAR_RELATED_GEAR_REQUESTS', gearId);
+      commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
 
-    async removeGearRequest({ commit }, gearRequest: StoredGearRequest<'FT'>) {
+    async removeGearRequest({ commit }, gearRequest: StoredGearRequest<"FT">) {
       const { seeker, gear, rentalPeriod } = gearRequest;
       const res = safeCall(
         this,
         repo.deleteGearRequest(this, seeker.id, gear.id, rentalPeriod.id),
         {
-          successMessage: 'La demande de matériel a été supprimée 🗑️',
+          successMessage: "La demande de matériel a été supprimée 🗑️",
           errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
         }
       );
       if (!res) return;
-      commit('DELETE_GEAR_REQUEST', gearRequest);
+      commit("DELETE_GEAR_REQUEST", gearRequest);
     },
 
     async fetchGearRequests({ commit, state }) {
@@ -777,27 +777,27 @@ export const actions = actionTree(
       );
       if (!res) return;
       const gearRequests = res.data.map(castGearRequestWithDate);
-      commit('SET_GEAR_REQUESTS', gearRequests);
+      commit("SET_GEAR_REQUESTS", gearRequests);
     },
 
     async addGearRequestRentalPeriod(
       { dispatch, getters },
-      rentalPeriod: Omit<Period, 'id'>
+      rentalPeriod: Omit<Period, "id">
     ) {
       const gearRequests =
-        getters.uniqueByGearGearRequests as StoredGearRequest<'FT'>[];
+        getters.uniqueByGearGearRequests as StoredGearRequest<"FT">[];
       if (gearRequests.length === 0) return;
       const [firstGearRequest, ...otherGearRequests] = gearRequests;
 
-      const periodId = await dispatch('getFirstSavedGearRequestPeriodId', {
+      const periodId = await dispatch("getFirstSavedGearRequestPeriodId", {
         gearRequest: firstGearRequest,
         rentalPeriod,
       });
 
       otherGearRequests.map(({ gear: { id: gearId }, quantity }) =>
-        dispatch('addGearRequest', { gearId, quantity, periodId })
+        dispatch("addGearRequest", { gearId, quantity, periodId })
       );
-      dispatch('fetchGearRequests');
+      dispatch("fetchGearRequests");
     },
 
     async getFirstSavedGearRequestPeriodId(
@@ -806,8 +806,8 @@ export const actions = actionTree(
         gearRequest,
         rentalPeriod,
       }: {
-        gearRequest: StoredGearRequest<'FT'>;
-        rentalPeriod: Omit<Period, 'id'>;
+        gearRequest: StoredGearRequest<"FT">;
+        rentalPeriod: Omit<Period, "id">;
       }
     ): Promise<number> {
       const firstGearRequestCreation = {
@@ -817,13 +817,13 @@ export const actions = actionTree(
       };
       const {
         rentalPeriod: { id: periodId },
-      } = await dispatch('addGearRequest', firstGearRequestCreation);
+      } = await dispatch("addGearRequest", firstGearRequestCreation);
       return periodId;
     },
 
     async removeGearRequestRentalPeriod(
       { dispatch, state, getters },
-      { start, end }: Omit<Period, 'id'>
+      { start, end }: Omit<Period, "id">
     ) {
       const deletedPeriod = { start, end, id: -1 };
       const toDeleteGearRequests = state.gearRequests.filter(
@@ -845,7 +845,7 @@ export const actions = actionTree(
               gearRequest.rentalPeriod.id
             ),
             {
-              successMessage: 'La demande de matériel a été supprimée 🗑️',
+              successMessage: "La demande de matériel a été supprimée 🗑️",
               errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
             }
           );
@@ -866,19 +866,19 @@ export const actions = actionTree(
         })
       );
       if (responses.some((response) => response === undefined)) return;
-      dispatch('fetchGearRequests');
+      dispatch("fetchGearRequests");
     },
 
     async updateGearRequestRentalPeriod(
       { state, dispatch, getters },
-      previousPeriod: Omit<Period, 'id'>
+      previousPeriod: Omit<Period, "id">
     ) {
       await safeCall(
         this,
         repo.removeGearRequestRentalPeriod(this, state.mFT.id, previousPeriod)
       );
       const gearRequests =
-        getters.uniqueByGearGearRequests as StoredGearRequest<'FT'>[];
+        getters.uniqueByGearGearRequests as StoredGearRequest<"FT">[];
       await Promise.all(
         gearRequests.map(({ gear, quantity }) => {
           const form = {
@@ -886,46 +886,46 @@ export const actions = actionTree(
             quantity,
           };
           if (gear.isConsumable)
-            return dispatch('addConsumableGearRequestForAllFtPeriods', form);
-          return dispatch('addGearRequestForAllFtPeriods', form);
+            return dispatch("addConsumableGearRequestForAllFtPeriods", form);
+          return dispatch("addGearRequestForAllFtPeriods", form);
         })
       );
-      dispatch('fetchGearRequests');
+      dispatch("fetchGearRequests");
     },
 
     async setDriveToGearRequest(
       { commit },
-      gearRequest: GearRequestWithDrive<'FT'>
+      gearRequest: GearRequestWithDrive<"FT">
     ) {
-      commit('UDPATE_GEAR_REQUEST', gearRequest);
+      commit("UDPATE_GEAR_REQUEST", gearRequest);
     },
 
     async validateGearRequests(
       { state, dispatch },
-      gearRequests: GearRequestWithDrive<'FA' | 'FT'>[]
+      gearRequests: GearRequestWithDrive<"FA" | "FT">[]
     ) {
       await Promise.all(
         gearRequests.map((gr) =>
-          safeCall<GearRequestWithDrive<'FT'>>(
+          safeCall<GearRequestWithDrive<"FT">>(
             this,
             repo.validateGearRequest(this, state.mFT.id, gr),
             {
-              successMessage: 'Validation effectuée ✅',
+              successMessage: "Validation effectuée ✅",
               errorMessage: "La tentative de validation n'a pas abouti",
             }
           )
         )
       );
-      dispatch('fetchGearRequests');
+      dispatch("fetchGearRequests");
     },
   }
 );
 
-function defaultState(): Omit<Ft, 'id'> {
+function defaultState(): Omit<Ft, "id"> {
   return {
-    name: '',
+    name: "",
     status: FtStatus.DRAFT,
-    description: '',
+    description: "",
     isStatic: false,
     timeWindows: [],
     feedbacks: [],

@@ -65,31 +65,31 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import TeamChip from '~/components/atoms/chip/TeamChip.vue';
-import { formatDateToHumanReadable } from '~/utils/date/dateUtils';
-import { Header } from '~/utils/models/dataTable';
-import { TimeSpanWithAssignees } from '~/utils/models/ftTimeSpan';
-import { User } from '~/utils/models/user';
-import { formatUserPhone, formatPhoneLink } from '~/utils/user/userUtils';
+import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import { Header } from "~/utils/models/dataTable";
+import { TimeSpanWithAssignees } from "~/utils/models/ftTimeSpan";
+import { User } from "~/utils/models/user";
+import { formatUserPhone, formatPhoneLink } from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: 'FtTimeSpanDetails',
+  name: "FtTimeSpanDetails",
   components: { TeamChip },
   computed: {
     timeSpan(): TimeSpanWithAssignees | null {
       return this.$accessor.assignment.timeSpanToDisplayDetails;
     },
     task(): string {
-      if (!this.timeSpan) return '';
+      if (!this.timeSpan) return "";
       return `[${this.timeSpan.ft.id}] ${this.timeSpan.ft.name}`;
     },
     location(): string {
-      if (!this.timeSpan) return '';
+      if (!this.timeSpan) return "";
       return this.timeSpan.ft.location;
     },
     timetable(): string {
-      if (!this.timeSpan) return '';
+      if (!this.timeSpan) return "";
       const start = formatDateToHumanReadable(this.timeSpan.start);
       const end = formatDateToHumanReadable(this.timeSpan.end);
       return `${start} - ${end}`;
@@ -100,24 +100,24 @@ export default Vue.extend({
     },
     headers(): Header[] {
       const volunteer = {
-        text: 'Bénévole',
-        value: 'volunteer',
-        width: '300px',
+        text: "Bénévole",
+        value: "volunteer",
+        width: "300px",
         sortable: false,
       };
       const teams = {
-        text: 'Equipes',
-        value: 'teams',
+        text: "Equipes",
+        value: "teams",
         sortable: false,
       };
       const assignedTeam = {
-        text: 'Affecté en tant que',
-        value: 'assignedTeam',
+        text: "Affecté en tant que",
+        value: "assignedTeam",
         sortable: false,
       };
       const phone = {
-        text: 'Téléphone',
-        value: 'phone',
+        text: "Téléphone",
+        value: "phone",
         sortable: false,
       };
       return [volunteer, teams, assignedTeam, phone];
@@ -125,10 +125,10 @@ export default Vue.extend({
   },
   methods: {
     closeDialog() {
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
     openCalendarInNewTab(assigneeId: number) {
-      window.open(`/planning/${assigneeId}`, '_blank');
+      window.open(`/planning/${assigneeId}`, "_blank");
     },
     formatPhone(phone: string) {
       return formatUserPhone(phone);

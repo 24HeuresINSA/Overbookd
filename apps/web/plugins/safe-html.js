@@ -1,6 +1,6 @@
-import Vue from 'vue';
-import VueSafeHTML, { allowedTags } from 'vue-safe-html';
+import Vue from "vue";
+import VueSafeHTML, { allowedTags } from "vue-safe-html";
 
 Vue.use(VueSafeHTML, {
-  allowedTags: [...allowedTags, 'p'],
+  allowedTags: [...allowedTags, "p"],
 });

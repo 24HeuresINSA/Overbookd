@@ -45,20 +45,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { IProvidePeriod } from '@overbookd/period';
-import TeamChip from '~/components/atoms/chip/TeamChip.vue';
-import FtTimeSpanDetails from '~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue';
+import Vue from "vue";
+import { IProvidePeriod } from "@overbookd/period";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import FtTimeSpanDetails from "~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue";
 import {
   TimelineEvent,
   TimelineFt,
   TimelineTimeWindow,
   TimelineTimeSpan,
-} from '~/utils/models/timeline';
-import { marginPercent, widthPercent } from '~/utils/timeline/placement';
+} from "~/utils/models/timeline";
+import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 
 export default Vue.extend({
-  name: 'TimelineEvents',
+  name: "TimelineEvents",
   components: { TeamChip, FtTimeSpanDetails },
   data: () => {
     return {
@@ -137,7 +137,7 @@ export default Vue.extend({
       return `${margin.toFixed(2)}%`;
     },
     openFtInNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`, '_blank');
+      window.open(`/ft/${ftId}`, "_blank");
     },
     openTimeSpanDetailsDialog(timeSpanId: number) {
       this.$accessor.assignment.fetchTimeSpanDetails(timeSpanId);

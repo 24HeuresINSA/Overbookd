@@ -17,26 +17,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Fuse from 'fuse.js';
-import FtTimeSpanFilters from '~/components/molecules/assignment/filter/FtTimeSpanFilters.vue';
-import TaskList from '~/components/molecules/assignment/list/TaskList.vue';
+import Vue from "vue";
+import Fuse from "fuse.js";
+import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
+import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
 import {
   FtWithTimeSpan,
   TaskCategory,
   TaskPriority,
   getRequiredTeamsInFt,
-} from '~/utils/models/ftTimeSpan';
-import { Team } from '~/utils/models/team';
-import { TaskPriorities } from '~/utils/models/ftTimeSpan';
+} from "~/utils/models/ftTimeSpan";
+import { Team } from "~/utils/models/team";
+import { TaskPriorities } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
-  name: 'FilterableTaskList',
+  name: "FilterableTaskList",
   components: { FtTimeSpanFilters, TaskList },
   data: () => ({
     completed: false,
     teams: [] as Team[],
-    ft: '',
+    ft: "",
     category: null as TaskCategory | TaskPriority | null,
   }),
   computed: {
@@ -82,7 +82,7 @@ export default Vue.extend({
       categorySearched: TaskCategory
     ): (ft: FtWithTimeSpan) => boolean {
       return (ft) => {
-        if (categorySearched === 'AUCUNE') return ft.category === null;
+        if (categorySearched === "AUCUNE") return ft.category === null;
         return ft.category === categorySearched;
       };
     },
@@ -103,7 +103,7 @@ export default Vue.extend({
     fuzzyFindFt(fts: FtWithTimeSpan[], search?: string): FtWithTimeSpan[] {
       if (!search) return fts;
       const fuse = new Fuse(fts, {
-        keys: ['id', 'name'],
+        keys: ["id", "name"],
         threshold: 0.4,
       });
       return fuse.search(search).map((e) => e.item);

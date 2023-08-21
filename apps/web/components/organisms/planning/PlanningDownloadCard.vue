@@ -85,20 +85,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { download } from '~/utils/planning/download';
+import Vue from "vue";
+import { download } from "~/utils/planning/download";
 
 export default Vue.extend({
-  name: 'PlanningDownloadCard',
+  name: "PlanningDownloadCard",
   computed: {
     me() {
       return this.$accessor.user.me;
     },
     canViewPlanning(): boolean {
-      return this.$accessor.user.can('download-planning');
+      return this.$accessor.user.can("download-planning");
     },
     personnalLink(): string {
-      return this.$accessor.planning.link ?? '';
+      return this.$accessor.planning.link ?? "";
     },
     planningBase64Data(): string {
       return this.$accessor.planning.planningBase64Data;
@@ -114,7 +114,7 @@ export default Vue.extend({
     },
     async copyToClipBoard() {
       await navigator.clipboard.writeText(this.personnalLink);
-      this.$accessor.notif.pushNotification({ message: 'Lien copie ✅' });
+      this.$accessor.notif.pushNotification({ message: "Lien copie ✅" });
     },
   },
 });

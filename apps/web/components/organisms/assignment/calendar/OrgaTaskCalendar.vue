@@ -27,18 +27,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Availability } from '@overbookd/volunteer-availability';
-import OverCalendar from '~/components/molecules/calendar/OverCalendar.vue';
-import AssignmentUserStats from '~/components/molecules/user/AssignmentUserStats.vue';
-import { getColorByStatus } from '~/domain/common/status-color';
-import { isPeriodIncludedByAnother } from '~/utils/availabilities/availabilities';
-import { computeNextHourDate } from '~/utils/date/dateUtils';
-import { Volunteer } from '~/utils/models/assignment';
-import { CalendarEvent } from '~/utils/models/calendar';
-import { AvailableTimeSpan } from '~/utils/models/ftTimeSpan';
-import { VolunteerAssignmentStat, VolunteerTask } from '~/utils/models/user';
-import { formatUsername } from '~/utils/user/userUtils';
+import Vue from "vue";
+import { Availability } from "@overbookd/volunteer-availability";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
+import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
+import { getColorByStatus } from "~/domain/common/status-color";
+import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
+import { computeNextHourDate } from "~/utils/date/dateUtils";
+import { Volunteer } from "~/utils/models/assignment";
+import { CalendarEvent } from "~/utils/models/calendar";
+import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
+import { VolunteerAssignmentStat, VolunteerTask } from "~/utils/models/user";
+import { formatUsername } from "~/utils/user/userUtils";
 
 interface CalendarItemWithTask extends CalendarEvent {
   timeSpanId?: number;
@@ -46,7 +46,7 @@ interface CalendarItemWithTask extends CalendarEvent {
 }
 
 export default Vue.extend({
-  name: 'OrgaTaskCalendar',
+  name: "OrgaTaskCalendar",
   components: { OverCalendar, AssignmentUserStats },
   data: () => ({
     calendarMarker: new Date(),
@@ -56,7 +56,7 @@ export default Vue.extend({
       return this.$accessor.assignment.selectedVolunteer;
     },
     volunteerName(): string {
-      if (!this.selectedVolunteer) return '';
+      if (!this.selectedVolunteer) return "";
       return formatUsername(this.selectedVolunteer);
     },
     manifDate(): Date {
@@ -94,7 +94,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch('eventDate');
+    await this.$accessor.configuration.fetch("eventDate");
     this.calendarMarker = this.manifDate;
   },
   methods: {
@@ -111,7 +111,7 @@ export default Vue.extend({
           message: "La FT n'est pas prête à être affectée",
         });
       }
-      this.$emit('display-time-span-details', timeSpanId);
+      this.$emit("display-time-span-details", timeSpanId);
     },
     openFtInNewTab(ftId: number) {
       window.open(`/ft/${ftId}`);

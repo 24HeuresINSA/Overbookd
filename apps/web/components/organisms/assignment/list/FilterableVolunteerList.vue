@@ -30,26 +30,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Fuse from 'fuse.js';
-import AssignmentVolunteerList from '~/components/molecules/assignment/list/AssignmentVolunteerList.vue';
-import FriendsDisplay from '~/components/molecules/friend/FriendsDisplay.vue';
-import VolunteerFilters from '~/components/molecules/assignment/filter/VolunteerFilters.vue';
-import { Team } from '~/utils/models/team';
+import Vue from "vue";
+import Fuse from "fuse.js";
+import AssignmentVolunteerList from "~/components/molecules/assignment/list/AssignmentVolunteerList.vue";
+import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
+import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
+import { Team } from "~/utils/models/team";
 import {
   Sort,
   Volunteer,
   AssignmentModes,
   getAssignmentModeFromRoute,
-} from '~/utils/models/assignment';
-import { FtTimeSpan } from '~/utils/models/ftTimeSpan';
+} from "~/utils/models/assignment";
+import { FtTimeSpan } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
-  name: 'FilterableVolunteerList',
+  name: "FilterableVolunteerList",
   components: { AssignmentVolunteerList, FriendsDisplay, VolunteerFilters },
   data: () => ({
     teams: [] as Team[],
-    volunteer: '',
+    volunteer: "",
     sort: 0,
   }),
   computed: {
@@ -98,7 +98,7 @@ export default Vue.extend({
     fuzzyFindVolunteer(volunteers: Volunteer[], search?: string): Volunteer[] {
       if (!search) return volunteers;
       const fuse = new Fuse(volunteers, {
-        keys: ['firstname', 'lastname'],
+        keys: ["firstname", "lastname"],
         threshold: 0.4,
       });
       return fuse.search(search).map((e) => e.item);

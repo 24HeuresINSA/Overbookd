@@ -1,13 +1,13 @@
-import { actionTree, mutationTree } from 'typed-vuex';
-import { updateItemToList } from '@overbookd/list';
+import { actionTree, mutationTree } from "typed-vuex";
+import { updateItemToList } from "@overbookd/list";
 import {
   castCharismaPeriodsWithDate,
   castCharismaPeriodWithDate,
   CharismaPeriod,
   SavedCharismaPeriod,
-} from '~/utils/models/charismaPeriod';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
+} from "~/utils/models/charismaPeriod";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
 
 const repo = RepoFactory.CharismaPeriodRepository;
 
@@ -49,7 +49,7 @@ export const actions = actionTree(
     async fetchCharismaPeriods({ commit }) {
       const res = await safeCall(this, repo.getCharismaPeriods(this));
       if (!res) return;
-      commit('SET_CHARISMA_PERIODS', castCharismaPeriodsWithDate(res.data));
+      commit("SET_CHARISMA_PERIODS", castCharismaPeriodsWithDate(res.data));
     },
 
     async addCharismaPeriod({ commit }, charismaPeriod: CharismaPeriod) {
@@ -57,12 +57,12 @@ export const actions = actionTree(
         this,
         repo.createCharismaPeriod(this, charismaPeriod),
         {
-          successMessage: 'Période créée 🥳',
-          errorMessage: 'Période non créée 😢',
+          successMessage: "Période créée 🥳",
+          errorMessage: "Période non créée 😢",
         }
       );
       if (!res) return;
-      commit('ADD_CHARISMA_PERIOD', castCharismaPeriodWithDate(res.data));
+      commit("ADD_CHARISMA_PERIOD", castCharismaPeriodWithDate(res.data));
     },
 
     async updateCharismaPeriod(
@@ -74,12 +74,12 @@ export const actions = actionTree(
         this,
         repo.updateCharismaPeriod(this, id, CharismaPeriodWithoutId),
         {
-          successMessage: 'Période mise à jour 🥳',
-          errorMessage: 'Période non mise à jour 😢',
+          successMessage: "Période mise à jour 🥳",
+          errorMessage: "Période non mise à jour 😢",
         }
       );
       if (!res) return;
-      commit('UPDATE_CHARISMA_PERIOD', castCharismaPeriodWithDate(res.data));
+      commit("UPDATE_CHARISMA_PERIOD", castCharismaPeriodWithDate(res.data));
     },
 
     async deleteCharismaPeriod(
@@ -90,12 +90,12 @@ export const actions = actionTree(
         this,
         repo.deleteCharismaPeriod(this, charismaPeriod.id),
         {
-          successMessage: 'Période supprimée 🥳',
-          errorMessage: 'Période non supprimée 😢',
+          successMessage: "Période supprimée 🥳",
+          errorMessage: "Période non supprimée 😢",
         }
       );
       if (!res) return;
-      commit('DELETE_CHARISMA_PERIOD', charismaPeriod);
+      commit("DELETE_CHARISMA_PERIOD", charismaPeriod);
     },
   }
 );

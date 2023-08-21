@@ -1,6 +1,6 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { IProvidePeriod } from '@overbookd/period';
-import { FeedbackCreation, SavedFeedback } from '~/utils/models/feedback';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { IProvidePeriod } from "@overbookd/period";
+import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
 import {
   Ft,
   FtCreation,
@@ -13,23 +13,23 @@ import {
   FtTimeWindowUpdate,
   FtUpdate,
   FtUserRequestUpdate,
-} from '~/utils/models/ft';
-import { FtTimeSpanParameters } from '~/utils/models/ftTimeSpan';
+} from "~/utils/models/ft";
+import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
 import {
   GearRequestCreation,
   GearRequestUpdate,
   GearRequestWithDrive,
   StoredGearRequest,
-} from '~/utils/models/gearRequests';
-import { Reviewer } from '~/utils/models/review';
-import { StatsPayload } from '~/utils/models/stats';
-import { User } from '~/utils/models/user';
-import { HttpStringified } from '~/utils/types/http';
+} from "~/utils/models/gearRequests";
+import { Reviewer } from "~/utils/models/review";
+import { StatsPayload } from "~/utils/models/stats";
+import { User } from "~/utils/models/user";
+import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class FtRepository {
-  private static readonly basePath = 'ft';
+  private static readonly basePath = "ft";
 
   static getAllFTs(context: Context, search?: FtSearch) {
     return context.$axios.get<HttpStringified<FtSimplified>[]>(this.basePath, {
@@ -184,14 +184,14 @@ export class FtRepository {
     taskId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
-    return context.$axios.post<HttpStringified<StoredGearRequest<'FT'>>>(
+    return context.$axios.post<HttpStringified<StoredGearRequest<"FT">>>(
       `${this.basePath}/${taskId}/gear-requests`,
       gearRequestCreationForm
     );
   }
 
   static getGearRequests(context: Context, taskId: number) {
-    return context.$axios.get<HttpStringified<StoredGearRequest<'FT'>>[]>(
+    return context.$axios.get<HttpStringified<StoredGearRequest<"FT">>[]>(
       `${this.basePath}/${taskId}/gear-requests`
     );
   }
@@ -224,7 +224,7 @@ export class FtRepository {
     rentalPeriodId: number,
     gearRequestUpdateForm: GearRequestUpdate
   ) {
-    return context.$axios.patch<HttpStringified<StoredGearRequest<'FT'>>>(
+    return context.$axios.patch<HttpStringified<StoredGearRequest<"FT">>>(
       `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
     );
@@ -233,14 +233,14 @@ export class FtRepository {
   static validateGearRequest(
     context: Context,
     taskId: number,
-    gearRequest: GearRequestWithDrive<'FA' | 'FT'>
+    gearRequest: GearRequestWithDrive<"FA" | "FT">
   ) {
     const {
       gear: { id: gearId },
       rentalPeriod: { id: rentalPeriodId },
       drive,
     } = gearRequest;
-    return context.$axios.patch<GearRequestWithDrive<'FT'>>(
+    return context.$axios.patch<GearRequestWithDrive<"FT">>(
       `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
       { drive }
     );

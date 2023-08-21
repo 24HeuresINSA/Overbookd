@@ -7,12 +7,12 @@
 </template>
 
 <script>
-import OverTransactions from '~/components/organisms/user/personnalAccount/OverTransactions.vue';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
+import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
 
 export default {
-  name: 'MTransactions',
+  name: "MTransactions",
   components: { OverTransactions },
   data: () => {
     return {
@@ -21,7 +21,7 @@ export default {
   },
 
   head: () => ({
-    title: 'Mes transactions',
+    title: "Mes transactions",
   }),
 
   computed: {

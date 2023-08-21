@@ -50,10 +50,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { formatDateWithMinutes } from '~/utils/date/dateUtils';
-import { gearRequestsSorts } from '~/utils/functions/gearRequest';
-import { Header } from '~/utils/models/dataTable';
+import Vue from "vue";
+import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { gearRequestsSorts } from "~/utils/functions/gearRequest";
+import { Header } from "~/utils/models/dataTable";
 import {
   GearRequest,
   GearRequestWithDrive,
@@ -61,7 +61,7 @@ import {
   isFTStoredGearRequest,
   SortableGearRequestHeader,
   StoredGearRequest,
-} from '~/utils/models/gearRequests';
+} from "~/utils/models/gearRequests";
 
 interface GearRequestsValidationData {
   headers: Header[];
@@ -69,7 +69,7 @@ interface GearRequestsValidationData {
 }
 
 export default Vue.extend({
-  name: 'GearRequestsValidation',
+  name: "GearRequestsValidation",
 
   props: {
     validator: {
@@ -79,51 +79,51 @@ export default Vue.extend({
     },
     festivalEvent: {
       type: String,
-      default: () => 'FA',
+      default: () => "FA",
     },
   },
 
   data(): GearRequestsValidationData {
     return {
       headers: [
-        { text: 'Suppression', value: 'delete', sortable: false },
-        { text: 'Quantite', value: 'quantity' },
-        { text: 'Matos', value: 'gear' },
-        { text: 'Du', value: 'startDate' },
-        { text: 'Au', value: 'endDate' },
-        { text: 'Magasin', value: 'drive', width: '30%', sortable: false },
+        { text: "Suppression", value: "delete", sortable: false },
+        { text: "Quantite", value: "quantity" },
+        { text: "Matos", value: "gear" },
+        { text: "Du", value: "startDate" },
+        { text: "Au", value: "endDate" },
+        { text: "Magasin", value: "drive", width: "30%", sortable: false },
       ],
 
       drives: [
-        'Benne Collette Besson',
-        'Benne Parking K-fet',
-        'Parking Eiffel',
-        'Creux GCU',
-        'Creux GM',
-        'Cave E',
-        'Club Rock',
-        'Conteneur 24h',
-        'Conteneur Karna',
-        'Conteneur Parking K-fet',
-        'Conteneur Scène Roots',
-        'Hall des Humanités',
-        'Local 24h',
-        'Magasin',
-        'MdE',
-        'Salle Montréal',
-        'Salle René Char',
-        'Non stocké',
-        'QG Orga',
-        'Backline',
+        "Benne Collette Besson",
+        "Benne Parking K-fet",
+        "Parking Eiffel",
+        "Creux GCU",
+        "Creux GM",
+        "Cave E",
+        "Club Rock",
+        "Conteneur 24h",
+        "Conteneur Karna",
+        "Conteneur Parking K-fet",
+        "Conteneur Scène Roots",
+        "Hall des Humanités",
+        "Local 24h",
+        "Magasin",
+        "MdE",
+        "Salle Montréal",
+        "Salle René Char",
+        "Non stocké",
+        "QG Orga",
+        "Backline",
         "Livré par l'équipe logistique",
-        'Livré par une com',
+        "Livré par une com",
       ],
     };
   },
 
   computed: {
     isFA(): boolean {
-      return this.festivalEvent === 'FA';
+      return this.festivalEvent === "FA";
     },
     gearRequestsToApprove(): StoredGearRequest[] {
       const gearRequests: StoredGearRequest[] = this.isFA
@@ -167,13 +167,13 @@ export default Vue.extend({
 
     async validateGearRequests() {
       const gearRequests = this.gearRequestsToApprove.filter(
-        (gr): gr is GearRequestWithDrive<'FA' | 'FT'> => Boolean(gr.drive)
+        (gr): gr is GearRequestWithDrive<"FA" | "FT"> => Boolean(gr.drive)
       );
       const validation = this.isFA
         ? this.$accessor.fa.validateGearRequests(gearRequests)
         : this.$accessor.ft.validateGearRequests(gearRequests);
       await validation;
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
 
     sortGearRequests(
@@ -181,7 +181,7 @@ export default Vue.extend({
       sortsBy: SortableGearRequestHeader[],
       sortsDesc: boolean[]
     ): GearRequest[] {
-      const sortBy = sortsBy.at(0) ?? 'quantity';
+      const sortBy = sortsBy.at(0) ?? "quantity";
       const sortFnc = gearRequestsSorts.get(sortBy);
 
       if (!sortFnc) return gearRequests;

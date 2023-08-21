@@ -30,15 +30,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 import {
   TaskCategories,
   TaskCategoryEmoji,
   TaskCategoryEmojis,
-} from '~/utils/models/ftTimeSpan';
-import { AssignmentStats } from '~/store/assignment';
-import { VolunteerAssignmentStat } from '~/utils/models/user';
-import { Duration } from '~/utils/date/duration';
+} from "~/utils/models/ftTimeSpan";
+import { AssignmentStats } from "~/store/assignment";
+import { VolunteerAssignmentStat } from "~/utils/models/user";
+import { Duration } from "~/utils/date/duration";
 
 function searchStatic(stat: VolunteerAssignmentStat): boolean {
   return stat.category === TaskCategories.STATIQUE;
@@ -65,25 +65,25 @@ function searchUnknown(stat: VolunteerAssignmentStat): boolean {
 }
 
 export default Vue.extend({
-  name: 'VolunteerStatsTable',
+  name: "VolunteerStatsTable",
   data: () => ({
     headers: [
-      { text: 'Benevole', value: 'volunteer', sortable: false },
+      { text: "Benevole", value: "volunteer", sortable: false },
       {
-        text: 'Creneaux statiques',
+        text: "Creneaux statiques",
         value: TaskCategories.STATIQUE,
         sortable: false,
       },
-      { text: 'Creneaux bar', value: TaskCategories.BAR, sortable: false },
+      { text: "Creneaux bar", value: TaskCategories.BAR, sortable: false },
       {
-        text: 'Creneaux manutention',
+        text: "Creneaux manutention",
         value: TaskCategories.MANUTENTION,
         sortable: false,
       },
-      { text: 'Creneaux fun', value: TaskCategories.FUN, sortable: false },
-      { text: 'Creneaux relous', value: TaskCategories.RELOU, sortable: false },
+      { text: "Creneaux fun", value: TaskCategories.FUN, sortable: false },
+      { text: "Creneaux relous", value: TaskCategories.RELOU, sortable: false },
       {
-        text: 'Creneaux indetermines',
+        text: "Creneaux indetermines",
         value: TaskCategories.AUCUNE,
         sortable: false,
       },

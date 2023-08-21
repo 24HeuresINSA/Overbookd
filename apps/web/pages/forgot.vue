@@ -25,19 +25,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { safeCall } from '~/utils/api/calls';
-import { RepoFactory } from '~/repositories/repo-factory';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import Vue from "vue";
+import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from "~/repositories/repo-factory";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
-  name: 'ForgotPassword',
+  name: "ForgotPassword",
   components: { SnackNotificationContainer },
   auth: false,
-  layout: 'none',
+  layout: "none",
 
   data: () => ({
-    email: '',
+    email: "",
   }),
 
   methods: {
@@ -58,7 +58,7 @@ export default Vue.extend({
 
       setTimeout(async () => {
         await this.$router.push({
-          path: '/',
+          path: "/",
         });
       }, 10000);
     },

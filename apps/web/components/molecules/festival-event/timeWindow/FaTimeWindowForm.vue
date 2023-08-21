@@ -53,16 +53,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import DateTimeField from '~/components/atoms/field/date/DateTimeField.vue';
-import ConfirmationMessage from '~/components/atoms/card/ConfirmationMessage.vue';
+import Vue from "vue";
+import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import {
   hasAllValidations,
   hasAtLeastOneValidation,
   isAnimationValidatedBy,
-} from '~/utils/festival-event/faUtils';
-import { Fa, TimeWindowType } from '~/utils/models/fa';
-import { MyUserInformation, User } from '~/utils/models/user';
+} from "~/utils/festival-event/faUtils";
+import { Fa, TimeWindowType } from "~/utils/models/fa";
+import { MyUserInformation, User } from "~/utils/models/user";
 
 interface FaTimeWindowFormData {
   start?: Date;
@@ -74,11 +74,11 @@ interface FaTimeWindowFormData {
 }
 
 export default Vue.extend({
-  name: 'FaTimeWindowForm',
+  name: "FaTimeWindowForm",
   components: { DateTimeField, ConfirmationMessage },
   model: {
-    prop: 'timeWindow',
-    event: 'change',
+    prop: "timeWindow",
+    event: "change",
   },
   props: {
     timeWindow: {
@@ -93,8 +93,8 @@ export default Vue.extend({
 
     isConfirmationDialogOpen: false,
 
-    animOwner: 'humain',
-    matosOwners: ['matos', 'barrieres', 'elec'],
+    animOwner: "humain",
+    matosOwners: ["matos", "barrieres", "elec"],
   }),
   computed: {
     mFA(): Fa {
@@ -134,14 +134,14 @@ export default Vue.extend({
     isFormInvalid(): boolean {
       const requiredFieldsFilled = this.start && this.end;
       if (!requiredFieldsFilled) {
-        this.showErrorMessage('❌ Tu dois compléter tous les champs !');
+        this.showErrorMessage("❌ Tu dois compléter tous les champs !");
         return true;
       }
 
       const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
       if (!startBeforeEnd) {
         this.showErrorMessage(
-          '❌ La date de début doit être avant la date de fin !'
+          "❌ La date de début doit être avant la date de fin !"
         );
         return true;
       }
@@ -154,7 +154,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch('eventDate');
+    await this.$accessor.configuration.fetch("eventDate");
     this.updateLocalVariable();
   },
   methods: {
@@ -180,12 +180,12 @@ export default Vue.extend({
         type: this.type,
       };
 
-      this.$emit('change', timeWindow);
-      this.$emit('close-dialog');
+      this.$emit("change", timeWindow);
+      this.$emit("close-dialog");
       this.clearLocalVariable();
     },
     checkNeedForConfirmation() {
-      const logTeamCodes = ['matos', 'barrieres', 'elec'];
+      const logTeamCodes = ["matos", "barrieres", "elec"];
       const isMatosTimeframe = this.type === TimeWindowType.MATOS;
       const shouldAskConfirmation =
         isMatosTimeframe && hasAtLeastOneValidation(this.mFA, logTeamCodes);
@@ -205,7 +205,7 @@ export default Vue.extend({
     closeAllDialogs() {
       this.clearLocalVariable();
       this.isConfirmationDialogOpen = false;
-      this.$emit('close-dialog');
+      this.$emit("close-dialog");
     },
     showErrorMessage(message: string) {
       return this.$accessor.notif.pushNotification({ message });

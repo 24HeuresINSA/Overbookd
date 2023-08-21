@@ -20,17 +20,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import OverCalendar from '~/components/molecules/calendar/OverCalendar.vue';
+import Vue from "vue";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   FtTimeSpanEvent,
   FtTimeSpanWithRequestedTeams,
   FtWithTimeSpan,
   RequestedTeam,
-} from '~/utils/models/ftTimeSpan';
+} from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
-  name: 'TaskOrgaCalendar',
+  name: "TaskOrgaCalendar",
   components: { OverCalendar },
   data: () => ({
     calendarMarker: new Date(),
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
     ftName(): string {
       if (this.selectedFt === null) {
-        return '';
+        return "";
       }
       return `[${this.selectedFt.id}] ${this.selectedFt.name}`;
     },
@@ -61,7 +61,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch('eventDate');
+    await this.$accessor.configuration.fetch("eventDate");
     this.calendarMarker = this.manifDate;
   },
   methods: {
@@ -69,7 +69,7 @@ export default Vue.extend({
       this.$accessor.assignment.setSelectedTimeSpan(timeSpan);
     },
     selectTimeSpanToDisplayDetails(timeSpanId: number) {
-      this.$emit('display-time-span-details', timeSpanId);
+      this.$emit("display-time-span-details", timeSpanId);
     },
     mapTimeSpanToEvent(
       timeSpan: FtTimeSpanWithRequestedTeams
@@ -100,7 +100,7 @@ export default Vue.extend({
     },
     convertDecimalToHex(decimal: number): string {
       const hex = decimal.toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
+      return hex.length === 1 ? "0" + hex : hex;
     },
     openSelectedFtInNewTab() {
       if (this.selectedFt === null) return;

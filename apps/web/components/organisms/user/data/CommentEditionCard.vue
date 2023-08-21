@@ -12,17 +12,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from "vue";
 
 export default Vue.extend({
-  name: 'CommentEditionCard',
+  name: "CommentEditionCard",
   data: () => ({
-    localComment: '',
+    localComment: "",
   }),
   computed: {
     comment: {
       get(): string {
-        return this.$accessor.user.me.comment ?? '';
+        return this.$accessor.user.me.comment ?? "";
       },
       set(comment: string) {
         this.localComment = comment;

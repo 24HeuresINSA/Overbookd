@@ -43,25 +43,25 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import ElectricityNeedForm from '~/components/molecules/festival-event/logistic/electricityNeed/ElectricityNeedForm.vue';
-import ElectricityNeedTable from '~/components/molecules/festival-event/logistic/electricityNeed/ElectricityNeedTable.vue';
-import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
+import Vue from "vue";
+import ElectricityNeedForm from "~/components/molecules/festival-event/logistic/electricityNeed/ElectricityNeedForm.vue";
+import ElectricityNeedTable from "~/components/molecules/festival-event/logistic/electricityNeed/ElectricityNeedTable.vue";
+import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from '~/utils/festival-event/faUtils';
-import { Fa, FaCardType, FaElectricityNeed } from '~/utils/models/fa';
+} from "~/utils/festival-event/faUtils";
+import { Fa, FaCardType, FaElectricityNeed } from "~/utils/models/fa";
 
 export default Vue.extend({
-  name: 'ElectricityNeedCard',
+  name: "ElectricityNeedCard",
   components: {
     CardErrorList,
     ElectricityNeedTable,
     ElectricityNeedForm,
   },
   data: () => ({
-    owner: 'elec',
+    owner: "elec",
     cardType: FaCardType.ELEC,
 
     isAddDialogOpen: false,

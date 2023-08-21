@@ -89,73 +89,73 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
-const REDIRECT_URL = '/';
+const REDIRECT_URL = "/";
 const BACKGROUNDS_URL = [
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_feudartificefinal.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_feder.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_rosalie.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_danakil.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_directions.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_photoequipe.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_fossegrandescene.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_montagescenehumas-scaled.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_resultatscoursesimg_24h_45e_benevoles_montagecrash.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_paille.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_assis.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_tireuse.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_service.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_repas.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_maquillage.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_qgorgahaut.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_resultatscourses.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_montagescene.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevole_trraverseecourse.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevole_poney.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_43e_qgorga.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_42e_benevoles_canapedehors.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_qgorga.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_foodtruck.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bardecouverte.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_festivaliersdanslherbe-scaled.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_fondgrandescene.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_viragevelo.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_podium.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/courses_caritatives_photo.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_coucoucoureur.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_coucouvelo.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_danse.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_villageprevention.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_tiralarc.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_kavinsky.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fosse.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fuzzcall.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg',
-  'https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg',
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bellecour.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_mome.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_feudartificefinal.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_feder.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_rosalie.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_danakil.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_directions.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_photoequipe.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_fossegrandescene.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_montagescenehumas-scaled.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_resultatscoursesimg_24h_45e_benevoles_montagecrash.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_paille.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevoles_assis.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_tireuse.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_service.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_repas.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_benevole_maquillage.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_qgorgahaut.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_resultatscourses.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_montagescene.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevole_trraverseecourse.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevole_poney.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_43e_qgorga.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_42e_benevoles_canapedehors.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_qgorga.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_foodtruck.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_bardecouverte.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_festivaliersdanslherbe-scaled.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_fondgrandescene.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_viragevelo.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_podium.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/courses_caritatives_photo.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_coucoucoureur.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_coucouvelo.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_danse.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_villageprevention.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_tiralarc.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_kavinsky.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fosse.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fuzzcall.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg",
+  "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg",
 ];
-import { version } from '../package.json';
+import { version } from "../package.json";
 
 export default Vue.extend({
-  name: 'Login',
+  name: "Login",
   auth: false,
   components: { SnackNotificationContainer },
-  layout: 'none',
+  layout: "none",
 
   data: () => ({
     credentials: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     feedbackMessage: undefined,
     timeout: 5000,
     version,
-    randomURL: '',
+    randomURL: "",
     isDialogOpen: false,
   }),
 
@@ -180,25 +180,25 @@ export default Vue.extend({
     async login() {
       try {
         if (this.credentials.email && this.credentials.password) {
-          await this.$auth.loginWith('local', { data: this.credentials }); // try to log user in
+          await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
           await this.$router.push({
             path: REDIRECT_URL,
           }); // redirect to homepage
-          const audio = new Audio('audio/jaune.m4a');
+          const audio = new Audio("audio/jaune.m4a");
           await audio.play();
         }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any -- can't cast with instanceof
       } catch (e: any) {
         if (e.response.status === 429) {
-          return this.$store.dispatch('notif/pushNotification', {
-            type: 'error',
+          return this.$store.dispatch("notif/pushNotification", {
+            type: "error",
             message:
-              'Tu as essayé de te connecter trop de fois ... 👨‍💻 Attends 30 secs',
+              "Tu as essayé de te connecter trop de fois ... 👨‍💻 Attends 30 secs",
           });
         }
-        return this.$store.dispatch('notif/pushNotification', {
-          type: 'error',
-          message: 'Ton email ou ton mot de passe est incorrect 😞',
+        return this.$store.dispatch("notif/pushNotification", {
+          type: "error",
+          message: "Ton email ou ton mot de passe est incorrect 😞",
         });
       }
     },

@@ -19,17 +19,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import TeamChip from '~/components/atoms/chip/TeamChip.vue';
-import { Volunteer } from '~/utils/models/needHelp';
+import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import { Volunteer } from "~/utils/models/needHelp";
 import {
   formatPhoneLink,
   formatUserPhone,
   formatUsername,
-} from '~/utils/user/userUtils';
+} from "~/utils/user/userUtils";
 
 export default Vue.extend({
-  name: 'NeedHelpVolunteerResumeCalendarHeader',
+  name: "NeedHelpVolunteerResumeCalendarHeader",
   components: { TeamChip },
   props: {
     volunteer: {

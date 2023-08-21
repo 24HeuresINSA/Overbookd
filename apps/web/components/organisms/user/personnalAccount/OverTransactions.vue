@@ -60,12 +60,12 @@
 </template>
 
 <script>
-import SnackNotificationContainer from '../../../molecules/snack/SnackNotificationContainer.vue';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
+import SnackNotificationContainer from "../../../molecules/snack/SnackNotificationContainer.vue";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
 
 export default {
-  name: 'OverTransactions',
+  name: "OverTransactions",
   components: { SnackNotificationContainer },
   props: {
     transactions: {
@@ -80,18 +80,18 @@ export default {
   data: () => {
     return {
       headers: [
-        { text: 'Type', value: 'type' },
-        { text: 'Depuis', value: 'from' },
+        { text: "Type", value: "type" },
+        { text: "Depuis", value: "from" },
         {
-          text: 'Vers',
-          value: 'to',
+          text: "Vers",
+          value: "to",
         },
-        { text: 'Contexte', value: 'context' },
-        { text: 'Date', value: 'createdAt' },
+        { text: "Contexte", value: "context" },
+        { text: "Date", value: "createdAt" },
         {
-          text: 'Montant',
-          value: 'amount',
-          align: 'end',
+          text: "Montant",
+          value: "amount",
+          align: "end",
         },
       ],
       users: {},
@@ -99,7 +99,7 @@ export default {
   },
   async mounted() {
     if (this.action) {
-      this.headers.push({ text: 'Action', value: 'action' });
+      this.headers.push({ text: "Action", value: "action" });
     }
   },
   methods: {
@@ -111,13 +111,13 @@ export default {
       if (deleteCall) {
         // update on screen
         this.$accessor.notif.pushNotification({
-          type: 'success',
-          message: 'Transaction supprimée',
+          type: "success",
+          message: "Transaction supprimée",
         });
       }
       this.$accessor.notif.pushNotification({
-        type: 'error',
-        message: 'Une erreur est survenue',
+        type: "error",
+        message: "Une erreur est survenue",
       });
     },
     getFullName({ lastname, firstname }) {

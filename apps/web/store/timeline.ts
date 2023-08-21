@@ -1,21 +1,21 @@
-import { actionTree, getterTree, mutationTree } from 'typed-vuex';
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import {
   IProvidePeriod,
   TWO_HOURS_IN_MS,
   QUARTER_IN_MS,
-} from '@overbookd/period';
-import { SlugifyService } from '~/domain/common/slugify.service';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
-import { castPeriod } from '~/utils/models/period';
-import { Team } from '~/utils/models/team';
+} from "@overbookd/period";
+import { SlugifyService } from "~/domain/common/slugify.service";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
+import { castPeriod } from "~/utils/models/period";
+import { Team } from "~/utils/models/team";
 import {
   TimelineEvent,
   TimelineFt,
   TimelineTimeSpan,
   TimelineTimeWindow,
-} from '~/utils/models/timeline';
-import { HttpStringified } from '~/utils/types/http';
+} from "~/utils/models/timeline";
+import { HttpStringified } from "~/utils/types/http";
 
 const timelineRepo = RepoFactory.TimelineRepository;
 
@@ -48,7 +48,7 @@ export const state = (): TimelineState => ({
   events: [],
   start: defaultPeriod().start,
   end: defaultPeriod().end,
-  search: '',
+  search: "",
   teams: [],
 });
 
@@ -99,22 +99,22 @@ export const actions = actionTree(
       );
       if (!res) return;
       const events = castTimelineEventsWithDate(res.data);
-      commit('SET_EVENTS', events);
+      commit("SET_EVENTS", events);
     },
     updatePeriod({ commit, dispatch }, { start, end }: IProvidePeriod) {
-      commit('SET_START', start);
-      commit('SET_END', end);
-      dispatch('fetchEvents');
+      commit("SET_START", start);
+      commit("SET_END", end);
+      dispatch("fetchEvents");
     },
     updateSearch({ commit }, search: string | null) {
-      commit('SET_SEARCH', search ?? '');
+      commit("SET_SEARCH", search ?? "");
     },
     updateTeams({ commit }, teams: Team[]) {
-      commit('SET_TEAMS', teams);
+      commit("SET_TEAMS", teams);
     },
     resetToDefaultPeriod({ dispatch }) {
       const period = defaultPeriod();
-      dispatch('updatePeriod', period);
+      dispatch("updatePeriod", period);
     },
   }
 );

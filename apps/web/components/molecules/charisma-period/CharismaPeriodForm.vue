@@ -43,16 +43,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import DateTimeField from '~/components/atoms/field/date/DateTimeField.vue';
+import Vue from "vue";
+import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-} from '~/utils/models/charismaPeriod';
-import { isNumber, min, required } from '~/utils/rules/inputRules';
+} from "~/utils/models/charismaPeriod";
+import { isNumber, min, required } from "~/utils/rules/inputRules";
 
 export default Vue.extend({
-  name: 'CharismaPeriodForm',
+  name: "CharismaPeriodForm",
   components: { DateTimeField },
   props: {
     charismaPeriod: {
@@ -61,11 +61,11 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     start: undefined as Date | undefined,
     end: undefined as Date | undefined,
-    charisma: '0',
+    charisma: "0",
 
     isFormValid: false,
     rules: {
@@ -93,20 +93,20 @@ export default Vue.extend({
     isCharismaPeriodInvalid(): boolean {
       const requiredFieldsFilled = this.isFormValid && this.start && this.end;
       if (!requiredFieldsFilled) {
-        this.showErrorMessage('❌ Tu dois compléter tous les champs !');
+        this.showErrorMessage("❌ Tu dois compléter tous les champs !");
         return true;
       }
 
       const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
       if (!startBeforeEnd) {
         this.showErrorMessage(
-          '❌ La date de début doit être avant la date de fin !'
+          "❌ La date de début doit être avant la date de fin !"
         );
         return true;
       }
 
       if (this.hasOverlap) {
-        this.showErrorMessage('❌ Ce créneau en chevauche un autre !');
+        this.showErrorMessage("❌ Ce créneau en chevauche un autre !");
         return true;
       }
 
@@ -128,7 +128,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch('eventDate');
+    await this.$accessor.configuration.fetch("eventDate");
     this.updateLocalVariable();
   },
   methods: {
@@ -142,11 +142,11 @@ export default Vue.extend({
       this.charisma = this.charismaPeriod?.charisma.toString();
     },
     clearLocalVariable() {
-      this.name = '';
-      this.description = '';
+      this.name = "";
+      this.description = "";
       this.start = this.manifDate;
       this.end = this.manifDate;
-      this.charisma = '0';
+      this.charisma = "0";
     },
     confirmCharismaPeriod() {
       if (this.isCharismaPeriodInvalid) return;
@@ -161,7 +161,7 @@ export default Vue.extend({
         end: this.endOrManifDate,
         charisma: +this.charisma,
       };
-      this.$emit('create', charismaPeriod);
+      this.$emit("create", charismaPeriod);
       this.clearLocalVariable();
     },
     updateCharismaPeriod() {
@@ -173,11 +173,11 @@ export default Vue.extend({
         end: this.end ?? this.charismaPeriod.end,
         charisma: +this.charisma,
       };
-      this.$emit('update', charismaPeriod);
+      this.$emit("update", charismaPeriod);
     },
     showErrorMessage(message: string) {
-      return this.$store.dispatch('notif/pushNotification', {
-        type: 'error',
+      return this.$store.dispatch("notif/pushNotification", {
+        type: "error",
         message,
       });
     },

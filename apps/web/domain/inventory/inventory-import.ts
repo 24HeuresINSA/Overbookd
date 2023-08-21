@@ -1,9 +1,9 @@
-import { GearRepository } from './gear.repository';
-import { InventoryRecord } from './inventory-record';
+import { GearRepository } from "./gear.repository";
+import { InventoryRecord } from "./inventory-record";
 import {
   ManualInventoryRecord,
   ManualInventoryRecordError,
-} from './manual-inventory-record';
+} from "./manual-inventory-record";
 
 export type InventoryImportRaw = {
   gear: string;

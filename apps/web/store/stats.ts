@@ -1,7 +1,7 @@
-import { actionTree, mutationTree } from 'typed-vuex';
-import { RepoFactory } from '~/repositories/repo-factory';
-import { safeCall } from '~/utils/api/calls';
-import { StatsPayload } from '~/utils/models/stats';
+import { actionTree, mutationTree } from "typed-vuex";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
+import { StatsPayload } from "~/utils/models/stats";
 
 export const state = () => ({
   statsFA: [] as StatsPayload[],
@@ -26,7 +26,7 @@ export const actions = actionTree(
         RepoFactory.FaRepository.getFaStats(this)
       );
       if (res) {
-        context.commit('SET_STATS_FA', res.data);
+        context.commit("SET_STATS_FA", res.data);
       }
       return res;
     },
@@ -36,7 +36,7 @@ export const actions = actionTree(
         RepoFactory.FtRepository.getFtStats(this)
       );
       if (res) {
-        context.commit('SET_STATS_FT', res.data);
+        context.commit("SET_STATS_FT", res.data);
       }
       return res;
     },

@@ -1,4 +1,4 @@
-import { Team } from './team';
+import { Team } from "./team";
 
 export interface Review {
   team: Team;
@@ -6,8 +6,8 @@ export interface Review {
 }
 
 export enum ReviewStatus {
-  VALIDATED = 'VALIDATED',
-  REFUSED = 'REFUSED',
+  VALIDATED = "VALIDATED",
+  REFUSED = "REFUSED",
 }
 
 export interface Reviewer {

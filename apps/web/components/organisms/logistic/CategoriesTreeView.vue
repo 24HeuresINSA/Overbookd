@@ -43,10 +43,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Category, CategoryTree } from '~/utils/models/catalog.model';
-import CategoryDetails from '../../molecules/logistic/CategoryDetails.vue';
-import CategoryForm from '../../molecules/logistic/CategoryForm.vue';
+import Vue from "vue";
+import { Category, CategoryTree } from "~/utils/models/catalog.model";
+import CategoryDetails from "../../molecules/logistic/CategoryDetails.vue";
+import CategoryForm from "../../molecules/logistic/CategoryForm.vue";
 
 interface CategoryTreeViewData {
   isCreateDialogOpen: boolean;
@@ -55,7 +55,7 @@ interface CategoryTreeViewData {
 }
 
 export default Vue.extend({
-  name: 'CategoriesTreeView',
+  name: "CategoriesTreeView",
   components: { CategoryForm, CategoryDetails },
   data(): CategoryTreeViewData {
     return {
@@ -69,7 +69,7 @@ export default Vue.extend({
       return this.$accessor.catalog.categoryTree;
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can('write-catalog');
+      return this.$accessor.user.can("write-catalog");
     },
   },
   mounted() {

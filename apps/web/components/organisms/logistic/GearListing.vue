@@ -79,21 +79,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { GearSearchOptions } from '~/store/catalog';
-import { Category, Gear } from '~/utils/models/catalog.model';
-import { Header } from '~/utils/models/dataTable';
-import { Team } from '~/utils/models/team';
-import ConfirmationMessage from '../../atoms/card/ConfirmationMessage.vue';
-import SearchCategory from '../../atoms/field/search/SearchCategory.vue';
-import SearchTeam from '../../atoms/field/search/SearchTeam.vue';
-import GearForm from '../../molecules/logistic/GearForm.vue';
+import Vue from "vue";
+import { GearSearchOptions } from "~/store/catalog";
+import { Category, Gear } from "~/utils/models/catalog.model";
+import { Header } from "~/utils/models/dataTable";
+import { Team } from "~/utils/models/team";
+import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
+import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
+import SearchTeam from "../../atoms/field/search/SearchTeam.vue";
+import GearForm from "../../molecules/logistic/GearForm.vue";
 
 interface GearListingData {
   headers: Header[];
   name: string;
   category: Category | null;
-  team: Pick<Team, 'name' | 'code'> | null;
+  team: Pick<Team, "name" | "code"> | null;
   loading: boolean;
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
@@ -102,19 +102,19 @@ interface GearListingData {
 }
 
 export default Vue.extend({
-  name: 'GearListing',
+  name: "GearListing",
   components: { GearForm, ConfirmationMessage, SearchTeam, SearchCategory },
   data(): GearListingData {
     return {
       headers: [
-        { text: 'Matos', value: 'name' },
-        { text: 'Code de reference', value: 'code' },
-        { text: "Matos d'appoint", value: 'isPonctualUsage' },
-        { text: 'Matos consommable', value: 'isConsumable' },
-        { text: 'Category', value: 'category' },
-        { text: 'Actions', value: 'actions' },
+        { text: "Matos", value: "name" },
+        { text: "Code de reference", value: "code" },
+        { text: "Matos d'appoint", value: "isPonctualUsage" },
+        { text: "Matos consommable", value: "isConsumable" },
+        { text: "Category", value: "category" },
+        { text: "Actions", value: "actions" },
       ],
-      name: '',
+      name: "",
       category: null,
       team: null,
       loading: false,
@@ -139,7 +139,7 @@ export default Vue.extend({
       );
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can('write-catalog');
+      return this.$accessor.user.can("write-catalog");
     },
   },
   beforeMount() {
@@ -152,7 +152,7 @@ export default Vue.extend({
       await this.fetchGears(searchOptions);
     },
     searchOnEnter(keyEvent: KeyboardEvent) {
-      if (keyEvent.key !== 'Enter') return;
+      if (keyEvent.key !== "Enter") return;
       return this.searchGears();
     },
     async fetchGears(searchOptions: GearSearchOptions) {

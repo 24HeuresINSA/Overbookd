@@ -1,7 +1,7 @@
-import { mutationTree, actionTree } from 'typed-vuex';
+import { mutationTree, actionTree } from "typed-vuex";
 
 export const state = () => ({
-  type: '',
+  type: "",
   open: false,
 });
 
@@ -21,10 +21,10 @@ export const actions = actionTree(
   { state },
   {
     openDialog: function ({ commit }, payload: string) {
-      commit('OPEN_DIALOG', payload);
+      commit("OPEN_DIALOG", payload);
     },
     closeDialog: function ({ commit }) {
-      commit('CLOSE_DIALOG');
+      commit("CLOSE_DIALOG");
     },
   }
 );

@@ -1,6 +1,6 @@
-import { Gear } from '~/utils/models/catalog.model';
-import { SlugifyService } from '../common/slugify.service';
-import { GearRepository } from './gear.repository';
+import { Gear } from "~/utils/models/catalog.model";
+import { SlugifyService } from "../common/slugify.service";
+import { GearRepository } from "./gear.repository";
 
 export class InMemoryGearRepository implements GearRepository {
   constructor(private gears: Gear[]) {}

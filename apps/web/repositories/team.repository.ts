@@ -1,11 +1,11 @@
-import { NuxtAxiosInstance } from '@nuxtjs/axios';
-import { Team } from '~/utils/models/team';
-import { HttpStringified } from '~/utils/types/http';
+import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { Team } from "~/utils/models/team";
+import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class TeamRepository {
-  private static readonly basePath = 'teams';
+  private static readonly basePath = "teams";
 
   static getTeams(context: Context) {
     return context.$axios.get<HttpStringified<Team[]>>(this.basePath);
@@ -23,7 +23,7 @@ export class TeamRepository {
   static getFaValidators(context: Context) {
     return context.$axios.get<Team[]>(this.basePath, {
       params: {
-        permission: 'fa-validator',
+        permission: "fa-validator",
       },
     });
   }
@@ -31,7 +31,7 @@ export class TeamRepository {
   static getFtValidators(context: Context) {
     return context.$axios.get<Team[]>(this.basePath, {
       params: {
-        permission: 'ft-validator',
+        permission: "ft-validator",
       },
     });
   }

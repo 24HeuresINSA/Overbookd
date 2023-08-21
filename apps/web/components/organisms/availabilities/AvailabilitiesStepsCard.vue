@@ -68,9 +68,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { IProvidePeriod } from '@overbookd/period';
-import AvailabilitiesPickCalendar from '~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue';
+import Vue from "vue";
+import { IProvidePeriod } from "@overbookd/period";
+import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue";
 
 interface CalendarStep {
   title: string;
@@ -78,14 +78,14 @@ interface CalendarStep {
 }
 
 export default Vue.extend({
-  name: 'AvailabilitiesStepsCard',
+  name: "AvailabilitiesStepsCard",
   components: { AvailabilitiesPickCalendar },
   data: () => ({
     step: 1,
   }),
   computed: {
     isHardUser(): boolean {
-      return this.$accessor.user.can('hard');
+      return this.$accessor.user.can("hard");
     },
     softCalendarSteps(): CalendarStep[] {
       return [this.preManifStep, this.manifStep, this.postManifStep];
@@ -98,37 +98,37 @@ export default Vue.extend({
     },
     prePreManifStep(): CalendarStep {
       return {
-        title: 'Pré-pré-festival',
+        title: "Pré-pré-festival",
         period: {
-          start: new Date('2023-05-01'),
-          end: new Date('2023-05-07'),
+          start: new Date("2023-05-01"),
+          end: new Date("2023-05-07"),
         },
       };
     },
     preManifStep(): CalendarStep {
       return {
-        title: 'Pré-festival',
+        title: "Pré-festival",
         period: {
-          start: new Date('2023-05-08'),
-          end: new Date('2023-05-11'),
+          start: new Date("2023-05-08"),
+          end: new Date("2023-05-11"),
         },
       };
     },
     manifStep(): CalendarStep {
       return {
-        title: 'Festival',
+        title: "Festival",
         period: {
-          start: new Date('2023-05-12'),
-          end: new Date('2023-05-15'),
+          start: new Date("2023-05-12"),
+          end: new Date("2023-05-15"),
         },
       };
     },
     postManifStep(): CalendarStep {
       return {
-        title: 'Post-festival',
+        title: "Post-festival",
         period: {
-          start: new Date('2023-05-16'),
-          end: new Date('2023-05-17'),
+          start: new Date("2023-05-16"),
+          end: new Date("2023-05-17"),
         },
       };
     },

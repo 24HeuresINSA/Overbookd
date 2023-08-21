@@ -17,16 +17,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from '~/utils/models/ftTimeSpan';
-import { sortTeamsForAssignment } from '~/utils/models/team';
+} from "~/utils/models/ftTimeSpan";
+import { sortTeamsForAssignment } from "~/utils/models/team";
 
 export default Vue.extend({
-  name: 'TaskResume',
+  name: "TaskResume",
   components: { TeamChip },
   props: {
     ft: {
@@ -45,7 +45,7 @@ export default Vue.extend({
       return getRequiredTeamsInFt(this.ft);
     },
     openFtNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`, '_blank');
+      window.open(`/ft/${ftId}`, "_blank");
     },
   },
 });

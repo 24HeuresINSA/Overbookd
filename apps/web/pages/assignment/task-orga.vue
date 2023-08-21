@@ -18,17 +18,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
-import AssignmentForm from '~/components/organisms/assignment/card/AssignmentForm.vue';
-import FilterableTaskList from '~/components/organisms/assignment/list/FilterableTaskList.vue';
-import FilterableVolunteerList from '~/components/organisms/assignment/list/FilterableVolunteerList.vue';
-import TaskOrgaCalendar from '~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue';
-import TimeSpanDetails from '~/components/organisms/assignment/card/TimeSpanDetails.vue';
-import { FtWithTimeSpan } from '~/utils/models/ftTimeSpan';
+import Vue from "vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import AssignmentForm from "~/components/organisms/assignment/card/AssignmentForm.vue";
+import FilterableTaskList from "~/components/organisms/assignment/list/FilterableTaskList.vue";
+import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
+import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
+import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
+import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
 
 export default Vue.extend({
-  name: 'TaskOrga',
+  name: "TaskOrga",
   components: {
     FilterableVolunteerList,
     FilterableTaskList,
@@ -41,7 +41,7 @@ export default Vue.extend({
     displayTimeSpanDetailsDialog: false,
   }),
   head: () => ({
-    title: 'Affect Tâche-Orga',
+    title: "Affect Tâche-Orga",
   }),
   computed: {
     ftWithTimeSpans(): FtWithTimeSpan[] {

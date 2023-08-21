@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import { SnackNotif } from '../models/store';
+import { AxiosResponse } from "axios";
+import { SnackNotif } from "../models/store";
 
 interface ActionMessage {
   successMessage?: string;
@@ -8,7 +8,7 @@ interface ActionMessage {
 }
 
 export async function safeCall<T>(
-  store: Vue['$store'],
+  store: Vue["$store"],
   repoFunction: Promise<AxiosResponse<T>>,
   message?: ActionMessage,
 ): Promise<AxiosResponse<T> | undefined> {
@@ -22,7 +22,7 @@ export async function safeCall<T>(
         message: message.successMessage,
         timeout: message.messageDuration,
       };
-      store.dispatch('notif/pushNotification', notif);
+      store.dispatch("notif/pushNotification", notif);
     }
     return res;
   } catch (error: unknown) {
@@ -31,7 +31,7 @@ export async function safeCall<T>(
       message: notifMessage,
       timeout: message?.messageDuration,
     };
-    store.dispatch('notif/pushNotification', notif);
+    store.dispatch("notif/pushNotification", notif);
     return undefined;
   }
 }
@@ -44,5 +44,5 @@ function getNotifMessage(error: any, customErrorMessage?: string) {
   if (error.response?.data?.message) {
     return error.response.data.message;
   }
-  return 'Une erreur est survenue 😢';
+  return "Une erreur est survenue 😢";
 }

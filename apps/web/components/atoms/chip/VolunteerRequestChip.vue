@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { FtUserRequestImpl } from '~/utils/models/ft';
-import { formatUsername } from '~/utils/user/userUtils';
+import Vue from "vue";
+import { FtUserRequestImpl } from "~/utils/models/ft";
+import { formatUsername } from "~/utils/user/userUtils";
 export default Vue.extend({
-  name: 'VolunteerRequestChip',
+  name: "VolunteerRequestChip",
   props: {
     disabled: {
       type: Boolean,
@@ -40,10 +40,10 @@ export default Vue.extend({
   },
   computed: {
     userRequestStatus(): string {
-      if (this.isNotAvailable) return 'not-available';
-      if (this.isAlsoRequested) return 'also-requested-by-ft';
-      if (this.isAlreadyAssigned) return 'already-assigned';
-      return '';
+      if (this.isNotAvailable) return "not-available";
+      if (this.isAlsoRequested) return "also-requested-by-ft";
+      if (this.isAlreadyAssigned) return "already-assigned";
+      return "";
     },
     userName(): string {
       return formatUsername(this.userRequest.user);
@@ -80,13 +80,13 @@ export default Vue.extend({
     },
     alreadyAssignedErrors(): string[] {
       return this.isAlreadyAssigned
-        ? ['Déjà assigné à un autre creneau. Cliquez pour voir son planning.']
+        ? ["Déjà assigné à un autre creneau. Cliquez pour voir son planning."]
         : [];
     },
   },
   methods: {
     deleteUserRequest(): void {
-      this.$emit('delete-user-request', this.userRequest);
+      this.$emit("delete-user-request", this.userRequest);
     },
     redirectToCalendar() {
       window.open(`/planning/${this.userRequest.user.id}`);

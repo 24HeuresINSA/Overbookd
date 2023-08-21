@@ -1,5 +1,5 @@
-import { Ft, FtStatus } from '../models/ft';
-import { Review, ReviewStatus } from '../models/review';
+import { Ft, FtStatus } from "../models/ft";
+import { Review, ReviewStatus } from "../models/review";
 
 export function isTaskValidatedBy(
   reviews: Review[],
