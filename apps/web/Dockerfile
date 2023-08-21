@@ -31,6 +31,7 @@ ENV BASE_URL=$BASE_URL
 
 ADD tsconfig.library-import.json ./
 ADD tsconfig.package.json ./
+ADD tsconfig.build.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci
 
 FROM node:20-alpine

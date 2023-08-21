@@ -108,6 +108,9 @@
         },
         "[python]": {
           "editor.defaultFormatter": "ms-python.python"
+        },
+        "[dockerfile]": {
+          "editor.defaultFormatter": "ms-azuretools.vscode-docker"
         }
       }
     }
