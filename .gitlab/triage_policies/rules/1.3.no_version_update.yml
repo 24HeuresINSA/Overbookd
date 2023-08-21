@@ -5,17 +5,21 @@ resource_rules:
         conditions:
           state: opened
           draft: false
-          author_member:
-            source: group
-            condition: member_of
-            source_id: 66670725
           ruby: |
             target_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:target_branch]}/package.json")
             target_branch_version = JSON.parse(target_branch_response.body)["version"]
             source_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:source_branch]}/package.json")
             source_branch_version = JSON.parse(source_branch_response.body)["version"]
 
+            renovate_merge_request_author = "24-bot"
+
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+
+            MR_info = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}")
+            author = JSON.parse(MR_info.author.name)
+            if author == renovate_merge_request_author
+              return false
+            end
 
             MR_diffs = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/changes", :headers => { "Authorization" => auth})
             MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
