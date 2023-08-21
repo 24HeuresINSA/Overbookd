@@ -13,7 +13,6 @@
       when: always
     - when: never
 
-
 gemnasium-dependency_scanning:
   <<: *security
   variables:
@@ -28,8 +27,7 @@ semgrep-sast:
 secret_detection:
   <<: *security
 
-
-.lint:
+.format:
   extends: .check
   image: node:20-alpine
   before_script:
@@ -44,7 +42,7 @@ secret_detection:
     - echo "StrictHostKeyChecking no" >> ~/.ssh/config
     - git config user.email "dsi@24heures.org"
     - git config user.name "24-bot"
-    - git remote remove ssh_origin || true  # Local repo state may be cached
+    - git remote remove ssh_origin || true # Local repo state may be cached
     - git remote add ssh_origin "git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git"
     - git fetch --all
     - git checkout -b $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME ssh_origin/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
@@ -53,43 +51,24 @@ secret_detection:
     - pnpm config set store-dir .pnpm-store
     - pnpm i
 
-
-overbookd/web_lint:
-  extends: .lint
+overbookd/format:
+  extends: .format
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/web/**/*
     - when: never
   script:
-    - pnpm run --filter @overbookd/web lint
-    - "git commit -am 'style(Web): ✍ Linted web files' || true"
+    - pnpm run format
+    - pnpm run lint
+    - "git commit -am 'style: ✍ run format and lint on all modules' || true"
     - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
 
-overbookd/api_lint:
-  extends: .lint
-  image: node:20-alpine
-  needs: [install]
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/api/**/*
-    - when: never
-  script:
-    - pnpm run --filter @overbookd/api lint
-    - "git commit -am 'style(Api): ✍ Linted api files' || true"
-    - git push ssh_origin HEAD:$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME || true
-
-
-overbookd/api_prune:
+overbookd/prune:
   extends: .check
   image: node:20-alpine
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/api/**/*
     - when: never
   before_script:
     - corepack enable
@@ -97,4 +76,4 @@ overbookd/api_prune:
     - pnpm config set store-dir .pnpm-store
     - pnpm i
   script:
-    - pnpm run --filter @overbookd/api find-deadcode
+    - pnpm run prune
