@@ -84,7 +84,7 @@ export default Vue.extend({
       return this.$accessor.fa.mFA;
     },
     faId(): number {
-      return +this.$route.params.fa;
+      return +this.$route.params.faId;
     },
   },
 
