@@ -61,7 +61,7 @@ export default Vue.extend({
   computed: {
     remaingTeamRequests(): { code: string; quantity: number }[] {
       const timeSpan = this.$accessor.assignment.timeSpans.find(
-        ({ id }) => id === this.timeSpan.id
+        ({ id }) => id === this.timeSpan.id,
       );
       if (!timeSpan) return [];
 

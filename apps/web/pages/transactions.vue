@@ -52,7 +52,7 @@ export default {
   async beforeMount() {
     const usersCall = await safeCall(
       this.$store,
-      RepoFactory.UserRepository.getAllUsernamesWithCP(this)
+      RepoFactory.UserRepository.getAllUsernamesWithCP(this),
     );
     if (usersCall) {
       this.usernames = usersCall.data;
@@ -62,7 +62,7 @@ export default {
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.TransactionRepository.getTransactions(this)
+      RepoFactory.TransactionRepository.getTransactions(this),
     );
     if (res) {
       this.transactions = res.data;

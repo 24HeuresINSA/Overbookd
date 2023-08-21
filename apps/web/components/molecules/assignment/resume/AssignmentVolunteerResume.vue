@@ -100,7 +100,7 @@ export default Vue.extend({
     },
     assignmentStats(): string {
       const duration = Duration.fromMilliseconds(
-        this.volunteer.assignmentDuration
+        this.volunteer.assignmentDuration,
       );
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },

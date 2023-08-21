@@ -261,7 +261,7 @@ export default {
     },
     async saveAvailabilities() {
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        this.user.id
+        this.user.id,
       );
       this.fetchUser(this.user.id);
     },

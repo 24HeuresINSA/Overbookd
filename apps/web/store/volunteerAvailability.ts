@@ -64,7 +64,7 @@ export const actions = actionTree(
 
       const res = await safeCall(
         this,
-        repo.getVolunteerAvailabilities(this, userId)
+        repo.getVolunteerAvailabilities(this, userId),
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
@@ -73,19 +73,19 @@ export const actions = actionTree(
 
     async updateVolunteerAvailabilities(
       { commit, dispatch, state, rootState },
-      userId: number
+      userId: number,
     ) {
       const res = await safeCall(
         this,
         repo.updateVolunteerAvailabilities(
           this,
           userId,
-          state.periodOrchestrator.availabilityPeriods
+          state.periodOrchestrator.availabilityPeriods,
         ),
         {
           successMessage: "Disponibilitiés sauvegardées 🥳",
           errorMessage: "Disponibilitiés non sauvegardées 😢",
-        }
+        },
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
@@ -102,12 +102,12 @@ export const actions = actionTree(
         repo.overrideVolunteerAvailabilities(
           this,
           userId,
-          state.periodOrchestrator.availabilityPeriods
+          state.periodOrchestrator.availabilityPeriods,
         ),
         {
           successMessage: "Disponibilitiés sauvegardées 🥳",
           errorMessage: "Disponibilitiés non sauvegardées 😢",
-        }
+        },
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
@@ -144,7 +144,7 @@ export const actions = actionTree(
     decrementCharisma({ commit, state }, decrement: number) {
       commit("SET_CURRENT_CHARISMA", state.currentCharisma - decrement);
     },
-  }
+  },
 );
 
 function castToAvailabilities(periods: HttpStringified<Period[]>) {

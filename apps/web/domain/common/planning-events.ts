@@ -11,7 +11,7 @@ export type PlanningEvent = {
 
 export function convertTaskToPlanningEvent(
   { start, end, ft: { id, name, status } }: VolunteerTask,
-  volunteerId: number
+  volunteerId: number,
 ): PlanningEvent {
   return {
     start,

@@ -23,7 +23,7 @@ export class SignaLocationRepository {
 
   static createNewSignaLocation(
     context: Context,
-    signaLocation: SignaLocationCreate
+    signaLocation: SignaLocationCreate,
   ) {
     return context.$axios.post<SignaLocation>(this.basePath, signaLocation);
   }
@@ -31,7 +31,7 @@ export class SignaLocationRepository {
   static updateSignaLocation(context: Context, signaLocation: SignaLocation) {
     return context.$axios.put<SignaLocation>(
       `${this.basePath}/${signaLocation.id}`,
-      signaLocation
+      signaLocation,
     );
   }
 }

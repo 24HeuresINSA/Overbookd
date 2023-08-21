@@ -318,12 +318,12 @@ export default {
     },
     isAnimationValidatedBy(FA, validatorId) {
       return FA.faValidation.some(
-        (validation) => validation.Team.id === parseInt(validatorId)
+        (validation) => validation.Team.id === parseInt(validatorId),
       );
     },
     isAnimationRefusedBy(FA, validatorId) {
       return FA.faRefuse?.some(
-        (refuse) => refuse.Team.id === parseInt(validatorId)
+        (refuse) => refuse.Team.id === parseInt(validatorId),
       );
     },
     async createNewFA() {
@@ -375,7 +375,7 @@ export default {
       const element = document.createElement("a");
       element.setAttribute(
         "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text),
       );
       element.setAttribute("download", filename);
 

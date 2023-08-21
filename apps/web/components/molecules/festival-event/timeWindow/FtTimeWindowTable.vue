@@ -145,7 +145,7 @@ export default Vue.extend({
     sortTimeWindows(
       timeWindows: FtTimeWindow[],
       sortsBy: SortableTimeWindowHeader[],
-      sortsDesc: boolean[]
+      sortsDesc: boolean[],
     ) {
       const sortBy = sortsBy.at(0) ?? "startDate";
       const sortFnc = ftTimeWindowsSorts.get(sortBy);

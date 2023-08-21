@@ -99,21 +99,21 @@ export interface FtWithTimeSpan extends SimplifiedFT {
 
 export function getRequiredTeamsInFt(ft: FtWithTimeSpan): string[] {
   const teams = ft.timeSpans.flatMap((timeSpan) =>
-    timeSpan.requestedTeams.map((team) => team.code)
+    timeSpan.requestedTeams.map((team) => team.code),
   );
   return [...new Set(teams)];
 }
 
 export function castAvailableTimeSpansWithDate(
-  timeSpansWithFt: HttpStringified<AvailableTimeSpan[]>
+  timeSpansWithFt: HttpStringified<AvailableTimeSpan[]>,
 ): AvailableTimeSpan[] {
   return timeSpansWithFt.map((timeSpanWithFt) =>
-    castAvailableTimeSpanWithDate(timeSpanWithFt)
+    castAvailableTimeSpanWithDate(timeSpanWithFt),
   );
 }
 
 export function castAvailableTimeSpanWithDate(
-  timeSpanWithFt: HttpStringified<AvailableTimeSpan>
+  timeSpanWithFt: HttpStringified<AvailableTimeSpan>,
 ): AvailableTimeSpan {
   return {
     ...timeSpanWithFt,
@@ -123,15 +123,15 @@ export function castAvailableTimeSpanWithDate(
 }
 
 export function castFtsWithTimeSpansWithDate(
-  ftWithTimeSpans: HttpStringified<FtWithTimeSpan[]>
+  ftWithTimeSpans: HttpStringified<FtWithTimeSpan[]>,
 ): FtWithTimeSpan[] {
   return ftWithTimeSpans.map((ftWithTimeSpan) =>
-    castFtWithTimeSpansWithDate(ftWithTimeSpan)
+    castFtWithTimeSpansWithDate(ftWithTimeSpan),
   );
 }
 
 export function castFtWithTimeSpansWithDate(
-  ftWithTimeSpan: HttpStringified<FtWithTimeSpan>
+  ftWithTimeSpan: HttpStringified<FtWithTimeSpan>,
 ): FtWithTimeSpan {
   return {
     ...ftWithTimeSpan,

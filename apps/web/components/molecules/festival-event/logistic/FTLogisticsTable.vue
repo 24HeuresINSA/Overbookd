@@ -51,9 +51,9 @@ export default Vue.extend({
       return this.$accessor.ft.gearRequests.reduce<GearRequest<"FT">[]>(
         (
           gearRequests: GearRequest<"FT">[],
-          gearRequest: GearRequest<"FT">
+          gearRequest: GearRequest<"FT">,
         ): GearRequest<"FT">[] => uniqueGearReducer(gearRequests, gearRequest),
-        []
+        [],
       );
     },
   },

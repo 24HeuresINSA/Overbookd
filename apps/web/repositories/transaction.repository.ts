@@ -33,7 +33,7 @@ export class TransactionRepository {
   static modifyTransaction(
     context: Context,
     transactionID: string,
-    transaction: Transaction
+    transaction: Transaction,
   ) {
     return context.$axios.put(`${this.basePath}/${transactionID}`, transaction);
   }

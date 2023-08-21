@@ -102,7 +102,7 @@ export default Vue.extend({
       const start = new Date(`${date} ${time}`);
       const end = computeNextHourDate(start);
       return this.availabilities.some(
-        isPeriodIncludedByAnother({ start, end })
+        isPeriodIncludedByAnother({ start, end }),
       );
     },
     selectTimeSpanToDisplayDetails(timeSpanId?: number) {

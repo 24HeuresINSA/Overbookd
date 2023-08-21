@@ -5,7 +5,7 @@ export type SortableTimeWindowHeader = "startDate" | "endDate";
 
 export function sortFtTimeWindowsOnStart(
   timeWindows: FtTimeWindow[],
-  desc: boolean
+  desc: boolean,
 ): FtTimeWindow[] {
   return timeWindows.sort((a, b) => {
     const order = desc ? -1 : 1;
@@ -15,7 +15,7 @@ export function sortFtTimeWindowsOnStart(
 
 export function sortFtTimeWindowsOnEnd(
   timeWindows: FtTimeWindow[],
-  desc: boolean
+  desc: boolean,
 ): FtTimeWindow[] {
   return timeWindows.sort((a, b) => {
     const order = desc ? -1 : 1;
@@ -33,7 +33,7 @@ export const ftTimeWindowsSorts = new Map<
 
 export function sortFaTimeWindowsOnStart(
   timeWindows: FaTimeWindow[],
-  desc: boolean
+  desc: boolean,
 ): FaTimeWindow[] {
   return timeWindows.sort((a, b) => {
     const order = desc ? -1 : 1;
@@ -43,7 +43,7 @@ export function sortFaTimeWindowsOnStart(
 
 export function sortFaTimeWindowsOnEnd(
   timeWindows: FaTimeWindow[],
-  desc: boolean
+  desc: boolean,
 ): FaTimeWindow[] {
   return timeWindows.sort((a, b) => {
     const order = desc ? -1 : 1;

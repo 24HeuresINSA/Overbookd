@@ -66,19 +66,19 @@ export const getters = getterTree(state, {
   },
   barrieresGearRequests(state) {
     return state.gearRequests.filter(
-      (gr) => gr.gear.owner?.code === "barrieres"
+      (gr) => gr.gear.owner?.code === "barrieres",
     );
   },
   gearRequestRentalPeriods(state): Period[] {
     const savedPeriods = uniquePeriodsReducer(
-      state.gearRequests.map((gr) => gr.rentalPeriod)
+      state.gearRequests.map((gr) => gr.rentalPeriod),
     );
     return [...savedPeriods, ...state.localGearRequestRentalPeriods];
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FA">[] {
     return state.gearRequests.reduce(
       uniqueByGearReducer,
-      [] as StoredGearRequest<"FA">[]
+      [] as StoredGearRequest<"FA">[],
     );
   },
   allSortedGearRequests(state, getters): SortedStoredGearRequests {
@@ -152,19 +152,19 @@ export const mutations = mutationTree(state, {
 
   UPDATE_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
     const index = mFA.electricityNeeds.findIndex(
-      (en) => en.id === electricityNeed.id
+      (en) => en.id === electricityNeed.id,
     );
     if (index === -1) return;
     mFA.electricityNeeds = updateItemToList(
       mFA.electricityNeeds,
       index,
-      electricityNeed
+      electricityNeed,
     );
   },
 
   DELETE_ELECTRICITY_NEED({ mFA }, electricityNeed: FaElectricityNeed) {
     mFA.electricityNeeds = mFA.electricityNeeds.filter(
-      (en) => en.id !== electricityNeed.id
+      (en) => en.id !== electricityNeed.id,
     );
   },
 
@@ -180,7 +180,7 @@ export const mutations = mutationTree(state, {
     const gearRequestIndex = state.gearRequests.findIndex(
       (gr) =>
         gr.gear.id === updatedGearRequest.gear.id &&
-        gr.rentalPeriod.id === updatedGearRequest.rentalPeriod.id
+        gr.rentalPeriod.id === updatedGearRequest.rentalPeriod.id,
     );
     if (gearRequestIndex === -1) return;
     state.gearRequests.splice(gearRequestIndex, 1, updatedGearRequest);
@@ -188,7 +188,7 @@ export const mutations = mutationTree(state, {
 
   REMOVE_GEAR_RELATED_GEAR_REQUESTS(state, gearId: number) {
     state.gearRequests = state.gearRequests.filter(
-      (gr) => gr.gear.id !== gearId
+      (gr) => gr.gear.id !== gearId,
     );
   },
 
@@ -196,13 +196,13 @@ export const mutations = mutationTree(state, {
     state.gearRequests = state.gearRequests.filter(
       (gr) =>
         gr.gear.id !== gearRequest.gear.id &&
-        gr.rentalPeriod.id !== gr.rentalPeriod.id
+        gr.rentalPeriod.id !== gr.rentalPeriod.id,
     );
   },
 
   ADD_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(
     state,
-    rentalPeriod: Omit<Period, "id">
+    rentalPeriod: Omit<Period, "id">,
   ) {
     const id = state.localGearRequestRentalPeriodId;
     state.localGearRequestRentalPeriodId =
@@ -219,7 +219,7 @@ export const mutations = mutationTree(state, {
   REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(state, rentalPeriod: Period) {
     state.localGearRequestRentalPeriods =
       state.localGearRequestRentalPeriods.filter(
-        (period) => period.id !== rentalPeriod.id
+        (period) => period.id !== rentalPeriod.id,
       );
   },
 
@@ -229,13 +229,13 @@ export const mutations = mutationTree(state, {
 
   UPDATE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD(state, rentalPeriod: Period) {
     const rentalPeriodIndex = state.localGearRequestRentalPeriods.findIndex(
-      (period) => period.id === rentalPeriod.id
+      (period) => period.id === rentalPeriod.id,
     );
     if (rentalPeriodIndex === -1) return;
     state.localGearRequestRentalPeriods.splice(
       rentalPeriodIndex,
       1,
-      rentalPeriod
+      rentalPeriod,
     );
   },
 
@@ -353,7 +353,7 @@ export const actions = actionTree(
       const allPromise = [];
       if (state.mFA.collaborator) {
         allPromise.push(
-          repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator)
+          repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator),
         );
       }
       await Promise.all(allPromise);
@@ -362,7 +362,7 @@ export const actions = actionTree(
 
     validate: async function (
       { dispatch, commit, state, rootState },
-      { validatorId, teamName, author }
+      { validatorId, teamName, author },
     ) {
       //check if the team is already in the list
       if (state.mFA.faValidation?.find((v) => v.team.id === validatorId))
@@ -393,7 +393,7 @@ export const actions = actionTree(
 
     refuse: async function (
       { dispatch, commit, state },
-      { validatorId, message, author }
+      { validatorId, message, author },
     ) {
       commit("UPDATE_STATUS", FaStatus.REFUSED);
       const body: FaValidationBody = {
@@ -417,7 +417,7 @@ export const actions = actionTree(
         {
           successMessage: "Info de publication créée 🥳",
           errorMessage: "Info de publication non créée 😢",
-        }
+        },
       );
       if (!res) return;
       commit("UPDATE_PUBLIC_ANIMATION", res.data);
@@ -425,7 +425,7 @@ export const actions = actionTree(
 
     async updatePublicAnimation(
       { commit, state },
-      publicAnimation: PublicAnimation
+      publicAnimation: PublicAnimation,
     ) {
       const res = await safeCall(
         this,
@@ -433,7 +433,7 @@ export const actions = actionTree(
         {
           successMessage: "Info de publication sauvegardée 🥳",
           errorMessage: "Info de publication non sauvegardée 😢",
-        }
+        },
       );
       if (!res) return;
       commit("UPDATE_PUBLIC_ANIMATION", publicAnimation);
@@ -446,7 +446,7 @@ export const actions = actionTree(
         {
           successMessage: "Info de publication supprimée 🥳",
           errorMessage: "Info de publication non supprimée 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_PUBLIC_ANIMATION");
@@ -454,11 +454,11 @@ export const actions = actionTree(
 
     resetLogValidations: async function (
       { dispatch, state, rootGetters },
-      author: User
+      author: User,
     ) {
       const logTeamCodes = ["matos", "barrieres", "elec"];
       const teamCodesThatValidatedFA = logTeamCodes.filter((teamCode) =>
-        isAnimationValidatedBy(state.mFA, teamCode)
+        isAnimationValidatedBy(state.mFA, teamCode),
       );
       if (teamCodesThatValidatedFA.length === 0) return;
       const teamNamesThatValidatedFA = await Promise.all(
@@ -466,7 +466,7 @@ export const actions = actionTree(
           const team = rootGetters["team/getTeamByCode"](teamCode);
           await repo.removeFaValidation(this, state.mFA.id, team.id);
           return team.name;
-        })
+        }),
       );
 
       const validTeams = teamNamesThatValidatedFA.join(" et ");
@@ -487,7 +487,7 @@ export const actions = actionTree(
         repo.getPreviousFa(this, state.mFA.id),
         {
           errorMessage: "La FA précédente n'a pas été trouvée 😢",
-        }
+        },
       );
       if (!res) return;
       if (!res.data) {
@@ -507,7 +507,7 @@ export const actions = actionTree(
         repo.getNextFa(this, state.mFA.id),
         {
           errorMessage: "La FA suivante n'a pas été trouvée 😢",
-        }
+        },
       );
       if (!res) return;
       if (!res.data) {
@@ -532,7 +532,7 @@ export const actions = actionTree(
         {
           successMessage: "Commentaire ajouté 🥳",
           errorMessage: "Commentaire non ajouté 😢",
-        }
+        },
       );
       if (!res) return;
       const createdAt = new Date(res.data.createdAt);
@@ -546,7 +546,7 @@ export const actions = actionTree(
         {
           successMessage: "Besoin de signalétique créé 🥳",
           errorMessage: "Besoin de signalétique non créé 😢",
-        }
+        },
       );
       if (!res) return;
       commit("ADD_SIGNA_NEED", res.data);
@@ -559,7 +559,7 @@ export const actions = actionTree(
         {
           successMessage: "Besoin de signalétique modifié 🥳",
           errorMessage: "Besoin de signalétique non modifié 😢",
-        }
+        },
       );
       if (!res) return;
       commit("UPDATE_SIGNA_NEED", res.data);
@@ -573,7 +573,7 @@ export const actions = actionTree(
         {
           successMessage: "Besoin de signalétique supprimé 🥳",
           errorMessage: "Besoin de signalétique non supprimé 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_SIGNA_NEED", signaNeed);
@@ -590,7 +590,7 @@ export const actions = actionTree(
         {
           successMessage: "Créneau créé 🥳",
           errorMessage: "Créneau non créé 😢",
-        }
+        },
       );
       if (!res) return;
       const savedTimeWindow = castFaTimeWindowWithDate(res.data);
@@ -599,7 +599,7 @@ export const actions = actionTree(
 
     async updateAnimationTimeWindow(
       { state, commit },
-      timeWindow: FaTimeWindow
+      timeWindow: FaTimeWindow,
     ) {
       const res = await safeCall(
         this,
@@ -607,7 +607,7 @@ export const actions = actionTree(
         {
           successMessage: "Créneau modifié 🥳",
           errorMessage: "Créneau non modifié 😢",
-        }
+        },
       );
       if (!res) return;
       const savedTimeWindow = castFaTimeWindowWithDate(res.data);
@@ -616,7 +616,7 @@ export const actions = actionTree(
 
     async deleteAnimationTimeWindow(
       { commit, state },
-      timeWindow: FaTimeWindow
+      timeWindow: FaTimeWindow,
     ) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
@@ -625,7 +625,7 @@ export const actions = actionTree(
         {
           successMessage: "Créneau supprimé 🥳",
           errorMessage: "Créneau non supprimé 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_TIME_WINDOW", timeWindow);
@@ -634,7 +634,7 @@ export const actions = actionTree(
     async updateCollaborator({ commit, state }, collaborator: Collaborator) {
       const res = await safeCall(
         this,
-        repo.updateCollaborator(this, state.mFA.id, collaborator)
+        repo.updateCollaborator(this, state.mFA.id, collaborator),
       );
       if (!res) return;
       commit("UPDATE_COLLABORATOR", res.data);
@@ -643,7 +643,7 @@ export const actions = actionTree(
     async deleteCollaborator({ commit, state }) {
       const res = await safeCall(
         this,
-        repo.deleteCollaborator(this, state.mFA.id)
+        repo.deleteCollaborator(this, state.mFA.id),
       );
       if (!res) return;
       commit("DELETE_COLLABORATOR");
@@ -651,7 +651,7 @@ export const actions = actionTree(
 
     async addElectricityNeed(
       { commit, state },
-      electricityNeed: FaElectricityNeed
+      electricityNeed: FaElectricityNeed,
     ) {
       const res = await safeCall(
         this,
@@ -659,7 +659,7 @@ export const actions = actionTree(
         {
           successMessage: "Besoin d'électricité créé 🥳",
           errorMessage: "Besoin d'électricité non créé 😢",
-        }
+        },
       );
       if (!res) return;
       commit("ADD_ELECTRICITY_NEED", res.data);
@@ -667,7 +667,7 @@ export const actions = actionTree(
 
     async updateElectricityNeed(
       { state, commit },
-      electricityNeed: FaElectricityNeed
+      electricityNeed: FaElectricityNeed,
     ) {
       const res = await safeCall(
         this,
@@ -675,7 +675,7 @@ export const actions = actionTree(
         {
           successMessage: "Besoin d'électricité modifié 🥳",
           errorMessage: "Besoin d'électricité non modifié 😢",
-        }
+        },
       );
       if (!res) return;
       commit("UPDATE_ELECTRICITY_NEED", res.data);
@@ -683,7 +683,7 @@ export const actions = actionTree(
 
     async deleteElectricityNeed(
       { commit, state },
-      electricityNeed: FaElectricityNeed
+      electricityNeed: FaElectricityNeed,
     ) {
       if (!electricityNeed?.id) return;
       const res = await safeCall(
@@ -692,7 +692,7 @@ export const actions = actionTree(
         {
           successMessage: "Besoin d'électricité supprimé 🥳",
           errorMessage: "Besoin d'électricité non supprimé 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_ELECTRICITY_NEED", electricityNeed);
@@ -700,7 +700,7 @@ export const actions = actionTree(
 
     async addGearRequestRentalPeriod(
       { dispatch, getters, commit },
-      rentalPeriod: Omit<Period, "id">
+      rentalPeriod: Omit<Period, "id">,
     ) {
       const gearRequests =
         getters.uniqueByGearGearRequests as GearRequest<"FA">[];
@@ -717,31 +717,33 @@ export const actions = actionTree(
         }));
       const { rentalPeriod: savedRentalPeriod } = await dispatch(
         "addGearRequest",
-        firstGearRequest
+        firstGearRequest,
       );
       otherGearRequests.map(({ gearId, quantity }) =>
         dispatch("addGearRequest", {
           gearId,
           quantity,
           periodId: savedRentalPeriod.id,
-        })
+        }),
       );
     },
 
     async addGearRequestForAllRentalPeriods(
       { commit, dispatch, getters },
-      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">,
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity
+        quantity,
       );
       const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]
       ).map(generateGearRequestCreation);
 
       await Promise.all(
-        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
+        gearRequestCreationForms.map((form) =>
+          dispatch("addGearRequest", form),
+        ),
       );
       commit("RESET_LOCAL_GEAR_REQUEST_RENTAL_PERIODS");
     },
@@ -753,7 +755,7 @@ export const actions = actionTree(
         {
           successMessage: "La demande de matériel a été ajoutée avec succès ✅",
           errorMessage: "La demande de matériel n'a pas été ajoutée ❌",
-        }
+        },
       );
       if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
@@ -763,14 +765,14 @@ export const actions = actionTree(
 
     async setDriveToGearRequest(
       { commit },
-      gearRequest: GearRequestWithDrive<"FA">
+      gearRequest: GearRequestWithDrive<"FA">,
     ) {
       commit("UDPATE_GEAR_REQUEST", gearRequest);
     },
 
     async validateGearRequests(
       { state, dispatch },
-      gearRequests: GearRequestWithDrive<"FA" | "FT">[]
+      gearRequests: GearRequestWithDrive<"FA" | "FT">[],
     ) {
       await Promise.all(
         gearRequests.map((gr) =>
@@ -780,26 +782,26 @@ export const actions = actionTree(
             {
               successMessage: "Validation effectuée ✅",
               errorMessage: "La tentative de validation n'a pas abouti",
-            }
-          )
-        )
+            },
+          ),
+        ),
       );
       dispatch("fetchGearRequests");
     },
 
     async removeGearRequestRentalPeriod(
       { state, commit, dispatch },
-      rentalPeriodToDelete: Period
+      rentalPeriodToDelete: Period,
     ) {
       if (rentalPeriodToDelete.id > 1000) {
         return commit(
           "REMOVE_LOCAL_GEAR_REQUEST_RENTAL_PERIOD",
-          rentalPeriodToDelete
+          rentalPeriodToDelete,
         );
       }
       const impactedGearRequest = state.gearRequests.filter(
         ({ rentalPeriod }) =>
-          isSimilarPeriod(rentalPeriodToDelete)(rentalPeriod)
+          isSimilarPeriod(rentalPeriodToDelete)(rentalPeriod),
       );
       await Promise.all(
         impactedGearRequest.map((gr) =>
@@ -809,14 +811,14 @@ export const actions = actionTree(
               this,
               state.mFA.id,
               gr.gear.id,
-              gr.rentalPeriod.id
+              gr.rentalPeriod.id,
             ),
             {
               successMessage: "La demande de matériel a été supprimée 🗑️",
               errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
-            }
-          )
-        )
+            },
+          ),
+        ),
       );
       dispatch("fetchGearRequests");
     },
@@ -832,15 +834,15 @@ export const actions = actionTree(
                 this,
                 state.mFA.id,
                 gearId,
-                gearRequest.rentalPeriod.id
+                gearRequest.rentalPeriod.id,
               ),
               {
                 successMessage: "La demande de matériel a été supprimée 🗑️",
                 errorMessage:
                   "La demande de matériel n'a pas a été supprimée ❌",
-              }
-            )
-          )
+              },
+            ),
+          ),
       );
       commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
     },
@@ -853,7 +855,7 @@ export const actions = actionTree(
         {
           successMessage: "La demande de matériel a été supprimée 🗑️",
           errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
-        }
+        },
       );
       if (!res) return;
       commit("REMOVE_GEAR_REQUEST", gearRequest);
@@ -871,7 +873,7 @@ export const actions = actionTree(
               (gearRequest) =>
                 gearRequest.rentalPeriod.id === rentalPeriodId ||
                 (gearRequest.rentalPeriod.start === start &&
-                  gearRequest.rentalPeriod.end === end)
+                  gearRequest.rentalPeriod.end === end),
             )
             .map(async (gearRequest) => {
               const res = await repo.updateGearRequest(
@@ -879,10 +881,10 @@ export const actions = actionTree(
                 state.mFA.id,
                 gearRequest.gear.id,
                 rentalPeriodId,
-                { start, end }
+                { start, end },
               );
               return res.data;
-            })
+            }),
         );
         dispatch("fetchGearRequests");
         if (!gearRequests.length) return;
@@ -890,7 +892,7 @@ export const actions = actionTree(
       } catch (e) {
         sendNotification(
           this,
-          "La mise a jour des demandes de matos a echouee ❌"
+          "La mise a jour des demandes de matos a echouee ❌",
         );
       }
     },
@@ -899,7 +901,7 @@ export const actions = actionTree(
       const faId = id ?? state.mFA.id;
       const resGearRequests = await safeCall(
         this,
-        repo.getGearRequests(this, faId)
+        repo.getGearRequests(this, faId),
       );
       if (!resGearRequests) return null;
       const gearRequests = resGearRequests.data.map(castGearRequestWithDate);
@@ -909,12 +911,12 @@ export const actions = actionTree(
     async getSignaNeedsForCsv() {
       const res = await safeCall<FaSignaNeedsExportCsv[]>(
         this,
-        repo.exportSignaNeedsForCsv(this)
+        repo.exportSignaNeedsForCsv(this),
       );
       if (!res) return;
       return res.data;
     },
-  }
+  },
 );
 
 function defaultState(): Omit<Fa, "id"> {

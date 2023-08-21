@@ -16,5 +16,5 @@ export const actions = actionTree(
     toggleDarkTheme({ state, commit }) {
       commit("SET_DARK_THEME", !state.darkTheme);
     },
-  }
+  },
 );

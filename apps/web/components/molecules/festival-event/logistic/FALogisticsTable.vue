@@ -57,28 +57,28 @@ export default Vue.extend({
           return this.$accessor.fa.matosGearRequests.reduce(
             (
               gearRequests: GearRequest<"FA">[],
-              gearRequest: GearRequest<"FA">
+              gearRequest: GearRequest<"FA">,
             ): GearRequest<"FA">[] =>
               uniqueGearReducer(gearRequests, gearRequest),
-            [] as GearRequest<"FA">[]
+            [] as GearRequest<"FA">[],
           );
         case "elec":
           return this.$accessor.fa.elecGearRequests.reduce(
             (
               gearRequests: GearRequest<"FA">[],
-              gearRequest: GearRequest<"FA">
+              gearRequest: GearRequest<"FA">,
             ): GearRequest<"FA">[] =>
               uniqueGearReducer(gearRequests, gearRequest),
-            [] as GearRequest<"FA">[]
+            [] as GearRequest<"FA">[],
           );
         case "barrieres":
           return this.$accessor.fa.barrieresGearRequests.reduce(
             (
               gearRequests: GearRequest<"FA">[],
-              gearRequest: GearRequest<"FA">
+              gearRequest: GearRequest<"FA">,
             ): GearRequest<"FA">[] =>
               uniqueGearReducer(gearRequests, gearRequest),
-            [] as GearRequest<"FA">[]
+            [] as GearRequest<"FA">[],
           );
         default:
           return [];

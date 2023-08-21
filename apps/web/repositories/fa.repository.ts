@@ -57,18 +57,18 @@ export class FaRepository {
   static updateFa(context: Context, fa: FaGeneralUpdate) {
     return context.$axios.post<HttpStringified<Fa>>(
       `${this.basePath}/${fa.id}`,
-      fa
+      fa,
     );
   }
 
   static updateCollaborator(
     context: Context,
     faId: number,
-    collaborator: Collaborator
+    collaborator: Collaborator,
   ) {
     return context.$axios.post(
       `${this.basePath}/${faId}/collaborator`,
-      collaborator
+      collaborator,
     );
   }
 
@@ -79,11 +79,11 @@ export class FaRepository {
   static updateSignaNeed(
     context: Context,
     faId: number,
-    signaNeed: FaSignaNeed
+    signaNeed: FaSignaNeed,
   ) {
     return context.$axios.post<HttpStringified<FaSignaNeed>>(
       `${this.basePath}/${faId}/signa-need`,
-      signaNeed
+      signaNeed,
     );
   }
 
@@ -94,49 +94,49 @@ export class FaRepository {
   static updateAnimationTimeWindow(
     context: Context,
     faId: number,
-    timeWindow: FaTimeWindow
+    timeWindow: FaTimeWindow,
   ) {
     return context.$axios.post<HttpStringified<FaTimeWindow>>(
       `${this.basePath}/${faId}/time-window`,
-      timeWindow
+      timeWindow,
     );
   }
 
   static deleteAnimationTimeWindow(
     context: Context,
     faId: number,
-    twId: number
+    twId: number,
   ) {
     return context.$axios.delete(
-      `${this.basePath}/${faId}/time-window/${twId}`
+      `${this.basePath}/${faId}/time-window/${twId}`,
     );
   }
 
   static updateElectricityNeed(
     context: Context,
     faId: number,
-    electricityNeed: FaElectricityNeed
+    electricityNeed: FaElectricityNeed,
   ) {
     return context.$axios.post<HttpStringified<FaElectricityNeed>>(
       `${this.basePath}/${faId}/electricity-need`,
-      electricityNeed
+      electricityNeed,
     );
   }
 
   static deleteElectricityNeed(context: Context, faId: number, enId: number) {
     return context.$axios.delete(
-      `${this.basePath}/${faId}/electricity-need/${enId}`
+      `${this.basePath}/${faId}/electricity-need/${enId}`,
     );
   }
 
   static addFAFeedback(
     context: Context,
     faId: number,
-    feedback: FeedbackCreation
+    feedback: FeedbackCreation,
   ) {
     return context.$axios.post<HttpStringified<SavedFeedback>>(
       `${this.basePath}/${faId}/feedback`,
-      feedback
+      feedback,
     );
   }
 
@@ -146,7 +146,7 @@ export class FaRepository {
 
   static removeFaValidation(context: Context, faId: number, teamId: number) {
     return context.$axios.delete(
-      `${this.basePath}/${faId}/validation/${teamId}`
+      `${this.basePath}/${faId}/validation/${teamId}`,
     );
   }
 
@@ -165,17 +165,17 @@ export class FaRepository {
   static createGearRequest(
     context: Context,
     animationId: number,
-    gearRequestCreationForm: GearRequestCreation
+    gearRequestCreationForm: GearRequestCreation,
   ) {
     return context.$axios.post<HttpStringified<StoredGearRequest<"FA">>>(
       `${this.basePath}/${animationId}/gear-requests`,
-      gearRequestCreationForm
+      gearRequestCreationForm,
     );
   }
 
   static getGearRequests(context: Context, animationId: number) {
     return context.$axios.get<HttpStringified<StoredGearRequest<"FA">>[]>(
-      `${this.basePath}/${animationId}/gear-requests`
+      `${this.basePath}/${animationId}/gear-requests`,
     );
   }
 
@@ -183,10 +183,10 @@ export class FaRepository {
     context: Context,
     animationId: number,
     gearId: number,
-    rentalPeriodId: number
+    rentalPeriodId: number,
   ) {
     return context.$axios.delete(
-      `${this.basePath}/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
+      `${this.basePath}/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
     );
   }
 
@@ -195,32 +195,32 @@ export class FaRepository {
     animationId: number,
     gearId: number,
     rentalPeriodId: number,
-    gearRequestUpdateForm: GearRequestUpdate
+    gearRequestUpdateForm: GearRequestUpdate,
   ) {
     return context.$axios.patch<GearRequest<"FA">>(
       `${this.basePath}/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
-      gearRequestUpdateForm
+      gearRequestUpdateForm,
     );
   }
 
   static addPublicAnimation(
     context: Context,
-    publicAnimation: PublicAnimationCreation
+    publicAnimation: PublicAnimationCreation,
   ) {
     return context.$axios.post<HttpStringified<PublicAnimation>>(
       "public-animation",
-      publicAnimation
+      publicAnimation,
     );
   }
 
   static updatePublicAnimation(
     context: Context,
     id: number,
-    publicAnimation: PublicAnimation
+    publicAnimation: PublicAnimation,
   ) {
     return context.$axios.put<HttpStringified<PublicAnimation>>(
       `public-animation/${id}`,
-      publicAnimation
+      publicAnimation,
     );
   }
 
@@ -230,14 +230,14 @@ export class FaRepository {
 
   static getAllPublicAnimations(context: Context) {
     return context.$axios.get<HttpStringified<PublicAnimationWithFa[]>>(
-      "public-animation"
+      "public-animation",
     );
   }
 
   static validateGearRequest(
     context: Context,
     animationId: number,
-    gearRequest: GearRequestWithDrive<"FA" | "FT">
+    gearRequest: GearRequestWithDrive<"FA" | "FT">,
   ) {
     const {
       gear: { id: gearId },
@@ -246,13 +246,13 @@ export class FaRepository {
     } = gearRequest;
     return context.$axios.patch<GearRequestWithDrive<"FA">>(
       `${this.basePath}/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
-      { drive }
+      { drive },
     );
   }
 
   static exportSignaNeedsForCsv(context: Context) {
     return context.$axios.get<HttpStringified<FaSignaNeedsExportCsv[]>>(
-      `${this.basePath}/signa-need/export-csv`
+      `${this.basePath}/signa-need/export-csv`,
     );
   }
 }

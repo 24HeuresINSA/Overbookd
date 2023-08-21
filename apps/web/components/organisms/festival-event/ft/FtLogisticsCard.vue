@@ -68,7 +68,7 @@ export default Vue.extend({
         this.gear &&
           parseInt(this.quantity) >= 1 &&
           this.$accessor.ft.gearRequestRentalPeriods.length > 0 &&
-          !this.isValidatedByMatos
+          !this.isValidatedByMatos,
       );
     },
     isValidatedByMatos(): boolean {
@@ -90,11 +90,11 @@ export default Vue.extend({
       };
       if (this.gear.isConsumable) {
         return this.$accessor.ft.addConsumableGearRequestForAllRentalPeriods(
-          gearRequestCreation
+          gearRequestCreation,
         );
       }
       return this.$accessor.ft.addGearRequestForAllRentalPeriods(
-        gearRequestCreation
+        gearRequestCreation,
       );
     },
   },

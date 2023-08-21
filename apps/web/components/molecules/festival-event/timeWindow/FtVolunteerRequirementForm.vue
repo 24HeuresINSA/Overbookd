@@ -140,7 +140,7 @@ export default Vue.extend({
     },
     isTeamAlreadyRequested(): boolean {
       return this.allTeamRequests.some(
-        (teamRequest) => teamRequest.team.id === this.selectedTeam?.id
+        (teamRequest) => teamRequest.team.id === this.selectedTeam?.id,
       );
     },
     isUserRequestValid(): boolean {
@@ -148,7 +148,7 @@ export default Vue.extend({
     },
     isUserAlreadyRequested(): boolean {
       return this.allUserRequests.some(
-        (userRequest) => userRequest.user.id === this.selectedUser?.id
+        (userRequest) => userRequest.user.id === this.selectedUser?.id,
       );
     },
     requestableUsers(): User[] {
@@ -216,12 +216,12 @@ export default Vue.extend({
     },
     removeTeamRequestFromNewOnes(teamRequest: FtTeamRequest) {
       this.newTeamRequests = this.newTeamRequests.filter(
-        ({ team }) => team.code !== teamRequest.team.code
+        ({ team }) => team.code !== teamRequest.team.code,
       );
     },
     removeTeamRequestFromSavedOnes(teamRequest: FtTeamRequest) {
       this.savedTeamRequests = this.savedTeamRequests.filter(
-        ({ team }) => team.code !== teamRequest.team.code
+        ({ team }) => team.code !== teamRequest.team.code,
       );
     },
     async deleteUserRequest(userRequest: FtUserRequest) {
@@ -237,23 +237,23 @@ export default Vue.extend({
     },
     removeUserRequestFromNewOnes(userRequest: FtUserRequest) {
       this.newUserRequests = this.newUserRequests.filter(
-        ({ user }) => user.id !== userRequest.user.id
+        ({ user }) => user.id !== userRequest.user.id,
       );
     },
     removeUserRequestFromSavedOnes(userRequest: FtUserRequest) {
       this.savedUserRequests = this.savedUserRequests.filter(
-        ({ user }) => user.id !== userRequest.user.id
+        ({ user }) => user.id !== userRequest.user.id,
       );
     },
 
     isSavedTeamRequest(teamRequest: FtTeamRequest): boolean {
       return this.savedTeamRequests.some(
-        (savedTeamRequest) => savedTeamRequest.team.id === teamRequest.team.id
+        (savedTeamRequest) => savedTeamRequest.team.id === teamRequest.team.id,
       );
     },
     isSavedUserRequest(userRequest: FtUserRequest): boolean {
       return this.savedUserRequests.some(
-        (savedUserRequest) => savedUserRequest.user.id === userRequest.user.id
+        (savedUserRequest) => savedUserRequest.user.id === userRequest.user.id,
       );
     },
     confirmVolunteerRequirement() {

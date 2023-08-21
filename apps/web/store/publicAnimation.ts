@@ -25,22 +25,22 @@ export const actions = actionTree(
         RepoFactory.FaRepository.getAllPublicAnimations(this),
         {
           errorMessage: "Probleme lors de la récuperation des animations",
-        }
+        },
       );
       if (!res) return;
       commit("SET_PUBLIC_ANIMATIONS", castFaPublicAnimationsWithDate(res.data));
     },
-  }
+  },
 );
 
 function castFaPublicAnimationsWithDate(
-  publicAnimations: HttpStringified<PublicAnimationWithFa[]>
+  publicAnimations: HttpStringified<PublicAnimationWithFa[]>,
 ): PublicAnimationWithFa[] {
   return publicAnimations.map(castFaPublicAnimationWithDate);
 }
 
 function castFaPublicAnimationWithDate(
-  publicAnimation: HttpStringified<PublicAnimationWithFa>
+  publicAnimation: HttpStringified<PublicAnimationWithFa>,
 ): PublicAnimationWithFa {
   return {
     ...publicAnimation,

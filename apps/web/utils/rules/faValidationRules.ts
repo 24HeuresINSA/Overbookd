@@ -15,7 +15,7 @@ import { User } from "../models/user";
 
 export function hasAtLeastOneError(
   mFA: Fa,
-  gearRequests: SortedStoredGearRequests
+  gearRequests: SortedStoredGearRequests,
 ): boolean {
   const errors = [
     ...generalErrors(mFA),
@@ -30,7 +30,7 @@ export function hasAtLeastOneError(
 }
 export function hasAtLeastOneWarning(
   mFA: Fa,
-  gearRequests: SortedStoredGearRequests
+  gearRequests: SortedStoredGearRequests,
 ): boolean {
   const warnings = [
     ...detailWarnings(mFA),
@@ -93,7 +93,7 @@ export function hasCategoriesToPublish(fa: Fa): string | boolean {
   );
 }
 export function isPublishable(
-  value: PublicAnimation | undefined
+  value: PublicAnimation | undefined,
 ): string | boolean {
   return !!value || "L'animation ne sera pas publiée sur le site.";
 }
@@ -115,14 +115,14 @@ export function hasLocation(value?: SignaLocation): string | boolean {
   return Boolean(value) || "L'animation n'a pas de localisation.";
 }
 export function hasSignaNeeds(
-  value: FaSignaNeed[] | undefined
+  value: FaSignaNeed[] | undefined,
 ): string | boolean {
   return (
     (value && value.length > 0) || "L'animation n'a pas besoin de signalétique."
   );
 }
 export function hasSignaNeedsWithQuantityHigherThanZero(
-  signaNeeds: FaSignaNeed[] | undefined
+  signaNeeds: FaSignaNeed[] | undefined,
 ): string | boolean {
   if (!signaNeeds || signaNeeds.length === 0) return true;
   return (
@@ -138,12 +138,12 @@ export function signaErrors(fa: Fa): string[] {
 }
 export function signaWarnings(fa: Fa): string[] {
   return [hasSignaNeeds(fa.signaNeeds)].filter(
-    (warning): warning is string => warning !== true
+    (warning): warning is string => warning !== true,
   );
 }
 
 export function hasAtLeastOneAnimationTimeWindow(
-  timeWindows: FaTimeWindow[] | undefined
+  timeWindows: FaTimeWindow[] | undefined,
 ): string | boolean {
   return (
     (timeWindows && timeWindows.length > 0) ||
@@ -152,12 +152,12 @@ export function hasAtLeastOneAnimationTimeWindow(
 }
 export function timeWindowsErrors(fa: Fa): string[] {
   return [hasAtLeastOneAnimationTimeWindow(fa.timeWindows)].filter(
-    (error): error is string => error !== true
+    (error): error is string => error !== true,
   );
 }
 
 export function hasSecurityPassNeeds(
-  value: number | undefined
+  value: number | undefined,
 ): string | boolean {
   return !value || "Cette activité n'a pas besoin de Pass Sécu.";
 }
@@ -176,7 +176,7 @@ export function hasSecurityNeeds(value: string | undefined): string | boolean {
 }
 export function securityErrors(fa: Fa): string[] {
   return [hasPassNumberHigherThanZero(fa)].filter(
-    (error): error is string => error !== true
+    (error): error is string => error !== true,
   );
 }
 export function securityWarnings(fa: Fa): string[] {
@@ -187,7 +187,7 @@ export function securityWarnings(fa: Fa): string[] {
 }
 
 export function isCollaboratorNotEmpty(
-  collaborator: Collaborator | undefined
+  collaborator: Collaborator | undefined,
 ): string | boolean {
   return Boolean(collaborator) || "Cette animation n'a pas de prestataire.";
 }
@@ -201,7 +201,7 @@ export function hasCollaboratorMandatoryFieldsFilled(fa: Fa): string | boolean {
   );
 }
 export function hasCollaboratorOptionalFieldsFilled(
-  collaborator: Collaborator | undefined
+  collaborator: Collaborator | undefined,
 ): string | boolean {
   if (!collaborator) return true;
   const { email, company } = collaborator;
@@ -214,7 +214,7 @@ export function hasCollaboratorOptionalFieldsFilled(
 
 export function collaboratorErrors(fa: Fa): string[] {
   return [hasCollaboratorMandatoryFieldsFilled(fa)].filter(
-    (error): error is string => error !== true
+    (error): error is string => error !== true,
   );
 }
 export function collaboratorWarnings(fa: Fa): string[] {
@@ -225,7 +225,7 @@ export function collaboratorWarnings(fa: Fa): string[] {
 }
 
 export function hasAtLeastOneMatosGearRequest(
-  gearRequests: GearRequest<"FA">[]
+  gearRequests: GearRequest<"FA">[],
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -233,7 +233,7 @@ export function hasAtLeastOneMatosGearRequest(
   );
 }
 export function hasAtLeastOneBarrieresGearRequest(
-  gearRequests: GearRequest<"FA">[]
+  gearRequests: GearRequest<"FA">[],
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -241,7 +241,7 @@ export function hasAtLeastOneBarrieresGearRequest(
   );
 }
 export function hasAtLeastOneElecGearRequest(
-  gearRequests: GearRequest<"FA">[]
+  gearRequests: GearRequest<"FA">[],
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -249,7 +249,7 @@ export function hasAtLeastOneElecGearRequest(
   );
 }
 export function hasMatosGearRequestWithQuantityHigherThanZero(
-  matosGearRequests: GearRequest<"FA">[]
+  matosGearRequests: GearRequest<"FA">[],
 ): string | boolean {
   return (
     matosGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
@@ -257,7 +257,7 @@ export function hasMatosGearRequestWithQuantityHigherThanZero(
   );
 }
 export function hasBarrieresGearRequestWithQuantityHigherThanZero(
-  barrieresGearRequests: GearRequest<"FA">[]
+  barrieresGearRequests: GearRequest<"FA">[],
 ): string | boolean {
   return (
     barrieresGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
@@ -265,7 +265,7 @@ export function hasBarrieresGearRequestWithQuantityHigherThanZero(
   );
 }
 export function hasElecGearRequestWithQuantityHigherThanZero(
-  elecGearRequests: GearRequest<"FA">[]
+  elecGearRequests: GearRequest<"FA">[],
 ): string | boolean {
   return (
     elecGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
@@ -273,7 +273,7 @@ export function hasElecGearRequestWithQuantityHigherThanZero(
   );
 }
 export function gearRequestErrors(
-  gearRequests: SortedStoredGearRequests
+  gearRequests: SortedStoredGearRequests,
 ): string[] {
   return [
     hasMatosGearRequestWithQuantityHigherThanZero(gearRequests.matos),
@@ -282,7 +282,7 @@ export function gearRequestErrors(
   ].filter((error): error is string => error !== true);
 }
 export function gearRequestWarnings(
-  gearRequests: SortedStoredGearRequests
+  gearRequests: SortedStoredGearRequests,
 ): string[] {
   return [
     hasAtLeastOneMatosGearRequest(gearRequests.matos),
@@ -292,7 +292,7 @@ export function gearRequestWarnings(
 }
 
 export function hasElecNeeds(
-  elecNeeds: FaElectricityNeed[] | undefined
+  elecNeeds: FaElectricityNeed[] | undefined,
 ): string | boolean {
   return (
     (elecNeeds && elecNeeds.length > 0) ||
@@ -301,7 +301,7 @@ export function hasElecNeeds(
 }
 export function elecWarnings(fa: Fa): string[] {
   return [hasElecNeeds(fa.electricityNeeds)].filter(
-    (warning): warning is string => warning !== true
+    (warning): warning is string => warning !== true,
   );
 }
 
@@ -310,6 +310,6 @@ export function hasWaterNeeds(value: string | undefined): string | boolean {
 }
 export function waterWarnings(fa: Fa): string[] {
   return [hasWaterNeeds(fa.waterNeed)].filter(
-    (warning): warning is string => warning !== true
+    (warning): warning is string => warning !== true,
   );
 }

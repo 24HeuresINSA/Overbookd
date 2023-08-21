@@ -84,7 +84,7 @@ export default Vue.extend({
     },
     async openInformationDialog(category: CategoryTree) {
       this.selectedCategory = await this.$accessor.catalog.fetchCategory(
-        category.id
+        category.id,
       );
       this.isInformationDialogOpen = true;
     },

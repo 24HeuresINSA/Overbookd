@@ -122,7 +122,7 @@ export interface FtTimeWindowUpdate {
 
 export type FtTimeWindowSortFunction = (
   timeWindows: FtTimeWindow[],
-  desc: boolean
+  desc: boolean,
 ) => FtTimeWindow[];
 
 interface AlsoRequiredByFt {
@@ -181,7 +181,7 @@ export function castFTWithDate(ft: HttpStringified<Ft>): Ft {
 }
 
 export function castFtTimeWindowWithDate(
-  timeWindow: HttpStringified<FtTimeWindow>
+  timeWindow: HttpStringified<FtTimeWindow>,
 ): FtTimeWindow {
   return {
     ...timeWindow,
@@ -194,7 +194,7 @@ export function castFtTimeWindowWithDate(
 }
 
 function castFtFeedbackWithDate(
-  feedback: HttpStringified<FtFeedback>
+  feedback: HttpStringified<FtFeedback>,
 ): FtFeedback {
   const createdAt = new Date(feedback.createdAt);
   return {
@@ -261,7 +261,7 @@ export function toSimplifiedFT({
 }
 
 export function castUserRequestWithDate(
-  userRequest: HttpStringified<FtUserRequest>
+  userRequest: HttpStringified<FtUserRequest>,
 ): FtUserRequest {
   return {
     ...userRequest,
@@ -270,13 +270,13 @@ export function castUserRequestWithDate(
         id,
         name,
         period: { start: new Date(period.start), end: new Date(period.end) },
-      })
+      }),
     ),
   };
 }
 
 function castTimeSpanWithDate(
-  timeSpan: HttpStringified<FtTimeSpan>
+  timeSpan: HttpStringified<FtTimeSpan>,
 ): FtTimeSpan {
   return {
     ...timeSpan,

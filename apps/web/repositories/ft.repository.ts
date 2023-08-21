@@ -52,7 +52,7 @@ export class FtRepository {
   static updateFT(context: Context, ft: FtUpdate) {
     return context.$axios.patch<HttpStringified<Ft>>(
       `${this.basePath}/${ft.id}`,
-      ft
+      ft,
     );
   }
 
@@ -62,38 +62,38 @@ export class FtRepository {
 
   static submitFT(context: Context, ftId: number) {
     return context.$axios.patch<HttpStringified<Ft>>(
-      `${this.basePath}/${ftId}/submit`
+      `${this.basePath}/${ftId}/submit`,
     );
   }
 
   static validateFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<Ft>>(
       `${this.basePath}/${ftId}/validation`,
-      reviewer
+      reviewer,
     );
   }
 
   static refuseFT(context: Context, ftId: number, reviewer: Reviewer) {
     return context.$axios.post<HttpStringified<Ft>>(
       `${this.basePath}/${ftId}/refusal`,
-      reviewer
+      reviewer,
     );
   }
 
   static switchToReadyForAssignment(
     context: Context,
     ftId: number,
-    timeSpanParameters: FtTimeSpanParameters
+    timeSpanParameters: FtTimeSpanParameters,
   ) {
     return context.$axios.post<HttpStringified<Ft>>(
       `${this.basePath}/${ftId}/assignment-approval`,
-      timeSpanParameters
+      timeSpanParameters,
     );
   }
 
   static deleteFTReview(context: Context, ftId: number, teamCode: string) {
     return context.$axios.delete(
-      `${this.basePath}/${ftId}/reviews/${teamCode}`
+      `${this.basePath}/${ftId}/reviews/${teamCode}`,
     );
   }
 
@@ -108,17 +108,17 @@ export class FtRepository {
   static updateFTTimeWindow(
     context: Context,
     ftId: number,
-    timeWindow: FtTimeWindowUpdate
+    timeWindow: FtTimeWindowUpdate,
   ) {
     return context.$axios.post<HttpStringified<FtTimeWindow>>(
       `${this.basePath}/${ftId}/time-windows`,
-      timeWindow
+      timeWindow,
     );
   }
 
   static deleteFTTimeWindow(context: Context, ftId: number, twId: number) {
     return context.$axios.delete(
-      `${this.basePath}/${ftId}/time-windows/${twId}`
+      `${this.basePath}/${ftId}/time-windows/${twId}`,
     );
   }
 
@@ -126,11 +126,11 @@ export class FtRepository {
     context: Context,
     ftId: number,
     twId: number,
-    userRequests: FtUserRequestUpdate[]
+    userRequests: FtUserRequestUpdate[],
   ) {
     return context.$axios.post<HttpStringified<User[]>>(
       `${this.basePath}/${ftId}/time-windows/${twId}/user-requests`,
-      userRequests
+      userRequests,
     );
   }
 
@@ -138,10 +138,10 @@ export class FtRepository {
     context: Context,
     ftId: number,
     twId: number,
-    userId: number
+    userId: number,
   ) {
     return context.$axios.delete(
-      `${this.basePath}/${ftId}/time-windows/${twId}/user-requests/${userId}`
+      `${this.basePath}/${ftId}/time-windows/${twId}/user-requests/${userId}`,
     );
   }
 
@@ -149,11 +149,11 @@ export class FtRepository {
     context: Context,
     ftId: number,
     twId: number,
-    teamRequests: FtTeamRequestUpdate[]
+    teamRequests: FtTeamRequestUpdate[],
   ) {
     return context.$axios.post<HttpStringified<FtTeamRequest[]>>(
       `${this.basePath}/${ftId}/time-windows/${twId}/team-requests`,
-      teamRequests
+      teamRequests,
     );
   }
 
@@ -161,38 +161,38 @@ export class FtRepository {
     context: Context,
     ftId: number,
     twId: number,
-    teamCode: string
+    teamCode: string,
   ) {
     return context.$axios.delete(
-      `${this.basePath}/${ftId}/time-windows/${twId}/team-requests/${teamCode}`
+      `${this.basePath}/${ftId}/time-windows/${twId}/team-requests/${teamCode}`,
     );
   }
 
   static addFTFeedback(
     context: Context,
     ftId: number,
-    feedback: FeedbackCreation
+    feedback: FeedbackCreation,
   ) {
     return context.$axios.post<HttpStringified<SavedFeedback>>(
       `${this.basePath}/${ftId}/feedback`,
-      feedback
+      feedback,
     );
   }
 
   static createGearRequest(
     context: Context,
     taskId: number,
-    gearRequestCreationForm: GearRequestCreation
+    gearRequestCreationForm: GearRequestCreation,
   ) {
     return context.$axios.post<HttpStringified<StoredGearRequest<"FT">>>(
       `${this.basePath}/${taskId}/gear-requests`,
-      gearRequestCreationForm
+      gearRequestCreationForm,
     );
   }
 
   static getGearRequests(context: Context, taskId: number) {
     return context.$axios.get<HttpStringified<StoredGearRequest<"FT">>[]>(
-      `${this.basePath}/${taskId}/gear-requests`
+      `${this.basePath}/${taskId}/gear-requests`,
     );
   }
 
@@ -200,17 +200,17 @@ export class FtRepository {
     context: Context,
     taskId: number,
     gearId: number,
-    rentalPeriodId: number
+    rentalPeriodId: number,
   ) {
     return context.$axios.delete(
-      `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`
+      `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
     );
   }
 
   static removeGearRequestRentalPeriod(
     context: Context,
     taskId: number,
-    removalPeriod: IProvidePeriod
+    removalPeriod: IProvidePeriod,
   ) {
     return context.$axios.delete(`${this.basePath}/${taskId}/gear-requests`, {
       data: removalPeriod,
@@ -222,18 +222,18 @@ export class FtRepository {
     taskId: number,
     gearId: number,
     rentalPeriodId: number,
-    gearRequestUpdateForm: GearRequestUpdate
+    gearRequestUpdateForm: GearRequestUpdate,
   ) {
     return context.$axios.patch<HttpStringified<StoredGearRequest<"FT">>>(
       `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
-      gearRequestUpdateForm
+      gearRequestUpdateForm,
     );
   }
 
   static validateGearRequest(
     context: Context,
     taskId: number,
-    gearRequest: GearRequestWithDrive<"FA" | "FT">
+    gearRequest: GearRequestWithDrive<"FA" | "FT">,
   ) {
     const {
       gear: { id: gearId },
@@ -242,7 +242,7 @@ export class FtRepository {
     } = gearRequest;
     return context.$axios.patch<GearRequestWithDrive<"FT">>(
       `${this.basePath}/${taskId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
-      { drive }
+      { drive },
     );
   }
 }

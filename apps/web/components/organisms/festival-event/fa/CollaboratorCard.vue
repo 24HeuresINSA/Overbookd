@@ -62,7 +62,7 @@ import {
 } from "~/utils/festival-event/faUtils";
 import { Collaborator, Fa, FaCardType } from "~/utils/models/fa";
 
-type VuetifyRule = (value: null | string) => boolean | string
+type VuetifyRule = (value: null | string) => boolean | string;
 
 export default Vue.extend({
   name: "CollaboratorCard",
@@ -102,8 +102,9 @@ export default Vue.extend({
     ruleEmail(): VuetifyRule[] {
       return [
         (v) =>
-          new RegExp("^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").test(v?.toString() || "") ||
-          "cet email n'est pas valide",
+          new RegExp("^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").test(
+            v?.toString() || "",
+          ) || "cet email n'est pas valide",
       ];
     },
   },

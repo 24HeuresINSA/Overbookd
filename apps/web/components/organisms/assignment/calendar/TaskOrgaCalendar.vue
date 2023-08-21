@@ -50,7 +50,7 @@ export default Vue.extend({
     },
     timeSpans(): FtTimeSpanEvent[] {
       return this.$accessor.assignment.selectedFtTimeSpans.flatMap((timeSpan) =>
-        this.mapTimeSpanToEvent(timeSpan)
+        this.mapTimeSpanToEvent(timeSpan),
       );
     },
     selectedTimeSpanId(): number | null {
@@ -72,7 +72,7 @@ export default Vue.extend({
       this.$emit("display-time-span-details", timeSpanId);
     },
     mapTimeSpanToEvent(
-      timeSpan: FtTimeSpanWithRequestedTeams
+      timeSpan: FtTimeSpanWithRequestedTeams,
     ): FtTimeSpanEvent[] {
       return timeSpan.requestedTeams.map((team) => ({
         ...timeSpan,

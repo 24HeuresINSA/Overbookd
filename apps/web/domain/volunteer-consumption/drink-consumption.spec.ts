@@ -14,9 +14,9 @@ describe("Volonteer drink consumptions", () => {
     ({ barrelPrice, consumptions, expectedUnitPrice }) => {
       it(`shoud compute unit price to ${expectedUnitPrice}`, () => {
         expect(computeUnitPrice(barrelPrice, consumptions)).toBe(
-          expectedUnitPrice
+          expectedUnitPrice,
         );
       });
-    }
+    },
   );
 });

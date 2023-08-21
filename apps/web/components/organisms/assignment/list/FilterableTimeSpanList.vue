@@ -66,19 +66,19 @@ export default Vue.extend({
   },
   methods: {
     filterTimeSpansByTeams(
-      teamsSearched: Team[]
+      teamsSearched: Team[],
     ): (timeSpan: AvailableTimeSpan) => boolean {
       return teamsSearched.length > 0
         ? (timeSpan) =>
             teamsSearched.every((teamSearched) =>
               timeSpan.requestedTeams.some(
-                (timeSpanTeam) => teamSearched.code === timeSpanTeam.code
-              )
+                (timeSpanTeam) => teamSearched.code === timeSpanTeam.code,
+              ),
             )
         : () => true;
     },
     filterFtByCatergoryOrPriority(
-      categorySearched: TaskCategory | TaskPriority | null
+      categorySearched: TaskCategory | TaskPriority | null,
     ): (ft: SimplifiedFT) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
@@ -87,17 +87,17 @@ export default Vue.extend({
       return this.filterFtByCategory(categorySearched);
     },
     isTaskPriority(
-      category: TaskPriority | TaskCategory
+      category: TaskPriority | TaskCategory,
     ): category is TaskPriority {
       return Object.values(TaskPriorities).includes(category);
     },
     filterFtByCategory(
-      categorySearched: TaskCategory
+      categorySearched: TaskCategory,
     ): (ft: SimplifiedFT) => boolean {
       return (ft) => ft.category === categorySearched;
     },
     filterByPriority(
-      prioritySearched: TaskPriority
+      prioritySearched: TaskPriority,
     ): (ft: SimplifiedFT) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
@@ -108,11 +108,11 @@ export default Vue.extend({
       return candidate.canBeAssignedAs(teamCode);
     },
     removeUnavailableTeamRequests(
-      timeSpan: AvailableTimeSpan
+      timeSpan: AvailableTimeSpan,
     ): AvailableTimeSpan {
       const requestedTeams = timeSpan.requestedTeams.filter(
         ({ code, quantity, assignmentCount }) =>
-          this.isVolunteerAssignableTo(code) && quantity > assignmentCount
+          this.isVolunteerAssignableTo(code) && quantity > assignmentCount,
       );
       return {
         ...timeSpan,
@@ -132,12 +132,12 @@ export default Vue.extend({
           if (!this.selectedVolunteer) return false;
           const candidate = new AssignmentCandidate(this.selectedVolunteer);
           return quantity > assignmentCount && candidate.canBeAssignedAs(code);
-        }
+        },
       );
     },
     fuzzyFindTimeSpan(
       timeSpans: AvailableTimeSpan[],
-      search?: string
+      search?: string,
     ): AvailableTimeSpan[] {
       if (!search) return timeSpans;
       const fuse = new Fuse(timeSpans, {

@@ -26,5 +26,5 @@ export const actions = actionTree(
     closeDialog: function ({ commit }) {
       commit("CLOSE_DIALOG");
     },
-  }
+  },
 );

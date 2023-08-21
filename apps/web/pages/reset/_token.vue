@@ -72,7 +72,7 @@ export default Vue.extend({
         {
           successMessage: "Password changé, redirection au login...",
           messageDuration: 10000,
-        }
+        },
       );
 
       if (!res) return;

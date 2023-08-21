@@ -213,7 +213,7 @@ export default {
           id,
           balance,
           newConsumption: 0,
-        })
+        }),
       );
     },
     totalConsumptions() {
@@ -228,7 +228,7 @@ export default {
     stickPrice() {
       return computeUnitPrice(
         +this.totalPrice,
-        +this.totalConsumptions
+        +this.totalConsumptions,
       ).toFixed(2);
     },
     rules() {
@@ -411,7 +411,7 @@ export default {
       });
       await RepoFactory.TransactionRepository.createTransactions(
         this,
-        transactions
+        transactions,
       );
       await this.$store.dispatch("notif/pushNotification", {
         type: "success",

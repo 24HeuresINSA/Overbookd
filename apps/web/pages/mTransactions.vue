@@ -36,7 +36,7 @@ export default {
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.TransactionRepository.getUserTransactions(this)
+      RepoFactory.TransactionRepository.getUserTransactions(this),
     );
     if (res) {
       this.mTransactions = res.data;

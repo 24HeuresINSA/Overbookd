@@ -10,7 +10,7 @@ export class OrgaNeedsRepository {
   static fetchStats(context: Context, periodAndTeams: OrgaNeedsRequest) {
     return context.$axios.get<HttpStringified<OrgaNeedsResponse[]>>(
       this.basePath,
-      { params: periodAndTeams }
+      { params: periodAndTeams },
     );
   }
 }

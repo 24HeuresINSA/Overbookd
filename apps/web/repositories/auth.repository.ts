@@ -9,7 +9,7 @@ export class AuthRepository {
 
   static resetPassword(
     context: Context,
-    data: { token: string; password: string; password2: string }
+    data: { token: string; password: string; password2: string },
   ) {
     return context.$axios.post("/reset", data);
   }

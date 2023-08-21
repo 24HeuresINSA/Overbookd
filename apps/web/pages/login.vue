@@ -187,7 +187,7 @@ export default Vue.extend({
           const audio = new Audio("audio/jaune.m4a");
           await audio.play();
         }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- can't cast with instanceof
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- can't cast with instanceof
       } catch (e: any) {
         if (e.response.status === 429) {
           return this.$store.dispatch("notif/pushNotification", {

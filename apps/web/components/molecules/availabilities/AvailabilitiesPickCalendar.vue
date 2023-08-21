@@ -80,7 +80,7 @@ export default Vue.extend({
     isSelected(): (date: string | Date, hour: number) => boolean {
       return isAvailabilityPeriodSelected(
         this.selectedAvailabilities,
-        this.savedAvailabilities
+        this.savedAvailabilities,
       );
     },
     isAllPeriodsInDaySelected(): (date: Date) => boolean {
@@ -89,7 +89,7 @@ export default Vue.extend({
         const end = computeTomorrowDate(start);
         const period = { start, end };
         return this.selectedAvailabilities.some(
-          isPeriodIncludedByAnother(period)
+          isPeriodIncludedByAnother(period),
         );
       };
     },
@@ -143,7 +143,7 @@ export default Vue.extend({
     },
     addPeriodsInDay(date: Date) {
       const periodsToAdd = this.generateAllPeriodsFor(date).filter(
-        (period) => !this.isSelected(period.start, period.start.getHours())
+        (period) => !this.isSelected(period.start, period.start.getHours()),
       );
       this.$accessor.volunteerAvailability.addAvailabilityPeriods(periodsToAdd);
       periodsToAdd.map((period) => this.incrementCharismaByDate(period.start));
@@ -164,19 +164,19 @@ export default Vue.extend({
     removePeriod(date: Date) {
       const periodToRemove = generateNewPeriod(date);
       this.$accessor.volunteerAvailability.removeAvailabilityPeriod(
-        periodToRemove
+        periodToRemove,
       );
       this.decrementCharismaByDate(date);
     },
     removePeriodsInDay(date: Date) {
       const periodsToRemove = this.generateAllPeriodsFor(date).filter(
-        (period) => this.isSelected(period.start, period.start.getHours())
+        (period) => this.isSelected(period.start, period.start.getHours()),
       );
       this.$accessor.volunteerAvailability.removeAvailabilityPeriods(
-        periodsToRemove
+        periodsToRemove,
       );
       periodsToRemove.map((period) =>
-        this.decrementCharismaByDate(period.start)
+        this.decrementCharismaByDate(period.start),
       );
     },
     getCharismaByDate(date: Date): number {
@@ -186,20 +186,20 @@ export default Vue.extend({
     },
     getDisplayedCharisma(date: string, hour: number): number {
       const charisma = this.getCharismaByDate(
-        setDateHour(new Date(date), hour)
+        setDateHour(new Date(date), hour),
       );
       return charisma * this.getPeriodDurationInHours(hour);
     },
     incrementCharismaByDate(date: Date) {
       this.$accessor.volunteerAvailability.incrementCharisma(
         this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours())
+          this.getPeriodDurationInHours(date.getHours()),
       );
     },
     decrementCharismaByDate(date: Date) {
       this.$accessor.volunteerAvailability.decrementCharisma(
         this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours())
+          this.getPeriodDurationInHours(date.getHours()),
       );
     },
   },

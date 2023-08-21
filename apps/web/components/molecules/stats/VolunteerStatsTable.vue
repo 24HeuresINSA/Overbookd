@@ -118,7 +118,7 @@ export default Vue.extend({
   methods: {
     retrieveStat(
       stats: VolunteerAssignmentStat[],
-      searchFunction: (stat: VolunteerAssignmentStat) => boolean
+      searchFunction: (stat: VolunteerAssignmentStat) => boolean,
     ): string {
       const stat = stats.find(searchFunction);
       return Duration.fromMilliseconds(stat?.duration ?? 0).toString();

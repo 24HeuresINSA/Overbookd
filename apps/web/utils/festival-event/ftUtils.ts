@@ -3,7 +3,7 @@ import { Review, ReviewStatus } from "../models/review";
 
 export function isTaskValidatedBy(
   reviews: Review[],
-  teamCode: string
+  teamCode: string,
 ): boolean {
   const validationReviews = getValidationReviews(reviews);
   return validationReviews.some((review) => review.team.code === teamCode);
@@ -23,7 +23,7 @@ export function getFTValidationStatus(ft: Ft, teamCode: string): FtStatus {
 
 export function getFTValidationStatusWithMultipleTeams(
   ft: Ft,
-  teamCodes: string[]
+  teamCodes: string[],
 ): FtStatus {
   if (ft.status === FtStatus.DRAFT) return FtStatus.DRAFT;
   if (hasAllFTValidations(ft.reviews, teamCodes)) return FtStatus.VALIDATED;
@@ -33,28 +33,28 @@ export function getFTValidationStatusWithMultipleTeams(
 
 export function hasAtLeastOneFTValidation(
   reviews: Review[],
-  teamCodes: string[]
+  teamCodes: string[],
 ): boolean {
   return teamCodes.some((code) => isTaskValidatedBy(reviews, code));
 }
 
 export function hasAtLeastOneFTRefusal(
   reviews: Review[],
-  teamCodes: string[]
+  teamCodes: string[],
 ): boolean {
   return teamCodes.some((code) => isTaskRefusedBy(reviews, code));
 }
 
 export function hasAllFTValidations(
   reviews: Review[],
-  teamCodes: string[]
+  teamCodes: string[],
 ): boolean {
   return teamCodes.every((code) => isTaskValidatedBy(reviews, code));
 }
 
 export function hasAllFTRefusals(
   reviews: Review[],
-  teamCodes: string[]
+  teamCodes: string[],
 ): boolean {
   return teamCodes.every((code) => isTaskRefusedBy(reviews, code));
 }

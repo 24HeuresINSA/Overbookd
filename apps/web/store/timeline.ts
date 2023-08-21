@@ -59,14 +59,14 @@ export const getters = getterTree(state, {
   filteredEvents(state): TimelineEvent[] {
     const fasMatchingTeams = filterFasMatchingTeams(state);
     const fasMatchingSearch = fasMatchingTeams.filter(({ fa }) =>
-      isMatchingSearchedName(fa, state.search)
+      isMatchingSearchedName(fa, state.search),
     );
     const ftsMatchingSearch = filterFasWithTasksMatchingSearch(
       fasMatchingTeams,
-      state.search
+      state.search,
     );
     return [...fasMatchingSearch, ...ftsMatchingSearch].sort(
-      (a, b) => a.fa.id - b.fa.id
+      (a, b) => a.fa.id - b.fa.id,
     );
   },
 });
@@ -95,7 +95,7 @@ export const actions = actionTree(
     async fetchEvents({ commit, getters }) {
       const res = await safeCall(
         this,
-        timelineRepo.getEvents(this, getters.period)
+        timelineRepo.getEvents(this, getters.period),
       );
       if (!res) return;
       const events = castTimelineEventsWithDate(res.data);
@@ -116,7 +116,7 @@ export const actions = actionTree(
       const period = defaultPeriod();
       dispatch("updatePeriod", period);
     },
-  }
+  },
 );
 
 function filterFasMatchingTeams({ teams, events }: TimelineState) {
@@ -130,7 +130,7 @@ function filterFasMatchingTeams({ teams, events }: TimelineState) {
 
 function filterFasWithTasksMatchingSearch(
   fas: TimelineEvent[],
-  search: string
+  search: string,
 ) {
   const faNotMatchingSearch = fas.filter(({ fa }) => {
     return !isMatchingSearchedName(fa, search);
@@ -147,18 +147,18 @@ function filterFasWithTasksMatchingSearch(
 
 function isMatchingSearchedName(event: WithName, search: string): boolean {
   return SlugifyService.apply(event.name).includes(
-    SlugifyService.apply(search)
+    SlugifyService.apply(search),
   );
 }
 
 function castTimelineEventsWithDate(
-  timelineEvents: HttpStringified<TimelineEvent[]>
+  timelineEvents: HttpStringified<TimelineEvent[]>,
 ): TimelineEvent[] {
   return timelineEvents.map(castTimelineEventWithDate);
 }
 
 function castTimelineEventWithDate(
-  event: HttpStringified<TimelineEvent>
+  event: HttpStringified<TimelineEvent>,
 ): TimelineEvent {
   return {
     ...event,
@@ -174,7 +174,7 @@ function castTimelineFtWithDate(ft: HttpStringified<TimelineFt>): TimelineFt {
 }
 
 function castTimelineTimeWindowWithDate(
-  timeWindow: HttpStringified<TimelineTimeWindow>
+  timeWindow: HttpStringified<TimelineTimeWindow>,
 ): TimelineTimeWindow {
   return {
     ...timeWindow,
@@ -184,7 +184,7 @@ function castTimelineTimeWindowWithDate(
 }
 
 function castTimelineTimeSpanWithDate(
-  timeSpan: HttpStringified<TimelineTimeSpan>
+  timeSpan: HttpStringified<TimelineTimeSpan>,
 ): TimelineTimeSpan {
   return {
     ...timeSpan,

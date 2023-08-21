@@ -77,7 +77,7 @@ export default Vue.extend({
         this.gear &&
           parseInt(this.quantity) >= 1 &&
           this.$accessor.fa.gearRequestRentalPeriods.length > 0 &&
-          !this.isValidatedByOwner
+          !this.isValidatedByOwner,
       );
     },
     isValidatedByOwner(): boolean {

@@ -13,14 +13,14 @@ export class ConfigurationRepository {
 
   static fetch(context: Context, key: string) {
     return context.$axios.get<HttpStringified<Configuration>>(
-      `${this.basePath}/${key}`
+      `${this.basePath}/${key}`,
     );
   }
 
   static save(context: Context, config: Configuration) {
     return context.$axios.post<HttpStringified<Configuration>>(
       `${this.basePath}/${config.key}`,
-      { value: config.value }
+      { value: config.value },
     );
   }
 }

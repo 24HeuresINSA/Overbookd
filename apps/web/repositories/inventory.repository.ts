@@ -11,7 +11,7 @@ export class InventoryRepository {
     const records = inventoryRecords.map((record) => record.toJson());
     return context.$axios.post<InventoryGroupedRecord[]>(
       this.basePath,
-      records
+      records,
     );
   }
 

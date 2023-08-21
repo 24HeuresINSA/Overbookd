@@ -111,7 +111,7 @@ export default Vue.extend({
     validationStatus(): string {
       return getFTValidationStatusWithMultipleTeams(
         this.mFT,
-        this.owners
+        this.owners,
       ).toLowerCase();
     },
     isConfirmationNeeded(): boolean {

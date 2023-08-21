@@ -45,7 +45,7 @@ export enum FtFeedbackSubjectType {
 }
 
 export function isSavedFeedback(
-  feedback: Feedback | SavedFeedback
+  feedback: Feedback | SavedFeedback,
 ): feedback is SavedFeedback {
   return (feedback as SavedFeedback).id !== undefined;
 }

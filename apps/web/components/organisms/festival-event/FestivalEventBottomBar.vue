@@ -251,7 +251,7 @@ export default Vue.extend({
       if (this.me.teams.includes("admin")) return this.validators;
 
       return this.validators.filter((validator: Team) =>
-        this.me.teams.includes(validator.code)
+        this.me.teams.includes(validator.code),
       );
     },
     teamsThatNotValidateYet(): Team[] {
@@ -272,7 +272,7 @@ export default Vue.extend({
       if (this.isFA) {
         return hasAtLeastOneError(
           this.mFA,
-          this.$accessor.fa.allSortedGearRequests
+          this.$accessor.fa.allSortedGearRequests,
         );
       }
       return hasAtLeastOneFTError(this.mFT);
@@ -352,13 +352,13 @@ export default Vue.extend({
       if (this.isFA) {
         return (
           this.$accessor.fa.gearRequests.filter(
-            (gr) => gr.gear.owner?.code === validator.code
+            (gr) => gr.gear.owner?.code === validator.code,
           ).length > 0
         );
       }
       return (
         this.$accessor.ft.gearRequests.filter(
-          (gr) => gr.gear.owner?.code === validator.code
+          (gr) => gr.gear.owner?.code === validator.code,
         ).length > 0
       );
     },

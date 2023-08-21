@@ -2,7 +2,7 @@ import { IProvidePeriod, Period } from "@overbookd/period";
 import { isPartyShift } from "../shift/shift";
 
 export function isSamePeriod(
-  period: IProvidePeriod
+  period: IProvidePeriod,
 ): (value: IProvidePeriod) => boolean {
   return (otherPeriod) =>
     period.start.getTime() === otherPeriod.start.getTime() &&
@@ -10,7 +10,7 @@ export function isSamePeriod(
 }
 
 export function isDateIncludedByPeriod(
-  date: Date
+  date: Date,
 ): (value: IProvidePeriod) => boolean {
   return (period) => period.start <= date && period.end > date;
 }

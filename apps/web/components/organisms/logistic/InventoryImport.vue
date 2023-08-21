@@ -135,7 +135,7 @@ export default Vue.extend({
     },
     displayableInventoryImportErrors(): DisplayableManualInventoryRecordError[] {
       return this.inventoryImportErrors.map(
-        DisplayableManualInventoryRecordError.fromError
+        DisplayableManualInventoryRecordError.fromError,
       );
     },
   },
@@ -153,10 +153,10 @@ export default Vue.extend({
       this.loading = true;
       const importContainer = new CSVInventoryImportContainer(
         importFile,
-        this.gearRepository
+        this.gearRepository,
       );
       const { records, errors } = await InventoryImport.toRecords(
-        importContainer
+        importContainer,
       );
       this.inventoryImportErrors = errors;
       this.inventoryRecords = records;
@@ -167,7 +167,7 @@ export default Vue.extend({
     },
     startEditMode(
       inventoryError: DisplayableManualInventoryRecordError,
-      errorIndex: number
+      errorIndex: number,
     ) {
       this.isUpdateImportErrorDialogOpen = true;
       this.selectedImportErrorIndex = errorIndex;
@@ -175,11 +175,11 @@ export default Vue.extend({
     },
     addToInventory(inventoryRecord: InventoryRecord) {
       this.inventoryRecords = inventoryRecord.mergeInside(
-        this.inventoryRecords
+        this.inventoryRecords,
       );
       this.inventoryImportErrors = removeItemAtIndex(
         this.inventoryImportErrors,
-        this.selectedImportErrorIndex
+        this.selectedImportErrorIndex,
       );
     },
     async saveInventory() {

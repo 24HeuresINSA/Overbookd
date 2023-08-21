@@ -32,10 +32,10 @@ export const mutations = mutationTree(state, {
   },
   UPDATE_GEAR_RECORDS(
     state,
-    { records, gearId }: { records: InventoryRecord[]; gearId: number }
+    { records, gearId }: { records: InventoryRecord[]; gearId: number },
   ) {
     const groupedRecordIndex = state.groupedRecords.findIndex(
-      (groupedRecord) => groupedRecord.gear.id === gearId
+      (groupedRecord) => groupedRecord.gear.id === gearId,
     );
     if (groupedRecordIndex === -1) return;
 
@@ -49,7 +49,7 @@ export const mutations = mutationTree(state, {
     state.groupedRecords = updateItemToList(
       state.groupedRecords,
       groupedRecordIndex,
-      updatedGroupedRecord
+      updatedGroupedRecord,
     );
   },
 });
@@ -64,7 +64,7 @@ export const actions = actionTree(
         {
           successMessage: "L'inventaire a ete reinitialise avec succes ✅",
           errorMessage: "Erreur lors de la reinitialisation de l'inventaire ❌",
-        }
+        },
       );
       if (!res) return;
       context.commit("SET_GROUPED_RECORDS", res.data);
@@ -73,7 +73,7 @@ export const actions = actionTree(
     async fetchGroupedRecords(context): Promise<void> {
       const res = await safeCall(
         this,
-        inventoryRepository.getGroupedRecords(this)
+        inventoryRepository.getGroupedRecords(this),
       );
       if (!res) return;
       context.commit("SET_GROUPED_RECORDS", res.data);
@@ -83,10 +83,10 @@ export const actions = actionTree(
       console.warn("fetching details for gear #", gearId);
       const res = await safeCall(
         this,
-        inventoryRepository.getRecords(this, gearId)
+        inventoryRepository.getRecords(this, gearId),
       );
       if (!res) return;
       context.commit("UPDATE_GEAR_RECORDS", { records: res.data, gearId });
     },
-  }
+  },
 );

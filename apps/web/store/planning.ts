@@ -34,7 +34,7 @@ export const actions = actionTree(
     async fetchSubscriptionLink({ commit }) {
       const res = await safeCall(
         this,
-        userRepo.getPlanningSubscriptionLink(this)
+        userRepo.getPlanningSubscriptionLink(this),
       );
       if (!res) return;
       commit("SET_LINK", res.data.link);
@@ -56,14 +56,14 @@ export const actions = actionTree(
             const volunteer = { firstname, lastname, id };
             const planningBase64Data = `${res.data}`;
             return { volunteer, planningBase64Data };
-          })
+          }),
         );
         planningsRes.push(...plannings);
       }
       const retrievedPlannings = planningsRes.filter(
-        (res): res is VolunteerPlanning => res !== undefined
+        (res): res is VolunteerPlanning => res !== undefined,
       );
       commit("SET_VOLUNTEER_PLANNINGS", retrievedPlannings);
     },
-  }
+  },
 );

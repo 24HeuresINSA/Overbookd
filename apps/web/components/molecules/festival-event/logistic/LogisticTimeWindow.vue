@@ -79,7 +79,7 @@ export default Vue.extend({
     validationStatus(): string {
       return getFAValidationStatusWithMultipleTeams(
         this.mFA,
-        this.owners
+        this.owners,
       ).toLowerCase();
     },
   },

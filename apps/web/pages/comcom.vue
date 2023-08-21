@@ -55,7 +55,7 @@
 
             <tr
               v-for="timeWindow in sortTimeWindows(
-                publicAnimation.fa.timeWindows
+                publicAnimation.fa.timeWindows,
               )"
               :key="timeWindow.id"
             >

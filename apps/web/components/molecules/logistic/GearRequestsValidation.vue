@@ -130,7 +130,7 @@ export default Vue.extend({
         ? this.$accessor.fa.gearRequests
         : this.$accessor.ft.gearRequests;
       return gearRequests.filter(
-        (gr) => gr.gear.owner?.code === this.validator.code
+        (gr) => gr.gear.owner?.code === this.validator.code,
       );
     },
     canValidateGearRequest(): boolean {
@@ -167,7 +167,7 @@ export default Vue.extend({
 
     async validateGearRequests() {
       const gearRequests = this.gearRequestsToApprove.filter(
-        (gr): gr is GearRequestWithDrive<"FA" | "FT"> => Boolean(gr.drive)
+        (gr): gr is GearRequestWithDrive<"FA" | "FT"> => Boolean(gr.drive),
       );
       const validation = this.isFA
         ? this.$accessor.fa.validateGearRequests(gearRequests)
@@ -179,7 +179,7 @@ export default Vue.extend({
     sortGearRequests(
       gearRequests: GearRequest[],
       sortsBy: SortableGearRequestHeader[],
-      sortsDesc: boolean[]
+      sortsDesc: boolean[],
     ): GearRequest[] {
       const sortBy = sortsBy.at(0) ?? "quantity";
       const sortFnc = gearRequestsSorts.get(sortBy);

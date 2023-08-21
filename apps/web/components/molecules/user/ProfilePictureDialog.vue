@@ -73,7 +73,7 @@ export default Vue.extend({
       profilePictureForm.append(
         "file",
         this.profilePicture,
-        this.profilePicture.name
+        this.profilePicture.name,
       );
       await this.$accessor.user.addProfilePicture(profilePictureForm);
       this.$accessor.user.setMyProfilePicture();

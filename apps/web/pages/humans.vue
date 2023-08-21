@@ -333,7 +333,7 @@ export default {
       const element = document.createElement("a");
       element.setAttribute(
         "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text),
       );
       element.setAttribute("download", filename);
 
@@ -439,7 +439,7 @@ export default {
       if (this.filters.hasPayedContributions !== undefined) {
         mUsers = mUsers.filter(
           (user) =>
-            user.hasPayedContributions === this.filters.hasPayedContributions
+            user.hasPayedContributions === this.filters.hasPayedContributions,
         );
         this.options.page = 1; // reset page
       }
@@ -450,7 +450,7 @@ export default {
           if (user.team) {
             return (
               user.team.filter((value) =>
-                this.filters.teams.map((team) => team.code).includes(value)
+                this.filters.teams.map((team) => team.code).includes(value),
               ).length === this.filters.teams.length
             );
           } else {
@@ -464,11 +464,11 @@ export default {
     async exportPlannings() {
       this.planningLoads = true;
       await this.$accessor.planning.fetchAllPdfPlannings(
-        this.filteredUsers.filter(({ charisma }) => charisma > 0)
+        this.filteredUsers.filter(({ charisma }) => charisma > 0),
       );
       this.planningLoads = false;
       this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
-        download(planningBase64Data, volunteer)
+        download(planningBase64Data, volunteer),
       );
     },
     getPhoneLink(phone) {

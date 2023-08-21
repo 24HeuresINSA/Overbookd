@@ -28,7 +28,7 @@ describe("Inventory Fill Form", () => {
             (gear as Gear).name,
             quantity as number,
             storage as string,
-            gearRepository
+            gearRepository,
           );
           record = await manualRecord.toInventoryRecord();
         });
@@ -41,7 +41,7 @@ describe("Inventory Fill Form", () => {
         it("should set up storage location", () => {
           expect(record.storage).toBe(storage);
         });
-      }
+      },
     );
   });
   describe("When using a manual record with unexisting gear", () => {
@@ -54,17 +54,17 @@ describe("Inventory Fill Form", () => {
         inexistingGearName,
         12,
         "Cave du E",
-        gearRepository
+        gearRepository,
       );
     });
     it("should inform user gear is not found", async () => {
       await expect(
-        async () => await manualRecord.toInventoryRecord()
+        async () => await manualRecord.toInventoryRecord(),
       ).rejects.toThrow(`Gear ${inexistingGearName} doesn't exist`);
     });
     it("should be able to retrieve manual inventory record", async () => {
       await expect(
-        async () => await manualRecord.toInventoryRecord()
+        async () => await manualRecord.toInventoryRecord(),
       ).rejects.toHaveProperty("record", manualRecord);
     });
   });
@@ -77,7 +77,7 @@ describe("Inventory Fill Form", () => {
       "test",
       quantity,
       storage,
-      gearRepository
+      gearRepository,
     );
     it("should generate an inventory record", () => {
       const error = new ManualInventoryRecordError(manualRecord);

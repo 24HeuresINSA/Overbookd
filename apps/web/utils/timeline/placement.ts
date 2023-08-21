@@ -3,7 +3,7 @@ import { getPeriodDuration } from "../models/period";
 
 function getIdleBeforePercent(
   container: IProvidePeriod,
-  containee: IProvidePeriod
+  containee: IProvidePeriod,
 ): number {
   const containerDuration = getPeriodDuration(container);
   const idleBeforeDuration =
@@ -13,7 +13,7 @@ function getIdleBeforePercent(
 
 function getDurationPercent(
   container: IProvidePeriod,
-  containee: IProvidePeriod
+  containee: IProvidePeriod,
 ): number {
   const containerDuration = getPeriodDuration(container);
   const containeeDuration = getPeriodDuration(containee);
@@ -22,7 +22,7 @@ function getDurationPercent(
 
 export function marginPercent(
   container: IProvidePeriod,
-  containee: IProvidePeriod
+  containee: IProvidePeriod,
 ): number {
   const durationRatio = getIdleBeforePercent(container, containee);
   return Math.max(durationRatio, 0);
@@ -30,7 +30,7 @@ export function marginPercent(
 
 export function widthPercent(
   container: IProvidePeriod,
-  containee: IProvidePeriod
+  containee: IProvidePeriod,
 ) {
   const durationRatio = getDurationPercent(container, containee);
   const margin = marginPercent(container, containee);

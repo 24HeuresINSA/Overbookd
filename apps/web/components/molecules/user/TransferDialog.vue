@@ -57,13 +57,13 @@ export default Vue.extend({
   },
   computed: {
     type(): string {
-      return this.$accessor.dialog.type
+      return this.$accessor.dialog.type;
     },
     open(): boolean {
-      return this.$accessor.dialog.open
+      return this.$accessor.dialog.open;
     },
     me(): MyUserInformation {
-      return this.$accessor.user.me
+      return this.$accessor.user.me;
     },
     toggled: {
       get: function (): boolean | unknown {
@@ -94,7 +94,7 @@ export default Vue.extend({
             text: username,
             value,
           };
-        }
+        },
       );
     },
   },

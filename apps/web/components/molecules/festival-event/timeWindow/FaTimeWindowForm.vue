@@ -141,7 +141,7 @@ export default Vue.extend({
       const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
       if (!startBeforeEnd) {
         this.showErrorMessage(
-          "❌ La date de début doit être avant la date de fin !"
+          "❌ La date de début doit être avant la date de fin !",
         );
         return true;
       }

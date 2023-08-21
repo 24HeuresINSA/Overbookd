@@ -13,7 +13,7 @@ export class InventoryRecord implements Record {
   constructor(
     public readonly gear: Gear,
     public readonly quantity: number,
-    public readonly storage: string
+    public readonly storage: string,
   ) {}
 
   private add(newRecord: InventoryRecord) {
@@ -21,14 +21,14 @@ export class InventoryRecord implements Record {
     const updatedRecord = new InventoryRecord(
       this.gear,
       quantity,
-      this.storage
+      this.storage,
     );
     return updatedRecord;
   }
 
   mergeInside(records: InventoryRecord[]): InventoryRecord[] {
     const similarRecordIndex = records.findIndex(
-      InventoryRecord.isSimilar(this)
+      InventoryRecord.isSimilar(this),
     );
     if (similarRecordIndex === -1) return [...records, this];
     const similarRecord = records.at(similarRecordIndex);
@@ -46,7 +46,7 @@ export class InventoryRecord implements Record {
   }
 
   static isSimilar(
-    currentRecord: InventoryRecord
+    currentRecord: InventoryRecord,
   ): (value: InventoryRecord) => boolean {
     return (record) =>
       record.gear.slug === currentRecord.gear.slug &&
