@@ -40,76 +40,7 @@
         "Vue.volar",
         "rohit-gohri.format-code-action",
         "DavidAnson.vscode-markdownlint"
-      ],
-      "settings": {
-        "conventionalCommits.autoCommit": false,
-        "conventionalCommits.scopes": [
-          "ci",
-          "web",
-          "api",
-          "configuration",
-          "catalog",
-          "gear-request",
-          "permission",
-          "assignment",
-          "planning",
-          "secu",
-          "user",
-          "authentication",
-          "personnal-account",
-          "fa",
-          "release",
-          "signa",
-          "ft",
-          "volunteer-availability",
-          "timeline",
-          "list",
-          "period",
-          "trombinoscope",
-          "renovate",
-          "devcontainer"
-        ],
-        "cSpell.enabled": false,
-        "colorize.languages": ["javascript", "json"],
-        "files.watcherExclude": {
-          "**/.git/objects/**": true,
-          "**/.git/subtree-cache/**": true,
-          "**/node_modules/**": true,
-          "**/docker/data/**": true
-        },
-        "search.exclude": {
-          "**/node_modules": true,
-          "**/docker/data/**": true
-        },
-        "editor.insertSpaces": true,
-        "editor.tabSize": 2,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.formatOnSave": false,
-        "editor.codeActionsOnSave": [
-          "source.formatDocument",
-          "source.fixAll.eslint"
-        ],
-        "eslint.validate": ["javascript", "typescript"],
-        "eslint.codeActionsOnSave.rules": ["all"],
-        "[typescript]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[json]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[vue]": {
-          "editor.defaultFormatter": "esbenp.prettier-vscode"
-        },
-        "[scss]": {
-          "editor.defaultFormatter": "vscode.css-language-features"
-        },
-        "[markdown]": {
-          "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-        },
-        "[python]": {
-          "editor.defaultFormatter": "ms-python.python"
-        }
-      }
+      ]
     }
   },
   // Use 'forwardPorts' to make a list of ports inside the container available locally.

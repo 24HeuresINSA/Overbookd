@@ -28,6 +28,7 @@ RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 FROM installer AS builder
 
 COPY tsconfig.library-import.json ./
+COPY tsconfig.build.json ./
 COPY tsconfig.package.json ./
 COPY tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
