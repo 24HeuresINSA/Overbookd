@@ -1,23 +1,23 @@
-import { GearRepository } from "./gear.repository";
+import { GearRepository } from './gear.repository';
 import {
   InventoryImportContainer,
   InventoryImportRaw,
-} from "./inventory-import";
-import { ManualInventoryRecord } from "./manual-inventory-record";
-import { Options, parse } from "csv-parse/lib/sync";
+} from './inventory-import';
+import { ManualInventoryRecord } from './manual-inventory-record';
+import { Options, parse } from 'csv-parse/lib/sync';
 
 export class CSVInventoryImportContainer extends InventoryImportContainer {
   private static readonly headerTranslation: Record<
     string,
     keyof InventoryImportRaw
   > = {
-    matos: "gear",
-    materiel: "gear",
-    stockage: "storage",
-    lieu: "storage",
-    "lieu de stockage": "storage",
-    quantite: "quantity",
-    nombre: "quantity",
+    matos: 'gear',
+    materiel: 'gear',
+    stockage: 'storage',
+    lieu: 'storage',
+    'lieu de stockage': 'storage',
+    quantite: 'quantity',
+    nombre: 'quantity',
   };
 
   constructor(private readonly file: File, gearRepository: GearRepository) {
@@ -30,7 +30,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
       trim: true,
       skip_empty_lines: true,
       skip_records_with_empty_values: true,
-      delimiter: ",",
+      delimiter: ',',
       columns: this.convertFileHeaderToRecordKeys,
       cast: this.castNumbersWhenPossible,
     };

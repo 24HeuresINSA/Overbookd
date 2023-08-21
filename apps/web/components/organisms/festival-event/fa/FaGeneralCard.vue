@@ -44,23 +44,23 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType, FaType } from "~/utils/models/fa";
-import { User } from "~/utils/models/user";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import { Team } from "~/utils/models/team";
+} from '~/utils/festival-event/faUtils';
+import { Fa, FaCardType, FaType } from '~/utils/models/fa';
+import { User } from '~/utils/models/user';
+import SearchTeam from '~/components/atoms/field/search/SearchTeam.vue';
+import SearchUser from '~/components/atoms/field/search/SearchUser.vue';
+import { Team } from '~/utils/models/team';
 
 export default Vue.extend({
-  name: "FaGeneralCard",
+  name: 'FaGeneralCard',
   components: { CardErrorList, SearchUser, SearchTeam },
   data: () => ({
-    owner: "humain",
+    owner: 'humain',
     cardType: FaCardType.GENERAL,
   }),
   computed: {

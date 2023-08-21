@@ -28,11 +28,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Team } from "~/utils/models/team";
+import Vue from 'vue';
+import { Team } from '~/utils/models/team';
 
 export default Vue.extend({
-  name: "TeamChip",
+  name: 'TeamChip',
   props: {
     team: {
       type: String,
@@ -40,7 +40,7 @@ export default Vue.extend({
     },
     size: {
       type: String,
-      default: "small",
+      default: 'small',
     },
     withName: {
       type: Boolean,
@@ -49,24 +49,24 @@ export default Vue.extend({
   },
   computed: {
     small(): boolean {
-      return this.size === "small";
+      return this.size === 'small';
     },
     large(): boolean {
-      return this.size === "large";
+      return this.size === 'large';
     },
     teamMetadate(): Team {
       return this.$accessor.team.getTeams([this.team])?.[0];
     },
     color(): string {
-      return this.teamMetadate?.color ?? "grey";
+      return this.teamMetadate?.color ?? 'grey';
     },
     flipClass(): string {
-      return this.team === "bde" ? "flip" : "";
+      return this.team === 'bde' ? 'flip' : '';
     },
   },
   methods: {
     sendEvent() {
-      this.$emit("click", this.team);
+      this.$emit('click', this.team);
     },
   },
 });

@@ -1,25 +1,25 @@
-import { ONE_HOUR_IN_MS } from "@overbookd/period";
+import { ONE_HOUR_IN_MS } from '@overbookd/period';
 
 // return format dd/mm/yyyy hh:mm
 export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
   };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
 }
 
 // return format dd/mm/yyyy
 export function formatDate(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
   };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
 }
 
 // return format yyyy-mm-ddThh:mm
@@ -41,7 +41,7 @@ export function formatLocalDate(date: Date): string {
 }
 
 function getTwoDigitsNumber(number: number): string {
-  return number < 10 ? "0" + number : number.toString();
+  return number < 10 ? '0' + number : number.toString();
 }
 
 export function getHourDiff(start: Date, end: Date): number {
@@ -62,21 +62,21 @@ export function roundMinutes(date: Date, round: number): Date | null {
 
 export function formatDateWithExplicitMonth(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "long",
+    year: 'numeric',
+    month: 'long',
   };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
 }
 
 export function formatDateDayName(date: Date | string): string {
-  return new Date(date).toLocaleDateString("fr-FR", {
-    weekday: "short",
+  return new Date(date).toLocaleDateString('fr-FR', {
+    weekday: 'short',
   });
 }
 
 export function formatDateDayNumber(date: Date | string): string {
-  return new Date(date).toLocaleDateString("fr-FR", {
-    day: "numeric",
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
   });
 }
 
@@ -98,19 +98,19 @@ export function computeNextHourDate(date: Date): Date {
 
 export function formatDateToHumanReadable(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    dateStyle: "long",
-    timeStyle: "short",
+    dateStyle: 'long',
+    timeStyle: 'short',
   };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
 }
 
 export function formatDateWithHoursAndMinutesOnly(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/Paris",
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Paris',
   };
-  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
 }
 
 export function isSameDay(date1: Date, date2: Date): boolean {

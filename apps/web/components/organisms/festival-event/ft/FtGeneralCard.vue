@@ -41,25 +41,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import SearchSignaLocation from '~/components/atoms/field/search/SearchSignaLocation.vue';
+import SearchTeam from '~/components/atoms/field/search/SearchTeam.vue';
+import SearchUser from '~/components/atoms/field/search/SearchUser.vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
-import { Ft, FtCardType } from "~/utils/models/ft";
-import { SignaLocation } from "~/utils/models/signaLocation";
-import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
+} from '~/utils/festival-event/ftUtils';
+import { Ft, FtCardType } from '~/utils/models/ft';
+import { SignaLocation } from '~/utils/models/signaLocation';
+import { Team } from '~/utils/models/team';
+import { User } from '~/utils/models/user';
 
 export default Vue.extend({
-  name: "FtGeneralCard",
+  name: 'FtGeneralCard',
   components: { SearchUser, SearchSignaLocation, SearchTeam, CardErrorList },
   data: () => ({
-    owner: "humain",
+    owner: 'humain',
     cardType: FtCardType.GENERAL,
   }),
   computed: {

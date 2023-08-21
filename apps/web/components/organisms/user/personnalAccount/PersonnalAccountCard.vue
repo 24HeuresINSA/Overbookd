@@ -54,24 +54,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TransferDialog from "~/components/molecules/user/TransferDialog.vue";
+import Vue from 'vue';
+import TransferDialog from '~/components/molecules/user/TransferDialog.vue';
+import { Transaction } from '~/utils/models/transaction';
 
 export default Vue.extend({
-  name: "PersonnalAccountCard",
+  name: 'PersonnalAccountCard',
   components: { TransferDialog },
   data() {
     return {
       headers: [
-        { text: "type", value: "type" },
-        { text: "context", value: "context" },
-        { text: "date", value: "createdAt" },
-        { text: "montant", value: "amount", align: "end" },
+        { text: 'type', value: 'type' },
+        { text: 'context', value: 'context' },
+        { text: 'date', value: 'createdAt' },
+        { text: 'montant', value: 'amount', align: 'end' },
       ],
     };
   },
   computed: {
-    displayedTransactionHistory(): any {
+    displayedTransactionHistory(): Transaction[] {
       return this.mTransactions.slice(0, 5);
     },
     mBalance() {
@@ -88,24 +89,24 @@ export default Vue.extend({
     await this.$accessor.transaction.fetchMTransactions();
   },
   methods: {
-    async openDialog(): Promise<any> {
-      this.$store.dispatch("dialog/openDialog", "transfer");
+    async openDialog(): Promise<void> {
+      this.$store.dispatch('dialog/openDialog', 'transfer');
     },
 
-    isNegativeTransaction(transaction: any) {
+    isNegativeTransaction(transaction: Transaction) {
       switch (transaction.type) {
-        case "DEPOSIT":
+        case 'DEPOSIT':
           return false;
-        case "TRANSFER":
-          return transaction.userFrom.id === this.me.id;
-        case "EXPENSE":
+        case 'TRANSFER':
+          return transaction.from === this.me.id;
+        case 'EXPENSE':
           return true;
         default:
           return false;
       }
     },
-    updateCP(amount: number): any {
-      this.$store.commit("user/UPDATE_USER", {
+    updateCP(amount: number): void {
+      this.$store.commit('user/UPDATE_USER', {
         balance: (this.$accessor.user.me.balance || 0) - amount,
       });
     },

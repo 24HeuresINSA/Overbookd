@@ -60,12 +60,12 @@
 </template>
 
 <script>
-import UserCard from "~/components/organisms/user/data/UserCard.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import PersonnalAccountCard from "~/components/organisms/user/personnalAccount/PersonnalAccountCard.vue";
-import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
-import CommentEditionCard from "~/components/organisms/user/data/CommentEditionCard.vue";
-import PlanningDownloadCard from "~/components/organisms/planning/PlanningDownloadCard.vue";
+import UserCard from '~/components/organisms/user/data/UserCard.vue';
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import PersonnalAccountCard from '~/components/organisms/user/personnalAccount/PersonnalAccountCard.vue';
+import FriendsCard from '~/components/molecules/friend/FriendsCard.vue';
+import CommentEditionCard from '~/components/organisms/user/data/CommentEditionCard.vue';
+import PlanningDownloadCard from '~/components/organisms/planning/PlanningDownloadCard.vue';
 
 export default {
   components: {
@@ -101,7 +101,7 @@ export default {
     async logout() {
       await this.$auth.logout();
       await this.$router.push({
-        path: "/login",
+        path: '/login',
       });
     },
     isAvailabilityUpdateActive() {

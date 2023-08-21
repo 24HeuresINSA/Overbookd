@@ -18,11 +18,11 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropType } from "vue";
-import { Team } from "~/utils/models/team";
+import Vue, { PropType } from 'vue';
+import { Team } from '~/utils/models/team';
 
 export default Vue.extend({
-  name: "OverChips",
+  name: 'OverChips',
   props: {
     roles: {
       type: Array as PropType<string[]>,
@@ -37,7 +37,7 @@ export default Vue.extend({
   },
   methods: {
     getFlipClass(role: Team): string {
-      return role.code === "bde" ? "flip" : "";
+      return role.code === 'bde' ? 'flip' : '';
     },
   },
 });

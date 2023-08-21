@@ -1,8 +1,8 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
-import { Permission } from "~/utils/models/permission";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
+import { actionTree, getterTree, mutationTree } from 'typed-vuex';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { safeCall } from '~/utils/api/calls';
+import { CreatePermissionForm, Permission } from '~/utils/models/permission';
+import { CompleteUserWithPermissions } from '~/utils/models/user';
 
 const permissionRepo = RepoFactory.PermissionRepository;
 
@@ -22,64 +22,78 @@ export const getters = getterTree(state, {
   isValidated:
     () =>
     (user: CompleteUserWithPermissions): boolean => {
-      return user.permissions.includes("validated-user");
+      return user.permissions.includes('validated-user');
     },
 });
 
 export const mutations = mutationTree(state, {
-  SET_PERMISSIONS(state, permissions: any) {
+  SET_PERMISSIONS(state, permissions: Permission[]) {
     state.permissions = permissions;
+  },
+  ADD_PERMISSION(state, permission: Permission) {
+    state.permissions = [...state.permissions, permission];
+  },
+  REMOVE_PERMISSION(state, permissionId: number) {
+    state.permissions = state.permissions.filter(
+      (permission) => permission.id !== permissionId,
+    );
   },
 });
 
 export const actions = actionTree(
   { state, mutations },
   {
-    async setPermissionsInStore(context): Promise<any> {
+    async fetchPermissions({ commit }): Promise<void> {
       const res = await safeCall(this, permissionRepo.getPermissions(this));
-      if (res) {
-        context.commit("SET_PERMISSIONS", res.data);
-      }
-      return res;
+      if (!res) return;
+      commit('SET_PERMISSIONS', res.data);
     },
-    createPermission(context, payload: any): Promise<any> {
-      return permissionRepo.createPermission(this, payload).then((res) => {
-        context.dispatch("setPermissionsInStore");
-        return res;
-      });
-    },
-    async updatePermission(context, payload: any): Promise<any> {
-      return safeCall(
+    async createPermission(
+      { commit },
+      payload: CreatePermissionForm,
+    ): Promise<void> {
+      const res = await safeCall(
         this,
-        permissionRepo.updatePermission(this, payload)
-      ).then((res) => {
-        context.dispatch("setPermissionsInStore");
-        return res;
-      });
+        permissionRepo.createPermission(this, payload),
+      );
+      if (!res) return;
+      commit('ADD_PERMISSION', res.data);
+    },
+    async updatePermission(
+      { dispatch },
+      payload: CreatePermissionForm,
+    ): Promise<void> {
+      const res = safeCall(
+        this,
+        permissionRepo.updatePermission(this, payload),
+      );
+      if (!res) return;
+      dispatch('fetchPermissions');
     },
     async removePermission(
-      context,
-      { permissionId }: { permissionId: number }
-    ): Promise<any> {
-      return safeCall(
+      { commit },
+      { permissionId }: { permissionId: number },
+    ): Promise<void> {
+      const res = await safeCall(
         this,
-        permissionRepo.removePermission(this, permissionId)
-      ).then((res) => {
-        context.dispatch("setPermissionsInStore");
-        return res;
-      });
+        permissionRepo.removePermission(this, permissionId),
+      );
+      if (!res) return;
+      commit('REMOVE_PERMISSION', permissionId);
     },
     async linkPermissionToTeams(
-      context,
-      { permissionId, teamCodes }: { permissionId: number; teamCodes: string[] }
-    ): Promise<any> {
-      return safeCall(
+      { dispatch },
+      {
+        permissionId,
+        teamCodes,
+      }: { permissionId: number; teamCodes: string[] },
+    ): Promise<void> {
+      const res = await safeCall(
         this,
-        permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes)
-      ).then((res) => {
-        context.dispatch("setPermissionsInStore");
-        return res;
-      });
+        permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes),
+      );
+      if (!res) return;
+      dispatch('fetchPermissions');
     },
-  }
+  },
 );

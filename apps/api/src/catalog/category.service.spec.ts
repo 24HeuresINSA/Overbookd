@@ -73,7 +73,7 @@ describe('Category', () => {
       it("should inform that category doesn't exist", async () => {
         await expect(
           async () => await categService.find(inexistantCategory),
-        ).rejects.toThrow(`Category #${inexistantCategory} doesn\'t exist`);
+        ).rejects.toThrow(`Category #${inexistantCategory} doesn't exist`);
       });
     });
   });
@@ -95,7 +95,7 @@ describe('Category', () => {
           expect(createdCategory).toHaveProperty('path');
           expect(createdCategory.path).toBe(expectedPath);
         });
-        it(`should be accessible after`, async () => {
+        it('should be accessible after', async () => {
           const createdCategory = await categService.create({ name });
           const fetchedCategory = await categService.find(createdCategory.id);
           expect(createdCategory).toMatchObject(fetchedCategory);
@@ -161,7 +161,7 @@ describe('Category', () => {
               parent: inexistantParentCategory,
             }),
         ).rejects.toThrow(
-          `Category #${inexistantParentCategory} doesn\'t exist`,
+          `Category #${inexistantParentCategory} doesn't exist`,
         );
       });
     });
@@ -233,7 +233,7 @@ describe('Category', () => {
         ${{ id: 3, name: 'Cablage', owner: { id: 3, name: 'elec' }, parent: 2 }}               | ${'electrique->cablage'}                      | ${{ id: 4, expectedPath: 'electrique->cablage->grosse-tension' }} | ${undefined}
         ${{ id: 2, name: 'Electricite', owner: { id: 3, name: 'elec' } }}                      | ${'electricite'}                              | ${{ id: 3, expectedPath: 'electricite->cable' }}                  | ${{ id: 4, expectedPath: 'electricite->cable->grosse-tension' }}
       `(
-        `when update category #$toUpdateCategory.id name to "$toUpdateCategory.name"`,
+        'when update category #$toUpdateCategory.id name to "$toUpdateCategory.name"',
         ({
           toUpdateCategory,
           expectedPath,
@@ -272,7 +272,7 @@ describe('Category', () => {
         ${{ id: 3, name: 'Cable', owner: 'signa', parent: 2 }} | ${teamElec}   | ${{ id: 3 }}  | ${undefined}
         ${{ id: 2, name: 'Electrique', owner: 'signa' }}       | ${teamSigna}  | ${{ id: 3 }}  | ${{ id: 3 }}
       `(
-        `when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team`,
+        'when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team',
         ({
           toUpdateCategory,
           expectedOwner,
@@ -366,7 +366,7 @@ describe('Category', () => {
         };
         await expect(
           async () => await categService.update(toUpdateCategory),
-        ).rejects.toThrow(`Category #${toUpdateCategory.id} doesn\'t exist`);
+        ).rejects.toThrow(`Category #${toUpdateCategory.id} doesn't exist`);
       });
     });
   });

@@ -1,16 +1,16 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   CategoryForm,
   CategorySearchOptions,
   GearForm,
   GearSearchOptions,
-} from "~/store/catalog";
-import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
+} from '~/store/catalog';
+import { Category, CategoryTree, Gear } from '~/utils/models/catalog.model';
 
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class GearsRepository {
-  private static readonly basePath = "gears";
+  private static readonly basePath = 'gears';
 
   static searchGears(context: Context, searchOptions?: GearSearchOptions) {
     return context.$axios.get<Gear[]>(this.basePath, { params: searchOptions });
@@ -30,7 +30,7 @@ export class GearsRepository {
 }
 
 export class CategoryRepository {
-  private static readonly basePath = "categories";
+  private static readonly basePath = 'categories';
 
   static searchCategories(
     context: Context,

@@ -47,19 +47,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import Vue from 'vue';
+import { formatDateToHumanReadable } from '~/utils/date/dateUtils';
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
-} from "~/utils/festival-event/faUtils";
-import { Fa } from "~/utils/models/fa";
-import { Period } from "~/utils/models/gearRequests";
+} from '~/utils/festival-event/faUtils';
+import { Fa } from '~/utils/models/fa';
+import { Period } from '~/utils/models/gearRequests';
 
 export default Vue.extend({
-  name: "LogisticTimeWindow",
+  name: 'LogisticTimeWindow',
   data: () => ({
-    owners: ["matos", "barrieres", "elec"],
+    owners: ['matos', 'barrieres', 'elec'],
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
   }),

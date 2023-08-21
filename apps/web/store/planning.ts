@@ -1,7 +1,7 @@
-import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
-import { User } from "~/utils/models/user";
+import { actionTree, mutationTree } from 'typed-vuex';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { safeCall } from '~/utils/api/calls';
+import { User } from '~/utils/models/user';
 
 const userRepo = RepoFactory.UserRepository;
 
@@ -12,7 +12,7 @@ type VolunteerPlanning = {
 
 export const state = () => ({
   link: null as string | null,
-  planningBase64Data: "",
+  planningBase64Data: '',
   volunteerPlannings: [] as VolunteerPlanning[],
 });
 
@@ -37,12 +37,12 @@ export const actions = actionTree(
         userRepo.getPlanningSubscriptionLink(this)
       );
       if (!res) return;
-      commit("SET_LINK", res.data.link);
+      commit('SET_LINK', res.data.link);
     },
     async fetchMyPdfPlanning({ commit }) {
       const res = await safeCall(this, userRepo.getMyPdfPlanning(this));
       if (!res) return;
-      commit("SET_PLANNING_DATA", res.data);
+      commit('SET_PLANNING_DATA', res.data);
     },
     async fetchAllPdfPlannings({ commit }, volunteers: User[]) {
       const maxRequests = 5;
@@ -63,7 +63,7 @@ export const actions = actionTree(
       const retrievedPlannings = planningsRes.filter(
         (res): res is VolunteerPlanning => res !== undefined
       );
-      commit("SET_VOLUNTEER_PLANNINGS", retrievedPlannings);
+      commit('SET_VOLUNTEER_PLANNINGS', retrievedPlannings);
     },
   }
 );

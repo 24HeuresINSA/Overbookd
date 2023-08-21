@@ -147,20 +147,20 @@
 </template>
 
 <script>
-import { removeItemAtIndex } from "@overbookd/list";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
-import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { isNumber, min } from "~/utils/rules/inputRules";
+import { removeItemAtIndex } from '@overbookd/list';
+import OverChips from '~/components/atoms/chip/OverChips.vue';
+import ProfilePicture from '~/components/atoms/card/ProfilePicture.vue';
+import { isNumber, min } from '~/utils/rules/inputRules';
 import {
   formatPhoneLink,
   formatUserNameWithNickname,
   formatUserPhone,
-} from "~/utils/user/userUtils";
-import DateField from "../../../atoms/field/date/DateField.vue";
-import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
+} from '~/utils/user/userUtils';
+import DateField from '../../../atoms/field/date/DateField.vue';
+import AvailabilitiesSumup from '../../../molecules/availabilities/AvailabilitiesSumup.vue';
 
 export default {
-  name: "UserInformation",
+  name: 'UserInformation',
   components: {
     OverChips,
     AvailabilitiesSumup,
@@ -201,7 +201,7 @@ export default {
         return this.toggle;
       },
       set: function (t) {
-        this.$emit("update-toggle", t);
+        this.$emit('update-toggle', t);
       },
     },
     formatUserNameWithNickname() {
@@ -211,13 +211,13 @@ export default {
       return this.hasEditingRole || this.isMe;
     },
     hasEditingRole() {
-      return this.$accessor.user.can("manage-users");
+      return this.$accessor.user.can('manage-users');
     },
     isMe() {
       return this.$accessor.user.me.id === this.selectedUser.id;
     },
     isHard() {
-      return (this.selectedUser.teams ?? []).includes("hard");
+      return (this.selectedUser.teams ?? []).includes('hard');
     },
     teams() {
       return this.$accessor.team.allTeams;

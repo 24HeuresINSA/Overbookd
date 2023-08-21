@@ -6,10 +6,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "Loader",
+  name: 'Loader',
   props: {
     loading: {
       type: Boolean,

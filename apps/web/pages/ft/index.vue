@@ -156,13 +156,13 @@
 </template>
 
 <script lang="ts">
-import Fuse from "fuse.js";
-import Vue from "vue";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { getFTValidationStatus } from "~/utils/festival-event/ftUtils";
-import { Header } from "~/utils/models/dataTable";
+import Fuse from 'fuse.js';
+import Vue from 'vue';
+import SearchTeam from '~/components/atoms/field/search/SearchTeam.vue';
+import NewFtCard from '~/components/molecules/festival-event/creation/NewFtCard.vue';
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import { getFTValidationStatus } from '~/utils/festival-event/ftUtils';
+import { Header } from '~/utils/models/dataTable';
 import {
   Ft,
   FtSearch,
@@ -170,10 +170,10 @@ import {
   FtStatus,
   FtStatusLabel,
   ftStatusLabels,
-} from "~/utils/models/ft";
-import { Team } from "~/utils/models/team";
-import { MyUserInformation, User } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+} from '~/utils/models/ft';
+import { Team } from '~/utils/models/team';
+import { MyUserInformation, User } from '~/utils/models/user';
+import { formatUsername } from '~/utils/user/userUtils';
 
 interface Data {
   headers: Header[];
@@ -194,21 +194,21 @@ interface Data {
 }
 
 export default Vue.extend({
-  name: "Ft",
+  name: 'Ft',
   components: { SnackNotificationContainer, SearchTeam, NewFtCard },
   data(): Data {
     return {
       headers: [
-        { text: "Statut", value: "status" },
-        { text: "Validation", value: "validation" },
-        { text: "Nom", value: "name" },
-        { text: "FA", value: "fa" },
-        { text: "Resp", value: "userInCharge" },
-        { text: "Equipe", value: "team" },
-        { text: "Action", value: "action", sortable: false },
+        { text: 'Statut', value: 'status' },
+        { text: 'Validation', value: 'validation' },
+        { text: 'Nom', value: 'name' },
+        { text: 'FA', value: 'fa' },
+        { text: 'Resp', value: 'userInCharge' },
+        { text: 'Equipe', value: 'team' },
+        { text: 'Action', value: 'action', sortable: false },
       ],
       filters: {
-        search: "",
+        search: '',
         team: undefined,
         myFTs: false,
         status: undefined,
@@ -224,7 +224,7 @@ export default Vue.extend({
   },
 
   head: () => ({
-    title: "Fiches Tâches",
+    title: 'Fiches Tâches',
   }),
 
   computed: {
@@ -254,21 +254,21 @@ export default Vue.extend({
       return [...ftStatusLabels.entries()];
     },
     canViewDeletedFt(): boolean {
-      return this.$accessor.user.can("view-deleted-ft");
+      return this.$accessor.user.can('view-deleted-ft');
     },
     canAffect(): boolean {
-      return this.$accessor.user.can("affect-volunteer");
+      return this.$accessor.user.can('affect-volunteer');
     },
     validators(): Team[] {
       return this.$accessor.team.ftValidators;
     },
     deletedFTTextClass(): string {
-      return this.filters.isDeleted ? "invalid-text" : "valid-text";
+      return this.filters.isDeleted ? 'invalid-text' : 'valid-text';
     },
   },
 
   watch: {
-    async "filters.isDeleted"() {
+    async 'filters.isDeleted'() {
       await this.fetchFTs();
     },
   },
@@ -306,7 +306,7 @@ export default Vue.extend({
     fuzzyFindFT(search?: string): FtSimplified[] {
       if (!search) return this.FTs;
       const fuse = new Fuse<FtSimplified>(this.FTs, {
-        keys: ["name", "id"],
+        keys: ['name', 'id'],
         threshold: 0.2,
       });
       return fuse.search(search).map((e) => e.item);
@@ -330,7 +330,7 @@ export default Vue.extend({
     },
 
     displayUsername(user: User | null): string {
-      if (!user) return "";
+      if (!user) return '';
       return formatUsername(user);
     },
 

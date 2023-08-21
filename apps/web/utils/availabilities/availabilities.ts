@@ -1,12 +1,12 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
-import { setDateHour } from "../date/dateUtils";
-import { isPartyShift } from "../shift/shift";
+import { IProvidePeriod } from '@overbookd/period';
+import { PeriodOrchestrator } from '@overbookd/volunteer-availability';
+import { setDateHour } from '../date/dateUtils';
+import { isPartyShift } from '../shift/shift';
 import {
   generateNewPeriod,
   isDateIncludedByPeriod,
   isSamePeriod,
-} from "./period";
+} from './period';
 
 export function isEndOfAvailabilityPeriod(hour: number): boolean {
   return isPartyShift(hour) || hour % 2 === 0;

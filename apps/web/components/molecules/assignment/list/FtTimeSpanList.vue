@@ -18,14 +18,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
-import TimeSpanResume from "../resume/TimeSpanResume.vue";
-import { Volunteer } from "~/utils/models/assignment";
+import Vue from 'vue';
+import { formatDateWithMinutes } from '~/utils/date/dateUtils';
+import { AvailableTimeSpan } from '~/utils/models/ftTimeSpan';
+import TimeSpanResume from '../resume/TimeSpanResume.vue';
+import { Volunteer } from '~/utils/models/assignment';
 
 export default Vue.extend({
-  name: "FtTimeSpanList",
+  name: 'FtTimeSpanList',
   components: { TimeSpanResume },
   props: {
     timeSpans: {

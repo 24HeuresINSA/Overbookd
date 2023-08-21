@@ -1,8 +1,8 @@
-import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
-import { PublicAnimationWithFa } from "~/utils/models/fa";
-import { HttpStringified } from "~/utils/types/http";
+import { actionTree, mutationTree } from 'typed-vuex';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { safeCall } from '~/utils/api/calls';
+import { PublicAnimationWithFa } from '~/utils/models/fa';
+import { HttpStringified } from '~/utils/types/http';
 
 export const state = () => ({
   publicAnimations: [] as PublicAnimationWithFa[],
@@ -24,11 +24,11 @@ export const actions = actionTree(
         this,
         RepoFactory.FaRepository.getAllPublicAnimations(this),
         {
-          errorMessage: "Probleme lors de la récuperation des animations",
+          errorMessage: 'Probleme lors de la récuperation des animations',
         }
       );
       if (!res) return;
-      commit("SET_PUBLIC_ANIMATIONS", castFaPublicAnimationsWithDate(res.data));
+      commit('SET_PUBLIC_ANIMATIONS', castFaPublicAnimationsWithDate(res.data));
     },
   }
 );

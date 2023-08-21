@@ -19,21 +19,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 const MAX_SIZE = 1024 * 1024 * 2;
 
 export default Vue.extend({
-  name: "ProfilePictureDialog",
+  name: 'ProfilePictureDialog',
   data: () => ({
     profilePicture: undefined as File | undefined,
     rules: [
       (value?: File) => !!value || "Une photo vide c'est pas une photo",
-      (value?: File) => (value?.size ?? 0) < MAX_SIZE || "Moins de 2 Mb stp 🙏",
+      (value?: File) => (value?.size ?? 0) < MAX_SIZE || 'Moins de 2 Mb stp 🙏',
       (value?: File) => {
-        const extensions = ["image/png", "image/jpeg", "image/gif"];
+        const extensions = ['image/png', 'image/jpeg', 'image/gif'];
         const isSupportedFile = !!value && extensions.includes(value.type);
-        return isSupportedFile || "Seulement des images (png, jpeg ou gif)";
+        return isSupportedFile || 'Seulement des images (png, jpeg ou gif)';
       },
     ],
   }),
@@ -49,7 +49,7 @@ export default Vue.extend({
     },
     toggled: {
       get: function (): boolean | unknown {
-        if (this.type == "profilePicture") {
+        if (this.type == 'profilePicture') {
           return this.open;
         }
         if (!this.open) {
@@ -59,7 +59,7 @@ export default Vue.extend({
       },
       set(val): void {
         if (!val) {
-          this.$store.dispatch("dialog/closeDialog");
+          this.$store.dispatch('dialog/closeDialog');
         }
       },
     },
@@ -71,13 +71,13 @@ export default Vue.extend({
       }
       const profilePictureForm = new FormData();
       profilePictureForm.append(
-        "file",
+        'file',
         this.profilePicture,
         this.profilePicture.name
       );
       await this.$accessor.user.addProfilePicture(profilePictureForm);
       this.$accessor.user.setMyProfilePicture();
-      this.$store.dispatch("dialog/closeDialog");
+      this.$store.dispatch('dialog/closeDialog');
     },
   },
 });

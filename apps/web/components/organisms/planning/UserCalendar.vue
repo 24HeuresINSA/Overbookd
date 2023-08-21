@@ -37,22 +37,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Availability } from "@overbookd/volunteer-availability";
-import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/dateUtils";
+import Vue from 'vue';
+import { Availability } from '@overbookd/volunteer-availability';
+import OverCalendar from '~/components/molecules/calendar/OverCalendar.vue';
+import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import { StatusColor, getColorByStatus } from '~/domain/common/status-color';
+import { isPeriodIncludedByAnother } from '~/utils/availabilities/availabilities';
+import { computeNextHourDate } from '~/utils/date/dateUtils';
 
 import {
   CompleteUserWithPermissions,
   Task,
   VolunteerAssignmentStat,
   VolunteerTask,
-} from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
-import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
+} from '~/utils/models/user';
+import { formatUsername } from '~/utils/user/userUtils';
+import AssignmentUserStats from '~/components/molecules/user/AssignmentUserStats.vue';
 
 interface CalendarEventWithFt {
   start: Date;
@@ -63,7 +63,7 @@ interface CalendarEventWithFt {
 }
 
 export default Vue.extend({
-  name: "UserCalendar",
+  name: 'UserCalendar',
   components: { OverCalendar, TeamChip, AssignmentUserStats },
   props: {
     userId: {
@@ -104,7 +104,7 @@ export default Vue.extend({
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {
-      return this.$accessor.user.can("affect-volunteer");
+      return this.$accessor.user.can('affect-volunteer');
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -124,7 +124,7 @@ export default Vue.extend({
       await this.$accessor.user.getVolunteerAssignmentStats(this.userId);
     }
 
-    await this.$accessor.configuration.fetch("eventDate");
+    await this.$accessor.configuration.fetch('eventDate');
     this.calendarCentralDate = this.manifDate;
     document.title = formatUsername(this.user);
   },

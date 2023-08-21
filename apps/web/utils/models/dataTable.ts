@@ -4,5 +4,5 @@ export interface Header {
   align?: string;
   sortable?: boolean;
   width?: string;
-  filter?: Function;
+  filter?: (value: never) => boolean;
 }

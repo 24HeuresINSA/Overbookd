@@ -18,15 +18,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 import {
   FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimeSpan";
-import TaskResume from "../resume/TaskResume.vue";
+} from '~/utils/models/ftTimeSpan';
+import TaskResume from '../resume/TaskResume.vue';
 
 export default Vue.extend({
-  name: "TaskList",
+  name: 'TaskList',
   components: { TaskResume },
   props: {
     fts: {

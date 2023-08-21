@@ -1,13 +1,13 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { AssignmentStats, BulkAssignmentRequest } from "~/store/assignment";
-import { UpdateAssignedTeam, Volunteer } from "~/utils/models/assignment";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import { AssignmentStats, BulkAssignmentRequest } from '~/store/assignment';
+import { UpdateAssignedTeam, Volunteer } from '~/utils/models/assignment';
 import {
   AvailableTimeSpan,
   FtTimeSpanWithRequestedTeams,
   FtWithTimeSpan,
   TimeSpanWithAssignees,
-} from "~/utils/models/ftTimeSpan";
-import { HttpStringified } from "~/utils/types/http";
+} from '~/utils/models/ftTimeSpan';
+import { HttpStringified } from '~/utils/types/http';
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -18,7 +18,7 @@ type AssignmentResponse = {
 };
 
 export class AssignmentRepository {
-  private static readonly basePath = "assignments";
+  private static readonly basePath = 'assignments';
 
   static getVolunteers(context: Context) {
     return context.$axios.get<HttpStringified<Volunteer[]>>(

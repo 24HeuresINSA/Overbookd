@@ -222,7 +222,7 @@ describe('Gear requests', () => {
         `(
           'When animation $fa.name ask for $quantity $gear.name from $startDate to $endDate',
           ({ fa, gear, quantity, startDate, endDate, excepectedStatus }) => {
-            let gearRequest: any;
+            let gearRequest: GearRequest;
             beforeAll(
               async () =>
                 (gearRequest = await gearRequestService.addAnimationRequest({
@@ -307,7 +307,7 @@ describe('Gear requests', () => {
                 start: new Date(),
                 end: new Date(),
               }),
-          ).rejects.toThrow(`Gear #${inexistantGear} doesn\'t exist`);
+          ).rejects.toThrow(`Gear #${inexistantGear} doesn't exist`);
         });
       });
       describe('When asking gear from a validated animation', () => {
@@ -336,7 +336,7 @@ describe('Gear requests', () => {
         `(
           'When task $ft.name ask for $quantity $gear.name from $startDate to $endDate',
           ({ ft, gear, quantity, startDate, endDate, excepectedStatus }) => {
-            let gearRequest: any;
+            let gearRequest: GearRequest;
             beforeAll(
               async () =>
                 (gearRequest = await gearRequestService.addTaskRequest({
@@ -472,7 +472,7 @@ describe('Gear requests', () => {
                 start: new Date(),
                 end: new Date(),
               }),
-          ).rejects.toThrow(`Gear #${inexistantGear} doesn\'t exist`);
+          ).rejects.toThrow(`Gear #${inexistantGear} doesn't exist`);
         });
       });
 

@@ -52,29 +52,29 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FaTimeWindowForm from "~/components/molecules/festival-event/timeWindow/FaTimeWindowForm.vue";
-import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
-import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import Vue from 'vue';
+import ConfirmationMessage from '~/components/atoms/card/ConfirmationMessage.vue';
+import FaTimeWindowForm from '~/components/molecules/festival-event/timeWindow/FaTimeWindowForm.vue';
+import FaTimeWindowTable from '~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue';
+import FestivalEventCalendar from '~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
+import { formatDateWithMinutes } from '~/utils/date/dateUtils';
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from '~/utils/festival-event/faUtils';
 import {
   Fa,
   FaCardType,
   FaTimeWindowWithType,
   TimeWindowType,
-} from "~/utils/models/fa";
-import { Period } from "~/utils/models/gearRequests";
-import { MyUserInformation, User } from "~/utils/models/user";
+} from '~/utils/models/fa';
+import { Period } from '~/utils/models/gearRequests';
+import { MyUserInformation, User } from '~/utils/models/user';
 
 export default Vue.extend({
-  name: "FaTimeWindowCard",
+  name: 'FaTimeWindowCard',
   components: {
     FaTimeWindowTable,
     FestivalEventCalendar,
@@ -83,8 +83,8 @@ export default Vue.extend({
     ConfirmationMessage,
   },
   data: () => ({
-    animOwner: "humain",
-    matosOwners: ["matos", "barrieres", "elec"],
+    animOwner: 'humain',
+    matosOwners: ['matos', 'barrieres', 'elec'],
     cardType: FaCardType.TIME_WINDOW,
 
     isAddDialogOpen: false,

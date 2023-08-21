@@ -12,12 +12,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SnackNotification from "~/components/atoms/snack/SnackNotification.vue";
-import { SnackNotif } from "~/utils/models/store";
+import Vue from 'vue';
+import SnackNotification from '~/components/atoms/snack/SnackNotification.vue';
+import { SnackNotif } from '~/utils/models/store';
 
 export default Vue.extend({
-  name: "SnackNotificationContainer",
+  name: 'SnackNotificationContainer',
   components: { SnackNotification },
   props: {
     toggle: {

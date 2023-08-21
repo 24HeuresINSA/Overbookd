@@ -18,5 +18,5 @@ export class ConfigurationResponseDto implements ConfigurationRepresentation {
   })
   @IsObject()
   @IsNotEmpty()
-  value: any;
+  value: object;
 }

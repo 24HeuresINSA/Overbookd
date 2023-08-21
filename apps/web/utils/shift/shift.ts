@@ -1,4 +1,4 @@
-import { SHIFT_HOURS_UTC } from "@overbookd/volunteer-availability";
+import { SHIFT_HOURS_UTC } from '@overbookd/volunteer-availability';
 
 export const SHIFT_HOURS = {
   DAY: SHIFT_HOURS_UTC.DAY + 2,

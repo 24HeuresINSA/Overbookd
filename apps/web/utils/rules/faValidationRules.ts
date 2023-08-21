@@ -7,11 +7,11 @@ import {
   FaType,
   PublicAnimation,
   SortedStoredGearRequests,
-} from "../models/fa";
-import { GearRequest } from "../models/gearRequests";
-import { SignaLocation } from "../models/signaLocation";
-import { Team } from "../models/team";
-import { User } from "../models/user";
+} from '../models/fa';
+import { GearRequest } from '../models/gearRequests';
+import { SignaLocation } from '../models/signaLocation';
+import { Team } from '../models/team';
+import { User } from '../models/user';
 
 export function hasAtLeastOneError(
   mFA: Fa,
@@ -67,7 +67,7 @@ export function generalErrors(fa: Fa): string[] {
 
 export function hasDescription(value: string | undefined): string | boolean {
   return (
-    (!!value && value !== "<p></p>") || "L'animation n'a pas de description."
+    (!!value && value !== '<p></p>') || "L'animation n'a pas de description."
   );
 }
 export function hasDescriptionToPublish(fa: Fa): string | boolean {
@@ -127,7 +127,7 @@ export function hasSignaNeedsWithQuantityHigherThanZero(
   if (!signaNeeds || signaNeeds.length === 0) return true;
   return (
     signaNeeds.every((signaNeed) => signaNeed.count > 0) ||
-    "Chaque demande de signa doit avoir une quantité."
+    'Chaque demande de signa doit avoir une quantité.'
   );
 }
 export function signaErrors(fa: Fa): string[] {
@@ -165,7 +165,7 @@ export function hasPassNumberHigherThanZero(fa: Fa): string | boolean {
   return (
     !fa.numberOfPass ||
     fa.numberOfPass > 0 ||
-    "Le nombre de Pass Sécu nécessaire doit être supérieur à 0."
+    'Le nombre de Pass Sécu nécessaire doit être supérieur à 0.'
   );
 }
 export function hasSecurityNeeds(value: string | undefined): string | boolean {
@@ -197,7 +197,7 @@ export function hasCollaboratorMandatoryFieldsFilled(fa: Fa): string | boolean {
   const hasMandatoryFieldsFilled = Boolean(firstname && lastname && phone);
   return (
     hasMandatoryFieldsFilled ||
-    "Les informations obligatoires du prestataire sont incomplètes."
+    'Les informations obligatoires du prestataire sont incomplètes.'
   );
 }
 export function hasCollaboratorOptionalFieldsFilled(
@@ -208,7 +208,7 @@ export function hasCollaboratorOptionalFieldsFilled(
   const hasOptionalFieldsFilled = Boolean(email && company);
   return (
     hasOptionalFieldsFilled ||
-    "Les informations optionnelles du prestataire sont incomplètes."
+    'Les informations optionnelles du prestataire sont incomplètes.'
   );
 }
 
@@ -225,7 +225,7 @@ export function collaboratorWarnings(fa: Fa): string[] {
 }
 
 export function hasAtLeastOneMatosGearRequest(
-  gearRequests: GearRequest<"FA">[]
+  gearRequests: GearRequest<'FA'>[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -233,7 +233,7 @@ export function hasAtLeastOneMatosGearRequest(
   );
 }
 export function hasAtLeastOneBarrieresGearRequest(
-  gearRequests: GearRequest<"FA">[]
+  gearRequests: GearRequest<'FA'>[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -241,7 +241,7 @@ export function hasAtLeastOneBarrieresGearRequest(
   );
 }
 export function hasAtLeastOneElecGearRequest(
-  gearRequests: GearRequest<"FA">[]
+  gearRequests: GearRequest<'FA'>[]
 ): string | boolean {
   return (
     (gearRequests && gearRequests.length > 0) ||
@@ -249,27 +249,27 @@ export function hasAtLeastOneElecGearRequest(
   );
 }
 export function hasMatosGearRequestWithQuantityHigherThanZero(
-  matosGearRequests: GearRequest<"FA">[]
+  matosGearRequests: GearRequest<'FA'>[]
 ): string | boolean {
   return (
     matosGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
-    "Chaque matériel Matos doit avoir une quantité."
+    'Chaque matériel Matos doit avoir une quantité.'
   );
 }
 export function hasBarrieresGearRequestWithQuantityHigherThanZero(
-  barrieresGearRequests: GearRequest<"FA">[]
+  barrieresGearRequests: GearRequest<'FA'>[]
 ): string | boolean {
   return (
     barrieresGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
-    "Chaque matériel Barrières doit avoir une quantité."
+    'Chaque matériel Barrières doit avoir une quantité.'
   );
 }
 export function hasElecGearRequestWithQuantityHigherThanZero(
-  elecGearRequests: GearRequest<"FA">[]
+  elecGearRequests: GearRequest<'FA'>[]
 ): string | boolean {
   return (
     elecGearRequests?.every((gearRequest) => gearRequest.quantity > 0) ||
-    "Chaque matériel Elec doit avoir une quantité."
+    'Chaque matériel Elec doit avoir une quantité.'
   );
 }
 export function gearRequestErrors(

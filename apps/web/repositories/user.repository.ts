@@ -1,4 +1,4 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   CompleteUser,
   CompleteUserWithPermissions,
@@ -8,76 +8,79 @@ import {
   UserModification,
   VolunteerAssignmentStat,
   VolunteerTask,
-} from "~/utils/models/user";
-import { HttpStringified } from "~/utils/types/http";
+} from '~/utils/models/user';
+import { HttpStringified } from '~/utils/types/http';
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class UserRepository {
-  private static readonly basePath = "users";
+  private static readonly basePath = 'users';
 
   static createUser(context: Context, user: UserCreation) {
-    return context.$axios.$post(`${this.basePath}`, user);
+    return context.$axios.post<HttpStringified<CompleteUser>>(
+      `${this.basePath}`,
+      user,
+    );
   }
 
   static getUser(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<CompleteUser>>(
-      `${this.basePath}/${userId}`
+      `${this.basePath}/${userId}`,
     );
   }
 
   static getMyUser(context: Context) {
     return context.$axios.get<HttpStringified<MyUserInformation>>(
-      `${this.basePath}/me`
+      `${this.basePath}/me`,
     );
   }
 
   static getAllUsers(context: Context) {
     return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
-      this.basePath
+      this.basePath,
     );
   }
 
   static getVolunteers(context: Context) {
     return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
-      `${this.basePath}/volunteers`
+      `${this.basePath}/volunteers`,
     );
   }
 
   static getCandidates(context: Context) {
     return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
-      `${this.basePath}/candidates`
+      `${this.basePath}/candidates`,
     );
   }
 
   static getAllPersonnalAccountConsummers(context: Context) {
     return context.$axios.get<HttpStringified<CompleteUser[]>>(
-      `${this.basePath}/personnal-account-consummers`
+      `${this.basePath}/personnal-account-consummers`,
     );
   }
 
   static async addProfilePicture(context: Context, profilePicture: FormData) {
     return context.$axios.post<HttpStringified<CompleteUser>>(
       `${this.basePath}/me/profile-picture`,
-      profilePicture
+      profilePicture,
     );
   }
 
   static async getProfilePicture(
     context: Context,
-    userId: number
+    userId: number,
   ): Promise<string | undefined> {
-    const token = context.$axios.defaults.headers.common["Authorization"];
+    const token = context.$axios.defaults.headers.common['Authorization'];
     if (!token) return undefined;
 
     const response = await fetch(
       `${process.env.BASE_URL}${this.basePath}/${userId}/profile-picture`,
       {
-        method: "GET",
+        method: 'GET',
         headers: {
           Authorization: `${token}`,
         },
-      }
+      },
     );
 
     if (response.status !== 200) return undefined;
@@ -89,18 +92,18 @@ export class UserRepository {
   static updateUser(
     context: Context,
     userId: number,
-    userData: UserModification
+    userData: UserModification,
   ) {
     return context.$axios.put<HttpStringified<CompleteUserWithPermissions>>(
       `${this.basePath}/${userId}`,
-      userData
+      userData,
     );
   }
 
   static updateMyUser(context: Context, userData: Partial<UserModification>) {
     return context.$axios.patch<HttpStringified<CompleteUserWithPermissions>>(
       `${this.basePath}/me`,
-      userData
+      userData,
     );
   }
 
@@ -109,7 +112,7 @@ export class UserRepository {
   }
 
   static getFriends(context: Context) {
-    return context.$axios.get<HttpStringified<User[]>>("friends");
+    return context.$axios.get<HttpStringified<User[]>>('friends');
   }
 
   static getUserFriends(context: Context, userId: number) {
@@ -117,7 +120,7 @@ export class UserRepository {
   }
 
   static addFriend(context: Context, friendId: number) {
-    return context.$axios.post<HttpStringified<User>>(`friends`, {
+    return context.$axios.post<HttpStringified<User>>('friends', {
       id: friendId,
     });
   }
@@ -128,39 +131,37 @@ export class UserRepository {
 
   static getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `${this.basePath}/${userId}/ft-requests`
+      `${this.basePath}/${userId}/ft-requests`,
     );
   }
 
   static getVolunteerAssignments(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
-      `${this.basePath}/${userId}/assignments`
+      `${this.basePath}/${userId}/assignments`,
     );
   }
 
   static getVolunteerAssignmentStats(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerAssignmentStat[]>>(
-      `${this.basePath}/${userId}/assignments/stats`
+      `${this.basePath}/${userId}/assignments/stats`,
     );
   }
 
   static getPlanningSubscriptionLink(context: Context) {
     return context.$axios.get<HttpStringified<{ link: string }>>(
-      `${this.basePath}/me/planning/subscribe-link`
+      `${this.basePath}/me/planning/subscribe-link`,
     );
   }
 
   static getMyPdfPlanning(context: Context) {
-    return context.$axios.get<HttpStringified<String>>(
-      `${this.basePath}/me/planning`,
-      { headers: { accept: "application/pdf" } }
-    );
+    return context.$axios.get<string>(`${this.basePath}/me/planning`, {
+      headers: { accept: 'application/pdf' },
+    });
   }
 
   static getPdfPlanning(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<String>>(
-      `${this.basePath}/${id}/planning`,
-      { headers: { accept: "application/pdf" } }
-    );
+    return context.$axios.get<string>(`${this.basePath}/${id}/planning`, {
+      headers: { accept: 'application/pdf' },
+    });
   }
 }

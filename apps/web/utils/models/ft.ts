@@ -1,26 +1,26 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { HttpStringified } from "../types/http";
-import { BaseFa } from "./fa";
-import { FtFeedback } from "./feedback";
-import { FtTimeSpan } from "./ftTimeSpan";
-import { Review } from "./review";
-import { SignaLocation } from "./signaLocation";
-import { Team } from "./team";
-import { User } from "./user";
+import { IProvidePeriod } from '@overbookd/period';
+import { HttpStringified } from '../types/http';
+import { BaseFa } from './fa';
+import { FtFeedback } from './feedback';
+import { FtTimeSpan } from './ftTimeSpan';
+import { Review } from './review';
+import { SignaLocation } from './signaLocation';
+import { Team } from './team';
+import { User } from './user';
 
 export enum FtStatus {
-  DRAFT = "DRAFT",
-  REFUSED = "REFUSED",
-  SUBMITTED = "SUBMITTED",
-  VALIDATED = "VALIDATED",
-  READY = "READY",
+  DRAFT = 'DRAFT',
+  REFUSED = 'REFUSED',
+  SUBMITTED = 'SUBMITTED',
+  VALIDATED = 'VALIDATED',
+  READY = 'READY',
 }
 
-export const BROUILLON = "Brouillon";
-const REFUSEE = "Refusée";
-const SOUMISE_A_VALIDATION = "Soumise à validation";
-const VALIDEE = "Validée";
-const PRETE_POUR_AFFECTATION = "Prête à affectation";
+export const BROUILLON = 'Brouillon';
+const REFUSEE = 'Refusée';
+const SOUMISE_A_VALIDATION = 'Soumise à validation';
+const VALIDEE = 'Validée';
+const PRETE_POUR_AFFECTATION = 'Prête à affectation';
 
 export type FtStatusLabel =
   | typeof BROUILLON
@@ -38,11 +38,11 @@ export const ftStatusLabels = new Map<FtStatus, FtStatusLabel>([
 ]);
 
 export enum FtCardType {
-  GENERAL = "GENERAL",
-  PARENT_FA = "PARENT_FA",
-  DETAIL = "DETAIL",
-  TIME_WINDOW = "TIME_WINDOW",
-  LOGISTICS = "LOGISTICS",
+  GENERAL = 'GENERAL',
+  PARENT_FA = 'PARENT_FA',
+  DETAIL = 'DETAIL',
+  TIME_WINDOW = 'TIME_WINDOW',
+  LOGISTICS = 'LOGISTICS',
 }
 
 interface BaseFt {
@@ -73,20 +73,20 @@ export interface Ft extends BaseFt {
 
 export type FtSimplified = Pick<
   Ft,
-  | "id"
-  | "name"
-  | "fa"
-  | "status"
-  | "userInCharge"
-  | "team"
-  | "reviews"
-  | "reviewer"
+  | 'id'
+  | 'name'
+  | 'fa'
+  | 'status'
+  | 'userInCharge'
+  | 'team'
+  | 'reviews'
+  | 'reviewer'
 >;
 
 export interface FtUpdate
   extends Pick<
     Ft,
-    "id" | "name" | "status" | "isStatic" | "description" | "isDeleted"
+    'id' | 'name' | 'status' | 'isStatic' | 'description' | 'isDeleted'
   > {
   parentFaId: number | null;
   userInChargeId: number | null;
@@ -166,7 +166,7 @@ export interface FtTeamRequest {
   team: Team;
 }
 
-export interface FtTeamRequestUpdate extends Omit<FtTeamRequest, "team"> {
+export interface FtTeamRequestUpdate extends Omit<FtTeamRequest, 'team'> {
   teamCode: string;
 }
 

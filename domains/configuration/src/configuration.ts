@@ -1,4 +1,4 @@
 export interface Configuration {
   key: string;
-  value: any;
+  value: object | string | number | boolean;
 }

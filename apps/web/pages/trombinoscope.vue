@@ -27,14 +27,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
-import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import Vue from 'vue';
+import TrombinoscopeCard from '~/components/molecules/user/TrombinoscopeCard.vue';
+import { CompleteUserWithPermissions } from '~/utils/models/user';
+import { formatUserNameWithNickname } from '~/utils/user/userUtils';
+import ProfilePicture from '~/components/atoms/card/ProfilePicture.vue';
 
 export default Vue.extend({
-  name: "Trombinoscope",
+  name: 'Trombinoscope',
   components: { TrombinoscopeCard, ProfilePicture },
   computed: {
     users() {

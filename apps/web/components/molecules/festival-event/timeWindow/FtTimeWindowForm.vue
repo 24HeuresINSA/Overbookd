@@ -40,10 +40,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
-import { formatDate, getHourDiff } from "~/utils/date/dateUtils";
-import { Ft, FtTimeWindow } from "~/utils/models/ft";
+import Vue from 'vue';
+import DateTimeField from '~/components/atoms/field/date/DateTimeField.vue';
+import { formatDate, getHourDiff } from '~/utils/date/dateUtils';
+import { Ft, FtTimeWindow } from '~/utils/models/ft';
 
 interface FtTimeWindowFormData {
   start?: Date;
@@ -53,11 +53,11 @@ interface FtTimeWindowFormData {
 }
 
 export default Vue.extend({
-  name: "FtTimeWindowForm",
+  name: 'FtTimeWindowForm',
   components: { DateTimeField },
   model: {
-    prop: "timeWindow",
-    event: "change",
+    prop: 'timeWindow',
+    event: 'change',
   },
   props: {
     timeWindow: {
@@ -98,14 +98,14 @@ export default Vue.extend({
     isFormInvalid(): boolean {
       const requiredFieldsFilled = this.start && this.end;
       if (!requiredFieldsFilled) {
-        this.showErrorMessage("❌ Tu dois compléter tous les champs !");
+        this.showErrorMessage('❌ Tu dois compléter tous les champs !');
         return true;
       }
 
       const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
       if (!startBeforeEnd) {
         this.showErrorMessage(
-          "❌ La date de début doit être avant la date de fin !"
+          '❌ La date de début doit être avant la date de fin !'
         );
         return true;
       }
@@ -134,7 +134,7 @@ export default Vue.extend({
     },
   },
   async created() {
-    await this.$accessor.configuration.fetch("eventDate");
+    await this.$accessor.configuration.fetch('eventDate');
     this.updateLocalVariable();
   },
   methods: {
@@ -153,7 +153,7 @@ export default Vue.extend({
     },
     confirmTimeWindow() {
       if (this.isFormInvalid) return;
-      this.$emit("change", this.mTimeWindow);
+      this.$emit('change', this.mTimeWindow);
       if (!this.isEditForm) this.clearLocalVariable();
     },
     showErrorMessage(message: string) {

@@ -9,11 +9,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
-import { CalendarEvent } from "~/utils/models/calendar";
-import { SavedCharismaPeriod } from "~/utils/models/charismaPeriod";
+import Vue from 'vue';
+import OverCalendar from '~/components/molecules/calendar/OverCalendar.vue';
+import { formatDateWithExplicitMonth } from '~/utils/date/dateUtils';
+import { CalendarEvent } from '~/utils/models/calendar';
+import { SavedCharismaPeriod } from '~/utils/models/charismaPeriod';
 
 const PRIMARY_COLOR = {
   RED_LEVEL: 33,
@@ -22,7 +22,7 @@ const PRIMARY_COLOR = {
 };
 
 export default Vue.extend({
-  name: "CharismaPeriodCalendar",
+  name: 'CharismaPeriodCalendar',
   components: { OverCalendar },
   data: () => ({
     calendarMarker: new Date(),
@@ -51,7 +51,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch("eventDate");
+    await this.$accessor.configuration.fetch('eventDate');
     this.calendarMarker = this.manifDate;
   },
   methods: {

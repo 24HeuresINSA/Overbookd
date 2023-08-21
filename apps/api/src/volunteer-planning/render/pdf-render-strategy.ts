@@ -89,7 +89,7 @@ export class PdfRenderStrategy implements RenderStrategy {
     this.printer = new Printer(this.fonts);
   }
 
-  render(tasks: Task[], volunteer: Volunteer): Promise<any> {
+  render(tasks: Task[], volunteer: Volunteer): Promise<unknown> {
     const pdfContent = this.generateContent(tasks);
     const header = this.generateHeader(volunteer);
     const footer = this.generateFooter();

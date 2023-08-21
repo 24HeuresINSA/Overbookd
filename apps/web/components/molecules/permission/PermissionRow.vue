@@ -40,12 +40,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
-import { Team } from "~/utils/models/team";
+import Vue from 'vue';
+import OverChips from '~/components/atoms/chip/OverChips.vue';
+import { Team } from '~/utils/models/team';
 
 export default Vue.extend({
-  name: "PermissionRow",
+  name: 'PermissionRow',
   components: {
     OverChips,
   },
@@ -69,7 +69,7 @@ export default Vue.extend({
     async addOrRemoveTeam() {
       if (!this.newElement) {
         this.$accessor.notif.pushNotification({
-          message: "Il faut préciser une team !",
+          message: 'Il faut préciser une team !',
         });
         return;
       }

@@ -36,19 +36,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Team } from "~/utils/models/team";
-import { nextSortDirection } from "~/utils/models/assignment";
-import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
+import Vue from 'vue';
+import { Team } from '~/utils/models/team';
+import { nextSortDirection } from '~/utils/models/assignment';
+import SearchTeams from '~/components/atoms/field/search/SearchTeams.vue';
 
 export default Vue.extend({
-  name: "VolunteerFilters",
+  name: 'VolunteerFilters',
   components: { SearchTeams },
   props: {
     type: {
       type: String,
       required: false,
-      default: "volunteer",
+      default: 'volunteer',
     },
     listLength: {
       type: Number,
@@ -56,20 +56,20 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    search: "",
+    search: '',
     teams: [],
     sort: 0,
   }),
   methods: {
     changeSearch(search: string) {
-      this.$emit("change:search", search);
+      this.$emit('change:search', search);
     },
     changeTeams(teams: Team[]) {
-      this.$emit("change:teams", teams);
+      this.$emit('change:teams', teams);
     },
     updateSort() {
       this.sort = nextSortDirection(this.sort);
-      this.$emit("change:sort", this.sort);
+      this.$emit('change:sort', this.sort);
     },
   },
 });

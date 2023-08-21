@@ -11,13 +11,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import CalendarList from "~/components/molecules/need-help/CalendarList.vue";
-import NeedHelpFormCard from "~/components/molecules/need-help/NeedHelpFormCard.vue";
-import NeedHelpVolunteerList from "~/components/molecules/need-help/NeedHelpVolunteerList.vue";
+import Vue from 'vue';
+import CalendarList from '~/components/molecules/need-help/CalendarList.vue';
+import NeedHelpFormCard from '~/components/molecules/need-help/NeedHelpFormCard.vue';
+import NeedHelpVolunteerList from '~/components/molecules/need-help/NeedHelpVolunteerList.vue';
 
 export default Vue.extend({
-  name: "NeedHelp",
+  name: 'NeedHelp',
   components: { NeedHelpFormCard, NeedHelpVolunteerList, CalendarList },
 });
 </script>

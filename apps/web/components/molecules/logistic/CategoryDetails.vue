@@ -56,12 +56,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import CategoryForm from "./CategoryForm.vue";
+import Vue from 'vue';
+import ConfirmationMessage from '~/components/atoms/card/ConfirmationMessage.vue';
+import CategoryForm from './CategoryForm.vue';
 
 export default Vue.extend({
-  name: "CategoryDetails",
+  name: 'CategoryDetails',
   components: { ConfirmationMessage, CategoryForm },
   props: {
     category: {
@@ -89,7 +89,7 @@ export default Vue.extend({
       this.isUpdateDialogOpen = false;
     },
     closeDialog() {
-      this.$emit("close-dialog");
+      this.$emit('close-dialog');
     },
     async deleteCategory() {
       await this.$accessor.catalog.deleteCategory(this.category);

@@ -4,7 +4,7 @@
       <template #body="{ items }">
         <tbody>
           <template v-for="publicAnimation in items">
-            <tr>
+            <tr :key="publicAnimation.fa.id">
               <th :rowspan="publicAnimation.fa.timeWindows.length + 1">
                 <nuxt-link
                   :to="`/fa/${publicAnimation.fa.id}`"
@@ -73,32 +73,32 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { Header } from "~/utils/models/dataTable";
-import { PublicAnimationWithFa } from "~/utils/models/fa";
-import { PeriodWithId } from "~/utils/models/period";
+import Vue from 'vue';
+import { formatDateWithMinutes } from '~/utils/date/dateUtils';
+import { Header } from '~/utils/models/dataTable';
+import { PublicAnimationWithFa } from '~/utils/models/fa';
+import { PeriodWithId } from '~/utils/models/period';
 
 interface Comcom {
   headers: Header[];
 }
 
 export default Vue.extend({
-  name: "Comcom",
+  name: 'Comcom',
   data(): Comcom {
     return {
       headers: [
-        { text: "FA", value: "fa" },
-        { text: "Photo", value: "photoLink", align: "center" },
-        { text: "Description", value: "description" },
-        { text: "Catégories", value: "categories" },
-        { text: "Anim phare", value: "isMajor", align: "center" },
-        { text: "Créneaux", value: "timeWindows" },
+        { text: 'FA', value: 'fa' },
+        { text: 'Photo', value: 'photoLink', align: 'center' },
+        { text: 'Description', value: 'description' },
+        { text: 'Catégories', value: 'categories' },
+        { text: 'Anim phare', value: 'isMajor', align: 'center' },
+        { text: 'Créneaux', value: 'timeWindows' },
       ],
     };
   },
   head: () => ({
-    title: "Animations à publier",
+    title: 'Animations à publier',
   }),
   computed: {
     publicAnimations(): PublicAnimationWithFa[] {

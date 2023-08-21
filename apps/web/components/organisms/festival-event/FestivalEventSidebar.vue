@@ -19,26 +19,26 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { getFAValidationStatus } from "~/utils/festival-event/faUtils";
-import { getFTValidationStatus } from "~/utils/festival-event/ftUtils";
-import { Fa, FaStatusLabel } from "~/utils/models/fa";
+import Vue from 'vue';
+import { getFAValidationStatus } from '~/utils/festival-event/faUtils';
+import { getFTValidationStatus } from '~/utils/festival-event/ftUtils';
+import { Fa, FaStatusLabel } from '~/utils/models/fa';
 import {
   FtStatusLabel,
   Ft,
   ftStatusLabels,
   BROUILLON,
-} from "~/utils/models/ft";
-import { Team } from "~/utils/models/team";
-import FestivalEventSummary from "./FestivalEventSummary.vue";
+} from '~/utils/models/ft';
+import { Team } from '~/utils/models/team';
+import FestivalEventSummary from './FestivalEventSummary.vue';
 
 export default Vue.extend({
-  name: "FestivalEventSidebar",
+  name: 'FestivalEventSidebar',
   components: { FestivalEventSummary },
   props: {
     festivalEvent: {
       type: String,
-      default: () => "FA",
+      default: () => 'FA',
     },
   },
   computed: {
@@ -49,7 +49,7 @@ export default Vue.extend({
       return this.$accessor.ft.mFT;
     },
     isFA(): boolean {
-      return this.festivalEvent === "FA";
+      return this.festivalEvent === 'FA';
     },
     titleWithId(): string {
       if (this.isFA) return `Fiche Activité n°${this.$route.params.fa}`;

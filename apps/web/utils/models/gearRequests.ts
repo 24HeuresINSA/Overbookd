@@ -1,6 +1,6 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { HttpStringified } from "../types/http";
-import { Gear } from "./catalog.model";
+import { IProvidePeriod } from '@overbookd/period';
+import { HttpStringified } from '../types/http';
+import { Gear } from './catalog.model';
 
 export interface BaseGearRequestCreation {
   gearId: number;
@@ -22,53 +22,53 @@ export type GearRequestCreation =
   | ExistingPeriodGearRequestCreation;
 
 export type GearRequestUpdate = Partial<
-  Omit<NewPeriodGearRequestCreation, "gearId">
+  Omit<NewPeriodGearRequestCreation, 'gearId'>
 >;
 
 export interface Period extends IProvidePeriod {
   id: number;
 }
 
-export interface Seeker<T extends "FA" | "FT" = "FA" | "FT"> {
+export interface Seeker<T extends 'FA' | 'FT' = 'FA' | 'FT'> {
   type: T;
   id: number;
   name: string;
 }
 
-export type EventSeeker = Seeker<"FA"> | Seeker<"FT">;
+export type EventSeeker = Seeker<'FA'> | Seeker<'FT'>;
 
-export interface GearRequest<T extends "FA" | "FT" = "FA" | "FT"> {
+export interface GearRequest<T extends 'FA' | 'FT' = 'FA' | 'FT'> {
   rentalPeriod: Period;
   quantity: number;
   gear: Gear;
   seeker: Seeker<T>;
 }
 
-export interface StoredGearRequest<T extends "FA" | "FT" = "FA" | "FT">
+export interface StoredGearRequest<T extends 'FA' | 'FT' = 'FA' | 'FT'>
   extends GearRequest<T> {
   drive?: string;
 }
 
 export function isFAStoredGearRequest(
   storedGearRequest: StoredGearRequest
-): storedGearRequest is StoredGearRequest<"FA"> {
-  return storedGearRequest.seeker.type === "FA";
+): storedGearRequest is StoredGearRequest<'FA'> {
+  return storedGearRequest.seeker.type === 'FA';
 }
 
 export function isFTStoredGearRequest(
   storedGearRequest: StoredGearRequest
-): storedGearRequest is StoredGearRequest<"FT"> {
-  return storedGearRequest.seeker.type === "FT";
+): storedGearRequest is StoredGearRequest<'FT'> {
+  return storedGearRequest.seeker.type === 'FT';
 }
 
-export interface GearRequestWithDrive<T extends "FA" | "FT" = "FA" | "FT">
+export interface GearRequestWithDrive<T extends 'FA' | 'FT' = 'FA' | 'FT'>
   extends GearRequest<T> {
   drive: string;
 }
 
 export type EventGearRequest =
-  | GearRequestWithDrive<"FA">
-  | GearRequestWithDrive<"FT">;
+  | GearRequestWithDrive<'FA'>
+  | GearRequestWithDrive<'FT'>;
 
 export function castGearRequestWithDate(
   gearRequest: HttpStringified<StoredGearRequest>
@@ -84,10 +84,10 @@ export function castGearRequestWithDate(
 }
 
 export type SortableGearRequestHeader =
-  | "quantity"
-  | "gear"
-  | "startDate"
-  | "endDate";
+  | 'quantity'
+  | 'gear'
+  | 'startDate'
+  | 'endDate';
 
 export type GearRequestSortFunction = (
   gearRequests: GearRequest[],

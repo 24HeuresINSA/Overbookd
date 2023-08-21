@@ -29,18 +29,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CharismaPeriodCalendar from "~/components/molecules/charisma-period/CharismaPeriodCalendar.vue";
-import CharismaPeriodForm from "~/components/molecules/charisma-period/CharismaPeriodForm.vue";
-import CharismaPeriodTable from "~/components/molecules/charisma-period/CharismaPeriodTable.vue";
+import Vue from 'vue';
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import CharismaPeriodCalendar from '~/components/molecules/charisma-period/CharismaPeriodCalendar.vue';
+import CharismaPeriodForm from '~/components/molecules/charisma-period/CharismaPeriodForm.vue';
+import CharismaPeriodTable from '~/components/molecules/charisma-period/CharismaPeriodTable.vue';
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-} from "~/utils/models/charismaPeriod";
+} from '~/utils/models/charismaPeriod';
 
 export default Vue.extend({
-  name: "CreateCharismaPeriod",
+  name: 'CreateCharismaPeriod',
   components: {
     SnackNotificationContainer,
     CharismaPeriodCalendar,
@@ -54,7 +54,7 @@ export default Vue.extend({
     isUpdateDialogOpen: false,
   }),
   head: () => ({
-    title: "Charisme des dispos",
+    title: 'Charisme des dispos',
   }),
   async mounted() {
     await this.$accessor.charismaPeriod.fetchCharismaPeriods();

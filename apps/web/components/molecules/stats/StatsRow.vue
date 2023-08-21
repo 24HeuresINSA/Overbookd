@@ -42,11 +42,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Team } from "~/utils/models/team";
-import { StatsPayload } from "~/utils/models/stats";
-import { FaStatusLabel } from "~/utils/models/fa";
-import StatsCard from "~/components/atoms/card/StatsCard.vue";
+import Vue from 'vue';
+import { Team } from '~/utils/models/team';
+import { StatsPayload } from '~/utils/models/stats';
+import { FaStatusLabel } from '~/utils/models/fa';
+import StatsCard from '~/components/atoms/card/StatsCard.vue';
 
 interface StatsRowData {
   historyFA: Map<string, number>;
@@ -70,54 +70,54 @@ export default Vue.extend({
   data(): StatsRowData {
     return {
       historyFA: new Map<string, number>([
-        ["bar", 19],
-        ["barrieres", 4],
-        ["bureau", 1],
-        ["catering", 1],
-        ["communication", 3],
-        ["concert", 2],
-        ["courses", 16],
-        ["culture", 20],
-        ["dd", 28],
-        ["deco", 7],
-        ["elec", 3],
-        ["hard", 2],
-        ["humain", 1],
-        ["beboo", 5],
-        ["matos", 6],
-        ["payant", 3],
-        ["plaizir", 13],
-        ["scene", 9],
-        ["secu", 16],
-        ["signa", 2],
-        ["sponso", 9],
-        ["sports", 20],
-        ["undefined", 0],
+        ['bar', 19],
+        ['barrieres', 4],
+        ['bureau', 1],
+        ['catering', 1],
+        ['communication', 3],
+        ['concert', 2],
+        ['courses', 16],
+        ['culture', 20],
+        ['dd', 28],
+        ['deco', 7],
+        ['elec', 3],
+        ['hard', 2],
+        ['humain', 1],
+        ['beboo', 5],
+        ['matos', 6],
+        ['payant', 3],
+        ['plaizir', 13],
+        ['scene', 9],
+        ['secu', 16],
+        ['signa', 2],
+        ['sponso', 9],
+        ['sports', 20],
+        ['undefined', 0],
       ]),
       historyFT: new Map<string, number>([
-        ["bar", 84],
-        ["barrieres", 37],
-        ["bureau", 3],
-        ["catering", 8],
-        ["communication", 27],
-        ["concert", 8],
-        ["courses", 58],
-        ["culture", 86],
-        ["dd", 56],
-        ["deco", 16],
-        ["elec", 25],
-        ["hard", 5],
-        ["humain", 10],
-        ["beboo", 9],
-        ["matos", 61],
-        ["payant", 18],
-        ["plaizir", 45],
-        ["scene", 87],
-        ["secu", 76],
-        ["signa", 28],
-        ["sponso", 35],
-        ["sports", 61],
-        ["undefined", 46],
+        ['bar', 84],
+        ['barrieres', 37],
+        ['bureau', 3],
+        ['catering', 8],
+        ['communication', 27],
+        ['concert', 8],
+        ['courses', 58],
+        ['culture', 86],
+        ['dd', 56],
+        ['deco', 16],
+        ['elec', 25],
+        ['hard', 5],
+        ['humain', 10],
+        ['beboo', 9],
+        ['matos', 61],
+        ['payant', 18],
+        ['plaizir', 45],
+        ['scene', 87],
+        ['secu', 76],
+        ['signa', 28],
+        ['sponso', 35],
+        ['sports', 61],
+        ['undefined', 46],
       ]),
     };
   },
@@ -134,7 +134,7 @@ export default Vue.extend({
       return this.$accessor.team.getTeamByCode(teamCode);
     },
     history(teamCode: string): number | undefined {
-      if (this.name === "FT") {
+      if (this.name === 'FT') {
         return this.historyFT.get(teamCode);
       }
 
@@ -142,19 +142,19 @@ export default Vue.extend({
     },
     displayHistory(teamCode: string): string {
       const lastYearValue = this.history(teamCode);
-      return lastYearValue ? lastYearValue.toString() : "N/A";
+      return lastYearValue ? lastYearValue.toString() : 'N/A';
     },
     historyPercentage(stats: StatsPayload): string {
       const lastYearCount = this.history(stats.teamCode);
       if (!lastYearCount || lastYearCount === 0) {
-        return "N/A";
+        return 'N/A';
       }
 
       const validatedNumber = stats.status.find(
-        (s) => s.status === "VALIDATED"
+        (s) => s.status === 'VALIDATED'
       )?.count;
 
-      return (((validatedNumber || 0) * 100) / lastYearCount).toFixed(0) + "%";
+      return (((validatedNumber || 0) * 100) / lastYearCount).toFixed(0) + '%';
     },
     toPascalCase(str: string): string {
       return `${str.at(0)?.toUpperCase()}${str.slice(1).toLowerCase()}`;

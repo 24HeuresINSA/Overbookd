@@ -198,12 +198,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
+import { Team } from '~/utils/models/team';
 
 export default Vue.extend({
-  name: "Ft420",
+  name: 'Ft420',
   computed: {
-    teams(): any {
+    teams(): Team[] {
       return this.$accessor.team.allTeams;
     },
   },

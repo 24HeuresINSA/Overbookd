@@ -4,7 +4,7 @@
  */
 export class Snack {
   timeout: number;
-  feedbackMessage = "";
+  feedbackMessage = '';
   active = false;
   constructor(t?: number) {
     this.timeout = t || 2000;

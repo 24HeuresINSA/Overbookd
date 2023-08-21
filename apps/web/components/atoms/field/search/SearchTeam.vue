@@ -21,23 +21,23 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Team } from "~/utils/models/team";
+import Vue from 'vue';
+import { Team } from '~/utils/models/team';
 
 interface SearchTeamData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: "SearchTeam",
+  name: 'SearchTeam',
   model: {
-    prop: "team",
-    event: "change",
+    prop: 'team',
+    event: 'change',
   },
   props: {
     label: {
       type: String,
-      default: "Chercher une équipe",
+      default: 'Chercher une équipe',
     },
     team: {
       type: Object as () => Team | null,
@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(team: Team | null) {
-      this.$emit("change", team);
+      this.$emit('change', team);
     },
   },
 });

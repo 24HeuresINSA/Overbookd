@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Fa, FaCardType, FaStatus } from "~/utils/models/fa";
-import { Ft, FtCardType, FtStatus } from "~/utils/models/ft";
+import Vue from 'vue';
+import { Fa, FaCardType, FaStatus } from '~/utils/models/fa';
+import { Ft, FtCardType, FtStatus } from '~/utils/models/ft';
 import {
   collaboratorErrors,
   detailErrors,
@@ -20,20 +20,20 @@ import {
   securityErrors,
   signaErrors,
   timeWindowsErrors,
-} from "~/utils/rules/faValidationRules";
+} from '~/utils/rules/faValidationRules';
 import {
   ftDetailErrors,
   ftGeneralErrors,
   ftParentFAErrors,
   ftTimeWindowsErrors,
-} from "~/utils/rules/ftValidationRules";
+} from '~/utils/rules/ftValidationRules';
 
 export default Vue.extend({
-  name: "CardErrorList",
+  name: 'CardErrorList',
   props: {
     festivalEvent: {
       type: String,
-      default: "FA",
+      default: 'FA',
     },
     type: {
       type: String,
@@ -48,7 +48,7 @@ export default Vue.extend({
       return this.$accessor.ft.mFT;
     },
     isFA(): boolean {
-      return this.festivalEvent === "FA";
+      return this.festivalEvent === 'FA';
     },
     errors(): string[] {
       if (this.isFA) return this.faErrors;

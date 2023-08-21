@@ -39,25 +39,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { Snack } from "~/utils/models/snack";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import Vue from 'vue';
+import { safeCall } from '~/utils/api/calls';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { Snack } from '~/utils/models/snack';
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
 
 export default Vue.extend({
-  name: "ForgotPassword",
+  name: 'ForgotPassword',
   components: { SnackNotificationContainer },
   auth: false,
-  layout: "none",
+  layout: 'none',
   data: () => ({
-    password: "",
-    password2: "",
+    password: '',
+    password2: '',
     snack: new Snack(3000),
     passwordVerif: [
       (v: string) =>
-        new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$`).test(v) ||
-        `au moins 8 caractères avec une MAJUSCULE, une minuscule et un chiffre minimum`,
+        new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$').test(v) ||
+        'au moins 8 caractères avec une MAJUSCULE, une minuscule et un chiffre minimum',
     ],
   }),
   methods: {
@@ -70,7 +70,7 @@ export default Vue.extend({
           password2: this.password2,
         }),
         {
-          successMessage: "Password changé, redirection au login...",
+          successMessage: 'Password changé, redirection au login...',
           messageDuration: 10000,
         }
       );
@@ -78,7 +78,7 @@ export default Vue.extend({
       if (!res) return;
       setTimeout(async () => {
         await this.$router.push({
-          path: "/",
+          path: '/',
         });
       }, 2000);
     },

@@ -14,15 +14,15 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { IProvidePeriod } from "@overbookd/period";
-import { formatDateWithHoursAndMinutesOnly } from "~/utils/date/dateUtils";
-import { getPeriodDuration } from "~/utils/models/period";
+import Vue from 'vue';
+import { IProvidePeriod } from '@overbookd/period';
+import { formatDateWithHoursAndMinutesOnly } from '~/utils/date/dateUtils';
+import { getPeriodDuration } from '~/utils/models/period';
 
 const NB_MARKERS = 9;
 
 export default Vue.extend({
-  name: "TimelineAxis",
+  name: 'TimelineAxis',
   computed: {
     startHour(): string {
       return formatDateWithHoursAndMinutesOnly(this.$accessor.timeline.start);

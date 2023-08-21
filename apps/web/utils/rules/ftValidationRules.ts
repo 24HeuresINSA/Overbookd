@@ -1,8 +1,8 @@
-import { BaseFa } from "../models/fa";
-import { Ft, FtTimeWindow } from "../models/ft";
-import { SignaLocation } from "../models/signaLocation";
-import { Team } from "../models/team";
-import { User } from "../models/user";
+import { BaseFa } from '../models/fa';
+import { Ft, FtTimeWindow } from '../models/ft';
+import { SignaLocation } from '../models/signaLocation';
+import { Team } from '../models/team';
+import { User } from '../models/user';
 
 export function hasAtLeastOneFTError(mFT: Ft): boolean {
   const errors = [
@@ -15,16 +15,16 @@ export function hasAtLeastOneFTError(mFT: Ft): boolean {
 }
 
 function hasName(name?: string): string | boolean {
-  return Boolean(name) || "La tâche doit avoir un nom.";
+  return Boolean(name) || 'La tâche doit avoir un nom.';
 }
 function hasTeam(team?: Team): string | boolean {
-  return Boolean(team) || "La tâche doit avoir une équipe associée.";
+  return Boolean(team) || 'La tâche doit avoir une équipe associée.';
 }
 function hasUserInCharge(user?: User): string | boolean {
-  return Boolean(user) || "La tâche doit avoir un responsable.";
+  return Boolean(user) || 'La tâche doit avoir un responsable.';
 }
 function hasLocation(location?: SignaLocation): string | boolean {
-  return Boolean(location) || "La tâche doit avoir un lieu.";
+  return Boolean(location) || 'La tâche doit avoir un lieu.';
 }
 export function ftGeneralErrors(ft: Ft): string[] {
   return [
@@ -36,7 +36,7 @@ export function ftGeneralErrors(ft: Ft): string[] {
 }
 
 function hasParentFA(fa?: BaseFa): string | boolean {
-  return Boolean(fa) || "La tâche doit avoir une FA asscoiée.";
+  return Boolean(fa) || 'La tâche doit avoir une FA asscoiée.';
 }
 export function ftParentFAErrors(ft: Ft): string[] {
   return [hasParentFA(ft.fa)].filter(
@@ -46,8 +46,8 @@ export function ftParentFAErrors(ft: Ft): string[] {
 
 function hasDescription(description: string): string | boolean {
   return (
-    (Boolean(description) && description !== "<p></p>") ||
-    "La tâche doit avoir une description."
+    (Boolean(description) && description !== '<p></p>') ||
+    'La tâche doit avoir une description.'
   );
 }
 export function ftDetailErrors(ft: Ft): string[] {
@@ -60,7 +60,7 @@ function hasAtLeastOneTimeWindow(
   timeWindows: FtTimeWindow[]
 ): string | boolean {
   return (
-    timeWindows.length > 0 || "La tâche doit avoir au moins une plage horaire."
+    timeWindows.length > 0 || 'La tâche doit avoir au moins une plage horaire.'
   );
 }
 function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
@@ -69,7 +69,7 @@ function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
   return (
     timeWindows.every(
       (tw) => tw.userRequests.length > 0 || tw.teamRequests.length > 0
-    ) || "Tu as des créneaux sans demande de bénévole."
+    ) || 'Tu as des créneaux sans demande de bénévole.'
   );
 }
 export function ftTimeWindowsErrors(ft: Ft): string[] {

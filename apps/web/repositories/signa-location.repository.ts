@@ -1,13 +1,13 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   SignaLocation,
   SignaLocationCreate,
-} from "~/utils/models/signaLocation";
+} from '~/utils/models/signaLocation';
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class SignaLocationRepository {
-  private static readonly basePath = "signa-location";
+  private static readonly basePath = 'signa-location';
 
   static getAllSignaLocations(context: Context) {
     return context.$axios.get<SignaLocation[]>(this.basePath);

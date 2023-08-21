@@ -1,7 +1,7 @@
-import { mutationTree, actionTree } from "typed-vuex";
+import { mutationTree, actionTree } from 'typed-vuex';
 
 export const state = () => ({
-  darkTheme: localStorage["theme"] === "true",
+  darkTheme: localStorage['theme'] === 'true',
 });
 
 export const mutations = mutationTree(state, {
@@ -14,7 +14,7 @@ export const actions = actionTree(
   { state },
   {
     toggleDarkTheme({ state, commit }) {
-      commit("SET_DARK_THEME", !state.darkTheme);
+      commit('SET_DARK_THEME', !state.darkTheme);
     },
   }
 );

@@ -11,5 +11,5 @@ export class UpsertConfigurationDto
   })
   @IsObject()
   @IsNotEmpty()
-  value: any;
+  value: object;
 }

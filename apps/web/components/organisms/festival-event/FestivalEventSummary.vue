@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 interface SummaryItem {
   id: string;
@@ -27,39 +27,39 @@ interface SummaryItem {
 }
 
 export default Vue.extend({
-  name: "FestivalEventSummary",
+  name: 'FestivalEventSummary',
   props: {
     festivalEvent: {
       type: String,
-      default: () => "FA",
+      default: () => 'FA',
     },
   },
   data: () => ({
     faItems: [
-      { id: "general", text: "Général", icon: "mdi-card-text" },
-      { id: "detail", text: "Détail", icon: "mdi-text-box" },
-      { id: "signa", text: "Signa", icon: "mdi-routes" },
-      { id: "timewindow", text: "Créneaux", icon: "mdi-calendar-clock" },
-      { id: "security", text: "Sécurité", icon: "mdi-shield" },
-      { id: "presta", text: "Presta", icon: "mdi-account" },
-      { id: "log", text: "Logistique", icon: "mdi-truck" },
-      { id: "elec", text: "Besoin Elec", icon: "mdi-flash" },
-      { id: "water", text: "Besoin Eau", icon: "mdi-water" },
-      { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
-      { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
+      { id: 'general', text: 'Général', icon: 'mdi-card-text' },
+      { id: 'detail', text: 'Détail', icon: 'mdi-text-box' },
+      { id: 'signa', text: 'Signa', icon: 'mdi-routes' },
+      { id: 'timewindow', text: 'Créneaux', icon: 'mdi-calendar-clock' },
+      { id: 'security', text: 'Sécurité', icon: 'mdi-shield' },
+      { id: 'presta', text: 'Presta', icon: 'mdi-account' },
+      { id: 'log', text: 'Logistique', icon: 'mdi-truck' },
+      { id: 'elec', text: 'Besoin Elec', icon: 'mdi-flash' },
+      { id: 'water', text: 'Besoin Eau', icon: 'mdi-water' },
+      { id: 'feedback', text: 'Commentaires', icon: 'mdi-comment' },
+      { id: 'ft', text: 'FT', icon: 'mdi-format-color-highlight' },
     ],
     ftItems: [
-      { id: "general", text: "Général", icon: "mdi-card-text" },
-      { id: "fa", text: "FA associée", icon: "mdi-chart-bubble" },
-      { id: "detail", text: "Détail", icon: "mdi-text-box" },
-      { id: "timewindow", text: "Créneaux", icon: "mdi-calendar-clock" },
-      { id: "matos", text: "Matos", icon: "mdi-truck" },
-      { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
+      { id: 'general', text: 'Général', icon: 'mdi-card-text' },
+      { id: 'fa', text: 'FA associée', icon: 'mdi-chart-bubble' },
+      { id: 'detail', text: 'Détail', icon: 'mdi-text-box' },
+      { id: 'timewindow', text: 'Créneaux', icon: 'mdi-calendar-clock' },
+      { id: 'matos', text: 'Matos', icon: 'mdi-truck' },
+      { id: 'feedback', text: 'Commentaires', icon: 'mdi-comment' },
     ],
   }),
   computed: {
     items(): SummaryItem[] {
-      return this.festivalEvent === "FA" ? this.faItems : this.ftItems;
+      return this.festivalEvent === 'FA' ? this.faItems : this.ftItems;
     },
   },
 });

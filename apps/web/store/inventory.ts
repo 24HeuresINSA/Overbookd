@@ -1,12 +1,12 @@
-import { mutationTree, getterTree, actionTree } from "typed-vuex";
-import { updateItemToList } from "@overbookd/list";
+import { mutationTree, getterTree, actionTree } from 'typed-vuex';
+import { updateItemToList } from '@overbookd/list';
 import {
   InventoryRecord,
   LiteInventoryRecord,
-} from "~/domain/inventory/inventory-record";
-import { safeCall } from "~/utils/api/calls";
-import { Gear } from "~/utils/models/catalog.model";
-import { RepoFactory } from "~/repositories/repo-factory";
+} from '~/domain/inventory/inventory-record';
+import { safeCall } from '~/utils/api/calls';
+import { Gear } from '~/utils/models/catalog.model';
+import { RepoFactory } from '~/repositories/repo-factory';
 
 const inventoryRepository = RepoFactory.InventoryRepository;
 
@@ -67,7 +67,7 @@ export const actions = actionTree(
         }
       );
       if (!res) return;
-      context.commit("SET_GROUPED_RECORDS", res.data);
+      context.commit('SET_GROUPED_RECORDS', res.data);
     },
 
     async fetchGroupedRecords(context): Promise<void> {
@@ -76,17 +76,17 @@ export const actions = actionTree(
         inventoryRepository.getGroupedRecords(this)
       );
       if (!res) return;
-      context.commit("SET_GROUPED_RECORDS", res.data);
+      context.commit('SET_GROUPED_RECORDS', res.data);
     },
 
     async fetchRecords(context, gearId: number): Promise<void> {
-      console.warn("fetching details for gear #", gearId);
+      console.warn('fetching details for gear #', gearId);
       const res = await safeCall(
         this,
         inventoryRepository.getRecords(this, gearId)
       );
       if (!res) return;
-      context.commit("UPDATE_GEAR_RECORDS", { records: res.data, gearId });
+      context.commit('UPDATE_GEAR_RECORDS', { records: res.data, gearId });
     },
   }
 );

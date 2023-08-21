@@ -1,8 +1,8 @@
-import { Period } from "@overbookd/period";
-import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { Volunteer } from "~/utils/models/assignment";
-import { VolunteerTask } from "~/utils/models/user";
-import { getUnderlyingTeams } from "./underlying-teams";
+import { Period } from '@overbookd/period';
+import { removeItemAtIndex, updateItemToList } from '@overbookd/list';
+import { Volunteer } from '~/utils/models/assignment';
+import { VolunteerTask } from '~/utils/models/user';
+import { getUnderlyingTeams } from './underlying-teams';
 
 type TeamRequest = {
   teamCode: string;
@@ -19,7 +19,7 @@ export type Task = {
 
 export class AssignmentCandidate {
   tasks: VolunteerTask[] = [];
-  private _assignment: string = "";
+  private _assignment: string = '';
   availabilities: Period[] = [];
 
   constructor(readonly volunteer: Volunteer) {}
@@ -37,7 +37,7 @@ export class AssignmentCandidate {
 
   unassign() {
     if (this.assignableTeams.length === 1) return;
-    this._assignment = "";
+    this._assignment = '';
   }
 
   get assignment(): string {
@@ -61,7 +61,7 @@ export class TaskAssignment {
 
   static init(task?: Task) {
     const defaultTask = {
-      name: "Task",
+      name: 'Task',
       id: 0,
       start: new Date(),
       end: new Date(),
@@ -178,7 +178,7 @@ export class TaskAssignment {
 
   get assignments() {
     const volunteers = this._candidates
-      .filter((candidate) => candidate.assignment !== "")
+      .filter((candidate) => candidate.assignment !== '')
       .map((candidate) => ({
         teamCode: candidate.assignment,
         id: candidate.volunteer.id,
@@ -296,7 +296,7 @@ export class TaskAssignment {
   }
 
   private get areAllCandidateAssigned(): boolean {
-    return this.candidates.every((candidate) => candidate.assignment !== "");
+    return this.candidates.every((candidate) => candidate.assignment !== '');
   }
 
   private get areAllTeamRequestBelowMaxCapacity(): boolean {

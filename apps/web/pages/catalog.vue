@@ -24,14 +24,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import CategoriesTreeView from "~/components/organisms/logistic/CategoriesTreeView.vue";
-import GearForm from "~/components/molecules/logistic/GearForm.vue";
-import GearListing from "~/components/organisms/logistic/GearListing.vue";
+import Vue from 'vue';
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import CategoriesTreeView from '~/components/organisms/logistic/CategoriesTreeView.vue';
+import GearForm from '~/components/molecules/logistic/GearForm.vue';
+import GearListing from '~/components/organisms/logistic/GearListing.vue';
 
 export default Vue.extend({
-  name: "Catalog",
+  name: 'Catalog',
   components: {
     GearListing,
     CategoriesTreeView,
@@ -44,11 +44,11 @@ export default Vue.extend({
     };
   },
   head: () => ({
-    title: "Catalogue",
+    title: 'Catalogue',
   }),
   computed: {
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-catalog");
+      return this.$accessor.user.can('write-catalog');
     },
   },
   methods: {

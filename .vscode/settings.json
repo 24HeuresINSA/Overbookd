@@ -44,5 +44,10 @@
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
   "eslint.validate": ["javascript", "typescript"],
-  "eslint.codeActionsOnSave.rules": ["all"]
+  "eslint.codeActionsOnSave.rules": [
+    "all"
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

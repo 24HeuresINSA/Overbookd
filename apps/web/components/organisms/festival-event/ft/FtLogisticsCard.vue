@@ -31,29 +31,29 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
-import FTLogisticsTable from "~/components/molecules/festival-event/logistic/FTLogisticsTable.vue";
+import Vue from 'vue';
+import SearchGear from '~/components/atoms/field/search/SearchGear.vue';
+import FTLogisticsTable from '~/components/molecules/festival-event/logistic/FTLogisticsTable.vue';
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
-import { Gear } from "~/utils/models/catalog.model";
-import { Ft } from "~/utils/models/ft";
-import { isNumber, min } from "~/utils/rules/inputRules";
+} from '~/utils/festival-event/ftUtils';
+import { Gear } from '~/utils/models/catalog.model';
+import { Ft } from '~/utils/models/ft';
+import { isNumber, min } from '~/utils/rules/inputRules';
 
 export default Vue.extend({
-  name: "FtLogisticsCard",
+  name: 'FtLogisticsCard',
   components: { FTLogisticsTable, SearchGear },
   props: {
     title: {
       type: String,
-      default: () => "",
+      default: () => '',
     },
   },
   data: () => ({
     gear: undefined as Gear | undefined,
-    quantity: "1",
+    quantity: '1',
     rules: {
       number: isNumber,
       min: min(1),
@@ -72,10 +72,10 @@ export default Vue.extend({
       );
     },
     isValidatedByMatos(): boolean {
-      return isTaskValidatedBy(this.mFT.reviews, "matos");
+      return isTaskValidatedBy(this.mFT.reviews, 'matos');
     },
     validationStatus(): string {
-      return getFTValidationStatus(this.mFT, "matos").toLowerCase();
+      return getFTValidationStatus(this.mFT, 'matos').toLowerCase();
     },
   },
   methods: {

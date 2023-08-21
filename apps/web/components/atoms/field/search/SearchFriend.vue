@@ -20,24 +20,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { User } from "~/utils/models/user";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import Vue from 'vue';
+import { User } from '~/utils/models/user';
+import { formatUserNameWithNickname } from '~/utils/user/userUtils';
 
 interface SearchFriendData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: "SearchFriend",
+  name: 'SearchFriend',
   model: {
-    prop: "friend",
-    event: "change",
+    prop: 'friend',
+    event: 'change',
   },
   props: {
     label: {
       type: String,
-      default: "Chercher un bénévole",
+      default: 'Chercher un bénévole',
     },
     friend: {
       type: Object as () => User | null,
@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(friend: User | null) {
-      this.$emit("change", friend);
+      this.$emit('change', friend);
     },
     displayUsername(friend: User): string {
       return formatUserNameWithNickname(friend);

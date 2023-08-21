@@ -116,21 +116,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
-import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
-import { Header } from "~/utils/models/dataTable";
-import { UpdateAssignedTeam } from "~/utils/models/assignment";
+import Vue from 'vue';
+import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import { getUnderlyingTeams } from '~/domain/timespan-assignment/underlying-teams';
+import { formatDateToHumanReadable } from '~/utils/date/dateUtils';
+import { Header } from '~/utils/models/dataTable';
+import { UpdateAssignedTeam } from '~/utils/models/assignment';
 import {
   TimeSpanAssignee,
   TimeSpanWithAssignees,
-} from "~/utils/models/ftTimeSpan";
-import { User } from "~/utils/models/user";
-import { isNumber, isString } from "~/utils/types/check";
+} from '~/utils/models/ftTimeSpan';
+import { User } from '~/utils/models/user';
+import { isNumber, isString } from '~/utils/types/check';
 
 export default Vue.extend({
-  name: "TimeSpanDetails",
+  name: 'TimeSpanDetails',
   components: { TeamChip },
   data: () => ({
     selectedAssigneeId: null as number | null,
@@ -141,15 +141,15 @@ export default Vue.extend({
       return this.$accessor.assignment.timeSpanToDisplayDetails;
     },
     task(): string {
-      if (!this.timeSpan) return "";
+      if (!this.timeSpan) return '';
       return `[${this.timeSpan.ft.id}] ${this.timeSpan.ft.name}`;
     },
     location(): string {
-      if (!this.timeSpan) return "";
+      if (!this.timeSpan) return '';
       return this.timeSpan.ft.location;
     },
     timetable(): string {
-      if (!this.timeSpan) return "";
+      if (!this.timeSpan) return '';
       const start = formatDateToHumanReadable(this.timeSpan.start);
       const end = formatDateToHumanReadable(this.timeSpan.end);
       return `${start} - ${end}`;
@@ -177,22 +177,22 @@ export default Vue.extend({
     },
     headers(): Header[] {
       const volunteer = {
-        text: "Bénévole",
-        value: "volunteer",
-        width: "300px",
+        text: 'Bénévole',
+        value: 'volunteer',
+        width: '300px',
         sortable: false,
       };
       const assignedTeam = {
-        text: "Affecté en tant que",
-        value: "assignedTeam",
+        text: 'Affecté en tant que',
+        value: 'assignedTeam',
         sortable: false,
       };
       const friends = {
-        text: "Amis affectés",
-        value: "friends",
+        text: 'Amis affectés',
+        value: 'friends',
         sortable: false,
       };
-      const actions = { text: "Actions", value: "actions", sortable: false };
+      const actions = { text: 'Actions', value: 'actions', sortable: false };
       if (this.isUpdateAssignedTeamActive) {
         return [volunteer, assignedTeam, actions];
       }
@@ -208,15 +208,15 @@ export default Vue.extend({
       });
     },
     closeDialog() {
-      this.$emit("close-dialog");
+      this.$emit('close-dialog');
     },
     openFtInNewTab() {
       if (!this.timeSpan) return;
       const ftId = this.timeSpan.ft.id;
-      window.open(`/ft/${ftId}`, "_blank");
+      window.open(`/ft/${ftId}`, '_blank');
     },
     openCalendarInNewTab(assigneeId: number) {
-      window.open(`/planning/${assigneeId}`, "_blank");
+      window.open(`/planning/${assigneeId}`, '_blank');
     },
     getAllVolunteerTeams(assignee: TimeSpanAssignee) {
       const underlyingTeams = getUnderlyingTeams(assignee.teams);

@@ -32,29 +32,29 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { IProvidePeriod, Period } from "@overbookd/period";
-import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
-import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
+import Vue from 'vue';
+import { IProvidePeriod, Period } from '@overbookd/period';
+import { PeriodOrchestrator } from '@overbookd/volunteer-availability';
+import OverCalendar from '~/components/molecules/calendar/OverCalendar.vue';
 import {
   hasAvailabilityPeriodError,
   isAvailabilityPeriodSaved,
   isAvailabilityPeriodSelected,
   isEndOfAvailabilityPeriod,
   isPeriodIncludedByAnother,
-} from "~/utils/availabilities/availabilities";
-import { generateNewPeriod } from "~/utils/availabilities/period";
-import { getCharismaByDate } from "~/utils/models/charismaPeriod";
-import { isPartyShift } from "~/utils/shift/shift";
+} from '~/utils/availabilities/availabilities';
+import { generateNewPeriod } from '~/utils/availabilities/period';
+import { getCharismaByDate } from '~/utils/models/charismaPeriod';
+import { isPartyShift } from '~/utils/shift/shift';
 import {
   formatDateDayName,
   formatDateDayNumber,
   computeTomorrowDate,
   setDateHour,
-} from "~/utils/date/dateUtils";
+} from '~/utils/date/dateUtils';
 
 export default Vue.extend({
-  name: "AvailabilitiesPickCalendar",
+  name: 'AvailabilitiesPickCalendar',
   components: { OverCalendar },
   props: {
     period: {
@@ -99,7 +99,7 @@ export default Vue.extend({
     hasError(): (date: string | Date, hour: number) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
-    weekdayNumbers(): Number[] {
+    weekdayNumbers(): number[] {
       return this.generateWeekdayList([], new Date(this.period.start));
     },
   },

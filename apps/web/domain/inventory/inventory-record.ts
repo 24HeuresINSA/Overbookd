@@ -1,5 +1,5 @@
-import { updateItemToList } from "@overbookd/list";
-import { Gear } from "~/utils/models/catalog.model";
+import { updateItemToList } from '@overbookd/list';
+import { Gear } from '~/utils/models/catalog.model';
 
 export interface Record {
   gear: Gear;
@@ -7,7 +7,7 @@ export interface Record {
   storage: string;
 }
 
-export type LiteInventoryRecord = Omit<Record, "gear">;
+export type LiteInventoryRecord = Omit<Record, 'gear'>;
 
 export class InventoryRecord implements Record {
   constructor(

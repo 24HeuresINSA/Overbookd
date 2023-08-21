@@ -1,10 +1,10 @@
-import { FtStatus } from "~/utils/models/ft";
+import { FtStatus } from '~/utils/models/ft';
 
-const GREY = "grey";
-const RED = "red";
-const ORANGE = "orange";
-const GREEN = "green";
-const PURPLE = "#673ab7";
+const GREY = 'grey';
+const RED = 'red';
+const ORANGE = 'orange';
+const GREEN = 'green';
+const PURPLE = '#673ab7';
 
 export type StatusColor =
   | typeof GREY
@@ -22,5 +22,5 @@ const statusColors = new Map<FtStatus, StatusColor>([
 ]);
 
 export function getColorByStatus(status: FtStatus): StatusColor {
-  return statusColors.get(status) || "grey";
+  return statusColors.get(status) || 'grey';
 }

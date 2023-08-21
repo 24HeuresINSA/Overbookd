@@ -158,7 +158,7 @@ describe('Catalog', () => {
     describe("When gear doesn't exist", () => {
       it("should inform the user gear doesn't exist", async () => {
         await expect(async () => await catalog.find(123)).rejects.toThrow(
-          `Gear #${123} doesn\'t exist`,
+          `Gear #${123} doesn't exist`,
         );
       });
     });
@@ -204,10 +204,10 @@ describe('Catalog', () => {
           expect(gear.name).toBe(name);
           expect(gear.slug).toBe(expectedSlug);
         });
-        it(`should set up ponctual usage property`, () => {
+        it('should set up ponctual usage property', () => {
           expect(gear.isPonctualUsage).toBe(isPonctualUsage);
         });
-        it(`should set up consumable property`, () => {
+        it('should set up consumable property', () => {
           expect(gear.isConsumable).toBe(isConsumable);
         });
         if (expectedCategory) {
@@ -223,7 +223,7 @@ describe('Catalog', () => {
             expect(gear.owner).toEqual(expectedOwner);
           });
         }
-        it(`should be accessible after`, async () => {
+        it('should be accessible after', async () => {
           const fetchedGear = await catalog.find(gear.id);
           expect(gear).toMatchObject(fetchedGear);
         });
@@ -239,7 +239,7 @@ describe('Catalog', () => {
               isPonctualUsage: false,
               isConsumable: false,
             }),
-        ).rejects.toThrow(`Category #${123} doesn\'t exist`);
+        ).rejects.toThrow(`Category #${123} doesn't exist`);
       });
     });
     describe('When a similar gear already exist (i.e. slug are the same)', () => {
@@ -252,7 +252,7 @@ describe('Catalog', () => {
               isPonctualUsage: true,
               isConsumable: false,
             }),
-        ).rejects.toThrow(`"Perceuse" gear already exist`);
+        ).rejects.toThrow('"Perceuse" gear already exist');
       });
     });
   });
@@ -299,7 +299,7 @@ describe('Catalog', () => {
               isPonctualUsage: false,
               isConsumable: false,
             }),
-        ).rejects.toThrow(`Gear #${123} doesn\'t exist`);
+        ).rejects.toThrow(`Gear #${123} doesn't exist`);
       });
     });
   });
@@ -314,7 +314,7 @@ describe('Catalog', () => {
         await catalog.remove(toDeleteGearId);
         await expect(
           async () => await catalog.find(toDeleteGearId),
-        ).rejects.toThrow(`Gear #${toDeleteGearId} doesn\'t exist`);
+        ).rejects.toThrow(`Gear #${toDeleteGearId} doesn't exist`);
       });
     });
   });

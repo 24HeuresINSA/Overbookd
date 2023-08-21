@@ -16,22 +16,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SearchFa from "~/components/atoms/field/search/SearchFa.vue";
-import CompleteLogisticsTable from "~/components/molecules/festival-event/logistic/CompleteLogisticsTable.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import SearchFa from '~/components/atoms/field/search/SearchFa.vue';
+import CompleteLogisticsTable from '~/components/molecules/festival-event/logistic/CompleteLogisticsTable.vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
-import { BaseFa } from "~/utils/models/fa";
-import { Ft, FtCardType } from "~/utils/models/ft";
+} from '~/utils/festival-event/ftUtils';
+import { BaseFa } from '~/utils/models/fa';
+import { Ft, FtCardType } from '~/utils/models/ft';
 
 export default Vue.extend({
-  name: "ParentFaCard",
+  name: 'ParentFaCard',
   components: { SearchFa, CompleteLogisticsTable, CardErrorList },
   data: () => ({
-    owner: "humain",
+    owner: 'humain',
     cardType: FtCardType.PARENT_FA,
   }),
   computed: {

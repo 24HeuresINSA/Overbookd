@@ -50,20 +50,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import SignaNeedForm from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedForm.vue";
-import SignaNeedTable from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedTable.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import SearchSignaLocation from '~/components/atoms/field/search/SearchSignaLocation.vue';
+import SignaNeedForm from '~/components/molecules/festival-event/logistic/signaNeed/SignaNeedForm.vue';
+import SignaNeedTable from '~/components/molecules/festival-event/logistic/signaNeed/SignaNeedTable.vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa";
-import { SignaLocation } from "~/utils/models/signaLocation";
+} from '~/utils/festival-event/faUtils';
+import { Fa, FaCardType, FaSignaNeed } from '~/utils/models/fa';
+import { SignaLocation } from '~/utils/models/signaLocation';
 
 export default Vue.extend({
-  name: "SignaCard",
+  name: 'SignaCard',
   components: {
     CardErrorList,
     SearchSignaLocation,
@@ -71,7 +71,7 @@ export default Vue.extend({
     SignaNeedForm,
   },
   data: () => ({
-    owner: "signa",
+    owner: 'signa',
     cardType: FaCardType.SIGNA,
 
     isAddDialogOpen: false,

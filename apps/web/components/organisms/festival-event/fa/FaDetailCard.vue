@@ -60,26 +60,26 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import RichEditor from '~/components/atoms/field/tiptap/RichEditor.vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from '~/utils/festival-event/faUtils';
 import {
   Fa,
   FaCardType,
   PublicAnimation,
   publicAnimationCategoryTypes,
   PublicAnimationCategoryType,
-} from "~/utils/models/fa";
+} from '~/utils/models/fa';
 
 export default Vue.extend({
-  name: "FaDetailCard",
+  name: 'FaDetailCard',
   components: { RichEditor, CardErrorList },
   data: () => ({
-    owner: "humain",
+    owner: 'humain',
     cardType: FaCardType.DETAIL,
     categories: Object.values(publicAnimationCategoryTypes),
     isPublicAnimation: false,

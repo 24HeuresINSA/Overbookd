@@ -1,11 +1,11 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { HttpStringified } from "~/utils/types/http";
-import { Configuration } from "@overbookd/configuration";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
+import { HttpStringified } from '~/utils/types/http';
+import { Configuration } from '@overbookd/configuration';
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class ConfigurationRepository {
-  private static readonly basePath = "configuration";
+  private static readonly basePath = 'configuration';
 
   static getAll(context: Context) {
     return context.$axios.get<HttpStringified<Configuration[]>>(this.basePath);

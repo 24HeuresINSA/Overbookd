@@ -6,14 +6,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import GearRequestListing from "~/components/organisms/logistic/GearRequestListing.vue";
+import Vue from 'vue';
+import GearRequestListing from '~/components/organisms/logistic/GearRequestListing.vue';
 
 export default Vue.extend({
-  name: "Logistic",
+  name: 'Logistic',
   components: { GearRequestListing },
   head: () => ({
-    title: "Logistique",
+    title: 'Logistique',
   }),
 });
 </script>

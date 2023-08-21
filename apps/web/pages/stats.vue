@@ -15,22 +15,22 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { StatsPayload } from "~/utils/models/stats";
-import StatsRow from "~/components/molecules/stats/StatsRow.vue";
+import Vue from 'vue';
+import { StatsPayload } from '~/utils/models/stats';
+import StatsRow from '~/components/molecules/stats/StatsRow.vue';
 
 export default Vue.extend({
-  name: "Stats",
+  name: 'Stats',
   components: { StatsRow },
   data() {
     return {
       switchType: false,
       dataset: [] as StatsPayload[],
-      name: "FA",
+      name: 'FA',
     };
   },
   head: () => ({
-    title: "Statistiques",
+    title: 'Statistiques',
   }),
   async mounted() {
     await this.update();
@@ -38,10 +38,10 @@ export default Vue.extend({
   methods: {
     async update() {
       if (this.switchType) {
-        this.name = "FT";
+        this.name = 'FT';
         this.dataset = await this.getStatsFT();
       } else {
-        this.name = "FA";
+        this.name = 'FA';
         this.dataset = await this.getStatsFA();
       }
     },

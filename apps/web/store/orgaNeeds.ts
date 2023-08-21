@@ -1,8 +1,8 @@
-import { actionTree, mutationTree } from "typed-vuex";
-import { IProvidePeriod } from "@overbookd/period";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
-import { HttpStringified } from "~/utils/types/http";
+import { actionTree, mutationTree } from 'typed-vuex';
+import { IProvidePeriod } from '@overbookd/period';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { safeCall } from '~/utils/api/calls';
+import { HttpStringified } from '~/utils/types/http';
 
 const orgaNeedsRepo = RepoFactory.OrgaNeedsRepository;
 
@@ -41,7 +41,7 @@ export const actions = actionTree(
         orgaNeedsRepo.fetchStats(this, periodAndTeams)
       );
       if (!res) return;
-      context.commit("SET_STATS", res.data);
+      context.commit('SET_STATS', res.data);
     },
   }
 );

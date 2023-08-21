@@ -94,20 +94,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { PlanningEvent } from "~/domain/common/planning-events";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/dateUtils";
-import { CalendarEvent, CalendarUser } from "~/utils/models/calendar";
-import { SHIFT_HOURS } from "~/utils/shift/shift";
-import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
+import Vue from 'vue';
+import { PlanningEvent } from '~/domain/common/planning-events';
+import { isPeriodIncludedByAnother } from '~/utils/availabilities/availabilities';
+import { computeNextHourDate } from '~/utils/date/dateUtils';
+import { CalendarEvent, CalendarUser } from '~/utils/models/calendar';
+import { SHIFT_HOURS } from '~/utils/shift/shift';
+import NeedHelpVolunteerResumeCalendarHeader from '../need-help/NeedHelpVolunteerResumeCalendarHeader.vue';
+import { VuetifyCalendar } from '~/utils/calendar/vuetify-calendar';
 
 export default Vue.extend({
-  name: "OverMultiCalendar",
+  name: 'OverMultiCalendar',
   components: { NeedHelpVolunteerResumeCalendarHeader },
   model: {
-    prop: "startDate",
-    event: "change",
+    prop: 'startDate',
+    event: 'change',
   },
   props: {
     users: {
@@ -160,7 +161,7 @@ export default Vue.extend({
   },
   methods: {
     updateDate(date: Date) {
-      this.$emit("change", date);
+      this.$emit('change', date);
     },
     retrieveVolunteer(id: number): CalendarUser | undefined {
       return this.users.find((volunteer) => volunteer.id === id);
@@ -202,11 +203,11 @@ export default Vue.extend({
       }));
     },
     previousDay() {
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.prev();
     },
     nextDay() {
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.next();
     },
   },

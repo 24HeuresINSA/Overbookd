@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Ft, FtCreation } from "~/utils/models/ft";
+import Vue from 'vue';
+import { Ft, FtCreation } from '~/utils/models/ft';
 
 export default Vue.extend({
-  name: "NewFtCard",
+  name: 'NewFtCard',
   props: {
     faId: {
       type: Number,
@@ -24,7 +24,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    ftName: "",
+    ftName: '',
   }),
   computed: {
     mFT(): Ft {
@@ -42,7 +42,7 @@ export default Vue.extend({
       await this.$accessor.ft.createFT(blankFT);
       if (!this.mFT?.id) return;
 
-      this.$emit("close-dialog");
+      this.$emit('close-dialog');
       this.$router.push({ path: `/ft/${this.mFT.id}` });
     },
   },

@@ -1,17 +1,17 @@
-import { actionTree, mutationTree, getterTree } from "typed-vuex";
+import { actionTree, mutationTree, getterTree } from 'typed-vuex';
 import {
   IProvidePeriod,
   ONE_HOUR_IN_MS,
   QUARTER_IN_MS,
-} from "@overbookd/period";
-import { SlugifyService } from "~/domain/common/slugify.service";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
-import { Volunteer } from "~/utils/models/needHelp";
-import { castPeriod } from "~/utils/models/period";
-import { Team } from "~/utils/models/team";
-import { DisplayedUser, castVolunteerTaskWithDate } from "~/utils/models/user";
-import { HttpStringified } from "~/utils/types/http";
+} from '@overbookd/period';
+import { SlugifyService } from '~/domain/common/slugify.service';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { safeCall } from '~/utils/api/calls';
+import { Volunteer } from '~/utils/models/needHelp';
+import { castPeriod } from '~/utils/models/period';
+import { Team } from '~/utils/models/team';
+import { DisplayedUser, castVolunteerTaskWithDate } from '~/utils/models/user';
+import { HttpStringified } from '~/utils/types/http';
 
 interface NeedHelpState {
   volunteers: Volunteer[];
@@ -40,7 +40,7 @@ export const state = (): NeedHelpState => ({
   volunteers: [],
   start: defaultPeriod().start,
   end: defaultPeriod().end,
-  search: "",
+  search: '',
   teams: [],
 });
 
@@ -85,22 +85,22 @@ export const actions = actionTree(
       );
       if (!res) return;
       const volunteers = res.data.map(castVolunteerWithDate);
-      commit("SET_VOLUNTEERS", volunteers);
+      commit('SET_VOLUNTEERS', volunteers);
     },
     updatePeriod({ commit, dispatch }, { start, end }: IProvidePeriod) {
-      commit("SET_START", start);
-      commit("SET_END", end);
-      dispatch("fetchVolunteers");
+      commit('SET_START', start);
+      commit('SET_END', end);
+      dispatch('fetchVolunteers');
     },
     updateSearch({ commit }, search: string | null) {
-      commit("SET_SEARCH", search ?? "");
+      commit('SET_SEARCH', search ?? '');
     },
     updateTeams({ commit }, teams: Team[]) {
-      commit("SET_TEAMS", teams);
+      commit('SET_TEAMS', teams);
     },
     resetToDefaultPeriod({ dispatch }) {
       const period = defaultPeriod();
-      dispatch("updatePeriod", period);
+      dispatch('updatePeriod', period);
     },
   }
 );

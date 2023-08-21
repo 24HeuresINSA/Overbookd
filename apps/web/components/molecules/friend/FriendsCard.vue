@@ -44,17 +44,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SearchFriend from "~/components/atoms/field/search/SearchFriend.vue";
-import { User } from "~/utils/models/user";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import Vue from 'vue';
+import SearchFriend from '~/components/atoms/field/search/SearchFriend.vue';
+import { User } from '~/utils/models/user';
+import { formatUserNameWithNickname } from '~/utils/user/userUtils';
 
 interface FriendsCardData {
   newFriend: User;
 }
 
 export default Vue.extend({
-  name: "FriendsCard",
+  name: 'FriendsCard',
   components: {
     SearchFriend,
   },
@@ -62,8 +62,8 @@ export default Vue.extend({
     return {
       newFriend: {
         id: 0,
-        firstname: "",
-        lastname: "",
+        firstname: '',
+        lastname: '',
       },
     };
   },
@@ -84,15 +84,15 @@ export default Vue.extend({
       if (+this.me.id === this.newFriend.id) {
         // asked himself to be friend
         window.open(
-          "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690"
+          'https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690'
         );
         return;
       }
       this.$accessor.user.addFriend(this.newFriend);
       this.newFriend = {
         id: 0,
-        firstname: "",
-        lastname: "",
+        firstname: '',
+        lastname: '',
       };
     },
     displayFriend(friend: User): string {

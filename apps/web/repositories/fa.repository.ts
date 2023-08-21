@@ -1,4 +1,4 @@
-import { NuxtAxiosInstance } from "@nuxtjs/axios";
+import { NuxtAxiosInstance } from '@nuxtjs/axios';
 import {
   Collaborator,
   CreateFa,
@@ -15,22 +15,22 @@ import {
   PublicAnimation,
   PublicAnimationCreation,
   PublicAnimationWithFa,
-} from "~/utils/models/fa";
-import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
+} from '~/utils/models/fa';
+import { FeedbackCreation, SavedFeedback } from '~/utils/models/feedback';
 import {
   GearRequest,
   GearRequestCreation,
   GearRequestUpdate,
   GearRequestWithDrive,
   StoredGearRequest,
-} from "~/utils/models/gearRequests";
-import { StatsPayload } from "~/utils/models/stats";
-import { HttpStringified } from "~/utils/types/http";
+} from '~/utils/models/gearRequests';
+import { StatsPayload } from '~/utils/models/stats';
+import { HttpStringified } from '~/utils/types/http';
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class FaRepository {
-  private static readonly basePath = "fa";
+  private static readonly basePath = 'fa';
 
   static getAllFas(context: Context, search?: SearchFa) {
     return context.$axios.get<HttpStringified<FaSimplified>[]>(this.basePath, {
@@ -167,14 +167,14 @@ export class FaRepository {
     animationId: number,
     gearRequestCreationForm: GearRequestCreation
   ) {
-    return context.$axios.post<HttpStringified<StoredGearRequest<"FA">>>(
+    return context.$axios.post<HttpStringified<StoredGearRequest<'FA'>>>(
       `${this.basePath}/${animationId}/gear-requests`,
       gearRequestCreationForm
     );
   }
 
   static getGearRequests(context: Context, animationId: number) {
-    return context.$axios.get<HttpStringified<StoredGearRequest<"FA">>[]>(
+    return context.$axios.get<HttpStringified<StoredGearRequest<'FA'>>[]>(
       `${this.basePath}/${animationId}/gear-requests`
     );
   }
@@ -197,7 +197,7 @@ export class FaRepository {
     rentalPeriodId: number,
     gearRequestUpdateForm: GearRequestUpdate
   ) {
-    return context.$axios.patch<GearRequest<"FA">>(
+    return context.$axios.patch<GearRequest<'FA'>>(
       `${this.basePath}/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}`,
       gearRequestUpdateForm
     );
@@ -208,7 +208,7 @@ export class FaRepository {
     publicAnimation: PublicAnimationCreation
   ) {
     return context.$axios.post<HttpStringified<PublicAnimation>>(
-      `public-animation`,
+      'public-animation',
       publicAnimation
     );
   }
@@ -230,21 +230,21 @@ export class FaRepository {
 
   static getAllPublicAnimations(context: Context) {
     return context.$axios.get<HttpStringified<PublicAnimationWithFa[]>>(
-      `public-animation`
+      'public-animation'
     );
   }
 
   static validateGearRequest(
     context: Context,
     animationId: number,
-    gearRequest: GearRequestWithDrive<"FA" | "FT">
+    gearRequest: GearRequestWithDrive<'FA' | 'FT'>
   ) {
     const {
       gear: { id: gearId },
       rentalPeriod: { id: rentalPeriodId },
       drive,
     } = gearRequest;
-    return context.$axios.patch<GearRequestWithDrive<"FA">>(
+    return context.$axios.patch<GearRequestWithDrive<'FA'>>(
       `${this.basePath}/${animationId}/gear-requests/${gearId}/rental-period/${rentalPeriodId}/approve`,
       { drive }
     );

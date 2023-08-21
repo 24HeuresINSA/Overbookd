@@ -45,12 +45,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
+import Vue from 'vue';
+import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import { AvailableTimeSpan } from '~/utils/models/ftTimeSpan';
 
 export default Vue.extend({
-  name: "TimeSpanResume",
+  name: 'TimeSpanResume',
   components: { TeamChip },
   props: {
     timeSpan: {
@@ -75,7 +75,7 @@ export default Vue.extend({
   },
   methods: {
     openFtInNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`, "_blank");
+      window.open(`/ft/${ftId}`, '_blank');
     },
     teamSelectShortcut() {
       if (this.timeSpan.requestedTeams.length !== 1) return;
@@ -84,7 +84,7 @@ export default Vue.extend({
       this.selectTeam(team);
     },
     selectTeam(teamCode: string) {
-      this.$emit("selected-team", teamCode);
+      this.$emit('selected-team', teamCode);
     },
   },
 });

@@ -63,24 +63,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { isTaskValidatedBy } from "~/utils/festival-event/ftUtils";
+import Vue from 'vue';
+import VolunteerRequestChip from '~/components/atoms/chip/VolunteerRequestChip.vue';
+import { formatDateWithMinutes } from '~/utils/date/dateUtils';
+import { isTaskValidatedBy } from '~/utils/festival-event/ftUtils';
 import {
   SortableTimeWindowHeader,
   ftTimeWindowsSorts,
-} from "~/utils/functions/timeWindow";
+} from '~/utils/functions/timeWindow';
 import {
   Ft,
   FtTeamRequest,
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-} from "~/utils/models/ft";
+} from '~/utils/models/ft';
 
 export default Vue.extend({
-  name: "FtTimeWindowTable",
+  name: 'FtTimeWindowTable',
   components: { VolunteerRequestChip },
   props: {
     disabled: {
@@ -90,12 +90,12 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Date de début", value: "startDate" },
-      { text: "Date de fin", value: "endDate" },
-      { text: "Découpage", value: "sliceTime", sortable: false },
-      { text: "Bénévoles Requis", value: "userRequests", sortable: false },
-      { text: "Equipes Requises", value: "teamRequests", sortable: false },
-      { text: "Action", value: "action", sortable: false },
+      { text: 'Date de début', value: 'startDate' },
+      { text: 'Date de fin', value: 'endDate' },
+      { text: 'Découpage', value: 'sliceTime', sortable: false },
+      { text: 'Bénévoles Requis', value: 'userRequests', sortable: false },
+      { text: 'Equipes Requises', value: 'teamRequests', sortable: false },
+      { text: 'Action', value: 'action', sortable: false },
     ],
   }),
   computed: {
@@ -109,7 +109,7 @@ export default Vue.extend({
       }));
     },
     shouldDisplayVolunteerEdition(): boolean {
-      return !isTaskValidatedBy(this.mFT.reviews, "humain");
+      return !isTaskValidatedBy(this.mFT.reviews, 'humain');
     },
   },
   methods: {
@@ -122,16 +122,16 @@ export default Vue.extend({
     floatToHour(float: number): string {
       const hours = Math.floor(float);
       const minutes = Math.round((float - hours) * 60);
-      return `${hours}h${minutes ? minutes : ""}`;
+      return `${hours}h${minutes ? minutes : ''}`;
     },
     editTimeWindow(timeWindow: FtTimeWindow) {
-      this.$emit("update-time", timeWindow);
+      this.$emit('update-time', timeWindow);
     },
     editVolunteer(timeWindow: FtTimeWindow) {
-      this.$emit("update-volunteer", timeWindow);
+      this.$emit('update-volunteer', timeWindow);
     },
     deleteTimeWindow(timeWindow: FtTimeWindow) {
-      this.$emit("delete", timeWindow);
+      this.$emit('delete', timeWindow);
     },
     deleteUserRequest(timeWindow: FtTimeWindow, userRequest: FtUserRequest) {
       this.$accessor.ft.deleteUserRequest({ timeWindow, userRequest });
@@ -147,7 +147,7 @@ export default Vue.extend({
       sortsBy: SortableTimeWindowHeader[],
       sortsDesc: boolean[]
     ) {
-      const sortBy = sortsBy.at(0) ?? "startDate";
+      const sortBy = sortsBy.at(0) ?? 'startDate';
       const sortFnc = ftTimeWindowsSorts.get(sortBy);
 
       if (!sortFnc) return timeWindows;

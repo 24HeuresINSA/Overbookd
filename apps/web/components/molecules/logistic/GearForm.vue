@@ -46,11 +46,11 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { GearForm } from "~/store/catalog";
-import { Category, Gear } from "~/utils/models/catalog.model";
-import { InputRulesData, minLength } from "~/utils/rules/inputRules";
-import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
+import Vue from 'vue';
+import { GearForm } from '~/store/catalog';
+import { Category, Gear } from '~/utils/models/catalog.model';
+import { InputRulesData, minLength } from '~/utils/rules/inputRules';
+import SearchCategoryVue from '../../atoms/field/search/SearchCategory.vue';
 
 interface GearFormData extends InputRulesData {
   name: string;
@@ -62,13 +62,13 @@ interface GearFormData extends InputRulesData {
 const nameMinLength = 3;
 
 export default Vue.extend({
-  name: "GearForm",
+  name: 'GearForm',
   components: { SearchCategoryVue },
   props: {
     gear: {
       type: Object,
       default: () => ({
-        name: "",
+        name: '',
         category: undefined,
         isPonctualUsage: false,
         isConsumable: false,
@@ -114,11 +114,11 @@ export default Vue.extend({
 
       await action;
       this.closeDialog();
-      this.name = "";
+      this.name = '';
       this.category = undefined;
     },
     closeDialog(): void {
-      this.$emit("close-dialog");
+      this.$emit('close-dialog');
     },
     updatePonctualUsage(ponctualUsage: boolean | null): void {
       this.isPonctualUsage = ponctualUsage ?? false;

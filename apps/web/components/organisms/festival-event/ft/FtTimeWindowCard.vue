@@ -52,33 +52,33 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FtTimeWindowForm from "~/components/molecules/festival-event/timeWindow/FtTimeWindowForm.vue";
-import FtTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FtTimeWindowTable.vue";
-import FtVolunteerRequirementForm from "~/components/molecules/festival-event/timeWindow/FtVolunteerRequirementForm.vue";
-import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import ConfirmationMessage from '~/components/atoms/card/ConfirmationMessage.vue';
+import FtTimeWindowForm from '~/components/molecules/festival-event/timeWindow/FtTimeWindowForm.vue';
+import FtTimeWindowTable from '~/components/molecules/festival-event/timeWindow/FtTimeWindowTable.vue';
+import FtVolunteerRequirementForm from '~/components/molecules/festival-event/timeWindow/FtVolunteerRequirementForm.vue';
+import FestivalEventCalendar from '~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFTValidationStatusWithMultipleTeams,
   hasAllFTValidations,
   hasAtLeastOneFTValidation,
-} from "~/utils/festival-event/ftUtils";
-import { Ft, FtCardType, FtTimeWindow } from "~/utils/models/ft";
+} from '~/utils/festival-event/ftUtils';
+import { Ft, FtCardType, FtTimeWindow } from '~/utils/models/ft';
 
 enum ConfirmationType {
-  ADD = "Ajout",
-  UPDATE = "Modification",
-  DELETE = "Suppression",
+  ADD = 'Ajout',
+  UPDATE = 'Modification',
+  DELETE = 'Suppression',
 }
 
 interface ConfirmationDialogData {
-  title: String;
-  text: String;
+  title: string;
+  text: string;
 }
 
 export default Vue.extend({
-  name: "FtTimeWindowCard",
+  name: 'FtTimeWindowCard',
   components: {
     FtTimeWindowTable,
     FestivalEventCalendar,
@@ -88,7 +88,7 @@ export default Vue.extend({
     ConfirmationMessage,
   },
   data: () => ({
-    owners: ["humain", "matos"],
+    owners: ['humain', 'matos'],
     cardType: FtCardType.TIME_WINDOW,
 
     isAddDialogOpen: false,
@@ -121,24 +121,24 @@ export default Vue.extend({
     },
     confirmationDialogData(): ConfirmationDialogData {
       let data: ConfirmationDialogData = {
-        title: "",
-        text: "",
+        title: '',
+        text: '',
       };
       switch (this.confirmationType) {
         case ConfirmationType.ADD:
-          data.title = "Ajouter un créneau";
-          data.text = "Tu es sûr de vouloir ajouter ce créneau ?";
+          data.title = 'Ajouter un créneau';
+          data.text = 'Tu es sûr de vouloir ajouter ce créneau ?';
           break;
         case ConfirmationType.UPDATE:
-          data.title = "Modifier un créneau";
-          data.text = "Tu es sûr de vouloir modifier ce créneau ?";
+          data.title = 'Modifier un créneau';
+          data.text = 'Tu es sûr de vouloir modifier ce créneau ?';
           break;
         case ConfirmationType.DELETE:
-          data.title = "Supprimer un créneau";
-          data.text = "Tu es sûr de vouloir supprimer ce créneau ?";
+          data.title = 'Supprimer un créneau';
+          data.text = 'Tu es sûr de vouloir supprimer ce créneau ?';
           break;
       }
-      data.text += " Cela annulera les validations en cours.";
+      data.text += ' Cela annulera les validations en cours.';
       return data;
     },
   },

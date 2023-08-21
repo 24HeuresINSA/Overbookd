@@ -10,9 +10,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 export default Vue.extend({
-  name: "SnackNotification",
+  name: 'SnackNotification',
   props: {
     setTimeout: {
       type: Number,
@@ -23,7 +23,7 @@ export default Vue.extend({
     setMessage: {
       type: String,
       default: () => {
-        return "";
+        return '';
       },
     },
     setId: {
@@ -52,7 +52,7 @@ export default Vue.extend({
     },
     toggle: function (val) {
       if (!val) {
-        this.$store.dispatch("notif/popNotification", this.setId);
+        this.$store.dispatch('notif/popNotification', this.setId);
         this.$accessor.notif.popNotification(this.setId);
       }
     },

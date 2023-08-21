@@ -39,20 +39,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType } from "~/utils/models/fa";
-import { isNumber, min } from "~/utils/rules/inputRules";
+} from '~/utils/festival-event/faUtils';
+import { Fa, FaCardType } from '~/utils/models/fa';
+import { isNumber, min } from '~/utils/rules/inputRules';
 
 export default Vue.extend({
-  name: "SecurityCard",
+  name: 'SecurityCard',
   components: { CardErrorList },
   data: () => ({
-    owner: "secu",
+    owner: 'secu',
     cardType: FaCardType.SECURITY,
 
     isPassRequired: false,

@@ -16,18 +16,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Duration } from "~/utils/date/duration";
+import Vue from 'vue';
+import { Duration } from '~/utils/date/duration';
 import {
   TaskCategories,
   TaskCategory,
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
-} from "~/utils/models/ftTimeSpan";
-import { VolunteerAssignmentStat } from "~/utils/models/user";
+} from '~/utils/models/ftTimeSpan';
+import { VolunteerAssignmentStat } from '~/utils/models/user';
 
 export default Vue.extend({
-  name: "AssignmentUserStats",
+  name: 'AssignmentUserStats',
   props: {
     stats: {
       type: Array as () => VolunteerAssignmentStat[],
@@ -50,7 +50,7 @@ export default Vue.extend({
       return TaskCategoryEmojiMap.get(category) ?? TaskCategoryEmojis.AUCUNE;
     },
     getStatCategoryName(category: TaskCategory | null): string {
-      return category?.toLowerCase() ?? "indeterminé";
+      return category?.toLowerCase() ?? 'indeterminé';
     },
     getDisplayedDuration(duration: number): string {
       return Duration.fromMilliseconds(duration).toString();

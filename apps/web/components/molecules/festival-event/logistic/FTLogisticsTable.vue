@@ -21,14 +21,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { uniqueGearReducer } from "~/utils/functions/gearRequest";
-import { Gear } from "~/utils/models/catalog.model";
-import { Header } from "~/utils/models/dataTable";
-import { GearRequest } from "~/utils/models/gearRequests";
+import Vue from 'vue';
+import { uniqueGearReducer } from '~/utils/functions/gearRequest';
+import { Gear } from '~/utils/models/catalog.model';
+import { Header } from '~/utils/models/dataTable';
+import { GearRequest } from '~/utils/models/gearRequests';
 
 export default Vue.extend({
-  name: "FTLogisticsTable",
+  name: 'FTLogisticsTable',
   props: {
     isDisabled: {
       type: Boolean,
@@ -37,22 +37,22 @@ export default Vue.extend({
   },
   computed: {
     headers(): Header[] {
-      const actionHeader = { text: "Action", value: "action" };
-      const driveHeader = { text: "Lieu de retrait", value: "drive" };
+      const actionHeader = { text: 'Action', value: 'action' };
+      const driveHeader = { text: 'Lieu de retrait', value: 'drive' };
       const commonHeaders = [
-        { text: "Nom", value: "name" },
-        { text: "Quantité", value: "quantity" },
+        { text: 'Nom', value: 'name' },
+        { text: 'Quantité', value: 'quantity' },
       ];
       return this.isDisabled
         ? [...commonHeaders, driveHeader]
         : [...commonHeaders, actionHeader];
     },
-    gearRequests(): GearRequest<"FT">[] {
-      return this.$accessor.ft.gearRequests.reduce<GearRequest<"FT">[]>(
+    gearRequests(): GearRequest<'FT'>[] {
+      return this.$accessor.ft.gearRequests.reduce<GearRequest<'FT'>[]>(
         (
-          gearRequests: GearRequest<"FT">[],
-          gearRequest: GearRequest<"FT">
-        ): GearRequest<"FT">[] => uniqueGearReducer(gearRequests, gearRequest),
+          gearRequests: GearRequest<'FT'>[],
+          gearRequest: GearRequest<'FT'>
+        ): GearRequest<'FT'>[] => uniqueGearReducer(gearRequests, gearRequest),
         []
       );
     },

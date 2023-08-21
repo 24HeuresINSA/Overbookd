@@ -32,28 +32,28 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
-import FALogisticsTable from "~/components/molecules/festival-event/logistic/FALogisticsTable.vue";
+import Vue from 'vue';
+import SearchGear from '~/components/atoms/field/search/SearchGear.vue';
+import FALogisticsTable from '~/components/molecules/festival-event/logistic/FALogisticsTable.vue';
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Gear } from "~/utils/models/catalog.model";
-import { Fa } from "~/utils/models/fa";
-import { isNumber, min } from "~/utils/rules/inputRules";
+} from '~/utils/festival-event/faUtils';
+import { Gear } from '~/utils/models/catalog.model';
+import { Fa } from '~/utils/models/fa';
+import { isNumber, min } from '~/utils/rules/inputRules';
 
 export default Vue.extend({
-  name: "FaLogisticsCard",
+  name: 'FaLogisticsCard',
   components: { FALogisticsTable, SearchGear },
   props: {
     title: {
       type: String,
-      default: () => "",
+      default: () => '',
     },
     owner: {
       type: String,
-      default: () => "",
+      default: () => '',
     },
     ponctualUsageGear: {
       type: Boolean,
@@ -62,7 +62,7 @@ export default Vue.extend({
   },
   data: () => ({
     gear: undefined as Gear | undefined,
-    quantity: "1",
+    quantity: '1',
     rules: {
       number: isNumber,
       min: min(1),

@@ -54,19 +54,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import Vue from 'vue';
+import CardErrorList from '~/components/molecules/festival-event/validation/CardErrorList.vue';
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Collaborator, Fa, FaCardType } from "~/utils/models/fa";
+} from '~/utils/festival-event/faUtils';
+import { Collaborator, Fa, FaCardType } from '~/utils/models/fa';
+
+type VuetifyRule = (value: null | string) => boolean | string
 
 export default Vue.extend({
-  name: "CollaboratorCard",
+  name: 'CollaboratorCard',
   components: { CardErrorList },
   data: () => ({
-    owner: "humain",
+    owner: 'humain',
     cardType: FaCardType.COLLABORATOR,
     isCollaboratorRequired: false,
   }),
@@ -77,9 +79,9 @@ export default Vue.extend({
     collaborator(): Collaborator {
       if (!this.mFA.collaborator) {
         return {
-          firstname: "",
-          lastname: "",
-          phone: "",
+          firstname: '',
+          lastname: '',
+          phone: '',
         };
       }
       return this.mFA.collaborator;
@@ -90,18 +92,18 @@ export default Vue.extend({
     validationStatus(): string {
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
-    rulePhone(): any {
+    rulePhone(): VuetifyRule[] {
       return [
-        (v: any) =>
-          new RegExp(`^$|0[1-7]{1}[0-9]{8}$`).test(v) ||
-          `ce numéro de téléphone n'est pas valide`,
+        (v) =>
+          new RegExp('^$|0[1-7]{1}[0-9]{8}$').test(v?.toString() || '') ||
+          'ce numéro de téléphone n\'est pas valide',
       ];
     },
-    ruleEmail(): any {
+    ruleEmail(): VuetifyRule[] {
       return [
-        (v: any) =>
-          new RegExp(`^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
-          `cet email n'est pas valide`,
+        (v) =>
+          new RegExp('^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$').test(v?.toString() || '') ||
+          'cet email n\'est pas valide',
       ];
     },
   },

@@ -12,7 +12,7 @@ import {
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {
-    super(`Category #${id} doesn\'t exist`);
+    super(`Category #${id} doesn't exist`);
   }
 }
 
@@ -32,7 +32,7 @@ export class CategoryService {
     @Inject('TEAM_REPOSITORY')
     private readonly teamRepository: TeamRepository,
     private readonly slugifyService: SlugifyService,
-  ) {}
+  ) { }
 
   async create({ name, owner, parent }: CategoryForm): Promise<Category> {
     const { path, ownerTeam } = await this.buildOwnerAndPath({

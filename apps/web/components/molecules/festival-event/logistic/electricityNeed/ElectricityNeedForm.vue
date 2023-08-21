@@ -46,13 +46,13 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 import {
   ElectricityType,
   ElectricityTypeWithLabel,
   electricityTypeLabels,
-} from "~/utils/models/fa";
-import { isNumber, min } from "~/utils/rules/inputRules";
+} from '~/utils/models/fa';
+import { isNumber, min } from '~/utils/rules/inputRules';
 
 interface ElectricityNeedData {
   electricityType?: ElectricityType;
@@ -67,10 +67,10 @@ interface ElectricityNeedData {
 }
 
 export default Vue.extend({
-  name: "ElectricityNeedForm",
+  name: 'ElectricityNeedForm',
   model: {
-    prop: "electricityNeed",
-    event: "change",
+    prop: 'electricityNeed',
+    event: 'change',
   },
   props: {
     electricityNeed: {
@@ -110,7 +110,7 @@ export default Vue.extend({
       );
     },
     statusFormLabel(): string {
-      return this.electricityNeed !== null ? "Modifier" : "Ajouter";
+      return this.electricityNeed !== null ? 'Modifier' : 'Ajouter';
     },
   },
   watch: {
@@ -140,7 +140,7 @@ export default Vue.extend({
     confirmElectricityNeed() {
       if (this.isFormInvalid) {
         return this.$accessor.notif.pushNotification({
-          message: "❌ Tu dois compléter tous les champs avec une * !",
+          message: '❌ Tu dois compléter tous les champs avec une * !',
         });
       }
 
@@ -153,8 +153,8 @@ export default Vue.extend({
         comment: this.comment,
       };
 
-      this.$emit("change", electricityNeed);
-      this.$emit("close-dialog");
+      this.$emit('change', electricityNeed);
+      this.$emit('close-dialog');
       this.clearLocalVariable();
     },
     showErrorMessage(message: string) {

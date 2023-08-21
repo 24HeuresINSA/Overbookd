@@ -1,7 +1,7 @@
-import { mutationTree, actionTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
-import { EventGearRequest } from "~/utils/models/gearRequests";
+import { mutationTree, actionTree } from 'typed-vuex';
+import { RepoFactory } from '~/repositories/repo-factory';
+import { safeCall } from '~/utils/api/calls';
+import { EventGearRequest } from '~/utils/models/gearRequests';
 
 const gearRequestRepository = RepoFactory.GearRequestRepository;
 
@@ -27,12 +27,12 @@ export const actions = actionTree(
         this,
         gearRequestRepository.getGearRequests(this),
         {
-          successMessage: "Demandes de matos chargees ✅",
-          errorMessage: "Impossible de charger les demandes de matos ❌",
+          successMessage: 'Demandes de matos chargees ✅',
+          errorMessage: 'Impossible de charger les demandes de matos ❌',
         }
       );
       if (!res) return;
-      commit("SET_GEAR_REQUESTS", res.data);
+      commit('SET_GEAR_REQUESTS', res.data);
     },
   }
 );

@@ -1,21 +1,21 @@
-import { AuthRepository } from "~/repositories/auth.repository";
-import { TransactionRepository } from "~/repositories/transaction.repository";
-import { AssignmentRepository } from "./assignment.repository";
-import { CategoryRepository, GearsRepository } from "./catalog.repository";
-import { CharismaPeriodRepository } from "./charisma-period.repository";
-import { FaRepository } from "./fa.repository";
-import { FtRepository } from "./ft.repository";
-import { GearRequestRepository } from "./gear-gequest.repository";
-import { InventoryRepository } from "./inventory.repository";
-import { PermissionRepository } from "./permission.repository";
-import { SignaLocationRepository } from "./signa-location.repository";
-import { TeamRepository } from "./team.repository";
-import { UserRepository } from "./user.repository";
-import { OrgaNeedsRepository } from "./orga-needs.repository";
-import { VolunteerAvailabilityRepository } from "./volunteer-availability.repository";
-import { NeedHelpRepository } from "./need-help.repository";
-import { TimelineRepository } from "./timeline.repository";
-import { ConfigurationRepository } from "./configuration.repository";
+import { AuthRepository } from '~/repositories/auth.repository';
+import { TransactionRepository } from '~/repositories/transaction.repository';
+import { AssignmentRepository } from './assignment.repository';
+import { CategoryRepository, GearsRepository } from './catalog.repository';
+import { CharismaPeriodRepository } from './charisma-period.repository';
+import { FaRepository } from './fa.repository';
+import { FtRepository } from './ft.repository';
+import { GearRequestRepository } from './gear-gequest.repository';
+import { InventoryRepository } from './inventory.repository';
+import { PermissionRepository } from './permission.repository';
+import { SignaLocationRepository } from './signa-location.repository';
+import { TeamRepository } from './team.repository';
+import { UserRepository } from './user.repository';
+import { OrgaNeedsRepository } from './orga-needs.repository';
+import { VolunteerAvailabilityRepository } from './volunteer-availability.repository';
+import { NeedHelpRepository } from './need-help.repository';
+import { TimelineRepository } from './timeline.repository';
+import { ConfigurationRepository } from './configuration.repository';
 
 const repositories = {
   user: UserRepository,

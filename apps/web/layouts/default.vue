@@ -141,37 +141,37 @@
 </template>
 
 <script>
-import { pages } from "~/utils/pages/pagesList.ts";
-import { version } from "../package.json";
+import { pages } from '~/utils/pages/pagesList.ts';
+import { version } from '../package.json';
 
 const AUTHORS = [
-  "Hamza - Cookie 🍪",
-  "Tit - Goelise 🦀",
-  "Tibo - Bigouu 🍊",
-  "Christophe - piStoph 🍺",
-  "Hugo - Cashless 💰",
-  "Tom - Nimbus 🧹",
-  "Paul - Nuts 💥",
-  "Thomas - Ginny 💡",
-  "Thibaut - Moule 🍑",
-  "Antoine - Gyneco 🩺",
-  "Damien - Hublot 🖐",
-  "Léo - Shagasse 😼",
-  "Léon - Trotski 🦁",
-  "Mathieu - Mussex 🐁",
-  "Lucas - Conforama 🏪",
-  "Adèle - Franck 🍷",
+  'Hamza - Cookie 🍪',
+  'Tit - Goelise 🦀',
+  'Tibo - Bigouu 🍊',
+  'Christophe - piStoph 🍺',
+  'Hugo - Cashless 💰',
+  'Tom - Nimbus 🧹',
+  'Paul - Nuts 💥',
+  'Thomas - Ginny 💡',
+  'Thibaut - Moule 🍑',
+  'Antoine - Gyneco 🩺',
+  'Damien - Hublot 🖐',
+  'Léo - Shagasse 😼',
+  'Léon - Trotski 🦁',
+  'Mathieu - Mussex 🐁',
+  'Lucas - Conforama 🏪',
+  'Adèle - Franck 🍷',
 ];
 
 export default {
-  middleware: "user",
+  middleware: 'user',
   data() {
     return {
       drawer: false,
       isWhiteMode: true, // let this set to true
       counter: 0,
       isJauneActive: false,
-      jauneStyle: "background-color: #FFD13C; color: #003C71",
+      jauneStyle: 'background-color: #FFD13C; color: #003C71',
       isDialogOpen: false,
       version,
       isSnackbarOpen: false,
@@ -181,13 +181,13 @@ export default {
       miniVariant: false,
       right: true,
       rightDrawer: false,
-      title: "Overbookd",
+      title: 'Overbookd',
       pages,
     };
   },
 
   head: () => ({
-    title: "Overbookd",
+    title: 'Overbookd',
   }),
 
   computed: {
@@ -200,11 +200,11 @@ export default {
     },
     logo() {
       if (this.isJauneActive) {
-        return "Ricard.png";
+        return 'Ricard.png';
       }
       return this.$vuetify.theme.dark
-        ? "overbookd_logo_blanc.png"
-        : "overbookd_logo_noir.png";
+        ? 'overbookd_logo_blanc.png'
+        : 'overbookd_logo_noir.png';
     },
 
     generateIssueTemplate() {
@@ -238,16 +238,16 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
       )}`;
     },
     isPreProd() {
-      return process.env.BASE_URL.includes("preprod");
+      return process.env.BASE_URL.includes('preprod');
     },
     isCetaitMieuxAvant() {
-      return process.env.BASE_URL.includes("cetaitmieuxavant");
+      return process.env.BASE_URL.includes('cetaitmieuxavant');
     },
   },
 
   mounted() {
-    let theme = localStorage["theme"];
-    if (theme === "false") theme = false;
+    let theme = localStorage['theme'];
+    if (theme === 'false') theme = false;
     this.$vuetify.theme.dark = theme || false;
   },
 
@@ -263,7 +263,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
 
     toggleTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      localStorage["theme"] = this.$vuetify.theme.dark;
+      localStorage['theme'] = this.$vuetify.theme.dark;
       this.$accessor.theme.toggleDarkTheme();
     },
 
@@ -271,8 +271,8 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
       this.counter++;
       if (this.counter > 24) {
         this.isJauneActive = true;
-        this.title = "RICARD - Pastis";
-        const audio = new Audio("audio/jaune.m4a");
+        this.title = 'RICARD - Pastis';
+        const audio = new Audio('audio/jaune.m4a');
         await audio.play();
       }
     },
@@ -280,7 +280,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     async logout() {
       await this.$auth.logout();
       await this.$router.push({
-        path: "/login",
+        path: '/login',
       });
     },
     copyToClipboard(text) {

@@ -28,14 +28,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { SortableTimeWindowHeader } from "~/utils/functions/timeWindow";
-import { faTimeWindowsSorts } from "~/utils/functions/timeWindow";
-import { Fa, FaTimeWindowWithType } from "~/utils/models/fa";
+import Vue from 'vue';
+import { formatDateWithMinutes } from '~/utils/date/dateUtils';
+import { SortableTimeWindowHeader } from '~/utils/functions/timeWindow';
+import { faTimeWindowsSorts } from '~/utils/functions/timeWindow';
+import { Fa, FaTimeWindowWithType } from '~/utils/models/fa';
 
 export default Vue.extend({
-  name: "FaTimeWindowTable",
+  name: 'FaTimeWindowTable',
   props: {
     timeWindows: {
       type: Array as () => FaTimeWindowWithType[],
@@ -48,10 +48,10 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Type", value: "type" },
-      { text: "Date de début", value: "startDate" },
-      { text: "Date de fin", value: "endDate" },
-      { text: "Action", value: "action", sortable: false },
+      { text: 'Type', value: 'type' },
+      { text: 'Date de début', value: 'startDate' },
+      { text: 'Date de fin', value: 'endDate' },
+      { text: 'Action', value: 'action', sortable: false },
     ],
   }),
   computed: {
@@ -64,17 +64,17 @@ export default Vue.extend({
       return formatDateWithMinutes(date);
     },
     updateTimeWindow(timeWindow: FaTimeWindowWithType) {
-      this.$emit("update", timeWindow);
+      this.$emit('update', timeWindow);
     },
     deleteTimeWindow(timeWindow: FaTimeWindowWithType) {
-      this.$emit("delete", timeWindow);
+      this.$emit('delete', timeWindow);
     },
     sortTimeWindows(
       timeWindows: FaTimeWindowWithType[],
       sortsBy: SortableTimeWindowHeader[],
       sortsDesc: boolean[]
     ) {
-      const sortBy = sortsBy.at(0) ?? "startDate";
+      const sortBy = sortsBy.at(0) ?? 'startDate';
       const sortFnc = faTimeWindowsSorts.get(sortBy);
 
       if (!sortFnc) return timeWindows;

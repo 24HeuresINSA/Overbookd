@@ -13,19 +13,19 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { formatLocalDateTime, roundMinutes } from "~/utils/date/dateUtils";
+import Vue from 'vue';
+import { formatLocalDateTime, roundMinutes } from '~/utils/date/dateUtils';
 
 export default Vue.extend({
-  name: "DateTimeField",
+  name: 'DateTimeField',
   model: {
-    prop: "date",
-    event: "change",
+    prop: 'date',
+    event: 'change',
   },
   props: {
     label: {
       type: String,
-      default: "Date",
+      default: 'Date',
     },
     date: {
       type: Date,
@@ -41,7 +41,7 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    dateStringified: "",
+    dateStringified: '',
   }),
   watch: {
     date() {
@@ -54,10 +54,10 @@ export default Vue.extend({
   methods: {
     updateDate(date: string) {
       const roundedMinutes = roundMinutes(new Date(date), this.step);
-      this.$emit("change", roundedMinutes);
+      this.$emit('change', roundedMinutes);
     },
     stringifyDate(date?: Date | string): string {
-      if (!date) return "";
+      if (!date) return '';
       return formatLocalDateTime(new Date(date));
     },
   },

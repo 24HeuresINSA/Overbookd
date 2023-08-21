@@ -30,18 +30,18 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "ConfirmationMessage",
+  name: 'ConfirmationMessage',
   props: {
     confirmColor: {
       type: String,
-      default: () => "success",
+      default: () => 'success',
     },
     abortColor: {
       type: String,
-      default: () => "warning",
+      default: () => 'warning',
     },
   },
   data() {
@@ -52,11 +52,11 @@ export default Vue.extend({
 
   methods: {
     confirm() {
-      this.$emit("confirm");
-      this.$emit("close-dialog");
+      this.$emit('confirm');
+      this.$emit('close-dialog');
     },
     closeDialog() {
-      this.$emit("close-dialog");
+      this.$emit('close-dialog');
     },
   },
 });

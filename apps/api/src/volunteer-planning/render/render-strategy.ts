@@ -25,5 +25,5 @@ export class PlanningRenderStrategy {
 }
 
 export interface RenderStrategy {
-  render(tasks: Task[], volunteer?: Volunteer): Promise<any>;
+  render(tasks: Task[], volunteer?: Volunteer): Promise<unknown>;
 }

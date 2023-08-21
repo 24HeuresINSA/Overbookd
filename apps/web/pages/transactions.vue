@@ -30,12 +30,12 @@
 </template>
 
 <script>
-import { RepoFactory } from "~/repositories/repo-factory";
-import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
-import { safeCall } from "~/utils/api/calls";
+import { RepoFactory } from '~/repositories/repo-factory';
+import OverTransactions from '~/components/organisms/user/personnalAccount/OverTransactions.vue';
+import { safeCall } from '~/utils/api/calls';
 
 export default {
-  name: "Transactions",
+  name: 'Transactions',
   components: { OverTransactions },
   data: () => {
     return {
@@ -46,7 +46,7 @@ export default {
     };
   },
   head: () => ({
-    title: "Transactions",
+    title: 'Transactions',
   }),
 
   async beforeMount() {

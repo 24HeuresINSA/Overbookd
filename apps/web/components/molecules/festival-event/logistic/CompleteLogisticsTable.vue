@@ -17,20 +17,20 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { StoredGearRequest } from "~/utils/models/gearRequests";
+import Vue from 'vue';
+import { StoredGearRequest } from '~/utils/models/gearRequests';
 
 export default Vue.extend({
-  name: "CompleteLogisticsTable",
+  name: 'CompleteLogisticsTable',
   data: () => ({
     headers: [
-      { text: "Nom", value: "name" },
-      { text: "Quantité", value: "quantity" },
-      { text: "Lieu de retrait", value: "drive" },
+      { text: 'Nom', value: 'name' },
+      { text: 'Quantité', value: 'quantity' },
+      { text: 'Lieu de retrait', value: 'drive' },
     ],
   }),
   computed: {
-    gearRequests(): StoredGearRequest<"FA">[] {
+    gearRequests(): StoredGearRequest<'FA'>[] {
       return this.$accessor.fa.uniqueByGearGearRequests;
     },
   },

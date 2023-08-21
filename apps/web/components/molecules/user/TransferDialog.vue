@@ -30,13 +30,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapState } from "vuex";
-import { DialogState } from "~/store/dialog";
-import { UserState } from "~/store/user";
-import { Transfer } from "~/utils/models/transaction";
-import { CompleteUser } from "~/utils/models/user";
-import { TMapState } from "~/utils/types/store";
+import Vue from 'vue';
+import { Transfer } from '~/utils/models/transaction';
+import { CompleteUser, MyUserInformation } from '~/utils/models/user';
 
 type UserAutocompleteItem = {
   text?: string;
@@ -44,7 +40,7 @@ type UserAutocompleteItem = {
 };
 
 export default Vue.extend({
-  name: "TransferDialog",
+  name: 'TransferDialog',
 
   data: () => {
     return {
@@ -53,23 +49,25 @@ export default Vue.extend({
           username: undefined,
           id: 0,
         },
-        amount: "0",
-        reason: "",
+        amount: '0',
+        reason: '',
         isValid: false,
       },
     };
   },
   computed: {
-    ...mapState<any, TMapState<DialogState>>("dialog", {
-      type: (state: DialogState) => state.type,
-      open: (state: DialogState) => state.open,
-    }),
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state: UserState) => state.me,
-    }),
+    type(): string {
+      return this.$accessor.dialog.type
+    },
+    open(): boolean {
+      return this.$accessor.dialog.open
+    },
+    me(): MyUserInformation {
+      return this.$accessor.user.me
+    },
     toggled: {
       get: function (): boolean | unknown {
-        if (this.type == "transfer") {
+        if (this.type == 'transfer') {
           return this.open;
         }
         if (!this.open) {
@@ -79,7 +77,7 @@ export default Vue.extend({
       },
       set(val): void {
         if (!val) {
-          this.$store.dispatch("dialog/closeDialog");
+          this.$store.dispatch('dialog/closeDialog');
         }
       },
     },
@@ -104,24 +102,24 @@ export default Vue.extend({
     this.$accessor.user.fetchPersonnalAccountConsummers();
   },
   methods: {
-    async transferMoney(): Promise<any> {
+    async transferMoney(): Promise<void> {
       if (!this.transfer.isValid) {
         return;
       }
       this.toggled = false;
-      this.transfer.amount = this.transfer.amount.replace(",", ".");
+      this.transfer.amount = this.transfer.amount.replace(',', '.');
       // transaction to self...
       if (this.transfer.user.id == this.me.id) {
         this.$accessor.notif.pushNotification({
           message:
-            "Trouve toi des amis plutôt que de faire des virements a toi même...",
+            'Trouve toi des amis plutôt que de faire des virements a toi même...',
         });
         return;
       }
 
       if (
         +this.transfer.amount <= 0 ||
-        +this.transfer.amount.toString().split(".")[1]?.length > 2
+        +this.transfer.amount.toString().split('.')[1]?.length > 2
       ) {
         this.$accessor.notif.pushNotification({
           message: "C'est plus assomaker...",
@@ -138,12 +136,12 @@ export default Vue.extend({
             to: this.transfer.user.id,
           };
           await this.$accessor.transaction.addTransaction(newTransfer);
-          this.$emit("transaction", newTransfer.amount);
+          this.$emit('transaction', newTransfer.amount);
           //reset form data
           this.transfer = {
             user: { username: undefined, id: 0 },
-            amount: "0",
-            reason: "",
+            amount: '0',
+            reason: '',
             isValid: false,
           };
         } catch (e) {

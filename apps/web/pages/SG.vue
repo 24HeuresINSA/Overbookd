@@ -154,13 +154,13 @@
  * then enter how much each user has a stick next to his name in the paper. after that the SG press a save button
  * and every user that consumed get charged accordingly
  */
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import SgConfigForm from "~/components/organisms/user/personnalAccount/SgConfigForm.vue";
-import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
-import { RepoFactory } from "~/repositories/repo-factory";
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import SgConfigForm from '~/components/organisms/user/personnalAccount/SgConfigForm.vue';
+import { computeUnitPrice } from '~/domain/volunteer-consumption/drink-consumption';
+import { RepoFactory } from '~/repositories/repo-factory';
 
 export default {
-  name: "SG",
+  name: 'SG',
   components: { SnackNotificationContainer, SgConfigForm },
 
   data: () => {
@@ -172,35 +172,35 @@ export default {
       totalCPBalance: 0,
       settledStickPrice: 0.5,
 
-      mode: "cask", //default mode
+      mode: 'cask', //default mode
       isSwitchDialogOpen: false,
       isSgConfigDialogOpen: false,
       regex: {
-        int: new RegExp(`^\\d*$`),
-        float: new RegExp(`^\\d*(\\.\\d+)?$`),
+        int: new RegExp('^\\d*$'),
+        float: new RegExp('^\\d*(\\.\\d+)?$'),
       },
 
       feedbacks: {
         totalPrice: "Prix total n'est pas un nombre",
         settledStickPrice: "Prix du baton n'est pas un nombre",
-        noNewConsumption: "pas de nouvelle consomation ou de dépot",
-        wrongNewConsumption: `champs non valide pour l'utilisateur: `,
+        noNewConsumption: 'pas de nouvelle consomation ou de dépot',
+        wrongNewConsumption: 'champs non valide pour l\'utilisateur: ',
       },
       reasons: [],
 
       headers: [
-        { text: "Prénom", value: "firstname" },
-        { text: "Nom", value: "lastname" },
-        { text: "Surnom", value: "nickname" },
-        { text: "CP", value: "balance" },
-        { text: "Nouvelle conso", value: "newConsumption" },
-        { text: "Action", value: "action" },
+        { text: 'Prénom', value: 'firstname' },
+        { text: 'Nom', value: 'lastname' },
+        { text: 'Surnom', value: 'nickname' },
+        { text: 'CP', value: 'balance' },
+        { text: 'Nouvelle conso', value: 'newConsumption' },
+        { text: 'Action', value: 'action' },
       ],
     };
   },
 
   head: () => ({
-    title: "SG",
+    title: 'SG',
   }),
 
   computed: {
@@ -233,13 +233,13 @@ export default {
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
-      return [(v) => regex.test(v) || `Il faut mettre un nombre valide`];
+      return [(v) => regex.test(v) || 'Il faut mettre un nombre valide'];
     },
     isExpenseMode() {
-      return this.mode === "cask" || this.mode === "closet";
+      return this.mode === 'cask' || this.mode === 'closet';
     },
     isCask() {
-      return this.mode === "cask";
+      return this.mode === 'cask';
     },
     areInputsValid() {
       let res = true;
@@ -253,7 +253,7 @@ export default {
       }
 
       switch (this.mode) {
-        case "cask":
+        case 'cask':
           if (!this.isFloat(this.totalPrice)) {
             res = false;
             reason.push(this.feedbacks.totalPrice);
@@ -266,7 +266,7 @@ export default {
           });
           break;
 
-        case "closet":
+        case 'closet':
           if (!this.isFloat(this.settledStickPrice)) {
             res = false;
             reason.push(this.feedbacks.settledStickPrice);
@@ -279,7 +279,7 @@ export default {
           });
           break;
 
-        case "deposit":
+        case 'deposit':
           mUsers.forEach((user) => {
             if (!this.isFloat(user.newConsumption)) {
               res = false;
@@ -294,7 +294,7 @@ export default {
       };
     },
     sgConfig() {
-      return this.$accessor.configuration.get("sg");
+      return this.$accessor.configuration.get('sg');
     },
   },
 
@@ -305,7 +305,7 @@ export default {
   },
 
   async mounted() {
-    await this.$accessor.configuration.fetch("sg");
+    await this.$accessor.configuration.fetch('sg');
     await this.$accessor.user.fetchPersonnalAccountConsummers();
     this.users = this.consummers;
     this.ready = true;
@@ -333,8 +333,8 @@ export default {
           // mode depense (Baton)
           try {
             if (
-              user.newConsumption.includes(",") ||
-              user.newConsumption.includes(".")
+              user.newConsumption.includes(',') ||
+              user.newConsumption.includes('.')
             ) {
               isCorrect = false;
             }
@@ -359,21 +359,21 @@ export default {
       });
 
       if (!isCorrect) {
-        await this.$store.dispatch("notif/pushNotification", {
-          type: "error",
-          message: "Il faut mettre des nombres",
+        await this.$store.dispatch('notif/pushNotification', {
+          type: 'error',
+          message: 'Il faut mettre des nombres',
         });
         return;
       }
 
       let transactions = usersWithConsumptions.map((user) => {
         let transaction = {
-          type: "EXPENSE",
+          type: 'EXPENSE',
           from: -1,
           to: -1,
         };
         switch (this.mode) {
-          case "cask":
+          case 'cask':
             transaction.from = user.id;
             transaction.to = user.id;
             //cast to float
@@ -385,7 +385,7 @@ export default {
             user.balance -= transaction.amount;
             break;
 
-          case "closet":
+          case 'closet':
             transaction.from = user.id;
             transaction.to = user.id;
             transaction.amount = +(
@@ -396,12 +396,12 @@ export default {
             user.balance -= transaction.amount;
             break;
 
-          case "deposit":
-            transaction.type = "DEPOSIT";
+          case 'deposit':
+            transaction.type = 'DEPOSIT';
             transaction.to = user.id;
             transaction.from = user.id;
             transaction.amount = +user.newConsumption;
-            transaction.context = `Recharge de compte perso`;
+            transaction.context = 'Recharge de compte perso';
             this.totalCPBalance += transaction.amount;
             user.balance += transaction.amount;
             break;
@@ -413,16 +413,16 @@ export default {
         this,
         transactions
       );
-      await this.$store.dispatch("notif/pushNotification", {
-        type: "success",
-        message: "Operations confirmées 💰💰💰",
+      await this.$store.dispatch('notif/pushNotification', {
+        type: 'success',
+        message: 'Operations confirmées 💰💰💰',
       });
 
-      usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+      usersWithConsumptions.forEach((u) => (u.newConsumption = ''));
     },
     cleanInputs() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
-      usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+      usersWithConsumptions.forEach((u) => (u.newConsumption = ''));
       this.isSwitchDialogOpen = false;
     },
     openSgConfigForm() {

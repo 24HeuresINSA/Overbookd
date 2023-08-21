@@ -1,14 +1,14 @@
 import { Configuration } from '@overbookd/configuration';
 
 export interface ConfigurationValue {
-  value: any;
+  value: object | string | number | boolean;
 }
 
 export class ConfigurationValueRepresentation implements ConfigurationValue {
-  value: any;
+  value: object | string | number | boolean;
 }
 
 export class ConfigurationRepresentation implements Configuration {
   key: string;
-  value: any;
+  value: object | string | number | boolean;
 }

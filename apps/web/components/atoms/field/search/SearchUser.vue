@@ -21,24 +21,24 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { CompleteUserWithPermissions as User } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+import Vue from 'vue';
+import { CompleteUserWithPermissions as User } from '~/utils/models/user';
+import { formatUsername } from '~/utils/user/userUtils';
 
 interface SearchUserData {
   loading: boolean;
 }
 
 export default Vue.extend({
-  name: "SearchUser",
+  name: 'SearchUser',
   model: {
-    prop: "user",
-    event: "change",
+    prop: 'user',
+    event: 'change',
   },
   props: {
     label: {
       type: String,
-      default: "Chercher un utilisateur",
+      default: 'Chercher un utilisateur',
     },
     user: {
       type: Object as () => User | null,
@@ -73,7 +73,7 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(user: User | null) {
-      this.$emit("change", user);
+      this.$emit('change', user);
     },
     displayUsername(user: User): string {
       return formatUsername(user);

@@ -54,12 +54,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { SgConfig } from "~/utils/models/configuration";
-import { Configuration } from "@overbookd/configuration";
+import Vue from 'vue';
+import { SgConfig } from '~/utils/models/configuration';
+import { Configuration } from '@overbookd/configuration';
 
 export default Vue.extend({
-  name: "SgConfigForm",
+  name: 'SgConfigForm',
   data() {
     return {
       tempSgConfig: {
@@ -73,18 +73,18 @@ export default Vue.extend({
   },
   computed: {
     sgConfig(): SgConfig {
-      return (this.$accessor.configuration.get("sg") ||
+      return (this.$accessor.configuration.get('sg') ||
         this.tempSgConfig) as SgConfig;
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch("sg");
+    await this.$accessor.configuration.fetch('sg');
     this.tempSgConfig = { ...this.sgConfig };
   },
   methods: {
     save() {
       const configuration: Configuration = {
-        key: "sg",
+        key: 'sg',
         value: {
           prixFutBlonde: +this.tempSgConfig.prixFutBlonde,
           prixFutBlanche: +this.tempSgConfig.prixFutBlanche,
@@ -96,7 +96,7 @@ export default Vue.extend({
       this.closeDialog();
     },
     closeDialog() {
-      this.$emit("close-dialog");
+      this.$emit('close-dialog');
     },
   },
 });

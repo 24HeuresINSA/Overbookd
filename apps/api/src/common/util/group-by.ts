@@ -1,4 +1,4 @@
-export function groupBy<T, K extends keyof any>(
+export function groupBy<T, K extends string | number | symbol>(
   arr: T[],
   key: (i: T) => K,
 ): T[][] {

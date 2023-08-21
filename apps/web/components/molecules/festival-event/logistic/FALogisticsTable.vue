@@ -21,14 +21,14 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { uniqueGearReducer } from "~/utils/functions/gearRequest";
-import { Gear } from "~/utils/models/catalog.model";
-import { Header } from "~/utils/models/dataTable";
-import { GearRequest } from "~/utils/models/gearRequests";
+import Vue from 'vue';
+import { uniqueGearReducer } from '~/utils/functions/gearRequest';
+import { Gear } from '~/utils/models/catalog.model';
+import { Header } from '~/utils/models/dataTable';
+import { GearRequest } from '~/utils/models/gearRequests';
 
 export default Vue.extend({
-  name: "FALogisticsTable",
+  name: 'FALogisticsTable',
   props: {
     isDisabled: {
       type: Boolean,
@@ -36,49 +36,49 @@ export default Vue.extend({
     },
     owner: {
       type: String,
-      default: () => "",
+      default: () => '',
     },
   },
   computed: {
     headers(): Header[] {
-      const actionHeader = { text: "Action", value: "action" };
-      const driveHeader = { text: "Lieu de retrait", value: "drive" };
+      const actionHeader = { text: 'Action', value: 'action' };
+      const driveHeader = { text: 'Lieu de retrait', value: 'drive' };
       const commonHeaders = [
-        { text: "Nom", value: "name" },
-        { text: "Quantité", value: "quantity" },
+        { text: 'Nom', value: 'name' },
+        { text: 'Quantité', value: 'quantity' },
       ];
       return this.isDisabled
         ? [...commonHeaders, driveHeader]
         : [...commonHeaders, actionHeader];
     },
-    gearRequest(): GearRequest<"FA">[] {
+    gearRequest(): GearRequest<'FA'>[] {
       switch (this.owner) {
-        case "matos":
+        case 'matos':
           return this.$accessor.fa.matosGearRequests.reduce(
             (
-              gearRequests: GearRequest<"FA">[],
-              gearRequest: GearRequest<"FA">
-            ): GearRequest<"FA">[] =>
+              gearRequests: GearRequest<'FA'>[],
+              gearRequest: GearRequest<'FA'>
+            ): GearRequest<'FA'>[] =>
               uniqueGearReducer(gearRequests, gearRequest),
-            [] as GearRequest<"FA">[]
+            [] as GearRequest<'FA'>[]
           );
-        case "elec":
+        case 'elec':
           return this.$accessor.fa.elecGearRequests.reduce(
             (
-              gearRequests: GearRequest<"FA">[],
-              gearRequest: GearRequest<"FA">
-            ): GearRequest<"FA">[] =>
+              gearRequests: GearRequest<'FA'>[],
+              gearRequest: GearRequest<'FA'>
+            ): GearRequest<'FA'>[] =>
               uniqueGearReducer(gearRequests, gearRequest),
-            [] as GearRequest<"FA">[]
+            [] as GearRequest<'FA'>[]
           );
-        case "barrieres":
+        case 'barrieres':
           return this.$accessor.fa.barrieresGearRequests.reduce(
             (
-              gearRequests: GearRequest<"FA">[],
-              gearRequest: GearRequest<"FA">
-            ): GearRequest<"FA">[] =>
+              gearRequests: GearRequest<'FA'>[],
+              gearRequest: GearRequest<'FA'>
+            ): GearRequest<'FA'>[] =>
               uniqueGearReducer(gearRequests, gearRequest),
-            [] as GearRequest<"FA">[]
+            [] as GearRequest<'FA'>[]
           );
         default:
           return [];

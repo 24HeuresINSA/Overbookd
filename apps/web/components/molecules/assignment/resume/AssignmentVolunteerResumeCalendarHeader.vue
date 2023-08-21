@@ -18,16 +18,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Duration } from "~/utils/date/duration";
-import { moveAtFirstIndex } from "@overbookd/list";
-import { Volunteer } from "~/utils/models/assignment";
-import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
-import { formatUsername } from "~/utils/user/userUtils";
+import Vue from 'vue';
+import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import { Duration } from '~/utils/date/duration';
+import { moveAtFirstIndex } from '@overbookd/list';
+import { Volunteer } from '~/utils/models/assignment';
+import { FtWithTimeSpan } from '~/utils/models/ftTimeSpan';
+import { formatUsername } from '~/utils/user/userUtils';
 
 export default Vue.extend({
-  name: "AssignmentVolunteerResumeCalendarHeader",
+  name: 'AssignmentVolunteerResumeCalendarHeader',
   components: { TeamChip },
   props: {
     volunteer: {
@@ -38,13 +38,13 @@ export default Vue.extend({
   computed: {
     sortedVolunteerTeams(): string[] {
       let filteredTeams = this.volunteer.teams.filter(
-        (team) => team !== "admin" && team !== "orga"
+        (team) => team !== 'admin' && team !== 'orga'
       );
-      const softIndex = filteredTeams.findIndex((team) => team === "soft");
+      const softIndex = filteredTeams.findIndex((team) => team === 'soft');
       if (softIndex !== -1) {
         filteredTeams = moveAtFirstIndex(filteredTeams, softIndex);
       }
-      const hardIndex = filteredTeams.findIndex((team) => team === "hard");
+      const hardIndex = filteredTeams.findIndex((team) => team === 'hard');
       if (hardIndex !== -1) {
         filteredTeams = moveAtFirstIndex(filteredTeams, hardIndex);
       }
@@ -63,8 +63,8 @@ export default Vue.extend({
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affectées";
-      return this.selectedFt?.category ?? "indéterminées";
+      if (!this.selectedFt) return 'affectées';
+      return this.selectedFt?.category ?? 'indéterminées';
     },
   },
 });

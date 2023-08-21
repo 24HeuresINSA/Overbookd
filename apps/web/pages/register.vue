@@ -146,10 +146,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { Team } from "~/utils/models/team";
-import { UserCreation } from "~/utils/models/user";
+import Vue from 'vue';
+import SnackNotificationContainer from '~/components/molecules/snack/SnackNotificationContainer.vue';
+import { Team } from '~/utils/models/team';
+import { UserCreation } from '~/utils/models/user';
 import {
   InputRulesData,
   required,
@@ -160,7 +160,7 @@ import {
   isMobilePhoneNumber,
   password,
   isSame,
-} from "~/utils/rules/inputRules";
+} from '~/utils/rules/inputRules';
 
 interface RegisterData extends InputRulesData {
   step: number;
@@ -177,26 +177,26 @@ interface RegisterData extends InputRulesData {
 }
 
 export default Vue.extend({
-  name: "Register",
+  name: 'Register',
   auth: false,
   components: { SnackNotificationContainer },
-  layout: "none",
+  layout: 'none',
   data(): RegisterData {
     return {
       step: 1,
-      firstname: "",
-      lastname: "",
+      firstname: '',
+      lastname: '',
       nickname: undefined,
-      birthday: "2000-01-01",
-      email: "",
-      phone: "",
+      birthday: '2000-01-01',
+      email: '',
+      phone: '',
       comment: undefined,
       teamId: undefined,
-      password: "",
-      repeatPassword: "",
+      password: '',
+      repeatPassword: '',
       rules: {
         required: required,
-        birthdayMinDate: minDate(new Date("1950-01-01")),
+        birthdayMinDate: minDate(new Date('1950-01-01')),
         birthdayMaxDate: maxDate(),
         email: isEmail,
         insaEmail: isInsaEmail,
@@ -210,7 +210,7 @@ export default Vue.extend({
       return new Date(this.birthday);
     },
     softCreationTeams(): Team[] {
-      const emptyTeam = { id: 0, name: "Aucune" } as Team;
+      const emptyTeam = { id: 0, name: 'Aucune' } as Team;
       return [...this.$accessor.team.softCreationTeams, emptyTeam];
     },
     presentationRules(): (() => boolean | string)[] {
@@ -273,13 +273,13 @@ export default Vue.extend({
     async register() {
       const res = await this.$accessor.user.createUser(this.mUser);
       if (!res) return;
-      await this.$auth.loginWith("local", {
+      await this.$auth.loginWith('local', {
         data: { email: this.email, password: this.password },
       });
-      this.$router.push("/");
+      this.$router.push('/');
     },
     returnToLogin() {
-      this.$router.push("/login");
+      this.$router.push('/login');
     },
   },
 });

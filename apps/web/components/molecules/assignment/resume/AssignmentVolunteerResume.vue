@@ -71,16 +71,16 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { Duration } from "~/utils/date/duration";
-import { Volunteer } from "~/utils/models/assignment";
-import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
-import { sortTeamsForAssignment } from "~/utils/models/team";
-import { formatUsername } from "~/utils/user/userUtils";
+import Vue from 'vue';
+import TeamChip from '~/components/atoms/chip/TeamChip.vue';
+import { Duration } from '~/utils/date/duration';
+import { Volunteer } from '~/utils/models/assignment';
+import { FtWithTimeSpan } from '~/utils/models/ftTimeSpan';
+import { sortTeamsForAssignment } from '~/utils/models/team';
+import { formatUsername } from '~/utils/user/userUtils';
 
 export default Vue.extend({
-  name: "AssignmentVolunteerResume",
+  name: 'AssignmentVolunteerResume',
   components: { TeamChip },
   props: {
     volunteer: {
@@ -105,13 +105,13 @@ export default Vue.extend({
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },
     category(): string {
-      if (!this.selectedFt) return "affecté";
-      return this.selectedFt?.category ?? "indéterminé";
+      if (!this.selectedFt) return 'affecté';
+      return this.selectedFt?.category ?? 'indéterminé';
     },
   },
   methods: {
     openCalendar() {
-      window.open(`/planning/${this.volunteer.id}`, "_blank");
+      window.open(`/planning/${this.volunteer.id}`, '_blank');
     },
   },
 });
