@@ -56,6 +56,10 @@ overbookd/format:
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/**/*
+        - libraries/**/*
+        - domains/**/*
     - when: never
   script:
     - pnpm run format
@@ -69,6 +73,10 @@ overbookd/prune:
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/**/*
+        - libraries/**/*
+        - domains/**/*
     - when: never
   before_script:
     - corepack enable
