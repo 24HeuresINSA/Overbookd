@@ -21,6 +21,7 @@
     "dev": "nuxt",
     "dev:host": "nuxt --hostname '0'",
     "generate": "nuxt-ts generate",
+    "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\" \"./**/*.js\"",
     "lint": "pnpm run lint:js",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
     "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
