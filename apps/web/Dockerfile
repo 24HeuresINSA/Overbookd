@@ -8,17 +8,17 @@ COPY pnpm-lock.yaml ./
 
 RUN pnpm fetch
 
-ADD pnpm-workspace.yaml ./
-ADD package.json ./
+COPY pnpm-workspace.yaml ./
+COPY package.json ./
 
 WORKDIR /overbookd/apps/web
-ADD apps/web/ ./
+COPY apps/web/ ./
 
 WORKDIR /overbookd/libraries
-ADD libraries/ ./
+COPY libraries/ ./
 
 WORKDIR /overbookd/domains
-ADD domains/ ./
+COPY domains/ ./
 
 WORKDIR /overbookd
 RUN pnpm install --recursive --offline --filter '@overbookd/web...'
@@ -29,9 +29,9 @@ ARG BASE_URL
 
 ENV BASE_URL=$BASE_URL
 
-ADD tsconfig.library-import.json ./
-ADD tsconfig.package.json ./
-ADD tsconfig.build.json ./
+COPY tsconfig.library-import.json ./
+COPY tsconfig.package.json ./
+COPY tsconfig.build.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci
 
 FROM node:20-alpine
