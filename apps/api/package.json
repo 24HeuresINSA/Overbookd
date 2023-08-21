@@ -51,6 +51,7 @@
     "@overbookd/list": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/registration": "workspace:^",
+    "@overbookd/slugify": "workspace:^",
     "@overbookd/user": "workspace:^",
     "@overbookd/volunteer-availability": "workspace:^",
     "@prisma/client": "5.1.1",

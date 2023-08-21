@@ -1,5 +1,4 @@
 import { Prisma, PrismaClient, Team } from '@prisma/client';
-import { SlugifyService } from '../src/common/services/slugify.service';
 import { HashingUtilsService } from '../src/hashing-utils/hashing-utils.service';
 import { Departments, Years } from '../src/user/dto/common';
 import { categoriesAndGears } from './seeders/gears';
@@ -7,9 +6,9 @@ import { permissions } from './seeders/permissions';
 import { signaLocations } from './seeders/signa-locations';
 import { Configuration } from '@overbookd/configuration';
 import { defaultCommitmentPresentation } from '@overbookd/registration';
+import { slugify } from '@overbookd/string';
 
 const prisma = new PrismaClient();
-const slugify = new SlugifyService();
 
 async function insertOrUpdateCategory(
   name: string,
@@ -18,8 +17,8 @@ async function insertOrUpdateCategory(
 ) {
   const parentId = parent?.id;
   const path = parent
-    ? `${parent.path}->${slugify.slugify(name)}`
-    : slugify.slugify(name);
+    ? `${parent.path}->${slugify(name)}`
+    : slugify(name);
   const owner = parent
     ? { id: parent.ownerId }
     : teams.find((team) => team.code === name.toLocaleLowerCase());
@@ -33,7 +32,7 @@ async function insertOrUpdateCategory(
 }
 
 function insertOrUpdateGear(name: string, categoryId: number) {
-  const slug = slugify.slugify(name);
+  const slug = slugify(name);
   const gear = { name, slug, categoryId };
   return prisma.catalogGear.upsert({
     create: gear,

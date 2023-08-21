@@ -1,4 +1,3 @@
-import { SlugifyService } from "../common/services/slugify.service";
 import { CatalogService } from "./catalog.service";
 import { Category, Gear } from "./interfaces";
 import {
@@ -135,7 +134,6 @@ describe("Catalog", () => {
   const categoryRepository = new InMemoryCategoryRepository();
   const gearRepository = new InMemoryGearRepository();
   const catalog = new CatalogService(
-    new SlugifyService(),
     categoryRepository,
     gearRepository,
   );

@@ -1,5 +1,4 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { SlugifyService } from "../common/services/slugify.service";
 import { CategoryNotFoundException } from "./category.service";
 import {
   Category,
@@ -7,6 +6,7 @@ import {
   Gear,
   GearRepository,
 } from "./interfaces";
+import { slugify } from '@overbookd/string';
 
 export type GearForm = {
   name: string;
@@ -35,8 +35,7 @@ type GearSearchRequest = {
 @Injectable()
 export class CatalogService {
   constructor(
-    private readonly slugService: SlugifyService,
-    @Inject("CATEGORY_REPOSITORY")
+    @Inject('CATEGORY_REPOSITORY')
     private readonly categoryRepository: CategoryRepository,
     @Inject("GEAR_REPOSITORY")
     private readonly gearRepository: GearRepository,
@@ -90,9 +89,9 @@ export class CatalogService {
     owner,
     ponctualUsage,
   }: GearSearchRequest): Promise<Gear[]> {
-    const slug = this.slugService.slugify(name);
-    const categorySlug = this.slugService.slugify(category);
-    const ownerSlug = this.slugService.slugify(owner);
+    const slug = slugify(name);
+    const categorySlug = slugify(category);
+    const ownerSlug = slugify(owner);
     return this.gearRepository.searchGear({
       slug,
       category: categorySlug,
@@ -102,7 +101,7 @@ export class CatalogService {
   }
 
   private async generateComputedProperties(name: string, categoryId: number) {
-    const slug = this.slugService.slugify(name);
+    const slug = slugify(name);
     const category = await this.getCategory(categoryId);
     const simplifiedCategory = category
       ? { name: category.name, path: category.path, id: category.id }

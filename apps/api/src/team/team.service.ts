@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { Prisma, Team } from "@prisma/client";
-import { SlugifyService } from "../common/services/slugify.service";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
+import { slugify } from '@overbookd/string';
 
 export const TEAM_SELECT = {
   select: {
@@ -20,7 +20,6 @@ export class TeamService {
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
-    private slugifyService: SlugifyService,
   ) {}
 
   async team(params: {
@@ -60,7 +59,7 @@ export class TeamService {
     color?: string;
     icon?: string;
   }): Promise<Team> {
-    const code = this.slugifyService.slugify(payload.code ?? payload.name);
+    const code = slugify(payload.code ?? payload.name);
     return this.prisma.team.create({
       data: { ...payload, code },
     });
