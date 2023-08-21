@@ -44,7 +44,7 @@ export default Vue.extend({
       return this.$accessor.ft.mFT;
     },
     ftId(): number {
-      return +this.$route.params.ft;
+      return +this.$route.params.ftId;
     },
     title(): string {
       const baseTitle = `FT ${this.ftId}`;
