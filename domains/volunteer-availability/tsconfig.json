@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "../../tsconfig.library-import",
-    "../../tsconfig.package.json"
-  ],
+  "extends": ["../../tsconfig.library-import", "../../tsconfig.package.json"],
   "compilerOptions": {
     "outDir": "./dist"
   }

@@ -24,6 +24,7 @@
     "dev:bash": "docker run --rm --name overbookd_bash --interactive --tty --user $(id --group $USER):$(id --user $USER) -v ./:/overbookd overbookd:dev sh --login",
     "format": "pnpm --recursive run format",
     "lint": "pnpm --recursive run lint",
+    "prune": "pnpm --recursive run prune",
     "preinstall": "npx only-allow pnpm",
     "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate",
     "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major",
@@ -44,6 +45,7 @@
     "eslint-plugin-security": "1.7.1",
     "eslint-plugin-unused-imports": "3.0.0",
     "prettier": "2.8.8",
+    "ts-prune": "0.10.3",
     "typescript": "5.1.6",
     "vitest": "0.34.2"
   }

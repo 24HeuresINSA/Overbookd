@@ -17,10 +17,11 @@
     "directory": "domains/configuration"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --project ./tsconfig.build.json",
     "build:ci": "pnpm build",
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
+    "prune": "ts-prune --error --ignore 'index.ts|dist'",
     "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
     "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
