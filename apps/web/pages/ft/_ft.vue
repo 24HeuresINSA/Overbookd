@@ -17,14 +17,14 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FeedbackCard from "~/components/organisms/festivalEvent/FeedbackCard.vue";
-import FestivalEventBottomBar from "~/components/organisms/festivalEvent/FestivalEventBottomBar.vue";
-import FestivalEventSidebar from "~/components/organisms/festivalEvent/FestivalEventSidebar.vue";
-import FtDetailCard from "~/components/organisms/festivalEvent/ft/FtDetailCard.vue";
-import FtGeneralCard from "~/components/organisms/festivalEvent/ft/FtGeneralCard.vue";
-import FtLogisticsCard from "~/components/organisms/festivalEvent/ft/FtLogisticsCard.vue";
-import FtTimeWindowCard from "~/components/organisms/festivalEvent/ft/FtTimeWindowCard.vue";
-import ParentFaCard from "~/components/organisms/festivalEvent/ft/ParentFaCard.vue";
+import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
+import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
+import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
+import FtDetailCard from "~/components/organisms/festival-event/ft/FtDetailCard.vue";
+import FtGeneralCard from "~/components/organisms/festival-event/ft/FtGeneralCard.vue";
+import FtLogisticsCard from "~/components/organisms/festival-event/ft/FtLogisticsCard.vue";
+import FtTimeWindowCard from "~/components/organisms/festival-event/ft/FtTimeWindowCard.vue";
+import ParentFaCard from "~/components/organisms/festival-event/ft/ParentFaCard.vue";
 
 export default Vue.extend({
   name: "FT",

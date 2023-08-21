@@ -1,9 +1,9 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { SignaLocation } from "~/utils/models/signaLocation";
 
-const repo = RepoFactory.signaLocationRepo;
+const repo = RepoFactory.SignaLocationRepository;
 
 export const state = () => ({
   locations: [] as SignaLocation[],

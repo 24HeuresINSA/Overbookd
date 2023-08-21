@@ -4,7 +4,7 @@ import {
   AssignmentCandidate,
   TaskAssignment,
 } from "~/domain/timespan-assignment/timeSpanAssignment";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
   AssignmentModes,
@@ -52,7 +52,7 @@ export type AssignmentStats = {
   stats: VolunteerAssignmentStat[];
 };
 
-const UserRepo = RepoFactory.userRepo;
+const UserRepo = RepoFactory.UserRepository;
 const AssignmentRepo = RepoFactory.AssignmentRepository;
 const AvailabilityRepo = RepoFactory.VolunteerAvailabilityRepository;
 

@@ -8,7 +8,7 @@
 
 <script>
 import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 
 export default {
@@ -36,7 +36,7 @@ export default {
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.transactionRepo.getUserTransactions(this)
+      RepoFactory.TransactionRepository.getUserTransactions(this)
     );
     if (res) {
       this.mTransactions = res.data;

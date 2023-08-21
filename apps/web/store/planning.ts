@@ -1,9 +1,9 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { User } from "~/utils/models/user";
 
-const userRepo = RepoFactory.userRepo;
+const userRepo = RepoFactory.UserRepository;
 
 type VolunteerPlanning = {
   volunteer: User;

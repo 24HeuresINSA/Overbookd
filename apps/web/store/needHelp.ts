@@ -5,7 +5,7 @@ import {
   QUARTER_IN_MS,
 } from "@overbookd/period";
 import { SlugifyService } from "~/domain/common/slugify.service";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/needHelp";
 import { castPeriod } from "~/utils/models/period";

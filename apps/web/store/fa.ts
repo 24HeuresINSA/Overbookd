@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
-import { isAnimationValidatedBy } from "~/utils/festivalEvent/faUtils";
+import { isAnimationValidatedBy } from "~/utils/festival-event/faUtils";
 import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
@@ -45,9 +45,9 @@ import {
 import { User } from "~/utils/models/user";
 import { sendNotification } from "./catalog";
 import { formatUsername } from "~/utils/user/userUtils";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 
-const repo = RepoFactory.faRepo;
+const repo = RepoFactory.FaRepository;
 
 export const state = () => ({
   FAs: [] as FaSimplified[],

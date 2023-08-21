@@ -1,5 +1,5 @@
 import { mutationTree, actionTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { EventGearRequest } from "~/utils/models/gearRequests";
 

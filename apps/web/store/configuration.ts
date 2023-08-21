@@ -1,6 +1,6 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Configuration } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";

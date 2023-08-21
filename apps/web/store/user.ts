@@ -1,6 +1,6 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
   CompleteUser,
@@ -17,7 +17,7 @@ import {
   castVolunteerTaskWithDate,
 } from "~/utils/models/user";
 
-const UserRepo = RepoFactory.userRepo;
+const userRepo = RepoFactory.UserRepository;
 
 export const state = () => ({
   me: {} as MyUserInformation,
@@ -110,13 +110,13 @@ export const actions = actionTree(
   { state },
   {
     async setSelectedUser({ commit }, user: CompleteUserWithPermissions) {
-      const res = await safeCall(this, UserRepo.getUserFriends(this, user.id));
+      const res = await safeCall(this, userRepo.getUserFriends(this, user.id));
       if (!res) return;
       commit("SET_SELECTED_USER_FRIENDS", res.data);
       commit("SET_SELECTED_USER", user);
     },
     async fetchUser({ commit }) {
-      const res = await safeCall(this, UserRepo.getMyUser(this), {
+      const res = await safeCall(this, userRepo.getMyUser(this), {
         errorMessage: "Session expirée 💨",
       });
       if (res) {
@@ -124,25 +124,25 @@ export const actions = actionTree(
       }
     },
     async fetchUsers({ commit }) {
-      const res = await safeCall(this, UserRepo.getAllUsers(this));
+      const res = await safeCall(this, userRepo.getAllUsers(this));
       if (res) {
         commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
       }
     },
     async fetchVolunteers({ commit }) {
-      const res = await safeCall(this, UserRepo.getVolunteers(this));
+      const res = await safeCall(this, userRepo.getVolunteers(this));
       if (!res) return;
       const volunteers = res.data.map(castUserWithDate);
       commit("SET_VOLUNTEERS", volunteers);
     },
     async fetchCandidates({ commit }) {
-      const res = await safeCall(this, UserRepo.getCandidates(this));
+      const res = await safeCall(this, userRepo.getCandidates(this));
       if (!res) return;
       const candidates = res.data.map(castUserWithDate);
       commit("SET_CANDIDATES", candidates);
     },
     async fetchFriends({ commit }) {
-      const res = await safeCall(this, UserRepo.getFriends(this));
+      const res = await safeCall(this, userRepo.getFriends(this));
       if (res) {
         commit("SET_FRIENDS", res.data);
       }
@@ -150,14 +150,14 @@ export const actions = actionTree(
     async fetchMyFriends({ commit, state }) {
       const res = await safeCall(
         this,
-        UserRepo.getUserFriends(this, state.me.id)
+        userRepo.getUserFriends(this, state.me.id)
       );
       if (res) {
         commit("SET_MY_FRIENDS", res.data);
       }
     },
     async addFriend({ commit }, friend: User) {
-      const res = await safeCall(this, UserRepo.addFriend(this, friend.id), {
+      const res = await safeCall(this, userRepo.addFriend(this, friend.id), {
         successMessage: `${friend.firstname} a été ajouté à tes amis 🎉`,
         errorMessage: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
       });
@@ -166,7 +166,7 @@ export const actions = actionTree(
       }
     },
     async removeFriend({ commit }, friend: User) {
-      const res = await safeCall(this, UserRepo.removeFriend(this, friend.id), {
+      const res = await safeCall(this, userRepo.removeFriend(this, friend.id), {
         successMessage: `${friend.firstname} a été supprimé de tes amis`,
         errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
       });
@@ -177,7 +177,7 @@ export const actions = actionTree(
     async fetchPersonnalAccountConsummers({ commit }) {
       const res = await safeCall(
         this,
-        UserRepo.getAllPersonnalAccountConsummers(this)
+        userRepo.getAllPersonnalAccountConsummers(this)
       );
       if (!res) return;
 
@@ -185,7 +185,7 @@ export const actions = actionTree(
       commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
     async createUser(_, user: UserCreation): Promise<any | undefined> {
-      const res = await safeCall(this, UserRepo.createUser(this, user), {
+      const res = await safeCall(this, userRepo.createUser(this, user), {
         successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
       });
@@ -195,7 +195,7 @@ export const actions = actionTree(
       const { id, ...userData } = user;
       const res = await safeCall(
         this,
-        UserRepo.updateUser(this, id, castToUserModification(userData)),
+        userRepo.updateUser(this, id, castToUserModification(userData)),
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
@@ -211,7 +211,7 @@ export const actions = actionTree(
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
         this,
-        UserRepo.updateMyUser(this, { comment }),
+        userRepo.updateMyUser(this, { comment }),
         {
           successMessage: "Commentaire mis à jour ! 🎉",
           errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",
@@ -223,7 +223,7 @@ export const actions = actionTree(
     },
 
     async deleteUser({ commit, state, dispatch }, userId: number) {
-      const res = await safeCall(this, UserRepo.deleteUser(this, userId), {
+      const res = await safeCall(this, userRepo.deleteUser(this, userId), {
         successMessage: "Utilisateur supprimé ! 🎉",
         errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
       });
@@ -239,7 +239,7 @@ export const actions = actionTree(
     ) {
       const res = await safeCall(
         this,
-        RepoFactory.teamRepo.linkUserToTeams(
+        RepoFactory.TeamRepository.linkUserToTeams(
           this,
           state.selectedUser.id,
           teams
@@ -262,7 +262,7 @@ export const actions = actionTree(
     },
 
     async fetchAndUpdateLocalUser({ commit, state, dispatch }, userId: number) {
-      const res = await safeCall(this, UserRepo.getUser(this, userId));
+      const res = await safeCall(this, userRepo.getUser(this, userId));
       if (!res) return;
       const user = { ...state.selectedUser, charisma: res.data.charisma };
       commit("UPDATE_USER", user);
@@ -270,7 +270,7 @@ export const actions = actionTree(
     },
 
     async findUserById({ commit }, id: number) {
-      const res = await safeCall(this, UserRepo.getUser(this, id));
+      const res = await safeCall(this, userRepo.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
     },
@@ -278,7 +278,7 @@ export const actions = actionTree(
     async getUserFtRequests({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        UserRepo.getUserFtRequests(this, userId)
+        userRepo.getUserFtRequests(this, userId)
       );
 
       if (!res) return;
@@ -289,7 +289,7 @@ export const actions = actionTree(
     async addProfilePicture({ commit }, profilePicture: FormData) {
       const res = await safeCall(
         this,
-        UserRepo.addProfilePicture(this, profilePicture),
+        userRepo.addProfilePicture(this, profilePicture),
         { successMessage: "Photo de profil mise à jour ! 🎉" }
       );
 
@@ -301,7 +301,7 @@ export const actions = actionTree(
       if (!user.profilePicture) return undefined;
       if (user.profilePictureBlob) return user.profilePictureBlob;
 
-      return RepoFactory.userRepo.getProfilePicture(this, user.id);
+      return userRepo.getProfilePicture(this, user.id);
     },
 
     async setMyProfilePicture({ commit, state, dispatch }) {
@@ -342,7 +342,7 @@ export const actions = actionTree(
     async getVolunteerAssignments({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        UserRepo.getVolunteerAssignments(this, userId)
+        userRepo.getVolunteerAssignments(this, userId)
       );
 
       if (!res) return;
@@ -353,7 +353,7 @@ export const actions = actionTree(
     async getVolunteerAssignmentStats({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        UserRepo.getVolunteerAssignmentStats(this, userId)
+        userRepo.getVolunteerAssignmentStats(this, userId)
       );
 
       if (!res) return;

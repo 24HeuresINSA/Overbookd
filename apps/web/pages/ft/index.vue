@@ -159,9 +159,9 @@
 import Fuse from "fuse.js";
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import NewFtCard from "~/components/molecules/festivalEvent/creation/NewFtCard.vue";
+import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { getFTValidationStatus } from "~/utils/festivalEvent/ftUtils";
+import { getFTValidationStatus } from "~/utils/festival-event/ftUtils";
 import { Header } from "~/utils/models/dataTable";
 import {
   Ft,

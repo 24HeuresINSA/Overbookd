@@ -1,8 +1,8 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
-import { RepoFactory } from "~/repositories/repoFactory";
+import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { getValidationReviews } from "~/utils/festivalEvent/ftUtils";
+import { getValidationReviews } from "~/utils/festival-event/ftUtils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,
@@ -49,7 +49,7 @@ import { Team } from "~/utils/models/team";
 import { User } from "~/utils/models/user";
 import { formatUsername } from "~/utils/user/userUtils";
 
-const repo = RepoFactory.ftRepo;
+const repo = RepoFactory.FtRepository;
 
 export const state = () => ({
   mFT: defaultState() as Ft,
@@ -719,7 +719,7 @@ export const actions = actionTree(
     async addGearRequest({ commit, state }, gearRequest: GearRequestCreation) {
       const res = await safeCall(
         this,
-        RepoFactory.ftRepo.createGearRequest(this, state.mFT.id, gearRequest),
+        repo.createGearRequest(this, state.mFT.id, gearRequest),
         {
           successMessage: "La demande de matériel a été ajoutée avec succès ✅",
           errorMessage: "La demande de matériel n'a pas pu etre ajoutée ❌",

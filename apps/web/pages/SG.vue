@@ -157,7 +157,7 @@
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import SgConfigForm from "~/components/organisms/user/personnalAccount/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
-import transactionRepo from "../repositories/transactionRepo";
+import { RepoFactory } from "~/repositories/repo-factory";
 
 export default {
   name: "SG",
@@ -409,7 +409,10 @@ export default {
 
         return transaction;
       });
-      await transactionRepo.createTransactions(this, transactions);
+      await RepoFactory.TransactionRepository.createTransactions(
+        this,
+        transactions
+      );
       await this.$store.dispatch("notif/pushNotification", {
         type: "success",
         message: "Operations confirmées 💰💰💰",
