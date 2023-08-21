@@ -19,6 +19,7 @@ import {
 } from "@overbookd/user";
 import {
   DatabaseMyUserInformation,
+  DatabaseTeamCode,
   DatabaseUserPersonalData,
   UserPasswordOnly,
   VolunteerTask,
@@ -263,14 +264,14 @@ export class UserService {
     const { teams, ...userWithoutTeams } = user;
     return {
       ...userWithoutTeams,
-      teams: teams.map(({ team: { code } }) => code),
+      teams: extractTeamCodes(teams),
     };
   }
 
   static formatToMyInformation(
     user: DatabaseMyUserInformation,
   ): MyUserInformation {
-    const teams = user.teams.map((t) => t.team.code);
+    const teams = extractTeamCodes(user.teams);
     const permissions = retrievePermissions(user.teams);
     const { _count, ...userWithoutCount } = user;
     return {
@@ -300,4 +301,8 @@ export class UserService {
       hasPayedContributions,
     };
   }
+}
+
+function extractTeamCodes(teams: DatabaseTeamCode[]) {
+  return teams.map((t) => t.team.code);
 }

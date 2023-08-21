@@ -18,9 +18,13 @@ export interface VolunteerTask extends IProvidePeriod {
   timeSpanId?: number;
 }
 
+export type DatabaseTeamCode = {
+  team: {
+    code: string;
+  };
+};
+
 export interface DatabaseUserPersonalData
   extends Omit<UserPersonnalData, "teams"> {
-  teams: {
-    team: { code: string };
-  }[];
+  teams: DatabaseTeamCode[];
 }
