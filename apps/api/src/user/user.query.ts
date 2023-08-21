@@ -1,4 +1,4 @@
-import { ftStatuses } from '../ft/ft.model';
+import { ftStatuses } from "../ft/ft.model";
 
 const SELECT_USER = {
   email: true,

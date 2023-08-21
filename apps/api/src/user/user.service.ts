@@ -1,28 +1,28 @@
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { JwtUtil } from '../authentication/entities/jwt-util.entity';
-import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
-import { MailService } from '../mail/mail.service';
-import { PrismaService } from '../prisma.service';
-import { retrievePermissions } from '../team/utils/permissions';
+import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { MailService } from "../mail/mail.service";
+import { PrismaService } from "../prisma.service";
+import { retrievePermissions } from "../team/utils/permissions";
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
-} from '../utils/assignment';
-import { getPeriodDuration } from '../utils/duration';
-import { VolunteerAssignmentStat } from './dto/volunteer-assignment-stat.response.dto';
-import { DatabaseVolunteerAssignmentStat } from './volunteer-assignment.model';
+} from "../utils/assignment";
+import { getPeriodDuration } from "../utils/duration";
+import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.response.dto";
+import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   UserCreateForm,
   UserPersonnalData,
   UserUpdateForm,
-} from '@overbookd/user';
+} from "@overbookd/user";
 import {
   DatabaseMyUserInformation,
   DatabaseUserPersonalData,
   UserPasswordOnly,
   VolunteerTask,
-} from './user.model';
+} from "./user.model";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
   SELECT_FT_USER_REQUESTS_BY_USER_ID,
@@ -30,8 +30,8 @@ import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   SELECT_USER_PERSONNAL_DATA,
   SELECT_VOLUNTEER_ASSIGNMENTS,
-} from './user.query';
-import { TaskCategory } from '@prisma/client';
+} from "./user.query";
+import { TaskCategory } from "@prisma/client";
 
 @Injectable()
 export class UserService {
@@ -119,7 +119,7 @@ export class UserService {
           some: {
             team: {
               permissions: {
-                some: { permission: { name: 'cp' } },
+                some: { permission: { name: "cp" } },
               },
             },
           },
@@ -208,7 +208,7 @@ export class UserService {
     author: JwtUtil,
   ): Promise<UserPersonnalData> {
     if (!this.canUpdateUser(author, targetId)) {
-      throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
+      throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
 
     const filteredPersonalData = this.filterUpdatableUserData(author, userData);
@@ -289,8 +289,8 @@ export class UserService {
     author: JwtUtil,
     userData: UserUpdateForm,
   ): UserUpdateForm {
-    const charisma = author.can('manage-users') ? userData.charisma : undefined;
-    const hasPayedContributions = author.can('manage-cp')
+    const charisma = author.can("manage-users") ? userData.charisma : undefined;
+    const hasPayedContributions = author.can("manage-cp")
       ? userData.hasPayedContributions
       : undefined;
 

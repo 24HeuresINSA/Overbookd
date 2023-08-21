@@ -1,16 +1,16 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { Volunteer } from './need-help.model';
-import { VolunteerRepository } from './need-help.service';
-import { PrismaService } from '../prisma.service';
-import { AssignmentService } from '../assignment/assignment.service';
-import { WHERE_VALIDATED_USER } from '../assignment/volunteer.service';
-import { Injectable } from '@nestjs/common';
+import { IProvidePeriod } from "@overbookd/period";
+import { Volunteer } from "./need-help.model";
+import { VolunteerRepository } from "./need-help.service";
+import { PrismaService } from "../prisma.service";
+import { AssignmentService } from "../assignment/assignment.service";
+import { WHERE_VALIDATED_USER } from "../assignment/volunteer.service";
+import { Injectable } from "@nestjs/common";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
   SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_VOLUNTEER_ASSIGNMENTS,
-} from '../user/user.query';
-import { VolunteerTask } from '../user/user.model';
+} from "../user/user.query";
+import { VolunteerTask } from "../user/user.model";
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
@@ -18,7 +18,7 @@ import {
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
-} from '../utils/assignment';
+} from "../utils/assignment";
 
 type DatabaseVolunteer = {
   id: number;

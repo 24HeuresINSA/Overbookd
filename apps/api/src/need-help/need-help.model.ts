@@ -1,5 +1,5 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { VolunteerTask } from '../user/user.model';
+import { IProvidePeriod } from "@overbookd/period";
+import { VolunteerTask } from "../user/user.model";
 
 export interface Volunteer {
   id: number;

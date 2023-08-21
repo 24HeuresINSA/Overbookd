@@ -2,19 +2,19 @@ import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
-import { randomBytes, timingSafeEqual } from 'crypto';
-import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
-import { MailService } from '../mail/mail.service';
-import { PrismaService } from '../prisma.service';
-import { retrievePermissions } from '../team/utils/permissions';
-import { UserPasswordOnly } from '../user/user.model';
-import { UserService } from '../user/user.service';
-import { SELECT_USER_TEAMS_AND_PERMISSIONS } from '../user/user.query';
-import { ResetPasswordRequestDto } from './dto/reset-password.request.dto';
-import { JwtPayload } from './entities/jwt-util.entity';
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { User } from "@prisma/client";
+import { randomBytes, timingSafeEqual } from "crypto";
+import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { MailService } from "../mail/mail.service";
+import { PrismaService } from "../prisma.service";
+import { retrievePermissions } from "../team/utils/permissions";
+import { UserPasswordOnly } from "../user/user.model";
+import { UserService } from "../user/user.service";
+import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
+import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
+import { JwtPayload } from "./entities/jwt-util.entity";
 
 type UserCredentials = Pick<User, "email" | "password">;
 type UserEmail = Pick<User, "email">;

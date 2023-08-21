@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { TaskCategory } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
-import { TeamService } from '../team/team.service';
-import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
-import { SELECT_USER_TEAMS } from '../user/user.query';
-import { getPeriodDuration } from '../utils/duration';
-import { AssignmentService } from './assignment.service';
-import { FtTimeSpanService, SELECT_FRIENDS } from './ft-time-span.service';
-import { TimeSpanWithFt } from './model/ft-time-span.model';
+import { Injectable } from "@nestjs/common";
+import { TaskCategory } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
+import { TeamService } from "../team/team.service";
+import { getOtherAssignableTeams } from "../team/underlying-teams.utils";
+import { SELECT_USER_TEAMS } from "../user/user.query";
+import { getPeriodDuration } from "../utils/duration";
+import { AssignmentService } from "./assignment.service";
+import { FtTimeSpanService, SELECT_FRIENDS } from "./ft-time-span.service";
+import { TimeSpanWithFt } from "./model/ft-time-span.model";
 import {
   AvailableVolunteer,
   DatabaseVolunteer,

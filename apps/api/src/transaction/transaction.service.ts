@@ -2,11 +2,11 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Transaction, TransactionType } from '@prisma/client';
-import { User } from '@prisma/client';
-import { SELECT_USERNAME_WITH_ID } from '../user/user.query';
+} from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { Transaction, TransactionType } from "@prisma/client";
+import { User } from "@prisma/client";
+import { SELECT_USERNAME_WITH_ID } from "../user/user.query";
 
 type CreateTransaction = Omit<
   Transaction,

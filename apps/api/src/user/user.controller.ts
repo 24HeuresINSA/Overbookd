@@ -50,25 +50,25 @@ import {
 import {
   PlanningSubscription,
   SubscriptionService,
-} from '../../src/volunteer-planning/subscription.service';
-import { VolunteerPlanningService } from '../../src/volunteer-planning/volunteer-planning.service';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { FileUploadRequestDto } from './dto/file-upload.request.dto';
-import { CreateUserRequestDto } from './dto/create-user.request.dto';
-import { UpdateUserRequestDto } from './dto/update-user.request.dto';
+} from "../../src/volunteer-planning/subscription.service";
+import { VolunteerPlanningService } from "../../src/volunteer-planning/volunteer-planning.service";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
+import { CreateUserRequestDto } from "./dto/create-user.request.dto";
+import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
-} from './dto/volunteer-assignment-stat.response.dto';
-import { ProfilePictureService } from './profile-picture.service';
-import { MyUserInformation, UserPersonnalData } from '@overbookd/user';
-import { UserService } from './user.service';
-import { UserPersonnalDataResponseDto } from './dto/user-personnal-data.response.dto';
-import { MyUserInformationResponseDto } from './dto/my-user-information.response.dto';
-import { Task } from '../volunteer-planning/domain/task.model';
+} from "./dto/volunteer-assignment-stat.response.dto";
+import { ProfilePictureService } from "./profile-picture.service";
+import { MyUserInformation, UserPersonnalData } from "@overbookd/user";
+import { UserService } from "./user.service";
+import { UserPersonnalDataResponseDto } from "./dto/user-personnal-data.response.dto";
+import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
+import { Task } from "../volunteer-planning/domain/task.model";
 
-@ApiTags('users')
-@Controller('users')
+@ApiTags("users")
+@Controller("users")
 @ApiBadRequestResponse({
   description: "Bad Request",
 })
@@ -88,7 +88,7 @@ export class UserController {
     type: CreateUserRequestDto,
   })
   @ApiCreatedResponse({
-    description: 'created user',
+    description: "created user",
     type: UserPersonnalDataResponseDto,
   })
   createUser(
@@ -162,7 +162,7 @@ export class UserController {
   @Get("me")
   @ApiResponse({
     status: 200,
-    description: 'Get a current user',
+    description: "Get a current user",
     type: MyUserInformationResponseDto,
   })
   async getCurrentUser(
@@ -224,7 +224,7 @@ export class UserController {
   @Patch("me")
   @ApiResponse({
     status: 200,
-    description: 'Updated current user',
+    description: "Updated current user",
     type: UserPersonnalDataResponseDto,
   })
   @ApiBody({
@@ -247,7 +247,7 @@ export class UserController {
   @Get("personnal-account-consummers")
   @ApiResponse({
     status: 200,
-    description: 'Get all usernames with valid CP',
+    description: "Get all usernames with valid CP",
     type: UserPersonnalDataResponseDto,
     isArray: true,
   })
@@ -261,11 +261,11 @@ export class UserController {
   @Get(":id")
   @ApiResponse({
     status: 200,
-    description: 'Get a user by id',
+    description: "Get a user by id",
     type: UserPersonnalDataResponseDto,
   })
   getUserById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<UserPersonnalData> {
     return this.userService.getById(id);
   }
@@ -370,7 +370,7 @@ export class UserController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Updated user',
+    description: "Updated user",
     type: UserPersonnalDataResponseDto,
   })
   updateUserById(
@@ -416,7 +416,7 @@ export class UserController {
   )
   @ApiResponse({
     status: 201,
-    description: 'Add a profile picture to a user',
+    description: "Add a profile picture to a user",
     type: MyUserInformationResponseDto,
   })
   @ApiBody({
