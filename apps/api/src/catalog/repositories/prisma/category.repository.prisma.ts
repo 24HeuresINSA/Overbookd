@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../../prisma.service";
 import {
   Category,
   CategoryAlreadyExists,
   CategoryRepository,
   CategoryTree,
   SearchCategory,
-} from '../../interfaces';
+} from "../../interfaces";
 
 @Injectable()
 export class PrismaCategoryRepository implements CategoryRepository {
@@ -41,7 +41,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     });
   }
 
-  async addCategory(category: Omit<Category, 'id'>): Promise<Category> {
+  async addCategory(category: Omit<Category, "id">): Promise<Category> {
     try {
       const data = this.buildUpsertData(category);
       return await this.prismaService.catalogCategory.create({
@@ -123,7 +123,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     return { ...nameCondition, ...ownerCondition };
   }
 
-  private buildUpsertData(category: Omit<Category, 'id'>) {
+  private buildUpsertData(category: Omit<Category, "id">) {
     const { owner, parent, ...baseCategory } = category;
     const ownerLink = owner ? { owner: { connect: { code: owner.code } } } : {};
     const parentLink = parent

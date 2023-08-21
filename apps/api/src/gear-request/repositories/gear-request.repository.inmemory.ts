@@ -1,5 +1,5 @@
-import { updateItemToList } from '@overbookd/list';
-import { GearRequestNotFound } from '../gear-request.error';
+import { updateItemToList } from "@overbookd/list";
+import { GearRequestNotFound } from "../gear-request.error";
 import {
   APPROVED,
   ApprovedGearRequest,
@@ -12,8 +12,8 @@ import {
   Period,
   SearchGearRequest,
   UpdateGearRequest,
-} from '../gear-request.model';
-import { GearRequestRepository } from '../gear-request.service';
+} from "../gear-request.model";
+import { GearRequestRepository } from "../gear-request.service";
 
 export class InMemoryGearRequestRepository implements GearRequestRepository {
   gearRequests: GearRequest[];

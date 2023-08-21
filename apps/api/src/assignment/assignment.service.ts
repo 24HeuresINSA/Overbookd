@@ -1,15 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { FtTeamRequest, FtTimeSpan } from '@prisma/client';
-import { IProvidePeriod } from '@overbookd/period';
-import { PrismaService } from '../prisma.service';
-import { TeamService } from '../team/team.service';
-import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
-import { VolunteerAssignmentStat } from '../user/dto/volunteer-assignment-stat.response.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { FtTeamRequest, FtTimeSpan } from "@prisma/client";
+import { IProvidePeriod } from "@overbookd/period";
+import { PrismaService } from "../prisma.service";
+import { TeamService } from "../team/team.service";
+import { getOtherAssignableTeams } from "../team/underlying-teams.utils";
+import { VolunteerAssignmentStat } from "../user/dto/volunteer-assignment-stat.response.dto";
 import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   UserService,
-} from '../user/user.service';
-import { WHERE_VALIDATED_USER } from './volunteer.service';
+} from "../user/user.service";
+import { WHERE_VALIDATED_USER } from "./volunteer.service";
 
 const SELECT_TEAM_REQUEST = {
   id: true,
@@ -50,7 +50,7 @@ function buildTimeSpanWithStatsSelection(timeSpanId: number, teamCode: string) {
   };
 }
 
-type TeamRequest = Pick<FtTeamRequest, 'quantity' | 'id' | 'teamCode'>;
+type TeamRequest = Pick<FtTeamRequest, "quantity" | "id" | "teamCode">;
 
 type DataBaseTeamRequestWithAssignmentStats = TeamRequest & {
   _count: {
@@ -58,7 +58,7 @@ type DataBaseTeamRequestWithAssignmentStats = TeamRequest & {
   };
 };
 
-type DataBaseTimeSpanWithStats = Pick<FtTimeSpan, 'id' | 'start' | 'end'> & {
+type DataBaseTimeSpanWithStats = Pick<FtTimeSpan, "id" | "start" | "end"> & {
   timeWindow: {
     teamRequests: DataBaseTeamRequestWithAssignmentStats[];
   };
@@ -157,7 +157,7 @@ export class AssignmentService {
 
   async getVolunteersAssignmentStats(): Promise<AssignmentStats[]> {
     const volunteers = await this.prisma.user.findMany({
-      where: { isDeleted: false, teams: { none: { team: { code: 'hard' } } } },
+      where: { isDeleted: false, teams: { none: { team: { code: "hard" } } } },
       select: {
         firstname: true,
         lastname: true,
@@ -190,7 +190,7 @@ export class AssignmentService {
 
     if (!volunteer) {
       throw new NotFoundException(
-        'Le bénévole demandé ne peut pas être assigné à ce créneau. Un autre humain vous a peut-être devancé.',
+        "Le bénévole demandé ne peut pas être assigné à ce créneau. Un autre humain vous a peut-être devancé.",
       );
     }
   }

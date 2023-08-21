@@ -1,6 +1,6 @@
-import { updateItemToList } from '@overbookd/list';
-import { JsonStoredTask, StoredTask } from './storedTask';
-import { Task } from './task.model';
+import { updateItemToList } from "@overbookd/list";
+import { JsonStoredTask, StoredTask } from "./storedTask";
+import { Task } from "./task.model";
 
 export interface TaskRepository {
   getVolunteerTasksInChronologicalOrder(

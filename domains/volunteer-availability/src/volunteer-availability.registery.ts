@@ -1,7 +1,7 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { updateItemToList } from '@overbookd/list';
-import { Availability } from './volunteer-availability';
-import { AvailabilityError } from './volunteer-availability.error';
+import { IProvidePeriod } from "@overbookd/period";
+import { updateItemToList } from "@overbookd/list";
+import { Availability } from "./volunteer-availability";
+import { AvailabilityError } from "./volunteer-availability.error";
 
 export class AvailabilityRegistery {
   private _availabilities: Availability[] = [];

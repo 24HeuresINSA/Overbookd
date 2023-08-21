@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { TimelineService } from './timeline.service';
-import { PrismaService } from '../../src/prisma.service';
-import { TimelineController } from './timeline.controller';
+import { Module } from "@nestjs/common";
+import { TimelineService } from "./timeline.service";
+import { PrismaService } from "../../src/prisma.service";
+import { TimelineController } from "./timeline.controller";
 
 @Module({
   controllers: [TimelineController],

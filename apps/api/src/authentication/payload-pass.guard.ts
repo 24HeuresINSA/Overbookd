@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext } from '@nestjs/common';
+import { CanActivate, ExecutionContext } from "@nestjs/common";
 
 // ts-prune-ignore-next
 export class PayloadPassGuard implements CanActivate {

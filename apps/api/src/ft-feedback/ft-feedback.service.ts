@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { CreateFtFeedbackRequestDto } from './dto/create-ft-feedback.request.dto';
-import { FtFeedbackResponse } from './ft-feedback.model';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { CreateFtFeedbackRequestDto } from "./dto/create-ft-feedback.request.dto";
+import { FtFeedbackResponse } from "./ft-feedback.model";
 
 @Injectable()
 export class FtFeedbackService {

@@ -1,5 +1,5 @@
-import { BadRequestException } from '@nestjs/common';
-import { TaskStatus } from './task.model';
+import { BadRequestException } from "@nestjs/common";
+import { TaskStatus } from "./task.model";
 
 export class TaskAlreadyValidatedError extends BadRequestException {
   constructor(taskId: number, status: TaskStatus) {

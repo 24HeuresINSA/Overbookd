@@ -1,24 +1,24 @@
-import { DateArray } from 'ics';
+import { DateArray } from "ics";
 
 export function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Paris',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Paris",
   };
-  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
 export function formatDateWithHoursAndMinutesOnly(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Paris',
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Paris",
   };
-  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
 export function toDateArray(date: string | Date): DateArray {
@@ -34,9 +34,9 @@ export function toDateArray(date: string | Date): DateArray {
 
 export function formatDateToHumanReadable(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    dateStyle: 'long',
-    timeStyle: 'short',
-    timeZone: 'Europe/Paris',
+    dateStyle: "long",
+    timeStyle: "short",
+    timeZone: "Europe/Paris",
   };
-  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }

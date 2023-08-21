@@ -1,16 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 export class UpdateSignaLocationRequestDto {
   @ApiProperty({
-    description: 'The id of the location',
+    description: "The id of the location",
     required: true,
   })
   @IsNumber()
   id: number;
   @ApiProperty({
-    description: 'The name of the location',
-    example: 'Devant les humas',
+    description: "The name of the location",
+    example: "Devant les humas",
     required: true,
   })
   @IsString()

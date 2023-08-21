@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
 import {
   ExportSignaNeed,
   FaSignaNeed,
   FaSignaNeedWithOptionalId,
-} from './fa-signa-need.model';
+} from "./fa-signa-need.model";
 import {
   SELECT_SIGNA_NEED,
   SELECT_SIGNA_NEED_FOR_EXPORT,
-} from './fa-signa-need.query';
+} from "./fa-signa-need.query";
 
 @Injectable()
 export class FaSignaNeedService {
@@ -43,7 +43,7 @@ export class FaSignaNeedService {
         fa: {
           isDeleted: false,
           faValidation: {
-            some: { team: { code: 'signa' } },
+            some: { team: { code: "signa" } },
           },
         },
       },

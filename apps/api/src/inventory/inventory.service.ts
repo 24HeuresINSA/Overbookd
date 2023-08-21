@@ -1,8 +1,8 @@
-import { Inject } from '@nestjs/common';
-import { Gear } from '../../src/catalog/interfaces';
-import { SlugifyService } from '../common/services/slugify.service';
+import { Inject } from "@nestjs/common";
+import { Gear } from "../../src/catalog/interfaces";
+import { SlugifyService } from "../common/services/slugify.service";
 
-export type LiteInventoryRecord = Omit<InventoryRecord, 'gear'>;
+export type LiteInventoryRecord = Omit<InventoryRecord, "gear">;
 
 export type GroupedRecord = {
   quantity: number;
@@ -32,7 +32,7 @@ export interface InventoryRepository {
 
 export class InventoryService {
   constructor(
-    @Inject('INVENTORY_REPOSITORY')
+    @Inject("INVENTORY_REPOSITORY")
     private inventoryRepository: InventoryRepository,
     private slugifyService: SlugifyService,
   ) {}

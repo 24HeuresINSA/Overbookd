@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsInt, IsNotEmpty, IsString } from "class-validator";
 
 export class LinkTeamToUserDto {
   @ApiProperty({
     required: true,
-    description: 'The id of the user',
+    description: "The id of the user",
     type: Number,
   })
   @IsInt()
@@ -13,7 +13,7 @@ export class LinkTeamToUserDto {
 
   @ApiProperty({
     required: true,
-    description: 'The new teams of the user',
+    description: "The new teams of the user",
     isArray: true,
     type: String,
   })

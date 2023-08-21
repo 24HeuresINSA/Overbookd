@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsNotEmpty,
   IsDefined,
@@ -6,13 +6,13 @@ import {
   MinLength,
   Matches,
   ValidationArguments,
-} from 'class-validator';
-import { OneNumber, upperCaseCharacter } from '../../user/dto/common';
+} from "class-validator";
+import { OneNumber, upperCaseCharacter } from "../../user/dto/common";
 
 export class ResetPasswordRequestDto {
   @ApiProperty({
     required: true,
-    description: 'The reset password token',
+    description: "The reset password token",
   })
   @IsDefined()
   @IsString()
@@ -21,7 +21,7 @@ export class ResetPasswordRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The new password',
+    description: "The new password",
   })
   @IsDefined()
   @IsNotEmpty()
@@ -39,7 +39,7 @@ export class ResetPasswordRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The new password again',
+    description: "The new password again",
   })
   @IsDefined()
   @IsNotEmpty()

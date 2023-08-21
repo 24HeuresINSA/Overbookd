@@ -1,17 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsDefined,
   IsInt,
   IsOptional,
   IsString,
   MinLength,
-} from 'class-validator';
-import { CategoryForm } from '../category.service';
+} from "class-validator";
+import { CategoryForm } from "../category.service";
 
 export class CategoryFormRequestDto implements CategoryForm {
   @ApiProperty({
     required: true,
-    description: 'Category name',
+    description: "Category name",
   })
   @IsString()
   @IsDefined()
@@ -20,7 +20,7 @@ export class CategoryFormRequestDto implements CategoryForm {
 
   @ApiProperty({
     required: false,
-    description: 'Category owner slug',
+    description: "Category owner slug",
   })
   @IsOptional()
   @IsString()
@@ -28,7 +28,7 @@ export class CategoryFormRequestDto implements CategoryForm {
 
   @ApiProperty({
     required: false,
-    description: 'Parent category id',
+    description: "Parent category id",
   })
   @IsOptional()
   @IsInt()

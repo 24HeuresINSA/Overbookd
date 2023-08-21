@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsNotEmpty,
   IsOptional,
@@ -6,15 +6,15 @@ import {
   Matches,
   MinLength,
   ValidationArguments,
-} from 'class-validator';
+} from "class-validator";
 
-const hexCode = new RegExp('^#[0-9|a-f|A-F]{6}$');
-const mdiIcon = new RegExp('^mdi-.+');
+const hexCode = new RegExp("^#[0-9|a-f|A-F]{6}$");
+const mdiIcon = new RegExp("^mdi-.+");
 
 export class TeamRequestDto {
   @ApiProperty({
     required: true,
-    description: 'The name of the team',
+    description: "The name of the team",
   })
   @IsString()
   @IsNotEmpty()
@@ -22,7 +22,7 @@ export class TeamRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The code of the team',
+    description: "The code of the team",
   })
   @IsOptional()
   @IsString()
@@ -31,7 +31,7 @@ export class TeamRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The color of the team',
+    description: "The color of the team",
   })
   @IsOptional()
   @IsString()
@@ -43,7 +43,7 @@ export class TeamRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The icon of the team',
+    description: "The icon of the team",
   })
   @IsOptional()
   @IsString()

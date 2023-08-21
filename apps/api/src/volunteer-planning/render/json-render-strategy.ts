@@ -1,5 +1,5 @@
-import { Task } from '../domain/task.model';
-import { RenderStrategy } from './render-strategy';
+import { Task } from "../domain/task.model";
+import { RenderStrategy } from "./render-strategy";
 
 export class JsonRenderStrategy implements RenderStrategy {
   render(tasks: Task[]) {

@@ -1,5 +1,5 @@
-import { TaskRepository } from '../gear-request.service';
-import { Task } from '../tasks/task.model';
+import { TaskRepository } from "../gear-request.service";
+import { Task } from "../tasks/task.model";
 
 export class InMemoryTaskRepository implements TaskRepository {
   tasks: Task[] = [];

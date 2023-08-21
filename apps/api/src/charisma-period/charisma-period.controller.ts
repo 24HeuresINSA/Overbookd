@@ -9,7 +9,7 @@ import {
   Post,
   Put,
   UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -19,23 +19,23 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { Permission } from '../authentication/permissions-auth.decorator';
-import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CharismaPeriodService } from './charisma-period.service';
-import { CharismaPeriodResponseDto } from './dto/charisma-period.response.dto';
-import { CreateCharismaPeriodRequestDto } from './dto/create-charisma-period.request.dto';
-import { UpdateCharismaPeriodRequestDto } from './dto/update-charisma-period.request.dto';
+} from "@nestjs/swagger";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { CharismaPeriodService } from "./charisma-period.service";
+import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
+import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
+import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
 @ApiBearerAuth()
-@ApiTags('charisma-period')
+@ApiTags("charisma-period")
 @ApiBadRequestResponse({
-  description: 'Request is not formated as expected',
+  description: "Request is not formated as expected",
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('charisma-period')
+@Controller("charisma-period")
 export class CharismaPeriodController {
   constructor(private readonly charismaPeriodService: CharismaPeriodService) {}
 
@@ -44,7 +44,7 @@ export class CharismaPeriodController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get all Charisma Period',
+    description: "Get all Charisma Period",
     isArray: true,
     type: CharismaPeriodResponseDto,
   })
@@ -53,36 +53,36 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get(":id")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get one Charisma Period',
+    description: "Get one Charisma Period",
     type: CharismaPeriodResponseDto,
   })
   @ApiParam({
-    name: 'id',
-    description: 'Charisma Period id',
+    name: "id",
+    description: "Charisma Period id",
     type: Number,
   })
-  @ApiNotFoundResponse({ description: 'Charisma Period not found' })
+  @ApiNotFoundResponse({ description: "Charisma Period not found" })
   findOne(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<CharismaPeriodResponseDto> {
     return this.charismaPeriodService.findOneCharismaPeriod(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
+  @Permission("affect-volunteer")
   @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'The Charisma Period has been successfully created.',
+    description: "The Charisma Period has been successfully created.",
     type: CharismaPeriodResponseDto,
   })
   @ApiBody({
-    description: 'Charisma Period to create',
+    description: "Charisma Period to create",
     type: CreateCharismaPeriodRequestDto,
   })
   create(
@@ -92,46 +92,46 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Put(':id')
+  @Permission("affect-volunteer")
+  @Put(":id")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'The Charisma Period has been successfully updated.',
+    description: "The Charisma Period has been successfully updated.",
     type: CharismaPeriodResponseDto,
   })
   @ApiParam({
-    name: 'id',
-    description: 'Charisma Period id',
+    name: "id",
+    description: "Charisma Period id",
     type: Number,
   })
   @ApiBody({
-    description: 'Charisma Period to update',
+    description: "Charisma Period to update",
     type: UpdateCharismaPeriodRequestDto,
   })
-  @ApiNotFoundResponse({ description: 'Charisma Period not found' })
+  @ApiNotFoundResponse({ description: "Charisma Period not found" })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() charismaPeriod: UpdateCharismaPeriodRequestDto,
   ): Promise<CharismaPeriodResponseDto> {
     return this.charismaPeriodService.updateCharismaPeriod(id, charismaPeriod);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Delete(':id')
+  @Permission("affect-volunteer")
+  @Delete(":id")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'The Charisma Period has been successfully deleted.',
+    description: "The Charisma Period has been successfully deleted.",
   })
   @ApiParam({
-    name: 'id',
-    description: 'Charisma Period id',
+    name: "id",
+    description: "Charisma Period id",
     type: Number,
   })
-  @ApiNotFoundResponse({ description: 'Charisma Period not found' })
-  remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  @ApiNotFoundResponse({ description: "Charisma Period not found" })
+  remove(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.charismaPeriodService.deleteCharismaPeriod(id);
   }
 }

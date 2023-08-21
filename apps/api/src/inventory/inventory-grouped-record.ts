@@ -1,10 +1,10 @@
-import { Gear } from '../catalog/interfaces';
+import { Gear } from "../catalog/interfaces";
 import {
   GroupedRecord,
   InventoryRecord,
   LiteInventoryRecord,
   toLiteRecord,
-} from './inventory.service';
+} from "./inventory.service";
 
 export class InventoryGroupedRecord implements GroupedRecord {
   quantity: number;

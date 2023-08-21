@@ -2,6 +2,6 @@ import {
   PrismaCategoryRepository,
   PrismaGearRepository,
   PrismaTeamRepository,
-} from './prisma';
+} from "./prisma";
 
 export { PrismaCategoryRepository, PrismaGearRepository, PrismaTeamRepository };

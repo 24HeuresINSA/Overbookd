@@ -17,8 +17,8 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express/multer';
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express/multer";
 import {
   ApiBearerAuth,
   ApiBody,
@@ -29,54 +29,54 @@ import {
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { randomUUID } from 'crypto';
-import { Request, Response } from 'express';
-import { diskStorage } from 'multer';
-import { join } from 'path';
-import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtUtil } from '../authentication/entities/jwt-util.entity';
-import { Permission } from '../authentication/permissions-auth.decorator';
-import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { buildVolunteerDisplayName } from '../../src/utils/volunteer';
-import { TaskResponseDto } from '../volunteer-planning/dto/task.response.dto';
-import { VolunteerSubscriptionPlanningResponseDto } from '../volunteer-planning/dto/volunter-subscription-planning.response.dto';
+} from "@nestjs/swagger";
+import { randomUUID } from "crypto";
+import { Request, Response } from "express";
+import { diskStorage } from "multer";
+import { join } from "path";
+import { RequestWithUserPayload } from "../../src/app.controller";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
+import { TaskResponseDto } from "../volunteer-planning/dto/task.response.dto";
+import { VolunteerSubscriptionPlanningResponseDto } from "../volunteer-planning/dto/volunter-subscription-planning.response.dto";
 import {
   IcalType,
   JsonType,
   PdfType,
   PlanningRenderStrategy,
-} from '../volunteer-planning/render/render-strategy';
+} from "../volunteer-planning/render/render-strategy";
 import {
   PlanningSubscription,
   SubscriptionService,
-} from '../../src/volunteer-planning/subscription.service';
-import { VolunteerPlanningService } from '../../src/volunteer-planning/volunteer-planning.service';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { FileUploadRequestDto } from './dto/file-upload.request.dto';
-import { CreateUserRequestDto } from './dto/create-user.request.dto';
-import { UpdateUserRequestDto } from './dto/update-user.request.dto';
-import { UserWithoutPasswordResponseDto } from './dto/user-without-password.response.dto';
+} from "../../src/volunteer-planning/subscription.service";
+import { VolunteerPlanningService } from "../../src/volunteer-planning/volunteer-planning.service";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
+import { CreateUserRequestDto } from "./dto/create-user.request.dto";
+import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
+import { UserWithoutPasswordResponseDto } from "./dto/user-without-password.response.dto";
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
-} from './dto/volunteer-assignment-stat.response.dto';
-import { ProfilePictureService } from './profile-picture.service';
+} from "./dto/volunteer-assignment-stat.response.dto";
+import { ProfilePictureService } from "./profile-picture.service";
 import {
   MyUserInformation,
   UserPersonnalData,
   UserWithTeamsAndPermissions,
   UserWithoutPassword,
-} from './user.model';
-import { UserService } from './user.service';
-import { UserPersonnalDataResponseDto } from './dto/user-personnal-data.response.dto';
-import { MyUSerInformationResponseDto } from './dto/my-user-information.response.dto';
-import { Task } from '../volunteer-planning/domain/task.model';
-import { UserWithTeamsAndPermissionsResponseDto } from './dto/user-with-teams-and-permissions.response.dto';
-@ApiTags('users')
-@Controller('users')
+} from "./user.model";
+import { UserService } from "./user.service";
+import { UserPersonnalDataResponseDto } from "./dto/user-personnal-data.response.dto";
+import { MyUSerInformationResponseDto } from "./dto/my-user-information.response.dto";
+import { Task } from "../volunteer-planning/domain/task.model";
+import { UserWithTeamsAndPermissionsResponseDto } from "./dto/user-with-teams-and-permissions.response.dto";
+@ApiTags("users")
+@Controller("users")
 @ApiBadRequestResponse({
-  description: 'Bad Request',
+  description: "Bad Request",
 })
 export class UserController {
   private readonly logger = new Logger(UserController.name);
@@ -90,11 +90,11 @@ export class UserController {
 
   @Post()
   @ApiBody({
-    description: 'Add new user',
+    description: "Add new user",
     type: CreateUserRequestDto,
   })
   @ApiCreatedResponse({
-    description: 'created user',
+    description: "created user",
     type: UserWithoutPasswordResponseDto,
   })
   createUser(
@@ -105,9 +105,9 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('validated-user')
+  @Permission("validated-user")
   @ApiUnauthorizedResponse({
-    description: 'User dont have the right to access this route',
+    description: "User dont have the right to access this route",
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
@@ -115,7 +115,7 @@ export class UserController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'Get all users',
+    description: "Get all users",
     type: UserPersonnalDataResponseDto,
     isArray: true,
   })
@@ -125,17 +125,17 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('validated-user')
+  @Permission("validated-user")
   @ApiUnauthorizedResponse({
-    description: 'User dont have the right to access this route',
+    description: "User dont have the right to access this route",
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  @Get('/volunteers')
+  @Get("/volunteers")
   @ApiResponse({
     status: 200,
-    description: 'Get all volunteers',
+    description: "Get all volunteers",
     type: UserPersonnalDataResponseDto,
     isArray: true,
   })
@@ -145,17 +145,17 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('validated-user')
+  @Permission("validated-user")
   @ApiUnauthorizedResponse({
-    description: 'User dont have the right to access this route',
+    description: "User dont have the right to access this route",
   })
   @ApiForbiddenResponse({
     description: "User can't access this resource",
   })
-  @Get('/candidates')
+  @Get("/candidates")
   @ApiResponse({
     status: 200,
-    description: 'Get all candidates',
+    description: "Get all candidates",
     type: UserPersonnalDataResponseDto,
     isArray: true,
   })
@@ -165,10 +165,10 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Get('me')
+  @Get("me")
   @ApiResponse({
     status: 200,
-    description: 'Get a current user',
+    description: "Get a current user",
     type: MyUSerInformationResponseDto,
   })
   async getCurrentUser(
@@ -178,12 +178,12 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('download-planning')
+  @Permission("download-planning")
   @ApiBearerAuth()
-  @Get('me/planning')
+  @Get("me/planning")
   @ApiResponse({
     status: 200,
-    description: 'Get current user planning',
+    description: "Get current user planning",
     isArray: true,
     type: TaskResponseDto,
   })
@@ -196,7 +196,7 @@ export class UserController {
     const format = request.headers.accept;
     try {
       const planning = await this.formatPlanning(volunteerId, format);
-      response.setHeader('content-type', format);
+      response.setHeader("content-type", format);
       response.send(planning);
       return;
     } catch (e) {
@@ -210,12 +210,12 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('download-planning')
+  @Permission("download-planning")
   @ApiBearerAuth()
-  @Get('me/planning/subscribe-link')
+  @Get("me/planning/subscribe-link")
   @ApiResponse({
     status: 200,
-    description: 'Get current user subscription planning link',
+    description: "Get current user subscription planning link",
     type: VolunteerSubscriptionPlanningResponseDto,
   })
   async getCurrentVolunteerSubscriptionPlanningLink(
@@ -227,14 +227,14 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Patch('me')
+  @Patch("me")
   @ApiResponse({
     status: 200,
-    description: 'Updated current user',
+    description: "Updated current user",
     type: UserWithTeamsAndPermissionsResponseDto,
   })
   @ApiBody({
-    description: 'New current user information',
+    description: "New current user information",
     type: UpdateUserRequestDto,
   })
   async updateCurrentUser(
@@ -245,12 +245,12 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('cp')
+  @Permission("cp")
   @ApiBearerAuth()
-  @Get('personnal-account-consummers')
+  @Get("personnal-account-consummers")
   @ApiResponse({
     status: 200,
-    description: 'Get all usernames with valid CP',
+    description: "Get all usernames with valid CP",
     type: UserWithoutPasswordResponseDto,
     isArray: true,
   })
@@ -260,71 +260,71 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('hard')
-  @Get(':id')
+  @Permission("hard")
+  @Get(":id")
   @ApiResponse({
     status: 200,
-    description: 'Get a user by id',
+    description: "Get a user by id",
     type: UserWithoutPasswordResponseDto,
   })
   getUserById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<UserWithoutPassword> {
     return this.userService.getById(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('hard')
-  @Get(':id/ft-requests')
+  @Permission("hard")
+  @Get(":id/ft-requests")
   @ApiResponse({
     status: 200,
-    description: 'Get tasks a volunteer is required on',
+    description: "Get tasks a volunteer is required on",
     isArray: true,
     type: VolunteerAssignmentDto,
   })
   async getFtUserRequestsByUserId(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<VolunteerAssignmentDto[]> {
     return this.userService.getFtUserRequestsByUserId(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('hard')
-  @Get(':id/assignments')
+  @Permission("hard")
+  @Get(":id/assignments")
   @ApiResponse({
     status: 200,
-    description: 'Get tasks a volunteer is assigned to',
+    description: "Get tasks a volunteer is assigned to",
     isArray: true,
     type: VolunteerAssignmentDto,
   })
   async getVolunteerAssignments(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<VolunteerAssignmentDto[]> {
     return this.userService.getVolunteerAssignments(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
+  @Permission("affect-volunteer")
   @ApiBearerAuth()
-  @Get(':id/planning')
+  @Get(":id/planning")
   @ApiResponse({
     status: 200,
-    description: 'Get current user planning',
+    description: "Get current user planning",
     isArray: true,
     type: TaskResponseDto,
   })
   @ApiProduces(JsonType, IcalType, PdfType)
   async getVolunteerPlanning(
-    @Param('id', ParseIntPipe) volunteerId: number,
+    @Param("id", ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,
     @Res() response: Response,
   ): Promise<TaskResponseDto[]> {
     const format = request.headers.accept;
     try {
       const planning = await this.formatPlanning(volunteerId, format);
-      response.setHeader('content-type', format);
+      response.setHeader("content-type", format);
       response.send(planning);
       return;
     } catch (e) {
@@ -350,34 +350,34 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('affect-volunteer')
-  @Get(':id/assignments/stats')
+  @Permission("affect-volunteer")
+  @Get(":id/assignments/stats")
   @ApiResponse({
     status: 200,
-    description: 'Get duration of assignments for a volunteer',
+    description: "Get duration of assignments for a volunteer",
     isArray: true,
     type: VolunteerAssignmentStatResponseDto,
   })
   async getVolunteerAssignmentStats(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<VolunteerAssignmentStatResponseDto[]> {
     return this.userService.getVolunteerAssignmentStats(id);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Put(':id')
+  @Put(":id")
   @ApiBody({
-    description: 'New user information',
+    description: "New user information",
     type: UpdateUserRequestDto,
   })
   @ApiResponse({
     status: 200,
-    description: 'Updated user',
+    description: "Updated user",
     type: UserWithTeamsAndPermissionsResponseDto,
   })
   updateUserById(
-    @Param('id', ParseIntPipe) targetUserId: number,
+    @Param("id", ParseIntPipe) targetUserId: number,
     @Body() user: UpdateUserRequestDto,
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<UserWithTeamsAndPermissions> {
@@ -390,28 +390,28 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('manage-users')
-  @Delete(':id')
+  @Permission("manage-users")
+  @Delete(":id")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a user by id',
+    description: "Delete a user by id",
   })
-  deleteUser(@Param('id', ParseIntPipe) userId: number): Promise<void> {
+  deleteUser(@Param("id", ParseIntPipe) userId: number): Promise<void> {
     return this.userService.deleteUser(userId);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Post('me/profile-picture')
+  @Post("me/profile-picture")
   @UseInterceptors(
-    FileInterceptor('file', {
+    FileInterceptor("file", {
       storage: diskStorage({
-        destination: join(process.cwd(), 'public'),
+        destination: join(process.cwd(), "public"),
         filename: (req, file, cb) => {
           const uuid = randomUUID();
-          const filenameFragments = file.originalname.split('.');
-          const extension = filenameFragments.at(-1) ?? 'jpg';
+          const filenameFragments = file.originalname.split(".");
+          const extension = filenameFragments.at(-1) ?? "jpg";
           cb(null, `${uuid}.${extension}`);
         },
       }),
@@ -419,11 +419,11 @@ export class UserController {
   )
   @ApiResponse({
     status: 201,
-    description: 'Add a profile picture to a user',
+    description: "Add a profile picture to a user",
     type: UserWithoutPasswordResponseDto,
   })
   @ApiBody({
-    description: 'Profile picture file',
+    description: "Profile picture file",
     type: FileUploadRequestDto,
   })
   defineProfilePicture(
@@ -438,13 +438,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @Get(':userId/profile-picture')
+  @Get(":userId/profile-picture")
   @ApiResponse({
     status: 200,
-    description: 'Get a users profile picture',
+    description: "Get a users profile picture",
   })
   getProfilePicture(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param("userId", ParseIntPipe) userId: number,
   ): Promise<StreamableFile> {
     return this.profilePictureService.streamProfilePicture(userId);
   }

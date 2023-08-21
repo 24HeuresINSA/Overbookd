@@ -1,12 +1,12 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { SlugifyService } from '../common/services/slugify.service';
-import { CategoryNotFoundException } from './category.service';
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { SlugifyService } from "../common/services/slugify.service";
+import { CategoryNotFoundException } from "./category.service";
 import {
   Category,
   CategoryRepository,
   Gear,
   GearRepository,
-} from './interfaces';
+} from "./interfaces";
 
 export type GearForm = {
   name: string;
@@ -36,9 +36,9 @@ type GearSearchRequest = {
 export class CatalogService {
   constructor(
     private readonly slugService: SlugifyService,
-    @Inject('CATEGORY_REPOSITORY')
+    @Inject("CATEGORY_REPOSITORY")
     private readonly categoryRepository: CategoryRepository,
-    @Inject('GEAR_REPOSITORY')
+    @Inject("GEAR_REPOSITORY")
     private readonly gearRepository: GearRepository,
   ) {}
 

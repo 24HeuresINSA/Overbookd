@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-const BACHE = 'BACHE';
-const PANNEAU = 'PANNEAU';
-const AFFICHE = 'AFFICHE';
+const BACHE = "BACHE";
+const PANNEAU = "PANNEAU";
+const AFFICHE = "AFFICHE";
 
 export const signaTypes: Record<SignaType, SignaType> = {
   BACHE,

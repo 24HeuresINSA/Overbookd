@@ -1,15 +1,15 @@
-import { Module } from '@nestjs/common';
-import { CatalogService } from './catalog.service';
-import { CategoryService } from './category.service';
-import { CommonModule } from '../common/common.module';
-import { CategoryController } from './category.controller';
-import { GearController } from './gear.controller';
-import { PrismaService } from '../prisma.service';
+import { Module } from "@nestjs/common";
+import { CatalogService } from "./catalog.service";
+import { CategoryService } from "./category.service";
+import { CommonModule } from "../common/common.module";
+import { CategoryController } from "./category.controller";
+import { GearController } from "./gear.controller";
+import { PrismaService } from "../prisma.service";
 import {
   PrismaCategoryRepository,
   PrismaGearRepository,
   PrismaTeamRepository,
-} from './repositories';
+} from "./repositories";
 
 @Module({
   imports: [CommonModule],
@@ -18,15 +18,15 @@ import {
     CatalogService,
     CategoryService,
     {
-      provide: 'GEAR_REPOSITORY',
+      provide: "GEAR_REPOSITORY",
       useClass: PrismaGearRepository,
     },
     {
-      provide: 'CATEGORY_REPOSITORY',
+      provide: "CATEGORY_REPOSITORY",
       useClass: PrismaCategoryRepository,
     },
     {
-      provide: 'TEAM_REPOSITORY',
+      provide: "TEAM_REPOSITORY",
       useClass: PrismaTeamRepository,
     },
   ],

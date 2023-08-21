@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Planning, TaskRepository } from './domain/planning';
-import { Task } from './domain/task.model';
+import { Inject, Injectable } from "@nestjs/common";
+import { Planning, TaskRepository } from "./domain/planning";
+import { Task } from "./domain/task.model";
 
 @Injectable()
 export class VolunteerPlanningService {
   private planning: Planning;
-  constructor(@Inject('TASK_REPOSITORY') taskRepository: TaskRepository) {
+  constructor(@Inject("TASK_REPOSITORY") taskRepository: TaskRepository) {
     this.planning = new Planning(taskRepository);
   }
 

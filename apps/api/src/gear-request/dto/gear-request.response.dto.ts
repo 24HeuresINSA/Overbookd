@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { GearRepresentation } from '../../common/dto/gear-representation.dto';
-import { Gear } from '../../catalog/interfaces';
+import { ApiProperty } from "@nestjs/swagger";
+import { GearRepresentation } from "../../common/dto/gear-representation.dto";
+import { Gear } from "../../catalog/interfaces";
 import {
   GearRequest,
   ApprovedGearRequest,
@@ -8,7 +8,7 @@ import {
   GearSeekerType,
   Period,
   APPROVED,
-} from '../gear-request.model';
+} from "../gear-request.model";
 
 class GearSeekerRepresentation implements GearSeeker {
   type: GearSeekerType;
@@ -25,28 +25,28 @@ class PeriodRepresentation implements Period {
 class BaseGearRequestResponseDto {
   @ApiProperty({
     required: true,
-    description: 'Gear seeker',
+    description: "Gear seeker",
     type: GearSeekerRepresentation,
   })
   seeker: GearSeeker;
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request quantity',
+    description: "Gear Request quantity",
     type: Number,
   })
   quantity: number;
 
   @ApiProperty({
     required: true,
-    description: 'Gear requested',
+    description: "Gear requested",
     type: GearRepresentation,
   })
   gear: Gear;
 
   @ApiProperty({
     required: true,
-    description: 'Gear request rental period',
+    description: "Gear request rental period",
     type: PeriodRepresentation,
   })
   rentalPeriod: Period;
@@ -58,14 +58,14 @@ export class GearRequestResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'Gear Request status',
+    description: "Gear Request status",
     type: String,
   })
   status: string;
 
   @ApiProperty({
     required: false,
-    description: 'Gear request drive location',
+    description: "Gear request drive location",
     type: String,
   })
   drive?: string;
@@ -77,14 +77,14 @@ export class ApprovedGearRequestResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'Gear Request status',
+    description: "Gear Request status",
     type: String,
   })
   status: typeof APPROVED;
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request drive',
+    description: "Gear Request drive",
     type: String,
   })
   drive: string;

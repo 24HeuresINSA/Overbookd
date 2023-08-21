@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { CollaboratorWithId } from './collaborator.model';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { CollaboratorWithId } from "./collaborator.model";
 
 export const COLLABORATOR_WITH_ID_SELECTION = {
   id: true,

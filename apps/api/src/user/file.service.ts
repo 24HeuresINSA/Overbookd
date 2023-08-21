@@ -7,16 +7,16 @@ import {
   Logger,
   NotFoundException,
   StreamableFile,
-} from '@nestjs/common';
-import { createReadStream, existsSync, unlink } from 'fs';
-import { join } from 'path';
+} from "@nestjs/common";
+import { createReadStream, existsSync, unlink } from "fs";
+import { join } from "path";
 
 @Injectable()
 export class FileService {
   private logger = new Logger(FileService.name);
 
   deleteFile(fileName: string): void {
-    const filePath = join(process.cwd(), '/public/', fileName);
+    const filePath = join(process.cwd(), "/public/", fileName);
     // nosemgrep
     if (!existsSync(filePath)) return;
     // nosemgrep
@@ -27,10 +27,10 @@ export class FileService {
   }
 
   streamFile(fileName: string): StreamableFile {
-    const filePath = join(process.cwd(), '/public/', fileName);
+    const filePath = join(process.cwd(), "/public/", fileName);
     // nosemgrep
     if (!existsSync(filePath)) {
-      throw new NotFoundException('Profile picture not found');
+      throw new NotFoundException("Profile picture not found");
     }
     // nosemgrep
     const file = createReadStream(filePath);

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
 import {
   IsDateString,
   IsDefined,
@@ -12,14 +12,14 @@ import {
   Matches,
   MinLength,
   ValidationArguments,
-} from 'class-validator';
-import { OneNumber, upperCaseCharacter } from './common';
-import { UserCreateForm } from '../user.model';
+} from "class-validator";
+import { OneNumber, upperCaseCharacter } from "./common";
+import { UserCreateForm } from "../user.model";
 
 export class CreateUserRequestDto implements UserCreateForm {
   @ApiProperty({
     required: true,
-    description: 'The firstname of the user',
+    description: "The firstname of the user",
   })
   @IsDefined()
   @IsString()
@@ -28,7 +28,7 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: true,
-    description: 'The lastname of the user',
+    description: "The lastname of the user",
   })
   @IsDefined()
   @IsString()
@@ -37,7 +37,7 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The nickname of the user',
+    description: "The nickname of the user",
   })
   @IsOptional()
   @IsString()
@@ -45,8 +45,8 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: true,
-    description: 'The email of the user',
-    example: 'john@doe.com',
+    description: "The email of the user",
+    example: "john@doe.com",
   })
   @IsDefined()
   @IsEmail()
@@ -56,7 +56,7 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: true,
-    description: 'The birthdate of the user',
+    description: "The birthdate of the user",
   })
   @IsDefined()
   @IsNotEmpty()
@@ -65,17 +65,17 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: true,
-    description: 'The phone number of the user',
-    example: '0601020304',
+    description: "The phone number of the user",
+    example: "0601020304",
   })
   @IsDefined()
   @IsNotEmpty()
-  @IsPhoneNumber('FR')
+  @IsPhoneNumber("FR")
   phone: string;
 
   @ApiProperty({
     required: false,
-    description: 'The team id of the user',
+    description: "The team id of the user",
   })
   @IsOptional()
   @IsNumber()
@@ -84,7 +84,7 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: true,
-    description: 'The password of the user',
+    description: "The password of the user",
   })
   @IsDefined()
   @IsNotEmpty()
@@ -102,7 +102,7 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: false,
-    description: 'A comment about the user',
+    description: "A comment about the user",
   })
   @IsOptional()
   @IsString()

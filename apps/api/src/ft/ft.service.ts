@@ -3,39 +3,39 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-} from '@nestjs/common';
-import { JwtUtil } from '../authentication/entities/jwt-util.entity';
+} from "@nestjs/common";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import {
   StatsPayload,
   StatsService,
-} from '../../src/common/services/stats.service';
-import { DataBaseUserRequest } from '../ft-user-request/dto/ft-user-request.response.dto';
-import { FtUserRequestService } from '../ft-user-request/ft-user-request.service';
-import { PrismaService } from '../prisma.service';
-import { CreateFtRequestDto } from './dto/create-ft.request.dto';
+} from "../../src/common/services/stats.service";
+import { DataBaseUserRequest } from "../ft-user-request/dto/ft-user-request.response.dto";
+import { FtUserRequestService } from "../ft-user-request/ft-user-request.service";
+import { PrismaService } from "../prisma.service";
+import { CreateFtRequestDto } from "./dto/create-ft.request.dto";
 import {
   CompleteFtResponseDto,
   LiteFtResponseDto,
-} from './dto/ft.response.dto';
-import { UpdateFtRequestDto } from './dto/update-ft.request.dto';
-import { FtStatus, ftStatuses } from './ft.model';
+} from "./dto/ft.response.dto";
+import { UpdateFtRequestDto } from "./dto/update-ft.request.dto";
+import { FtStatus, ftStatuses } from "./ft.model";
 import {
   COMPLETE_FT_SELECT,
   FtIdResponse,
   LITE_FT_SELECT,
   TimeWindow,
-} from './ft-types';
-import { ReviewerResponseDto } from './dto/reviewer.response.dto';
+} from "./ft-types";
+import { ReviewerResponseDto } from "./dto/reviewer.response.dto";
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
 }
 
-type DataBaseTimeWindow = Omit<TimeWindow, 'userRequests'> & {
+type DataBaseTimeWindow = Omit<TimeWindow, "userRequests"> & {
   userRequests: DataBaseUserRequest[];
 };
 
-export type DataBaseCompleteFt = Omit<CompleteFtResponseDto, 'timeWindows'> & {
+export type DataBaseCompleteFt = Omit<CompleteFtResponseDto, "timeWindows"> & {
   timeWindows: DataBaseTimeWindow[];
 };
 
@@ -75,17 +75,17 @@ export class FtService {
         isDeleted: search.isDeleted,
         status: search.status,
       },
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
       select: LITE_FT_SELECT,
     });
   }
 
   async getFtStats(): Promise<StatsPayload[]> {
     const ft = await this.prisma.ft.groupBy({
-      by: ['teamCode', 'status'],
+      by: ["teamCode", "status"],
       where: { isDeleted: false },
       _count: { status: true },
-      orderBy: { teamCode: 'asc' },
+      orderBy: { teamCode: "asc" },
     });
     return this.statsService.stats(ft);
   }
@@ -103,7 +103,7 @@ export class FtService {
     updateFtDto: UpdateFtRequestDto,
     author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
-    const canAffect = author.can('affect-volunteer');
+    const canAffect = author.can("affect-volunteer");
 
     const ft = canAffect
       ? await this.findOne(id)
@@ -166,7 +166,7 @@ export class FtService {
         id: { lt: id },
         isDeleted: false,
       },
-      orderBy: { id: 'desc' },
+      orderBy: { id: "desc" },
       select: { id: true },
     });
   }
@@ -177,7 +177,7 @@ export class FtService {
         id: { gt: id },
         isDeleted: false,
       },
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
       select: { id: true },
     });
   }
@@ -204,7 +204,7 @@ export class FtService {
   }
 
   private async checkAssignmentValidity(taskId: number, reviewerId: number) {
-    const teams = this.buildTeamCodeCondition('humain');
+    const teams = this.buildTeamCodeCondition("humain");
     const [existingTask, reviewer] = await Promise.all([
       this.prisma.ft.findFirst({
         select: { id: true },
@@ -219,7 +219,7 @@ export class FtService {
     if (!existingTask) throw new NotFoundException(`FT #${taskId} non trouvee`);
     if (!reviewer) {
       throw new BadRequestException(
-        'Mauvais candidat pour devenir responsable',
+        "Mauvais candidat pour devenir responsable",
       );
     }
   }
@@ -245,11 +245,11 @@ export class FtService {
   }
 
   private async findBestReviewerCandidate() {
-    const teams = this.buildTeamCodeCondition('humain');
+    const teams = this.buildTeamCodeCondition("humain");
     return this.prisma.user.findFirst({
       select: { id: true },
       where: { teams },
-      orderBy: [{ ftsInReview: { _count: 'asc' } }],
+      orderBy: [{ ftsInReview: { _count: "asc" } }],
     });
   }
 

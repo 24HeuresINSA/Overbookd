@@ -2,8 +2,8 @@ import {
   GroupedRecord,
   InventoryRecord,
   InventoryRepository,
-} from '../inventory.service';
-import { InventoryGroupedRecord } from '../inventory-grouped-record';
+} from "../inventory.service";
+import { InventoryGroupedRecord } from "../inventory-grouped-record";
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   private records: InventoryRecord[];
@@ -20,7 +20,7 @@ export class InMemoryInventoryRepository implements InventoryRepository {
   searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]> {
     return Promise.resolve(
       this.records
-        .filter((record) => record.gear.slug.includes(gearSlug ?? ''))
+        .filter((record) => record.gear.slug.includes(gearSlug ?? ""))
         .reduce((groupedRecords, record) => {
           const groupedRecord =
             InventoryGroupedRecord.fromInventoryRecord(record);

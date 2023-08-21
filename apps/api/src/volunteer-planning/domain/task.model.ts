@@ -1,4 +1,4 @@
-import { IProvidePeriod } from '@overbookd/period';
+import { IProvidePeriod } from "@overbookd/period";
 
 export type Volunteer = {
   id: number;

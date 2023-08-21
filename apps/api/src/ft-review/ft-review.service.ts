@@ -4,23 +4,23 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-} from '@nestjs/common';
-import { FtReview, ReviewStatus } from '@prisma/client';
+} from "@nestjs/common";
+import { FtReview, ReviewStatus } from "@prisma/client";
 import {
   JwtPayload,
   JwtUtil,
-} from '../authentication/entities/jwt-util.entity';
-import { faStatuses } from '../fa/fa.model';
-import { CreateFtFeedbackRequestDto } from '../ft-feedback/dto/create-ft-feedback.request.dto';
-import { ftFeedbackSubjectTypes } from '../ft-feedback/ft-feedback.model';
-import { CompleteFtResponseDto } from '../ft/dto/ft.response.dto';
-import { FtStatus, ftStatuses } from '../ft/ft.model';
-import { DataBaseCompleteFt, FtService } from '../ft/ft.service';
-import { COMPLETE_FT_SELECT, TimeSpan } from '../ft/ft-types';
-import { PrismaService } from '../prisma.service';
-import { TimeSpanParametersRequestDto } from './dto/time-span-parameters.request.dto';
-import { UpsertFtReviewRequestDto } from './dto/upsert-ft-review.request.dto';
-import { TimeSpansGenerator } from './time-spans-generator';
+} from "../authentication/entities/jwt-util.entity";
+import { faStatuses } from "../fa/fa.model";
+import { CreateFtFeedbackRequestDto } from "../ft-feedback/dto/create-ft-feedback.request.dto";
+import { ftFeedbackSubjectTypes } from "../ft-feedback/ft-feedback.model";
+import { CompleteFtResponseDto } from "../ft/dto/ft.response.dto";
+import { FtStatus, ftStatuses } from "../ft/ft.model";
+import { DataBaseCompleteFt, FtService } from "../ft/ft.service";
+import { COMPLETE_FT_SELECT, TimeSpan } from "../ft/ft-types";
+import { PrismaService } from "../prisma.service";
+import { TimeSpanParametersRequestDto } from "./dto/time-span-parameters.request.dto";
+import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
+import { TimeSpansGenerator } from "./time-spans-generator";
 
 @Injectable()
 export class FtReviewService {
@@ -126,7 +126,7 @@ export class FtReviewService {
       this.createNestedTimeSpansWithAssignments(timeSpans);
 
     const feedback: CreateFtFeedbackRequestDto = {
-      comment: 'Prête pour affectation !',
+      comment: "Prête pour affectation !",
       subject: ftFeedbackSubjectTypes.READY,
       authorId: userId,
       createdAt: new Date(),
@@ -161,7 +161,7 @@ export class FtReviewService {
   ): Promise<FtStatus> | null {
     const ftValidators = this.prisma.teamPermission.count({
       where: {
-        permissionName: 'ft-validator',
+        permissionName: "ft-validator",
       },
     });
     const ftValidatedReviews = this.prisma.ftReview.count({
@@ -182,13 +182,13 @@ export class FtReviewService {
 
   private async checkSwitchableToReady(ft: DataBaseCompleteFt | null) {
     if (!ft) {
-      throw new NotFoundException('FT introuvable');
+      throw new NotFoundException("FT introuvable");
     }
     if (ft.status !== ftStatuses.VALIDATED) {
-      throw new BadRequestException('FT non validée');
+      throw new BadRequestException("FT non validée");
     }
     if (ft.fa.status !== faStatuses.VALIDATED) {
-      throw new BadRequestException('FA non validée');
+      throw new BadRequestException("FA non validée");
     }
     await this.hasAtLeastOneConflict(ft);
   }
@@ -197,10 +197,10 @@ export class FtReviewService {
     const ft = await this.retrieveCompleteFt(ftId);
 
     if (!ft) {
-      throw new NotFoundException('FT introuvable');
+      throw new NotFoundException("FT introuvable");
     }
     if (ft.status === ftStatuses.READY) {
-      throw new BadRequestException('FT prete pour affectation');
+      throw new BadRequestException("FT prete pour affectation");
     }
 
     return;
@@ -226,21 +226,21 @@ export class FtReviewService {
       ({ userRequests }) => userRequests,
     );
 
-    const availableError = 'Certains bénévoles ne sont pas disponibles';
-    const alsoRequestedByError = 'La FT a des conflits avec d’autres FTs';
-    const alreadyAssignedError = 'Certains bénévoles sont déjà affectés';
+    const availableError = "Certains bénévoles ne sont pas disponibles";
+    const alsoRequestedByError = "La FT a des conflits avec d’autres FTs";
+    const alreadyAssignedError = "Certains bénévoles sont déjà affectés";
 
     userRequests.map(({ alsoRequestedBy, isAvailable, isAlreadyAssigned }) => {
       if (isAvailable && alsoRequestedBy.length === 0 && !isAlreadyAssigned)
         return;
 
       const errors = [
-        !isAvailable ? availableError : '',
-        alsoRequestedBy.length > 0 ? alsoRequestedByError : '',
-        isAlreadyAssigned ? alreadyAssignedError : '',
+        !isAvailable ? availableError : "",
+        alsoRequestedBy.length > 0 ? alsoRequestedByError : "",
+        isAlreadyAssigned ? alreadyAssignedError : "",
       ].filter((err) => err);
 
-      throw new BadRequestException(errors.join(' & '));
+      throw new BadRequestException(errors.join(" & "));
     });
   }
 
@@ -254,7 +254,7 @@ export class FtReviewService {
     });
 
     if (!ft) {
-      throw new NotFoundException('FT introuvable');
+      throw new NotFoundException("FT introuvable");
     }
 
     if (ft.status !== ftStatuses.READY) {
@@ -262,9 +262,9 @@ export class FtReviewService {
     }
 
     const user = new JwtUtil(jwtPayload);
-    if (!user.can('affect-volunteer')) {
+    if (!user.can("affect-volunteer")) {
       throw new ForbiddenException(
-        'Seuls les utilisateurs avec la permission affect-volunteer peuvent refuser une FT avec le statut READY',
+        "Seuls les utilisateurs avec la permission affect-volunteer peuvent refuser une FT avec le statut READY",
       );
     }
   }

@@ -1,7 +1,7 @@
-import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
-import { SELECT_ELECTRICITY_NEED } from '../fa-electricity-need/fa-electricity-need.query';
-import { SELECT_SIGNA_NEED } from '../fa-signa-need/fa-signa-need.query';
-import { TEAM_SELECT } from '../team/team.service';
+import { COLLABORATOR_WITH_ID_SELECTION } from "../collaborator/collaborator.service";
+import { SELECT_ELECTRICITY_NEED } from "../fa-electricity-need/fa-electricity-need.query";
+import { SELECT_SIGNA_NEED } from "../fa-signa-need/fa-signa-need.query";
+import { TEAM_SELECT } from "../team/team.service";
 
 export type FaIdResponse = {
   id: number;

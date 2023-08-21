@@ -2,24 +2,24 @@ import {
   BadRequestException,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
-import { randomBytes, timingSafeEqual } from 'crypto';
-import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
-import { MailService } from '../mail/mail.service';
-import { PrismaService } from '../prisma.service';
-import { retrievePermissions } from '../team/utils/permissions';
-import { UserPasswordOnly } from '../user/user.model';
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { User } from "@prisma/client";
+import { randomBytes, timingSafeEqual } from "crypto";
+import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { MailService } from "../mail/mail.service";
+import { PrismaService } from "../prisma.service";
+import { retrievePermissions } from "../team/utils/permissions";
+import { UserPasswordOnly } from "../user/user.model";
 import {
   SELECT_USER_TEAMS_AND_PERMISSIONS,
   UserService,
-} from '../user/user.service';
-import { ResetPasswordRequestDto } from './dto/reset-password.request.dto';
-import { JwtPayload } from './entities/jwt-util.entity';
+} from "../user/user.service";
+import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
+import { JwtPayload } from "./entities/jwt-util.entity";
 
-type UserCredentials = Pick<User, 'email' | 'password'>;
-type UserEmail = Pick<User, 'email'>;
+type UserCredentials = Pick<User, "email" | "password">;
+type UserEmail = Pick<User, "email">;
 const ONE_HOUR = 3600000;
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AuthenticationService {
     const findUserCondition = { email };
     const user = await this.userService.getUserPassword(findUserCondition);
     if (await this.isInvalidUser(user, password)) {
-      throw new UnauthorizedException('Email ou mot de passe invalid');
+      throw new UnauthorizedException("Email ou mot de passe invalid");
     }
     const userWithPayload = await this.prisma.user.findUnique({
       where: { email },
@@ -78,7 +78,7 @@ export class AuthenticationService {
 
     if (!user) return;
 
-    const resetToken = randomBytes(20).toString('hex');
+    const resetToken = randomBytes(20).toString("hex");
     const expirationDate = new Date(Date.now() + ONE_HOUR);
 
     const userDatabaseUpdate = this.prisma.user.update({
@@ -104,7 +104,7 @@ export class AuthenticationService {
     password2,
   }: ResetPasswordRequestDto): Promise<void> {
     if (!timingSafeEqual(Buffer.from(password), Buffer.from(password2))) {
-      throw new BadRequestException('The passwords are not the same');
+      throw new BadRequestException("The passwords are not the same");
     }
 
     const user = await this.prisma.user.findFirst({
@@ -117,7 +117,7 @@ export class AuthenticationService {
     });
 
     if (!user) {
-      throw new UnauthorizedException('Token is invalid or expired');
+      throw new UnauthorizedException("Token is invalid or expired");
     }
 
     await this.prisma.user.update({

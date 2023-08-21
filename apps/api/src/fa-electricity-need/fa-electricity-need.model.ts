@@ -1,16 +1,16 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
-const PC16_Prise_classique = 'PC16_Prise_classique';
-const P17_16A_MONO = 'P17_16A_MONO';
-const P17_16A_TRI = 'P17_16A_TRI';
-const P17_16A_TETRA = 'P17_16A_TETRA';
-const P17_32A_MONO = 'P17_32A_MONO';
-const P17_32A_TRI = 'P17_32A_TRI';
-const P17_32A_TETRA = 'P17_32A_TETRA';
-const P17_63A_MONO = 'P17_63A_MONO';
-const P17_63A_TRI = 'P17_63A_TRI';
-const P17_63A_TETRA = 'P17_63A_TETRA';
-const P17_125A_TETRA = 'P17_125A_TETRA';
+const PC16_Prise_classique = "PC16_Prise_classique";
+const P17_16A_MONO = "P17_16A_MONO";
+const P17_16A_TRI = "P17_16A_TRI";
+const P17_16A_TETRA = "P17_16A_TETRA";
+const P17_32A_MONO = "P17_32A_MONO";
+const P17_32A_TRI = "P17_32A_TRI";
+const P17_32A_TETRA = "P17_32A_TETRA";
+const P17_63A_MONO = "P17_63A_MONO";
+const P17_63A_TRI = "P17_63A_TRI";
+const P17_63A_TETRA = "P17_63A_TETRA";
+const P17_125A_TETRA = "P17_125A_TETRA";
 
 export type ElectricityType =
   | typeof PC16_Prise_classique

@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { TaskCategory } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
-import { TeamService } from '../team/team.service';
-import { getOtherAssignableTeams } from '../team/underlying-teams.utils';
-import { SELECT_USER_TEAMS } from '../user/user.service';
-import { getPeriodDuration } from '../utils/duration';
-import { AssignmentService } from './assignment.service';
-import { FtTimeSpanService, SELECT_FRIENDS } from './ft-time-span.service';
-import { TimeSpanWithFt } from './model/ft-time-span.model';
+import { Injectable } from "@nestjs/common";
+import { TaskCategory } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
+import { TeamService } from "../team/team.service";
+import { getOtherAssignableTeams } from "../team/underlying-teams.utils";
+import { SELECT_USER_TEAMS } from "../user/user.service";
+import { getPeriodDuration } from "../utils/duration";
+import { AssignmentService } from "./assignment.service";
+import { FtTimeSpanService, SELECT_FRIENDS } from "./ft-time-span.service";
+import { TimeSpanWithFt } from "./model/ft-time-span.model";
 import {
   AvailableVolunteer,
   DatabaseVolunteer,
   DatabaseVolunteerWithFriendRequests,
   Volunteer,
-} from './model/volunteer.model';
+} from "./model/volunteer.model";
 
 export const WHERE_VALIDATED_USER = {
   team: {
@@ -21,7 +21,7 @@ export const WHERE_VALIDATED_USER = {
       team: {
         permissions: {
           some: {
-            permissionName: 'validated-user',
+            permissionName: "validated-user",
           },
         },
       },
@@ -70,7 +70,7 @@ export class VolunteerService {
         ...SELECT_VOLUNTEER,
         ...SELECT_ASSIGNMENTS_PERIOD,
       },
-      orderBy: { charisma: 'desc' },
+      orderBy: { charisma: "desc" },
     });
     return this.formatVolunteers(volunteers);
   }
@@ -91,7 +91,7 @@ export class VolunteerService {
     const volunteers = await this.prisma.user.findMany({
       select,
       where,
-      orderBy: { charisma: 'desc' },
+      orderBy: { charisma: "desc" },
     });
     return this.formatAvailableVolunteers(volunteers, ftTimeSpan.assignees);
   }

@@ -1,11 +1,11 @@
-import { Task, Volunteer } from '../domain/task.model';
-import { IcalRenderStrategy } from './ical-render-strategy';
-import { JsonRenderStrategy } from './json-render-strategy';
-import { PdfRenderStrategy } from './pdf-render-strategy';
+import { Task, Volunteer } from "../domain/task.model";
+import { IcalRenderStrategy } from "./ical-render-strategy";
+import { JsonRenderStrategy } from "./json-render-strategy";
+import { PdfRenderStrategy } from "./pdf-render-strategy";
 
-export const JsonType = 'application/json';
-export const IcalType = 'text/calendar';
-export const PdfType = 'application/pdf';
+export const JsonType = "application/json";
+export const IcalType = "text/calendar";
+export const PdfType = "application/pdf";
 
 type PlanningAcceptType = typeof JsonType | typeof IcalType | typeof PdfType;
 

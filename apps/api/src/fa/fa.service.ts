@@ -1,17 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateFaRequestDto } from './dto/update-fa.request.dto';
-import { ValidationDto } from './dto/validation.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { UpdateFaRequestDto } from "./dto/update-fa.request.dto";
+import { ValidationDto } from "./dto/validation.dto";
 
-import { StatsPayload, StatsService } from '../common/services/stats.service';
-import { PrismaService } from '../prisma.service';
-import { CreateFaRequestDto } from './dto/create-fa.request.dto';
-import { CompleteFaResponse, FaStatus, LiteFaResponse } from './fa.model';
-import { COMPLETE_FA_SELECT, FaIdResponse, LITE_FA_SELECT } from './faTypes';
+import { StatsPayload, StatsService } from "../common/services/stats.service";
+import { PrismaService } from "../prisma.service";
+import { CreateFaRequestDto } from "./dto/create-fa.request.dto";
+import { CompleteFaResponse, FaStatus, LiteFaResponse } from "./fa.model";
+import { COMPLETE_FA_SELECT, FaIdResponse, LITE_FA_SELECT } from "./faTypes";
 import {
   CollaboratorWithId,
   CollaboratorWithOptionalIdRepresentation,
-} from '../collaborator/collaborator.model';
-import { COLLABORATOR_WITH_ID_SELECTION } from '../collaborator/collaborator.service';
+} from "../collaborator/collaborator.model";
+import { COLLABORATOR_WITH_ID_SELECTION } from "../collaborator/collaborator.service";
 
 export interface SearchFa {
   isDeleted: boolean;
@@ -29,7 +29,7 @@ export class FaService {
     return this.prisma.fa.findMany({
       where,
       select: LITE_FA_SELECT,
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
     });
   }
 
@@ -44,7 +44,7 @@ export class FaService {
 
   async getFaStats(): Promise<StatsPayload[]> {
     const fa = await this.prisma.fa.groupBy({
-      by: ['teamId', 'status'],
+      by: ["teamId", "status"],
       where: { isDeleted: false },
       _count: { status: true },
     });
@@ -157,7 +157,7 @@ export class FaService {
         id: { lt: id },
         isDeleted: false,
       },
-      orderBy: { id: 'desc' },
+      orderBy: { id: "desc" },
       select: { id: true },
     });
   }
@@ -168,7 +168,7 @@ export class FaService {
         id: { gt: id },
         isDeleted: false,
       },
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
       select: { id: true },
     });
   }

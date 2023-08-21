@@ -1,8 +1,8 @@
-import { getPeriodDuration } from '../utils/duration';
-import { Gear } from '../catalog/interfaces';
+import { getPeriodDuration } from "../utils/duration";
+import { Gear } from "../catalog/interfaces";
 
-export const PENDING = 'PENDING';
-export const APPROVED = 'APPROVED';
+export const PENDING = "PENDING";
+export const APPROVED = "APPROVED";
 
 export interface GearRequest {
   seeker: GearSeeker;
@@ -24,7 +24,7 @@ export type Period = {
   end: Date;
 };
 
-export type PeriodForm = Omit<Period, 'id'>;
+export type PeriodForm = Omit<Period, "id">;
 
 export type GearSeeker = {
   type: GearSeekerType;
@@ -33,8 +33,8 @@ export type GearSeeker = {
 };
 
 export enum GearSeekerType {
-  Animation = 'FA',
-  Task = 'FT',
+  Animation = "FA",
+  Task = "FT",
 }
 
 type BaseCreateGearRequestForm = {
@@ -61,7 +61,7 @@ export function isExistingPeriodForm(
 }
 
 export type UpdateGearRequest = Partial<
-  Pick<NewPeriodCreateGearRequestForm, 'start' | 'end' | 'quantity'>
+  Pick<NewPeriodCreateGearRequestForm, "start" | "end" | "quantity">
 >;
 
 export interface ApproveGearRequest {
@@ -80,8 +80,8 @@ export type GearRequestIdentifier = {
 };
 
 export type SearchGearRequest = {
-  seeker?: Omit<GearSeeker, 'name'>;
-  gear?: Partial<Pick<Gear, 'id' | 'isConsumable'>>;
+  seeker?: Omit<GearSeeker, "name">;
+  gear?: Partial<Pick<Gear, "id" | "isConsumable">>;
   period?: PeriodForm;
 };
 

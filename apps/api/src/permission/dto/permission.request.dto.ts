@@ -1,28 +1,28 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsOptional,
   IsString,
   Matches,
   ValidationArguments,
-} from 'class-validator';
+} from "class-validator";
 
 export class PermissionRequestDto {
   @ApiProperty({
-    name: 'name',
+    name: "name",
     required: true,
-    description: 'The name of the permission',
+    description: "The name of the permission",
     type: String,
   })
   @IsString()
-  @Matches(new RegExp('^[a-z-]+$'), {
+  @Matches(new RegExp("^[a-z-]+$"), {
     message: (va: ValidationArguments) => `${va.property} should be kebab-case`,
   })
   name: string;
 
   @ApiProperty({
-    name: 'description',
+    name: "description",
     required: false,
-    description: 'The description of the permission',
+    description: "The description of the permission",
     type: String,
   })
   @IsString()

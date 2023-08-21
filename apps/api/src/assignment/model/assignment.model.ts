@@ -1,5 +1,5 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { FtStatus } from '../../ft/ft.model';
+import { IProvidePeriod } from "@overbookd/period";
+import { FtStatus } from "../../ft/ft.model";
 
 type DatabaseFt = {
   name: string;

@@ -1,4 +1,4 @@
-import { TaskCategory } from '@prisma/client';
+import { TaskCategory } from "@prisma/client";
 
 export interface DatabaseVolunteerAssignmentStat {
   timeSpan: {

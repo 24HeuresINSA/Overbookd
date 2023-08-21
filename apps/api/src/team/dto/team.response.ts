@@ -1,38 +1,38 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Team } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { Team } from "@prisma/client";
 
 export class TeamResponseDto implements Team {
   @ApiProperty({
-    name: 'id',
-    description: 'The id of the team',
+    name: "id",
+    description: "The id of the team",
     type: Number,
   })
   id: number;
 
   @ApiProperty({
-    name: 'name',
-    description: 'The name of the team',
+    name: "name",
+    description: "The name of the team",
     type: String,
   })
   name: string;
 
   @ApiProperty({
-    name: 'color',
-    description: 'The color of the team',
+    name: "color",
+    description: "The color of the team",
     type: String,
   })
   color: string;
 
   @ApiProperty({
-    name: 'icon',
-    description: 'The icon of the team',
+    name: "icon",
+    description: "The icon of the team",
     type: String,
   })
   icon: string;
 
   @ApiProperty({
-    name: 'code',
-    description: 'The code of the team',
+    name: "code",
+    description: "The code of the team",
     type: String,
   })
   code: string;

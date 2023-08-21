@@ -1,24 +1,24 @@
-import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
-import { Ft, Prisma, TaskCategory } from '@prisma/client';
-import { IProvidePeriod } from '@overbookd/period';
-import { JwtUtil } from '../authentication/entities/jwt-util.entity';
-import { ftStatuses } from '../ft/ft.model';
-import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
-import { MailService } from '../mail/mail.service';
-import { PrismaService } from '../prisma.service';
+import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import { Ft, Prisma, TaskCategory } from "@prisma/client";
+import { IProvidePeriod } from "@overbookd/period";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { ftStatuses } from "../ft/ft.model";
+import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { MailService } from "../mail/mail.service";
+import { PrismaService } from "../prisma.service";
 import {
   TeamWithNestedPermissions,
   retrievePermissions,
-} from '../team/utils/permissions';
+} from "../team/utils/permissions";
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
-} from '../utils/assignment';
-import { getPeriodDuration } from '../utils/duration';
-import { CreateUserRequestDto } from './dto/create-user.request.dto';
-import { UpdateUserRequestDto } from './dto/update-user.request.dto';
-import { VolunteerAssignmentStat } from './dto/volunteer-assignment-stat.response.dto';
-import { DatabaseVolunteerAssignmentStat } from './volunteer-assignment.model';
+} from "../utils/assignment";
+import { getPeriodDuration } from "../utils/duration";
+import { CreateUserRequestDto } from "./dto/create-user.request.dto";
+import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
+import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.response.dto";
+import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   UserPasswordOnly,
@@ -26,7 +26,7 @@ import {
   UserUpdateForm,
   UserWithTeamsAndPermissions,
   UserWithoutPassword,
-} from './user.model';
+} from "./user.model";
 
 export const SELECT_USER = {
   email: true,
@@ -145,7 +145,7 @@ type DatabaseMyUserInformation = UserWithoutPassword & {
 };
 
 export type VolunteerTask = IProvidePeriod & {
-  ft: Pick<Ft, 'id' | 'name' | 'status'>;
+  ft: Pick<Ft, "id" | "name" | "status">;
   timeSpanId?: number;
 };
 
@@ -164,7 +164,7 @@ type DatabaseUserWithTeamsAndPermissions = UserWithoutPassword & {
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService, private mail: MailService) {}
-  private logger = new Logger('UserService');
+  private logger = new Logger("UserService");
 
   async getById(id: number): Promise<MyUserInformation | null> {
     const user = await this.prisma.user.findUnique({
@@ -204,7 +204,7 @@ export class UserService {
 
   async getAll(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
       where: { isDeleted: false },
       select: {
         ...SELECT_USER,
@@ -216,13 +216,13 @@ export class UserService {
 
   async getCandidates(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
       where: {
         isDeleted: false,
         teams: {
           none: {
             team: {
-              permissions: { some: { permissionName: 'validated-user' } },
+              permissions: { some: { permissionName: "validated-user" } },
             },
           },
         },
@@ -237,13 +237,13 @@ export class UserService {
 
   async getVolunteers(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
-      orderBy: { id: 'asc' },
+      orderBy: { id: "asc" },
       where: {
         isDeleted: false,
         teams: {
           some: {
             team: {
-              permissions: { some: { permissionName: 'validated-user' } },
+              permissions: { some: { permissionName: "validated-user" } },
             },
           },
         },
@@ -265,7 +265,7 @@ export class UserService {
               permissions: {
                 some: {
                   permission: {
-                    name: 'cp',
+                    name: "cp",
                   },
                 },
               },
@@ -364,13 +364,13 @@ export class UserService {
     author: JwtUtil,
   ): Promise<UserWithTeamsAndPermissions> {
     if (!this.canUpdateUser(author, targetUserId)) {
-      throw new ForbiddenException('Tu ne peux pas modifier ce bénévole');
+      throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
 
-    if (!author.can('manage-users')) {
+    if (!author.can("manage-users")) {
       delete userData.charisma;
     }
-    if (!author.can('manage-cp')) {
+    if (!author.can("manage-cp")) {
       delete userData.hasPayedContributions;
     }
 
@@ -457,6 +457,6 @@ export class UserService {
   }
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
-    return author.can('manage-users') || author.id === targetUserId;
+    return author.can("manage-users") || author.id === targetUserId;
   }
 }

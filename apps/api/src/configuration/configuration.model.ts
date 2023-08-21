@@ -1,4 +1,4 @@
-import { Configuration } from '@overbookd/configuration';
+import { Configuration } from "@overbookd/configuration";
 
 export interface ConfigurationValue {
   value: object | string | number | boolean;

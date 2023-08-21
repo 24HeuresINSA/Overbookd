@@ -2,12 +2,12 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { TeamService } from '../team/team.service';
-import { PrismaService } from '../prisma.service';
-import { PermissionRequestDto } from './dto/permission.request.dto';
-import { PermissionResponseDto } from './dto/permission.response.dto';
+} from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { TeamService } from "../team/team.service";
+import { PrismaService } from "../prisma.service";
+import { PermissionRequestDto } from "./dto/permission.request.dto";
+import { PermissionResponseDto } from "./dto/permission.response.dto";
 
 const SELECT_PERMISSION = {
   id: true,
@@ -72,9 +72,9 @@ export class PermissionService {
       // Integrity constraint violation
       if (
         e instanceof Prisma.PrismaClientKnownRequestError &&
-        e.code === 'P2002'
+        e.code === "P2002"
       ) {
-        throw new ConflictException('Permission name already exists');
+        throw new ConflictException("Permission name already exists");
       }
       throw e;
     }
@@ -121,7 +121,7 @@ export class PermissionService {
       },
     });
     if (!permission) {
-      throw new NotFoundException('Permission does not exist');
+      throw new NotFoundException("Permission does not exist");
     }
     return {
       ...permission,
@@ -134,7 +134,7 @@ export class PermissionService {
       where: { code: { in: teamCodes } },
     });
     if (teams.length !== teamCodes.length) {
-      throw new NotFoundException('All the provided Teams does not exist');
+      throw new NotFoundException("All the provided Teams does not exist");
     }
   }
 

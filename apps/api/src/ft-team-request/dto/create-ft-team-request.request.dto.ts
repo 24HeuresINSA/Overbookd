@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsString, Min } from "class-validator";
 
 export class CreateFtTeamRequestRequestDto {
   @ApiProperty({
     type: Number,
-    description: 'The quantity of people needed for this team',
+    description: "The quantity of people needed for this team",
     example: 1,
     required: true,
   })
@@ -15,8 +15,8 @@ export class CreateFtTeamRequestRequestDto {
 
   @ApiProperty({
     type: String,
-    description: 'The code of the team',
-    example: 'bar',
+    description: "The code of the team",
+    example: "bar",
     required: true,
   })
   @IsNotEmpty()

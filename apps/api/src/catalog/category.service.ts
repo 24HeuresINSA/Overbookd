@@ -1,5 +1,5 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { SlugifyService } from '../common/services/slugify.service';
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { SlugifyService } from "../common/services/slugify.service";
 
 import {
   Category,
@@ -8,7 +8,7 @@ import {
   SearchCategory,
   Team,
   TeamRepository,
-} from './interfaces';
+} from "./interfaces";
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {
@@ -27,12 +27,12 @@ type updateCategoryForm = CategoryForm & { id: number };
 @Injectable()
 export class CategoryService {
   constructor(
-    @Inject('CATEGORY_REPOSITORY')
+    @Inject("CATEGORY_REPOSITORY")
     private readonly categoryRepository: CategoryRepository,
-    @Inject('TEAM_REPOSITORY')
+    @Inject("TEAM_REPOSITORY")
     private readonly teamRepository: TeamRepository,
     private readonly slugifyService: SlugifyService,
-  ) { }
+  ) {}
 
   async create({ name, owner, parent }: CategoryForm): Promise<Category> {
     const { path, ownerTeam } = await this.buildOwnerAndPath({

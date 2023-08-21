@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service';
-import { PeriodNotFound } from '../gear-request.error';
-import { Period, PeriodForm } from '../gear-request.model';
-import { PeriodRepository } from '../gear-request.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma.service";
+import { PeriodNotFound } from "../gear-request.error";
+import { Period, PeriodForm } from "../gear-request.model";
+import { PeriodRepository } from "../gear-request.service";
 
 @Injectable()
 export class PrismaPeriodRepository implements PeriodRepository {

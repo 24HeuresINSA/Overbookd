@@ -1,19 +1,19 @@
-import Printer from 'pdfmake';
-import sanitizeHtml from 'sanitize-html';
-import htmlToPdfMake from 'html-to-pdfmake';
-import { join } from 'path';
-import { Content, StyleDictionary } from 'pdfmake/interfaces';
-import { JSDOM } from 'jsdom';
-import { IProvidePeriod } from '@overbookd/period';
+import Printer from "pdfmake";
+import sanitizeHtml from "sanitize-html";
+import htmlToPdfMake from "html-to-pdfmake";
+import { join } from "path";
+import { Content, StyleDictionary } from "pdfmake/interfaces";
+import { JSDOM } from "jsdom";
+import { IProvidePeriod } from "@overbookd/period";
 import {
   formatDateToHumanReadable,
   formatDateWithHoursAndMinutesOnly,
-} from '../../utils/date';
-import { Assignment, Task, Volunteer } from '../domain/task.model';
-import { PurpleCocktail } from './pdf/purple-cocktail';
-import { SecurityPlan } from './pdf/security-plan';
-import { Introduction } from './pdf/introduction';
-import { RenderStrategy } from './render-strategy';
+} from "../../utils/date";
+import { Assignment, Task, Volunteer } from "../domain/task.model";
+import { PurpleCocktail } from "./pdf/purple-cocktail";
+import { SecurityPlan } from "./pdf/security-plan";
+import { Introduction } from "./pdf/introduction";
+import { RenderStrategy } from "./render-strategy";
 
 class PdfException extends Error {}
 
@@ -28,8 +28,8 @@ export class PdfRenderStrategy implements RenderStrategy {
   private htmlToPdfDefaultStyle: StyleDictionary = {
     b: { bold: true },
     strong: { bold: true },
-    u: { decoration: 'underline' },
-    s: { decoration: 'lineThrough' },
+    u: { decoration: "underline" },
+    s: { decoration: "lineThrough" },
     em: { italics: true },
     i: { italics: true },
     h1: { fontSize: 15, bold: true, marginBottom: 5 },
@@ -38,13 +38,13 @@ export class PdfRenderStrategy implements RenderStrategy {
     h4: { fontSize: 12, bold: true, marginBottom: 3 },
     h5: { fontSize: 11, bold: true, marginBottom: 3 },
     h6: { fontSize: 10, bold: true, marginBottom: 3 },
-    a: { color: 'blue', decoration: 'underline' },
-    strike: { decoration: 'lineThrough' },
+    a: { color: "blue", decoration: "underline" },
+    strike: { decoration: "lineThrough" },
     p: { margin: [0, 3, 0, 3] },
     ul: { marginBottom: 3 },
     li: { marginLeft: 3 },
     table: { marginBottom: 3 },
-    th: { bold: true, fillColor: '#EEEEEE' },
+    th: { bold: true, fillColor: "#EEEEEE" },
   };
 
   private pdfStyles: StyleDictionary = {
@@ -59,7 +59,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       marginBottom: 20,
       marginLeft: 100,
       marginRight: 100,
-      alignment: 'center',
+      alignment: "center",
     },
     paragraph: {
       fontSize: 10,
@@ -74,13 +74,13 @@ export class PdfRenderStrategy implements RenderStrategy {
 
   private fonts = {
     Roboto: {
-      normal: join(__dirname, '../../..', '/fonts/Roboto-Regular.ttf'),
-      bold: join(__dirname, '../../..', '/fonts/Roboto-Medium.ttf'),
-      italics: join(__dirname, '../../..', '/fonts/Roboto-Italic.ttf'),
+      normal: join(__dirname, "../../..", "/fonts/Roboto-Regular.ttf"),
+      bold: join(__dirname, "../../..", "/fonts/Roboto-Medium.ttf"),
+      italics: join(__dirname, "../../..", "/fonts/Roboto-Italic.ttf"),
       bolditalics: join(
         __dirname,
-        '../../..',
-        '/fonts/Roboto-MediumItalic.ttf',
+        "../../..",
+        "/fonts/Roboto-MediumItalic.ttf",
       ),
     },
   };
@@ -107,14 +107,14 @@ export class PdfRenderStrategy implements RenderStrategy {
 
     const chunks = [];
     return new Promise((resolve, reject) => {
-      pdf.on('data', function (chunk) {
+      pdf.on("data", function (chunk) {
         chunks.push(chunk);
       });
-      pdf.on('end', function () {
+      pdf.on("end", function () {
         const result = Buffer.concat(chunks);
-        resolve(result.toString('base64'));
+        resolve(result.toString("base64"));
       });
-      pdf.on('err', function (error) {
+      pdf.on("err", function (error) {
         reject(new PdfException(error));
       });
       pdf.end();
@@ -124,10 +124,10 @@ export class PdfRenderStrategy implements RenderStrategy {
   private generateMetadata(volunteer: Volunteer) {
     return {
       title: `Livret ${volunteer.name}`,
-      author: 'overbookd',
+      author: "overbookd",
       suject: "livret bénévole 24 heures de l'INSA",
-      creator: 'overbookd',
-      producer: 'overbookd',
+      creator: "overbookd",
+      producer: "overbookd",
     };
   }
 
@@ -137,26 +137,26 @@ export class PdfRenderStrategy implements RenderStrategy {
         columns: [
           {
             stack: [
-              { text: 'Responsables Bénévoles', style: ['bold'] },
-              'Zéline: 06 82 60 88 91',
-              'Marion: 06 51 40 75 01',
-              'Julie: 07 82 91 57 99',
+              { text: "Responsables Bénévoles", style: ["bold"] },
+              "Zéline: 06 82 60 88 91",
+              "Marion: 06 51 40 75 01",
+              "Julie: 07 82 91 57 99",
             ],
             width: 150,
           },
           {
             stack: [
-              { text: 'PC Sécurité', style: ['bold'] },
-              'Principal: 04 28 29 22 11',
-              'Secondaire: 04 72 43 70 70',
+              { text: "PC Sécurité", style: ["bold"] },
+              "Principal: 04 28 29 22 11",
+              "Secondaire: 04 72 43 70 70",
             ],
             width: 150,
           },
 
           {
             text: `- ${currentPage.toString()}`,
-            style: ['bold'],
-            alignment: 'right',
+            style: ["bold"],
+            alignment: "right",
             marginTop: 40,
           },
         ],
@@ -168,11 +168,11 @@ export class PdfRenderStrategy implements RenderStrategy {
   private generateHeader(volunteer: Volunteer) {
     return function (currentPage: number): Content {
       const headerTitle =
-        currentPage === SECURITY_PLAN_PAGE ? 'Plan Sécu' : volunteer.name;
+        currentPage === SECURITY_PLAN_PAGE ? "Plan Sécu" : volunteer.name;
       return {
         columns: [
           {
-            image: join(__dirname, '../../..', '/assets/logo_24h.png'),
+            image: join(__dirname, "../../..", "/assets/logo_24h.png"),
             fit: [50, 50],
             width: 50,
             margin: [20, 15],
@@ -181,18 +181,18 @@ export class PdfRenderStrategy implements RenderStrategy {
             stack: [
               {
                 text: "24 heures de l'INSA - 48ème édition",
-                alignment: 'center',
-                style: ['edition'],
+                alignment: "center",
+                style: ["edition"],
               },
               {
                 text: headerTitle,
-                alignment: 'center',
-                style: ['volunteer', 'bold'],
+                alignment: "center",
+                style: ["volunteer", "bold"],
               },
             ],
           },
           {
-            text: '',
+            text: "",
             width: 50,
           },
         ],
@@ -229,13 +229,13 @@ export class PdfRenderStrategy implements RenderStrategy {
   }: Task): Content[] {
     const displayPeriod = this.extractPeriod(period);
     const displayLocation = this.extractLocation(location);
-    const displayName = { text: name, style: ['task'] };
+    const displayName = { text: name, style: ["task"] };
     const displayDescription = this.extractDescription(description);
     const displayAssignment = this.extractAssignments(assignments);
     const taskSeparator: Content = {
       table: {
-        widths: ['*'],
-        body: [[{ text: '', fillColor: '#000' }]],
+        widths: ["*"],
+        body: [[{ text: "", fillColor: "#000" }]],
       },
       margin: [0, 5, 0, 15],
     };
@@ -251,9 +251,9 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private extractAssignments(assignments: Assignment[]): Content {
-    if (assignments.length === 0) return '';
+    if (assignments.length === 0) return "";
 
-    const header = { text: 'Affectés avec toi', style: ['assign'] };
+    const header = { text: "Affectés avec toi", style: ["assign"] };
     const listing = assignments.map(({ period, volunteers }) => {
       const displayHours = this.extractHours(period);
       const displayVolunteers = this.extractVolunteers(volunteers);
@@ -287,7 +287,7 @@ export class PdfRenderStrategy implements RenderStrategy {
           volunteers.length,
           columnIndex,
         );
-        const text = shouldDisplayEllipsis ? '...' : name;
+        const text = shouldDisplayEllipsis ? "..." : name;
         return { text };
       });
   }
@@ -311,21 +311,21 @@ export class PdfRenderStrategy implements RenderStrategy {
 
     if (isColumnFull) return currentLine;
 
-    const lineFill = Array(columnsDelta).fill('');
+    const lineFill = Array(columnsDelta).fill("");
     return [...currentLine, ...lineFill];
   }
 
   private extractHours(period: IProvidePeriod) {
     const start = formatDateWithHoursAndMinutesOnly(period.start);
     const end = formatDateWithHoursAndMinutesOnly(period.end);
-    return { text: `${start} - ${end}`, style: ['period'] };
+    return { text: `${start} - ${end}`, style: ["period"] };
   }
 
   private extractLocation(location: string): Content {
     return {
       text: [
-        { text: 'Lieu: ', style: ['details', 'bold'] },
-        { text: location, style: ['details'] },
+        { text: "Lieu: ", style: ["details", "bold"] },
+        { text: location, style: ["details"] },
       ],
       margin: [0, 0, 0, 5],
     };
@@ -336,8 +336,8 @@ export class PdfRenderStrategy implements RenderStrategy {
     const end = formatDateToHumanReadable(period.end);
     const displayPeriod = {
       text: [
-        { text: 'Creneau: ', style: ['bold', 'details'] },
-        { text: `${start} - ${end}`, style: ['details'] },
+        { text: "Creneau: ", style: ["bold", "details"] },
+        { text: `${start} - ${end}`, style: ["details"] },
       ],
     };
     return displayPeriod;

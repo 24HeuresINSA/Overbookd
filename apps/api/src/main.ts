@@ -1,21 +1,21 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import basicAuth from 'express-basic-auth';
-import { ValidationPipe } from '@nestjs/common';
-import { json, urlencoded } from 'body-parser';
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
+import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import basicAuth from "express-basic-auth";
+import { ValidationPipe } from "@nestjs/common";
+import { json, urlencoded } from "body-parser";
 
 const allowedOrigins = [
-  'http://localhost:3000',
-  'https://overbookd.24heures.org',
-  'https://preprod.overbookd.24heures.org',
-  'https://overbookd.traefik.me',
-  'https://cetaitmieuxavant.24heures.org',
+  "http://localhost:3000",
+  "https://overbookd.24heures.org",
+  "https://preprod.overbookd.24heures.org",
+  "https://overbookd.traefik.me",
+  "https://cetaitmieuxavant.24heures.org",
 ];
 
 const SWAGGER_PROTECT_DOMAINS = [
-  'overbookd.24heures.org',
-  'preprod.overbookd.24heures.org',
+  "overbookd.24heures.org",
+  "preprod.overbookd.24heures.org",
 ];
 
 async function bootstrap() {
@@ -26,14 +26,14 @@ async function bootstrap() {
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(new Error("Not allowed by CORS"));
       }
     },
   });
 
   if (SWAGGER_PROTECT_DOMAINS.includes(process.env.DOMAIN)) {
     app.use(
-      '/swagger',
+      "/swagger",
       basicAuth({
         challenge: true,
         users: {
@@ -44,18 +44,18 @@ async function bootstrap() {
   }
   //Create swagger
   const config = new DocumentBuilder()
-    .setTitle('Overbookd')
-    .setDescription('The Overbookd API description')
-    .setVersion('1.0')
-    .addServer('/api')
+    .setTitle("Overbookd")
+    .setDescription("The Overbookd API description")
+    .setVersion("1.0")
+    .addServer("/api")
     .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger', app, document);
+  SwaggerModule.setup("swagger", app, document);
 
-  app.use(json({ limit: '200kb' }));
-  app.use(urlencoded({ limit: '200kb', extended: true }));
+  app.use(json({ limit: "200kb" }));
+  app.use(urlencoded({ limit: "200kb", extended: true }));
 
   app.enableShutdownHooks();
 

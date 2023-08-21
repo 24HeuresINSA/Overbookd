@@ -1,4 +1,4 @@
-import { TaskCategory } from '@prisma/client';
+import { TaskCategory } from "@prisma/client";
 
 export interface RequestedTeam {
   code: string;
@@ -61,7 +61,7 @@ type AssignedAsTeamMember = AssignmentAsTeamMember & {
 
 export type DatabaseTimeSpanWithFtAndAssignees = Omit<
   DatabaseTimeSpanWithFt,
-  'assignments'
+  "assignments"
 > & {
   assignments: AssignedAsTeamMember[];
 };

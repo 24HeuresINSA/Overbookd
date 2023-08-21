@@ -1,12 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString, MinLength } from 'class-validator';
-import { SearchGear } from '../interfaces';
+import { ApiProperty } from "@nestjs/swagger";
+import { Transform } from "class-transformer";
+import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
+import { SearchGear } from "../interfaces";
 
 export class GearSearchRequestDto implements SearchGear {
   @ApiProperty({
     required: false,
-    description: 'Gear name',
+    description: "Gear name",
   })
   @IsOptional()
   @IsString()
@@ -14,7 +14,7 @@ export class GearSearchRequestDto implements SearchGear {
 
   @ApiProperty({
     required: false,
-    description: 'Category name',
+    description: "Category name",
   })
   @IsOptional()
   @IsString()
@@ -23,7 +23,7 @@ export class GearSearchRequestDto implements SearchGear {
 
   @ApiProperty({
     required: false,
-    description: 'Owner name',
+    description: "Owner name",
   })
   @IsOptional()
   @IsString()
@@ -32,10 +32,10 @@ export class GearSearchRequestDto implements SearchGear {
 
   @ApiProperty({
     required: false,
-    description: 'Gear usage',
+    description: "Gear usage",
   })
   @IsOptional()
-  @Transform(({ value }) => value === 'true')
+  @Transform(({ value }) => value === "true")
   @IsBoolean()
   ponctualUsage?: boolean;
 }

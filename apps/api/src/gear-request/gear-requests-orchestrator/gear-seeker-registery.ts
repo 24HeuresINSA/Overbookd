@@ -1,13 +1,13 @@
-import { faStatuses } from '../../fa/fa.model';
-import { AnimationAlreadyValidatedError } from '../animations/animation.error';
+import { faStatuses } from "../../fa/fa.model";
+import { AnimationAlreadyValidatedError } from "../animations/animation.error";
 import {
   GearRequestIdentifierSeeker,
   GearSeeker,
   GearSeekerType,
-} from '../gear-request.model';
-import { AnimationRepository, TaskRepository } from '../gear-request.service';
-import { TaskAlreadyValidatedError } from '../tasks/task.error';
-import { taskStatuses } from '../tasks/task.model';
+} from "../gear-request.model";
+import { AnimationRepository, TaskRepository } from "../gear-request.service";
+import { TaskAlreadyValidatedError } from "../tasks/task.error";
+import { taskStatuses } from "../tasks/task.model";
 
 export interface GearSeekerRegistery {
   getSeeker(id: number): Promise<GearSeeker | undefined>;

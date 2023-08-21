@@ -1,5 +1,5 @@
-const VALIDATED = 'VALIDATED';
-const REFUSED = 'REFUSED';
+const VALIDATED = "VALIDATED";
+const REFUSED = "REFUSED";
 
 export type ReviewStatus = typeof VALIDATED | typeof REFUSED;
 

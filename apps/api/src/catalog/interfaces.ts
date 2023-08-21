@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException } from "@nestjs/common";
 
 export interface Category {
   id: number;
@@ -8,7 +8,7 @@ export interface Category {
   parent?: number;
 }
 
-export type SimplifiedCategory = Omit<Category, 'parent' | 'owner'>;
+export type SimplifiedCategory = Omit<Category, "parent" | "owner">;
 
 export interface Team {
   code: string;
@@ -44,8 +44,8 @@ export interface SearchCategory {
 
 export interface GearRepository {
   getGear(id: number): Promise<Gear>;
-  addGear(gear: Omit<Gear, 'id'>): Promise<Gear | undefined>;
-  updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear | undefined>;
+  addGear(gear: Omit<Gear, "id">): Promise<Gear | undefined>;
+  updateGear(gear: Omit<Gear, "owner">): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: SearchGear): Promise<Gear[]>;
 }
@@ -53,7 +53,7 @@ export interface GearRepository {
 export interface CategoryRepository {
   getCategory(id: number): Promise<Category | undefined>;
   getSubCategories(parentId: number): Promise<Category[] | undefined>;
-  addCategory(category: Omit<Category, 'id'>): Promise<Category>;
+  addCategory(category: Omit<Category, "id">): Promise<Category>;
   removeCategory(id: number): Promise<Category | undefined>;
   updateCategories(categories: Category[]): Promise<Category[] | undefined>;
   updateCategory(category: Category): Promise<Category | undefined>;
@@ -66,16 +66,16 @@ export interface TeamRepository {
 }
 
 export class GearAlreadyExists extends BadRequestException {
-  gear: Pick<Gear, 'name'>;
-  constructor(gear: Pick<Gear, 'name'>) {
+  gear: Pick<Gear, "name">;
+  constructor(gear: Pick<Gear, "name">) {
     super(`"${gear.name}" gear already exists`);
     this.gear = gear;
   }
 }
 
 export class CategoryAlreadyExists extends BadRequestException {
-  category: Pick<Category, 'name'>;
-  constructor(category: Pick<Category, 'name'>) {
+  category: Pick<Category, "name">;
+  constructor(category: Pick<Category, "name">) {
     super(`"${category.name}" category already exists`);
     this.category = category;
   }

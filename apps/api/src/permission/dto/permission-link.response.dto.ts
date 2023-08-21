@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNotEmpty, IsString } from "class-validator";
 
 export class PermissionLinkResponseDto {
   @ApiProperty({
-    name: 'teamCodes',
+    name: "teamCodes",
     required: true,
-    description: 'An array of team code to link to the permission',
+    description: "An array of team code to link to the permission",
     isArray: true,
     type: String,
   })

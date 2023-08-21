@@ -4,11 +4,11 @@ export interface Task {
   status: TaskStatus;
 }
 
-const DRAFT = 'DRAFT';
-const SUBMITTED = 'SUBMITTED';
-const VALIDATED = 'VALIDATED';
-const REFUSED = 'REFUSED';
-const READY = 'READY';
+const DRAFT = "DRAFT";
+const SUBMITTED = "SUBMITTED";
+const VALIDATED = "VALIDATED";
+const REFUSED = "REFUSED";
+const READY = "READY";
 
 export const taskStatuses: Record<TaskStatus, TaskStatus> = {
   DRAFT,

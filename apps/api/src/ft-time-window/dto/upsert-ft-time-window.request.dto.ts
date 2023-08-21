@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber, IsOptional, Min } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsNumber, IsOptional, Min } from "class-validator";
 
 export class UpsertFtTimeWindowRequestDto {
   @ApiProperty({
     required: false,
     type: Number,
-    description: 'The id of the time window',
+    description: "The id of the time window",
   })
   @IsOptional()
   @IsNumber()
@@ -15,7 +15,7 @@ export class UpsertFtTimeWindowRequestDto {
   @ApiProperty({
     required: true,
     type: Date,
-    description: 'The start of the time window',
+    description: "The start of the time window",
   })
   @IsDateString()
   start: Date;
@@ -23,7 +23,7 @@ export class UpsertFtTimeWindowRequestDto {
   @ApiProperty({
     required: true,
     type: Date,
-    description: 'The end of the time window',
+    description: "The end of the time window",
   })
   @IsDateString()
   end: Date;
@@ -31,7 +31,7 @@ export class UpsertFtTimeWindowRequestDto {
   @ApiProperty({
     required: false,
     type: Number,
-    description: 'The slice time of the time window',
+    description: "The slice time of the time window",
   })
   @IsOptional()
   @IsNumber()

@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsOptional, Min } from 'class-validator';
-import { UpdateGearRequest } from '../gear-request.model';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsOptional, Min } from "class-validator";
+import { UpdateGearRequest } from "../gear-request.model";
 
 export class UpdateGearRequestRequestDto implements UpdateGearRequest {
   @ApiProperty({
     required: false,
-    description: 'Gear Request quantity',
+    description: "Gear Request quantity",
     type: Number,
   })
   @IsOptional()
@@ -14,7 +14,7 @@ export class UpdateGearRequestRequestDto implements UpdateGearRequest {
 
   @ApiProperty({
     required: false,
-    description: 'Gear Request start rental period',
+    description: "Gear Request start rental period",
     type: Date,
   })
   @IsOptional()
@@ -23,7 +23,7 @@ export class UpdateGearRequestRequestDto implements UpdateGearRequest {
 
   @ApiProperty({
     required: false,
-    description: 'Gear Request end rental period',
+    description: "Gear Request end rental period",
     type: Date,
   })
   @IsOptional()

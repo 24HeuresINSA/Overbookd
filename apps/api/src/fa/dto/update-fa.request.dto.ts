@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsDefined,
@@ -9,25 +9,25 @@ import {
   IsString,
   Min,
   ValidationArguments,
-} from 'class-validator';
-import { FaStatus, faStatuses } from '../fa.model';
+} from "class-validator";
+import { FaStatus, faStatuses } from "../fa.model";
 
 enum FaType {
-  Concert = 'Concert',
-  Course = 'Course',
-  Divertissement = 'Divertissement',
-  Initiation = 'Initiation',
-  Tournoi = 'Tournoi',
-  Vente = 'Vente',
-  Prevention = 'Prevention',
-  Spectacle = 'Spectacle',
-  Autre = 'Autre',
+  Concert = "Concert",
+  Course = "Course",
+  Divertissement = "Divertissement",
+  Initiation = "Initiation",
+  Tournoi = "Tournoi",
+  Vente = "Vente",
+  Prevention = "Prevention",
+  Spectacle = "Spectacle",
+  Autre = "Autre",
 }
 
 export class UpdateFaRequestDto {
   @ApiProperty({
     required: true,
-    description: 'The name of the fa',
+    description: "The name of the fa",
   })
   @IsDefined()
   @IsString()
@@ -36,7 +36,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The type of the fa',
+    description: "The type of the fa",
     enum: FaType,
   })
   @IsOptional()
@@ -48,7 +48,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The id of the team whos responsible of the fa',
+    description: "The id of the team whos responsible of the fa",
   })
   @IsOptional()
   @IsNumber()
@@ -57,7 +57,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The id of the user who is responsible of the fa',
+    description: "The id of the user who is responsible of the fa",
   })
   @IsOptional()
   @IsNumber()
@@ -66,7 +66,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The id of the location of the fa',
+    description: "The id of the location of the fa",
   })
   @IsOptional()
   @IsNumber()
@@ -75,7 +75,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The status of the fa',
+    description: "The status of the fa",
     enum: faStatuses,
   })
   @IsOptional()
@@ -87,7 +87,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The description of the fa',
+    description: "The description of the fa",
   })
   @IsOptional()
   @IsString()
@@ -95,7 +95,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Is the activity publishable on the website',
+    description: "Is the activity publishable on the website",
   })
   @IsOptional()
   @IsBoolean()
@@ -103,7 +103,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Link of the photo',
+    description: "Link of the photo",
   })
   @IsOptional()
   @IsString()
@@ -111,7 +111,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The security needs',
+    description: "The security needs",
   })
   @IsOptional()
   @IsString()
@@ -119,7 +119,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Number of security pass if required',
+    description: "Number of security pass if required",
   })
   @IsOptional()
   @IsNumber()
@@ -128,7 +128,7 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Text description about water',
+    description: "Text description about water",
   })
   @IsOptional()
   @IsString()

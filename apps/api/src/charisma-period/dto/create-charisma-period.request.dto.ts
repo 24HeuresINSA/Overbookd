@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsDateString,
   IsDefined,
@@ -6,12 +6,12 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator';
+} from "class-validator";
 
 export class CreateCharismaPeriodRequestDto {
   @ApiProperty({
     required: true,
-    description: 'The name of the Charisma Period',
+    description: "The name of the Charisma Period",
     type: String,
   })
   @IsString()
@@ -20,7 +20,7 @@ export class CreateCharismaPeriodRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The description of the Charisma Period',
+    description: "The description of the Charisma Period",
     type: String,
   })
   @IsString()
@@ -29,7 +29,7 @@ export class CreateCharismaPeriodRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The charisma associated the Charisma Period',
+    description: "The charisma associated the Charisma Period",
     type: Number,
   })
   @IsDefined()
@@ -38,7 +38,7 @@ export class CreateCharismaPeriodRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The start date of the Charisma Period',
+    description: "The start date of the Charisma Period",
     type: Date,
   })
   @IsNotEmpty()
@@ -47,7 +47,7 @@ export class CreateCharismaPeriodRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The end date of the Charisma Period',
+    description: "The end date of the Charisma Period",
     type: Date,
   })
   @IsNotEmpty()

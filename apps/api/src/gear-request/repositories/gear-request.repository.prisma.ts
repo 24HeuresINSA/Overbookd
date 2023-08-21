@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import {
   convertGearToApiContract,
   DatabaseGear,
-} from '../../catalog/repositories/prisma/gear.repository.prisma';
-import { PrismaService } from '../../prisma.service';
+} from "../../catalog/repositories/prisma/gear.repository.prisma";
+import { PrismaService } from "../../prisma.service";
 import {
   GearRequestAlreadyExists,
   GearRequestNotFound,
-} from '../gear-request.error';
+} from "../gear-request.error";
 import {
   APPROVED,
   ApprovedGearRequest,
@@ -20,8 +20,8 @@ import {
   Period,
   SearchGearRequest,
   UpdateGearRequest,
-} from '../gear-request.model';
-import { GearRequestRepository } from '../gear-request.service';
+} from "../gear-request.model";
+import { GearRequestRepository } from "../gear-request.service";
 
 type Animation = {
   animation: { id: number; name: string };
@@ -327,7 +327,7 @@ export class PrismaGearRequestRepository implements GearRequestRepository {
     period,
   }: SearchGearRequest) {
     const seekerType =
-      seeker?.type === GearSeekerType.Animation ? 'animationId' : 'taskId';
+      seeker?.type === GearSeekerType.Animation ? "animationId" : "taskId";
     const seekerCondition = seeker?.id ? { [seekerType]: seeker.id } : {};
     const gearIdCondition = gear?.id ? { id: gear.id } : {};
     const gearConsumableCondition =

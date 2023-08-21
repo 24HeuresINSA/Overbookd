@@ -1,47 +1,47 @@
-import { Category, Team } from './interfaces';
+import { Category, Team } from "./interfaces";
 import {
   InMemoryCategoryRepository,
   InMemoryTeamRepository,
-} from './repositories/in-memory';
-import { CategoryService } from './category.service';
-import { SlugifyService } from '../common/services/slugify.service';
+} from "./repositories/in-memory";
+import { CategoryService } from "./category.service";
+import { SlugifyService } from "../common/services/slugify.service";
 
-const teamMatos = { name: 'Orga Logistique Matos', code: 'matos' };
-const teamSigna = { name: 'Orga Signaletique', code: 'signa' };
-const teamElec = { name: 'Orga Logistique Electricite & Eau', code: 'elec' };
+const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
+const teamSigna = { name: "Orga Signaletique", code: "signa" };
+const teamElec = { name: "Orga Logistique Electricite & Eau", code: "elec" };
 
 const TEAMS: Team[] = [teamMatos, teamSigna, teamElec];
 
 const CATEGORIES: Category[] = [
   {
     id: 1,
-    name: 'Bricollage',
-    path: 'bricollage',
+    name: "Bricollage",
+    path: "bricollage",
     owner: teamMatos,
   },
   {
     id: 2,
-    name: 'Electrique',
-    path: 'electrique',
+    name: "Electrique",
+    path: "electrique",
     owner: teamElec,
   },
   {
     id: 3,
-    name: 'Cable',
-    path: 'electrique->cable',
+    name: "Cable",
+    path: "electrique->cable",
     owner: teamElec,
     parent: 2,
   },
   {
     id: 4,
-    name: 'Grosse Tension',
-    path: 'electrique->cable->grosse-tension',
+    name: "Grosse Tension",
+    path: "electrique->cable->grosse-tension",
     owner: teamElec,
     parent: 3,
   },
 ];
 
-describe('Category', () => {
+describe("Category", () => {
   const categoryRepository = new InMemoryCategoryRepository();
   const teamRepository = new InMemoryTeamRepository();
   const categService = new CategoryService(
@@ -53,14 +53,14 @@ describe('Category', () => {
     categoryRepository.categories = [...CATEGORIES];
     teamRepository.teams = [...TEAMS];
   });
-  describe('get category', () => {
+  describe("get category", () => {
     describe.each`
       categoryId | expectedCategory
       ${1}       | ${CATEGORIES[0]}
       ${2}       | ${CATEGORIES[1]}
       ${3}       | ${CATEGORIES[2]}
     `(
-      'when category #$categoryId exists',
+      "when category #$categoryId exists",
       ({ categoryId, expectedCategory }) => {
         it(`should retreive category #${categoryId} information`, async () => {
           const category = await categService.find(categoryId);
@@ -77,25 +77,25 @@ describe('Category', () => {
       });
     });
   });
-  describe('create a category', () => {
+  describe("create a category", () => {
     describe.each`
       name                    | expectedPath
-      ${'mobilier'}           | ${'mobilier'}
-      ${'Mobilier'}           | ${'mobilier'}
-      ${'prise secteur 400V'} | ${'prise-secteur-400v'}
+      ${"mobilier"}           | ${"mobilier"}
+      ${"Mobilier"}           | ${"mobilier"}
+      ${"prise secteur 400V"} | ${"prise-secteur-400v"}
     `(
-      '$name main category without responsible team',
+      "$name main category without responsible team",
       ({ name, expectedPath }) => {
         it(`should be created with generated id and "${expectedPath}" as path`, async () => {
           const createdCategory = await categService.create({ name });
-          expect(createdCategory).toHaveProperty('id');
+          expect(createdCategory).toHaveProperty("id");
           expect(createdCategory.id).toEqual(expect.any(Number));
-          expect(createdCategory).toHaveProperty('name');
+          expect(createdCategory).toHaveProperty("name");
           expect(createdCategory.name).toBe(name);
-          expect(createdCategory).toHaveProperty('path');
+          expect(createdCategory).toHaveProperty("path");
           expect(createdCategory.path).toBe(expectedPath);
         });
-        it('should be accessible after', async () => {
+        it("should be accessible after", async () => {
           const createdCategory = await categService.create({ name });
           const fetchedCategory = await categService.find(createdCategory.id);
           expect(createdCategory).toMatchObject(fetchedCategory);
@@ -104,11 +104,11 @@ describe('Category', () => {
     );
     describe.each`
       name                   | owner      | expectedOwner
-      ${'Outils'}            | ${'matos'} | ${teamMatos}
-      ${'Panneaux Lumineux'} | ${'signa'} | ${teamSigna}
-      ${'Cables'}            | ${'elec'}  | ${teamElec}
+      ${"Outils"}            | ${"matos"} | ${teamMatos}
+      ${"Panneaux Lumineux"} | ${"signa"} | ${teamSigna}
+      ${"Cables"}            | ${"elec"}  | ${teamElec}
     `(
-      '$name main category with #$owner owner team',
+      "$name main category with #$owner owner team",
       ({ name, owner, expectedOwner }) => {
         it(`should associate ${name} category to ${expectedOwner.name} team`, async () => {
           const createdCategory = await categService.create({ name, owner });
@@ -118,11 +118,11 @@ describe('Category', () => {
     );
     describe.each`
       name            | owner        | parentCategory | expectedPath                | expectedOwner
-      ${'Outils'}     | ${'matos'}   | ${1}           | ${'bricollage->outils'}     | ${teamMatos}
-      ${'Rangements'} | ${'elec'}    | ${1}           | ${'bricollage->rangements'} | ${teamMatos}
-      ${'Rallonges'}  | ${undefined} | ${2}           | ${'electrique->rallonges'}  | ${teamElec}
+      ${"Outils"}     | ${"matos"}   | ${1}           | ${"bricollage->outils"}     | ${teamMatos}
+      ${"Rangements"} | ${"elec"}    | ${1}           | ${"bricollage->rangements"} | ${teamMatos}
+      ${"Rallonges"}  | ${undefined} | ${2}           | ${"electrique->rallonges"}  | ${teamElec}
     `(
-      '$name sub category of #$parentCategory category',
+      "$name sub category of #$parentCategory category",
       ({ name, owner, parentCategory, expectedPath, expectedOwner }) => {
         it(`should generate composed ${expectedPath} path`, async () => {
           const createdCategory = await categService.create({
@@ -151,7 +151,7 @@ describe('Category', () => {
       },
     );
     describe("when parent category doesn't exist ", () => {
-      const categoryName = 'Rangement';
+      const categoryName = "Rangement";
       const inexistantParentCategory = 5;
       it("should inform the user parent category doesn't exist", async () => {
         await expect(
@@ -165,8 +165,8 @@ describe('Category', () => {
         );
       });
     });
-    describe('when a category already exists', () => {
-      it('should inform the user category already exists', async () => {
+    describe("when a category already exists", () => {
+      it("should inform the user category already exists", async () => {
         const name = CATEGORIES[0].name.toUpperCase();
         await expect(
           async () =>
@@ -177,14 +177,14 @@ describe('Category', () => {
       });
     });
   });
-  describe('delete a category', () => {
+  describe("delete a category", () => {
     describe.each`
       toDeleteCategory        | childrenCategory                                         | grandChildrenCategory
       ${{ id: 1 }}            | ${undefined}                                             | ${undefined}
       ${{ id: 4 }}            | ${undefined}                                             | ${undefined}
       ${{ id: 5 }}            | ${undefined}                                             | ${undefined}
-      ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedPath: 'electrique->grosse-tension' }} | ${undefined}
-      ${{ id: 2 }}            | ${{ id: 3, expectedPath: 'cable' }}                      | ${{ id: 4, expectedPath: 'cable->grosse-tension' }}
+      ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedPath: "electrique->grosse-tension" }} | ${undefined}
+      ${{ id: 2 }}            | ${{ id: 3, expectedPath: "cable" }}                      | ${{ id: 4, expectedPath: "cable->grosse-tension" }}
     `(
       `when deleting category $toDeleteCategory
         with child category $childrenCategory
@@ -221,17 +221,17 @@ describe('Category', () => {
       },
     );
   });
-  describe('update a category', () => {
+  describe("update a category", () => {
     describe(`update category name
       - Update category slug according to new name
       - Cascade slug updates on sub categories
     `, () => {
       describe.each`
         toUpdateCategory                                                                       | expectedPath                                  | childCategory                                                     | grandChildCategory
-        ${{ id: 1, name: 'Bricolles', owner: { id: 1, name: 'matos' } }}                       | ${'bricolles'}                                | ${undefined}                                                      | ${undefined}
-        ${{ id: 4, name: 'Mega Grosses Tensions', owner: { id: 3, name: 'elec' }, parent: 3 }} | ${'electrique->cable->mega-grosses-tensions'} | ${undefined}                                                      | ${undefined}
-        ${{ id: 3, name: 'Cablage', owner: { id: 3, name: 'elec' }, parent: 2 }}               | ${'electrique->cablage'}                      | ${{ id: 4, expectedPath: 'electrique->cablage->grosse-tension' }} | ${undefined}
-        ${{ id: 2, name: 'Electricite', owner: { id: 3, name: 'elec' } }}                      | ${'electricite'}                              | ${{ id: 3, expectedPath: 'electricite->cable' }}                  | ${{ id: 4, expectedPath: 'electricite->cable->grosse-tension' }}
+        ${{ id: 1, name: "Bricolles", owner: { id: 1, name: "matos" } }}                       | ${"bricolles"}                                | ${undefined}                                                      | ${undefined}
+        ${{ id: 4, name: "Mega Grosses Tensions", owner: { id: 3, name: "elec" }, parent: 3 }} | ${"electrique->cable->mega-grosses-tensions"} | ${undefined}                                                      | ${undefined}
+        ${{ id: 3, name: "Cablage", owner: { id: 3, name: "elec" }, parent: 2 }}               | ${"electrique->cablage"}                      | ${{ id: 4, expectedPath: "electrique->cablage->grosse-tension" }} | ${undefined}
+        ${{ id: 2, name: "Electricite", owner: { id: 3, name: "elec" } }}                      | ${"electricite"}                              | ${{ id: 3, expectedPath: "electricite->cable" }}                  | ${{ id: 4, expectedPath: "electricite->cable->grosse-tension" }}
       `(
         'when update category #$toUpdateCategory.id name to "$toUpdateCategory.name"',
         ({
@@ -268,11 +268,11 @@ describe('Category', () => {
     `, () => {
       describe.each`
         toUpdateCategory                                       | expectedOwner | childCategory | grandChildCategory
-        ${{ id: 1, name: 'Bricollage', owner: 'signa' }}       | ${teamSigna}  | ${undefined}  | ${undefined}
-        ${{ id: 3, name: 'Cable', owner: 'signa', parent: 2 }} | ${teamElec}   | ${{ id: 3 }}  | ${undefined}
-        ${{ id: 2, name: 'Electrique', owner: 'signa' }}       | ${teamSigna}  | ${{ id: 3 }}  | ${{ id: 3 }}
+        ${{ id: 1, name: "Bricollage", owner: "signa" }}       | ${teamSigna}  | ${undefined}  | ${undefined}
+        ${{ id: 3, name: "Cable", owner: "signa", parent: 2 }} | ${teamElec}   | ${{ id: 3 }}  | ${undefined}
+        ${{ id: 2, name: "Electrique", owner: "signa" }}       | ${teamSigna}  | ${{ id: 3 }}  | ${{ id: 3 }}
       `(
-        'when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team',
+        "when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team",
         ({
           toUpdateCategory,
           expectedOwner,
@@ -308,11 +308,11 @@ describe('Category', () => {
     `, () => {
       describe.each`
         toUpdateCategory                                            | expectedOwner | expectedPath                | childCategory                                               | grandChildCategory
-        ${{ id: 1, name: 'Bricollage', owner: 'matos', parent: 2 }} | ${teamElec}   | ${'electrique->bricollage'} | ${undefined}                                                | ${undefined}
-        ${{ id: 4, name: 'Grosse Tension', owner: 'elec' }}         | ${teamElec}   | ${'grosse-tension'}         | ${undefined}                                                | ${undefined}
-        ${{ id: 2, name: 'Electrique', owner: 'elec', parent: 1 }}  | ${teamMatos}  | ${'bricollage->electrique'} | ${{ id: 3, expectedPath: 'bricollage->electrique->cable' }} | ${{ id: 4, expectedPath: 'bricollage->electrique->cable->grosse-tension' }}
+        ${{ id: 1, name: "Bricollage", owner: "matos", parent: 2 }} | ${teamElec}   | ${"electrique->bricollage"} | ${undefined}                                                | ${undefined}
+        ${{ id: 4, name: "Grosse Tension", owner: "elec" }}         | ${teamElec}   | ${"grosse-tension"}         | ${undefined}                                                | ${undefined}
+        ${{ id: 2, name: "Electrique", owner: "elec", parent: 1 }}  | ${teamMatos}  | ${"bricollage->electrique"} | ${{ id: 3, expectedPath: "bricollage->electrique->cable" }} | ${{ id: 4, expectedPath: "bricollage->electrique->cable->grosse-tension" }}
       `(
-        'when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category',
+        "when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category",
         ({
           toUpdateCategory,
           expectedOwner,
@@ -360,8 +360,8 @@ describe('Category', () => {
       it("should inform user category doesn't exist", async () => {
         const toUpdateCategory = {
           id: 123,
-          name: 'Bricollage',
-          owner: 'matos',
+          name: "Bricollage",
+          owner: "matos",
           parent: 2,
         };
         await expect(
@@ -370,7 +370,7 @@ describe('Category', () => {
       });
     });
   });
-  describe('get all categories', () => {
+  describe("get all categories", () => {
     it(`should render categories as a parent tree
     - Matos
     - Electrique
@@ -381,28 +381,28 @@ describe('Category', () => {
       expect(categories).toHaveLength(2);
       expect(categories).toContainEqual({
         id: 1,
-        name: 'Bricollage',
-        path: 'bricollage',
+        name: "Bricollage",
+        path: "bricollage",
         owner: teamMatos,
         subCategories: [],
       });
       expect(categories).toContainEqual({
         id: 2,
-        name: 'Electrique',
-        path: 'electrique',
+        name: "Electrique",
+        path: "electrique",
         owner: teamElec,
         subCategories: [
           {
             id: 3,
-            name: 'Cable',
-            path: 'electrique->cable',
+            name: "Cable",
+            path: "electrique->cable",
             owner: teamElec,
             parent: 2,
             subCategories: [
               {
                 id: 4,
-                name: 'Grosse Tension',
-                path: 'electrique->cable->grosse-tension',
+                name: "Grosse Tension",
+                path: "electrique->cable->grosse-tension",
                 owner: teamElec,
                 parent: 3,
                 subCategories: [],
@@ -412,7 +412,7 @@ describe('Category', () => {
         ],
       });
     });
-    describe('when there is more subcategories on a category', () => {
+    describe("when there is more subcategories on a category", () => {
       beforeEach(() => {
         categoryRepository.categories = getSignaCategories();
       });
@@ -433,29 +433,29 @@ describe('Category', () => {
         expect(categories).toHaveLength(1);
         expect(categories).toContainEqual({
           id: 1,
-          name: 'Signaletique',
-          path: 'signaletique',
+          name: "Signaletique",
+          path: "signaletique",
           owner: teamSigna,
           subCategories: [
             {
               id: 2,
-              name: 'Lumineuse',
-              path: 'signaletique->lumineuse',
+              name: "Lumineuse",
+              path: "signaletique->lumineuse",
               owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 3,
-                  name: 'Projection',
-                  path: 'signaletique->lumineuse->projection',
+                  name: "Projection",
+                  path: "signaletique->lumineuse->projection",
                   owner: teamSigna,
                   parent: 2,
                   subCategories: [],
                 },
                 {
                   id: 10,
-                  name: 'Panneau',
-                  path: 'signaletique->lumineuse->panneau',
+                  name: "Panneau",
+                  path: "signaletique->lumineuse->panneau",
                   owner: teamSigna,
                   parent: 2,
                   subCategories: [],
@@ -464,23 +464,23 @@ describe('Category', () => {
             },
             {
               id: 4,
-              name: 'Plan',
-              path: 'signaletique->plan',
+              name: "Plan",
+              path: "signaletique->plan",
               owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 5,
-                  name: 'Grand Format',
-                  path: 'signaletique->plan->grand-format',
+                  name: "Grand Format",
+                  path: "signaletique->plan->grand-format",
                   owner: teamSigna,
                   parent: 4,
                   subCategories: [],
                 },
                 {
                   id: 6,
-                  name: 'Format Flyer',
-                  path: 'signaletique->plan->format-flyer',
+                  name: "Format Flyer",
+                  path: "signaletique->plan->format-flyer",
                   owner: teamSigna,
                   parent: 4,
                   subCategories: [],
@@ -489,31 +489,31 @@ describe('Category', () => {
             },
             {
               id: 7,
-              name: 'Panneau',
-              path: 'signaletique->panneau',
+              name: "Panneau",
+              path: "signaletique->panneau",
               owner: teamSigna,
               parent: 1,
               subCategories: [
                 {
                   id: 8,
-                  name: 'Bois',
-                  path: 'signaletique->panneau->bois',
+                  name: "Bois",
+                  path: "signaletique->panneau->bois",
                   owner: teamSigna,
                   parent: 7,
                   subCategories: [],
                 },
                 {
                   id: 8,
-                  name: 'Plastique',
-                  path: 'signaletique->panneau->plastique',
+                  name: "Plastique",
+                  path: "signaletique->panneau->plastique",
                   owner: teamSigna,
                   parent: 7,
                   subCategories: [],
                 },
                 {
                   id: 9,
-                  name: 'Moquette',
-                  path: 'signaletique->panneau->moquette',
+                  name: "Moquette",
+                  path: "signaletique->panneau->moquette",
                   owner: teamSigna,
                   parent: 7,
                   subCategories: [],
@@ -525,14 +525,14 @@ describe('Category', () => {
       });
     });
   });
-  describe('search a category', () => {
+  describe("search a category", () => {
     describe.each`
       searchName   | searchOwner  | expectedCategories
       ${undefined} | ${undefined} | ${CATEGORIES}
-      ${'bric'}    | ${undefined} | ${[CATEGORIES[0]]}
-      ${'elec'}    | ${undefined} | ${[CATEGORIES[1]]}
-      ${'elec'}    | ${'matos'}   | ${[]}
-      ${undefined} | ${'elec'}    | ${[CATEGORIES[1], CATEGORIES[2], CATEGORIES[3]]}
+      ${"bric"}    | ${undefined} | ${[CATEGORIES[0]]}
+      ${"elec"}    | ${undefined} | ${[CATEGORIES[1]]}
+      ${"elec"}    | ${"matos"}   | ${[]}
+      ${undefined} | ${"elec"}    | ${[CATEGORIES[1], CATEGORIES[2], CATEGORIES[3]]}
     `(
       'When looking for "$searchName" with "$searchOwner" owner',
       ({ searchName, searchOwner, expectedCategories }) => {
@@ -551,62 +551,62 @@ describe('Category', () => {
 function getSignaCategories(): Category[] {
   const owner = teamSigna;
   return [
-    { id: 1, name: 'Signaletique', path: 'signaletique', owner },
+    { id: 1, name: "Signaletique", path: "signaletique", owner },
     {
       id: 2,
-      name: 'Lumineuse',
-      path: 'signaletique->lumineuse',
+      name: "Lumineuse",
+      path: "signaletique->lumineuse",
       owner,
       parent: 1,
     },
     {
       id: 3,
-      name: 'Projection',
-      path: 'signaletique->lumineuse->projection',
+      name: "Projection",
+      path: "signaletique->lumineuse->projection",
       owner,
       parent: 2,
     },
     {
       id: 10,
-      name: 'Panneau',
-      path: 'signaletique->lumineuse->panneau',
+      name: "Panneau",
+      path: "signaletique->lumineuse->panneau",
       owner,
       parent: 2,
     },
-    { id: 4, name: 'Plan', path: 'signaletique->plan', owner, parent: 1 },
+    { id: 4, name: "Plan", path: "signaletique->plan", owner, parent: 1 },
     {
       id: 5,
-      name: 'Grand Format',
-      path: 'signaletique->plan->grand-format',
+      name: "Grand Format",
+      path: "signaletique->plan->grand-format",
       owner,
       parent: 4,
     },
     {
       id: 6,
-      name: 'Format Flyer',
-      path: 'signaletique->plan->format-flyer',
+      name: "Format Flyer",
+      path: "signaletique->plan->format-flyer",
       owner,
       parent: 4,
     },
-    { id: 7, name: 'Panneau', path: 'signaletique->panneau', owner, parent: 1 },
+    { id: 7, name: "Panneau", path: "signaletique->panneau", owner, parent: 1 },
     {
       id: 8,
-      name: 'Bois',
-      path: 'signaletique->panneau->bois',
+      name: "Bois",
+      path: "signaletique->panneau->bois",
       owner,
       parent: 7,
     },
     {
       id: 8,
-      name: 'Plastique',
-      path: 'signaletique->panneau->plastique',
+      name: "Plastique",
+      path: "signaletique->panneau->plastique",
       owner,
       parent: 7,
     },
     {
       id: 9,
-      name: 'Moquette',
-      path: 'signaletique->panneau->moquette',
+      name: "Moquette",
+      path: "signaletique->panneau->moquette",
       owner,
       parent: 7,
     },

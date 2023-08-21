@@ -1,6 +1,6 @@
-import { IProvidePeriod, Period } from '@overbookd/period';
-import { updateItemToList } from '@overbookd/list';
-import { Availability } from './volunteer-availability';
+import { IProvidePeriod, Period } from "@overbookd/period";
+import { updateItemToList } from "@overbookd/list";
+import { Availability } from "./volunteer-availability";
 
 export type PeriodWithError = IProvidePeriod & {
   message: string;
@@ -43,7 +43,7 @@ export class PeriodOrchestrator {
       })
       .map((period) => ({
         ...period,
-        message: 'La période doit durer au moins 2 heures',
+        message: "La période doit durer au moins 2 heures",
       }));
   }
 
