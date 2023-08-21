@@ -133,10 +133,7 @@ const SIMILAR_GEARS: Gear[] = [
 describe("Catalog", () => {
   const categoryRepository = new InMemoryCategoryRepository();
   const gearRepository = new InMemoryGearRepository();
-  const catalog = new CatalogService(
-    categoryRepository,
-    gearRepository,
-  );
+  const catalog = new CatalogService(categoryRepository, gearRepository);
   beforeAll(() => {
     categoryRepository.categories = CATEGORIES;
     gearRepository.gears = GEARS;
