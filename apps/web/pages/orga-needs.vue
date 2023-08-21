@@ -30,7 +30,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
-import { OrgaNeedsResponse } from "~/store/orga-needs";
+import { OrgaNeedsResponse } from "~/store/orgaNeeds";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
