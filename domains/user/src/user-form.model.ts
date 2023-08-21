@@ -7,7 +7,7 @@ export interface UserCreateForm extends UserName {
   phone: string;
   comment?: string;
   password: string;
-};
+}
 
 export interface UserUpdateForm {
   firstname?: string;
@@ -20,4 +20,4 @@ export interface UserUpdateForm {
   hasPayedContributions?: boolean;
   profilePicture?: string;
   charisma?: number;
-};
+}

@@ -6,7 +6,7 @@ export interface UserName {
 
 export interface User extends UserName {
   id: number;
-};
+}
 
 export interface UserPersonnalData extends User {
   email: string;
@@ -18,9 +18,9 @@ export interface UserPersonnalData extends User {
   charisma: number;
   balance: number;
   teams: string[];
-};
+}
 
 export interface MyUserInformation extends UserPersonnalData {
   permissions: string[];
   tasksCount: number;
-};
+}
