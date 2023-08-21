@@ -58,14 +58,14 @@ export class UserService {
   }
 
   async updateMyInformation(
-    author: JwtPayload,
+    authorInformation: JwtPayload,
     user: UserUpdateForm,
   ): Promise<MyUserInformation | null> {
-    const jwtAuthor = new JwtUtil(author);
-    const filteredUserData = this.filterUpdatableUserData(jwtAuthor, user);
+    const author = new JwtUtil(authorInformation);
+    const filteredUserData = this.filterUpdatableUserData(author, user);
 
     const updatedUser = await this.prisma.user.update({
-      where: { id: author.id },
+      where: { id: authorInformation.id },
       data: filteredUserData,
       select: SELECT_MY_USER_INFORMATION,
     });
@@ -210,18 +210,15 @@ export class UserService {
   async updateUser(
     targetId: number,
     userData: UserUpdateForm,
-    author: JwtPayload,
+    authorInformation: JwtPayload,
   ): Promise<UserPersonnalData> {
-    const jwtAuthor = new JwtUtil(author);
+    const author = new JwtUtil(authorInformation);
 
-    if (!this.canUpdateUser(jwtAuthor, targetId)) {
+    if (!this.canUpdateUser(author, targetId)) {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
 
-    const filteredPersonalData = this.filterUpdatableUserData(
-      jwtAuthor,
-      userData,
-    );
+    const filteredPersonalData = this.filterUpdatableUserData(author, userData);
 
     const user = await this.prisma.user.update({
       select: SELECT_USER_PERSONNAL_DATA,
