@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
-import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { JwtPayload, JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
@@ -55,10 +55,11 @@ export class UserService {
   }
 
   async updateMyInformation(
-    author: JwtUtil,
+    author: JwtPayload,
     user: UserUpdateForm,
   ): Promise<MyUserInformation | null> {
-    const filteredUserData = this.filterUpdatableUserData(author, user);
+    const jwtAuthor = new JwtUtil(author);
+    const filteredUserData = this.filterUpdatableUserData(jwtAuthor, user);
 
     const updatedUser = await this.prisma.user.update({
       where: { id: author.id },
@@ -206,13 +207,15 @@ export class UserService {
   async updateUser(
     targetId: number,
     userData: UserUpdateForm,
-    author: JwtUtil,
+    author: JwtPayload,
   ): Promise<UserPersonnalData> {
-    if (!this.canUpdateUser(author, targetId)) {
+    const jwtAuthor = new JwtUtil(author);
+
+    if (!this.canUpdateUser(jwtAuthor, targetId)) {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
 
-    const filteredPersonalData = this.filterUpdatableUserData(author, userData);
+    const filteredPersonalData = this.filterUpdatableUserData(jwtAuthor, userData);
 
     const user = await this.prisma.user.update({
       select: SELECT_USER_PERSONNAL_DATA,

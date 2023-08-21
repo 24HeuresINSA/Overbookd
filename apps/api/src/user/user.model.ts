@@ -1,7 +1,7 @@
 import { MyUserInformation, UserPersonnalData } from "@overbookd/user";
 import { TeamWithNestedPermissions } from "../team/utils/permissions";
 import { IProvidePeriod } from "@overbookd/period";
-import { Ft } from "@prisma/client"; // TODO do not use prisma type
+import { FtStatus } from "../ft/ft.model";
 
 export type UserPasswordOnly = {
   password: string;
@@ -14,7 +14,11 @@ export interface DatabaseMyUserInformation
 }
 
 export interface VolunteerTask extends IProvidePeriod {
-  ft: Pick<Ft, "id" | "name" | "status">;
+  ft: {
+    id: number;
+    name: string;
+    status: FtStatus;
+  };
   timeSpanId?: number;
 }
 
