@@ -33,3 +33,7 @@ export class SlugifyService {
       .replace(spacesOrApostrophes, SLUG_SEPARATOR);
   }
 }
+
+export function slugify(sentence?: string): string | undefined {
+  return sentence ? SlugifyService.apply(sentence) : undefined;
+}
