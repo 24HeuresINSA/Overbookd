@@ -393,7 +393,7 @@ importers:
 
   libraries/period: {}
 
-  libraries/string: {}
+  libraries/slugify: {}
 
 packages:
 

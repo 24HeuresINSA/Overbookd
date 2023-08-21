@@ -6,7 +6,7 @@ import {
   Gear,
   GearRepository,
 } from "./interfaces";
-import { slugify } from "@overbookd/string";
+import { SlugifyService } from "@overbookd/slugify";
 
 export type GearForm = {
   name: string;
@@ -89,9 +89,9 @@ export class CatalogService {
     owner,
     ponctualUsage,
   }: GearSearchRequest): Promise<Gear[]> {
-    const slug = slugify(name);
-    const categorySlug = slugify(category);
-    const ownerSlug = slugify(owner);
+    const slug = SlugifyService.apply(name);
+    const categorySlug = SlugifyService.apply(category);
+    const ownerSlug = SlugifyService.apply(owner);
     return this.gearRepository.searchGear({
       slug,
       category: categorySlug,
@@ -101,7 +101,7 @@ export class CatalogService {
   }
 
   private async generateComputedProperties(name: string, categoryId: number) {
-    const slug = slugify(name);
+    const slug = SlugifyService.apply(name);
     const category = await this.getCategory(categoryId);
     const simplifiedCategory = category
       ? { name: category.name, path: category.path, id: category.id }

@@ -1,7 +1,7 @@
 {
-  "name": "@overbookd/string",
+  "name": "@overbookd/slugify",
   "version": "1.0.0-rc.1",
-  "description": "Gestion des string pour overbookd",
+  "description": "Gestion des slugs pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "libraries/string"
+    "directory": "libraries/slugify"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
@@ -26,11 +26,10 @@
     "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "echo 'No tests'",
-    "test:ci": "echo 'No tests'"
+    "test": "vitest --config ../../vitest.config.ts",
+    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
   },
   "keywords": [
-    "string",
     "slugify"
   ],
   "engines": {

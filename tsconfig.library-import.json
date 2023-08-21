@@ -1,15 +1,9 @@
 {
   "compilerOptions": {
     "paths": {
-      "@overbookd/period": [
-        "./libraries/period/src"
-      ],
-      "@overbookd/list": [
-        "./libraries/list/src"
-      ],
-      "@overbookd/string": [
-        "./libraries/string/src"
-      ],
+      "@overbookd/period": ["./libraries/period/src"],
+      "@overbookd/list": ["./libraries/list/src"],
+      "@overbookd/slugify": ["./libraries/slugify/src"]
     }
   }
 }

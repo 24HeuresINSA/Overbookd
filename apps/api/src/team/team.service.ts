@@ -3,7 +3,7 @@ import { Prisma, Team } from "@prisma/client";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
-import { slugify } from "@overbookd/string";
+import { SlugifyService } from "@overbookd/slugify";
 
 export const TEAM_SELECT = {
   select: {
@@ -59,7 +59,7 @@ export class TeamService {
     color?: string;
     icon?: string;
   }): Promise<Team> {
-    const code = slugify(payload.code ?? payload.name);
+    const code = SlugifyService.apply(payload.code ?? payload.name);
     return this.prisma.team.create({
       data: { ...payload, code },
     });

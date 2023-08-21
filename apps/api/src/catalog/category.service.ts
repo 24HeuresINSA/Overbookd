@@ -7,7 +7,7 @@ import {
   Team,
   TeamRepository,
 } from "./interfaces";
-import { slugify } from "@overbookd/string";
+import { SlugifyService } from "@overbookd/slugify";
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {
@@ -110,8 +110,8 @@ export class CategoryService {
   }
 
   search({ name, owner }: SearchCategory): Promise<Category[]> {
-    const nameSlug = slugify(name);
-    const ownerSlug = slugify(owner);
+    const nameSlug = SlugifyService.apply(name);
+    const ownerSlug = SlugifyService.apply(owner);
     return this.categoryRepository.searchCategory({
       name: nameSlug,
       owner: ownerSlug,
@@ -179,8 +179,8 @@ export class CategoryService {
 
   private generatePath(name: string, parentCategory?: Category): string {
     return parentCategory
-      ? `${parentCategory.path}->${slugify(name)}`
-      : slugify(name);
+      ? `${parentCategory.path}->${SlugifyService.apply(name)}`
+      : SlugifyService.apply(name);
   }
 
   private async findOwner(
