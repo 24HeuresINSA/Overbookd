@@ -15,16 +15,16 @@ import {
   PublicAnimation,
   PublicAnimationCreation,
   PublicAnimationWithFa,
-} from "~/utils/models/fa";
-import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback";
+} from "~/utils/models/fa.model";
+import { FeedbackCreation, SavedFeedback } from "~/utils/models/feedback.model";
 import {
   GearRequest,
   GearRequestCreation,
   GearRequestUpdate,
   GearRequestWithDrive,
   StoredGearRequest,
-} from "~/utils/models/gearRequests";
-import { StatsPayload } from "~/utils/models/stats";
+} from "~/utils/models/gear-request.model";
+import { StatsPayload } from "~/utils/models/stats.model";
 import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };

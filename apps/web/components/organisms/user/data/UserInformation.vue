@@ -150,12 +150,12 @@
 import { removeItemAtIndex } from "@overbookd/list";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { isNumber, min } from "~/utils/rules/inputRules";
+import { isNumber, min } from "~/utils/rules/input.rules";
 import {
   formatPhoneLink,
   formatUserNameWithNickname,
   formatUserPhone,
-} from "~/utils/user/userUtils";
+} from "~/utils/user/user.utils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
 

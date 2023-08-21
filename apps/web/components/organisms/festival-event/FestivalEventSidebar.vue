@@ -20,16 +20,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { getFAValidationStatus } from "~/utils/festival-event/faUtils";
-import { getFTValidationStatus } from "~/utils/festival-event/ftUtils";
-import { Fa, FaStatusLabel } from "~/utils/models/fa";
+import { getFAValidationStatus } from "~/utils/festival-event/fa.utils";
+import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
+import { Fa, FaStatusLabel } from "~/utils/models/fa.model";
 import {
   FtStatusLabel,
   Ft,
   ftStatusLabels,
   BROUILLON,
-} from "~/utils/models/ft";
-import { Team } from "~/utils/models/team";
+} from "~/utils/models/ft.model";
+import { Team } from "~/utils/models/team.model";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
 
 export default Vue.extend({

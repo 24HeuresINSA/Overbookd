@@ -58,20 +58,20 @@ import FaTimeWindowForm from "~/components/molecules/festival-event/timeWindow/F
 import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
 import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import {
   Fa,
   FaCardType,
   FaTimeWindowWithType,
   TimeWindowType,
-} from "~/utils/models/fa";
-import { Period } from "~/utils/models/gearRequests";
-import { MyUserInformation, User } from "~/utils/models/user";
+} from "~/utils/models/fa.model";
+import { Period } from "~/utils/models/gear-request.model";
+import { MyUserInformation, User } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "FaTimeWindowCard",

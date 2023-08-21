@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { SignaLocation } from "~/utils/models/signaLocation";
+import { SignaLocation } from "~/utils/models/signa-location.model";
 
 interface SearchLocationData {
   loading: boolean;

@@ -170,22 +170,22 @@ import {
   getFAValidationStatus,
   isAnimationRefusedBy,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import {
   getFTValidationStatus,
   isTaskRefusedBy,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
-import { Fa, FaStatus } from "~/utils/models/fa";
-import { Ft, FtStatus } from "~/utils/models/ft";
+} from "~/utils/festival-event/ft.utils";
+import { Fa, FaStatus } from "~/utils/models/fa.model";
+import { Ft, FtStatus } from "~/utils/models/ft.model";
 import {
   FtTimeSpanParameters,
   TaskCategories,
-} from "~/utils/models/ftTimeSpan";
-import { Team } from "~/utils/models/team";
-import { MyUserInformation, User } from "~/utils/models/user";
-import { hasAtLeastOneError } from "~/utils/rules/faValidationRules";
-import { hasAtLeastOneFTError } from "~/utils/rules/ftValidationRules";
+} from "~/utils/models/ft-time-span.model";
+import { Team } from "~/utils/models/team.model";
+import { MyUserInformation, User } from "~/utils/models/user.model";
+import { hasAtLeastOneError } from "~/utils/rules/fa-validation.rules";
+import { hasAtLeastOneFTError } from "~/utils/rules/ft-validation.rules";
 import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
 import FaCheckBeforeSubmitCard from "./fa/FaCheckBeforeSubmitCard.vue";
 import FtCheckBeforeSubmitCard from "./ft/FtCheckBeforeSubmitCard.vue";

@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./user.model";
 
 export const AssignmentModes = {
   ORGA_TASK: "orga-task",

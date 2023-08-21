@@ -31,8 +31,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Transfer } from "~/utils/models/transaction";
-import { CompleteUser, MyUserInformation } from "~/utils/models/user";
+import { Transfer } from "~/utils/models/transaction.model";
+import { CompleteUser, MyUserInformation } from "~/utils/models/user.model";
 
 type UserAutocompleteItem = {
   text?: string;

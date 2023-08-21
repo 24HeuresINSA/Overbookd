@@ -38,10 +38,10 @@ import FALogisticsTable from "~/components/molecules/festival-event/logistic/FAL
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
+} from "~/utils/festival-event/fa.utils";
 import { Gear } from "~/utils/models/catalog.model";
-import { Fa } from "~/utils/models/fa";
-import { isNumber, min } from "~/utils/rules/inputRules";
+import { Fa } from "~/utils/models/fa.model";
+import { isNumber, min } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "FaLogisticsCard",

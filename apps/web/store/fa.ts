@@ -1,13 +1,13 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
-import { isAnimationValidatedBy } from "~/utils/festival-event/faUtils";
+import { isAnimationValidatedBy } from "~/utils/festival-event/fa.utils";
 import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
   uniqueByGearReducer,
   uniquePeriodsReducer,
-} from "~/utils/functions/gearRequest";
+} from "~/utils/functions/gear-request";
 import {
   Collaborator,
   CreateFa,
@@ -27,13 +27,13 @@ import {
   castFaWithDate,
   simplifyCompleteFa,
   toUpdateFa,
-} from "~/utils/models/fa";
+} from "~/utils/models/fa.model";
 import {
   FaFeedback,
   FaFeedbackSubjectType,
   FeedbackCreation,
-} from "~/utils/models/feedback";
-import { Ft } from "~/utils/models/ft";
+} from "~/utils/models/feedback.model";
+import { Ft } from "~/utils/models/ft.model";
 import {
   GearRequest,
   GearRequestCreation,
@@ -41,10 +41,10 @@ import {
   Period,
   StoredGearRequest,
   castGearRequestWithDate,
-} from "~/utils/models/gearRequests";
-import { User } from "~/utils/models/user";
+} from "~/utils/models/gear-request.model";
+import { User } from "~/utils/models/user.model";
 import { sendNotification } from "./catalog";
-import { formatUsername } from "~/utils/user/userUtils";
+import { formatUsername } from "~/utils/user/user.utils";
 import { RepoFactory } from "~/repositories/repo-factory";
 
 const repo = RepoFactory.FaRepository;

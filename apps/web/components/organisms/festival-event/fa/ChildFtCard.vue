@@ -42,14 +42,14 @@
 <script lang="ts">
 import Vue from "vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
-import { Fa } from "~/utils/models/fa";
+import { Fa } from "~/utils/models/fa.model";
 import {
   FtSimplified,
   FtStatus,
   FtStatusLabel,
   ftStatusLabels,
   BROUILLON,
-} from "~/utils/models/ft";
+} from "~/utils/models/ft.model";
 
 export default Vue.extend({
   name: "ChildFtCard",

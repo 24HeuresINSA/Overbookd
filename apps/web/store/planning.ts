@@ -1,7 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { User } from "~/utils/models/user";
+import { User } from "~/utils/models/user.model";
 
 const userRepo = RepoFactory.UserRepository;
 

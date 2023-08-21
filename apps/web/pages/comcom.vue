@@ -74,10 +74,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { Header } from "~/utils/models/dataTable";
-import { PublicAnimationWithFa } from "~/utils/models/fa";
-import { PeriodWithId } from "~/utils/models/period";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { Header } from "~/utils/models/data-table.model";
+import { PublicAnimationWithFa } from "~/utils/models/fa.model";
+import { PeriodWithId } from "~/utils/models/period.model";
 
 interface Comcom {
   headers: Header[];

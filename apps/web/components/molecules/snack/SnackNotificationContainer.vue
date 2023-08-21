@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotification from "~/components/atoms/snack/SnackNotification.vue";
-import { SnackNotif } from "~/utils/models/store";
+import { SnackNotif } from "~/utils/models/notif.model";
 
 export default Vue.extend({
   name: "SnackNotificationContainer",

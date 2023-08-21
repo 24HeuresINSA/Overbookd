@@ -23,8 +23,8 @@ import {
   TaskCategory,
   TaskCategoryEmojiMap,
   TaskCategoryEmojis,
-} from "~/utils/models/ftTimeSpan";
-import { VolunteerAssignmentStat } from "~/utils/models/user";
+} from "~/utils/models/ft-time-span.model";
+import { VolunteerAssignmentStat } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "AssignmentUserStats",

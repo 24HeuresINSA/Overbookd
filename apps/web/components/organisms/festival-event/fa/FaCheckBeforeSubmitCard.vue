@@ -131,7 +131,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, SortedStoredGearRequests } from "~/utils/models/fa";
+import { Fa, SortedStoredGearRequests } from "~/utils/models/fa.model";
 import {
   collaboratorErrors,
   collaboratorWarnings,
@@ -149,7 +149,7 @@ import {
   signaWarnings,
   timeWindowsErrors,
   waterWarnings,
-} from "~/utils/rules/faValidationRules";
+} from "~/utils/rules/fa-validation.rules";
 
 export default Vue.extend({
   name: "FaCheckBeforeSubmitCard",

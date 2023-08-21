@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { EventGearRequest } from "~/utils/models/gearRequests";
+import { EventGearRequest } from "~/utils/models/gear-request.model";
 
 export type Context = { $axios: NuxtAxiosInstance };
 

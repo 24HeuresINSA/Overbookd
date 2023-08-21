@@ -49,11 +49,11 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ftUtils";
-import { Ft, FtCardType } from "~/utils/models/ft";
-import { SignaLocation } from "~/utils/models/signaLocation";
-import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
+} from "~/utils/festival-event/ft.utils";
+import { Ft, FtCardType } from "~/utils/models/ft.model";
+import { SignaLocation } from "~/utils/models/signa-location.model";
+import { Team } from "~/utils/models/team.model";
+import { User } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "FtGeneralCard",

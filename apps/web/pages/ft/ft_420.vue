@@ -199,7 +199,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "Ft420",

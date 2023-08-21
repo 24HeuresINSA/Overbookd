@@ -1,6 +1,6 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
-import { Transaction, Transfer } from "~/utils/models/transaction";
+import { Transaction, Transfer } from "~/utils/models/transaction.model";
 import { safeCall } from "~/utils/api/calls";
 
 const transactionRepo = RepoFactory.TransactionRepository;

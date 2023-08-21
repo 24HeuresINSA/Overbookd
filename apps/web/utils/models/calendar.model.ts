@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { User } from "./user";
+import { User } from "./user.model";
 
 export interface CalendarEvent {
   start: Date;

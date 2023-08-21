@@ -97,8 +97,8 @@
 import Vue from "vue";
 import { PlanningEvent } from "~/domain/common/planning-events";
 import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/dateUtils";
-import { CalendarEvent, CalendarUser } from "~/utils/models/calendar";
+import { computeNextHourDate } from "~/utils/date/date.utils";
+import { CalendarEvent, CalendarUser } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";

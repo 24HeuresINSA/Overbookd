@@ -1,5 +1,5 @@
 import { AxiosResponse } from "axios";
-import { SnackNotif } from "../models/store";
+import { SnackNotif } from "../models/notif.model";
 
 interface ActionMessage {
   successMessage?: string;

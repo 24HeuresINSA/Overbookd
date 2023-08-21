@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { getPeriodDuration } from "../models/period";
+import { getPeriodDuration } from "../models/period.model";
 
 function getIdleBeforePercent(
   container: IProvidePeriod,

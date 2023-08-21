@@ -51,8 +51,8 @@ import {
   ElectricityType,
   ElectricityTypeWithLabel,
   electricityTypeLabels,
-} from "~/utils/models/fa";
-import { isNumber, min } from "~/utils/rules/inputRules";
+} from "~/utils/models/fa.model";
+import { isNumber, min } from "~/utils/rules/input.rules";
 
 interface ElectricityNeedData {
   electricityType?: ElectricityType;

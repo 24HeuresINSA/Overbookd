@@ -40,7 +40,7 @@ import Vue from "vue";
 import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
 import { DisplayableManualInventoryRecordError } from "~/domain/inventory/manual-inventory-record";
 import { Gear } from "~/utils/models/catalog.model";
-import { InputRulesData } from "~/utils/rules/inputRules";
+import { InputRulesData } from "~/utils/rules/input.rules";
 
 interface InventoryRecordFormData extends InputRulesData {
   gear?: Gear;

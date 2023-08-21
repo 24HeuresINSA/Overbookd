@@ -1,4 +1,4 @@
-import { Team } from "./team";
+import { Team } from "./team.model";
 
 export interface Gear {
   id: number;

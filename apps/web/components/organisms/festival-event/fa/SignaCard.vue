@@ -58,9 +58,9 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa";
-import { SignaLocation } from "~/utils/models/signaLocation";
+} from "~/utils/festival-event/fa.utils";
+import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa.model";
+import { SignaLocation } from "~/utils/models/signa-location.model";
 
 export default Vue.extend({
   name: "SignaCard",

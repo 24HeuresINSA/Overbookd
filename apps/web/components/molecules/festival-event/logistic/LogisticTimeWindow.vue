@@ -48,13 +48,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateToHumanReadable } from "~/utils/date/dateUtils";
+import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import {
   getFAValidationStatusWithMultipleTeams,
   hasAllValidations,
-} from "~/utils/festival-event/faUtils";
-import { Fa } from "~/utils/models/fa";
-import { Period } from "~/utils/models/gearRequests";
+} from "~/utils/festival-event/fa.utils";
+import { Fa } from "~/utils/models/fa.model";
+import { Period } from "~/utils/models/gear-request.model";
 
 export default Vue.extend({
   name: "LogisticTimeWindow",

@@ -2,7 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { getValidationReviews } from "~/utils/festival-event/ftUtils";
+import { getValidationReviews } from "~/utils/festival-event/ft.utils";
 import {
   generateGearRequestCreationBuilder,
   isSameGearRequest,
@@ -12,13 +12,13 @@ import {
   uniqueByGearReducer,
   uniqueGearRequestPeriodsReducer,
   uniquePeriodsReducer,
-} from "~/utils/functions/gearRequest";
+} from "~/utils/functions/gear-request";
 import {
   Feedback,
   FeedbackCreation,
   FtFeedback,
   FtFeedbackSubjectType,
-} from "~/utils/models/feedback";
+} from "~/utils/models/feedback.model";
 import {
   Ft,
   FtCreation,
@@ -35,19 +35,19 @@ import {
   castFtTimeWindowWithDate,
   getFtTimeWindowWithoutRequests,
   toUpdateFT,
-} from "~/utils/models/ft";
-import { FtTimeSpanParameters } from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft.model";
+import { FtTimeSpanParameters } from "~/utils/models/ft-time-span.model";
 import {
   GearRequestCreation,
   GearRequestWithDrive,
   Period,
   StoredGearRequest,
   castGearRequestWithDate,
-} from "~/utils/models/gearRequests";
-import { Review, Reviewer } from "~/utils/models/review";
-import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+} from "~/utils/models/gear-request.model";
+import { Review, Reviewer } from "~/utils/models/review.model";
+import { Team } from "~/utils/models/team.model";
+import { User } from "~/utils/models/user.model";
+import { formatUsername } from "~/utils/user/user.utils";
 
 const repo = RepoFactory.FtRepository;
 

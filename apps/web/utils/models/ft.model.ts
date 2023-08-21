@@ -1,12 +1,12 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
-import { BaseFa } from "./fa";
-import { FtFeedback } from "./feedback";
-import { FtTimeSpan } from "./ftTimeSpan";
-import { Review } from "./review";
-import { SignaLocation } from "./signaLocation";
-import { Team } from "./team";
-import { User } from "./user";
+import { BaseFa } from "./fa.model";
+import { FtFeedback } from "./feedback.model";
+import { FtTimeSpan } from "./ft-time-span.model";
+import { Review } from "./review.model";
+import { SignaLocation } from "./signa-location.model";
+import { Team } from "./team.model";
+import { User } from "./user.model";
 
 export enum FtStatus {
   DRAFT = "DRAFT",

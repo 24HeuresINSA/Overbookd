@@ -5,7 +5,7 @@ import {
   castCharismaPeriodWithDate,
   CharismaPeriod,
   SavedCharismaPeriod,
-} from "~/utils/models/charismaPeriod";
+} from "~/utils/models/charisma-period.model";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 

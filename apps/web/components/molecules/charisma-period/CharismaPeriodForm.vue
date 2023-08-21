@@ -48,8 +48,8 @@ import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-} from "~/utils/models/charismaPeriod";
-import { isNumber, min, required } from "~/utils/rules/inputRules";
+} from "~/utils/models/charisma-period.model";
+import { isNumber, min, required } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "CharismaPeriodForm",

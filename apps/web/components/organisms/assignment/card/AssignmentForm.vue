@@ -110,8 +110,8 @@ import {
   convertTaskToPlanningEvent,
   createTemporaryTaskPlanningEvent,
 } from "~/domain/common/planning-events";
-import { Volunteer } from "~/utils/models/assignment";
-import { CalendarUser } from "~/utils/models/calendar";
+import { Volunteer } from "~/utils/models/assignment.model";
+import { CalendarUser } from "~/utils/models/calendar.model";
 import { getUnderlyingTeams } from "~/domain/timespan-assignment/underlying-teams";
 import OverMultiCalendar from "~/components/molecules/calendar/OverMultiCalendar.vue";
 import AssignmentVolunteerResumeCalendarHeader from "~/components/molecules/assignment/resume/AssignmentVolunteerResumeCalendarHeader.vue";

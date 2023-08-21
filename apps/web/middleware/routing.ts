@@ -1,5 +1,5 @@
-import { pages } from "~/utils/pages/pagesList";
 import { NuxtContext } from "./nuxt-context";
+import { pages } from "../utils/pages/pages-list";
 
 export default async function (context: NuxtContext) {
   const pagePath = context.route.path;

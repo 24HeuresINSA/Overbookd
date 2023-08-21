@@ -1,5 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { SnackNotif } from "~/utils/models/store";
+import { SnackNotif } from "~/utils/models/notif.model";
 
 export const state = () => ({
   queue: [] as SnackNotif[],

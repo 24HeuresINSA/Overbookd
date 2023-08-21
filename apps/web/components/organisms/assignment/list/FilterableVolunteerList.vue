@@ -35,14 +35,14 @@ import Fuse from "fuse.js";
 import AssignmentVolunteerList from "~/components/molecules/assignment/list/AssignmentVolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 import {
   Sort,
   Volunteer,
   AssignmentModes,
   getAssignmentModeFromRoute,
-} from "~/utils/models/assignment";
-import { FtTimeSpan } from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/assignment.model";
+import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "FilterableVolunteerList",

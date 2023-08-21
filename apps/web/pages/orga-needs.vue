@@ -34,7 +34,7 @@ import { OrgaNeedsResponse } from "~/store/orgaNeeds";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import OrgaNeedsChart from "~/components/organisms/orga-needs/OrgaNeedsChart.vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 

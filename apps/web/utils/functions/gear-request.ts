@@ -9,7 +9,7 @@ import {
   Seeker,
   SortableGearRequestHeader,
   StoredGearRequest,
-} from "../models/gearRequests";
+} from "../models/gear-request.model";
 
 export function uniqueGearRequestPeriodsReducer(
   gearRequests: GearRequest<"FA" | "FT">[],

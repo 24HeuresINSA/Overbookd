@@ -26,9 +26,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { Header } from "~/utils/models/dataTable";
-import { EventGearRequest, EventSeeker } from "~/utils/models/gearRequests";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { Header } from "~/utils/models/data-table.model";
+import {
+  EventGearRequest,
+  EventSeeker,
+} from "~/utils/models/gear-request.model";
 
 interface GearRequestListingData {
   headers: Header[];

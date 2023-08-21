@@ -49,12 +49,12 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType, FaType } from "~/utils/models/fa";
-import { User } from "~/utils/models/user";
+} from "~/utils/festival-event/fa.utils";
+import { Fa, FaCardType, FaType } from "~/utils/models/fa.model";
+import { User } from "~/utils/models/user.model";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import { Team } from "~/utils/models/team";
+import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "FaGeneralCard",

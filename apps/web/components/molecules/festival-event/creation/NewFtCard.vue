@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Ft, FtCreation } from "~/utils/models/ft";
+import { Ft, FtCreation } from "~/utils/models/ft.model";
 
 export default Vue.extend({
   name: "NewFtCard",

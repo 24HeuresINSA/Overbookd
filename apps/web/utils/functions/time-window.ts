@@ -1,5 +1,5 @@
-import { FaTimeWindow, FaTimeWindowSortFunction } from "../models/fa";
-import { FtTimeWindow, FtTimeWindowSortFunction } from "../models/ft";
+import { FaTimeWindow, FaTimeWindowSortFunction } from "../models/fa.model";
+import { FtTimeWindow, FtTimeWindowSortFunction } from "../models/ft.model";
 
 export type SortableTimeWindowHeader = "startDate" | "endDate";
 

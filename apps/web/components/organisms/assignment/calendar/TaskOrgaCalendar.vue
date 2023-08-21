@@ -27,7 +27,7 @@ import {
   FtTimeSpanWithRequestedTeams,
   FtWithTimeSpan,
   RequestedTeam,
-} from "~/utils/models/ftTimeSpan";
+} from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "TaskOrgaCalendar",

@@ -11,7 +11,7 @@ import {
   UpdateAssignedTeam,
   Volunteer,
   getAssignmentModeFromRoute,
-} from "~/utils/models/assignment";
+} from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   FtTimeSpan,
@@ -20,14 +20,14 @@ import {
   TimeSpanWithAssignees,
   castAvailableTimeSpansWithDate,
   castFtsWithTimeSpansWithDate,
-} from "~/utils/models/ftTimeSpan";
-import { castPeriods } from "~/utils/models/period";
+} from "~/utils/models/ft-time-span.model";
+import { castPeriods } from "~/utils/models/period.model";
 import {
   User,
   VolunteerAssignmentStat,
   VolunteerTask,
   castVolunteerTaskWithDate,
-} from "~/utils/models/user";
+} from "~/utils/models/user.model";
 import { HttpStringified } from "~/utils/types/http";
 
 type AssignmentParameters = {

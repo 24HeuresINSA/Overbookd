@@ -1,6 +1,9 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Permission, CreatePermissionForm } from "~/utils/models/permission";
 import { HttpStringified } from "~/utils/types/http";
+import {
+  Permission,
+  CreatePermissionForm,
+} from "~/utils/models/permission.model";
 
 type Context = { $axios: NuxtAxiosInstance };
 

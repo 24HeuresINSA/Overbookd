@@ -54,7 +54,7 @@ import {
   TimelineFt,
   TimelineTimeWindow,
   TimelineTimeSpan,
-} from "~/utils/models/timeline";
+} from "~/utils/models/timeline.model";
 import { marginPercent, widthPercent } from "~/utils/timeline/placement";
 
 export default Vue.extend({

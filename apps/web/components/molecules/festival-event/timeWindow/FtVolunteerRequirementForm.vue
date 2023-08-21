@@ -78,11 +78,11 @@ import {
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-} from "~/utils/models/ft";
-import { Team } from "~/utils/models/team";
-import { User } from "~/utils/models/user";
-import { isNumber, min } from "~/utils/rules/inputRules";
-import { formatUsername } from "~/utils/user/userUtils";
+} from "~/utils/models/ft.model";
+import { Team } from "~/utils/models/team.model";
+import { User } from "~/utils/models/user.model";
+import { isNumber, min } from "~/utils/rules/input.rules";
+import { formatUsername } from "~/utils/user/user.utils";
 
 export default Vue.extend({
   name: "FtVolunteerRequirementForm",

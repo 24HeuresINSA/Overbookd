@@ -22,8 +22,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CompleteUserWithPermissions as User } from "~/utils/models/user";
-import { formatUsername } from "~/utils/user/userUtils";
+import { CompleteUserWithPermissions as User } from "~/utils/models/user.model";
+import { formatUsername } from "~/utils/user/user.utils";
 
 interface SearchUserData {
   loading: boolean;

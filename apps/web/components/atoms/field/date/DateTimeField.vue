@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatLocalDateTime, roundMinutes } from "~/utils/date/dateUtils";
+import { formatLocalDateTime, roundMinutes } from "~/utils/date/date.utils";
 
 export default Vue.extend({
   name: "DateTimeField",

@@ -25,7 +25,7 @@ import FilterableTaskList from "~/components/organisms/assignment/list/Filterabl
 import FilterableVolunteerList from "~/components/organisms/assignment/list/FilterableVolunteerList.vue";
 import TaskOrgaCalendar from "~/components/organisms/assignment/calendar/TaskOrgaCalendar.vue";
 import TimeSpanDetails from "~/components/organisms/assignment/card/TimeSpanDetails.vue";
-import { FtWithTimeSpan } from "~/utils/models/ftTimeSpan";
+import { FtWithTimeSpan } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "TaskOrga",

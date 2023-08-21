@@ -33,10 +33,10 @@
 <script lang="ts">
 import Vue from "vue";
 import FtTimeSpanDetails from "~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue";
-import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
-import { CalendarEvent } from "~/utils/models/calendar";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
-import { FtStatus, FtTimeWindow } from "~/utils/models/ft";
+import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
+import { CalendarEvent } from "~/utils/models/calendar.model";
+import { FtStatus, FtTimeWindow } from "~/utils/models/ft.model";
 
 type Event = CalendarEvent & {
   timeSpanId?: number;

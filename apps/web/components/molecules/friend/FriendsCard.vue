@@ -46,8 +46,8 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchFriend from "~/components/atoms/field/search/SearchFriend.vue";
-import { User } from "~/utils/models/user";
-import { formatUserNameWithNickname } from "~/utils/user/userUtils";
+import { User } from "~/utils/models/user.model";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 interface FriendsCardData {
   newFriend: User;

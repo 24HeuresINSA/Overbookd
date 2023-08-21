@@ -51,9 +51,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { gearRequestsSorts } from "~/utils/functions/gearRequest";
-import { Header } from "~/utils/models/dataTable";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { gearRequestsSorts } from "~/utils/functions/gear-request";
+import { Header } from "~/utils/models/data-table.model";
 import {
   GearRequest,
   GearRequestWithDrive,
@@ -61,7 +61,7 @@ import {
   isFTStoredGearRequest,
   SortableGearRequestHeader,
   StoredGearRequest,
-} from "~/utils/models/gearRequests";
+} from "~/utils/models/gear-request.model";
 
 interface GearRequestsValidationData {
   headers: Header[];

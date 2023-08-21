@@ -11,8 +11,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Fa, FaCardType, FaStatus } from "~/utils/models/fa";
-import { Ft, FtCardType, FtStatus } from "~/utils/models/ft";
+import { Fa, FaCardType, FaStatus } from "~/utils/models/fa.model";
+import { Ft, FtCardType, FtStatus } from "~/utils/models/ft.model";
 import {
   collaboratorErrors,
   detailErrors,
@@ -20,13 +20,13 @@ import {
   securityErrors,
   signaErrors,
   timeWindowsErrors,
-} from "~/utils/rules/faValidationRules";
+} from "~/utils/rules/fa-validation.rules";
 import {
   ftDetailErrors,
   ftGeneralErrors,
   ftParentFAErrors,
   ftTimeWindowsErrors,
-} from "~/utils/rules/ftValidationRules";
+} from "~/utils/rules/ft-validation.rules";
 
 export default Vue.extend({
   name: "CardErrorList",

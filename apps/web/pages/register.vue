@@ -148,8 +148,8 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { Team } from "~/utils/models/team";
-import { UserCreation } from "~/utils/models/user";
+import { Team } from "~/utils/models/team.model";
+import { UserCreation } from "~/utils/models/user.model";
 import {
   InputRulesData,
   required,
@@ -160,7 +160,7 @@ import {
   isMobilePhoneNumber,
   password,
   isSame,
-} from "~/utils/rules/inputRules";
+} from "~/utils/rules/input.rules";
 
 interface RegisterData extends InputRulesData {
   step: number;

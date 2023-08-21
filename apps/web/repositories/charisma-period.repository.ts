@@ -2,7 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   CharismaPeriod,
   SavedCharismaPeriod,
-} from "~/utils/models/charismaPeriod";
+} from "~/utils/models/charisma-period.model";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };

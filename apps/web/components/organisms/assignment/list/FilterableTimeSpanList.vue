@@ -29,15 +29,15 @@ import Vue from "vue";
 import Fuse from "fuse.js";
 import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import FtTimeSpanList from "~/components/molecules/assignment/list/FtTimeSpanList.vue";
-import { Volunteer } from "~/utils/models/assignment";
+import { Volunteer } from "~/utils/models/assignment.model";
 import {
   AvailableTimeSpan,
   SimplifiedFT,
   TaskCategory,
   TaskPriorities,
   TaskPriority,
-} from "~/utils/models/ftTimeSpan";
-import { Team } from "~/utils/models/team";
+} from "~/utils/models/ft-time-span.model";
+import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 
 export default Vue.extend({

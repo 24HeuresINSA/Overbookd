@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { SgConfig } from "~/utils/models/configuration";
+import { SgConfig } from "~/utils/models/configuration.model";
 import { Configuration } from "@overbookd/configuration";
 
 export default Vue.extend({

@@ -65,19 +65,19 @@
 <script lang="ts">
 import Vue from "vue";
 import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.vue";
-import { formatDateWithMinutes } from "~/utils/date/dateUtils";
-import { isTaskValidatedBy } from "~/utils/festival-event/ftUtils";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { isTaskValidatedBy } from "~/utils/festival-event/ft.utils";
 import {
   SortableTimeWindowHeader,
   ftTimeWindowsSorts,
-} from "~/utils/functions/timeWindow";
+} from "~/utils/functions/time-window";
 import {
   Ft,
   FtTeamRequest,
   FtTimeWindow,
   FtUserRequest,
   FtUserRequestImpl,
-} from "~/utils/models/ft";
+} from "~/utils/models/ft.model";
 
 export default Vue.extend({
   name: "FtTimeWindowTable",

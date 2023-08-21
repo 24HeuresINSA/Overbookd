@@ -22,8 +22,8 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FtWithTimeSpan,
   getRequiredTeamsInFt,
-} from "~/utils/models/ftTimeSpan";
-import { sortTeamsForAssignment } from "~/utils/models/team";
+} from "~/utils/models/ft-time-span.model";
+import { sortTeamsForAssignment } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "TaskResume",

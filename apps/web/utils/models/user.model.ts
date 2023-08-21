@@ -1,7 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "../types/http";
-import { FtStatus } from "./ft";
-import { TaskCategory } from "./ftTimeSpan";
+import { FtStatus } from "./ft.model";
+import { TaskCategory } from "./ft-time-span.model";
 
 export interface DisplayedUser {
   firstname: string;

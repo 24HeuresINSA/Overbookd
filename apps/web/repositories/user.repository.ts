@@ -8,7 +8,7 @@ import {
   UserModification,
   VolunteerAssignmentStat,
   VolunteerTask,
-} from "~/utils/models/user";
+} from "~/utils/models/user.model";
 import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };

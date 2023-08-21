@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Period } from "@overbookd/period";
-import { Volunteer } from "~/utils/models/needHelp";
+import { Volunteer } from "~/utils/models/need-help.model";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };

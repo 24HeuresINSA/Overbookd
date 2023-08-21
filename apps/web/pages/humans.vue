@@ -184,7 +184,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
 import { download } from "~/utils/planning/download";
-import { formatPhoneLink } from "~/utils/user/userUtils";
+import { formatPhoneLink } from "~/utils/user/user.utils";
 
 export default {
   name: "Humans",

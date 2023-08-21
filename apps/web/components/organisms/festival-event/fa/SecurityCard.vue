@@ -44,9 +44,9 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFAValidationStatus,
   isAnimationValidatedBy,
-} from "~/utils/festival-event/faUtils";
-import { Fa, FaCardType } from "~/utils/models/fa";
-import { isNumber, min } from "~/utils/rules/inputRules";
+} from "~/utils/festival-event/fa.utils";
+import { Fa, FaCardType } from "~/utils/models/fa.model";
+import { isNumber, min } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "SecurityCard",

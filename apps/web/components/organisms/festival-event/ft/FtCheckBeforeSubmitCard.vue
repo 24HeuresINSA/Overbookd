@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Ft } from "~/utils/models/ft";
+import { Ft } from "~/utils/models/ft.model";
 
 import {
   ftDetailErrors,
@@ -63,7 +63,7 @@ import {
   ftParentFAErrors,
   ftTimeWindowsErrors,
   hasAtLeastOneFTError,
-} from "~/utils/rules/ftValidationRules";
+} from "~/utils/rules/ft-validation.rules";
 
 export default Vue.extend({
   name: "FtCheckBeforeSubmitCard",

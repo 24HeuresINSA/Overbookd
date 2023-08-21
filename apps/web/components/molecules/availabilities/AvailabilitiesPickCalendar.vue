@@ -44,14 +44,14 @@ import {
   isPeriodIncludedByAnother,
 } from "~/utils/availabilities/availabilities";
 import { generateNewPeriod } from "~/utils/availabilities/period";
-import { getCharismaByDate } from "~/utils/models/charismaPeriod";
+import { getCharismaByDate } from "~/utils/models/charisma-period.model";
 import { isPartyShift } from "~/utils/shift/shift";
 import {
   formatDateDayName,
   formatDateDayNumber,
   computeTomorrowDate,
   setDateHour,
-} from "~/utils/date/dateUtils";
+} from "~/utils/date/date.utils";
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",

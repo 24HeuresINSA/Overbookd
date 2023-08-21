@@ -43,8 +43,8 @@ import SearchTeamVue from "~/components/atoms/field/search/SearchTeam.vue";
 import { CategoryForm } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
 import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
-import { InputRulesData, minLength } from "~/utils/rules/inputRules";
-import { Team } from "~/utils/models/team";
+import { InputRulesData, minLength } from "~/utils/rules/input.rules";
+import { Team } from "~/utils/models/team.model";
 
 interface CategoryFormData extends InputRulesData {
   name: string;

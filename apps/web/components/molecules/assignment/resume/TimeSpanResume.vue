@@ -47,7 +47,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { AvailableTimeSpan } from "~/utils/models/ftTimeSpan";
+import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
 
 export default Vue.extend({
   name: "TimeSpanResume",

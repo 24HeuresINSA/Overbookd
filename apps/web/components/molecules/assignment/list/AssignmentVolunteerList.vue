@@ -20,7 +20,7 @@
 <script lang="ts">
 import Vue from "vue";
 import AssignmentVolunteerResume from "~/components/molecules/assignment/resume/AssignmentVolunteerResume.vue";
-import { Volunteer } from "~/utils/models/assignment";
+import { Volunteer } from "~/utils/models/assignment.model";
 
 export default Vue.extend({
   name: "AssignmentVolunteerList",
