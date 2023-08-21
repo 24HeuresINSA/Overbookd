@@ -38,7 +38,8 @@
         "dbaeumer.vscode-eslint",
         "kamikillerto.vscode-colorize",
         "Vue.volar",
-        "rohit-gohri.format-code-action"
+        "rohit-gohri.format-code-action",
+        "DavidAnson.vscode-markdownlint"
       ]
     }
   },

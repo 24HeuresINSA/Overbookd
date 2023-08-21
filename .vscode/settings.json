@@ -44,13 +44,20 @@
   "editor.formatOnSave": false,
   "editor.codeActionsOnSave": ["source.formatDocument", "source.fixAll.eslint"],
   "eslint.validate": ["javascript", "typescript"],
-  "eslint.codeActionsOnSave.rules": [
-    "all"
-  ],
+  "eslint.codeActionsOnSave.rules": ["all"],
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.python"
   }
 }
