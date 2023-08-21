@@ -55,6 +55,7 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         permissionRepo.createPermission(this, payload),
+        { successMessage: 'Permission créée ✅' },
       );
       if (!res) return;
       commit('ADD_PERMISSION', res.data);

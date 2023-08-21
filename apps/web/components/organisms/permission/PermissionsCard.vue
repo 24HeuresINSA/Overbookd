@@ -101,15 +101,12 @@ export default Vue.extend({
   },
   methods: {
     async addPermission() {
-      let response = await this.$accessor.permission.createPermission({
+      await this.$accessor.permission.createPermission({
         name: this.newPermissionName,
         description: this.newPermissionDescription,
       });
       this.newPermissionName = '';
       this.newPermissionDescription = '';
-      this.$accessor.notif.pushNotification({
-        message: response,
-      });
     },
   },
 });
