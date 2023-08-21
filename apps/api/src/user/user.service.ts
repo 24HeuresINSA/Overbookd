@@ -1,5 +1,8 @@
 import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
-import { JwtPayload, JwtUtil } from "../authentication/entities/jwt-util.entity";
+import {
+  JwtPayload,
+  JwtUtil,
+} from "../authentication/entities/jwt-util.entity";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
@@ -215,7 +218,10 @@ export class UserService {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
 
-    const filteredPersonalData = this.filterUpdatableUserData(jwtAuthor, userData);
+    const filteredPersonalData = this.filterUpdatableUserData(
+      jwtAuthor,
+      userData,
+    );
 
     const user = await this.prisma.user.update({
       select: SELECT_USER_PERSONNAL_DATA,

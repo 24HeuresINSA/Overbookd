@@ -234,10 +234,7 @@ export class UserController {
     @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: UpdateUserRequestDto,
   ): Promise<UserPersonnalData | null> {
-    return this.userService.updateMyInformation(
-      req.user,
-      userData,
-    );
+    return this.userService.updateMyInformation(req.user, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -377,11 +374,7 @@ export class UserController {
     @Body() user: UpdateUserRequestDto,
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<UserPersonnalData> {
-    return this.userService.updateUser(
-      targetUserId,
-      user,
-      req.user,
-    );
+    return this.userService.updateUser(targetUserId, user, req.user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
