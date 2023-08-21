@@ -105,8 +105,8 @@ importers:
         specifier: 1.2.1
         version: 1.2.1
       html-to-pdfmake:
-        specifier: 2.4.22
-        version: 2.4.22
+        specifier: 2.4.23
+        version: 2.4.23
       ics:
         specifier: 3.4.0
         version: 3.4.0
@@ -9219,6 +9219,7 @@ packages:
 
   /function-bind@1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
+    requiresBuild: true
 
   /function.prototype.name@1.1.5:
     resolution: {integrity: sha512-uN7m/BzVKQnCUF/iW8jYea67v++2u7m5UgENbHRtdDVclOUP+FMPlCNdmk0h/ysGyo2tavMJEDqJAkJdRa1vMA==}
@@ -9726,8 +9727,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /html-to-pdfmake@2.4.22:
-    resolution: {integrity: sha512-tzhTPYRlvaHMMRbW/4tlRVAATnKsuhIMhEK9kiB0bQCJHg0BDb/un0N2r9tQSvJWDcWcDUEH94NTYUEfYzE9kA==}
+  /html-to-pdfmake@2.4.23:
+    resolution: {integrity: sha512-0QrtniAsltaXIq/O8c5qPbyeoDEiGC1iMrw2f8rgCYvULPR+AbSSOplkxDmp7W9Zv1802D3uSb/albjJqR+MIw==}
     dev: false
 
   /html-to-text@9.0.5:
