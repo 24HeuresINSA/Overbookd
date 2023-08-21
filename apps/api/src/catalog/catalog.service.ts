@@ -6,7 +6,7 @@ import {
   Gear,
   GearRepository,
 } from "./interfaces";
-import { slugify } from '@overbookd/string';
+import { slugify } from "@overbookd/string";
 
 export type GearForm = {
   name: string;
@@ -35,7 +35,7 @@ type GearSearchRequest = {
 @Injectable()
 export class CatalogService {
   constructor(
-    @Inject('CATEGORY_REPOSITORY')
+    @Inject("CATEGORY_REPOSITORY")
     private readonly categoryRepository: CategoryRepository,
     @Inject("GEAR_REPOSITORY")
     private readonly gearRepository: GearRepository,

@@ -68,11 +68,11 @@ const TABLE: Gear = {
   isConsumable: false,
 };
 
-describe('Inventory Service', () => {
-  describe('Setup inventory', () => {
+describe("Inventory Service", () => {
+  describe("Setup inventory", () => {
     const inventoryRepository = new InMemoryInventoryRepository();
     const inventoryService = new InventoryService(inventoryRepository);
-    describe('when ask to setup inventory with 2 records for different gear', () => {
+    describe("when ask to setup inventory with 2 records for different gear", () => {
       let inventory: GroupedRecord[];
       beforeAll(async () => {
         inventory = await inventoryService.setup([
@@ -210,8 +210,8 @@ describe('Inventory Service', () => {
     const records = [...tableRecords, ...marteauRecords, ...ponceuseRecords];
     const inventoryRepository = new InMemoryInventoryRepository(records);
     const inventoryService = new InventoryService(inventoryRepository);
-    describe('When searching all grouped records', () => {
-      it('should return all grouped records with the sum of quantities', async () => {
+    describe("When searching all grouped records", () => {
+      it("should return all grouped records with the sum of quantities", async () => {
         const records = await inventoryService.search({});
         expect(records).toHaveLength(3);
         expect(records).toContainEqual({

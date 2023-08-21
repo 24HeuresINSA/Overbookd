@@ -7,7 +7,7 @@ import {
   Team,
   TeamRepository,
 } from "./interfaces";
-import { slugify } from '@overbookd/string';
+import { slugify } from "@overbookd/string";
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {
