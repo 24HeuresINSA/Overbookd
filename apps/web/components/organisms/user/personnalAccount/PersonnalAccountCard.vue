@@ -56,7 +56,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TransferDialog from "~/components/molecules/user/TransferDialog.vue";
-import { Transaction } from "~/utils/models/transaction";
+import { Transaction } from "~/utils/models/transaction.model";
 
 export default Vue.extend({
   name: "PersonnalAccountCard",
