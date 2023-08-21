@@ -165,33 +165,33 @@ enum FaStatus {
 }
 
 model Fa {
-  id                     Int                     @id @default(autoincrement())
-  name                   String                  @db.VarChar(255)
-  type                   FaType?
-  team                   Team?                   @relation(fields: [teamId], references: [id])
-  teamId                 Int?                    @map("team_id")
-  userInCharge           User?                   @relation(fields: [userInChargeId], references: [id], name: "in_charge")
-  userInChargeId         Int?                    @map("user_in_charge_id")
-  createdAt              DateTime?               @default(now()) @map("created_at")
-  location               SignaLocation?          @relation(fields: [locationId], references: [id])
-  locationId             Int?                    @map("location_id")
-  status                 FaStatus                @default(DRAFT)
-  description            String?                 @db.Text
-  securityNeed           String?                 @map("security_need") @db.Text
-  numberOfPass           Int?                    @map("number_of_pass")
-  waterNeed              String?                 @map("water_need") @db.Text
-  isDeleted              Boolean                 @default(false) @map("is_deleted")
-  faValidation           FaValidation[]
-  faRefuse               FaRefuse[]
-  electricityNeeds       FaElectricityNeed[]
-  signaNeeds             FaSignaNeed[]
-  feedbacks              FaFeedback[]
-  timeWindows            FaTimeWindow[]
-  gearRequests           GearRequest[]           @relation("gear-request-animation")
-  publicAnimation        PublicAnimation?
-  fts                    Ft[]
-  collaborator           Collaborator?           @relation(fields: [collaboratorId], references: [id])
-  collaboratorId         Int?
+  id               Int                 @id @default(autoincrement())
+  name             String              @db.VarChar(255)
+  type             FaType?
+  team             Team?               @relation(fields: [teamId], references: [id])
+  teamId           Int?                @map("team_id")
+  userInCharge     User?               @relation(fields: [userInChargeId], references: [id], name: "in_charge")
+  userInChargeId   Int?                @map("user_in_charge_id")
+  createdAt        DateTime?           @default(now()) @map("created_at")
+  location         SignaLocation?      @relation(fields: [locationId], references: [id])
+  locationId       Int?                @map("location_id")
+  status           FaStatus            @default(DRAFT)
+  description      String?             @db.Text
+  securityNeed     String?             @map("security_need") @db.Text
+  numberOfPass     Int?                @map("number_of_pass")
+  waterNeed        String?             @map("water_need") @db.Text
+  isDeleted        Boolean             @default(false) @map("is_deleted")
+  faValidation     FaValidation[]
+  faRefuse         FaRefuse[]
+  electricityNeeds FaElectricityNeed[]
+  signaNeeds       FaSignaNeed[]
+  feedbacks        FaFeedback[]
+  timeWindows      FaTimeWindow[]
+  gearRequests     GearRequest[]       @relation("gear-request-animation")
+  publicAnimation  PublicAnimation?
+  fts              Ft[]
+  collaborator     Collaborator?       @relation(fields: [collaboratorId], references: [id])
+  collaboratorId   Int?
 
   @@map("fa")
 }
