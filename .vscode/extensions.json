@@ -14,7 +14,10 @@
     "kamikillerto.vscode-colorize",
     "Vue.volar",
     "rohit-gohri.format-code-action",
-    "DavidAnson.vscode-markdownlint"
+    "DavidAnson.vscode-markdownlint",
+    "esbenp.prettier-vscode",
+    "ms-python.python",
+    "ms-python.autopep8"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []

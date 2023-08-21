@@ -39,7 +39,10 @@
         "kamikillerto.vscode-colorize",
         "Vue.volar",
         "rohit-gohri.format-code-action",
-        "DavidAnson.vscode-markdownlint"
+        "DavidAnson.vscode-markdownlint",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "ms-python.autopep8"
       ]
     }
   },
