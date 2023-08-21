@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../src/prisma.service';
-import { FriendResponseDto } from './dto/friend.response.dto';
-import { FriendWithData } from './friend.model';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../src/prisma.service";
+import { FriendResponseDto } from "./dto/friend.response.dto";
+import { FriendWithData } from "./friend.model";
 
 @Injectable()
 export class FriendService {
@@ -30,7 +30,7 @@ export class FriendService {
   }
 
   async findFriends(): Promise<FriendResponseDto[]> {
-    const nonFriendableTeams = ['fen', 'voiture', 'camion'];
+    const nonFriendableTeams = ["fen", "voiture", "camion"];
 
     return this.prisma.user.findMany({
       select: this.SELECT_FRIEND,

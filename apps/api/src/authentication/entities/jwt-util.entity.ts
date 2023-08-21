@@ -19,7 +19,7 @@ export class JwtUtil implements JwtPayload {
   }
 
   private get isAdmin(): boolean {
-    return this.teams.includes('admin');
+    return this.teams.includes("admin");
   }
 
   can(permission: string): boolean {

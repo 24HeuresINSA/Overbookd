@@ -40,7 +40,7 @@ function hasParentFA(fa?: BaseFa): string | boolean {
 }
 export function ftParentFAErrors(ft: Ft): string[] {
   return [hasParentFA(ft.fa)].filter(
-    (error): error is string => error !== true
+    (error): error is string => error !== true,
   );
 }
 
@@ -52,23 +52,23 @@ function hasDescription(description: string): string | boolean {
 }
 export function ftDetailErrors(ft: Ft): string[] {
   return [hasDescription(ft.description)].filter(
-    (error): error is string => error !== true
+    (error): error is string => error !== true,
   );
 }
 
 function hasAtLeastOneTimeWindow(
-  timeWindows: FtTimeWindow[]
+  timeWindows: FtTimeWindow[],
 ): string | boolean {
   return (
     timeWindows.length > 0 || "La tâche doit avoir au moins une plage horaire."
   );
 }
 function hasAtLeastOneUserOrTeamRequestPerTimeWindow(
-  timeWindows: FtTimeWindow[]
+  timeWindows: FtTimeWindow[],
 ): string | boolean {
   return (
     timeWindows.every(
-      (tw) => tw.userRequests.length > 0 || tw.teamRequests.length > 0
+      (tw) => tw.userRequests.length > 0 || tw.teamRequests.length > 0,
     ) || "Tu as des créneaux sans demande de bénévole."
   );
 }

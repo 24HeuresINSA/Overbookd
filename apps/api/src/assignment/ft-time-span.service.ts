@@ -1,13 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { TaskCategory } from '@prisma/client';
-import { ftStatuses } from '../ft/ft.model';
-import { PrismaService } from '../prisma.service';
-import { TeamService } from '../team/team.service';
-import { getUnderlyingTeams } from '../team/underlying-teams.utils';
-import { SELECT_USER_TEAMS, UserService } from '../user/user.service';
-import { PeriodDto } from '../volunteer-availability/dto/period.dto';
-import { VolunteerAvailabilityService } from '../volunteer-availability/volunteer-availability.service';
-import { SELECT_BASE_TIMESPAN } from './assignment.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { TaskCategory } from "@prisma/client";
+import { ftStatuses } from "../ft/ft.model";
+import { PrismaService } from "../prisma.service";
+import { TeamService } from "../team/team.service";
+import { getUnderlyingTeams } from "../team/underlying-teams.utils";
+import { SELECT_USER_TEAMS, UserService } from "../user/user.service";
+import { PeriodDto } from "../volunteer-availability/dto/period.dto";
+import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
+import { SELECT_BASE_TIMESPAN } from "./assignment.service";
 import {
   Assignee,
   AssignmentAsTeamMember,
@@ -33,7 +33,7 @@ import {
   TimeSpanWithFt,
   TimeSpanWithFtAndAssignees,
   WithTeams,
-} from './model/ft-time-span.model';
+} from "./model/ft-time-span.model";
 
 const WHERE_EXISTS_AND_READY = {
   isDeleted: false,
@@ -245,7 +245,7 @@ export class FtTimeSpanService {
     const timeSpans = await this.prisma.ftTimeSpan.findMany({
       select: SELECT_TIMESPAN_WITH_FT_AND_ASSIGNMENTS,
       where,
-      orderBy: { start: 'asc' },
+      orderBy: { start: "asc" },
     });
     return this.formatAvailableForVolunteerTimeSpans(timeSpans, friends);
   }

@@ -84,7 +84,7 @@ export default Vue.extend({
       if (+this.me.id === this.newFriend.id) {
         // asked himself to be friend
         window.open(
-          "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690"
+          "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690",
         );
         return;
       }

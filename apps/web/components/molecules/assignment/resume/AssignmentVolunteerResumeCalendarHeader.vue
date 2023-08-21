@@ -38,7 +38,7 @@ export default Vue.extend({
   computed: {
     sortedVolunteerTeams(): string[] {
       let filteredTeams = this.volunteer.teams.filter(
-        (team) => team !== "admin" && team !== "orga"
+        (team) => team !== "admin" && team !== "orga",
       );
       const softIndex = filteredTeams.findIndex((team) => team === "soft");
       if (softIndex !== -1) {
@@ -58,7 +58,7 @@ export default Vue.extend({
     },
     assignmentStats(): string {
       const duration = Duration.fromMilliseconds(
-        this.volunteer.assignmentDuration
+        this.volunteer.assignmentDuration,
       );
       return `${this.category.toLowerCase()}: ${duration.toString()}`;
     },

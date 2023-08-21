@@ -96,11 +96,11 @@ export default Vue.extend({
   computed: {
     timeWindowsList(): FaTimeWindowWithType[] {
       const animationTimeWindows = this.$accessor.fa.mFA.timeWindows.map(
-        (period) => ({ ...period, type: TimeWindowType.ANIM })
+        (period) => ({ ...period, type: TimeWindowType.ANIM }),
       );
 
       const gearTimeWindows = this.$accessor.fa.gearRequestRentalPeriods.map(
-        (period) => ({ ...period, type: TimeWindowType.MATOS })
+        (period) => ({ ...period, type: TimeWindowType.MATOS }),
       );
 
       return [...animationTimeWindows, ...gearTimeWindows];
@@ -121,7 +121,7 @@ export default Vue.extend({
       const owners = [...this.matosOwners, this.animOwner];
       return getFAValidationStatusWithMultipleTeams(
         this.mFA,
-        owners
+        owners,
       ).toLowerCase();
     },
     me(): MyUserInformation {
@@ -155,7 +155,7 @@ export default Vue.extend({
       const timeWindowWithoutType = { ...timeWindow, type: undefined };
       if (this.isAnimationTimeWindow(timeWindow)) {
         return this.$accessor.fa.updateAnimationTimeWindow(
-          timeWindowWithoutType
+          timeWindowWithoutType,
         );
       }
       if (!timeWindow.id) return;
@@ -166,7 +166,7 @@ export default Vue.extend({
         return this.$accessor.fa.deleteAnimationTimeWindow(timeWindow);
       }
       return this.$accessor.fa.removeGearRequestRentalPeriod(
-        timeWindow as Period
+        timeWindow as Period,
       );
     },
     openEditDialog(timeWindow: FaTimeWindowWithType) {

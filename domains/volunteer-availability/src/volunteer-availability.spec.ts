@@ -5,14 +5,14 @@ import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error";
 
 function formatDateWithMinutes(date: string | Date): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Paris',
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: "Europe/Paris",
   };
-  return new Intl.DateTimeFormat('fr', displayOptions).format(new Date(date));
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
 describe("volunteer availability", () => {
@@ -66,7 +66,7 @@ describe("volunteer availability", () => {
               end: new Date("2023-05-13 09:00+02:00"),
             };
             expect(() => Availability.fromPeriod(period)).toThrow(
-              AVAILABILITY_ERROR_MESSAGES.START_HOUR
+              AVAILABILITY_ERROR_MESSAGES.START_HOUR,
             );
           });
           it("should handle UTC date", () => {
@@ -75,7 +75,7 @@ describe("volunteer availability", () => {
               end: new Date("2023-05-13 07:00Z"),
             };
             expect(() => Availability.fromPeriod(period)).toThrow(
-              AVAILABILITY_ERROR_MESSAGES.START_HOUR
+              AVAILABILITY_ERROR_MESSAGES.START_HOUR,
             );
           });
         });
@@ -97,7 +97,7 @@ describe("volunteer availability", () => {
               end: new Date("2023-05-13 13:00+02:00"),
             };
             expect(() => Availability.fromPeriod(period)).toThrow(
-              AVAILABILITY_ERROR_MESSAGES.START_HOUR
+              AVAILABILITY_ERROR_MESSAGES.START_HOUR,
             );
           });
           it("should handle UTC date", () => {
@@ -106,7 +106,7 @@ describe("volunteer availability", () => {
               end: new Date("2023-05-13 11:00Z"),
             };
             expect(() => Availability.fromPeriod(period)).toThrow(
-              AVAILABILITY_ERROR_MESSAGES.START_HOUR
+              AVAILABILITY_ERROR_MESSAGES.START_HOUR,
             );
           });
         });
@@ -116,7 +116,7 @@ describe("volunteer availability", () => {
             end: new Date("2023-05-13 13:00+02:00"),
           };
           expect(() => Availability.fromPeriod(period)).toThrow(
-            AVAILABILITY_ERROR_MESSAGES.START_HOUR
+            AVAILABILITY_ERROR_MESSAGES.START_HOUR,
           );
         });
       });
@@ -129,7 +129,7 @@ describe("volunteer availability", () => {
           end: start,
         };
         expect(() => Availability.fromPeriod(period)).toThrow(
-          AVAILABILITY_ERROR_MESSAGES.PERIOD_TIMELINE
+          AVAILABILITY_ERROR_MESSAGES.PERIOD_TIMELINE,
         );
       });
     });
@@ -142,7 +142,7 @@ describe("volunteer availability", () => {
           end,
         };
         expect(() => Availability.fromPeriod(period)).toThrow(
-          AVAILABILITY_ERROR_MESSAGES.PERIOD_TIMELINE
+          AVAILABILITY_ERROR_MESSAGES.PERIOD_TIMELINE,
         );
       });
     });
@@ -166,7 +166,7 @@ describe("volunteer availability", () => {
           end: new Date("2023-05-13 02:00+02:00"),
         };
         expect(() => Availability.fromPeriod(period)).toThrow(
-          AVAILABILITY_ERROR_MESSAGES.MINIMUM_PERIOD_DURATION
+          AVAILABILITY_ERROR_MESSAGES.MINIMUM_PERIOD_DURATION,
         );
       });
     });
@@ -206,7 +206,7 @@ describe("volunteer availability", () => {
             expect(mergedAvailabilities.start).toEqual(expectedStart);
             expect(mergedAvailabilities.end).toEqual(expectedEnd);
           });
-        }
+        },
       );
     });
     describe("when availabilities are isolated", () => {
@@ -221,7 +221,7 @@ describe("volunteer availability", () => {
         };
         const availability = Availability.fromPeriod(firstPeriod);
         expect(() => availability.addPeriod(secondPeriod)).toThrow(
-          AVAILABILITY_ERROR_MESSAGES.PERIODS_JOINT
+          AVAILABILITY_ERROR_MESSAGES.PERIODS_JOINT,
         );
       });
     });

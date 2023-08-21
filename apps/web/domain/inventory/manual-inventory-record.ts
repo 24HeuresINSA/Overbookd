@@ -7,7 +7,7 @@ export class ManualInventoryRecord {
     public readonly gear: string,
     public readonly quantity: number,
     public readonly storage: string,
-    private readonly gearRepository: GearRepository
+    private readonly gearRepository: GearRepository,
   ) {}
 
   async toInventoryRecord(): Promise<InventoryRecord> {
@@ -30,15 +30,15 @@ export class ManualInventoryRecordError extends Error {
 export class DisplayableManualInventoryRecordError {
   constructor(
     public readonly record: ManualInventoryRecord,
-    public readonly error: string
+    public readonly error: string,
   ) {}
 
   static fromError(
-    error: ManualInventoryRecordError
+    error: ManualInventoryRecordError,
   ): DisplayableManualInventoryRecordError {
     return new DisplayableManualInventoryRecordError(
       error.record,
-      error.message
+      error.message,
     );
   }
 

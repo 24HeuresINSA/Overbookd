@@ -1,7 +1,7 @@
-const REFUSED = 'REFUSED';
-const SUBMIT = 'SUBMIT';
-const VALIDATED = 'VALIDATED';
-const COMMENT = 'COMMENT';
+const REFUSED = "REFUSED";
+const SUBMIT = "SUBMIT";
+const VALIDATED = "VALIDATED";
+const COMMENT = "COMMENT";
 
 export type FaFeedbackSubjectType =
   | typeof REFUSED

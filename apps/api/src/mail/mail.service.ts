@@ -2,9 +2,9 @@ import {
   Logger,
   Injectable,
   InternalServerErrorException,
-} from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
-import { MailTestRequestDto } from './dto/mail-test.request.dto';
+} from "@nestjs/common";
+import { MailerService } from "@nestjs-modules/mailer";
+import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 
 type emailResetPassword = {
   email: string;
@@ -14,14 +14,14 @@ type emailResetPassword = {
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
-  private logger = new Logger('MailService');
+  private logger = new Logger("MailService");
 
   async mailTest({ email, username }: MailTestRequestDto): Promise<void> {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
         subject: "Mail de test de l'API overbookd",
-        template: 'mailTest',
+        template: "mailTest",
         context: {
           username: username,
         },
@@ -44,8 +44,8 @@ export class MailService {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: 'Réinitialisation de ton mot de passe overbookd',
-        template: 'resetPassword',
+        subject: "Réinitialisation de ton mot de passe overbookd",
+        template: "resetPassword",
         context: {
           firstname,
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
@@ -71,8 +71,8 @@ export class MailService {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: 'Bienvenue sur Overbookd !',
-        template: 'welcome',
+        subject: "Bienvenue sur Overbookd !",
+        template: "welcome",
         context: {
           email,
           firstname,

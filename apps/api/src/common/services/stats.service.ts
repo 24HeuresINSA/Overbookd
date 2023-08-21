@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { groupBy } from '../util/group-by';
-import { FaStatus } from '../../fa/fa.model';
-import { FtStatus } from '../../ft/ft.model';
+import { Injectable } from "@nestjs/common";
+import { groupBy } from "../util/group-by";
+import { FaStatus } from "../../fa/fa.model";
+import { FtStatus } from "../../ft/ft.model";
 
 export type StatusCount = {
   status: FaStatus | FtStatus;

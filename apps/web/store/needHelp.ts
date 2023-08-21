@@ -52,7 +52,7 @@ export const getters = getterTree(state, {
     return state.volunteers.filter(
       (volunteer) =>
         isMatchingName(state.search, volunteer) &&
-        isMatchingTeam(state.teams, volunteer)
+        isMatchingTeam(state.teams, volunteer),
     );
   },
 });
@@ -81,7 +81,7 @@ export const actions = actionTree(
     async fetchVolunteers({ commit, getters }) {
       const res = await safeCall(
         this,
-        repository.getAvailableVolunteers(this, getters.period)
+        repository.getAvailableVolunteers(this, getters.period),
       );
       if (!res) return;
       const volunteers = res.data.map(castVolunteerWithDate);
@@ -102,12 +102,12 @@ export const actions = actionTree(
       const period = defaultPeriod();
       dispatch("updatePeriod", period);
     },
-  }
+  },
 );
 
 function isMatchingName(
   nameSearch: string,
-  { firstname, lastname }: DisplayedUser
+  { firstname, lastname }: DisplayedUser,
 ) {
   const slugSearch = SlugifyService.apply(nameSearch);
   const slugName = SlugifyService.apply(`${firstname}${lastname}`);
@@ -122,7 +122,7 @@ function isMatchingTeam(teamsSearch: Team[], { teams }: { teams: string[] }) {
 }
 
 function castVolunteerWithDate(
-  volunteer: HttpStringified<Volunteer>
+  volunteer: HttpStringified<Volunteer>,
 ): Volunteer {
   return {
     ...volunteer,

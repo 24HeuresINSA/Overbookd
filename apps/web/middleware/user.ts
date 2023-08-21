@@ -1,5 +1,7 @@
-export default async function (context: any) {
-  if (context.store.state?.user?.me?.email === undefined) {
+import { NuxtContext } from "./nuxt-context";
+
+export default async function (context: NuxtContext) {
+  if (context.store.$accessor.user.me?.email === undefined) {
     await context.store.$accessor.user.fetchUser();
   }
 }

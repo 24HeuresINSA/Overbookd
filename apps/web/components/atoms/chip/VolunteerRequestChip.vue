@@ -72,7 +72,7 @@ export default Vue.extend({
     },
     alsoRequestedByErrors(): string[] {
       return this.userRequest.alsoRequestedBy.map(
-        (ft) => `Aussi demande dans la FT #${ft.id} - ${ft.name}`
+        (ft) => `Aussi demande dans la FT #${ft.id} - ${ft.name}`,
       );
     },
     notAvailableErrors(): string[] {

@@ -1,9 +1,9 @@
-import { DataBaseUserRequest } from '../ft-user-request/dto/ft-user-request.response.dto';
-import { TimeSpan, TimeWindow } from '../ft/ft-types';
-import { ONE_HOUR_IN_MS } from '@overbookd/period';
-import { getPeriodDuration } from '../utils/duration';
+import { DataBaseUserRequest } from "../ft-user-request/dto/ft-user-request.response.dto";
+import { TimeSpan, TimeWindow } from "../ft/ft-types";
+import { ONE_HOUR_IN_MS } from "@overbookd/period";
+import { getPeriodDuration } from "../utils/duration";
 
-type LiteTimeWindow = Pick<TimeWindow, 'id' | 'start' | 'end' | 'sliceTime'> & {
+type LiteTimeWindow = Pick<TimeWindow, "id" | "start" | "end" | "sliceTime"> & {
   userRequests: DataBaseUserRequest[];
 };
 type Period = {
@@ -13,7 +13,7 @@ type Period = {
 class TimeSpansGeneratorException extends Error {}
 
 const DIVIDABLE_ERROR_MESSAGE =
-  'Time window duration is not dividable by the slice time';
+  "Time window duration is not dividable by the slice time";
 
 type TimeSpanBuilderParams = {
   start: Date;

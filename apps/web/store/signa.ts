@@ -34,10 +34,10 @@ export const actions = actionTree(
         repo.getAllSignaLocations(this),
         {
           errorMessage: "Erreur lors de la récupération des lieux de la signa.",
-        }
+        },
       );
       if (!signaLocations) return;
       commit("SET_SIGNA_LOCATIONS", signaLocations.data);
     },
-  }
+  },
 );

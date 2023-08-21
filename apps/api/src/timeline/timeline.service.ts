@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { IProvidePeriod } from '@overbookd/period';
-import { PrismaService } from '../../src/prisma.service';
-import { TimelineEvent, TimelineFt } from './timeline.model';
+import { Injectable } from "@nestjs/common";
+import { IProvidePeriod } from "@overbookd/period";
+import { PrismaService } from "../../src/prisma.service";
+import { TimelineEvent, TimelineFt } from "./timeline.model";
 
 interface DatabaseFT {
   id: number;

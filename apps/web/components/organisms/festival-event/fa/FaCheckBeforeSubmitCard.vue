@@ -154,9 +154,6 @@ import {
 export default Vue.extend({
   name: "FaCheckBeforeSubmitCard",
   computed: {
-    FA(): any {
-      return this.$accessor.fa;
-    },
     mFA(): Fa {
       return this.$accessor.fa.mFA;
     },

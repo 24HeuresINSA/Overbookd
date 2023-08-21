@@ -101,6 +101,7 @@ import { computeNextHourDate } from "~/utils/date/dateUtils";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
+import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
 
 export default Vue.extend({
   name: "OverMultiCalendar",
@@ -143,7 +144,7 @@ export default Vue.extend({
           name,
           color,
           timed: true,
-        })
+        }),
       );
     },
     previewEvents(): CalendarEvent[] {
@@ -182,7 +183,7 @@ export default Vue.extend({
     isVolunteerAvailable(
       date: string,
       time: string,
-      volunteerId: number
+      volunteerId: number,
     ): boolean {
       const volunteer = this.retrieveVolunteer(volunteerId);
       if (!volunteer) return false;
@@ -191,7 +192,7 @@ export default Vue.extend({
       const end = computeNextHourDate(start);
 
       return volunteer.availabilities.some(
-        isPeriodIncludedByAnother({ start, end })
+        isPeriodIncludedByAnother({ start, end }),
       );
     },
     buildPreviewEvents(eventToAdd: PlanningEvent): CalendarEvent[] {
@@ -202,11 +203,11 @@ export default Vue.extend({
       }));
     },
     previousDay() {
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.prev();
     },
     nextDay() {
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.next();
     },
   },

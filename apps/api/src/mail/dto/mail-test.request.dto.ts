@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsDefined, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsEmail, IsDefined, IsString } from "class-validator";
 
 export class MailTestRequestDto {
   @ApiProperty({
     required: true,
-    description: 'The email of the receiver',
-    example: 'john@doe.com',
+    description: "The email of the receiver",
+    example: "john@doe.com",
   })
   @IsDefined()
   @IsEmail()
@@ -13,7 +13,7 @@ export class MailTestRequestDto {
 
   @ApiProperty({
     required: true,
-    description: 'The email of the user',
+    description: "The email of the user",
   })
   @IsDefined()
   @IsString()

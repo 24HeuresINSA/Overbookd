@@ -1,4 +1,4 @@
-import { GearRepository } from '../../catalog/interfaces';
+import { GearRepository } from "../../catalog/interfaces";
 import {
   buildGearRequestIdentifier,
   CreateGearRequest,
@@ -10,12 +10,12 @@ import {
   Period,
   PeriodForm,
   UpdateGearRequest,
-} from '../gear-request.model';
+} from "../gear-request.model";
 import {
   GearRequestRepository,
   PeriodRepository,
-} from '../gear-request.service';
-import { GearSeekerRegistery } from './gear-seeker-registery';
+} from "../gear-request.service";
+import { GearSeekerRegistery } from "./gear-seeker-registery";
 
 export abstract class GearRequestOrchestrator {
   constructor(
@@ -384,7 +384,7 @@ function mergePeriods(periods: PeriodForm[]): PeriodForm {
   return { start, end };
 }
 
-type GearRequestWithRentalPeriodForm = Omit<GearRequest, 'rentalPeriod'> & {
+type GearRequestWithRentalPeriodForm = Omit<GearRequest, "rentalPeriod"> & {
   rentalPeriod: PeriodForm;
 };
 

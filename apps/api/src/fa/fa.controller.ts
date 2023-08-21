@@ -11,7 +11,7 @@ import {
   Query,
   Request,
   UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -22,47 +22,47 @@ import {
   ApiQuery,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { Permission } from '../authentication/permissions-auth.decorator';
-import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { StatsPayload } from '../common/services/stats.service';
+} from "@nestjs/swagger";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { StatsPayload } from "../common/services/stats.service";
 import {
   ApprovedGearRequest,
   GearSeekerType,
-} from '../gear-request/gear-request.model';
-import { RequestWithUserPayload } from '../app.controller';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { ApproveGearRequestRequestDto } from '../gear-request/dto/approve-gear-request.request.dto';
+} from "../gear-request/gear-request.model";
+import { RequestWithUserPayload } from "../app.controller";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { ApproveGearRequestRequestDto } from "../gear-request/dto/approve-gear-request.request.dto";
 import {
   ExistingPeriodGearRequestFormRequestDto,
   GearRequestRequestDto,
   NewPeriodGearRequestFormRequestDto,
-} from '../gear-request/dto/gear-request.request.dto';
+} from "../gear-request/dto/gear-request.request.dto";
 import {
   ApprovedGearRequestResponseDto,
   GearRequestResponseDto,
-} from '../gear-request/dto/gear-request.response.dto';
-import { UpdateGearRequestRequestDto } from '../gear-request/dto/update-gear-request.request.dto';
-import { GearRequestService } from '../gear-request/gear-request.service';
-import { CompleteFaResponseDto } from './dto/complete-fa.response.dto';
-import { CreateFaRequestDto } from './dto/create-fa.request.dto';
-import { FaSearchRequestDto } from './dto/fa-search.request.dto';
-import { LiteFaResponseDto } from './dto/lite-fa.response.dto';
-import { UpdateFaRequestDto } from './dto/update-fa.request.dto';
-import { ValidationDto } from './dto/validation.dto';
-import { CompleteFaResponse, LiteFaResponse } from './fa.model';
-import { FaService } from './fa.service';
-import { FaIdResponse } from './faTypes';
-import { CollaboratorResponseDto } from '../collaborator/dto/collaborator.response.dto';
-import { CollaboratorRequestDto } from '../collaborator/dto/collaborator.request.dto';
-import { CollaboratorWithId } from '../collaborator/collaborator.model';
-import { StatsResponseDto } from './dto/stats.response.dto';
-import { FollowingFaResponseDto } from './dto/following-fa.response.dto';
+} from "../gear-request/dto/gear-request.response.dto";
+import { UpdateGearRequestRequestDto } from "../gear-request/dto/update-gear-request.request.dto";
+import { GearRequestService } from "../gear-request/gear-request.service";
+import { CompleteFaResponseDto } from "./dto/complete-fa.response.dto";
+import { CreateFaRequestDto } from "./dto/create-fa.request.dto";
+import { FaSearchRequestDto } from "./dto/fa-search.request.dto";
+import { LiteFaResponseDto } from "./dto/lite-fa.response.dto";
+import { UpdateFaRequestDto } from "./dto/update-fa.request.dto";
+import { ValidationDto } from "./dto/validation.dto";
+import { CompleteFaResponse, LiteFaResponse } from "./fa.model";
+import { FaService } from "./fa.service";
+import { FaIdResponse } from "./faTypes";
+import { CollaboratorResponseDto } from "../collaborator/dto/collaborator.response.dto";
+import { CollaboratorRequestDto } from "../collaborator/dto/collaborator.request.dto";
+import { CollaboratorWithId } from "../collaborator/collaborator.model";
+import { StatsResponseDto } from "./dto/stats.response.dto";
+import { FollowingFaResponseDto } from "./dto/following-fa.response.dto";
 
 @ApiBearerAuth()
-@ApiTags('fa')
+@ApiTags("fa")
 @ApiBadRequestResponse({
-  description: 'Request is not formated as expected',
+  description: "Request is not formated as expected",
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
@@ -70,7 +70,7 @@ import { FollowingFaResponseDto } from './dto/following-fa.response.dto';
 @ApiNotFoundResponse({
   description: "Can't find a requested resource",
 })
-@Controller('fa')
+@Controller("fa")
 export class FaController {
   constructor(
     private readonly faService: FaService,
@@ -78,12 +78,12 @@ export class FaController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
+  @Permission("hard")
   @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Create a new fa',
+    description: "Create a new fa",
     type: CompleteFaResponseDto,
   })
   create(@Body() FA: CreateFaRequestDto): Promise<CompleteFaResponse> {
@@ -91,20 +91,20 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
+  @Permission("hard")
   @Get()
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get all fa',
+    description: "Get all fa",
     isArray: true,
     type: LiteFaResponseDto,
   })
   @ApiQuery({
-    name: 'isDeleted',
+    name: "isDeleted",
     required: false,
     type: Boolean,
-    description: 'Get FAs that are deleted',
+    description: "Get FAs that are deleted",
   })
   findAll(
     @Query() searchRequest: FaSearchRequestDto,
@@ -113,12 +113,12 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get('stats')
+  @Permission("hard")
+  @Get("stats")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get FA stats',
+    description: "Get FA stats",
     isArray: true,
     type: StatsResponseDto,
   })
@@ -127,215 +127,215 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id')
+  @Permission("hard")
+  @Get(":id")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get a fa',
+    description: "Get a fa",
     type: CompleteFaResponseDto,
   })
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<CompleteFaResponse> {
+  findOne(@Param("id", ParseIntPipe) id: number): Promise<CompleteFaResponse> {
     return this.faService.findOne(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Post(':id')
+  @Permission("hard")
+  @Post(":id")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Update a fa',
+    description: "Update a fa",
     type: CompleteFaResponseDto,
   })
   @ApiBody({
-    description: 'Update a fa',
+    description: "Update a fa",
     type: UpdateFaRequestDto,
   })
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() updateFaDto: UpdateFaRequestDto,
   ): Promise<CompleteFaResponse> {
     return this.faService.update(id, updateFaDto);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Delete(':id')
+  @Permission("hard")
+  @Delete(":id")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a fa',
+    description: "Delete a fa",
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param("id", ParseIntPipe) id: number) {
     return this.faService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('fa-validator')
-  @Post(':id/validation')
+  @Permission("fa-validator")
+  @Post(":id/validation")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Validate a fa',
+    description: "Validate a fa",
   })
   @ApiParam({
-    name: 'id',
+    name: "id",
     type: Number,
-    description: 'FA id',
+    description: "FA id",
     required: true,
   })
   validate(
     @Request() request: RequestWithUserPayload,
     @Body() teamId: ValidationDto,
-    @Param('id', ParseIntPipe) faId: number,
+    @Param("id", ParseIntPipe) faId: number,
   ): Promise<void> {
     const userId = request.user.userId ?? request.user.id;
     return this.faService.validatefa(userId, faId, teamId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('fa-validator')
-  @Delete(':faId/validation/:teamId')
+  @Permission("fa-validator")
+  @Delete(":faId/validation/:teamId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Remove a validation of fa',
+    description: "Remove a validation of fa",
   })
   @ApiParam({
-    name: 'faId',
+    name: "faId",
     type: Number,
-    description: 'FA id',
+    description: "FA id",
     required: true,
   })
   @ApiParam({
-    name: 'teamId',
+    name: "teamId",
     type: Number,
-    description: 'Team id',
+    description: "Team id",
     required: true,
   })
   removeValidation(
-    @Param('faId', ParseIntPipe) faId: number,
-    @Param('teamId', ParseIntPipe) teamId: number,
+    @Param("faId", ParseIntPipe) faId: number,
+    @Param("teamId", ParseIntPipe) teamId: number,
   ): Promise<void> {
     return this.faService.removeFaValidation(faId, teamId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('fa-validator')
-  @Post(':id/refusal')
+  @Permission("fa-validator")
+  @Post(":id/refusal")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Refuse a fa',
+    description: "Refuse a fa",
   })
   @ApiParam({
-    name: 'id',
+    name: "id",
     type: Number,
-    description: 'FA id',
+    description: "FA id",
     required: true,
   })
   refuse(
     @Request() request: RequestWithUserPayload,
     @Body() validationForm: ValidationDto,
-    @Param('id', ParseIntPipe) faId: number,
+    @Param("id", ParseIntPipe) faId: number,
   ): Promise<void> {
     const userId = request.user.userId ?? request.user.id;
     return this.faService.refusefa(userId, faId, validationForm);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id/previous')
+  @Permission("hard")
+  @Get(":id/previous")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get the previous fa',
+    description: "Get the previous fa",
     type: FollowingFaResponseDto,
   })
   findPrevious(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<FaIdResponse | null> {
     return this.faService.findPrevious(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id/next')
+  @Permission("hard")
+  @Get(":id/next")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get the next fa',
+    description: "Get the next fa",
     type: FollowingFaResponseDto,
   })
   findNext(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<FaIdResponse | null> {
     return this.faService.findNext(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Post(':id/collaborator')
+  @Permission("hard")
+  @Post(":id/collaborator")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Add a collaborator to a fa',
+    description: "Add a collaborator to a fa",
     type: CollaboratorResponseDto,
   })
   @ApiParam({
-    name: 'id',
+    name: "id",
     type: Number,
-    description: 'FA id',
+    description: "FA id",
     required: true,
   })
   @ApiBody({
-    description: 'Collaborator to add',
+    description: "Collaborator to add",
     type: CollaboratorRequestDto,
   })
   addCollaborator(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() collaborator: CollaboratorRequestDto,
   ): Promise<CollaboratorWithId> {
     return this.faService.addCollaborator(id, collaborator);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Delete(':id/collaborator')
+  @Permission("hard")
+  @Delete(":id/collaborator")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Remove a collaborator from a fa',
+    description: "Remove a collaborator from a fa",
   })
   @ApiParam({
-    name: 'id',
+    name: "id",
     type: Number,
-    description: 'FA id',
+    description: "FA id",
     required: true,
   })
-  removeCollaborator(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  removeCollaborator(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.faService.removeCollaborator(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Post(':id/gear-requests')
+  @Permission("hard")
+  @Post(":id/gear-requests")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Creating a new gear request',
+    description: "Creating a new gear request",
     type: GearRequestResponseDto,
   })
   @ApiParam({
-    name: 'id',
+    name: "id",
     type: Number,
-    description: 'Animation id',
+    description: "Animation id",
     required: true,
   })
   @ApiBody({ type: GearRequestRequestDto })
   addGearRequest(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body()
     gearRequestForm:
       | NewPeriodGearRequestFormRequestDto
@@ -348,60 +348,60 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get(':id/gear-requests')
+  @Permission("hard")
+  @Get(":id/gear-requests")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get animation gear requests',
+    description: "Get animation gear requests",
     isArray: true,
     type: GearRequestResponseDto,
   })
   @ApiParam({
-    name: 'id',
+    name: "id",
     type: Number,
-    description: 'Animation id',
+    description: "Animation id",
     required: true,
   })
   getGearRequests(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<GearRequestResponseDto[]> {
     return this.gearRequestService.getAnimationRequests(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
+  @Permission("hard")
   @Patch(
-    ':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve',
+    ":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve",
   )
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Gear request approved',
+    description: "Gear request approved",
     type: ApprovedGearRequestResponseDto,
   })
   @ApiParam({
-    name: 'animationId',
+    name: "animationId",
     type: Number,
-    description: 'Animation id',
+    description: "Animation id",
     required: true,
   })
   @ApiParam({
-    name: 'gearId',
+    name: "gearId",
     type: Number,
-    description: 'Gear id',
+    description: "Gear id",
     required: true,
   })
   @ApiParam({
-    name: 'rentalPeriodId',
+    name: "rentalPeriodId",
     type: Number,
-    description: 'Rental period id',
+    description: "Rental period id",
     required: true,
   })
   approveGearRequest(
-    @Param('animationId', ParseIntPipe) animationId: number,
-    @Param('gearId', ParseIntPipe) gearId: number,
-    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Param("animationId", ParseIntPipe) animationId: number,
+    @Param("gearId", ParseIntPipe) gearId: number,
+    @Param("rentalPeriodId", ParseIntPipe) rentalPeriodId: number,
     @Body() approveForm: ApproveGearRequestRequestDto,
   ): Promise<ApprovedGearRequest> {
     const gearRequestId = {
@@ -414,36 +414,36 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Patch(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
+  @Permission("hard")
+  @Patch(":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Update an existing gear request',
+    description: "Update an existing gear request",
     type: GearRequestResponseDto,
   })
   @ApiParam({
-    name: 'animationId',
+    name: "animationId",
     type: Number,
-    description: 'Animation id',
+    description: "Animation id",
     required: true,
   })
   @ApiParam({
-    name: 'gearId',
+    name: "gearId",
     type: Number,
-    description: 'Gear id',
+    description: "Gear id",
     required: true,
   })
   @ApiParam({
-    name: 'rentalPeriodId',
+    name: "rentalPeriodId",
     type: Number,
-    description: 'Rental period id',
+    description: "Rental period id",
     required: true,
   })
   updateGearRequest(
-    @Param('animationId', ParseIntPipe) animationId: number,
-    @Param('gearId', ParseIntPipe) gearId: number,
-    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Param("animationId", ParseIntPipe) animationId: number,
+    @Param("gearId", ParseIntPipe) gearId: number,
+    @Param("rentalPeriodId", ParseIntPipe) rentalPeriodId: number,
     @Body() gearRequestForm: UpdateGearRequestRequestDto,
   ): Promise<GearRequestResponseDto> {
     return this.gearRequestService.updateAnimationRequest(
@@ -455,35 +455,35 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Delete(':animationId/gear-requests/:gearId/rental-period/:rentalPeriodId')
+  @Permission("hard")
+  @Delete(":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Gear request deleted',
+    description: "Gear request deleted",
   })
   @ApiParam({
-    name: 'animationId',
+    name: "animationId",
     type: Number,
-    description: 'Animation id',
+    description: "Animation id",
     required: true,
   })
   @ApiParam({
-    name: 'gearId',
+    name: "gearId",
     type: Number,
-    description: 'Gear id',
+    description: "Gear id",
     required: true,
   })
   @ApiParam({
-    name: 'rentalPeriodId',
+    name: "rentalPeriodId",
     type: Number,
-    description: 'Rental period id',
+    description: "Rental period id",
     required: true,
   })
   deleteGearRequest(
-    @Param('animationId', ParseIntPipe) animationId: number,
-    @Param('gearId', ParseIntPipe) gearId: number,
-    @Param('rentalPeriodId', ParseIntPipe) rentalPeriodId: number,
+    @Param("animationId", ParseIntPipe) animationId: number,
+    @Param("gearId", ParseIntPipe) gearId: number,
+    @Param("rentalPeriodId", ParseIntPipe) rentalPeriodId: number,
   ): Promise<void> {
     return this.gearRequestService.removeAnimationRequest(
       animationId,

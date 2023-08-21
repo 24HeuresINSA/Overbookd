@@ -1,4 +1,4 @@
-import { FaStatus } from '../../fa/fa.model';
+import { FaStatus } from "../../fa/fa.model";
 
 export interface Animation {
   id: number;

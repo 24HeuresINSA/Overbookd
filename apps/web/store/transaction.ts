@@ -26,7 +26,7 @@ export const actions = actionTree(
     async fetchMTransactions({ commit }) {
       const res = await safeCall(
         this,
-        transactionRepo.getUserTransactions(this)
+        transactionRepo.getUserTransactions(this),
       );
       if (res) {
         commit("SET_TRANSACTIONS", res.data);
@@ -35,7 +35,7 @@ export const actions = actionTree(
     async addTransaction({ commit }, transfer: Partial<Transfer>) {
       const res = await safeCall(
         this,
-        transactionRepo.createTransfer(this, transfer)
+        transactionRepo.createTransfer(this, transfer),
       );
       if (res) {
         commit("ADD_TRANSACTIONS", res.data);
@@ -43,5 +43,5 @@ export const actions = actionTree(
       }
       return false;
     },
-  }
+  },
 );

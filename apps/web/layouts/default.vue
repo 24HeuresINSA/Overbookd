@@ -109,7 +109,7 @@
             color="blue-grey"
             @click="
               copyToClipboard(
-                'contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com'
+                'contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com',
               )
             "
             >Copier l'adresse mail</v-btn
@@ -234,7 +234,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
 
     mailUrl() {
       return `mailto:contact-project%2B24-heures-insa-overbookd-mono-31598236-issue-%40incoming.gitlab.com?body=${encodeURIComponent(
-        this.generateIssueTemplate
+        this.generateIssueTemplate,
       )}`;
     },
     isPreProd() {

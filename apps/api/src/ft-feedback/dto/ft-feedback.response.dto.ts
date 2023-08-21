@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsNumber, IsString } from "class-validator";
 import {
   FtFeedbackAuthor,
   FtFeedbackResponse,
   FtFeedbackSubjectType,
   ftFeedbackSubjectTypes,
-} from '../ft-feedback.model';
+} from "../ft-feedback.model";
 
 class FtFeedbackAuthorRepresentation implements FtFeedbackAuthor {
   firstname: string;
@@ -15,7 +15,7 @@ class FtFeedbackAuthorRepresentation implements FtFeedbackAuthor {
 export class FtFeedbackResponseDto implements FtFeedbackResponse {
   @ApiProperty({
     required: true,
-    description: 'The id of the ft feedback',
+    description: "The id of the ft feedback",
     type: Number,
   })
   @IsNumber()
@@ -24,7 +24,7 @@ export class FtFeedbackResponseDto implements FtFeedbackResponse {
   @ApiProperty({
     required: true,
     type: FtFeedbackAuthorRepresentation,
-    description: 'The author of feedback',
+    description: "The author of feedback",
   })
   @IsNumber()
   author: FtFeedbackAuthor;
@@ -32,14 +32,14 @@ export class FtFeedbackResponseDto implements FtFeedbackResponse {
   @ApiProperty({
     required: true,
     type: Date,
-    description: 'The date of feedback creation',
+    description: "The date of feedback creation",
   })
   @IsDateString()
   createdAt: Date;
 
   @ApiProperty({
     required: true,
-    description: 'The subject of feedback',
+    description: "The subject of feedback",
     enum: ftFeedbackSubjectTypes,
   })
   @IsString()
@@ -48,7 +48,7 @@ export class FtFeedbackResponseDto implements FtFeedbackResponse {
   @ApiProperty({
     required: true,
     type: String,
-    description: 'The comment of feedback',
+    description: "The comment of feedback",
   })
   @IsString()
   comment: string;

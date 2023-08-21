@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { NeedHelpController } from './need-help.controller';
-import { PrismaVolunteerRepository } from './volunteer.repository.prisma';
-import { NeedHelpService } from './need-help.service';
-import { CommonModule } from '../common/common.module';
+import { Module } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { NeedHelpController } from "./need-help.controller";
+import { PrismaVolunteerRepository } from "./volunteer.repository.prisma";
+import { NeedHelpService } from "./need-help.service";
+import { CommonModule } from "../common/common.module";
 
 @Module({
   imports: [CommonModule],
@@ -11,7 +11,7 @@ import { CommonModule } from '../common/common.module';
   providers: [
     PrismaService,
     NeedHelpService,
-    { provide: 'VOLUNTEER_REPOSITORY', useClass: PrismaVolunteerRepository },
+    { provide: "VOLUNTEER_REPOSITORY", useClass: PrismaVolunteerRepository },
   ],
   exports: [NeedHelpService],
 })

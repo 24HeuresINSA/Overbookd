@@ -97,7 +97,7 @@ export default Vue.extend({
           ft,
           color: getColorByStatus(ft.status),
           timed: true,
-        })
+        }),
       );
     },
     user(): CompleteUserWithPermissions {
@@ -115,7 +115,7 @@ export default Vue.extend({
       this.$accessor.user.findUserById(this.userId),
       this.$accessor.user.getUserFtRequests(this.userId),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.userId
+        this.userId,
       ),
       this.$accessor.user.getVolunteerAssignments(this.userId),
     ]);
@@ -136,7 +136,7 @@ export default Vue.extend({
       const start = new Date(`${date} ${time}`);
       const end = computeNextHourDate(start);
       return this.availabilities.some(
-        isPeriodIncludedByAnother({ start, end })
+        isPeriodIncludedByAnother({ start, end }),
       );
     },
     openFt(ftId: number) {

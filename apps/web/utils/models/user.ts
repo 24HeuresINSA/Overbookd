@@ -76,7 +76,7 @@ export interface VolunteerAssignmentStat {
 }
 
 export function castToUserModification(
-  user: CompleteUserWithoutId
+  user: CompleteUserWithoutId,
 ): UserModification {
   return {
     firstname: user.firstname,
@@ -93,7 +93,7 @@ export function castToUserModification(
 }
 
 export function castUserWithDate(
-  user: HttpStringified<CompleteUser | MyUserInformation>
+  user: HttpStringified<CompleteUser | MyUserInformation>,
 ) {
   return {
     ...user,
@@ -106,7 +106,7 @@ export function castUsersWithDate(users: HttpStringified<CompleteUser[]>) {
 }
 
 export function castUserWithPermissionsWithDate(
-  user: HttpStringified<CompleteUserWithPermissions>
+  user: HttpStringified<CompleteUserWithPermissions>,
 ) {
   return {
     ...user,
@@ -115,13 +115,13 @@ export function castUserWithPermissionsWithDate(
 }
 
 export function castUsersWithPermissionsWithDate(
-  users: HttpStringified<CompleteUserWithPermissions[]>
+  users: HttpStringified<CompleteUserWithPermissions[]>,
 ) {
   return users.map(castUserWithPermissionsWithDate);
 }
 
 export function castVolunteerTaskWithDate(
-  periods: HttpStringified<VolunteerTask[]>
+  periods: HttpStringified<VolunteerTask[]>,
 ): VolunteerTask[] {
   return periods.map((task) => ({
     ...task,

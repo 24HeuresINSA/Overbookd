@@ -6,7 +6,7 @@
         <template #body="{ items }">
           <tbody>
             <template v-for="groupedRecord in items">
-              <tr>
+              <tr :key="groupedRecord.gear.id">
                 <th
                   :rowspan="groupedRecord.records.length + 1"
                   class="text-start"

@@ -1,17 +1,17 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
   ApiUnauthorizedResponse,
-} from '@nestjs/swagger';
-import { AppService } from './app.service';
-import { JwtAuthGuard } from './authentication/jwt-auth.guard';
-import { MailTestRequestDto } from './mail/dto/mail-test.request.dto';
-import { MailService } from './mail/mail.service';
-import { Permission } from './authentication/permissions-auth.decorator';
-import { PermissionsGuard } from './authentication/permissions-auth.guard';
-import { JwtPayload } from './authentication/entities/jwt-util.entity';
-import { Request } from 'express';
+} from "@nestjs/swagger";
+import { AppService } from "./app.service";
+import { JwtAuthGuard } from "./authentication/jwt-auth.guard";
+import { MailTestRequestDto } from "./mail/dto/mail-test.request.dto";
+import { MailService } from "./mail/mail.service";
+import { Permission } from "./authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "./authentication/permissions-auth.guard";
+import { JwtPayload } from "./authentication/entities/jwt-util.entity";
+import { Request } from "express";
 
 /**
  * IMPORTANT: used in others controller like transactions
@@ -34,15 +34,15 @@ export class AppController {
 
   @ApiBearerAuth()
   @ApiBody({
-    description: 'Route de test pour le service mail',
+    description: "Route de test pour le service mail",
     type: MailTestRequestDto,
   })
   @ApiUnauthorizedResponse({
-    description: 'User dont have the right to access this route',
+    description: "User dont have the right to access this route",
   })
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('admin')
-  @Post('mailtest')
+  @Permission("admin")
+  @Post("mailtest")
   async mailtest(@Body() to: MailTestRequestDto) {
     return this.mailService.mailTest(to);
   }

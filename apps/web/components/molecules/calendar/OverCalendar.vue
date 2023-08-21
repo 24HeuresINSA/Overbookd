@@ -116,6 +116,7 @@
 import Vue from "vue";
 import { CalendarEvent } from "~/utils/models/calendar";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
+import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
 
 export default Vue.extend({
   name: "OverCalendar",
@@ -159,7 +160,7 @@ export default Vue.extend({
     hourToScrollTo() {
       if (this.hourToScrollTo === null) return;
       const time = `${this.hourToScrollTo}:00`;
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.scrollToTime(time);
     },
   },
@@ -182,11 +183,11 @@ export default Vue.extend({
       this.$emit("change", date);
     },
     previousPage() {
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.prev();
     },
     nextPage() {
-      const calendar = this.$refs.calendar as any;
+      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.next();
     },
   },
@@ -204,3 +205,4 @@ export default Vue.extend({
   }
 }
 </style>
+./vuetify-calendar../../../utils/calendar/vuetify-calendar

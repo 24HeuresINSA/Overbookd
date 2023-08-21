@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { StatsPayload, StatusCount } from '../../common/services/stats.service';
-import { ftStatuses } from '../../ft/ft.model';
-import { FaStatus } from '../fa.model';
-import { FtStatus } from '@prisma/client';
+import { ApiProperty } from "@nestjs/swagger";
+import { StatsPayload, StatusCount } from "../../common/services/stats.service";
+import { ftStatuses } from "../../ft/ft.model";
+import { FaStatus } from "../fa.model";
+import { FtStatus } from "@prisma/client";
 
 class StatusCountRepresentation implements StatusCount {
   @ApiProperty({ enum: ftStatuses })

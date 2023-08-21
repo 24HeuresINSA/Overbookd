@@ -50,13 +50,13 @@ export interface StoredGearRequest<T extends "FA" | "FT" = "FA" | "FT">
 }
 
 export function isFAStoredGearRequest(
-  storedGearRequest: StoredGearRequest
+  storedGearRequest: StoredGearRequest,
 ): storedGearRequest is StoredGearRequest<"FA"> {
   return storedGearRequest.seeker.type === "FA";
 }
 
 export function isFTStoredGearRequest(
-  storedGearRequest: StoredGearRequest
+  storedGearRequest: StoredGearRequest,
 ): storedGearRequest is StoredGearRequest<"FT"> {
   return storedGearRequest.seeker.type === "FT";
 }
@@ -71,7 +71,7 @@ export type EventGearRequest =
   | GearRequestWithDrive<"FT">;
 
 export function castGearRequestWithDate(
-  gearRequest: HttpStringified<StoredGearRequest>
+  gearRequest: HttpStringified<StoredGearRequest>,
 ): StoredGearRequest {
   return {
     ...gearRequest,
@@ -91,5 +91,5 @@ export type SortableGearRequestHeader =
 
 export type GearRequestSortFunction = (
   gearRequests: GearRequest[],
-  desc: boolean
+  desc: boolean,
 ) => GearRequest[];

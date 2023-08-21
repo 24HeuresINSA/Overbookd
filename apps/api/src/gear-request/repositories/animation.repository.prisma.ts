@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../prisma.service';
-import { AnimationRepository } from '../gear-request.service';
-import { Animation } from '../animations/animation.model';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../prisma.service";
+import { AnimationRepository } from "../gear-request.service";
+import { Animation } from "../animations/animation.model";
 
 @Injectable()
 export class PrismaAnimationRepository implements AnimationRepository {

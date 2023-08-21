@@ -1,0 +1,87 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:security/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": [
+      "./apps/*/tsconfig.json",
+      "!./apps/web/tsconfig.json",
+      "./domains/*/tsconfig.json",
+      "./libraries/*/tsconfig.json"
+    ]
+  },
+  "plugins": ["@typescript-eslint", "unused-imports"],
+  "rules": {
+    "quotes": [
+      "error",
+      "double",
+      { "avoidEscape": true, "allowTemplateLiterals": false }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "^_", "ignoreRestSiblings": true }
+    ],
+    "unused-imports/no-unused-imports": "error"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "warn"
+      }
+    },
+    {
+      "files": ["./apps/web"],
+      "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true,
+        "jest": true
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:security/recommended",
+        "plugin:vue/recommended",
+        "prettier"
+      ],
+      "parser": "vue-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": ["./tsconfig.json"],
+        "extraFileExtensions": [".vue"]
+      },
+      "plugins": ["@typescript-eslint", "unused-imports"],
+      "rules": {
+        "indent": ["error", 2, { "ignoredNodes": ["PropertyDefinition"] }],
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "varsIgnorePattern": "^_", "ignoreRestSiblings": true }
+        ],
+        "unused-imports/no-unused-imports": "error",
+        "vue/component-name-in-template-casing": ["error", "PascalCase"],
+        "vue/no-unused-vars": "error",
+        "vue/require-v-for-key": "error",
+        "vue/valid-v-slot": ["error", { "allowModifiers": true }],
+        "vue/no-unused-components": "error"
+      }
+    }
+  ]
+}

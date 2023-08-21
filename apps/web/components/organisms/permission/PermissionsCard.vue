@@ -96,20 +96,17 @@ export default Vue.extend({
   },
   async mounted() {
     if (this.$accessor.permission.allPermissions.length === 0) {
-      await this.$accessor.permission.setPermissionsInStore();
+      await this.$accessor.permission.fetchPermissions();
     }
   },
   methods: {
     async addPermission() {
-      let response = await this.$accessor.permission.createPermission({
+      await this.$accessor.permission.createPermission({
         name: this.newPermissionName,
         description: this.newPermissionDescription,
       });
       this.newPermissionName = "";
       this.newPermissionDescription = "";
-      this.$accessor.notif.pushNotification({
-        message: response,
-      });
     },
   },
 });

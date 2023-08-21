@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { SecretService } from './secret.service';
+import { Injectable } from "@nestjs/common";
+import { SecretService } from "./secret.service";
 
 export type PlanningSubscription = {
   link: string;

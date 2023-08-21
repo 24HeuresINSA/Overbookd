@@ -47,7 +47,7 @@ export default Vue.extend({
   methods: {
     selectVolunteer(friend: User) {
       const volunteer = this.$accessor.assignment.volunteers.find(
-        (volunteer) => volunteer.id === friend.id
+        (volunteer) => volunteer.id === friend.id,
       );
       if (!volunteer) return;
       this.$emit("select-volunteer", volunteer);

@@ -1,10 +1,10 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { Period } from '../../gear-request/gear-request.model';
+import { ApiProperty } from "@nestjs/swagger";
+import { Period } from "../../gear-request/gear-request.model";
 import {
   PublicAnimationWithFa,
   PublicAnimationFa,
-} from '../public-animation.model';
-import { PublicAnimationResponseDto } from './public-animation.response.dto';
+} from "../public-animation.model";
+import { PublicAnimationResponseDto } from "./public-animation.response.dto";
 
 class PeriodRepresentation implements Period {
   @ApiProperty({})
@@ -30,7 +30,7 @@ export class PublicAnimationWithFaResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'The fa linked',
+    description: "The fa linked",
     type: PublicAnimationRepresentation,
   })
   fa: PublicAnimationFa;

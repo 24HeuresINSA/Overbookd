@@ -9,47 +9,47 @@ import {
   Patch,
   Post,
   UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { Permission } from '../authentication/permissions-auth.decorator';
-import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { AssignmentService, AssignmentStats } from './assignment.service';
+} from "@nestjs/swagger";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { AssignmentService, AssignmentStats } from "./assignment.service";
 import {
   AssignmentRequestDto,
   UpdateAssignedTeamRequestDto,
-} from './dto/assignment.request.dto';
-import { AssignmentResponseDto } from './dto/assignment.response.dto';
-import { AssignmentStatsResponseDto } from './dto/assignment-stats.response.dto';
+} from "./dto/assignment.request.dto";
+import { AssignmentResponseDto } from "./dto/assignment.response.dto";
+import { AssignmentStatsResponseDto } from "./dto/assignment-stats.response.dto";
 import {
   FtTimeSpanResponseDto,
   FtWithTimeSpansResponseDto,
   TimeSpanWithAssigneesResponseDto,
   TimeSpanWithFtResponseDto,
-} from './dto/ft-time-span.response.dto';
+} from "./dto/ft-time-span.response.dto";
 import {
   AvailableVolunteerResponseDto,
   VolunteerResponseDto,
-} from './dto/volunteer.response.dto';
-import { FtTimeSpanService } from './ft-time-span.service';
-import { TimeSpan, TimeSpanWithAssignees } from './model/ft-time-span.model';
-import { VolunteerService } from './volunteer.service';
+} from "./dto/volunteer.response.dto";
+import { FtTimeSpanService } from "./ft-time-span.service";
+import { TimeSpan, TimeSpanWithAssignees } from "./model/ft-time-span.model";
+import { VolunteerService } from "./volunteer.service";
 
 @ApiBearerAuth()
-@ApiTags('assignments')
+@ApiTags("assignments")
 @ApiBadRequestResponse({
-  description: 'Request is not formated as expected',
+  description: "Request is not formated as expected",
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('assignments')
+@Controller("assignments")
 export class AssignmentController {
   constructor(
     private readonly assignmentService: AssignmentService,
@@ -58,12 +58,12 @@ export class AssignmentController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Get('volunteers')
+  @Permission("affect-volunteer")
+  @Get("volunteers")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get all valid volunteers',
+    description: "Get all valid volunteers",
     isArray: true,
     type: VolunteerResponseDto,
   })
@@ -72,12 +72,12 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Get('ft-timespans')
+  @Permission("affect-volunteer")
+  @Get("ft-timespans")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get all valid ft with time spans',
+    description: "Get all valid ft with time spans",
     isArray: true,
     type: FtWithTimeSpansResponseDto,
   })
@@ -87,11 +87,11 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission('affect-volunteer')
-  @Get('stats')
+  @Permission("affect-volunteer")
+  @Get("stats")
   @ApiResponse({
     status: 200,
-    description: 'Get assignments stats for all volunteers',
+    description: "Get assignments stats for all volunteers",
     isArray: true,
     type: AssignmentStatsResponseDto,
   })
@@ -100,33 +100,33 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Get('ft/:ftId')
+  @Permission("affect-volunteer")
+  @Get("ft/:ftId")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get ft with time spans and stats',
+    description: "Get ft with time spans and stats",
     isArray: true,
     type: FtTimeSpanResponseDto,
   })
   findFtTimeSpans(
-    @Param('ftId', ParseIntPipe) ftId: number,
+    @Param("ftId", ParseIntPipe) ftId: number,
   ): Promise<TimeSpan[]> {
     return this.ftTimeSpanService.findTimeSpansForFt(ftId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Get('volunteer/:volunteerId/ft-timespans')
+  @Permission("affect-volunteer")
+  @Get("volunteer/:volunteerId/ft-timespans")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get ft time spans available for volunteer',
+    description: "Get ft time spans available for volunteer",
     isArray: true,
     type: TimeSpanWithFtResponseDto,
   })
   findFtTimeSpansAvailableForVolunteer(
-    @Param('volunteerId', ParseIntPipe) volunteerId: number,
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
   ): Promise<TimeSpanWithFtResponseDto[]> {
     return this.ftTimeSpanService.findTimeSpansWithFtWhereVolunteerIsAssignableTo(
       volunteerId,
@@ -134,17 +134,17 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Get('ft-timespans/:timeSpanId/volunteers')
+  @Permission("affect-volunteer")
+  @Get("ft-timespans/:timeSpanId/volunteers")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get volunteers available for ft time span',
+    description: "Get volunteers available for ft time span",
     isArray: true,
     type: AvailableVolunteerResponseDto,
   })
   findAvailableVolunteersForFtTimeSpan(
-    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
+    @Param("timeSpanId", ParseIntPipe) timeSpanId: number,
   ): Promise<AvailableVolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteersForFtTimeSpan(
       timeSpanId,
@@ -152,23 +152,23 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('hard')
-  @Get('ft-timespans/:timeSpanId')
+  @Permission("hard")
+  @Get("ft-timespans/:timeSpanId")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get time span details',
+    description: "Get time span details",
     type: TimeSpanWithAssigneesResponseDto,
   })
   findTimeSpanDetails(
-    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
+    @Param("timeSpanId", ParseIntPipe) timeSpanId: number,
   ): Promise<TimeSpanWithAssignees> {
     return this.ftTimeSpanService.findTimeSpanWithAssignees(timeSpanId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Get('ft-timespans/:timeSpanId/volunteers/:volunteerId/available-friends')
+  @Permission("affect-volunteer")
+  @Get("ft-timespans/:timeSpanId/volunteers/:volunteerId/available-friends")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -177,8 +177,8 @@ export class AssignmentController {
     type: VolunteerResponseDto,
   })
   findAvailableVolunteerFriendsForFtTimeSpan(
-    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
-    @Param('volunteerId', ParseIntPipe) volunteerId: number,
+    @Param("timeSpanId", ParseIntPipe) timeSpanId: number,
+    @Param("volunteerId", ParseIntPipe) volunteerId: number,
   ): Promise<VolunteerResponseDto[]> {
     return this.volunteerService.findAvailableVolunteerFriendsForFtTimeSpan(
       timeSpanId,
@@ -187,12 +187,12 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
+  @Permission("affect-volunteer")
   @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Affect volunteers to time span as team member',
+    description: "Affect volunteers to time span as team member",
     type: AssignmentResponseDto,
   })
   assignVolunteerToTimeSpan(
@@ -205,16 +205,16 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Delete('ft-timespans/:timeSpanId/volunteers/:assigneeId')
+  @Permission("affect-volunteer")
+  @Delete("ft-timespans/:timeSpanId/volunteers/:assigneeId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Unaffect volunteers from time span',
+    description: "Unaffect volunteers from time span",
   })
   unassignVolunteerToTimeSpan(
-    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
-    @Param('assigneeId', ParseIntPipe) assigneeId: number,
+    @Param("timeSpanId", ParseIntPipe) timeSpanId: number,
+    @Param("assigneeId", ParseIntPipe) assigneeId: number,
   ) {
     return this.assignmentService.unassignVolunteerToTimeSpan(
       assigneeId,
@@ -223,17 +223,17 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-volunteer')
-  @Patch('ft-timespans/:timeSpanId/assignees/:assigneeId/affected-team')
+  @Permission("affect-volunteer")
+  @Patch("ft-timespans/:timeSpanId/assignees/:assigneeId/affected-team")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Update assigned team for assignee',
+    description: "Update assigned team for assignee",
     type: AssignmentResponseDto,
   })
   updateAssignedTeam(
-    @Param('timeSpanId', ParseIntPipe) timeSpanId: number,
-    @Param('assigneeId', ParseIntPipe) assigneeId: number,
+    @Param("timeSpanId", ParseIntPipe) timeSpanId: number,
+    @Param("assigneeId", ParseIntPipe) assigneeId: number,
     @Body() { team }: UpdateAssignedTeamRequestDto,
   ): Promise<AssignmentResponseDto> {
     return this.assignmentService.updateAssignedTeam(

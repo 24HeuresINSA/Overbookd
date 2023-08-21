@@ -46,7 +46,7 @@ export default Vue.extend({
     await Promise.all([
       this.$accessor.charismaPeriod.fetchCharismaPeriods(),
       this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.userId
+        this.userId,
       ),
     ]);
   },

@@ -1,19 +1,19 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { Assignment, Task, Volunteer } from '../domain/task.model';
-import { ApiProperty } from '@nestjs/swagger';
-import { PeriodDto } from '../../volunteer-availability/dto/period.dto';
+import { IProvidePeriod } from "@overbookd/period";
+import { Assignment, Task, Volunteer } from "../domain/task.model";
+import { ApiProperty } from "@nestjs/swagger";
+import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 
 class VolunteerRepresentation implements Volunteer {
   @ApiProperty({
-    name: 'id',
-    description: 'volunteer id',
+    name: "id",
+    description: "volunteer id",
     type: Number,
   })
   id: number;
 
   @ApiProperty({
-    name: 'name',
-    description: 'volunteer name',
+    name: "name",
+    description: "volunteer name",
     type: String,
   })
   name: string;
@@ -21,14 +21,14 @@ class VolunteerRepresentation implements Volunteer {
 
 class AssignmentRepresentation implements Assignment {
   @ApiProperty({
-    name: 'period',
-    description: 'period volunteers are assigned',
+    name: "period",
+    description: "period volunteers are assigned",
     type: PeriodDto,
   })
   period: IProvidePeriod;
 
   @ApiProperty({
-    name: 'volunteers',
+    name: "volunteers",
     description: "volunteer's assigned during the period",
     type: VolunteerRepresentation,
     isArray: true,
@@ -38,36 +38,36 @@ class AssignmentRepresentation implements Assignment {
 
 export class TaskResponseDto implements Task {
   @ApiProperty({
-    name: 'name',
-    description: 'task name',
+    name: "name",
+    description: "task name",
     type: String,
   })
   name: string;
 
   @ApiProperty({
-    name: 'description',
-    description: 'task description',
+    name: "description",
+    description: "task description",
     type: String,
   })
   description: string;
 
   @ApiProperty({
-    name: 'period',
-    description: 'task period',
+    name: "period",
+    description: "task period",
     type: PeriodDto,
   })
   period: IProvidePeriod;
 
   @ApiProperty({
-    name: 'location',
-    description: 'task location',
+    name: "location",
+    description: "task location",
     type: String,
   })
   location: string;
 
   @ApiProperty({
-    name: 'assignments',
-    description: 'other volunteers assigned during similar periods',
+    name: "assignments",
+    description: "other volunteers assigned during similar periods",
     type: AssignmentRepresentation,
     isArray: true,
   })

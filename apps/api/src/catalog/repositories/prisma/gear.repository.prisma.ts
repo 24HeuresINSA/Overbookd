@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { GearReferenceCodeService } from '../../gear-reference-code.service';
-import { PrismaService } from '../../../prisma.service';
+import { Injectable } from "@nestjs/common";
+import { GearReferenceCodeService } from "../../gear-reference-code.service";
+import { PrismaService } from "../../../prisma.service";
 import {
   Gear,
   GearAlreadyExists,
   GearRepository,
   SearchGear,
-} from '../../interfaces';
+} from "../../interfaces";
 
 export type DatabaseGear = {
   id: number;
@@ -85,7 +85,7 @@ export class PrismaGearRepository implements GearRepository {
     return convertGearToApiContract(gear);
   }
 
-  async addGear(gear: Omit<Gear, 'id'>): Promise<Gear> {
+  async addGear(gear: Omit<Gear, "id">): Promise<Gear> {
     try {
       const data = this.buildUpsertData(gear);
       const newGear = await this.prismaService.catalogGear.create({
@@ -101,7 +101,7 @@ export class PrismaGearRepository implements GearRepository {
     }
   }
 
-  private buildUpsertData(gear: Omit<Gear, 'id'>) {
+  private buildUpsertData(gear: Omit<Gear, "id">) {
     const { category, owner, ...baseGear } = gear;
     const categoryLink = category
       ? { category: { connect: { id: category.id } } }
@@ -110,7 +110,7 @@ export class PrismaGearRepository implements GearRepository {
     return { ...baseGear, ...categoryLink };
   }
 
-  async updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear> {
+  async updateGear(gear: Omit<Gear, "owner">): Promise<Gear> {
     const { id, category, ...data } = gear;
     const updatedGear = await this.prismaService.catalogGear.update({
       data: { ...data, category: { connect: { id: category.id } } },

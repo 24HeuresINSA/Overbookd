@@ -14,16 +14,16 @@ export function isEndOfAvailabilityPeriod(hour: number): boolean {
 
 export function isAvailabilityPeriodSelected(
   selectedAvailabilities: IProvidePeriod[],
-  savedAvailabilities: IProvidePeriod[]
+  savedAvailabilities: IProvidePeriod[],
 ): (date: string | Date, hour: number) => boolean {
   return (date: string | Date, hour: number) =>
     selectedAvailabilities.some(
-      isDateIncludedByPeriod(setDateHour(new Date(date), hour))
+      isDateIncludedByPeriod(setDateHour(new Date(date), hour)),
     ) && !isAvailabilityPeriodSaved(savedAvailabilities)(date, hour);
 }
 
 export function isAvailabilityPeriodSaved(
-  savedAvailabilities: IProvidePeriod[]
+  savedAvailabilities: IProvidePeriod[],
 ): (date: string | Date, hour: number) => boolean {
   return (date: string | Date, hour: number) => {
     const updatedDate = setDateHour(new Date(date), hour);
@@ -32,7 +32,7 @@ export function isAvailabilityPeriodSaved(
 }
 
 export function hasAvailabilityPeriodError(
-  periodOrchestrator: PeriodOrchestrator
+  periodOrchestrator: PeriodOrchestrator,
 ): (date: string | Date, hour: number) => boolean {
   return (date: string | Date, hour: number) => {
     const updatedDate = setDateHour(new Date(date), hour);
@@ -42,7 +42,7 @@ export function hasAvailabilityPeriodError(
 }
 
 export function isPeriodIncludedByAnother(
-  period: IProvidePeriod
+  period: IProvidePeriod,
 ): (value: IProvidePeriod) => boolean {
   return (anotherPeriod) =>
     anotherPeriod.start.getTime() <= period.start.getTime() &&

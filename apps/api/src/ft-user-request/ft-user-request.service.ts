@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { IProvidePeriod } from '@overbookd/period';
-import { PrismaService } from '../prisma.service';
-import { SELECT_USERNAME_WITH_ID } from '../user/user.service';
-import { FtUserRequestDto } from './dto/ft-user-request.request.dto';
+import { Injectable } from "@nestjs/common";
+import { IProvidePeriod } from "@overbookd/period";
+import { PrismaService } from "../prisma.service";
+import { SELECT_USERNAME_WITH_ID } from "../user/user.service";
+import { FtUserRequestDto } from "./dto/ft-user-request.request.dto";
 import {
   DataBaseUserRequest,
   FtUserRequestResponseDto,
   UserRequest,
-} from './dto/ft-user-request.response.dto';
+} from "./dto/ft-user-request.response.dto";
 
 type UserId = {
   userId: number;
@@ -212,7 +212,7 @@ export class FtUserRequestService {
   }
 
   private async findRequestableUsers(request: FtUserRequestDto[]) {
-    const requestablePermission = 'validated-user';
+    const requestablePermission = "validated-user";
     const requestedUserIds = request.map(({ userId }) => userId);
     return this.prisma.user.findMany({
       select: { id: true },

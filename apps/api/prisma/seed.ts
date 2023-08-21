@@ -435,7 +435,7 @@ async function main() {
   const savedPermissions = await Promise.all(
     permissions.map(async (permission) => {
       const name = permission.name;
-      console.log(`----------------------------------------------------------`);
+      console.log('----------------------------------------------------------');
       console.log(`Inserting ${name} as permission`);
       return prisma.permission.upsert({
         where: { name },

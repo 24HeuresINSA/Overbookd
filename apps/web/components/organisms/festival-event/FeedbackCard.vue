@@ -59,7 +59,7 @@ export default Vue.extend({
         ? [...this.faFeedbacks]
         : [...this.fatFeedbacks];
       return feedbacks.sort(
-        (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
       );
     },
     faFeedbacks(): FaFeedback[] {

@@ -1,11 +1,11 @@
-import { EventAttributes, createEvents } from 'ics';
-import { IProvidePeriod } from '@overbookd/period';
+import { EventAttributes, createEvents } from "ics";
+import { IProvidePeriod } from "@overbookd/period";
 import {
   formatDateWithHoursAndMinutesOnly,
   toDateArray,
-} from '../../utils/date';
-import { Assignment, Task } from '../domain/task.model';
-import { RenderStrategy } from './render-strategy';
+} from "../../utils/date";
+import { Assignment, Task } from "../domain/task.model";
+import { RenderStrategy } from "./render-strategy";
 
 export class IcalRenderStrategy implements RenderStrategy {
   private readonly EMPTY_CALENDAR =
@@ -41,14 +41,14 @@ export class IcalRenderStrategy implements RenderStrategy {
   }
 
   private buildAssignmentsDescription(assignments: Assignment[]) {
-    if (assignments.length === 0) return '';
+    if (assignments.length === 0) return "";
 
-    const header = '<h2>Affectés avec toi</h2>';
+    const header = "<h2>Affectés avec toi</h2>";
     const listing = assignments.reduce((description, assignment) => {
       const volunteers = this.generateVolunteerList(assignment);
       const period = this.generatePeriodHeader(assignment.period);
       return `${description}<li>${period}<ul>${volunteers}</ul></li>`;
-    }, '');
+    }, "");
 
     return `${header}<ul>${listing}</ul>`;
   }
@@ -61,6 +61,6 @@ export class IcalRenderStrategy implements RenderStrategy {
   }
 
   private generateVolunteerList(assignment: Assignment) {
-    return assignment.volunteers.map(({ name }) => `<li>${name}</li>`).join('');
+    return assignment.volunteers.map(({ name }) => `<li>${name}</li>`).join("");
   }
 }

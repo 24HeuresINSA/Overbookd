@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { removeItemAtIndex, updateItemToList } from '@overbookd/list';
-import { GearReferenceCodeService } from '../../gear-reference-code.service';
-import { GearNotFoundException } from '../../catalog.service';
+import { Injectable } from "@nestjs/common";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import { GearReferenceCodeService } from "../../gear-reference-code.service";
+import { GearNotFoundException } from "../../catalog.service";
 import {
   Gear,
   GearAlreadyExists,
   GearRepository,
   SearchGear,
-} from '../../interfaces';
+} from "../../interfaces";
 
 class GearSearchBuilder {
   private ownerCondition = true;
@@ -68,7 +68,7 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve(gear);
   }
 
-  addGear(gear: Omit<Gear, 'id'>): Promise<Gear> {
+  addGear(gear: Omit<Gear, "id">): Promise<Gear> {
     const existingGear = this.gears.find((g) => g.slug === gear.slug);
     if (existingGear) throw new GearAlreadyExists(existingGear);
     const id = this.gears.length + 1;
@@ -80,7 +80,7 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve(createdGear);
   }
 
-  updateGear(gear: Omit<Gear, 'owner'>): Promise<Gear | undefined> {
+  updateGear(gear: Omit<Gear, "owner">): Promise<Gear | undefined> {
     const gearIndex = this.gears.findIndex((g) => g.id === gear.id);
     if (gearIndex === -1) return Promise.resolve(undefined);
     this.gears = updateItemToList(this.gears, gearIndex, gear);

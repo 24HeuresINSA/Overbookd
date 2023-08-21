@@ -1,9 +1,9 @@
-import { TransactionType } from '@prisma/client';
+import { TransactionType } from "@prisma/client";
 import {
   TransactionUser,
   TransactionWithSenderAndReceiver,
-} from '../transaction.service';
-import { ApiProperty } from '@nestjs/swagger';
+} from "../transaction.service";
+import { ApiProperty } from "@nestjs/swagger";
 
 class UserRepresentation implements TransactionUser {
   id: number;
@@ -21,10 +21,10 @@ export class TransactionResponseDto
   context: string;
   createdAt: Date;
   isDeleted: boolean;
-  @ApiProperty({ description: 'Transaction sender', type: UserRepresentation })
+  @ApiProperty({ description: "Transaction sender", type: UserRepresentation })
   userFrom: TransactionUser;
   @ApiProperty({
-    description: 'Transaction receiver',
+    description: "Transaction receiver",
     type: UserRepresentation,
   })
   userTo: TransactionUser;

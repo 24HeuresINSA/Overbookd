@@ -296,7 +296,7 @@ export default Vue.extend({
     },
 
     filterFTByReviewer(
-      searchMyFTsToReview: boolean
+      searchMyFTsToReview: boolean,
     ): (ft: FtSimplified) => boolean {
       return searchMyFTsToReview
         ? (ft) => ft.reviewer?.id === this.me.id

@@ -1,15 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsNumber, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsNumber, IsString } from "class-validator";
 import {
   FaFeedbackAuthor,
   FaFeedbackResponse,
   FaFeedbackSubjectType,
-} from '../fa-feedback.model';
+} from "../fa-feedback.model";
 
 export class FaFeedbackResponseDto implements FaFeedbackResponse {
   @ApiProperty({
     required: true,
-    description: 'The id of the ft feedback',
+    description: "The id of the ft feedback",
     type: Number,
   })
   @IsNumber()
@@ -18,7 +18,7 @@ export class FaFeedbackResponseDto implements FaFeedbackResponse {
   @ApiProperty({
     required: true,
     type: FaFeedbackAuthor,
-    description: 'The author of feedback',
+    description: "The author of feedback",
   })
   @IsNumber()
   author: FaFeedbackAuthor;
@@ -26,7 +26,7 @@ export class FaFeedbackResponseDto implements FaFeedbackResponse {
   @ApiProperty({
     required: true,
     type: Date,
-    description: 'The date of feedback creation',
+    description: "The date of feedback creation",
   })
   @IsDateString()
   createdAt: Date;
@@ -34,7 +34,7 @@ export class FaFeedbackResponseDto implements FaFeedbackResponse {
   @ApiProperty({
     required: true,
     type: String,
-    description: 'The subject of feedback',
+    description: "The subject of feedback",
   })
   @IsString()
   subject: FaFeedbackSubjectType;
@@ -42,7 +42,7 @@ export class FaFeedbackResponseDto implements FaFeedbackResponse {
   @ApiProperty({
     required: true,
     type: String,
-    description: 'The comment of feedback',
+    description: "The comment of feedback",
   })
   @IsString()
   comment: string;

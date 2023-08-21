@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { CharismaPeriodResponseDto } from './dto/charisma-period.response.dto';
-import { CreateCharismaPeriodRequestDto } from './dto/create-charisma-period.request.dto';
-import { UpdateCharismaPeriodRequestDto } from './dto/update-charisma-period.request.dto';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
+import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
+import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
 
 @Injectable()
 export class CharismaPeriodService {

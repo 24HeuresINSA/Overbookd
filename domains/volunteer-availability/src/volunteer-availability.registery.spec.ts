@@ -14,7 +14,7 @@ describe("Volunteer availability registery", () => {
         availabilityRegistery.addPeriod(period);
         expect(availabilityRegistery.availabilities).toHaveLength(1);
         expect(availabilityRegistery.availabilities).toContainEqual(
-          Availability.fromPeriod(period)
+          Availability.fromPeriod(period),
         );
       });
     });
@@ -37,10 +37,10 @@ describe("Volunteer availability registery", () => {
           };
           availabilityRegistery.addPeriod(addingPeriod);
           expect(availabilityRegistery.availabilities).toContainEqual(
-            Availability.fromPeriod(existingPeriod)
+            Availability.fromPeriod(existingPeriod),
           );
           expect(availabilityRegistery.availabilities).toContainEqual(
-            Availability.fromPeriod(addingPeriod)
+            Availability.fromPeriod(addingPeriod),
           );
         });
       });
@@ -82,10 +82,10 @@ describe("Volunteer availability registery", () => {
           sundayPartyAndNighShift,
         ];
         existingAvailabilities = availabilityPeriods.map(
-          Availability.fromPeriod
+          Availability.fromPeriod,
         );
         availabilityRegistery = AvailabilityRegistery.fromAvailabilities(
-          existingAvailabilities
+          existingAvailabilities,
         );
       });
       describe("when adding availability period from 2023-05-12 12:00 to 2023-05-12 18:00", () => {
@@ -96,7 +96,7 @@ describe("Volunteer availability registery", () => {
           };
           availabilityRegistery.addPeriod(addingPeriod);
           expect(availabilityRegistery.availabilities).toContainEqual(
-            Availability.fromPeriod(addingPeriod)
+            Availability.fromPeriod(addingPeriod),
           );
         });
       });
@@ -111,7 +111,7 @@ describe("Volunteer availability registery", () => {
             Availability.fromPeriod({
               start: existingAvailabilities[0].start,
               end: addingPeriod.end,
-            })
+            }),
           );
         });
       });
@@ -123,13 +123,13 @@ describe("Volunteer availability registery", () => {
           };
           availabilityRegistery.addPeriod(addingPeriod);
           expect(availabilityRegistery.availabilities).toHaveLength(
-            existingAvailabilities.length - 1
+            existingAvailabilities.length - 1,
           );
           expect(availabilityRegistery.availabilities).toContainEqual(
             Availability.fromPeriod({
               start: existingAvailabilities[0].start,
               end: existingAvailabilities[1].end,
-            })
+            }),
           );
         });
       });
@@ -145,7 +145,7 @@ describe("Volunteer availability registery", () => {
             Availability.fromPeriod({
               start: existingAvailabilities[0].start,
               end: existingAvailabilities[3].end,
-            })
+            }),
           );
         });
       });

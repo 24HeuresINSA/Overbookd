@@ -241,7 +241,7 @@ export interface PublicAnimationWithFa extends Required<PublicAnimation> {
 
 export type FaTimeWindowSortFunction = (
   timeWindows: FaTimeWindow[],
-  desc: boolean
+  desc: boolean,
 ) => FaTimeWindow[];
 
 export interface ElectricityTypeWithLabel {
@@ -266,7 +266,7 @@ export function castFaWithDate(fa: HttpStringified<Fa>): Fa {
 }
 
 export function castFaTimeWindowWithDate(
-  timeWindow: HttpStringified<FaTimeWindow>
+  timeWindow: HttpStringified<FaTimeWindow>,
 ): FaTimeWindow {
   return {
     ...timeWindow,
@@ -276,7 +276,7 @@ export function castFaTimeWindowWithDate(
 }
 
 function castFeedbackWithDate(
-  feedback: HttpStringified<FaFeedback>
+  feedback: HttpStringified<FaFeedback>,
 ): FaFeedback {
   const createdAt = new Date(feedback.createdAt);
   return {

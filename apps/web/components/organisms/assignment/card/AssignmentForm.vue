@@ -148,7 +148,7 @@ export default Vue.extend({
     },
     volunteerIds(): string[] {
       return this.taskAssignment.candidates.map((c) =>
-        c.volunteer.id.toString()
+        c.volunteer.id.toString(),
       );
     },
     currentTask(): Task {
@@ -156,13 +156,13 @@ export default Vue.extend({
     },
     calendarUsers(): CalendarUser[] {
       return this.taskAssignment.candidates.map(
-        ({ volunteer, availabilities }) => ({ ...volunteer, availabilities })
+        ({ volunteer, availabilities }) => ({ ...volunteer, availabilities }),
       );
     },
     candidatesTaskEvents(): PlanningEvent[] {
       return this.$accessor.assignment.taskAssignment.candidates.flatMap(
         ({ volunteer, tasks }) =>
-          tasks.map((task) => convertTaskToPlanningEvent(task, volunteer.id))
+          tasks.map((task) => convertTaskToPlanningEvent(task, volunteer.id)),
       );
     },
     currentTaskAsEvent(): PlanningEvent {
@@ -201,7 +201,7 @@ export default Vue.extend({
       const underlyingTeams = getUnderlyingTeams(candidate.volunteer.teams);
       const teams = [...candidate.volunteer.teams, ...underlyingTeams];
       return teams.filter((team) =>
-        this.taskAssignment.remainingTeamRequest.includes(team)
+        this.taskAssignment.remainingTeamRequest.includes(team),
       );
     },
     temporaryAssign(teamCode: string, candidate?: AssignmentCandidate) {
@@ -215,7 +215,7 @@ export default Vue.extend({
     },
     isNotAssignedAs(
       teamCode: string,
-      candidate?: AssignmentCandidate
+      candidate?: AssignmentCandidate,
     ): boolean {
       if (!candidate) return false;
       return candidate.assignment !== teamCode;
@@ -243,13 +243,13 @@ export default Vue.extend({
     },
     isLastAddedCandidate(volunteerId: string): boolean {
       const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId
+        (candidate) => candidate.volunteer.id === +volunteerId,
       );
       return candidateIndex + 1 === this.taskAssignment.candidates.length;
     },
     isFirstAddedCandidate(volunteerId: string): boolean {
       const candidateIndex = this.taskAssignment.candidates.findIndex(
-        (candidate) => candidate.volunteer.id === +volunteerId
+        (candidate) => candidate.volunteer.id === +volunteerId,
       );
       return candidateIndex === 0;
     },

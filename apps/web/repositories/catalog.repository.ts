@@ -34,7 +34,7 @@ export class CategoryRepository {
 
   static searchCategories(
     context: Context,
-    searchOptions?: CategorySearchOptions
+    searchOptions?: CategorySearchOptions,
   ) {
     return context.$axios.get<Category[]>(this.basePath, {
       params: searchOptions,
@@ -52,11 +52,11 @@ export class CategoryRepository {
   static updateCategory(
     context: Context,
     categoryId: number,
-    categoryForm: CategoryForm
+    categoryForm: CategoryForm,
   ) {
     return context.$axios.put<Category>(
       `${this.basePath}/${categoryId}`,
-      categoryForm
+      categoryForm,
     );
   }
 

@@ -9,7 +9,7 @@ import {
   Post,
   Request,
   UseGuards,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -19,22 +19,22 @@ import {
   ApiParam,
   ApiResponse,
   ApiTags,
-} from '@nestjs/swagger';
-import { RequestWithUserPayload } from '../../src/app.controller';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { CreateFriendRequestDto } from './dto/create-friend.request.dto';
-import { FriendResponseDto } from './dto/friend.response.dto';
-import { FriendService } from './friend.service';
+} from "@nestjs/swagger";
+import { RequestWithUserPayload } from "../../src/app.controller";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { CreateFriendRequestDto } from "./dto/create-friend.request.dto";
+import { FriendResponseDto } from "./dto/friend.response.dto";
+import { FriendService } from "./friend.service";
 
 @ApiBearerAuth()
-@ApiTags('friend')
+@ApiTags("friend")
 @ApiBadRequestResponse({
-  description: 'Request is not formated as expected',
+  description: "Request is not formated as expected",
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller('friends')
+@Controller("friends")
 export class FriendController {
   constructor(private readonly friendService: FriendService) {}
 
@@ -43,7 +43,7 @@ export class FriendController {
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get friends list',
+    description: "Get friends list",
     isArray: true,
     type: FriendResponseDto,
   })
@@ -52,23 +52,23 @@ export class FriendController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get(":id")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Get friends of a user',
+    description: "Get friends of a user",
     isArray: true,
     type: FriendResponseDto,
   })
   @ApiParam({
-    name: 'id',
-    description: 'User id',
+    name: "id",
+    description: "User id",
     type: Number,
     required: true,
   })
-  @ApiNotFoundResponse({ description: 'Friends not found' })
+  @ApiNotFoundResponse({ description: "Friends not found" })
   findMany(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<FriendResponseDto[]> {
     return this.friendService.findUserFriends(id);
   }
@@ -78,14 +78,14 @@ export class FriendController {
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Create relation between two users',
+    description: "Create relation between two users",
     type: FriendResponseDto,
   })
   @ApiBody({
-    description: 'Friend id',
+    description: "Friend id",
     type: CreateFriendRequestDto,
   })
-  @ApiNotFoundResponse({ description: 'Friend not found' })
+  @ApiNotFoundResponse({ description: "Friend not found" })
   create(
     @Body() friend: CreateFriendRequestDto,
     @Request() req: RequestWithUserPayload,
@@ -94,21 +94,21 @@ export class FriendController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete(':friendId')
+  @Delete(":friendId")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete relation between two users',
+    description: "Delete relation between two users",
   })
   @ApiParam({
-    name: 'friendId',
-    description: 'Friend id',
+    name: "friendId",
+    description: "Friend id",
     type: Number,
     required: true,
   })
-  @ApiNotFoundResponse({ description: 'Friend not found' })
+  @ApiNotFoundResponse({ description: "Friend not found" })
   remove(
-    @Param('friendId', ParseIntPipe) friendId: number,
+    @Param("friendId", ParseIntPipe) friendId: number,
     @Request() req: RequestWithUserPayload,
   ): Promise<void> {
     return this.friendService.delete(req.user.id, friendId);

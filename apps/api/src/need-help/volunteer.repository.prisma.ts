@@ -1,24 +1,24 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { Volunteer } from './need-help.model';
-import { VolunteerRepository } from './need-help.service';
-import { PrismaService } from '../../src/prisma.service';
-import { AssignmentService } from '../../src/assignment/assignment.service';
-import { WHERE_VALIDATED_USER } from '../../src/assignment/volunteer.service';
-import { Injectable } from '@nestjs/common';
+import { IProvidePeriod } from "@overbookd/period";
+import { Volunteer } from "./need-help.model";
+import { VolunteerRepository } from "./need-help.service";
+import { PrismaService } from "../../src/prisma.service";
+import { AssignmentService } from "../../src/assignment/assignment.service";
+import { WHERE_VALIDATED_USER } from "../../src/assignment/volunteer.service";
+import { Injectable } from "@nestjs/common";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
   SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_VOLUNTEER_ASSIGNMENTS,
   VolunteerTask,
-} from '../../src/user/user.service';
+} from "../../src/user/user.service";
 import {
   DatabaseAssignment,
   DatabaseFtUserRequest,
-} from '../assignment/model/assignment.model';
+} from "../assignment/model/assignment.model";
 import {
   formatAssignmentAsTask,
   formatRequirementAsTask,
-} from '../../src/utils/assignment';
+} from "../../src/utils/assignment";
 
 type DatabaseVolunteer = {
   id: number;

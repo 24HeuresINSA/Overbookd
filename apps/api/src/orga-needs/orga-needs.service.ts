@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { IProvidePeriod, QUARTER_IN_MS } from '@overbookd/period';
-import { PrismaService } from '../prisma.service';
-import { VolunteerAvailability } from '@prisma/client';
-import { getPeriodDuration } from '../utils/duration';
+import { Injectable } from "@nestjs/common";
+import { IProvidePeriod, QUARTER_IN_MS } from "@overbookd/period";
+import { PrismaService } from "../prisma.service";
+import { VolunteerAvailability } from "@prisma/client";
+import { getPeriodDuration } from "../utils/duration";
 
 interface OrgaNeedsRequest {
   start: Date;
@@ -222,7 +222,7 @@ export class OrgaNeedsService {
 
   private teamMemberCondition(teams: string[]) {
     const isValidUser = {
-      permissions: { some: { permissionName: 'validated-user' } },
+      permissions: { some: { permissionName: "validated-user" } },
     };
     const isMemberOf = { code: { in: teams } };
 

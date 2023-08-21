@@ -1,17 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsDefined, IsOptional, Min } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsDefined, IsOptional, Min } from "class-validator";
 import {
   CreateGearRequest,
   ExistingPeriodGearRequestForm,
   NewPeriodCreateGearRequestForm,
-} from '../gear-request.model';
+} from "../gear-request.model";
 
 export class GearRequestRequestDto
-  implements Omit<CreateGearRequest, 'seekerId'>
+  implements Omit<CreateGearRequest, "seekerId">
 {
   @ApiProperty({
     required: true,
-    description: 'Gear Request quantity',
+    description: "Gear Request quantity",
     type: Number,
   })
   @IsDefined()
@@ -20,7 +20,7 @@ export class GearRequestRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Id requested',
+    description: "Gear Id requested",
     type: Number,
   })
   @IsDefined()
@@ -29,7 +29,7 @@ export class GearRequestRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request rental period id',
+    description: "Gear Request rental period id",
     type: Number,
   })
   @IsOptional()
@@ -38,7 +38,7 @@ export class GearRequestRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request start rental period',
+    description: "Gear Request start rental period",
     type: Date,
   })
   @IsOptional()
@@ -47,7 +47,7 @@ export class GearRequestRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request end rental period',
+    description: "Gear Request end rental period",
     type: Date,
   })
   @IsOptional()
@@ -56,11 +56,11 @@ export class GearRequestRequestDto
 }
 
 export class ExistingPeriodGearRequestFormRequestDto
-  implements Omit<ExistingPeriodGearRequestForm, 'seekerId'>
+  implements Omit<ExistingPeriodGearRequestForm, "seekerId">
 {
   @ApiProperty({
     required: true,
-    description: 'Gear Request quantity',
+    description: "Gear Request quantity",
     type: Number,
   })
   @IsDefined()
@@ -69,7 +69,7 @@ export class ExistingPeriodGearRequestFormRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Id requested',
+    description: "Gear Id requested",
     type: Number,
   })
   @IsDefined()
@@ -78,7 +78,7 @@ export class ExistingPeriodGearRequestFormRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request rental period id',
+    description: "Gear Request rental period id",
     type: Number,
   })
   @IsDefined()
@@ -87,11 +87,11 @@ export class ExistingPeriodGearRequestFormRequestDto
 }
 
 export class NewPeriodGearRequestFormRequestDto
-  implements Omit<NewPeriodCreateGearRequestForm, 'seekerId'>
+  implements Omit<NewPeriodCreateGearRequestForm, "seekerId">
 {
   @ApiProperty({
     required: true,
-    description: 'Gear Request quantity',
+    description: "Gear Request quantity",
     type: Number,
   })
   @IsDefined()
@@ -100,7 +100,7 @@ export class NewPeriodGearRequestFormRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Id requested',
+    description: "Gear Id requested",
     type: Number,
   })
   @IsDefined()
@@ -109,7 +109,7 @@ export class NewPeriodGearRequestFormRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request start rental period',
+    description: "Gear Request start rental period",
     type: Date,
   })
   @IsDefined()
@@ -118,7 +118,7 @@ export class NewPeriodGearRequestFormRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'Gear Request end rental period',
+    description: "Gear Request end rental period",
     type: Date,
   })
   @IsDefined()

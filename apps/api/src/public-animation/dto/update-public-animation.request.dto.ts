@@ -1,15 +1,15 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsBoolean, IsOptional, IsString } from "class-validator";
 import {
   AnimationCategory,
   PublicAnimation,
   animationCategories,
-} from '../public-animation.model';
+} from "../public-animation.model";
 
 export class UpdatePublicAnimationRequestDto implements PublicAnimation {
   @ApiProperty({
     required: true,
-    description: 'The link to the photo',
+    description: "The link to the photo",
   })
   @IsOptional()
   @IsString()
@@ -17,7 +17,7 @@ export class UpdatePublicAnimationRequestDto implements PublicAnimation {
 
   @ApiProperty({
     required: false,
-    description: 'Is the activty a flagship one',
+    description: "Is the activty a flagship one",
   })
   @IsOptional()
   @IsBoolean()
@@ -25,7 +25,7 @@ export class UpdatePublicAnimationRequestDto implements PublicAnimation {
 
   @ApiProperty({
     required: false,
-    description: 'The description of the animation',
+    description: "The description of the animation",
   })
   @IsOptional()
   @IsString()
@@ -33,7 +33,7 @@ export class UpdatePublicAnimationRequestDto implements PublicAnimation {
 
   @ApiProperty({
     required: true,
-    description: 'The categories of the animation',
+    description: "The categories of the animation",
     enum: animationCategories,
     isArray: true,
   })

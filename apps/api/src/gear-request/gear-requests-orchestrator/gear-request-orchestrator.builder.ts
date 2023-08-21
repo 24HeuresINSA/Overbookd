@@ -1,20 +1,20 @@
-import { GearRepository } from '../../catalog/interfaces';
-import { GearSeekerType } from '../gear-request.model';
+import { GearRepository } from "../../catalog/interfaces";
+import { GearSeekerType } from "../gear-request.model";
 import {
   AnimationRepository,
   GearRequestRepository,
   PeriodRepository,
   TaskRepository,
-} from '../gear-request.service';
+} from "../gear-request.service";
 import {
   AnimationGearSeekerRegistery,
   TaskGearSeekerRegistery,
-} from './gear-seeker-registery';
+} from "./gear-seeker-registery";
 import {
   GearRequestOrchestrator,
   ConsumableGearRequest,
   StandardGearRequest,
-} from './gear-request-orchestrator';
+} from "./gear-request-orchestrator";
 
 export class GearRequestOrchestratorBuilder {
   static build(

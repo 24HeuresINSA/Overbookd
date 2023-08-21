@@ -87,7 +87,7 @@ export default Vue.extend({
       return Boolean(
         numberOfPass &&
           numberOfPass > 0 &&
-          numberOfPass !== this.mFA.numberOfPass
+          numberOfPass !== this.mFA.numberOfPass,
       );
     },
     clearNumberOfPass(isPassRequired: boolean) {

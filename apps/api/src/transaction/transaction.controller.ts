@@ -9,32 +9,32 @@ import {
   Request,
   ParseIntPipe,
   HttpCode,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   TransactionService,
   TransactionWithSenderAndReceiver,
-} from './transaction.service';
-import { Transaction } from '@prisma/client';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { CreateTransactionRequestDto } from './dto/create-transaction.request.dto';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { Permission } from '../authentication/permissions-auth.decorator';
-import { RequestWithUserPayload } from '../../src/app.controller';
-import { TransactionResponseDto } from './dto/transaction.response.dto';
+} from "./transaction.service";
+import { Transaction } from "@prisma/client";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { CreateTransactionRequestDto } from "./dto/create-transaction.request.dto";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { RequestWithUserPayload } from "../../src/app.controller";
+import { TransactionResponseDto } from "./dto/transaction.response.dto";
 
 @ApiBearerAuth()
-@ApiTags('transactions')
-@Controller('transactions')
+@ApiTags("transactions")
+@Controller("transactions")
 export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('manage-cp')
+  @Permission("manage-cp")
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'Get all transactions',
+    description: "Get all transactions",
     isArray: true,
     type: TransactionResponseDto,
   })
@@ -43,26 +43,26 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission('manage-cp')
-  @Get('user/:id')
+  @Permission("manage-cp")
+  @Get("user/:id")
   @ApiResponse({
     status: 200,
-    description: 'Get all transactions of a user',
+    description: "Get all transactions of a user",
     type: TransactionResponseDto,
     isArray: true,
   })
   getUserTransactions(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<TransactionWithSenderAndReceiver[]> {
     return this.transactionService.getUserTransactions(id);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission('cp')
-  @Get('me')
+  @Permission("cp")
+  @Get("me")
   @ApiResponse({
     status: 200,
-    description: 'Get all transactions of self',
+    description: "Get all transactions of self",
     type: TransactionResponseDto,
     isArray: true,
   })
@@ -74,29 +74,29 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission('cp')
-  @Get('/:id')
+  @Permission("cp")
+  @Get("/:id")
   @ApiResponse({
     status: 200,
-    description: 'Get a transaction by id',
+    description: "Get a transaction by id",
     type: TransactionResponseDto,
   })
   getTransactionById(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
   ): Promise<TransactionWithSenderAndReceiver | null> {
     return this.transactionService.getTransactionById(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('cp')
-  @Post('transfer')
+  @Permission("cp")
+  @Post("transfer")
   @ApiBody({
-    description: 'Create a transaction',
+    description: "Create a transaction",
     type: CreateTransactionRequestDto,
   })
   @ApiResponse({
     status: 201,
-    description: 'Generated transaction',
+    description: "Generated transaction",
     type: TransactionResponseDto,
   })
   createTransaction(
@@ -108,15 +108,15 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('manage-cp')
-  @Post('sg')
+  @Permission("manage-cp")
+  @Post("sg")
   @ApiBody({
-    description: 'transactions to generate',
+    description: "transactions to generate",
     isArray: true,
     type: CreateTransactionRequestDto,
   })
   @ApiResponse({
-    description: 'generated transactions',
+    description: "generated transactions",
     status: 201,
     type: TransactionResponseDto,
     isArray: true,
@@ -128,14 +128,14 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('manage-cp')
+  @Permission("manage-cp")
   @HttpCode(204)
-  @Delete(':id')
+  @Delete(":id")
   @ApiResponse({
     status: 204,
-    description: 'Delete a transaction by id',
+    description: "Delete a transaction by id",
   })
-  deleteTransaction(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  deleteTransaction(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.transactionService.deleteTransaction(id);
   }
 }

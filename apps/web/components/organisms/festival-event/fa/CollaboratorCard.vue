@@ -62,6 +62,8 @@ import {
 } from "~/utils/festival-event/faUtils";
 import { Collaborator, Fa, FaCardType } from "~/utils/models/fa";
 
+type VuetifyRule = (value: null | string) => boolean | string;
+
 export default Vue.extend({
   name: "CollaboratorCard",
   components: { CardErrorList },
@@ -90,18 +92,19 @@ export default Vue.extend({
     validationStatus(): string {
       return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
     },
-    rulePhone(): any {
+    rulePhone(): VuetifyRule[] {
       return [
-        (v: any) =>
-          new RegExp(`^$|0[1-7]{1}[0-9]{8}$`).test(v) ||
-          `ce numéro de téléphone n'est pas valide`,
+        (v) =>
+          new RegExp("^$|0[1-7]{1}[0-9]{8}$").test(v?.toString() || "") ||
+          "ce numéro de téléphone n'est pas valide",
       ];
     },
-    ruleEmail(): any {
+    ruleEmail(): VuetifyRule[] {
       return [
-        (v: any) =>
-          new RegExp(`^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$`).test(v) ||
-          `cet email n'est pas valide`,
+        (v) =>
+          new RegExp("^$|[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").test(
+            v?.toString() || "",
+          ) || "cet email n'est pas valide",
       ];
     },
   },

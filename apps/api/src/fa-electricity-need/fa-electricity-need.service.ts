@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
 import {
   FaElectricityNeed,
   FaElectricityNeedWithOptionalId,
-} from './fa-electricity-need.model';
-import { SELECT_ELECTRICITY_NEED } from './fa-electricity-need.query';
+} from "./fa-electricity-need.model";
+import { SELECT_ELECTRICITY_NEED } from "./fa-electricity-need.query";
 
 @Injectable()
 export class FaElectricityNeedService {

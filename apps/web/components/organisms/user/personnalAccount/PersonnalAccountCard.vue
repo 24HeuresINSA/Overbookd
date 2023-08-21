@@ -56,6 +56,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TransferDialog from "~/components/molecules/user/TransferDialog.vue";
+import { Transaction } from "~/utils/models/transaction";
 
 export default Vue.extend({
   name: "PersonnalAccountCard",
@@ -71,7 +72,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    displayedTransactionHistory(): any {
+    displayedTransactionHistory(): Transaction[] {
       return this.mTransactions.slice(0, 5);
     },
     mBalance() {
@@ -88,23 +89,23 @@ export default Vue.extend({
     await this.$accessor.transaction.fetchMTransactions();
   },
   methods: {
-    async openDialog(): Promise<any> {
+    async openDialog(): Promise<void> {
       this.$store.dispatch("dialog/openDialog", "transfer");
     },
 
-    isNegativeTransaction(transaction: any) {
+    isNegativeTransaction(transaction: Transaction) {
       switch (transaction.type) {
         case "DEPOSIT":
           return false;
         case "TRANSFER":
-          return transaction.userFrom.id === this.me.id;
+          return transaction.from === this.me.id;
         case "EXPENSE":
           return true;
         default:
           return false;
       }
     },
-    updateCP(amount: number): any {
+    updateCP(amount: number): void {
       this.$store.commit("user/UPDATE_USER", {
         balance: (this.$accessor.user.me.balance || 0) - amount,
       });

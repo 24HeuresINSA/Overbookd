@@ -56,8 +56,8 @@ export default Vue.extend({
     snack: new Snack(3000),
     passwordVerif: [
       (v: string) =>
-        new RegExp(`^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$`).test(v) ||
-        `au moins 8 caractères avec une MAJUSCULE, une minuscule et un chiffre minimum`,
+        new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$").test(v) ||
+        "au moins 8 caractères avec une MAJUSCULE, une minuscule et un chiffre minimum",
     ],
   }),
   methods: {
@@ -72,7 +72,7 @@ export default Vue.extend({
         {
           successMessage: "Password changé, redirection au login...",
           messageDuration: 10000,
-        }
+        },
       );
 
       if (!res) return;

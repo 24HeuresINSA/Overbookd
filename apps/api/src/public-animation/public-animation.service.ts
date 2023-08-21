@@ -1,19 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { Period } from '@prisma/client';
-import { PrismaService } from '../prisma.service';
-import { CreatePublicAnimationRequestDto } from './dto/create-public-animation.request.dto';
-import { UpdatePublicAnimationRequestDto } from './dto/update-public-animation.request.dto';
+import { Injectable } from "@nestjs/common";
+import { Period } from "@prisma/client";
+import { PrismaService } from "../prisma.service";
+import { CreatePublicAnimationRequestDto } from "./dto/create-public-animation.request.dto";
+import { UpdatePublicAnimationRequestDto } from "./dto/update-public-animation.request.dto";
 import {
   PublicAnimation,
   PublicAnimationWithFa,
   PublicAnimationFa,
-} from './public-animation.model';
+} from "./public-animation.model";
 
-type DatabasePublicAnimationFa = Omit<PublicAnimationFa, 'timeWindows'> & {
+type DatabasePublicAnimationFa = Omit<PublicAnimationFa, "timeWindows"> & {
   timeWindows: Period[];
 };
 
-type DatabasePublicAnimation = Omit<PublicAnimationWithFa, 'fa'> & {
+type DatabasePublicAnimation = Omit<PublicAnimationWithFa, "fa"> & {
   fa: DatabasePublicAnimationFa;
 };
 
@@ -80,7 +80,7 @@ export class PublicAnimationService {
 
   async findAll(): Promise<PublicAnimationWithFa[]> {
     const publicAnimations = await this.prisma.publicAnimation.findMany({
-      orderBy: { faId: 'asc' },
+      orderBy: { faId: "asc" },
       select: this.SELECT_PUBLIC_ANIMATION_WITH_FA,
     });
     return publicAnimations.map(convertToPublicAnimation);

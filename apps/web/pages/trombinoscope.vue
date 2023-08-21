@@ -49,7 +49,7 @@ export default Vue.extend({
             birthdate.getDate() === today.getDate() &&
             birthdate.getMonth() === today.getMonth()
           );
-        }
+        },
       );
     },
   },

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
 import {
   FaTimeWindow,
   FaTimeWindowWithOptionalId,
-} from './fa-time-window.model';
+} from "./fa-time-window.model";
 
 const SELECT_TIME_WINDOW = {
   id: true,

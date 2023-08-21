@@ -44,7 +44,7 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
   }
 
   private convertFileHeaderToRecordKeys(
-    header: string[]
+    header: string[],
   ): (keyof InventoryImportRaw)[] {
     return header.map((column) => {
       const transalte =

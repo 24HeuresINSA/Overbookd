@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsOptional,
   IsString,
@@ -7,15 +7,15 @@ import {
   IsEmail,
   IsDefined,
   IsNumber,
-} from 'class-validator';
-import { CollaboratorWithIdRepresentation } from '../collaborator.model';
+} from "class-validator";
+import { CollaboratorWithIdRepresentation } from "../collaborator.model";
 
 export class CollaboratorResponseDto
   implements CollaboratorWithIdRepresentation
 {
   @ApiProperty({
     required: true,
-    description: 'The id of the collaborator',
+    description: "The id of the collaborator",
   })
   @IsNumber()
   @IsDefined()
@@ -23,7 +23,7 @@ export class CollaboratorResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'The firstname of the collaborator',
+    description: "The firstname of the collaborator",
   })
   @IsString()
   @IsDefined()
@@ -32,7 +32,7 @@ export class CollaboratorResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'The lastname of the collaborator',
+    description: "The lastname of the collaborator",
   })
   @IsString()
   @IsDefined()
@@ -41,17 +41,17 @@ export class CollaboratorResponseDto
 
   @ApiProperty({
     required: true,
-    description: 'The phone number of the collaborator',
-    example: '0601020304',
+    description: "The phone number of the collaborator",
+    example: "0601020304",
   })
   @IsDefined()
-  @IsPhoneNumber('FR')
+  @IsPhoneNumber("FR")
   phone: string;
 
   @ApiProperty({
     required: false,
-    description: 'The email of the collaborator',
-    example: 'john@doe.com',
+    description: "The email of the collaborator",
+    example: "john@doe.com",
   })
   @IsEmail()
   @IsOptional()
@@ -59,7 +59,7 @@ export class CollaboratorResponseDto
 
   @ApiProperty({
     required: false,
-    description: 'The company of the collaborator',
+    description: "The company of the collaborator",
   })
   @IsString()
   @IsOptional()
@@ -68,7 +68,7 @@ export class CollaboratorResponseDto
 
   @ApiProperty({
     required: false,
-    description: 'Any comments about the collaborator',
+    description: "Any comments about the collaborator",
   })
   @IsString()
   @IsOptional()

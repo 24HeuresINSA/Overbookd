@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsDefined,
@@ -6,13 +6,13 @@ import {
   IsOptional,
   IsString,
   MinLength,
-} from 'class-validator';
-import { GearForm } from '../catalog.service';
+} from "class-validator";
+import { GearForm } from "../catalog.service";
 
 export class GearFormRequestDto implements GearForm {
   @ApiProperty({
     required: true,
-    description: 'Gear name',
+    description: "Gear name",
   })
   @IsString()
   @IsDefined()
@@ -21,7 +21,7 @@ export class GearFormRequestDto implements GearForm {
 
   @ApiProperty({
     required: true,
-    description: 'Gear usage',
+    description: "Gear usage",
   })
   @IsBoolean()
   @IsDefined()
@@ -29,7 +29,7 @@ export class GearFormRequestDto implements GearForm {
 
   @ApiProperty({
     required: true,
-    description: 'Gear consumable status',
+    description: "Gear consumable status",
   })
   @IsBoolean()
   @IsDefined()
@@ -37,7 +37,7 @@ export class GearFormRequestDto implements GearForm {
 
   @ApiProperty({
     required: false,
-    description: 'Category id to link gear to',
+    description: "Category id to link gear to",
   })
   @IsOptional()
   @IsInt()

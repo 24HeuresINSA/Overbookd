@@ -15,11 +15,11 @@ export abstract class InventoryImportContainer {
   constructor(protected readonly gearRepository: GearRepository) {}
   abstract extractManualRecords(): Promise<ManualInventoryRecord[]>;
   protected convertImportRawsToManualRecords(
-    raws: InventoryImportRaw[]
+    raws: InventoryImportRaw[],
   ): ManualInventoryRecord[] {
     return raws.map(
       ({ gear, quantity, storage }) =>
-        new ManualInventoryRecord(gear, quantity, storage, this.gearRepository)
+        new ManualInventoryRecord(gear, quantity, storage, this.gearRepository),
     );
   }
 }
@@ -31,18 +31,18 @@ export class InventoryImport {
   }> {
     const manualRecords = await file.extractManualRecords();
     const inventoryRecords = await Promise.all(
-      manualRecords.map(this.convertToRecords())
+      manualRecords.map(this.convertToRecords()),
     );
 
     const records = this.deduplicateRecords(
-      inventoryRecords.filter(isInventoryRecord())
+      inventoryRecords.filter(isInventoryRecord()),
     );
     const errors = inventoryRecords.filter(isRecordError());
     return { records, errors };
   }
 
   private static convertToRecords(): (
-    value: ManualInventoryRecord
+    value: ManualInventoryRecord,
   ) => Promise<InventoryRecord | ManualInventoryRecordError | undefined> {
     return async (manualRecord) => {
       try {
@@ -55,24 +55,24 @@ export class InventoryImport {
   }
 
   private static deduplicateRecords(
-    inventoryRecords: InventoryRecord[]
+    inventoryRecords: InventoryRecord[],
   ): InventoryRecord[] {
     return inventoryRecords.reduce<InventoryRecord[]>(
       (records, currentRecord) => currentRecord.mergeInside(records),
-      []
+      [],
     );
   }
 }
 
 function isRecordError(): (
-  value: InventoryRecord | ManualInventoryRecordError | undefined
+  value: InventoryRecord | ManualInventoryRecordError | undefined,
 ) => value is ManualInventoryRecordError {
   return (error): error is ManualInventoryRecordError =>
     (error as ManualInventoryRecordError)?.message !== undefined;
 }
 
 function isInventoryRecord(): (
-  value: InventoryRecord | ManualInventoryRecordError | undefined
+  value: InventoryRecord | ManualInventoryRecordError | undefined,
 ) => value is InventoryRecord {
   return (record): record is InventoryRecord =>
     (record as InventoryRecord)?.gear?.name !== undefined;

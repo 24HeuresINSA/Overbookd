@@ -1,5 +1,4 @@
-export const defaultCommitmentPresentation =
-    `<p>Hello et merci d'être venu jusqu'ici ! 🤗</p>
+export const defaultCommitmentPresentation = `<p>Hello et merci d'être venu jusqu'ici ! 🤗</p>
     <p>
     Le festival des 24 heures de l'INSA n'est possible que grâce aux
     plus de

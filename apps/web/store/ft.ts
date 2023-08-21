@@ -73,13 +73,13 @@ export const getters = getterTree(state, {
   },
   localGearRequestRentalPeriods(state, getters): Period[] {
     return (getters.gearRequestRentalPeriods as Period[]).filter(
-      ({ id }) => id <= state.localGearRequestRentalPeriodId
+      ({ id }) => id <= state.localGearRequestRentalPeriodId,
     );
   },
   uniqueByGearGearRequests(state): StoredGearRequest<"FT">[] {
     return state.gearRequests.reduce(
       uniqueByGearReducer,
-      [] as StoredGearRequest<"FT">[]
+      [] as StoredGearRequest<"FT">[],
     );
   },
 });
@@ -120,7 +120,7 @@ export const mutations = mutationTree(state, {
     {
       timeWindowId,
       userRequests,
-    }: { timeWindowId: number; userRequests: FtUserRequest[] }
+    }: { timeWindowId: number; userRequests: FtUserRequest[] },
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
@@ -130,7 +130,7 @@ export const mutations = mutationTree(state, {
     mFT.timeWindows = updateItemToList(
       mFT.timeWindows,
       index,
-      updatedTimeWindow
+      updatedTimeWindow,
     );
   },
 
@@ -139,7 +139,7 @@ export const mutations = mutationTree(state, {
     {
       timeWindowId,
       teamRequests,
-    }: { timeWindowId: number; teamRequests: FtTeamRequest[] }
+    }: { timeWindowId: number; teamRequests: FtTeamRequest[] },
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindowId);
     if (index === -1) return;
@@ -149,7 +149,7 @@ export const mutations = mutationTree(state, {
     mFT.timeWindows = updateItemToList(
       mFT.timeWindows,
       index,
-      updatedTimeWindow
+      updatedTimeWindow,
     );
   },
 
@@ -158,12 +158,12 @@ export const mutations = mutationTree(state, {
     {
       timeWindow,
       userRequest,
-    }: { timeWindow: FtTimeWindow; userRequest: FtUserRequest }
+    }: { timeWindow: FtTimeWindow; userRequest: FtUserRequest },
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
     const userRequests = timeWindow.userRequests.filter(
-      (ur) => ur.user.id !== userRequest.user.id
+      (ur) => ur.user.id !== userRequest.user.id,
     );
     mFT.timeWindows = updateItemToList(mFT.timeWindows, index, {
       ...timeWindow,
@@ -176,12 +176,12 @@ export const mutations = mutationTree(state, {
     {
       timeWindow,
       teamRequest,
-    }: { timeWindow: FtTimeWindow; teamRequest: FtTeamRequest }
+    }: { timeWindow: FtTimeWindow; teamRequest: FtTeamRequest },
   ) {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
     const teamRequests = timeWindow.teamRequests.filter(
-      (tr) => tr.team.id !== teamRequest.team.id
+      (tr) => tr.team.id !== teamRequest.team.id,
     );
     mFT.timeWindows = updateItemToList(mFT.timeWindows, index, {
       ...timeWindow,
@@ -203,7 +203,7 @@ export const mutations = mutationTree(state, {
 
   ADD_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     const index = state.gearRequests.findIndex(
-      isSimilarGearRequest(gearRequest)
+      isSimilarGearRequest(gearRequest),
     );
     if (index === -1) {
       state.gearRequests = [...state.gearRequests, gearRequest];
@@ -212,7 +212,7 @@ export const mutations = mutationTree(state, {
     state.gearRequests = updateItemToList(
       state.gearRequests,
       index,
-      gearRequest
+      gearRequest,
     );
   },
 
@@ -222,13 +222,13 @@ export const mutations = mutationTree(state, {
 
   REMOVE_GEAR_RELATED_GEAR_REQUESTS(state, gearId: number) {
     state.gearRequests = state.gearRequests.filter(
-      (gr) => gr.gear.id !== gearId
+      (gr) => gr.gear.id !== gearId,
     );
   },
 
   DELETE_GEAR_REQUEST(state, gearRequest: StoredGearRequest<"FT">) {
     state.gearRequests = state.gearRequests.filter(
-      (gr) => !isSameGearRequest(gearRequest)(gr)
+      (gr) => !isSameGearRequest(gearRequest)(gr),
     );
   },
 
@@ -244,7 +244,7 @@ export const mutations = mutationTree(state, {
     const gearRequestIndex = state.gearRequests.findIndex(
       (gr) =>
         gr.gear.id === updatedGearRequest.gear.id &&
-        gr.rentalPeriod.id === updatedGearRequest.rentalPeriod.id
+        gr.rentalPeriod.id === updatedGearRequest.rentalPeriod.id,
     );
     if (gearRequestIndex === -1) return;
     state.gearRequests.splice(gearRequestIndex, 1, updatedGearRequest);
@@ -326,7 +326,7 @@ export const actions = actionTree(
         {
           successMessage: "Créneau ajouté 🥳",
           errorMessage: "Créneau non ajouté 😢",
-        }
+        },
       );
       if (!res) return;
       commit("ADD_TIME_WINDOW", castFtTimeWindowWithDate(res.data));
@@ -354,13 +354,13 @@ export const actions = actionTree(
 
     async validate(
       { dispatch, commit, state },
-      { author, team }: { author: User; team: Team }
+      { author, team }: { author: User; team: Team },
     ) {
       const reviewer: Reviewer = { teamCode: team.code };
       const resFT = await safeCall(
         this,
         repo.validateFT(this, state.mFT.id, reviewer),
-        { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" }
+        { successMessage: "FT validée 🥳", errorMessage: "FT non validée 😢" },
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
@@ -377,13 +377,13 @@ export const actions = actionTree(
 
     async refuse(
       { commit, dispatch, state },
-      { author, team, message }: { author: User; team: Team; message?: string }
+      { author, team, message }: { author: User; team: Team; message?: string },
     ) {
       const reviewer: Reviewer = { teamCode: team.code };
       const resFT = await safeCall(
         this,
         repo.refuseFT(this, state.mFT.id, reviewer),
-        { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" }
+        { successMessage: "FT refusée 🥳", errorMessage: "FT non refusée 😢" },
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
@@ -403,12 +403,12 @@ export const actions = actionTree(
       {
         author,
         timeSpanParameters,
-      }: { author: User; timeSpanParameters: FtTimeSpanParameters }
+      }: { author: User; timeSpanParameters: FtTimeSpanParameters },
     ) {
       const resFT = await safeCall(
         this,
         repo.switchToReadyForAssignment(this, state.mFT.id, timeSpanParameters),
-        { successMessage: "FT prête à affectation 🥳" }
+        { successMessage: "FT prête à affectation 🥳" },
       );
       if (!resFT) return;
       const updatedFT = castFTWithDate(resFT.data);
@@ -429,13 +429,13 @@ export const actions = actionTree(
         repo.getPreviousFT(this, state.mFT.id),
         {
           errorMessage: "La FT précédente n'a pas été trouvée 😢",
-        }
+        },
       );
       if (!res) return;
       if (!res.data) {
         alert("Il n'y a pas de FT avant celle-ci 😢");
         return this.$router.push({
-          path: `/ft`,
+          path: "/ft",
         });
       }
       return this.$router.push({
@@ -449,13 +449,13 @@ export const actions = actionTree(
         repo.getNextFT(this, state.mFT.id),
         {
           errorMessage: "La FT suivante n'a pas été trouvée 😢",
-        }
+        },
       );
       if (!res) return;
       if (!res.data) {
         alert("🎉 Tu as atteint la dernière FT ! 🎉");
         return this.$router.push({
-          path: `/ft`,
+          path: "/ft",
         });
       }
       return this.$router.push({
@@ -465,7 +465,7 @@ export const actions = actionTree(
 
     async updateTimeWindow(
       { commit, dispatch, state },
-      timeWindow: FtTimeWindow
+      timeWindow: FtTimeWindow,
     ) {
       const adaptedTimeWindow = getFtTimeWindowWithoutRequests(timeWindow);
       const res = await safeCall(
@@ -474,13 +474,13 @@ export const actions = actionTree(
         {
           successMessage: "Créneau modifié 🥳",
           errorMessage: "Créneau non modifié 😢",
-        }
+        },
       );
       if (!res) return;
       const savedTimeWindow = castFtTimeWindowWithDate(res.data);
       const { teamRequests, userRequests } = timeWindow;
       const previousTimeWindow = state.mFT.timeWindows.find(
-        ({ id }) => id === savedTimeWindow.id
+        ({ id }) => id === savedTimeWindow.id,
       );
       commit("UPDATE_TIME_WINDOW", {
         ...savedTimeWindow,
@@ -497,7 +497,7 @@ export const actions = actionTree(
 
     async updateTimeWindowRequirements(
       { commit, state },
-      timeWindow: FtTimeWindow
+      timeWindow: FtTimeWindow,
     ) {
       if (!timeWindow.id) return;
       const adaptedUserRequests: FtUserRequestUpdate[] =
@@ -517,12 +517,12 @@ export const actions = actionTree(
             this,
             state.mFT.id,
             timeWindow.id,
-            adaptedUserRequests
+            adaptedUserRequests,
           ),
           {
             successMessage: "Demandes de bénévole mises à jour 🥳",
             errorMessage: "Demandes de bénévoles non mises à jour 😢",
-          }
+          },
         ),
         safeCall(
           this,
@@ -530,12 +530,12 @@ export const actions = actionTree(
             this,
             state.mFT.id,
             timeWindow.id,
-            adaptedTeamRequests
+            adaptedTeamRequests,
           ),
           {
             successMessage: "Demandes d'équipes mises à jour 🥳",
             errorMessage: "Demandes d'équipes non mises à jour 😢",
-          }
+          },
         ),
       ]);
       if (resUserRequests) {
@@ -557,7 +557,7 @@ export const actions = actionTree(
       {
         timeWindow,
         userRequest,
-      }: { timeWindow: FtTimeWindow; userRequest: FtUserRequest }
+      }: { timeWindow: FtTimeWindow; userRequest: FtUserRequest },
     ) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
@@ -566,12 +566,12 @@ export const actions = actionTree(
           this,
           state.mFT.id,
           timeWindow.id,
-          userRequest.user.id
+          userRequest.user.id,
         ),
         {
           successMessage: "Demande de bénévole supprimée 🥳",
           errorMessage: "Demande de bénévole non supprimée 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_USER_REQUEST", { timeWindow, userRequest });
@@ -582,7 +582,7 @@ export const actions = actionTree(
       {
         timeWindow,
         teamRequest,
-      }: { timeWindow: FtTimeWindow; teamRequest: FtTeamRequest }
+      }: { timeWindow: FtTimeWindow; teamRequest: FtTeamRequest },
     ) {
       if (!timeWindow?.id) return;
       const res = await safeCall(
@@ -591,12 +591,12 @@ export const actions = actionTree(
           this,
           state.mFT.id,
           timeWindow.id,
-          teamRequest.team.code
+          teamRequest.team.code,
         ),
         {
           successMessage: "Demande d'équipe supprimée 🥳",
           errorMessage: "Demande d'équipe non supprimée 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_TEAM_REQUEST", { timeWindow, teamRequest });
@@ -610,7 +610,7 @@ export const actions = actionTree(
         {
           successMessage: "Créneau supprimé 🥳",
           errorMessage: "Créneau non supprimé 😢",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_TIME_WINDOW", timeWindow);
@@ -622,9 +622,9 @@ export const actions = actionTree(
         validationReviews.map((review) =>
           safeCall(
             this,
-            repo.deleteFTReview(this, state.mFT.id, review.team.code)
-          )
-        )
+            repo.deleteFTReview(this, state.mFT.id, review.team.code),
+          ),
+        ),
       );
       if (!res || res.length !== validationReviews.length) return;
       commit("DELETE_REVIEWS", validationReviews);
@@ -641,7 +641,7 @@ export const actions = actionTree(
         {
           successMessage: "Commentaire ajouté 🥳",
           errorMessage: "Commentaire non ajouté 😢",
-        }
+        },
       );
       if (!res) return;
       const createdAt = new Date(res.data.createdAt);
@@ -650,47 +650,51 @@ export const actions = actionTree(
 
     async addGearRequestForAllRentalPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">,
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity
+        quantity,
       );
       const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]
       ).map(generateGearRequestCreation);
       await Promise.all(
-        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
+        gearRequestCreationForms.map((form) =>
+          dispatch("addGearRequest", form),
+        ),
       );
     },
 
     async addGearRequestForAllFtPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">,
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity
+        quantity,
       );
       const periods = uniquePeriodsReducer(getters.ftPeriods) as Period[];
       const gearRequestCreationForms = periods.map(generateGearRequestCreation);
       await Promise.all(
-        gearRequestCreationForms.map((form) => dispatch("addGearRequest", form))
+        gearRequestCreationForms.map((form) =>
+          dispatch("addGearRequest", form),
+        ),
       );
     },
 
     async addConsumableGearRequestForAllFtPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">,
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity
+        quantity,
       );
       const periods = uniquePeriodsReducer(getters.ftPeriods) as Period[];
       const period = {
         start: new Date(
-          Math.min(...periods.map(({ start }) => start.getTime()))
+          Math.min(...periods.map(({ start }) => start.getTime())),
         ),
         end: new Date(Math.max(...periods.map(({ end }) => end.getTime()))),
         id: -1,
@@ -701,11 +705,11 @@ export const actions = actionTree(
 
     async addConsumableGearRequestForAllRentalPeriods(
       { getters, dispatch },
-      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">
+      { gearId, quantity }: Pick<GearRequestCreation, "gearId" | "quantity">,
     ) {
       const generateGearRequestCreation = generateGearRequestCreationBuilder(
         gearId,
-        quantity
+        quantity,
       );
       const gearRequestCreationForms = (
         getters.gearRequestRentalPeriods as Period[]
@@ -723,7 +727,7 @@ export const actions = actionTree(
         {
           successMessage: "La demande de matériel a été ajoutée avec succès ✅",
           errorMessage: "La demande de matériel n'a pas pu etre ajoutée ❌",
-        }
+        },
       );
       if (!res) return;
       const createdGearRequest = castGearRequestWithDate(res.data);
@@ -742,15 +746,15 @@ export const actions = actionTree(
                 this,
                 state.mFT.id,
                 gearId,
-                gearRequest.rentalPeriod.id
+                gearRequest.rentalPeriod.id,
               ),
               {
                 successMessage: "La demande de matériel a été supprimée 🗑️",
                 errorMessage:
                   "La demande de matériel n'a pas a été supprimée ❌",
-              }
-            )
-          )
+              },
+            ),
+          ),
       );
       if (removals.some((res) => res === undefined)) return;
       commit("REMOVE_GEAR_RELATED_GEAR_REQUESTS", gearId);
@@ -764,7 +768,7 @@ export const actions = actionTree(
         {
           successMessage: "La demande de matériel a été supprimée 🗑️",
           errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
-        }
+        },
       );
       if (!res) return;
       commit("DELETE_GEAR_REQUEST", gearRequest);
@@ -773,7 +777,7 @@ export const actions = actionTree(
     async fetchGearRequests({ commit, state }) {
       const res = await safeCall(
         this,
-        repo.getGearRequests(this, state.mFT.id)
+        repo.getGearRequests(this, state.mFT.id),
       );
       if (!res) return;
       const gearRequests = res.data.map(castGearRequestWithDate);
@@ -782,7 +786,7 @@ export const actions = actionTree(
 
     async addGearRequestRentalPeriod(
       { dispatch, getters },
-      rentalPeriod: Omit<Period, "id">
+      rentalPeriod: Omit<Period, "id">,
     ) {
       const gearRequests =
         getters.uniqueByGearGearRequests as StoredGearRequest<"FT">[];
@@ -795,7 +799,7 @@ export const actions = actionTree(
       });
 
       otherGearRequests.map(({ gear: { id: gearId }, quantity }) =>
-        dispatch("addGearRequest", { gearId, quantity, periodId })
+        dispatch("addGearRequest", { gearId, quantity, periodId }),
       );
       dispatch("fetchGearRequests");
     },
@@ -808,7 +812,7 @@ export const actions = actionTree(
       }: {
         gearRequest: StoredGearRequest<"FT">;
         rentalPeriod: Omit<Period, "id">;
-      }
+      },
     ): Promise<number> {
       const firstGearRequestCreation = {
         gearId: gearRequest.gear.id,
@@ -823,18 +827,18 @@ export const actions = actionTree(
 
     async removeGearRequestRentalPeriod(
       { dispatch, state, getters },
-      { start, end }: Omit<Period, "id">
+      { start, end }: Omit<Period, "id">,
     ) {
       const deletedPeriod = { start, end, id: -1 };
       const toDeleteGearRequests = state.gearRequests.filter(
-        ({ rentalPeriod }) => isSimilarPeriod(deletedPeriod)(rentalPeriod)
+        ({ rentalPeriod }) => isSimilarPeriod(deletedPeriod)(rentalPeriod),
       );
       const responses = await Promise.all(
         toDeleteGearRequests.map(async (gearRequest) => {
           const toCreateGearRequests = splitGearRequest(
             gearRequest,
             { start, end },
-            getters.ftPeriods
+            getters.ftPeriods,
           );
           await safeCall(
             this,
@@ -842,12 +846,12 @@ export const actions = actionTree(
               this,
               state.mFT.id,
               gearRequest.gear.id,
-              gearRequest.rentalPeriod.id
+              gearRequest.rentalPeriod.id,
             ),
             {
               successMessage: "La demande de matériel a été supprimée 🗑️",
               errorMessage: "La demande de matériel n'a pas a été supprimée ❌",
-            }
+            },
           );
           return Promise.all(
             toCreateGearRequests.map((gr) => {
@@ -859,11 +863,11 @@ export const actions = actionTree(
               };
               return safeCall(
                 this,
-                repo.createGearRequest(this, state.mFT.id, gearRequestCreation)
+                repo.createGearRequest(this, state.mFT.id, gearRequestCreation),
               );
-            })
+            }),
           );
-        })
+        }),
       );
       if (responses.some((response) => response === undefined)) return;
       dispatch("fetchGearRequests");
@@ -871,11 +875,11 @@ export const actions = actionTree(
 
     async updateGearRequestRentalPeriod(
       { state, dispatch, getters },
-      previousPeriod: Omit<Period, "id">
+      previousPeriod: Omit<Period, "id">,
     ) {
       await safeCall(
         this,
-        repo.removeGearRequestRentalPeriod(this, state.mFT.id, previousPeriod)
+        repo.removeGearRequestRentalPeriod(this, state.mFT.id, previousPeriod),
       );
       const gearRequests =
         getters.uniqueByGearGearRequests as StoredGearRequest<"FT">[];
@@ -888,21 +892,21 @@ export const actions = actionTree(
           if (gear.isConsumable)
             return dispatch("addConsumableGearRequestForAllFtPeriods", form);
           return dispatch("addGearRequestForAllFtPeriods", form);
-        })
+        }),
       );
       dispatch("fetchGearRequests");
     },
 
     async setDriveToGearRequest(
       { commit },
-      gearRequest: GearRequestWithDrive<"FT">
+      gearRequest: GearRequestWithDrive<"FT">,
     ) {
       commit("UDPATE_GEAR_REQUEST", gearRequest);
     },
 
     async validateGearRequests(
       { state, dispatch },
-      gearRequests: GearRequestWithDrive<"FA" | "FT">[]
+      gearRequests: GearRequestWithDrive<"FA" | "FT">[],
     ) {
       await Promise.all(
         gearRequests.map((gr) =>
@@ -912,13 +916,13 @@ export const actions = actionTree(
             {
               successMessage: "Validation effectuée ✅",
               errorMessage: "La tentative de validation n'a pas abouti",
-            }
-          )
-        )
+            },
+          ),
+        ),
       );
       dispatch("fetchGearRequests");
     },
-  }
+  },
 );
 
 function defaultState(): Omit<Ft, "id"> {

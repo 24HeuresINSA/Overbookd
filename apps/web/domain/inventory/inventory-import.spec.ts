@@ -12,7 +12,7 @@ import { marteau, perceuse, scieCirculaire } from "./test-helper";
 class FakeInventoryImportContainer extends InventoryImportContainer {
   constructor(
     private readonly raws: InventoryImportRaw[],
-    gearRepository: GearRepository
+    gearRepository: GearRepository,
   ) {
     super(gearRepository);
   }
@@ -66,21 +66,21 @@ describe("Inventory import", () => {
         marteauInCaveE,
         scieCirculaireInLocal,
       ],
-      gearRepository
+      gearRepository,
     );
     it("should transform all raw to InventoryRecord", async () => {
       const { records } = await InventoryImport.toRecords(importContainer);
       expect(records).toHaveLength(5);
       const marteauRecords = records.filter(
-        (record) => record.gear.slug === marteau.slug
+        (record) => record.gear.slug === marteau.slug,
       );
       expect(marteauRecords).toHaveLength(2);
       const perceuseRecords = records.filter(
-        (record) => record.gear.slug === perceuse.slug
+        (record) => record.gear.slug === perceuse.slug,
       );
       expect(perceuseRecords).toHaveLength(2);
       const scieCirculaireRecords = records.filter(
-        (record) => record.gear.slug === scieCirculaire.slug
+        (record) => record.gear.slug === scieCirculaire.slug,
       );
       expect(scieCirculaireRecords).toHaveLength(1);
     });
@@ -94,7 +94,7 @@ describe("Inventory import", () => {
         marteauInLocal,
         scieCirculaireInLocal,
       ],
-      gearRepository
+      gearRepository,
     );
     it("should concacenate quantity for similar raws", async () => {
       const { records } = await InventoryImport.toRecords(importContainer);
@@ -110,7 +110,7 @@ describe("Inventory import", () => {
         { gear: "Martascie", quantity: 3, storage: "Cave du E" },
         scieCirculaireInLocal,
       ],
-      gearRepository
+      gearRepository,
     );
     it("should transform only valid raws", async () => {
       const { records } = await InventoryImport.toRecords(importContainer);

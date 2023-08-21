@@ -1,6 +1,6 @@
-import { arePeriodsOverlapping } from '../../utils/period';
-import { TaskRepository } from './planning';
-import { JsonStoredTask } from './storedTask';
+import { arePeriodsOverlapping } from "../../utils/period";
+import { TaskRepository } from "./planning";
+import { JsonStoredTask } from "./storedTask";
 
 export class InMemoryTaskRepository implements TaskRepository {
   constructor(private tasks: JsonStoredTask[]) {}

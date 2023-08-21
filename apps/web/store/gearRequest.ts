@@ -29,10 +29,10 @@ export const actions = actionTree(
         {
           successMessage: "Demandes de matos chargees ✅",
           errorMessage: "Impossible de charger les demandes de matos ❌",
-        }
+        },
       );
       if (!res) return;
       commit("SET_GEAR_REQUESTS", res.data);
     },
-  }
+  },
 );

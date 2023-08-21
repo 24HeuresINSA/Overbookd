@@ -4,7 +4,7 @@
       <template #body="{ items }">
         <tbody>
           <template v-for="publicAnimation in items">
-            <tr>
+            <tr :key="publicAnimation.fa.id">
               <th :rowspan="publicAnimation.fa.timeWindows.length + 1">
                 <nuxt-link
                   :to="`/fa/${publicAnimation.fa.id}`"
@@ -55,7 +55,7 @@
 
             <tr
               v-for="timeWindow in sortTimeWindows(
-                publicAnimation.fa.timeWindows
+                publicAnimation.fa.timeWindows,
               )"
               :key="timeWindow.id"
             >

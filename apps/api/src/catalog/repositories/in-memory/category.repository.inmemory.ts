@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { removeItemAtIndex, updateItemToList } from '@overbookd/list';
+import { Injectable } from "@nestjs/common";
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import {
   Category,
   CategoryAlreadyExists,
   CategoryRepository,
   CategoryTree,
   SearchCategory,
-} from '../../interfaces';
+} from "../../interfaces";
 
 class CategorySearchBuilder {
   private ownerCondition = true;
@@ -52,7 +52,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     );
   }
 
-  async addCategory(category: Omit<Category, 'id'>): Promise<Category> {
+  async addCategory(category: Omit<Category, "id">): Promise<Category> {
     const existingCategory = this.categories.find(
       (categ) => categ.path === category.path,
     );

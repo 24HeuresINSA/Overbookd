@@ -31,12 +31,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { mapState } from "vuex";
-import { DialogState } from "~/store/dialog";
-import { UserState } from "~/store/user";
 import { Transfer } from "~/utils/models/transaction";
-import { CompleteUser } from "~/utils/models/user";
-import { TMapState } from "~/utils/types/store";
+import { CompleteUser, MyUserInformation } from "~/utils/models/user";
 
 type UserAutocompleteItem = {
   text?: string;
@@ -60,13 +56,15 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...mapState<any, TMapState<DialogState>>("dialog", {
-      type: (state: DialogState) => state.type,
-      open: (state: DialogState) => state.open,
-    }),
-    ...mapState<any, TMapState<UserState>>("user", {
-      me: (state: UserState) => state.me,
-    }),
+    type(): string {
+      return this.$accessor.dialog.type;
+    },
+    open(): boolean {
+      return this.$accessor.dialog.open;
+    },
+    me(): MyUserInformation {
+      return this.$accessor.user.me;
+    },
     toggled: {
       get: function (): boolean | unknown {
         if (this.type == "transfer") {
@@ -96,7 +94,7 @@ export default Vue.extend({
             text: username,
             value,
           };
-        }
+        },
       );
     },
   },
@@ -104,7 +102,7 @@ export default Vue.extend({
     this.$accessor.user.fetchPersonnalAccountConsummers();
   },
   methods: {
-    async transferMoney(): Promise<any> {
+    async transferMoney(): Promise<void> {
       if (!this.transfer.isValid) {
         return;
       }

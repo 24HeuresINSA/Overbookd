@@ -1,62 +1,62 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   SimplifiedCategoryRepresentation,
   TeamRepresentation,
-} from '../../common/dto/gear-representation.dto';
-import { Gear, SimplifiedCategory, Team } from '../interfaces';
+} from "../../common/dto/gear-representation.dto";
+import { Gear, SimplifiedCategory, Team } from "../interfaces";
 
 export class GearResponseDto implements Gear {
   @ApiProperty({
     required: true,
-    description: 'Gear id',
+    description: "Gear id",
     type: Number,
   })
   id: number;
 
   @ApiProperty({
     required: true,
-    description: 'Gear name',
+    description: "Gear name",
     type: String,
   })
   name: string;
 
   @ApiProperty({
     required: true,
-    description: 'Gear slug',
+    description: "Gear slug",
     type: String,
   })
   slug: string;
 
   @ApiProperty({
     required: false,
-    description: 'Gear category',
+    description: "Gear category",
     type: SimplifiedCategoryRepresentation,
   })
   category?: SimplifiedCategory;
 
   @ApiProperty({
     required: false,
-    description: 'Gear owner',
+    description: "Gear owner",
     type: TeamRepresentation,
   })
   owner?: Team;
 
   @ApiProperty({
     required: false,
-    description: 'Gear reference code',
+    description: "Gear reference code",
     type: String,
   })
   code?: string;
 
   @ApiProperty({
     required: true,
-    description: 'Gear usage',
+    description: "Gear usage",
   })
   isPonctualUsage: boolean;
 
   @ApiProperty({
     required: true,
-    description: 'Gear consumable status',
+    description: "Gear consumable status",
   })
   isConsumable: boolean;
 }

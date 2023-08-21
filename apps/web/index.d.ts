@@ -4,7 +4,7 @@ import Vue from "vue";
 import { accessorType } from "~/store";
 
 interface AuthOptions {
-  data: any;
+  data: object;
 }
 
 interface AuthStrategy {
@@ -29,11 +29,13 @@ declare module "vue/types/vue" {
     $accessor: typeof accessorType;
     $safeCall: typeof safeCall;
     $auth: Auth;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- this is vuex definition of Store
     $store: Store<any>;
   }
 }
 
 declare module "vue/types/options" {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- V is used on other definitions and we need definitions to match each others
   export interface ComponentOptions<V extends Vue> {
     auth?: boolean;
   }

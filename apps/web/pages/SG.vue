@@ -176,15 +176,15 @@ export default {
       isSwitchDialogOpen: false,
       isSgConfigDialogOpen: false,
       regex: {
-        int: new RegExp(`^\\d*$`),
-        float: new RegExp(`^\\d*(\\.\\d+)?$`),
+        int: new RegExp("^\\d*$"),
+        float: new RegExp("^\\d*(\\.\\d+)?$"),
       },
 
       feedbacks: {
         totalPrice: "Prix total n'est pas un nombre",
         settledStickPrice: "Prix du baton n'est pas un nombre",
         noNewConsumption: "pas de nouvelle consomation ou de dépot",
-        wrongNewConsumption: `champs non valide pour l'utilisateur: `,
+        wrongNewConsumption: "champs non valide pour l'utilisateur: ",
       },
       reasons: [],
 
@@ -213,7 +213,7 @@ export default {
           id,
           balance,
           newConsumption: 0,
-        })
+        }),
       );
     },
     totalConsumptions() {
@@ -228,12 +228,12 @@ export default {
     stickPrice() {
       return computeUnitPrice(
         +this.totalPrice,
-        +this.totalConsumptions
+        +this.totalConsumptions,
       ).toFixed(2);
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
-      return [(v) => regex.test(v) || `Il faut mettre un nombre valide`];
+      return [(v) => regex.test(v) || "Il faut mettre un nombre valide"];
     },
     isExpenseMode() {
       return this.mode === "cask" || this.mode === "closet";
@@ -401,7 +401,7 @@ export default {
             transaction.to = user.id;
             transaction.from = user.id;
             transaction.amount = +user.newConsumption;
-            transaction.context = `Recharge de compte perso`;
+            transaction.context = "Recharge de compte perso";
             this.totalCPBalance += transaction.amount;
             user.balance += transaction.amount;
             break;
@@ -411,7 +411,7 @@ export default {
       });
       await RepoFactory.TransactionRepository.createTransactions(
         this,
-        transactions
+        transactions,
       );
       await this.$store.dispatch("notif/pushNotification", {
         type: "success",

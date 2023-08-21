@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsOptional,
   IsString,
@@ -7,15 +7,15 @@ import {
   IsEmail,
   IsDefined,
   IsNumber,
-} from 'class-validator';
-import { CollaboratorWithOptionalIdRepresentation } from '../collaborator.model';
+} from "class-validator";
+import { CollaboratorWithOptionalIdRepresentation } from "../collaborator.model";
 
 export class CollaboratorRequestDto
   implements CollaboratorWithOptionalIdRepresentation
 {
   @ApiProperty({
     required: true,
-    description: 'The collaborator id',
+    description: "The collaborator id",
   })
   @IsNumber()
   @IsOptional()
@@ -23,7 +23,7 @@ export class CollaboratorRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The collaborator firstname',
+    description: "The collaborator firstname",
   })
   @IsString()
   @IsDefined()
@@ -32,7 +32,7 @@ export class CollaboratorRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The collaborator lastname',
+    description: "The collaborator lastname",
   })
   @IsString()
   @IsDefined()
@@ -41,16 +41,16 @@ export class CollaboratorRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The collaborator phone number',
-    example: '0601020304',
+    description: "The collaborator phone number",
+    example: "0601020304",
   })
   @IsDefined()
-  @IsPhoneNumber('FR')
+  @IsPhoneNumber("FR")
   phone: string;
 
   @ApiProperty({
     required: false,
-    description: 'The collaborator email',
+    description: "The collaborator email",
   })
   @IsEmail()
   @IsOptional()
@@ -58,7 +58,7 @@ export class CollaboratorRequestDto
 
   @ApiProperty({
     required: false,
-    description: 'The collaborator company',
+    description: "The collaborator company",
   })
   @IsString()
   @IsOptional()
@@ -67,7 +67,7 @@ export class CollaboratorRequestDto
 
   @ApiProperty({
     required: false,
-    description: 'Any comments about the collaborator',
+    description: "Any comments about the collaborator",
   })
   @IsString()
   @IsOptional()

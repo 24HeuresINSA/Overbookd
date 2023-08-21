@@ -53,24 +53,24 @@ export default Vue.extend({
   },
   methods: {
     filterFtByTeamRequests(
-      teamsSearched: Team[]
+      teamsSearched: Team[],
     ): (ft: FtWithTimeSpan) => boolean {
       return teamsSearched.length > 0
         ? (ft) =>
             teamsSearched.every((teamSearched) =>
               getRequiredTeamsInFt(ft).some(
-                (timeSpanTeamCode) => teamSearched.code === timeSpanTeamCode
-              )
+                (timeSpanTeamCode) => teamSearched.code === timeSpanTeamCode,
+              ),
             )
         : () => true;
     },
     isTaskPriority(
-      category: TaskPriority | TaskCategory
+      category: TaskPriority | TaskCategory,
     ): category is TaskPriority {
       return Object.values(TaskPriorities).includes(category);
     },
     filterFtByCatergoryOrPriority(
-      categorySearched: TaskCategory | TaskPriority | null
+      categorySearched: TaskCategory | TaskPriority | null,
     ): (ft: FtWithTimeSpan) => boolean {
       if (!categorySearched) return () => true;
       if (this.isTaskPriority(categorySearched)) {
@@ -79,7 +79,7 @@ export default Vue.extend({
       return this.filterFtByCategory(categorySearched);
     },
     filterFtByCategory(
-      categorySearched: TaskCategory
+      categorySearched: TaskCategory,
     ): (ft: FtWithTimeSpan) => boolean {
       return (ft) => {
         if (categorySearched === "AUCUNE") return ft.category === null;
@@ -87,7 +87,7 @@ export default Vue.extend({
       };
     },
     filterByPriority(
-      prioritySearched: TaskPriority
+      prioritySearched: TaskPriority,
     ): (ft: FtWithTimeSpan) => boolean {
       const hasPriority = prioritySearched === TaskPriorities.PRIORITAIRE;
       return (ft) => ft.hasPriority === hasPriority;
@@ -96,8 +96,8 @@ export default Vue.extend({
       if (this.completed) return true;
       return timeSpans.some(({ requestedTeams }) =>
         requestedTeams.some(
-          ({ quantity, assignmentCount }) => quantity > assignmentCount
-        )
+          ({ quantity, assignmentCount }) => quantity > assignmentCount,
+        ),
       );
     },
     fuzzyFindFt(fts: FtWithTimeSpan[], search?: string): FtWithTimeSpan[] {

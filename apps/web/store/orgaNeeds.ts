@@ -38,16 +38,16 @@ export const actions = actionTree(
     async fetchStats(context, periodAndTeams: OrgaNeedsRequest): Promise<void> {
       const res = await safeCall(
         this,
-        orgaNeedsRepo.fetchStats(this, periodAndTeams)
+        orgaNeedsRepo.fetchStats(this, periodAndTeams),
       );
       if (!res) return;
       context.commit("SET_STATS", res.data);
     },
-  }
+  },
 );
 
 function formatToStats(
-  stats: HttpStringified<OrgaNeedsResponse[]>
+  stats: HttpStringified<OrgaNeedsResponse[]>,
 ): OrgaNeedsResponse[] {
   return stats.map((stat) => ({
     ...stat,

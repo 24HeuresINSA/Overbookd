@@ -73,8 +73,8 @@ enum ConfirmationType {
 }
 
 interface ConfirmationDialogData {
-  title: String;
-  text: String;
+  title: string;
+  text: string;
 }
 
 export default Vue.extend({
@@ -111,7 +111,7 @@ export default Vue.extend({
     validationStatus(): string {
       return getFTValidationStatusWithMultipleTeams(
         this.mFT,
-        this.owners
+        this.owners,
       ).toLowerCase();
     },
     isConfirmationNeeded(): boolean {

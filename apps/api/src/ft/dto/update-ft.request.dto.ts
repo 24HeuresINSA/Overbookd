@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsNotEmpty,
@@ -6,12 +6,12 @@ import {
   IsOptional,
   IsString,
   Min,
-} from 'class-validator';
+} from "class-validator";
 
 export class UpdateFtRequestDto {
   @ApiProperty({
     required: true,
-    description: 'The name of the ft',
+    description: "The name of the ft",
   })
   @IsString()
   @IsNotEmpty()
@@ -19,7 +19,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The id of the parent fa',
+    description: "The id of the parent fa",
   })
   @IsOptional()
   @IsNumber()
@@ -28,7 +28,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'Is the activity static',
+    description: "Is the activity static",
     default: false,
   })
   @IsOptional()
@@ -37,7 +37,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The description of the ft',
+    description: "The description of the ft",
   })
   @IsOptional()
   @IsString()
@@ -45,7 +45,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The id of the user whos responsible of the ft',
+    description: "The id of the user whos responsible of the ft",
   })
   @IsOptional()
   @IsNumber()
@@ -54,7 +54,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The code of the team whos responsible of the ft',
+    description: "The code of the team whos responsible of the ft",
   })
   @IsOptional()
   @IsString()
@@ -62,7 +62,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The id of the location of the ft',
+    description: "The id of the location of the ft",
   })
   @IsOptional()
   @IsNumber()
@@ -71,7 +71,7 @@ export class UpdateFtRequestDto {
 
   @ApiProperty({
     required: false,
-    description: 'The deleted status of the ft',
+    description: "The deleted status of the ft",
   })
   @IsOptional()
   @IsBoolean()

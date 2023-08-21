@@ -79,10 +79,10 @@ export default Vue.extend({
   methods: {
     buildTaskPeriod(task: TimelineFt): IProvidePeriod {
       const lowestStartDate = Math.min(
-        ...task.timeWindows.map(({ start }) => start.getTime())
+        ...task.timeWindows.map(({ start }) => start.getTime()),
       );
       const highestEndDate = Math.max(
-        ...task.timeWindows.map(({ end }) => end.getTime())
+        ...task.timeWindows.map(({ end }) => end.getTime()),
       );
       return {
         start: new Date(Math.max(lowestStartDate, this.range.start.getTime())),
@@ -107,7 +107,7 @@ export default Vue.extend({
     },
     computeTimeWindowWidth(
       task: TimelineFt,
-      timeWindow: TimelineTimeWindow
+      timeWindow: TimelineTimeWindow,
     ): string {
       const taskPeriod = this.buildTaskPeriod(task);
       const timeWindowPeriod = this.adjustPeriodToRange(timeWindow);
@@ -116,7 +116,7 @@ export default Vue.extend({
     },
     computeTimeSpanWidth(
       timeWindow: TimelineTimeWindow,
-      timeSpan: TimelineTimeSpan
+      timeSpan: TimelineTimeSpan,
     ): string {
       const timeWindowPeriod = this.adjustPeriodToRange(timeWindow);
       const timeSpanPeriod = this.adjustPeriodToRange(timeSpan);
@@ -130,7 +130,7 @@ export default Vue.extend({
     },
     computeTimeWindowLeftMargin(
       task: TimelineFt,
-      timeWindow: TimelineTimeWindow
+      timeWindow: TimelineTimeWindow,
     ): string {
       const taskPeriod = this.buildTaskPeriod(task);
       const margin = marginPercent(taskPeriod, timeWindow);

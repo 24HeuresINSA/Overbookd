@@ -54,7 +54,7 @@ export class PeriodOrchestrator {
   private mergePeriods(periods: Period[]): Period[] {
     if (!this.canMergeAtLeastOnePeriod(periods)) return periods;
     return this.mergePeriods(
-      periods.reduce(PeriodOrchestrator.reduceToMergedPeriods, [] as Period[])
+      periods.reduce(PeriodOrchestrator.reduceToMergedPeriods, [] as Period[]),
     );
   }
 
@@ -64,21 +64,21 @@ export class PeriodOrchestrator {
 
   private static reduceToMergedPeriods(
     periods: Period[],
-    period: Period
+    period: Period,
   ): Period[] {
     const mergeablePeriodIndex = periods.findIndex((otherPeriod) =>
-      period.isFollowedBy(otherPeriod)
+      period.isFollowedBy(otherPeriod),
     );
     if (mergeablePeriodIndex === -1) return [...periods, period];
     return PeriodOrchestrator.mergePeriodToPeriodList(
       periods,
       mergeablePeriodIndex,
-      period
+      period,
     );
   }
 
   private static isMergeableFromOneOf(
-    periods: Period[]
+    periods: Period[],
   ): (value: Period, index: number) => boolean {
     return (period, startIndex) => {
       return periods
@@ -90,13 +90,13 @@ export class PeriodOrchestrator {
   private static mergePeriodToPeriodList(
     periods: Period[],
     mergeablePeriodIndex: number,
-    period: Period
+    period: Period,
   ) {
     const mergeablePeriod = periods.at(mergeablePeriodIndex);
 
     if (!mergeablePeriod) return periods;
 
-    const mergedPeriod = period.mergeWith(mergeablePeriod)
+    const mergedPeriod = period.mergeWith(mergeablePeriod);
     return updateItemToList(periods, mergeablePeriodIndex, mergedPeriod);
   }
 }

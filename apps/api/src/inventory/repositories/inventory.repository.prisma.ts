@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { Gear } from '../../../src/catalog/interfaces';
-import { convertGearToApiContract } from '../../../src/catalog/repositories/prisma/gear.repository.prisma';
-import { PrismaService } from '../../../src/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { Gear } from "../../../src/catalog/interfaces";
+import { convertGearToApiContract } from "../../../src/catalog/repositories/prisma/gear.repository.prisma";
+import { PrismaService } from "../../../src/prisma.service";
 import {
   GroupedRecord,
   InventoryRecord,
   InventoryRepository,
   LiteInventoryRecord,
-} from '../inventory.service';
+} from "../inventory.service";
 
 type AggregatedInventoryRecord = {
   gearId: number;
@@ -117,7 +117,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
   private aggregateRecords(gearSlug?: string) {
     const where = this.buildSearchCondition(gearSlug);
     return this.prismaService.inventoryRecord.groupBy({
-      by: ['gearId'],
+      by: ["gearId"],
       _sum: {
         quantity: true,
       },

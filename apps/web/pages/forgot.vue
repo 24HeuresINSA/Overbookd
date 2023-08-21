@@ -51,7 +51,7 @@ export default Vue.extend({
           successMessage:
             "Un lien pour changer de mot de passe a été envoyé à cette adresse si un bénévole s'est inscrit avec. 📨",
           messageDuration: 10000,
-        }
+        },
       );
 
       if (!res) return;

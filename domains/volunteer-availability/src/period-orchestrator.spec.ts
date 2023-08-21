@@ -179,10 +179,12 @@ describe("Period orchestrator", () => {
       describe("when removing an entire period", () => {
         it("should remove the period from availabilities", () => {
           const periodOrchestrator = PeriodOrchestrator.init(periods);
-          periodOrchestrator.removePeriod(Period.init({
-            start: new Date("2023-05-12 02:00+02:00"),
-            end: new Date("2023-05-12 03:00+02:00"),
-          }));
+          periodOrchestrator.removePeriod(
+            Period.init({
+              start: new Date("2023-05-12 02:00+02:00"),
+              end: new Date("2023-05-12 03:00+02:00"),
+            }),
+          );
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(2);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             {
@@ -199,10 +201,12 @@ describe("Period orchestrator", () => {
       describe("when removing a part of a period", () => {
         it("should update impacted period", () => {
           const periodOrchestrator = PeriodOrchestrator.init(periods);
-          periodOrchestrator.removePeriod(Period.init({
-            start: new Date("2023-05-12 05:00+02:00"),
-            end: new Date("2023-05-12 06:00+02:00"),
-          }));
+          periodOrchestrator.removePeriod(
+            Period.init({
+              start: new Date("2023-05-12 05:00+02:00"),
+              end: new Date("2023-05-12 06:00+02:00"),
+            }),
+          );
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(3);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             Period.init({
@@ -231,10 +235,12 @@ describe("Period orchestrator", () => {
               end: new Date("2023-05-12 14:00+02:00"),
             },
           ]);
-          periodOrchestrator.removePeriod(Period.init({
-            start: new Date("2023-05-12 10:00+02:00"),
-            end: new Date("2023-05-12 12:00+02:00"),
-          }));
+          periodOrchestrator.removePeriod(
+            Period.init({
+              start: new Date("2023-05-12 10:00+02:00"),
+              end: new Date("2023-05-12 12:00+02:00"),
+            }),
+          );
           expect(periodOrchestrator.availabilityPeriods).toHaveLength(4);
           expect(periodOrchestrator.availabilityPeriods).toEqual([
             Period.init({

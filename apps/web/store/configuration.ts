@@ -34,7 +34,7 @@ export const mutations = mutationTree(state, {
 
   SET_CONFIG(state, configuration: Configuration) {
     const index = state.configurations.findIndex(
-      (c) => c.key === configuration.key
+      (c) => c.key === configuration.key,
     );
     const configurations =
       index !== -1
@@ -67,5 +67,5 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_CONFIG", res.data);
     },
-  }
+  },
 );

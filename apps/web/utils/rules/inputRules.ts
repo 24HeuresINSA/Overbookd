@@ -42,20 +42,20 @@ export function maxDate(maxDate: Date = new Date()) {
 }
 
 const emailPattern = new RegExp(
-  "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$"
+  "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$",
 );
 
 export function isEmail(value: string | null) {
   return (value && emailPattern.test(value)) || "Adresse mail non valable";
 }
 
-const insaEmailPattern = new RegExp(`^.+@(?!insa-lyon.fr).*`);
+const insaEmailPattern = new RegExp("^.+@(?!insa-lyon.fr).*");
 
 export function isInsaEmail(value: string | null) {
   return (value && insaEmailPattern.test(value)) || "Pas d'adresse insa 🙏";
 }
 
-const mobilePhoneNumberPattern = new RegExp(`0[6-7]{1}[0-9]{8}$`);
+const mobilePhoneNumberPattern = new RegExp("0[6-7]{1}[0-9]{8}$");
 
 export function isMobilePhoneNumber(value: string | null) {
   return (
@@ -65,7 +65,7 @@ export function isMobilePhoneNumber(value: string | null) {
 }
 
 const passwordPattern = new RegExp(
-  `^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$`
+  "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$",
 );
 
 export function password(value: string | null) {
@@ -81,7 +81,7 @@ export function isSame(matching: string | null) {
   };
 }
 
-export function required(value: any) {
+export function required(value: unknown) {
   return Boolean(value) || "Ce champ est requis";
 }
 

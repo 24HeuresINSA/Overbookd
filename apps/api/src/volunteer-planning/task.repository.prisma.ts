@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { IProvidePeriod } from '@overbookd/period';
-import { PrismaService } from '../../src/prisma.service';
-import { buildVolunteerDisplayName } from '../../src/utils/volunteer';
-import { TaskRepository } from './domain/planning';
-import { JsonStoredTask } from './domain/storedTask';
+import { Injectable } from "@nestjs/common";
+import { IProvidePeriod } from "@overbookd/period";
+import { PrismaService } from "../../src/prisma.service";
+import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
+import { TaskRepository } from "./domain/planning";
+import { JsonStoredTask } from "./domain/storedTask";
 
 type DatabaseStoredTask = {
   start: Date;
@@ -77,7 +77,7 @@ export class PrismaTaskRepository implements TaskRepository {
     const tasks = await this.prismaService.ftTimeSpan.findMany({
       where: { assignments: { some: { assigneeId: volunteerId } } },
       select: this.SELECT_TASK,
-      orderBy: { start: 'asc' },
+      orderBy: { start: "asc" },
     });
     const taskIds = tasks.map(({ timeWindow }) => timeWindow.ft.id);
     const assignments = await this.prismaService.assignment.findMany({
@@ -86,7 +86,7 @@ export class PrismaTaskRepository implements TaskRepository {
         NOT: { assigneeId: volunteerId },
       },
       select: this.SELECT_ASSIGNMENT,
-      orderBy: { timeSpan: { start: 'asc' } },
+      orderBy: { timeSpan: { start: "asc" } },
     });
 
     return tasks.map((task) => this.formatTask(task, assignments));

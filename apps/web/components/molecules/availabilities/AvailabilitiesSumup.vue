@@ -86,7 +86,7 @@ export default Vue.extend({
   methods: {
     fetchAvailabilities() {
       return this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.userId
+        this.userId,
       );
     },
     isEndOfPeriod(hour: number): boolean {
@@ -109,7 +109,7 @@ export default Vue.extend({
     removePeriod(date: Date) {
       const periodToRemove = generateNewPeriod(date);
       this.$accessor.volunteerAvailability.removeAvailabilityPeriod(
-        periodToRemove
+        periodToRemove,
       );
     },
   },

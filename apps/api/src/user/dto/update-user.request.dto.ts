@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
   IsEmail,
@@ -7,13 +7,13 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-} from 'class-validator';
-import { UserUpdateForm } from '../user.model';
+} from "class-validator";
+import { UserUpdateForm } from "../user.model";
 
 export class UpdateUserRequestDto implements UserUpdateForm {
   @ApiProperty({
     required: false,
-    description: 'The firstname of the user',
+    description: "The firstname of the user",
   })
   @IsOptional()
   @IsString()
@@ -22,7 +22,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The lastname of the user',
+    description: "The lastname of the user",
   })
   @IsOptional()
   @IsString()
@@ -31,7 +31,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The nickname of the user',
+    description: "The nickname of the user",
   })
   @IsOptional()
   @IsString()
@@ -40,8 +40,8 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The email of the user',
-    example: 'john@doe.com',
+    description: "The email of the user",
+    example: "john@doe.com",
   })
   @IsOptional()
   @IsEmail()
@@ -50,7 +50,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The birthdate of the user',
+    description: "The birthdate of the user",
   })
   @IsOptional()
   @IsNotEmpty()
@@ -58,8 +58,8 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The phone number of the user',
-    example: '0601020304',
+    description: "The phone number of the user",
+    example: "0601020304",
   })
   @IsOptional()
   @IsNotEmpty()
@@ -68,7 +68,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'A comment about the user',
+    description: "A comment about the user",
   })
   @IsOptional()
   @IsString()
@@ -77,7 +77,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The user has payed his contribution',
+    description: "The user has payed his contribution",
   })
   @IsOptional()
   @IsBoolean()
@@ -85,7 +85,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The user profile picture path',
+    description: "The user profile picture path",
   })
   @IsOptional()
   @IsString()
@@ -94,7 +94,7 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: 'The user charisma points',
+    description: "The user charisma points",
   })
   @IsOptional()
   @IsNotEmpty()

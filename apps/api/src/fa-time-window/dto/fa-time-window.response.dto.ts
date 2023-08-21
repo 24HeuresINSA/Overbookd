@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsDateString, IsDefined } from 'class-validator';
-import { FaTimeWindowRepresentation } from '../fa-time-window.model';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumber, IsDateString, IsDefined } from "class-validator";
+import { FaTimeWindowRepresentation } from "../fa-time-window.model";
 
 export class FaTimeWindowResponseDto implements FaTimeWindowRepresentation {
   @ApiProperty({
     required: false,
-    description: 'Time window id',
+    description: "Time window id",
   })
   @IsDefined()
   @IsNumber()
@@ -13,7 +13,7 @@ export class FaTimeWindowResponseDto implements FaTimeWindowRepresentation {
 
   @ApiProperty({
     required: true,
-    description: 'Time window start',
+    description: "Time window start",
   })
   @IsDefined()
   @IsDateString()
@@ -21,7 +21,7 @@ export class FaTimeWindowResponseDto implements FaTimeWindowRepresentation {
 
   @ApiProperty({
     required: true,
-    description: 'Time window end',
+    description: "Time window end",
   })
   @IsDefined()
   @IsDateString()

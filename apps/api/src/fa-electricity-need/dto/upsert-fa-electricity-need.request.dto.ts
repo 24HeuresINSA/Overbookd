@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 import {
   IsDefined,
   IsEnum,
@@ -7,19 +7,19 @@ import {
   IsString,
   Min,
   ValidationArguments,
-} from 'class-validator';
+} from "class-validator";
 import {
   ElectricityType,
   FaElectricityNeedWithOptionalIdRepresentation,
   electricityTypes,
-} from '../fa-electricity-need.model';
+} from "../fa-electricity-need.model";
 
 export class UpsertFaElectricityNeedRequestDto
   implements FaElectricityNeedWithOptionalIdRepresentation
 {
   @ApiProperty({
     required: false,
-    description: 'The electricity need id',
+    description: "The electricity need id",
   })
   @IsOptional()
   @IsNumber()
@@ -27,7 +27,7 @@ export class UpsertFaElectricityNeedRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The type of electricity',
+    description: "The type of electricity",
     example: electricityTypes.PC16_Prise_classique,
   })
   @IsDefined()
@@ -39,7 +39,7 @@ export class UpsertFaElectricityNeedRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The device plugged in',
+    description: "The device plugged in",
   })
   @IsDefined()
   @IsString()
@@ -47,7 +47,7 @@ export class UpsertFaElectricityNeedRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The power of electricity',
+    description: "The power of electricity",
   })
   @IsDefined()
   @IsNumber()
@@ -56,7 +56,7 @@ export class UpsertFaElectricityNeedRequestDto
 
   @ApiProperty({
     required: true,
-    description: 'The count of device',
+    description: "The count of device",
   })
   @IsDefined()
   @IsNumber()
@@ -65,7 +65,7 @@ export class UpsertFaElectricityNeedRequestDto
 
   @ApiProperty({
     required: false,
-    description: 'Any comment about electricity',
+    description: "Any comment about electricity",
   })
   @IsOptional()
   @IsString()

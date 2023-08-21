@@ -76,7 +76,7 @@ export default Vue.extend({
       let teamCodes = [...this.permission.teams];
       if (teamCodes.find((teamCode) => teamCode === this.newElement)) {
         teamCodes = teamCodes.filter(
-          (teamCode) => teamCode !== this.newElement
+          (teamCode) => teamCode !== this.newElement,
         );
       } else {
         teamCodes.push(this.newElement);

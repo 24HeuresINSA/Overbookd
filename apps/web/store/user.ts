@@ -54,7 +54,7 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_ASSIGNMENT_STATS(
     state: UserState,
-    stats: VolunteerAssignmentStat[]
+    stats: VolunteerAssignmentStat[],
   ) {
     state.selectedUserAssignmentStats = stats;
   },
@@ -101,7 +101,7 @@ export const getters = getterTree(state, {
   },
   validatedUsers: (state: UserState) => {
     return state.users.filter(({ permissions }) =>
-      permissions.includes("validated-user")
+      permissions.includes("validated-user"),
     );
   },
 });
@@ -150,7 +150,7 @@ export const actions = actionTree(
     async fetchMyFriends({ commit, state }) {
       const res = await safeCall(
         this,
-        userRepo.getUserFriends(this, state.me.id)
+        userRepo.getUserFriends(this, state.me.id),
       );
       if (res) {
         commit("SET_MY_FRIENDS", res.data);
@@ -177,19 +177,20 @@ export const actions = actionTree(
     async fetchPersonnalAccountConsummers({ commit }) {
       const res = await safeCall(
         this,
-        userRepo.getAllPersonnalAccountConsummers(this)
+        userRepo.getAllPersonnalAccountConsummers(this),
       );
       if (!res) return;
 
       const consummers = res.data.map(castUserWithDate);
       commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
-    async createUser(_, user: UserCreation): Promise<any | undefined> {
+    async createUser(_, user: UserCreation): Promise<CompleteUser | undefined> {
       const res = await safeCall(this, userRepo.createUser(this, user), {
         successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
       });
-      return res;
+      if (!res) return undefined;
+      return castUserWithDate(res.data);
     },
     async updateUser({ commit, state }, user: CompleteUserWithPermissions) {
       const { id, ...userData } = user;
@@ -199,7 +200,7 @@ export const actions = actionTree(
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
-        }
+        },
       );
       if (!res) return;
       commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
@@ -215,7 +216,7 @@ export const actions = actionTree(
         {
           successMessage: "Commentaire mis à jour ! 🎉",
           errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",
-        }
+        },
       );
       if (!res) return;
       commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
@@ -235,19 +236,19 @@ export const actions = actionTree(
 
     async updateSelectedUserTeams(
       { commit, state, dispatch },
-      teams: string[]
+      teams: string[],
     ) {
       const res = await safeCall(
         this,
         RepoFactory.TeamRepository.linkUserToTeams(
           this,
           state.selectedUser.id,
-          teams
+          teams,
         ),
         {
           successMessage: "Equipes mises à jour ! 🎉",
           errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
-        }
+        },
       );
       if (!res) return;
       const user: CompleteUserWithPermissions = {
@@ -278,7 +279,7 @@ export const actions = actionTree(
     async getUserFtRequests({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        userRepo.getUserFtRequests(this, userId)
+        userRepo.getUserFtRequests(this, userId),
       );
 
       if (!res) return;
@@ -290,7 +291,7 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         userRepo.addProfilePicture(this, profilePicture),
-        { successMessage: "Photo de profil mise à jour ! 🎉" }
+        { successMessage: "Photo de profil mise à jour ! 🎉" },
       );
 
       if (!res) return;
@@ -328,7 +329,7 @@ export const actions = actionTree(
 
     async setProfilePicture(
       { commit, dispatch },
-      user: CompleteUserWithPermissions
+      user: CompleteUserWithPermissions,
     ) {
       const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
@@ -342,7 +343,7 @@ export const actions = actionTree(
     async getVolunteerAssignments({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        userRepo.getVolunteerAssignments(this, userId)
+        userRepo.getVolunteerAssignments(this, userId),
       );
 
       if (!res) return;
@@ -353,11 +354,11 @@ export const actions = actionTree(
     async getVolunteerAssignmentStats({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        userRepo.getVolunteerAssignmentStats(this, userId)
+        userRepo.getVolunteerAssignmentStats(this, userId),
       );
 
       if (!res) return;
       commit("SET_SELECTED_USER_ASSIGNMENT_STATS", res.data);
     },
-  }
+  },
 );

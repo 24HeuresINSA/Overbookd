@@ -1,8 +1,8 @@
-const REFUSED = 'REFUSED';
-const SUBMIT = 'SUBMIT';
-const VALIDATED = 'VALIDATED';
-const COMMENT = 'COMMENT';
-const READY = 'READY';
+const REFUSED = "REFUSED";
+const SUBMIT = "SUBMIT";
+const VALIDATED = "VALIDATED";
+const COMMENT = "COMMENT";
+const READY = "READY";
 
 export const ftFeedbackSubjectTypes: Record<
   FtFeedbackSubjectType,

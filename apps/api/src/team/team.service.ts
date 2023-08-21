@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, Team } from '@prisma/client';
-import { SlugifyService } from '../common/services/slugify.service';
-import { PrismaService } from '../../src/prisma.service';
-import { UserService } from '../../src/user/user.service';
-import { LinkTeamToUserDto } from './dto/link-team-user.dto';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { Prisma, Team } from "@prisma/client";
+import { SlugifyService } from "../common/services/slugify.service";
+import { PrismaService } from "../../src/prisma.service";
+import { UserService } from "../../src/user/user.service";
+import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 
 export const TEAM_SELECT = {
   select: {
@@ -123,7 +123,7 @@ export class TeamService {
   private async checkUserExistence(id: number): Promise<void> {
     const user = await this.userService.getById(id);
     if (!user.id) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
   }
 }

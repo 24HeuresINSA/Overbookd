@@ -12,7 +12,7 @@ import {
 } from "../models/gearRequests";
 
 export function uniqueGearRequestPeriodsReducer(
-  gearRequests: GearRequest<"FA" | "FT">[]
+  gearRequests: GearRequest<"FA" | "FT">[],
 ): Period[] {
   const rentalPeriods = gearRequests
     .filter(({ gear }) => !gear.isConsumable)
@@ -29,20 +29,20 @@ export function uniquePeriodsReducer(rentalPeriods: Period[]): Period[] {
     const mergedPeriod = {
       id: similarPeriod.id,
       start: new Date(
-        Math.min(rentalPeriod.start.getTime(), similarPeriod.start.getTime())
+        Math.min(rentalPeriod.start.getTime(), similarPeriod.start.getTime()),
       ),
       end: new Date(
-        Math.max(rentalPeriod.end.getTime(), similarPeriod.end.getTime())
+        Math.max(rentalPeriod.end.getTime(), similarPeriod.end.getTime()),
       ),
     };
     return uniquePeriodsReducer(
-      updateItemToList(periods, similarPeriodIndex, mergedPeriod)
+      updateItemToList(periods, similarPeriodIndex, mergedPeriod),
     );
   }, [] as Period[]);
 }
 
 export function isSimilarPeriod(
-  rentalPeriod: Period
+  rentalPeriod: Period,
 ): (value: Period) => boolean {
   return (period) =>
     period.id === rentalPeriod.id || isOverlappingPeriod(period)(rentalPeriod);
@@ -50,10 +50,10 @@ export function isSimilarPeriod(
 
 export function uniqueGearReducer<T extends "FA" | "FT">(
   gearRequests: GearRequest<T>[],
-  gearRequest: GearRequest<T>
+  gearRequest: GearRequest<T>,
 ): GearRequest<T>[] {
   const existingGearRequest = gearRequests.find(
-    (gr) => gr.gear.id === gearRequest.gear.id
+    (gr) => gr.gear.id === gearRequest.gear.id,
   );
   if (existingGearRequest) return gearRequests;
   return [...gearRequests, gearRequest];
@@ -61,7 +61,7 @@ export function uniqueGearReducer<T extends "FA" | "FT">(
 
 export function generateGearRequestCreationBuilder(
   gearId: number,
-  quantity: number
+  quantity: number,
 ): (period: Period) => GearRequestCreation {
   return (period: Period) => {
     const periodPart = isCreatedPeriod(period)
@@ -82,17 +82,17 @@ function isCreatedPeriod(period: Period): boolean {
 
 export function uniqueByGearReducer<T extends "FA" | "FT">(
   gearRequests: StoredGearRequest<T>[],
-  gearRequest: StoredGearRequest<T>
+  gearRequest: StoredGearRequest<T>,
 ): StoredGearRequest<T>[] {
   const savedGearRequest = gearRequests.find(
-    (gr) => gr.gear.id === gearRequest.gear.id
+    (gr) => gr.gear.id === gearRequest.gear.id,
   );
   if (savedGearRequest) return gearRequests;
   return [...gearRequests, gearRequest];
 }
 
 export function isSameGearRequest<T extends "FA" | "FT">(
-  gearRequest: StoredGearRequest<T>
+  gearRequest: StoredGearRequest<T>,
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
     return (
@@ -105,13 +105,13 @@ export function isSameGearRequest<T extends "FA" | "FT">(
 }
 
 export function isSimilarGearRequest<T extends "FA" | "FT">(
-  gearRequest: StoredGearRequest<T>
+  gearRequest: StoredGearRequest<T>,
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
     const isSameGear = gearRequest.gear.id === gr.gear.id;
     const isSameSeeker = isSameGearRequestSeeker(gearRequest.seeker)(gr.seeker);
     const isSimilarPeriod = isOverlappingPeriod(gearRequest.rentalPeriod)(
-      gr.rentalPeriod
+      gr.rentalPeriod,
     );
     return (
       (isSameGear && isSameSeeker && isSimilarPeriod) ||
@@ -121,13 +121,13 @@ export function isSimilarGearRequest<T extends "FA" | "FT">(
 }
 
 function isSameGearRequestSeeker<T extends "FA" | "FT">(
-  seeker: Seeker<T>
+  seeker: Seeker<T>,
 ): (value: Seeker<T>) => boolean {
   return (s: Seeker<T>) => seeker.id === s.id && seeker.type === s.type;
 }
 
 function isOverlappingPeriod(
-  period: IProvidePeriod
+  period: IProvidePeriod,
 ): (value: IProvidePeriod) => boolean {
   return (p: IProvidePeriod) =>
     period.start.getTime() <= p.end.getTime() &&
@@ -135,7 +135,7 @@ function isOverlappingPeriod(
 }
 
 export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
-  gearRequest: StoredGearRequest<T>
+  gearRequest: StoredGearRequest<T>,
 ): (value: StoredGearRequest<T>) => boolean {
   return (gr: StoredGearRequest<T>) => {
     return (
@@ -150,17 +150,17 @@ export function isSimilarConsumableGearRequest<T extends "FA" | "FT">(
 export function splitGearRequest<T extends "FA" | "FT">(
   gearRequest: GearRequest<T>,
   toRemovePeriod: IProvidePeriod,
-  availablePeriods: IProvidePeriod[]
+  availablePeriods: IProvidePeriod[],
 ): GearRequest<T>[] {
   const remainingPeriods = availablePeriods.filter(
-    (period) => !isSamePeriod(toRemovePeriod)(period)
+    (period) => !isSamePeriod(toRemovePeriod)(period),
   );
   if (gearRequest.gear.isConsumable) {
     const start = new Date(
-      Math.min(...remainingPeriods.map(({ start }) => start.getTime()))
+      Math.min(...remainingPeriods.map(({ start }) => start.getTime())),
     );
     const end = new Date(
-      Math.max(...remainingPeriods.map(({ end }) => end.getTime()))
+      Math.max(...remainingPeriods.map(({ end }) => end.getTime())),
     );
     return [{ ...gearRequest, rentalPeriod: { id: -1, start, end } }];
   }
@@ -168,7 +168,7 @@ export function splitGearRequest<T extends "FA" | "FT">(
     remainingPeriods.map((period, index) => ({
       ...period,
       id: -1 * (index + 1),
-    }))
+    })),
   );
   return mergedPeriods.map((rentalPeriod) => ({
     ...gearRequest,
@@ -184,7 +184,7 @@ function sortOnQuantity(gearRequests: GearRequest[], desc: boolean) {
 function sortOnGear(gearRequests: GearRequest[], desc: boolean) {
   const order = desc ? -1 : 1;
   return gearRequests.sort(
-    (a, b) => a.gear.name.localeCompare(b.gear.name) * order
+    (a, b) => a.gear.name.localeCompare(b.gear.name) * order,
   );
 }
 
@@ -192,7 +192,7 @@ function sortOnRentalPeriodStart(gearRequests: GearRequest[], desc: boolean) {
   const order = desc ? -1 : 1;
   return gearRequests.sort(
     (a, b) =>
-      (a.rentalPeriod.start.getTime() - b.rentalPeriod.start.getTime()) * order
+      (a.rentalPeriod.start.getTime() - b.rentalPeriod.start.getTime()) * order,
   );
 }
 
@@ -200,7 +200,7 @@ function sortOnRentalPeriodEnd(gearRequests: GearRequest[], desc: boolean) {
   const order = desc ? -1 : 1;
   return gearRequests.sort(
     (a, b) =>
-      (a.rentalPeriod.end.getTime() - b.rentalPeriod.end.getTime()) * order
+      (a.rentalPeriod.end.getTime() - b.rentalPeriod.end.getTime()) * order,
   );
 }
 

@@ -8,7 +8,7 @@ export class TeamRepository {
   private static readonly basePath = "teams";
 
   static getTeams(context: Context) {
-    return context.$axios.get(this.basePath);
+    return context.$axios.get<HttpStringified<Team[]>>(this.basePath);
   }
 
   static linkUserToTeams(context: Context, userId: number, teams: string[]) {

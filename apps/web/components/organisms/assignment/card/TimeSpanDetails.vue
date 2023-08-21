@@ -226,7 +226,7 @@ export default Vue.extend({
       const volunteerTeams = this.getAllVolunteerTeams(assignee);
       const assignableTeams = this.allTimeSpansTeamCodes.filter(
         (team) =>
-          volunteerTeams.includes(team) && team !== assignee.assignedTeam
+          volunteerTeams.includes(team) && team !== assignee.assignedTeam,
       );
       return [assignee.assignedTeam, ...assignableTeams];
     },

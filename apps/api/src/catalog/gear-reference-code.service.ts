@@ -1,4 +1,4 @@
-import { SimplifiedCategory } from './interfaces';
+import { SimplifiedCategory } from "./interfaces";
 
 export class GearReferenceCodeService {
   static computeGearCode(category: SimplifiedCategory, id: number): string {
@@ -8,14 +8,14 @@ export class GearReferenceCodeService {
   }
 
   private static toThreeDigitFormat(id: number) {
-    return ('000' + id).slice(-3);
+    return ("000" + id).slice(-3);
   }
 
   private static computeCategoryPathCode(category: SimplifiedCategory) {
     return category.path
-      .split('->')
+      .split("->")
       .map((categorySlug) => this.toTwoLettersUpperCase(categorySlug))
-      .join('_');
+      .join("_");
   }
 
   private static toTwoLettersUpperCase(categorySlug: string): string {

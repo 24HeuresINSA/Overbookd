@@ -99,11 +99,11 @@ export const actions = actionTree(
   {
     async fetchGears(
       context,
-      gearSerchOptions: GearSearchOptions
+      gearSerchOptions: GearSearchOptions,
     ): Promise<void> {
       const call = await safeCall<Gear[]>(
         this,
-        gearRepository.searchGears(this, gearSerchOptions)
+        gearRepository.searchGears(this, gearSerchOptions),
       );
       if (!call) return;
       context.commit("SET_GEARS", call.data);
@@ -111,11 +111,11 @@ export const actions = actionTree(
 
     async fetchCategories(
       context,
-      categorySerchOptions: CategorySearchOptions
+      categorySerchOptions: CategorySearchOptions,
     ): Promise<void> {
       const call = await safeCall<Category[]>(
         this,
-        categoryRepository.searchCategories(this, categorySerchOptions)
+        categoryRepository.searchCategories(this, categorySerchOptions),
       );
       if (!call) return;
       context.commit("SET_CATEGORIES", call.data);
@@ -124,7 +124,7 @@ export const actions = actionTree(
     async fetchCategoryTree(context): Promise<void> {
       const call = await safeCall<CategoryTree[]>(
         this,
-        categoryRepository.getCategoryTree(this)
+        categoryRepository.getCategoryTree(this),
       );
       if (!call) return;
       context.commit("SET_CATEGORY_TREE", call.data);
@@ -137,7 +137,7 @@ export const actions = actionTree(
         {
           successMessage: "La categorie a ete cree avec succes",
           errorMessage: "Erreur lors de la creation de la categorie",
-        }
+        },
       );
       if (!call) return;
       context.commit("ADD_CATEGORY", call.data);
@@ -151,7 +151,7 @@ export const actions = actionTree(
         {
           successMessage: "Le materiel a ete cree avec succes",
           errorMessage: "Erreur lors de la creation du materiel",
-        }
+        },
       );
       if (!call) return;
       context.commit("ADD_GEAR", call.data);
@@ -165,7 +165,7 @@ export const actions = actionTree(
         {
           successMessage: "Le materiel a ete mis a jour avec succes",
           errorMessage: "Erreur lors de la mise a jour du materiel",
-        }
+        },
       );
       if (!call) return;
       context.commit("UPDATE_GEAR", call.data);
@@ -176,8 +176,9 @@ export const actions = actionTree(
         await gearRepository.deleteGear(this, gear.id);
         sendNotification(this, `${gear.name} supprime`);
         context.commit("DELETE_GEAR", gear);
-      } catch (error: any) {
-        sendNotification(this, error.message ?? DEFAULT_ERROR);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : DEFAULT_ERROR;
+        sendNotification(this, message);
       }
     },
 
@@ -187,8 +188,9 @@ export const actions = actionTree(
         sendNotification(this, `${category.name} supprime`);
         context.commit("DELETE_CATEGORY", category);
         this.dispatch("catalog/fetchCategoryTree");
-      } catch (error: any) {
-        sendNotification(this, error.message ?? DEFAULT_ERROR);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : DEFAULT_ERROR;
+        sendNotification(this, message);
       }
     },
 
@@ -200,7 +202,7 @@ export const actions = actionTree(
         {
           successMessage: "La categorie a ete mise a jour avec succes",
           errorMessage: "Erreur lors de la mise a jour de la categorie",
-        }
+        },
       );
       if (!call) return;
       context.commit("UPDATE_CATEGORY", call.data);
@@ -209,21 +211,21 @@ export const actions = actionTree(
 
     async fetchCategory(
       context,
-      categoryId: number
+      categoryId: number,
     ): Promise<Category | undefined> {
       const storedCategory = context.state.categories.find(
-        (category) => category.id === categoryId
+        (category) => category.id === categoryId,
       );
       if (storedCategory) return storedCategory;
       const call = await safeCall<Category>(
         this,
-        categoryRepository.getCategory(this, categoryId)
+        categoryRepository.getCategory(this, categoryId),
       );
       if (!call) return undefined;
       context.commit("ADD_CATEGORY", call.data);
       return call.data;
     },
-  }
+  },
 );
 
 export function sendNotification(store: Vue["$store"], message: string) {

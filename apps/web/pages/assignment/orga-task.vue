@@ -50,7 +50,7 @@ export default Vue.extend({
     const volunteerId = +this.$route.query.volunteer;
     if (!volunteerId) return;
     const volunteer = this.volunteers.find(
-      (volunteer) => volunteer.id === volunteerId
+      (volunteer) => volunteer.id === volunteerId,
     );
     if (!volunteer) return;
     this.$accessor.assignment.selectVolunteer(volunteer);

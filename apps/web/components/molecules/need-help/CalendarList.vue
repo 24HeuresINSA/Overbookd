@@ -43,7 +43,7 @@ export default Vue.extend({
     },
     tasksAsEvents(): PlanningEvent[] {
       return this.$accessor.needHelp.volunteers.flatMap(({ tasks, id }) =>
-        tasks.map((task) => convertTaskToPlanningEvent(task, id))
+        tasks.map((task) => convertTaskToPlanningEvent(task, id)),
       );
     },
   },

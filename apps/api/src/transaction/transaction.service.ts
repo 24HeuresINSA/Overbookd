@@ -2,15 +2,15 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Transaction, TransactionType } from '@prisma/client';
-import { User } from '@prisma/client';
-import { SELECT_USERNAME_WITH_ID } from '../../src/user/user.service';
+} from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { Transaction, TransactionType } from "@prisma/client";
+import { User } from "@prisma/client";
+import { SELECT_USERNAME_WITH_ID } from "../../src/user/user.service";
 
 type CreateTransaction = Omit<
   Transaction,
-  'id' | 'from' | 'type' | 'isDeleted' | 'createdAt'
+  "id" | "from" | "type" | "isDeleted" | "createdAt"
 >;
 
 const SELECT_TRANSACTION = {
@@ -36,7 +36,7 @@ export type TransactionUser = {
 
 export type TransactionWithSenderAndReceiver = Omit<
   Transaction,
-  'to' | 'from'
+  "to" | "from"
 > & {
   userFrom: TransactionUser;
   userTo: TransactionUser;
@@ -51,7 +51,7 @@ export class TransactionService {
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
       select: SELECT_TRANSACTION,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
   }
 
@@ -70,7 +70,7 @@ export class TransactionService {
     return this.prisma.transaction.findMany({
       select: SELECT_TRANSACTION,
       where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { createdAt: "desc" },
     });
   }
 
@@ -118,11 +118,11 @@ export class TransactionService {
         this.checkTransactionAmount(transaction.amount);
         //Check if user exists
         const userId =
-          transaction.type === 'DEPOSIT' ? transaction.to : transaction.from;
+          transaction.type === "DEPOSIT" ? transaction.to : transaction.from;
         const users = await this.userExists([userId]);
         const user = users.find((user) => user.id === userId);
         const newBalance =
-          transaction.type === 'DEPOSIT'
+          transaction.type === "DEPOSIT"
             ? user.balance + transaction.amount
             : user.balance - transaction.amount;
         //Update the user and create the transaction
@@ -172,18 +172,18 @@ export class TransactionService {
       where: { id: { in: userIds } },
     });
     if (users.length !== userIds.length) {
-      throw new NotFoundException('User does not exist');
+      throw new NotFoundException("User does not exist");
     }
     return users;
   }
 
   private checkTransactionAmount(amount: number): void {
     if (amount <= 0) {
-      throw new BadRequestException('Amount must be greater than 0');
+      throw new BadRequestException("Amount must be greater than 0");
     }
-    const decimal = amount.toString().split('.')[1];
+    const decimal = amount.toString().split(".")[1];
     if (decimal && decimal.length > 2) {
-      throw new BadRequestException('Amount must be a max of 2 decimal places');
+      throw new BadRequestException("Amount must be a max of 2 decimal places");
     }
   }
 
@@ -240,10 +240,10 @@ export class TransactionService {
   }
 
   private shouldUpdateReceiverBalance(transactionType: string): boolean {
-    return ['DEPOSIT', 'TRANSFER'].includes(transactionType);
+    return ["DEPOSIT", "TRANSFER"].includes(transactionType);
   }
 
   private shouldUpdateSenderBalance(transactionType: string): boolean {
-    return ['EXPENSE', 'TRANSFER'].includes(transactionType);
+    return ["EXPENSE", "TRANSFER"].includes(transactionType);
   }
 }

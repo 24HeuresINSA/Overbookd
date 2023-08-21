@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { GearRepository } from '../catalog/interfaces';
-import { Animation } from './animations/animation.model';
-import { GearRequestOrchestratorBuilder } from './gear-requests-orchestrator/gear-request-orchestrator.builder';
+import { Inject, Injectable } from "@nestjs/common";
+import { GearRepository } from "../catalog/interfaces";
+import { Animation } from "./animations/animation.model";
+import { GearRequestOrchestratorBuilder } from "./gear-requests-orchestrator/gear-request-orchestrator.builder";
 import {
   GearRequest,
   GearRequestIdentifier,
@@ -13,8 +13,8 @@ import {
   Period,
   PeriodForm,
   MultiOperandGearRequest,
-} from './gear-request.model';
-import { Task } from './tasks/task.model';
+} from "./gear-request.model";
+import { Task } from "./tasks/task.model";
 
 export interface GearRequestRepository {
   addGearRequest(gearRequest: GearRequest): Promise<GearRequest>;
@@ -55,15 +55,15 @@ export interface PeriodRepository {
 @Injectable()
 export class GearRequestService {
   constructor(
-    @Inject('GEAR_REQUEST_REPOSITORY')
+    @Inject("GEAR_REQUEST_REPOSITORY")
     private readonly gearRequestRepository: GearRequestRepository,
-    @Inject('GEAR_REPOSITORY')
+    @Inject("GEAR_REPOSITORY")
     private readonly gearRepository: GearRepository,
-    @Inject('ANIMATION_REPOSITORY')
+    @Inject("ANIMATION_REPOSITORY")
     private readonly animationRepository: AnimationRepository,
-    @Inject('PERIOD_REPOSITORY')
+    @Inject("PERIOD_REPOSITORY")
     private readonly periodRepository: PeriodRepository,
-    @Inject('TASK_REPOSITORY')
+    @Inject("TASK_REPOSITORY")
     private readonly taskRepository: TaskRepository,
   ) {}
 

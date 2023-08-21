@@ -98,7 +98,7 @@ interface GearListingData {
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
-  delay: any;
+  delay?: ReturnType<typeof setTimeout>;
 }
 
 export default Vue.extend({
@@ -128,13 +128,13 @@ export default Vue.extend({
     gears(): Gear[] {
       return this.$accessor.catalog.gears;
     },
-    canSearch(): Boolean {
+    canSearch(): boolean {
       return (
         [this.name, this.category?.path, this.team?.code].some((searchOption) =>
-          this.isValidSearchOption(searchOption)
+          this.isValidSearchOption(searchOption),
         ) ||
         [this.name, this.category, this.team].every(
-          (searchOption) => !searchOption
+          (searchOption) => !searchOption,
         )
       );
     },

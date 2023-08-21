@@ -12,13 +12,13 @@ export interface SavedCharismaPeriod extends CharismaPeriod {
 }
 
 export function castCharismaPeriodsWithDate(
-  charismaPeriods: HttpStringified<SavedCharismaPeriod[]>
+  charismaPeriods: HttpStringified<SavedCharismaPeriod[]>,
 ): SavedCharismaPeriod[] {
   return charismaPeriods.map(castCharismaPeriodWithDate);
 }
 
 export function castCharismaPeriodWithDate(
-  charismaPeriod: HttpStringified<SavedCharismaPeriod>
+  charismaPeriod: HttpStringified<SavedCharismaPeriod>,
 ): SavedCharismaPeriod {
   return {
     ...charismaPeriod,
@@ -29,7 +29,7 @@ export function castCharismaPeriodWithDate(
 
 export function getCharismaByDate(
   charismaPeriods: SavedCharismaPeriod[],
-  date: Date
+  date: Date,
 ): number {
   return (
     charismaPeriods.find((charismaPeriod) => {

@@ -82,7 +82,7 @@ export class TaskAssignment {
 
   addCandidate(candidate: AssignmentCandidate): TaskAssignment {
     const assignableTeams = candidate.assignableTeams(
-      this.remainingTeamRequestsAfterAssignment
+      this.remainingTeamRequestsAfterAssignment,
     );
     if (assignableTeams.length === 1) {
       candidate.assign(assignableTeams[0]);
@@ -98,17 +98,17 @@ export class TaskAssignment {
 
     this._candidates = removeItemAtIndex(
       this._candidates,
-      this._candidates.length - 1
+      this._candidates.length - 1,
     );
     return this;
   }
 
   replaceCandidateBy(
     id: number,
-    candidate: AssignmentCandidate
+    candidate: AssignmentCandidate,
   ): TaskAssignment {
     const remainingCandidates = this.candidates.filter(
-      (c) => c.volunteer.id !== id
+      (c) => c.volunteer.id !== id,
     );
     if (remainingCandidates.length === this.candidates.length) return this;
     this._candidates = remainingCandidates;
@@ -121,7 +121,7 @@ export class TaskAssignment {
 
   withCandidateTasks(id: number, tasks: VolunteerTask[]): TaskAssignment {
     const candidateIndex = this._candidates.findIndex(
-      (candidate) => candidate.volunteer.id === id
+      (candidate) => candidate.volunteer.id === id,
     );
 
     if (candidateIndex === -1) return this;
@@ -132,7 +132,7 @@ export class TaskAssignment {
     this._candidates = updateItemToList(
       this._candidates,
       candidateIndex,
-      candidate
+      candidate,
     );
 
     return this;
@@ -140,10 +140,10 @@ export class TaskAssignment {
 
   withCandidateAvailabilities(
     id: number,
-    availabilities: Period[]
+    availabilities: Period[],
   ): TaskAssignment {
     const candidateIndex = this._candidates.findIndex(
-      (candidate) => candidate.volunteer.id === id
+      (candidate) => candidate.volunteer.id === id,
     );
 
     if (candidateIndex === -1) return this;
@@ -154,7 +154,7 @@ export class TaskAssignment {
     this._candidates = updateItemToList(
       this._candidates,
       candidateIndex,
-      candidate
+      candidate,
     );
 
     return this;
@@ -201,7 +201,7 @@ export class TaskAssignment {
     return this._friends.filter(
       (friend) =>
         !this.getCandidate(friend.id) &&
-        this.canBeAssigned(friend, this.remainingTeamRequestsAfterAssignment)
+        this.canBeAssigned(friend, this.remainingTeamRequestsAfterAssignment),
     );
   }
 
@@ -209,7 +209,7 @@ export class TaskAssignment {
     return this._potentialCandidates.filter(
       (potentialCandidate) =>
         !this.getCandidate(potentialCandidate.id) &&
-        this.canBeAssigned(potentialCandidate, this.remainingTeamRequest)
+        this.canBeAssigned(potentialCandidate, this.remainingTeamRequest),
     );
   }
 
@@ -224,7 +224,7 @@ export class TaskAssignment {
   private get areNotEnoughCandidate(): boolean {
     const requirements = this.teamRequests.reduce(
       (sum, { quantity, assignments }) => sum + quantity - assignments,
-      0
+      0,
     );
     return requirements > this.candidates.length;
   }
@@ -236,7 +236,7 @@ export class TaskAssignment {
   private get remainingTeamRequestsAfterAssignment(): string[] {
     return this.teamRequests
       .filter((teamRequest) =>
-        this.isRemainingTeamRequestAfterAssignment(teamRequest)
+        this.isRemainingTeamRequestAfterAssignment(teamRequest),
       )
       .map(({ teamCode }) => teamCode);
   }
@@ -251,7 +251,7 @@ export class TaskAssignment {
 
   private countCandidateAssignedTo(teamCode: string): number {
     return this._candidates.filter(
-      (candidate) => candidate.assignment === teamCode
+      (candidate) => candidate.assignment === teamCode,
     ).length;
   }
 
@@ -261,7 +261,7 @@ export class TaskAssignment {
 
   private canBeAssigned(
     volunteer: Volunteer,
-    remainingTeamRequests: string[]
+    remainingTeamRequests: string[],
   ): boolean {
     const asCandidate = new AssignmentCandidate(volunteer);
     const assignableTeams = asCandidate.assignableTeams(remainingTeamRequests);
@@ -283,7 +283,7 @@ export class TaskAssignment {
     if (!lastCandidate) return this;
     const newCandidate = strategy.findNewCandidate(
       lastCandidate,
-      this.potentialCandidates
+      this.potentialCandidates,
     );
     if (!newCandidate) return this;
     return this.replaceCandidateBy(lastCandidate.volunteer.id, newCandidate);
@@ -302,7 +302,7 @@ export class TaskAssignment {
   private get areAllTeamRequestBelowMaxCapacity(): boolean {
     return this.teamRequests.every(
       ({ teamCode, quantity, assignments }) =>
-        assignments + this.countCandidateAssignedTo(teamCode) <= quantity
+        assignments + this.countCandidateAssignedTo(teamCode) <= quantity,
     );
   }
 }
@@ -310,18 +310,18 @@ export class TaskAssignment {
 interface ReplacementStrategy {
   findNewCandidate(
     lastCandidate: AssignmentCandidate,
-    potentialCandidates: Volunteer[]
+    potentialCandidates: Volunteer[],
   ): AssignmentCandidate | undefined;
 }
 
 class NextCandidateReplacementStrategy implements ReplacementStrategy {
   findNewCandidate(
     lastCandidate: AssignmentCandidate,
-    potentialCandidates: Volunteer[]
+    potentialCandidates: Volunteer[],
   ): AssignmentCandidate | undefined {
     const nextFriend =
       potentialCandidates.find(
-        (friend) => friend.id > lastCandidate.volunteer.id
+        (friend) => friend.id > lastCandidate.volunteer.id,
       ) ?? potentialCandidates.at(0);
     if (!nextFriend) return undefined;
     return new AssignmentCandidate(nextFriend);
@@ -331,7 +331,7 @@ class NextCandidateReplacementStrategy implements ReplacementStrategy {
 class PreviousCandidateReplacementStrategy implements ReplacementStrategy {
   findNewCandidate(
     lastCandidate: AssignmentCandidate,
-    potentialCandidates: Volunteer[]
+    potentialCandidates: Volunteer[],
   ): AssignmentCandidate | undefined {
     const previousFriend =
       [...potentialCandidates]

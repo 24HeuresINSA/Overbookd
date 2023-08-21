@@ -1,11 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
-import { SearchCategory } from '../interfaces';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsOptional, IsString, MinLength } from "class-validator";
+import { SearchCategory } from "../interfaces";
 
 export class CategorySearchRequestDto implements SearchCategory {
   @ApiProperty({
     required: false,
-    description: 'Category name',
+    description: "Category name",
   })
   @IsOptional()
   @IsString()
@@ -14,7 +14,7 @@ export class CategorySearchRequestDto implements SearchCategory {
 
   @ApiProperty({
     required: false,
-    description: 'Owner name',
+    description: "Owner name",
   })
   @IsOptional()
   @IsString()

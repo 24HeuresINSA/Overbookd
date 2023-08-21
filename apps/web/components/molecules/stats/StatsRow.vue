@@ -151,7 +151,7 @@ export default Vue.extend({
       }
 
       const validatedNumber = stats.status.find(
-        (s) => s.status === "VALIDATED"
+        (s) => s.status === "VALIDATED",
       )?.count;
 
       return (((validatedNumber || 0) * 100) / lastYearCount).toFixed(0) + "%";

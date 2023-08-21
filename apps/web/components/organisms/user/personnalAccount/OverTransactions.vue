@@ -106,7 +106,10 @@ export default {
     async deleteTransaction(transactionID) {
       const deleteCall = await safeCall(
         this.$store,
-        RepoFactory.TransactionRepository.deleteTransaction(this, transactionID)
+        RepoFactory.TransactionRepository.deleteTransaction(
+          this,
+          transactionID,
+        ),
       );
       if (deleteCall) {
         // update on screen

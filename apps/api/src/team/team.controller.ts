@@ -10,43 +10,43 @@ import {
   Post,
   Query,
   UseGuards,
-} from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../authentication/jwt-auth.guard';
-import { Permission } from '../authentication/permissions-auth.decorator';
-import { PermissionsGuard } from '../authentication/permissions-auth.guard';
-import { TeamRequestDto } from './dto/team.request.dto';
-import { LinkTeamToUserDto } from './dto/link-team-user.dto';
-import { TeamResponseDto } from './dto/team.response';
-import { TeamService } from './team.service';
+} from "@nestjs/common";
+import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { Permission } from "../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { TeamRequestDto } from "./dto/team.request.dto";
+import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
+import { TeamResponseDto } from "./dto/team.response";
+import { TeamService } from "./team.service";
 
-@ApiTags('teams')
-@Controller('teams')
+@ApiTags("teams")
+@Controller("teams")
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'Get all teams',
+    description: "Get all teams",
     type: TeamResponseDto,
     isArray: true,
   })
   async getTeams(
-    @Query('permission') permission?: string,
+    @Query("permission") permission?: string,
   ): Promise<TeamResponseDto[]> {
     const where = buildQueryParamsCondition(permission);
-    return this.teamService.team({ orderBy: { name: 'asc' }, where });
+    return this.teamService.team({ orderBy: { name: "asc" }, where });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('affect-team')
-  @Post('link')
+  @Permission("affect-team")
+  @Post("link")
   @ApiBearerAuth()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Link a user with different teams',
+    description: "Link a user with different teams",
     type: LinkTeamToUserDto,
   })
   async updateUserTeams(
@@ -56,13 +56,13 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('admin')
+  @Permission("admin")
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
-    description: 'Create a team',
+    description: "Create a team",
     type: TeamResponseDto,
   })
   async addTeam(@Body() payload: TeamRequestDto): Promise<TeamResponseDto> {
@@ -70,32 +70,32 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('admin')
-  @Patch(':id')
+  @Permission("admin")
+  @Patch(":id")
   @ApiBearerAuth()
   @HttpCode(200)
   @ApiResponse({
     status: 200,
-    description: 'Update a team',
+    description: "Update a team",
     type: TeamResponseDto,
   })
   async updateTeam(
-    @Param('id', ParseIntPipe) id: number,
+    @Param("id", ParseIntPipe) id: number,
     @Body() data: TeamRequestDto,
   ): Promise<TeamResponseDto> {
     return this.teamService.updateTeam(id, data);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission('admin')
-  @Delete(':id')
+  @Permission("admin")
+  @Delete(":id")
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({
     status: 204,
-    description: 'Delete a team',
+    description: "Delete a team",
   })
-  async deleteTeam(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async deleteTeam(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.teamService.deleteTeam(id);
   }
 }

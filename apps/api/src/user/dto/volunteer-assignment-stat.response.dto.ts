@@ -1,7 +1,7 @@
-import { TaskCategory } from '@prisma/client';
-import { VolunteerTask } from '../user.service';
-import { ApiProperty } from '@nestjs/swagger';
-import { FtStatus, ftStatuses } from '../../ft/ft.model';
+import { TaskCategory } from "@prisma/client";
+import { VolunteerTask } from "../user.service";
+import { ApiProperty } from "@nestjs/swagger";
+import { FtStatus, ftStatuses } from "../../ft/ft.model";
 
 class FtRepresentation {
   id: number;
@@ -26,14 +26,14 @@ export class VolunteerAssignmentStatResponseDto
 {
   @ApiProperty({
     required: true,
-    description: 'The task category of the stats',
+    description: "The task category of the stats",
     type: String,
   })
   category: TaskCategory;
 
   @ApiProperty({
     required: true,
-    description: 'Assignment duration in milliseconds',
+    description: "Assignment duration in milliseconds",
     type: Number,
   })
   duration: number;

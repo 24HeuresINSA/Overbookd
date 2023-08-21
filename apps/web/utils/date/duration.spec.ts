@@ -19,10 +19,10 @@ describe("duration", () => {
           Duration.fromMilliseconds(
             (hours as number) * ONE_HOUR_IN_MS +
               (minutes as number) * ONE_MINUTE_IN_MS +
-              (milliseconds as number)
-          ).toString()
+              (milliseconds as number),
+          ).toString(),
         ).toBe(expected);
       });
-    }
+    },
   );
 });

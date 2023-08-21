@@ -1,12 +1,12 @@
-import { JwtService } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import { MailService } from '../mail/mail.service';
-import { HashingUtilsService } from '../hashing-utils/hashing-utils.service';
-import { UserService } from '../user/user.service';
-import { AuthenticationService } from './authentication.service';
-import { PrismaService } from '../prisma.service';
+import { JwtService } from "@nestjs/jwt";
+import { Test, TestingModule } from "@nestjs/testing";
+import { MailService } from "../mail/mail.service";
+import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { UserService } from "../user/user.service";
+import { AuthenticationService } from "./authentication.service";
+import { PrismaService } from "../prisma.service";
 
-describe('AuthService', () => {
+describe("AuthService", () => {
   let service: AuthenticationService;
 
   beforeEach(async () => {
@@ -53,7 +53,7 @@ describe('AuthService', () => {
     service = module.get<AuthenticationService>(AuthenticationService);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(service).toBeDefined();
   });
 });

@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { FileService } from './file.service';
-import { UserWithTeamsAndPermissions } from './user.model';
+import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
+import { PrismaService } from "../prisma.service";
+import { FileService } from "./file.service";
+import { UserWithTeamsAndPermissions } from "./user.model";
 import {
   SELECT_USER,
   SELECT_USER_TEAMS_AND_PERMISSIONS,
   UserService,
-} from './user.service';
+} from "./user.service";
 
 @Injectable()
 export class ProfilePictureService {
@@ -47,7 +47,7 @@ export class ProfilePictureService {
   async streamProfilePicture(userId: number): Promise<StreamableFile> {
     const profilePictureName = await this.getProfilePicture(userId);
     if (!profilePictureName) {
-      throw new NotFoundException('Profile picture not found');
+      throw new NotFoundException("Profile picture not found");
     }
     return this.fileService.streamFile(profilePictureName);
   }

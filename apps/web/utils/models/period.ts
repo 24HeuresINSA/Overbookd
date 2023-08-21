@@ -6,13 +6,13 @@ export interface PeriodWithId extends IProvidePeriod {
 }
 
 export function castPeriods(
-  periods: HttpStringified<IProvidePeriod[]>
+  periods: HttpStringified<IProvidePeriod[]>,
 ): IProvidePeriod[] {
   return periods.map(castPeriod);
 }
 
 export function castPeriod(
-  period: HttpStringified<IProvidePeriod>
+  period: HttpStringified<IProvidePeriod>,
 ): IProvidePeriod {
   return {
     start: new Date(period.start),

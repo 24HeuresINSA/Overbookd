@@ -1,18 +1,18 @@
-import { IProvidePeriod } from '@overbookd/period';
-import { removeItemAtIndex } from '@overbookd/list';
-import { Assignment, Task, Volunteer } from './task.model';
+import { IProvidePeriod } from "@overbookd/period";
+import { removeItemAtIndex } from "@overbookd/list";
+import { Assignment, Task, Volunteer } from "./task.model";
 import {
   arePeriodsOverlapping,
   areSamePeriods,
   includesOtherPeriod,
-} from '../../utils/period';
-import { getPeriodDuration } from '../../utils/duration';
+} from "../../utils/period";
+import { getPeriodDuration } from "../../utils/duration";
 
 type Assignee = { period: IProvidePeriod; id: number; name: string };
 
 export type JsonStoredTask = Pick<
   Task,
-  'description' | 'location' | 'name' | 'period'
+  "description" | "location" | "name" | "period"
 > & {
   id: number;
   assignees: Assignee[];

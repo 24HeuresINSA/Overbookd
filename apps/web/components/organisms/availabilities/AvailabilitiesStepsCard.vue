@@ -148,7 +148,7 @@ export default Vue.extend({
     },
     async saveAvailabilities() {
       return this.$accessor.volunteerAvailability.updateVolunteerAvailabilities(
-        +this.$accessor.user.me.id
+        +this.$accessor.user.me.id,
       );
     },
   },

@@ -1,5 +1,5 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { GearRequest, GearRequestIdentifier } from './gear-request.model';
+import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { GearRequest, GearRequestIdentifier } from "./gear-request.model";
 
 export class GearRequestAlreadyExists extends BadRequestException {
   gearRequest: GearRequest;

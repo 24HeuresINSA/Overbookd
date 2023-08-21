@@ -1,21 +1,21 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { CollaboratorWithId } from '../collaborator/collaborator.model';
+import { ApiProperty } from "@nestjs/swagger";
+import { CollaboratorWithId } from "../collaborator/collaborator.model";
 import {
   FaFeedbackSubjectType,
   subjectTypes,
-} from '../fa-feedback/fa-feedback.model';
-import { FaElectricityNeed } from '../fa-electricity-need/fa-electricity-need.model';
+} from "../fa-feedback/fa-feedback.model";
+import { FaElectricityNeed } from "../fa-electricity-need/fa-electricity-need.model";
 import {
   AnimationCategory,
   animationCategories,
-} from '../public-animation/public-animation.model';
-import { FtStatus, ftStatuses } from '../ft/ft.model';
-import { FaSignaNeed } from '../fa-signa-need/fa-signa-need.model';
+} from "../public-animation/public-animation.model";
+import { FtStatus, ftStatuses } from "../ft/ft.model";
+import { FaSignaNeed } from "../fa-signa-need/fa-signa-need.model";
 
-const DRAFT = 'DRAFT';
-const SUBMITTED = 'SUBMITTED';
-const VALIDATED = 'VALIDATED';
-const REFUSED = 'REFUSED';
+const DRAFT = "DRAFT";
+const SUBMITTED = "SUBMITTED";
+const VALIDATED = "VALIDATED";
+const REFUSED = "REFUSED";
 
 export const faStatuses: Record<FaStatus, FaStatus> = {
   DRAFT,
@@ -30,15 +30,15 @@ export type FaStatus =
   | typeof VALIDATED
   | typeof REFUSED;
 
-const CONCERT = 'Concert';
-const COURSE = 'Course';
-const DIVERTISSEMENT = 'Divertissement';
-const INITIATION = 'Initiation';
-const TOURNOI = 'Tournoi';
-const VENTE = 'Vente';
-const PREVENTION = 'Prevention';
-const SPECTACLE = 'Spectacle';
-const AUTRE = 'Autre';
+const CONCERT = "Concert";
+const COURSE = "Course";
+const DIVERTISSEMENT = "Divertissement";
+const INITIATION = "Initiation";
+const TOURNOI = "Tournoi";
+const VENTE = "Vente";
+const PREVENTION = "Prevention";
+const SPECTACLE = "Spectacle";
+const AUTRE = "Autre";
 
 export const faTypes: Record<FaType, FaType> = {
   Concert: CONCERT,

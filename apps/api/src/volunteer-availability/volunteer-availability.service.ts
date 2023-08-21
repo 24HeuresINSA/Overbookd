@@ -1,13 +1,13 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { ONE_HOUR_IN_MS, Period } from '@overbookd/period';
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
+import { ONE_HOUR_IN_MS, Period } from "@overbookd/period";
 import {
   PeriodOrchestrator,
   PeriodWithError,
-} from '@overbookd/volunteer-availability';
-import { PrismaService } from '../prisma.service';
-import { formatDateWithMinutes } from '../utils/date';
-import { PeriodDto } from './dto/period.dto';
+} from "@overbookd/volunteer-availability";
+import { PrismaService } from "../prisma.service";
+import { formatDateWithMinutes } from "../utils/date";
+import { PeriodDto } from "./dto/period.dto";
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -167,7 +167,7 @@ export class VolunteerAvailabilityService {
     if (periodOrchestrator.errors.length > 0) {
       const errors = periodOrchestrator.errors
         .map(buildPeriodOrchestratorErrorMessage)
-        .join('\n');
+        .join("\n");
       throw new ForbiddenException(errors);
     }
   }

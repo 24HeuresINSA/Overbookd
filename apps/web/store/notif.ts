@@ -34,5 +34,5 @@ export const actions = actionTree(
     popNotification: function ({ commit }, payload: number) {
       commit("POP_NOTIFICATION", payload);
     },
-  }
+  },
 );

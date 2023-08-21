@@ -7,7 +7,7 @@ export class InMemoryGearRepository implements GearRepository {
 
   find(gearName: string): Promise<Gear | undefined> {
     return Promise.resolve(
-      this.gears.find((gear) => gear.slug === SlugifyService.apply(gearName))
+      this.gears.find((gear) => gear.slug === SlugifyService.apply(gearName)),
     );
   }
 }

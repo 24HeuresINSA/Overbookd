@@ -86,7 +86,7 @@ export default Vue.extend({
 
       const dateEventStartChanged = !isSameDay(
         this.dateEventStart,
-        this.$accessor.configuration.eventStartDate
+        this.$accessor.configuration.eventStartDate,
       );
 
       if (dateEventStartChanged) {
@@ -109,8 +109,8 @@ export default Vue.extend({
 
       await Promise.all(
         configurationsToSave.map((config) =>
-          this.$accessor.configuration.save(config)
-        )
+          this.$accessor.configuration.save(config),
+        ),
       );
     },
   },

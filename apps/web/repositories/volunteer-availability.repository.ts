@@ -9,29 +9,29 @@ export class VolunteerAvailabilityRepository {
 
   static async getVolunteerAvailabilities(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<Period[]>>(
-      `${this.basePath}/${userId}`
+      `${this.basePath}/${userId}`,
     );
   }
 
   static async updateVolunteerAvailabilities(
     context: Context,
     userId: number,
-    periods: Period[]
+    periods: Period[],
   ) {
     return context.$axios.post<HttpStringified<Period[]>>(
       `${this.basePath}/${userId}`,
-      periods
+      periods,
     );
   }
 
   static async overrideVolunteerAvailabilities(
     context: Context,
     userId: number,
-    periods: Period[]
+    periods: Period[],
   ) {
     return context.$axios.patch<HttpStringified<Period[]>>(
       `${this.basePath}/${userId}`,
-      periods
+      periods,
     );
   }
 }

@@ -105,7 +105,7 @@ export default Vue.extend({
       const startBeforeEnd = this.startOrManifDate < this.endOrManifDate;
       if (!startBeforeEnd) {
         this.showErrorMessage(
-          "❌ La date de début doit être avant la date de fin !"
+          "❌ La date de début doit être avant la date de fin !",
         );
         return true;
       }
@@ -115,7 +115,7 @@ export default Vue.extend({
       const sliceInOneTimeWindow = hourDiff === this.sliceTime;
       if (this.toSlice && (!isSliceValid || sliceInOneTimeWindow)) {
         this.showErrorMessage(
-          `❌ La durée de la plage horaire doit être un multiple de ${this.sliceTime}h !`
+          `❌ La durée de la plage horaire doit être un multiple de ${this.sliceTime}h !`,
         );
         return true;
       }

@@ -7,10 +7,10 @@ interface ActionMessage {
   messageDuration?: number;
 }
 
-export async function safeCall<T = any>(
+export async function safeCall<T>(
   store: Vue["$store"],
   repoFunction: Promise<AxiosResponse<T>>,
-  message?: ActionMessage
+  message?: ActionMessage,
 ): Promise<AxiosResponse<T> | undefined> {
   try {
     const res = await repoFunction;
@@ -25,7 +25,7 @@ export async function safeCall<T = any>(
       store.dispatch("notif/pushNotification", notif);
     }
     return res;
-  } catch (error: any) {
+  } catch (error: unknown) {
     const notifMessage = getNotifMessage(error, message?.errorMessage);
     const notif: SnackNotif = {
       message: notifMessage,
@@ -36,6 +36,7 @@ export async function safeCall<T = any>(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- can't cast error to specific type
 function getNotifMessage(error: any, customErrorMessage?: string) {
   if (customErrorMessage) {
     return customErrorMessage;

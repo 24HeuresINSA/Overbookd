@@ -1,10 +1,10 @@
-import { Period } from '../gear-request/gear-request.model';
+import { Period } from "../gear-request/gear-request.model";
 
-const DIVERTISSEMENT = 'Divertissement';
-const CULTURE = 'Culture';
-const SPORT = 'Sport';
-const ENFANT = 'Enfant';
-const AUTRE = 'Autre';
+const DIVERTISSEMENT = "Divertissement";
+const CULTURE = "Culture";
+const SPORT = "Sport";
+const ENFANT = "Enfant";
+const AUTRE = "Autre";
 
 export const animationCategories: Record<AnimationCategory, AnimationCategory> =
   {

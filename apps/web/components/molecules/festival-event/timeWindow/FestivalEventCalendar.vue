@@ -35,6 +35,7 @@ import Vue from "vue";
 import FtTimeSpanDetails from "~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue";
 import { formatDateWithExplicitMonth } from "~/utils/date/dateUtils";
 import { CalendarEvent } from "~/utils/models/calendar";
+import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
 import { FtStatus, FtTimeWindow } from "~/utils/models/ft";
 
 type Event = CalendarEvent & {
@@ -88,7 +89,7 @@ export default Vue.extend({
             timed: true,
             color: "secondary",
             name: "Utilisation du matos",
-          })
+          }),
         );
 
       return [...animationTimeWindows, ...gearTimeWindows];
@@ -119,17 +120,15 @@ export default Vue.extend({
     this.value = this.manifDate;
   },
   methods: {
-    getEventColor(event: any): string {
+    getEventColor(event: { color: string }): string {
       return event.color;
     },
     previousPage() {
-      const calendar = this.$refs.formCalendar;
-      // @ts-ignore
+      const calendar = this.$refs.formCalendar as unknown as VuetifyCalendar;
       if (calendar) calendar.prev();
     },
     nextPage() {
-      const calendar = this.$refs.formCalendar;
-      // @ts-ignore
+      const calendar = this.$refs.formCalendar as unknown as VuetifyCalendar;
       if (calendar) calendar.next();
     },
     viewEvent({ event }: { event: { timeSpanId?: number } }) {
@@ -146,7 +145,7 @@ export default Vue.extend({
           timed: true,
           color: "purple",
           name: "Tâche",
-        }))
+        })),
       );
     },
     closeTimeSpanDetailsDialog() {

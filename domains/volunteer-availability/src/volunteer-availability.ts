@@ -30,11 +30,11 @@ export class Availability {
       throw new AvailabilityPeriodsJointError();
     const startTime = Math.min(
       new Date(this.start).getTime(),
-      new Date(period.start).getTime()
+      new Date(period.start).getTime(),
     );
     const endTime = Math.max(
       new Date(this.end).getTime(),
-      new Date(period.end).getTime()
+      new Date(period.end).getTime(),
     );
     return new Availability(new Date(startTime), new Date(endTime));
   }

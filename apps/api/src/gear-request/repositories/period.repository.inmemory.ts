@@ -1,6 +1,6 @@
-import { PeriodNotFound } from '../gear-request.error';
-import { Period, PeriodForm } from '../gear-request.model';
-import { PeriodRepository } from '../gear-request.service';
+import { PeriodNotFound } from "../gear-request.error";
+import { Period, PeriodForm } from "../gear-request.model";
+import { PeriodRepository } from "../gear-request.service";
 
 export class InMemoryPeriodRepository implements PeriodRepository {
   periods: Period[];
