@@ -37,7 +37,8 @@
         "Prisma.prisma",
         "dbaeumer.vscode-eslint",
         "kamikillerto.vscode-colorize",
-        "Vue.volar"
+        "Vue.volar",
+        "rohit-gohri.format-code-action"
       ]
     }
   },
