@@ -41,6 +41,6 @@ resource_rules:
 
             The version of overbookd has not been updated.
 
-            Make sure to run `pnpm release:candidate` locally.
+            Make sure to run `pnpm release:candidate` locally. :pray:
 
-            If it's already done rebase on `main` without your changes on package.json files and run it again.
+            _If it's already done_, **rebase** on `main` without your changes on `package.json` files **and run it again**.
