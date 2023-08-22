@@ -11,12 +11,10 @@ resource_rules:
             source_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:source_branch]}/package.json")
             source_branch_version = JSON.parse(source_branch_response.body)["version"]
 
-            renovate_merge_request_author = "24-bot"
+            renovate_merge_request_author = "dsi11"
 
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
 
-            MR_info = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}")
-            author = JSON.parse(MR_info.author.name)
             if author == renovate_merge_request_author
               return false
             end

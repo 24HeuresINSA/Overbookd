@@ -4,12 +4,11 @@ resource_rules:
       - name: find all opened MR and no closed issues
         conditions:
           state: opened
+          draft: false
           ruby: |
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
-            renovate_merge_request_author = "24-bot"
+            renovate_merge_request_author = "dsi11"
 
-            MR_info = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}")
-            author = JSON.parse(MR_info.author.name)
             if author == renovate_merge_request_author
               return false
             end
