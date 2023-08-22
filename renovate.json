@@ -7,23 +7,16 @@
   ],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-  "reviewers": [
-    "LeoMouyna",
-    "titouan-joseph",
-    "LeonDumestre"
-  ],
-  "labels": [
-    "dependencies"
-  ],
+  "reviewers": ["LeoMouyna", "titouan-joseph", "LeonDumestre"],
+  "labels": ["Type::Dependencies"],
+  "pre-commit": {
+    "enabled": true
+  },
   "packageRules": [
     {
       "description": "Group all dependencies from the api directory",
-      "matchFileNames": [
-        "apps/api/**"
-      ],
-      "addLabels": [
-        "Scope::Api"
-      ],
+      "matchFileNames": ["apps/api/**"],
+      "addLabels": ["Scope::Api"],
       "groupName": "API dependencies",
       "groupSlug": "api-dependencies",
       "matchDatasources": ["npm"],
@@ -31,28 +24,18 @@
     },
     {
       "description": "Group all dependencies from the web directory",
-      "matchFileNames": [
-        "apps/web/**"
-      ],
-      "addLabels": [
-        "Scope::Web"
-      ],
+      "matchFileNames": ["apps/web/**"],
+      "addLabels": ["Scope::Web"],
       "groupName": "Web dependencies",
       "groupSlug": "web-dependencies",
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days",
-      "excludePackageNames": [
-        "axios"
-      ]
+      "excludePackageNames": ["axios"]
     },
     {
       "description": "Group all dependencies from the libs directory",
-      "matchFileNames": [
-        "libraries/**"
-      ],
-      "addLabels": [
-        "Scope::Libs"
-      ],
+      "matchFileNames": ["libraries/**"],
+      "addLabels": ["Scope::Libs"],
       "groupName": "Libs dependencies",
       "groupSlug": "libs-dependencies",
       "matchDatasources": ["npm"],
@@ -60,12 +43,8 @@
     },
     {
       "description": "Group all dependencies from the domains directory",
-      "matchFileNames": [
-        "domains/**"
-      ],
-      "addLabels": [
-        "Scope::Domain"
-      ],
+      "matchFileNames": ["domains/**"],
+      "addLabels": ["Scope::Domain"],
       "groupName": "Domain dependencies",
       "groupSlug": "domain-dependencies",
       "matchDatasources": ["npm"],
@@ -73,27 +52,24 @@
     },
     {
       "description": "Group all gitlab-ci dependencies",
-      "matchFileNames": [
-        ".gitlab-ci.yml",
-        ".gitlab/ci/**"
-      ],
-      "addLabels": [
-        "gitlabci"
-      ],
+      "matchFileNames": [".gitlab-ci.yml", ".gitlab/ci/**"],
+      "addLabels": ["Scope::CI", "gitlabci"],
       "groupName": "Gitlab CI dependencies",
       "groupSlug": "gitlab-ci-dependencies"
     },
     {
       "description": "Group all Dockerfile dependencies",
-      "matchFileNames": [
-        "**/Dockerfile",
-        "**/docker-compose.yml"
-      ],
-      "addLabels": [
-        "docker"
-      ],
+      "matchFileNames": ["**/Dockerfile", "**/docker-compose.yml"],
+      "addLabels": ["Scope::CI", "docker"],
       "groupName": "Dockerfile dependencies",
       "groupSlug": "dockerfile-dependencies"
+    },
+    {
+      "description": "Group all pre-commit dependencies",
+      "matchFileNames": [".pre-commit-config.yaml"],
+      "addLabels": ["Scope::CI"],
+      "groupName": "Pre-commit dependencies",
+      "groupSlug": "pre-commit-dependencies"
     },
     {
       "matchPackageNames": [

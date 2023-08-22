@@ -13,6 +13,7 @@
   },
   "scripts": {
     "db:exec": "run(){ MY_GID=$(id --group $USER) MY_UID=$(id --user $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env exec api sh -c \"cd /overbookd/apps/api && npx $1\"; }; run",
+    "ci:init": "python3 -m ensurepip --upgrade && python3 -m pip install --upgrade pip && python3 -m pip install pre-commit && pre-commit install --install-hooks --overwrite && pre-commit install --hook-type commit-msg",
     "dev:build": "docker build --tag overbookd:dev ./docker && pnpm dev:start",
     "dev:clean": "pnpm dev:down && rm -rf node_modules .pnpm-store apps/**/node_modules **/dist && docker system prune --all",
     "dev:down": "MY_GID=$(id --group $USER) MY_UID=$(id --user $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env down",
