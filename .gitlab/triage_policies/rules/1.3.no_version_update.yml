@@ -11,7 +11,13 @@ resource_rules:
             source_branch_response = HTTParty.get("https://gitlab.com/24-heures-insa/overbookd-mono/-/raw/#{resource[:source_branch]}/package.json")
             source_branch_version = JSON.parse(source_branch_response.body)["version"]
 
+            renovate_merge_request_author = "dsi11"
+
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+
+            if author == renovate_merge_request_author
+              return false
+            end
 
             MR_diffs = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/changes", :headers => { "Authorization" => auth})
             MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
@@ -32,6 +38,9 @@ resource_rules:
           comment_type: thread
           comment: |
             Hi {{author}},
+
             The version of overbookd has not been updated.
-            Make sure to run `pnpm release:candidate` locally.
-            If it's already done rebase on `main` without your changes on package.json files and run it again.
+
+            Make sure to run `pnpm release:candidate` locally. :pray:
+
+            _If it's already done_, **rebase** on `main` without your changes on `package.json` files **and run it again**.

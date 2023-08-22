@@ -4,8 +4,15 @@ resource_rules:
       - name: find all opened MR and no closed issues
         conditions:
           state: opened
+          draft: false
           ruby: |
             auth = "Bearer " + ENV["GITLAB_API_TOKEN"]
+            renovate_merge_request_author = "dsi11"
+
+            if author == renovate_merge_request_author
+              return false
+            end
+
             MR_notes = HTTParty.get("https://gitlab.com/api/v4/projects/#{resource[:project_id]}/merge_requests/#{resource[:iid]}/notes", :headers => { "Authorization" => auth})
             JSON.parse(MR_notes.body).each do |note|
               if resource[:description].include?("Closes #")
@@ -19,5 +26,7 @@ resource_rules:
           comment_type: thread
           comment: |
             Hi {{author}},
+
             The MR does not close any issue.
+
             Are you sure this MR is not related to any issue?
