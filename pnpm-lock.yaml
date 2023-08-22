@@ -80,6 +80,9 @@ importers:
       '@overbookd/registration':
         specifier: workspace:^
         version: link:../../domains/registration
+      '@overbookd/user':
+        specifier: workspace:^
+        version: link:../../domains/user
       '@overbookd/volunteer-availability':
         specifier: workspace:^
         version: link:../../domains/volunteer-availability
@@ -246,6 +249,9 @@ importers:
       '@overbookd/registration':
         specifier: workspace:*
         version: link:../../domains/registration
+      '@overbookd/user':
+        specifier: workspace:*
+        version: link:../../domains/user
       '@overbookd/volunteer-availability':
         specifier: workspace:*
         version: link:../../domains/volunteer-availability
@@ -363,8 +369,8 @@ importers:
         version: 4.46.0
 
   domains/configuration: {}
-
   domains/registration: {}
+  domains/user: {}
 
   domains/volunteer-availability:
     dependencies:

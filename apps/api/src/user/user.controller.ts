@@ -35,7 +35,6 @@ import { Request, Response } from "express";
 import { diskStorage } from "multer";
 import { join } from "path";
 import { RequestWithUserPayload } from "../../src/app.controller";
-import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
@@ -56,23 +55,17 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
 import { CreateUserRequestDto } from "./dto/create-user.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
-import { UserWithoutPasswordResponseDto } from "./dto/user-without-password.response.dto";
 import {
   VolunteerAssignmentDto,
   VolunteerAssignmentStatResponseDto,
 } from "./dto/volunteer-assignment-stat.response.dto";
 import { ProfilePictureService } from "./profile-picture.service";
-import {
-  MyUserInformation,
-  UserPersonnalData,
-  UserWithTeamsAndPermissions,
-  UserWithoutPassword,
-} from "./user.model";
+import { MyUserInformation, UserPersonnalData } from "@overbookd/user";
 import { UserService } from "./user.service";
 import { UserPersonnalDataResponseDto } from "./dto/user-personnal-data.response.dto";
-import { MyUSerInformationResponseDto } from "./dto/my-user-information.response.dto";
+import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
 import { Task } from "../volunteer-planning/domain/task.model";
-import { UserWithTeamsAndPermissionsResponseDto } from "./dto/user-with-teams-and-permissions.response.dto";
+
 @ApiTags("users")
 @Controller("users")
 @ApiBadRequestResponse({
@@ -95,11 +88,11 @@ export class UserController {
   })
   @ApiCreatedResponse({
     description: "created user",
-    type: UserWithoutPasswordResponseDto,
+    type: UserPersonnalDataResponseDto,
   })
   createUser(
     @Body() userData: CreateUserRequestDto,
-  ): Promise<UserWithoutPassword> {
+  ): Promise<UserPersonnalData> {
     return this.userService.createUser(userData);
   }
 
@@ -169,7 +162,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get a current user",
-    type: MyUSerInformationResponseDto,
+    type: MyUserInformationResponseDto,
   })
   async getCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
@@ -231,7 +224,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Updated current user",
-    type: UserWithTeamsAndPermissionsResponseDto,
+    type: UserPersonnalDataResponseDto,
   })
   @ApiBody({
     description: "New current user information",
@@ -240,8 +233,8 @@ export class UserController {
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: UpdateUserRequestDto,
-  ): Promise<UserWithTeamsAndPermissions | null> {
-    return this.userService.updateUserPersonnalData(req.user.id, userData);
+  ): Promise<UserPersonnalData | null> {
+    return this.userService.updateMyInformation(req.user, userData);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -251,10 +244,10 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get all usernames with valid CP",
-    type: UserWithoutPasswordResponseDto,
+    type: UserPersonnalDataResponseDto,
     isArray: true,
   })
-  async getUsernamesWithValidCP(): Promise<UserWithoutPassword[]> {
+  async getUsernamesWithValidCP(): Promise<UserPersonnalData[]> {
     return this.userService.getAllPersonnalAccountConsummers();
   }
 
@@ -265,11 +258,11 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get a user by id",
-    type: UserWithoutPasswordResponseDto,
+    type: UserPersonnalDataResponseDto,
   })
   getUserById(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<UserWithoutPassword> {
+  ): Promise<UserPersonnalData> {
     return this.userService.getById(id);
   }
 
@@ -374,18 +367,14 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Updated user",
-    type: UserWithTeamsAndPermissionsResponseDto,
+    type: UserPersonnalDataResponseDto,
   })
   updateUserById(
     @Param("id", ParseIntPipe) targetUserId: number,
     @Body() user: UpdateUserRequestDto,
     @RequestDecorator() req: RequestWithUserPayload,
-  ): Promise<UserWithTeamsAndPermissions> {
-    return this.userService.updateUser(
-      targetUserId,
-      user,
-      new JwtUtil(req.user),
-    );
+  ): Promise<UserPersonnalData> {
+    return this.userService.updateUser(targetUserId, user, req.user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -420,7 +409,7 @@ export class UserController {
   @ApiResponse({
     status: 201,
     description: "Add a profile picture to a user",
-    type: UserWithoutPasswordResponseDto,
+    type: MyUserInformationResponseDto,
   })
   @ApiBody({
     description: "Profile picture file",
@@ -429,7 +418,7 @@ export class UserController {
   defineProfilePicture(
     @RequestDecorator() req: RequestWithUserPayload,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<UserWithTeamsAndPermissions> {
+  ): Promise<MyUserInformation> {
     return this.profilePictureService.updateProfilePicture(
       req.user.id,
       file.filename,

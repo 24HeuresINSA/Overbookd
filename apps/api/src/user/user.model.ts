@@ -1,51 +1,34 @@
-export type UserCreateForm = {
-  firstname: string;
-  lastname: string;
-  nickname?: string | null;
-  teamId?: number;
-  email: string;
-  birthdate: Date;
-  phone: string;
-  comment?: string | null;
-  password: string;
-};
-
-export type UserUpdateForm = {
-  firstname?: string;
-  lastname?: string;
-  nickname?: string | null;
-  email?: string;
-  birthdate?: Date;
-  phone?: string;
-  comment?: string | null;
-  hasPayedContributions?: boolean;
-  profilePicture?: string | null;
-  charisma?: number;
-};
-
-export type UserWithoutPassword = Required<UserUpdateForm> & {
-  id: number;
-  balance: number;
-};
-
-type WithTeams = {
-  teams: string[];
-};
-
-type WithPermissions = {
-  permissions: string[];
-};
-
-export type UserPersonnalData = UserWithoutPassword & WithTeams;
-
-export type UserWithTeamsAndPermissions = UserWithoutPassword &
-  WithTeams &
-  WithPermissions;
+import { MyUserInformation, UserPersonnalData } from "@overbookd/user";
+import { TeamWithNestedPermissions } from "../team/utils/permissions";
+import { IProvidePeriod } from "@overbookd/period";
+import { FtStatus } from "../ft/ft.model";
 
 export type UserPasswordOnly = {
   password: string;
 };
 
-export type MyUserInformation = UserWithTeamsAndPermissions & {
-  tasksCount: number;
+export interface DatabaseMyUserInformation
+  extends Omit<MyUserInformation, "teams" | "permissions" | "tasksCount"> {
+  teams: TeamWithNestedPermissions[];
+  _count: { assignments: number };
+}
+
+export interface VolunteerTask extends IProvidePeriod {
+  ft: {
+    id: number;
+    name: string;
+    status: FtStatus;
+  };
+  timeSpanId?: number;
+}
+
+export type DatabaseTeamCode = {
+  team: {
+    code: string;
+  };
 };
+
+export interface DatabaseUserPersonalData
+  extends Omit<UserPersonnalData, "teams"> {
+  teams: DatabaseTeamCode[];
+}

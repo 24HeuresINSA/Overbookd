@@ -14,7 +14,7 @@ import {
   ValidationArguments,
 } from "class-validator";
 import { OneNumber, upperCaseCharacter } from "./common";
-import { UserCreateForm } from "../user.model";
+import { UserCreateForm } from "@overbookd/user";
 
 export class CreateUserRequestDto implements UserCreateForm {
   @ApiProperty({

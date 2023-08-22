@@ -18,6 +18,7 @@
       "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/user": ["../../domains/user/src"],
       "@overbookd/volunteer-availability": ["../../domains/volunteer-availability/src"]
     },
     "types": [

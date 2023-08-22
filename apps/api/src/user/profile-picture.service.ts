@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { FileService } from "./file.service";
-import { UserWithTeamsAndPermissions } from "./user.model";
-import {
-  SELECT_USER,
-  SELECT_USER_TEAMS_AND_PERMISSIONS,
-  UserService,
-} from "./user.service";
+import { SELECT_MY_USER_INFORMATION } from "./user.query";
+import { UserService } from "./user.service";
+import { MyUserInformation } from "@overbookd/user";
 
 @Injectable()
 export class ProfilePictureService {
@@ -18,9 +15,7 @@ export class ProfilePictureService {
   private async getProfilePicture(userId: number): Promise<string | null> {
     const { profilePicture } = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: {
-        profilePicture: true,
-      },
+      select: { profilePicture: true },
     });
     return profilePicture;
   }
@@ -28,7 +23,7 @@ export class ProfilePictureService {
   async updateProfilePicture(
     userId: number,
     profilePicture: string,
-  ): Promise<UserWithTeamsAndPermissions> {
+  ): Promise<MyUserInformation> {
     const currentProfilePicture = await this.getProfilePicture(userId);
     if (currentProfilePicture) {
       this.fileService.deleteFile(currentProfilePicture);
@@ -36,12 +31,9 @@ export class ProfilePictureService {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: { profilePicture },
-      select: {
-        ...SELECT_USER,
-        ...SELECT_USER_TEAMS_AND_PERMISSIONS,
-      },
+      select: SELECT_MY_USER_INFORMATION,
     });
-    return UserService.getUserWithTeamsAndPermissions(user);
+    return UserService.formatToMyInformation(user);
   }
 
   async streamProfilePicture(userId: number): Promise<StreamableFile> {

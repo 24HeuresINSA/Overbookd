@@ -8,7 +8,7 @@ import {
   IsOptional,
   IsString,
 } from "class-validator";
-import { UserUpdateForm } from "../user.model";
+import { UserUpdateForm } from "@overbookd/user";
 
 export class UpdateUserRequestDto implements UserUpdateForm {
   @ApiProperty({
