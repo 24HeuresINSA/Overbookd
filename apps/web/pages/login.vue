@@ -139,7 +139,8 @@ const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg",
 ];
-import { version } from "../package.json";
+
+const version = process.env.OVERBOOKD_VERSION;
 
 export default Vue.extend({
   name: "Login",

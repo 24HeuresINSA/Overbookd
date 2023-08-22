@@ -142,7 +142,8 @@
 
 <script>
 import { pages } from "~/utils/pages/pages-list.ts";
-import { version } from "../package.json";
+
+const version = process.env.OVERBOOKD_VERSION;
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
