@@ -244,7 +244,7 @@ export default Vue.extend({
   position: relative;
 
   h2 {
-    color: red;
+    color: white;
   }
 }
 
