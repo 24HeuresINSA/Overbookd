@@ -97,6 +97,28 @@ export class UserService {
     return users.map(UserService.formatToPersonalData);
   }
 
+  async getNewcomers(): Promise<UserPersonnalData[]> {
+    const now = new Date();
+    const minRegisterDate = new Date(now.setDate(now.getDate() - 60));
+
+    const users = await this.prisma.user.findMany({
+      orderBy: { id: 'asc' },
+      where: {
+        isDeleted: false,
+        teams: {
+          none: {
+            team: {
+              permissions: { some: { permissionName: 'validated-user' } },
+            },
+          },
+        },
+        createdAt: { gte: minRegisterDate },
+      },
+      select: SELECT_USER_PERSONNAL_DATA,
+    });
+    return users.map(UserService.formatToPersonalData);
+  }
+
   async getVolunteers(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
