@@ -12,7 +12,8 @@
   "workspaceFolder": "/overbookd",
   // Use this environment variable if you need to bind mount your local source code into a new container.
   "remoteEnv": {
-    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+    "OVERBOOKD_VERSION": "$(jq '.version' package.json | tr -d '\"')"
   },
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
