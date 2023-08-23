@@ -40,7 +40,7 @@ import {
 } from "~/utils/models/charisma-period.model";
 
 export default Vue.extend({
-  name: "CreateCharismaPeriod",
+  name: "CharismaPeriods",
   components: {
     SnackNotificationContainer,
     CharismaPeriodCalendar,

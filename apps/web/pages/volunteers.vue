@@ -187,7 +187,7 @@ import { download } from "~/utils/planning/download";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 
 export default {
-  name: "Humans",
+  name: "Volunteers",
   components: {
     UserInformation,
     SnackNotificationContainer,

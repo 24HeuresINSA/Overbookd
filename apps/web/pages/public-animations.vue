@@ -79,13 +79,13 @@ import { Header } from "~/utils/models/data-table.model";
 import { PublicAnimationWithFa } from "~/utils/models/fa.model";
 import { PeriodWithId } from "~/utils/models/period.model";
 
-interface Comcom {
+interface PublicAnimationsData {
   headers: Header[];
 }
 
 export default Vue.extend({
-  name: "Comcom",
-  data(): Comcom {
+  name: "PublicAnimations",
+  data(): PublicAnimationsData {
     return {
       headers: [
         { text: "FA", value: "fa" },

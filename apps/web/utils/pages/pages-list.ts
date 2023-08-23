@@ -33,7 +33,7 @@ export const pages: Page[] = [
     icon: "mdi-account-group",
     title: "Liste des bénévoles",
     permission: "hard",
-    to: "/humans",
+    to: "/volunteers",
   },
   {
     icon: "mdi-clock",
@@ -51,7 +51,7 @@ export const pages: Page[] = [
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",
     permission: "affect-volunteer",
-    to: "/charismaPeriod",
+    to: "/charisma-period",
   },
   {
     icon: "mdi-human-greeting",
@@ -123,7 +123,7 @@ export const pages: Page[] = [
     icon: "mdi-web-sync",
     permission: "read-animation-to-publish",
     title: "Animations à publier",
-    to: "/comcom",
+    to: "/public-animations",
   },
   {
     icon: "mdi-chart-areaspline-variant",
