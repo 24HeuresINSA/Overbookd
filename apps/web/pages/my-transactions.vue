@@ -12,7 +12,7 @@ import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 
 export default {
-  name: "MTransactions",
+  name: "MyTransactions",
   components: { OverTransactions },
   data: () => {
     return {

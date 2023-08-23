@@ -46,7 +46,7 @@
           <v-btn text small @click="openDialog()">
             Effectuer un virement
           </v-btn>
-          <v-btn text small to="/mTransactions">Mes transactions</v-btn>
+          <v-btn text small to="/my-transactions">Mes transactions</v-btn>
         </v-card-actions>
       </v-responsive>
     </v-card>
