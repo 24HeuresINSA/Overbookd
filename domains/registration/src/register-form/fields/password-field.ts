@@ -27,7 +27,7 @@ export class PasswordField implements Field<string> {
     reason: `Il faut au moins ${this.minPasswordLength} caractères dans le mot de passe`,
   };
 
-  private constructor(private readonly password: string) { }
+  private constructor(private readonly password: string) {}
 
   static build(password: string): PasswordField {
     return new PasswordField(password);

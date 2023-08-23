@@ -2,7 +2,7 @@ import { Field } from "./field";
 import { TeamCode } from "../../newcomer";
 
 export class TeamsField implements Field<TeamCode[]> {
-  private constructor(private readonly teams: TeamCode[]) { }
+  private constructor(private readonly teams: TeamCode[]) {}
 
   get value(): TeamCode[] {
     return this.teams;

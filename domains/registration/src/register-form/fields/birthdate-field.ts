@@ -14,7 +14,7 @@ export class BirthdateField implements Field<Date> {
     reason: "Tu ne peux pas naitre dans le futur 🕵️‍♂️",
   };
 
-  private constructor(private readonly birthdate: Date) { }
+  private constructor(private readonly birthdate: Date) {}
 
   static build(birthdate: Date): BirthdateField {
     return new BirthdateField(birthdate);

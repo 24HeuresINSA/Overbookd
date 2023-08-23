@@ -1,7 +1,7 @@
 import { Field } from "./field";
 
 export class NicknameField implements Field<string | undefined> {
-  private constructor(private readonly nickname?: string) { }
+  private constructor(private readonly nickname?: string) {}
 
   get value(): string | undefined {
     return this.nickname;

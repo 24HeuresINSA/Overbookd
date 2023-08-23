@@ -3,7 +3,7 @@ import { Rule } from "./rule";
 
 export class EmailField implements Field<string> {
   private readonly emailPattern = new RegExp(
-    "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$"
+    "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$",
   );
   private readonly insaEmailPattern = new RegExp("^((?!insa-lyon.fr).)*$");
 
@@ -17,7 +17,7 @@ export class EmailField implements Field<string> {
     reason: "Pas d'adresse insa 🙏",
   };
 
-  private constructor(private readonly email: string) { }
+  private constructor(private readonly email: string) {}
 
   static build(email: string): EmailField {
     return new EmailField(email);

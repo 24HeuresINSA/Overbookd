@@ -1,7 +1,7 @@
 import { Field } from "./field";
 
 export class CommentField implements Field<string | undefined> {
-  private constructor(private readonly comment?: string) { }
+  private constructor(private readonly comment?: string) {}
 
   get value(): string | undefined {
     return this.comment;

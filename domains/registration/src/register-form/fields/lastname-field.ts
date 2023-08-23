@@ -1,7 +1,7 @@
 import { Field } from "./field";
 
 export class LastnameField implements Field<string> {
-  private constructor(private readonly lastname: string) { }
+  private constructor(private readonly lastname: string) {}
 
   get value(): string {
     return this.lastname;
