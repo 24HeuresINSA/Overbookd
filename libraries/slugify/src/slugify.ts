@@ -32,8 +32,8 @@ export class SlugifyService {
       .replace(nonStandardChar, (char) => this.convert.get(char) ?? char)
       .replace(spacesOrApostrophes, SLUG_SEPARATOR);
   }
-}
 
-export function slugify(sentence?: string): string | undefined {
-  return sentence ? SlugifyService.apply(sentence) : undefined;
+  static applyOnOptional(sentence?: string): string | undefined {
+    return sentence ? this.apply(sentence) : undefined;
+  }
 }

@@ -6,7 +6,7 @@ import {
   Gear,
   GearRepository,
 } from "./interfaces";
-import { SlugifyService, slugify } from "@overbookd/slugify";
+import { SlugifyService } from "@overbookd/slugify";
 
 export type GearForm = {
   name: string;
@@ -89,9 +89,9 @@ export class CatalogService {
     owner,
     ponctualUsage,
   }: GearSearchRequest): Promise<Gear[]> {
-    const slug = slugify(name);
-    const categorySlug = slugify(category);
-    const ownerSlug = slugify(owner);
+    const slug = SlugifyService.applyOnOptional(name);
+    const categorySlug = SlugifyService.applyOnOptional(category);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
     return this.gearRepository.searchGear({
       slug,
       category: categorySlug,
