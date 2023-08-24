@@ -20,16 +20,20 @@ export const mutations = mutationTree(state, {
   },
 });
 
-export const actions = actionTree({ state }, {
+export const actions = actionTree(
+  { state },
+  {
     async getNewcomers({ commit }) {
-      const res = await safeCall(this, repo.getNewcomers(this))
+      const res = await safeCall(this, repo.getNewcomers(this));
       if (!res) return;
       commit("SET_NEWCOMERS", castNewComersWithDate(res.data));
     },
   },
 );
 
-function castNewComersWithDate(newcomers: HttpStringified<IDefineANewcomer[]>): IDefineANewcomer[] {
+function castNewComersWithDate(
+  newcomers: HttpStringified<IDefineANewcomer[]>,
+): IDefineANewcomer[] {
   return newcomers.map((newcomer) => ({
     ...newcomer,
     registeredAt: new Date(newcomer.registeredAt),

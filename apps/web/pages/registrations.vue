@@ -44,7 +44,7 @@ interface RegistrationsData {
   selectedNewcomers: IDefineANewcomer[];
 }
 
-type SearchableNewcomer = IDefineANewcomer & {searchable: string};
+type SearchableNewcomer = IDefineANewcomer & { searchable: string };
 
 export default Vue.extend({
   name: "Registrations",
@@ -61,7 +61,12 @@ export default Vue.extend({
   }),
   computed: {
     searchableNewcomers(): SearchableNewcomer[] {
-      return this.$accessor.registration.newcomers.map((newcomer) => ({...newcomer, searchable: SlugifyService.apply(`${newcomer.firstName} ${newcomer.lastName}`)}));
+      return this.$accessor.registration.newcomers.map((newcomer) => ({
+        ...newcomer,
+        searchable: SlugifyService.apply(
+          `${newcomer.firstName} ${newcomer.lastName}`,
+        ),
+      }));
     },
     matchingSearchNewcomers(): IDefineANewcomer[] {
       return this.searchableNewcomers.filter(({ searchable }) => {
@@ -76,7 +81,7 @@ export default Vue.extend({
     formatDate(date: Date): string {
       return formatLocalDate(date);
     },
-  }
+  },
 });
 </script>
 
