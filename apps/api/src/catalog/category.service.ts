@@ -1,6 +1,4 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { SlugifyService } from "../common/services/slugify.service";
-
 import {
   Category,
   CategoryRepository,
@@ -9,6 +7,7 @@ import {
   Team,
   TeamRepository,
 } from "./interfaces";
+import { SlugifyService } from "@overbookd/slugify";
 
 export class CategoryNotFoundException extends NotFoundException {
   constructor(id: number) {
@@ -31,7 +30,6 @@ export class CategoryService {
     private readonly categoryRepository: CategoryRepository,
     @Inject("TEAM_REPOSITORY")
     private readonly teamRepository: TeamRepository,
-    private readonly slugifyService: SlugifyService,
   ) {}
 
   async create({ name, owner, parent }: CategoryForm): Promise<Category> {
@@ -112,8 +110,8 @@ export class CategoryService {
   }
 
   search({ name, owner }: SearchCategory): Promise<Category[]> {
-    const nameSlug = this.slugifyService.slugify(name);
-    const ownerSlug = this.slugifyService.slugify(owner);
+    const nameSlug = SlugifyService.applyOnOptional(name);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
     return this.categoryRepository.searchCategory({
       name: nameSlug,
       owner: ownerSlug,
@@ -181,8 +179,8 @@ export class CategoryService {
 
   private generatePath(name: string, parentCategory?: Category): string {
     return parentCategory
-      ? `${parentCategory.path}->${this.slugifyService.slugify(name)}`
-      : this.slugifyService.slugify(name);
+      ? `${parentCategory.path}->${SlugifyService.apply(name)}`
+      : SlugifyService.apply(name);
   }
 
   private async findOwner(

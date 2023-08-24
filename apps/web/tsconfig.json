@@ -18,14 +18,11 @@
       "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/slugify": ["../../libraries/slugify/src"],
       "@overbookd/user": ["../../domains/user/src"],
       "@overbookd/volunteer-availability": ["../../domains/volunteer-availability/src"]
     },
-    "types": [
-      "@nuxt/types",
-      "@nuxtjs/axios",
-      "@types/node",
-    ]
+    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node"]
   },
-  "exclude": ["node_modules", ".nuxt", "dist"],
+  "exclude": ["node_modules", ".nuxt", "dist"]
 }

@@ -24,6 +24,7 @@
       "@overbookd/registration": ["./domains/registration/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/slugify": ["../../libraries/slugify/src"],
       "@overbookd/user": ["../../domains/user/src"],
       "@overbookd/volunteer-availability": [
         "../../domains/volunteer-availability/src"

@@ -1,6 +1,3 @@
-import { Injectable } from "@nestjs/common";
-
-@Injectable()
 export class SlugifyService {
   private static readonly convert = new Map<string, string>([
     ["à", "a"],
@@ -19,20 +16,24 @@ export class SlugifyService {
     ["ü", "u"],
     ["ù", "u"],
     ["ç", "c"],
+    ["œ", "oe"],
+    ["æ", "ae"],
+    ["ø", "o"],
   ]);
 
-  slugify(name?: string): string | undefined {
-    if (!name) return undefined;
-    return SlugifyService.apply(name);
-  }
+  private constructor() {}
 
-  static apply(name: string): string {
+  static apply(sentence: string): string {
     const SLUG_SEPARATOR = "-";
-    const spaces = new RegExp("[ ]+", "gm");
+    const spacesOrApostrophes = new RegExp("[ ']+", "gm");
     const nonStandardChar = new RegExp("[^A-Za-z0-9]", "gm");
-    return name
+    return sentence
       .toLowerCase()
       .replace(nonStandardChar, (char) => this.convert.get(char) ?? char)
-      .replace(spaces, SLUG_SEPARATOR);
+      .replace(spacesOrApostrophes, SLUG_SEPARATOR);
+  }
+
+  static applyOnOptional(sentence?: string): string | undefined {
+    return sentence ? this.apply(sentence) : undefined;
   }
 }

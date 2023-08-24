@@ -1,5 +1,4 @@
 import { Category, Gear } from "../../src/catalog/interfaces";
-import { SlugifyService } from "../common/services/slugify.service";
 import {
   GroupedRecord,
   InventoryService,
@@ -70,13 +69,9 @@ const TABLE: Gear = {
 };
 
 describe("Inventory Service", () => {
-  const slugifyService = new SlugifyService();
   describe("Setup inventory", () => {
     const inventoryRepository = new InMemoryInventoryRepository();
-    const inventoryService = new InventoryService(
-      inventoryRepository,
-      slugifyService,
-    );
+    const inventoryService = new InventoryService(inventoryRepository);
     describe("when ask to setup inventory with 2 records for different gear", () => {
       let inventory: GroupedRecord[];
       beforeAll(async () => {
@@ -214,10 +209,7 @@ describe("Inventory Service", () => {
     ];
     const records = [...tableRecords, ...marteauRecords, ...ponceuseRecords];
     const inventoryRepository = new InMemoryInventoryRepository(records);
-    const inventoryService = new InventoryService(
-      inventoryRepository,
-      slugifyService,
-    );
+    const inventoryService = new InventoryService(inventoryRepository);
     describe("When searching all grouped records", () => {
       it("should return all grouped records with the sum of quantities", async () => {
         const records = await inventoryService.search({});
@@ -274,10 +266,7 @@ describe("Inventory Service", () => {
       },
     ];
     const inventoryRepository = new InMemoryInventoryRepository(records);
-    const inventoryService = new InventoryService(
-      inventoryRepository,
-      slugifyService,
-    );
+    const inventoryService = new InventoryService(inventoryRepository);
     describe.each`
       gear                          | expectedRecords
       ${MARTEAU}                    | ${[{ quantity: 5, gear: MARTEAU, storage: "Local" }, { quantity: 15, gear: MARTEAU, storage: "Conteneur H" }]}

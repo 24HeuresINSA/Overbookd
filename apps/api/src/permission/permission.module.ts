@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { SlugifyService } from "../../src/common/services/slugify.service";
 import { MailService } from "../../src/mail/mail.service";
 import { TeamService } from "../../src/team/team.service";
 import { UserService } from "../../src/user/user.service";
@@ -15,7 +14,6 @@ import { PermissionService } from "./permission.service";
     PrismaService,
     TeamService,
     UserService,
-    SlugifyService,
     MailService,
   ],
 })
