@@ -122,26 +122,28 @@ describe("Register form", () => {
   });
   describe("mobilePhone rules", () => {
     const baseForm = validForm().clearMobilePhone();
+    const invalidMobilePhone = "Numéro de téléphone mobile non valable";
+    const internationalFormatNotSupported =
+      "Nous ne supportons pas les numéros au format international";
     describe.each`
-      mobilePhone           | valid
-      ${""}                 | ${false}
-      ${"0621361323812735"} | ${false}
-      ${"0201020103"}       | ${false}
-      ${"0201020103"}       | ${false}
-      ${"+33601020103"}     | ${false}
-      ${"0601020103"}       | ${true}
-      ${"0701020103"}       | ${true}
+      mobilePhone           | valid    | reasons
+      ${""}                 | ${false} | ${[invalidMobilePhone]}
+      ${"0621361323812735"} | ${false} | ${[invalidMobilePhone]}
+      ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
+      ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
+      ${"+33601020103"}     | ${false} | ${[internationalFormatNotSupported]}
+      ${"0601020103"}       | ${true}  | ${[]}
+      ${"0701020103"}       | ${true}  | ${[true]}
     `(
       "when mobile phone is filled with $mobilePhone",
-      ({ mobilePhone, valid }) => {
+      ({ mobilePhone, valid, reasons }) => {
         const validity = valid ? "valid" : "invalid";
         it(`should indicate that mobile phone is ${validity}`, () => {
           const form = baseForm.fillMobilePhone(mobilePhone);
           expect(form.isValid).toBe(valid);
           if (valid) return;
-          expect(form.reasons).toHaveLength(1);
-          const invalidMobilePhone = "Numéro de téléphone mobile non valable";
-          expect(form.reasons).contain(invalidMobilePhone);
+          expect(form.reasons).toHaveLength(reasons.length);
+          expect(form.reasons).toMatchObject(reasons);
         });
       },
     );
