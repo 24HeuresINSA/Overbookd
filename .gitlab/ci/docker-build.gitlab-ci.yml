@@ -42,9 +42,10 @@ overbookd-web_docker_pre_build:
     - apk update
     - apk add jq
     - VERSION=$(jq -r '.version' ./${APP_PATH}/package.json)
+    - OVERBOOKD_VERSION=$(jq -r '.version' package.json | tr -d '"')
   script:
     - docker load -i ${APP_NAME}_installer.tar
-    - docker build --cache-from $CI_REGISTRY_IMAGE/$APP_NAME:installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:$TAG --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION --file $APP_PATH/Dockerfile .
+    - docker build --cache-from $CI_REGISTRY_IMAGE/$APP_NAME:installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:$TAG --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg WEB_VERSION=$VERSION --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION --file $APP_PATH/Dockerfile .
     - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${APP_NAME}:${TAG} ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION_TAG_PREFIX}${VERSION}
   after_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -123,7 +124,7 @@ overbookd-api_docker_build:
         - apps/api/**/*
     - when: never
   script:
-    - docker build --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg VERSION=$VERSION --file $APP_PATH/Dockerfile .
+    - docker build --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg API_VERSION=$VERSION --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION --file $APP_PATH/Dockerfile .
     - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${APP_NAME}:latest ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION} ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod_${VERSION}
   artifacts:
     paths:

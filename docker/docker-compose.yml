@@ -8,7 +8,6 @@ networks:
 volumes:
   certs:
 
-
 services:
   certs-downloader:
     image: alpine
@@ -60,7 +59,6 @@ services:
     user: ${MY_UID}:${MY_GID}
     image: overbookd:dev
     restart: unless-stopped
-    platform: linux/x86_64
     networks:
       - overbookd_net-api
       - traefik-public
@@ -87,10 +85,14 @@ services:
       - -c
       - |
         cd /overbookd
+        export OVERBOOKD_VERSION=$$(jq '.version' package.json | tr -d '\"')
         pnpm config set store-dir .pnpm-store
         pnpm fetch
         pnpm install
         pnpm --recursive --filter '@overbookd/api...' run build
+        echo "============================================="
+        echo "Overbookd version passed: $$OVERBOOKD_VERSION"
+        echo "============================================="
         pnpm --recursive --filter '@overbookd/api' run start:dev
 
   postgresql:
@@ -148,9 +150,13 @@ services:
       - -c
       - |
         cd /overbookd
+        export OVERBOOKD_VERSION=$$(jq '.version' package.json | tr -d '\"')
         pnpm config set store-dir .pnpm-store
         pnpm fetch
         pnpm install
+        echo "============================================="
+        echo "Overbookd version passed: $$OVERBOOKD_VERSION"
+        echo "============================================="
         pnpm --recursive --filter '@overbookd/web' run dev
 
   bash:

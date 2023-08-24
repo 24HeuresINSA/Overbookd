@@ -6,3 +6,6 @@ RUN chmod +x /etc/profile.d/aliases.sh
 
 RUN npm install -g pnpm
 RUN pnpm --version
+
+RUN apk update && apk add --no-cache \
+  jq

@@ -24,7 +24,8 @@
     "period",
     "trombinoscope",
     "renovate",
-    "devcontainer"
+    "devcontainer",
+    "docker"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],

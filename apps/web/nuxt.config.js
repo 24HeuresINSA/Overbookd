@@ -3,6 +3,7 @@ import colors from "vuetify/es5/util/colors";
 export default {
   env: {
     BASE_URL: process.env.BASE_URL,
+    OVERBOOKD_VERSION: process.env.OVERBOOKD_VERSION,
   },
 
   telemetry: false,
