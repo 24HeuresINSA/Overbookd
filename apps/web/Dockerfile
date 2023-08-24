@@ -26,8 +26,10 @@ RUN pnpm install --recursive --offline --filter '@overbookd/web...'
 FROM installer AS builder
 
 ARG BASE_URL
+ARG OVERBOOKD_VERSION
 
 ENV BASE_URL=$BASE_URL
+ENV OVERBOOKD_VERSION=${OVERBOOKD_VERSION}
 
 COPY tsconfig.library-import.json ./
 COPY tsconfig.package.json ./
@@ -37,7 +39,6 @@ RUN pnpm --filter '@overbookd/web...' run build:ci
 FROM node:20-alpine
 
 ARG WEB_VERSION
-ARG OVERBOOKD_VERSION
 
 LABEL org.24heures.overbookd.image.title="Overbookd-web" \
   org.24heures.overbookd.image.documentation="https://gitlab.com/24-heures-insa/overbookd-mono/-/wikis/home" \
@@ -59,8 +60,6 @@ RUN npm install serve --silent
 COPY --chown=node:node --from=builder /overbookd/apps/web/dist ./dist
 
 EXPOSE 1234
-
-ENV OVERBOOKD_VERSION=${OVERBOOKD_VERSION}
 
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 CMD [ "wget", "-q", "-O", "-", "http://localhost:1234/"]
 
