@@ -27,6 +27,26 @@
 
       <template #no-data> Aucun nouvel arrivant </template>
     </v-data-table>
+
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-menu offset-y>
+        <template #activator="{ attrs, on }">
+          <v-btn class="white--text" v-bind="attrs" color="blue" v-on="on">
+            Ajouter à une équipe
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item v-for="team of teamsToAdd" :key="team" link>
+            <v-list-item-title
+              color="green"
+              @click="addTeamToSelectedNewcomers(team)"
+              v-text="team.name"
+            ></v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-card-actions>
   </div>
 </template>
 
@@ -37,6 +57,7 @@ import { Header } from "~/utils/models/data-table.model";
 import { IDefineANewcomer } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
+import { Team } from "~/utils/models/team.model";
 
 interface RegistrationsData {
   headers: Header[];
@@ -76,10 +97,21 @@ export default Vue.extend({
         return searchable.includes(search);
       });
     },
+    teamsToAdd(): Team[] {
+      const teamsCode = ["hard", "soft"];
+      return teamsCode.map((code) => this.$accessor.team.getTeamByCode(code));
+    },
   },
   methods: {
     formatDate(date: Date): string {
       return formatLocalDate(date);
+    },
+    addTeamToSelectedNewcomers(team: Team) {
+      this.$accessor.registration.addTeamToNewcomers({
+        teamCode: team.code,
+        newcomers: this.selectedNewcomers,
+      });
+      this.selectedNewcomers = [];
     },
   },
 });

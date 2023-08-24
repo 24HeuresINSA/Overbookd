@@ -26,12 +26,27 @@ export const actions = actionTree(
     async getNewcomers({ commit }) {
       const res = await safeCall(this, repo.getNewcomers(this));
       if (!res) return;
-      commit("SET_NEWCOMERS", castNewComersWithDate(res.data));
+      commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
+    },
+
+    async addTeamToNewcomers(
+      { commit },
+      {
+        teamCode,
+        newcomers,
+      }: { teamCode: string; newcomers: IDefineANewcomer[] },
+    ) {
+      const res = await safeCall(
+        this,
+        repo.addTeamToNewcomers(this, teamCode, newcomers),
+      );
+      if (!res) return;
+      commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
     },
   },
 );
 
-function castNewComersWithDate(
+function castNewcomersWithDate(
   newcomers: HttpStringified<IDefineANewcomer[]>,
 ): IDefineANewcomer[] {
   return newcomers.map((newcomer) => ({

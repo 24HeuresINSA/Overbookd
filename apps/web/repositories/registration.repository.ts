@@ -12,4 +12,15 @@ export class RegistrationRepository {
       this.basePath,
     );
   }
+
+  static addTeamToNewcomers(
+    context: Context,
+    teamCode: string,
+    newcomers: IDefineANewcomer[],
+  ) {
+    return context.$axios.post<HttpStringified<IDefineANewcomer[]>>(
+      `${this.basePath}/add-team/${teamCode}`,
+      { newcomers },
+    );
+  }
 }
