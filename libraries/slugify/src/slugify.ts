@@ -1,5 +1,5 @@
 export class SlugifyService {
-  private static convert = new Map<string, string>([
+  private static readonly convert = new Map<string, string>([
     ["à", "a"],
     ["â", "a"],
     ["ä", "a"],
