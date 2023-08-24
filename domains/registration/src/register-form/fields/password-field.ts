@@ -5,7 +5,8 @@ export class PasswordField implements Field<string> {
   private readonly minusculePattern = new RegExp("[a-z]");
   private readonly majusculePattern = new RegExp("[A-Z]");
   private readonly numberPattern = new RegExp("[0-9]");
-  private readonly minPasswordLength = 8;
+  private readonly specialCharPattern = new RegExp("[!@#$%^&*=+_{}[]()|.]");
+  private readonly minPasswordLength = 12;
 
   private readonly containsMinuscule: Rule<string> = {
     test: (value) => this.minusculePattern.test(value),
@@ -20,6 +21,12 @@ export class PasswordField implements Field<string> {
   private readonly containsNumber: Rule<string> = {
     test: (value) => this.numberPattern.test(value),
     reason: "Il faut au moins un chiffre dans le mot de passe",
+  };
+
+  private readonly containsSpecialChar: Rule<string> = {
+    test: (value) => this.specialCharPattern.test(value),
+    reason:
+      "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe",
   };
 
   private readonly atLeast8CharactersLong: Rule<string> = {
@@ -42,6 +49,7 @@ export class PasswordField implements Field<string> {
       this.containsMinuscule,
       this.containsMajuscule,
       this.containsNumber,
+      this.containsSpecialChar,
       this.atLeast8CharactersLong,
     ];
   }

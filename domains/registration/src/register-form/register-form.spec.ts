@@ -8,14 +8,16 @@ import {
 } from "../newcomer";
 import { RegisterForm } from "./register-form";
 
-const AT_LEAST_8_CHAR_IN_PASSWORD =
-  "Il faut au moins 8 caractères dans le mot de passe";
+const AT_LEAST_12_CHAR_IN_PASSWORD =
+  "Il faut au moins 12 caractères dans le mot de passe";
 const AT_LEAST_1_NUMBER_IN_PASSWORD =
   "Il faut au moins un chiffre dans le mot de passe";
 const AT_LEAST_1_MAJ_IN_PASSWORD =
   "Il faut au moins une MAJUSCULE dans le mot de passe";
 const AT_LEAST_1_MIN_IN_PASSWORD =
   "Il faut au moins une minuscule dans le mot de passe";
+const AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD =
+  "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe";
 
 describe("Register form", () => {
   describe("when form is completely filled", () => {
@@ -92,22 +94,37 @@ describe("Register form", () => {
     const baseForm = validForm().clearPassword();
     describe("when password is filled with missing rules", () => {
       describe.each`
-        password           | reasons
-        ${""}              | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"aB2"}           | ${[AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"aBcacq"}        | ${[AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"a143cq"}        | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"X143AS"}        | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"asqd"}          | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"AFW"}           | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"124153"}        | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_8_CHAR_IN_PASSWORD]}
-        ${"A22231BAH"}     | ${[AT_LEAST_1_MIN_IN_PASSWORD]}
-        ${"1235131411"}    | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD]}
-        ${"AHVJVDWVAS"}    | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD]}
-        ${"$@%#&!*$%!^"}   | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD]}
-        ${"a22231dta"}     | ${[AT_LEAST_1_MAJ_IN_PASSWORD]}
-        ${"aadjpefjqdta"}  | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD]}
-        ${"aASBDHDGSIdta"} | ${[AT_LEAST_1_NUMBER_IN_PASSWORD]}
+        password               | reasons
+        ${""}                  | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"aB2@"}              | ${[AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"X143AS+"}           | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"a143cq*"}           | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"aBcacq%"}           | ${[AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"aB2"}               | ${[AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"a143cq"}            | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"X143AS"}            | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"aBcacq"}            | ${[AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"(143{"}             | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"(ARH{"}             | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"(akr{"}             | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"asqd"}              | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"AFW"}               | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"124153"}            | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"#$%^&*("}           | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_12_CHAR_IN_PASSWORD]}
+        ${"A22231BAH134!"}     | ${[AT_LEAST_1_MIN_IN_PASSWORD]}
+        ${"A22231BAH134"}      | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
+        ${"12351314111451+"}   | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD]}
+        ${"AHVJVDWVASADHD+"}   | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD]}
+        ${"12351314111451"}    | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
+        ${"!@#$%^&*!@#$%^&"}   | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD]}
+        ${"AHVJVDWVASADHD"}    | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
+        ${"------------"}      | ${[AT_LEAST_1_MIN_IN_PASSWORD, AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
+        ${"a22231dtaah1425+"}  | ${[AT_LEAST_1_MAJ_IN_PASSWORD]}
+        ${"aadjpefjqdtaxckw+"} | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD]}
+        ${"a22231dtaah1425"}   | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
+        ${"aadjpefjqdtaxckw"}  | ${[AT_LEAST_1_MAJ_IN_PASSWORD, AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
+        ${"aASBDHDGSIdtahxk^"} | ${[AT_LEAST_1_NUMBER_IN_PASSWORD]}
+        ${"aASBDHDGSIdtahxk"}  | ${[AT_LEAST_1_NUMBER_IN_PASSWORD, AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD]}
       `("when password is filled with $password", ({ password, reasons }) => {
         const length = reasons.length;
         const join = reasons.join(", ");
@@ -228,7 +245,7 @@ function validForm() {
     .fillEmail("test@example.com")
     .fillFirstname("Titouan")
     .fillLastname("Moula")
-    .fillPassword("P4ssW0rd123")
+    .fillPassword("P4ssW0rd123^")
     .fillMobilePhone("0601020304")
     .fillNickname("Shagou")
     .fillBirthdate(new Date("2000-01-01"))
