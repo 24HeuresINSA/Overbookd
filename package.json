@@ -27,10 +27,10 @@
     "lint": "pnpm --recursive run lint",
     "prune": "pnpm --recursive run prune",
     "preinstall": "npx only-allow pnpm",
-    "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate && pnpm dev:restart",
-    "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major && pnpm dev:restart",
-    "release:minor": "git fetch -ap && pnpm version minor --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:minor && pnpm dev:restart",
-    "release:patch": "git fetch -ap && pnpm version patch --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:patch && pnpm dev:restart"
+    "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate && docker restart overbookd_web overbookd_api",
+    "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major && docker restart overbookd_web overbookd_api",
+    "release:minor": "git fetch -ap && pnpm version minor --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:minor && docker restart overbookd_web overbookd_api",
+    "release:patch": "git fetch -ap && pnpm version patch --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:patch && docker restart overbookd_web overbookd_api"
   },
   "packageManager": "pnpm@8.6.12",
   "engines": {
