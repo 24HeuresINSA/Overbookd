@@ -5,7 +5,7 @@ import {
   TECKOS_CODE,
   STRASBOURG_CODE,
   KARNA_CODE,
-} from "../newcomer";
+} from "../registree";
 import { RegisterForm } from "./register-form";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =

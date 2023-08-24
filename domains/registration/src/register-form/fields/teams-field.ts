@@ -1,5 +1,5 @@
 import { Field } from "./field";
-import { TeamCode } from "../../newcomer";
+import { TeamCode } from "../../registree";
 
 export class TeamsField implements Field<TeamCode[]> {
   private constructor(private readonly teams: TeamCode[]) {}

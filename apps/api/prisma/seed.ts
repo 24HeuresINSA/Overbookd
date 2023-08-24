@@ -303,6 +303,12 @@ async function main() {
       color: "#09A1C4",
       icon: "mdi-account",
     },
+    {
+      name: "INSA Strasbourg",
+      code: "strasbourg",
+      color: "#ACBB62",
+      icon: "mdi-sausage",
+    }
   ];
 
   await Promise.all(

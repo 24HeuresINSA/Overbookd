@@ -48,6 +48,12 @@ export const pages: Page[] = [
     to: "/planning",
   },
   {
+    icon: "mdi-account-multiple-plus",
+    title: "Inscriptions",
+    permission: "sg", // à changer
+    to: "/registrations",
+  },
+  {
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",
     permission: "affect-volunteer",

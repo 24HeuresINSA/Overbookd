@@ -116,8 +116,8 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="refuse(selectedValidator)">
-            enregistrer</v-btn
-          >
+            enregistrer
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
