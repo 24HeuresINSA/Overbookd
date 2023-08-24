@@ -25,7 +25,8 @@
     "trombinoscope",
     "renovate",
     "devcontainer",
-    "docker"
+    "docker",
+    "registration"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],
