@@ -6,12 +6,12 @@ export class BirthdateField implements Field<Date> {
 
   private readonly notBefore1950: Rule<Date> = {
     test: (value) => value.getTime() > this.minimumBirthdate.getTime(),
-    reason: "Vous n'êtes pas si vieux !",
+    reason: "Tu n'es pas si vieux !",
   };
 
   private readonly notInFuture: Rule<Date> = {
     test: (value) => value.getTime() < Date.now(),
-    reason: "Tu ne peux pas naitre dans le futur 🕵️‍♂️",
+    reason: "Tu ne peux pas naître dans le futur 🕵️‍♂️",
   };
 
   private constructor(private readonly birthdate: Date) {}

@@ -166,8 +166,8 @@ describe("Register form", () => {
     const baseForm = validForm().clearBirthdate();
     describe.each`
       birthdate       | valid    | reason
-      ${"1949-12-25"} | ${false} | ${"Vous n'êtes pas si vieux !"}
-      ${"3000-12-25"} | ${false} | ${"Tu ne peux pas naitre dans le futur 🕵️‍♂️"}
+      ${"1949-12-25"} | ${false} | ${"Tu n'es pas si vieux !"}
+      ${"3000-12-25"} | ${false} | ${"Tu ne peux pas naître dans le futur 🕵️‍♂️"}
       ${"2001-12-25"} | ${true}  | ${undefined}
     `(
       "when birthdate is filled with $birthdate",
