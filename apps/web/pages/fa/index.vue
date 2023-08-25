@@ -277,7 +277,7 @@ export default {
       if (!team) {
         return FAs;
       }
-      return FAs.filter((FA) => FA.team_id === team.id);
+      return FAs.filter((FA) => FA.team.code === team.code);
     },
     filterByDeletedStatus(FAs) {
       if (this.isDeletedFilter === false) {
@@ -360,14 +360,14 @@ export default {
       let color = "grey";
       if (fa.faValidation) {
         fa.faValidation.forEach((validation) => {
-          if (Number(validation.team.id) === Number(validator.id)) {
+          if (validation.team.code === validator.code) {
             color = "green";
           }
         });
       }
       if (fa.faRefuse) {
         fa.faRefuse.forEach((validation) => {
-          if (Number(validation.team.id) === Number(validator.id)) {
+          if (validation.team.code === validator.code) {
             color = "red";
           }
         });

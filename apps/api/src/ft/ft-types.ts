@@ -5,6 +5,8 @@ import { TEAM_SELECT } from "../team/team.service";
 import { FtStatus } from "./ft.model";
 import { IProvidePeriod } from "@overbookd/period";
 import { TimeSpanBase } from "../assignment/model/ft-time-span.model";
+import { Team } from "../team/team.model";
+
 export class SignaLocation {
   id: number;
   name: string;
@@ -17,14 +19,6 @@ export class UserName {
 
 export class UserNameWithId extends UserName {
   id: number;
-}
-
-export class Team {
-  id: number;
-  name: string;
-  color: string;
-  icon: string;
-  code: string;
 }
 
 export class TeamRequest {

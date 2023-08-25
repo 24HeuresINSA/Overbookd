@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma, Team } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { SlugifyService } from "@overbookd/slugify";
+import { Team } from "./team.model";
 
 export const TEAM_SELECT = {
   select: {
@@ -65,7 +66,7 @@ export class TeamService {
   }
 
   async updateTeam(
-    id: number,
+    code: string,
     payload: {
       name?: string;
       color?: string;
@@ -73,14 +74,14 @@ export class TeamService {
     },
   ): Promise<Team> {
     return this.prisma.team.update({
-      where: { id },
+      where: { code },
       data: payload,
     });
   }
 
-  async deleteTeam(id: number): Promise<void> {
+  async deleteTeam(code: string): Promise<void> {
     await this.prisma.team.delete({
-      where: { id },
+      where: { code },
     });
     return;
   }

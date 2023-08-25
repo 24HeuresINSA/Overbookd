@@ -12,7 +12,6 @@ import {
   MinimalFa,
   Review,
   SignaLocation,
-  Team,
   TeamRequest,
   TimeWindow,
   UserName,
@@ -25,6 +24,7 @@ import {
   ftFeedbackSubjectTypes,
 } from "../../ft-feedback/ft-feedback.model";
 import { ReviewStatus, reviewStatuses } from "../../ft-review/ft-review.model";
+import { Team } from "../../team/team.model";
 
 class Author implements UserName {
   firstname: string;
@@ -51,7 +51,6 @@ class RequestedUser implements UserNameWithId {
 }
 
 class TeamRepresentation implements Team {
-  id: number;
   name: string;
   color: string;
   icon: string;

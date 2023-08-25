@@ -149,7 +149,7 @@ export interface FaGeneralUpdate
     Fa,
     "id" | "name" | "description" | "type" | "securityNeed" | "waterNeed"
   > {
-  teamCode: number | null;
+  teamCode: string | null;
   userInChargeId: number | null;
   locationId: number | null;
   numberOfPass: number | null;

@@ -31,28 +31,6 @@ export const COMPLETE_FA_SELECT = {
   collaborator: {
     select: COLLABORATOR_WITH_ID_SELECTION,
   },
-  faValidation: {
-    select: {
-      user: {
-        select: {
-          firstname: true,
-          lastname: true,
-        },
-      },
-      team: TEAM_SELECT,
-    },
-  },
-  faRefuse: {
-    select: {
-      user: {
-        select: {
-          firstname: true,
-          lastname: true,
-        },
-      },
-      team: TEAM_SELECT,
-    },
-  },
   electricityNeeds: {
     select: SELECT_ELECTRICITY_NEED,
   },
@@ -105,14 +83,4 @@ export const LITE_FA_SELECT = {
   status: true,
   isDeleted: true,
   userInCharge: USER_IN_CHARGE_SELECT,
-  faValidation: {
-    select: {
-      team: TEAM_SELECT,
-    },
-  },
-  faRefuse: {
-    select: {
-      team: TEAM_SELECT,
-    },
-  },
 };

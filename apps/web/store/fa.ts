@@ -19,7 +19,6 @@ import {
   FaSimplified,
   FaStatus,
   FaTimeWindow,
-  FaValidationBody,
   SearchFa,
   PublicAnimation,
   SortedStoredGearRequests,
@@ -414,7 +413,7 @@ export const actions = actionTree(
       const teamNamesThatValidatedFA = await Promise.all(
         teamCodesThatValidatedFA.map(async (teamCode) => {
           const team = rootGetters["team/getTeamByCode"](teamCode);
-          //await repo.removeFaValidation(this, state.mFA.id, team.id);
+          //await repo.removeFaValidation(this, state.mFA.id, team.code);
           return team.name;
         }),
       );

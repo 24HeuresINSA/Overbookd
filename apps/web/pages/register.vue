@@ -210,7 +210,7 @@ export default Vue.extend({
       return new Date(this.birthday);
     },
     softCreationTeams(): Team[] {
-      const emptyTeam = { id: 0, name: "Aucune" } as Team;
+      const emptyTeam = { code: "", name: "Aucune" } as Team;
       return [...this.$accessor.team.softCreationTeams, emptyTeam];
     },
     presentationRules(): (() => boolean | string)[] {

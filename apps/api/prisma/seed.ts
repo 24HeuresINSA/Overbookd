@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Team } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { Departments, Years } from "../src/user/dto/common";
 import { categoriesAndGears } from "./seeders/gears";
@@ -7,22 +7,23 @@ import { signaLocations } from "./seeders/signa-locations";
 import { Configuration } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
+import { Team } from "../src/team/team.model";
 
 const prisma = new PrismaClient();
 
 async function insertOrUpdateCategory(
   name: string,
   teams: Team[],
-  parent?: { id: number; path: string; ownerId: number },
+  parent?: { id: number; path: string; ownerCode: string },
 ) {
   const parentId = parent?.id;
   const path = parent
     ? `${parent.path}->${SlugifyService.apply(name)}`
     : SlugifyService.apply(name);
   const owner = parent
-    ? { id: parent.ownerId }
+    ? { code: parent.ownerCode }
     : teams.find((team) => team.code === name.toLocaleLowerCase());
-  const ownerPart = owner ? { ownerId: owner.id } : {};
+  const ownerPart = owner ? { ownerCode: owner.code } : {};
   const category = { name, path, parent: parentId, ...ownerPart };
   return prisma.catalogCategory.upsert({
     create: category,
@@ -404,7 +405,7 @@ async function main() {
       const {
         id: categoryId,
         path: categoryPath,
-        ownerId,
+        ownerCode,
       } = await insertOrUpdateCategory(name, databaseTeams);
       const gearsInsert = gears
         ? gears?.map((name) => {
@@ -421,7 +422,7 @@ async function main() {
               await insertOrUpdateCategory(subCategory.name, databaseTeams, {
                 id: categoryId,
                 path: categoryPath,
-                ownerId,
+                ownerCode,
               });
             return Promise.all(
               subCategory.gears.map((gear) => {

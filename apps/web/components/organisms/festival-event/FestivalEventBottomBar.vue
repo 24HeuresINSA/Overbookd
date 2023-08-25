@@ -22,7 +22,7 @@
           <v-list>
             <v-list-item
               v-for="validator of teamsThatCanRefuse"
-              :key="validator.id"
+              :key="validator.code"
               link
             >
               <v-list-item-title
@@ -50,7 +50,7 @@
           <v-list>
             <v-list-item
               v-for="validator of teamsThatNotValidateYet"
-              :key="validator.id"
+              :key="validator.code"
               link
             >
               <v-list-item-title
@@ -370,13 +370,7 @@ export default Vue.extend({
       if (!validator) return;
       const author = this.meAsUser;
       if (this.isFA) {
-        const payload = {
-          validatorId: validator.id,
-          userId: this.me.id,
-          teamName: validator.name,
-          author,
-        };
-        //return this.$accessor.fa.validate(payload);
+        // TODO: implement validate for FA
       }
       const payload = { author, team: validator };
       return this.$accessor.ft.validate(payload);
@@ -387,12 +381,7 @@ export default Vue.extend({
       }
       const author = this.meAsUser;
       if (this.isFA) {
-        const payload = {
-          validatorId: validator.id,
-          message: this.refuseComment,
-          author,
-        };
-        //await this.$accessor.fa.refuse(payload);
+        // TODO: implement refuse for FA
       } else {
         const payload = {
           author,
