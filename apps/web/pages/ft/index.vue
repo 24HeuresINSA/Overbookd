@@ -9,7 +9,7 @@
           <v-card-text>
             <v-text-field
               v-model="filters.search"
-              label="Recherche"
+              label="Rechercher une FT"
             ></v-text-field>
             <SearchTeam
               v-model="filters.team"
@@ -156,11 +156,11 @@
 </template>
 
 <script lang="ts">
-import Fuse from "fuse.js";
 import Vue from "vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { SlugifyService } from "@overbookd/slugify";
 import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
 import { Header } from "~/utils/models/data-table.model";
 import {
@@ -174,6 +174,8 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { MyUserInformation, User } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
+
+type SearchableFt = FtSimplified & { searchable: string };
 
 interface Data {
   headers: Header[];
@@ -237,10 +239,22 @@ export default Vue.extend({
     FTs(): FtSimplified[] {
       return this.$accessor.ft.FTs;
     },
+    searchableFTs(): SearchableFt[] {
+      return this.FTs.map((ft) => ({
+        ...ft,
+        searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
+      }));
+    },
+    matchingSearchFTs(): FtSimplified[] {
+      return this.searchableFTs.filter(({ searchable }) => {
+        const search = SlugifyService.apply(this.filters.search);
+        return searchable.includes(search);
+      });
+    },
     filteredFTs(): FtSimplified[] {
-      const { search, team, myFTs, status, myFTsToReview } = this.filters;
+      const { team, myFTs, status, myFTsToReview } = this.filters;
 
-      const res = this.fuzzyFindFT(search);
+      const res = this.matchingSearchFTs;
       return res.filter((ft) => {
         return (
           this.filterFTByTeam(team)(ft) &&
@@ -301,15 +315,6 @@ export default Vue.extend({
       return searchMyFTsToReview
         ? (ft) => ft.reviewer?.id === this.me.id
         : () => true;
-    },
-
-    fuzzyFindFT(search?: string): FtSimplified[] {
-      if (!search) return this.FTs;
-      const fuse = new Fuse<FtSimplified>(this.FTs, {
-        keys: ["name", "id"],
-        threshold: 0.2,
-      });
-      return fuse.search(search).map((e) => e.item);
     },
 
     async retrieveValidatorsIfNeeded(): Promise<void> {

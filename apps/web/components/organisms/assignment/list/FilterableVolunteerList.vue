@@ -2,16 +2,16 @@
   <v-card class="filterable-volunteer-list">
     <v-card-text class="filterable-volunteer-list__text">
       <VolunteerFilters
-        :list-length="filteredVolunteers.length"
+        :list-length="displayedVolunteers.length"
         class="filters"
-        @change:search="volunteer = $event"
+        @change:search="searchVolunteer = $event"
         @change:teams="teams = $event"
         @change:sort="sort = $event"
       ></VolunteerFilters>
       <v-divider />
       <AssignmentVolunteerList
         v-if="shouldShowVolunteerList"
-        :volunteers="filteredVolunteers"
+        :volunteers="displayedVolunteers"
         class="volunteer-list"
         :class="isOrgaTaskMode ? 'volunteer-list--with-friend-list' : ''"
         @select-volunteer="handleVolunteerSelection"
@@ -31,7 +31,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Fuse from "fuse.js";
 import AssignmentVolunteerList from "~/components/molecules/assignment/list/AssignmentVolunteerList.vue";
 import FriendsDisplay from "~/components/molecules/friend/FriendsDisplay.vue";
 import VolunteerFilters from "~/components/molecules/assignment/filter/VolunteerFilters.vue";
@@ -43,25 +42,45 @@ import {
   getAssignmentModeFromRoute,
 } from "~/utils/models/assignment.model";
 import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
+import { SlugifyService } from "@overbookd/slugify";
+
+type SearchableVolunteer = Volunteer & { searchable: string };
+
+interface FilterableVolunteerListData {
+  teams: Team[];
+  searchVolunteer: string;
+  sort: number;
+}
 
 export default Vue.extend({
   name: "FilterableVolunteerList",
   components: { AssignmentVolunteerList, FriendsDisplay, VolunteerFilters },
-  data: () => ({
-    teams: [] as Team[],
-    volunteer: "",
+  data: (): FilterableVolunteerListData => ({
+    teams: [],
+    searchVolunteer: "",
     sort: 0,
   }),
   computed: {
-    filteredVolunteers(): Volunteer[] {
-      const filteredVolunteers = this.$accessor.assignment.volunteers.filter(
+    volunteers(): Volunteer[] {
+      return this.$accessor.assignment.volunteers;
+    },
+    searchableVolunteers(): SearchableVolunteer[] {
+      return this.volunteers.map((volunteer) => ({
+        ...volunteer,
+        searchable: SlugifyService.apply(`${volunteer.firstname} ${volunteer.lastname}`),
+      }));
+    },
+    matchingSearchVolunteers(): Volunteer[] {
+      return this.searchableFTs.filter(({ searchable }) => {
+        const search = SlugifyService.apply(this.filters.search);
+        return searchable.includes(search);
+      });
+    },
+    displayedVolunteers(): Volunteer[] {
+      const filteredVolunteers = this.matchingSearchVolunteers.filter(
         (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer),
       );
-      const searchedVolunteers = this.fuzzyFindVolunteer(
-        filteredVolunteers,
-        this.volunteer,
-      );
-      return this.sortVolunteers(searchedVolunteers);
+      return this.sortVolunteers(filteredVolunteers);
     },
     isOrgaTaskMode(): boolean {
       return (
@@ -78,7 +97,7 @@ export default Vue.extend({
     shouldShowVolunteerList(): boolean {
       return (
         this.isOrgaTaskMode ||
-        (this.selectedTimeSpan !== null && this.filteredVolunteers.length > 0)
+        (this.selectedTimeSpan !== null && this.displayedVolunteers.length > 0)
       );
     },
   },
@@ -94,14 +113,6 @@ export default Vue.extend({
               ),
             )
         : () => true;
-    },
-    fuzzyFindVolunteer(volunteers: Volunteer[], search?: string): Volunteer[] {
-      if (!search) return volunteers;
-      const fuse = new Fuse(volunteers, {
-        keys: ["firstname", "lastname"],
-        threshold: 0.4,
-      });
-      return fuse.search(search).map((e) => e.item);
     },
     handleVolunteerSelection(volunteer: Volunteer) {
       if (this.isOrgaTaskMode) {
