@@ -67,7 +67,9 @@ export default Vue.extend({
     searchableVolunteers(): SearchableVolunteer[] {
       return this.volunteers.map((volunteer) => ({
         ...volunteer,
-        searchable: SlugifyService.apply(`${volunteer.firstname} ${volunteer.lastname}`),
+        searchable: SlugifyService.apply(
+          `${volunteer.firstname} ${volunteer.lastname} ${volunteer.nickname}`,
+        ),
       }));
     },
     matchingSearchVolunteers(): Volunteer[] {

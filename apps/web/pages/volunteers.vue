@@ -178,13 +178,13 @@
 </template>
 
 <script>
-import Fuse from "fuse.js";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
 import { download } from "~/utils/planning/download";
 import { formatPhoneLink } from "~/utils/user/user.utils";
+import { SlugifyService } from "@overbookd/slugify";
 
 export default {
   name: "Volunteers",
@@ -215,7 +215,7 @@ export default {
       loading: false,
 
       filters: {
-        search: undefined,
+        search: "",
         teams: [],
         isValidated: true,
         hasPayedContributions: undefined,
@@ -244,11 +244,23 @@ export default {
         ? this.$accessor.user.volunteers
         : this.$accessor.user.candidates;
     },
+    searchableVolunteers() {
+      return this.users.map((user) => ({
+        ...user,
+        searchable: `${user.firstname} ${user.lastname} ${user.nickname}`,
+      }));
+    },
     teams() {
       return this.$accessor.team.allTeams;
     },
     volunteerPlannings() {
       return this.$accessor.planning.volunteerPlannings;
+    },
+    matchingVolunteers() {
+      return this.searchableVolunteers.filter(({ searchable }) => {
+        const search = SlugifyService.apply(this.filters.search);
+        return searchable.includes(search);
+      });
     },
   },
 
@@ -421,19 +433,7 @@ export default {
     },
 
     updateFilteredUsers() {
-      let mUsers = this.users;
-
-      // filter by search
-      if (this.filters.search) {
-        const options = {
-          // Search in `author` and in `tags` array
-          keys: ["firstname", "lastname", "nickname", "phone"],
-        };
-        const fuse = new Fuse(mUsers, options);
-
-        mUsers = fuse.search(this.filters.search).map((e) => e.item);
-        this.options.page = 1; // reset page
-      }
+      let mUsers = this.matchingVolunteers;
 
       // filter by payed contributions
       if (this.filters.hasPayedContributions !== undefined) {
