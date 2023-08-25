@@ -89,10 +89,8 @@ export default Vue.extend({
       }));
     },
     matchingSearchNewcomers(): IDefineANewcomer[] {
+      const search = SlugifyService.apply(this.searchNewcomer);
       return this.searchableNewcomers.filter(({ searchable }) => {
-        if (this.searchNewcomer === undefined) return true;
-
-        const search = SlugifyService.apply(this.searchNewcomer);
         return searchable.includes(search);
       });
     },

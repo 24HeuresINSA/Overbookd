@@ -247,7 +247,9 @@ export default {
     searchableVolunteers() {
       return this.users.map((user) => ({
         ...user,
-        searchable: `${user.firstname} ${user.lastname} ${user.nickname}`,
+        searchable: SlugifyService.apply(
+          `${user.firstname} ${user.lastname} ${user.nickname}`
+        ),
       }));
     },
     teams() {
@@ -257,8 +259,8 @@ export default {
       return this.$accessor.planning.volunteerPlannings;
     },
     matchingVolunteers() {
+      const search = SlugifyService.apply(this.filters.search);
       return this.searchableVolunteers.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.filters.search);
         return searchable.includes(search);
       });
     },

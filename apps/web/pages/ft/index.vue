@@ -246,8 +246,8 @@ export default Vue.extend({
       }));
     },
     matchingSearchFTs(): FtSimplified[] {
+      const search = SlugifyService.apply(this.filters.search);
       return this.searchableFTs.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.filters.search);
         return searchable.includes(search);
       });
     },

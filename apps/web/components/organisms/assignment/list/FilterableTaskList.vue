@@ -59,8 +59,8 @@ export default Vue.extend({
       }));
     },
     matchingSearchFts(): FtWithTimeSpan[] {
+      const search = SlugifyService.apply(this.searchFt);
       return this.searchableFts.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.searchFt);
         return searchable.includes(search);
       });
     },

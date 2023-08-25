@@ -73,8 +73,8 @@ export default Vue.extend({
       }));
     },
     matchingSearchVolunteers(): Volunteer[] {
+      const search = SlugifyService.apply(this.searchVolunteer);
       return this.searchableVolunteers.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.searchVolunteer);
         return searchable.includes(search);
       });
     },

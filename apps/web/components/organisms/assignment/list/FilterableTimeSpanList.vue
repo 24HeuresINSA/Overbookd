@@ -67,8 +67,8 @@ export default Vue.extend({
       }));
     },
     matchingSearchTimeSpans(): AvailableTimeSpan[] {
+      const search = SlugifyService.apply(this.searchTimeSpan);
       return this.searchableTimeSpans.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.searchTimeSpan);
         return searchable.includes(search);
       });
     },
