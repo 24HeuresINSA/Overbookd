@@ -174,8 +174,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { MyUserInformation, User } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
-
-type SearchableFt = FtSimplified & { searchable: string };
+import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
 
 interface Data {
   headers: Header[];
@@ -239,22 +238,16 @@ export default Vue.extend({
     FTs(): FtSimplified[] {
       return this.$accessor.ft.FTs;
     },
-    searchableFTs(): SearchableFt[] {
+    searchableFTs(): Searchable<FtSimplified>[] {
       return this.FTs.map((ft) => ({
         ...ft,
         searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
       }));
     },
-    matchingSearchFTs(): FtSimplified[] {
-      const search = SlugifyService.apply(this.filters.search);
-      return this.searchableFTs.filter(({ searchable }) => {
-        return searchable.includes(search);
-      });
-    },
     filteredFTs(): FtSimplified[] {
       const { team, myFTs, status, myFTsToReview } = this.filters;
 
-      const res = this.matchingSearchFTs;
+      const res = matchingSearchItems<FtSimplified>(this.searchableFTs, this.filters.search);
       return res.filter((ft) => {
         return (
           this.filterFTByTeam(team)(ft) &&
