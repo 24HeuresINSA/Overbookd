@@ -80,7 +80,7 @@ export class FakeRegistrationRepository {
       firstName: "Jasmine",
       lastName: "Macron",
       registeredAt: new Date(),
-      teams: ["karna", "teckos", "tendrestival"],
+      teams: ["karna", "teckos"],
     },
     {
       id: 9,
@@ -105,7 +105,7 @@ export class FakeRegistrationRepository {
     return Promise.resolve(
       this.newcomers.map((newcomer) => ({
         ...newcomer,
-        registeredAt: newcomer.registeredAt.toLocaleString(),
+        registeredAt: newcomer.registeredAt.toString(),
       })),
     );
   }

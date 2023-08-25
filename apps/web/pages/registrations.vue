@@ -100,12 +100,15 @@ export default Vue.extend({
       return ["hard", "soft", "confiance"];
     },
   },
+  mounted() {
+    this.$accessor.registration.getNewcomers();
+  },
   methods: {
     formatDate(date: Date): string {
       return formatLocalDate(date);
     },
     getTeamName(teamCode: string): string {
-      return this.$accessor.team.getTeam(teamCode).name;
+      return this.$accessor.team.getTeamByCode(teamCode).name;
     },
     enrollNewcomersAsMemberOf(team: JoinableTeam) {
       this.$accessor.registration.enrollNewcomers({

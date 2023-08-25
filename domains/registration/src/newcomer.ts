@@ -5,5 +5,5 @@ export interface IDefineANewcomer {
   firstName: string;
   lastName: string;
   registeredAt: Date;
-  teams: TeamCode[];
+  teams: [] | [TeamCode] | [TeamCode, TeamCode];
 }
