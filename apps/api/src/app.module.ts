@@ -97,6 +97,7 @@ import { MailModule } from "./mail/mail.module";
     VolunteerPlanningModule,
     TimelineModule,
     NeedHelpModule,
+    RegistrationModule,
     ThrottlerModule.forRoot({
       ttl: 60,
       limit: 500,
