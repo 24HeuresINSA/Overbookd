@@ -1,13 +1,13 @@
 import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
+import { FakeRegistrationRepository } from "~/repositories/registration.repository";
 import { HttpStringified } from "~/utils/types/http";
 
 type State = {
   newcomers: IDefineANewcomer[];
 };
 
-const repo = RepoFactory.RegistrationRepository;
+const repo = FakeRegistrationRepository;
 
 export const state = (): State => ({
   newcomers: [],
@@ -31,8 +31,6 @@ export const actions = actionTree(
   { state },
   {
     async getNewcomers({ commit }) {
-      /* const res = await safeCall(this, repo.getNewcomers(this));
-      if (!res) return; */
       const res = await repo.getNewcomers(this);
       commit("SET_NEWCOMERS", castNewcomersWithDate(res));
     },
@@ -40,16 +38,11 @@ export const actions = actionTree(
     async enrollNewcomers(
       { commit },
       {
-        teamCode,
+        team,
         newcomers,
-      }: { teamCode: JoinableTeam; newcomers: IDefineANewcomer[] },
+      }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
-      /* const res = await safeCall(
-        this,
-        repo.addTeamToNewcomers(this, teamCode, newcomers),
-      );
-      if (!res) return; */
-      await repo.addTeamToNewcomers(this, teamCode, newcomers);
+      await repo.enrollNewcomers(team, newcomers);
       commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
     },
   },

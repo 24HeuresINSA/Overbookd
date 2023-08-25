@@ -8,25 +8,23 @@ export class RegistrationRepository {
   private static readonly basePath = "registrations";
 
   static getNewcomers(context: Context) {
-    return FakeRegistrationRepository.getNewcomers(context);
     return context.$axios.get<HttpStringified<IDefineANewcomer[]>>(
       this.basePath,
     );
   }
 
-  static addTeamToNewcomers(
+  static enrollNewcomers(
     context: Context,
     teamCode: JoinableTeam,
     newcomers: IDefineANewcomer[],
   ) {
-    return FakeRegistrationRepository.enrollNewcomers(teamCode, newcomers);
     return context.$axios.post<void>(`${this.basePath}/enroll-to/${teamCode}`, {
       newcomers,
     });
   }
 }
 
-class FakeRegistrationRepository {
+export class FakeRegistrationRepository {
   private static newcomers: IDefineANewcomer[] = [
     {
       id: 1,

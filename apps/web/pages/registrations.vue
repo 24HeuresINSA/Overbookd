@@ -107,9 +107,9 @@ export default Vue.extend({
     getTeamName(teamCode: string): string {
       return this.$accessor.team.getTeam(teamCode).name;
     },
-    enrollNewcomersAsMemberOf(teamCode: JoinableTeam) {
+    enrollNewcomersAsMemberOf(team: JoinableTeam) {
       this.$accessor.registration.enrollNewcomers({
-        teamCode,
+        team,
         newcomers: this.selectedNewcomers,
       });
       this.selectedNewcomers = [];
