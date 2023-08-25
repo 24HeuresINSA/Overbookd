@@ -72,7 +72,7 @@ export default Vue.extend({
     },
     matchingSearchVolunteers(): Volunteer[] {
       return this.searchableVolunteers.filter(({ searchable }) => {
-        const search = SlugifyService.apply(searchVolunteer);
+        const search = SlugifyService.apply(this.searchVolunteer);
         return searchable.includes(search);
       });
     },
