@@ -18,18 +18,14 @@ export const mutations = mutationTree(state, {
   SET_NEWCOMERS(state, newcomers: IDefineANewcomer[]) {
     state.newcomers = newcomers;
   },
-  REMOVE_ENROLLED_NEWCOMERS(
-    state,
-    newcomers: IDefineANewcomer[],
-  ) {
+  REMOVE_ENROLLED_NEWCOMERS(state, newcomers: IDefineANewcomer[]) {
     state.newcomers = state.newcomers.filter(
       (newcomer) =>
         !newcomers.some(
-          (enrolledNewcomer) =>
-            enrolledNewcomer.id === newcomer.id,
+          (enrolledNewcomer) => enrolledNewcomer.id === newcomer.id,
         ),
     );
-  }
+  },
 });
 
 export const actions = actionTree(
