@@ -1,7 +1,7 @@
 import { UserName } from "./user.model";
 
 export interface UserCreateForm extends UserName {
-  teamId?: number;
+  teamCode?: string;
   email: string;
   birthdate: Date;
   phone: string;

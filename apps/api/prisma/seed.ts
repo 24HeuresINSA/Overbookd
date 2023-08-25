@@ -366,7 +366,7 @@ async function main() {
 
       const teams = databaseTeams
         .filter((team) => teamNames.split(",").includes(team.code))
-        .map((team) => ({ teamId: team.id }));
+        .map((team) => ({ teamCode: team.code }));
 
       const email = `${user}@24h.me`;
 

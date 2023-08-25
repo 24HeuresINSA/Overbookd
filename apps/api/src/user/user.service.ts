@@ -194,10 +194,10 @@ export class UserService {
       this.logger.error(e);
     }
 
-    if (!payload.teamId) return userPersonnalData;
+    if (!payload.teamCode) return userPersonnalData;
 
     const addTeamData = {
-      teamId: payload.teamId,
+      teamCode: payload.teamCode,
       userId: newUser.id,
     };
 

@@ -360,56 +360,6 @@ export const actions = actionTree(
       dispatch("fetchFa", state.mFA.id);
     },
 
-    validate: async function (
-      { dispatch, commit, state, rootState },
-      { validatorId, teamName, author },
-    ) {
-      //check if the team is already in the list
-      if (state.mFA.faValidation?.find((v) => v.team.id === validatorId))
-        return;
-      if (state.mFA.faRefuse?.length === 1) {
-        if (state.mFA.faRefuse[0].team.id === validatorId) {
-          commit("UPDATE_STATUS", FaStatus.SUBMITTED);
-        }
-      }
-      const MAX_VALIDATORS = rootState.team.faValidators.length;
-      // -1 car la validation est faite avant l'ajout du validateur
-      if (state.mFA.faValidation?.length === MAX_VALIDATORS - 1) {
-        // validated by all validators
-        commit("UPDATE_STATUS", FaStatus.VALIDATED);
-      }
-      const body: FaValidationBody = { teamId: validatorId };
-
-      await repo.validateFA(this, state.mFA.id, body);
-      const feedback: FaFeedback = {
-        subject: FaFeedbackSubjectType.VALIDATED,
-        comment: `La FA a été validée par ${teamName}.`,
-        author,
-        createdAt: new Date(),
-      };
-      dispatch("addFeedback", feedback);
-      dispatch("save");
-    },
-
-    refuse: async function (
-      { dispatch, commit, state },
-      { validatorId, message, author },
-    ) {
-      commit("UPDATE_STATUS", FaStatus.REFUSED);
-      const body: FaValidationBody = {
-        teamId: validatorId,
-      };
-      await repo.refuseFA(this, state.mFA.id, body);
-      const feedback: FaFeedback = {
-        subject: FaFeedbackSubjectType.REFUSED,
-        comment: `La FA a été refusée${message ? ": " + message : "."}`,
-        author,
-        createdAt: new Date(),
-      };
-      dispatch("addFeedback", feedback);
-      dispatch("save");
-    },
-
     async createPublicAnimation({ commit, state }) {
       const res = await safeCall(
         this,
@@ -464,7 +414,7 @@ export const actions = actionTree(
       const teamNamesThatValidatedFA = await Promise.all(
         teamCodesThatValidatedFA.map(async (teamCode) => {
           const team = rootGetters["team/getTeamByCode"](teamCode);
-          await repo.removeFaValidation(this, state.mFA.id, team.id);
+          //await repo.removeFaValidation(this, state.mFA.id, team.id);
           return team.name;
         }),
       );

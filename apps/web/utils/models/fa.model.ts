@@ -149,7 +149,7 @@ export interface FaGeneralUpdate
     Fa,
     "id" | "name" | "description" | "type" | "securityNeed" | "waterNeed"
   > {
-  teamId: number | null;
+  teamCode: number | null;
   userInChargeId: number | null;
   locationId: number | null;
   numberOfPass: number | null;
@@ -208,7 +208,7 @@ export interface FaTimeWindowWithType extends FaTimeWindow {
 }
 
 export interface FaValidationBody {
-  teamId: number;
+  teamCode: number;
 }
 
 export interface SearchFa {
@@ -323,7 +323,7 @@ export function toUpdateFa({
     description,
     type,
     userInChargeId: userInCharge?.id ?? null,
-    teamId: team?.id ?? null,
+    teamCode: team?.code ?? null,
     locationId: location?.id ?? null,
     securityNeed,
     numberOfPass: numberOfPass ?? null,

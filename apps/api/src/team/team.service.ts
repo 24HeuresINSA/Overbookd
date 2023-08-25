@@ -7,7 +7,6 @@ import { SlugifyService } from "@overbookd/slugify";
 
 export const TEAM_SELECT = {
   select: {
-    id: true,
     name: true,
     code: true,
     color: true,
@@ -104,7 +103,7 @@ export class TeamService {
     const createNew = this.prisma.userTeam.createMany({
       data: teamsToLink.map((team) => ({
         userId,
-        teamId: team.id,
+        teamCode: team.code,
       })),
     });
 
