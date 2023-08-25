@@ -1,7 +1,6 @@
 import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
-import { safeCall } from "~/utils/api/calls";
 import { HttpStringified } from "~/utils/types/http";
 
 type State = {
