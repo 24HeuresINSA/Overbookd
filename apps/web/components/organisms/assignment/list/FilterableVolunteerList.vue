@@ -71,8 +71,8 @@ export default Vue.extend({
       }));
     },
     matchingSearchVolunteers(): Volunteer[] {
-      return this.searchableFTs.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.filters.search);
+      return this.searchableVolunteers.filter(({ searchable }) => {
+        const search = SlugifyService.apply(searchVolunteer);
         return searchable.includes(search);
       });
     },
