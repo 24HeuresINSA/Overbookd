@@ -4,7 +4,7 @@
       <FtTimeSpanFilters
         :list-length="filteredTimeSpans.length"
         class="filters"
-        @change:search="timeSpan = $event"
+        @change:search="searchTimeSpan = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
       ></FtTimeSpanFilters>
@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Fuse from "fuse.js";
 import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import FtTimeSpanList from "~/components/molecules/assignment/list/FtTimeSpanList.vue";
 import { Volunteer } from "~/utils/models/assignment.model";
@@ -39,21 +38,44 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
+import { SlugifyService } from "@overbookd/slugify";
+
+type SearchableTimeSpan = AvailableTimeSpan & { searchable: string };
+
+interface FilterableTimeSpanListData {
+  teams: Team[];
+  searchTimeSpan: string;
+  category: TaskCategory | TaskPriority | null;
+}
 
 export default Vue.extend({
   name: "FilterableTimeSpanList",
   components: { FtTimeSpanFilters, FtTimeSpanList },
-  data: () => ({
-    teams: [] as Team[],
-    timeSpan: "",
-    category: null as TaskCategory | TaskPriority | null,
+  data: (): FilterableTimeSpanListData => ({
+    teams: [],
+    searchTimeSpan: "",
+    category: null,
   }),
   computed: {
+    timeSpans(): AvailableTimeSpan[] {
+      return this.$accessor.assignment.timeSpans;
+    },
+    searchableTimeSpans(): SearchableTimeSpan[] {
+      return this.timeSpans.map((timeSpan) => ({
+        ...timeSpan,
+        searchable: SlugifyService.apply(`${timeSpan.ft.id} ${timeSpan.ft.name}`),
+      }));
+    },
+    matchingSearchTimeSpans(): AvailableTimeSpan[] {
+      return this.searchableTimeSpans.filter(({ searchable }) => {
+        const search = SlugifyService.apply(this.searchTimeSpan);
+        return searchable.includes(search);
+      });
+    },
     filteredTimeSpans(): AvailableTimeSpan[] {
-      const filteredTimeSpans = this.$accessor.assignment.timeSpans
+      return this.matchingSearchTimeSpans
         .filter((timeSpan) => this.isMatchingFilter(timeSpan))
         .map((timeSpan) => this.removeUnavailableTeamRequests(timeSpan));
-      return this.fuzzyFindTimeSpan(filteredTimeSpans, this.timeSpan);
     },
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
@@ -134,17 +156,6 @@ export default Vue.extend({
           return quantity > assignmentCount && candidate.canBeAssignedAs(code);
         },
       );
-    },
-    fuzzyFindTimeSpan(
-      timeSpans: AvailableTimeSpan[],
-      search?: string,
-    ): AvailableTimeSpan[] {
-      if (!search) return timeSpans;
-      const fuse = new Fuse(timeSpans, {
-        keys: ["ft.id", "ft.name"],
-        threshold: 0.4,
-      });
-      return fuse.search(search).map((e) => e.item);
     },
   },
 });

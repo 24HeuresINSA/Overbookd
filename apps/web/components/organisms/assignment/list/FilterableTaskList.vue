@@ -5,7 +5,7 @@
         :list-length="filteredFts.length"
         class="filters"
         type="ft"
-        @change:search="ft = $event"
+        @change:search="searchFt = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
         @change:completed="completed = $event"
@@ -18,7 +18,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Fuse from "fuse.js";
 import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import TaskList from "~/components/molecules/assignment/list/TaskList.vue";
 import {
@@ -29,26 +28,51 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
+import { SlugifyService } from "@overbookd/slugify";
+
+type SearchableFtWithTimespan = FtWithTimeSpan & { searchable: string };
+
+interface FilterableTaskListData {
+  teams: Team[];
+  searchFt: string;
+  category: TaskCategory | TaskPriority | null;
+  completed: boolean;
+}
 
 export default Vue.extend({
   name: "FilterableTaskList",
   components: { FtTimeSpanFilters, TaskList },
-  data: () => ({
+  data: (): FilterableTaskListData => ({
     completed: false,
-    teams: [] as Team[],
-    ft: "",
-    category: null as TaskCategory | TaskPriority | null,
+    teams: [],
+    searchFt: "",
+    category: null,
   }),
   computed: {
+    fts(): FtWithTimeSpan[] {
+      return this.$accessor.assignment.fts;
+    },
+    searchableFts(): SearchableFtWithTimespan[] {
+      return this.fts.map((ft) => ({
+        ...ft,
+        searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
+      }));
+    },
+    matchingSearchFts(): FtWithTimeSpan[] {
+      return this.searchableFts.filter(({ searchable }) => {
+        const search = SlugifyService.apply(this.searchFt);
+        return searchable.includes(search);
+      });
+    },
     filteredFts(): FtWithTimeSpan[] {
-      const filteredFts = this.$accessor.assignment.fts.filter((ft) => {
+      const searchedFts = this.matchingSearchFts;
+      return searchedFts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&
           this.filterFtByCatergoryOrPriority(this.category)(ft) &&
           this.filterFtByQuantity(ft)
         );
       });
-      return this.fuzzyFindFt(filteredFts, this.ft);
     },
   },
   methods: {
@@ -99,14 +123,6 @@ export default Vue.extend({
           ({ quantity, assignmentCount }) => quantity > assignmentCount,
         ),
       );
-    },
-    fuzzyFindFt(fts: FtWithTimeSpan[], search?: string): FtWithTimeSpan[] {
-      if (!search) return fts;
-      const fuse = new Fuse(fts, {
-        keys: ["id", "name"],
-        threshold: 0.4,
-      });
-      return fuse.search(search).map((e) => e.item);
     },
   },
 });
