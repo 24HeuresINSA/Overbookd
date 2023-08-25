@@ -380,3 +380,13 @@ ALTER TABLE "fa" RENAME COLUMN "collaboratorId" TO "collaborator_id";
 
 -- RenameForeignKey
 ALTER TABLE "fa" RENAME CONSTRAINT "fa_collaboratorId_fkey" TO "fa_collaborator_id_fkey";
+
+
+-- DropForeignKey
+ALTER TABLE "ft" DROP CONSTRAINT "ft_team_code_fkey";
+
+-- AlterTable
+ALTER TABLE "ft" ALTER COLUMN "team_code" DROP NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "ft" ADD CONSTRAINT "ft_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE SET NULL ON UPDATE CASCADE;

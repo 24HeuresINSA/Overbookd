@@ -17,8 +17,11 @@ import {
   UserName,
   UserNameWithId,
 } from "../ft-types";
-import { SignaLocationRepresentation, faStatuses } from "../../fa/fa.model";
-import { FaStatus } from "@prisma/client";
+import {
+  FaStatus,
+  SignaLocationRepresentation,
+  faStatuses,
+} from "../../fa/fa.model";
 import {
   FtFeedbackSubjectType,
   ftFeedbackSubjectTypes,

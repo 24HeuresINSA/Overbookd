@@ -424,8 +424,8 @@ model Ft {
   description    String?        @db.Text
   userInCharge   User?          @relation(fields: [userInChargeId], references: [id], name: "inCharge")
   userInChargeId Int?           @map("user_in_charge_id")
-  team           Team           @relation(fields: [teamCode], references: [code])
-  teamCode       String         @map("team_code") @db.VarChar(20)
+  team           Team?          @relation(fields: [teamCode], references: [code])
+  teamCode       String?        @map("team_code") @db.VarChar(20)
   location       SignaLocation? @relation(fields: [locationId], references: [id])
   locationId     Int?           @map("location_id")
   isDeleted      Boolean        @default(false) @map("is_deleted")

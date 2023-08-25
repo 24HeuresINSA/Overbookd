@@ -1,4 +1,3 @@
-import { FaStatus, FtFeedbackSubjectType, ReviewStatus } from "@prisma/client";
 import { SELECT_BASE_TIMESPAN } from "../assignment/assignment.service";
 import { UserRequest } from "../ft-user-request/dto/ft-user-request.response.dto";
 import { TEAM_SELECT } from "../team/team.service";
@@ -6,6 +5,9 @@ import { FtStatus } from "./ft.model";
 import { IProvidePeriod } from "@overbookd/period";
 import { TimeSpanBase } from "../assignment/model/ft-time-span.model";
 import { Team } from "../team/team.model";
+import { FaStatus } from "../fa/fa.model";
+import { ReviewStatus } from "../ft-review/ft-review.model";
+import { FtFeedbackSubjectType } from "../ft-feedback/ft-feedback.model";
 
 export class SignaLocation {
   id: number;
