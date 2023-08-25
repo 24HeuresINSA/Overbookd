@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fa">
     <h1>Fiches Activités</h1>
 
     <div class="custom_container">
@@ -7,54 +7,40 @@
         <v-card>
           <v-card-title>Filtres</v-card-title>
           <v-card-text>
-            <v-text-field v-model="search" label="Recherche" dense>
-            </v-text-field>
-
+            <v-text-field
+              v-model="filters.search"
+              label="Recherche"
+            ></v-text-field>
             <SearchTeam
-              v-model="selectedTeam"
+              v-model="filters.team"
               label="Équipe"
               :boxed="false"
             ></SearchTeam>
 
+            <h3>Statut</h3>
             <v-list dense shaped>
-              <v-list-item-group v-model="selectedStatus">
-                <v-list-item :value="''">
-                  <v-list-item-title class="small">Tous</v-list-item-title>
+              <v-list-item-group v-model="filters.status">
+                <v-list-item :value="null">
+                  <v-list-item-title>Tous</v-list-item-title>
                 </v-list-item>
-                <v-list-item :value="'DRAFT'">
-                  <v-list-item-title class="small">Brouillon</v-list-item-title>
-                </v-list-item>
-                <v-list-item :value="'SUBMITTED'">
-                  <v-list-item-title class="small">Soumise</v-list-item-title>
-                </v-list-item>
-                <v-list-item :value="'REFUSED'">
-                  <v-list-item-title class="small">Refusée </v-list-item-title>
-                </v-list-item>
-                <v-list-item :value="'VALIDATED'">
-                  <v-list-item-title class="small">Validée </v-list-item-title>
+                <v-list-item
+                  v-for="[status, label] in statuses"
+                  :key="status"
+                  :value="status"
+                >
+                  <v-list-item-title>
+                    {{ label }}
+                  </v-list-item-title>
                 </v-list-item>
               </v-list-item-group>
             </v-list>
-            <div v-for="validator of validators" :key="validator.id">
-              <v-btn-toggle
-                v-model="filter[validator.id]"
-                tile
-                color="deep-purple accent-3"
-                group
-              >
-                <v-icon small>{{ validator.icon }}</v-icon>
-                <v-btn x-small :value="true" class="btn-check">validée </v-btn>
-                <v-btn x-small :value="false" class="btn-check">refusée </v-btn>
-                <v-btn x-small :value="2" class="btn-check">à valider </v-btn>
-              </v-btn-toggle>
-            </div>
             <v-switch
-              v-if="isAdmin"
-              v-model="isDeletedFilter"
+              v-if="canViewDeletedFa"
+              v-model="filters.isDeleted"
               label="Afficher les FA supprimées"
             ></v-switch>
-            <v-btn v-if="isSecu" @click="exportCsvSecu()">Export sécu</v-btn>
-            <v-btn v-if="isSigna" @click="exportCsvSigna()">Export signa</v-btn>
+            <!--<v-btn v-if="isSecu" @click="exportCsvSecu()">Export sécu</v-btn>
+            <v-btn v-if="isSigna" @click="exportCsvSigna()">Export signa</v-btn>-->
           </v-card-text>
         </v-card>
       </v-container>
@@ -62,25 +48,19 @@
       <v-card class="data-table">
         <v-data-table
           :headers="headers"
-          :items="selectedFAs"
+          :items="filteredFas"
           :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
           class="elevation-1"
         >
-          <template #[`item.validation`]="{ item }">
-            <v-chip-group column>
-              <v-chip
-                v-for="(validator, i) of validators"
-                :key="i"
-                small
-                :color="getValidatorColor(item, validator)"
-              >
-                <v-icon small>
-                  {{ validator.icon }}
-                </v-icon>
+          <template #item.status="{ item }">
+            <v-chip-group id="status">
+              <v-chip :color="getFaStatus(item.status)" small>
+                {{ item.id }}
               </v-chip>
             </v-chip-group>
           </template>
-          <template #[`item.name`]="{ item }">
+
+          <template #item.name="{ item }">
             <nuxt-link
               :to="`/fa/${item.id}`"
               :style="
@@ -88,16 +68,19 @@
                   ? `text-decoration:line-through;`
                   : `text-decoration:none;`
               "
-              >{{ item.name ? item.name : "" }}
+              >{{ item.name }}
             </nuxt-link>
           </template>
-          <template #[`item.team`]="{ item }">
-            {{ item.Team ? item.Team.name : "" }}
+
+          <template #item.team="{ item }">
+            {{ item?.team?.name }}
           </template>
-          <template #[`item.userInCharge`]="{ item }">
-            {{ formatUsername(item.userInCharge) }}
+
+          <template #item.userInCharge="{ item }">
+            {{ item.userInCharge ? formatUsername(item.userInCharge) : "" }}
           </template>
-          <template #[`item.action`]="{ item }">
+
+          <template #item.action="{ item }">
             <tr>
               <td>
                 <v-btn class="mx-2" icon small :to="`/fa/${item.id}`">
@@ -109,272 +92,143 @@
               </td>
             </tr>
           </template>
-
-          <template #[`item.status`]="row">
-            <v-chip v-if="row.item" :color="color[row.item.status]" small
-              >{{ row.item.id }}
-            </v-chip>
-          </template>
         </v-data-table>
       </v-card>
     </div>
 
-    <v-dialog v-model="isNewFADialogOpen" max-width="600">
-      <v-card>
-        <v-card-title>Ajouter une nouvelle FA</v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="faName"
-            label="Nom de la FA"
-            @keydown.enter="createNewFA"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="createNewFA">créer la FA</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="isDeleteFAOpen" max-width="600">
-      <v-card>
-        <v-card-title>Supprimer une FA</v-card-title>
-        <v-card-text> Voulez-vous vraiment supprimer cette FA ?</v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn text @click="deleteFA">supprimer</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-btn
+      color="secondary"
+      class="btn-plus"
       elevation="2"
       fab
-      class="btn-plus"
-      color="primary"
-      small
-      @click="isNewFADialogOpen = true"
+      @click="isNewFaDialogOpen = true"
     >
-      <v-icon small>mdi-plus-thick</v-icon>
+      <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
+
+    <v-dialog v-model="isNewFaDialogOpen" max-width="600">
+      <NewFaCard />
+    </v-dialog>
+
+    <v-dialog v-model="isDeleteDialogOpen" width="600">
+      <v-card>
+        <v-img src="/img/sure.jpeg"></v-img>
+        <v-card-title>t'es sûr bébé ?</v-card-title>
+        <v-card-actions>
+          <v-btn right text @click="deleteFa()">oui 😏</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <SnackNotificationContainer></SnackNotificationContainer>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { SlugifyService } from "@overbookd/slugify";
-import { FaStatus } from "~/utils/models/fa.model";
+import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import {
+  Fa,
+  FaSimplified,
+  FaStatus,
+  FaStatusLabel,
+  faStatusLabels,
+  SearchFa,
+} from "~/utils/models/fa.model";
 import { formatUsername } from "~/utils/user/user.utils";
-import { matchingSearchItems } from "~/utils/search/search.utils";
+import { Team } from "~/utils/models/team.model";
+import { User } from "@overbookd/user";
+import { Header } from "~/utils/models/data-table.model";
 
-export default {
+interface FaData {
+  headers: Header[];
+  selectedFa?: Fa;
+  isNewFaDialogOpen: boolean;
+  isDeleteDialogOpen: boolean;
+  filters: {
+    search: string;
+    team?: Team;
+    status: FaStatus;
+    isDeleted: boolean;
+  };
+}
+
+export default Vue.extend({
   name: "Fa",
-  components: { SearchTeam },
-  data() {
-    return {
-      mFA: null,
+  components: { SearchTeam, NewFaCard, SnackNotificationContainer },
+  data: (): FaData => ({
+    headers: [
+      { text: "Statut", value: "status", sortable: false },
+      { text: "Validation", value: "validation", sortable: false },
+      { text: "Nom", value: "name" },
+      { text: "Equipe", value: "team" },
+      { text: "Resp", value: "userInCharge" },
+      { text: "Action", value: "action", sortable: false },
+    ],
+    selectedFa: undefined,
+    isNewFaDialogOpen: false,
+    isDeleteDialogOpen: false,
+    filters: {
       search: "",
-      filter: {},
-      isDeletedFilter: false,
-      sortDesc: false,
-      page: 1,
-      itemsPerPage: 4,
-      selectedStatus: "",
-      selectedTeam: undefined,
-      headers: [
-        { text: "Statut", value: "status" },
-        { text: "Validation", value: "validation" },
-        { text: "Nom", value: "name" },
-        { text: "Equipe", value: "Team" },
-        { text: "Resp", value: "userInCharge" },
-        { text: "Action", value: "action", sortable: false },
-      ],
-      color: {
-        SUBMITTED: "warning",
-        VALIDATED: "green",
-        REFUSED: "red",
-        DRAFT: "grey",
-        undefined: "grey",
-      },
-      isNewFADialogOpen: false,
-      isDeleteFAOpen: false,
-      faName: undefined,
-      teamNames: this.$accessor.team.teamNames,
-    };
-  },
+      team: undefined,
+      status: FaStatus.DRAFT,
+      isDeleted: false,
+    },
+  }),
   head: () => ({
     title: "Fiches Activités",
   }),
   computed: {
-    FAs() {
+    FAs(): FaSimplified[] {
       return this.$accessor.fa.FAs;
     },
-    searchableFAs() {
-      return this.FAs.map((fa) => ({
-        ...fa,
-        searchable: SlugifyService.apply(`${fa.id} ${fa.name}`),
-      }));
-    },
-    numberOfPages() {
-      return Math.ceil(this.items.length / this.itemsPerPage);
-    },
-    canViewDeletedFa() {
+    canViewDeletedFa(): boolean {
       return this.$accessor.user.can("view-deleted-fa");
     },
-    isSecu() {
+    isSecu(): boolean {
       return this.$accessor.user.can("manage-pass-secu");
     },
-    isSigna() {
+    isSigna(): boolean {
       return this.$accessor.user.can("manage-location");
     },
-    selectedFAs() {
-      const matchingSearchFAs = matchingSearchItems(
-        this.searchableFAs,
-        this.search,
-      );
-      const filteredFAsByTeam = this.filterBySelectedTeam(
-        matchingSearchFAs,
-        this.selectedTeam,
-      );
-      return this.filterByValidatorStatus(filteredFAsByTeam);
+    statuses(): [FaStatus, FaStatusLabel][] {
+      return [...faStatusLabels.entries()];
     },
-    validators() {
-      return this.$accessor.team.faValidators;
-    },
-  },
-  watch: {
-    async selectedStatus() {
-      await this.fetchFas();
-    },
-    async isDeletedFilter() {
-      await this.fetchFas();
+    filteredFas(): FaSimplified[] {
+      return this.FAs;
     },
   },
   async mounted() {
-    if (!this.$accessor.user.can("hard")) {
-      await this.$router.push({
-        path: "/",
-      });
-    }
-
-    this.fetchFas();
-    if (this.validators.length === 0) {
-      await this.$accessor.team.fetchFaValidators();
-    }
+    await this.fetchFas();
   },
   methods: {
     async fetchFas() {
-      const status =
-        this.selectedStatus === "" ? undefined : this.selectedStatus;
-      const search = { isDeleted: this.isDeletedFilter, status };
-      await this.$accessor.fa.fetchFAs(search);
-    },
-    preDelete(fa) {
-      this.mFA = fa;
-      this.isDeleteFAOpen = true;
-    },
-    filterBySelectedTeam(FAs, team) {
-      if (!team) {
-        return FAs;
-      }
-      return FAs.filter((FA) => FA.team.code === team.code);
-    },
-    filterByDeletedStatus(FAs) {
-      if (this.isDeletedFilter === false) {
-        return FAs.filter((FA) => FA.isValid !== false);
-      }
-      return FAs.filter((FA) => FA.isValid === false);
-    },
-    filterByValidatorStatus(FAs) {
-      const filter = this.filter;
-      Object.entries(filter).forEach(([validatorId, value]) => {
-        FAs = FAs.filter((FA) => {
-          if (value === true) {
-            return this.isAnimationValidatedBy(FA, validatorId);
-          }
-          if (value === false) {
-            return this.isAnimationRefusedBy(FA, validatorId);
-          }
-          if (value === 2) {
-            return (
-              !this.isAnimationValidatedBy(FA, validatorId) &&
-              FA.status === FaStatus.SUBMITTED
-            );
-          }
-          return true;
-        });
-      });
-      return FAs;
-    },
-    filterByStatus(FAs, status) {
-      if (status === 0) {
-        return FAs;
-      }
-      const s = ["", "DRAFT", "SUBMITTED", "REFUSED", "VALIDATED"];
-      FAs = FAs.map((FA) => {
-        if (FA) {
-          if (FA.status === undefined) {
-            FA.status = "DRAFT";
-          }
-        }
-        return FA;
-      });
-      return FAs.filter((FA) => FA?.status === s.at(status));
-    },
-    isAnimationValidatedBy(FA, validatorId) {
-      return FA.faValidation.some(
-        (validation) => validation.Team.id === parseInt(validatorId),
-      );
-    },
-    isAnimationRefusedBy(FA, validatorId) {
-      return FA.faRefuse?.some(
-        (refuse) => refuse.Team.id === parseInt(validatorId),
-      );
-    },
-    async createNewFA() {
-      if (!this.faName) return;
-      const FA = {
-        name: this.faName,
+      const searchParams: SearchFa = {
+        isDeleted: this.filters.isDeleted,
+        status: this.filters.status,
       };
-      await this.$accessor.fa.createFa(FA);
-      const savedFA = this.$accessor.fa.mFA;
-      if (savedFA.id) {
-        await this.$router.push({ path: "fa/" + savedFA.id });
-      }
+      await this.$accessor.fa.fetchFAs(searchParams);
     },
-    async deleteFA() {
-      await this.$accessor.fa.deleteFA(this.mFA.id);
-      this.isDeleteFAOpen = false;
-      this.mFA = undefined;
+    getFaStatus(status: FaStatus): string {
+      return status.toLowerCase();
     },
-    nextPage() {
-      if (this.page + 1 <= this.numberOfPages) this.page += 1;
+    preDelete(fa: Fa) {
+      this.selectedFa = fa;
+      this.isDeleteDialogOpen = true;
     },
-    formerPage() {
-      if (this.page - 1 >= 1) this.page -= 1;
+    async deleteFa() {
+      if (!this.selectedFa) return;
+      await this.$accessor.fa.deleteFA(this.selectedFa.id);
+      this.isDeleteDialogOpen = false;
+      this.selectedFa = undefined;
     },
-    updateItemsPerPage(number) {
-      this.itemsPerPage = number;
+    filterBySelectedTeam(FAs: FaSimplified[], team?: Team): FaSimplified[] {
+      if (!team) return FAs;
+      return FAs.filter((FA) => FA.team?.code === team.code);
     },
-    getValidatorColor(fa, validator) {
-      let color = "grey";
-      if (fa.faValidation) {
-        fa.faValidation.forEach((validation) => {
-          if (validation.team.code === validator.code) {
-            color = "green";
-          }
-        });
-      }
-      if (fa.faRefuse) {
-        fa.faRefuse.forEach((validation) => {
-          if (validation.team.code === validator.code) {
-            color = "red";
-          }
-        });
-      }
-      return color;
-    },
-    download(filename, text) {
+    /*download(filename: string, text: string) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
       const element = document.createElement("a");
@@ -392,12 +246,12 @@ export default {
     async exportCsvSecu() {
       // Parse data into a CSV string to be passed to the download function
       const csvHeader = "Numero;Nom;Resp;Nombre_de_pass;";
-      const csvRows = this.selectedFAs.map((fa) => {
+      const csvRows = this.FAs.map((fa) => {
         const rowData = [
           fa.id,
           fa.name,
-          formatUsername(fa.user_in_charge),
-          fa.number_of_pass,
+          fa.userInCharge ? formatUsername(fa.userInCharge) : "",
+          fa.numberOfPass,
         ];
         return `${rowData.join(";")}`;
       });
@@ -424,16 +278,15 @@ export default {
       const regex = new RegExp(/undefined/i, "g");
       const parsedCSV = csv.replace(regex, "");
       this.download("exportSigna.csv", parsedCSV);
-    },
-    formatUsername(user) {
-      if (!user) return "";
+    },*/
+    formatUsername(user: User) {
       return formatUsername(user);
     },
   },
-};
+});
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h1 {
   margin-left: 12px;
 }

@@ -5,11 +5,11 @@
       <v-col sm="7">
         <v-row>
           <v-col
-            v-for="(displayedStatus, status) in allStatus"
+            v-for="[status, label] in allStatus"
             :key="status"
             class="flex-grow-1"
           >
-            <StatsCard :status="status">{{ displayedStatus }}</StatsCard>
+            <StatsCard :status="status">{{ label }}</StatsCard>
           </v-col>
         </v-row>
       </v-col>
@@ -45,7 +45,7 @@
 import Vue from "vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { FaStatusLabel } from "~/utils/models/fa.model";
+import { faStatusLabels } from "~/utils/models/fa.model";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 
 interface StatsRowData {
@@ -54,9 +54,7 @@ interface StatsRowData {
 }
 
 export default Vue.extend({
-  components: {
-    StatsCard,
-  },
+  components: { StatsCard },
   props: {
     name: {
       type: String,
@@ -122,8 +120,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    allStatus(): typeof FaStatusLabel {
-      return FaStatusLabel;
+    allStatus(): typeof faStatusLabels {
+      return faStatusLabels;
     },
     teamStats(): StatsPayload[] {
       return this.dataset;

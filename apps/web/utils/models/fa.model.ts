@@ -14,12 +14,23 @@ export enum FaStatus {
   VALIDATED = "VALIDATED",
 }
 
-export enum FaStatusLabel {
-  DRAFT = "Brouillon",
-  REFUSED = "Refusée",
-  SUBMITTED = "Soumise à validation",
-  VALIDATED = "Validée",
-}
+const BROUILLON = "Brouillon";
+const REFUSEE = "Refusée";
+const SOUMISE_A_VALIDATION = "Soumise à validation";
+const VALIDEE = "Validée";
+
+export type FaStatusLabel =
+  | typeof BROUILLON
+  | typeof REFUSEE
+  | typeof SOUMISE_A_VALIDATION
+  | typeof VALIDEE;
+
+export const faStatusLabels = new Map<FaStatus, FaStatusLabel>([
+  [FaStatus.DRAFT, BROUILLON],
+  [FaStatus.REFUSED, REFUSEE],
+  [FaStatus.SUBMITTED, SOUMISE_A_VALIDATION],
+  [FaStatus.VALIDATED, VALIDEE],
+]);
 
 const PC16_Prise_classique = "PC16_Prise_classique";
 const P17_16A_MONO = "P17_16A_MONO";
