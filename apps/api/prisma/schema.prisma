@@ -75,8 +75,6 @@ model User {
   transactionsTo   Transaction[] @relation("to")
 
   faInCharge   Fa[]           @relation("in_charge")
-  faValidation FaValidation[]
-  faRefuse     FaRefuse[]
   faFeedbacks  FaFeedback[]
 
   ftsInCharge      Ft[]                    @relation("inCharge")
@@ -93,15 +91,12 @@ model User {
 }
 
 model Team {
-  id              Int               @id @default(autoincrement())
+  code            String            @id @unique @db.VarChar(20)
   name            String            @unique @db.VarChar(30)
   users           UserTeam[]
   color           String            @default("#000000") @db.VarChar(30)
   icon            String            @default("mdi-circle") @db.VarChar(255)
   fa              Fa[]
-  faValidation    FaValidation[]
-  faRefuse        FaRefuse[]
-  code            String?           @unique @db.VarChar(20)
   ownedCategories CatalogCategory[] @relation("owner")
   ftRequests      FtTeamRequest[]
   ftReviews       FtReview[]
@@ -112,12 +107,12 @@ model Team {
 }
 
 model UserTeam {
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int  @map("user_id")
-  team   Team @relation(fields: [teamId], references: [id])
-  teamId Int  @map("team_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int    @map("user_id")
+  team     Team   @relation(fields: [teamCode], references: [code])
+  teamCode String @map("team_code")
 
-  @@id([userId, teamId])
+  @@id([userId, teamCode])
   @@map("user_team")
 }
 
@@ -168,8 +163,8 @@ model Fa {
   id               Int                 @id @default(autoincrement())
   name             String              @db.VarChar(255)
   type             FaType?
-  team             Team?               @relation(fields: [teamId], references: [id])
-  teamId           Int?                @map("team_id")
+  team             Team?               @relation(fields: [teamCode], references: [code])
+  teamCode         String?             @map("team_code")
   userInCharge     User?               @relation(fields: [userInChargeId], references: [id], name: "in_charge")
   userInChargeId   Int?                @map("user_in_charge_id")
   createdAt        DateTime?           @default(now()) @map("created_at")
@@ -181,8 +176,6 @@ model Fa {
   numberOfPass     Int?                @map("number_of_pass")
   waterNeed        String?             @map("water_need") @db.Text
   isDeleted        Boolean             @default(false) @map("is_deleted")
-  faValidation     FaValidation[]
-  faRefuse         FaRefuse[]
   electricityNeeds FaElectricityNeed[]
   signaNeeds       FaSignaNeed[]
   feedbacks        FaFeedback[]
@@ -208,34 +201,6 @@ enum FaType {
   Autre
 
   @@map("fa_type")
-}
-
-model FaValidation {
-  fa        Fa       @relation(fields: [faId], references: [id])
-  faId      Int      @map("fa_id")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @map("user_id")
-  team      Team     @relation(fields: [teamId], references: [id])
-  teamId    Int      @map("team_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  isDeleted Boolean  @default(false) @map("is_deleted")
-
-  @@id([faId, teamId])
-  @@map("fa_validation")
-}
-
-model FaRefuse {
-  fa        Fa       @relation(fields: [faId], references: [id])
-  faId      Int      @map("fa_id")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @map("user_id")
-  team      Team     @relation(fields: [teamId], references: [id])
-  teamId    Int      @map("team_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  isDeleted Boolean  @default(false) @map("is_deleted")
-
-  @@id([faId, teamId])
-  @@map("fa_refuse")
 }
 
 model SignaLocation {
@@ -372,8 +337,8 @@ model CatalogCategory {
   parent         Int?
   parentCategory CatalogCategory?  @relation("parent", fields: [parent], references: [id])
   subCategories  CatalogCategory[] @relation("parent")
-  ownerId        Int?              @map("owner_id")
-  owner          Team?             @relation("owner", fields: [ownerId], references: [id])
+  ownerCode      String?           @map("owner_code")
+  owner          Team?             @relation("owner", fields: [ownerCode], references: [code])
   gears          CatalogGear[]     @relation("category")
 
   @@map("catalog_category")
