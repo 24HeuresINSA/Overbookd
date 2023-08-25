@@ -11,7 +11,7 @@
     >
       <template #top>
         <v-text-field
-          v-model="searchNewComer"
+          v-model="searchNewcomer"
           label="Rechercher un nouvel arrivant"
           class="search"
         ></v-text-field>
@@ -60,7 +60,7 @@ import { SlugifyService } from "@overbookd/slugify";
 
 interface RegistrationsData {
   headers: Header[];
-  searchNewComer: string;
+  searchNewcomer: string;
   selectedNewcomers: IDefineANewcomer[];
 }
 
@@ -76,7 +76,7 @@ export default Vue.extend({
       { text: "Date d'inscription", value: "registeredAt" },
       { text: "Equipes", value: "teams", sortable: false },
     ],
-    searchNewComer: "",
+    searchNewcomer: "",
     selectedNewcomers: [],
   }),
   computed: {
@@ -90,9 +90,9 @@ export default Vue.extend({
     },
     matchingSearchNewcomers(): IDefineANewcomer[] {
       return this.searchableNewcomers.filter(({ searchable }) => {
-        if (this.searchNewComer === undefined) return true;
+        if (this.searchNewcomer === undefined) return true;
 
-        const search = SlugifyService.apply(this.searchNewComer);
+        const search = SlugifyService.apply(this.searchNewcomer);
         return searchable.includes(search);
       });
     },
