@@ -105,7 +105,7 @@ export default Vue.extend({
       return formatLocalDate(date);
     },
     getTeamName(teamCode: string): string {
-      return this.$accessor.teams.getTeam(teamCode).name;
+      return this.$accessor.team.getTeam(teamCode).name;
     },
     enrollNewcomersAsMemberOf(teamCode: JoinableTeam) {
       this.$accessor.registration.enrollNewcomers({
