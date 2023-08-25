@@ -29,6 +29,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
+import { matchingSearchItems } from "~/utils/search/search.utils";
 
 type SearchableFtWithTimespan = FtWithTimeSpan & { searchable: string };
 
@@ -58,14 +59,11 @@ export default Vue.extend({
         searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
       }));
     },
-    matchingSearchFts(): FtWithTimeSpan[] {
-      const search = SlugifyService.apply(this.searchFt);
-      return this.searchableFts.filter(({ searchable }) => {
-        return searchable.includes(search);
-      });
-    },
     filteredFts(): FtWithTimeSpan[] {
-      const searchedFts = this.matchingSearchFts;
+      const searchedFts = matchingSearchItems<FtWithTimeSpan>(
+        this.searchableFts,
+        this.searchFt,
+      );
       return searchedFts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&

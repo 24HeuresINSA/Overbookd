@@ -16,7 +16,7 @@ import {
 } from "./model/volunteer.model";
 
 export const WHERE_VALIDATED_USER = {
-  team: {
+  teams: {
     some: {
       team: {
         permissions: {

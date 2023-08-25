@@ -43,6 +43,7 @@ import {
 } from "~/utils/models/assignment.model";
 import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
+import { matchingSearchItems } from "~/utils/search/search.utils";
 
 type SearchableVolunteer = Volunteer & { searchable: string };
 
@@ -72,15 +73,13 @@ export default Vue.extend({
         ),
       }));
     },
-    matchingSearchVolunteers(): Volunteer[] {
-      const search = SlugifyService.apply(this.searchVolunteer);
-      return this.searchableVolunteers.filter(({ searchable }) => {
-        return searchable.includes(search);
-      });
-    },
     displayedVolunteers(): Volunteer[] {
-      const filteredVolunteers = this.matchingSearchVolunteers.filter(
-        (volunteer) => this.filterVolunteerByTeams(this.teams)(volunteer),
+      const matchedVolunteers = matchingSearchItems<SearchableVolunteer>(
+        this.searchableVolunteers,
+        this.searchVolunteer,
+      );
+      const filteredVolunteers = matchedVolunteers.filter((volunteer) =>
+        this.filterVolunteerByTeams(this.teams)(volunteer),
       );
       return this.sortVolunteers(filteredVolunteers);
     },

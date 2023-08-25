@@ -39,6 +39,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 import { SlugifyService } from "@overbookd/slugify";
+import { matchingSearchItems } from "~/utils/search/search.utils";
 
 type SearchableTimeSpan = AvailableTimeSpan & { searchable: string };
 
@@ -68,14 +69,12 @@ export default Vue.extend({
         ),
       }));
     },
-    matchingSearchTimeSpans(): AvailableTimeSpan[] {
-      const search = SlugifyService.apply(this.searchTimeSpan);
-      return this.searchableTimeSpans.filter(({ searchable }) => {
-        return searchable.includes(search);
-      });
-    },
     filteredTimeSpans(): AvailableTimeSpan[] {
-      return this.matchingSearchTimeSpans
+      const matchedTimeSpans = matchingSearchItems<AvailableTimeSpan>(
+        this.searchableTimeSpans,
+        this.searchTimeSpan,
+      );
+      return matchedTimeSpans
         .filter((timeSpan) => this.isMatchingFilter(timeSpan))
         .map((timeSpan) => this.removeUnavailableTeamRequests(timeSpan));
     },

@@ -185,6 +185,7 @@ import UserInformation from "~/components/organisms/user/data/UserInformation.vu
 import { download } from "~/utils/planning/download";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
+import { matchingSearchItems } from "~/utils/search/search.utils";
 
 export default {
   name: "Volunteers",
@@ -257,12 +258,6 @@ export default {
     },
     volunteerPlannings() {
       return this.$accessor.planning.volunteerPlannings;
-    },
-    matchingVolunteers() {
-      const search = SlugifyService.apply(this.filters.search);
-      return this.searchableVolunteers.filter(({ searchable }) => {
-        return searchable.includes(search);
-      });
     },
   },
 
@@ -435,7 +430,10 @@ export default {
     },
 
     updateFilteredUsers() {
-      let mUsers = this.matchingVolunteers;
+      let mUsers = matchingSearchItems(
+        this.searchableVolunteers,
+        this.filters.search,
+      );
 
       // filter by payed contributions
       if (this.filters.hasPayedContributions !== undefined) {

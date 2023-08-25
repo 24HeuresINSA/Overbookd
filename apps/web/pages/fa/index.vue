@@ -165,6 +165,7 @@ import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { SlugifyService } from "@overbookd/slugify";
 import { FaStatus } from "~/utils/models/fa.model";
 import { formatUsername } from "~/utils/user/user.utils";
+import { matchingSearchItems } from "~/utils/search/search.utils";
 
 export default {
   name: "Fa",
@@ -226,14 +227,8 @@ export default {
     isSigna() {
       return this.$accessor.user.can("manage-location");
     },
-    matchingSearchFAs() {
-      return this.searchableFAs.filter(({ searchable }) => {
-        const search = SlugifyService.apply(this.search);
-        return searchable.includes(search);
-      });
-    },
     selectedFAs() {
-      const matchedFAs = this.matchingSearchFAs;
+      const matchedFAs = matchingSearchItems(this.searchableFAs, this.search);
       const filteredFAsByTeam = this.filterBySelectedTeam(
         matchedFAs,
         this.selectedTeam,
