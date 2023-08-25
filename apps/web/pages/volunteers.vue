@@ -248,7 +248,7 @@ export default {
       return this.users.map((user) => ({
         ...user,
         searchable: SlugifyService.apply(
-          `${user.firstname} ${user.lastname} ${user.nickname}`
+          `${user.firstname} ${user.lastname} ${user.nickname}`,
         ),
       }));
     },

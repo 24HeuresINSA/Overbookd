@@ -63,7 +63,9 @@ export default Vue.extend({
     searchableTimeSpans(): SearchableTimeSpan[] {
       return this.timeSpans.map((timeSpan) => ({
         ...timeSpan,
-        searchable: SlugifyService.apply(`${timeSpan.ft.id} ${timeSpan.ft.name}`),
+        searchable: SlugifyService.apply(
+          `${timeSpan.ft.id} ${timeSpan.ft.name}`,
+        ),
       }));
     },
     matchingSearchTimeSpans(): AvailableTimeSpan[] {

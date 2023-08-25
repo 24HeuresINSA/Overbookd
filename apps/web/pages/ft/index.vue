@@ -247,7 +247,10 @@ export default Vue.extend({
     filteredFTs(): FtSimplified[] {
       const { team, myFTs, status, myFTsToReview } = this.filters;
 
-      const res = matchingSearchItems<FtSimplified>(this.searchableFTs, this.filters.search);
+      const res = matchingSearchItems<FtSimplified>(
+        this.searchableFTs,
+        this.filters.search,
+      );
       return res.filter((ft) => {
         return (
           this.filterFTByTeam(team)(ft) &&

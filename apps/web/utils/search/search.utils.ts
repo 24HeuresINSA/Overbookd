@@ -1,6 +1,6 @@
 import { SlugifyService } from "@overbookd/slugify";
 
-export type Searchable<T> = T & { searchable: string }
+export type Searchable<T> = T & { searchable: string };
 
 export function matchingSearchItems<T>(
   searchableItems: Searchable<T>[],

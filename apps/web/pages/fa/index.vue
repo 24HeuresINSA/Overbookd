@@ -234,7 +234,10 @@ export default {
     },
     selectedFAs() {
       const matchedFAs = this.matchingSearchFAs;
-      const filteredFAsByTeam = this.filterBySelectedTeam(matchedFAs, this.selectedTeam);
+      const filteredFAsByTeam = this.filterBySelectedTeam(
+        matchedFAs,
+        this.selectedTeam,
+      );
       return this.filterByValidatorStatus(filteredFAsByTeam);
     },
     validators() {
