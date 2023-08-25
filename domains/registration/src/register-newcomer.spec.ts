@@ -1,0 +1,86 @@
+import { beforeAll, describe, expect, it } from "vitest";
+import {
+  FulfilledRegistration,
+  KARNA_CODE,
+  TECKOS_CODE,
+  Teams,
+} from "./register-form";
+import { RegisterNewcomer } from "./register-newcomer";
+import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory";
+
+const email = "test@example.com";
+const firstname = "Titouan";
+const lastname = "Moula";
+const password = "P4ssW0rd123^";
+const mobilePhone = "0601020304";
+const birthdate = new Date("2000-01-01");
+const comment = "Vous etes les meilleurs ! <3";
+const teams: Teams = [KARNA_CODE, TECKOS_CODE];
+const nickname = "Shagou";
+
+const registerForm: FulfilledRegistration = {
+  lastname,
+  firstname,
+  mobilePhone,
+  password,
+  comment,
+  birthdate,
+  teams,
+  nickname,
+  email,
+};
+
+let registerNewcomer: RegisterNewcomer;
+
+describe("Register newcomer", () => {
+  beforeAll(() => {
+    const newcomerRepository = new InMemoryNewcomerRepository();
+    registerNewcomer = new RegisterNewcomer(newcomerRepository);
+  });
+  describe("when receiving a fulfilled registration", () => {
+    it("should register the associated newcomer", async () => {
+      const registree = await registerNewcomer.fromRegisterForm(registerForm);
+      const { password, ...personalData } = registerForm;
+      expect(registree).toStrictEqual({ ...personalData, id: 1 });
+    });
+  });
+  describe("when 2 newcomers are receiving", () => {
+    it("should generate different id for both", async () => {
+      const [firstRegistree, secondRegistree] = await Promise.all([
+        registerNewcomer.fromRegisterForm({
+          ...registerForm,
+          email: "le.tchad@protonmail.com",
+        }),
+        registerNewcomer.fromRegisterForm({
+          ...registerForm,
+        }),
+      ]);
+      expect(firstRegistree.id).not.toBe(secondRegistree.id);
+    });
+  });
+  describe("when an existing newcomer has the same email", () => {
+    beforeAll(() => {
+      const newcomerRepository = new InMemoryNewcomerRepository([
+        {
+          id: 1,
+          firstname,
+          lastname,
+          mobilePhone,
+          comment,
+          birthdate,
+          teams,
+          nickname,
+          email,
+        },
+      ]);
+      registerNewcomer = new RegisterNewcomer(newcomerRepository);
+    });
+    it("should indicate that someone is already register with this email", async () => {
+      await expect(async () =>
+        registerNewcomer.fromRegisterForm(registerForm),
+      ).rejects.toThrowError(
+        "Erreur lors de l'inscription:\nL'email est déja utilisé par un autre utilisateur",
+      );
+    });
+  });
+});

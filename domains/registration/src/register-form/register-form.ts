@@ -8,7 +8,7 @@ import { NicknameField } from "./fields/nickname-field";
 import { BirthdateField } from "./fields/birthdate-field";
 import { CommentField } from "./fields/comment-field";
 import { TeamsField } from "./fields/teams-field";
-import { TeamCode, IDefineARegistree } from "../registree";
+import { FulfilledRegistration, Teams } from "./fulfilled-registration";
 
 export class RegisterForm {
   private email: EmailField;
@@ -31,7 +31,7 @@ export class RegisterForm {
     birthdate,
     comment,
     teams,
-  }: Partial<IDefineARegistree>) {
+  }: Partial<FulfilledRegistration>) {
     this.email = EmailField.build(email ?? "");
     this.firstname = FirstnameField.build(firstname ?? "");
     this.lastname = LastnameField.build(lastname ?? "");
@@ -48,78 +48,99 @@ export class RegisterForm {
   }
 
   fillEmail(email: string): RegisterForm {
-    return new RegisterForm({ ...this.registree, email });
+    return new RegisterForm({ ...this.currentRegistration, email });
   }
 
   clearEmail(): RegisterForm {
-    return new RegisterForm({ ...this.registree, email: undefined });
+    return new RegisterForm({ ...this.currentRegistration, email: undefined });
   }
 
   fillFirstname(firstname: string) {
-    return new RegisterForm({ ...this.registree, firstname });
+    return new RegisterForm({ ...this.currentRegistration, firstname });
   }
 
   clearFirstname(): RegisterForm {
-    return new RegisterForm({ ...this.registree, firstname: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      firstname: undefined,
+    });
   }
 
   fillLastname(lastname: string): RegisterForm {
-    return new RegisterForm({ ...this.registree, lastname });
+    return new RegisterForm({ ...this.currentRegistration, lastname });
   }
 
   clearLastname(): RegisterForm {
-    return new RegisterForm({ ...this.registree, lastname: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      lastname: undefined,
+    });
   }
 
   fillPassword(password: string): RegisterForm {
-    return new RegisterForm({ ...this.registree, password });
+    return new RegisterForm({ ...this.currentRegistration, password });
   }
 
   clearPassword(): RegisterForm {
-    return new RegisterForm({ ...this.registree, password: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      password: undefined,
+    });
   }
 
   fillMobilePhone(mobilePhone: string): RegisterForm {
-    return new RegisterForm({ ...this.registree, mobilePhone });
+    return new RegisterForm({ ...this.currentRegistration, mobilePhone });
   }
 
   clearMobilePhone(): RegisterForm {
-    return new RegisterForm({ ...this.registree, mobilePhone: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      mobilePhone: undefined,
+    });
   }
 
   fillNickname(nickname: string): RegisterForm {
-    return new RegisterForm({ ...this.registree, nickname });
+    return new RegisterForm({ ...this.currentRegistration, nickname });
   }
 
   clearNickname(): RegisterForm {
-    return new RegisterForm({ ...this.registree, nickname: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      nickname: undefined,
+    });
   }
 
   fillBirthdate(birthdate: Date): RegisterForm {
-    return new RegisterForm({ ...this.registree, birthdate });
+    return new RegisterForm({ ...this.currentRegistration, birthdate });
   }
 
   clearBirthdate(): RegisterForm {
-    return new RegisterForm({ ...this.registree, birthdate: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      birthdate: undefined,
+    });
   }
 
   fillComment(comment: string): RegisterForm {
-    return new RegisterForm({ ...this.registree, comment });
+    return new RegisterForm({ ...this.currentRegistration, comment });
   }
 
   clearComment(): RegisterForm {
-    return new RegisterForm({ ...this.registree, comment: undefined });
+    return new RegisterForm({
+      ...this.currentRegistration,
+      comment: undefined,
+    });
   }
 
-  fillTeams(teams: TeamCode[]): RegisterForm {
-    return new RegisterForm({ ...this.registree, teams });
+  fillTeams(teams: Teams): RegisterForm {
+    return new RegisterForm({ ...this.currentRegistration, teams });
   }
 
   clearTeams(): RegisterForm {
-    return new RegisterForm({ ...this.registree, teams: [] });
+    return new RegisterForm({ ...this.currentRegistration, teams: [] });
   }
 
-  private get registree(): Partial<IDefineARegistree> {
+  private get currentRegistration(): Partial<FulfilledRegistration> {
     return {
       email: this.email.value,
       firstname: this.firstname.value,
@@ -153,5 +174,36 @@ export class RegisterForm {
 
   get reasons(): string[] {
     return this.fields.flatMap((field) => field.reasons);
+  }
+
+  complete(): FulfilledRegistration {
+    if (!this.isFulfilled(this.currentRegistration)) {
+      throw new NotFulfilledRegistration(this.reasons);
+    }
+    return this.currentRegistration;
+  }
+
+  private isFulfilled(
+    registration: Partial<FulfilledRegistration>,
+  ): registration is FulfilledRegistration {
+    return this.isValid;
+  }
+}
+
+export class RegistrationError extends Error {
+  constructor(
+    readonly reasons: string[],
+    errorMessage: string = "Erreur lors de l'inscription",
+  ) {
+    const cause = reasons.join("\n");
+    const message = `${errorMessage}:\n${reasons}`;
+    super(message, { cause });
+  }
+}
+
+class NotFulfilledRegistration extends RegistrationError {
+  constructor(reasons: string[]) {
+    const message = "L'inscription n'est pas complete";
+    super(reasons, message);
   }
 }

@@ -15,7 +15,9 @@ export type TeamCode =
   | typeof TECKOS_CODE
   | typeof TENDRESTIVAL_CODE;
 
-export type IDefineARegistree = {
+export type Teams = [] | [TeamCode] | [TeamCode, TeamCode];
+
+export type FulfilledRegistration = {
   email: string;
   firstname: string;
   lastname: string;
@@ -24,5 +26,5 @@ export type IDefineARegistree = {
   nickname?: string;
   birthdate: Date;
   comment?: string;
-  teams: TeamCode[];
+  teams: Teams;
 };

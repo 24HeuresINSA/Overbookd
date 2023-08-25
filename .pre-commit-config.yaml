@@ -32,5 +32,12 @@ repos:
     rev: v1.4.0
     hooks:
       - id: detect-secrets
-        args: ["--json", "--exclude-secrets", "(password|supersecret)"]
+        args:
+          [
+            "--json",
+            "--exclude-secrets",
+            "(password|supersecret)",
+            "--exclude-files",
+            ".spec.ts$",
+          ]
         exclude: pnpm-lock.yaml

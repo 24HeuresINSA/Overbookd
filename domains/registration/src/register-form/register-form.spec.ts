@@ -5,7 +5,8 @@ import {
   TECKOS_CODE,
   STRASBOURG_CODE,
   KARNA_CODE,
-} from "../registree";
+  Teams,
+} from "./fulfilled-registration";
 import { RegisterForm } from "./register-form";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
@@ -19,11 +20,50 @@ const AT_LEAST_1_MIN_IN_PASSWORD =
 const AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD =
   "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe";
 
+const email = "test@example.com";
+const firstname = "Titouan";
+const lastname = "Moula";
+const password = "P4ssW0rd123^";
+const mobilePhone = "0601020304";
+const birthdate = new Date("2000-01-01");
+const comment = "Vous etes les meilleurs ! <3";
+const teams: Teams = [KARNA_CODE, TECKOS_CODE];
+const nickname = "Shagou";
+
+function validForm() {
+  return RegisterForm.init()
+    .fillEmail(email)
+    .fillFirstname(firstname)
+    .fillLastname(lastname)
+    .fillPassword(password)
+    .fillMobilePhone(mobilePhone)
+    .fillNickname(nickname)
+    .fillBirthdate(birthdate)
+    .fillComment(comment)
+    .fillTeams(teams);
+}
+
 describe("Register form", () => {
   describe("when form is completely filled", () => {
     it("should indicate the form is valid", () => {
       const form = validForm();
       expect(form.isValid).toBe(true);
+    });
+    describe("when we want to register a newcomer", () => {
+      it("should generate a fulfilled form", () => {
+        const newcomer = validForm().complete();
+        expect(newcomer).toEqual({
+          firstname,
+          lastname,
+          teams,
+          comment,
+          nickname,
+          birthdate,
+          password,
+          email,
+          mobilePhone,
+        });
+      });
     });
   });
   describe("email rules", () => {
@@ -150,7 +190,7 @@ describe("Register form", () => {
       ${"0201020103"}       | ${false} | ${[invalidMobilePhone]}
       ${"+33601020103"}     | ${false} | ${[internationalFormatNotSupported]}
       ${"0601020103"}       | ${true}  | ${[]}
-      ${"0701020103"}       | ${true}  | ${[true]}
+      ${"0701020103"}       | ${true}  | ${[]}
     `(
       "when mobile phone is filled with $mobilePhone",
       ({ mobilePhone, valid, reasons }) => {
@@ -239,16 +279,3 @@ describe("Register form", () => {
     });
   });
 });
-
-function validForm() {
-  return RegisterForm.init()
-    .fillEmail("test@example.com")
-    .fillFirstname("Titouan")
-    .fillLastname("Moula")
-    .fillPassword("P4ssW0rd123^")
-    .fillMobilePhone("0601020304")
-    .fillNickname("Shagou")
-    .fillBirthdate(new Date("2000-01-01"))
-    .fillComment("Vous etes les meilleurs ! <3")
-    .fillTeams([KARNA_CODE, TECKOS_CODE]);
-}

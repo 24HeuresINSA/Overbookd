@@ -1,2 +1,3 @@
-export * from "./register-form";
 export * from "./fields";
+export * from "./fulfilled-registration";
+export * from "./register-form";
