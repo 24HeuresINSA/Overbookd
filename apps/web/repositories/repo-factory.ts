@@ -16,6 +16,7 @@ import { VolunteerAvailabilityRepository } from "./volunteer-availability.reposi
 import { NeedHelpRepository } from "./need-help.repository";
 import { TimelineRepository } from "./timeline.repository";
 import { ConfigurationRepository } from "./configuration.repository";
+import { RegistrationRepository } from "./registration.repository";
 
 const repositories = {
   user: UserRepository,
@@ -37,6 +38,7 @@ const repositories = {
   orgaNeeds: OrgaNeedsRepository,
   needHelp: NeedHelpRepository,
   timeline: TimelineRepository,
+  registration: RegistrationRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -62,4 +64,5 @@ export const RepoFactory = {
   OrgaNeedsRepository,
   NeedHelpRepository,
   TimelineRepository,
+  RegistrationRepository,
 };

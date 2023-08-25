@@ -8,7 +8,7 @@ import { NicknameField } from "./fields/nickname-field";
 import { BirthdateField } from "./fields/birthdate-field";
 import { CommentField } from "./fields/comment-field";
 import { TeamsField } from "./fields/teams-field";
-import { TeamCode, Newcomer } from "../newcomer";
+import { TeamCode, IDefineARegistree } from "../registree";
 
 export class RegisterForm {
   private email: EmailField;
@@ -31,7 +31,7 @@ export class RegisterForm {
     birthdate,
     comment,
     teams,
-  }: Partial<Newcomer>) {
+  }: Partial<IDefineARegistree>) {
     this.email = EmailField.build(email ?? "");
     this.firstname = FirstnameField.build(firstname ?? "");
     this.lastname = LastnameField.build(lastname ?? "");
@@ -48,78 +48,78 @@ export class RegisterForm {
   }
 
   fillEmail(email: string): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, email });
+    return new RegisterForm({ ...this.registree, email });
   }
 
   clearEmail(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, email: undefined });
+    return new RegisterForm({ ...this.registree, email: undefined });
   }
 
   fillFirstname(firstname: string) {
-    return new RegisterForm({ ...this.newcomer, firstname });
+    return new RegisterForm({ ...this.registree, firstname });
   }
 
   clearFirstname(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, firstname: undefined });
+    return new RegisterForm({ ...this.registree, firstname: undefined });
   }
 
   fillLastname(lastname: string): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, lastname });
+    return new RegisterForm({ ...this.registree, lastname });
   }
 
   clearLastname(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, lastname: undefined });
+    return new RegisterForm({ ...this.registree, lastname: undefined });
   }
 
   fillPassword(password: string): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, password });
+    return new RegisterForm({ ...this.registree, password });
   }
 
   clearPassword(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, password: undefined });
+    return new RegisterForm({ ...this.registree, password: undefined });
   }
 
   fillMobilePhone(mobilePhone: string): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, mobilePhone });
+    return new RegisterForm({ ...this.registree, mobilePhone });
   }
 
   clearMobilePhone(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, mobilePhone: undefined });
+    return new RegisterForm({ ...this.registree, mobilePhone: undefined });
   }
 
   fillNickname(nickname: string): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, nickname });
+    return new RegisterForm({ ...this.registree, nickname });
   }
 
   clearNickname(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, nickname: undefined });
+    return new RegisterForm({ ...this.registree, nickname: undefined });
   }
 
   fillBirthdate(birthdate: Date): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, birthdate });
+    return new RegisterForm({ ...this.registree, birthdate });
   }
 
   clearBirthdate(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, birthdate: undefined });
+    return new RegisterForm({ ...this.registree, birthdate: undefined });
   }
 
   fillComment(comment: string): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, comment });
+    return new RegisterForm({ ...this.registree, comment });
   }
 
   clearComment(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, comment: undefined });
+    return new RegisterForm({ ...this.registree, comment: undefined });
   }
 
   fillTeams(teams: TeamCode[]): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, teams });
+    return new RegisterForm({ ...this.registree, teams });
   }
 
   clearTeams(): RegisterForm {
-    return new RegisterForm({ ...this.newcomer, teams: [] });
+    return new RegisterForm({ ...this.registree, teams: [] });
   }
 
-  private get newcomer(): Partial<Newcomer> {
+  private get registree(): Partial<IDefineARegistree> {
     return {
       email: this.email.value,
       firstname: this.firstname.value,
