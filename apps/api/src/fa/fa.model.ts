@@ -164,27 +164,6 @@ export class BaseFtRepresentation implements BaseFt {
   status: FtStatus;
 }
 
-export interface FaReview {
-  user: UserName;
-  team: Team;
-}
-
-export class FaReviewRepresentation implements FaReview {
-  @ApiProperty({ type: UserNameRepresentation })
-  user: UserName;
-  @ApiProperty({ type: TeamRepresentation })
-  team: Team;
-}
-
-export interface FaReviewTeam {
-  team: Team;
-}
-
-export class FaReviewTeamRepresentation implements FaReviewTeam {
-  @ApiProperty({ type: TeamRepresentation })
-  team: Team;
-}
-
 export interface PublicAnimation {
   photoLink?: string;
   description?: string;

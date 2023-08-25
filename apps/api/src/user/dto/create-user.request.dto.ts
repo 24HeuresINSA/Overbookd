@@ -5,7 +5,6 @@ import {
   IsDefined,
   IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsPhoneNumber,
   IsString,
