@@ -309,7 +309,7 @@ async function main() {
       code: "strasbourg",
       color: "#ACBB62",
       icon: "mdi-sausage",
-    }
+    },
   ];
 
   await Promise.all(
