@@ -8,7 +8,7 @@ export class RegistrationRepository {
   private static readonly basePath = "registrations";
 
   static getNewcomers(context: Context) {
-    return FakeRegistrationRepository.getNewcomers();
+    return FakeRegistrationRepository.getNewcomers(context);
     return context.$axios.get<HttpStringified<IDefineANewcomer[]>>(
       this.basePath,
     );
@@ -40,7 +40,8 @@ class FakeRegistrationRepository {
     { id: 10, firstName: "Clement", lastName: "Daguillon", registeredAt: new Date("2022-08-10"), teams: ["teckos"] },
   ]
 
-  static getNewcomers(): Promise<HttpStringified<IDefineANewcomer[]>>{
+  static getNewcomers(context: Context): Promise<HttpStringified<IDefineANewcomer[]>>{
+    console.debug(context) // Pour pas qu'il soit note comme not used
     return Promise.resolve(this.newcomers.map((newcomer) => ({...newcomer, registeredAt: newcomer.registeredAt.toLocaleString()})));
   }
 
