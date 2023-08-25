@@ -35,7 +35,7 @@ export const actions = actionTree(
       /* const res = await safeCall(this, repo.getNewcomers(this));
       if (!res) return; */
       const res = await repo.getNewcomers(this);
-      commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
+      commit("SET_NEWCOMERS", castNewcomersWithDate(res));
     },
 
     async enrollNewcomers(
@@ -50,7 +50,7 @@ export const actions = actionTree(
         repo.addTeamToNewcomers(this, teamCode, newcomers),
       );
       if (!res) return; */
-      const res = await repo.addTeamToNewcomers(this, teamCode, newcomers);
+      await repo.addTeamToNewcomers(this, teamCode, newcomers);
       commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
     },
   },
