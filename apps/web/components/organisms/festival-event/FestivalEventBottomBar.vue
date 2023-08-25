@@ -376,7 +376,7 @@ export default Vue.extend({
           teamName: validator.name,
           author,
         };
-        return this.$accessor.fa.validate(payload);
+        //return this.$accessor.fa.validate(payload);
       }
       const payload = { author, team: validator };
       return this.$accessor.ft.validate(payload);
@@ -392,7 +392,7 @@ export default Vue.extend({
           message: this.refuseComment,
           author,
         };
-        await this.$accessor.fa.refuse(payload);
+        //await this.$accessor.fa.refuse(payload);
       } else {
         const payload = {
           author,
