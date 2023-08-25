@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { NewcomerRepresentation, NewcomerTeams } from "../registration.model";
 
 export class NewcomerResponseDto implements NewcomerRepresentation {
-
   @ApiProperty({
     required: true,
     description: "The newcomer id",
