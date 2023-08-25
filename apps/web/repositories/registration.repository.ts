@@ -18,8 +18,8 @@ export class RegistrationRepository {
     teamCode: string,
     newcomers: IDefineANewcomer[],
   ) {
-    return context.$axios.post<HttpStringified<IDefineANewcomer[]>>(
-      `${this.basePath}/add-team/${teamCode}`,
+    return context.$axios.post<void>(
+      `${this.basePath}/enroll-to/${teamCode}`,
       { newcomers },
     );
   }

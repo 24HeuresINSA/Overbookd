@@ -18,6 +18,18 @@ export const mutations = mutationTree(state, {
   SET_NEWCOMERS(state, newcomers: IDefineANewcomer[]) {
     state.newcomers = newcomers;
   },
+  REMOVE_ENROLLED_NEWCOMERS(
+    state,
+    newcomers: IDefineANewcomer[],
+  ) {
+    state.newcomers = state.newcomers.filter(
+      (newcomer) =>
+        !newcomers.some(
+          (enrolledNewcomer) =>
+            enrolledNewcomer.id === newcomer.id,
+        ),
+    );
+  }
 });
 
 export const actions = actionTree(
@@ -29,7 +41,7 @@ export const actions = actionTree(
       commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
     },
 
-    async addTeamToNewcomers(
+    async enrollNewcomers(
       { commit },
       {
         teamCode,
@@ -41,7 +53,7 @@ export const actions = actionTree(
         repo.addTeamToNewcomers(this, teamCode, newcomers),
       );
       if (!res) return;
-      commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
+      commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
     },
   },
 );

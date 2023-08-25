@@ -33,15 +33,15 @@
       <v-menu offset-y>
         <template #activator="{ attrs, on }">
           <v-btn class="white--text" v-bind="attrs" color="blue" v-on="on">
-            Ajouter à une équipe
+            Enrôler en tant que
           </v-btn>
         </template>
         <v-list>
-          <v-list-item v-for="team of teamsToAdd" :key="team" link>
+          <v-list-item v-for="teamCode of joinableTeams" :key="teamCode" link>
             <v-list-item-title
               color="green"
-              @click="addTeamToSelectedNewcomers(team)"
-              v-text="team.name"
+              @click="enrollNewcomersAsMemberOf(teamCode)"
+              v-text="getTeamName(teamCode)"
             ></v-list-item-title>
           </v-list-item>
         </v-list>
@@ -54,7 +54,7 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { IDefineANewcomer } from "@overbookd/registration";
+import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "~/utils/models/team.model";
@@ -97,17 +97,19 @@ export default Vue.extend({
         return searchable.includes(search);
       });
     },
-    teamsToAdd(): Team[] {
-      const teamsCode = ["hard", "soft"];
-      return teamsCode.map((code) => this.$accessor.team.getTeamByCode(code));
+    joinableTeams(): JoinableTeam[] {
+      return ["hard", "soft", "confiance"];
     },
   },
   methods: {
     formatDate(date: Date): string {
       return formatLocalDate(date);
     },
-    addTeamToSelectedNewcomers(team: Team) {
-      this.$accessor.registration.addTeamToNewcomers({
+    getTeamName(teamCode: string): string {
+      return this.$accessor.teams.getTeam(teamCode).name;
+    },
+    enrollNewcomersAsMemberOf(team: Team) {
+      this.$accessor.registration.enrollNewcomers({
         teamCode: team.code,
         newcomers: this.selectedNewcomers,
       });
