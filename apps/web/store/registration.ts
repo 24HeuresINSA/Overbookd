@@ -1,4 +1,4 @@
-import { IDefineANewcomer } from "@overbookd/registration";
+import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
@@ -42,7 +42,7 @@ export const actions = actionTree(
       {
         teamCode,
         newcomers,
-      }: { teamCode: string; newcomers: IDefineANewcomer[] },
+      }: { teamCode: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
       const res = await safeCall(
         this,

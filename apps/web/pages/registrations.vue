@@ -57,7 +57,6 @@ import { Header } from "~/utils/models/data-table.model";
 import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team } from "~/utils/models/team.model";
 
 interface RegistrationsData {
   headers: Header[];
@@ -108,9 +107,9 @@ export default Vue.extend({
     getTeamName(teamCode: string): string {
       return this.$accessor.teams.getTeam(teamCode).name;
     },
-    enrollNewcomersAsMemberOf(team: Team) {
+    enrollNewcomersAsMemberOf(teamCode: JoinableTeam) {
       this.$accessor.registration.enrollNewcomers({
-        teamCode: team.code,
+        teamCode,
         newcomers: this.selectedNewcomers,
       });
       this.selectedNewcomers = [];
