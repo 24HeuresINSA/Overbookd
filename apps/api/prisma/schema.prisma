@@ -74,8 +74,8 @@ model User {
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
 
-  faInCharge   Fa[]           @relation("in_charge")
-  faFeedbacks  FaFeedback[]
+  faInCharge  Fa[]         @relation("in_charge")
+  faFeedbacks FaFeedback[]
 
   ftsInCharge      Ft[]                    @relation("inCharge")
   ftFeedbacks      FtFeedback[]
@@ -91,12 +91,13 @@ model User {
 }
 
 model Team {
-  code            String            @id @unique @db.VarChar(20)
+  id              Int               @id @default(autoincrement())
   name            String            @unique @db.VarChar(30)
   users           UserTeam[]
   color           String            @default("#000000") @db.VarChar(30)
   icon            String            @default("mdi-circle") @db.VarChar(255)
   fa              Fa[]
+  code            String?           @unique @db.VarChar(20)
   ownedCategories CatalogCategory[] @relation("owner")
   ftRequests      FtTeamRequest[]
   ftReviews       FtReview[]
@@ -106,13 +107,31 @@ model Team {
   @@map("team")
 }
 
-model UserTeam {
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId   Int    @map("user_id")
-  team     Team   @relation(fields: [teamCode], references: [code])
-  teamCode String @map("team_code")
+model NewTeam {
+  code            String            @id @unique @db.VarChar(20)
+  name            String            @unique @db.VarChar(30)
+  color           String            @default("#000000") @db.VarChar(30)
+  icon            String            @default("mdi-circle") @db.VarChar(255)
+  users           UserTeam[]
+  fa              Fa[]
+  ownedCategories CatalogCategory[] @relation("new_owner")
+  ftRequests      FtTeamRequest[]
+  ftReviews       FtReview[]
+  permissions     TeamPermission[]
+  Ft              Ft[]
 
-  @@id([userId, teamCode])
+  @@map("new_team")
+}
+
+model UserTeam {
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int      @map("user_id")
+  team        Team     @relation(fields: [teamId], references: [id])
+  teamId      Int      @map("team_id")
+  NewTeam     NewTeam? @relation(fields: [newTeamCode], references: [code])
+  newTeamCode String?  @db.VarChar(20)
+
+  @@id([userId, teamId])
   @@map("user_team")
 }
 
@@ -130,6 +149,8 @@ model TeamPermission {
   teamCode       String     @map("team_code")
   permission     Permission @relation(fields: [permissionName], references: [name], onDelete: Cascade)
   permissionName String     @map("permission_name")
+  NewTeam        NewTeam?   @relation(fields: [newTeamCode], references: [code])
+  newTeamCode    String?    @db.VarChar(20)
 
   @@id([teamCode, permissionName])
   @@map("team_permission")
@@ -163,8 +184,8 @@ model Fa {
   id               Int                 @id @default(autoincrement())
   name             String              @db.VarChar(255)
   type             FaType?
-  team             Team?               @relation(fields: [teamCode], references: [code])
-  teamCode         String?             @map("team_code")
+  team             Team?               @relation(fields: [teamId], references: [id])
+  teamId           Int?                @map("team_id")
   userInCharge     User?               @relation(fields: [userInChargeId], references: [id], name: "in_charge")
   userInChargeId   Int?                @map("user_in_charge_id")
   createdAt        DateTime?           @default(now()) @map("created_at")
@@ -185,6 +206,8 @@ model Fa {
   fts              Ft[]
   collaborator     Collaborator?       @relation(fields: [collaboratorId], references: [id])
   collaboratorId   Int?
+  NewTeam          NewTeam?            @relation(fields: [newTeamCode], references: [code])
+  newTeamCode      String?             @db.VarChar(20)
 
   @@map("fa")
 }
@@ -337,9 +360,11 @@ model CatalogCategory {
   parent         Int?
   parentCategory CatalogCategory?  @relation("parent", fields: [parent], references: [id])
   subCategories  CatalogCategory[] @relation("parent")
-  ownerCode      String?           @map("owner_code")
-  owner          Team?             @relation("owner", fields: [ownerCode], references: [code])
+  ownerId        Int?              @map("owner_id")
+  owner          Team?             @relation("owner", fields: [ownerId], references: [id])
   gears          CatalogGear[]     @relation("category")
+  NewTeam        NewTeam?          @relation("new_owner", fields: [newTeamCode], references: [code])
+  newTeamCode    String?           @db.VarChar(20)
 
   @@map("catalog_category")
 }
@@ -438,6 +463,8 @@ model Ft {
   timeWindows  FtTimeWindow[]
   reviews      FtReview[]
   gearRequests GearRequest[]  @relation("gear-request-task")
+  NewTeam      NewTeam?       @relation(fields: [newTeamCode], references: [code])
+  newTeamCode  String?        @db.VarChar(20)
 
   @@map("ft")
 }
@@ -503,6 +530,8 @@ model FtTeamRequest {
   quantity      Int
 
   assignments Assignment[]
+  NewTeam     NewTeam?     @relation(fields: [newTeamCode], references: [code])
+  newTeamCode String?      @db.VarChar(20)
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
@@ -547,11 +576,13 @@ enum ReviewStatus {
 }
 
 model FtReview {
-  ft       Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId     Int          @map("ft_id")
-  team     Team         @relation(fields: [teamCode], references: [code])
-  teamCode String       @map("team_code")
-  status   ReviewStatus
+  ft          Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId        Int          @map("ft_id")
+  team        Team         @relation(fields: [teamCode], references: [code])
+  teamCode    String       @map("team_code")
+  status      ReviewStatus
+  NewTeam     NewTeam?     @relation(fields: [newTeamCode], references: [code])
+  newTeamCode String?      @db.VarChar(20)
 
   @@unique([ftId, teamCode])
   @@map("ft_review")
