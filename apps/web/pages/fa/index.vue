@@ -2,7 +2,7 @@
   <div class="fa">
     <h1>Fiches Activités</h1>
 
-    <div class="custom_container">
+    <div class="custom-container">
       <v-container class="sidebar">
         <FestivalEventFilter
           :search="filters.search"
@@ -13,13 +13,32 @@
           @change:status="filters.status = $event"
         >
           <template #additional-filters>
+            <div v-for="validator of validators" :key="validator.code">
+              <v-btn-toggle
+                tile
+                color="deep-purple accent-3"
+                group
+                @change="changeValidatorStatusFilter(validator, $event)"
+              >
+                <v-icon small>{{ validator.icon }}</v-icon>
+                <v-btn x-small value="VALIDATED" class="btn-check">
+                  validée
+                </v-btn>
+                <v-btn x-small value="REFUDED" class="btn-check">refusée</v-btn>
+                <v-btn x-small value="TO_VALIDATE" class="btn-check">
+                  à valider
+                </v-btn>
+              </v-btn-toggle>
+            </div>
+
             <v-switch
               v-if="canViewDeletedFa"
               v-model="filters.isDeleted"
               label="Afficher les FA supprimées"
             ></v-switch>
-            <!--<v-btn v-if="isSecu" @click="exportCsvSecu()">Export sécu</v-btn>
-            <v-btn v-if="isSigna" @click="exportCsvSigna()">Export signa</v-btn>-->
+            <v-btn v-if="canExportSignaNeeds" @click="exportCsvSigna()">
+              Export signa
+            </v-btn>
           </template>
         </FestivalEventFilter>
       </v-container>
@@ -32,7 +51,7 @@
           class="elevation-1"
         >
           <template #item.status="{ item }">
-            <v-chip-group id="status">
+            <v-chip-group>
               <v-chip :color="getFaStatus(item.status)" small>
                 {{ item.id }}
               </v-chip>
@@ -40,14 +59,8 @@
           </template>
 
           <template #item.name="{ item }">
-            <nuxt-link
-              :to="`/fa/${item.id}`"
-              :style="
-                item.isDeleted === true
-                  ? `text-decoration:line-through;`
-                  : `text-decoration:none;`
-              "
-              >{{ item.name }}
+            <nuxt-link :to="`/fa/${item.id}`" :class="deletedFaTextClass">
+              {{ item.name }}
             </nuxt-link>
           </template>
 
@@ -62,15 +75,19 @@
           <template #item.action="{ item }">
             <tr>
               <td>
-                <v-btn icon small :to="`/fa/${item.id}`">
-                  <v-icon small>mdi-circle-edit-outline</v-icon>
-                </v-btn>
-                <v-btn icon small @click="preDelete(item)">
-                  <v-icon small>mdi-delete</v-icon>
-                </v-btn>
+                <div v-if="!filters.isDeleted">
+                  <v-btn icon small :to="`/fa/${item.id}`">
+                    <v-icon small>mdi-circle-edit-outline</v-icon>
+                  </v-btn>
+                  <v-btn icon small @click="preDelete(item)">
+                    <v-icon small>mdi-delete</v-icon>
+                  </v-btn>
+                </div>
               </td>
             </tr>
           </template>
+
+          <template #no-data> Aucune FA trouvée </template>
         </v-data-table>
       </v-card>
     </div>
@@ -109,7 +126,6 @@ import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import {
-  Fa,
   FaSimplified,
   FaStatus,
   FaStatusLabel,
@@ -121,11 +137,18 @@ import { Team } from "~/utils/models/team.model";
 import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 
+enum ValidatorStatus {
+  VALIDATED = "VALIDATED",
+  REFUSED = "REFUSED",
+  TO_VALIDATE = "TO_VALIDATE",
+}
+
 interface FaData {
   headers: Header[];
-  selectedFa?: Fa;
+  selectedFa?: FaSimplified;
   isNewFaDialogOpen: boolean;
   isDeleteDialogOpen: boolean;
+  validatiorStatuses: Map<string, ValidatorStatus>;
   filters: {
     search: string;
     team?: Team;
@@ -149,6 +172,7 @@ export default Vue.extend({
     selectedFa: undefined,
     isNewFaDialogOpen: false,
     isDeleteDialogOpen: false,
+    validatiorStatuses: new Map(),
     filters: {
       search: "",
       team: undefined,
@@ -160,69 +184,81 @@ export default Vue.extend({
     title: "Fiches Activités",
   }),
   computed: {
-    FAs(): FaSimplified[] {
+    Fas(): FaSimplified[] {
       return this.$accessor.fa.FAs;
+    },
+    validators(): Team[] {
+      return this.$accessor.team.faValidators;
     },
     canViewDeletedFa(): boolean {
       return this.$accessor.user.can("view-deleted-fa");
     },
-    isSecu(): boolean {
-      return this.$accessor.user.can("manage-pass-secu");
-    },
-    isSigna(): boolean {
+    canExportSignaNeeds(): boolean {
       return this.$accessor.user.can("manage-location");
     },
     statuses(): [FaStatus, FaStatusLabel][] {
       return [...faStatusLabels.entries()];
     },
     filteredFas(): FaSimplified[] {
-      return this.FAs;
+      const { team, status } = this.filters;
+
+      return this.Fas.filter((fa) => {
+        return (
+          this.filterFaByTeam(team)(fa) && this.filterFaByStatus(status)(fa)
+        );
+      });
+    },
+    deletedFaTextClass(): string {
+      return this.filters.isDeleted ? "invalid-text" : "valid-text";
     },
   },
-  async mounted() {
-    await this.fetchFas();
+
+  watch: {
+    async "filters.isDeleted"() {
+      await this.fetchFas();
+    },
   },
+
+  async mounted() {
+    await Promise.all([
+      this.$accessor.team.fetchFaValidators(),
+      this.$accessor.fa.fetchFAs(),
+    ]);
+  },
+
   methods: {
+    filterFaByTeam(teamSearched?: Team): (fa: FaSimplified) => boolean {
+      return teamSearched
+        ? (fa) => fa.team?.code === teamSearched.code
+        : () => true;
+    },
+
+    filterFaByStatus(statusSearched?: FaStatus): (fa: FaSimplified) => boolean {
+      return statusSearched ? (fa) => fa.status === statusSearched : () => true;
+    },
+
     async fetchFas() {
-      const searchParams: SearchFa = {
-        isDeleted: this.filters.isDeleted,
-        status: this.filters.status,
-      };
+      const searchParams: SearchFa = { isDeleted: this.filters.isDeleted };
       await this.$accessor.fa.fetchFAs(searchParams);
     },
+
     getFaStatus(status: FaStatus): string {
       return status.toLowerCase();
     },
-    preDelete(fa: Fa) {
+
+    preDelete(fa: FaSimplified) {
       this.selectedFa = fa;
       this.isDeleteDialogOpen = true;
     },
+
     async deleteFa() {
       if (!this.selectedFa) return;
       await this.$accessor.fa.deleteFA(this.selectedFa.id);
       this.isDeleteDialogOpen = false;
       this.selectedFa = undefined;
     },
-    filterBySelectedTeam(FAs: FaSimplified[], team?: Team): FaSimplified[] {
-      if (!team) return FAs;
-      return FAs.filter((FA) => FA.team?.code === team.code);
-    },
-    /*download(filename: string, text: string) {
-      // We use the 'a' HTML element to incorporate file generation into
-      // the browser rather than server-side
-      const element = document.createElement("a");
-      element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text),
-      );
-      element.setAttribute("download", filename);
 
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    },
-    async exportCsvSecu() {
+    /*async exportCsvSecu() {
       // Parse data into a CSV string to be passed to the download function
       const csvHeader = "Numero;Nom;Resp;Nombre_de_pass;";
       const csvRows = this.FAs.map((fa) => {
@@ -238,18 +274,22 @@ export default Vue.extend({
       const regex = new RegExp(/undefined/i, "g");
       const parsedCSV = csv.replace(regex, "");
       this.download("passsecu.csv", parsedCSV);
-    },
+    },*/
+
     async exportCsvSigna() {
-      const signa_needs = await this.$accessor.fa.getSignaNeedsForCsv();
-      const csvHeader = "Numero FA;Nom FA;Type;Texte;Nombre;Commentaire;";
-      const csvRows = signa_needs.map((signa_need) => {
+      const signaNeeds = await this.$accessor.fa.getSignaNeedsForCsv();
+      if (!signaNeeds) return;
+      const csvHeader =
+        "Numero FA;Nom FA;Type;Texte;Nombre;Taille;Commentaire;";
+      const csvRows = signaNeeds.map((signaNeed) => {
         const rowData = [
-          signa_need.fa_id,
-          signa_need.fa_name,
-          signa_need.signa_type,
-          signa_need.text,
-          signa_need.count,
-          signa_need.comment,
+          signaNeed.faId,
+          signaNeed.faName,
+          signaNeed.signaType,
+          signaNeed.text,
+          signaNeed.count,
+          signaNeed.size,
+          signaNeed.comment,
         ];
         return `${rowData.join(";")}`;
       });
@@ -257,7 +297,28 @@ export default Vue.extend({
       const regex = new RegExp(/undefined/i, "g");
       const parsedCSV = csv.replace(regex, "");
       this.download("exportSigna.csv", parsedCSV);
-    },*/
+    },
+
+    download(filename: string, text: string) {
+      // We use the 'a' HTML element to incorporate file generation into
+      // the browser rather than server-side
+      const element = document.createElement("a");
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(text),
+      );
+      element.setAttribute("download", filename);
+
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    },
+
+    changeValidatorStatusFilter(team: Team, value: ValidatorStatus) {
+      this.validatiorStatuses.set(team.code, value);
+    },
+
     formatUsername(user?: User) {
       return user ? formatUsername(user) : "";
     },
@@ -267,15 +328,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 h1 {
-  margin-left: 12px;
+  margin-left: 15px;
 }
 
-.small {
-  font-size: small;
-  margin-left: 0;
-}
-
-.custom_container {
+.custom-container {
   display: flex;
   margin: 1%;
 }
@@ -289,6 +345,18 @@ h1 {
   margin-left: 20px;
   height: fit-content;
   width: 100vw;
+
+  .valid-text {
+    text-decoration: none;
+  }
+
+  .invalid-text {
+    text-decoration: line-through;
+  }
+}
+
+.btn-check {
+  padding: 0 2px;
 }
 
 .btn-plus {
@@ -298,7 +366,7 @@ h1 {
 }
 
 @media only screen and (max-width: 800px) {
-  .custom_container {
+  .custom-container {
     flex-direction: column;
   }
 
