@@ -38,8 +38,7 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
-import { SlugifyService } from "@overbookd/slugify";
-import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
+import { matchingSearchableValue } from "~/utils/search/search.utils";
 
 interface FilterableTimeSpanListData {
   teams: Team[];
@@ -59,20 +58,8 @@ export default Vue.extend({
     timeSpans(): AvailableTimeSpan[] {
       return this.$accessor.assignment.timeSpans;
     },
-    searchableTimeSpans(): Searchable<AvailableTimeSpan>[] {
-      return this.timeSpans.map((timeSpan) => ({
-        ...timeSpan,
-        searchable: SlugifyService.apply(
-          `${timeSpan.ft.id} ${timeSpan.ft.name}`,
-        ),
-      }));
-    },
     filteredTimeSpans(): AvailableTimeSpan[] {
-      const matchedTimeSpans = matchingSearchItems<AvailableTimeSpan>(
-        this.searchableTimeSpans,
-        this.searchTimeSpan,
-      );
-      return matchedTimeSpans
+      return this.timeSpans
         .filter((timeSpan) => this.isMatchingFilter(timeSpan))
         .map((timeSpan) => this.removeUnavailableTeamRequests(timeSpan));
     },
@@ -144,7 +131,8 @@ export default Vue.extend({
       return (
         this.hasAssignableSlotsAvailable(timeSpan) &&
         this.filterTimeSpansByTeams(this.teams)(timeSpan) &&
-        this.filterFtByCatergoryOrPriority(this.category)(timeSpan.ft)
+        this.filterFtByCatergoryOrPriority(this.category)(timeSpan.ft) &&
+        this.filterTimeSpanBySearch(this.searchTimeSpan)(timeSpan)
       );
     },
     hasAssignableSlotsAvailable(timeSpan: AvailableTimeSpan): boolean {
@@ -155,6 +143,14 @@ export default Vue.extend({
           return quantity > assignmentCount && candidate.canBeAssignedAs(code);
         },
       );
+    },
+    filterTimeSpanBySearch(
+      search: string,
+    ): (timeSpan: AvailableTimeSpan) => boolean {
+      return (timeSpan) => {
+        const searchableValue = `${timeSpan.ft.id} ${timeSpan.ft.name}`;
+        return matchingSearchableValue(searchableValue, search);
+      };
     },
   },
 });

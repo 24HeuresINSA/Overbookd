@@ -11,3 +11,11 @@ export function matchingSearchItems<T>(
     return searchable.includes(search);
   });
 }
+
+export function matchingSearchableValue(
+  searchableValue: string,
+  searchItem: string,
+): boolean {
+  const search = SlugifyService.apply(searchItem);
+  return searchableValue.includes(search);
+}
