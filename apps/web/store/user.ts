@@ -192,7 +192,9 @@ export const actions = actionTree(
       if (!res) return undefined;
       return castUserWithDate(res.data);
     },
-    async updateUser({ commit, state }, user: UserPersonnalData) {
+    async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
+      if (state.me.id === user.id) dispatch("updateMyUser");
+
       const res = await safeCall(
         this,
         userRepo.updateUser(this, user.id, castToUserUpdateForm(user)),
@@ -203,11 +205,16 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
-      if (res.data.id === state.me.id) {
-        commit("SET_USER", castUserWithDate(res.data));
-      }
     },
-
+    async updateMyUser({ commit }, user: UserPersonnalData) {
+      const res = await safeCall(this, userRepo.updateMyUser(this, user), {
+        successMessage: "Profil mis à jour ! 🎉",
+        errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
+      });
+      if (!res) return;
+      commit("UPDATE_USER", castUserWithDate(res.data));
+      commit("SET_USER", castUserWithDate(res.data));
+    },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
         this,
