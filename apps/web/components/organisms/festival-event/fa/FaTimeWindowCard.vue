@@ -71,7 +71,7 @@ import {
   TimeWindowType,
 } from "~/utils/models/fa.model";
 import { Period } from "~/utils/models/gear-request.model";
-import { MyUserInformation, User } from "~/utils/models/user.model";
+import { MyUserInformation, User } from "@overbookd/user";
 
 export default Vue.extend({
   name: "FaTimeWindowCard",

@@ -149,7 +149,7 @@
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { Team } from "~/utils/models/team.model";
-import { UserCreation } from "~/utils/models/user.model";
+import { UserCreateForm } from "@overbookd/user";
 import {
   InputRulesData,
   required,
@@ -248,7 +248,7 @@ export default Vue.extend({
         this.repeatPasswordRule(this.repeatPassword) !== true
       );
     },
-    mUser(): UserCreation {
+    mUser(): UserCreateForm {
       return {
         firstname: this.firstname,
         lastname: this.lastname,

@@ -1,5 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { User, VolunteerTask } from "./user.model";
+import { VolunteerTask } from "./user.model";
+import { User } from "@overbookd/user";
 
 export interface Volunteer extends User {
   phone: string;

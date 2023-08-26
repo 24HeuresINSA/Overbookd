@@ -46,7 +46,7 @@ import {
 } from "~/utils/models/gear-request.model";
 import { Review, Reviewer } from "~/utils/models/review.model";
 import { Team } from "~/utils/models/team.model";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 
 const repo = RepoFactory.FtRepository;

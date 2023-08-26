@@ -46,13 +46,13 @@ import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities
 import { computeNextHourDate } from "~/utils/date/date.utils";
 
 import {
-  CompleteUserWithPermissions,
   Task,
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
+import { UserPersonnalData } from "@overbookd/user";
 
 interface CalendarEventWithFt {
   start: Date;
@@ -100,7 +100,7 @@ export default Vue.extend({
         }),
       );
     },
-    user(): CompleteUserWithPermissions {
+    user(): UserPersonnalData {
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {

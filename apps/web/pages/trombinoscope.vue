@@ -29,7 +29,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user.model";
+import { UserPersonnalData } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 
@@ -41,23 +41,21 @@ export default Vue.extend({
       return this.$accessor.user.users;
     },
     usersBornToday() {
-      return this.$accessor.user.users.filter(
-        (user: CompleteUserWithPermissions) => {
-          const today = new Date();
-          const birthdate = new Date(user.birthdate);
-          return (
-            birthdate.getDate() === today.getDate() &&
-            birthdate.getMonth() === today.getMonth()
-          );
-        },
-      );
+      return this.$accessor.user.users.filter((user: UserPersonnalData) => {
+        const today = new Date();
+        const birthdate = new Date(user.birthdate);
+        return (
+          birthdate.getDate() === today.getDate() &&
+          birthdate.getMonth() === today.getMonth()
+        );
+      });
     },
   },
   created() {
     if (!this.users.length) this.$accessor.user.fetchUsers();
   },
   mounted() {
-    this.usersBornToday.forEach((user: CompleteUserWithPermissions) => {
+    this.usersBornToday.forEach((user: UserPersonnalData) => {
       this.$accessor.user.setProfilePicture(user);
     });
   },

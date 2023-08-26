@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 interface SearchFriendData {

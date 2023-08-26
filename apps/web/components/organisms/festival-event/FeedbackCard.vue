@@ -34,11 +34,7 @@ import {
   FtFeedback,
   FtFeedbackSubjectType,
 } from "~/utils/models/feedback.model";
-import {
-  DisplayedUser,
-  MyUserInformation,
-  User,
-} from "~/utils/models/user.model";
+import { MyUserInformation, User } from "@overbookd/user";
 
 export default Vue.extend({
   name: "FeedbackCard",
@@ -109,7 +105,7 @@ export default Vue.extend({
       }
       this.comment = "";
     },
-    getAuthorName(user?: DisplayedUser) {
+    getAuthorName(user?: User) {
       if (!user) return `${this.me.firstname} ${this.me.lastname}`;
       return `${user.firstname} ${user.lastname}`;
     },

@@ -9,22 +9,25 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user.model";
+import { UserPersonnalData } from "@overbookd/user";
 
 export default Vue.extend({
   name: "ProfilePicture",
   props: {
-    user: { type: Object as () => CompleteUserWithPermissions, required: true },
+    user: {
+      type: Object as () => UserPersonnalData,
+      required: true,
+    },
   },
   mounted() {
     if (!this.hasProfilePicture(this.user)) return;
     this.getProfilePictureBlob(this.user);
   },
   methods: {
-    hasProfilePicture(user: CompleteUserWithPermissions): boolean {
+    hasProfilePicture(user: UserPersonnalData): boolean {
       return user.profilePicture !== null;
     },
-    getProfilePictureBlob(user: CompleteUserWithPermissions) {
+    getProfilePictureBlob(user: UserPersonnalData) {
       return this.$accessor.user.setProfilePicture(user);
     },
   },

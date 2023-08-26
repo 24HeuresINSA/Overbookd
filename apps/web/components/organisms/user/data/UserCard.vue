@@ -30,7 +30,7 @@
         </h3>
         <h3 class="mt-1">🗣 {{ me.tasksCount }} tâches affectées</h3>
 
-        <OverChips :roles="me.team"></OverChips>
+        <OverChips :roles="me.teams"></OverChips>
       </v-card-text>
     </v-card>
   </div>
@@ -41,7 +41,7 @@ import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { MyUserInformation } from "~/utils/models/user.model";
+import { MyUserInformation } from "@overbookd/user";
 
 export default Vue.extend({
   name: "UserCard",

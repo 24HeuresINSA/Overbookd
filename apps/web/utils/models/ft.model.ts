@@ -6,7 +6,7 @@ import { FtTimeSpan } from "./ft-time-span.model";
 import { Review } from "./review.model";
 import { SignaLocation } from "./signa-location.model";
 import { Team } from "./team.model";
-import { User } from "./user.model";
+import { User } from "@overbookd/user";
 
 export enum FtStatus {
   DRAFT = "DRAFT",

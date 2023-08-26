@@ -1,30 +1,31 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
-  CompleteUser,
-  CompleteUserWithPermissions,
-  MyUserInformation,
-  User,
-  UserCreation,
-  UserModification,
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
 import { HttpStringified } from "~/utils/types/http";
+import {
+  MyUserInformation,
+  User,
+  UserPersonnalData,
+  UserCreateForm,
+  UserUpdateForm,
+} from "@overbookd/user";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class UserRepository {
   private static readonly basePath = "users";
 
-  static createUser(context: Context, user: UserCreation) {
-    return context.$axios.post<HttpStringified<CompleteUser>>(
+  static createUser(context: Context, user: UserCreateForm) {
+    return context.$axios.post<HttpStringified<UserPersonnalData>>(
       `${this.basePath}`,
       user,
     );
   }
 
   static getUser(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<CompleteUser>>(
+    return context.$axios.get<HttpStringified<UserPersonnalData>>(
       `${this.basePath}/${userId}`,
     );
   }
@@ -36,31 +37,31 @@ export class UserRepository {
   }
 
   static getAllUsers(context: Context) {
-    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
       this.basePath,
     );
   }
 
   static getVolunteers(context: Context) {
-    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
       `${this.basePath}/volunteers`,
     );
   }
 
   static getCandidates(context: Context) {
-    return context.$axios.get<HttpStringified<CompleteUserWithPermissions[]>>(
+    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
       `${this.basePath}/candidates`,
     );
   }
 
   static getAllPersonnalAccountConsummers(context: Context) {
-    return context.$axios.get<HttpStringified<CompleteUser[]>>(
+    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
       `${this.basePath}/personnal-account-consummers`,
     );
   }
 
   static async addProfilePicture(context: Context, profilePicture: FormData) {
-    return context.$axios.post<HttpStringified<CompleteUser>>(
+    return context.$axios.post<HttpStringified<MyUserInformation>>(
       `${this.basePath}/me/profile-picture`,
       profilePicture,
     );
@@ -92,16 +93,16 @@ export class UserRepository {
   static updateUser(
     context: Context,
     userId: number,
-    userData: UserModification,
+    userData: UserUpdateForm,
   ) {
-    return context.$axios.put<HttpStringified<CompleteUserWithPermissions>>(
+    return context.$axios.put<HttpStringified<UserPersonnalData>>(
       `${this.basePath}/${userId}`,
       userData,
     );
   }
 
-  static updateMyUser(context: Context, userData: Partial<UserModification>) {
-    return context.$axios.patch<HttpStringified<CompleteUserWithPermissions>>(
+  static updateMyUser(context: Context, userData: Partial<UserUpdateForm>) {
+    return context.$axios.patch<HttpStringified<MyUserInformation>>(
       `${this.basePath}/me`,
       userData,
     );

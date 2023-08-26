@@ -3,7 +3,7 @@
     <ProfilePicture :user="user" />
     <v-card-title>{{ formatUserNameWithNickname(user) }} </v-card-title>
     <v-card-subtitle>
-      <TeamChip v-for="team of user.team" :key="team" :team="team" />
+      <TeamChip v-for="team of user.teams" :key="team" :team="team" />
     </v-card-subtitle>
     <v-card-text class="comment">
       {{ user.comment }}
@@ -15,14 +15,17 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user.model";
+import { UserPersonnalData } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 export default Vue.extend({
   name: "TrombinoscopeCard",
   components: { TeamChip, ProfilePicture },
   props: {
-    user: { type: Object as () => CompleteUserWithPermissions, required: true },
+    user: {
+      type: Object as () => UserPersonnalData,
+      required: true,
+    },
   },
   methods: {
     formatUserNameWithNickname,

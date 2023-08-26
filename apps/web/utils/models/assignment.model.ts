@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+import { User } from "@overbookd/user";
 
 export const AssignmentModes = {
   ORGA_TASK: "orga-task",

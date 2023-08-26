@@ -14,10 +14,11 @@ export interface UserPersonnalData extends User {
   phone: string;
   comment?: string;
   hasPayedContributions: boolean;
-  profilePicture?: string;
   charisma: number;
   balance: number;
   teams: string[];
+  profilePicture?: string;
+  profilePictureBlob?: string;
 }
 
 export interface MyUserInformation extends UserPersonnalData {

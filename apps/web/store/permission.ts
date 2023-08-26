@@ -5,7 +5,6 @@ import {
   CreatePermissionForm,
   Permission,
 } from "~/utils/models/permission.model";
-import { CompleteUserWithPermissions } from "~/utils/models/user.model";
 
 const permissionRepo = RepoFactory.PermissionRepository;
 
@@ -22,11 +21,6 @@ export const getters = getterTree(state, {
   allPermissions(state): Permission[] {
     return state.permissions;
   },
-  isValidated:
-    () =>
-    (user: CompleteUserWithPermissions): boolean => {
-      return user.permissions.includes("validated-user");
-    },
 });
 
 export const mutations = mutationTree(state, {

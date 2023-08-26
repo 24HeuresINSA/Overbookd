@@ -126,7 +126,7 @@ import {
   TimeSpanAssignee,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 import { isNumber, isString } from "~/utils/types/check";
 
 export default Vue.extend({
