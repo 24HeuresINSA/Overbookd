@@ -4,36 +4,15 @@
 
     <div class="custom_container">
       <v-container class="sidebar">
-        <v-card>
-          <v-card-title>Filtres</v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="filters.search"
-              label="Recherche"
-            ></v-text-field>
-            <SearchTeam
-              v-model="filters.team"
-              label="Équipe"
-              :boxed="false"
-            ></SearchTeam>
-
-            <h3>Statut</h3>
-            <v-list dense shaped>
-              <v-list-item-group v-model="filters.status">
-                <v-list-item :value="null">
-                  <v-list-item-title>Tous</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  v-for="[status, label] in statuses"
-                  :key="status"
-                  :value="status"
-                >
-                  <v-list-item-title>
-                    {{ label }}
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
+        <FestivalEventFilter
+          :search="filters.search"
+          :team="filters.team"
+          :status="filters.status"
+          @change:search="filters.search = $event"
+          @change:team="filters.team = $event"
+          @change:status="filters.status = $event"
+        >
+          <template #additional-filters>
             <v-switch
               v-if="canViewDeletedFa"
               v-model="filters.isDeleted"
@@ -41,8 +20,8 @@
             ></v-switch>
             <!--<v-btn v-if="isSecu" @click="exportCsvSecu()">Export sécu</v-btn>
             <v-btn v-if="isSigna" @click="exportCsvSigna()">Export signa</v-btn>-->
-          </v-card-text>
-        </v-card>
+          </template>
+        </FestivalEventFilter>
       </v-container>
 
       <v-card class="data-table">
@@ -73,20 +52,20 @@
           </template>
 
           <template #item.team="{ item }">
-            {{ item?.team?.name }}
+            {{ item.team?.name }}
           </template>
 
           <template #item.userInCharge="{ item }">
-            {{ item.userInCharge ? formatUsername(item.userInCharge) : "" }}
+            {{ formatUsername(item.userInCharge) }}
           </template>
 
           <template #item.action="{ item }">
             <tr>
               <td>
-                <v-btn class="mx-2" icon small :to="`/fa/${item.id}`">
+                <v-btn icon small :to="`/fa/${item.id}`">
                   <v-icon small>mdi-circle-edit-outline</v-icon>
                 </v-btn>
-                <v-btn class="mx-2" icon small @click="preDelete(item)">
+                <v-btn icon small @click="preDelete(item)">
                   <v-icon small>mdi-delete</v-icon>
                 </v-btn>
               </td>
@@ -126,9 +105,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import {
   Fa,
   FaSimplified,
@@ -157,7 +136,7 @@ interface FaData {
 
 export default Vue.extend({
   name: "Fa",
-  components: { SearchTeam, NewFaCard, SnackNotificationContainer },
+  components: { FestivalEventFilter, NewFaCard, SnackNotificationContainer },
   data: (): FaData => ({
     headers: [
       { text: "Statut", value: "status", sortable: false },
@@ -279,8 +258,8 @@ export default Vue.extend({
       const parsedCSV = csv.replace(regex, "");
       this.download("exportSigna.csv", parsedCSV);
     },*/
-    formatUsername(user: User) {
-      return formatUsername(user);
+    formatUsername(user?: User) {
+      return user ? formatUsername(user) : "";
     },
   },
 });
@@ -310,11 +289,6 @@ h1 {
   margin-left: 20px;
   height: fit-content;
   width: 100vw;
-}
-
-.btn-check {
-  padding-right: 2px;
-  padding-left: 2px;
 }
 
 .btn-plus {

@@ -52,8 +52,8 @@ export default Vue.extend({
       return this.festivalEvent === "FA";
     },
     titleWithId(): string {
-      if (this.isFA) return `Fiche Activité n°${this.$route.params.fa}`;
-      return `Fiche Tâche n°${this.$route.params.ft}`;
+      if (this.isFA) return `Fiche Activité n°${this.$route.params.faId}`;
+      return `Fiche Tâche n°${this.$route.params.ftId}`;
     },
     name(): string {
       return this.isFA ? this.mFA.name : this.mFT.name;
