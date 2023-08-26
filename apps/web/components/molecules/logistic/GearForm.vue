@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearForm } from "~/store/catalog";
+import { GearForm } from "~/store/catalogGear";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";
 import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
@@ -109,8 +109,8 @@ export default Vue.extend({
         gear = { ...gear, category: this.category?.id };
       }
       const action = this.gear.id
-        ? this.$accessor.catalog.updateGear({ ...gear, id: this.gear.id })
-        : this.$accessor.catalog.createGear(gear);
+        ? this.$accessor.catalogGear.updateGear({ ...gear, id: this.gear.id })
+        : this.$accessor.catalogGear.createGear(gear);
 
       await action;
       this.closeDialog();

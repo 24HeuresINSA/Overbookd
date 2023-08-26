@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalog";
+import { GearSearchOptions } from "~/store/catalogGear";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/data-table.model";
 import { Team } from "~/utils/models/team.model";
@@ -126,7 +126,7 @@ export default Vue.extend({
   },
   computed: {
     gears(): Gear[] {
-      return this.$accessor.catalog.gears;
+      return this.$accessor.catalogGear.gears;
     },
     canSearch(): boolean {
       return (
@@ -157,7 +157,7 @@ export default Vue.extend({
     },
     async fetchGears(searchOptions: GearSearchOptions) {
       this.loading = true;
-      await this.$accessor.catalog.fetchGears(searchOptions);
+      await this.$accessor.catalogGear.fetchGears(searchOptions);
       this.loading = false;
     },
     openUpdateGearDialog(gear: Gear) {
@@ -192,7 +192,7 @@ export default Vue.extend({
     },
     async deleteGear() {
       if (!this.selectedGear) return;
-      await this.$accessor.catalog.deleteGear(this.selectedGear);
+      await this.$accessor.catalogGear.deleteGear(this.selectedGear);
     },
     defectSearchGears() {
       if (this.delay) clearInterval(this.delay);

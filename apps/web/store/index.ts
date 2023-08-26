@@ -3,6 +3,7 @@ import { actionTree, getAccessorType, mutationTree } from "typed-vuex";
 // Import all submodules
 import * as assignment from "./assignment";
 import * as catalog from "./catalog";
+import * as catalogGear from "./catalogGear";
 import * as charismaPeriod from "./charismaPeriod";
 import * as configuration from "./configuration";
 import * as dialog from "./dialog";
@@ -51,6 +52,7 @@ export const accessorType = getAccessorType({
     team,
     assignment,
     catalog,
+    catalogGear,
     configuration,
     signa,
     publicAnimation,
