@@ -103,7 +103,7 @@ export class RegistrationService {
       },
       select: SELECT_NEWCOMER,
     });
-    return newComers.map(this.formatToNewcomer);
+    return newComers.map(RegistrationService.formatToNewcomer);
   }
 
   async enrollNewcomers(
@@ -126,8 +126,12 @@ export class RegistrationService {
     ]);
   }
 
-  private formatToNewcomer(newcomer: DatabaseNewcomer): IDefineANewcomer {
-    const teams = this.formatTeamsToJoinableTeams(newcomer.teams);
+  private static formatToNewcomer(
+    newcomer: DatabaseNewcomer,
+  ): IDefineANewcomer {
+    const teams = RegistrationService.formatTeamsToJoinableTeams(
+      newcomer.teams,
+    );
     return {
       id: newcomer.id,
       firstName: newcomer.firstname,
@@ -137,7 +141,9 @@ export class RegistrationService {
     };
   }
 
-  private formatTeamsToJoinableTeams(teams: DatabaseTeamCode[]): NewcomerTeams {
+  private static formatTeamsToJoinableTeams(
+    teams: DatabaseTeamCode[],
+  ): NewcomerTeams {
     const teamCodes = teams.map(({ team }) => team.code);
 
     if (teamCodes.length === 0) return [];
