@@ -18,9 +18,12 @@
       "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/signa": ["../../domains/signa/src"],
       "@overbookd/slugify": ["../../libraries/slugify/src"],
       "@overbookd/user": ["../../domains/user/src"],
-      "@overbookd/volunteer-availability": ["../../domains/volunteer-availability/src"]
+      "@overbookd/volunteer-availability": [
+        "../../domains/volunteer-availability/src"
+      ]
     },
     "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node"]
   },
