@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Catalogue</h1>
+    <h1>Catalogue Matos</h1>
     <div class="catalog">
       <section class="gears">
         <GearListing></GearListing>
@@ -31,7 +31,7 @@ import GearForm from "~/components/molecules/logistic/GearForm.vue";
 import GearListing from "~/components/organisms/logistic/GearListing.vue";
 
 export default Vue.extend({
-  name: "Catalog",
+  name: "CatalogGear",
   components: {
     GearListing,
     CategoriesTreeView,
@@ -44,7 +44,7 @@ export default Vue.extend({
     };
   },
   head: () => ({
-    title: "Catalogue",
+    title: "Catalogue Matos",
   }),
   computed: {
     isCatalogWriter(): boolean {
