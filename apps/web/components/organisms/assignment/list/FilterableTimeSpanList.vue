@@ -39,9 +39,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
 import { SlugifyService } from "@overbookd/slugify";
-import { matchingSearchItems } from "~/utils/search/search.utils";
-
-type SearchableTimeSpan = AvailableTimeSpan & { searchable: string };
+import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
 
 interface FilterableTimeSpanListData {
   teams: Team[];
@@ -61,7 +59,7 @@ export default Vue.extend({
     timeSpans(): AvailableTimeSpan[] {
       return this.$accessor.assignment.timeSpans;
     },
-    searchableTimeSpans(): SearchableTimeSpan[] {
+    searchableTimeSpans(): Searchable<AvailableTimeSpan>[] {
       return this.timeSpans.map((timeSpan) => ({
         ...timeSpan,
         searchable: SlugifyService.apply(

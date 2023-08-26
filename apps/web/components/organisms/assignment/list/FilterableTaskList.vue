@@ -29,9 +29,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
-import { matchingSearchItems } from "~/utils/search/search.utils";
-
-type SearchableFtWithTimespan = FtWithTimeSpan & { searchable: string };
+import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
 
 interface FilterableTaskListData {
   teams: Team[];
@@ -53,7 +51,7 @@ export default Vue.extend({
     fts(): FtWithTimeSpan[] {
       return this.$accessor.assignment.fts;
     },
-    searchableFts(): SearchableFtWithTimespan[] {
+    searchableFts(): Searchable<FtWithTimeSpan>[] {
       return this.fts.map((ft) => ({
         ...ft,
         searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),

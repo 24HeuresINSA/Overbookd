@@ -43,9 +43,7 @@ import {
 } from "~/utils/models/assignment.model";
 import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
-import { matchingSearchItems } from "~/utils/search/search.utils";
-
-type SearchableVolunteer = Volunteer & { searchable: string };
+import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
 
 interface FilterableVolunteerListData {
   teams: Team[];
@@ -65,7 +63,7 @@ export default Vue.extend({
     volunteers(): Volunteer[] {
       return this.$accessor.assignment.volunteers;
     },
-    searchableVolunteers(): SearchableVolunteer[] {
+    searchableVolunteers(): Searchable<Volunteer>[] {
       return this.volunteers.map((volunteer) => ({
         ...volunteer,
         searchable: SlugifyService.apply(
@@ -74,7 +72,7 @@ export default Vue.extend({
       }));
     },
     displayedVolunteers(): Volunteer[] {
-      const matchedVolunteers = matchingSearchItems<SearchableVolunteer>(
+      const matchedVolunteers = matchingSearchItems<Volunteer>(
         this.searchableVolunteers,
         this.searchVolunteer,
       );

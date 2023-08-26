@@ -4,7 +4,7 @@
     <v-data-table
       v-model="selectedNewcomers"
       :headers="headers"
-      :items="matchingSearchNewcomers"
+      :items="filteredNewcomers"
       :items-per-page="30"
       show-select
       class="elevation-1"
@@ -57,14 +57,13 @@ import { Header } from "~/utils/models/data-table.model";
 import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
+import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
 
 interface RegistrationsData {
   headers: Header[];
   searchNewcomer: string;
   selectedNewcomers: IDefineANewcomer[];
 }
-
-type SearchableNewcomer = IDefineANewcomer & { searchable: string };
 
 export default Vue.extend({
   name: "Registrations",
@@ -80,7 +79,7 @@ export default Vue.extend({
     selectedNewcomers: [],
   }),
   computed: {
-    searchableNewcomers(): SearchableNewcomer[] {
+    searchableNewcomers(): Searchable<IDefineANewcomer>[] {
       return this.$accessor.registration.newcomers.map((newcomer) => ({
         ...newcomer,
         searchable: SlugifyService.apply(
@@ -88,11 +87,11 @@ export default Vue.extend({
         ),
       }));
     },
-    matchingSearchNewcomers(): IDefineANewcomer[] {
-      const search = SlugifyService.apply(this.searchNewcomer);
-      return this.searchableNewcomers.filter(({ searchable }) => {
-        return searchable.includes(search);
-      });
+    filteredNewcomers(): IDefineANewcomer[] {
+      return matchingSearchItems<IDefineANewcomer>(
+        this.searchableNewcomers,
+        this.searchNewcomer,
+      );
     },
     joinableTeams(): JoinableTeam[] {
       return ["hard", "soft", "confiance"];
