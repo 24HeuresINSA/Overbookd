@@ -65,6 +65,7 @@
         </v-list>
       </v-menu>
     </v-card-actions>
+
     <SnackNotificationContainer />
   </div>
 </template>
@@ -77,9 +78,9 @@ import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import RegistrationConfiguration from "~/components/molecules/registration/RegistrationConfiguration.vue";
-import { ONE_DAY_IN_MS } from "../../../libraries/period/src";
+import { ONE_DAY_IN_MS } from "@overbookd/period";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 interface RegistrationsData {
   headers: Header[];
@@ -99,8 +100,8 @@ export default Vue.extend({
   },
   data: (): RegistrationsData => ({
     headers: [
-      { text: "Nom", value: "lastName" },
-      { text: "Prénom", value: "firstName" },
+      { text: "Prénom", value: "firstname" },
+      { text: "Nom", value: "lastname" },
       { text: "Date d'inscription", value: "registeredAt" },
       { text: "Equipes", value: "teams", sortable: false },
     ],
@@ -113,7 +114,7 @@ export default Vue.extend({
       return this.$accessor.registration.newcomers.map((newcomer) => ({
         ...newcomer,
         searchable: SlugifyService.apply(
-          `${newcomer.firstName} ${newcomer.lastName}`,
+          `${newcomer.firstname} ${newcomer.lastname}`,
         ),
       }));
     },

@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { NewcomerRepresentation, NewcomerTeams } from "../registration.model";
+import { NewcomerRepresentation } from "../registration.model";
+import { Teams } from "@overbookd/registration";
 
 export class NewcomerResponseDto implements NewcomerRepresentation {
   @ApiProperty({
@@ -14,14 +15,14 @@ export class NewcomerResponseDto implements NewcomerRepresentation {
     description: "The newcomer firstname",
     type: String,
   })
-  firstName: string;
+  firstname: string;
 
   @ApiProperty({
     required: true,
     description: "The newcomer lastname",
     type: String,
   })
-  lastName: string;
+  lastname: string;
 
   @ApiProperty({
     required: true,
@@ -35,5 +36,5 @@ export class NewcomerResponseDto implements NewcomerRepresentation {
     description: "The newcomer teams",
     example: [],
   })
-  teams: NewcomerTeams;
+  teams: Teams;
 }

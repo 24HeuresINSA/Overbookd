@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import {
-  ADHERENT,
+  EnrollNewcomersForm,
   FulfilledRegistration,
   IDefineANewcomer,
   NewcomerRegisteredEvent,
@@ -9,6 +9,7 @@ import {
   Registree,
   TeamCode,
   VOLUNTEER,
+  ADHERENT,
   Teams,
   isJoinableTeams,
 } from "@overbookd/registration";
@@ -17,7 +18,6 @@ import { InviteNewAdherents } from "@overbookd/registration";
 import { BadRequestException } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { SELECT_USER_TEAMS } from "../user/user.query";
-import { NewcomerToEnroll } from "./registration.model";
 
 const SELECT_NEWCOMER = {
   id: true,
@@ -90,7 +90,7 @@ export class RegistrationService {
     const now = new Date();
     const minRegisterDate = new Date(now.setDate(now.getDate() - 60));
 
-    const newComers = await this.prisma.user.findMany({
+    const newcomers = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
@@ -105,13 +105,13 @@ export class RegistrationService {
       },
       select: SELECT_NEWCOMER,
     });
-    return newComers.map(RegistrationService.formatToNewcomer);
+    return newcomers.map(RegistrationService.formatToNewcomer);
   }
 
-  async enrollNewcomers(
-    team: TeamCode,
-    newcomers: NewcomerToEnroll[],
-  ): Promise<void> {
+  async enrollNewcomers({
+    newcomers,
+    team,
+  }: EnrollNewcomersForm): Promise<void> {
     const allRequests = newcomers.map(({ id }) =>
       this.prisma.user.update({
         where: { id },
@@ -135,8 +135,8 @@ export class RegistrationService {
     );
     return {
       id: newcomer.id,
-      firstName: newcomer.firstname,
-      lastName: newcomer.lastname,
+      firstname: newcomer.firstname,
+      lastname: newcomer.lastname,
       registeredAt: newcomer.createdAt,
       teams,
     };

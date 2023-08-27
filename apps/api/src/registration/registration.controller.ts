@@ -26,7 +26,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { IDefineANewcomer, TeamCode } from "@overbookd/registration";
 import { NewcomerResponseDto } from "./dto/newcomer.response.dto";
-import { EnrollNewcomerRequestDto } from "./dto/enroll-newcomer.request.dto";
+import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("registration")
@@ -40,6 +40,7 @@ import { EnrollNewcomerRequestDto } from "./dto/enroll-newcomer.request.dto";
 @ApiUnauthorizedResponse({
   description: "User dont have the right to access this route",
 })
+@Controller()
 export class RegistrationController {
   private readonly logger = new Logger(RegistrationController.name);
 
@@ -79,12 +80,11 @@ export class RegistrationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission("manage-users")
-  @Post("/newcomers/enroll-to/:team")
+  @Post("/newcomers/enroll")
   @HttpCode(204)
   @ApiBody({
-    description: "Newcomers to enroll",
-    type: EnrollNewcomerRequestDto,
-    isArray: true,
+    description: "Newcomers to enroll to a team",
+    type: EnrollNewcomersRequestDto,
   })
   @ApiResponse({
     status: 204,
@@ -92,8 +92,8 @@ export class RegistrationController {
   })
   enrollNewcomers(
     @Param("team") team: TeamCode,
-    @Body() newcomers: EnrollNewcomerRequestDto[],
+    @Body() payload: EnrollNewcomersRequestDto,
   ): Promise<void> {
-    return this.registrationService.enrollNewcomers(team, newcomers);
+    return this.registrationService.enrollNewcomers(payload);
   }
 }

@@ -1,11 +1,9 @@
-import { TeamCode } from "./register-form";
-
-export type Teams = [] | [TeamCode] | [TeamCode, TeamCode];
+import { TeamCode, Teams } from "./register-form";
 
 export interface IDefineANewcomer {
   id: number;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   registeredAt: Date;
   teams: Teams;
 }

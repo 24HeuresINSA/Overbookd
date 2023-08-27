@@ -63,10 +63,13 @@ export const actions = actionTree(
         newcomers,
       }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
-      const newComersId = newcomers.map(({ id }) => ({ id }));
+      const body = {
+        newcomers: newcomers.map(({ id }) => ({ id })),
+        team,
+      };
       const res = await safeCall(
         this,
-        registrationRepo.enrollNewcomers(this, team, newComersId),
+        registrationRepo.enrollNewcomers(this, body),
         {
           successMessage: `Les nouveaux arrivants sélectionnés ont bien été ajoutés à l'équipe ${team}`,
           errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être ajoutés à l'équipe ${team}`,
