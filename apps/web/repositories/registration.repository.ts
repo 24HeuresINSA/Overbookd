@@ -8,23 +8,28 @@ import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
+interface NewcomerId {
+  id: number;
+}
+
 export class RegistrationRepository {
   private static readonly basePath = "newcomers";
 
   static getNewcomers(context: Context) {
     return context.$axios.get<HttpStringified<IDefineANewcomer[]>>(
-      this.basePath,
+      `${this.basePath}/newcomers`,
     );
   }
 
   static enrollNewcomers(
     context: Context,
     teamCode: JoinableTeam,
-    newcomers: IDefineANewcomer[],
+    newcomersId: NewcomerId[],
   ) {
-    return context.$axios.post<void>(`${this.basePath}/enroll-to/${teamCode}`, {
-      newcomers,
-    });
+    return context.$axios.post<void>(
+      `${this.basePath}/enroll-to/${teamCode}`,
+      newcomersId,
+    );
   }
 
   static generateLink(context: Context) {

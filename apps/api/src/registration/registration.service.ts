@@ -110,20 +110,19 @@ export class RegistrationService {
     team: TeamCode,
     newcomers: NewcomerToEnroll[],
   ): Promise<void> {
-    await this.prisma.$transaction([
-      ...newcomers.map((newcomer) =>
-        this.prisma.user.update({
-          where: { id: newcomer.id },
-          data: {
-            teams: {
-              create: {
-                team: { connect: { code: team } },
-              },
+    const allRequests = newcomers.map(({ id }) =>
+      this.prisma.user.update({
+        where: { id },
+        data: {
+          teams: {
+            create: {
+              team: { connect: { code: team } },
             },
           },
-        }),
-      ),
-    ]);
+        },
+      }),
+    );
+    await this.prisma.$transaction(allRequests);
   }
 
   private static formatToNewcomer(

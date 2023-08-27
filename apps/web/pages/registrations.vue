@@ -44,7 +44,13 @@
       <v-spacer></v-spacer>
       <v-menu offset-y>
         <template #activator="{ attrs, on }">
-          <v-btn class="white--text" v-bind="attrs" color="blue" v-on="on">
+          <v-btn
+            class="white--text"
+            v-bind="attrs"
+            color="blue"
+            :disabled="noNewcomerSelected"
+            v-on="on"
+          >
             Enrôler en tant que
           </v-btn>
         </template>
@@ -123,6 +129,9 @@ export default Vue.extend({
     },
     joinableTeams(): JoinableTeam[] {
       return ["hard", "soft", "confiance"];
+    },
+    noNewcomerSelected(): boolean {
+      return this.selectedNewcomers.length === 0;
     },
   },
   mounted() {

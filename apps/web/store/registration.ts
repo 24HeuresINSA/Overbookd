@@ -63,7 +63,16 @@ export const actions = actionTree(
         newcomers,
       }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
-      await fakeRegistrationRepo.enrollNewcomers(team, newcomers);
+      const newComersId = newcomers.map(({ id }) => ({ id }));
+      const res = await safeCall(
+        this,
+        registrationRepo.enrollNewcomers(this, team, newComersId),
+        {
+          successMessage: `Les nouveaux arrivants sélectionnés ont bien été ajoutés à l'équipe ${team}`,
+          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être ajoutés à l'équipe ${team}`,
+        },
+      );
+      if (!res) return;
       commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
     },
 
