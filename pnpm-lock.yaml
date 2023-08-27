@@ -192,12 +192,6 @@ importers:
       '@types/supertest':
         specifier: 2.0.12
         version: 2.0.12
-      '@typescript-eslint/eslint-plugin':
-        specifier: 6.4.1
-        version: 6.4.1(@typescript-eslint/parser@6.4.1)(eslint@8.48.0)(typescript@5.1.6)
-      '@typescript-eslint/parser':
-        specifier: 6.4.1
-        version: 6.4.1(eslint@8.48.0)(typescript@5.1.6)
       jest:
         specifier: 29.6.3
         version: 29.6.3(@types/node@20.5.3)(ts-node@10.9.1)
