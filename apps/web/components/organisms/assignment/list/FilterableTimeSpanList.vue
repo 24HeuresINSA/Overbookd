@@ -4,7 +4,7 @@
       <FtTimeSpanFilters
         :list-length="filteredTimeSpans.length"
         class="filters"
-        @change:search="searchTimeSpan = $event"
+        @change:search="searchFtName = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
       ></FtTimeSpanFilters>
@@ -38,11 +38,12 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
-import { matchingSearchableValue } from "~/utils/search/search.utils";
+import { Searchable } from "~/utils/search/search.utils";
+import { SlugifyService } from "@overbookd/slugify";
 
 interface FilterableTimeSpanListData {
   teams: Team[];
-  searchTimeSpan: string;
+  searchFtName: string;
   category: TaskCategory | TaskPriority | null;
 }
 
@@ -51,15 +52,23 @@ export default Vue.extend({
   components: { FtTimeSpanFilters, FtTimeSpanList },
   data: (): FilterableTimeSpanListData => ({
     teams: [],
-    searchTimeSpan: "",
+    searchFtName: "",
     category: null,
   }),
   computed: {
     timeSpans(): AvailableTimeSpan[] {
       return this.$accessor.assignment.timeSpans;
     },
+    searchableTimeSpans(): Searchable<AvailableTimeSpan>[] {
+      return this.timeSpans.map((timeSpan) => ({
+        ...timeSpan,
+        searchable: SlugifyService.apply(
+          `${timeSpan.ft.id} ${timeSpan.ft.name}`,
+        ),
+      }));
+    },
     filteredTimeSpans(): AvailableTimeSpan[] {
-      return this.timeSpans
+      return this.searchableTimeSpans
         .filter((timeSpan) => this.isMatchingFilter(timeSpan))
         .map((timeSpan) => this.removeUnavailableTeamRequests(timeSpan));
     },
@@ -127,12 +136,12 @@ export default Vue.extend({
         requestedTeams,
       };
     },
-    isMatchingFilter(timeSpan: AvailableTimeSpan): boolean {
+    isMatchingFilter(timeSpan: Searchable<AvailableTimeSpan>): boolean {
       return (
         this.hasAssignableSlotsAvailable(timeSpan) &&
         this.filterTimeSpansByTeams(this.teams)(timeSpan) &&
         this.filterFtByCatergoryOrPriority(this.category)(timeSpan.ft) &&
-        this.filterTimeSpanBySearch(this.searchTimeSpan)(timeSpan)
+        this.filterTimeSpanByFtName(this.searchFtName)(timeSpan)
       );
     },
     hasAssignableSlotsAvailable(timeSpan: AvailableTimeSpan): boolean {
@@ -144,13 +153,10 @@ export default Vue.extend({
         },
       );
     },
-    filterTimeSpanBySearch(
+    filterTimeSpanByFtName(
       search: string,
-    ): (timeSpan: AvailableTimeSpan) => boolean {
-      return (timeSpan) => {
-        const searchableValue = `${timeSpan.ft.id} ${timeSpan.ft.name}`;
-        return matchingSearchableValue(searchableValue, search);
-      };
+    ): (timeSpan: Searchable<AvailableTimeSpan>) => boolean {
+      return ({ searchable }) => searchable.includes(search);
     },
   },
 });

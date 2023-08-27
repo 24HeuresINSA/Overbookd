@@ -88,10 +88,7 @@ export default Vue.extend({
       }));
     },
     filteredNewcomers(): IDefineANewcomer[] {
-      return matchingSearchItems<IDefineANewcomer>(
-        this.searchableNewcomers,
-        this.searchNewcomer,
-      );
+      return matchingSearchItems(this.searchableNewcomers, this.searchNewcomer);
     },
     joinableTeams(): JoinableTeam[] {
       return ["hard", "soft", "confiance"];
