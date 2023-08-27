@@ -120,7 +120,8 @@ export default Vue.extend({
     filterFtByName(
       search: string,
     ): (timeSpan: Searchable<FtWithTimeSpan>) => boolean {
-      return ({ searchable }) => searchable.includes(search);
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
   },
 });

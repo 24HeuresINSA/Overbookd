@@ -156,7 +156,8 @@ export default Vue.extend({
     filterTimeSpanByFtName(
       search: string,
     ): (timeSpan: Searchable<AvailableTimeSpan>) => boolean {
-      return ({ searchable }) => searchable.includes(search);
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
   },
 });

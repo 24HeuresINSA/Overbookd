@@ -228,9 +228,9 @@ export default {
       return this.$accessor.user.can("manage-location");
     },
     selectedFAs() {
-      const matchedFAs = matchingSearchItems(this.searchableFAs, this.search);
+      const matchingSearchFAs = matchingSearchItems(this.searchableFAs, this.search);
       const filteredFAsByTeam = this.filterBySelectedTeam(
-        matchedFAs,
+        matchingSearchFAs,
         this.selectedTeam,
       );
       return this.filterByValidatorStatus(filteredFAsByTeam);
