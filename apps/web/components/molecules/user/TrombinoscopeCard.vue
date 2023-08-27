@@ -15,15 +15,15 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { UserPersonnalData } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+import { UserPersonnalDataWithPP } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "TrombinoscopeCard",
   components: { TeamChip, ProfilePicture },
   props: {
     user: {
-      type: Object as () => UserPersonnalData,
+      type: Object as () => UserPersonnalDataWithPP,
       required: true,
     },
   },

@@ -8,6 +8,16 @@ import {
   UserUpdateForm,
 } from "@overbookd/user";
 
+export interface UserPersonnalDataWithPP extends UserPersonnalData {
+  profilePicture?: string;
+  profilePictureBlob?: string;
+}
+
+export interface MyUserInformationWithPP extends MyUserInformation {
+  profilePicture?: string;
+  profilePictureBlob?: string;
+}
+
 export interface Task {
   id: number;
   name: string;
@@ -34,7 +44,6 @@ export function castToUserUpdateForm(user: UserPersonnalData): UserUpdateForm {
     phone: user.phone,
     comment: user.comment || undefined,
     hasPayedContributions: user.hasPayedContributions || false,
-    profilePicture: user.profilePicture || undefined,
     charisma: +user.charisma,
   };
 }

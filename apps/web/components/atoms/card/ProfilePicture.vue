@@ -10,12 +10,13 @@
 <script lang="ts">
 import Vue from "vue";
 import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonnalDataWithPP } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "ProfilePicture",
   props: {
     user: {
-      type: Object as () => UserPersonnalData,
+      type: Object as () => UserPersonnalDataWithPP,
       required: true,
     },
   },
@@ -24,7 +25,7 @@ export default Vue.extend({
     this.getProfilePictureBlob(this.user);
   },
   methods: {
-    hasProfilePicture(user: UserPersonnalData): boolean {
+    hasProfilePicture(user: UserPersonnalDataWithPP): boolean {
       return user.profilePicture !== null;
     },
     getProfilePictureBlob(user: UserPersonnalData) {

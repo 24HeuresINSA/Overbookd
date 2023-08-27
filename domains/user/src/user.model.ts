@@ -17,8 +17,6 @@ export interface UserPersonnalData extends User {
   charisma: number;
   balance: number;
   teams: string[];
-  profilePicture?: string;
-  profilePictureBlob?: string;
 }
 
 export interface MyUserInformation extends UserPersonnalData {
