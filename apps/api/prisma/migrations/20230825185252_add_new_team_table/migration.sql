@@ -390,3 +390,22 @@ ALTER TABLE "ft" ALTER COLUMN "team_code" DROP NOT NULL;
 
 -- AddForeignKey
 ALTER TABLE "ft" ADD CONSTRAINT "ft_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE SET NULL ON UPDATE CASCADE;
+
+
+-- DropForeignKey
+ALTER TABLE "ft_team_request" DROP CONSTRAINT "ft_team_request_team_code_fkey";
+
+-- DropForeignKey
+ALTER TABLE "team_permission" DROP CONSTRAINT "team_permission_team_code_fkey";
+
+-- DropForeignKey
+ALTER TABLE "user_team" DROP CONSTRAINT "user_team_team_code_fkey";
+
+-- AddForeignKey
+ALTER TABLE "user_team" ADD CONSTRAINT "user_team_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "team_permission" ADD CONSTRAINT "team_permission_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ft_team_request" ADD CONSTRAINT "ft_team_request_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE CASCADE ON UPDATE CASCADE;
