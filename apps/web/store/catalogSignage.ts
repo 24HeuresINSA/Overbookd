@@ -63,21 +63,21 @@ export const actions = actionTree(
       commit("ADD_SIGNAGE", res.data);
     },
 
-    async updateGear({ commit }, form: SignageUpdateForm): Promise<void> {
-      const { id, ...gearForm } = form;
+    async updateSignage({ commit }, form: SignageUpdateForm): Promise<void> {
+      const { id, ...signageForm } = form;
       const res = await safeCall<Signage>(
         this,
-        signageRepository.updateSignage(this, id, gearForm),
+        signageRepository.updateSignage(this, id, signageForm),
         {
-          successMessage: "Le matériel a été mis a jour avec succès",
-          errorMessage: "Erreur lors de la mise à jour du matériel",
+          successMessage: "La signalétique a été mis a jour avec succès",
+          errorMessage: "Erreur lors de la mise à jour de la signalétique",
         },
       );
       if (!res) return;
       commit("UPDATE_SIGNAGE", res.data);
     },
 
-    async deleteGear({ commit }, signage: Signage): Promise<void> {
+    async deleteSignage({ commit }, signage: Signage): Promise<void> {
       const res = await safeCall(
         this,
         signageRepository.deleteSignage(this, signage.id),
