@@ -60,11 +60,11 @@ export const actions = actionTree(
   {
     async fetchGears(
       { commit },
-      gearSerchOptions: GearSearchOptions,
+      gearSearchOptions: GearSearchOptions,
     ): Promise<void> {
       const res = await safeCall<Gear[]>(
         this,
-        gearRepository.searchGears(this, gearSerchOptions),
+        gearRepository.searchGears(this, gearSearchOptions),
       );
       if (!res) return;
       commit("SET_GEARS", res.data);

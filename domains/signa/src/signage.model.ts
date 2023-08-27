@@ -1,5 +1,5 @@
 export interface Signage {
-  id: string;
+  id: number;
   name: string;
   image?: string;
 }

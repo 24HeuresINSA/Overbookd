@@ -1,7 +1,11 @@
 import { AuthRepository } from "~/repositories/auth.repository";
 import { TransactionRepository } from "~/repositories/transaction.repository";
 import { AssignmentRepository } from "./assignment.repository";
-import { CategoryRepository, GearsRepository } from "./catalog.repository";
+import {
+  CategoryRepository,
+  GearsRepository,
+  SignagesRepository,
+} from "./catalog.repository";
 import { CharismaPeriodRepository } from "./charisma-period.repository";
 import { FaRepository } from "./fa.repository";
 import { FtRepository } from "./ft.repository";
@@ -26,6 +30,7 @@ const repositories = {
   auth: AuthRepository,
   team: TeamRepository,
   gear: GearsRepository,
+  signage: SignagesRepository,
   category: CategoryRepository,
   configuration: ConfigurationRepository,
   signaLocation: SignaLocationRepository,
@@ -52,6 +57,7 @@ export const RepoFactory = {
   AuthRepository,
   TeamRepository,
   GearsRepository,
+  SignagesRepository,
   CategoryRepository,
   ConfigurationRepository,
   SignaLocationRepository,
