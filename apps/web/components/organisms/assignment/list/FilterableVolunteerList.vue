@@ -43,7 +43,7 @@ import {
 } from "~/utils/models/assignment.model";
 import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
-import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
+import { Searchable } from "~/utils/search/search.utils";
 
 interface FilterableVolunteerListData {
   teams: Team[];
@@ -72,12 +72,13 @@ export default Vue.extend({
       }));
     },
     displayedVolunteers(): Volunteer[] {
-      const matchedVolunteers = matchingSearchItems<Volunteer>(
-        this.searchableVolunteers,
-        this.searchVolunteer,
-      );
-      const filteredVolunteers = matchedVolunteers.filter((volunteer) =>
-        this.filterVolunteerByTeams(this.teams)(volunteer),
+      const filteredVolunteers = this.searchableVolunteers.filter(
+        (volunteer) => {
+          return (
+            this.filterVolunteerByTeams(this.teams)(volunteer) &&
+            this.filterVolunteertByName(this.searchVolunteer)(volunteer)
+          );
+        },
       );
       return this.sortVolunteers(filteredVolunteers);
     },
@@ -128,6 +129,11 @@ export default Vue.extend({
         }
         return b.assignmentDuration - a.assignmentDuration;
       });
+    },
+    filterVolunteertByName(
+      search: string,
+    ): (timeSpan: Searchable<Volunteer>) => boolean {
+      return ({ searchable }) => searchable.includes(search);
     },
   },
 });

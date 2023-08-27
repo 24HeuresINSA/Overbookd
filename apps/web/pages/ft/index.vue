@@ -174,7 +174,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { MyUserInformation, User } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
-import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
+import { Searchable } from "~/utils/search/search.utils";
 
 interface Data {
   headers: Header[];
@@ -245,18 +245,15 @@ export default Vue.extend({
       }));
     },
     filteredFTs(): FtSimplified[] {
-      const { team, myFTs, status, myFTsToReview } = this.filters;
+      const { search, team, myFTs, status, myFTsToReview } = this.filters;
 
-      const res = matchingSearchItems<FtSimplified>(
-        this.searchableFTs,
-        this.filters.search,
-      );
-      return res.filter((ft) => {
+      return this.searchableFTs.filter((ft) => {
         return (
           this.filterFTByTeam(team)(ft) &&
           this.filterFTByOwnership(myFTs)(ft) &&
           this.filterFTByStatus(status)(ft) &&
-          this.filterFTByReviewer(myFTsToReview)(ft)
+          this.filterFTByReviewer(myFTsToReview)(ft) &&
+          this.filterFTByName(search)(ft)
         );
       });
     },
@@ -311,6 +308,10 @@ export default Vue.extend({
       return searchMyFTsToReview
         ? (ft) => ft.reviewer?.id === this.me.id
         : () => true;
+    },
+
+    filterFTByName(search: string): (ft: Searchable<FtSimplified>) => boolean {
+      return ({ searchable }) => searchable.includes(search);
     },
 
     async retrieveValidatorsIfNeeded(): Promise<void> {

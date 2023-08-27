@@ -29,7 +29,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
-import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
+import { Searchable } from "~/utils/search/search.utils";
 
 interface FilterableTaskListData {
   teams: Team[];
@@ -58,15 +58,12 @@ export default Vue.extend({
       }));
     },
     filteredFts(): FtWithTimeSpan[] {
-      const searchedFts = matchingSearchItems<FtWithTimeSpan>(
-        this.searchableFts,
-        this.searchFt,
-      );
-      return searchedFts.filter((ft) => {
+      return this.searchableFts.filter((ft) => {
         return (
           this.filterFtByTeamRequests(this.teams)(ft) &&
           this.filterFtByCatergoryOrPriority(this.category)(ft) &&
-          this.filterFtByQuantity(ft)
+          this.filterFtByQuantity(ft) &&
+          this.filterFtByName(this.searchFt)(ft)
         );
       });
     },
@@ -119,6 +116,11 @@ export default Vue.extend({
           ({ quantity, assignmentCount }) => quantity > assignmentCount,
         ),
       );
+    },
+    filterFtByName(
+      search: string,
+    ): (timeSpan: Searchable<FtWithTimeSpan>) => boolean {
+      return ({ searchable }) => searchable.includes(search);
     },
   },
 });
