@@ -9,13 +9,15 @@ import {
   Registree,
   TeamCode,
   VOLUNTEER,
+  Teams,
+  isJoinableTeams,
 } from "@overbookd/registration";
 import { jwtConstants } from "../authentication/constants";
 import { InviteNewAdherents } from "@overbookd/registration";
 import { BadRequestException } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { SELECT_USER_TEAMS } from "../user/user.query";
-import { NewcomerToEnroll, NewcomerTeams } from "./registration.model";
+import { NewcomerToEnroll } from "./registration.model";
 
 const SELECT_NEWCOMER = {
   id: true,
@@ -140,13 +142,8 @@ export class RegistrationService {
     };
   }
 
-  private static formatTeamsToJoinableTeams(
-    teams: DatabaseTeamCode[],
-  ): NewcomerTeams {
-    const teamCodes = teams.map(({ team }) => team.code);
-
-    if (teamCodes.length === 0) return [];
-    if (teamCodes.length === 1) return [teamCodes[0]];
-    return [teamCodes[0], teamCodes[1]];
+  private static formatTeamsToJoinableTeams(teams: DatabaseTeamCode[]): Teams {
+    const joinableTeams = teams.map(({ team }) => team.code);
+    return isJoinableTeams(joinableTeams) ? joinableTeams : [];
   }
 }

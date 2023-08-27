@@ -1,13 +1,11 @@
-import { IDefineANewcomer, TeamCode } from "@overbookd/registration";
-
-export type NewcomerTeams = [] | [TeamCode] | [TeamCode, TeamCode];
+import { IDefineANewcomer, Teams } from "@overbookd/registration";
 
 export class NewcomerRepresentation implements IDefineANewcomer {
   id: number;
   firstName: string;
   lastName: string;
   registeredAt: Date;
-  teams: NewcomerTeams;
+  teams: Teams;
 }
 
 export interface NewcomerToEnroll {
