@@ -109,7 +109,7 @@ model Team {
 model UserTeam {
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId   Int    @map("user_id")
-  team     Team   @relation(fields: [teamCode], references: [code])
+  team     Team   @relation(fields: [teamCode], references: [code], onDelete: Cascade)
   teamCode String @map("team_code") @db.VarChar(20)
 
   @@id([userId, teamCode])
@@ -128,7 +128,7 @@ model Permission {
 model TeamPermission {
   permission     Permission @relation(fields: [permissionName], references: [name], onDelete: Cascade)
   permissionName String     @map("permission_name")
-  team           Team       @relation(fields: [teamCode], references: [code])
+  team           Team       @relation(fields: [teamCode], references: [code], onDelete: Cascade)
   teamCode       String     @map("team_code") @db.VarChar(20)
 
   @@id([permissionName, teamCode])
@@ -501,7 +501,7 @@ model FtTeamRequest {
   quantity      Int
 
   assignments Assignment[]
-  team        Team         @relation(fields: [teamCode], references: [code])
+  team        Team         @relation(fields: [teamCode], references: [code], onDelete: Cascade)
   teamCode    String       @map("team_code") @db.VarChar(20)
 
   @@unique([timeWindowsId, teamCode])
