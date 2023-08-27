@@ -3,7 +3,7 @@
     <h1>Catalogue Matos</h1>
     <div class="catalog">
       <section class="gears">
-        <GearListing></GearListing>
+        <GearListing />
         <v-btn
           v-if="isCatalogWriter"
           large
@@ -11,15 +11,15 @@
           rounded
           @click="openGearCreationDialog"
         >
-          <v-icon dark> mdi-plus </v-icon>Ajouter du matos</v-btn
-        >
+          <v-icon dark> mdi-plus </v-icon>Ajouter du matos
+        </v-btn>
       </section>
-      <CategoriesTreeView class="categories"></CategoriesTreeView>
+      <CategoriesTreeView class="categories" />
     </div>
     <v-dialog v-model="gearCreationDialogOpened" width="600px">
-      <GearForm @close-dialog="closeGearCreationDialog"></GearForm
-    ></v-dialog>
-    <SnackNotificationContainer></SnackNotificationContainer>
+      <GearForm @close-dialog="closeGearCreationDialog" />
+    </v-dialog>
+    <SnackNotificationContainer />
   </div>
 </template>
 
