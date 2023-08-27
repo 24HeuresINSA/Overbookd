@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   Logger,
-  Param,
   Post,
   UseFilters,
   UseGuards,
@@ -24,7 +23,7 @@ import { RegistrationErrorFilter } from "./registration-error.filter";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { IDefineANewcomer, TeamCode } from "@overbookd/registration";
+import { IDefineANewcomer } from "@overbookd/registration";
 import { NewcomerResponseDto } from "./dto/newcomer.response.dto";
 import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
 
@@ -90,10 +89,7 @@ export class RegistrationController {
     status: 204,
     description: "Enroll newcomers to a team",
   })
-  enrollNewcomers(
-    @Param("team") team: TeamCode,
-    @Body() payload: EnrollNewcomersRequestDto,
-  ): Promise<void> {
+  enrollNewcomers(@Body() payload: EnrollNewcomersRequestDto): Promise<void> {
     return this.registrationService.enrollNewcomers(payload);
   }
 }
