@@ -550,7 +550,7 @@ model FtReview {
   ft       Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
   ftId     Int          @map("ft_id")
   status   ReviewStatus
-  team     Team         @relation(fields: [teamCode], references: [code])
+  team     Team         @relation(fields: [teamCode], references: [code], onDelete: Cascade)
   teamCode String       @map("team_code") @db.VarChar(20)
 
   @@unique([ftId, teamCode])

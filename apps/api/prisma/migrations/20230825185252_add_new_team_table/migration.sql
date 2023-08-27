@@ -409,3 +409,9 @@ ALTER TABLE "team_permission" ADD CONSTRAINT "team_permission_team_code_fkey" FO
 
 -- AddForeignKey
 ALTER TABLE "ft_team_request" ADD CONSTRAINT "ft_team_request_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- DropForeignKey
+ALTER TABLE "ft_review" DROP CONSTRAINT "ft_review_team_code_fkey";
+
+-- AddForeignKey
+ALTER TABLE "ft_review" ADD CONSTRAINT "ft_review_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE CASCADE ON UPDATE CASCADE;
