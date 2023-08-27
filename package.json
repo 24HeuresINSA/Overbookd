@@ -32,10 +32,10 @@
     "release:minor": "git fetch -ap && pnpm version minor --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:minor && docker restart overbookd_web overbookd_api",
     "release:patch": "git fetch -ap && pnpm version patch --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:patch && docker restart overbookd_web overbookd_api"
   },
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "pnpm@8.7.0",
   "engines": {
     "node": "20.5.1",
-    "pnpm": "8.6.12"
+    "pnpm": "8.7.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "6.4.1",
