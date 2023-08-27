@@ -11,7 +11,7 @@ import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default Vue.extend({
-  name: "CatalogSigna",
+  name: "Catalog",
   components: {
     SnackNotificationContainer,
   },

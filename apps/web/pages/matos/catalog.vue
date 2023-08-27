@@ -31,7 +31,7 @@ import GearForm from "~/components/molecules/logistic/GearForm.vue";
 import GearListing from "~/components/organisms/logistic/GearListing.vue";
 
 export default Vue.extend({
-  name: "CatalogGear",
+  name: "Catalog",
   components: {
     GearListing,
     CategoriesTreeView,
