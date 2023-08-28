@@ -99,7 +99,7 @@ export default Vue.extend({
 
       this.closeDialog();
       this.name = "";
-      this.type = undefined;
+      this.type = signageTypes.AFFICHE;
     },
     closeDialog(): void {
       this.$emit("close-dialog");
