@@ -87,6 +87,6 @@ export const actions = actionTree(
     async createTeam({ dispatch }, team: Team): Promise<void> {
       await safeCall(this, teamRepo.createTeam(this, team));
       await dispatch("fetchTeams");
-    }
+    },
   },
 );

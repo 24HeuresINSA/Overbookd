@@ -16,15 +16,21 @@
         ></v-text-field>
       </template>
 
-      <template #item.rendering="{item}">
+      <template #item.rendering="{ item }">
         <TeamChip :team="item" with-name />
       </template>
 
-      <template #item.actions="{item}">
+      <template #item.actions="{ item }">
         <v-btn fab dark small class="mx-2" @click="openUpdateTeamDialog(item)">
           <v-icon dark> mdi-pencil </v-icon>
         </v-btn>
-        <v-btn fab dark small class="mx-2" @click="openDeleteConfirmationDialog(item)">
+        <v-btn
+          fab
+          dark
+          small
+          class="mx-2"
+          @click="openDeleteConfirmationDialog(item)"
+        >
           <v-icon dark> mdi-trash-can </v-icon>
         </v-btn>
       </template>

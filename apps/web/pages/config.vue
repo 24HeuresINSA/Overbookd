@@ -28,7 +28,7 @@
 
     <PermissionsCard />
     <TeamsCard />
-  
+
     <SnackNotificationContainer />
   </v-container>
 </template>
@@ -36,7 +36,6 @@
 <script lang="ts">
 import Vue from "vue";
 import PermissionsCard from "~/components/organisms/permission/PermissionsCard.vue";
-import TeamsCard from "~/components/organisms/team/TeamsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import DateField from "~/components/atoms/field/date/DateField.vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
