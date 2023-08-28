@@ -12,22 +12,19 @@ import {
   MinimalFa,
   Review,
   SignaLocation,
+  Team,
   TeamRequest,
   TimeWindow,
   UserName,
   UserNameWithId,
 } from "../ft-types";
-import {
-  FaStatus,
-  SignaLocationRepresentation,
-  faStatuses,
-} from "../../fa/fa.model";
+import { SignaLocationRepresentation, faStatuses } from "../../fa/fa.model";
+import { FaStatus } from "@prisma/client";
 import {
   FtFeedbackSubjectType,
   ftFeedbackSubjectTypes,
 } from "../../ft-feedback/ft-feedback.model";
 import { ReviewStatus, reviewStatuses } from "../../ft-review/ft-review.model";
-import { Team } from "../../team/team.model";
 
 class Author implements UserName {
   firstname: string;
@@ -54,6 +51,7 @@ class RequestedUser implements UserNameWithId {
 }
 
 class TeamRepresentation implements Team {
+  id: number;
   name: string;
   color: string;
   icon: string;

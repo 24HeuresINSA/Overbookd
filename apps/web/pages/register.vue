@@ -91,7 +91,7 @@
               :rules="[rules.required, rules.mobilePhone]"
             ></v-text-field>
             <v-select
-              v-model="teamCode"
+              v-model="teamId"
               label="Équipe"
               :items="softCreationTeams"
               item-text="name"
@@ -168,7 +168,7 @@ interface RegisterData extends InputRulesData {
   lastname: string;
   nickname?: string;
   birthday: string;
-  teamCode?: number;
+  teamId?: number;
   phone: string;
   comment?: string;
   email: string;
@@ -191,7 +191,7 @@ export default Vue.extend({
       email: "",
       phone: "",
       comment: undefined,
-      teamCode: undefined,
+      teamId: undefined,
       password: "",
       repeatPassword: "",
       rules: {
@@ -210,7 +210,7 @@ export default Vue.extend({
       return new Date(this.birthday);
     },
     softCreationTeams(): Team[] {
-      const emptyTeam = { code: "", name: "Aucune" } as Team;
+      const emptyTeam = { id: 0, name: "Aucune" } as Team;
       return [...this.$accessor.team.softCreationTeams, emptyTeam];
     },
     presentationRules(): (() => boolean | string)[] {
@@ -257,7 +257,7 @@ export default Vue.extend({
         email: this.email,
         phone: this.phone,
         comment: this.comment,
-        teamCode: this.teamCode,
+        teamId: this.teamId === 0 ? undefined : this.teamId,
         password: this.password,
       };
     },

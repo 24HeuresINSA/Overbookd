@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Team } from "../team.model";
+import { Team } from "@prisma/client";
 
 export class TeamResponseDto implements Team {
   @ApiProperty({
-    name: "code",
-    description: "The code of the team",
-    type: String,
+    name: "id",
+    description: "The id of the team",
+    type: Number,
   })
-  code: string;
+  id: number;
 
   @ApiProperty({
     name: "name",
@@ -29,4 +29,11 @@ export class TeamResponseDto implements Team {
     type: String,
   })
   icon: string;
+
+  @ApiProperty({
+    name: "code",
+    description: "The code of the team",
+    type: String,
+  })
+  code: string;
 }
