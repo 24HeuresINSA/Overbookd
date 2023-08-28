@@ -8,15 +8,15 @@ import {
   UserUpdateForm,
 } from "@overbookd/user";
 
-export interface UserPersonnalDataWithPP extends UserPersonnalData {
+type WithPotentialProfilePicture = {
   profilePicture?: string;
   profilePictureBlob?: string;
 }
 
-export interface MyUserInformationWithPP extends MyUserInformation {
-  profilePicture?: string;
-  profilePictureBlob?: string;
-}
+
+export type UserPersonnalDataWithProfilePicture = UserPersonnalData & WithPotentialProfilePicture;
+
+export type MyUserInformationWithProfilePicture = MyUserInformation & WithPotentialProfilePicture;
 
 export interface Task {
   id: number;

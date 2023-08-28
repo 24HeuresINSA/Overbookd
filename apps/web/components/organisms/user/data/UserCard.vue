@@ -41,7 +41,7 @@ import Vue from "vue";
 import OverChips from "~/components/atoms/chip/OverChips.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { MyUserInformationWithPP } from "~/utils/models/user.model";
+import { MyUserInformationWithProfilePicture } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "UserCard",
@@ -56,7 +56,7 @@ export default Vue.extend({
   },
 
   computed: {
-    me(): MyUserInformationWithPP {
+    me(): MyUserInformationWithProfilePicture {
       return this.$accessor.user.me;
     },
     friends(): number {

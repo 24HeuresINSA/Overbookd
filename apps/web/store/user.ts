@@ -3,8 +3,8 @@ import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
-  MyUserInformationWithPP,
-  UserPersonnalDataWithPP,
+  MyUserInformationWithProfilePicture,
+  UserPersonnalDataWithProfilePicture,
   VolunteerAssignmentStat,
   VolunteerTask,
   castToUserUpdateForm,
@@ -21,9 +21,9 @@ import {
 const userRepo = RepoFactory.UserRepository;
 
 export const state = () => ({
-  me: {} as MyUserInformation | MyUserInformationWithPP,
-  users: [] as (UserPersonnalData | UserPersonnalDataWithPP)[],
-  selectedUser: {} as UserPersonnalData | UserPersonnalDataWithPP,
+  me: {} as MyUserInformation | MyUserInformationWithProfilePicture,
+  users: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
+  selectedUser: {} as UserPersonnalData | UserPersonnalDataWithProfilePicture,
   selectedUserFriends: [] as User[],
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
@@ -304,7 +304,7 @@ export const actions = actionTree(
       commit("SET_USER", castUserWithDate(res.data));
     },
 
-    getProfilePicture(_, user: MyUserInformationWithPP) {
+    getProfilePicture(_, user: MyUserInformationWithProfilePicture) {
       if (!user.profilePicture) return undefined;
       if (user.profilePictureBlob) return user.profilePictureBlob;
 
