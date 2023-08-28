@@ -4,7 +4,7 @@
       <FtTimeSpanFilters
         :list-length="filteredTimeSpans.length"
         class="filters"
-        @change:search="timeSpan = $event"
+        @change:search="searchFtName = $event"
         @change:teams="teams = $event"
         @change:category="category = $event"
       ></FtTimeSpanFilters>
@@ -26,7 +26,6 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Fuse from "fuse.js";
 import FtTimeSpanFilters from "~/components/molecules/assignment/filter/FtTimeSpanFilters.vue";
 import FtTimeSpanList from "~/components/molecules/assignment/list/FtTimeSpanList.vue";
 import { Volunteer } from "~/utils/models/assignment.model";
@@ -39,21 +38,39 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
 import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssignment";
+import { Searchable } from "~/utils/search/search.utils";
+import { SlugifyService } from "@overbookd/slugify";
+
+interface FilterableTimeSpanListData {
+  teams: Team[];
+  searchFtName: string;
+  category: TaskCategory | TaskPriority | null;
+}
 
 export default Vue.extend({
   name: "FilterableTimeSpanList",
   components: { FtTimeSpanFilters, FtTimeSpanList },
-  data: () => ({
-    teams: [] as Team[],
-    timeSpan: "",
-    category: null as TaskCategory | TaskPriority | null,
+  data: (): FilterableTimeSpanListData => ({
+    teams: [],
+    searchFtName: "",
+    category: null,
   }),
   computed: {
+    timeSpans(): AvailableTimeSpan[] {
+      return this.$accessor.assignment.timeSpans;
+    },
+    searchableTimeSpans(): Searchable<AvailableTimeSpan>[] {
+      return this.timeSpans.map((timeSpan) => ({
+        ...timeSpan,
+        searchable: SlugifyService.apply(
+          `${timeSpan.ft.id} ${timeSpan.ft.name}`,
+        ),
+      }));
+    },
     filteredTimeSpans(): AvailableTimeSpan[] {
-      const filteredTimeSpans = this.$accessor.assignment.timeSpans
+      return this.searchableTimeSpans
         .filter((timeSpan) => this.isMatchingFilter(timeSpan))
         .map((timeSpan) => this.removeUnavailableTeamRequests(timeSpan));
-      return this.fuzzyFindTimeSpan(filteredTimeSpans, this.timeSpan);
     },
     selectedVolunteer(): Volunteer | null {
       return this.$accessor.assignment.selectedVolunteer;
@@ -119,11 +136,12 @@ export default Vue.extend({
         requestedTeams,
       };
     },
-    isMatchingFilter(timeSpan: AvailableTimeSpan): boolean {
+    isMatchingFilter(timeSpan: Searchable<AvailableTimeSpan>): boolean {
       return (
         this.hasAssignableSlotsAvailable(timeSpan) &&
         this.filterTimeSpansByTeams(this.teams)(timeSpan) &&
-        this.filterFtByCatergoryOrPriority(this.category)(timeSpan.ft)
+        this.filterFtByCatergoryOrPriority(this.category)(timeSpan.ft) &&
+        this.filterTimeSpanByFtName(this.searchFtName)(timeSpan)
       );
     },
     hasAssignableSlotsAvailable(timeSpan: AvailableTimeSpan): boolean {
@@ -135,16 +153,11 @@ export default Vue.extend({
         },
       );
     },
-    fuzzyFindTimeSpan(
-      timeSpans: AvailableTimeSpan[],
-      search?: string,
-    ): AvailableTimeSpan[] {
-      if (!search) return timeSpans;
-      const fuse = new Fuse(timeSpans, {
-        keys: ["ft.id", "ft.name"],
-        threshold: 0.4,
-      });
-      return fuse.search(search).map((e) => e.item);
+    filterTimeSpanByFtName(
+      search: string,
+    ): (timeSpan: Searchable<AvailableTimeSpan>) => boolean {
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
   },
 });

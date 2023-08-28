@@ -161,10 +161,11 @@
 </template>
 
 <script>
-import Fuse from "fuse.js";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import { SlugifyService } from "@overbookd/slugify";
 import { FaStatus } from "~/utils/models/fa.model";
 import { formatUsername } from "~/utils/user/user.utils";
+import { matchingSearchItems } from "~/utils/search/search.utils";
 
 export default {
   name: "Fa",
@@ -172,7 +173,7 @@ export default {
   data() {
     return {
       mFA: null,
-      search: undefined,
+      search: "",
       filter: {},
       isDeletedFilter: false,
       sortDesc: false,
@@ -208,6 +209,12 @@ export default {
     FAs() {
       return this.$accessor.fa.FAs;
     },
+    searchableFAs() {
+      return this.FAs.map((fa) => ({
+        ...fa,
+        searchable: SlugifyService.apply(`${fa.id} ${fa.name}`),
+      }));
+    },
     numberOfPages() {
       return Math.ceil(this.items.length / this.itemsPerPage);
     },
@@ -221,17 +228,15 @@ export default {
       return this.$accessor.user.can("manage-location");
     },
     selectedFAs() {
-      let mFAs = this.filterBySelectedTeam(this.FAs, this.selectedTeam);
-      mFAs = this.filterByValidatorStatus(mFAs);
-      const options = {
-        // Search in `author` and in `tags` array
-        keys: ["name", "description"],
-      };
-      const fuse = new Fuse(mFAs, options);
-      if (this.search === undefined || this.search === "") {
-        return mFAs;
-      }
-      return fuse.search(this.search).map((e) => e.item);
+      const matchingSearchFAs = matchingSearchItems(
+        this.searchableFAs,
+        this.search,
+      );
+      const filteredFAsByTeam = this.filterBySelectedTeam(
+        matchingSearchFAs,
+        this.selectedTeam,
+      );
+      return this.filterByValidatorStatus(filteredFAsByTeam);
     },
     validators() {
       return this.$accessor.team.faValidators;
