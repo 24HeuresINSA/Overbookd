@@ -21,7 +21,7 @@ export interface UserCreation extends DisplayedUser {
   email: string;
   birthdate: Date;
   phone: string;
-  teamCode?: number;
+  teamId?: number;
   department?: string;
   year?: string;
   password: string;
@@ -29,7 +29,7 @@ export interface UserCreation extends DisplayedUser {
 }
 
 export interface UserModification
-  extends Omit<UserCreation, "password" | "teamCode"> {
+  extends Omit<UserCreation, "password" | "teamId"> {
   hasPayedContributions: boolean;
   profilePicture?: string;
   charisma: number;

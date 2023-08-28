@@ -42,9 +42,9 @@ export class FaSignaNeedService {
       where: {
         fa: {
           isDeleted: false,
-          //faValidation: {
-          //  some: { team: { code: "signa" } },
-          //},
+          faValidation: {
+            some: { team: { code: "signa" } },
+          },
         },
       },
     });

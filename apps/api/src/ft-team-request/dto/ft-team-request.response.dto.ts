@@ -3,12 +3,12 @@ import { TeamRequestDto } from "../../team/dto/team.request.dto";
 
 class CompeleteTeamDto extends TeamRequestDto {
   @ApiProperty({
-    type: String,
-    description: "The code of the team",
-    example: "soft",
+    type: Number,
+    description: "The id of the team",
+    example: 1,
     required: true,
   })
-  code: string;
+  id: number;
 }
 
 export class FtTeamRequestResponseDto {

@@ -5,7 +5,7 @@ import {
   Logger,
   NotFoundException,
 } from "@nestjs/common";
-import { FtReview } from "@prisma/client";
+import { FtReview, ReviewStatus } from "@prisma/client";
 import {
   JwtPayload,
   JwtUtil,
@@ -21,7 +21,6 @@ import { PrismaService } from "../prisma.service";
 import { TimeSpanParametersRequestDto } from "./dto/time-span-parameters.request.dto";
 import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { TimeSpansGenerator } from "./time-spans-generator";
-import { reviewStatuses } from "../ft-review/ft-review.model";
 
 @Injectable()
 export class FtReviewService {
@@ -38,7 +37,7 @@ export class FtReviewService {
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
-      status: reviewStatuses.VALIDATED,
+      status: ReviewStatus.VALIDATED,
     };
     this.logger.log(`Validate FT #${ftId} as ${reviewer.teamCode}`);
     const upsertReview = this.prisma.ftReview.upsert({
@@ -75,7 +74,7 @@ export class FtReviewService {
     const completeReview: FtReview = {
       ftId,
       teamCode: reviewer.teamCode,
-      status: reviewStatuses.REFUSED,
+      status: ReviewStatus.REFUSED,
     };
     this.logger.log(`Refuse FT #${ftId} as ${reviewer.teamCode}`);
     const upsertReview = this.prisma.ftReview.upsert({
@@ -168,7 +167,7 @@ export class FtReviewService {
     const ftValidatedReviews = this.prisma.ftReview.count({
       where: {
         ftId,
-        status: reviewStatuses.VALIDATED,
+        status: ReviewStatus.VALIDATED,
       },
     });
     const [ftValidatorsCount, ftValidatedReviewsCount] =

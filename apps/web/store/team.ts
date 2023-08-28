@@ -32,6 +32,11 @@ export const getters = getterTree(state, {
         return teamCodes.includes(t.code);
       });
     },
+  getTeamById:
+    (state) =>
+    (id: number): Team | undefined => {
+      return state.teams.find((t) => t.id === id);
+    },
   getTeamByCode:
     (state, getters) =>
     (code: string): Team => {

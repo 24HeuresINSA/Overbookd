@@ -48,11 +48,12 @@ export class UpdateFaRequestDto {
 
   @ApiProperty({
     required: false,
-    description: "The code of the team whos responsible of the fa",
+    description: "The id of the team whos responsible of the fa",
   })
   @IsOptional()
-  @IsString()
-  teamCode?: string;
+  @IsNumber()
+  @Min(1)
+  teamId?: number;
 
   @ApiProperty({
     required: false,

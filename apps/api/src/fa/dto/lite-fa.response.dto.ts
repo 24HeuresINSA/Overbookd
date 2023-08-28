@@ -1,13 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  FaReviewTeam,
+  FaReviewTeamRepresentation,
   FaStatus,
   LiteFaResponse,
+  Team,
   TeamRepresentation,
   UserNameWithId,
   UserNameWithIdRepresentation,
   faStatuses,
 } from "../fa.model";
-import { Team } from "../../team/team.model";
 
 export class LiteFaResponseDto implements LiteFaResponse {
   @ApiProperty({
@@ -51,4 +53,20 @@ export class LiteFaResponseDto implements LiteFaResponse {
     type: UserNameWithIdRepresentation,
   })
   userInCharge?: UserNameWithId;
+
+  @ApiProperty({
+    required: true,
+    description: "The validations of the fa",
+    type: FaReviewTeamRepresentation,
+    isArray: true,
+  })
+  faValidation: FaReviewTeam[];
+
+  @ApiProperty({
+    required: true,
+    description: "The refusals of the fa",
+    type: FaReviewTeamRepresentation,
+    isArray: true,
+  })
+  faRefuse: FaReviewTeam[];
 }

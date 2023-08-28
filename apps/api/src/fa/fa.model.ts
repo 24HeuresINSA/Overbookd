@@ -11,7 +11,6 @@ import {
 } from "../public-animation/public-animation.model";
 import { FtStatus, ftStatuses } from "../ft/ft.model";
 import { FaSignaNeed } from "../fa-signa-need/fa-signa-need.model";
-import { Team } from "../team/team.model";
 
 const DRAFT = "DRAFT";
 const SUBMITTED = "SUBMITTED";
@@ -103,6 +102,14 @@ export class UserNameWithIdRepresentation
   id: number;
 }
 
+export interface Team {
+  id: number;
+  name: string;
+  color: string;
+  icon: string;
+  code: string;
+}
+
 export class TeamRepresentation implements Team {
   @ApiProperty({})
   id: number;
@@ -164,6 +171,27 @@ export class BaseFtRepresentation implements BaseFt {
   status: FtStatus;
 }
 
+export interface FaReview {
+  user: UserName;
+  team: Team;
+}
+
+export class FaReviewRepresentation implements FaReview {
+  @ApiProperty({ type: UserNameRepresentation })
+  user: UserName;
+  @ApiProperty({ type: TeamRepresentation })
+  team: Team;
+}
+
+export interface FaReviewTeam {
+  team: Team;
+}
+
+export class FaReviewTeamRepresentation implements FaReviewTeam {
+  @ApiProperty({ type: TeamRepresentation })
+  team: Team;
+}
+
 export interface PublicAnimation {
   photoLink?: string;
   description?: string;
@@ -197,6 +225,8 @@ export interface CompleteFaResponse {
   collaborator?: CollaboratorWithId;
   electricityNeeds: FaElectricityNeed[];
   signaNeeds: FaSignaNeed[];
+  faValidation: FaReview[];
+  faRefuse: FaReview[];
   feedbacks: FaFeedback[];
   timeWindows: FaTimeWindow[];
   publicAnimation: PublicAnimation;
@@ -210,4 +240,6 @@ export interface LiteFaResponse {
   isDeleted: boolean;
   team?: Team;
   userInCharge?: UserNameWithId;
+  faValidation: FaReviewTeam[];
+  faRefuse: FaReviewTeam[];
 }

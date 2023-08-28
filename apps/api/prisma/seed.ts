@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient, Team } from "@prisma/client";
 import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { Departments, Years } from "../src/user/dto/common";
 import { categoriesAndGears } from "./seeders/gears";
@@ -7,23 +7,22 @@ import { signaLocations } from "./seeders/signa-locations";
 import { Configuration } from "@overbookd/configuration";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team } from "../src/team/team.model";
 
 const prisma = new PrismaClient();
 
 async function insertOrUpdateCategory(
   name: string,
   teams: Team[],
-  parent?: { id: number; path: string; ownerCode: string },
+  parent?: { id: number; path: string; ownerId: number },
 ) {
   const parentId = parent?.id;
   const path = parent
     ? `${parent.path}->${SlugifyService.apply(name)}`
     : SlugifyService.apply(name);
   const owner = parent
-    ? { code: parent.ownerCode }
+    ? { id: parent.ownerId }
     : teams.find((team) => team.code === name.toLocaleLowerCase());
-  const ownerPart = owner ? { ownerCode: owner.code } : {};
+  const ownerPart = owner ? { ownerId: owner.id } : {};
   const category = { name, path, parent: parentId, ...ownerPart };
   return prisma.catalogCategory.upsert({
     create: category,
@@ -309,7 +308,7 @@ async function main() {
       code: "strasbourg",
       color: "#ACBB62",
       icon: "mdi-sausage",
-    },
+    }
   ];
 
   await Promise.all(
@@ -367,7 +366,7 @@ async function main() {
 
       const teams = databaseTeams
         .filter((team) => teamNames.split(",").includes(team.code))
-        .map((team) => ({ teamCode: team.code }));
+        .map((team) => ({ teamId: team.id }));
 
       const email = `${user}@24h.me`;
 
@@ -405,7 +404,7 @@ async function main() {
       const {
         id: categoryId,
         path: categoryPath,
-        ownerCode,
+        ownerId,
       } = await insertOrUpdateCategory(name, databaseTeams);
       const gearsInsert = gears
         ? gears?.map((name) => {
@@ -422,7 +421,7 @@ async function main() {
               await insertOrUpdateCategory(subCategory.name, databaseTeams, {
                 id: categoryId,
                 path: categoryPath,
-                ownerCode,
+                ownerId,
               });
             return Promise.all(
               subCategory.gears.map((gear) => {

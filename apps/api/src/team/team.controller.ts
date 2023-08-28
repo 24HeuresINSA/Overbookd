@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -70,7 +71,7 @@ export class TeamController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission("admin")
-  @Patch(":code")
+  @Patch(":id")
   @ApiBearerAuth()
   @HttpCode(200)
   @ApiResponse({
@@ -79,23 +80,23 @@ export class TeamController {
     type: TeamResponseDto,
   })
   async updateTeam(
-    @Param("code") code: string,
+    @Param("id", ParseIntPipe) id: number,
     @Body() data: TeamRequestDto,
   ): Promise<TeamResponseDto> {
-    return this.teamService.updateTeam(code, data);
+    return this.teamService.updateTeam(id, data);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission("admin")
-  @Delete(":code")
+  @Delete(":id")
   @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Delete a team",
   })
-  async deleteTeam(@Param("code") code: string): Promise<void> {
-    return this.teamService.deleteTeam(code);
+  async deleteTeam(@Param("id", ParseIntPipe) id: number): Promise<void> {
+    return this.teamService.deleteTeam(id);
   }
 }
 

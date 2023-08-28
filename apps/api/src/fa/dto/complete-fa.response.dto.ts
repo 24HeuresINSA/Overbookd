@@ -5,6 +5,8 @@ import {
   CompleteFaResponse,
   FaFeedback,
   FaFeedbackRepresentation,
+  FaReview,
+  FaReviewRepresentation,
   FaStatus,
   FaTimeWindow,
   FaTimeWindowRepresentation,
@@ -13,6 +15,7 @@ import {
   SignaLocationRepresentation,
   PublicAnimation,
   PublicAnimationRepresentation,
+  Team,
   TeamRepresentation,
   UserNameWithId,
   UserNameWithIdRepresentation,
@@ -29,7 +32,6 @@ import {
   FaSignaNeedRepresentation,
   FaSignaNeed,
 } from "../../fa-signa-need/fa-signa-need.model";
-import { Team } from "../../team/team.model";
 
 export class CompleteFaResponseDto implements CompleteFaResponse {
   @ApiProperty({
@@ -131,6 +133,22 @@ export class CompleteFaResponseDto implements CompleteFaResponse {
     isArray: true,
   })
   signaNeeds: FaSignaNeed[];
+
+  @ApiProperty({
+    required: true,
+    description: "The validations of the fa",
+    type: FaReviewRepresentation,
+    isArray: true,
+  })
+  faValidation: FaReview[];
+
+  @ApiProperty({
+    required: true,
+    description: "The refusals of the fa",
+    type: FaReviewRepresentation,
+    isArray: true,
+  })
+  faRefuse: FaReview[];
 
   @ApiProperty({
     required: true,
