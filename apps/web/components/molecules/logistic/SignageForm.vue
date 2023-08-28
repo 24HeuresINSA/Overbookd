@@ -19,10 +19,13 @@
             counter
             :rules="[rules.nameMinLength]"
           ></v-text-field>
-          <SearchCategory
-            v-model="category"
-            label="Choisisez une catégorie associée"
-          ></SearchCategory>
+          <h3>Type de créneau</h3>
+          <v-select
+            v-model="type"
+            type="select"
+            :items="signageTypes"
+            :rules="[rules.typeRequired]"
+          ></v-select>
         </div>
         <v-btn color="success" dark large @click="createOrUpdateSignage">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
@@ -35,14 +38,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Category } from "~/utils/models/catalog.model";
-import { InputRulesData, minLength } from "~/utils/rules/input.rules";
+import { InputRulesData, minLength, required } from "~/utils/rules/input.rules";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
-import { Signage, SignageForm } from "@overbookd/signa";
+import { Signage, SignageForm, SignageType, signageTypes } from "@overbookd/signa";
 
 interface SignageFormData extends InputRulesData {
   name: string;
-  category?: Category;
+  type?: SignageType;
 }
 
 const nameMinLength = 3;
@@ -55,45 +57,45 @@ export default Vue.extend({
       type: Object,
       default: () => ({
         name: "",
-        category: undefined,
+        type: undefined,
       }),
     },
   },
   data(): SignageFormData {
     return {
       name: this.signage.name,
-      category: this.signage.category,
-      rules: { nameMinLength: minLength(nameMinLength) },
+      type: this.signage.type,
+      rules: {
+        nameMinLength: minLength(nameMinLength),
+        typeRequired: required()
+      },
     };
   },
   computed: {
-    shouldUpdateCategory(): boolean {
-      return this.category || this.signage.category;
+    signageTypes(): SignageType[] {
+      return Object.values(signageTypes);
     },
   },
   watch: {
     signage(signage: Signage) {
       this.name = signage.name;
-      this.category = signage.category;
+      this.type = signage.type;
     },
   },
   methods: {
     async createOrUpdateSignage() {
-      let signage: SignageForm = { name: this.name };
-      if (this.shouldUpdateCategory) {
-        signage = { ...signage, category: this.category?.id };
-      }
-      const action = this.signage.id
+      const signage: SignageForm = { name: this.name, type: this.type };
+
+      await this.signage.id
         ? this.$accessor.catalogSignage.updateSignage({
             ...signage,
             id: this.signage.id,
           })
         : this.$accessor.catalogSignage.createSignage(signage);
 
-      await action;
       this.closeDialog();
       this.name = "";
-      this.category = undefined;
+      this.type = undefined;
     },
     closeDialog(): void {
       this.$emit("close-dialog");

@@ -8,7 +8,7 @@ import {
 } from "@overbookd/signa";
 import { RepoFactory } from "~/repositories/repo-factory";
 
-const signageRepository = RepoFactory.SignagesRepository;
+const signageRepository = RepoFactory.CatalogSignageRepository;
 
 interface State {
   signages: Signage[];

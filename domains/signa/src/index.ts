@@ -1,2 +1,2 @@
-export * from "./signage.model";
+export * from "./signage";
 export * from "./signage-form.model";

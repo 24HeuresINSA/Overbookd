@@ -14,26 +14,12 @@
         @input="defectSearchSignages"
         @keydown="searchOnEnter"
       ></v-text-field>
-      <SearchCategory
-        v-model="category"
-        :boxed="false"
-        @change="searchSignages"
-      ></SearchCategory>
     </form>
     <v-data-table
       :headers="headers"
       :items="signages"
-      :name="name"
-      :category="category"
       :loading="loading"
     >
-      <template #item.category="{ item }">
-        <div v-show="item.category" class="category-details">
-          <span class="category-details__name">{{ item.category?.name }}</span>
-          <span class="category-details__path"> {{ item.category?.path }}</span>
-        </div>
-      </template>
-
       <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateSignageDialog(item)">
           mdi-pencil
@@ -71,16 +57,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Category } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
-import { Signage, SignageSearchOptions } from "@overbookd/signa";
+import { Signage, SignageSearchOptions, SignageType } from "@overbookd/signa";
 
 interface SignageListingData {
   headers: Header[];
   name: string;
-  category: Category | null;
+  type?: SignageType;
   loading: boolean;
   selectedSignage?: Signage;
   isUpdateSignageDialogOpen: boolean;
@@ -95,12 +80,12 @@ export default Vue.extend({
     return {
       headers: [
         { text: "Signalisation", value: "name" },
+        { text: "Type", value: "type" },
         { text: "Image", value: "image" },
-        { text: "Catégorie", value: "category" },
         { text: "Actions", value: "actions" },
       ],
       name: "",
-      category: null,
+      type: undefined,
       loading: false,
       selectedSignage: undefined,
       isUpdateSignageDialogOpen: false,
@@ -111,13 +96,6 @@ export default Vue.extend({
   computed: {
     signages(): Signage[] {
       return this.$accessor.catalogSignage.signages;
-    },
-    canSearch(): boolean {
-      return (
-        [this.name, this.category?.path].some((searchOption) =>
-          this.isValidSearchOption(searchOption),
-        ) || [this.name, this.category].every((searchOption) => !searchOption)
-      );
     },
     isCatalogWriter(): boolean {
       return this.$accessor.user.can("write-catalog-signa");
@@ -155,18 +133,11 @@ export default Vue.extend({
     closeDeleteSignageDialog() {
       this.isDeleteSignageDialogOpen = false;
     },
-    isValidSearchOption(searchOption: string | null | undefined): boolean {
-      return Boolean(searchOption);
-    },
     buildSearchOptions(): SignageSearchOptions {
-      let searchOptions = {};
-      if (this.isValidSearchOption(this.name)) {
-        searchOptions = { ...searchOptions, name: this.name };
-      }
-      if (this.isValidSearchOption(this.category?.path)) {
-        searchOptions = { ...searchOptions, category: this.category?.path };
-      }
-      return searchOptions;
+      return {
+        name: this.name ? this.name : undefined,
+        type: this.type ? this.type : undefined,
+      };
     },
     async deleteSignage() {
       if (!this.selectedSignage) return;
@@ -190,16 +161,6 @@ form {
   justify-content: space-evenly;
   .v-input {
     flex-grow: 1;
-  }
-}
-.category-details {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  margin: 0;
-  &__path {
-    font-size: 0.8rem;
-    color: gray;
   }
 }
 </style>

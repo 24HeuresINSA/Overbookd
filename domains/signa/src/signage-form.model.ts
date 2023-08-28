@@ -1,11 +1,13 @@
+import { SignageType } from "./signage";
+
 export interface SignageForm {
   name: string;
-  category?: number;
+  type: SignageType;
 }
 
 export interface SignageSearchOptions {
   name?: string;
-  category?: string;
+  type?: SignageType;
 }
 
 export interface SignageUpdateForm extends SignageForm {
