@@ -136,6 +136,8 @@ import { formatUsername } from "~/utils/user/user.utils";
 import { Team } from "~/utils/models/team.model";
 import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
+import { Searchable } from "~/utils/search/search.utils";
+import { SlugifyService } from "@overbookd/slugify";
 
 enum ValidatorStatus {
   VALIDATED = "VALIDATED",
@@ -184,7 +186,7 @@ export default Vue.extend({
     title: "Fiches Activités",
   }),
   computed: {
-    Fas(): FaSimplified[] {
+    fas(): FaSimplified[] {
       return this.$accessor.fa.FAs;
     },
     validators(): Team[] {
@@ -199,12 +201,20 @@ export default Vue.extend({
     statuses(): [FaStatus, FaStatusLabel][] {
       return [...faStatusLabels.entries()];
     },
+    searchableFas(): Searchable<FaSimplified>[] {
+      return this.fas.map((fa) => ({
+        ...fa,
+        searchable: SlugifyService.apply(`${fa.id} ${fa.name}`),
+      }));
+    },
     filteredFas(): FaSimplified[] {
-      const { team, status } = this.filters;
+      const { team, status, search } = this.filters;
 
-      return this.Fas.filter((fa) => {
+      return this.searchableFas.filter((fa) => {
         return (
-          this.filterFaByTeam(team)(fa) && this.filterFaByStatus(status)(fa)
+          this.filterFaByTeam(team)(fa) &&
+          this.filterFaByStatus(status)(fa) &&
+          this.filterFaBySearch(search)(fa)
         );
       });
     },
@@ -235,6 +245,12 @@ export default Vue.extend({
 
     filterFaByStatus(statusSearched?: FaStatus): (fa: FaSimplified) => boolean {
       return statusSearched ? (fa) => fa.status === statusSearched : () => true;
+    },
+
+    filterFaBySearch(search: string): (fa: FaSimplified) => boolean {
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
+        
     },
 
     async fetchFas() {
