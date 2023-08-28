@@ -11,12 +11,13 @@ import {
 type WithPotentialProfilePicture = {
   profilePicture?: string;
   profilePictureBlob?: string;
-}
+};
 
+export type UserPersonnalDataWithProfilePicture = UserPersonnalData &
+  WithPotentialProfilePicture;
 
-export type UserPersonnalDataWithProfilePicture = UserPersonnalData & WithPotentialProfilePicture;
-
-export type MyUserInformationWithProfilePicture = MyUserInformation & WithPotentialProfilePicture;
+export type MyUserInformationWithProfilePicture = MyUserInformation &
+  WithPotentialProfilePicture;
 
 export interface Task {
   id: number;
