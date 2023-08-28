@@ -9,7 +9,6 @@ import {
   Patch,
   Post,
   Query,
-  Request,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -30,7 +29,6 @@ import {
   ApprovedGearRequest,
   GearSeekerType,
 } from "../gear-request/gear-request.model";
-import { RequestWithUserPayload } from "../app.controller";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { ApproveGearRequestRequestDto } from "../gear-request/dto/approve-gear-request.request.dto";
 import {
@@ -49,7 +47,6 @@ import { CreateFaRequestDto } from "./dto/create-fa.request.dto";
 import { FaSearchRequestDto } from "./dto/fa-search.request.dto";
 import { LiteFaResponseDto } from "./dto/lite-fa.response.dto";
 import { UpdateFaRequestDto } from "./dto/update-fa.request.dto";
-import { ValidationDto } from "./dto/validation.dto";
 import { CompleteFaResponse, LiteFaResponse } from "./fa.model";
 import { FaService } from "./fa.service";
 import { FaIdResponse } from "./faTypes";
@@ -169,79 +166,6 @@ export class FaController {
   })
   remove(@Param("id", ParseIntPipe) id: number) {
     return this.faService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("fa-validator")
-  @Post(":id/validation")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Validate a fa",
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "FA id",
-    required: true,
-  })
-  validate(
-    @Request() request: RequestWithUserPayload,
-    @Body() teamId: ValidationDto,
-    @Param("id", ParseIntPipe) faId: number,
-  ): Promise<void> {
-    const userId = request.user.userId ?? request.user.id;
-    return this.faService.validatefa(userId, faId, teamId);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("fa-validator")
-  @Delete(":faId/validation/:teamId")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Remove a validation of fa",
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "FA id",
-    required: true,
-  })
-  @ApiParam({
-    name: "teamId",
-    type: Number,
-    description: "Team id",
-    required: true,
-  })
-  removeValidation(
-    @Param("faId", ParseIntPipe) faId: number,
-    @Param("teamId", ParseIntPipe) teamId: number,
-  ): Promise<void> {
-    return this.faService.removeFaValidation(faId, teamId);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("fa-validator")
-  @Post(":id/refusal")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Refuse a fa",
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "FA id",
-    required: true,
-  })
-  refuse(
-    @Request() request: RequestWithUserPayload,
-    @Body() validationForm: ValidationDto,
-    @Param("id", ParseIntPipe) faId: number,
-  ): Promise<void> {
-    const userId = request.user.userId ?? request.user.id;
-    return this.faService.refusefa(userId, faId, validationForm);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

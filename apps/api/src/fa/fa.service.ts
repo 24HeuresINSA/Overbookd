@@ -1,7 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { UpdateFaRequestDto } from "./dto/update-fa.request.dto";
-import { ValidationDto } from "./dto/validation.dto";
-
 import { StatsPayload, StatsService } from "../common/services/stats.service";
 import { PrismaService } from "../prisma.service";
 import { CreateFaRequestDto } from "./dto/create-fa.request.dto";
@@ -44,14 +42,16 @@ export class FaService {
 
   async getFaStats(): Promise<StatsPayload[]> {
     const fa = await this.prisma.fa.groupBy({
-      by: ["teamId", "status"],
+      by: ["teamCode", "status"],
       where: { isDeleted: false },
       _count: { status: true },
     });
-    const teams = await this.prisma.team.findMany({});
+    const teams = await this.prisma.team.findMany({
+      select: { code: true },
+    });
     const transformedFa = fa.map((fa) => ({
       ...fa,
-      teamCode: teams.find((team) => team.id === fa.teamId)?.code,
+      teamCode: teams.find((team) => team.code === fa.teamCode)?.code,
     }));
     return this.statsService.stats(transformedFa);
   }
@@ -82,73 +82,6 @@ export class FaService {
       where: { id },
       data: { isDeleted: true },
     });
-  }
-
-  async validatefa(
-    userId: number,
-    faId: number,
-    body: ValidationDto,
-  ): Promise<void> {
-    const teamId = body.teamId;
-    await this.checkFaExistence(faId);
-
-    const data = {
-      faId,
-      teamId,
-      userId,
-    };
-    //add the user validation
-    await this.prisma.$transaction([
-      this.prisma.faValidation.upsert({
-        create: data,
-        update: data,
-        where: {
-          faId_teamId: {
-            faId,
-            teamId,
-          },
-        },
-      }),
-      this.prisma.faRefuse.deleteMany({
-        where: {
-          faId,
-          teamId,
-        },
-      }),
-    ]);
-  }
-
-  async removeFaValidation(faId: number, teamId: number): Promise<void> {
-    await this.checkFaExistence(faId);
-    await this.removeValidationFromTeam(faId, teamId);
-  }
-
-  async refusefa(
-    userId: number,
-    faId: number,
-    body: ValidationDto,
-  ): Promise<void> {
-    const teamId = body.teamId;
-    await this.checkFaExistence(faId);
-
-    const data = {
-      faId,
-      teamId,
-      userId,
-    };
-    await this.prisma.$transaction([
-      this.prisma.faRefuse.upsert({
-        create: data,
-        update: data,
-        where: {
-          faId_teamId: {
-            faId,
-            teamId,
-          },
-        },
-      }),
-      this.removeValidationFromTeam(faId, teamId),
-    ]);
   }
 
   async findPrevious(id: number): Promise<FaIdResponse | null> {
@@ -209,14 +142,5 @@ export class FaService {
       where: { id },
     });
     if (!fa) throw new NotFoundException(`fa with id ${id} not found`);
-  }
-
-  private removeValidationFromTeam(faId: number, teamId: number) {
-    return this.prisma.faValidation.deleteMany({
-      where: {
-        faId,
-        teamId,
-      },
-    });
   }
 }

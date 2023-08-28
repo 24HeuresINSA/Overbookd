@@ -5,7 +5,6 @@ import {
   IsDefined,
   IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsPhoneNumber,
   IsString,
@@ -75,12 +74,11 @@ export class CreateUserRequestDto implements UserCreateForm {
 
   @ApiProperty({
     required: false,
-    description: "The team id of the user",
+    description: "The team code of the user",
   })
   @IsOptional()
-  @IsNumber()
-  @IsNotEmpty()
-  teamId?: number;
+  @IsString()
+  teamCode?: string;
 
   @ApiProperty({
     required: true,
