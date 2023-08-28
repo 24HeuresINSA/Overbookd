@@ -58,6 +58,20 @@
             </v-chip-group>
           </template>
 
+          <template #item.validation="{ item }">
+            <v-chip-group column>
+              <v-chip
+                v-for="validator of validators"
+                :key="validator.code"
+                small
+              >
+                <v-icon small>
+                  {{ validator.icon }}
+                </v-icon>
+              </v-chip>
+            </v-chip-group>
+          </template>
+
           <template #item.name="{ item }">
             <nuxt-link :to="`/fa/${item.id}`" :class="deletedFaTextClass">
               {{ item.name }}
@@ -65,7 +79,7 @@
           </template>
 
           <template #item.team="{ item }">
-            {{ item.team?.name }}
+            {{ item.team?.name ?? "" }}
           </template>
 
           <template #item.userInCharge="{ item }">
@@ -107,13 +121,16 @@
     </v-dialog>
 
     <v-dialog v-model="isDeleteDialogOpen" width="600">
-      <v-card>
-        <v-img src="/img/sure.jpeg"></v-img>
-        <v-card-title>t'es sûr bébé ?</v-card-title>
-        <v-card-actions>
-          <v-btn right text @click="deleteFa()">oui 😏</v-btn>
-        </v-card-actions>
-      </v-card>
+      <ConfirmationMessage
+        @close-dialog="closeDeleteFaDialog"
+        @confirm="deleteFa"
+      >
+        <template #title> Supprimer la FA </template>
+        <template #statement>
+          Es-tu sûr de vouloir supprimer la FA
+          <strong>{{ selectedFa?.name }}</strong> ?
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
 
     <SnackNotificationContainer></SnackNotificationContainer>
@@ -125,6 +142,7 @@ import Vue from "vue";
 import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import {
   FaSimplified,
   FaStatus,
@@ -161,7 +179,12 @@ interface FaData {
 
 export default Vue.extend({
   name: "Fa",
-  components: { FestivalEventFilter, NewFaCard, SnackNotificationContainer },
+  components: {
+    FestivalEventFilter,
+    NewFaCard,
+    ConfirmationMessage,
+    SnackNotificationContainer,
+  },
   data: (): FaData => ({
     headers: [
       { text: "Statut", value: "status", sortable: false },
@@ -214,7 +237,7 @@ export default Vue.extend({
         return (
           this.filterFaByTeam(team)(fa) &&
           this.filterFaByStatus(status)(fa) &&
-          this.filterFaBySearch(search)(fa)
+          this.filterFaByNameAndId(search)(fa)
         );
       });
     },
@@ -247,10 +270,11 @@ export default Vue.extend({
       return statusSearched ? (fa) => fa.status === statusSearched : () => true;
     },
 
-    filterFaBySearch(search: string): (fa: Searchable<FaSimplified>) => boolean {
+    filterFaByNameAndId(
+      search: string,
+    ): (fa: Searchable<FaSimplified>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
-        
     },
 
     async fetchFas() {
@@ -272,6 +296,11 @@ export default Vue.extend({
       await this.$accessor.fa.deleteFA(this.selectedFa.id);
       this.isDeleteDialogOpen = false;
       this.selectedFa = undefined;
+    },
+
+    closeDeleteFaDialog() {
+      this.selectedFa = undefined;
+      this.isDeleteDialogOpen = false;
     },
 
     /*async exportCsvSecu() {
