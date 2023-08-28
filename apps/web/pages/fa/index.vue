@@ -247,7 +247,7 @@ export default Vue.extend({
       return statusSearched ? (fa) => fa.status === statusSearched : () => true;
     },
 
-    filterFaBySearch(search: string): (fa: FaSimplified) => boolean {
+    filterFaBySearch(search: string): (fa: Searchable<FaSimplified>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
         
