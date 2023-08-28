@@ -59,7 +59,6 @@
 import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
-import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 import { Signage, SignageSearchOptions, SignageType } from "@overbookd/signa";
 
 interface SignageListingData {
@@ -75,7 +74,7 @@ interface SignageListingData {
 
 export default Vue.extend({
   name: "SignageListing",
-  components: { ConfirmationMessage, SearchCategory },
+  components: { ConfirmationMessage },
   data(): SignageListingData {
     return {
       headers: [
@@ -106,7 +105,6 @@ export default Vue.extend({
   },
   methods: {
     async searchSignages() {
-      if (!this.canSearch) return;
       const searchOptions = this.buildSearchOptions();
       await this.fetchSignages(searchOptions);
     },

@@ -39,25 +39,23 @@
 <script lang="ts">
 import Vue from "vue";
 import { InputRulesData, minLength, required } from "~/utils/rules/input.rules";
-import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 import { Signage, SignageForm, SignageType, signageTypes } from "@overbookd/signa";
 
 interface SignageFormData extends InputRulesData {
   name: string;
-  type?: SignageType;
+  type: SignageType;
 }
 
 const nameMinLength = 3;
 
 export default Vue.extend({
   name: "SignageForm",
-  components: { SearchCategory },
   props: {
     signage: {
       type: Object,
       default: () => ({
         name: "",
-        type: undefined,
+        type: signageTypes.AFFICHE,
       }),
     },
   },
@@ -67,7 +65,7 @@ export default Vue.extend({
       type: this.signage.type,
       rules: {
         nameMinLength: minLength(nameMinLength),
-        typeRequired: required()
+        typeRequired: required,
       },
     };
   },
@@ -84,6 +82,7 @@ export default Vue.extend({
   },
   methods: {
     async createOrUpdateSignage() {
+      if (!this.name || !this.type) return;
       const signage: SignageForm = { name: this.name, type: this.type };
 
       await this.signage.id

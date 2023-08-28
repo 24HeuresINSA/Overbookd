@@ -81,10 +81,8 @@ export function isSame(matching: string | null) {
   };
 }
 
-export function required() {
-  return function (value: string | null) {
+export function required(value: string | null) {
     return Boolean(value) || "Ce champ est requis";
-  };
 }
 
 export interface InputRulesData {
