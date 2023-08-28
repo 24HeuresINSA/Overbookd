@@ -65,7 +65,7 @@ export default Vue.extend({
   },
   mounted() {
     if (this.allTeams.length) return;
-    this.$accessor.team.setTeamsInStore();
+    this.$accessor.team.fetchTeams();
   },
   methods: {
     propagateEvent(teams: Team[]) {

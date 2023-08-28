@@ -66,7 +66,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async setTeamsInStore({ commit }): Promise<void> {
+    async fetchTeams({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getTeams(this));
       if (!res) return;
       commit("SET_TEAMS", res.data);
@@ -83,5 +83,10 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_FT_VALIDATORS", res.data);
     },
+
+    async createTeam({ dispatch }, team: Team): Promise<void> {
+      await safeCall(this, teamRepo.createTeam(this, team));
+      await dispatch("fetchTeams");
+    }
   },
 );
