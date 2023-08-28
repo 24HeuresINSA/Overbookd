@@ -140,7 +140,7 @@ export default Vue.extend({
     },
     isTeamAlreadyRequested(): boolean {
       return this.allTeamRequests.some(
-        (teamRequest) => teamRequest.team.id === this.selectedTeam?.id,
+        (teamRequest) => teamRequest.team.code === this.selectedTeam?.code,
       );
     },
     isUserRequestValid(): boolean {
@@ -248,7 +248,8 @@ export default Vue.extend({
 
     isSavedTeamRequest(teamRequest: FtTeamRequest): boolean {
       return this.savedTeamRequests.some(
-        (savedTeamRequest) => savedTeamRequest.team.id === teamRequest.team.id,
+        (savedTeamRequest) =>
+          savedTeamRequest.team.code === teamRequest.team.code,
       );
     },
     isSavedUserRequest(userRequest: FtUserRequest): boolean {

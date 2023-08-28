@@ -181,7 +181,7 @@ export const mutations = mutationTree(state, {
     const index = mFT.timeWindows.findIndex((tw) => tw.id === timeWindow.id);
     if (index === -1) return;
     const teamRequests = timeWindow.teamRequests.filter(
-      (tr) => tr.team.id !== teamRequest.team.id,
+      (tr) => tr.team.code !== teamRequest.team.code,
     );
     mFT.timeWindows = updateItemToList(mFT.timeWindows, index, {
       ...timeWindow,

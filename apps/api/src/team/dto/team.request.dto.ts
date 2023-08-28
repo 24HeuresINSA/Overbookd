@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsString,
   Matches,
-  MinLength,
   ValidationArguments,
 } from "class-validator";
 
@@ -19,15 +18,6 @@ export class TeamRequestDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    required: true,
-    description: "The code of the team",
-  })
-  @IsOptional()
-  @IsString()
-  @MinLength(4)
-  code?: string;
 
   @ApiProperty({
     required: false,
