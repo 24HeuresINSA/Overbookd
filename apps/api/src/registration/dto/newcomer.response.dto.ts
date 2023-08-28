@@ -34,7 +34,7 @@ export class NewcomerResponseDto implements NewcomerRepresentation {
   @ApiProperty({
     required: true,
     description: "The newcomer teams",
-    example: [],
+    example: ["teckos"],
   })
   teams: Teams;
 }

@@ -71,8 +71,8 @@ export const actions = actionTree(
         this,
         registrationRepo.enrollNewcomers(this, body),
         {
-          successMessage: `Les nouveaux arrivants sélectionnés ont bien été ajoutés à l'équipe ${team}`,
-          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être ajoutés à l'équipe ${team}`,
+          successMessage: `Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que ${team}`,
+          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés`,
         },
       );
       if (!res) return;
