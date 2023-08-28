@@ -58,7 +58,7 @@
             </v-chip-group>
           </template>
 
-          <template #item.validation="{ item }">
+          <template #item.validation>
             <v-chip-group column>
               <v-chip
                 v-for="validator of validators"
