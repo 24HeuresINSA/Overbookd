@@ -1,10 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsDefined, IsString } from "class-validator";
+import {
+  IsArray,
+  IsDefined,
+  IsEnum,
+  ValidationArguments,
+} from "class-validator";
 import {
   EnrollNewcomersFormRepresentation,
   NewcomerToEnrollRepresentation,
 } from "../registration.model";
-import { JoinableTeam, NewcomerToEnroll } from "@overbookd/registration";
+import {
+  JoinableTeam,
+  joinableTeams,
+  NewcomerToEnroll,
+} from "@overbookd/registration";
 
 export class EnrollNewcomersRequestDto
   implements EnrollNewcomersFormRepresentation
@@ -25,6 +34,9 @@ export class EnrollNewcomersRequestDto
     type: String,
   })
   @IsDefined()
-  @IsString()
+  @IsEnum(joinableTeams, {
+    message: (va: ValidationArguments) =>
+      `${va.property} must be one of ${Object.values(joinableTeams)}`,
+  })
   team: JoinableTeam;
 }

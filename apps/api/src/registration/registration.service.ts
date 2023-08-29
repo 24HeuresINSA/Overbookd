@@ -96,9 +96,7 @@ export class RegistrationService {
         isDeleted: false,
         teams: {
           none: {
-            team: {
-              permissions: { some: { permissionName: "validated-user" } },
-            },
+            team: { code: "benevole" },
           },
         },
         createdAt: { gte: minRegisterDate },
@@ -117,9 +115,10 @@ export class RegistrationService {
         where: { id },
         data: {
           teams: {
-            create: {
-              team: { connect: { code: team } },
-            },
+            create: [
+              { team: { connect: { code: team } } },
+              { team: { connect: { code: "benevole" } } },
+            ],
           },
         },
       }),

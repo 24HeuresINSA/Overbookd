@@ -80,13 +80,12 @@ export class RegistrationController {
   @ApiBearerAuth()
   @Permission("manage-users")
   @Post("/newcomers/enroll")
-  @HttpCode(204)
   @ApiBody({
     description: "Newcomers to enroll to a team",
     type: EnrollNewcomersRequestDto,
   })
   @ApiResponse({
-    status: 204,
+    status: 201,
     description: "Enroll newcomers to a team",
   })
   enrollNewcomers(@Body() payload: EnrollNewcomersRequestDto): Promise<void> {
