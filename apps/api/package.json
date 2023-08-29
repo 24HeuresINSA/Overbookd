@@ -76,7 +76,7 @@
     "sanitize-html": "2.11.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "10.1.15",
+    "@nestjs/cli": "10.1.16",
     "@nestjs/schematics": "10.0.2",
     "@nestjs/testing": "10.2.1",
     "@types/bcrypt": "5.0.0",
@@ -84,7 +84,7 @@
     "@types/html-to-pdfmake": "2.4.1",
     "@types/jest": "29.5.4",
     "@types/multer": "1.4.7",
-    "@types/node": "20.5.4",
+    "@types/node": "20.5.6",
     "@types/passport-jwt": "3.0.9",
     "@types/passport-local": "1.0.35",
     "@types/pdfmake": "0.2.2",
