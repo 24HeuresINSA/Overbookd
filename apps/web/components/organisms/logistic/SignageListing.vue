@@ -15,11 +15,7 @@
         @keydown="searchOnEnter"
       ></v-text-field>
     </form>
-    <v-data-table
-      :headers="headers"
-      :items="signages"
-      :loading="loading"
-    >
+    <v-data-table :headers="headers" :items="signages" :loading="loading">
       <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateSignageDialog(item)">
           mdi-pencil

@@ -82,7 +82,7 @@ export function isSame(matching: string | null) {
 }
 
 export function required(value: string | null) {
-    return Boolean(value) || "Ce champ est requis";
+  return Boolean(value) || "Ce champ est requis";
 }
 
 export interface InputRulesData {

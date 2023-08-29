@@ -8,10 +8,7 @@ export const signageTypes: Record<SignageType, SignageType> = {
   AFFICHE,
 };
 
-export type SignageType =
-  | typeof BACHE
-  | typeof PANNEAU
-  | typeof AFFICHE;
+export type SignageType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
 
 export interface Signage {
   id: number;

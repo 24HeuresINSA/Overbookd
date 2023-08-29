@@ -39,7 +39,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { InputRulesData, minLength, required } from "~/utils/rules/input.rules";
-import { Signage, SignageForm, SignageType, signageTypes } from "@overbookd/signa";
+import {
+  Signage,
+  SignageForm,
+  SignageType,
+  signageTypes,
+} from "@overbookd/signa";
 
 interface SignageFormData extends InputRulesData {
   name: string;
@@ -85,7 +90,7 @@ export default Vue.extend({
       if (!this.name || !this.type) return;
       const signage: SignageForm = { name: this.name, type: this.type };
 
-      await this.signage.id
+      (await this.signage.id)
         ? this.$accessor.catalogSignage.updateSignage({
             ...signage,
             id: this.signage.id,
