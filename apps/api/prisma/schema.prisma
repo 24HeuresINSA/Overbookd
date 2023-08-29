@@ -74,10 +74,8 @@ model User {
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
 
-  faInCharge   Fa[]           @relation("in_charge")
-  faValidation FaValidation[]
-  faRefuse     FaRefuse[]
-  faFeedbacks  FaFeedback[]
+  faInCharge  Fa[]         @relation("in_charge")
+  faFeedbacks FaFeedback[]
 
   ftsInCharge      Ft[]                    @relation("inCharge")
   ftFeedbacks      FtFeedback[]
@@ -99,8 +97,6 @@ model Team {
   color           String            @default("#000000") @db.VarChar(30)
   icon            String            @default("mdi-circle") @db.VarChar(255)
   fa              Fa[]
-  faValidation    FaValidation[]
-  faRefuse        FaRefuse[]
   code            String?           @unique @db.VarChar(20)
   ownedCategories CatalogCategory[] @relation("owner")
   ftRequests      FtTeamRequest[]
@@ -111,11 +107,30 @@ model Team {
   @@map("team")
 }
 
+model NewTeam {
+  code  String @id @unique @db.VarChar(20)
+  name  String @unique @db.VarChar(30)
+  color String @default("#000000") @db.VarChar(30)
+  icon  String @default("mdi-circle") @db.VarChar(255)
+
+  users           UserTeam[]
+  fa              Fa[]
+  ownedCategories CatalogCategory[] @relation("new_owner")
+  ftRequests      FtTeamRequest[]
+  ftReviews       FtReview[]
+  permissions     TeamPermission[]
+  ft              Ft[]
+
+  @@map("new_team")
+}
+
 model UserTeam {
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int  @map("user_id")
-  team   Team @relation(fields: [teamId], references: [id])
-  teamId Int  @map("team_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int      @map("user_id")
+  team        Team     @relation(fields: [teamId], references: [id])
+  teamId      Int      @map("team_id")
+  NewTeam     NewTeam? @relation(fields: [newTeamCode], references: [code])
+  newTeamCode String?  @db.VarChar(20)
 
   @@id([userId, teamId])
   @@map("user_team")
@@ -135,6 +150,8 @@ model TeamPermission {
   teamCode       String     @map("team_code")
   permission     Permission @relation(fields: [permissionName], references: [name], onDelete: Cascade)
   permissionName String     @map("permission_name")
+  NewTeam        NewTeam?   @relation(fields: [newTeamCode], references: [code])
+  newTeamCode    String?    @db.VarChar(20)
 
   @@id([teamCode, permissionName])
   @@map("team_permission")
@@ -181,8 +198,6 @@ model Fa {
   numberOfPass     Int?                @map("number_of_pass")
   waterNeed        String?             @map("water_need") @db.Text
   isDeleted        Boolean             @default(false) @map("is_deleted")
-  faValidation     FaValidation[]
-  faRefuse         FaRefuse[]
   electricityNeeds FaElectricityNeed[]
   signaNeeds       FaSignaNeed[]
   feedbacks        FaFeedback[]
@@ -191,7 +206,9 @@ model Fa {
   publicAnimation  PublicAnimation?
   fts              Ft[]
   collaborator     Collaborator?       @relation(fields: [collaboratorId], references: [id])
-  collaboratorId   Int?
+  collaboratorId   Int?                @map("collaborator_id")
+  NewTeam          NewTeam?            @relation(fields: [newTeamCode], references: [code])
+  newTeamCode      String?             @db.VarChar(20)
 
   @@map("fa")
 }
@@ -208,34 +225,6 @@ enum FaType {
   Autre
 
   @@map("fa_type")
-}
-
-model FaValidation {
-  fa        Fa       @relation(fields: [faId], references: [id])
-  faId      Int      @map("fa_id")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @map("user_id")
-  team      Team     @relation(fields: [teamId], references: [id])
-  teamId    Int      @map("team_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  isDeleted Boolean  @default(false) @map("is_deleted")
-
-  @@id([faId, teamId])
-  @@map("fa_validation")
-}
-
-model FaRefuse {
-  fa        Fa       @relation(fields: [faId], references: [id])
-  faId      Int      @map("fa_id")
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int      @map("user_id")
-  team      Team     @relation(fields: [teamId], references: [id])
-  teamId    Int      @map("team_id")
-  createdAt DateTime @default(now()) @map("created_at")
-  isDeleted Boolean  @default(false) @map("is_deleted")
-
-  @@id([faId, teamId])
-  @@map("fa_refuse")
 }
 
 model SignaLocation {
@@ -375,6 +364,8 @@ model CatalogCategory {
   ownerId        Int?              @map("owner_id")
   owner          Team?             @relation("owner", fields: [ownerId], references: [id])
   gears          CatalogGear[]     @relation("category")
+  NewOwner       NewTeam?          @relation("new_owner", fields: [newOwnerCode], references: [code])
+  newOwnerCode   String?           @db.VarChar(20)
 
   @@map("catalog_category")
 }
@@ -473,6 +464,8 @@ model Ft {
   timeWindows  FtTimeWindow[]
   reviews      FtReview[]
   gearRequests GearRequest[]  @relation("gear-request-task")
+  NewTeam      NewTeam?       @relation(fields: [newTeamCode], references: [code])
+  newTeamCode  String?        @db.VarChar(20)
 
   @@map("ft")
 }
@@ -538,6 +531,8 @@ model FtTeamRequest {
   quantity      Int
 
   assignments Assignment[]
+  NewTeam     NewTeam?     @relation(fields: [newTeamCode], references: [code])
+  newTeamCode String?      @db.VarChar(20)
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
@@ -582,11 +577,13 @@ enum ReviewStatus {
 }
 
 model FtReview {
-  ft       Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId     Int          @map("ft_id")
-  team     Team         @relation(fields: [teamCode], references: [code])
-  teamCode String       @map("team_code")
-  status   ReviewStatus
+  ft          Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId        Int          @map("ft_id")
+  team        Team         @relation(fields: [teamCode], references: [code])
+  teamCode    String       @map("team_code")
+  status      ReviewStatus
+  NewTeam     NewTeam?     @relation(fields: [newTeamCode], references: [code])
+  newTeamCode String?      @db.VarChar(20)
 
   @@unique([ftId, teamCode])
   @@map("ft_review")
