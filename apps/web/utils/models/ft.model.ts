@@ -16,7 +16,7 @@ export enum FtStatus {
   READY = "READY",
 }
 
-const BROUILLON = "Brouillon";
+export const BROUILLON = "Brouillon";
 const REFUSEE = "Refusée";
 const SOUMISE_A_VALIDATION = "Soumise à validation";
 const VALIDEE = "Validée";
