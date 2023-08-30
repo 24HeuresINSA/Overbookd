@@ -195,7 +195,7 @@ export const actions = actionTree(
       return castUserWithDate(res.data);
     },
     async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
-      if (state.me.id === user.id) dispatch("updateMyUser");
+      if (state.me.id === user.id) return dispatch("updateMyUser");
 
       const res = await safeCall(
         this,
