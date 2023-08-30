@@ -183,7 +183,7 @@ import {
   TaskCategories,
 } from "~/utils/models/ft-time-span.model";
 import { Team } from "~/utils/models/team.model";
-import { MyUserInformation, User } from "~/utils/models/user.model";
+import { MyUserInformation, User } from "@overbookd/user";
 import { hasAtLeastOneError } from "~/utils/rules/fa-validation.rules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ft-validation.rules";
 import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";

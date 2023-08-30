@@ -1,5 +1,5 @@
 import { HttpStringified } from "../types/http";
-import { User } from "./user.model";
+import { User } from "@overbookd/user";
 
 export const TaskCategories = {
   STATIQUE: "STATIQUE",

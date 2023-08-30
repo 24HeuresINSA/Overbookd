@@ -53,7 +53,7 @@ import {
 import { Ft, FtCardType } from "~/utils/models/ft.model";
 import { SignaLocation } from "~/utils/models/signa-location.model";
 import { Team } from "~/utils/models/team.model";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 
 export default Vue.extend({
   name: "FtGeneralCard",

@@ -172,7 +172,7 @@ import {
   ftStatusLabels,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
-import { MyUserInformation, User } from "~/utils/models/user.model";
+import { MyUserInformation, User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Searchable } from "~/utils/search/search.utils";
 

@@ -11,7 +11,7 @@ import {
 import { GearRequest } from "../models/gear-request.model";
 import { SignaLocation } from "../models/signa-location.model";
 import { Team } from "../models/team.model";
-import { User } from "../models/user.model";
+import { User } from "@overbookd/user";
 
 export function hasAtLeastOneError(
   mFA: Fa,

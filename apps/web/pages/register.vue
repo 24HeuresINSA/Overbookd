@@ -95,7 +95,7 @@
               label="Équipe"
               :items="softCreationTeams"
               item-text="name"
-              item-value="id"
+              item-value="code"
               clearable
               hint="Tu nous rejoins à plusieurs ?"
               persistent-hint
@@ -149,7 +149,7 @@
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { Team } from "~/utils/models/team.model";
-import { UserCreation } from "~/utils/models/user.model";
+import { UserCreateForm } from "@overbookd/user";
 import {
   InputRulesData,
   required,
@@ -168,7 +168,7 @@ interface RegisterData extends InputRulesData {
   lastname: string;
   nickname?: string;
   birthday: string;
-  teamCode?: number;
+  teamCode?: string;
   phone: string;
   comment?: string;
   email: string;
@@ -248,7 +248,7 @@ export default Vue.extend({
         this.repeatPasswordRule(this.repeatPassword) !== true
       );
     },
-    mUser(): UserCreation {
+    mUser(): UserCreateForm {
       return {
         firstname: this.firstname,
         lastname: this.lastname,

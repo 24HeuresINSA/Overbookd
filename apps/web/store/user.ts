@@ -3,33 +3,34 @@ import { updateItemToList } from "@overbookd/list";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
-  CompleteUser,
-  CompleteUserWithPermissions,
-  MyUserInformation,
-  User,
-  UserCreation,
+  MyUserInformationWithProfilePicture,
+  UserPersonnalDataWithProfilePicture,
   VolunteerAssignmentStat,
   VolunteerTask,
-  castToUserModification,
+  castToUserUpdateForm,
   castUserWithDate,
-  castUserWithPermissionsWithDate,
-  castUsersWithPermissionsWithDate,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
+import {
+  MyUserInformation,
+  User,
+  UserCreateForm,
+  UserPersonnalData,
+} from "@overbookd/user";
 
 const userRepo = RepoFactory.UserRepository;
 
 export const state = () => ({
-  me: {} as MyUserInformation,
-  users: [] as CompleteUserWithPermissions[],
-  selectedUser: {} as CompleteUserWithPermissions,
+  me: {} as MyUserInformation | MyUserInformationWithProfilePicture,
+  users: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
+  selectedUser: {} as UserPersonnalData | UserPersonnalDataWithProfilePicture,
   selectedUserFriends: [] as User[],
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
-  personalAccountConsumers: [] as CompleteUser[],
-  volunteers: [] as CompleteUser[],
-  candidates: [] as CompleteUser[],
+  personalAccountConsumers: [] as UserPersonnalData[],
+  volunteers: [] as UserPersonnalData[],
+  candidates: [] as UserPersonnalData[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -40,7 +41,7 @@ export const mutations = mutationTree(state, {
   SET_USER(state: UserState, data: MyUserInformation) {
     state.me = data;
   },
-  SET_SELECTED_USER(state: UserState, data: CompleteUserWithPermissions) {
+  SET_SELECTED_USER(state: UserState, data: UserPersonnalData) {
     state.selectedUser = data;
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
@@ -58,13 +59,16 @@ export const mutations = mutationTree(state, {
   ) {
     state.selectedUserAssignmentStats = stats;
   },
-  SET_USERS(state: UserState, data: CompleteUserWithPermissions[]) {
+  SET_USERS(state: UserState, data: UserPersonnalData[]) {
     state.users = data;
   },
-  SET_PERSONNAL_ACCOUNT_CONSUMMERS(state: UserState, data: CompleteUser[]) {
+  SET_PERSONNAL_ACCOUNT_CONSUMMERS(
+    state: UserState,
+    data: UserPersonnalData[],
+  ) {
     state.personalAccountConsumers = data;
   },
-  UPDATE_USER(state: UserState, data: CompleteUserWithPermissions) {
+  UPDATE_USER(state: UserState, data: UserPersonnalData) {
     const index = state.users.findIndex((user) => user.id === data.id);
     if (index !== -1) {
       state.users = updateItemToList(state.users, index, data);
@@ -82,10 +86,10 @@ export const mutations = mutationTree(state, {
   REMOVE_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
   },
-  SET_VOLUNTEERS(state: UserState, volunteers: CompleteUser[]) {
+  SET_VOLUNTEERS(state: UserState, volunteers: UserPersonnalData[]) {
     state.volunteers = volunteers;
   },
-  SET_CANDIDATES(state: UserState, candidates: CompleteUser[]) {
+  SET_CANDIDATES(state: UserState, candidates: UserPersonnalData[]) {
     state.candidates = candidates;
   },
 });
@@ -99,17 +103,12 @@ export const getters = getterTree(state, {
       false
     );
   },
-  validatedUsers: (state: UserState) => {
-    return state.users.filter(({ permissions }) =>
-      permissions.includes("validated-user"),
-    );
-  },
 });
 
 export const actions = actionTree(
   { state },
   {
-    async setSelectedUser({ commit }, user: CompleteUserWithPermissions) {
+    async setSelectedUser({ commit }, user: UserPersonnalData) {
       const res = await safeCall(this, userRepo.getUserFriends(this, user.id));
       if (!res) return;
       commit("SET_SELECTED_USER_FRIENDS", res.data);
@@ -126,7 +125,7 @@ export const actions = actionTree(
     async fetchUsers({ commit }) {
       const res = await safeCall(this, userRepo.getAllUsers(this));
       if (res) {
-        commit("SET_USERS", castUsersWithPermissionsWithDate(res.data));
+        commit("SET_USERS", res.data.map(castUserWithDate));
       }
     },
     async fetchVolunteers({ commit }) {
@@ -184,7 +183,10 @@ export const actions = actionTree(
       const consummers = res.data.map(castUserWithDate);
       commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
-    async createUser(_, user: UserCreation): Promise<CompleteUser | undefined> {
+    async createUser(
+      _,
+      user: UserCreateForm,
+    ): Promise<UserPersonnalData | undefined> {
       const res = await safeCall(this, userRepo.createUser(this, user), {
         successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
         errorMessage: "Mince, le compte n'a pas pu être créé 😢",
@@ -192,23 +194,29 @@ export const actions = actionTree(
       if (!res) return undefined;
       return castUserWithDate(res.data);
     },
-    async updateUser({ commit, state }, user: CompleteUserWithPermissions) {
-      const { id, ...userData } = user;
+    async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
+      if (state.me.id === user.id) return dispatch("updateMyUser");
+
       const res = await safeCall(
         this,
-        userRepo.updateUser(this, id, castToUserModification(userData)),
+        userRepo.updateUser(this, user.id, castToUserUpdateForm(user)),
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
         },
       );
       if (!res) return;
-      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
-      if (res.data.id === state.me.id) {
-        commit("SET_USER", castUserWithDate(res.data));
-      }
+      commit("UPDATE_USER", castUserWithDate(res.data));
     },
-
+    async updateMyUser({ commit }, user: UserPersonnalData) {
+      const res = await safeCall(this, userRepo.updateMyUser(this, user), {
+        successMessage: "Profil mis à jour ! 🎉",
+        errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
+      });
+      if (!res) return;
+      commit("UPDATE_USER", castUserWithDate(res.data));
+      commit("SET_USER", castUserWithDate(res.data));
+    },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
         this,
@@ -219,7 +227,7 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("UPDATE_USER", castUserWithPermissionsWithDate(res.data));
+      commit("UPDATE_USER", castUserWithDate(res.data));
       commit("SET_USER", castUserWithDate(res.data));
     },
 
@@ -251,15 +259,13 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      const user: CompleteUserWithPermissions = {
+      const user: UserPersonnalData = {
         ...state.selectedUser,
         teams: res.data.teams,
       };
       commit("UPDATE_USER", user);
       commit("SET_SELECTED_USER", user);
-      if (res.data.userId === state.me.id) {
-        dispatch("fetchUser");
-      }
+      if (res.data.userId === state.me.id) dispatch("fetchUser");
     },
 
     async fetchAndUpdateLocalUser({ commit, state, dispatch }, userId: number) {
@@ -298,7 +304,7 @@ export const actions = actionTree(
       commit("SET_USER", castUserWithDate(res.data));
     },
 
-    getProfilePicture(_, user: CompleteUserWithPermissions) {
+    getProfilePicture(_, user: MyUserInformationWithProfilePicture) {
       if (!user.profilePicture) return undefined;
       if (user.profilePictureBlob) return user.profilePictureBlob;
 
@@ -327,10 +333,7 @@ export const actions = actionTree(
       });
     },
 
-    async setProfilePicture(
-      { commit, dispatch },
-      user: CompleteUserWithPermissions,
-    ) {
+    async setProfilePicture({ commit, dispatch }, user: UserPersonnalData) {
       const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 

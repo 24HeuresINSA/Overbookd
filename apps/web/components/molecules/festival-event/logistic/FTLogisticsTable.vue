@@ -1,5 +1,5 @@
 <template>
-  <v-data-table :headers="headers" :items="gearRequest">
+  <v-data-table :headers="headers" :items="gearRequests">
     <template #item.name="{ item }">
       {{ item.gear.name }}
     </template>

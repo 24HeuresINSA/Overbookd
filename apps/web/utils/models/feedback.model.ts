@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+import { User } from "@overbookd/user";
 
 interface BaseFeedback {
   comment: string;

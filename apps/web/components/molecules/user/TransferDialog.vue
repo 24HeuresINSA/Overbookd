@@ -32,11 +32,11 @@
 <script lang="ts">
 import Vue from "vue";
 import { Transfer } from "~/utils/models/transaction.model";
-import { CompleteUser, MyUserInformation } from "~/utils/models/user.model";
+import { MyUserInformation, User } from "@overbookd/user";
 
 type UserAutocompleteItem = {
   text?: string;
-  value: Partial<CompleteUser>;
+  value: User;
 };
 
 export default Vue.extend({
@@ -85,7 +85,7 @@ export default Vue.extend({
       return this.$accessor.user.personalAccountConsumers.map(
         ({ firstname, lastname, id }) => {
           const username = `${firstname} ${lastname}`;
-          const value: Partial<CompleteUser> = {
+          const value: User = {
             firstname,
             lastname,
             id,

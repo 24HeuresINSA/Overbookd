@@ -23,7 +23,7 @@ import {
 } from "~/utils/models/gear-request.model";
 import { Reviewer } from "~/utils/models/review.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };

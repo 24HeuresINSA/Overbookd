@@ -10,10 +10,8 @@ import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/need-help.model";
 import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team.model";
-import {
-  DisplayedUser,
-  castVolunteerTaskWithDate,
-} from "~/utils/models/user.model";
+import { castVolunteerTaskWithDate } from "~/utils/models/user.model";
+import { UserName } from "@overbookd/user";
 import { HttpStringified } from "~/utils/types/http";
 
 interface NeedHelpState {
@@ -108,10 +106,7 @@ export const actions = actionTree(
   },
 );
 
-function isMatchingName(
-  nameSearch: string,
-  { firstname, lastname }: DisplayedUser,
-) {
+function isMatchingName(nameSearch: string, { firstname, lastname }: UserName) {
   const slugSearch = SlugifyService.apply(nameSearch);
   const slugName = SlugifyService.apply(`${firstname}${lastname}`);
   return slugName.includes(slugSearch);

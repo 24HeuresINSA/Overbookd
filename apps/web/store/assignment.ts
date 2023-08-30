@@ -23,12 +23,12 @@ import {
 } from "~/utils/models/ft-time-span.model";
 import { castPeriods } from "~/utils/models/period.model";
 import {
-  User,
   VolunteerAssignmentStat,
   VolunteerTask,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
 import { HttpStringified } from "~/utils/types/http";
+import { User } from "@overbookd/user";
 
 type AssignmentParameters = {
   volunteerId: number;

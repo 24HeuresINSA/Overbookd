@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { User } from "@overbookd/user";
 
-export class FriendResponseDto {
+export class FriendResponseDto implements User {
   @ApiProperty({
     required: true,
     description: "The id of the Friend",

@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../src/prisma.service";
-import { FriendResponseDto } from "./dto/friend.response.dto";
-import { FriendWithData } from "./friend.model";
+import { User } from "@overbookd/user";
+
+type FriendWithData = {
+  friend: User;
+};
 
 @Injectable()
 export class FriendService {
@@ -14,7 +17,7 @@ export class FriendService {
     nickname: true,
   };
 
-  async findUserFriends(id: number): Promise<FriendResponseDto[]> {
+  async findUserFriends(id: number): Promise<User[]> {
     const friends = await this.prisma.friend.findMany({
       where: {
         requestorId: id,
@@ -29,7 +32,7 @@ export class FriendService {
     return friends.map(retrieveFriend);
   }
 
-  async findFriends(): Promise<FriendResponseDto[]> {
+  async findFriends(): Promise<User[]> {
     const nonFriendableTeams = ["fen", "voiture", "camion"];
 
     return this.prisma.user.findMany({
@@ -47,10 +50,7 @@ export class FriendService {
     });
   }
 
-  async create(
-    requestorId: number,
-    friendId: number,
-  ): Promise<FriendResponseDto | null> {
+  async create(requestorId: number, friendId: number): Promise<User | null> {
     const { friend } = await this.prisma.friend.create({
       data: {
         requestorId,
@@ -78,7 +78,7 @@ export class FriendService {
   }
 }
 
-function retrieveFriend({ friend }: FriendWithData): FriendResponseDto {
+function retrieveFriend({ friend }: FriendWithData): User {
   return {
     id: friend.id,
     firstname: friend.firstname,

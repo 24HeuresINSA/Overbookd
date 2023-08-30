@@ -2,7 +2,7 @@ import { BaseFa } from "../models/fa.model";
 import { Ft, FtTimeWindow } from "../models/ft.model";
 import { SignaLocation } from "../models/signa-location.model";
 import { Team } from "../models/team.model";
-import { User } from "../models/user.model";
+import { User } from "@overbookd/user";
 
 export function hasAtLeastOneFTError(mFT: Ft): boolean {
   const errors = [

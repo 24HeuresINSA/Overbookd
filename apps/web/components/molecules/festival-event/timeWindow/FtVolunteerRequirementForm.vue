@@ -80,7 +80,7 @@ import {
   FtUserRequestImpl,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { formatUsername } from "~/utils/user/user.utils";
 
@@ -152,7 +152,7 @@ export default Vue.extend({
       );
     },
     requestableUsers(): User[] {
-      return this.$accessor.user.validatedUsers;
+      return this.$accessor.user.volunteers;
     },
   },
   watch: {
@@ -161,6 +161,7 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    await this.$accessor.user.fetchVolunteers();
     this.updateLocalVariable();
   },
   methods: {

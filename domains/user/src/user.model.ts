@@ -14,7 +14,6 @@ export interface UserPersonnalData extends User {
   phone: string;
   comment?: string;
   hasPayedContributions: boolean;
-  profilePicture?: string;
   charisma: number;
   balance: number;
   teams: string[];

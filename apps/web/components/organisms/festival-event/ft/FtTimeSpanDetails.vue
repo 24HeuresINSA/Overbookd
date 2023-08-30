@@ -70,7 +70,7 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { TimeSpanWithAssignees } from "~/utils/models/ft-time-span.model";
-import { User } from "~/utils/models/user.model";
+import { User } from "@overbookd/user";
 import { formatUserPhone, formatPhoneLink } from "~/utils/user/user.utils";
 
 export default Vue.extend({

@@ -29,9 +29,9 @@
 <script lang="ts">
 import Vue from "vue";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
-import { CompleteUserWithPermissions } from "~/utils/models/user.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import { UserPersonnalDataWithProfilePicture } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "Trombinoscope",
@@ -42,7 +42,7 @@ export default Vue.extend({
     },
     usersBornToday() {
       return this.$accessor.user.users.filter(
-        (user: CompleteUserWithPermissions) => {
+        (user: UserPersonnalDataWithProfilePicture) => {
           const today = new Date();
           const birthdate = new Date(user.birthdate);
           return (
@@ -57,7 +57,7 @@ export default Vue.extend({
     if (!this.users.length) this.$accessor.user.fetchUsers();
   },
   mounted() {
-    this.usersBornToday.forEach((user: CompleteUserWithPermissions) => {
+    this.usersBornToday.forEach((user: UserPersonnalDataWithProfilePicture) => {
       this.$accessor.user.setProfilePicture(user);
     });
   },

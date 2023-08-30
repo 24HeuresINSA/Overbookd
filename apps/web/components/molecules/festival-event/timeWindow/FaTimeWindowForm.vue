@@ -62,7 +62,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festival-event/fa.utils";
 import { Fa, TimeWindowType } from "~/utils/models/fa.model";
-import { MyUserInformation, User } from "~/utils/models/user.model";
+import { MyUserInformation, User } from "@overbookd/user";
 
 interface FaTimeWindowFormData {
   start?: Date;
