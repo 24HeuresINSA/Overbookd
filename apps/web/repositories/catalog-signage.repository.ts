@@ -7,7 +7,7 @@ export type Context = { $axios: NuxtAxiosInstance };
 export class CatalogSignageRepository {
   private static readonly basePath = "signages";
 
-  static searchSignages(context: Context) {
+  static fetchSignages(context: Context) {
     return context.$axios.get<Signage[]>(this.basePath);
   }
 
@@ -60,7 +60,7 @@ export class FakeCatalogSignageRepository {
     },
   ];
 
-  static searchSignages(context: Context): Promise<{ data: Signage[] }> {
+  static fetchSignages(context: Context): Promise<{ data: Signage[] }> {
     console.debug(context); // Pour pas qu'il soit noté comme not used
     return new Promise((resolve) => resolve({ data: this.signages }));
   }

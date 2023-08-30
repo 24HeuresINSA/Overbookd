@@ -36,7 +36,7 @@ export const actions = actionTree(
     async fetchSignages({ commit }): Promise<void> {
       const res = await safeCall<Signage[]>(
         this,
-        signageRepository.searchSignages(this),
+        signageRepository.fetchSignages(this),
       );
       if (!res) return;
       commit("SET_SIGNAGES", res.data);
