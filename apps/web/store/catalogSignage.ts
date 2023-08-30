@@ -34,10 +34,11 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchSignages({ commit }): Promise<void> {
-      const res = await safeCall<Signage[]>(
+      /*const res = await safeCall<Signage[]>(
         this,
         signageRepository.fetchSignages(this),
-      );
+      );*/
+      const res = await signageRepository.fetchSignages(this);
       if (!res) return;
       commit("SET_SIGNAGES", res.data);
     },
