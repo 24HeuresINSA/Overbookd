@@ -32,11 +32,11 @@
             </div>
 
             <v-switch
-              v-if="canViewDeletedFa"
+              v-if="can('view-deleted-fa')"
               v-model="filters.isDeleted"
               label="Afficher les FA supprimées"
             ></v-switch>
-            <v-btn v-if="canExportSignaNeeds" @click="exportCsvSigna()">
+            <v-btn v-if="can('manage-location')" @click="exportCsvSigna()">
               Export signa
             </v-btn>
           </template>
@@ -168,11 +168,11 @@ interface FaData {
   selectedFa?: FaSimplified;
   isNewFaDialogOpen: boolean;
   isDeleteDialogOpen: boolean;
-  validatiorStatuses: Map<string, ValidatorStatus>;
+  validatorStatuses: Map<string, ValidatorStatus>;
   filters: {
     search: string;
     team?: Team;
-    status: FaStatus;
+    status?: FaStatus;
     isDeleted: boolean;
   };
 }
@@ -197,11 +197,11 @@ export default Vue.extend({
     selectedFa: undefined,
     isNewFaDialogOpen: false,
     isDeleteDialogOpen: false,
-    validatiorStatuses: new Map(),
+    validatorStatuses: new Map(),
     filters: {
       search: "",
       team: undefined,
-      status: FaStatus.DRAFT,
+      status: undefined,
       isDeleted: false,
     },
   }),
@@ -214,12 +214,6 @@ export default Vue.extend({
     },
     validators(): Team[] {
       return this.$accessor.team.faValidators;
-    },
-    canViewDeletedFa(): boolean {
-      return this.$accessor.user.can("view-deleted-fa");
-    },
-    canExportSignaNeeds(): boolean {
-      return this.$accessor.user.can("manage-location");
     },
     statuses(): [FaStatus, FaStatusLabel][] {
       return [...faStatusLabels.entries()];
@@ -282,6 +276,10 @@ export default Vue.extend({
       await this.$accessor.fa.fetchFAs(searchParams);
     },
 
+    can(permission: string): boolean {
+      return this.$accessor.user.can(permission);
+    },
+
     getFaStatus(status: FaStatus): string {
       return status.toLowerCase();
     },
@@ -325,7 +323,7 @@ export default Vue.extend({
       const signaNeeds = await this.$accessor.fa.getSignaNeedsForCsv();
       if (!signaNeeds) return;
       const csvHeader =
-        "Numero FA;Nom FA;Type;Texte;Nombre;Taille;Commentaire;";
+        "Numéro FA;Nom FA;Type;Texte;Nombre;Taille;Commentaire;";
       const csvRows = signaNeeds.map((signaNeed) => {
         const rowData = [
           signaNeed.faId,
@@ -361,7 +359,7 @@ export default Vue.extend({
     },
 
     changeValidatorStatusFilter(team: Team, value: ValidatorStatus) {
-      this.validatiorStatuses.set(team.code, value);
+      this.validatorStatuses.set(team.code, value);
     },
 
     formatUsername(user?: User) {
