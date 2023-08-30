@@ -7,7 +7,7 @@
 
 */
 -- AlterTable
-ALTER TABLE "fa_site_publish_animation"
+ALTER TABLE "fa_site_publish_animation" 
 ALTER COLUMN "photo_link " SET DEFAULT '',
 ALTER COLUMN "description" SET DEFAULT '';
 
@@ -16,7 +16,7 @@ UPDATE "fa_site_publish_animation" SET "photo_link " = '' where "photo_link " IS
 UPDATE "fa_site_publish_animation" SET "description" = '' where "description" IS NULL;
 
 -- AlterTable
-ALTER TABLE "fa_site_publish_animation"
+ALTER TABLE "fa_site_publish_animation" 
 ALTER COLUMN "description" SET NOT NULL,
 ALTER COLUMN "photo_link " SET NOT NULL,
 ALTER COLUMN "isMajor" SET NOT NULL;
