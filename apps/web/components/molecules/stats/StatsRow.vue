@@ -136,7 +136,9 @@ export default Vue.extend({
       return this.$accessor.team.getTeamByCode(teamCode);
     },
     history(teamCode: string): number | undefined {
-      return this.isFT ? this.historyFT.get(teamCode) : this.historyFA.get(teamCode);
+      return this.isFT
+        ? this.historyFT.get(teamCode)
+        : this.historyFA.get(teamCode);
     },
     displayHistory(teamCode: string): string {
       const lastYearValue = this.history(teamCode);
