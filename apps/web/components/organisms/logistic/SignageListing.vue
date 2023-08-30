@@ -3,17 +3,22 @@
     <h2>Signalisations</h2>
     <form class="filter">
       <v-text-field
-        v-model="name"
+        v-model="searchName"
         append-icon="mdi-hammer-screwdriver"
         label="Nom de la signalisation"
         autofocus
         clearable
         clear-icon="mdi-close-circle-outline"
-        :disabled="loading"
         counter
-        @input="defectSearchSignages"
-        @keydown="searchOnEnter"
       ></v-text-field>
+
+      <v-select
+        v-model="searchType"
+        type="select"
+        label="Type de signalisation"
+        :items="signageTypes"
+        clearable
+      ></v-select>
     </form>
     <v-data-table :headers="headers" :items="signages" :loading="loading">
       <template v-if="isCatalogWriter" #item.actions="{ item }">
@@ -55,17 +60,16 @@
 import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
-import { Signage, SignageSearchOptions, SignageType } from "@overbookd/signa";
+import { Signage, SignageType, signageTypes } from "@overbookd/signa";
+import { SlugifyService } from "@overbookd/slugify";
 
 interface SignageListingData {
   headers: Header[];
-  name: string;
-  type?: SignageType;
-  loading: boolean;
+  searchName: string;
+  searchType?: SignageType;
   selectedSignage?: Signage;
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
-  delay?: ReturnType<typeof setTimeout>;
 }
 
 export default Vue.extend({
@@ -74,44 +78,44 @@ export default Vue.extend({
   data(): SignageListingData {
     return {
       headers: [
-        { text: "Signalisation", value: "name" },
+        { text: "Nom", value: "name" },
         { text: "Type", value: "type" },
-        { text: "Image", value: "image" },
-        { text: "Actions", value: "actions" },
+        { text: "Image", value: "image", sortable: false },
+        { text: "Actions", value: "actions", sortable: false },
       ],
-      name: "",
-      type: undefined,
-      loading: false,
+      searchName: "",
+      searchType: undefined,
+
       selectedSignage: undefined,
       isUpdateSignageDialogOpen: false,
       isDeleteSignageDialogOpen: false,
-      delay: undefined,
     };
   },
   computed: {
     signages(): Signage[] {
       return this.$accessor.catalogSignage.signages;
     },
+    filteredSignages(): Signage[] {
+      return this.signages.filter((signage) => {
+        return (
+          this.filterSignagesByName(this.searchName)(signage) &&
+          this.filterSignagesByType(this.searchType)(signage)
+        );
+      );
+    },
     isCatalogWriter(): boolean {
       return this.$accessor.user.can("write-catalog-signa");
     },
+    signageTypes(): SignageType[] {
+      return Object.values(signageTypes);
+    },
   },
   beforeMount() {
-    this.fetchSignages({});
+    this.fetchSignages();
   },
   methods: {
-    async searchSignages() {
-      const searchOptions = this.buildSearchOptions();
-      await this.fetchSignages(searchOptions);
-    },
-    searchOnEnter(keyEvent: KeyboardEvent) {
-      if (keyEvent.key !== "Enter") return;
-      return this.searchSignages();
-    },
-    async fetchSignages(searchOptions: SignageSearchOptions) {
-      this.loading = true;
-      await this.$accessor.catalogSignage.fetchSignages(searchOptions);
-      this.loading = false;
+    async fetchSignages() {
+      await this.$accessor.catalogSignage.fetchSignages();
     },
     openUpdateSignageDialog(signage: Signage) {
       this.selectedSignage = signage;
@@ -127,19 +131,16 @@ export default Vue.extend({
     closeDeleteSignageDialog() {
       this.isDeleteSignageDialogOpen = false;
     },
-    buildSearchOptions(): SignageSearchOptions {
-      return {
-        name: this.name ? this.name : undefined,
-        type: this.type ? this.type : undefined,
-      };
-    },
     async deleteSignage() {
       if (!this.selectedSignage) return;
       await this.$accessor.catalogSignage.deleteSignage(this.selectedSignage);
     },
-    defectSearchSignages() {
-      if (this.delay) clearInterval(this.delay);
-      this.delay = setTimeout(this.searchSignages, 800);
+    filterSignagesByName(search: string): (signage: Signage) => boolean {
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ slug }) => slug.includes(slugifiedSearch);
+    },
+    filterSignagesByType(searchType?: SignageType): (signage: Signage) => boolean {
+      return ({ type }) => type ? type === searchType : true;
     },
   },
 });

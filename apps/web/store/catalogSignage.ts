@@ -1,11 +1,6 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
-import {
-  Signage,
-  SignageForm,
-  SignageSearchOptions,
-  SignageUpdateForm,
-} from "@overbookd/signa";
+import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
 import { RepoFactory } from "~/repositories/repo-factory";
 
 const signageRepository = RepoFactory.CatalogSignageRepository;
@@ -38,13 +33,10 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchSignages(
-      { commit },
-      signageSearchOptions: SignageSearchOptions,
-    ): Promise<void> {
+    async fetchSignages({ commit }): Promise<void> {
       const res = await safeCall<Signage[]>(
         this,
-        signageRepository.searchSignages(this, signageSearchOptions),
+        signageRepository.searchSignages(this),
       );
       if (!res) return;
       commit("SET_SIGNAGES", res.data);

@@ -88,7 +88,10 @@ export default Vue.extend({
   methods: {
     async createOrUpdateSignage() {
       if (!this.name || !this.type) return;
-      const signage: SignageForm = { name: this.name, type: this.type };
+      const signage: SignageForm = {
+        name: this.name,
+        type: this.type
+      };
 
       (await this.signage.id)
         ? this.$accessor.catalogSignage.updateSignage({

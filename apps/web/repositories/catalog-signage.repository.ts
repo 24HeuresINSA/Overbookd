@@ -1,18 +1,13 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { SignageSearchOptions, Signage, SignageForm } from "@overbookd/signa";
+import { Signage, SignageForm } from "@overbookd/signa";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class CatalogSignageRepository {
   private static readonly basePath = "signages";
 
-  static searchSignages(
-    context: Context,
-    searchOptions?: SignageSearchOptions,
-  ) {
-    return context.$axios.get<Signage[]>(this.basePath, {
-      params: searchOptions,
-    });
+  static searchSignages(context: Context) {
+    return context.$axios.get<Signage[]>(this.basePath);
   }
 
   static createSignage(context: Context, signageForm: SignageForm) {
