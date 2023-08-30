@@ -18,6 +18,7 @@ const BROUILLON = "Brouillon";
 const REFUSEE = "Refusée";
 const SOUMISE_A_VALIDATION = "Soumise à validation";
 const VALIDEE = "Validée";
+const A_VALIDER = "À valider";
 
 export type FaStatusLabel =
   | typeof BROUILLON
@@ -30,6 +31,26 @@ export const faStatusLabels = new Map<FaStatus, FaStatusLabel>([
   [FaStatus.REFUSED, REFUSEE],
   [FaStatus.SUBMITTED, SOUMISE_A_VALIDATION],
   [FaStatus.VALIDATED, VALIDEE],
+]);
+
+export enum ValidatorStatus {
+  VALIDATED = "VALIDATED",
+  REFUSED = "REFUSED",
+  TO_VALIDATE = "TO_VALIDATE",
+}
+
+export type ValidatorStatusLabel =
+  | typeof VALIDEE
+  | typeof REFUSEE
+  | typeof A_VALIDER;
+
+export const validatorStatusLabels = new Map<
+  ValidatorStatus,
+  ValidatorStatusLabel
+>([
+  [ValidatorStatus.VALIDATED, VALIDEE],
+  [ValidatorStatus.REFUSED, REFUSEE],
+  [ValidatorStatus.TO_VALIDATE, A_VALIDER],
 ]);
 
 const PC16_Prise_classique = "PC16_Prise_classique";

@@ -22,12 +22,17 @@
 import Vue from "vue";
 import { getFAValidationStatus } from "~/utils/festival-event/fa.utils";
 import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
-import { Fa, FaStatusLabel, faStatusLabels } from "~/utils/models/fa.model";
 import {
-  FtStatusLabel,
+  Fa,
+  FaStatus,
+  FaStatusLabel,
+  faStatusLabels,
+} from "~/utils/models/fa.model";
+import {
   Ft,
+  FtStatus,
+  FtStatusLabel,
   ftStatusLabels,
-  BROUILLON,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
@@ -60,8 +65,15 @@ export default Vue.extend({
     },
     // TODO : Crée un StatusLabel commun (dans un nouveau model Status ?)
     statusLabel(): FaStatusLabel | FtStatusLabel {
-      if (this.isFA) return faStatusLabels.get(this.mFA.status) ?? BROUILLON;
-      return ftStatusLabels.get(this.mFT.status) ?? BROUILLON;
+      if (this.isFA)
+        return (
+          faStatusLabels.get(this.mFA.status) ??
+          (faStatusLabels.get(FaStatus.DRAFT) as FaStatusLabel)
+        );
+      return (
+        ftStatusLabels.get(this.mFT.status) ??
+        (ftStatusLabels.get(FtStatus.DRAFT) as FtStatusLabel)
+      );
     },
     validators(): Team[] {
       if (this.isFA) return this.$accessor.team.faValidators;

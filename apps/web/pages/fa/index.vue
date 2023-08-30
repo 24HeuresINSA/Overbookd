@@ -21,12 +21,14 @@
                 @change="changeValidatorStatusFilter(validator, $event)"
               >
                 <v-icon small>{{ validator.icon }}</v-icon>
-                <v-btn x-small value="VALIDATED" class="btn-check">
-                  validée
-                </v-btn>
-                <v-btn x-small value="REFUDED" class="btn-check">refusée</v-btn>
-                <v-btn x-small value="TO_VALIDATE" class="btn-check">
-                  à valider
+                <v-btn
+                  v-for="[status, label] of validatorStatusLabels"
+                  :key="status"
+                  :value="status"
+                  x-small
+                  @click="changeValidatorStatusFilter(validator, status)"
+                >
+                  {{ label }}
                 </v-btn>
               </v-btn-toggle>
             </div>
@@ -133,7 +135,7 @@
       </ConfirmationMessage>
     </v-dialog>
 
-    <SnackNotificationContainer></SnackNotificationContainer>
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -149,6 +151,9 @@ import {
   FaStatusLabel,
   faStatusLabels,
   SearchFa,
+  ValidatorStatus,
+  ValidatorStatusLabel,
+  validatorStatusLabels,
 } from "~/utils/models/fa.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Team } from "~/utils/models/team.model";
@@ -156,12 +161,6 @@ import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
-
-enum ValidatorStatus {
-  VALIDATED = "VALIDATED",
-  REFUSED = "REFUSED",
-  TO_VALIDATE = "TO_VALIDATE",
-}
 
 interface FaData {
   headers: Header[];
@@ -234,6 +233,9 @@ export default Vue.extend({
           this.filterFaByNameAndId(search)(fa)
         );
       });
+    },
+    validatorStatusLabels(): [ValidatorStatus, ValidatorStatusLabel][] {
+      return [...validatorStatusLabels.entries()];
     },
     deletedFaTextClass(): string {
       return this.filters.isDeleted ? "invalid-text" : "valid-text";
