@@ -31,7 +31,6 @@ export class CatalogSignageRepository {
   }
 }
 
-
 export class FakeCatalogSignageRepository {
   private static readonly signages: Signage[] = [
     {
@@ -65,7 +64,10 @@ export class FakeCatalogSignageRepository {
     return new Promise((resolve) => resolve({ data: this.signages }));
   }
 
-  static createSignage(context: Context, signageForm: SignageForm): Promise<{ data: Signage }> {
+  static createSignage(
+    context: Context,
+    signageForm: SignageForm,
+  ): Promise<{ data: Signage }> {
     console.debug(context); // Pour pas qu'il soit noté comme not used
     return new Promise((resolve) =>
       resolve({

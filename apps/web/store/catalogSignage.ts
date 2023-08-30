@@ -1,5 +1,4 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { safeCall } from "~/utils/api/calls";
 import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
 import { FakeCatalogSignageRepository } from "~/repositories/catalog-signage.repository";
 

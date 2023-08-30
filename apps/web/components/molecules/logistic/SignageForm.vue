@@ -90,7 +90,7 @@ export default Vue.extend({
       if (!this.name || !this.type) return;
       const signage: SignageForm = {
         name: this.name,
-        type: this.type
+        type: this.type,
       };
 
       (await this.signage.id)
