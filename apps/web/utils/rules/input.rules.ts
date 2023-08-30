@@ -81,7 +81,7 @@ export function isSame(matching: string | null) {
   };
 }
 
-export function required(value: string | null) {
+export function required(value: unknown) {
   return Boolean(value) || "Ce champ est requis";
 }
 

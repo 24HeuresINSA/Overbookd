@@ -20,7 +20,7 @@
         clearable
       ></v-select>
     </form>
-    <v-data-table :headers="headers" :items="signages" :loading="loading">
+    <v-data-table :headers="headers" :items="signages">
       <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateSignageDialog(item)">
           mdi-pencil
