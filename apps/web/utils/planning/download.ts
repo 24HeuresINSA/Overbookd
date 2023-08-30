@@ -1,4 +1,4 @@
-import { SlugifyService } from "~/domain/common/slugify.service";
+import { SlugifyService } from "@overbookd/slugify";
 import { UserName } from "@overbookd/user";
 
 export function download(planningBase64Data: string, volunteer: UserName) {
