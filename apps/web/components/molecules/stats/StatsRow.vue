@@ -5,11 +5,11 @@
       <v-col sm="7">
         <v-row>
           <v-col
-            v-for="(displayedStatus, status) in allStatus"
+            v-for="[status, label] in allStatusLabels"
             :key="status"
             class="flex-grow-1"
           >
-            <StatsCard :status="status">{{ displayedStatus }}</StatsCard>
+            <StatsCard :status="status">{{ label }}</StatsCard>
           </v-col>
         </v-row>
       </v-col>
@@ -43,10 +43,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { FaStatusLabel } from "~/utils/models/fa.model";
-import StatsCard from "~/components/atoms/card/StatsCard.vue";
+import { faStatusLabels } from "~/utils/models/fa.model";
+import { ftStatusLabels } from "~/utils/models/ft.model";
 
 interface StatsRowData {
   historyFA: Map<string, number>;
@@ -54,9 +55,7 @@ interface StatsRowData {
 }
 
 export default Vue.extend({
-  components: {
-    StatsCard,
-  },
+  components: { StatsCard },
   props: {
     name: {
       type: String,
@@ -122,8 +121,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    allStatus(): typeof FaStatusLabel {
-      return FaStatusLabel;
+    isFT(): boolean {
+      return this.name === "FT";
+    },
+    allStatusLabels(): typeof faStatusLabels | typeof ftStatusLabels {
+      return this.isFT ? faStatusLabels : ftStatusLabels;
     },
     teamStats(): StatsPayload[] {
       return this.dataset;
@@ -134,11 +136,9 @@ export default Vue.extend({
       return this.$accessor.team.getTeamByCode(teamCode);
     },
     history(teamCode: string): number | undefined {
-      if (this.name === "FT") {
-        return this.historyFT.get(teamCode);
-      }
-
-      return this.historyFA.get(teamCode);
+      return this.isFT
+        ? this.historyFT.get(teamCode)
+        : this.historyFA.get(teamCode);
     },
     displayHistory(teamCode: string): string {
       const lastYearValue = this.history(teamCode);

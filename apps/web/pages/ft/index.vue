@@ -1,6 +1,6 @@
 <template>
   <div class="ft">
-    <h1>Fiche Tâche</h1>
+    <h1>Fiches Tâches</h1>
 
     <div class="custom_container">
       <v-container class="sidebar">
@@ -151,8 +151,6 @@
     </v-dialog>
     <SnackNotificationContainer></SnackNotificationContainer>
   </div>
-
-  <!-- snack bar -->
 </template>
 
 <script lang="ts">
@@ -178,18 +176,17 @@ import { Searchable } from "~/utils/search/search.utils";
 
 interface Data {
   headers: Header[];
-  selectedFT: Ft | undefined;
+  selectedFT?: Ft;
   isDeleteDialogOpen: boolean;
   isRestoreDialogOpen: boolean;
   isNewFTDialogOpen: boolean;
-  loading: boolean;
 
   filters: {
     search: string;
-    team: Team | undefined;
+    team?: Team;
     myFTs: boolean;
     isDeleted: boolean;
-    status: FtStatus | undefined;
+    status?: FtStatus;
     myFTsToReview: boolean;
   };
 }
@@ -220,7 +217,6 @@ export default Vue.extend({
       isRestoreDialogOpen: false,
       isDeleteDialogOpen: false,
       isNewFTDialogOpen: false,
-      loading: true,
     };
   },
 
@@ -282,7 +278,6 @@ export default Vue.extend({
 
   async mounted() {
     await Promise.all([this.fetchFTs(), this.retrieveValidatorsIfNeeded()]);
-    this.loading = false;
   },
 
   methods: {

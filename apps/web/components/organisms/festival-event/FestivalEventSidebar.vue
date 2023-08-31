@@ -22,12 +22,17 @@
 import Vue from "vue";
 import { getFAValidationStatus } from "~/utils/festival-event/fa.utils";
 import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
-import { Fa, FaStatusLabel } from "~/utils/models/fa.model";
 import {
-  FtStatusLabel,
+  Fa,
+  FaStatusLabel,
+  faStatusLabels,
+  BROUILLON as FA_DRAFT,
+} from "~/utils/models/fa.model";
+import {
   Ft,
+  FtStatusLabel,
   ftStatusLabels,
-  BROUILLON,
+  BROUILLON as FT_DRAFT,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
@@ -52,16 +57,16 @@ export default Vue.extend({
       return this.festivalEvent === "FA";
     },
     titleWithId(): string {
-      if (this.isFA) return `Fiche Activité n°${this.$route.params.fa}`;
-      return `Fiche Tâche n°${this.$route.params.ft}`;
+      if (this.isFA) return `Fiche Activité n°${this.$route.params.faId}`;
+      return `Fiche Tâche n°${this.$route.params.ftId}`;
     },
     name(): string {
       return this.isFA ? this.mFA.name : this.mFT.name;
     },
     // TODO : Crée un StatusLabel commun (dans un nouveau model Status ?)
     statusLabel(): FaStatusLabel | FtStatusLabel {
-      if (this.isFA) return FaStatusLabel[this.mFA.status];
-      return ftStatusLabels.get(this.mFT.status) ?? BROUILLON;
+      if (this.isFA) return faStatusLabels.get(this.mFA.status) ?? FA_DRAFT;
+      return ftStatusLabels.get(this.mFT.status) ?? FT_DRAFT;
     },
     validators(): Team[] {
       if (this.isFA) return this.$accessor.team.faValidators;
