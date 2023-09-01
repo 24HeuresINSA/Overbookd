@@ -87,9 +87,6 @@ export class RegistrationService {
   }
 
   async getNewcomers(): Promise<IDefineANewcomer[]> {
-    const now = new Date();
-    const minRegisterDate = new Date(now.setDate(now.getDate() - 60));
-
     const newcomers = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
@@ -99,7 +96,6 @@ export class RegistrationService {
             team: { code: "benevole" },
           },
         },
-        createdAt: { gte: minRegisterDate },
       },
       select: SELECT_NEWCOMER,
     });
