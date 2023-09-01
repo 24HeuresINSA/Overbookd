@@ -2,15 +2,22 @@ import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import { FakeRegistrationRepository } from "~/repositories/registration.repository";
 import { HttpStringified } from "~/utils/types/http";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
 
 type State = {
   newcomers: IDefineANewcomer[];
+  inviteNewAdherentLink?: URL;
 };
 
-const repo = FakeRegistrationRepository;
+const registrationRepo = FakeRegistrationRepository;
+const configurationRepo = RepoFactory.ConfigurationRepository;
+
+const INVITE_NEW_ADHERENT_LINK = "inviteNewAdherentLink";
 
 export const state = (): State => ({
   newcomers: [],
+  inviteNewAdherentLink: undefined,
 });
 
 export const mutations = mutationTree(state, {
@@ -25,13 +32,19 @@ export const mutations = mutationTree(state, {
         ),
     );
   },
+  SET_INVITE_NEW_ADHERENT_LINK(state, link: URL) {
+    state.inviteNewAdherentLink = link;
+  },
+  REMOVE_INVITE_NEW_ADHERENT_LINK(state) {
+    state.inviteNewAdherentLink = undefined;
+  },
 });
 
 export const actions = actionTree(
   { state },
   {
     async getNewcomers({ commit }) {
-      const res = await repo.getNewcomers(this);
+      const res = await registrationRepo.getNewcomers(this);
       commit("SET_NEWCOMERS", castNewcomersWithDate(res));
     },
 
@@ -42,8 +55,36 @@ export const actions = actionTree(
         newcomers,
       }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
-      await repo.enrollNewcomers(team, newcomers);
+      await registrationRepo.enrollNewcomers(team, newcomers);
       commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
+    },
+
+    async fetchInviteNewAdherentLink({ commit }) {
+      const res = await safeCall(
+        this,
+        configurationRepo.fetch(this, INVITE_NEW_ADHERENT_LINK),
+      );
+      if (!res || !res.data) return;
+      const link = new URL(res.data.value.toString());
+      commit("SET_INVITE_NEW_ADHERENT_LINK", link);
+    },
+
+    async generateInviteNewAdherentLink({ dispatch }) {
+      const res = await registrationRepo.generateLink();
+      if (!res) return;
+      dispatch("updateInviteNewAdherentLink", new URL(res.data));
+    },
+
+    async updateInviteNewAdherentLink({ commit }, link: URL) {
+      const res = await safeCall(
+        this,
+        configurationRepo.save(this, {
+          key: INVITE_NEW_ADHERENT_LINK,
+          value: link.href,
+        }),
+      );
+      if (!res) return;
+      commit("SET_INVITE_NEW_ADHERENT_LINK", link);
     },
   },
 );
