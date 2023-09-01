@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalog";
+import { GearSearchOptions } from "~/store/catalogGear";
 import { Gear } from "~/utils/models/catalog.model";
 
 interface SearchGearData {
@@ -80,7 +80,7 @@ export default Vue.extend({
   },
   computed: {
     gears() {
-      return this.$accessor.catalog.gears;
+      return this.$accessor.catalogGear.gears;
     },
   },
   methods: {
@@ -104,7 +104,7 @@ export default Vue.extend({
     },
     async fetchGears(searchOptions: GearSearchOptions) {
       this.loading = true;
-      await this.$accessor.catalog.fetchGears(searchOptions);
+      await this.$accessor.catalogGear.fetchGears(searchOptions);
       this.loading = false;
     },
     propagateEvent(gear: Gear) {

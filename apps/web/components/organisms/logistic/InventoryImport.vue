@@ -125,10 +125,10 @@ export default Vue.extend({
   },
   computed: {
     gearRepository(): GearRepository {
-      return this.$accessor.catalog.gearRepository;
+      return this.$accessor.catalogGear.gearRepository;
     },
     gears(): Gear[] {
-      return this.$accessor.catalog.gears;
+      return this.$accessor.catalogGear.gears;
     },
     hasError(): boolean {
       return this.inventoryImportErrors.length > 0;
@@ -141,7 +141,7 @@ export default Vue.extend({
   },
   mounted() {
     if (this.gears.length > 0) return;
-    this.$accessor.catalog.fetchGears({});
+    this.$accessor.catalogGear.fetchGears({});
   },
   methods: {
     async extractInventoryRecords(importFile: File) {

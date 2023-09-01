@@ -1,35 +1,14 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { GearRepository as InventoryGearRepository } from "~/domain/inventory/gear.repository";
-import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.repository";
+import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
+import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import { SnackNotif } from "~/utils/models/notif.model";
 
-const gearRepository = RepoFactory.GearsRepository;
 const categoryRepository = RepoFactory.CategoryRepository;
 
 interface State {
-  gears: Gear[];
   categories: Category[];
   categoryTree: CategoryTree[];
-}
-
-export interface GearSearchOptions {
-  name?: string;
-  category?: string;
-  owner?: string;
-}
-
-export interface GearForm {
-  name: string;
-  category?: number;
-  isPonctualUsage: boolean;
-  isConsumable: boolean;
-}
-
-export interface GearUpdateForm extends GearForm {
-  id: number;
 }
 
 export interface CategorySearchOptions {
@@ -48,32 +27,11 @@ export interface CategoryUpdateForm extends CategoryForm {
 }
 
 export const state = (): State => ({
-  gears: [],
   categories: [],
   categoryTree: [],
 });
 
-export const getters = getterTree(state, {
-  gearRepository(state): InventoryGearRepository {
-    return new InMemoryGearRepository(state.gears);
-  },
-});
-
 export const mutations = mutationTree(state, {
-  SET_GEARS(state, gears: Gear[]) {
-    state.gears = gears;
-  },
-  ADD_GEAR(state, gear: Gear) {
-    state.gears.push(gear);
-  },
-  DELETE_GEAR(state, gear: Gear) {
-    state.gears = state.gears.filter((g) => g.id !== gear.id);
-  },
-  UPDATE_GEAR(state, gear: Gear) {
-    const index = state.gears.findIndex((g) => g.id === gear.id);
-    if (index < 0) return;
-    state.gears.splice(index, 1, gear);
-  },
   SET_CATEGORIES(state, categories: Category[]) {
     state.categories = categories;
   },
@@ -97,18 +55,6 @@ const DEFAULT_ERROR = "Quelque chose s'est mal passe";
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchGears(
-      context,
-      gearSerchOptions: GearSearchOptions,
-    ): Promise<void> {
-      const call = await safeCall<Gear[]>(
-        this,
-        gearRepository.searchGears(this, gearSerchOptions),
-      );
-      if (!call) return;
-      context.commit("SET_GEARS", call.data);
-    },
-
     async fetchCategories(
       context,
       categorySerchOptions: CategorySearchOptions,
@@ -142,44 +88,6 @@ export const actions = actionTree(
       if (!call) return;
       context.commit("ADD_CATEGORY", call.data);
       this.dispatch("catalog/fetchCategoryTree");
-    },
-
-    async createGear(context, gearForm: GearForm): Promise<void> {
-      const call = await safeCall<Gear>(
-        this,
-        gearRepository.createGear(this, gearForm),
-        {
-          successMessage: "Le materiel a ete cree avec succes",
-          errorMessage: "Erreur lors de la creation du materiel",
-        },
-      );
-      if (!call) return;
-      context.commit("ADD_GEAR", call.data);
-    },
-
-    async updateGear(context, form: GearUpdateForm): Promise<void> {
-      const { id, ...gearForm } = form;
-      const call = await safeCall<Gear>(
-        this,
-        gearRepository.updateGear(this, id, gearForm),
-        {
-          successMessage: "Le materiel a ete mis a jour avec succes",
-          errorMessage: "Erreur lors de la mise a jour du materiel",
-        },
-      );
-      if (!call) return;
-      context.commit("UPDATE_GEAR", call.data);
-    },
-
-    async deleteGear(context, gear: Gear): Promise<void> {
-      try {
-        await gearRepository.deleteGear(this, gear.id);
-        sendNotification(this, `${gear.name} supprime`);
-        context.commit("DELETE_GEAR", gear);
-      } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : DEFAULT_ERROR;
-        sendNotification(this, message);
-      }
     },
 
     async deleteCategory(context, category: Category): Promise<void> {
@@ -229,8 +137,6 @@ export const actions = actionTree(
 );
 
 export function sendNotification(store: Vue["$store"], message: string) {
-  const notif: SnackNotif = {
-    message,
-  };
+  const notif: SnackNotif = { message };
   store.dispatch("notif/pushNotification", notif);
 }

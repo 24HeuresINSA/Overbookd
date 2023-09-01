@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Inventaire</h1>
+    <h1>Inventaire Matos</h1>
     <InventoryImport v-if="importing" @import-done="switchToDisplay" />
     <InventoryListing v-else @ask-init="switchToImport" />
     <SnackNotificationContainer></SnackNotificationContainer>
@@ -24,7 +24,7 @@ export default Vue.extend({
     importing: false,
   }),
   head: () => ({
-    title: "Inventaire",
+    title: "Inventaire Matos",
   }),
   methods: {
     switchToImport() {

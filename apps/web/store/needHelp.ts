@@ -4,7 +4,7 @@ import {
   ONE_HOUR_IN_MS,
   QUARTER_IN_MS,
 } from "@overbookd/period";
-import { SlugifyService } from "~/domain/common/slugify.service";
+import { SlugifyService } from "@overbookd/slugify";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/need-help.model";

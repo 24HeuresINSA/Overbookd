@@ -1,10 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import {
-  CategoryForm,
-  CategorySearchOptions,
-  GearForm,
-  GearSearchOptions,
-} from "~/store/catalog";
+import { CategoryForm, CategorySearchOptions } from "~/store/catalog";
+import { GearForm, GearSearchOptions } from "~/store/catalogGear";
 import { Category, CategoryTree, Gear } from "~/utils/models/catalog.model";
 
 export type Context = { $axios: NuxtAxiosInstance };

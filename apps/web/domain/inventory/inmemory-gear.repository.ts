@@ -1,5 +1,5 @@
 import { Gear } from "~/utils/models/catalog.model";
-import { SlugifyService } from "../common/slugify.service";
+import { SlugifyService } from "@overbookd/slugify";
 import { GearRepository } from "./gear.repository";
 
 export class InMemoryGearRepository implements GearRepository {

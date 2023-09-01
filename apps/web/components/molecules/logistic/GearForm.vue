@@ -31,10 +31,10 @@
             label="Est du matos consommable"
             @change="updateConsumableStatus"
           ></v-switch>
-          <SearchCategoryVue
+          <SearchCategory
             v-model="category"
             label="Choisisez une categorie associee"
-          ></SearchCategoryVue>
+          ></SearchCategory>
         </div>
         <v-btn color="success" dark large @click="createOrUpdateGear">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Sauvegarder
@@ -47,10 +47,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearForm } from "~/store/catalog";
+import { GearForm } from "~/store/catalogGear";
 import { Category, Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";
-import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
+import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 
 interface GearFormData extends InputRulesData {
   name: string;
@@ -63,7 +63,7 @@ const nameMinLength = 3;
 
 export default Vue.extend({
   name: "GearForm",
-  components: { SearchCategoryVue },
+  components: { SearchCategory },
   props: {
     gear: {
       type: Object,
@@ -109,8 +109,8 @@ export default Vue.extend({
         gear = { ...gear, category: this.category?.id };
       }
       const action = this.gear.id
-        ? this.$accessor.catalog.updateGear({ ...gear, id: this.gear.id })
-        : this.$accessor.catalog.createGear(gear);
+        ? this.$accessor.catalogGear.updateGear({ ...gear, id: this.gear.id })
+        : this.$accessor.catalogGear.createGear(gear);
 
       await action;
       this.closeDialog();

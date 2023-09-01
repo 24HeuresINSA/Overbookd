@@ -110,20 +110,26 @@ export const pages: Page[] = [
   {
     icon: "mdi-bookshelf",
     permission: "read-catalog",
-    title: "Catalogue",
-    to: "/catalog",
+    title: "Catalogue Matos",
+    to: "/matos/catalog",
   },
   {
     icon: "mdi-warehouse",
     permission: "write-inventory",
     title: "Inventaire",
-    to: "/inventory",
+    to: "/matos/inventory",
   },
   {
     icon: "mdi-truck",
     permission: "write-inventory",
     title: "Logistique",
-    to: "/logistic",
+    to: "/matos/logistic",
+  },
+  {
+    icon: "mdi-bookshelf",
+    permission: "read-catalog-signa",
+    title: "Catalogue Signa",
+    to: "/signa/catalog",
   },
   {
     icon: "mdi-web-sync",
