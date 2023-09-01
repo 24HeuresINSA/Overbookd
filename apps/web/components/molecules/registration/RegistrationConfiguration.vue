@@ -1,7 +1,7 @@
 <template>
   <div class="registration-configuration">
     <v-text-field
-      :value="registerNewAdherentLink"
+      :value="registerNewAdherentLink?.href"
       outlined
       readonly
       placeholder="Pas de lien encore genere"
@@ -40,30 +40,24 @@
 
 <script lang="ts">
 import Vue from "vue";
-import jwt_decode from "jwt-decode";
-import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
+import { InviteNewAdherents } from "@overbookd/registration";
 
 export default Vue.extend({
   name: "RegistrationConfiguration",
   computed: {
     registerNewAdherentLink(): URL | undefined {
-      return new URL(
-        "https://overbookd.24heures.org/register?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTgwMTkyMDAwMDB9.Q6phgjNeHv116a9MHqTbodTZfpf76SFZlRrxVo3eU88",
-      );
+      return this.$accessor.registration.inviteNewAdherentLink;
     },
     hasRegisterNewAdherentLink(): boolean {
       return this.registerNewAdherentLink !== undefined;
     },
     expirationRegisterNewAdherentLinkDate(): string {
       if (!this.registerNewAdherentLink) return "";
-      const token = this.registerNewAdherentLink.searchParams.get("token");
-      if (!token) return "";
-      const { exp } = jwt_decode<{ exp: number }>(token);
-      const expirationDate = new Date(exp);
-      return `Ce lien expire le ${formatDateWithExplicitMonthAndDay(
-        expirationDate,
-      )}`;
+      return InviteNewAdherents.isLinkExpired(this.registerNewAdherentLink);
     },
+  },
+  mounted() {
+    this.$accessor.registration.fetchInviteNewAdherentLink();
   },
   methods: {
     async copyToClipBoard() {
@@ -74,7 +68,7 @@ export default Vue.extend({
       this.$accessor.notif.pushNotification({ message: "Lien copie ✅" });
     },
     refreshRegisterNewAdherentLink() {
-      console.log("refresh");
+      this.$accessor.registration.generateInviteNewAdherentLink();
     },
   },
 });

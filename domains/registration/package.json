@@ -6,7 +6,7 @@
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
   "private": true,
-  "main": "dist/index.js",
+  "main": "dist/domains/registration/src/index.js",
   "bugs": {
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
     "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
@@ -35,5 +35,13 @@
   "engines": {
     "node": "20.5.1",
     "pnpm": "8.7.1"
+  },
+  "dependencies": {
+    "@overbookd/period": "workspace:^",
+    "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^3.1.2"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2"
   }
 }
