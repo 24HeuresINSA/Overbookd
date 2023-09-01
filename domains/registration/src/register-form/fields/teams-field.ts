@@ -1,10 +1,10 @@
 import { Field } from "./field";
-import { TeamCode } from "../../registree";
+import { Teams } from "../fulfilled-registration";
 
-export class TeamsField implements Field<TeamCode[]> {
-  private constructor(private readonly teams: TeamCode[]) {}
+export class TeamsField implements Field<Teams> {
+  private constructor(private readonly teams: Teams) {}
 
-  get value(): TeamCode[] {
+  get value(): Teams {
     return this.teams;
   }
 
@@ -20,7 +20,7 @@ export class TeamsField implements Field<TeamCode[]> {
       : [`Tu ne peux pas rejoindre plus de ${this.MAX_TEAM_ALLOWED} équipes`];
   }
 
-  static build(teams: TeamCode[]): TeamsField {
+  static build(teams: Teams): TeamsField {
     return new TeamsField(teams);
   }
 }

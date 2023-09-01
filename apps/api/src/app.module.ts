@@ -41,6 +41,7 @@ import { VolunteerPlanningModule } from "./volunteer-planning/volunteer-planning
 import { ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuardCustom } from "./throttler-custom.guard";
+import { RegistrationModule } from "./registration/registration.module";
 
 @Module({
   imports: [
@@ -100,6 +101,7 @@ import { ThrottlerGuardCustom } from "./throttler-custom.guard";
       ttl: 60,
       limit: 500,
     }),
+    RegistrationModule,
   ],
   controllers: [AppController],
   providers: [

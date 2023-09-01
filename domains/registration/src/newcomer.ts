@@ -1,4 +1,4 @@
-import { TeamCode } from "./registree";
+import { TeamCode } from "./register-form";
 
 export interface IDefineANewcomer {
   id: number;
