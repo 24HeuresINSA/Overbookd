@@ -8,7 +8,7 @@ import {
   WithExpiration,
 } from "./invite-new-adherents";
 
-const domain = "https://test.com";
+const domain = "test.com";
 const secret = "secret";
 
 describe("Invite new adherents", () => {
@@ -19,7 +19,7 @@ describe("Invite new adherents", () => {
     });
     it("should expose url according to given domain", () => {
       const link = InviteNewAdherents.byLink({ domain, secret });
-      expect(link.origin).toBe(domain);
+      expect(link.host).toBe(domain);
     });
     it("should expose a jwt token as parameter", () => {
       const link = InviteNewAdherents.byLink({ domain, secret });
@@ -52,13 +52,13 @@ describe("Invite new adherents", () => {
     });
     describe("when link is not a valid link", () => {
       it("should consider link as expired", () => {
-        const invalidLink = new URL(`${domain}`);
+        const invalidLink = new URL(`https://${domain}`);
         expect(InviteNewAdherents.isLinkExpired(invalidLink)).toBe(
           LINK_EXPIRED,
         );
 
         const linkWithInvalidToken = new URL(
-          `${domain}?${TOKEN}=vdtqfdqwda.adgqeugfkabd.fdaghuida`,
+          `https://${domain}?${TOKEN}=vdtqfdqwda.adgqeugfkabd.fdaghuida`,
         );
         expect(InviteNewAdherents.isLinkExpired(linkWithInvalidToken)).toBe(
           LINK_EXPIRED,
@@ -69,7 +69,9 @@ describe("Invite new adherents", () => {
       it("should indicate link as expired", () => {
         const expiredToken =
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTI3NDg4MDB9.AHZulnYZM0aRLcWZEsQu6aJY3mc4L-InYzk3gJYLQI8";
-        const expiredLink = new URL(`${domain}?${TOKEN}=${expiredToken}`);
+        const expiredLink = new URL(
+          `https://${domain}?${TOKEN}=${expiredToken}`,
+        );
         expect(InviteNewAdherents.isLinkExpired(expiredLink)).toBe(
           LINK_EXPIRED,
         );

@@ -70,7 +70,7 @@ export const actions = actionTree(
     },
 
     async generateInviteNewAdherentLink({ dispatch }) {
-      const res = await registrationRepo.generateLink();
+      const res = await safeCall(this, registrationRepo.generateLink(this));
       if (!res) return;
       dispatch("updateInviteNewAdherentLink", new URL(res.data));
     },

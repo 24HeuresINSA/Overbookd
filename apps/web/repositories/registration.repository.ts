@@ -5,7 +5,7 @@ import { HttpStringified } from "~/utils/types/http";
 type Context = { $axios: NuxtAxiosInstance };
 
 export class RegistrationRepository {
-  private static readonly basePath = "registrations";
+  private static readonly basePath = "newcomers";
 
   static getNewcomers(context: Context) {
     return context.$axios.get<HttpStringified<IDefineANewcomer[]>>(
@@ -21,6 +21,12 @@ export class RegistrationRepository {
     return context.$axios.post<void>(`${this.basePath}/enroll-to/${teamCode}`, {
       newcomers,
     });
+  }
+
+  static generateLink(context: Context) {
+    return context.$axios.get<string>(
+      `${this.basePath}/invite-new-adherents-link`,
+    );
   }
 }
 
@@ -118,10 +124,7 @@ export class FakeRegistrationRepository {
     return Promise.resolve();
   }
 
-  static generateLink(): Promise<{ data: string } | undefined> {
-    const link =
-      "https://overbookd.24heures.org/register?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTg3OTY4MDB9.hImidi9xPdKV4IjbvQTjVcCT3p7EWGtciaeT7QHkO8U";
-    const url = new URL(link);
-    return Promise.resolve({ data: url.href });
+  static generateLink(context: Context) {
+    return context.$axios.get<string>("newcomers/invite-new-adherents-link");
   }
 }
