@@ -19,7 +19,7 @@
             counter
             :rules="[rules.nameMinLength]"
           ></v-text-field>
-          <h3>Type de créneau</h3>
+          <h3>Type de la signatlisation</h3>
           <v-select
             v-model="type"
             type="select"
@@ -93,7 +93,7 @@ export default Vue.extend({
         type: this.type,
       };
 
-      (await this.signage.id)
+       this.signage.id
         ? this.$accessor.catalogSignage.updateSignage({
             ...signage,
             id: this.signage.id,

@@ -50,7 +50,7 @@
       >
         <template #title>Suppression de la signalisation</template>
         <template #statement>
-          Tu es sûr le point de supprimer
+          Tu es sur le point de supprimer
           <strong>{{ selectedSignage?.name }}</strong> <br />
           Vérifie 2 fois avant de cliquer car elle sera supprimé de partout,
           même sur les FA déjà validées.
@@ -147,8 +147,8 @@ export default Vue.extend({
     },
     filterSignagesByName(search: string | null): (signage: Signage) => boolean {
       if (!search) return () => true;
-      const slugifiedSearch = SlugifyService.applyOnOptional(search);
-      return ({ slug }) => slug.includes(slugifiedSearch ?? "");
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ slug }) => slug.includes(slugifiedSearch);
     },
     filterSignagesByType(
       searchType: SignageType | null,

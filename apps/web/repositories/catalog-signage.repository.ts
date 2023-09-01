@@ -61,7 +61,7 @@ export class FakeCatalogSignageRepository {
 
   static fetchSignages(context: Context): Promise<{ data: Signage[] }> {
     console.debug(context); // Pour pas qu'il soit noté comme not used
-    return new Promise((resolve) => resolve({ data: this.signages }));
+    return Promise.resolve({ data: this.signages });
   }
 
   static createSignage(
@@ -69,15 +69,13 @@ export class FakeCatalogSignageRepository {
     signageForm: SignageForm,
   ): Promise<{ data: Signage }> {
     console.debug(context); // Pour pas qu'il soit noté comme not used
-    return new Promise((resolve) =>
-      resolve({
-        data: {
-          ...signageForm,
-          slug: SlugifyService.apply(signageForm.name),
-          id: this.signages.length + 1,
-        },
-      }),
-    );
+    return Promise.resolve({
+      data: {
+        ...signageForm,
+        slug: SlugifyService.apply(signageForm.name),
+        id: this.signages.length + 1,
+      },
+    });
   }
 
   static updateSignage(
@@ -86,19 +84,17 @@ export class FakeCatalogSignageRepository {
     signageForm: SignageForm,
   ): Promise<{ data: Signage }> {
     console.debug(context); // Pour pas qu'il soit noté comme not used
-    return new Promise((resolve) =>
-      resolve({
+    return Promise.resolve({
         data: {
           ...signageForm,
           slug: SlugifyService.apply(signageForm.name),
           id: signageId,
         },
-      }),
-    );
+    });
   }
 
   static deleteSignage(context: Context, signageId: number) {
     console.debug(context, signageId); // Pour pas qu'ils soit notés comme not used
-    return new Promise((resolve) => resolve({}));
+    return Promise.resolve({});
   }
 }
