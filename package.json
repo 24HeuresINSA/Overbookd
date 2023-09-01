@@ -35,7 +35,7 @@
   "packageManager": "pnpm@8.7.0",
   "engines": {
     "node": "20.5.1",
-    "pnpm": "8.7.0"
+    "pnpm": "8.7.1"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "6.5.0",
