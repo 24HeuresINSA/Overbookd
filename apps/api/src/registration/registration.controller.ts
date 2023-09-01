@@ -7,7 +7,7 @@ import {
   Post,
   UseFilters,
 } from "@nestjs/common";
-import { FulfilledRegistrationDto } from "./dto/fulfilled-registration.dto";
+import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
 import { RegistrationErrorFilter } from "./registration-error.filter";
 
@@ -25,10 +25,10 @@ export class RegistrationController {
   @UseFilters(new RegistrationErrorFilter())
   @ApiBody({
     description: "Register a newcomer",
-    type: FulfilledRegistrationDto,
+    type: RegistrationRequestDto,
   })
   @HttpCode(201)
-  registerNewcomer(@Body() registration: FulfilledRegistrationDto) {
+  registerNewcomer(@Body() registration: RegistrationRequestDto) {
     return this.registrationService.register(registration);
   }
 }

@@ -10,7 +10,7 @@ import {
   IsString,
 } from "class-validator";
 
-export class FulfilledRegistrationDto implements FulfilledRegistration {
+export class RegistrationRequestDto implements FulfilledRegistration {
   @ApiProperty({ example: "test@example.com" })
   @IsEmail()
   email: string;
