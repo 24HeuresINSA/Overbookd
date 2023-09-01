@@ -72,6 +72,15 @@
       "groupSlug": "pre-commit-dependencies"
     },
     {
+      "description": "Group all pre-commit dependencies",
+      "matchFileNames": ["package.json"],
+      "addLabels": ["Scope::Config"],
+      "groupName": "Root package dependencies",
+      "groupSlug": "root-package-dependencies",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
       "matchPackageNames": [
         "nuxt",
         "@nuxt/typescript-build",
