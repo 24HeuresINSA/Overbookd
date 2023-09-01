@@ -195,15 +195,12 @@ export class RegistrationError extends Error {
     readonly reasons: string[],
     errorMessage: string = "Erreur lors de l'inscription",
   ) {
-    const cause = reasons.join("\n");
-    const message = `${errorMessage}:\n${reasons}`;
-    super(message, { cause });
+    super(`${errorMessage}:\n${reasons.join("\n")}`);
   }
 }
 
 class NotFulfilledRegistration extends RegistrationError {
   constructor(reasons: string[]) {
-    const message = "L'inscription n'est pas complete";
-    super(reasons, message);
+    super(reasons, "L'inscription n'est pas complete");
   }
 }

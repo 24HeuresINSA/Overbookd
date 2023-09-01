@@ -53,6 +53,7 @@ describe("Register newcomer", () => {
         }),
         registerNewcomer.fromRegisterForm({
           ...registerForm,
+          email: "brole@protonmail.com",
         }),
       ]);
       expect(firstRegistree.id).not.toBe(secondRegistree.id);

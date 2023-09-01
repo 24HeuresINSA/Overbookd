@@ -20,6 +20,7 @@ export class FulfilledRegistrationDto implements FulfilledRegistration {
   firstname: string;
 
   @IsDefined()
+  @IsString()
   lastname: string;
 
   @IsDefined()
