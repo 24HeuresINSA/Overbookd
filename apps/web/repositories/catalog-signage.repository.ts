@@ -85,11 +85,11 @@ export class FakeCatalogSignageRepository {
   ): Promise<{ data: Signage }> {
     console.debug(context); // Pour pas qu'il soit noté comme not used
     return Promise.resolve({
-        data: {
-          ...signageForm,
-          slug: SlugifyService.apply(signageForm.name),
-          id: signageId,
-        },
+      data: {
+        ...signageForm,
+        slug: SlugifyService.apply(signageForm.name),
+        id: signageId,
+      },
     });
   }
 

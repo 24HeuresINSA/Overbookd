@@ -93,7 +93,7 @@ export default Vue.extend({
         type: this.type,
       };
 
-       this.signage.id
+      this.signage.id
         ? this.$accessor.catalogSignage.updateSignage({
             ...signage,
             id: this.signage.id,
