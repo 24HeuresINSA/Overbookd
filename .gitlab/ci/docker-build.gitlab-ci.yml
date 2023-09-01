@@ -24,11 +24,13 @@ overbookd-web_docker_pre_build:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
     - when: never
   cache:
     key: $CI_COMMIT_REF_SLUG
@@ -77,9 +79,11 @@ preprod_overbookd-web_docker_build:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
     - when: never
 
 prod_overbookd-web_docker_build:
@@ -103,6 +107,7 @@ prod_overbookd-web_docker_build:
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
     - when: never
 
 overbookd-api_docker_build:
@@ -118,11 +123,13 @@ overbookd-api_docker_build:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - apps/api/**/*
+        - pnpm-lock.yaml
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/api/**/*
+        - pnpm-lock.yaml
     - when: never
   script:
     - docker build --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg API_VERSION=$VERSION --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION --file $APP_PATH/Dockerfile .

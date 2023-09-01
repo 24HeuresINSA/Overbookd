@@ -15,6 +15,7 @@ overbookd/api_test:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - apps/api/**/*
+        - pnpm-lock.yaml
     - when: never
   variables:
     PNPM_WORKSPACE: "@overbookd/api"
@@ -33,6 +34,7 @@ overbookd/web_test:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
     - when: never
   variables:
     PNPM_WORKSPACE: "@overbookd/web"
@@ -51,6 +53,7 @@ overbookd/libraries_test:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - libraries/**/*
+        - pnpm-lock.yaml
     - when: never
   variables:
     PNPM_WORKSPACE: "{libraries/**}"
@@ -62,6 +65,7 @@ overbookd/domains_test:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
         - domains/**/*
+        - pnpm-lock.yaml
     - when: never
   variables:
     PNPM_WORKSPACE: "{domains/**}"

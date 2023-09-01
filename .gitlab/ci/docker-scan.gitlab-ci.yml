@@ -16,9 +16,11 @@ overbookd-web_scan:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
+        - pnpm-lock.yaml
   needs: ["preprod_overbookd-web_docker_build"]
   variables:
     APP_NAME: web
@@ -36,9 +38,11 @@ overbookd-api_scan:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       changes:
         - apps/api/**/*
+        - pnpm-lock.yaml
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/api/**/*
+        - pnpm-lock.yaml
   needs: ["overbookd-api_docker_build"]
   variables:
     APP_NAME: api
