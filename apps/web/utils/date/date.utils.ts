@@ -60,10 +60,21 @@ export function roundMinutes(date: Date, round: number): Date | null {
   return date;
 }
 
+// return month YYYY
 export function formatDateWithExplicitMonth(date: Date | string): string {
   const displayOptions: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}
+
+// return dd month YYYY
+export function formatDateWithExplicitMonthAndDay(date: Date | string): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   };
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }

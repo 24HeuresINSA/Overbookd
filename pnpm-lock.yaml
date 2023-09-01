@@ -279,6 +279,9 @@ importers:
       file-saver:
         specifier: 2.0.5
         version: 2.0.5
+      jwt-decode:
+        specifier: ^3.1.2
+        version: 3.1.2
       nuxt:
         specifier: 2.17.1
         version: 2.17.1(consola@3.2.3)(prettier@2.8.8)(typescript@4.9.5)(vue@2.7.14)

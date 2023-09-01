@@ -1,13 +1,15 @@
 <template>
   <div>
     <h1>Nouvelles inscriptions</h1>
+    <RegistrationConfiguration class="registration-configuration" />
+    <v-divider></v-divider>
     <v-data-table
       v-model="selectedNewcomers"
       :headers="headers"
       :items="filteredNewcomers"
       :items-per-page="30"
       show-select
-      class="elevation-1"
+      class="elevation-1 newcomer-listing"
     >
       <template #top>
         <v-text-field
@@ -47,6 +49,7 @@
         </v-list>
       </v-menu>
     </v-card-actions>
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -58,6 +61,8 @@ import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import RegistrationConfiguration from "~/components/molecules/registration/RegistrationConfiguration.vue";
 
 interface RegistrationsData {
   headers: Header[];
@@ -67,7 +72,11 @@ interface RegistrationsData {
 
 export default Vue.extend({
   name: "Registrations",
-  components: { TeamChip },
+  components: {
+    TeamChip,
+    SnackNotificationContainer,
+    RegistrationConfiguration,
+  },
   data: (): RegistrationsData => ({
     headers: [
       { text: "Nom", value: "lastName" },
@@ -118,5 +127,9 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .search {
   margin: 0 20px;
+}
+
+.registration-configuration {
+  margin: 10px 0;
 }
 </style>
