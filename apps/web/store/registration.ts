@@ -1,6 +1,9 @@
 import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
-import { FakeRegistrationRepository } from "~/repositories/registration.repository";
+import {
+  FakeRegistrationRepository,
+  RegistrationRepository,
+} from "~/repositories/registration.repository";
 import { HttpStringified } from "~/utils/types/http";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
@@ -10,7 +13,8 @@ type State = {
   inviteNewAdherentLink?: URL;
 };
 
-const registrationRepo = FakeRegistrationRepository;
+const fakeRegistrationRepo = FakeRegistrationRepository;
+const registrationRepo = RegistrationRepository;
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
 const INVITE_NEW_ADHERENT_LINK = "inviteNewAdherentLink";
@@ -44,7 +48,7 @@ export const actions = actionTree(
   { state },
   {
     async getNewcomers({ commit }) {
-      const res = await registrationRepo.getNewcomers(this);
+      const res = await fakeRegistrationRepo.getNewcomers(this);
       commit("SET_NEWCOMERS", castNewcomersWithDate(res));
     },
 
@@ -55,7 +59,7 @@ export const actions = actionTree(
         newcomers,
       }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
-      await registrationRepo.enrollNewcomers(team, newcomers);
+      await fakeRegistrationRepo.enrollNewcomers(team, newcomers);
       commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
     },
 

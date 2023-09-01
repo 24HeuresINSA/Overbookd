@@ -124,7 +124,10 @@ export class FakeRegistrationRepository {
     return Promise.resolve();
   }
 
-  static generateLink(context: Context) {
-    return context.$axios.get<string>("newcomers/invite-new-adherents-link");
+  static generateLink(): Promise<{ data: string } | undefined> {
+    const link =
+      "https://overbookd.24heures.org/register?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTg3OTY4MDB9.hImidi9xPdKV4IjbvQTjVcCT3p7EWGtciaeT7QHkO8U";
+    const url = new URL(link);
+    return Promise.resolve({ data: url.href });
   }
 }
