@@ -80,9 +80,6 @@ importers:
       '@overbookd/registration':
         specifier: workspace:^
         version: link:../../domains/registration
-      '@overbookd/signa':
-        specifier: workspace:*
-        version: link:../../domains/signa
       '@overbookd/slugify':
         specifier: workspace:^
         version: link:../../libraries/slugify
