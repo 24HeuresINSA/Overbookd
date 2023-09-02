@@ -14,6 +14,11 @@ type LinkGeneration = {
   secret: string;
 };
 
+type CheckInvitation = {
+  token: string;
+  secret: string;
+};
+
 export class InviteNewAdherents {
   static byLink({ domain, secret }: LinkGeneration): URL {
     const baseUrl = new URL(`https://${domain}/register`);
@@ -37,6 +42,15 @@ export class InviteNewAdherents {
       return `Le lien expire le ${expirationDate}`;
     } catch {
       return LINK_EXPIRED;
+    }
+  }
+
+  static isInvitationValid({ token, secret }: CheckInvitation) {
+    try {
+      jwt.verify(token, secret, { ignoreExpiration: false });
+      return true;
+    } catch {
+      return false;
     }
   }
 

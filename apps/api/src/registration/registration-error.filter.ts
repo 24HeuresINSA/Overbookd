@@ -9,7 +9,7 @@ export class RegistrationErrorFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     response.status(400).json({
-      message: exception.reasons,
+      message: exception.reasons.join("\n"),
       error: "Bad Request",
       statusCode: 400,
     });

@@ -30,7 +30,6 @@ import { MailService } from "./mail/mail.service";
 import { NeedHelpModule } from "./need-help/need-help.module";
 import { OrgaNeedsModule } from "./orga-needs/orga-needs.module";
 import { PermissionModule } from "./permission/permission.module";
-import { PrismaService } from "./prisma.service";
 import { SignaLocationModule } from "./signa-location/signa-location.module";
 import { TeamModule } from "./team/team.module";
 import { TimelineModule } from "./timeline/timeline.module";
@@ -42,6 +41,7 @@ import { ThrottlerModule } from "@nestjs/throttler";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuardCustom } from "./throttler-custom.guard";
 import { RegistrationModule } from "./registration/registration.module";
+import { PrismaModule } from "./prisma.module";
 
 @Module({
   imports: [
@@ -102,11 +102,11 @@ import { RegistrationModule } from "./registration/registration.module";
       limit: 500,
     }),
     RegistrationModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    PrismaService,
     HashingUtilsService,
     MailService,
     {
@@ -114,6 +114,5 @@ import { RegistrationModule } from "./registration/registration.module";
       useClass: ThrottlerGuardCustom,
     },
   ],
-  exports: [PrismaService],
 })
 export class AppModule {}

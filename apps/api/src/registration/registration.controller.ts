@@ -29,8 +29,8 @@ export class RegistrationController {
     type: RegistrationRequestDto,
   })
   @HttpCode(201)
-  registerNewcomer(@Body() registration: RegistrationRequestDto) {
-    return this.registrationService.register(registration);
+  registerNewcomer(@Body() { newcomer, token }: RegistrationRequestDto) {
+    return this.registrationService.register(newcomer, token);
   }
 
   @Get("invite-new-adherents-link")

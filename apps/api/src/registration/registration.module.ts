@@ -1,17 +1,26 @@
 import { Module } from "@nestjs/common";
 import { RegistrationController } from "./registration.controller";
 import { RegistrationService } from "./registration.service";
-import {
-  InMemoryNewcomerRepository,
-  RegisterNewcomer,
-} from "@overbookd/registration";
+import { RegisterNewcomer } from "@overbookd/registration";
+import { PrismaService } from "../prisma.service";
+import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
+import { PrismaModule } from "../prisma.module";
+import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 
 @Module({
   controllers: [RegistrationController],
   providers: [
     {
+      provide: PrismaNewcomerRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaNewcomerRepository(prisma, new HashingUtilsService()),
+      inject: [PrismaService],
+    },
+    {
       provide: RegisterNewcomer,
-      useFactory: () => new RegisterNewcomer(new InMemoryNewcomerRepository()),
+      useFactory: (newcomerRepository: PrismaNewcomerRepository) =>
+        new RegisterNewcomer(newcomerRepository),
+      inject: [PrismaNewcomerRepository],
     },
     {
       provide: RegistrationService,
@@ -20,5 +29,6 @@ import {
       inject: [RegisterNewcomer],
     },
   ],
+  imports: [PrismaModule],
 })
 export class RegistrationModule {}
