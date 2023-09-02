@@ -1,0 +1,42 @@
+<table style="text-align: center">
+  <h1>Bienvenu sur Overbookd</h1>
+  <p>
+    Félicitations <%= firstname %>, ton inscription sur Overbookd est complète !
+    <br />
+    CEPENDANT! Il faut encore que ton compte soit valide.
+  </p>
+  <p>
+    Tu peux tout de meme te connecter avec ton email comme identifiant:
+    <br />
+    <%= email %>
+  </p>
+  <h2>Quelle com t'interesse le plus ?</h2>
+  <p>
+    En attendant la validation manuelle de ton compte, tu peux
+    <a href="https://framahttps://framaforms.org/abc/fr">
+      remplir ce questionnaire pour nous dire dans quelle equipe tu aimerais te
+      retrouver
+    </a>
+  </p>
+  <a
+    id="link-button"
+    href="<%= loginLink %>"
+    style="
+      background-color: green;
+      padding: 1rem 1rem 1rem 1rem;
+      border-radius: 0.5rem;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin: 1rem;
+    "
+  >
+    Connexion à Overbookd
+  </a>
+  <p>Si le lien ne marche pas, va a cette adresse : <%= loginLink %></p>
+
+  <p>
+    Merci pour ton investissement ! <br />
+    La Team OB
+  </p>
+</table>
