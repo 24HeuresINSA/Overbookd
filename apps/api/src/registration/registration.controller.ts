@@ -2,6 +2,7 @@ import { ApiBadRequestResponse, ApiBody, ApiTags } from "@nestjs/swagger";
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Logger,
   Post,
@@ -30,5 +31,11 @@ export class RegistrationController {
   @HttpCode(201)
   registerNewcomer(@Body() registration: RegistrationRequestDto) {
     return this.registrationService.register(registration);
+  }
+
+  @Get("invite-new-adherents-link")
+  @HttpCode(200)
+  generateNewAdherentsInvitationLink() {
+    return this.registrationService.invite();
   }
 }

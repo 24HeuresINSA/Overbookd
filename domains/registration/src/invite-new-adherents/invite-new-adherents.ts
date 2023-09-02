@@ -16,7 +16,7 @@ type LinkGeneration = {
 
 export class InviteNewAdherents {
   static byLink({ domain, secret }: LinkGeneration): URL {
-    const baseUrl = new URL(domain);
+    const baseUrl = new URL(`https://${domain}/register`);
     const token = jwt.sign({}, secret, { expiresIn: "30 days" });
     baseUrl.searchParams.append(TOKEN, token);
     return baseUrl;

@@ -5,7 +5,7 @@ import { HttpStringified } from "~/utils/types/http";
 type Context = { $axios: NuxtAxiosInstance };
 
 export class RegistrationRepository {
-  private static readonly basePath = "registrations";
+  private static readonly basePath = "newcomers";
 
   static getNewcomers(context: Context) {
     return context.$axios.get<HttpStringified<IDefineANewcomer[]>>(
@@ -21,6 +21,12 @@ export class RegistrationRepository {
     return context.$axios.post<void>(`${this.basePath}/enroll-to/${teamCode}`, {
       newcomers,
     });
+  }
+
+  static generateLink(context: Context) {
+    return context.$axios.get<string>(
+      `${this.basePath}/invite-new-adherents-link`,
+    );
   }
 }
 
