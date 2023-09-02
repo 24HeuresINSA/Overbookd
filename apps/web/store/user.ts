@@ -109,12 +109,13 @@ export const actions = actionTree(
       commit("SET_SELECTED_USER_FRIENDS", res.data);
       commit("SET_SELECTED_USER", user);
     },
-    async fetchUser({ commit }) {
+    async fetchUser({ commit, dispatch }) {
       const res = await safeCall(this, userRepo.getMyUser(this), {
         errorMessage: "Session expirée 💨",
       });
       if (res) {
         commit("SET_USER", castUserWithDate(res.data));
+        dispatch("setMyProfilePicture");
       }
     },
     async fetchUsers({ commit }) {
