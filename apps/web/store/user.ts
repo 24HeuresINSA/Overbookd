@@ -11,12 +11,7 @@ import {
   castUserWithDate,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
-import {
-  MyUserInformation,
-  User,
-  UserCreateForm,
-  UserPersonnalData,
-} from "@overbookd/user";
+import { MyUserInformation, User, UserPersonnalData } from "@overbookd/user";
 
 const userRepo = RepoFactory.UserRepository;
 
@@ -182,17 +177,6 @@ export const actions = actionTree(
 
       const consummers = res.data.map(castUserWithDate);
       commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
-    },
-    async createUser(
-      _,
-      user: UserCreateForm,
-    ): Promise<UserPersonnalData | undefined> {
-      const res = await safeCall(this, userRepo.createUser(this, user), {
-        successMessage: "🎉 Inscription terminée, Bienvenue au 24 ! 🎉",
-        errorMessage: "Mince, le compte n'a pas pu être créé 😢",
-      });
-      if (!res) return undefined;
-      return castUserWithDate(res.data);
     },
     async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
       if (state.me.id === user.id) return dispatch("updateMyUser");

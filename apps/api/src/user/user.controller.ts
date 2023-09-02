@@ -26,7 +26,6 @@ import {
   ApiResponse,
   ApiTags,
   ApiBadRequestResponse,
-  ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
@@ -53,7 +52,6 @@ import {
 import { VolunteerPlanningService } from "../../src/volunteer-planning/volunteer-planning.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
-import { CreateUserRequestDto } from "./dto/create-user.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
 import {
   VolunteerAssignmentDto,
@@ -80,21 +78,6 @@ export class UserController {
     private readonly planningSubscription: SubscriptionService,
     private readonly profilePictureService: ProfilePictureService,
   ) {}
-
-  @Post()
-  @ApiBody({
-    description: "Add new user",
-    type: CreateUserRequestDto,
-  })
-  @ApiCreatedResponse({
-    description: "created user",
-    type: UserPersonnalDataResponseDto,
-  })
-  createUser(
-    @Body() userData: CreateUserRequestDto,
-  ): Promise<UserPersonnalData> {
-    return this.userService.createUser(userData);
-  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()

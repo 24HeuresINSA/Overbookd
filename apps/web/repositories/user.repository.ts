@@ -8,7 +8,6 @@ import {
   MyUserInformation,
   User,
   UserPersonnalData,
-  UserCreateForm,
   UserUpdateForm,
 } from "@overbookd/user";
 
@@ -16,13 +15,6 @@ type Context = { $axios: NuxtAxiosInstance };
 
 export class UserRepository {
   private static readonly basePath = "users";
-
-  static createUser(context: Context, user: UserCreateForm) {
-    return context.$axios.post<HttpStringified<UserPersonnalData>>(
-      `${this.basePath}`,
-      user,
-    );
-  }
 
   static getUser(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<UserPersonnalData>>(

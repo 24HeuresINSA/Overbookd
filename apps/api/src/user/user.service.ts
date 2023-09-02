@@ -3,7 +3,6 @@ import {
   JwtPayload,
   JwtUtil,
 } from "../authentication/entities/jwt-util.entity";
-import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
@@ -16,7 +15,6 @@ import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.respons
 import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
-  UserCreateForm,
   UserPersonnalData,
   UserUpdateForm,
 } from "@overbookd/user";
@@ -164,47 +162,6 @@ export class UserService {
       },
     });
     return teams.map((t) => t.code);
-  }
-
-  async createUser(payload: UserCreateForm): Promise<UserPersonnalData> {
-    const newUserData = {
-      firstname: payload.firstname,
-      lastname: payload.lastname,
-      email: payload.email,
-      password: await new HashingUtilsService().hash(payload.password),
-      nickname: payload.nickname,
-      birthdate: payload.birthdate,
-      phone: payload.phone,
-      comment: payload.comment,
-    };
-
-    const newUser = await this.prisma.user.create({
-      data: newUserData,
-      select: SELECT_USER_PERSONNAL_DATA,
-    });
-
-    const userPersonnalData = UserService.formatToPersonalData(newUser);
-
-    try {
-      await this.mail.mailWelcome({
-        email: newUser.email,
-        firstname: newUser.firstname,
-      });
-    } catch (e) {
-      this.logger.error(e);
-    }
-
-    if (!payload.teamCode) return userPersonnalData;
-
-    const addTeamData = {
-      teamCode: payload.teamCode,
-      userId: newUser.id,
-    };
-
-    await this.prisma.userTeam.create({
-      data: addTeamData,
-    });
-    return userPersonnalData;
   }
 
   async updateUser(
