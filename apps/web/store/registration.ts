@@ -1,4 +1,8 @@
-import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
+import {
+  IDefineANewcomer,
+  JoinableTeam,
+  RegisterForm,
+} from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import {
   FakeRegistrationRepository,
@@ -89,6 +93,13 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_INVITE_NEW_ADHERENT_LINK", link);
+    },
+
+    async register(_, { token, form }: { token?: string; form: RegisterForm }) {
+      return safeCall(
+        this,
+        registrationRepo.registerNewcomer(this, form, token),
+      );
     },
   },
 );
