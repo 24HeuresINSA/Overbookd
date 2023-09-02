@@ -390,6 +390,7 @@ export default Vue.extend({
 
   .errors {
     margin-top: 10px;
+    font-size: 0.8rem;
   }
 }
 </style>
