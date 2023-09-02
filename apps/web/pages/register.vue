@@ -91,14 +91,16 @@
               :rules="[rules.required, rules.mobilePhone]"
             ></v-text-field>
             <v-select
-              v-model="teamCode"
-              label="Équipe"
-              :items="softCreationTeams"
+              v-model="teams"
+              multiple
+              label="Équipes"
+              :items="comingFromTeams"
               item-text="name"
               item-value="code"
               clearable
               hint="Tu nous rejoins à plusieurs ?"
               persistent-hint
+              :rules="[twoTeamsMaximumRule]"
             ></v-select>
             <v-textarea
               v-model="comment"
@@ -121,7 +123,7 @@
               type="password"
               label="Mot de passe*"
               required
-              hint="Au moins une MAJUSCULE, minuscule, un chiffre et 6 caractères 🔒"
+              hint="Au moins une MAJUSCULE, minuscule, un chiffre, un caractères spécial et 12 caractères 🔒"
               persistent-hint
               :rules="[rules.password]"
             ></v-text-field>
@@ -138,6 +140,15 @@
             M'inscrire
           </v-btn>
           <v-btn text @click="step = 3"> Revenir </v-btn>
+          <ul class="errors">
+            <li
+              v-for="reason in registerForm.reasons"
+              :key="reason"
+              class="error--text"
+            >
+              {{ reason }}
+            </li>
+          </ul>
         </v-stepper-content>
       </v-stepper>
     </v-card>
@@ -148,8 +159,18 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { Team } from "~/utils/models/team.model";
-import { UserCreateForm } from "@overbookd/user";
+import {
+  BDE_CODE,
+  KARNA_CODE,
+  KFET_CODE,
+  RegisterForm,
+  STRASBOURG_CODE,
+  TECKOS_CODE,
+  TENDRESTIVAL_CODE,
+  TeamCode,
+  Teams,
+  WOODSTOWER_CODE,
+} from "@overbookd/registration";
 import {
   InputRulesData,
   required,
@@ -160,6 +181,7 @@ import {
   isMobilePhoneNumber,
   password,
   isSame,
+  maxLength,
 } from "~/utils/rules/input.rules";
 
 interface RegisterData extends InputRulesData {
@@ -168,7 +190,7 @@ interface RegisterData extends InputRulesData {
   lastname: string;
   nickname?: string;
   birthday: string;
-  teamCode?: string;
+  teams: Teams;
   phone: string;
   comment?: string;
   email: string;
@@ -191,7 +213,7 @@ export default Vue.extend({
       email: "",
       phone: "",
       comment: undefined,
-      teamCode: undefined,
+      teams: [],
       password: "",
       repeatPassword: "",
       rules: {
@@ -206,12 +228,43 @@ export default Vue.extend({
     };
   },
   computed: {
+    token(): string | undefined {
+      const token = this.$route.query.token;
+      if (Array.isArray(token)) return undefined;
+
+      return token ?? undefined;
+    },
+    cleanComment(): string | undefined {
+      if (!this.comment) return undefined;
+      return this.comment;
+    },
+    cleanNickname(): string | undefined {
+      if (!this.nickname) return undefined;
+      return this.nickname;
+    },
+    registerForm(): RegisterForm {
+      return this.commentAction(this.nicknameAction(RegisterForm.init()))
+        .fillBirthdate(this.birthdayDate)
+        .fillEmail(this.email)
+        .fillFirstname(this.firstname)
+        .fillLastname(this.lastname)
+        .fillMobilePhone(this.phone)
+        .fillTeams(this.teams)
+        .fillPassword(this.password);
+    },
     birthdayDate(): Date {
       return new Date(this.birthday);
     },
-    softCreationTeams(): Team[] {
-      const emptyTeam = { code: "", name: "Aucune" } as Team;
-      return [...this.$accessor.team.softCreationTeams, emptyTeam];
+    comingFromTeams(): TeamCode[] {
+      return [
+        BDE_CODE,
+        STRASBOURG_CODE,
+        KFET_CODE,
+        KARNA_CODE,
+        WOODSTOWER_CODE,
+        TECKOS_CODE,
+        TENDRESTIVAL_CODE,
+      ];
     },
     presentationRules(): (() => boolean | string)[] {
       return [
@@ -240,26 +293,17 @@ export default Vue.extend({
     repeatPasswordRule(): (value: string | null) => boolean | string {
       return isSame(this.password);
     },
+    twoTeamsMaximumRule(): (value: unknown[] | null) => boolean | string {
+      return maxLength(2);
+    },
     isFormInvalid(): boolean {
       return (
         this.presentationRules.some((rule) => rule() !== true) ||
         this.contactRules.some((rule) => rule() !== true) ||
         this.securityRules.some((rule) => rule() !== true) ||
-        this.repeatPasswordRule(this.repeatPassword) !== true
+        this.repeatPasswordRule(this.repeatPassword) !== true ||
+        this.registerForm.reasons.length > 0
       );
-    },
-    mUser(): UserCreateForm {
-      return {
-        firstname: this.firstname,
-        lastname: this.lastname,
-        nickname: this.nickname,
-        birthdate: this.birthdayDate,
-        email: this.email,
-        phone: this.phone,
-        comment: this.comment,
-        teamCode: this.teamCode,
-        password: this.password,
-      };
     },
     registerDescription(): string {
       return this.$accessor.configuration.registerFormDescription;
@@ -270,8 +314,19 @@ export default Vue.extend({
     await this.$accessor.configuration.fetchAll();
   },
   methods: {
+    commentAction(form: RegisterForm) {
+      if (this.cleanComment === undefined) return form.clearComment();
+      return form.fillComment(this.cleanComment);
+    },
+    nicknameAction(form: RegisterForm) {
+      if (this.cleanNickname === undefined) return form.clearNickname();
+      return form.fillNickname(this.cleanNickname);
+    },
     async register() {
-      const res = await this.$accessor.user.createUser(this.mUser);
+      const res = await this.$accessor.registration.register({
+        token: this.token,
+        form: this.registerForm,
+      });
       if (!res) return;
       await this.$auth.loginWith("local", {
         data: { email: this.email, password: this.password },
@@ -331,6 +386,10 @@ export default Vue.extend({
     &.dense {
       gap: 0px;
     }
+  }
+
+  .errors {
+    margin-top: 10px;
   }
 }
 </style>

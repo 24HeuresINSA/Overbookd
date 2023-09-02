@@ -1,5 +1,9 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
+import {
+  IDefineANewcomer,
+  JoinableTeam,
+  RegisterForm,
+} from "@overbookd/registration";
 import { HttpStringified } from "~/utils/types/http";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -27,6 +31,15 @@ export class RegistrationRepository {
     return context.$axios.get<string>(
       `${this.basePath}/invite-new-adherents-link`,
     );
+  }
+
+  static registerNewcomer(
+    context: Context,
+    form: RegisterForm,
+    token?: string,
+  ) {
+    const newcomer = form.complete();
+    return context.$axios.post<void>(`${this.basePath}`, { token, newcomer });
   }
 }
 

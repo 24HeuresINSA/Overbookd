@@ -1,43 +1,40 @@
 export function isNumber(value: string | null): boolean | string {
-  return (
-    (value != undefined && !isNaN(parseInt(value, 10))) ||
-    "La valeur doit être un nombre"
-  );
+  const message = "La valeur doit être un nombre";
+  return (value != undefined && !isNaN(parseInt(value, 10))) || message;
 }
 
 export function min(minValue: number) {
+  const message = `La valeur doit être au moins de ${minValue}`;
   return function (value: string | null) {
-    return (
-      (value != undefined && parseInt(value, 10) >= minValue) ||
-      `La valeur doit être au moins de ${minValue}`
-    );
+    return (value != undefined && parseInt(value, 10) >= minValue) || message;
   };
 }
 
 export function minLength(minLength: number) {
   return function (value: string | null) {
-    return (
-      (value && value.length >= minLength) ||
-      `Taper au moins ${minLength} caracteres`
-    );
+    const message = `Taper au moins ${minLength} caracteres`;
+    return (value && value.length >= minLength) || message;
+  };
+}
+
+export function maxLength(maxLength: number) {
+  return function (value: unknown[] | null) {
+    const message = `Pas plus de ${maxLength}`;
+    return (value && value.length <= maxLength) || message;
   };
 }
 
 export function minDate(minDate: Date) {
   return function (value: string | null) {
-    return (
-      (value && new Date(value).getTime() >= minDate.getTime()) ||
-      "Vous n'êtes pas si vieux !"
-    );
+    const message = "Vous n'êtes pas si vieux !";
+    return (value && new Date(value).getTime() >= minDate.getTime()) || message;
   };
 }
 
 export function maxDate(maxDate: Date = new Date()) {
   return function (value: string | null) {
-    return (
-      (value && new Date(value).getTime() < maxDate.getTime()) ||
-      "Tu n'es pas si jeune !"
-    );
+    const message = "Tu n'es pas si jeune !";
+    return (value && new Date(value).getTime() < maxDate.getTime()) || message;
   };
 }
 
@@ -58,21 +55,18 @@ export function isInsaEmail(value: string | null) {
 const mobilePhoneNumberPattern = new RegExp("0[6-7]{1}[0-9]{8}$");
 
 export function isMobilePhoneNumber(value: string | null) {
-  return (
-    (value && mobilePhoneNumberPattern.test(value)) ||
-    "Numéro de téléphone non valable"
-  );
+  const message = "Numéro de téléphone non valable";
+  return (value && mobilePhoneNumberPattern.test(value)) || message;
 }
 
 const passwordPattern = new RegExp(
-  "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$",
+  "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*=+_{}[]()|.]).{12,}$",
 );
 
 export function password(value: string | null) {
-  return (
-    (value && passwordPattern.test(value)) ||
-    "Au moins une MAJUSCULE, minuscule, un chiffre et 8 caractères"
-  );
+  const message =
+    "Au moins une MAJUSCULE, minuscule, un chiffre, un caractère spécial et 12 caractères";
+  return (value && passwordPattern.test(value)) || message;
 }
 
 export function isSame(matching: string | null) {
