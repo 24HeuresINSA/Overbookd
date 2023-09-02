@@ -8,9 +8,10 @@ import {
   IsEmail,
   IsOptional,
   IsString,
+  ValidateNested,
 } from "class-validator";
 
-export class RegistrationRequestDto implements FulfilledRegistration {
+class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @ApiProperty({ example: "test@example.com" })
   @IsEmail()
   email: string;
@@ -52,4 +53,16 @@ export class RegistrationRequestDto implements FulfilledRegistration {
   @IsArray()
   @Type(() => String)
   teams: Teams;
+}
+
+export class RegistrationRequestDto {
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  token: string;
+
+  @ApiProperty({ type: FulfilledRegistrationRepresentation })
+  @Type(() => FulfilledRegistrationRepresentation)
+  @ValidateNested()
+  newcomer: FulfilledRegistration;
 }
