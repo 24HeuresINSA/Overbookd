@@ -6,6 +6,8 @@ import { PrismaService } from "../prisma.service";
 import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
 import { PrismaModule } from "../prisma.module";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
+import { DomainEventModule } from "../domain-event/domain-event.module";
+import { DomainEventService } from "../domain-event/domain-event.service";
 
 @Module({
   controllers: [RegistrationController],
@@ -24,11 +26,13 @@ import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
     },
     {
       provide: RegistrationService,
-      useFactory: (registerNewcomer: RegisterNewcomer) =>
-        new RegistrationService(registerNewcomer),
-      inject: [RegisterNewcomer],
+      useFactory: (
+        registerNewcomer: RegisterNewcomer,
+        eventStore: DomainEventService,
+      ) => new RegistrationService(registerNewcomer, eventStore),
+      inject: [RegisterNewcomer, DomainEventService],
     },
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, DomainEventModule],
 })
 export class RegistrationModule {}

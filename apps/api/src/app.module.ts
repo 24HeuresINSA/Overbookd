@@ -26,7 +26,6 @@ import { GearRequestModule } from "./gear-request/gear-request.module";
 import { HashingUtilsModule } from "./hashing-utils/hashing-utils.module";
 import { HashingUtilsService } from "./hashing-utils/hashing-utils.service";
 import { InventoryModule } from "./inventory/inventory.module";
-import { MailService } from "./mail/mail.service";
 import { NeedHelpModule } from "./need-help/need-help.module";
 import { OrgaNeedsModule } from "./orga-needs/orga-needs.module";
 import { PermissionModule } from "./permission/permission.module";
@@ -42,6 +41,7 @@ import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuardCustom } from "./throttler-custom.guard";
 import { RegistrationModule } from "./registration/registration.module";
 import { PrismaModule } from "./prisma.module";
+import { MailModule } from "./mail/mail.module";
 
 @Module({
   imports: [
@@ -103,12 +103,12 @@ import { PrismaModule } from "./prisma.module";
     }),
     RegistrationModule,
     PrismaModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
     HashingUtilsService,
-    MailService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuardCustom,

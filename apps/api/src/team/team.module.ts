@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { CommonModule } from "../../src/common/common.module";
-import { MailService } from "../../src/mail/mail.service";
 import { UserService } from "../../src/user/user.service";
-import { PrismaService } from "../prisma.service";
 import { TeamController } from "./team.controller";
 import { TeamService } from "./team.service";
+import { MailModule } from "../mail/mail.module";
+import { PrismaModule } from "../prisma.module";
 
 @Module({
-  imports: [CommonModule],
+  imports: [CommonModule, MailModule, PrismaModule],
   controllers: [TeamController],
-  providers: [PrismaService, UserService, TeamService, MailService],
+  providers: [UserService, TeamService],
 })
 export class TeamModule {}

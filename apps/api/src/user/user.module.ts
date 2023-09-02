@@ -1,21 +1,15 @@
 import { Module } from "@nestjs/common";
 import { VolunteerPlanningModule } from "../../src/volunteer-planning/volunteer-planning.module";
-import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { FileService } from "./file.service";
 import { ProfilePictureService } from "./profile-picture.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
+import { MailModule } from "../mail/mail.module";
 
 @Module({
-  imports: [VolunteerPlanningModule],
+  imports: [VolunteerPlanningModule, MailModule],
   controllers: [UserController],
-  providers: [
-    UserService,
-    PrismaService,
-    MailService,
-    FileService,
-    ProfilePictureService,
-  ],
+  providers: [UserService, PrismaService, FileService, ProfilePictureService],
 })
 export class UserModule {}
