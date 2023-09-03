@@ -8,6 +8,7 @@ import { PrismaModule } from "../prisma.module";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
+import { PrismaEnrollNewcomersRepository } from "./repository/enroll-newcomers-repository.prisma";
 
 @Module({
   controllers: [RegistrationController],
@@ -19,6 +20,12 @@ import { DomainEventService } from "../domain-event/domain-event.service";
       inject: [PrismaService],
     },
     {
+      provide: PrismaEnrollNewcomersRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaEnrollNewcomersRepository(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: RegisterNewcomer,
       useFactory: (newcomerRepository: PrismaNewcomerRepository) =>
         new RegisterNewcomer(newcomerRepository),
@@ -27,10 +34,16 @@ import { DomainEventService } from "../domain-event/domain-event.service";
     {
       provide: RegistrationService,
       useFactory: (
+        enrollNewcomers: PrismaEnrollNewcomersRepository,
         registerNewcomer: RegisterNewcomer,
         eventStore: DomainEventService,
-      ) => new RegistrationService(registerNewcomer, eventStore),
-      inject: [RegisterNewcomer, DomainEventService],
+      ) =>
+        new RegistrationService(enrollNewcomers, registerNewcomer, eventStore),
+      inject: [
+        PrismaEnrollNewcomersRepository,
+        RegisterNewcomer,
+        DomainEventService,
+      ],
     },
   ],
   imports: [PrismaModule, DomainEventModule],

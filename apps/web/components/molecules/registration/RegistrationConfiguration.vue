@@ -4,8 +4,8 @@
       :value="registerNewAdherentLink?.href"
       outlined
       readonly
-      placeholder="Pas de lien encore genere"
-      label="Lien d'invitation pour les futurs adherents"
+      placeholder="Pas de lien encore généré"
+      label="Lien d'invitation pour les futurs adhérents"
       type="text"
       :hint="expirationRegisterNewAdherentLinkDate"
       :persistent-hint="hasRegisterNewAdherentLink"
@@ -31,7 +31,7 @@
               mdi-refresh
             </v-icon>
           </template>
-          <span>Regenerer le lien</span>
+          <span>Régénérer le lien</span>
         </v-tooltip>
       </template>
     </v-text-field>
@@ -65,7 +65,7 @@ export default Vue.extend({
       await navigator.clipboard.writeText(
         this.registerNewAdherentLink.toString(),
       );
-      this.$accessor.notif.pushNotification({ message: "Lien copie ✅" });
+      this.$accessor.notif.pushNotification({ message: "Lien copié ✅" });
     },
     refreshRegisterNewAdherentLink() {
       this.$accessor.registration.generateInviteNewAdherentLink();

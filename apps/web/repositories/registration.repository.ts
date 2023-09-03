@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
+  EnrollNewcomersForm,
   IDefineANewcomer,
   JoinableTeam,
   RegisterForm,
@@ -17,14 +18,8 @@ export class RegistrationRepository {
     );
   }
 
-  static enrollNewcomers(
-    context: Context,
-    teamCode: JoinableTeam,
-    newcomers: IDefineANewcomer[],
-  ) {
-    return context.$axios.post<void>(`${this.basePath}/enroll-to/${teamCode}`, {
-      newcomers,
-    });
+  static enrollNewcomers(context: Context, body: EnrollNewcomersForm) {
+    return context.$axios.post<void>(`${this.basePath}/enroll`, body);
   }
 
   static generateLink(context: Context) {
@@ -47,71 +42,71 @@ export class FakeRegistrationRepository {
   private static newcomers: IDefineANewcomer[] = [
     {
       id: 1,
-      firstName: "John",
-      lastName: "Doe",
+      firstname: "John",
+      lastname: "Doe",
       registeredAt: new Date(),
       teams: ["strasbourg"],
     },
     {
       id: 2,
-      firstName: "Lucas",
-      lastName: "Duval",
+      firstname: "Lucas",
+      lastname: "Duval",
       registeredAt: new Date("2021-09-05"),
       teams: ["karna"],
     },
     {
       id: 3,
-      firstName: "Leon",
-      lastName: "Dumestre",
+      firstname: "Leon",
+      lastname: "Dumestre",
       registeredAt: new Date("2022-09-20"),
       teams: [],
     },
     {
       id: 4,
-      firstName: "Leo",
-      lastName: "Mouyna",
+      firstname: "Leo",
+      lastname: "Mouyna",
       registeredAt: new Date("2010-10-02"),
       teams: ["teckos", "woods"],
     },
     {
       id: 5,
-      firstName: "Frodon",
-      lastName: "Odon",
+      firstname: "Frodon",
+      lastname: "Odon",
       registeredAt: new Date("2021-09-30"),
       teams: [],
     },
     {
       id: 6,
-      firstName: "Aude",
-      lastName: "Baudoux",
+      firstname: "Aude",
+      lastname: "Baudoux",
       registeredAt: new Date("2020-08-23"),
       teams: ["bde"],
     },
     {
       id: 7,
-      firstName: "Luca",
-      lastName: "Magin",
+      firstname: "Luca",
+      lastname: "Magin",
       registeredAt: new Date("2021-09-06"),
       teams: [],
     },
     {
       id: 8,
-      firstName: "Jasmine",
-      lastName: "Macron",
+      firstname: "Jasmine",
+      lastname: "Macron",
       registeredAt: new Date(),
       teams: ["karna", "teckos"],
     },
     {
       id: 9,
-      firstName: "Casper",
-      lastName: "Le Fantome",
+      firstname: "Casper",
+      lastname: "Le Fantome",
       registeredAt: new Date(),
       teams: ["strasbourg"],
     },
     {
       id: 10,
-      firstName: "Clement",
-      lastName: "Daguillon",
+      firstname: "Clement",
+      lastname: "Daguillon",
       registeredAt: new Date("2022-08-10"),
       teams: ["teckos"],
     },

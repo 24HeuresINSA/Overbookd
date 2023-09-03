@@ -1,9 +1,13 @@
-import { TeamCode } from "./register-form";
+import { TeamCode, Teams } from "./register-form";
 
 export interface IDefineANewcomer {
   id: number;
-  firstName: string;
-  lastName: string;
+  firstname: string;
+  lastname: string;
   registeredAt: Date;
-  teams: [] | [TeamCode] | [TeamCode, TeamCode];
+  teams: Teams;
+}
+
+export function isJoinableTeams(teams: TeamCode[]): teams is Teams {
+  return teams.length <= 2;
 }

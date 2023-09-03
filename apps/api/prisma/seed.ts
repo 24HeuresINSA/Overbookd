@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { Departments, Years } from "../src/user/dto/common";
 import { categoriesAndGears } from "./seeders/gears";
@@ -45,7 +45,7 @@ function insertOrUpdateGear(name: string, categoryId: number) {
 async function main() {
   console.log("Creating teams 👥");
 
-  const teams: Prisma.TeamUncheckedCreateInput[] = [
+  const teams: Team[] = [
     {
       name: "admin",
       code: "admin",

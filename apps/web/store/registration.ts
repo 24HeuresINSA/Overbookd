@@ -4,10 +4,6 @@ import {
   RegisterForm,
 } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
-import {
-  FakeRegistrationRepository,
-  RegistrationRepository,
-} from "~/repositories/registration.repository";
 import { HttpStringified } from "~/utils/types/http";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
@@ -17,8 +13,7 @@ type State = {
   inviteNewAdherentLink?: URL;
 };
 
-const fakeRegistrationRepo = FakeRegistrationRepository;
-const registrationRepo = RegistrationRepository;
+const registrationRepo = RepoFactory.RegistrationRepository;
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
 const INVITE_NEW_ADHERENT_LINK = "inviteNewAdherentLink";
@@ -52,8 +47,9 @@ export const actions = actionTree(
   { state },
   {
     async getNewcomers({ commit }) {
-      const res = await fakeRegistrationRepo.getNewcomers(this);
-      commit("SET_NEWCOMERS", castNewcomersWithDate(res));
+      const res = await registrationRepo.getNewcomers(this);
+      if (!res) return;
+      commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
     },
 
     async enrollNewcomers(
@@ -63,7 +59,19 @@ export const actions = actionTree(
         newcomers,
       }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
     ) {
-      await fakeRegistrationRepo.enrollNewcomers(team, newcomers);
+      const body = {
+        newcomers: newcomers.map(({ id }) => ({ id })),
+        team,
+      };
+      const res = await safeCall(
+        this,
+        registrationRepo.enrollNewcomers(this, body),
+        {
+          successMessage: `Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que ${team}`,
+          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés`,
+        },
+      );
+      if (!res) return;
       commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
     },
 
