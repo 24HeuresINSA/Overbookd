@@ -7,27 +7,69 @@
       src="https://media.giphy.com/media/P07JtCEMQF9N6/giphy.gif"
     ></v-img>
 
-    <h2>Description du formulaire d'inscription</h2>
-    <RichEditor
-      :data="registerFormDescription"
-      @change="updateRegisterFormDescription($event)"
-    >
-      <template #header>
-        <div class="divider" />
-        <TiptapMenuItem
-          title="Texte par défaut"
-          class="white-menu-item"
-          :action="replaceRegisterDescriptionByTemplate"
-        />
-      </template>
-    </RichEditor>
+    <v-expansion-panels>
+      <v-expansion-panel class="collapse">
+        <v-expansion-panel-header>
+          <h2>Description du formulaire d'inscription</h2>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <RichEditor
+            :data="registerFormDescription"
+            @change="updateRegisterFormDescription($event)"
+          >
+            <template #header>
+              <div class="divider" />
+              <TiptapMenuItem
+                title="Texte par défaut"
+                class="white-menu-item"
+                :action="replaceRegisterDescriptionByTemplate"
+              />
+            </template>
+          </RichEditor>
 
-    <h2>Date de début de la manif</h2>
-    <DateField v-model="dateEventStart" label="Début de la manif"></DateField>
-    <v-btn class="save-btn" @click="save"> Enregistrer </v-btn>
+          <v-btn
+            color="primary"
+            class="save-btn"
+            @click="saveRegisterFormDescription"
+          >
+            Enregistrer
+          </v-btn>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
 
-    <PermissionsCard />
-    <TeamsCard />
+      <v-expansion-panel class="collapse">
+        <v-expansion-panel-header>
+          <h2>Date de début de la manif</h2>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <DateField
+            v-model="dateEventStart"
+            label="Début de la manif"
+          ></DateField>
+          <v-btn color="primary" class="save-btn" @click="saveEventStartDate">
+            Enregistrer
+          </v-btn>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+
+      <v-expansion-panel class="collapse">
+        <v-expansion-panel-header>
+          <h2>Permissions</h2>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <PermissionsCard />
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+
+      <v-expansion-panel class="collapse">
+        <v-expansion-panel-header>
+          <h2>Equipes</h2>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <TeamsCard />
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
     <SnackNotificationContainer />
   </v-container>
@@ -39,9 +81,9 @@ import PermissionsCard from "~/components/organisms/permission/PermissionsCard.v
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import DateField from "~/components/atoms/field/date/DateField.vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import { isSameDay } from "~/utils/date/date.utils";
 import TiptapMenuItem from "~/components/atoms/field/tiptap/TiptapMenuItem.vue";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
+import TeamsCard from "~/components/organisms/team/TeamsCard.vue";
 
 interface ConfigurationData {
   dateEventStart: Date;
@@ -56,6 +98,7 @@ export default Vue.extend({
     DateField,
     RichEditor,
     TiptapMenuItem,
+    TeamsCard,
   },
 
   data(): ConfigurationData {
@@ -83,44 +126,24 @@ export default Vue.extend({
     updateRegisterFormDescription(description: string) {
       this.registerFormDescription = description;
     },
-    async save() {
-      const configurationsToSave = [];
-
-      const dateEventStartChanged = !isSameDay(
-        this.dateEventStart,
-        this.$accessor.configuration.eventStartDate,
-      );
-
-      if (dateEventStartChanged) {
-        configurationsToSave.push({
-          key: "eventDate",
-          value: { start: this.dateEventStart },
-        });
-      }
-
-      const registerFormDescriptionChanged =
-        this.registerFormDescription !==
-        this.$accessor.configuration.registerFormDescription;
-
-      if (registerFormDescriptionChanged) {
-        configurationsToSave.push({
-          key: "registerForm",
-          value: { description: this.registerFormDescription },
-        });
-      }
-
-      await Promise.all(
-        configurationsToSave.map((config) =>
-          this.$accessor.configuration.save(config),
-        ),
-      );
+    saveRegisterFormDescription() {
+      this.$accessor.configuration.save({
+        key: "registerForm",
+        value: { description: this.registerFormDescription },
+      });
+    },
+    saveEventStartDate() {
+      this.$accessor.configuration.save({
+        key: "eventDate",
+        value: { start: this.dateEventStart },
+      });
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-h2 {
+.collapse {
   margin-top: 20px;
 }
 

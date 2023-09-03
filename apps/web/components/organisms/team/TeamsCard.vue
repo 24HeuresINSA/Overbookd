@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Equipes</h2>
     <v-data-table
       :headers="headers"
       :items="teams"
@@ -17,43 +16,43 @@
       </template>
 
       <template #item.rendering="{ item }">
-        <TeamChip :team="item" with-name />
+        <TeamChip :team="item.code" with-name />
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn fab dark small class="mx-2" @click="openUpdateTeamDialog(item)">
-          <v-icon dark> mdi-pencil </v-icon>
+        <v-btn icon @click="openUpdateTeamDialog(item)">
+          <v-icon> mdi-pencil </v-icon>
         </v-btn>
-        <v-btn
-          fab
-          dark
-          small
-          class="mx-2"
-          @click="openDeleteConfirmationDialog(item)"
-        >
-          <v-icon dark> mdi-trash-can </v-icon>
+        <v-btn icon @click="openDeleteConfirmationDialog(item)">
+          <v-icon> mdi-trash-can </v-icon>
         </v-btn>
       </template>
 
       <template #footer.prepend>
-        <v-btn
-          color="primary"
-          dark
-          class="ma-2 w-1/3 px-4"
-          @click="openAddTeamDialog"
-        >
+        <v-btn color="primary" @click="openAddTeamDialog">
           Ajouter une équipe
         </v-btn>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="isDeleteDialogOpen" width="600px">
+    <v-dialog v-model="isTeamDialogOpen" width="600px">
+      <TeamForm
+        :team="selectedTeam"
+        @close-dialog="closeTeamDialog"
+        @create="createTeam"
+        @update="updateTeam"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="isDeleteConfirmationDialogOpen" width="600px">
       <ConfirmationMessage
         confirm-color="error"
         @close-dialog="closeDeleteConfirmationDialog"
         @confirm="removeSelectedTeam"
       >
-        <template #title> Supprimer l'équipe {{ selectedTeam.name }} </template>
+        <template #title>
+          Supprimer l'équipe {{ selectedTeam?.name }}
+        </template>
         <template #statement>
           Cette équipe sera supprimée DEFINITIVEMENT !!! <br />
           Vérifie bien que tu ne te trompes pas d'équipe.
@@ -68,19 +67,20 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { Team } from "~/utils/models/team.model";
-import { Header } from "~utils/models/data-table.model";
+import { Header } from "~/utils/models/data-table.model";
+import TeamForm from "~/components/molecules/team/TeamForm.vue";
 
 interface TeamsCardData {
   search: string;
   headers: Header[];
-  selectedTeam?: Team;
+  selectedTeam: Team | null;
   isTeamDialogOpen: boolean;
   isDeleteConfirmationDialogOpen: boolean;
 }
 
 export default Vue.extend({
   name: "TeamsCard",
-  components: { TeamChip, ConfirmationMessage },
+  components: { TeamChip, ConfirmationMessage, TeamForm },
   data: (): TeamsCardData => ({
     headers: [
       {
@@ -127,10 +127,11 @@ export default Vue.extend({
       await this.$accessor.team.updateTeam(team);
     },
     async removeSelectedTeam() {
+      if (!this.selectedTeam) return;
       await this.$accessor.team.removeTeam(this.selectedTeam);
     },
     openAddTeamDialog() {
-      this.selectedTeam = undefined;
+      this.selectedTeam = null;
       this.isTeamDialogOpen = true;
     },
     openUpdateTeamDialog(team: Team) {
@@ -138,7 +139,7 @@ export default Vue.extend({
       this.isTeamDialogOpen = true;
     },
     closeTeamDialog() {
-      this.selectedTeam = undefined;
+      this.selectedTeam = null;
       this.isTeamDialogOpen = false;
     },
     openDeleteConfirmationDialog(team: Team) {
@@ -146,7 +147,7 @@ export default Vue.extend({
       this.isDeleteConfirmationDialogOpen = true;
     },
     closeDeleteConfirmationDialog() {
-      this.selectedTeam = undefined;
+      this.selectedTeam = null;
       this.isDeleteConfirmationDialogOpen = false;
     },
   },

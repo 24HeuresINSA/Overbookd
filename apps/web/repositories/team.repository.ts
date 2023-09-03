@@ -35,4 +35,16 @@ export class TeamRepository {
       },
     });
   }
+
+  static createTeam(context: Context, team: Team) {
+    return context.$axios.post<Team>(this.basePath, team);
+  }
+
+  static updateTeam(context: Context, team: Team) {
+    return context.$axios.patch<Team>(`${this.basePath}/${team.code}`, team);
+  }
+
+  static deleteTeam(context: Context, teamCode: string) {
+    return context.$axios.delete<void>(`${this.basePath}/${teamCode}`);
+  }
 }
