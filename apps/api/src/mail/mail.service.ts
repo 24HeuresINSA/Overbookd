@@ -117,7 +117,6 @@ export class MailService implements OnApplicationBootstrap {
       }
     } catch (error) {
       this.logger.error(error);
-      throw new InternalServerErrorException("Can't send welcome mail");
     }
   }
 }

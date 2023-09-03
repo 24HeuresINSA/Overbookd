@@ -1,6 +1,5 @@
 export * from "./registration.constant";
 export * from "./register-form";
-export * from "./newcomer-form.model";
 export * from "./enroll";
 export * from "./newcomer";
 export * from "./register-newcomer";

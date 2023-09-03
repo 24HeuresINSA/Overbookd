@@ -1,5 +1,4 @@
-import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { Injectable, BadRequestException } from "@nestjs/common";
 import {
   EnrollNewcomersForm,
   FulfilledRegistration,
@@ -7,40 +6,19 @@ import {
   NewcomerRegisteredEvent,
   RegisterNewcomer,
   Registree,
-  TeamCode,
   VOLUNTEER,
   ADHERENT,
-  Teams,
-  isJoinableTeams,
+  EnrollNewcomers,
 } from "@overbookd/registration";
 import { jwtConstants } from "../authentication/constants";
 import { InviteNewAdherents } from "@overbookd/registration";
-import { BadRequestException } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { SELECT_USER_TEAMS } from "../user/user.query";
-
-const SELECT_NEWCOMER = {
-  id: true,
-  firstname: true,
-  lastname: true,
-  createdAt: true,
-  ...SELECT_USER_TEAMS,
-};
-
-interface DatabaseNewcomer {
-  id: number;
-  firstname: string;
-  lastname: string;
-  createdAt: Date;
-  teams: DatabaseTeamCode[];
-}
-
-type DatabaseTeamCode = { team: { code: TeamCode } };
+import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
 
 @Injectable()
 export class RegistrationService {
   constructor(
-    private prisma: PrismaService,
+    private readonly enrollNewcomersRepository: EnrollNewcomersRepository,
     private readonly registerNewcomer: RegisterNewcomer,
     private readonly eventStore: DomainEventService,
   ) {}
@@ -87,58 +65,16 @@ export class RegistrationService {
   }
 
   async getNewcomers(): Promise<IDefineANewcomer[]> {
-    const newcomers = await this.prisma.user.findMany({
-      orderBy: { id: "asc" },
-      where: {
-        isDeleted: false,
-        teams: {
-          none: {
-            team: { code: "benevole" },
-          },
-        },
-      },
-      select: SELECT_NEWCOMER,
-    });
-    return newcomers.map(RegistrationService.formatToNewcomer);
+    return this.enrollNewcomersRepository.findEnrollable();
   }
 
   async enrollNewcomers({
     newcomers,
     team,
   }: EnrollNewcomersForm): Promise<void> {
-    const allRequests = newcomers.map(({ id }) =>
-      this.prisma.user.update({
-        where: { id },
-        data: {
-          teams: {
-            create: [
-              { team: { connect: { code: team } } },
-              { team: { connect: { code: "benevole" } } },
-            ],
-          },
-        },
-      }),
-    );
-    await this.prisma.$transaction(allRequests);
-  }
-
-  private static formatToNewcomer(
-    newcomer: DatabaseNewcomer,
-  ): IDefineANewcomer {
-    const teams = RegistrationService.formatTeamsToJoinableTeams(
-      newcomer.teams,
-    );
-    return {
-      id: newcomer.id,
-      firstname: newcomer.firstname,
-      lastname: newcomer.lastname,
-      registeredAt: newcomer.createdAt,
-      teams,
-    };
-  }
-
-  private static formatTeamsToJoinableTeams(teams: DatabaseTeamCode[]): Teams {
-    const joinableTeams = teams.map(({ team }) => team.code);
-    return isJoinableTeams(joinableTeams) ? joinableTeams : [];
+    console.log(JSON.stringify(newcomers));
+    const newcomersToEnroll = EnrollNewcomers.with(newcomers).to(team);
+    console.log(JSON.stringify(newcomersToEnroll));
+    await this.enrollNewcomersRepository.enroll(newcomersToEnroll);
   }
 }

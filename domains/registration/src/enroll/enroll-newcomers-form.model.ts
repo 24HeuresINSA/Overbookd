@@ -1,8 +1,5 @@
-import { JoinableTeam } from "./enroll";
-
-export interface NewcomerToEnroll {
-  id: number;
-}
+import { JoinableTeam } from ".";
+import { NewcomerToEnroll } from "./enroll-newcomers";
 
 export interface EnrollNewcomersForm {
   newcomers: NewcomerToEnroll[];

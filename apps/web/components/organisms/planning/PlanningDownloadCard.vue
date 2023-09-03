@@ -114,7 +114,7 @@ export default Vue.extend({
     },
     async copyToClipBoard() {
       await navigator.clipboard.writeText(this.personnalLink);
-      this.$accessor.notif.pushNotification({ message: "Lien copie ✅" });
+      this.$accessor.notif.pushNotification({ message: "Lien copié ✅" });
     },
   },
 });

@@ -6,18 +6,18 @@ import {
   ValidationArguments,
 } from "class-validator";
 import {
-  EnrollNewcomersFormRepresentation,
-  NewcomerToEnrollRepresentation,
-} from "../registration.model";
-import {
+  EnrollNewcomersForm,
   JoinableTeam,
   joinableTeams,
   NewcomerToEnroll,
 } from "@overbookd/registration";
 
-export class EnrollNewcomersRequestDto
-  implements EnrollNewcomersFormRepresentation
-{
+class NewcomerToEnrollRepresentation implements NewcomerToEnroll {
+  @ApiProperty({ required: true })
+  id: number;
+}
+
+export class EnrollNewcomersRequestDto implements EnrollNewcomersForm {
   @ApiProperty({
     required: true,
     description: "Newcomers to enroll",

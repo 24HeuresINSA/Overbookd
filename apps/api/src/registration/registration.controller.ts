@@ -39,7 +39,6 @@ import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
 @ApiUnauthorizedResponse({
   description: "User dont have the right to access this route",
 })
-@Controller()
 export class RegistrationController {
   private readonly logger = new Logger(RegistrationController.name);
 
@@ -65,7 +64,7 @@ export class RegistrationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission("manage-users")
-  @Get("/newcomers")
+  @Get()
   @ApiResponse({
     status: 200,
     description: "Get all newcomers",
@@ -79,7 +78,7 @@ export class RegistrationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission("manage-users")
-  @Post("/newcomers/enroll")
+  @Post("/enroll")
   @ApiBody({
     description: "Newcomers to enroll to a team",
     type: EnrollNewcomersRequestDto,

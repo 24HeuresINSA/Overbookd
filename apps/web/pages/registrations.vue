@@ -74,7 +74,11 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
+import {
+  IDefineANewcomer,
+  JoinableTeam,
+  joinableTeams,
+} from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
@@ -129,7 +133,7 @@ export default Vue.extend({
       });
     },
     joinableTeams(): JoinableTeam[] {
-      return ["hard", "soft", "confiance"];
+      return Object.values(joinableTeams);
     },
     noNewcomerSelected(): boolean {
       return this.selectedNewcomers.length === 0;
