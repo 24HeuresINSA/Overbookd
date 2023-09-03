@@ -20,9 +20,9 @@
         </v-btn>
         <v-btn :color="confirmColor" dark large @click="confirm">
           <slot name="confirm-btn-content">
-            <v-icon left> mdi-checkbox-marked-circle-outline </v-icon
-            >Confirmer</slot
-          >
+            <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
+            Confirmer
+          </slot>
         </v-btn>
       </div>
     </v-card-text>

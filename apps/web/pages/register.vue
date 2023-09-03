@@ -310,7 +310,7 @@ export default Vue.extend({
     },
   },
   async created() {
-    await this.$accessor.team.setTeamsInStore();
+    await this.$accessor.team.fetchTeams();
     await this.$accessor.configuration.fetchAll();
   },
   methods: {

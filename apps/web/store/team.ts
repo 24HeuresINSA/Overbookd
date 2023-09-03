@@ -37,18 +37,6 @@ export const getters = getterTree(state, {
     (code: string): Team => {
       return getters.allTeams.find((t: Team) => t.code === code);
     },
-  softCreationTeams(state): Team[] {
-    const teamsCodes = [
-      "bde",
-      "kfet",
-      "karna",
-      "woods",
-      "strasbourg",
-      "teckos",
-      "tendrestival",
-    ];
-    return state.teams.filter((t) => teamsCodes.includes(t.code));
-  },
 });
 
 export const mutations = mutationTree(state, {
@@ -66,7 +54,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async setTeamsInStore({ commit }): Promise<void> {
+    async fetchTeams({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getTeams(this));
       if (!res) return;
       commit("SET_TEAMS", res.data);
@@ -82,6 +70,27 @@ export const actions = actionTree(
       const res = await safeCall(this, teamRepo.getFtValidators(this));
       if (!res) return;
       commit("SET_FT_VALIDATORS", res.data);
+    },
+
+    async createTeam({ dispatch }, team: Team): Promise<void> {
+      await safeCall(this, teamRepo.createTeam(this, team), {
+        successMessage: "Equipe créée avec succès ✅",
+      });
+      await dispatch("fetchTeams");
+    },
+
+    async updateTeam({ dispatch }, team: Team): Promise<void> {
+      await safeCall(this, teamRepo.updateTeam(this, team), {
+        successMessage: "Equipe modifiée avec succès ✅",
+      });
+      await dispatch("fetchTeams");
+    },
+
+    async removeTeam({ dispatch }, { code }: Team): Promise<void> {
+      await safeCall(this, teamRepo.deleteTeam(this, code), {
+        successMessage: "Equipe supprimée avec succès ✅",
+      });
+      await dispatch("fetchTeams");
     },
   },
 );

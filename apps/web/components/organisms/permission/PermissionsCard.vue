@@ -1,6 +1,5 @@
 <template>
   <div class="my-4">
-    <h2>Permissions</h2>
     <v-data-table
       :headers="headers"
       :items="permissions"
