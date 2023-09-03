@@ -293,12 +293,6 @@ async function main() {
       icon: "mdi-forest",
     },
     {
-      name: "roti",
-      code: "roti",
-      color: "#40F6D8",
-      icon: "mdi-glass-mug-variant",
-    },
-    {
       name: "bénévole",
       code: "benevole",
       color: "#09A1C4",
