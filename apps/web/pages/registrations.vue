@@ -12,11 +12,21 @@
       class="elevation-1 newcomer-listing"
     >
       <template #top>
-        <v-text-field
-          v-model="searchNewcomer"
-          label="Rechercher un nouvel arrivant"
-          class="search"
-        ></v-text-field>
+        <div class="filters">
+          <v-text-field
+            v-model="searchNewcomer"
+            label="Rechercher un nouvel arrivant"
+            class="search"
+          ></v-text-field>
+          <v-btn
+            class="ma-2"
+            color="primary"
+            :outlined="!last30DaysNewcomers"
+            @click="toggleLast30DaysNewcomers"
+          >
+            Inscrits dans les 30 derniers jours
+          </v-btn>
+        </div>
       </template>
 
       <template #item.registeredAt="{ item }">
@@ -60,15 +70,19 @@ import { Header } from "~/utils/models/data-table.model";
 import { IDefineANewcomer, JoinableTeam } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
-import { Searchable, matchingSearchItems } from "~/utils/search/search.utils";
+import { Searchable } from "~/utils/search/search.utils";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import RegistrationConfiguration from "~/components/molecules/registration/RegistrationConfiguration.vue";
+import { ONE_DAY_IN_MS } from "../../../libraries/period/src";
 
 interface RegistrationsData {
   headers: Header[];
+  last30DaysNewcomers: boolean;
   searchNewcomer: string;
   selectedNewcomers: IDefineANewcomer[];
 }
+
+type Filter = (newcomer: Searchable<IDefineANewcomer>) => boolean;
 
 export default Vue.extend({
   name: "Registrations",
@@ -84,6 +98,7 @@ export default Vue.extend({
       { text: "Date d'inscription", value: "registeredAt" },
       { text: "Equipes", value: "teams", sortable: false },
     ],
+    last30DaysNewcomers: true,
     searchNewcomer: "",
     selectedNewcomers: [],
   }),
@@ -97,7 +112,14 @@ export default Vue.extend({
       }));
     },
     filteredNewcomers(): IDefineANewcomer[] {
-      return matchingSearchItems(this.searchableNewcomers, this.searchNewcomer);
+      const search = SlugifyService.apply(this.searchNewcomer);
+      const thirtyDaysAgo = Date.now() - 30 * ONE_DAY_IN_MS;
+      return this.searchableNewcomers.filter((newcomer) => {
+        return (
+          this.isMatchingNameSearch(search)(newcomer) &&
+          this.isMatchingRegistrationDateLimit(thirtyDaysAgo)(newcomer)
+        );
+      });
     },
     joinableTeams(): JoinableTeam[] {
       return ["hard", "soft", "confiance"];
@@ -120,13 +142,28 @@ export default Vue.extend({
       });
       this.selectedNewcomers = [];
     },
+    toggleLast30DaysNewcomers() {
+      this.last30DaysNewcomers = !this.last30DaysNewcomers;
+    },
+    isMatchingNameSearch(search: string): Filter {
+      return ({ searchable }: Searchable<IDefineANewcomer>) =>
+        searchable.includes(search);
+    },
+    isMatchingRegistrationDateLimit(dateLimit: number): Filter {
+      return ({ registeredAt }: IDefineANewcomer) => {
+        if (!this.last30DaysNewcomers) return true;
+        return registeredAt.getTime() > dateLimit;
+      };
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.search {
-  margin: 0 20px;
+.filters {
+  display: flex;
+  gap: 20px;
+  margin: 10px 20px;
 }
 
 .registration-configuration {
