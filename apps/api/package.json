@@ -76,7 +76,7 @@
     "sanitize-html": "2.11.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "10.1.16",
+    "@nestjs/cli": "10.1.17",
     "@nestjs/schematics": "10.0.2",
     "@nestjs/testing": "10.2.3",
     "@types/bcrypt": "5.0.0",
