@@ -21,7 +21,7 @@ WORKDIR /overbookd/domains
 COPY domains/ ./
 
 WORKDIR /overbookd
-RUN pnpm install --recursive --offline --filter '@overbookd/api' --filter '{domains/**}' --filter '{libraries/**}'
+RUN pnpm install --prod --recursive --offline --filter '@overbookd/api' --filter '{domains/**}' --filter '{libraries/**}'
 
 FROM installer AS builder
 
