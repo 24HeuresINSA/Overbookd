@@ -3,7 +3,6 @@ import { AnonymousMember } from "./anonymous-member";
 import {
   WithTransactions,
   WithoutTransactions,
-  ForgetAboutMember,
 } from "./forget-about.strategy";
 
 export interface MemberRepository {
