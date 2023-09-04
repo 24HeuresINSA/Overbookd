@@ -5,7 +5,7 @@ import {
 } from "./anonymous-member";
 import { MemberRepository } from "./forget-member";
 
-export interface ForgetAboutMember {
+interface ForgetAboutMember {
   forget(): Promise<void | AnonymousMember>;
 }
 
