@@ -31,6 +31,8 @@ COPY tsconfig.package.json ./
 COPY tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 
+RUN pnpm install --prod --recursive --offline --filter '@overbookd/api...'
+
 FROM node:20-alpine
 
 ARG API_VERSION
