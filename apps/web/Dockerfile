@@ -21,7 +21,7 @@ WORKDIR /overbookd/domains
 COPY domains/ ./
 
 WORKDIR /overbookd
-RUN pnpm install --recursive --offline --filter '@overbookd/web' --filter '{domains/**}' --filter '{libraries/**}'
+RUN pnpm install --recursive --offline --filter '@overbookd/web...'
 
 FROM installer AS builder
 
