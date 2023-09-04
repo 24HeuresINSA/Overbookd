@@ -13,7 +13,7 @@ import {
 
 const withTaskMember: StoredMember = {
   id: 1,
-  email: "with-task@gmail.com",
+  email: "with-task@24heures.org",
   tasks: [{ end: new Date(Date.now() + ONE_DAY_IN_MS * 30) }],
   balance: 10,
   transactions: [{ from: 0, to: 1 }],
@@ -21,7 +21,7 @@ const withTaskMember: StoredMember = {
 
 const inDebtMember: StoredMember = {
   id: 2,
-  email: "in-debt@gmail.com",
+  email: "in-debt@24heures.org",
   tasks: [],
   balance: -5,
   transactions: [{ from: 2, to: 0 }],
@@ -29,7 +29,7 @@ const inDebtMember: StoredMember = {
 
 const withoutTransactionsMember: StoredMember = {
   id: 3,
-  email: "withoutTransaction@gmail.com",
+  email: "withoutTransaction@24heures.org",
   tasks: [{ end: new Date("2022-05-12") }],
   balance: 0,
   transactions: [],
@@ -37,7 +37,7 @@ const withoutTransactionsMember: StoredMember = {
 
 const withTransactionsMember: StoredMember = {
   id: 4,
-  email: "withTransaction@gmail.com",
+  email: "withTransaction@24heures.org",
   tasks: [{ end: new Date("2022-05-12") }],
   balance: 0,
   transactions: [
