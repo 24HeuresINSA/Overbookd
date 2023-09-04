@@ -11,8 +11,6 @@ RUN pnpm fetch
 COPY pnpm-workspace.yaml ./
 COPY package.json ./
 
-RUN echo "node-linker=hoisted" >> .npmrc
-
 WORKDIR /overbookd/apps/api
 COPY apps/api/ ./
 
