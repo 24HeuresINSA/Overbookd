@@ -1,9 +1,6 @@
 import { AssignedInFuturTask, InDebt } from "./forget-member.error";
 import { AnonymousMember } from "./anonymous-member";
-import {
-  WithTransactions,
-  WithoutTransactions,
-} from "./forget-about.strategy";
+import { WithTransactions, WithoutTransactions } from "./forget-about.strategy";
 
 export interface MemberRepository {
   hasTasks(email: string): Promise<boolean>;
