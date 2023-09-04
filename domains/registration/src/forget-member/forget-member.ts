@@ -36,10 +36,6 @@ export class ForgetMember {
     const strategy = hasTransactions ? WithTransactions : WithoutTransactions;
     const strategyInitializer = { id, repository: this.members };
 
-    return this.forgetAbout(strategy.init(strategyInitializer));
-  }
-
-  private forgetAbout(strategy: ForgetAboutMember) {
-    return strategy.forget();
+    return strategy.init(strategyInitializer).forget();
   }
 }
