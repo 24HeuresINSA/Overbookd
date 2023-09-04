@@ -1,0 +1,77 @@
+import { updateItemToList } from "@overbookd/list";
+import { AnonymousMember } from "./anonymous-member";
+import { MemberRepository } from "./forget-member";
+
+type Task = {
+  end: Date;
+};
+
+type Transaction = {
+  from: number;
+  to: number;
+};
+
+export type StoredMember = {
+  id: number;
+  email: string;
+  tasks: Task[];
+  balance: number;
+  transactions: Transaction[];
+};
+
+export class InMemoryMemberRepository implements MemberRepository {
+  constructor(private members: StoredMember[]) {}
+
+  hasTasks(email: string): Promise<boolean> {
+    return Promise.resolve(
+      this.members
+        .find((member) => member.email === email)
+        ?.tasks?.some(({ end }) => end.getTime() > Date.now()) ?? false,
+    );
+  }
+
+  hasDebts(email: string): Promise<boolean> {
+    return Promise.resolve(
+      (this.members.find((member) => member.email === email)?.balance ?? 0) < 0,
+    );
+  }
+
+  hasTransactions(email: string): Promise<boolean> {
+    return Promise.resolve(
+      (this.members.find((member) => member.email === email)?.transactions
+        ?.length ?? 0) > 0,
+    );
+  }
+
+  async delete(id: number): Promise<void> {
+    this.members = this.members.filter((member) => member.id !== id);
+  }
+
+  getId(email: string): Promise<number> {
+    const member = this.members.find((member) => member.email === email);
+    if (!member) {
+      return Promise.reject(new Error(`Not found member with email: ${email}`));
+    }
+
+    return Promise.resolve(member.id);
+  }
+
+  async anonymize(
+    id: number,
+    anonymous: AnonymousMember,
+  ): Promise<AnonymousMember> {
+    const memberIndex = this.members.findIndex((member) => member.id === id);
+    const member = this.members.at(memberIndex);
+    if (memberIndex === -1 || !member) {
+      return Promise.reject(new Error(`Not found member with id: ${id}`));
+    }
+
+    const anonymized = { ...member, email: anonymous.email };
+    this.members = updateItemToList(this.members, memberIndex, anonymized);
+    return anonymous;
+  }
+
+  get storedMembers(): StoredMember[] {
+    return this.members;
+  }
+}

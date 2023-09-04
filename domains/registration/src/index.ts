@@ -6,3 +6,4 @@ export * from "./register-newcomer";
 export * from "./newcomer-repository.inmemory";
 export * from "./invite-new-adherents";
 export * from "./event";
+export * from "./forget-member";
