@@ -7,5 +7,5 @@ export type AnonymousMember = {
   nickname: null;
   email: string;
   mobilePhone: typeof ANONYMOUS_MOBILE_PHONE;
-  comments: null;
+  comment: null;
 };

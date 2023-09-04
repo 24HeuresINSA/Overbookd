@@ -45,7 +45,7 @@ export class WithTransactions implements ForgetAboutMember {
       lastname: ANONYMOUS,
       mobilePhone: ANONYMOUS_MOBILE_PHONE,
       email: `anonymous+${this.id}@24heures.org`,
-      comments: null,
+      comment: null,
       nickname: null,
     };
     return this.members.anonymize(this.id, anonymizedMember);

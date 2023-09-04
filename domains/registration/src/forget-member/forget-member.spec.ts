@@ -91,7 +91,7 @@ describe("Forget member", () => {
         lastname: ANONYMOUS,
         mobilePhone: ANONYMOUS_MOBILE_PHONE,
         nickname: null,
-        comments: null,
+        comment: null,
       });
     });
   });
