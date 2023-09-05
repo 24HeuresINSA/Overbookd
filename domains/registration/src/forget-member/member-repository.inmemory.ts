@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
 import { AnonymousMember } from "./anonymous-member";
-import { MemberRepository } from "./forget-member";
+import { Credentials, Member, MemberRepository } from "./forget-member";
 
 type Task = {
   end: Date;
@@ -14,6 +14,7 @@ type Transaction = {
 export type StoredMember = {
   id: number;
   email: string;
+  password: string;
   tasks: Task[];
   balance: number;
   transactions: Transaction[];
@@ -47,15 +48,6 @@ export class InMemoryMemberRepository implements MemberRepository {
     this.members = this.members.filter((member) => member.id !== id);
   }
 
-  getId(email: string): Promise<number> {
-    const member = this.members.find((member) => member.email === email);
-    if (!member) {
-      return Promise.reject(new Error(`Not found member with email: ${email}`));
-    }
-
-    return Promise.resolve(member.id);
-  }
-
   async anonymize(
     id: number,
     anonymous: AnonymousMember,
@@ -73,5 +65,14 @@ export class InMemoryMemberRepository implements MemberRepository {
 
   get storedMembers(): StoredMember[] {
     return this.members;
+  }
+
+  authenticate(credentials: Credentials): Promise<Member | null> {
+    const member = this.members.find(
+      ({ email, password }) =>
+        email === credentials.email && password === credentials.password,
+    );
+
+    return Promise.resolve(member ? { id: member.id } : null);
   }
 }

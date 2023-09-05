@@ -1,26 +1,43 @@
-import { AssignedInFuturTask, InDebt } from "./forget-member.error";
+import {
+  AssignedInFuturTask,
+  InDebt,
+  WrongCrendentials,
+} from "./forget-member.error";
 import { AnonymousMember } from "./anonymous-member";
 import { WithTransactions, WithoutTransactions } from "./forget-about.strategy";
+
+export type Credentials = {
+  email: string;
+  password: string;
+};
+
+export type Member = {
+  id: number;
+};
 
 export interface MemberRepository {
   hasTasks(email: string): Promise<boolean>;
   hasDebts(email: string): Promise<boolean>;
   hasTransactions(email: string): Promise<boolean>;
   delete(id: number): Promise<void>;
-  getId(email: string): Promise<number>;
   anonymize(id: number, anonymous: AnonymousMember): Promise<AnonymousMember>;
+  authenticate(credentials: Credentials): Promise<Member | null>;
 }
 
 export class ForgetMember {
   constructor(private readonly members: MemberRepository) {}
 
-  async with(email: string) {
-    const [hasTasks, hasDebts, hasTransactions, id] = await Promise.all([
+  async with({ email, password }: Credentials) {
+    const [member, hasTasks, hasDebts, hasTransactions] = await Promise.all([
+      this.members.authenticate({ email, password }),
       this.members.hasTasks(email),
       this.members.hasDebts(email),
       this.members.hasTransactions(email),
-      this.members.getId(email),
     ]);
+
+    if (!member) {
+      throw new WrongCrendentials();
+    }
 
     if (hasTasks) {
       throw new AssignedInFuturTask();
@@ -30,7 +47,7 @@ export class ForgetMember {
     }
 
     const strategy = hasTransactions ? WithTransactions : WithoutTransactions;
-    const strategyInitializer = { id, repository: this.members };
+    const strategyInitializer = { id: member.id, repository: this.members };
 
     return strategy.init(strategyInitializer).forget();
   }
