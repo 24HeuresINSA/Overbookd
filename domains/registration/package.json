@@ -37,7 +37,7 @@
     "pnpm": "8.7.1"
   },
   "dependencies": {
-    "@overbookd/list": "workspace:1.0.0-rc.2",
+    "@overbookd/list": "workspace:^",
     "@overbookd/period": "workspace:^",
     "jsonwebtoken": "9.0.2",
     "jwt-decode": "3.1.2"
