@@ -88,7 +88,7 @@ services:
         export OVERBOOKD_VERSION=$$(jq '.version' package.json | tr -d '\"')
         pnpm config set store-dir .pnpm-store
         pnpm fetch
-        pnpm install
+        pnpm install --recursive
         pnpm --recursive --filter '@overbookd/api...' run build
         echo "============================================="
         echo "Overbookd version passed: $$OVERBOOKD_VERSION"
@@ -153,7 +153,8 @@ services:
         export OVERBOOKD_VERSION=$$(jq '.version' package.json | tr -d '\"')
         pnpm config set store-dir .pnpm-store
         pnpm fetch
-        pnpm install
+        pnpm install --recursive
+        pnpm --recursive --filter '@overbookd/web...' run build
         echo "============================================="
         echo "Overbookd version passed: $$OVERBOOKD_VERSION"
         echo "============================================="
