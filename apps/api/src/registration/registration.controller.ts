@@ -19,7 +19,10 @@ import {
 } from "@nestjs/swagger";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
-import { RegistrationErrorFilter } from "./registration-error.filter";
+import {
+  ForgetMemberErrorFilter,
+  RegistrationErrorFilter,
+} from "./registration-error.filter";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -27,6 +30,7 @@ import { IDefineANewcomer } from "@overbookd/registration";
 import { NewcomerResponseDto } from "./dto/newcomer.response.dto";
 import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
 import { ENROLL_NEWCOMER, MANAGE_USERS } from "@overbookd/permission";
+import { ForgetRequestDto } from "./dto/forget.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("registration")
@@ -90,5 +94,16 @@ export class RegistrationController {
   })
   enrollNewcomers(@Body() payload: EnrollNewcomersRequestDto): Promise<void> {
     return this.registrationService.enrollNewcomers(payload);
+  }
+
+  @Post("forget")
+  @UseFilters(new ForgetMemberErrorFilter())
+  @ApiBody({
+    description: "Forget a member",
+    type: ForgetRequestDto,
+  })
+  @HttpCode(201)
+  forgetMember(@Body() { token, credentials }: ForgetRequestDto) {
+    return this.registrationService.forget(credentials, token);
   }
 }

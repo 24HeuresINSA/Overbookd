@@ -4,7 +4,6 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { User } from "@prisma/client";
 import { randomBytes, timingSafeEqual } from "crypto";
 import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { MailService } from "../mail/mail.service";
@@ -15,10 +14,10 @@ import { UserService } from "../user/user.service";
 import { SELECT_USER_TEAMS_AND_PERMISSIONS } from "../user/user.query";
 import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
 import { JwtPayload } from "./entities/jwt-util.entity";
+import { ONE_HOUR_IN_MS } from "@overbookd/period";
 
-type UserCredentials = Pick<User, "email" | "password">;
-type UserEmail = Pick<User, "email">;
-const ONE_HOUR = 3600000;
+type UserCredentials = { email: string; password: string };
+type UserEmail = { email: string };
 
 @Injectable()
 export class AuthenticationService {
@@ -76,7 +75,7 @@ export class AuthenticationService {
     if (!user) return;
 
     const resetToken = randomBytes(20).toString("hex");
-    const expirationDate = new Date(Date.now() + ONE_HOUR);
+    const expirationDate = new Date(Date.now() + ONE_HOUR_IN_MS);
 
     const userDatabaseUpdate = this.prisma.user.update({
       where: { email },
