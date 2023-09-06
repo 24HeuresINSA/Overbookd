@@ -5,11 +5,11 @@ import { IsDefined, IsEmail, IsString, ValidateNested } from "class-validator";
 
 class CredentialsRepresentation implements Credentials {
   @IsDefined()
-    @IsEmail()
+  @IsEmail()
   email: string;
 
   @IsDefined()
-    @IsString()
+  @IsString()
   password: string;
 }
 
@@ -22,5 +22,5 @@ export class ForgetRequestDto {
   @ApiProperty({ type: CredentialsRepresentation })
   @Type(() => CredentialsRepresentation)
   @ValidateNested()
-  credentials: Credentials
+  credentials: Credentials;
 }
