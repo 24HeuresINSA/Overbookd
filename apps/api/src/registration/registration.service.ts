@@ -76,9 +76,7 @@ export class RegistrationService {
     newcomers,
     team,
   }: EnrollNewcomersForm): Promise<void> {
-    console.log(JSON.stringify(newcomers));
     const newcomersToEnroll = EnrollNewcomers.with(newcomers).to(team);
-    console.log(JSON.stringify(newcomersToEnroll));
     await this.enrollNewcomersRepository.enroll(newcomersToEnroll);
   }
 
