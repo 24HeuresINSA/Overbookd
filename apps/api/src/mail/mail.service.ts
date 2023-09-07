@@ -37,11 +37,10 @@ export class MailService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     const registrationEvents = this.eventStore.listen("registration");
 
-    registrationEvents
-      .pipe(filter(isAdherentRegistered))
-      .subscribe((event) =>
-        this.logger.log("Send welcome-adherent mail", JSON.stringify(event)),
-      );
+    registrationEvents.pipe(filter(isAdherentRegistered)).subscribe((event) => {
+      this.logger.log("Send welcome-adherent mail", JSON.stringify(event));
+      this.welcome(event);
+    });
 
     registrationEvents
       .pipe(filter(isVolunteerRegistered))
