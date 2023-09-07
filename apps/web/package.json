@@ -61,13 +61,13 @@
     "vue-safe-html": "2.2.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.22.14",
+    "@babel/preset-env": "7.22.15",
     "@jest/globals": "29.6.4",
     "@nuxt/types": "2.17.1",
     "@nuxt/typescript-build": "2.1.0",
     "@nuxtjs/color-mode": "2.1.1",
     "@types/jest": "29.5.4",
-    "@types/node": "20.5.7",
+    "@types/node": "20.5.9",
     "@vue/cli-plugin-babel": "5.0.8",
     "axios": "0.21.1",
     "eslint-plugin-vue": "7.20.0",
@@ -110,7 +110,7 @@
     "testEnvironment": "jsdom"
   },
   "engines": {
-    "node": "20.5.1",
-    "pnpm": "8.7.1"
+    "node": "20.6.0",
+    "pnpm": "8.7.3"
   }
 }
