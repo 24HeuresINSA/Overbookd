@@ -103,6 +103,10 @@ export class RegistrationController {
     type: ForgetRequestDto,
   })
   @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: "Forget request done",
+  })
   forgetMember(@Body() { token, credentials }: ForgetRequestDto) {
     return this.registrationService.forget(credentials, token);
   }
