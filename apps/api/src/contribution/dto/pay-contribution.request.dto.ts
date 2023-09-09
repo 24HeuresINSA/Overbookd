@@ -12,6 +12,7 @@ export class PayContributionRequestDto {
 
   @ApiProperty({
     description: "The amount to pay",
+    example: 100,
     type: Number,
   })
   @IsDefined()

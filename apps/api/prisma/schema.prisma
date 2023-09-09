@@ -154,7 +154,7 @@ model Transaction {
 
 model Contribution {
   id             Int      @id @default(autoincrement())
-  amount         Float    @default(1.0)
+  amount         Float    @default(100)
   paymentDate    DateTime @map("payment_date")
   expirationDate DateTime @map("expiration_date")
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
