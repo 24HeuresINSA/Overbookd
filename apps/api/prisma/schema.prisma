@@ -154,7 +154,7 @@ model Transaction {
 
 model Contribution {
   id             Int      @id @default(autoincrement())
-  isPayed        Boolean  @default(false) @map("is_payed")
+  amount         Float    @default(1.0)
   paymentDate    DateTime @map("payment_date")
   expirationDate DateTime @map("expiration_date")
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)

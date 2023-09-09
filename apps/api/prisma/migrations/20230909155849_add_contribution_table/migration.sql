@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "contribution" (
     "id" SERIAL NOT NULL,
-    "is_payed" BOOLEAN NOT NULL DEFAULT false,
+    "amount" DOUBLE PRECISION NOT NULL DEFAULT 1.0,
     "payment_date" TIMESTAMP(3) NOT NULL,
     "expiration_date" TIMESTAMP(3) NOT NULL,
     "user_id" INTEGER NOT NULL,
