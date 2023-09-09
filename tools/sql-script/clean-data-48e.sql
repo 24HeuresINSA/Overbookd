@@ -70,3 +70,6 @@ INSERT INTO "user_team" ("user_id", "team_code")
 SELECT "user_id", 'benevole'
 FROM "user_team"
 WHERE "team_code" = 'vieux';
+
+-- Reset user charisma
+UPDATE "user" SET charisma = 0;
