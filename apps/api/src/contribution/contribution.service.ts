@@ -1,8 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import {
-  PayContributionForm,
-  ContributionResponse,
-} from "@overbookd/contribution";
+import { PayContributionForm, UserContribution } from "@overbookd/contribution";
 import { PayContributionRepository } from "./repository/pay-contribution.repository.";
 
 @Injectable()
@@ -11,13 +8,11 @@ export class ContributionService {
     private readonly payContributionRepository: PayContributionRepository,
   ) {}
 
-  async pay(
-    contributionData: PayContributionForm,
-  ): Promise<ContributionResponse> {
+  async pay(contributionData: PayContributionForm): Promise<UserContribution> {
     return this.payContributionRepository.pay(contributionData);
   }
 
-  async find(userId: number): Promise<ContributionResponse | null> {
+  async find(userId: number): Promise<UserContribution | null> {
     return this.payContributionRepository.find(userId);
   }
 

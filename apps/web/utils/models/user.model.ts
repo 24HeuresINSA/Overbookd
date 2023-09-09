@@ -44,7 +44,6 @@ export function castToUserUpdateForm(user: UserPersonnalData): UserUpdateForm {
     birthdate: new Date(user.birthdate),
     phone: user.phone,
     comment: user.comment || undefined,
-    hasPayedContributions: user.hasPayedContributions || false,
     charisma: +user.charisma,
   };
 }

@@ -415,8 +415,11 @@ importers:
 
   domains/user:
     dependencies:
+      '@overbookd/contribution':
+        specifier: workspace:*
+        version: link:../contribution
       '@overbookd/permission':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../permission
 
   domains/volunteer-availability:

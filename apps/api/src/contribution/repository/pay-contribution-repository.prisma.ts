@@ -1,7 +1,4 @@
-import {
-  PayContributionForm,
-  ContributionResponse,
-} from "@overbookd/contribution";
+import { PayContributionForm, UserContribution } from "@overbookd/contribution";
 import { PayContributionRepository } from "./pay-contribution.repository.";
 import { PrismaService } from "../../prisma.service";
 import {
@@ -14,9 +11,7 @@ export class PrismaPayContributionRepository
 {
   constructor(private readonly prisma: PrismaService) {}
 
-  async pay(
-    contributionData: PayContributionForm,
-  ): Promise<ContributionResponse> {
+  async pay(contributionData: PayContributionForm): Promise<UserContribution> {
     const { amount, userId } = contributionData;
 
     const currentDate = new Date();
@@ -44,7 +39,7 @@ export class PrismaPayContributionRepository
     });
   }
 
-  async find(userId: number): Promise<ContributionResponse | null> {
+  async find(userId: number): Promise<UserContribution | null> {
     return this.prisma.contribution.findFirst({
       where: {
         userId,

@@ -23,10 +23,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { ContributionService } from "./contribution.service";
 import { ContributionResponseDto } from "./dto/contribution.response.dto";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
-import {
-  ContributionResponse,
-  PayContributionForm,
-} from "@overbookd/contribution";
+import { UserContribution, PayContributionForm } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -53,7 +50,7 @@ export class ContributionController {
   @ApiParam({ name: "userId", type: Number })
   find(
     @Param("userId", ParseIntPipe) userId: number,
-  ): Promise<ContributionResponse | null> {
+  ): Promise<UserContribution | null> {
     return this.contributionService.find(userId);
   }
 
@@ -69,7 +66,7 @@ export class ContributionController {
   @ApiBody({ type: PayContributionRequestDto })
   pay(
     @Body() contributionData: PayContributionForm,
-  ): Promise<ContributionResponse> {
+  ): Promise<UserContribution> {
     return this.contributionService.pay(contributionData);
   }
 
