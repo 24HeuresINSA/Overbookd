@@ -47,6 +47,7 @@
     "@nestjs/swagger": "7.1.11",
     "@nestjs/throttler": "4.2.1",
     "@overbookd/configuration": "workspace:^",
+    "@overbookd/contribution": "workspace:^",
     "@overbookd/list": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/permission": "workspace:^",

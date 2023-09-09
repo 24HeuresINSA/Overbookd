@@ -71,6 +71,9 @@ importers:
       '@overbookd/configuration':
         specifier: workspace:^
         version: link:../../domains/configuration
+      '@overbookd/contribution':
+        specifier: workspace:^
+        version: link:../../domains/contribution
       '@overbookd/list':
         specifier: workspace:^
         version: link:../../libraries/list
@@ -384,6 +387,8 @@ importers:
         version: 4.47.0
 
   domains/configuration: {}
+  
+  domains/contribution: {}
 
   domains/permission: {}
 

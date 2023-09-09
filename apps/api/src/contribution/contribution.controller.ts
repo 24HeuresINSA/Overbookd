@@ -24,7 +24,7 @@ import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 import {
   ContributionResponse,
   PayContributionForm,
-} from "./contribution.model";
+} from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
