@@ -27,6 +27,7 @@ repos:
             performance,
             refacto,
             refactor,
+            ci,
           ]
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0

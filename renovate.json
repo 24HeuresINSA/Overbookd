@@ -72,11 +72,19 @@
       "groupSlug": "pre-commit-dependencies"
     },
     {
-      "description": "Group all pre-commit dependencies",
+      "description": "Group all root dependencies",
       "matchFileNames": ["package.json"],
       "addLabels": ["Scope::Config"],
       "groupName": "Root package dependencies",
       "groupSlug": "root-package-dependencies",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Group all update of pnpm",
+      "matchPackageNames": ["pnpm"],
+      "groupName": "Pnpm update",
+      "groupSlug": "pnpm-update",
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days"
     },
