@@ -26,7 +26,8 @@
     "renovate",
     "devcontainer",
     "docker",
-    "registration"
+    "registration",
+    "deps"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],

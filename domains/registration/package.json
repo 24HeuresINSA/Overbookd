@@ -33,8 +33,8 @@
     "registration"
   ],
   "engines": {
-    "node": "20.6.1",
-    "pnpm": "8.7.3"
+    "node": "20.6.1",    
+    "pnpm": "8.7.4"
   },
   "dependencies": {
     "@overbookd/list": "workspace:^",
