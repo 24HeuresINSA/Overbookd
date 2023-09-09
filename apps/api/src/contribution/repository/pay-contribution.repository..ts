@@ -6,4 +6,5 @@ import {
 export interface PayContributionRepository {
   pay: (contribution: PayContributionForm) => Promise<ContributionResponse>;
   find: (userId: number) => Promise<ContributionResponse | null>;
+  remove: (userId: number) => Promise<void>;
 }

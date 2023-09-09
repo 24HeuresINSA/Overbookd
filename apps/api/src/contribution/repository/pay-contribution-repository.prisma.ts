@@ -26,12 +26,19 @@ export class PrismaPayContributionRepository
       expirationDate.setFullYear(expirationDate.getFullYear() + 1);
     }
 
-    return this.prisma.contribution.create({
-      data: {
+    const data = {
+      userId,
+      amount,
+      paymentDate: currentDate,
+      expirationDate,
+    };
+
+    return this.prisma.contribution.upsert({
+      create: data,
+      update: data,
+      where: {
         userId,
-        amount,
-        paymentDate: currentDate,
-        expirationDate,
+        ...WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
       },
       select: SELECT_CONTRIBUTION,
     });
@@ -44,6 +51,15 @@ export class PrismaPayContributionRepository
         ...WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
       },
       select: SELECT_CONTRIBUTION,
+    });
+  }
+
+  async remove(userId: number): Promise<void> {
+    await this.prisma.contribution.deleteMany({
+      where: {
+        userId,
+        ...WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
+      },
     });
   }
 }

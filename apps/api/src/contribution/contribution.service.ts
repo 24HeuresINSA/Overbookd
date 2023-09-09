@@ -20,4 +20,8 @@ export class ContributionService {
   async find(userId: number): Promise<ContributionResponse | null> {
     return this.payContributionRepository.find(userId);
   }
+
+  async remove(userId: number): Promise<void> {
+    return this.payContributionRepository.remove(userId);
+  }
 }

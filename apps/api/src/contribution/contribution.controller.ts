@@ -6,6 +6,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  HttpCode,
+  Delete,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -42,7 +44,22 @@ export class ContributionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("sg")
+  @Get(":userId")
+  @ApiResponse({
+    status: 200,
+    description: "Get current contribution",
+    type: ContributionResponseDto,
+  })
+  @ApiParam({ name: "userId", type: Number })
+  find(
+    @Param("userId", ParseIntPipe) userId: number,
+  ): Promise<ContributionResponse | null> {
+    return this.contributionService.find(userId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission("manage-cp")
   @Post()
   @ApiResponse({
     status: 201,
@@ -58,16 +75,11 @@ export class ContributionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Get(":userId")
-  @ApiResponse({
-    status: 200,
-    description: "Get current contribution",
-    type: ContributionResponseDto,
-  })
+  @Permission("manage-cp")
+  @Delete(":userId")
+  @HttpCode(204)
   @ApiParam({ name: "userId", type: Number })
-  find(
-    @Param("userId", ParseIntPipe) userId: number,
-  ): Promise<ContributionResponse | null> {
-    return this.contributionService.find(userId);
+  remove(@Param("userId", ParseIntPipe) userId: number): Promise<void> {
+    return this.contributionService.remove(userId);
   }
 }

@@ -1,4 +1,4 @@
-export interface ContributionResponse {
+export interface UserContribution {
   amount: number;
   paymentDate: Date;
 }

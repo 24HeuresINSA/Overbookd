@@ -1,4 +1,5 @@
 import { Permission } from "@overbookd/permission";
+import { UserContribution } from "@overbookd/contribution";
 
 export interface UserName {
   firstname: string;
@@ -15,7 +16,7 @@ export interface UserPersonnalData extends User {
   birthdate: Date;
   phone: string;
   comment?: string;
-  hasPayedContributions: boolean;
+  contribution?: UserContribution;
   charisma: number;
   balance: number;
   teams: string[];
