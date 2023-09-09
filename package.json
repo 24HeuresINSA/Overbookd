@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "1.16.4-rc.80",
+  "version": "2.0.0",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -34,7 +34,7 @@
   },
   "packageManager": "pnpm@8.7.4",
   "engines": {
-    "node": "20.6.1",    
+    "node": "20.6.1",
     "pnpm": "8.7.4"
   },
   "devDependencies": {
