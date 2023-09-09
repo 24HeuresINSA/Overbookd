@@ -85,7 +85,8 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments Assignment[]
+  assignments   Assignment[]
+  contributions Contribution[]
 
   @@map("user")
 }
@@ -149,6 +150,17 @@ model Transaction {
   isDeleted Boolean         @default(false) @map("is_deleted")
 
   @@map("transaction")
+}
+
+model Contribution {
+  id             Int      @id @default(autoincrement())
+  isPayed        Boolean  @default(false) @map("is_payed")
+  paymentDate    DateTime @map("payment_date")
+  expirationDate DateTime @map("expiration_date")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int      @map("user_id")
+
+  @@map("contribution")
 }
 
 enum FaStatus {
