@@ -48,26 +48,25 @@ enum Department {
 }
 
 model User {
-  id                    Int         @id @default(autoincrement())
-  firstname             String      @db.VarChar(30)
-  lastname              String      @db.VarChar(30)
-  nickname              String?     @db.VarChar(30)
-  email                 String      @unique
-  birthdate             DateTime
-  phone                 String      @db.VarChar(30)
-  department            Department?
-  comment               String?
-  resetPasswordToken    String?     @unique @map("reset_password_token")
-  resetPasswordExpires  DateTime?   @map("reset_password_expires")
-  hasPayedContributions Boolean     @default(false) @map("has_payed_contributions")
-  year                  Year?
-  profilePicture        String?     @map("profile_picture")
-  charisma              Int         @default(0)
-  balance               Float       @default(0)
-  password              String      @default("")
-  createdAt             DateTime    @default(now()) @map("created_at")
-  updatedAt             DateTime    @updatedAt @map("updated_at")
-  isDeleted             Boolean     @default(false) @map("is_deleted")
+  id                   Int         @id @default(autoincrement())
+  firstname            String      @db.VarChar(30)
+  lastname             String      @db.VarChar(30)
+  nickname             String?     @db.VarChar(30)
+  email                String      @unique
+  birthdate            DateTime
+  phone                String      @db.VarChar(30)
+  department           Department?
+  comment              String?
+  resetPasswordToken   String?     @unique @map("reset_password_token")
+  resetPasswordExpires DateTime?   @map("reset_password_expires")
+  year                 Year?
+  profilePicture       String?     @map("profile_picture")
+  charisma             Int         @default(0)
+  balance              Float       @default(0)
+  password             String      @default("")
+  createdAt            DateTime    @default(now()) @map("created_at")
+  updatedAt            DateTime    @updatedAt @map("updated_at")
+  isDeleted            Boolean     @default(false) @map("is_deleted")
 
   teams UserTeam[]
 
@@ -153,13 +152,13 @@ model Transaction {
 }
 
 model Contribution {
-  id             Int      @id @default(autoincrement())
-  amount         Float    @default(100)
-  paymentDate    DateTime @map("payment_date")
-  expirationDate DateTime @map("expiration_date")
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         Int      @map("user_id")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expirationDate DateTime @map("expiration_date")
+  paymentDate    DateTime @default(now()) @map("payment_date")
+  amount         Float    @default(100)
 
+  @@id([userId, expirationDate])
   @@map("contribution")
 }
 
