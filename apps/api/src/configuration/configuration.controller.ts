@@ -23,6 +23,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { ConfigurationValue } from "./configuration.model";
 import { Configuration } from "@overbookd/configuration";
 import { UpsertConfigurationDto } from "./dto/upsert-configuration.request.dto";
+import { MANAGE_CONFIG } from "@overbookd/permission";
 
 @ApiTags("configuration")
 @Controller("configuration")
@@ -52,7 +53,7 @@ export class ConfigurationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("manage-config")
+  @Permission(MANAGE_CONFIG)
   @Post(":key")
   @ApiResponse({
     status: 201,
@@ -72,7 +73,7 @@ export class ConfigurationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("manage-config")
+  @Permission(MANAGE_CONFIG)
   @Delete(":key")
   @HttpCode(204)
   @ApiResponse({

@@ -24,6 +24,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { ftTimeWindowResponseDto } from "./dto/ft-time-window.response.dto";
 import { UpsertFtTimeWindowRequestDto } from "./dto/upsert-ft-time-window.request.dto";
 import { FtTimeWindowService } from "./ft-time-window.service";
+import { WRITE_FT } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -40,9 +41,8 @@ export class FtTimeWindowController {
   private readonly logger = new Logger(FtTimeWindowController.name);
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-ft")
+  @Permission(WRITE_FT)
   @Post(":ftId/time-windows")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "The ft time windows have been successfully upserted.",
@@ -68,7 +68,7 @@ export class FtTimeWindowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-ft")
+  @Permission(WRITE_FT)
   @Delete(":ftId/time-windows/:id")
   @HttpCode(204)
   @ApiResponse({

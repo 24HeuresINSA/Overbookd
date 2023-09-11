@@ -25,6 +25,7 @@ import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionLinkResponseDto } from "./dto/permission-link.response.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
 import { PermissionService } from "./permission.service";
+import { MANAGE_PERMISSIONS } from "@overbookd/permission";
 
 @ApiTags("permissions")
 @Controller("permissions")
@@ -39,7 +40,7 @@ import { PermissionService } from "./permission.service";
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
-  @Permission("manage-permissions")
+  @Permission(MANAGE_PERMISSIONS)
   @Get()
   @ApiResponse({
     status: 200,
@@ -51,9 +52,8 @@ export class PermissionController {
     return this.permissionService.permission({ orderBy: { name: "asc" } });
   }
 
-  @Permission("manage-permissions")
+  @Permission(MANAGE_PERMISSIONS)
   @Post()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Create a permission",
@@ -65,11 +65,11 @@ export class PermissionController {
     return this.permissionService.createPermission(payload);
   }
 
-  @Permission("manage-permissions")
+  @Permission(MANAGE_PERMISSIONS)
   @Patch(":id")
   @HttpCode(200)
   @ApiNotFoundResponse({
-    description: "Can't find a site publish animation resource",
+    description: "Can't find a permission resource",
   })
   @ApiResponse({
     status: 200,
@@ -83,11 +83,11 @@ export class PermissionController {
     return this.permissionService.updatePermission(id, payload);
   }
 
-  @Permission("manage-permissions")
+  @Permission(MANAGE_PERMISSIONS)
   @Delete(":id")
   @HttpCode(204)
   @ApiNotFoundResponse({
-    description: "Can't find a site publish animation resource",
+    description: "Can't find a permission resource",
   })
   @ApiResponse({
     status: 204,
@@ -97,11 +97,10 @@ export class PermissionController {
     return this.permissionService.deletePermission(id);
   }
 
-  @Permission("manage-permissions")
+  @Permission(MANAGE_PERMISSIONS)
   @Post("link/:id")
-  @HttpCode(201)
   @ApiNotFoundResponse({
-    description: "Can't find a site publish animation resource",
+    description: "Can't find a permission resource",
   })
   @ApiResponse({
     status: 201,

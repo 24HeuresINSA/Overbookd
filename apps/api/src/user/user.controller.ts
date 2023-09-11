@@ -63,6 +63,13 @@ import { UserService } from "./user.service";
 import { UserPersonnalDataResponseDto } from "./dto/user-personnal-data.response.dto";
 import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
 import { Task } from "../volunteer-planning/domain/task.model";
+import {
+  AFFECT_VOLUNTEER,
+  DOWNLOAD_PLANNING,
+  HAVE_PERSONNAL_ACCOUNT,
+  MANAGE_USERS,
+  VIEW_VOLUNTEER,
+} from "@overbookd/permission";
 
 @ApiTags("users")
 @Controller("users")
@@ -81,7 +88,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("view-volunteer")
+  @Permission(VIEW_VOLUNTEER)
   @ApiUnauthorizedResponse({
     description: "User dont have the right to access this route",
   })
@@ -101,7 +108,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("view-volunteer")
+  @Permission(VIEW_VOLUNTEER)
   @ApiUnauthorizedResponse({
     description: "User dont have the right to access this route",
   })
@@ -121,7 +128,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("view-volunteer")
+  @Permission(VIEW_VOLUNTEER)
   @ApiUnauthorizedResponse({
     description: "User dont have the right to access this route",
   })
@@ -154,7 +161,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("download-planning")
+  @Permission(DOWNLOAD_PLANNING)
   @ApiBearerAuth()
   @Get("me/planning")
   @ApiResponse({
@@ -186,7 +193,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("download-planning")
+  @Permission(DOWNLOAD_PLANNING)
   @ApiBearerAuth()
   @Get("me/planning/subscribe-link")
   @ApiResponse({
@@ -221,7 +228,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("have-personnal-account")
+  @Permission(HAVE_PERSONNAL_ACCOUNT)
   @ApiBearerAuth()
   @Get("personnal-account-consummers")
   @ApiResponse({
@@ -236,7 +243,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("view-volunteer")
+  @Permission(VIEW_VOLUNTEER)
   @Get(":id")
   @ApiResponse({
     status: 200,
@@ -251,7 +258,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("view-volunteer")
+  @Permission(VIEW_VOLUNTEER)
   @Get(":id/ft-requests")
   @ApiResponse({
     status: 200,
@@ -267,7 +274,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("view-volunteer")
+  @Permission(VIEW_VOLUNTEER)
   @Get(":id/assignments")
   @ApiResponse({
     status: 200,
@@ -282,7 +289,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @ApiBearerAuth()
   @Get(":id/planning")
   @ApiResponse({
@@ -326,7 +333,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get(":id/assignments/stats")
   @ApiResponse({
     status: 200,
@@ -362,7 +369,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("manage-users")
+  @Permission(MANAGE_USERS)
   @Delete(":id")
   @HttpCode(204)
   @ApiResponse({

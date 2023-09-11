@@ -22,6 +22,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { CreateFaFeedbackRequestDto } from "./dto/create-fa-feedback.request.dto";
 import { FaFeedbackResponseDto } from "./dto/fa-feedback.response.dto";
 import { FaFeedbackService } from "./fa-feedback.service";
+import { WRITE_FA } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("fa")
@@ -36,7 +37,7 @@ export class FaFeedbackController {
   constructor(private readonly faFeedbackService: FaFeedbackService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Post(":faId/feedback")
   @HttpCode(201)
   @ApiResponse({

@@ -3,6 +3,7 @@ import { IProvidePeriod, QUARTER_IN_MS } from "@overbookd/period";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailability } from "@prisma/client";
 import { getPeriodDuration } from "../utils/duration";
+import { BE_AFFECTED } from "@overbookd/permission";
 
 interface OrgaNeedsRequest {
   start: Date;
@@ -222,7 +223,7 @@ export class OrgaNeedsService {
 
   private teamMemberCondition(teams: string[]) {
     const isValidUser = {
-      permissions: { some: { permissionName: "be-affected" } },
+      permissions: { some: { permissionName: BE_AFFECTED } },
     };
     const isMemberOf = { code: { in: teams } };
 

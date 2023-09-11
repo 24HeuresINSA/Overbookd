@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -12,6 +12,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { OrgaNeedsResponseDto } from "./dto/orga-needs.response.dto";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 @ApiTags("orga-needs")
 @Controller("orga-needs")
@@ -26,9 +27,8 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 export class OrgaNeedsController {
   constructor(private readonly orgaNeedsService: OrgaNeedsService) {}
 
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get()
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Returns the needs for a given day per 15 minutes interval",

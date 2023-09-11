@@ -30,6 +30,7 @@ import { GearSearchRequestDto } from "./dto/gear-search.request.dto";
 import { Gear } from "./interfaces";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 @Controller("gears")
 @ApiTags("catalog")
@@ -42,7 +43,7 @@ export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get()
-  @Permission("read-gear-catalog")
+  @Permission(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get gears that match search",
@@ -74,7 +75,7 @@ export class GearController {
   }
 
   @Get(":id")
-  @Permission("read-gear-catalog")
+  @Permission(READ_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Get a specific gear",
@@ -97,7 +98,7 @@ export class GearController {
   }
 
   @Post()
-  @Permission("write-gear-catalog")
+  @Permission(WRITE_GEAR_CATALOG)
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -115,7 +116,7 @@ export class GearController {
   }
 
   @Put(":id")
-  @Permission("write-gear-catalog")
+  @Permission(WRITE_GEAR_CATALOG)
   @ApiResponse({
     status: 200,
     description: "Updating a gear",
@@ -144,7 +145,7 @@ export class GearController {
   }
 
   @Delete(":id")
-  @Permission("write-gear-catalog")
+  @Permission(WRITE_GEAR_CATALOG)
   @HttpCode(204)
   @ApiResponse({
     status: 204,

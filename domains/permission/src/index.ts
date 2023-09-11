@@ -1,2 +1,2 @@
-export type { Permission } from "./permission";
-export { permissions } from "./permission";
+export type { Permission } from "./permission.model";
+export * from "./permissions";

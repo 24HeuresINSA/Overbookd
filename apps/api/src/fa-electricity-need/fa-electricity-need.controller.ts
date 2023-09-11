@@ -24,6 +24,7 @@ import { FaElectricityNeedService } from "./fa-electricity-need.service";
 import { FaElectricityNeedResponseDto } from "./dto/fa-electricity-need.response.dto";
 import { UpsertFaElectricityNeedRequestDto } from "./dto/upsert-fa-electricity-need.request.dto";
 import { FaElectricityNeed } from "./fa-electricity-need.model";
+import { WRITE_FA } from "@overbookd/permission";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -40,7 +41,7 @@ export class FaElectricityNeedController {
     private readonly faElectricityNeedService: FaElectricityNeedService,
   ) {}
 
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Post(":faId/electricity-need")
   @ApiResponse({
     status: 201,
@@ -65,7 +66,7 @@ export class FaElectricityNeedController {
     return this.faElectricityNeedService.upsert(faId, electricityNeed);
   }
 
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Delete(":faId/electricity-need/:id")
   @HttpCode(204)
   @ApiResponse({

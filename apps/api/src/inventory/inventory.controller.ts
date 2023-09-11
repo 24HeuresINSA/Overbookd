@@ -27,6 +27,7 @@ import { InventoryGroupedRecordResponseDto } from "./dto/inventory-grouped-recor
 import { InventoryGroupedRecordSearchRequestDto } from "./dto/inventory-grouped-record-search.request.dto";
 import { InventoryRecordDto } from "./dto/inventory-record.dto";
 import { InventoryRecord, InventoryService } from "./inventory.service";
+import { WRITE_INVENTORY } from "@overbookd/permission";
 
 @Controller("inventory")
 @ApiTags("inventory")
@@ -44,8 +45,8 @@ import { InventoryRecord, InventoryService } from "./inventory.service";
 export class InventoryController {
   constructor(private readonly inventoryService: InventoryService) {}
 
-  @Permission("write-inventory")
-  @Get("")
+  @Permission(WRITE_INVENTORY)
+  @Get()
   @ApiResponse({
     status: 200,
     description: "Get inventory grouped records that match search",
@@ -64,8 +65,8 @@ export class InventoryController {
     return this.inventoryService.search({ name });
   }
 
-  @Permission("write-inventory")
-  @Post("")
+  @Permission(WRITE_INVENTORY)
+  @Post()
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -85,7 +86,7 @@ export class InventoryController {
     return this.inventoryService.setup(records);
   }
 
-  @Permission("write-inventory")
+  @Permission(WRITE_INVENTORY)
   @Get(":gearId")
   @ApiResponse({
     status: 200,

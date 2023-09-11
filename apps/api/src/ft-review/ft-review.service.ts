@@ -22,6 +22,7 @@ import { TimeSpanParametersRequestDto } from "./dto/time-span-parameters.request
 import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { TimeSpansGenerator } from "./time-spans-generator";
 import { reviewStatuses } from "../ft-review/ft-review.model";
+import { VALIDATE_FT } from "@overbookd/permission";
 
 @Injectable()
 export class FtReviewService {
@@ -162,7 +163,7 @@ export class FtReviewService {
   ): Promise<FtStatus> | null {
     const ftValidators = this.prisma.teamPermission.count({
       where: {
-        permissionName: "validate-ft",
+        permissionName: VALIDATE_FT,
       },
     });
     const ftValidatedReviews = this.prisma.ftReview.count({

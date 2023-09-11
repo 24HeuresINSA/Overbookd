@@ -34,6 +34,7 @@ import {
   SELECT_VOLUNTEER_ASSIGNMENTS,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
+import { BE_AFFECTED } from "@overbookd/permission";
 
 @Injectable()
 export class UserService {
@@ -87,7 +88,7 @@ export class UserService {
         teams: {
           none: {
             team: {
-              permissions: { some: { permissionName: "be-affected" } },
+              permissions: { some: { permissionName: BE_AFFECTED } },
             },
           },
         },
@@ -105,7 +106,7 @@ export class UserService {
         teams: {
           some: {
             team: {
-              permissions: { some: { permissionName: "be-affected" } },
+              permissions: { some: { permissionName: BE_AFFECTED } },
             },
           },
         },

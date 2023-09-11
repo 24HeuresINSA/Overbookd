@@ -27,6 +27,7 @@ import { CharismaPeriodService } from "./charisma-period.service";
 import { CharismaPeriodResponseDto } from "./dto/charisma-period.response.dto";
 import { CreateCharismaPeriodRequestDto } from "./dto/create-charisma-period.request.dto";
 import { UpdateCharismaPeriodRequestDto } from "./dto/update-charisma-period.request.dto";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 @ApiBearerAuth()
 @ApiTags("charisma-period")
 @ApiBadRequestResponse({
@@ -73,9 +74,8 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Post()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "The Charisma Period has been successfully created.",
@@ -92,7 +92,7 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Put(":id")
   @HttpCode(200)
   @ApiResponse({
@@ -118,7 +118,7 @@ export class CharismaPeriodController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Delete(":id")
   @HttpCode(204)
   @ApiResponse({

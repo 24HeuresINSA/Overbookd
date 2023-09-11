@@ -27,6 +27,7 @@ import { UpdatePublicAnimationRequestDto } from "./dto/update-public-animation.r
 import { PublicAnimationResponseDto } from "./dto/public-animation.response.dto";
 import { PublicAnimationWithFaResponseDto } from "./dto/public-animation-with-fa.response.dto";
 import { PublicAnimationService } from "./public-animation.service";
+import { READ_ANIMATION_TO_PUBLISH, WRITE_FA } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("fa")
@@ -37,7 +38,7 @@ export class PublicAnimationController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Post()
   @ApiBody({ type: CreatePublicAnimationRequestDto })
   @ApiResponse({
@@ -56,7 +57,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Put(":faId")
   @ApiResponse({
     status: 200,
@@ -81,7 +82,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("read-animation-to-publish")
+  @Permission(READ_ANIMATION_TO_PUBLISH)
   @Get()
   @ApiResponse({
     status: 200,
@@ -97,7 +98,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Get(":faId")
   @ApiResponse({
     status: 200,
@@ -116,7 +117,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Delete(":faId")
   @HttpCode(204)
   @ApiResponse({

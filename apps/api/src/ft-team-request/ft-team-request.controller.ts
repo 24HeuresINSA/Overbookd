@@ -23,6 +23,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CreateFtTeamRequestRequestDto } from "./dto/create-ft-team-request.request.dto";
 import { FtTeamRequestResponseDto } from "./dto/ft-team-request.response.dto";
 import { FtTeamRequestService } from "./ft-team-request.service";
+import { WRITE_FT } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -40,7 +41,7 @@ export class FtTeamRequestController {
   constructor(private readonly ftTeamRequestService: FtTeamRequestService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-ft")
+  @Permission(WRITE_FT)
   @Post(":ftId/time-windows/:twId/team-requests")
   @HttpCode(201)
   @ApiBody({
@@ -63,7 +64,7 @@ export class FtTeamRequestController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-ft")
+  @Permission(WRITE_FT)
   @Delete(":ftId/time-windows/:twId/team-requests/:teamCode")
   @HttpCode(204)
   @ApiResponse({

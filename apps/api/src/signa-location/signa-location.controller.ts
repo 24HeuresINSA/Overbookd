@@ -18,6 +18,7 @@ import { CreateSignaLocationRequestDto } from "./dto/create-signa-location.reque
 import { UpdateSignaLocationRequestDto } from "./dto/update-signa-location.request.dto";
 import { SignaLocationService } from "./signa-location.service";
 import { SignaLocationRepresentation } from "../fa/fa.model";
+import { MANAGE_LOCATION, WRITE_FA } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("signa-location")
@@ -26,7 +27,7 @@ export class SignaLocationController {
   constructor(private readonly signaLocationService: SignaLocationService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-location")
+  @Permission(MANAGE_LOCATION)
   @Post()
   @ApiBody({
     type: CreateSignaLocationRequestDto,
@@ -40,7 +41,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Get()
   @ApiResponse({
     status: 200,
@@ -52,7 +53,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Get(":id")
   @ApiResponse({
     status: 200,
@@ -63,7 +64,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-location")
+  @Permission(MANAGE_LOCATION)
   @Patch(":id")
   @ApiResponse({
     status: 200,
@@ -77,7 +78,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-location")
+  @Permission(MANAGE_LOCATION)
   @Delete(":id")
   @HttpCode(204)
   @ApiResponse({ status: 204 })

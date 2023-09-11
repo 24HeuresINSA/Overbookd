@@ -11,6 +11,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { GearRequestResponseDto } from "./dto/gear-request.response.dto";
 import { GearRequestService } from "./gear-request.service";
+import { WRITE_INVENTORY } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("gear-requests")
@@ -25,7 +26,7 @@ export class GearRequestController {
   constructor(private readonly gearRequestService: GearRequestService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("write-inventory")
+  @Permission(WRITE_INVENTORY)
   @Get()
   @ApiResponse({
     status: 200,

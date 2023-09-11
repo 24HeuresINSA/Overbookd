@@ -18,6 +18,7 @@ import { TeamRequestDto } from "./dto/team.request.dto";
 import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { TeamService } from "./team.service";
+import { AFFECT_TEAM, MANAGE_TEAMS } from "@overbookd/permission";
 
 @ApiTags("teams")
 @Controller("teams")
@@ -39,10 +40,9 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-team")
+  @Permission(AFFECT_TEAM)
   @Post("link")
   @ApiBearerAuth()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Link a user with different teams",
@@ -55,10 +55,9 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-teams")
+  @Permission(MANAGE_TEAMS)
   @Post()
   @ApiBearerAuth()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Create a team",
@@ -69,7 +68,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-teams")
+  @Permission(MANAGE_TEAMS)
   @Patch(":code")
   @ApiBearerAuth()
   @HttpCode(200)
@@ -86,7 +85,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-teams")
+  @Permission(MANAGE_TEAMS)
   @Delete(":code")
   @ApiBearerAuth()
   @HttpCode(204)

@@ -24,6 +24,7 @@ import { FaTimeWindowRequestDto } from "./dto/fa-time-window.request.dto";
 import { FaTimeWindowService } from "./fa-time-window.service";
 import { FaTimeWindowResponseDto } from "./dto/fa-time-window.response.dto";
 import { FaTimeWindow } from "./fa-time-window.model";
+import { WRITE_FA } from "@overbookd/permission";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -38,7 +39,7 @@ import { FaTimeWindow } from "./fa-time-window.model";
 export class FaTimeWindowController {
   constructor(private readonly faTimeWindowService: FaTimeWindowService) {}
 
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Post(":faId/time-window")
   @ApiResponse({
     status: 201,
@@ -63,7 +64,7 @@ export class FaTimeWindowController {
     return this.faTimeWindowService.upsert(faId, timeWIndow);
   }
 
-  @Permission("write-fa")
+  @Permission(WRITE_FA)
   @Delete(":faId/time-window/:id")
   @HttpCode(204)
   @ApiResponse({
