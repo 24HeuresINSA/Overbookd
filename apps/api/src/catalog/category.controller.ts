@@ -43,7 +43,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @Permission("read-matos-catalog")
+  @Permission("read-gear-catalog")
   @ApiResponse({
     status: 200,
     description: "Get categories that match search",
@@ -69,7 +69,7 @@ export class CategoryController {
   }
 
   @Get("/tree")
-  @Permission("read-matos-catalog")
+  @Permission("read-gear-catalog")
   @ApiResponse({
     status: 200,
     description: "Get categories tree",
@@ -81,7 +81,7 @@ export class CategoryController {
   }
 
   @Get(":id")
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @ApiResponse({
     status: 200,
     description: "Get a specific category",
@@ -104,7 +104,7 @@ export class CategoryController {
   }
 
   @Delete(":id")
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -127,7 +127,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -145,7 +145,7 @@ export class CategoryController {
   }
 
   @Put(":id")
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @HttpCode(200)
   @ApiResponse({
     status: 200,

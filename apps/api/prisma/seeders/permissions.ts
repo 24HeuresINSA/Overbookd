@@ -25,9 +25,6 @@ export const permissions = [
       createMany: {
         data: [
           { teamCode: "benevole" },
-          { teamCode: "hard" },
-          { teamCode: "vieux" },
-          { teamCode: "soft" },
           { teamCode: "camion" },
           { teamCode: "voiture" },
           { teamCode: "fen" },
@@ -36,7 +33,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-matos-catalog",
+    name: "write-gear-catalog",
     description: "Peut éditer le catalogue du matos",
     teams: {
       createMany: {
@@ -49,7 +46,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-matos-catalog",
+    name: "read-gear-catalog",
     description: "Peut voir le catalogue du matos",
     teams: {
       createMany: {
@@ -66,7 +63,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-signa-catalog",
+    name: "read-signage-catalog",
     description: "Peut voir le catalogue de la signa",
     teams: {
       createMany: {
@@ -75,7 +72,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-signa-catalog",
+    name: "write-signage-catalog",
     description: "Peut éditer le catalogue du matos",
     teams: {
       createMany: {
@@ -98,15 +95,6 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "sg" }],
-      },
-    },
-  },
-  {
-    name: "send-broadcast",
-    description: "Utilisateurs qui peuvent envoyer des notifications",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "bureau" }, { teamCode: "orga" }],
       },
     },
   },
@@ -143,15 +131,6 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "signa" }],
-      },
-    },
-  },
-  {
-    name: "manage-pass-secu",
-    description: "Peut gérer les passes sécurité",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "secu" }],
       },
     },
   },
@@ -227,7 +206,7 @@ export const permissions = [
   },
   {
     name: "view-stats",
-    description: "Peut voir les stats",
+    description: "Peut voir les stats des FA et des FT",
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
@@ -239,7 +218,7 @@ export const permissions = [
     description: "Peut remplir ses disponibilités",
     teams: {
       createMany: {
-        data: [{ teamCode: "hard" }, { teamCode: "soft" }],
+        data: [{ teamCode: "benevole" }],
       },
     },
   },
@@ -266,7 +245,7 @@ export const permissions = [
     description: "Peut voir les planning",
     teams: {
       createMany: {
-        data: [{ teamCode: "hard" }, { teamCode: "soft" }],
+        data: [{ teamCode: "benevole" }],
       },
     },
   },
@@ -275,7 +254,7 @@ export const permissions = [
     description: "Peut télécharger son planning",
     teams: {
       createMany: {
-        data: [{ teamCode: "hard" }, { teamCode: "soft" }],
+        data: [{ teamCode: "benevole" }],
       },
     },
   },
@@ -284,7 +263,7 @@ export const permissions = [
     description: "Peut enrôler des nouveaux",
     teams: {
       createMany: {
-        data: [{ teamCode: "sg" }],
+        data: [{ teamCode: "sg" }, { teamCode: "humain" }],
       },
     },
   },

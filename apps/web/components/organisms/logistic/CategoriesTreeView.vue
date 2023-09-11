@@ -69,7 +69,7 @@ export default Vue.extend({
       return this.$accessor.catalog.categoryTree;
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-matos-catalog");
+      return this.$accessor.user.can("write-gear-catalog");
     },
   },
   mounted() {

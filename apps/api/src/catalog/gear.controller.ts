@@ -42,7 +42,7 @@ export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get()
-  @Permission("read-matos-catalog")
+  @Permission("read-gear-catalog")
   @ApiResponse({
     status: 200,
     description: "Get gears that match search",
@@ -74,7 +74,7 @@ export class GearController {
   }
 
   @Get(":id")
-  @Permission("read-matos-catalog")
+  @Permission("read-gear-catalog")
   @ApiResponse({
     status: 200,
     description: "Get a specific gear",
@@ -97,7 +97,7 @@ export class GearController {
   }
 
   @Post()
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -115,7 +115,7 @@ export class GearController {
   }
 
   @Put(":id")
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @ApiResponse({
     status: 200,
     description: "Updating a gear",
@@ -144,7 +144,7 @@ export class GearController {
   }
 
   @Delete(":id")
-  @Permission("write-matos-catalog")
+  @Permission("write-gear-catalog")
   @HttpCode(204)
   @ApiResponse({
     status: 204,

@@ -109,7 +109,7 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-bookshelf",
-    permission: "read-matos-catalog",
+    permission: "read-gear-catalog",
     title: "Catalogue Matos",
     to: "/matos/catalog",
   },
@@ -127,7 +127,7 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-bookshelf",
-    permission: "read-signa-catalog",
+    permission: "read-signage-catalog",
     title: "Catalogue Signa",
     to: "/signa/catalog",
   },
