@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { UserPersonnalDataResponseDto } from "./user-personnal-data.response.dto";
 import { MyUserInformation } from "@overbookd/user";
+import { Permission } from "@overbookd/permission";
 
 export class MyUserInformationResponseDto
   extends UserPersonnalDataResponseDto
@@ -12,7 +13,7 @@ export class MyUserInformationResponseDto
     type: String,
     isArray: true,
   })
-  permissions: string[];
+  permissions: Permission[];
 
   @ApiProperty({
     name: "tasksCount",
