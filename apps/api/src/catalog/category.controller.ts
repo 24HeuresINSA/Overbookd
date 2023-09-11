@@ -43,7 +43,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @Permission("view-matos-catalog")
+  @Permission("read-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Get categories that match search",
@@ -69,7 +69,7 @@ export class CategoryController {
   }
 
   @Get("/tree")
-  @Permission("view-matos-catalog")
+  @Permission("read-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Get categories tree",

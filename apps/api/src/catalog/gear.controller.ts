@@ -42,7 +42,7 @@ export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
   @Get()
-  @Permission("view-matos-catalog")
+  @Permission("read-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Get gears that match search",
@@ -74,7 +74,7 @@ export class GearController {
   }
 
   @Get(":id")
-  @Permission("view-matos-catalog")
+  @Permission("read-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Get a specific gear",
