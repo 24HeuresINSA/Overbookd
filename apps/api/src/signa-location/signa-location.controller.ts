@@ -63,7 +63,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("orga")
+  @Permission("manage-location")
   @Patch(":id")
   @ApiResponse({
     status: 200,

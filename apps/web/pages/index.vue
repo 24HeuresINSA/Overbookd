@@ -6,7 +6,7 @@
           <UserCard />
         </v-col>
 
-        <v-col v-if="hasPermission('validated-user')" cols="12" sm="6" md="8">
+        <v-col v-if="can('download-planning')" cols="12" sm="6" md="8">
           <PlanningDownloadCard />
         </v-col>
 
@@ -35,7 +35,7 @@
           <FriendsCard />
         </v-col>
         <v-col cols="12" sm="6" md="8">
-          <PersonnalAccountCard v-if="hasPermission('cp')" />
+          <PersonnalAccountCard v-if="can('cp')" />
           <CommentEditionCard v-else />
         </v-col>
       </v-row>
@@ -94,7 +94,7 @@ export default {
     this.$accessor.user.fetchUser();
   },
   methods: {
-    hasPermission(permission) {
+    can(permission) {
       return this.$accessor.user.can(permission);
     },
 
