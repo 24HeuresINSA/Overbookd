@@ -39,7 +39,7 @@ import { PermissionService } from "./permission.service";
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
-  @Permission("manage-config")
+  @Permission("manage-permissions")
   @Get()
   @ApiResponse({
     status: 200,
@@ -51,7 +51,7 @@ export class PermissionController {
     return this.permissionService.permission({ orderBy: { name: "asc" } });
   }
 
-  @Permission("admin")
+  @Permission("manage-permissions")
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -65,7 +65,7 @@ export class PermissionController {
     return this.permissionService.createPermission(payload);
   }
 
-  @Permission("admin")
+  @Permission("manage-permissions")
   @Patch(":id")
   @HttpCode(200)
   @ApiNotFoundResponse({
@@ -83,7 +83,7 @@ export class PermissionController {
     return this.permissionService.updatePermission(id, payload);
   }
 
-  @Permission("admin")
+  @Permission("manage-permissions")
   @Delete(":id")
   @HttpCode(204)
   @ApiNotFoundResponse({
@@ -97,7 +97,7 @@ export class PermissionController {
     return this.permissionService.deletePermission(id);
   }
 
-  @Permission("admin")
+  @Permission("manage-permissions")
   @Post("link/:id")
   @HttpCode(201)
   @ApiNotFoundResponse({

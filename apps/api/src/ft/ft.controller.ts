@@ -462,7 +462,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission("validate-ft")
   @Put(":taskId/humanReviewer")
   @HttpCode(200)
   @ApiResponse({

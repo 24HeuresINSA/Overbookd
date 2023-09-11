@@ -55,7 +55,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("admin")
+  @Permission("manage-teams")
   @Post()
   @ApiBearerAuth()
   @HttpCode(201)
@@ -69,7 +69,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("admin")
+  @Permission("manage-teams")
   @Patch(":code")
   @ApiBearerAuth()
   @HttpCode(200)
@@ -86,7 +86,7 @@ export class TeamController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("admin")
+  @Permission("manage-teams")
   @Delete(":code")
   @ApiBearerAuth()
   @HttpCode(204)

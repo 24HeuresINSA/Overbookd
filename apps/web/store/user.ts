@@ -93,7 +93,7 @@ export const getters = getterTree(state, {
   can: (state: UserState) => (permission?: string) => {
     if (!permission) return true;
     return (
-      state.me.permissions.includes("admin") ||
+      state.me.teams.includes("admin") ||
       state.me.permissions.includes(permission) ||
       false
     );

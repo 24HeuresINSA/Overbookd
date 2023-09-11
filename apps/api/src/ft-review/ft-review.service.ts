@@ -162,7 +162,7 @@ export class FtReviewService {
   ): Promise<FtStatus> | null {
     const ftValidators = this.prisma.teamPermission.count({
       where: {
-        permissionName: "ft-validator",
+        permissionName: "validate-ft",
       },
     });
     const ftValidatedReviews = this.prisma.ftReview.count({

@@ -212,7 +212,7 @@ export class FtUserRequestService {
   }
 
   private async findRequestableUsers(request: FtUserRequestDto[]) {
-    const requestablePermission = "validated-user";
+    const requestablePermission = "be-affected";
     const requestedUserIds = request.map(({ userId }) => userId);
     return this.prisma.user.findMany({
       select: { id: true },

@@ -1,14 +1,5 @@
 export const permissions = [
   {
-    name: "admin",
-    description: "Admin",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "admin" }],
-      },
-    },
-  },
-  {
     name: "hard",
     description: "Uniquement les hards",
     teams: {
@@ -37,11 +28,12 @@ export const permissions = [
     },
   },
   {
-    name: "validated-user",
-    description: "Utilisateurs validés",
+    name: "be-affected",
+    description: "Utilisateurs pouvant être affectés",
     teams: {
       createMany: {
         data: [
+          { teamCode: "benevole" },
           { teamCode: "hard" },
           { teamCode: "vieux" },
           { teamCode: "soft" },
@@ -173,7 +165,7 @@ export const permissions = [
     },
   },
   {
-    name: "fa-validator",
+    name: "validate-fa",
     description: "Peut valider les FA",
     teams: {
       createMany: {
@@ -189,7 +181,7 @@ export const permissions = [
     },
   },
   {
-    name: "ft-validator",
+    name: "validate-ft",
     description: "Peut valider les FT",
     teams: {
       createMany: {

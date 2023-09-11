@@ -87,7 +87,7 @@ export class UserService {
         teams: {
           none: {
             team: {
-              permissions: { some: { permissionName: "validated-user" } },
+              permissions: { some: { permissionName: "be-affected" } },
             },
           },
         },
@@ -105,7 +105,7 @@ export class UserService {
         teams: {
           some: {
             team: {
-              permissions: { some: { permissionName: "validated-user" } },
+              permissions: { some: { permissionName: "be-affected" } },
             },
           },
         },

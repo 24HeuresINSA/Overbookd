@@ -40,7 +40,7 @@ export class FtReviewController {
   constructor(private readonly ftReviewService: FtReviewService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission("validate-ft")
   @Post(":ftId/validation")
   @HttpCode(201)
   @ApiResponse({
@@ -66,7 +66,7 @@ export class FtReviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission("validate-ft")
   @Post(":ftId/refusal")
   @HttpCode(201)
   @ApiResponse({
@@ -124,7 +124,7 @@ export class FtReviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission("validate-ft")
   @Delete(":ftId/reviews/:teamCode")
   @HttpCode(204)
   @ApiResponse({

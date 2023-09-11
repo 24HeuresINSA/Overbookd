@@ -41,7 +41,7 @@ export class AppController {
     description: "User dont have the right to access this route",
   })
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("admin")
+  @Permission("send-mail-test")
   @Post("mailtest")
   async mailtest(@Body() to: MailTestRequestDto) {
     return this.mailService.mailTest(to);

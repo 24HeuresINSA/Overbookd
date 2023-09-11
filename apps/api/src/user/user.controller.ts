@@ -81,7 +81,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("validated-user")
+  @Permission("view-volunteer")
   @ApiUnauthorizedResponse({
     description: "User dont have the right to access this route",
   })
@@ -101,7 +101,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("validated-user")
+  @Permission("view-volunteer")
   @ApiUnauthorizedResponse({
     description: "User dont have the right to access this route",
   })
@@ -121,7 +121,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("validated-user")
+  @Permission("view-volunteer")
   @ApiUnauthorizedResponse({
     description: "User dont have the right to access this route",
   })

@@ -23,7 +23,7 @@ export class TeamRepository {
   static getFaValidators(context: Context) {
     return context.$axios.get<Team[]>(this.basePath, {
       params: {
-        permission: "fa-validator",
+        permission: "validate-fa",
       },
     });
   }
@@ -31,7 +31,7 @@ export class TeamRepository {
   static getFtValidators(context: Context) {
     return context.$axios.get<Team[]>(this.basePath, {
       params: {
-        permission: "ft-validator",
+        permission: "validate-ft",
       },
     });
   }

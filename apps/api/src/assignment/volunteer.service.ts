@@ -15,16 +15,10 @@ import {
   Volunteer,
 } from "./model/volunteer.model";
 
-export const WHERE_VALIDATED_USER = {
+export const WHERE_IS_VOLUNTEER = {
   teams: {
     some: {
-      team: {
-        permissions: {
-          some: {
-            permissionName: "validated-user",
-          },
-        },
-      },
+      team: { code: "benevole" },
     },
   },
 };
@@ -64,7 +58,7 @@ export class VolunteerService {
     const volunteers = await this.prisma.user.findMany({
       where: {
         isDeleted: false,
-        ...WHERE_VALIDATED_USER,
+        ...WHERE_IS_VOLUNTEER,
       },
       select: {
         ...SELECT_VOLUNTEER,
@@ -150,7 +144,7 @@ export class VolunteerService {
       );
 
     return {
-      ...WHERE_VALIDATED_USER,
+      ...WHERE_IS_VOLUNTEER,
       isDeleted: false,
       team,
       availabilities,
