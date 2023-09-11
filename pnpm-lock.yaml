@@ -402,7 +402,11 @@ importers:
 
   domains/signa: {}
 
-  domains/user: {}
+  domains/user:
+    dependencies:
+      '@overbookd/permission':
+        specifier: workspace:^
+        version: link:../permission
 
   domains/volunteer-availability:
     dependencies:
