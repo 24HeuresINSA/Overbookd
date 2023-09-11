@@ -30,7 +30,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-cp")
+  @Permission("manage-personnal-accounts")
   @Get()
   @ApiResponse({
     status: 200,
@@ -43,7 +43,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission("manage-cp")
+  @Permission("manage-personnal-accounts")
   @Get("user/:id")
   @ApiResponse({
     status: 200,
@@ -108,7 +108,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-cp")
+  @Permission("manage-personnal-accounts")
   @Post("sg")
   @ApiBody({
     description: "transactions to generate",
@@ -128,7 +128,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("manage-cp")
+  @Permission("manage-personnal-accounts")
   @HttpCode(204)
   @Delete(":id")
   @ApiResponse({

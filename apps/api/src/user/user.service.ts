@@ -254,7 +254,7 @@ export class UserService {
     userData: UserUpdateForm,
   ): UserUpdateForm {
     const charisma = author.can("manage-users") ? userData.charisma : undefined;
-    const hasPayedContributions = author.can("manage-cp")
+    const hasPayedContributions = author.can("manage-personnal-accounts")
       ? userData.hasPayedContributions
       : undefined;
 

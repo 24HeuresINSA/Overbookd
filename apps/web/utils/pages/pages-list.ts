@@ -97,13 +97,13 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-format-list-bulleted",
-    permission: "manage-cp",
+    permission: "manage-personnal-accounts",
     title: "SG",
     to: "/SG",
   },
   {
     icon: "mdi-cash-multiple",
-    permission: "manage-cp",
+    permission: "manage-personnal-accounts",
     title: "Transactions",
     to: "/transactions",
   },

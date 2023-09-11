@@ -10,8 +10,7 @@ export const permissions = [
   },
   {
     name: "affect-team",
-    description:
-      "Utilisateurs qui peuvent affecter des utilisateurs à des équipes",
+    description: "Peut affecter des utilisateurs à des équipes",
     teams: {
       createMany: {
         data: [{ teamCode: "humain" }, { teamCode: "sg" }],
@@ -20,7 +19,7 @@ export const permissions = [
   },
   {
     name: "be-affected",
-    description: "Utilisateurs pouvant être affectés",
+    description: "Peut être affecté",
     teams: {
       createMany: {
         data: [
@@ -90,8 +89,8 @@ export const permissions = [
     },
   },
   {
-    name: "manage-cp",
-    description: "Utilisateurs qui peuvent gérer les CP",
+    name: "manage-personnal-accounts",
+    description: "Peut gérer les comptes persos",
     teams: {
       createMany: {
         data: [{ teamCode: "sg" }],
@@ -100,7 +99,7 @@ export const permissions = [
   },
   {
     name: "manage-users",
-    description: "Utilisateurs qui peuvent gérer les utilisateurs",
+    description: "Peut gérer les utilisateurs",
     teams: {
       createMany: {
         data: [{ teamCode: "bureau" }, { teamCode: "humain" }],

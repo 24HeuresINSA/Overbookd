@@ -276,7 +276,7 @@ export default {
     await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
 
-    if (this.can("manage-cp")) {
+    if (this.can("manage-personnal-accounts")) {
       this.headers.splice(this.headers.length - 1, 0, {
         text: "CP",
         value: "balance",
