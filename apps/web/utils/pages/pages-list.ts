@@ -140,7 +140,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-chart-areaspline-variant",
     title: "Stats",
-    permission: "view-stats",
+    permission: "view-festival-events-stats",
     to: "/stats",
   },
 ];

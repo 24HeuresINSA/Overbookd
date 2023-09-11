@@ -204,7 +204,7 @@ export const permissions = [
     },
   },
   {
-    name: "view-stats",
+    name: "view-festival-events-stats",
     description: "Peut voir les stats des FA et des FT",
     teams: {
       createMany: {
