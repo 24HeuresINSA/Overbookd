@@ -1,14 +1,5 @@
 export const permissions = [
   {
-    name: "hard",
-    description: "Uniquement les hards",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "hard" }],
-      },
-    },
-  },
-  {
     name: "have-personnal-account",
     description: "Possède un compte perso",
     teams: {

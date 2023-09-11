@@ -152,7 +152,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard") // TO CHANGE
+  @Permission("be-affected")
   @Get("ft-timespans/:timeSpanId")
   @HttpCode(200)
   @ApiResponse({
