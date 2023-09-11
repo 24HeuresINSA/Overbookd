@@ -26,7 +26,7 @@ export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get()
   @HttpCode(200)
   @ApiResponse({

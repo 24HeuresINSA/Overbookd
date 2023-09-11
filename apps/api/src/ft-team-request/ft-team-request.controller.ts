@@ -40,7 +40,7 @@ export class FtTeamRequestController {
   constructor(private readonly ftTeamRequestService: FtTeamRequestService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Post(":ftId/time-windows/:twId/team-requests")
   @HttpCode(201)
   @ApiBody({
@@ -63,7 +63,7 @@ export class FtTeamRequestController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Delete(":ftId/time-windows/:twId/team-requests/:teamCode")
   @HttpCode(204)
   @ApiResponse({

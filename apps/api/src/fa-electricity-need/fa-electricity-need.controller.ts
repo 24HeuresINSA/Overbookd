@@ -40,7 +40,7 @@ export class FaElectricityNeedController {
     private readonly faElectricityNeedService: FaElectricityNeedService,
   ) {}
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":faId/electricity-need")
   @ApiResponse({
     status: 201,
@@ -65,7 +65,7 @@ export class FaElectricityNeedController {
     return this.faElectricityNeedService.upsert(faId, electricityNeed);
   }
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":faId/electricity-need/:id")
   @HttpCode(204)
   @ApiResponse({

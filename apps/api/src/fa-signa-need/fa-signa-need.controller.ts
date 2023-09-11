@@ -40,7 +40,7 @@ import { FaSignaNeedExportCsvResponseDto } from "./dto/fa-signa-need-export-csv.
 export class FaSignaNeedController {
   constructor(private readonly faSignaNeedService: FaSignaNeedService) {}
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":faId/signa-need")
   @ApiResponse({
     status: 201,
@@ -65,7 +65,7 @@ export class FaSignaNeedController {
     return this.faSignaNeedService.upsert(faId, signaNeed);
   }
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":faId/signa-need/:id")
   @HttpCode(204)
   @ApiResponse({
@@ -91,7 +91,7 @@ export class FaSignaNeedController {
     return this.faSignaNeedService.remove(faId, id);
   }
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Get("signa-need/export-csv")
   @ApiResponse({
     status: 200,

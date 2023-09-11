@@ -38,7 +38,7 @@ import { FaTimeWindow } from "./fa-time-window.model";
 export class FaTimeWindowController {
   constructor(private readonly faTimeWindowService: FaTimeWindowService) {}
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":faId/time-window")
   @ApiResponse({
     status: 201,
@@ -63,7 +63,7 @@ export class FaTimeWindowController {
     return this.faTimeWindowService.upsert(faId, timeWIndow);
   }
 
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":faId/time-window/:id")
   @HttpCode(204)
   @ApiResponse({

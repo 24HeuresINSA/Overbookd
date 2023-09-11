@@ -39,7 +39,7 @@ import { PermissionService } from "./permission.service";
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
-  @Permission("hard")
+  @Permission("manage-config")
   @Get()
   @ApiResponse({
     status: 200,

@@ -40,7 +40,7 @@ export class FtUserRequestController {
   constructor(private readonly ftUserRequestService: FtUserRequestService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Post("/:ftId/time-windows/:twId/user-requests")
   @HttpCode(201)
   @ApiResponse({
@@ -62,7 +62,7 @@ export class FtUserRequestController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Delete("/:ftId/time-windows/:twId/user-requests/:userId")
   @HttpCode(204)
   @ApiResponse({

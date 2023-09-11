@@ -36,7 +36,7 @@ export class FtFeedbackController {
   constructor(private readonly ftFeedbackService: FtFeedbackService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Post(":ftId/feedback")
   @HttpCode(201)
   @ApiResponse({

@@ -37,7 +37,7 @@ export class PublicAnimationController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Post()
   @ApiBody({ type: CreatePublicAnimationRequestDto })
   @ApiResponse({
@@ -56,7 +56,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Put(":faId")
   @ApiResponse({
     status: 200,
@@ -81,7 +81,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("read-animation-to-publish")
   @Get()
   @ApiResponse({
     status: 200,
@@ -97,7 +97,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get(":faId")
   @ApiResponse({
     status: 200,
@@ -116,7 +116,7 @@ export class PublicAnimationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":faId")
   @HttpCode(204)
   @ApiResponse({

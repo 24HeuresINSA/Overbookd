@@ -36,7 +36,7 @@ export class FaFeedbackController {
   constructor(private readonly faFeedbackService: FaFeedbackService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":faId/feedback")
   @HttpCode(201)
   @ApiResponse({

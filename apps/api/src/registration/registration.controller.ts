@@ -77,7 +77,7 @@ export class RegistrationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("manage-users")
+  @Permission("enroll-newcomer")
   @Post("/enroll")
   @ApiBody({
     description: "Newcomers to enroll to a team",

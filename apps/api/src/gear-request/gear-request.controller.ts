@@ -26,7 +26,7 @@ export class GearRequestController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission("hard")
-  @Get("")
+  @Get()
   @ApiResponse({
     status: 200,
     description: "Get all events gear requests",

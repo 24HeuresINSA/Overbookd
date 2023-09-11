@@ -40,7 +40,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get()
   @ApiResponse({
     status: 200,
@@ -52,7 +52,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get(":id")
   @ApiResponse({
     status: 200,

@@ -40,7 +40,7 @@ export class FtTimeWindowController {
   private readonly logger = new Logger(FtTimeWindowController.name);
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Post(":ftId/time-windows")
   @HttpCode(201)
   @ApiResponse({
@@ -68,7 +68,7 @@ export class FtTimeWindowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-ft")
   @Delete(":ftId/time-windows/:id")
   @HttpCode(204)
   @ApiResponse({

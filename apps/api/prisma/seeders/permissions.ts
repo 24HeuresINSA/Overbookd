@@ -53,8 +53,8 @@ export const permissions = [
     },
   },
   {
-    name: "write-catalog",
-    description: "Peut éditer le catalogue",
+    name: "write-matos-catalog",
+    description: "Peut éditer le catalogue du matos",
     teams: {
       createMany: {
         data: [
@@ -66,8 +66,8 @@ export const permissions = [
     },
   },
   {
-    name: "read-catalog",
-    description: "Peut voir le catalogue",
+    name: "read-matos-catalog",
+    description: "Peut voir le catalogue du matos",
     teams: {
       createMany: {
         data: [
@@ -77,7 +77,26 @@ export const permissions = [
           { teamCode: "signa" },
           { teamCode: "bar" },
           { teamCode: "catering" },
+          { teamCode: "hard" },
         ],
+      },
+    },
+  },
+  {
+    name: "read-signa-catalog",
+    description: "Peut voir le catalogue de la signa",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "signa" }, { teamCode: "hard" }],
+      },
+    },
+  },
+  {
+    name: "write-signa-catalog",
+    description: "Peut éditer le catalogue du matos",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "signa" }],
       },
     },
   },
@@ -197,8 +216,26 @@ export const permissions = [
     },
   },
   {
+    name: "write-fa",
+    description: "Peut écrire dans les FA",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
     name: "read-ft",
     description: "Peut lire les FT",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
+      },
+    },
+  },
+  {
+    name: "write-ft",
+    description: "Peut écrire dans les FT",
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
@@ -256,6 +293,33 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "soft" }],
+      },
+    },
+  },
+  {
+    name: "enroll-newcomer",
+    description: "Peut enrôler des nouveaux",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "sg" }],
+      },
+    },
+  },
+  {
+    name: "view-trombinoscope",
+    description: "Peut voir le trombinoscope",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: "view-volunteer",
+    description: "Peut voir les bénévoles",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
       },
     },
   },

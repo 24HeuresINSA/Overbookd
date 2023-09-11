@@ -139,7 +139,7 @@ export default Vue.extend({
       );
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-catalog");
+      return this.$accessor.user.can("write-matos-catalog");
     },
   },
   beforeMount() {

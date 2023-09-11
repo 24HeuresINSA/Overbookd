@@ -26,7 +26,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 export class OrgaNeedsController {
   constructor(private readonly orgaNeedsService: OrgaNeedsService) {}
 
-  @Permission("hard")
+  @Permission("affect-volunteer")
   @Get()
   @HttpCode(200)
   @ApiResponse({

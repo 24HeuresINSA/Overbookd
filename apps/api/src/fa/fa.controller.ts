@@ -75,7 +75,7 @@ export class FaController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Post()
   @HttpCode(201)
   @ApiResponse({
@@ -88,7 +88,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get()
   @HttpCode(200)
   @ApiResponse({
@@ -110,7 +110,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get("stats")
   @HttpCode(200)
   @ApiResponse({
@@ -124,7 +124,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get(":id")
   @HttpCode(200)
   @ApiResponse({
@@ -137,7 +137,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":id")
   @HttpCode(201)
   @ApiResponse({
@@ -157,7 +157,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":id")
   @HttpCode(204)
   @ApiResponse({
@@ -169,7 +169,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get(":id/previous")
   @HttpCode(200)
   @ApiResponse({
@@ -184,7 +184,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get(":id/next")
   @HttpCode(200)
   @ApiResponse({
@@ -199,7 +199,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":id/collaborator")
   @HttpCode(201)
   @ApiResponse({
@@ -225,7 +225,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":id/collaborator")
   @HttpCode(204)
   @ApiResponse({
@@ -243,7 +243,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Post(":id/gear-requests")
   @HttpCode(201)
   @ApiResponse({
@@ -272,7 +272,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Get(":id/gear-requests")
   @HttpCode(200)
   @ApiResponse({
@@ -294,7 +294,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Patch(
     ":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve",
   )
@@ -338,7 +338,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Patch(":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @HttpCode(200)
   @ApiResponse({
@@ -379,7 +379,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-fa")
   @Delete(":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @HttpCode(204)
   @ApiResponse({

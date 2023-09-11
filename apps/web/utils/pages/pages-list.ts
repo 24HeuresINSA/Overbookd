@@ -14,7 +14,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-image",
     title: "Trombinoscope",
-    permission: "hard",
+    permission: "view-trombinoscope",
     to: "/trombinoscope",
   },
   {
@@ -32,7 +32,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-account-group",
     title: "Liste des bénévoles",
-    permission: "hard",
+    permission: "view-volunteer",
     to: "/volunteers",
   },
   {
@@ -50,7 +50,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-account-multiple-plus",
     title: "Inscriptions",
-    permission: "sg", // à changer
+    permission: "enroll-newcomer",
     to: "/registrations",
   },
   {
@@ -109,7 +109,7 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-bookshelf",
-    permission: "read-catalog",
+    permission: "read-matos-catalog",
     title: "Catalogue Matos",
     to: "/matos/catalog",
   },
@@ -127,7 +127,7 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-bookshelf",
-    permission: "read-catalog-signa",
+    permission: "read-signa-catalog",
     title: "Catalogue Signa",
     to: "/signa/catalog",
   },

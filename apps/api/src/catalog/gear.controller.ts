@@ -41,8 +41,8 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 export class GearController {
   constructor(private readonly catalogService: CatalogService) {}
 
-  @Get("")
-  @Permission("hard")
+  @Get()
+  @Permission("view-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Get gears that match search",
@@ -74,7 +74,7 @@ export class GearController {
   }
 
   @Get(":id")
-  @Permission("hard")
+  @Permission("view-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Get a specific gear",
@@ -97,7 +97,7 @@ export class GearController {
   }
 
   @Post()
-  @Permission("write-catalog")
+  @Permission("write-matos-catalog")
   @HttpCode(201)
   @ApiResponse({
     status: 201,
@@ -115,7 +115,7 @@ export class GearController {
   }
 
   @Put(":id")
-  @Permission("write-catalog")
+  @Permission("write-matos-catalog")
   @ApiResponse({
     status: 200,
     description: "Updating a gear",
@@ -144,7 +144,7 @@ export class GearController {
   }
 
   @Delete(":id")
-  @Permission("write-catalog")
+  @Permission("write-matos-catalog")
   @HttpCode(204)
   @ApiResponse({
     status: 204,

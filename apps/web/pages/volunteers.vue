@@ -38,7 +38,7 @@
                 </template>
               </v-combobox>
 
-              <template v-if="hasPermission('manage-users')">
+              <template v-if="can('manage-users')">
                 <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -55,7 +55,7 @@
                   >
                 </v-btn-toggle>
               </template>
-              <template v-if="hasPermission('bureau')">
+              <template v-if="can('sg')">
                 <p>Cotisation</p>
                 <v-btn-toggle
                   v-model="filters.hasPayedContributions"
@@ -75,7 +75,7 @@
               </template>
             </v-card-text>
           </v-card>
-          <v-card v-if="hasPermission('manage-users')">
+          <v-card v-if="can('manage-users')">
             <v-card-title>Mode stats humains</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
               <label>Mode stats</label>
@@ -114,12 +114,7 @@
                 {{ item.nickname ? `(${item.nickname})` : "" }}
               </template>
               <template #[`item.action`]="{ item }" style="display: flex">
-                <v-btn
-                  v-if="hasPermission('hard')"
-                  icon
-                  small
-                  @click="openInformationDialog(item)"
-                >
+                <v-btn icon small @click="openInformationDialog(item)">
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
                 <v-btn icon small :href="getPhoneLink(item.phone)">
@@ -280,13 +275,8 @@ export default {
   async mounted() {
     await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
-    if (!this.hasPermission("hard")) {
-      return this.$router.push({
-        path: "/",
-      });
-    }
 
-    if (this.hasPermission("manage-cp")) {
+    if (this.can("manage-cp")) {
       this.headers.splice(this.headers.length - 1, 0, {
         text: "CP",
         value: "balance",
@@ -319,7 +309,7 @@ export default {
         : undefined;
     },
 
-    hasPermission(permission) {
+    can(permission) {
       return this.$accessor.user.can(permission);
     },
 

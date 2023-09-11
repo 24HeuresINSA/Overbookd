@@ -236,7 +236,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("hard")
+  @Permission("view-volunteer")
   @Get(":id")
   @ApiResponse({
     status: 200,
@@ -251,7 +251,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("hard")
+  @Permission("view-volunteer")
   @Get(":id/ft-requests")
   @ApiResponse({
     status: 200,
@@ -267,7 +267,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("hard")
+  @Permission("view-volunteer")
   @Get(":id/assignments")
   @ApiResponse({
     status: 200,
@@ -413,7 +413,7 @@ export class UserController {
   @Get(":userId/profile-picture")
   @ApiResponse({
     status: 200,
-    description: "Get a users profile picture",
+    description: "Get a user profile picture",
   })
   getProfilePicture(
     @Param("userId", ParseIntPipe) userId: number,
