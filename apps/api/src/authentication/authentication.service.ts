@@ -32,7 +32,7 @@ export class AuthenticationService {
   async validateUser(email: string, password: string): Promise<JwtPayload> {
     const user = await this.userService.getUserPassword(email);
     if (await this.isInvalidUser(user, password)) {
-      throw new UnauthorizedException("Email ou mot de passe invalid");
+      throw new UnauthorizedException("Email ou mot de passe invalide");
     }
     const userWithPayload = await this.prisma.user.findUnique({
       where: { email },

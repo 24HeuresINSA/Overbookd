@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Request,
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -19,6 +20,8 @@ import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { TeamService } from "./team.service";
 import { AFFECT_TEAM, MANAGE_TEAMS } from "@overbookd/permission";
+import { RequestWithUserPayload } from "../app.controller";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
 @ApiTags("teams")
 @Controller("teams")
@@ -50,8 +53,9 @@ export class TeamController {
   })
   async updateUserTeams(
     @Body() payload: LinkTeamToUserDto,
+    @Request() req: RequestWithUserPayload,
   ): Promise<LinkTeamToUserDto> {
-    return this.teamService.updateUserTeams(payload);
+    return this.teamService.updateUserTeams(payload, new JwtUtil(req.user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

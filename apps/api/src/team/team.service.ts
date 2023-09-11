@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
 import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "./team.model";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
 export const TEAM_SELECT = {
   select: {
@@ -41,12 +46,13 @@ export class TeamService {
     });
   }
 
-  async updateUserTeams({
-    userId,
-    teams,
-  }: LinkTeamToUserDto): Promise<LinkTeamToUserDto> {
+  async updateUserTeams(
+    { userId, teams }: LinkTeamToUserDto,
+    author: JwtUtil,
+  ): Promise<LinkTeamToUserDto> {
     await this.checkUserExistence(userId);
-    const teamsToLink = await this.fetchExistingTeams(teams);
+    const linkableTeams = this.cleanAdminTeamIfNotAdmin(teams, author);
+    const teamsToLink = await this.fetchExistingTeams(linkableTeams);
     await this.forceUserTeams(userId, teamsToLink);
 
     const newLinkedTeams = teamsToLink.map((team) => team.code);
@@ -124,5 +130,16 @@ export class TeamService {
     if (!user.id) {
       throw new NotFoundException("User not found");
     }
+  }
+
+  private cleanAdminTeamIfNotAdmin(teams: string[], author: JwtUtil) {
+    if (!author.can("manage-admins")) {
+      return teams.filter((team) => team !== "admin");
+    }
+    if (teams.length === 0) {
+      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
+    }
+
+    return teams;
   }
 }
