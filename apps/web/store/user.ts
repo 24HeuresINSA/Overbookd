@@ -12,6 +12,7 @@ import {
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
 import { MyUserInformation, User, UserPersonnalData } from "@overbookd/user";
+import { Permission } from "@overbookd/permission";
 
 const userRepo = RepoFactory.UserRepository;
 
@@ -90,7 +91,7 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  can: (state: UserState) => (permission?: string) => {
+  can: (state: UserState) => (permission?: Permission) => {
     if (!permission) return true;
     return (
       state.me.teams.includes("admin") ||

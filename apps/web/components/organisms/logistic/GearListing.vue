@@ -88,6 +88,7 @@ import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 import SearchTeam from "../../atoms/field/search/SearchTeam.vue";
 import GearForm from "../../molecules/logistic/GearForm.vue";
+import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 interface GearListingData {
   headers: Header[];
@@ -139,7 +140,7 @@ export default Vue.extend({
       );
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-gear-catalog");
+      return this.$accessor.user.can(WRITE_GEAR_CATALOG);
     },
   },
   beforeMount() {

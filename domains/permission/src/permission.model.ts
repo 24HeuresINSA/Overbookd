@@ -31,6 +31,8 @@ import {
   SEND_MAIL_TEST,
   MANAGE_PERMISSIONS,
   MANAGE_TEAMS,
+  VIEW_DELETED_FT,
+  VIEW_DELETED_FA,
 } from "./permissions";
 
 export type Permission =
@@ -65,4 +67,6 @@ export type Permission =
   | typeof VIEW_VOLUNTEER
   | typeof SEND_MAIL_TEST
   | typeof MANAGE_TEAMS
-  | typeof MANAGE_PERMISSIONS;
+  | typeof MANAGE_PERMISSIONS
+  | typeof VIEW_DELETED_FA
+  | typeof VIEW_DELETED_FT;

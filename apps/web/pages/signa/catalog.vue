@@ -29,6 +29,7 @@ import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import SignageListing from "~/components/organisms/logistic/SignageListing.vue";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
+import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 
 export default Vue.extend({
   name: "Catalog",
@@ -45,7 +46,7 @@ export default Vue.extend({
   }),
   computed: {
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-catalog-signa");
+      return this.$accessor.user.can(WRITE_SIGNAGE_CATALOG);
     },
   },
   methods: {

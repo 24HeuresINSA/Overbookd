@@ -29,6 +29,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import CategoriesTreeView from "~/components/organisms/logistic/CategoriesTreeView.vue";
 import GearForm from "~/components/molecules/logistic/GearForm.vue";
 import GearListing from "~/components/organisms/logistic/GearListing.vue";
+import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 export default Vue.extend({
   name: "Catalog",
@@ -48,7 +49,7 @@ export default Vue.extend({
   }),
   computed: {
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-gear-catalog");
+      return this.$accessor.user.can(WRITE_GEAR_CATALOG);
     },
   },
   methods: {

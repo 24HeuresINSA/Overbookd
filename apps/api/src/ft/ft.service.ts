@@ -26,6 +26,7 @@ import {
   TimeWindow,
 } from "./ft-types";
 import { ReviewerResponseDto } from "./dto/reviewer.response.dto";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 export interface SearchFt {
   isDeleted: boolean;
   status?: FtStatus;
@@ -103,7 +104,7 @@ export class FtService {
     updateFtDto: UpdateFtRequestDto,
     author: JwtUtil,
   ): Promise<CompleteFtResponseDto | null> {
-    const canAffect = author.can("affect-volunteer");
+    const canAffect = author.can(AFFECT_VOLUNTEER);
 
     const ft = canAffect
       ? await this.findOne(id)

@@ -38,7 +38,7 @@
                 </template>
               </v-combobox>
 
-              <template v-if="can('manage-users')">
+              <template v-if="canManageUsers">
                 <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -55,7 +55,7 @@
                   >
                 </v-btn-toggle>
               </template>
-              <template v-if="can('sg')">
+              <template v-if="canManagePersonnalAccounts">
                 <p>Cotisation</p>
                 <v-btn-toggle
                   v-model="filters.hasPayedContributions"
@@ -75,7 +75,7 @@
               </template>
             </v-card-text>
           </v-card>
-          <v-card v-if="can('manage-users')">
+          <v-card v-if="canManageUsers">
             <v-card-title>Mode stats humains</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
               <label>Mode stats</label>
@@ -181,6 +181,7 @@ import { download } from "~/utils/planning/download";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { matchingSearchItems } from "~/utils/search/search.utils";
+import { MANAGE_PERSONNAL_ACCOUNTS, MANAGE_USERS } from "@overbookd/permission";
 
 export default {
   name: "Volunteers",
@@ -254,6 +255,12 @@ export default {
     volunteerPlannings() {
       return this.$accessor.planning.volunteerPlannings;
     },
+    canManageUsers() {
+      return this.$accessor.user.can(MANAGE_USERS);
+    },
+    canManagePersonnalAccounts() {
+      return this.$accessor.user.can(MANAGE_PERSONNAL_ACCOUNTS);
+    },
   },
 
   watch: {
@@ -276,7 +283,7 @@ export default {
     await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
 
-    if (this.can("manage-personnal-accounts")) {
+    if (this.canManagePersonnalAccounts) {
       this.headers.splice(this.headers.length - 1, 0, {
         text: "CP",
         value: "balance",
@@ -307,10 +314,6 @@ export default {
       return this.isCpUseful(item)
         ? (item.balance || 0).toFixed(2) + " €"
         : undefined;
-    },
-
-    can(permission) {
-      return this.$accessor.user.can(permission);
     },
 
     openInformationDialog(user) {

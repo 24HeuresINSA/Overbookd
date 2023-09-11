@@ -173,6 +173,7 @@ import { Team } from "~/utils/models/team.model";
 import { MyUserInformation, User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Searchable } from "~/utils/search/search.utils";
+import { AFFECT_VOLUNTEER, VIEW_DELETED_FT } from "@overbookd/permission";
 
 interface Data {
   headers: Header[];
@@ -257,10 +258,10 @@ export default Vue.extend({
       return [...ftStatusLabels.entries()];
     },
     canViewDeletedFt(): boolean {
-      return this.$accessor.user.can("view-deleted-ft");
+      return this.$accessor.user.can(VIEW_DELETED_FT);
     },
     canAffect(): boolean {
-      return this.$accessor.user.can("affect-volunteer");
+      return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     validators(): Team[] {
       return this.$accessor.team.ftValidators;
@@ -313,10 +314,6 @@ export default Vue.extend({
     async retrieveValidatorsIfNeeded(): Promise<void> {
       if (this.validators.length) return;
       return this.$accessor.team.fetchFtValidators();
-    },
-
-    hasPermission(permission: string) {
-      return this.$accessor.user.can(permission);
     },
 
     getFTStatus(status: FtStatus): string {

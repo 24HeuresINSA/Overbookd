@@ -30,3 +30,5 @@ export const VIEW_VOLUNTEER = "view-volunteer";
 export const SEND_MAIL_TEST = "send-mail-test";
 export const MANAGE_TEAMS = "manage-teams";
 export const MANAGE_PERMISSIONS = "manage-permissions";
+export const VIEW_DELETED_FA = "view-deleted-fa";
+export const VIEW_DELETED_FT = "view-deleted-ft";

@@ -6,7 +6,7 @@
           <UserCard />
         </v-col>
 
-        <v-col v-if="can('download-planning')" cols="12" sm="6" md="8">
+        <v-col v-if="canDownloadPlanning" cols="12" sm="6" md="8">
           <PlanningDownloadCard />
         </v-col>
 
@@ -35,7 +35,7 @@
           <FriendsCard />
         </v-col>
         <v-col cols="12" sm="6" md="8">
-          <PersonnalAccountCard v-if="can('have-personal-account')" />
+          <PersonnalAccountCard v-if="havePersonnalAccount" />
           <CommentEditionCard v-else />
         </v-col>
       </v-row>
@@ -66,6 +66,10 @@ import PersonnalAccountCard from "~/components/organisms/user/personnalAccount/P
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentEditionCard from "~/components/organisms/user/data/CommentEditionCard.vue";
 import PlanningDownloadCard from "~/components/organisms/planning/PlanningDownloadCard.vue";
+import {
+  DOWNLOAD_PLANNING,
+  HAVE_PERSONNAL_ACCOUNT,
+} from "@overbookd/permission";
 
 export default {
   components: {
@@ -89,15 +93,17 @@ export default {
       // user has no team
       return this.me.team === undefined || this.me.team.length === 0;
     },
+    canDownloadPlanning() {
+      return this.$accessor.user.can(DOWNLOAD_PLANNING);
+    },
+    havePersonnalAccount() {
+      return this.$accessor.user.can(HAVE_PERSONNAL_ACCOUNT);
+    },
   },
   async mounted() {
     this.$accessor.user.fetchUser();
   },
   methods: {
-    can(permission) {
-      return this.$accessor.user.can(permission);
-    },
-
     async logout() {
       await this.$auth.logout();
       await this.$router.push({

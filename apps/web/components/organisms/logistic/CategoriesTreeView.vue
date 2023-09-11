@@ -47,6 +47,7 @@ import Vue from "vue";
 import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import CategoryDetails from "../../molecules/logistic/CategoryDetails.vue";
 import CategoryForm from "../../molecules/logistic/CategoryForm.vue";
+import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 interface CategoryTreeViewData {
   isCreateDialogOpen: boolean;
@@ -69,7 +70,7 @@ export default Vue.extend({
       return this.$accessor.catalog.categoryTree;
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-gear-catalog");
+      return this.$accessor.user.can(WRITE_GEAR_CATALOG);
     },
   },
   mounted() {

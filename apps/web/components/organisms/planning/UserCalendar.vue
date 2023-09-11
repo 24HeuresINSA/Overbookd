@@ -53,6 +53,7 @@ import {
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { UserPersonnalData } from "@overbookd/user";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 interface CalendarEventWithFt {
   start: Date;
@@ -104,7 +105,7 @@ export default Vue.extend({
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {
-      return this.$accessor.user.can("affect-volunteer");
+      return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;

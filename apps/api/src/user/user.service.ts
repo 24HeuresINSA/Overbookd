@@ -34,7 +34,11 @@ import {
   SELECT_VOLUNTEER_ASSIGNMENTS,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
-import { BE_AFFECTED } from "@overbookd/permission";
+import {
+  BE_AFFECTED,
+  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_USERS,
+} from "@overbookd/permission";
 
 @Injectable()
 export class UserService {
@@ -247,15 +251,15 @@ export class UserService {
   }
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
-    return author.can("manage-users") || author.id === targetUserId;
+    return author.can(MANAGE_USERS) || author.id === targetUserId;
   }
 
   private filterUpdatableUserData(
     author: JwtUtil,
     userData: UserUpdateForm,
   ): UserUpdateForm {
-    const charisma = author.can("manage-users") ? userData.charisma : undefined;
-    const hasPayedContributions = author.can("manage-personnal-accounts")
+    const charisma = author.can(MANAGE_USERS) ? userData.charisma : undefined;
+    const hasPayedContributions = author.can(MANAGE_PERSONNAL_ACCOUNTS)
       ? userData.hasPayedContributions
       : undefined;
 
