@@ -25,7 +25,7 @@ export class GearRequestController {
   constructor(private readonly gearRequestService: GearRequestService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission("write-inventory")
   @Get()
   @ApiResponse({
     status: 200,
