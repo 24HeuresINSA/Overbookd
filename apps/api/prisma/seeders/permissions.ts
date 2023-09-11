@@ -1,6 +1,8 @@
+import { permissions as perm } from "@overbookd/permission";
+
 export const permissions = [
   {
-    name: "have-personnal-account",
+    name: perm.HAVE_PERSONNAL_ACCOUNT,
     description: "Possède un compte perso",
     teams: {
       createMany: {
@@ -9,7 +11,7 @@ export const permissions = [
     },
   },
   {
-    name: "affect-team",
+    name: perm.AFFECT_TEAM,
     description: "Peut affecter des utilisateurs à des équipes",
     teams: {
       createMany: {
@@ -18,7 +20,7 @@ export const permissions = [
     },
   },
   {
-    name: "be-affected",
+    name: perm.BE_AFFECTED,
     description: "Peut être affecté",
     teams: {
       createMany: {
@@ -32,7 +34,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-gear-catalog",
+    name: perm.WRITE_GEAR_CATALOG,
     description: "Peut éditer le catalogue du matos",
     teams: {
       createMany: {
@@ -45,7 +47,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-gear-catalog",
+    name: perm.READ_GEAR_CATALOG,
     description: "Peut voir le catalogue du matos",
     teams: {
       createMany: {
@@ -62,7 +64,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-signage-catalog",
+    name: perm.READ_SIGNAGE_CATALOG,
     description: "Peut voir le catalogue de la signa",
     teams: {
       createMany: {
@@ -71,7 +73,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-signage-catalog",
+    name: perm.WRITE_SIGNAGE_CATALOG,
     description: "Peut éditer le catalogue du matos",
     teams: {
       createMany: {
@@ -80,7 +82,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-inventory",
+    name: perm.WRITE_INVENTORY,
     description: "Peut éditer l'inventaire",
     teams: {
       createMany: {
@@ -89,7 +91,7 @@ export const permissions = [
     },
   },
   {
-    name: "manage-personnal-accounts",
+    name: perm.MANAGE_PERSONNAL_ACCOUNTS,
     description: "Peut gérer les comptes persos",
     teams: {
       createMany: {
@@ -98,7 +100,7 @@ export const permissions = [
     },
   },
   {
-    name: "manage-users",
+    name: perm.MANAGE_USERS,
     description: "Peut gérer les utilisateurs",
     teams: {
       createMany: {
@@ -107,7 +109,7 @@ export const permissions = [
     },
   },
   {
-    name: "affect-volunteer",
+    name: perm.AFFECT_VOLUNTEER,
     description: "Peut affecter",
     teams: {
       createMany: {
@@ -116,7 +118,7 @@ export const permissions = [
     },
   },
   {
-    name: "manage-config",
+    name: perm.MANAGE_CONFIG,
     description: "Peut gérer la configuration",
     teams: {
       createMany: {
@@ -125,7 +127,7 @@ export const permissions = [
     },
   },
   {
-    name: "manage-location",
+    name: perm.MANAGE_LOCATION,
     description: "Peut gérer les lieux",
     teams: {
       createMany: {
@@ -134,7 +136,7 @@ export const permissions = [
     },
   },
   {
-    name: "validate-fa",
+    name: perm.VALIDATE_FA,
     description: "Peut valider les FA",
     teams: {
       createMany: {
@@ -150,7 +152,7 @@ export const permissions = [
     },
   },
   {
-    name: "validate-ft",
+    name: perm.VALIDATE_FT,
     description: "Peut valider les FT",
     teams: {
       createMany: {
@@ -159,7 +161,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-animation-to-publish",
+    name: perm.READ_ANIMATION_TO_PUBLISH,
     description: "Peut voir les animations à publier",
     teams: {
       createMany: {
@@ -168,7 +170,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-fa",
+    name: perm.READ_FA,
     description: "Peut lire les FA",
     teams: {
       createMany: {
@@ -177,7 +179,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-fa",
+    name: perm.WRITE_FA,
     description: "Peut écrire dans les FA",
     teams: {
       createMany: {
@@ -186,7 +188,7 @@ export const permissions = [
     },
   },
   {
-    name: "read-ft",
+    name: perm.READ_FT,
     description: "Peut lire les FT",
     teams: {
       createMany: {
@@ -195,7 +197,7 @@ export const permissions = [
     },
   },
   {
-    name: "write-ft",
+    name: perm.WRITE_FT,
     description: "Peut écrire dans les FT",
     teams: {
       createMany: {
@@ -204,7 +206,7 @@ export const permissions = [
     },
   },
   {
-    name: "view-festival-events-stats",
+    name: perm.VIEW_FESTIVAL_EVENTS_STATS,
     description: "Peut voir les stats des FA et des FT",
     teams: {
       createMany: {
@@ -213,7 +215,7 @@ export const permissions = [
     },
   },
   {
-    name: "fill-availability",
+    name: perm.FILL_AVAILABILITY,
     description: "Peut remplir ses disponibilités",
     teams: {
       createMany: {
@@ -222,7 +224,7 @@ export const permissions = [
     },
   },
   {
-    name: "view-timeline",
+    name: perm.VIEW_TIMELINE,
     description: "Peut voir la timeline",
     teams: {
       createMany: {
@@ -231,7 +233,7 @@ export const permissions = [
     },
   },
   {
-    name: "ask-for-help",
+    name: perm.ASK_FOR_HELP,
     description: "Peut accéder à la demande d'aide",
     teams: {
       createMany: {
@@ -240,7 +242,7 @@ export const permissions = [
     },
   },
   {
-    name: "view-planning",
+    name: perm.VIEW_PLANNING,
     description: "Peut voir les planning",
     teams: {
       createMany: {
@@ -249,7 +251,7 @@ export const permissions = [
     },
   },
   {
-    name: "download-planning",
+    name: perm.DOWNLOAD_PLANNING,
     description: "Peut télécharger son planning",
     teams: {
       createMany: {
@@ -258,7 +260,7 @@ export const permissions = [
     },
   },
   {
-    name: "enroll-newcomer",
+    name: perm.ENROLL_NEWCOMER,
     description: "Peut enrôler des nouveaux",
     teams: {
       createMany: {
@@ -267,7 +269,7 @@ export const permissions = [
     },
   },
   {
-    name: "view-trombinoscope",
+    name: perm.VIEW_TROMBINOSCOPE,
     description: "Peut voir le trombinoscope",
     teams: {
       createMany: {
@@ -276,7 +278,7 @@ export const permissions = [
     },
   },
   {
-    name: "view-volunteer",
+    name: perm.VIEW_VOLUNTEER,
     description: "Peut voir les bénévoles",
     teams: {
       createMany: {

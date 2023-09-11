@@ -77,6 +77,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period
+      '@overbookd/permission':
+        specifier: workspace:^
+        version: link:../../domains/permission
       '@overbookd/registration':
         specifier: workspace:^
         version: link:../../domains/registration
@@ -243,6 +246,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
+      '@overbookd/permission':
+        specifier: workspace:*
+        version: link:../../domains/permission
       '@overbookd/registration':
         specifier: workspace:*
         version: link:../../domains/registration
@@ -372,6 +378,8 @@ importers:
         version: 4.47.0
 
   domains/configuration: {}
+
+  domains/permission: {}
 
   domains/registration:
     dependencies:

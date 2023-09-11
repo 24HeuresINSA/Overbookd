@@ -18,14 +18,15 @@
     "resolveJsonModule": true,
     "paths": {
       "@overbookd/api": ["./apps/api/src"],
+      "@overbookd/configuration": ["./domains/configuration/src"],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
-      "@overbookd/configuration": ["./domains/configuration/src"],
+      "@overbookd/permission": ["./domains/permission/src"],
       "@overbookd/registration": ["./domains/registration/src"],
       "@overbookd/signa": ["./domains/signa/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"],
       "@overbookd/user": ["./domains/user/src"],
-      "@overbookd/web": ["./apps/web/src"],
+      "@overbookd/web": ["./apps/web/src"]
     }
   },
   "exclude": ["**/dist", "**/node_modules", "**/build", "**/*.spec.ts"]
