@@ -221,7 +221,7 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("cp")
+  @Permission("have-personnal-account")
   @ApiBearerAuth()
   @Get("personnal-account-consummers")
   @ApiResponse({

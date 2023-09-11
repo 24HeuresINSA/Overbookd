@@ -18,8 +18,8 @@ export const permissions = [
     },
   },
   {
-    name: "cp",
-    description: "Utilisateurs qui ont des CP",
+    name: "have-personnal-account",
+    description: "Possède un compte perso",
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],

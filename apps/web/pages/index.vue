@@ -35,7 +35,7 @@
           <FriendsCard />
         </v-col>
         <v-col cols="12" sm="6" md="8">
-          <PersonnalAccountCard v-if="can('cp')" />
+          <PersonnalAccountCard v-if="can('have-personal-account')" />
           <CommentEditionCard v-else />
         </v-col>
       </v-row>

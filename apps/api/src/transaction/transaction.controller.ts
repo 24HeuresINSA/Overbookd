@@ -58,7 +58,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission("cp")
+  @Permission("have-personnal-account")
   @Get("me")
   @ApiResponse({
     status: 200,
@@ -74,7 +74,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission("cp")
+  @Permission("have-personnal-account")
   @Get("/:id")
   @ApiResponse({
     status: 200,
@@ -88,7 +88,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("cp")
+  @Permission("have-personnal-account")
   @Post("transfer")
   @ApiBody({
     description: "Create a transaction",

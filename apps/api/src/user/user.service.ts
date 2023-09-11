@@ -122,7 +122,7 @@ export class UserService {
           some: {
             team: {
               permissions: {
-                some: { permission: { name: "cp" } },
+                some: { permission: { name: "have-personnal-account" } },
               },
             },
           },
