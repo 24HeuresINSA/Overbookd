@@ -1,22 +1,32 @@
 <table style="text-align: center">
-  <h1>Bienvenu sur Overbookd</h1>
+  <h1>Bienvenue sur Overbookd</h1>
   <p>
     Félicitations <%= firstname %>, ton inscription sur Overbookd est complète !
     <br />
-    CEPENDANT! Il faut encore que ton compte soit valide.
+    <strong>CEPENDANT!</strong> Il faut encore que ton compte soit validé.
   </p>
-  <p>
-    Tu peux tout de meme te connecter avec ton email comme identifiant:
-    <br />
-    <%= email %>
-  </p>
-  <h2>Quelle com t'interesse le plus ?</h2>
+  <h2>Quelle com t'intéresse le plus ?</h2>
   <p>
     En attendant la validation manuelle de ton compte, tu peux
-    <a href="https://framahttps://framaforms.org/abc/fr">
-      remplir ce questionnaire pour nous dire dans quelle equipe tu aimerais te
-      retrouver
+    <a
+      href="https://framaforms.org/abc/fr"
+      style="font-weight: 700; font-size: 1.2rem"
+    >
+      remplir ce questionnaire pour nous dire dans quelle équipe tu aimerais te
+      retrouver.
     </a>
+  </p>
+  <p>
+    Si le lien ne marche pas, tu peux
+    <a href="mailto:sg@24heures.org">contacter le secrétaire général</a>
+  </p>
+
+  <h2>Connexion</h2>
+  <p>
+    Tu peux tout de même te connecter à Overbookd avec ton email comme
+    identifiant:
+    <br />
+    <%= email %>
   </p>
   <a
     id="link-button"
