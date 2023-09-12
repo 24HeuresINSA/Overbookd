@@ -18,7 +18,7 @@ import { CreateSignaLocationRequestDto } from "./dto/create-signa-location.reque
 import { UpdateSignaLocationRequestDto } from "./dto/update-signa-location.request.dto";
 import { SignaLocationService } from "./signa-location.service";
 import { SignaLocationRepresentation } from "../fa/fa.model";
-import { MANAGE_LOCATION, WRITE_FA } from "@overbookd/permission";
+import { MANAGE_LOCATION, READ_FA } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("signa-location")
@@ -41,7 +41,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
+  @Permission(READ_FA)
   @Get()
   @ApiResponse({
     status: 200,
@@ -53,7 +53,7 @@ export class SignaLocationController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
+  @Permission(READ_FA)
   @Get(":id")
   @ApiResponse({
     status: 200,
