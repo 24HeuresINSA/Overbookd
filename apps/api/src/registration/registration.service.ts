@@ -17,6 +17,7 @@ import { jwtConstants } from "../authentication/constants";
 import { InviteNewAdherents } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
+import { isString } from "class-validator";
 
 @Injectable()
 export class RegistrationService {
@@ -81,7 +82,10 @@ export class RegistrationService {
   }
 
   async forget(credentials: Credentials, token: string) {
-    const isValidForgetRequest = this.checkForgetRequestValidity(token);
+    const isValidForgetRequest = this.checkForgetRequestValidity(
+      token,
+      credentials.email,
+    );
 
     if (!isValidForgetRequest) {
       throw new BadRequestException("Le lien d'oubli a exipré");
@@ -90,10 +94,14 @@ export class RegistrationService {
     await this.forgetMember.with(credentials);
   }
 
-  private checkForgetRequestValidity(token: string) {
+  private checkForgetRequestValidity(token: string, email: string) {
     try {
-      jwt.verify(token, jwtConstants.secret, { ignoreExpiration: false });
-      return true;
+      const verifyOptions = { ignoreExpiration: false };
+      const payload = jwt.verify(token, jwtConstants.secret, verifyOptions);
+
+      if (isString(payload)) return false;
+
+      return payload.email === email;
     } catch {
       return false;
     }
