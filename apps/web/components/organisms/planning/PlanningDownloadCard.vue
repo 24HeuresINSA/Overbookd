@@ -99,7 +99,7 @@ export default Vue.extend({
       return this.$accessor.user.can(DOWNLOAD_PLANNING);
     },
     personnalLink(): string {
-      return this.$accessor.planning?.link ?? "";
+      return this.$accessor.planning.link ?? "";
     },
     planningBase64Data(): string {
       return this.$accessor.planning.planningBase64Data;
