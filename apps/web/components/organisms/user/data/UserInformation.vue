@@ -8,7 +8,12 @@
             {{ formatUserNameWithNickname }}
           </v-card-title>
           <v-card-text>
-            <OverChips :roles="selectedUser.teams" />
+            <TeamChip
+              v-for="team of selectedUser.teams"
+              :key="team"
+              :team="team"
+              with-name
+            ></TeamChip>
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newTeam"
@@ -148,7 +153,7 @@
 
 <script>
 import { removeItemAtIndex } from "@overbookd/list";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import {
@@ -163,7 +168,7 @@ import { MANAGE_USERS } from "@overbookd/permission";
 export default {
   name: "UserInformation",
   components: {
-    OverChips,
+    TeamChip,
     AvailabilitiesSumup,
     DateField,
     ProfilePicture,
@@ -215,10 +220,10 @@ export default {
       return this.$accessor.user.can(MANAGE_USERS);
     },
     isMe() {
-      return this.$accessor.user.me.id === this.selectedUser.id;
+      return this.me.id === this.selectedUser.id;
     },
     isHard() {
-      return this.selectedUser.teams.includes("hard");
+      return this.selectedUser?.teams?.includes("hard") ?? false;
     },
     teams() {
       return this.$accessor.team.allTeams;

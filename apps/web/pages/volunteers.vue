@@ -138,7 +138,12 @@
 
               <template #[`item.teams`]="{ item }">
                 <v-container>
-                  <OverChips :roles="item.teams"></OverChips>
+                  <TeamChip
+                    v-for="team of item.teams"
+                    :key="team"
+                    :team="team"
+                    with-name
+                  ></TeamChip>
                 </v-container>
               </template>
             </v-data-table>
@@ -173,7 +178,7 @@
 </template>
 
 <script>
-import OverChips from "~/components/atoms/chip/OverChips.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
@@ -188,7 +193,7 @@ export default {
   components: {
     UserInformation,
     SnackNotificationContainer,
-    OverChips,
+    TeamChip,
     VolunteerStatsTable,
   },
   data() {

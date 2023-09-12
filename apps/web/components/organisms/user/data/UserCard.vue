@@ -30,7 +30,12 @@
         </h3>
         <h3 class="mt-1">🗣 {{ me.tasksCount }} tâches affectées</h3>
 
-        <OverChips :roles="me.teams"></OverChips>
+        <TeamChip
+          v-for="team of me.teams"
+          :key="team"
+          :team="team"
+          with-name
+        ></TeamChip>
       </v-card-text>
     </v-card>
   </div>
@@ -38,14 +43,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { MyUserInformationWithProfilePicture } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "UserCard",
-  components: { OverChips, ProfilePictureDialog, ProfilePicture },
+  components: { TeamChip, ProfilePictureDialog, ProfilePicture },
   props: {
     user: {
       type: Object,

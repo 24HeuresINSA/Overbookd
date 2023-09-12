@@ -16,7 +16,7 @@
       </template>
 
       <template #item.rendering="{ item }">
-        <TeamChip :team="item.code" with-name />
+        <TeamChip :team="item.code" with-name show-hidden />
       </template>
 
       <template #item.actions="{ item }">
