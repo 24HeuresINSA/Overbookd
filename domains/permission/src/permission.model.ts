@@ -33,6 +33,7 @@ import {
   MANAGE_TEAMS,
   VIEW_DELETED_FT,
   VIEW_DELETED_FA,
+  MANAGE_ADMINS,
 } from "./permissions";
 
 export type Permission =
@@ -69,4 +70,5 @@ export type Permission =
   | typeof MANAGE_TEAMS
   | typeof MANAGE_PERMISSIONS
   | typeof VIEW_DELETED_FA
-  | typeof VIEW_DELETED_FT;
+  | typeof VIEW_DELETED_FT
+  | typeof MANAGE_ADMINS;

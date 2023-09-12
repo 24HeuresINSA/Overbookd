@@ -10,6 +10,7 @@ import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "./team.model";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { MANAGE_ADMINS } from "@overbookd/permission";
 
 export const TEAM_SELECT = {
   select: {
@@ -51,7 +52,7 @@ export class TeamService {
     author: JwtUtil,
   ): Promise<LinkTeamToUserDto> {
     await this.checkUserExistence(userId);
-    const linkableTeams = this.cleanAdminTeamIfNotAdmin(teams, author);
+    const linkableTeams = this.cleanAdminTeam(teams, author);
     const teamsToLink = await this.fetchExistingTeams(linkableTeams);
     await this.forceUserTeams(userId, teamsToLink);
 
@@ -132,8 +133,8 @@ export class TeamService {
     }
   }
 
-  private cleanAdminTeamIfNotAdmin(teams: string[], author: JwtUtil) {
-    if (!author.can("manage-admins")) {
+  private cleanAdminTeam(teams: string[], author: JwtUtil) {
+    if (!author.can(MANAGE_ADMINS)) {
       return teams.filter((team) => team !== "admin");
     }
     if (teams.length === 0) {
