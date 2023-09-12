@@ -34,11 +34,11 @@
             </div>
 
             <v-switch
-              v-if="can('view-deleted-fa')"
+              v-if="canViewDeletedFa"
               v-model="filters.isDeleted"
               label="Afficher les FA supprimées"
             ></v-switch>
-            <v-btn v-if="can('manage-location')" @click="exportCsvSigna()">
+            <v-btn v-if="canManageLocation" @click="exportCsvSigna()">
               Export signa
             </v-btn>
           </template>
@@ -161,6 +161,7 @@ import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
+import { MANAGE_LOCATION, VIEW_DELETED_FA } from "@overbookd/permission";
 
 interface FaData {
   headers: Header[];
@@ -240,6 +241,13 @@ export default Vue.extend({
     deletedFaTextClass(): string {
       return this.filters.isDeleted ? "invalid-text" : "valid-text";
     },
+    canViewDeletedFa(): boolean {
+      return this.$accessor.user.can(VIEW_DELETED_FA);
+    },
+
+    canManageLocation(): boolean {
+      return this.$accessor.user.can(MANAGE_LOCATION);
+    },
   },
 
   watch: {
@@ -276,10 +284,6 @@ export default Vue.extend({
     async fetchFas() {
       const searchParams: SearchFa = { isDeleted: this.filters.isDeleted };
       await this.$accessor.fa.fetchFAs(searchParams);
-    },
-
-    can(permission: string): boolean {
-      return this.$accessor.user.can(permission);
     },
 
     getFaStatus(status: FaStatus): string {

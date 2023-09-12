@@ -40,6 +40,7 @@ import {
 import { FtTimeSpanService } from "./ft-time-span.service";
 import { TimeSpan, TimeSpanWithAssignees } from "./model/ft-time-span.model";
 import { VolunteerService } from "./volunteer.service";
+import { AFFECT_VOLUNTEER, BE_AFFECTED } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("assignments")
@@ -58,9 +59,8 @@ export class AssignmentController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("volunteers")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get all valid volunteers",
@@ -72,9 +72,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("ft-timespans")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get all valid ft with time spans",
@@ -87,7 +86,7 @@ export class AssignmentController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("stats")
   @ApiResponse({
     status: 200,
@@ -100,9 +99,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("ft/:ftId")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get ft with time spans and stats",
@@ -116,9 +114,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("volunteer/:volunteerId/ft-timespans")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get ft time spans available for volunteer",
@@ -134,9 +131,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("ft-timespans/:timeSpanId/volunteers")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get volunteers available for ft time span",
@@ -152,9 +148,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(BE_AFFECTED)
   @Get("ft-timespans/:timeSpanId")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get time span details",
@@ -167,9 +162,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Get("ft-timespans/:timeSpanId/volunteers/:volunteerId/available-friends")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get volunteer's friends available for ft time span",
@@ -187,9 +181,8 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Post()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Affect volunteers to time span as team member",
@@ -205,7 +198,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Delete("ft-timespans/:timeSpanId/volunteers/:assigneeId")
   @HttpCode(204)
   @ApiResponse({
@@ -223,7 +216,7 @@ export class AssignmentController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Patch("ft-timespans/:timeSpanId/assignees/:assigneeId/affected-team")
   @HttpCode(200)
   @ApiResponse({

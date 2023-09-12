@@ -26,6 +26,7 @@ import { FaSignaNeedResponseDto } from "./dto/fa-signa-need.response.dto";
 import { UpsertFaSignaNeedRequestDto } from "./dto/upsert-fa-signa-need.request.dto";
 import { ExportSignaNeed, FaSignaNeed } from "./fa-signa-need.model";
 import { FaSignaNeedExportCsvResponseDto } from "./dto/fa-signa-need-export-csv.response.dto";
+import { READ_FA, WRITE_FA } from "@overbookd/permission";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -40,7 +41,7 @@ import { FaSignaNeedExportCsvResponseDto } from "./dto/fa-signa-need-export-csv.
 export class FaSignaNeedController {
   constructor(private readonly faSignaNeedService: FaSignaNeedService) {}
 
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Post(":faId/signa-need")
   @ApiResponse({
     status: 201,
@@ -65,7 +66,7 @@ export class FaSignaNeedController {
     return this.faSignaNeedService.upsert(faId, signaNeed);
   }
 
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Delete(":faId/signa-need/:id")
   @HttpCode(204)
   @ApiResponse({
@@ -91,7 +92,7 @@ export class FaSignaNeedController {
     return this.faSignaNeedService.remove(faId, id);
   }
 
-  @Permission("hard")
+  @Permission(READ_FA)
   @Get("signa-need/export-csv")
   @ApiResponse({
     status: 200,

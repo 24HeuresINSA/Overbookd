@@ -26,7 +26,7 @@
         </v-list-item>
         <template v-for="(item, i) in pages">
           <v-list-item
-            v-if="hasPermission(item.permission)"
+            v-if="can(item.permission)"
             :key="i"
             :to="item.to"
             router
@@ -59,7 +59,7 @@
       <v-spacer />
       <div v-if="isPreProd" class="watermark">PREPROD</div>
       <div v-if="isCetaitMieuxAvant" class="watermark">CTMA</div>
-      <v-btn v-if="hasPermission('hard')" text @click="isDialogOpen = true">
+      <v-btn v-if="isVolunteer" text @click="isDialogOpen = true">
         <v-icon>mdi-bug-outline</v-icon>
         {{ isMobile ? "" : "Signaler un bug" }}
       </v-btn>
@@ -86,7 +86,7 @@
     </v-footer>
 
     <v-dialog v-model="isDialogOpen" max-width="800">
-      <v-card v-if="hasPermission('hard')">
+      <v-card v-if="isVolunteer">
         <v-card-title>Signaler un bug ou feature request</v-card-title>
         <v-card-text>
           <h4>
@@ -244,6 +244,9 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     isCetaitMieuxAvant() {
       return process.env.BASE_URL.includes("cetaitmieuxavant");
     },
+    isVolunteer() {
+      return this.$accessor.user.me.teams.includes("benevole");
+    },
   },
 
   mounted() {
@@ -258,7 +261,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
       return items[Math.floor(Math.random() * items.length)];
     },
 
-    hasPermission(permission) {
+    can(permission) {
       return this.$accessor.user.can(permission);
     },
 

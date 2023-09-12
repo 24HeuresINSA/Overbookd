@@ -12,6 +12,7 @@ import { Permission } from "./authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "./authentication/permissions-auth.guard";
 import { JwtPayload } from "./authentication/entities/jwt-util.entity";
 import { Request } from "express";
+import { SEND_MAIL_TEST } from "@overbookd/permission";
 
 /**
  * IMPORTANT: used in others controller like transactions
@@ -41,7 +42,7 @@ export class AppController {
     description: "User dont have the right to access this route",
   })
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("admin")
+  @Permission(SEND_MAIL_TEST)
   @Post("mailtest")
   async mailtest(@Body() to: MailTestRequestDto) {
     return this.mailService.mailTest(to);

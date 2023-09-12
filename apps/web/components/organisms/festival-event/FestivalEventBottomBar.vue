@@ -189,6 +189,7 @@ import { hasAtLeastOneFTError } from "~/utils/rules/ft-validation.rules";
 import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
 import FaCheckBeforeSubmitCard from "./fa/FaCheckBeforeSubmitCard.vue";
 import FtCheckBeforeSubmitCard from "./ft/FtCheckBeforeSubmitCard.vue";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 export default Vue.extend({
   name: "FestivalEventBottomBar",
@@ -324,7 +325,7 @@ export default Vue.extend({
       return (
         !this.isFA &&
         this.isValidated &&
-        this.$accessor.user.can("affect-volunteer")
+        this.$accessor.user.can(AFFECT_VOLUNTEER)
       );
     },
     previousLink(): string {

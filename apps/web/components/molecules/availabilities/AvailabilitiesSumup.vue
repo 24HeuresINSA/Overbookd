@@ -35,6 +35,7 @@ import {
   setDateHour,
 } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 export default Vue.extend({
   name: "AvailabilitiesSumup",
@@ -68,7 +69,7 @@ export default Vue.extend({
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     isReadonly(): boolean {
-      return !this.$accessor.user.can("affect-volunteer");
+      return !this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
   },
   watch: {

@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import Vue from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
@@ -43,7 +44,7 @@ export default Vue.extend({
       return !this.isValidatedByOwner || this.canAffect;
     },
     canAffect(): boolean {
-      return this.$accessor.user.can("affect-volunteer");
+      return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     validationStatus(): string {
       return getFTValidationStatus(this.mFT, this.owner).toLowerCase();

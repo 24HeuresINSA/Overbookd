@@ -22,6 +22,7 @@ import { TimeSpanParametersRequestDto } from "./dto/time-span-parameters.request
 import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { TimeSpansGenerator } from "./time-spans-generator";
 import { reviewStatuses } from "../ft-review/ft-review.model";
+import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
 
 @Injectable()
 export class FtReviewService {
@@ -162,7 +163,7 @@ export class FtReviewService {
   ): Promise<FtStatus> | null {
     const ftValidators = this.prisma.teamPermission.count({
       where: {
-        permissionName: "ft-validator",
+        permissionName: VALIDATE_FT,
       },
     });
     const ftValidatedReviews = this.prisma.ftReview.count({
@@ -263,7 +264,7 @@ export class FtReviewService {
     }
 
     const user = new JwtUtil(jwtPayload);
-    if (!user.can("affect-volunteer")) {
+    if (!user.can(AFFECT_VOLUNTEER)) {
       throw new ForbiddenException(
         "Seuls les utilisateurs avec la permission affect-volunteer peuvent refuser une FT avec le statut READY",
       );

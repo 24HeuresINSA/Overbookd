@@ -85,6 +85,7 @@
 </template>
 
 <script lang="ts">
+import { DOWNLOAD_PLANNING } from "@overbookd/permission";
 import Vue from "vue";
 import { download } from "~/utils/planning/download";
 
@@ -95,7 +96,7 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     canViewPlanning(): boolean {
-      return this.$accessor.user.can("download-planning");
+      return this.$accessor.user.can(DOWNLOAD_PLANNING);
     },
     personnalLink(): string {
       return this.$accessor.planning.link ?? "";

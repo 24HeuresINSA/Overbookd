@@ -61,6 +61,12 @@ import { ReviewerResponseDto } from "./dto/reviewer.response.dto";
 import { ReviewerRequestDto } from "./dto/reviewer.request.dto";
 import { StatsResponseDto } from "../fa/dto/stats.response.dto";
 import { FollowingFtResponseDto } from "./dto/following-ft.response.dto";
+import {
+  READ_FT,
+  VALIDATE_FT,
+  VIEW_FESTIVAL_EVENTS_STATS,
+  WRITE_FT,
+} from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -78,9 +84,8 @@ export class FtController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Post()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "The ft has been successfully created.",
@@ -99,7 +104,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FT)
   @Get()
   @ApiResponse({
     status: 200,
@@ -127,7 +132,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(VIEW_FESTIVAL_EVENTS_STATS)
   @Get("stats")
   @ApiResponse({
     status: 200,
@@ -140,7 +145,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FT)
   @Get(":id")
   @ApiParam({
     name: "id",
@@ -163,7 +168,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Patch(":id")
   @ApiResponse({
     status: 200,
@@ -192,7 +197,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Patch(":id/submit")
   @ApiResponse({
     status: 200,
@@ -215,7 +220,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Delete(":id")
   @HttpCode(204)
   @ApiResponse({
@@ -233,7 +238,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FT)
   @Get(":id/previous")
   @ApiResponse({
     status: 200,
@@ -247,7 +252,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FT)
   @Get(":id/next")
   @ApiResponse({
     status: 200,
@@ -261,7 +266,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Post(":id/gear-requests")
   @ApiResponse({
     status: 201,
@@ -289,7 +294,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FT)
   @Get(":id/gear-requests")
   @ApiResponse({
     status: 200,
@@ -310,7 +315,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Delete(":taskId/gear-requests/")
   @HttpCode(204)
   @ApiResponse({
@@ -336,7 +341,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Delete(":taskId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @HttpCode(204)
   @ApiResponse({
@@ -374,7 +379,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Patch(":taskId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @ApiResponse({
     status: 200,
@@ -417,7 +422,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(VALIDATE_FT)
   @Patch(":taskId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve")
   @HttpCode(200)
   @ApiResponse({
@@ -462,7 +467,7 @@ export class FtController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission(VALIDATE_FT)
   @Put(":taskId/humanReviewer")
   @HttpCode(200)
   @ApiResponse({

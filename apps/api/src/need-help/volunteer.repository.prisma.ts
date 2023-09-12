@@ -3,7 +3,7 @@ import { Volunteer } from "./need-help.model";
 import { VolunteerRepository } from "./need-help.service";
 import { PrismaService } from "../prisma.service";
 import { AssignmentService } from "../assignment/assignment.service";
-import { WHERE_VALIDATED_USER } from "../assignment/volunteer.service";
+import { WHERE_IS_VOLUNTEER } from "../assignment/volunteer.service";
 import { Injectable } from "@nestjs/common";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
@@ -73,7 +73,7 @@ export class PrismaVolunteerRepository implements VolunteerRepository {
       );
 
     return {
-      ...WHERE_VALIDATED_USER,
+      ...WHERE_IS_VOLUNTEER,
       isDeleted: false,
       availabilities,
       assignments,

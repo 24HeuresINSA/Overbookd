@@ -23,6 +23,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { FtUserRequestDto } from "./dto/ft-user-request.request.dto";
 import { FtUserRequestResponseDto } from "./dto/ft-user-request.response.dto";
 import { FtUserRequestService } from "./ft-user-request.service";
+import { WRITE_FT } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -40,9 +41,8 @@ export class FtUserRequestController {
   constructor(private readonly ftUserRequestService: FtUserRequestService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Post("/:ftId/time-windows/:twId/user-requests")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "The user request has been successfully created.",
@@ -62,7 +62,7 @@ export class FtUserRequestController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Delete("/:ftId/time-windows/:twId/user-requests/:userId")
   @HttpCode(204)
   @ApiResponse({

@@ -23,6 +23,7 @@
       "@overbookd/configuration": ["../../domains/configuration/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
+      "@overbookd/permission": ["../../domains/permission/src"],
       "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/slugify": ["../../libraries/slugify/src"],
       "@overbookd/user": ["../../domains/user/src"],

@@ -158,6 +158,7 @@ import {
 } from "~/utils/user/user.utils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
+import { MANAGE_USERS } from "@overbookd/permission";
 
 export default {
   name: "UserInformation",
@@ -211,13 +212,13 @@ export default {
       return this.hasEditingRole || this.isMe;
     },
     hasEditingRole() {
-      return this.$accessor.user.can("manage-users");
+      return this.$accessor.user.can(MANAGE_USERS);
     },
     isMe() {
       return this.$accessor.user.me.id === this.selectedUser.id;
     },
     isHard() {
-      return (this.selectedUser.teams ?? []).includes("hard");
+      return this.selectedUser.teams.includes("hard");
     },
     teams() {
       return this.$accessor.team.allTeams;

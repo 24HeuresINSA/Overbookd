@@ -84,8 +84,8 @@ export default Vue.extend({
     step: 1,
   }),
   computed: {
-    isHardUser(): boolean {
-      return this.$accessor.user.can("hard");
+    isHard() {
+      return this.$accessor.user.me.teams.includes("hard");
     },
     softCalendarSteps(): CalendarStep[] {
       return [this.preManifStep, this.manifStep, this.postManifStep];
@@ -94,7 +94,7 @@ export default Vue.extend({
       return [this.prePreManifStep, ...this.softCalendarSteps];
     },
     calendarSteps(): CalendarStep[] {
-      return this.isHardUser ? this.hardCalendarSteps : this.softCalendarSteps;
+      return this.isHard ? this.hardCalendarSteps : this.softCalendarSteps;
     },
     prePreManifStep(): CalendarStep {
       return {

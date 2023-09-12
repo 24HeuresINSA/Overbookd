@@ -1,3 +1,5 @@
+import { Permission } from "@overbookd/permission";
+
 export interface UserName {
   firstname: string;
   lastname: string;
@@ -20,6 +22,6 @@ export interface UserPersonnalData extends User {
 }
 
 export interface MyUserInformation extends UserPersonnalData {
-  permissions: string[];
+  permissions: Permission[];
   tasksCount: number;
 }

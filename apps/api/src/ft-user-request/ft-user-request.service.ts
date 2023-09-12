@@ -8,6 +8,7 @@ import {
   FtUserRequestResponseDto,
   UserRequest,
 } from "./dto/ft-user-request.response.dto";
+import { BE_AFFECTED } from "@overbookd/permission";
 
 type UserId = {
   userId: number;
@@ -212,7 +213,6 @@ export class FtUserRequestService {
   }
 
   private async findRequestableUsers(request: FtUserRequestDto[]) {
-    const requestablePermission = "validated-user";
     const requestedUserIds = request.map(({ userId }) => userId);
     return this.prisma.user.findMany({
       select: { id: true },
@@ -224,7 +224,7 @@ export class FtUserRequestService {
               permissions: {
                 some: {
                   permission: {
-                    name: requestablePermission,
+                    name: BE_AFFECTED,
                   },
                 },
               },

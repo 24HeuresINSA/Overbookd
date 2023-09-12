@@ -1,15 +1,17 @@
+import { Permission } from "@overbookd/permission";
+
 export type JwtPayload = {
   id: number;
   userId: number;
   teams: string[];
-  permissions: string[];
+  permissions: Permission[];
 };
 
 export class JwtUtil implements JwtPayload {
   userId: number;
   id: number;
   teams: string[];
-  permissions: string[];
+  permissions: Permission[];
 
   constructor(payload: JwtPayload) {
     this.userId = payload.userId;
@@ -22,7 +24,7 @@ export class JwtUtil implements JwtPayload {
     return this.teams.includes("admin");
   }
 
-  can(permission: string): boolean {
+  can(permission: Permission): boolean {
     return this.isAdmin || this.permissions.includes(permission);
   }
 }

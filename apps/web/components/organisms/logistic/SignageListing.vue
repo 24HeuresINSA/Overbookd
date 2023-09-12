@@ -70,6 +70,7 @@ import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
 import { SlugifyService } from "@overbookd/slugify";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
+import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 
 interface SignageListingData {
   headers: Header[];
@@ -112,7 +113,7 @@ export default Vue.extend({
       });
     },
     isCatalogWriter(): boolean {
-      return this.$accessor.user.can("write-catalog-signa");
+      return this.$accessor.user.can(WRITE_SIGNAGE_CATALOG);
     },
     signageTypes(): SignageType[] {
       return Object.values(signageTypes);

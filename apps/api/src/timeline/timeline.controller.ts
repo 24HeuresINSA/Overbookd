@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Query, UseGuards } from "@nestjs/common";
+import { Controller, Get, Query, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -13,6 +13,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { TimelineEventResponseDto } from "./dto/timeline-event.response.dto";
 import { TimelineService } from "./timeline.service";
+import { VIEW_TIMELINE } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("timeline")
@@ -30,9 +31,8 @@ export class TimelineController {
   constructor(private readonly timelineService: TimelineService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("view-timeline")
+  @Permission(VIEW_TIMELINE)
   @Get()
-  @HttpCode(200)
   @ApiQuery({
     name: "start",
     required: true,

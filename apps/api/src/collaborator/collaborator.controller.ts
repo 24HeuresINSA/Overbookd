@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, HttpCode } from "@nestjs/common";
+import { Controller, Get, UseGuards } from "@nestjs/common";
 import { CollaboratorService } from "./collaborator.service";
 import {
   ApiBadRequestResponse,
@@ -12,6 +12,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CollaboratorWithId } from "./collaborator.model";
 import { CollaboratorResponseDto } from "./dto/collaborator.response.dto";
+import { WRITE_FA } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("collaborators")
@@ -26,9 +27,8 @@ export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Get()
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get all collaborators",

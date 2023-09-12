@@ -38,7 +38,7 @@
                 </template>
               </v-combobox>
 
-              <template v-if="hasPermission('manage-users')">
+              <template v-if="canManageUsers">
                 <label>Compte validé</label>
                 <v-btn-toggle
                   v-model="filters.isValidated"
@@ -55,7 +55,7 @@
                   >
                 </v-btn-toggle>
               </template>
-              <template v-if="hasPermission('bureau')">
+              <template v-if="canManagePersonnalAccounts">
                 <p>Cotisation</p>
                 <v-btn-toggle
                   v-model="filters.hasPayedContributions"
@@ -75,7 +75,7 @@
               </template>
             </v-card-text>
           </v-card>
-          <v-card v-if="hasPermission('manage-users')">
+          <v-card v-if="canManageUsers">
             <v-card-title>Mode stats humains</v-card-title>
             <v-card-text style="display: flex; flex-direction: column">
               <label>Mode stats</label>
@@ -114,12 +114,7 @@
                 {{ item.nickname ? `(${item.nickname})` : "" }}
               </template>
               <template #[`item.action`]="{ item }" style="display: flex">
-                <v-btn
-                  v-if="hasPermission('hard')"
-                  icon
-                  small
-                  @click="openInformationDialog(item)"
-                >
+                <v-btn icon small @click="openInformationDialog(item)">
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
                 <v-btn icon small :href="getPhoneLink(item.phone)">
@@ -186,6 +181,7 @@ import { download } from "~/utils/planning/download";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { matchingSearchItems } from "~/utils/search/search.utils";
+import { MANAGE_PERSONNAL_ACCOUNTS, MANAGE_USERS } from "@overbookd/permission";
 
 export default {
   name: "Volunteers",
@@ -259,6 +255,12 @@ export default {
     volunteerPlannings() {
       return this.$accessor.planning.volunteerPlannings;
     },
+    canManageUsers() {
+      return this.$accessor.user.can(MANAGE_USERS);
+    },
+    canManagePersonnalAccounts() {
+      return this.$accessor.user.can(MANAGE_PERSONNAL_ACCOUNTS);
+    },
   },
 
   watch: {
@@ -280,13 +282,8 @@ export default {
   async mounted() {
     await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
-    if (!this.hasPermission("hard")) {
-      return this.$router.push({
-        path: "/",
-      });
-    }
 
-    if (this.hasPermission("manage-cp")) {
+    if (this.canManagePersonnalAccounts) {
       this.headers.splice(this.headers.length - 1, 0, {
         text: "CP",
         value: "balance",
@@ -317,10 +314,6 @@ export default {
       return this.isCpUseful(item)
         ? (item.balance || 0).toFixed(2) + " €"
         : undefined;
-    },
-
-    hasPermission(permission) {
-      return this.$accessor.user.can(permission);
     },
 
     openInformationDialog(user) {

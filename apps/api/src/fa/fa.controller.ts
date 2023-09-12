@@ -55,6 +55,12 @@ import { CollaboratorRequestDto } from "../collaborator/dto/collaborator.request
 import { CollaboratorWithId } from "../collaborator/collaborator.model";
 import { StatsResponseDto } from "./dto/stats.response.dto";
 import { FollowingFaResponseDto } from "./dto/following-fa.response.dto";
+import {
+  READ_FA,
+  VALIDATE_FA,
+  VIEW_FESTIVAL_EVENTS_STATS,
+  WRITE_FA,
+} from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("fa")
@@ -75,9 +81,8 @@ export class FaController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Post()
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Create a new fa",
@@ -88,9 +93,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FA)
   @Get()
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get all fa",
@@ -110,9 +114,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(VIEW_FESTIVAL_EVENTS_STATS)
   @Get("stats")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get FA stats",
@@ -124,9 +127,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FA)
   @Get(":id")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get a fa",
@@ -137,9 +139,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Post(":id")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Update a fa",
@@ -157,9 +158,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Delete(":id")
-  @HttpCode(204)
   @ApiResponse({
     status: 204,
     description: "Delete a fa",
@@ -169,9 +169,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FA)
   @Get(":id/previous")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get the previous fa",
@@ -184,9 +183,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FA)
   @Get(":id/next")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get the next fa",
@@ -199,9 +197,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Post(":id/collaborator")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Add a collaborator to a fa",
@@ -225,7 +222,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Delete(":id/collaborator")
   @HttpCode(204)
   @ApiResponse({
@@ -243,9 +240,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Post(":id/gear-requests")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Creating a new gear request",
@@ -272,9 +268,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(READ_FA)
   @Get(":id/gear-requests")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Get animation gear requests",
@@ -294,11 +289,10 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(VALIDATE_FA)
   @Patch(
     ":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve",
   )
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Gear request approved",
@@ -338,9 +332,8 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Patch(":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Update an existing gear request",
@@ -379,7 +372,7 @@ export class FaController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FA)
   @Delete(":animationId/gear-requests/:gearId/rental-period/:rentalPeriodId")
   @HttpCode(204)
   @ApiResponse({

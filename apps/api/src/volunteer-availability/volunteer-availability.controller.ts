@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -24,6 +23,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PeriodDto } from "./dto/period.dto";
 import { VolunteerAvailabilityService } from "./volunteer-availability.service";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("volunteer-availability")
@@ -41,7 +41,6 @@ export class VolunteerAvailabilityController {
 
   @UseGuards(JwtAuthGuard)
   @Post(":userId")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Volunteer's availability periods successfully created.",
@@ -71,7 +70,6 @@ export class VolunteerAvailabilityController {
 
   @UseGuards(JwtAuthGuard)
   @Get(":userId")
-  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Volunteer's availability periods",
@@ -92,9 +90,8 @@ export class VolunteerAvailabilityController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Patch(":userId")
-  @HttpCode(201)
   @ApiParam({
     name: "userId",
     description: "The id of the user to add the availability periods to.",

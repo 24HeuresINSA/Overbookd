@@ -22,6 +22,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { CreateFtFeedbackRequestDto } from "./dto/create-ft-feedback.request.dto";
 import { FtFeedbackResponseDto } from "./dto/ft-feedback.response.dto";
 import { FtFeedbackService } from "./ft-feedback.service";
+import { WRITE_FT } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -36,7 +37,7 @@ export class FtFeedbackController {
   constructor(private readonly ftFeedbackService: FtFeedbackService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("hard")
+  @Permission(WRITE_FT)
   @Post(":ftId/feedback")
   @HttpCode(201)
   @ApiResponse({

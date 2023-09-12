@@ -1,270 +1,318 @@
+import {
+  AFFECT_TEAM,
+  AFFECT_VOLUNTEER,
+  ASK_FOR_HELP,
+  BE_AFFECTED,
+  DOWNLOAD_PLANNING,
+  ENROLL_NEWCOMER,
+  FILL_AVAILABILITY,
+  HAVE_PERSONNAL_ACCOUNT,
+  MANAGE_CONFIG,
+  MANAGE_LOCATION,
+  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_USERS,
+  READ_ANIMATION_TO_PUBLISH,
+  READ_FA,
+  READ_FT,
+  READ_GEAR_CATALOG,
+  READ_SIGNAGE_CATALOG,
+  VALIDATE_FA,
+  VALIDATE_FT,
+  VIEW_FESTIVAL_EVENTS_STATS,
+  VIEW_PLANNING,
+  VIEW_TIMELINE,
+  VIEW_TROMBINOSCOPE,
+  VIEW_VOLUNTEER,
+  WRITE_FA,
+  WRITE_FT,
+  WRITE_GEAR_CATALOG,
+  WRITE_INVENTORY,
+  WRITE_SIGNAGE_CATALOG,
+} from "@overbookd/permission";
+
 export const permissions = [
   {
-    name: 'admin',
-    description: 'Admin',
+    name: HAVE_PERSONNAL_ACCOUNT,
+    description: "Possède un compte perso",
     teams: {
       createMany: {
-        data: [{ teamCode: 'admin' }],
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
   {
-    name: 'hard',
-    description: 'Uniquement les hards',
+    name: AFFECT_TEAM,
+    description: "Peut affecter des utilisateurs à des équipes",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }],
+        data: [{ teamCode: "humain" }, { teamCode: "sg" }],
       },
     },
   },
   {
-    name: 'cp',
-    description: 'Utilisateurs qui ont des CP',
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
-      },
-    },
-  },
-  {
-    name: 'affect-team',
-    description:
-      'Utilisateurs qui peuvent affecter des utilisateurs à des équipes',
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'humain' }, { teamCode: 'sg' }],
-      },
-    },
-  },
-  {
-    name: 'validated-user',
-    description: 'Utilisateurs validés',
+    name: BE_AFFECTED,
+    description: "Peut être affecté",
     teams: {
       createMany: {
         data: [
-          { teamCode: 'hard' },
-          { teamCode: 'vieux' },
-          { teamCode: 'soft' },
-          { teamCode: 'camion' },
-          { teamCode: 'voiture' },
-          { teamCode: 'fen' },
+          { teamCode: "benevole" },
+          { teamCode: "camion" },
+          { teamCode: "voiture" },
+          { teamCode: "fen" },
         ],
       },
     },
   },
   {
-    name: 'write-catalog',
-    description: 'Peut éditer le catalogue',
+    name: WRITE_GEAR_CATALOG,
+    description: "Peut éditer le catalogue du matos",
     teams: {
       createMany: {
         data: [
-          { teamCode: 'matos' },
-          { teamCode: 'elec' },
-          { teamCode: 'barrieres' },
+          { teamCode: "matos" },
+          { teamCode: "elec" },
+          { teamCode: "barrieres" },
         ],
       },
     },
   },
   {
-    name: 'read-catalog',
-    description: 'Peut voir le catalogue',
+    name: READ_GEAR_CATALOG,
+    description: "Peut voir le catalogue du matos",
     teams: {
       createMany: {
         data: [
-          { teamCode: 'matos' },
-          { teamCode: 'elec' },
-          { teamCode: 'barrieres' },
-          { teamCode: 'signa' },
-          { teamCode: 'bar' },
-          { teamCode: 'catering' },
+          { teamCode: "matos" },
+          { teamCode: "elec" },
+          { teamCode: "barrieres" },
+          { teamCode: "signa" },
+          { teamCode: "bar" },
+          { teamCode: "catering" },
+          { teamCode: "hard" },
         ],
       },
     },
   },
   {
-    name: 'write-inventory',
+    name: READ_SIGNAGE_CATALOG,
+    description: "Peut voir le catalogue de la signa",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "signa" }, { teamCode: "hard" }],
+      },
+    },
+  },
+  {
+    name: WRITE_SIGNAGE_CATALOG,
+    description: "Peut éditer le catalogue du matos",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "signa" }],
+      },
+    },
+  },
+  {
+    name: WRITE_INVENTORY,
     description: "Peut éditer l'inventaire",
     teams: {
       createMany: {
-        data: [{ teamCode: 'matos' }, { teamCode: 'elec' }],
+        data: [{ teamCode: "matos" }, { teamCode: "elec" }],
       },
     },
   },
   {
-    name: 'manage-cp',
-    description: 'Utilisateurs qui peuvent gérer les CP',
+    name: MANAGE_PERSONNAL_ACCOUNTS,
+    description: "Peut gérer les comptes persos",
     teams: {
       createMany: {
-        data: [{ teamCode: 'sg' }],
+        data: [{ teamCode: "sg" }],
       },
     },
   },
   {
-    name: 'send-broadcast',
-    description: 'Utilisateurs qui peuvent envoyer des notifications',
+    name: MANAGE_USERS,
+    description: "Peut gérer les utilisateurs",
     teams: {
       createMany: {
-        data: [{ teamCode: 'bureau' }, { teamCode: 'orga' }],
+        data: [{ teamCode: "bureau" }, { teamCode: "humain" }],
       },
     },
   },
   {
-    name: 'manage-users',
-    description: 'Utilisateurs qui peuvent gérer les utilisateurs',
+    name: AFFECT_VOLUNTEER,
+    description: "Peut affecter",
     teams: {
       createMany: {
-        data: [{ teamCode: 'bureau' }, { teamCode: 'humain' }],
+        data: [{ teamCode: "humain" }],
       },
     },
   },
   {
-    name: 'bureau',
-    description: 'Le bureau',
+    name: MANAGE_CONFIG,
+    description: "Peut gérer la configuration",
     teams: {
       createMany: {
-        data: [{ teamCode: 'bureau' }],
+        data: [{ teamCode: "admin" }],
       },
     },
   },
   {
-    name: 'affect-volunteer',
-    description: 'Peut affecter',
+    name: MANAGE_LOCATION,
+    description: "Peut gérer les lieux",
     teams: {
       createMany: {
-        data: [{ teamCode: 'humain' }],
+        data: [{ teamCode: "signa" }],
       },
     },
   },
   {
-    name: 'manage-config',
-    description: 'Peut gérer la configuration',
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'admin' }],
-      },
-    },
-  },
-  {
-    name: 'manage-location',
-    description: 'Peut gérer les lieux',
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'signa' }],
-      },
-    },
-  },
-  {
-    name: 'orga',
-    description: "L'équipe d'organisation",
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'orga' }],
-      },
-    },
-  },
-  {
-    name: 'manage-pass-secu',
-    description: 'Peut gérer les passes sécurité',
-    teams: {
-      createMany: {
-        data: [{ teamCode: 'secu' }],
-      },
-    },
-  },
-  {
-    name: 'fa-validator',
-    description: 'Peut valider les FA',
+    name: VALIDATE_FA,
+    description: "Peut valider les FA",
     teams: {
       createMany: {
         data: [
-          { teamCode: 'barrieres' },
-          { teamCode: 'elec' },
-          { teamCode: 'humain' },
-          { teamCode: 'matos' },
-          { teamCode: 'secu' },
-          { teamCode: 'signa' },
+          { teamCode: "barrieres" },
+          { teamCode: "elec" },
+          { teamCode: "humain" },
+          { teamCode: "matos" },
+          { teamCode: "secu" },
+          { teamCode: "signa" },
         ],
       },
     },
   },
   {
-    name: 'ft-validator',
-    description: 'Peut valider les FT',
+    name: VALIDATE_FT,
+    description: "Peut valider les FT",
     teams: {
       createMany: {
-        data: [{ teamCode: 'humain' }, { teamCode: 'matos' }],
+        data: [{ teamCode: "humain" }, { teamCode: "matos" }],
       },
     },
   },
   {
-    name: 'read-animation-to-publish',
-    description: 'Peut voir les animations à publier',
+    name: READ_ANIMATION_TO_PUBLISH,
+    description: "Peut voir les animations à publier",
     teams: {
       createMany: {
-        data: [{ teamCode: 'communication' }],
+        data: [{ teamCode: "communication" }],
       },
     },
   },
   {
-    name: 'read-fa',
-    description: 'Peut lire les FA',
+    name: READ_FA,
+    description: "Peut lire les FA",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
   {
-    name: 'read-ft',
-    description: 'Peut lire les FT',
+    name: WRITE_FA,
+    description: "Peut écrire dans les FA",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
   {
-    name: 'view-stats',
-    description: 'Peut voir les stats',
+    name: READ_FT,
+    description: "Peut lire les FT",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }, { teamCode: 'vieux' }],
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
   {
-    name: 'fill-availability',
-    description: 'Peut remplir ses disponibilités',
+    name: WRITE_FT,
+    description: "Peut écrire dans les FT",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
   {
-    name: 'view-timeline',
-    description: 'Peut voir la timeline',
+    name: VIEW_FESTIVAL_EVENTS_STATS,
+    description: "Peut voir les stats des FA et des FT",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }],
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },
   {
-    name: 'ask-for-help',
+    name: FILL_AVAILABILITY,
+    description: "Peut remplir ses disponibilités",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: VIEW_TIMELINE,
+    description: "Peut voir la timeline",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }],
+      },
+    },
+  },
+  {
+    name: ASK_FOR_HELP,
     description: "Peut accéder à la demande d'aide",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }],
+        data: [{ teamCode: "hard" }],
       },
     },
   },
   {
-    name: 'download-planning',
-    description: 'Peut télécharger son planning',
+    name: VIEW_PLANNING,
+    description: "Peut voir les planning",
     teams: {
       createMany: {
-        data: [{ teamCode: 'hard' }, { teamCode: 'soft' }],
+        data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: DOWNLOAD_PLANNING,
+    description: "Peut télécharger son planning",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: ENROLL_NEWCOMER,
+    description: "Peut enrôler des nouveaux",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "sg" }, { teamCode: "humain" }],
+      },
+    },
+  },
+  {
+    name: VIEW_TROMBINOSCOPE,
+    description: "Peut voir le trombinoscope",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: VIEW_VOLUNTEER,
+    description: "Peut voir les bénévoles",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "benevole" }],
       },
     },
   },

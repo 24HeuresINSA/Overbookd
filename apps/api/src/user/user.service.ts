@@ -34,6 +34,12 @@ import {
   SELECT_VOLUNTEER_ASSIGNMENTS,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
+import {
+  BE_AFFECTED,
+  HAVE_PERSONNAL_ACCOUNT,
+  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_USERS,
+} from "@overbookd/permission";
 
 @Injectable()
 export class UserService {
@@ -87,7 +93,7 @@ export class UserService {
         teams: {
           none: {
             team: {
-              permissions: { some: { permissionName: "validated-user" } },
+              permissions: { some: { permissionName: BE_AFFECTED } },
             },
           },
         },
@@ -105,7 +111,7 @@ export class UserService {
         teams: {
           some: {
             team: {
-              permissions: { some: { permissionName: "validated-user" } },
+              permissions: { some: { permissionName: BE_AFFECTED } },
             },
           },
         },
@@ -122,7 +128,7 @@ export class UserService {
           some: {
             team: {
               permissions: {
-                some: { permission: { name: "cp" } },
+                some: { permission: { name: HAVE_PERSONNAL_ACCOUNT } },
               },
             },
           },
@@ -246,15 +252,15 @@ export class UserService {
   }
 
   private canUpdateUser(author: JwtUtil, targetUserId: number): boolean {
-    return author.can("manage-users") || author.id === targetUserId;
+    return author.can(MANAGE_USERS) || author.id === targetUserId;
   }
 
   private filterUpdatableUserData(
     author: JwtUtil,
     userData: UserUpdateForm,
   ): UserUpdateForm {
-    const charisma = author.can("manage-users") ? userData.charisma : undefined;
-    const hasPayedContributions = author.can("manage-cp")
+    const charisma = author.can(MANAGE_USERS) ? userData.charisma : undefined;
+    const hasPayedContributions = author.can(MANAGE_PERSONNAL_ACCOUNTS)
       ? userData.hasPayedContributions
       : undefined;
 

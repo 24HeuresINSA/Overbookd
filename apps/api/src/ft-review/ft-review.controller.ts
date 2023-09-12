@@ -26,6 +26,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { TimeSpanParametersRequestDto } from "./dto/time-span-parameters.request.dto";
 import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { FtReviewService } from "./ft-review.service";
+import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -40,9 +41,8 @@ export class FtReviewController {
   constructor(private readonly ftReviewService: FtReviewService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission(VALIDATE_FT)
   @Post(":ftId/validation")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Validate a FT",
@@ -66,9 +66,8 @@ export class FtReviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission(VALIDATE_FT)
   @Post(":ftId/refusal")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Refuse a FT",
@@ -93,9 +92,8 @@ export class FtReviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("affect-volunteer")
+  @Permission(AFFECT_VOLUNTEER)
   @Post(":ftId/assignment-approval")
-  @HttpCode(201)
   @ApiResponse({
     status: 201,
     description: "Switch FT to ready for assignement",
@@ -124,7 +122,7 @@ export class FtReviewController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ft-validator")
+  @Permission(VALIDATE_FT)
   @Delete(":ftId/reviews/:teamCode")
   @HttpCode(204)
   @ApiResponse({

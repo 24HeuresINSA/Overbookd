@@ -13,6 +13,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { NeedHelpService } from "./need-help.service";
 import { VolunteerResponseDto } from "./dto/volunteer.response.dto";
+import { ASK_FOR_HELP } from "@overbookd/permission";
 
 @ApiBearerAuth()
 @ApiTags("need-help")
@@ -30,7 +31,7 @@ export class NeedHelpController {
   constructor(private readonly needHelpService: NeedHelpService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission("ask-for-help")
+  @Permission(ASK_FOR_HELP)
   @Get()
   @HttpCode(200)
   @ApiQuery({

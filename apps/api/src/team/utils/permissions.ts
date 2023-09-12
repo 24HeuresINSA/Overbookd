@@ -1,3 +1,5 @@
+import { isPermission } from "@overbookd/permission";
+
 export type TeamWithNestedPermissions = {
   team: {
     code: string;
@@ -7,11 +9,11 @@ export type TeamWithNestedPermissions = {
   };
 };
 
-export function retrievePermissions(
-  teams: TeamWithNestedPermissions[],
-): Set<string> {
-  const permissions = teams.flatMap(({ team }) =>
-    team.permissions.map(({ permissionName }) => permissionName),
-  );
+export function retrievePermissions(teams: TeamWithNestedPermissions[]) {
+  const permissions = teams
+    .flatMap(({ team }) =>
+      team.permissions.map(({ permissionName }) => permissionName),
+    )
+    .filter(isPermission);
   return new Set(permissions);
 }
