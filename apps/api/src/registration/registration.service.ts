@@ -88,7 +88,9 @@ export class RegistrationService {
     );
 
     if (!isValidForgetRequest) {
-      throw new BadRequestException("Le lien d'oubli a exipré");
+      throw new BadRequestException(
+        "Le lien d'oubli ne semble pas le bon. Tu peux en redemander un.",
+      );
     }
 
     await this.forgetMember.with(credentials);
