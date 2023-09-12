@@ -1,6 +1,7 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Team } from "~/utils/models/team.model";
 import { HttpStringified } from "~/utils/types/http";
+import { VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -23,7 +24,7 @@ export class TeamRepository {
   static getFaValidators(context: Context) {
     return context.$axios.get<Team[]>(this.basePath, {
       params: {
-        permission: "validate-fa",
+        permission: VALIDATE_FA,
       },
     });
   }
@@ -31,7 +32,7 @@ export class TeamRepository {
   static getFtValidators(context: Context) {
     return context.$axios.get<Team[]>(this.basePath, {
       params: {
-        permission: "validate-ft",
+        permission: VALIDATE_FT,
       },
     });
   }

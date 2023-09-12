@@ -1,3 +1,5 @@
+import { Permission } from "./permission.model";
+
 export const HAVE_PERSONNAL_ACCOUNT = "have-personnal-account";
 export const AFFECT_TEAM = "affect-team";
 export const BE_AFFECTED = "be-affected";
@@ -32,3 +34,44 @@ export const MANAGE_TEAMS = "manage-teams";
 export const MANAGE_PERMISSIONS = "manage-permissions";
 export const VIEW_DELETED_FA = "view-deleted-fa";
 export const VIEW_DELETED_FT = "view-deleted-ft";
+
+const permissions = [
+  HAVE_PERSONNAL_ACCOUNT,
+  AFFECT_TEAM,
+  BE_AFFECTED,
+  WRITE_GEAR_CATALOG,
+  READ_GEAR_CATALOG,
+  READ_SIGNAGE_CATALOG,
+  WRITE_SIGNAGE_CATALOG,
+  WRITE_INVENTORY,
+  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_USERS,
+  AFFECT_VOLUNTEER,
+  MANAGE_CONFIG,
+  MANAGE_LOCATION,
+  VALIDATE_FA,
+  VALIDATE_FT,
+  READ_ANIMATION_TO_PUBLISH,
+  READ_FA,
+  WRITE_FA,
+  READ_FT,
+  WRITE_FT,
+  VIEW_FESTIVAL_EVENTS_STATS,
+  FILL_AVAILABILITY,
+  VIEW_TIMELINE,
+  ASK_FOR_HELP,
+  VIEW_PLANNING,
+  DOWNLOAD_PLANNING,
+  ENROLL_NEWCOMER,
+  VIEW_TROMBINOSCOPE,
+  VIEW_VOLUNTEER,
+  SEND_MAIL_TEST,
+  MANAGE_TEAMS,
+  MANAGE_PERMISSIONS,
+  VIEW_DELETED_FA,
+  VIEW_DELETED_FT,
+];
+
+export function isPermission(permission: string): permission is Permission {
+  return permissions.includes(permission);
+}
