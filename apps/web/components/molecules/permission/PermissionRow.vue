@@ -17,7 +17,13 @@
       </div>
     </td>
     <td>
-      <OverChips :roles="permission.teams" />
+      <TeamChip
+        v-for="team of permission.teams"
+        :key="team"
+        :team="team"
+        with-name
+        show-hidden
+      ></TeamChip>
     </td>
     <td>
       <div class="d-flex align-center">
@@ -41,14 +47,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import OverChips from "~/components/atoms/chip/OverChips.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "PermissionRow",
-  components: {
-    OverChips,
-  },
+  components: { TeamChip },
   props: {
     permission: {
       type: Object,

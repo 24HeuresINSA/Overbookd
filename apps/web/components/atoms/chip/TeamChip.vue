@@ -1,5 +1,6 @@
 <template>
   <v-chip
+    v-show="showTeam"
     :small="small"
     :large="large"
     :color="color"
@@ -46,6 +47,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    showHidden: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     small(): boolean {
@@ -56,6 +61,10 @@ export default Vue.extend({
     },
     teamMetadate(): Team {
       return this.$accessor.team.getTeams([this.team])?.[0];
+    },
+    showTeam(): boolean {
+      const hiddenTeams = ["benevole"];
+      return this.showHidden || !hiddenTeams.includes(this.team);
     },
     color(): string {
       return this.teamMetadate?.color ?? "grey";
