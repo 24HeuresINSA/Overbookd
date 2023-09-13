@@ -89,7 +89,7 @@ export class RegistrationService {
 
     if (!isValidForgetRequest) {
       throw new BadRequestException(
-        "Le lien d'oubli ne semble pas le bon. Tu peux en redemander un.",
+        "Le lien d'oubli ne semble pas être le bon. Tu peux en redemander un.",
       );
     }
 
