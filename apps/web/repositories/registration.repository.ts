@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
+  Credentials,
   EnrollNewcomersForm,
   IDefineANewcomer,
   JoinableTeam,
@@ -35,6 +36,11 @@ export class RegistrationRepository {
   ) {
     const newcomer = form.complete();
     return context.$axios.post<void>(`${this.basePath}`, { token, newcomer });
+  }
+
+  static forgetMe(context: Context, credentials: Credentials, token: string) {
+    const body = { token, credentials };
+    return context.$axios.post<void>(`${this.basePath}/forget`, body);
   }
 }
 
