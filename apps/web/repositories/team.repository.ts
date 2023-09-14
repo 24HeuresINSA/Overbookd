@@ -1,7 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Team } from "~/utils/models/team.model";
 import { HttpStringified } from "~/utils/types/http";
-import { VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -12,37 +11,27 @@ export class TeamRepository {
     return context.$axios.get<HttpStringified<Team[]>>(this.basePath);
   }
 
-  static linkUserToTeams(context: Context, userId: number, teams: string[]) {
-    return context.$axios.post<
-      HttpStringified<{ userId: number; teams: string[] }>
-    >(`${this.basePath}/link`, {
-      userId,
-      teams,
-    });
-  }
-
   static getFaValidators(context: Context) {
-    return context.$axios.get<Team[]>(this.basePath, {
-      params: {
-        permission: VALIDATE_FA,
-      },
-    });
+    return context.$axios.get<HttpStringified<Team[]>>(
+      `${this.basePath}/fa-validators`,
+    );
   }
 
   static getFtValidators(context: Context) {
-    return context.$axios.get<Team[]>(this.basePath, {
-      params: {
-        permission: VALIDATE_FT,
-      },
-    });
+    return context.$axios.get<HttpStringified<Team[]>>(
+      `${this.basePath}/ft-validators`,
+    );
   }
 
   static createTeam(context: Context, team: Team) {
-    return context.$axios.post<Team>(this.basePath, team);
+    return context.$axios.post<HttpStringified<Team>>(this.basePath, team);
   }
 
   static updateTeam(context: Context, team: Team) {
-    return context.$axios.patch<Team>(`${this.basePath}/${team.code}`, team);
+    return context.$axios.patch<HttpStringified<Team>>(
+      `${this.basePath}/${team.code}`,
+      team,
+    );
   }
 
   static deleteTeam(context: Context, teamCode: string) {

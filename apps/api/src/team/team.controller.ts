@@ -16,7 +16,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { TeamService } from "./team.service";
-import { MANAGE_TEAMS } from "@overbookd/permission";
+import { MANAGE_TEAMS, READ_FA, READ_FT } from "@overbookd/permission";
 
 @ApiTags("teams")
 @Controller("teams")
@@ -32,6 +32,32 @@ export class TeamController {
   })
   async findAll(): Promise<TeamResponseDto[]> {
     return this.teamService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get("fa-validators")
+  @ApiResponse({
+    status: 200,
+    description: "Get all fa validators",
+    type: TeamResponseDto,
+    isArray: true,
+  })
+  async findAllFaValidators(): Promise<TeamResponseDto[]> {
+    return this.teamService.findFaValidators();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FT)
+  @Get("ft-validators")
+  @ApiResponse({
+    status: 200,
+    description: "Get all ft validators",
+    type: TeamResponseDto,
+    isArray: true,
+  })
+  async findAllFtValidators(): Promise<TeamResponseDto[]> {
+    return this.teamService.findFtValidators();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

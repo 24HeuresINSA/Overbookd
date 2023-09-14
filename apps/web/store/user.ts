@@ -234,11 +234,7 @@ export const actions = actionTree(
     ) {
       const res = await safeCall(
         this,
-        RepoFactory.TeamRepository.linkUserToTeams(
-          this,
-          state.selectedUser.id,
-          teams,
-        ),
+        userRepo.addTeamsToUser(this, state.selectedUser.id, teams),
         {
           successMessage: "Equipes mises à jour ! 🎉",
           errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",

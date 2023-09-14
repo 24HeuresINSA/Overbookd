@@ -8,7 +8,7 @@ import { UserService } from "../../src/user/user.service";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team, UpdateTeamForm } from "./team.model";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { MANAGE_ADMINS } from "@overbookd/permission";
+import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 
 @Injectable()
 export class TeamService {
@@ -19,6 +19,18 @@ export class TeamService {
 
   async findAll(): Promise<Team[]> {
     return this.prisma.team.findMany({ orderBy: { name: "asc" } });
+  }
+
+  async findFaValidators(): Promise<Team[]> {
+    return this.prisma.team.findMany({
+      where: { permissions: { some: { permissionName: VALIDATE_FA } } },
+    });
+  }
+
+  async findFtValidators(): Promise<Team[]> {
+    return this.prisma.team.findMany({
+      where: { permissions: { some: { permissionName: VALIDATE_FT } } },
+    });
   }
 
   async createTeam(payload: Team): Promise<Team> {

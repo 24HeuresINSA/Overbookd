@@ -157,4 +157,17 @@ export class UserRepository {
       headers: { accept: "application/pdf" },
     });
   }
+
+  static addTeamsToUser(context: Context, userId: number, teams: string[]) {
+    return context.$axios.post<HttpStringified<string[]>>(
+      `${this.basePath}/${userId}/teams`,
+      teams,
+    );
+  }
+
+  static removeTeamFromUser(context: Context, userId: number, team: string) {
+    return context.$axios.delete<void>(
+      `${this.basePath}/${userId}/teams/${team}`,
+    );
+  }
 }
