@@ -7,6 +7,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { HttpStringified } from "~/utils/types/http";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
+import { Credentials } from "@overbookd/registration";
 
 type State = {
   newcomers: IDefineANewcomer[];
@@ -107,6 +108,19 @@ export const actions = actionTree(
       return safeCall(
         this,
         registrationRepo.registerNewcomer(this, form, token),
+      );
+    },
+
+    async forgetMe(
+      _,
+      { credentials, token }: { credentials: Credentials; token: string },
+    ) {
+      await safeCall(
+        this,
+        registrationRepo.forgetMe(this, credentials, token),
+        {
+          successMessage: "Les informations liées à ce compte sont supprimées",
+        },
       );
     },
   },
