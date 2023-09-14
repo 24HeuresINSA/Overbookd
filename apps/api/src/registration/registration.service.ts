@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import { Injectable, BadRequestException } from "@nestjs/common";
 import {
   EnrollNewcomersForm,
@@ -9,11 +10,14 @@ import {
   VOLUNTEER,
   ADHERENT,
   EnrollNewcomers,
+  Credentials,
+  ForgetMember,
 } from "@overbookd/registration";
 import { jwtConstants } from "../authentication/constants";
 import { InviteNewAdherents } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
+import { isString } from "class-validator";
 
 @Injectable()
 export class RegistrationService {
@@ -21,6 +25,7 @@ export class RegistrationService {
     private readonly enrollNewcomersRepository: EnrollNewcomersRepository,
     private readonly registerNewcomer: RegisterNewcomer,
     private readonly eventStore: DomainEventService,
+    private readonly forgetMember: ForgetMember,
   ) {}
 
   async register(
@@ -72,9 +77,35 @@ export class RegistrationService {
     newcomers,
     team,
   }: EnrollNewcomersForm): Promise<void> {
-    console.log(JSON.stringify(newcomers));
     const newcomersToEnroll = EnrollNewcomers.with(newcomers).to(team);
-    console.log(JSON.stringify(newcomersToEnroll));
     await this.enrollNewcomersRepository.enroll(newcomersToEnroll);
+  }
+
+  async forget(credentials: Credentials, token: string) {
+    const isValidForgetRequest = this.checkForgetRequestValidity(
+      token,
+      credentials.email,
+    );
+
+    if (!isValidForgetRequest) {
+      throw new BadRequestException(
+        "Le lien d'oubli ne semble pas être le bon. Tu peux en redemander un.",
+      );
+    }
+
+    await this.forgetMember.with(credentials);
+  }
+
+  private checkForgetRequestValidity(token: string, email: string) {
+    try {
+      const verifyOptions = { ignoreExpiration: false };
+      const payload = jwt.verify(token, jwtConstants.secret, verifyOptions);
+
+      if (isString(payload)) return false;
+
+      return payload.email === email;
+    } catch {
+      return false;
+    }
   }
 }

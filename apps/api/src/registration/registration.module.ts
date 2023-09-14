@@ -9,6 +9,8 @@ import { HashingUtilsService } from "../hashing-utils/hashing-utils.service";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { PrismaEnrollNewcomersRepository } from "./repository/enroll-newcomers-repository.prisma";
+import { PrismaMemberRepository } from "./repository/member-repository.prisma";
+import { ForgetMember } from "@overbookd/registration";
 
 @Module({
   controllers: [RegistrationController],
@@ -32,17 +34,36 @@ import { PrismaEnrollNewcomersRepository } from "./repository/enroll-newcomers-r
       inject: [PrismaNewcomerRepository],
     },
     {
+      provide: PrismaMemberRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaMemberRepository(prisma, new HashingUtilsService()),
+      inject: [PrismaService],
+    },
+    {
+      provide: ForgetMember,
+      useFactory: (members: PrismaMemberRepository) =>
+        new ForgetMember(members),
+      inject: [PrismaMemberRepository],
+    },
+    {
       provide: RegistrationService,
       useFactory: (
         enrollNewcomers: PrismaEnrollNewcomersRepository,
         registerNewcomer: RegisterNewcomer,
         eventStore: DomainEventService,
+        forgetMember: ForgetMember,
       ) =>
-        new RegistrationService(enrollNewcomers, registerNewcomer, eventStore),
+        new RegistrationService(
+          enrollNewcomers,
+          registerNewcomer,
+          eventStore,
+          forgetMember,
+        ),
       inject: [
         PrismaEnrollNewcomersRepository,
         RegisterNewcomer,
         DomainEventService,
+        ForgetMember,
       ],
     },
   ],
