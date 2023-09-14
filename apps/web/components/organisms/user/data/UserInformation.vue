@@ -18,7 +18,7 @@
               <v-select
                 v-model="newTeam"
                 label="Choix de l'équipe"
-                :items="teams"
+                :items="manageableTeams"
                 item-value="code"
                 item-text="name"
               >
@@ -167,7 +167,7 @@ import {
 } from "~/utils/user/user.utils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
-import { MANAGE_USERS } from "@overbookd/permission";
+import { MANAGE_USERS, MANAGE_ADMINS } from "@overbookd/permission";
 
 export default {
   name: "UserInformation",
@@ -229,8 +229,10 @@ export default {
     isHard() {
       return this.selectedUser?.teams?.includes("hard") ?? false;
     },
-    teams() {
-      return this.$accessor.team.allTeams;
+    manageableTeams() {
+      const teams = this.$accessor.team.allTeams;
+      if (this.$accessor.user.can(MANAGE_ADMINS)) return teams;
+      return teams.filter((team) => team.code !== "admin");
     },
     selectedUserPhone() {
       return formatUserPhone(this.selectedUser.phone);
