@@ -91,12 +91,13 @@ export class TeamService {
     author: JwtUtil,
   ): Promise<void> {
     await this.checkUserExistence(userId);
+    await this.checkTeamOfUserExistence(userId, team);
     this.cleanAdminTeam([team], author);
 
     await this.prisma.userTeam.delete({
       where: {
         userId_teamCode: {
-          userId: userId,
+          userId,
           teamCode: team,
         },
       },
@@ -125,7 +126,22 @@ export class TeamService {
   private async checkUserExistence(id: number): Promise<void> {
     const user = await this.userService.getById(id);
     if (!user.id) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException("Utilisateur inconnu");
+    }
+  }
+
+  private async checkTeamOfUserExistence(
+    userId: number,
+    team: string,
+  ): Promise<void> {
+    const userTeam = await this.prisma.userTeam.findFirst({
+      where: {
+        userId,
+        teamCode: team,
+      },
+    });
+    if (!userTeam) {
+      throw new NotFoundException("Equipe de l'utilisateur non trouvée");
     }
   }
 
