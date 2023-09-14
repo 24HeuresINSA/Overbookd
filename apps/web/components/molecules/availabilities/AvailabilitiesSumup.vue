@@ -43,7 +43,7 @@ export default Vue.extend({
   props: {
     userId: {
       type: Number,
-      required: true,
+      required: false,
     },
   },
   data: () => ({

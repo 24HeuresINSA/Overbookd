@@ -159,7 +159,7 @@ export class UserRepository {
   }
 
   static addTeamsToUser(context: Context, userId: number, teams: string[]) {
-    return context.$axios.post<HttpStringified<string[]>>(
+    return context.$axios.patch<HttpStringified<string[]>>(
       `${this.basePath}/${userId}/teams`,
       teams,
     );

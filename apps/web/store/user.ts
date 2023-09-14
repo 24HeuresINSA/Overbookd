@@ -34,11 +34,17 @@ export const state = () => ({
 export type UserState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_USER(state: UserState, data: MyUserInformation) {
+  SET_MY_USER(state: UserState, data: MyUserInformation) {
     state.me = data;
   },
   SET_SELECTED_USER(state: UserState, data: UserPersonnalData) {
     state.selectedUser = data;
+  },
+  ADD_TEAMS_TO_SELECTED_USER(state: UserState, teams: string[]) {
+    state.me.teams = [...new Set([...state.me.teams, ...teams])];
+  },
+  REMOVE_TEAM_FROM_SELECTED_USER(state: UserState, team: string) {
+    state.me.teams = state.me.teams.filter((t) => t !== team);
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
     state.selectedUserFriends = friends;
@@ -68,6 +74,30 @@ export const mutations = mutationTree(state, {
     const index = state.users.findIndex((user) => user.id === data.id);
     if (index !== -1) {
       state.users = updateItemToList(state.users, index, data);
+    }
+  },
+  ADD_TEAMS_TO_USER(
+    state: UserState,
+    { userId, teams }: { userId: number; teams: string[] },
+  ) {
+    const index = state.users.findIndex((user) => user.id === userId);
+    if (index !== -1) {
+      const user = state.users.at(index);
+      if (!user) return;
+      user.teams = [...new Set([...user.teams, ...teams])];
+      state.users = updateItemToList(state.users, index, user);
+    }
+  },
+  REMOVE_TEAM_FROM_USER(
+    state: UserState,
+    { userId, team }: { userId: number; team: string },
+  ) {
+    const index = state.users.findIndex((user) => user.id === userId);
+    if (index !== -1) {
+      const user = state.users.at(index);
+      if (!user) return;
+      user.teams = user.teams.filter((t) => t !== team);
+      state.users = updateItemToList(state.users, index, user);
     }
   },
   SET_FRIENDS(state: UserState, friends: User[]) {
@@ -115,7 +145,7 @@ export const actions = actionTree(
         errorMessage: "Session expirée 💨",
       });
       if (res) {
-        commit("SET_USER", castUserWithDate(res.data));
+        commit("SET_MY_USER", castUserWithDate(res.data));
         dispatch("setMyProfilePicture");
       }
     },
@@ -201,7 +231,7 @@ export const actions = actionTree(
       });
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
-      commit("SET_USER", castUserWithDate(res.data));
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
@@ -214,7 +244,7 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
-      commit("SET_USER", castUserWithDate(res.data));
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
 
     async deleteUser({ commit, state, dispatch }, userId: number) {
@@ -228,26 +258,32 @@ export const actions = actionTree(
       if (user.id === state.me.id) dispatch("fetchUser");
     },
 
-    async updateSelectedUserTeams(
-      { commit, state, dispatch },
-      teams: string[],
-    ) {
+    async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
+      console.log(state.selectedUser.id);
       const res = await safeCall(
         this,
         userRepo.addTeamsToUser(this, state.selectedUser.id, teams),
-        {
-          successMessage: "Equipes mises à jour ! 🎉",
-          errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
-        },
+        { successMessage: "Equipe(s) ajoutée(s) ! 🎉" },
       );
       if (!res) return;
-      const user: UserPersonnalData = {
-        ...state.selectedUser,
-        teams: res.data.teams,
-      };
-      commit("UPDATE_USER", user);
-      commit("SET_SELECTED_USER", user);
-      if (res.data.userId === state.me.id) dispatch("fetchUser");
+      commit("ADD_TEAMS_TO_USER", res.data);
+      commit("ADD_TEAMS_TO_SELECTED_USER", res.data);
+      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
+    },
+
+    async removeTeamFromSelectedUser(
+      { commit, state, dispatch },
+      team: string,
+    ) {
+      const res = await safeCall(
+        this,
+        userRepo.removeTeamFromUser(this, state.selectedUser.id, team),
+        { successMessage: "Equipe retirée ! 🎉" },
+      );
+      if (!res) return;
+      commit("REMOVE_TEAM_FROM_USER", res.data);
+      commit("REMOVE_TEAM_FROM_SELECTED_USER", res.data);
+      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 
     async fetchAndUpdateLocalUser({ commit, state, dispatch }, userId: number) {
@@ -283,7 +319,7 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      commit("SET_USER", castUserWithDate(res.data));
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
 
     getProfilePicture(_, user: MyUserInformationWithProfilePicture) {
@@ -298,7 +334,7 @@ export const actions = actionTree(
       const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 
-      commit("SET_USER", {
+      commit("SET_MY_USER", {
         ...state.me,
         profilePictureBlob,
       });

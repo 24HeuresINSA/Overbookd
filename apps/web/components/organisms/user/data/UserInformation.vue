@@ -23,7 +23,12 @@
                 item-text="name"
               >
               </v-select>
-              <v-btn text @click="addRemoveRole()">Ajouter/Retirer</v-btn>
+              <v-btn small class="mx-2" @click="addTeam">
+                <v-icon> mdi-plus </v-icon>
+              </v-btn>
+              <v-btn small class="mx-2" @click="removeTeam">
+                <v-icon> mdi-minus </v-icon>
+              </v-btn>
             </div>
 
             <v-container>
@@ -152,7 +157,6 @@
 </template>
 
 <script>
-import { removeItemAtIndex } from "@overbookd/list";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { isNumber, min } from "~/utils/rules/input.rules";
@@ -249,17 +253,13 @@ export default {
   },
 
   methods: {
-    addRemoveRole() {
+    addTeam() {
       if (!this.newTeam) return;
-      const teams = this.computeTeams();
-      this.$accessor.user.updateSelectedUserTeams(teams);
+      this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
     },
-    computeTeams() {
-      const teamIndex = this.selectedUser.teams.indexOf(this.newTeam);
-      if (teamIndex !== -1) {
-        return removeItemAtIndex(this.selectedUser.teams, teamIndex);
-      }
-      return [...this.selectedUser.teams, this.newTeam];
+    removeTeam() {
+      if (!this.newTeam) return;
+      this.$accessor.user.removeTeamFromSelectedUser(this.newTeam);
     },
     async savePersonnalData() {
       await this.$accessor.user.updateUser(this.user);
