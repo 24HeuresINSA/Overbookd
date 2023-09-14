@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -17,6 +17,7 @@ import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { TeamService } from "./team.service";
 import { MANAGE_TEAMS, READ_FA, READ_FT } from "@overbookd/permission";
+import { UpdateTeamRequestDto } from "./dto/update-team.request";
 
 @ApiTags("teams")
 @Controller("teams")
@@ -64,6 +65,10 @@ export class TeamController {
   @Permission(MANAGE_TEAMS)
   @Post()
   @ApiBearerAuth()
+  @ApiBody({
+    description: "Team to create",
+    type: CreateTeamRequestDto,
+  })
   @ApiResponse({
     status: 201,
     description: "Create a team",
@@ -80,6 +85,10 @@ export class TeamController {
   @Patch(":code")
   @ApiBearerAuth()
   @HttpCode(200)
+  @ApiBody({
+    description: "Team to update",
+    type: UpdateTeamRequestDto,
+  })
   @ApiResponse({
     status: 200,
     description: "Update a team",
@@ -87,7 +96,7 @@ export class TeamController {
   })
   async updateTeam(
     @Param("code") code: string,
-    @Body() data: CreateTeamRequestDto,
+    @Body() data: UpdateTeamRequestDto,
   ): Promise<TeamResponseDto> {
     return this.teamService.updateTeam(code, data);
   }
