@@ -1,7 +1,7 @@
 <template>
   <div class="forget">
     <v-card class="forget-card">
-      <v-card-title>Supprimer toutes les donnees me concernant</v-card-title>
+      <v-card-title>Supprimer toutes les données me concernant</v-card-title>
       <v-card-subtitle>Tout doit disparaitre 💨</v-card-subtitle>
       <v-card-text>
         <form>
@@ -23,7 +23,7 @@
           </fieldset>
           <v-checkbox
             v-model="confirm"
-            label="Cette suppression est definitive et irreversible, je comprends que je devrais me creer un nouveau compte si je souhaite utiliser a nouveau Overbookd"
+            label="Cette suppression est définitive et irreversible, je comprends que je devrais me créer un nouveau compte si je souhaite utiliser à nouveau Overbookd"
             color="success"
             hide-details
             required
@@ -76,7 +76,9 @@ export default Vue.extend({
       return token ?? "";
     },
     isValid(): boolean {
-      return Boolean(this.email) && Boolean(this.password) && this.confirm;
+      const isValidEmail = this.rules.email(this.email) === true;
+      const isValidPassword = this.rules.required(this.password) === true;
+      return isValidEmail && isValidPassword && this.confirm;
     },
   },
   methods: {

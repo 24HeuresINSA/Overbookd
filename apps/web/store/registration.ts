@@ -119,7 +119,7 @@ export const actions = actionTree(
         this,
         registrationRepo.forgetMe(this, credentials, token),
         {
-          successMessage: "Les informations liees a ce compte sont supprimees",
+          successMessage: "Les informations liées à ce compte sont supprimées",
         },
       );
     },
