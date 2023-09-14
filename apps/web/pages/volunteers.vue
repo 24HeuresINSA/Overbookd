@@ -445,9 +445,9 @@ export default {
       // filter by team
       if (this.filters.teams.length > 0) {
         mUsers = mUsers.filter((user) => {
-          if (user.team) {
+          if (user.teams) {
             return (
-              user.team.filter((value) =>
+              user.teams.filter((value) =>
                 this.filters.teams.map((team) => team.code).includes(value),
               ).length === this.filters.teams.length
             );
