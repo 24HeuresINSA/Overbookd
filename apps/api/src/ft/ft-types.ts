@@ -1,6 +1,6 @@
 import { SELECT_BASE_TIMESPAN } from "../assignment/assignment.service";
 import { UserRequest } from "../ft-user-request/dto/ft-user-request.response.dto";
-import { TEAM_SELECT } from "../team/team.service";
+import { TEAM_SELECT } from "../team/team.query";
 import { FtStatus } from "./ft.model";
 import { IProvidePeriod } from "@overbookd/period";
 import { TimeSpanBase } from "../assignment/model/ft-time-span.model";

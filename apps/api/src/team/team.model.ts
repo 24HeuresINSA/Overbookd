@@ -4,3 +4,9 @@ export class Team {
   icon: string;
   code: string;
 }
+
+export interface UpdateTeamForm {
+  name?: string;
+  color?: string;
+  icon?: string;
+}

@@ -1,15 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TeamRequestDto } from "../../team/dto/team.request.dto";
-
-class CompeleteTeamDto extends TeamRequestDto {
-  @ApiProperty({
-    type: String,
-    description: "The code of the team",
-    example: "soft",
-    required: true,
-  })
-  code: string;
-}
+import { CreateTeamRequestDto } from "../../team/dto/create-team.request.dto";
+import { Team } from "../../team/team.model";
 
 export class FtTeamRequestResponseDto {
   @ApiProperty({
@@ -21,9 +12,9 @@ export class FtTeamRequestResponseDto {
   quantity: number;
 
   @ApiProperty({
-    type: TeamRequestDto,
+    type: CreateTeamRequestDto,
     description: "The team",
     required: true,
   })
-  team: CompeleteTeamDto;
+  team: Team;
 }

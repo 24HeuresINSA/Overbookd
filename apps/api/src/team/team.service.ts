@@ -3,23 +3,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
-import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team } from "./team.model";
+import { Team, UpdateTeamForm } from "./team.model";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { MANAGE_ADMINS } from "@overbookd/permission";
-
-export const TEAM_SELECT = {
-  select: {
-    name: true,
-    code: true,
-    color: true,
-    icon: true,
-  },
-};
 
 @Injectable()
 export class TeamService {
@@ -28,58 +17,18 @@ export class TeamService {
     private userService: UserService,
   ) {}
 
-  async team(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.TeamWhereUniqueInput;
-    where?: Prisma.TeamWhereInput;
-    orderBy?: Prisma.TeamOrderByWithRelationInput;
-    include?: Prisma.TeamInclude;
-  }): Promise<Team[]> {
-    const { skip, take, cursor, where, orderBy, include } = params;
-    return this.prisma.team.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-      include,
-    });
+  async findAll(): Promise<Team[]> {
+    return this.prisma.team.findMany({ orderBy: { name: "asc" } });
   }
 
-  async updateUserTeams(
-    { userId, teams }: LinkTeamToUserDto,
-    author: JwtUtil,
-  ): Promise<LinkTeamToUserDto> {
-    await this.checkUserExistence(userId);
-    const linkableTeams = this.cleanAdminTeam(teams, author);
-    const teamsToLink = await this.fetchExistingTeams(linkableTeams);
-    await this.forceUserTeams(userId, teamsToLink);
-
-    const newLinkedTeams = teamsToLink.map((team) => team.code);
-    return { userId, teams: newLinkedTeams };
-  }
-
-  async createTeam(payload: {
-    name: string;
-    code?: string;
-    color?: string;
-    icon?: string;
-  }): Promise<Team> {
+  async createTeam(payload: Team): Promise<Team> {
     const code = SlugifyService.apply(payload.code ?? payload.name);
     return this.prisma.team.create({
       data: { ...payload, code },
     });
   }
 
-  async updateTeam(
-    code: string,
-    payload: {
-      name?: string;
-      color?: string;
-      icon?: string;
-    },
-  ): Promise<Team> {
+  async updateTeam(code: string, payload: UpdateTeamForm): Promise<Team> {
     return this.prisma.team.update({
       where: { code },
       data: payload,
@@ -89,6 +38,56 @@ export class TeamService {
   async deleteTeam(code: string): Promise<void> {
     await this.prisma.team.delete({
       where: { code },
+    });
+    return;
+  }
+
+  async addTeamsToUser(
+    userId: number,
+    teams: string[],
+    author: JwtUtil,
+  ): Promise<string[]> {
+    await this.checkUserExistence(userId);
+    const existingTeams = await this.fetchExistingTeams(teams);
+
+    const teamsToLink = this.cleanAdminTeam(existingTeams, author);
+    const userTeamLinks = teamsToLink.map((teamCode) => {
+      return { userId, teamCode };
+    });
+
+    const actions = userTeamLinks.map((link) => {
+      return this.prisma.userTeam.upsert({
+        where: {
+          userId_teamCode: {
+            userId: link.userId,
+            teamCode: link.teamCode,
+          },
+        },
+        create: link,
+        update: {},
+        select: { teamCode: true },
+      });
+    });
+
+    const result = await this.prisma.$transaction(actions);
+    return result.map((link) => link.teamCode);
+  }
+
+  async removeTeamFromUser(
+    userId: number,
+    team: string,
+    author: JwtUtil,
+  ): Promise<void> {
+    await this.checkUserExistence(userId);
+    this.cleanAdminTeam([team], author);
+
+    await this.prisma.userTeam.delete({
+      where: {
+        userId_teamCode: {
+          userId: userId,
+          teamCode: team,
+        },
+      },
     });
     return;
   }
@@ -103,27 +102,12 @@ export class TeamService {
     };
   }
 
-  private async forceUserTeams(userId: number, teamsToLink: Team[]) {
-    const deleteAll = this.prisma.userTeam.deleteMany({
-      where: { userId },
+  private async fetchExistingTeams(teams: string[]): Promise<string[]> {
+    const teamsFound = await this.prisma.team.findMany({
+      where: { code: { in: teams } },
+      select: { code: true },
     });
-
-    const createNew = this.prisma.userTeam.createMany({
-      data: teamsToLink.map((team) => ({
-        userId,
-        teamCode: team.code,
-      })),
-    });
-
-    return this.prisma.$transaction([deleteAll, createNew]);
-  }
-
-  private async fetchExistingTeams(teams: string[]): Promise<Team[]> {
-    return this.prisma.team.findMany({
-      where: {
-        code: { in: teams },
-      },
-    });
+    return teamsFound.map((team) => team.code);
   }
 
   private async checkUserExistence(id: number): Promise<void> {

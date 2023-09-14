@@ -64,12 +64,15 @@ import { UserPersonnalDataResponseDto } from "./dto/user-personnal-data.response
 import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
 import { Task } from "../volunteer-planning/domain/task.model";
 import {
+  AFFECT_TEAM,
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
   HAVE_PERSONNAL_ACCOUNT,
   MANAGE_USERS,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
+import { TeamService } from "../team/team.service";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 
 @ApiTags("users")
 @Controller("users")
@@ -84,6 +87,7 @@ export class UserController {
     private readonly planningService: VolunteerPlanningService,
     private readonly planningSubscription: SubscriptionService,
     private readonly profilePictureService: ProfilePictureService,
+    private readonly teamService: TeamService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -426,5 +430,53 @@ export class UserController {
     @Param("userId", ParseIntPipe) userId: number,
   ): Promise<StreamableFile> {
     return this.profilePictureService.streamProfilePicture(userId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_TEAM)
+  @Patch(":userId/teams")
+  @ApiResponse({
+    status: 200,
+    description: "Link a user with different teams",
+    type: String,
+    isArray: true,
+  })
+  @ApiBody({
+    description: "Teams to link",
+    type: String,
+    isArray: true,
+  })
+  async addTeamsToUser(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Body() teams: string[],
+    @RequestDecorator() req: RequestWithUserPayload,
+  ): Promise<string[]> {
+    return this.teamService.addTeamsToUser(
+      userId,
+      teams,
+      new JwtUtil(req.user),
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(AFFECT_TEAM)
+  @Delete(":userId/teams/:teamCode")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Remove a team from a user",
+  })
+  async removeTeamFromUser(
+    @Param("userId", ParseIntPipe) userId: number,
+    @Param("teamCode") teamCode: string,
+    @RequestDecorator() req: RequestWithUserPayload,
+  ): Promise<void> {
+    return this.teamService.removeTeamFromUser(
+      userId,
+      teamCode,
+      new JwtUtil(req.user),
+    );
   }
 }
