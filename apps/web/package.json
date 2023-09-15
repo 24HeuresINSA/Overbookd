@@ -24,7 +24,6 @@
     "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\" \"./**/*.js\"",
     "lint": "pnpm run lint:js",
     "lint:js": "eslint --ext \".js,.ts,.vue\" --ignore-path .gitignore . --fix",
-    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
     "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
