@@ -7,6 +7,11 @@ export type JwtPayload = {
   permissions: Permission[];
 };
 
+export type RefreshJwt = {
+  id: number;
+  email: string;
+};
+
 export class JwtUtil implements JwtPayload {
   userId: number;
   id: number;
