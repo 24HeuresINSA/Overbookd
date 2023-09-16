@@ -1,3 +1,4 @@
+import { ONE_DAY_IN_MS } from "@overbookd/period";
 import colors from "vuetify/es5/util/colors";
 
 export default {
@@ -60,20 +61,25 @@ export default {
   auth: {
     strategies: {
       local: {
+        scheme: "refresh",
         token: {
           property: "accessToken",
           global: true,
           required: true,
           type: "Bearer",
         },
+        refreshToken: {
+          property: "refreshToken",
+          data: "refreshToken",
+          required: true,
+          maxAge: 7 * ONE_DAY_IN_MS,
+        },
         user: {
           property: false,
         },
         endpoints: {
-          login: {
-            url: "/login",
-            method: "post",
-          },
+          login: { url: "/login", method: "post" },
+          refresh: { url: "/refresh", method: "post" },
           user: false,
         },
       },

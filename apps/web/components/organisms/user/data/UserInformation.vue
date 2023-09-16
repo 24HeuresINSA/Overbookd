@@ -258,6 +258,7 @@ export default {
     addTeam() {
       if (!this.newTeam) return;
       this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
+      this.$auth.refreshTokens();
     },
     removeTeam() {
       if (!this.newTeam) return;
