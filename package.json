@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "2.0.2-rc.0",
+  "version": "2.0.2-rc.1",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -27,10 +27,11 @@
     "lint": "pnpm --recursive run lint",
     "prune": "pnpm --recursive run prune",
     "preinstall": "npx only-allow pnpm",
-    "release:candidate": "git fetch -ap && pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:candidate && docker restart overbookd_web overbookd_api",
-    "release:major": "git fetch -ap && pnpm version major --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:major && docker restart overbookd_web overbookd_api",
-    "release:minor": "git fetch -ap && pnpm version minor --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:minor && docker restart overbookd_web overbookd_api",
-    "release:patch": "git fetch -ap && pnpm version patch --commit-hooks=false --git-tag-version=false && pnpm --recursive --filter '...[origin/main]' run release:patch && docker restart overbookd_web overbookd_api"
+    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false && docker restart overbookd_web overbookd_api",
+    "release:major": "pnpm version major && docker restart overbookd_web overbookd_api",
+    "release:minor": "pnpm version minor && docker restart overbookd_web overbookd_api",
+    "release:patch": "pnpm version patch && docker restart overbookd_web overbookd_api",
+    "release:pull-request": "git fetch -ap && pnpm --recursive --filter '...^[origin/main]' --filter '![origin/main]' run release:patch"
   },
   "packageManager": "pnpm@8.7.5",
   "engines": {

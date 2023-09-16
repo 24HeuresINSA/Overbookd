@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/slugify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Gestion des slugs pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -22,7 +22,6 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prune": "ts-prune --error --ignore 'index.ts|dist'",
-    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
     "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",

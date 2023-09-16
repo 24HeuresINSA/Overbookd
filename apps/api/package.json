@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/api",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -27,7 +27,6 @@
     "start:dev": "nest start --watch --preserveWatchOutput",
     "start:migrate:prod": "npx prisma migrate deploy && pnpm run start:prod",
     "start:prod": "node src/main",
-    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
     "release:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "release:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "release:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
