@@ -62,7 +62,7 @@
     "ejs": "3.1.9",
     "express-basic-auth": "1.2.1",
     "html-to-pdfmake": "2.4.25",
-    "ics": "3.4.0",
+    "ics": "3.5.0",
     "jsdom": "22.1.0",
     "jsonwebtoken": "9.0.2",
     "multer": "1.4.5-lts.1",
