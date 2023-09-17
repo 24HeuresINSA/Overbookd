@@ -10,7 +10,11 @@
 .pre-build:
   extends: .docker
   script:
-    - docker build --target installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:installer --file $APP_PATH/Dockerfile .
+    - >
+      docker build
+      --target installer
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:installer
+      --file $APP_PATH/Dockerfile .
     - docker save $CI_REGISTRY_IMAGE/$APP_NAME:installer > ${APP_NAME}_installer.tar
 
 overbookd-web_docker_pre_build:
@@ -22,15 +26,9 @@ overbookd-web_docker_pre_build:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/web/**/*
-        - pnpm-lock.yaml
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
-      changes:
-        - apps/web/**/*
-        - pnpm-lock.yaml
     - when: never
   cache:
     key: $CI_COMMIT_REF_SLUG
@@ -47,9 +45,25 @@ overbookd-web_docker_pre_build:
     - OVERBOOKD_VERSION=$(jq -r '.version' package.json | tr -d '"')
     - echo $OVERBOOKD_VERSION
   script:
+    - '[ -v CI_COMMIT_BRANCH ] && VERSION_TAG_PREFIX="pre-prod_" || VERSION_TAG_PREFIX=""'
+    - '[ -v CI_COMMIT_BRANCH ] && TAG="pre-prod" || TAG="latest"'
+    - "[ -v CI_COMMIT_BRANCH ] && BASE_URL=$BASE_URL_PREPROD ||  BASE_URL=$BASE_URL_PROD"
+    - '[ -v CI_COMMIT_BRANCH ] && BASE_IMAGE="web_pre-prod" || BASE_IMAGE="web_prod"'
     - docker load -i ${APP_NAME}_installer.tar
-    - docker build --cache-from $CI_REGISTRY_IMAGE/$APP_NAME:installer --tag $CI_REGISTRY_IMAGE/$APP_NAME:$TAG --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG_PREFIX$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg WEB_VERSION=$VERSION --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION --file $APP_PATH/Dockerfile .
-    - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${APP_NAME}:${TAG} ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION_TAG_PREFIX}${VERSION}
+    - >
+      docker build
+      --cache-from $CI_REGISTRY_IMAGE/$APP_NAME:installer
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$TAG
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION_TAG_PREFIX$VERSION
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
+      --build-arg BASE_URL=$BASE_URL
+      --build-arg WEB_VERSION=$VERSION
+      --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION
+      --file $APP_PATH/Dockerfile .
+    - >
+      docker save -o ${BASE_IMAGE}.tar
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:${TAG}
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION_TAG_PREFIX}${VERSION}
   after_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
@@ -58,7 +72,7 @@ overbookd-web_docker_pre_build:
       - ${BASE_IMAGE}.tar
     expire_in: 1 hour
 
-preprod_overbookd-web_docker_build:
+overbookd-web_docker_build:
   extends: .docker-build
   needs: ["overbookd-web_docker_pre_build"]
   cache:
@@ -69,45 +83,15 @@ preprod_overbookd-web_docker_build:
   variables:
     APP_PATH: apps/web
     APP_NAME: web
-    VERSION_TAG_PREFIX: "pre-prod_"
-    TAG: pre-prod
-    BASE_URL: $BASE_URL_PREPROD
-    BASE_IMAGE: web_pre-prod
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/web/**/*
-        - pnpm-lock.yaml
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
-        - pnpm-lock.yaml
-    - when: never
-
-prod_overbookd-web_docker_build:
-  extends: .docker-build
-  needs: ["overbookd-web_docker_pre_build"]
-  cache:
-    key: $CI_COMMIT_REF_SLUG
-    paths:
-      - ${APP_NAME}_installer.tar
-    policy: pull
-  variables:
-    APP_PATH: apps/web
-    APP_NAME: web
-    VERSION_TAG_PREFIX: ""
-    TAG: latest
-    BASE_URL: $BASE_URL_PROD
-    BASE_IMAGE: web_prod
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "main"'
-      changes:
-        - apps/web/**/*
-        - pnpm-lock.yaml
+        - package.json
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
     - when: never
 
 overbookd-api_docker_build:
@@ -121,19 +105,32 @@ overbookd-api_docker_build:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - apps/api/**/*
-        - pnpm-lock.yaml
       when: manual
       allow_failure: true
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/api/**/*
-        - pnpm-lock.yaml
+        - package.json
+    - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
     - when: never
   script:
-    - docker build --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA --build-arg BASE_URL=$BASE_URL --build-arg API_VERSION=$VERSION --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION --file $APP_PATH/Dockerfile .
-    - docker save -o ${BASE_IMAGE}.tar ${CI_REGISTRY_IMAGE}/${APP_NAME}:latest ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION} ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod_${VERSION}
+    - >
+      docker build
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:latest
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$VERSION
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:pre-prod_$VERSION
+      --tag $CI_REGISTRY_IMAGE/$APP_NAME:$CI_COMMIT_SHORT_SHA
+      --build-arg BASE_URL=$BASE_URL
+      --build-arg API_VERSION=$VERSION
+      --build-arg OVERBOOKD_VERSION=$OVERBOOKD_VERSION
+      --file $APP_PATH/Dockerfile .
+    - >
+      docker save -o ${BASE_IMAGE}.tar
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:latest
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:${VERSION}
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod
+      ${CI_REGISTRY_IMAGE}/${APP_NAME}:pre-prod_${VERSION}
   artifacts:
     paths:
       - ${BASE_IMAGE}.tar
