@@ -41,10 +41,16 @@ export const mutations = mutationTree(state, {
     state.selectedUser = data;
   },
   ADD_TEAMS_TO_SELECTED_USER(state: UserState, teams: string[]) {
-    state.me.teams = [...new Set([...state.me.teams, ...teams])];
+    state.selectedUser.teams = [
+      ...new Set([...state.selectedUser.teams, ...teams]),
+    ];
   },
   REMOVE_TEAM_FROM_SELECTED_USER(state: UserState, team: string) {
-    state.me.teams = state.me.teams.filter((t) => t !== team);
+    console.log(team);
+    state.selectedUser.teams = state.selectedUser.teams.filter(
+      (t) => t !== team,
+    );
+    console.log(state.selectedUser.teams);
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
     state.selectedUserFriends = friends;
@@ -72,33 +78,8 @@ export const mutations = mutationTree(state, {
   },
   UPDATE_USER(state: UserState, data: UserPersonnalData) {
     const index = state.users.findIndex((user) => user.id === data.id);
-    if (index !== -1) {
-      state.users = updateItemToList(state.users, index, data);
-    }
-  },
-  ADD_TEAMS_TO_USER(
-    state: UserState,
-    { userId, teams }: { userId: number; teams: string[] },
-  ) {
-    const index = state.users.findIndex((user) => user.id === userId);
-    if (index !== -1) {
-      const user = state.users.at(index);
-      if (!user) return;
-      user.teams = [...new Set([...user.teams, ...teams])];
-      state.users = updateItemToList(state.users, index, user);
-    }
-  },
-  REMOVE_TEAM_FROM_USER(
-    state: UserState,
-    { userId, team }: { userId: number; team: string },
-  ) {
-    const index = state.users.findIndex((user) => user.id === userId);
-    if (index !== -1) {
-      const user = state.users.at(index);
-      if (!user) return;
-      user.teams = user.teams.filter((t) => t !== team);
-      state.users = updateItemToList(state.users, index, user);
-    }
+    if (index === -1) return;
+    state.users = updateItemToList(state.users, index, data);
   },
   SET_FRIENDS(state: UserState, friends: User[]) {
     state.friends = friends;
@@ -259,15 +240,14 @@ export const actions = actionTree(
     },
 
     async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
-      console.log(state.selectedUser.id);
       const res = await safeCall(
         this,
         userRepo.addTeamsToUser(this, state.selectedUser.id, teams),
         { successMessage: "Equipe(s) ajoutée(s) ! 🎉" },
       );
       if (!res) return;
-      commit("ADD_TEAMS_TO_USER", res.data);
       commit("ADD_TEAMS_TO_SELECTED_USER", res.data);
+      commit("UPDATE_USER", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 
@@ -281,8 +261,8 @@ export const actions = actionTree(
         { successMessage: "Equipe retirée ! 🎉" },
       );
       if (!res) return;
-      commit("REMOVE_TEAM_FROM_USER", res.data);
-      commit("REMOVE_TEAM_FROM_SELECTED_USER", res.data);
+      commit("REMOVE_TEAM_FROM_SELECTED_USER", team);
+      commit("UPDATE_USER", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 

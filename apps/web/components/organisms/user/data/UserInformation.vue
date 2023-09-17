@@ -27,7 +27,7 @@
                 <v-icon> mdi-plus </v-icon>
               </v-btn>
               <v-btn small class="mx-2" @click="removeTeam">
-                <v-icon> mdi-minus </v-icon>
+                <v-icon> mdi-close </v-icon>
               </v-btn>
             </div>
 
@@ -255,14 +255,17 @@ export default {
   },
 
   methods: {
-    addTeam() {
+    async addTeam() {
       if (!this.newTeam) return;
-      this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
+      await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
       this.$auth.refreshTokens();
+      this.user = { ...this.selectedUser };
     },
-    removeTeam() {
+    async removeTeam() {
       if (!this.newTeam) return;
-      this.$accessor.user.removeTeamFromSelectedUser(this.newTeam);
+      await this.$accessor.user.removeTeamFromSelectedUser(this.newTeam);
+      this.$auth.refreshTokens();
+      this.user = { ...this.selectedUser };
     },
     async savePersonnalData() {
       await this.$accessor.user.updateUser(this.user);
