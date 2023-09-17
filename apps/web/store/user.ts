@@ -46,11 +46,9 @@ export const mutations = mutationTree(state, {
     ];
   },
   REMOVE_TEAM_FROM_SELECTED_USER(state: UserState, team: string) {
-    console.log(team);
     state.selectedUser.teams = state.selectedUser.teams.filter(
       (t) => t !== team,
     );
-    console.log(state.selectedUser.teams);
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
     state.selectedUserFriends = friends;

@@ -60,10 +60,12 @@ export class TeamService {
     author: JwtUtil,
   ): Promise<string[]> {
     await this.checkUserExistence(userId);
-    const existingTeams = await this.fetchExistingTeams(teams);
+    if (!this.canManageTeams(teams, author)) {
+      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
+    }
 
-    const teamsToLink = this.cleanAdminTeam(existingTeams, author);
-    const userTeamLinks = teamsToLink.map((teamCode) => {
+    const existingTeams = await this.fetchExistingTeams(teams);
+    const userTeamLinks = existingTeams.map((teamCode) => {
       return { userId, teamCode };
     });
 
@@ -91,18 +93,22 @@ export class TeamService {
     author: JwtUtil,
   ): Promise<void> {
     await this.checkUserExistence(userId);
-    await this.checkTeamOfUserExistence(userId, team);
-    this.cleanAdminTeam([team], author);
+    if (!this.canManageTeams([team], author)) {
+      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
+    }
 
-    await this.prisma.userTeam.delete({
-      where: {
-        userId_teamCode: {
-          userId,
-          teamCode: team,
+    try {
+      await this.prisma.userTeam.delete({
+        where: {
+          userId_teamCode: {
+            userId,
+            teamCode: team,
+          },
         },
-      },
-    });
-    return;
+      });
+    } catch (e) {
+      return;
+    }
   }
 
   static buildIsMemberOfCondition(teamCodes: string[]) {
@@ -125,34 +131,12 @@ export class TeamService {
 
   private async checkUserExistence(id: number): Promise<void> {
     const user = await this.userService.getById(id);
-    if (!user.id) {
+    if (!user) {
       throw new NotFoundException("Utilisateur inconnu");
     }
   }
 
-  private async checkTeamOfUserExistence(
-    userId: number,
-    team: string,
-  ): Promise<void> {
-    const userTeam = await this.prisma.userTeam.findFirst({
-      where: {
-        userId,
-        teamCode: team,
-      },
-    });
-    if (!userTeam) {
-      throw new NotFoundException("Equipe de l'utilisateur non trouvée");
-    }
-  }
-
-  private cleanAdminTeam(teams: string[], author: JwtUtil) {
-    if (!author.can(MANAGE_ADMINS)) {
-      return teams.filter((team) => team !== "admin");
-    }
-    if (teams.length === 0) {
-      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
-    }
-
-    return teams;
+  private canManageTeams(teams: string[], author: JwtUtil) {
+    return !teams.includes("admin") || author.can(MANAGE_ADMINS);
   }
 }
