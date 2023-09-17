@@ -4,6 +4,7 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiNotFoundResponse,
+  ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
@@ -13,6 +14,7 @@ import { ResetPasswordRequestDto } from "./dto/reset-password.request.dto";
 import { LoginRequestDto } from "./dto/login.request.dto";
 import { UserAccessResponseDto } from "./dto/user-access.response.dto";
 import { Throttle } from "@nestjs/throttler";
+import { RefreshAccessRequestDto } from "./dto/refresh-access.request.dto";
 
 @ApiTags("authentication")
 @Controller()
@@ -37,6 +39,25 @@ export class AuthenticationController {
   })
   async login(@Body() userCredentials: LoginRequestDto) {
     return this.authService.login(userCredentials);
+  }
+
+  @Post("refresh")
+  @ApiBody({
+    description: "Route de refresh du token",
+    type: RefreshAccessRequestDto,
+  })
+  @ApiResponse({
+    description: "User access token",
+    type: UserAccessResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: "Wrong refresh token",
+  })
+  @ApiBadRequestResponse({
+    description: "Bad Request",
+  })
+  refresh(@Body() refreshToken: RefreshAccessRequestDto) {
+    return this.authService.refresh(refreshToken);
   }
 
   @Throttle(2, 60)

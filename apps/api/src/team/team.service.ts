@@ -1,78 +1,49 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { PrismaService } from "../../src/prisma.service";
 import { UserService } from "../../src/user/user.service";
-import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
 import { SlugifyService } from "@overbookd/slugify";
-import { Team } from "./team.model";
-
-export const TEAM_SELECT = {
-  select: {
-    name: true,
-    code: true,
-    color: true,
-    icon: true,
-  },
-};
+import { Team, UpdateTeamForm } from "./team.model";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 
 @Injectable()
 export class TeamService {
+  private readonly logger = new Logger(TeamService.name);
+
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
   ) {}
 
-  async team(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.TeamWhereUniqueInput;
-    where?: Prisma.TeamWhereInput;
-    orderBy?: Prisma.TeamOrderByWithRelationInput;
-    include?: Prisma.TeamInclude;
-  }): Promise<Team[]> {
-    const { skip, take, cursor, where, orderBy, include } = params;
+  async findAll(): Promise<Team[]> {
+    return this.prisma.team.findMany({ orderBy: { name: "asc" } });
+  }
+
+  async findFaValidators(): Promise<Team[]> {
     return this.prisma.team.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
-      include,
+      where: { permissions: { some: { permissionName: VALIDATE_FA } } },
     });
   }
 
-  async updateUserTeams({
-    userId,
-    teams,
-  }: LinkTeamToUserDto): Promise<LinkTeamToUserDto> {
-    await this.checkUserExistence(userId);
-    const teamsToLink = await this.fetchExistingTeams(teams);
-    await this.forceUserTeams(userId, teamsToLink);
-
-    const newLinkedTeams = teamsToLink.map((team) => team.code);
-    return { userId, teams: newLinkedTeams };
+  async findFtValidators(): Promise<Team[]> {
+    return this.prisma.team.findMany({
+      where: { permissions: { some: { permissionName: VALIDATE_FT } } },
+    });
   }
 
-  async createTeam(payload: {
-    name: string;
-    code?: string;
-    color?: string;
-    icon?: string;
-  }): Promise<Team> {
+  async createTeam(payload: Team): Promise<Team> {
     const code = SlugifyService.apply(payload.code ?? payload.name);
     return this.prisma.team.create({
       data: { ...payload, code },
     });
   }
 
-  async updateTeam(
-    code: string,
-    payload: {
-      name?: string;
-      color?: string;
-      icon?: string;
-    },
-  ): Promise<Team> {
+  async updateTeam(code: string, payload: UpdateTeamForm): Promise<Team> {
     return this.prisma.team.update({
       where: { code },
       data: payload,
@@ -86,6 +57,63 @@ export class TeamService {
     return;
   }
 
+  async addTeamsToUser(
+    userId: number,
+    teams: string[],
+    author: JwtUtil,
+  ): Promise<string[]> {
+    await this.checkUserExistence(userId);
+    if (!this.canManageTeams(teams, author)) {
+      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
+    }
+
+    const existingTeams = await this.fetchExistingTeams(teams);
+    const userTeamLinks = existingTeams.map((teamCode) => {
+      return { userId, teamCode };
+    });
+
+    const actions = userTeamLinks.map((link) => {
+      return this.prisma.userTeam.upsert({
+        where: {
+          userId_teamCode: {
+            userId: link.userId,
+            teamCode: link.teamCode,
+          },
+        },
+        create: link,
+        update: {},
+        select: { teamCode: true },
+      });
+    });
+
+    const result = await this.prisma.$transaction(actions);
+    return result.map((link) => link.teamCode);
+  }
+
+  async removeTeamFromUser(
+    userId: number,
+    team: string,
+    author: JwtUtil,
+  ): Promise<void> {
+    await this.checkUserExistence(userId);
+    if (!this.canManageTeams([team], author)) {
+      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
+    }
+
+    try {
+      await this.prisma.userTeam.delete({
+        where: {
+          userId_teamCode: {
+            userId,
+            teamCode: team,
+          },
+        },
+      });
+    } catch (e) {
+      this.logger.warn(`Try to remove ${team} unexisting team`);
+    }
+  }
+
   static buildIsMemberOfCondition(teamCodes: string[]) {
     return {
       some: {
@@ -96,33 +124,22 @@ export class TeamService {
     };
   }
 
-  private async forceUserTeams(userId: number, teamsToLink: Team[]) {
-    const deleteAll = this.prisma.userTeam.deleteMany({
-      where: { userId },
+  private async fetchExistingTeams(teams: string[]): Promise<string[]> {
+    const teamsFound = await this.prisma.team.findMany({
+      where: { code: { in: teams } },
+      select: { code: true },
     });
-
-    const createNew = this.prisma.userTeam.createMany({
-      data: teamsToLink.map((team) => ({
-        userId,
-        teamCode: team.code,
-      })),
-    });
-
-    return this.prisma.$transaction([deleteAll, createNew]);
-  }
-
-  private async fetchExistingTeams(teams: string[]): Promise<Team[]> {
-    return this.prisma.team.findMany({
-      where: {
-        code: { in: teams },
-      },
-    });
+    return teamsFound.map((team) => team.code);
   }
 
   private async checkUserExistence(id: number): Promise<void> {
     const user = await this.userService.getById(id);
-    if (!user.id) {
-      throw new NotFoundException("User not found");
+    if (!user) {
+      throw new NotFoundException("Utilisateur inconnu");
     }
+  }
+
+  private canManageTeams(teams: string[], author: JwtUtil) {
+    return !teams.includes("admin") || author.can(MANAGE_ADMINS);
   }
 }

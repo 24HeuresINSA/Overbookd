@@ -20,6 +20,7 @@ interface GetterSetter<T> {
 interface Auth {
   logout: () => Promise<void>;
   loginWith: (startegy: "local", options: AuthOptions) => Promise<void>;
+  refreshTokens: () => Promise<void>;
   loggedIn: boolean;
   strategy: AuthStrategy;
 }

@@ -7,18 +7,17 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from "@nestjs/common";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { TeamRequestDto } from "./dto/team.request.dto";
-import { LinkTeamToUserDto } from "./dto/link-team-user.dto";
+import { CreateTeamRequestDto } from "./dto/create-team.request.dto";
 import { TeamResponseDto } from "./dto/team.response";
 import { TeamService } from "./team.service";
-import { AFFECT_TEAM, MANAGE_TEAMS } from "@overbookd/permission";
+import { MANAGE_TEAMS, READ_FA, READ_FT } from "@overbookd/permission";
+import { UpdateTeamRequestDto } from "./dto/update-team.request";
 
 @ApiTags("teams")
 @Controller("teams")
@@ -32,38 +31,52 @@ export class TeamController {
     type: TeamResponseDto,
     isArray: true,
   })
-  async getTeams(
-    @Query("permission") permission?: string,
-  ): Promise<TeamResponseDto[]> {
-    const where = buildQueryParamsCondition(permission);
-    return this.teamService.team({ orderBy: { name: "asc" }, where });
+  async findAll(): Promise<TeamResponseDto[]> {
+    return this.teamService.findAll();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(AFFECT_TEAM)
-  @Post("link")
-  @ApiBearerAuth()
+  @Permission(READ_FA)
+  @Get("fa-validators")
   @ApiResponse({
-    status: 201,
-    description: "Link a user with different teams",
-    type: LinkTeamToUserDto,
+    status: 200,
+    description: "Get all fa validators",
+    type: TeamResponseDto,
+    isArray: true,
   })
-  async updateUserTeams(
-    @Body() payload: LinkTeamToUserDto,
-  ): Promise<LinkTeamToUserDto> {
-    return this.teamService.updateUserTeams(payload);
+  async findAllFaValidators(): Promise<TeamResponseDto[]> {
+    return this.teamService.findFaValidators();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FT)
+  @Get("ft-validators")
+  @ApiResponse({
+    status: 200,
+    description: "Get all ft validators",
+    type: TeamResponseDto,
+    isArray: true,
+  })
+  async findAllFtValidators(): Promise<TeamResponseDto[]> {
+    return this.teamService.findFtValidators();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(MANAGE_TEAMS)
   @Post()
   @ApiBearerAuth()
+  @ApiBody({
+    description: "Team to create",
+    type: CreateTeamRequestDto,
+  })
   @ApiResponse({
     status: 201,
     description: "Create a team",
     type: TeamResponseDto,
   })
-  async addTeam(@Body() payload: TeamRequestDto): Promise<TeamResponseDto> {
+  async createTeam(
+    @Body() payload: CreateTeamRequestDto,
+  ): Promise<TeamResponseDto> {
     return this.teamService.createTeam(payload);
   }
 
@@ -72,6 +85,10 @@ export class TeamController {
   @Patch(":code")
   @ApiBearerAuth()
   @HttpCode(200)
+  @ApiBody({
+    description: "Team to update",
+    type: UpdateTeamRequestDto,
+  })
   @ApiResponse({
     status: 200,
     description: "Update a team",
@@ -79,7 +96,7 @@ export class TeamController {
   })
   async updateTeam(
     @Param("code") code: string,
-    @Body() data: TeamRequestDto,
+    @Body() data: UpdateTeamRequestDto,
   ): Promise<TeamResponseDto> {
     return this.teamService.updateTeam(code, data);
   }
@@ -96,16 +113,4 @@ export class TeamController {
   async deleteTeam(@Param("code") code: string): Promise<void> {
     return this.teamService.deleteTeam(code);
   }
-}
-
-function buildQueryParamsCondition(permission: string) {
-  return permission
-    ? {
-        permissions: {
-          some: {
-            permissionName: permission,
-          },
-        },
-      }
-    : {};
 }

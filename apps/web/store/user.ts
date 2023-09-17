@@ -34,11 +34,21 @@ export const state = () => ({
 export type UserState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  SET_USER(state: UserState, data: MyUserInformation) {
+  SET_MY_USER(state: UserState, data: MyUserInformation) {
     state.me = data;
   },
   SET_SELECTED_USER(state: UserState, data: UserPersonnalData) {
     state.selectedUser = data;
+  },
+  ADD_TEAMS_TO_SELECTED_USER(state: UserState, teams: string[]) {
+    state.selectedUser.teams = [
+      ...new Set([...state.selectedUser.teams, ...teams]),
+    ];
+  },
+  REMOVE_TEAM_FROM_SELECTED_USER(state: UserState, team: string) {
+    state.selectedUser.teams = state.selectedUser.teams.filter(
+      (t) => t !== team,
+    );
   },
   SET_SELECTED_USER_FRIENDS(state: UserState, friends: User[]) {
     state.selectedUserFriends = friends;
@@ -66,9 +76,8 @@ export const mutations = mutationTree(state, {
   },
   UPDATE_USER(state: UserState, data: UserPersonnalData) {
     const index = state.users.findIndex((user) => user.id === data.id);
-    if (index !== -1) {
-      state.users = updateItemToList(state.users, index, data);
-    }
+    if (index === -1) return;
+    state.users = updateItemToList(state.users, index, data);
   },
   SET_FRIENDS(state: UserState, friends: User[]) {
     state.friends = friends;
@@ -115,7 +124,7 @@ export const actions = actionTree(
         errorMessage: "Session expirée 💨",
       });
       if (res) {
-        commit("SET_USER", castUserWithDate(res.data));
+        commit("SET_MY_USER", castUserWithDate(res.data));
         dispatch("setMyProfilePicture");
       }
     },
@@ -201,7 +210,7 @@ export const actions = actionTree(
       });
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
-      commit("SET_USER", castUserWithDate(res.data));
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
@@ -214,7 +223,7 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
-      commit("SET_USER", castUserWithDate(res.data));
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
 
     async deleteUser({ commit, state, dispatch }, userId: number) {
@@ -228,30 +237,31 @@ export const actions = actionTree(
       if (user.id === state.me.id) dispatch("fetchUser");
     },
 
-    async updateSelectedUserTeams(
+    async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
+      const res = await safeCall(
+        this,
+        userRepo.addTeamsToUser(this, state.selectedUser.id, teams),
+        { successMessage: "Equipe(s) ajoutée(s) ! 🎉" },
+      );
+      if (!res) return;
+      commit("ADD_TEAMS_TO_SELECTED_USER", res.data);
+      commit("UPDATE_USER", state.selectedUser);
+      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
+    },
+
+    async removeTeamFromSelectedUser(
       { commit, state, dispatch },
-      teams: string[],
+      team: string,
     ) {
       const res = await safeCall(
         this,
-        RepoFactory.TeamRepository.linkUserToTeams(
-          this,
-          state.selectedUser.id,
-          teams,
-        ),
-        {
-          successMessage: "Equipes mises à jour ! 🎉",
-          errorMessage: "Mince, les équipes n'ont pas pu être mises à jour 😢",
-        },
+        userRepo.removeTeamFromUser(this, state.selectedUser.id, team),
+        { successMessage: "Equipe retirée ! 🎉" },
       );
       if (!res) return;
-      const user: UserPersonnalData = {
-        ...state.selectedUser,
-        teams: res.data.teams,
-      };
-      commit("UPDATE_USER", user);
-      commit("SET_SELECTED_USER", user);
-      if (res.data.userId === state.me.id) dispatch("fetchUser");
+      commit("REMOVE_TEAM_FROM_SELECTED_USER", team);
+      commit("UPDATE_USER", state.selectedUser);
+      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 
     async fetchAndUpdateLocalUser({ commit, state, dispatch }, userId: number) {
@@ -287,7 +297,7 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      commit("SET_USER", castUserWithDate(res.data));
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
 
     getProfilePicture(_, user: MyUserInformationWithProfilePicture) {
@@ -302,7 +312,7 @@ export const actions = actionTree(
       const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 
-      commit("SET_USER", {
+      commit("SET_MY_USER", {
         ...state.me,
         profilePictureBlob,
       });

@@ -6,10 +6,17 @@ import { ProfilePictureService } from "./profile-picture.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { MailModule } from "../mail/mail.module";
+import { TeamService } from "../team/team.service";
 
 @Module({
   imports: [VolunteerPlanningModule, MailModule],
   controllers: [UserController],
-  providers: [UserService, PrismaService, FileService, ProfilePictureService],
+  providers: [
+    UserService,
+    PrismaService,
+    FileService,
+    ProfilePictureService,
+    TeamService,
+  ],
 })
 export class UserModule {}

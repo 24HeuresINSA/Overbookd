@@ -13,17 +13,21 @@
               :key="team"
               :team="team"
               with-name
+              close
+              @close="removeTeam"
             ></TeamChip>
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
                 v-model="newTeam"
                 label="Choix de l'équipe"
-                :items="teams"
+                :items="manageableTeams"
                 item-value="code"
                 item-text="name"
               >
               </v-select>
-              <v-btn text @click="addRemoveRole()">Ajouter/Retirer</v-btn>
+              <v-btn small class="mx-2" @click="addTeam">
+                <v-icon> mdi-plus </v-icon>
+              </v-btn>
             </div>
 
             <v-container>
@@ -152,7 +156,6 @@
 </template>
 
 <script>
-import { removeItemAtIndex } from "@overbookd/list";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { isNumber, min } from "~/utils/rules/input.rules";
@@ -163,7 +166,7 @@ import {
 } from "~/utils/user/user.utils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
-import { MANAGE_USERS } from "@overbookd/permission";
+import { MANAGE_USERS, MANAGE_ADMINS } from "@overbookd/permission";
 
 export default {
   name: "UserInformation",
@@ -225,8 +228,10 @@ export default {
     isHard() {
       return this.selectedUser?.teams?.includes("hard") ?? false;
     },
-    teams() {
-      return this.$accessor.team.allTeams;
+    manageableTeams() {
+      const teams = this.$accessor.team.allTeams;
+      if (this.$accessor.user.can(MANAGE_ADMINS)) return teams;
+      return teams.filter((team) => team.code !== "admin");
     },
     selectedUserPhone() {
       return formatUserPhone(this.selectedUser.phone);
@@ -249,17 +254,16 @@ export default {
   },
 
   methods: {
-    addRemoveRole() {
+    async addTeam() {
       if (!this.newTeam) return;
-      const teams = this.computeTeams();
-      this.$accessor.user.updateSelectedUserTeams(teams);
+      await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
+      this.$auth.refreshTokens();
+      this.user = { ...this.selectedUser };
     },
-    computeTeams() {
-      const teamIndex = this.selectedUser.teams.indexOf(this.newTeam);
-      if (teamIndex !== -1) {
-        return removeItemAtIndex(this.selectedUser.teams, teamIndex);
-      }
-      return [...this.selectedUser.teams, this.newTeam];
+    async removeTeam(team) {
+      await this.$accessor.user.removeTeamFromSelectedUser(team);
+      this.$auth.refreshTokens();
+      this.user = { ...this.selectedUser };
     },
     async savePersonnalData() {
       await this.$accessor.user.updateUser(this.user);

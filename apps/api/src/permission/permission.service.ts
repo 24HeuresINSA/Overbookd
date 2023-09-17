@@ -130,7 +130,7 @@ export class PermissionService {
   }
 
   private async assertAllTeamCodesExist(teamCodes: string[]) {
-    const teams = await this.teamService.team({
+    const teams = await this.prisma.team.findMany({
       where: { code: { in: teamCodes } },
     });
     if (teams.length !== teamCodes.length) {

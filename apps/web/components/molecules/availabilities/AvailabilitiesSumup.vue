@@ -43,7 +43,8 @@ export default Vue.extend({
   props: {
     userId: {
       type: Number,
-      required: true,
+      required: false,
+      default: null,
     },
   },
   data: () => ({
@@ -86,6 +87,7 @@ export default Vue.extend({
   },
   methods: {
     fetchAvailabilities() {
+      if (!this.userId) return;
       return this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
         this.userId,
       );

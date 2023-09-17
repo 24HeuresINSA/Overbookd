@@ -5,7 +5,9 @@
     :large="large"
     :color="color"
     :class="flipClass"
+    :close="close"
     @click="sendEvent"
+    @click:close="sendCloseEvent"
   >
     <v-tooltip top>
       <template #activator="{ on, attrs }">
@@ -51,6 +53,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    close: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     small(): boolean {
@@ -77,6 +83,9 @@ export default Vue.extend({
     sendEvent() {
       this.$emit("click", this.team);
     },
+    sendCloseEvent() {
+      this.$emit("close", this.team);
+    },
   },
 });
 </script>
@@ -84,6 +93,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .v-chip {
   margin-right: 2px;
+  color: white;
 }
 span.name {
   color: white;
