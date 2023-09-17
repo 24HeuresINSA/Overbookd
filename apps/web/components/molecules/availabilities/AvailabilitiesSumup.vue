@@ -44,6 +44,7 @@ export default Vue.extend({
     userId: {
       type: Number,
       required: false,
+      default: null,
     },
   },
   data: () => ({
@@ -86,6 +87,7 @@ export default Vue.extend({
   },
   methods: {
     fetchAvailabilities() {
+      if (!this.userId) return;
       return this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
         this.userId,
       );

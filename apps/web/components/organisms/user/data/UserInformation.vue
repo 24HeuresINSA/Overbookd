@@ -13,6 +13,8 @@
               :key="team"
               :team="team"
               with-name
+              close
+              @close="removeTeam"
             ></TeamChip>
             <div v-if="hasEditingRole" class="d-flex align-center">
               <v-select
@@ -25,9 +27,6 @@
               </v-select>
               <v-btn small class="mx-2" @click="addTeam">
                 <v-icon> mdi-plus </v-icon>
-              </v-btn>
-              <v-btn small class="mx-2" @click="removeTeam">
-                <v-icon> mdi-close </v-icon>
               </v-btn>
             </div>
 
@@ -261,9 +260,8 @@ export default {
       this.$auth.refreshTokens();
       this.user = { ...this.selectedUser };
     },
-    async removeTeam() {
-      if (!this.newTeam) return;
-      await this.$accessor.user.removeTeamFromSelectedUser(this.newTeam);
+    async removeTeam(team) {
+      await this.$accessor.user.removeTeamFromSelectedUser(team);
       this.$auth.refreshTokens();
       this.user = { ...this.selectedUser };
     },

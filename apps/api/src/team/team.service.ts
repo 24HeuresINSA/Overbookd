@@ -10,11 +10,10 @@ import { SlugifyService } from "@overbookd/slugify";
 import { Team, UpdateTeamForm } from "./team.model";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
-import { FtService } from "../ft/ft.service";
 
 @Injectable()
 export class TeamService {
-  private readonly logger = new Logger(FtService.name);
+  private readonly logger = new Logger(TeamService.name);
 
   constructor(
     private prisma: PrismaService,
