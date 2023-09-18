@@ -82,6 +82,9 @@ export const mutations = mutationTree(state, {
     if (index === -1) return;
     state.users = updateItemToList(state.users, index, data);
   },
+  REMOVE_USER(state: UserState, id: number) {
+    state.users = state.users.filter((user) => user.id !== id);
+  },
   SET_FRIENDS(state: UserState, friends: User[]) {
     state.friends = friends;
   },
@@ -235,15 +238,13 @@ export const actions = actionTree(
       commit("SET_MY_USER", me);
     },
 
-    async deleteUser({ commit, state, dispatch }, userId: number) {
+    async deleteUser({ commit }, userId: number) {
       const res = await safeCall(this, userRepo.deleteUser(this, userId), {
         successMessage: "Utilisateur supprimé ! 🎉",
         errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
       });
       if (!res) return;
-      const user = { ...state.selectedUser, isDeleted: true };
-      commit("UPDATE_USER", user);
-      if (user.id === state.me.id) dispatch("fetchUser");
+      commit("REMOVE_USER", userId);
     },
 
     async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
@@ -271,14 +272,6 @@ export const actions = actionTree(
       commit("REMOVE_TEAM_FROM_SELECTED_USER", team);
       commit("UPDATE_USER", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
-    },
-
-    async fetchAndUpdateLocalUser({ commit, state, dispatch }, userId: number) {
-      const res = await safeCall(this, userRepo.getUser(this, userId));
-      if (!res) return;
-      const user = { ...state.selectedUser, charisma: res.data.charisma };
-      commit("UPDATE_USER", user);
-      if (res.data.id === state.me.id) dispatch("fetchUser");
     },
 
     async findUserById({ commit }, id: number) {

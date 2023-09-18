@@ -133,10 +133,9 @@
       </v-row>
     </div>
 
-    <UserInformation
-      :toggle="isUserInformationDialogOpen"
-      @update-toggle="(t) => (isUserInformationDialogOpen = t)"
-    ></UserInformation>
+    <v-dialog v-model="isUserInformationDialogOpen">
+      <UserInformation @close-dialog="closeUserInformationDialog" />
+    </v-dialog>
 
     <SnackNotificationContainer />
   </div>
@@ -241,15 +240,11 @@ export default Vue.extend({
   },
 
   async mounted() {
-    await this.initStore();
+    await this.$accessor.user.fetchCandidates();
+    await this.$accessor.user.fetchVolunteers();
   },
 
   methods: {
-    async initStore() {
-      await this.$accessor.user.fetchCandidates();
-      await this.$accessor.user.fetchVolunteers();
-    },
-
     openInformationDialog(user: UserPersonnalData) {
       this.$accessor.user.setSelectedUser(user);
       this.isUserInformationDialogOpen = true;
@@ -337,6 +332,10 @@ export default Vue.extend({
 
     formatUserName(user: UserPersonnalData) {
       return formatUserNameWithNickname(user);
+    },
+
+    closeUserInformationDialog() {
+      this.isUserInformationDialogOpen = false;
     },
   },
 });
