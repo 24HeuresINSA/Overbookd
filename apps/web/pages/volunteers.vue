@@ -9,48 +9,28 @@
               <v-text-field
                 v-model="filters.search"
                 label="Recherche"
-                :disabled="isModeStatsActive"
+                :disabled="isStatsModeActive"
               ></v-text-field>
-              <v-combobox
+              <SearchTeam
                 v-model="filters.teams"
-                chips
-                multiple
-                clearable
-                dense
-                label="Team"
-                :items="teams"
-                item-text="name"
-                :disabled="isModeStatsActive"
-              >
-                <template #selection="{ attrs, item, selected }">
-                  <v-chip
-                    v-bind="attrs"
-                    :input-value="selected"
-                    close
-                    :color="getRoleMetadata(item).color"
-                    @click:close="removeTeamInFilter(item)"
-                  >
-                    <v-icon left color="white">
-                      {{ getRoleMetadata(item).icon }}
-                    </v-icon>
-                    <a style="color: white">{{ getRoleMetadata(item).name }}</a>
-                  </v-chip>
-                </template>
-              </v-combobox>
+                label="Équipe"
+                :boxed="false"
+                :disabled="isStatsModeActive"
+              ></SearchTeam>
 
               <template v-if="canManageUsers">
                 <label>Compte validé</label>
                 <v-btn-toggle
-                  v-model="filters.isValidated"
+                  v-model="filters.isVolunteer"
                   tile
                   color="deep-purple accent-3"
                   group
-                  :disabled="isModeStatsActive"
+                  :disabled="isStatsModeActive"
                 >
-                  <v-btn :value="true" small :disabled="isModeStatsActive">
+                  <v-btn :value="true" small :disabled="isStatsModeActive">
                     oui</v-btn
                   >
-                  <v-btn :value="false" small :disabled="isModeStatsActive">
+                  <v-btn :value="false" small :disabled="isStatsModeActive">
                     Non</v-btn
                   >
                 </v-btn-toggle>
@@ -58,17 +38,17 @@
               <template v-if="canManagePersonnalAccounts">
                 <p>Cotisation</p>
                 <v-btn-toggle
-                  v-model="filters.hasPayedContributions"
+                  v-model="filters.hasPayedContribution"
                   tile
                   color="deep-purple accent-3"
                   group
-                  :disabled="isModeStatsActive"
+                  :disabled="isStatsModeActive"
                 >
-                  <v-btn :value="true" small :disabled="isModeStatsActive">
+                  <v-btn :value="true" small :disabled="isStatsModeActive">
                     Payée
                   </v-btn>
 
-                  <v-btn :value="false" small :disabled="isModeStatsActive">
+                  <v-btn :value="false" small :disabled="isStatsModeActive">
                     Non payée
                   </v-btn>
                 </v-btn-toggle>
@@ -80,7 +60,7 @@
             <v-card-text style="display: flex; flex-direction: column">
               <label>Mode stats</label>
               <v-btn-toggle
-                v-model="isModeStatsActive"
+                v-model="isStatsModeActive"
                 tile
                 color="deep-purple accent-3"
                 group
@@ -91,7 +71,7 @@
             </v-card-text>
             <v-card-actions class="ctas">
               <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
-              <v-btn :loading="planningLoads" text @click="exportPlannings">
+              <v-btn :loading="planningLoading" text @click="exportPlannings">
                 télécharger plannings
               </v-btn>
             </v-card-actions>
@@ -100,20 +80,20 @@
         <v-col md="10">
           <div v-if="!loading">
             <v-data-table
-              v-if="!isModeStatsActive"
+              v-if="!isStatsModeActive"
               style="max-height: 100%; overflow-y: auto"
               :headers="headers"
               :items="filteredUsers"
               :options.sync="options"
               class="elevation-1"
-              dense
               :items-per-page="20"
+              dense
             >
-              <template #[`item.firstname`]="{ item }">
+              <template #item.name="{ item }">
                 {{ item.firstname }} {{ item.lastname }}
                 {{ item.nickname ? `(${item.nickname})` : "" }}
               </template>
-              <template #[`item.action`]="{ item }" style="display: flex">
+              <template #item.actions="{ item }" style="display: flex">
                 <v-btn icon small @click="openInformationDialog(item)">
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
@@ -158,7 +138,7 @@
     <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
       {{ feedbackMessage }}
 
-      <template #action="{ attrs }">
+      <template #actions="{ attrs }">
         <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
           Close
         </v-btn>
@@ -167,82 +147,95 @@
 
     <SnackNotificationContainer></SnackNotificationContainer>
     <UserInformation
-      :toggle="isUserDialogOpen"
-      @update-toggle="(t) => (isUserDialogOpen = t)"
+      :toggle="isUserInformationDialogOpen"
+      @update-toggle="(t) => (isUserInformationDialogOpen = t)"
     ></UserInformation>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
+import SearchTeams from "~/components/atoms/field/search/SearchTeam.vue";
 import { download } from "~/utils/planning/download";
 import { formatPhoneLink } from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { matchingSearchItems } from "~/utils/search/search.utils";
 import { MANAGE_PERSONNAL_ACCOUNTS, MANAGE_USERS } from "@overbookd/permission";
+import { UserPersonnalData } from "@overbookd/user";
+import { Header } from "~/utils/models/data-table.model";
+import { VolunteerPlanning } from "~/store/planning";
 
-export default {
+interface VolunteersData {
+  usersHeaders: Header[];
+  statsHeaders: Header[];
+
+  filters: {
+    search: string;
+    teams: string[];
+    isVolunteer: boolean;
+    hasPayedContribution?: boolean;
+  };
+
+  isUserInformationDialogOpen: boolean;
+  isStatsModeActive: boolean;
+  planningLoading: boolean;
+}
+
+export default Vue.extend({
   name: "Volunteers",
   components: {
     UserInformation,
     SnackNotificationContainer,
     TeamChip,
     VolunteerStatsTable,
+    SearchTeams,
   },
-  data() {
-    return {
-      filteredUsers: [],
-      headers: [
-        { text: "Prénom Nom (Surnom)", value: "firstname" },
-        { text: "Equipes", value: "teams" },
-        { text: "Charisme", value: "charisma", align: "end" },
-        { text: "Action", value: "action", sortable: false },
-      ],
-      statsHeaders: [
-        { text: "Prénom Nom (Surnom)", value: "firstname" },
-        { text: "Charisme", value: "charisma", align: "end" },
-        { text: "Charge", value: "charge" },
-        { text: "Heures affectés", value: "hours" },
-        { text: "Statiques", value: "statics" },
-        { text: "Action", value: "action", sortable: false },
-      ],
+  data: (): VolunteersData => ({
+    usersHeaders: [
+      { text: "Prénom Nom (Surnom)", value: "name" },
+      { text: "Equipes", value: "teams" },
+      { text: "Charisme", value: "charisma", align: "end" },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
+    statsHeaders: [
+      { text: "Prénom Nom (Surnom)", value: "name" },
+      { text: "Charisme", value: "charisma", align: "end" },
+      { text: "Charge", value: "charge" },
+      { text: "Heures affectés", value: "hours" },
+      { text: "Statiques", value: "statics" },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
 
-      loading: false,
+    filters: {
+      search: "",
+      teams: [],
+      isVolunteer: true,
+      hasPayedContribution: undefined,
+    },
 
-      filters: {
-        search: "",
-        teams: [],
-        isValidated: true,
-        hasPayedContributions: undefined,
-      },
+    isUserInformationDialogOpen: false,
+    isStatsModeActive: false,
 
-      isUserDialogOpen: false,
-      isSnackbarOpen: false,
-
-      newRole: undefined,
-      feedbackMessage: "Sauvegardé 🥳",
-      isModeStatsActive: false,
-
-      options: { page: 1 },
-
-      planningLoads: false,
-    };
-  },
-
+    planningLoading: false,
+  }),
   head: () => ({
     title: "Liste des bénévoles",
   }),
 
   computed: {
-    users() {
-      return this.filters.isValidated
+    users(): UserPersonnalData[] {
+      return this.filters.isVolunteer
         ? this.$accessor.user.volunteers
         : this.$accessor.user.candidates;
     },
-    searchableVolunteers() {
+    filteredUsers(): UserPersonnalData[] {
+      return this.users;
+    },
+    searchableVolunteers(): UserPersonnalData[] {
       return this.users.map((user) => ({
         ...user,
         searchable: SlugifyService.apply(
@@ -250,16 +243,13 @@ export default {
         ),
       }));
     },
-    teams() {
-      return this.$accessor.team.allTeams;
-    },
-    volunteerPlannings() {
+    volunteerPlannings(): VolunteerPlanning[] {
       return this.$accessor.planning.volunteerPlannings;
     },
-    canManageUsers() {
+    canManageUsers(): boolean {
       return this.$accessor.user.can(MANAGE_USERS);
     },
-    canManagePersonnalAccounts() {
+    canManagePersonnalAccounts(): boolean {
       return this.$accessor.user.can(MANAGE_PERSONNAL_ACCOUNTS);
     },
   },
@@ -292,32 +282,13 @@ export default {
       await this.$accessor.timeslot.fetchTimeslots();
       await this.$accessor.ft.fetchAll();
     },
-    isCpUseful(item) {
-      return (
-        (item.teams?.includes("hard") &&
-          !(
-            item.teams?.includes("fen") ||
-            item.teams?.includes("voiture") ||
-            item.teams?.includes("camion")
-          )) ||
-        item.teams?.includes("vieux")
-      );
-    },
 
-    openInformationDialog(user) {
+    openInformationDialog(user: UserPersonnalData) {
       this.$accessor.user.setSelectedUser(user);
-      this.isUserDialogOpen = true;
+      this.isUserInformationDialogOpen = true;
     },
 
-    getRoleMetadata(team) {
-      return this.teams.find((t) => t.code === team.code);
-    },
-
-    removeTeamInFilter(item) {
-      this.filters.teams.splice(this.filters.teams.indexOf(item), 1);
-    },
-
-    download(filename, text) {
+    download(filename: string, text: string) {
       // We use the 'a' HTML element to incorporate file generation into
       // the browser rather than server-side
       const element = document.createElement("a");
@@ -339,21 +310,18 @@ export default {
       const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
 
       const csvHeader =
-        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire";
+        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;ContribPayée;Commentaire";
 
-      const csvContent = this.users.map((user) => {
+      const csvContent = this.users.map((user: UserPersonnalData) => {
         return [
           user.firstname,
           user.lastname,
           user.nickname,
           user.charisma,
-          `"${user.team}"`,
+          user.teams?.join(", ") ?? "",
           user.email,
           user.birthdate,
           `+33${user.phone}`,
-          user.department,
-          user.year,
-          user.hasPayedContributions,
           user.comment?.replace(lineReturnRegex, " ") ?? "",
         ].join(";");
       });
@@ -365,47 +333,7 @@ export default {
       this.download("utilisateurs.csv", parsedCSV);
     },
 
-    getCharge(plan) {
-      let charge = 0;
-      plan.slots.forEach((slot) => {
-        const start = new Date(slot.start);
-        const end = new Date(slot.end);
-        const time = end.getTime() - start.getTime();
-        charge += time;
-      });
-      const user = this.users.find((e) => e._id === plan._id);
-      const hours = user.availabilities.length * 2 || 0;
-      if (charge === 0 || hours === 0) {
-        return 0;
-      } else {
-        return (charge / (hours * 3600000)) * 100;
-      }
-    },
-
-    getAffected(plan) {
-      let total = 0;
-      plan.slots.forEach((slot) => {
-        const start = new Date(slot.start);
-        const end = new Date(slot.end);
-        const time = end.getTime() - start.getTime();
-        total += time;
-      });
-      return Math.round(total / 3600000);
-    },
-
-    getStatic(plan) {
-      let statics = 0;
-      const Fts = this.$accessor.ft.Fts;
-      plan.slots.forEach((slot) => {
-        const ft = Fts.find((e) => e.count === slot.count);
-        if (ft.general.areTimeframesStatic) {
-          statics++;
-        }
-      });
-      return statics;
-    },
-
-    openCalendar(userId) {
+    openCalendar(userId: number) {
       window.open(`/planning/${userId}`, "_blank");
     },
 
@@ -416,10 +344,10 @@ export default {
       );
 
       // filter by payed contributions
-      if (this.filters.hasPayedContributions !== undefined) {
+      if (this.filters.hasPayedContribution !== undefined) {
         mUsers = mUsers.filter(
           (user) =>
-            user.hasPayedContributions === this.filters.hasPayedContributions,
+            user.hasPayedContribution === this.filters.hasPayedContribution,
         );
         this.options.page = 1; // reset page
       }
@@ -442,11 +370,11 @@ export default {
       this.filteredUsers = mUsers;
     },
     async exportPlannings() {
-      this.planningLoads = true;
+      this.planningLoading = true;
       await this.$accessor.planning.fetchAllPdfPlannings(
         this.filteredUsers.filter(({ charisma }) => charisma > 0),
       );
-      this.planningLoads = false;
+      this.planningLoading = false;
       this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
         download(planningBase64Data, volunteer),
       );
@@ -455,10 +383,10 @@ export default {
       return formatPhoneLink(phone);
     },
   },
-};
+});
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 p {
   margin: 0;
 }

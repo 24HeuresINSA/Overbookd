@@ -5,7 +5,7 @@ import { User } from "@overbookd/user";
 
 const userRepo = RepoFactory.UserRepository;
 
-type VolunteerPlanning = {
+export type VolunteerPlanning = {
   volunteer: User;
   planningBase64Data: string;
 };
