@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common";
-import { PayContributionForm, UserContribution } from "@overbookd/contribution";
-import { PayContributionRepository } from "./repository/pay-contribution.repository.";
+import { PayContribution, PayContributionForm, UserContribution } from "@overbookd/contribution";
+import { PrismaPayContributionRepository } from "./repository/pay-contribution-repository.prisma";
 
 @Injectable()
 export class ContributionService {
   constructor(
-    private readonly payContributionRepository: PayContributionRepository,
+    private readonly payContributionRepository: PrismaPayContributionRepository,
+    private readonly payContribution: PayContribution,
   ) {}
 
   async pay(contributionData: PayContributionForm): Promise<UserContribution> {
-    return this.payContributionRepository.pay(contributionData);
+    const contribution = await this.payContribution.apply(contributionData);
+    return this.payContributionRepository.pay(contribution);
   }
 
   async find(userId: number): Promise<UserContribution | null> {

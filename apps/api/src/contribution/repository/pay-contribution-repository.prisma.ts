@@ -1,40 +1,20 @@
-import { PayContributionForm, UserContribution } from "@overbookd/contribution";
-import { PayContributionRepository } from "./pay-contribution.repository.";
-import { PrismaService } from "../../prisma.service";
 import {
-  SELECT_CONTRIBUTION,
-  WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
-} from "../contribution.query";
+  Contribution,
+  ContributionRepository,
+  PayContribution,
+  UserContribution,
+} from "@overbookd/contribution";
+import { PrismaService } from "../../prisma.service";
+import { SELECT_CONTRIBUTION } from "../contribution.query";
 
 export class PrismaPayContributionRepository
-  implements PayContributionRepository
+  implements ContributionRepository
 {
   constructor(private readonly prisma: PrismaService) {}
 
-  async pay(contributionData: PayContributionForm): Promise<UserContribution> {
-    const { amount, userId } = contributionData;
-
-    const currentDate = new Date();
-    const expirationDate = new Date(currentDate.getFullYear(), 7, 31);
-
-    if (currentDate > expirationDate) {
-      expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-    }
-
-    const data = {
-      userId,
-      amount,
-      paymentDate: currentDate,
-      expirationDate,
-    };
-
-    return this.prisma.contribution.upsert({
-      create: data,
-      update: data,
-      where: {
-        userId,
-        ...WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
-      },
+  async pay(contribution: Contribution): Promise<UserContribution> {
+    return this.prisma.contribution.create({
+      data: contribution,
       select: SELECT_CONTRIBUTION,
     });
   }
@@ -43,18 +23,30 @@ export class PrismaPayContributionRepository
     return this.prisma.contribution.findFirst({
       where: {
         userId,
-        ...WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
+        ...PrismaPayContributionRepository.buildEditionIsCurrentCondition(),
       },
       select: SELECT_CONTRIBUTION,
     });
   }
 
   async remove(userId: number): Promise<void> {
-    await this.prisma.contribution.deleteMany({
+    await this.prisma.contribution.delete({
       where: {
         userId,
-        ...WHERE_EXPIRATION_DATE_GREATER_THAN_NOW,
+        ...PrismaPayContributionRepository.buildEditionIsCurrentCondition(),
       },
     });
+  }
+
+  async hasAlreadyPayed(userId: number, edition: number): Promise<boolean> {
+    const contribution = await this.prisma.contribution.findFirst({
+      where: { userId, edition },
+    });
+    return Boolean(contribution);
+  }
+
+  static buildEditionIsCurrentCondition() {
+    const currentEdition = PayContribution.getCurrentEdition();
+    return { edition: currentEdition };
   }
 }
