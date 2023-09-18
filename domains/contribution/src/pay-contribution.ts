@@ -5,18 +5,31 @@ export interface PayContributionForm {
   userId: number;
 }
 
-export class PayContribution {
-  private constructor() {}
+export interface ContributionRepository {
+  hasAlreadyPayed(userId: number, edition: number): Promise<boolean>;
+}
 
-  static of(contributionForm: PayContributionForm): Contribution {
+export class PayContribution {
+  constructor(private readonly contributions: ContributionRepository) {}
+
+  async apply({ userId, amount }: PayContributionForm): Promise<Contribution> {
+    const edition = this.getCurrentEdition();
+
+    const hasAlreadyPayed = await this.contributions.hasAlreadyPayed(
+      userId, edition
+    );
+    if (hasAlreadyPayed) throw new Error("Already payed");
+
     return {
-      ...contributionForm,
+      userId,
+      amount,
       paymentDate: new Date(),
       expirationDate: this.calculeExpirationDate(),
+      edition,
     };
   }
 
-  private static calculeExpirationDate(): Date {
+  private calculeExpirationDate(): Date {
     const currentDate = new Date();
     const expirationDate = new Date(currentDate.getFullYear(), 7, 31);
 
@@ -25,5 +38,16 @@ export class PayContribution {
     }
 
     return expirationDate;
+  }
+
+  private getCurrentEdition(): number {
+    const currentDate = new Date();
+
+    // current year to edition (2024 -> 49th edition)
+    const currentEdition = currentDate.getFullYear() - 1975;
+
+    // if current month is after august, increment edition
+    if (currentDate.getMonth() > 7) return currentEdition + 1;
+    return currentEdition;
   }
 }

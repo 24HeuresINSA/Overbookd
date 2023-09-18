@@ -10,11 +10,12 @@ ALTER TABLE "user" DROP COLUMN "has_payed_contributions";
 -- CreateTable
 CREATE TABLE "contribution" (
     "user_id" INTEGER NOT NULL,
+    "edition" INTEGER NOT NULL DEFAULT 49,
     "expiration_date" TIMESTAMP(3) NOT NULL,
     "payment_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "amount" DOUBLE PRECISION NOT NULL DEFAULT 100,
 
-    CONSTRAINT "contribution_pkey" PRIMARY KEY ("user_id","expiration_date")
+    CONSTRAINT "contribution_pkey" PRIMARY KEY ("user_id","edition")
 );
 
 -- AddForeignKey
