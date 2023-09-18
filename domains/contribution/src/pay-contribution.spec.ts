@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { PayContribution } from "./pay-contribution";
 import { InMemoryContributionRepository } from "./contribution-repository.inmemory";
 import { Contribution } from "./contribution.model";
+import {
+  HAS_ALREADY_PAYED_ERROR_MESSAGE,
+  INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
+} from "./pay-contribution.error";
 
 const contributions: Contribution[] = [
   {
@@ -36,27 +40,54 @@ describe("Pay contribution", () => {
     payContribution = new PayContribution(contributionRepository);
   });
 
-  /*it("should have expiration date after payment date", async () => {
-    const contributionForm = { userId: 1, amount: 100 };
-    const payedContribution = await payContribution.apply(contributionForm);
+  describe("when user has not already payed his contribution", () => {
 
-    expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
-      payedContribution.paymentDate.getTime(),
-    );
+    it("should have expiration date after payment date", async () => {
+      const contributionForm = { userId: 1, amount: 100 };
+      const payedContribution = await payContribution.apply(contributionForm);
+  
+      expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
+        payedContribution.paymentDate.getTime(),
+      );
+    });
+  
+    it("should have expiration date on the last day of August", async () => {
+      const contributionForm = { userId: 1, amount: 100 };
+      const payedContribution = await payContribution.apply(contributionForm);
+  
+      expect(payedContribution.expirationDate.getMonth()).toBe(7);
+      expect(payedContribution.expirationDate.getDate()).toBe(31);
+    });
+  
+    it("should have an amount equal than one hundred cents", async () => {
+      const contributionForm = { userId: 1, amount: 100 };
+      const payedContribution = await payContribution.apply(contributionForm);
+  
+      expect(payedContribution.amount).toBeEqual(100);
+    })
+
+    it("should have an amount greater than one hundred cents", async () => {
+      const contributionForm = { userId: 1, amount: 150 };
+      const payedContribution = await payContribution.apply(contributionForm);
+  
+      expect(payedContribution.amount).toBeEqual(150);
+    })
+
+    it("should have an amount less than one hundred cents", async () => {
+      const contributionForm = { userId: 1, amount: 90 };
+      const payedContribution = await payContribution.apply(contributionForm);
+
+      expect(payedContribution).toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+    });
   });
 
-  it("should have expiration date on the last day of August", async () => {
-    const contributionForm = { userId: 1, amount: 100 };
-    const payedContribution = await payContribution.apply(contributionForm);
+  describe("when user has already payed his contribution", () => {
+    const contribution = { userId: 2, amount: 150 };
 
-    expect(payedContribution.expirationDate.getMonth()).toBe(7);
-    expect(payedContribution.expirationDate.getDate()).toBe(31);
+    it("should indicate that user has already payed", async () => {
+      const payedContribution = await payContribution.apply(contribution);
+
+      expect(payedContribution).toThrow(HAS_ALREADY_PAYED_ERROR_MESSAGE);
+    });
   });
-
-  it("should have an amount greater or equal than one hundred cents", async () => {
-    const contributionForm = { userId: 1, amount: 100 };
-    const payedContribution = await payContribution.apply(contributionForm);
-
-    expect(payedContribution.amount).toBeGreaterThanOrEqual(100);
-  });*/
 });

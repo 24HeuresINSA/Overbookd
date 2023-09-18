@@ -25,6 +25,7 @@ import { ContributionResponseDto } from "./dto/contribution.response.dto";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 import { UserContribution, PayContributionForm } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
+import { MANAGE_PERSONNAL_ACCOUNTS } from "@overbookd/permission";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -56,7 +57,7 @@ export class ContributionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("manage-cp")
+  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
   @Post()
   @ApiResponse({
     status: 201,
@@ -72,7 +73,7 @@ export class ContributionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission("manage-cp")
+  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
   @Delete(":userId")
   @HttpCode(204)
   @ApiParam({ name: "userId", type: Number })
