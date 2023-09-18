@@ -11,12 +11,12 @@
                 label="Recherche"
                 :disabled="isStatsModeActive"
               ></v-text-field>
-              <SearchTeam
+              <SearchTeams
                 v-model="filters.teams"
                 label="Équipe"
                 :boxed="false"
                 :disabled="isStatsModeActive"
-              ></SearchTeam>
+              ></SearchTeams>
 
               <template v-if="canManageUsers">
                 <label>Compte validé</label>
@@ -28,11 +28,11 @@
                   :disabled="isStatsModeActive"
                 >
                   <v-btn :value="true" small :disabled="isStatsModeActive">
-                    oui</v-btn
-                  >
+                    oui
+                  </v-btn>
                   <v-btn :value="false" small :disabled="isStatsModeActive">
-                    Non</v-btn
-                  >
+                    Non
+                  </v-btn>
                 </v-btn-toggle>
               </template>
               <template v-if="canManagePersonnalAccounts">
@@ -71,48 +71,50 @@
             </v-card-text>
             <v-card-actions class="ctas">
               <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
-              <v-btn :loading="planningLoading" text @click="exportPlannings">
+              <v-btn text @click="exportPlannings">
                 télécharger plannings
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
         <v-col md="10">
-          <div v-if="!loading">
+          <div>
             <v-data-table
               v-if="!isStatsModeActive"
               style="max-height: 100%; overflow-y: auto"
               :headers="headers"
-              :items="filteredUsers"
-              :options.sync="options"
+              :items="displayedUsers"
               class="elevation-1"
               :items-per-page="20"
               dense
             >
               <template #item.name="{ item }">
-                {{ item.firstname }} {{ item.lastname }}
-                {{ item.nickname ? `(${item.nickname})` : "" }}
+                {{ formatUserName(item) }}
               </template>
+
               <template #item.actions="{ item }" style="display: flex">
                 <v-btn icon small @click="openInformationDialog(item)">
                   <v-icon small>mdi-information-outline</v-icon>
                 </v-btn>
+
                 <v-btn icon small :href="getPhoneLink(item.phone)">
                   <v-icon small>mdi-phone</v-icon>
                 </v-btn>
+
                 <v-btn icon small :href="'mailto:' + item.email">
                   <v-icon small>mdi-email</v-icon>
                 </v-btn>
+
                 <v-btn icon small @click="openCalendar(item.id)">
                   <v-icon small>mdi-calendar</v-icon>
                 </v-btn>
               </template>
 
-              <template #[`item.charisma`]="{ item }">
+              <template #item.charisma="{ item }">
                 {{ item.charisma || 0 }}
               </template>
 
-              <template #[`item.teams`]="{ item }">
+              <template #item.teams="{ item }">
                 <v-container>
                   <TeamChip
                     v-for="team of item.teams"
@@ -122,34 +124,21 @@
                   ></TeamChip>
                 </v-container>
               </template>
+
+              <template #no-data> Aucun bénévole trouvé </template>
             </v-data-table>
             <VolunteerStatsTable v-else />
-          </div>
-          <div v-else class="d-flex justify-center">
-            <v-progress-circular
-              indeterminate
-              color="grey"
-            ></v-progress-circular>
           </div>
         </v-col>
       </v-row>
     </div>
 
-    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
-      {{ feedbackMessage }}
-
-      <template #actions="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-
-    <SnackNotificationContainer></SnackNotificationContainer>
     <UserInformation
       :toggle="isUserInformationDialogOpen"
       @update-toggle="(t) => (isUserInformationDialogOpen = t)"
     ></UserInformation>
+
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -159,30 +148,32 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
-import SearchTeams from "~/components/atoms/field/search/SearchTeam.vue";
+import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { download } from "~/utils/planning/download";
-import { formatPhoneLink } from "~/utils/user/user.utils";
+import {
+  formatPhoneLink,
+  formatUserNameWithNickname,
+} from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
-import { matchingSearchItems } from "~/utils/search/search.utils";
+import { Searchable } from "~/utils/search/search.utils";
 import { MANAGE_PERSONNAL_ACCOUNTS, MANAGE_USERS } from "@overbookd/permission";
 import { UserPersonnalData } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { VolunteerPlanning } from "~/store/planning";
+import { Team } from "~/utils/models/team.model";
 
 interface VolunteersData {
-  usersHeaders: Header[];
-  statsHeaders: Header[];
+  headers: Header[];
 
   filters: {
     search: string;
-    teams: string[];
+    teams: Team[];
     isVolunteer: boolean;
     hasPayedContribution?: boolean;
   };
 
   isUserInformationDialogOpen: boolean;
   isStatsModeActive: boolean;
-  planningLoading: boolean;
 }
 
 export default Vue.extend({
@@ -195,18 +186,10 @@ export default Vue.extend({
     SearchTeams,
   },
   data: (): VolunteersData => ({
-    usersHeaders: [
+    headers: [
       { text: "Prénom Nom (Surnom)", value: "name" },
       { text: "Equipes", value: "teams" },
       { text: "Charisme", value: "charisma", align: "end" },
-      { text: "Actions", value: "actions", sortable: false },
-    ],
-    statsHeaders: [
-      { text: "Prénom Nom (Surnom)", value: "name" },
-      { text: "Charisme", value: "charisma", align: "end" },
-      { text: "Charge", value: "charge" },
-      { text: "Heures affectés", value: "hours" },
-      { text: "Statiques", value: "statics" },
       { text: "Actions", value: "actions", sortable: false },
     ],
 
@@ -219,8 +202,6 @@ export default Vue.extend({
 
     isUserInformationDialogOpen: false,
     isStatsModeActive: false,
-
-    planningLoading: false,
   }),
   head: () => ({
     title: "Liste des bénévoles",
@@ -232,16 +213,21 @@ export default Vue.extend({
         ? this.$accessor.user.volunteers
         : this.$accessor.user.candidates;
     },
-    filteredUsers(): UserPersonnalData[] {
-      return this.users;
-    },
-    searchableVolunteers(): UserPersonnalData[] {
+    searchableUsers(): Searchable<UserPersonnalData>[] {
       return this.users.map((user) => ({
         ...user,
         searchable: SlugifyService.apply(
           `${user.firstname} ${user.lastname} ${user.nickname}`,
         ),
       }));
+    },
+    displayedUsers(): UserPersonnalData[] {
+      return this.searchableUsers.filter((user) => {
+        return (
+          this.filterUserByTeams(this.filters.teams)(user) &&
+          this.filterUserByName(this.filters.search)(user)
+        );
+      });
     },
     volunteerPlannings(): VolunteerPlanning[] {
       return this.$accessor.planning.volunteerPlannings;
@@ -254,33 +240,14 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    filters: {
-      handler() {
-        this.updateFilteredUsers();
-      },
-      deep: true,
-    },
-
-    users: {
-      handler() {
-        this.updateFilteredUsers();
-      },
-      deep: true,
-    },
-  },
-
   async mounted() {
-    await this.$accessor.user.fetchCandidates();
-    await this.$accessor.user.fetchVolunteers();
+    await this.initStore();
   },
 
   methods: {
     async initStore() {
       await this.$accessor.user.fetchCandidates();
       await this.$accessor.user.fetchVolunteers();
-      await this.$accessor.timeslot.fetchTimeslots();
-      await this.$accessor.ft.fetchAll();
     },
 
     openInformationDialog(user: UserPersonnalData) {
@@ -306,9 +273,7 @@ export default Vue.extend({
 
     async exportCSV() {
       // Parse data into a CSV string to be passed to the download function
-
       const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
-
       const csvHeader =
         "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;ContribPayée;Commentaire";
 
@@ -337,50 +302,41 @@ export default Vue.extend({
       window.open(`/planning/${userId}`, "_blank");
     },
 
-    updateFilteredUsers() {
-      let mUsers = matchingSearchItems(
-        this.searchableVolunteers,
-        this.filters.search,
-      );
-
-      // filter by payed contributions
-      if (this.filters.hasPayedContribution !== undefined) {
-        mUsers = mUsers.filter(
-          (user) =>
-            user.hasPayedContribution === this.filters.hasPayedContribution,
-        );
-        this.options.page = 1; // reset page
-      }
-
-      // filter by team
-      if (this.filters.teams.length > 0) {
-        mUsers = mUsers.filter((user) => {
-          if (user.teams) {
-            return (
-              user.teams.filter((value) =>
-                this.filters.teams.map((team) => team.code).includes(value),
-              ).length === this.filters.teams.length
-            );
-          } else {
-            return false;
-          }
-        });
-        this.options.page = 1; // reset page
-      }
-      this.filteredUsers = mUsers;
+    filterUserByName(
+      search: string,
+    ): (user: Searchable<UserPersonnalData>) => boolean {
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
+
+    filterUserByTeams(
+      teamsSearched: Team[],
+    ): (user: UserPersonnalData) => boolean {
+      return teamsSearched.length > 0
+        ? (user) =>
+            teamsSearched.every((teamSearched) =>
+              user.teams.some(
+                (userTeamCode) => teamSearched.code === userTeamCode,
+              ),
+            )
+        : () => true;
+    },
+
     async exportPlannings() {
-      this.planningLoading = true;
       await this.$accessor.planning.fetchAllPdfPlannings(
-        this.filteredUsers.filter(({ charisma }) => charisma > 0),
+        this.displayedUsers.filter(({ charisma }) => charisma > 0),
       );
-      this.planningLoading = false;
       this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
         download(planningBase64Data, volunteer),
       );
     },
-    getPhoneLink(phone) {
+
+    getPhoneLink(phone: string) {
       return formatPhoneLink(phone);
+    },
+
+    formatUserName(user: UserPersonnalData) {
+      return formatUserNameWithNickname(user);
     },
   },
 });

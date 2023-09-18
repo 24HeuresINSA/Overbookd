@@ -76,7 +76,7 @@ export default Vue.extend({
         (volunteer) => {
           return (
             this.filterVolunteerByTeams(this.teams)(volunteer) &&
-            this.filterVolunteertByName(this.searchVolunteer)(volunteer)
+            this.filterVolunteerByName(this.searchVolunteer)(volunteer)
           );
         },
       );
@@ -130,7 +130,7 @@ export default Vue.extend({
         return b.assignmentDuration - a.assignmentDuration;
       });
     },
-    filterVolunteertByName(
+    filterVolunteerByName(
       search: string,
     ): (timeSpan: Searchable<Volunteer>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
