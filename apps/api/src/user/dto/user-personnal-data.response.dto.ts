@@ -1,5 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { UserPersonnalData } from "@overbookd/user";
+import { UserContribution } from "@overbookd/contribution";
+import { ContributionResponseDto } from "../../contribution/dto/contribution.response.dto";
 
 export class UserPersonnalDataResponseDto implements UserPersonnalData {
   @ApiProperty({
@@ -91,4 +93,11 @@ export class UserPersonnalDataResponseDto implements UserPersonnalData {
     isArray: true,
   })
   teams: string[];
+
+  @ApiProperty({
+    name: "contribution",
+    description: "User current contribution",
+    type: ContributionResponseDto,
+  })
+  contribution?: UserContribution;
 }

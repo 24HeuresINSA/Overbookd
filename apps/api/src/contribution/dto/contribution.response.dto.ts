@@ -5,6 +5,7 @@ export class ContributionResponseDto implements UserContribution {
   @ApiProperty({
     description: "The contribution amount",
     type: Number,
+    example: 100,
   })
   amount: number;
 
