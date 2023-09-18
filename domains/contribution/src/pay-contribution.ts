@@ -20,7 +20,8 @@ export class PayContribution {
     const edition = PayContribution.getCurrentEdition();
 
     const hasAlreadyPayed = await this.contributions.hasAlreadyPayed(
-      userId, edition
+      userId,
+      edition,
     );
     if (hasAlreadyPayed) throw new HasAlreadyPayed();
 

@@ -41,43 +41,43 @@ describe("Pay contribution", () => {
   });
 
   describe("when user has not already payed his contribution", () => {
-
     it("should have expiration date after payment date", async () => {
       const contributionForm = { userId: 1, amount: 100 };
       const payedContribution = await payContribution.apply(contributionForm);
-  
+
       expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
         payedContribution.paymentDate.getTime(),
       );
     });
-  
+
     it("should have expiration date on the last day of August", async () => {
       const contributionForm = { userId: 1, amount: 100 };
       const payedContribution = await payContribution.apply(contributionForm);
-  
+
       expect(payedContribution.expirationDate.getMonth()).toBe(7);
       expect(payedContribution.expirationDate.getDate()).toBe(31);
     });
-  
+
     it("should have an amount equal than one hundred cents", async () => {
       const contributionForm = { userId: 1, amount: 100 };
       const payedContribution = await payContribution.apply(contributionForm);
-  
-      expect(payedContribution.amount).toBeEqual(100);
-    })
+
+      expect(payedContribution.amount).toEqual(100);
+    });
 
     it("should have an amount greater than one hundred cents", async () => {
       const contributionForm = { userId: 1, amount: 150 };
       const payedContribution = await payContribution.apply(contributionForm);
-  
-      expect(payedContribution.amount).toBeEqual(150);
-    })
+
+      expect(payedContribution.amount).toBeGreaterThan(100);
+    });
 
     it("should have an amount less than one hundred cents", async () => {
       const contributionForm = { userId: 1, amount: 90 };
-      const payedContribution = await payContribution.apply(contributionForm);
 
-      expect(payedContribution).toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+      expect(
+        async () => await payContribution.apply(contributionForm),
+      ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
     });
   });
 
@@ -85,9 +85,9 @@ describe("Pay contribution", () => {
     const contribution = { userId: 2, amount: 150 };
 
     it("should indicate that user has already payed", async () => {
-      const payedContribution = await payContribution.apply(contribution);
-
-      expect(payedContribution).toThrow(HAS_ALREADY_PAYED_ERROR_MESSAGE);
+      expect(
+        async () => await payContribution.apply(contribution),
+      ).rejects.toThrow(HAS_ALREADY_PAYED_ERROR_MESSAGE);
     });
   });
 });

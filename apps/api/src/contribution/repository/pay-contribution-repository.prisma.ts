@@ -7,9 +7,7 @@ import {
 import { PrismaService } from "../../prisma.service";
 import { SELECT_CONTRIBUTION } from "../contribution.query";
 
-export class PrismaPayContributionRepository
-  implements ContributionRepository
-{
+export class PrismaPayContributionRepository implements ContributionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async pay(contribution: Contribution): Promise<UserContribution> {
@@ -32,8 +30,10 @@ export class PrismaPayContributionRepository
   async remove(userId: number): Promise<void> {
     await this.prisma.contribution.delete({
       where: {
-        userId,
-        ...PrismaPayContributionRepository.buildEditionIsCurrentCondition(),
+        userId_edition: {
+          userId,
+          ...PrismaPayContributionRepository.buildEditionIsCurrentCondition(),
+        },
       },
     });
   }
