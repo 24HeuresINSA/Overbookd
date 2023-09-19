@@ -41,8 +41,9 @@ describe("Pay contribution", () => {
   });
 
   describe("when user has not already payed his contribution", () => {
+    const contributionForm = { userId: 1, amount: 100 };
+
     it("should have expiration date after payment date", async () => {
-      const contributionForm = { userId: 1, amount: 100 };
       const payedContribution = await payContribution.for(contributionForm);
 
       expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
@@ -51,33 +52,29 @@ describe("Pay contribution", () => {
     });
 
     it("should have expiration date on the last day of August", async () => {
-      const contributionForm = { userId: 1, amount: 100 };
       const payedContribution = await payContribution.for(contributionForm);
 
       expect(payedContribution.expirationDate.getMonth()).toBe(7);
       expect(payedContribution.expirationDate.getDate()).toBe(31);
     });
 
-    it("should have an amount equal to one hundred cents", async () => {
-      const contributionForm = { userId: 1, amount: 100 };
-      const payedContribution = await payContribution.for(contributionForm);
+    describe.each`
+      userId | amount | error
+      ${1}   | ${100} |
+      ${1}   | ${150} |
+      ${1}   | ${90}  | ${INSUFFICIENT_AMOUNT_ERROR_MESSAGE}
+    `("when user try to pay $amount cents", ({ userId, amount, error }) => {
+      it(`should indicate that ${error}`, async () => {
+        if (error) {
+          expect(
+            async () => await payContribution.for({ userId, amount }),
+          ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+        } else {
+          const payedContribution = await payContribution.for({ userId, amount });
 
-      expect(payedContribution.amount).toEqual(100);
-    });
-
-    it("should have an amount greater than one hundred cents", async () => {
-      const contributionForm = { userId: 1, amount: 150 };
-      const payedContribution = await payContribution.for(contributionForm);
-
-      expect(payedContribution.amount).toBeGreaterThan(100);
-    });
-
-    it("should indicate we can't pay less than one hundred cents", async () => {
-      const contributionForm = { userId: 1, amount: 90 };
-
-      expect(
-        async () => await payContribution.for(contributionForm),
-      ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+          expect(payedContribution.amount).toBeGreaterThanOrEqual(amount);
+        }
+      });
     });
   });
 
