@@ -93,11 +93,4 @@ export class UserPersonnalDataResponseDto implements UserPersonnalData {
     isArray: true,
   })
   teams: string[];
-
-  @ApiProperty({
-    name: "contribution",
-    description: "User current contribution",
-    type: ContributionResponseDto,
-  })
-  contribution?: UserContribution;
 }
