@@ -3,7 +3,6 @@ import {
   Controller,
   Post,
   Body,
-  Get,
   Param,
   ParseIntPipe,
   HttpCode,
@@ -39,21 +38,6 @@ import { MANAGE_PERSONNAL_ACCOUNTS } from "@overbookd/permission";
 @Controller("contribution")
 export class ContributionController {
   constructor(private readonly contributionService: ContributionService) {}
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Get(":userId")
-  @ApiResponse({
-    status: 200,
-    description: "Get current contribution",
-    type: ContributionResponseDto,
-  })
-  @ApiParam({ name: "userId", type: Number })
-  find(
-    @Param("userId", ParseIntPipe) userId: number,
-  ): Promise<UserContribution | null> {
-    return this.contributionService.find(userId);
-  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()

@@ -1,5 +1,9 @@
 import { Contribution, UserContribution } from "./contribution.model";
 import { HasAlreadyPayed, InsufficientAmount } from "./pay-contribution.error";
+import { ONE_YEAR_IN_MS } from "@overbookd/period";
+
+const BASE_EDITION = 49
+const BASE_EDITION_STARTS = new Date("2023-09-01");
 
 export interface PayContributionForm {
   amount: number;
@@ -8,15 +12,13 @@ export interface PayContributionForm {
 
 export interface ContributionRepository {
   pay: (contribution: Contribution) => Promise<UserContribution>;
-  find: (userId: number) => Promise<UserContribution | null>;
-  remove: (userId: number) => Promise<void>;
   hasAlreadyPayed(userId: number, edition: number): Promise<boolean>;
 }
 
 export class PayContribution {
   constructor(private readonly contributions: ContributionRepository) {}
 
-  async apply({ userId, amount }: PayContributionForm): Promise<Contribution> {
+  async for({ userId, amount }: PayContributionForm): Promise<Contribution> {
     const edition = PayContribution.getCurrentEdition();
 
     const hasAlreadyPayed = await this.contributions.hasAlreadyPayed(
@@ -36,7 +38,7 @@ export class PayContribution {
     };
   }
 
-  static calculeExpirationDate(): Date {
+  private static calculeExpirationDate(): Date {
     const currentDate = new Date();
     const expirationDate = new Date(currentDate.getFullYear(), 7, 31);
 
@@ -48,13 +50,13 @@ export class PayContribution {
   }
 
   static getCurrentEdition(): number {
-    const currentDate = new Date();
-
-    // current year to edition (2024 -> 49th edition)
-    const currentEdition = currentDate.getFullYear() - 1975;
-
-    // if current month is after august, increment edition
-    if (currentDate.getMonth() > 7) return currentEdition + 1;
-    return currentEdition;
+    return PayContribution.findEdition(new Date());
   }
+
+  private static findEdition(date: Date): number {
+    const durationAfterBaseEdition = date.getTime() - BASE_EDITION_STARTS.getTime();
+    const editionAfterBaseEdition = Math.floor(durationAfterBaseEdition / ONE_YEAR_IN_MS);
+    return BASE_EDITION + editionAfterBaseEdition;
+  }
+  
 }

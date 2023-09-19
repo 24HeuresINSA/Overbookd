@@ -10,12 +10,8 @@ export class ContributionService {
   ) {}
 
   async pay(contributionData: PayContributionForm): Promise<UserContribution> {
-    const contribution = await this.payContribution.apply(contributionData);
+    const contribution = await this.payContribution.for(contributionData);
     return this.payContributionRepository.pay(contribution);
-  }
-
-  async find(userId: number): Promise<UserContribution | null> {
-    return this.payContributionRepository.find(userId);
   }
 
   async remove(userId: number): Promise<void> {

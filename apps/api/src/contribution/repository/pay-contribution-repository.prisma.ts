@@ -17,16 +17,6 @@ export class PrismaPayContributionRepository implements ContributionRepository {
     });
   }
 
-  async find(userId: number): Promise<UserContribution | null> {
-    return this.prisma.contribution.findFirst({
-      where: {
-        userId,
-        ...PrismaPayContributionRepository.buildEditionIsCurrentCondition(),
-      },
-      select: SELECT_CONTRIBUTION,
-    });
-  }
-
   async remove(userId: number): Promise<void> {
     await this.prisma.contribution.delete({
       where: {
