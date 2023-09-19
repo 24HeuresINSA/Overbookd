@@ -153,7 +153,7 @@ export default Vue.extend({
       if (!this.selectedSignage) return;
       await this.$accessor.catalogSignage.deleteSignage(this.selectedSignage);
     },
-    filterSignagesByName(search: string | null): (signage: Signage) => boolean {
+    filterSignagesByName(search: string | null): (signage: Searchable<Signage>) => boolean {
       if (!search) return () => true;
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);

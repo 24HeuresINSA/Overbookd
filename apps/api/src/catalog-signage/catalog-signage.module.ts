@@ -7,4 +7,4 @@ import { CatalogSignageService } from "./catalog-signage.service";
   controllers: [CatalogSignageController],
   providers: [CatalogSignageService, PrismaService],
 })
-export class CatalogSignagerModule {}
+export class CatalogSignageModule {}
