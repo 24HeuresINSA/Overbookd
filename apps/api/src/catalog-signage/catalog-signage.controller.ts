@@ -67,7 +67,7 @@ export class CatalogSignageController {
     description: "The signage has been successfully created",
     type: SignageResponseDto,
   })
-  create(signage: SignageForm): Promise<Signage> {
+  create(@Body() signage: SignageForm): Promise<Signage> {
     return this.catalogSignageService.create(signage);
   }
 

@@ -52,8 +52,8 @@
         <template #statement>
           Tu es sur le point de supprimer
           <strong>{{ selectedSignage?.name }}</strong> <br />
-          Vérifie 2 fois avant de cliquer car elle sera supprimé de partout,
-          même sur les FA déjà validées.
+          Vérifie 2 fois avant de cliquer car elle sera également supprimée sur
+          les FA déjà validées.
         </template>
         <template #confirm-btn-content>
           <v-icon left> mdi-delete </v-icon>Supprimer
