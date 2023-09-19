@@ -7,11 +7,11 @@ import {
   IsString,
   ValidationArguments,
 } from "class-validator";
-import { SignageUpdateForm, signageTypes, SignageType } from '@overbookd/signa';
+import { SignageUpdateForm, signageTypes, SignageType } from "@overbookd/signa";
 
 export class UpdateSignageRequestDto implements SignageUpdateForm {
   @ApiProperty({
-    description: 'The signage id',
+    description: "The signage id",
     required: true,
   })
   @IsNotEmpty()
@@ -19,16 +19,16 @@ export class UpdateSignageRequestDto implements SignageUpdateForm {
   id: number;
 
   @ApiProperty({
-    description: 'The signage name',
+    description: "The signage name",
     required: true,
-    example: 'Panneau vert',
+    example: "Panneau vert",
   })
   @IsString()
   @IsNotEmpty()
   name: string;
 
   @ApiProperty({
-    description: 'The signage type',
+    description: "The signage type",
     required: true,
     example: signageTypes.PANNEAU,
   })

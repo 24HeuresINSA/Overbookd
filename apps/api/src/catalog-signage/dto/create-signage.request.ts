@@ -6,22 +6,22 @@ import {
   IsString,
   ValidationArguments,
 } from "class-validator";
-import { SignageForm, signageTypes, SignageType } from '@overbookd/signa';
+import { SignageForm, signageTypes, SignageType } from "@overbookd/signa";
 
 export class CreateSignageRequestDto implements SignageForm {
   @ApiProperty({
-    description: 'The signage name',
+    description: "The signage name",
     required: true,
-    example: 'Panneau vert',
+    example: "Panneau vert",
   })
   @IsString()
   @IsNotEmpty()
   name: string;
 
   @ApiProperty({
-    description: 'The signage type',
+    description: "The signage type",
     required: true,
-    example: 'PANNEAU',
+    example: "PANNEAU",
   })
   @IsDefined()
   @IsEnum(signageTypes, {

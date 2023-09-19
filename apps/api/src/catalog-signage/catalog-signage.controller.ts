@@ -21,7 +21,10 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CatalogSignageService } from "./catalog-signage.service";
-import { READ_SIGNAGE_CATALOG, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
+import {
+  READ_SIGNAGE_CATALOG,
+  WRITE_SIGNAGE_CATALOG,
+} from "@overbookd/permission";
 import { SignageResponseDto } from "./dto/signage.reponse";
 import { Signage } from "@overbookd/signa";
 import { CreateSignageRequestDto } from "./dto/create-signage.request";
