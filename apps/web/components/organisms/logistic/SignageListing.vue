@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Signalisations</h2>
     <form class="filter">
       <v-text-field
         v-model="searchName"

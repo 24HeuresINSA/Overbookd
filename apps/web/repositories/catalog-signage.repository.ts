@@ -26,6 +26,6 @@ export class CatalogSignageRepository {
   }
 
   static deleteSignage(context: Context, signageId: number) {
-    return context.$axios.$delete(`${this.basePath}/${signageId}`);
+    return context.$axios.delete(`${this.basePath}/${signageId}`);
   }
 }
