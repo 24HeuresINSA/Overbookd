@@ -60,21 +60,26 @@ describe("Pay contribution", () => {
 
     describe.each`
       userId | amount | error
-      ${1}   | ${100} |
-      ${1}   | ${150} |
+      ${1}   | ${100} | ${null}
+      ${1}   | ${150} | ${null}
       ${1}   | ${90}  | ${INSUFFICIENT_AMOUNT_ERROR_MESSAGE}
     `("when user try to pay $amount cents", ({ userId, amount, error }) => {
-      it(`should indicate that ${error}`, async () => {
-        if (error) {
+      if (error) {
+        it(`should indicate that ${error}`, async () => {
           expect(
             async () => await payContribution.for({ userId, amount }),
           ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
-        } else {
-          const payedContribution = await payContribution.for({ userId, amount });
+        });
+      } else {
+        it(`should pay ${amount} cents`, async () => {
+          const payedContribution = await payContribution.for({
+            userId,
+            amount,
+          });
 
           expect(payedContribution.amount).toBeGreaterThanOrEqual(amount);
-        }
-      });
+        });
+      }
     });
   });
 
