@@ -36,25 +36,21 @@ export class FakeCatalogSignageRepository {
     {
       id: 1,
       name: "44 Radio Scoop",
-      slug: "44-radio-scoop",
       type: signageTypes.BACHE,
     },
     {
       id: 2,
       name: "Flèche verte",
-      slug: "fleche-verte",
       type: signageTypes.PANNEAU,
     },
     {
       id: 3,
       name: "Affiche 48",
-      slug: "affiche-48",
       type: signageTypes.AFFICHE,
     },
     {
       id: 4,
       name: "Panneau bois toilettes",
-      slug: "panneau-bois-toilettes",
       type: signageTypes.PANNEAU,
     },
   ];

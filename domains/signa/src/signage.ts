@@ -13,7 +13,6 @@ export type SignageType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
 export interface Signage {
   id: number;
   name: string;
-  slug: string;
   type: SignageType;
   image?: string;
 }

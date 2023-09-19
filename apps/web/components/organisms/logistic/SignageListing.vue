@@ -71,6 +71,7 @@ import { Signage, SignageType, signageTypes } from "@overbookd/signa";
 import { SlugifyService } from "@overbookd/slugify";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
+import { Searchable } from "~/utils/search/search.utils";
 
 interface SignageListingData {
   headers: Header[];
@@ -104,8 +105,14 @@ export default Vue.extend({
     signages(): Signage[] {
       return this.$accessor.catalogSignage.signages;
     },
+    searchableSignages(): Searchable<Signage>[] {
+      return this.signages.map((signage) => ({
+        ...signage,
+        searchable: SlugifyService.apply(signage.name),
+      }));
+    },
     filteredSignages(): Signage[] {
-      return this.signages.filter((signage) => {
+      return this.searchableSignages.filter((signage) => {
         return (
           this.filterSignagesByName(this.searchName)(signage) &&
           this.filterSignagesByType(this.searchType)(signage)
@@ -149,7 +156,7 @@ export default Vue.extend({
     filterSignagesByName(search: string | null): (signage: Signage) => boolean {
       if (!search) return () => true;
       const slugifiedSearch = SlugifyService.apply(search);
-      return ({ slug }) => slug.includes(slugifiedSearch);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
     filterSignagesByType(
       searchType: SignageType | null,
