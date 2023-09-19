@@ -617,8 +617,9 @@ model Friend {
 }
 
 model CatalogSignage {
-  id    Int     @id @default(autoincrement())
-  name  String  @unique @db.VarChar(40)
+  id    Int       @id @default(autoincrement())
+  name  String    @unique @db.VarChar(40)
+  type  SignaType
   image String?
 
   @@map("catalog_signage")
