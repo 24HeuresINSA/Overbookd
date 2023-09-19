@@ -110,7 +110,7 @@
     "testEnvironment": "jsdom"
   },
   "engines": {
-    "node": "20.6.1",
+    "node": "20.7.0",
     "pnpm": "8.7.5"
   }
 }
