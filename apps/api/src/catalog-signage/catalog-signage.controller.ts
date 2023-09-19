@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
@@ -26,13 +27,12 @@ import {
   WRITE_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
 import { SignageResponseDto } from "./dto/signage.reponse";
-import { Signage } from "@overbookd/signa";
-import { CreateSignageRequestDto } from "./dto/create-signage.request";
-import { UpdateSignageRequestDto } from "./dto/update-signage.request";
+import { Signage, SignageForm } from "@overbookd/signa";
+import { SignageFormRequestDto } from "./dto/signage-form.request";
 
 @ApiBearerAuth()
-@ApiTags("catalog-signage")
-@Controller("catalog-signage")
+@ApiTags("signages")
+@Controller("signages")
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -60,31 +60,34 @@ export class CatalogSignageController {
   @Post()
   @ApiBody({
     description: "The signage to create",
-    type: CreateSignageRequestDto,
+    type: SignageFormRequestDto,
   })
   @ApiResponse({
     status: 201,
     description: "The signage has been successfully created",
     type: SignageResponseDto,
   })
-  create(signage: CreateSignageRequestDto): Promise<Signage> {
+  create(signage: SignageForm): Promise<Signage> {
     return this.catalogSignageService.create(signage);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_SIGNAGE_CATALOG)
-  @Put()
+  @Put(":id")
   @ApiBody({
     description: "The signage to update",
-    type: UpdateSignageRequestDto,
+    type: SignageFormRequestDto,
   })
   @ApiResponse({
     status: 200,
     description: "The signage has been successfully updated",
     type: SignageResponseDto,
   })
-  update(signage: UpdateSignageRequestDto): Promise<Signage> {
-    return this.catalogSignageService.update(signage);
+  update(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() signage: SignageForm,
+  ): Promise<Signage> {
+    return this.catalogSignageService.update(id, signage);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

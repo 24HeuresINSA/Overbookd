@@ -9,7 +9,7 @@ export class SignageResponseDto implements Signage {
 
   @ApiProperty({
     description: "The signage name",
-    example: "Panneau vert",
+    example: "Flèche verte",
   })
   name: string;
 

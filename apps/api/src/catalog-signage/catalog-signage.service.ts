@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
+import { Signage, SignageForm } from "@overbookd/signa";
 
 @Injectable()
 export class CatalogSignageService {
@@ -16,9 +16,9 @@ export class CatalogSignageService {
     });
   }
 
-  async update(signage: SignageUpdateForm): Promise<Signage> {
+  async update(id: number, signage: SignageForm): Promise<Signage> {
     return this.prisma.catalogSignage.update({
-      where: { id: signage.id },
+      where: { id },
       data: signage,
     });
   }

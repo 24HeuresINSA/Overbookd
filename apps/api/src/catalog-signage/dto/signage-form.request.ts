@@ -3,25 +3,16 @@ import {
   IsDefined,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsString,
   ValidationArguments,
 } from "class-validator";
-import { SignageUpdateForm, signageTypes, SignageType } from "@overbookd/signa";
+import { SignageForm, signageTypes, SignageType } from "@overbookd/signa";
 
-export class UpdateSignageRequestDto implements SignageUpdateForm {
-  @ApiProperty({
-    description: "The signage id",
-    required: true,
-  })
-  @IsNotEmpty()
-  @IsNumber()
-  id: number;
-
+export class SignageFormRequestDto implements SignageForm {
   @ApiProperty({
     description: "The signage name",
     required: true,
-    example: "Panneau vert",
+    example: "Flèche verte",
   })
   @IsString()
   @IsNotEmpty()
