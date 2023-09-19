@@ -52,6 +52,7 @@
     "@overbookd/period": "workspace:^",
     "@overbookd/permission": "workspace:^",
     "@overbookd/registration": "workspace:^",
+    "@overbookd/signa": "workspace:^",
     "@overbookd/slugify": "workspace:^",
     "@overbookd/user": "workspace:^",
     "@overbookd/volunteer-availability": "workspace:^",
