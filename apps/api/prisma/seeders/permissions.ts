@@ -12,6 +12,7 @@ import {
   MANAGE_LOCATION,
   MANAGE_PERSONNAL_ACCOUNTS,
   MANAGE_USERS,
+  PAY_CONTRIBUTION,
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   READ_FT,
@@ -326,4 +327,13 @@ export const permissions = [
       },
     },
   },
+  {
+    name: PAY_CONTRIBUTION,
+    description: "Peut payer sa cotisation",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }],
+      },
+    },
+  }
 ];

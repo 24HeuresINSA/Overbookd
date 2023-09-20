@@ -1,3 +1,4 @@
+import { UnauthorizedException } from "@nestjs/common";
 import {
   Contribution,
   ContributionRepository,
@@ -5,7 +6,7 @@ import {
   UserContribution,
 } from "@overbookd/contribution";
 import { PrismaService } from "../../prisma.service";
-import { SELECT_CONTRIBUTION } from "../contribution.query";
+import { SELECT_CONTRIBUTION, WHERE_CAN_PAY_CONTRIBUTION } from "../contribution.query";
 import { SELECT_USER_PERSONNAL_DATA } from "../../user/user.query";
 import { UserService } from "../../user/user.service";
 import { UserPersonnalData } from "@overbookd/user";
@@ -14,12 +15,13 @@ export class PrismaPayContributionRepository implements ContributionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
-    const currentEdition = PayContribution.getCurrentEdition();
+    const WHERE_EDITION_IS_CURRENT = PrismaPayContributionRepository.buildEditionIsCurrentCondition();
     const users = await this.prisma.user.findMany({
       where: {
         contributions: {
-          none: { edition: currentEdition },
+          none: WHERE_EDITION_IS_CURRENT,
         },
+        ...WHERE_CAN_PAY_CONTRIBUTION,
       },
       select: SELECT_USER_PERSONNAL_DATA,
     });
@@ -27,6 +29,11 @@ export class PrismaPayContributionRepository implements ContributionRepository {
   }
 
   async pay(contribution: Contribution): Promise<UserContribution> {
+    const canPay = await this.canPayContribution(contribution.userId);
+    if (!canPay) {
+      throw new UnauthorizedException("Ce bénévole ne peut pas payer de contribution");
+    }
+
     return this.prisma.contribution.create({
       data: contribution,
       select: SELECT_CONTRIBUTION,
@@ -54,5 +61,14 @@ export class PrismaPayContributionRepository implements ContributionRepository {
   static buildEditionIsCurrentCondition() {
     const currentEdition = PayContribution.getCurrentEdition();
     return { edition: currentEdition };
+  }
+
+  private async canPayContribution(id: number): Promise<boolean> {
+    return this.prisma.user.findFirst({
+      where: {
+        id,
+        ...WHERE_CAN_PAY_CONTRIBUTION,
+      },
+    });
   }
 }

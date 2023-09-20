@@ -36,6 +36,7 @@ export const VIEW_DELETED_FA = "view-deleted-fa";
 export const VIEW_DELETED_FT = "view-deleted-ft";
 export const MANAGE_ADMINS = "manage-admins";
 export const MANAGE_CONTRIBUTIONS = "manage-contributions";
+export const PAY_CONTRIBUTION = "pay-contribution";
 
 const permissions = [
   HAVE_PERSONNAL_ACCOUNT,
@@ -74,6 +75,7 @@ const permissions = [
   VIEW_DELETED_FT,
   MANAGE_ADMINS,
   MANAGE_CONTRIBUTIONS,
+  PAY_CONTRIBUTION,
 ];
 
 export function isPermission(permission: string): permission is Permission {
