@@ -31,7 +31,13 @@
     "release:major": "pnpm version major && docker restart overbookd_web overbookd_api",
     "release:minor": "pnpm version minor && docker restart overbookd_web overbookd_api",
     "release:patch": "pnpm version patch && docker restart overbookd_web overbookd_api",
-    "release:pull-request": "git fetch -ap && pnpm --recursive --filter '...^[origin/main]' --filter '![origin/main]' run release:patch"
+    "version:bump-dependent": "pnpm --recursive --filter '...^[origin/main]' --filter '![origin/main]' run version:patch",
+    "version:major-dependency": "pnpm --recursive --filter '[origin/main]' run version:major",
+    "version:minor-dependency": "pnpm --recursive --filter '[origin/main]' run version:minor",
+    "version:patch-dependency": "pnpm --recursive --filter '[origin/main]' run version:patch",
+    "version:major": "git fetch -ap && pnpm run version:major-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
+    "version:minor": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
+    "version:patch": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate"
   },
   "packageManager": "pnpm@8.7.5",
   "engines": {
