@@ -14,8 +14,8 @@ import { UserPersonnalData } from "@overbookd/user";
 export class PrismaPayContributionRepository implements ContributionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
-    const WHERE_EDITION_IS_CURRENT = PrismaPayContributionRepository.buildEditionIsCurrentCondition();
+  async findMembersWithContributionOutToDate(): Promise<UserPersonnalData[]> {
+    const WHERE_EDITION_IS_CURRENT = this.buildEditionIsCurrentCondition();
     const users = await this.prisma.user.findMany({
       where: {
         contributions: {
@@ -45,7 +45,7 @@ export class PrismaPayContributionRepository implements ContributionRepository {
       where: {
         userId_edition: {
           userId,
-          ...PrismaPayContributionRepository.buildEditionIsCurrentCondition(),
+          ...this.buildEditionIsCurrentCondition(),
         },
       },
     });
@@ -58,7 +58,7 @@ export class PrismaPayContributionRepository implements ContributionRepository {
     return Boolean(contribution);
   }
 
-  static buildEditionIsCurrentCondition() {
+  private buildEditionIsCurrentCondition() {
     const currentEdition = PayContribution.getCurrentEdition();
     return { edition: currentEdition };
   }

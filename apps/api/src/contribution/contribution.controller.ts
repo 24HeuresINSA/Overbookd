@@ -48,12 +48,12 @@ export class ContributionController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: "List of users with no contribution for the current edition",
+    description: "List of members with contribution out-to-date for the current edition",
     type: UserPersonnalDataResponseDto,
     isArray: true,
   })
-  findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
-    return this.contributionService.findUsersWithNoContribution();
+  findMembersWithContributionOutToDate(): Promise<UserPersonnalData[]> {
+    return this.contributionService.findMembersWithContributionOutToDate();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

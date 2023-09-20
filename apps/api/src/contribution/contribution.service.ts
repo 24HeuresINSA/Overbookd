@@ -11,8 +11,8 @@ export class ContributionService {
   ) {}
 
   // find users with no contribution for the current edition
-  async findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
-    return this.payContributionRepository.findUsersWithNoContribution();
+  async findMembersWithContributionOutToDate(): Promise<UserPersonnalData[]> {
+    return this.payContributionRepository.findMembersWithContributionOutToDate();
   }
 
   async pay(contributionData: PayContributionForm): Promise<UserContribution> {

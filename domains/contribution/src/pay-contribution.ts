@@ -4,6 +4,13 @@ import { ONE_YEAR_IN_MS } from "@overbookd/period";
 
 const BASE_EDITION = 49
 const BASE_EDITION_STARTS = new Date("2023-09-01");
+const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
+const AUGUST = 7
+const EXIPIRATION_DATE = {
+  month: AUGUST,
+  day: 31
+}
+
 
 export interface PayContributionForm {
   amount: number;
@@ -27,20 +34,23 @@ export class PayContribution {
     );
     if (hasAlreadyPayed) throw new HasAlreadyPayed();
 
-    if (amount < 100) throw new InsufficientAmount();
+    if (amount < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS) {
+      throw new InsufficientAmount();
+    }
 
     return {
       userId,
       amount,
       paymentDate: new Date(),
-      expirationDate: PayContribution.calculeExpirationDate(),
+      expirationDate: this.calculeExpirationDate(),
       edition,
     };
   }
 
-  private static calculeExpirationDate(): Date {
+  private calculeExpirationDate(): Date {
     const currentDate = new Date();
-    const expirationDate = new Date(currentDate.getFullYear(), 7, 31);
+    const { month, day } = EXIPIRATION_DATE;
+    const expirationDate = new Date(currentDate.getFullYear(), month, day);
 
     if (currentDate > expirationDate) {
       expirationDate.setFullYear(expirationDate.getFullYear() + 1);
@@ -50,7 +60,7 @@ export class PayContribution {
   }
 
   static getCurrentEdition(): number {
-    return PayContribution.findEdition(new Date());
+    return this.findEdition(new Date());
   }
 
   private static findEdition(date: Date): number {
