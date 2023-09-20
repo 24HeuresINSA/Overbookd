@@ -41,6 +41,8 @@ resource_rules:
 
             The version of overbookd has not been updated.
 
-            Make sure to run `pnpm release:candidate` locally. :pray:
+            Make sure to run `pnpm version:<level>` locally. :pray:
+
+            If you don't know which level to choose take a look at [this documentation](https://gitlab.com/24-heures-insa/overbookd-mono/-/wikis/Gestion-des-versions#r%C3%A8gles-de-niveau-pour-modules)
 
             _If it's already done_, **rebase** on `main` without your changes on `package.json` files **and run it again**.
