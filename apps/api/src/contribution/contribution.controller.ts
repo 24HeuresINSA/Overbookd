@@ -31,14 +31,14 @@ import { UserPersonnalData } from "@overbookd/user";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
-@ApiTags("contribution")
+@ApiTags("contributions")
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@Controller("contribution")
+@Controller("contributions")
 export class ContributionController {
   constructor(private readonly contributionService: ContributionService) {}
 
