@@ -14,8 +14,20 @@ export class SignageResponseDto implements Signage {
   name: string;
 
   @ApiProperty({
+    description: "The signage slug",
+    example: "fleche-verte",
+  })
+  slug: string;
+
+  @ApiProperty({
     description: "The signage type",
     example: signageTypes.PANNEAU,
   })
   type: SignageType;
+
+  @ApiProperty({
+    description: "The signage image link",
+    required: false,
+  })
+  image?: string;
 }

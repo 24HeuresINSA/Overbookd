@@ -2,6 +2,7 @@
 CREATE TABLE "catalog_signage" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(40) NOT NULL,
+    "slug" VARCHAR(40) NOT NULL,
     "type" "signa_type" NOT NULL,
     "image" TEXT,
 
@@ -9,4 +10,4 @@ CREATE TABLE "catalog_signage" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "catalog_signage_name_key" ON "catalog_signage"("name");
+CREATE UNIQUE INDEX "catalog_signage_slug_key" ON "catalog_signage"("slug");

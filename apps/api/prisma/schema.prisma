@@ -618,7 +618,8 @@ model Friend {
 
 model CatalogSignage {
   id    Int       @id @default(autoincrement())
-  name  String    @unique @db.VarChar(40)
+  name  String    @db.VarChar(40)
+  slug  String    @unique @db.VarChar(40)
   type  SignaType
   image String?
 
