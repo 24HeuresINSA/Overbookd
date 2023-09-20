@@ -137,7 +137,7 @@ import {
 } from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
-import { MANAGE_PERSONNAL_ACCOUNTS, MANAGE_USERS } from "@overbookd/permission";
+import { MANAGE_USERS } from "@overbookd/permission";
 import { UserPersonnalData } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { VolunteerPlanning } from "~/store/planning";
