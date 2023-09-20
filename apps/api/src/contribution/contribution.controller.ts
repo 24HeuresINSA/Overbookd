@@ -48,7 +48,8 @@ export class ContributionController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: "List of members with contribution out-to-date for the current edition",
+    description:
+      "List of members with contribution out-to-date for the current edition",
     type: UserPersonnalDataResponseDto,
     isArray: true,
   })

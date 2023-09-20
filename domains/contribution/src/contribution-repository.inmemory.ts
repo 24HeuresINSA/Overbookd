@@ -15,7 +15,7 @@ export class InMemoryContributionRepository implements ContributionRepository {
   find(userId: number): Promise<UserContribution | null> {
     const currentEdition = PayContribution.getCurrentEdition();
     const contribution = this.contributions.find(
-      (c) => userId === c.userId && currentEdition === c.edition
+      (c) => userId === c.userId && currentEdition === c.edition,
     );
     return Promise.resolve(contribution || null);
   }
@@ -23,14 +23,14 @@ export class InMemoryContributionRepository implements ContributionRepository {
   remove(userId: number): Promise<void> {
     const currentEdition = PayContribution.getCurrentEdition();
     this.contributions = this.contributions.filter(
-      (c) => userId !== c.userId || currentEdition !== c.edition
+      (c) => userId !== c.userId || currentEdition !== c.edition,
     );
     return Promise.resolve();
   }
 
   hasAlreadyPayed(userId: number, edition: number): Promise<boolean> {
     const hasAlreadyPayed = this.contributions.some(
-      (c) => userId === c.userId && edition === c.edition
+      (c) => userId === c.userId && edition === c.edition,
     );
     return Promise.resolve(hasAlreadyPayed);
   }

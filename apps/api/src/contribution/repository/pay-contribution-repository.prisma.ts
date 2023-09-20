@@ -6,7 +6,10 @@ import {
   UserContribution,
 } from "@overbookd/contribution";
 import { PrismaService } from "../../prisma.service";
-import { SELECT_CONTRIBUTION, WHERE_CAN_PAY_CONTRIBUTION } from "../contribution.query";
+import {
+  SELECT_CONTRIBUTION,
+  WHERE_CAN_PAY_CONTRIBUTION,
+} from "../contribution.query";
 import { SELECT_USER_PERSONNAL_DATA } from "../../user/user.query";
 import { UserService } from "../../user/user.service";
 import { UserPersonnalData } from "@overbookd/user";
@@ -31,7 +34,9 @@ export class PrismaPayContributionRepository implements ContributionRepository {
   async pay(contribution: Contribution): Promise<UserContribution> {
     const canPay = await this.canPayContribution(contribution.userId);
     if (!canPay) {
-      throw new UnauthorizedException("Ce bénévole ne peut pas payer de contribution");
+      throw new UnauthorizedException(
+        "Ce bénévole ne peut pas payer de contribution",
+      );
     }
 
     return this.prisma.contribution.create({

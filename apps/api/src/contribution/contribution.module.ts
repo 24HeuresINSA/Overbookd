@@ -17,8 +17,9 @@ import { PayContribution } from "@overbookd/contribution";
     },
     {
       provide: PayContribution,
-      useFactory: (payContributionRepository: PrismaPayContributionRepository) =>
-        new PayContribution(payContributionRepository),
+      useFactory: (
+        payContributionRepository: PrismaPayContributionRepository,
+      ) => new PayContribution(payContributionRepository),
       inject: [ContributionService],
     },
     {

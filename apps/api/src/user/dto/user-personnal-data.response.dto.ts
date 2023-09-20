@@ -1,7 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { UserPersonnalData } from "@overbookd/user";
-import { UserContribution } from "@overbookd/contribution";
-import { ContributionResponseDto } from "../../contribution/dto/contribution.response.dto";
 
 export class UserPersonnalDataResponseDto implements UserPersonnalData {
   @ApiProperty({

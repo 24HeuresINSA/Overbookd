@@ -2,15 +2,14 @@ import { Contribution, UserContribution } from "./contribution.model";
 import { HasAlreadyPayed, InsufficientAmount } from "./pay-contribution.error";
 import { ONE_YEAR_IN_MS } from "@overbookd/period";
 
-const BASE_EDITION = 49
+const BASE_EDITION = 49;
 const BASE_EDITION_STARTS = new Date("2023-09-01");
 const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
-const AUGUST = 7
+const AUGUST = 7;
 const EXIPIRATION_DATE = {
   month: AUGUST,
-  day: 31
-}
-
+  day: 31,
+};
 
 export interface PayContributionForm {
   amount: number;
@@ -64,9 +63,11 @@ export class PayContribution {
   }
 
   private static findEdition(date: Date): number {
-    const durationAfterBaseEdition = date.getTime() - BASE_EDITION_STARTS.getTime();
-    const editionAfterBaseEdition = Math.floor(durationAfterBaseEdition / ONE_YEAR_IN_MS);
+    const durationAfterBaseEdition =
+      date.getTime() - BASE_EDITION_STARTS.getTime();
+    const editionAfterBaseEdition = Math.floor(
+      durationAfterBaseEdition / ONE_YEAR_IN_MS,
+    );
     return BASE_EDITION + editionAfterBaseEdition;
   }
-  
 }

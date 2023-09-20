@@ -37,7 +37,6 @@ import { TaskCategory } from "@prisma/client";
 import {
   BE_AFFECTED,
   HAVE_PERSONNAL_ACCOUNT,
-  MANAGE_PERSONNAL_ACCOUNTS,
   MANAGE_USERS,
 } from "@overbookd/permission";
 
