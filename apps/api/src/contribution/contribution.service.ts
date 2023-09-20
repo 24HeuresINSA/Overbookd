@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PayContribution, PayContributionForm, UserContribution } from "@overbookd/contribution";
 import { PrismaPayContributionRepository } from "./repository/pay-contribution-repository.prisma";
+import { UserPersonnalData } from "@overbookd/user";
 
 @Injectable()
 export class ContributionService {
@@ -8,6 +9,11 @@ export class ContributionService {
     private readonly payContributionRepository: PrismaPayContributionRepository,
     private readonly payContribution: PayContribution,
   ) {}
+
+  // find users with no contribution for the current edition
+  async findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
+    return this.payContributionRepository.findUsersWithNoContribution();
+  }
 
   async pay(contributionData: PayContributionForm): Promise<UserContribution> {
     const contribution = await this.payContribution.for(contributionData);

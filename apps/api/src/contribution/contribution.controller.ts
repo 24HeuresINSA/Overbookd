@@ -1,6 +1,7 @@
 import {
   UseGuards,
   Controller,
+  Get,
   Post,
   Body,
   Param,
@@ -24,7 +25,9 @@ import { ContributionResponseDto } from "./dto/contribution.response.dto";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
 import { UserContribution, PayContributionForm } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { MANAGE_PERSONNAL_ACCOUNTS } from "@overbookd/permission";
+import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
+import { UserPersonnalDataResponseDto } from "../user/dto/user-personnal-data.response.dto";
+import { UserPersonnalData } from "@overbookd/user";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -41,7 +44,21 @@ export class ContributionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
+  @Permission(MANAGE_CONTRIBUTIONS)
+  @Get()
+  @ApiResponse({
+    status: 200,
+    description: "List of users with no contribution for the current edition",
+    type: UserPersonnalDataResponseDto,
+    isArray: true,
+  })
+  findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
+    return this.contributionService.findUsersWithNoContribution();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(MANAGE_CONTRIBUTIONS)
   @Post()
   @ApiResponse({
     status: 201,
@@ -57,7 +74,7 @@ export class ContributionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
+  @Permission(MANAGE_CONTRIBUTIONS)
   @Delete(":userId")
   @HttpCode(204)
   @ApiParam({ name: "userId", type: Number })

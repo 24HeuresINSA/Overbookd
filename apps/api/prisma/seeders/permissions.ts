@@ -8,6 +8,7 @@ import {
   FILL_AVAILABILITY,
   HAVE_PERSONNAL_ACCOUNT,
   MANAGE_CONFIG,
+  MANAGE_CONTRIBUTIONS,
   MANAGE_LOCATION,
   MANAGE_PERSONNAL_ACCOUNTS,
   MANAGE_USERS,
@@ -313,6 +314,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "benevole" }],
+      },
+    },
+  },
+  {
+    name: MANAGE_CONTRIBUTIONS,
+    description: "Peut gérer les cotisations",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "sg" }],
       },
     },
   },

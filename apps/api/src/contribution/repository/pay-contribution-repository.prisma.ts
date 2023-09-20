@@ -6,9 +6,25 @@ import {
 } from "@overbookd/contribution";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_CONTRIBUTION } from "../contribution.query";
+import { SELECT_USER_PERSONNAL_DATA } from "../../user/user.query";
+import { UserService } from "../../user/user.service";
+import { UserPersonnalData } from "@overbookd/user";
 
 export class PrismaPayContributionRepository implements ContributionRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async findUsersWithNoContribution(): Promise<UserPersonnalData[]> {
+    const currentEdition = PayContribution.getCurrentEdition();
+    const users = await this.prisma.user.findMany({
+      where: {
+        contributions: {
+          none: { edition: currentEdition },
+        },
+      },
+      select: SELECT_USER_PERSONNAL_DATA,
+    });
+    return users.map(UserService.formatToPersonalData);
+  }
 
   async pay(contribution: Contribution): Promise<UserContribution> {
     return this.prisma.contribution.create({
