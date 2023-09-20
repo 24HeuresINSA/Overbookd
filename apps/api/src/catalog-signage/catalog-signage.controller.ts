@@ -26,7 +26,7 @@ import {
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
-import { SignageResponseDto } from "./dto/signage.reponse";
+import { SignageResponseDto } from "./dto/signage.response";
 import { Signage, SignageForm } from "@overbookd/signa";
 import { SignageFormRequestDto } from "./dto/signage-form.request";
 
