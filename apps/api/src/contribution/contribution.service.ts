@@ -1,30 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import {
-  PayContribution,
-  PayContributionForm,
-  UserContribution,
-} from "@overbookd/contribution";
-import { PrismaPayContributionRepository } from "./repository/pay-contribution-repository.prisma";
-import { UserPersonnalData } from "@overbookd/user";
+import { PayContribution, PayContributionForm } from "@overbookd/contribution";
+import { Adherent } from "@overbookd/contribution";
 
 @Injectable()
 export class ContributionService {
-  constructor(
-    private readonly payContributionRepository: PrismaPayContributionRepository,
-    private readonly payContribution: PayContribution,
-  ) {}
+  constructor(private readonly payContribution: PayContribution) {}
 
-  // find users with no contribution for the current edition
-  async findMembersWithContributionOutToDate(): Promise<UserPersonnalData[]> {
-    return this.payContributionRepository.findMembersWithContributionOutToDate();
+  async findAdherentsWithContributionOutToDate(): Promise<Adherent[]> {
+    return this.payContribution.findAdherentsWithContributionOutToDate();
   }
 
-  async pay(contributionData: PayContributionForm): Promise<UserContribution> {
-    const contribution = await this.payContribution.for(contributionData);
-    return this.payContributionRepository.pay(contribution);
-  }
-
-  async remove(userId: number): Promise<void> {
-    return this.payContributionRepository.remove(userId);
+  async pay(contributionData: PayContributionForm): Promise<void> {
+    await this.payContribution.for(contributionData);
   }
 }

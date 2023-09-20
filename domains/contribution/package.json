@@ -37,6 +37,7 @@
     "pnpm": "8.7.5"
   },
   "dependencies": {
-    "@overbookd/period": "workspace:*"
+    "@overbookd/period": "workspace:*",
+    "@overbookd/permission": "workspace:*"
   }
 }

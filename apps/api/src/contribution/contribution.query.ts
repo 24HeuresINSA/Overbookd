@@ -1,10 +1,5 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
 
-export const SELECT_CONTRIBUTION = {
-  amount: true,
-  paymentDate: true,
-};
-
 export const WHERE_CAN_PAY_CONTRIBUTION = {
   teams: {
     some: {
@@ -15,4 +10,11 @@ export const WHERE_CAN_PAY_CONTRIBUTION = {
       },
     },
   },
+};
+
+export const SELECT_ADHERENT = {
+  id: true,
+  firstname: true,
+  lastname: true,
+  nickname: true,
 };

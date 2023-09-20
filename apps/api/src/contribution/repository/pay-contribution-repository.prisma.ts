@@ -1,59 +1,43 @@
-import { UnauthorizedException } from "@nestjs/common";
 import {
+  Adherent,
   Contribution,
   ContributionRepository,
-  PayContribution,
-  UserContribution,
 } from "@overbookd/contribution";
 import { PrismaService } from "../../prisma.service";
 import {
-  SELECT_CONTRIBUTION,
+  SELECT_ADHERENT,
   WHERE_CAN_PAY_CONTRIBUTION,
 } from "../contribution.query";
-import { SELECT_USER_PERSONNAL_DATA } from "../../user/user.query";
-import { UserService } from "../../user/user.service";
-import { UserPersonnalData } from "@overbookd/user";
 
 export class PrismaPayContributionRepository implements ContributionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findMembersWithContributionOutToDate(): Promise<UserPersonnalData[]> {
-    const WHERE_EDITION_IS_CURRENT = this.buildEditionIsCurrentCondition();
-    const users = await this.prisma.user.findMany({
+  async findAdherentsOutToDate(edition: number): Promise<Adherent[]> {
+    return this.prisma.user.findMany({
       where: {
         contributions: {
-          none: WHERE_EDITION_IS_CURRENT,
+          none: { edition },
         },
         ...WHERE_CAN_PAY_CONTRIBUTION,
       },
-      select: SELECT_USER_PERSONNAL_DATA,
+      select: SELECT_ADHERENT,
     });
-    return users.map(UserService.formatToPersonalData);
   }
 
-  async pay(contribution: Contribution): Promise<UserContribution> {
-    const canPay = await this.canPayContribution(contribution.userId);
-    if (!canPay) {
-      throw new UnauthorizedException(
-        "Ce bénévole ne peut pas payer de contribution",
-      );
-    }
-
+  async pay(contribution: Contribution): Promise<Contribution> {
     return this.prisma.contribution.create({
       data: contribution,
-      select: SELECT_CONTRIBUTION,
     });
   }
 
-  async remove(userId: number): Promise<void> {
-    await this.prisma.contribution.delete({
+  async isAllowedToPay(userId: number): Promise<boolean> {
+    const user = this.prisma.user.findFirst({
       where: {
-        userId_edition: {
-          userId,
-          ...this.buildEditionIsCurrentCondition(),
-        },
+        id: userId,
+        ...WHERE_CAN_PAY_CONTRIBUTION,
       },
     });
+    return Boolean(user);
   }
 
   async hasAlreadyPayed(userId: number, edition: number): Promise<boolean> {
@@ -61,20 +45,5 @@ export class PrismaPayContributionRepository implements ContributionRepository {
       where: { userId, edition },
     });
     return Boolean(contribution);
-  }
-
-  private buildEditionIsCurrentCondition() {
-    const currentEdition = PayContribution.getCurrentEdition();
-    return { edition: currentEdition };
-  }
-
-  private async canPayContribution(id: number): Promise<boolean> {
-    const user = this.prisma.user.findFirst({
-      where: {
-        id,
-        ...WHERE_CAN_PAY_CONTRIBUTION,
-      },
-    });
-    return Boolean(user);
   }
 }

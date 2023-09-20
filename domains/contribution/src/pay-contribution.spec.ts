@@ -1,29 +1,53 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PayContribution } from "./pay-contribution";
+import { EXPIRATION_DATE, Member, PayContribution } from "./pay-contribution";
 import { InMemoryContributionRepository } from "./contribution-repository.inmemory";
 import { Contribution } from "./contribution.model";
 import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
+  NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE,
 } from "./pay-contribution.error";
+import { ONE_YEAR_IN_MS } from "@overbookd/period";
+import { PAY_CONTRIBUTION } from "@overbookd/permission";
+
+const lea: Member = {
+  id: 1,
+  firstname: "Léa",
+  lastname: "Mauyno",
+  nickname: "Shogosse",
+  permissions: [PAY_CONTRIBUTION],
+};
+const noel: Member = {
+  id: 2,
+  firstname: "Noël",
+  lastname: "Ertsemud",
+  permissions: [PAY_CONTRIBUTION],
+};
+const tatouin: Member = {
+  id: 3,
+  firstname: "Tatouin",
+  lastname: "Jesoph",
+  permissions: [],
+};
+const adherents: Member[] = [lea, noel, tatouin];
 
 const contributions: Contribution[] = [
   {
-    userId: 1,
+    userId: lea.id,
     amount: 100,
     edition: 48,
     paymentDate: new Date(2022, 8, 1),
     expirationDate: new Date(2023, 7, 31),
   },
   {
-    userId: 2,
+    userId: noel.id,
     amount: 200,
     edition: 48,
     paymentDate: new Date(2022, 10, 20),
     expirationDate: new Date(2023, 7, 31),
   },
   {
-    userId: 2,
+    userId: noel.id,
     amount: 100,
     edition: 49,
     paymentDate: new Date(2023, 9, 12),
@@ -35,61 +59,120 @@ describe("Pay contribution", () => {
   let payContribution: PayContribution;
   let contributionRepository: InMemoryContributionRepository;
 
-  beforeEach(() => {
-    contributionRepository = new InMemoryContributionRepository(contributions);
-    payContribution = new PayContribution(contributionRepository);
-  });
+  describe("when adherent is paying his contribution", () => {
+    beforeEach(() => {
+      contributionRepository = new InMemoryContributionRepository(
+        contributions,
+        adherents,
+      );
+      payContribution = new PayContribution(contributionRepository);
+    });
 
-  describe("when user has not already payed his contribution", () => {
-    const contributionForm = { userId: 1, amount: 100 };
+    describe("when adherent has not already payed his contribution", () => {
+      describe("when adherent try to pay less than 100 cents", () => {
+        it("should indicate that the minimum amount is 100 cents", async () => {
+          const contributionForm = { userId: lea.id, amount: 90 };
+          expect(
+            async () => await payContribution.for(contributionForm),
+          ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+        });
+      });
 
-    it("should have expiration date after payment date", async () => {
-      const payedContribution = await payContribution.for(contributionForm);
+      describe("when non adherent try to pay a contribution", () => {
+        it("should indicate that non adherent is not allowed to pay contribution", async () => {
+          const contributionForm = { userId: tatouin.id, amount: 100 };
+          expect(
+            async () => await payContribution.for(contributionForm),
+          ).rejects.toThrow(NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE);
+        });
+      });
 
-      expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
-        payedContribution.paymentDate.getTime(),
+      describe.each`
+        userId    | amount
+        ${lea.id} | ${100}
+        ${lea.id} | ${150}
+      `(
+        "when adherent #$userId try to pay $amount cents",
+        ({ userId, amount }) => {
+          const contributionForm = { userId, amount };
+
+          it(`should pay ${amount} cents`, async () => {
+            const payedContribution = await payContribution.for(
+              contributionForm,
+            );
+
+            expect(payedContribution.amount).toBeGreaterThanOrEqual(amount);
+          });
+
+          it("should have expiration date after payment date", async () => {
+            const payedContribution = await payContribution.for(
+              contributionForm,
+            );
+
+            expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
+              payedContribution.paymentDate.getTime(),
+            );
+          });
+
+          it("should have expiration date before next edition", async () => {
+            const payedContribution = await payContribution.for(
+              contributionForm,
+            );
+
+            const duration =
+              payedContribution.expirationDate.getTime() -
+              payedContribution.paymentDate.getTime();
+
+            expect(duration).toBeLessThanOrEqual(ONE_YEAR_IN_MS);
+          });
+
+          it("should have expiration date on the last day of August", async () => {
+            const payedContribution = await payContribution.for(
+              contributionForm,
+            );
+            const { month, day } = EXPIRATION_DATE;
+
+            expect(payedContribution.expirationDate.getMonth()).toBe(month);
+            expect(payedContribution.expirationDate.getDate()).toBe(day);
+          });
+
+          it("should save it as a new contribution", async () => {
+            const payedContribution = await payContribution.for(
+              contributionForm,
+            );
+
+            expect(contributionRepository.has(payedContribution)).toBe(true);
+          });
+        },
       );
     });
 
-    it("should have expiration date on the last day of August", async () => {
-      const payedContribution = await payContribution.for(contributionForm);
+    describe("when adherent has already payed his contribution", () => {
+      const contribution = { userId: 2, amount: 150 };
 
-      expect(payedContribution.expirationDate.getMonth()).toBe(7);
-      expect(payedContribution.expirationDate.getDate()).toBe(31);
-    });
-
-    describe.each`
-      userId | amount | error
-      ${1}   | ${100} | ${null}
-      ${1}   | ${150} | ${null}
-      ${1}   | ${90}  | ${INSUFFICIENT_AMOUNT_ERROR_MESSAGE}
-    `("when user try to pay $amount cents", ({ userId, amount, error }) => {
-      if (error) {
-        it(`should indicate that ${error}`, async () => {
-          expect(
-            async () => await payContribution.for({ userId, amount }),
-          ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
-        });
-      } else {
-        it(`should pay ${amount} cents`, async () => {
-          const payedContribution = await payContribution.for({
-            userId,
-            amount,
-          });
-
-          expect(payedContribution.amount).toBeGreaterThanOrEqual(amount);
-        });
-      }
+      it("should indicate that adherent has already payed", async () => {
+        expect(
+          async () => await payContribution.for(contribution),
+        ).rejects.toThrow(HAS_ALREADY_PAYED_ERROR_MESSAGE);
+      });
     });
   });
 
-  describe("when user has already payed his contribution", () => {
-    const contribution = { userId: 2, amount: 150 };
+  describe("when manager is looking for adherents with contribution out-to-date", () => {
+    beforeEach(() => {
+      contributionRepository = new InMemoryContributionRepository(
+        contributions,
+        adherents,
+      );
+      payContribution = new PayContribution(contributionRepository);
+    });
 
-    it("should indicate that user has already payed", async () => {
-      expect(
-        async () => await payContribution.for(contribution),
-      ).rejects.toThrow(HAS_ALREADY_PAYED_ERROR_MESSAGE);
+    it("should return adherents with contribution out-to-date", async () => {
+      const adherents =
+        await payContribution.findAdherentsWithContributionOutToDate();
+      const { permissions, ...leaPersonnalData } = lea;
+
+      expect(adherents).toMatchObject([leaPersonnalData]);
     });
   });
 });

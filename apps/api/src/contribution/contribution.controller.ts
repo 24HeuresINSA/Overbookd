@@ -1,14 +1,4 @@
-import {
-  UseGuards,
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  ParseIntPipe,
-  HttpCode,
-  Delete,
-} from "@nestjs/common";
+import { UseGuards, Controller, Get, Post, Body } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiTags,
@@ -16,18 +6,15 @@ import {
   ApiForbiddenResponse,
   ApiResponse,
   ApiBody,
-  ApiParam,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { ContributionService } from "./contribution.service";
-import { ContributionResponseDto } from "./dto/contribution.response.dto";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
-import { UserContribution, PayContributionForm } from "@overbookd/contribution";
+import { PayContributionForm, Adherent } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
-import { UserPersonnalDataResponseDto } from "../user/dto/user-personnal-data.response.dto";
-import { UserPersonnalData } from "@overbookd/user";
+import { AdherentResponseDto } from "./dto/adherent.response.dto";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -45,16 +32,16 @@ export class ContributionController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_CONTRIBUTIONS)
-  @Get()
+  @Get("out-to-date-adherents")
   @ApiResponse({
     status: 200,
     description:
-      "List of members with contribution out-to-date for the current edition",
-    type: UserPersonnalDataResponseDto,
+      "List of adherents with contribution out-to-date for the current edition",
+    type: AdherentResponseDto,
     isArray: true,
   })
-  findMembersWithContributionOutToDate(): Promise<UserPersonnalData[]> {
-    return this.contributionService.findMembersWithContributionOutToDate();
+  findAdherentsWithContributionOutToDate(): Promise<Adherent[]> {
+    return this.contributionService.findAdherentsWithContributionOutToDate();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -64,22 +51,12 @@ export class ContributionController {
   @ApiResponse({
     status: 201,
     description: "Pay configuration",
-    type: ContributionResponseDto,
   })
-  @ApiBody({ type: PayContributionRequestDto })
-  pay(
-    @Body() contributionData: PayContributionForm,
-  ): Promise<UserContribution> {
+  @ApiBody({
+    description: "Contribution to pay",
+    type: PayContributionRequestDto,
+  })
+  pay(@Body() contributionData: PayContributionForm): Promise<void> {
     return this.contributionService.pay(contributionData);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(MANAGE_CONTRIBUTIONS)
-  @Delete(":userId")
-  @HttpCode(204)
-  @ApiParam({ name: "userId", type: Number })
-  remove(@Param("userId", ParseIntPipe) userId: number): Promise<void> {
-    return this.contributionService.remove(userId);
   }
 }

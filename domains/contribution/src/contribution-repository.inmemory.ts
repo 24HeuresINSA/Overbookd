@@ -1,31 +1,41 @@
-import { Contribution, UserContribution } from "./contribution.model";
-import { ContributionRepository, PayContribution } from "./pay-contribution";
+import { PAY_CONTRIBUTION } from "@overbookd/permission";
+import { Contribution } from "./contribution.model";
+import { Adherent, ContributionRepository, Member } from "./pay-contribution";
 
 export class InMemoryContributionRepository implements ContributionRepository {
-  constructor(private contributions: Contribution[]) {}
+  constructor(
+    private contributions: Contribution[],
+    private readonly members: Member[],
+  ) {}
 
-  pay(contribution: Contribution): Promise<UserContribution> {
+  private get adherents(): Adherent[] {
+    return this.members
+      .filter((member) => member.permissions.includes(PAY_CONTRIBUTION))
+      .map(({ permissions, ...adherent }) => adherent);
+  }
+
+  pay(contribution: Contribution): Promise<Contribution> {
     this.contributions = [...this.contributions, contribution];
-    return Promise.resolve({
-      amount: contribution.amount,
-      paymentDate: contribution.paymentDate,
-    });
+    return Promise.resolve(contribution);
   }
 
-  find(userId: number): Promise<UserContribution | null> {
-    const currentEdition = PayContribution.getCurrentEdition();
-    const contribution = this.contributions.find(
-      (c) => userId === c.userId && currentEdition === c.edition,
+  findAdherentsOutToDate(edition: number): Promise<Adherent[]> {
+    const adherents = this.adherents.filter(
+      (adherent) =>
+        !this.contributions.some(
+          (contribution) =>
+            contribution.userId === adherent.id &&
+            contribution.edition === edition,
+        ),
     );
-    return Promise.resolve(contribution || null);
+    return Promise.resolve(adherents);
   }
 
-  remove(userId: number): Promise<void> {
-    const currentEdition = PayContribution.getCurrentEdition();
-    this.contributions = this.contributions.filter(
-      (c) => userId !== c.userId || currentEdition !== c.edition,
+  isAllowedToPay(userId: number): Promise<boolean> {
+    const isAdherent = this.adherents.some(
+      (adherent) => adherent.id === userId,
     );
-    return Promise.resolve();
+    return Promise.resolve(isAdherent);
   }
 
   hasAlreadyPayed(userId: number, edition: number): Promise<boolean> {
@@ -33,5 +43,12 @@ export class InMemoryContributionRepository implements ContributionRepository {
       (c) => userId === c.userId && edition === c.edition,
     );
     return Promise.resolve(hasAlreadyPayed);
+  }
+
+  has(contribution: Contribution): boolean {
+    return this.contributions.some(
+      ({ userId, edition }) =>
+        userId === contribution.userId && edition === contribution.edition,
+    );
   }
 }

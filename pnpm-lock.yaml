@@ -393,6 +393,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
+      '@overbookd/permission':
+        specifier: workspace:*
+        version: link:../permission
 
   domains/permission: {}
 

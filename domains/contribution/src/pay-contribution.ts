@@ -1,15 +1,34 @@
-import { Contribution, UserContribution } from "./contribution.model";
-import { HasAlreadyPayed, InsufficientAmount } from "./pay-contribution.error";
+import { Permission } from "@overbookd/permission";
+import { Contribution } from "./contribution.model";
+import {
+  HasAlreadyPayed,
+  InsufficientAmount,
+  NotAllowedToPay,
+} from "./pay-contribution.error";
 import { ONE_YEAR_IN_MS } from "@overbookd/period";
 
 const BASE_EDITION = 49;
 const BASE_EDITION_STARTS = new Date("2023-09-01");
+const BASE_EDITION_ENDS = new Date("2024-08-31");
 const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
 const AUGUST = 7;
-const EXIPIRATION_DATE = {
+export const EXPIRATION_DATE = {
   month: AUGUST,
   day: 31,
 };
+
+export type Adherent = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+};
+
+type WithPermission = {
+  permissions: Permission[];
+};
+
+export type Member = Adherent & WithPermission;
 
 export interface PayContributionForm {
   amount: number;
@@ -17,52 +36,61 @@ export interface PayContributionForm {
 }
 
 export interface ContributionRepository {
-  pay: (contribution: Contribution) => Promise<UserContribution>;
+  pay(contribution: Contribution): Promise<Contribution>;
   hasAlreadyPayed(userId: number, edition: number): Promise<boolean>;
+  findAdherentsOutToDate(edition: number): Promise<Adherent[]>;
+  isAllowedToPay(userId: number): Promise<boolean>;
 }
 
 export class PayContribution {
   constructor(private readonly contributions: ContributionRepository) {}
 
-  async for({ userId, amount }: PayContributionForm): Promise<Contribution> {
-    const edition = PayContribution.getCurrentEdition();
+  private get currentEdition(): number {
+    return this.findEdition(new Date());
+  }
 
-    const hasAlreadyPayed = await this.contributions.hasAlreadyPayed(
-      userId,
-      edition,
-    );
+  async for({ userId, amount }: PayContributionForm): Promise<Contribution> {
+    const edition = this.currentEdition;
+
+    const [isAllowedToPay, hasAlreadyPayed] = await Promise.all([
+      this.contributions.isAllowedToPay(userId),
+      this.contributions.hasAlreadyPayed(userId, edition),
+    ]);
+    if (!isAllowedToPay) throw new NotAllowedToPay();
     if (hasAlreadyPayed) throw new HasAlreadyPayed();
 
     if (amount < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS) {
       throw new InsufficientAmount();
     }
 
-    return {
+    const newContribution = {
       userId,
       amount,
       paymentDate: new Date(),
-      expirationDate: this.calculeExpirationDate(),
+      expirationDate: this.calculeExpirationDate(edition),
       edition,
     };
+
+    return this.contributions.pay(newContribution);
   }
 
-  private calculeExpirationDate(): Date {
-    const currentDate = new Date();
-    const { month, day } = EXIPIRATION_DATE;
-    const expirationDate = new Date(currentDate.getFullYear(), month, day);
-
-    if (currentDate > expirationDate) {
-      expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-    }
-
-    return expirationDate;
+  async findAdherentsWithContributionOutToDate(): Promise<Adherent[]> {
+    return this.contributions.findAdherentsOutToDate(this.currentEdition);
   }
 
-  static getCurrentEdition(): number {
-    return this.findEdition(new Date());
+  private calculeExpirationDate(edition: number): Date {
+    const yearsSinceBaseEdition = edition - BASE_EDITION;
+    const expirationDateYear =
+      BASE_EDITION_ENDS.getFullYear() + yearsSinceBaseEdition;
+
+    return new Date(
+      expirationDateYear,
+      EXPIRATION_DATE.month,
+      EXPIRATION_DATE.day,
+    );
   }
 
-  private static findEdition(date: Date): number {
+  private findEdition(date: Date): number {
     const durationAfterBaseEdition =
       date.getTime() - BASE_EDITION_STARTS.getTime();
     const editionAfterBaseEdition = Math.floor(
