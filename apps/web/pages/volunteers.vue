@@ -35,24 +35,6 @@
                   </v-btn>
                 </v-btn-toggle>
               </template>
-              <template v-if="canManagePersonnalAccounts">
-                <p>Cotisation</p>
-                <v-btn-toggle
-                  v-model="filters.hasPayedContribution"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                  :disabled="isStatsModeActive"
-                >
-                  <v-btn :value="true" small :disabled="isStatsModeActive">
-                    Payée
-                  </v-btn>
-
-                  <v-btn :value="false" small :disabled="isStatsModeActive">
-                    Non payée
-                  </v-btn>
-                </v-btn-toggle>
-              </template>
             </v-card-text>
           </v-card>
           <v-card v-if="canManageUsers">
@@ -71,7 +53,7 @@
             </v-card-text>
             <v-card-actions class="ctas">
               <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
-              <v-btn text @click="exportPlannings">
+              <v-btn text :loading="planningLoading" @click="exportPlannings">
                 télécharger plannings
               </v-btn>
             </v-card-actions>
@@ -168,11 +150,12 @@ interface VolunteersData {
     search: string;
     teams: Team[];
     isVolunteer: boolean;
-    hasPayedContribution?: boolean;
   };
 
   isUserInformationDialogOpen: boolean;
   isStatsModeActive: boolean;
+
+  planningLoading: boolean;
 }
 
 export default Vue.extend({
@@ -196,11 +179,12 @@ export default Vue.extend({
       search: "",
       teams: [],
       isVolunteer: true,
-      hasPayedContribution: undefined,
     },
 
     isUserInformationDialogOpen: false,
     isStatsModeActive: false,
+
+    planningLoading: false,
   }),
   head: () => ({
     title: "Liste des bénévoles",
@@ -233,9 +217,6 @@ export default Vue.extend({
     },
     canManageUsers(): boolean {
       return this.$accessor.user.can(MANAGE_USERS);
-    },
-    canManagePersonnalAccounts(): boolean {
-      return this.$accessor.user.can(MANAGE_PERSONNAL_ACCOUNTS);
     },
   },
 
@@ -270,7 +251,7 @@ export default Vue.extend({
       // Parse data into a CSV string to be passed to the download function
       const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
       const csvHeader =
-        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;ContribPayée;Commentaire";
+        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Commentaire";
 
       const csvContent = this.users.map((user: UserPersonnalData) => {
         return [
@@ -281,7 +262,7 @@ export default Vue.extend({
           user.teams?.join(", ") ?? "",
           user.email,
           user.birthdate,
-          `+33${user.phone}`,
+          user.phone,
           user.comment?.replace(lineReturnRegex, " ") ?? "",
         ].join(";");
       });
@@ -307,23 +288,23 @@ export default Vue.extend({
     filterUserByTeams(
       teamsSearched: Team[],
     ): (user: UserPersonnalData) => boolean {
-      return teamsSearched.length > 0
-        ? (user) =>
-            teamsSearched.every((teamSearched) =>
-              user.teams.some(
-                (userTeamCode) => teamSearched.code === userTeamCode,
-              ),
-            )
-        : () => true;
+      if (teamsSearched.length === 0) return () => true;
+
+      return (user) =>
+        teamsSearched.every((teamSearched) =>
+          user.teams.some((userTeamCode) => teamSearched.code === userTeamCode),
+        );
     },
 
     async exportPlannings() {
+      this.planningLoading = true;
       await this.$accessor.planning.fetchAllPdfPlannings(
         this.displayedUsers.filter(({ charisma }) => charisma > 0),
       );
       this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
         download(planningBase64Data, volunteer),
       );
+      this.planningLoading = false;
     },
 
     getPhoneLink(phone: string) {

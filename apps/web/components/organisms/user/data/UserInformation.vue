@@ -203,9 +203,6 @@ export default Vue.extend({
     isMe(): boolean {
       return this.me.id === this.selectedUser.id;
     },
-    isHard(): boolean {
-      return this.selectedUser.teams?.includes("hard") ?? false;
-    },
     assignableTeams(): Team[] {
       const teamsToAdd = this.$accessor.team.allTeams.filter(
         (team) => !this.selectedUser.teams?.includes(team.code),
