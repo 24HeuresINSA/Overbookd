@@ -45,10 +45,10 @@ overbookd-web_docker_pre_build:
     - OVERBOOKD_VERSION=$(jq -r '.version' package.json | tr -d '"')
     - echo $OVERBOOKD_VERSION
   script:
-    - '[ -v CI_COMMIT_BRANCH ] && VERSION_TAG_PREFIX="pre-prod_" || VERSION_TAG_PREFIX=""'
-    - '[ -v CI_COMMIT_BRANCH ] && TAG="pre-prod" || TAG="latest"'
-    - "[ -v CI_COMMIT_BRANCH ] && BASE_URL=$BASE_URL_PREPROD ||  BASE_URL=$BASE_URL_PROD"
-    - '[ -v CI_COMMIT_BRANCH ] && BASE_IMAGE="web_pre-prod" || BASE_IMAGE="web_prod"'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && VERSION_TAG_PREFIX="pre-prod_" || VERSION_TAG_PREFIX=""'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && TAG="pre-prod" || TAG="latest"'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_URL=$BASE_URL_PREPROD ||  BASE_URL=$BASE_URL_PROD'
+    - '[ -n "$CI_COMMIT_BRANCH" ] && BASE_IMAGE="web_pre-prod" || BASE_IMAGE="web_prod"'
     - docker load -i ${APP_NAME}_installer.tar
     - >
       docker build
