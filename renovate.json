@@ -5,6 +5,8 @@
     "group:recommended",
     ":dependencyDashboard"
   ],
+  "timezone": "Europe/Paris",
+  "schedule": ["after 5pm on monday"],
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
   "reviewers": ["LeoMouyna", "titouan-joseph", "LeonDumestre"],
