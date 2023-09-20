@@ -64,11 +64,12 @@ export class PrismaPayContributionRepository implements ContributionRepository {
   }
 
   private async canPayContribution(id: number): Promise<boolean> {
-    return this.prisma.user.findFirst({
+    const user = this.prisma.user.findFirst({
       where: {
         id,
         ...WHERE_CAN_PAY_CONTRIBUTION,
       },
     });
+    return Boolean(user);
   }
 }
