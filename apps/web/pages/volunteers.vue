@@ -1,118 +1,97 @@
 <template>
-  <div>
-    <div style="width: 100%; display: grid">
-      <v-row>
-        <v-col md="2">
-          <v-card style="margin-bottom: 5%">
-            <v-card-title>Filtres</v-card-title>
-            <v-card-text style="display: flex; flex-direction: column">
-              <v-text-field
-                v-model="filters.search"
-                label="Recherche"
-                :disabled="isStatsModeActive"
-              ></v-text-field>
-              <SearchTeams
-                v-model="filters.teams"
-                label="Équipe"
-                :boxed="false"
-                :disabled="isStatsModeActive"
-              ></SearchTeams>
+  <div class="volunteers-page">
+    <div class="filters">
+      <v-card class="filters_volunteers">
+        <v-card-title>Filtres</v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="filters.search"
+            label="Recherche"
+            :disabled="isStatsModeActive"
+          />
 
-              <template v-if="canManageUsers">
-                <label>Compte validé</label>
-                <v-btn-toggle
-                  v-model="filters.isVolunteer"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                  :disabled="isStatsModeActive"
-                >
-                  <v-btn :value="true" small :disabled="isStatsModeActive">
-                    oui
-                  </v-btn>
-                  <v-btn :value="false" small :disabled="isStatsModeActive">
-                    Non
-                  </v-btn>
-                </v-btn-toggle>
-              </template>
-            </v-card-text>
-          </v-card>
-          <v-card v-if="canManageUsers">
-            <v-card-title>Mode stats humains</v-card-title>
-            <v-card-text style="display: flex; flex-direction: column">
-              <label>Mode stats</label>
-              <v-btn-toggle
-                v-model="isStatsModeActive"
-                tile
-                color="deep-purple accent-3"
-                group
-              >
-                <v-btn :value="true" small> oui</v-btn>
-                <v-btn :value="false" small> Non</v-btn>
-              </v-btn-toggle>
-            </v-card-text>
-            <v-card-actions class="ctas">
-              <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
-              <v-btn text :loading="planningLoading" @click="exportPlannings">
-                télécharger plannings
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col md="10">
-          <div>
-            <v-data-table
-              v-if="!isStatsModeActive"
-              style="max-height: 100%; overflow-y: auto"
-              :headers="headers"
-              :items="displayedUsers"
-              class="elevation-1"
-              :items-per-page="20"
-              dense
-            >
-              <template #item.name="{ item }">
-                {{ formatUserName(item) }}
-              </template>
+          <SearchTeams
+            v-model="filters.teams"
+            label="Équipe"
+            :boxed="false"
+            :disabled="isStatsModeActive"
+          />
 
-              <template #item.actions="{ item }" style="display: flex">
-                <v-btn icon small @click="openInformationDialog(item)">
-                  <v-icon small>mdi-information-outline</v-icon>
-                </v-btn>
+          <v-switch
+            v-if="canManageUsers"
+            v-model="filters.isCandidate"
+            label="Membres non validés"
+            :disabled="isStatsModeActive"
+          />
+        </v-card-text>
+      </v-card>
 
-                <v-btn icon small :href="getPhoneLink(item.phone)">
-                  <v-icon small>mdi-phone</v-icon>
-                </v-btn>
+      <v-card v-if="canManageUsers" class="filters__stats">
+        <v-card-title>Mode stats</v-card-title>
+        <v-card-text class="stats-content">
+          <v-switch v-model="isStatsModeActive" label="Afficher les stats" />
 
-                <v-btn icon small :href="'mailto:' + item.email">
-                  <v-icon small>mdi-email</v-icon>
-                </v-btn>
+          <v-btn :allow-overflow="false" @click="exportCSV">
+            exporter les bénévoles
+          </v-btn>
 
-                <v-btn icon small @click="openCalendar(item.id)">
-                  <v-icon small>mdi-calendar</v-icon>
-                </v-btn>
-              </template>
+          <v-btn :loading="planningLoading" @click="exportPlannings">
+            exporter les plannings
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </div>
 
-              <template #item.charisma="{ item }">
-                {{ item.charisma || 0 }}
-              </template>
+    <div class="table-container">
+      <v-data-table
+        v-if="!isStatsModeActive"
+        :headers="headers"
+        :items="displayedUsers"
+        class="elevation-1"
+        :items-per-page="20"
+        disable-sort
+      >
+        <template #item.name="{ item }">
+          {{ formatUserName(item) }}
+        </template>
 
-              <template #item.teams="{ item }">
-                <v-container>
-                  <TeamChip
-                    v-for="team of item.teams"
-                    :key="team"
-                    :team="team"
-                    with-name
-                  ></TeamChip>
-                </v-container>
-              </template>
+        <template #item.actions="{ item }">
+          <div class="list-actions">
+            <v-btn icon small @click="openInformationDialog(item)">
+              <v-icon small>mdi-information-outline</v-icon>
+            </v-btn>
 
-              <template #no-data> Aucun bénévole trouvé </template>
-            </v-data-table>
-            <VolunteerStatsTable v-else />
+            <v-btn icon small :href="getPhoneLink(item.phone)">
+              <v-icon small>mdi-phone</v-icon>
+            </v-btn>
+
+            <v-btn icon small :href="`mailto:${item.email}`">
+              <v-icon small>mdi-email</v-icon>
+            </v-btn>
+
+            <v-btn icon small @click="openCalendar(item.id)">
+              <v-icon small>mdi-calendar</v-icon>
+            </v-btn>
           </div>
-        </v-col>
-      </v-row>
+        </template>
+
+        <template #item.charisma="{ item }">
+          {{ item.charisma }}
+        </template>
+
+        <template #item.teams="{ item }">
+          <TeamChip
+            v-for="team of item.teams"
+            :key="team"
+            :team="team"
+            with-name
+          />
+        </template>
+
+        <template #no-data> Aucun bénévole trouvé </template>
+      </v-data-table>
+
+      <VolunteerStatsTable v-else />
     </div>
 
     <v-dialog v-model="isUserInformationDialogOpen">
@@ -149,7 +128,7 @@ interface VolunteersData {
   filters: {
     search: string;
     teams: Team[];
-    isVolunteer: boolean;
+    isCandidate: boolean;
   };
 
   isUserInformationDialogOpen: boolean;
@@ -171,14 +150,14 @@ export default Vue.extend({
     headers: [
       { text: "Prénom Nom (Surnom)", value: "name" },
       { text: "Equipes", value: "teams" },
-      { text: "Charisme", value: "charisma", align: "end" },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Charisme", value: "charisma" },
+      { text: "Actions", value: "actions" },
     ],
 
     filters: {
       search: "",
       teams: [],
-      isVolunteer: true,
+      isCandidate: false,
     },
 
     isUserInformationDialogOpen: false,
@@ -192,9 +171,9 @@ export default Vue.extend({
 
   computed: {
     users(): UserPersonnalData[] {
-      return this.filters.isVolunteer
-        ? this.$accessor.user.volunteers
-        : this.$accessor.user.candidates;
+      return this.filters.isCandidate
+        ? this.$accessor.user.candidates
+        : this.$accessor.user.volunteers;
     },
     searchableUsers(): Searchable<UserPersonnalData>[] {
       return this.users.map((user) => ({
@@ -251,7 +230,7 @@ export default Vue.extend({
       // Parse data into a CSV string to be passed to the download function
       const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
       const csvHeader =
-        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Commentaire";
+        "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire";
 
       const csvContent = this.users.map((user: UserPersonnalData) => {
         return [
@@ -323,21 +302,52 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-p {
-  margin: 0;
+.volunteers-page {
+  display: flex;
+  gap: 1em;
 }
 
-.v-btn-toggle--group > .v-btn.v-btn {
-  margin: 0;
-}
-
-.container {
-  padding: 0;
-}
-
-.ctas {
+.filters {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1em;
+  width: 20%;
+
+  &__stats {
+    width: 100%;
+
+    .stats-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      text-align: start;
+    }
+  }
+}
+
+.table-container {
+  width: 80%;
+}
+
+@media screen and (max-width: 600px) {
+  .volunteers-page {
+    flex-direction: column;
+  }
+
+  .filters {
+    width: 100%;
+
+    &__stats {
+      display: none;
+    }
+  }
+}
+
+.table-container {
+  width: 100%;
+
+  .list-actions {
+    display: flex;
+  }
 }
 </style>
