@@ -615,3 +615,13 @@ model Friend {
   @@id([requestorId, friendId])
   @@map("friend")
 }
+
+model CatalogSignage {
+  id    Int       @id @default(autoincrement())
+  name  String    @db.VarChar(40)
+  slug  String    @unique @db.VarChar(40)
+  type  SignaType
+  image String?
+
+  @@map("catalog_signage")
+}

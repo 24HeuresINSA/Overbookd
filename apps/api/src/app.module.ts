@@ -43,6 +43,7 @@ import { RegistrationModule } from "./registration/registration.module";
 import { PrismaModule } from "./prisma.module";
 import { MailModule } from "./mail/mail.module";
 import { ContributionModule } from "./contribution/contribution.module";
+import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
 
 @Module({
   imports: [
@@ -107,6 +108,7 @@ import { ContributionModule } from "./contribution/contribution.module";
     PrismaModule,
     MailModule,
     ContributionModule,
+    CatalogSignageModule,
   ],
   controllers: [AppController],
   providers: [

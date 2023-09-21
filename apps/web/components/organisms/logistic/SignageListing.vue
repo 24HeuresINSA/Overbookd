@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Signalisations</h2>
     <form class="filter">
       <v-text-field
         v-model="searchName"
@@ -52,8 +51,8 @@
         <template #statement>
           Tu es sur le point de supprimer
           <strong>{{ selectedSignage?.name }}</strong> <br />
-          Vérifie 2 fois avant de cliquer car elle sera supprimé de partout,
-          même sur les FA déjà validées.
+          Vérifie 2 fois avant de cliquer car elle sera également supprimée sur
+          les FA déjà validées.
         </template>
         <template #confirm-btn-content>
           <v-icon left> mdi-delete </v-icon>Supprimer
@@ -68,9 +67,9 @@ import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
-import { SlugifyService } from "@overbookd/slugify";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
+import { SlugifyService } from "@overbookd/slugify";
 
 interface SignageListingData {
   headers: Header[];

@@ -1,8 +1,9 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
-import { FakeCatalogSignageRepository } from "~/repositories/catalog-signage.repository";
+import { RepoFactory } from "~/repositories/repo-factory";
+import { safeCall } from "~/utils/api/calls";
 
-const signageRepository = FakeCatalogSignageRepository;
+const signageRepository = RepoFactory.CatalogSignageRepository;
 
 interface State {
   signages: Signage[];
@@ -33,54 +34,50 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchSignages({ commit }): Promise<void> {
-      /*const res = await safeCall<Signage[]>(
+      const res = await safeCall<Signage[]>(
         this,
         signageRepository.fetchSignages(this),
-      );*/
-      const res = await signageRepository.fetchSignages(this);
+      );
       if (!res) return;
       commit("SET_SIGNAGES", res.data);
     },
 
     async createSignage({ commit }, signageForm: SignageForm): Promise<void> {
-      /*const res = await safeCall<Signage>(
+      const res = await safeCall<Signage>(
         this,
         signageRepository.createSignage(this, signageForm),
         {
-          successMessage: "La signalétique a été créé avec succès",
-          errorMessage: "Erreur lors de la création de la signalétique",
+          successMessage: "La signalétique a été créé avec succès ✅",
+          errorMessage: "Erreur lors de la création de la signalétique ❌",
         },
-      );*/
-      const res = await signageRepository.createSignage(this, signageForm);
+      );
       if (!res) return;
       commit("ADD_SIGNAGE", res.data);
     },
 
     async updateSignage({ commit }, form: SignageUpdateForm): Promise<void> {
       const { id, ...signageForm } = form;
-      /*const res = await safeCall<Signage>(
+      const res = await safeCall<Signage>(
         this,
         signageRepository.updateSignage(this, id, signageForm),
         {
-          successMessage: "La signalétique a été mis a jour avec succès",
-          errorMessage: "Erreur lors de la mise à jour de la signalétique",
+          successMessage: "La signalétique a été mis a jour avec succès ✅",
+          errorMessage: "Erreur lors de la mise à jour de la signalétique ❌",
         },
-      );*/
-      const res = await signageRepository.updateSignage(this, id, signageForm);
+      );
       if (!res) return;
       commit("UPDATE_SIGNAGE", res.data);
     },
 
     async deleteSignage({ commit }, signage: Signage): Promise<void> {
-      /*const res = await safeCall(
+      const res = await safeCall(
         this,
         signageRepository.deleteSignage(this, signage.id),
         {
-          successMessage: `${signage.name} supprimé avec succès`,
-          errorMessage: `Erreur lors de la suppression de ${signage.name}`,
+          successMessage: `${signage.name} supprimé avec succès ✅`,
+          errorMessage: `Erreur lors de la suppression de ${signage.name} ❌`,
         },
-      );*/
-      const res = await signageRepository.deleteSignage(this, signage.id);
+      );
       if (!res) return;
       commit("DELETE_SIGNAGE", signage);
     },
