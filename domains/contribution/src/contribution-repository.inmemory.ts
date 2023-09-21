@@ -1,5 +1,9 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { Contribution } from "./contribution.model";
+import {
+  Contribution,
+  IIdentifyContribution,
+  areSameContributions,
+} from "./contribution.model";
 import { Adherent, ContributionRepository, Member } from "./pay-contribution";
 
 export class InMemoryContributionRepository implements ContributionRepository {
@@ -20,14 +24,10 @@ export class InMemoryContributionRepository implements ContributionRepository {
   }
 
   findAdherentsOutToDate(edition: number): Promise<Adherent[]> {
-    const adherents = this.adherents.filter(
-      (adherent) =>
-        !this.contributions.some(
-          (contribution) =>
-            contribution.userId === adherent.id &&
-            contribution.edition === edition,
-        ),
-    );
+    const adherents = this.adherents.filter((adherent) => {
+      const contributionIdentity = { userId: adherent.id, edition };
+      return !this.has(contributionIdentity);
+    });
     return Promise.resolve(adherents);
   }
 
@@ -39,16 +39,14 @@ export class InMemoryContributionRepository implements ContributionRepository {
   }
 
   hasAlreadyPayed(userId: number, edition: number): Promise<boolean> {
-    const hasAlreadyPayed = this.contributions.some(
-      (c) => userId === c.userId && edition === c.edition,
-    );
+    const contributionIdentity = { userId, edition };
+    const hasAlreadyPayed = this.has(contributionIdentity);
     return Promise.resolve(hasAlreadyPayed);
   }
 
-  has(contribution: Contribution): boolean {
-    return this.contributions.some(
-      ({ userId, edition }) =>
-        userId === contribution.userId && edition === contribution.edition,
+  has(contributionIdentity: IIdentifyContribution): boolean {
+    return this.contributions.some((contribution) =>
+      areSameContributions(contributionIdentity, contribution),
     );
   }
 }
