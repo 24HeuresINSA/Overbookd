@@ -25,9 +25,12 @@ export class PrismaPayContributionRepository implements ContributionRepository {
   }
 
   async pay(contribution: Contribution): Promise<Contribution> {
-    return this.prisma.contribution.create({
-      data: contribution,
+    const { adherentId, ...rest } = contribution;
+    const data = { ...rest, userId: adherentId };
+    const { userId, ...fromDatabase } = await this.prisma.contribution.create({
+      data,
     });
+    return { adherentId, ...fromDatabase };
   }
 
   async isAllowedToPay(userId: number): Promise<boolean> {

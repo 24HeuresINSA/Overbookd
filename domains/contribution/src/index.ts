@@ -4,4 +4,4 @@ export type {
   ContributionRepository,
   Adherent,
 } from "./pay-contribution";
-export type { Contribution } from "./contribution.model";
+export type { Contribution } from "./contribution";

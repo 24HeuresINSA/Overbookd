@@ -4,12 +4,12 @@ import { PayContributionForm } from "@overbookd/contribution";
 
 export class PayContributionRequestDto implements PayContributionForm {
   @ApiProperty({
-    description: "The user id",
+    description: "The adherent id",
     type: Number,
   })
   @IsDefined()
   @IsNumber()
-  userId: number;
+  adherentId: number;
 
   @ApiProperty({
     description: "The amount to pay",

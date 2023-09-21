@@ -1,5 +1,5 @@
 import { Permission } from "@overbookd/permission";
-import { Contribution } from "./contribution.model";
+import { Contribution } from "./contribution";
 import {
   HasAlreadyPayed,
   InsufficientAmount,
@@ -32,7 +32,7 @@ export type Member = Adherent & WithPermission;
 
 export interface PayContributionForm {
   amount: number;
-  userId: number;
+  adherentId: number;
 }
 
 export interface ContributionRepository {
@@ -49,12 +49,15 @@ export class PayContribution {
     return this.findEdition(new Date());
   }
 
-  async for({ userId, amount }: PayContributionForm): Promise<Contribution> {
+  async for({
+    adherentId,
+    amount,
+  }: PayContributionForm): Promise<Contribution> {
     const edition = this.currentEdition;
 
     const [isAllowedToPay, hasAlreadyPayed] = await Promise.all([
-      this.contributions.isAllowedToPay(userId),
-      this.contributions.hasAlreadyPayed(userId, edition),
+      this.contributions.isAllowedToPay(adherentId),
+      this.contributions.hasAlreadyPayed(adherentId, edition),
     ]);
     if (!isAllowedToPay) throw new NotAllowedToPay();
     if (hasAlreadyPayed) throw new HasAlreadyPayed();
@@ -64,7 +67,7 @@ export class PayContribution {
     }
 
     const newContribution = {
-      userId,
+      adherentId,
       amount,
       paymentDate: new Date(),
       expirationDate: this.calculeExpirationDate(edition),

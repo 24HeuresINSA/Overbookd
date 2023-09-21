@@ -1,5 +1,5 @@
 export type ContributionIdentity = {
-  userId: number;
+  adherentId: number;
   edition: number;
 };
 
@@ -14,7 +14,7 @@ export function areSameContributions(
   other: ContributionIdentity,
 ): boolean {
   return (
-    contribution.userId === other.userId &&
+    contribution.adherentId === other.adherentId &&
     contribution.edition === other.edition
   );
 }

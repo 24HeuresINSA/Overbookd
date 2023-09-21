@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { EXPIRATION_DATE, Member, PayContribution } from "./pay-contribution";
 import { InMemoryContributionRepository } from "./contribution-repository.inmemory";
-import { Contribution } from "./contribution.model";
+import { Contribution } from "./contribution";
 import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
@@ -33,21 +33,21 @@ const adherents: Member[] = [lea, noel, tatouin];
 
 const contributions: Contribution[] = [
   {
-    userId: lea.id,
+    adherentId: lea.id,
     amount: 100,
     edition: 48,
     paymentDate: new Date(2022, 8, 1),
     expirationDate: new Date(2023, 7, 31),
   },
   {
-    userId: noel.id,
+    adherentId: noel.id,
     amount: 200,
     edition: 48,
     paymentDate: new Date(2022, 10, 20),
     expirationDate: new Date(2023, 7, 31),
   },
   {
-    userId: noel.id,
+    adherentId: noel.id,
     amount: 100,
     edition: 49,
     paymentDate: new Date(2023, 9, 12),
@@ -71,7 +71,7 @@ describe("Pay contribution", () => {
     describe("when adherent has not already payed his contribution", () => {
       describe("when adherent try to pay less than 100 cents", () => {
         it("should indicate that the minimum amount is 100 cents", async () => {
-          const contributionForm = { userId: lea.id, amount: 90 };
+          const contributionForm = { adherentId: lea.id, amount: 90 };
           expect(
             async () => await payContribution.for(contributionForm),
           ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
@@ -80,7 +80,7 @@ describe("Pay contribution", () => {
 
       describe("when non adherent try to pay a contribution", () => {
         it("should indicate that non adherent is not allowed to pay contribution", async () => {
-          const contributionForm = { userId: tatouin.id, amount: 100 };
+          const contributionForm = { adherentId: tatouin.id, amount: 100 };
           expect(
             async () => await payContribution.for(contributionForm),
           ).rejects.toThrow(NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE);
@@ -88,13 +88,13 @@ describe("Pay contribution", () => {
       });
 
       describe.each`
-        userId    | amount
-        ${lea.id} | ${100}
-        ${lea.id} | ${150}
+        adherentId | amount
+        ${lea.id}  | ${100}
+        ${lea.id}  | ${150}
       `(
-        "when adherent #$userId try to pay $amount cents",
-        ({ userId, amount }) => {
-          const contributionForm = { userId, amount };
+        "when adherent #$adherentId try to pay $amount cents",
+        ({ adherentId, amount }) => {
+          const contributionForm = { adherentId, amount };
 
           it(`should pay ${amount} cents`, async () => {
             const payedContribution = await payContribution.for(
@@ -148,7 +148,7 @@ describe("Pay contribution", () => {
     });
 
     describe("when adherent has already payed his contribution", () => {
-      const contribution = { userId: 2, amount: 150 };
+      const contribution = { adherentId: noel.id, amount: 150 };
 
       it("should indicate that adherent has already payed", async () => {
         expect(

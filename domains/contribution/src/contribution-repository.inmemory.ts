@@ -3,7 +3,7 @@ import {
   Contribution,
   ContributionIdentity,
   areSameContributions,
-} from "./contribution.model";
+} from "./contribution";
 import { Adherent, ContributionRepository, Member } from "./pay-contribution";
 
 export class InMemoryContributionRepository implements ContributionRepository {
@@ -25,7 +25,7 @@ export class InMemoryContributionRepository implements ContributionRepository {
 
   findAdherentsOutToDate(edition: number): Promise<Adherent[]> {
     const adherents = this.adherents.filter((adherent) => {
-      const contributionIdentity = { userId: adherent.id, edition };
+      const contributionIdentity = { adherentId: adherent.id, edition };
       return !this.has(contributionIdentity);
     });
     return Promise.resolve(adherents);
@@ -38,8 +38,8 @@ export class InMemoryContributionRepository implements ContributionRepository {
     return Promise.resolve(isAdherent);
   }
 
-  hasAlreadyPayed(userId: number, edition: number): Promise<boolean> {
-    const contributionIdentity = { userId, edition };
+  hasAlreadyPayed(adherentId: number, edition: number): Promise<boolean> {
+    const contributionIdentity = { adherentId, edition };
     const hasAlreadyPayed = this.has(contributionIdentity);
     return Promise.resolve(hasAlreadyPayed);
   }
