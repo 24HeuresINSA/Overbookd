@@ -54,4 +54,4 @@ Tous les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo 
 - Le front : <https://overbookd.traefik.me>
 - Le back : <https://overbookd.traefik.me/api>
 - Swagger : <https://overbookd.traefik.me/api/swagger>
-- Adminer : <https://overbookd.traefik.me/adminer/>, petit lien magique pour autofill <https://overbookd.traefik.me/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-48e&ns=public>
+- Adminer : <https://overbookd.traefik.me/adminer/>, petit lien magique pour autofill <https://overbookd.traefik.me/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-local&ns=public>
