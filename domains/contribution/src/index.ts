@@ -1,4 +1,7 @@
-export { PayContribution } from "./pay-contribution";
+export {
+  PayContribution,
+  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
+} from "./pay-contribution";
 export type {
   PayContributionForm,
   ContributionRepository,

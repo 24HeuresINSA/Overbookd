@@ -7,7 +7,7 @@ import {
 } from "./pay-contribution.error";
 import { Edition } from "./edition";
 
-const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
+export const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
 export type Adherent = {
   id: number;
   firstname: string;
