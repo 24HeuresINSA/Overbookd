@@ -50,7 +50,7 @@ export class ContributionController {
   @Post()
   @ApiResponse({
     status: 201,
-    description: "Pay configuration",
+    description: "Pay contribution",
   })
   @ApiBody({
     description: "Contribution to pay",
