@@ -11,7 +11,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { ContributionService } from "./contribution.service";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
-import { PayContributionForm, Adherent } from "@overbookd/contribution";
+import { Adherent } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
 import { AdherentResponseDto } from "./dto/adherent.response.dto";
@@ -56,7 +56,7 @@ export class ContributionController {
     description: "Contribution to pay",
     type: PayContributionRequestDto,
   })
-  pay(@Body() contributionData: PayContributionForm): Promise<void> {
+  pay(@Body() contributionData: PayContributionRequestDto): Promise<void> {
     return this.contributionService.pay(contributionData);
   }
 }
