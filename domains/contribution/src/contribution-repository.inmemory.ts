@@ -1,7 +1,7 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
 import {
   Contribution,
-  IIdentifyContribution,
+  ContributionIdentity,
   areSameContributions,
 } from "./contribution.model";
 import { Adherent, ContributionRepository, Member } from "./pay-contribution";
@@ -44,7 +44,7 @@ export class InMemoryContributionRepository implements ContributionRepository {
     return Promise.resolve(hasAlreadyPayed);
   }
 
-  has(contributionIdentity: IIdentifyContribution): boolean {
+  has(contributionIdentity: ContributionIdentity): boolean {
     return this.contributions.some((contribution) =>
       areSameContributions(contributionIdentity, contribution),
     );

@@ -1,17 +1,17 @@
-export interface IIdentifyContribution {
+export type ContributionIdentity = {
   userId: number;
   edition: number;
-}
+};
 
-export interface Contribution extends IIdentifyContribution {
+export type Contribution = ContributionIdentity & {
   amount: number;
   paymentDate: Date;
   expirationDate: Date;
-}
+};
 
 export function areSameContributions(
-  contribution: IIdentifyContribution,
-  other: IIdentifyContribution,
+  contribution: ContributionIdentity,
+  other: ContributionIdentity,
 ): boolean {
   return (
     contribution.userId === other.userId &&
