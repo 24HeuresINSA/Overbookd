@@ -1,4 +1,4 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import { Adherent, PayContributionForm } from "@overbookd/contribution";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
@@ -28,7 +28,7 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchAdherentsOutToDate({ commit }) {
-      const res = await safeCall(this, repo.getAdherentsOutToDate(this));
+      const res = await safeCall(this, repo.fetchAdherentsOutToDate(this));
       if (!res) return;
       commit("SET_ADHERENTS_OUT_TO_DATE", res.data);
     },
