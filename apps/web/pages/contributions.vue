@@ -74,11 +74,11 @@ export default Vue.extend({
     },
   },
   async created() {
-    await this.$accessor.contributions.fetchAdherentsOutToDate();
+    await this.$accessor.contribution.fetchAdherentsOutToDate();
   },
   methods: {
     payContribution(adherent: Adherent) {
-      this.$accessor.contributions.payContribution({
+      this.$accessor.contribution.payContribution({
         adherent,
         amount: this.amount,
       });
