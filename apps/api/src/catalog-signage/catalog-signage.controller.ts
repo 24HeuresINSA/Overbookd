@@ -27,7 +27,7 @@ import {
   WRITE_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
 import { SignageResponseDto } from "./dto/signage.response";
-import { Signage, SignageForm } from "@overbookd/signa";
+import { Signage } from "@overbookd/signa";
 import { SignageFormRequestDto } from "./dto/signage-form.request";
 
 @ApiBearerAuth()
@@ -67,7 +67,7 @@ export class CatalogSignageController {
     description: "The signage has been successfully created",
     type: SignageResponseDto,
   })
-  create(@Body() signage: SignageForm): Promise<Signage> {
+  create(@Body() signage: SignageResponseDto): Promise<Signage> {
     return this.catalogSignageService.create(signage);
   }
 
@@ -85,7 +85,7 @@ export class CatalogSignageController {
   })
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() signage: SignageForm,
+    @Body() signage: SignageResponseDto,
   ): Promise<Signage> {
     return this.catalogSignageService.update(id, signage);
   }
