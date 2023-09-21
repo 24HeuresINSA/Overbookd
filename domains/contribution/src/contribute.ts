@@ -35,13 +35,9 @@ export class Contribute {
 
   private static calculeExpirationDate(edition: number): Date {
     const yearsSinceBaseEdition = edition - BASE_EDITION;
-    const expirationDateYear =
-      BASE_EDITION_ENDS.getFullYear() + yearsSinceBaseEdition;
+    const year = BASE_EDITION_ENDS.getFullYear() + yearsSinceBaseEdition;
+    const { month, day } = EXPIRATION_DATE;
 
-    return new Date(
-      expirationDateYear,
-      EXPIRATION_DATE.month,
-      EXPIRATION_DATE.day,
-    );
+    return new Date(year, month, day);
   }
 }
