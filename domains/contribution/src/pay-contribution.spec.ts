@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { EXPIRATION_DATE, Member, PayContribution } from "./pay-contribution";
+import { Member, PayContribution } from "./pay-contribution";
+import { EXPIRATION_DATE } from "./contribute";
 import { InMemoryContributionRepository } from "./contribution-repository.inmemory";
-import { Contribution } from "./contribution";
+import { Contribution } from "./contribute";
 import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,

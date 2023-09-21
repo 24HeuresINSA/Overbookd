@@ -1,9 +1,5 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import {
-  Contribution,
-  ContributionIdentity,
-  areSameContributions,
-} from "./contribution";
+import { Contribution, ContributionIdentity } from "./contribute";
 import { Adherent, ContributionRepository, Member } from "./pay-contribution";
 
 export class InMemoryContributionRepository implements ContributionRepository {
@@ -49,4 +45,14 @@ export class InMemoryContributionRepository implements ContributionRepository {
       areSameContributions(contributionIdentity, contribution),
     );
   }
+}
+
+function areSameContributions(
+  contribution: ContributionIdentity,
+  other: ContributionIdentity,
+): boolean {
+  return (
+    contribution.adherentId === other.adherentId &&
+    contribution.edition === other.edition
+  );
 }
