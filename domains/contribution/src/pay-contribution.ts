@@ -37,9 +37,9 @@ export interface PayContributionForm {
 
 export interface ContributionRepository {
   pay(contribution: Contribution): Promise<Contribution>;
-  hasAlreadyPayed(userId: number, edition: number): Promise<boolean>;
+  hasAlreadyPayed(adherentId: number, edition: number): Promise<boolean>;
   findAdherentsOutToDate(edition: number): Promise<Adherent[]>;
-  isAllowedToPay(userId: number): Promise<boolean>;
+  isAllowedToPay(memberId: number): Promise<boolean>;
 }
 
 export class PayContribution {

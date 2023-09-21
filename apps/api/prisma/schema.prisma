@@ -152,14 +152,14 @@ model Transaction {
 }
 
 model Contribution {
-  userId         Int      @map("user_id")
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  adherentId     Int      @map("adherent_id")
+  adherent       User     @relation(fields: [adherentId], references: [id], onDelete: Cascade)
   edition        Int
   expirationDate DateTime @map("expiration_date")
   paymentDate    DateTime @default(now()) @map("payment_date")
   amount         Int      @default(100)
 
-  @@id([userId, edition])
+  @@id([adherentId, edition])
   @@map("contribution")
 }
 

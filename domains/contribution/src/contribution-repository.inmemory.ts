@@ -31,9 +31,9 @@ export class InMemoryContributionRepository implements ContributionRepository {
     return Promise.resolve(adherents);
   }
 
-  isAllowedToPay(userId: number): Promise<boolean> {
+  isAllowedToPay(memberId: number): Promise<boolean> {
     const isAdherent = this.adherents.some(
-      (adherent) => adherent.id === userId,
+      (adherent) => adherent.id === memberId,
     );
     return Promise.resolve(isAdherent);
   }
