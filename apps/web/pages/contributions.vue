@@ -7,32 +7,31 @@
       :items-per-page="15"
       class="elevation-1"
     >
-    <template #item.name="{ item }">
-      {{ formatAdherentName(item) }}
-    </template>
+      <template #item.name="{ item }">
+        {{ formatAdherentName(item) }}
+      </template>
 
-    <template #item.actions="{ item }">
-      <div v-if="selectedAdherent">
-        <v-text-field
-          v-model="amount"
-          label="Montant"
-          type="number"
-          suffix="€"
-          :rules="[rules.number, rules.min]"
-        ></v-text-field>
-        <v-btn icon color="success" @click="payContribution(item)">
-          <v-icon> mdi-check </v-icon>
+      <template #item.actions="{ item }">
+        <div v-if="selectedAdherent">
+          <v-text-field
+            v-model="amount"
+            label="Montant"
+            type="number"
+            suffix="€"
+            :rules="[rules.number, rules.min]"
+          ></v-text-field>
+          <v-btn icon color="success" @click="payContribution(item)">
+            <v-icon> mdi-check </v-icon>
+          </v-btn>
+        </div>
+
+        <v-btn v-else icon @click="selectAdherent(item)">
+          <v-icon> mdi-play </v-icon>
         </v-btn>
-      </div>
+      </template>
+    </v-data-table>
 
-      <v-btn v-else icon @click="selectAdherent(item)">
-        <v-icon> mdi-play </v-icon>
-      </v-btn>
-
-    </template>
-  </v-data-table>
-
-  <SnackNotificationContainer />
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -54,46 +53,46 @@ interface ContributionsData extends InputRulesData {
 }
 
 export default Vue.extend({
-    name: "Contributions",
-    components: { SnackNotificationContainer },
-    data: (): ContributionsData => ({
-      headers: [
-          { text: "Nom", value: "name" },
-          { text: "Actions", value: "actions", sortable: false },
-      ],
+  name: "Contributions",
+  components: { SnackNotificationContainer },
+  data: (): ContributionsData => ({
+    headers: [
+      { text: "Nom", value: "name" },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
 
-      selectedAdherent: null,
-      amount: MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
-      rules: {
-        number: isNumber,
-        min: min(MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS),
-      },
-    }),
-    computed: {
-      adherents(): Adherent[] {
-          return this.$accessor.contribution.adherentsOutToDate;
-      },
+    selectedAdherent: null,
+    amount: MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
+    rules: {
+      number: isNumber,
+      min: min(MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS),
     },
-    async created() {
-      await this.$accessor.contributions.fetchAdherentsOutToDate();
+  }),
+  computed: {
+    adherents(): Adherent[] {
+      return this.$accessor.contribution.adherentsOutToDate;
     },
-    methods: {
-      payContribution(adherent: Adherent) {
-        this.$accessor.contributions.payContribution({
-          adherent,
-          amount: this.amount
-        });
-        
-        this.selectedAdherent = null;
-        this.amount = MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
-      },
-      formatAdherentName(adherent: Adherent): string {
-        return formatUserNameWithNickname(adherent);
-      },
-      selectAdherent(adherent: Adherent) {
-        this.selectedAdherent = adherent;
-        this.amount = MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
-      }
+  },
+  async created() {
+    await this.$accessor.contributions.fetchAdherentsOutToDate();
+  },
+  methods: {
+    payContribution(adherent: Adherent) {
+      this.$accessor.contributions.payContribution({
+        adherent,
+        amount: this.amount,
+      });
+
+      this.selectedAdherent = null;
+      this.amount = MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
     },
+    formatAdherentName(adherent: Adherent): string {
+      return formatUserNameWithNickname(adherent);
+    },
+    selectAdherent(adherent: Adherent) {
+      this.selectedAdherent = adherent;
+      this.amount = MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
+    },
+  },
 });
 </script>

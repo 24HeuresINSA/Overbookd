@@ -14,9 +14,6 @@ export class ContributionRepository {
   }
 
   static payContribution(context: Context, form: PayContributionForm) {
-    return context.$axios.post<HttpStringified<Adherent>>(
-      this.basePath,
-      form,
-    );
+    return context.$axios.post<HttpStringified<Adherent>>(this.basePath, form);
   }
 }
