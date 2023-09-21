@@ -30,7 +30,7 @@ ARG OVERBOOKD_VERSION
 ENV BASE_URL=$BASE_URL
 ENV OVERBOOKD_VERSION=${OVERBOOKD_VERSION}
 
-COPY tsconfig.library-import.json ./
+COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.package.json ./
 COPY tsconfig.build.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci

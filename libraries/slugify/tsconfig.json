@@ -1,6 +1,6 @@
 {
   "extends": [
-    "../../tsconfig.library-import",
+    "../../tsconfig.cross-modules-import",
     "../../tsconfig.package.json"
   ],
   "compilerOptions": {
