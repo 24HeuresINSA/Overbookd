@@ -42,6 +42,7 @@ import { ThrottlerGuardCustom } from "./throttler-custom.guard";
 import { RegistrationModule } from "./registration/registration.module";
 import { PrismaModule } from "./prisma.module";
 import { MailModule } from "./mail/mail.module";
+import { ContributionModule } from "./contribution/contribution.module";
 
 @Module({
   imports: [
@@ -105,6 +106,7 @@ import { MailModule } from "./mail/mail.module";
     RegistrationModule,
     PrismaModule,
     MailModule,
+    ContributionModule,
   ],
   controllers: [AppController],
   providers: [

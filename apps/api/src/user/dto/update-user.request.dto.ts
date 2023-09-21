@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  IsBoolean,
   IsEmail,
   IsMobilePhone,
   IsNotEmpty,
@@ -74,14 +73,6 @@ export class UpdateUserRequestDto implements UserUpdateForm {
   @IsString()
   @IsNotEmpty()
   comment?: string;
-
-  @ApiProperty({
-    required: false,
-    description: "The user has payed his contribution",
-  })
-  @IsOptional()
-  @IsBoolean()
-  hasPayedContributions?: boolean;
 
   @ApiProperty({
     required: false,

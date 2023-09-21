@@ -34,6 +34,8 @@ import {
   VIEW_DELETED_FT,
   VIEW_DELETED_FA,
   MANAGE_ADMINS,
+  MANAGE_CONTRIBUTIONS,
+  PAY_CONTRIBUTION,
 } from "./permissions";
 
 export type Permission =
@@ -71,4 +73,6 @@ export type Permission =
   | typeof MANAGE_PERMISSIONS
   | typeof VIEW_DELETED_FA
   | typeof VIEW_DELETED_FT
-  | typeof MANAGE_ADMINS;
+  | typeof MANAGE_ADMINS
+  | typeof MANAGE_CONTRIBUTIONS
+  | typeof PAY_CONTRIBUTION;

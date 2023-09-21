@@ -21,6 +21,7 @@
     "resolveJsonModule": true,
     "paths": {
       "@overbookd/configuration": ["../../domains/configuration/src"],
+      "@overbookd/contribution": ["../../domains/contribution/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
       "@overbookd/permission": ["../../domains/permission/src"],

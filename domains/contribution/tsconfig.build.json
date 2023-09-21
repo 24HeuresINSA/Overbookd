@@ -1,7 +1,7 @@
 {
   "extends": [
     "../../tsconfig.cross-modules-import",
-    "../../tsconfig.package.json"
+    "../../tsconfig.build.json"
   ],
   "compilerOptions": {
     "outDir": "./dist"

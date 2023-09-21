@@ -63,13 +63,6 @@ export class UserPersonnalDataResponseDto implements UserPersonnalData {
   comment: string | null;
 
   @ApiProperty({
-    name: "hasPayedContributions",
-    description: "User contribution payment",
-    type: Boolean,
-  })
-  hasPayedContributions: boolean;
-
-  @ApiProperty({
     name: "profilePicture",
     description: "User profile picture link",
     type: String,

@@ -8,9 +8,11 @@ import {
   FILL_AVAILABILITY,
   HAVE_PERSONNAL_ACCOUNT,
   MANAGE_CONFIG,
+  MANAGE_CONTRIBUTIONS,
   MANAGE_LOCATION,
   MANAGE_PERSONNAL_ACCOUNTS,
   MANAGE_USERS,
+  PAY_CONTRIBUTION,
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   READ_FT,
@@ -316,4 +318,22 @@ export const permissions = [
       },
     },
   },
+  {
+    name: MANAGE_CONTRIBUTIONS,
+    description: "Peut gérer les cotisations",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "sg" }],
+      },
+    },
+  },
+  {
+    name: PAY_CONTRIBUTION,
+    description: "Peut payer sa cotisation",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }],
+      },
+    },
+  }
 ];

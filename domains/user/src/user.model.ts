@@ -15,7 +15,6 @@ export interface UserPersonnalData extends User {
   birthdate: Date;
   phone: string;
   comment?: string;
-  hasPayedContributions: boolean;
   charisma: number;
   balance: number;
   teams: string[];

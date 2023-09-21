@@ -6,7 +6,6 @@ export interface UserUpdateForm {
   birthdate?: Date;
   phone?: string;
   comment?: string;
-  hasPayedContributions?: boolean;
   profilePicture?: string;
   charisma?: number;
 }

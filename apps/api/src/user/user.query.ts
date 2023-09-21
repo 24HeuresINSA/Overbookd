@@ -12,7 +12,6 @@ const SELECT_USER = {
   profilePicture: true,
   charisma: true,
   balance: true,
-  hasPayedContributions: true,
 };
 
 export const SELECT_USER_TEAMS = {
