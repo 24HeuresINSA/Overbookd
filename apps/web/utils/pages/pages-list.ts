@@ -4,6 +4,7 @@ import {
   ENROLL_NEWCOMER,
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
+  MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONNAL_ACCOUNTS,
   Permission,
   READ_ANIMATION_TO_PUBLISH,
@@ -105,6 +106,12 @@ export const pages: Page[] = [
       "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
     mobileSupport: false,
     keywords: ["arrivants", "inscriptions"],
+  },
+  {
+    icon: "mdi-cash-multiple",
+    title: "Cotisations",
+    permission: MANAGE_CONTRIBUTIONS,
+    to: "/contributions",
   },
   {
     icon: "mdi-clock-edit",
