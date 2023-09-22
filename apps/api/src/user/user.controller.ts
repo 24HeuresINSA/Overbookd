@@ -73,6 +73,7 @@ import {
 } from "@overbookd/permission";
 import { TeamService } from "../team/team.service";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
 
 @ApiTags("users")
 @Controller("users")
@@ -222,11 +223,11 @@ export class UserController {
   })
   @ApiBody({
     description: "New current user information",
-    type: UpdateUserRequestDto,
+    type: UpdateProfileRequestDto,
   })
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
-    @Body() userData: UpdateUserRequestDto,
+    @Body() userData: UpdateProfileRequestDto,
   ): Promise<UserPersonnalData | null> {
     return this.userService.updateMyInformation(req.user, userData);
   }

@@ -6,6 +6,7 @@ import {
 import { HttpStringified } from "~/utils/types/http";
 import {
   MyUserInformation,
+  Profile,
   User,
   UserPersonnalData,
   UserUpdateForm,
@@ -25,6 +26,13 @@ export class UserRepository {
   static getMyUser(context: Context) {
     return context.$axios.get<HttpStringified<MyUserInformation>>(
       `${this.basePath}/me`,
+    );
+  }
+
+  static updateMyProfile(context: Context, profile: Partial<Profile>) {
+    return context.$axios.patch<HttpStringified<MyUserInformation>>(
+      `${this.basePath}/me`,
+      profile,
     );
   }
 
@@ -89,13 +97,6 @@ export class UserRepository {
   ) {
     return context.$axios.put<HttpStringified<UserPersonnalData>>(
       `${this.basePath}/${userId}`,
-      userData,
-    );
-  }
-
-  static updateMyUser(context: Context, userData: Partial<UserUpdateForm>) {
-    return context.$axios.patch<HttpStringified<MyUserInformation>>(
-      `${this.basePath}/me`,
       userData,
     );
   }
