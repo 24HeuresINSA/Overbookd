@@ -19,11 +19,14 @@ import {
   WRITE_INVENTORY,
 } from "@overbookd/permission";
 
-interface Page {
+export interface Page {
   icon: string;
   title: string;
   permission?: Permission;
   to: string;
+  description: string;
+  mobileSupport: boolean;
+  keywords: string[];
 }
 
 export const pages: Page[] = [
@@ -31,137 +34,236 @@ export const pages: Page[] = [
     icon: "mdi-apps",
     title: "Accueil",
     to: "/",
+    description: "Page principale pour se rediriger vers toutes les autres",
+    mobileSupport: true,
+    keywords: [],
   },
   {
     icon: "mdi-image",
     title: "Trombinoscope",
     permission: VIEW_TROMBINOSCOPE,
     to: "/trombinoscope",
+    description:
+      "Liste de tous les benevoles avec leur photo permet de mettre un visage sur un nom avant de se rencontrer",
+    mobileSupport: false,
+    keywords: ["trombinoscope", "photos"],
   },
   {
     icon: "mdi-chart-bubble",
     title: "Fiches Activités",
     permission: READ_FA,
     to: "/fa",
+    description:
+      "Liste des FAs, les FAs permettent de decrire tout ce qui va se passer sur le festival",
+    mobileSupport: false,
+    keywords: ["fas", "fiches-activites", "animations"],
   },
   {
     icon: "mdi-format-color-highlight",
     title: "Fiches Tâches",
     permission: READ_FT,
     to: "/ft",
+    description:
+      "Liste des FTs, les FTs permettent de déecrire tout ce qui doit etre fait pour que le festival se déroule bien",
+    mobileSupport: false,
+    keywords: ["fts", "fiche-taches"],
   },
   {
     icon: "mdi-account-group",
     title: "Liste des bénévoles",
     permission: VIEW_VOLUNTEER,
     to: "/volunteers",
+    description: "Permet de voir tous les bénévoles",
+    mobileSupport: false,
+    keywords: ["benevoles", "orgas"],
   },
   {
     icon: "mdi-clock",
     title: "Mes dispos",
     permission: FILL_AVAILABILITY,
     to: "/availabilities",
+    description:
+      "Permet de renseigner quand tu es disponible pour aider sur le festival",
+    mobileSupport: false,
+    keywords: ["dispos", "disponibilites"],
   },
   {
     icon: "mdi-calendar-clock",
     title: "Planning",
     permission: VIEW_PLANNING,
     to: "/planning",
+    description: "Permet d'avoir un apercu de son planning sur le festival",
+    mobileSupport: false,
+    keywords: ["planning", "calendrier", "taches", "affectation"],
   },
   {
     icon: "mdi-account-multiple-plus",
     title: "Inscriptions",
     permission: ENROLL_NEWCOMER,
     to: "/registrations",
+    description:
+      "Permet de visualiser toutes les nouveaux arrivant sur Overbookd et de les enroller",
+    mobileSupport: false,
+    keywords: ["arrivants", "inscriptions"],
   },
   {
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",
     permission: AFFECT_VOLUNTEER,
     to: "/charisma-period",
+    description:
+      "Permet de définir les points de charisme des créneaux du festival",
+    mobileSupport: false,
+    keywords: ["charisme-dispos", "charisme-disponibilites"],
   },
   {
     icon: "mdi-human-greeting",
     title: "Affect Orga-Tâche",
     permission: AFFECT_VOLUNTEER,
     to: "/assignment/orga-task",
+    description: "Permet d'affecter des bénévoles a des taches",
+    mobileSupport: false,
+    keywords: ["affect", "orga-tache", "affectation"],
   },
   {
     icon: "mdi-human-greeting",
     title: "Affect Tâche-Orga",
     permission: AFFECT_VOLUNTEER,
     to: "/assignment/task-orga",
+    description: "Permet de d'affecter des taches a des bénévoles",
+    mobileSupport: false,
+    keywords: ["affect", "tache-orga", "affectation"],
   },
   {
     icon: "mdi-clock",
     title: "Besoin orgas",
     permission: AFFECT_VOLUNTEER,
     to: "/orga-needs",
+    description:
+      "Permet de visualiser l'ensemble des bénévoles demandés pour réaliser les taches sur le festival",
+    mobileSupport: false,
+    keywords: ["benevoles", "demandes-benevoles", "besoin-benevoles", "orgas"],
   },
   {
     icon: "mdi-clock-fast",
     title: "Timeline",
     permission: VIEW_TIMELINE,
     to: "/timeline",
+    description:
+      "Permet de voir toutes les taches qui se déroulent pendant une plage horaire",
+    mobileSupport: true,
+    keywords: ["activite", "timeline"],
   },
   {
     icon: "mdi-handshake",
     title: "A l'aide",
     permission: ASK_FOR_HELP,
     to: "/need-help",
+    description:
+      "Permet de trouver un bénévole disponible pour venir aider sur une tache",
+    mobileSupport: true,
+    keywords: ["aide-ponctuelle", "disponible"],
   },
   {
     icon: "mdi-cog",
     title: "Config Système",
     permission: MANAGE_CONFIG,
     to: "/config",
+    description: "Permet de configurer Overbookd",
+    mobileSupport: false,
+    keywords: ["admin", "system", "configuration"],
   },
   {
     icon: "mdi-format-list-bulleted",
     title: "SG",
     permission: MANAGE_PERSONNAL_ACCOUNTS,
     to: "/SG",
+    description:
+      "Permet de répartir les consommations des comptes perso aux adhérants",
+    mobileSupport: false,
+    keywords: [
+      "comptes-perso",
+      "consommations",
+      "consomations",
+      "placard",
+      "biere",
+    ],
   },
   {
     icon: "mdi-cash-multiple",
     title: "Transactions",
     permission: MANAGE_PERSONNAL_ACCOUNTS,
     to: "/transactions",
+    description:
+      "Permet de visualiser les transactions effectuées sur Overbookd",
+    mobileSupport: false,
+    keywords: ["virements", "compte-perso", "transactions"],
   },
   {
     icon: "mdi-bookshelf",
     title: "Catalogue Matos",
     permission: READ_GEAR_CATALOG,
     to: "/matos/catalog",
+    description:
+      "Permet de définir l'ensemble du matériel disponible sur le festival",
+    mobileSupport: false,
+    keywords: ["catalogue-matos", "catalogue-materiel"],
   },
   {
     icon: "mdi-warehouse",
     title: "Inventaire",
     permission: WRITE_INVENTORY,
     to: "/matos/inventory",
+    description:
+      "Permet de compter l'ensemble du matériel appartenant a l'association",
+    mobileSupport: false,
+    keywords: ["inventaire", "matos", "materiel"],
   },
   {
     icon: "mdi-truck",
     title: "Logistique",
     permission: WRITE_INVENTORY,
     to: "/matos/logistic",
+    description:
+      "Permet de visualiser l'ensemble des demandes de matériel sur le fetsival",
+    mobileSupport: false,
+    keywords: ["demandes-matos", "demandes-materiel"],
   },
   {
     icon: "mdi-bookshelf",
     title: "Catalogue Signa",
     permission: READ_SIGNAGE_CATALOG,
     to: "/signa/catalog",
+    description:
+      "Permet de définir l'ensemble de la signalétique disponible sur le festival",
+    mobileSupport: false,
+    keywords: ["catalogue-signaletique"],
   },
   {
     icon: "mdi-web-sync",
     title: "Animations à publier",
     permission: READ_ANIMATION_TO_PUBLISH,
     to: "/public-animations",
+    description:
+      "Permet de lister les animations surlesquelles communiquer via les réseaux sociaux ou le site web",
+    mobileSupport: false,
+    keywords: ["animations", "communication", "publier", "publication"],
   },
   {
     icon: "mdi-chart-areaspline-variant",
     title: "Stats",
     permission: VIEW_FESTIVAL_EVENTS_STATS,
     to: "/stats",
+    description:
+      "Permet d'avoir un apercu de l'avancée des FAs et des FTs par rappport a l'édition précédente",
+    mobileSupport: false,
+    keywords: [
+      "statistiques",
+      "fas",
+      "fiches-activites",
+      "fts",
+      "fiche-taches",
+      "animations",
+    ],
   },
 ];
