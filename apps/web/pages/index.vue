@@ -41,11 +41,9 @@ export default Vue.extend({
   components: {
     SnackNotificationContainer,
   },
-  data: () => {
-    return {
-      search: "",
-    };
-  },
+  data: () => ({
+    search: "",
+  }),
   computed: {
     me(): MyUserInformation {
       return this.$accessor.user.me;

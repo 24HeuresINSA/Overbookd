@@ -44,7 +44,7 @@ export const pages: Page[] = [
     permission: VIEW_TROMBINOSCOPE,
     to: "/trombinoscope",
     description:
-      "Liste de tous les benevoles avec leur photo permet de mettre un visage sur un nom avant de se rencontrer",
+      "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
     mobileSupport: true,
     keywords: ["trombinoscope", "photos"],
   },
@@ -54,7 +54,7 @@ export const pages: Page[] = [
     permission: READ_FA,
     to: "/fa",
     description:
-      "Liste des FAs, les FAs permettent de decrire tout ce qui va se passer sur le festival",
+      "Liste des FAs, les FAs permettent de décrire tout ce qui va se passer sur le festival",
     mobileSupport: false,
     keywords: ["fas", "fiches-activites", "animations"],
   },
@@ -64,7 +64,7 @@ export const pages: Page[] = [
     permission: READ_FT,
     to: "/ft",
     description:
-      "Liste des FTs, les FTs permettent de déecrire tout ce qui doit etre fait pour que le festival se déroule bien",
+      "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
     mobileSupport: false,
     keywords: ["fts", "fiche-taches"],
   },
@@ -102,7 +102,7 @@ export const pages: Page[] = [
     permission: ENROLL_NEWCOMER,
     to: "/registrations",
     description:
-      "Permet de visualiser toutes les nouveaux arrivant sur Overbookd et de les enroller",
+      "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
     mobileSupport: false,
     keywords: ["arrivants", "inscriptions"],
   },
@@ -121,7 +121,7 @@ export const pages: Page[] = [
     title: "Affect Orga-Tâche",
     permission: AFFECT_VOLUNTEER,
     to: "/assignment/orga-task",
-    description: "Permet d'affecter des bénévoles a des taches",
+    description: "Permet d'affecter des bénévoles à des tâches",
     mobileSupport: false,
     keywords: ["affect", "orga-tache", "affectation"],
   },
@@ -130,7 +130,7 @@ export const pages: Page[] = [
     title: "Affect Tâche-Orga",
     permission: AFFECT_VOLUNTEER,
     to: "/assignment/task-orga",
-    description: "Permet de d'affecter des taches a des bénévoles",
+    description: "Permet d'affecter des tâches à des bénévoles",
     mobileSupport: false,
     keywords: ["affect", "tache-orga", "affectation"],
   },
@@ -160,7 +160,7 @@ export const pages: Page[] = [
     permission: ASK_FOR_HELP,
     to: "/need-help",
     description:
-      "Permet de trouver un bénévole disponible pour venir aider sur une tache",
+      "Permet de trouver un bénévole disponible pour venir aider sur une tâche",
     mobileSupport: true,
     keywords: ["aide-ponctuelle", "disponible"],
   },
@@ -215,7 +215,7 @@ export const pages: Page[] = [
     permission: WRITE_INVENTORY,
     to: "/matos/inventory",
     description:
-      "Permet de compter l'ensemble du matériel appartenant a l'association",
+      "Permet de compter l'ensemble du matériel appartenant à l'association",
     mobileSupport: false,
     keywords: ["inventaire", "matos", "materiel"],
   },
@@ -225,7 +225,7 @@ export const pages: Page[] = [
     permission: WRITE_INVENTORY,
     to: "/matos/logistic",
     description:
-      "Permet de visualiser l'ensemble des demandes de matériel sur le fetsival",
+      "Permet de visualiser l'ensemble des demandes de matériel sur le festival",
     mobileSupport: false,
     keywords: ["demandes-matos", "demandes-materiel"],
   },
