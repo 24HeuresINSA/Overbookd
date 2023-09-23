@@ -29,12 +29,12 @@
 </template>
 
 <script lang="ts">
-import { Permission } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import { MyUserInformation } from "@overbookd/user";
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { pages, Page } from "~/utils/pages/pages-list";
+import { isDesktop } from "~/utils/device/device.utils";
 
 export default Vue.extend({
   name: "Home",
@@ -49,26 +49,22 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     isDesktop(): boolean {
-      return window.screen.width >= 960;
+      return isDesktop();
     },
     pages(): Page[] {
       const searches = this.search
         .split(" ")
         .map((search) => SlugifyService.apply(search));
-      return pages.filter(
-        ({ keywords, permission, mobileSupport }) =>
-          (this.isDesktop || mobileSupport) &&
-          this.can(permission) &&
-          keywords.some((keyword) =>
-            searches.some((search) => keyword.includes(search)),
-          ),
-      );
-    },
-  },
-  methods: {
-    can(permission?: Permission): boolean {
-      if (!permission) return true;
-      return this.me.permissions.includes(permission);
+
+      return pages.filter(({ keywords, permission, mobileSupport }) => {
+        const isSupportedByDevice = this.isDesktop || mobileSupport;
+        const hasAccess = this.$accessor.user.can(permission);
+        const matchSearch = keywords.some((keyword) =>
+          searches.some((search) => keyword.includes(search)),
+        );
+
+        return isSupportedByDevice && hasAccess && matchSearch;
+      });
     },
   },
 });
