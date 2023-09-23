@@ -45,7 +45,7 @@ export const pages: Page[] = [
     to: "/trombinoscope",
     description:
       "Liste de tous les benevoles avec leur photo permet de mettre un visage sur un nom avant de se rencontrer",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["trombinoscope", "photos"],
   },
   {
@@ -84,7 +84,7 @@ export const pages: Page[] = [
     to: "/availabilities",
     description:
       "Permet de renseigner quand tu es disponible pour aider sur le festival",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["dispos", "disponibilites"],
   },
   {

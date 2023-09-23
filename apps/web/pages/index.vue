@@ -50,12 +50,16 @@ export default Vue.extend({
     me(): MyUserInformation {
       return this.$accessor.user.me;
     },
+    isDesktop(): boolean {
+      return window.screen.width >= 960;
+    },
     pages(): Page[] {
       const searches = this.search
         .split(" ")
         .map((search) => SlugifyService.apply(search));
       return pages.filter(
-        ({ keywords, permission }) =>
+        ({ keywords, permission, mobileSupport }) =>
+          (this.isDesktop || mobileSupport) &&
           this.can(permission) &&
           keywords.some((keyword) =>
             searches.some((search) => keyword.includes(search)),
