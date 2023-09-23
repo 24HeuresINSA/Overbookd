@@ -38,7 +38,9 @@ export const actions = actionTree(
       { adherent, amount }: { adherent: Adherent; amount: number },
     ) {
       const form: PayContributionForm = { adherentId: adherent.id, amount };
-      const res = await safeCall(this, repo.payContribution(this, form));
+      const res = await safeCall(this, repo.payContribution(this, form), {
+        successMessage: "La cotisation a été payée avec succès 💰",
+      });
       if (!res) return;
       commit("REMOVE_OUT_TO_DATE_ADHERENT", adherent.id);
     },
