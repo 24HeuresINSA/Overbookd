@@ -121,6 +121,9 @@ export default Vue.extend({
     border-color: lightgrey;
     border-width: thin;
     min-height: 165px;
+    height: 355px;
+    flex-wrap: wrap;
+    justify-content: space-around;
     @media only screen and (max-width: $mobile-max-width) {
       width: 100%;
       max-width: 100%;
@@ -128,6 +131,7 @@ export default Vue.extend({
       overflow: auto;
       border: none;
       padding: 2px;
+      height: auto;
     }
 
     a {
