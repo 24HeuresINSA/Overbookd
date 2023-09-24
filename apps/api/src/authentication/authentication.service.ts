@@ -43,6 +43,8 @@ export class AuthenticationService {
       where,
       select: {
         id: true,
+        firstname: true,
+        lastname: true,
         ...SELECT_USER_TEAMS_AND_PERMISSIONS,
       },
     });
@@ -53,6 +55,7 @@ export class AuthenticationService {
       userId: userWithPayload.id,
       teams: teams,
       permissions: [...permissions],
+      username: `${userWithPayload.firstname} ${userWithPayload.lastname}`,
     };
   }
 

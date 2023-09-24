@@ -19,7 +19,9 @@ import { MailModule } from "../mail/mail.module";
     MailModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: "24h" },
+      signOptions: {
+        expiresIn: "24h",
+      },
     }),
     HashingUtilsModule,
   ],
