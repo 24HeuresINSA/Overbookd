@@ -45,35 +45,35 @@
               </v-col>
               <v-col md="6">
                 <v-text-field
-                  v-model="user.lastname"
-                  label="Nom"
+                  v-model="firstname"
+                  label="Prénom"
                   :disabled="!canEditUserData"
                 ></v-text-field>
               </v-col>
               <v-col md="6">
                 <v-text-field
-                  v-model="user.firstname"
-                  label="Prénom"
+                  v-model="lastname"
+                  label="Nom"
                   :disabled="!canEditUserData"
                 ></v-text-field>
               </v-col>
               <v-col md="12">
                 <v-textarea
-                  v-model="user.comment"
+                  v-model="comment"
                   label="Commentaire"
                   :disabled="!canEditUserData"
                 ></v-textarea>
               </v-col>
               <v-col md="4">
                 <v-text-field
-                  v-model="user.nickname"
+                  v-model="nickname"
                   label="Surnom"
                   :disabled="!canEditUserData"
                 ></v-text-field>
               </v-col>
               <v-col md="4">
                 <DateField
-                  v-model="user.birthdate"
+                  v-model="birthdate"
                   label="Date de naissance"
                   :boxed="false"
                   :disabled="!canManageUsers"
@@ -82,7 +82,7 @@
               <v-col md="4" style="display: flex; align-items: baseline">
                 <p>+33&nbsp;</p>
                 <v-text-field
-                  v-model="user.phone"
+                  v-model="phone"
                   label="Numéro de téléphone "
                   :disabled="!canEditUserData"
                   type="number"
@@ -90,7 +90,7 @@
               </v-col>
               <v-col md="4">
                 <v-text-field
-                  v-model="user.charisma"
+                  v-model="charisma"
                   label="Charisme"
                   type="number"
                   :rules="[rules.number, rules.min]"
@@ -151,15 +151,14 @@ import { MyUserInformation, User, UserPersonnalData } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
 interface UserInformationData extends InputRulesData {
-  user: {
-    lastname?: string;
-    firstname?: string;
-    comment?: string;
-    nickname?: string;
-    birthdate?: Date;
-    phone?: string;
-    charisma?: number;
-  };
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+  comment?: string;
+  birthdate: Date;
+  phone: string;
+  charisma: number;
+
   newTeam?: string;
 }
 
@@ -172,14 +171,23 @@ export default Vue.extend({
     ProfilePicture,
   },
 
-  data: (): UserInformationData => ({
-    user: {},
-    newTeam: undefined,
-    rules: {
-      number: isNumber,
-      min: min(0),
-    },
-  }),
+  data(): UserInformationData {
+    return {
+      firstname: "",
+      lastname: "",
+      nickname: "",
+      comment: "",
+      birthdate: new Date(),
+      phone: "",
+      charisma: 0,
+
+      newTeam: undefined,
+      rules: {
+        number: isNumber,
+        min: min(0),
+      },
+    };
+  },
 
   computed: {
     me(): MyUserInformation {
@@ -216,40 +224,56 @@ export default Vue.extend({
     selectedUserPhoneLink(): string {
       return formatPhoneLink(this.selectedUser.phone);
     },
+    updatedUser(): UserPersonnalData {
+      return {
+        ...this.selectedUser,
+        firstname: this.firstname,
+        lastname: this.lastname,
+        nickname: this.nickname,
+        comment: this.comment,
+        birthdate: this.birthdate,
+        phone: this.phone,
+        charisma: this.charisma,
+      };
+    },
   },
 
   watch: {
-    async selectedUser(newUser, oldUser) {
-      this.user = { ...this.selectedUser };
-      if (oldUser.id === newUser.id) return;
+    async selectedUser() {
+      await this.updateUserInformations();
       await this.$accessor.user.setSelectedUserProfilePicture();
     },
   },
 
   async mounted() {
-    this.user = { ...this.selectedUser };
+    await this.updateUserInformations();
     await this.$accessor.user.setSelectedUserProfilePicture();
   },
 
   methods: {
+    async updateUserInformations() {
+      this.firstname = this.selectedUser.firstname;
+      this.lastname = this.selectedUser.lastname;
+      this.nickname = this.selectedUser.nickname;
+      this.comment = this.selectedUser.comment;
+      this.birthdate = this.selectedUser.birthdate;
+      this.phone = this.selectedUser.phone;
+      this.charisma = this.selectedUser.charisma;
+    },
     async addTeam() {
       if (!this.newTeam) return;
       await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
       this.$auth.refreshTokens();
-      this.user = { ...this.selectedUser };
+      await this.updateUserInformations();
       this.newTeam = undefined;
     },
     async removeTeam(team: string) {
       await this.$accessor.user.removeTeamFromSelectedUser(team);
       this.$auth.refreshTokens();
-      this.user = { ...this.selectedUser };
+      await this.updateUserInformations();
     },
     async savePersonnalData() {
-      const userToUpdate = {
-        ...this.selectedUser,
-        ...this.user,
-      };
-      await this.$accessor.user.updateUser(userToUpdate);
+      await this.$accessor.user.updateUser(this.updatedUser);
     },
     async saveAvailabilities() {
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(

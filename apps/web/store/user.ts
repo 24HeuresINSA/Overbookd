@@ -30,9 +30,9 @@ export const state = () => ({
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
-  personalAccountConsumers: [] as Consumer[],
-  volunteers: [] as UserPersonnalData[],
-  candidates: [] as UserPersonnalData[],
+  personalAccountConsumers: [] as UserPersonnalData[],
+  volunteers: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
+  candidates: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -102,6 +102,30 @@ export const mutations = mutationTree(state, {
   },
   SET_CANDIDATES(state: UserState, candidates: UserPersonnalData[]) {
     state.candidates = candidates;
+  },
+  UPDATE_VOLUNTEER(state: UserState, data: UserPersonnalData) {
+    const index = state.volunteers.findIndex(
+      (volunteer) => volunteer.id === data.id,
+    );
+    if (index === -1) return;
+    state.volunteers = updateItemToList(state.volunteers, index, data);
+  },
+  UPDATE_CANDIDATE(state: UserState, data: UserPersonnalData) {
+    const index = state.candidates.findIndex(
+      (candidate) => candidate.id === data.id,
+    );
+    if (index === -1) return;
+    state.candidates = updateItemToList(state.candidates, index, data);
+  },
+  REMOVE_VOLUNTEER(state: UserState, id: number) {
+    state.volunteers = state.volunteers.filter(
+      (volunteer) => volunteer.id !== id,
+    );
+  },
+  REMOVE_CANDIDATE(state: UserState, id: number) {
+    state.candidates = state.candidates.filter(
+      (candidate) => candidate.id !== id,
+    );
   },
 });
 
@@ -207,7 +231,10 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("UPDATE_USER", castUserWithDate(res.data));
+      const updatedUser = castUserWithDate(res.data);
+      commit("UPDATE_USER", updatedUser);
+      commit("UPDATE_VOLUNTEER", updatedUser);
+      commit("UPDATE_CANDIDATE", updatedUser);
     },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
@@ -245,6 +272,8 @@ export const actions = actionTree(
       });
       if (!res) return;
       commit("REMOVE_USER", userId);
+      commit("REMOVE_VOLUNTEER", userId);
+      commit("REMOVE_CANDIDATE", userId);
     },
 
     async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
@@ -256,6 +285,8 @@ export const actions = actionTree(
       if (!res) return;
       commit("ADD_TEAMS_TO_SELECTED_USER", res.data);
       commit("UPDATE_USER", state.selectedUser);
+      commit("UPDATE_VOLUNTEER", state.selectedUser);
+      commit("UPDATE_CANDIDATE", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 
@@ -271,6 +302,8 @@ export const actions = actionTree(
       if (!res) return;
       commit("REMOVE_TEAM_FROM_SELECTED_USER", team);
       commit("UPDATE_USER", state.selectedUser);
+      commit("UPDATE_VOLUNTEER", state.selectedUser);
+      commit("UPDATE_CANDIDATE", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 
