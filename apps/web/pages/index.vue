@@ -41,7 +41,6 @@ export default Vue.extend({
   components: {
     SnackNotificationContainer,
   },
-  layout: "reworkd",
   data: () => ({
     search: "",
   }),

@@ -36,7 +36,6 @@ import { UserPersonnalDataWithProfilePicture } from "~/utils/models/user.model";
 export default Vue.extend({
   name: "Trombinoscope",
   components: { TrombinoscopeCard, ProfilePicture },
-  layout: "reworkd",
   computed: {
     users() {
       return this.$accessor.user.users;
