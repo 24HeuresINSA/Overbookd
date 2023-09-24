@@ -18,14 +18,14 @@
       <v-btn
         :href="`mailto:${bugReportEmail}`"
         color="primary"
-        @click="copyIssueTemplate()"
+        @click="copyIssueTemplate"
       >
         Envoyer le mail
       </v-btn>
       <v-btn color="blue-grey" @click="copyEmail">
         Copier l'adresse mail
       </v-btn>
-      <v-btn color="purple" @click="copyIssueTemplate()">
+      <v-btn color="purple" @click="copyIssueTemplate">
         Copier le modèle
       </v-btn>
     </v-card-actions>
