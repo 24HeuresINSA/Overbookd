@@ -1,126 +1,168 @@
 <template>
-  <div>
-    <v-container class="align-stretch flex-wrap align-content-start">
-      <v-row>
-        <v-col cols="12" sm="6" md="4">
-          <UserCard />
-        </v-col>
+  <div class="home">
+    <h1 class="welcome">Bienvenue sur Overbookd 👋</h1>
 
-        <v-col v-if="canDownloadPlanning" cols="12" sm="6" md="8">
-          <PlanningDownloadCard />
-        </v-col>
+    <nav>
+      <v-text-field
+        v-model="search"
+        class="search"
+        outlined
+        append-icon="mdi-magnify"
+        placeholder="Qu'est ce que tu cherches ?"
+      ></v-text-field>
 
-        <v-col v-else cols="12" sm="6" md="8">
-          <v-card>
-            <v-card-title><h3>Tu n'as pas été validé</h3></v-card-title>
-            <v-card-text style="font-size: 1.1em">
-              <p>
-                Tu n'as pas encore été validé par les responsables bénévoles
-                <br />
-                N'hésite pas
-                <strong> a compléter tes disponibilités </strong> pour augmenter
-                tes chances.
-              </p>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" class="cta" to="/availabilities">
-                rajouter des disponibilités
-              </v-btn>
-            </v-card-actions>
+      <div class="pages">
+        <nuxt-link v-for="page in pages" :key="page.title" :to="page.to">
+          <v-card class="page">
+            <h2>
+              <v-icon>{{ page.icon }}</v-icon>
+              <span>{{ page.title }}</span>
+            </h2>
+            <p class="description">{{ page.description }}</p>
           </v-card>
-        </v-col>
-
-        <v-col cols="12" sm="6" md="4">
-          <FriendsCard />
-        </v-col>
-        <v-col cols="12" sm="6" md="8">
-          <PersonnalAccountCard v-if="havePersonnalAccount" />
-          <CommentEditionCard v-else />
-        </v-col>
-      </v-row>
-    </v-container>
+        </nuxt-link>
+      </div>
+    </nav>
 
     <SnackNotificationContainer />
-    <!-- On commente cette partie pour le moment pour que les personnes sans role puissent accéder a leur dispo
-    <v-dialog v-model="hasNotBeenApproved" max-width="600" persistent>
-      <v-card>
-        <v-card-title>Oupsss</v-card-title>
-        <v-card-text>
-          Merci de rejoindre l'asso mais il faut qu'un admin active ton compte
-          (demande à Maëlle)..
-        </v-card-text>
-        <v-card-actions>
-          <v-btn text @click="logout">DÉCONNEXION</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    -->
   </div>
 </template>
 
-<script>
-import UserCard from "~/components/organisms/user/data/UserCard.vue";
+<script lang="ts">
+import { SlugifyService } from "@overbookd/slugify";
+import { MyUserInformation } from "@overbookd/user";
+import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import PersonnalAccountCard from "~/components/organisms/user/personnalAccount/PersonnalAccountCard.vue";
-import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
-import CommentEditionCard from "~/components/organisms/user/data/CommentEditionCard.vue";
-import PlanningDownloadCard from "~/components/organisms/planning/PlanningDownloadCard.vue";
-import {
-  DOWNLOAD_PLANNING,
-  HAVE_PERSONNAL_ACCOUNT,
-} from "@overbookd/permission";
+import { pages, Page } from "~/utils/pages/pages-list";
+import { isDesktop } from "~/utils/device/device.utils";
 
-export default {
+export default Vue.extend({
+  name: "Home",
   components: {
-    UserCard,
     SnackNotificationContainer,
-    PersonnalAccountCard,
-    FriendsCard,
-    CommentEditionCard,
-    PlanningDownloadCard,
   },
-
+  data: () => ({
+    search: "",
+  }),
   computed: {
-    me() {
+    me(): MyUserInformation {
       return this.$accessor.user.me;
     },
-    hasNotBeenApproved() {
-      // user is not or could not be loaded from the store
-      if (!this.me) {
-        return false; // not loaded yet
-      }
-      // user has no team
-      return this.me.team === undefined || this.me.team.length === 0;
+    isDesktop(): boolean {
+      return isDesktop();
     },
-    canDownloadPlanning() {
-      return this.$accessor.user.can(DOWNLOAD_PLANNING);
-    },
-    havePersonnalAccount() {
-      return this.$accessor.user.can(HAVE_PERSONNAL_ACCOUNT);
-    },
-  },
-  async mounted() {
-    this.$accessor.user.fetchUser();
-  },
-  methods: {
-    async logout() {
-      await this.$auth.logout();
-      await this.$router.push({
-        path: "/login",
+    pages(): Page[] {
+      const searches = this.search
+        .split(" ")
+        .map((search) => SlugifyService.apply(search));
+
+      return pages.filter(({ keywords, permission, mobileSupport }) => {
+        const isSupportedByDevice = this.isDesktop || mobileSupport;
+        const hasAccess = this.$accessor.user.can(permission);
+        const matchSearch = keywords.some((keyword) =>
+          searches.some((search) => keyword.includes(search)),
+        );
+
+        return isSupportedByDevice && hasAccess && matchSearch;
       });
     },
-    isAvailabilityUpdateActive() {
-      return true;
-    },
-    isManif() {
-      return true;
-    },
   },
-};
+});
 </script>
+
 <style lang="scss" scoped>
-.cta {
-  color: white;
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 30px;
+  gap: 60px;
+  @media only screen and (max-width: $mobile-max-width) {
+    margin: 0px;
+    gap: 40px;
+  }
+
+  .welcome {
+    font-size: 4rem;
+    @media only screen and (max-width: $mobile-max-width) {
+      font-size: xx-large;
+      text-align: center;
+    }
+  }
+
+  nav {
+    width: 100%;
+    @media only screen and (min-width: $mobile-max-width) {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      overflow: hidden;
+    }
+  }
+
+  .search {
+    width: 80%;
+    @media only screen and (max-width: $mobile-max-width) {
+      min-width: 95%;
+    }
+  }
+
+  .pages {
+    display: flex;
+    gap: 20px;
+    width: 90%;
+    max-width: 90%;
+    overflow-x: scroll;
+    padding: 10px;
+    border: solid;
+    border-radius: 5px;
+    border-color: lightgrey;
+    border-width: thin;
+    min-height: 165px;
+    height: 355px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    @media only screen and (max-width: $mobile-max-width) {
+      width: 100%;
+      max-width: 100%;
+      flex-direction: column;
+      overflow: auto;
+      border: none;
+      padding: 2px;
+      height: auto;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    .page {
+      padding: 5px;
+      @media only screen and (min-width: $mobile-max-width) {
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 155px;
+      }
+      h2 {
+        text-decoration: unset;
+        font-size: large;
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+      }
+      @media only screen and (max-width: $mobile-max-width) {
+        h2 {
+          font-size: 1.2rem;
+        }
+      }
+      p {
+        text-decoration: unset;
+        margin-top: 5px;
+        padding: 0px 10px;
+      }
+    }
+  }
 }
 </style>
