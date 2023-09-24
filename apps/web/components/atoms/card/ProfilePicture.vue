@@ -2,9 +2,12 @@
   <v-img
     v-if="hasProfilePicture(user)"
     class="userProfilePicture"
+    :class="{ small }"
     :src="user.profilePictureBlob"
   />
-  <v-icon v-else class="defaultProfilePicture">mdi-account-circle</v-icon>
+  <v-icon v-else class="defaultProfilePicture" :class="{ small }">
+    mdi-account-circle
+  </v-icon>
 </template>
 
 <script lang="ts">
@@ -18,6 +21,11 @@ export default Vue.extend({
     user: {
       type: Object as () => UserPersonnalDataWithProfilePicture,
       required: true,
+    },
+    small: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   mounted() {
@@ -44,5 +52,11 @@ export default Vue.extend({
 .defaultProfilePicture {
   font-size: 100px;
   align-self: center;
+  &.small {
+    font-size: 55px;
+    @media only screen and (max-width: $mobile-max-width) {
+      font-size: 45px;
+    }
+  }
 }
 </style>

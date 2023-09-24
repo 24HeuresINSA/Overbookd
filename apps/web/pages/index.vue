@@ -92,11 +92,11 @@ export default Vue.extend({
 
   nav {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     @media only screen and (min-width: $mobile-max-width) {
       padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       gap: 40px;
       overflow: hidden;
     }
@@ -114,7 +114,7 @@ export default Vue.extend({
     gap: 20px;
     width: 90%;
     max-width: 90%;
-    overflow-x: scroll;
+    overflow-y: scroll;
     padding: 10px;
     border: solid;
     border-radius: 5px;
