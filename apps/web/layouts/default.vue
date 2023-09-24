@@ -228,7 +228,6 @@ ${window.location.href}
 # Additional info
 version: ${version}
 user agent: ${navigator.userAgent}
-vendor: ${navigator.vendor}
 date: ${Date().toLocaleString()}
 resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
     },
