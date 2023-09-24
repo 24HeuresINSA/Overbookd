@@ -329,7 +329,7 @@ export default Vue.extend({
   width: 80%;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: $mobile-max-width) {
   .volunteers-page {
     flex-direction: column;
   }
