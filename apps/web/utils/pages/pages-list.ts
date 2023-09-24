@@ -112,12 +112,16 @@ export const pages: Page[] = [
     title: "Cotisations",
     permission: MANAGE_CONTRIBUTIONS,
     to: "/contributions",
+    description:
+      "Permet d'enregistrer les cotisations des adhérents à l'association",
+    mobileSupport: false,
+    keywords: ["cotisations", "contributions"],
   },
   {
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",
     permission: AFFECT_VOLUNTEER,
-    to: "/charisma-period",
+    to: "/charisma-periods",
     description:
       "Permet de définir les points de charisme des créneaux du festival",
     mobileSupport: false,

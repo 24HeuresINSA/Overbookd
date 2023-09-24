@@ -8,7 +8,7 @@ import {
 import { Edition } from "./edition";
 
 export const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
-export const MINIMUM_CONTRIBUTION_AMOUNT_IN_EUROS = 100;
+
 export type Adherent = {
   id: number;
   firstname: string;

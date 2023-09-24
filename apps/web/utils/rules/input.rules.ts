@@ -80,5 +80,10 @@ export function required(value: unknown) {
 }
 
 export interface InputRulesData {
-  rules: Record<string, (value: string | null) => string | boolean>;
+  rules: InputRules;
 }
+
+export type InputRules = Record<
+  string,
+  (value: string | null) => string | boolean
+>;

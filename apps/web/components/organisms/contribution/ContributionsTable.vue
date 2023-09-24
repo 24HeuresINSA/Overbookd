@@ -46,7 +46,7 @@ export default Vue.extend({
       { text: "Prénom", value: "firstname" },
       { text: "Nom", value: "lastname" },
       { text: "Surnom", value: "nickname" },
-      { text: "Actions", value: "actions", width: "30%", sortable: false },
+      { text: "Paiement", value: "payment", width: "30%", sortable: false },
     ],
     search: "",
   }),

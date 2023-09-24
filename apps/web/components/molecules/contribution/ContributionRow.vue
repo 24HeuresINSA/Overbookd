@@ -1,17 +1,20 @@
 <template>
   <tr>
-    <td>{{ adherent?.firstname }}</td>
-    <td>{{ adherent?.lastname }}</td>
-    <td>{{ adherent?.nickname ?? "" }}</td>
+    <td>{{ adherent.firstname }}</td>
+    <td>{{ adherent.lastname }}</td>
+    <td>{{ adherent.nickname }}</td>
     <td class="form">
-      <v-text-field
+      <MoneyField
         v-model="amount"
-        type="number"
-        suffix="€"
-        class="amount-input"
-        :rules="[rules.number, rules.min]"
-      ></v-text-field>
-      <v-btn color="primary" @click="payContribution">
+        :min="minimumContributionAmount"
+        label=""
+        @error="updateAmountValidity"
+      />
+      <v-btn
+        color="primary"
+        :disabled="isAmountInvalid"
+        @click="payContribution"
+      >
         Valider le paiement
       </v-btn>
     </td>
@@ -22,16 +25,18 @@
 import Vue from "vue";
 import {
   Adherent,
-  MINIMUM_CONTRIBUTION_AMOUNT_IN_EUROS,
+  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
 } from "@overbookd/contribution";
-import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
+import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
-interface ContributionRowData extends InputRulesData {
+interface ContributionRowData {
   amount: number;
+  isAmountInvalid: boolean;
 }
 
 export default Vue.extend({
   name: "ContributionRow",
+  components: { MoneyField },
   props: {
     adherent: {
       type: Object as () => Adherent,
@@ -39,12 +44,14 @@ export default Vue.extend({
     },
   },
   data: (): ContributionRowData => ({
-    amount: MINIMUM_CONTRIBUTION_AMOUNT_IN_EUROS,
-    rules: {
-      number: isNumber,
-      min: min(MINIMUM_CONTRIBUTION_AMOUNT_IN_EUROS),
-    },
+    amount: MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
+    isAmountInvalid: false,
   }),
+  computed: {
+    minimumContributionAmount(): number {
+      return MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
+    },
+  },
   methods: {
     payContribution() {
       this.$accessor.contribution.payContribution({
@@ -52,8 +59,8 @@ export default Vue.extend({
         amount: this.amount,
       });
     },
-    centsToEuros(cents: number): number {
-      return cents / 100;
+    updateAmountValidity(isInvalid: boolean) {
+      this.isAmountInvalid = isInvalid;
     },
   },
 });
@@ -64,9 +71,5 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.amount-input {
-  width: 100px;
 }
 </style>
