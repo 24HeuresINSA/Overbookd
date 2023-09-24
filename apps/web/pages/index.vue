@@ -41,6 +41,7 @@ export default Vue.extend({
   components: {
     SnackNotificationContainer,
   },
+  layout: "reworkd",
   data: () => ({
     search: "",
   }),
@@ -92,11 +93,11 @@ export default Vue.extend({
 
   nav {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     @media only screen and (min-width: $mobile-max-width) {
       padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       gap: 40px;
       overflow: hidden;
     }

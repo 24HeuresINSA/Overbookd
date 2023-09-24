@@ -294,7 +294,7 @@ resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
 };
 </script>
 
-<style>
+<style scoped>
 .watermark {
   position: absolute;
   top: 0;
