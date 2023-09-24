@@ -140,15 +140,6 @@
             M'inscrire
           </v-btn>
           <v-btn text @click="step = 3"> Revenir </v-btn>
-          <ul class="errors">
-            <li
-              v-for="reason in registerForm.reasons"
-              :key="reason"
-              class="error--text"
-            >
-              {{ reason }}
-            </li>
-          </ul>
         </v-stepper-content>
       </v-stepper>
     </v-card>
@@ -386,11 +377,6 @@ export default Vue.extend({
     &.dense {
       gap: 0px;
     }
-  }
-
-  .errors {
-    margin-top: 10px;
-    font-size: 0.8rem;
   }
 }
 </style>
