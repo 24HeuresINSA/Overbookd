@@ -5,6 +5,7 @@ export type JwtPayload = {
   userId: number;
   teams: string[];
   permissions: Permission[];
+  username: string;
 };
 
 export type RefreshJwt = {
@@ -17,12 +18,14 @@ export class JwtUtil implements JwtPayload {
   id: number;
   teams: string[];
   permissions: Permission[];
+  username: string;
 
   constructor(payload: JwtPayload) {
     this.userId = payload.userId;
     this.teams = payload.teams;
     this.permissions = payload.permissions;
     this.id = payload.id;
+    this.username = payload.username;
   }
 
   private get isAdmin(): boolean {

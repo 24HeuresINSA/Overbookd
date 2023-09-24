@@ -19,12 +19,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     teams,
     permissions,
     id,
+    username,
   }: JwtPayload & unknown): Promise<JwtPayload> {
     return {
       userId,
       teams,
       permissions,
       id,
+      username,
     };
   }
 }
