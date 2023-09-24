@@ -1,24 +1,31 @@
 <template>
   <v-app class="overbookd">
-    <header>
-      <nuxt-link class="application" to="/">
-        <img class="logo" src="/img/logo/overbookd_logo_noir.png" />
-        <span class="version"> {{ version }}</span>
-      </nuxt-link>
-      <span class="watermark">{{ watermark }}</span>
-      <div class="actions">
-        <span class="action profile">
-          <ProfilePicture class="profile-picture" :user="me" />
-          <span class="action__text">{{ myName }}</span>
-        </span>
-        <span class="action logout" @click="logout()">
-          <v-icon>mdi-logout</v-icon>
-          <span class="action__text"> Deconnexion </span>
-        </span>
-      </div>
-    </header>
+    <Header />
     <div class="main">
-      <aside></aside>
+      <aside>
+        <nav>
+          <nuxt-link
+            v-for="page in pages"
+            :key="page.title"
+            :to="page.to"
+            class="page"
+          >
+            <v-icon>{{ page.icon }}</v-icon>
+            <span class="page__title">{{ page.title }}</span>
+          </nuxt-link>
+        </nav>
+        <div class="actions">
+          <span class="action bug-report">
+            <v-icon>mdi-bug</v-icon>
+            <span class="action__title">Rapporter une erreur</span>
+          </span>
+          <span class="action ask-help">
+            <v-icon>mdi-help-circle-outline</v-icon>
+            <span class="action__title">Une question ?</span>
+          </span>
+        </div>
+      </aside>
+
       <nuxt class="content" />
     </div>
     <footer>
@@ -28,11 +35,11 @@
 </template>
 
 <script lang="ts">
-import { UserPersonnalData } from "@overbookd/user";
 import Vue from "vue";
-import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
+import { isDesktop } from "~/utils/device/device.utils";
+import { Page, pages } from "~/utils/pages/pages-list";
+import Header from "./parts/header.vue";
 
-const version = process.env.OVERBOOKD_VERSION;
 const AUTHORS = [
   "Hamza - Cookie 🍪",
   "Tit - Goelise 🦀",
@@ -55,39 +62,19 @@ const AUTHORS = [
 export default Vue.extend({
   name: "ReworkdLayout",
   components: {
-    ProfilePicture,
+    Header,
   },
   computed: {
-    me(): UserPersonnalData {
-      return this.$accessor.user.me;
-    },
     randomAuthor(): string {
       const randomIndex = Math.floor(Math.random() * AUTHORS.length);
       return AUTHORS.at(randomIndex) ?? "";
     },
-    version(): string {
-      return `v${version}` ?? "";
-    },
-    isPreProd(): boolean {
-      return process.env.BASE_URL?.includes("preprod") ?? false;
-    },
-    isCetaitMieuxAvant(): boolean {
-      return process.env.BASE_URL?.includes("cetaitmieuxavant") ?? false;
-    },
-    watermark(): string {
-      if (this.isPreProd) return "preprod";
-      if (this.isCetaitMieuxAvant) return "ctma";
-      return "";
-    },
-    myName(): string {
-      return this.me.nickname || this.me.firstname;
-    },
-  },
-  methods: {
-    async logout() {
-      await this.$auth.logout();
-      await this.$router.push({
-        path: "/login",
+    pages(): Page[] {
+      return pages.filter(({ permission, mobileSupport }) => {
+        const isSupportedByDevice = isDesktop() || mobileSupport;
+        const hasAccess = this.$accessor.user.can(permission);
+
+        return isSupportedByDevice && hasAccess;
       });
     },
   },
@@ -95,88 +82,82 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-header {
-  z-index: 3;
-  position: sticky;
-  top: 0;
+.main {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0px 5px;
-  background-color: change-color($color: $blue-24h, $whiteness: 60%);
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
-    0 1px 10px 0 rgba(0, 0, 0, 0.12);
-  height: $header-height;
   @media only screen and (max-width: $mobile-max-width) {
-    height: $mobile-header-height;
+    flex-direction: column-reverse;
   }
-
-  a {
-    text-decoration: none;
-    color: black;
+  height: 100%;
+  @media only screen and (min-width: $mobile-max-width) {
+    padding-bottom: 30px;
   }
-  .application {
+  aside {
+    position: sticky;
+    @media only screen and (max-width: $mobile-max-width) {
+      position: fixed;
+      z-index: 3;
+      width: 100%;
+      .actions {
+        border-left: 2px solid #756a46;
+        display: flex;
+      }
+      .v-icon {
+        font-size: 36px;
+      }
+    }
+    bottom: 0;
+    @media only screen and (max-width: $mobile-max-width) {
+      flex-direction: row;
+    }
+    background-color: change-color($color: $yellow-24h, $whiteness: 60%);
+    min-width: 35px;
+    padding: 5px 0px;
     display: flex;
-    gap: 3px;
-    align-items: center;
-
-    .logo {
-      max-width: 200px;
+    flex-direction: column;
+    justify-content: space-between;
+    &:hover {
+      min-width: 200px;
+      .page__title,
+      .action__title {
+        display: unset;
+      }
     }
 
-    .version {
-      font-weight: 600;
-      @media only screen and (max-width: $mobile-max-width) {
+    .action,
+    .page {
+      padding: 5px;
+      &:hover {
+        cursor: pointer;
+        background-color: $yellow-24h;
+      }
+      display: flex;
+      gap: 3px;
+      &__title {
         display: none;
       }
     }
-  }
 
-  .actions {
-    display: flex;
-    .action {
+    nav {
+      a {
+        text-decoration: none;
+        color: black;
+      }
       display: flex;
-      gap: 2px;
-      align-items: center;
-      padding: 5px 10px;
-      border-radius: 20%;
-      &:hover {
-        cursor: pointer;
-        background-color: $blue-24h;
+      flex-direction: column;
+      @media only screen and (max-width: $mobile-max-width) {
+        flex-direction: row;
+        max-width: 80%;
+        overflow-x: scroll;
+        overflow-y: hidden;
       }
-      &__text {
-        text-transform: capitalize;
-        @media only screen and (max-width: $mobile-max-width) {
-          display: none;
-        }
-      }
-    }
-  }
-
-  .profile-picture {
-    border-radius: 50%;
-    max-width: 55px;
-    max-height: 55px;
-    @media only screen and (max-width: $mobile-max-width) {
-      max-width: 45px;
-      max-height: 45px;
-    }
-  }
-}
-
-.main {
-  display: flex;
-  padding-bottom: 30px;
-  height: 100%;
-  aside {
-    min-width: 30px;
-    background-color: change-color($color: $yellow-24h, $whiteness: 60%);
-    &:hover {
-      min-width: 100px;
     }
   }
   .content {
     padding: 5px;
+    width: 100%;
+    @media only screen and (max-width: $mobile-max-width) {
+      padding-bottom: 60px;
+    }
   }
 }
 

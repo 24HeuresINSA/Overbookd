@@ -115,7 +115,7 @@ export default Vue.extend({
     gap: 20px;
     width: 90%;
     max-width: 90%;
-    overflow-x: scroll;
+    overflow-y: scroll;
     padding: 10px;
     border: solid;
     border-radius: 5px;
