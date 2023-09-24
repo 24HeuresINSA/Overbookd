@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { InputRules, isNumber, min } from "~/utils/rules/input.rules";
+import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "MoneyField",
@@ -34,15 +34,17 @@ export default Vue.extend({
       default: 0,
     },
   },
+  data(): InputRulesData {
+    return {
+      rules: {
+        number: isNumber,
+        min: min(this.min / 100),
+      },
+    };
+  },
   computed: {
     valueInEuros(): number {
       return this.value / 100;
-    },
-    rules(): InputRules {
-      return {
-        number: isNumber,
-        min: min(this.min / 100),
-      };
     },
   },
   methods: {
