@@ -27,6 +27,8 @@
       ></v-text-field>
 
       <SearchTeams v-model="teams" label="Filtrer par équipe" :boxed="false" />
+
+      <v-switch v-model="showOnlyMyTasks" label="Afficher mes FTs" />
     </fieldset>
   </div>
 </template>
@@ -68,6 +70,15 @@ export default Vue.extend({
       },
       set(value: Team[]) {
         this.$accessor.timeline.updateTeams(value);
+      },
+    },
+    showOnlyMyTasks: {
+      get(): boolean {
+        return Boolean(this.$accessor.timeline.owner);
+      },
+      set(value: boolean) {
+        const owner = value ? this.$accessor.user.me.id : null;
+        this.$accessor.timeline.updateOwner(owner);
       },
     },
   },

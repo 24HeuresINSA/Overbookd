@@ -8,6 +8,7 @@ interface DatabaseFT {
   name: string;
   timeWindows: DatabaseTimeWindow[];
   hasPriority?: boolean;
+  userInCharge: { id: number };
 }
 
 type DatabaseTimeSpan = IProvidePeriod & {
@@ -72,6 +73,9 @@ export class TimelineService {
       id: true,
       name: true,
       hasPriority: true,
+      userInCharge: {
+        select: { id: true },
+      },
       ...timeWindowSelection,
     };
   }
@@ -135,5 +139,6 @@ function formatFts(fts: DatabaseFT[]): TimelineFt[] {
     name: ft.name,
     hasPriority: ft.hasPriority ?? false,
     timeWindows: ft.timeWindows,
+    owner: ft.userInCharge.id,
   }));
 }

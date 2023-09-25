@@ -29,6 +29,7 @@ interface TimelineState {
   end: Date;
   search: string;
   teams: Team[];
+  owner: number | null;
 }
 
 function defaultPeriod() {
@@ -50,6 +51,7 @@ export const state = (): TimelineState => ({
   end: defaultPeriod().end,
   search: "",
   teams: [],
+  owner: null,
 });
 
 export const getters = getterTree(state, {
@@ -65,9 +67,12 @@ export const getters = getterTree(state, {
       fasMatchingTeams,
       state.search,
     );
-    return [...fasMatchingSearch, ...ftsMatchingSearch].sort(
-      (a, b) => a.fa.id - b.fa.id,
+    const fasWithFts = [...fasMatchingSearch, ...ftsMatchingSearch];
+    const eventsMatchingInCharge = filterEventsMatchingInCharge(
+      fasWithFts,
+      state.owner,
     );
+    return eventsMatchingInCharge.sort((a, b) => a.fa.id - b.fa.id);
   },
 });
 
@@ -86,6 +91,9 @@ export const mutations = mutationTree(state, {
   },
   SET_TEAMS(state, teams: Team[]) {
     state.teams = teams;
+  },
+  SET_OWNER(state, ownerId: number | null) {
+    state.owner = ownerId;
   },
 });
 
@@ -111,6 +119,9 @@ export const actions = actionTree(
     },
     updateTeams({ commit }, teams: Team[]) {
       commit("SET_TEAMS", teams);
+    },
+    updateOwner({ commit }, ownerId: number | null) {
+      commit("SET_OWNER", ownerId);
     },
     resetToDefaultPeriod({ dispatch }) {
       const period = defaultPeriod();
@@ -143,6 +154,19 @@ function filterFasWithTasksMatchingSearch(
       ...event,
       fts: event.fts.filter((ft) => isMatchingSearchedName(ft, search)),
     }));
+}
+
+function filterEventsMatchingInCharge(
+  events: TimelineEvent[],
+  ownerId: number | null,
+) {
+  if (!ownerId) return events;
+  return events
+    .map((event) => ({
+      ...event,
+      fts: event.fts.filter((ft) => ft.owner === ownerId),
+    }))
+    .filter((event) => event.fts.length > 0);
 }
 
 function isMatchingSearchedName(event: WithName, search: string): boolean {

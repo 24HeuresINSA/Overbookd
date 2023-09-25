@@ -19,6 +19,7 @@ export interface TimelineFt {
   name: string;
   timeWindows: TimelineTimeWindow[];
   hasPriority: boolean;
+  owner: number;
 }
 
 export interface TimelineEvent {

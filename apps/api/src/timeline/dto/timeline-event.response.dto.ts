@@ -106,6 +106,13 @@ class TimelineFtDto implements TimelineFt {
     type: Boolean,
   })
   hasPriority: boolean;
+
+  @ApiProperty({
+    required: true,
+    description: "The owner id of the FT",
+    type: Number,
+  })
+  owner: number;
 }
 
 export class TimelineEventResponseDto implements TimelineEvent {
