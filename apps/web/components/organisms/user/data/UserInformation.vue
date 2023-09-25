@@ -110,10 +110,20 @@
           </v-container>
         </v-card-text>
         <div class="action-btns">
-          <v-btn text color="success" @click="savePersonnalData">
+          <v-btn
+            v-if="canEditUserData"
+            text
+            color="success"
+            @click="savePersonnalData"
+          >
             changer les informations personnelles
           </v-btn>
-          <v-btn text color="warning" @click="saveAvailabilities">
+          <v-btn
+            v-if="canManageAvailability"
+            text
+            color="warning"
+            @click="saveAvailabilities"
+          >
             changer les disponibilites
           </v-btn>
           <v-btn v-if="canManageUsers" text color="red" @click="deleteUser">
@@ -140,7 +150,11 @@ import {
 } from "~/utils/user/user.utils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
-import { MANAGE_USERS, MANAGE_ADMINS } from "@overbookd/permission";
+import {
+  MANAGE_USERS,
+  MANAGE_ADMINS,
+  AFFECT_VOLUNTEER,
+} from "@overbookd/permission";
 import { MyUserInformation, User, UserPersonnalData } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
@@ -201,6 +215,9 @@ export default Vue.extend({
     },
     canManageUsers(): boolean {
       return this.$accessor.user.can(MANAGE_USERS);
+    },
+    canManageAvailability(): boolean {
+      return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     isMe(): boolean {
       return this.me.id === this.selectedUser.id;
@@ -321,6 +338,7 @@ export default Vue.extend({
 
 .action-btns {
   display: flex;
+  flex-direction: column;
   gap: 15px;
   flex-wrap: wrap;
   justify-content: center;

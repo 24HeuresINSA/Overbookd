@@ -51,7 +51,7 @@
         :items-per-page="20"
         disable-sort
       >
-        <template #item.name="{ item }">
+        <template #item.firstname="{ item }">
           {{ formatUserName(item) }}
         </template>
 
@@ -73,10 +73,6 @@
               <v-icon small>mdi-calendar</v-icon>
             </v-btn>
           </div>
-        </template>
-
-        <template #item.charisma="{ item }">
-          {{ item.charisma }}
         </template>
 
         <template #item.teams="{ item }">
@@ -148,10 +144,10 @@ export default Vue.extend({
   },
   data: (): VolunteersData => ({
     headers: [
-      { text: "Prénom Nom (Surnom)", value: "name" },
-      { text: "Equipes", value: "teams" },
+      { text: "Prénom Nom (Surnom)", value: "firstname" },
+      { text: "Equipes", value: "teams", sortable: false },
       { text: "Charisme", value: "charisma" },
-      { text: "Actions", value: "actions" },
+      { text: "Actions", value: "actions", sortable: false },
     ],
 
     filters: {
@@ -184,11 +180,10 @@ export default Vue.extend({
       }));
     },
     displayedUsers(): UserPersonnalData[] {
+      const matchTeams = this.filterUserByTeams(this.filters.teams);
+      const matchName = this.filterUserByName(this.filters.search);
       return this.searchableUsers.filter((user) => {
-        return (
-          this.filterUserByTeams(this.filters.teams)(user) &&
-          this.filterUserByName(this.filters.search)(user)
-        );
+        return matchTeams(user) && matchName(user);
       });
     },
     volunteerPlannings(): VolunteerPlanning[] {

@@ -103,14 +103,20 @@ export const mutations = mutationTree(state, {
   SET_CANDIDATES(state: UserState, candidates: UserPersonnalData[]) {
     state.candidates = candidates;
   },
-  UPDATE_VOLUNTEER(state: UserState, data: UserPersonnalData) {
+  UPDATE_VOLUNTEER(
+    state: UserState,
+    data: UserPersonnalData | UserPersonnalDataWithProfilePicture,
+  ) {
     const index = state.volunteers.findIndex(
       (volunteer) => volunteer.id === data.id,
     );
     if (index === -1) return;
     state.volunteers = updateItemToList(state.volunteers, index, data);
   },
-  UPDATE_CANDIDATE(state: UserState, data: UserPersonnalData) {
+  UPDATE_CANDIDATE(
+    state: UserState,
+    data: UserPersonnalData | UserPersonnalDataWithProfilePicture,
+  ) {
     const index = state.candidates.findIndex(
       (candidate) => candidate.id === data.id,
     );
@@ -219,7 +225,10 @@ export const actions = actionTree(
       const consummers = res.data.map(castUserWithDate);
       commit("SET_PERSONNAL_ACCOUNT_CONSUMERS", consummers);
     },
-    async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
+    async updateUser(
+      { commit, dispatch, state },
+      user: UserPersonnalData | UserPersonnalDataWithProfilePicture,
+    ) {
       if (state.me.id === user.id) return dispatch("updateMyProfile", user);
 
       const res = await safeCall(
