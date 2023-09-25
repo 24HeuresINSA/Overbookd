@@ -6,10 +6,10 @@
     </nuxt-link>
     <span class="watermark">{{ watermark }}</span>
     <div class="actions">
-      <span class="action profile">
+      <nuxt-link class="action profile" to="/profile">
         <ProfilePicture small class="profile-picture" :user="me" />
         <span class="action__text">{{ myName }}</span>
-      </span>
+      </nuxt-link>
       <span class="action logout" @click="logout()">
         <v-icon>mdi-logout</v-icon>
         <span class="action__text"> Deconnexion </span>

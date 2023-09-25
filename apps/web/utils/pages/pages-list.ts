@@ -40,6 +40,14 @@ export const pages: Page[] = [
     keywords: [],
   },
   {
+    icon: "mdi-account",
+    title: "Profil",
+    to: "/profile",
+    description: "Page d'édition de ton profil",
+    mobileSupport: true,
+    keywords: ["profile", "photo", "commentaires"],
+  },
+  {
     icon: "mdi-image",
     title: "Trombinoscope",
     permission: VIEW_TROMBINOSCOPE,

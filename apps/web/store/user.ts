@@ -11,7 +11,12 @@ import {
   castUserWithDate,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
-import { MyUserInformation, User, UserPersonnalData } from "@overbookd/user";
+import {
+  MyUserInformation,
+  Profile,
+  User,
+  UserPersonnalData,
+} from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 
 const userRepo = RepoFactory.UserRepository;
@@ -190,7 +195,7 @@ export const actions = actionTree(
       commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
     },
     async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
-      if (state.me.id === user.id) return dispatch("updateMyUser");
+      if (state.me.id === user.id) return dispatch("updateMyProfile", user);
 
       const res = await safeCall(
         this,
@@ -203,19 +208,10 @@ export const actions = actionTree(
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
     },
-    async updateMyUser({ commit }, user: UserPersonnalData) {
-      const res = await safeCall(this, userRepo.updateMyUser(this, user), {
-        successMessage: "Profil mis à jour ! 🎉",
-        errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
-      });
-      if (!res) return;
-      commit("UPDATE_USER", castUserWithDate(res.data));
-      commit("SET_MY_USER", castUserWithDate(res.data));
-    },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
         this,
-        userRepo.updateMyUser(this, { comment }),
+        userRepo.updateMyProfile(this, { comment }),
         {
           successMessage: "Commentaire mis à jour ! 🎉",
           errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",
@@ -224,6 +220,21 @@ export const actions = actionTree(
       if (!res) return;
       commit("UPDATE_USER", castUserWithDate(res.data));
       commit("SET_MY_USER", castUserWithDate(res.data));
+    },
+
+    async updateMyProfile({ commit, state }, profile: Profile) {
+      const res = await safeCall(
+        this,
+        userRepo.updateMyProfile(this, profile),
+        {
+          successMessage: "Profil mis à jour ! 🎉",
+          errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
+        },
+      );
+      if (!res) return;
+      const me = { ...state.me, ...castUserWithDate(res.data) };
+      commit("UPDATE_USER", me);
+      commit("SET_MY_USER", me);
     },
 
     async deleteUser({ commit, state, dispatch }, userId: number) {

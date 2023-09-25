@@ -15,6 +15,7 @@ import { VolunteerAssignmentStat } from "./dto/volunteer-assignment-stat.respons
 import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
+  Profile,
   UserPersonnalData,
   UserUpdateForm,
 } from "@overbookd/user";
@@ -62,14 +63,11 @@ export class UserService {
 
   async updateMyInformation(
     authorInformation: JwtPayload,
-    user: UserUpdateForm,
+    profile: Partial<Profile>,
   ): Promise<MyUserInformation | null> {
-    const author = new JwtUtil(authorInformation);
-    const filteredUserData = this.filterUpdatableUserData(author, user);
-
     const updatedUser = await this.prisma.user.update({
       where: { id: authorInformation.id },
-      data: filteredUserData,
+      data: profile,
       select: SELECT_MY_USER_INFORMATION,
     });
     return UserService.formatToMyInformation(updatedUser);

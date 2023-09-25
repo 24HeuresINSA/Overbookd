@@ -10,6 +10,13 @@ export interface User extends UserName {
   id: number;
 }
 
+export type Profile = UserName & {
+  email: string;
+  birthdate: Date;
+  phone: string;
+  comment?: string;
+};
+
 export interface UserPersonnalData extends User {
   email: string;
   birthdate: Date;
