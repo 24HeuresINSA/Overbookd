@@ -61,10 +61,12 @@ export default Vue.extend({
     padding-bottom: 30px;
   }
   .content {
+    margin-left: 35px;
     padding: 5px;
     width: 100%;
     @media only screen and (max-width: $mobile-max-width) {
       padding-bottom: 60px;
+      margin: unset;
     }
   }
 }
