@@ -2,8 +2,8 @@
   <v-card>
     <div class="user-information">
       <div class="user-information__personnal-data">
-        <ProfilePicture :user="selectedUser" />
-        <v-card-title>
+        <v-card-title class="card-title">
+          <ProfilePicture :user="selectedUser" />
           {{ formatUserNameWithNickname }}
         </v-card-title>
         <v-card-text>
@@ -30,65 +30,63 @@
           </div>
 
           <v-container>
-            <v-row>
-              <v-col md="6" class="d-flex align-center justify-center">
-                <v-btn icon :href="'mailto:' + selectedUser.email">
-                  <v-icon>mdi-send</v-icon>
-                </v-btn>
-                <h3>{{ selectedUser.email }}</h3>
-              </v-col>
-              <v-col md="6" style="display: flex; align-items: baseline">
-                <v-btn icon :href="selectedUserPhoneLink">
-                  <v-icon>mdi-phone</v-icon>
-                </v-btn>
-                <h3>{{ selectedUserPhone }}</h3>
-              </v-col>
-              <v-col md="6">
+            <div class="column">
+              <div class="row">
+                <div class="row">
+                  <v-btn icon :href="'mailto:' + selectedUser.email">
+                    <v-icon>mdi-send</v-icon>
+                  </v-btn>
+                  <h3>{{ selectedUser.email }}</h3>
+                </div>
+                <div class="row">
+                  <v-btn icon :href="selectedUserPhoneLink">
+                    <v-icon>mdi-phone</v-icon>
+                  </v-btn>
+                  <h3>{{ selectedUserPhone }}</h3>
+                </div>
+              </div>
+
+              <div class="row">
                 <v-text-field
                   v-model="firstname"
                   label="Prénom"
                   :disabled="!canEditUserData"
                 ></v-text-field>
-              </v-col>
-              <v-col md="6">
                 <v-text-field
                   v-model="lastname"
                   label="Nom"
                   :disabled="!canEditUserData"
                 ></v-text-field>
-              </v-col>
-              <v-col md="12">
-                <v-textarea
-                  v-model="comment"
-                  label="Commentaire"
-                  :disabled="!canEditUserData"
-                ></v-textarea>
-              </v-col>
-              <v-col md="4">
+              </div>
+
+              <v-textarea
+                v-model="comment"
+                label="Commentaire"
+                :rows="4"
+                :disabled="!canEditUserData"
+              ></v-textarea>
+
+              <div class="row">
                 <v-text-field
                   v-model="nickname"
                   label="Surnom"
                   :disabled="!canEditUserData"
                 ></v-text-field>
-              </v-col>
-              <v-col md="4">
                 <DateField
                   v-model="birthdate"
                   label="Date de naissance"
                   :boxed="false"
                   :disabled="!canManageUsers"
                 ></DateField>
-              </v-col>
-              <v-col md="4" style="display: flex; align-items: baseline">
-                <p>+33&nbsp;</p>
+              </div>
+
+              <div class="row">
                 <v-text-field
                   v-model="phone"
                   label="Numéro de téléphone "
                   :disabled="!canEditUserData"
                   type="number"
                 ></v-text-field>
-              </v-col>
-              <v-col md="4">
                 <v-text-field
                   v-model="charisma"
                   label="Charisme"
@@ -96,34 +94,30 @@
                   :rules="[rules.number, rules.min]"
                   :disabled="!canManageUsers"
                 ></v-text-field>
-              </v-col>
-            </v-row>
-            <v-col class="pl-0">
+              </div>
+            </div>
+            <div class="column">
               <h4 class="mb-4">Amis :</h4>
-              <v-row>
-                <v-chip
-                  v-for="friend in selectedUserFriends"
-                  :key="friend.id"
-                  class="mr-2 mb-2"
-                >
+              <div class="row">
+                <v-chip v-for="friend in selectedUserFriends" :key="friend.id">
                   {{ friend.firstname }} {{ friend.lastname }}
                 </v-chip>
                 <p v-show="selectedUserFriends.length === 0" class="ml-3">
                   Aucun ami
                 </p>
-              </v-row>
-            </v-col>
+              </div>
+            </div>
           </v-container>
         </v-card-text>
-        <div class="ctas">
-          <v-btn v-if="canManageUsers" text color="red" @click="deleteUser">
-            supprimer
-          </v-btn>
-          <v-btn text color="success" @click="savePersonnalData()">
+        <div class="action-btns">
+          <v-btn text color="success" @click="savePersonnalData">
             changer les informations personnelles
           </v-btn>
-          <v-btn text color="warning" @click="saveAvailabilities()">
+          <v-btn text color="warning" @click="saveAvailabilities">
             changer les disponibilites
+          </v-btn>
+          <v-btn v-if="canManageUsers" text color="red" @click="deleteUser">
+            supprimer
           </v-btn>
         </div>
       </div>
@@ -263,12 +257,14 @@ export default Vue.extend({
     async addTeam() {
       if (!this.newTeam) return;
       await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
+
       this.$auth.refreshTokens();
       await this.updateUserInformations();
       this.newTeam = undefined;
     },
     async removeTeam(team: string) {
       await this.$accessor.user.removeTeamFromSelectedUser(team);
+
       this.$auth.refreshTokens();
       await this.updateUserInformations();
     },
@@ -283,6 +279,7 @@ export default Vue.extend({
     },
     async deleteUser() {
       await this.$accessor.user.deleteUser(this.selectedUser.id);
+
       if (this.isMe) return this.$auth.logout();
       this.$emit("close-dialog");
     },
@@ -291,6 +288,25 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 0;
+}
+
 .user-information {
   display: flex;
   gap: 10px;
@@ -303,20 +319,14 @@ export default Vue.extend({
   }
 }
 
-.ctas {
+.action-btns {
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-@media only screen and(max-width: 2055px) {
-  .ctas {
-    flex-direction: column;
-  }
-}
-
-@media only screen and(max-width: 965px) {
+@media only screen and(max-width: $mobile-max-width) {
   .user-information {
     flex-direction: column;
 
