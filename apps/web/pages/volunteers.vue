@@ -16,13 +16,6 @@
             :boxed="false"
             :disabled="isStatsModeActive"
           />
-
-          <v-switch
-            v-if="canManageUsers"
-            v-model="filters.isCandidate"
-            label="Membres non validés"
-            :disabled="isStatsModeActive"
-          />
         </v-card-text>
       </v-card>
 
@@ -46,13 +39,13 @@
       <v-data-table
         v-if="!isStatsModeActive"
         :headers="headers"
-        :items="displayedUsers"
+        :items="displayedVolunteers"
         class="elevation-1"
         :items-per-page="20"
         disable-sort
       >
         <template #item.firstname="{ item }">
-          {{ formatUserName(item) }}
+          {{ formatVolunteerName(item) }}
         </template>
 
         <template #item.actions="{ item }">
@@ -91,7 +84,7 @@
     </div>
 
     <v-dialog v-model="isUserInformationDialogOpen">
-      <UserInformation @close-dialog="closeUserInformationDialog" />
+      <VolunteerInformation @close-dialog="closeUserInformationDialog" />
     </v-dialog>
 
     <SnackNotificationContainer />
@@ -103,7 +96,7 @@ import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
-import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
+import VolunteerInformation from "~/components/organisms/user/data/VolunteerInformation.vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import { download } from "~/utils/planning/download";
 import {
@@ -124,7 +117,6 @@ interface VolunteersData {
   filters: {
     search: string;
     teams: Team[];
-    isCandidate: boolean;
   };
 
   isUserInformationDialogOpen: boolean;
@@ -136,7 +128,7 @@ interface VolunteersData {
 export default Vue.extend({
   name: "Volunteers",
   components: {
-    UserInformation,
+    VolunteerInformation,
     SnackNotificationContainer,
     TeamChip,
     VolunteerStatsTable,
@@ -153,7 +145,6 @@ export default Vue.extend({
     filters: {
       search: "",
       teams: [],
-      isCandidate: false,
     },
 
     isUserInformationDialogOpen: false,
@@ -166,24 +157,22 @@ export default Vue.extend({
   }),
 
   computed: {
-    users(): UserPersonnalData[] {
-      return this.filters.isCandidate
-        ? this.$accessor.user.candidates
-        : this.$accessor.user.volunteers;
+    volunteers(): UserPersonnalData[] {
+      return this.$accessor.user.volunteers;
     },
-    searchableUsers(): Searchable<UserPersonnalData>[] {
-      return this.users.map((user) => ({
-        ...user,
+    searchableVolunteers(): Searchable<UserPersonnalData>[] {
+      return this.volunteers.map((volunteer) => ({
+        ...volunteer,
         searchable: SlugifyService.apply(
-          `${user.firstname} ${user.lastname} ${user.nickname}`,
+          `${volunteer.firstname} ${volunteer.lastname} ${volunteer.nickname}`,
         ),
       }));
     },
-    displayedUsers(): UserPersonnalData[] {
-      const matchTeams = this.filterUserByTeams(this.filters.teams);
-      const matchName = this.filterUserByName(this.filters.search);
-      return this.searchableUsers.filter((user) => {
-        return matchTeams(user) && matchName(user);
+    displayedVolunteers(): UserPersonnalData[] {
+      const matchTeams = this.filterVolunteersByTeams(this.filters.teams);
+      const matchName = this.filterVolunteersByName(this.filters.search);
+      return this.searchableVolunteers.filter((volunteer) => {
+        return matchTeams(volunteer) && matchName(volunteer);
       });
     },
     volunteerPlannings(): VolunteerPlanning[] {
@@ -195,13 +184,12 @@ export default Vue.extend({
   },
 
   async mounted() {
-    await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
   },
 
   methods: {
-    openInformationDialog(user: UserPersonnalData) {
-      this.$accessor.user.setSelectedUser(user);
+    openInformationDialog(volunteer: UserPersonnalData) {
+      this.$accessor.user.setSelectedUser(volunteer);
       this.isUserInformationDialogOpen = true;
     },
 
@@ -227,17 +215,17 @@ export default Vue.extend({
       const csvHeader =
         "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire";
 
-      const csvContent = this.users.map((user: UserPersonnalData) => {
+      const csvContent = this.volunteers.map((volunteer: UserPersonnalData) => {
         return [
-          user.firstname,
-          user.lastname,
-          user.nickname,
-          user.charisma,
-          user.teams?.join(", ") ?? "",
-          user.email,
-          user.birthdate,
-          user.phone,
-          user.comment?.replace(lineReturnRegex, " ") ?? "",
+          volunteer.firstname,
+          volunteer.lastname,
+          volunteer.nickname,
+          volunteer.charisma,
+          volunteer.teams?.join(", ") ?? "",
+          volunteer.email,
+          volunteer.birthdate,
+          volunteer.phone,
+          volunteer.comment?.replace(lineReturnRegex, " ") ?? "",
         ].join(";");
       });
 
@@ -248,32 +236,32 @@ export default Vue.extend({
       this.download("utilisateurs.csv", parsedCSV);
     },
 
-    openCalendar(userId: number) {
-      window.open(`/planning/${userId}`, "_blank");
+    openCalendar(volunteerId: number) {
+      window.open(`/planning/${volunteerId}`, "_blank");
     },
 
-    filterUserByName(
+    filterVolunteersByName(
       search: string,
-    ): (user: Searchable<UserPersonnalData>) => boolean {
+    ): (volunteer: Searchable<UserPersonnalData>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
-    filterUserByTeams(
+    filterVolunteersByTeams(
       teamsSearched: Team[],
-    ): (user: UserPersonnalData) => boolean {
+    ): (volunteer: UserPersonnalData) => boolean {
       if (teamsSearched.length === 0) return () => true;
 
-      return (user) =>
+      return (volunteer) =>
         teamsSearched.every((teamSearched) =>
-          user.teams.some((userTeamCode) => teamSearched.code === userTeamCode),
+          volunteer.teams.some((teamCode) => teamSearched.code === teamCode),
         );
     },
 
     async exportPlannings() {
       this.planningLoading = true;
       await this.$accessor.planning.fetchAllPdfPlannings(
-        this.displayedUsers.filter(({ charisma }) => charisma > 0),
+        this.displayedVolunteers.filter(({ charisma }) => charisma > 0),
       );
       this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
         download(planningBase64Data, volunteer),
@@ -285,8 +273,8 @@ export default Vue.extend({
       return formatPhoneLink(phone);
     },
 
-    formatUserName(user: UserPersonnalData) {
-      return formatUserNameWithNickname(user);
+    formatVolunteerName(volunteer: UserPersonnalData) {
+      return formatUserNameWithNickname(volunteer);
     },
 
     closeUserInformationDialog() {
@@ -300,6 +288,9 @@ export default Vue.extend({
 .volunteers-page {
   display: flex;
   gap: 1em;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
 }
 
 .filters {
@@ -307,9 +298,15 @@ export default Vue.extend({
   flex-direction: column;
   gap: 1em;
   width: 20%;
+  @media screen and (max-width: $mobile-max-width) {
+    width: 100%;
+  }
 
   &__stats {
     width: 100%;
+    @media screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
 
     .stats-content {
       display: flex;
@@ -322,27 +319,16 @@ export default Vue.extend({
 
 .table-container {
   width: 80%;
-}
-
-@media screen and (max-width: $mobile-max-width) {
-  .volunteers-page {
-    flex-direction: column;
-  }
-
-  .filters {
+  @media screen and (max-width: $mobile-max-width) {
     width: 100%;
-
-    &__stats {
-      display: none;
-    }
   }
 }
 
-.table-container {
-  width: 100%;
-
-  .list-actions {
+.list-actions {
+  @media screen and (max-width: $mobile-max-width) {
     display: flex;
+    flex-direction: column;
+    gap: 1em;
   }
 }
 </style>

@@ -32,7 +32,6 @@ export const state = () => ({
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
   personalAccountConsumers: [] as UserPersonnalData[],
   volunteers: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
-  candidates: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -100,9 +99,6 @@ export const mutations = mutationTree(state, {
   SET_VOLUNTEERS(state: UserState, volunteers: UserPersonnalData[]) {
     state.volunteers = volunteers;
   },
-  SET_CANDIDATES(state: UserState, candidates: UserPersonnalData[]) {
-    state.candidates = candidates;
-  },
   UPDATE_VOLUNTEER(
     state: UserState,
     data: UserPersonnalData | UserPersonnalDataWithProfilePicture,
@@ -113,24 +109,9 @@ export const mutations = mutationTree(state, {
     if (index === -1) return;
     state.volunteers = updateItemToList(state.volunteers, index, data);
   },
-  UPDATE_CANDIDATE(
-    state: UserState,
-    data: UserPersonnalData | UserPersonnalDataWithProfilePicture,
-  ) {
-    const index = state.candidates.findIndex(
-      (candidate) => candidate.id === data.id,
-    );
-    if (index === -1) return;
-    state.candidates = updateItemToList(state.candidates, index, data);
-  },
   REMOVE_VOLUNTEER(state: UserState, id: number) {
     state.volunteers = state.volunteers.filter(
       (volunteer) => volunteer.id !== id,
-    );
-  },
-  REMOVE_CANDIDATE(state: UserState, id: number) {
-    state.candidates = state.candidates.filter(
-      (candidate) => candidate.id !== id,
     );
   },
 });
@@ -175,12 +156,6 @@ export const actions = actionTree(
       if (!res) return;
       const volunteers = res.data.map(castUserWithDate);
       commit("SET_VOLUNTEERS", volunteers);
-    },
-    async fetchCandidates({ commit }) {
-      const res = await safeCall(this, userRepo.getCandidates(this));
-      if (!res) return;
-      const candidates = res.data.map(castUserWithDate);
-      commit("SET_CANDIDATES", candidates);
     },
     async fetchFriends({ commit }) {
       const res = await safeCall(this, userRepo.getFriends(this));
@@ -243,7 +218,6 @@ export const actions = actionTree(
       const updatedUser = castUserWithDate(res.data);
       commit("UPDATE_USER", updatedUser);
       commit("UPDATE_VOLUNTEER", updatedUser);
-      commit("UPDATE_CANDIDATE", updatedUser);
     },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
@@ -282,7 +256,6 @@ export const actions = actionTree(
       if (!res) return;
       commit("REMOVE_USER", userId);
       commit("REMOVE_VOLUNTEER", userId);
-      commit("REMOVE_CANDIDATE", userId);
     },
 
     async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
@@ -295,7 +268,6 @@ export const actions = actionTree(
       commit("ADD_TEAMS_TO_SELECTED_USER", res.data);
       commit("UPDATE_USER", state.selectedUser);
       commit("UPDATE_VOLUNTEER", state.selectedUser);
-      commit("UPDATE_CANDIDATE", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 
@@ -312,7 +284,6 @@ export const actions = actionTree(
       commit("REMOVE_TEAM_FROM_SELECTED_USER", team);
       commit("UPDATE_USER", state.selectedUser);
       commit("UPDATE_VOLUNTEER", state.selectedUser);
-      commit("UPDATE_CANDIDATE", state.selectedUser);
       if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
 

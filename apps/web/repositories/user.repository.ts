@@ -49,12 +49,6 @@ export class UserRepository {
     );
   }
 
-  static getCandidates(context: Context) {
-    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
-      `${this.basePath}/candidates`,
-    );
-  }
-
   static getAllPersonnalAccountConsummers(context: Context) {
     return context.$axios.get<HttpStringified<Consumer[]>>(
       `${this.basePath}/personnal-account-consummers`,

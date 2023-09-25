@@ -1,14 +1,14 @@
 <template>
   <v-card>
-    <div class="user-information">
-      <div class="user-information__personnal-data">
+    <div class="volunteer-info">
+      <div class="volunteer-info__personnal-data">
         <v-card-title class="card-title">
-          <ProfilePicture :user="selectedUser" />
-          {{ formatUserNameWithNickname }}
+          <ProfilePicture :user="selectedVolunteer" />
+          {{ formatVolunteerNameWithNickname }}
         </v-card-title>
         <v-card-text>
           <TeamChip
-            v-for="team of selectedUser.teams"
+            v-for="team of selectedVolunteer.teams"
             :key="team"
             :team="team"
             with-name
@@ -33,16 +33,16 @@
             <div class="column">
               <div class="row">
                 <div class="row">
-                  <v-btn icon :href="'mailto:' + selectedUser.email">
+                  <v-btn icon :href="'mailto:' + selectedVolunteer.email">
                     <v-icon>mdi-send</v-icon>
                   </v-btn>
-                  <h3>{{ selectedUser.email }}</h3>
+                  <h3>{{ selectedVolunteer.email }}</h3>
                 </div>
                 <div class="row">
-                  <v-btn icon :href="selectedUserPhoneLink">
+                  <v-btn icon :href="selectedVolunteerPhoneLink">
                     <v-icon>mdi-phone</v-icon>
                   </v-btn>
-                  <h3>{{ selectedUserPhone }}</h3>
+                  <h3>{{ selectedVolunteerPhone }}</h3>
                 </div>
               </div>
 
@@ -50,12 +50,12 @@
                 <v-text-field
                   v-model="firstname"
                   label="Prénom"
-                  :disabled="!canEditUserData"
+                  :disabled="!canEditVolunteerData"
                 ></v-text-field>
                 <v-text-field
                   v-model="lastname"
                   label="Nom"
-                  :disabled="!canEditUserData"
+                  :disabled="!canEditVolunteerData"
                 ></v-text-field>
               </div>
 
@@ -63,14 +63,14 @@
                 v-model="comment"
                 label="Commentaire"
                 :rows="4"
-                :disabled="!canEditUserData"
+                :disabled="!canEditVolunteerData"
               ></v-textarea>
 
               <div class="row">
                 <v-text-field
                   v-model="nickname"
                   label="Surnom"
-                  :disabled="!canEditUserData"
+                  :disabled="!canEditVolunteerData"
                 ></v-text-field>
                 <DateField
                   v-model="birthdate"
@@ -84,7 +84,7 @@
                 <v-text-field
                   v-model="phone"
                   label="Numéro de téléphone "
-                  :disabled="!canEditUserData"
+                  :disabled="!canEditVolunteerData"
                   type="number"
                 ></v-text-field>
                 <v-text-field
@@ -99,10 +99,13 @@
             <div class="column">
               <h4 class="mb-4">Amis :</h4>
               <div class="row">
-                <v-chip v-for="friend in selectedUserFriends" :key="friend.id">
+                <v-chip
+                  v-for="friend in selectedVolunteerFriends"
+                  :key="friend.id"
+                >
                   {{ friend.firstname }} {{ friend.lastname }}
                 </v-chip>
-                <p v-show="selectedUserFriends.length === 0" class="ml-3">
+                <p v-show="selectedVolunteerFriends.length === 0" class="ml-3">
                   Aucun ami
                 </p>
               </div>
@@ -111,7 +114,7 @@
         </v-card-text>
         <div class="action-btns">
           <v-btn
-            v-if="canEditUserData"
+            v-if="canEditVolunteerData"
             text
             color="success"
             @click="savePersonnalData"
@@ -126,13 +129,18 @@
           >
             changer les disponibilites
           </v-btn>
-          <v-btn v-if="canManageUsers" text color="red" @click="deleteUser">
+          <v-btn
+            v-if="canManageUsers"
+            text
+            color="red"
+            @click="deleteVolunteer"
+          >
             supprimer
           </v-btn>
         </div>
       </div>
-      <div class="user-information__availabilities">
-        <AvailabilitiesSumup :user-id="selectedUser.id" />
+      <div class="volunteer-info__availabilities">
+        <AvailabilitiesSumup :user-id="selectedVolunteer.id" />
       </div>
     </div>
   </v-card>
@@ -155,10 +163,11 @@ import {
   MANAGE_ADMINS,
   AFFECT_VOLUNTEER,
 } from "@overbookd/permission";
-import { MyUserInformation, User, UserPersonnalData } from "@overbookd/user";
+import { MyUserInformation, User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
+import { UserPersonnalDataWithProfilePicture } from "~/utils/models/user.model";
 
-interface UserInformationData extends InputRulesData {
+interface VolunteerInformationData extends InputRulesData {
   firstname: string;
   lastname: string;
   nickname?: string;
@@ -171,7 +180,7 @@ interface UserInformationData extends InputRulesData {
 }
 
 export default Vue.extend({
-  name: "UserInformation",
+  name: "VolunteerInformation",
   components: {
     TeamChip,
     AvailabilitiesSumup,
@@ -179,7 +188,7 @@ export default Vue.extend({
     ProfilePicture,
   },
 
-  data(): UserInformationData {
+  data(): VolunteerInformationData {
     return {
       firstname: "",
       lastname: "",
@@ -201,16 +210,16 @@ export default Vue.extend({
     me(): MyUserInformation {
       return this.$accessor.user.me;
     },
-    selectedUser(): UserPersonnalData {
+    selectedVolunteer(): UserPersonnalDataWithProfilePicture {
       return this.$accessor.user.selectedUser;
     },
-    selectedUserFriends(): User[] {
+    selectedVolunteerFriends(): User[] {
       return this.$accessor.user.selectedUserFriends;
     },
-    formatUserNameWithNickname(): string {
-      return formatUserNameWithNickname(this.selectedUser);
+    formatVolunteerNameWithNickname(): string {
+      return formatUserNameWithNickname(this.selectedVolunteer);
     },
-    canEditUserData(): boolean {
+    canEditVolunteerData(): boolean {
       return this.canManageUsers || this.isMe;
     },
     canManageUsers(): boolean {
@@ -220,24 +229,24 @@ export default Vue.extend({
       return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     isMe(): boolean {
-      return this.me.id === this.selectedUser.id;
+      return this.me.id === this.selectedVolunteer.id;
     },
     assignableTeams(): Team[] {
       const teamsToAdd = this.$accessor.team.allTeams.filter(
-        (team) => !this.selectedUser.teams?.includes(team.code),
+        (team) => !this.selectedVolunteer.teams?.includes(team.code),
       );
       if (this.$accessor.user.can(MANAGE_ADMINS)) return teamsToAdd;
       return teamsToAdd.filter((team) => team.code !== "admin");
     },
-    selectedUserPhone(): string {
-      return formatUserPhone(this.selectedUser.phone);
+    selectedVolunteerPhone(): string {
+      return formatUserPhone(this.selectedVolunteer.phone);
     },
-    selectedUserPhoneLink(): string {
-      return formatPhoneLink(this.selectedUser.phone);
+    selectedVolunteerPhoneLink(): string {
+      return formatPhoneLink(this.selectedVolunteer.phone);
     },
-    updatedUser(): UserPersonnalData {
+    updatedVolunteer(): UserPersonnalDataWithProfilePicture {
       return {
-        ...this.selectedUser,
+        ...this.selectedVolunteer,
         firstname: this.firstname,
         lastname: this.lastname,
         nickname: this.nickname,
@@ -250,52 +259,53 @@ export default Vue.extend({
   },
 
   watch: {
-    async selectedUser() {
-      await this.updateUserInformations();
-      await this.$accessor.user.setSelectedUserProfilePicture();
+    async selectedVolunteer() {
+      await this.updateVolunteerInformations();
     },
   },
 
   async mounted() {
-    await this.updateUserInformations();
-    await this.$accessor.user.setSelectedUserProfilePicture();
+    await this.updateVolunteerInformations();
   },
 
   methods: {
-    async updateUserInformations() {
-      this.firstname = this.selectedUser.firstname;
-      this.lastname = this.selectedUser.lastname;
-      this.nickname = this.selectedUser.nickname;
-      this.comment = this.selectedUser.comment;
-      this.birthdate = this.selectedUser.birthdate;
-      this.phone = this.selectedUser.phone;
-      this.charisma = this.selectedUser.charisma;
+    async updateVolunteerInformations() {
+      this.firstname = this.selectedVolunteer.firstname;
+      this.lastname = this.selectedVolunteer.lastname;
+      this.nickname = this.selectedVolunteer.nickname;
+      this.comment = this.selectedVolunteer.comment;
+      this.birthdate = this.selectedVolunteer.birthdate;
+      this.phone = this.selectedVolunteer.phone;
+      this.charisma = this.selectedVolunteer.charisma;
+
+      if (this.selectedVolunteer.profilePictureBlob) return;
+      await this.$accessor.user.setSelectedUserProfilePicture();
     },
     async addTeam() {
       if (!this.newTeam) return;
       await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
 
       this.$auth.refreshTokens();
-      await this.updateUserInformations();
+      await this.updateVolunteerInformations();
       this.newTeam = undefined;
     },
     async removeTeam(team: string) {
       await this.$accessor.user.removeTeamFromSelectedUser(team);
 
       this.$auth.refreshTokens();
-      await this.updateUserInformations();
+      await this.updateVolunteerInformations();
     },
     async savePersonnalData() {
-      await this.$accessor.user.updateUser(this.updatedUser);
+      await this.$accessor.user.updateUser(this.updatedVolunteer);
     },
     async saveAvailabilities() {
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        this.selectedUser.id,
+        this.selectedVolunteer.id,
       );
       this.$emit("close-dialog");
     },
-    async deleteUser() {
-      await this.$accessor.user.deleteUser(this.selectedUser.id);
+    async deleteVolunteer() {
+      await this.$accessor.user.deleteUser(this.selectedVolunteer.id);
 
       if (this.isMe) return this.$auth.logout();
       this.$emit("close-dialog");
@@ -324,7 +334,7 @@ export default Vue.extend({
   margin: 0;
 }
 
-.user-information {
+.volunteer-info {
   display: flex;
   gap: 10px;
 
@@ -345,7 +355,7 @@ export default Vue.extend({
 }
 
 @media only screen and(max-width: $mobile-max-width) {
-  .user-information {
+  .volunteer-info {
     flex-direction: column;
 
     &__personnal-data,

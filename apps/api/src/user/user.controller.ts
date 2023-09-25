@@ -133,26 +133,6 @@ export class UserController {
     return this.userService.getVolunteers();
   }
 
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @ApiBearerAuth()
-  @Permission(VIEW_VOLUNTEER)
-  @ApiUnauthorizedResponse({
-    description: "User dont have the right to access this route",
-  })
-  @ApiForbiddenResponse({
-    description: "User can't access this resource",
-  })
-  @Get("/candidates")
-  @ApiResponse({
-    status: 200,
-    description: "Get all candidates",
-    type: UserPersonnalDataResponseDto,
-    isArray: true,
-  })
-  getCandidates(): Promise<UserPersonnalData[]> {
-    return this.userService.getCandidates();
-  }
-
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @Get("me")
