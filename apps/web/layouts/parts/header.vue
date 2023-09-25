@@ -145,20 +145,11 @@ header {
   }
 
   .watermark {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 4;
     text-transform: uppercase;
 
     color: #ec0000;
     font-size: 50px;
     font-weight: 500px;
-    display: grid;
-    justify-content: center;
-    align-content: center;
     opacity: 1;
     animation: wiggle 2s infinite;
   }
