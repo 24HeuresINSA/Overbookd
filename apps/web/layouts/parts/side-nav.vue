@@ -74,9 +74,16 @@ export default Vue.extend({
 $background-color: $blue-24h;
 
 aside {
-  position: sticky;
+  position: fixed;
+  top: $header-height;
+  z-index: 3;
+  height: calc(100vh - #{$header-height} - 34px);
+  overflow-y: auto;
   @media only screen and (max-width: $mobile-max-width) {
     position: fixed;
+    bottom: 0;
+    top: unset;
+    height: unset;
     z-index: 3;
     width: 100%;
     .actions {
@@ -87,7 +94,6 @@ aside {
       font-size: 36px;
     }
   }
-  bottom: 0;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: row;
   }
