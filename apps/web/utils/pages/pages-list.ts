@@ -4,6 +4,7 @@ import {
   ENROLL_NEWCOMER,
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
+  MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONNAL_ACCOUNTS,
   Permission,
   READ_ANIMATION_TO_PUBLISH,
@@ -107,10 +108,20 @@ export const pages: Page[] = [
     keywords: ["arrivants", "inscriptions"],
   },
   {
+    icon: "mdi-cash-multiple",
+    title: "Cotisations",
+    permission: MANAGE_CONTRIBUTIONS,
+    to: "/contributions",
+    description:
+      "Permet d'enregistrer les cotisations des adhérents à l'association",
+    mobileSupport: false,
+    keywords: ["cotisations", "contributions"],
+  },
+  {
     icon: "mdi-clock-edit",
     title: "Charisme des dispos",
     permission: AFFECT_VOLUNTEER,
-    to: "/charisma-period",
+    to: "/charisma-periods",
     description:
       "Permet de définir les points de charisme des créneaux du festival",
     mobileSupport: false,

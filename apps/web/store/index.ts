@@ -27,6 +27,7 @@ import * as timeline from "./timeline";
 import * as transaction from "./transaction";
 import * as user from "./user";
 import * as volunteerAvailability from "./volunteerAvailability";
+import * as contribution from "./contribution";
 
 export const state = () => ({});
 
@@ -70,5 +71,6 @@ export const accessorType = getAccessorType({
     timeline,
     needHelp,
     registration,
+    contribution,
   },
 });
