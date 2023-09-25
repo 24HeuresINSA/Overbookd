@@ -43,7 +43,7 @@ export const pages: Page[] = [
     icon: "mdi-account",
     title: "Profil",
     to: "/profile",
-    description: "Page d'edition de ton profil",
+    description: "Page d'édition de ton profil",
     mobileSupport: true,
     keywords: ["profile", "photo", "commentaires"],
   },
