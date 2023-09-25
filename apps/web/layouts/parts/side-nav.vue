@@ -77,7 +77,7 @@ aside {
   position: fixed;
   top: $header-height;
   z-index: 3;
-  height: calc(100vh - #{$header-height} - 34px);
+  height: calc(100vh - #{$header-height});
   overflow-y: auto;
   @media only screen and (max-width: $mobile-max-width) {
     position: fixed;

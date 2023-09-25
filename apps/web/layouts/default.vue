@@ -1,13 +1,15 @@
 <template>
   <v-app class="overbookd">
     <Header />
-    <div class="main">
+    <div class="side-with-main">
       <SideNav />
-      <nuxt class="content" />
+      <div class="main">
+        <nuxt class="content" />
+        <footer>
+          <span>Fait avec ❤️ par {{ randomAuthor }}</span>
+        </footer>
+      </div>
     </div>
-    <footer>
-      <span>Fait avec ❤️ par {{ randomAuthor }}</span>
-    </footer>
   </v-app>
 </template>
 
@@ -51,20 +53,20 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.main {
+.side-with-main {
   display: flex;
   @media only screen and (max-width: $mobile-max-width) {
     flex-direction: column-reverse;
   }
-  height: 100%;
-  @media only screen and (min-width: $mobile-max-width) {
-    padding-bottom: 30px;
-  }
-  .content {
+  min-height: calc(100% - #{$header-height});
+  .main {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
     margin-left: 35px;
-    padding: 5px;
     width: 100%;
     @media only screen and (max-width: $mobile-max-width) {
+      padding: 5px;
       padding-bottom: 60px;
       margin: unset;
     }
@@ -74,8 +76,6 @@ export default Vue.extend({
 footer {
   background-color: $yellow-24h;
   padding: 5px 10px;
-  position: fixed;
-  bottom: 0;
   width: 100%;
   @media only screen and (max-width: $mobile-max-width) {
     display: none;
