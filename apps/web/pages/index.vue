@@ -1,5 +1,20 @@
 <template>
   <div class="home">
+    <v-alert
+      v-for="alert in alerts"
+      :key="alert.message"
+      color="error"
+      dark
+      icon="mdi-nuke"
+      border="left"
+      prominent
+      dismissible
+      @input="dismiss(alert)"
+    >
+      <h2 class="alert">{{ alert.message }}</h2>
+      <p class="description">{{ alert.description }}</p>
+    </v-alert>
+
     <h1 class="welcome">Bienvenue sur Overbookd 👋</h1>
 
     <nav>
@@ -35,6 +50,7 @@ import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { pages, Page } from "~/utils/pages/pages-list";
 import { isDesktop } from "~/utils/device/device.utils";
+import { Alert } from "../../../domains/personnal-account/src/in-debt-alerting";
 
 export default Vue.extend({
   name: "Home",
@@ -66,11 +82,25 @@ export default Vue.extend({
         return isSupportedByDevice && hasAccess && matchSearch;
       });
     },
+    alerts(): Alert[] {
+      return this.$accessor.alert.alerts;
+    },
+  },
+  methods: {
+    dismiss(alert: Alert) {
+      this.$accessor.alert.dismiss(alert);
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.description {
+  padding-right: 30px;
+  @media only screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
+}
 .home {
   display: flex;
   flex-direction: column;
@@ -80,6 +110,12 @@ export default Vue.extend({
   @media only screen and (max-width: $mobile-max-width) {
     margin: 0px;
     gap: 40px;
+  }
+
+  .alert {
+    @media only screen and (max-width: $mobile-max-width) {
+      font-size: large;
+    }
   }
 
   .welcome {

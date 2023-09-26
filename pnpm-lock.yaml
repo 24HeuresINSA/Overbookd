@@ -408,14 +408,7 @@ importers:
 
   domains/permission: {}
 
-  domains/personnal-account:
-    dependencies:
-      '@overbookd/list':
-        specifier: workspace:*
-        version: link:../../libraries/list
-      '@overbookd/period':
-        specifier: workspace:*
-        version: link:../../libraries/period
+  domains/personnal-account: {}
 
   domains/registration:
     dependencies:

@@ -28,6 +28,7 @@ import * as transaction from "./transaction";
 import * as user from "./user";
 import * as volunteerAvailability from "./volunteerAvailability";
 import * as contribution from "./contribution";
+import * as alert from "./alert";
 
 export const state = () => ({});
 
@@ -72,5 +73,6 @@ export const accessorType = getAccessorType({
     needHelp,
     registration,
     contribution,
+    alert,
   },
 });
