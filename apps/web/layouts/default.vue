@@ -56,7 +56,7 @@ export default Vue.extend({
 .side-with-main {
   display: flex;
   @media only screen and (max-width: $mobile-max-width) {
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
   min-height: calc(100% - #{$header-height});
   .main {
