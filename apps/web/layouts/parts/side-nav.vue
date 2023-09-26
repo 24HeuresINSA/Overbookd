@@ -71,7 +71,7 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
-$background-color: $blue-24h;
+$background-color: #cfcfd0;
 
 aside {
   position: fixed;
@@ -118,7 +118,7 @@ aside {
       cursor: pointer;
       background-color: change-color(
         $color: $background-color,
-        $whiteness: 60%
+        $blackness: 60%
       );
     }
     display: flex;

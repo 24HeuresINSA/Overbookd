@@ -58,7 +58,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$background-color: $yellow-24h;
+$background-color: change-color(
+  $color: $yellow-24h,
+  $whiteness: 30%,
+);
 
 header {
   z-index: 3;
