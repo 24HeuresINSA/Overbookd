@@ -120,7 +120,7 @@ aside {
       cursor: pointer;
       background-color: change-color(
         $color: $background-color,
-        $whiteness: 60%
+        $blackness: 60%
       );
     }
     display: flex;
