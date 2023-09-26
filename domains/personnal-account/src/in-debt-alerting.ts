@@ -7,7 +7,7 @@ export interface Adherents {
   getBalance(adherentId: number): Promise<number>;
 }
 
-interface Alert {
+export interface Alert {
   message: string;
   description: string;
 }
