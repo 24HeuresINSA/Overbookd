@@ -8,18 +8,18 @@ export interface Adherents {
 }
 
 export interface Alert {
-  message: string;
-  description: string;
+  summary: string;
+  details: string;
 }
 
 class InDebtAlert implements Alert {
-  message: string;
-  description: string;
+  summary: string;
+  details: string;
 
   constructor(balance: number) {
-    const description = `Tu es à ${balance} ${PERSONNAL_ACCOUNT_FINANCING}`;
-    this.message = NEGATIVE_BALANCE;
-    this.description = description;
+    const details = `Tu es à ${balance} ${PERSONNAL_ACCOUNT_FINANCING}`;
+    this.summary = NEGATIVE_BALANCE;
+    this.details = details;
   }
 }
 

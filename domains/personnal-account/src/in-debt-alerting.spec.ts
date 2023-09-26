@@ -40,15 +40,15 @@ describe("In Debt Alerting", () => {
     });
     it("should indicate adherent is in debt", async () => {
       const alert = await inDebtAlert.for(adherentInDebts.id);
-      expect(alert?.message).toBe(NEGATIVE_BALANCE);
+      expect(alert?.summary).toBe(NEGATIVE_BALANCE);
     });
     it("should indicate adherent balance", async () => {
       const alert = await inDebtAlert.for(adherentInDebts.id);
-      expect(alert?.description).toContain(adherentInDebts.balance);
+      expect(alert?.details).toContain(adherentInDebts.balance);
     });
     it("should instruct adherent to pay it debts", async () => {
       const alert = await inDebtAlert.for(adherentInDebts.id);
-      expect(alert?.description).toContain(PERSONNAL_ACCOUNT_FINANCING);
+      expect(alert?.details).toContain(PERSONNAL_ACCOUNT_FINANCING);
     });
   });
 });

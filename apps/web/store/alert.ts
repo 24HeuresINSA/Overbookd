@@ -18,7 +18,7 @@ export const mutations = mutationTree(state, {
     state.alerts = alerts;
   },
   REMOVE_ALERT(state, alert: Alert) {
-    state.alerts = state.alerts.filter((a) => a.message !== alert.message);
+    state.alerts = state.alerts.filter((a) => a.summary !== alert.summary);
   },
 });
 

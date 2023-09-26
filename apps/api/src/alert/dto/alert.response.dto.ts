@@ -6,11 +6,11 @@ export class AlertResponseDto implements Alert {
     type: String,
     description: "Main alert message",
   })
-  message: string;
+  summary: string;
 
   @ApiProperty({
     type: String,
-    description: "Alert explanation and description",
+    description: "Alert explanation and details",
   })
-  description: string;
+  details: string;
 }

@@ -2,7 +2,7 @@
   <div class="home">
     <v-alert
       v-for="alert in alerts"
-      :key="alert.message"
+      :key="alert.summary"
       color="error"
       dark
       icon="mdi-nuke"
@@ -11,8 +11,8 @@
       dismissible
       @input="dismiss(alert)"
     >
-      <h2 class="alert">{{ alert.message }}</h2>
-      <p class="description">{{ alert.description }}</p>
+      <h2 class="summary">{{ alert.summary }}</h2>
+      <p class="details">{{ alert.details }}</p>
     </v-alert>
 
     <h1 class="welcome">Bienvenue sur Overbookd 👋</h1>
@@ -95,12 +95,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.description {
-  padding-right: 30px;
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
-  }
-}
 .home {
   display: flex;
   flex-direction: column;
@@ -112,9 +106,16 @@ export default Vue.extend({
     gap: 40px;
   }
 
-  .alert {
+  .summary {
     @media only screen and (max-width: $mobile-max-width) {
       font-size: large;
+    }
+  }
+
+  .details {
+    padding-right: 30px;
+    @media only screen and (max-width: $mobile-max-width) {
+      display: none;
     }
   }
 
