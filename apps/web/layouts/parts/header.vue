@@ -1,9 +1,6 @@
 <template>
   <header>
-    <nuxt-link class="application" to="/">
-      <img class="logo" src="/img/logo/overbookd_logo_noir.png" />
-      <span class="version"> {{ version }}</span>
-    </nuxt-link>
+    <Logo />
     <span class="watermark">{{ watermark }}</span>
     <div class="actions">
       <nuxt-link class="action profile" to="/profile">
@@ -22,13 +19,13 @@
 import Vue from "vue";
 import { UserPersonnalData } from "@overbookd/user";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-
-const version = process.env.OVERBOOKD_VERSION;
+import Logo from "./logo.vue";
 
 export default Vue.extend({
   name: "LayoutHeader",
   components: {
     ProfilePicture,
+    Logo,
   },
   computed: {
     me(): UserPersonnalData {
@@ -36,9 +33,6 @@ export default Vue.extend({
     },
     myName(): string {
       return this.me.nickname || this.me.firstname;
-    },
-    version(): string {
-      return `v${version}` ?? "";
     },
     isPreProd(): boolean {
       return process.env.BASE_URL?.includes("preprod") ?? false;
@@ -85,22 +79,6 @@ header {
   a {
     text-decoration: none;
     color: black;
-  }
-  .application {
-    display: flex;
-    gap: 3px;
-    align-items: center;
-
-    .logo {
-      max-width: 200px;
-    }
-
-    .version {
-      font-weight: 600;
-      @media only screen and (max-width: $mobile-max-width) {
-        display: none;
-      }
-    }
   }
 
   .actions {
