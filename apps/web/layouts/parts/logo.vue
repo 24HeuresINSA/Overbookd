@@ -9,6 +9,8 @@
 import Vue from "vue";
 
 const version = process.env.OVERBOOKD_VERSION;
+const TWENTY_FOUR = 24;
+const FIFTY_ONE = 51;
 
 export default Vue.extend({
   name: "Logo",
@@ -20,9 +22,19 @@ export default Vue.extend({
       return `v${version}` ?? "";
     },
     logo(): string {
-      if (this.counter >= 51) return "Pastis.png";
-      if (this.counter >= 24) return "Ricard.png";
+      if (this.counter >= FIFTY_ONE) return "Pastis.png";
+      if (this.counter >= TWENTY_FOUR) return "Ricard.png";
       return "overbookd_logo_noir.png";
+    },
+    track(): string {
+      return "audio/jaune.m4a";
+    },
+  },
+  watch: {
+    counter(counter: number) {
+      if (counter !== TWENTY_FOUR) return;
+      const audio = new Audio(this.track);
+      audio.play();
     },
   },
   methods: {
