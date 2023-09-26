@@ -44,6 +44,7 @@ import { PrismaModule } from "./prisma.module";
 import { MailModule } from "./mail/mail.module";
 import { ContributionModule } from "./contribution/contribution.module";
 import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
+import { AlertModule } from "./alert/alert.module";
 
 @Module({
   imports: [
@@ -109,6 +110,7 @@ import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
     MailModule,
     ContributionModule,
     CatalogSignageModule,
+    AlertModule,
   ],
   controllers: [AppController],
   providers: [

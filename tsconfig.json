@@ -22,6 +22,7 @@
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./domains/permission/src"],
+      "@overbookd/personnal-account": ["./domains/personnal-account/src"],
       "@overbookd/registration": ["./domains/registration/src"],
       "@overbookd/signa": ["./domains/signa/src"],
       "@overbookd/slugify": ["./libraries/slugify/src"],

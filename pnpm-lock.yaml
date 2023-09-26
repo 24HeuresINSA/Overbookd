@@ -83,6 +83,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:^
         version: link:../../domains/permission
+      '@overbookd/personnal-account':
+        specifier: workspace:^
+        version: link:../../domains/personnal-account
       '@overbookd/registration':
         specifier: workspace:^
         version: link:../../domains/registration
@@ -404,6 +407,8 @@ importers:
         version: link:../permission
 
   domains/permission: {}
+
+  domains/personnal-account: {}
 
   domains/registration:
     dependencies:
