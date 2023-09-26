@@ -104,10 +104,10 @@ aside {
   flex-direction: column;
   justify-content: space-between;
   &:hover {
-    min-width: 200px;
     .page__title,
     .action__title {
-      display: unset;
+      transition: max-width 0.5s;
+      max-width: 200px;
     }
   }
 
@@ -124,7 +124,13 @@ aside {
     display: flex;
     gap: 3px;
     &__title {
-      display: none;
+      transition: max-width 0.5s;
+      overflow: hidden;
+      max-width: 0px;
+      max-height: 24px;
+      @media only screen and (max-width: $mobile-max-width) {
+        display: none;
+      }
     }
   }
 
