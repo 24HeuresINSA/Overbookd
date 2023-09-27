@@ -23,11 +23,11 @@ export interface UserPersonnalData extends User {
   phone: string;
   comment?: string;
   charisma: number;
-  balance: number;
   teams: string[];
 }
 
 export interface MyUserInformation extends UserPersonnalData {
+  balance: number;
   permissions: Permission[];
   tasksCount: number;
 }

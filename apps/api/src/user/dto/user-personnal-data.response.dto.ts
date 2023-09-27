@@ -78,13 +78,6 @@ export class UserPersonnalDataResponseDto implements UserPersonnalData {
   charisma: number;
 
   @ApiProperty({
-    name: "balance",
-    description: "User personnal account balance",
-    type: Number,
-  })
-  balance: number;
-
-  @ApiProperty({
     name: "teams",
     description: "User teams",
     type: String,

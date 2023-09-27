@@ -11,7 +11,6 @@ const SELECT_USER = {
   comment: true,
   profilePicture: true,
   charisma: true,
-  balance: true,
 };
 
 export const SELECT_USER_TEAMS = {
@@ -55,6 +54,7 @@ export const SELECT_MY_USER_INFORMATION = {
   ...SELECT_USER,
   ...SELECT_USER_TEAMS_AND_PERMISSIONS,
   ...SELECT_USER_TASKS_COUNT,
+  balance: true,
 };
 
 export const SELECT_USER_PERSONNAL_DATA = {

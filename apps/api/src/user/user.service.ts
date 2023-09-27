@@ -20,6 +20,8 @@ import {
   UserUpdateForm,
 } from "@overbookd/user";
 import {
+  Consumer,
+  DatabaseConsumer,
   DatabaseMyUserInformation,
   DatabaseTeamCode,
   DatabaseUserPersonalData,
@@ -46,7 +48,15 @@ export class UserService {
   constructor(private prisma: PrismaService, private mail: MailService) {}
   private logger = new Logger("UserService");
 
-  async getById(id: number): Promise<MyUserInformation | null> {
+  async getById(id: number): Promise<UserPersonnalData | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: SELECT_USER_PERSONNAL_DATA,
+    });
+    return UserService.formatToPersonalData(user);
+  }
+
+  async getMyInformation({ id }: JwtPayload): Promise<MyUserInformation> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: SELECT_MY_USER_INFORMATION,
@@ -118,7 +128,7 @@ export class UserService {
     return users.map(UserService.formatToPersonalData);
   }
 
-  async getAllPersonnalAccountConsummers(): Promise<UserPersonnalData[]> {
+  async getAllPersonnalAccountConsummers(): Promise<Consumer[]> {
     const users = await this.prisma.user.findMany({
       where: {
         teams: {
@@ -131,9 +141,9 @@ export class UserService {
           },
         },
       },
-      select: SELECT_USER_PERSONNAL_DATA,
+      select: { ...SELECT_USER_PERSONNAL_DATA, balance: true },
     });
-    return users.map(UserService.formatToPersonalData);
+    return users.map(UserService.formatToConsumer);
   }
 
   async getFtUserRequestsByUserId(userId: number): Promise<VolunteerTask[]> {
@@ -227,6 +237,14 @@ export class UserService {
   static formatToPersonalData(
     user: DatabaseUserPersonalData,
   ): UserPersonnalData {
+    const { teams, ...userWithoutTeams } = user;
+    return {
+      ...userWithoutTeams,
+      teams: extractTeamCodes(teams),
+    };
+  }
+
+  static formatToConsumer(user: DatabaseConsumer): Consumer {
     const { teams, ...userWithoutTeams } = user;
     return {
       ...userWithoutTeams,
