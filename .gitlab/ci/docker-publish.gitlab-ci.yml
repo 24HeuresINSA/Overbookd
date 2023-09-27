@@ -40,6 +40,8 @@ preprod_overbookd-web_publish:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
+    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+      when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
       changes:
         - apps/web/**/*
