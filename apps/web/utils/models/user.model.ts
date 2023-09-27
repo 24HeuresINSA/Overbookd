@@ -49,7 +49,7 @@ export function castToUserUpdateForm(user: UserPersonnalData): UserUpdateForm {
 }
 
 export function castUserWithDate(
-  user: HttpStringified<UserPersonnalData | MyUserInformation>,
+  user: HttpStringified<UserPersonnalData | MyUserInformation | Consumer>,
 ) {
   return {
     ...user,
@@ -70,3 +70,5 @@ export function castVolunteerTaskWithDate(
     end: new Date(task.end),
   }));
 }
+
+export type Consumer = UserPersonnalData & { balance: number };

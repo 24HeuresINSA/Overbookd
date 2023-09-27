@@ -101,13 +101,6 @@
               </v-row>
               <v-row v-if="isHard">
                 <v-col md="4">
-                  <v-text-field
-                    v-model="user.balance"
-                    label="Solde compte perso"
-                    :disabled="true"
-                  ></v-text-field>
-                </v-col>
-                <v-col md="4">
                   <v-switch
                     v-model="user.hasPayedContributions"
                     label="Cotisation"

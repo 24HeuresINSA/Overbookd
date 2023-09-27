@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
+  Consumer,
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
@@ -55,7 +56,7 @@ export class UserRepository {
   }
 
   static getAllPersonnalAccountConsummers(context: Context) {
-    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
+    return context.$axios.get<HttpStringified<Consumer[]>>(
       `${this.basePath}/personnal-account-consummers`,
     );
   }

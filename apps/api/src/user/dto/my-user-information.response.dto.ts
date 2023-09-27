@@ -8,6 +8,12 @@ export class MyUserInformationResponseDto
   implements MyUserInformation
 {
   @ApiProperty({
+    description: "User personnal account balance",
+    type: Number,
+  })
+  balance: number;
+
+  @ApiProperty({
     name: "permissions",
     description: "User permissions",
     type: String,

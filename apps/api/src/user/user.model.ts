@@ -32,3 +32,11 @@ export interface DatabaseUserPersonalData
   extends Omit<UserPersonnalData, "teams"> {
   teams: DatabaseTeamCode[];
 }
+
+type WithBalance = {
+  balance: number;
+};
+
+export type Consumer = UserPersonnalData & WithBalance;
+
+export type DatabaseConsumer = DatabaseUserPersonalData & WithBalance;

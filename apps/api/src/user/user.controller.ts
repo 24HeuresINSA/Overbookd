@@ -74,6 +74,8 @@ import {
 import { TeamService } from "../team/team.service";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
+import { Consumer } from "./user.model";
+import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 
 @ApiTags("users")
 @Controller("users")
@@ -162,7 +164,7 @@ export class UserController {
   async getCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
   ): Promise<MyUserInformation | null> {
-    return this.userService.getById(req.user.userId ?? req.user.id);
+    return this.userService.getMyInformation(req.user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -219,7 +221,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Updated current user",
-    type: UserPersonnalDataResponseDto,
+    type: MyUserInformationResponseDto,
   })
   @ApiBody({
     description: "New current user information",
@@ -228,7 +230,7 @@ export class UserController {
   async updateCurrentUser(
     @RequestDecorator() req: RequestWithUserPayload,
     @Body() userData: UpdateProfileRequestDto,
-  ): Promise<UserPersonnalData | null> {
+  ): Promise<MyUserInformation | null> {
     return this.userService.updateMyInformation(req.user, userData);
   }
 
@@ -238,11 +240,11 @@ export class UserController {
   @Get("personnal-account-consummers")
   @ApiResponse({
     status: 200,
-    description: "Get all usernames with valid CP",
-    type: UserPersonnalDataResponseDto,
+    description: "Get all consumers",
+    type: ConsumerResponseDto,
     isArray: true,
   })
-  async getUsernamesWithValidCP(): Promise<UserPersonnalData[]> {
+  async getUsernamesWithValidCP(): Promise<Consumer[]> {
     return this.userService.getAllPersonnalAccountConsummers();
   }
 

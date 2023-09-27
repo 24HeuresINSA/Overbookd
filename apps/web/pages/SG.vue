@@ -247,7 +247,7 @@ export default {
 
       let mUsers = this.users.filter((u) => u.newConsumption);
 
-      if (mUsers === []) {
+      if (mUsers.length === 0) {
         res = false;
         reason.push(this.feedbacks.noNewConsumption);
       }

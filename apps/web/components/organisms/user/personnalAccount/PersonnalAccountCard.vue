@@ -107,7 +107,7 @@ export default Vue.extend({
     },
     updateCP(amount: number): void {
       this.$store.commit("user/UPDATE_USER", {
-        balance: (this.$accessor.user.me.balance || 0) - amount,
+        balance: this.mBalance - amount,
       });
     },
   },

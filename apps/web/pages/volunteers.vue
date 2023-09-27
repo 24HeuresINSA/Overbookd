@@ -128,10 +128,6 @@
                 </v-btn>
               </template>
 
-              <template #[`item.balance`]="{ item }">
-                {{ getCP(item) }}
-              </template>
-
               <template #[`item.charisma`]="{ item }">
                 {{ item.charisma || 0 }}
               </template>
@@ -287,14 +283,6 @@ export default {
   async mounted() {
     await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
-
-    if (this.canManagePersonnalAccounts) {
-      this.headers.splice(this.headers.length - 1, 0, {
-        text: "CP",
-        value: "balance",
-        align: "end",
-      });
-    }
   },
 
   methods: {
@@ -314,11 +302,6 @@ export default {
           )) ||
         item.teams?.includes("vieux")
       );
-    },
-    getCP(item) {
-      return this.isCpUseful(item)
-        ? (item.balance || 0).toFixed(2) + " €"
-        : undefined;
     },
 
     openInformationDialog(user) {
@@ -370,7 +353,6 @@ export default {
           `+33${user.phone}`,
           user.department,
           user.year,
-          user.balance,
           user.hasPayedContributions,
           user.comment?.replace(lineReturnRegex, " ") ?? "",
         ].join(";");

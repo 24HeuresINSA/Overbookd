@@ -18,6 +18,7 @@ import {
   UserPersonnalData,
 } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
+import { Consumer } from "~/utils/models/user.model";
 
 const userRepo = RepoFactory.UserRepository;
 
@@ -29,7 +30,7 @@ export const state = () => ({
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
-  personalAccountConsumers: [] as UserPersonnalData[],
+  personalAccountConsumers: [] as Consumer[],
   volunteers: [] as UserPersonnalData[],
   candidates: [] as UserPersonnalData[],
   friends: [] as User[],
@@ -73,10 +74,7 @@ export const mutations = mutationTree(state, {
   SET_USERS(state: UserState, data: UserPersonnalData[]) {
     state.users = data;
   },
-  SET_PERSONNAL_ACCOUNT_CONSUMMERS(
-    state: UserState,
-    data: UserPersonnalData[],
-  ) {
+  SET_PERSONNAL_ACCOUNT_CONSUMERS(state: UserState, data: Consumer[]) {
     state.personalAccountConsumers = data;
   },
   UPDATE_USER(state: UserState, data: UserPersonnalData) {
@@ -192,7 +190,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const consummers = res.data.map(castUserWithDate);
-      commit("SET_PERSONNAL_ACCOUNT_CONSUMMERS", consummers);
+      commit("SET_PERSONNAL_ACCOUNT_CONSUMERS", consummers);
     },
     async updateUser({ commit, dispatch, state }, user: UserPersonnalData) {
       if (state.me.id === user.id) return dispatch("updateMyProfile", user);
