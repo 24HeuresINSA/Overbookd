@@ -68,8 +68,8 @@ export const actions = actionTree(
         this,
         registrationRepo.enrollNewcomers(this, body),
         {
-          successMessage: `Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que ${team}`,
-          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés`,
+          successMessage: `Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que ${team} ✅`,
+          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés ❌`,
         },
       );
       if (!res) return;
@@ -119,7 +119,8 @@ export const actions = actionTree(
         this,
         registrationRepo.forgetMe(this, credentials, token),
         {
-          successMessage: "Les informations liées à ce compte sont supprimées",
+          successMessage:
+            "Les informations liées à ce compte sont supprimées 🗑️",
         },
       );
     },
