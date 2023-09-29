@@ -15,7 +15,7 @@
             close
             @close="removeTeam"
           ></TeamChip>
-          <div v-if="canManageUsers" class="d-flex align-center">
+          <div v-if="canManageUsers" class="row">
             <v-select
               v-model="newTeam"
               label="Choix de l'équipe"
@@ -32,94 +32,78 @@
           <v-container>
             <div class="column">
               <div class="row">
-                <div class="row">
-                  <v-btn icon :href="'mailto:' + selectedVolunteer.email">
-                    <v-icon>mdi-send</v-icon>
-                  </v-btn>
-                  <h3>{{ selectedVolunteer.email }}</h3>
-                </div>
-                <div class="row">
-                  <v-btn icon :href="selectedVolunteerPhoneLink">
-                    <v-icon>mdi-phone</v-icon>
-                  </v-btn>
-                  <h3>{{ selectedVolunteerPhone }}</h3>
-                </div>
+                <v-icon class="charisma-icon">mdi-emoticon-cool-outline</v-icon>
+                <span>
+                  {{ selectedVolunteer.charisma || 0 }} points de charisme
+                </span>
               </div>
 
               <div class="row">
-                <v-text-field
-                  v-model="firstname"
-                  label="Prénom"
-                  :disabled="!canEditVolunteerData"
-                ></v-text-field>
-                <v-text-field
-                  v-model="lastname"
-                  label="Nom"
-                  :disabled="!canEditVolunteerData"
-                ></v-text-field>
-              </div>
-
-              <v-textarea
-                v-model="comment"
-                label="Commentaire"
-                :rows="4"
-                :disabled="!canEditVolunteerData"
-              ></v-textarea>
-
-              <div class="row">
-                <v-text-field
-                  v-model="nickname"
-                  label="Surnom"
-                  :disabled="!canEditVolunteerData"
-                ></v-text-field>
-                <DateField
-                  v-model="birthdate"
-                  label="Date de naissance"
-                  :boxed="false"
-                  :disabled="!canManageUsers"
-                ></DateField>
+                <v-btn icon :href="'mailto:' + selectedVolunteer.email">
+                  <v-icon>mdi-send</v-icon>
+                </v-btn>
+                <h3>{{ selectedVolunteer.email }}</h3>
               </div>
 
               <div class="row">
-                <v-text-field
-                  v-model="phone"
-                  label="Numéro de téléphone "
-                  :disabled="!canEditVolunteerData"
-                  type="number"
-                ></v-text-field>
-                <v-text-field
-                  v-model="charisma"
-                  label="Charisme"
-                  type="number"
-                  :rules="[rules.number, rules.min]"
-                  :disabled="!canManageUsers"
-                ></v-text-field>
+                <v-btn icon :href="selectedVolunteerPhoneLink">
+                  <v-icon>mdi-phone</v-icon>
+                </v-btn>
+                <h3>{{ selectedVolunteerPhone }}</h3>
               </div>
+
+              <DateField
+                v-model="birthdate"
+                label="Date de naissance"
+                :boxed="false"
+                :disabled="!canManageUsers"
+              ></DateField>
+
+              <v-text-field
+                v-model="email"
+                label="Email"
+                :rules="[rules.required, rules.email, rules.insaEmail]"
+                persistent-hint
+              ></v-text-field>
+
+              <v-text-field
+                v-model="phone"
+                label="Numéro de téléphone"
+                :disabled="!canManageUsers"
+                type="number"
+              ></v-text-field>
             </div>
-            <div class="column">
-              <h4 class="mb-4">Amis :</h4>
+
+            <div v-if="selectedVolunteer.comment">
+              <h3>Commentaire</h3>
+              <p>{{ selectedVolunteer.comment }}</p>
+            </div>
+
+            <div class="friends">
+              <h3>Amis :</h3>
               <div class="row">
                 <v-chip
                   v-for="friend in selectedVolunteerFriends"
                   :key="friend.id"
                 >
-                  {{ friend.firstname }} {{ friend.lastname }}
+                  {{ formatUserName(friend) }}
                 </v-chip>
-                <p v-show="selectedVolunteerFriends.length === 0" class="ml-3">
+                <span v-show="selectedVolunteerFriends.length === 0">
                   Aucun ami
-                </p>
+                </span>
               </div>
             </div>
           </v-container>
         </v-card-text>
-        <div class="action-btns">
+
+        <v-card-actions class="action-btns">
           <v-btn
-            v-if="canEditVolunteerData"
+            v-if="canManageUsers"
             text
             color="success"
             @click="savePersonnalData"
           >
-            changer les informations personnelles
+            changer les infos personnelles
           </v-btn>
           <v-btn
             v-if="canManageAvailability"
@@ -137,7 +121,7 @@
           >
             supprimer
           </v-btn>
-        </div>
+        </v-card-actions>
       </div>
       <div class="volunteer-info__availabilities">
         <AvailabilitiesSumup :user-id="selectedVolunteer.id" />
@@ -150,11 +134,11 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 import {
   formatPhoneLink,
   formatUserNameWithNickname,
   formatUserPhone,
+  formatUsername,
 } from "~/utils/user/user.utils";
 import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
@@ -166,15 +150,17 @@ import {
 import { MyUserInformation, User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 import { UserPersonnalDataWithProfilePicture } from "~/utils/models/user.model";
+import {
+  InputRulesData,
+  isEmail,
+  isInsaEmail,
+  required,
+} from "~/utils/rules/input.rules";
 
 interface VolunteerInformationData extends InputRulesData {
-  firstname: string;
-  lastname: string;
-  nickname?: string;
-  comment?: string;
   birthdate: Date;
   phone: string;
-  charisma: number;
+  email: string;
 
   newTeam?: string;
 }
@@ -190,18 +176,15 @@ export default Vue.extend({
 
   data(): VolunteerInformationData {
     return {
-      firstname: "",
-      lastname: "",
-      nickname: "",
-      comment: "",
       birthdate: new Date(),
       phone: "",
-      charisma: 0,
+      email: "",
 
       newTeam: undefined,
       rules: {
-        number: isNumber,
-        min: min(0),
+        required: required,
+        email: isEmail,
+        insaEmail: isInsaEmail,
       },
     };
   },
@@ -218,9 +201,6 @@ export default Vue.extend({
     },
     formatVolunteerNameWithNickname(): string {
       return formatUserNameWithNickname(this.selectedVolunteer);
-    },
-    canEditVolunteerData(): boolean {
-      return this.canManageUsers || this.isMe;
     },
     canManageUsers(): boolean {
       return this.$accessor.user.can(MANAGE_USERS);
@@ -247,13 +227,9 @@ export default Vue.extend({
     updatedVolunteer(): UserPersonnalDataWithProfilePicture {
       return {
         ...this.selectedVolunteer,
-        firstname: this.firstname,
-        lastname: this.lastname,
-        nickname: this.nickname,
-        comment: this.comment,
         birthdate: this.birthdate,
         phone: this.phone,
-        charisma: this.charisma,
+        email: this.email,
       };
     },
   },
@@ -270,13 +246,9 @@ export default Vue.extend({
 
   methods: {
     async updateVolunteerInformations() {
-      this.firstname = this.selectedVolunteer.firstname;
-      this.lastname = this.selectedVolunteer.lastname;
-      this.nickname = this.selectedVolunteer.nickname;
-      this.comment = this.selectedVolunteer.comment;
       this.birthdate = this.selectedVolunteer.birthdate;
       this.phone = this.selectedVolunteer.phone;
-      this.charisma = this.selectedVolunteer.charisma;
+      this.email = this.selectedVolunteer.email;
 
       if (this.selectedVolunteer.profilePictureBlob) return;
       await this.$accessor.user.setSelectedUserProfilePicture();
@@ -310,6 +282,9 @@ export default Vue.extend({
       if (this.isMe) return this.$auth.logout();
       this.$emit("close-dialog");
     },
+    formatUserName(user: User): string {
+      return formatUsername(user);
+    },
   },
 });
 </script>
@@ -324,26 +299,45 @@ export default Vue.extend({
 .column {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .row {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
   margin: 0;
 }
 
 .volunteer-info {
   display: flex;
-  gap: 10px;
-
+  gap: 15px;
   &__personnal-data {
     width: 40%;
   }
   &__availabilities {
     width: 60%;
   }
+
+  @media only screen and(max-width: $mobile-max-width) {
+    flex-direction: column;
+    &__personnal-data {
+      width: 100%;
+    }
+    &__availabilities {
+      display: none;
+    }
+  }
+}
+
+.charisma-icon {
+  margin: 0 5px;
+}
+
+.friends {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .action-btns {
@@ -352,16 +346,5 @@ export default Vue.extend({
   gap: 15px;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-@media only screen and(max-width: $mobile-max-width) {
-  .volunteer-info {
-    flex-direction: column;
-
-    &__personnal-data,
-    &__availabilities {
-      width: 100%;
-    }
-  }
 }
 </style>

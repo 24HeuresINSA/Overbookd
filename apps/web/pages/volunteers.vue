@@ -288,8 +288,11 @@ export default Vue.extend({
 .volunteers-page {
   display: flex;
   gap: 1em;
+  margin-left: 1em;
+
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
+    margin-left: 0;
   }
 }
 
