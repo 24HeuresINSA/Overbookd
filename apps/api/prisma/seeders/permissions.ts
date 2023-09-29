@@ -335,5 +335,5 @@ export const permissions = [
         data: [{ teamCode: "hard" }],
       },
     },
-  }
+  },
 ];
