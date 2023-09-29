@@ -36,6 +36,7 @@
                 type="number"
                 label="Points de charisme"
                 prepend-icon="mdi-emoticon-cool-outline"
+                :rules="[rules.required, rules.number]"
                 :disabled="!canManageUsers"
               ></v-text-field>
 
@@ -53,6 +54,7 @@
                 v-model="phone"
                 label="Numéro de téléphone"
                 :disabled="!canManageUsers"
+                :rules="[rules.required, rules.mobilePhone]"
                 prepend-icon="mdi-phone"
                 @click:prepend="callPhoneNumber"
               ></v-text-field>
@@ -93,6 +95,7 @@
             v-if="canManageAvailability"
             text
             color="warning"
+            class="availability-btn"
             @click="saveAvailabilities"
           >
             changer les disponibilites
@@ -136,6 +139,8 @@ import {
   InputRulesData,
   isEmail,
   isInsaEmail,
+  isMobilePhoneNumber,
+  isNumber,
   required,
 } from "~/utils/rules/input.rules";
 
@@ -166,6 +171,8 @@ export default Vue.extend({
         required: required,
         email: isEmail,
         insaEmail: isInsaEmail,
+        mobilePhone: isMobilePhoneNumber,
+        number: isNumber,
       },
     };
   },
@@ -306,6 +313,10 @@ export default Vue.extend({
       width: 100%;
     }
     &__availabilities {
+      display: none;
+    }
+
+    .availability-btn {
       display: none;
     }
   }

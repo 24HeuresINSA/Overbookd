@@ -30,7 +30,7 @@ export const state = () => ({
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
-  personalAccountConsumers: [] as UserPersonnalData[],
+  personalAccountConsumers: [] as Consumer[],
   volunteers: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
   friends: [] as User[],
   mFriends: [] as User[],
