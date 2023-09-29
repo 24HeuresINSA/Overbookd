@@ -31,56 +31,40 @@
 
           <v-container>
             <div class="column">
-              <div class="row">
-                <v-icon class="charisma-icon">mdi-emoticon-cool-outline</v-icon>
-                <span>
-                  {{ selectedVolunteer.charisma || 0 }} points de charisme
-                </span>
-              </div>
-
-              <div class="row">
-                <v-btn icon :href="'mailto:' + selectedVolunteer.email">
-                  <v-icon>mdi-send</v-icon>
-                </v-btn>
-                <h3>{{ selectedVolunteer.email }}</h3>
-              </div>
-
-              <div class="row">
-                <v-btn icon :href="selectedVolunteerPhoneLink">
-                  <v-icon>mdi-phone</v-icon>
-                </v-btn>
-                <h3>{{ selectedVolunteerPhone }}</h3>
-              </div>
-
-              <DateField
-                v-model="birthdate"
-                label="Date de naissance"
-                :boxed="false"
+              <v-text-field
+                v-model="charisma"
+                type="number"
+                label="Points de charisme"
+                prepend-icon="mdi-emoticon-cool-outline"
                 :disabled="!canManageUsers"
-              ></DateField>
+              ></v-text-field>
 
               <v-text-field
                 v-model="email"
                 label="Email"
                 :rules="[rules.required, rules.email, rules.insaEmail]"
                 persistent-hint
+                :disabled="!canManageUsers"
+                prepend-icon="mdi-send"
+                @click:prepend="sendEmail"
               ></v-text-field>
 
               <v-text-field
                 v-model="phone"
                 label="Numéro de téléphone"
                 :disabled="!canManageUsers"
-                type="number"
+                prepend-icon="mdi-phone"
+                @click:prepend="callPhoneNumber"
               ></v-text-field>
             </div>
 
-            <div v-if="selectedVolunteer.comment">
+            <div>
               <h3>Commentaire</h3>
-              <p>{{ selectedVolunteer.comment }}</p>
+              <p>{{ selectedVolunteer.comment ?? "Aucun commentaire" }}</p>
             </div>
 
             <div class="friends">
-              <h3>Amis :</h3>
+              <h3>Amis</h3>
               <div class="row">
                 <v-chip
                   v-for="friend in selectedVolunteerFriends"
@@ -137,10 +121,8 @@ import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import {
   formatPhoneLink,
   formatUserNameWithNickname,
-  formatUserPhone,
   formatUsername,
 } from "~/utils/user/user.utils";
-import DateField from "../../../atoms/field/date/DateField.vue";
 import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
 import {
   MANAGE_USERS,
@@ -158,9 +140,9 @@ import {
 } from "~/utils/rules/input.rules";
 
 interface VolunteerInformationData extends InputRulesData {
-  birthdate: Date;
   phone: string;
   email: string;
+  charisma: number;
 
   newTeam?: string;
 }
@@ -170,15 +152,14 @@ export default Vue.extend({
   components: {
     TeamChip,
     AvailabilitiesSumup,
-    DateField,
     ProfilePicture,
   },
 
   data(): VolunteerInformationData {
     return {
-      birthdate: new Date(),
       phone: "",
       email: "",
+      charisma: 0,
 
       newTeam: undefined,
       rules: {
@@ -218,18 +199,12 @@ export default Vue.extend({
       if (this.$accessor.user.can(MANAGE_ADMINS)) return teamsToAdd;
       return teamsToAdd.filter((team) => team.code !== "admin");
     },
-    selectedVolunteerPhone(): string {
-      return formatUserPhone(this.selectedVolunteer.phone);
-    },
-    selectedVolunteerPhoneLink(): string {
-      return formatPhoneLink(this.selectedVolunteer.phone);
-    },
     updatedVolunteer(): UserPersonnalDataWithProfilePicture {
       return {
         ...this.selectedVolunteer,
-        birthdate: this.birthdate,
         phone: this.phone,
         email: this.email,
+        charisma: this.charisma,
       };
     },
   },
@@ -246,9 +221,9 @@ export default Vue.extend({
 
   methods: {
     async updateVolunteerInformations() {
-      this.birthdate = this.selectedVolunteer.birthdate;
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
+      this.charisma = this.selectedVolunteer.charisma;
 
       if (this.selectedVolunteer.profilePictureBlob) return;
       await this.$accessor.user.setSelectedUserProfilePicture();
@@ -284,6 +259,12 @@ export default Vue.extend({
     },
     formatUserName(user: User): string {
       return formatUsername(user);
+    },
+    sendEmail() {
+      window.location.href = `mailto:${this.selectedVolunteer.email}`;
+    },
+    callPhoneNumber() {
+      window.location.href = formatPhoneLink(this.selectedVolunteer.phone);
     },
   },
 });
@@ -328,10 +309,6 @@ export default Vue.extend({
       display: none;
     }
   }
-}
-
-.charisma-icon {
-  margin: 0 5px;
 }
 
 .friends {
