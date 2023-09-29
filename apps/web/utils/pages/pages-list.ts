@@ -83,7 +83,7 @@ export const pages: Page[] = [
     permission: VIEW_VOLUNTEER,
     to: "/volunteers",
     description: "Permet de voir tous les bénévoles",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["benevoles", "orgas"],
   },
   {
