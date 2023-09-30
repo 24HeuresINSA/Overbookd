@@ -1,9 +1,10 @@
-import { Adherents } from "./in-debt-alerting";
+import { Adherents } from "./adherents";
 
 type Adherent = {
   id: number;
   balance: number;
 };
+
 export class InMemoryAdhrents implements Adherents {
   constructor(private adherents: Adherent[]) {}
 
