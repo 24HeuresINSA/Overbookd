@@ -3,7 +3,7 @@ import { Permission } from "@overbookd/permission";
 export interface UserName {
   firstname: string;
   lastname: string;
-  nickname?: string;
+  nickname?: string | null;
 }
 
 export interface User extends UserName {
@@ -14,14 +14,14 @@ export type Profile = UserName & {
   email: string;
   birthdate: Date;
   phone: string;
-  comment?: string;
+  comment: string | null;
 };
 
 export interface UserPersonnalData extends User {
   email: string;
   birthdate: Date;
   phone: string;
-  comment?: string;
+  comment?: string | null;
   charisma: number;
   teams: string[];
 }

@@ -31,6 +31,8 @@
             prepend-icon="mdi-account"
             label="Surnom"
             hide-details
+            clearable
+            @click:clear()="nickname = null"
             @input="defectSave"
           ></v-text-field>
         </v-form>
@@ -120,10 +122,10 @@ import { formatLocalDate } from "~/utils/date/date.utils";
 interface UserCardData extends InputRulesData {
   firstname: string;
   lastname: string;
-  nickname?: string;
+  nickname?: string | null;
   birthday: string;
   phone: string;
-  comment?: string;
+  comment?: string | null;
   email: string;
   delay?: ReturnType<typeof setTimeout>;
 }
@@ -135,11 +137,11 @@ export default Vue.extend({
     return {
       firstname: "",
       lastname: "",
-      nickname: undefined,
+      nickname: null,
       birthday: "2000-01-01",
       email: "",
       phone: "",
-      comment: undefined,
+      comment: null,
       delay: undefined,
       rules: {
         required: required,
@@ -215,7 +217,8 @@ export default Vue.extend({
       this.delay = setTimeout(this.save, 800);
     },
     save() {
-      const nickname = this.nickname ? this.nickname : undefined;
+      const nickname = this.nickname ? this.nickname : null;
+      const comment = this.comment ? this.comment : null;
       const myInfo = {
         firstname: this.firstname,
         lastname: this.lastname,
@@ -223,7 +226,7 @@ export default Vue.extend({
         birthdate: new Date(this.birthday),
         email: this.email,
         phone: this.phone,
-        comment: this.comment,
+        comment,
       };
       this.$accessor.user.updateMyProfile(myInfo);
     },
