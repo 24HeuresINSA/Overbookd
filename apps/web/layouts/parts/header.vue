@@ -3,7 +3,7 @@
     <Logo />
     <span class="watermark">{{ watermark }}</span>
     <div class="actions">
-      <nuxt-link class="action notifications" to="/">
+      <nuxt-link class="action notifications" to="/notifications">
         <span class="bell">
           <span class="bullet active"></span>
           <v-icon>mdi-bell</v-icon>
