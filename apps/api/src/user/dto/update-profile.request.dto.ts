@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Profile } from "@overbookd/user";
 import {
-  IsEmail,
   IsMobilePhone,
   IsNotEmpty,
   IsOptional,
@@ -35,16 +34,6 @@ export class UpdateProfileRequestDto implements Partial<Profile> {
   @IsString()
   @IsNotEmpty()
   nickname?: string;
-
-  @ApiProperty({
-    required: false,
-    description: "The email of the user",
-    example: "john@doe.com",
-  })
-  @IsOptional()
-  @IsEmail()
-  @IsNotEmpty()
-  email?: string;
 
   @ApiProperty({
     required: false,

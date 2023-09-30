@@ -60,14 +60,6 @@
 
         <v-form class="further-info__personnal">
           <v-text-field
-            v-model="email"
-            prepend-icon="mdi-email-outline"
-            label="Email"
-            required
-            :rules="[rules.required, rules.email, rules.insaEmail]"
-            @input="defectSave"
-          ></v-text-field>
-          <v-text-field
             v-model="phone"
             prepend-icon="mdi-phone"
             label="Téléphone portable"
@@ -86,8 +78,16 @@
               rules.birthdayMinDate,
             ]"
             @input="defectSave"
-          >
-          </v-text-field>
+          ></v-text-field>
+          <v-text-field
+            v-model="email"
+            prepend-icon="mdi-email-outline"
+            label="Email"
+            readonly
+            hint="Pour changer ton email il faut passer par les responsables bénévoles ou le.a sécretaire général.e. 🙏"
+            persistent-hint
+            @input="defectSave"
+          ></v-text-field>
         </v-form>
       </v-card-text>
       <v-textarea
@@ -110,8 +110,6 @@ import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { MyUserInformationWithProfilePicture } from "~/utils/models/user.model";
 import {
   InputRulesData,
-  isEmail,
-  isInsaEmail,
   isMobilePhoneNumber,
   maxDate,
   minDate,
@@ -147,8 +145,6 @@ export default Vue.extend({
         required: required,
         birthdayMinDate: minDate(new Date("1950-01-01")),
         birthdayMaxDate: maxDate(),
-        email: isEmail,
-        insaEmail: isInsaEmail,
         mobilePhone: isMobilePhoneNumber,
       },
     };
@@ -174,18 +170,8 @@ export default Vue.extend({
         this.rules.mobilePhone(this.phone),
       ].every((rule) => rule === true);
 
-      const isValidEmail = [
-        this.rules.required(this.email),
-        this.rules.email(this.email),
-        this.rules.insaEmail(this.email),
-      ].every((rule) => rule === true);
-
       return (
-        isValidFirstname &&
-        isValidLastname &&
-        isValidBirthdate &&
-        isValidPhone &&
-        isValidEmail
+        isValidFirstname && isValidLastname && isValidBirthdate && isValidPhone
       );
     },
   },
@@ -229,10 +215,11 @@ export default Vue.extend({
       this.delay = setTimeout(this.save, 800);
     },
     save() {
+      const nickname = this.nickname ? this.nickname : undefined;
       const myInfo = {
         firstname: this.firstname,
         lastname: this.lastname,
-        nickname: this.nickname,
+        nickname,
         birthdate: new Date(this.birthday),
         email: this.email,
         phone: this.phone,
