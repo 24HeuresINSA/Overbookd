@@ -1,5 +1,8 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { PersonnalAccountAlert } from "@overbookd/personnal-account";
+import {
+  IAlertAboutPersonnalAccount,
+  PersonnalAccountAlert,
+} from "@overbookd/personnal-account";
 import { safeCall } from "~/utils/api/calls";
 import { RepoFactory } from "~/repositories/repo-factory";
 
@@ -14,10 +17,12 @@ export const state = (): AlertState => ({
 });
 
 export const mutations = mutationTree(state, {
-  SET_ALERTS(state, alerts: PersonnalAccountAlert[]) {
-    state.alerts = alerts;
+  SET_ALERTS(state, alerts: IAlertAboutPersonnalAccount[]) {
+    state.alerts = alerts.map(
+      ({ summary, balance }) => new PersonnalAccountAlert(summary, balance),
+    );
   },
-  REMOVE_ALERT(state, alert: PersonnalAccountAlert) {
+  REMOVE_ALERT(state, alert: IAlertAboutPersonnalAccount) {
     state.alerts = state.alerts.filter((a) => a.summary !== alert.summary);
   },
 });
@@ -30,7 +35,7 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_ALERTS", res.data);
     },
-    dismiss({ commit }, alert: PersonnalAccountAlert) {
+    dismiss({ commit }, alert: IAlertAboutPersonnalAccount) {
       commit("REMOVE_ALERT", alert);
     },
   },

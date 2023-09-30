@@ -1,7 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PersonnalAccountAlert } from "@overbookd/personnal-account";
+import { IAlertAboutPersonnalAccount } from "@overbookd/personnal-account";
 
-export class PersonnalAccountResponseDto implements PersonnalAccountAlert {
+export class PersonnalAccountResponseDto
+  implements IAlertAboutPersonnalAccount
+{
   @ApiProperty({
     type: String,
     description: "Main alert message",

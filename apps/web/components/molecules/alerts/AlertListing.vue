@@ -21,7 +21,9 @@ export default Vue.extend({
   },
   computed: {
     alerts(): PersonnalAccountAlert[] {
-      return this.$accessor.alert.alerts;
+      return this.$accessor.alert.alerts.map(
+        ({ summary, balance }) => new PersonnalAccountAlert(summary, balance),
+      );
     },
   },
   methods: {
