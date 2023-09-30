@@ -20,6 +20,7 @@ import { ConfigurationRepository } from "./configuration.repository";
 import { RegistrationRepository } from "./registration.repository";
 import { ContributionRepository } from "./contribution.repository";
 import { AlertRepository } from "./alert.repository";
+import { NotificationRepository } from "./notification.repository";
 
 const repositories = {
   user: UserRepository,
@@ -45,6 +46,7 @@ const repositories = {
   registration: RegistrationRepository,
   contribution: ContributionRepository,
   alert: AlertRepository,
+  notification: NotificationRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -74,4 +76,5 @@ export const RepoFactory = {
   RegistrationRepository,
   ContributionRepository,
   AlertRepository,
+  NotificationRepository,
 };

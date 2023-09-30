@@ -5,7 +5,7 @@
     <div class="actions">
       <nuxt-link class="action notifications" to="/notifications">
         <span class="bell">
-          <span class="bullet active"></span>
+          <span class="bullet" :class="{ active: hasNotifications }"></span>
           <v-icon>mdi-bell</v-icon>
         </span>
         <span class="action__text"> Notifications </span>
@@ -40,6 +40,9 @@ export default Vue.extend({
     },
     myName(): string {
       return this.me.nickname || this.me.firstname;
+    },
+    hasNotifications(): boolean {
+      return this.$accessor.notification.hasNotifications;
     },
     isPreProd(): boolean {
       return process.env.BASE_URL?.includes("preprod") ?? false;

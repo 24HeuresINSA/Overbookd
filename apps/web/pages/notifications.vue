@@ -1,7 +1,7 @@
 <template>
   <div class="notifications">
     <h1>Notifications</h1>
-    <v-card to="/registrations">
+    <v-card v-if="hasNotifications" class="notification" @click="move">
       <v-btn class="ignore-btn" icon @click="ignore">
         <v-icon>mdi-close</v-icon>
       </v-btn>
@@ -13,6 +13,7 @@
         inscription
       </v-card-text>
     </v-card>
+    <p v-else>Rien de nouveau pour le moment !</p>
   </div>
 </template>
 
@@ -21,16 +22,34 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Notifications",
+  computed: {
+    hasNotifications(): boolean {
+      return this.$accessor.notification.hasNotifications;
+    },
+  },
   methods: {
     ignore(event: Event): void {
       event.preventDefault();
-      console.warn("Ignore notification");
+      this.dismiss();
+    },
+    async move(): Promise<void> {
+      this.$router.push("/registrations");
+      this.dismiss();
+    },
+    dismiss(): void {
+      this.$accessor.notification.readNotification();
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
+.notification {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
 h1 {
   padding-left: 10px;
 }

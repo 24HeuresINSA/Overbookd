@@ -70,7 +70,10 @@ export default Vue.extend({
       margin: unset;
     }
     .content {
-      padding: 5px;
+      padding: 10px;
+      @media only screen and (max-width: $mobile-max-width) {
+        padding: 5px;
+      }
     }
   }
 }
