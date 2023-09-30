@@ -1,19 +1,6 @@
 <template>
   <div class="home">
-    <v-alert
-      v-for="alert in alerts"
-      :key="alert.summary"
-      color="error"
-      dark
-      icon="mdi-nuke"
-      border="left"
-      prominent
-      dismissible
-      @input="dismiss(alert)"
-    >
-      <h2 class="summary">{{ alert.summary }}</h2>
-      <p class="details">{{ alert.details }}</p>
-    </v-alert>
+    <AlertListing />
 
     <h1 class="welcome">Bienvenue sur Overbookd 👋</h1>
 
@@ -44,18 +31,19 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { SlugifyService } from "@overbookd/slugify";
 import { MyUserInformation } from "@overbookd/user";
-import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import AlertListing from "~/components/molecules/alerts/AlertListing.vue";
 import { pages, Page } from "~/utils/pages/pages-list";
 import { isDesktop } from "~/utils/device/device.utils";
-import { Alert } from "../../../domains/personnal-account/src/in-debt-alerting";
 
 export default Vue.extend({
   name: "Home",
   components: {
     SnackNotificationContainer,
+    AlertListing,
   },
   data: () => ({
     search: "",
@@ -82,14 +70,6 @@ export default Vue.extend({
         return isSupportedByDevice && hasAccess && matchSearch;
       });
     },
-    alerts(): Alert[] {
-      return this.$accessor.alert.alerts;
-    },
-  },
-  methods: {
-    dismiss(alert: Alert) {
-      this.$accessor.alert.dismiss(alert);
-    },
   },
 });
 </script>
@@ -104,19 +84,6 @@ export default Vue.extend({
   @media only screen and (max-width: $mobile-max-width) {
     margin: 0px;
     gap: 40px;
-  }
-
-  .summary {
-    @media only screen and (max-width: $mobile-max-width) {
-      font-size: large;
-    }
-  }
-
-  .details {
-    padding-right: 30px;
-    @media only screen and (max-width: $mobile-max-width) {
-      display: none;
-    }
   }
 
   .welcome {

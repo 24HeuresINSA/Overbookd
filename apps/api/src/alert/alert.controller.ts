@@ -9,7 +9,7 @@ import {
 import { AlertService } from "./alert.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
-import { AlertResponseDto } from "./dto/alert.response.dto";
+import { PersonnalAccountResponseDto } from "./dto/personnal-account.response.dto";
 
 @ApiTags("alerts")
 @ApiBearerAuth()
@@ -26,7 +26,7 @@ export class AlertController {
   @ApiResponse({
     status: 200,
     description: "Volunteer's alerts",
-    type: AlertResponseDto,
+    type: PersonnalAccountResponseDto,
     isArray: true,
   })
   getAlerts(@Request() request: RequestWithUserPayload) {

@@ -1,25 +1,19 @@
-import {
-  PERSONNAL_ACCOUNT_FINANCING,
-  NEGATIVE_BALANCE,
-} from "./in-debt-alerting.constant";
+import { NEGATIVE_BALANCE } from "./in-debt-alerting.constant";
 
 export interface Adherents {
   getBalance(adherentId: number): Promise<number>;
 }
 
-export interface Alert {
+export interface PersonnalAccountAlert {
   summary: string;
-  details: string;
+  balance: number;
 }
 
-class InDebtAlert implements Alert {
+class InDebtAlert implements PersonnalAccountAlert {
   summary: string;
-  details: string;
 
-  constructor(balance: number) {
-    const details = `Tu es à ${balance} ${PERSONNAL_ACCOUNT_FINANCING}`;
+  constructor(readonly balance: number) {
     this.summary = NEGATIVE_BALANCE;
-    this.details = details;
   }
 }
 

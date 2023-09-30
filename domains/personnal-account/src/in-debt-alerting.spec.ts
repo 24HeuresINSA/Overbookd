@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import {
-  PERSONNAL_ACCOUNT_FINANCING,
-  NEGATIVE_BALANCE,
-} from "./in-debt-alerting.constant";
+import { NEGATIVE_BALANCE } from "./in-debt-alerting.constant";
 import { Adherents, InDebtAlerting } from "./in-debt-alerting";
 import { InMemoryAdhrents } from "./adherents.in-memory";
 
@@ -44,11 +41,7 @@ describe("In Debt Alerting", () => {
     });
     it("should indicate adherent balance", async () => {
       const alert = await inDebtAlert.for(adherentInDebts.id);
-      expect(alert?.details).toContain(adherentInDebts.balance);
-    });
-    it("should instruct adherent to pay it debts", async () => {
-      const alert = await inDebtAlert.for(adherentInDebts.id);
-      expect(alert?.details).toContain(PERSONNAL_ACCOUNT_FINANCING);
+      expect(alert?.balance).toBe(adherentInDebts.balance);
     });
   });
 });
