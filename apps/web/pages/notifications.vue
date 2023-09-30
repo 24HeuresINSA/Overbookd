@@ -43,16 +43,17 @@ h1 {
 
 .bullet {
   position: absolute;
-  top: 3px;
-  left: 3px;
-
   border-radius: 50%;
   background-color: $blue-24h;
+  top: 8px;
+  left: 8px;
+  min-width: 10px;
+  min-height: 10px;
   @media only screen and (max-width: $mobile-max-width) {
+    top: 3px;
+    left: 3px;
     min-width: 15px;
     min-height: 15px;
   }
-  min-width: 10px;
-  min-height: 10px;
 }
 </style>
