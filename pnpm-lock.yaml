@@ -421,6 +421,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period
+      '@overbookd/permission':
+        specifier: workspace:^
+        version: link:../permission
       jsonwebtoken:
         specifier: 9.0.2
         version: 9.0.2

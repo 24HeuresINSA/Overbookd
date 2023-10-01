@@ -86,8 +86,16 @@ model User {
 
   assignments   Assignment[]
   contributions Contribution[]
+  notifications Notification[]
 
   @@map("user")
+}
+
+model Notification {
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int  @id
+
+  @@map("notification")
 }
 
 model Team {
