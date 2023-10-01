@@ -15,7 +15,13 @@ export class PrismaNotificationRepository implements NotificationRepository {
   ): Promise<Notifyee[]> {
     const notifyees = await this.prisma.user.findMany({
       where: {
-        teams: { some: { teamCode: { equals: clause.havePermission } } },
+        teams: {
+          some: {
+            team: {
+              permissions: { some: { permissionName: clause.havePermission } },
+            },
+          },
+        },
       },
       select: {
         id: true,

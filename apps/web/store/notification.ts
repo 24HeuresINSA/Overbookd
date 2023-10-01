@@ -29,7 +29,12 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_NOTIFICATIONS", res.data);
     },
-    readNotification({ commit }) {
+    async readNotification({ commit }) {
+      const res = await safeCall(
+        this,
+        notificationRepository.readMyNotification(this),
+      );
+      if (!res) return;
       commit("SET_NOTIFICATIONS", false);
     },
   },

@@ -8,4 +8,8 @@ export class NotificationRepository {
   static getMyNotifications(context: Context) {
     return context.$axios.get<boolean>(this.basePath);
   }
+
+  static readMyNotification(context: Context) {
+    return context.$axios.delete(this.basePath);
+  }
 }
