@@ -47,12 +47,19 @@ import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 import { faStatusLabels } from "~/utils/models/fa.model";
-import { ftStatusLabels } from "~/utils/models/ft.model";
+import { FaStatus } from "~/utils/models/fa.model";
+import { FtStatus, ftStatusLabels } from "~/utils/models/ft.model";
 
 interface StatsRowData {
   historyFA: Map<string, number>;
   historyFT: Map<string, number>;
 }
+
+const validStatuses: string[] = [
+  FaStatus.VALIDATED,
+  FtStatus.VALIDATED,
+  FtStatus.READY,
+];
 
 export default Vue.extend({
   components: { StatsCard },
@@ -125,7 +132,7 @@ export default Vue.extend({
       return this.name === "FT";
     },
     allStatusLabels(): typeof faStatusLabels | typeof ftStatusLabels {
-      return this.isFT ? faStatusLabels : ftStatusLabels;
+      return this.isFT ? ftStatusLabels : faStatusLabels;
     },
     teamStats(): StatsPayload[] {
       return this.dataset;
@@ -150,9 +157,10 @@ export default Vue.extend({
         return "N/A";
       }
 
-      const validatedNumber = stats.status.find(
-        (s) => s.status === "VALIDATED",
-      )?.count;
+      const validatedNumber = stats.status.reduce(
+        (acc, s) => (validStatuses.includes(s.status) ? acc + s.count : acc),
+        0,
+      );
 
       return (((validatedNumber || 0) * 100) / lastYearCount).toFixed(0) + "%";
     },

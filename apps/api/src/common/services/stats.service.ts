@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { groupBy } from "../util/group-by";
 import { FaStatus } from "../../fa/fa.model";
-import { FtStatus } from "../../ft/ft.model";
+import { FtStatus, ftStatuses } from "../../ft/ft.model";
 
 export type StatusCount = {
   status: FaStatus | FtStatus;
@@ -21,6 +21,21 @@ type StatsQueryResult = {
     status: number;
   };
 };
+
+const faStatusOrder = [
+  ftStatuses["DRAFT"],
+  ftStatuses["REFUSED"],
+  ftStatuses["SUBMITTED"],
+  ftStatuses["VALIDATED"],
+];
+
+const ftStatusOrder = [
+  ftStatuses["DRAFT"],
+  ftStatuses["REFUSED"],
+  ftStatuses["SUBMITTED"],
+  ftStatuses["VALIDATED"],
+  ftStatuses["READY"],
+];
 
 @Injectable()
 export class StatsService {
@@ -45,12 +60,21 @@ export class StatsService {
   private static extractStatusStats(
     teamStats: StatsQueryResult[],
   ): { status: FaStatus | FtStatus; count: number }[] {
-    return teamStats
-      .map(({ status, _count }) => ({
-        status,
-        count: _count.status,
-      }))
-      .sort((a, b) => a.status.localeCompare(b.status));
+    const statuses = teamStats.map(({ status, _count }) => ({
+      status,
+      count: _count.status,
+    }));
+    return StatsService.sortStatus(statuses);
+  }
+
+  private static sortStatus(
+    statuses: { status: FaStatus | FtStatus; count: number }[],
+  ): { status: FaStatus | FtStatus; count: number }[] {
+    const statusOrder =
+      statuses[0].status in ftStatuses ? ftStatusOrder : faStatusOrder;
+    return statuses.sort(
+      (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status),
+    );
   }
 
   private static sumStatusCount(teamStats: StatsQueryResult[]): number {
