@@ -69,18 +69,18 @@ export class PrismaTaskRepository implements TaskRepository {
     },
   };
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
   ): Promise<JsonStoredTask[]> {
-    const tasks = await this.prismaService.ftTimeSpan.findMany({
+    const tasks = await this.prisma.ftTimeSpan.findMany({
       where: { assignments: { some: { assigneeId: volunteerId } } },
       select: this.SELECT_TASK,
       orderBy: { start: "asc" },
     });
     const taskIds = tasks.map(({ timeWindow }) => timeWindow.ft.id);
-    const assignments = await this.prismaService.assignment.findMany({
+    const assignments = await this.prisma.assignment.findMany({
       where: {
         timeSpan: { timeWindow: { ftId: { in: taskIds } } },
         NOT: { assigneeId: volunteerId },

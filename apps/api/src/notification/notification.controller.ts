@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
-import { Controller, Get, Request, UseGuards } from "@nestjs/common";
+import { Controller, Delete, Get, Request, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
 
@@ -28,6 +28,16 @@ export class NotificationController {
     type: Boolean,
   })
   hasNotifications(@Request() { user }: RequestWithUserPayload) {
-    return this.notify.hasNotifications(user);
+    return this.notify.hasNotifications(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete()
+  @ApiResponse({
+    status: 204,
+    description: "Volunteer's notifications set as red",
+  })
+  readNotification(@Request() { user }: RequestWithUserPayload) {
+    return this.notify.readNotification(user.id);
   }
 }
