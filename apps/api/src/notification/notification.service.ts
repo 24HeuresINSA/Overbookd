@@ -1,8 +1,16 @@
-import { Logger, OnApplicationBootstrap } from "@nestjs/common";
+import { Logger, MessageEvent, OnApplicationBootstrap } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { filter } from "rxjs";
+import { Observable, filter, map, merge } from "rxjs";
 import { isAdherentRegistered } from "../domain-event/domain-event";
 import { RegisterNewcomer } from "@overbookd/registration";
+import { JwtService } from "@nestjs/jwt";
+import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
+
+type AvailableNotification = {
+  source: Observable<MessageEvent>;
+  permission: Permission;
+};
 
 export interface NotificationRepository {
   someFor(userId: number): Promise<boolean>;
@@ -14,6 +22,7 @@ export class NotificationService implements OnApplicationBootstrap {
     private readonly notifications: NotificationRepository,
     private readonly eventStore: DomainEventService,
     private readonly register: RegisterNewcomer,
+    private readonly jwt: JwtService,
   ) {}
 
   private logger = new Logger("NotificationService");
@@ -37,5 +46,32 @@ export class NotificationService implements OnApplicationBootstrap {
 
   async readNotification(user: number): Promise<void> {
     await this.notifications.readFrom(user);
+  }
+
+  meInLive(token: string): Observable<MessageEvent> {
+    const { permissions } = this.jwt.verify<JwtPayload>(token);
+
+    const myNotifications = this.filterMyNotifications(permissions);
+    return merge(...myNotifications);
+  }
+
+  private filterMyNotifications(
+    permissions: Permission[],
+  ): Observable<MessageEvent>[] {
+    const availableNotifications: AvailableNotification[] = [
+      this.adherentRegistered,
+    ];
+
+    return availableNotifications
+      .filter(({ permission }) => permissions.includes(permission))
+      .map(({ source }) => source);
+  }
+
+  private get adherentRegistered(): AvailableNotification {
+    const adherentRegistered = this.eventStore.listen("registration").pipe(
+      filter(isAdherentRegistered),
+      map((data) => ({ type: "adherent-registered", data })),
+    );
+    return { source: adherentRegistered, permission: ENROLL_NEWCOMER };
   }
 }

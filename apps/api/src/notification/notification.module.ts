@@ -8,6 +8,8 @@ import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { RegistrationModule } from "../registration/registration.module";
 import { RegisterNewcomer } from "@overbookd/registration";
+import { JwtModule, JwtService } from "@nestjs/jwt";
+import { jwtConstants } from "../authentication/constants";
 
 @Module({
   controllers: [NotificationController],
@@ -24,14 +26,26 @@ import { RegisterNewcomer } from "@overbookd/registration";
         notifications: PrismaNotificationRepository,
         events: DomainEventService,
         register: RegisterNewcomer,
-      ) => new NotificationService(notifications, events, register),
+        jwt: JwtService,
+      ) => new NotificationService(notifications, events, register, jwt),
       inject: [
         PrismaNotificationRepository,
         DomainEventService,
         RegisterNewcomer,
+        JwtService,
       ],
     },
   ],
-  imports: [PrismaModule, DomainEventModule, RegistrationModule],
+  imports: [
+    PrismaModule,
+    DomainEventModule,
+    RegistrationModule,
+    JwtModule.register({
+      secret: jwtConstants.secret,
+      signOptions: {
+        expiresIn: "24h",
+      },
+    }),
+  ],
 })
 export class NotificationModule {}

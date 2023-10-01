@@ -37,5 +37,8 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_NOTIFICATIONS", false);
     },
+    received({ commit }) {
+      commit("SET_NOTIFICATIONS", true);
+    },
   },
 );

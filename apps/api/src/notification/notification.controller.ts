@@ -6,9 +6,19 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { NotificationService } from "./notification.service";
-import { Controller, Delete, Get, Request, UseGuards } from "@nestjs/common";
+import {
+  Controller,
+  Delete,
+  Get,
+  MessageEvent,
+  Query,
+  Request,
+  Sse,
+  UseGuards,
+} from "@nestjs/common";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
+import { Observable } from "rxjs";
 
 @ApiTags("notifications")
 @ApiBearerAuth()
@@ -29,6 +39,13 @@ export class NotificationController {
   })
   hasNotifications(@Request() { user }: RequestWithUserPayload) {
     return this.notify.hasNotifications(user.id);
+  }
+
+  @Sse("live")
+  liveNotification(
+    @Query() { token }: { token: string },
+  ): Observable<MessageEvent> {
+    return this.notify.meInLive(token);
   }
 
   @UseGuards(JwtAuthGuard)

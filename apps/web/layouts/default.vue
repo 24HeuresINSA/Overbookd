@@ -37,17 +37,40 @@ const AUTHORS = [
   "Adèle - Franck 🍷",
 ];
 
+interface LayoutData {
+  notificationSource?: EventSource;
+}
+
 export default Vue.extend({
   name: "ReworkdLayout",
   components: {
     Header,
     SideNav,
   },
+  data: (): LayoutData => ({
+    notificationSource: undefined,
+  }),
   computed: {
     randomAuthor(): string {
       const randomIndex = Math.floor(Math.random() * AUTHORS.length);
       return AUTHORS.at(randomIndex) ?? "";
     },
+    liveNotificationEndpoint(): string {
+      const path = `${process.env.BASE_URL}/notifications/live`;
+      const liveEndpoint = new URL(path);
+      const token = this.$auth.strategy.token.get()?.split(" ")?.[1] ?? "";
+      liveEndpoint.searchParams.append("token", token);
+      return liveEndpoint.href;
+    },
+  },
+  mounted() {
+    this.notificationSource = new EventSource(this.liveNotificationEndpoint);
+    this.notificationSource.addEventListener("adherent-registered", () => {
+      this.$accessor.notification.received();
+    });
+  },
+  destroyed() {
+    this.notificationSource?.close();
   },
 });
 </script>
