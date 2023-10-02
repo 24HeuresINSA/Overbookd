@@ -5,6 +5,8 @@ import {
   Notifyee,
 } from "@overbookd/registration";
 import { PrismaService } from "../../prisma.service";
+import { SELECT_NOTIFYEE } from "./notification.query";
+import { HAS_PERMISSION } from "./notification.query";
 
 export class PrismaNotificationRepository implements NotificationRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -13,24 +15,22 @@ export class PrismaNotificationRepository implements NotificationRepository {
     event: AdherentRegistered,
     clause: FilterNotifyees,
   ): Promise<Notifyee[]> {
-    const notifyees = await this.prisma.user.findMany({
-      where: {
-        teams: {
-          some: {
-            team: {
-              permissions: { some: { permissionName: clause.havePermission } },
-            },
-          },
-        },
-      },
-      select: {
-        id: true,
-      },
-    });
-    await this.prisma.notification.createMany({
+    const notifyees = await this.findNotifyees(clause);
+
+    await this.generateNotifications(notifyees);
+    return notifyees;
+  }
+
+  private async generateNotifications(notifyees: Notifyee[]) {
+    return this.prisma.notification.createMany({
       data: notifyees.map(({ id }) => ({ userId: id })),
       skipDuplicates: true,
     });
-    return notifyees;
+  }
+
+  private async findNotifyees(clause: FilterNotifyees) {
+    const where = HAS_PERMISSION(clause.havePermission);
+    const select = SELECT_NOTIFYEE;
+    return this.prisma.user.findMany({ where, select });
   }
 }

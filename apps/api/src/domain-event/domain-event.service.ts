@@ -1,5 +1,15 @@
 import { Observable, ReplaySubject, filter, map } from "rxjs";
-import { DomainEvent, Domain, OverbookEvent } from "./domain-event";
+import {
+  DomainEvent,
+  Domain,
+  OverbookdEvent,
+  isAdherentRegistered,
+  isVolunteerRegistered,
+} from "./domain-event";
+import {
+  AdherentRegistered,
+  VolunteerRegistered,
+} from "@overbookd/registration";
 
 export class DomainEventService {
   private readonly $events = new ReplaySubject<DomainEvent>();
@@ -16,13 +26,21 @@ export class DomainEventService {
     return new DomainEventService([]);
   }
 
-  listen(domain: Domain): Observable<OverbookEvent> {
+  private listen(domain: Domain): Observable<OverbookdEvent> {
     return this.$events
       .pipe(filter((event) => event.domain === domain))
       .pipe(map(({ event }) => event));
   }
 
-  publish<T extends OverbookEvent>(event: DomainEvent<T>): void {
+  publish<T extends OverbookdEvent>(event: DomainEvent<T>): void {
     this.$events.next(event);
+  }
+
+  get adherentRegisteredEvents(): Observable<AdherentRegistered> {
+    return this.listen("registration").pipe(filter(isAdherentRegistered));
+  }
+
+  get volunteerRegisteredEvents(): Observable<VolunteerRegistered> {
+    return this.listen("registration").pipe(filter(isVolunteerRegistered));
   }
 }

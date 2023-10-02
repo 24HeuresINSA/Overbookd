@@ -7,11 +7,6 @@ import {
 import { MailerService } from "@nestjs-modules/mailer";
 import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { filter } from "rxjs";
-import {
-  isAdherentRegistered,
-  isVolunteerRegistered,
-} from "../domain-event/domain-event";
 
 type emailResetPassword = {
   email: string;
@@ -35,19 +30,17 @@ export class MailService implements OnApplicationBootstrap {
   private logger = new Logger("MailService");
 
   onApplicationBootstrap() {
-    const registrationEvents = this.eventStore.listen("registration");
-
-    registrationEvents.pipe(filter(isAdherentRegistered)).subscribe((event) => {
-      this.logger.log("Send welcome-adherent mail", JSON.stringify(event));
+    this.eventStore.adherentRegisteredEvents.subscribe((event) => {
+      this.logger.log("Send welcome-adherent mail");
+      this.logger.debug(JSON.stringify(event));
       this.welcome(event);
     });
 
-    registrationEvents
-      .pipe(filter(isVolunteerRegistered))
-      .subscribe((event) => {
-        this.logger.log("Send welcome-volunteer mail", JSON.stringify(event));
-        this.welcome(event);
-      });
+    this.eventStore.volunteerRegisteredEvents.subscribe((event) => {
+      this.logger.log("Send welcome-volunteer mail");
+      this.logger.debug(JSON.stringify(event));
+      this.welcome(event);
+    });
   }
 
   async mailTest({ email, username }: MailTestRequestDto): Promise<void> {
