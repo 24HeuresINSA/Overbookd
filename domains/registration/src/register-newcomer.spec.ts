@@ -7,6 +7,25 @@ import {
 } from "./register-form";
 import { RegisterNewcomer } from "./register-newcomer";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory";
+import { AdherentRegistered, NewcomerRegisteredEvent } from "./event";
+import {
+  ENROLL_NEWCOMER,
+  Permission,
+  READ_FA,
+  READ_FT,
+} from "@overbookd/permission";
+import { InMemoryNotificationRepository } from "./notification-repository.inmemory";
+import { StoredNotifyee } from "./notification-repository.inmemory";
+
+export type WithPermissions = {
+  permissions: Permission[];
+};
+
+const notifyees: StoredNotifyee[] = [
+  { id: 100, permissions: [] },
+  { id: 101, permissions: [READ_FA] },
+  { id: 102, permissions: [READ_FA, READ_FT, ENROLL_NEWCOMER] },
+];
 
 const email = "test@example.com";
 const firstname = "Titouan";
@@ -35,7 +54,13 @@ let registerNewcomer: RegisterNewcomer;
 describe("Register newcomer", () => {
   beforeAll(() => {
     const newcomerRepository = new InMemoryNewcomerRepository();
-    registerNewcomer = new RegisterNewcomer(newcomerRepository);
+    const notificationRepository = new InMemoryNotificationRepository(
+      notifyees,
+    );
+    registerNewcomer = new RegisterNewcomer(
+      newcomerRepository,
+      notificationRepository,
+    );
   });
   describe("when receiving a fulfilled registration", () => {
     it("should register the associated newcomer", async () => {
@@ -74,7 +99,13 @@ describe("Register newcomer", () => {
           email,
         },
       ]);
-      registerNewcomer = new RegisterNewcomer(newcomerRepository);
+      const notificationRepository = new InMemoryNotificationRepository(
+        notifyees,
+      );
+      registerNewcomer = new RegisterNewcomer(
+        newcomerRepository,
+        notificationRepository,
+      );
     });
     it("should indicate that someone is already register with this email", async () => {
       await expect(async () =>
@@ -82,6 +113,32 @@ describe("Register newcomer", () => {
       ).rejects.toThrowError(
         "Erreur lors de l'inscription:\nL'email est déja utilisé par un autre utilisateur",
       );
+    });
+  });
+  describe("Notification", () => {
+    let newcomerRegistered: AdherentRegistered;
+    beforeAll(async () => {
+      const newcomerRepository = new InMemoryNewcomerRepository();
+      const notificationRepository = new InMemoryNotificationRepository(
+        notifyees,
+      );
+      const registerNewcomer = new RegisterNewcomer(
+        newcomerRepository,
+        notificationRepository,
+      );
+      const registree = await registerNewcomer.fromRegisterForm(registerForm);
+      newcomerRegistered = NewcomerRegisteredEvent.create(
+        registree,
+        "adherent",
+      );
+    });
+    describe("when a new comer has been registered", () => {
+      it("should generate a notification for 'can enroll' users", async () => {
+        const notifees = await registerNewcomer.notifyAwaitForValidation(
+          newcomerRegistered,
+        );
+        expect(notifees).toHaveLength(1);
+      });
     });
   });
 });

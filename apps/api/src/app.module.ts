@@ -45,6 +45,7 @@ import { MailModule } from "./mail/mail.module";
 import { ContributionModule } from "./contribution/contribution.module";
 import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
 import { AlertModule } from "./alert/alert.module";
+import { NotificationModule } from "./notification/notification.module";
 
 @Module({
   imports: [
@@ -111,6 +112,7 @@ import { AlertModule } from "./alert/alert.module";
     ContributionModule,
     CatalogSignageModule,
     AlertModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [

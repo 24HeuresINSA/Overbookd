@@ -112,7 +112,7 @@ export const pages: Page[] = [
     to: "/registrations",
     description:
       "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["arrivants", "inscriptions"],
   },
   {

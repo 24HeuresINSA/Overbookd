@@ -1,3 +1,6 @@
+import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
+
+import { AdherentRegistered } from "./event";
 import {
   FulfilledRegistration,
   RegisterForm,
@@ -22,8 +25,23 @@ export interface NewcomerRepository {
   save: (fulfilledForm: FulfilledRegistration) => Promise<Registree>;
 }
 
+export type FilterNotifyees = {
+  havePermission: Permission;
+};
+
+export type Notifyee = {
+  id: number;
+};
+
+export interface NotificationRepository {
+  add(event: AdherentRegistered, clause: FilterNotifyees): Promise<Notifyee[]>;
+}
+
 export class RegisterNewcomer {
-  constructor(private readonly newcomerRepository: NewcomerRepository) {}
+  constructor(
+    private readonly newcomerRepository: NewcomerRepository,
+    private readonly notificationRepository: NotificationRepository,
+  ) {}
 
   private commentAction(form: RegisterForm, comment?: string) {
     if (comment === undefined) return form.clearComment();
@@ -60,5 +78,11 @@ export class RegisterNewcomer {
     }
 
     return this.newcomerRepository.save(fulfilledForm);
+  }
+
+  notifyAwaitForValidation(newcomer: AdherentRegistered): Promise<Notifyee[]> {
+    return this.notificationRepository.add(newcomer, {
+      havePermission: ENROLL_NEWCOMER,
+    });
   }
 }

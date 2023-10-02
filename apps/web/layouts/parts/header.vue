@@ -3,6 +3,13 @@
     <Logo />
     <span class="watermark">{{ watermark }}</span>
     <div class="actions">
+      <nuxt-link class="action notifications" to="/notifications">
+        <span class="bell">
+          <span class="bullet" :class="{ active: hasNotifications }"></span>
+          <v-icon>mdi-bell</v-icon>
+        </span>
+        <span class="action__text"> Notifications </span>
+      </nuxt-link>
       <nuxt-link class="action profile" to="/profile">
         <ProfilePicture small class="profile-picture" :user="me" />
         <span class="action__text">{{ myName }}</span>
@@ -33,6 +40,9 @@ export default Vue.extend({
     },
     myName(): string {
       return this.me.nickname || this.me.firstname;
+    },
+    hasNotifications(): boolean {
+      return this.$accessor.notification.hasNotifications;
     },
     isPreProd(): boolean {
       return process.env.BASE_URL?.includes("preprod") ?? false;
@@ -104,9 +114,33 @@ header {
           display: none;
         }
       }
+      .bell {
+        .bullet {
+          display: none;
+          &.active {
+            display: inline-block;
+
+            border-radius: 50%;
+            background-color: $blue-24h;
+            position: relative;
+            z-index: 4;
+            @media only screen and (max-width: $mobile-max-width) {
+              left: 40px;
+              bottom: 10px;
+              min-width: 15px;
+              min-height: 15px;
+            }
+            left: 28px;
+            bottom: 7px;
+            min-width: 10px;
+            min-height: 10px;
+          }
+        }
+      }
     }
 
-    .logout {
+    .logout,
+    .bell {
       @media only screen and (max-width: $mobile-max-width) {
         .v-icon {
           font-size: 36px;

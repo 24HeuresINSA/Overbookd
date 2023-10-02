@@ -13,6 +13,7 @@ import * as ft from "./ft";
 import * as gearRequest from "./gearRequest";
 import * as inventory from "./inventory";
 import * as needHelp from "./needHelp";
+import * as notification from "./notification";
 import * as notif from "./notif";
 import * as orgaNeeds from "./orgaNeeds";
 import * as permission from "./permission";
@@ -48,6 +49,7 @@ export const accessorType = getAccessorType({
   modules: {
     dialog,
     notif,
+    notification,
     user,
     transaction,
     fa,
