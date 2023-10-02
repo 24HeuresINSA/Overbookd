@@ -31,12 +31,7 @@
     </template>
 
     <template #item.teams="{ item }">
-      <TeamChip
-        v-for="team of item.teams"
-        :key="team"
-        :team="team"
-        with-name
-      />
+      <TeamChip v-for="team of item.teams" :key="team" :team="team" with-name />
     </template>
 
     <template #no-data> Aucun bénévole trouvé </template>
@@ -47,7 +42,10 @@
 import Vue from "vue";
 import { UserPersonnalData } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
-import { formatPhoneLink, formatUserNameWithNickname } from "~/utils/user/user.utils";
+import {
+  formatPhoneLink,
+  formatUserNameWithNickname,
+} from "~/utils/user/user.utils";
 
 interface VolunteerListData {
   headers: Header[];

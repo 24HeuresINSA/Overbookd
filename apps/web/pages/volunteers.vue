@@ -15,9 +15,9 @@
 
     <div class="table-container">
       <VolunteerList
-      v-if="!isStatsModeActive"
-      :volunteers="displayedVolunteers"
-      @open-dialog="openVolunteerInfoDialog"
+        v-if="!isStatsModeActive"
+        :volunteers="displayedVolunteers"
+        @open-dialog="openVolunteerInfoDialog"
       />
       <VolunteerStatsTable v-else />
     </div>
@@ -61,8 +61,8 @@ export default Vue.extend({
     SnackNotificationContainer,
     VolunteerStatsTable,
     VolunteerStatsExportFilters,
-    VolunteerList
-},
+    VolunteerList,
+  },
   data: (): VolunteersData => ({
     filters: {
       search: "",

@@ -66,10 +66,7 @@
         <div class="friends">
           <h3>Amis</h3>
           <div class="row">
-            <v-chip
-              v-for="friend in selectedVolunteerFriends"
-              :key="friend.id"
-            >
+            <v-chip v-for="friend in selectedVolunteerFriends" :key="friend.id">
               {{ formatUserName(friend) }}
             </v-chip>
             <span v-show="selectedVolunteerFriends.length === 0">
@@ -98,12 +95,7 @@
       >
         changer les disponibilites
       </v-btn>
-      <v-btn
-        v-if="canManageUsers"
-        text
-        color="red"
-        @click="deleteVolunteer"
-      >
+      <v-btn v-if="canManageUsers" text color="red" @click="deleteVolunteer">
         supprimer
       </v-btn>
     </v-card-actions>

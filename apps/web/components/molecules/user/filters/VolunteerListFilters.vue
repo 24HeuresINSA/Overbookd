@@ -2,11 +2,7 @@
   <v-card class="filters_volunteers">
     <v-card-title>Filtres</v-card-title>
     <v-card-text>
-      <v-text-field
-        v-model="search"
-        label="Recherche"
-        :disabled="disabled"
-      />
+      <v-text-field v-model="search" label="Recherche" :disabled="disabled" />
 
       <SearchTeams
         v-model="teams"
@@ -47,6 +43,6 @@ export default Vue.extend({
     propagateTeams() {
       this.$emit("change:teams", this.teams);
     },
-  }
+  },
 });
 </script>

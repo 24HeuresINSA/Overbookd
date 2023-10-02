@@ -21,7 +21,7 @@ export default Vue.extend({
   components: {
     VolunteerPersonalDataForm,
     AvailabilitiesSumup,
-},
+  },
 });
 </script>
 
