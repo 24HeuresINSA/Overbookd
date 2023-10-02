@@ -87,7 +87,7 @@
 <script lang="ts">
 import { DOWNLOAD_PLANNING } from "@overbookd/permission";
 import Vue from "vue";
-import { download } from "~/utils/planning/download";
+import { downloadPlanning } from "~/utils/planning/download";
 
 export default Vue.extend({
   name: "PlanningDownloadCard",
@@ -111,7 +111,7 @@ export default Vue.extend({
   methods: {
     async exportPlanning() {
       await this.$accessor.planning.fetchMyPdfPlanning();
-      download(this.planningBase64Data, this.me);
+      downloadPlanning(this.planningBase64Data, this.me);
     },
     async copyToClipBoard() {
       await navigator.clipboard.writeText(this.personnalLink);

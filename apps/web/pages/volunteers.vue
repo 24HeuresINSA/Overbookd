@@ -8,7 +8,6 @@
       />
 
       <VolunteerStatsExportFilters
-        :planningLoading="planningLoading"
         :filtered-volunteers="displayedVolunteers"
         @change:statsMode="isStatsModeActive = $event"
       />
@@ -33,11 +32,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
 import VolunteerInformation from "~/components/organisms/user/data/VolunteerInformation.vue";
-import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
 import VolunteerListFilters from "~/components/molecules/user/filters/VolunteerListFilters.vue";
 import VolunteerStatsExportFilters from "~/components/molecules/user/filters/VolunteerStatsExportFilters.vue";
 import VolunteerList from "~/components/organisms/user/data/VolunteerList.vue";
@@ -54,7 +51,6 @@ interface VolunteersData {
 
   isVolunteerInfoDialogOpen: boolean;
   isStatsModeActive: boolean;
-  planningLoading: boolean;
 }
 
 export default Vue.extend({
@@ -63,9 +59,7 @@ export default Vue.extend({
     VolunteerListFilters,
     VolunteerInformation,
     SnackNotificationContainer,
-    TeamChip,
     VolunteerStatsTable,
-    SearchTeams,
     VolunteerStatsExportFilters,
     VolunteerList
 },
@@ -77,7 +71,6 @@ export default Vue.extend({
 
     isVolunteerInfoDialogOpen: false,
     isStatsModeActive: false,
-    planningLoading: false,
   }),
   head: () => ({
     title: "Liste des bénévoles",

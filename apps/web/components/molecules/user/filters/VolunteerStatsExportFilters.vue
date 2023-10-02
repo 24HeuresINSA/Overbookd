@@ -22,18 +22,16 @@ import { MANAGE_USERS } from "@overbookd/permission";
 import { UserPersonnalData } from "@overbookd/user";
 import { VolunteerPlanning } from "~/store/planning";
 import { download } from "~/utils/file/file.utils";
+import { downloadPlanning } from "~/utils/planning/download";
 
 interface VolunteerStatsExportFiltersData {
+  planningLoading: boolean;
   isStatsModeActive: boolean;
 }
 
 export default Vue.extend({
   name: "VolunteerStatsExportFilters",
   props: {
-    planningLoading: {
-      type: Boolean,
-      default: false,
-    },
     filteredVolunteers: {
       type: Array as () => UserPersonnalData[],
       required: true,
@@ -41,6 +39,7 @@ export default Vue.extend({
   },
 
   data: (): VolunteerStatsExportFiltersData => ({
+    planningLoading: false,
     isStatsModeActive: false,
   }),
 
@@ -94,7 +93,7 @@ export default Vue.extend({
       this.filteredVolunteers.filter(({ charisma }) => charisma > 0),
     );
     this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
-      download(planningBase64Data, volunteer),
+    downloadPlanning(planningBase64Data, volunteer),
     );
     this.planningLoading = false;
   },

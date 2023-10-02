@@ -227,7 +227,7 @@ export default Vue.extend({
     },
     async addTeam() {
       if (!this.newTeam) return;
-      await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
+      await this.$accessor.user.addTeamsToSelectedUser([this.newTeam.code]);
 
       this.$auth.refreshTokens();
       await this.updateVolunteerInformations();
