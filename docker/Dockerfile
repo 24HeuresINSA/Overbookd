@@ -4,7 +4,7 @@ COPY ./aliases /etc/profile.d/aliases.sh
 
 RUN chmod +x /etc/profile.d/aliases.sh
 
-RUN npm install -g pnpm@8.7.5
+RUN npm install -g pnpm@8.8.0
 
 RUN apk update && apk add --no-cache \
   jq

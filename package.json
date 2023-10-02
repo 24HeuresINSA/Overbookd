@@ -39,10 +39,10 @@
     "version:minor": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
     "version:patch": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate"
   },
-  "packageManager": "pnpm@8.7.5",
+  "packageManager": "pnpm@8.8.0",
   "engines": {
     "node": "20.7.0",
-    "pnpm": "8.7.5"
+    "pnpm": "8.8.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "6.7.0",
