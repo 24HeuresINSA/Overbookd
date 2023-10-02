@@ -4,10 +4,13 @@
     :items="volunteers"
     class="elevation-1"
     :items-per-page="20"
-    disable-sort
   >
     <template #item.firstname="{ item }">
       {{ formatVolunteerName(item) }}
+    </template>
+
+    <template #item.teams="{ item }">
+      <TeamChip v-for="team of item.teams" :key="team" :team="team" with-name />
     </template>
 
     <template #item.actions="{ item }">
@@ -30,16 +33,13 @@
       </div>
     </template>
 
-    <template #item.teams="{ item }">
-      <TeamChip v-for="team of item.teams" :key="team" :team="team" with-name />
-    </template>
-
     <template #no-data> Aucun bénévole trouvé </template>
   </v-data-table>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { UserPersonnalData } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import {
@@ -53,6 +53,7 @@ interface VolunteerListData {
 
 export default Vue.extend({
   name: "VolunteerInformation",
+  components: { TeamChip },
 
   props: {
     volunteers: {

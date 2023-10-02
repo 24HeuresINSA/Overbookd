@@ -4,77 +4,78 @@
       <ProfilePicture :user="selectedVolunteer" />
       {{ formatVolunteerNameWithNickname }}
     </v-card-title>
-    <v-card-text>
-      <TeamChip
-        v-for="team of selectedVolunteer.teams"
-        :key="team"
-        :team="team"
-        with-name
-        close
-        @close="removeTeam"
-      ></TeamChip>
-      <div v-if="canManageUsers" class="row">
-        <v-select
-          v-model="newTeam"
-          label="Choix de l'équipe"
-          :items="assignableTeams"
-          item-value="code"
-          item-text="name"
-        >
-        </v-select>
-        <v-btn small class="mx-2" @click="addTeam">
-          <v-icon> mdi-plus </v-icon>
-        </v-btn>
+
+    <v-card-text class="card-content">
+      <div>
+        <div class="team-list">
+          <TeamChip
+            v-for="team of selectedVolunteer.teams"
+            :key="team"
+            :team="team"
+            with-name
+            close
+            @close="removeTeam"
+          />
+        </div>
+        <div v-if="canManageUsers" class="team-add">
+          <v-select
+            v-model="newTeam"
+            label="Choix de l'équipe"
+            :items="assignableTeams"
+            item-value="code"
+            item-text="name"
+          >
+          </v-select>
+          <v-btn small class="mx-2" @click="addTeam">
+            <v-icon> mdi-plus </v-icon>
+          </v-btn>
+        </div>
       </div>
 
-      <v-container>
-        <div class="column">
-          <v-text-field
-            v-model="charisma"
-            type="number"
-            label="Points de charisme"
-            prepend-icon="mdi-emoticon-cool-outline"
-            :rules="[rules.required, rules.number]"
-            :disabled="!canManageUsers"
-          ></v-text-field>
+      <v-text-field
+        v-model="charisma"
+        type="number"
+        label="Points de charisme"
+        prepend-icon="mdi-emoticon-cool-outline"
+        :rules="[rules.required, rules.number]"
+        :disabled="!canManageUsers"
+      />
 
-          <v-text-field
-            v-model="email"
-            label="Email"
-            :rules="[rules.required, rules.email, rules.insaEmail]"
-            persistent-hint
-            :disabled="!canManageUsers"
-            prepend-icon="mdi-send"
-            @click:prepend="sendEmail"
-          ></v-text-field>
+      <v-text-field
+        v-model="email"
+        label="Email"
+        :rules="[rules.required, rules.email, rules.insaEmail]"
+        persistent-hint
+        :disabled="!canManageUsers"
+        prepend-icon="mdi-send"
+        @click:prepend="sendEmail"
+      />
 
-          <v-text-field
-            v-model="phone"
-            label="Numéro de téléphone"
-            :disabled="!canManageUsers"
-            :rules="[rules.required, rules.mobilePhone]"
-            prepend-icon="mdi-phone"
-            @click:prepend="callPhoneNumber"
-          ></v-text-field>
+      <v-text-field
+        v-model="phone"
+        label="Numéro de téléphone"
+        :disabled="!canManageUsers"
+        :rules="[rules.required, rules.mobilePhone]"
+        prepend-icon="mdi-phone"
+        @click:prepend="callPhoneNumber"
+      />
+
+      <div>
+        <h3>Commentaire</h3>
+        <p>{{ selectedVolunteer.comment ?? "Aucun commentaire" }}</p>
+      </div>
+
+      <div class="friends">
+        <h3>Amis</h3>
+        <div class="friends__list">
+          <v-chip v-for="friend in selectedVolunteerFriends" :key="friend.id">
+            {{ formatUserName(friend) }}
+          </v-chip>
+          <span v-show="selectedVolunteerFriends.length === 0">
+            Aucun ami
+          </span>
         </div>
-
-        <div>
-          <h3>Commentaire</h3>
-          <p>{{ selectedVolunteer.comment ?? "Aucun commentaire" }}</p>
-        </div>
-
-        <div class="friends">
-          <h3>Amis</h3>
-          <div class="row">
-            <v-chip v-for="friend in selectedVolunteerFriends" :key="friend.id">
-              {{ formatUserName(friend) }}
-            </v-chip>
-            <span v-show="selectedVolunteerFriends.length === 0">
-              Aucun ami
-            </span>
-          </div>
-        </div>
-      </v-container>
+      </div>
     </v-card-text>
 
     <v-card-actions class="action-btns">
@@ -133,7 +134,7 @@ interface VolunteerPersonalDataFormData extends InputRulesData {
   email: string;
   charisma: number;
 
-  newTeam?: Team;
+  newTeam?: string;
 }
 
 export default Vue.extend({
@@ -217,41 +218,48 @@ export default Vue.extend({
       if (this.selectedVolunteer.profilePictureBlob) return;
       await this.$accessor.user.setSelectedUserProfilePicture();
     },
+
     async addTeam() {
       if (!this.newTeam) return;
-      await this.$accessor.user.addTeamsToSelectedUser([this.newTeam.code]);
+      await this.$accessor.user.addTeamsToSelectedUser([this.newTeam]);
 
       this.$auth.refreshTokens();
       await this.updateVolunteerInformations();
       this.newTeam = undefined;
     },
+
     async removeTeam(team: string) {
       await this.$accessor.user.removeTeamFromSelectedUser(team);
-
       this.$auth.refreshTokens();
       await this.updateVolunteerInformations();
     },
+
     async savePersonnalData() {
       await this.$accessor.user.updateUser(this.updatedVolunteer);
     },
+
     async saveAvailabilities() {
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
         this.selectedVolunteer.id,
       );
       this.$emit("close-dialog");
     },
+
     async deleteVolunteer() {
       await this.$accessor.user.deleteUser(this.selectedVolunteer.id);
 
       if (this.isMe) return this.$auth.logout();
       this.$emit("close-dialog");
     },
+
     formatUserName(user: User): string {
       return formatUsername(user);
     },
+
     sendEmail() {
       window.location.href = `mailto:${this.selectedVolunteer.email}`;
     },
+
     callPhoneNumber() {
       window.location.href = formatPhoneLink(this.selectedVolunteer.phone);
     },
@@ -266,17 +274,24 @@ export default Vue.extend({
   gap: 10px;
 }
 
-.column {
+.card-content {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 0 25px;
 }
 
-.row {
+.team-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.team-add {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 0;
+  margin-left: 10px;
 }
 
 .availability-btn {
@@ -289,6 +304,12 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   gap: 5px;
+  &__list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+  }
 }
 
 .action-btns {

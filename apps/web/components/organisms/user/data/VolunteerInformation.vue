@@ -5,7 +5,7 @@
         <VolunteerPersonalDataForm />
       </div>
       <div class="volunteer-info__availabilities">
-        <AvailabilitiesSumup :user-id="selectedVolunteer.id" />
+        <AvailabilitiesSumup />
       </div>
     </div>
   </v-card>

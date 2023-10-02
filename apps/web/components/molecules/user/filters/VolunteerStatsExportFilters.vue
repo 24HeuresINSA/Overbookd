@@ -3,11 +3,13 @@
     <v-card-title>Mode stats</v-card-title>
 
     <v-card-text class="stats-export-card__content">
-      <v-switch v-model="isStatsModeActive" label="Afficher les stats" />
+      <v-switch
+        v-model="isStatsModeActive"
+        label="Afficher les stats"
+        @change="propagateStatsModeActivation"
+      />
 
-      <v-btn :allow-overflow="false" @click="exportCSV">
-        exporter les bénévoles
-      </v-btn>
+      <v-btn @click="exportCSV"> exporter les bénévoles </v-btn>
 
       <v-btn :loading="planningLoading" @click="exportPlannings">
         exporter les plannings
