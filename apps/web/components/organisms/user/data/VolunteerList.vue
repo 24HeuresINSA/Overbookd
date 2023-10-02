@@ -10,7 +10,14 @@
     </template>
 
     <template #item.teams="{ item }">
-      <TeamChip v-for="team of item.teams" :key="team" :team="team" with-name />
+      <TeamChip
+        v-for="team of item.teams"
+        :key="team"
+        :team="team"
+        with-name
+        clickable
+        @click="propagateClickedTeam"
+      />
     </template>
 
     <template #item.actions="{ item }">
@@ -46,6 +53,7 @@ import {
   formatPhoneLink,
   formatUserNameWithNickname,
 } from "~/utils/user/user.utils";
+import { Team } from "~/utils/models/team.model";
 
 interface VolunteerListData {
   headers: Header[];
@@ -87,6 +95,10 @@ export default Vue.extend({
 
     formatVolunteerName(volunteer: UserPersonnalData) {
       return formatUserNameWithNickname(volunteer);
+    },
+
+    propagateClickedTeam(team: Team) {
+      this.$emit("click:team", team);
     },
   },
 });

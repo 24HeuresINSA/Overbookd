@@ -2,6 +2,8 @@
   <div class="volunteers-page">
     <div class="filters">
       <VolunteerListFilters
+        :search="filters.search"
+        :teams="filters.teams"
         :disabled="isStatsModeActive"
         @change:search="filters.search = $event"
         @change:teams="filters.teams = $event"
@@ -18,6 +20,7 @@
         v-if="!isStatsModeActive"
         :volunteers="displayedVolunteers"
         @open-dialog="openVolunteerInfoDialog"
+        @click:team="addTeamInFilters"
       />
       <VolunteerStatsTable v-else />
     </div>
@@ -118,6 +121,12 @@ export default Vue.extend({
         teamsSearched.every((teamSearched) =>
           volunteer.teams.some((teamCode) => teamSearched.code === teamCode),
         );
+    },
+
+    addTeamInFilters(team: Team) {
+      if (!this.filters.teams.some((t) => t.code === team.code)) {
+        this.filters.teams = [...this.filters.teams, team];
+      }
     },
 
     openVolunteerInfoDialog() {

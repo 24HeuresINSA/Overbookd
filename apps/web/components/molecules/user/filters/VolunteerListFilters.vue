@@ -3,14 +3,14 @@
     <v-card-title>Filtres</v-card-title>
     <v-card-text>
       <v-text-field
-        v-model="search"
+        :data="search"
         label="Recherche"
         :disabled="disabled"
         @input="propagateSearch"
       />
 
       <SearchTeams
-        v-model="teams"
+        :teams="teams"
         label="Équipe(s)"
         :boxed="false"
         :disabled="disabled"
@@ -23,33 +23,31 @@
 <script lang="ts">
 import Vue from "vue";
 import SearchTeams from "~/components/atoms/field/search/SearchTeams.vue";
-
-interface VolunteeListFiltersData {
-  search: string;
-  teams: string[];
-}
+import { Team } from "~/utils/models/team.model";
 
 export default Vue.extend({
   name: "VolunteerListFilters",
   components: { SearchTeams },
   props: {
+    search: {
+      type: String,
+      default: "",
+    },
+    teams: {
+      type: Array as () => Team[],
+      default: () => [],
+    },
     disabled: {
       type: Boolean,
       default: false,
     },
   },
-  data: (): VolunteeListFiltersData => ({
-    search: "",
-    teams: [],
-  }),
   methods: {
-    propagateSearch() {
-      this.$emit("change:search", this.search);
-      console.log(this.search);
+    propagateSearch(search: string) {
+      this.$emit("change:search", search);
     },
-    propagateTeams() {
-      this.$emit("change:teams", this.teams);
-      console.log(this.teams);
+    propagateTeams(teams: Team[]) {
+      this.$emit("change:teams", teams);
     },
   },
 });
