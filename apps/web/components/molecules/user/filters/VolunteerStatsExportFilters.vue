@@ -21,8 +21,8 @@ import Vue from "vue";
 import { MANAGE_USERS } from "@overbookd/permission";
 import { UserPersonnalData } from "@overbookd/user";
 import { VolunteerPlanning } from "~/store/planning";
-import { download } from "~/utils/file/file.utils";
 import { downloadPlanning } from "~/utils/planning/download";
+import { download } from "~/utils/file/file.utils";
 
 interface VolunteerStatsExportFiltersData {
   planningLoading: boolean;
@@ -85,33 +85,34 @@ export default Vue.extend({
 
       const parsedCSV = csv.replace(regex, "");
       download("utilisateurs.csv", parsedCSV);
-  },
+    },
 
-  async exportPlannings() {
-    this.planningLoading = true;
-    await this.$accessor.planning.fetchAllPdfPlannings(
-      this.filteredVolunteers.filter(({ charisma }) => charisma > 0),
-    );
-    this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
-    downloadPlanning(planningBase64Data, volunteer),
-    );
-    this.planningLoading = false;
+    async exportPlannings() {
+      this.planningLoading = true;
+      await this.$accessor.planning.fetchAllPdfPlannings(
+        this.filteredVolunteers.filter(({ charisma }) => charisma > 0),
+      );
+      this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
+        downloadPlanning(planningBase64Data, volunteer),
+      );
+      this.planningLoading = false;
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .stats-export-card {
-    width: 100%;
-    @media screen and (max-width: $mobile-max-width) {
-      display: none;
-    }
-
-    &__content {
-      display: flex;
-      flex-direction: column;
-      gap: 1em;
-      text-align: start;
-    }
+  width: 100%;
+  @media screen and (max-width: $mobile-max-width) {
+    display: none;
   }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    text-align: start;
+  }
+}
 </style>
