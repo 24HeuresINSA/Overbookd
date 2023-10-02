@@ -162,7 +162,9 @@ export default Vue.extend({
         0,
       );
 
-      return (((countAtLeastValidated || 0) * 100) / lastYearCount).toFixed(0) + "%";
+      return (
+        (((countAtLeastValidated || 0) * 100) / lastYearCount).toFixed(0) + "%"
+      );
     },
     toPascalCase(str: string): string {
       return `${str.at(0)?.toUpperCase()}${str.slice(1).toLowerCase()}`;

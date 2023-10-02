@@ -37,7 +37,6 @@ const ftStatusLifeCycle = [
   ftStatuses.READY,
 ];
 
-
 @Injectable()
 export class StatsService {
   stats(statsFromQuery: StatsQueryResult[]): StatsPayload[] {
