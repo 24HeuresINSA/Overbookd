@@ -3,7 +3,8 @@
   "extends": [
     "config:recommended",
     "group:recommended",
-    ":dependencyDashboard"
+    ":dependencyDashboard",
+    "schedule:weekly"
   ],
   "timezone": "Europe/Paris",
   "prHourlyLimit": 0,
@@ -21,8 +22,7 @@
       "groupName": "API dependencies",
       "groupSlug": "api-dependencies",
       "matchDatasources": ["npm"],
-      "minimumReleaseAge": "3 days",
-      "extends": ["schedule:weekly"]
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the web directory",
@@ -32,8 +32,7 @@
       "groupSlug": "web-dependencies",
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days",
-      "excludePackageNames": ["axios"],
-      "extends": ["schedule:weekly"]
+      "excludePackageNames": ["axios"]
     },
     {
       "description": "Group all dependencies from the libs directory",
@@ -42,8 +41,7 @@
       "groupName": "Libs dependencies",
       "groupSlug": "libs-dependencies",
       "matchDatasources": ["npm"],
-      "minimumReleaseAge": "3 days",
-      "extends": ["schedule:weekly"]
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all dependencies from the domains directory",
@@ -52,32 +50,28 @@
       "groupName": "Domain dependencies",
       "groupSlug": "domain-dependencies",
       "matchDatasources": ["npm"],
-      "minimumReleaseAge": "3 days",
-      "extends": ["schedule:weekly"]
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all gitlab-ci dependencies",
       "matchFileNames": [".gitlab-ci.yml", ".gitlab/ci/**"],
       "addLabels": ["Scope::CI", "gitlabci"],
       "groupName": "Gitlab CI dependencies",
-      "groupSlug": "gitlab-ci-dependencies",
-      "extends": ["schedule:weekly"]
+      "groupSlug": "gitlab-ci-dependencies"
     },
     {
       "description": "Group all Dockerfile dependencies",
       "matchFileNames": ["**/Dockerfile", "**/docker-compose.yml"],
       "addLabels": ["Scope::CI", "docker"],
       "groupName": "Dockerfile dependencies",
-      "groupSlug": "dockerfile-dependencies",
-      "extends": ["schedule:weekly"]
+      "groupSlug": "dockerfile-dependencies"
     },
     {
       "description": "Group all pre-commit dependencies",
       "matchFileNames": [".pre-commit-config.yaml"],
       "addLabels": ["Scope::CI"],
       "groupName": "Pre-commit dependencies",
-      "groupSlug": "pre-commit-dependencies",
-      "extends": ["schedule:weekly"]
+      "groupSlug": "pre-commit-dependencies"
     },
     {
       "description": "Group all root dependencies",
@@ -86,8 +80,7 @@
       "groupName": "Root package dependencies",
       "groupSlug": "root-package-dependencies",
       "matchDatasources": ["npm"],
-      "minimumReleaseAge": "3 days",
-      "extends": ["schedule:weekly"]
+      "minimumReleaseAge": "3 days"
     },
     {
       "description": "Group all update of pnpm",
@@ -95,8 +88,7 @@
       "groupName": "Pnpm update",
       "groupSlug": "pnpm-update",
       "matchDatasources": ["npm"],
-      "minimumReleaseAge": "3 days",
-      "extends": ["schedule:weekly"]
+      "minimumReleaseAge": "3 days"
     },
     {
       "matchPackageNames": [
