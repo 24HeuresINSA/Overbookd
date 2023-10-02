@@ -157,12 +157,12 @@ export default Vue.extend({
         return "N/A";
       }
 
-      const validatedNumber = stats.status.reduce(
+      const countAtLeastValidated = stats.status.reduce(
         (acc, s) => (validStatuses.includes(s.status) ? acc + s.count : acc),
         0,
       );
 
-      return (((validatedNumber || 0) * 100) / lastYearCount).toFixed(0) + "%";
+      return (((countAtLeastValidated || 0) * 100) / lastYearCount).toFixed(0) + "%";
     },
     toPascalCase(str: string): string {
       return `${str.at(0)?.toUpperCase()}${str.slice(1).toLowerCase()}`;
