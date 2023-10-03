@@ -22,7 +22,7 @@ export class DomainEventService {
     return new DomainEventService([]);
   }
 
-  private listen<T extends DomainEvent["type"]>(
+  listen<T extends DomainEvent["type"]>(
     domain: T,
   ): Observable<Extract<DomainEvent, { type: T }>> {
     return filterEvents(domain, this.$events);

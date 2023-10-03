@@ -1,6 +1,6 @@
 import { Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { Observable, map, merge } from "rxjs";
+import { Observable, merge } from "rxjs";
 import { ADHERENT_REGISTERED, RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
@@ -65,9 +65,7 @@ export class NotificationService implements OnApplicationBootstrap {
   }
 
   private get adherentRegistered(): AvailableNotification {
-    const adherentRegistered = this.eventStore.adherentsRegistered.pipe(
-      map((data): DomainEvent => ({ type: ADHERENT_REGISTERED, data })),
-    );
+    const adherentRegistered = this.eventStore.listen(ADHERENT_REGISTERED);
     return { source: adherentRegistered, permission: ENROLL_NEWCOMER };
   }
 }
