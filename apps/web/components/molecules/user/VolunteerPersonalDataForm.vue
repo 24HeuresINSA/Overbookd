@@ -46,7 +46,7 @@
         label="Email"
         :rules="[rules.required, rules.email, rules.insaEmail]"
         persistent-hint
-        :disabled="!canManageUsers"
+        :readonly="!canManageUsers"
         prepend-icon="mdi-send"
         @click:prepend="sendEmail"
       />
@@ -54,7 +54,7 @@
       <v-text-field
         v-model="phone"
         label="Numéro de téléphone"
-        :disabled="!canManageUsers"
+        :readonly="!canManageUsers"
         :rules="[rules.required, rules.mobilePhone]"
         prepend-icon="mdi-phone"
         @click:prepend="callPhoneNumber"
