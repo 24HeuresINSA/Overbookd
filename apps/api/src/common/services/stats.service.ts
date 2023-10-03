@@ -3,14 +3,9 @@ import { groupBy } from "../util/group-by";
 import { FaStatus, faStatuses } from "../../fa/fa.model";
 import { FtStatus, ftStatuses } from "../../ft/ft.model";
 
-export type StatusCount = {
-  status: FaStatus | FtStatus;
-  count: number;
-};
-
 export type StatsPayload = {
   teamCode: string;
-  status: StatusCount[];
+  status: Record<FaStatus | FtStatus, number>;
   total: number;
 };
 
@@ -59,24 +54,22 @@ export class StatsService {
 
   private static extractStatusStats(
     teamStats: StatsQueryResult[],
-  ): { status: FaStatus | FtStatus; count: number }[] {
-    const statuses = teamStats.map(({ status, _count }) => ({
-      status,
-      count: _count.status,
-    }));
-    return StatsService.sortStatus(statuses);
+  ): Record<FaStatus | FtStatus, number> {
+    const statuses = StatsService.sortStatus(teamStats);
+
+    return statuses.reduce((acc, item) => {
+      acc[item.status] = item._count.status;
+      return acc;
+    }, {} as Record<FaStatus | FtStatus, number>);
   }
 
-  private static sortStatus(
-    statuses: { status: FaStatus | FtStatus; count: number }[],
-  ): { status: FaStatus | FtStatus; count: number }[] {
-    const statusOrder = statuses.some(
+  private static sortStatus(teamStats: StatsQueryResult[]): StatsQueryResult[] {
+    const statusOrder = teamStats.some(
       ({ status }) => status === ftStatuses.READY,
     )
       ? ftStatusLifeCycle
       : faStatusLifeCycle;
-
-    return statuses.sort(
+    return teamStats.sort(
       (a, b) => statusOrder.indexOf(a.status) - statusOrder.indexOf(b.status),
     );
   }

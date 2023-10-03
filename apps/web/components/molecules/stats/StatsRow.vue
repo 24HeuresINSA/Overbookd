@@ -22,12 +22,12 @@
       <v-col sm="7">
         <div class="d-flex">
           <div
-            v-for="(element, i) in com.status"
-            :key="i"
-            :style="`flex-grow: ${element.count}`"
+            v-for="(count, status) in com.status"
+            :key="status"
+            :style="`flex-grow: ${count}`"
           >
-            <StatsCard :status="element.status">
-              {{ element.count }}
+            <StatsCard :status="status">
+              {{ count }}
             </StatsCard>
           </div>
         </div>
@@ -157,8 +157,9 @@ export default Vue.extend({
         return "N/A";
       }
 
-      const countAtLeastValidated = stats.status.reduce(
-        (acc, s) => (validStatuses.includes(s.status) ? acc + s.count : acc),
+      const countAtLeastValidated = Object.entries(stats.status).reduce(
+        (acc, [status, count]) =>
+          validStatuses.includes(status) ? acc + count : acc,
         0,
       );
 
