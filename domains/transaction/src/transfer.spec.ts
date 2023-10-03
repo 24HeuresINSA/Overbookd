@@ -138,6 +138,8 @@ describe("Transfer", () => {
         });
       });
 
+//////////////////////////////////////////
+
       describe.each`
         from          | to            | amount    | error
         ${lea.id}     | ${tatouin.id} | ${1000}   | ${undefined}
@@ -148,13 +150,36 @@ describe("Transfer", () => {
         ${noel.id}    | ${neimad.id}  | ${1000}   | ${PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE}
       `(
         "when adherent try to transfer $amount cents from $from to $to",
-        ({ from, to, amount }) => {
+        ({ from, to, amount, error }) => {
           const transferToCreate = {
             to,
             amount,
             context: "Miam miam",
           };
 
+          if (error) {
+
+            it(`should indicate that ${error}`, async () => {
+              expect(
+                async () => await transfer.for(transferToCreate, from)
+              ).rejects.toThrow(error);
+            });
+
+          } else {
+
+            it(`should transfer ${amount} cents from ${from} to ${to}`, async () => {
+              const createdTransfer = await transfer.for(transferToCreate, from);
+
+              expect(createdTransfer.amount).toBe(amount);
+              expect(createdTransfer.to.id).toBe(to);
+
+              const payor = adherents.find((adherent) => adherent.id === from);
+              const payee = adherents.find((adherent) => adherent.id === to);
+
+              expect(payor.balance).toBe(payor.balance - amount);
+              expect(payee.balance).toBe(payee.balance + amount);
+            });
+          }
         }
       );
     });
