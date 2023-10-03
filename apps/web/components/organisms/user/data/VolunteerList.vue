@@ -10,14 +10,16 @@
     </template>
 
     <template #item.teams="{ item }">
-      <TeamChip
-        v-for="team of item.teams"
-        :key="team"
-        :team="team"
-        with-name
-        clickable
-        @click="propagateClickedTeam"
-      />
+      <div class="team-list">
+        <TeamChip
+          v-for="team of item.teams"
+          :key="team"
+          :team="team"
+          with-name
+          clickable
+          @click="propagateClickedTeam"
+        />
+      </div>
     </template>
 
     <template #item.actions="{ item }">
@@ -110,5 +112,11 @@ export default Vue.extend({
     display: flex;
     gap: 1em;
   }
+}
+
+.team-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 </style>

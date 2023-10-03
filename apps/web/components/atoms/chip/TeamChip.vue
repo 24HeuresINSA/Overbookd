@@ -83,7 +83,7 @@ export default Vue.extend({
     classes(): Record<string, boolean> {
       return {
         clickable: this.clickable,
-        flip: this.team === "bde"
+        flip: this.team === "bde",
       };
     },
   },
