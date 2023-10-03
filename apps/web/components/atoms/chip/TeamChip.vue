@@ -80,10 +80,11 @@ export default Vue.extend({
     color(): string {
       return this.teamMetadate?.color ?? "grey";
     },
-    classes(): string {
-      const clickable = this.clickable ? "clickable" : "";
-      const flip = this.team === "bde" ? "flip" : "";
-      return `${clickable} ${flip}`;
+    classes(): Record<string, boolean> {
+      return {
+        clickable: this.clickable,
+        flip: this.team === "bde"
+      };
     },
   },
   methods: {
