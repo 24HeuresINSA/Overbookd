@@ -1,479 +1,170 @@
 <template>
-  <div>
-    <div style="width: 100%; display: grid">
-      <v-row>
-        <v-col md="2">
-          <v-card style="margin-bottom: 5%">
-            <v-card-title>Filtres</v-card-title>
-            <v-card-text style="display: flex; flex-direction: column">
-              <v-text-field
-                v-model="filters.search"
-                label="Recherche"
-                :disabled="isModeStatsActive"
-              ></v-text-field>
-              <v-combobox
-                v-model="filters.teams"
-                chips
-                multiple
-                clearable
-                dense
-                label="Team"
-                :items="teams"
-                item-text="name"
-                :disabled="isModeStatsActive"
-              >
-                <template #selection="{ attrs, item, selected }">
-                  <v-chip
-                    v-bind="attrs"
-                    :input-value="selected"
-                    close
-                    :color="getRoleMetadata(item).color"
-                    @click:close="removeTeamInFilter(item)"
-                  >
-                    <v-icon left color="white">
-                      {{ getRoleMetadata(item).icon }}
-                    </v-icon>
-                    <a style="color: white">{{ getRoleMetadata(item).name }}</a>
-                  </v-chip>
-                </template>
-              </v-combobox>
+  <div class="volunteers-page">
+    <div class="filters">
+      <VolunteerListFilters
+        :search="filters.search"
+        :teams="filters.teams"
+        :disabled="isStatsModeActive"
+        @change:search="filters.search = $event"
+        @change:teams="filters.teams = $event"
+      />
 
-              <template v-if="canManageUsers">
-                <label>Compte validé</label>
-                <v-btn-toggle
-                  v-model="filters.isValidated"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                  :disabled="isModeStatsActive"
-                >
-                  <v-btn :value="true" small :disabled="isModeStatsActive">
-                    oui</v-btn
-                  >
-                  <v-btn :value="false" small :disabled="isModeStatsActive">
-                    Non</v-btn
-                  >
-                </v-btn-toggle>
-              </template>
-              <template v-if="canManagePersonnalAccounts">
-                <p>Cotisation</p>
-                <v-btn-toggle
-                  v-model="filters.hasPayedContributions"
-                  tile
-                  color="deep-purple accent-3"
-                  group
-                  :disabled="isModeStatsActive"
-                >
-                  <v-btn :value="true" small :disabled="isModeStatsActive">
-                    Payée
-                  </v-btn>
-
-                  <v-btn :value="false" small :disabled="isModeStatsActive">
-                    Non payée
-                  </v-btn>
-                </v-btn-toggle>
-              </template>
-            </v-card-text>
-          </v-card>
-          <v-card v-if="canManageUsers">
-            <v-card-title>Mode stats humains</v-card-title>
-            <v-card-text style="display: flex; flex-direction: column">
-              <label>Mode stats</label>
-              <v-btn-toggle
-                v-model="isModeStatsActive"
-                tile
-                color="deep-purple accent-3"
-                group
-              >
-                <v-btn :value="true" small> oui</v-btn>
-                <v-btn :value="false" small> Non</v-btn>
-              </v-btn-toggle>
-            </v-card-text>
-            <v-card-actions class="ctas">
-              <v-btn text @click="exportCSV"> exporter bénévoles </v-btn>
-              <v-btn :loading="planningLoads" text @click="exportPlannings">
-                télécharger plannings
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col md="10">
-          <div v-if="!loading">
-            <v-data-table
-              v-if="!isModeStatsActive"
-              style="max-height: 100%; overflow-y: auto"
-              :headers="headers"
-              :items="filteredUsers"
-              :options.sync="options"
-              class="elevation-1"
-              dense
-              :items-per-page="20"
-            >
-              <template #[`item.firstname`]="{ item }">
-                {{ item.firstname }} {{ item.lastname }}
-                {{ item.nickname ? `(${item.nickname})` : "" }}
-              </template>
-              <template #[`item.action`]="{ item }" style="display: flex">
-                <v-btn icon small @click="openInformationDialog(item)">
-                  <v-icon small>mdi-information-outline</v-icon>
-                </v-btn>
-                <v-btn icon small :href="getPhoneLink(item.phone)">
-                  <v-icon small>mdi-phone</v-icon>
-                </v-btn>
-                <v-btn icon small :href="'mailto:' + item.email">
-                  <v-icon small>mdi-email</v-icon>
-                </v-btn>
-                <v-btn icon small @click="openCalendar(item.id)">
-                  <v-icon small>mdi-calendar</v-icon>
-                </v-btn>
-              </template>
-
-              <template #[`item.charisma`]="{ item }">
-                {{ item.charisma || 0 }}
-              </template>
-
-              <template #[`item.teams`]="{ item }">
-                <v-container>
-                  <TeamChip
-                    v-for="team of item.teams"
-                    :key="team"
-                    :team="team"
-                    with-name
-                  ></TeamChip>
-                </v-container>
-              </template>
-            </v-data-table>
-            <VolunteerStatsTable v-else />
-          </div>
-          <div v-else class="d-flex justify-center">
-            <v-progress-circular
-              indeterminate
-              color="grey"
-            ></v-progress-circular>
-          </div>
-        </v-col>
-      </v-row>
+      <VolunteerStatsExportFilters
+        :filtered-volunteers="displayedVolunteers"
+        @change:statsMode="isStatsModeActive = $event"
+      />
     </div>
 
-    <v-snackbar v-model="isSnackbarOpen" :timeout="5000">
-      {{ feedbackMessage }}
+    <div class="table-container">
+      <VolunteerList
+        v-if="!isStatsModeActive"
+        :volunteers="displayedVolunteers"
+        @open-dialog="openVolunteerInfoDialog"
+        @click:team="addTeamInFilters"
+      />
+      <VolunteerStatsTable v-else />
+    </div>
 
-      <template #action="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <v-dialog v-model="isVolunteerInfoDialogOpen">
+      <VolunteerInformation @close-dialog="closeVolunteerInfoDialog" />
+    </v-dialog>
 
-    <SnackNotificationContainer></SnackNotificationContainer>
-    <UserInformation
-      :toggle="isUserDialogOpen"
-      @update-toggle="(t) => (isUserDialogOpen = t)"
-    ></UserInformation>
+    <SnackNotificationContainer />
   </div>
 </template>
 
-<script>
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+<script lang="ts">
+import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
-import UserInformation from "~/components/organisms/user/data/UserInformation.vue";
-import { download } from "~/utils/planning/download";
-import { formatPhoneLink } from "~/utils/user/user.utils";
+import VolunteerInformation from "~/components/organisms/user/data/VolunteerInformation.vue";
+import VolunteerListFilters from "~/components/molecules/user/filters/VolunteerListFilters.vue";
+import VolunteerStatsExportFilters from "~/components/molecules/user/filters/VolunteerStatsExportFilters.vue";
+import VolunteerList from "~/components/organisms/user/data/VolunteerList.vue";
 import { SlugifyService } from "@overbookd/slugify";
-import { matchingSearchItems } from "~/utils/search/search.utils";
-import { MANAGE_PERSONNAL_ACCOUNTS, MANAGE_USERS } from "@overbookd/permission";
+import { Searchable } from "~/utils/search/search.utils";
+import { UserPersonnalData } from "@overbookd/user";
+import { Team } from "~/utils/models/team.model";
 
-export default {
+interface VolunteersData {
+  filters: {
+    search: string;
+    teams: Team[];
+  };
+
+  isVolunteerInfoDialogOpen: boolean;
+  isStatsModeActive: boolean;
+}
+
+export default Vue.extend({
   name: "Volunteers",
   components: {
-    UserInformation,
+    VolunteerListFilters,
+    VolunteerInformation,
     SnackNotificationContainer,
-    TeamChip,
     VolunteerStatsTable,
+    VolunteerStatsExportFilters,
+    VolunteerList,
   },
-  data() {
-    return {
-      filteredUsers: [],
-      headers: [
-        { text: "Prénom Nom (Surnom)", value: "firstname" },
-        { text: "Equipes", value: "teams" },
-        { text: "Charisme", value: "charisma", align: "end" },
-        { text: "Action", value: "action", sortable: false },
-      ],
-      statsHeaders: [
-        { text: "Prénom Nom (Surnom)", value: "firstname" },
-        { text: "Charisme", value: "charisma", align: "end" },
-        { text: "Charge", value: "charge" },
-        { text: "Heures affectés", value: "hours" },
-        { text: "Statiques", value: "statics" },
-        { text: "Action", value: "action", sortable: false },
-      ],
+  data: (): VolunteersData => ({
+    filters: {
+      search: "",
+      teams: [],
+    },
 
-      loading: false,
-
-      filters: {
-        search: "",
-        teams: [],
-        isValidated: true,
-        hasPayedContributions: undefined,
-      },
-
-      isUserDialogOpen: false,
-      isSnackbarOpen: false,
-
-      newRole: undefined,
-      feedbackMessage: "Sauvegardé 🥳",
-      isModeStatsActive: false,
-
-      options: { page: 1 },
-
-      planningLoads: false,
-    };
-  },
-
+    isVolunteerInfoDialogOpen: false,
+    isStatsModeActive: false,
+  }),
   head: () => ({
     title: "Liste des bénévoles",
   }),
 
   computed: {
-    users() {
-      return this.filters.isValidated
-        ? this.$accessor.user.volunteers
-        : this.$accessor.user.candidates;
+    volunteers(): UserPersonnalData[] {
+      return this.$accessor.user.volunteers;
     },
-    searchableVolunteers() {
-      return this.users.map((user) => ({
-        ...user,
+    searchableVolunteers(): Searchable<UserPersonnalData>[] {
+      return this.volunteers.map((volunteer) => ({
+        ...volunteer,
         searchable: SlugifyService.apply(
-          `${user.firstname} ${user.lastname} ${user.nickname}`,
+          `${volunteer.firstname} ${volunteer.lastname} ${volunteer.nickname}`,
         ),
       }));
     },
-    teams() {
-      return this.$accessor.team.allTeams;
-    },
-    volunteerPlannings() {
-      return this.$accessor.planning.volunteerPlannings;
-    },
-    canManageUsers() {
-      return this.$accessor.user.can(MANAGE_USERS);
-    },
-    canManagePersonnalAccounts() {
-      return this.$accessor.user.can(MANAGE_PERSONNAL_ACCOUNTS);
-    },
-  },
-
-  watch: {
-    filters: {
-      handler() {
-        this.updateFilteredUsers();
-      },
-      deep: true,
-    },
-
-    users: {
-      handler() {
-        this.updateFilteredUsers();
-      },
-      deep: true,
+    displayedVolunteers(): UserPersonnalData[] {
+      const matchTeams = this.filterVolunteersByTeams(this.filters.teams);
+      const matchName = this.filterVolunteersByName(this.filters.search);
+      return this.searchableVolunteers.filter((volunteer) => {
+        return matchTeams(volunteer) && matchName(volunteer);
+      });
     },
   },
 
   async mounted() {
-    await this.$accessor.user.fetchCandidates();
     await this.$accessor.user.fetchVolunteers();
   },
 
   methods: {
-    async initStore() {
-      await this.$accessor.user.fetchCandidates();
-      await this.$accessor.user.fetchVolunteers();
-      await this.$accessor.timeslot.fetchTimeslots();
-      await this.$accessor.ft.fetchAll();
-    },
-    isCpUseful(item) {
-      return (
-        (item.teams?.includes("hard") &&
-          !(
-            item.teams?.includes("fen") ||
-            item.teams?.includes("voiture") ||
-            item.teams?.includes("camion")
-          )) ||
-        item.teams?.includes("vieux")
-      );
+    filterVolunteersByName(
+      search: string,
+    ): (volunteer: Searchable<UserPersonnalData>) => boolean {
+      const slugifiedSearch = SlugifyService.apply(search);
+      return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
-    openInformationDialog(user) {
-      this.$accessor.user.setSelectedUser(user);
-      this.isUserDialogOpen = true;
-    },
+    filterVolunteersByTeams(
+      teamsSearched: Team[],
+    ): (volunteer: UserPersonnalData) => boolean {
+      if (teamsSearched.length === 0) return () => true;
 
-    getRoleMetadata(team) {
-      return this.teams.find((t) => t.code === team.code);
-    },
-
-    removeTeamInFilter(item) {
-      this.filters.teams.splice(this.filters.teams.indexOf(item), 1);
-    },
-
-    download(filename, text) {
-      // We use the 'a' HTML element to incorporate file generation into
-      // the browser rather than server-side
-      const element = document.createElement("a");
-      element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," + encodeURIComponent(text),
-      );
-      element.setAttribute("download", filename);
-
-      element.style.display = "none";
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
-    },
-
-    async exportCSV() {
-      // Parse data into a CSV string to be passed to the download function
-
-      const lineReturnRegex = new RegExp("(\\r\\n|\\n|\\r)", "gm");
-
-      const csvHeader =
-        "Prénom;Nom;Surnom;Charisme;Roles;Email;Date de naissance;Téléphone;Département;Année;Solde;ContribPayée;Commentaire";
-
-      const csvContent = this.users.map((user) => {
-        return [
-          user.firstname,
-          user.lastname,
-          user.nickname,
-          user.charisma,
-          `"${user.team}"`,
-          user.email,
-          user.birthdate,
-          `+33${user.phone}`,
-          user.department,
-          user.year,
-          user.hasPayedContributions,
-          user.comment?.replace(lineReturnRegex, " ") ?? "",
-        ].join(";");
-      });
-
-      const csv = [csvHeader, ...csvContent].join("\n");
-      const regex = new RegExp(/undefined/i, "g");
-
-      const parsedCSV = csv.replace(regex, "");
-      this.download("utilisateurs.csv", parsedCSV);
-    },
-
-    getCharge(plan) {
-      let charge = 0;
-      plan.slots.forEach((slot) => {
-        const start = new Date(slot.start);
-        const end = new Date(slot.end);
-        const time = end.getTime() - start.getTime();
-        charge += time;
-      });
-      const user = this.users.find((e) => e._id === plan._id);
-      const hours = user.availabilities.length * 2 || 0;
-      if (charge === 0 || hours === 0) {
-        return 0;
-      } else {
-        return (charge / (hours * 3600000)) * 100;
-      }
-    },
-
-    getAffected(plan) {
-      let total = 0;
-      plan.slots.forEach((slot) => {
-        const start = new Date(slot.start);
-        const end = new Date(slot.end);
-        const time = end.getTime() - start.getTime();
-        total += time;
-      });
-      return Math.round(total / 3600000);
-    },
-
-    getStatic(plan) {
-      let statics = 0;
-      const Fts = this.$accessor.ft.Fts;
-      plan.slots.forEach((slot) => {
-        const ft = Fts.find((e) => e.count === slot.count);
-        if (ft.general.areTimeframesStatic) {
-          statics++;
-        }
-      });
-      return statics;
-    },
-
-    openCalendar(userId) {
-      window.open(`/planning/${userId}`, "_blank");
-    },
-
-    updateFilteredUsers() {
-      let mUsers = matchingSearchItems(
-        this.searchableVolunteers,
-        this.filters.search,
-      );
-
-      // filter by payed contributions
-      if (this.filters.hasPayedContributions !== undefined) {
-        mUsers = mUsers.filter(
-          (user) =>
-            user.hasPayedContributions === this.filters.hasPayedContributions,
+      return (volunteer) =>
+        teamsSearched.every((teamSearched) =>
+          volunteer.teams.some((teamCode) => teamSearched.code === teamCode),
         );
-        this.options.page = 1; // reset page
-      }
+    },
 
-      // filter by team
-      if (this.filters.teams.length > 0) {
-        mUsers = mUsers.filter((user) => {
-          if (user.teams) {
-            return (
-              user.teams.filter((value) =>
-                this.filters.teams.map((team) => team.code).includes(value),
-              ).length === this.filters.teams.length
-            );
-          } else {
-            return false;
-          }
-        });
-        this.options.page = 1; // reset page
+    addTeamInFilters(team: Team) {
+      if (!this.filters.teams.some((t) => t.code === team.code)) {
+        this.filters.teams = [...this.filters.teams, team];
       }
-      this.filteredUsers = mUsers;
     },
-    async exportPlannings() {
-      this.planningLoads = true;
-      await this.$accessor.planning.fetchAllPdfPlannings(
-        this.filteredUsers.filter(({ charisma }) => charisma > 0),
-      );
-      this.planningLoads = false;
-      this.volunteerPlannings.map(({ volunteer, planningBase64Data }) =>
-        download(planningBase64Data, volunteer),
-      );
+
+    openVolunteerInfoDialog() {
+      this.isVolunteerInfoDialogOpen = true;
     },
-    getPhoneLink(phone) {
-      return formatPhoneLink(phone);
+
+    closeVolunteerInfoDialog() {
+      this.isVolunteerInfoDialogOpen = false;
     },
   },
-};
+});
 </script>
 
-<style scoped>
-p {
-  margin: 0;
+<style lang="scss" scoped>
+.volunteers-page {
+  display: flex;
+  gap: 1em;
+  margin-left: 1em;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    margin-left: 0;
+  }
 }
 
-.v-btn-toggle--group > .v-btn.v-btn {
-  margin: 0;
-}
-
-.container {
-  padding: 0;
-}
-
-.ctas {
+.filters {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 1em;
+  width: 20%;
+  @media screen and (max-width: $mobile-max-width) {
+    width: 100%;
+  }
+}
+
+.table-container {
+  width: 80%;
+  @media screen and (max-width: $mobile-max-width) {
+    width: 100%;
+  }
 }
 </style>

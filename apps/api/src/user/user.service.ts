@@ -92,24 +92,6 @@ export class UserService {
     return users.map(UserService.formatToPersonalData);
   }
 
-  async getCandidates(): Promise<UserPersonnalData[]> {
-    const users = await this.prisma.user.findMany({
-      orderBy: { id: "asc" },
-      where: {
-        isDeleted: false,
-        teams: {
-          none: {
-            team: {
-              permissions: { some: { permissionName: BE_AFFECTED } },
-            },
-          },
-        },
-      },
-      select: SELECT_USER_PERSONNAL_DATA,
-    });
-    return users.map(UserService.formatToPersonalData);
-  }
-
   async getVolunteers(): Promise<UserPersonnalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },

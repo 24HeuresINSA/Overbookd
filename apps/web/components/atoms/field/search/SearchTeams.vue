@@ -15,14 +15,23 @@
     return-object
     @change="propagateEvent"
   >
+    <template #selection="{ item }">
+      <TeamChip
+        :team="item.code"
+        with-name
+        close
+        @close="propagateEventWithoutTeam"
+      />
+    </template>
     <template #no-data>
-      <v-list-item> Aucune equipe correspondante </v-list-item>
+      <v-list-item> Aucune équipe correspondante </v-list-item>
     </template>
   </v-combobox>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import TeamChip from "../../chip/TeamChip.vue";
 import { Team } from "~/utils/models/team.model";
 
 interface SearchTeamData {
@@ -31,6 +40,7 @@ interface SearchTeamData {
 
 export default Vue.extend({
   name: "SearchTeams",
+  components: { TeamChip },
   model: {
     prop: "teams",
     event: "change",
@@ -70,6 +80,10 @@ export default Vue.extend({
   methods: {
     propagateEvent(teams: Team[]) {
       this.$emit("change", teams);
+    },
+    propagateEventWithoutTeam(team: string) {
+      const teams = this.teams.filter((t) => t.code !== team);
+      this.propagateEvent(teams);
     },
   },
 });

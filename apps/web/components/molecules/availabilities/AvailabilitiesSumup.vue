@@ -36,21 +36,18 @@ import {
 } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { UserPersonnalData } from "@overbookd/user";
 
 export default Vue.extend({
   name: "AvailabilitiesSumup",
   components: { OverCalendar },
-  props: {
-    userId: {
-      type: Number,
-      required: false,
-      default: null,
-    },
-  },
   data: () => ({
     calendarMarker: new Date(),
   }),
   computed: {
+    selectedVolunteer(): UserPersonnalData {
+      return this.$accessor.user.selectedUser;
+    },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
     },
@@ -87,9 +84,9 @@ export default Vue.extend({
   },
   methods: {
     fetchAvailabilities() {
-      if (!this.userId) return;
+      if (!this.selectedVolunteer) return;
       return this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.userId,
+        this.selectedVolunteer.id,
       );
     },
     isEndOfPeriod(hour: number): boolean {

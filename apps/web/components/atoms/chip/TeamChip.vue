@@ -4,8 +4,9 @@
     :small="small"
     :large="large"
     :color="color"
-    :class="flipClass"
+    :class="classes"
     :close="close"
+    :ripple="clickable"
     @click="sendEvent"
     @click:close="sendCloseEvent"
   >
@@ -57,6 +58,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    clickable: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     small(): boolean {
@@ -75,13 +80,16 @@ export default Vue.extend({
     color(): string {
       return this.teamMetadate?.color ?? "grey";
     },
-    flipClass(): string {
-      return this.team === "bde" ? "flip" : "";
+    classes(): Record<string, boolean> {
+      return {
+        clickable: this.clickable,
+        flip: this.team === "bde",
+      };
     },
   },
   methods: {
     sendEvent() {
-      this.$emit("click", this.team);
+      this.$emit("click", this.teamMetadate);
     },
     sendCloseEvent() {
       this.$emit("close", this.team);
@@ -94,6 +102,7 @@ export default Vue.extend({
 .v-chip {
   margin-right: 2px;
   color: white;
+  cursor: default;
 }
 span.name {
   color: white;
@@ -101,5 +110,9 @@ span.name {
 }
 .flip {
   transform: rotate(180deg);
+}
+
+.clickable {
+  cursor: pointer;
 }
 </style>

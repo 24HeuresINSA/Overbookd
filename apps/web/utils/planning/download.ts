@@ -1,7 +1,10 @@
 import { SlugifyService } from "@overbookd/slugify";
 import { UserName } from "@overbookd/user";
 
-export function download(planningBase64Data: string, volunteer: UserName) {
+export function downloadPlanning(
+  planningBase64Data: string,
+  volunteer: UserName,
+) {
   const base64Uri = `data:application/pdf;base64,${planningBase64Data}`;
   const firstname = SlugifyService.apply(volunteer.firstname);
   const lastname = SlugifyService.apply(volunteer.lastname);
