@@ -1,4 +1,4 @@
-import { Logger, MessageEvent, OnApplicationBootstrap } from "@nestjs/common";
+import { Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { Observable, map, merge } from "rxjs";
 import { ADHERENT_REGISTERED, RegisterNewcomer } from "@overbookd/registration";
