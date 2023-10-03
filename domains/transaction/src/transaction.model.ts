@@ -1,7 +1,13 @@
-export type Transaction = {
-  id: string;
+import User from "@overbookd/user";
+
+export type MyTransaction = {
+  id: number;
   amount: number;
-  to: string;
-  from: string;
+  to: User;
   context: string;
+  createdAt: Date;
+};
+
+export type Transaction = MyTransaction & {
+  from: User;
 };

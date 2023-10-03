@@ -1,1 +1,2 @@
-export type { Transaction } from "./transaction.model";
+export type { MyTransaction, Transaction } from "./transaction.model";
+export { Transfer } from "./transfer";

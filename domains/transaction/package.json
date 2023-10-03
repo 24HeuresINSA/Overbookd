@@ -25,8 +25,8 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "echo 'No tests'",
-    "test:ci": "echo 'No tests'"
+    "test": "vitest --config ../../vitest.config.ts",
+    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
   },
   "keywords": [
     "transaction",
@@ -35,5 +35,9 @@
   "engines": {
     "node": "20.8.0",
     "pnpm": "8.8.0"
+  },
+  "dependencies": {
+    "@overbookd/user": "workspace:^",
+    "@overbookd/permission": "workspace:^"
   }
 }
