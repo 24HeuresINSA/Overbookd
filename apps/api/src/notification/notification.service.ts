@@ -28,7 +28,7 @@ export class NotificationService implements OnApplicationBootstrap {
   private logger = new Logger("NotificationService");
 
   onApplicationBootstrap() {
-    this.eventStore.adherentRegisteredEvents.subscribe(async (event) => {
+    this.eventStore.adherentsRegistered.subscribe(async (event) => {
       this.logger.debug(JSON.stringify(event));
       const users = await this.register.notifyAwaitForValidation(event);
       const notifyees = users.map(({ id }) => id);
@@ -65,7 +65,7 @@ export class NotificationService implements OnApplicationBootstrap {
   }
 
   private get adherentRegistered(): AvailableNotification {
-    const adherentRegistered = this.eventStore.adherentRegisteredEvents.pipe(
+    const adherentRegistered = this.eventStore.adherentsRegistered.pipe(
       map((data): DomainEvent => ({ type: ADHERENT_REGISTERED, data })),
     );
     return { source: adherentRegistered, permission: ENROLL_NEWCOMER };

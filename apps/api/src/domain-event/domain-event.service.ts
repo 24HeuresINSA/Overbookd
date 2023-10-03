@@ -32,11 +32,11 @@ export class DomainEventService {
     this.$events.next(event);
   }
 
-  get adherentRegisteredEvents(): Observable<AdherentRegistered> {
+  get adherentsRegistered(): Observable<AdherentRegistered> {
     return this.listen(ADHERENT_REGISTERED).pipe(map(({ data }) => data));
   }
 
-  get volunteerRegisteredEvents(): Observable<VolunteerRegistered> {
+  get volunteersRegistered(): Observable<VolunteerRegistered> {
     return this.listen(VOLUNTEER_REGISTERED).pipe(map(({ data }) => data));
   }
 }
