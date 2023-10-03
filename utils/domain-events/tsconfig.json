@@ -1,0 +1,7 @@
+{
+  "extends": ["../../tsconfig.json", "../../tsconfig.package.json"],
+  "compilerOptions": {
+    "lib": ["ES2020", "ES2022", "DOM"],
+    "outDir": "./dist"
+  }
+}

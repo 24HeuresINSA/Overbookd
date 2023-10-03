@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
+      "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./domains/permission/src"],

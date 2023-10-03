@@ -1,3 +1,4 @@
+import type { Event } from "@overbookd/event";
 import { Teams } from "../register-form";
 import { Registree } from "../register-newcomer";
 
@@ -48,3 +49,13 @@ export class NewcomerRegisteredEvent<T extends Member>
 }
 
 export const ADHERENT_REGISTERED = "adherent-registered";
+export const VOLUNTEER_REGISTERED = "volunteer-registered";
+
+export type AdherentRegisteredEvent = Event<
+  typeof ADHERENT_REGISTERED,
+  AdherentRegistered
+>;
+export type VolunteerRegisteredEvent = Event<
+  typeof VOLUNTEER_REGISTERED,
+  VolunteerRegistered
+>;

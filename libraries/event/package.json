@@ -1,12 +1,12 @@
 {
-  "name": "@overbookd/registration",
-  "version": "1.1.1",
-  "description": "Gestion de l'inscription des utilisateurs pour overbookd",
+  "name": "@overbookd/event",
+  "version": "1.0.0-rc0",
+  "description": "Gestion des évènements métier pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
   "private": true,
-  "main": "dist/domains/registration/src/index.js",
+  "main": "dist/index.js",
   "bugs": {
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
     "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "domains/registration"
+    "directory": "libraries/event"
   },
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
@@ -25,25 +25,15 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "vitest --config ../../vitest.config.ts",
-    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
+    "test": "echo 'No tests'",
+    "test:ci": "echo 'No tests'"
   },
   "keywords": [
-    "registration"
+    "event",
+    "library"
   ],
   "engines": {
     "node": "20.8.0",
     "pnpm": "8.8.0"
-  },
-  "dependencies": {
-    "@overbookd/event": "workspace:^",
-    "@overbookd/list": "workspace:^",
-    "@overbookd/period": "workspace:^",
-    "@overbookd/permission": "workspace:^",
-    "jsonwebtoken": "9.0.2",
-    "jwt-decode": "3.1.2"
-  },
-  "devDependencies": {
-    "@types/jsonwebtoken": "9.0.3"
   }
 }

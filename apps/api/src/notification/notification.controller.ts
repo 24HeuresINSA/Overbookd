@@ -10,7 +10,6 @@ import {
   Controller,
   Delete,
   Get,
-  MessageEvent,
   Query,
   Request,
   Sse,
@@ -19,6 +18,7 @@ import {
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
 import { Observable } from "rxjs";
+import { DomainEvent } from "@overbookd/domain-events";
 
 @ApiTags("notifications")
 @ApiBearerAuth()
@@ -44,7 +44,7 @@ export class NotificationController {
   @Sse("live")
   liveNotification(
     @Query() { token }: { token: string },
-  ): Observable<MessageEvent> {
+  ): Observable<DomainEvent> {
     return this.notify.inLive(token);
   }
 

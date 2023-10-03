@@ -415,6 +415,9 @@ importers:
 
   domains/registration:
     dependencies:
+      '@overbookd/event':
+        specifier: workspace:^
+        version: link:../../libraries/event
       '@overbookd/list':
         specifier: workspace:^
         version: link:../../libraries/list
@@ -452,11 +455,22 @@ importers:
         specifier: workspace:*
         version: link:../../libraries/period
 
+  libraries/event: {}
+
   libraries/list: {}
 
   libraries/period: {}
 
   libraries/slugify: {}
+
+  utils/domain-events:
+    dependencies:
+      '@overbookd/registration':
+        specifier: workspace:^
+        version: link:../../domains/registration
+      rxjs:
+        specifier: 7.8.1
+        version: 7.8.1
 
 packages:
 

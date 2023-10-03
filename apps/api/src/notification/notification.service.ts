@@ -5,15 +5,11 @@ import { ADHERENT_REGISTERED, RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
-import { OverbookdEventType } from "../domain-event/domain-event";
+import { DomainEvent } from "@overbookd/domain-events";
 
 type AvailableNotification = {
-  source: Observable<DomainNotification>;
+  source: Observable<DomainEvent>;
   permission: Permission;
-};
-
-type DomainNotification = MessageEvent & {
-  type: OverbookdEventType;
 };
 
 export interface NotificationRepository {
@@ -49,7 +45,7 @@ export class NotificationService implements OnApplicationBootstrap {
     await this.notifications.readFrom(user);
   }
 
-  inLive(token: string): Observable<DomainNotification> {
+  inLive(token: string): Observable<DomainEvent> {
     const { permissions } = this.jwt.verify<JwtPayload>(token);
 
     const myNotifications = this.filterMyNotifications(permissions);
@@ -58,7 +54,7 @@ export class NotificationService implements OnApplicationBootstrap {
 
   private filterMyNotifications(
     permissions: Permission[],
-  ): Observable<DomainNotification>[] {
+  ): Observable<DomainEvent>[] {
     const availableNotifications: AvailableNotification[] = [
       this.adherentRegistered,
     ];
@@ -70,7 +66,7 @@ export class NotificationService implements OnApplicationBootstrap {
 
   private get adherentRegistered(): AvailableNotification {
     const adherentRegistered = this.eventStore.adherentRegisteredEvents.pipe(
-      map((data): DomainNotification => ({ type: ADHERENT_REGISTERED, data })),
+      map((data): DomainEvent => ({ type: ADHERENT_REGISTERED, data })),
     );
     return { source: adherentRegistered, permission: ENROLL_NEWCOMER };
   }
