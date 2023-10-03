@@ -39,7 +39,7 @@
     "@nuxtjs/vuetify": "1.12.3",
     "@overbookd/configuration": "workspace:*",
     "@overbookd/contribution": "workspace:*",
-    "@overbookd/domain-event": "workspace:*",
+    "@overbookd/domain-events": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
     "@overbookd/permission": "workspace:*",
