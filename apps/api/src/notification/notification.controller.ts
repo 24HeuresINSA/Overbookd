@@ -45,7 +45,7 @@ export class NotificationController {
   liveNotification(
     @Query() { token }: { token: string },
   ): Observable<MessageEvent> {
-    return this.notify.meInLive(token);
+    return this.notify.inLive(token);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -46,3 +46,5 @@ export class NewcomerRegisteredEvent<T extends Member>
     return new NewcomerRegisteredEvent({ ...registree, membership });
   }
 }
+
+export const ADHERENT_REGISTERED = "adherent-registered";

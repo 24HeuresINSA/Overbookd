@@ -24,7 +24,7 @@ export const actions = actionTree(
     async fetchNotifications({ commit }) {
       const res = await safeCall(
         this,
-        notificationRepository.getMyNotifications(this),
+        notificationRepository.hasNotifications(this),
       );
       if (!res) return;
       commit("SET_NOTIFICATIONS", res.data);

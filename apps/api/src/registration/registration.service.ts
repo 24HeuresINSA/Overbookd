@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { Injectable, BadRequestException } from "@nestjs/common";
+import { BadRequestException } from "@nestjs/common";
 import {
   EnrollNewcomersForm,
   FulfilledRegistration,
@@ -19,7 +19,6 @@ import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
 import { isString } from "class-validator";
 
-@Injectable()
 export class RegistrationService {
   constructor(
     private readonly enrollNewcomersRepository: EnrollNewcomersRepository,
@@ -64,7 +63,7 @@ export class RegistrationService {
   }
 
   invite(): URL {
-    const domain = process.env.DOMAIN;
+    const domain = process.env.DOMAIN ?? "";
     const secret = jwtConstants.secret;
     return InviteNewAdherents.byLink({ domain, secret });
   }
