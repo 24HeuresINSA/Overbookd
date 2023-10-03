@@ -19,6 +19,9 @@ COPY libraries/ ./
 WORKDIR /overbookd/domains
 COPY domains/ ./
 
+WORKDIR /overbookd/utils
+COPY utils/ ./
+
 WORKDIR /overbookd
 RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 
