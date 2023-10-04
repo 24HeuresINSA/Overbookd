@@ -8,29 +8,29 @@ import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant";
 
 const CURRENT_EDITION = Edition.current;
 
-type TestingMembers = Member & {
+type TestingMember = Member & {
   contributions: number[];
 };
 
-const nonAdherent: TestingMembers = {
+const nonAdherent: TestingMember = {
   id: 1,
   permissions: [],
   contributions: [],
 };
 
-const upToDateAdherent: TestingMembers = {
+const upToDateAdherent: TestingMember = {
   id: 2,
   permissions: [PAY_CONTRIBUTION],
   contributions: [CURRENT_EDITION],
 };
 
-const newAdherent: TestingMembers = {
+const newAdherent: TestingMember = {
   id: 3,
   permissions: [PAY_CONTRIBUTION],
   contributions: [],
 };
 
-const elderAdherent: TestingMembers = {
+const elderAdherent: TestingMember = {
   id: 4,
   permissions: [PAY_CONTRIBUTION],
   contributions: [
@@ -41,7 +41,7 @@ const elderAdherent: TestingMembers = {
   ],
 };
 
-const testingMembers: TestingMembers[] = [
+const testingMembers: TestingMember[] = [
   nonAdherent,
   upToDateAdherent,
   newAdherent,
