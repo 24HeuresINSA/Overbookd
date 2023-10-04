@@ -171,9 +171,9 @@ describe("Pay contribution", () => {
     it("should return adherents with contribution out-to-date", async () => {
       const adherents =
         await payContribution.findAdherentsWithContributionOutToDate();
-      const { permissions, ...leaPersonnalData } = lea;
+      const { permissions, ...leaPersonalData } = lea;
 
-      expect(adherents).toMatchObject([leaPersonnalData]);
+      expect(adherents).toMatchObject([leaPersonalData]);
     });
   });
 });

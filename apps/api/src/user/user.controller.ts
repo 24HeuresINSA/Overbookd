@@ -58,16 +58,16 @@ import {
   VolunteerAssignmentStatResponseDto,
 } from "./dto/volunteer-assignment-stat.response.dto";
 import { ProfilePictureService } from "./profile-picture.service";
-import { MyUserInformation, UserPersonnalData } from "@overbookd/user";
+import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";
-import { UserPersonnalDataResponseDto } from "./dto/user-personnal-data.response.dto";
+import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.dto";
 import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
 import { Task } from "../volunteer-planning/domain/task.model";
 import {
   AFFECT_TEAM,
   AFFECT_VOLUNTEER,
   DOWNLOAD_PLANNING,
-  HAVE_PERSONNAL_ACCOUNT,
+  HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
   VIEW_VOLUNTEER,
 } from "@overbookd/permission";
@@ -106,10 +106,10 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get all users",
-    type: UserPersonnalDataResponseDto,
+    type: UserPersonalDataResponseDto,
     isArray: true,
   })
-  getUsers(): Promise<UserPersonnalData[]> {
+  getUsers(): Promise<UserPersonalData[]> {
     return this.userService.getAll();
   }
 
@@ -126,10 +126,10 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get all volunteers",
-    type: UserPersonnalDataResponseDto,
+    type: UserPersonalDataResponseDto,
     isArray: true,
   })
-  getVolunteers(): Promise<UserPersonnalData[]> {
+  getVolunteers(): Promise<UserPersonalData[]> {
     return this.userService.getVolunteers();
   }
 
@@ -215,9 +215,9 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(HAVE_PERSONNAL_ACCOUNT)
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @ApiBearerAuth()
-  @Get("personnal-account-consummers")
+  @Get("personal-account-consummers")
   @ApiResponse({
     status: 200,
     description: "Get all consumers",
@@ -225,7 +225,7 @@ export class UserController {
     isArray: true,
   })
   async getUsernamesWithValidCP(): Promise<Consumer[]> {
-    return this.userService.getAllPersonnalAccountConsummers();
+    return this.userService.getAllPersonalAccountConsummers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -235,11 +235,11 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Get a user by id",
-    type: UserPersonnalDataResponseDto,
+    type: UserPersonalDataResponseDto,
   })
   getUserById(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<UserPersonnalData> {
+  ): Promise<UserPersonalData> {
     return this.userService.getById(id);
   }
 
@@ -344,13 +344,13 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: "Updated user",
-    type: UserPersonnalDataResponseDto,
+    type: UserPersonalDataResponseDto,
   })
   updateUserById(
     @Param("id", ParseIntPipe) targetUserId: number,
     @Body() user: UpdateUserRequestDto,
     @RequestDecorator() req: RequestWithUserPayload,
-  ): Promise<UserPersonnalData> {
+  ): Promise<UserPersonalData> {
     return this.userService.updateUser(targetUserId, user, req.user);
   }
 

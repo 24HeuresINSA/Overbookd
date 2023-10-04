@@ -155,7 +155,7 @@
  * and every user that consumed get charged accordingly
  */
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import SgConfigForm from "~/components/organisms/user/personnalAccount/SgConfigForm.vue";
+import SgConfigForm from "~/components/organisms/user/personalAccount/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repo-factory";
 
@@ -306,7 +306,7 @@ export default {
 
   async mounted() {
     await this.$accessor.configuration.fetch("sg");
-    await this.$accessor.user.fetchPersonnalAccountConsummers();
+    await this.$accessor.user.fetchPersonalAccountConsummers();
     this.users = this.consummers;
     this.ready = true;
   },

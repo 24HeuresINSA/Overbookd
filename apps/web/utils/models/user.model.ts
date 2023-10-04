@@ -4,7 +4,7 @@ import { FtStatus } from "./ft.model";
 import { TaskCategory } from "./ft-time-span.model";
 import {
   MyUserInformation,
-  UserPersonnalData,
+  UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
 
@@ -13,7 +13,7 @@ type WithPotentialProfilePicture = {
   profilePictureBlob?: string;
 };
 
-export type UserPersonnalDataWithProfilePicture = UserPersonnalData &
+export type UserPersonalDataWithProfilePicture = UserPersonalData &
   WithPotentialProfilePicture;
 
 export type MyUserInformationWithProfilePicture = MyUserInformation &
@@ -35,7 +35,7 @@ export interface VolunteerAssignmentStat {
   duration: number;
 }
 
-export function castToUserUpdateForm(user: UserPersonnalData): UserUpdateForm {
+export function castToUserUpdateForm(user: UserPersonalData): UserUpdateForm {
   return {
     firstname: user.firstname,
     lastname: user.lastname,
@@ -49,7 +49,7 @@ export function castToUserUpdateForm(user: UserPersonnalData): UserUpdateForm {
 }
 
 export function castUserWithDate(
-  user: HttpStringified<UserPersonnalData | MyUserInformation | Consumer>,
+  user: HttpStringified<UserPersonalData | MyUserInformation | Consumer>,
 ) {
   return {
     ...user,
@@ -57,7 +57,7 @@ export function castUserWithDate(
   };
 }
 
-export function castUsersWithDate(users: HttpStringified<UserPersonnalData[]>) {
+export function castUsersWithDate(users: HttpStringified<UserPersonalData[]>) {
   return users.map(castUserWithDate);
 }
 
@@ -71,4 +71,4 @@ export function castVolunteerTaskWithDate(
   }));
 }
 
-export type Consumer = UserPersonnalData & { balance: number };
+export type Consumer = UserPersonalData & { balance: number };

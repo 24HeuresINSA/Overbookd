@@ -6,11 +6,11 @@ import {
   DOWNLOAD_PLANNING,
   ENROLL_NEWCOMER,
   FILL_AVAILABILITY,
-  HAVE_PERSONNAL_ACCOUNT,
+  HAVE_PERSONAL_ACCOUNT,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
   MANAGE_LOCATION,
-  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_PERSONAL_ACCOUNTS,
   MANAGE_USERS,
   PAY_CONTRIBUTION,
   READ_ANIMATION_TO_PUBLISH,
@@ -34,7 +34,7 @@ import {
 
 export const permissions = [
   {
-    name: HAVE_PERSONNAL_ACCOUNT,
+    name: HAVE_PERSONAL_ACCOUNT,
     description: "Possède un compte perso",
     teams: {
       createMany: {
@@ -123,7 +123,7 @@ export const permissions = [
     },
   },
   {
-    name: MANAGE_PERSONNAL_ACCOUNTS,
+    name: MANAGE_PERSONAL_ACCOUNTS,
     description: "Peut gérer les comptes persos",
     teams: {
       createMany: {

@@ -4,7 +4,7 @@ import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
   MyUserInformationWithProfilePicture,
-  UserPersonnalDataWithProfilePicture,
+  UserPersonalDataWithProfilePicture,
   VolunteerAssignmentStat,
   VolunteerTask,
   castToUserUpdateForm,
@@ -15,7 +15,7 @@ import {
   MyUserInformation,
   Profile,
   User,
-  UserPersonnalData,
+  UserPersonalData,
 } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 import { Consumer } from "~/utils/models/user.model";
@@ -24,14 +24,14 @@ const userRepo = RepoFactory.UserRepository;
 
 export const state = () => ({
   me: {} as MyUserInformation | MyUserInformationWithProfilePicture,
-  users: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
-  selectedUser: {} as UserPersonnalData | UserPersonnalDataWithProfilePicture,
+  users: [] as (UserPersonalData | UserPersonalDataWithProfilePicture)[],
+  selectedUser: {} as UserPersonalData | UserPersonalDataWithProfilePicture,
   selectedUserFriends: [] as User[],
   selectedUserFtRequests: [] as VolunteerTask[],
   selectedUserAssignments: [] as VolunteerTask[],
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
   personalAccountConsumers: [] as Consumer[],
-  volunteers: [] as (UserPersonnalData | UserPersonnalDataWithProfilePicture)[],
+  volunteers: [] as (UserPersonalData | UserPersonalDataWithProfilePicture)[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -42,7 +42,7 @@ export const mutations = mutationTree(state, {
   SET_MY_USER(state: UserState, data: MyUserInformation) {
     state.me = data;
   },
-  SET_SELECTED_USER(state: UserState, data: UserPersonnalData) {
+  SET_SELECTED_USER(state: UserState, data: UserPersonalData) {
     state.selectedUser = data;
   },
   ADD_TEAMS_TO_SELECTED_USER(state: UserState, teams: string[]) {
@@ -70,13 +70,13 @@ export const mutations = mutationTree(state, {
   ) {
     state.selectedUserAssignmentStats = stats;
   },
-  SET_USERS(state: UserState, data: UserPersonnalData[]) {
+  SET_USERS(state: UserState, data: UserPersonalData[]) {
     state.users = data;
   },
-  SET_PERSONNAL_ACCOUNT_CONSUMERS(state: UserState, data: Consumer[]) {
+  SET_PERSONAL_ACCOUNT_CONSUMERS(state: UserState, data: Consumer[]) {
     state.personalAccountConsumers = data;
   },
-  UPDATE_USER(state: UserState, data: UserPersonnalData) {
+  UPDATE_USER(state: UserState, data: UserPersonalData) {
     const index = state.users.findIndex((user) => user.id === data.id);
     if (index === -1) return;
     state.users = updateItemToList(state.users, index, data);
@@ -96,12 +96,12 @@ export const mutations = mutationTree(state, {
   REMOVE_MY_FRIEND(state: UserState, friend: User) {
     state.mFriends = state.mFriends.filter((f) => f.id !== friend.id);
   },
-  SET_VOLUNTEERS(state: UserState, volunteers: UserPersonnalData[]) {
+  SET_VOLUNTEERS(state: UserState, volunteers: UserPersonalData[]) {
     state.volunteers = volunteers;
   },
   UPDATE_VOLUNTEER(
     state: UserState,
-    data: UserPersonnalData | UserPersonnalDataWithProfilePicture,
+    data: UserPersonalData | UserPersonalDataWithProfilePicture,
   ) {
     const index = state.volunteers.findIndex(
       (volunteer) => volunteer.id === data.id,
@@ -130,7 +130,7 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async setSelectedUser({ commit }, user: UserPersonnalData) {
+    async setSelectedUser({ commit }, user: UserPersonalData) {
       const res = await safeCall(this, userRepo.getUserFriends(this, user.id));
       if (!res) return;
       commit("SET_SELECTED_USER_FRIENDS", res.data);
@@ -190,19 +190,19 @@ export const actions = actionTree(
         commit("REMOVE_MY_FRIEND", friend);
       }
     },
-    async fetchPersonnalAccountConsummers({ commit }) {
+    async fetchPersonalAccountConsummers({ commit }) {
       const res = await safeCall(
         this,
-        userRepo.getAllPersonnalAccountConsummers(this),
+        userRepo.getAllPersonalAccountConsummers(this),
       );
       if (!res) return;
 
       const consummers = res.data.map(castUserWithDate);
-      commit("SET_PERSONNAL_ACCOUNT_CONSUMERS", consummers);
+      commit("SET_PERSONAL_ACCOUNT_CONSUMERS", consummers);
     },
     async updateUser(
       { commit, dispatch, state },
-      user: UserPersonnalData | UserPersonnalDataWithProfilePicture,
+      user: UserPersonalData | UserPersonalDataWithProfilePicture,
     ) {
       if (state.me.id === user.id) return dispatch("updateMyProfile", user);
 
@@ -344,7 +344,7 @@ export const actions = actionTree(
       });
     },
 
-    async setProfilePicture({ commit, dispatch }, user: UserPersonnalData) {
+    async setProfilePicture({ commit, dispatch }, user: UserPersonalData) {
       const profilePictureBlob = await dispatch("getProfilePicture", user);
       if (!profilePictureBlob) return;
 

@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserPersonnalDataResponseDto } from "./user-personnal-data.response.dto";
+import { UserPersonalDataResponseDto } from "./user-personal-data.response.dto";
 import { MyUserInformation } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 
 export class MyUserInformationResponseDto
-  extends UserPersonnalDataResponseDto
+  extends UserPersonalDataResponseDto
   implements MyUserInformation
 {
   @ApiProperty({
-    description: "User personnal account balance",
+    description: "User personal account balance",
     type: Number,
   })
   balance: number;

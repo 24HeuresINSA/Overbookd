@@ -83,7 +83,7 @@
         v-if="canManageUsers"
         text
         color="success"
-        @click="savePersonnalData"
+        @click="savePersonalData"
       >
         changer les infos personnelles
       </v-btn>
@@ -119,7 +119,7 @@ import {
 } from "@overbookd/permission";
 import { MyUserInformation, User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
-import { UserPersonnalDataWithProfilePicture } from "~/utils/models/user.model";
+import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 import {
   InputRulesData,
   isEmail,
@@ -164,7 +164,7 @@ export default Vue.extend({
     me(): MyUserInformation {
       return this.$accessor.user.me;
     },
-    selectedVolunteer(): UserPersonnalDataWithProfilePicture {
+    selectedVolunteer(): UserPersonalDataWithProfilePicture {
       return this.$accessor.user.selectedUser;
     },
     selectedVolunteerFriends(): User[] {
@@ -189,7 +189,7 @@ export default Vue.extend({
       if (this.$accessor.user.can(MANAGE_ADMINS)) return teamsToAdd;
       return teamsToAdd.filter((team) => team.code !== "admin");
     },
-    updatedVolunteer(): UserPersonnalDataWithProfilePicture {
+    updatedVolunteer(): UserPersonalDataWithProfilePicture {
       return {
         ...this.selectedVolunteer,
         phone: this.phone,
@@ -234,7 +234,7 @@ export default Vue.extend({
       await this.updateVolunteerInformations();
     },
 
-    async savePersonnalData() {
+    async savePersonalData() {
       await this.$accessor.user.updateUser(this.updatedVolunteer);
     },
 

@@ -49,7 +49,7 @@
 <script lang="ts">
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import {
   formatPhoneLink,
@@ -67,7 +67,7 @@ export default Vue.extend({
 
   props: {
     volunteers: {
-      type: Array as () => UserPersonnalData[],
+      type: Array as () => UserPersonalData[],
       required: true,
     },
   },
@@ -82,7 +82,7 @@ export default Vue.extend({
   }),
 
   methods: {
-    openInformationDialog(volunteer: UserPersonnalData) {
+    openInformationDialog(volunteer: UserPersonalData) {
       this.$accessor.user.setSelectedUser(volunteer);
       this.$emit("open-dialog");
     },
@@ -95,7 +95,7 @@ export default Vue.extend({
       return formatPhoneLink(phone);
     },
 
-    formatVolunteerName(volunteer: UserPersonnalData) {
+    formatVolunteerName(volunteer: UserPersonalData) {
       return formatUserNameWithNickname(volunteer);
     },
 

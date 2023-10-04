@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Consumer } from "../user.model";
-import { UserPersonnalDataResponseDto } from "./user-personnal-data.response.dto";
+import { UserPersonalDataResponseDto } from "./user-personal-data.response.dto";
 
 export class ConsumerResponseDto
-  extends UserPersonnalDataResponseDto
+  extends UserPersonalDataResponseDto
   implements Consumer
 {
   @ApiProperty({

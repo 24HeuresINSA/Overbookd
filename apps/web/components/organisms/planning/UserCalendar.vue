@@ -52,7 +52,7 @@ import {
 } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 interface CalendarEventWithFt {
@@ -101,7 +101,7 @@ export default Vue.extend({
         }),
       );
     },
-    user(): UserPersonnalData {
+    user(): UserPersonalData {
       return this.$accessor.user.selectedUser;
     },
     shouldShowStats(): boolean {

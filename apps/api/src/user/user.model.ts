@@ -1,4 +1,4 @@
-import { MyUserInformation, UserPersonnalData } from "@overbookd/user";
+import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { TeamWithNestedPermissions } from "../team/utils/permissions";
 import { IProvidePeriod } from "@overbookd/period";
 import { FtStatus } from "../ft/ft.model";
@@ -29,7 +29,7 @@ export type DatabaseTeamCode = {
 };
 
 export interface DatabaseUserPersonalData
-  extends Omit<UserPersonnalData, "teams"> {
+  extends Omit<UserPersonalData, "teams"> {
   teams: DatabaseTeamCode[];
 }
 
@@ -37,6 +37,6 @@ type WithBalance = {
   balance: number;
 };
 
-export type Consumer = UserPersonnalData & WithBalance;
+export type Consumer = UserPersonalData & WithBalance;
 
 export type DatabaseConsumer = DatabaseUserPersonalData & WithBalance;

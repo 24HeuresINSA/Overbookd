@@ -99,7 +99,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.$accessor.user.fetchPersonnalAccountConsummers();
+    this.$accessor.user.fetchPersonalAccountConsummers();
   },
   methods: {
     async transferMoney(): Promise<void> {

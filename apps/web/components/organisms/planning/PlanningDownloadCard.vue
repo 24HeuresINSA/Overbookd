@@ -98,7 +98,7 @@ export default Vue.extend({
     canViewPlanning(): boolean {
       return this.$accessor.user.can(DOWNLOAD_PLANNING);
     },
-    personnalLink(): string {
+    personalLink(): string {
       return this.$accessor.planning.link ?? "";
     },
     planningBase64Data(): string {
@@ -114,7 +114,7 @@ export default Vue.extend({
       downloadPlanning(this.planningBase64Data, this.me);
     },
     async copyToClipBoard() {
-      await navigator.clipboard.writeText(this.personnalLink);
+      await navigator.clipboard.writeText(this.personalLink);
       this.$accessor.notif.pushNotification({ message: "Lien copié ✅" });
     },
   },

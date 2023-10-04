@@ -12,14 +12,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { UserPersonnalData } from "@overbookd/user";
-import { UserPersonnalDataWithProfilePicture } from "~/utils/models/user.model";
+import { UserPersonalData } from "@overbookd/user";
+import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "ProfilePicture",
   props: {
     user: {
-      type: Object as () => UserPersonnalDataWithProfilePicture,
+      type: Object as () => UserPersonalDataWithProfilePicture,
       required: true,
     },
     small: {
@@ -33,10 +33,10 @@ export default Vue.extend({
     this.getProfilePictureBlob(this.user);
   },
   methods: {
-    hasProfilePicture(user: UserPersonnalDataWithProfilePicture): boolean {
+    hasProfilePicture(user: UserPersonalDataWithProfilePicture): boolean {
       return user.profilePicture !== null;
     },
-    getProfilePictureBlob(user: UserPersonnalData) {
+    getProfilePictureBlob(user: UserPersonalData) {
       return this.$accessor.user.setProfilePicture(user);
     },
   },
