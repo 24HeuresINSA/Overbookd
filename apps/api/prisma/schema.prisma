@@ -148,13 +148,12 @@ model Transaction {
   id        Int             @id @default(autoincrement())
   type      TransactionType
   from      Int
-  userFrom  User            @relation("from", fields: [from], references: [id])
-  to        Int             @default(-1)
-  userTo    User            @relation("to", fields: [to], references: [id])
-  amount    Float           @default(0)
+  payor     User            @relation("from", fields: [from], references: [id])
+  to        Int
+  payee     User            @relation("to", fields: [to], references: [id])
+  amount    Int
   context   String          @default("") @db.VarChar(255)
   createdAt DateTime        @default(now()) @map("created_at")
-  isDeleted Boolean         @default(false) @map("is_deleted")
 
   @@map("transaction")
 }

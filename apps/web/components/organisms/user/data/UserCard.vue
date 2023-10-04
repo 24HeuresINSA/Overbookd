@@ -60,7 +60,7 @@
           </div>
         </div>
 
-        <v-form class="further-info__personnal">
+        <v-form class="further-info__personal">
           <v-text-field
             v-model="phone"
             prepend-icon="mdi-phone"
@@ -286,7 +286,7 @@ export default Vue.extend({
       }
     }
 
-    &__personnal {
+    &__personal {
       width: 100%;
       @media only screen and (min-width: $mobile-max-width) {
         width: 50%;

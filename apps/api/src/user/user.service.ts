@@ -16,7 +16,7 @@ import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   Profile,
-  UserPersonnalData,
+  UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
 import {
@@ -33,13 +33,13 @@ import {
   SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_MY_USER_INFORMATION,
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
-  SELECT_USER_PERSONNAL_DATA,
+  SELECT_USER_PERSONAL_DATA,
   SELECT_VOLUNTEER_ASSIGNMENTS,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
 import {
   BE_AFFECTED,
-  HAVE_PERSONNAL_ACCOUNT,
+  HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
 } from "@overbookd/permission";
 
@@ -48,10 +48,10 @@ export class UserService {
   constructor(private prisma: PrismaService, private mail: MailService) {}
   private logger = new Logger("UserService");
 
-  async getById(id: number): Promise<UserPersonnalData | null> {
+  async getById(id: number): Promise<UserPersonalData | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: SELECT_USER_PERSONNAL_DATA,
+      select: SELECT_USER_PERSONAL_DATA,
     });
     return UserService.formatToPersonalData(user);
   }
@@ -83,16 +83,16 @@ export class UserService {
     return UserService.formatToMyInformation(updatedUser);
   }
 
-  async getAll(): Promise<UserPersonnalData[]> {
+  async getAll(): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: { isDeleted: false },
-      select: SELECT_USER_PERSONNAL_DATA,
+      select: SELECT_USER_PERSONAL_DATA,
     });
     return users.map(UserService.formatToPersonalData);
   }
 
-  async getVolunteers(): Promise<UserPersonnalData[]> {
+  async getVolunteers(): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
@@ -105,25 +105,25 @@ export class UserService {
           },
         },
       },
-      select: SELECT_USER_PERSONNAL_DATA,
+      select: SELECT_USER_PERSONAL_DATA,
     });
     return users.map(UserService.formatToPersonalData);
   }
 
-  async getAllPersonnalAccountConsummers(): Promise<Consumer[]> {
+  async getAllPersonalAccountConsummers(): Promise<Consumer[]> {
     const users = await this.prisma.user.findMany({
       where: {
         teams: {
           some: {
             team: {
               permissions: {
-                some: { permission: { name: HAVE_PERSONNAL_ACCOUNT } },
+                some: { permission: { name: HAVE_PERSONAL_ACCOUNT } },
               },
             },
           },
         },
       },
-      select: { ...SELECT_USER_PERSONNAL_DATA, balance: true },
+      select: { ...SELECT_USER_PERSONAL_DATA, balance: true },
     });
     return users.map(UserService.formatToConsumer);
   }
@@ -163,7 +163,7 @@ export class UserService {
     targetId: number,
     userData: UserUpdateForm,
     authorInformation: JwtPayload,
-  ): Promise<UserPersonnalData> {
+  ): Promise<UserPersonalData> {
     const author = new JwtUtil(authorInformation);
 
     if (!this.canUpdateUser(author, targetId)) {
@@ -173,7 +173,7 @@ export class UserService {
     const filteredPersonalData = this.filterUpdatableUserData(author, userData);
 
     const user = await this.prisma.user.update({
-      select: SELECT_USER_PERSONNAL_DATA,
+      select: SELECT_USER_PERSONAL_DATA,
       data: filteredPersonalData,
       where: { id: targetId },
     });
@@ -218,7 +218,7 @@ export class UserService {
 
   static formatToPersonalData(
     user: DatabaseUserPersonalData,
-  ): UserPersonnalData {
+  ): UserPersonalData {
     const { teams, ...userWithoutTeams } = user;
     return {
       ...userWithoutTeams,

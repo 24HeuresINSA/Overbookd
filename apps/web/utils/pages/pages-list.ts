@@ -5,7 +5,7 @@ import {
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
-  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_PERSONAL_ACCOUNTS,
   Permission,
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
@@ -195,7 +195,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-format-list-bulleted",
     title: "SG",
-    permission: MANAGE_PERSONNAL_ACCOUNTS,
+    permission: MANAGE_PERSONAL_ACCOUNTS,
     to: "/SG",
     description:
       "Permet de répartir les consommations des comptes perso aux adhérants",
@@ -211,7 +211,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-cash-multiple",
     title: "Transactions",
-    permission: MANAGE_PERSONNAL_ACCOUNTS,
+    permission: MANAGE_PERSONAL_ACCOUNTS,
     to: "/transactions",
     description:
       "Permet de visualiser les transactions effectuées sur Overbookd",

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import OverTransactions from "~/components/organisms/user/personnalAccount/OverTransactions.vue";
+import OverTransactions from "~/components/organisms/user/personalAccount/OverTransactions.vue";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 

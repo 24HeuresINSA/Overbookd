@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { PersonnalAccountAlert } from "@overbookd/personnal-account";
+import { PersonalAccountAlert } from "@overbookd/personal-account";
 
 const CP_RULES_EXPLAINED =
   "Les comptes persos ne peuvent exister que si tout le monde joue le jeu en restant dans le positif. Sinon ça veut dire que: Pas d'argent >> Pas de fûts >> Pas de rôtisserie >> Pas de manif >> Pas de manif.";
@@ -28,10 +28,10 @@ const CP_FEATURES_EXPLAINED =
   "Tu peux te servir de ton compte perso pour consommer des boissons ou de la nourriture disponible au local ou encore rembourser un autre membre de l'asso à la manière d'un Lydia.";
 
 export default Vue.extend({
-  name: "PersonnalAccountAlert",
+  name: "PersonalAccountAlert",
   props: {
     alert: {
-      type: PersonnalAccountAlert,
+      type: PersonalAccountAlert,
       required: true,
     },
   },

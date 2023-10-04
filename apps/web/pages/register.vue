@@ -34,7 +34,7 @@
         </v-stepper-step>
 
         <v-stepper-content step="2">
-          <v-form class="data dense personnal-data">
+          <v-form class="data dense personal-data">
             <v-text-field
               v-model="firstname"
               label="Prénom*"

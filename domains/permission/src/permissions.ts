@@ -1,6 +1,6 @@
 import { Permission } from "./permission.model";
 
-export const HAVE_PERSONNAL_ACCOUNT = "have-personnal-account";
+export const HAVE_PERSONAL_ACCOUNT = "have-personal-account";
 export const AFFECT_TEAM = "affect-team";
 export const BE_AFFECTED = "be-affected";
 export const WRITE_GEAR_CATALOG = "write-gear-catalog";
@@ -8,7 +8,7 @@ export const READ_GEAR_CATALOG = "read-gear-catalog";
 export const READ_SIGNAGE_CATALOG = "read-signage-catalog";
 export const WRITE_SIGNAGE_CATALOG = "write-signage-catalog";
 export const WRITE_INVENTORY = "write-inventory";
-export const MANAGE_PERSONNAL_ACCOUNTS = "manage-personnal-accounts";
+export const MANAGE_PERSONAL_ACCOUNTS = "manage-personal-accounts";
 export const MANAGE_USERS = "manage-users";
 export const AFFECT_VOLUNTEER = "affect-volunteer";
 export const MANAGE_CONFIG = "manage-config";
@@ -39,7 +39,7 @@ export const MANAGE_CONTRIBUTIONS = "manage-contributions";
 export const PAY_CONTRIBUTION = "pay-contribution";
 
 const permissions = [
-  HAVE_PERSONNAL_ACCOUNT,
+  HAVE_PERSONAL_ACCOUNT,
   AFFECT_TEAM,
   BE_AFFECTED,
   WRITE_GEAR_CATALOG,
@@ -47,7 +47,7 @@ const permissions = [
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
   WRITE_INVENTORY,
-  MANAGE_PERSONNAL_ACCOUNTS,
+  MANAGE_PERSONAL_ACCOUNTS,
   MANAGE_USERS,
   AFFECT_VOLUNTEER,
   MANAGE_CONFIG,

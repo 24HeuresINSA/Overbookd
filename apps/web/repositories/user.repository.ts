@@ -9,7 +9,7 @@ import {
   MyUserInformation,
   Profile,
   User,
-  UserPersonnalData,
+  UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
 
@@ -19,7 +19,7 @@ export class UserRepository {
   private static readonly basePath = "users";
 
   static getUser(context: Context, userId: number) {
-    return context.$axios.get<HttpStringified<UserPersonnalData>>(
+    return context.$axios.get<HttpStringified<UserPersonalData>>(
       `${this.basePath}/${userId}`,
     );
   }
@@ -38,20 +38,20 @@ export class UserRepository {
   }
 
   static getAllUsers(context: Context) {
-    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
+    return context.$axios.get<HttpStringified<UserPersonalData[]>>(
       this.basePath,
     );
   }
 
   static getVolunteers(context: Context) {
-    return context.$axios.get<HttpStringified<UserPersonnalData[]>>(
+    return context.$axios.get<HttpStringified<UserPersonalData[]>>(
       `${this.basePath}/volunteers`,
     );
   }
 
-  static getAllPersonnalAccountConsummers(context: Context) {
+  static getAllPersonalAccountConsummers(context: Context) {
     return context.$axios.get<HttpStringified<Consumer[]>>(
-      `${this.basePath}/personnal-account-consummers`,
+      `${this.basePath}/personal-account-consummers`,
     );
   }
 
@@ -90,7 +90,7 @@ export class UserRepository {
     userId: number,
     userData: UserUpdateForm,
   ) {
-    return context.$axios.put<HttpStringified<UserPersonnalData>>(
+    return context.$axios.put<HttpStringified<UserPersonalData>>(
       `${this.basePath}/${userId}`,
       userData,
     );

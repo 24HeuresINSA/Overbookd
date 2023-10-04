@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <div class="volunteer-info">
-      <div class="volunteer-info__personnal-data">
+      <div class="volunteer-info__personal-data">
         <VolunteerPersonalDataForm />
       </div>
       <div class="volunteer-info__availabilities">
@@ -29,7 +29,7 @@ export default Vue.extend({
 .volunteer-info {
   display: flex;
   gap: 15px;
-  &__personnal-data {
+  &__personal-data {
     width: 40%;
   }
   &__availabilities {
@@ -38,7 +38,7 @@ export default Vue.extend({
 
   @media only screen and(max-width: $mobile-max-width) {
     flex-direction: column;
-    &__personnal-data {
+    &__personal-data {
       width: 100%;
     }
     &__availabilities {

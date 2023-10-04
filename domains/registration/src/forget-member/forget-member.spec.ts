@@ -108,7 +108,7 @@ describe("Forget member", () => {
     });
   });
   describe("when asking to forget a member without transactions", () => {
-    it("should anonymize member personnal data", async () => {
+    it("should anonymize member personal data", async () => {
       const anonymizedMember = await forgetMember.with({
         email: withTransactionsMember.email,
         password: withTransactionsMember.password,

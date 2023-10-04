@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { MANAGE_USERS } from "@overbookd/permission";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 import { VolunteerPlanning } from "~/store/planning";
 import { downloadPlanning } from "~/utils/planning/download";
 import { download } from "~/utils/file/file.utils";
@@ -35,7 +35,7 @@ export default Vue.extend({
   name: "VolunteerStatsExportFilters",
   props: {
     filteredVolunteers: {
-      type: Array as () => UserPersonnalData[],
+      type: Array as () => UserPersonalData[],
       required: true,
     },
   },
@@ -46,7 +46,7 @@ export default Vue.extend({
   }),
 
   computed: {
-    volunteers(): UserPersonnalData[] {
+    volunteers(): UserPersonalData[] {
       return this.$accessor.user.volunteers;
     },
     volunteerPlannings(): VolunteerPlanning[] {
@@ -68,7 +68,7 @@ export default Vue.extend({
       const csvHeader =
         "Prenom;Nom;Surnom;Charisme;Equipes;Email;Date de naissance;Telephone;Commentaire";
 
-      const csvContent = this.volunteers.map((volunteer: UserPersonnalData) => {
+      const csvContent = this.volunteers.map((volunteer: UserPersonalData) => {
         return [
           volunteer.firstname,
           volunteer.lastname,

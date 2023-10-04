@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import Logo from "./logo.vue";
 
@@ -35,7 +35,7 @@ export default Vue.extend({
     Logo,
   },
   computed: {
-    me(): UserPersonnalData {
+    me(): UserPersonalData {
       return this.$accessor.user.me;
     },
     myName(): string {

@@ -1,6 +1,6 @@
 <template>
   <div class="alerts">
-    <PersonnalAccount
+    <PersonalAccount
       v-for="alert in alerts"
       :key="alert.summary"
       :alert="alert"
@@ -11,23 +11,23 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { PersonnalAccountAlert } from "@overbookd/personnal-account";
-import PersonnalAccount from "~/components/atoms/alerts/PersonnalAccount.vue";
+import { PersonalAccountAlert } from "@overbookd/personal-account";
+import PersonalAccount from "~/components/atoms/alerts/PersonalAccount.vue";
 
 export default Vue.extend({
   name: "AlertListing",
   components: {
-    PersonnalAccount,
+    PersonalAccount,
   },
   computed: {
-    alerts(): PersonnalAccountAlert[] {
+    alerts(): PersonalAccountAlert[] {
       return this.$accessor.alert.alerts.map(
-        ({ summary, balance }) => new PersonnalAccountAlert(summary, balance),
+        ({ summary, balance }) => new PersonalAccountAlert(summary, balance),
       );
     },
   },
   methods: {
-    dismiss(alert: PersonnalAccountAlert) {
+    dismiss(alert: PersonalAccountAlert) {
       this.$accessor.alert.dismiss(alert);
     },
   },

@@ -36,7 +36,7 @@ import {
 } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 
 export default Vue.extend({
   name: "AvailabilitiesSumup",
@@ -45,7 +45,7 @@ export default Vue.extend({
     calendarMarker: new Date(),
   }),
   computed: {
-    selectedVolunteer(): UserPersonnalData {
+    selectedVolunteer(): UserPersonalData {
       return this.$accessor.user.selectedUser;
     },
     manifDate(): Date {

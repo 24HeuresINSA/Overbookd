@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 
 interface SearchUserData {
@@ -41,7 +41,7 @@ export default Vue.extend({
       default: "Chercher un utilisateur",
     },
     user: {
-      type: Object as () => UserPersonnalData | null,
+      type: Object as () => UserPersonalData | null,
       default: null,
     },
     boxed: {
@@ -53,7 +53,7 @@ export default Vue.extend({
       default: false,
     },
     list: {
-      type: Array as () => UserPersonnalData[] | null,
+      type: Array as () => UserPersonalData[] | null,
       default: () => null,
     },
   },
@@ -72,10 +72,10 @@ export default Vue.extend({
     this.$accessor.user.fetchUsers();
   },
   methods: {
-    propagateEvent(user: UserPersonnalData | null) {
+    propagateEvent(user: UserPersonalData | null) {
       this.$emit("change", user);
     },
-    displayUsername(user: UserPersonnalData): string {
+    displayUsername(user: UserPersonalData): string {
       return formatUsername(user);
     },
   },

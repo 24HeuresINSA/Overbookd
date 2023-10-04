@@ -23,8 +23,8 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../../src/app.controller";
 import { TransactionResponseDto } from "./dto/transaction.response.dto";
 import {
-  HAVE_PERSONNAL_ACCOUNT,
-  MANAGE_PERSONNAL_ACCOUNTS,
+  HAVE_PERSONAL_ACCOUNT,
+  MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
 
 @ApiBearerAuth()
@@ -34,7 +34,7 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Get()
   @ApiResponse({
     status: 200,
@@ -47,7 +47,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Get("user/:id")
   @ApiResponse({
     status: 200,
@@ -62,7 +62,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission(HAVE_PERSONNAL_ACCOUNT)
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("me")
   @ApiResponse({
     status: 200,
@@ -78,7 +78,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Permission(HAVE_PERSONNAL_ACCOUNT)
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("/:id")
   @ApiResponse({
     status: 200,
@@ -92,7 +92,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(HAVE_PERSONNAL_ACCOUNT)
+  @Permission(HAVE_PERSONAL_ACCOUNT)
   @Post("transfer")
   @ApiBody({
     description: "Create a transaction",
@@ -112,7 +112,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @Post("sg")
   @ApiBody({
     description: "transactions to generate",
@@ -132,7 +132,7 @@ export class TransactionController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(MANAGE_PERSONNAL_ACCOUNTS)
+  @Permission(MANAGE_PERSONAL_ACCOUNTS)
   @HttpCode(204)
   @Delete(":id")
   @ApiResponse({

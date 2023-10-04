@@ -3,7 +3,7 @@ import { AlertController } from "./alert.controller";
 import { PrismaModule } from "../prisma.module";
 import { PrismaAdherents } from "./adherents.prisma";
 import { PrismaService } from "../prisma.service";
-import { PersonnalAccountAlerting } from "@overbookd/personnal-account";
+import { PersonalAccountAlerting } from "@overbookd/personal-account";
 import { AlertService } from "./alert.service";
 
 @Module({
@@ -16,18 +16,18 @@ import { AlertService } from "./alert.service";
       inject: [PrismaService],
     },
     {
-      provide: PersonnalAccountAlerting,
+      provide: PersonalAccountAlerting,
       useFactory: (adherents: PrismaAdherents) =>
-        new PersonnalAccountAlerting(adherents),
+        new PersonalAccountAlerting(adherents),
       inject: [PrismaAdherents],
     },
     {
       provide: AlertService,
-      useFactory: (alerting: PersonnalAccountAlerting) =>
+      useFactory: (alerting: PersonalAccountAlerting) =>
         new AlertService(alerting),
-      inject: [PersonnalAccountAlerting],
+      inject: [PersonalAccountAlerting],
     },
   ],
-  exports: [PersonnalAccountAlerting],
+  exports: [PersonalAccountAlerting],
 })
 export class AlertModule {}

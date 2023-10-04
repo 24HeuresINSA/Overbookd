@@ -43,7 +43,7 @@ import VolunteerStatsExportFilters from "~/components/molecules/user/filters/Vol
 import VolunteerList from "~/components/organisms/user/data/VolunteerList.vue";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
-import { UserPersonnalData } from "@overbookd/user";
+import { UserPersonalData } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
 interface VolunteersData {
@@ -80,10 +80,10 @@ export default Vue.extend({
   }),
 
   computed: {
-    volunteers(): UserPersonnalData[] {
+    volunteers(): UserPersonalData[] {
       return this.$accessor.user.volunteers;
     },
-    searchableVolunteers(): Searchable<UserPersonnalData>[] {
+    searchableVolunteers(): Searchable<UserPersonalData>[] {
       return this.volunteers.map((volunteer) => ({
         ...volunteer,
         searchable: SlugifyService.apply(
@@ -91,7 +91,7 @@ export default Vue.extend({
         ),
       }));
     },
-    displayedVolunteers(): UserPersonnalData[] {
+    displayedVolunteers(): UserPersonalData[] {
       const matchTeams = this.filterVolunteersByTeams(this.filters.teams);
       const matchName = this.filterVolunteersByName(this.filters.search);
       return this.searchableVolunteers.filter((volunteer) => {
@@ -107,14 +107,14 @@ export default Vue.extend({
   methods: {
     filterVolunteersByName(
       search: string,
-    ): (volunteer: Searchable<UserPersonnalData>) => boolean {
+    ): (volunteer: Searchable<UserPersonalData>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
     filterVolunteersByTeams(
       teamsSearched: Team[],
-    ): (volunteer: UserPersonnalData) => boolean {
+    ): (volunteer: UserPersonalData) => boolean {
       if (teamsSearched.length === 0) return () => true;
 
       return (volunteer) =>

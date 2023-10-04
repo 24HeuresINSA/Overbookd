@@ -17,7 +17,7 @@ export type Profile = UserName & {
   comment: string | null;
 };
 
-export interface UserPersonnalData extends User {
+export interface UserPersonalData extends User {
   email: string;
   birthdate: Date;
   phone: string;
@@ -26,7 +26,7 @@ export interface UserPersonnalData extends User {
   teams: string[];
 }
 
-export interface MyUserInformation extends UserPersonnalData {
+export interface MyUserInformation extends UserPersonalData {
   balance: number;
   permissions: Permission[];
   tasksCount: number;
