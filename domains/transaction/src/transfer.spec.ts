@@ -76,7 +76,7 @@ describe("Transfer", () => {
 
     describe("when adherent try to transfer negative amount", () => {
       const transferToCreate = {
-        to: lea.id,
+        to: noel.id,
         amount: -100,
         context: "Miam miam",
       };
@@ -90,7 +90,7 @@ describe("Transfer", () => {
 
     describe("when adherent try to transfer 0 cent", () => {
       const transferToCreate = {
-        to: lea.id,
+        to: noel.id,
         amount: 0,
         context: "Miam miam",
       };
@@ -125,42 +125,40 @@ describe("Transfer", () => {
 
       it("should indicate that payee is not allowed to receive transfer", async () => {
         expect(
-          async () => await transfer.for(transferToCreate, neimad.id),
+          async () => await transfer.for(transferToCreate, noel.id),
         ).rejects.toThrow(PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE);
       });
     });
 
     describe("when allowed adherent try to valid transfer to an other adherent", () => {
       describe.each`
-        payor      | payee      | amount  | expectedPayorBalance | expectedPayeeBalance
-        ${lea}     | ${tatouin} | ${1000} | ${-1000}             | ${1000}
-        ${tatouin} | ${noel}    | ${500}  | ${-500}              | ${500}
+        from          | to            | amount  | expectedPayorBalance | expectedPayeeBalance
+        ${lea.id}     | ${tatouin.id} | ${1000} | ${-1000}             | ${1000}
+        ${tatouin.id} | ${noel.id}    | ${500}  | ${-500}              | ${500}
       `(
-        "when adherent try to transfer $amount cents from $from to $to",
-        ({
-          payor,
-          payee,
-          amount,
-          expectedPayorBalance,
-          expectedPayeeBalance,
-        }) => {
+        "when adherent try to transfer $amount cents from #$from to #$to",
+        ({ from, to, amount, expectedPayorBalance, expectedPayeeBalance }) => {
           const transferToCreate = {
-            to: payee.id,
+            to,
             amount,
             context: "Miam miam",
           };
 
-          it(`should transfer ${amount} cents from ${payor.firstname} to ${payee.firstname}`, async () => {
-            const createdTransfer = await transfer.for(
-              transferToCreate,
-              payor.id,
-            );
+          it(`should transfer ${amount} cents from #${from} to #${to}`, async () => {
+            const createdTransfer = await transfer.for(transferToCreate, from);
 
             expect(createdTransfer.amount).toBe(amount);
-            expect(createdTransfer.to.id).toBe(payee.id);
+            expect(createdTransfer.to.id).toBe(to);
 
-            expect(payor.balance).toBe(expectedPayorBalance);
-            expect(payee.balance).toBe(expectedPayeeBalance);
+            const payor = transferRepository.adherents.find(
+              (adherent) => adherent.id === from,
+            );
+            const payee = transferRepository.adherents.find(
+              (adherent) => adherent.id === to,
+            );
+
+            expect(payor?.balance).toBe(expectedPayorBalance);
+            expect(payee?.balance).toBe(expectedPayeeBalance);
           });
         },
       );

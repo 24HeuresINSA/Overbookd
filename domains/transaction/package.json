@@ -37,7 +37,7 @@
     "pnpm": "8.8.0"
   },
   "dependencies": {
-    "@overbookd/user": "workspace:^",
+    "@overbookd/list": "workspace:^",
     "@overbookd/permission": "workspace:^"
   }
 }

@@ -1,4 +1,9 @@
-import User from "@overbookd/user";
+export type User = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+};
 
 export type MyTransaction = {
   id: number;

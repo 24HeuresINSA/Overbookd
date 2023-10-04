@@ -1,27 +1,27 @@
-import { User } from "@overbookd/user";
 import { HAVE_PERSONNAL_ACCOUNT, Permission } from "@overbookd/permission";
-import { MyTransaction, Transaction } from "./transaction.model";
+import { updateItemToList } from "@overbookd/list";
+import { MyTransaction, Transaction, User } from "./transaction.model";
 import { TransferForm, TransferRepository } from "./transfer";
 
 type WithBalance = {
   balance: number;
 };
 
+type Member = User & WithBalance;
+
 type WithPermission = {
   permissions: Permission[];
 };
-
-export type Member = User & WithBalance;
 
 export type MemberWithPermission = Member & WithPermission;
 
 export class InMemoryTransferRepository implements TransferRepository {
   constructor(
     private transfers: Transaction[],
-    private readonly members: MemberWithPermission[],
+    private members: MemberWithPermission[],
   ) {}
 
-  private get adherents(): Member[] {
+  get adherents(): Member[] {
     return this.members
       .filter((member) => member.permissions.includes(HAVE_PERSONNAL_ACCOUNT))
       .map(({ permissions, ...adherent }) => adherent);
@@ -40,6 +40,9 @@ export class InMemoryTransferRepository implements TransferRepository {
     payor.balance -= transfer.amount;
     payee.balance += transfer.amount;
 
+    this.updateMemberToList(payor);
+    this.updateMemberToList(payee);
+
     return Promise.resolve({
       id: this.transfers.length + 1,
       amount: transfer.amount,
@@ -54,5 +57,14 @@ export class InMemoryTransferRepository implements TransferRepository {
       (adherent) => adherent.id === memberId,
     );
     return Promise.resolve(isAdherent);
+  }
+
+  private updateMemberToList(member: Member) {
+    const index = this.members.findIndex((m) => m.id === member.id);
+    const adherent: MemberWithPermission = {
+      ...member,
+      permissions: [HAVE_PERSONNAL_ACCOUNT],
+    };
+    this.members = updateItemToList(this.members, index, adherent);
   }
 }
