@@ -1,7 +1,7 @@
 import { CURRENT_BALANCE_MESSAGE } from "./current-balance";
 import { NEGATIVE_BALANCE } from "./in-debt";
 
-type Summary = typeof NEGATIVE_BALANCE | typeof CURRENT_BALANCE_MESSAGE;
+export type Summary = typeof NEGATIVE_BALANCE | typeof CURRENT_BALANCE_MESSAGE;
 
 export interface IAlertAboutPersonalAccount {
   summary: Summary;
