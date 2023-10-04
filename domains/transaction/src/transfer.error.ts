@@ -1,5 +1,8 @@
-export const INSUFFICIENT_AMOUNT_ERROR_MESSAGE =
+export const NEGATIVE_AMOUNT_ERROR_MESSAGE =
   "Le montant doit être positif";
+
+export const INSUFFICIENT_AMOUNT_ERROR_MESSAGE =
+  "Le montant doit être supérieur à 0";
 
 export const TRANSFER_TO_YOURSELF_ERROR_MESSAGE =
   "Tu ne peux pas faire de virement à toi-même";
@@ -11,6 +14,12 @@ export const PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
   "Tu n'as pas de compte personnel";
 
 class TransferError extends Error {}
+
+export class NegativeAmount extends TransferError {
+  constructor() {
+    super(NEGATIVE_AMOUNT_ERROR_MESSAGE);
+  }
+}
 
 export class InsufficientAmount extends TransferError {
   constructor() {

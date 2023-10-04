@@ -4,7 +4,7 @@ import { MyTransaction, Transaction } from "./transaction.model";
 import { TransferForm, TransferRepository } from "./transfer";
 
 type WithBalance = {
-  permissions: Permission[];
+  balance: number;
 };
 
 type WithPermission = {
@@ -14,7 +14,6 @@ type WithPermission = {
 export type Member = User & WithBalance;
 
 export type MemberWithPermission = Member & WithPermission;
-
 
 export class InMemoryTransferRepository implements TransferRepository {
   constructor(
@@ -29,8 +28,14 @@ export class InMemoryTransferRepository implements TransferRepository {
   }
 
   create(transfer: TransferForm): Promise<MyTransaction> {
-    const payor = this.adherents.find((adherent) => adherent.id === transfer.from);
-    const payee = this.adherents.find((adherent) => adherent.id === transfer.to);
+    const payor = this.adherents.find(
+      (adherent) => adherent.id === transfer.from,
+    );
+    const payee = this.adherents.find(
+      (adherent) => adherent.id === transfer.to,
+    );
+
+    if (!payor || !payee) throw new Error("Utilisateur introuvable");
 
     payor.balance -= transfer.amount;
     payee.balance += transfer.amount;
