@@ -30,7 +30,7 @@ FROM installer AS builder
 COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.package.json ./
-COPY tsconfig.utils.json ./
+COPY tsconfig.all-modules-import.json ./
 COPY tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 

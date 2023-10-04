@@ -1,4 +1,5 @@
 {
+  "extends": ["./tsconfig.all-modules-import.json"],
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
@@ -15,22 +16,7 @@
     "noFallthroughCasesInSwitch": true,
     "useUnknownInCatchVariables": false,
     "emitDeclarationOnly": true,
-    "resolveJsonModule": true,
-    "paths": {
-      "@overbookd/api": ["./apps/api/src"],
-      "@overbookd/configuration": ["./domains/configuration/src"],
-      "@overbookd/domain-events": ["./utils/domain-events/src"],
-      "@overbookd/event": ["./libraries/event/src"],
-      "@overbookd/list": ["./libraries/list/src"],
-      "@overbookd/period": ["./libraries/period/src"],
-      "@overbookd/permission": ["./domains/permission/src"],
-      "@overbookd/personnal-account": ["./domains/personnal-account/src"],
-      "@overbookd/registration": ["./domains/registration/src"],
-      "@overbookd/signa": ["./domains/signa/src"],
-      "@overbookd/slugify": ["./libraries/slugify/src"],
-      "@overbookd/user": ["./domains/user/src"],
-      "@overbookd/web": ["./apps/web/src"]
-    }
+    "resolveJsonModule": true
   },
   "exclude": ["**/dist", "**/node_modules", "**/build", "**/*.spec.ts"]
 }
