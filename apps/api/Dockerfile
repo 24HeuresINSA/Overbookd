@@ -63,6 +63,7 @@ COPY --chown=node:node --from=builder /overbookd/apps/api/prisma /overbookd/apps
 COPY --chown=node:node --from=builder /overbookd/apps/api/node_modules /overbookd/apps/api/node_modules
 COPY --chown=node:node --from=builder /overbookd/libraries /overbookd/libraries
 COPY --chown=node:node --from=builder /overbookd/domains /overbookd/domains
+COPY --chown=node:node --from=builder /overbookd/utils /overbookd/utils
 
 EXPOSE 3000
 
