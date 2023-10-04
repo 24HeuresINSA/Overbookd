@@ -201,11 +201,9 @@ export const actions = actionTree(
       commit("SET_PERSONAL_ACCOUNT_CONSUMERS", consummers);
     },
     async updateUser(
-      { commit, dispatch, state },
+      { commit, state, dispatch },
       user: UserPersonalData | UserPersonalDataWithProfilePicture,
     ) {
-      if (state.me.id === user.id) return dispatch("updateMyProfile", user);
-
       const res = await safeCall(
         this,
         userRepo.updateUser(this, user.id, castToUserUpdateForm(user)),
@@ -218,6 +216,7 @@ export const actions = actionTree(
       const updatedUser = castUserWithDate(res.data);
       commit("UPDATE_USER", updatedUser);
       commit("UPDATE_VOLUNTEER", updatedUser);
+      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
     },
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
