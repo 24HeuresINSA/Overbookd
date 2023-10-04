@@ -3,7 +3,7 @@ import {
   ASK_FOR_HELP,
   ENROLL_NEWCOMER,
   FILL_AVAILABILITY,
-  HAVE_PERSONNAL_ACCOUNT,
+  HAVE_PERSONAL_ACCOUNT,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
@@ -110,7 +110,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-currency-usd",
     title: "Compte perso",
-    permission: HAVE_PERSONNAL_ACCOUNT,
+    permission: HAVE_PERSONAL_ACCOUNT,
     to: "/personal-account",
     description: "Permet de voir l'état de son compte perso et ses consos",
     mobileSupport: true,

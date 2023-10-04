@@ -5,7 +5,7 @@ import {
 } from "./transfer-repository.inmemory";
 import { Transaction } from "./transaction.model";
 import { Transfer } from "./transfer";
-import { HAVE_PERSONNAL_ACCOUNT } from "@overbookd/permission";
+import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import {
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
   NEGATIVE_AMOUNT_ERROR_MESSAGE,
@@ -20,21 +20,21 @@ const lea: MemberWithPermission = {
   lastname: "Mauyno",
   nickname: "Shogosse",
   balance: 0,
-  permissions: [HAVE_PERSONNAL_ACCOUNT],
+  permissions: [HAVE_PERSONAL_ACCOUNT],
 };
 const noel: MemberWithPermission = {
   id: 2,
   firstname: "Noël",
   lastname: "Ertsemud",
   balance: 0,
-  permissions: [HAVE_PERSONNAL_ACCOUNT],
+  permissions: [HAVE_PERSONAL_ACCOUNT],
 };
 const tatouin: MemberWithPermission = {
   id: 3,
   firstname: "Tatouin",
   lastname: "Jesoph",
   balance: 0,
-  permissions: [HAVE_PERSONNAL_ACCOUNT],
+  permissions: [HAVE_PERSONAL_ACCOUNT],
 };
 const neimad: MemberWithPermission = {
   id: 4,

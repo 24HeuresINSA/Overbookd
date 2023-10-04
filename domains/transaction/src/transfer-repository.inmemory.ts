@@ -1,4 +1,4 @@
-import { HAVE_PERSONNAL_ACCOUNT, Permission } from "@overbookd/permission";
+import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import { updateItemToList } from "@overbookd/list";
 import { MyTransaction, Transaction, User } from "./transaction.model";
 import { TransferForm, TransferRepository } from "./transfer";
@@ -23,7 +23,7 @@ export class InMemoryTransferRepository implements TransferRepository {
 
   get adherents(): Member[] {
     return this.members
-      .filter((member) => member.permissions.includes(HAVE_PERSONNAL_ACCOUNT))
+      .filter((member) => member.permissions.includes(HAVE_PERSONAL_ACCOUNT))
       .map(({ permissions, ...adherent }) => adherent);
   }
 
@@ -63,7 +63,7 @@ export class InMemoryTransferRepository implements TransferRepository {
     const index = this.members.findIndex((m) => m.id === member.id);
     const adherent: MemberWithPermission = {
       ...member,
-      permissions: [HAVE_PERSONNAL_ACCOUNT],
+      permissions: [HAVE_PERSONAL_ACCOUNT],
     };
     this.members = updateItemToList(this.members, index, adherent);
   }
