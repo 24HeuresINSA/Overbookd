@@ -1,5 +1,5 @@
 {
-  "extends": ["../../tsconfig.cross-modules-import", "../../tsconfig.package.json"],
+  "extends": ["../../tsconfig.cross-modules-import.json", "../../tsconfig.package.json"],
   "compilerOptions": {
     "outDir": "./dist"
   }

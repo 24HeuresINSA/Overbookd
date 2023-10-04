@@ -36,6 +36,7 @@ ENV OVERBOOKD_VERSION=${OVERBOOKD_VERSION}
 COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.package.json ./
 COPY tsconfig.build.json ./
+COPY tsconfig.utils.json ./
 RUN pnpm --filter '@overbookd/web...' run build:ci
 
 FROM node:20-alpine
