@@ -36,9 +36,7 @@ describe("In Debt Alerting", () => {
   });
   describe("when adherent has balance to 0", () => {
     it("shouldn't generate alert", async () => {
-      const alert = await personalAccountAlert.for(
-        adherentWithEmptyAccount.id,
-      );
+      const alert = await personalAccountAlert.for(adherentWithEmptyAccount.id);
       expect(alert).toBe(undefined);
     });
   });
