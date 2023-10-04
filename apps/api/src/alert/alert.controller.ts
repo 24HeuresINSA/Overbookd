@@ -9,7 +9,7 @@ import {
 import { AlertService } from "./alert.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
-import { PersonalAccountResponseDto as PersonalAccountResponseDto } from "./dto/personal-account.response.dto";
+import { PersonalAccountResponseDto } from "./dto/personal-account.response.dto";
 
 @ApiTags("alerts")
 @ApiBearerAuth()
