@@ -19,6 +19,9 @@ COPY libraries/ ./
 WORKDIR /overbookd/domains
 COPY domains/ ./
 
+WORKDIR /overbookd/utils
+COPY utils/ ./
+
 WORKDIR /overbookd
 RUN pnpm install --recursive --offline --filter '@overbookd/api...'
 
@@ -27,6 +30,7 @@ FROM installer AS builder
 COPY tsconfig.cross-modules-import.json ./
 COPY tsconfig.build.json ./
 COPY tsconfig.package.json ./
+COPY tsconfig.all-modules-import.json ./
 COPY tsconfig.json ./
 RUN pnpm --recursive --filter '@overbookd/api...' run build:ci
 

@@ -19,7 +19,8 @@
       "./apps/*/tsconfig.json",
       "!./apps/web/tsconfig.json",
       "./domains/*/tsconfig.json",
-      "./libraries/*/tsconfig.json"
+      "./libraries/*/tsconfig.json",
+      "./utils/*/tsconfig.json"
     ]
   },
   "plugins": ["@typescript-eslint", "unused-imports"],

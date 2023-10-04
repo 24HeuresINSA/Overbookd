@@ -12,12 +12,15 @@ import {
   EnrollNewcomers,
   Credentials,
   ForgetMember,
+  ADHERENT_REGISTERED,
+  VOLUNTEER_REGISTERED,
 } from "@overbookd/registration";
 import { jwtConstants } from "../authentication/constants";
 import { InviteNewAdherents } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
 import { isString } from "class-validator";
+import { DomainEvent } from "@overbookd/domain-events";
 
 export class RegistrationService {
   constructor(
@@ -45,12 +48,17 @@ export class RegistrationService {
   }
 
   private publishNewcomerRegisteredEvent(registree: Registree, token?: string) {
-    const membership = token ? ADHERENT : VOLUNTEER;
+    const event: DomainEvent = token
+      ? {
+          type: ADHERENT_REGISTERED,
+          data: NewcomerRegisteredEvent.create(registree, ADHERENT),
+        }
+      : {
+          type: VOLUNTEER_REGISTERED,
+          data: NewcomerRegisteredEvent.create(registree, VOLUNTEER),
+        };
 
-    this.eventStore.publish({
-      domain: "registration",
-      event: NewcomerRegisteredEvent.create(registree, membership),
-    });
+    this.eventStore.publish(event);
   }
 
   private checkInvitationValidity(token?: string) {
