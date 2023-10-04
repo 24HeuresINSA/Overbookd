@@ -30,6 +30,6 @@ export class SettleAlerting {
     if (!haveToSettleContribution) return undefined;
     if (hasAlreadyContribute) return undefined;
 
-    return Promise.resolve(new SettleAlert(edition));
+    return new SettleAlert(edition);
   }
 }
