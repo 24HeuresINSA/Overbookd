@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { IAlertAboutPersonalAccount } from "@overbookd/personal-account";
+import { Alerts } from "@overbookd/alerts";
 import { HttpStringified } from "~/utils/types/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
@@ -8,8 +8,6 @@ export class AlertRepository {
   private static readonly basePath = "alerts";
 
   static getMyAlerts(context: Context) {
-    return context.$axios.get<HttpStringified<IAlertAboutPersonalAccount[]>>(
-      this.basePath,
-    );
+    return context.$axios.get<HttpStringified<Alerts>>(this.basePath);
   }
 }

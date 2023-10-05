@@ -46,6 +46,7 @@
     "@nestjs/platform-express": "10.2.6",
     "@nestjs/swagger": "7.1.12",
     "@nestjs/throttler": "4.2.1",
+    "@overbookd/alerts": "workspace:^",
     "@overbookd/configuration": "workspace:^",
     "@overbookd/contribution": "workspace:^",
     "@overbookd/domain-events": "workspace:^",

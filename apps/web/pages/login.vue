@@ -182,7 +182,6 @@ export default Vue.extend({
       try {
         if (this.credentials.email && this.credentials.password) {
           await this.$auth.loginWith("local", { data: this.credentials }); // try to log user in
-          this.$accessor.alert.fetchAlerts();
           await this.$router.push({
             path: REDIRECT_URL,
           }); // redirect to homepage
