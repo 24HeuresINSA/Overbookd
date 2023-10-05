@@ -13,7 +13,8 @@ export class PersonalAccountResponseDto implements IAlertAboutPersonalAccount {
 
   @ApiProperty({
     type: Number,
-    description: "Alert explanation and details",
+    description:
+      "Current balance for adherent concerned by personal account alert",
   })
   balance: number;
 }

@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@overbookd/api": ["./apps/api/src"],
+      "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./domains/configuration/src"],
       "@overbookd/domain-events": ["./utils/domain-events/src"],
       "@overbookd/event": ["./libraries/event/src"],

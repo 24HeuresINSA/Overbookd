@@ -469,6 +469,15 @@ importers:
 
   libraries/slugify: {}
 
+  utils/alerts:
+    dependencies:
+      '@overbookd/registration':
+        specifier: workspace:^
+        version: link:../../domains/registration
+      rxjs:
+        specifier: 7.8.1
+        version: 7.8.1
+
   utils/domain-events:
     dependencies:
       '@overbookd/registration':
@@ -10698,7 +10707,7 @@ packages:
       pretty-format: 29.7.0
       slash: 3.0.0
       strip-json-comments: 3.1.1
-      ts-node: 10.9.1(@types/node@20.7.2)(typescript@4.9.5)
+      ts-node: 10.9.1(@types/node@20.7.2)(typescript@5.2.2)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
