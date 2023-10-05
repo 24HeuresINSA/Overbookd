@@ -475,15 +475,6 @@ importers:
 
   libraries/slugify: {}
 
-  utils/alerts:
-    dependencies:
-      '@overbookd/registration':
-        specifier: workspace:^
-        version: link:../../domains/registration
-      rxjs:
-        specifier: 7.8.1
-        version: 7.8.1
-
   utils/domain-events:
     dependencies:
       '@overbookd/registration':

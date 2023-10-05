@@ -190,15 +190,15 @@ export const actions = actionTree(
         commit("REMOVE_MY_FRIEND", friend);
       }
     },
-    async fetchPersonalAccountConsummers({ commit }) {
+    async fetchPersonalAccountConsumers({ commit }) {
       const res = await safeCall(
         this,
-        userRepo.getAllPersonalAccountConsummers(this),
+        userRepo.getAllPersonalAccountConsumers(this),
       );
       if (!res) return;
 
-      const consummers = res.data.map(castUserWithDate);
-      commit("SET_PERSONAL_ACCOUNT_CONSUMERS", consummers);
+      const consumers = res.data.map(castUserWithDate);
+      commit("SET_PERSONAL_ACCOUNT_CONSUMERS", consumers);
     },
     async updateUser(
       { commit, state, dispatch },

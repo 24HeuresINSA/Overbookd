@@ -49,9 +49,9 @@ export class UserRepository {
     );
   }
 
-  static getAllPersonalAccountConsummers(context: Context) {
+  static getAllPersonalAccountConsumers(context: Context) {
     return context.$axios.get<HttpStringified<Consumer[]>>(
-      `${this.basePath}/personal-account-consummers`,
+      `${this.basePath}/personal-account-consumers`,
     );
   }
 
