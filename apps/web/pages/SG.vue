@@ -437,7 +437,7 @@ export default {
     closeConfigDialog() {
       this.isSgConfigDialogOpen = false;
     },
-     sendEmailToNegativeBalanceConumers() {
+    sendEmailToNegativeBalanceConumers() {
       const consumers = this.consumers.filter(
         (consumer) => consumer.balance < 0,
       );
