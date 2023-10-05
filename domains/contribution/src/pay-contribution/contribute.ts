@@ -1,4 +1,4 @@
-import { BASE_EDITION, BASE_EDITION_ENDS, Edition } from "./edition";
+import { BASE_EDITION, BASE_EDITION_ENDS, Edition } from "../edition";
 
 const AUGUST = 7;
 

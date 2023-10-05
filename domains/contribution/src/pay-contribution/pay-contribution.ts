@@ -5,7 +5,7 @@ import {
   InsufficientAmount,
   NotAllowedToPay,
 } from "./pay-contribution.error";
-import { Edition } from "./edition";
+import { Edition } from "../edition";
 
 export const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
 
