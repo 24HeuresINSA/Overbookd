@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { Edition } from "../edition";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
 import { InMemoryContributions } from "./contributions.inmemory";
-import { InMemoryMembers, Member } from "./members.inmemory";
+import { InMemoryPermissions, Member } from "./permissions.inmemory";
 import { SettleAlerting } from "./settle-alerting";
 import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant";
 
@@ -52,9 +52,9 @@ const testingContributions = testingMembers.flatMap(({ id, contributions }) =>
 );
 
 describe("Settle alerting", () => {
-  const members = new InMemoryMembers(testingMembers);
+  const permissions = new InMemoryPermissions(testingMembers);
   const contributions = new InMemoryContributions(testingContributions);
-  const settleAlert = new SettleAlerting(members, contributions);
+  const settleAlert = new SettleAlerting(permissions, contributions);
   describe("When volunteer is not adherent", () => {
     it("shouldn't generate alert", async () => {
       const alert = await settleAlert.for(nonAdherent.id);
