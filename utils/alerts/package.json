@@ -1,5 +1,5 @@
 {
-  "name": "@overbookd/domain-events",
+  "name": "@overbookd/alerts",
   "version": "1.0.0",
   "description": "Utilitaire pour les alertes d'overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
