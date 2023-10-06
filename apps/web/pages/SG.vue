@@ -90,7 +90,7 @@
           <v-btn v-if="isCask" @click="openSgConfigForm">
             Configuration des fûts
           </v-btn>
-          <v-btn class="mt-4" @click="sendEmailToNegativeBalanceConumers">
+          <v-btn class="mt-4" :href="negativeBalanceMailLink">
             Envoyer un mail aux CP négatifs
           </v-btn>
         </v-card-text>
@@ -162,7 +162,7 @@ import SgConfigForm from "~/components/organisms/user/personalAccount/SgConfigFo
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
-import { openMailClient } from "~/utils/mail/mail.utils";
+import { mailLinkForClient } from "~/utils/mail/mail.utils";
 
 export default {
   name: "SG",
@@ -302,6 +302,20 @@ export default {
     sgConfig() {
       return this.$accessor.configuration.get("sg");
     },
+    negativeBalanceMailLink() {
+      const inDebtConsumers = this.consumers.filter(
+        (consumer) => consumer.balance < 0,
+      );
+      const mails = inDebtConsumers.map((consumer) => consumer.email);
+
+      const mailVars = {
+        bcc: mails.join("; "),
+        subject: "[24 heures] Ton compte perso est dans le négatif",
+        body: NEGATIVE_CP_BODY_TEMPLATE,
+      };
+
+      return mailLinkForClient(mailVars);
+    },
   },
 
   watch: {
@@ -436,20 +450,6 @@ export default {
     },
     closeConfigDialog() {
       this.isSgConfigDialogOpen = false;
-    },
-    sendEmailToNegativeBalanceConumers() {
-      const consumers = this.consumers.filter(
-        (consumer) => consumer.balance < 0,
-      );
-      const mails = consumers.map((consumer) => consumer.email);
-
-      const template = {
-        bcc: mails.join("; "),
-        subject: "[comptes persos négatifs]",
-        body: NEGATIVE_CP_BODY_TEMPLATE,
-      };
-
-      openMailClient(template);
     },
   },
 };

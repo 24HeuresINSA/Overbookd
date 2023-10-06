@@ -1,4 +1,4 @@
-export type MailTemplate = {
+export type MailVars = {
   subject?: string;
   body?: string;
   to?: string;
@@ -6,7 +6,7 @@ export type MailTemplate = {
   bcc?: string;
 };
 
-export function openMailClient(mail: MailTemplate) {
+export function mailLinkForClient(mail: MailVars): string {
   const to = mail.to ?? "";
   const cc = mail.cc ? `cc=${mail.cc}` : "";
   const bcc = mail.bcc ? `bcc=${mail.bcc}` : "";
@@ -15,5 +15,5 @@ export function openMailClient(mail: MailTemplate) {
 
   const args = [cc, bcc, subject, body].filter((arg) => arg).join("&");
 
-  window.open(`mailto:${to}?${args}`);
+  return `mailto:${to}?${args}`;
 }

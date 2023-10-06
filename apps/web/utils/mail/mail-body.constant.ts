@@ -1,8 +1,8 @@
 const LINE_BREAK = "%0D%0A";
 
 export const NEGATIVE_CP_BODY_TEMPLATE = `Bonsoir !${LINE_BREAK}
-Le solde actuel de ton compte perso est négative.${LINE_BREAK}
-Tu es donc invité à t'adresser au SG dans les plus brefs délais afin de remédier à ce déficit.${LINE_BREAK}
+Le solde actuel de ton compte perso est négatif.${LINE_BREAK}
+Il va falloir remédier à ce déficit dans les plus brefs délais.${LINE_BREAK}
 Que tu sois fossile ou non, la règle est la même !${LINE_BREAK}
 Souviens-toi, une conso = un bâton !${LINE_BREAK}
 ${LINE_BREAK}
