@@ -1,5 +1,5 @@
 import { Adherents } from "@overbookd/personal-account";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../../prisma.service";
 
 export class PrismaAdherents implements Adherents {
   constructor(private readonly prisma: PrismaService) {}

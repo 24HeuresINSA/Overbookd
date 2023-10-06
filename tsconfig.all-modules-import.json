@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
+      "@overbookd/alerts": ["./utils/alerts/src"],
       "@overbookd/api": ["./apps/api/src"],
       "@overbookd/contribution": ["./domains/contribution/src"],
       "@overbookd/configuration": ["./domains/configuration/src"],

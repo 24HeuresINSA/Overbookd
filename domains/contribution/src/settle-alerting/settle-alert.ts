@@ -1,6 +1,6 @@
 import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant";
 
-type Summary = typeof HAVE_TO_SETTLE_CONTRIBUTION;
+export type Summary = typeof HAVE_TO_SETTLE_CONTRIBUTION;
 
 export interface IAlertAboutContribution {
   summary: Summary;
