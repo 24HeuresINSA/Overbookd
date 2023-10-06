@@ -110,7 +110,7 @@ export class UserService {
     return users.map(UserService.formatToPersonalData);
   }
 
-  async getAllPersonalAccountConsummers(): Promise<Consumer[]> {
+  async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const users = await this.prisma.user.findMany({
       where: {
         teams: {

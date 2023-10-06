@@ -3,9 +3,9 @@
     <h1>SG 🥵</h1>
     <v-container style="display: flex; width: 100%">
       <v-card>
+        <v-card-title>Mode</v-card-title>
         <v-card-text style="display: flex; flex-direction: column">
-          <label>Mode</label>
-          <v-container>
+          <div>
             <v-btn-toggle
               v-model="mode"
               tile
@@ -16,7 +16,7 @@
               <v-btn value="closet" small> Placard</v-btn>
               <v-btn value="deposit" small> Dépot</v-btn>
             </v-btn-toggle>
-          </v-container>
+          </div>
           <v-list v-if="!areInputsValid.res">
             <v-list-item
               v-for="(reason, key) in areInputsValid.reason"
@@ -90,12 +90,15 @@
           <v-btn v-if="isCask" @click="openSgConfigForm">
             Configuration des fûts
           </v-btn>
+          <v-btn class="mt-4" :href="negativeBalanceMailLink">
+            Envoyer un mail aux CP négatifs
+          </v-btn>
         </v-card-text>
       </v-card>
 
       <v-data-table
         :headers="headers"
-        :items="consummers"
+        :items="consumers"
         style="width: 100%"
         disable-pagination
         hide-default-footer
@@ -132,8 +135,8 @@
     <v-dialog v-model="isSwitchDialogOpen" width="600px">
       <v-card>
         <v-card-title>Attention</v-card-title>
-        <v-card-text
-          >Si tu changes de mode, les données non enregistrées seront effacées.
+        <v-card-text>
+          Si tu changes de mode, les données non enregistrées seront effacées.
         </v-card-text>
         <v-card-actions>
           <v-btn text @click="cleanInputs">Changer de mode</v-btn>
@@ -158,6 +161,8 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import SgConfigForm from "~/components/organisms/user/personalAccount/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repo-factory";
+import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
+import { mailLinkForClient } from "~/utils/mail/mail.utils";
 
 export default {
   name: "SG",
@@ -204,14 +209,15 @@ export default {
   }),
 
   computed: {
-    consummers() {
+    consumers() {
       return this.$accessor.user.personalAccountConsumers.map(
-        ({ firstname, lastname, nickname, id, balance }) => ({
+        ({ firstname, lastname, nickname, id, email, balance }) => ({
           firstname,
           lastname,
           nickname,
           id,
           balance,
+          email,
           newConsumption: 0,
         }),
       );
@@ -296,6 +302,20 @@ export default {
     sgConfig() {
       return this.$accessor.configuration.get("sg");
     },
+    negativeBalanceMailLink() {
+      const inDebtConsumers = this.consumers.filter(
+        (consumer) => consumer.balance < 0,
+      );
+      const mails = inDebtConsumers.map((consumer) => consumer.email);
+
+      const mailVars = {
+        bcc: mails.join("; "),
+        subject: "[24 heures] Ton compte perso est dans le négatif",
+        body: NEGATIVE_CP_BODY_TEMPLATE,
+      };
+
+      return mailLinkForClient(mailVars);
+    },
   },
 
   watch: {
@@ -306,8 +326,8 @@ export default {
 
   async mounted() {
     await this.$accessor.configuration.fetch("sg");
-    await this.$accessor.user.fetchPersonalAccountConsummers();
-    this.users = this.consummers;
+    await this.$accessor.user.fetchPersonalAccountConsumers();
+    this.users = this.consumers;
     this.ready = true;
   },
 
@@ -434,5 +454,3 @@ export default {
   },
 };
 </script>
-
-<style scoped></style>

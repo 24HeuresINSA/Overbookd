@@ -217,7 +217,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @ApiBearerAuth()
-  @Get("personal-account-consummers")
+  @Get("personal-account-consumers")
   @ApiResponse({
     status: 200,
     description: "Get all consumers",
@@ -225,7 +225,7 @@ export class UserController {
     isArray: true,
   })
   async getUsernamesWithValidCP(): Promise<Consumer[]> {
-    return this.userService.getAllPersonalAccountConsummers();
+    return this.userService.getAllPersonalAccountConsumers();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
