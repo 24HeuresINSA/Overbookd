@@ -1,13 +1,3 @@
-import { User } from "../transaction.model";
-
-export type MyTransfer = {
-  id: number;
-  amount: number;
-  to: User;
-  context: string;
-  createdAt: Date;
-};
-
 export type CreateTransferForm = {
   to: number;
   amount: number;
