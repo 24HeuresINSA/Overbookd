@@ -1,7 +1,8 @@
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import { updateItemToList } from "@overbookd/list";
-import { MyTransfer, Transaction, User } from "./transaction.model";
-import { TransferForm, TransferRepository } from "./transfer";
+import { Transaction, User, transactionTypes } from "../transaction.model";
+import { TransferRepository } from ".";
+import { TransferForm } from "./transfer.model";
 
 type WithBalance = {
   balance: number;
@@ -27,7 +28,7 @@ export class InMemoryTransferRepository implements TransferRepository {
       .map(({ permissions, ...adherent }) => adherent);
   }
 
-  create(transfer: TransferForm): Promise<MyTransfer> {
+  create(transfer: TransferForm): Promise<Transaction> {
     const payor = this.adherents.find(
       (adherent) => adherent.id === transfer.from,
     );
@@ -43,12 +44,15 @@ export class InMemoryTransferRepository implements TransferRepository {
     this.updateMemberToList(payor);
     this.updateMemberToList(payee);
 
-    const { balance, ...payorAsUser } = payor;
+    const { balance: balance1, ...payorAsUser } = payor;
+    const { balance: balance2, ...payeeAsUser } = payee;
 
     return Promise.resolve({
       id: this.transfers.length + 1,
       amount: transfer.amount,
-      to: payorAsUser,
+      from: payorAsUser,
+      to: payeeAsUser,
+      type: transactionTypes.TRANSFER,
       context: transfer.context,
       createdAt: new Date(),
     });

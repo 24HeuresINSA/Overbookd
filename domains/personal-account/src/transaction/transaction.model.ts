@@ -5,17 +5,14 @@ export type User = {
   nickname?: string;
 };
 
-export type MyTransfer = {
+export type Transaction =  {
   id: number;
   amount: number;
   to: User;
-  context: string;
-  createdAt: Date;
-};
-
-export type Transaction = MyTransfer & {
   from: User;
+  context: string;
   type: TransactionType;
+  createdAt: Date;
 };
 
 const TRANSFER = "TRANSFER";
