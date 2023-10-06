@@ -29,11 +29,18 @@
     "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
   },
   "keywords": [
+    "personal-account",
     "availability",
-    "domain"
+    "domain",
+    "transaction",
+    "transfer"
   ],
   "engines": {
     "node": "20.8.0",
     "pnpm": "8.8.0"
+  },
+  "dependencies": {
+    "@overbookd/list": "workspace:^",
+    "@overbookd/permission": "workspace:^"
   }
 }

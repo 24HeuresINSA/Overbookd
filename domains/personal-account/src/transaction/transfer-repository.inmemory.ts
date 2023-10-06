@@ -1,6 +1,6 @@
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import { updateItemToList } from "@overbookd/list";
-import { MyTransaction, Transaction, User } from "./transaction.model";
+import { MyTransfer, Transaction, User } from "./transaction.model";
 import { TransferForm, TransferRepository } from "./transfer";
 
 type WithBalance = {
@@ -9,16 +9,16 @@ type WithBalance = {
 
 type Member = User & WithBalance;
 
-type WithPermission = {
+type WithPermissions = {
   permissions: Permission[];
 };
 
-export type MemberWithPermission = Member & WithPermission;
+export type MemberWithPermissions = Member & WithPermissions;
 
 export class InMemoryTransferRepository implements TransferRepository {
   constructor(
     private transfers: Transaction[],
-    private members: MemberWithPermission[],
+    private members: MemberWithPermissions[],
   ) {}
 
   get adherents(): Member[] {
@@ -27,7 +27,7 @@ export class InMemoryTransferRepository implements TransferRepository {
       .map(({ permissions, ...adherent }) => adherent);
   }
 
-  create(transfer: TransferForm): Promise<MyTransaction> {
+  create(transfer: TransferForm): Promise<MyTransfer> {
     const payor = this.adherents.find(
       (adherent) => adherent.id === transfer.from,
     );
@@ -43,10 +43,12 @@ export class InMemoryTransferRepository implements TransferRepository {
     this.updateMemberToList(payor);
     this.updateMemberToList(payee);
 
+    const { balance, ...payorAsUser } = payor;
+
     return Promise.resolve({
       id: this.transfers.length + 1,
       amount: transfer.amount,
-      to: { ...payee, balance: undefined },
+      to: payorAsUser,
       context: transfer.context,
       createdAt: new Date(),
     });
@@ -61,7 +63,7 @@ export class InMemoryTransferRepository implements TransferRepository {
 
   private updateMemberToList(member: Member) {
     const index = this.members.findIndex((m) => m.id === member.id);
-    const adherent: MemberWithPermission = {
+    const adherent: MemberWithPermissions = {
       ...member,
       permissions: [HAVE_PERSONAL_ACCOUNT],
     };

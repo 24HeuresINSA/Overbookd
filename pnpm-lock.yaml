@@ -101,9 +101,6 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:^
         version: link:../../libraries/slugify
-      '@overbookd/transaction':
-        specifier: workspace:^
-        version: link:../../domains/transaction
       '@overbookd/user':
         specifier: workspace:^
         version: link:../../domains/user
@@ -294,9 +291,6 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
-      '@overbookd/transaction':
-        specifier: workspace:*
-        version: link:../../domains/transaction
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../domains/user
@@ -429,7 +423,15 @@ importers:
 
   domains/permission: {}
 
-  domains/personal-account: {}
+  domains/personal-account:
+    dependencies:
+      '@overbookd/list':
+        specifier: workspace:^
+        version: link:../../libraries/list
+      '@overbookd/permission':
+        specifier: workspace:^
+        version: link:../permission
+
 
   domains/registration:
     dependencies:
@@ -457,15 +459,6 @@ importers:
         version: 9.0.3
 
   domains/signa: {}
-
-  domains/transaction:
-    dependencies:
-      '@overbookd/list':
-        specifier: workspace:^
-        version: link:../../libraries/list
-      '@overbookd/permission':
-        specifier: workspace:^
-        version: link:../permission
 
   domains/user:
     dependencies:

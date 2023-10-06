@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   InMemoryTransferRepository,
-  MemberWithPermission,
+  MemberWithPermissions,
 } from "./transfer-repository.inmemory";
 import { Transaction } from "./transaction.model";
 import { Transfer } from "./transfer";
@@ -14,7 +14,7 @@ import {
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
 } from "./transfer.error";
 
-const lea: MemberWithPermission = {
+const lea: MemberWithPermissions = {
   id: 1,
   firstname: "Léa",
   lastname: "Mauyno",
@@ -22,28 +22,28 @@ const lea: MemberWithPermission = {
   balance: 0,
   permissions: [HAVE_PERSONAL_ACCOUNT],
 };
-const noel: MemberWithPermission = {
+const noel: MemberWithPermissions = {
   id: 2,
   firstname: "Noël",
   lastname: "Ertsemud",
   balance: 0,
   permissions: [HAVE_PERSONAL_ACCOUNT],
 };
-const tatouin: MemberWithPermission = {
+const tatouin: MemberWithPermissions = {
   id: 3,
   firstname: "Tatouin",
   lastname: "Jesoph",
   balance: 0,
   permissions: [HAVE_PERSONAL_ACCOUNT],
 };
-const neimad: MemberWithPermission = {
+const neimad: MemberWithPermissions = {
   id: 4,
   firstname: "Neimad",
   lastname: "reaucar",
   balance: 0,
   permissions: [],
 };
-const adherents: MemberWithPermission[] = [lea, noel, tatouin, neimad];
+const adherents: MemberWithPermissions[] = [lea, noel, tatouin, neimad];
 
 const transactions: Transaction[] = [];
 
@@ -102,7 +102,7 @@ describe("Transfer", () => {
       });
     });
 
-    describe("when not allowed adherent try to transfer", () => {
+    describe("when an adherent without personal account try to transfer", () => {
       const transferToCreate = {
         to: lea.id,
         amount: 10,

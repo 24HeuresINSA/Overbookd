@@ -57,7 +57,6 @@
     "@overbookd/registration": "workspace:^",
     "@overbookd/signa": "workspace:^",
     "@overbookd/slugify": "workspace:^",
-    "@overbookd/transaction": "workspace:^",
     "@overbookd/user": "workspace:^",
     "@overbookd/volunteer-availability": "workspace:^",
     "@prisma/client": "5.3.1",
