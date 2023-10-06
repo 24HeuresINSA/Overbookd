@@ -9,7 +9,7 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
-      Cette {{ edition }}eme edition ne peut se faire sans toi !
+      Cette {{ edition }}ème édition ne peut se faire sans toi !
     </p>
     <p class="details">
       {{ details }}
@@ -22,7 +22,7 @@ import Vue from "vue";
 import { SettleAlert } from "@overbookd/contribution";
 
 const ADHESION_FEATURES =
-  "La cotisation est necessaire pour devenir adherent a l'association. Cette adhesion te permet d'etre couvert par l'assurance de l'association pendant les evenements mais aussi d'avoir le droit de votes aux differentes Assemblees Generales";
+  "La cotisation est nécessaire pour devenir adhérent à l'association. Cette adhésion te permet d'être couvert par l'assurance de l'association pendant les évènements mais aussi d'avoir le droit de votes lors des différentes Assemblées Générales";
 
 export default Vue.extend({
   name: "ContributionAlert",
