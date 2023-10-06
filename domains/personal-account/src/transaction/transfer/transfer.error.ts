@@ -1,5 +1,4 @@
-export const NEGATIVE_AMOUNT_ERROR_MESSAGE =
-  "Le montant doit être positif";
+export const NEGATIVE_AMOUNT_ERROR_MESSAGE = "Le montant doit être positif";
 
 export const INSUFFICIENT_AMOUNT_ERROR_MESSAGE =
   "Le montant doit être supérieur à 0";

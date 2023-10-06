@@ -72,7 +72,9 @@ describe("Transfer", () => {
         const wantedTransfer = Payor.init(lea.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(TRANSFER_TO_YOURSELF_ERROR_MESSAGE);
+        expect(sendTransfer).rejects.toThrow(
+          TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
+        );
       });
     });
 
@@ -117,7 +119,9 @@ describe("Transfer", () => {
         const wantedTransfer = Payor.init(neimad.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE);
+        expect(sendTransfer).rejects.toThrow(
+          PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
+        );
       });
     });
 
@@ -132,7 +136,9 @@ describe("Transfer", () => {
         const wantedTransfer = Payor.init(noel.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE);
+        expect(sendTransfer).rejects.toThrow(
+          PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
+        );
       });
     });
 
@@ -152,7 +158,9 @@ describe("Transfer", () => {
 
           it(`should transfer ${amount} cents from #${from} to #${to}`, async () => {
             const wantedTransfer = Payor.init(from).transferTo(transferToSend);
-            const { from: payor, to: payee } = await transfer.send(wantedTransfer)
+            const { from: payor, to: payee } = await transfer.send(
+              wantedTransfer,
+            );
 
             expect(payor.id).toBe(from);
             expect(payee.id).toBe(to);

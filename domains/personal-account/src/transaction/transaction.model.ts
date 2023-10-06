@@ -5,7 +5,7 @@ export type User = {
   nickname?: string;
 };
 
-export type Transaction =  {
+export type Transaction = {
   id: number;
   amount: number;
   to: User;

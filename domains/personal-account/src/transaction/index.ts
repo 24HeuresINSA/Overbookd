@@ -1,6 +1,6 @@
 export type { TransferRepository } from "./transfer";
 export { Transfer, Payor } from "./transfer";
-export type { 
+export type {
   Transaction,
   transactionTypes,
   TransactionType,
