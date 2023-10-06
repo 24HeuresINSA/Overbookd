@@ -1,4 +1,3 @@
-import { Transaction } from "../transaction.model";
 import {
   InsufficientAmount,
   NegativeAmount,
@@ -6,17 +5,17 @@ import {
   PayorNotHavePersonalAccount,
   TransferToYourself,
 } from "./transfer.error";
-import { TransferForm } from "./transfer.model";
+import { IDefineTransfer, TransferForm } from "./transfer.model";
 
 export interface TransferRepository {
-  create: (transfer: TransferForm) => Promise<Transaction>;
+  create: (transfer: TransferForm) => Promise<IDefineTransfer>;
   isAllowedToTransfer: (memberId: number) => Promise<boolean>;
 }
 
 export class Transfer {
   constructor(private readonly transfers: TransferRepository) {}
 
-  async send(transfer: TransferForm): Promise<Transaction> {
+  async send(transfer: TransferForm): Promise<IDefineTransfer> {
     if (transfer.to === transfer.from) throw new TransferToYourself();
 
     if (transfer.amount < 0) throw new NegativeAmount();

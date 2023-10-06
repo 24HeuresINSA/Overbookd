@@ -3,7 +3,6 @@ import {
   InMemoryTransferRepository,
   MemberWithPermissions,
 } from "./transfer-repository.inmemory";
-import { Transaction } from "../transaction.model";
 import { Transfer } from ".";
 import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import {
@@ -14,6 +13,7 @@ import {
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
 } from "./transfer.error";
 import { Payor } from "./payor";
+import { IDefineTransfer } from "./transfer.model";
 
 const lea: MemberWithPermissions = {
   id: 1,
@@ -46,7 +46,7 @@ const neimad: MemberWithPermissions = {
 };
 const adherents: MemberWithPermissions[] = [lea, noel, tatouin, neimad];
 
-const transactions: Transaction[] = [];
+const transactions: IDefineTransfer[] = [];
 
 describe("Transfer", () => {
   let transfer: Transfer;
