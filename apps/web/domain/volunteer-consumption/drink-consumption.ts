@@ -1,4 +1,4 @@
-const UNIT_PRICE_STEP = 0.05;
+const UNIT_PRICE_STEP = 5;
 
 export function computeUnitPrice(barrelPrice: number, consumptions: number) {
   const unitPrice = barrelPrice / consumptions;

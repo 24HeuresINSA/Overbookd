@@ -9,41 +9,30 @@
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
-          <v-text-field
+          <MoneyField
             v-model="tempSgConfig.prixFutBlonde"
             label="Prix fût blonde"
-            prefix="€"
-            type="number"
-            required
             @keydown.enter="save"
           >
-          </v-text-field>
-          <v-text-field
+          </MoneyField>
+          <MoneyField
             v-model="tempSgConfig.prixFutBlanche"
             label="Prix fût blanche"
-            prefix="€"
-            type="number"
-            required
             @keydown.enter="save"
           >
-          </v-text-field>
-          <v-text-field
+          </MoneyField>
+          <MoneyField
             v-model="tempSgConfig.prixFutTriple"
             label="Prix fût Triple"
-            prefix="€"
-            type="number"
             @keydown.enter="save"
           >
-          </v-text-field>
-          <v-text-field
+          </MoneyField>
+          <MoneyField
             v-model="tempSgConfig.prixFutFlower"
             label="Prix fût Flower"
-            prefix="€"
-            type="number"
-            required
             @keydown.enter="save"
           >
-          </v-text-field>
+          </MoneyField>
         </v-form>
       </v-card-text>
       <v-card-actions class="Fut_Config__actions">
@@ -57,9 +46,12 @@
 import Vue from "vue";
 import { SgConfig } from "~/utils/models/configuration.model";
 import { Configuration } from "@overbookd/configuration";
+import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
+
 
 export default Vue.extend({
   name: "SgConfigForm",
+  components: { MoneyField },
   data() {
     return {
       tempSgConfig: {

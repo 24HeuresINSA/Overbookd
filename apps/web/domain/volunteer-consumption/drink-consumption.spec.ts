@@ -4,11 +4,11 @@ import { computeUnitPrice } from "./drink-consumption";
 describe("Volonteer drink consumptions", () => {
   describe.each`
     barrelPrice | consumptions | expectedUnitPrice
-    ${50}       | ${50}        | ${1}
-    ${50}       | ${25}        | ${2}
-    ${100}      | ${99}        | ${1.05}
-    ${74.42}    | ${35}        | ${2.15}
-    ${149}      | ${100}       | ${1.5}
+    ${5000}     | ${50}        | ${100}
+    ${5000}     | ${25}        | ${200}
+    ${10000}    | ${99}        | ${105}
+    ${7442}     | ${35}        | ${215}
+    ${14900}    | ${100}       | ${15}
   `(
     "When a barrel cost $barrelPrice and volunteer consume $consumptions times",
     ({ barrelPrice, consumptions, expectedUnitPrice }) => {
