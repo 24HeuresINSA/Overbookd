@@ -17,6 +17,13 @@ export class SignaLocationRepository {
     return context.$axios.get<SignaLocation>(`${this.basePath}/${id}`);
   }
 
+  static createNewSignaLocation(
+    context: Context,
+    signaLocation: SignaLocationCreate,
+  ) {
+    return context.$axios.post<SignaLocation>(this.basePath, signaLocation);
+  }
+
   static deleteSignaLocation(context: Context, id: number) {
     return context.$axios.delete<SignaLocation>(`${this.basePath}/${id}`);
   }
@@ -26,12 +33,5 @@ export class SignaLocationRepository {
       `${this.basePath}/${signaLocation.id}`,
       signaLocation,
     );
-  }
-
-  static createNewSignaLocation(
-    context: Context,
-    signaLocation: SignaLocationCreate,
-  ) {
-    return context.$axios.post<SignaLocation>(this.basePath, signaLocation);
   }
 }
