@@ -10,8 +10,8 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
-      Tu es à <strong>{{ balance }}</strong
-      >, {{ statement }} !
+      Tu es à <strong>{{ balance }}</strong>,
+      {{ statement }} !
     </p>
     <p class="details">
       {{ details }}

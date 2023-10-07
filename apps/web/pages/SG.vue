@@ -93,7 +93,7 @@
         multi-sort
         :sort-by="['firstname', 'lastname']"
       >
-        <template #[`item.action`]="{ item }">
+        <template #item.action="{ item }">
           <v-text-field
             v-if="isExpenseMode"
             v-model="item.newConsumption"
@@ -108,11 +108,11 @@
           />
         </template>
 
-        <template #[`item.balance`]="{ item }">
+        <template #item.balance="{ item }">
           <MoneyField :value="item.balance" readonly />
         </template>
 
-        <template #[`item.newConsumption`]="{ item }">
+        <template #item.newConsumption="{ item }">
           <MoneyField :value="spend(item.newConsumption)" readonly />
         </template>
       </v-data-table>
