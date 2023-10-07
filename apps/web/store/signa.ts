@@ -1,7 +1,10 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { SignaLocation } from "~/utils/models/signa-location.model";
+import {
+  SignaLocation,
+  CreateLocation,
+} from "~/utils/models/signa-location.model";
 
 const repo = RepoFactory.SignaLocationRepository;
 
@@ -38,6 +41,27 @@ export const actions = actionTree(
       );
       if (!signaLocations) return;
       commit("SET_SIGNA_LOCATIONS", signaLocations.data);
+    },
+    async createLocation({ dispatch }, location: CreateLocation) {
+      await safeCall(this, repo.createNewSignaLocation(this, location), {
+        successMessage: "Lieu ajouté 🥳",
+        errorMessage: "Lieu non ajouté 😢",
+      });
+      await dispatch("getAllSignaLocations");
+    },
+    async editLocation({ dispatch }, location: SignaLocation) {
+      await safeCall(this, repo.updateSignaLocation(this, location), {
+        successMessage: "Lieu modifié 🥳",
+        errorMessage: "Lieu non modifié 😢",
+      });
+      await dispatch("getAllSignaLocations");
+    },
+    async deleteLocation({ dispatch }, location: SignaLocation) {
+      await safeCall(this, repo.deleteSignaLocation(this, location.id), {
+        successMessage: "Lieu supprimé 🥳",
+        errorMessage: "Lieu non supprimé 😢",
+      });
+      await dispatch("getAllSignaLocations");
     },
   },
 );

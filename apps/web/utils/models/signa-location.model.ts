@@ -3,6 +3,8 @@ export interface SignaLocation {
   name: string;
 }
 
+export type CreateLocation = Pick<SignaLocation, "name">;
+
 export interface SignaLocationCreate {
   name: string;
 }
