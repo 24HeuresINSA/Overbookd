@@ -10,7 +10,8 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
-      Tu es à <strong>{{ balance }}</strong>, {{ statement }} !
+      Tu es à <strong>{{ balance }}</strong
+      >, {{ statement }} !
     </p>
     <p class="details">
       {{ details }}
@@ -53,8 +54,8 @@ export default Vue.extend({
       return this.isInDebt ? "c'est déconné" : "tout est en règle";
     },
     balance(): string {
-      return Money.displayCents(this.alert.balance)
-    }
+      return Money.displayCents(this.alert.balance);
+    },
   },
   methods: {
     dismiss(): void {

@@ -40,14 +40,24 @@
           </template>
 
           <template v-if="mode === 'deposit'">
-            <MoneyField :value="totalConsumptions" readonly label="Depot total" />
+            <MoneyField
+              :value="totalConsumptions"
+              readonly
+              label="Depot total"
+            />
           </template>
           <v-btn :disabled="!areInputsValid.res" @click="saveTransactions"
             >Enregistrer</v-btn
           >
           <br />
           <br />
-          <h3><MoneyField :value="totalCPBalance" readonly label="Solde de la caisse" /></h3>
+          <h3>
+            <MoneyField
+              :value="totalCPBalance"
+              readonly
+              label="Solde de la caisse"
+            />
+          </h3>
 
           <v-radio-group
             v-if="ready && isCask"
@@ -91,15 +101,19 @@
             :rules="rules"
             type="number"
           ></v-text-field>
-          <MoneyField v-else v-model="item.newConsumption" label="thunas (en euro)" />
+          <MoneyField
+            v-else
+            v-model="item.newConsumption"
+            label="thunas (en euro)"
+          />
         </template>
 
         <template #[`item.balance`]="{ item }">
-          <MoneyField :value="item.balance" readonly/>
+          <MoneyField :value="item.balance" readonly />
         </template>
 
         <template #[`item.newConsumption`]="{ item }">
-          <MoneyField :value="spend(item.newConsumption)" readonly/>
+          <MoneyField :value="spend(item.newConsumption)" readonly />
         </template>
       </v-data-table>
     </v-container>
@@ -134,8 +148,8 @@ import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumpti
 import { RepoFactory } from "~/repositories/repo-factory";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
-import MoneyField from "~/components/atoms/field/money/MoneyField.vue"
-import {Money} from "~/utils/money/money"
+import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
+import { Money } from "~/utils/money/money";
 
 const TRANSACTION_DEPOSIT = "DEPOSIT";
 const TRANSACTION_EXPENSE = "EXPENSE";
@@ -198,7 +212,7 @@ export default {
       );
     },
     totalCPBalance() {
-      return this.users.reduce((sum, user) => sum + user.balance, 0)
+      return this.users.reduce((sum, user) => sum + user.balance, 0);
     },
     totalConsumptions() {
       let totalConsumptions = 0;
@@ -210,10 +224,7 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      return computeUnitPrice(
-        +this.totalPrice,
-        +this.totalConsumptions,
-      )
+      return computeUnitPrice(+this.totalPrice, +this.totalConsumptions);
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
@@ -365,14 +376,15 @@ export default {
       }
 
       const transactions = usersWithConsumptions.map((user) => {
-        const amount = this.spend(user.newConsumption)
-        const context = this.defineContext(user.newConsumption)
+        const amount = this.spend(user.newConsumption);
+        const context = this.defineContext(user.newConsumption);
         const transaction = {
-          type: this.mode === "deposit" ? TRANSACTION_DEPOSIT : TRANSACTION_EXPENSE,
+          type:
+            this.mode === "deposit" ? TRANSACTION_DEPOSIT : TRANSACTION_EXPENSE,
           from: user.id,
           to: user.id,
           amount,
-          context
+          context,
         };
 
         switch (transaction.mode) {
@@ -414,25 +426,27 @@ export default {
     spend(consumptions) {
       switch (this.mode) {
         case "cask":
-          return (+this.stickPrice * consumptions) || 0
+          return +this.stickPrice * consumptions || 0;
         case "closet":
-          return this.settledStickPrice * consumptions
+          return this.settledStickPrice * consumptions;
         case "deposit":
         default:
-          return consumptions
+          return consumptions;
       }
     },
     defineContext(consumptions) {
       switch (this.mode) {
         case "cask":
-          return `Conso au local de ${consumptions} bâton à ${Money.displayCents(this.stickPrice)}`
+          return `Conso au local de ${consumptions} bâton à ${Money.displayCents(
+            this.stickPrice,
+          )}`;
         case "closet":
-          return `Conso placard:  ${consumptions} bâtons`
+          return `Conso placard:  ${consumptions} bâtons`;
         case "deposit":
         default:
-          return "Recharge de compte perso"
+          return "Recharge de compte perso";
       }
-    }
+    },
   },
 };
 </script>

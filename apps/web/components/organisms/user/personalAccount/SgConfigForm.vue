@@ -48,7 +48,6 @@ import { SgConfig } from "~/utils/models/configuration.model";
 import { Configuration } from "@overbookd/configuration";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
-
 export default Vue.extend({
   name: "SgConfigForm",
   components: { MoneyField },
