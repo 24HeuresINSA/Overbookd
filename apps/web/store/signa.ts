@@ -2,6 +2,7 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
+  Location,
   SignaLocation,
   CreateLocation,
 } from "~/utils/models/signa-location.model";
@@ -40,7 +41,8 @@ export const actions = actionTree(
         },
       );
       if (!signaLocations) return;
-      commit("SET_SIGNA_LOCATIONS", signaLocations.data);
+      const formattedLocations = signaLocations.data.map((location) => new Location(location.id, location.name));
+      commit("SET_SIGNA_LOCATIONS", formattedLocations);
     },
     async createLocation({ dispatch }, location: CreateLocation) {
       await safeCall(this, repo.createNewSignaLocation(this, location), {

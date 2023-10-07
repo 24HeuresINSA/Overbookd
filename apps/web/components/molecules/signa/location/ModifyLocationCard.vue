@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { SignaLocation } from "~/utils/models/signa-location.model";
+import { SignaLocation, Location } from "~/utils/models/signa-location.model";
 
 interface ModifyLocationCardData {
   newLocation: SignaLocation;
@@ -28,7 +28,7 @@ export default defineComponent({
   name: "ModifyLocationCard",
   props: {
     location: {
-      type: SignaLocation,
+      type: Location,
       required: true,
     },
   },
