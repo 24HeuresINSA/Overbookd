@@ -5,10 +5,9 @@
       <v-text-field v-model="locationName" label="Nom du lieu"></v-text-field>
     </v-card-text>
     <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn :disabled="!locationName" @click="createNewLocation"
-        >Ajouter le lieu</v-btn
-      >
+      <v-btn :disabled="!locationName" @click="createNewLocation">
+        Ajouter le lieu
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
