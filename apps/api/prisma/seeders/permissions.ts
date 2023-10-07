@@ -30,6 +30,7 @@ import {
   WRITE_GEAR_CATALOG,
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
+  WRITE_SIGNAGE_LOCATION,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -106,7 +107,16 @@ export const permissions = [
   },
   {
     name: WRITE_SIGNAGE_CATALOG,
-    description: "Peut éditer le catalogue du matos",
+    description: "Peut éditer le catalogue de la signa",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "signa" }],
+      },
+    },
+  },
+  {
+    name: WRITE_SIGNAGE_LOCATION,
+    description: "Peut éditer les lieux de la signa",
     teams: {
       createMany: {
         data: [{ teamCode: "signa" }],
