@@ -41,7 +41,9 @@ export const actions = actionTree(
         },
       );
       if (!signaLocations) return;
-      const formattedLocations = signaLocations.data.map((location) => new Location(location.id, location.name));
+      const formattedLocations = signaLocations.data.map(
+        (location) => new Location(location.id, location.name),
+      );
       commit("SET_SIGNA_LOCATIONS", formattedLocations);
     },
     async createLocation({ dispatch }, location: CreateLocation) {
