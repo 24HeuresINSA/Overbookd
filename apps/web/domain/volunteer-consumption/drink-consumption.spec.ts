@@ -8,7 +8,7 @@ describe("Volonteer drink consumptions", () => {
     ${5000}     | ${25}        | ${200}
     ${10000}    | ${99}        | ${105}
     ${7442}     | ${35}        | ${215}
-    ${14900}    | ${100}       | ${15}
+    ${14900}    | ${100}       | ${150}
   `(
     "When a barrel cost $barrelPrice and volunteer consume $consumptions times",
     ({ barrelPrice, consumptions, expectedUnitPrice }) => {
