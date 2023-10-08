@@ -1,10 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   InMemoryTransferRepository,
-  MemberWithPermissions,
 } from "./transfer-repository.inmemory";
-import { Transfer } from ".";
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import {
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
   NEGATIVE_AMOUNT_ERROR_MESSAGE,
@@ -13,52 +11,43 @@ import {
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
 } from "./transfer.error";
 import { Payor } from "./payor";
-import { IDefineTransfer } from "./transfer.model";
+import { InMemoryMemberRepository } from "./member-repository.inmemory";
+import { Transfer } from "./transfer";
 
-const lea: MemberWithPermissions = {
+const lea = {
   id: 1,
-  firstname: "Léa",
-  lastname: "Mauyno",
-  nickname: "Shogosse",
   balance: 0,
-  permissions: [HAVE_PERSONAL_ACCOUNT],
+  permissions: [HAVE_PERSONAL_ACCOUNT] as Permission[],
 };
-const noel: MemberWithPermissions = {
+const noel = {
   id: 2,
-  firstname: "Noël",
-  lastname: "Ertsemud",
   balance: 0,
-  permissions: [HAVE_PERSONAL_ACCOUNT],
+  permissions: [HAVE_PERSONAL_ACCOUNT] as Permission[],
 };
-const tatouin: MemberWithPermissions = {
+const tatouin = {
   id: 3,
-  firstname: "Tatouin",
-  lastname: "Jesoph",
   balance: 0,
-  permissions: [HAVE_PERSONAL_ACCOUNT],
+  permissions: [HAVE_PERSONAL_ACCOUNT] as Permission[],
 };
-const neimad: MemberWithPermissions = {
+const neimad = {
   id: 4,
-  firstname: "Neimad",
-  lastname: "reaucar",
   balance: 0,
-  permissions: [],
+  permissions: [] as Permission[],
 };
-const adherents: MemberWithPermissions[] = [lea, noel, tatouin, neimad];
+const adherents = [lea, noel, tatouin];
 
-const transactions: IDefineTransfer[] = [];
+const members = [...adherents, neimad];
 
 describe("Transfer", () => {
   let transfer: Transfer;
   let transferRepository: InMemoryTransferRepository;
+  let memberRepository: InMemoryMemberRepository;
 
   describe("when member create transfer", () => {
     beforeEach(() => {
-      transferRepository = new InMemoryTransferRepository(
-        transactions,
-        adherents,
-      );
-      transfer = new Transfer(transferRepository);
+      transferRepository = new InMemoryTransferRepository(adherents);
+      memberRepository = new InMemoryMemberRepository(members);
+      transfer = new Transfer(transferRepository, memberRepository);
     });
 
     describe("when adherent try to transfer to himself", () => {
@@ -142,7 +131,7 @@ describe("Transfer", () => {
       });
     });
 
-    describe("when allowed adherent try to valid transfer to an other adherent", () => {
+    describe("when allowed adherent try to transfer to an other adherent", () => {
       describe.each`
         from          | to            | amount  | expectedPayorBalance | expectedPayeeBalance
         ${lea.id}     | ${tatouin.id} | ${1000} | ${-1000}             | ${1000}
@@ -165,18 +154,48 @@ describe("Transfer", () => {
             expect(payor.id).toBe(from);
             expect(payee.id).toBe(to);
 
-            const payorWithBalance = transferRepository.adherents.find(
-              (adherent) => adherent.id === from,
-            );
-            const payeeWithBalance = transferRepository.adherents.find(
-              (adherent) => adherent.id === to,
-            );
+            console.log(payor, expectedPayorBalance);
+            console.log(payee, expectedPayeeBalance);
 
-            expect(payorWithBalance?.balance).toBe(expectedPayorBalance);
-            expect(payeeWithBalance?.balance).toBe(expectedPayeeBalance);
+            expect(payor.balance).toBe(expectedPayorBalance);
+            expect(payee.balance).toBe(expectedPayeeBalance);
           });
         },
       );
+    });
+
+    describe("when adherent transfers multiple times", () => {
+      it("should be debited from all the transfer amounts", async () => {
+        const transferToSend = {
+          to: tatouin.id,
+          amount: 100,
+          context: "Miam miam",
+        };
+        const transferToTatouin = Payor.init(lea.id).transferTo(transferToSend);
+        await transfer.send(transferToTatouin);
+
+        const transferToNoel = Payor.init(lea.id).transferTo({ ...transferToSend, to: noel.id });
+        const { from } = await transfer.send(transferToNoel);
+
+        expect(from.balance).toBe(-200);
+      });
+    });
+
+    describe("when adherent receives multiple transfers", () => {
+      it("should be credited from all the transfer amounts", async () => {
+        const transferToSend = {
+          to: tatouin.id,
+          amount: 100,
+          context: "Miam miam",
+        };
+        const transferFromLea = Payor.init(lea.id).transferTo(transferToSend);
+        await transfer.send(transferFromLea);
+
+        const transferFromNoel = Payor.init(noel.id).transferTo(transferToSend);
+        const { to } = await transfer.send(transferFromNoel);
+
+        expect(to.balance).toBe(200);
+      });
     });
   });
 });

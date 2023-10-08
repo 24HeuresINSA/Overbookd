@@ -1,4 +1,12 @@
-import { CreateTransferForm, TransferForm } from "./transfer.model";
+export type CreateTransferForm = {
+  to: number;
+  amount: number;
+  context: string;
+};
+
+export type TransferForm = CreateTransferForm & {
+  from: number;
+};
 
 export class Payor {
   private constructor(private readonly payor: number) {}
