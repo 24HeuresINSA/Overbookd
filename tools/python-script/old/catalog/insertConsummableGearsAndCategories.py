@@ -32,8 +32,10 @@ def getCategoryId(categoryName: str) -> int:
         params={"name": categoryName},
         timeout=3
     ).json()
-    [category] = [category for category in categories if category.get(
-        "path") == categoryName]
+    [category] = [
+        category for category in categories
+        if category.get("path") == categoryName
+    ]
     return int(category.get("id"))
 
 

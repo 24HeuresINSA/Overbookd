@@ -1,5 +1,6 @@
 from overbookd import overbookd
 import logging
+import json
 
 
 if __name__ == "__main__":
@@ -10,8 +11,13 @@ if __name__ == "__main__":
     ob = overbookd.Overbookd(
         email="admin@24h.me",
         password="password",
-        environement="dev"
+        environement="dev-container"
     )
 
     print(ob.httpConnectionPool.request(
-        "GET", ob.apiPathHelper("/users")).data.decode("utf-8"))
+        "GET",
+        ob.apiPathHelper("/users")
+        ).data)
+
+    print(json.loads(ob.httpConnectionPool.request(
+        "GET", ob.apiPathHelper("/users")).data))

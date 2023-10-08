@@ -2,8 +2,17 @@ import typing
 import logging
 import urllib3
 import json
+import ssl
+import sys
 
-environementTypeHints = typing.Literal["dev", "preprod", "prod", "ctma"]
+if sys.version_info.major < 3:
+    sys.exit("Python 3 is required")
+
+environementTypeHints = typing.Literal["dev-container",
+                                       "dev-baremetal",
+                                       "preprod",
+                                       "prod",
+                                       "ctma"]
 
 
 class Overbookd:
@@ -22,9 +31,9 @@ class Overbookd:
         self.password = password
 
         if not self.isCorrectEnvironement(environement):
-            self.logger.error(
-                "Environement must be 'dev', 'preprod' or 'prod'")
-            raise ValueError("Environement must be 'dev', 'preprod' or 'prod'")
+            errorMsg = f"Environement must be one off {list(typing.get_args(environementTypeHints))}"
+            self.logger.error(errorMsg)
+            raise ValueError(errorMsg)
 
         self.environement = environement
 
@@ -40,7 +49,7 @@ class Overbookd:
         return False
 
     def setUpHttpConnectionPool(self) -> None:
-        if self.environement == "dev":
+        if self.environement == "dev-container":
             self.httpConnectionPool = urllib3.HTTPConnectionPool(
                 self.baseUrlMap[self.environement],
                 port=3000,
@@ -48,43 +57,46 @@ class Overbookd:
                          "Authorization": f"Bearer {self.jwt}"},
             )
 
-        if self.environement in ["preprod", "prod", "ctma"]:
+        if self.environement in ["preprod", "prod", "ctma", "dev-baremetal"]:
             self.httpConnectionPool = urllib3.HTTPSConnectionPool(
                 self.baseUrlMap[self.environement],
                 port=443,
+                cert_reqs=ssl.CERT_NONE if self.environement == "dev-baremetal" else ssl.CERT_REQUIRED,
                 headers={"Content-Type": "application/json",
                          "Authorization": f"Bearer {self.jwt}"},
             )
 
     def setUpBaseUrlMap(self) -> None:
-        self.devBaseUrl = "https://overbookd.traefik.me"
-        self.preprodBaseUrl = "https://preprod.overbookd.24heures.org"
-        self.prodBaseUrl = "https://overbookd.24heures.org"
-        self.ctmaBaseUrl = "https://cetaitmieuxavant.24heures.org"
         self.baseUrlMap = {
-            "dev": self.devBaseUrl[8:],
-            "preprod": self.preprodBaseUrl[8:],
-            "prod": self.prodBaseUrl[8:],
-            "ctma": self.ctmaBaseUrl[8:]
+            "dev-baremetal": "overbookd.traefik.me",
+            "dev-container": "overbookd.traefik.me",
+            "preprod": "preprod.overbookd.24heures.org",
+            "prod": "overbookd.24heures.org",
+            "ctma": "cetaitmieuxavant.24heures.org",
         }
 
     def login(self) -> None:
         self.logger.info(f"Try to Login with {self.email}")
 
-        path = "/login" if self.environement == "dev" else "/api/login"
-        url = f"{'http' if self.environement == 'dev' else 'https'}://{self.baseUrlMap[self.environement]}:{3000 if self.environement == 'dev' else ''}{path}"
+        path = self.apiPathHelper("/login")
+        url = f"{'http' if self.environement == 'dev-container' else 'https'}://{self.baseUrlMap[self.environement]}{':3000' if self.environement == 'dev-container' else ''}{path}"
         self.logger.debug(f"Login url : {url}")
 
         data = {"email": self.email, "password": self.password}
 
-        response = urllib3.request("POST", url, body=json.dumps(
-            data), headers={"Content-Type": "application/json"})
+        response = urllib3.request(
+            "POST",
+            url,
+            body=json.dumps(data),
+            headers={"Content-Type": "application/json"},
+        )
 
         if response.status in [200, 201]:
             self.logger.info("Login successful")
             self.logger.debug(
-                f"login response : {response.data.decode('utf-8')}")
-            jsonResponse = json.loads(response.data.decode("utf-8"))
+                f"login response : {response.data}")
+            jsonResponse = json.loads(response.data)
+
             if "accessToken" in jsonResponse:
                 self.jwt = jsonResponse["accessToken"]
 
@@ -97,6 +109,4 @@ class Overbookd:
                 f"Login failed : {response.status} {response.data.decode('utf-8')}")
 
     def apiPathHelper(self, path: str) -> str:
-        if self.environement == "dev":
-            return path
-        return f"/api{path}"
+        return path if self.environement == "dev-container" else f"/api{path}"
