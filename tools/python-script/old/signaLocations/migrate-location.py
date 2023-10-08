@@ -92,4 +92,4 @@ if __name__ == "__main__":
 
     for location in locations:
         if "SIGNA" in location["neededBy"]:
-          setNewLocations(token, location["name"])
+            setNewLocations(token, location["name"])

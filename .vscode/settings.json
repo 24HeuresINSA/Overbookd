@@ -27,7 +27,8 @@
     "devcontainer",
     "docker",
     "registration",
-    "deps"
+    "deps",
+    "tools"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],

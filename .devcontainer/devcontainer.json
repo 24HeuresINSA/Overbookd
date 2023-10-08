@@ -54,7 +54,8 @@
   },
   "postStartCommand": {
     "delete-my-uid-in-dot-env": "sed -i '/^MY_UID=[0-9]\\+/d' ./docker/.env",
-    "delete-my-gid-in-dot-env": "sed -i '/^MY_GID=[0-9]\\+/d' ./docker/.env"
+    "delete-my-gid-in-dot-env": "sed -i '/^MY_GID=[0-9]\\+/d' ./docker/.env",
+    "adding-api-ip-in-etc-hosts": "grep overbookd /etc/hosts || echo \"$(docker inspect overbookd_api | jq '  .[] | .NetworkSettings | .Networks | .\"overbookd_overbookd_net-api\" | .IPAddress ' | sed -z 's/\"//g') overbookd.traefik.me\" | sudo tee -a /etc/hosts"
   }
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   // "remoteUser": "root"

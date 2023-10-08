@@ -64,6 +64,7 @@ def setValidatorForTeam(token, team, isFAValidator, isFTValidator):
 
     logger.info(f"Set validator for team reponse : {response.text}")
 
+
 if __name__ == '__main__':
 
     token = login("user", "password")
