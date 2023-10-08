@@ -12,6 +12,7 @@ import {
   READ_FT,
   READ_GEAR_CATALOG,
   READ_SIGNAGE_CATALOG,
+  WRITE_SIGNAGE_LOCATION,
   VIEW_FESTIVAL_EVENTS_STATS,
   VIEW_PLANNING,
   VIEW_TIMELINE,
@@ -247,6 +248,16 @@ export const pages: Page[] = [
       "Permet de visualiser l'ensemble des demandes de matériel sur le festival",
     mobileSupport: false,
     keywords: ["demandes-matos", "demandes-materiel"],
+  },
+  {
+    icon: "mdi-map-marker",
+    title: "Lieux de la Signa",
+    permission: WRITE_SIGNAGE_LOCATION,
+    to: "/signa/location",
+    description:
+      "Permet de définir l'ensemble des lieux disponible sur le festival",
+    mobileSupport: false,
+    keywords: ["lieux-signaletique"],
   },
   {
     icon: "mdi-bookshelf",

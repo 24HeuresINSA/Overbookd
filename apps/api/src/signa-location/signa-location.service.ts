@@ -13,7 +13,7 @@ export class SignaLocationService {
   }
 
   findAll() {
-    return this.prisma.signaLocation.findMany();
+    return this.prisma.signaLocation.findMany({ orderBy: { name: "asc" } });
   }
 
   findOne(id: number) {
