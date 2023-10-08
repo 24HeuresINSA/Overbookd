@@ -62,7 +62,7 @@ model User {
   year                 Year?
   profilePicture       String?     @map("profile_picture")
   charisma             Int         @default(0)
-  balance              Float       @default(0)
+  balance              Int         @default(0)
   password             String      @default("")
   createdAt            DateTime    @default(now()) @map("created_at")
   updatedAt            DateTime    @updatedAt @map("updated_at")

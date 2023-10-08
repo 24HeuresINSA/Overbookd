@@ -10,7 +10,8 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
-      Tu es à <strong>{{ alert.balance }} €</strong>, {{ statement }} !
+      Tu es à <strong>{{ balance }}</strong
+      >, {{ statement }} !
     </p>
     <p class="details">
       {{ details }}
@@ -21,6 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { PersonalAccountAlert } from "@overbookd/personal-account";
+import { Money } from "~/utils/money/money";
 
 const CP_RULES_EXPLAINED =
   "Les comptes persos ne peuvent exister que si tout le monde joue le jeu en restant dans le positif. Sinon ça veut dire que: Pas d'argent >> Pas de fûts >> Pas de rôtisserie >> Pas de manif >> Pas de manif.";
@@ -50,6 +52,9 @@ export default Vue.extend({
     },
     statement(): string {
       return this.isInDebt ? "c'est déconné" : "tout est en règle";
+    },
+    balance(): string {
+      return Money.displayCents(this.alert.balance);
     },
   },
   methods: {

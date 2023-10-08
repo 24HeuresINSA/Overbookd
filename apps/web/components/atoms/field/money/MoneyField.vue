@@ -5,6 +5,7 @@
     :label="label"
     suffix="€"
     :rules="[rules.number, rules.min]"
+    :readonly="readonly"
     @input="propagateValue"
     @update:error="propagateError"
   ></v-text-field>
@@ -12,6 +13,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Money } from "~/utils/money/money";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
@@ -33,6 +35,10 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
   },
   data(): InputRulesData {
     return {
@@ -44,7 +50,7 @@ export default Vue.extend({
   },
   computed: {
     valueInEuros(): number {
-      return this.value / 100;
+      return Money.inEuros(this.value);
     },
   },
   methods: {

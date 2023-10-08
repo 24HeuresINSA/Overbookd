@@ -29,48 +29,35 @@
           </v-list>
 
           <template v-if="isCask">
-            <v-text-field
-              v-model="totalPrice"
-              label="Prix total"
-              type="number"
-              :rules="[
-                (v) =>
-                  new RegExp(regex.float).test(v) ||
-                  `il faut mettre un nombre (avec . comme virgule)`,
-              ]"
-            ></v-text-field>
+            <MoneyField v-model="totalPrice" label="Prix du fût" />
             <label> Nombre de bâton total {{ totalConsumptions }} </label>
-            <label
-              >Prix du bâton:
-              {{ stickPrice }}
-              €</label
-            >
+            <MoneyField :value="stickPrice" readonly label="Prix du bâton" />
           </template>
 
           <template v-if="mode === 'closet'">
-            <v-text-field
-              v-model="settledStickPrice"
-              label="Prix du bâton"
-              type="number"
-              :rules="[
-                (v) =>
-                  new RegExp(regex.float).test(v) ||
-                  `Il faut mettre un nombre (avec . comme virgule)`,
-              ]"
-            ></v-text-field>
+            <MoneyField v-model="settledStickPrice" label="Prix du bâton" />
             <label> Nombre de bâton total {{ totalConsumptions }} </label>
           </template>
 
           <template v-if="mode === 'deposit'">
-            <label> Depot total: {{ totalConsumptions }} €</label>
+            <MoneyField
+              :value="totalConsumptions"
+              readonly
+              label="Depot total"
+            />
           </template>
           <v-btn :disabled="!areInputsValid.res" @click="saveTransactions"
             >Enregistrer</v-btn
           >
-          <!--<v-btn text>Envoyer un mail au négatif</v-btn>-->
           <br />
           <br />
-          <h3>Solde de la caisse {{ totalCPBalance.toFixed(2) }} €</h3>
+          <h3>
+            <MoneyField
+              :value="totalCPBalance"
+              readonly
+              label="Solde de la caisse"
+            />
+          </h3>
 
           <v-radio-group
             v-if="ready && isCask"
@@ -106,29 +93,27 @@
         multi-sort
         :sort-by="['firstname', 'lastname']"
       >
-        <template #[`item.action`]="{ item }">
+        <template #item.action="{ item }">
           <v-text-field
+            v-if="isExpenseMode"
             v-model="item.newConsumption"
-            :label="isExpenseMode ? 'Nombre de bâton' : 'thunas (en euro)'"
+            label="Nombre de bâtons"
             :rules="rules"
+            type="number"
           ></v-text-field>
+          <MoneyField
+            v-else
+            v-model="item.newConsumption"
+            label="thunas (en euro)"
+          />
         </template>
 
-        <template #[`item.balance`]="{ item }">
-          {{ (item.balance || 0).toFixed(2) }} €
+        <template #item.balance="{ item }">
+          <MoneyField :value="item.balance" readonly />
         </template>
 
-        <template #[`item.newConsumption`]="{ item }">
-          <div v-if="isExpenseMode">
-            {{
-              (
-                (isCask ? stickPrice : settledStickPrice) *
-                  item.newConsumption || 0
-              ).toFixed(2)
-            }}
-            €
-          </div>
-          <div v-else>{{ (+item.newConsumption || 0).toFixed(2) }}€</div>
+        <template #item.newConsumption="{ item }">
+          <MoneyField :value="spend(item.newConsumption)" readonly />
         </template>
       </v-data-table>
     </v-container>
@@ -163,19 +148,23 @@ import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumpti
 import { RepoFactory } from "~/repositories/repo-factory";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
+import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
+import { Money } from "~/utils/money/money";
+
+const TRANSACTION_DEPOSIT = "DEPOSIT";
+const TRANSACTION_EXPENSE = "EXPENSE";
 
 export default {
   name: "SG",
-  components: { SnackNotificationContainer, SgConfigForm },
+  components: { SnackNotificationContainer, SgConfigForm, MoneyField },
 
   data: () => {
     return {
       ready: false,
       users: [],
-      totalConsumption: undefined, // total coast of the barrel
-      totalPrice: undefined,
-      totalCPBalance: 0,
-      settledStickPrice: 0.5,
+      totalConsumption: 0,
+      totalPrice: 0,
+      settledStickPrice: 50,
 
       mode: "cask", //default mode
       isSwitchDialogOpen: false,
@@ -222,6 +211,9 @@ export default {
         }),
       );
     },
+    totalCPBalance() {
+      return this.users.reduce((sum, user) => sum + user.balance, 0);
+    },
     totalConsumptions() {
       let totalConsumptions = 0;
       this.users.forEach((user) => {
@@ -232,10 +224,7 @@ export default {
       return totalConsumptions;
     },
     stickPrice() {
-      return computeUnitPrice(
-        +this.totalPrice,
-        +this.totalConsumptions,
-      ).toFixed(2);
+      return computeUnitPrice(+this.totalPrice, +this.totalConsumptions);
     },
     rules() {
       const regex = this.isExpenseMode ? this.regex.int : this.regex.float;
@@ -386,63 +375,46 @@ export default {
         return;
       }
 
-      let transactions = usersWithConsumptions.map((user) => {
-        let transaction = {
-          type: "EXPENSE",
-          from: -1,
-          to: -1,
+      const transactions = usersWithConsumptions.map((user) => {
+        const amount = this.spend(user.newConsumption);
+        const context = this.defineContext(user.newConsumption);
+        const transaction = {
+          type:
+            this.mode === "deposit" ? TRANSACTION_DEPOSIT : TRANSACTION_EXPENSE,
+          from: user.id,
+          to: user.id,
+          amount,
+          context,
         };
-        switch (this.mode) {
-          case "cask":
-            transaction.from = user.id;
-            transaction.to = user.id;
-            //cast to float
-            transaction.amount = +(
-              +this.stickPrice * +user.newConsumption
-            ).toFixed(2);
-            transaction.context = `Conso au local de ${user.newConsumption} bâton à ${this.stickPrice} €`;
-            this.totalCPBalance -= transaction.amount;
-            user.balance -= transaction.amount;
+
+        switch (transaction.mode) {
+          case TRANSACTION_EXPENSE:
+            user.balance -= amount;
             break;
 
-          case "closet":
-            transaction.from = user.id;
-            transaction.to = user.id;
-            transaction.amount = +(
-              +this.settledStickPrice * +user.newConsumption
-            ).toFixed(2);
-            transaction.context = `Conso placard:  ${user.newConsumption} bâtons`;
-            this.totalCPBalance -= transaction.amount;
-            user.balance -= transaction.amount;
-            break;
-
-          case "deposit":
-            transaction.type = "DEPOSIT";
-            transaction.to = user.id;
-            transaction.from = user.id;
-            transaction.amount = +user.newConsumption;
-            transaction.context = "Recharge de compte perso";
-            this.totalCPBalance += transaction.amount;
-            user.balance += transaction.amount;
+          case TRANSACTION_DEPOSIT:
+            user.balance += amount;
             break;
         }
 
         return transaction;
       });
+
       await RepoFactory.TransactionRepository.createTransactions(
         this,
         transactions,
       );
+
       await this.$store.dispatch("notif/pushNotification", {
         type: "success",
         message: "Operations confirmées 💰💰💰",
       });
 
-      usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+      this.cleanInputs();
     },
     cleanInputs() {
       let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
-      usersWithConsumptions.forEach((u) => (u.newConsumption = ""));
+      usersWithConsumptions.forEach((u) => (u.newConsumption = 0));
       this.isSwitchDialogOpen = false;
     },
     openSgConfigForm() {
@@ -450,6 +422,30 @@ export default {
     },
     closeConfigDialog() {
       this.isSgConfigDialogOpen = false;
+    },
+    spend(consumptions) {
+      switch (this.mode) {
+        case "cask":
+          return +this.stickPrice * consumptions || 0;
+        case "closet":
+          return this.settledStickPrice * consumptions;
+        case "deposit":
+        default:
+          return consumptions;
+      }
+    },
+    defineContext(consumptions) {
+      switch (this.mode) {
+        case "cask":
+          return `Conso au local de ${consumptions} bâton à ${Money.displayCents(
+            this.stickPrice,
+          )}`;
+        case "closet":
+          return `Conso placard:  ${consumptions} bâtons`;
+        case "deposit":
+        default:
+          return "Recharge de compte perso";
+      }
     },
   },
 };
