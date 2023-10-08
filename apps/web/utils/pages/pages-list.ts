@@ -55,7 +55,7 @@ export const pages: Page[] = [
     to: "/trombinoscope",
     description:
       "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
-    mobileSupport: true,
+    mobileSupport: false,
     keywords: ["trombinoscope", "photos"],
   },
   {
