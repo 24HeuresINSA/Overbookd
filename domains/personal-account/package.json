@@ -1,12 +1,12 @@
 {
   "name": "@overbookd/personal-account",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Gestion des consommations des bénévoles pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
   "private": true,
-  "main": "dist/index.js",
+  "main": "dist/domains/personal-account/src/index.js",
   "bugs": {
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
     "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
@@ -29,11 +29,18 @@
     "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
   },
   "keywords": [
+    "personal-account",
     "availability",
-    "domain"
+    "domain",
+    "transaction",
+    "transfer"
   ],
   "engines": {
     "node": "20.8.0",
     "pnpm": "8.8.0"
+  },
+  "dependencies": {
+    "@overbookd/list": "workspace:^",
+    "@overbookd/permission": "workspace:^"
   }
 }
