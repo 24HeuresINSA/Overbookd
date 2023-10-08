@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  InMemoryTransferRepository,
-} from "./transfer-repository.inmemory";
+import { InMemoryTransferRepository } from "./transfer-repository.inmemory";
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import {
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
@@ -174,7 +172,10 @@ describe("Transfer", () => {
         const transferToTatouin = Payor.init(lea.id).transferTo(transferToSend);
         await transfer.send(transferToTatouin);
 
-        const transferToNoel = Payor.init(lea.id).transferTo({ ...transferToSend, to: noel.id });
+        const transferToNoel = Payor.init(lea.id).transferTo({
+          ...transferToSend,
+          to: noel.id,
+        });
         const { from } = await transfer.send(transferToNoel);
 
         expect(from.balance).toBe(-200);

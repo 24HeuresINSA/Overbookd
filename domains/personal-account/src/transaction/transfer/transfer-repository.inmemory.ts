@@ -5,7 +5,7 @@ import { TransferRepository, TransferResponse } from "./transfer";
 type Adherent = {
   id: number;
   balance: number;
-}
+};
 
 export class InMemoryTransferRepository implements TransferRepository {
   constructor(private adherents: Adherent[]) {}
