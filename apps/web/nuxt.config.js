@@ -56,6 +56,7 @@ export default {
     // https://go.nuxtjs.dev/pwa
     "@nuxtjs/pwa",
     "@nuxtjs/auth-next",
+    "nuxt-leaflet",
   ],
 
   auth: {

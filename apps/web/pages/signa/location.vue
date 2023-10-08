@@ -1,38 +1,39 @@
 <template>
   <div>
     <h1>Lieux de la Signa</h1>
-    <section class="location-table">
-      <v-container class="location-table">
-        <v-data-table
-          :headers="headers"
-          :items="locations"
-          :search="search"
-          :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
-          class="elevation-1"
-        >
-          <template #top>
-            <v-text-field
-              v-model="search"
-              label="Chercher"
-              class="mx-4"
-            ></v-text-field>
-          </template>
+    <v-container>
+      <LocationMap></LocationMap>
+    </v-container>
+    <v-container class="location-table">
+      <v-data-table
+        :headers="headers"
+        :items="locations"
+        :search="search"
+        :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
+        class="elevation-1"
+      >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Chercher"
+            class="mx-4"
+          ></v-text-field>
+        </template>
 
-          <template #item.action="{ item }">
-            <tr>
-              <td>
-                <v-btn icon small @click="locationToEdit = item">
-                  <v-icon small>mdi-circle-edit-outline</v-icon>
-                </v-btn>
-                <v-btn icon small @click="locationToDelete = item">
-                  <v-icon small>mdi-delete</v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-container>
-    </section>
+        <template #item.action="{ item }">
+          <tr>
+            <td>
+              <v-btn icon small @click="locationToEdit = item">
+                <v-icon small>mdi-circle-edit-outline</v-icon>
+              </v-btn>
+              <v-btn icon small @click="locationToDelete = item">
+                <v-icon small>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+    </v-container>
 
     <v-btn
       color="secondary"
@@ -75,6 +76,7 @@
 import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
 import { SignaLocation, Location } from "~/utils/models/signa-location.model";
+import LocationMap from "~/components/molecules/signa/location/LocationMap.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import NewLocationCard from "~/components/molecules/signa/location/NewLocationCard.vue";
 import ModifyLocationCard from "~/components/molecules/signa/location/ModifyLocationCard.vue";
@@ -91,6 +93,7 @@ interface LocationData {
 export default Vue.extend({
   name: "Location",
   components: {
+    LocationMap,
     NewLocationCard,
     ModifyLocationCard,
     ConfirmationMessage,
