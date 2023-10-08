@@ -7,5 +7,3 @@ export type {
   IAlertAboutPersonalAccount,
   Summary,
 } from "./personal-account-alert";
-export type { TransferRepository } from "./transaction";
-export { Transfer, Payor } from "./transaction";

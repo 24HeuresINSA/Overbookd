@@ -1,13 +1,13 @@
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import { Member, MemberRepository } from "./transfer";
 
-export type StoredMember = {
+type StoredMember = {
   id: number;
   permissions: Permission[];
 };
 
 export class InMemoryMemberRepository implements MemberRepository {
-  constructor(private members: StoredMember[]) {}
+  constructor(private readonly members: StoredMember[]) {}
 
   getById(adherentId: number): Promise<Member> {
     const member = this.members.find((m) => m.id === adherentId);
