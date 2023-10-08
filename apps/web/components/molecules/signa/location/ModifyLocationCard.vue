@@ -9,9 +9,9 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn :disabled="disableEditButton" @click="editLocation"
-        >Modifier le lieu</v-btn
-      >
+      <v-btn :disabled="disableEditButton" @click="editLocation">
+        Modifier le lieu
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
