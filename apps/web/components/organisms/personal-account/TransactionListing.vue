@@ -213,7 +213,7 @@ export default defineComponent({
   @media screen and (min-width: $mobile-max-width) {
     overflow-y: auto;
     margin-bottom: 0;
-    min-width: 40%;
+    min-width: 50%;
   }
 }
 
