@@ -47,26 +47,38 @@ export const actions = actionTree(
       commit("SET_SIGNA_LOCATIONS", formattedLocations);
     },
     async createLocation({ dispatch }, location: CreateLocation) {
-      const res = await safeCall(this, repo.createNewSignaLocation(this, location), {
-        successMessage: "Lieu ajouté 🥳",
-        errorMessage: "Lieu non ajouté 😢",
-      });
+      const res = await safeCall(
+        this,
+        repo.createNewSignaLocation(this, location),
+        {
+          successMessage: "Lieu ajouté 🥳",
+          errorMessage: "Lieu non ajouté 😢",
+        },
+      );
       if (!res) return;
       await dispatch("getAllSignaLocations");
     },
     async editLocation({ dispatch }, location: SignaLocation) {
-      const res = await safeCall(this, repo.updateSignaLocation(this, location), {
-        successMessage: "Lieu modifié 🥳",
-        errorMessage: "Lieu non modifié 😢",
-      });
+      const res = await safeCall(
+        this,
+        repo.updateSignaLocation(this, location),
+        {
+          successMessage: "Lieu modifié 🥳",
+          errorMessage: "Lieu non modifié 😢",
+        },
+      );
       if (!res) return;
       await dispatch("getAllSignaLocations");
     },
     async deleteLocation({ dispatch }, location: SignaLocation) {
-      const res = await safeCall(this, repo.deleteSignaLocation(this, location.id), {
-        successMessage: "Lieu supprimé 🥳",
-        errorMessage: "Lieu non supprimé 😢",
-      });
+      const res = await safeCall(
+        this,
+        repo.deleteSignaLocation(this, location.id),
+        {
+          successMessage: "Lieu supprimé 🥳",
+          errorMessage: "Lieu non supprimé 😢",
+        },
+      );
       if (!res) return;
       await dispatch("getAllSignaLocations");
     },
