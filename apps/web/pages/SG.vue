@@ -414,11 +414,10 @@ export default {
         }),
       ]);
 
-
       this.cleanInputs();
     },
     cleanInputs() {
-      this.users=this.consumers
+      this.users = this.consumers;
       this.isSwitchDialogOpen = false;
     },
     openSgConfigForm() {
