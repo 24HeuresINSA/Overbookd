@@ -13,8 +13,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import AvailabilitiesSumup from "../../../molecules/availabilities/AvailabilitiesSumup.vue";
-import VolunteerPersonalDataForm from "../../../molecules/user/VolunteerPersonalDataForm.vue";
+import AvailabilitiesSumup from "~/components/molecules/availabilities/AvailabilitiesSumup.vue";
+import VolunteerPersonalDataForm from "~/components/molecules/user/VolunteerPersonalDataForm.vue";
 
 export default Vue.extend({
   name: "VolunteerInformation",
