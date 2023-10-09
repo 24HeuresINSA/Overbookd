@@ -316,6 +316,7 @@ export default {
   async mounted() {
     await this.$accessor.configuration.fetch("sg");
     await this.$accessor.user.fetchPersonalAccountConsumers();
+    this.totalPrice = this.sgConfig.prixFutBlonde;
     this.users = this.consumers;
     this.ready = true;
   },
@@ -405,16 +406,19 @@ export default {
         transactions,
       );
 
-      await this.$store.dispatch("notif/pushNotification", {
-        type: "success",
-        message: "Operations confirmées 💰💰💰",
-      });
+      await Promise.all([
+        this.$accessor.user.fetchPersonalAccountConsumers(),
+        this.$store.dispatch("notif/pushNotification", {
+          type: "success",
+          message: "Operations confirmées 💰💰💰",
+        }),
+      ]);
+
 
       this.cleanInputs();
     },
     cleanInputs() {
-      let usersWithConsumptions = this.users.filter((u) => u.newConsumption);
-      usersWithConsumptions.forEach((u) => (u.newConsumption = 0));
+      this.users=this.consumers
       this.isSwitchDialogOpen = false;
     },
     openSgConfigForm() {
