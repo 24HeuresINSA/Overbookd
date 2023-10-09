@@ -24,11 +24,11 @@ overbookd/bump-version:
   interruptible: true
   image: node:20-alpine
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
     - when: never
   before_script:
     - !reference [.setup-git, script]
     - !reference [.setup-pnpm, before_script]
   script:
-    - pnpm release:$BUMP_LEVEL
+    - npx commit-and-tag-version
     - git push --tags ssh_origin HEAD:main

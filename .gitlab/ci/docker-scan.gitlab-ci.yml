@@ -13,7 +13,7 @@ overbookd-web_scan:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -35,7 +35,7 @@ overbookd-api_scan:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     - if: '$CI_COMMIT_BRANCH == "main"'
