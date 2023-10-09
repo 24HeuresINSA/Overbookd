@@ -9,7 +9,7 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import UserCard from "~/components/organisms/user/data/UserCard.vue";
+import UserCard from "~/components/organisms/user/UserCard.vue";
 
 export default Vue.extend({
   name: "Profile",

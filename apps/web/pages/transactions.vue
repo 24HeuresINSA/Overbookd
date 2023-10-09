@@ -29,7 +29,7 @@
 
 <script>
 import { RepoFactory } from "~/repositories/repo-factory";
-import OverTransactions from "~/components/organisms/user/personalAccount/OverTransactions.vue";
+import OverTransactions from "~/components/organisms/personal-account/OverTransactions.vue";
 import { safeCall } from "~/utils/api/calls";
 import { formatUsername } from "~/utils/user/user.utils";
 
