@@ -32,7 +32,10 @@ def getCategoryId(categoryName: str) -> int:
         params={"name": categoryName},
         timeout=3
     ).json()
-    [category] = [category for category in categories if category.get("path") == categoryName]
+    [category] = [
+        category for category in categories
+        if category.get("path") == categoryName
+    ]
     return int(category.get("id"))
 
 
@@ -75,7 +78,8 @@ def createGear(name: str, category: int, ponctualGear: bool = False, consumableG
     print(f"Try to create gear {name} with {category} as category")
     return requests.post(
         f"https://{DOMAIN}/api/gears",
-        json={"name": name, "category": category, "isPonctualUsage": ponctualGear, "isConsumable": consumableGear},
+        json={"name": name, "category": category,
+              "isPonctualUsage": ponctualGear, "isConsumable": consumableGear},
         headers={"Authorization": f"Bearer {TOKEN}"},
         timeout=3
     ).json()
@@ -95,7 +99,7 @@ def extractFromFile(categories: Dict, filename: str):
             consumableGear = int(gear['consumable'])
             gears.append({'name': gearName, 'category': categoryPath,
                          "isPonctualUsage": ponctualGear == 1,
-                         "isConsumable": consumableGear == 1})
+                          "isConsumable": consumableGear == 1})
             if categories.get(categoryPath) is not None:
                 continue
             categories.update(

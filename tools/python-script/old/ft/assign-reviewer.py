@@ -11,8 +11,10 @@ DOMAIN = "preprod.overbookd.24heures.org"
 
 reviewer_candidate_ids = []
 
+
 def fetchExistingFts():
     return requests.get(f"https://{DOMAIN}/api/ft", headers={"Authorization": f"Bearer {TOKEN}"}, timeout=3).json()
+
 
 def setReviewersToFts(fts):
     for ft in fts:
@@ -21,12 +23,16 @@ def setReviewersToFts(fts):
 
         body = json.dumps({"id": reviewer_id})
         url = f"https://{DOMAIN}/api/ft/{ft['id']}/humanReviewer"
-        headers = {"Authorization": f"Bearer {TOKEN}", 'Content-Type': 'application/json'}
-        reviewer = requests.put(url, data=body, headers=headers, timeout=3).json()
+        headers = {"Authorization": f"Bearer {TOKEN}",
+                   'Content-Type': 'application/json'}
+        reviewer = requests.put(
+            url, data=body, headers=headers, timeout=3).json()
         logger.info(f"For FT #{ft['id']}: {reviewer}")
+
 
 def main():
     existing_fts = fetchExistingFts()
     setReviewersToFts(existing_fts)
+
 
 main()

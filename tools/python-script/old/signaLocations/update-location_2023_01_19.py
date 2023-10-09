@@ -10,10 +10,13 @@ toAddLocations = [
 toDeleteLocationNames = [] + toAddLocations
 
 toUpdateLocationForms = [
-  { "from": "Espace VIP", "to": "Trou GM" },
+    {"from": "Espace VIP", "to": "Trou GM"},
 ]
 
+
 def main():
-  updateLocations(toAddLocations, toDeleteLocationNames, toUpdateLocationForms)
+    updateLocations(toAddLocations, toDeleteLocationNames,
+                    toUpdateLocationForms)
+
 
 main()
