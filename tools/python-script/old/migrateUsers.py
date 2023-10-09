@@ -181,7 +181,8 @@ def createUser(users, token):
             "email": user["email"],
             "birthdate": birthdayCatch(user),
             "phone": phoneCatch(user),
-
+            "department": newDepartFormat(user),
+            "year": newYearFormat(user),
             "password": "password",
         })
 
