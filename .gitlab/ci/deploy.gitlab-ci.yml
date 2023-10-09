@@ -5,7 +5,7 @@ deploy:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: '$CI_COMMIT_BRANCH == "main"'
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'

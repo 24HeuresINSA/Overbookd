@@ -25,7 +25,7 @@ overbookd-web_docker_pre_build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: manual
@@ -85,7 +85,7 @@ overbookd-web_docker_build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - if: '$CI_COMMIT_BRANCH == "main"'
@@ -110,7 +110,7 @@ overbookd-api_docker_build:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "web" && $BUMP_LEVEL'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
       when: never
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       when: manual
