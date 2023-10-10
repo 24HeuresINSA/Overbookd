@@ -1,6 +1,5 @@
 <template>
   <v-alert
-    dark
     icon="mdi-hand-coin"
     border="left"
     prominent
