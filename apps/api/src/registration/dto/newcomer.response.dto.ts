@@ -25,6 +25,13 @@ export class NewcomerResponseDto implements IDefineANewcomer {
 
   @ApiProperty({
     required: true,
+    description: "The newcomer email",
+    type: String,
+  })
+  email: string;
+
+  @ApiProperty({
+    required: true,
     description: "The newcomer register date",
     type: Date,
   })
