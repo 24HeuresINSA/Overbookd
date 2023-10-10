@@ -13,8 +13,9 @@ datasource db {
 
 enum TransactionType {
   DEPOSIT
-  EXPENSE
   TRANSFER
+  BARREL
+  PROVISIONS
 
   @@map("transaction_type")
 }
@@ -146,12 +147,12 @@ model TeamPermission {
 
 model Transaction {
   id        Int             @id @default(autoincrement())
-  type      TransactionType
+  type      TransactionType @default(TRANSFER)
   from      Int
   userFrom  User            @relation("from", fields: [from], references: [id])
   to        Int             @default(-1)
   userTo    User            @relation("to", fields: [to], references: [id])
-  amount    Int           @default(0)
+  amount    Int             @default(0)
   context   String          @default("") @db.VarChar(255)
   createdAt DateTime        @default(now()) @map("created_at")
   isDeleted Boolean         @default(false) @map("is_deleted")
