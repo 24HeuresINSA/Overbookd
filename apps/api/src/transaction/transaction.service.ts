@@ -244,6 +244,6 @@ export class TransactionService {
   }
 
   private shouldUpdateSenderBalance(transactionType: string): boolean {
-    return ["EXPENSE", "TRANSFER"].includes(transactionType);
+    return ["BARREL", "PROVISIONS", "TRANSFER"].includes(transactionType);
   }
 }
