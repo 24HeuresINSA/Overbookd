@@ -20,34 +20,6 @@ enum TransactionType {
   @@map("transaction_type")
 }
 
-enum Year {
-  A1
-  A2
-  A3
-  A4
-  A5
-  VIEUX
-  AUTRE
-
-  @@map("year")
-}
-
-enum Department {
-  TC
-  IF
-  GE
-  GM
-  GI
-  GCU
-  GEN
-  SGM
-  BS
-  FIMI
-  AUTRE
-
-  @@map("department")
-}
-
 model User {
   id                   Int         @id @default(autoincrement())
   firstname            String      @db.VarChar(30)
@@ -56,11 +28,9 @@ model User {
   email                String      @unique
   birthdate            DateTime
   phone                String      @db.VarChar(30)
-  department           Department?
   comment              String?
   resetPasswordToken   String?     @unique @map("reset_password_token")
   resetPasswordExpires DateTime?   @map("reset_password_expires")
-  year                 Year?
   profilePicture       String?     @map("profile_picture")
   charisma             Int         @default(0)
   balance              Int         @default(0)
