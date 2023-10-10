@@ -2,8 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 enum TransactionType {
   DEPOSIT = "DEPOSIT",
-  EXPENSE = "EXPENSE",
+  BARREL = "BARREL",
   TRANSFER = "TRANSFER",
+  PROVISIONS = "PROVISIONS",
 }
 
 export class CreateTransactionRequestDto {

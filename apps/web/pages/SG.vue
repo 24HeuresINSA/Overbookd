@@ -152,7 +152,8 @@ import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 import { Money } from "~/utils/money/money";
 
 const TRANSACTION_DEPOSIT = "DEPOSIT";
-const TRANSACTION_EXPENSE = "EXPENSE";
+const TRANSACTION_BARREL = "BARREL";
+const TRANSACTION_PROVISIONS = "PROVISIONS";
 
 export default {
   name: "SG",
@@ -235,6 +236,17 @@ export default {
     },
     isCask() {
       return this.mode === "cask";
+    },
+    transactionType() {
+      switch (this.mode) {
+        case "cask":
+          return TRANSACTION_BARREL;
+        case "closet":
+          return TRANSACTION_PROVISIONS;
+        case "deposit":
+        default:
+          return TRANSACTION_DEPOSIT;
+      }
     },
     areInputsValid() {
       let res = true;
@@ -379,9 +391,9 @@ export default {
       const transactions = usersWithConsumptions.map((user) => {
         const amount = this.spend(user.newConsumption);
         const context = this.defineContext(user.newConsumption);
+        const type = this.transactionType;
         const transaction = {
-          type:
-            this.mode === "deposit" ? TRANSACTION_DEPOSIT : TRANSACTION_EXPENSE,
+          type,
           from: user.id,
           to: user.id,
           amount,
@@ -389,7 +401,7 @@ export default {
         };
 
         switch (transaction.mode) {
-          case TRANSACTION_EXPENSE:
+          case TRANSACTION_BARREL:
             user.balance -= amount;
             break;
 

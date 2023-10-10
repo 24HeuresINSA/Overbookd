@@ -10,6 +10,7 @@ export class AlertService {
   ) {}
 
   async getMyAlerts(volunteer: JwtPayload): Promise<Alerts> {
+    console.error(typeof volunteer.id);
     const [personalAccount, contribution] = await Promise.all([
       this.personalAccountAlerting.for(volunteer.id),
       this.contributionAlerting.for(volunteer.id),

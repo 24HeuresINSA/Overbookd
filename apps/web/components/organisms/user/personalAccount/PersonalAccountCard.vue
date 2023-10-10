@@ -99,7 +99,8 @@ export default Vue.extend({
           return false;
         case "TRANSFER":
           return transaction.from === this.me.id;
-        case "EXPENSE":
+        case "BARREL":
+        case "PROVISIONS":
           return true;
         default:
           return false;

@@ -30,7 +30,9 @@
 
       <template #[`item.from`]="{ item }">
         {{
-          item.type == "TRANSFER" || item.type == "EXPENSE"
+          item.type == "TRANSFER" ||
+          item.type == "BARREL" ||
+          item.type == "PROVISIONS"
             ? getFullName(item.userFrom)
             : ""
         }}

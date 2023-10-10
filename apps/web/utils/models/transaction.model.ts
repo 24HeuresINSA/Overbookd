@@ -5,8 +5,14 @@ interface BaseTransaction {
   isDeleted: boolean;
 }
 
-export interface Expense extends BaseTransaction {
-  type: "EXPENSE";
+export interface Barrel extends BaseTransaction {
+  type: "BARREL";
+  from: string;
+  to: null;
+}
+
+export interface Provisions extends BaseTransaction {
+  type: "PROVISIONS";
   from: string;
   to: null;
 }
@@ -23,4 +29,4 @@ export interface Transfer extends BaseTransaction {
   to: number;
 }
 
-export type Transaction = Expense | Deposit | Transfer;
+export type Transaction = Barrel | Provisions | Deposit | Transfer;
