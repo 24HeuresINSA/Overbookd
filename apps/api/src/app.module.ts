@@ -46,6 +46,7 @@ import { ContributionModule } from "./contribution/contribution.module";
 import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
 import { AlertModule } from "./alert/alert.module";
 import { NotificationModule } from "./notification/notification.module";
+import { ONE_MINUTE_IN_MS } from "@overbookd/period";
 
 @Module({
   imports: [
@@ -103,8 +104,7 @@ import { NotificationModule } from "./notification/notification.module";
     NeedHelpModule,
     RegistrationModule,
     ThrottlerModule.forRoot({
-      ttl: 60,
-      limit: 500,
+      throttlers: [{ ttl: ONE_MINUTE_IN_MS, limit: 500 }],
     }),
     RegistrationModule,
     PrismaModule,

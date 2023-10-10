@@ -45,7 +45,7 @@
     "@nestjs/passport": "10.0.2",
     "@nestjs/platform-express": "10.2.7",
     "@nestjs/swagger": "7.1.13",
-    "@nestjs/throttler": "4.2.1",
+    "@nestjs/throttler": "5.0.0",
     "@overbookd/alerts": "workspace:^",
     "@overbookd/configuration": "workspace:^",
     "@overbookd/contribution": "workspace:^",

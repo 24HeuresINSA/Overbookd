@@ -15,13 +15,14 @@ import { LoginRequestDto } from "./dto/login.request.dto";
 import { UserAccessResponseDto } from "./dto/user-access.response.dto";
 import { Throttle } from "@nestjs/throttler";
 import { RefreshAccessRequestDto } from "./dto/refresh-access.request.dto";
+import { ONE_MINUTE_IN_MS, THIRTY_SECONDS_IN_MS } from "@overbookd/period";
 
 @ApiTags("authentication")
 @Controller()
 export class AuthenticationController {
   constructor(private authService: AuthenticationService) {}
 
-  @Throttle(10, 30)
+  @Throttle({ default: { limit: 10, ttl: THIRTY_SECONDS_IN_MS } })
   @Post("login")
   @ApiBody({
     description: "Route de connection",
@@ -60,7 +61,7 @@ export class AuthenticationController {
     return this.authService.refresh(refreshToken);
   }
 
-  @Throttle(2, 60)
+  @Throttle({ default: { limit: 2, ttl: ONE_MINUTE_IN_MS } })
   @ApiBody({
     description:
       "Route pour la premiere partie de la procedure de reset de mot de passe, envoie un mail a l'utilisateur",
@@ -74,7 +75,7 @@ export class AuthenticationController {
     return this.authService.forgot(user);
   }
 
-  @Throttle(2, 60)
+  @Throttle({ default: { limit: 2, ttl: ONE_MINUTE_IN_MS } })
   @ApiBody({
     description:
       "Route pour la seconde partie procedure de reset de mot de passe, enregistre le nouveau mot de passe",
