@@ -176,7 +176,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .registrations {
-  margin-left: 20px;
+  margin-left: 10px;
   @media screen and (max-width: $mobile-max-width) {
     margin-left: 0;
   }
