@@ -1,23 +1,6 @@
 include:
   - local: /.gitlab/ci/setup-pnpm.gitlab-ci.yml
-
-.setup-git:
-  script:
-    - apk update
-    - apk add openssh git
-    - eval $(ssh-agent -s)
-    - mkdir ~/.ssh/
-    - echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - echo "Host gitlab.com" >> ~/.ssh/config
-    - echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
-    - echo "StrictHostKeyChecking no" >> ~/.ssh/config
-    - git config user.email "dsi@24heures.org"
-    - git config user.name "24-bot"
-    - git remote remove ssh_origin || true # Local repo state may be cached
-    - git remote add ssh_origin "git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git"
-    - git fetch --all
-    - git checkout -b main ssh_origin/main
+  - local: /.gitlab/ci/setup-git.gitlab-ci.yml
 
 overbookd/bump-version:
   stage: bump
