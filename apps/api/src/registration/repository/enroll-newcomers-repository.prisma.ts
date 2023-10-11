@@ -57,6 +57,7 @@ function formatToNewcomer(newcomer: DatabaseNewcomer): IDefineANewcomer {
     id: newcomer.id,
     firstname: newcomer.firstname,
     lastname: newcomer.lastname,
+    email: newcomer.email,
     registeredAt: newcomer.createdAt,
     teams,
   };

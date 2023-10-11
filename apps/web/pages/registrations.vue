@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="registrations">
     <h1>Nouvelles inscriptions</h1>
     <RegistrationConfiguration class="registration-configuration" />
     <v-divider></v-divider>
@@ -106,6 +106,7 @@ export default Vue.extend({
     headers: [
       { text: "Prénom", value: "firstname" },
       { text: "Nom", value: "lastname" },
+      { text: "Email", value: "email" },
       { text: "Date d'inscription", value: "registeredAt" },
       { text: "Equipes", value: "teams", sortable: false },
     ],
@@ -174,6 +175,13 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.registrations {
+  margin-left: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    margin-left: 0;
+  }
+}
+
 .filters {
   display: flex;
   gap: 20px;

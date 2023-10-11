@@ -4,6 +4,7 @@ export interface IDefineANewcomer {
   id: number;
   firstname: string;
   lastname: string;
+  email: string;
   registeredAt: Date;
   teams: Teams;
 }
