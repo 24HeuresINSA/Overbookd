@@ -16,6 +16,7 @@ stages:
   - docker-scan
   - docker-publish
   - deploy
+  - release
 
 include:
   - local: /.gitlab/ci/setup-pnpm.gitlab-ci.yml
@@ -34,3 +35,4 @@ include:
   - local: /.gitlab/ci/docker-scan.gitlab-ci.yml
   - local: /.gitlab/ci/docker-publish.gitlab-ci.yml
   - local: /.gitlab/ci/deploy.gitlab-ci.yml
+  - local: /.gitlab/ci/create-release.gitlab-ci.yml
