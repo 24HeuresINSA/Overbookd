@@ -26,143 +26,17 @@
 import { defineComponent } from "vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Money } from "~/utils/money/money";
-
-type BaseTransaction = {
-  amount: number;
-  context: string;
-  date: Date;
-};
-
-type DepositTransaction = BaseTransaction & {
-  type: "DEPOSIT";
-};
-
-type BarrelTransaction = BaseTransaction & {
-  type: "BARREL";
-};
-
-type ProvisionsTransaction = BaseTransaction & {
-  type: "PROVISIONS";
-};
-
-type TransferIReceiveTransaction = BaseTransaction & {
-  type: "TRANSFER";
-  from: number;
-};
-
-type TransferISendTransaction = BaseTransaction & {
-  type: "TRANSFER";
-  to: number;
-};
-
-function doIReceive(transfer: TransferIReceiveTransaction | TransferISendTransaction): transfer is TransferIReceiveTransaction {
-  return "from" in transfer;
-}
-
-type Transaction =
-  DepositTransaction |
-  BarrelTransaction |
-  ProvisionsTransaction |
-  TransferIReceiveTransaction |
-  TransferISendTransaction;
-
-type TransactionType = Transaction["type"];
+import { Transaction, TransactionType, doIReceive } from "@overbookd/transactions";
 
 export default defineComponent({
   name: "TransactionListing",
   computed: {
     transactions(): Transaction[] {
-      return [
-        {
-          amount: 100,
-          context: "Fût de blonde",
-          type: "BARREL",
-          date: new Date("2023-10-02"),
-        },
-        {
-          amount: 150,
-          context: "Conso placard",
-          type: "PROVISIONS",
-          date: new Date("2023-08-26"),
-        },
-        {
-          amount: 1000,
-          context: "Dépôt",
-          type: "DEPOSIT",
-          date: new Date("2023-06-12"),
-        },
-        {
-          amount: 500,
-          context: "Burger midi local",
-          type: "TRANSFER",
-          date: new Date("2023-03-12"),
-          from: 1,
-        },
-        {
-          amount: 1500,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1502,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1501,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1500,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1502,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1501,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1500,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1502,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-        {
-          amount: 1501,
-          context: "Repas orga",
-          type: "TRANSFER",
-          date: new Date("2023-02-10"),
-          to: 1,
-        },
-      ];
+      return this.$accessor.transaction.myTransactions;
     },
+  },
+  async created() {
+    await this.$accessor.transaction.fetchMyTransactions();
   },
   methods: {
     isDebit(transaction: Transaction): boolean {
