@@ -11,12 +11,12 @@ prepare_release:
     - !reference [.setup-git, script]
   script:
     - PREVIOUS_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)
-    - CURRENT_COMMIT_TAG=$(git describe --abbrev=0 --tags)
+    - CURRENT_TAG=$(git describe --abbrev=0 --tags)
     - echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> variables.env
-    - echo "CURRENT_COMMIT_TAG=$CURRENT_COMMIT_TAG" >> variables.env
-    - echo "TAG_DATE=$(git log -1 --pretty=format:'%ad' --date=short $CURRENT_COMMIT_TAG)" >> variables.env
-    - echo "CHANGELOG=$(git log $PREVIOUS_TAG...$CURRENT_COMMIT_TAG --pretty=format:'- %s' --reverse | grep -v 'chore(release)')" >> variables.env
-    - echo "COMPARE_LINK=https://gitlab.com/24-heures-insa/overbookd-mono/-/compare/$PREVIOUS_TAG...$CURRENT_COMMIT_TAG" >> variables.env
+    - echo "CURRENT_TAG=$CURRENT_TAG" >> variables.env
+    - echo "TAG_DATE=$(git log -1 --pretty=format:'%ad' --date=short $CURRENT_TAG)" >> variables.env
+    - echo "CHANGELOG=$(git log $PREVIOUS_TAG...$CURRENT_TAG --pretty=format:'- %s' --reverse | grep -v 'chore(release)')" >> variables.env
+    - echo "COMPARE_LINK=https://gitlab.com/24-heures-insa/overbookd-mono/-/compare/$PREVIOUS_TAG...$CURRENT_TAG" >> variables.env
   artifacts:
     reports:
       dotenv: variables.env
@@ -32,11 +32,11 @@ publish_release:
     - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "1276-automate-release-generation"'
   script:
     - echo $PREVIOUS_TAG
-    - echo $CURRENT_COMMIT_TAG
+    - echo $CURRENT_TAG
     - echo $TAG_DATE
     - echo $CHANGELOG
     - echo $COMPARE_LINK
   release:
-    tag_name: "$CURRENT_COMMIT_TAG"
-    name: "$CURRENT_COMMIT_TAG"
-    description: "## [$CURRENT_COMMIT_TAG]($COMPARE_LINK) ($TAG_DATE)\n\n$CHANGELOG"
+    tag_name: "$CURRENT_TAG"
+    name: "$CURRENT_TAG"
+    description: "## [$CURRENT_TAG]($COMPARE_LINK) ($TAG_DATE)\n\n$CHANGELOG"
