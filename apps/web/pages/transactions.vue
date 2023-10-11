@@ -1,22 +1,20 @@
 <template>
   <v-container>
     <h1>Transactions 💸</h1>
-    <v-card style="margin-bottom: 5px">
-      <v-card-text
-        style="display: flex; flex-direction: row; align-items: center"
-      >
+    <v-card>
+      <v-card-text class="transactions-content">
         <v-autocomplete
-          v-model="selectedUserID"
+          v-model="selectedUserId"
           label="Nom"
-          :items="usernames"
-          item-text="username"
+          :items="consumers"
+          :item-text="displayUserName"
           item-value="id"
-          style="width: 300px"
+          class="filter"
         ></v-autocomplete>
-        <v-btn icon @click="search(selectedUserID)">
+        <v-btn icon @click="search(selectedUserId)">
           <v-icon>mdi-account-search</v-icon>
         </v-btn>
-        <v-btn icon @click="clear()">
+        <v-btn icon @click="clear">
           <v-icon>mdi-spray-bottle</v-icon>
         </v-btn>
       </v-card-text>
@@ -33,6 +31,7 @@
 import { RepoFactory } from "~/repositories/repo-factory";
 import OverTransactions from "~/components/organisms/user/personalAccount/OverTransactions.vue";
 import { safeCall } from "~/utils/api/calls";
+import { formatUsername } from "~/utils/user/user.utils";
 
 export default {
   name: "Transactions",
@@ -41,22 +40,22 @@ export default {
     return {
       transactions: [],
       filteredTransactions: [],
-      usernames: [],
-      selectedUserID: undefined,
+      selectedUserId: undefined,
     };
   },
+
   head: () => ({
     title: "Transactions",
   }),
 
-  async beforeMount() {
-    const usersCall = await safeCall(
-      this.$store,
-      RepoFactory.UserRepository.getAllUsernamesWithCP(this),
-    );
-    if (usersCall) {
-      this.usernames = usersCall.data;
-    }
+  computed: {
+    consumers() {
+      return this.$accessor.user.personalAccountConsumers;
+    },
+  },
+
+  async created() {
+    await this.$accessor.user.fetchPersonalAccountConsumers();
   },
 
   async mounted() {
@@ -79,8 +78,21 @@ export default {
     clear() {
       this.filteredTransactions = this.transactions;
     },
+    displayUserName(user) {
+      return formatUsername(user);
+    },
   },
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.transactions-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.filter {
+  width: 300px;
+}
+</style>
