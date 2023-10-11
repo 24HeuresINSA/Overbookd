@@ -15,7 +15,7 @@ prepare_release:
     - echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> variables.env
     - echo "CURRENT_COMMIT_TAG=$CURRENT_COMMIT_TAG" >> variables.env
     - echo "TAG_DATE=$(git log -1 --pretty=format:'%ad' --date=short $CURRENT_COMMIT_TAG)" >> variables.env
-    - echo "CHANGELOG=$(git log $PREVIOUS_TAG...$CURRENT_COMMIT_TAG --pretty=format:'- %s' --reverse | grep -v "chore(release)")" >> variables.env
+    - echo "CHANGELOG=$(git log $PREVIOUS_TAG...$CURRENT_COMMIT_TAG --pretty=format:'- %s' --reverse | grep -v 'chore(release)')" >> variables.env
     - echo "COMPARE_LINK=https://gitlab.com/24-heures-insa/overbookd-mono/-/compare/$PREVIOUS_TAG...$CURRENT_COMMIT_TAG" >> variables.env
   artifacts:
     reports:
