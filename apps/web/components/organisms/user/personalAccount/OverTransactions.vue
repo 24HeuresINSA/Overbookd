@@ -6,21 +6,21 @@
       dense
       :items-per-page="-1"
     >
-      <template #[`group.summary`]="{ group }">
+      <template #group.summary="{ group }">
         {{ new Date(group).toLocaleString() }}
       </template>
 
-      <template #[`item.type`]="{ item }">
+      <template #item.type="{ item }">
         <label :style="item.isDeleted ? 'background-color: red' : ''">
           {{ item.type }}
         </label>
       </template>
 
-      <template #[`item.amount`]="{ item }">
-        {{ (item.amount || 0).toFixed(2) }} €
+      <template #item.amount="{ item }">
+        {{ convertToEuros(item.amount) }}
       </template>
 
-      <template #[`item.to`]="{ item }">
+      <template #item.to="{ item }">
         {{
           item.type == "TRANSFER" || item.type == "DEPOSIT"
             ? getFullName(item.userTo)
@@ -28,7 +28,7 @@
         }}
       </template>
 
-      <template #[`item.from`]="{ item }">
+      <template #item.from="{ item }">
         {{
           item.type == "TRANSFER" ||
           item.type == "BARREL" ||
@@ -38,15 +38,11 @@
         }}
       </template>
 
-      <template #[`item.createdAt`]="{ item }">
-        {{
-          new Date(item.createdAt).toLocaleString("fr", {
-            timezone: "Europe/Paris",
-          })
-        }}
+      <template #item.createdAt="{ item }">
+        {{ formatDate(item.createdAt) }}
       </template>
 
-      <template #[`item.action`]="{ item }">
+      <template #item.action="{ item }">
         <v-btn
           v-if="!item.isDeleted"
           icon
@@ -57,16 +53,21 @@
         </v-btn>
       </template>
     </v-data-table>
-    <SnackNotificationContainer></SnackNotificationContainer>
+    <SnackNotificationContainer />
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import SnackNotificationContainer from "../../../molecules/snack/SnackNotificationContainer.vue";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
+import { Money } from "~/utils/money/money";
+import { formatUsername } from "~/utils/user/user.utils";
+import { User } from "@overbookd/user";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
 
-export default {
+export default defineComponent({
   name: "OverTransactions",
   components: { SnackNotificationContainer },
   props: {
@@ -84,17 +85,10 @@ export default {
       headers: [
         { text: "Type", value: "type" },
         { text: "Depuis", value: "from" },
-        {
-          text: "Vers",
-          value: "to",
-        },
+        { text: "Vers", value: "to" },
         { text: "Contexte", value: "context" },
         { text: "Date", value: "createdAt" },
-        {
-          text: "Montant",
-          value: "amount",
-          align: "end",
-        },
+        { text: "Montant", value: "amount" },
       ],
       users: {},
     };
@@ -105,31 +99,33 @@ export default {
     }
   },
   methods: {
-    async deleteTransaction(transactionID) {
+    async deleteTransaction(transactionId: string) {
       const deleteCall = await safeCall(
         this.$store,
         RepoFactory.TransactionRepository.deleteTransaction(
           this,
-          transactionID,
+          transactionId,
         ),
       );
       if (deleteCall) {
         // update on screen
         this.$accessor.notif.pushNotification({
-          type: "success",
           message: "Transaction supprimée",
         });
       }
       this.$accessor.notif.pushNotification({
-        type: "error",
         message: "Une erreur est survenue",
       });
     },
-    getFullName({ lastname, firstname }) {
-      return `${firstname} ${lastname}`;
+    getFullName(user: User): string {
+      return formatUsername(user);
+    },
+    convertToEuros(amount: number): string {
+      return Money.displayCents(amount);
+    },
+    formatDate(date: Date): string {
+      return formatDateWithMinutes(date);
     },
   },
-};
+});
 </script>
-
-<style scoped></style>
