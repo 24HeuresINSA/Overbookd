@@ -10,10 +10,12 @@ prepare_release:
   before_script:
     - !reference [.setup-git, script]
   script:
-    - echo "PREVIOUS_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)" >> variables.env
-    - echo "CURRENT_COMMIT_TAG=$(git describe --abbrev=0 --tags)" >> variables.env
+    - PREVIOUS_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)
+    - CURRENT_COMMIT_TAG=$(git describe --abbrev=0 --tags)
+    - echo "PREVIOUS_TAG=$PREVIOUS_TAG" >> variables.env
+    - echo "CURRENT_COMMIT_TAG=$CURRENT_COMMIT_TAG" >> variables.env
     - echo "TAG_DATE=$(git log -1 --pretty=format:'%ad' --date=short $CURRENT_COMMIT_TAG)" >> variables.env
-    - echo "CHANGELOG=$(git log $PREVIOUS_TAG...$CI_COMMIT_TAG --pretty=format:'- %s' --reverse | grep -v "chore(release)")" >> variables.env
+    - echo "CHANGELOG=$(git log $PREVIOUS_TAG...$CURRENT_COMMIT_TAG --pretty=format:'- %s' --reverse | grep -v "chore(release)")" >> variables.env
     - echo "COMPARE_LINK=https://gitlab.com/24-heures-insa/overbookd-mono/-/compare/$PREVIOUS_TAG...$CURRENT_COMMIT_TAG" >> variables.env
   artifacts:
     reports:
