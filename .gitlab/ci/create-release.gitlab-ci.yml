@@ -6,10 +6,12 @@ release:
   image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
     - if: $CI_COMMIT_TAG
+    - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "1276-automate-release-generation"'
   before_script:
     - !reference [.setup-git, script]
   script:
     - PREVIOUS_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1 --max-count=1`)
+    - CI_COMMIT_TAG=$($CI_COMMIT_TAG || $(git describe --abbrev=0 --tags))
     - TAG_DATE=$(git log -1 --pretty=format:'%ad' --date=short $CI_COMMIT_TAG)
     - CHANGELOG=$(git log $PREVIOUS_TAG...$CI_COMMIT_TAG --pretty=format:'- %s' --reverse | grep -v "chore(release)")
     - COMPARE_LINK=https://gitlab.com/24-heures-insa/overbookd-mono/-/compare/$PREVIOUS_TAG...$CI_COMMIT_TAG
