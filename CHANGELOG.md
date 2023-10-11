@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.3.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.3.0...v2.3.1) (2023-10-11)
+
+
+### Bug Fixes
+
+* **deps:** update api dependencies ([e5cf3ef](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e5cf3efc236a4faadca3bd16a55d54da94244494))
+* **deps:** update dependency @nestjs/throttler to v5 ([59038da](https://gitlab.com/24-heures-insa/overbookd-mono/commit/59038da6d4d5c27a6669b5439cd3e60936ab9138))
+* stop using department and year ([e43bcb9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e43bcb91c8e62e4d50af93793c944d2a67a538b6))
+
 ## [2.3.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.2.1...v2.3.0) (2023-10-09)
 
 
