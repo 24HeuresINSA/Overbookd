@@ -2,10 +2,13 @@
   <div class="transactions">
     <v-card
       v-for="transaction in transactions"
-      :key="`${transaction.type}-${transaction.amount}-${transaction.date.getTime()}`"
-      class="transaction" :class="{
-        'credit': isCredit(transaction),
-        'debit': isDebit(transaction),
+      :key="`${transaction.type}-
+        ${transaction.amount}-
+        ${transaction.date.getTime()}`"
+      class="transaction"
+      :class="{
+        credit: isCredit(transaction),
+        debit: isDebit(transaction),
       }"
     >
       <v-card-title class="transaction__title">
@@ -26,7 +29,11 @@
 import { defineComponent } from "vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
 import { Money } from "~/utils/money/money";
-import { Transaction, TransactionType, doIReceive } from "@overbookd/transactions";
+import {
+  Transaction,
+  TransactionType,
+  doIReceive,
+} from "@overbookd/transactions";
 
 export default defineComponent({
   name: "TransactionListing",
@@ -48,7 +55,7 @@ export default defineComponent({
           return false;
         case "TRANSFER":
           return doIReceive(transaction);
-      };
+      }
     },
     isCredit(transaction: Transaction): boolean {
       return !this.isDebit(transaction);
@@ -63,7 +70,7 @@ export default defineComponent({
           return "mdi-food";
         case "TRANSFER":
           return "mdi-swap-vertical";
-      };
+      }
     },
     formatAmount(transaction: Transaction): string {
       const symbol = this.isDebit(transaction) ? "-" : "";
@@ -71,7 +78,7 @@ export default defineComponent({
     },
     formatDate(date: Date): string {
       return formatDateToHumanReadable(date);
-    }
+    },
   },
 });
 </script>

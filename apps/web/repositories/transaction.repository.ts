@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transaction } from "~/utils/models/transaction.model";
+import { Transaction } from "@overbookd/transactions";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -24,7 +24,7 @@ export class TransactionRepository {
 }
 
 export class FakeTransactionRepository {
-  static getMyTransactions() {
+  static getMyTransactions(): Promise<Transaction[]> {
     return Promise.resolve([
       {
         amount: 100,

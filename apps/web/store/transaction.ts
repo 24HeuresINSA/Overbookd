@@ -1,5 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { Transaction } from "~/utils/models/transaction.model";
+import { Transaction } from "@overbookd/transactions";
 import { FakeTransactionRepository } from "~/repositories/transaction.repository";
 
 export const state = () => ({
