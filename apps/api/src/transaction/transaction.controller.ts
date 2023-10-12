@@ -26,12 +26,18 @@ import {
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
+import { TransferService } from "./transfer.service";
+import { CreateTransferForm } from "@overbookd/personal-account";
+import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("transactions")
 @Controller("transactions")
 export class TransactionController {
-  constructor(private readonly transactionService: TransactionService) {}
+  constructor(
+    private readonly transactionService: TransactionService,
+    private readonly transferService: TransferService,
+  ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(MANAGE_PERSONAL_ACCOUNTS)
@@ -46,22 +52,7 @@ export class TransactionController {
     return this.transactionService.getAllTransactions();
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
-  @Get("user/:id")
-  @ApiResponse({
-    status: 200,
-    description: "Get all transactions of a user",
-    type: TransactionResponseDto,
-    isArray: true,
-  })
-  getUserTransactions(
-    @Param("id", ParseIntPipe) id: number,
-  ): Promise<TransactionWithSenderAndReceiver[]> {
-    return this.transactionService.getUserTransactions(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("me")
   @ApiResponse({
@@ -73,42 +64,22 @@ export class TransactionController {
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
   ): Promise<TransactionWithSenderAndReceiver[]> {
-    const { userId } = request.user;
-    return this.transactionService.getUserTransactions(userId);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Permission(HAVE_PERSONAL_ACCOUNT)
-  @Get("/:id")
-  @ApiResponse({
-    status: 200,
-    description: "Get a transaction by id",
-    type: TransactionResponseDto,
-  })
-  getTransactionById(
-    @Param("id", ParseIntPipe) id: number,
-  ): Promise<TransactionWithSenderAndReceiver | null> {
-    return this.transactionService.getTransactionById(id);
+    return this.transactionService.getMyTransactions(request.user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Post("transfer")
+  @HttpCode(204)
   @ApiBody({
-    description: "Create a transaction",
-    type: CreateTransactionRequestDto,
+    description: "transfer to create",
+    type: CreateTransferRequestDto,
   })
-  @ApiResponse({
-    status: 201,
-    description: "Generated transaction",
-    type: TransactionResponseDto,
-  })
-  createTransaction(
-    @Body() transactionData: Transaction,
+  sendTransfer(
+    @Body() transfer: CreateTransferForm,
     @Request() request: RequestWithUserPayload,
-  ): Promise<TransactionWithSenderAndReceiver> {
-    const { userId } = request.user;
-    return this.transactionService.createTransaction(transactionData, userId);
+  ): Promise<void> {
+    return this.transferService.send(transfer, request.user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

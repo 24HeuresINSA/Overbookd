@@ -1,6 +1,9 @@
-import { Credentials, MemberRepository } from "@overbookd/registration";
-import { AnonymousMember } from "@overbookd/registration/src/forget-member/anonymous-member";
-import { Member } from "@overbookd/registration/src/forget-member/forget-member";
+import {
+  AnonymousMember,
+  Credentials,
+  Member,
+  MemberRepository,
+} from "@overbookd/registration";
 import { PrismaService } from "../../prisma.service";
 import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
 
@@ -29,7 +32,7 @@ export class PrismaMemberRepository implements MemberRepository {
 
   async hasTransactions(email: string): Promise<boolean> {
     const transactions = await this.prisma.transaction.count({
-      where: { OR: [{ userFrom: { email } }, { userTo: { email } }] },
+      where: { OR: [{ payor: { email } }, { payee: { email } }] },
     });
     return transactions > 0;
   }

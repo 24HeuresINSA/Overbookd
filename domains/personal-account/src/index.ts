@@ -8,9 +8,15 @@ export type {
   Summary,
 } from "./personal-account-alert";
 export type {
+  CreateTransferForm,
+  Member,
+  MemberRepository,
   Transaction,
   TransactionType,
   TransferIReceiveTransaction,
   TransferISendTransaction,
+  TransferRepository,
+  TransferResponse,
+  TransferForm,
 } from "./transaction";
 export { doIReceive } from "./transaction";

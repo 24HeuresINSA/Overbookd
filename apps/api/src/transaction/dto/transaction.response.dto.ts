@@ -22,10 +22,10 @@ export class TransactionResponseDto
   createdAt: Date;
   isDeleted: boolean;
   @ApiProperty({ description: "Transaction sender", type: UserRepresentation })
-  userFrom: TransactionUser;
+  payor: TransactionUser;
   @ApiProperty({
     description: "Transaction receiver",
     type: UserRepresentation,
   })
-  userTo: TransactionUser;
+  payee: TransactionUser;
 }

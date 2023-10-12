@@ -23,7 +23,7 @@
       <template #item.to="{ item }">
         {{
           item.type == "TRANSFER" || item.type == "DEPOSIT"
-            ? getFullName(item.userTo)
+            ? getFullName(item.payee)
             : ""
         }}
       </template>
@@ -33,7 +33,7 @@
           item.type == "TRANSFER" ||
           item.type == "BARREL" ||
           item.type == "PROVISIONS"
-            ? getFullName(item.userFrom)
+            ? getFullName(item.payor)
             : ""
         }}
       </template>
