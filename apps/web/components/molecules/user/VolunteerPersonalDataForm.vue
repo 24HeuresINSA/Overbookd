@@ -61,6 +61,7 @@
       />
 
       <v-text-field
+        v-show="canManageUsers"
         v-model="nickname"
         label="Surnom"
         :readonly="!canManageUsers"
