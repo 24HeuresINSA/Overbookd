@@ -27,10 +27,10 @@ export type TransferISendTransaction = BaseTransaction & {
 };
 
 export type Transaction =
-  DepositTransaction |
-  BarrelTransaction |
-  ProvisionsTransaction |
-  TransferIReceiveTransaction |
-  TransferISendTransaction;
+  | DepositTransaction
+  | BarrelTransaction
+  | ProvisionsTransaction
+  | TransferIReceiveTransaction
+  | TransferISendTransaction;
 
 export type TransactionType = Transaction["type"];

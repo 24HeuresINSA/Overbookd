@@ -20,7 +20,7 @@ import { defineComponent } from "vue";
 import TransactionListing from "~/components/organisms/personal-account/TransactionListing.vue";
 
 export default defineComponent({
-  name: 'MyPersonalAccount',
+  name: "MyPersonalAccount",
   components: { TransactionListing },
   head: () => ({
     title: "Mon compte perso",
@@ -53,7 +53,8 @@ $footer-height: 34px;
   justify-content: center;
   align-items: center;
   gap: 25%;
-  .balance, .transfer-btn {
+  .balance,
+  .transfer-btn {
     width: min(90%, 650px);
   }
   .balance {
