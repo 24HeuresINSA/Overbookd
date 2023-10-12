@@ -45,7 +45,7 @@
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
 
-    <v-dialog v-model="isNewLocationDialogOpen" max-width="600">
+    <v-dialog v-model="isNewLocationDialogOpen" max-width="1200">
       <NewLocationCard @close-dialog="closeAllDialogs" />
     </v-dialog>
 
