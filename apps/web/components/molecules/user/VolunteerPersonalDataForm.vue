@@ -139,7 +139,7 @@ import {
 interface VolunteerPersonalDataFormData extends InputRulesData {
   phone: string;
   email: string;
-  nickname: string;
+  nickname: string | null;
   charisma: number;
 
   newTeam?: string;
@@ -155,7 +155,7 @@ export default Vue.extend({
     return {
       phone: "",
       email: "",
-      nickname: "",
+      nickname: null,
       charisma: 0,
 
       newTeam: undefined,
@@ -223,7 +223,7 @@ export default Vue.extend({
     async updateVolunteerInformations() {
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
-      this.nickname = this.selectedVolunteer.nickname ?? "";
+      this.nickname = this.selectedVolunteer.nickname ?? null;
       this.charisma = this.selectedVolunteer.charisma;
 
       if (this.selectedVolunteer.profilePictureBlob) return;
