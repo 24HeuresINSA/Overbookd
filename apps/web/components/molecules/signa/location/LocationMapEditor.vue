@@ -30,14 +30,17 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
-type Selection = {
-  type: "POINT" | "ROAD" | "AREA";
-  coordinates: number[] | number[][];
-};
+import { MapObjectType } from "~/utils/models/signa-location.model";
 
 export default defineComponent({
   name: "LocationMapEditor",
+  props: {
+    value: {
+      type: Object as () => MapObjectType | null,
+      default: null,
+    },
+  },
+  emits: ["input"],
   data: () => ({
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
@@ -48,9 +51,17 @@ export default defineComponent({
     actions: ["Point", "Ligne", "Zone"],
     editionDone: false,
     mouseLatlng: null as null | number[],
-    selection: null as null | Selection,
   }),
   computed: {
+    selection: {
+      get(): null | MapObjectType {
+        return this.value;
+      },
+      set(selection: null | MapObjectType) {
+        console.log(selection);
+        this.$emit("input", selection);
+      },
+    },
     point(): null | number[] {
       if (this.selection && this.selection.type === "POINT") {
         return this.selection.coordinates as number[];
