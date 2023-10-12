@@ -60,6 +60,12 @@
         @click:prepend="callPhoneNumber"
       />
 
+      <v-text-field
+        v-model="nickname"
+        label="Surnom"
+        :readonly="!canManageUsers"
+      />
+
       <div>
         <h3>Commentaire</h3>
         <p>{{ selectedVolunteer.comment ?? "Aucun commentaire" }}</p>
@@ -132,6 +138,7 @@ import {
 interface VolunteerPersonalDataFormData extends InputRulesData {
   phone: string;
   email: string;
+  nickname: string;
   charisma: number;
 
   newTeam?: string;
@@ -147,6 +154,7 @@ export default Vue.extend({
     return {
       phone: "",
       email: "",
+      nickname: "",
       charisma: 0,
 
       newTeam: undefined,
@@ -194,6 +202,7 @@ export default Vue.extend({
         ...this.selectedVolunteer,
         phone: this.phone,
         email: this.email,
+        nickname: this.nickname == "" ? null : this.nickname,
         charisma: this.charisma,
       };
     },
@@ -213,6 +222,7 @@ export default Vue.extend({
     async updateVolunteerInformations() {
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
+      this.nickname = this.selectedVolunteer.nickname ?? "";
       this.charisma = this.selectedVolunteer.charisma;
 
       if (this.selectedVolunteer.profilePictureBlob) return;
