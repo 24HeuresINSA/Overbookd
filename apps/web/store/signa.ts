@@ -42,7 +42,8 @@ export const actions = actionTree(
       );
       if (!signaLocations) return;
       const formattedLocations = signaLocations.data.map(
-        (location) => new Location(location.id, location.name),
+        (location) =>
+          new Location(location.id, location.name, location.coordinates),
       );
       commit("SET_SIGNA_LOCATIONS", formattedLocations);
     },
