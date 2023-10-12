@@ -49,6 +49,22 @@ export const pages: Page[] = [
     keywords: ["profile", "photo", "commentaires"],
   },
   {
+    icon: "mdi-currency-usd",
+    title: "Compte perso",
+    to: "/my-personal-account",
+    description:
+      "Page avec ton compte persos et tes transactions permettant de faire des virements",
+    mobileSupport: true,
+    keywords: [
+      "virements",
+      "cps",
+      "comptes",
+      "persos",
+      "consos",
+      "consomations",
+    ],
+  },
+  {
     icon: "mdi-image",
     title: "Trombinoscope",
     permission: VIEW_TROMBINOSCOPE,

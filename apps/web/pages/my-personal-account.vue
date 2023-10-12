@@ -6,9 +6,9 @@
         <h1 class="balance__value">150.34€</h1>
       </div>
 
-      <v-btn rounded x-large class="transfer-btn" color="primary">
+      <!--<v-btn rounded x-large class="transfer-btn" color="primary">
         Faire un virement
-      </v-btn>
+      </v-btn>-->
     </div>
 
     <TransactionListing />
