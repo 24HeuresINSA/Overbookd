@@ -17,11 +17,8 @@ import {
   UserName,
   UserNameWithId,
 } from "../ft-types";
-import {
-  FaStatus,
-  SignaLocationRepresentation,
-  faStatuses,
-} from "../../fa/fa.model";
+import { FaStatus, faStatuses } from "../../fa/fa.model";
+import { SignaLocationRepresentation } from "../../signa-location/signa-location.model";
 import {
   FtFeedbackSubjectType,
   ftFeedbackSubjectTypes,
