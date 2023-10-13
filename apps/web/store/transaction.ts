@@ -18,7 +18,7 @@ export const actions = actionTree(
   { state },
   {
     async fetchMyTransactions({ commit }) {
-      const res = FakeTransactionRepository.getMyTransactions();
+      const res = await FakeTransactionRepository.getMyTransactions();
       commit("SET_MY_TRANSACTIONS", res);
     },
   },

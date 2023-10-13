@@ -22,12 +22,16 @@
         {{ formatDate(transaction.date) }}
       </v-card-subtitle>
     </v-card>
+
+    <h1 v-if="transactions.length === 0" class="no-transaction">
+      Tu n'as aucune transaction pour le moment
+    </h1>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { formatDateToHumanReadable } from "~/utils/date/date.utils";
+import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
 import { Money } from "~/utils/money/money";
 import {
   Transaction,
@@ -77,7 +81,7 @@ export default defineComponent({
       return `${symbol}${Money.displayCents(transaction.amount)}`;
     },
     formatDate(date: Date): string {
-      return formatDateToHumanReadable(date);
+      return formatDateWithExplicitMonthAndDay(date);
     },
   },
 });
@@ -134,5 +138,11 @@ export default defineComponent({
     min-width: 15%;
     text-align: right;
   }
+}
+
+.no-transaction {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 10px;
 }
 </style>
