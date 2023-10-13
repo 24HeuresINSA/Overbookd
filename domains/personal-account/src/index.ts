@@ -19,5 +19,15 @@ export type {
   TransferRepository,
   TransferResponse,
   TransferForm,
+  DepositTransaction,
+  BarrelTransaction,
+  ProvisionsTransaction,
 } from "./transaction";
-export { doIReceive } from "./transaction";
+export {
+  BARREL,
+  DEPOSIT,
+  PROVISIONS,
+  TRANSFER,
+  doIReceive,
+  transactionTypes,
+} from "./transaction";

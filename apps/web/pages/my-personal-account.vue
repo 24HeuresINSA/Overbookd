@@ -3,7 +3,7 @@
     <div class="summary">
       <div class="balance">
         <span class="balance__title">Solde de mon compte perso :</span>
-        <h1 class="balance__value">150.34€</h1>
+        <h1 class="balance__value">{{ balance }}</h1>
       </div>
 
       <!--<v-btn rounded x-large class="transfer-btn" color="primary">
@@ -18,6 +18,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TransactionListing from "~/components/organisms/personal-account/TransactionListing.vue";
+import { Money } from "~/utils/money/money";
 
 export default defineComponent({
   name: "MyPersonalAccount",
@@ -25,6 +26,11 @@ export default defineComponent({
   head: () => ({
     title: "Mon compte perso",
   }),
+  computed: {
+    balance(): string {
+      return Money.displayCents(this.$accessor.user.me.balance);
+    },
+  },
 });
 </script>
 

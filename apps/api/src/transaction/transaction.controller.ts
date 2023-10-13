@@ -14,8 +14,15 @@ import {
   TransactionService,
   TransactionWithSenderAndReceiver,
 } from "./transaction.service";
-import { Transaction } from "@prisma/client";
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Transaction as PrismaTransaction } from "@prisma/client";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from "@nestjs/swagger";
 import { CreateTransactionRequestDto } from "./dto/create-transaction.request.dto";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -27,8 +34,15 @@ import {
   MANAGE_PERSONAL_ACCOUNTS,
 } from "@overbookd/permission";
 import { TransferService } from "./transfer.service";
-import { CreateTransferForm } from "@overbookd/personal-account";
+import { CreateTransferForm, Transaction } from "@overbookd/personal-account";
 import { CreateTransferRequestDto } from "./dto/create-transfer.request.dto";
+import {
+  BarrelTransactionDto,
+  DepositTransactionDto,
+  ProvisionsTransactionDto,
+  TransferIReceiveTransactionDto,
+  TransferISendTransactionDto,
+} from "./dto/my-transaction.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("transactions")
@@ -55,15 +69,29 @@ export class TransactionController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("me")
+  @ApiExtraModels(
+    DepositTransactionDto,
+    BarrelTransactionDto,
+    ProvisionsTransactionDto,
+    TransferIReceiveTransactionDto,
+    TransferISendTransactionDto,
+  )
   @ApiResponse({
     status: 200,
     description: "Get all transactions of self",
-    type: TransactionResponseDto,
-    isArray: true,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DepositTransactionDto) },
+        { $ref: getSchemaPath(BarrelTransactionDto) },
+        { $ref: getSchemaPath(ProvisionsTransactionDto) },
+        { $ref: getSchemaPath(TransferIReceiveTransactionDto) },
+        { $ref: getSchemaPath(TransferISendTransactionDto) },
+      ],
+    },
   })
   getMyTransactions(
     @Request() request: RequestWithUserPayload,
-  ): Promise<TransactionWithSenderAndReceiver[]> {
+  ): Promise<Transaction[]> {
     return this.transactionService.getMyTransactions(request.user);
   }
 
@@ -101,7 +129,7 @@ export class TransactionController {
     isArray: true,
   })
   addSgTransaction(
-    @Body() transactionData: Transaction[],
+    @Body() transactionData: PrismaTransaction[],
   ): Promise<TransactionWithSenderAndReceiver[]> {
     return this.transactionService.addSgTransaction(transactionData);
   }

@@ -7,14 +7,24 @@ import { PrismaTransferRepository } from "./repository/transfer-repository.prism
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
 import { Transfer } from "@overbookd/personal-account";
 import { TransferService } from "./transfer.service";
+import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
 
 @Module({
   controllers: [TransactionController],
   providers: [
     {
-      provide: TransactionService,
-      useFactory: (prisma: PrismaService) => new TransactionService(prisma),
+      provide: PrismaTransactionRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaTransactionRepository(prisma),
       inject: [PrismaService],
+    },
+    {
+      provide: TransactionService,
+      useFactory: (
+        transactions: PrismaTransactionRepository,
+        prisma: PrismaService,
+      ) => new TransactionService(transactions, prisma),
+      inject: [PrismaTransactionRepository, PrismaService],
     },
     {
       provide: PrismaTransferRepository,

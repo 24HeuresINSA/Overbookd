@@ -4,10 +4,12 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { Transaction } from "@prisma/client";
+import { Transaction as PrismaTransaction } from "@prisma/client";
 import { User } from "@prisma/client";
 import { SELECT_TRANSACTION } from "./transaction.query";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import { Transaction } from "@overbookd/personal-account";
+import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
 
 export type TransactionUser = {
   id: number;
@@ -16,7 +18,7 @@ export type TransactionUser = {
 };
 
 export type TransactionWithSenderAndReceiver = Omit<
-  Transaction,
+  PrismaTransaction,
   "to" | "from"
 > & {
   payor: TransactionUser;
@@ -25,7 +27,10 @@ export type TransactionWithSenderAndReceiver = Omit<
 
 @Injectable()
 export class TransactionService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly transactions: PrismaTransactionRepository,
+    private prisma: PrismaService,
+  ) {}
 
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
@@ -34,18 +39,12 @@ export class TransactionService {
     });
   }
 
-  async getMyTransactions(
-    user: JwtPayload,
-  ): Promise<TransactionWithSenderAndReceiver[]> {
-    return this.prisma.transaction.findMany({
-      where: { OR: [{ from: user.id }, { to: user.id }] },
-      select: SELECT_TRANSACTION,
-      orderBy: { createdAt: "desc" },
-    });
+  async getMyTransactions(user: JwtPayload): Promise<Transaction[]> {
+    return this.transactions.getMine(user.id);
   }
 
   async addSgTransaction(
-    transactions: Transaction[],
+    transactions: PrismaTransaction[],
   ): Promise<TransactionWithSenderAndReceiver[]> {
     return Promise.all(
       transactions.map(async (transaction) => {
