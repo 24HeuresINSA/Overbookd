@@ -1,13 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { MapObject } from "../signa-location.model";
+import { IsNotEmpty, IsObject, IsString } from "class-validator";
 
 export class UpdateSignaLocationRequestDto {
-  @ApiProperty({
-    description: "The id of the location",
-    required: true,
-  })
-  @IsNumber()
-  id: number;
   @ApiProperty({
     description: "The name of the location",
     example: "Devant les humas",
@@ -16,4 +11,15 @@ export class UpdateSignaLocationRequestDto {
   @IsString()
   @IsNotEmpty()
   name: string;
+
+  @ApiProperty({
+    description: "The coordinates of the location",
+    example: {
+      type: "POINT",
+      coordinates: [1, 2],
+    },
+    required: false,
+  })
+  @IsObject()
+  coordinates: MapObject | null;
 }
