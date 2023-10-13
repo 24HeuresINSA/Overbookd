@@ -12,6 +12,7 @@ import {
 import { FtStatus, ftStatuses } from "../ft/ft.model";
 import { FaSignaNeed } from "../fa-signa-need/fa-signa-need.model";
 import { Team } from "../team/team.model";
+import { SignaLocation } from "../signa-location/signa-location.model";
 
 const DRAFT = "DRAFT";
 const SUBMITTED = "SUBMITTED";
@@ -63,18 +64,6 @@ export type FaType =
   | typeof PREVENTION
   | typeof SPECTACLE
   | typeof AUTRE;
-
-export interface SignaLocation {
-  id: number;
-  name: string;
-}
-
-export class SignaLocationRepresentation implements SignaLocation {
-  @ApiProperty({})
-  id: number;
-  @ApiProperty({})
-  name: string;
-}
 
 interface UserName {
   firstname: string;

@@ -17,7 +17,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { CreateSignaLocationRequestDto } from "./dto/create-signa-location.request.dto";
 import { UpdateSignaLocationRequestDto } from "./dto/update-signa-location.request.dto";
 import { SignaLocationService } from "./signa-location.service";
-import { SignaLocationRepresentation } from "../fa/fa.model";
+import { SignaLocationRepresentation } from "./signa-location.model";
 import { MANAGE_LOCATION, READ_FA } from "@overbookd/permission";
 
 @ApiBearerAuth()

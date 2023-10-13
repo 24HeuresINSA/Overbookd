@@ -198,6 +198,7 @@ enum FaType {
 model SignaLocation {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(255)
+  coordinates Json?
   fas  Fa[]
   fts  Ft[]
 

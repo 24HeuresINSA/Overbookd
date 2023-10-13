@@ -9,8 +9,6 @@ import {
   FaTimeWindow,
   FaTimeWindowRepresentation,
   FaType,
-  SignaLocation,
-  SignaLocationRepresentation,
   PublicAnimation,
   PublicAnimationRepresentation,
   TeamRepresentation,
@@ -19,6 +17,7 @@ import {
   faStatuses,
   faTypes,
 } from "../fa.model";
+import { SignaLocation, SignaLocationRepresentation } from "../../signa-location/signa-location.model";
 import { CollaboratorWithId } from "../../collaborator/collaborator.model";
 import { CollaboratorResponseDto } from "../../collaborator/dto/collaborator.response.dto";
 import {
