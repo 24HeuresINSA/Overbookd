@@ -2,7 +2,8 @@
   <div>
     <v-card-title class="card-title">
       <ProfilePicture :user="selectedVolunteer" />
-      {{ formatVolunteerNameWithNickname }}
+      <div v-show="canManageUsers">{{ formatVolunteerName }}</div>
+      <div v-show="!canManageUsers">{{ formatVolunteerNameWithNickname }}</div>
     </v-card-title>
 
     <v-card-text class="card-content">
@@ -33,6 +34,14 @@
       </div>
 
       <v-text-field
+        v-show="canManageUsers"
+        v-model="nickname"
+        label="Surnom"
+        prepend-icon="mdi-account"
+        :readonly="!canManageUsers"
+      />
+
+      <v-text-field
         v-model="charisma"
         type="number"
         label="Points de charisme"
@@ -58,13 +67,6 @@
         :rules="[rules.required, rules.mobilePhone]"
         prepend-icon="mdi-phone"
         @click:prepend="callPhoneNumber"
-      />
-
-      <v-text-field
-        v-show="canManageUsers"
-        v-model="nickname"
-        label="Surnom"
-        :readonly="!canManageUsers"
       />
 
       <div>
@@ -137,11 +139,10 @@ import {
 } from "~/utils/rules/input.rules";
 
 interface VolunteerPersonalDataFormData extends InputRulesData {
+  nickname: string | null;
   phone: string;
   email: string;
-  nickname: string | null;
   charisma: number;
-
   newTeam?: string;
 }
 
@@ -153,11 +154,10 @@ export default Vue.extend({
   },
   data(): VolunteerPersonalDataFormData {
     return {
+      nickname: null,
       phone: "",
       email: "",
-      nickname: null,
       charisma: 0,
-
       newTeam: undefined,
       rules: {
         required: required,
@@ -178,6 +178,9 @@ export default Vue.extend({
     },
     selectedVolunteerFriends(): User[] {
       return this.$accessor.user.selectedUserFriends;
+    },
+    formatVolunteerName(): string {
+      return formatUsername(this.selectedVolunteer);
     },
     formatVolunteerNameWithNickname(): string {
       return formatUserNameWithNickname(this.selectedVolunteer);
@@ -201,9 +204,9 @@ export default Vue.extend({
     updatedVolunteer(): UserPersonalDataWithProfilePicture {
       return {
         ...this.selectedVolunteer,
+        nickname: this.nickname ? this.nickname : null,
         phone: this.phone,
         email: this.email,
-        nickname: this.nickname == "" ? null : this.nickname,
         charisma: this.charisma,
       };
     },
@@ -221,9 +224,9 @@ export default Vue.extend({
 
   methods: {
     async updateVolunteerInformations() {
+      this.nickname = this.selectedVolunteer.nickname ?? null;
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
-      this.nickname = this.selectedVolunteer.nickname ?? null;
       this.charisma = this.selectedVolunteer.charisma;
 
       if (this.selectedVolunteer.profilePictureBlob) return;
