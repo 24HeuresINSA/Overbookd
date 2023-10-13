@@ -2,7 +2,8 @@
   <div>
     <v-card-title class="card-title">
       <ProfilePicture :user="selectedVolunteer" />
-      {{ formatVolunteerNameWithNickname }}
+      <div v-show="canManageUsers">{{ formatVolunteerName }}</div>
+      <div v-show="!canManageUsers">{{ formatVolunteerNameWithNickname }}</div>
     </v-card-title>
 
     <v-card-text class="card-content">
@@ -31,6 +32,14 @@
           </v-btn>
         </div>
       </div>
+
+      <v-text-field
+        v-show="canManageUsers"
+        v-model="nickname"
+        label="Surnom"
+        prepend-icon="mdi-account"
+        :readonly="!canManageUsers"
+      />
 
       <v-text-field
         v-model="charisma"
@@ -130,10 +139,10 @@ import {
 } from "~/utils/rules/input.rules";
 
 interface VolunteerPersonalDataFormData extends InputRulesData {
+  nickname: string | null;
   phone: string;
   email: string;
   charisma: number;
-
   newTeam?: string;
 }
 
@@ -145,10 +154,10 @@ export default Vue.extend({
   },
   data(): VolunteerPersonalDataFormData {
     return {
+      nickname: null,
       phone: "",
       email: "",
       charisma: 0,
-
       newTeam: undefined,
       rules: {
         required: required,
@@ -169,6 +178,9 @@ export default Vue.extend({
     },
     selectedVolunteerFriends(): User[] {
       return this.$accessor.user.selectedUserFriends;
+    },
+    formatVolunteerName(): string {
+      return formatUsername(this.selectedVolunteer);
     },
     formatVolunteerNameWithNickname(): string {
       return formatUserNameWithNickname(this.selectedVolunteer);
@@ -192,6 +204,7 @@ export default Vue.extend({
     updatedVolunteer(): UserPersonalDataWithProfilePicture {
       return {
         ...this.selectedVolunteer,
+        nickname: this.nickname ? this.nickname : null,
         phone: this.phone,
         email: this.email,
         charisma: this.charisma,
@@ -211,6 +224,7 @@ export default Vue.extend({
 
   methods: {
     async updateVolunteerInformations() {
+      this.nickname = this.selectedVolunteer.nickname ?? null;
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
       this.charisma = this.selectedVolunteer.charisma;

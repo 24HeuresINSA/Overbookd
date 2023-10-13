@@ -39,11 +39,11 @@ export function castToUserUpdateForm(user: UserPersonalData): UserUpdateForm {
   return {
     firstname: user.firstname,
     lastname: user.lastname,
-    nickname: user.nickname || undefined,
+    nickname: user.nickname || null,
     email: user.email,
     birthdate: new Date(user.birthdate),
     phone: user.phone,
-    comment: user.comment || undefined,
+    comment: user.comment || null,
     charisma: +user.charisma,
   };
 }
