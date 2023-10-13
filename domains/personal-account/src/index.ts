@@ -7,6 +7,7 @@ export type {
   IAlertAboutPersonalAccount,
   Summary,
 } from "./personal-account-alert";
+export { Payor, Transfer } from "./transaction";
 export type {
   CreateTransferForm,
   Member,

@@ -5,4 +5,5 @@ export type {
   TransferRepository,
   TransferResponse,
 } from "./transfer";
+export { Payor } from "./payor";
 export type { CreateTransferForm, TransferForm } from "./payor";

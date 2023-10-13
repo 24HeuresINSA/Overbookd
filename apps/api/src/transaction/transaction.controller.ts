@@ -75,6 +75,10 @@ export class TransactionController {
     description: "transfer to create",
     type: CreateTransferRequestDto,
   })
+  @ApiResponse({
+    status: 204,
+    description: "Create a transfer",
+  })
   sendTransfer(
     @Body() transfer: CreateTransferForm,
     @Request() request: RequestWithUserPayload,

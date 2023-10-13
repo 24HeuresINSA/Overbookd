@@ -5,7 +5,7 @@ export type {
   TransferISendTransaction,
 } from "./transaction.model";
 export { doIReceive } from "./transaction.model";
-export { Transfer } from "./transfer";
+export { Payor, Transfer } from "./transfer";
 export type {
   CreateTransferForm,
   Member,
