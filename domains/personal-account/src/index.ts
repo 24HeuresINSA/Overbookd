@@ -1,12 +1,12 @@
-export { PersonalAccountAlerting as PersonalAccountAlerting } from "./personal-account-alerting";
-export { PersonalAccountAlert as PersonalAccountAlert } from "./personal-account-alert";
+export { PersonalAccountAlerting as PersonalAccountAlerting } from "./alerting/personal-account-alerting";
+export { PersonalAccountAlert as PersonalAccountAlert } from "./alerting/personal-account-alert";
 export { CURRENT_BALANCE_MESSAGE } from "./current-balance";
 export { NEGATIVE_BALANCE } from "./in-debt";
-export type { Adherents } from "./adherents";
+export type { Adherents } from "./alerting/adherents";
 export type {
   IAlertAboutPersonalAccount,
   Summary,
-} from "./personal-account-alert";
+} from "./alerting/personal-account-alert";
 export { Payor, Transfer } from "./transaction";
 export type {
   CreateTransferForm,

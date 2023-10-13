@@ -2,8 +2,8 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { Adherents } from "./adherents";
 import { PersonalAccountAlerting } from "./personal-account-alerting";
 import { InMemoryAdhrents } from "./adherents.in-memory";
-import { NEGATIVE_BALANCE } from "./in-debt";
-import { CURRENT_BALANCE_MESSAGE } from "./current-balance";
+import { NEGATIVE_BALANCE } from "../in-debt";
+import { CURRENT_BALANCE_MESSAGE } from "../current-balance";
 
 const adherentWithCredit = { id: 1, balance: 13 };
 const adherentWithEmptyAccount = { id: 2, balance: 0 };

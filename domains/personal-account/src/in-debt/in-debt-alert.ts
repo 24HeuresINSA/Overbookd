@@ -1,4 +1,4 @@
-import { PersonalAccountAlert } from "../personal-account-alert";
+import { PersonalAccountAlert } from "../alerting/personal-account-alert";
 import { NEGATIVE_BALANCE } from "./in-debt-alerting.constant";
 
 export class InDebtAlert extends PersonalAccountAlert {
