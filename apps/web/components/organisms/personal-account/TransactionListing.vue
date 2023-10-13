@@ -34,6 +34,10 @@ import { defineComponent } from "vue";
 import { formatDateWithExplicitMonthAndDay } from "~/utils/date/date.utils";
 import { Money } from "~/utils/money/money";
 import {
+  BARREL,
+  DEPOSIT,
+  PROVISIONS,
+  TRANSFER,
   Transaction,
   TransactionType,
   doIReceive,
@@ -50,29 +54,29 @@ export default defineComponent({
     await this.$accessor.transaction.fetchMyTransactions();
   },
   methods: {
-    isDebit(transaction: Transaction): boolean {
+    isCredit(transaction: Transaction): boolean {
       switch (transaction.type) {
-        case "BARREL":
-        case "PROVISIONS":
-          return true;
-        case "DEPOSIT":
+        case BARREL:
+        case PROVISIONS:
           return false;
-        case "TRANSFER":
+        case DEPOSIT:
+          return true;
+        case TRANSFER:
           return doIReceive(transaction);
       }
     },
-    isCredit(transaction: Transaction): boolean {
-      return !this.isDebit(transaction);
+    isDebit(transaction: Transaction): boolean {
+      return !this.isCredit(transaction);
     },
     getTransactionIcon(type: TransactionType): string {
       switch (type) {
-        case "BARREL":
+        case BARREL:
           return "mdi-glass-mug-variant";
-        case "DEPOSIT":
+        case DEPOSIT:
           return "mdi-transfer";
-        case "PROVISIONS":
+        case PROVISIONS:
           return "mdi-food";
-        case "TRANSFER":
+        case TRANSFER:
           return "mdi-swap-vertical";
       }
     },

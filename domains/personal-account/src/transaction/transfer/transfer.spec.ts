@@ -152,9 +152,6 @@ describe("Transfer", () => {
             expect(payor.id).toBe(from);
             expect(payee.id).toBe(to);
 
-            console.log(payor, expectedPayorBalance);
-            console.log(payee, expectedPayeeBalance);
-
             expect(payor.balance).toBe(expectedPayorBalance);
             expect(payee.balance).toBe(expectedPayeeBalance);
           });

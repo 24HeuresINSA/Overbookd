@@ -21,23 +21,23 @@ enum TransactionType {
 }
 
 model User {
-  id                   Int         @id @default(autoincrement())
-  firstname            String      @db.VarChar(30)
-  lastname             String      @db.VarChar(30)
-  nickname             String?     @db.VarChar(30)
-  email                String      @unique
+  id                   Int       @id @default(autoincrement())
+  firstname            String    @db.VarChar(30)
+  lastname             String    @db.VarChar(30)
+  nickname             String?   @db.VarChar(30)
+  email                String    @unique
   birthdate            DateTime
-  phone                String      @db.VarChar(30)
+  phone                String    @db.VarChar(30)
   comment              String?
-  resetPasswordToken   String?     @unique @map("reset_password_token")
-  resetPasswordExpires DateTime?   @map("reset_password_expires")
-  profilePicture       String?     @map("profile_picture")
-  charisma             Int         @default(0)
-  balance              Int         @default(0)
-  password             String      @default("")
-  createdAt            DateTime    @default(now()) @map("created_at")
-  updatedAt            DateTime    @updatedAt @map("updated_at")
-  isDeleted            Boolean     @default(false) @map("is_deleted")
+  resetPasswordToken   String?   @unique @map("reset_password_token")
+  resetPasswordExpires DateTime? @map("reset_password_expires")
+  profilePicture       String?   @map("profile_picture")
+  charisma             Int       @default(0)
+  balance              Int       @default(0)
+  password             String    @default("")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  isDeleted            Boolean   @default(false) @map("is_deleted")
 
   teams UserTeam[]
 
@@ -119,10 +119,10 @@ model Transaction {
   id        Int             @id @default(autoincrement())
   type      TransactionType @default(TRANSFER)
   from      Int
-  userFrom  User            @relation("from", fields: [from], references: [id])
-  to        Int             @default(-1)
-  userTo    User            @relation("to", fields: [to], references: [id])
-  amount    Int             @default(0)
+  payor     User            @relation("from", fields: [from], references: [id])
+  to        Int
+  payee     User            @relation("to", fields: [to], references: [id])
+  amount    Int
   context   String          @default("") @db.VarChar(255)
   createdAt DateTime        @default(now()) @map("created_at")
   isDeleted Boolean         @default(false) @map("is_deleted")

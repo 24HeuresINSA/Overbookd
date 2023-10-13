@@ -1,4 +1,4 @@
-type CreateTransferForm = {
+export type CreateTransferForm = {
   to: number;
   amount: number;
   context: string;

@@ -4,29 +4,12 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { Transaction, TransactionType } from "@prisma/client";
+import { Transaction as PrismaTransaction } from "@prisma/client";
 import { User } from "@prisma/client";
-import { SELECT_USERNAME_WITH_ID } from "../user/user.query";
-
-type CreateTransaction = Omit<
-  Transaction,
-  "id" | "from" | "type" | "isDeleted" | "createdAt"
->;
-
-const SELECT_TRANSACTION = {
-  id: true,
-  type: true,
-  userFrom: {
-    select: SELECT_USERNAME_WITH_ID,
-  },
-  userTo: {
-    select: SELECT_USERNAME_WITH_ID,
-  },
-  amount: true,
-  context: true,
-  createdAt: true,
-  isDeleted: true,
-};
+import { SELECT_TRANSACTION } from "./transaction.query";
+import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import { Transaction } from "@overbookd/personal-account";
+import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
 
 export type TransactionUser = {
   id: number;
@@ -35,19 +18,20 @@ export type TransactionUser = {
 };
 
 export type TransactionWithSenderAndReceiver = Omit<
-  Transaction,
+  PrismaTransaction,
   "to" | "from"
 > & {
-  userFrom: TransactionUser;
-  userTo: TransactionUser;
+  payor: TransactionUser;
+  payee: TransactionUser;
 };
 
 @Injectable()
 export class TransactionService {
-  constructor(private prisma: PrismaService) {}
-  /**     **/
-  /** GET **/
-  /**     **/
+  constructor(
+    private readonly transactions: PrismaTransactionRepository,
+    private prisma: PrismaService,
+  ) {}
+
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
       select: SELECT_TRANSACTION,
@@ -55,63 +39,12 @@ export class TransactionService {
     });
   }
 
-  async getTransactionById(
-    id: number,
-  ): Promise<TransactionWithSenderAndReceiver | null> {
-    return this.prisma.transaction.findUnique({
-      select: SELECT_TRANSACTION,
-      where: { id },
-    });
-  }
-
-  async getUserTransactions(
-    userId: number,
-  ): Promise<TransactionWithSenderAndReceiver[]> {
-    return this.prisma.transaction.findMany({
-      select: SELECT_TRANSACTION,
-      where: { OR: [{ from: Number(userId) }, { to: Number(userId) }] },
-      orderBy: { createdAt: "desc" },
-    });
-  }
-
-  /**      **/
-  /** POST **/
-  /**      **/
-  async createTransaction(
-    userTransaction: CreateTransaction,
-    userId: number,
-  ): Promise<TransactionWithSenderAndReceiver> {
-    const data = {
-      ...userTransaction,
-      from: userId,
-      type: TransactionType.TRANSFER,
-    };
-    this.checkTransactionAmount(data.amount);
-    const users = await this.userExists([data.from, data.to]);
-    const sender = users.find((user) => user.id === data.from);
-    const receiver = users.find((user) => user.id === data.to);
-
-    const senderBalance = sender.balance - data.amount;
-    const receiverBalance = receiver.balance + data.amount;
-    const [transaction] = await this.prisma.$transaction([
-      this.prisma.transaction.create({
-        select: SELECT_TRANSACTION,
-        data: data,
-      }),
-      this.prisma.user.update({
-        where: { id: Number(data.from) },
-        data: { balance: senderBalance },
-      }),
-      this.prisma.user.update({
-        where: { id: Number(data.to) },
-        data: { balance: receiverBalance },
-      }),
-    ]);
-    return transaction;
+  async getMyTransactions(user: JwtPayload): Promise<Transaction[]> {
+    return this.transactions.getMine(user.id);
   }
 
   async addSgTransaction(
-    transactions: Transaction[],
+    transactions: PrismaTransaction[],
   ): Promise<TransactionWithSenderAndReceiver[]> {
     return Promise.all(
       transactions.map(async (transaction) => {
@@ -141,9 +74,6 @@ export class TransactionService {
     );
   }
 
-  /**        **/
-  /** DELETE **/
-  /**        **/
   async deleteTransaction(id: number): Promise<void> {
     const transaction = await this.transactionExists(id);
 
@@ -164,10 +94,7 @@ export class TransactionService {
     return;
   }
 
-  /**         **/
-  /** HELPERS **/
-  /**         **/
-  async userExists(userIds: number[]): Promise<User[]> {
+  private async userExists(userIds: number[]): Promise<User[]> {
     const users = await this.prisma.user.findMany({
       where: { id: { in: userIds } },
     });
@@ -190,7 +117,10 @@ export class TransactionService {
   private async transactionExists(
     transactionId: number,
   ): Promise<TransactionWithSenderAndReceiver> {
-    const transaction = await this.getTransactionById(transactionId);
+    const transaction = await this.prisma.transaction.findFirst({
+      where: { id: transactionId },
+      select: SELECT_TRANSACTION,
+    });
     if (!transaction) {
       throw new NotFoundException(
         `Transaction with ID ${transactionId} not found`,
@@ -219,7 +149,7 @@ export class TransactionService {
     if (!this.shouldUpdateReceiverBalance(transaction.type)) {
       return undefined;
     }
-    const [receiver] = await this.userExists([transaction.userTo.id]);
+    const [receiver] = await this.userExists([transaction.payee.id]);
     return {
       where: { id: receiver.id },
       data: { balance: receiver.balance - transaction.amount },
@@ -232,7 +162,7 @@ export class TransactionService {
     if (!this.shouldUpdateSenderBalance(transaction.type)) {
       return undefined;
     }
-    const [sender] = await this.userExists([transaction.userFrom.id]);
+    const [sender] = await this.userExists([transaction.payor.id]);
     return {
       where: { id: sender.id },
       data: { balance: sender.balance + transaction.amount },

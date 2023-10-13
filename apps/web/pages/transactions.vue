@@ -72,7 +72,7 @@ export default {
   methods: {
     search(id) {
       this.filteredTransactions = this.transactions.filter((t) => {
-        return t.userFrom.id === id || t.userTo.id === id;
+        return t.payor.id === id || t.payee.id === id;
       });
     },
     clear() {

@@ -1,28 +1,33 @@
+export const DEPOSIT = "DEPOSIT";
+export const BARREL = "BARREL";
+export const PROVISIONS = "PROVISIONS";
+export const TRANSFER = "TRANSFER";
+
 type BaseTransaction = {
   amount: number;
   context: string;
   date: Date;
 };
 
-type DepositTransaction = BaseTransaction & {
-  type: "DEPOSIT";
+export type DepositTransaction = BaseTransaction & {
+  type: typeof DEPOSIT;
 };
 
-type BarrelTransaction = BaseTransaction & {
-  type: "BARREL";
+export type BarrelTransaction = BaseTransaction & {
+  type: typeof BARREL;
 };
 
-type ProvisionsTransaction = BaseTransaction & {
-  type: "PROVISIONS";
+export type ProvisionsTransaction = BaseTransaction & {
+  type: typeof PROVISIONS;
 };
 
 export type TransferIReceiveTransaction = BaseTransaction & {
-  type: "TRANSFER";
+  type: typeof TRANSFER;
   from: number;
 };
 
 export type TransferISendTransaction = BaseTransaction & {
-  type: "TRANSFER";
+  type: typeof TRANSFER;
   to: number;
 };
 
@@ -34,6 +39,13 @@ export type Transaction =
   | TransferISendTransaction;
 
 export type TransactionType = Transaction["type"];
+
+export const transactionTypes: TransactionType[] = [
+  DEPOSIT,
+  BARREL,
+  PROVISIONS,
+  TRANSFER,
+];
 
 export function doIReceive(
   transfer: TransferIReceiveTransaction | TransferISendTransaction,
