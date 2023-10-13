@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.4.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.3.1...v2.4.0) (2023-10-13)
+
+
+### Features
+
+* **ci:** automate release generation on tag creation. [#1276](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1276) ([db1df1c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/db1df1ced1d99f3382a772659be5586a533ed6cb))
+* **Comptes-persos:** Faire une page dédiée [#1247](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1247) ([96df67e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/96df67ee2dec140dfdc8f38872b0c23bcbbb671e))
+* modify surname in VolunteerInformation. [#1281](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1281) ([06b4b59](https://gitlab.com/24-heures-insa/overbookd-mono/commit/06b4b59f0fe3e7f6f588c2c98f00f896e3729bc0))
+* **transfer:** Implémentation des virements dans l'api [#1247](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1247) ([47ca654](https://gitlab.com/24-heures-insa/overbookd-mono/commit/47ca654303865ab5536e7f44a6791ae4bcf372e1))
+
+
+### Bug Fixes
+
+* **web:** display transaction amount in euros instead of in cents. [#1279](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1279) ([8acfcb4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8acfcb4f96795d6534719a4429812770fc1f4c86))
+
+
+### Chores
+
+* **ci:** add Chore section to changelog. [#1277](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1277) ([8dba4e1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8dba4e10431a549e1017475e267575e5636783d1))
+* **personal-account:** Show personal account page ([c57276b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c57276bdb1ea181fed075dd8b86e06c4796544aa))
+
 ## [2.3.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.3.0...v2.3.1) (2023-10-11)
 
 
