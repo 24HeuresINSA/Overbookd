@@ -34,3 +34,9 @@ export type Transaction =
   | TransferISendTransaction;
 
 export type TransactionType = Transaction["type"];
+
+export function doIReceive(
+  transfer: TransferIReceiveTransaction | TransferISendTransaction,
+): transfer is TransferIReceiveTransaction {
+  return "from" in transfer;
+}

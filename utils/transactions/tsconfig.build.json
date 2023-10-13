@@ -1,7 +1,0 @@
-{
-  "extends": ["../../tsconfig.all-modules-import.json", "../../tsconfig.build.json"],
-  "compilerOptions": {
-    "lib": ["ES2020", "ES2022"],
-    "outDir": "./dist"
-  }
-}

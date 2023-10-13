@@ -104,9 +104,6 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:^
         version: link:../../libraries/slugify
-      '@overbookd/transactions':
-        specifier: workspace:^
-        version: link:../../utils/transactions
       '@overbookd/user':
         specifier: workspace:^
         version: link:../../domains/user
@@ -297,9 +294,6 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
-      '@overbookd/transactions':
-        specifier: workspace:*
-        version: link:../../utils/transactions
       '@overbookd/user':
         specifier: workspace:*
         version: link:../../domains/user
@@ -508,8 +502,6 @@ importers:
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
-
-  utils/transactions: {}
 
 packages:
 

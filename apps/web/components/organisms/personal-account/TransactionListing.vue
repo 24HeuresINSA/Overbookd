@@ -33,7 +33,7 @@ import {
   Transaction,
   TransactionType,
   doIReceive,
-} from "@overbookd/transactions";
+} from "@overbookd/personal-account";
 
 export default defineComponent({
   name: "TransactionListing",
@@ -99,8 +99,6 @@ export default defineComponent({
 }
 
 .transaction {
-  background-color: rgba(255, 0, 0, 0.05);
-
   &.credit {
     background-color: rgba(0, 255, 0, 0.05);
 

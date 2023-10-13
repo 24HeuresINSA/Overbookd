@@ -48,7 +48,6 @@
     "@overbookd/registration": "workspace:*",
     "@overbookd/signa": "workspace:*",
     "@overbookd/slugify": "workspace:*",
-    "@overbookd/transactions": "workspace:*",
     "@overbookd/user": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",
     "@tiptap/pm": "2.1.11",

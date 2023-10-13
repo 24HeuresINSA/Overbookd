@@ -7,3 +7,10 @@ export type {
   IAlertAboutPersonalAccount,
   Summary,
 } from "./personal-account-alert";
+export type {
+  Transaction,
+  TransactionType,
+  TransferIReceiveTransaction,
+  TransferISendTransaction,
+} from "./transaction";
+export { doIReceive } from "./transaction";

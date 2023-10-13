@@ -19,6 +19,7 @@ import {
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
   WRITE_INVENTORY,
+  HAVE_PERSONAL_ACCOUNT,
 } from "@overbookd/permission";
 
 export interface Page {
@@ -51,6 +52,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-currency-usd",
     title: "Compte perso",
+    permission: HAVE_PERSONAL_ACCOUNT,
     to: "/my-personal-account",
     description:
       "Page avec ton compte persos et tes transactions permettant de faire des virements",

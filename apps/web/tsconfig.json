@@ -25,7 +25,6 @@
       "@overbookd/registration": ["../../domains/registration/src"],
       "@overbookd/signa": ["../../domains/signa/src"],
       "@overbookd/slugify": ["../../libraries/slugify/src"],
-      "@overbookd/transactions": ["../../utils/transactions/src"],
       "@overbookd/user": ["../../domains/user/src"],
       "@overbookd/volunteer-availability": [
         "../../domains/volunteer-availability/src"

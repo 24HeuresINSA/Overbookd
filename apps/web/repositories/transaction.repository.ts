@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transaction } from "@overbookd/transactions";
+import { Transaction } from "@overbookd/personal-account";
 
 type Context = { $axios: NuxtAxiosInstance };
 
