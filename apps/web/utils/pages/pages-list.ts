@@ -19,6 +19,7 @@ import {
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
   WRITE_INVENTORY,
+  MANAGE_ADMINS,
 } from "@overbookd/permission";
 
 export interface Page {
@@ -49,13 +50,30 @@ export const pages: Page[] = [
     keywords: ["profile", "photo", "commentaires"],
   },
   {
+    icon: "mdi-currency-usd",
+    title: "Compte perso",
+    permission: MANAGE_ADMINS,
+    to: "/my-personal-account",
+    description:
+      "Page avec ton compte persos et tes transactions permettant de faire des virements",
+    mobileSupport: true,
+    keywords: [
+      "virements",
+      "cps",
+      "comptes",
+      "persos",
+      "consos",
+      "consomations",
+    ],
+  },
+  {
     icon: "mdi-image",
     title: "Trombinoscope",
     permission: VIEW_TROMBINOSCOPE,
     to: "/trombinoscope",
     description:
       "Liste de tous les bénévoles avec leur photo ce qui permet de mettre un visage sur un nom avant de se rencontrer",
-    mobileSupport: true,
+    mobileSupport: false,
     keywords: ["trombinoscope", "photos"],
   },
   {

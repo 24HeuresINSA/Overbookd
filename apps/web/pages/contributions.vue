@@ -15,5 +15,8 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 export default Vue.extend({
   name: "Contributions",
   components: { ContributionsTable, SnackNotificationContainer },
+  head: () => ({
+    title: "Cotisations",
+  }),
 });
 </script>

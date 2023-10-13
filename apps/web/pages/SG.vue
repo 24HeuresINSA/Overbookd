@@ -143,7 +143,7 @@
  * and every user that consumed get charged accordingly
  */
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import SgConfigForm from "~/components/organisms/user/personalAccount/SgConfigForm.vue";
+import SgConfigForm from "~/components/organisms/personal-account/SgConfigForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";

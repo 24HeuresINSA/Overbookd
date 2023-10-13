@@ -37,10 +37,10 @@
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import VolunteerStatsTable from "~/components/molecules/stats/VolunteerStatsTable.vue";
-import VolunteerInformation from "~/components/organisms/user/data/VolunteerInformation.vue";
+import VolunteerInformation from "~/components/organisms/user/VolunteerInformation.vue";
 import VolunteerListFilters from "~/components/molecules/user/filters/VolunteerListFilters.vue";
 import VolunteerStatsExportFilters from "~/components/molecules/user/filters/VolunteerStatsExportFilters.vue";
-import VolunteerList from "~/components/organisms/user/data/VolunteerList.vue";
+import VolunteerList from "~/components/organisms/user/VolunteerList.vue";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 import { UserPersonalData } from "@overbookd/user";

@@ -74,7 +74,7 @@ $background-color: change-color(
 );
 
 header {
-  z-index: 3;
+  z-index: 10;
   position: sticky;
   top: 0;
   display: flex;

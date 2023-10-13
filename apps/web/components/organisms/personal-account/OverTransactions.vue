@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SnackNotificationContainer from "../../../molecules/snack/SnackNotificationContainer.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Money } from "~/utils/money/money";

@@ -82,7 +82,8 @@ export default Vue.extend({
   margin: 10px 30px;
   gap: 60px;
   @media only screen and (max-width: $mobile-max-width) {
-    margin: 0px;
+    margin: 0;
+    margin-top: 5px;
     gap: 40px;
   }
 
