@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { MapObject } from "../signa-location.model";
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
+import { ValidateIf, IsNotEmpty, IsObject, IsString } from "class-validator";
 
 export class UpdateSignaLocationRequestDto {
   @ApiProperty({
@@ -21,5 +21,6 @@ export class UpdateSignaLocationRequestDto {
     required: false,
   })
   @IsObject()
+  @ValidateIf((_, value) => value !== null)
   coordinates: MapObject | null;
 }

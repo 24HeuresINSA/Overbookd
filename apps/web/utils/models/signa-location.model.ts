@@ -1,7 +1,7 @@
 export interface SignaLocation {
   id: number;
   name: string;
-  coordinates: MapObject | null;
+  coordinates: MapObjectType | null;
 }
 
 export interface MapObject {
@@ -26,7 +26,7 @@ export class Location implements SignaLocation {
   constructor(
     readonly id: number,
     readonly name: string,
-    readonly coordinates: MapObject | null,
+    readonly coordinates: MapObjectType | null,
   ) {
     this.id = id;
     this.name = name;

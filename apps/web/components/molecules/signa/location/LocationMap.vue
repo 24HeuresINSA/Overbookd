@@ -3,7 +3,7 @@
     <div class="map-container">
       <client-only>
         <l-map
-          id="LocationMap"
+          id="location-map"
           :zoom="zoom"
           :center="center"
           :options="{ name: 'LocationMap' }"
@@ -59,5 +59,9 @@ export default defineComponent({
   position: relative;
   z-index: 1;
   height: 40vh;
+}
+
+#location-map {
+  cursor: auto;
 }
 </style>
