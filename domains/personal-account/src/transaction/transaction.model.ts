@@ -2,6 +2,7 @@ export const DEPOSIT = "DEPOSIT";
 export const BARREL = "BARREL";
 export const PROVISIONS = "PROVISIONS";
 export const TRANSFER = "TRANSFER";
+export const SHARED_MEAL = "SHARED_MEAL";
 
 type BaseTransaction = {
   amount: number;
@@ -31,12 +32,24 @@ export type TransferISendTransaction = BaseTransaction & {
   to: number;
 };
 
+export type SharedMealIOfferTransaction = BaseTransaction & {
+  type: typeof SHARED_MEAL;
+  from: number;
+};
+
+export type SharedMealIShotgunTransaction = BaseTransaction & {
+  type: typeof SHARED_MEAL;
+  to: number;
+};
+
 export type Transaction =
   | DepositTransaction
   | BarrelTransaction
   | ProvisionsTransaction
   | TransferIReceiveTransaction
-  | TransferISendTransaction;
+  | TransferISendTransaction
+  | SharedMealIOfferTransaction
+  | SharedMealIShotgunTransaction;
 
 export type TransactionType = Transaction["type"];
 
@@ -45,10 +58,17 @@ export const transactionTypes: TransactionType[] = [
   BARREL,
   PROVISIONS,
   TRANSFER,
+  SHARED_MEAL,
 ];
 
 export function doIReceive(
   transfer: TransferIReceiveTransaction | TransferISendTransaction,
 ): transfer is TransferIReceiveTransaction {
   return "from" in transfer;
+}
+
+export function doIOffer(
+  sharedMeal: SharedMealIOfferTransaction | SharedMealIShotgunTransaction,
+): sharedMeal is SharedMealIOfferTransaction {
+  return "from" in sharedMeal;
 }
