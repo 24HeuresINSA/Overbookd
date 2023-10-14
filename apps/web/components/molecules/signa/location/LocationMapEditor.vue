@@ -24,12 +24,12 @@
     </v-lazy>
     <div class="editor-container">
       <div>
-        <v-select v-model="action" :items="actions" @input="reset"></v-select>
+        <v-select v-model="action" :items="actions"></v-select>
       </div>
       <v-btn :disabled="editionDone" @click="finishAction">
         Finir l'edition
       </v-btn>
-      <v-btn @click="reset"> Réinitialiser </v-btn>
+      <v-btn @click="reset(action)"> Réinitialiser </v-btn>
     </div>
   </section>
 </template>
@@ -117,22 +117,7 @@ export default defineComponent({
         }
       },
       set(action: Action) {
-        this.point = Point.create();
-        this.line = Line.create();
-        this.polygon = Polygon.create();
-
-        switch (action) {
-          case POINT:
-            this.geoJson = { ...this.point.geoJson };
-            break;
-          case ROUTE:
-            this.geoJson = { ...this.line.geoJson };
-            break;
-          case ZONE:
-            this.geoJson = { ...this.polygon.geoJson };
-            break;
-        }
-        this.editionDone = false;
+        this.reset(action);
       },
     },
     isPointEdition(): boolean {
@@ -181,11 +166,11 @@ export default defineComponent({
     finishAction() {
       this.editionDone = true;
     },
-    reset() {
+    reset(action: Action) {
       this.point = Point.create();
       this.line = Line.create();
       this.polygon = Polygon.create();
-      switch (this.action) {
+      switch (action) {
         case POINT:
           this.geoJson = this.point.geoJson;
           break;
