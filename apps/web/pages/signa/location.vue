@@ -75,7 +75,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
-import { SignaLocation, Location } from "~/utils/models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 import LocationMap from "~/components/molecules/signa/location/LocationMap.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import NewLocationCard from "~/components/molecules/signa/location/NewLocationCard.vue";
@@ -86,8 +86,8 @@ interface LocationData {
   headers: Header[];
   search: string;
   isNewLocationDialogOpen: boolean;
-  locationToEdit: Location | null;
-  locationToDelete: Location | null;
+  locationToEdit: SignaLocation | null;
+  locationToDelete: SignaLocation | null;
 }
 
 export default Vue.extend({

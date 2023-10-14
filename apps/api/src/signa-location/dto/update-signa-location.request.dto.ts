@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { MapObject } from "../signa-location.model";
-import { ValidateIf, IsNotEmpty, IsObject, IsString } from "class-validator";
+import { PointLocation, RoadLocation, AreaLocation } from "@overbookd/signa";
+import { ValidateIf, IsNotEmpty, IsObject, IsString, IsOptional } from "class-validator";
 
 export class UpdateSignaLocationRequestDto {
   @ApiProperty({
@@ -8,6 +8,7 @@ export class UpdateSignaLocationRequestDto {
     example: "Devant les humas",
     required: true,
   })
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -16,11 +17,12 @@ export class UpdateSignaLocationRequestDto {
     description: "The coordinates of the location",
     example: {
       type: "POINT",
-      coordinates: [1, 2],
+      geoJson: { lat: 1, lng: 2 },
     },
     required: false,
   })
+  @IsOptional()
   @IsObject()
   @ValidateIf((_, value) => value !== null)
-  coordinates: MapObject | null;
+  geoJson: null | PointLocation | RoadLocation | AreaLocation;
 }

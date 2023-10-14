@@ -1,21 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-
-export type MapObjectTypes = "POINT" | "ROAD" | "AREA";
-
-export type LatLng = {
-  lat: number;
-  lng: number;
-};
-
-export type MapObject = {
-  type: MapObjectTypes;
-  coordinates: LatLng[];
-};
-export interface SignaLocation {
-  id: number;
-  name: string;
-  coordinates: MapObject | null;
-}
+import { SignaLocation, PointLocation, RoadLocation, AreaLocation } from "@overbookd/signa";
 
 export class SignaLocationRepresentation implements SignaLocation {
   @ApiProperty({})
@@ -23,5 +7,5 @@ export class SignaLocationRepresentation implements SignaLocation {
   @ApiProperty({})
   name: string;
   @ApiProperty({})
-  coordinates: MapObject | null;
+  geoJson: null | PointLocation | RoadLocation | AreaLocation;
 }
