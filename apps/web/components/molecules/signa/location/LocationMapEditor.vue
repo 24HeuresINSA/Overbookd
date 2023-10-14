@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { MapObjectType } from "~/utils/models/signa-location.model";
+import { MapObjectType, LatLng } from "~/utils/models/signa-location.model";
 
 export default defineComponent({
   name: "LocationMapEditor",
@@ -51,7 +51,7 @@ export default defineComponent({
     action: "Point",
     actions: ["Point", "Ligne", "Zone"],
     editionDone: false,
-    mouseLatlng: null as null | number[],
+    mouseLatlng: null as null | LatLng,
   }),
   computed: {
     selection: {
@@ -59,42 +59,39 @@ export default defineComponent({
         return this.value;
       },
       set(selection: null | MapObjectType) {
-        console.log(selection);
         this.$emit("input", selection);
       },
     },
-    point(): null | number[] {
+    point(): null | LatLng {
       if (this.selection && this.selection.type === "POINT") {
-        return this.selection.coordinates as number[];
+        return this.selection.coordinates?.[0] ?? null;
       }
       return null;
     },
-    line(): null | number[][] {
+    line(): null | LatLng[] {
       if (this.selection && this.selection.type === "ROAD") {
         if (!this.editionDone && this.action === "Ligne" && this.mouseLatlng) {
-          const lastLine = this.selection.coordinates as number[][];
-          return [...lastLine, this.mouseLatlng];
+          return [...this.selection.coordinates, this.mouseLatlng];
         }
-        return this.selection.coordinates as number[][];
+        return this.selection.coordinates;
       }
       return null;
     },
-    polygon(): null | number[][] {
+    polygon(): null | LatLng[] {
       if (this.selection && this.selection.type === "AREA") {
         if (!this.editionDone && this.action === "Zone" && this.mouseLatlng) {
-          const lastPolygon = this.selection.coordinates as number[][];
-          return [...lastPolygon, this.mouseLatlng];
+          return [...this.selection.coordinates, this.mouseLatlng];
         }
-        return this.selection.coordinates as number[][];
+        return this.selection.coordinates;
       }
       return null;
     },
   },
   methods: {
-    userHover({ latlng }: { latlng: number[] }) {
+    userHover({ latlng }: { latlng: LatLng }) {
       this.mouseLatlng = latlng;
     },
-    userAction({ latlng }: { latlng: number[] }) {
+    userAction({ latlng }: { latlng: LatLng }) {
       if (this.editionDone) return;
       switch (this.action) {
         case "Point":
@@ -108,20 +105,20 @@ export default defineComponent({
           break;
       }
     },
-    setPoint(latlng: number[]) {
+    setPoint(latlng: LatLng) {
       if (this.line || this.polygon) return;
       this.selection = {
         type: "POINT",
-        coordinates: latlng,
+        coordinates: [latlng],
       };
     },
-    addLinePoint(latlng: number[]) {
+    addLinePoint(latlng: LatLng) {
       if (this.point || this.polygon) return;
       if (this.selection && this.selection.type === "ROAD") {
         this.selection.coordinates = [
           ...this.selection.coordinates,
           latlng,
-        ] as number[][];
+        ] as LatLng[];
       } else {
         this.selection = {
           type: "ROAD",
@@ -129,13 +126,13 @@ export default defineComponent({
         };
       }
     },
-    addPolygonPoint(latlng: number[]) {
+    addPolygonPoint(latlng: LatLng) {
       if (this.point || this.line) return;
       if (this.selection && this.selection.type === "AREA") {
         this.selection.coordinates = [
           ...this.selection.coordinates,
           latlng,
-        ] as number[][];
+        ] as LatLng[];
       } else {
         this.selection = {
           type: "AREA",

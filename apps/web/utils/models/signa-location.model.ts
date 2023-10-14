@@ -4,16 +4,21 @@ export interface SignaLocation {
   coordinates: MapObjectType | null;
 }
 
+export type LatLng = {
+  lat: number;
+  lng: number;
+};
+
 export interface MapObject {
   type: string;
-  coordinates: number[] | number[][];
+  coordinates: LatLng[];
 }
 
 export type MapObjectTypes = "POINT" | "ROAD" | "AREA";
 
 export type MapObjectType = {
   type: MapObjectTypes;
-  coordinates: number[] | number[][];
+  coordinates: LatLng[];
 };
 
 export type CreateLocation = Pick<SignaLocation, "name" | "coordinates">;
@@ -27,6 +32,18 @@ export class Location implements SignaLocation {
     readonly id: number,
     readonly name: string,
     readonly coordinates: MapObjectType | null,
+  ) {
+    this.id = id;
+    this.name = name;
+    this.coordinates = coordinates;
+  }
+}
+
+export class NotNullLocation implements SignaLocation {
+  constructor(
+    readonly id: number,
+    readonly name: string,
+    readonly coordinates: MapObjectType,
   ) {
     this.id = id;
     this.name = name;
