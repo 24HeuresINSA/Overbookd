@@ -23,10 +23,10 @@
         <template #item.action="{ item }">
           <tr>
             <td>
-              <v-btn icon small @click="locationToEdit = item">
+              <v-btn icon small @click="editLocationDialog(item)">
                 <v-icon small>mdi-circle-edit-outline</v-icon>
               </v-btn>
-              <v-btn icon small @click="locationToDelete = item">
+              <v-btn icon small @click="deleteLocationDialog(item)">
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -88,6 +88,8 @@ interface LocationData {
   isNewLocationDialogOpen: boolean;
   locationToEdit: SignaLocation | null;
   locationToDelete: SignaLocation | null;
+  displayEditLocationDialog: boolean;
+  displayDeleteLocationDialog: boolean;
 }
 
 export default Vue.extend({
@@ -108,6 +110,8 @@ export default Vue.extend({
     isNewLocationDialogOpen: false,
     locationToEdit: null,
     locationToDelete: null,
+    displayEditLocationDialog: false,
+    displayDeleteLocationDialog: false,
   }),
   head: () => ({
     title: "Lieux de la signa",
@@ -116,21 +120,35 @@ export default Vue.extend({
     locations(): SignaLocation[] {
       return this.$accessor.signa.locations;
     },
-    displayEditLocationDialog(): boolean {
-      return this.locationToEdit !== null;
+  },
+  watch: {
+    displayEditLocationDialog(val: boolean) {
+      if (val) return;
+      this.closeAllDialogs();
     },
-    displayDeleteLocationDialog(): boolean {
-      return this.locationToDelete !== null;
+    displayDeleteLocationDialog(val: boolean) {
+      if (val) return;
+      this.closeAllDialogs();
     },
   },
   async mounted() {
     this.$accessor.signa.getAllSignaLocations();
   },
   methods: {
+    editLocationDialog(location: SignaLocation) {
+      this.locationToEdit = location;
+      this.displayEditLocationDialog = true;
+    },
+    deleteLocationDialog(location: SignaLocation) {
+      this.locationToDelete = location;
+      this.displayDeleteLocationDialog = true;
+    },
     closeAllDialogs() {
       this.isNewLocationDialogOpen = false;
       this.locationToEdit = null;
       this.locationToDelete = null;
+      this.displayEditLocationDialog = false;
+      this.displayDeleteLocationDialog = false;
     },
     async deleteLocation() {
       if (!this.locationToDelete) return;
