@@ -32,12 +32,12 @@ export type TransferISendTransaction = BaseTransaction & {
   to: number;
 };
 
-export type SharedMealIOfferTransaction = BaseTransaction & {
+type SharedMealIOfferTransaction = BaseTransaction & {
   type: typeof SHARED_MEAL;
   from: number;
 };
 
-export type SharedMealIShotgunTransaction = BaseTransaction & {
+type SharedMealIShotgunTransaction = BaseTransaction & {
   type: typeof SHARED_MEAL;
   to: number;
 };
@@ -65,10 +65,4 @@ export function doIReceive(
   transfer: TransferIReceiveTransaction | TransferISendTransaction,
 ): transfer is TransferIReceiveTransaction {
   return "from" in transfer;
-}
-
-export function doIOffer(
-  sharedMeal: SharedMealIOfferTransaction | SharedMealIShotgunTransaction,
-): sharedMeal is SharedMealIOfferTransaction {
-  return "from" in sharedMeal;
 }
