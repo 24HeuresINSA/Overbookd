@@ -4,7 +4,7 @@ import { BaseFa } from "./fa.model";
 import { FtFeedback } from "./feedback.model";
 import { FtTimeSpan } from "./ft-time-span.model";
 import { Review } from "./review.model";
-import { SignaLocation } from "./signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 import { Team } from "./team.model";
 import { User } from "@overbookd/user";
 

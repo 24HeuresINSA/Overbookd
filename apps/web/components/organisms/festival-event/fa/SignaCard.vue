@@ -60,7 +60,7 @@ import {
   isAnimationValidatedBy,
 } from "~/utils/festival-event/fa.utils";
 import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa.model";
-import { SignaLocation } from "~/utils/models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 
 export default Vue.extend({
   name: "SignaCard",

@@ -31,13 +31,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { MapObjectType, LatLng } from "~/utils/models/signa-location.model";
+import { GeoJson, Coordinate, PointLocation, RoadLocation, AreaLocation } from "@overbookd/signa";
 
 export default defineComponent({
   name: "LocationMapEditor",
   props: {
     value: {
-      type: Object as () => MapObjectType | null,
+      type: Object as () => GeoJson,
       default: null,
     },
   },
@@ -51,47 +51,47 @@ export default defineComponent({
     action: "Point",
     actions: ["Point", "Ligne", "Zone"],
     editionDone: false,
-    mouseLatlng: null as null | LatLng,
+    mouseLatlng: null as null | Coordinate,
   }),
   computed: {
-    selection: {
-      get(): null | MapObjectType {
+    geoJson: {
+      get(): GeoJson {
         return this.value;
       },
-      set(selection: null | MapObjectType) {
-        this.$emit("input", selection);
+      set(geoJson: GeoJson) {
+        this.$emit("input", geoJson);
       },
     },
-    point(): null | LatLng {
-      if (this.selection && this.selection.type === "POINT") {
-        return this.selection.coordinates?.[0] ?? null;
+    point(): null | PointLocation["coordinates"] {
+      if (this.geoJson && this.geoJson.type === "POINT") {
+        return this.geoJson.coordinates;
       }
       return null;
     },
-    line(): null | LatLng[] {
-      if (this.selection && this.selection.type === "ROAD") {
+    line(): null | RoadLocation["coordinates"] {
+      if (this.geoJson && this.geoJson.type === "ROAD") {
         if (!this.editionDone && this.action === "Ligne" && this.mouseLatlng) {
-          return [...this.selection.coordinates, this.mouseLatlng];
+          return [...this.geoJson.coordinates, this.mouseLatlng];
         }
-        return this.selection.coordinates;
+        return this.geoJson.coordinates;
       }
       return null;
     },
-    polygon(): null | LatLng[] {
-      if (this.selection && this.selection.type === "AREA") {
+    polygon(): null | AreaLocation["coordinates"] {
+      if (this.geoJson && this.geoJson.type === "AREA") {
         if (!this.editionDone && this.action === "Zone" && this.mouseLatlng) {
-          return [...this.selection.coordinates, this.mouseLatlng];
+          return [...this.geoJson.coordinates, this.mouseLatlng];
         }
-        return this.selection.coordinates;
+        return this.geoJson.coordinates;
       }
       return null;
     },
   },
   methods: {
-    userHover({ latlng }: { latlng: LatLng }) {
+    userHover({ latlng }: { latlng: Coordinate }) {
       this.mouseLatlng = latlng;
     },
-    userAction({ latlng }: { latlng: LatLng }) {
+    userAction({ latlng }: { latlng: Coordinate }) {
       if (this.editionDone) return;
       switch (this.action) {
         case "Point":
@@ -105,36 +105,36 @@ export default defineComponent({
           break;
       }
     },
-    setPoint(latlng: LatLng) {
+    setPoint(latlng: Coordinate) {
       if (this.line || this.polygon) return;
-      this.selection = {
+      this.geoJson = {
         type: "POINT",
-        coordinates: [latlng],
+        coordinates: latlng,
       };
     },
-    addLinePoint(latlng: LatLng) {
+    addLinePoint(latlng: Coordinate) {
       if (this.point || this.polygon) return;
-      if (this.selection && this.selection.type === "ROAD") {
-        this.selection.coordinates = [
-          ...this.selection.coordinates,
+      if (this.geoJson && this.geoJson.type === "ROAD") {
+        this.geoJson.coordinates = [
+          ...this.geoJson.coordinates,
           latlng,
-        ] as LatLng[];
+        ];
       } else {
-        this.selection = {
+        this.geoJson = {
           type: "ROAD",
           coordinates: [latlng],
         };
       }
     },
-    addPolygonPoint(latlng: LatLng) {
+    addPolygonPoint(latlng: Coordinate) {
       if (this.point || this.line) return;
-      if (this.selection && this.selection.type === "AREA") {
-        this.selection.coordinates = [
-          ...this.selection.coordinates,
+      if (this.geoJson && this.geoJson.type === "AREA") {
+        this.geoJson.coordinates = [
+          ...this.geoJson.coordinates,
           latlng,
-        ] as LatLng[];
+        ];
       } else {
-        this.selection = {
+        this.geoJson = {
           type: "AREA",
           coordinates: [latlng],
         };
@@ -144,7 +144,7 @@ export default defineComponent({
       this.editionDone = true;
     },
     reset() {
-      this.selection = null;
+      this.geoJson = null;
       this.editionDone = false;
     },
   },

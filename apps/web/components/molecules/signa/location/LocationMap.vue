@@ -12,21 +12,21 @@
           <l-marker
             v-for="(location, index) in points"
             :key="index"
-            :lat-lng="location.coordinates.coordinates[0]"
+            :lat-lng="location.geoJson.coordinates"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-marker>
           <l-polyline
-            v-for="(location, index) in lines"
+            v-for="(location, index) in roads"
             :key="index"
-            :lat-lngs="location.coordinates.coordinates"
+            :lat-lngs="location.geoJson.coordinates"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polyline>
           <l-polygon
-            v-for="(location, index) in polygons"
+            v-for="(location, index) in areas"
             :key="index"
-            :lat-lngs="location.coordinates.coordinates"
+            :lat-lngs="location.geoJson.coordinates"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polygon>
@@ -38,13 +38,18 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Location, NotNullLocation } from "~/utils/models/signa-location.model";
+import {
+  SignaLocation,
+  PointLocation,
+  RoadLocation,
+  AreaLocation,
+} from "@overbookd/signa";
 
 export default defineComponent({
   name: "LocationMap",
   props: {
     locations: {
-      type: Array<Location>,
+      type: Array as () => SignaLocation[],
       required: true,
     },
   },
@@ -56,20 +61,14 @@ export default defineComponent({
     center: [45.784045, 4.876916],
   }),
   computed: {
-    filteredLocations(): NotNullLocation[] {
-      return this.locations.filter((location) => location.coordinates) as NotNullLocation[];
+    points(): SignaLocation<PointLocation>[] {
+      return [];
     },
-    points(): NotNullLocation[] {
-      return this.filteredLocations
-        .filter((location) => location.coordinates.type === "POINT");
+    roads(): SignaLocation<RoadLocation>[] {
+      return [];
     },
-    lines(): NotNullLocation[] {
-      return this.filteredLocations
-        .filter((location) => location.coordinates.type === "ROAD");
-    },
-    polygons(): NotNullLocation[] {
-      return this.filteredLocations
-        .filter((location) => location.coordinates.type === "AREA");
+    areas(): SignaLocation<AreaLocation>[] {
+      return [];
     },
   },
 });
