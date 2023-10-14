@@ -17,7 +17,8 @@ import {
   faStatuses,
   faTypes,
 } from "../fa.model";
-import { SignaLocation, SignaLocationRepresentation } from "../../signa-location/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
+import { SignaLocationRepresentation } from "../../signa-location/signa-location.model";
 import { CollaboratorWithId } from "../../collaborator/collaborator.model";
 import { CollaboratorResponseDto } from "../../collaborator/dto/collaborator.response.dto";
 import {

@@ -12,7 +12,7 @@ import {
 import { FtStatus, ftStatuses } from "../ft/ft.model";
 import { FaSignaNeed } from "../fa-signa-need/fa-signa-need.model";
 import { Team } from "../team/team.model";
-import { SignaLocation } from "../signa-location/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 
 const DRAFT = "DRAFT";
 const SUBMITTED = "SUBMITTED";

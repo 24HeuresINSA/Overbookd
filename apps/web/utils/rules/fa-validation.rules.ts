@@ -9,7 +9,7 @@ import {
   SortedStoredGearRequests,
 } from "../models/fa.model";
 import { GearRequest } from "../models/gear-request.model";
-import { SignaLocation } from "../models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 import { Team } from "../models/team.model";
 import { User } from "@overbookd/user";
 

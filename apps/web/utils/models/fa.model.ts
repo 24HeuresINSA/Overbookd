@@ -3,7 +3,7 @@ import { FaFeedback } from "./feedback.model";
 import { FtSimplified } from "./ft.model";
 import { StoredGearRequest } from "./gear-request.model";
 import { PeriodWithId } from "./period.model";
-import { SignaLocation } from "./signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 import { Team } from "./team.model";
 import { User } from "@overbookd/user";
 
