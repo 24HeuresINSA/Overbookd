@@ -10,13 +10,7 @@ overbookd/release:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
     - when: never
   before_script:
-    - !reference [.setup-git, script]
     - !reference [.setup-pnpm, before_script]
-    - GITLAB_TOKEN=$GITLAB_API_TOKEN
-    - GIT_AUTHOR_NAME=24-bot
-    - GIT_AUTHOR_EMAIL=dsi@24heures.org
-    - GIT_COMMITTER_NAME=24-bot
-    - GIT_COMMITTER_EMAIL=dsi@24heures.org
     - pnpm install
   script:
     - npx semantic-release
