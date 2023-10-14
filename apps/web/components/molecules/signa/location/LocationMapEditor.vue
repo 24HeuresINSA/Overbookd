@@ -4,6 +4,7 @@
       <client-only>
         <div class="map">
           <l-map
+            id="location-map-editor"
             :zoom="zoom"
             :center="center"
             :options="{ name: 'LocationMapEditor' }"
@@ -117,7 +118,10 @@ export default defineComponent({
     addLinePoint(latlng: number[]) {
       if (this.point || this.polygon) return;
       if (this.selection && this.selection.type === "ROAD") {
-        this.selection.coordinates = [...this.selection.coordinates, latlng] as number[][];
+        this.selection.coordinates = [
+          ...this.selection.coordinates,
+          latlng,
+        ] as number[][];
       } else {
         this.selection = {
           type: "ROAD",
@@ -128,7 +132,10 @@ export default defineComponent({
     addPolygonPoint(latlng: number[]) {
       if (this.point || this.line) return;
       if (this.selection && this.selection.type === "AREA") {
-        this.selection.coordinates = [...this.selection.coordinates, latlng] as number[][];
+        this.selection.coordinates = [
+          ...this.selection.coordinates,
+          latlng,
+        ] as number[][];
       } else {
         this.selection = {
           type: "AREA",
@@ -150,6 +157,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 .map {
   height: 60vh;
+}
+
+#location-map-editor {
+  cursor: crosshair;
 }
 
 .editor-container {

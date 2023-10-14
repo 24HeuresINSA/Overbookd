@@ -6,6 +6,7 @@
         v-model="newLocation.name"
         label="Nom du lieu"
       ></v-text-field>
+      <LocationMapEditor v-model="newLocation.coordinates"/>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -18,6 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import LocationMapEditor from "./LocationMapEditor.vue";
 import { SignaLocation, Location } from "~/utils/models/signa-location.model";
 
 interface ModifyLocationCardData {
@@ -26,6 +28,7 @@ interface ModifyLocationCardData {
 
 export default defineComponent({
   name: "ModifyLocationCard",
+  components: { LocationMapEditor },
   props: {
     location: {
       type: Location,
@@ -37,7 +40,7 @@ export default defineComponent({
   }),
   computed: {
     disableEditButton(): boolean {
-      return this.location.name === this.newLocation.name;
+      return this.location === this.newLocation;
     },
   },
   methods: {
