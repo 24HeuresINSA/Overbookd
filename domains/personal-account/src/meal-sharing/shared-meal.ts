@@ -1,17 +1,20 @@
-import { IExposeSharedMeal, IInformAboutMeal } from "./meals.model";
+import {
+  Expense,
+  IExposePastMeal,
+  IExposeSharedMeal,
+  IInformAboutMeal,
+} from "./meals.model";
 import { Meal } from "./meal";
 import { IDefineMealDate } from "./meal-sharing";
 import { Adherent } from "./adherent";
+import { Shotgun } from "./adherent";
+import { PastMeal } from "./past-meal";
 
 type IInitSharedMeal = {
   id: number;
   menu: string;
   date: IDefineMealDate;
   chef: Adherent;
-};
-
-type Shotgun = Adherent & {
-  date: Date;
 };
 
 type IRetrieveSharedMeal = {
@@ -58,10 +61,13 @@ export class SharedMeal implements IExposeSharedMeal {
     return new SharedMeal(this.id, this.meal, this.chef, shotguns);
   }
 
-  shotgunsBefore(date: Date): number {
-    const inTimeShotguns = this._shotguns.filter(
-      (shotgun) => shotgun.date.getTime() < date.getTime(),
-    );
-    return inTimeShotguns.length;
+  close(expense: Expense): IExposePastMeal {
+    return PastMeal.init({
+      id: this.id,
+      meal: this.meal,
+      chef: this.chef,
+      shotguns: this._shotguns,
+      expense,
+    });
   }
 }

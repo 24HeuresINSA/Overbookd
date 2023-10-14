@@ -1,5 +1,10 @@
 import { Adherent } from "./adherent";
 
+export type Expense = {
+  amount: number;
+  date: Date;
+};
+
 export type IInformAboutMeal = { menu: string; date: string };
 
 type BaseSharedMeal = {
@@ -12,13 +17,21 @@ type BaseSharedMeal = {
 export type IExposeSharedMeal = BaseSharedMeal & {
   hasShotgun(adherent: Adherent): boolean;
   shotgunFor(adherent: Adherent): IExposeSharedMeal;
-  shotgunsBefore(date: Date): number;
+  close(expense: Expense): IExposePastMeal;
+};
+
+export type EndSharedMeal = {
+  chef: Adherent;
+  date: string;
+  guests: number[];
+  amount: number;
 };
 
 export type IExposePastMeal = BaseSharedMeal & {
   shotgunFor(adherent: Adherent): IExposeSharedMeal;
   amount: number;
   inTimeShotguns: number;
+  event: EndSharedMeal;
 };
 
 export function isPastMeal(

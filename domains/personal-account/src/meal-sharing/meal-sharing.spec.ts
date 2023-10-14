@@ -154,5 +154,13 @@ describe("Meal Sharing", () => {
     it("should count how many shotguns were done", () => {
       expect(pastSharedMeal.shotguns).toBe(3);
     });
+    it("should expose a closure event describing shared meal", () => {
+      expect(pastSharedMeal.event).toEqual({
+        chef: julie,
+        amount: 1000,
+        guests: [julie.id, noel.id, shogosse.id],
+        date: "jeudi 12 octobre midi",
+      });
+    });
   });
 });

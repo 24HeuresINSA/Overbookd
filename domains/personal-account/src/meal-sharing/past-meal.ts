@@ -1,8 +1,8 @@
-import { IExposeSharedMeal } from "./meals.model";
-import { Adherent } from "./adherent";
+import { EndSharedMeal, IExposeSharedMeal } from "./meals.model";
+import { Adherent, Shotgun } from "./adherent";
 import { IExposePastMeal } from "./meals.model";
 import { IInformAboutMeal } from "./meals.model";
-import { Expense } from "./meal-sharing";
+import { Expense } from "./meals.model";
 import { MealSharingError } from "./meal-sharing.error";
 
 export const PAST_MEAL_ERROR =
@@ -14,26 +14,25 @@ class PastMealError extends MealSharingError {
   }
 }
 
+type IInitPastMeal = {
+  id: number;
+  meal: IInformAboutMeal;
+  chef: Adherent;
+  expense: Expense;
+  shotguns: Shotgun[];
+};
+
 export class PastMeal implements IExposePastMeal {
   private constructor(
     readonly id: number,
     readonly meal: IInformAboutMeal,
     readonly chef: Adherent,
-    private readonly _shotguns: { inTime: number; total: number },
-    readonly amount: number,
+    private readonly _shotguns: Shotgun[],
+    private readonly expense: Expense,
   ) {}
 
-  static init(
-    sharedMeal: IExposeSharedMeal,
-    { amount, date }: Expense,
-  ): PastMeal {
-    const inTimeShotguns = sharedMeal.shotgunsBefore(date);
-    const { id, meal, chef, shotguns: totalShotguns } = sharedMeal;
-    const shotguns = {
-      inTime: inTimeShotguns,
-      total: totalShotguns,
-    };
-    return new PastMeal(id, meal, chef, shotguns, amount);
+  static init({ id, meal, chef, shotguns, expense }: IInitPastMeal): PastMeal {
+    return new PastMeal(id, meal, chef, shotguns, expense);
   }
 
   shotgunFor(): IExposeSharedMeal {
@@ -41,10 +40,25 @@ export class PastMeal implements IExposePastMeal {
   }
 
   get inTimeShotguns(): number {
-    return this._shotguns.inTime;
+    return this._shotguns.filter(
+      ({ date }) => date.getTime() < this.expense.date.getTime(),
+    ).length;
   }
 
   get shotguns(): number {
-    return this._shotguns.total;
+    return this._shotguns.length;
+  }
+
+  get amount(): number {
+    return this.expense.amount;
+  }
+
+  get event(): EndSharedMeal {
+    return {
+      chef: this.chef,
+      date: this.meal.date,
+      amount: this.amount,
+      guests: this._shotguns.map(({ id }) => id),
+    };
   }
 }

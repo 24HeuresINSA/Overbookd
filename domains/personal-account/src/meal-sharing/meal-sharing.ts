@@ -7,6 +7,7 @@ import {
   MealNotFound,
   GuestNotFound,
 } from "./meal-sharing.error";
+import { Expense } from "./meals.model";
 
 export const SOIR = "SOIR";
 export const MIDI = "MIDI";
@@ -31,11 +32,6 @@ export type SharedMeals = {
 
 export type Adherents = {
   find(id: number): Promise<Adherent | undefined>;
-};
-
-export type Expense = {
-  amount: number;
-  date: Date;
 };
 
 export class MealSharing {
@@ -79,7 +75,7 @@ export class MealSharing {
     if (!meal) throw new MealNotFound(mealId);
     if (isPastMeal(meal)) return meal;
 
-    const pastSharedMeal = PastMeal.init(meal, expense);
+    const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);
   }
 }
