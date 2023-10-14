@@ -11,21 +11,21 @@
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
           <l-marker
             v-for="(location, index) in points"
-            :key="index"
+            :key="`point-${index}`"
             :lat-lng="location.geoJson.coordinates"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-marker>
           <l-polyline
             v-for="(location, index) in roads"
-            :key="index"
+            :key="`road-${index}`"
             :lat-lngs="location.geoJson.coordinates"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polyline>
           <l-polygon
             v-for="(location, index) in areas"
-            :key="index"
+            :key="`area-${index}`"
             :lat-lngs="location.geoJson.coordinates"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
@@ -39,10 +39,14 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
+  POINT,
+  ROAD,
+  AREA,
   SignaLocation,
   PointLocation,
   RoadLocation,
   AreaLocation,
+  filterLocation,
 } from "@overbookd/signa";
 
 export default defineComponent({
@@ -62,13 +66,13 @@ export default defineComponent({
   }),
   computed: {
     points(): SignaLocation<PointLocation>[] {
-      return [];
+      return filterLocation(POINT, this.locations);
     },
     roads(): SignaLocation<RoadLocation>[] {
-      return [];
+      return filterLocation(ROAD, this.locations);
     },
     areas(): SignaLocation<AreaLocation>[] {
-      return [];
+      return filterLocation(AREA, this.locations);
     },
   },
 });
