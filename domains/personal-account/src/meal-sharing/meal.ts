@@ -1,9 +1,8 @@
 import { IInformAboutMeal } from "./meals.model";
 import { IDefineMealDate } from "./meal-sharing";
 
-
 export class Meal implements IInformAboutMeal {
-  private constructor(readonly menu: string, readonly date: string) { }
+  private constructor(readonly menu: string, readonly date: string) {}
 
   static init(menu: string, dateDefinition: IDefineMealDate): Meal {
     const date = this.buildDate(dateDefinition);

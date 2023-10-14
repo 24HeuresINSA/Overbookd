@@ -1,6 +1,5 @@
 import { Adherent } from "./adherent";
 import { isPastMeal } from "./meals.model";
-import { PastMeal } from "./past-meal";
 import { IExposeSharedMeal, IExposePastMeal } from "./meals.model";
 import {
   ChefNotFound,

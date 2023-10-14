@@ -27,7 +27,7 @@ export class SharedMeal {
   private static divideAmount(totalAmount: number, guests: number) {
     const individualAmount = totalAmount / guests;
     const individualAmountSteps = Math.ceil(
-      individualAmount / this.INDIVIDUAL_AMOUNT_STEP
+      individualAmount / this.INDIVIDUAL_AMOUNT_STEP,
     );
     return individualAmountSteps * this.INDIVIDUAL_AMOUNT_STEP;
   }
