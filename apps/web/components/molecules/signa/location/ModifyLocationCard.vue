@@ -6,7 +6,7 @@
         v-model="newLocation.name"
         label="Nom du lieu"
       ></v-text-field>
-      <LocationMapEditor v-model="newLocation.geoJson"/>
+      <LocationMapEditor v-model="newLocation.geoJson" />
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
