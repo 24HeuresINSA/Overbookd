@@ -1,15 +1,19 @@
+export const POINT = "POINT";
+export const ROAD = "ROAD";
+export const AREA = "AREA";
+
 export type PointLocation = {
-  type: "POINT";
+  type: typeof POINT;
   coordinates: Coordinate;
 };
 
 export type RoadLocation = {
-  type: "ROAD";
+  type: typeof ROAD;
   coordinates: Coordinate[];
 };
 
 export type AreaLocation = {
-  type: "AREA";
+  type: typeof AREA;
   coordinates: Coordinate[];
 };
 
@@ -24,4 +28,28 @@ export interface SignaLocation<T extends GeoJson = GeoJson> {
   id: number;
   name: string;
   geoJson: T;
+}
+
+export function isPointLocation(geoJson: GeoJson): geoJson is PointLocation {
+  return geoJson?.type === POINT;
+}
+
+export function isRoadLocation(geoJson: GeoJson): geoJson is RoadLocation {
+  return geoJson?.type === ROAD;
+}
+
+export function isAreaLocation(geoJson: GeoJson): geoJson is AreaLocation {
+  return geoJson?.type === AREA;
+}
+
+export function filterLocation<
+  T extends typeof POINT | typeof ROAD | typeof AREA,
+>(
+  type: T,
+  locations: SignaLocation[],
+): SignaLocation<Extract<GeoJson, { type: T }>>[] {
+  return locations.filter(
+    (location): location is SignaLocation<Extract<GeoJson, { type: T }>> =>
+      location.geoJson?.type === type,
+  );
 }
