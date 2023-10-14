@@ -6,7 +6,7 @@ export class LoginRequestDto {
   @ApiProperty({
     required: true,
     description: "The email of the user",
-    example: "john@doe.com",
+    example: "admin@24h.me",
   })
   @IsDefined()
   @IsEmail()
@@ -16,7 +16,7 @@ export class LoginRequestDto {
   @ApiProperty({
     required: true,
     description: "The password of the user",
-    example: "my5up3rP4s5w0rd",
+    example: "password",
   })
   @IsDefined()
   @IsNotEmpty()

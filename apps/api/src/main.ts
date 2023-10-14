@@ -52,7 +52,11 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("swagger", app, document);
+  SwaggerModule.setup("swagger", app, document, {
+    swaggerOptions: {
+      docExpansion: "none",
+    },
+  });
 
   app.use(json({ limit: "200kb" }));
   app.use(urlencoded({ limit: "200kb", extended: true }));
