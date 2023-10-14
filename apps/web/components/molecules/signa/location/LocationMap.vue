@@ -10,25 +10,25 @@
         >
           <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
           <l-marker
-            v-for="(latlng, index) in points"
+            v-for="(location, index) in points"
             :key="index"
-            :lat-lng="latlng"
+            :lat-lng="location.coordinates.coordinates[0]"
           >
-            <l-tooltip>Hello!</l-tooltip>
+            <l-tooltip>{{ location.name }}</l-tooltip>
           </l-marker>
           <l-polyline
-            v-for="(line, index) in lines"
+            v-for="(location, index) in lines"
             :key="index"
-            :lat-lngs="line"
+            :lat-lngs="location.coordinates.coordinates"
           >
-            <l-tooltip>Hello!</l-tooltip>
+            <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polyline>
           <l-polygon
-            v-for="(polygon, index) in polygons"
+            v-for="(location, index) in polygons"
             :key="index"
-            :lat-lngs="polygon"
+            :lat-lngs="location.coordinates.coordinates"
           >
-            <l-tooltip>Hello!</l-tooltip>
+            <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polygon>
         </l-map>
       </client-only>
@@ -38,19 +38,40 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Location, NotNullLocation } from "~/utils/models/signa-location.model";
 
 export default defineComponent({
   name: "LocationMap",
+  props: {
+    locations: {
+      type: Array<Location>,
+      required: true,
+    },
+  },
   data: () => ({
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
       '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     zoom: 16,
     center: [45.784045, 4.876916],
-    points: [] as number[][],
-    lines: [] as number[][][],
-    polygons: [] as number[][][],
   }),
+  computed: {
+    filteredLocations(): NotNullLocation[] {
+      return this.locations.filter((location) => location.coordinates) as NotNullLocation[];
+    },
+    points(): NotNullLocation[] {
+      return this.filteredLocations
+        .filter((location) => location.coordinates.type === "POINT");
+    },
+    lines(): NotNullLocation[] {
+      return this.filteredLocations
+        .filter((location) => location.coordinates.type === "ROAD");
+    },
+    polygons(): NotNullLocation[] {
+      return this.filteredLocations
+        .filter((location) => location.coordinates.type === "AREA");
+    },
+  },
 });
 </script>
 

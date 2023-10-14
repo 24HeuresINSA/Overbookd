@@ -1,10 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export type MapObjectTypes = "POINT" | "ROAD" | "AREA";
-// TODO Move
+
+export type LatLng = {
+  lat: number;
+  lng: number;
+};
+
 export type MapObject = {
   type: MapObjectTypes;
-  coordinates: number[] | number[][];
+  coordinates: LatLng[];
 };
 export interface SignaLocation {
   id: number;
