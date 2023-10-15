@@ -28,7 +28,8 @@
     "docker",
     "registration",
     "deps",
-    "tools"
+    "tools",
+    "festival-activity"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],
