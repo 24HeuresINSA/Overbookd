@@ -24,7 +24,12 @@
     </v-lazy>
     <div class="editor-container">
       <div>
-        <v-select v-model="action" :items="actions"></v-select>
+        <v-select
+          v-model="action"
+          :items="actions"
+          item-text="value"
+          item-value="key"
+        ></v-select>
       </div>
       <v-btn :disabled="editionDone" @click="finishAction">
         Finir l'edition
@@ -40,26 +45,32 @@ import {
   GeoJson,
   Coordinate,
   isPointLocation,
-  POINT as POINT_LOCATION,
-  ROAD as ROAD_LOCATION,
-  AREA as AREA_LOCATION,
+  POINT,
+  ROAD,
+  AREA,
 } from "@overbookd/signa";
 import { Point } from "~/utils/signa-location/point";
 import { Line } from "~/utils/signa-location/line";
 import { Polygon } from "~/utils/signa-location/polygon";
 
-const POINT = "Point";
-const ROUTE = "Route";
-const ZONE = "Zone";
+const actions: ActionItem[] = [
+  { key: POINT, value: "Point" },
+  { key: ROAD, value: "Road" },
+  { key: AREA, value: "Area" },
+];
 
-type Action = typeof POINT | typeof ROUTE | typeof ZONE;
+type Action = typeof POINT | typeof ROAD | typeof AREA;
+type ActionItem = {
+  key: Action;
+  value: string;
+};
 
 interface LocationMapEditorData {
   url: string;
   attribution: string;
   zoom: number;
   center: Coordinate;
-  actions: Action[];
+  actions: ActionItem[];
   editionDone: boolean;
   mouseLatlng: Coordinate;
   point: Point;
@@ -88,7 +99,7 @@ export default defineComponent({
       '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     zoom: 16,
     center,
-    actions: [POINT, ROUTE, ZONE],
+    actions,
     editionDone: false,
     mouseLatlng: center,
     point: Point.create(),
@@ -106,15 +117,7 @@ export default defineComponent({
     },
     action: {
       get(): Action {
-        switch (this.geoJson?.type) {
-          case ROAD_LOCATION:
-            return ROUTE;
-          case AREA_LOCATION:
-            return ZONE;
-          case POINT_LOCATION:
-          default:
-            return POINT;
-        }
+        return this.geoJson?.type ?? POINT;
       },
       set(action: Action) {
         this.reset(action);
@@ -124,10 +127,10 @@ export default defineComponent({
       return this.action === POINT;
     },
     isRoadEdition(): boolean {
-      return this.action === ROUTE;
+      return this.action === ROAD;
     },
     isAreaEdition(): boolean {
-      return this.action === ZONE;
+      return this.action === AREA;
     },
     coordinates(): Coordinate | Coordinate[] {
       if (!this.geoJson) return center;
@@ -147,17 +150,16 @@ export default defineComponent({
     },
     userAction({ latlng }: { latlng: Coordinate }) {
       if (this.editionDone) return;
-      console.error("ICI");
       switch (this.action) {
         case POINT:
           this.point.addCoordinate(latlng);
           this.geoJson = this.point.geoJson;
           break;
-        case ROUTE:
+        case ROAD:
           this.line.addCoordinate(latlng);
           this.geoJson = this.line.geoJson;
           break;
-        case ZONE:
+        case AREA:
           this.polygon.addCoordinate(latlng);
           this.geoJson = this.polygon.geoJson;
           break;
@@ -174,10 +176,10 @@ export default defineComponent({
         case POINT:
           this.geoJson = this.point.geoJson;
           break;
-        case ROUTE:
+        case ROAD:
           this.geoJson = this.line.geoJson;
           break;
-        case ZONE:
+        case AREA:
           this.geoJson = this.polygon.geoJson;
           break;
       }
