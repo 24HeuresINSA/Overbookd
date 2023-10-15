@@ -1,6 +1,7 @@
 import { Coordinate, AREA, AreaLocation } from "@overbookd/signa";
+import { Location } from "./location";
 
-export class Polygon implements AreaLocation {
+export class Polygon implements AreaLocation, Location {
   private constructor(private _coordinates: Coordinate[]) {}
   static create(coordinates: Coordinate[] = []) {
     return new Polygon(coordinates);
@@ -17,7 +18,7 @@ export class Polygon implements AreaLocation {
   get geoJson(): AreaLocation {
     return {
       type: this.type,
-      coordinates: [ ...this.coordinates ],
+      coordinates: [...this.coordinates],
     };
   }
 }
