@@ -10,6 +10,7 @@ overbookd/release:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
     - when: never
   before_script:
+    - !reference [.setup-git, script]
     - !reference [.setup-pnpm, before_script]
     - pnpm install
   script:
