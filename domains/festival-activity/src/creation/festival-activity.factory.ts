@@ -10,7 +10,7 @@ import {
   InquirySection,
 } from "./draft-festival-activity";
 
-export function* numberGenerator(start: number): Generator<number> {
+function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1000000; i++) {
     yield i;
   }

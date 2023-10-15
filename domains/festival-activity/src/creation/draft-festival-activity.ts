@@ -7,14 +7,14 @@ export type Adherent = {
   nickname?: string;
 };
 
-export type Signage = {
+type Signage = {
   quantity: number;
   text: string;
   size: string;
   type: "BACHE" | "PANNEAU" | "AFFICHE";
 };
 
-export type ElectricitySupply = {
+type ElectricitySupply = {
   connection:
     | "PC16_Prise_classique"
     | "P17_16A_MONO"
