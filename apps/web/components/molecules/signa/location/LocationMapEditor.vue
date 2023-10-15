@@ -24,7 +24,13 @@
     </v-lazy>
     <div class="editor-container">
       <div>
-        <v-select v-model="action" :items="actions" @input="reset"></v-select>
+        <v-select
+          v-model="action"
+          :items="actions"
+          item-text="value"
+          item-value="key"
+          @input="reset"
+        ></v-select>
       </div>
       <v-btn :disabled="editionDone" @click="finishAction">
         Finir l'edition
@@ -52,14 +58,22 @@ const POINT = "Point";
 const ROUTE = "Route";
 const ZONE = "Zone";
 
-type Action = typeof POINT | typeof ROUTE | typeof ZONE;
+type Action =
+  | typeof POINT_LOCATION
+  | typeof ROAD_LOCATION
+  | typeof AREA_LOCATION;
+type ActionItem = {
+  key: Action;
+  value: typeof POINT | typeof ROUTE | typeof ZONE;
+};
 
 interface LocationMapEditorData {
   url: string;
   attribution: string;
   zoom: number;
   center: Coordinate;
-  actions: Action[];
+  action: Action;
+  actions: ActionItem[];
   editionDone: boolean;
   mouseLatlng: Coordinate;
   point: Point;
@@ -82,13 +96,27 @@ export default defineComponent({
     },
   },
   emits: ["update:geo-json"],
-  data: (): LocationMapEditorData => ({
+  data: (props): LocationMapEditorData => ({
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
     attribution:
       '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
     zoom: 16,
     center,
-    actions: [POINT, ROUTE, ZONE],
+    action: props.value?.type || POINT_LOCATION,
+    actions: [
+      {
+        key: POINT_LOCATION,
+        value: POINT,
+      },
+      {
+        key: ROAD_LOCATION,
+        value: ROUTE,
+      },
+      {
+        key: AREA_LOCATION,
+        value: ZONE,
+      },
+    ],
     editionDone: false,
     mouseLatlng: center,
     point: Point.create(),
@@ -104,45 +132,14 @@ export default defineComponent({
         this.$emit("update:geo-json", geoJson);
       },
     },
-    action: {
-      get(): Action {
-        switch (this.geoJson?.type) {
-          case ROAD_LOCATION:
-            return ROUTE;
-          case AREA_LOCATION:
-            return ZONE;
-          case POINT_LOCATION:
-          default:
-            return POINT;
-        }
-      },
-      set(action: Action) {
-        this.point = Point.create();
-        this.line = Line.create();
-        this.polygon = Polygon.create();
-
-        switch (action) {
-          case POINT:
-            this.geoJson = { ...this.point.geoJson };
-            break;
-          case ROUTE:
-            this.geoJson = { ...this.line.geoJson };
-            break;
-          case ZONE:
-            this.geoJson = { ...this.polygon.geoJson };
-            break;
-        }
-        this.editionDone = false;
-      },
-    },
     isPointEdition(): boolean {
-      return this.action === POINT;
+      return this.action === POINT_LOCATION;
     },
     isRoadEdition(): boolean {
-      return this.action === ROUTE;
+      return this.action === ROAD_LOCATION;
     },
     isAreaEdition(): boolean {
-      return this.action === ZONE;
+      return this.action === AREA_LOCATION;
     },
     coordinates(): Coordinate | Coordinate[] {
       if (!this.geoJson) return center;
@@ -156,23 +153,27 @@ export default defineComponent({
         : [...this.geoJson.coordinates, this.mouseLatlng];
     },
   },
+  watch: {
+    action() {
+      this.reset();
+    },
+  },
   methods: {
     userHover({ latlng }: { latlng: Coordinate }) {
       this.mouseLatlng = latlng;
     },
     userAction({ latlng }: { latlng: Coordinate }) {
       if (this.editionDone) return;
-      console.error("ICI");
       switch (this.action) {
-        case POINT:
+        case POINT_LOCATION:
           this.point.addCoordinate(latlng);
           this.geoJson = this.point.geoJson;
           break;
-        case ROUTE:
+        case ROAD_LOCATION:
           this.line.addCoordinate(latlng);
           this.geoJson = this.line.geoJson;
           break;
-        case ZONE:
+        case AREA_LOCATION:
           this.polygon.addCoordinate(latlng);
           this.geoJson = this.polygon.geoJson;
           break;
@@ -186,13 +187,13 @@ export default defineComponent({
       this.line = Line.create();
       this.polygon = Polygon.create();
       switch (this.action) {
-        case POINT:
+        case POINT_LOCATION:
           this.geoJson = this.point.geoJson;
           break;
-        case ROUTE:
+        case ROAD_LOCATION:
           this.geoJson = this.line.geoJson;
           break;
-        case ZONE:
+        case AREA_LOCATION:
           this.geoJson = this.polygon.geoJson;
           break;
       }
