@@ -17,7 +17,7 @@ export class Line implements RoadLocation {
   get geoJson(): RoadLocation {
     return {
       type: this.type,
-      coordinates: [ ...this.coordinates ],
+      coordinates: [...this.coordinates],
     };
   }
 }

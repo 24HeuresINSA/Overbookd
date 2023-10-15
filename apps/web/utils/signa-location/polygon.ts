@@ -17,7 +17,7 @@ export class Polygon implements AreaLocation {
   get geoJson(): AreaLocation {
     return {
       type: this.type,
-      coordinates: [ ...this.coordinates ],
+      coordinates: [...this.coordinates],
     };
   }
 }
