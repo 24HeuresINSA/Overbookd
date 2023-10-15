@@ -13,4 +13,4 @@ overbookd/release:
     - !reference [.setup-pnpm, before_script]
     - pnpm install
   script:
-    - npx semantic-release
+    - GIT_AUTHOR_NAME=24-bot GIT_AUTHOR_EMAIL=dsi@24heures.org GIT_COMMITTER_NAME=24-bot GIT_COMMITTER_EMAIL=dsi@24heures.org GITLAB_TOKEN=$GITLAB_API_TOKEN  npx semantic-release
