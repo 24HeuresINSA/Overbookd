@@ -49,7 +49,7 @@
       <NewLocationCard @close-dialog="closeAllDialogs" />
     </v-dialog>
 
-    <v-dialog v-model="displayEditLocationDialog" max-width="600">
+    <v-dialog v-model="displayEditLocationDialog" max-width="1200">
       <ModifyLocationCard
         v-if="locationToEdit"
         :location="locationToEdit"
