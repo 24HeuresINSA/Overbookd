@@ -1,12 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PointLocation, RoadLocation, AreaLocation } from "@overbookd/signa";
-import {
-  ValidateIf,
-  IsNotEmpty,
-  IsObject,
-  IsString,
-  IsOptional,
-} from "class-validator";
+import { ValidateIf, IsNotEmpty, IsObject, IsString, IsOptional } from "class-validator";
 
 export class UpdateSignaLocationRequestDto {
   @ApiProperty({

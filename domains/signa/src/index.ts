@@ -8,10 +8,4 @@ export type {
   GeoJson,
   SignaLocation,
 } from "./location/location.model";
-export {
-  POINT,
-  ROAD,
-  AREA,
-  isPointLocation,
-  filterLocation,
-} from "./location/location.model";
+export { POINT, ROAD, AREA, isPointLocation, filterLocation } from "./location/location.model";
