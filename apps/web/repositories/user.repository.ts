@@ -70,7 +70,7 @@ export class UserRepository {
     if (!token) return undefined;
 
     const response = await fetch(
-      `/${process.env.BASE_URL}${this.basePath}/${userId}/profile-picture`,
+      `${process.env.BASE_URL}${this.basePath}/${userId}/profile-picture`,
       {
         method: "GET",
         headers: {
