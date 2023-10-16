@@ -3,6 +3,7 @@ import {
   FestivalActivity,
   DraftFestivalActivity,
   FestivalActivityFactory,
+  CreateFestivalActivity,
 } from "@overbookd/festival-activity";
 import { FestivalActivityRepository } from "./festival-activity.repository";
 import { Period } from "@overbookd/period";
@@ -28,10 +29,12 @@ export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
 {
   private festivalActivities: FestivalActivity[];
+  private festivalActivityFactory: FestivalActivityFactory;
 
   constructor() {
-    const festivalActivityFactory = new FestivalActivityFactory();
-    const barbecue25emeCreation = festivalActivityFactory.create({
+    this.festivalActivityFactory = new FestivalActivityFactory();
+
+    const barbecue25emeCreation = this.festivalActivityFactory.create({
       name: "Barbecue 25eme",
       author: noel,
     });
@@ -42,7 +45,7 @@ export class InMemoryFestivalActivityRepository
       signa: { ...barbecue25emeCreation.signa, location: "Devant le QG" },
     });
 
-    const escapeGame = festivalActivityFactory.create({
+    const escapeGame = this.festivalActivityFactory.create({
       name: "Barbecue 25eme",
       author: noel,
     });
@@ -68,6 +71,13 @@ export class InMemoryFestivalActivityRepository
         (festivalActivity) => festivalActivity.id === id,
       ),
     );
+  }
+
+  create(form: CreateFestivalActivity): Promise<DraftFestivalActivity> {
+    const festivalActivityFactory = new FestivalActivityFactory();
+    const festivalActivity = festivalActivityFactory.create(form);
+    this.festivalActivities = [...this.festivalActivities, festivalActivity];
+    return Promise.resolve(festivalActivity);
   }
 
   save(festivalActivity: FestivalActivity): Promise<FestivalActivity> {

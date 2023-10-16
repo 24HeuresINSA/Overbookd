@@ -4,7 +4,9 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Post,
   Put,
+  Request,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -19,6 +21,7 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import {
+  CreateFestivalActivityForm,
   FestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
@@ -26,6 +29,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.reponse.dto";
 import { Permission } from "../authentication/permissions-auth.decorator";
+import { RequestWithUserPayload } from "../app.controller";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -71,6 +75,23 @@ export class FestivalActivityController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<FestivalActivity | null> {
     return this.festivalActivityService.findById(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post()
+  @ApiResponse({
+    status: 201,
+    description: "A festival activity",
+  })
+  @ApiBody({
+    description: "Festival activity to create",
+  })
+  create(
+    @Body() { name }: CreateFestivalActivityForm,
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.create(user, name);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

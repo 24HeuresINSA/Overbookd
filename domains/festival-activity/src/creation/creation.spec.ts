@@ -3,11 +3,6 @@ import { FestivalActivityFactory } from "./festival-activity.factory";
 import { DRAFT } from "./draft-festival-activity";
 import { Adherent } from "./draft-festival-activity";
 
-export type CreateFestivalActivity = {
-  name: string;
-  author: Adherent;
-};
-
 const noel: Adherent = {
   id: 1,
   lastname: "Ertsemud",

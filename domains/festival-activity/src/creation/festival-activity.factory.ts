@@ -1,4 +1,3 @@
-import { CreateFestivalActivity } from "./creation.spec";
 import {
   DraftFestivalActivity,
   GeneralSection,
@@ -15,6 +14,11 @@ function* numberGenerator(start: number): Generator<number> {
     yield i;
   }
 }
+
+export type CreateFestivalActivity = {
+  name: string;
+  author: Adherent;
+};
 
 export class FestivalActivityFactory {
   private idGenerator: Generator<number>;

@@ -11,5 +11,9 @@ export type PreviewFestivalActivity = {
   name: string;
   status: typeof DRAFT;
   adherent: Adherent;
-  team: string | null;
+  team?: string;
+};
+
+export type CreateFestivalActivityForm = {
+  name: string;
 };
