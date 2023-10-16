@@ -11,7 +11,7 @@ import {
 } from "./draft-festival-activity";
 
 function* numberGenerator(start: number): Generator<number> {
-  for (let i = start; i < 1000000; i++) {
+  for (let i = start; i < 1_000_000; i++) {
     yield i;
   }
 }
@@ -45,7 +45,9 @@ export class FestivalActivityFactory {
       name,
       description: null,
       categories: [],
-      photo: null,
+      toPublish: false,
+      photoLink: null,
+      isFlagship: false,
       timeWindows: [],
     };
   }

@@ -41,7 +41,9 @@ describe("Festival activity creation", () => {
     it("should generate general section with default value", () => {
       expect(escapeGame.general.description).toBeNull();
       expect(escapeGame.general.categories).toEqual([]);
-      expect(escapeGame.general.photo).toBeNull();
+      expect(escapeGame.general.toPublish).toEqual(false);
+      expect(escapeGame.general.photoLink).toBeNull();
+      expect(escapeGame.general.isFlagship).toEqual(false);
       expect(escapeGame.general.timeWindows).toEqual([]);
     });
 

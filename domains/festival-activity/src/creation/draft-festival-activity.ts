@@ -12,6 +12,7 @@ type Signage = {
   text: string;
   size: string;
   type: "BACHE" | "PANNEAU" | "AFFICHE";
+  comment: string;
 };
 
 type ElectricitySupply = {
@@ -43,7 +44,9 @@ export type GeneralSection = {
   name: string;
   description: string | null;
   categories: string[];
-  photo: string | null;
+  toPublish: boolean;
+  photoLink: string | null;
+  isFlagship: boolean;
   timeWindows: Period[];
 };
 
@@ -74,7 +77,7 @@ export type InquirySection = {
   barriers: Inquiry[];
 };
 
-type BaseFestivalActivity = {
+export type BaseFestivalActivity = {
   id: number;
   general: GeneralSection;
   inCharge: InChargeSection;
