@@ -30,6 +30,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.reponse.dto";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
+import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -103,6 +104,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "Festival activity to save",
+    type: CreateFestivalActivityRequestDto,
   })
   save(@Body() festivalActivity: FestivalActivity): Promise<FestivalActivity> {
     return this.festivalActivityService.save(festivalActivity);
