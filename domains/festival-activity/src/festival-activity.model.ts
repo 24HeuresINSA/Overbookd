@@ -1,11 +1,26 @@
 import {
   Adherent,
   BaseFestivalActivity,
+  DraftFestivalActivityRepresentation,
 } from "./creation/draft-festival-activity";
 
-export type FestivalActivity = BaseFestivalActivity & {
-  status: FaStatus;
+type InReviewFestivalActivity = BaseFestivalActivity & {
+  status: typeof IN_REVIEW;
 };
+
+type ApprovedFestivalActivity = BaseFestivalActivity & {
+  status: typeof APPROVED;
+};
+
+type RejectedFestivalActivity = BaseFestivalActivity & {
+  status: typeof REJECTED;
+};
+
+export type FestivalActivity =
+  | DraftFestivalActivityRepresentation
+  | InReviewFestivalActivity
+  | ApprovedFestivalActivity
+  | RejectedFestivalActivity;
 
 export type LiteFestivalActivity = {
   id: number;

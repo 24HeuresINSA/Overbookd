@@ -87,7 +87,7 @@ export type BaseFestivalActivity = {
   inquiry: InquirySection;
 };
 
-type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
+export type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
   status: typeof DRAFT;
 };
 
