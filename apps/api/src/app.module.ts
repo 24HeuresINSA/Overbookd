@@ -57,6 +57,7 @@ import { ONE_MINUTE_IN_MS } from "@overbookd/period";
     TeamModule,
     TransactionModule,
     FaModule,
+    FestivalActivityModule,
     CollaboratorModule,
     MailerModule.forRoot({
       transport: {
@@ -114,7 +115,6 @@ import { ONE_MINUTE_IN_MS } from "@overbookd/period";
     CatalogSignageModule,
     AlertModule,
     NotificationModule,
-    FestivalActivityModule,
   ],
   controllers: [AppController],
   providers: [

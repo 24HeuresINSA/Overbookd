@@ -74,8 +74,7 @@ export class InMemoryFestivalActivityRepository
   }
 
   create(form: CreateFestivalActivity): Promise<DraftFestivalActivity> {
-    const festivalActivityFactory = new FestivalActivityFactory();
-    const festivalActivity = festivalActivityFactory.create(form);
+    const festivalActivity = this.festivalActivityFactory.create(form);
     this.festivalActivities = [...this.festivalActivities, festivalActivity];
     return Promise.resolve(festivalActivity);
   }

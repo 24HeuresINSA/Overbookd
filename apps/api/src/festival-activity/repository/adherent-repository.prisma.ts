@@ -16,7 +16,7 @@ export class PrismaAdherentRepository implements AdherentRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   find(id: number) {
-    return this.prisma.user.findOne({
+    return this.prisma.user.findFirst({
       where: { id },
       select: SELECT_ADHERENT,
     });

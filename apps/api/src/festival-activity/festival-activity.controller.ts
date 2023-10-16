@@ -87,6 +87,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "Festival activity to create",
+    type: CreateFestivalActivityRequestDto,
   })
   create(
     @Body() { name }: CreateFestivalActivityForm,
@@ -104,7 +105,6 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "Festival activity to save",
-    type: CreateFestivalActivityRequestDto,
   })
   save(@Body() festivalActivity: FestivalActivity): Promise<FestivalActivity> {
     return this.festivalActivityService.save(festivalActivity);
