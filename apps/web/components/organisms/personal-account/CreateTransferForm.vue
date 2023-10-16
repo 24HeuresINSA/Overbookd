@@ -3,19 +3,18 @@
     <v-btn class="close-btn" icon @click="closeDialog">
       <v-icon>mdi-close</v-icon>
     </v-btn>
-    <v-card-title class="signage__title">
+    <v-card-title class="transfer__title">
       <h2>Faire un virement</h2>
     </v-card-title>
     <v-card-text>
       <form>
         <div class="fields">
           <MoneyField v-model="amount" label="Montant du virement" :min="1" />
-          <SearchUser v-model="payee" label="Bénéficiaire" />
+          <SearchUser v-model="payee" label="Bénéficiaire" :boxed="false" />
           <v-text-field v-model="context" label="Motif" />
         </div>
         <v-btn
           color="success"
-          dark
           large
           :disabled="!isTransferValid"
           @click="sendTransfer"
@@ -86,6 +85,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 0;
     .fields {
       width: 80%;
     }

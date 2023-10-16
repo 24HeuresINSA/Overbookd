@@ -84,7 +84,7 @@ $footer-height: 34px;
   z-index: 5;
   justify-content: center;
   align-items: center;
-  gap: 25%;
+  gap: calc(25% + 20px);
   .balance,
   .transfer-btn {
     width: min(90%, 650px);
