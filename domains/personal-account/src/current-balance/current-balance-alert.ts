@@ -1,4 +1,4 @@
-import { PersonalAccountAlert } from "../personal-account-alert";
+import { PersonalAccountAlert } from "../alerting/personal-account-alert";
 import { CURRENT_BALANCE_MESSAGE } from "./current-balance.constant";
 
 export class CurrentBalanceAlert extends PersonalAccountAlert {

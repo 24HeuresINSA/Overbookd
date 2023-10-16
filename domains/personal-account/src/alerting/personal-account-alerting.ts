@@ -1,6 +1,6 @@
 import { Adherents } from "./adherents";
-import { CurrentBalanceAlert } from "./current-balance/current-balance-alert";
-import { InDebtAlert } from "./in-debt/in-debt-alert";
+import { CurrentBalanceAlert } from "../current-balance/current-balance-alert";
+import { InDebtAlert } from "../in-debt/in-debt-alert";
 
 export class PersonalAccountAlerting {
   constructor(private readonly adherents: Adherents) {}

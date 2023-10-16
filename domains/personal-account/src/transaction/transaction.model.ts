@@ -2,6 +2,7 @@ export const DEPOSIT = "DEPOSIT";
 export const BARREL = "BARREL";
 export const PROVISIONS = "PROVISIONS";
 export const TRANSFER = "TRANSFER";
+export const SHARED_MEAL = "SHARED_MEAL";
 
 type BaseTransaction = {
   amount: number;
