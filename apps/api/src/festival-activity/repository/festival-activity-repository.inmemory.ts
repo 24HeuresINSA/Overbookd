@@ -8,23 +8,13 @@ import { FestivalActivityRepository } from "./festival-activity.repository";
 import { Period } from "@overbookd/period";
 
 const barbecue25emeGeneral = {
-  name: "Barbecue 25eme",
   description: "Un barbecue pour les vieux",
-  categories: [],
-  toPublish: false,
-  photoLink: null,
-  isFlagship: false,
   timeWindows: [
     Period.init({
       start: new Date("2023-05-15 10:00"),
       end: new Date("2023-05-15 14:00"),
     }),
   ],
-};
-
-const barbecue25emeSigna = {
-  location: "Devant le QG",
-  signages: [],
 };
 
 const noel = {
@@ -46,9 +36,9 @@ export class InMemoryFestivalActivityRepository
     });
     const barbecue25eme = DraftFestivalActivity.build({
       ...barbecue25emeCreation,
-      general: barbecue25emeGeneral,
+      general: { ...barbecue25emeCreation.general, ...barbecue25emeGeneral },
       inCharge: { ...barbecue25emeCreation.inCharge, team: "vieux" },
-      signa: barbecue25emeSigna,
+      signa: { ...barbecue25emeCreation.signa, location: "Devant le QG" },
     });
 
     const escapeGame = festivalActivityFactory.create({

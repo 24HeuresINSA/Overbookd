@@ -13,8 +13,3 @@ export type PreviewFestivalActivity = {
   adherent: Adherent;
   team: string | null;
 };
-
-export type UpdateFestivalActivity = {
-  id: number;
-  name: string;
-};
