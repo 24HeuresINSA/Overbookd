@@ -46,7 +46,7 @@ export class InMemoryFestivalActivityRepository
     });
 
     const escapeGame = this.festivalActivityFactory.create({
-      name: "Barbecue 25eme",
+      name: "Escape Game",
       author: noel,
     });
 
