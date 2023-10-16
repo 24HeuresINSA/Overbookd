@@ -37,10 +37,10 @@
     "version:minor": "git fetch -ap && pnpm run version:minor-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
     "version:patch": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate"
   },
-  "packageManager": "pnpm@8.8.0",
+  "packageManager": "pnpm@8.9.0",
   "engines": {
     "node": "20.8.0",
-    "pnpm": "8.8.0"
+    "pnpm": "8.9.0"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.3",
