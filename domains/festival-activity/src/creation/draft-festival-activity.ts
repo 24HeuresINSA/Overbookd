@@ -77,7 +77,7 @@ export type InquirySection = {
   barriers: Inquiry[];
 };
 
-export type BaseFestivalActivity = {
+type BaseFestivalActivity = {
   id: number;
   general: GeneralSection;
   inCharge: InChargeSection;

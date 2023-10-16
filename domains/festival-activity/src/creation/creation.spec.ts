@@ -81,7 +81,9 @@ describe("Festival activity creation", () => {
           name: "Escape game",
           description: null,
           categories: [],
-          photo: null,
+          toPublish: false,
+          photoLink: null,
+          isFlagship: false,
           timeWindows: [],
         },
         inCharge: {
