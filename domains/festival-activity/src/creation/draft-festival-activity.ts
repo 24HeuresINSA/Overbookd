@@ -89,7 +89,7 @@ type BaseFestivalActivity = {
 
 export const DRAFT = "DRAFT";
 
-export type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
+type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
   status: typeof DRAFT;
 };
 

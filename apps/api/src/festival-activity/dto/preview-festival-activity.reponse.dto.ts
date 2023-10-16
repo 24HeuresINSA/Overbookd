@@ -49,6 +49,7 @@ export class PreviewFestivalActivityResponseDto
   @ApiProperty({
     description: "The festival activity status",
     type: String,
+    example: DRAFT,
   })
   status: typeof DRAFT;
 

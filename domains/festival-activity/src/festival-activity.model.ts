@@ -1,10 +1,10 @@
 import {
   Adherent,
   DRAFT,
-  DraftFestivalActivityRepresentation,
+  DraftFestivalActivity,
 } from "./creation/draft-festival-activity";
 
-export type FestivalActivity = DraftFestivalActivityRepresentation /* | ... */;
+export type FestivalActivity = DraftFestivalActivity /* | ... */;
 
 export type PreviewFestivalActivity = {
   id: number;
