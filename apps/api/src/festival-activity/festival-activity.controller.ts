@@ -27,7 +27,7 @@ import {
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.reponse.dto";
+import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.response.dto";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
