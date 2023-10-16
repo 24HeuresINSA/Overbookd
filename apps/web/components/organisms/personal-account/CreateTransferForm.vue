@@ -10,7 +10,12 @@
       <form>
         <div class="fields">
           <MoneyField v-model="amount" label="Montant du virement" :min="1" />
-          <SearchUser v-model="payee" label="Bénéficiaire" :boxed="false" />
+          <SearchUser
+            v-model="payee"
+            label="Bénéficiaire"
+            :list="adherents"
+            :boxed="false"
+          />
           <v-text-field v-model="context" label="Motif" />
         </div>
         <v-btn
@@ -31,11 +36,11 @@
 import { defineComponent } from "vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
-import { UserPersonalData } from "@overbookd/user";
+import { Consumer } from "~/utils/models/user.model";
 
 interface CreateTransferFormData {
   amount: number;
-  payee: UserPersonalData | null;
+  payee: Consumer | null;
   context: string;
 }
 
@@ -51,6 +56,14 @@ export default defineComponent({
     isTransferValid(): boolean {
       return this.amount > 0 && this.payee !== null && this.context !== "";
     },
+    adherents(): Consumer[] {
+      return this.$accessor.user.personalAccountConsumers.filter(
+        (consumer) => consumer.id !== this.$accessor.user.me.id,
+      );
+    },
+  },
+  mounted() {
+    this.$accessor.user.fetchPersonalAccountConsumers();
   },
   methods: {
     async sendTransfer() {

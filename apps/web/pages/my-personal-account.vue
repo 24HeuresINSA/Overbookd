@@ -22,6 +22,8 @@
     <v-dialog v-model="isTransferDialogOpen" max-width="600px">
       <CreateTransferForm @close-dialog="closeTransferDialog" />
     </v-dialog>
+
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -30,6 +32,7 @@ import { defineComponent } from "vue";
 import TransactionListing from "~/components/organisms/personal-account/TransactionListing.vue";
 import CreateTransferForm from "~/components/organisms/personal-account/CreateTransferForm.vue";
 import { Money } from "~/utils/money/money";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 interface MyPersonalAccountData {
   isTransferDialogOpen: boolean;
@@ -37,7 +40,11 @@ interface MyPersonalAccountData {
 
 export default defineComponent({
   name: "MyPersonalAccount",
-  components: { CreateTransferForm, TransactionListing },
+  components: {
+    CreateTransferForm,
+    TransactionListing,
+    SnackNotificationContainer,
+  },
   data: (): MyPersonalAccountData => ({
     isTransferDialogOpen: false,
   }),
