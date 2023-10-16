@@ -11,7 +11,7 @@
         <div class="fields">
           <MoneyField v-model="amount" label="Montant du virement" :min="1" />
           <SearchUser v-model="payee" label="Bénéficiaire" />
-          <v-text-field v-model="context" label="Contexte du virement" />
+          <v-text-field v-model="context" label="Motif" />
         </div>
         <v-btn
           color="success"
