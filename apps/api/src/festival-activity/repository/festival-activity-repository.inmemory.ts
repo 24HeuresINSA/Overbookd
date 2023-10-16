@@ -6,6 +6,7 @@ import {
 } from "@overbookd/festival-activity";
 import { FestivalActivityRepository } from "./festival-activity.repository";
 import { Period } from "@overbookd/period";
+import { updateItemToList } from "@overbookd/list";
 
 const barbecue25emeGeneral = {
   description: "Un barbecue pour les vieux",
@@ -70,20 +71,19 @@ export class InMemoryFestivalActivityRepository
   }
 
   save(festivalActivity: FestivalActivity): Promise<FestivalActivity> {
-    const festivalActivityToUpdate = this.findById(festivalActivity.id);
-    if (!festivalActivityToUpdate) {
+    const festivalActivityIndex = this.festivalActivities.findIndex(
+      (festivalActivityToUpdate) =>
+        festivalActivityToUpdate.id === festivalActivity.id,
+    );
+    if (festivalActivityIndex == -1) {
       throw new Error("Festival activity not found");
     }
 
-    const updatedFestivalActivity = {
-      ...festivalActivityToUpdate,
-      ...festivalActivity,
-    };
-    this.festivalActivities = this.festivalActivities.map((festivalActivity) =>
-      festivalActivity.id === updatedFestivalActivity.id
-        ? updatedFestivalActivity
-        : festivalActivity,
+    this.festivalActivities = updateItemToList(
+      this.festivalActivities,
+      festivalActivityIndex,
+      festivalActivity,
     );
-    return Promise.resolve(updatedFestivalActivity);
+    return Promise.resolve(festivalActivity);
   }
 }

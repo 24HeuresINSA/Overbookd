@@ -4,7 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Post,
+  Put,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -75,13 +75,13 @@ export class FestivalActivityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
-  @Post()
+  @Put()
   @ApiResponse({
     status: 201,
     description: "A festival activity",
   })
   @ApiBody({
-    description: "Festival activity to create",
+    description: "Festival activity to save",
   })
   save(@Body() festivalActivity: FestivalActivity): Promise<FestivalActivity> {
     return this.festivalActivityService.save(festivalActivity);
