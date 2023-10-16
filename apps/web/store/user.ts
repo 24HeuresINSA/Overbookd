@@ -136,14 +136,16 @@ export const actions = actionTree(
       commit("SET_SELECTED_USER_FRIENDS", res.data);
       commit("SET_SELECTED_USER", user);
     },
-    async fetchUser({ commit, dispatch }) {
+    async fetchUser({ dispatch }) {
+      await dispatch("fetchMyInformation");
+      await dispatch("setMyProfilePicture");
+    },
+    async fetchMyInformation({ commit }) {
       const res = await safeCall(this, userRepo.getMyUser(this), {
         errorMessage: "Session expirée 💨",
       });
-      if (res) {
-        commit("SET_MY_USER", castUserWithDate(res.data));
-        dispatch("setMyProfilePicture");
-      }
+      if (!res) return;
+      commit("SET_MY_USER", castUserWithDate(res.data));
     },
     async fetchUsers({ commit }) {
       const res = await safeCall(this, userRepo.getAllUsers(this));
@@ -267,7 +269,7 @@ export const actions = actionTree(
       commit("ADD_TEAMS_TO_SELECTED_USER", res.data);
       commit("UPDATE_USER", state.selectedUser);
       commit("UPDATE_VOLUNTEER", state.selectedUser);
-      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
+      if (state.selectedUser.id === state.me.id) dispatch("fetchMyInformation");
     },
 
     async removeTeamFromSelectedUser(
@@ -283,7 +285,7 @@ export const actions = actionTree(
       commit("REMOVE_TEAM_FROM_SELECTED_USER", team);
       commit("UPDATE_USER", state.selectedUser);
       commit("UPDATE_VOLUNTEER", state.selectedUser);
-      if (state.selectedUser.id === state.me.id) dispatch("fetchUser");
+      if (state.selectedUser.id === state.me.id) dispatch("fetchMyInformation");
     },
 
     async findUserById({ commit }, id: number) {

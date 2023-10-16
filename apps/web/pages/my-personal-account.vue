@@ -6,29 +6,55 @@
         <h1 class="balance__value">{{ balance }}</h1>
       </div>
 
-      <!--<v-btn rounded x-large class="transfer-btn" color="primary">
+      <v-btn
+        rounded
+        x-large
+        class="transfer-btn"
+        color="primary"
+        @click="openTransferDialog"
+      >
         Faire un virement
-      </v-btn>-->
+      </v-btn>
     </div>
 
     <TransactionListing />
+
+    <v-dialog v-model="isTransferDialogOpen" max-width="600px">
+      <CreateTransferForm @close-dialog="closeTransferDialog" />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import TransactionListing from "~/components/organisms/personal-account/TransactionListing.vue";
+import CreateTransferForm from "~/components/organisms/personal-account/CreateTransferForm.vue";
 import { Money } from "~/utils/money/money";
+
+interface MyPersonalAccountData {
+  isTransferDialogOpen: boolean;
+}
 
 export default defineComponent({
   name: "MyPersonalAccount",
-  components: { TransactionListing },
+  components: { CreateTransferForm, TransactionListing },
+  data: (): MyPersonalAccountData => ({
+    isTransferDialogOpen: false,
+  }),
   head: () => ({
     title: "Mon compte perso",
   }),
   computed: {
     balance(): string {
       return Money.displayCents(this.$accessor.user.me.balance);
+    },
+  },
+  methods: {
+    openTransferDialog() {
+      this.isTransferDialogOpen = true;
+    },
+    closeTransferDialog() {
+      this.isTransferDialogOpen = false;
     },
   },
 });
