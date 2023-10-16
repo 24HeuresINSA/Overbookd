@@ -6,7 +6,7 @@ import { Expense } from "./meals.model";
 import { MealSharingError } from "./meal-sharing.error";
 
 export const PAST_MEAL_ERROR =
-  "Ce repas partage a ete cloture, il n'est plus possible de shotgun";
+  "Ce repas partagé a été cloturé, il n'est plus possible de shotgun";
 
 class PastMealError extends MealSharingError {
   constructor() {
