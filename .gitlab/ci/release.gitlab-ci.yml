@@ -2,16 +2,22 @@ include:
   - local: /.gitlab/ci/setup-pnpm.gitlab-ci.yml
   - local: /.gitlab/ci/setup-git.gitlab-ci.yml
 
-overbookd/bump-version:
-  stage: bump
+overbookd/release:
+  stage: release
   interruptible: true
   image: node:20-alpine
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
     - when: never
+  variables:
+    GIT_AUTHOR_NAME: 24-bot
+    GIT_AUTHOR_EMAIL: dsi@24heures.org
+    GIT_COMMITTER_NAME: 24-bot
+    GIT_COMMITTER_EMAIL: dsi@24heures.org
+    GITLAB_TOKEN: $GITLAB_API_TOKEN
   before_script:
     - !reference [.setup-git, script]
     - !reference [.setup-pnpm, before_script]
+    - pnpm install
   script:
-    - npx commit-and-tag-version
-    - git push --tags ssh_origin HEAD:main
+    - npx semantic-release

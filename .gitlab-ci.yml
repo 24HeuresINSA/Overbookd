@@ -11,7 +11,6 @@ stages:
   - check
   - build
   - test
-  - bump
   - docker-build
   - docker-scan
   - docker-publish
@@ -30,9 +29,8 @@ include:
   - local: /.gitlab/ci/check.gitlab-ci.yml
   - local: /.gitlab/ci/build.gitlab-ci.yml
   - local: /.gitlab/ci/test.gitlab-ci.yml
-  - local: /.gitlab/ci/bump-version.gitlab-ci.yml
   - local: /.gitlab/ci/docker-build.gitlab-ci.yml
   - local: /.gitlab/ci/docker-scan.gitlab-ci.yml
   - local: /.gitlab/ci/docker-publish.gitlab-ci.yml
   - local: /.gitlab/ci/deploy.gitlab-ci.yml
-  - local: /.gitlab/ci/create-release.gitlab-ci.yml
+  - local: /.gitlab/ci/release.gitlab-ci.yml
