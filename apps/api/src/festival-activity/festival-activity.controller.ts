@@ -1,17 +1,30 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiTags,
   ApiBadRequestResponse,
   ApiForbiddenResponse,
   ApiResponse,
+  ApiParam,
+  ApiBody,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
-import { READ_FA } from "@overbookd/permission";
-import { LiteFestivalActivity } from "@overbookd/festival-activity";
+import { READ_FA, WRITE_FA } from "@overbookd/permission";
+import {
+  FestivalActivity,
+  PreviewFestivalActivity,
+} from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { LiteFestivalActivityResponseDto } from "./dto/lite-festival-activity.reponse.dto";
+import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.reponse.dto";
 import { Permission } from "../authentication/permissions-auth.decorator";
 
 @ApiBearerAuth()
@@ -34,10 +47,43 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 201,
     description: "All festival activities",
-    type: LiteFestivalActivityResponseDto,
+    type: PreviewFestivalActivityResponseDto,
     isArray: true,
   })
-  findAll(): Promise<LiteFestivalActivity[]> {
+  findAll(): Promise<PreviewFestivalActivity[]> {
     return this.festivalActivityService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get(":id")
+  @ApiResponse({
+    status: 201,
+    description: "A festival activity",
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  findById(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<FestivalActivity | null> {
+    return this.festivalActivityService.findById(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post()
+  @ApiResponse({
+    status: 201,
+    description: "A festival activity",
+  })
+  @ApiBody({
+    description: "Festival activity to create",
+  })
+  save(@Body() festivalActivity: FestivalActivity): Promise<FestivalActivity> {
+    return this.festivalActivityService.save(festivalActivity);
   }
 }

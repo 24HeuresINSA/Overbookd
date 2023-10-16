@@ -1,9 +1,10 @@
 import {
   FestivalActivity,
-  LiteFestivalActivity,
+  PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 
 export interface FestivalActivityRepository {
-  findAll(): Promise<LiteFestivalActivity[]>;
+  findAll(): Promise<PreviewFestivalActivity[]>;
   findById(id: number): Promise<FestivalActivity | null>;
+  save(festivalActivity: FestivalActivity): Promise<FestivalActivity>;
 }

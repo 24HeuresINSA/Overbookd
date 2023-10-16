@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   Adherent,
-  FaStatus,
-  LiteFestivalActivity,
+  DRAFT,
+  PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 
-class AdherentDto implements Adherent {
+class AdherentResponseDto implements Adherent {
   @ApiProperty({
     description: "The adherent id",
     type: Number,
@@ -31,7 +31,9 @@ class AdherentDto implements Adherent {
   nickname?: string;
 }
 
-export class LiteFestivalActivityResponseDto implements LiteFestivalActivity {
+export class PreviewFestivalActivityResponseDto
+  implements PreviewFestivalActivity
+{
   @ApiProperty({
     description: "The festival activity id",
     type: Number,
@@ -48,11 +50,11 @@ export class LiteFestivalActivityResponseDto implements LiteFestivalActivity {
     description: "The festival activity status",
     type: String,
   })
-  status: FaStatus;
+  status: typeof DRAFT;
 
   @ApiProperty({
     description: "The festival activity adherent in charge",
-    type: AdherentDto,
+    type: AdherentResponseDto,
   })
   adherent: Adherent;
 

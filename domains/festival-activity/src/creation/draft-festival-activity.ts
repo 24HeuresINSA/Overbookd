@@ -87,11 +87,11 @@ export type BaseFestivalActivity = {
   inquiry: InquirySection;
 };
 
+export const DRAFT = "DRAFT";
+
 export type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
   status: typeof DRAFT;
 };
-
-export const DRAFT = "DRAFT";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
