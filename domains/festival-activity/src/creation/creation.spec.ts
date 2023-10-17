@@ -3,11 +3,6 @@ import { FestivalActivityFactory } from "./festival-activity.factory";
 import { DRAFT } from "./draft-festival-activity";
 import { Adherent } from "./draft-festival-activity";
 
-export type CreateFestivalActivity = {
-  name: string;
-  author: Adherent;
-};
-
 const noel: Adherent = {
   id: 1,
   lastname: "Ertsemud",
@@ -41,7 +36,9 @@ describe("Festival activity creation", () => {
     it("should generate general section with default value", () => {
       expect(escapeGame.general.description).toBeNull();
       expect(escapeGame.general.categories).toEqual([]);
-      expect(escapeGame.general.photo).toBeNull();
+      expect(escapeGame.general.toPublish).toEqual(false);
+      expect(escapeGame.general.photoLink).toBeNull();
+      expect(escapeGame.general.isFlagship).toEqual(false);
       expect(escapeGame.general.timeWindows).toEqual([]);
     });
 
@@ -79,7 +76,9 @@ describe("Festival activity creation", () => {
           name: "Escape game",
           description: null,
           categories: [],
-          photo: null,
+          toPublish: false,
+          photoLink: null,
+          isFlagship: false,
           timeWindows: [],
         },
         inCharge: {

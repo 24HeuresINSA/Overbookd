@@ -12,6 +12,7 @@ type Signage = {
   text: string;
   size: string;
   type: "BACHE" | "PANNEAU" | "AFFICHE";
+  comment: string;
 };
 
 type ElectricitySupply = {
@@ -43,7 +44,9 @@ export type GeneralSection = {
   name: string;
   description: string | null;
   categories: string[];
-  photo: string | null;
+  toPublish: boolean;
+  photoLink: string | null;
+  isFlagship: boolean;
   timeWindows: Period[];
 };
 
@@ -84,11 +87,11 @@ type BaseFestivalActivity = {
   inquiry: InquirySection;
 };
 
+export const DRAFT = "DRAFT";
+
 type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
   status: typeof DRAFT;
 };
-
-export const DRAFT = "DRAFT";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
