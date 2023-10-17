@@ -32,3 +32,11 @@ export {
   transactionTypes,
   TransferError,
 } from "./transaction";
+
+export type { Moment, IDefineMealDate } from "./meal-sharing/meal-sharing";
+export { MIDI, SOIR, MealSharing } from "./meal-sharing/meal-sharing";
+export { InMemoryAdherents } from "./meal-sharing/adherents.inmemory";
+export { InMemorySharedMeals } from "./meal-sharing/shared-meals.inmemory";
+export { SharedMeal } from "./meal-sharing/shared-meal";
+export type { IExposeSharedMeal } from "./meal-sharing/meals.model";
+export type { Adherent } from "./meal-sharing/adherent";

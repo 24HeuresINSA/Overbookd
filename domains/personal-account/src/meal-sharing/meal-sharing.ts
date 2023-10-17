@@ -11,7 +11,7 @@ import { Expense } from "./meals.model";
 export const SOIR = "SOIR";
 export const MIDI = "MIDI";
 
-type Moment = typeof SOIR | typeof MIDI;
+export type Moment = typeof SOIR | typeof MIDI;
 
 export type IDefineMealDate = { day: Date; moment: Moment };
 
