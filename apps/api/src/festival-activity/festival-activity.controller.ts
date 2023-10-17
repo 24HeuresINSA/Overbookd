@@ -21,8 +21,8 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import type {
-  CreateFestivalActivityForm,
-  FestivalActivity,
+  DraftFestivalActivityRepresentation,
+  FestivalActivityRepresentation,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -31,7 +31,7 @@ import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activ
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
-import { DraftFestivalActivityResponseDto } from "./dto/draft-festival-activity.response.dto";
+import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -66,7 +66,7 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityResponseDto,
+    type: DraftFestivalActivityDto,
   })
   @ApiParam({
     name: "id",
@@ -76,7 +76,7 @@ export class FestivalActivityController {
   })
   findById(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<FestivalActivity | null> {
+  ): Promise<FestivalActivityRepresentation | null> {
     return this.festivalActivityService.findById(id);
   }
 
@@ -86,16 +86,16 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 201,
     description: "A festival activity",
-    type: DraftFestivalActivityResponseDto,
+    type: DraftFestivalActivityDto,
   })
   @ApiBody({
     description: "Festival activity to create",
     type: CreateFestivalActivityRequestDto,
   })
   create(
-    @Body() { name }: CreateFestivalActivityForm,
+    @Body() { name }: CreateFestivalActivityRequestDto,
     @Request() { user }: RequestWithUserPayload,
-  ): Promise<FestivalActivity> {
+  ): Promise<DraftFestivalActivityRepresentation> {
     return this.festivalActivityService.create(user, name);
   }
 
@@ -105,12 +105,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityResponseDto,
+    type: DraftFestivalActivityDto,
   })
   @ApiBody({
     description: "Festival activity to save",
   })
-  save(@Body() festivalActivity: FestivalActivity): Promise<FestivalActivity> {
+  save(
+    @Body() festivalActivity: DraftFestivalActivityDto,
+  ): Promise<FestivalActivityRepresentation> {
     return this.festivalActivityService.save(festivalActivity);
   }
 }

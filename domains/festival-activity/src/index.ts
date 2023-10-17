@@ -21,4 +21,5 @@ export type {
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
   FestivalActivity,
+  FestivalActivityRepresentation,
 } from "./festival-activity.model";
