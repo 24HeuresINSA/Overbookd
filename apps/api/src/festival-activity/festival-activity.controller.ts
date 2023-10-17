@@ -31,7 +31,7 @@ import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activ
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
-import { DraftFestivalActivityResponseDto } from "./dto/draft-festival-activity.response.dto";
+import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -66,7 +66,7 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityResponseDto,
+    type: DraftFestivalActivityDto,
   })
   @ApiParam({
     name: "id",
@@ -86,7 +86,7 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 201,
     description: "A festival activity",
-    type: DraftFestivalActivityResponseDto,
+    type: DraftFestivalActivityDto,
   })
   @ApiBody({
     description: "Festival activity to create",
@@ -105,13 +105,13 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityResponseDto,
+    type: DraftFestivalActivityDto,
   })
   @ApiBody({
     description: "Festival activity to save",
   })
   save(
-    @Body() festivalActivity: DraftFestivalActivityResponseDto,
+    @Body() festivalActivity: DraftFestivalActivityDto,
   ): Promise<FestivalActivityRepresentation> {
     return this.festivalActivityService.save(festivalActivity);
   }

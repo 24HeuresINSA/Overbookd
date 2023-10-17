@@ -234,7 +234,7 @@ class InquirySectionDto implements InquirySection {
   barriers: Inquiry[];
 }
 
-export class DraftFestivalActivityResponseDto
+export class DraftFestivalActivityDto
   implements DraftFestivalActivityRepresentation
 {
   @ApiProperty({})
