@@ -105,7 +105,12 @@
       >
         changer les disponibilites
       </v-btn>
-      <v-btn v-if="canManageUsers" text color="red" @click="deleteVolunteer">
+      <v-btn
+        v-if="canManageUsers && !isMe"
+        text
+        color="red"
+        @click="deleteVolunteer"
+      >
         supprimer
       </v-btn>
     </v-card-actions>
@@ -261,8 +266,6 @@ export default Vue.extend({
 
     async deleteVolunteer() {
       await this.$accessor.user.deleteUser(this.selectedVolunteer.id);
-
-      if (this.isMe) return this.$auth.logout();
       this.$emit("close-dialog");
     },
 

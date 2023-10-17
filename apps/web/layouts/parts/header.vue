@@ -59,9 +59,8 @@ export default Vue.extend({
   methods: {
     async logout() {
       await this.$auth.logout();
-      await this.$router.push({
-        path: "/login",
-      });
+      this.$accessor.user.cleanUser();
+      await this.$router.push({ path: "/login" });
     },
   },
 });
