@@ -30,4 +30,5 @@ export {
   TRANSFER,
   doIReceive,
   transactionTypes,
+  TransferError,
 } from "./transaction";
