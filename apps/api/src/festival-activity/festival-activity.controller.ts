@@ -20,7 +20,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
-import {
+import type {
   CreateFestivalActivityForm,
   FestivalActivity,
   PreviewFestivalActivity,
@@ -31,6 +31,7 @@ import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activ
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
+import { DraftFestivalActivityResponseDto } from "./dto/draft-festival-activity.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -50,7 +51,7 @@ export class FestivalActivityController {
   @Permission(READ_FA)
   @Get()
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: "All festival activities",
     type: PreviewFestivalActivityResponseDto,
     isArray: true,
@@ -63,8 +64,9 @@ export class FestivalActivityController {
   @Permission(READ_FA)
   @Get(":id")
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: "A festival activity",
+    type: DraftFestivalActivityResponseDto,
   })
   @ApiParam({
     name: "id",
@@ -84,6 +86,7 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 201,
     description: "A festival activity",
+    type: DraftFestivalActivityResponseDto,
   })
   @ApiBody({
     description: "Festival activity to create",
@@ -100,8 +103,9 @@ export class FestivalActivityController {
   @Permission(WRITE_FA)
   @Put()
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: "A festival activity",
+    type: DraftFestivalActivityResponseDto,
   })
   @ApiBody({
     description: "Festival activity to save",

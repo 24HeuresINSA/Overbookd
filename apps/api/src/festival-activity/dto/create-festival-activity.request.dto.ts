@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CreateFestivalActivityForm } from "@overbookd/festival-activity";
+import type { CreateFestivalActivityForm } from "@overbookd/festival-activity";
 import { IsNotEmpty, IsString } from "class-validator";
 
 export class CreateFestivalActivityRequestDto

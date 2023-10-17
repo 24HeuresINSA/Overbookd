@@ -1,4 +1,4 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 
 export type Adherent = {
   id: number;
@@ -7,7 +7,7 @@ export type Adherent = {
   nickname?: string;
 };
 
-type Signage = {
+export type Signage = {
   quantity: number;
   text: string;
   size: string;
@@ -15,7 +15,7 @@ type Signage = {
   comment: string;
 };
 
-type ElectricitySupply = {
+export type ElectricitySupply = {
   connection:
     | "PC16_Prise_classique"
     | "P17_16A_MONO"
@@ -34,7 +34,7 @@ type ElectricitySupply = {
   comment: string | null;
 };
 
-type Inquiry = {
+export type Inquiry = {
   id: number;
   quantity: number;
   name: string;
@@ -47,7 +47,7 @@ export type GeneralSection = {
   toPublish: boolean;
   photoLink: string | null;
   isFlagship: boolean;
-  timeWindows: Period[];
+  timeWindows: IProvidePeriod[];
 };
 
 export type InChargeSection = {
@@ -71,7 +71,7 @@ export type SupplySection = {
 };
 
 export type InquirySection = {
-  timeWindows: Period[];
+  timeWindows: IProvidePeriod[];
   gears: Inquiry[];
   electricity: Inquiry[];
   barriers: Inquiry[];
@@ -89,7 +89,7 @@ type BaseFestivalActivity = {
 
 export const DRAFT = "DRAFT";
 
-type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
+export type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
   status: typeof DRAFT;
 };
 
