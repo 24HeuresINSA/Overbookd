@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { FestivalActivityRepository } from "./repository/festival-activity.repository";
 import {
+  DraftFestivalActivity,
+  DraftFestivalActivityRepresentation,
   FestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
@@ -27,7 +29,12 @@ export class FestivalActivityService {
     return this.festivalActivities.create({ author, name });
   }
 
-  save(festivalActivity: FestivalActivity): Promise<FestivalActivity> {
+  save(
+    festivalActivityRepresentation: DraftFestivalActivityRepresentation,
+  ): Promise<FestivalActivity> {
+    const festivalActivity = DraftFestivalActivity.build(
+      festivalActivityRepresentation,
+    );
     return this.festivalActivities.save(festivalActivity);
   }
 }

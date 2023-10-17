@@ -21,8 +21,8 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import type {
-  CreateFestivalActivityForm,
-  FestivalActivity,
+  DraftFestivalActivityRepresentation,
+  FestivalActivityRepresentation,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -76,7 +76,7 @@ export class FestivalActivityController {
   })
   findById(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<FestivalActivity | null> {
+  ): Promise<FestivalActivityRepresentation | null> {
     return this.festivalActivityService.findById(id);
   }
 
@@ -93,9 +93,9 @@ export class FestivalActivityController {
     type: CreateFestivalActivityRequestDto,
   })
   create(
-    @Body() { name }: CreateFestivalActivityForm,
+    @Body() { name }: CreateFestivalActivityRequestDto,
     @Request() { user }: RequestWithUserPayload,
-  ): Promise<FestivalActivity> {
+  ): Promise<DraftFestivalActivityRepresentation> {
     return this.festivalActivityService.create(user, name);
   }
 
@@ -110,7 +110,9 @@ export class FestivalActivityController {
   @ApiBody({
     description: "Festival activity to save",
   })
-  save(@Body() festivalActivity: FestivalActivity): Promise<FestivalActivity> {
+  save(
+    @Body() festivalActivity: DraftFestivalActivityResponseDto,
+  ): Promise<FestivalActivityRepresentation> {
     return this.festivalActivityService.save(festivalActivity);
   }
 }

@@ -2,9 +2,13 @@ import {
   Adherent,
   DRAFT,
   DraftFestivalActivity,
+  DraftFestivalActivityRepresentation,
 } from "./creation/draft-festival-activity";
 
 export type FestivalActivity = DraftFestivalActivity /* | ... */;
+
+export type FestivalActivityRepresentation =
+  DraftFestivalActivityRepresentation /* | ... */;
 
 export type PreviewFestivalActivity = {
   id: number;
