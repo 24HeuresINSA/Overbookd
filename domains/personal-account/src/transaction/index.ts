@@ -15,12 +15,13 @@ export {
   doIReceive,
   transactionTypes,
 } from "./transaction.model";
-export { Payor, Transfer } from "./transfer";
+export { Transfer } from "./transfer/transfer";
 export type {
-  CreateTransferForm,
   Member,
   MemberRepository,
   TransferRepository,
   TransferResponse,
-  TransferForm,
-} from "./transfer";
+} from "./transfer/transfer";
+export { Payor } from "./transfer/payor";
+export type { CreateTransferForm, TransferForm } from "./transfer/payor";
+export { TransferError } from "./transfer/transfer.error";

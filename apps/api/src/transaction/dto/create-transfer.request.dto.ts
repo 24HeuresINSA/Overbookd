@@ -20,6 +20,7 @@ export class CreateTransferRequestDto implements CreateTransferForm {
   @ApiProperty({
     description: "The amount to transfer",
     type: Number,
+    example: 100,
   })
   @IsDefined()
   @IsNumber()

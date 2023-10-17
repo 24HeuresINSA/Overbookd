@@ -1,5 +1,5 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { Transaction } from "@overbookd/personal-account";
+import { CreateTransferForm, Transaction } from "@overbookd/personal-account";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -18,7 +18,11 @@ export class TransactionRepository {
     return context.$axios.post(`${this.basePath}/sg`, transaction);
   }
 
-  static deleteTransaction(context: Context, transactionID: string) {
-    return context.$axios.delete(`${this.basePath}/${transactionID}`);
+  static deleteTransaction(context: Context, transactionId: string) {
+    return context.$axios.delete(`${this.basePath}/${transactionId}`);
+  }
+
+  static sendTransfer(context: Context, transferForm: CreateTransferForm) {
+    return context.$axios.post(`${this.basePath}/transfer`, transferForm);
   }
 }

@@ -9,6 +9,7 @@ import {
   Request,
   ParseIntPipe,
   HttpCode,
+  UseFilters,
 } from "@nestjs/common";
 import {
   TransactionService,
@@ -16,11 +17,14 @@ import {
 } from "./transaction.service";
 import { Transaction as PrismaTransaction } from "@prisma/client";
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
   ApiExtraModels,
+  ApiForbiddenResponse,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
   getSchemaPath,
 } from "@nestjs/swagger";
 import { CreateTransactionRequestDto } from "./dto/create-transaction.request.dto";
@@ -43,10 +47,21 @@ import {
   TransferIReceiveTransactionDto,
   TransferISendTransactionDto,
 } from "./dto/my-transaction.response.dto";
+import { TransferErrorFilter } from "./transfer-error.filter";
 
 @ApiBearerAuth()
+@UseFilters(new TransferErrorFilter())
 @ApiTags("transactions")
 @Controller("transactions")
+@ApiBadRequestResponse({
+  description: "Bad Request",
+})
+@ApiForbiddenResponse({
+  description: "User can't access this resource",
+})
+@ApiUnauthorizedResponse({
+  description: "User don't have the right to access this route",
+})
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,

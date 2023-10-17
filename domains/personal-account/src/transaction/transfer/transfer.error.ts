@@ -12,7 +12,7 @@ export const PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
 export const PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
   "Tu n'as pas de compte personnel";
 
-class TransferError extends Error {}
+export class TransferError extends Error {}
 
 export class NegativeAmount extends TransferError {
   constructor() {
