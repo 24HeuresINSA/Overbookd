@@ -1,3 +1,19 @@
+# [2.5.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.4.0...v2.5.0) (2023-10-17)
+
+
+### Bug Fixes
+
+* **api:** define festival activity dto. [#1290](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1290) ([50453b7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/50453b73531918122b1c8dfb4f0807f01ca3c049))
+* **api:** use type instead of class on controller signature. [#1290](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1290) ([2e76443](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2e76443502ea9d2b2197c7ed6624294ada85258c))
+* **web:** display profile picture. [#1284](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1284) ([6fade9b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6fade9b68fc2d9fc5e8ef3f8b81c3b85c3452cd4))
+
+
+### Features
+
+* **festival-activity:** enable creation. [#1165](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1165) ([48e8aa0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/48e8aa0597aa6540e07b124d7191a7ff01358137))
+* **personal-account:** allow meal sharing. [#1283](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1283) ([b60b681](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b60b6814ac57940578ff4092e3245069ac717a7e))
+* **personal-account:** Implement transfer in web [#1287](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1287) ([8f1af2a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8f1af2a038617bb0fbf5ab183c3b95f3fbfc7c29))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
