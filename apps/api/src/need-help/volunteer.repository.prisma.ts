@@ -25,7 +25,7 @@ type DatabaseVolunteer = {
   lastname: string;
   firstname: string;
   phone: string;
-  team: { team: { code: string } }[];
+  teams: { team: { code: string } }[];
   availabilities: IProvidePeriod[];
   assignments: DatabaseAssignment[];
   ftUserRequests: DatabaseFtUserRequest[];
@@ -36,7 +36,7 @@ const SELECT_VOLUNTEER = {
   lastname: true,
   firstname: true,
   phone: true,
-  team: { select: { team: { select: { code: true } } } },
+  teams: { select: { team: { select: { code: true } } } },
   availabilities: { select: { start: true, end: true } },
 };
 
@@ -87,7 +87,7 @@ function formatVolunteers(volunteers: DatabaseVolunteer[]): Volunteer[] {
     lastname: volunteer.lastname,
     firstname: volunteer.firstname,
     phone: volunteer.phone,
-    teams: volunteer.team.map(({ team }) => team.code),
+    teams: volunteer.teams.map(({ team }) => team.code),
     availabilities: volunteer.availabilities,
     tasks: [
       ...formatVolunteerAssignments(volunteer.assignments),
