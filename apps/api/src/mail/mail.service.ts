@@ -47,8 +47,8 @@ export class MailService implements OnApplicationBootstrap {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: "Mail de test de l'API overbookd",
-        template: "mailTest",
+        subject: "Mail de test de l'API Overbookd",
+        template: "mail-test",
         context: {
           username: username,
         },
@@ -71,8 +71,8 @@ export class MailService implements OnApplicationBootstrap {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: "Réinitialisation de ton mot de passe overbookd",
-        template: "resetPassword",
+        subject: "Réinitialisation de ton mot de passe Overbookd",
+        template: "reset-password",
         context: {
           firstname,
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
