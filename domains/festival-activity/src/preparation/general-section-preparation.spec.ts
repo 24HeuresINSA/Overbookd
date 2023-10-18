@@ -160,4 +160,41 @@ describe("General section of festival activity preparation", () => {
       });
     });
   });
+
+  describe("when adherent want to update multiple fields consecutively", () => {
+    describe("when adherent want to update name and description 2 times", () => {
+      it("should only update name and description", async () => {
+        const firstDataToUpdate = {
+          name: "Laser game",
+          description: null,
+        };
+
+        await prepareFestivalActivity.updateGeneralSection(
+          escapeGameActivity.id,
+          firstDataToUpdate,
+        );
+
+        const secondDataToUpdate = {
+          name: "Bowling",
+          description: "Tire sur les quilles",
+        };
+        const { general } = await prepareFestivalActivity.updateGeneralSection(
+          escapeGameActivity.id,
+          secondDataToUpdate,
+        );
+
+        expect(general.name).toBe(secondDataToUpdate.name);
+        expect(general.description).toBe(secondDataToUpdate.description);
+
+        const { categories, toPublish, photoLink, isFlagship, timeWindows } =
+          escapeGameGeneral;
+
+        expect(general.categories).toEqual(categories);
+        expect(general.toPublish).toBe(toPublish);
+        expect(general.photoLink).toBe(photoLink);
+        expect(general.isFlagship).toBe(isFlagship);
+        expect(general.timeWindows).toEqual(timeWindows);
+      });
+    });
+  });
 });

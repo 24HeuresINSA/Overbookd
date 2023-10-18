@@ -1,37 +1,45 @@
 import {
-  GeneralSection,
   DraftFestivalActivityRepresentation,
+  DraftFestivalActivity,
 } from "../creation/draft-festival-activity";
-import { FestivalActivityRepresentation } from "../festival-activity.model";
+import {
+  FestivalActivity,
+  FestivalActivityRepresentation,
+} from "../festival-activity.model";
 import { FestivalActivityRepository } from "./prepare-festival-activity";
+import { updateItemToList } from "@overbookd/list";
 
 export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
 {
   constructor(private festivalActivities: FestivalActivityRepresentation[]) {}
 
-  saveGeneralSection(
-    id: number,
-    generalSection: Partial<GeneralSection>,
-  ): Promise<DraftFestivalActivityRepresentation> {
-    const festivalActivityToUpdate = this.festivalActivities.find(
+  find(id: number): Promise<FestivalActivity> {
+    const festivalActivity = this.festivalActivities.find(
       (festivalActivity) => festivalActivity.id === id,
     );
-    if (!festivalActivityToUpdate)
-      throw new Error("Festival activity not found");
+    if (!festivalActivity) throw new Error("Festival activity not found");
+    const draftFestivalActivity = DraftFestivalActivity.build(festivalActivity);
 
-    const updatedFestivalActivity = {
-      ...festivalActivityToUpdate,
-      general: {
-        ...festivalActivityToUpdate.general,
-        ...generalSection,
-      },
-    };
+    return Promise.resolve(draftFestivalActivity);
+  }
 
-    this.festivalActivities = this.festivalActivities.map((festivalActivity) =>
-      festivalActivity.id === id ? updatedFestivalActivity : festivalActivity,
+  save(
+    festivalActivity: FestivalActivityRepresentation,
+  ): Promise<DraftFestivalActivityRepresentation> {
+    const festivalActivityIndex = this.festivalActivities.findIndex(
+      (festivalActivityToUpdate) =>
+        festivalActivityToUpdate.id === festivalActivity.id,
     );
+    if (festivalActivityIndex == -1) {
+      throw new Error("Festival activity not found");
+    }
 
-    return Promise.resolve(updatedFestivalActivity);
+    updateItemToList(
+      this.festivalActivities,
+      festivalActivityIndex,
+      festivalActivity,
+    );
+    return Promise.resolve(festivalActivity);
   }
 }

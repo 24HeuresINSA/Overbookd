@@ -1,10 +1,13 @@
 import { GeneralSection } from "../creation/draft-festival-activity";
-import { FestivalActivityRepresentation } from "../festival-activity.model";
+import {
+  FestivalActivity,
+  FestivalActivityRepresentation,
+} from "../festival-activity.model";
 
 export interface FestivalActivityRepository {
-  saveGeneralSection(
-    id: number,
-    generalSection: Partial<GeneralSection>,
+  find(id: number): Promise<FestivalActivity>;
+  save(
+    festivalActivity: FestivalActivityRepresentation,
   ): Promise<FestivalActivityRepresentation>;
 }
 
@@ -13,15 +16,14 @@ export class PrepareFestivalActivity {
     private readonly festivalActivities: FestivalActivityRepository,
   ) {}
 
-  updateGeneralSection(
+  async updateGeneralSection(
     id: number,
     generalSection: Partial<GeneralSection>,
   ): Promise<FestivalActivityRepresentation> {
-    if (generalSection.toPublish === false) {
-      generalSection.photoLink = null;
-      generalSection.isFlagship = false;
-    }
+    const existingFA = await this.festivalActivities.find(id);
 
-    return this.festivalActivities.saveGeneralSection(id, generalSection);
+    const updatedFA = existingFA.changeGeneralSection(generalSection);
+
+    return this.festivalActivities.save(updatedFA);
   }
 }

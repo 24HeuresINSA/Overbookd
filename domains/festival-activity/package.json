@@ -38,6 +38,7 @@
     "pnpm": "8.9.0"
   },
   "dependencies": {
+    "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*"
   }
 }

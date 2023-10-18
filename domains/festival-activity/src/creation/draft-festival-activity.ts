@@ -96,15 +96,19 @@ export type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
 {
+  general: GeneralSection;
+
   private constructor(
     readonly id: number,
-    readonly general: GeneralSection,
+    general: GeneralSection,
     readonly inCharge: InChargeSection,
     readonly signa: SignaSection,
     readonly security: SecuritySection,
     readonly supply: SupplySection,
     readonly inquiry: InquirySection,
-  ) {}
+  ) {
+    this.general = general;
+  }
 
   get status(): typeof DRAFT {
     return DRAFT;
@@ -125,6 +129,18 @@ export class DraftFestivalActivity
       supply,
       inquiry,
     );
+  }
+
+  public changeGeneralSection(
+    section: Partial<GeneralSection>,
+  ): DraftFestivalActivityRepresentation {
+    this.general = { ...this.general, ...section };
+
+    if (section.toPublish === false) {
+      this.general.photoLink = null;
+      this.general.isFlagship = false;
+    }
+    return this.json;
   }
 
   get json(): DraftFestivalActivityRepresentation {
