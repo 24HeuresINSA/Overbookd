@@ -36,7 +36,7 @@ const SELECT_VOLUNTEER = {
   lastname: true,
   firstname: true,
   phone: true,
-  team: { select: { team: { select: { code: true } } } },
+  teams: { select: { team: { select: { code: true } } } },
   availabilities: { select: { start: true, end: true } },
 };
 
