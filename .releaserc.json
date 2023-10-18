@@ -29,6 +29,12 @@
     ],
     "@semantic-release/changelog",
     [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    [
       "@semantic-release/git",
       {
         "message": "chore(release): ⬆️ bump to ${nextRelease.version}\n\n${nextRelease.notes}"

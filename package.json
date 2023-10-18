@@ -4,6 +4,7 @@
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
+  "private": true,
   "description": "Logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -44,6 +45,7 @@
   },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/npm": "22.0.5",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "12.0.6",
     "@typescript-eslint/eslint-plugin": "6.7.5",
