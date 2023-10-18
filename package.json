@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "2.4.1-rc.6",
+  "version": "2.5.1-rc.0",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/npm": "22.0.5",
+    "@semantic-release/npm": "11.0.0",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "12.0.6",
     "@typescript-eslint/eslint-plugin": "6.7.5",

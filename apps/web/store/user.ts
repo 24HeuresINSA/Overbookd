@@ -148,6 +148,9 @@ export const actions = actionTree(
       if (!res) return;
       commit("SET_MY_USER", castUserWithDate(res.data));
     },
+    cleanUser({ commit }) {
+      commit("SET_MY_USER", {});
+    },
     async fetchUsers({ commit }) {
       const res = await safeCall(this, userRepo.getAllUsers(this));
       if (res) {

@@ -17,6 +17,9 @@ importers:
       '@semantic-release/gitlab':
         specifier: 12.0.6
         version: 12.0.6(semantic-release@22.0.5)
+      '@semantic-release/npm':
+        specifier: 11.0.0
+        version: 11.0.0(semantic-release@22.0.5)
       '@typescript-eslint/eslint-plugin':
         specifier: 6.7.5
         version: 6.7.5(@typescript-eslint/parser@6.7.5)(eslint@8.51.0)(typescript@5.2.2)
