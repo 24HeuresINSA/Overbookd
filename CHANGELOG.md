@@ -1,3 +1,12 @@
+## [2.5.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.5.0...v2.5.1) (2023-10-18)
+
+
+### Bug Fixes
+
+* **forgot-password:** envoi du mail [#1292](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1292) ([5ecfab8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5ecfab8e9c07a3f53cb575950a8eede30933b92b))
+* **need-help:** Fix une erreur 500 [#1293](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1293) ([8b37d5a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8b37d5a51993ef0081e40a14e1d01ba18b47fb5b))
+* **user:** Clean user data when logout [#1266](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1266) ([4d6e6f5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4d6e6f50f1cc6624e96f45ba2beafea7612971c0))
+
 # [2.5.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.4.0...v2.5.0) (2023-10-17)
 
 
