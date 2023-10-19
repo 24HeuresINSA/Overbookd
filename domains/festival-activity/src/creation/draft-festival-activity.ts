@@ -127,6 +127,24 @@ export class DraftFestivalActivity
     );
   }
 
+  public changeGeneralSection(
+    generalUpdate: Partial<GeneralSection>,
+  ): DraftFestivalActivity {
+    const privateFestivalActivity = {
+      toPublish: false,
+      photoLink: null,
+      isFlagship: false,
+    };
+    const cleanedUpdate =
+      generalUpdate.toPublish === false
+        ? { ...generalUpdate, ...privateFestivalActivity }
+        : generalUpdate;
+    const general = { ...this.general, ...cleanedUpdate };
+
+    const builder = { ...this.json, general };
+    return DraftFestivalActivity.build(builder);
+  }
+
   get json(): DraftFestivalActivityRepresentation {
     return {
       id: this.id,

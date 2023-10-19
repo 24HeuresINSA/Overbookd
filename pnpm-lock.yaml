@@ -441,6 +441,9 @@ importers:
 
   domains/festival-activity:
     dependencies:
+      '@overbookd/list':
+        specifier: workspace:*
+        version: link:../../libraries/list
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
