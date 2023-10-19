@@ -88,7 +88,7 @@ export class RegistrationService {
     await this.enrollNewcomersRepository.enroll(newcomersToEnroll);
   }
 
-  async forget(credentials: Credentials, token: string) {
+  async forgetMe(credentials: Credentials, token: string) {
     const isValidForgetRequest = this.checkForgetRequestValidity(
       token,
       credentials.email,
@@ -101,6 +101,10 @@ export class RegistrationService {
     }
 
     await this.forgetMember.forgetMe(credentials);
+  }
+
+  async forgetHim(email: string) {
+    return this.forgetMember.forgetHim(email);
   }
 
   private checkForgetRequestValidity(token: string, email: string) {
