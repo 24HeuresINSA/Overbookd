@@ -1,13 +1,6 @@
 import { GeneralSection } from "../creation/draft-festival-activity";
-import {
-  FestivalActivity,
-  FestivalActivityRepresentation,
-} from "../festival-activity.model";
-
-export interface FestivalActivityRepository {
-  find(id: number): Promise<FestivalActivity>;
-  save(festivalActivity: FestivalActivity): Promise<FestivalActivity>;
-}
+import { FestivalActivity } from "../festival-activity.model";
+import { FestivalActivityRepository } from "../festival-activity.repository";
 
 export class PrepareFestivalActivity {
   constructor(
@@ -17,8 +10,9 @@ export class PrepareFestivalActivity {
   async updateGeneralSection(
     id: number,
     generalSection: Partial<GeneralSection>,
-  ): Promise<FestivalActivityRepresentation> {
-    const existingFA = await this.festivalActivities.find(id);
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.festivalActivities.findById(id);
+    if (!existingFA) throw new Error("Festival activity not found");
 
     const updatedFA = existingFA.changeGeneralSection(generalSection);
 

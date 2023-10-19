@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { FestivalActivityRepository } from "./repository/festival-activity.repository";
 import {
-  DraftFestivalActivity,
-  DraftFestivalActivityRepresentation,
   FestivalActivity,
+  FestivalActivityRepository,
+  GeneralSection,
+  PrepareFestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { AdherentRepository } from "./repository/adherent-repository.prisma";
@@ -29,12 +29,19 @@ export class FestivalActivityService {
     return this.festivalActivities.create({ author, name });
   }
 
-  save(
-    festivalActivityRepresentation: DraftFestivalActivityRepresentation,
+  async saveGeneralSection(
+    id: number,
+    generalSection: Partial<GeneralSection>,
   ): Promise<FestivalActivity> {
-    const festivalActivity = DraftFestivalActivity.build(
-      festivalActivityRepresentation,
+    const festivalActivity = await this.findById(id);
+    if (!festivalActivity) throw new Error("Festival activity not found");
+    const prepareFestivalActivity = new PrepareFestivalActivity(
+      this.festivalActivities,
     );
-    return this.festivalActivities.save(festivalActivity);
+    const updatedFA = await prepareFestivalActivity.updateGeneralSection(
+      id,
+      generalSection,
+    );
+    return this.festivalActivities.save(updatedFA);
   }
 }

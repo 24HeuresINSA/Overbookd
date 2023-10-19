@@ -1,56 +1,22 @@
+import { FestivalActivityRepository } from "./festival-activity.repository";
+import { updateItemToList } from "@overbookd/list";
+import { DraftFestivalActivity } from "./creation/draft-festival-activity";
 import {
-  PreviewFestivalActivity,
-  FestivalActivity,
-  DraftFestivalActivity,
   FestivalActivityFactory,
   CreateFestivalActivity,
-} from "@overbookd/festival-activity";
-import { FestivalActivityRepository } from "./festival-activity.repository";
-import { Period } from "@overbookd/period";
-import { updateItemToList } from "@overbookd/list";
-
-const barbecue25emeGeneral = {
-  description: "Un barbecue pour les vieux",
-  timeWindows: [
-    Period.init({
-      start: new Date("2023-05-15 10:00"),
-      end: new Date("2023-05-15 14:00"),
-    }),
-  ],
-};
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
+} from "./creation/festival-activity.factory";
+import {
+  FestivalActivity,
+  PreviewFestivalActivity,
+} from "./festival-activity.model";
 
 export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
 {
-  private festivalActivities: FestivalActivity[];
-  private festivalActivityFactory: FestivalActivityFactory;
+  festivalActivityFactory: FestivalActivityFactory;
 
-  constructor() {
+  constructor(private festivalActivities: FestivalActivity[]) {
     this.festivalActivityFactory = new FestivalActivityFactory();
-
-    const barbecue25emeCreation = this.festivalActivityFactory.create({
-      name: "Barbecue 25eme",
-      author: noel,
-    });
-    const barbecue25eme = DraftFestivalActivity.build({
-      ...barbecue25emeCreation,
-      general: { ...barbecue25emeCreation.general, ...barbecue25emeGeneral },
-      inCharge: { ...barbecue25emeCreation.inCharge, team: "vieux" },
-      signa: { ...barbecue25emeCreation.signa, location: "Devant le QG" },
-    });
-
-    const escapeGame = this.festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-
-    this.festivalActivities = [escapeGame, barbecue25eme];
   }
 
   findAll(): Promise<PreviewFestivalActivity[]> {
@@ -66,11 +32,13 @@ export class InMemoryFestivalActivityRepository
   }
 
   findById(id: number): Promise<FestivalActivity | null> {
-    return Promise.resolve(
-      this.festivalActivities.find(
-        (festivalActivity) => festivalActivity.id === id,
-      ),
+    const festivalActivity = this.festivalActivities.find(
+      (festivalActivity) => festivalActivity.id === id,
     );
+    if (!festivalActivity) throw new Error("Festival activity not found");
+    const draftFestivalActivity = DraftFestivalActivity.build(festivalActivity);
+
+    return Promise.resolve(draftFestivalActivity);
   }
 
   create(form: CreateFestivalActivity): Promise<DraftFestivalActivity> {

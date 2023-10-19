@@ -4,8 +4,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
-  Put,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -32,6 +32,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
+import { GeneralSectionRequestDto } from "./dto/update-festival-activity.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -101,18 +102,26 @@ export class FestivalActivityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
-  @Put()
+  @Patch(":id/general")
   @ApiResponse({
     status: 200,
     description: "A festival activity",
     type: DraftFestivalActivityDto,
   })
   @ApiBody({
-    description: "Festival activity to save",
+    description: "General section of festival activity to save",
+    type: GeneralSectionRequestDto,
   })
-  save(
-    @Body() festivalActivity: DraftFestivalActivityDto,
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  saveGeneralSection(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() generalSection: GeneralSectionRequestDto,
   ): Promise<FestivalActivityRepresentation> {
-    return this.festivalActivityService.save(festivalActivity);
+    return this.festivalActivityService.saveGeneralSection(id, generalSection);
   }
 }

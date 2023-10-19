@@ -23,3 +23,6 @@ export type {
   FestivalActivity,
   FestivalActivityRepresentation,
 } from "./festival-activity.model";
+export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
+export type { FestivalActivityRepository } from "./festival-activity.repository";
+export { InMemoryFestivalActivityRepository } from "./festival-activity-repository.inmemory";
