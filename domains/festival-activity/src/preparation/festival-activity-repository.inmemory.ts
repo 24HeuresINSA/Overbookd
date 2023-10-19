@@ -29,8 +29,7 @@ export class InMemoryFestivalActivityRepository
     if (festivalActivityIndex == -1) {
       throw new Error("Festival activity not found");
     }
-
-    updateItemToList(
+    this.festivalActivities = updateItemToList(
       this.festivalActivities,
       festivalActivityIndex,
       festivalActivity,

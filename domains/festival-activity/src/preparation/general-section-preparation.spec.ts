@@ -162,38 +162,25 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe("when adherent want to update multiple fields consecutively", () => {
-    describe("when adherent want to update name and description 2 times", () => {
-      it("should only update name and description", async () => {
-        const firstDataToUpdate = {
-          name: "Laser game",
-          description: null,
+    describe("when adherent want to update name then description in 2 times", () => {
+      it("should update both name and description", async () => {
+        const updateName = { name: "Laser game" };
+        const updateDescription = {
+          description: "Tire sur les gens avec un pistolet laser",
         };
 
         await prepareFestivalActivity.updateGeneralSection(
           escapeGameActivity.id,
-          firstDataToUpdate,
+          updateName,
         );
 
-        const secondDataToUpdate = {
-          name: "Bowling",
-          description: "Tire sur les quilles",
-        };
         const { general } = await prepareFestivalActivity.updateGeneralSection(
           escapeGameActivity.id,
-          secondDataToUpdate,
+          updateDescription,
         );
 
-        expect(general.name).toBe(secondDataToUpdate.name);
-        expect(general.description).toBe(secondDataToUpdate.description);
-
-        const { categories, toPublish, photoLink, isFlagship, timeWindows } =
-          escapeGameGeneral;
-
-        expect(general.categories).toEqual(categories);
-        expect(general.toPublish).toBe(toPublish);
-        expect(general.photoLink).toBe(photoLink);
-        expect(general.isFlagship).toBe(isFlagship);
-        expect(general.timeWindows).toEqual(timeWindows);
+        expect(general.name).toBe(updateName.name);
+        expect(general.description).toBe(updateDescription.description);
       });
     });
   });

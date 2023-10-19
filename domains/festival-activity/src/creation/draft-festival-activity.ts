@@ -128,18 +128,18 @@ export class DraftFestivalActivity
   }
 
   public changeGeneralSection(
-    section: Partial<GeneralSection>,
+    generalUpdate: Partial<GeneralSection>,
   ): DraftFestivalActivity {
-    let general = { ...this.general, ...section };
-
-    if (section.toPublish === false) {
-      const privateFestivalActivity = {
-        toPublish: false,
-        photoLink: null,
-        isFlagship: false,
-      };
-      general = { ...general, ...privateFestivalActivity };
-    }
+    const privateFestivalActivity = {
+      toPublish: false,
+      photoLink: null,
+      isFlagship: false,
+    };
+    const cleanedUpdate =
+      generalUpdate.toPublish === false
+        ? { ...generalUpdate, ...privateFestivalActivity }
+        : generalUpdate;
+    const general = { ...this.general, ...cleanedUpdate };
 
     const builder = { ...this.json, general };
     return DraftFestivalActivity.build(builder);
