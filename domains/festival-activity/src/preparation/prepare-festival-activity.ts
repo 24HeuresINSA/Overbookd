@@ -6,9 +6,7 @@ import {
 
 export interface FestivalActivityRepository {
   find(id: number): Promise<FestivalActivity>;
-  save(
-    festivalActivity: FestivalActivityRepresentation,
-  ): Promise<FestivalActivityRepresentation>;
+  save(festivalActivity: FestivalActivity): Promise<FestivalActivity>;
 }
 
 export class PrepareFestivalActivity {

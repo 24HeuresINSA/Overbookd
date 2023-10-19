@@ -1,7 +1,4 @@
-import {
-  DraftFestivalActivityRepresentation,
-  DraftFestivalActivity,
-} from "../creation/draft-festival-activity";
+import { DraftFestivalActivity } from "../creation/draft-festival-activity";
 import {
   FestivalActivity,
   FestivalActivityRepresentation,
@@ -24,9 +21,7 @@ export class InMemoryFestivalActivityRepository
     return Promise.resolve(draftFestivalActivity);
   }
 
-  save(
-    festivalActivity: FestivalActivityRepresentation,
-  ): Promise<DraftFestivalActivityRepresentation> {
+  save(festivalActivity: FestivalActivity): Promise<DraftFestivalActivity> {
     const festivalActivityIndex = this.festivalActivities.findIndex(
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,
