@@ -9,7 +9,7 @@ import {
   FestivalActivity,
   PreviewFestivalActivity,
 } from "./festival-activity.model";
-import { NotFound } from "./festival-activity.error";
+import { FestivalActivityNotFound } from "./festival-activity.error";
 
 export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
@@ -37,8 +37,8 @@ export class InMemoryFestivalActivityRepository
       (festivalActivity) => festivalActivity.id === id,
     );
     if (!festivalActivity) return Promise.resolve(null);
-    const draftFestivalActivity = DraftFestivalActivity.build(festivalActivity);
 
+    const draftFestivalActivity = DraftFestivalActivity.build(festivalActivity);
     return Promise.resolve(draftFestivalActivity);
   }
 
@@ -53,7 +53,8 @@ export class InMemoryFestivalActivityRepository
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,
     );
-    if (festivalActivityIndex == -1) throw new NotFound();
+    if (festivalActivityIndex == -1)
+      throw new FestivalActivityNotFound(festivalActivity.id);
 
     this.festivalActivities = updateItemToList(
       this.festivalActivities,

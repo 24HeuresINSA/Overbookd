@@ -11,7 +11,7 @@ import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 
 @Injectable()
 export class FestivalActivityService {
-  prepareFestivalActivity: PrepareFestivalActivity;
+  private prepareFestivalActivity: PrepareFestivalActivity;
 
   constructor(
     private readonly adherents: AdherentRepository,
