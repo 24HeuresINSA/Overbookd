@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { FestivalActivityRepository } from "./repository/festival-activity.repository";
 import {
-  DraftFestivalActivity,
-  DraftFestivalActivityRepresentation,
   FestivalActivity,
+  FestivalActivityRepository,
+  GeneralSection,
+  PrepareFestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { AdherentRepository } from "./repository/adherent-repository.prisma";
@@ -11,10 +11,16 @@ import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 
 @Injectable()
 export class FestivalActivityService {
+  private prepareFestivalActivity: PrepareFestivalActivity;
+
   constructor(
     private readonly adherents: AdherentRepository,
     private readonly festivalActivities: FestivalActivityRepository,
-  ) {}
+  ) {
+    this.prepareFestivalActivity = new PrepareFestivalActivity(
+      this.festivalActivities,
+    );
+  }
 
   findAll(): Promise<PreviewFestivalActivity[]> {
     return this.festivalActivities.findAll();
@@ -29,12 +35,13 @@ export class FestivalActivityService {
     return this.festivalActivities.create({ author, name });
   }
 
-  save(
-    festivalActivityRepresentation: DraftFestivalActivityRepresentation,
+  saveGeneralSection(
+    id: number,
+    generalSection: Partial<GeneralSection>,
   ): Promise<FestivalActivity> {
-    const festivalActivity = DraftFestivalActivity.build(
-      festivalActivityRepresentation,
+    return this.prepareFestivalActivity.updateGeneralSection(
+      id,
+      generalSection,
     );
-    return this.festivalActivities.save(festivalActivity);
   }
 }

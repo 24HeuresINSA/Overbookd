@@ -1,9 +1,9 @@
+import { DraftFestivalActivity } from "./creation/draft-festival-activity";
+import { CreateFestivalActivity } from "./creation/festival-activity.factory";
 import {
-  CreateFestivalActivity,
-  DraftFestivalActivity,
-  FestivalActivity,
   PreviewFestivalActivity,
-} from "@overbookd/festival-activity";
+  FestivalActivity,
+} from "./festival-activity.model";
 
 export interface FestivalActivityRepository {
   findAll(): Promise<PreviewFestivalActivity[]>;

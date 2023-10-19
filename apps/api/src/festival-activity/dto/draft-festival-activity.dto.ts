@@ -16,14 +16,7 @@ import type {
 import { DRAFT } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { AdherentResponseDto } from "./adherent.response.dto";
-
-class PeriodDto implements IProvidePeriod {
-  @ApiProperty({})
-  start: Date;
-
-  @ApiProperty({})
-  end: Date;
-}
+import { PeriodDto } from "./period.dto";
 
 class GeneralSectionDto implements GeneralSection {
   @ApiProperty({

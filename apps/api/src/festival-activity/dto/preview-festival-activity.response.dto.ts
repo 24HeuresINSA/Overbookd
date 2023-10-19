@@ -38,5 +38,5 @@ export class PreviewFestivalActivityResponseDto
     description: "The festival activity team code",
     type: String,
   })
-  team?: string;
+  team: string | null;
 }

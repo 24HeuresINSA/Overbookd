@@ -1,6 +1,4 @@
 import {
-  Adherent,
-  DRAFT,
   DraftFestivalActivity,
   DraftFestivalActivityRepresentation,
 } from "./creation/draft-festival-activity";
@@ -11,11 +9,11 @@ export type FestivalActivityRepresentation =
   DraftFestivalActivityRepresentation /* | ... */;
 
 export type PreviewFestivalActivity = {
-  id: number;
-  name: string;
-  status: typeof DRAFT;
-  adherent: Adherent;
-  team?: string;
+  id: FestivalActivityRepresentation["id"];
+  name: FestivalActivityRepresentation["general"]["name"];
+  status: FestivalActivityRepresentation["status"];
+  adherent: FestivalActivityRepresentation["inCharge"]["adherent"];
+  team: FestivalActivityRepresentation["inCharge"]["team"];
 };
 
 export type CreateFestivalActivityForm = {

@@ -5,7 +5,7 @@ import {
 } from "../creation/draft-festival-activity";
 import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "./festival-activity-repository.inmemory";
+import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
 
 const noel = {
   id: 1,
