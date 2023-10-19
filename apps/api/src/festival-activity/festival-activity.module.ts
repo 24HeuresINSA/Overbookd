@@ -11,7 +11,7 @@ import { InMemoryFestivalActivityRepository } from "@overbookd/festival-activity
   providers: [
     {
       provide: InMemoryFestivalActivityRepository,
-      useFactory: () => new InMemoryFestivalActivityRepository([]),
+      useFactory: () => new InMemoryFestivalActivityRepository(),
     },
     {
       provide: PrismaAdherentRepository,

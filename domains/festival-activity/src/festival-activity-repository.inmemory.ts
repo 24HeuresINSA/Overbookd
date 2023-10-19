@@ -9,13 +9,14 @@ import {
   FestivalActivity,
   PreviewFestivalActivity,
 } from "./festival-activity.model";
+import { NotFound } from "./festival-activity.error";
 
 export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
 {
   festivalActivityFactory: FestivalActivityFactory;
 
-  constructor(private festivalActivities: FestivalActivity[]) {
+  constructor(private festivalActivities: FestivalActivity[] = []) {
     this.festivalActivityFactory = new FestivalActivityFactory();
   }
 
@@ -35,7 +36,7 @@ export class InMemoryFestivalActivityRepository
     const festivalActivity = this.festivalActivities.find(
       (festivalActivity) => festivalActivity.id === id,
     );
-    if (!festivalActivity) throw new Error("Festival activity not found");
+    if (!festivalActivity) return Promise.resolve(null);
     const draftFestivalActivity = DraftFestivalActivity.build(festivalActivity);
 
     return Promise.resolve(draftFestivalActivity);
@@ -52,9 +53,7 @@ export class InMemoryFestivalActivityRepository
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,
     );
-    if (festivalActivityIndex == -1) {
-      throw new Error("Festival activity not found");
-    }
+    if (festivalActivityIndex == -1) throw new NotFound();
 
     this.festivalActivities = updateItemToList(
       this.festivalActivities,

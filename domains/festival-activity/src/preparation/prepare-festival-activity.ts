@@ -1,4 +1,5 @@
 import { GeneralSection } from "../creation/draft-festival-activity";
+import { NotFound } from "../festival-activity.error";
 import { FestivalActivity } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";
 
@@ -12,7 +13,7 @@ export class PrepareFestivalActivity {
     generalSection: Partial<GeneralSection>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
-    if (!existingFA) throw new Error("Festival activity not found");
+    if (!existingFA) throw new NotFound();
 
     const updatedFA = existingFA.changeGeneralSection(generalSection);
 
