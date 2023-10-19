@@ -137,7 +137,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_USER", user);
     },
     async fetchUser({ state, dispatch }) {
-      dispatch("fetchMyInformation");
+      await dispatch("fetchMyInformation");
       if (!state.me) return;
       await dispatch("setMyProfilePicture");
     },
