@@ -100,7 +100,7 @@ export class RegistrationService {
       );
     }
 
-    await this.forgetMember.with(credentials);
+    await this.forgetMember.forgetMe(credentials);
   }
 
   private checkForgetRequestValidity(token: string, email: string) {
