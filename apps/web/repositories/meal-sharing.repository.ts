@@ -4,6 +4,7 @@ import {
   InMemoryAdherents,
   InMemorySharedMeals,
   MealSharing,
+  SharedMeal,
 } from "@overbookd/personal-account";
 
 export type Context = { $axios: NuxtAxiosInstance };
@@ -13,6 +14,13 @@ const alphonse = {
   name: "chef",
 };
 
+const couscous = SharedMeal.retrieve({
+  id: 1,
+  meal: { menu: "Couscous", date: "vendredi 20 octobre soir" },
+  chef: alphonse,
+  shotguns: [{ ...alphonse, date: new Date("2023-10-18") }],
+});
+
 const adherents = new InMemoryAdherents(
   new Array(1_000).fill(null).map((_value, index) => ({
     ...alphonse,
@@ -20,7 +28,7 @@ const adherents = new InMemoryAdherents(
   })),
 );
 
-const sharedMeals = new InMemorySharedMeals();
+const sharedMeals = new InMemorySharedMeals([couscous]);
 
 const mealSharing = new MealSharing(sharedMeals, adherents);
 
