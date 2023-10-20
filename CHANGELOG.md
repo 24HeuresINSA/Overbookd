@@ -1,3 +1,11 @@
+## [2.5.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.5.1...v2.5.2) (2023-10-20)
+
+
+### Bug Fixes
+
+* **registration:** enable forget about not validated user. [#1294](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1294) ([4b5bae3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4b5bae3ba111a6ced6b22effc2c3be6bbc4194a5))
+* **web:** wait for my information before ask for profile picture. [#1295](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1295) ([99bf754](https://gitlab.com/24-heures-insa/overbookd-mono/commit/99bf7540984337ba8445cf39f5068181d7fe5482))
+
 ## [2.5.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.5.0...v2.5.1) (2023-10-18)
 
 
