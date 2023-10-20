@@ -1,7 +1,15 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { GeneralSection } from "@overbookd/festival-activity";
+import {
+  GeneralSection,
+  InChargeSection,
+  SecuritySection,
+  SignaSection,
+  Signage,
+  SupplySection,
+} from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "./period.dto";
+import { Adherent } from "@overbookd/contribution";
 
 export class GeneralSectionRequestDto implements Partial<GeneralSection> {
   @ApiProperty({
@@ -50,4 +58,63 @@ export class GeneralSectionRequestDto implements Partial<GeneralSection> {
     required: false,
   })
   timeWindows?: IProvidePeriod[];
+}
+
+export class InChargeSectionRequestDto implements Partial<InChargeSection> {
+  @ApiProperty({
+    description: "Festival activity adherent id in charge",
+    required: false,
+  })
+  adherent?: Adherent;
+
+  @ApiProperty({
+    description: "Festival activity team in charge",
+    required: false,
+  })
+  team?: string;
+
+  @ApiProperty({
+    description: "Festival activity contractors in charge",
+    isArray: true,
+    required: false,
+  })
+  contractors?: never[];
+}
+
+export class SignaSectionRequestDto implements Partial<SignaSection> {
+  @ApiProperty({
+    description: "Festival activity location",
+    required: false,
+  })
+  location?: string | null;
+
+  @ApiProperty({
+    description: "Festival activity signages",
+    isArray: true,
+    required: false,
+  })
+  signage?: Signage[];
+}
+
+export class SecuritySectionRequestDto implements Partial<SecuritySection> {
+  @ApiProperty({
+    description: "Festival activity special security need",
+    required: false,
+  })
+  specialNeed?: string | null;
+}
+
+export class SupplySectionRequestDto implements Partial<SupplySection> {
+  @ApiProperty({
+    description: "Festival activity electricity supply",
+    isArray: true,
+    required: false,
+  })
+  electricity?: never[];
+
+  @ApiProperty({
+    description: "Festival activity water supply",
+    required: false,
+  })
+  water?: string | null;
 }
