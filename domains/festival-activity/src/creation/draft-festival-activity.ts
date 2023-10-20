@@ -110,6 +110,19 @@ export class DraftFestivalActivity
     return DRAFT;
   }
 
+  get json(): DraftFestivalActivityRepresentation {
+    return {
+      id: this.id,
+      general: this.general,
+      inCharge: this.inCharge,
+      signa: this.signa,
+      security: this.security,
+      supply: this.supply,
+      inquiry: this.inquiry,
+      status: this.status,
+    };
+  }
+
   public static build(
     draftFestivalActivity: BaseFestivalActivity,
   ): DraftFestivalActivity {
@@ -145,16 +158,39 @@ export class DraftFestivalActivity
     return DraftFestivalActivity.build(builder);
   }
 
-  get json(): DraftFestivalActivityRepresentation {
-    return {
-      id: this.id,
-      general: this.general,
-      inCharge: this.inCharge,
-      signa: this.signa,
-      security: this.security,
-      supply: this.supply,
-      inquiry: this.inquiry,
-      status: this.status,
-    };
+  public changeInChargeSection(
+    inChargeUpdate: Partial<InChargeSection>,
+  ): DraftFestivalActivity {
+    const inCharge = { ...this.inCharge, ...inChargeUpdate };
+
+    const builder = { ...this.json, inCharge };
+    return DraftFestivalActivity.build(builder);
+  }
+
+  public changeSignaSection(
+    signaUpdate: Partial<SignaSection>,
+  ): DraftFestivalActivity {
+    const signa = { ...this.signa, ...signaUpdate };
+
+    const builder = { ...this.json, signa };
+    return DraftFestivalActivity.build(builder);
+  }
+
+  public changeSecuritySection(
+    securityUpdate: Partial<SecuritySection>,
+  ): DraftFestivalActivity {
+    const security = { ...this.security, ...securityUpdate };
+
+    const builder = { ...this.json, security };
+    return DraftFestivalActivity.build(builder);
+  }
+
+  public changeSupplySection(
+    supplyUpdate: Partial<SupplySection>,
+  ): DraftFestivalActivity {
+    const supply = { ...this.supply, ...supplyUpdate };
+
+    const builder = { ...this.json, supply };
+    return DraftFestivalActivity.build(builder);
   }
 }
