@@ -1,13 +1,9 @@
 import {
   IDefineMealDate,
   IExposeSharedMeal,
-  InMemoryAdherents,
-  InMemorySharedMeals,
-  MealSharing,
 } from "@overbookd/personal-account";
 import { actionTree, mutationTree } from "typed-vuex";
-
-const sharedMeals = new InMemorySharedMeals();
+import { MealSharingRepository } from "~/repositories/meal-sharing.repository";
 
 interface MealSharingState {
   sharedMeal?: IExposeSharedMeal;
@@ -31,29 +27,24 @@ export const actions = actionTree(
   {
     async offerSharedMeal(
       { commit, rootState },
-      {
-        menu,
-        date,
-        chefId,
-      }: { menu: string; date: IDefineMealDate; chefId: number },
+      creatMeal: { menu: string; date: IDefineMealDate },
     ) {
-      const { id, firstname, lastname, nickname } = rootState.user.me;
-      const adherent = { id, name: nickname ?? `${firstname} ${lastname}` };
+      const chefId = rootState.user.me.id;
 
-      const adherents = new InMemoryAdherents([adherent]);
-      const mealSharing = new MealSharing(sharedMeals, adherents);
-      const sharedMeal = await mealSharing.offer(menu, date, chefId);
-      commit("SET_SHARED_MEAL", sharedMeal);
+      const res = await MealSharingRepository.offer(this, {
+        ...creatMeal,
+        chefId,
+      });
+
+      if (!res) return;
+      commit("SET_SHARED_MEAL", res.data);
     },
 
-    async find({ state, dispatch, rootState }, mealId: number) {
-      if (state.sharedMeal?.id === mealId) return;
+    async find({ commit }, mealId: number) {
+      const res = await MealSharingRepository.find(this, mealId);
 
-      dispatch("offerSharedMeal", {
-        menu: "Couscous",
-        date: { day: new Date(), moment: "SOIR" },
-        chefId: rootState.user.me.id,
-      });
+      if (!res) return;
+      commit("SET_SHARED_MEAL", res.data);
     },
   },
 );
