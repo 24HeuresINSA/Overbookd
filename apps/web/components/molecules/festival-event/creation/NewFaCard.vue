@@ -1,21 +1,21 @@
 <template>
   <v-card>
-    <v-card-title>Ajouter une nouvelle FA</v-card-title>
+    <v-card-title>Ajouter une nouvelle Fiche Activité</v-card-title>
     <v-card-text>
-      <v-text-field v-model="faName" label="Nom de la FA"></v-text-field>
+      <v-text-field v-model="name" label="Nom de la FA"></v-text-field>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn :disabled="!faName" @click="createNewFa">Créer la FA</v-btn>
+      <v-btn :disabled="!name" @click="createNewFa">Créer la FA</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Fa, CreateFa } from "~/utils/models/fa.model";
+import { defineComponent } from "vue";
+import { FestivalActivityRepresentation } from "@overbookd/festival-activity";
 
-export default Vue.extend({
+export default defineComponent({
   name: "NewFaCard",
   props: {
     faId: {
@@ -24,23 +24,23 @@ export default Vue.extend({
     },
   },
   data: () => ({
-    faName: "",
+    name: "",
   }),
   computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
+    selectedActivity(): FestivalActivityRepresentation | null {
+      return this.$accessor.festivalActivity.selectedActivity;
     },
   },
   methods: {
     async createNewFa() {
-      if (!this.faName) return;
-      const blankFa: CreateFa = { name: this.faName };
+      if (!this.name) return;
+      const blankFa = { name: this.name };
 
-      await this.$accessor.fa.createFa(blankFa);
-      if (!this.mFA?.id) return;
+      await this.$accessor.festivalActivity.create(blankFa);
+      if (!this.selectedActivity?.id) return;
 
       this.$emit("close-dialog");
-      this.$router.push({ path: `/fa/${this.mFA.id}` });
+      this.$router.push({ path: `/fa/${this.selectedActivity.id}` });
     },
   },
 });

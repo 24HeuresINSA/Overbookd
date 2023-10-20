@@ -18,6 +18,7 @@
       "@overbookd/configuration": ["../../domains/configuration/src"],
       "@overbookd/contribution": ["../../domains/contribution/src"],
       "@overbookd/domain-events": ["../../utils/domain-events/src"],
+      "@overbookd/festival-activity": ["../../domains/festival-activity/src"],
       "@overbookd/list": ["../../libraries/list/src"],
       "@overbookd/period": ["../../libraries/period/src"],
       "@overbookd/permission": ["../../domains/permission/src"],

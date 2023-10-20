@@ -288,6 +288,9 @@ importers:
       '@overbookd/domain-events':
         specifier: workspace:*
         version: link:../../utils/domain-events
+      '@overbookd/festival-activity':
+        specifier: workspace:*
+        version: link:../../domains/festival-activity
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
