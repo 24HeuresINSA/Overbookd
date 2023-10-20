@@ -8,9 +8,9 @@ import {
 import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member";
 import {
   ALREADY_HAVE_TRANSACTIONS,
-  ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE,
+  ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
   IN_DEBT_ERROR_MESSAGE,
-  I_M_ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE,
+  I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
   I_M_IN_DEBT_ERROR_MESSAGE,
   WRONG_CREDENTIALS_ERROR_MESSAGE,
 } from "./forget-member.error";
@@ -86,7 +86,7 @@ describe("Forget member", () => {
               email: withTaskMember.email,
               password: withTaskMember.password,
             }),
-        ).rejects.toThrow(I_M_ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE);
+        ).rejects.toThrow(I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
       });
     });
     describe("when I'm in debt", () => {
@@ -133,7 +133,7 @@ describe("Forget member", () => {
       it("should indicate that we can't forget about assigned member", async () => {
         expect(
           async () => await forgetMember.forgetHim(withTaskMember.email),
-        ).rejects.toThrow(ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE);
+        ).rejects.toThrow(ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
       });
     });
     describe("when he is in debt", () => {

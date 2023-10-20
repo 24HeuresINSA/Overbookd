@@ -1,7 +1,7 @@
-export const I_M_ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE =
+export const I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE =
   "Nous ne pouvons pas t'effacer d'Overbookd.\nTu es affecté à une tâche à venir.\nContacte les responsables bénévoles pour t'aider.";
 
-export const ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE =
+export const ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE =
   "Nous ne pouvons pas l'effacer d'Overbookd.\nIel est affecté(e) à une tâche à venir.";
 
 export const I_M_IN_DEBT_ERROR_MESSAGE =
@@ -21,8 +21,8 @@ export class ForgetMemberError extends Error {}
 export class AssignedInFuturTask extends ForgetMemberError {
   constructor(isMyself: boolean = true) {
     const message = isMyself
-      ? I_M_ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE
-      : ASSINGED_IN_FUTUR_TASK_ERROR_MESSAGE;
+      ? I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE
+      : ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE;
 
     super(message);
   }
