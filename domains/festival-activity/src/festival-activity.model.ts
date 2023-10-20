@@ -1,12 +1,16 @@
+import { DRAFT } from "./festival-activity.core";
+import { DraftFestivalActivity } from "./creation/draft-festival-activity";
+import { DraftFestivalActivityRepresentation } from "./creation/draft-festival-activity.model";
 import {
-  DraftFestivalActivity,
-  DraftFestivalActivityRepresentation,
-} from "./creation/draft-festival-activity";
+  InReviewFestivalActivity,
+  InReviewFestivalActivityRepresentation,
+} from "./creation/in-review-festival-activity";
 
-export type FestivalActivity = DraftFestivalActivity /* | ... */;
+export type FestivalActivity = DraftFestivalActivity | InReviewFestivalActivity;
 
 export type FestivalActivityRepresentation =
-  DraftFestivalActivityRepresentation /* | ... */;
+  | DraftFestivalActivityRepresentation
+  | InReviewFestivalActivityRepresentation;
 
 export type PreviewFestivalActivity = {
   id: FestivalActivityRepresentation["id"];
@@ -19,3 +23,9 @@ export type PreviewFestivalActivity = {
 export type CreateFestivalActivityForm = {
   name: string;
 };
+
+export function isDraft(
+  festivalActivity: FestivalActivity,
+): festivalActivity is DraftFestivalActivity {
+  return festivalActivity.status === DRAFT;
+}
