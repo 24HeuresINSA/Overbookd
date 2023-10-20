@@ -15,9 +15,12 @@ export function castActivityWithDate(
   };
 }
 
+type General = FestivalActivityRepresentation["general"];
+type Inquiry = FestivalActivityRepresentation["inquiry"];
+
 function castGeneralSectionWithDate(
-  general: HttpStringified<FestivalActivityRepresentation["general"]>,
-): FestivalActivityRepresentation["general"] {
+  general: HttpStringified<General>,
+): General {
   const timeWindows = general.timeWindows.map((tw) => ({
     ...tw,
     start: new Date(tw.start),
@@ -30,8 +33,8 @@ function castGeneralSectionWithDate(
 }
 
 function castInquirySectionWithDate(
-  inquiry: HttpStringified<FestivalActivityRepresentation["inquiry"]>,
-): FestivalActivityRepresentation["inquiry"] {
+  inquiry: HttpStringified<Inquiry>,
+): Inquiry {
   const timeWindows = inquiry.timeWindows.map((tw) => ({
     ...tw,
     start: new Date(tw.start),
