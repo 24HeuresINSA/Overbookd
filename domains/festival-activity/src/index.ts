@@ -5,18 +5,17 @@ export type {
   Signage,
   ElectricitySupply,
   Inquiry,
+  InquirySection,
+} from "./festival-activity.core";
+export type {
   DraftFestivalActivityRepresentation,
   GeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
   SupplySection,
-  InquirySection,
-} from "./creation/draft-festival-activity";
-export {
-  DraftFestivalActivity,
-  DRAFT,
-} from "./creation/draft-festival-activity";
+} from "./creation/draft-festival-activity.model";
+export { DraftFestivalActivity } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,
   PreviewFestivalActivity,

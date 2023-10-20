@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   DraftFestivalActivity,
-  GeneralSection,
 } from "../creation/draft-festival-activity";
+import { GeneralSection } from "../creation/draft-festival-activity.model";
 import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";

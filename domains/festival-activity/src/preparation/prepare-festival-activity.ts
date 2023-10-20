@@ -4,9 +4,9 @@ import {
   SecuritySection,
   SignaSection,
   SupplySection,
-} from "../creation/draft-festival-activity";
+} from "../creation/draft-festival-activity.model";
 import { FestivalActivityNotFound } from "../festival-activity.error";
-import { FestivalActivity } from "../festival-activity.model";
+import { FestivalActivity, isDraft } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";
 
 export class PrepareFestivalActivity {
@@ -20,6 +20,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeGeneralSection(generalSection);
 
@@ -32,6 +33,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeInChargeSection(inChargeSection);
 
@@ -44,6 +46,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeSignaSection(signaSection);
 
@@ -56,6 +59,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeSecuritySection(securitySection);
 
@@ -68,6 +72,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeSupplySection(supplySection);
 
