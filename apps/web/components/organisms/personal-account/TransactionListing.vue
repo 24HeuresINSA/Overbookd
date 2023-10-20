@@ -129,6 +129,10 @@ export default defineComponent({
     justify-content: space-between;
     flex-wrap: nowrap;
     gap: 20px;
+
+    @media screen and (max-width: $mobile-max-width) {
+      gap: 10px;
+    }
   }
 
   &__context {
@@ -141,6 +145,11 @@ export default defineComponent({
     font-size: 2rem;
     min-width: 15%;
     text-align: right;
+
+    @media screen and (max-width: $mobile-max-width) {
+      font-size: 1.6rem;
+      min-width: 25%;
+    }
   }
 }
 
