@@ -3,7 +3,6 @@
     <SharedMealCard
       v-if="shared && users.length"
       :shared="shared"
-      :chef-personal-data="chefPersonalData"
     ></SharedMealCard>
   </div>
 </template>
@@ -27,11 +26,6 @@ export default Vue.extend({
       const shared = this.$accessor.mealSharing.sharedMeal;
       if (!shared) return undefined;
       return shared;
-    },
-    chefPersonalData() {
-      return this.$accessor.user.users.find(
-        ({ id }) => id === this.$accessor.mealSharing.sharedMeal?.chef.id,
-      );
     },
   },
   mounted() {

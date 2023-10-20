@@ -1,7 +1,7 @@
 <template>
   <v-card class="shared-meal">
     <v-card-title class="meal-title">
-      Repas partage du <wbr /> {{ shared.meal.date }}
+      Repas partagé du <wbr /> {{ shared.meal.date }}
     </v-card-title>
     <v-card-text>
       <v-divider role="presentation" />
@@ -17,7 +17,7 @@
       <v-divider role="presentation" />
       <div class="menu">
         <h3>Au menu</h3>
-        <p>{{ shared?.meal?.menu }}</p>
+        <p>{{ shared.meal.menu }}</p>
       </div>
       <v-divider role="presentation" />
       <div class="shotgun">
@@ -43,7 +43,6 @@
 import { Adherent, IExposeSharedMeal } from "@overbookd/personal-account";
 import Vue from "vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
-import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 
 export default Vue.extend({
   name: "SharedMealCard",
@@ -51,10 +50,6 @@ export default Vue.extend({
   props: {
     shared: {
       type: Object as () => IExposeSharedMeal,
-      required: true,
-    },
-    chefPersonalData: {
-      type: Object as () => UserPersonalDataWithProfilePicture,
       required: true,
     },
   },
@@ -65,6 +60,11 @@ export default Vue.extend({
     },
     hasShotgun(): boolean {
       return this.shared.hasShotgun(this.me) ?? false;
+    },
+    chefPersonalData() {
+      return this.$accessor.user.users.find(
+        ({ id }) => id === this.$accessor.mealSharing.sharedMeal?.chef.id,
+      );
     },
   },
 });
