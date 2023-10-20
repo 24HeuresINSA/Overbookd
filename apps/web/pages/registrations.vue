@@ -37,6 +37,12 @@
         <TeamChip v-for="team of item.teams" :key="team" :team="team" />
       </template>
 
+      <template #item.action="{ item }">
+        <v-btn color="primary" @click="forgetHim(item.email)">
+          Supprimer l'inscription
+        </v-btn>
+      </template>
+
       <template #no-data> Aucun nouvel arrivant </template>
     </v-data-table>
 
@@ -108,7 +114,8 @@ export default Vue.extend({
       { text: "Nom", value: "lastname" },
       { text: "Email", value: "email" },
       { text: "Date d'inscription", value: "registeredAt" },
-      { text: "Equipes", value: "teams", sortable: false },
+      { text: "Équipes", value: "teams", sortable: false },
+      { text: "Action", value: "action", sortable: false },
     ],
     last30DaysNewcomers: true,
     searchNewcomer: "",
@@ -163,6 +170,9 @@ export default Vue.extend({
     isMatchingNameSearch(search: string): Filter {
       return ({ searchable }: Searchable<IDefineANewcomer>) =>
         searchable.includes(search);
+    },
+    forgetHim(email: string) {
+      this.$accessor.registration.forgetHim(email);
     },
     isMatchingRegistrationDateLimit(dateLimit: number): Filter {
       return ({ registeredAt }: IDefineANewcomer) => {

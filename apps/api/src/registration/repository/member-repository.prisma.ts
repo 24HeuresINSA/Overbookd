@@ -71,4 +71,12 @@ export class PrismaMemberRepository implements MemberRepository {
 
     return { id: user.id };
   }
+
+  async getId(email: string): Promise<number | null> {
+    const user = await this.prisma.user.findFirst({
+      where: { email },
+      select: { id: true },
+    });
+    return user?.id ?? null;
+  }
 }

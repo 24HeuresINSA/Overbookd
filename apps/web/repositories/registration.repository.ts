@@ -41,4 +41,8 @@ export class RegistrationRepository {
     const body = { token, credentials };
     return context.$axios.post<void>(`${this.basePath}/forget`, body);
   }
+
+  static forgetHim(context: Context, email: string) {
+    return context.$axios.delete<void>(`${this.basePath}/forget/${email}`);
+  }
 }

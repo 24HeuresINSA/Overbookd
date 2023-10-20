@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Logger,
+  Param,
   Post,
   UseFilters,
   UseGuards,
@@ -107,7 +109,18 @@ export class RegistrationController {
     status: 201,
     description: "Forget request done",
   })
-  forgetMember(@Body() { token, credentials }: ForgetRequestDto) {
-    return this.registrationService.forget(credentials, token);
+  forgetMe(@Body() { token, credentials }: ForgetRequestDto) {
+    return this.registrationService.forgetMe(credentials, token);
+  }
+
+  @Delete("forget/:email")
+  @UseFilters(new ForgetMemberErrorFilter())
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Forget request done",
+  })
+  forgetHim(@Param("email") email: string): Promise<void> {
+    return this.registrationService.forgetHim(email);
   }
 }

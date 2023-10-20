@@ -75,4 +75,11 @@ export class InMemoryMemberRepository implements MemberRepository {
 
     return Promise.resolve(member ? { id: member.id } : null);
   }
+
+  getId(email: string): Promise<number | null> {
+    const member = this.members.find((member) => member.email === email);
+    if (!member) return Promise.resolve(null);
+
+    return Promise.resolve(member.id);
+  }
 }

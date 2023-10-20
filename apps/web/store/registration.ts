@@ -124,6 +124,12 @@ export const actions = actionTree(
         },
       );
     },
+
+    async forgetHim({ dispatch }, email: string) {
+      const res = await safeCall(this, registrationRepo.forgetHim(this, email));
+      if (!res) return;
+      dispatch("getNewcomers");
+    },
   },
 );
 
