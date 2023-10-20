@@ -71,7 +71,6 @@ export default defineComponent({
       await this.$accessor.mealSharing.offerSharedMeal({
         menu: this.menu,
         date: this.date,
-        chefId: this.me.id,
       });
       this.$router.push({
         path: `/meal-sharing/${this.$accessor.mealSharing.sharedMeal?.id}`,
