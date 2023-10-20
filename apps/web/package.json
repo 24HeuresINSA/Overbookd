@@ -41,6 +41,7 @@
     "@overbookd/configuration": "workspace:*",
     "@overbookd/contribution": "workspace:*",
     "@overbookd/domain-events": "workspace:*",
+    "@overbookd/festival-activity": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/period": "workspace:*",
     "@overbookd/permission": "workspace:*",

@@ -21,11 +21,13 @@ import { RegistrationRepository } from "./registration.repository";
 import { ContributionRepository } from "./contribution.repository";
 import { AlertRepository } from "./alert.repository";
 import { NotificationRepository } from "./notification.repository";
+import { FestivalActivityRepository } from "./festival-activity.repository";
 
 const repositories = {
   user: UserRepository,
   transaction: TransactionRepository,
   FA: FaRepository,
+  festivalActivity: FestivalActivityRepository,
   FT: FtRepository,
   auth: AuthRepository,
   team: TeamRepository,
@@ -56,6 +58,7 @@ export const RepoFactory = {
   TransactionRepository,
   UserRepository,
   FaRepository,
+  FestivalActivityRepository,
   FtRepository,
   AuthRepository,
   TeamRepository,

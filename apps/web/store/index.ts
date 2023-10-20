@@ -9,6 +9,7 @@ import * as charismaPeriod from "./charismaPeriod";
 import * as configuration from "./configuration";
 import * as dialog from "./dialog";
 import * as fa from "./fa";
+import * as festivalActivity from "./festivalActivity";
 import * as ft from "./ft";
 import * as gearRequest from "./gearRequest";
 import * as inventory from "./inventory";
@@ -53,6 +54,7 @@ export const accessorType = getAccessorType({
     user,
     transaction,
     fa,
+    festivalActivity,
     ft,
     team,
     assignment,
