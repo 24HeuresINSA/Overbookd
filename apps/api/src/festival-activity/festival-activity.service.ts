@@ -3,7 +3,7 @@ import {
   FestivalActivity,
   FestivalActivityRepository,
   GeneralSection,
-  InChargeSection,
+  InChargeSectionForm,
   PrepareFestivalActivity,
   PreviewFestivalActivity,
   SecuritySection,
@@ -46,11 +46,18 @@ export class FestivalActivityService {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
 
-  saveInChargeSection(
+  async saveInChargeSection(
     id: number,
-    inCharge: Partial<InChargeSection>,
+    inCharge: Partial<InChargeSectionForm>,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.updateInChargeSection(id, inCharge);
+    const builder = {
+      adherent: inCharge.adherentId
+        ? await this.adherents.find(inCharge.adherentId)
+        : undefined,
+      team: inCharge.team,
+      contractors: inCharge.contractors,
+    };
+    return this.prepareFestivalActivity.updateInChargeSection(id, builder);
   }
 
   saveSignaSection(

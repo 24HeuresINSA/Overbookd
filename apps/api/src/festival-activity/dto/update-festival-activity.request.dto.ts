@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   GeneralSection,
-  InChargeSection,
+  InChargeSectionForm,
   SecuritySection,
   SignaSection,
   Signage,
@@ -9,7 +9,6 @@ import {
 } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "./period.dto";
-import { Adherent } from "@overbookd/contribution";
 
 export class GeneralSectionRequestDto implements Partial<GeneralSection> {
   @ApiProperty({
@@ -60,12 +59,12 @@ export class GeneralSectionRequestDto implements Partial<GeneralSection> {
   timeWindows?: IProvidePeriod[];
 }
 
-export class InChargeSectionRequestDto implements Partial<InChargeSection> {
+export class InChargeSectionRequestDto implements Partial<InChargeSectionForm> {
   @ApiProperty({
     description: "Festival activity adherent id in charge",
     required: false,
   })
-  adherent?: Adherent;
+  adherentId?: number;
 
   @ApiProperty({
     description: "Festival activity team in charge",

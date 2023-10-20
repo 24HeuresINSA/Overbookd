@@ -19,6 +19,7 @@ export {
 } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,
+  InChargeSectionForm,
   PreviewFestivalActivity,
   FestivalActivity,
   FestivalActivityRepresentation,
