@@ -1,26 +1,26 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  GeneralSection,
-  InChargeSectionForm,
-  SecuritySection,
+  PrepareGeneralSection,
+  PrepareInChargeSection,
+  PrepareSecuritySection,
+  PrepareSupplySection,
   SignaSection,
-  Signage,
-  SupplySection,
 } from "@overbookd/festival-activity";
-import { IProvidePeriod } from "@overbookd/period";
-import { PeriodDto } from "./period.dto";
+import { IsOptional } from "class-validator";
 
-export class GeneralSectionRequestDto implements Partial<GeneralSection> {
+export class GeneralSectionRequestDto implements PrepareGeneralSection {
   @ApiProperty({
     description: "Festival activity name",
     required: false,
   })
+  @IsOptional()
   name?: string;
 
   @ApiProperty({
     description: "Festival activity presentation",
     required: false,
   })
+  @IsOptional()
   description?: string | null;
 
   @ApiProperty({
@@ -28,6 +28,7 @@ export class GeneralSectionRequestDto implements Partial<GeneralSection> {
     isArray: true,
     required: false,
   })
+  @IsOptional()
   categories?: string[];
 
   @ApiProperty({
@@ -35,12 +36,14 @@ export class GeneralSectionRequestDto implements Partial<GeneralSection> {
       "Do we whant to publish this festival activity to our web site",
     required: false,
   })
+  @IsOptional()
   toPublish?: boolean;
 
   @ApiProperty({
     description: "Festival activity photo link",
     required: false,
   })
+  @IsOptional()
   photoLink?: string | null;
 
   @ApiProperty({
@@ -48,36 +51,24 @@ export class GeneralSectionRequestDto implements Partial<GeneralSection> {
       "Define which festival activities are most important ones (i.e. are flagship)",
     required: false,
   })
+  @IsOptional()
   isFlagship?: boolean;
-
-  @ApiProperty({
-    description: "time windows during which this festival activity occurs",
-    isArray: true,
-    type: PeriodDto,
-    required: false,
-  })
-  timeWindows?: IProvidePeriod[];
 }
 
-export class InChargeSectionRequestDto implements Partial<InChargeSectionForm> {
+export class InChargeSectionRequestDto implements PrepareInChargeSection {
   @ApiProperty({
     description: "Festival activity adherent id in charge",
     required: false,
   })
+  @IsOptional()
   adherentId?: number;
 
   @ApiProperty({
     description: "Festival activity team in charge",
     required: false,
   })
+  @IsOptional()
   team?: string;
-
-  @ApiProperty({
-    description: "Festival activity contractors in charge",
-    isArray: true,
-    required: false,
-  })
-  contractors?: never[];
 }
 
 export class SignaSectionRequestDto implements Partial<SignaSection> {
@@ -85,35 +76,24 @@ export class SignaSectionRequestDto implements Partial<SignaSection> {
     description: "Festival activity location",
     required: false,
   })
+  @IsOptional()
   location?: string | null;
-
-  @ApiProperty({
-    description: "Festival activity signages",
-    isArray: true,
-    required: false,
-  })
-  signage?: Signage[];
 }
 
-export class SecuritySectionRequestDto implements Partial<SecuritySection> {
+export class SecuritySectionRequestDto implements PrepareSecuritySection {
   @ApiProperty({
     description: "Festival activity special security need",
     required: false,
   })
+  @IsOptional()
   specialNeed?: string | null;
 }
 
-export class SupplySectionRequestDto implements Partial<SupplySection> {
-  @ApiProperty({
-    description: "Festival activity electricity supply",
-    isArray: true,
-    required: false,
-  })
-  electricity?: never[];
-
+export class SupplySectionRequestDto implements PrepareSupplySection {
   @ApiProperty({
     description: "Festival activity water supply",
     required: false,
   })
+  @IsOptional()
   water?: string | null;
 }

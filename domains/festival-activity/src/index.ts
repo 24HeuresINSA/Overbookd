@@ -19,7 +19,6 @@ export {
 } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,
-  InChargeSectionForm,
   PreviewFestivalActivity,
   FestivalActivity,
   FestivalActivityRepresentation,
@@ -27,3 +26,10 @@ export type {
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
 export type { FestivalActivityRepository } from "./festival-activity.repository";
 export { InMemoryFestivalActivityRepository } from "./festival-activity-repository.inmemory";
+export type {
+  PrepareGeneralSection,
+  PrepareInChargeSection,
+  PrepareSignaSection,
+  PrepareSecuritySection,
+  PrepareSupplySection,
+} from "./preparation/prepare-festival-activity.model";

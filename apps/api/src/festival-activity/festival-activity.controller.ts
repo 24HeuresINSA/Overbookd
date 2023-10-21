@@ -126,9 +126,9 @@ export class FestivalActivityController {
   })
   saveGeneralSection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() generalSection: GeneralSectionRequestDto,
+    @Body() general: GeneralSectionRequestDto,
   ): Promise<FestivalActivityRepresentation> {
-    return this.festivalActivityService.saveGeneralSection(id, generalSection);
+    return this.festivalActivityService.saveGeneralSection(id, general);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

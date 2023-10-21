@@ -1,7 +1,6 @@
 import {
   DraftFestivalActivity,
   DraftFestivalActivityRepresentation,
-  InChargeSection,
 } from "./creation/draft-festival-activity";
 
 export type FestivalActivity = DraftFestivalActivity /* | ... */;
@@ -19,8 +18,4 @@ export type PreviewFestivalActivity = {
 
 export type CreateFestivalActivityForm = {
   name: string;
-};
-
-export type InChargeSectionForm = Omit<InChargeSection, "adherent"> & {
-  adherentId: number;
 };
