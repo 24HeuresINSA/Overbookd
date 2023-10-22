@@ -32,7 +32,13 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
-import { GeneralSectionRequestDto } from "./dto/update-festival-activity.request.dto";
+import {
+  GeneralSectionRequestDto,
+  InChargeSectionRequestDto,
+  SecuritySectionRequestDto,
+  SignaSectionRequestDto,
+  SupplySectionRequestDto,
+} from "./dto/update-festival-activity.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -120,8 +126,108 @@ export class FestivalActivityController {
   })
   saveGeneralSection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() generalSection: GeneralSectionRequestDto,
+    @Body() general: GeneralSectionRequestDto,
   ): Promise<FestivalActivityRepresentation> {
-    return this.festivalActivityService.saveGeneralSection(id, generalSection);
+    return this.festivalActivityService.saveGeneralSection(id, general);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Patch(":id/in-charge")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "In charge section of festival activity to save",
+    type: InChargeSectionRequestDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  saveInChargeSection(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() inCharge: InChargeSectionRequestDto,
+  ): Promise<FestivalActivityRepresentation> {
+    return this.festivalActivityService.saveInChargeSection(id, inCharge);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Patch(":id/signa")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Signa section of festival activity to save",
+    type: SignaSectionRequestDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  saveSignaSection(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() signa: SignaSectionRequestDto,
+  ): Promise<FestivalActivityRepresentation> {
+    return this.festivalActivityService.saveSignaSection(id, signa);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Patch(":id/security")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Security section of festival activity to save",
+    type: SecuritySectionRequestDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  saveSecuritySection(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() security: SecuritySectionRequestDto,
+  ): Promise<FestivalActivityRepresentation> {
+    return this.festivalActivityService.saveSecuritySection(id, security);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Patch(":id/supply")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Supply section of festival activity to save",
+    type: SupplySectionRequestDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  saveSupplySection(
+    @Param("id", ParseIntPipe) id: number,
+    @Body() supply: SupplySectionRequestDto,
+  ): Promise<FestivalActivityRepresentation> {
+    return this.festivalActivityService.saveSupplySection(id, supply);
   }
 }
