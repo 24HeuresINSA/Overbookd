@@ -4,12 +4,8 @@
     <div class="opacity-filter"></div>
     <v-form>
       <v-container class="form-container">
-        <v-row>
-          <v-img
-            src="img/logo/logo_desktop.png"
-            alt="overbookd"
-            class="logo"
-          ></v-img>
+        <v-row class="logo">
+          <v-img src="img/logo/logo_home.png" alt="overbookd" />
         </v-row>
         <v-row class="version justify-center">
           <h2>{{ version }}</h2>
@@ -214,6 +210,10 @@ export default Vue.extend({
 </script>
 
 <style scoped lang="scss">
+.logo {
+  width: 20em;
+  height: 20em;
+}
 .img-background {
   position: absolute;
   left: 0;
