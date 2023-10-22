@@ -1,3 +1,4 @@
+import { IProvidePeriod } from "@overbookd/period";
 import {
   InChargeSection,
   SecuritySection,
@@ -24,6 +25,28 @@ export class PrepareFestivalActivity {
 
     const updatedFA = existingFA.changeGeneralSection(generalSection);
 
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addGeneralTimeWindow(
+    faId: number,
+    period: IProvidePeriod,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.festivalActivities.findById(faId);
+    if (!existingFA) throw new FestivalActivityNotFound(faId);
+
+    const updatedFA = existingFA.addGeneralTimeWindow(period);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeGeneralTimeWindow(
+    faId: number,
+    timeWindowId: string,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.festivalActivities.findById(faId);
+    if (!existingFA) throw new FestivalActivityNotFound(faId);
+
+    const updatedFA = existingFA.removeGeneralTimeWindow(timeWindowId);
     return this.festivalActivities.save(updatedFA);
   }
 

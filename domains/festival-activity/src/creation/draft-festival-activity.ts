@@ -67,6 +67,23 @@ export class DraftFestivalActivity
     return DraftFestivalActivity.build(builder);
   }
 
+  public addGeneralTimeWindow(
+    timeWindow: IProvidePeriod,
+  ): DraftFestivalActivity {
+    const timeWindowForm = { faId: this.id, ...timeWindow };
+    const general = this.general.addTimeWindow(timeWindowForm);
+
+    const builder = { ...this.json, general };
+    return DraftFestivalActivity.build(builder);
+  }
+
+  public removeGeneralTimeWindow(timeWIndowId: string): DraftFestivalActivity {
+    const general = this.general.removeTimeWindow(timeWIndowId);
+
+    const builder = { ...this.json, general };
+    return DraftFestivalActivity.build(builder);
+  }
+
   public changeInChargeSection(
     inChargeUpdate: Partial<InChargeSection>,
   ): DraftFestivalActivity {
