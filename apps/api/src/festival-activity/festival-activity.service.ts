@@ -3,7 +3,6 @@ import {
   FestivalActivity,
   FestivalActivityRepository,
   GeneralSection,
-  InChargeSection,
   PrepareFestivalActivity,
   PrepareInChargeSection,
   PreviewFestivalActivity,
@@ -51,13 +50,10 @@ export class FestivalActivityService {
     id: number,
     inCharge: PrepareInChargeSection,
   ): Promise<FestivalActivity> {
-    const builder: Partial<InChargeSection> = {};
-    if (inCharge.adherentId) {
-      builder.adherent = await this.adherents.find(inCharge.adherentId);
-    }
-    if (inCharge.team) {
-      builder.team = inCharge.team;
-    }
+    const adherent = inCharge.adherentId
+      ? { adherent: await this.adherents.find(inCharge.adherentId) }
+      : {};
+    const builder = { ...inCharge, ...adherent };
     return this.prepareFestivalActivity.updateInChargeSection(id, builder);
   }
 
