@@ -6,7 +6,7 @@
       <v-container class="form-container">
         <v-row>
           <v-img
-            src="img/logo/overbookd_logo_blanc.png"
+            src="img/logo/logo_desktop.png"
             alt="overbookd"
             class="logo"
           ></v-img>
