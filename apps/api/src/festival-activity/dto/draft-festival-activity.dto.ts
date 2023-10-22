@@ -11,13 +11,34 @@ import type {
   Signage,
   ElectricitySupply,
   Inquiry,
+  GeneralSectionRepresentation,
+  GeneralTimeWindowRepresentation,
 } from "@overbookd/festival-activity";
 import { DRAFT } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
 
-class GeneralSectionDto implements GeneralSection {
+class GeneralTimeWindowDto implements GeneralTimeWindowRepresentation {
+  @ApiProperty({
+    description: "Festival activity time window id",
+  })
+  id: string;
+
+  @ApiProperty({
+    description: "Festival activity time window start date",
+    type: Date,
+  })
+  start: Date;
+
+  @ApiProperty({
+    description: "Festival activity time window end date",
+    type: Date,
+  })
+  end: Date;
+}
+
+class GeneralSectionDto implements GeneralSectionRepresentation {
   @ApiProperty({
     description: "Festival activity name",
   })
@@ -56,9 +77,9 @@ class GeneralSectionDto implements GeneralSection {
   @ApiProperty({
     description: "time windows during which this festival activity occurs",
     isArray: true,
-    type: PeriodDto,
+    type: GeneralTimeWindowDto,
   })
-  timeWindows: IProvidePeriod[];
+  timeWindows: GeneralTimeWindowRepresentation[];
 }
 
 class InChargeSectionDto implements InChargeSection {

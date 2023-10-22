@@ -16,7 +16,10 @@ export type {
   SupplySection,
 } from "./creation/draft-festival-activity.model";
 export { GeneralSection } from "./creation/general-section";
-export type { GeneralSectionRepresentation } from "./creation/general-section";
+export type {
+  GeneralSectionRepresentation,
+  GeneralTimeWindowRepresentation,
+} from "./creation/general-section";
 export { DraftFestivalActivity } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,

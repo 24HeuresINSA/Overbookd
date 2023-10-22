@@ -7,6 +7,10 @@ import {
   GeneralSection,
   GeneralSectionRepresentation,
 } from "../creation/general-section";
+import {
+  GENERAL_TIME_WINDOW_NOT_FOUND_ERROR_MESSAGE,
+  GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE,
+} from "../festival-activity.error";
 
 const noel = {
   id: 1,
@@ -182,6 +186,94 @@ describe("General section of festival activity preparation", () => {
 
         expect(general.name).toBe(updateName.name);
         expect(general.description).toBe(updateDescription.description);
+      });
+    });
+  });
+
+  describe("when adherent want to add a time window", () => {
+    it("should add the time window", async () => {
+      const timeWindowToAdd = {
+        start: new Date("2023-05-17 09:00"),
+        end: new Date("2023-05-17 14:00"),
+      };
+
+      const { general } = await prepareFestivalActivity.addGeneralTimeWindow(
+        escapeGameActivity.id,
+        timeWindowToAdd,
+      );
+
+      const timeWindowId = `${
+        escapeGameActivity.id
+      }-${timeWindowToAdd.start.getTime()}-${timeWindowToAdd.end.getTime()}`;
+
+      const timeWindow = general.timeWindows.find(
+        (tw) => tw.id === timeWindowId,
+      );
+
+      expect(timeWindow?.id).toEqual(timeWindowId);
+      expect(timeWindow?.start).toEqual(timeWindowToAdd.start);
+      expect(timeWindow?.end).toEqual(timeWindowToAdd.end);
+    });
+
+    describe("when adherent want to add a time window that already exists", () => {
+      it("should should indicate that the time window already exists", async () => {
+        const timeWindowToAdd = {
+          start: new Date("2023-05-17 09:00"),
+          end: new Date("2023-05-17 14:00"),
+        };
+
+        await prepareFestivalActivity.addGeneralTimeWindow(
+          escapeGameActivity.id,
+          timeWindowToAdd,
+        );
+
+        await expect(
+          prepareFestivalActivity.addGeneralTimeWindow(
+            escapeGameActivity.id,
+            timeWindowToAdd,
+          ),
+        ).rejects.toThrow(GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE);
+      });
+    });
+  });
+
+  describe("when adherent want to remove a time window", () => {
+    it("should remove the time window", async () => {
+      const timeWindowToAdd = {
+        start: new Date("2023-05-17 09:00"),
+        end: new Date("2023-05-17 14:00"),
+      };
+
+      await prepareFestivalActivity.addGeneralTimeWindow(
+        escapeGameActivity.id,
+        timeWindowToAdd,
+      );
+
+      const timeWindowId = `${
+        escapeGameActivity.id
+      }-${timeWindowToAdd.start.getTime()}-${timeWindowToAdd.end.getTime()}`;
+
+      const { general } = await prepareFestivalActivity.removeGeneralTimeWindow(
+        escapeGameActivity.id,
+        timeWindowId,
+      );
+
+      const timeWindow = general.timeWindows.find(
+        (tw) => tw.id === timeWindowId,
+      );
+      expect(timeWindow).toBeUndefined();
+    });
+
+    describe("when adherent want to remove a time window that does not exist", () => {
+      it("should should indicate that the time window does not exist", async () => {
+        const timeWindowId = `${escapeGameActivity.id}-123456789-987654321}`;
+
+        await expect(
+          prepareFestivalActivity.removeGeneralTimeWindow(
+            escapeGameActivity.id,
+            timeWindowId,
+          ),
+        ).rejects.toThrow(GENERAL_TIME_WINDOW_NOT_FOUND_ERROR_MESSAGE);
       });
     });
   });
