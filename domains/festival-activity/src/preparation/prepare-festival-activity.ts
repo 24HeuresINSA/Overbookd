@@ -1,10 +1,10 @@
 import {
-  GeneralSection,
   InChargeSection,
   SecuritySection,
   SignaSection,
   SupplySection,
 } from "../creation/draft-festival-activity.model";
+import { GeneralSectionRepresentation } from "../creation/general-section";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { FestivalActivity, isDraft } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";
@@ -16,7 +16,7 @@ export class PrepareFestivalActivity {
 
   async updateGeneralSection(
     id: number,
-    generalSection: Partial<GeneralSection>,
+    generalSection: Partial<GeneralSectionRepresentation>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);

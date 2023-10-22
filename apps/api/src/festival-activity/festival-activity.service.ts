@@ -3,7 +3,7 @@ import {
   DraftFestivalActivity,
   FestivalActivity,
   FestivalActivityRepository,
-  GeneralSection,
+  GeneralSectionRepresentation,
   PrepareFestivalActivity,
   PrepareInChargeSection,
   PreviewFestivalActivity,
@@ -45,7 +45,7 @@ export class FestivalActivityService {
 
   saveGeneralSection(
     id: number,
-    general: Partial<GeneralSection>,
+    general: Partial<GeneralSectionRepresentation>,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }

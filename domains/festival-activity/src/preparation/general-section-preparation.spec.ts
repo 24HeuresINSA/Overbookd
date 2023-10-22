@@ -1,9 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { DraftFestivalActivity } from "../creation/draft-festival-activity";
-import { GeneralSection } from "../creation/draft-festival-activity.model";
 import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
+import {
+  GeneralSection,
+  GeneralSectionRepresentation,
+} from "../creation/general-section";
 
 const noel = {
   id: 1,
@@ -11,7 +14,7 @@ const noel = {
   firstname: "Noel",
 };
 
-const escapeGameGeneral: GeneralSection = {
+const escapeGameGeneral: GeneralSectionRepresentation = {
   name: "Escape Game",
   description: null,
   toPublish: true,
@@ -35,7 +38,7 @@ describe("General section of festival activity preparation", () => {
     });
     escapeGameActivity = DraftFestivalActivity.build({
       ...escapeGameCreation,
-      general: escapeGameGeneral,
+      general: GeneralSection.build(escapeGameGeneral),
     });
     const festivalActivities = [escapeGameActivity];
 
