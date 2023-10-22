@@ -10,6 +10,7 @@ import {
   SecuritySection,
   SupplySection,
 } from "./draft-festival-activity.model";
+import { GeneralSectionRepresentation } from "./general-section";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
@@ -59,19 +60,9 @@ export class DraftFestivalActivity
   }
 
   public changeGeneralSection(
-    generalUpdate: Partial<GeneralSection>,
+    generalUpdate: Partial<GeneralSectionRepresentation>,
   ): DraftFestivalActivity {
-    const privateFestivalActivity = {
-      toPublish: false,
-      photoLink: null,
-      isFlagship: false,
-    };
-    const cleanedUpdate =
-      generalUpdate.toPublish === false
-        ? { ...generalUpdate, ...privateFestivalActivity }
-        : generalUpdate;
-    const general = { ...this.general, ...cleanedUpdate };
-
+    const general = this.general.update(generalUpdate);
     const builder = { ...this.json, general };
     return DraftFestivalActivity.build(builder);
   }

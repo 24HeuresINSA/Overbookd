@@ -10,12 +10,13 @@ export type {
 export { DRAFT } from "./festival-activity.core";
 export type {
   DraftFestivalActivityRepresentation,
-  GeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
   SupplySection,
 } from "./creation/draft-festival-activity.model";
+export { GeneralSection } from "./creation/general-section";
+export type { GeneralSectionRepresentation } from "./creation/general-section";
 export { DraftFestivalActivity } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,

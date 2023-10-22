@@ -1,6 +1,5 @@
 import { DraftFestivalActivity } from "./draft-festival-activity";
 import {
-  GeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
@@ -8,6 +7,7 @@ import {
 } from "./draft-festival-activity.model";
 import { InquirySection } from "../festival-activity.core";
 import { Adherent } from "../festival-activity.core";
+import { GeneralSection } from "./general-section";
 
 function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1_000_000; i++) {
@@ -33,7 +33,7 @@ export class FestivalActivityFactory {
   }: CreateFestivalActivity): DraftFestivalActivity {
     const activity = {
       id: this.idGenerator.next().value,
-      general: this.generateGeneralSection(name),
+      general: GeneralSection.create(name),
       inCharge: this.generateInChargeSection(author),
       signa: this.generateSignaSection(),
       security: this.generateSecuritySection(),
@@ -42,18 +42,6 @@ export class FestivalActivityFactory {
     };
 
     return DraftFestivalActivity.build(activity);
-  }
-
-  private generateGeneralSection(name: string): GeneralSection {
-    return {
-      name,
-      description: null,
-      categories: [],
-      toPublish: false,
-      photoLink: null,
-      isFlagship: false,
-      timeWindows: [],
-    };
   }
 
   private generateInChargeSection(author: Adherent): InChargeSection {
