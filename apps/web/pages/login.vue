@@ -5,7 +5,7 @@
     <v-form>
       <v-container class="form-container">
         <v-row class="logo">
-          <v-img src="img/logo/logo_home.png" alt="overbookd" />
+          <v-img src="img/logo/logo_home_white.png" alt="overbookd" />
         </v-row>
         <v-row class="version justify-center">
           <h2>{{ version }}</h2>
@@ -134,6 +134,10 @@ const BACKGROUNDS_URL = [
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_fuzzcall.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img__tremplin_24h_2020_photoartistes.jpg",
   "https://www.24heures.org/wp-content/uploads/2022/01/img_24h_45e_comah.jpg",
+  "https://www.24heures.org/wp-content/uploads/2023/05/img_24h_48e_confettis-scaled.jpg",
+  "https://live.staticflickr.com/65535/53033340706_729e5f653d_b.jpg",
+  "https://live.staticflickr.com/65535/53033819508_78a3ef2495_b.jpg",
+  "https://live.staticflickr.com/65535/52617420469_0994528701_b.jpg",
 ];
 
 const version = process.env.OVERBOOKD_VERSION;
@@ -213,7 +217,9 @@ export default Vue.extend({
 .logo {
   width: 20em;
   height: 20em;
+  align-self: center;
 }
+
 .img-background {
   position: absolute;
   left: 0;
@@ -228,7 +234,7 @@ export default Vue.extend({
 }
 
 .opacity-filter {
-  opacity: 0.15;
+  opacity: 0.3;
   position: absolute;
   left: 0;
   top: 0;
@@ -249,6 +255,8 @@ export default Vue.extend({
 }
 
 .form-container {
+  display: flex;
+  flex-direction: column;
   align-self: center;
   justify-self: center;
   margin-top: 10%;
