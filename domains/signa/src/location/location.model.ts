@@ -34,14 +34,6 @@ export function isPointLocation(geoJson: GeoJson): geoJson is PointLocation {
   return geoJson?.type === POINT;
 }
 
-export function isRoadLocation(geoJson: GeoJson): geoJson is RoadLocation {
-  return geoJson?.type === ROAD;
-}
-
-export function isAreaLocation(geoJson: GeoJson): geoJson is AreaLocation {
-  return geoJson?.type === AREA;
-}
-
 export function filterLocation<
   T extends typeof POINT | typeof ROAD | typeof AREA,
 >(
