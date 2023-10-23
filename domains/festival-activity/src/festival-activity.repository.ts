@@ -9,5 +9,5 @@ export interface FestivalActivityRepository {
   findAll(): Promise<PreviewFestivalActivity[]>;
   findById(id: number): Promise<FestivalActivity | null>;
   create(form: CreateFestivalActivity): Promise<DraftFestivalActivity>;
-  save(festivalActivity: FestivalActivity): Promise<FestivalActivity>;
+  save<T extends FestivalActivity>(festivalActivity: T): Promise<T>;
 }

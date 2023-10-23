@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { DraftFestivalActivity } from "../creation/draft-festival-activity";
 import {
   barrieres,
@@ -10,7 +10,7 @@ import {
   signa,
 } from "./waiting-for-review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
-import { IN_REVIEW } from "../festival-activity.core";
+import { DRAFT, IN_REVIEW } from "../festival-activity.core";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
 import { AskForReview } from "./ask-for-review";
 import {
@@ -26,24 +26,28 @@ import {
   internalWithoutInquiryTimeWindows,
   justCreated,
 } from "./ask-for-review.test-utils";
+import { InReviewFestivalActivity } from "./in-review-festival-activity";
 
 describe("Ask for review", () => {
-  const festivalActivities = new InMemoryFestivalActivityRepository(
-    [
-      pcSecurite,
-      finaleEsport,
-      internalWithoutDescription,
-      publicWithoutPhoto,
-      publicWithoutCategory,
-      publicWithoutTimeWindows,
-      internalWithoutTeamInCharge,
-      internalWithoutLocation,
-      internalWithoutInquiries,
-      internalWithoutInquiryTimeWindows,
-      justCreated,
-    ].map(DraftFestivalActivity.build),
-  );
-  const askForReview = new AskForReview(festivalActivities);
+  let askForReview: AskForReview;
+  beforeEach(() => {
+    const festivalActivities = new InMemoryFestivalActivityRepository(
+      [
+        pcSecurite,
+        finaleEsport,
+        internalWithoutDescription,
+        publicWithoutPhoto,
+        publicWithoutCategory,
+        publicWithoutTimeWindows,
+        internalWithoutTeamInCharge,
+        internalWithoutLocation,
+        internalWithoutInquiries,
+        internalWithoutInquiryTimeWindows,
+        justCreated,
+      ].map(DraftFestivalActivity.build),
+    );
+    askForReview = new AskForReview(festivalActivities);
+  });
   describe("when asking a review for a draft festival activity", () => {
     describe("when draft festival activity has all required fields fulfilled", () => {
       it("should indicate festival activity is reviewable", async () => {
@@ -210,6 +214,19 @@ describe("Ask for review", () => {
         expect(
           async () => await askForReview.fromDraft(justCreated.id),
         ).rejects.toThrow("- Une équipe responsable est nécessaire");
+      });
+    });
+    describe("when ask several time for a review", () => {
+      beforeEach(() => {
+        const festivalActivities = new InMemoryFestivalActivityRepository([
+          InReviewFestivalActivity.init({ ...pcSecurite, status: DRAFT }),
+        ]);
+        askForReview = new AskForReview(festivalActivities);
+      });
+      it("should indicate that festival activity is already under review", async () => {
+        expect(
+          async () => await askForReview.fromDraft(pcSecurite.id),
+        ).rejects.toThrow();
       });
     });
   });

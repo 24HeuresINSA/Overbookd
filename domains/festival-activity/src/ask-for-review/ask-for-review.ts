@@ -13,6 +13,6 @@ export class AskForReview {
     if (!festivalActivity) throw new FestivalActivityNotFound(draftId);
     if (!isDraft(festivalActivity)) throw new Review.NotInDraft(draftId);
 
-    return Promise.resolve(festivalActivity.askForReview());
+    return this.festivalActivities.save(festivalActivity.askForReview());
   }
 }
