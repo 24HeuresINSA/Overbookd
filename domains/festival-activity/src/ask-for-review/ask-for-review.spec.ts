@@ -7,7 +7,7 @@ import {
   humain,
   matos,
   secu,
-  signa
+  signa,
 } from "./waiting-for-review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
 import { IN_REVIEW } from "../festival-activity.core";

@@ -5,8 +5,8 @@ import { isDraft } from "../festival-activity.model";
 
 export class AskForReview {
   constructor(
-    private readonly festivalActivities: FestivalActivityRepository
-  ) { }
+    private readonly festivalActivities: FestivalActivityRepository,
+  ) {}
 
   async fromDraft(draftId: number): Promise<InReviewFestivalActivity> {
     const festivalActivity = await this.festivalActivities.findById(draftId);
