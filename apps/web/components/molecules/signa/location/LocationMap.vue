@@ -61,7 +61,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['show:location'],
+  emits: ["show:location"],
   data: () => ({
     ...mapConfiguration,
   }),
@@ -78,9 +78,9 @@ export default defineComponent({
   },
   methods: {
     showLocation(location: SignaLocation) {
-      this.$emit('show:location', location);
-    }
-  }
+      this.$emit("show:location", location);
+    },
+  },
 });
 </script>
 
