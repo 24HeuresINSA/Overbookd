@@ -1,6 +1,6 @@
 import { DRAFT } from "../festival-activity.core";
 import { InquirySection } from "../festival-activity.core";
-import { InReviewFestivalActivity } from "./in-review-festival-activity";
+import { InReviewFestivalActivity } from "../ask-for-review/in-review-festival-activity";
 import {
   BaseFestivalActivity,
   DraftFestivalActivityRepresentation,

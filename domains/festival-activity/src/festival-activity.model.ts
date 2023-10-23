@@ -4,7 +4,7 @@ import { DraftFestivalActivityRepresentation } from "./creation/draft-festival-a
 import {
   InReviewFestivalActivity,
   InReviewFestivalActivityRepresentation,
-} from "./creation/in-review-festival-activity";
+} from "./ask-for-review/in-review-festival-activity";
 
 export type FestivalActivity = DraftFestivalActivity | InReviewFestivalActivity;
 
