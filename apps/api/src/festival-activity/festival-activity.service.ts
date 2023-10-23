@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import {
+  DraftFestivalActivity,
   FestivalActivity,
   FestivalActivityRepository,
   GeneralSection,
@@ -34,7 +35,10 @@ export class FestivalActivityService {
     return this.festivalActivities.findById(id);
   }
 
-  async create({ id }: JwtPayload, name: string): Promise<FestivalActivity> {
+  async create(
+    { id }: JwtPayload,
+    name: string,
+  ): Promise<DraftFestivalActivity> {
     const author = await this.adherents.find(id);
     return this.festivalActivities.create({ author, name });
   }
