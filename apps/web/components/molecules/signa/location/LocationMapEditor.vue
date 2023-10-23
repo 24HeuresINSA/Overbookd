@@ -56,8 +56,8 @@ import { mapConfiguration } from "~/utils/models/signa-location.model";
 
 const actions: ActionItem[] = [
   { key: POINT, value: "Point" },
-  { key: ROAD, value: "Road" },
-  { key: AREA, value: "Area" },
+  { key: ROAD, value: "Route" },
+  { key: AREA, value: "Zone" },
 ];
 
 type Action = typeof POINT | typeof ROAD | typeof AREA;
