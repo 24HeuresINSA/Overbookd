@@ -24,7 +24,8 @@ export default Vue.extend({
     logo(): string {
       if (this.counter >= FIFTY_ONE) return "Pastis.png";
       if (this.counter >= TWENTY_FOUR) return "Ricard.png";
-      return "overbookd_logo_noir.png";
+      if (window.innerWidth <= 960) return "logo_mobile.png";
+      return "logo_desktop.png";
     },
     track(): string {
       return "audio/jaune.m4a";
