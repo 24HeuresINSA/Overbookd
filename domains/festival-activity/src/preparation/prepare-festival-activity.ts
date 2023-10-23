@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { Period } from "@overbookd/period";
 import {
   InChargeSection,
   SecuritySection,
@@ -17,20 +17,20 @@ export class PrepareFestivalActivity {
 
   async updateGeneralSection(
     id: number,
-    generalSection: Partial<GeneralSectionRepresentation>,
+    general: Partial<GeneralSectionRepresentation>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
-    const updatedFA = existingFA.changeGeneralSection(generalSection);
+    const updatedFA = existingFA.changeGeneralSection(general);
 
     return this.festivalActivities.save(updatedFA);
   }
 
   async addTimeWindowInGeneral(
     faId: number,
-    period: IProvidePeriod,
+    period: Period,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(faId);
     if (!existingFA) throw new FestivalActivityNotFound(faId);
@@ -52,52 +52,52 @@ export class PrepareFestivalActivity {
 
   async updateInChargeSection(
     id: number,
-    inChargeSection: Partial<InChargeSection>,
+    inCharge: Partial<InChargeSection>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
-    const updatedFA = existingFA.changeInChargeSection(inChargeSection);
+    const updatedFA = existingFA.changeInChargeSection(inCharge);
 
     return this.festivalActivities.save(updatedFA);
   }
 
   async updateSignaSection(
     id: number,
-    signaSection: Partial<SignaSection>,
+    signa: Partial<SignaSection>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
-    const updatedFA = existingFA.changeSignaSection(signaSection);
+    const updatedFA = existingFA.changeSignaSection(signa);
 
     return this.festivalActivities.save(updatedFA);
   }
 
   async updateSecuritySection(
     id: number,
-    securitySection: Partial<SecuritySection>,
+    security: Partial<SecuritySection>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
-    const updatedFA = existingFA.changeSecuritySection(securitySection);
+    const updatedFA = existingFA.changeSecuritySection(security);
 
     return this.festivalActivities.save(updatedFA);
   }
 
   async updateSupplySection(
     id: number,
-    supplySection: Partial<SupplySection>,
+    supply: Partial<SupplySection>,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
-    const updatedFA = existingFA.changeSupplySection(supplySection);
+    const updatedFA = existingFA.changeSupplySection(supply);
 
     return this.festivalActivities.save(updatedFA);
   }

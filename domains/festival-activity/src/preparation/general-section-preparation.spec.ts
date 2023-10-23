@@ -8,6 +8,7 @@ import {
   GeneralSectionRepresentation,
 } from "../creation/general-section";
 import { GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
+import { Period } from "@overbookd/period";
 
 const noel = {
   id: 1,
@@ -188,12 +189,12 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe("when adherent want to add a time window", () => {
-    it("should add the time window", async () => {
-      const timeWindowToAdd = {
-        start: new Date("2023-05-17 09:00"),
-        end: new Date("2023-05-17 14:00"),
-      };
+    const timeWindowToAdd = Period.init({
+      start: new Date("2023-05-17 09:00"),
+      end: new Date("2023-05-17 08:00"),
+    });
 
+    it("should add the time window", async () => {
       const { general } = await prepareFestivalActivity.addTimeWindowInGeneral(
         escapeGameActivity.id,
         timeWindowToAdd,
@@ -214,11 +215,6 @@ describe("General section of festival activity preparation", () => {
 
     describe("when adherent want to add a time window that already exists", () => {
       it("should should indicate that the time window already exists", async () => {
-        const timeWindowToAdd = {
-          start: new Date("2023-05-17 09:00"),
-          end: new Date("2023-05-17 14:00"),
-        };
-
         await prepareFestivalActivity.addTimeWindowInGeneral(
           escapeGameActivity.id,
           timeWindowToAdd,
@@ -236,10 +232,10 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to remove a time window", () => {
     it("should remove the time window", async () => {
-      const timeWindowToAdd = {
+      const timeWindowToAdd = Period.init({
         start: new Date("2023-05-17 09:00"),
         end: new Date("2023-05-17 14:00"),
-      };
+      });
 
       await prepareFestivalActivity.addTimeWindowInGeneral(
         escapeGameActivity.id,
@@ -250,10 +246,11 @@ describe("General section of festival activity preparation", () => {
         escapeGameActivity.id
       }-${timeWindowToAdd.start.getTime()}-${timeWindowToAdd.end.getTime()}`;
 
-      const { general } = await prepareFestivalActivity.removeTimeWindowFromGeneral(
-        escapeGameActivity.id,
-        timeWindowId,
-      );
+      const { general } =
+        await prepareFestivalActivity.removeTimeWindowFromGeneral(
+          escapeGameActivity.id,
+          timeWindowId,
+        );
 
       const timeWindow = general.timeWindows.find(
         (tw) => tw.id === timeWindowId,
