@@ -1,12 +1,13 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { GeneralTimeWindowAlreadyExists } from "../festival-activity.error";
 
 export type GeneralTimeWindowRepresentation = IProvidePeriod & {
   id: string;
 };
 
-type CreateGeneralTimeWindow = IProvidePeriod & {
+type CreateGeneralTimeWindow = {
   faId: number;
+  period: Period;
 };
 
 export type GeneralSectionRepresentation = {
@@ -104,10 +105,12 @@ class GeneralTimeWindow implements GeneralTimeWindowRepresentation {
   }
 
   static create(form: CreateGeneralTimeWindow): GeneralTimeWindow {
-    return new GeneralTimeWindow(this.generateId(form), form.start, form.end);
+    const { start, end } = form.period;
+    return new GeneralTimeWindow(this.generateId(form), start, end);
   }
 
   private static generateId(form: CreateGeneralTimeWindow): string {
-    return `${form.faId}-${form.start.getTime()}-${form.end.getTime()}`;
+    const { start, end } = form.period;
+    return `${form.faId}-${start.getTime()}-${end.getTime()}`;
   }
 }

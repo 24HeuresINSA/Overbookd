@@ -4,13 +4,16 @@ import { InReviewFestivalActivity } from "../ask-for-review/in-review-festival-a
 import {
   BaseFestivalActivity,
   DraftFestivalActivityRepresentation,
-  GeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
   SupplySection,
 } from "./draft-festival-activity.model";
-import { GeneralSectionRepresentation } from "./general-section";
+import {
+  GeneralSection,
+  GeneralSectionRepresentation,
+} from "./general-section";
+import { Period } from "@overbookd/period";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
@@ -50,7 +53,7 @@ export class DraftFestivalActivity
 
     return new DraftFestivalActivity(
       id,
-      general,
+      GeneralSection.build(general),
       inCharge,
       signa,
       security,
@@ -67,10 +70,8 @@ export class DraftFestivalActivity
     return DraftFestivalActivity.build(builder);
   }
 
-  public addTimeWindowInGeneral(
-    timeWindow: IProvidePeriod,
-  ): DraftFestivalActivity {
-    const timeWindowForm = { faId: this.id, ...timeWindow };
+  public addTimeWindowInGeneral(period: Period): DraftFestivalActivity {
+    const timeWindowForm = { faId: this.id, period };
     const general = this.general.addTimeWindow(timeWindowForm);
 
     const builder = { ...this.json, general };
