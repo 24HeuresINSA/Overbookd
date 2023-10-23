@@ -13,6 +13,7 @@
             v-for="(location, index) in points"
             :key="`point-${index}`"
             :lat-lng="location.geoJson.coordinates"
+            @click="showLocation(location)"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-marker>
@@ -20,6 +21,7 @@
             v-for="(location, index) in roads"
             :key="`road-${index}`"
             :lat-lngs="location.geoJson.coordinates"
+            @click="showLocation(location)"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polyline>
@@ -27,6 +29,7 @@
             v-for="(location, index) in areas"
             :key="`area-${index}`"
             :lat-lngs="location.geoJson.coordinates"
+            @click="showLocation(location)"
           >
             <l-tooltip>{{ location.name }}</l-tooltip>
           </l-polygon>
@@ -48,6 +51,7 @@ import {
   AreaLocation,
   filterLocation,
 } from "@overbookd/signa";
+import { mapConfiguration } from "~/utils/models/signa-location.model";
 
 export default defineComponent({
   name: "LocationMap",
@@ -57,12 +61,9 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ['show:location'],
   data: () => ({
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution:
-      '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    zoom: 16,
-    center: [45.784045, 4.876916],
+    ...mapConfiguration,
   }),
   computed: {
     points(): SignaLocation<PointLocation>[] {
@@ -75,6 +76,11 @@ export default defineComponent({
       return filterLocation(AREA, this.locations);
     },
   },
+  methods: {
+    showLocation(location: SignaLocation) {
+      this.$emit('show:location', location);
+    }
+  }
 });
 </script>
 

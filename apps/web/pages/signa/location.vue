@@ -2,7 +2,10 @@
   <div>
     <h1>Lieux de la Signa</h1>
     <v-container>
-      <LocationMap :locations="locations"></LocationMap>
+      <LocationMap
+        :locations="locations"
+        @show:location="editLocationDialog"
+      ></LocationMap>
     </v-container>
     <v-container class="location-table">
       <v-data-table
