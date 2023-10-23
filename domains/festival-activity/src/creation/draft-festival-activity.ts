@@ -67,7 +67,7 @@ export class DraftFestivalActivity
     return DraftFestivalActivity.build(builder);
   }
 
-  public addGeneralTimeWindow(
+  public addTimeWindowInGeneral(
     timeWindow: IProvidePeriod,
   ): DraftFestivalActivity {
     const timeWindowForm = { faId: this.id, ...timeWindow };
@@ -77,7 +77,9 @@ export class DraftFestivalActivity
     return DraftFestivalActivity.build(builder);
   }
 
-  public removeGeneralTimeWindow(timeWIndowId: string): DraftFestivalActivity {
+  public removeTimeWindowFromGeneral(
+    timeWIndowId: string,
+  ): DraftFestivalActivity {
     const general = this.general.removeTimeWindow(timeWIndowId);
 
     const builder = { ...this.json, general };

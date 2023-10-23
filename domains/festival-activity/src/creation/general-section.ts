@@ -1,8 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  GeneralTimeWindowAlreadyExists,
-  GeneralTimeWindowNotFound,
-} from "../festival-activity.error";
+import { GeneralTimeWindowAlreadyExists } from "../festival-activity.error";
 
 export type GeneralTimeWindowRepresentation = IProvidePeriod & {
   id: string;
@@ -91,9 +88,6 @@ export class GeneralSection implements GeneralSectionRepresentation {
 
   public removeTimeWindow(timeWindowId: string): GeneralSection {
     const timeWindows = this.timeWindows.filter((tw) => tw.id !== timeWindowId);
-    if (timeWindows.length === this.timeWindows.length) {
-      throw new GeneralTimeWindowNotFound();
-    }
     return GeneralSection.build({ ...this.json, timeWindows });
   }
 }

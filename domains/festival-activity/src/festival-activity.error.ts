@@ -5,9 +5,6 @@ function buildFestivalActivityNotFoundErrorMessage(id: number) {
 export const GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE =
   "Une créneau existe déjà à ces heures pour cette activité";
 
-export const GENERAL_TIME_WINDOW_NOT_FOUND_ERROR_MESSAGE =
-  "Le créneau n'a pas été trouvé";
-
 class FestivalActivityError extends Error {}
 
 export class FestivalActivityNotFound extends FestivalActivityError {
@@ -31,11 +28,5 @@ export const Review = {
 export class GeneralTimeWindowAlreadyExists extends FestivalActivityError {
   constructor() {
     super(GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE);
-  }
-}
-
-export class GeneralTimeWindowNotFound extends FestivalActivityError {
-  constructor() {
-    super(GENERAL_TIME_WINDOW_NOT_FOUND_ERROR_MESSAGE);
   }
 }

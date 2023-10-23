@@ -28,25 +28,25 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.save(updatedFA);
   }
 
-  async addGeneralTimeWindow(
+  async addTimeWindowInGeneral(
     faId: number,
     period: IProvidePeriod,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(faId);
     if (!existingFA) throw new FestivalActivityNotFound(faId);
 
-    const updatedFA = existingFA.addGeneralTimeWindow(period);
+    const updatedFA = existingFA.addTimeWindowInGeneral(period);
     return this.festivalActivities.save(updatedFA);
   }
 
-  async removeGeneralTimeWindow(
+  async removeTimeWindowFromGeneral(
     faId: number,
     timeWindowId: string,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(faId);
     if (!existingFA) throw new FestivalActivityNotFound(faId);
 
-    const updatedFA = existingFA.removeGeneralTimeWindow(timeWindowId);
+    const updatedFA = existingFA.removeTimeWindowFromGeneral(timeWindowId);
     return this.festivalActivities.save(updatedFA);
   }
 
