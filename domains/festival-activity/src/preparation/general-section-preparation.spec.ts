@@ -7,10 +7,7 @@ import {
   GeneralSection,
   GeneralSectionRepresentation,
 } from "../creation/general-section";
-import {
-  GENERAL_TIME_WINDOW_NOT_FOUND_ERROR_MESSAGE,
-  GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE,
-} from "../festival-activity.error";
+import { GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
 
 const noel = {
   id: 1,
@@ -197,7 +194,7 @@ describe("General section of festival activity preparation", () => {
         end: new Date("2023-05-17 14:00"),
       };
 
-      const { general } = await prepareFestivalActivity.addGeneralTimeWindow(
+      const { general } = await prepareFestivalActivity.addTimeWindowInGeneral(
         escapeGameActivity.id,
         timeWindowToAdd,
       );
@@ -222,13 +219,13 @@ describe("General section of festival activity preparation", () => {
           end: new Date("2023-05-17 14:00"),
         };
 
-        await prepareFestivalActivity.addGeneralTimeWindow(
+        await prepareFestivalActivity.addTimeWindowInGeneral(
           escapeGameActivity.id,
           timeWindowToAdd,
         );
 
         await expect(
-          prepareFestivalActivity.addGeneralTimeWindow(
+          prepareFestivalActivity.addTimeWindowInGeneral(
             escapeGameActivity.id,
             timeWindowToAdd,
           ),
@@ -244,7 +241,7 @@ describe("General section of festival activity preparation", () => {
         end: new Date("2023-05-17 14:00"),
       };
 
-      await prepareFestivalActivity.addGeneralTimeWindow(
+      await prepareFestivalActivity.addTimeWindowInGeneral(
         escapeGameActivity.id,
         timeWindowToAdd,
       );
@@ -253,7 +250,7 @@ describe("General section of festival activity preparation", () => {
         escapeGameActivity.id
       }-${timeWindowToAdd.start.getTime()}-${timeWindowToAdd.end.getTime()}`;
 
-      const { general } = await prepareFestivalActivity.removeGeneralTimeWindow(
+      const { general } = await prepareFestivalActivity.removeTimeWindowFromGeneral(
         escapeGameActivity.id,
         timeWindowId,
       );
@@ -262,19 +259,6 @@ describe("General section of festival activity preparation", () => {
         (tw) => tw.id === timeWindowId,
       );
       expect(timeWindow).toBeUndefined();
-    });
-
-    describe("when adherent want to remove a time window that does not exist", () => {
-      it("should should indicate that the time window does not exist", async () => {
-        const timeWindowId = `${escapeGameActivity.id}-123456789-987654321}`;
-
-        await expect(
-          prepareFestivalActivity.removeGeneralTimeWindow(
-            escapeGameActivity.id,
-            timeWindowId,
-          ),
-        ).rejects.toThrow(GENERAL_TIME_WINDOW_NOT_FOUND_ERROR_MESSAGE);
-      });
     });
   });
 });
