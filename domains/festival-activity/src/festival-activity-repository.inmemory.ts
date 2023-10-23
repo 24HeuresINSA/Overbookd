@@ -38,8 +38,7 @@ export class InMemoryFestivalActivityRepository
     );
     if (!festivalActivity) return Promise.resolve(null);
 
-    const draftFestivalActivity = DraftFestivalActivity.build(festivalActivity);
-    return Promise.resolve(draftFestivalActivity);
+    return Promise.resolve(festivalActivity);
   }
 
   create(form: CreateFestivalActivity): Promise<DraftFestivalActivity> {
@@ -48,7 +47,7 @@ export class InMemoryFestivalActivityRepository
     return Promise.resolve(festivalActivity);
   }
 
-  save(festivalActivity: FestivalActivity): Promise<FestivalActivity> {
+  save<T extends FestivalActivity>(festivalActivity: T): Promise<T> {
     const festivalActivityIndex = this.festivalActivities.findIndex(
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,
