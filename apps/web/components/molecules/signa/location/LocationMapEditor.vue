@@ -52,6 +52,7 @@ import {
 import { Point } from "~/utils/signa-location/point";
 import { Line } from "~/utils/signa-location/line";
 import { Polygon } from "~/utils/signa-location/polygon";
+import { mapConfiguration } from "~/utils/models/signa-location.model";
 
 const actions: ActionItem[] = [
   { key: POINT, value: "Point" },
@@ -78,8 +79,6 @@ interface LocationMapEditorData {
   polygon: Polygon;
 }
 
-const center = { lat: 45.784045, lng: 4.876916 };
-
 export default defineComponent({
   name: "LocationMapEditor",
   model: {
@@ -94,14 +93,10 @@ export default defineComponent({
   },
   emits: ["update:geo-json"],
   data: (): LocationMapEditorData => ({
-    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    attribution:
-      '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-    zoom: 16,
-    center,
+    ...mapConfiguration,
     actions,
     editionDone: false,
-    mouseLatlng: center,
+    mouseLatlng: mapConfiguration.center,
     point: Point.create(),
     line: Line.create(),
     polygon: Polygon.create(),
@@ -133,7 +128,7 @@ export default defineComponent({
       return this.action === AREA;
     },
     coordinates(): Coordinate | Coordinate[] {
-      if (!this.geoJson) return center;
+      if (!this.geoJson) return mapConfiguration.center;
 
       if (isPointLocation(this.geoJson)) {
         return this.geoJson.coordinates;
