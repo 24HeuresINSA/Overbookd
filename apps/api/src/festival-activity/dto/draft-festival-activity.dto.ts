@@ -12,7 +12,6 @@ import type {
   ElectricitySupply,
   Inquiry,
 } from "@overbookd/festival-activity";
-
 import { DRAFT } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { AdherentResponseDto } from "./adherent.response.dto";

@@ -7,6 +7,7 @@ export type {
   Inquiry,
   InquirySection,
 } from "./festival-activity.core";
+export { DRAFT } from "./festival-activity.core";
 export type {
   DraftFestivalActivityRepresentation,
   GeneralSection,
