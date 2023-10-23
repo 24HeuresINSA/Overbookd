@@ -1,12 +1,10 @@
-import {
-  DraftFestivalActivity,
-} from "./draft-festival-activity";
+import { DraftFestivalActivity } from "./draft-festival-activity";
 import {
   GeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
-  SupplySection
+  SupplySection,
 } from "./draft-festival-activity.model";
 import { InquirySection } from "../festival-activity.core";
 import { Adherent } from "../festival-activity.core";
