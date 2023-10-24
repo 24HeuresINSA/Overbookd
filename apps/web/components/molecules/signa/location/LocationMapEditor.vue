@@ -53,6 +53,7 @@ import { Point } from "~/utils/signa-location/point";
 import { Line } from "~/utils/signa-location/line";
 import { Polygon } from "~/utils/signa-location/polygon";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
+import { Location } from "~/utils/signa-location/location";
 
 type Action = typeof POINT | typeof ROAD | typeof AREA;
 type ActionItem = {
@@ -68,9 +69,7 @@ interface LocationMapEditorData {
   actions: ActionItem[];
   editionDone: boolean;
   mouseLatlng: Coordinate;
-  point: Point;
-  line: Line;
-  polygon: Polygon;
+  location: Location;
 }
 
 const actions: ActionItem[] = [
@@ -97,9 +96,7 @@ export default defineComponent({
     actions,
     editionDone: false,
     mouseLatlng: mapConfiguration.center,
-    point: Point.create(),
-    line: Line.create(),
-    polygon: Polygon.create(),
+    location: Point.create(),
   }),
   computed: {
     geoJson: {
@@ -145,39 +142,25 @@ export default defineComponent({
     },
     userAction({ latlng }: { latlng: Coordinate }) {
       if (this.editionDone) return;
-      switch (this.action) {
-        case POINT:
-          this.point.addCoordinate(latlng);
-          this.geoJson = this.point.geoJson;
-          break;
-        case ROAD:
-          this.line.addCoordinate(latlng);
-          this.geoJson = this.line.geoJson;
-          break;
-        case AREA:
-          this.polygon.addCoordinate(latlng);
-          this.geoJson = this.polygon.geoJson;
-          break;
-      }
+      this.location.addCoordinate(latlng);
+      this.geoJson = this.location.geoJson;
     },
     finishAction() {
       this.editionDone = true;
     },
     reset(action: Action) {
-      this.point = Point.create();
-      this.line = Line.create();
-      this.polygon = Polygon.create();
       switch (action) {
         case POINT:
-          this.geoJson = this.point.geoJson;
+          this.location = Point.create();
           break;
         case ROAD:
-          this.geoJson = this.line.geoJson;
+          this.location = Line.create();
           break;
         case AREA:
-          this.geoJson = this.polygon.geoJson;
+          this.location = Polygon.create();
           break;
       }
+      this.geoJson = this.location.geoJson;
       this.editionDone = false;
     },
   },

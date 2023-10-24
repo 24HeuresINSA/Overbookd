@@ -1,6 +1,7 @@
 import { Coordinate, ROAD, RoadLocation } from "@overbookd/signa";
+import { Location } from "./location";
 
-export class Line implements RoadLocation {
+export class Line implements RoadLocation, Location {
   private constructor(private _coordinates: Coordinate[]) {}
 
   static create(coordinates: Coordinate[] = []) {
