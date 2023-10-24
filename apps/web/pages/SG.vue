@@ -4,6 +4,9 @@
     <v-container style="display: flex; width: 100%">
       <v-card>
         <v-card-title>Mode</v-card-title>
+        <v-btn class="ml-4" @click="exportOrgaList">
+          Exporter la liste des orgas
+        </v-btn>
         <v-card-text style="display: flex; flex-direction: column">
           <div>
             <v-btn-toggle
@@ -150,6 +153,14 @@ import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 import { Money } from "~/utils/money/money";
+import { download } from "~/utils/file/file.utils";
+import {
+  BARREL,
+  DEPOSIT,
+  PROVISIONS,
+  Transaction,
+  TransactionType,
+} from "@overbookd/personal-account";
 
 const TRANSACTION_DEPOSIT = "DEPOSIT";
 const TRANSACTION_BARREL = "BARREL";
@@ -161,6 +172,7 @@ export default {
 
   data: () => {
     return {
+      exportList: [],
       ready: false,
       users: [],
       totalConsumption: 0,
@@ -198,7 +210,10 @@ export default {
     title: "SG",
   }),
 
-  computed: {
+  computed:{
+    transactions() {
+      return this.$accessor.transaction.allTransactions;
+    },
     consumers() {
       return this.$accessor.user.personalAccountConsumers.map(
         ({ firstname, lastname, nickname, id, email, balance }) => ({
@@ -331,6 +346,11 @@ export default {
     this.totalPrice = this.sgConfig.prixFutBlonde;
     this.users = this.consumers;
     this.ready = true;
+    await this.$accessor.transaction.fetchAllTransactions();
+  },
+
+  async created() {
+    await this.$accessor.transaction.fetchAllTransactions();
   },
 
   methods: {
@@ -438,6 +458,34 @@ export default {
     closeConfigDialog() {
       this.isSgConfigDialogOpen = false;
     },
+    exportOrgaList() {
+      // Sort the 100 first users by absolute balance
+
+      let exportList = this.consumers
+        .sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance))
+        .slice(0, 50)
+        .map((user) => {
+          return {
+            firstname: user.firstname,
+            lastname: user.lastname,
+          };
+        });
+
+      const csvHeader = "Prenom,Nom";
+      
+      const csvContent = exportList.map((volunteer) => {
+        return [volunteer.firstname, volunteer.lastname].join(",");
+      });
+      
+      const csv = [csvHeader, ...csvContent].join("\n");
+      const regex = new RegExp(/undefined/i, "g");
+
+      const parsedCSV = csv.replace(regex, "");
+      download("orgas.csv", parsedCSV);
+
+      console.log(this.transactions);
+    },
+
     spend(consumptions) {
       switch (this.mode) {
         case "cask":
