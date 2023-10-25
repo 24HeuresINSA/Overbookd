@@ -37,7 +37,7 @@ export type ElectricitySupply = {
   comment: string | null;
 };
 
-export type Inquiry = {
+export type InquiryRequest = {
   id: number;
   quantity: number;
   name: string;
@@ -45,7 +45,7 @@ export type Inquiry = {
 
 export type InquirySection = {
   timeWindows: IProvidePeriod[];
-  gears: Inquiry[];
-  electricity: Inquiry[];
-  barriers: Inquiry[];
+  gears: InquiryRequest[];
+  electricity: InquiryRequest[];
+  barriers: InquiryRequest[];
 };

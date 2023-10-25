@@ -1,28 +1,34 @@
-import { InReviewWithTimeWindowsInquirySection } from "../in-review-festival-activity.model";
+import { InquiryWithTimeWindows } from "../in-review-festival-activity.model";
 import { InquirySection } from "../../festival-activity.core";
-import { InReviewWithRequestInquirySection } from "../in-review-festival-activity.model";
+import { InquiryWithRequests } from "../in-review-festival-activity.model";
 
 const REQUIRED_INQUIRY_WITH_TIMEWINDOWS =
   "Au moins une demande de matos est nécessaire pour un créneau matos";
 const REQUIRED_TIMEWINDOWS_WITH_INQUIRY =
   "Au moins un créneau matos est nécessaire pour une demande matos";
 
+type WithTimeWindowsInquirySection = InquiryWithTimeWindows &
+  Omit<InquirySection, "timeWindows">;
+
+type WithRequestsInquirySection = InquiryWithRequests &
+  Pick<InquirySection, "timeWindows">;
+
 function isWithTimeWindows(
   section: InquirySection,
-): section is InReviewWithTimeWindowsInquirySection {
+): section is WithTimeWindowsInquirySection {
   return section.timeWindows.length > 0;
 }
 
 function isWithRequest(
   section: InquirySection,
-): section is InReviewWithRequestInquirySection {
+): section is WithRequestsInquirySection {
   const inquiriesCount =
     section.barriers.length + section.electricity.length + section.gears.length;
   return inquiriesCount > 0;
 }
 
 class ActivityInquiryWithTimeWindowsSpecification {
-  static errors(section: InReviewWithTimeWindowsInquirySection): string[] {
+  static errors(section: WithTimeWindowsInquirySection): string[] {
     const inquiriesCount =
       section.barriers.length +
       section.gears.length +
@@ -32,7 +38,7 @@ class ActivityInquiryWithTimeWindowsSpecification {
 }
 
 class ActivityInquiryWithRequestSpecification {
-  static errors(section: InReviewWithRequestInquirySection): string[] {
+  static errors(section: WithRequestsInquirySection): string[] {
     return section.timeWindows.length > 0
       ? []
       : [REQUIRED_TIMEWINDOWS_WITH_INQUIRY];

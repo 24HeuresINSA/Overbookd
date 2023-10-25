@@ -1,13 +1,17 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { IN_REVIEW, Inquiry, InquirySection } from "../festival-activity.core";
 import {
-  BaseFestivalActivity,
-  GeneralSection,
+  IN_REVIEW,
+  InquiryRequest,
+  InquirySection,
+} from "../festival-activity.core";
+import {
   InChargeSection,
+  SecuritySection,
   SignaSection,
+  SupplySection,
 } from "../creation/draft-festival-activity.model";
 
-type InReviewPrivateGeneralSection = GeneralSection & {
+export type InReviewPrivateGeneralSection = {
   name: string;
   description: string;
   toPublish: false;
@@ -17,7 +21,7 @@ type InReviewPrivateGeneralSection = GeneralSection & {
   timeWindows: IProvidePeriod[];
 };
 
-type InReviewPublicGeneralSection = GeneralSection & {
+export type InReviewPublicGeneralSection = {
   name: string;
   description: string;
   toPublish: true;
@@ -39,35 +43,47 @@ export type InReviewSignaSection = SignaSection & {
   location: string;
 };
 
-export type InReviewWithTimeWindowsInquirySection = InquirySection & {
+export type InquiryWithTimeWindows = {
   timeWindows: [IProvidePeriod, ...IProvidePeriod[]];
 };
 
-type WithGearsInquirySection = InquirySection & {
-  gears: [Inquiry, ...Inquiry[]];
+type InquiryWithGears = {
+  barriers: InquiryRequest[];
+  electricity: InquiryRequest[];
+  gears: [InquiryRequest, ...InquiryRequest[]];
 };
 
-type WithBarriersInquirySection = InquirySection & {
-  barrieres: [Inquiry, ...Inquiry[]];
+type InquiryWithBarriers = {
+  barriers: [InquiryRequest, ...InquiryRequest[]];
+  electricity: InquiryRequest[];
+  gears: InquiryRequest[];
 };
 
-type WithElectricityInquirySection = InquirySection & {
-  electricity: [Inquiry, ...Inquiry[]];
+type InquiryWithElectricity = {
+  barriers: InquiryRequest[];
+  electricity: [InquiryRequest, ...InquiryRequest[]];
+  gears: InquiryRequest[];
 };
 
-export type InReviewWithRequestInquirySection =
-  | WithGearsInquirySection
-  | WithBarriersInquirySection
-  | WithElectricityInquirySection;
+export type InquiryWithRequests =
+  | InquiryWithGears
+  | InquiryWithBarriers
+  | InquiryWithElectricity;
+
+export type InReviewInquirySectionWithRequests = InquiryWithRequests &
+  InquiryWithTimeWindows;
 
 export type InReviewInquirySection =
   | InquirySection
-  | (InReviewWithRequestInquirySection & InReviewWithTimeWindowsInquirySection);
+  | InReviewInquirySectionWithRequests;
 
-export type InReviewFestivalActivityRepresentation = BaseFestivalActivity & {
+export type InReviewFestivalActivityRepresentation = {
+  id: number;
   status: typeof IN_REVIEW;
   general: InReviewGeneralSection;
   inCharge: InReviewInChargeSection;
+  security: SecuritySection;
   signa: InReviewSignaSection;
+  supply: SupplySection;
   inquiry: InReviewInquirySection;
 };
