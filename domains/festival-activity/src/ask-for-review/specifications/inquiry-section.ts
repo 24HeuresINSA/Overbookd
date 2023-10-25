@@ -22,18 +22,16 @@ function isWithTimeWindows(
 function isWithRequest(
   section: InquirySection,
 ): section is WithRequestsInquirySection {
-  const inquiriesCount =
-    section.barriers.length + section.electricity.length + section.gears.length;
-  return inquiriesCount > 0;
+  const { barriers, electricity, gears } = section;
+  const requests = barriers.length + electricity.length + gears.length;
+  return requests > 0;
 }
 
 class ActivityInquiryWithTimeWindowsSpecification {
   static errors(section: WithTimeWindowsInquirySection): string[] {
-    const inquiriesCount =
-      section.barriers.length +
-      section.gears.length +
-      section.electricity.length;
-    return inquiriesCount > 0 ? [] : [REQUIRED_INQUIRY_WITH_TIMEWINDOWS];
+    const { barriers, electricity, gears } = section;
+    const requests = barriers.length + electricity.length + gears.length;
+    return requests > 0 ? [] : [REQUIRED_INQUIRY_WITH_TIMEWINDOWS];
   }
 }
 
