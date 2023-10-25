@@ -1,47 +1,157 @@
-import { FestivalActivityRepresentation } from "@overbookd/festival-activity";
+import {
+  DRAFT,
+  DraftFestivalActivityRepresentation,
+  FestivalActivityRepresentation,
+  InReviewFestivalActivityRepresentation,
+  InReviewInquirySectionWithRequests,
+  InReviewPrivateGeneralSection,
+} from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
+import { IProvidePeriod } from "@overbookd/period";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivityRepresentation>,
 ): FestivalActivityRepresentation {
-  return {
-    ...activity,
-    general: castGeneralSectionWithDate(activity.general),
-    inquiry: castInquirySectionWithDate(activity.inquiry),
-    inCharge: {
-      ...activity.inCharge,
-      contractors: [], // TODO remove this when contractors are implemented
-    },
-  };
+  if (isDraft(activity)) {
+    return Draft.castActivityWithDate(activity);
+  }
+  return InReview.castActivityWithDate(activity);
 }
 
-type General = FestivalActivityRepresentation["general"];
-type Inquiry = FestivalActivityRepresentation["inquiry"];
-
-function castGeneralSectionWithDate(
-  general: HttpStringified<General>,
-): General {
-  const timeWindows = general.timeWindows.map((tw) => ({
-    ...tw,
-    start: new Date(tw.start),
-    end: new Date(tw.end),
-  }));
-  return {
-    ...general,
-    timeWindows,
-  };
+function isDraft(
+  festivalActivity: HttpStringified<FestivalActivityRepresentation>,
+): festivalActivity is HttpStringified<DraftFestivalActivityRepresentation> {
+  return festivalActivity.status === DRAFT;
 }
 
-function castInquirySectionWithDate(
-  inquiry: HttpStringified<Inquiry>,
-): Inquiry {
-  const timeWindows = inquiry.timeWindows.map((tw) => ({
-    ...tw,
-    start: new Date(tw.start),
-    end: new Date(tw.end),
-  }));
+type DraftGeneral = DraftFestivalActivityRepresentation["general"];
+type DraftInquiry = DraftFestivalActivityRepresentation["inquiry"];
+
+class Draft {
+  static castActivityWithDate(
+    draft: HttpStringified<DraftFestivalActivityRepresentation>,
+  ): DraftFestivalActivityRepresentation {
+    return {
+      ...draft,
+      general: this.castGeneralSectionWithDate(draft.general),
+      inquiry: this.castInquirySectionWithDate(draft.inquiry),
+      inCharge: {
+        ...draft.inCharge,
+        contractors: [], // TODO remove this when contractors are implemented
+      },
+    };
+  }
+
+  private static castGeneralSectionWithDate(
+    general: HttpStringified<DraftGeneral>,
+  ): DraftGeneral {
+    const timeWindows = general.timeWindows.map((tw) => ({
+      ...tw,
+      start: new Date(tw.start),
+      end: new Date(tw.end),
+    }));
+    return {
+      ...general,
+      timeWindows,
+    };
+  }
+
+  private static castInquirySectionWithDate(
+    inquiry: HttpStringified<DraftInquiry>,
+  ): DraftInquiry {
+    const timeWindows = inquiry.timeWindows.map((tw) => ({
+      ...tw,
+      start: new Date(tw.start),
+      end: new Date(tw.end),
+    }));
+    return {
+      ...inquiry,
+      timeWindows,
+    };
+  }
+}
+
+type InReviewGeneral = InReviewFestivalActivityRepresentation["general"];
+type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
+
+function isPrivate(
+  general: HttpStringified<InReviewGeneral>,
+): general is HttpStringified<InReviewPrivateGeneralSection> {
+  return general.toPublish === false;
+}
+
+function hasRequests(
+  inquiry: HttpStringified<InReviewInquiry>,
+): inquiry is HttpStringified<InReviewInquirySectionWithRequests> {
+  const { barriers, electricity, gears } = inquiry;
+  const requests = barriers.length + electricity.length + gears.length;
+  return inquiry.timeWindows.length > 0 && requests > 0;
+}
+
+class InReview {
+  static castActivityWithDate(
+    inReview: HttpStringified<InReviewFestivalActivityRepresentation>,
+  ): InReviewFestivalActivityRepresentation {
+    return {
+      ...inReview,
+      general: this.castGeneralSectionWithDate(inReview.general),
+      inquiry: this.castInquirySectionWithDate(inReview.inquiry),
+      inCharge: {
+        ...inReview.inCharge,
+        contractors: [], // TODO remove this when contractors are implemented
+      },
+    };
+  }
+
+  private static castGeneralSectionWithDate(
+    general: HttpStringified<InReviewGeneral>,
+  ): InReviewGeneral {
+    if (isPrivate(general)) {
+      const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
+      return {
+        ...general,
+        timeWindows,
+      };
+    }
+
+    const [timeWindow, ...others] = general.timeWindows;
+    const first = castTimeWindowWithDate(timeWindow);
+    const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
+      first,
+      ...others.map(castTimeWindowWithDate),
+    ];
+    return { ...general, timeWindows };
+  }
+
+  private static castInquirySectionWithDate(
+    inquiry: HttpStringified<InReviewInquiry>,
+  ): InReviewInquiry {
+    if (hasRequests(inquiry)) {
+      const [timeWindow, ...others] = inquiry.timeWindows;
+      const first = castTimeWindowWithDate(timeWindow);
+      const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
+        first,
+        ...others.map(castTimeWindowWithDate),
+      ];
+
+      return { ...inquiry, timeWindows };
+    }
+
+    inquiry.timeWindows;
+    const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
+    return {
+      ...inquiry,
+      timeWindows,
+    };
+  }
+}
+
+function castTimeWindowWithDate(
+  timeWindow: HttpStringified<IProvidePeriod>,
+): IProvidePeriod {
   return {
-    ...inquiry,
-    timeWindows,
+    ...timeWindow,
+    start: new Date(timeWindow.start),
+    end: new Date(timeWindow.end),
   };
 }

@@ -4,7 +4,7 @@ export type {
   Adherent,
   Signage,
   ElectricitySupply,
-  Inquiry,
+  InquiryRequest as Inquiry,
   InquirySection,
 } from "./festival-activity.core";
 export { DRAFT } from "./festival-activity.core";
@@ -33,3 +33,11 @@ export type {
   PrepareSecuritySection,
   PrepareSupplySection,
 } from "./preparation/prepare-festival-activity.model";
+
+export type {
+  InReviewPrivateGeneralSection,
+  InReviewGeneralSection,
+  InReviewPublicGeneralSection,
+  InReviewFestivalActivityRepresentation,
+  InReviewInquirySectionWithRequests,
+} from "./ask-for-review/in-review-festival-activity.model";
