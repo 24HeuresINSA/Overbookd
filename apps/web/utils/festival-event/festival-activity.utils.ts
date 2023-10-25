@@ -114,27 +114,14 @@ class InReview {
       };
     }
 
-    const [timeWindow, ...others] = general.timeWindows;
-    const first = castTimeWindowWithDate(timeWindow);
-    const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
-      first,
-      ...others.map(castTimeWindowWithDate),
-    ];
-    return { ...general, timeWindows };
+    return castAtLeastOneTimeWindowWithDate(general);
   }
 
   private static castInquirySectionWithDate(
     inquiry: HttpStringified<InReviewInquiry>,
   ): InReviewInquiry {
     if (hasRequests(inquiry)) {
-      const [timeWindow, ...others] = inquiry.timeWindows;
-      const first = castTimeWindowWithDate(timeWindow);
-      const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
-        first,
-        ...others.map(castTimeWindowWithDate),
-      ];
-
-      return { ...inquiry, timeWindows };
+      return castAtLeastOneTimeWindowWithDate(inquiry);
     }
 
     inquiry.timeWindows;
@@ -154,4 +141,23 @@ function castTimeWindowWithDate(
     start: new Date(timeWindow.start),
     end: new Date(timeWindow.end),
   };
+}
+
+type WithTimeWindows = {
+  timeWindows: [IProvidePeriod, ...IProvidePeriod[]];
+};
+
+type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
+
+function castAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
+  hasAtLeastOneTimeWindow: T,
+): T & WithTimeWindows {
+  const [timeWindow, ...others] = hasAtLeastOneTimeWindow.timeWindows;
+  const first = castTimeWindowWithDate(timeWindow);
+  const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
+    first,
+    ...others.map(castTimeWindowWithDate),
+  ];
+
+  return { ...hasAtLeastOneTimeWindow, timeWindows };
 }
