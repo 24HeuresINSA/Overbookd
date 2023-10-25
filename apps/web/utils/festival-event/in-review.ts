@@ -5,7 +5,7 @@ import {
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
 import { IProvidePeriod } from "@overbookd/period";
-import { castTimeWindowWithDate } from "./castTimeWindowWithDate";
+import { castTimeWindowWithDate } from "./cast-time-windows";
 
 type InReviewGeneral = InReviewFestivalActivityRepresentation["general"];
 type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
@@ -47,10 +47,7 @@ export class InReview {
     }
 
     const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
-    return {
-      ...general,
-      timeWindows,
-    };
+    return { ...general, timeWindows };
   }
 
   private static castInquirySectionWithDate(
@@ -60,12 +57,8 @@ export class InReview {
       return castAtLeastOneTimeWindowWithDate(inquiry);
     }
 
-    inquiry.timeWindows;
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
-    return {
-      ...inquiry,
-      timeWindows,
-    };
+    return { ...inquiry, timeWindows };
   }
 }
 

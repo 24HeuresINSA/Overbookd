@@ -24,19 +24,15 @@ export class Draft {
     general: HttpStringified<DraftGeneral>,
   ): DraftGeneral {
     const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
-    return {
-      ...general,
-      timeWindows,
-    };
+
+    return { ...general, timeWindows };
   }
 
   private static castInquirySectionWithDate(
     inquiry: HttpStringified<DraftInquiry>,
   ): DraftInquiry {
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
-    return {
-      ...inquiry,
-      timeWindows,
-    };
+
+    return { ...inquiry, timeWindows };
   }
 }
