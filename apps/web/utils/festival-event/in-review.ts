@@ -5,6 +5,7 @@ import {
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
 import { IProvidePeriod } from "@overbookd/period";
+import { castTimeWindowWithDate } from "./castTimeWindowWithDate";
 
 type InReviewGeneral = InReviewFestivalActivityRepresentation["general"];
 type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
@@ -66,16 +67,6 @@ export class InReview {
       timeWindows,
     };
   }
-}
-
-function castTimeWindowWithDate(
-  timeWindow: HttpStringified<IProvidePeriod>,
-): IProvidePeriod {
-  return {
-    ...timeWindow,
-    start: new Date(timeWindow.start),
-    end: new Date(timeWindow.end),
-  };
 }
 
 type WithTimeWindows = {
