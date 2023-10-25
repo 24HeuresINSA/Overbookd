@@ -1,5 +1,6 @@
 import { DraftFestivalActivityRepresentation } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
+import { castTimeWindowWithDate } from "./cast-time-windows";
 
 type DraftGeneral = DraftFestivalActivityRepresentation["general"];
 type DraftInquiry = DraftFestivalActivityRepresentation["inquiry"];
@@ -22,11 +23,7 @@ export class Draft {
   private static castGeneralSectionWithDate(
     general: HttpStringified<DraftGeneral>,
   ): DraftGeneral {
-    const timeWindows = general.timeWindows.map((tw) => ({
-      ...tw,
-      start: new Date(tw.start),
-      end: new Date(tw.end),
-    }));
+    const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
     return {
       ...general,
       timeWindows,
@@ -36,11 +33,7 @@ export class Draft {
   private static castInquirySectionWithDate(
     inquiry: HttpStringified<DraftInquiry>,
   ): DraftInquiry {
-    const timeWindows = inquiry.timeWindows.map((tw) => ({
-      ...tw,
-      start: new Date(tw.start),
-      end: new Date(tw.end),
-    }));
+    const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
     return {
       ...inquiry,
       timeWindows,
