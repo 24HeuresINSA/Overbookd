@@ -13,7 +13,7 @@ type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
 function isPublic(
   general: HttpStringified<InReviewGeneral>,
 ): general is HttpStringified<InReviewPublicGeneralSection> {
-  return general.toPublish === false;
+  return general.toPublish === true;
 }
 
 function hasRequests(
