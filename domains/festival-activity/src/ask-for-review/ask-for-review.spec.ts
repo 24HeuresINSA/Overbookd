@@ -27,6 +27,7 @@ import {
   justCreated,
 } from "./ask-for-review.test-utils";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
+import { Review } from "../festival-activity.error";
 
 describe("Ask for review", () => {
   let askForReview: AskForReview;
@@ -226,7 +227,7 @@ describe("Ask for review", () => {
       it("should indicate that festival activity is already under review", async () => {
         expect(
           async () => await askForReview.fromDraft(pcSecurite.id),
-        ).rejects.toThrow();
+        ).rejects.toThrow(Review.NotInDraft);
       });
     });
   });
