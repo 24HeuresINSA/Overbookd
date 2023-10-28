@@ -29,17 +29,19 @@ function isWithRequest(
 
 class ActivityInquiryWithTimeWindowsSpecification {
   static errors(section: WithTimeWindowsInquirySection): string[] {
-    const { barriers, electricity, gears } = section;
-    const requests = barriers.length + electricity.length + gears.length;
-    return requests > 0 ? [] : [REQUIRED_INQUIRY_WITH_TIMEWINDOWS];
+    if (isWithRequest(section)) {
+      return [];
+    }
+    return [REQUIRED_INQUIRY_WITH_TIMEWINDOWS];
   }
 }
 
 class ActivityInquiryWithRequestSpecification {
   static errors(section: WithRequestsInquirySection): string[] {
-    return section.timeWindows.length > 0
-      ? []
-      : [REQUIRED_TIMEWINDOWS_WITH_INQUIRY];
+    if (isWithTimeWindows(section)) {
+      return [];
+    }
+    return [REQUIRED_TIMEWINDOWS_WITH_INQUIRY];
   }
 }
 
