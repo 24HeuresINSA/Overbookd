@@ -10,6 +10,7 @@ import {
   SignaSection,
   SupplySection,
 } from "../creation/draft-festival-activity.model";
+import { GeneralTimeWindow } from "../creation/general-section";
 
 export type InReviewPrivateGeneralSection = {
   name: string;
@@ -18,7 +19,7 @@ export type InReviewPrivateGeneralSection = {
   categories: string[];
   photoLink: string | null;
   isFlagship: boolean;
-  timeWindows: IProvidePeriod[];
+  timeWindows: GeneralTimeWindow[];
 };
 
 export type InReviewPublicGeneralSection = {
@@ -28,7 +29,7 @@ export type InReviewPublicGeneralSection = {
   categories: [string, ...string[]];
   photoLink: string;
   isFlagship: boolean;
-  timeWindows: [IProvidePeriod, ...IProvidePeriod[]];
+  timeWindows: [GeneralTimeWindow, ...GeneralTimeWindow[]];
 };
 
 export type InReviewGeneralSection =

@@ -190,8 +190,8 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to add a time window", () => {
     const timeWindowToAdd = Period.init({
-      start: new Date("2023-05-17 09:00"),
-      end: new Date("2023-05-17 08:00"),
+      start: new Date("2023-05-17 08:00"),
+      end: new Date("2023-05-17 09:00"),
     });
 
     it("should add the time window", async () => {

@@ -1,4 +1,3 @@
-import { IProvidePeriod } from "@overbookd/period";
 import {
   Adherent,
   Signage,
@@ -6,16 +5,7 @@ import {
   InquirySection,
   DRAFT,
 } from "../festival-activity.core";
-
-export type GeneralSection = {
-  name: string;
-  description: string | null;
-  categories: string[];
-  toPublish: boolean;
-  photoLink: string | null;
-  isFlagship: boolean;
-  timeWindows: IProvidePeriod[];
-};
+import { GeneralSectionRepresentation } from "./general-section";
 
 export type InChargeSection = {
   adherent: Adherent;
@@ -38,7 +28,7 @@ export type SupplySection = {
 };
 export type BaseFestivalActivity = {
   id: number;
-  general: GeneralSection;
+  general: GeneralSectionRepresentation;
   inCharge: InChargeSection;
   signa: SignaSection;
   security: SecuritySection;
