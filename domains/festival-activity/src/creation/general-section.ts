@@ -1,5 +1,6 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { GeneralTimeWindowAlreadyExists } from "../festival-activity.error";
+import { Duration } from "@overbookd/period";
 
 export type GeneralTimeWindowRepresentation = IProvidePeriod & {
   id: string;
@@ -111,6 +112,9 @@ export class GeneralTimeWindow implements GeneralTimeWindowRepresentation {
 
   private static generateId(form: CreateGeneralTimeWindow): string {
     const { start, end } = form.period;
-    return `${form.faId}-${start.getTime()}-${end.getTime()}`;
+    const startMinutes = Duration.ms(start.getTime()).inMinutes;
+    const endMinutes = Duration.ms(end.getTime()).inMinutes;
+
+    return `${form.faId}-${startMinutes}-${endMinutes}`;
   }
 }

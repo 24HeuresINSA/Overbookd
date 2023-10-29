@@ -9,6 +9,7 @@ import {
 } from "../creation/general-section";
 import { GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
 import { Period } from "@overbookd/period";
+import { Duration } from "@overbookd/period";
 
 const noel = {
   id: 1,
@@ -200,9 +201,9 @@ describe("General section of festival activity preparation", () => {
         timeWindowToAdd,
       );
 
-      const timeWindowId = `${
-        escapeGameActivity.id
-      }-${timeWindowToAdd.start.getTime()}-${timeWindowToAdd.end.getTime()}`;
+      const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
+      const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
+      const timeWindowId = `${escapeGameActivity.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
       const timeWindow = general.timeWindows.find(
         (tw) => tw.id === timeWindowId,
@@ -242,9 +243,9 @@ describe("General section of festival activity preparation", () => {
         timeWindowToAdd,
       );
 
-      const timeWindowId = `${
-        escapeGameActivity.id
-      }-${timeWindowToAdd.start.getTime()}-${timeWindowToAdd.end.getTime()}`;
+      const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
+      const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
+      const timeWindowId = `${escapeGameActivity.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
       const { general } =
         await prepareFestivalActivity.removeTimeWindowFromGeneral(
