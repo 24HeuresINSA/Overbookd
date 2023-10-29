@@ -63,7 +63,7 @@
     "nuxt-typed-vuex": "0.3.1",
     "remixicon": "3.5.0",
     "vue-chartjs": "3.5.1",
-    "vue-safe-html": "2.2.0"
+    "vue-safe-html": "3.0.1"
   },
   "devDependencies": {
     "@babel/preset-env": "7.23.2",
