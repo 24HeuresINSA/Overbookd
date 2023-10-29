@@ -34,6 +34,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(faId);
     if (!existingFA) throw new FestivalActivityNotFound(faId);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.addTimeWindowInGeneral(period);
     return this.festivalActivities.save(updatedFA);
@@ -45,6 +46,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(faId);
     if (!existingFA) throw new FestivalActivityNotFound(faId);
+    if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.removeTimeWindowFromGeneral(timeWindowId);
     return this.festivalActivities.save(updatedFA);

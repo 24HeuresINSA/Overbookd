@@ -93,7 +93,7 @@ export class GeneralSection implements GeneralSectionRepresentation {
   }
 }
 
-class GeneralTimeWindow implements GeneralTimeWindowRepresentation {
+export class GeneralTimeWindow implements GeneralTimeWindowRepresentation {
   constructor(readonly id: string, readonly start: Date, readonly end: Date) {}
 
   get json(): GeneralTimeWindowRepresentation {

@@ -1,11 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  DraftFestivalActivity,
-  InChargeSection,
-} from "../creation/draft-festival-activity";
+import { DraftFestivalActivity } from "../creation/draft-festival-activity";
 import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
+import { InChargeSection } from "../creation/draft-festival-activity.model";
 
 const noel = {
   id: 1,

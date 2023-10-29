@@ -5,7 +5,7 @@ function buildFestivalActivityNotFoundErrorMessage(id: number) {
 export const GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE =
   "Une créneau existe déjà à ces heures pour cette activité";
 
-class FestivalActivityError extends Error {}
+export class FestivalActivityError extends Error {}
 
 export class FestivalActivityNotFound extends FestivalActivityError {
   constructor(id: number) {
