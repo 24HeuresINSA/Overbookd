@@ -1,14 +1,3 @@
-export const INVALID_PERIOD_ERROR_MESSAGE =
-  "La date de fin doit être ultérieure à la date de début";
-
-class PeriodError extends Error {}
-
-class InvalidPeriod extends PeriodError {
-  constructor() {
-    super(INVALID_PERIOD_ERROR_MESSAGE);
-  }
-}
-
 export interface IProvidePeriod {
   start: Date;
   end: Date;
@@ -24,7 +13,6 @@ export class Period {
   }
 
   static init({ start, end }: IProvidePeriod): Period {
-    if (start.getTime() >= end.getTime()) throw new InvalidPeriod();
     return new Period(start, end);
   }
 
