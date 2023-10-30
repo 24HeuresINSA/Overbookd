@@ -43,24 +43,32 @@
       class="btn-plus"
       elevation="2"
       fab
-      @click="isNewLocationDialogOpen = true"
+      @click="displayNewLocationDialog = true"
     >
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
 
-    <v-dialog v-model="isNewLocationDialogOpen" max-width="1200">
+    <v-dialog v-model="displayNewLocationDialog" max-width="1200">
       <NewLocationCard @close-dialog="closeAllDialogs" />
     </v-dialog>
 
-    <v-dialog v-model="displayEditLocationDialog" max-width="1200">
-      <ModifyLocationCard
+    <v-dialog
+      v-model="displayEditLocationDialog"
+      max-width="1200"
+      @update:return-value="closeAllDialogs"
+    >
+      <EditLocationCard
         v-if="locationToEdit"
         :location="locationToEdit"
         @close-dialog="closeAllDialogs"
       />
     </v-dialog>
 
-    <v-dialog v-model="displayDeleteLocationDialog" max-width="600">
+    <v-dialog
+      v-model="displayDeleteLocationDialog"
+      max-width="600"
+      @update:return-value="closeAllDialogs"
+    >
       <ConfirmationMessage
         @close-dialog="closeAllDialogs"
         @confirm="deleteLocation"
@@ -82,13 +90,13 @@ import { SignaLocation } from "@overbookd/signa";
 import LocationMap from "~/components/molecules/signa/location/LocationMap.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import NewLocationCard from "~/components/molecules/signa/location/NewLocationCard.vue";
-import ModifyLocationCard from "~/components/molecules/signa/location/EditLocationCard.vue";
+import EditLocationCard from "~/components/molecules/signa/location/EditLocationCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 interface LocationData {
   headers: Header[];
   search: string;
-  isNewLocationDialogOpen: boolean;
+  displayNewLocationDialog: boolean;
   locationToEdit: SignaLocation | null;
   locationToDelete: SignaLocation | null;
   displayEditLocationDialog: boolean;
@@ -100,7 +108,7 @@ export default Vue.extend({
   components: {
     LocationMap,
     NewLocationCard,
-    ModifyLocationCard,
+    EditLocationCard,
     ConfirmationMessage,
     SnackNotificationContainer,
   },
@@ -110,7 +118,7 @@ export default Vue.extend({
       { text: "Action", value: "action", sortable: false },
     ],
     search: "",
-    isNewLocationDialogOpen: false,
+    displayNewLocationDialog: false,
     locationToEdit: null,
     locationToDelete: null,
     displayEditLocationDialog: false,
@@ -122,16 +130,6 @@ export default Vue.extend({
   computed: {
     locations(): SignaLocation[] {
       return this.$accessor.signa.locations;
-    },
-  },
-  watch: {
-    displayEditLocationDialog(val: boolean) {
-      if (val) return;
-      this.closeAllDialogs();
-    },
-    displayDeleteLocationDialog(val: boolean) {
-      if (val) return;
-      this.closeAllDialogs();
     },
   },
   async mounted() {
@@ -147,9 +145,9 @@ export default Vue.extend({
       this.displayDeleteLocationDialog = true;
     },
     closeAllDialogs() {
-      this.isNewLocationDialogOpen = false;
       this.locationToEdit = null;
       this.locationToDelete = null;
+      this.displayNewLocationDialog = false;
       this.displayEditLocationDialog = false;
       this.displayDeleteLocationDialog = false;
     },

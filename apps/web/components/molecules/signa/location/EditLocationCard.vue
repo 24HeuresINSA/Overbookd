@@ -22,12 +22,12 @@ import { defineComponent } from "vue";
 import { SignaLocation } from "@overbookd/signa";
 import LocationMapEditor from "./LocationMapEditor.vue";
 
-interface ModifyLocationCardData {
+interface EditLocationCardData {
   newLocation: SignaLocation;
 }
 
 export default defineComponent({
-  name: "ModifyLocationCard",
+  name: "EditLocationCard",
   components: { LocationMapEditor },
   props: {
     location: {
@@ -35,7 +35,7 @@ export default defineComponent({
       required: true,
     },
   },
-  data: (props): ModifyLocationCardData => ({
+  data: (props): EditLocationCardData => ({
     newLocation: { ...props.location },
   }),
   computed: {
