@@ -3,8 +3,8 @@ import {
   PrepareGeneralSection,
   PrepareInChargeSection,
   PrepareSecuritySection,
+  PrepareSignaSection,
   PrepareSupplySection,
-  SignaSection,
 } from "@overbookd/festival-activity";
 import { IsOptional } from "class-validator";
 
@@ -71,7 +71,7 @@ export class InChargeSectionRequestDto implements PrepareInChargeSection {
   team?: string;
 }
 
-export class SignaSectionRequestDto implements Partial<SignaSection> {
+export class SignaSectionRequestDto implements PrepareSignaSection {
   @ApiProperty({
     description: "Festival activity location",
     required: false,
