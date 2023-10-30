@@ -12,7 +12,7 @@ import {
 import {
   GeneralSection,
   GeneralSectionRepresentation,
-} from "./general-section";
+} from "./general-section.factory";
 import { Period } from "@overbookd/period";
 
 export class DraftFestivalActivity

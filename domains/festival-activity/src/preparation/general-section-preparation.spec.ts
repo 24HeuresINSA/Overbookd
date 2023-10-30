@@ -6,7 +6,7 @@ import { InMemoryFestivalActivityRepository } from "../festival-activity-reposit
 import {
   GeneralSection,
   GeneralSectionRepresentation,
-} from "../creation/general-section";
+} from "../creation/general-section.factory";
 import { GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
 import { Period } from "@overbookd/period";
 import { Duration } from "@overbookd/period";

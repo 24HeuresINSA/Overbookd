@@ -5,7 +5,7 @@ import {
   InquirySection,
   DRAFT,
 } from "../festival-activity.core";
-import { GeneralSectionRepresentation } from "./general-section";
+import { GeneralSectionRepresentation } from "./general-section.factory";
 
 export type InChargeSection = {
   adherent: Adherent;

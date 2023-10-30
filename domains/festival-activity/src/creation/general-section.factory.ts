@@ -29,7 +29,7 @@ export class GeneralSection implements GeneralSectionRepresentation {
     readonly toPublish: boolean,
     readonly photoLink: string | null,
     readonly isFlagship: boolean,
-    readonly timeWindows: GeneralTimeWindowRepresentation[],
+    readonly timeWindows: GeneralTimeWindow[],
   ) {}
 
   get json(): GeneralSectionRepresentation {
@@ -40,7 +40,7 @@ export class GeneralSection implements GeneralSectionRepresentation {
       toPublish: this.toPublish,
       photoLink: this.photoLink,
       isFlagship: this.isFlagship,
-      timeWindows: this.timeWindows,
+      timeWindows: this.timeWindows.map((tw) => tw.json),
     };
   }
 
@@ -56,7 +56,7 @@ export class GeneralSection implements GeneralSectionRepresentation {
       general.toPublish,
       general.photoLink,
       general.isFlagship,
-      general.timeWindows,
+      GeneralTimeWindow.buildArray(general.timeWindows),
     );
   }
 
@@ -103,6 +103,20 @@ export class GeneralTimeWindow implements GeneralTimeWindowRepresentation {
       start: this.start,
       end: this.end,
     };
+  }
+
+  static build(timeWindow: GeneralTimeWindowRepresentation): GeneralTimeWindow {
+    return new GeneralTimeWindow(
+      timeWindow.id,
+      timeWindow.start,
+      timeWindow.end,
+    );
+  }
+
+  static buildArray(
+    timeWindows: GeneralTimeWindowRepresentation[],
+  ): GeneralTimeWindow[] {
+    return timeWindows.map(GeneralTimeWindow.build);
   }
 
   static create(form: CreateGeneralTimeWindow): GeneralTimeWindow {
