@@ -82,7 +82,7 @@ import { SignaLocation } from "@overbookd/signa";
 import LocationMap from "~/components/molecules/signa/location/LocationMap.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import NewLocationCard from "~/components/molecules/signa/location/NewLocationCard.vue";
-import ModifyLocationCard from "~/components/molecules/signa/location/ModifyLocationCard.vue";
+import ModifyLocationCard from "~/components/molecules/signa/location/EditLocationCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 interface LocationData {
