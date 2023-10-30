@@ -135,7 +135,7 @@
     "testEnvironment": "node"
   },
   "engines": {
-    "node": "20.8.1",
+    "node": "20.9.0",
     "pnpm": "8.9.2"
   }
 }
