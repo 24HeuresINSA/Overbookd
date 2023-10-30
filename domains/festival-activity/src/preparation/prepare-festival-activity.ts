@@ -1,14 +1,14 @@
 import { Period } from "@overbookd/period";
-import {
-  InChargeSection,
-  SecuritySection,
-  SignaSection,
-  SupplySection,
-} from "../creation/draft-festival-activity.model";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { FestivalActivity, isDraft } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";
-import { PrepareGeneralSection } from "./prepare-festival-activity.model";
+import {
+  PrepareGeneralSection,
+  PrepareInChargeSection,
+  PrepareSecuritySection,
+  PrepareSignaSection,
+  PrepareSupplySection,
+} from "./prepare-festival-activity.model";
 
 export class PrepareFestivalActivity {
   constructor(
@@ -24,7 +24,6 @@ export class PrepareFestivalActivity {
     if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeGeneralSection(general);
-
     return this.festivalActivities.save(updatedFA);
   }
 
@@ -54,53 +53,49 @@ export class PrepareFestivalActivity {
 
   async updateInChargeSection(
     id: number,
-    inCharge: Partial<InChargeSection>,
+    inCharge: PrepareInChargeSection,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeInChargeSection(inCharge);
-
     return this.festivalActivities.save(updatedFA);
   }
 
   async updateSignaSection(
     id: number,
-    signa: Partial<SignaSection>,
+    signa: PrepareSignaSection,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeSignaSection(signa);
-
     return this.festivalActivities.save(updatedFA);
   }
 
   async updateSecuritySection(
     id: number,
-    security: Partial<SecuritySection>,
+    security: PrepareSecuritySection,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeSecuritySection(security);
-
     return this.festivalActivities.save(updatedFA);
   }
 
   async updateSupplySection(
     id: number,
-    supply: Partial<SupplySection>,
+    supply: PrepareSupplySection,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     if (!isDraft(existingFA)) return existingFA;
 
     const updatedFA = existingFA.changeSupplySection(supply);
-
     return this.festivalActivities.save(updatedFA);
   }
 }

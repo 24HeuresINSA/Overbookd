@@ -9,11 +9,15 @@ import {
   SecuritySection,
   SupplySection,
 } from "./draft-festival-activity.model";
-import {
-  DraftGeneralSection,
-  DraftGeneralSectionRepresentation,
-} from "./draft-general-section";
+import { DraftGeneralSection } from "./draft-general-section";
 import { Period } from "@overbookd/period";
+import {
+  PrepareGeneralSection,
+  PrepareInChargeSection,
+  PrepareSecuritySection,
+  PrepareSignaSection,
+  PrepareSupplySection,
+} from "../preparation/prepare-festival-activity.model";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
@@ -63,7 +67,7 @@ export class DraftFestivalActivity
   }
 
   public changeGeneralSection(
-    generalUpdate: Partial<DraftGeneralSectionRepresentation>,
+    generalUpdate: PrepareGeneralSection,
   ): DraftFestivalActivity {
     const general = this.general.update(generalUpdate);
     const builder = { ...this.json, general };
@@ -88,7 +92,7 @@ export class DraftFestivalActivity
   }
 
   public changeInChargeSection(
-    inChargeUpdate: Partial<InChargeSection>,
+    inChargeUpdate: PrepareInChargeSection,
   ): DraftFestivalActivity {
     const inCharge = { ...this.inCharge, ...inChargeUpdate };
 
@@ -97,7 +101,7 @@ export class DraftFestivalActivity
   }
 
   public changeSignaSection(
-    signaUpdate: Partial<SignaSection>,
+    signaUpdate: PrepareSignaSection,
   ): DraftFestivalActivity {
     const signa = { ...this.signa, ...signaUpdate };
 
@@ -106,7 +110,7 @@ export class DraftFestivalActivity
   }
 
   public changeSecuritySection(
-    securityUpdate: Partial<SecuritySection>,
+    securityUpdate: PrepareSecuritySection,
   ): DraftFestivalActivity {
     const security = { ...this.security, ...securityUpdate };
 
@@ -115,7 +119,7 @@ export class DraftFestivalActivity
   }
 
   public changeSupplySection(
-    supplyUpdate: Partial<SupplySection>,
+    supplyUpdate: PrepareSupplySection,
   ): DraftFestivalActivity {
     const supply = { ...this.supply, ...supplyUpdate };
 
