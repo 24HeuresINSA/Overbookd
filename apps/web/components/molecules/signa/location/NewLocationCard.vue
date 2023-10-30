@@ -21,6 +21,10 @@ import { defineComponent } from "vue";
 import LocationMapEditor from "./LocationMapEditor.vue";
 import { CreateLocation } from "~/utils/models/signa-location.model";
 
+interface NewLocationCardDate {
+  newLocation: CreateLocation;
+}
+
 const defaultLocation: CreateLocation = {
   name: "",
   geoJson: null,
@@ -29,7 +33,7 @@ const defaultLocation: CreateLocation = {
 export default defineComponent({
   name: "NewLocationCard",
   components: { LocationMapEditor },
-  data: () => ({
+  data: (): NewLocationCardDate => ({
     newLocation: { ...defaultLocation },
   }),
   computed: {
@@ -40,9 +44,7 @@ export default defineComponent({
   methods: {
     async createNewLocation() {
       if (!this.isNewLocationDefined) return;
-      await this.$accessor.signa.createLocation(
-        this.newLocation as CreateLocation,
-      );
+      await this.$accessor.signa.createLocation(this.newLocation);
 
       this.newLocation = { ...defaultLocation };
       this.$emit("close-dialog");
