@@ -15,11 +15,11 @@ export type {
   SecuritySection,
   SupplySection,
 } from "./creation/draft-festival-activity.model";
-export { GeneralSection } from "./creation/general-section.factory";
+export { DraftGeneralSection } from "./creation/draft-general-section";
 export type {
-  GeneralSectionRepresentation,
+  DraftGeneralSectionRepresentation,
   GeneralTimeWindowRepresentation,
-} from "./creation/general-section.factory";
+} from "./creation/draft-general-section";
 export { DraftFestivalActivity } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,

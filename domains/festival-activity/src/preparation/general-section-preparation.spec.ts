@@ -4,9 +4,9 @@ import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
 import {
-  GeneralSection,
-  GeneralSectionRepresentation,
-} from "../creation/general-section.factory";
+  DraftGeneralSection,
+  DraftGeneralSectionRepresentation,
+} from "../creation/draft-general-section";
 import { GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
 import { Period } from "@overbookd/period";
 import { Duration } from "@overbookd/period";
@@ -17,7 +17,7 @@ const noel = {
   firstname: "Noel",
 };
 
-const escapeGameGeneral: GeneralSectionRepresentation = {
+const escapeGameGeneral: DraftGeneralSectionRepresentation = {
   name: "Escape Game",
   description: null,
   toPublish: true,
@@ -41,7 +41,7 @@ describe("General section of festival activity preparation", () => {
     });
     escapeGameActivity = DraftFestivalActivity.build({
       ...escapeGameCreation,
-      general: GeneralSection.build(escapeGameGeneral),
+      general: DraftGeneralSection.build(escapeGameGeneral),
     });
     const festivalActivities = [escapeGameActivity];
 

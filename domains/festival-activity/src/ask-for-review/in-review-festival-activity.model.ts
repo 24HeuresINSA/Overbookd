@@ -10,7 +10,7 @@ import {
   SignaSection,
   SupplySection,
 } from "../creation/draft-festival-activity.model";
-import { GeneralTimeWindow } from "../creation/general-section.factory";
+import { GeneralTimeWindow } from "../creation/draft-general-section";
 
 export type InReviewPrivateGeneralSection = {
   name: string;

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import type {
   DraftFestivalActivityRepresentation,
-  GeneralSection,
+  DraftGeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
@@ -11,8 +11,8 @@ import type {
   Signage,
   ElectricitySupply,
   Inquiry,
-  GeneralSectionRepresentation,
   GeneralTimeWindowRepresentation,
+  DraftGeneralSectionRepresentation,
 } from "@overbookd/festival-activity";
 import { DRAFT } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
@@ -38,7 +38,7 @@ class GeneralTimeWindowDto implements GeneralTimeWindowRepresentation {
   end: Date;
 }
 
-class GeneralSectionDto implements GeneralSectionRepresentation {
+class GeneralSectionDto implements DraftGeneralSectionRepresentation {
   @ApiProperty({
     description: "Festival activity name",
   })
@@ -257,7 +257,7 @@ export class DraftFestivalActivityDto
     description: "Section related to festival activity general info",
     type: GeneralSectionDto,
   })
-  general: GeneralSection;
+  general: DraftGeneralSection;
 
   @ApiProperty({
     description: "Section related to festival activity in charge info",

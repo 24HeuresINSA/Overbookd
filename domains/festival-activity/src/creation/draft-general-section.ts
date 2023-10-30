@@ -1,6 +1,7 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { GeneralTimeWindowAlreadyExists } from "../festival-activity.error";
 import { Duration } from "@overbookd/period";
+import { PrepareGeneralSection } from "../preparation/prepare-festival-activity.model";
 
 export type GeneralTimeWindowRepresentation = IProvidePeriod & {
   id: string;
@@ -11,7 +12,7 @@ type CreateGeneralTimeWindow = {
   period: Period;
 };
 
-export type GeneralSectionRepresentation = {
+export type DraftGeneralSectionRepresentation = {
   name: string;
   description: string | null;
   categories: string[];
@@ -21,7 +22,7 @@ export type GeneralSectionRepresentation = {
   timeWindows: GeneralTimeWindowRepresentation[];
 };
 
-export class GeneralSection implements GeneralSectionRepresentation {
+export class DraftGeneralSection implements DraftGeneralSectionRepresentation {
   private constructor(
     readonly name: string,
     readonly description: string | null,
@@ -32,7 +33,7 @@ export class GeneralSection implements GeneralSectionRepresentation {
     readonly timeWindows: GeneralTimeWindow[],
   ) {}
 
-  get json(): GeneralSectionRepresentation {
+  get json(): DraftGeneralSectionRepresentation {
     return {
       name: this.name,
       description: this.description,
@@ -44,12 +45,14 @@ export class GeneralSection implements GeneralSectionRepresentation {
     };
   }
 
-  static create(name: string): GeneralSection {
-    return new GeneralSection(name, null, [], false, null, false, []);
+  static create(name: string): DraftGeneralSection {
+    return new DraftGeneralSection(name, null, [], false, null, false, []);
   }
 
-  static build(general: GeneralSectionRepresentation): GeneralSection {
-    return new GeneralSection(
+  static build(
+    general: DraftGeneralSectionRepresentation,
+  ): DraftGeneralSection {
+    return new DraftGeneralSection(
       general.name,
       general.description,
       general.categories,
@@ -60,9 +63,7 @@ export class GeneralSection implements GeneralSectionRepresentation {
     );
   }
 
-  public update(
-    generalUpdate: Partial<GeneralSectionRepresentation>,
-  ): GeneralSection {
+  public update(generalUpdate: PrepareGeneralSection): DraftGeneralSection {
     const privateFestivalActivity = {
       toPublish: false,
       photoLink: null,
@@ -73,10 +74,12 @@ export class GeneralSection implements GeneralSectionRepresentation {
         ? { ...generalUpdate, ...privateFestivalActivity }
         : generalUpdate;
     const build = { ...this.json, ...cleanedUpdate };
-    return GeneralSection.build(build);
+    return DraftGeneralSection.build(build);
   }
 
-  public addTimeWindow(timeWindow: CreateGeneralTimeWindow): GeneralSection {
+  public addTimeWindow(
+    timeWindow: CreateGeneralTimeWindow,
+  ): DraftGeneralSection {
     const newTimeWindow = GeneralTimeWindow.create(timeWindow);
 
     const alreadyExists = this.timeWindows.some(
@@ -85,12 +88,12 @@ export class GeneralSection implements GeneralSectionRepresentation {
     if (alreadyExists) throw new GeneralTimeWindowAlreadyExists();
 
     const timeWindows = [...this.timeWindows, newTimeWindow];
-    return GeneralSection.build({ ...this.json, timeWindows });
+    return DraftGeneralSection.build({ ...this.json, timeWindows });
   }
 
-  public removeTimeWindow(timeWindowId: string): GeneralSection {
+  public removeTimeWindow(timeWindowId: string): DraftGeneralSection {
     const timeWindows = this.timeWindows.filter((tw) => tw.id !== timeWindowId);
-    return GeneralSection.build({ ...this.json, timeWindows });
+    return DraftGeneralSection.build({ ...this.json, timeWindows });
   }
 }
 

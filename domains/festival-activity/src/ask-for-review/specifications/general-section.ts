@@ -1,7 +1,7 @@
 import {
-  GeneralSection,
-  GeneralSectionRepresentation,
-} from "../../creation/general-section.factory";
+  DraftGeneralSection,
+  DraftGeneralSectionRepresentation,
+} from "../../creation/draft-general-section";
 
 const REQUIRED_DESCRIPTION = "Une description est nécessaire";
 const REQUIRED_PHOTO_ON_PUBLIC_ACTIVITY =
@@ -11,16 +11,16 @@ const REQUIRED_CATEGORIES_ON_PUBLIC_ACTIVITY =
 const REQUIRED_TIMEWINDOWS_ON_PUBLIC_ACTIVITY =
   "Au moins un créneau horaire est nécessaire pour les animations publiées";
 
-type PublicDraftGeneral = GeneralSection & {
+type PublicDraftGeneral = DraftGeneralSection & {
   toPublish: true;
 };
 
 export class ActivityGeneralSpecification {
-  static errors(section: GeneralSectionRepresentation): string[] {
+  static errors(section: DraftGeneralSectionRepresentation): string[] {
     return this.hasDescriptionSet(section) ? [] : [REQUIRED_DESCRIPTION];
   }
 
-  private static hasDescriptionSet(section: GeneralSectionRepresentation) {
+  private static hasDescriptionSet(section: DraftGeneralSectionRepresentation) {
     return section.description !== null;
   }
 }
@@ -66,7 +66,7 @@ export class PublicActivityGeneralSpecification {
 }
 
 export function isPublicActivity(
-  general: GeneralSectionRepresentation,
+  general: DraftGeneralSectionRepresentation,
 ): general is PublicDraftGeneral {
   return general.toPublish;
 }
