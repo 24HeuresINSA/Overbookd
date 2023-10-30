@@ -14,7 +14,6 @@ export class UpdateSignaLocationRequestDto {
     example: "Devant les humas",
     required: true,
   })
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
   name: string;

@@ -32,9 +32,9 @@
         ></v-select>
       </div>
       <v-btn :disabled="editionDone" @click="finishAction">
-        Finir l'edition
+        Finir l'édition
       </v-btn>
-      <v-btn @click="reset(action)"> Réinitialiser </v-btn>
+      <v-btn @click="reset(action)">Réinitialiser</v-btn>
     </div>
   </section>
 </template>
@@ -54,12 +54,6 @@ import { Line } from "~/utils/signa-location/line";
 import { Polygon } from "~/utils/signa-location/polygon";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
 
-const actions: ActionItem[] = [
-  { key: POINT, value: "Point" },
-  { key: ROAD, value: "Route" },
-  { key: AREA, value: "Zone" },
-];
-
 type Action = typeof POINT | typeof ROAD | typeof AREA;
 type ActionItem = {
   key: Action;
@@ -78,6 +72,12 @@ interface LocationMapEditorData {
   line: Line;
   polygon: Polygon;
 }
+
+const actions: ActionItem[] = [
+  { key: POINT, value: "Point" },
+  { key: ROAD, value: "Route" },
+  { key: AREA, value: "Zone" },
+];
 
 export default defineComponent({
   name: "LocationMapEditor",
