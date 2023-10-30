@@ -5,7 +5,7 @@ import {
   SignaSection,
   SupplySection,
 } from "../creation/draft-festival-activity.model";
-import { GeneralSectionRepresentation } from "../creation/general-section";
+import { GeneralSectionRepresentation } from "../creation/general-section.factory";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { FestivalActivity, isDraft } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";

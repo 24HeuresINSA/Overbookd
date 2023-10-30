@@ -7,7 +7,7 @@ import {
 } from "./draft-festival-activity.model";
 import { InquirySection } from "../festival-activity.core";
 import { Adherent } from "../festival-activity.core";
-import { GeneralSection } from "./general-section";
+import { GeneralSection } from "./general-section.factory";
 
 function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1_000_000; i++) {
