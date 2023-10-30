@@ -1,6 +1,7 @@
 import { Coordinate, AREA, AreaLocation } from "@overbookd/signa";
+import { Location } from "./location";
 
-export class Polygon implements AreaLocation {
+export class Polygon implements AreaLocation, Location {
   private constructor(private _coordinates: Coordinate[]) {}
 
   static create(coordinates: Coordinate[] = []) {

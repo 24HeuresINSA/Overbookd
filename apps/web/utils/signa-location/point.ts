@@ -1,6 +1,7 @@
 import { POINT, PointLocation, Coordinate } from "@overbookd/signa";
+import { Location } from "./location";
 
-export class Point implements PointLocation {
+export class Point implements PointLocation, Location {
   private constructor(private _coordinates: Coordinate) {}
 
   static create(coordinates: Coordinate = { lat: 1, lng: 1 }) {
