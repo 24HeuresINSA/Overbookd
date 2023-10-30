@@ -10,9 +10,9 @@ import {
   SupplySection,
 } from "./draft-festival-activity.model";
 import {
-  GeneralSection,
-  GeneralSectionRepresentation,
-} from "./general-section.factory";
+  DraftGeneralSection,
+  DraftGeneralSectionRepresentation,
+} from "./draft-general-section";
 import { Period } from "@overbookd/period";
 
 export class DraftFestivalActivity
@@ -20,7 +20,7 @@ export class DraftFestivalActivity
 {
   private constructor(
     readonly id: number,
-    readonly general: GeneralSection,
+    readonly general: DraftGeneralSection,
     readonly inCharge: InChargeSection,
     readonly signa: SignaSection,
     readonly security: SecuritySection,
@@ -53,7 +53,7 @@ export class DraftFestivalActivity
 
     return new DraftFestivalActivity(
       id,
-      GeneralSection.build(general),
+      DraftGeneralSection.build(general),
       inCharge,
       signa,
       security,
@@ -63,7 +63,7 @@ export class DraftFestivalActivity
   }
 
   public changeGeneralSection(
-    generalUpdate: Partial<GeneralSectionRepresentation>,
+    generalUpdate: Partial<DraftGeneralSectionRepresentation>,
   ): DraftFestivalActivity {
     const general = this.general.update(generalUpdate);
     const builder = { ...this.json, general };

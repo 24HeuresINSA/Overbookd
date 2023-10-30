@@ -5,7 +5,7 @@ import {
   InquirySection,
   DRAFT,
 } from "../festival-activity.core";
-import { GeneralSectionRepresentation } from "./general-section.factory";
+import { DraftGeneralSectionRepresentation } from "./draft-general-section";
 
 export type InChargeSection = {
   adherent: Adherent;
@@ -28,7 +28,7 @@ export type SupplySection = {
 };
 export type BaseFestivalActivity = {
   id: number;
-  general: GeneralSectionRepresentation;
+  general: DraftGeneralSectionRepresentation;
   inCharge: InChargeSection;
   signa: SignaSection;
   security: SecuritySection;
