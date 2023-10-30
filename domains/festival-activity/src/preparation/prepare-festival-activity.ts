@@ -5,10 +5,10 @@ import {
   SignaSection,
   SupplySection,
 } from "../creation/draft-festival-activity.model";
-import { GeneralSectionRepresentation } from "../creation/general-section.factory";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { FestivalActivity, isDraft } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";
+import { PrepareGeneralSection } from "./prepare-festival-activity.model";
 
 export class PrepareFestivalActivity {
   constructor(
@@ -17,7 +17,7 @@ export class PrepareFestivalActivity {
 
   async updateGeneralSection(
     id: number,
-    general: Partial<GeneralSectionRepresentation>,
+    general: PrepareGeneralSection,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);

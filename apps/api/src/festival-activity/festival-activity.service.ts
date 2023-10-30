@@ -3,13 +3,13 @@ import {
   DraftFestivalActivity,
   FestivalActivity,
   FestivalActivityRepository,
-  GeneralSectionRepresentation,
   PrepareFestivalActivity,
+  PrepareGeneralSection,
   PrepareInChargeSection,
+  PrepareSecuritySection,
+  PrepareSignaSection,
+  PrepareSupplySection,
   PreviewFestivalActivity,
-  SecuritySection,
-  SignaSection,
-  SupplySection,
 } from "@overbookd/festival-activity";
 import { AdherentRepository } from "./repository/adherent-repository.prisma";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
@@ -45,7 +45,7 @@ export class FestivalActivityService {
 
   saveGeneralSection(
     id: number,
-    general: Partial<GeneralSectionRepresentation>,
+    general: PrepareGeneralSection,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
@@ -63,21 +63,21 @@ export class FestivalActivityService {
 
   saveSignaSection(
     id: number,
-    signa: Partial<SignaSection>,
+    signa: PrepareSignaSection,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSignaSection(id, signa);
   }
 
   saveSecuritySection(
     id: number,
-    security: Partial<SecuritySection>,
+    security: PrepareSecuritySection,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
     id: number,
-    supply: Partial<SupplySection>,
+    supply: PrepareSupplySection,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);
   }
