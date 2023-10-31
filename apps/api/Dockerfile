@@ -2,7 +2,7 @@ FROM node:20-alpine AS installer
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@8.9.2
+RUN npm install -g pnpm@8.10.0
 COPY pnpm-lock.yaml ./
 
 RUN pnpm fetch
@@ -50,7 +50,7 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
 
 ENV NODE_ENV production
 
-RUN npm install -g pnpm@8.9.2
+RUN npm install -g pnpm@8.10.0
 
 USER node
 
