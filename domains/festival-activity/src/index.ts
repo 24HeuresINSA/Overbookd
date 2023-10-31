@@ -4,19 +4,19 @@ export type {
   Adherent,
   Signage,
   ElectricitySupply,
-  Inquiry,
+  InquiryRequest as Inquiry,
+  InquirySection,
+} from "./festival-activity.core";
+export { DRAFT } from "./festival-activity.core";
+export type {
   DraftFestivalActivityRepresentation,
   GeneralSection,
   InChargeSection,
   SignaSection,
   SecuritySection,
   SupplySection,
-  InquirySection,
-} from "./creation/draft-festival-activity";
-export {
-  DraftFestivalActivity,
-  DRAFT,
-} from "./creation/draft-festival-activity";
+} from "./creation/draft-festival-activity.model";
+export { DraftFestivalActivity } from "./creation/draft-festival-activity";
 export type {
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
@@ -33,3 +33,11 @@ export type {
   PrepareSecuritySection,
   PrepareSupplySection,
 } from "./preparation/prepare-festival-activity.model";
+
+export type {
+  InReviewPrivateGeneralSection,
+  InReviewGeneralSection,
+  InReviewPublicGeneralSection,
+  InReviewFestivalActivityRepresentation,
+  InReviewInquirySectionWithRequests,
+} from "./ask-for-review/in-review-festival-activity.model";

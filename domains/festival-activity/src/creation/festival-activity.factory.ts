@@ -1,13 +1,13 @@
+import { DraftFestivalActivity } from "./draft-festival-activity";
 import {
-  DraftFestivalActivity,
   GeneralSection,
-  Adherent,
   InChargeSection,
   SignaSection,
   SecuritySection,
   SupplySection,
-  InquirySection,
-} from "./draft-festival-activity";
+} from "./draft-festival-activity.model";
+import { InquirySection } from "../festival-activity.core";
+import { Adherent } from "../festival-activity.core";
 
 function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1_000_000; i++) {

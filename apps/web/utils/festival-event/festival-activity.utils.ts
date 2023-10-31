@@ -1,47 +1,23 @@
-import { FestivalActivityRepresentation } from "@overbookd/festival-activity";
+import {
+  DRAFT,
+  DraftFestivalActivityRepresentation,
+  FestivalActivityRepresentation,
+} from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
+import { InReview } from "./in-review";
+import { Draft } from "./draft";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivityRepresentation>,
 ): FestivalActivityRepresentation {
-  return {
-    ...activity,
-    general: castGeneralSectionWithDate(activity.general),
-    inquiry: castInquirySectionWithDate(activity.inquiry),
-    inCharge: {
-      ...activity.inCharge,
-      contractors: [], // TODO remove this when contractors are implemented
-    },
-  };
+  if (isDraft(activity)) {
+    return Draft.castActivityWithDate(activity);
+  }
+  return InReview.castActivityWithDate(activity);
 }
 
-type General = FestivalActivityRepresentation["general"];
-type Inquiry = FestivalActivityRepresentation["inquiry"];
-
-function castGeneralSectionWithDate(
-  general: HttpStringified<General>,
-): General {
-  const timeWindows = general.timeWindows.map((tw) => ({
-    ...tw,
-    start: new Date(tw.start),
-    end: new Date(tw.end),
-  }));
-  return {
-    ...general,
-    timeWindows,
-  };
-}
-
-function castInquirySectionWithDate(
-  inquiry: HttpStringified<Inquiry>,
-): Inquiry {
-  const timeWindows = inquiry.timeWindows.map((tw) => ({
-    ...tw,
-    start: new Date(tw.start),
-    end: new Date(tw.end),
-  }));
-  return {
-    ...inquiry,
-    timeWindows,
-  };
+function isDraft(
+  festivalActivity: HttpStringified<FestivalActivityRepresentation>,
+): festivalActivity is HttpStringified<DraftFestivalActivityRepresentation> {
+  return festivalActivity.status === DRAFT;
 }
