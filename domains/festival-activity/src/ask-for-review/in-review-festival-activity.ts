@@ -8,10 +8,10 @@ import {
   isPublicActivity,
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
-} from "./specifications/general-section";
-import { ActivityInChargeSpecification } from "./specifications/in-charge-section";
-import { ActivitySignaSpecification } from "./specifications/signa-section";
-import { ActivityInquirySpecification } from "./specifications/inquiry-section";
+} from "./specifications/general-section-specification";
+import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification";
+import { ActivitySignaSpecification } from "./specifications/signa-section-specification";
+import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification";
 import { ReadyForReviewException } from "./ready-for-review.error";
 import {
   WaitingForReview,
