@@ -44,7 +44,7 @@ describe("Invite new adherents", () => {
     describe("when link is not expired yet", () => {
       const validLink = InviteNewAdherents.byLink({ domain, secret });
       const expireText = new RegExp(
-        "Le lien expire le [1-9][0-9]? [a-z]+ 2[0-9]{3}",
+        "Le lien expire le [1-9][0-9]? [a-zéû]+ 2[0-9]{3}",
       );
       it("should indicate when link will expire", () => {
         expect(InviteNewAdherents.isLinkExpired(validLink)).toMatch(expireText);
