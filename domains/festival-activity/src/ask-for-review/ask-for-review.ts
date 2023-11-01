@@ -1,7 +1,7 @@
-import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { FestivalActivityRepository } from "../festival-activity.repository";
 import { FestivalActivityNotFound, Review } from "../festival-activity.error";
 import { isDraft } from "../festival-activity.model";
+import { InReviewFestivalActivity } from "./in-review-festival-activity";
 
 export class AskForReview {
   constructor(

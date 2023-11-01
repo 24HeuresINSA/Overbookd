@@ -1,5 +1,4 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { GeneralTimeWindow } from "./creation/draft-general-section";
 
 export const DRAFT = "DRAFT";
 export const IN_REVIEW = "IN_REVIEW";
@@ -69,9 +68,9 @@ export type PrivateGeneralSection = {
   description: string;
   toPublish: false;
   categories: string[];
-  photoLink: string | null;
-  isFlagship: boolean;
-  timeWindows: GeneralTimeWindow[];
+  photoLink: null;
+  isFlagship: false;
+  timeWindows: TimeWindow[];
 };
 
 export type PublicGeneralSection = {
@@ -81,12 +80,13 @@ export type PublicGeneralSection = {
   categories: [string, ...string[]];
   photoLink: string;
   isFlagship: boolean;
-  timeWindows: [GeneralTimeWindow, ...GeneralTimeWindow[]];
+  timeWindows: [TimeWindow, ...TimeWindow[]];
 };
 
 export type GeneralSection = PrivateGeneralSection | PublicGeneralSection;
+
 export type InquiryWithTimeWindows = {
-  timeWindows: [IProvidePeriod, ...IProvidePeriod[]];
+  timeWindows: [TimeWindow, ...TimeWindow[]];
 };
 
 type InquiryWithGears = {
@@ -115,13 +115,17 @@ export type InquiryWithRequests =
 export type InquirySectionWithRequests = InquiryWithRequests &
   InquiryWithTimeWindows;
 
-export type InquirySectionWithoutRequest = {
-  timeWindows: IProvidePeriod[];
+export type InquirySectionWithPotentialRequests = {
+  timeWindows: TimeWindow[];
   gears: Inquiry[];
   electricity: Inquiry[];
   barriers: Inquiry[];
 };
 
 export type InquirySection =
-  | InquirySectionWithoutRequest
+  | InquirySectionWithPotentialRequests
   | InquirySectionWithRequests;
+
+export type TimeWindow = IProvidePeriod & {
+  id: string;
+};

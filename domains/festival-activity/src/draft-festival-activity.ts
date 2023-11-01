@@ -3,21 +3,22 @@ import { InReviewFestivalActivity } from "./ask-for-review/in-review-festival-ac
 import {
   DraftFestivalActivityBuilder,
   DraftFestivalActivityRepresentation,
+  DraftGeneralSection,
   DraftInChargeSection,
   DraftInquirySection,
   DraftSecuritySection,
   DraftSignaSection,
   DraftSupplySection,
 } from "./creation/draft-festival-activity.model";
-import { DraftGeneralSection } from "./creation/draft-general-section";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import {
-  PrepareGeneralSection,
-  PrepareInChargeSection,
-  PrepareSecuritySection,
-  PrepareSignaSection,
-  PrepareSupplySection,
+  PrepareGeneralSectionForm,
+  PrepareInChargeSectionForm,
+  PrepareSecuritySectionForm,
+  PrepareSignaSectionForm,
+  PrepareSupplySectionForm,
 } from "./preparation/prepare-festival-activity.model";
+import { PrepareGeneralSection } from "./preparation/prepare-general-section";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
@@ -39,7 +40,7 @@ export class DraftFestivalActivity
   get json(): DraftFestivalActivityRepresentation {
     return {
       id: this.id,
-      general: this.general.json,
+      general: this.general,
       inCharge: this.inCharge,
       signa: this.signa,
       security: this.security,
@@ -57,7 +58,7 @@ export class DraftFestivalActivity
 
     return new DraftFestivalActivity(
       id,
-      DraftGeneralSection.build(general),
+      general,
       inCharge,
       signa,
       security,
@@ -67,32 +68,39 @@ export class DraftFestivalActivity
   }
 
   public changeGeneralSection(
-    generalUpdate: PrepareGeneralSection,
+    generalUpdate: PrepareGeneralSectionForm,
   ): DraftFestivalActivity {
-    const general = this.general.update(generalUpdate);
+    const general = PrepareGeneralSection.build(this.general).update(
+      generalUpdate,
+    );
+
     const builder = { ...this.json, general };
     return DraftFestivalActivity.build(builder);
   }
 
-  public addTimeWindowInGeneral(period: Period): DraftFestivalActivity {
+  public addTimeWindowInGeneral(period: IProvidePeriod): DraftFestivalActivity {
     const timeWindowForm = { faId: this.id, period };
-    const general = this.general.addTimeWindow(timeWindowForm);
+    const general = PrepareGeneralSection.build(this.general).addTimeWindow(
+      timeWindowForm,
+    );
 
     const builder = { ...this.json, general };
     return DraftFestivalActivity.build(builder);
   }
 
   public removeTimeWindowFromGeneral(
-    timeWIndowId: string,
+    timeWindowId: string,
   ): DraftFestivalActivity {
-    const general = this.general.removeTimeWindow(timeWIndowId);
+    const general = PrepareGeneralSection.build(this.general).removeTimeWindow(
+      timeWindowId,
+    );
 
     const builder = { ...this.json, general };
     return DraftFestivalActivity.build(builder);
   }
 
   public changeInChargeSection(
-    inChargeUpdate: PrepareInChargeSection,
+    inChargeUpdate: PrepareInChargeSectionForm,
   ): DraftFestivalActivity {
     const inCharge = { ...this.inCharge, ...inChargeUpdate };
 
@@ -101,7 +109,7 @@ export class DraftFestivalActivity
   }
 
   public changeSignaSection(
-    signaUpdate: PrepareSignaSection,
+    signaUpdate: PrepareSignaSectionForm,
   ): DraftFestivalActivity {
     const signa = { ...this.signa, ...signaUpdate };
 
@@ -110,7 +118,7 @@ export class DraftFestivalActivity
   }
 
   public changeSecuritySection(
-    securityUpdate: PrepareSecuritySection,
+    securityUpdate: PrepareSecuritySectionForm,
   ): DraftFestivalActivity {
     const security = { ...this.security, ...securityUpdate };
 
@@ -119,7 +127,7 @@ export class DraftFestivalActivity
   }
 
   public changeSupplySection(
-    supplyUpdate: PrepareSupplySection,
+    supplyUpdate: PrepareSupplySectionForm,
   ): DraftFestivalActivity {
     const supply = { ...this.supply, ...supplyUpdate };
 

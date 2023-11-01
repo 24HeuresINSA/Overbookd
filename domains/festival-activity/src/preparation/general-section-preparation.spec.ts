@@ -3,13 +3,11 @@ import { DraftFestivalActivity } from "../draft-festival-activity";
 import { FestivalActivityCreation } from "../creation/creation";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-import {
-  DraftGeneralSection,
-  DraftGeneralSectionRepresentation,
-} from "../creation/draft-general-section";
-import { GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
+import { PrepareGeneralSection } from "./prepare-general-section";
+import { TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
 import { Period } from "@overbookd/period";
 import { Duration } from "@overbookd/period";
+import { DraftGeneralSection } from "../creation/draft-festival-activity.model";
 
 const noel = {
   id: 1,
@@ -17,7 +15,7 @@ const noel = {
   firstname: "Noel",
 };
 
-const escapeGameGeneral: DraftGeneralSectionRepresentation = {
+const escapeGameGeneral: DraftGeneralSection = {
   name: "Escape Game",
   description: null,
   toPublish: true,
@@ -41,7 +39,7 @@ describe("General section of festival activity preparation", () => {
     });
     escapeGameActivity = DraftFestivalActivity.build({
       ...escapeGameCreation,
-      general: DraftGeneralSection.build(escapeGameGeneral),
+      general: PrepareGeneralSection.build(escapeGameGeneral),
     });
     const festivalActivities = [escapeGameActivity];
 
@@ -226,17 +224,17 @@ describe("General section of festival activity preparation", () => {
             escapeGameActivity.id,
             timeWindowToAdd,
           ),
-        ).rejects.toThrow(GENERAL_TIME_WINOW_ALREADY_EXISTS_ERROR_MESSAGE);
+        ).rejects.toThrow(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);
       });
     });
   });
 
   describe("when adherent want to remove a time window", () => {
     it("should remove the time window", async () => {
-      const timeWindowToAdd = Period.init({
+      const timeWindowToAdd = {
         start: new Date("2023-05-17 09:00"),
         end: new Date("2023-05-17 14:00"),
-      });
+      };
 
       await prepareFestivalActivity.addTimeWindowInGeneral(
         escapeGameActivity.id,

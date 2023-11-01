@@ -3,13 +3,16 @@ import {
   SupplySection,
   InChargeSection,
   SignaSection,
+  TimeWindow,
 } from "../festival-activity.core";
-import { InquirySectionWithoutRequest, DRAFT } from "../festival-activity.core";
-import { DraftGeneralSectionRepresentation } from "./draft-general-section";
+import {
+  InquirySectionWithPotentialRequests,
+  DRAFT,
+} from "../festival-activity.core";
 
 export type DraftFestivalActivityBuilder = {
   id: number;
-  general: DraftGeneralSectionRepresentation;
+  general: DraftGeneralSection;
   inCharge: DraftInChargeSection;
   signa: DraftSignaSection;
   security: DraftSecuritySection;
@@ -21,6 +24,16 @@ export type DraftFestivalActivityRepresentation =
   DraftFestivalActivityBuilder & {
     status: typeof DRAFT;
   };
+
+export type DraftGeneralSection = {
+  name: string;
+  description: string | null;
+  categories: string[];
+  toPublish: boolean;
+  photoLink: string | null;
+  isFlagship: boolean;
+  timeWindows: TimeWindow[];
+};
 
 export type DraftInChargeSection = Omit<InChargeSection, "team"> & {
   team: string | null;
@@ -34,4 +47,4 @@ export type DraftSecuritySection = SecuritySection;
 
 export type DraftSupplySection = SupplySection;
 
-export type DraftInquirySection = InquirySectionWithoutRequest;
+export type DraftInquirySection = InquirySectionWithPotentialRequests;

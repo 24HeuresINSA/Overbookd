@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import type {
   DraftFestivalActivityRepresentation,
-  DraftGeneralSection,
   DraftInChargeSection,
   DraftSignaSection,
   DraftSecuritySection,
@@ -11,15 +10,14 @@ import type {
   Signage,
   ElectricitySupply,
   Inquiry,
-  GeneralTimeWindowRepresentation,
-  DraftGeneralSectionRepresentation,
+  TimeWindow,
+  DraftGeneralSection,
 } from "@overbookd/festival-activity";
 import { DRAFT } from "@overbookd/festival-activity";
-import { IProvidePeriod } from "@overbookd/period";
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
 
-class GeneralTimeWindowDto implements GeneralTimeWindowRepresentation {
+class TimeWindowDto implements TimeWindow {
   @ApiProperty({
     description: "Festival activity time window id",
   })
@@ -38,7 +36,7 @@ class GeneralTimeWindowDto implements GeneralTimeWindowRepresentation {
   end: Date;
 }
 
-class GeneralSectionDto implements DraftGeneralSectionRepresentation {
+class GeneralSectionDto implements DraftGeneralSection {
   @ApiProperty({
     description: "Festival activity name",
   })
@@ -77,9 +75,9 @@ class GeneralSectionDto implements DraftGeneralSectionRepresentation {
   @ApiProperty({
     description: "time windows during which this festival activity occurs",
     isArray: true,
-    type: GeneralTimeWindowDto,
+    type: TimeWindowDto,
   })
-  timeWindows: GeneralTimeWindowRepresentation[];
+  timeWindows: TimeWindow[];
 }
 
 class InChargeSectionDto implements DraftInChargeSection {
@@ -226,7 +224,7 @@ class InquirySectionDto implements DraftInquirySection {
     isArray: true,
     type: PeriodDto,
   })
-  timeWindows: IProvidePeriod[];
+  timeWindows: TimeWindow[];
 
   @ApiProperty({
     isArray: true,

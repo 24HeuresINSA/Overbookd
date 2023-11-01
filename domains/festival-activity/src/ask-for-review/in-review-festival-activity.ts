@@ -41,7 +41,7 @@ export type InReviewFestivalActivityRepresentation = {
 };
 
 class ReadyForReview {
-  static isSatifiedBy(
+  static isSatisfiedBy(
     festivalActivity: FestivalActivityRepresentation,
   ): festivalActivity is InReviewFestivalActivityRepresentation {
     return this.errors(festivalActivity).length === 0;
@@ -92,7 +92,7 @@ export class InReviewFestivalActivity
   }
 
   static init(draft: FestivalActivityRepresentation): InReviewFestivalActivity {
-    if (!ReadyForReview.isSatifiedBy(draft)) {
+    if (!ReadyForReview.isSatisfiedBy(draft)) {
       throw ReadyForReview.generateError(draft);
     }
 

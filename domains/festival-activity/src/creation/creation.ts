@@ -8,10 +8,7 @@ import {
   DraftSupplySection,
 } from "./draft-festival-activity.model";
 import { Adherent } from "../festival-activity.core";
-import {
-  DraftGeneralSection,
-  DraftGeneralSectionRepresentation,
-} from "./draft-general-section";
+import { DraftGeneralSection } from "./draft-festival-activity.model";
 
 function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1_000_000; i++) {
@@ -54,8 +51,16 @@ export class FestivalActivityCreation {
 
   private generateGeneralSection(
     name: string,
-  ): DraftGeneralSectionRepresentation {
-    return DraftGeneralSection.create(name).json;
+  ): DraftGeneralSection {
+    return {
+      name,
+      categories: [],
+      description: null,
+      toPublish: false,
+      isFlagship: false,
+      photoLink: null,
+      timeWindows: [],
+    };
   }
 
   private generateInChargeSection(author: Adherent): DraftInChargeSection {

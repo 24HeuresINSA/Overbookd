@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  PrepareGeneralSection,
-  PrepareInChargeSection,
-  PrepareSecuritySection,
-  PrepareSignaSection,
-  PrepareSupplySection,
+  PrepareGeneralSectionForm,
+  PrepareInChargeSectionForm,
+  PrepareSecuritySectionForm,
+  PrepareSignaSectionForm,
+  PrepareSupplySectionForm,
 } from "@overbookd/festival-activity";
 import { IsOptional } from "class-validator";
 
-export class GeneralSectionRequestDto implements PrepareGeneralSection {
+export class GeneralSectionRequestDto implements PrepareGeneralSectionForm {
   @ApiProperty({
     description: "Festival activity name",
     required: false,
@@ -55,7 +55,7 @@ export class GeneralSectionRequestDto implements PrepareGeneralSection {
   isFlagship?: boolean;
 }
 
-export class InChargeSectionRequestDto implements PrepareInChargeSection {
+export class InChargeSectionRequestDto implements PrepareInChargeSectionForm {
   @ApiProperty({
     description: "Festival activity adherent id in charge",
     required: false,
@@ -71,7 +71,7 @@ export class InChargeSectionRequestDto implements PrepareInChargeSection {
   team?: string;
 }
 
-export class SignaSectionRequestDto implements PrepareSignaSection {
+export class SignaSectionRequestDto implements PrepareSignaSectionForm {
   @ApiProperty({
     description: "Festival activity location",
     required: false,
@@ -80,7 +80,7 @@ export class SignaSectionRequestDto implements PrepareSignaSection {
   location?: string | null;
 }
 
-export class SecuritySectionRequestDto implements PrepareSecuritySection {
+export class SecuritySectionRequestDto implements PrepareSecuritySectionForm {
   @ApiProperty({
     description: "Festival activity special security need",
     required: false,
@@ -89,7 +89,7 @@ export class SecuritySectionRequestDto implements PrepareSecuritySection {
   specialNeed?: string | null;
 }
 
-export class SupplySectionRequestDto implements PrepareSupplySection {
+export class SupplySectionRequestDto implements PrepareSupplySectionForm {
   @ApiProperty({
     description: "Festival activity water supply",
     required: false,

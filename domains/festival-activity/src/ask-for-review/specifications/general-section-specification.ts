@@ -1,7 +1,4 @@
-import {
-  DraftGeneralSection,
-  DraftGeneralSectionRepresentation,
-} from "../../creation/draft-general-section";
+import { DraftGeneralSection } from "../../creation/draft-festival-activity.model";
 
 const REQUIRED_DESCRIPTION = "Une description est nécessaire";
 const REQUIRED_PHOTO_ON_PUBLIC_ACTIVITY =
@@ -16,14 +13,15 @@ type PublicDraftGeneral = DraftGeneralSection & {
 };
 
 export class ActivityGeneralSpecification {
-  static errors(section: DraftGeneralSectionRepresentation): string[] {
+  static errors(section: DraftGeneralSection): string[] {
     return this.hasDescriptionSet(section) ? [] : [REQUIRED_DESCRIPTION];
   }
 
-  private static hasDescriptionSet(section: DraftGeneralSectionRepresentation) {
+  private static hasDescriptionSet(section: DraftGeneralSection) {
     return section.description !== null;
   }
 }
+
 export class PublicActivityGeneralSpecification {
   static errors(section: PublicDraftGeneral): string[] {
     return [
@@ -66,7 +64,7 @@ export class PublicActivityGeneralSpecification {
 }
 
 export function isPublicActivity(
-  general: DraftGeneralSectionRepresentation,
+  general: DraftGeneralSection,
 ): general is PublicDraftGeneral {
   return general.toPublish;
 }

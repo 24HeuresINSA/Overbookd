@@ -3,6 +3,7 @@ export type {
   Signage,
   ElectricitySupply,
   Inquiry,
+  TimeWindow,
 } from "./festival-activity.core";
 export { DRAFT } from "./festival-activity.core";
 
@@ -25,6 +26,7 @@ export type { CreateFestivalActivity } from "./creation/creation";
 
 export type {
   DraftFestivalActivityRepresentation,
+  DraftGeneralSection,
   DraftInChargeSection,
   DraftSignaSection,
   DraftSecuritySection,
@@ -32,19 +34,13 @@ export type {
   DraftInquirySection,
 } from "./creation/draft-festival-activity.model";
 
-export { DraftGeneralSection } from "./creation/draft-general-section";
-export type {
-  DraftGeneralSectionRepresentation,
-  GeneralTimeWindowRepresentation,
-} from "./creation/draft-general-section";
-
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
 
 export type {
-  PrepareGeneralSection,
-  PrepareInChargeSection,
-  PrepareSignaSection,
-  PrepareSecuritySection,
-  PrepareSupplySection,
+  PrepareGeneralSectionForm,
+  PrepareInChargeSectionForm,
+  PrepareSignaSectionForm,
+  PrepareSecuritySectionForm,
+  PrepareSupplySectionForm,
 } from "./preparation/prepare-festival-activity.model";

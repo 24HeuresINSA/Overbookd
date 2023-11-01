@@ -1,4 +1,4 @@
-export type PrepareGeneralSection = {
+export type PrepareGeneralSectionForm = {
   name?: string;
   description?: string | null;
   categories?: string[];
@@ -7,19 +7,19 @@ export type PrepareGeneralSection = {
   isFlagship?: boolean;
 };
 
-export type PrepareInChargeSection = {
+export type PrepareInChargeSectionForm = {
   adherentId?: number;
   team?: string | null;
 };
 
-export type PrepareSignaSection = {
+export type PrepareSignaSectionForm = {
   location?: string | null;
 };
 
-export type PrepareSecuritySection = {
+export type PrepareSecuritySectionForm = {
   specialNeed?: string | null;
 };
 
-export type PrepareSupplySection = {
+export type PrepareSupplySectionForm = {
   water?: string | null;
 };

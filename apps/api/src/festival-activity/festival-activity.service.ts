@@ -4,11 +4,11 @@ import {
   FestivalActivity,
   FestivalActivityRepository,
   PrepareFestivalActivity,
-  PrepareGeneralSection,
-  PrepareInChargeSection,
-  PrepareSecuritySection,
-  PrepareSignaSection,
-  PrepareSupplySection,
+  PrepareGeneralSectionForm,
+  PrepareInChargeSectionForm,
+  PrepareSecuritySectionForm,
+  PrepareSignaSectionForm,
+  PrepareSupplySectionForm,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { AdherentRepository } from "./repository/adherent-repository.prisma";
@@ -45,14 +45,14 @@ export class FestivalActivityService {
 
   saveGeneralSection(
     id: number,
-    general: PrepareGeneralSection,
+    general: PrepareGeneralSectionForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
 
   async saveInChargeSection(
     id: number,
-    inCharge: PrepareInChargeSection,
+    inCharge: PrepareInChargeSectionForm,
   ): Promise<FestivalActivity> {
     const adherent = inCharge.adherentId
       ? { adherent: await this.adherents.find(inCharge.adherentId) }
@@ -63,21 +63,21 @@ export class FestivalActivityService {
 
   saveSignaSection(
     id: number,
-    signa: PrepareSignaSection,
+    signa: PrepareSignaSectionForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSignaSection(id, signa);
   }
 
   saveSecuritySection(
     id: number,
-    security: PrepareSecuritySection,
+    security: PrepareSecuritySectionForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
     id: number,
-    supply: PrepareSupplySection,
+    supply: PrepareSupplySectionForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);
   }

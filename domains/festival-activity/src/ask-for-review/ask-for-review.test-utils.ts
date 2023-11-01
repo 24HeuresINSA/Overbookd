@@ -42,6 +42,7 @@ export const pcSecurite = {
   inquiry: {
     timeWindows: [
       {
+        id: "1-202305121900-202305150800",
         start: new Date("2023-05-12 09:00"),
         end: new Date("2023-05-15 08:00"),
       },
@@ -90,6 +91,7 @@ export const finaleEsport = {
   inquiry: {
     timeWindows: [
       {
+        id: "2-202305121900-202305150800",
         start: new Date("2023-05-12 09:00"),
         end: new Date("2023-05-15 08:00"),
       },

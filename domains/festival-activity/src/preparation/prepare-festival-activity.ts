@@ -1,13 +1,13 @@
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { FestivalActivity, isDraft } from "../festival-activity.model";
 import { FestivalActivityRepository } from "../festival-activity.repository";
 import {
-  PrepareGeneralSection,
-  PrepareInChargeSection,
-  PrepareSecuritySection,
-  PrepareSignaSection,
-  PrepareSupplySection,
+  PrepareGeneralSectionForm,
+  PrepareInChargeSectionForm,
+  PrepareSecuritySectionForm,
+  PrepareSignaSectionForm,
+  PrepareSupplySectionForm,
 } from "./prepare-festival-activity.model";
 
 export class PrepareFestivalActivity {
@@ -17,7 +17,7 @@ export class PrepareFestivalActivity {
 
   async updateGeneralSection(
     id: number,
-    general: PrepareGeneralSection,
+    general: PrepareGeneralSectionForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
@@ -29,7 +29,7 @@ export class PrepareFestivalActivity {
 
   async addTimeWindowInGeneral(
     faId: number,
-    period: Period,
+    period: IProvidePeriod,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(faId);
     if (!existingFA) throw new FestivalActivityNotFound(faId);
@@ -53,7 +53,7 @@ export class PrepareFestivalActivity {
 
   async updateInChargeSection(
     id: number,
-    inCharge: PrepareInChargeSection,
+    inCharge: PrepareInChargeSectionForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
@@ -65,7 +65,7 @@ export class PrepareFestivalActivity {
 
   async updateSignaSection(
     id: number,
-    signa: PrepareSignaSection,
+    signa: PrepareSignaSectionForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
@@ -77,7 +77,7 @@ export class PrepareFestivalActivity {
 
   async updateSecuritySection(
     id: number,
-    security: PrepareSecuritySection,
+    security: PrepareSecuritySectionForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
@@ -89,7 +89,7 @@ export class PrepareFestivalActivity {
 
   async updateSupplySection(
     id: number,
-    supply: PrepareSupplySection,
+    supply: PrepareSupplySectionForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
