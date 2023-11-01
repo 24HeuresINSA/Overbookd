@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { ONE_DAY_IN_MS, ONE_SECOND_IN_MS } from "@overbookd/period";
 import {
   InviteNewAdherents,
@@ -24,7 +24,7 @@ describe("Invite new adherents", () => {
     it("should expose a jwt token as parameter", () => {
       const link = InviteNewAdherents.byLink({ domain, secret });
       const token = link.searchParams.get(TOKEN);
-      expect(() => jwt_decode(token ?? "")).not.toThrow();
+      expect(() => jwtDecode(token ?? "")).not.toThrow();
     });
     it("should generate a jwt token with a 30 days expiration", () => {
       const now = Date.now();
@@ -33,7 +33,7 @@ describe("Invite new adherents", () => {
 
       const link = InviteNewAdherents.byLink({ domain, secret });
       const token = link.searchParams.get(TOKEN);
-      const { exp } = jwt_decode<WithExpiration>(token ?? "");
+      const { exp } = jwtDecode<WithExpiration>(token ?? "");
       const expirationInMs = exp * ONE_SECOND_IN_MS;
 
       expect(expirationInMs).toBeGreaterThan(in29Days);

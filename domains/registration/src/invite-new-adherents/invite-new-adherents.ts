@@ -1,4 +1,4 @@
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import jwt from "jsonwebtoken";
 import { ONE_SECOND_IN_MS } from "@overbookd/period";
 
@@ -31,7 +31,7 @@ export class InviteNewAdherents {
     const token = link.searchParams.get(TOKEN);
 
     try {
-      const { exp } = jwt_decode<WithExpiration>(token ?? "");
+      const { exp } = jwtDecode<WithExpiration>(token ?? "");
       const expirationInMs = exp * ONE_SECOND_IN_MS;
 
       if (InviteNewAdherents.isPast(expirationInMs)) return LINK_EXPIRED;
