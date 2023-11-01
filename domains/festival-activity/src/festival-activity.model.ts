@@ -1,8 +1,8 @@
 import { DRAFT } from "./festival-activity.core";
-import { DraftFestivalActivity } from "./creation/draft-festival-activity";
+import { DraftFestivalActivity } from "./draft-festival-activity";
 import { DraftFestivalActivityRepresentation } from "./creation/draft-festival-activity.model";
 import { InReviewFestivalActivity } from "./ask-for-review/in-review-festival-activity";
-import { InReviewFestivalActivityRepresentation } from "./ask-for-review/in-review-festival-activity.model";
+import { InReviewFestivalActivityRepresentation } from "./ask-for-review/in-review-festival-activity";
 
 export type FestivalActivity = DraftFestivalActivity | InReviewFestivalActivity;
 

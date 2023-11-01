@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "../creation/draft-festival-activity";
+import { DraftFestivalActivity } from "../draft-festival-activity";
 import {
   barrieres,
   comcom,

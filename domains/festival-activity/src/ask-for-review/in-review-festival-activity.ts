@@ -1,9 +1,13 @@
-import { IN_REVIEW } from "../festival-activity.core";
-import { FestivalActivityRepresentation } from "../festival-activity.model";
 import {
+  GeneralSection,
+  IN_REVIEW,
+  InChargeSection,
+  InquirySection,
   SecuritySection,
+  SignaSection,
   SupplySection,
-} from "../creation/draft-festival-activity.model";
+} from "../festival-activity.core";
+import { FestivalActivityRepresentation } from "../festival-activity.model";
 import {
   isPublicActivity,
   PublicActivityGeneralSpecification,
@@ -24,13 +28,17 @@ import {
   barrieres,
   comcom,
 } from "./waiting-for-review";
-import {
-  InReviewFestivalActivityRepresentation,
-  InReviewGeneralSection,
-  InReviewInChargeSection,
-  InReviewSignaSection,
-  InReviewInquirySection,
-} from "./in-review-festival-activity.model";
+
+export type InReviewFestivalActivityRepresentation = {
+  id: number;
+  status: typeof IN_REVIEW;
+  general: GeneralSection;
+  inCharge: InChargeSection;
+  security: SecuritySection;
+  signa: SignaSection;
+  supply: SupplySection;
+  inquiry: InquirySection;
+};
 
 class ReadyForReview {
   static isSatifiedBy(
@@ -71,12 +79,12 @@ export class InReviewFestivalActivity
 {
   private constructor(
     readonly id: number,
-    readonly general: InReviewGeneralSection,
-    readonly inCharge: InReviewInChargeSection,
-    readonly signa: InReviewSignaSection,
+    readonly general: GeneralSection,
+    readonly inCharge: InChargeSection,
+    readonly signa: SignaSection,
     readonly security: SecuritySection,
     readonly supply: SupplySection,
-    readonly inquiry: InReviewInquirySection,
+    readonly inquiry: InquirySection,
   ) {}
 
   get status(): typeof IN_REVIEW {

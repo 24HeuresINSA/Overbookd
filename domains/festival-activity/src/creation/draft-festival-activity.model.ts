@@ -1,41 +1,37 @@
 import {
-  Adherent,
-  Signage,
-  ElectricitySupply,
-  InquirySection,
-  DRAFT,
+  SecuritySection,
+  SupplySection,
+  InChargeSection,
+  SignaSection,
 } from "../festival-activity.core";
+import { InquirySectionWithoutRequest, DRAFT } from "../festival-activity.core";
 import { DraftGeneralSectionRepresentation } from "./draft-general-section";
 
-export type InChargeSection = {
-  adherent: Adherent;
-  team: string | null;
-  contractors: never[];
-};
-
-export type SignaSection = {
-  location: string | null;
-  signages: Signage[];
-};
-
-export type SecuritySection = {
-  specialNeed: string | null;
-};
-
-export type SupplySection = {
-  electricity: ElectricitySupply[];
-  water: string | null;
-};
-export type BaseFestivalActivity = {
+export type DraftFestivalActivityBuilder = {
   id: number;
   general: DraftGeneralSectionRepresentation;
-  inCharge: InChargeSection;
-  signa: SignaSection;
-  security: SecuritySection;
-  supply: SupplySection;
-  inquiry: InquirySection;
+  inCharge: DraftInChargeSection;
+  signa: DraftSignaSection;
+  security: DraftSecuritySection;
+  supply: DraftSupplySection;
+  inquiry: DraftInquirySection;
 };
 
-export type DraftFestivalActivityRepresentation = BaseFestivalActivity & {
-  status: typeof DRAFT;
+export type DraftFestivalActivityRepresentation =
+  DraftFestivalActivityBuilder & {
+    status: typeof DRAFT;
+  };
+
+export type DraftInChargeSection = Omit<InChargeSection, "team"> & {
+  team: string | null;
 };
+
+export type DraftSignaSection = Omit<SignaSection, "location"> & {
+  location: string | null;
+};
+
+export type DraftSecuritySection = SecuritySection;
+
+export type DraftSupplySection = SupplySection;
+
+export type DraftInquirySection = InquirySectionWithoutRequest;

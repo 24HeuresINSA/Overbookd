@@ -1,15 +1,15 @@
-import { DRAFT } from "../festival-activity.core";
-import { InquirySection } from "../festival-activity.core";
-import { InReviewFestivalActivity } from "../ask-for-review/in-review-festival-activity";
+import { DRAFT } from "./festival-activity.core";
+import { InReviewFestivalActivity } from "./ask-for-review/in-review-festival-activity";
 import {
-  BaseFestivalActivity,
+  DraftFestivalActivityBuilder,
   DraftFestivalActivityRepresentation,
-  InChargeSection,
-  SignaSection,
-  SecuritySection,
-  SupplySection,
-} from "./draft-festival-activity.model";
-import { DraftGeneralSection } from "./draft-general-section";
+  DraftInChargeSection,
+  DraftInquirySection,
+  DraftSecuritySection,
+  DraftSignaSection,
+  DraftSupplySection,
+} from "./creation/draft-festival-activity.model";
+import { DraftGeneralSection } from "./creation/draft-general-section";
 import { Period } from "@overbookd/period";
 import {
   PrepareGeneralSection,
@@ -17,7 +17,7 @@ import {
   PrepareSecuritySection,
   PrepareSignaSection,
   PrepareSupplySection,
-} from "../preparation/prepare-festival-activity.model";
+} from "./preparation/prepare-festival-activity.model";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
@@ -25,11 +25,11 @@ export class DraftFestivalActivity
   private constructor(
     readonly id: number,
     readonly general: DraftGeneralSection,
-    readonly inCharge: InChargeSection,
-    readonly signa: SignaSection,
-    readonly security: SecuritySection,
-    readonly supply: SupplySection,
-    readonly inquiry: InquirySection,
+    readonly inCharge: DraftInChargeSection,
+    readonly signa: DraftSignaSection,
+    readonly security: DraftSecuritySection,
+    readonly supply: DraftSupplySection,
+    readonly inquiry: DraftInquirySection,
   ) {}
 
   get status(): typeof DRAFT {
@@ -39,7 +39,7 @@ export class DraftFestivalActivity
   get json(): DraftFestivalActivityRepresentation {
     return {
       id: this.id,
-      general: this.general,
+      general: this.general.json,
       inCharge: this.inCharge,
       signa: this.signa,
       security: this.security,
@@ -50,7 +50,7 @@ export class DraftFestivalActivity
   }
 
   public static build(
-    draftFestivalActivity: BaseFestivalActivity,
+    draftFestivalActivity: DraftFestivalActivityBuilder,
   ): DraftFestivalActivity {
     const { id, general, inCharge, signa, security, supply, inquiry } =
       draftFestivalActivity;

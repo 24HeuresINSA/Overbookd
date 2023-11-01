@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { FestivalActivityFactory } from "./festival-activity.factory";
+import { FestivalActivityCreation } from "./creation";
 import { DRAFT } from "../festival-activity.core";
 import { Adherent } from "../festival-activity.core";
 
@@ -11,8 +11,8 @@ const noel: Adherent = {
 
 describe("Festival activity creation", () => {
   describe(`when ${noel.firstname} create Escape game activity`, () => {
-    const festivalActivityFactory = new FestivalActivityFactory();
-    const escapeGame = festivalActivityFactory.create({
+    const festivalActivity = new FestivalActivityCreation();
+    const escapeGame = festivalActivity.create({
       name: "Escape game",
       author: noel,
     });
@@ -68,8 +68,8 @@ describe("Festival activity creation", () => {
       expect(escapeGame.inquiry.barriers).toEqual([]);
     });
 
-    it("should expose a json format", () => {
-      expect(escapeGame.json).toEqual({
+    it("should match festival activity json structure", () => {
+      expect(escapeGame).toEqual({
         id: expect.any(Number),
         status: DRAFT,
         general: {

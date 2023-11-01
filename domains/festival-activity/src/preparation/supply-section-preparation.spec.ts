@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "../creation/draft-festival-activity";
-import { FestivalActivityFactory } from "../creation/festival-activity.factory";
+import { DraftFestivalActivity } from "../draft-festival-activity";
+import { FestivalActivityCreation } from "../creation/creation";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-import { SupplySection } from "../creation/draft-festival-activity.model";
+import { SupplySection } from "../festival-activity.core";
 
 const noel = {
   id: 1,
@@ -18,12 +18,12 @@ const escapeGameSupply: SupplySection = {
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: FestivalActivityFactory;
+  let festivalActivityFactory: FestivalActivityCreation;
   let festivalActivityRepository: InMemoryFestivalActivityRepository;
   let escapeGameActivity: DraftFestivalActivity;
 
   beforeEach(() => {
-    festivalActivityFactory = new FestivalActivityFactory();
+    festivalActivityFactory = new FestivalActivityCreation();
     const escapeGameCreation = festivalActivityFactory.create({
       name: "Escape Game",
       author: noel,

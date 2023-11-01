@@ -1,6 +1,6 @@
-import { InquiryWithTimeWindows } from "../in-review-festival-activity.model";
-import { InquirySection } from "../../festival-activity.core";
-import { InquiryWithRequests } from "../in-review-festival-activity.model";
+import { InquiryWithTimeWindows } from "../../festival-activity.core";
+import { InquirySectionWithoutRequest } from "../../festival-activity.core";
+import { InquiryWithRequests } from "../../festival-activity.core";
 
 const REQUIRED_INQUIRY_WITH_TIMEWINDOWS =
   "Au moins une demande de matos est nécessaire pour un créneau matos";
@@ -8,19 +8,19 @@ const REQUIRED_TIMEWINDOWS_WITH_INQUIRY =
   "Au moins un créneau matos est nécessaire pour une demande matos";
 
 type WithTimeWindowsInquirySection = InquiryWithTimeWindows &
-  Omit<InquirySection, "timeWindows">;
+  Omit<InquirySectionWithoutRequest, "timeWindows">;
 
 type WithRequestsInquirySection = InquiryWithRequests &
-  Pick<InquirySection, "timeWindows">;
+  Pick<InquirySectionWithoutRequest, "timeWindows">;
 
 function isWithTimeWindows(
-  section: InquirySection,
+  section: InquirySectionWithoutRequest,
 ): section is WithTimeWindowsInquirySection {
   return section.timeWindows.length > 0;
 }
 
 function isWithRequest(
-  section: InquirySection,
+  section: InquirySectionWithoutRequest,
 ): section is WithRequestsInquirySection {
   const { barriers, electricity, gears } = section;
   const requests = barriers.length + electricity.length + gears.length;
@@ -46,7 +46,7 @@ class ActivityInquiryWithRequestSpecification {
 }
 
 export class ActivityInquirySpecification {
-  static errors(section: InquirySection): string[] {
+  static errors(section: InquirySectionWithoutRequest): string[] {
     if (isWithTimeWindows(section)) {
       return ActivityInquiryWithTimeWindowsSpecification.errors(section);
     }

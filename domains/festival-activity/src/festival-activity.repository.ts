@@ -1,5 +1,5 @@
-import { DraftFestivalActivity } from "./creation/draft-festival-activity";
-import { CreateFestivalActivity } from "./creation/festival-activity.factory";
+import { DraftFestivalActivity } from "./draft-festival-activity";
+import { CreateFestivalActivity } from "./creation/creation";
 import {
   PreviewFestivalActivity,
   FestivalActivity,

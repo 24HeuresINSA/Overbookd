@@ -2,11 +2,11 @@ import { ApiProperty } from "@nestjs/swagger";
 import type {
   DraftFestivalActivityRepresentation,
   DraftGeneralSection,
-  InChargeSection,
-  SignaSection,
-  SecuritySection,
-  SupplySection,
-  InquirySection,
+  DraftInChargeSection,
+  DraftSignaSection,
+  DraftSecuritySection,
+  DraftSupplySection,
+  DraftInquirySection,
   Adherent,
   Signage,
   ElectricitySupply,
@@ -82,7 +82,7 @@ class GeneralSectionDto implements DraftGeneralSectionRepresentation {
   timeWindows: GeneralTimeWindowRepresentation[];
 }
 
-class InChargeSectionDto implements InChargeSection {
+class InChargeSectionDto implements DraftInChargeSection {
   @ApiProperty({
     description: "Adherent in charge of this festival activity",
     type: AdherentResponseDto,
@@ -126,7 +126,7 @@ class SignageDto implements Signage {
   comment: string;
 }
 
-class SignaSectionDto implements SignaSection {
+class SignaSectionDto implements DraftSignaSection {
   @ApiProperty({
     description: "Define where this festival activity take place",
     required: false,
@@ -141,7 +141,7 @@ class SignaSectionDto implements SignaSection {
   signages: Signage[];
 }
 
-class SecuritySectionDto implements SecuritySection {
+class SecuritySectionDto implements DraftSecuritySection {
   @ApiProperty({
     description: "Describe safety features for this festival activity",
     required: false,
@@ -196,7 +196,7 @@ class ElectricitySupplyDto implements ElectricitySupply {
   comment: string | null;
 }
 
-class SupplySectionDto implements SupplySection {
+class SupplySectionDto implements DraftSupplySection {
   @ApiProperty({
     isArray: true,
     type: ElectricitySupplyDto,
@@ -220,7 +220,7 @@ class InquiryDto implements Inquiry {
   name: string;
 }
 
-class InquirySectionDto implements InquirySection {
+class InquirySectionDto implements DraftInquirySection {
   @ApiProperty({
     description: "time windows during which you need requested stuff",
     isArray: true,
@@ -263,31 +263,31 @@ export class DraftFestivalActivityDto
     description: "Section related to festival activity in charge info",
     type: InChargeSectionDto,
   })
-  inCharge: InChargeSection;
+  inCharge: DraftInChargeSection;
 
   @ApiProperty({
     description: "Section related to festival activity signa info",
     type: SignaSectionDto,
   })
-  signa: SignaSection;
+  signa: DraftSignaSection;
 
   @ApiProperty({
     description: "Section related to festival activity security info",
     type: SecuritySectionDto,
   })
-  security: SecuritySection;
+  security: DraftSecuritySection;
 
   @ApiProperty({
     description: "Section related to festival activity supply info",
     type: SupplySectionDto,
   })
-  supply: SupplySection;
+  supply: DraftSupplySection;
 
   @ApiProperty({
     description: "Section related to festival activity inquiry info",
     type: InquirySectionDto,
   })
-  inquiry: InquirySection;
+  inquiry: DraftInquirySection;
 
   @ApiProperty({ enum: [DRAFT] })
   status: typeof DRAFT;

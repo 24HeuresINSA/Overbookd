@@ -1,10 +1,10 @@
 import { FestivalActivityRepository } from "./festival-activity.repository";
 import { updateItemToList } from "@overbookd/list";
-import { DraftFestivalActivity } from "./creation/draft-festival-activity";
+import { DraftFestivalActivity } from "./draft-festival-activity";
 import {
-  FestivalActivityFactory,
+  FestivalActivityCreation,
   CreateFestivalActivity,
-} from "./creation/festival-activity.factory";
+} from "./creation/creation";
 import {
   FestivalActivity,
   PreviewFestivalActivity,
@@ -14,10 +14,10 @@ import { FestivalActivityNotFound } from "./festival-activity.error";
 export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
 {
-  festivalActivityFactory: FestivalActivityFactory;
+  festivalActivityFactory: FestivalActivityCreation;
 
   constructor(private festivalActivities: FestivalActivity[] = []) {
-    this.festivalActivityFactory = new FestivalActivityFactory();
+    this.festivalActivityFactory = new FestivalActivityCreation();
   }
 
   findAll(): Promise<PreviewFestivalActivity[]> {
