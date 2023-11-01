@@ -49,9 +49,7 @@ export class FestivalActivityCreation {
     return this.idGenerator.next().value;
   }
 
-  private generateGeneralSection(
-    name: string,
-  ): DraftGeneralSection {
+  private generateGeneralSection(name: string): DraftGeneralSection {
     return {
       name,
       categories: [],
