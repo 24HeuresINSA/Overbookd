@@ -63,7 +63,7 @@ export type SupplySection = {
   water: string | null;
 };
 
-export type PrivateGeneralSection = {
+type PrivateGeneralSection = {
   name: string;
   description: string;
   toPublish: false;
@@ -73,7 +73,7 @@ export type PrivateGeneralSection = {
   timeWindows: TimeWindow[];
 };
 
-export type PublicGeneralSection = {
+type PublicGeneralSection = {
   name: string;
   description: string;
   toPublish: true;
@@ -112,8 +112,7 @@ export type InquiryWithRequests =
   | InquiryWithBarriers
   | InquiryWithElectricity;
 
-export type InquirySectionWithRequests = InquiryWithRequests &
-  InquiryWithTimeWindows;
+type InquirySectionWithRequests = InquiryWithRequests & InquiryWithTimeWindows;
 
 export type InquirySectionWithPotentialRequests = {
   timeWindows: TimeWindow[];

@@ -14,10 +14,10 @@ import { FestivalActivityNotFound } from "./festival-activity.error";
 export class InMemoryFestivalActivityRepository
   implements FestivalActivityRepository
 {
-  festivalActivityFactory: FestivalActivityCreation;
+  festivalActivityCreation: FestivalActivityCreation;
 
   constructor(private festivalActivities: FestivalActivity[] = []) {
-    this.festivalActivityFactory = new FestivalActivityCreation();
+    this.festivalActivityCreation = new FestivalActivityCreation();
   }
 
   findAll(): Promise<PreviewFestivalActivity[]> {
@@ -42,7 +42,8 @@ export class InMemoryFestivalActivityRepository
   }
 
   create(form: CreateFestivalActivity): Promise<DraftFestivalActivity> {
-    const festivalActivity = this.festivalActivityFactory.create(form);
+    const builder = this.festivalActivityCreation.create(form);
+    const festivalActivity = DraftFestivalActivity.build(builder);
     this.festivalActivities = [...this.festivalActivities, festivalActivity];
     return Promise.resolve(festivalActivity);
   }
