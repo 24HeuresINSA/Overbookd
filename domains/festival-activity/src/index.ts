@@ -4,6 +4,8 @@ export type {
   ElectricitySupply,
   Inquiry,
   TimeWindow,
+  PublicGeneralSection,
+  InquirySectionWithRequests,
 } from "./festival-activity.core";
 export { DRAFT } from "./festival-activity.core";
 
@@ -44,3 +46,6 @@ export type {
   PrepareSecuritySectionForm,
   PrepareSupplySectionForm,
 } from "./preparation/prepare-festival-activity.model";
+
+//ASK FOR REVIEW
+export type { InReviewFestivalActivityRepresentation } from "./ask-for-review/in-review-festival-activity";

@@ -1,10 +1,10 @@
 import {
   InReviewFestivalActivityRepresentation,
-  InReviewInquirySectionWithRequests,
-  InReviewPublicGeneralSection,
+  InquirySectionWithRequests,
+  PublicGeneralSection,
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
-import { IProvidePeriod } from "@overbookd/period";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
 type InReviewGeneral = InReviewFestivalActivityRepresentation["general"];
@@ -12,13 +12,13 @@ type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
 
 function isPublic(
   general: HttpStringified<InReviewGeneral>,
-): general is HttpStringified<InReviewPublicGeneralSection> {
+): general is HttpStringified<PublicGeneralSection> {
   return general.toPublish === true;
 }
 
 function hasRequests(
   inquiry: HttpStringified<InReviewInquiry>,
-): inquiry is HttpStringified<InReviewInquirySectionWithRequests> {
+): inquiry is HttpStringified<InquirySectionWithRequests> {
   const { barriers, electricity, gears } = inquiry;
   const requests = barriers.length + electricity.length + gears.length;
   return inquiry.timeWindows.length > 0 && requests > 0;
@@ -63,7 +63,7 @@ export class InReview {
 }
 
 type WithTimeWindows = {
-  timeWindows: [IProvidePeriod, ...IProvidePeriod[]];
+  timeWindows: [TimeWindow, ...TimeWindow[]];
 };
 type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
 
@@ -72,7 +72,7 @@ function castAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
 ): T & WithTimeWindows {
   const [timeWindow, ...others] = hasAtLeastOneTimeWindow.timeWindows;
   const first = castTimeWindowWithDate(timeWindow);
-  const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
+  const timeWindows: [TimeWindow, ...TimeWindow[]] = [
     first,
     ...others.map(castTimeWindowWithDate),
   ];

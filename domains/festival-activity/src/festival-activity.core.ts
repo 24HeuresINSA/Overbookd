@@ -73,7 +73,7 @@ type PrivateGeneralSection = {
   timeWindows: TimeWindow[];
 };
 
-type PublicGeneralSection = {
+export type PublicGeneralSection = {
   name: string;
   description: string;
   toPublish: true;
@@ -112,7 +112,8 @@ export type InquiryWithRequests =
   | InquiryWithBarriers
   | InquiryWithElectricity;
 
-type InquirySectionWithRequests = InquiryWithRequests & InquiryWithTimeWindows;
+export type InquirySectionWithRequests = InquiryWithRequests &
+  InquiryWithTimeWindows;
 
 export type InquirySectionWithPotentialRequests = {
   timeWindows: TimeWindow[];
