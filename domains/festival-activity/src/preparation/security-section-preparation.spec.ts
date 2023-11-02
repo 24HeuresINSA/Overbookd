@@ -1,43 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "./draft-festival-activity";
-import { CreateFestivalActivity } from "../creation/creation";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-import { SecuritySection } from "../festival-activity";
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
-
-const escapeGameSecurity: SecuritySection = {
-  specialNeed: "Pas de besoin particulier",
-};
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { escapeGame } from "./preparation.test-utils";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: CreateFestivalActivity;
-  let festivalActivityRepository: InMemoryFestivalActivityRepository;
-  let escapeGameActivity: DraftFestivalActivity;
+  let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    festivalActivityFactory = new CreateFestivalActivity();
-    const escapeGameCreation = festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-    escapeGameActivity = DraftFestivalActivity.build({
-      ...escapeGameCreation,
-      security: escapeGameSecurity,
-    });
-    const festivalActivities = [escapeGameActivity];
-
-    festivalActivityRepository = new InMemoryFestivalActivityRepository(
-      festivalActivities,
-    );
+    prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
+      escapeGame,
+    ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
-      festivalActivityRepository,
+      prepareFestivalActivities,
     );
   });
 
@@ -48,7 +23,7 @@ describe("General section of festival activity preparation", () => {
 
         const { security } =
           await prepareFestivalActivity.updateSecuritySection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateSecurity,
           );
 

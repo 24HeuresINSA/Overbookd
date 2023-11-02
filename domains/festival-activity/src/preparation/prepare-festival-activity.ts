@@ -1,6 +1,8 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { FestivalActivityNotFound } from "../festival-activity.error";
-import { FestivalActivityRepository } from "../festival-activity.repository";
+import { Duration, IProvidePeriod, Period } from "@overbookd/period";
+import {
+  FestivalActivityNotFound,
+  TimeWindowAlreadyExists,
+} from "../festival-activity.error";
 import {
   PrepareGeneralForm,
   PrepareInChargeForm,
@@ -14,13 +16,21 @@ import {
   FestivalActivity,
   IN_REVIEW,
   InReview,
+  PreviewFestivalActivity,
+  TimeWindow,
   isDraft,
 } from "../festival-activity";
 
+export interface PrepareFestivalActivityRepository {
+  findAll(): Promise<PreviewFestivalActivity[]>;
+  findById(id: number): Promise<FestivalActivity | null>;
+  save(activity: FestivalActivity): Promise<FestivalActivity>;
+}
+
 type Prepare<T extends FestivalActivity> = {
   updateGeneral(general: PrepareGeneralForm): T;
-  addGeneralTimeWindow(timeWindow: IProvidePeriod): T;
-  removeGeneralTimeWindow(id: string): T;
+  addGeneralTimeWindow(period: IProvidePeriod): T;
+  removeGeneralTimeWindow(id: TimeWindow["id"]): T;
   updateInCharge(inCharge: PrepareInChargeForm): T;
   updateSigna(signa: PrepareSignaForm): T;
   updateSecurity(security: PrepareSecurityForm): T;
@@ -37,12 +47,6 @@ class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
     readonly supply: Draft["supply"],
     readonly inquiry: Draft["inquiry"],
   ) {}
-  addGeneralTimeWindow(timeWindow: IProvidePeriod): Draft {
-    throw new Error("Method not implemented.");
-  }
-  removeGeneralTimeWindow(id: string): Draft {
-    throw new Error("Method not implemented.");
-  }
 
   get status(): typeof DRAFT {
     return DRAFT;
@@ -76,7 +80,34 @@ class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
   }
 
   updateGeneral(form: PrepareGeneralForm): Draft {
-    const general = { ...this.general, ...form };
+    const privateFestivalActivity = {
+      toPublish: false,
+      photoLink: null,
+      isFlagship: false,
+    };
+    const cleanedUpdate =
+      form.toPublish === false ? { ...form, ...privateFestivalActivity } : form;
+
+    const general = { ...this.general, ...cleanedUpdate };
+    return { ...this.festivalActivity, general };
+  }
+
+  addGeneralTimeWindow(period: IProvidePeriod): Draft {
+    const id = generateTimeWindowId(this.id, period);
+    const { start, end } = Period.init(period);
+    const timeWindow = { id, start, end };
+
+    const alreadyExists = this.general.timeWindows.some((tw) => tw.id === id);
+    if (alreadyExists) throw new TimeWindowAlreadyExists();
+
+    const timeWindows = [...this.general.timeWindows, timeWindow];
+    const general = { ...this.general, timeWindows };
+    return { ...this.festivalActivity, general };
+  }
+
+  removeGeneralTimeWindow(id: TimeWindow["id"]): Draft {
+    const timeWindows = this.general.timeWindows.filter((tw) => tw.id !== id);
+    const general = { ...this.general, timeWindows };
     return { ...this.festivalActivity, general };
   }
 
@@ -111,14 +142,47 @@ class PrepareInReviewFestivalActivity implements InReview, Prepare<InReview> {
     public supply: InReview["supply"],
     public inquiry: InReview["inquiry"],
   ) {}
-  addGeneralTimeWindow(timeWindow: IProvidePeriod): InReview {
-    throw new Error("Method not implemented.");
+
+  get status(): typeof IN_REVIEW {
+    return IN_REVIEW;
   }
-  removeGeneralTimeWindow(id: string): InReview {
-    throw new Error("Method not implemented.");
+
+  private get festivalActivity(): InReview {
+    return {
+      id: this.id,
+      status: this.status,
+      general: this.general,
+      inCharge: this.inCharge,
+      signa: this.signa,
+      security: this.security,
+      supply: this.supply,
+      inquiry: this.inquiry,
+    };
+  }
+
+  static build(activity: InReview): PrepareInReviewFestivalActivity {
+    const { id, general, inCharge, signa, security, supply, inquiry } =
+      activity;
+    return new PrepareInReviewFestivalActivity(
+      id,
+      general,
+      inCharge,
+      signa,
+      security,
+      supply,
+      inquiry,
+    );
   }
 
   updateGeneral(general: PrepareGeneralForm): InReview {
+    throw new Error("Method not implemented.");
+  }
+
+  addGeneralTimeWindow(period: IProvidePeriod): InReview {
+    throw new Error("Method not implemented.");
+  }
+
+  removeGeneralTimeWindow(id: TimeWindow["id"]): InReview {
     throw new Error("Method not implemented.");
   }
 
@@ -137,29 +201,19 @@ class PrepareInReviewFestivalActivity implements InReview, Prepare<InReview> {
   updateSupply(supply: PrepareSupplyForm): InReview {
     throw new Error("Method not implemented.");
   }
+}
 
-  get status(): typeof IN_REVIEW {
-    return IN_REVIEW;
-  }
+function generateTimeWindowId(faId: number, period: IProvidePeriod): string {
+  const { start, end } = period;
+  const startMinutes = Duration.ms(start.getTime()).inMinutes;
+  const endMinutes = Duration.ms(end.getTime()).inMinutes;
 
-  static build(activity: InReview): PrepareInReviewFestivalActivity {
-    const { id, general, inCharge, signa, security, supply, inquiry } =
-      activity;
-    return new PrepareInReviewFestivalActivity(
-      id,
-      general,
-      inCharge,
-      signa,
-      security,
-      supply,
-      inquiry,
-    );
-  }
+  return `${faId}-${startMinutes}-${endMinutes}`;
 }
 
 export class PrepareFestivalActivity {
   constructor(
-    private readonly festivalActivities: FestivalActivityRepository,
+    private readonly festivalActivities: PrepareFestivalActivityRepository,
   ) {}
 
   async updateGeneralSection(
@@ -167,7 +221,6 @@ export class PrepareFestivalActivity {
     general: PrepareGeneralForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
-
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateGeneral(general);
@@ -185,8 +238,9 @@ export class PrepareFestivalActivity {
     period: IProvidePeriod,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA = existingFA.addTimeWindowInGeneral(period);
+    const updatedFA = prepare.addGeneralTimeWindow(period);
     return this.festivalActivities.save(updatedFA);
   }
 
@@ -195,8 +249,9 @@ export class PrepareFestivalActivity {
     timeWindowId: string,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA = existingFA.removeTimeWindowFromGeneral(timeWindowId);
+    const updatedFA = prepare.removeGeneralTimeWindow(timeWindowId);
     return this.festivalActivities.save(updatedFA);
   }
 
@@ -205,10 +260,10 @@ export class PrepareFestivalActivity {
     inCharge: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
-
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateInCharge(inCharge);
+    console.log(updatedFA.inCharge);
     return this.festivalActivities.save(updatedFA);
   }
 
@@ -217,7 +272,6 @@ export class PrepareFestivalActivity {
     signa: PrepareSignaForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
-
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateSigna(signa);
@@ -229,7 +283,6 @@ export class PrepareFestivalActivity {
     security: PrepareSecurityForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
-
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateSecurity(security);
@@ -241,7 +294,6 @@ export class PrepareFestivalActivity {
     supply: PrepareSupplyForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
-
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateSupply(supply);

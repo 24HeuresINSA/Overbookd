@@ -20,11 +20,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
-import type {
-  DraftFestivalActivityRepresentation,
-  FestivalActivityRepresentation,
-  PreviewFestivalActivity,
-} from "@overbookd/festival-activity";
+import type { PreviewFestivalActivity } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.response.dto";
@@ -39,6 +35,7 @@ import {
   SignaSectionRequestDto,
   SupplySectionRequestDto,
 } from "./dto/update-festival-activity.request.dto";
+import { FestivalActivity } from "@overbookd/festival-activity/src/festival-activity";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -83,7 +80,7 @@ export class FestivalActivityController {
   })
   findById(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<FestivalActivityRepresentation | null> {
+  ): Promise<FestivalActivity | null> {
     return this.festivalActivityService.findById(id);
   }
 
@@ -102,7 +99,7 @@ export class FestivalActivityController {
   create(
     @Body() { name }: CreateFestivalActivityRequestDto,
     @Request() { user }: RequestWithUserPayload,
-  ): Promise<DraftFestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.create(user, name);
   }
 
@@ -127,7 +124,7 @@ export class FestivalActivityController {
   saveGeneralSection(
     @Param("id", ParseIntPipe) id: number,
     @Body() general: GeneralSectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveGeneralSection(id, general);
   }
 
@@ -152,7 +149,7 @@ export class FestivalActivityController {
   saveInChargeSection(
     @Param("id", ParseIntPipe) id: number,
     @Body() inCharge: InChargeSectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveInChargeSection(id, inCharge);
   }
 
@@ -177,7 +174,7 @@ export class FestivalActivityController {
   saveSignaSection(
     @Param("id", ParseIntPipe) id: number,
     @Body() signa: SignaSectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveSignaSection(id, signa);
   }
 
@@ -202,7 +199,7 @@ export class FestivalActivityController {
   saveSecuritySection(
     @Param("id", ParseIntPipe) id: number,
     @Body() security: SecuritySectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveSecuritySection(id, security);
   }
 
@@ -227,7 +224,7 @@ export class FestivalActivityController {
   saveSupplySection(
     @Param("id", ParseIntPipe) id: number,
     @Body() supply: SupplySectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveSupplySection(id, supply);
   }
 }

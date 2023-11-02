@@ -1,51 +1,39 @@
 export type {
   Adherent,
+  Draft,
+  DraftGeneral,
+  DraftInCharge,
+  DraftSigna,
+  Security,
+  Supply,
+  InquiryWithPotentialRequests,
+  FestivalActivity,
   Signage,
   ElectricitySupply,
-  InquiryRequest as Inquiry,
+  InquiryRequest,
   TimeWindow,
-  PublicGeneralSection,
-  WithInquiries as InquirySectionWithRequests,
+  WithInquiries,
+  CreateFestivalActivityForm,
+  PreviewFestivalActivity,
 } from "./festival-activity";
 export { DRAFT } from "./festival-activity";
 
-export { DraftFestivalActivity } from "./preparation/draft-festival-activity";
-
-export type {
-  CreateFestivalActivityForm,
-  PreviewFestivalActivity,
-  FestivalActivity,
-  FestivalActivityRepresentation,
-} from "./festival-activity.model";
-
-export type { FestivalActivityRepository } from "./festival-activity.repository";
-
-export { InMemoryFestivalActivityRepository } from "./festival-activity-repository.inmemory";
-
 // CREATION
-export { CreateFestivalActivity as FestivalActivityCreation } from "./creation/creation";
-export type { FestivalActivityCreationForm as CreateFestivalActivity } from "./creation/creation";
-
+export { CreateFestivalActivity } from "./creation/creation";
 export type {
-  DraftFestivalActivityRepresentation,
-  DraftGeneralSection,
-  DraftInChargeSection,
-  DraftSigna as DraftSignaSection,
-  DraftSecuritySection,
-  DraftSupplySection,
-  DraftInquirySection,
-} from "./creation/draft-festival-activity.model";
+  FestivalActivityCreationForm,
+  CreateFestivalActivityRepository,
+} from "./creation/creation";
+export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
 
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
-
+export type { PrepareFestivalActivityRepository } from "./preparation/prepare-festival-activity";
 export type {
-  PrepareGeneralForm as PrepareGeneralSectionForm,
-  PrepareInChargeForm as PrepareInChargeSectionForm,
-  PrepareSignaForm as PrepareSignaSectionForm,
-  PrepareSecurityForm as PrepareSecuritySectionForm,
-  PrepareSupplyForm as PrepareSupplySectionForm,
+  PrepareGeneralForm,
+  PrepareInChargeForm,
+  PrepareSignaForm,
+  PrepareSecurityForm,
+  PrepareSupplyForm,
 } from "./preparation/prepare-festival-activity.model";
-
-//ASK FOR REVIEW
-export type { InReviewFestivalActivityRepresentation } from "./ask-for-review/in-review-festival-activity";
+export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";

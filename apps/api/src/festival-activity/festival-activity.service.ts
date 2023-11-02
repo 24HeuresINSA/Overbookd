@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import {
-  DraftFestivalActivity,
+  CreateFestivalActivity,
+  CreateFestivalActivityRepository,
+  Draft,
   FestivalActivity,
-  FestivalActivityRepository,
   PrepareFestivalActivity,
-  PrepareGeneralSectionForm,
-  PrepareInChargeSectionForm,
-  PrepareSecuritySectionForm,
-  PrepareSignaSectionForm,
-  PrepareSupplySectionForm,
+  PrepareFestivalActivityRepository,
+  PrepareGeneralForm,
+  PrepareInChargeForm,
+  PrepareSecurityForm,
+  PrepareSignaForm,
+  PrepareSupplyForm,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { AdherentRepository } from "./repository/adherent-repository.prisma";
@@ -16,43 +18,45 @@ import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 
 @Injectable()
 export class FestivalActivityService {
-  private prepareFestivalActivity: PrepareFestivalActivity;
+  private readonly createFestivalActivity: CreateFestivalActivity;
+  private readonly prepareFestivalActivity: PrepareFestivalActivity;
 
   constructor(
     private readonly adherents: AdherentRepository,
-    private readonly festivalActivities: FestivalActivityRepository,
+    createFestivalActivities: CreateFestivalActivityRepository,
+    private readonly prepareFestivalActivities: PrepareFestivalActivityRepository,
   ) {
+    this.createFestivalActivity = new CreateFestivalActivity(
+      createFestivalActivities,
+    );
     this.prepareFestivalActivity = new PrepareFestivalActivity(
-      this.festivalActivities,
+      prepareFestivalActivities,
     );
   }
 
   findAll(): Promise<PreviewFestivalActivity[]> {
-    return this.festivalActivities.findAll();
+    return this.prepareFestivalActivities.findAll();
   }
 
   findById(id: number): Promise<FestivalActivity | null> {
-    return this.festivalActivities.findById(id);
+    return this.prepareFestivalActivities.findById(id);
   }
 
-  async create(
-    { id }: JwtPayload,
-    name: string,
-  ): Promise<DraftFestivalActivity> {
+  async create({ id }: JwtPayload, name: string): Promise<Draft> {
     const author = await this.adherents.find(id);
-    return this.festivalActivities.create({ author, name });
+    return this.createFestivalActivity.create({ author, name });
   }
 
   saveGeneralSection(
     id: number,
-    general: PrepareGeneralSectionForm,
+    general: PrepareGeneralForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
 
   async saveInChargeSection(
     id: number,
-    inCharge: PrepareInChargeSectionForm,
+    inCharge: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
     const adherent = inCharge.adherentId
       ? { adherent: await this.adherents.find(inCharge.adherentId) }
@@ -63,21 +67,21 @@ export class FestivalActivityService {
 
   saveSignaSection(
     id: number,
-    signa: PrepareSignaSectionForm,
+    signa: PrepareSignaForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSignaSection(id, signa);
   }
 
   saveSecuritySection(
     id: number,
-    security: PrepareSecuritySectionForm,
+    security: PrepareSecurityForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
     id: number,
-    supply: PrepareSupplySectionForm,
+    supply: PrepareSupplyForm,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);
   }

@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  PrepareGeneralSectionForm,
-  PrepareInChargeSectionForm,
-  PrepareSecuritySectionForm,
-  PrepareSignaSectionForm,
-  PrepareSupplySectionForm,
+  PrepareGeneralForm,
+  PrepareInChargeForm,
+  PrepareSecurityForm,
+  PrepareSignaForm,
+  PrepareSupplyForm,
 } from "@overbookd/festival-activity";
 import { IsOptional } from "class-validator";
 
-export class GeneralSectionRequestDto implements PrepareGeneralSectionForm {
+export class GeneralSectionRequestDto implements PrepareGeneralForm {
   @ApiProperty({
     description: "Festival activity name",
     required: false,
@@ -55,7 +55,7 @@ export class GeneralSectionRequestDto implements PrepareGeneralSectionForm {
   isFlagship?: boolean;
 }
 
-export class InChargeSectionRequestDto implements PrepareInChargeSectionForm {
+export class InChargeSectionRequestDto implements PrepareInChargeForm {
   @ApiProperty({
     description: "Festival activity adherent id in charge",
     required: false,
@@ -71,7 +71,7 @@ export class InChargeSectionRequestDto implements PrepareInChargeSectionForm {
   team?: string;
 }
 
-export class SignaSectionRequestDto implements PrepareSignaSectionForm {
+export class SignaSectionRequestDto implements PrepareSignaForm {
   @ApiProperty({
     description: "Festival activity location",
     required: false,
@@ -80,7 +80,7 @@ export class SignaSectionRequestDto implements PrepareSignaSectionForm {
   location?: string | null;
 }
 
-export class SecuritySectionRequestDto implements PrepareSecuritySectionForm {
+export class SecuritySectionRequestDto implements PrepareSecurityForm {
   @ApiProperty({
     description: "Festival activity special security need",
     required: false,
@@ -89,7 +89,7 @@ export class SecuritySectionRequestDto implements PrepareSecuritySectionForm {
   specialNeed?: string | null;
 }
 
-export class SupplySectionRequestDto implements PrepareSupplySectionForm {
+export class SupplySectionRequestDto implements PrepareSupplyForm {
   @ApiProperty({
     description: "Festival activity water supply",
     required: false,

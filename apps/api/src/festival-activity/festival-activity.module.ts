@@ -4,14 +4,21 @@ import { FestivalActivityService } from "./festival-activity.service";
 import { PrismaAdherentRepository } from "./repository/adherent-repository.prisma";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
-import { InMemoryFestivalActivityRepository } from "@overbookd/festival-activity";
+import {
+  InMemoryCreateFestivalActivityRepository,
+  InMemoryPrepareFestivalActivityRepository,
+} from "@overbookd/festival-activity";
 
 @Module({
   controllers: [FestivalActivityController],
   providers: [
     {
-      provide: InMemoryFestivalActivityRepository,
-      useFactory: () => new InMemoryFestivalActivityRepository(),
+      provide: InMemoryCreateFestivalActivityRepository,
+      useFactory: () => new InMemoryCreateFestivalActivityRepository(),
+    },
+    {
+      provide: InMemoryPrepareFestivalActivityRepository,
+      useFactory: () => new InMemoryPrepareFestivalActivityRepository(),
     },
     {
       provide: PrismaAdherentRepository,
@@ -23,9 +30,14 @@ import { InMemoryFestivalActivityRepository } from "@overbookd/festival-activity
       provide: FestivalActivityService,
       useFactory: (
         adherents: PrismaAdherentRepository,
-        festivalActivities: InMemoryFestivalActivityRepository,
-      ) => new FestivalActivityService(adherents, festivalActivities),
-      inject: [PrismaAdherentRepository, InMemoryFestivalActivityRepository],
+        create: InMemoryCreateFestivalActivityRepository,
+        prepare: InMemoryPrepareFestivalActivityRepository,
+      ) => new FestivalActivityService(adherents, create, prepare),
+      inject: [
+        PrismaAdherentRepository,
+        InMemoryCreateFestivalActivityRepository,
+        InMemoryPrepareFestivalActivityRepository,
+      ],
     },
   ],
   imports: [PrismaModule],

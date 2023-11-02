@@ -1,53 +1,21 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "./draft-festival-activity";
-import { CreateFestivalActivity } from "../creation/creation";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-import { PrepareGeneralSection } from "./prepare-general-section";
 import { TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
 import { Period } from "@overbookd/period";
 import { Duration } from "@overbookd/period";
-import { DraftGeneralSection } from "../creation/draft-festival-activity.model";
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
-
-const escapeGameGeneral: DraftGeneralSection = {
-  name: "Escape Game",
-  description: null,
-  toPublish: true,
-  photoLink: "https://www.google.com",
-  isFlagship: true,
-  categories: ["Sport"],
-  timeWindows: [],
-};
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { escapeGame } from "./preparation.test-utils";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: CreateFestivalActivity;
-  let festivalActivityRepository: InMemoryFestivalActivityRepository;
-  let escapeGameActivity: DraftFestivalActivity;
+  let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    festivalActivityFactory = new CreateFestivalActivity();
-    const escapeGameCreation = festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-    escapeGameActivity = DraftFestivalActivity.build({
-      ...escapeGameCreation,
-      general: PrepareGeneralSection.build(escapeGameGeneral),
-    });
-    const festivalActivities = [escapeGameActivity];
-
-    festivalActivityRepository = new InMemoryFestivalActivityRepository(
-      festivalActivities,
-    );
+    prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
+      escapeGame,
+    ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
-      festivalActivityRepository,
+      prepareFestivalActivities,
     );
   });
 
@@ -57,7 +25,7 @@ describe("General section of festival activity preparation", () => {
         const nameToUpdate = { name: "Laser game" };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           nameToUpdate,
         );
 
@@ -70,7 +38,7 @@ describe("General section of festival activity preparation", () => {
           photoLink,
           isFlagship,
           timeWindows,
-        } = escapeGameGeneral;
+        } = escapeGame.general;
 
         expect(general.description).toBe(description);
         expect(general.categories).toEqual(categories);
@@ -86,7 +54,7 @@ describe("General section of festival activity preparation", () => {
         const descriptionToUpdate = { description: "Tire sur les cibles" };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           descriptionToUpdate,
         );
 
@@ -99,7 +67,7 @@ describe("General section of festival activity preparation", () => {
           photoLink,
           isFlagship,
           timeWindows,
-        } = escapeGameGeneral;
+        } = escapeGame.general;
 
         expect(general.name).toBe(name);
         expect(general.categories).toEqual(categories);
@@ -115,7 +83,7 @@ describe("General section of festival activity preparation", () => {
         const categoriesToUpdate = { categories: ["Culture", "Sport"] };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           categoriesToUpdate,
         );
 
@@ -128,7 +96,7 @@ describe("General section of festival activity preparation", () => {
           photoLink,
           isFlagship,
           timeWindows,
-        } = escapeGameGeneral;
+        } = escapeGame.general;
 
         expect(general.name).toBe(name);
         expect(general.description).toBe(description);
@@ -144,7 +112,7 @@ describe("General section of festival activity preparation", () => {
         const toPublishToUpdate = { toPublish: false };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           toPublishToUpdate,
         );
 
@@ -153,7 +121,7 @@ describe("General section of festival activity preparation", () => {
         expect(general.isFlagship).toBe(false);
 
         const { name, description, categories, timeWindows } =
-          escapeGameGeneral;
+          escapeGame.general;
 
         expect(general.name).toBe(name);
         expect(general.description).toBe(description);
@@ -172,12 +140,12 @@ describe("General section of festival activity preparation", () => {
         };
 
         await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateName,
         );
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateDescription,
         );
 
@@ -195,13 +163,13 @@ describe("General section of festival activity preparation", () => {
 
     it("should add the time window", async () => {
       const { general } = await prepareFestivalActivity.addTimeWindowInGeneral(
-        escapeGameActivity.id,
+        escapeGame.id,
         timeWindowToAdd,
       );
 
       const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
       const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const timeWindowId = `${escapeGameActivity.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+      const timeWindowId = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
       const timeWindow = general.timeWindows.find(
         (tw) => tw.id === timeWindowId,
@@ -215,13 +183,13 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to add a time window that already exists", () => {
       it("should should indicate that the time window already exists", async () => {
         await prepareFestivalActivity.addTimeWindowInGeneral(
-          escapeGameActivity.id,
+          escapeGame.id,
           timeWindowToAdd,
         );
 
         await expect(
           prepareFestivalActivity.addTimeWindowInGeneral(
-            escapeGameActivity.id,
+            escapeGame.id,
             timeWindowToAdd,
           ),
         ).rejects.toThrow(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);
@@ -237,17 +205,17 @@ describe("General section of festival activity preparation", () => {
       };
 
       await prepareFestivalActivity.addTimeWindowInGeneral(
-        escapeGameActivity.id,
+        escapeGame.id,
         timeWindowToAdd,
       );
 
       const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
       const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const timeWindowId = `${escapeGameActivity.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+      const timeWindowId = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
       const { general } =
         await prepareFestivalActivity.removeTimeWindowFromGeneral(
-          escapeGameActivity.id,
+          escapeGame.id,
           timeWindowId,
         );
 

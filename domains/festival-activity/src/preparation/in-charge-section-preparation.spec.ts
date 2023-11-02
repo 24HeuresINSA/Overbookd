@@ -1,68 +1,35 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "./draft-festival-activity";
-import { CreateFestivalActivity } from "../creation/creation";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-import { InChargeSection } from "../festival-activity";
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
-
-const lea = {
-  id: 2,
-  lastname: "Mouyno",
-  firstname: "Lea",
-};
-
-const escapeGameInCharge: InChargeSection = {
-  adherent: noel,
-  team: "culture",
-  contractors: [],
-};
+import { escapeGame, lea } from "./preparation.test-utils";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: CreateFestivalActivity;
-  let festivalActivityRepository: InMemoryFestivalActivityRepository;
-  let escapeGameActivity: DraftFestivalActivity;
+  let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    festivalActivityFactory = new CreateFestivalActivity();
-    const escapeGameCreation = festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-    escapeGameActivity = DraftFestivalActivity.build({
-      ...escapeGameCreation,
-      inCharge: escapeGameInCharge,
-    });
-    const festivalActivities = [escapeGameActivity];
-
-    festivalActivityRepository = new InMemoryFestivalActivityRepository(
-      festivalActivities,
-    );
+    prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
+      escapeGame,
+    ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
-      festivalActivityRepository,
+      prepareFestivalActivities,
     );
   });
 
   describe("when adherent want to update a field", () => {
     describe("when adherent want to update adherent in charge", () => {
       it("should only update adherent", async () => {
-        const updateAdherent = { adherent: lea };
+        const updateAdherent = { adherentId: lea.id };
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateAdherent,
           );
 
-        expect(inCharge.adherent).toBe(updateAdherent.adherent);
+        expect(inCharge.adherent.id).toBe(updateAdherent.adherentId);
 
-        const { team, contractors } = escapeGameInCharge;
+        const { team, contractors } = escapeGame.inCharge;
 
         expect(inCharge.team).toBe(team);
         expect(inCharge.contractors).toEqual(contractors);
@@ -75,13 +42,13 @@ describe("General section of festival activity preparation", () => {
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateTeam,
           );
 
         expect(inCharge.team).toBe(updateTeam.team);
 
-        const { adherent, contractors } = escapeGameInCharge;
+        const { adherent, contractors } = escapeGame.inCharge;
 
         expect(inCharge.adherent).toBe(adherent);
         expect(inCharge.contractors).toEqual(contractors);
@@ -92,21 +59,21 @@ describe("General section of festival activity preparation", () => {
   describe("when adherent want to update multiple fields consecutively", () => {
     describe("when adherent want to update adherent then team in 2 times", () => {
       it("should update both adherent and team", async () => {
-        const updateAdherent = { adherent: lea };
+        const updateAdherent = { adherentId: lea.id };
         const updateTeam = { team: "plaizir" };
 
         await prepareFestivalActivity.updateInChargeSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateAdherent,
         );
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateTeam,
           );
 
-        expect(inCharge.adherent).toBe(updateAdherent.adherent);
+        expect(inCharge.adherent).toBe(lea);
         expect(inCharge.team).toBe(updateTeam.team);
       });
     });
