@@ -263,7 +263,6 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateInCharge(inCharge);
-    console.log(updatedFA.inCharge);
     return this.festivalActivities.save(updatedFA);
   }
 
