@@ -1,5 +1,5 @@
-import { DRAFT } from "./festival-activity.core";
-import { InReviewFestivalActivity } from "./ask-for-review/in-review-festival-activity";
+import { DRAFT } from "../festival-activity";
+import { InReviewFestivalActivity } from "../ask-for-review/in-review-festival-activity";
 import {
   DraftFestivalActivityBuilder,
   DraftFestivalActivityRepresentation,
@@ -7,18 +7,18 @@ import {
   DraftInChargeSection,
   DraftInquirySection,
   DraftSecuritySection,
-  DraftSignaSection,
+  DraftSigna,
   DraftSupplySection,
 } from "./creation/draft-festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
 import {
-  PrepareGeneralSectionForm,
-  PrepareInChargeSectionForm,
-  PrepareSecuritySectionForm,
-  PrepareSignaSectionForm,
-  PrepareSupplySectionForm,
-} from "./preparation/prepare-festival-activity.model";
-import { PrepareGeneralSection } from "./preparation/prepare-general-section";
+  PrepareGeneralForm,
+  PrepareInChargeForm,
+  PrepareSecurityForm,
+  PrepareSignaForm,
+  PrepareSupplyForm,
+} from "./prepare-festival-activity.model";
+import { PrepareGeneralSection } from "./prepare-general-section";
 
 export class DraftFestivalActivity
   implements DraftFestivalActivityRepresentation
@@ -27,7 +27,7 @@ export class DraftFestivalActivity
     readonly id: number,
     readonly general: DraftGeneralSection,
     readonly inCharge: DraftInChargeSection,
-    readonly signa: DraftSignaSection,
+    readonly signa: DraftSigna,
     readonly security: DraftSecuritySection,
     readonly supply: DraftSupplySection,
     readonly inquiry: DraftInquirySection,
@@ -68,7 +68,7 @@ export class DraftFestivalActivity
   }
 
   public changeGeneralSection(
-    generalUpdate: PrepareGeneralSectionForm,
+    generalUpdate: PrepareGeneralForm,
   ): DraftFestivalActivity {
     const general = PrepareGeneralSection.build(this.general).update(
       generalUpdate,
@@ -100,7 +100,7 @@ export class DraftFestivalActivity
   }
 
   public changeInChargeSection(
-    inChargeUpdate: PrepareInChargeSectionForm,
+    inChargeUpdate: PrepareInChargeForm,
   ): DraftFestivalActivity {
     const inCharge = { ...this.inCharge, ...inChargeUpdate };
 
@@ -109,7 +109,7 @@ export class DraftFestivalActivity
   }
 
   public changeSignaSection(
-    signaUpdate: PrepareSignaSectionForm,
+    signaUpdate: PrepareSignaForm,
   ): DraftFestivalActivity {
     const signa = { ...this.signa, ...signaUpdate };
 
@@ -118,7 +118,7 @@ export class DraftFestivalActivity
   }
 
   public changeSecuritySection(
-    securityUpdate: PrepareSecuritySectionForm,
+    securityUpdate: PrepareSecurityForm,
   ): DraftFestivalActivity {
     const security = { ...this.security, ...securityUpdate };
 
@@ -127,15 +127,11 @@ export class DraftFestivalActivity
   }
 
   public changeSupplySection(
-    supplyUpdate: PrepareSupplySectionForm,
+    supplyUpdate: PrepareSupplyForm,
   ): DraftFestivalActivity {
     const supply = { ...this.supply, ...supplyUpdate };
 
     const builder = { ...this.json, supply };
     return DraftFestivalActivity.build(builder);
-  }
-
-  askForReview() {
-    return InReviewFestivalActivity.init({ ...this.json });
   }
 }

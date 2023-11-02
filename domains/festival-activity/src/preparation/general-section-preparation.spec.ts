@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "../draft-festival-activity";
-import { FestivalActivityCreation } from "../creation/creation";
+import { DraftFestivalActivity } from "./draft-festival-activity";
+import { CreateFestivalActivity } from "../creation/creation";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
 import { PrepareGeneralSection } from "./prepare-general-section";
@@ -27,12 +27,12 @@ const escapeGameGeneral: DraftGeneralSection = {
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: FestivalActivityCreation;
+  let festivalActivityFactory: CreateFestivalActivity;
   let festivalActivityRepository: InMemoryFestivalActivityRepository;
   let escapeGameActivity: DraftFestivalActivity;
 
   beforeEach(() => {
-    festivalActivityFactory = new FestivalActivityCreation();
+    festivalActivityFactory = new CreateFestivalActivity();
     const escapeGameCreation = festivalActivityFactory.create({
       name: "Escape Game",
       author: noel,

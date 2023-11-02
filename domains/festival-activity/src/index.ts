@@ -2,14 +2,14 @@ export type {
   Adherent,
   Signage,
   ElectricitySupply,
-  Inquiry,
+  InquiryRequest as Inquiry,
   TimeWindow,
   PublicGeneralSection,
-  InquirySectionWithRequests,
-} from "./festival-activity.core";
-export { DRAFT } from "./festival-activity.core";
+  WithInquiries as InquirySectionWithRequests,
+} from "./festival-activity";
+export { DRAFT } from "./festival-activity";
 
-export { DraftFestivalActivity } from "./draft-festival-activity";
+export { DraftFestivalActivity } from "./preparation/draft-festival-activity";
 
 export type {
   CreateFestivalActivityForm,
@@ -23,14 +23,14 @@ export type { FestivalActivityRepository } from "./festival-activity.repository"
 export { InMemoryFestivalActivityRepository } from "./festival-activity-repository.inmemory";
 
 // CREATION
-export { FestivalActivityCreation } from "./creation/creation";
-export type { CreateFestivalActivity } from "./creation/creation";
+export { CreateFestivalActivity as FestivalActivityCreation } from "./creation/creation";
+export type { FestivalActivityCreationForm as CreateFestivalActivity } from "./creation/creation";
 
 export type {
   DraftFestivalActivityRepresentation,
   DraftGeneralSection,
   DraftInChargeSection,
-  DraftSignaSection,
+  DraftSigna as DraftSignaSection,
   DraftSecuritySection,
   DraftSupplySection,
   DraftInquirySection,
@@ -40,11 +40,11 @@ export type {
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
 
 export type {
-  PrepareGeneralSectionForm,
-  PrepareInChargeSectionForm,
-  PrepareSignaSectionForm,
-  PrepareSecuritySectionForm,
-  PrepareSupplySectionForm,
+  PrepareGeneralForm as PrepareGeneralSectionForm,
+  PrepareInChargeForm as PrepareInChargeSectionForm,
+  PrepareSignaForm as PrepareSignaSectionForm,
+  PrepareSecurityForm as PrepareSecuritySectionForm,
+  PrepareSupplyForm as PrepareSupplySectionForm,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

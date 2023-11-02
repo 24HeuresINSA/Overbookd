@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { FestivalActivityCreation } from "./creation";
-import { DRAFT } from "../festival-activity.core";
-import { Adherent } from "../festival-activity.core";
+import { CreateFestivalActivity } from "./creation";
+import { DRAFT } from "../festival-activity";
+import { Adherent } from "../festival-activity";
+import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.inmemory";
 
 const noel: Adherent = {
   id: 1,
@@ -10,9 +11,10 @@ const noel: Adherent = {
 };
 
 describe("Festival activity creation", () => {
-  describe(`when ${noel.firstname} create Escape game activity`, () => {
-    const festivalActivity = new FestivalActivityCreation();
-    const escapeGame = festivalActivity.create({
+  describe(`when ${noel.firstname} create Escape game activity`, async () => {
+    const repository = new InMemoryCreateFestivalActivityRepository();
+    const festivalActivity = new CreateFestivalActivity(repository);
+    const escapeGame = await festivalActivity.create({
       name: "Escape game",
       author: noel,
     });

@@ -1,11 +1,11 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { TimeWindowAlreadyExists as TimeWindowAlreadyExists } from "../festival-activity.error";
 import { Duration } from "@overbookd/period";
-import { PrepareGeneralSectionForm } from "./prepare-festival-activity.model";
-import { TimeWindow } from "../festival-activity.core";
+import { PrepareGeneralForm } from "./prepare-festival-activity.model";
+import { TimeWindow } from "../festival-activity";
 import { DraftGeneralSection } from "../creation/draft-festival-activity.model";
 
-type CreateGeneralTimeWindow = {
+type CreateTimeWindow = {
   faId: number;
   period: IProvidePeriod;
 };
@@ -49,7 +49,7 @@ export class PrepareGeneralSection implements DraftGeneralSection {
     );
   }
 
-  public update(generalUpdate: PrepareGeneralSectionForm): DraftGeneralSection {
+  public update(generalUpdate: PrepareGeneralForm): DraftGeneralSection {
     const privateFestivalActivity = {
       toPublish: false,
       photoLink: null,
@@ -63,9 +63,7 @@ export class PrepareGeneralSection implements DraftGeneralSection {
     return PrepareGeneralSection.build(build);
   }
 
-  public addTimeWindow(
-    timeWindowForm: CreateGeneralTimeWindow,
-  ): DraftGeneralSection {
+  public addTimeWindow(timeWindowForm: CreateTimeWindow): DraftGeneralSection {
     const { timeWindows } = this._timeWindows.add(timeWindowForm);
     return PrepareGeneralSection.build({ ...this.json, timeWindows });
   }
@@ -83,7 +81,7 @@ class TimeWindows {
     return new TimeWindows(timeWindows);
   }
 
-  public add(form: CreateGeneralTimeWindow): TimeWindows {
+  public add(form: CreateTimeWindow): TimeWindows {
     const id = this.generateId(form);
     const { start, end } = Period.init(form.period);
     const timeWindow = { id, start, end };
@@ -100,7 +98,7 @@ class TimeWindows {
     return TimeWindows.build(timeWindows);
   }
 
-  private generateId(form: CreateGeneralTimeWindow): string {
+  private generateId(form: CreateTimeWindow): string {
     const { start, end } = form.period;
     const startMinutes = Duration.ms(start.getTime()).inMinutes;
     const endMinutes = Duration.ms(end.getTime()).inMinutes;

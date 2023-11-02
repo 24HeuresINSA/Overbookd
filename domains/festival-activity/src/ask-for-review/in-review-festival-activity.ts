@@ -1,13 +1,4 @@
-import {
-  GeneralSection,
-  IN_REVIEW,
-  InChargeSection,
-  InquirySection,
-  SecuritySection,
-  SignaSection,
-  SupplySection,
-} from "../festival-activity.core";
-import { FestivalActivityRepresentation } from "../festival-activity.model";
+import { FestivalActivity, IN_REVIEW, InReview } from "../festival-activity";
 import {
   isPublicActivity,
   PublicActivityGeneralSpecification,
@@ -28,34 +19,20 @@ import {
   barrieres,
   comcom,
 } from "./waiting-for-review";
-
-export type InReviewFestivalActivityRepresentation = {
-  id: number;
-  status: typeof IN_REVIEW;
-  general: GeneralSection;
-  inCharge: InChargeSection;
-  security: SecuritySection;
-  signa: SignaSection;
-  supply: SupplySection;
-  inquiry: InquirySection;
-};
-
 class ReadyForReview {
   static isSatisfiedBy(
-    festivalActivity: FestivalActivityRepresentation,
-  ): festivalActivity is InReviewFestivalActivityRepresentation {
+    festivalActivity: FestivalActivity,
+  ): festivalActivity is InReview {
     return this.errors(festivalActivity).length === 0;
   }
 
   static generateError(
-    festivalActivity: FestivalActivityRepresentation,
+    festivalActivity: FestivalActivity,
   ): ReadyForReviewException {
     return new ReadyForReviewException(this.errors(festivalActivity));
   }
 
-  private static errors(
-    festivalActivity: FestivalActivityRepresentation,
-  ): string[] {
+  private static errors(festivalActivity: FestivalActivity): string[] {
     const general = isPublicActivity(festivalActivity.general)
       ? PublicActivityGeneralSpecification.errors(festivalActivity.general)
       : ActivityGeneralSpecification.errors(festivalActivity.general);
@@ -74,24 +51,22 @@ class ReadyForReview {
   }
 }
 
-export class InReviewFestivalActivity
-  implements InReviewFestivalActivityRepresentation
-{
+export class InReviewFestivalActivity implements InReview {
   private constructor(
-    readonly id: number,
-    readonly general: GeneralSection,
-    readonly inCharge: InChargeSection,
-    readonly signa: SignaSection,
-    readonly security: SecuritySection,
-    readonly supply: SupplySection,
-    readonly inquiry: InquirySection,
+    readonly id: InReview["id"],
+    readonly general: InReview["general"],
+    readonly inCharge: InReview["inCharge"],
+    readonly signa: InReview["signa"],
+    readonly security: InReview["security"],
+    readonly supply: InReview["supply"],
+    readonly inquiry: InReview["inquiry"],
   ) {}
 
   get status(): typeof IN_REVIEW {
     return IN_REVIEW;
   }
 
-  static init(draft: FestivalActivityRepresentation): InReviewFestivalActivity {
+  static init(draft: FestivalActivity): InReviewFestivalActivity {
     if (!ReadyForReview.isSatisfiedBy(draft)) {
       throw ReadyForReview.generateError(draft);
     }

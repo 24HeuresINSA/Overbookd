@@ -1,34 +1,36 @@
-import { InquiryWithTimeWindows } from "../../festival-activity.core";
-import { InquirySectionWithPotentialRequests } from "../../festival-activity.core";
-import { InquiryWithRequests } from "../../festival-activity.core";
+import {
+  WithTimeWindows,
+  InquiryWithPotentialRequests,
+  WithInquiries,
+} from "../../festival-activity";
 
 const REQUIRED_INQUIRY_WITH_TIMEWINDOWS =
   "Au moins une demande de matos est nécessaire pour un créneau matos";
 const REQUIRED_TIMEWINDOWS_WITH_INQUIRY =
   "Au moins un créneau matos est nécessaire pour une demande matos";
 
-type WithTimeWindowsInquirySection = InquiryWithTimeWindows &
-  Omit<InquirySectionWithPotentialRequests, "timeWindows">;
+type WithTimeWindowsAndPotentialInquiries = WithTimeWindows &
+  Omit<InquiryWithPotentialRequests, "timeWindows">;
 
-type WithRequestsInquirySection = InquiryWithRequests &
-  Pick<InquirySectionWithPotentialRequests, "timeWindows">;
+type WithInquiriesAndPotentialTimeWindows = WithInquiries &
+  Pick<InquiryWithPotentialRequests, "timeWindows">;
 
 function isWithTimeWindows(
-  section: InquirySectionWithPotentialRequests,
-): section is WithTimeWindowsInquirySection {
+  section: InquiryWithPotentialRequests,
+): section is WithTimeWindowsAndPotentialInquiries {
   return section.timeWindows.length > 0;
 }
 
 function isWithRequest(
-  section: InquirySectionWithPotentialRequests,
-): section is WithRequestsInquirySection {
+  section: InquiryWithPotentialRequests,
+): section is WithInquiriesAndPotentialTimeWindows {
   const { barriers, electricity, gears } = section;
   const requests = barriers.length + electricity.length + gears.length;
   return requests > 0;
 }
 
 class ActivityInquiryWithTimeWindowsSpecification {
-  static errors(section: WithTimeWindowsInquirySection): string[] {
+  static errors(section: WithTimeWindowsAndPotentialInquiries): string[] {
     if (isWithRequest(section)) {
       return [];
     }
@@ -37,7 +39,7 @@ class ActivityInquiryWithTimeWindowsSpecification {
 }
 
 class ActivityInquiryWithRequestSpecification {
-  static errors(section: WithRequestsInquirySection): string[] {
+  static errors(section: WithInquiriesAndPotentialTimeWindows): string[] {
     if (isWithTimeWindows(section)) {
       return [];
     }
@@ -46,7 +48,7 @@ class ActivityInquiryWithRequestSpecification {
 }
 
 export class ActivityInquirySpecification {
-  static errors(section: InquirySectionWithPotentialRequests): string[] {
+  static errors(section: InquiryWithPotentialRequests): string[] {
     if (isWithTimeWindows(section)) {
       return ActivityInquiryWithTimeWindowsSpecification.errors(section);
     }

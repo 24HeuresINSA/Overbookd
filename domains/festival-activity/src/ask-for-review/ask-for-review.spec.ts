@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "../draft-festival-activity";
+import { DraftFestivalActivity } from "../preparation/draft-festival-activity";
 import {
   barrieres,
   comcom,
@@ -10,7 +10,7 @@ import {
   signa,
 } from "./waiting-for-review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
-import { DRAFT, IN_REVIEW } from "../festival-activity.core";
+import { DRAFT, IN_REVIEW } from "../festival-activity";
 import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
 import { AskForReview } from "./ask-for-review";
 import {
@@ -28,9 +28,11 @@ import {
 } from "./ask-for-review.test-utils";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { Review } from "../festival-activity.error";
+import { InMemoryNotifications } from "./notifications.inmemory";
 
 describe("Ask for review", () => {
   let askForReview: AskForReview;
+  let notifications: InMemoryNotifications;
   beforeEach(() => {
     const festivalActivities = new InMemoryFestivalActivityRepository(
       [
@@ -47,7 +49,8 @@ describe("Ask for review", () => {
         justCreated,
       ].map(DraftFestivalActivity.build),
     );
-    askForReview = new AskForReview(festivalActivities);
+    notifications = new InMemoryNotifications();
+    askForReview = new AskForReview(festivalActivities, notifications);
   });
   describe("when asking a review for a draft festival activity", () => {
     describe("when draft festival activity has all required fields fulfilled", () => {
@@ -68,27 +71,33 @@ describe("Ask for review", () => {
       });
       it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
         const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-        expect(inReviewFa.readyForReview.id).toBe(inReviewFa.id);
-        expect(inReviewFa.readyForReview.name).toBe(inReviewFa.general.name);
-        expect(inReviewFa.readyForReview.reviewers).toContain(humain);
-        expect(inReviewFa.readyForReview.reviewers).toContain(signa);
-        expect(inReviewFa.readyForReview.reviewers).toContain(secu);
-        expect(inReviewFa.readyForReview.reviewers).toContain(matos);
-        expect(inReviewFa.readyForReview.reviewers).toContain(elec);
-        expect(inReviewFa.readyForReview.reviewers).toContain(barrieres);
+        expect(notifications.entries).toHaveLength(6);
+        const event = { id: inReviewFa.id, name: inReviewFa.general.name };
+        expect(notifications.entries).toContainEqual({ team: humain, event });
+        expect(notifications.entries).toContainEqual({ team: signa, event });
+        expect(notifications.entries).toContainEqual({ team: secu, event });
+        expect(notifications.entries).toContainEqual({ team: matos, event });
+        expect(notifications.entries).toContainEqual({ team: elec, event });
+        expect(notifications.entries).toContainEqual({
+          team: barrieres,
+          event,
+        });
       });
       describe("when festival activity will be published (i.e. is public)", () => {
         it("should also ask review from comcom", async () => {
           const inReviewFa = await askForReview.fromDraft(finaleEsport.id);
-          expect(inReviewFa.readyForReview.id).toBe(inReviewFa.id);
-          expect(inReviewFa.readyForReview.name).toBe(inReviewFa.general.name);
-          expect(inReviewFa.readyForReview.reviewers).toContain(comcom);
-          expect(inReviewFa.readyForReview.reviewers).toContain(humain);
-          expect(inReviewFa.readyForReview.reviewers).toContain(signa);
-          expect(inReviewFa.readyForReview.reviewers).toContain(secu);
-          expect(inReviewFa.readyForReview.reviewers).toContain(matos);
-          expect(inReviewFa.readyForReview.reviewers).toContain(elec);
-          expect(inReviewFa.readyForReview.reviewers).toContain(barrieres);
+          expect(notifications.entries).toHaveLength(7);
+          const event = { id: inReviewFa.id, name: inReviewFa.general.name };
+          expect(notifications.entries).toContainEqual({ team: comcom, event });
+          expect(notifications.entries).toContainEqual({ team: humain, event });
+          expect(notifications.entries).toContainEqual({ team: signa, event });
+          expect(notifications.entries).toContainEqual({ team: secu, event });
+          expect(notifications.entries).toContainEqual({ team: matos, event });
+          expect(notifications.entries).toContainEqual({ team: elec, event });
+          expect(notifications.entries).toContainEqual({
+            team: barrieres,
+            event,
+          });
         });
       });
     });
@@ -222,7 +231,8 @@ describe("Ask for review", () => {
         const festivalActivities = new InMemoryFestivalActivityRepository([
           InReviewFestivalActivity.init({ ...pcSecurite, status: DRAFT }),
         ]);
-        askForReview = new AskForReview(festivalActivities);
+        const notifications = new InMemoryNotifications();
+        askForReview = new AskForReview(festivalActivities, notifications);
       });
       it("should indicate that festival activity is already under review", async () => {
         expect(

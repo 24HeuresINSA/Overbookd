@@ -1,13 +1,10 @@
-import { DraftFestivalActivity } from "./draft-festival-activity";
-import { CreateFestivalActivity } from "./creation/creation";
-import {
-  PreviewFestivalActivity,
-  FestivalActivity,
-} from "./festival-activity.model";
+import { DraftFestivalActivity } from "./preparation/draft-festival-activity";
+import { FestivalActivityCreationForm } from "./creation/creation";
+import { FestivalActivity, PreviewFestivalActivity } from "./festival-activity";
 
 export interface FestivalActivityRepository {
   findAll(): Promise<PreviewFestivalActivity[]>;
   findById(id: number): Promise<FestivalActivity | null>;
-  create(form: CreateFestivalActivity): Promise<DraftFestivalActivity>;
+  create(form: FestivalActivityCreationForm): Promise<DraftFestivalActivity>;
   save<T extends FestivalActivity>(festivalActivity: T): Promise<T>;
 }
