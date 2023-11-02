@@ -134,7 +134,7 @@ export type WithInquiries =
   | WithBarriereInquiries
   | WithElectricityInquiries;
 
-export type InquiryWithRequests = WithInquiries & WithTimeWindows;
+type InquiryWithRequests = WithInquiries & WithTimeWindows;
 
 export type InquiryWithPotentialRequests = {
   timeWindows: TimeWindow[];
@@ -143,7 +143,7 @@ export type InquiryWithPotentialRequests = {
   barriers: InquiryRequest[];
 };
 
-export type Inquiry = InquiryWithPotentialRequests | InquiryWithRequests;
+type Inquiry = InquiryWithPotentialRequests | InquiryWithRequests;
 
 export type Draft = {
   id: number;

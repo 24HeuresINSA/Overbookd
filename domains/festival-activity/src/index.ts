@@ -37,3 +37,6 @@ export type {
   PrepareSupplyForm,
 } from "./preparation/prepare-festival-activity.model";
 export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";
+
+//ASK FOR REVIEW
+export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
