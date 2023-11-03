@@ -1,3 +1,5 @@
+import { DRAFT, Draft } from "../festival-activity";
+
 const robocop = {
   id: 1,
   nickname: "Robocop",
@@ -16,8 +18,9 @@ const dixCadenasPompier = { id: 1, name: "Cadenas Pompier", quantity: 10 };
 const uneBouilloire = { id: 2, name: "Bouilloire", quantity: 1 };
 const uneMultiprise = { id: 3, name: "Multiprise", quantity: 1 };
 
-export const pcSecurite = {
+export const pcSecurite: Draft = {
   id: 1,
+  status: DRAFT,
   general: {
     name: "PC Securite",
     description: "Tour de guet",
@@ -57,8 +60,9 @@ export const pcSecurite = {
   },
 };
 
-export const finaleEsport = {
+export const finaleEsport: Draft = {
   id: 2,
+  status: DRAFT,
   general: {
     name: "Finale esport",
     description:
@@ -154,8 +158,9 @@ export const internalWithoutInquiryTimeWindows = {
   inquiry: { ...pcSecurite.inquiry, timeWindows: [] },
 };
 
-export const justCreated = {
+export const justCreated: Draft = {
   id: 11,
+  status: DRAFT,
   inCharge: {
     adherent: robocop,
     team: null,

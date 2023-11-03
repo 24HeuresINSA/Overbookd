@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "../preparation/draft-festival-activity";
 import {
   barrieres,
   comcom,
@@ -11,7 +10,6 @@ import {
 } from "./waiting-for-review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
 import { DRAFT, IN_REVIEW } from "../festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
 import { AskForReview } from "./ask-for-review";
 import {
   pcSecurite,
@@ -29,13 +27,14 @@ import {
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { Review } from "../festival-activity.error";
 import { InMemoryNotifications } from "./notifications.inmemory";
+import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory";
 
 describe("Ask for review", () => {
   let askForReview: AskForReview;
   let notifications: InMemoryNotifications;
   beforeEach(() => {
-    const festivalActivities = new InMemoryFestivalActivityRepository(
-      [
+    const festivalActivities =
+      new InMemoryAskForReviewFestivalActivityRepository([
         pcSecurite,
         finaleEsport,
         internalWithoutDescription,
@@ -47,8 +46,7 @@ describe("Ask for review", () => {
         internalWithoutInquiries,
         internalWithoutInquiryTimeWindows,
         justCreated,
-      ].map(DraftFestivalActivity.build),
-    );
+      ]);
     notifications = new InMemoryNotifications();
     askForReview = new AskForReview(festivalActivities, notifications);
   });
@@ -228,9 +226,10 @@ describe("Ask for review", () => {
     });
     describe("when ask several time for a review", () => {
       beforeEach(() => {
-        const festivalActivities = new InMemoryFestivalActivityRepository([
-          InReviewFestivalActivity.init({ ...pcSecurite, status: DRAFT }),
-        ]);
+        const festivalActivities =
+          new InMemoryAskForReviewFestivalActivityRepository([
+            InReviewFestivalActivity.init({ ...pcSecurite, status: DRAFT }),
+          ]);
         const notifications = new InMemoryNotifications();
         askForReview = new AskForReview(festivalActivities, notifications);
       });

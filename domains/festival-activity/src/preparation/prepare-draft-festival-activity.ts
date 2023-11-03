@@ -5,10 +5,10 @@ import { Draft, DRAFT, TimeWindow } from "../festival-activity";
 import { TimeWindowAlreadyExists } from "../festival-activity.error";
 import {
   PrepareGeneralForm,
-  PrepareInChargeForm,
   PrepareSignaForm,
   PrepareSecurityForm,
   PrepareSupplyForm,
+  PrepareInChargeFormWithAdherent,
 } from "./prepare-festival-activity.model";
 
 export class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
@@ -85,7 +85,7 @@ export class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
     return { ...this.festivalActivity, general };
   }
 
-  updateInCharge(form: PrepareInChargeForm): Draft {
+  updateInCharge(form: PrepareInChargeFormWithAdherent): Draft {
     const inCharge = { ...this.inCharge, ...form };
     return { ...this.festivalActivity, inCharge };
   }

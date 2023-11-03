@@ -1,3 +1,5 @@
+import { Adherent } from "../festival-activity";
+
 export type PrepareGeneralForm = {
   name?: string;
   description?: string | null;
@@ -10,6 +12,13 @@ export type PrepareGeneralForm = {
 export type PrepareInChargeForm = {
   adherentId?: number;
   team?: string;
+};
+
+export type PrepareInChargeFormWithAdherent = Omit<
+  PrepareInChargeForm,
+  "adherentId"
+> & {
+  adherent?: Adherent;
 };
 
 export type PrepareSignaForm = {

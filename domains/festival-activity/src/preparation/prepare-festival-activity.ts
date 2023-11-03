@@ -1,13 +1,18 @@
 import { Duration, IProvidePeriod } from "@overbookd/period";
-import { FestivalActivityNotFound } from "../festival-activity.error";
+import {
+  AdherentNotFound,
+  FestivalActivityNotFound,
+} from "../festival-activity.error";
 import {
   PrepareGeneralForm,
   PrepareInChargeForm,
+  PrepareInChargeFormWithAdherent,
   PrepareSecurityForm,
   PrepareSignaForm,
   PrepareSupplyForm,
 } from "./prepare-festival-activity.model";
 import {
+  Adherent,
   FestivalActivity,
   PreviewFestivalActivity,
   TimeWindow,
@@ -15,6 +20,10 @@ import {
 } from "../festival-activity";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
+
+export interface Adherents {
+  findById(id: number): Promise<Adherent | null>;
+}
 
 export interface PrepareFestivalActivityRepository {
   findAll(): Promise<PreviewFestivalActivity[]>;
@@ -35,7 +44,14 @@ export type Prepare<T extends FestivalActivity> = {
 export class PrepareFestivalActivity {
   constructor(
     private readonly festivalActivities: PrepareFestivalActivityRepository,
+    private readonly adherents: Adherents,
   ) {}
+
+  private getPrepareHelper(existingFA: FestivalActivity) {
+    return isDraft(existingFA)
+      ? PrepareDraftFestivalActivity.build(existingFA)
+      : PrepareInReviewFestivalActivity.build(existingFA);
+  }
 
   async updateGeneralSection(
     id: number,
@@ -46,12 +62,6 @@ export class PrepareFestivalActivity {
 
     const updatedFA = prepare.updateGeneral(general);
     return this.festivalActivities.save(updatedFA);
-  }
-
-  private getPrepareHelper(existingFA: FestivalActivity) {
-    return isDraft(existingFA)
-      ? PrepareDraftFestivalActivity.build(existingFA)
-      : PrepareInReviewFestivalActivity.build(existingFA);
   }
 
   async addTimeWindowInGeneral(
@@ -83,7 +93,14 @@ export class PrepareFestivalActivity {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA = prepare.updateInCharge(inCharge);
+    let builder: PrepareInChargeFormWithAdherent = { ...inCharge };
+    if (inCharge.adherentId) {
+      const adherent = await this.adherents.findById(inCharge.adherentId);
+      if (!adherent) throw new AdherentNotFound();
+      builder = { ...builder, adherent };
+    }
+
+    const updatedFA = prepare.updateInCharge(builder);
     return this.festivalActivities.save(updatedFA);
   }
 

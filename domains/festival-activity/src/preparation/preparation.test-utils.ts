@@ -1,6 +1,6 @@
 import { DRAFT, Draft } from "../festival-activity";
 
-const noel = {
+export const noel = {
   id: 1,
   firstname: "Noel",
   lastname: "Ertsemud",

@@ -1,21 +1,27 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { PrepareFestivalActivity } from "./prepare-festival-activity";
+import {
+  Adherents,
+  PrepareFestivalActivity,
+} from "./prepare-festival-activity";
 import { TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE } from "../festival-activity.error";
-import { Period } from "@overbookd/period";
-import { Duration } from "@overbookd/period";
+import { Duration, Period } from "@overbookd/period";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
+import { InMemoryAdherents } from "./adherent.inmemory";
 
 describe("General section of festival activity preparation", () => {
+  let adherents: Adherents;
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
+    adherents = new InMemoryAdherents();
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
+      adherents,
     );
   });
 
