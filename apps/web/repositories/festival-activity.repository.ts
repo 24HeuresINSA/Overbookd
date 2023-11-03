@@ -2,7 +2,7 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { HttpStringified } from "~/utils/types/http";
 import {
   CreateFestivalActivityForm,
-  FestivalActivityRepresentation,
+  FestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 
@@ -18,13 +18,13 @@ export class FestivalActivityRepository {
   }
 
   static getOne(context: Context, id: number) {
-    return context.$axios.get<HttpStringified<FestivalActivityRepresentation>>(
+    return context.$axios.get<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${id}`,
     );
   }
 
   static create(context: Context, data: CreateFestivalActivityForm) {
-    return context.$axios.post<HttpStringified<FestivalActivityRepresentation>>(
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
       this.basePath,
       data,
     );

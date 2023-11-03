@@ -3,15 +3,10 @@ import {
   Adherent,
   Draft,
   DRAFT,
-  DraftGeneral,
-  DraftInCharge,
-  DraftSigna,
   ElectricitySupply,
   InquiryRequest,
   InquiryWithPotentialRequests,
-  Security,
   Signage,
-  Supply,
   TimeWindow,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
@@ -36,7 +31,9 @@ class TimeWindowDto implements TimeWindow {
   end: Date;
 }
 
-class GeneralSectionDto implements DraftGeneral {
+type General = Draft["general"];
+
+class GeneralSectionDto implements General {
   @ApiProperty({
     description: "Festival activity name",
   })
@@ -80,7 +77,9 @@ class GeneralSectionDto implements DraftGeneral {
   timeWindows: TimeWindow[];
 }
 
-class InChargeSectionDto implements DraftInCharge {
+type InCharge = Draft["inCharge"];
+
+class InChargeSectionDto implements InCharge {
   @ApiProperty({
     description: "Adherent in charge of this festival activity",
     type: AdherentResponseDto,
@@ -124,7 +123,9 @@ class SignageDto implements Signage {
   comment: string;
 }
 
-class SignaSectionDto implements DraftSigna {
+type Signa = Draft["signa"];
+
+class SignaSectionDto implements Signa {
   @ApiProperty({
     description: "Define where this festival activity take place",
     required: false,
@@ -138,6 +139,8 @@ class SignaSectionDto implements DraftSigna {
   })
   signages: Signage[];
 }
+
+type Security = Draft["security"];
 
 class SecuritySectionDto implements Security {
   @ApiProperty({
@@ -193,6 +196,8 @@ class ElectricitySupplyDto implements ElectricitySupply {
   })
   comment: string | null;
 }
+
+type Supply = Draft["supply"];
 
 class SupplySectionDto implements Supply {
   @ApiProperty({
