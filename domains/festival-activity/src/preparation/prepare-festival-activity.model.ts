@@ -1,5 +1,3 @@
-import { Adherent } from "../festival-activity";
-
 export type PrepareGeneralForm = {
   name?: string;
   description?: string | null;

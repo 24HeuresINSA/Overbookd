@@ -6,7 +6,6 @@ import {
 import {
   PrepareGeneralForm,
   PrepareInChargeForm,
-  PrepareInChargeFormWithAdherent,
   PrepareSecurityForm,
   PrepareSignaForm,
   PrepareSupplyForm,
