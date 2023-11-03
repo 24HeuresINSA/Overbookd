@@ -7,7 +7,7 @@ export type TimeWindow = IProvidePeriod & {
   id: string;
 };
 
-export type DraftGeneral = {
+type DraftGeneral = {
   name: string;
   description: string | null;
   categories: string[];
@@ -52,7 +52,7 @@ type InCharge = {
   contractors: never[];
 };
 
-export type DraftInCharge = Omit<InCharge, "team"> & {
+type DraftInCharge = Omit<InCharge, "team"> & {
   team: string | null;
 };
 
@@ -69,11 +69,11 @@ type Signa = {
   signages: Signage[];
 };
 
-export type DraftSigna = Omit<Signa, "location"> & {
+type DraftSigna = Omit<Signa, "location"> & {
   location: string | null;
 };
 
-export type Security = {
+type Security = {
   specialNeed: string | null;
 };
 
@@ -96,7 +96,7 @@ export type ElectricitySupply = {
   comment: string | null;
 };
 
-export type Supply = {
+type Supply = {
   electricity: ElectricitySupply[];
   water: string | null;
 };
