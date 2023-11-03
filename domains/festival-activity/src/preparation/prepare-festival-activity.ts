@@ -22,7 +22,7 @@ import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-ac
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
 
 export interface Adherents {
-  findById(id: number): Promise<Adherent | null>;
+  find(id: number): Promise<Adherent | null>;
 }
 
 export interface PrepareFestivalActivityRepository {
@@ -88,19 +88,23 @@ export class PrepareFestivalActivity {
 
   async updateInChargeSection(
     id: number,
-    inCharge: PrepareInChargeForm,
+    form: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
 
-    let builder: PrepareInChargeFormWithAdherent = { ...inCharge };
-    if (inCharge.adherentId) {
-      const adherent = await this.adherents.findById(inCharge.adherentId);
-      if (!adherent) throw new AdherentNotFound();
-      builder = { ...builder, adherent };
-    }
+    const adherent = form.adherentId
+      ? {
+          adherent: await (async () => {
+            const adherent = await this.adherents.find(form.adherentId ?? 0);
+            if (!adherent) throw new Error("Adherent not found");
+            return adherent;
+          })(),
+        }
+      : {};
+    const { adherentId, ...inCharge } = { ...form, ...adherent };
 
-    const updatedFA = prepare.updateInCharge(builder);
+    const updatedFA = prepare.updateInCharge(inCharge);
     return this.festivalActivities.save(updatedFA);
   }
 

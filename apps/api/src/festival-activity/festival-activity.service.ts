@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import {
+  Adherents,
   CreateFestivalActivity,
   CreateFestivalActivityRepository,
   Draft,
@@ -13,7 +14,6 @@ import {
   PrepareSupplyForm,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
-import { AdherentRepository } from "./repository/adherent-repository.prisma";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 
 @Injectable()
@@ -22,7 +22,7 @@ export class FestivalActivityService {
   private readonly prepareFestivalActivity: PrepareFestivalActivity;
 
   constructor(
-    private readonly adherents: AdherentRepository,
+    private readonly adherents: Adherents,
     createFestivalActivities: CreateFestivalActivityRepository,
     private readonly prepareFestivalActivities: PrepareFestivalActivityRepository,
   ) {
@@ -31,6 +31,7 @@ export class FestivalActivityService {
     );
     this.prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
+      adherents,
     );
   }
 
@@ -58,11 +59,7 @@ export class FestivalActivityService {
     id: number,
     inCharge: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
-    const adherent = inCharge.adherentId
-      ? { adherent: await this.adherents.find(inCharge.adherentId) }
-      : {};
-    const builder = { ...inCharge, ...adherent };
-    return this.prepareFestivalActivity.updateInChargeSection(id, builder);
+    return this.prepareFestivalActivity.updateInChargeSection(id, inCharge);
   }
 
   saveSignaSection(
