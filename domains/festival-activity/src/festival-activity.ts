@@ -19,7 +19,7 @@ export type DraftGeneral = {
 
 type General = Public | Private;
 
-type Public = {
+export type Public = {
   name: string;
   description: string;
   categories: [string, ...string[]];
@@ -134,7 +134,7 @@ export type WithInquiries =
   | WithBarriereInquiries
   | WithElectricityInquiries;
 
-type InquiryWithRequests = WithInquiries & WithTimeWindows;
+export type InquiryWithRequests = WithInquiries & WithTimeWindows;
 
 export type InquiryWithPotentialRequests = {
   timeWindows: TimeWindow[];

@@ -1,33 +1,28 @@
 import {
-  InReviewFestivalActivityRepresentation,
-  InquirySectionWithRequests,
-  PublicGeneralSection,
+  InReview,
+  InquiryWithRequests,
+  PublicGeneral,
   TimeWindow,
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
-type InReviewGeneral = InReviewFestivalActivityRepresentation["general"];
-type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
-
 function isPublic(
-  general: HttpStringified<InReviewGeneral>,
-): general is HttpStringified<PublicGeneralSection> {
+  general: HttpStringified<InReview["general"]>,
+): general is HttpStringified<PublicGeneral> {
   return general.toPublish === true;
 }
 
 function hasRequests(
-  inquiry: HttpStringified<InReviewInquiry>,
-): inquiry is HttpStringified<InquirySectionWithRequests> {
+  inquiry: HttpStringified<InReview["inquiry"]>,
+): inquiry is HttpStringified<InquiryWithRequests> {
   const { barriers, electricity, gears } = inquiry;
   const requests = barriers.length + electricity.length + gears.length;
   return inquiry.timeWindows.length > 0 && requests > 0;
 }
 
-export class InReview {
-  static castActivityWithDate(
-    inReview: HttpStringified<InReviewFestivalActivityRepresentation>,
-  ): InReviewFestivalActivityRepresentation {
+export class InReviewFormat {
+  static castActivityWithDate(inReview: HttpStringified<InReview>): InReview {
     return {
       ...inReview,
       general: this.castGeneralSectionWithDate(inReview.general),
@@ -40,8 +35,8 @@ export class InReview {
   }
 
   private static castGeneralSectionWithDate(
-    general: HttpStringified<InReviewGeneral>,
-  ): InReviewGeneral {
+    general: HttpStringified<InReview["general"]>,
+  ): InReview["general"] {
     if (isPublic(general)) {
       return castAtLeastOneTimeWindowWithDate(general);
     }
@@ -51,8 +46,8 @@ export class InReview {
   }
 
   private static castInquirySectionWithDate(
-    inquiry: HttpStringified<InReviewInquiry>,
-  ): InReviewInquiry {
+    inquiry: HttpStringified<InReview["inquiry"]>,
+  ): InReview["inquiry"] {
     if (hasRequests(inquiry)) {
       return castAtLeastOneTimeWindowWithDate(inquiry);
     }
