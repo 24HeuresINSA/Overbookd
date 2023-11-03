@@ -1,15 +1,22 @@
 import { Prepare, generateTimeWindowId } from "./prepare-festival-activity";
 
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { Draft, DRAFT, TimeWindow } from "../festival-activity";
+import { Adherent, Draft, DRAFT, TimeWindow } from "../festival-activity";
 import { TimeWindowAlreadyExists } from "../festival-activity.error";
 import {
   PrepareGeneralForm,
   PrepareSignaForm,
   PrepareSecurityForm,
   PrepareSupplyForm,
-  PrepareInChargeFormWithAdherent,
+  PrepareInChargeForm,
 } from "./prepare-festival-activity.model";
+
+type PrepareInChargeFormWithAdherent = Omit<
+  PrepareInChargeForm,
+  "adherentId"
+> & {
+  adherent?: Adherent;
+};
 
 export class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
   private constructor(

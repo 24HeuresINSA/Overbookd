@@ -96,8 +96,9 @@ export class PrepareFestivalActivity {
     const adherent = form.adherentId
       ? {
           adherent: await (async () => {
-            const adherent = await this.adherents.find(form.adherentId ?? 0);
-            if (!adherent) throw new Error("Adherent not found");
+            const adherentId = form.adherentId as number;
+            const adherent = await this.adherents.find(adherentId);
+            if (!adherent) throw new AdherentNotFound(adherentId);
             return adherent;
           })(),
         }

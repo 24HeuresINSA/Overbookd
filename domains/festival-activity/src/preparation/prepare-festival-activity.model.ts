@@ -14,13 +14,6 @@ export type PrepareInChargeForm = {
   team?: string;
 };
 
-export type PrepareInChargeFormWithAdherent = Omit<
-  PrepareInChargeForm,
-  "adherentId"
-> & {
-  adherent?: Adherent;
-};
-
 export type PrepareSignaForm = {
   location?: string | null;
 };
