@@ -21,12 +21,12 @@ function hasRequests(
   return inquiry.timeWindows.length > 0 && requests > 0;
 }
 
-export class InReviewFormat {
-  static castActivityWithDate(inReview: HttpStringified<InReview>): InReview {
+export class CastInReview {
+  static withDate(inReview: HttpStringified<InReview>): InReview {
     return {
       ...inReview,
-      general: this.castGeneralSectionWithDate(inReview.general),
-      inquiry: this.castInquirySectionWithDate(inReview.inquiry),
+      general: this.generalWithDate(inReview.general),
+      inquiry: this.inquiryWithDate(inReview.inquiry),
       inCharge: {
         ...inReview.inCharge,
         contractors: [], // TODO remove this when contractors are implemented
@@ -34,22 +34,22 @@ export class InReviewFormat {
     };
   }
 
-  private static castGeneralSectionWithDate(
+  private static generalWithDate(
     general: HttpStringified<InReview["general"]>,
   ): InReview["general"] {
     if (isPublic(general)) {
-      return castAtLeastOneTimeWindowWithDate(general);
+      return withAtLeastOneTimeWindowWithDate(general);
     }
 
     const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
     return { ...general, timeWindows };
   }
 
-  private static castInquirySectionWithDate(
+  private static inquiryWithDate(
     inquiry: HttpStringified<InReview["inquiry"]>,
   ): InReview["inquiry"] {
     if (hasRequests(inquiry)) {
-      return castAtLeastOneTimeWindowWithDate(inquiry);
+      return withAtLeastOneTimeWindowWithDate(inquiry);
     }
 
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
@@ -62,7 +62,7 @@ type WithTimeWindows = {
 };
 type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
 
-function castAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
+function withAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
   hasAtLeastOneTimeWindow: T,
 ): T & WithTimeWindows {
   const [timeWindow, ...others] = hasAtLeastOneTimeWindow.timeWindows;

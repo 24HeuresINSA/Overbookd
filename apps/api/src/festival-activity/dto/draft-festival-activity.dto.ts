@@ -33,7 +33,7 @@ class TimeWindowDto implements TimeWindow {
 
 type General = Draft["general"];
 
-class GeneralSectionDto implements General {
+class GeneralDto implements General {
   @ApiProperty({
     description: "Festival activity name",
   })
@@ -79,7 +79,7 @@ class GeneralSectionDto implements General {
 
 type InCharge = Draft["inCharge"];
 
-class InChargeSectionDto implements InCharge {
+class InChargeDto implements InCharge {
   @ApiProperty({
     description: "Adherent in charge of this festival activity",
     type: AdherentResponseDto,
@@ -125,7 +125,7 @@ class SignageDto implements Signage {
 
 type Signa = Draft["signa"];
 
-class SignaSectionDto implements Signa {
+class SignaDto implements Signa {
   @ApiProperty({
     description: "Define where this festival activity take place",
     required: false,
@@ -142,7 +142,7 @@ class SignaSectionDto implements Signa {
 
 type Security = Draft["security"];
 
-class SecuritySectionDto implements Security {
+class SecurityDto implements Security {
   @ApiProperty({
     description: "Describe safety features for this festival activity",
     required: false,
@@ -199,7 +199,7 @@ class ElectricitySupplyDto implements ElectricitySupply {
 
 type Supply = Draft["supply"];
 
-class SupplySectionDto implements Supply {
+class SupplyDto implements Supply {
   @ApiProperty({
     isArray: true,
     type: ElectricitySupplyDto,
@@ -212,7 +212,7 @@ class SupplySectionDto implements Supply {
   water: string | null;
 }
 
-class InquiryDto implements InquiryRequest {
+class InquiryRequestDto implements InquiryRequest {
   @ApiProperty({})
   id: number;
 
@@ -223,7 +223,7 @@ class InquiryDto implements InquiryRequest {
   name: string;
 }
 
-class InquirySectionDto implements InquiryWithPotentialRequests {
+class InquiryDto implements InquiryWithPotentialRequests {
   @ApiProperty({
     description: "time windows during which you need requested stuff",
     isArray: true,
@@ -233,19 +233,19 @@ class InquirySectionDto implements InquiryWithPotentialRequests {
 
   @ApiProperty({
     isArray: true,
-    type: InquiryDto,
+    type: InquiryRequestDto,
   })
   gears: InquiryRequest[];
 
   @ApiProperty({
     isArray: true,
-    type: InquiryDto,
+    type: InquiryRequestDto,
   })
   electricity: InquiryRequest[];
 
   @ApiProperty({
     isArray: true,
-    type: InquiryDto,
+    type: InquiryRequestDto,
   })
   barriers: InquiryRequest[];
 }
@@ -256,39 +256,39 @@ export class DraftFestivalActivityDto implements Draft {
 
   @ApiProperty({
     description: "Section related to festival activity general info",
-    type: GeneralSectionDto,
+    type: GeneralDto,
   })
-  general: Draft["general"];
+  general: General;
 
   @ApiProperty({
     description: "Section related to festival activity in charge info",
-    type: InChargeSectionDto,
+    type: InChargeDto,
   })
-  inCharge: Draft["inCharge"];
+  inCharge: InCharge;
 
   @ApiProperty({
     description: "Section related to festival activity signa info",
-    type: SignaSectionDto,
+    type: SignaDto,
   })
-  signa: Draft["signa"];
+  signa: Signa;
 
   @ApiProperty({
     description: "Section related to festival activity security info",
-    type: SecuritySectionDto,
+    type: SecurityDto,
   })
-  security: Draft["security"];
+  security: Security;
 
   @ApiProperty({
     description: "Section related to festival activity supply info",
-    type: SupplySectionDto,
+    type: SupplyDto,
   })
-  supply: Draft["supply"];
+  supply: Supply;
 
   @ApiProperty({
     description: "Section related to festival activity inquiry info",
-    type: InquirySectionDto,
+    type: InquiryDto,
   })
-  inquiry: Draft["inquiry"];
+  inquiry: InquiryWithPotentialRequests;
 
   @ApiProperty({ enum: [DRAFT] })
   status: typeof DRAFT;

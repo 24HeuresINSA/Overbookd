@@ -12,10 +12,10 @@ export class InMemoryAskForReviewFestivalActivityRepository
     const festivalActivity = this.festivalActivities.find(
       (festivalActivity) => festivalActivity.id === id,
     );
-    if (!festivalActivity) return Promise.resolve(null);
 
-    return Promise.resolve(festivalActivity);
+    return Promise.resolve(festivalActivity ?? null);
   }
+
   save(festivalActivity: InReview): Promise<InReview> {
     const festivalActivityIndex = this.festivalActivities.findIndex(
       (festivalActivityToUpdate) =>

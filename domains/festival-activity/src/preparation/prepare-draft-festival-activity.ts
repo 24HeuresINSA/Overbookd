@@ -1,8 +1,11 @@
 import { Prepare, generateTimeWindowId } from "./prepare-festival-activity";
 
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { Adherent, Draft, DRAFT, TimeWindow } from "../festival-activity";
-import { TimeWindowAlreadyExists } from "../festival-activity.error";
+import { Adherent, Draft, TimeWindow } from "../festival-activity";
+import {
+  TimeWindowAlreadyExists,
+  TimeWindowEndBeforeStart,
+} from "../festival-activity.error";
 import {
   PrepareGeneralForm,
   PrepareSignaForm,
@@ -18,46 +21,13 @@ type PrepareInChargeFormWithAdherent = Omit<
   adherent?: Adherent;
 };
 
-export class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
-  private constructor(
-    readonly id: Draft["id"],
-    readonly general: Draft["general"],
-    readonly inCharge: Draft["inCharge"],
-    readonly signa: Draft["signa"],
-    readonly security: Draft["security"],
-    readonly supply: Draft["supply"],
-    readonly inquiry: Draft["inquiry"],
-  ) {}
-
-  get status(): typeof DRAFT {
-    return DRAFT;
-  }
+export class PrepareDraftFestivalActivity implements Prepare<Draft> {
+  private constructor(private readonly activity: Draft) {}
 
   static build(activity: Draft): PrepareDraftFestivalActivity {
-    const { id, general, inCharge, signa, security, supply, inquiry } =
-      activity;
-    return new PrepareDraftFestivalActivity(
-      id,
-      general,
-      inCharge,
-      signa,
-      security,
-      supply,
-      inquiry,
-    );
-  }
-
-  private get festivalActivity(): Draft {
-    return {
-      id: this.id,
-      status: this.status,
-      general: this.general,
-      inCharge: this.inCharge,
-      signa: this.signa,
-      security: this.security,
-      supply: this.supply,
-      inquiry: this.inquiry,
-    };
+    return new PrepareDraftFestivalActivity({
+      ...activity,
+    });
   }
 
   updateGeneral(form: PrepareGeneralForm): Draft {
@@ -69,46 +39,53 @@ export class PrepareDraftFestivalActivity implements Draft, Prepare<Draft> {
     const cleanedUpdate =
       form.toPublish === false ? { ...form, ...privateFestivalActivity } : form;
 
-    const general = { ...this.general, ...cleanedUpdate };
-    return { ...this.festivalActivity, general };
+    const general = { ...this.activity.general, ...cleanedUpdate };
+    return { ...this.activity, general };
   }
 
   addGeneralTimeWindow(period: IProvidePeriod): Draft {
-    const id = generateTimeWindowId(this.id, period);
+    if (period.start.getTime() >= period.end.getTime()) {
+      throw new TimeWindowEndBeforeStart();
+    }
+    const id = generateTimeWindowId(this.activity.id, period);
     const { start, end } = Period.init(period);
     const timeWindow = { id, start, end };
 
-    const alreadyExists = this.general.timeWindows.some((tw) => tw.id === id);
+    const alreadyExists = this.activity.general.timeWindows.some(
+      (tw) => tw.id === id,
+    );
     if (alreadyExists) throw new TimeWindowAlreadyExists();
 
-    const timeWindows = [...this.general.timeWindows, timeWindow];
-    const general = { ...this.general, timeWindows };
-    return { ...this.festivalActivity, general };
+    const timeWindows = [...this.activity.general.timeWindows, timeWindow];
+    const general = { ...this.activity.general, timeWindows };
+    return { ...this.activity, general };
   }
 
   removeGeneralTimeWindow(id: TimeWindow["id"]): Draft {
-    const timeWindows = this.general.timeWindows.filter((tw) => tw.id !== id);
-    const general = { ...this.general, timeWindows };
-    return { ...this.festivalActivity, general };
+    const timeWindows = this.activity.general.timeWindows.filter(
+      (tw) => tw.id !== id,
+    );
+    const general = { ...this.activity.general, timeWindows };
+    return { ...this.activity, general };
   }
 
   updateInCharge(form: PrepareInChargeFormWithAdherent): Draft {
-    const inCharge = { ...this.inCharge, ...form };
-    return { ...this.festivalActivity, inCharge };
+    const inCharge = { ...this.activity.inCharge, ...form };
+    return { ...this.activity, inCharge };
   }
 
   updateSigna(form: PrepareSignaForm): Draft {
-    const signa = { ...this.signa, ...form };
-    return { ...this.festivalActivity, signa };
+    const signa = { ...this.activity.signa, ...form };
+    return { ...this.activity, signa };
   }
 
   updateSecurity(form: PrepareSecurityForm): Draft {
-    const security = { ...this.security, ...form };
-    return { ...this.festivalActivity, security };
+    const security = { ...this.activity.security, ...form };
+    return { ...this.activity, security };
   }
 
   updateSupply(form: PrepareSupplyForm): Draft {
-    const supply = { ...this.supply, ...form };
-    return { ...this.festivalActivity, supply };
+    const supply = { ...this.activity.supply, ...form };
+    return { ...this.activity, supply };
   }
 }

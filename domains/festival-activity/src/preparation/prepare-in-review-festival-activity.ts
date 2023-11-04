@@ -1,7 +1,7 @@
 import { Prepare } from "./prepare-festival-activity";
 
 import { IProvidePeriod } from "@overbookd/period";
-import { InReview, IN_REVIEW, TimeWindow } from "../festival-activity";
+import { InReview, TimeWindow } from "../festival-activity";
 import {
   PrepareGeneralForm,
   PrepareInChargeForm,
@@ -10,48 +10,11 @@ import {
   PrepareSupplyForm,
 } from "./prepare-festival-activity.model";
 
-export class PrepareInReviewFestivalActivity
-  implements InReview, Prepare<InReview>
-{
-  private constructor(
-    public id: InReview["id"],
-    public general: InReview["general"],
-    public inCharge: InReview["inCharge"],
-    public signa: InReview["signa"],
-    public security: InReview["security"],
-    public supply: InReview["supply"],
-    public inquiry: InReview["inquiry"],
-  ) {}
-
-  get status(): typeof IN_REVIEW {
-    return IN_REVIEW;
-  }
-
-  private get festivalActivity(): InReview {
-    return {
-      id: this.id,
-      status: this.status,
-      general: this.general,
-      inCharge: this.inCharge,
-      signa: this.signa,
-      security: this.security,
-      supply: this.supply,
-      inquiry: this.inquiry,
-    };
-  }
+export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
+  private constructor(private readonly activity: InReview) {}
 
   static build(activity: InReview): PrepareInReviewFestivalActivity {
-    const { id, general, inCharge, signa, security, supply, inquiry } =
-      activity;
-    return new PrepareInReviewFestivalActivity(
-      id,
-      general,
-      inCharge,
-      signa,
-      security,
-      supply,
-      inquiry,
-    );
+    return new PrepareInReviewFestivalActivity(activity);
   }
 
   updateGeneral(general: PrepareGeneralForm): InReview {

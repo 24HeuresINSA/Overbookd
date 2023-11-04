@@ -6,6 +6,6 @@ export class InMemoryAdherents implements Adherents {
 
   find(id: number): Promise<Adherent | null> {
     const adherent = this.adherents.find((adherent) => adherent.id === id);
-    return Promise.resolve(adherent ? adherent : null);
+    return Promise.resolve(adherent ?? null);
   }
 }

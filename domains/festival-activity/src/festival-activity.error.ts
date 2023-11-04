@@ -5,6 +5,9 @@ function buildFestivalActivityNotFoundErrorMessage(id: number) {
 export const TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE =
   "Une créneau existe déjà à ces heures";
 
+export const TIME_WINDOW_END_BEFORE_START_ERROR_MESSAGE =
+  "La date de fin doit être après la date de début";
+
 export class FestivalActivityError extends Error {}
 
 export class FestivalActivityNotFound extends FestivalActivityError {
@@ -28,6 +31,12 @@ export const Review = {
 export class TimeWindowAlreadyExists extends FestivalActivityError {
   constructor() {
     super(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);
+  }
+}
+
+export class TimeWindowEndBeforeStart extends FestivalActivityError {
+  constructor() {
+    super(TIME_WINDOW_END_BEFORE_START_ERROR_MESSAGE);
   }
 }
 

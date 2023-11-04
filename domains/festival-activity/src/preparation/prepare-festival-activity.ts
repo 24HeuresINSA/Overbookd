@@ -20,15 +20,15 @@ import {
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
 
-export interface Adherents {
+export type Adherents = {
   find(id: number): Promise<Adherent | null>;
-}
+};
 
-export interface PrepareFestivalActivityRepository {
+export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;
   findById(id: number): Promise<FestivalActivity | null>;
   save(activity: FestivalActivity): Promise<FestivalActivity>;
-}
+};
 
 export type Prepare<T extends FestivalActivity> = {
   updateGeneral(general: PrepareGeneralForm): T;
@@ -93,19 +93,21 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const adherent = form.adherentId
-      ? {
-          adherent: await (async () => {
-            const adherentId = form.adherentId as number;
-            const adherent = await this.adherents.find(adherentId);
-            if (!adherent) throw new AdherentNotFound(adherentId);
-            return adherent;
-          })(),
-        }
+      ? { adherent: await this.findAdherent(form) }
       : {};
     const { adherentId, ...inCharge } = { ...form, ...adherent };
 
     const updatedFA = prepare.updateInCharge(inCharge);
     return this.festivalActivities.save(updatedFA);
+  }
+
+  private async findAdherent(form: PrepareInChargeForm) {
+    return await (async () => {
+      const adherentId = form.adherentId as number;
+      const adherent = await this.adherents.find(adherentId);
+      if (!adherent) throw new AdherentNotFound(adherentId);
+      return adherent;
+    })();
   }
 
   async updateSignaSection(

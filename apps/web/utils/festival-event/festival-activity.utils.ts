@@ -1,15 +1,15 @@
 import { DRAFT, Draft, FestivalActivity } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
-import { InReviewFormat } from "./in-review";
-import { DraftCast } from "./draft";
+import { CastInReview } from "./in-review";
+import { CastDraft } from "./draft";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivity>,
 ): FestivalActivity {
   if (isDraft(activity)) {
-    return DraftCast.castActivityWithDate(activity);
+    return CastDraft.withDate(activity);
   }
-  return InReviewFormat.castActivityWithDate(activity);
+  return CastInReview.withDate(activity);
 }
 
 function isDraft(
