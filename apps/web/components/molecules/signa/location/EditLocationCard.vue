@@ -35,6 +35,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ["edition-done"],
   data: (props): EditLocationCardData => ({
     newLocation: { ...props.location },
   }),
@@ -46,7 +47,7 @@ export default defineComponent({
   methods: {
     async editLocation() {
       await this.$accessor.signa.editLocation(this.newLocation);
-      this.$emit("close-dialog");
+      this.$emit("edition-done");
     },
   },
 });

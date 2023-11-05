@@ -49,28 +49,28 @@
     </v-btn>
 
     <v-dialog v-model="displayNewLocationDialog" max-width="1200">
-      <NewLocationCard @close-dialog="closeAllDialogs" />
+      <NewLocationCard @creation-done="closeCreationDialog" />
     </v-dialog>
 
     <v-dialog
       v-model="displayEditLocationDialog"
       max-width="1200"
-      @update:return-value="closeAllDialogs"
+      @update:return-value="closeEditionDialog"
     >
       <EditLocationCard
         v-if="locationToEdit"
         :location="locationToEdit"
-        @close-dialog="closeAllDialogs"
+        @edition-done="closeEditionDialog"
       />
     </v-dialog>
 
     <v-dialog
       v-model="displayDeleteLocationDialog"
       max-width="600"
-      @update:return-value="closeAllDialogs"
+      @update:return-value="closeDeletionDialog"
     >
       <ConfirmationMessage
-        @close-dialog="closeAllDialogs"
+        @close-dialog="closeDeletionDialog"
         @confirm="deleteLocation"
       >
         <template #title>
@@ -144,18 +144,22 @@ export default Vue.extend({
       this.locationToDelete = location;
       this.displayDeleteLocationDialog = true;
     },
-    closeAllDialogs() {
-      this.locationToEdit = null;
-      this.locationToDelete = null;
+    closeCreationDialog() {
       this.displayNewLocationDialog = false;
+    },
+    closeEditionDialog() {
+      this.locationToEdit = null;
       this.displayEditLocationDialog = false;
+    },
+    closeDeletionDialog() {
+      this.locationToDelete = null;
       this.displayDeleteLocationDialog = false;
     },
     async deleteLocation() {
       if (!this.locationToDelete) return;
 
       await this.$accessor.signa.deleteLocation(this.locationToDelete);
-      this.closeAllDialogs();
+      this.closeDeletionDialog();
     },
   },
 });

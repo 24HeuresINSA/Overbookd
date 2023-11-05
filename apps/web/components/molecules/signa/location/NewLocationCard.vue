@@ -33,6 +33,7 @@ const defaultLocation: CreateLocation = {
 export default defineComponent({
   name: "NewLocationCard",
   components: { LocationMapEditor },
+  emits: ["creation-done"],
   data: (): NewLocationCardDate => ({
     newLocation: { ...defaultLocation },
   }),
@@ -47,7 +48,7 @@ export default defineComponent({
       await this.$accessor.signa.createLocation(this.newLocation);
 
       this.newLocation = { ...defaultLocation };
-      this.$emit("close-dialog");
+      this.$emit("creation-done");
     },
   },
 });
