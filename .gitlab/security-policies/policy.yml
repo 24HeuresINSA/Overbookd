@@ -1,0 +1,19 @@
+---
+scan_result_policy:
+  - name: Test
+    description: ""
+    enabled: true
+    rules:
+      - type: license_finding
+        match_on_inclusion: true
+        license_types:
+          - MIT
+        license_states:
+          - detected
+        branch_type: protected
+    actions:
+      - type: require_approval
+        approvals_required: 1
+        group_approvers_ids:
+          - 10531436
+    approval_settings: {}
