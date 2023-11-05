@@ -1,23 +1,19 @@
-import {
-  DRAFT,
-  DraftFestivalActivityRepresentation,
-  FestivalActivityRepresentation,
-} from "@overbookd/festival-activity";
+import { DRAFT, Draft, FestivalActivity } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
-import { InReview } from "./in-review";
-import { Draft } from "./draft";
+import { CastInReview } from "./in-review";
+import { CastDraft } from "./draft";
 
 export function castActivityWithDate(
-  activity: HttpStringified<FestivalActivityRepresentation>,
-): FestivalActivityRepresentation {
+  activity: HttpStringified<FestivalActivity>,
+): FestivalActivity {
   if (isDraft(activity)) {
-    return Draft.castActivityWithDate(activity);
+    return CastDraft.withDate(activity);
   }
-  return InReview.castActivityWithDate(activity);
+  return CastInReview.withDate(activity);
 }
 
 function isDraft(
-  festivalActivity: HttpStringified<FestivalActivityRepresentation>,
-): festivalActivity is HttpStringified<DraftFestivalActivityRepresentation> {
+  festivalActivity: HttpStringified<FestivalActivity>,
+): festivalActivity is HttpStringified<Draft> {
   return festivalActivity.status === DRAFT;
 }

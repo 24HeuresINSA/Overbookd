@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/festival-activity",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Gestion des activités sur le festival pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -26,7 +26,7 @@
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
     "test": "vitest --config ../../vitest.config.ts",
-    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
+    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --reporter=verbose --watch=false --outputFile=junit.xml"
   },
   "keywords": [
     "festival-activity",

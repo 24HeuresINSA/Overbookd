@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
+import { FestivalActivity } from "@overbookd/festival-activity";
 import { defineComponent } from "vue";
-import { FestivalActivityRepresentation } from "@overbookd/festival-activity";
 
 export default defineComponent({
   name: "NewFaCard",
@@ -27,7 +27,7 @@ export default defineComponent({
     name: "",
   }),
   computed: {
-    selectedActivity(): FestivalActivityRepresentation | null {
+    selectedActivity(): FestivalActivity | null {
       return this.$accessor.festivalActivity.selectedActivity;
     },
   },

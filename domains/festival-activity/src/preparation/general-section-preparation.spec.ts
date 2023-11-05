@@ -1,49 +1,20 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { DraftFestivalActivity } from "../creation/draft-festival-activity";
-import { GeneralSection } from "../creation/draft-festival-activity.model";
-import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
-
-const escapeGameGeneral: GeneralSection = {
-  name: "Escape Game",
-  description: null,
-  toPublish: true,
-  photoLink: "https://www.google.com",
-  isFlagship: true,
-  categories: ["Sport"],
-  timeWindows: [],
-};
+import { TimeWindowAlreadyExists } from "../festival-activity.error";
+import { Duration, EndBeforeStart } from "@overbookd/period";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { escapeGame } from "./preparation.test-utils";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: FestivalActivityFactory;
-  let festivalActivityRepository: InMemoryFestivalActivityRepository;
-  let escapeGameActivity: DraftFestivalActivity;
+  let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    festivalActivityFactory = new FestivalActivityFactory();
-    const escapeGameCreation = festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-    escapeGameActivity = DraftFestivalActivity.build({
-      ...escapeGameCreation,
-      general: escapeGameGeneral,
-    });
-    const festivalActivities = [escapeGameActivity];
-
-    festivalActivityRepository = new InMemoryFestivalActivityRepository(
-      festivalActivities,
-    );
+    prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
+      escapeGame,
+    ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
-      festivalActivityRepository,
+      prepareFestivalActivities,
     );
   });
 
@@ -53,7 +24,7 @@ describe("General section of festival activity preparation", () => {
         const nameToUpdate = { name: "Laser game" };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           nameToUpdate,
         );
 
@@ -66,7 +37,7 @@ describe("General section of festival activity preparation", () => {
           photoLink,
           isFlagship,
           timeWindows,
-        } = escapeGameGeneral;
+        } = escapeGame.general;
 
         expect(general.description).toBe(description);
         expect(general.categories).toEqual(categories);
@@ -82,7 +53,7 @@ describe("General section of festival activity preparation", () => {
         const descriptionToUpdate = { description: "Tire sur les cibles" };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           descriptionToUpdate,
         );
 
@@ -95,7 +66,7 @@ describe("General section of festival activity preparation", () => {
           photoLink,
           isFlagship,
           timeWindows,
-        } = escapeGameGeneral;
+        } = escapeGame.general;
 
         expect(general.name).toBe(name);
         expect(general.categories).toEqual(categories);
@@ -111,7 +82,7 @@ describe("General section of festival activity preparation", () => {
         const categoriesToUpdate = { categories: ["Culture", "Sport"] };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           categoriesToUpdate,
         );
 
@@ -124,7 +95,7 @@ describe("General section of festival activity preparation", () => {
           photoLink,
           isFlagship,
           timeWindows,
-        } = escapeGameGeneral;
+        } = escapeGame.general;
 
         expect(general.name).toBe(name);
         expect(general.description).toBe(description);
@@ -140,7 +111,7 @@ describe("General section of festival activity preparation", () => {
         const toPublishToUpdate = { toPublish: false };
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           toPublishToUpdate,
         );
 
@@ -149,7 +120,7 @@ describe("General section of festival activity preparation", () => {
         expect(general.isFlagship).toBe(false);
 
         const { name, description, categories, timeWindows } =
-          escapeGameGeneral;
+          escapeGame.general;
 
         expect(general.name).toBe(name);
         expect(general.description).toBe(description);
@@ -168,18 +139,90 @@ describe("General section of festival activity preparation", () => {
         };
 
         await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateName,
         );
 
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateDescription,
         );
 
         expect(general.name).toBe(updateName.name);
         expect(general.description).toBe(updateDescription.description);
       });
+    });
+  });
+
+  describe("when adherent want to add a time window", () => {
+    it("should add the time window", async () => {
+      const timeWindowToAdd = {
+        start: new Date("2023-05-17T08:00+02:00"),
+        end: new Date("2023-05-17T09:00+02:00"),
+      };
+
+      const { general } = await prepareFestivalActivity.addTimeWindowInGeneral(
+        escapeGame.id,
+        timeWindowToAdd,
+      );
+
+      const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
+      const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
+      const timeWindowId = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+
+      const timeWindow = general.timeWindows.find(
+        (tw) => tw.id === timeWindowId,
+      );
+
+      expect(timeWindow?.id).toBe(timeWindowId);
+      expect(timeWindow?.start).toBe(timeWindowToAdd.start);
+      expect(timeWindow?.end).toBe(timeWindowToAdd.end);
+    });
+
+    describe("when adherent want to add a time window that already exists", () => {
+      it("should should indicate that the time window already exists", async () => {
+        const existingTimeWindow = escapeGame.general.timeWindows[0];
+
+        await expect(
+          prepareFestivalActivity.addTimeWindowInGeneral(
+            escapeGame.id,
+            existingTimeWindow,
+          ),
+        ).rejects.toThrow(TimeWindowAlreadyExists);
+      });
+    });
+
+    describe("when adherent want to add a time window with end before start", () => {
+      it("should should indicate that end should be after start", async () => {
+        const invalidTimeWindow = {
+          start: new Date("2023-05-17T09:00+02:00"),
+          end: new Date("2023-05-17T08:00+02:00"),
+        };
+
+        await expect(
+          prepareFestivalActivity.addTimeWindowInGeneral(
+            escapeGame.id,
+            invalidTimeWindow,
+          ),
+        ).rejects.toThrow(EndBeforeStart);
+      });
+    });
+  });
+
+  describe("when adherent want to remove a time window", () => {
+    it("should remove the time window", async () => {
+      const timeWindowIdToRemove = "1-28071960-28072080";
+
+      const { general } =
+        await prepareFestivalActivity.removeTimeWindowFromGeneral(
+          escapeGame.id,
+          timeWindowIdToRemove,
+        );
+
+      const timeWindow = general.timeWindows.find(
+        (tw) => tw.id === timeWindowIdToRemove,
+      );
+      expect(timeWindow).toBeUndefined();
     });
   });
 });

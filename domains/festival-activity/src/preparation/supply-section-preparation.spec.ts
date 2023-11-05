@@ -1,46 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  DraftFestivalActivity,
-  SupplySection,
-} from "../creation/draft-festival-activity";
-import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
-
-const escapeGameSupply: SupplySection = {
-  electricity: [],
-  water: null,
-};
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { escapeGame } from "./preparation.test-utils";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: FestivalActivityFactory;
-  let festivalActivityRepository: InMemoryFestivalActivityRepository;
-  let escapeGameActivity: DraftFestivalActivity;
+  let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    festivalActivityFactory = new FestivalActivityFactory();
-    const escapeGameCreation = festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-    escapeGameActivity = DraftFestivalActivity.build({
-      ...escapeGameCreation,
-      supply: escapeGameSupply,
-    });
-    const festivalActivities = [escapeGameActivity];
-
-    festivalActivityRepository = new InMemoryFestivalActivityRepository(
-      festivalActivities,
-    );
+    prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
+      escapeGame,
+    ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
-      festivalActivityRepository,
+      prepareFestivalActivities,
     );
   });
 
@@ -50,12 +22,12 @@ describe("General section of festival activity preparation", () => {
         const updateWater = { water: "Jet d'eau" };
 
         const { supply } = await prepareFestivalActivity.updateSupplySection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateWater,
         );
 
         expect(supply.water).toBe(updateWater.water);
-        expect(supply.electricity).toEqual(escapeGameSupply.electricity);
+        expect(supply.electricity).toEqual(escapeGame.supply.electricity);
       });
     });
   });

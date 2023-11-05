@@ -1,5 +1,5 @@
 import { PrismaService } from "../../prisma.service";
-import { Adherent } from "@overbookd/festival-activity";
+import { Adherents } from "@overbookd/festival-activity";
 
 const SELECT_ADHERENT = {
   id: true,
@@ -8,11 +8,7 @@ const SELECT_ADHERENT = {
   nickname: true,
 };
 
-export interface AdherentRepository {
-  find(id: number): Promise<Adherent | null>;
-}
-
-export class PrismaAdherentRepository implements AdherentRepository {
+export class PrismaAdherentRepository implements Adherents {
   constructor(private readonly prisma: PrismaService) {}
 
   find(id: number) {

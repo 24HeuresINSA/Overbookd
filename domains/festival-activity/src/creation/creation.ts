@@ -1,13 +1,4 @@
-import { DraftFestivalActivity } from "./draft-festival-activity";
-import {
-  GeneralSection,
-  InChargeSection,
-  SignaSection,
-  SecuritySection,
-  SupplySection,
-} from "./draft-festival-activity.model";
-import { InquirySection } from "../festival-activity.core";
-import { Adherent } from "../festival-activity.core";
+import { Adherent, DRAFT, Draft } from "../festival-activity";
 
 function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1_000_000; i++) {
@@ -15,24 +6,32 @@ function* numberGenerator(start: number): Generator<number> {
   }
 }
 
-export type CreateFestivalActivity = {
+export type FestivalActivityCreationForm = {
   name: string;
   author: Adherent;
 };
 
-export class FestivalActivityFactory {
+export type CreateFestivalActivityRepository = {
+  create(activity: Draft): Promise<Draft>;
+};
+
+export class CreateFestivalActivity {
   private idGenerator: Generator<number>;
 
-  constructor(startId: number = 1) {
+  constructor(
+    private readonly festivalActivities: CreateFestivalActivityRepository,
+    startId: number = 1,
+  ) {
     this.idGenerator = numberGenerator(startId);
   }
 
   public create({
     name,
     author,
-  }: CreateFestivalActivity): DraftFestivalActivity {
-    const activity = {
-      id: this.idGenerator.next().value,
+  }: FestivalActivityCreationForm): Promise<Draft> {
+    const activity: Draft = {
+      id: this.generateId(),
+      status: DRAFT,
       general: this.generateGeneralSection(name),
       inCharge: this.generateInChargeSection(author),
       signa: this.generateSignaSection(),
@@ -41,22 +40,26 @@ export class FestivalActivityFactory {
       inquiry: this.generateInquirySection(),
     };
 
-    return DraftFestivalActivity.build(activity);
+    return this.festivalActivities.create(activity);
   }
 
-  private generateGeneralSection(name: string): GeneralSection {
+  private generateId(): number {
+    return this.idGenerator.next().value;
+  }
+
+  private generateGeneralSection(name: string): Draft["general"] {
     return {
       name,
-      description: null,
       categories: [],
+      description: null,
       toPublish: false,
-      photoLink: null,
       isFlagship: false,
+      photoLink: null,
       timeWindows: [],
     };
   }
 
-  private generateInChargeSection(author: Adherent): InChargeSection {
+  private generateInChargeSection(author: Adherent): Draft["inCharge"] {
     return {
       adherent: author,
       team: null,
@@ -64,27 +67,27 @@ export class FestivalActivityFactory {
     };
   }
 
-  private generateSignaSection(): SignaSection {
+  private generateSignaSection(): Draft["signa"] {
     return {
       location: null,
       signages: [],
     };
   }
 
-  private generateSecuritySection(): SecuritySection {
+  private generateSecuritySection(): Draft["security"] {
     return {
       specialNeed: null,
     };
   }
 
-  private generateSupplySection(): SupplySection {
+  private generateSupplySection(): Draft["supply"] {
     return {
       electricity: [],
       water: null,
     };
   }
 
-  private generateInquirySection(): InquirySection {
+  private generateInquirySection(): Draft["inquiry"] {
     return {
       timeWindows: [],
       gears: [],

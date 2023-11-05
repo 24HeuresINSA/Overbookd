@@ -1,9 +1,9 @@
+import { TimeWindow } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
-import { IProvidePeriod } from "@overbookd/period";
 
 export function castTimeWindowWithDate(
-  timeWindow: HttpStringified<IProvidePeriod>,
-): IProvidePeriod {
+  timeWindow: HttpStringified<TimeWindow>,
+): TimeWindow {
   return {
     ...timeWindow,
     start: new Date(timeWindow.start),

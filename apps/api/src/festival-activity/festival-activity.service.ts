@@ -1,83 +1,82 @@
 import { Injectable } from "@nestjs/common";
 import {
-  DraftFestivalActivity,
+  Adherents,
+  CreateFestivalActivity,
+  Draft,
   FestivalActivity,
-  FestivalActivityRepository,
-  GeneralSection,
   PrepareFestivalActivity,
-  PrepareInChargeSection,
+  PrepareGeneralUpdate,
+  PrepareSecurityUpdate,
+  PrepareSignaUpdate,
+  PrepareSupplyUpdate,
   PreviewFestivalActivity,
-  SecuritySection,
-  SignaSection,
-  SupplySection,
 } from "@overbookd/festival-activity";
-import { AdherentRepository } from "./repository/adherent-repository.prisma";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+
+export type PrepareInChargeForm = {
+  adherentId?: number;
+  team?: string;
+};
 
 @Injectable()
 export class FestivalActivityService {
-  private prepareFestivalActivity: PrepareFestivalActivity;
-
   constructor(
-    private readonly adherents: AdherentRepository,
-    private readonly festivalActivities: FestivalActivityRepository,
-  ) {
-    this.prepareFestivalActivity = new PrepareFestivalActivity(
-      this.festivalActivities,
-    );
-  }
+    private readonly adherents: Adherents,
+    private readonly createFestivalActivity: CreateFestivalActivity,
+    private readonly prepareFestivalActivity: PrepareFestivalActivity,
+  ) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {
-    return this.festivalActivities.findAll();
+    return this.prepareFestivalActivity.findAll();
   }
 
   findById(id: number): Promise<FestivalActivity | null> {
-    return this.festivalActivities.findById(id);
+    return this.prepareFestivalActivity.findById(id);
   }
 
-  async create(
-    { id }: JwtPayload,
-    name: string,
-  ): Promise<DraftFestivalActivity> {
+  async create({ id }: JwtPayload, name: string): Promise<Draft> {
     const author = await this.adherents.find(id);
-    return this.festivalActivities.create({ author, name });
+    return this.createFestivalActivity.create({ author, name });
   }
 
   saveGeneralSection(
     id: number,
-    general: Partial<GeneralSection>,
+    general: PrepareGeneralUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
 
   async saveInChargeSection(
     id: number,
-    inCharge: PrepareInChargeSection,
+    inCharge: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
     const adherent = inCharge.adherentId
       ? { adherent: await this.adherents.find(inCharge.adherentId) }
       : {};
-    const builder = { ...inCharge, ...adherent };
-    return this.prepareFestivalActivity.updateInChargeSection(id, builder);
+
+    return this.prepareFestivalActivity.updateInChargeSection(id, {
+      ...inCharge,
+      ...adherent,
+    });
   }
 
   saveSignaSection(
     id: number,
-    signa: Partial<SignaSection>,
+    signa: PrepareSignaUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSignaSection(id, signa);
   }
 
   saveSecuritySection(
     id: number,
-    security: Partial<SecuritySection>,
+    security: PrepareSecurityUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
     id: number,
-    supply: Partial<SupplySection>,
+    supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);
   }

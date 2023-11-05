@@ -1,6 +1,5 @@
 import {
   CreateFestivalActivityForm,
-  DraftFestivalActivity,
   FestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
@@ -43,8 +42,7 @@ export const actions = actionTree(
       const res = await safeCall(this, repo.getOne(this, id));
       if (!res) return;
 
-      const castedActivity = castActivityWithDate(res.data);
-      const activity = DraftFestivalActivity.build(castedActivity);
+      const activity = castActivityWithDate(res.data);
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
@@ -52,8 +50,7 @@ export const actions = actionTree(
       const res = await safeCall(this, repo.create(this, form));
       if (!res) return;
 
-      const castedActivity = castActivityWithDate(res.data);
-      const activity = DraftFestivalActivity.build(castedActivity);
+      const activity = castActivityWithDate(res.data);
       commit("SET_SELECTED_ACTIVITY", activity);
       await dispatch("fetchAllActivities");
     },

@@ -21,8 +21,7 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import type {
-  DraftFestivalActivityRepresentation,
-  FestivalActivityRepresentation,
+  FestivalActivity,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -33,11 +32,11 @@ import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
 import {
-  GeneralSectionRequestDto,
-  InChargeSectionRequestDto,
-  SecuritySectionRequestDto,
-  SignaSectionRequestDto,
-  SupplySectionRequestDto,
+  GeneralRequestDto,
+  InChargeRequestDto,
+  SecurityRequestDto,
+  SignaRequestDto,
+  SupplyRequestDto,
 } from "./dto/update-festival-activity.request.dto";
 
 @ApiBearerAuth()
@@ -83,7 +82,7 @@ export class FestivalActivityController {
   })
   findById(
     @Param("id", ParseIntPipe) id: number,
-  ): Promise<FestivalActivityRepresentation | null> {
+  ): Promise<FestivalActivity | null> {
     return this.festivalActivityService.findById(id);
   }
 
@@ -102,7 +101,7 @@ export class FestivalActivityController {
   create(
     @Body() { name }: CreateFestivalActivityRequestDto,
     @Request() { user }: RequestWithUserPayload,
-  ): Promise<DraftFestivalActivityRepresentation> {
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.create(user, name);
   }
 
@@ -116,7 +115,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "General section of festival activity to save",
-    type: GeneralSectionRequestDto,
+    type: GeneralRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -126,8 +125,8 @@ export class FestivalActivityController {
   })
   saveGeneralSection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() general: GeneralSectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+    @Body() general: GeneralRequestDto,
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveGeneralSection(id, general);
   }
 
@@ -141,7 +140,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "In charge section of festival activity to save",
-    type: InChargeSectionRequestDto,
+    type: InChargeRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -151,8 +150,8 @@ export class FestivalActivityController {
   })
   saveInChargeSection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() inCharge: InChargeSectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+    @Body() inCharge: InChargeRequestDto,
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveInChargeSection(id, inCharge);
   }
 
@@ -166,7 +165,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "Signa section of festival activity to save",
-    type: SignaSectionRequestDto,
+    type: SignaRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -176,8 +175,8 @@ export class FestivalActivityController {
   })
   saveSignaSection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() signa: SignaSectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+    @Body() signa: SignaRequestDto,
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveSignaSection(id, signa);
   }
 
@@ -191,7 +190,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "Security section of festival activity to save",
-    type: SecuritySectionRequestDto,
+    type: SecurityRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -201,8 +200,8 @@ export class FestivalActivityController {
   })
   saveSecuritySection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() security: SecuritySectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+    @Body() security: SecurityRequestDto,
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveSecuritySection(id, security);
   }
 
@@ -216,7 +215,7 @@ export class FestivalActivityController {
   })
   @ApiBody({
     description: "Supply section of festival activity to save",
-    type: SupplySectionRequestDto,
+    type: SupplyRequestDto,
   })
   @ApiParam({
     name: "id",
@@ -226,8 +225,8 @@ export class FestivalActivityController {
   })
   saveSupplySection(
     @Param("id", ParseIntPipe) id: number,
-    @Body() supply: SupplySectionRequestDto,
-  ): Promise<FestivalActivityRepresentation> {
+    @Body() supply: SupplyRequestDto,
+  ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveSupplySection(id, supply);
   }
 }

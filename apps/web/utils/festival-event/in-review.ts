@@ -1,37 +1,32 @@
 import {
-  InReviewFestivalActivityRepresentation,
-  InReviewInquirySectionWithRequests,
-  InReviewPublicGeneralSection,
+  InReview,
+  InquiryWithRequests,
+  PublicGeneral,
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
-import { IProvidePeriod } from "@overbookd/period";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
-type InReviewGeneral = InReviewFestivalActivityRepresentation["general"];
-type InReviewInquiry = InReviewFestivalActivityRepresentation["inquiry"];
-
 function isPublic(
-  general: HttpStringified<InReviewGeneral>,
-): general is HttpStringified<InReviewPublicGeneralSection> {
+  general: HttpStringified<InReview["general"]>,
+): general is HttpStringified<PublicGeneral> {
   return general.toPublish === true;
 }
 
 function hasRequests(
-  inquiry: HttpStringified<InReviewInquiry>,
-): inquiry is HttpStringified<InReviewInquirySectionWithRequests> {
+  inquiry: HttpStringified<InReview["inquiry"]>,
+): inquiry is HttpStringified<InquiryWithRequests> {
   const { barriers, electricity, gears } = inquiry;
   const requests = barriers.length + electricity.length + gears.length;
   return inquiry.timeWindows.length > 0 && requests > 0;
 }
 
-export class InReview {
-  static castActivityWithDate(
-    inReview: HttpStringified<InReviewFestivalActivityRepresentation>,
-  ): InReviewFestivalActivityRepresentation {
+export class CastInReview {
+  static withDate(inReview: HttpStringified<InReview>): InReview {
     return {
       ...inReview,
-      general: this.castGeneralSectionWithDate(inReview.general),
-      inquiry: this.castInquirySectionWithDate(inReview.inquiry),
+      general: this.generalWithDate(inReview.general),
+      inquiry: this.inquiryWithDate(inReview.inquiry),
       inCharge: {
         ...inReview.inCharge,
         contractors: [], // TODO remove this when contractors are implemented
@@ -39,22 +34,22 @@ export class InReview {
     };
   }
 
-  private static castGeneralSectionWithDate(
-    general: HttpStringified<InReviewGeneral>,
-  ): InReviewGeneral {
+  private static generalWithDate(
+    general: HttpStringified<InReview["general"]>,
+  ): InReview["general"] {
     if (isPublic(general)) {
-      return castAtLeastOneTimeWindowWithDate(general);
+      return withAtLeastOneTimeWindowWithDate(general);
     }
 
     const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
     return { ...general, timeWindows };
   }
 
-  private static castInquirySectionWithDate(
-    inquiry: HttpStringified<InReviewInquiry>,
-  ): InReviewInquiry {
+  private static inquiryWithDate(
+    inquiry: HttpStringified<InReview["inquiry"]>,
+  ): InReview["inquiry"] {
     if (hasRequests(inquiry)) {
-      return castAtLeastOneTimeWindowWithDate(inquiry);
+      return withAtLeastOneTimeWindowWithDate(inquiry);
     }
 
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
@@ -63,16 +58,16 @@ export class InReview {
 }
 
 type WithTimeWindows = {
-  timeWindows: [IProvidePeriod, ...IProvidePeriod[]];
+  timeWindows: [TimeWindow, ...TimeWindow[]];
 };
 type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
 
-function castAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
+function withAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
   hasAtLeastOneTimeWindow: T,
 ): T & WithTimeWindows {
   const [timeWindow, ...others] = hasAtLeastOneTimeWindow.timeWindows;
   const first = castTimeWindowWithDate(timeWindow);
-  const timeWindows: [IProvidePeriod, ...IProvidePeriod[]] = [
+  const timeWindows: [TimeWindow, ...TimeWindow[]] = [
     first,
     ...others.map(castTimeWindowWithDate),
   ];

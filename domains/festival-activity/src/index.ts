@@ -1,43 +1,43 @@
-export { FestivalActivityFactory } from "./creation/festival-activity.factory";
-export type { CreateFestivalActivity } from "./creation/festival-activity.factory";
 export type {
   Adherent,
+  Draft,
+  InReview,
+  Public as PublicGeneral,
+  InquiryWithPotentialRequests,
+  InquiryWithRequests,
+  FestivalActivity,
   Signage,
   ElectricitySupply,
-  InquiryRequest as Inquiry,
-  InquirySection,
-} from "./festival-activity.core";
-export { DRAFT } from "./festival-activity.core";
-export type {
-  DraftFestivalActivityRepresentation,
-  GeneralSection,
-  InChargeSection,
-  SignaSection,
-  SecuritySection,
-  SupplySection,
-} from "./creation/draft-festival-activity.model";
-export { DraftFestivalActivity } from "./creation/draft-festival-activity";
-export type {
+  InquiryRequest,
+  TimeWindow,
+  WithInquiries,
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
-  FestivalActivity,
-  FestivalActivityRepresentation,
-} from "./festival-activity.model";
-export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
-export type { FestivalActivityRepository } from "./festival-activity.repository";
-export { InMemoryFestivalActivityRepository } from "./festival-activity-repository.inmemory";
-export type {
-  PrepareGeneralSection,
-  PrepareInChargeSection,
-  PrepareSignaSection,
-  PrepareSecuritySection,
-  PrepareSupplySection,
-} from "./preparation/prepare-festival-activity.model";
+} from "./festival-activity";
+export { DRAFT } from "./festival-activity";
 
+// CREATION
+export { CreateFestivalActivity } from "./creation/creation";
 export type {
-  InReviewPrivateGeneralSection,
-  InReviewGeneralSection,
-  InReviewPublicGeneralSection,
-  InReviewFestivalActivityRepresentation,
-  InReviewInquirySectionWithRequests,
-} from "./ask-for-review/in-review-festival-activity.model";
+  FestivalActivityCreationForm,
+  CreateFestivalActivityRepository,
+} from "./creation/creation";
+export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
+
+// PREPARATION
+export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
+export type {
+  Adherents,
+  PrepareFestivalActivityRepository,
+} from "./preparation/prepare-festival-activity";
+export type {
+  PrepareGeneralUpdate,
+  PrepareInChargeUpdate,
+  PrepareSignaUpdate,
+  PrepareSecurityUpdate,
+  PrepareSupplyUpdate,
+} from "./preparation/prepare-festival-activity.model";
+export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";
+
+//ASK FOR REVIEW
+export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";

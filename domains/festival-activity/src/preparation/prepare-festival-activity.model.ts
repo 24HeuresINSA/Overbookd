@@ -1,4 +1,6 @@
-export type PrepareGeneralSection = {
+import { Adherent } from "../festival-activity";
+
+export type PrepareGeneralUpdate = {
   name?: string;
   description?: string | null;
   categories?: string[];
@@ -7,19 +9,19 @@ export type PrepareGeneralSection = {
   isFlagship?: boolean;
 };
 
-export type PrepareInChargeSection = {
-  adherentId?: number;
-  team?: string | null;
+export type PrepareInChargeUpdate = {
+  adherent?: Adherent;
+  team?: string;
 };
 
-export type PrepareSignaSection = {
+export type PrepareSignaUpdate = {
   location?: string | null;
 };
 
-export type PrepareSecuritySection = {
+export type PrepareSecurityUpdate = {
   specialNeed?: string | null;
 };
 
-export type PrepareSupplySection = {
+export type PrepareSupplyUpdate = {
   water?: string | null;
 };

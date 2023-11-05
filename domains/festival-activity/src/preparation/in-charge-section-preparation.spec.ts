@@ -1,53 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  DraftFestivalActivity,
-  InChargeSection,
-} from "../creation/draft-festival-activity";
-import { FestivalActivityFactory } from "../creation/festival-activity.factory";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { InMemoryFestivalActivityRepository } from "../festival-activity-repository.inmemory";
-
-const noel = {
-  id: 1,
-  lastname: "Ertsemud",
-  firstname: "Noel",
-};
-
-const lea = {
-  id: 2,
-  lastname: "Mouyno",
-  firstname: "Lea",
-};
-
-const escapeGameInCharge: InChargeSection = {
-  adherent: noel,
-  team: "culture",
-  contractors: [],
-};
+import { escapeGame, lea } from "./preparation.test-utils";
+import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
-  let festivalActivityFactory: FestivalActivityFactory;
-  let festivalActivityRepository: InMemoryFestivalActivityRepository;
-  let escapeGameActivity: DraftFestivalActivity;
+  let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    festivalActivityFactory = new FestivalActivityFactory();
-    const escapeGameCreation = festivalActivityFactory.create({
-      name: "Escape Game",
-      author: noel,
-    });
-    escapeGameActivity = DraftFestivalActivity.build({
-      ...escapeGameCreation,
-      inCharge: escapeGameInCharge,
-    });
-    const festivalActivities = [escapeGameActivity];
-
-    festivalActivityRepository = new InMemoryFestivalActivityRepository(
-      festivalActivities,
-    );
+    prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
+      escapeGame,
+    ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
-      festivalActivityRepository,
+      prepareFestivalActivities,
     );
   });
 
@@ -58,13 +23,13 @@ describe("General section of festival activity preparation", () => {
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateAdherent,
           );
 
-        expect(inCharge.adherent).toBe(updateAdherent.adherent);
+        expect(inCharge.adherent).toEqual(updateAdherent.adherent);
 
-        const { team, contractors } = escapeGameInCharge;
+        const { team, contractors } = escapeGame.inCharge;
 
         expect(inCharge.team).toBe(team);
         expect(inCharge.contractors).toEqual(contractors);
@@ -77,13 +42,13 @@ describe("General section of festival activity preparation", () => {
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateTeam,
           );
 
         expect(inCharge.team).toBe(updateTeam.team);
 
-        const { adherent, contractors } = escapeGameInCharge;
+        const { adherent, contractors } = escapeGame.inCharge;
 
         expect(inCharge.adherent).toBe(adherent);
         expect(inCharge.contractors).toEqual(contractors);
@@ -98,17 +63,17 @@ describe("General section of festival activity preparation", () => {
         const updateTeam = { team: "plaizir" };
 
         await prepareFestivalActivity.updateInChargeSection(
-          escapeGameActivity.id,
+          escapeGame.id,
           updateAdherent,
         );
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGameActivity.id,
+            escapeGame.id,
             updateTeam,
           );
 
-        expect(inCharge.adherent).toBe(updateAdherent.adherent);
+        expect(inCharge.adherent).toEqual(lea);
         expect(inCharge.team).toBe(updateTeam.team);
       });
     });

@@ -1,18 +1,13 @@
-import { DraftFestivalActivityRepresentation } from "@overbookd/festival-activity";
+import { Draft } from "@overbookd/festival-activity";
 import { HttpStringified } from "../types/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
-type DraftGeneral = DraftFestivalActivityRepresentation["general"];
-type DraftInquiry = DraftFestivalActivityRepresentation["inquiry"];
-
-export class Draft {
-  static castActivityWithDate(
-    draft: HttpStringified<DraftFestivalActivityRepresentation>,
-  ): DraftFestivalActivityRepresentation {
+export class CastDraft {
+  static withDate(draft: HttpStringified<Draft>): Draft {
     return {
       ...draft,
-      general: this.castGeneralSectionWithDate(draft.general),
-      inquiry: this.castInquirySectionWithDate(draft.inquiry),
+      general: this.generalWithDate(draft.general),
+      inquiry: this.inquiryWithDate(draft.inquiry),
       inCharge: {
         ...draft.inCharge,
         contractors: [], // TODO remove this when contractors are implemented
@@ -20,17 +15,17 @@ export class Draft {
     };
   }
 
-  private static castGeneralSectionWithDate(
-    general: HttpStringified<DraftGeneral>,
-  ): DraftGeneral {
+  private static generalWithDate(
+    general: HttpStringified<Draft["general"]>,
+  ): Draft["general"] {
     const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
 
     return { ...general, timeWindows };
   }
 
-  private static castInquirySectionWithDate(
-    inquiry: HttpStringified<DraftInquiry>,
-  ): DraftInquiry {
+  private static inquiryWithDate(
+    inquiry: HttpStringified<Draft["inquiry"]>,
+  ): Draft["inquiry"] {
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
 
     return { ...inquiry, timeWindows };
