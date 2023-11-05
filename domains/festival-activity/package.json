@@ -26,7 +26,7 @@
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
     "test": "vitest --config ../../vitest.config.ts",
-    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --watch=false --outputFile=junit.xml"
+    "test:ci": "vitest --config ../../vitest.config.ts --coverage --reporter=junit --reporter=verbose --watch=false --outputFile=junit.xml"
   },
   "keywords": [
     "festival-activity",
