@@ -18,5 +18,6 @@
     "emitDeclarationOnly": true,
     "resolveJsonModule": true
   },
-  "exclude": ["**/dist", "**/node_modules", "**/build", "**/*.spec.ts"]
+  "exclude": ["**/dist", "**/node_modules", "**/build", "**/*.spec.ts"],
+  "files": ["vitest.config.ts", "vitest-ci.config.ts"]
 }

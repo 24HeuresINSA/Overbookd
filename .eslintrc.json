@@ -20,7 +20,8 @@
       "!./apps/web/tsconfig.json",
       "./domains/*/tsconfig.json",
       "./libraries/*/tsconfig.json",
-      "./utils/*/tsconfig.json"
+      "./utils/*/tsconfig.json",
+      "./tsconfig.json"
     ]
   },
   "plugins": ["@typescript-eslint", "unused-imports"],
