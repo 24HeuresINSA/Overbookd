@@ -25,8 +25,8 @@ export const escapeGame: Draft = {
     timeWindows: [
       {
         id: "1-28071960-28072080",
-        start: new Date("2023-05-17 12:00"),
-        end: new Date("2023-05-17 14:00"),
+        start: new Date("2023-05-17T12:00+02:00"),
+        end: new Date("2023-05-17T14:00+02:00"),
       },
     ],
   },

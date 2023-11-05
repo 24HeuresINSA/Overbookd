@@ -5,13 +5,15 @@ describe("Create a period", () => {
   describe("when start is before end", () => {
     it("should create a period", () => {
       const period = Period.init({
-        start: new Date("2023-05-17 08:00"),
-        end: new Date("2023-05-17 09:00"),
+        start: new Date("2023-05-17T08:00+02:00"),
+        end: new Date("2023-05-17T09:00+02:00"),
       });
       expect(period.start.getTime()).toBe(
-        new Date("2023-05-17 08:00").getTime(),
+        new Date("2023-05-17T08:00+02:00").getTime(),
       );
-      expect(period.end.getTime()).toBe(new Date("2023-05-17 09:00").getTime());
+      expect(period.end.getTime()).toBe(
+        new Date("2023-05-17T09:00+02:00").getTime(),
+      );
     });
   });
 
@@ -19,8 +21,8 @@ describe("Create a period", () => {
     it("should indicate that end should be after start", () => {
       expect(() =>
         Period.init({
-          start: new Date("2023-05-17 09:00"),
-          end: new Date("2023-05-17 08:00"),
+          start: new Date("2023-05-17T09:00+02:00"),
+          end: new Date("2023-05-17T08:00+02:00"),
         }),
       ).toThrow(EndBeforeStart);
     });

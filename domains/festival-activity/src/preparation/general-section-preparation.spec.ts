@@ -157,8 +157,8 @@ describe("General section of festival activity preparation", () => {
   describe("when adherent want to add a time window", () => {
     it("should add the time window", async () => {
       const timeWindowToAdd = {
-        start: new Date("2023-05-17 08:00"),
-        end: new Date("2023-05-17 09:00"),
+        start: new Date("2023-05-17T08:00+02:00"),
+        end: new Date("2023-05-17T09:00+02:00"),
       };
 
       const { general } = await prepareFestivalActivity.addTimeWindowInGeneral(
@@ -195,8 +195,8 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to add a time window with end before start", () => {
       it("should should indicate that end should be after start", async () => {
         const invalidTimeWindow = {
-          start: new Date("2023-05-17 09:00"),
-          end: new Date("2023-05-17 08:00"),
+          start: new Date("2023-05-17T09:00+02:00"),
+          end: new Date("2023-05-17T08:00+02:00"),
         };
 
         await expect(
