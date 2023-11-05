@@ -1,3 +1,33 @@
+## [2.6.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.5.2...v2.6.0) (2023-11-05)
+
+
+### Features
+
+* change logo ([28268ab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/28268abdf851306bd81708846961368323fbb7c7))
+* **signa:** S'amuser avec des API de carte [#1268](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1268) ([2bf9594](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2bf95946e8c3d2ed761608a7fe5c78de25b62e9e))
+
+
+### Bug Fixes
+
+* **catalog-signa:** creation error [#1313](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1313) ([0d31eeb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0d31eebe3d782a163a9a358d8a45ce22fa3f3cb0))
+* **deps:** update dependency jwt-decode to v4 ([4bbd3f4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4bbd3f4e3801af720cb922f77d0a857aa5151917))
+* **deps:** update web dependencies (major) ([7cb0dea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7cb0deaf8bd3e363f0d46584796fa66318f48ec3))
+* **nuxt:** installation error [#1303](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1303) ([5e81c93](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5e81c939a4a66f712fd373c5d1029f5fbf91cdbc))
+* **personnal-account:** Fix euro display in personnel account [#1286](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1286) ([d5194a1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d5194a12582af42a701bc15cf7c889c16e1607bf))
+
+
+### Pre-Features
+
+* **festival-activity:** implement time windows in domain [#1299](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1299) ([9e0f502](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9e0f502a69d18a70f65b10195f3c64c90bf6350d))
+
+
+### CI/CD
+
+* :construction_worker: remove unconfidentializer ([631f90f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/631f90fbd74edf6754fab8396cda35f2de21bdf6))
+* **python scan:** run only with our conditions ([c598153](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c598153122eeebe2a5b319b139e7190460d96df5))
+* **sementic-release:** :art: Add CI/CD, pre-features, docs, refactor and perfs sections ([101466f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/101466f8c69332e32f0108cd8d40bf90117287ad))
+* **triage:** :construction_worker: remove triage ([d8fc34f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d8fc34f3b2969920014f7067b0b512b923b2507b))
+
 ## [2.5.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.5.1...v2.5.2) (2023-10-20)
 
 
