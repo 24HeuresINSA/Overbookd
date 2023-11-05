@@ -1,17 +1,13 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import {
-  Location,
-  SignaLocation,
-  CreateLocation,
-} from "~/utils/models/signa-location.model";
+import { CreateLocation } from "~/utils/models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 
 const repo = RepoFactory.SignaLocationRepository;
 
 export const state = () => ({
   locations: [] as SignaLocation[],
-  location: {} as SignaLocation,
 });
 
 export const getters = getterTree(state, {
@@ -23,9 +19,6 @@ export const getters = getterTree(state, {
 export const mutations = mutationTree(state, {
   SET_SIGNA_LOCATIONS(state, signaLocations: SignaLocation[]) {
     state.locations = signaLocations;
-  },
-  SET_SIGNA_LOCATION(state, signaLocation: SignaLocation) {
-    state.location = signaLocation;
   },
 });
 
@@ -41,10 +34,7 @@ export const actions = actionTree(
         },
       );
       if (!signaLocations) return;
-      const formattedLocations = signaLocations.data.map(
-        (location) => new Location(location.id, location.name),
-      );
-      commit("SET_SIGNA_LOCATIONS", formattedLocations);
+      commit("SET_SIGNA_LOCATIONS", signaLocations.data);
     },
     async createLocation({ dispatch }, location: CreateLocation) {
       const res = await safeCall(

@@ -1,17 +1,19 @@
-export interface SignaLocation {
-  id: number;
-  name: string;
-}
+import { SignaLocation, Coordinate } from "@overbookd/signa";
 
-export type CreateLocation = Pick<SignaLocation, "name">;
+export type CreateLocation = Pick<SignaLocation, "name" | "geoJson">;
 
-export interface SignaLocationCreate {
-  name: string;
-}
-
-export class Location implements SignaLocation {
-  constructor(readonly id: number, readonly name: string) {
-    this.id = id;
-    this.name = name;
-  }
-}
+export const mapConfiguration: {
+  url: string;
+  attribution: string;
+  zoom: number;
+  center: Coordinate;
+} = {
+  url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  attribution:
+    '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+  zoom: 16,
+  center: {
+    lat: 45.784045,
+    lng: 4.876916,
+  },
+};

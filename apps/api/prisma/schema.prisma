@@ -196,10 +196,11 @@ enum FaType {
 }
 
 model SignaLocation {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-  fas  Fa[]
-  fts  Ft[]
+  id      Int    @id @default(autoincrement())
+  name    String @db.VarChar(255)
+  geoJson Json?  @map("geo_json")
+  fas     Fa[]
+  fts     Ft[]
 
   @@map("signa_location")
 }

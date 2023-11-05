@@ -31,7 +31,7 @@
         "../../domains/volunteer-availability/src"
       ]
     },
-    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node"]
+    "types": ["@nuxt/types", "@nuxtjs/axios", "@types/node", "nuxt-leaflet"]
   },
   "exclude": ["node_modules", ".nuxt", "dist"]
 }

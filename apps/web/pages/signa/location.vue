@@ -1,64 +1,76 @@
 <template>
   <div>
     <h1>Lieux de la Signa</h1>
-    <section class="location-table">
-      <v-container class="location-table">
-        <v-data-table
-          :headers="headers"
-          :items="locations"
-          :search="search"
-          :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
-          class="elevation-1"
-        >
-          <template #top>
-            <v-text-field
-              v-model="search"
-              label="Chercher"
-              class="mx-4"
-            ></v-text-field>
-          </template>
+    <v-container>
+      <LocationMap
+        :locations="locations"
+        @show:location="editLocationDialog"
+      ></LocationMap>
+    </v-container>
+    <v-container class="location-table">
+      <v-data-table
+        :headers="headers"
+        :items="locations"
+        :search="search"
+        :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
+        class="elevation-1"
+      >
+        <template #top>
+          <v-text-field
+            v-model="search"
+            label="Chercher"
+            class="mx-4"
+          ></v-text-field>
+        </template>
 
-          <template #item.action="{ item }">
-            <tr>
-              <td>
-                <v-btn icon small @click="locationToEdit = item">
-                  <v-icon small>mdi-circle-edit-outline</v-icon>
-                </v-btn>
-                <v-btn icon small @click="locationToDelete = item">
-                  <v-icon small>mdi-delete</v-icon>
-                </v-btn>
-              </td>
-            </tr>
-          </template>
-        </v-data-table>
-      </v-container>
-    </section>
+        <template #item.action="{ item }">
+          <tr>
+            <td>
+              <v-btn icon small @click="editLocationDialog(item)">
+                <v-icon small>mdi-circle-edit-outline</v-icon>
+              </v-btn>
+              <v-btn icon small @click="deleteLocationDialog(item)">
+                <v-icon small>mdi-delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+      </v-data-table>
+    </v-container>
 
     <v-btn
       color="secondary"
       class="btn-plus"
       elevation="2"
       fab
-      @click="isNewLocationDialogOpen = true"
+      @click="displayNewLocationDialog = true"
     >
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
 
-    <v-dialog v-model="isNewLocationDialogOpen" max-width="600">
-      <NewLocationCard @close-dialog="closeAllDialogs" />
+    <v-dialog v-model="displayNewLocationDialog" max-width="1200">
+      <NewLocationCard @creation-done="closeCreationDialog" />
     </v-dialog>
 
-    <v-dialog v-model="displayEditLocationDialog" max-width="600">
-      <ModifyLocationCard
+    <v-dialog
+      v-model="displayEditLocationDialog"
+      max-width="1200"
+      @update:return-value="closeEditionDialog"
+    >
+      <EditLocationCard
         v-if="locationToEdit"
         :location="locationToEdit"
-        @close-dialog="closeAllDialogs"
+        @edition-done="closeEditionDialog"
       />
     </v-dialog>
 
-    <v-dialog v-model="displayDeleteLocationDialog" max-width="600">
+    <v-dialog
+      v-model="displayDeleteLocationDialog"
+      max-width="600"
+      @update:return-value="closeDeletionDialog"
+    >
       <ConfirmationMessage
-        @close-dialog="closeAllDialogs"
+        @close-dialog="closeDeletionDialog"
         @confirm="deleteLocation"
       >
         <template #title>
@@ -74,25 +86,29 @@
 <script lang="ts">
 import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
-import { SignaLocation, Location } from "~/utils/models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
+import LocationMap from "~/components/molecules/signa/location/LocationMap.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import NewLocationCard from "~/components/molecules/signa/location/NewLocationCard.vue";
-import ModifyLocationCard from "~/components/molecules/signa/location/ModifyLocationCard.vue";
+import EditLocationCard from "~/components/molecules/signa/location/EditLocationCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 interface LocationData {
   headers: Header[];
   search: string;
-  isNewLocationDialogOpen: boolean;
-  locationToEdit: Location | null;
-  locationToDelete: Location | null;
+  displayNewLocationDialog: boolean;
+  locationToEdit: SignaLocation | null;
+  locationToDelete: SignaLocation | null;
+  displayEditLocationDialog: boolean;
+  displayDeleteLocationDialog: boolean;
 }
 
 export default Vue.extend({
   name: "Location",
   components: {
+    LocationMap,
     NewLocationCard,
-    ModifyLocationCard,
+    EditLocationCard,
     ConfirmationMessage,
     SnackNotificationContainer,
   },
@@ -102,9 +118,11 @@ export default Vue.extend({
       { text: "Action", value: "action", sortable: false },
     ],
     search: "",
-    isNewLocationDialogOpen: false,
+    displayNewLocationDialog: false,
     locationToEdit: null,
     locationToDelete: null,
+    displayEditLocationDialog: false,
+    displayDeleteLocationDialog: false,
   }),
   head: () => ({
     title: "Lieux de la signa",
@@ -113,27 +131,35 @@ export default Vue.extend({
     locations(): SignaLocation[] {
       return this.$accessor.signa.locations;
     },
-    displayEditLocationDialog(): boolean {
-      return this.locationToEdit !== null;
-    },
-    displayDeleteLocationDialog(): boolean {
-      return this.locationToDelete !== null;
-    },
   },
   async mounted() {
     this.$accessor.signa.getAllSignaLocations();
   },
   methods: {
-    closeAllDialogs() {
-      this.isNewLocationDialogOpen = false;
+    editLocationDialog(location: SignaLocation) {
+      this.locationToEdit = location;
+      this.displayEditLocationDialog = true;
+    },
+    deleteLocationDialog(location: SignaLocation) {
+      this.locationToDelete = location;
+      this.displayDeleteLocationDialog = true;
+    },
+    closeCreationDialog() {
+      this.displayNewLocationDialog = false;
+    },
+    closeEditionDialog() {
       this.locationToEdit = null;
+      this.displayEditLocationDialog = false;
+    },
+    closeDeletionDialog() {
       this.locationToDelete = null;
+      this.displayDeleteLocationDialog = false;
     },
     async deleteLocation() {
       if (!this.locationToDelete) return;
 
       await this.$accessor.signa.deleteLocation(this.locationToDelete);
-      this.closeAllDialogs();
+      this.closeDeletionDialog();
     },
   },
 });

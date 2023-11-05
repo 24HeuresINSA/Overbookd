@@ -2,10 +2,14 @@
   <v-card>
     <v-card-title>Ajouter un nouveau lieu</v-card-title>
     <v-card-text>
-      <v-text-field v-model="locationName" label="Nom du lieu"></v-text-field>
+      <v-text-field
+        v-model="newLocation.name"
+        label="Nom du lieu"
+      ></v-text-field>
+      <LocationMapEditor v-model="newLocation.geoJson" />
     </v-card-text>
     <v-card-actions>
-      <v-btn :disabled="!locationName" @click="createNewLocation">
+      <v-btn :disabled="!isNewLocationDefined" @click="createNewLocation">
         Ajouter le lieu
       </v-btn>
     </v-card-actions>
@@ -13,22 +17,38 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import LocationMapEditor from "./LocationMapEditor.vue";
 import { CreateLocation } from "~/utils/models/signa-location.model";
 
-export default Vue.extend({
+interface NewLocationCardDate {
+  newLocation: CreateLocation;
+}
+
+const defaultLocation: CreateLocation = {
+  name: "",
+  geoJson: null,
+};
+
+export default defineComponent({
   name: "NewLocationCard",
-  data: () => ({
-    locationName: "",
+  components: { LocationMapEditor },
+  emits: ["creation-done"],
+  data: (): NewLocationCardDate => ({
+    newLocation: { ...defaultLocation },
   }),
+  computed: {
+    isNewLocationDefined(): boolean {
+      return this.newLocation.name.length > 0;
+    },
+  },
   methods: {
     async createNewLocation() {
-      if (!this.locationName) return;
-      const blankLocation: CreateLocation = { name: this.locationName };
-      await this.$accessor.signa.createLocation(blankLocation);
+      if (!this.isNewLocationDefined) return;
+      await this.$accessor.signa.createLocation(this.newLocation);
 
-      this.locationName = "";
-      this.$emit("close-dialog");
+      this.newLocation = { ...defaultLocation };
+      this.$emit("creation-done");
     },
   },
 });

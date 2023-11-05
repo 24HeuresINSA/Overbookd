@@ -51,7 +51,7 @@ import {
   isTaskValidatedBy,
 } from "~/utils/festival-event/ft.utils";
 import { Ft, FtCardType } from "~/utils/models/ft.model";
-import { SignaLocation } from "~/utils/models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
 import { Team } from "~/utils/models/team.model";
 import { User } from "@overbookd/user";
 

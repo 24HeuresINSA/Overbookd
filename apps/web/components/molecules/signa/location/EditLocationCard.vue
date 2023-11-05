@@ -6,6 +6,7 @@
         v-model="newLocation.name"
         label="Nom du lieu"
       ></v-text-field>
+      <LocationMapEditor v-model="newLocation.geoJson" />
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
@@ -18,32 +19,35 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { SignaLocation, Location } from "~/utils/models/signa-location.model";
+import { SignaLocation } from "@overbookd/signa";
+import LocationMapEditor from "./LocationMapEditor.vue";
 
-interface ModifyLocationCardData {
+interface EditLocationCardData {
   newLocation: SignaLocation;
 }
 
 export default defineComponent({
-  name: "ModifyLocationCard",
+  name: "EditLocationCard",
+  components: { LocationMapEditor },
   props: {
     location: {
-      type: Location,
+      type: Object as () => SignaLocation,
       required: true,
     },
   },
-  data: (props): ModifyLocationCardData => ({
+  emits: ["edition-done"],
+  data: (props): EditLocationCardData => ({
     newLocation: { ...props.location },
   }),
   computed: {
     disableEditButton(): boolean {
-      return this.location.name === this.newLocation.name;
+      return this.location === this.newLocation;
     },
   },
   methods: {
     async editLocation() {
       await this.$accessor.signa.editLocation(this.newLocation);
-      this.$emit("close-dialog");
+      this.$emit("edition-done");
     },
   },
 });
