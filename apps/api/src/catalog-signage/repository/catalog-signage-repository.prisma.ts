@@ -3,6 +3,8 @@ import { PrismaService } from "../../prisma.service";
 import { CatalogSignageRepository } from "../catalog-signage.service";
 import { SlugifyService } from "@overbookd/slugify";
 
+export class CatalogSignageError extends Error {}
+
 export class PrismaCatalogSignageRepository
   implements CatalogSignageRepository
 {
@@ -14,6 +16,12 @@ export class PrismaCatalogSignageRepository
 
   async create(signage: SignageForm): Promise<Signage> {
     const slug = SlugifyService.apply(signage.name);
+    const existing = await this.prisma.catalogSignage.findFirst({
+      where: { slug },
+    });
+    if (existing) {
+      throw new CatalogSignageError("La signalisation avec ce nom existe déjà");
+    }
     return this.prisma.catalogSignage.create({
       data: { ...signage, slug },
     });

@@ -9,6 +9,7 @@ import {
   Put,
   Delete,
   UseGuards,
+  UseFilters,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
@@ -29,10 +30,12 @@ import {
 import { SignageResponseDto } from "./dto/signage.response";
 import { Signage } from "@overbookd/signa";
 import { SignageFormRequestDto } from "./dto/signage-form.request";
+import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
 
 @ApiBearerAuth()
 @ApiTags("signages")
 @Controller("signages")
+@UseFilters(new CatalogSignageErrorFilter())
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -67,7 +70,7 @@ export class CatalogSignageController {
     description: "The signage has been successfully created",
     type: SignageResponseDto,
   })
-  create(@Body() signage: SignageResponseDto): Promise<Signage> {
+  create(@Body() signage: SignageFormRequestDto): Promise<Signage> {
     return this.catalogSignageService.create(signage);
   }
 
