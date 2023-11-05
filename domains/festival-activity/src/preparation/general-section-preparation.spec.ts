@@ -1,7 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  PrepareFestivalActivity,
-} from "./prepare-festival-activity";
+import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { TimeWindowAlreadyExists } from "../festival-activity.error";
 import { Duration, EndBeforeStart } from "@overbookd/period";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
