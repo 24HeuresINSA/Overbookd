@@ -1,14 +1,11 @@
-import { Duration, IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
+import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
-  AdherentNotFound,
-  FestivalActivityNotFound,
-} from "../festival-activity.error";
-import {
-  PrepareGeneralForm,
-  PrepareInChargeForm,
-  PrepareSecurityForm,
-  PrepareSignaForm,
-  PrepareSupplyForm,
+  PrepareGeneralUpdate,
+  PrepareInChargeUpdate,
+  PrepareSecurityUpdate,
+  PrepareSignaUpdate,
+  PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import {
   Adherent,
@@ -31,20 +28,27 @@ export type PrepareFestivalActivityRepository = {
 };
 
 export type Prepare<T extends FestivalActivity> = {
-  updateGeneral(general: PrepareGeneralForm): T;
+  updateGeneral(general: PrepareGeneralUpdate): T;
   addGeneralTimeWindow(period: IProvidePeriod): T;
   removeGeneralTimeWindow(id: TimeWindow["id"]): T;
-  updateInCharge(inCharge: PrepareInChargeForm): T;
-  updateSigna(signa: PrepareSignaForm): T;
-  updateSecurity(security: PrepareSecurityForm): T;
-  updateSupply(supply: PrepareSupplyForm): T;
+  updateInCharge(inCharge: PrepareInChargeUpdate): T;
+  updateSigna(signa: PrepareSignaUpdate): T;
+  updateSecurity(security: PrepareSecurityUpdate): T;
+  updateSupply(supply: PrepareSupplyUpdate): T;
 };
 
 export class PrepareFestivalActivity {
   constructor(
     private readonly festivalActivities: PrepareFestivalActivityRepository,
-    private readonly adherents: Adherents,
   ) {}
+
+  findAll(): Promise<PreviewFestivalActivity[]> {
+    return this.festivalActivities.findAll();
+  }
+
+  findById(id: number): Promise<FestivalActivity | null> {
+    return this.festivalActivities.findById(id);
+  }
 
   private getPrepareHelper(existingFA: FestivalActivity) {
     return isDraft(existingFA)
@@ -54,7 +58,7 @@ export class PrepareFestivalActivity {
 
   async updateGeneralSection(
     id: number,
-    general: PrepareGeneralForm,
+    general: PrepareGeneralUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
@@ -87,32 +91,18 @@ export class PrepareFestivalActivity {
 
   async updateInChargeSection(
     id: number,
-    form: PrepareInChargeForm,
+    inCharge: PrepareInChargeUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
-
-    const adherent = form.adherentId
-      ? { adherent: await this.findAdherent(form) }
-      : {};
-    const { adherentId, ...inCharge } = { ...form, ...adherent };
 
     const updatedFA = prepare.updateInCharge(inCharge);
     return this.festivalActivities.save(updatedFA);
   }
 
-  private async findAdherent(form: PrepareInChargeForm) {
-    return await (async () => {
-      const adherentId = form.adherentId as number;
-      const adherent = await this.adherents.find(adherentId);
-      if (!adherent) throw new AdherentNotFound(adherentId);
-      return adherent;
-    })();
-  }
-
   async updateSignaSection(
     id: number,
-    signa: PrepareSignaForm,
+    signa: PrepareSignaUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
@@ -123,7 +113,7 @@ export class PrepareFestivalActivity {
 
   async updateSecuritySection(
     id: number,
-    security: PrepareSecurityForm,
+    security: PrepareSecurityUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
@@ -134,7 +124,7 @@ export class PrepareFestivalActivity {
 
   async updateSupplySection(
     id: number,
-    supply: PrepareSupplyForm,
+    supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);
@@ -148,15 +138,4 @@ export class PrepareFestivalActivity {
     if (!existingFA) throw new FestivalActivityNotFound(id);
     return existingFA;
   }
-}
-
-export function generateTimeWindowId(
-  faId: number,
-  period: IProvidePeriod,
-): string {
-  const { start, end } = period;
-  const startMinutes = Duration.ms(start.getTime()).inMinutes;
-  const endMinutes = Duration.ms(end.getTime()).inMinutes;
-
-  return `${faId}-${startMinutes}-${endMinutes}`;
 }

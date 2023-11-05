@@ -31,11 +31,11 @@ export type {
   PrepareFestivalActivityRepository,
 } from "./preparation/prepare-festival-activity";
 export type {
-  PrepareGeneralForm,
-  PrepareInChargeForm,
-  PrepareSignaForm,
-  PrepareSecurityForm,
-  PrepareSupplyForm,
+  PrepareGeneralUpdate,
+  PrepareInChargeUpdate,
+  PrepareSignaUpdate,
+  PrepareSecurityUpdate,
+  PrepareSupplyUpdate,
 } from "./preparation/prepare-festival-activity.model";
 export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";
 

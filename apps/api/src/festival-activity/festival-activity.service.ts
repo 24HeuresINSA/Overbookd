@@ -2,45 +2,36 @@ import { Injectable } from "@nestjs/common";
 import {
   Adherents,
   CreateFestivalActivity,
-  CreateFestivalActivityRepository,
   Draft,
   FestivalActivity,
   PrepareFestivalActivity,
-  PrepareFestivalActivityRepository,
-  PrepareGeneralForm,
-  PrepareInChargeForm,
-  PrepareSecurityForm,
-  PrepareSignaForm,
-  PrepareSupplyForm,
+  PrepareGeneralUpdate,
+  PrepareSecurityUpdate,
+  PrepareSignaUpdate,
+  PrepareSupplyUpdate,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 
+export type PrepareInChargeForm = {
+  adherentId?: number;
+  team?: string;
+};
+
 @Injectable()
 export class FestivalActivityService {
-  private readonly createFestivalActivity: CreateFestivalActivity;
-  private readonly prepareFestivalActivity: PrepareFestivalActivity;
-
   constructor(
     private readonly adherents: Adherents,
-    createFestivalActivities: CreateFestivalActivityRepository,
-    private readonly prepareFestivalActivities: PrepareFestivalActivityRepository,
-  ) {
-    this.createFestivalActivity = new CreateFestivalActivity(
-      createFestivalActivities,
-    );
-    this.prepareFestivalActivity = new PrepareFestivalActivity(
-      prepareFestivalActivities,
-      adherents,
-    );
-  }
+    private readonly createFestivalActivity: CreateFestivalActivity,
+    private readonly prepareFestivalActivity: PrepareFestivalActivity,
+  ) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {
-    return this.prepareFestivalActivities.findAll();
+    return this.prepareFestivalActivity.findAll();
   }
 
   findById(id: number): Promise<FestivalActivity | null> {
-    return this.prepareFestivalActivities.findById(id);
+    return this.prepareFestivalActivity.findById(id);
   }
 
   async create({ id }: JwtPayload, name: string): Promise<Draft> {
@@ -50,7 +41,7 @@ export class FestivalActivityService {
 
   saveGeneralSection(
     id: number,
-    general: PrepareGeneralForm,
+    general: PrepareGeneralUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
@@ -59,26 +50,33 @@ export class FestivalActivityService {
     id: number,
     inCharge: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.updateInChargeSection(id, inCharge);
+    const adherent = inCharge.adherentId
+      ? { adherent: await this.adherents.find(inCharge.adherentId) }
+      : {};
+
+    return this.prepareFestivalActivity.updateInChargeSection(id, {
+      ...inCharge,
+      ...adherent,
+    });
   }
 
   saveSignaSection(
     id: number,
-    signa: PrepareSignaForm,
+    signa: PrepareSignaUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSignaSection(id, signa);
   }
 
   saveSecuritySection(
     id: number,
-    security: PrepareSecurityForm,
+    security: PrepareSecurityUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
     id: number,
-    supply: PrepareSupplyForm,
+    supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);
   }

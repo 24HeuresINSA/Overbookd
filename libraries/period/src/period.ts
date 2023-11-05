@@ -3,6 +3,15 @@ export interface IProvidePeriod {
   end: Date;
 }
 
+const END_BEFORE_START_ERROR_MESSAGE =
+  "La date de fin doit être après la date de début";
+
+export class EndBeforeStart extends Error {
+  constructor() {
+    super(END_BEFORE_START_ERROR_MESSAGE);
+  }
+}
+
 export class Period {
   start: Date;
   end: Date;
@@ -13,6 +22,9 @@ export class Period {
   }
 
   static init({ start, end }: IProvidePeriod): Period {
+    if (start.getTime() > end.getTime()) {
+      throw new EndBeforeStart();
+    }
     return new Period(start, end);
   }
 

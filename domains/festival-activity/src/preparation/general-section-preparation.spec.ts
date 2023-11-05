@@ -1,30 +1,22 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  Adherents,
   PrepareFestivalActivity,
 } from "./prepare-festival-activity";
-import {
-  TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE,
-  TIME_WINDOW_END_BEFORE_START_ERROR_MESSAGE,
-} from "../festival-activity.error";
-import { Duration, Period } from "@overbookd/period";
+import { TimeWindowAlreadyExists } from "../festival-activity.error";
+import { Duration, EndBeforeStart } from "@overbookd/period";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
-import { InMemoryAdherents } from "./adherent.inmemory";
 
 describe("General section of festival activity preparation", () => {
-  let adherents: Adherents;
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    adherents = new InMemoryAdherents();
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
-      adherents,
     );
   });
 
@@ -166,10 +158,10 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to add a time window", () => {
     it("should add the time window", async () => {
-      const timeWindowToAdd = Period.init({
+      const timeWindowToAdd = {
         start: new Date("2023-05-17 08:00"),
         end: new Date("2023-05-17 09:00"),
-      });
+      };
 
       const { general } = await prepareFestivalActivity.addTimeWindowInGeneral(
         escapeGame.id,
@@ -198,23 +190,23 @@ describe("General section of festival activity preparation", () => {
             escapeGame.id,
             existingTimeWindow,
           ),
-        ).rejects.toThrow(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);
+        ).rejects.toThrow(TimeWindowAlreadyExists);
       });
     });
 
     describe("when adherent want to add a time window with end before start", () => {
       it("should should indicate that end should be after start", async () => {
-        const invalidTimeWIndow = Period.init({
+        const invalidTimeWindow = {
           start: new Date("2023-05-17 09:00"),
           end: new Date("2023-05-17 08:00"),
-        });
+        };
 
         await expect(
           prepareFestivalActivity.addTimeWindowInGeneral(
             escapeGame.id,
-            invalidTimeWIndow,
+            invalidTimeWindow,
           ),
-        ).rejects.toThrow(TIME_WINDOW_END_BEFORE_START_ERROR_MESSAGE);
+        ).rejects.toThrow(EndBeforeStart);
       });
     });
   });

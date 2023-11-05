@@ -1,25 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  Adherents,
-  PrepareFestivalActivity,
-} from "./prepare-festival-activity";
+import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
-import { InMemoryAdherents } from "./adherent.inmemory";
 
 describe("General section of festival activity preparation", () => {
-  let adherents: Adherents;
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    adherents = new InMemoryAdherents();
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
-      adherents,
     );
   });
 

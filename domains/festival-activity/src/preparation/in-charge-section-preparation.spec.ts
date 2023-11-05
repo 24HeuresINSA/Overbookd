@@ -1,32 +1,25 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  Adherents,
-  PrepareFestivalActivity,
-} from "./prepare-festival-activity";
-import { escapeGame, lea, noel } from "./preparation.test-utils";
+import { PrepareFestivalActivity } from "./prepare-festival-activity";
+import { escapeGame, lea } from "./preparation.test-utils";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { InMemoryAdherents } from "./adherent.inmemory";
 
 describe("General section of festival activity preparation", () => {
-  let adherents: Adherents;
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
   beforeEach(() => {
-    adherents = new InMemoryAdherents([noel, lea]);
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
-      adherents,
     );
   });
 
   describe("when adherent want to update a field", () => {
     describe("when adherent want to update adherent in charge", () => {
       it("should only update adherent", async () => {
-        const updateAdherent = { adherentId: lea.id };
+        const updateAdherent = { adherent: lea };
 
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
@@ -34,7 +27,7 @@ describe("General section of festival activity preparation", () => {
             updateAdherent,
           );
 
-        expect(inCharge.adherent.id).toBe(updateAdherent.adherentId);
+        expect(inCharge.adherent).toEqual(updateAdherent.adherent);
 
         const { team, contractors } = escapeGame.inCharge;
 
@@ -66,7 +59,7 @@ describe("General section of festival activity preparation", () => {
   describe("when adherent want to update multiple fields consecutively", () => {
     describe("when adherent want to update adherent then team in 2 times", () => {
       it("should update both adherent and team", async () => {
-        const updateAdherent = { adherentId: lea.id };
+        const updateAdherent = { adherent: lea };
         const updateTeam = { team: "plaizir" };
 
         await prepareFestivalActivity.updateInChargeSection(
@@ -80,7 +73,7 @@ describe("General section of festival activity preparation", () => {
             updateTeam,
           );
 
-        expect(inCharge.adherent).toBe(lea);
+        expect(inCharge.adherent).toEqual(lea);
         expect(inCharge.team).toBe(updateTeam.team);
       });
     });

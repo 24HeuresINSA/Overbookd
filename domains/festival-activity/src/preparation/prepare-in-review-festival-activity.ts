@@ -3,11 +3,11 @@ import { Prepare } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { InReview, TimeWindow } from "../festival-activity";
 import {
-  PrepareGeneralForm,
-  PrepareInChargeForm,
-  PrepareSignaForm,
-  PrepareSecurityForm,
-  PrepareSupplyForm,
+  PrepareGeneralUpdate,
+  PrepareInChargeUpdate,
+  PrepareSignaUpdate,
+  PrepareSecurityUpdate,
+  PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 
 export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
@@ -17,7 +17,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return new PrepareInReviewFestivalActivity(activity);
   }
 
-  updateGeneral(general: PrepareGeneralForm): InReview {
+  updateGeneral(general: PrepareGeneralUpdate): InReview {
     throw new Error("Method not implemented." + general);
   }
 
@@ -29,19 +29,19 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     throw new Error("Method not implemented." + id);
   }
 
-  updateInCharge(inCharge: PrepareInChargeForm): InReview {
+  updateInCharge(inCharge: PrepareInChargeUpdate): InReview {
     throw new Error("Method not implemented." + inCharge);
   }
 
-  updateSigna(signa: PrepareSignaForm): InReview {
+  updateSigna(signa: PrepareSignaUpdate): InReview {
     throw new Error("Method not implemented." + signa);
   }
 
-  updateSecurity(security: PrepareSecurityForm): InReview {
+  updateSecurity(security: PrepareSecurityUpdate): InReview {
     throw new Error("Method not implemented." + security);
   }
 
-  updateSupply(supply: PrepareSupplyForm): InReview {
+  updateSupply(supply: PrepareSupplyUpdate): InReview {
     throw new Error("Method not implemented." + supply);
   }
 }

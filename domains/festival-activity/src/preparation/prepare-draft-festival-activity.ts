@@ -1,21 +1,18 @@
-import { Prepare, generateTimeWindowId } from "./prepare-festival-activity";
+import { Prepare } from "./prepare-festival-activity";
 
-import { IProvidePeriod, Period } from "@overbookd/period";
+import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { Adherent, Draft, TimeWindow } from "../festival-activity";
+import { TimeWindowAlreadyExists } from "../festival-activity.error";
 import {
-  TimeWindowAlreadyExists,
-  TimeWindowEndBeforeStart,
-} from "../festival-activity.error";
-import {
-  PrepareGeneralForm,
-  PrepareSignaForm,
-  PrepareSecurityForm,
-  PrepareSupplyForm,
-  PrepareInChargeForm,
+  PrepareGeneralUpdate,
+  PrepareSignaUpdate,
+  PrepareSecurityUpdate,
+  PrepareSupplyUpdate,
+  PrepareInChargeUpdate,
 } from "./prepare-festival-activity.model";
 
 type PrepareInChargeFormWithAdherent = Omit<
-  PrepareInChargeForm,
+  PrepareInChargeUpdate,
   "adherentId"
 > & {
   adherent?: Adherent;
@@ -30,7 +27,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     });
   }
 
-  updateGeneral(form: PrepareGeneralForm): Draft {
+  updateGeneral(form: PrepareGeneralUpdate): Draft {
     const privateFestivalActivity = {
       toPublish: false,
       photoLink: null,
@@ -44,27 +41,19 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   }
 
   addGeneralTimeWindow(period: IProvidePeriod): Draft {
-    if (period.start.getTime() >= period.end.getTime()) {
-      throw new TimeWindowEndBeforeStart();
-    }
-    const id = generateTimeWindowId(this.activity.id, period);
-    const { start, end } = Period.init(period);
-    const timeWindow = { id, start, end };
+    const timeWindows = TimeWindows.build(
+      this.activity.general.timeWindows,
+    ).add(period, this.activity.id).entries;
 
-    const alreadyExists = this.activity.general.timeWindows.some(
-      (tw) => tw.id === id,
-    );
-    if (alreadyExists) throw new TimeWindowAlreadyExists();
-
-    const timeWindows = [...this.activity.general.timeWindows, timeWindow];
     const general = { ...this.activity.general, timeWindows };
     return { ...this.activity, general };
   }
 
   removeGeneralTimeWindow(id: TimeWindow["id"]): Draft {
-    const timeWindows = this.activity.general.timeWindows.filter(
-      (tw) => tw.id !== id,
-    );
+    const timeWindows = TimeWindows.build(
+      this.activity.general.timeWindows,
+    ).remove(id).entries;
+
     const general = { ...this.activity.general, timeWindows };
     return { ...this.activity, general };
   }
@@ -74,18 +63,53 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inCharge };
   }
 
-  updateSigna(form: PrepareSignaForm): Draft {
+  updateSigna(form: PrepareSignaUpdate): Draft {
     const signa = { ...this.activity.signa, ...form };
     return { ...this.activity, signa };
   }
 
-  updateSecurity(form: PrepareSecurityForm): Draft {
+  updateSecurity(form: PrepareSecurityUpdate): Draft {
     const security = { ...this.activity.security, ...form };
     return { ...this.activity, security };
   }
 
-  updateSupply(form: PrepareSupplyForm): Draft {
+  updateSupply(form: PrepareSupplyUpdate): Draft {
     const supply = { ...this.activity.supply, ...form };
     return { ...this.activity, supply };
+  }
+}
+
+class TimeWindows {
+  private constructor(private readonly timeWindows: TimeWindow[]) {}
+
+  get entries(): TimeWindow[] {
+    return this.timeWindows;
+  }
+
+  static build(timeWindows: TimeWindow[]): TimeWindows {
+    return new TimeWindows(timeWindows);
+  }
+
+  add(period: IProvidePeriod, faId: number) {
+    const { start, end } = Period.init(period);
+    const id = this.generateTimeWindowId(faId, { start, end });
+    const timeWindow = { id, start, end };
+
+    const alreadyExists = this.timeWindows.some((tw) => tw.id === id);
+    if (alreadyExists) throw new TimeWindowAlreadyExists();
+
+    return new TimeWindows([...this.timeWindows, timeWindow]);
+  }
+
+  remove(id: TimeWindow["id"]) {
+    return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
+  }
+
+  private generateTimeWindowId(faId: number, period: IProvidePeriod): string {
+    const { start, end } = period;
+    const startMinutes = Duration.ms(start.getTime()).inMinutes;
+    const endMinutes = Duration.ms(end.getTime()).inMinutes;
+
+    return `${faId}-${startMinutes}-${endMinutes}`;
   }
 }

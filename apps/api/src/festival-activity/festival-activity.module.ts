@@ -5,8 +5,10 @@ import { PrismaAdherentRepository } from "./repository/adherent-repository.prism
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import {
+  CreateFestivalActivity,
   InMemoryCreateFestivalActivityRepository,
   InMemoryPrepareFestivalActivityRepository,
+  PrepareFestivalActivity,
 } from "@overbookd/festival-activity";
 
 @Module({
@@ -27,16 +29,30 @@ import {
       inject: [PrismaService],
     },
     {
+      provide: CreateFestivalActivity,
+      useFactory: (
+        festivalActivities: InMemoryCreateFestivalActivityRepository,
+      ) => new CreateFestivalActivity(festivalActivities),
+      inject: [InMemoryCreateFestivalActivityRepository],
+    },
+    {
+      provide: PrepareFestivalActivity,
+      useFactory: (
+        festivalActivities: InMemoryPrepareFestivalActivityRepository,
+      ) => new PrepareFestivalActivity(festivalActivities),
+      inject: [InMemoryPrepareFestivalActivityRepository],
+    },
+    {
       provide: FestivalActivityService,
       useFactory: (
         adherents: PrismaAdherentRepository,
-        create: InMemoryCreateFestivalActivityRepository,
-        prepare: InMemoryPrepareFestivalActivityRepository,
+        create: CreateFestivalActivity,
+        prepare: PrepareFestivalActivity,
       ) => new FestivalActivityService(adherents, create, prepare),
       inject: [
         PrismaAdherentRepository,
-        InMemoryCreateFestivalActivityRepository,
-        InMemoryPrepareFestivalActivityRepository,
+        CreateFestivalActivity,
+        PrepareFestivalActivity,
       ],
     },
   ],
