@@ -10,7 +10,12 @@ import {
   signa,
 } from "./waiting-for-review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
-import { DRAFT, IN_REVIEW, REVIEWING } from "../festival-activity";
+import {
+  DRAFT,
+  IN_REVIEW,
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW,
+} from "../festival-activity";
 import { AskForReview } from "./ask-for-review";
 import {
   pcSecurite,
@@ -89,22 +94,19 @@ describe("Ask for review", () => {
         });
         it.each`
           team         | status
-          ${comcom}    | ${undefined}
+          ${comcom}    | ${NOT_ASKING_TO_REVIEW}
           ${humain}    | ${REVIEWING}
           ${signa}     | ${REVIEWING}
           ${secu}      | ${REVIEWING}
           ${matos}     | ${REVIEWING}
           ${elec}      | ${REVIEWING}
           ${barrieres} | ${REVIEWING}
-        `(
-          "should explain $team is concern or not with review",
-          async ({ team, status }) => {
-            const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-            if (!isReviewer(team)) throw new Error();
-            // eslint-disable-next-line security/detect-object-injection
-            expect(inReviewFa.reviews[team]).toBe(status);
-          },
-        );
+        `("should explain $team is $status", async ({ team, status }) => {
+          const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
+          if (!isReviewer(team)) throw new Error();
+          // eslint-disable-next-line security/detect-object-injection
+          expect(inReviewFa.reviews[team]).toBe(status);
+        });
         describe("when festival activity will be published (i.e. is public)", () => {
           it("should also ask review from comcom", async () => {
             const inReviewFa = await askForReview.fromDraft(finaleEsport.id);

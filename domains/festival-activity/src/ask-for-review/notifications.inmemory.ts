@@ -1,10 +1,10 @@
 import { Notifications, Notifyee } from "./ask-for-review";
-import { PublicActivityReviewer, WaitingForReview } from "./waiting-for-review";
+import { Reviewer, WaitingForReview } from "./waiting-for-review";
 
 type FestivalActivityToReview = Omit<WaitingForReview, "reviewers">;
 
 type Notification = {
-  team: PublicActivityReviewer;
+  team: Reviewer;
   event: FestivalActivityToReview;
 };
 

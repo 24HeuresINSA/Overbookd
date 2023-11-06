@@ -168,8 +168,11 @@ export type Draft = {
 };
 
 export const REVIEWING = "REVIEWING";
+export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";
 
-type Reviews = Record<Reviewer, undefined | typeof REVIEWING>;
+export type ReviewStatus = typeof REVIEWING | typeof NOT_ASKING_TO_REVIEW;
+
+type Reviews = Record<Reviewer, ReviewStatus>;
 
 export type InReview = {
   id: number;

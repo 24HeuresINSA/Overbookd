@@ -3,21 +3,22 @@ import {
   PreviewFestivalActivity,
   FestivalActivity,
   isDraft,
+  NOT_ASKING_TO_REVIEW,
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
 import { Reviewer } from "../ask-for-review/waiting-for-review";
 
-type DraftReview = Record<Reviewer, undefined>;
+type DraftReview = Record<Reviewer, typeof NOT_ASKING_TO_REVIEW>;
 
 const DRAFT_REVIEWS: DraftReview = {
-  humain: undefined,
-  signa: undefined,
-  secu: undefined,
-  matos: undefined,
-  elec: undefined,
-  barrieres: undefined,
-  comcom: undefined,
+  humain: NOT_ASKING_TO_REVIEW,
+  signa: NOT_ASKING_TO_REVIEW,
+  secu: NOT_ASKING_TO_REVIEW,
+  matos: NOT_ASKING_TO_REVIEW,
+  elec: NOT_ASKING_TO_REVIEW,
+  barrieres: NOT_ASKING_TO_REVIEW,
+  comcom: NOT_ASKING_TO_REVIEW,
 };
 
 export class InMemoryPrepareFestivalActivityRepository

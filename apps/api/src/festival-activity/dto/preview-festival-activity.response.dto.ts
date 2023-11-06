@@ -2,55 +2,59 @@ import { ApiProperty } from "@nestjs/swagger";
 import type {
   Adherent,
   PreviewFestivalActivity,
+  ReviewStatus,
+} from "@overbookd/festival-activity";
+import {
+  DRAFT,
+  NOT_ASKING_TO_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-activity";
-import { DRAFT } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 
 type Reviews = PreviewFestivalActivity["reviews"];
 
 class ReviewsDto implements Reviews {
   @ApiProperty({
-    description:
-      "'humain' team review status (undefined means no need for review)",
+    description: "'humain' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  humain: undefined | typeof REVIEWING;
+  humain: ReviewStatus;
 
   @ApiProperty({
-    description:
-      "'signa' team review status (undefined means no need for review)",
+    description: "'signa' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  signa: undefined | typeof REVIEWING;
+  signa: ReviewStatus;
 
   @ApiProperty({
-    description:
-      "'secu' team review status (undefined means no need for review)",
+    description: "'secu' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  secu: undefined | typeof REVIEWING;
+  secu: ReviewStatus;
 
   @ApiProperty({
-    description:
-      "'matos' team review status (undefined means no need for review)",
+    description: "'matos' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  matos: undefined | typeof REVIEWING;
+  matos: ReviewStatus;
 
   @ApiProperty({
-    description:
-      "'elec' team review status (undefined means no need for review)",
+    description: "'elec' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  elec: undefined | typeof REVIEWING;
+  elec: ReviewStatus;
 
   @ApiProperty({
-    description:
-      "'barrieres' team review status (undefined means no need for review)",
+    description: "'barrieres' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  barrieres: undefined | typeof REVIEWING;
+  barrieres: ReviewStatus;
 
   @ApiProperty({
-    description:
-      "'comcom' team review status (undefined means no need for review)",
+    description: "'comcom' team review status",
+    examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  comcom: undefined | typeof REVIEWING;
+  comcom: ReviewStatus;
 }
 
 export class PreviewFestivalActivityResponseDto

@@ -14,8 +14,9 @@ export type {
   WithInquiries,
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
+  ReviewStatus,
 } from "./festival-activity";
-export { DRAFT, REVIEWING } from "./festival-activity";
+export { DRAFT, REVIEWING, NOT_ASKING_TO_REVIEW } from "./festival-activity";
 
 // CREATION
 export { CreateFestivalActivity } from "./creation/creation";

@@ -2,6 +2,7 @@ import {
   FestivalActivity,
   IN_REVIEW,
   InReview,
+  NOT_ASKING_TO_REVIEW,
   REVIEWING,
 } from "../festival-activity";
 import {
@@ -28,10 +29,10 @@ import {
 } from "./waiting-for-review";
 
 type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
-  Record<Exclude<Reviewer, T>, undefined>;
+  Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
 
 const PRIVATE_ACTIVITY_REVIEWS: MandatoryReviews<PrivateActivityReviewer> = {
-  comcom: undefined,
+  comcom: NOT_ASKING_TO_REVIEW,
   humain: REVIEWING,
   signa: REVIEWING,
   secu: REVIEWING,
