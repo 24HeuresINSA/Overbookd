@@ -3,7 +3,8 @@
   "extends": [
     "config:recommended",
     "group:recommended",
-    ":dependencyDashboard"
+    ":dependencyDashboard",
+    ":semanticCommitTypeAll(chore)"
   ],
   "timezone": "Europe/Paris",
   "schedule": ["after 5pm on monday"],
