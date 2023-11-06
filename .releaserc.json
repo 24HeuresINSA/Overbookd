@@ -40,16 +40,6 @@
               "hidden": false
             },
             {
-              "type": "pre-feat",
-              "section": "Pre-Features",
-              "hidden": false
-            },
-            {
-              "type": "pre feat",
-              "section": "Pre-Features",
-              "hidden": false
-            },
-            {
               "type": "alpha",
               "section": "Pre-Features",
               "hidden": false

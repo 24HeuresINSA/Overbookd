@@ -29,8 +29,6 @@ repos:
             refactor,
             ci,
             prefeat,
-            pre-feat,
-            pre feat,
             alpha,
           ]
   - repo: https://github.com/Yelp/detect-secrets
