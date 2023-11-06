@@ -31,6 +31,7 @@ export class InMemoryPrepareFestivalActivityRepository
         const reviews = isDraft(festivalActivity)
           ? DRAFT_REVIEWS
           : festivalActivity.reviews;
+
         return {
           id: festivalActivity.id,
           name: festivalActivity.general.name,
