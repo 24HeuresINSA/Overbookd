@@ -1,5 +1,6 @@
 export type {
   Adherent,
+  Contractor,
   Draft,
   InReview,
   Public as PublicGeneral,

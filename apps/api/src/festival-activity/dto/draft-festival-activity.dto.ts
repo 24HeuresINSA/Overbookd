@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   Adherent,
+  Contractor,
   Draft,
   DRAFT,
   ElectricitySupply,
@@ -11,6 +12,7 @@ import {
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
+import { ContractorResponseDto } from "./contractor.response.dto";
 
 class TimeWindowDto implements TimeWindow {
   @ApiProperty({
@@ -94,9 +96,10 @@ class InChargeDto implements InCharge {
 
   @ApiProperty({
     description: "Contractors in charge of this festival activity",
+    type: ContractorResponseDto,
     isArray: true,
   })
-  contractors: never[];
+  contractors: Contractor[];
 }
 
 const signaTypes = ["BACHE", "PANNEAU", "AFFICHE"];

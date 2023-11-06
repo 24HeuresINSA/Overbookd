@@ -78,4 +78,66 @@ describe("General section of festival activity preparation", () => {
       });
     });
   });
+
+  describe("when adherent want to add a contractor", () => {
+    it("should add contractor", async () => {
+      const contractorToAdd = {
+        firstname: "Lea",
+        lastname: "Mouyno",
+        phone: "0123456789",
+      };
+      const { inCharge } = await prepareFestivalActivity.addContractor(
+        escapeGame.id,
+        contractorToAdd,
+      );
+
+      const contractorId = "1-2";
+      const expectedContractor = { id: contractorId, ...contractorToAdd };
+      const contractor = inCharge.contractors.find(
+        (contractor) => contractor.id === contractorId,
+      );
+
+      expect(contractor).toEqual(expectedContractor);
+    });
+  });
+
+  describe("when adherent want to update a contractor", () => {
+    it("should update contractor", async () => {
+      const contractorToUpdate = {
+        id: "1-1",
+        firstname: "Noel",
+        lastname: "Mouyno",
+        phone: "0123456789",
+        email: "noel@gmail.com",
+        company: "SNCF",
+        comment: "Je suis un commentaire",
+      };
+      const { inCharge } = await prepareFestivalActivity.updateContractor(
+        escapeGame.id,
+        contractorToUpdate,
+      );
+
+      const contractor = inCharge.contractors.find(
+        (contractor) => contractor.id === contractorToUpdate.id,
+      );
+
+      expect(contractor).toEqual(contractorToUpdate);
+    });
+  });
+
+  describe("when adherent want to delete a contractor", () => {
+    it("should delete contractor", async () => {
+      const contractorId = "1-1";
+      const { inCharge } = await prepareFestivalActivity.removeContractor(
+        escapeGame.id,
+        contractorId,
+      );
+
+      const contractor = inCharge.contractors.find(
+        (contractor) => contractor.id === contractorId,
+      );
+
+      expect(contractor).toBeUndefined();
+    });
+  });
 });

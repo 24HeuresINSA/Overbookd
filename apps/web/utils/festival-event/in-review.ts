@@ -27,10 +27,6 @@ export class CastInReview {
       ...inReview,
       general: this.generalWithDate(inReview.general),
       inquiry: this.inquiryWithDate(inReview.inquiry),
-      inCharge: {
-        ...inReview.inCharge,
-        contractors: [], // TODO remove this when contractors are implemented
-      },
     };
   }
 

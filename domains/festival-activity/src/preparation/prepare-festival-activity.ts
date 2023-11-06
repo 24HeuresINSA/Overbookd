@@ -1,6 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
+  PrepareContractorCreation,
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareSecurityUpdate,
@@ -9,6 +10,7 @@ import {
 } from "./prepare-festival-activity.model";
 import {
   Adherent,
+  Contractor,
   FestivalActivity,
   PreviewFestivalActivity,
   TimeWindow,
@@ -32,6 +34,9 @@ export type Prepare<T extends FestivalActivity> = {
   addGeneralTimeWindow(period: IProvidePeriod): T;
   removeGeneralTimeWindow(id: TimeWindow["id"]): T;
   updateInCharge(inCharge: PrepareInChargeUpdate): T;
+  addContractor(contractor: PrepareContractorCreation): T;
+  updateContractor(contractor: Contractor): T;
+  removeContractor(id: Contractor["id"]): T;
   updateSigna(signa: PrepareSignaUpdate): T;
   updateSecurity(security: PrepareSecurityUpdate): T;
   updateSupply(supply: PrepareSupplyUpdate): T;
@@ -80,7 +85,7 @@ export class PrepareFestivalActivity {
 
   async removeTimeWindowFromGeneral(
     faId: number,
-    timeWindowId: string,
+    timeWindowId: TimeWindow["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
@@ -97,6 +102,39 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateInCharge(inCharge);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addContractor(
+    faId: number,
+    contractor: PrepareContractorCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.addContractor(contractor);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async updateContractor(
+    faId: number,
+    contractor: Contractor,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.updateContractor(contractor);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeContractor(
+    faId: number,
+    contractorId: Contractor["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.removeContractor(contractorId);
     return this.festivalActivities.save(updatedFA);
   }
 
