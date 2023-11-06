@@ -168,6 +168,9 @@ const electricitySupplyConnections = [
 ];
 
 class ElectricitySupplyDto implements ElectricitySupply {
+  @ApiProperty({})
+  id: string;
+
   @ApiProperty({
     enum: electricitySupplyConnections,
     example: "PC16_Prise_classique",
