@@ -15,7 +15,7 @@ export type {
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
 } from "./festival-activity";
-export { DRAFT } from "./festival-activity";
+export { DRAFT, REVIEWING } from "./festival-activity";
 
 // CREATION
 export { CreateFestivalActivity } from "./creation/creation";

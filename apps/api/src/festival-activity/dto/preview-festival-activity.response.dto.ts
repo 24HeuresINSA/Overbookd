@@ -2,9 +2,56 @@ import { ApiProperty } from "@nestjs/swagger";
 import type {
   Adherent,
   PreviewFestivalActivity,
+  REVIEWING,
 } from "@overbookd/festival-activity";
 import { DRAFT } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
+
+type Reviews = PreviewFestivalActivity["reviews"];
+
+class ReviewsDto implements Reviews {
+  @ApiProperty({
+    description:
+      "'humain' team review status (undefined means no need for review)",
+  })
+  humain: undefined | typeof REVIEWING;
+
+  @ApiProperty({
+    description:
+      "'signa' team review status (undefined means no need for review)",
+  })
+  signa: undefined | typeof REVIEWING;
+
+  @ApiProperty({
+    description:
+      "'secu' team review status (undefined means no need for review)",
+  })
+  secu: undefined | typeof REVIEWING;
+
+  @ApiProperty({
+    description:
+      "'matos' team review status (undefined means no need for review)",
+  })
+  matos: undefined | typeof REVIEWING;
+
+  @ApiProperty({
+    description:
+      "'elec' team review status (undefined means no need for review)",
+  })
+  elec: undefined | typeof REVIEWING;
+
+  @ApiProperty({
+    description:
+      "'barrieres' team review status (undefined means no need for review)",
+  })
+  barrieres: undefined | typeof REVIEWING;
+
+  @ApiProperty({
+    description:
+      "'comcom' team review status (undefined means no need for review)",
+  })
+  comcom: undefined | typeof REVIEWING;
+}
 
 export class PreviewFestivalActivityResponseDto
   implements PreviewFestivalActivity
@@ -39,4 +86,9 @@ export class PreviewFestivalActivityResponseDto
     type: String,
   })
   team: string | null;
+
+  @ApiProperty({
+    type: ReviewsDto,
+  })
+  reviews: Reviews;
 }
