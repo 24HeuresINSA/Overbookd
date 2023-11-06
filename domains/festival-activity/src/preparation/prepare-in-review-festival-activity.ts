@@ -1,7 +1,12 @@
 import { Prepare } from "./prepare-festival-activity";
 
 import { IProvidePeriod } from "@overbookd/period";
-import { Contractor, InReview, TimeWindow } from "../festival-activity";
+import {
+  Contractor,
+  ElectricitySupply,
+  InReview,
+  TimeWindow,
+} from "../festival-activity";
 import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
@@ -9,6 +14,7 @@ import {
   PrepareSecurityUpdate,
   PrepareSupplyUpdate,
   PrepareContractorCreation,
+  PrepareElectricitySupplyCreation,
 } from "./prepare-festival-activity.model";
 
 export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
@@ -56,5 +62,21 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
 
   updateSupply(supply: PrepareSupplyUpdate): InReview {
     throw new Error("Method not implemented." + supply);
+  }
+
+  addElectricitySupply(
+    electricitySupply: PrepareElectricitySupplyCreation,
+  ): InReview {
+    throw new Error("Method not implemented." + electricitySupply);
+  }
+
+  updateElectricitySupply(electricitySupply: ElectricitySupply): InReview {
+    throw new Error("Method not implemented." + electricitySupply);
+  }
+
+  removeElectricitySupply(
+    electricitySupplyId: ElectricitySupply["id"],
+  ): InReview {
+    throw new Error("Method not implemented." + electricitySupplyId);
   }
 }

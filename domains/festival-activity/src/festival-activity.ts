@@ -52,9 +52,9 @@ export type Contractor = {
   firstname: string;
   lastname: string;
   phone: string;
-  email?: string;
-  company?: string;
-  comment?: string;
+  email: string | null;
+  company: string | null;
+  comment: string | null;
 };
 
 type InCharge = {
@@ -89,6 +89,7 @@ type Security = {
 };
 
 export type ElectricitySupply = {
+  id: string;
   connection:
     | "PC16_Prise_classique"
     | "P17_16A_MONO"

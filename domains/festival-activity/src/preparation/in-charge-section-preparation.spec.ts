@@ -85,16 +85,19 @@ describe("General section of festival activity preparation", () => {
         firstname: "Lea",
         lastname: "Mouyno",
         phone: "0123456789",
+        email: null,
+        company: null,
+        comment: null,
       };
       const { inCharge } = await prepareFestivalActivity.addContractor(
         escapeGame.id,
         contractorToAdd,
       );
 
-      const contractorId = "1-2";
-      const expectedContractor = { id: contractorId, ...contractorToAdd };
+      const id = "1-2";
+      const expectedContractor = { id, ...contractorToAdd };
       const contractor = inCharge.contractors.find(
-        (contractor) => contractor.id === contractorId,
+        (contractor) => contractor.id === id,
       );
 
       expect(contractor).toEqual(expectedContractor);

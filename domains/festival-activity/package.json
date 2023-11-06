@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",
-    "@overbookd/period": "workspace:*"
+    "@overbookd/period": "workspace:*",
+    "@overbookd/slugify": "workspace:*"
   }
 }

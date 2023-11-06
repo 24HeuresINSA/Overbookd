@@ -1,9 +1,17 @@
 import { Prepare } from "./prepare-festival-activity";
-
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
-import { Adherent, Contractor, Draft, TimeWindow } from "../festival-activity";
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  Adherent,
+  Contractor,
+  Draft,
+  ElectricitySupply,
+  TimeWindow,
+} from "../festival-activity";
 import {
   ContractorNotFound,
+  ElectricitySupplyAlreadyExists,
+  ElectricitySupplyNotFound,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import {
@@ -13,6 +21,7 @@ import {
   PrepareSupplyUpdate,
   PrepareInChargeUpdate,
   PrepareContractorCreation,
+  PrepareElectricitySupplyCreation,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -27,9 +36,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   private constructor(private readonly activity: Draft) {}
 
   static build(activity: Draft): PrepareDraftFestivalActivity {
-    return new PrepareDraftFestivalActivity({
-      ...activity,
-    });
+    return new PrepareDraftFestivalActivity(activity);
   }
 
   updateGeneral(form: PrepareGeneralUpdate): Draft {
@@ -107,6 +114,35 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
 
   updateSupply(form: PrepareSupplyUpdate): Draft {
     const supply = { ...this.activity.supply, ...form };
+    return { ...this.activity, supply };
+  }
+
+  addElectricitySupply(
+    electricitySupply: PrepareElectricitySupplyCreation,
+  ): Draft {
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).add(electricitySupply, this.activity.id).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
+  }
+
+  updateElectricitySupply(electricitySupply: ElectricitySupply): Draft {
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).update(electricitySupply).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
+  }
+
+  removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): Draft {
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).remove(electricitySupplyId).entries;
+
+    const supply = { ...this.activity.supply, electricity };
     return { ...this.activity, supply };
   }
 }
@@ -191,5 +227,66 @@ class Contractors {
     const newId = +lastId + 1;
 
     return `${faId}-${newId}`;
+  }
+}
+
+class ElectricitySupplies {
+  private constructor(
+    private readonly electricitySupplies: ElectricitySupply[],
+  ) {}
+
+  get entries(): ElectricitySupply[] {
+    return this.electricitySupplies;
+  }
+
+  static build(supplies: ElectricitySupply[]): ElectricitySupplies {
+    return new ElectricitySupplies(supplies);
+  }
+
+  add(
+    form: PrepareElectricitySupplyCreation,
+    faId: number,
+  ): ElectricitySupplies {
+    const id = this.generateElectricitySupplyId(faId, form);
+    const supply = { ...form, id };
+
+    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
+    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
+
+    return new ElectricitySupplies([...this.electricitySupplies, supply]);
+  }
+
+  update(electricitySupply: ElectricitySupply): ElectricitySupplies {
+    const currentSupply = this.electricitySupplies.findIndex(
+      (es) => es.id === electricitySupply.id,
+    );
+    if (currentSupply === -1) throw new ElectricitySupplyNotFound();
+
+    const faId = +electricitySupply.id.split("-")[0];
+    const id = this.generateElectricitySupplyId(faId, electricitySupply);
+    const updatedSupply = { ...electricitySupply, id };
+
+    const electricitySupplies = updateItemToList(
+      this.electricitySupplies,
+      currentSupply,
+      updatedSupply,
+    );
+    return new ElectricitySupplies(electricitySupplies);
+  }
+
+  remove(id: TimeWindow["id"]): ElectricitySupplies {
+    return new ElectricitySupplies(
+      this.electricitySupplies.filter((es) => es.id !== id),
+    );
+  }
+
+  private generateElectricitySupplyId(
+    faId: number,
+    electricitySupply: PrepareElectricitySupplyCreation,
+  ): string {
+    const slug = SlugifyService.apply(
+      `${electricitySupply.device} ${electricitySupply.connection}`,
+    );
+    return `${faId}-${slug}`;
   }
 }
