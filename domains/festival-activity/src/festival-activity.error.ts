@@ -5,8 +5,6 @@ function buildFestivalActivityNotFoundErrorMessage(id: number) {
 const TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE =
   "Une créneau existe déjà à ces heures";
 
-const CONTRACTOR_ALREADY_EXISTS_ERROR_MESSAGE = "Ce prestataire existe déjà";
-
 const CONTRACTOR_NOT_FOUND_ERROR_MESSAGE =
   "Ce prestataire n'existe pas dans la fiche activité";
 
@@ -33,12 +31,6 @@ export const Review = {
 export class TimeWindowAlreadyExists extends FestivalActivityError {
   constructor() {
     super(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);
-  }
-}
-
-export class ContractorAlreadyExists extends FestivalActivityError {
-  constructor() {
-    super(CONTRACTOR_ALREADY_EXISTS_ERROR_MESSAGE);
   }
 }
 

@@ -125,8 +125,8 @@ describe("General section of festival activity preparation", () => {
     });
   });
 
-  describe("when adherent want to delete a contractor", () => {
-    it("should delete contractor", async () => {
+  describe("when adherent want to remove a contractor", () => {
+    it("should remove contractor", async () => {
       const contractorId = "1-1";
       const { inCharge } = await prepareFestivalActivity.removeContractor(
         escapeGame.id,

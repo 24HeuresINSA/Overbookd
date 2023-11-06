@@ -3,7 +3,6 @@ import { Prepare } from "./prepare-festival-activity";
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { Adherent, Contractor, Draft, TimeWindow } from "../festival-activity";
 import {
-  ContractorAlreadyExists,
   ContractorNotFound,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
@@ -162,9 +161,6 @@ class Contractors {
     const id = this.generateContractorId(faId);
     const contractor = { ...form, id };
 
-    const alreadyExists = this.contractors.some((c) => c.id === id);
-    if (alreadyExists) throw new ContractorAlreadyExists();
-
     return new Contractors([...this.contractors, contractor]);
   }
 
@@ -187,12 +183,12 @@ class Contractors {
   }
 
   private generateContractorId(faId: number): string {
-    const lastContractor = this.contractors[this.contractors.length - 1];
+    const lastContractor = this.contractors.at(-1);
 
     if (!lastContractor) return `${faId}-1`;
 
     const lastId = lastContractor.id.split("-")[1];
-    const newId = parseInt(lastId, 10) + 1;
+    const newId = +lastId + 1;
 
     return `${faId}-${newId}`;
   }
