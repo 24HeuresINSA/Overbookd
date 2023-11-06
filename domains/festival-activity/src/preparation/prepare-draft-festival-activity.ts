@@ -1,15 +1,20 @@
 import { Prepare } from "./prepare-festival-activity";
 
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
-import { Adherent, Draft, TimeWindow } from "../festival-activity";
-import { TimeWindowAlreadyExists } from "../festival-activity.error";
+import { Adherent, Contractor, Draft, TimeWindow } from "../festival-activity";
+import {
+  ContractorNotFound,
+  TimeWindowAlreadyExists,
+} from "../festival-activity.error";
 import {
   PrepareGeneralUpdate,
   PrepareSignaUpdate,
   PrepareSecurityUpdate,
   PrepareSupplyUpdate,
   PrepareInChargeUpdate,
+  PrepareContractorCreation,
 } from "./prepare-festival-activity.model";
+import { updateItemToList } from "@overbookd/list";
 
 type PrepareInChargeFormWithAdherent = Omit<
   PrepareInChargeUpdate,
@@ -63,6 +68,33 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inCharge };
   }
 
+  addContractor(contractor: PrepareContractorCreation): Draft {
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).add(contractor, this.activity.id).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
+  }
+
+  updateContractor(contractor: Contractor): Draft {
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).update(contractor).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
+  }
+
+  removeContractor(contractorId: Contractor["id"]): Draft {
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).remove(contractorId).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
+  }
+
   updateSigna(form: PrepareSignaUpdate): Draft {
     const signa = { ...this.activity.signa, ...form };
     return { ...this.activity, signa };
@@ -90,7 +122,7 @@ class TimeWindows {
     return new TimeWindows(timeWindows);
   }
 
-  add(period: IProvidePeriod, faId: number) {
+  add(period: IProvidePeriod, faId: number): TimeWindows {
     const { start, end } = Period.init(period);
     const id = this.generateTimeWindowId(faId, { start, end });
     const timeWindow = { id, start, end };
@@ -101,7 +133,7 @@ class TimeWindows {
     return new TimeWindows([...this.timeWindows, timeWindow]);
   }
 
-  remove(id: TimeWindow["id"]) {
+  remove(id: TimeWindow["id"]): TimeWindows {
     return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
   }
 
@@ -111,5 +143,53 @@ class TimeWindows {
     const endMinutes = Duration.ms(end.getTime()).inMinutes;
 
     return `${faId}-${startMinutes}-${endMinutes}`;
+  }
+}
+
+class Contractors {
+  private constructor(private readonly contractors: Contractor[]) {}
+
+  get entries(): Contractor[] {
+    return this.contractors;
+  }
+
+  static build(contractors: Contractor[]): Contractors {
+    return new Contractors(contractors);
+  }
+
+  add(form: PrepareContractorCreation, faId: number): Contractors {
+    const id = this.generateContractorId(faId);
+    const contractor = { ...form, id };
+
+    return new Contractors([...this.contractors, contractor]);
+  }
+
+  update(contractor: Contractor): Contractors {
+    const currentContractor = this.contractors.findIndex(
+      (c) => c.id === contractor.id,
+    );
+    if (currentContractor === -1) throw new ContractorNotFound();
+
+    const contractors = updateItemToList(
+      this.contractors,
+      currentContractor,
+      contractor,
+    );
+    return new Contractors(contractors);
+  }
+
+  remove(id: TimeWindow["id"]): Contractors {
+    return new Contractors(this.contractors.filter((tw) => tw.id !== id));
+  }
+
+  private generateContractorId(faId: number): string {
+    const lastContractor = this.contractors.at(-1);
+
+    if (!lastContractor) return `${faId}-1`;
+
+    const lastId = lastContractor.id.split("-")[1];
+    const newId = +lastId + 1;
+
+    return `${faId}-${newId}`;
   }
 }

@@ -8,10 +8,6 @@ export class CastDraft {
       ...draft,
       general: this.generalWithDate(draft.general),
       inquiry: this.inquiryWithDate(draft.inquiry),
-      inCharge: {
-        ...draft.inCharge,
-        contractors: [], // TODO remove this when contractors are implemented
-      },
     };
   }
 

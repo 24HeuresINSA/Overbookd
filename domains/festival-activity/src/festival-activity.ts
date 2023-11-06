@@ -46,10 +46,20 @@ export type Adherent = {
   nickname?: string;
 };
 
+export type Contractor = {
+  id: string;
+  firstname: string;
+  lastname: string;
+  phone: string;
+  email?: string;
+  company?: string;
+  comment?: string;
+};
+
 type InCharge = {
   adherent: Adherent;
   team: string;
-  contractors: never[];
+  contractors: Contractor[];
 };
 
 type DraftInCharge = Omit<InCharge, "team"> & {

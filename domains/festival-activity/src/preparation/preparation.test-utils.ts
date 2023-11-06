@@ -33,7 +33,15 @@ export const escapeGame: Draft = {
   inCharge: {
     adherent: noel,
     team: "culture",
-    contractors: [],
+    contractors: [
+      {
+        id: "1-1",
+        firstname: "Jean",
+        lastname: "Dupont",
+        phone: "0123456789",
+        email: "jean@gmail.com",
+      },
+    ],
   },
   signa: {
     location: "Creux CGU",

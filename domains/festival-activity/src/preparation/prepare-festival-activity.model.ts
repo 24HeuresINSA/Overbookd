@@ -1,4 +1,4 @@
-import { Adherent } from "../festival-activity";
+import { Adherent, Contractor } from "../festival-activity";
 
 export type PrepareGeneralUpdate = {
   name?: string;
@@ -13,6 +13,8 @@ export type PrepareInChargeUpdate = {
   adherent?: Adherent;
   team?: string;
 };
+
+export type PrepareContractorCreation = Omit<Contractor, "id">;
 
 export type PrepareSignaUpdate = {
   location?: string | null;
