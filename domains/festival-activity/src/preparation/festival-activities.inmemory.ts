@@ -2,9 +2,24 @@ import { updateItemToList } from "@overbookd/list";
 import {
   PreviewFestivalActivity,
   FestivalActivity,
+  isDraft,
+  NOT_ASKING_TO_REVIEW,
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
+import { Reviewer } from "../ask-for-review/waiting-for-review";
+
+type DraftReview = Record<Reviewer, typeof NOT_ASKING_TO_REVIEW>;
+
+const DRAFT_REVIEWS: DraftReview = {
+  humain: NOT_ASKING_TO_REVIEW,
+  signa: NOT_ASKING_TO_REVIEW,
+  secu: NOT_ASKING_TO_REVIEW,
+  matos: NOT_ASKING_TO_REVIEW,
+  elec: NOT_ASKING_TO_REVIEW,
+  barrieres: NOT_ASKING_TO_REVIEW,
+  comcom: NOT_ASKING_TO_REVIEW,
+};
 
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
@@ -13,13 +28,20 @@ export class InMemoryPrepareFestivalActivityRepository
 
   findAll(): Promise<PreviewFestivalActivity[]> {
     return Promise.resolve(
-      this.festivalActivities.map((festivalActivity) => ({
-        id: festivalActivity.id,
-        name: festivalActivity.general.name,
-        status: festivalActivity.status,
-        adherent: festivalActivity.inCharge.adherent,
-        team: festivalActivity.inCharge.team,
-      })),
+      this.festivalActivities.map((festivalActivity) => {
+        const reviews = isDraft(festivalActivity)
+          ? DRAFT_REVIEWS
+          : festivalActivity.reviews;
+
+        return {
+          id: festivalActivity.id,
+          name: festivalActivity.general.name,
+          status: festivalActivity.status,
+          adherent: festivalActivity.inCharge.adherent,
+          team: festivalActivity.inCharge.team,
+          reviews,
+        };
+      }),
     );
   }
 

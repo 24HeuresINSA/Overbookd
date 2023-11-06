@@ -1,4 +1,10 @@
-import { FestivalActivity, IN_REVIEW, InReview } from "../festival-activity";
+import {
+  FestivalActivity,
+  IN_REVIEW,
+  InReview,
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+} from "../festival-activity";
 import {
   isPublicActivity,
   PublicActivityGeneralSpecification,
@@ -18,7 +24,33 @@ import {
   elec,
   barrieres,
   comcom,
+  PrivateActivityReviewer,
+  PublicActivityReviewer,
 } from "./waiting-for-review";
+
+type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
+  Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
+
+const PRIVATE_ACTIVITY_REVIEWS: MandatoryReviews<PrivateActivityReviewer> = {
+  comcom: NOT_ASKING_TO_REVIEW,
+  humain: REVIEWING,
+  signa: REVIEWING,
+  secu: REVIEWING,
+  matos: REVIEWING,
+  elec: REVIEWING,
+  barrieres: REVIEWING,
+};
+
+const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
+  comcom: REVIEWING,
+  humain: REVIEWING,
+  signa: REVIEWING,
+  secu: REVIEWING,
+  matos: REVIEWING,
+  elec: REVIEWING,
+  barrieres: REVIEWING,
+};
+
 class ReadyForReview {
   static isSatisfiedBy(
     festivalActivity: FestivalActivity,
@@ -60,6 +92,7 @@ export class InReviewFestivalActivity implements InReview {
     readonly security: InReview["security"],
     readonly supply: InReview["supply"],
     readonly inquiry: InReview["inquiry"],
+    readonly reviews: InReview["reviews"],
   ) {}
 
   get status(): typeof IN_REVIEW {
@@ -71,6 +104,11 @@ export class InReviewFestivalActivity implements InReview {
       throw ReadyForReview.generateError(draft);
     }
 
+    const isPublic = draft.general.toPublish;
+    const reviews = isPublic
+      ? PUBLIC_ACTIVITY_REVIEWS
+      : PRIVATE_ACTIVITY_REVIEWS;
+
     return new InReviewFestivalActivity(
       draft.id,
       draft.general,
@@ -79,6 +117,7 @@ export class InReviewFestivalActivity implements InReview {
       draft.security,
       draft.supply,
       draft.inquiry,
+      reviews,
     );
   }
 

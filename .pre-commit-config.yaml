@@ -28,6 +28,8 @@ repos:
             refacto,
             refactor,
             ci,
+            prefeat,
+            alpha,
           ]
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.4.0

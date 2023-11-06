@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  Reviewer,
   barrieres,
   comcom,
   elec,
@@ -9,7 +10,12 @@ import {
   signa,
 } from "./waiting-for-review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
-import { DRAFT, IN_REVIEW } from "../festival-activity";
+import {
+  DRAFT,
+  IN_REVIEW,
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW,
+} from "../festival-activity";
 import { AskForReview } from "./ask-for-review";
 import {
   pcSecurite,
@@ -28,6 +34,10 @@ import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { Review } from "../festival-activity.error";
 import { InMemoryNotifications } from "./notifications.inmemory";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory";
+
+function isReviewer(team: string): team is Reviewer {
+  return [barrieres, comcom, elec, humain, matos, secu, signa].includes(team);
+}
 
 describe("Ask for review", () => {
   let askForReview: AskForReview;
@@ -67,20 +77,79 @@ describe("Ask for review", () => {
         expect(inReviewFa.signa).toEqual(pcSecurite.signa);
         expect(inReviewFa.supply).toEqual(pcSecurite.supply);
       });
-      it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
-        const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-        expect(notifications.entries).toHaveLength(6);
-        const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-        expect(notifications.entries).toContainEqual({ team: humain, event });
-        expect(notifications.entries).toContainEqual({ team: signa, event });
-        expect(notifications.entries).toContainEqual({ team: secu, event });
-        expect(notifications.entries).toContainEqual({ team: matos, event });
-        expect(notifications.entries).toContainEqual({ team: elec, event });
-        expect(notifications.entries).toContainEqual({
-          team: barrieres,
-          event,
+      describe("reviews", () => {
+        it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
+          const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
+
+          const event = { id: inReviewFa.id, name: inReviewFa.general.name };
+          const barrieresNotification = { team: barrieres, event };
+
+          expect(notifications.entries).toHaveLength(6);
+          expect(notifications.entries).toContainEqual({ team: humain, event });
+          expect(notifications.entries).toContainEqual({ team: signa, event });
+          expect(notifications.entries).toContainEqual({ team: secu, event });
+          expect(notifications.entries).toContainEqual({ team: matos, event });
+          expect(notifications.entries).toContainEqual({ team: elec, event });
+          expect(notifications.entries).toContainEqual(barrieresNotification);
+        });
+        it.each`
+          team         | status
+          ${comcom}    | ${NOT_ASKING_TO_REVIEW}
+          ${humain}    | ${REVIEWING}
+          ${signa}     | ${REVIEWING}
+          ${secu}      | ${REVIEWING}
+          ${matos}     | ${REVIEWING}
+          ${elec}      | ${REVIEWING}
+          ${barrieres} | ${REVIEWING}
+        `("should explain $team is $status", async ({ team, status }) => {
+          const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
+          if (!isReviewer(team)) throw new Error();
+          // eslint-disable-next-line security/detect-object-injection
+          expect(inReviewFa.reviews[team]).toBe(status);
+        });
+        describe("when festival activity will be published (i.e. is public)", () => {
+          it("should also ask review from comcom", async () => {
+            const inReviewFa = await askForReview.fromDraft(finaleEsport.id);
+
+            const event = { id: inReviewFa.id, name: inReviewFa.general.name };
+            const comcomNotification = { team: comcom, event };
+            const humainNotification = { team: humain, event };
+            const signaNotification = { team: signa, event };
+            const secuNotification = { team: secu, event };
+            const matosNotification = { team: matos, event };
+            const elecNotification = { team: elec, event };
+            const barrieresNotification = { team: barrieres, event };
+
+            expect(notifications.entries).toHaveLength(7);
+            expect(notifications.entries).toContainEqual(comcomNotification);
+            expect(notifications.entries).toContainEqual(humainNotification);
+            expect(notifications.entries).toContainEqual(signaNotification);
+            expect(notifications.entries).toContainEqual(secuNotification);
+            expect(notifications.entries).toContainEqual(matosNotification);
+            expect(notifications.entries).toContainEqual(elecNotification);
+            expect(notifications.entries).toContainEqual(barrieresNotification);
+          });
+          it.each`
+            team         | status
+            ${comcom}    | ${REVIEWING}
+            ${humain}    | ${REVIEWING}
+            ${signa}     | ${REVIEWING}
+            ${secu}      | ${REVIEWING}
+            ${matos}     | ${REVIEWING}
+            ${elec}      | ${REVIEWING}
+            ${barrieres} | ${REVIEWING}
+          `(
+            "should explain $team is concern with review",
+            async ({ team, status }) => {
+              const inReviewFa = await askForReview.fromDraft(finaleEsport.id);
+              if (!isReviewer(team)) throw new Error();
+              // eslint-disable-next-line security/detect-object-injection
+              expect(inReviewFa.reviews[team]).toBe(status);
+            },
+          );
         });
       });
+
       describe("when festival activity will be published (i.e. is public)", () => {
         it("should also ask review from comcom", async () => {
           const inReviewFa = await askForReview.fromDraft(finaleEsport.id);

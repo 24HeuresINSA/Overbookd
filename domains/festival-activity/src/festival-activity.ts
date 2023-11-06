@@ -1,4 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
+import { Reviewer } from "./ask-for-review/waiting-for-review";
 
 export const DRAFT = "DRAFT";
 export const IN_REVIEW = "IN_REVIEW";
@@ -166,6 +167,13 @@ export type Draft = {
   inquiry: Inquiry;
 };
 
+export const REVIEWING = "REVIEWING";
+export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";
+
+export type ReviewStatus = typeof REVIEWING | typeof NOT_ASKING_TO_REVIEW;
+
+type Reviews = Record<Reviewer, ReviewStatus>;
+
 export type InReview = {
   id: number;
   status: typeof IN_REVIEW;
@@ -175,6 +183,7 @@ export type InReview = {
   security: Security;
   supply: Supply;
   inquiry: Inquiry;
+  reviews: Reviews;
 };
 
 export type FestivalActivity = Draft | InReview;
@@ -185,6 +194,7 @@ export type PreviewFestivalActivity = {
   status: FestivalActivity["status"];
   adherent: FestivalActivity["inCharge"]["adherent"];
   team: FestivalActivity["inCharge"]["team"];
+  reviews: Reviews;
 };
 
 export type CreateFestivalActivityForm = {
