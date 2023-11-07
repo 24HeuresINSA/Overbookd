@@ -1,6 +1,9 @@
 import { Duration, EndBeforeStart } from "@overbookd/period";
 import { beforeEach, describe, expect, it } from "vitest";
-import { TimeWindowAlreadyExists } from "../festival-activity.error";
+import {
+  InquiryAlreadyExists,
+  TimeWindowAlreadyExists,
+} from "../festival-activity.error";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
@@ -87,6 +90,56 @@ describe("Inquiry section of festival activity preparation", () => {
         (tw) => tw.id === timeWindowIdToRemove,
       );
       expect(timeWindow).toBeUndefined();
+    });
+  });
+
+  describe("when adherent want to add a gear inquiry", () => {
+    it("should add the gear inquiry", async () => {
+      const inquiryToAdd = {
+        slug: "branle-canisse",
+        quantity: 3,
+      };
+
+      const { inquiry } = await prepareFestivalActivity.addGearInquiry(
+        escapeGame.id,
+        inquiryToAdd,
+      );
+
+      const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
+      const gearInquiry = inquiry.gears.find((tw) => tw.id === inquiryId);
+
+      expect(gearInquiry?.id).toBe(inquiryId);
+      expect(gearInquiry?.quantity).toBe(inquiryToAdd.quantity);
+      expect(gearInquiry?.slug).toBe(inquiryToAdd.slug);
+    });
+
+    describe("when adherent want to add a gear inquiry that already exists", () => {
+      it("should should indicate that the gear inquiry already exists", async () => {
+        const existingGearInquiry = escapeGame.inquiry.gears[0];
+
+        await expect(
+          prepareFestivalActivity.addGearInquiry(
+            escapeGame.id,
+            existingGearInquiry,
+          ),
+        ).rejects.toThrow(InquiryAlreadyExists);
+      });
+    });
+  });
+
+  describe("when adherent want to remove a gear inquiry", () => {
+    it("should remove the gear inquiry", async () => {
+      const gearInquiryIdToRemove = "1-marteau";
+
+      const { inquiry } = await prepareFestivalActivity.removeGearInquiry(
+        escapeGame.id,
+        gearInquiryIdToRemove,
+      );
+
+      const gearInquiry = inquiry.gears.find(
+        (tw) => tw.id === gearInquiryIdToRemove,
+      );
+      expect(gearInquiry).toBeUndefined();
     });
   });
 });

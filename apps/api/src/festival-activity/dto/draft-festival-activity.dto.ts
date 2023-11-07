@@ -220,13 +220,13 @@ class SupplyDto implements Supply {
 
 class InquiryRequestDto implements InquiryRequest {
   @ApiProperty({})
-  id: number;
+  id: string;
 
   @ApiProperty({})
   quantity: number;
 
   @ApiProperty({})
-  name: string;
+  slug: string;
 }
 
 class InquiryDto implements InquiryWithPotentialRequests {

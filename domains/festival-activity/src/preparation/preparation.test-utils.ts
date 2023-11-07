@@ -65,7 +65,13 @@ export const escapeGame: Draft = {
         end: new Date("2023-05-17T15:00+02:00"),
       },
     ],
-    gears: [],
+    gears: [
+      {
+        id: "1-marteau",
+        quantity: 2,
+        slug: "marteau",
+      },
+    ],
     electricity: [],
     barriers: [],
   },

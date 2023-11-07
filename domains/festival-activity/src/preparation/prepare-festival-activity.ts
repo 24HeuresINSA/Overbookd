@@ -7,6 +7,7 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
+  PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
@@ -16,6 +17,7 @@ import {
   Contractor,
   ElectricitySupply,
   FestivalActivity,
+  InquiryRequest,
   PreviewFestivalActivity,
   TimeWindow,
   isDraft,
@@ -49,6 +51,12 @@ export type Prepare<T extends FestivalActivity> = {
   removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
   addInquiryTimeWindow(period: IProvidePeriod): T;
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
+  addGearInquiry(gear: PrepareInquiryRequestCreation): T;
+  removeGearInquiry(id: InquiryRequest["id"]): T;
+  addBarrierInquiry(barrier: PrepareInquiryRequestCreation): T;
+  removeBarrierInquiry(id: InquiryRequest["id"]): T;
+  addElectricityInquiry(electricity: PrepareInquiryRequestCreation): T;
+  removeElectricityInquiry(id: InquiryRequest["id"]): T;
 };
 
 export class PrepareFestivalActivity {
@@ -232,6 +240,67 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.removeInquiryTimeWindow(timeWindowId);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addGearInquiry(
+    faId: number,
+    gear: PrepareInquiryRequestCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.addGearInquiry(gear);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeGearInquiry(
+    faId: number,
+    gearId: InquiryRequest["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+    const updatedFA = prepare.removeGearInquiry(gearId);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addBarrierInquiry(
+    faId: number,
+    barrier: PrepareInquiryRequestCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+    const updatedFA = prepare.addBarrierInquiry(barrier);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeBarrierInquiry(
+    faId: number,
+    barrierId: InquiryRequest["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+    const updatedFA = prepare.removeBarrierInquiry(barrierId);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addElectricityInquiry(
+    faId: number,
+    electricity: PrepareInquiryRequestCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+    const updatedFA = prepare.addElectricityInquiry(electricity);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeElectricityInquiry(
+    faId: number,
+    electricityId: InquiryRequest["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+    const updatedFA = prepare.removeElectricityInquiry(electricityId);
     return this.festivalActivities.save(updatedFA);
   }
 

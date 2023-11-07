@@ -1,9 +1,5 @@
-import {
-  Adherent,
-  Contractor,
-  ElectricityConnection,
-  ElectricitySupply,
-} from "../festival-activity";
+import { ElectricityConnection, ElectricitySupply } from "../festival-activity";
+import { Adherent, Contractor, InquiryRequest } from "../festival-activity";
 
 export type PrepareGeneralUpdate = {
   name?: string;
@@ -64,3 +60,5 @@ export type PrepareElectricitySupplyUpdate = {
   count?: number;
   comment?: string | null;
 };
+
+export type PrepareInquiryRequestCreation = Omit<InquiryRequest, "id">;

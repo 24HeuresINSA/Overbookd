@@ -7,12 +7,14 @@ import {
   Draft,
   ElectricityConnection,
   ElectricitySupply,
+  InquiryRequest,
   TimeWindow,
 } from "../festival-activity";
 import {
   ContractorNotFound,
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
+  InquiryAlreadyExists,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import {
@@ -25,6 +27,7 @@ import {
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
   PrepareContractorUpdate,
+  PrepareInquiryRequestCreation,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -166,6 +169,68 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     ).remove(id).entries;
 
     const inquiry = { ...this.activity.inquiry, timeWindows };
+    return { ...this.activity, inquiry };
+  }
+
+  addGearInquiry(gear: PrepareInquiryRequestCreation): Draft {
+    const gears = Inquiries.build(this.activity.inquiry.gears).add(
+      gear,
+      this.activity.id,
+    ).entries;
+
+    const inquiry = { ...this.activity.inquiry, gears };
+    return { ...this.activity, inquiry };
+  }
+
+  removeGearInquiry(id: InquiryRequest["id"]): Draft {
+    const gears = Inquiries.build(this.activity.inquiry.gears).remove(
+      id,
+    ).entries;
+
+    const inquiry = { ...this.activity.inquiry, gears };
+    return { ...this.activity, inquiry };
+  }
+
+  addBarrierInquiry(barrier: PrepareInquiryRequestCreation): Draft {
+    const barriers = Inquiries.build(this.activity.inquiry.barriers).add(
+      barrier,
+      this.activity.id,
+    ).entries;
+
+    const inquiry = { ...this.activity.inquiry, barriers };
+    return { ...this.activity, inquiry };
+  }
+
+  removeBarrierInquiry(id: InquiryRequest["id"]): Draft {
+    const barriers = Inquiries.build(this.activity.inquiry.barriers).remove(
+      id,
+    ).entries;
+
+    const inquiry = { ...this.activity.inquiry, barriers };
+    return { ...this.activity, inquiry };
+  }
+
+  addElectricityInquiry(electricity: PrepareInquiryRequestCreation): Draft {
+    const electricityInquiries = Inquiries.build(
+      this.activity.inquiry.electricity,
+    ).add(electricity, this.activity.id).entries;
+
+    const inquiry = {
+      ...this.activity.inquiry,
+      electricity: electricityInquiries,
+    };
+    return { ...this.activity, inquiry };
+  }
+
+  removeElectricityInquiry(id: InquiryRequest["id"]): Draft {
+    const electricityInquiries = Inquiries.build(
+      this.activity.inquiry.electricity,
+    ).remove(id).entries;
+
+    const inquiry = {
+      ...this.activity.inquiry,
+      electricity: electricityInquiries,
+    };
     return { ...this.activity, inquiry };
   }
 }
@@ -358,5 +423,35 @@ class ElectricitySupplies {
     );
 
     return { ...updatedSupply, id };
+  }
+}
+
+class Inquiries {
+  private constructor(private readonly inquiries: InquiryRequest[]) {}
+
+  get entries(): InquiryRequest[] {
+    return this.inquiries;
+  }
+
+  static build(inquiries: InquiryRequest[]): Inquiries {
+    return new Inquiries(inquiries);
+  }
+
+  add(form: PrepareInquiryRequestCreation, faId: number): Inquiries {
+    const id = this.generateInquiryId(faId, form.slug);
+    const inquiry = { ...form, id };
+
+    const alreadyExists = this.inquiries.some((i) => i.id === id);
+    if (alreadyExists) throw new InquiryAlreadyExists();
+
+    return new Inquiries([...this.inquiries, inquiry]);
+  }
+
+  remove(id: InquiryRequest["id"]): Inquiries {
+    return new Inquiries(this.inquiries.filter((tw) => tw.id !== id));
+  }
+
+  private generateInquiryId(faId: number, slug: string): string {
+    return `${faId}-${slug}`;
   }
 }
