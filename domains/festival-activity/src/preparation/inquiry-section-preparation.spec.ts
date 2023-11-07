@@ -41,15 +41,10 @@ describe("Inquiry section of festival activity preparation", () => {
 
       const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
       const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const timeWindowId = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+      const id = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
-      const timeWindow = inquiry.timeWindows.find(
-        (tw) => tw.id === timeWindowId,
-      );
-
-      expect(timeWindow?.id).toBe(timeWindowId);
-      expect(timeWindow?.start).toBe(timeWindowToAdd.start);
-      expect(timeWindow?.end).toBe(timeWindowToAdd.end);
+      const expectedTimeWindow = { id, ...timeWindowToAdd };
+      expect(inquiry.timeWindows).toContainEqual(expectedTimeWindow);
     });
 
     describe("when adherent want to add a time window that already exists", () => {
@@ -118,11 +113,7 @@ describe("Inquiry section of festival activity preparation", () => {
         name: inquiryToAdd.name,
         quantity: inquiryToAdd.quantity,
       };
-      const gearInquiry = inquiry.gears.find(
-        (inquiry) => inquiry.slug === inquiryToAdd.slug,
-      );
-
-      expect(gearInquiry).toEqual(expectedInquiry);
+      expect(inquiry.gears).toContainEqual(expectedInquiry);
     });
 
     describe("when adherent want to add a gear inquiry that already exists", () => {
@@ -178,11 +169,7 @@ describe("Inquiry section of festival activity preparation", () => {
         name: inquiryToAdd.name,
         quantity: inquiryToAdd.quantity,
       };
-      const barrierInquiry = inquiry.barriers.find(
-        (inquiry) => inquiry.slug === inquiryToAdd.slug,
-      );
-
-      expect(barrierInquiry).toEqual(expectedInquiry);
+      expect(inquiry.barriers).toContainEqual(expectedInquiry);
     });
 
     describe("when adherent want to add a barrier inquiry that already exists", () => {
@@ -238,11 +225,7 @@ describe("Inquiry section of festival activity preparation", () => {
         name: inquiryToAdd.name,
         quantity: inquiryToAdd.quantity,
       };
-      const elecInquiry = inquiry.electricity.find(
-        (inquiry) => inquiry.slug === inquiryToAdd.slug,
-      );
-
-      expect(elecInquiry).toEqual(expectedInquiry);
+      expect(inquiry.electricity).toContainEqual(expectedInquiry);
     });
 
     describe("when adherent want to add an electricity inquiry that already exists", () => {

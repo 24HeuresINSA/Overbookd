@@ -209,15 +209,12 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   }
 
   removeInquiry(slug: InquiryRequest["slug"]): Draft {
-    const gears = Inquiries.build(this.activity.inquiry.gears).remove(
-      slug,
-    ).entries;
-    const barriers = Inquiries.build(this.activity.inquiry.barriers).remove(
-      slug,
-    ).entries;
-    const electricity = Inquiries.build(
-      this.activity.inquiry.electricity,
-    ).remove(slug).entries;
+    const inquiry = this.activity.inquiry;
+    const [gears, barriers, electricity] = [
+      inquiry.gears,
+      inquiry.barriers,
+      inquiry.electricity,
+    ].map((inquiries) => Inquiries.build(inquiries).remove(slug).entries);
 
     return {
       ...this.activity,
