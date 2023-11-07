@@ -61,17 +61,12 @@ export type PrepareElectricitySupplyUpdate = {
   comment?: string | null;
 };
 
-export const GEAR = "matos";
-export const BARRIER = "barrieres";
-export const ELECTRICITY = "elec";
+export const MATOS = "matos";
+export const BARRIERES = "barrieres";
+export const ELEC = "elec";
 
-type InquiryOwner = typeof GEAR | typeof BARRIER | typeof ELECTRICITY;
+type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;
 
 export type PrepareInquiryRequestCreation = InquiryRequest & {
-  owner: InquiryOwner;
-};
-
-export type PrepareInquiryRequestRemoval = {
-  slug: string;
   owner: InquiryOwner;
 };

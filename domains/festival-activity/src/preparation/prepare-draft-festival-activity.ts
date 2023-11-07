@@ -28,6 +28,9 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
+  MATOS,
+  BARRIERES,
+  ELEC,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -172,64 +175,59 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inquiry };
   }
 
-  addGearInquiry(gear: PrepareInquiryRequestCreation): Draft {
-    const gears = Inquiries.build(this.activity.inquiry.gears).add(
-      gear,
-    ).entries;
+  addInquiry(form: PrepareInquiryRequestCreation): Draft {
+    const inquiry = (() => {
+      switch (form.owner) {
+        case MATOS:
+          return {
+            ...this.activity.inquiry,
+            gears: Inquiries.build(this.activity.inquiry.gears).add(form)
+              .entries,
+          };
 
-    const inquiry = { ...this.activity.inquiry, gears };
+        case BARRIERES:
+          return {
+            ...this.activity.inquiry,
+            barriers: Inquiries.build(this.activity.inquiry.barriers).add(form)
+              .entries,
+          };
+
+        case ELEC:
+          return {
+            ...this.activity.inquiry,
+            electricity: Inquiries.build(this.activity.inquiry.electricity).add(
+              form,
+            ).entries,
+          };
+
+        default:
+          throw new Error("Responsable du matos inconnu");
+      }
+    })();
+
     return { ...this.activity, inquiry };
   }
 
-  removeGearInquiry(slug: InquiryRequest["slug"]): Draft {
+  removeInquiry(slug: InquiryRequest["slug"]): Draft {
     const gears = Inquiries.build(this.activity.inquiry.gears).remove(
       slug,
     ).entries;
-
-    const inquiry = { ...this.activity.inquiry, gears };
-    return { ...this.activity, inquiry };
-  }
-
-  addBarrierInquiry(barrier: PrepareInquiryRequestCreation): Draft {
-    const barriers = Inquiries.build(this.activity.inquiry.barriers).add(
-      barrier,
-    ).entries;
-
-    const inquiry = { ...this.activity.inquiry, barriers };
-    return { ...this.activity, inquiry };
-  }
-
-  removeBarrierInquiry(slug: InquiryRequest["slug"]): Draft {
     const barriers = Inquiries.build(this.activity.inquiry.barriers).remove(
       slug,
     ).entries;
-
-    const inquiry = { ...this.activity.inquiry, barriers };
-    return { ...this.activity, inquiry };
-  }
-
-  addElectricityInquiry(electricity: PrepareInquiryRequestCreation): Draft {
-    const electricityInquiries = Inquiries.build(
-      this.activity.inquiry.electricity,
-    ).add(electricity).entries;
-
-    const inquiry = {
-      ...this.activity.inquiry,
-      electricity: electricityInquiries,
-    };
-    return { ...this.activity, inquiry };
-  }
-
-  removeElectricityInquiry(slug: InquiryRequest["slug"]): Draft {
-    const electricityInquiries = Inquiries.build(
+    const electricity = Inquiries.build(
       this.activity.inquiry.electricity,
     ).remove(slug).entries;
 
-    const inquiry = {
-      ...this.activity.inquiry,
-      electricity: electricityInquiries,
+    return {
+      ...this.activity,
+      inquiry: {
+        ...this.activity.inquiry,
+        gears,
+        barriers,
+        electricity,
+      },
     };
-    return { ...this.activity, inquiry };
   }
 }
 
@@ -438,13 +436,17 @@ class Inquiries {
   add({ slug, quantity, name }: PrepareInquiryRequestCreation): Inquiries {
     const inquiry = { slug, quantity, name };
 
-    const alreadyExists = this.inquiries.some((inq) => inq.slug === slug);
+    const alreadyExists = this.inquiries.some(
+      (inquiry) => inquiry.slug === slug,
+    );
     if (alreadyExists) throw new InquiryAlreadyExists();
 
     return new Inquiries([...this.inquiries, inquiry]);
   }
 
   remove(slug: InquiryRequest["slug"]): Inquiries {
-    return new Inquiries(this.inquiries.filter((inq) => inq.slug !== slug));
+    return new Inquiries(
+      this.inquiries.filter((inquiry) => inquiry.slug !== slug),
+    );
   }
 }

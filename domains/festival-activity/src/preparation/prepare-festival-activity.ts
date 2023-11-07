@@ -1,9 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
-  BARRIER,
-  ELECTRICITY,
-  GEAR,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
@@ -11,7 +8,6 @@ import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareInquiryRequestCreation,
-  PrepareInquiryRequestRemoval,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
@@ -50,12 +46,8 @@ export type Prepare<T extends FestivalActivity> = {
   removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
   addInquiryTimeWindow(period: IProvidePeriod): T;
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
-  addGearInquiry(gear: PrepareInquiryRequestCreation): T;
-  removeGearInquiry(slug: InquiryRequest["slug"]): T;
-  addBarrierInquiry(barrier: PrepareInquiryRequestCreation): T;
-  removeBarrierInquiry(slug: InquiryRequest["slug"]): T;
-  addElectricityInquiry(electricity: PrepareInquiryRequestCreation): T;
-  removeElectricityInquiry(slug: InquiryRequest["slug"]): T;
+  addInquiry(inquiry: PrepareInquiryRequestCreation): T;
+  removeInquiry(slug: InquiryRequest["slug"]): T;
 };
 
 export class PrepareFestivalActivity {
@@ -249,32 +241,18 @@ export class PrepareFestivalActivity {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA =
-      inquiry.owner === GEAR
-        ? prepare.addGearInquiry(inquiry)
-        : inquiry.owner === BARRIER
-        ? prepare.addBarrierInquiry(inquiry)
-        : prepare.addElectricityInquiry(inquiry);
-
+    const updatedFA = prepare.addInquiry(inquiry);
     return this.festivalActivities.save(updatedFA);
   }
 
   async removeInquiryRequest(
     faId: number,
-    { owner, slug }: PrepareInquiryRequestRemoval,
+    slug: InquiryRequest["slug"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA =
-      owner === GEAR
-        ? prepare.removeGearInquiry(slug)
-        : owner === BARRIER
-        ? prepare.removeBarrierInquiry(slug)
-        : owner === ELECTRICITY
-        ? prepare.removeElectricityInquiry(slug)
-        : existingFA;
-
+    const updatedFA = prepare.removeInquiry(slug);
     return this.festivalActivities.save(updatedFA);
   }
 
