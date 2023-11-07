@@ -67,11 +67,17 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to add an electricity supply that already exists", () => {
       it("should indicate that electricity supply already exists", async () => {
         const existingElectricitySupply = escapeGame.supply.electricity[0];
+        const electricitySupplyToAdd = {
+          connection: existingElectricitySupply.connection,
+          device: existingElectricitySupply.device,
+          power: existingElectricitySupply.power,
+          count: existingElectricitySupply.count,
+        };
 
         await expect(
           prepareFestivalActivity.addElectricitySupply(
             escapeGame.id,
-            existingElectricitySupply,
+            electricitySupplyToAdd,
           ),
         ).rejects.toThrow(ElectricitySupplyAlreadyExists);
       });

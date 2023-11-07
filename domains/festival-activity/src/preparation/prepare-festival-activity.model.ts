@@ -19,7 +19,14 @@ export type PrepareInChargeUpdate = {
   team?: string;
 };
 
-export type PrepareContractorCreation = Omit<Contractor, "id">;
+export type PrepareContractorCreation = Pick<
+  Contractor,
+  "firstname" | "lastname" | "phone"
+> & {
+  email?: string;
+  company?: string;
+  comment?: string;
+};
 
 export type PrepareSignaUpdate = {
   location?: string | null;
@@ -37,7 +44,7 @@ export type PrepareElectricitySupplyCreation = Omit<
   ElectricitySupply,
   "id" | "comment"
 > & {
-  comment?: string | null;
+  comment?: string;
 };
 
 export type PrepareElectricitySupplyUpdate = {

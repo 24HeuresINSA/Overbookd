@@ -85,9 +85,6 @@ describe("General section of festival activity preparation", () => {
         firstname: "Lea",
         lastname: "Mouyno",
         phone: "0123456789",
-        email: null,
-        company: null,
-        comment: null,
       };
       const { inCharge } = await prepareFestivalActivity.addContractor(
         escapeGame.id,

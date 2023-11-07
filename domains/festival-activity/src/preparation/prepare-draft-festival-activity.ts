@@ -5,6 +5,7 @@ import {
   Adherent,
   Contractor,
   Draft,
+  ElectricityConnection,
   ElectricitySupply,
   TimeWindow,
 } from "../festival-activity";
@@ -198,7 +199,13 @@ class Contractors {
 
   add(form: PrepareContractorCreation, faId: number): Contractors {
     const id = this.generateContractorId(faId);
-    const contractor = { ...form, id };
+    const contractor = {
+      ...form,
+      id,
+      email: form.email ?? null,
+      company: form.company ?? null,
+      comment: form.comment ?? null,
+    };
 
     return new Contractors([...this.contractors, contractor]);
   }
@@ -250,7 +257,11 @@ class ElectricitySupplies {
     form: PrepareElectricitySupplyCreation,
     faId: number,
   ): ElectricitySupplies {
-    const id = this.generateElectricitySupplyId(faId, form);
+    const id = this.generateElectricitySupplyId(
+      faId,
+      form.device,
+      form.connection,
+    );
     const supply = {
       ...form,
       id,
@@ -277,7 +288,11 @@ class ElectricitySupplies {
       comment: form.comment ?? currentSupply.comment,
     };
     const faId = +form.id.split("-")[0];
-    const id = this.generateElectricitySupplyId(faId, electricitySupply);
+    const id = this.generateElectricitySupplyId(
+      faId,
+      electricitySupply.device,
+      electricitySupply.connection,
+    );
 
     const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
     if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
@@ -303,11 +318,10 @@ class ElectricitySupplies {
 
   private generateElectricitySupplyId(
     faId: number,
-    electricitySupply: PrepareElectricitySupplyCreation,
+    device: string,
+    connection: ElectricityConnection,
   ): string {
-    const slug = SlugifyService.apply(
-      `${electricitySupply.device} ${electricitySupply.connection}`,
-    );
+    const slug = SlugifyService.apply(`${device} ${connection}`);
     return `${faId}-${slug}`;
   }
 }
