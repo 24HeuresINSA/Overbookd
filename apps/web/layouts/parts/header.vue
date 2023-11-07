@@ -113,6 +113,9 @@ header {
           display: none;
         }
       }
+      &.profile {
+        gap: 5px;
+      }
       .bell {
         .bullet {
           display: none;
@@ -156,6 +159,7 @@ header {
       max-width: 45px;
       max-height: 45px;
     }
+    padding: unset;
   }
 
   .watermark {

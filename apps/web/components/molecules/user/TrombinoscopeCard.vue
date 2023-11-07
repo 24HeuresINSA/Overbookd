@@ -1,7 +1,9 @@
 <template>
   <v-card class="profilePictureCard">
-    <ProfilePicture :user="user" />
-    <v-card-title>{{ formatUserNameWithNickname(user) }} </v-card-title>
+    <v-card-title class="name-with-picture">
+      <ProfilePicture :user="user" />
+      {{ formatUserNameWithNickname(user) }}
+    </v-card-title>
     <v-card-subtitle>
       <TeamChip v-for="team of user.teams" :key="team" :team="team" />
     </v-card-subtitle>
@@ -35,11 +37,16 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .comment {
-  overflow-y: hidden;
+  overflow-y: scroll;
 }
 
 .profilePictureCard {
   display: flex;
   flex-direction: column;
+  .name-with-picture {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
 </style>

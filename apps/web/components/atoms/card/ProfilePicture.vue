@@ -1,5 +1,5 @@
 <template>
-  <v-img
+  <img
     v-if="hasProfilePicture(user)"
     class="userProfilePicture"
     :class="{ small }"
@@ -45,12 +45,15 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .userProfilePicture {
-  max-height: 150px;
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
   object-fit: cover;
+  padding: 15px;
 }
 
 .defaultProfilePicture {
-  font-size: 100px;
+  font-size: 150px;
   align-self: center;
   &.small {
     font-size: 55px;

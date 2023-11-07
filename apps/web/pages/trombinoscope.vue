@@ -7,8 +7,8 @@
         class="userBornToday__card"
         color="#FFD700"
       >
-        <ProfilePicture :user="userBornToday" />
         <v-card-title>
+          <ProfilePicture :user="userBornToday" />
           <p>Joyeux anniv 🥳</p>
           <p>{{ formatUserNameWithNickname(userBornToday) }}</p>
         </v-card-title>
@@ -74,33 +74,36 @@ export default Vue.extend({
 }
 
 .userBornToday {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-}
+  padding: 5px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  place-items: center;
+  gap: 10px;
 
-.userBornToday__card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 5px;
-  width: 15%;
-  height: 80%;
+  &__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+    min-height: 100%;
+    .userProfilePicture {
+      max-height: 50%;
+    }
 
-  .userProfilePicture {
-    max-height: 50%;
-  }
-
-  .defaultProfilePicture {
-    justify-self: center;
-  }
-  .v-card__title {
-    flex-grow: 1;
-    justify-self: flex-end;
-    p {
-      margin: 0;
+    .defaultProfilePicture {
+      justify-self: center;
+    }
+    .v-card__title {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      p {
+        margin: 0;
+      }
     }
   }
 }
