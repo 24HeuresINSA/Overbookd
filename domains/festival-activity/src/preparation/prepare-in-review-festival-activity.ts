@@ -98,23 +98,23 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     throw new Error("Method not implemented." + gear);
   }
 
-  removeGearInquiry(id: InquiryRequest["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+  removeGearInquiry(slug: InquiryRequest["slug"]): InReview {
+    throw new Error("Method not implemented." + slug);
   }
 
   addBarrierInquiry(barrier: PrepareInquiryRequestCreation): InReview {
     throw new Error("Method not implemented." + barrier);
   }
 
-  removeBarrierInquiry(id: InquiryRequest["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+  removeBarrierInquiry(slug: InquiryRequest["slug"]): InReview {
+    throw new Error("Method not implemented." + slug);
   }
 
   addElectricityInquiry(electricity: PrepareInquiryRequestCreation): InReview {
     throw new Error("Method not implemented." + electricity);
   }
 
-  removeElectricityInquiry(id: InquiryRequest["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+  removeElectricityInquiry(slug: InquiryRequest["slug"]): InReview {
+    throw new Error("Method not implemented." + slug);
   }
 }

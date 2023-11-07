@@ -175,16 +175,15 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   addGearInquiry(gear: PrepareInquiryRequestCreation): Draft {
     const gears = Inquiries.build(this.activity.inquiry.gears).add(
       gear,
-      this.activity.id,
     ).entries;
 
     const inquiry = { ...this.activity.inquiry, gears };
     return { ...this.activity, inquiry };
   }
 
-  removeGearInquiry(id: InquiryRequest["id"]): Draft {
+  removeGearInquiry(slug: InquiryRequest["slug"]): Draft {
     const gears = Inquiries.build(this.activity.inquiry.gears).remove(
-      id,
+      slug,
     ).entries;
 
     const inquiry = { ...this.activity.inquiry, gears };
@@ -194,16 +193,15 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   addBarrierInquiry(barrier: PrepareInquiryRequestCreation): Draft {
     const barriers = Inquiries.build(this.activity.inquiry.barriers).add(
       barrier,
-      this.activity.id,
     ).entries;
 
     const inquiry = { ...this.activity.inquiry, barriers };
     return { ...this.activity, inquiry };
   }
 
-  removeBarrierInquiry(id: InquiryRequest["id"]): Draft {
+  removeBarrierInquiry(slug: InquiryRequest["slug"]): Draft {
     const barriers = Inquiries.build(this.activity.inquiry.barriers).remove(
-      id,
+      slug,
     ).entries;
 
     const inquiry = { ...this.activity.inquiry, barriers };
@@ -213,7 +211,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   addElectricityInquiry(electricity: PrepareInquiryRequestCreation): Draft {
     const electricityInquiries = Inquiries.build(
       this.activity.inquiry.electricity,
-    ).add(electricity, this.activity.id).entries;
+    ).add(electricity).entries;
 
     const inquiry = {
       ...this.activity.inquiry,
@@ -222,10 +220,10 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inquiry };
   }
 
-  removeElectricityInquiry(id: InquiryRequest["id"]): Draft {
+  removeElectricityInquiry(slug: InquiryRequest["slug"]): Draft {
     const electricityInquiries = Inquiries.build(
       this.activity.inquiry.electricity,
-    ).remove(id).entries;
+    ).remove(slug).entries;
 
     const inquiry = {
       ...this.activity.inquiry,
@@ -437,26 +435,16 @@ class Inquiries {
     return new Inquiries(inquiries);
   }
 
-  add(form: PrepareInquiryRequestCreation, faId: number): Inquiries {
-    const id = this.generateInquiryId(faId, form.category, form.slug);
-    const inquiry = { ...form, id };
+  add({ slug, quantity, name }: PrepareInquiryRequestCreation): Inquiries {
+    const inquiry = { slug, quantity, name };
 
-    const alreadyExists = this.inquiries.some((inq) => inq.id === id);
+    const alreadyExists = this.inquiries.some((inq) => inq.slug === slug);
     if (alreadyExists) throw new InquiryAlreadyExists();
 
     return new Inquiries([...this.inquiries, inquiry]);
   }
 
-  remove(id: InquiryRequest["id"]): Inquiries {
-    return new Inquiries(this.inquiries.filter((inq) => inq.id !== id));
-  }
-
-  private generateInquiryId(
-    faId: number,
-    category: string,
-    slug: string,
-  ): string {
-    const inquiryId = SlugifyService.apply(`${category} ${slug}`);
-    return `${faId}-${inquiryId}`;
+  remove(slug: InquiryRequest["slug"]): Inquiries {
+    return new Inquiries(this.inquiries.filter((inq) => inq.slug !== slug));
   }
 }

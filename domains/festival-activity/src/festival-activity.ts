@@ -132,9 +132,9 @@ export type WithTimeWindows = {
 };
 
 export type InquiryRequest = {
-  id: string;
-  quantity: number;
   slug: string;
+  quantity: number;
+  name: string;
 };
 
 type WithGearInquiries = {

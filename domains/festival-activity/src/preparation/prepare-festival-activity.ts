@@ -4,7 +4,6 @@ import {
   BARRIER,
   ELECTRICITY,
   GEAR,
-  InquiryCategory,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
@@ -12,6 +11,7 @@ import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareInquiryRequestCreation,
+  PrepareInquiryRequestRemoval,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
@@ -51,11 +51,11 @@ export type Prepare<T extends FestivalActivity> = {
   addInquiryTimeWindow(period: IProvidePeriod): T;
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
   addGearInquiry(gear: PrepareInquiryRequestCreation): T;
-  removeGearInquiry(id: InquiryRequest["id"]): T;
+  removeGearInquiry(slug: InquiryRequest["slug"]): T;
   addBarrierInquiry(barrier: PrepareInquiryRequestCreation): T;
-  removeBarrierInquiry(id: InquiryRequest["id"]): T;
+  removeBarrierInquiry(slug: InquiryRequest["slug"]): T;
   addElectricityInquiry(electricity: PrepareInquiryRequestCreation): T;
-  removeElectricityInquiry(id: InquiryRequest["id"]): T;
+  removeElectricityInquiry(slug: InquiryRequest["slug"]): T;
 };
 
 export class PrepareFestivalActivity {
@@ -250,9 +250,9 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA =
-      inquiry.category === GEAR
+      inquiry.owner === GEAR
         ? prepare.addGearInquiry(inquiry)
-        : inquiry.category === BARRIER
+        : inquiry.owner === BARRIER
         ? prepare.addBarrierInquiry(inquiry)
         : prepare.addElectricityInquiry(inquiry);
 
@@ -261,36 +261,21 @@ export class PrepareFestivalActivity {
 
   async removeInquiryRequest(
     faId: number,
-    gearId: InquiryRequest["id"],
+    { owner, slug }: PrepareInquiryRequestRemoval,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const category = this.findInquiryCategoryById(gearId);
     const updatedFA =
-      category === GEAR
-        ? prepare.removeGearInquiry(gearId)
-        : category === BARRIER
-        ? prepare.removeBarrierInquiry(gearId)
-        : prepare.removeElectricityInquiry(gearId);
+      owner === GEAR
+        ? prepare.removeGearInquiry(slug)
+        : owner === BARRIER
+        ? prepare.removeBarrierInquiry(slug)
+        : owner === ELECTRICITY
+        ? prepare.removeElectricityInquiry(slug)
+        : existingFA;
 
     return this.festivalActivities.save(updatedFA);
-  }
-
-  private findInquiryCategoryById(
-    inquiryId: InquiryRequest["id"],
-  ): InquiryCategory {
-    const category = inquiryId.split("-")[1];
-    switch (category) {
-      case "gear":
-        return GEAR;
-      case "barrier":
-        return BARRIER;
-      case "electricity":
-        return ELECTRICITY;
-      default:
-        throw new Error(`Unknown category ${category}`);
-    }
   }
 
   private async findActivityIfExists(id: number): Promise<FestivalActivity> {

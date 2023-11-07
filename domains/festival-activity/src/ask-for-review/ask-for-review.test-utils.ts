@@ -15,18 +15,18 @@ const faker = {
 };
 
 const dixCadenasPompier = {
-  id: "1-gear-cadenas-pompier",
   slug: "cadenas-pompier",
+  name: "Cadenas pompier",
   quantity: 10,
 };
 const uneBouilloire = {
-  id: "1-gear-bouilloire",
   slug: "bouilloire",
+  name: "Bouilloire",
   quantity: 1,
 };
 const uneMultiprise = {
-  id: "2-gear-multiprise",
   slug: "multiprise",
+  name: "Multiprise",
   quantity: 1,
 };
 
