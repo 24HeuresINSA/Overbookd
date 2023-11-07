@@ -99,11 +99,8 @@ describe("General section of festival activity preparation", () => {
         company: null,
         comment: null,
       };
-      const contractor = inCharge.contractors.find(
-        (contractor) => contractor.id === id,
-      );
 
-      expect(contractor).toEqual(expectedContractor);
+      expect(inCharge.contractors).toContainEqual(expectedContractor);
     });
   });
 
@@ -123,27 +120,19 @@ describe("General section of festival activity preparation", () => {
         contractorToUpdate,
       );
 
-      const contractor = inCharge.contractors.find(
-        (contractor) => contractor.id === contractorToUpdate.id,
-      );
-
-      expect(contractor).toEqual(contractorToUpdate);
+      expect(inCharge.contractors).toContainEqual(contractorToUpdate);
     });
   });
 
   describe("when adherent want to remove a contractor", () => {
     it("should remove contractor", async () => {
-      const contractorId = "1-1";
+      const contractorToRemove = escapeGame.inCharge.contractors[0];
       const { inCharge } = await prepareFestivalActivity.removeContractor(
         escapeGame.id,
-        contractorId,
+        contractorToRemove.id,
       );
 
-      const contractor = inCharge.contractors.find(
-        (contractor) => contractor.id === contractorId,
-      );
-
-      expect(contractor).toBeUndefined();
+      expect(inCharge.contractors).not.toContainEqual(contractorToRemove);
     });
   });
 });
