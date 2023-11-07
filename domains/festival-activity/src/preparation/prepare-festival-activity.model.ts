@@ -49,9 +49,9 @@ export type PrepareSupplyUpdate = {
   water?: string | null;
 };
 
-export type PrepareElectricitySupplyCreation = Omit<
+export type PrepareElectricitySupplyCreation = Pick<
   ElectricitySupply,
-  "id" | "comment"
+  "connection" | "device" | "power" | "count"
 > & {
   comment?: string;
 };

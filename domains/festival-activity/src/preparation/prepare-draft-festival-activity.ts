@@ -212,22 +212,22 @@ class Contractors {
   }
 
   update(contractor: PrepareContractorUpdate): Contractors {
-    const currentContractor = this.contractors.find(
+    const currentContractorIndex = this.contractors.findIndex(
       (c) => c.id === contractor.id,
     );
-    if (!currentContractor) throw new ContractorNotFound();
+    const currentContractor = this.contractors.at(currentContractorIndex);
+    if (currentContractorIndex === -1 || !currentContractor) {
+      throw new ContractorNotFound();
+    }
 
     const updatedContractor = {
       ...currentContractor,
       ...contractor,
     };
 
-    const currentContractorInd = this.contractors.findIndex(
-      (c) => c.id === contractor.id,
-    );
     const contractors = updateItemToList(
       this.contractors,
-      currentContractorInd,
+      currentContractorIndex,
       updatedContractor,
     );
     return new Contractors(contractors);
