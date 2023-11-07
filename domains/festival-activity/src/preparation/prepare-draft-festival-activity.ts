@@ -329,7 +329,7 @@ class ElectricitySupplies {
       device: form.device ?? previousSupply.device,
       power: form.power ?? previousSupply.power,
       count: form.count ?? previousSupply.count,
-      comment: form.comment ?? previousSupply.comment,
+      comment: form.comment === undefined ? previousSupply.comment : null,
     };
 
     const faId = +previousSupply.id.split("-")[0];

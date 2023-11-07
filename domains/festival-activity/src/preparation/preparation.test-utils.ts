@@ -41,7 +41,7 @@ export const escapeGame: Draft = {
         phone: "0123456789",
         email: "jean@gmail.com",
         company: null,
-        comment: null,
+        comment: "Sympa",
       },
     ],
   },

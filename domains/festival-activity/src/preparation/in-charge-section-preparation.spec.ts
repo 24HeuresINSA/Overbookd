@@ -116,7 +116,7 @@ describe("General section of festival activity preparation", () => {
         phone: "0123456789",
         email: "noel@gmail.com",
         company: "SNCF",
-        comment: "Je suis un commentaire",
+        comment: null,
       };
       const { inCharge } = await prepareFestivalActivity.updateContractor(
         escapeGame.id,
