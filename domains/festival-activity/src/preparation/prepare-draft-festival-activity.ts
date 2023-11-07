@@ -9,6 +9,7 @@ import {
   ElectricitySupply,
   InquiryRequest,
   TimeWindow,
+  WithInquiries,
 } from "../festival-activity";
 import {
   ContractorNotFound,
@@ -176,36 +177,34 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   }
 
   addInquiry(form: PrepareInquiryRequestCreation): Draft {
-    const inquiry = (() => {
-      switch (form.owner) {
-        case MATOS:
-          return {
-            ...this.activity.inquiry,
-            gears: Inquiries.build(this.activity.inquiry.gears).add(form)
-              .entries,
-          };
-
-        case BARRIERES:
-          return {
-            ...this.activity.inquiry,
-            barriers: Inquiries.build(this.activity.inquiry.barriers).add(form)
-              .entries,
-          };
-
-        case ELEC:
-          return {
-            ...this.activity.inquiry,
-            electricity: Inquiries.build(this.activity.inquiry.electricity).add(
-              form,
-            ).entries,
-          };
-
-        default:
-          throw new Error("Responsable du matos inconnu");
-      }
-    })();
+    const { owner, ...inquiryToAdd } = form;
+    const updatedInquiry = this.addInquiryToOwnerSection(owner, inquiryToAdd);
+    const inquiry = { ...this.activity.inquiry, ...updatedInquiry };
 
     return { ...this.activity, inquiry };
+  }
+
+  private addInquiryToOwnerSection(
+    owner: PrepareInquiryRequestCreation["owner"],
+    inquiry: InquiryRequest,
+  ) {
+    const { section, inquiries } = this.findOwnerSection(owner);
+    return { [section]: Inquiries.build(inquiries).add(inquiry).entries };
+  }
+
+  private findOwnerSection(owner: PrepareInquiryRequestCreation["owner"]): {
+    section: keyof WithInquiries;
+    inquiries: InquiryRequest[];
+  } {
+    const inquiry = this.activity.inquiry;
+    switch (owner) {
+      case MATOS:
+        return { section: "gears", inquiries: inquiry.gears };
+      case BARRIERES:
+        return { section: "barriers", inquiries: inquiry.barriers };
+      case ELEC:
+        return { section: "electricity", inquiries: inquiry.electricity };
+    }
   }
 
   removeInquiry(slug: InquiryRequest["slug"]): Draft {
@@ -430,7 +429,7 @@ class Inquiries {
     return new Inquiries(inquiries);
   }
 
-  add({ slug, quantity, name }: PrepareInquiryRequestCreation): Inquiries {
+  add({ slug, quantity, name }: InquiryRequest): Inquiries {
     const inquiry = { slug, quantity, name };
 
     const alreadyExists = this.inquiries.some(
