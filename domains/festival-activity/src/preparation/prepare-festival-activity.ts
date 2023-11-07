@@ -10,6 +10,8 @@ import {
   PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import {
@@ -18,6 +20,7 @@ import {
   FestivalActivity,
   InquiryRequest,
   PreviewFestivalActivity,
+  Signage,
   TimeWindow,
   isDraft,
 } from "../festival-activity";
@@ -39,6 +42,9 @@ export type Prepare<T extends FestivalActivity> = {
   updateContractor(contractor: PrepareContractorUpdate): T;
   removeContractor(id: Contractor["id"]): T;
   updateSigna(signa: PrepareSignaUpdate): T;
+  addSignage(signage: PrepareSignageCreation): T;
+  updateSignage(signage: PrepareSignageUpdate): T;
+  removeSignage(id: Signage["id"]): T;
   updateSecurity(security: PrepareSecurityUpdate): T;
   updateSupply(supply: PrepareSupplyUpdate): T;
   addElectricitySupply(electricitySupply: PrepareElectricitySupplyCreation): T;
@@ -154,6 +160,39 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateSigna(signa);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addSignage(
+    faId: number,
+    signage: PrepareSignageCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.addSignage(signage);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async updateSignage(
+    faId: number,
+    signage: PrepareSignageUpdate,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.updateSignage(signage);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeSignage(
+    faId: number,
+    signageId: Signage["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.removeSignage(signageId);
     return this.festivalActivities.save(updatedFA);
   }
 

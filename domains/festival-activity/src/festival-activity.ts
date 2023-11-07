@@ -67,12 +67,19 @@ type DraftInCharge = Omit<InCharge, "team"> & {
   team: string | null;
 };
 
+const BACHE = "BACHE";
+const PANNEAU = "PANNEAU";
+const AFFICHE = "AFFICHE";
+
+export type SignageType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
+
 export type Signage = {
+  id: string;
   quantity: number;
   text: string;
   size: string;
-  type: "BACHE" | "PANNEAU" | "AFFICHE";
-  comment: string;
+  type: SignageType;
+  comment: string | null;
 };
 
 type Signa = {

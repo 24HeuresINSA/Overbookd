@@ -1,4 +1,9 @@
-import { ElectricityConnection, ElectricitySupply } from "../festival-activity";
+import {
+  ElectricityConnection,
+  ElectricitySupply,
+  Signage,
+  SignageType,
+} from "../festival-activity";
 import { Adherent, Contractor, InquiryRequest } from "../festival-activity";
 
 export type PrepareGeneralUpdate = {
@@ -35,6 +40,22 @@ export type PrepareContractorUpdate = Pick<
 
 export type PrepareSignaUpdate = {
   location?: string | null;
+};
+
+export type PrepareSignageCreation = Pick<
+  Signage,
+  "quantity" | "text" | "size" | "type"
+> & {
+  comment?: string;
+};
+
+export type PrepareSignageUpdate = {
+  id: string;
+  quantity?: number;
+  text?: string;
+  size?: string;
+  type?: SignageType;
+  comment?: string | null;
 };
 
 export type PrepareSecurityUpdate = {
