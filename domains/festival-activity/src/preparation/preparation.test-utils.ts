@@ -1,8 +1,10 @@
 import {
+  BACHE,
   DRAFT,
   Draft,
   P17_16A_TETRA,
   P17_32A_TETRA,
+  PANNEAU,
 } from "../festival-activity";
 
 const noel = {
@@ -52,7 +54,24 @@ export const escapeGame: Draft = {
   },
   signa: {
     location: "Creux CGU",
-    signages: [],
+    signages: [
+      {
+        id: "panneau-escape-game-4x3",
+        text: "Escape Game",
+        quantity: 1,
+        size: "4x3",
+        type: PANNEAU,
+        comment: null,
+      },
+      {
+        id: "bache-bienvenue-10m-par-2m",
+        text: "Bienvenue",
+        quantity: 1,
+        size: "10m par 2m",
+        type: BACHE,
+        comment: "Pour qu'on nous voit bien",
+      },
+    ],
   },
   security: {
     specialNeed: "Pas de besoin particulier",

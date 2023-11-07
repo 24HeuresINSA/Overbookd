@@ -407,7 +407,8 @@ class Signages {
       text: form.text ?? previousSignage.text,
       size: form.size ?? previousSignage.size,
       type: form.type ?? previousSignage.type,
-      comment: form.comment === undefined ? previousSignage.comment : null,
+      comment:
+        form.comment === undefined ? previousSignage.comment : form.comment,
     };
 
     const id = this.generateSignageId(
@@ -505,7 +506,8 @@ class ElectricitySupplies {
       device: form.device ?? previousSupply.device,
       power: form.power ?? previousSupply.power,
       count: form.count ?? previousSupply.count,
-      comment: form.comment === undefined ? previousSupply.comment : null,
+      comment:
+        form.comment === undefined ? previousSupply.comment : form.comment,
     };
 
     const id = this.generateElectricitySupplyId(

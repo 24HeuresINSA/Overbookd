@@ -88,7 +88,7 @@ describe("General section of festival activity preparation", () => {
   describe("when adherent want to update an electricity supply", () => {
     it("should update the electricity supply", async () => {
       const electricitySupplyToUpdate = escapeGame.supply.electricity[0];
-      const updatedelectricitySupply = {
+      const updatedElectricitySupply = {
         id: electricitySupplyToUpdate.id,
         device: "Ordinateur",
         comment: null,
@@ -96,13 +96,13 @@ describe("General section of festival activity preparation", () => {
 
       const { supply } = await prepareFestivalActivity.updateElectricitySupply(
         escapeGame.id,
-        updatedelectricitySupply,
+        updatedElectricitySupply,
       );
 
       const id = "ordinateur-p17_16a_tetra";
       const expectedElectricitySupply = {
         ...electricitySupplyToUpdate,
-        ...updatedelectricitySupply,
+        ...updatedElectricitySupply,
         id,
       };
 
