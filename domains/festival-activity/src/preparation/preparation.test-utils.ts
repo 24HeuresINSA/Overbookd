@@ -29,7 +29,7 @@ export const escapeGame: Draft = {
     categories: ["Sport"],
     timeWindows: [
       {
-        id: "1-28071960-28072080",
+        id: "28071960-28072080",
         start: new Date("2023-05-17T12:00+02:00"),
         end: new Date("2023-05-17T14:00+02:00"),
       },
@@ -40,7 +40,7 @@ export const escapeGame: Draft = {
     team: "culture",
     contractors: [
       {
-        id: "1-1",
+        id: 1,
         firstname: "Jean",
         lastname: "Dupont",
         phone: "0123456789",
@@ -60,7 +60,7 @@ export const escapeGame: Draft = {
   inquiry: {
     timeWindows: [
       {
-        id: "1-28071900-28072140",
+        id: "28071900-28072140",
         start: new Date("2023-05-17T11:00+02:00"),
         end: new Date("2023-05-17T15:00+02:00"),
       },
@@ -90,7 +90,7 @@ export const escapeGame: Draft = {
   supply: {
     electricity: [
       {
-        id: "1-lumiere-p17_16a_tetra",
+        id: "lumiere-p17_16a_tetra",
         connection: P17_16A_TETRA,
         device: "Lumière",
         power: 100,
@@ -98,7 +98,7 @@ export const escapeGame: Draft = {
         comment: "Ceci est un commentaire",
       },
       {
-        id: "1-enceinte-p17_32a_tetra",
+        id: "enceinte-p17_32a_tetra",
         connection: P17_32A_TETRA,
         device: "Enceinte",
         power: 200,

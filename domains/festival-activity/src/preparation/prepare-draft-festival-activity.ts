@@ -66,7 +66,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   addGeneralTimeWindow(period: IProvidePeriod): Draft {
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
-    ).add(period, this.activity.id).entries;
+    ).add(period).entries;
 
     const general = { ...this.activity.general, timeWindows };
     return { ...this.activity, general };
@@ -89,7 +89,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   addContractor(contractor: PrepareContractorCreation): Draft {
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
-    ).add(contractor, this.activity.id).entries;
+    ).add(contractor).entries;
 
     const inCharge = { ...this.activity.inCharge, contractors };
     return { ...this.activity, inCharge };
@@ -133,7 +133,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   ): Draft {
     const electricity = ElectricitySupplies.build(
       this.activity.supply.electricity,
-    ).add(electricitySupply, this.activity.id).entries;
+    ).add(electricitySupply).entries;
 
     const supply = { ...this.activity.supply, electricity };
     return { ...this.activity, supply };
@@ -162,7 +162,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   addInquiryTimeWindow(period: IProvidePeriod): Draft {
     const timeWindows = TimeWindows.build(
       this.activity.inquiry.timeWindows,
-    ).add(period, this.activity.id).entries;
+    ).add(period).entries;
 
     const inquiry = { ...this.activity.inquiry, timeWindows };
     return { ...this.activity, inquiry };
@@ -239,9 +239,9 @@ class TimeWindows {
     return new TimeWindows(timeWindows);
   }
 
-  add(period: IProvidePeriod, faId: FestivalActivity["id"]): TimeWindows {
+  add(period: IProvidePeriod): TimeWindows {
     const { start, end } = Period.init(period);
-    const id = this.generateTimeWindowId(faId, { start, end });
+    const id = this.generateTimeWindowId({ start, end });
     const timeWindow = { id, start, end };
 
     const alreadyExists = this.timeWindows.some((tw) => tw.id === id);
@@ -254,15 +254,12 @@ class TimeWindows {
     return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
   }
 
-  private generateTimeWindowId(
-    faId: FestivalActivity["id"],
-    period: IProvidePeriod,
-  ): TimeWindow["id"] {
+  private generateTimeWindowId(period: IProvidePeriod): TimeWindow["id"] {
     const { start, end } = period;
     const startMinutes = Duration.ms(start.getTime()).inMinutes;
     const endMinutes = Duration.ms(end.getTime()).inMinutes;
 
-    return `${faId}-${startMinutes}-${endMinutes}`;
+    return `${startMinutes}-${endMinutes}`;
   }
 }
 
@@ -277,11 +274,8 @@ class Contractors {
     return new Contractors(contractors);
   }
 
-  add(
-    form: PrepareContractorCreation,
-    faId: FestivalActivity["id"],
-  ): Contractors {
-    const id = this.generateContractorId(faId);
+  add(form: PrepareContractorCreation): Contractors {
+    const id = this.generateContractorId();
     const contractor = {
       ...form,
       id,
@@ -316,18 +310,12 @@ class Contractors {
   }
 
   remove(id: Contractor["id"]): Contractors {
-    return new Contractors(this.contractors.filter((tw) => tw.id !== id));
+    return new Contractors(this.contractors.filter((c) => c.id !== id));
   }
 
-  private generateContractorId(faId: FestivalActivity["id"]): Contractor["id"] {
-    const lastContractor = this.contractors.at(-1);
-
-    if (!lastContractor) return `${faId}-1`;
-
-    const lastId = lastContractor.id.split("-")[1];
-    const newId = +lastId + 1;
-
-    return `${faId}-${newId}`;
+  private generateContractorId(): Contractor["id"] {
+    const lastContractorId = this.contractors.at(-1)?.id ?? 0;
+    return lastContractorId + 1;
   }
 }
 
@@ -344,15 +332,8 @@ class ElectricitySupplies {
     return new ElectricitySupplies(supplies);
   }
 
-  add(
-    form: PrepareElectricitySupplyCreation,
-    faId: FestivalActivity["id"],
-  ): ElectricitySupplies {
-    const id = this.generateElectricitySupplyId(
-      faId,
-      form.device,
-      form.connection,
-    );
+  add(form: PrepareElectricitySupplyCreation): ElectricitySupplies {
+    const id = this.generateElectricitySupplyId(form.device, form.connection);
     const comment = form.comment ?? null;
     const supply = { ...form, id, comment };
 
@@ -388,12 +369,11 @@ class ElectricitySupplies {
   }
 
   private generateElectricitySupplyId(
-    faId: FestivalActivity["id"],
     device: string,
     connection: ElectricityConnection,
   ): ElectricitySupply["id"] {
     const supplyId = SlugifyService.apply(`${device} ${connection}`);
-    return `${faId}-${supplyId}`;
+    return supplyId;
   }
 
   private throwIfAlreadyExists(id: string) {
@@ -414,9 +394,7 @@ class ElectricitySupplies {
       comment: form.comment === undefined ? previousSupply.comment : null,
     };
 
-    const faId = +previousSupply.id.split("-")[0];
     const id = this.generateElectricitySupplyId(
-      faId,
       updatedSupply.device,
       updatedSupply.connection,
     );
