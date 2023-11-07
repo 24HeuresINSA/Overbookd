@@ -92,7 +92,13 @@ describe("General section of festival activity preparation", () => {
       );
 
       const id = "1-2";
-      const expectedContractor = { id, ...contractorToAdd };
+      const expectedContractor = {
+        id,
+        ...contractorToAdd,
+        email: null,
+        company: null,
+        comment: null,
+      };
       const contractor = inCharge.contractors.find(
         (contractor) => contractor.id === id,
       );
