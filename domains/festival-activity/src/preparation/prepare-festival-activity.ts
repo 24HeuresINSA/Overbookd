@@ -280,7 +280,6 @@ export class PrepareFestivalActivity {
   private findInquiryCategoryById(
     inquiryId: InquiryRequest["id"],
   ): InquiryCategory {
-    // id = faId-category-slug
     const category = inquiryId.split("-")[1];
     switch (category) {
       case "gear":

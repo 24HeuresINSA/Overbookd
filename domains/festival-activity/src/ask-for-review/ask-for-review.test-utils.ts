@@ -15,12 +15,20 @@ const faker = {
 };
 
 const dixCadenasPompier = {
-  id: "1-cadenas-pompier",
+  id: "1-gear-cadenas-pompier",
   slug: "cadenas-pompier",
   quantity: 10,
 };
-const uneBouilloire = { id: "1-bouilloire", slug: "bouilloire", quantity: 1 };
-const uneMultiprise = { id: "2-multiprise", slug: "multiprise", quantity: 1 };
+const uneBouilloire = {
+  id: "1-gear-bouilloire",
+  slug: "bouilloire",
+  quantity: 1,
+};
+const uneMultiprise = {
+  id: "2-gear-multiprise",
+  slug: "multiprise",
+  quantity: 1,
+};
 
 export const pcSecurite: Draft = {
   id: 1,
