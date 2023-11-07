@@ -264,10 +264,9 @@ class ElectricitySupplies {
   }
 
   update(form: PrepareElectricitySupplyUpdate): ElectricitySupplies {
-    const currentSupplyInd = this.electricitySupplies.findIndex(
+    const currentSupply = this.electricitySupplies.find(
       (es) => es.id === form.id,
     );
-    const currentSupply = this.electricitySupplies.at(currentSupplyInd);
     if (!currentSupply) throw new ElectricitySupplyNotFound();
 
     const electricitySupply = {
@@ -284,6 +283,9 @@ class ElectricitySupplies {
     if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
 
     const updatedSupply = { ...electricitySupply, id };
+    const currentSupplyInd = this.electricitySupplies.findIndex(
+      (es) => es.id === form.id,
+    );
 
     const electricitySupplies = updateItemToList(
       this.electricitySupplies,

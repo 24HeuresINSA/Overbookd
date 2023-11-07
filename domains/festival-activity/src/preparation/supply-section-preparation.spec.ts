@@ -55,6 +55,7 @@ describe("General section of festival activity preparation", () => {
       const expectedElectricitySupply = {
         id,
         ...electricitySupplyToAdd,
+        comment: null,
       };
       const electricitySupply = supply.electricity.find(
         (electricity) => electricity.id === id,
@@ -79,20 +80,22 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to update an electricity supply", () => {
     it("should update the electricity supply", async () => {
-      const electricitySupplyToUpdate = {
-        ...escapeGame.supply.electricity[0],
+      const electricitySupplyToUpdate = escapeGame.supply.electricity[0];
+      const updatedelectricitySupply = {
+        id: electricitySupplyToUpdate.id,
         device: "Ordinateur",
         comment: "Ceci est un commentaire",
       };
 
       const { supply } = await prepareFestivalActivity.updateElectricitySupply(
         escapeGame.id,
-        electricitySupplyToUpdate,
+        updatedelectricitySupply,
       );
 
       const id = "1-ordinateur-p17_16a_tetra";
       const expectedElectricitySupply = {
         ...electricitySupplyToUpdate,
+        ...updatedelectricitySupply,
         id,
       };
 
@@ -106,8 +109,8 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to update an electricity supply that does not exist", () => {
       it("should indicate that electricity supply does not exist", async () => {
         const electricitySupplyToUpdate = {
-          ...escapeGame.supply.electricity[0],
           id: "1-bonjour-p17_16a_tetra",
+          comment: "Ceci est un commentaire",
         };
 
         await expect(
@@ -122,7 +125,7 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to update an electricity supply with data that generate existing id", () => {
       it("should indicate that electricity supply already exists", async () => {
         const electricitySupplyToUpdate = {
-          ...escapeGame.supply.electricity[0],
+          id: "1-lumiere-p17_16a_tetra",
           device: "Enceinte",
           connection: electricityConnections.P17_32A_TETRA,
         };
