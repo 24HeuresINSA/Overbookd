@@ -65,7 +65,7 @@ export const GEAR = "matos";
 export const BARRIER = "barrieres";
 export const ELECTRICITY = "elec";
 
-export type InquiryOwner = typeof GEAR | typeof BARRIER | typeof ELECTRICITY;
+type InquiryOwner = typeof GEAR | typeof BARRIER | typeof ELECTRICITY;
 
 export type PrepareInquiryRequestCreation = InquiryRequest & {
   owner: InquiryOwner;
