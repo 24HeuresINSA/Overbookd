@@ -156,6 +156,7 @@ header {
       max-width: 45px;
       max-height: 45px;
     }
+    padding: unset;
   }
 
   .watermark {
