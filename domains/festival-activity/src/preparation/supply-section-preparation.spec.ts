@@ -6,7 +6,11 @@ import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
 } from "../festival-activity.error";
-import { electricityConnections } from "../festival-activity";
+import { P17_16A_MONO, P17_32A_TETRA } from "../festival-activity";
+import {
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+} from "./prepare-festival-activity.model";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -39,8 +43,8 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to add an electricity supply", () => {
     it("should add the electricity supply", async () => {
-      const electricitySupplyToAdd = {
-        connection: electricityConnections.P17_16A_MONO,
+      const electricitySupplyToAdd: PrepareElectricitySupplyCreation = {
+        connection: P17_16A_MONO,
         device: "Ordinateur",
         power: 300,
         count: 2,
@@ -130,10 +134,10 @@ describe("General section of festival activity preparation", () => {
 
     describe("when adherent want to update an electricity supply with data that generate existing id", () => {
       it("should indicate that electricity supply already exists", async () => {
-        const electricitySupplyToUpdate = {
+        const electricitySupplyToUpdate: PrepareElectricitySupplyUpdate = {
           id: "1-lumiere-p17_16a_tetra",
           device: "Enceinte",
-          connection: electricityConnections.P17_32A_TETRA,
+          connection: P17_32A_TETRA,
         };
 
         await expect(
