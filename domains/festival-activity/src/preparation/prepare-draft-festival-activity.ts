@@ -10,7 +10,6 @@ import {
   InquiryRequest,
   TimeWindow,
   WithInquiries,
-  FestivalActivity,
 } from "../festival-activity";
 import {
   ContractorNotFound,
