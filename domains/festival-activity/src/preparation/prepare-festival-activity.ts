@@ -186,6 +186,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
+
     const updatedFA = prepare.addElectricitySupply(electricitySupply);
     return this.festivalActivities.save(updatedFA);
   }
@@ -196,6 +197,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
+
     const updatedFA = prepare.updateElectricitySupply(electricitySupply);
     return this.festivalActivities.save(updatedFA);
   }
@@ -206,6 +208,7 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
+
     const updatedFA = prepare.removeElectricitySupply(electricitySupplyId);
     return this.festivalActivities.save(updatedFA);
   }
