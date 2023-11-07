@@ -61,9 +61,8 @@ describe("General section of festival activity preparation", () => {
         ...signageToAdd,
         comment: null,
       };
-      const signage = signa.signages.find((s) => s.id === id);
 
-      expect(signage).toEqual(expectedSignage);
+      expect(signa.signages).toContainEqual(expectedSignage);
     });
 
     describe("when adherent want to add a signage that already exists", () => {
@@ -103,9 +102,8 @@ describe("General section of festival activity preparation", () => {
         ...updatedSignage,
         id,
       };
-      const signage = signa.signages.find((s) => s.id === id);
 
-      expect(signage).toEqual(expectedSignage);
+      expect(signa.signages).toContainEqual(expectedSignage);
     });
 
     describe("when adherent want to update a signage that does not exist", () => {
