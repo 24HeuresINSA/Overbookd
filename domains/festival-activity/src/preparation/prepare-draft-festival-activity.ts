@@ -24,6 +24,7 @@ import {
   PrepareContractorCreation,
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
+  PrepareContractorUpdate,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -86,7 +87,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inCharge };
   }
 
-  updateContractor(contractor: Contractor): Draft {
+  updateContractor(contractor: PrepareContractorUpdate): Draft {
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
     ).update(contractor).entries;
@@ -210,16 +211,24 @@ class Contractors {
     return new Contractors([...this.contractors, contractor]);
   }
 
-  update(contractor: Contractor): Contractors {
-    const currentContractor = this.contractors.findIndex(
+  update(contractor: PrepareContractorUpdate): Contractors {
+    const currentContractor = this.contractors.find(
       (c) => c.id === contractor.id,
     );
-    if (currentContractor === -1) throw new ContractorNotFound();
+    if (!currentContractor) throw new ContractorNotFound();
 
+    const updatedContractor = {
+      ...currentContractor,
+      ...contractor,
+    };
+
+    const currentContractorInd = this.contractors.findIndex(
+      (c) => c.id === contractor.id,
+    );
     const contractors = updateItemToList(
       this.contractors,
-      currentContractor,
-      contractor,
+      currentContractorInd,
+      updatedContractor,
     );
     return new Contractors(contractors);
   }
@@ -281,11 +290,8 @@ class ElectricitySupplies {
     if (!currentSupply) throw new ElectricitySupplyNotFound();
 
     const electricitySupply = {
-      connection: form.connection ?? currentSupply.connection,
-      device: form.device ?? currentSupply.device,
-      power: form.power ?? currentSupply.power,
-      count: form.count ?? currentSupply.count,
-      comment: form.comment ?? currentSupply.comment,
+      ...currentSupply,
+      ...form,
     };
     const faId = +form.id.split("-")[0];
     const id = this.generateElectricitySupplyId(

@@ -16,6 +16,7 @@ import {
   PrepareContractorCreation,
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
+  PrepareContractorUpdate,
 } from "./prepare-festival-activity.model";
 
 export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
@@ -45,7 +46,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     throw new Error("Method not implemented." + contractor);
   }
 
-  updateContractor(contractor: Contractor): InReview {
+  updateContractor(contractor: PrepareContractorUpdate): InReview {
     throw new Error("Method not implemented." + contractor);
   }
 

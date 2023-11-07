@@ -28,6 +28,15 @@ export type PrepareContractorCreation = Pick<
   comment?: string;
 };
 
+export type PrepareContractorUpdate = Pick<
+  Contractor,
+  "id" | "firstname" | "lastname" | "phone"
+> & {
+  email?: string | null;
+  company?: string | null;
+  comment?: string | null;
+};
+
 export type PrepareSignaUpdate = {
   location?: string | null;
 };

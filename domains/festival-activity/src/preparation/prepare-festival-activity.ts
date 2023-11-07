@@ -2,6 +2,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
   PrepareContractorCreation,
+  PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
   PrepareGeneralUpdate,
@@ -38,7 +39,7 @@ export type Prepare<T extends FestivalActivity> = {
   removeGeneralTimeWindow(id: TimeWindow["id"]): T;
   updateInCharge(inCharge: PrepareInChargeUpdate): T;
   addContractor(contractor: PrepareContractorCreation): T;
-  updateContractor(contractor: Contractor): T;
+  updateContractor(contractor: PrepareContractorUpdate): T;
   removeContractor(id: Contractor["id"]): T;
   updateSigna(signa: PrepareSignaUpdate): T;
   updateSecurity(security: PrepareSecurityUpdate): T;
@@ -124,7 +125,7 @@ export class PrepareFestivalActivity {
 
   async updateContractor(
     faId: number,
-    contractor: Contractor,
+    contractor: PrepareContractorUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
