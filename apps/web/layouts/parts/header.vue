@@ -113,6 +113,9 @@ header {
           display: none;
         }
       }
+      &.profile {
+        gap: 5px;
+      }
       .bell {
         .bullet {
           display: none;

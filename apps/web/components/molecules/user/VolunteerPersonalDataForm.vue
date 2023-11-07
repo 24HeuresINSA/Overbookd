@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card-title class="card-title">
-      <ProfilePicture :user="selectedVolunteer" />
+      <ProfilePicture :user="selectedVolunteer" class="profile-picture" />
       <div v-show="canManageUsers">{{ formatVolunteerName }}</div>
       <div v-show="!canManageUsers">{{ formatVolunteerNameWithNickname }}</div>
     </v-card-title>
@@ -289,6 +289,13 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   gap: 10px;
+  @media only screen and(max-width: $mobile-max-width) {
+    .profile-picture {
+      max-width: 100px;
+      max-height: 100px;
+      font-size: 80px;
+    }
+  }
 }
 
 .card-content {
