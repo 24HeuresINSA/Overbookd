@@ -150,6 +150,24 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     const supply = { ...this.activity.supply, electricity };
     return { ...this.activity, supply };
   }
+
+  addInquiryTimeWindow(period: IProvidePeriod): Draft {
+    const timeWindows = TimeWindows.build(
+      this.activity.inquiry.timeWindows,
+    ).add(period, this.activity.id).entries;
+
+    const inquiry = { ...this.activity.inquiry, timeWindows };
+    return { ...this.activity, inquiry };
+  }
+
+  removeInquiryTimeWindow(id: TimeWindow["id"]): Draft {
+    const timeWindows = TimeWindows.build(
+      this.activity.inquiry.timeWindows,
+    ).remove(id).entries;
+
+    const inquiry = { ...this.activity.inquiry, timeWindows };
+    return { ...this.activity, inquiry };
+  }
 }
 
 class TimeWindows {
