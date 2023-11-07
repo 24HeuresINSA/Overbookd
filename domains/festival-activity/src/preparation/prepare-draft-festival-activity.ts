@@ -271,52 +271,35 @@ class ElectricitySupplies {
       form.device,
       form.connection,
     );
-    const supply = {
-      ...form,
-      id,
-      comment: form.comment ?? null,
-    };
+    const comment = form.comment ?? null;
+    const supply = { ...form, id, comment };
 
-    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
-    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
+    this.throwIfAlreadyExists(id);
 
     return new ElectricitySupplies([...this.electricitySupplies, supply]);
   }
 
   update(form: PrepareElectricitySupplyUpdate): ElectricitySupplies {
-    const currentSupply = this.electricitySupplies.find(
+    const currentSupplyIndex = this.electricitySupplies.findIndex(
       (es) => es.id === form.id,
     );
-    if (!currentSupply) throw new ElectricitySupplyNotFound();
+    const currentSupply = this.electricitySupplies.at(currentSupplyIndex);
+    if (currentSupplyIndex === -1 || !currentSupply) {
+      throw new ElectricitySupplyNotFound();
+    }
 
-    const electricitySupply = {
-      ...currentSupply,
-      ...form,
-    };
-    const faId = +form.id.split("-")[0];
-    const id = this.generateElectricitySupplyId(
-      faId,
-      electricitySupply.device,
-      electricitySupply.connection,
-    );
+    const updatedSupply = this.generateUpdatedSupply(currentSupply, form);
 
-    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
-    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
-
-    const updatedSupply = { ...electricitySupply, id };
-    const currentSupplyInd = this.electricitySupplies.findIndex(
-      (es) => es.id === form.id,
-    );
-
+    this.throwIfAlreadyExists(updatedSupply.id);
     const electricitySupplies = updateItemToList(
       this.electricitySupplies,
-      currentSupplyInd,
+      currentSupplyIndex,
       updatedSupply,
     );
     return new ElectricitySupplies(electricitySupplies);
   }
 
-  remove(id: TimeWindow["id"]): ElectricitySupplies {
+  remove(id: ElectricitySupply["id"]): ElectricitySupplies {
     return new ElectricitySupplies(
       this.electricitySupplies.filter((es) => es.id !== id),
     );
@@ -327,7 +310,35 @@ class ElectricitySupplies {
     device: string,
     connection: ElectricityConnection,
   ): string {
-    const slug = SlugifyService.apply(`${device} ${connection}`);
-    return `${faId}-${slug}`;
+    const supplyId = SlugifyService.apply(`${device} ${connection}`);
+    return `${faId}-${supplyId}`;
+  }
+
+  private throwIfAlreadyExists(id: string) {
+    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
+    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
+  }
+
+  private generateUpdatedSupply(
+    previousSupply: ElectricitySupply,
+    form: PrepareElectricitySupplyUpdate,
+  ): ElectricitySupply {
+    const updatedSupply = {
+      ...previousSupply,
+      connection: form.connection ?? previousSupply.connection,
+      device: form.device ?? previousSupply.device,
+      power: form.power ?? previousSupply.power,
+      count: form.count ?? previousSupply.count,
+      comment: form.comment ?? previousSupply.comment,
+    };
+
+    const faId = +previousSupply.id.split("-")[0];
+    const id = this.generateElectricitySupplyId(
+      faId,
+      updatedSupply.device,
+      updatedSupply.connection,
+    );
+
+    return { ...updatedSupply, id };
   }
 }

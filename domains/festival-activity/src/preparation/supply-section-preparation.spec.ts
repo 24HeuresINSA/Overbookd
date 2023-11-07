@@ -90,7 +90,7 @@ describe("General section of festival activity preparation", () => {
       const updatedelectricitySupply = {
         id: electricitySupplyToUpdate.id,
         device: "Ordinateur",
-        comment: "Ceci est un commentaire",
+        comment: null,
       };
 
       const { supply } = await prepareFestivalActivity.updateElectricitySupply(

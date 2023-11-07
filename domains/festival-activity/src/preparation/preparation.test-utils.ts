@@ -66,7 +66,7 @@ export const escapeGame: Draft = {
         device: "Lumière",
         power: 100,
         count: 3,
-        comment: null,
+        comment: "Ceci est un commentaire",
       },
       {
         id: "1-enceinte-p17_32a_tetra",
