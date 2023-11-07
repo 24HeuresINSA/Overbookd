@@ -137,15 +137,14 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to remove a signage", () => {
     it("should remove the signage", async () => {
-      const signageId = escapeGame.signa.signages[0].id;
+      const signageToRemove = escapeGame.signa.signages[0];
 
       const { signa } = await prepareFestivalActivity.removeSignage(
         escapeGame.id,
-        signageId,
+        signageToRemove.id,
       );
-      const signage = signa.signages.find((s) => s.id === signageId);
 
-      expect(signage).toBeUndefined();
+      expect(signa.signages).not.toContainEqual(signageToRemove);
     });
   });
 });
