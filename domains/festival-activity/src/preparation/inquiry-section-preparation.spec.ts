@@ -41,7 +41,7 @@ describe("Inquiry section of festival activity preparation", () => {
 
       const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
       const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const id = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+      const id = `${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
       const expectedTimeWindow = { id, ...timeWindowToAdd };
       expect(inquiry.timeWindows).toContainEqual(expectedTimeWindow);
