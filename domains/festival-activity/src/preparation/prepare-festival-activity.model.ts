@@ -1,4 +1,9 @@
-import { Adherent, Contractor, ElectricitySupply } from "../festival-activity";
+import {
+  Adherent,
+  Contractor,
+  ElectricityConnection,
+  ElectricitySupply,
+} from "../festival-activity";
 
 export type PrepareGeneralUpdate = {
   name?: string;
@@ -28,4 +33,18 @@ export type PrepareSupplyUpdate = {
   water?: string | null;
 };
 
-export type PrepareElectricitySupplyCreation = Omit<ElectricitySupply, "id">;
+export type PrepareElectricitySupplyCreation = Omit<
+  ElectricitySupply,
+  "id" | "comment"
+> & {
+  comment?: string | null;
+};
+
+export type PrepareElectricitySupplyUpdate = {
+  id: string;
+  connection?: ElectricityConnection;
+  device?: string;
+  power?: number;
+  count?: number;
+  comment?: string | null;
+};

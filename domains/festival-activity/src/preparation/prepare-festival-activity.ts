@@ -3,6 +3,7 @@ import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
   PrepareContractorCreation,
   PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareSecurityUpdate,
@@ -43,7 +44,7 @@ export type Prepare<T extends FestivalActivity> = {
   updateSecurity(security: PrepareSecurityUpdate): T;
   updateSupply(supply: PrepareSupplyUpdate): T;
   addElectricitySupply(electricitySupply: PrepareElectricitySupplyCreation): T;
-  updateElectricitySupply(electricitySupply: ElectricitySupply): T;
+  updateElectricitySupply(electricitySupply: PrepareElectricitySupplyUpdate): T;
   removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
 };
 
@@ -189,7 +190,7 @@ export class PrepareFestivalActivity {
 
   async updateElectricitySupply(
     faId: number,
-    electricitySupply: ElectricitySupply,
+    electricitySupply: PrepareElectricitySupplyUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);

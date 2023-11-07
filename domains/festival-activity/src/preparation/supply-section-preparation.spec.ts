@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
-import { PrepareElectricitySupplyCreation } from "./prepare-festival-activity.model";
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
 } from "../festival-activity.error";
+import { electricityConnections } from "../festival-activity";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -39,12 +39,11 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to add an electricity supply", () => {
     it("should add the electricity supply", async () => {
-      const electricitySupplyToAdd: PrepareElectricitySupplyCreation = {
-        connection: "P17_16A_MONO",
+      const electricitySupplyToAdd = {
+        connection: electricityConnections.P17_16A_MONO,
         device: "Ordinateur",
         power: 300,
         count: 2,
-        comment: null,
       };
 
       const { supply } = await prepareFestivalActivity.addElectricitySupply(
@@ -117,6 +116,23 @@ describe("General section of festival activity preparation", () => {
             electricitySupplyToUpdate,
           ),
         ).rejects.toThrow(ElectricitySupplyNotFound);
+      });
+    });
+
+    describe("when adherent want to update an electricity supply with data that generate existing id", () => {
+      it("should indicate that electricity supply already exists", async () => {
+        const electricitySupplyToUpdate = {
+          ...escapeGame.supply.electricity[0],
+          device: "Enceinte",
+          connection: electricityConnections.P17_32A_TETRA,
+        };
+
+        await expect(
+          prepareFestivalActivity.updateElectricitySupply(
+            escapeGame.id,
+            electricitySupplyToUpdate,
+          ),
+        ).rejects.toThrow(ElectricitySupplyAlreadyExists);
       });
     });
   });

@@ -1,4 +1,4 @@
-import { DRAFT, Draft } from "../festival-activity";
+import { DRAFT, Draft, electricityConnections } from "../festival-activity";
 
 const noel = {
   id: 1,
@@ -62,10 +62,18 @@ export const escapeGame: Draft = {
     electricity: [
       {
         id: "1-lumiere-p17_16a_tetra",
-        connection: "P17_16A_TETRA",
+        connection: electricityConnections.P17_16A_TETRA,
         device: "Lumière",
         power: 100,
         count: 3,
+        comment: null,
+      },
+      {
+        id: "1-enceinte-p17_32a_tetra",
+        connection: electricityConnections.P17_32A_TETRA,
+        device: "Enceinte",
+        power: 200,
+        count: 1,
         comment: null,
       },
     ],

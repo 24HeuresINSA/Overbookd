@@ -22,6 +22,7 @@ import {
   PrepareInChargeUpdate,
   PrepareContractorCreation,
   PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -128,7 +129,9 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, supply };
   }
 
-  updateElectricitySupply(electricitySupply: ElectricitySupply): Draft {
+  updateElectricitySupply(
+    electricitySupply: PrepareElectricitySupplyUpdate,
+  ): Draft {
     const electricity = ElectricitySupplies.build(
       this.activity.supply.electricity,
     ).update(electricitySupply).entries;
@@ -248,7 +251,11 @@ class ElectricitySupplies {
     faId: number,
   ): ElectricitySupplies {
     const id = this.generateElectricitySupplyId(faId, form);
-    const supply = { ...form, id };
+    const supply = {
+      ...form,
+      id,
+      comment: form.comment ?? null,
+    };
 
     const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
     if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
@@ -256,19 +263,31 @@ class ElectricitySupplies {
     return new ElectricitySupplies([...this.electricitySupplies, supply]);
   }
 
-  update(electricitySupply: ElectricitySupply): ElectricitySupplies {
-    const currentSupply = this.electricitySupplies.findIndex(
-      (es) => es.id === electricitySupply.id,
+  update(form: PrepareElectricitySupplyUpdate): ElectricitySupplies {
+    const currentSupplyInd = this.electricitySupplies.findIndex(
+      (es) => es.id === form.id,
     );
-    if (currentSupply === -1) throw new ElectricitySupplyNotFound();
+    const currentSupply = this.electricitySupplies.at(currentSupplyInd);
+    if (!currentSupply) throw new ElectricitySupplyNotFound();
 
-    const faId = +electricitySupply.id.split("-")[0];
+    const electricitySupply = {
+      connection: form.connection ?? currentSupply.connection,
+      device: form.device ?? currentSupply.device,
+      power: form.power ?? currentSupply.power,
+      count: form.count ?? currentSupply.count,
+      comment: form.comment ?? currentSupply.comment,
+    };
+    const faId = +form.id.split("-")[0];
     const id = this.generateElectricitySupplyId(faId, electricitySupply);
+
+    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
+    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
+
     const updatedSupply = { ...electricitySupply, id };
 
     const electricitySupplies = updateItemToList(
       this.electricitySupplies,
-      currentSupply,
+      currentSupplyInd,
       updatedSupply,
     );
     return new ElectricitySupplies(electricitySupplies);
