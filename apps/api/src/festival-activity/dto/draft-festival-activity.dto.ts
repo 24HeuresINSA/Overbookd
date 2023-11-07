@@ -105,6 +105,9 @@ class InChargeDto implements InCharge {
 const signaTypes = ["BACHE", "PANNEAU", "AFFICHE"];
 
 class SignageDto implements Signage {
+  @ApiProperty({})
+  id: string;
+
   @ApiProperty({
     description: "Wanted quantity for this signage",
   })
