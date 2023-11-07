@@ -83,4 +83,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   ): InReview {
     throw new Error("Method not implemented." + electricitySupplyId);
   }
+
+  addInquiryTimeWindow(period: IProvidePeriod): InReview {
+    throw new Error("Method not implemented." + period);
+  }
+
+  removeInquiryTimeWindow(id: string): InReview {
+    throw new Error("Method not implemented." + id);
+  }
 }

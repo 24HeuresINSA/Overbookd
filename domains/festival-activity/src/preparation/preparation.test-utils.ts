@@ -58,7 +58,13 @@ export const escapeGame: Draft = {
     specialNeed: "Pas de besoin particulier",
   },
   inquiry: {
-    timeWindows: [],
+    timeWindows: [
+      {
+        id: "1-28071900-28072140",
+        start: new Date("2023-05-17T11:00+02:00"),
+        end: new Date("2023-05-17T15:00+02:00"),
+      },
+    ],
     gears: [],
     electricity: [],
     barriers: [],

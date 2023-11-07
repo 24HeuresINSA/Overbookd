@@ -47,6 +47,8 @@ export type Prepare<T extends FestivalActivity> = {
   addElectricitySupply(electricitySupply: PrepareElectricitySupplyCreation): T;
   updateElectricitySupply(electricitySupply: PrepareElectricitySupplyUpdate): T;
   removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
+  addInquiryTimeWindow(period: IProvidePeriod): T;
+  removeInquiryTimeWindow(id: TimeWindow["id"]): T;
 };
 
 export class PrepareFestivalActivity {
@@ -184,7 +186,6 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
-
     const updatedFA = prepare.addElectricitySupply(electricitySupply);
     return this.festivalActivities.save(updatedFA);
   }
@@ -195,7 +196,6 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
-
     const updatedFA = prepare.updateElectricitySupply(electricitySupply);
     return this.festivalActivities.save(updatedFA);
   }
@@ -206,8 +206,29 @@ export class PrepareFestivalActivity {
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
-
     const updatedFA = prepare.removeElectricitySupply(electricitySupplyId);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addTimeWindowInInquiry(
+    faId: number,
+    period: IProvidePeriod,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.addInquiryTimeWindow(period);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeTimeWindowFromInquiry(
+    faId: number,
+    timeWindowId: TimeWindow["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.removeInquiryTimeWindow(timeWindowId);
     return this.festivalActivities.save(updatedFA);
   }
 
