@@ -106,7 +106,7 @@ describe("Inquiry section of festival activity preparation", () => {
       );
 
       const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
-      const gearInquiry = inquiry.gears.find((tw) => tw.id === inquiryId);
+      const gearInquiry = inquiry.gears.find((inq) => inq.id === inquiryId);
 
       expect(gearInquiry?.id).toBe(inquiryId);
       expect(gearInquiry?.quantity).toBe(inquiryToAdd.quantity);
@@ -137,9 +137,114 @@ describe("Inquiry section of festival activity preparation", () => {
       );
 
       const gearInquiry = inquiry.gears.find(
-        (tw) => tw.id === gearInquiryIdToRemove,
+        (inq) => inq.id === gearInquiryIdToRemove,
       );
       expect(gearInquiry).toBeUndefined();
+    });
+  });
+
+  describe("when adherent want to add a barrier inquiry", () => {
+    it("should add the barrier inquiry", async () => {
+      const inquiryToAdd = {
+        slug: "heras",
+        quantity: 5,
+      };
+
+      const { inquiry } = await prepareFestivalActivity.addBarrierInquiry(
+        escapeGame.id,
+        inquiryToAdd,
+      );
+
+      const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
+      const barrierInquiry = inquiry.barriers.find(
+        (inq) => inq.id === inquiryId,
+      );
+
+      expect(barrierInquiry?.id).toBe(inquiryId);
+      expect(barrierInquiry?.quantity).toBe(inquiryToAdd.quantity);
+      expect(barrierInquiry?.slug).toBe(inquiryToAdd.slug);
+    });
+
+    describe("when adherent want to add a barrier inquiry that already exists", () => {
+      it("should should indicate that the barrier inquiry already exists", async () => {
+        const existingBarrierInquiry = escapeGame.inquiry.barriers[0];
+
+        await expect(
+          prepareFestivalActivity.addBarrierInquiry(
+            escapeGame.id,
+            existingBarrierInquiry,
+          ),
+        ).rejects.toThrow(InquiryAlreadyExists);
+      });
+    });
+  });
+
+  describe("when adherent want to remove a barrier inquiry", () => {
+    it("should remove the barrier inquiry", async () => {
+      const barrierInquiryIdToRemove = "1-vauban";
+
+      const { inquiry } = await prepareFestivalActivity.removeBarrierInquiry(
+        escapeGame.id,
+        barrierInquiryIdToRemove,
+      );
+
+      const barrierInquiry = inquiry.barriers.find(
+        (inq) => inq.id === barrierInquiryIdToRemove,
+      );
+      expect(barrierInquiry).toBeUndefined();
+    });
+  });
+
+  describe("when adherent want to add an electricity inquiry", () => {
+    it("should add the electricity inquiry", async () => {
+      const inquiryToAdd = {
+        slug: "chargeur-usb-c",
+        quantity: 1,
+      };
+
+      const { inquiry } = await prepareFestivalActivity.addElectricityInquiry(
+        escapeGame.id,
+        inquiryToAdd,
+      );
+
+      const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
+      const elecInquiry = inquiry.electricity.find(
+        (inq) => inq.id === inquiryId,
+      );
+
+      expect(elecInquiry?.id).toBe(inquiryId);
+      expect(elecInquiry?.quantity).toBe(inquiryToAdd.quantity);
+      expect(elecInquiry?.slug).toBe(inquiryToAdd.slug);
+    });
+
+    describe("when adherent want to add an electricity inquiry that already exists", () => {
+      it("should should indicate that the electricity inquiry already exists", async () => {
+        const existingElecInquiry = escapeGame.inquiry.electricity[0];
+
+        await expect(
+          prepareFestivalActivity.addElectricityInquiry(
+            escapeGame.id,
+            existingElecInquiry,
+          ),
+        ).rejects.toThrow(InquiryAlreadyExists);
+      });
+    });
+  });
+
+  describe("when adherent want to remove an electricity inquiry", () => {
+    it("should remove the electricity inquiry", async () => {
+      const elecInquiryIdToRemove = "1-prise-murale";
+
+      const { inquiry } =
+        await prepareFestivalActivity.removeElectricityInquiry(
+          escapeGame.id,
+          elecInquiryIdToRemove,
+        );
+
+      const elecInquiry = inquiry.electricity.find(
+        (inq) => inq.id === elecInquiryIdToRemove,
+      );
+      expect(elecInquiry).toBeUndefined();
     });
   });
 });

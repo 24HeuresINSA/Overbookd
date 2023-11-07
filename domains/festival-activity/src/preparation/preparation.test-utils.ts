@@ -72,8 +72,20 @@ export const escapeGame: Draft = {
         slug: "marteau",
       },
     ],
-    electricity: [],
-    barriers: [],
+    electricity: [
+      {
+        id: "1-prise-murale",
+        quantity: 1,
+        slug: "prise-murale",
+      },
+    ],
+    barriers: [
+      {
+        id: "1-vauban",
+        quantity: 15,
+        slug: "vauban",
+      },
+    ],
   },
   supply: {
     electricity: [

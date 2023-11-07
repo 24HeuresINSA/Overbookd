@@ -441,14 +441,14 @@ class Inquiries {
     const id = this.generateInquiryId(faId, form.slug);
     const inquiry = { ...form, id };
 
-    const alreadyExists = this.inquiries.some((i) => i.id === id);
+    const alreadyExists = this.inquiries.some((inq) => inq.id === id);
     if (alreadyExists) throw new InquiryAlreadyExists();
 
     return new Inquiries([...this.inquiries, inquiry]);
   }
 
   remove(id: InquiryRequest["id"]): Inquiries {
-    return new Inquiries(this.inquiries.filter((tw) => tw.id !== id));
+    return new Inquiries(this.inquiries.filter((inq) => inq.id !== id));
   }
 
   private generateInquiryId(faId: number, slug: string): string {
