@@ -91,10 +91,16 @@ describe("General section of festival activity preparation", () => {
         contractorToAdd,
       );
 
-      const contractorId = "1-2";
-      const expectedContractor = { id: contractorId, ...contractorToAdd };
+      const id = "1-2";
+      const expectedContractor = {
+        id,
+        ...contractorToAdd,
+        email: null,
+        company: null,
+        comment: null,
+      };
       const contractor = inCharge.contractors.find(
-        (contractor) => contractor.id === contractorId,
+        (contractor) => contractor.id === id,
       );
 
       expect(contractor).toEqual(expectedContractor);
@@ -110,7 +116,7 @@ describe("General section of festival activity preparation", () => {
         phone: "0123456789",
         email: "noel@gmail.com",
         company: "SNCF",
-        comment: "Je suis un commentaire",
+        comment: null,
       };
       const { inCharge } = await prepareFestivalActivity.updateContractor(
         escapeGame.id,

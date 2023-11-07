@@ -456,6 +456,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period
+      '@overbookd/slugify':
+        specifier: workspace:*
+        version: link:../../libraries/slugify
 
   domains/permission: {}
 

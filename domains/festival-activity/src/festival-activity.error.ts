@@ -8,6 +8,12 @@ const TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE =
 const CONTRACTOR_NOT_FOUND_ERROR_MESSAGE =
   "Ce prestataire n'existe pas dans la fiche activité";
 
+const ELECTRICITY_SUPPLY_NOT_FOUND_ERROR_MESSAGE =
+  "Cette demande d'elec n'existe pas dans la fiche activité";
+
+const ELECTRICITY_SUPPLY_ALREADY_EXISTS_ERROR_MESSAGE =
+  "Une demande d'elec similaire existe déjà dans la fiche activité";
+
 export class FestivalActivityError extends Error {}
 
 export class FestivalActivityNotFound extends FestivalActivityError {
@@ -37,5 +43,17 @@ export class TimeWindowAlreadyExists extends FestivalActivityError {
 export class ContractorNotFound extends FestivalActivityError {
   constructor() {
     super(CONTRACTOR_NOT_FOUND_ERROR_MESSAGE);
+  }
+}
+
+export class ElectricitySupplyNotFound extends FestivalActivityError {
+  constructor() {
+    super(ELECTRICITY_SUPPLY_NOT_FOUND_ERROR_MESSAGE);
+  }
+}
+
+export class ElectricitySupplyAlreadyExists extends FestivalActivityError {
+  constructor() {
+    super(ELECTRICITY_SUPPLY_ALREADY_EXISTS_ERROR_MESSAGE);
   }
 }

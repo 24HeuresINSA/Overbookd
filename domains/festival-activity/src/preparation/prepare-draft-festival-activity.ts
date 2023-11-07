@@ -1,9 +1,18 @@
 import { Prepare } from "./prepare-festival-activity";
-
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
-import { Adherent, Contractor, Draft, TimeWindow } from "../festival-activity";
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  Adherent,
+  Contractor,
+  Draft,
+  ElectricityConnection,
+  ElectricitySupply,
+  TimeWindow,
+} from "../festival-activity";
 import {
   ContractorNotFound,
+  ElectricitySupplyAlreadyExists,
+  ElectricitySupplyNotFound,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import {
@@ -13,6 +22,9 @@ import {
   PrepareSupplyUpdate,
   PrepareInChargeUpdate,
   PrepareContractorCreation,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+  PrepareContractorUpdate,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -27,9 +39,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   private constructor(private readonly activity: Draft) {}
 
   static build(activity: Draft): PrepareDraftFestivalActivity {
-    return new PrepareDraftFestivalActivity({
-      ...activity,
-    });
+    return new PrepareDraftFestivalActivity(activity);
   }
 
   updateGeneral(form: PrepareGeneralUpdate): Draft {
@@ -77,7 +87,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inCharge };
   }
 
-  updateContractor(contractor: Contractor): Draft {
+  updateContractor(contractor: PrepareContractorUpdate): Draft {
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
     ).update(contractor).entries;
@@ -107,6 +117,37 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
 
   updateSupply(form: PrepareSupplyUpdate): Draft {
     const supply = { ...this.activity.supply, ...form };
+    return { ...this.activity, supply };
+  }
+
+  addElectricitySupply(
+    electricitySupply: PrepareElectricitySupplyCreation,
+  ): Draft {
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).add(electricitySupply, this.activity.id).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
+  }
+
+  updateElectricitySupply(
+    electricitySupply: PrepareElectricitySupplyUpdate,
+  ): Draft {
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).update(electricitySupply).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
+  }
+
+  removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): Draft {
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).remove(electricitySupplyId).entries;
+
+    const supply = { ...this.activity.supply, electricity };
     return { ...this.activity, supply };
   }
 }
@@ -159,21 +200,35 @@ class Contractors {
 
   add(form: PrepareContractorCreation, faId: number): Contractors {
     const id = this.generateContractorId(faId);
-    const contractor = { ...form, id };
+    const contractor = {
+      ...form,
+      id,
+      email: form.email ?? null,
+      company: form.company ?? null,
+      comment: form.comment ?? null,
+    };
 
     return new Contractors([...this.contractors, contractor]);
   }
 
-  update(contractor: Contractor): Contractors {
-    const currentContractor = this.contractors.findIndex(
+  update(contractor: PrepareContractorUpdate): Contractors {
+    const currentContractorIndex = this.contractors.findIndex(
       (c) => c.id === contractor.id,
     );
-    if (currentContractor === -1) throw new ContractorNotFound();
+    const currentContractor = this.contractors.at(currentContractorIndex);
+    if (currentContractorIndex === -1 || !currentContractor) {
+      throw new ContractorNotFound();
+    }
+
+    const updatedContractor = {
+      ...currentContractor,
+      ...contractor,
+    };
 
     const contractors = updateItemToList(
       this.contractors,
-      currentContractor,
-      contractor,
+      currentContractorIndex,
+      updatedContractor,
     );
     return new Contractors(contractors);
   }
@@ -191,5 +246,99 @@ class Contractors {
     const newId = +lastId + 1;
 
     return `${faId}-${newId}`;
+  }
+}
+
+class ElectricitySupplies {
+  private constructor(
+    private readonly electricitySupplies: ElectricitySupply[],
+  ) {}
+
+  get entries(): ElectricitySupply[] {
+    return this.electricitySupplies;
+  }
+
+  static build(supplies: ElectricitySupply[]): ElectricitySupplies {
+    return new ElectricitySupplies(supplies);
+  }
+
+  add(
+    form: PrepareElectricitySupplyCreation,
+    faId: number,
+  ): ElectricitySupplies {
+    const id = this.generateElectricitySupplyId(
+      faId,
+      form.device,
+      form.connection,
+    );
+    const comment = form.comment ?? null;
+    const supply = { ...form, id, comment };
+
+    this.throwIfAlreadyExists(id);
+
+    return new ElectricitySupplies([...this.electricitySupplies, supply]);
+  }
+
+  update(form: PrepareElectricitySupplyUpdate): ElectricitySupplies {
+    const currentSupplyIndex = this.electricitySupplies.findIndex(
+      (es) => es.id === form.id,
+    );
+    const currentSupply = this.electricitySupplies.at(currentSupplyIndex);
+    if (currentSupplyIndex === -1 || !currentSupply) {
+      throw new ElectricitySupplyNotFound();
+    }
+
+    const updatedSupply = this.generateUpdatedSupply(currentSupply, form);
+
+    this.throwIfAlreadyExists(updatedSupply.id);
+    const electricitySupplies = updateItemToList(
+      this.electricitySupplies,
+      currentSupplyIndex,
+      updatedSupply,
+    );
+    return new ElectricitySupplies(electricitySupplies);
+  }
+
+  remove(id: ElectricitySupply["id"]): ElectricitySupplies {
+    return new ElectricitySupplies(
+      this.electricitySupplies.filter((es) => es.id !== id),
+    );
+  }
+
+  private generateElectricitySupplyId(
+    faId: number,
+    device: string,
+    connection: ElectricityConnection,
+  ): string {
+    const supplyId = SlugifyService.apply(`${device} ${connection}`);
+    return `${faId}-${supplyId}`;
+  }
+
+  private throwIfAlreadyExists(id: string) {
+    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
+    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
+  }
+
+  private generateUpdatedSupply(
+    previousSupply: ElectricitySupply,
+    form: PrepareElectricitySupplyUpdate,
+  ): ElectricitySupply {
+    const updatedSupply = {
+      ...previousSupply,
+      connection: form.connection ?? previousSupply.connection,
+      device: form.device ?? previousSupply.device,
+      power: form.power ?? previousSupply.power,
+      count: form.count ?? previousSupply.count,
+      comment: form.comment === undefined ? previousSupply.comment : null,
+    };
+
+    const faId = +previousSupply.id.split("-")[0];
+    const id = this.generateElectricitySupplyId(
+      faId,
+      updatedSupply.device,
+      updatedSupply.connection,
+    );
+
+    return { ...updatedSupply, id };
   }
 }

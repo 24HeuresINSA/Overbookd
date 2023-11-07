@@ -2,6 +2,9 @@ import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
   PrepareContractorCreation,
+  PrepareContractorUpdate,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareSecurityUpdate,
@@ -11,6 +14,7 @@ import {
 import {
   Adherent,
   Contractor,
+  ElectricitySupply,
   FestivalActivity,
   PreviewFestivalActivity,
   TimeWindow,
@@ -35,11 +39,14 @@ export type Prepare<T extends FestivalActivity> = {
   removeGeneralTimeWindow(id: TimeWindow["id"]): T;
   updateInCharge(inCharge: PrepareInChargeUpdate): T;
   addContractor(contractor: PrepareContractorCreation): T;
-  updateContractor(contractor: Contractor): T;
+  updateContractor(contractor: PrepareContractorUpdate): T;
   removeContractor(id: Contractor["id"]): T;
   updateSigna(signa: PrepareSignaUpdate): T;
   updateSecurity(security: PrepareSecurityUpdate): T;
   updateSupply(supply: PrepareSupplyUpdate): T;
+  addElectricitySupply(electricitySupply: PrepareElectricitySupplyCreation): T;
+  updateElectricitySupply(electricitySupply: PrepareElectricitySupplyUpdate): T;
+  removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
 };
 
 export class PrepareFestivalActivity {
@@ -118,7 +125,7 @@ export class PrepareFestivalActivity {
 
   async updateContractor(
     faId: number,
-    contractor: Contractor,
+    contractor: PrepareContractorUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
@@ -168,6 +175,39 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.updateSupply(supply);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addElectricitySupply(
+    faId: number,
+    electricitySupply: PrepareElectricitySupplyCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.addElectricitySupply(electricitySupply);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async updateElectricitySupply(
+    faId: number,
+    electricitySupply: PrepareElectricitySupplyUpdate,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.updateElectricitySupply(electricitySupply);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeElectricitySupply(
+    faId: number,
+    electricitySupplyId: ElectricitySupply["id"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.removeElectricitySupply(electricitySupplyId);
     return this.festivalActivities.save(updatedFA);
   }
 
