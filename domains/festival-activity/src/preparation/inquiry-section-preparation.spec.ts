@@ -136,17 +136,14 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove a gear inquiry", () => {
     it("should remove the gear inquiry", async () => {
-      const inquirySlugToRemove = "marteau";
+      const inquiryToRemove = escapeGame.inquiry.gears[0];
 
       const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
         escapeGame.id,
-        inquirySlugToRemove,
+        inquiryToRemove.slug,
       );
 
-      const gearInquiry = inquiry.gears.find(
-        (inquiry) => inquiry.slug === inquirySlugToRemove,
-      );
-      expect(gearInquiry).toBeUndefined();
+      expect(inquiry.gears).not.toContainEqual(inquiryToRemove);
     });
   });
 
@@ -192,17 +189,14 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove a barrier inquiry", () => {
     it("should remove the barrier inquiry", async () => {
-      const inquirySlugToRemove = "vauban";
+      const inquiryToRemove = escapeGame.inquiry.barriers[0];
 
       const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
         escapeGame.id,
-        inquirySlugToRemove,
+        inquiryToRemove.slug,
       );
 
-      const barrierInquiry = inquiry.barriers.find(
-        (inquiry) => inquiry.slug === inquirySlugToRemove,
-      );
-      expect(barrierInquiry).toBeUndefined();
+      expect(inquiry.barriers).not.toContainEqual(inquiryToRemove);
     });
   });
 
@@ -248,17 +242,14 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove an electricity inquiry", () => {
     it("should remove the electricity inquiry", async () => {
-      const inquirySlugToRemove = "prise-murale";
+      const inquiryToRemove = escapeGame.inquiry.electricity[0];
 
       const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
         escapeGame.id,
-        inquirySlugToRemove,
+        inquiryToRemove.slug,
       );
 
-      const elecInquiry = inquiry.electricity.find(
-        (inquiry) => inquiry.slug === inquirySlugToRemove,
-      );
-      expect(elecInquiry).toBeUndefined();
+      expect(inquiry.electricity).not.toContainEqual(inquiryToRemove);
     });
   });
 });
