@@ -187,7 +187,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   private addInquiryToOwnerSection(
     owner: PrepareInquiryRequestCreation["owner"],
     inquiry: InquiryRequest,
-  ) {
+  ): { [key in keyof WithInquiries]?: [InquiryRequest, ...InquiryRequest[]] } {
     const { section, inquiries } = this.findOwnerSection(owner);
     return { [section]: Inquiries.build(inquiries).add(inquiry).entries };
   }
