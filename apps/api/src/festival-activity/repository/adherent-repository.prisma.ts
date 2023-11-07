@@ -1,5 +1,5 @@
 import { PrismaService } from "../../prisma.service";
-import { Adherents } from "@overbookd/festival-activity";
+import { Adherents } from "../festival-activity.service";
 
 const SELECT_ADHERENT = {
   id: true,

@@ -1,6 +1,10 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
+  BARRIER,
+  ELECTRICITY,
+  GEAR,
+  InquiryCategory,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
@@ -13,7 +17,6 @@ import {
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import {
-  Adherent,
   Contractor,
   ElectricitySupply,
   FestivalActivity,
@@ -24,10 +27,6 @@ import {
 } from "../festival-activity";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
-
-export type Adherents = {
-  find(id: number): Promise<Adherent | null>;
-};
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;
@@ -243,65 +242,56 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.save(updatedFA);
   }
 
-  async addGearInquiry(
+  async addInquiryRequest(
     faId: number,
-    gear: PrepareInquiryRequestCreation,
+    inquiry: PrepareInquiryRequestCreation,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA = prepare.addGearInquiry(gear);
+    const updatedFA =
+      inquiry.category === GEAR
+        ? prepare.addGearInquiry(inquiry)
+        : inquiry.category === BARRIER
+        ? prepare.addBarrierInquiry(inquiry)
+        : prepare.addElectricityInquiry(inquiry);
+
     return this.festivalActivities.save(updatedFA);
   }
 
-  async removeGearInquiry(
+  async removeInquiryRequest(
     faId: number,
     gearId: InquiryRequest["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
-    const updatedFA = prepare.removeGearInquiry(gearId);
+
+    const category = this.findInquiryCategoryById(gearId);
+    const updatedFA =
+      category === GEAR
+        ? prepare.removeGearInquiry(gearId)
+        : category === BARRIER
+        ? prepare.removeBarrierInquiry(gearId)
+        : prepare.removeElectricityInquiry(gearId);
+
     return this.festivalActivities.save(updatedFA);
   }
 
-  async addBarrierInquiry(
-    faId: number,
-    barrier: PrepareInquiryRequestCreation,
-  ): Promise<FestivalActivity> {
-    const existingFA = await this.findActivityIfExists(faId);
-    const prepare = this.getPrepareHelper(existingFA);
-    const updatedFA = prepare.addBarrierInquiry(barrier);
-    return this.festivalActivities.save(updatedFA);
-  }
-
-  async removeBarrierInquiry(
-    faId: number,
-    barrierId: InquiryRequest["id"],
-  ): Promise<FestivalActivity> {
-    const existingFA = await this.findActivityIfExists(faId);
-    const prepare = this.getPrepareHelper(existingFA);
-    const updatedFA = prepare.removeBarrierInquiry(barrierId);
-    return this.festivalActivities.save(updatedFA);
-  }
-
-  async addElectricityInquiry(
-    faId: number,
-    electricity: PrepareInquiryRequestCreation,
-  ): Promise<FestivalActivity> {
-    const existingFA = await this.findActivityIfExists(faId);
-    const prepare = this.getPrepareHelper(existingFA);
-    const updatedFA = prepare.addElectricityInquiry(electricity);
-    return this.festivalActivities.save(updatedFA);
-  }
-
-  async removeElectricityInquiry(
-    faId: number,
-    electricityId: InquiryRequest["id"],
-  ): Promise<FestivalActivity> {
-    const existingFA = await this.findActivityIfExists(faId);
-    const prepare = this.getPrepareHelper(existingFA);
-    const updatedFA = prepare.removeElectricityInquiry(electricityId);
-    return this.festivalActivities.save(updatedFA);
+  private findInquiryCategoryById(
+    inquiryId: InquiryRequest["id"],
+  ): InquiryCategory {
+    // id = faId-category-slug
+    const category = inquiryId.split("-")[1];
+    switch (category) {
+      case "gear":
+        return GEAR;
+      case "barrier":
+        return BARRIER;
+      case "electricity":
+        return ELECTRICITY;
+      default:
+        throw new Error(`Unknown category ${category}`);
+    }
   }
 
   private async findActivityIfExists(id: number): Promise<FestivalActivity> {

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import {
-  Adherents,
+  Adherent,
   CreateFestivalActivity,
   Draft,
   FestivalActivity,
@@ -16,6 +16,10 @@ import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 export type PrepareInChargeForm = {
   adherentId?: number;
   team?: string;
+};
+
+export type Adherents = {
+  find(id: number): Promise<Adherent | null>;
 };
 
 @Injectable()

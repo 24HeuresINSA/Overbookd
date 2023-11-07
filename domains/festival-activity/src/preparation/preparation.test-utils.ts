@@ -67,21 +67,21 @@ export const escapeGame: Draft = {
     ],
     gears: [
       {
-        id: "1-marteau",
+        id: "1-gear-marteau",
         quantity: 2,
         slug: "marteau",
       },
     ],
     electricity: [
       {
-        id: "1-prise-murale",
+        id: "1-electricity-prise-murale",
         quantity: 1,
         slug: "prise-murale",
       },
     ],
     barriers: [
       {
-        id: "1-vauban",
+        id: "1-barrier-vauban",
         quantity: 15,
         slug: "vauban",
       },

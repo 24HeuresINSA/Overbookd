@@ -61,4 +61,12 @@ export type PrepareElectricitySupplyUpdate = {
   comment?: string | null;
 };
 
-export type PrepareInquiryRequestCreation = Omit<InquiryRequest, "id">;
+export const GEAR = "GEAR";
+export const BARRIER = "BARRIER";
+export const ELECTRICITY = "ELECTRICITY";
+
+export type InquiryCategory = typeof GEAR | typeof BARRIER | typeof ELECTRICITY;
+
+export type PrepareInquiryRequestCreation = Omit<InquiryRequest, "id"> & {
+  category: InquiryCategory;
+};

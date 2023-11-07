@@ -7,6 +7,12 @@ import {
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
+import {
+  BARRIER,
+  ELECTRICITY,
+  GEAR,
+  PrepareInquiryRequestCreation,
+} from "./prepare-festival-activity.model";
 
 describe("Inquiry section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -95,17 +101,19 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to add a gear inquiry", () => {
     it("should add the gear inquiry", async () => {
-      const inquiryToAdd = {
+      const inquiryToAdd: PrepareInquiryRequestCreation = {
         slug: "branle-canisse",
         quantity: 3,
+        category: GEAR,
       };
 
-      const { inquiry } = await prepareFestivalActivity.addGearInquiry(
+      const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
         escapeGame.id,
         inquiryToAdd,
       );
 
-      const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
+      const category = inquiryToAdd.category.toLowerCase();
+      const inquiryId = `${escapeGame.id}-${category}-${inquiryToAdd.slug}`;
       const gearInquiry = inquiry.gears.find((inq) => inq.id === inquiryId);
 
       expect(gearInquiry?.id).toBe(inquiryId);
@@ -116,11 +124,15 @@ describe("Inquiry section of festival activity preparation", () => {
     describe("when adherent want to add a gear inquiry that already exists", () => {
       it("should should indicate that the gear inquiry already exists", async () => {
         const existingGearInquiry = escapeGame.inquiry.gears[0];
+        const inquiryToAdd: PrepareInquiryRequestCreation = {
+          ...existingGearInquiry,
+          category: GEAR,
+        };
 
         await expect(
-          prepareFestivalActivity.addGearInquiry(
+          prepareFestivalActivity.addInquiryRequest(
             escapeGame.id,
-            existingGearInquiry,
+            inquiryToAdd,
           ),
         ).rejects.toThrow(InquiryAlreadyExists);
       });
@@ -129,9 +141,9 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove a gear inquiry", () => {
     it("should remove the gear inquiry", async () => {
-      const gearInquiryIdToRemove = "1-marteau";
+      const gearInquiryIdToRemove = "1-gear-marteau";
 
-      const { inquiry } = await prepareFestivalActivity.removeGearInquiry(
+      const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
         escapeGame.id,
         gearInquiryIdToRemove,
       );
@@ -145,17 +157,19 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to add a barrier inquiry", () => {
     it("should add the barrier inquiry", async () => {
-      const inquiryToAdd = {
+      const inquiryToAdd: PrepareInquiryRequestCreation = {
         slug: "heras",
         quantity: 5,
+        category: BARRIER,
       };
 
-      const { inquiry } = await prepareFestivalActivity.addBarrierInquiry(
+      const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
         escapeGame.id,
         inquiryToAdd,
       );
 
-      const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
+      const category = inquiryToAdd.category.toLowerCase();
+      const inquiryId = `${escapeGame.id}-${category}-${inquiryToAdd.slug}`;
       const barrierInquiry = inquiry.barriers.find(
         (inq) => inq.id === inquiryId,
       );
@@ -168,11 +182,15 @@ describe("Inquiry section of festival activity preparation", () => {
     describe("when adherent want to add a barrier inquiry that already exists", () => {
       it("should should indicate that the barrier inquiry already exists", async () => {
         const existingBarrierInquiry = escapeGame.inquiry.barriers[0];
+        const inquiryToAdd: PrepareInquiryRequestCreation = {
+          ...existingBarrierInquiry,
+          category: BARRIER,
+        };
 
         await expect(
-          prepareFestivalActivity.addBarrierInquiry(
+          prepareFestivalActivity.addInquiryRequest(
             escapeGame.id,
-            existingBarrierInquiry,
+            inquiryToAdd,
           ),
         ).rejects.toThrow(InquiryAlreadyExists);
       });
@@ -181,9 +199,9 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove a barrier inquiry", () => {
     it("should remove the barrier inquiry", async () => {
-      const barrierInquiryIdToRemove = "1-vauban";
+      const barrierInquiryIdToRemove = "1-barrier-vauban";
 
-      const { inquiry } = await prepareFestivalActivity.removeBarrierInquiry(
+      const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
         escapeGame.id,
         barrierInquiryIdToRemove,
       );
@@ -197,17 +215,19 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to add an electricity inquiry", () => {
     it("should add the electricity inquiry", async () => {
-      const inquiryToAdd = {
+      const inquiryToAdd: PrepareInquiryRequestCreation = {
         slug: "chargeur-usb-c",
         quantity: 1,
+        category: ELECTRICITY,
       };
 
-      const { inquiry } = await prepareFestivalActivity.addElectricityInquiry(
+      const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
         escapeGame.id,
         inquiryToAdd,
       );
 
-      const inquiryId = `${escapeGame.id}-${inquiryToAdd.slug}`;
+      const category = inquiryToAdd.category.toLowerCase();
+      const inquiryId = `${escapeGame.id}-${category}-${inquiryToAdd.slug}`;
       const elecInquiry = inquiry.electricity.find(
         (inq) => inq.id === inquiryId,
       );
@@ -220,11 +240,15 @@ describe("Inquiry section of festival activity preparation", () => {
     describe("when adherent want to add an electricity inquiry that already exists", () => {
       it("should should indicate that the electricity inquiry already exists", async () => {
         const existingElecInquiry = escapeGame.inquiry.electricity[0];
+        const inquiryToAdd: PrepareInquiryRequestCreation = {
+          ...existingElecInquiry,
+          category: ELECTRICITY,
+        };
 
         await expect(
-          prepareFestivalActivity.addElectricityInquiry(
+          prepareFestivalActivity.addInquiryRequest(
             escapeGame.id,
-            existingElecInquiry,
+            inquiryToAdd,
           ),
         ).rejects.toThrow(InquiryAlreadyExists);
       });
@@ -233,13 +257,12 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove an electricity inquiry", () => {
     it("should remove the electricity inquiry", async () => {
-      const elecInquiryIdToRemove = "1-prise-murale";
+      const elecInquiryIdToRemove = "1-electricity-prise-murale";
 
-      const { inquiry } =
-        await prepareFestivalActivity.removeElectricityInquiry(
-          escapeGame.id,
-          elecInquiryIdToRemove,
-        );
+      const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
+        escapeGame.id,
+        elecInquiryIdToRemove,
+      );
 
       const elecInquiry = inquiry.electricity.find(
         (inq) => inq.id === elecInquiryIdToRemove,

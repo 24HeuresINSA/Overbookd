@@ -1,6 +1,6 @@
 import { Prepare } from "./prepare-festival-activity";
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
+import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import {
   Adherent,
   Contractor,
@@ -438,7 +438,7 @@ class Inquiries {
   }
 
   add(form: PrepareInquiryRequestCreation, faId: number): Inquiries {
-    const id = this.generateInquiryId(faId, form.slug);
+    const id = this.generateInquiryId(faId, form.category, form.slug);
     const inquiry = { ...form, id };
 
     const alreadyExists = this.inquiries.some((inq) => inq.id === id);
@@ -451,7 +451,12 @@ class Inquiries {
     return new Inquiries(this.inquiries.filter((inq) => inq.id !== id));
   }
 
-  private generateInquiryId(faId: number, slug: string): string {
-    return `${faId}-${slug}`;
+  private generateInquiryId(
+    faId: number,
+    category: string,
+    slug: string,
+  ): string {
+    const inquiryId = SlugifyService.apply(`${category} ${slug}`);
+    return `${faId}-${inquiryId}`;
   }
 }
