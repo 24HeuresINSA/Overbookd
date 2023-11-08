@@ -95,7 +95,7 @@ type Security = {
   specialNeed: string | null;
 };
 
-const PC16_Prise_classique = "PC16_Prise_classique";
+export const PC16_Prise_classique = "PC16_Prise_classique";
 export const P17_16A_MONO = "P17_16A_MONO";
 const P17_16A_TRI = "P17_16A_TRI";
 export const P17_16A_TETRA = "P17_16A_TETRA";

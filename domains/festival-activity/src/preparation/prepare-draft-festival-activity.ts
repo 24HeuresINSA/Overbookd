@@ -327,10 +327,10 @@ class Contractors {
       throw new ContractorNotFound();
     }
 
-    const updatedContractor = {
-      ...currentContractor,
-      ...contractor,
-    };
+    const updatedContractor = this.generateUpdatedContractor(
+      currentContractor,
+      contractor,
+    );
 
     const contractors = updateItemToList(
       this.contractors,
@@ -347,6 +347,25 @@ class Contractors {
   private generateContractorId(): Contractor["id"] {
     const lastContractorId = this.contractors.at(-1)?.id ?? 0;
     return lastContractorId + 1;
+  }
+
+  private generateUpdatedContractor(
+    previousContractor: Contractor,
+    form: PrepareContractorUpdate,
+  ): Contractor {
+    const updatedContractor = {
+      ...previousContractor,
+      firstname: form.firstname ?? previousContractor.firstname,
+      lastname: form.lastname ?? previousContractor.lastname,
+      phone: form.phone ?? previousContractor.phone,
+      email: form.email === undefined ? previousContractor.email : form.email,
+      company:
+        form.company === undefined ? previousContractor.company : form.company,
+      comment:
+        form.comment === undefined ? previousContractor.comment : form.comment,
+    };
+
+    return updatedContractor;
   }
 }
 
@@ -405,6 +424,7 @@ class Signages {
     const updatedSignage = {
       ...previousSignage,
       text: form.text ?? previousSignage.text,
+      quantity: form.quantity ?? previousSignage.quantity,
       size: form.size ?? previousSignage.size,
       type: form.type ?? previousSignage.type,
       comment:

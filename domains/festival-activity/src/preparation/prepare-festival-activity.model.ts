@@ -29,10 +29,11 @@ export type PrepareContractorCreation = Pick<
   comment?: string;
 };
 
-export type PrepareContractorUpdate = Pick<
-  Contractor,
-  "id" | "firstname" | "lastname" | "phone"
-> & {
+export type PrepareContractorUpdate = {
+  id: Contractor["id"];
+  firstname?: string;
+  lastname?: string;
+  phone?: string;
   email?: string | null;
   company?: string | null;
   comment?: string | null;
@@ -50,7 +51,7 @@ export type PrepareSignageCreation = Pick<
 };
 
 export type PrepareSignageUpdate = {
-  id: string;
+  id: Signage["id"];
   quantity?: number;
   text?: string;
   size?: string;

@@ -6,7 +6,11 @@ import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
 } from "../festival-activity.error";
-import { P17_16A_MONO, P17_32A_TETRA } from "../festival-activity";
+import {
+  P17_16A_MONO,
+  P17_32A_TETRA,
+  PC16_Prise_classique,
+} from "../festival-activity";
 import {
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
@@ -55,10 +59,9 @@ describe("General section of festival activity preparation", () => {
         electricitySupplyToAdd,
       );
 
-      const id = "ordinateur-p17_16a_mono";
       const expectedElectricitySupply = {
-        id,
         ...electricitySupplyToAdd,
+        id: "ordinateur-p17_16a_mono",
         comment: null,
       };
 
@@ -86,27 +89,55 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe("when adherent want to update an electricity supply", () => {
-    it("should update the electricity supply", async () => {
-      const electricitySupplyToUpdate = escapeGame.supply.electricity[0];
-      const updatedElectricitySupply = {
-        id: electricitySupplyToUpdate.id,
-        device: "Ordinateur",
-        comment: null,
-      };
+    describe("when an adherent want to update device and comment of an electricity supply", () => {
+      it("should update device and comment of electricity supply", async () => {
+        const electricitySupplyToUpdate = escapeGame.supply.electricity[0];
+        const updatedElectricitySupply = {
+          id: electricitySupplyToUpdate.id,
+          device: "Ordinateur",
+          comment: null,
+        };
 
-      const { supply } = await prepareFestivalActivity.updateElectricitySupply(
-        escapeGame.id,
-        updatedElectricitySupply,
-      );
+        const { supply } =
+          await prepareFestivalActivity.updateElectricitySupply(
+            escapeGame.id,
+            updatedElectricitySupply,
+          );
 
-      const id = "ordinateur-p17_16a_tetra";
-      const expectedElectricitySupply = {
-        ...electricitySupplyToUpdate,
-        ...updatedElectricitySupply,
-        id,
-      };
+        const expectedElectricitySupply = {
+          ...electricitySupplyToUpdate,
+          ...updatedElectricitySupply,
+          id: "ordinateur-p17_16a_tetra",
+        };
 
-      expect(supply.electricity).toContainEqual(expectedElectricitySupply);
+        expect(supply.electricity).toContainEqual(expectedElectricitySupply);
+      });
+    });
+
+    describe("when an adherent want to update connection, power, count and comment of an electricity supply", () => {
+      it("should update connection, power, count and comment of electricity supply", async () => {
+        const electricitySupplyToUpdate = escapeGame.supply.electricity[1];
+        const updatedElectricitySupply: PrepareElectricitySupplyUpdate = {
+          id: electricitySupplyToUpdate.id,
+          connection: PC16_Prise_classique,
+          power: 1000,
+          comment: "Ne pas mettre les doigts dans la prise",
+        };
+
+        const { supply } =
+          await prepareFestivalActivity.updateElectricitySupply(
+            escapeGame.id,
+            updatedElectricitySupply,
+          );
+
+        const expectedElectricitySupply = {
+          ...electricitySupplyToUpdate,
+          ...updatedElectricitySupply,
+          id: "enceinte-pc16_prise_classique",
+        };
+
+        expect(supply.electricity).toContainEqual(expectedElectricitySupply);
+      });
     });
 
     describe("when adherent want to update an electricity supply that does not exist", () => {
