@@ -10,6 +10,7 @@ import {
   InquiryRequest,
   TimeWindow,
   WithInquiries,
+  FestivalActivity,
 } from "../festival-activity";
 import {
   ContractorNotFound,
@@ -238,7 +239,7 @@ class TimeWindows {
     return new TimeWindows(timeWindows);
   }
 
-  add(period: IProvidePeriod, faId: number): TimeWindows {
+  add(period: IProvidePeriod, faId: FestivalActivity["id"]): TimeWindows {
     const { start, end } = Period.init(period);
     const id = this.generateTimeWindowId(faId, { start, end });
     const timeWindow = { id, start, end };
@@ -253,7 +254,10 @@ class TimeWindows {
     return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
   }
 
-  private generateTimeWindowId(faId: number, period: IProvidePeriod): string {
+  private generateTimeWindowId(
+    faId: FestivalActivity["id"],
+    period: IProvidePeriod,
+  ): TimeWindow["id"] {
     const { start, end } = period;
     const startMinutes = Duration.ms(start.getTime()).inMinutes;
     const endMinutes = Duration.ms(end.getTime()).inMinutes;
@@ -273,7 +277,10 @@ class Contractors {
     return new Contractors(contractors);
   }
 
-  add(form: PrepareContractorCreation, faId: number): Contractors {
+  add(
+    form: PrepareContractorCreation,
+    faId: FestivalActivity["id"],
+  ): Contractors {
     const id = this.generateContractorId(faId);
     const contractor = {
       ...form,
@@ -308,11 +315,11 @@ class Contractors {
     return new Contractors(contractors);
   }
 
-  remove(id: TimeWindow["id"]): Contractors {
+  remove(id: Contractor["id"]): Contractors {
     return new Contractors(this.contractors.filter((tw) => tw.id !== id));
   }
 
-  private generateContractorId(faId: number): string {
+  private generateContractorId(faId: FestivalActivity["id"]): Contractor["id"] {
     const lastContractor = this.contractors.at(-1);
 
     if (!lastContractor) return `${faId}-1`;
@@ -339,7 +346,7 @@ class ElectricitySupplies {
 
   add(
     form: PrepareElectricitySupplyCreation,
-    faId: number,
+    faId: FestivalActivity["id"],
   ): ElectricitySupplies {
     const id = this.generateElectricitySupplyId(
       faId,
@@ -381,10 +388,10 @@ class ElectricitySupplies {
   }
 
   private generateElectricitySupplyId(
-    faId: number,
+    faId: FestivalActivity["id"],
     device: string,
     connection: ElectricityConnection,
-  ): string {
+  ): ElectricitySupply["id"] {
     const supplyId = SlugifyService.apply(`${device} ${connection}`);
     return `${faId}-${supplyId}`;
   }

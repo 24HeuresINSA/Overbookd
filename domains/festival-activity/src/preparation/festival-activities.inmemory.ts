@@ -45,7 +45,7 @@ export class InMemoryPrepareFestivalActivityRepository
     );
   }
 
-  findById(id: number): Promise<FestivalActivity | null> {
+  findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     const festivalActivity = this.festivalActivities.find(
       (festivalActivity) => festivalActivity.id === id,
     );

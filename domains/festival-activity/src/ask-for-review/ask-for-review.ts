@@ -4,7 +4,7 @@ import { FestivalActivity, InReview, isDraft } from "../festival-activity";
 import { Reviewer, WaitingForReview } from "./waiting-for-review";
 
 export type AskForReviewFestivalActivityRepository = {
-  findById(id: number): Promise<FestivalActivity | null>;
+  findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save(festivalActivity: InReview): Promise<InReview>;
 };
 
@@ -22,7 +22,7 @@ export class AskForReview {
     private readonly notifications: Notifications,
   ) {}
 
-  async fromDraft(draftId: number): Promise<InReview> {
+  async fromDraft(draftId: FestivalActivity["id"]): Promise<InReview> {
     const festivalActivity = await this.festivalActivities.findById(draftId);
     if (!festivalActivity) throw new FestivalActivityNotFound(draftId);
     if (!isDraft(festivalActivity)) throw new Review.NotInDraft(draftId);

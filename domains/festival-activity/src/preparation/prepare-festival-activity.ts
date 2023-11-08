@@ -26,7 +26,7 @@ import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity"
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;
-  findById(id: number): Promise<FestivalActivity | null>;
+  findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save(activity: FestivalActivity): Promise<FestivalActivity>;
 };
 
@@ -59,7 +59,7 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.findAll();
   }
 
-  findById(id: number): Promise<FestivalActivity | null> {
+  findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     return this.festivalActivities.findById(id);
   }
 
@@ -70,7 +70,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateGeneralSection(
-    id: number,
+    id: FestivalActivity["id"],
     general: PrepareGeneralUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
@@ -81,7 +81,7 @@ export class PrepareFestivalActivity {
   }
 
   async addTimeWindowInGeneral(
-    faId: number,
+    faId: FestivalActivity["id"],
     period: IProvidePeriod,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -92,7 +92,7 @@ export class PrepareFestivalActivity {
   }
 
   async removeTimeWindowFromGeneral(
-    faId: number,
+    faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -103,7 +103,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateInChargeSection(
-    id: number,
+    id: FestivalActivity["id"],
     inCharge: PrepareInChargeUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
@@ -114,7 +114,7 @@ export class PrepareFestivalActivity {
   }
 
   async addContractor(
-    faId: number,
+    faId: FestivalActivity["id"],
     contractor: PrepareContractorCreation,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -125,7 +125,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateContractor(
-    faId: number,
+    faId: FestivalActivity["id"],
     contractor: PrepareContractorUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -136,7 +136,7 @@ export class PrepareFestivalActivity {
   }
 
   async removeContractor(
-    faId: number,
+    faId: FestivalActivity["id"],
     contractorId: Contractor["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -147,7 +147,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateSignaSection(
-    id: number,
+    id: FestivalActivity["id"],
     signa: PrepareSignaUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
@@ -158,7 +158,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateSecuritySection(
-    id: number,
+    id: FestivalActivity["id"],
     security: PrepareSecurityUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
@@ -169,7 +169,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateSupplySection(
-    id: number,
+    id: FestivalActivity["id"],
     supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
@@ -180,7 +180,7 @@ export class PrepareFestivalActivity {
   }
 
   async addElectricitySupply(
-    faId: number,
+    faId: FestivalActivity["id"],
     electricitySupply: PrepareElectricitySupplyCreation,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -191,7 +191,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateElectricitySupply(
-    faId: number,
+    faId: FestivalActivity["id"],
     electricitySupply: PrepareElectricitySupplyUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -202,7 +202,7 @@ export class PrepareFestivalActivity {
   }
 
   async removeElectricitySupply(
-    faId: number,
+    faId: FestivalActivity["id"],
     electricitySupplyId: ElectricitySupply["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -213,7 +213,7 @@ export class PrepareFestivalActivity {
   }
 
   async addTimeWindowInInquiry(
-    faId: number,
+    faId: FestivalActivity["id"],
     period: IProvidePeriod,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -224,7 +224,7 @@ export class PrepareFestivalActivity {
   }
 
   async removeTimeWindowFromInquiry(
-    faId: number,
+    faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);

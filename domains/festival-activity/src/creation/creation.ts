@@ -1,4 +1,4 @@
-import { Adherent, DRAFT, Draft } from "../festival-activity";
+import { Adherent, DRAFT, Draft, FestivalActivity } from "../festival-activity";
 
 function* numberGenerator(start: number): Generator<number> {
   for (let i = start; i < 1_000_000; i++) {
@@ -43,7 +43,7 @@ export class CreateFestivalActivity {
     return this.festivalActivities.create(activity);
   }
 
-  private generateId(): number {
+  private generateId(): FestivalActivity["id"] {
     return this.idGenerator.next().value;
   }
 
