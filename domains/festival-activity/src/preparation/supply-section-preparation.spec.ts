@@ -61,11 +61,8 @@ describe("General section of festival activity preparation", () => {
         ...electricitySupplyToAdd,
         comment: null,
       };
-      const electricitySupply = supply.electricity.find(
-        (electricity) => electricity.id === id,
-      );
 
-      expect(electricitySupply).toEqual(expectedElectricitySupply);
+      expect(supply.electricity).toContainEqual(expectedElectricitySupply);
     });
 
     describe("when adherent want to add an electricity supply that already exists", () => {
@@ -109,11 +106,7 @@ describe("General section of festival activity preparation", () => {
         id,
       };
 
-      const electricitySupply = supply.electricity.find(
-        (electricity) => electricity.id === id,
-      );
-
-      expect(electricitySupply).toEqual(expectedElectricitySupply);
+      expect(supply.electricity).toContainEqual(expectedElectricitySupply);
     });
 
     describe("when adherent want to update an electricity supply that does not exist", () => {
@@ -152,18 +145,14 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to remove an electricity supply", () => {
     it("should remove the electricity supply", async () => {
-      const electricitySupplyId = "1-lumiere-p17_16a_tetra";
+      const electricitySupplyToRemove = escapeGame.supply.electricity[0];
 
       const { supply } = await prepareFestivalActivity.removeElectricitySupply(
         escapeGame.id,
-        electricitySupplyId,
+        electricitySupplyToRemove.id,
       );
 
-      const electricitySupply = supply.electricity.find(
-        (electricity) => electricity.id === electricitySupplyId,
-      );
-
-      expect(electricitySupply).toBeUndefined();
+      expect(supply.electricity).not.toContainEqual(electricitySupplyToRemove);
     });
   });
 });

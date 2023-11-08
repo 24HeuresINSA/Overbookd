@@ -5,6 +5,7 @@ import {
   Contractor,
   ElectricitySupply,
   InReview,
+  InquiryRequest,
   TimeWindow,
 } from "../festival-activity";
 import {
@@ -17,6 +18,7 @@ import {
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
   PrepareContractorUpdate,
+  PrepareInquiryRequestCreation,
 } from "./prepare-festival-activity.model";
 
 export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
@@ -90,5 +92,13 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
 
   removeInquiryTimeWindow(id: string): InReview {
     throw new Error("Method not implemented." + id);
+  }
+
+  addInquiry(inquiry: PrepareInquiryRequestCreation): InReview {
+    throw new Error("Method not implemented." + inquiry);
+  }
+
+  removeInquiry(slug: InquiryRequest["slug"]): InReview {
+    throw new Error("Method not implemented." + slug);
   }
 }

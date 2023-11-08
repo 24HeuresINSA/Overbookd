@@ -132,7 +132,7 @@ export type WithTimeWindows = {
 };
 
 export type InquiryRequest = {
-  id: number;
+  slug: string;
   quantity: number;
   name: string;
 };
@@ -143,7 +143,7 @@ type WithGearInquiries = {
   gears: [InquiryRequest, ...InquiryRequest[]];
 };
 
-type WithBarriereInquiries = {
+type WithBarrierInquiries = {
   barriers: [InquiryRequest, ...InquiryRequest[]];
   electricity: InquiryRequest[];
   gears: InquiryRequest[];
@@ -157,7 +157,7 @@ type WithElectricityInquiries = {
 
 export type WithInquiries =
   | WithGearInquiries
-  | WithBarriereInquiries
+  | WithBarrierInquiries
   | WithElectricityInquiries;
 
 export type InquiryWithRequests = WithInquiries & WithTimeWindows;

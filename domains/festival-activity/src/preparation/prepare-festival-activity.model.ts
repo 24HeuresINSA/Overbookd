@@ -1,9 +1,5 @@
-import {
-  Adherent,
-  Contractor,
-  ElectricityConnection,
-  ElectricitySupply,
-} from "../festival-activity";
+import { ElectricityConnection, ElectricitySupply } from "../festival-activity";
+import { Adherent, Contractor, InquiryRequest } from "../festival-activity";
 
 export type PrepareGeneralUpdate = {
   name?: string;
@@ -63,4 +59,14 @@ export type PrepareElectricitySupplyUpdate = {
   power?: number;
   count?: number;
   comment?: string | null;
+};
+
+export const MATOS = "matos";
+export const BARRIERES = "barrieres";
+export const ELEC = "elec";
+
+type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;
+
+export type PrepareInquiryRequestCreation = InquiryRequest & {
+  owner: InquiryOwner;
 };

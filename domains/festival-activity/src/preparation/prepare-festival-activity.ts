@@ -7,25 +7,22 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
+  PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import {
-  Adherent,
   Contractor,
   ElectricitySupply,
   FestivalActivity,
+  InquiryRequest,
   PreviewFestivalActivity,
   TimeWindow,
   isDraft,
 } from "../festival-activity";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
-
-export type Adherents = {
-  find(id: number): Promise<Adherent | null>;
-};
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;
@@ -49,6 +46,8 @@ export type Prepare<T extends FestivalActivity> = {
   removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): T;
   addInquiryTimeWindow(period: IProvidePeriod): T;
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
+  addInquiry(inquiry: PrepareInquiryRequestCreation): T;
+  removeInquiry(slug: InquiryRequest["slug"]): T;
 };
 
 export class PrepareFestivalActivity {
@@ -232,6 +231,28 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.removeInquiryTimeWindow(timeWindowId);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async addInquiryRequest(
+    faId: number,
+    inquiry: PrepareInquiryRequestCreation,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.addInquiry(inquiry);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async removeInquiryRequest(
+    faId: number,
+    slug: InquiryRequest["slug"],
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.removeInquiry(slug);
     return this.festivalActivities.save(updatedFA);
   }
 

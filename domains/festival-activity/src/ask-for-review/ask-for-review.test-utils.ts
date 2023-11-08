@@ -14,9 +14,21 @@ const faker = {
   lastname: "Sang-hyeok",
 };
 
-const dixCadenasPompier = { id: 1, name: "Cadenas Pompier", quantity: 10 };
-const uneBouilloire = { id: 2, name: "Bouilloire", quantity: 1 };
-const uneMultiprise = { id: 3, name: "Multiprise", quantity: 1 };
+const dixCadenasPompier = {
+  slug: "cadenas-pompier",
+  name: "Cadenas pompier",
+  quantity: 10,
+};
+const uneBouilloire = {
+  slug: "bouilloire",
+  name: "Bouilloire",
+  quantity: 1,
+};
+const uneMultiprise = {
+  slug: "multiprise",
+  name: "Multiprise",
+  quantity: 1,
+};
 
 export const pcSecurite: Draft = {
   id: 1,

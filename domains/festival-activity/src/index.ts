@@ -28,10 +28,7 @@ export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-ac
 
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
-export type {
-  Adherents,
-  PrepareFestivalActivityRepository,
-} from "./preparation/prepare-festival-activity";
+export type { PrepareFestivalActivityRepository } from "./preparation/prepare-festival-activity";
 export type {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,

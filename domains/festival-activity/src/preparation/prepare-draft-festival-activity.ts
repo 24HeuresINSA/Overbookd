@@ -1,18 +1,21 @@
 import { Prepare } from "./prepare-festival-activity";
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
+import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import {
   Adherent,
   Contractor,
   Draft,
   ElectricityConnection,
   ElectricitySupply,
+  InquiryRequest,
   TimeWindow,
+  WithInquiries,
 } from "../festival-activity";
 import {
   ContractorNotFound,
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
+  InquiryAlreadyExists,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import {
@@ -25,6 +28,10 @@ import {
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
   PrepareContractorUpdate,
+  PrepareInquiryRequestCreation,
+  MATOS,
+  BARRIERES,
+  ELEC,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -167,6 +174,56 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
 
     const inquiry = { ...this.activity.inquiry, timeWindows };
     return { ...this.activity, inquiry };
+  }
+
+  addInquiry(form: PrepareInquiryRequestCreation): Draft {
+    const { owner, ...inquiryToAdd } = form;
+    const updatedInquiry = this.addInquiryToOwnerSection(owner, inquiryToAdd);
+    const inquiry = { ...this.activity.inquiry, ...updatedInquiry };
+
+    return { ...this.activity, inquiry };
+  }
+
+  private addInquiryToOwnerSection(
+    owner: PrepareInquiryRequestCreation["owner"],
+    inquiry: InquiryRequest,
+  ): { [key in keyof WithInquiries]?: [InquiryRequest, ...InquiryRequest[]] } {
+    const { section, inquiries } = this.findOwnerSection(owner);
+    return { [section]: Inquiries.build(inquiries).add(inquiry).entries };
+  }
+
+  private findOwnerSection(owner: PrepareInquiryRequestCreation["owner"]): {
+    section: keyof WithInquiries;
+    inquiries: InquiryRequest[];
+  } {
+    const inquiry = this.activity.inquiry;
+    switch (owner) {
+      case MATOS:
+        return { section: "gears", inquiries: inquiry.gears };
+      case BARRIERES:
+        return { section: "barriers", inquiries: inquiry.barriers };
+      case ELEC:
+        return { section: "electricity", inquiries: inquiry.electricity };
+    }
+  }
+
+  removeInquiry(slug: InquiryRequest["slug"]): Draft {
+    const inquiry = this.activity.inquiry;
+    const [gears, barriers, electricity] = [
+      inquiry.gears,
+      inquiry.barriers,
+      inquiry.electricity,
+    ].map((inquiries) => Inquiries.build(inquiries).remove(slug).entries);
+
+    return {
+      ...this.activity,
+      inquiry: {
+        ...this.activity.inquiry,
+        gears,
+        barriers,
+        electricity,
+      },
+    };
   }
 }
 
@@ -358,5 +415,34 @@ class ElectricitySupplies {
     );
 
     return { ...updatedSupply, id };
+  }
+}
+
+class Inquiries {
+  private constructor(private readonly inquiries: InquiryRequest[]) {}
+
+  get entries(): InquiryRequest[] {
+    return this.inquiries;
+  }
+
+  static build(inquiries: InquiryRequest[]): Inquiries {
+    return new Inquiries(inquiries);
+  }
+
+  add({ slug, quantity, name }: InquiryRequest): Inquiries {
+    const inquiry = { slug, quantity, name };
+
+    const alreadyExists = this.inquiries.some(
+      (inquiry) => inquiry.slug === slug,
+    );
+    if (alreadyExists) throw new InquiryAlreadyExists();
+
+    return new Inquiries([...this.inquiries, inquiry]);
+  }
+
+  remove(slug: InquiryRequest["slug"]): Inquiries {
+    return new Inquiries(
+      this.inquiries.filter((inquiry) => inquiry.slug !== slug),
+    );
   }
 }

@@ -65,9 +65,27 @@ export const escapeGame: Draft = {
         end: new Date("2023-05-17T15:00+02:00"),
       },
     ],
-    gears: [],
-    electricity: [],
-    barriers: [],
+    gears: [
+      {
+        slug: "marteau",
+        name: "Marteau",
+        quantity: 2,
+      },
+    ],
+    electricity: [
+      {
+        slug: "prise-murale",
+        name: "Prise murale",
+        quantity: 1,
+      },
+    ],
+    barriers: [
+      {
+        slug: "vauban",
+        name: "Vauban",
+        quantity: 15,
+      },
+    ],
   },
   supply: {
     electricity: [

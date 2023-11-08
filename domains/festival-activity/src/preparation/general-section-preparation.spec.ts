@@ -168,15 +168,11 @@ describe("General section of festival activity preparation", () => {
 
       const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
       const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const timeWindowId = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+      const id = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
-      const timeWindow = general.timeWindows.find(
-        (tw) => tw.id === timeWindowId,
-      );
+      const expectedTimeWindow = { ...timeWindowToAdd, id };
 
-      expect(timeWindow?.id).toBe(timeWindowId);
-      expect(timeWindow?.start).toBe(timeWindowToAdd.start);
-      expect(timeWindow?.end).toBe(timeWindowToAdd.end);
+      expect(general.timeWindows).toContainEqual(expectedTimeWindow);
     });
 
     describe("when adherent want to add a time window that already exists", () => {
@@ -211,18 +207,15 @@ describe("General section of festival activity preparation", () => {
 
   describe("when adherent want to remove a time window", () => {
     it("should remove the time window", async () => {
-      const timeWindowIdToRemove = "1-28071960-28072080";
+      const timeWindowToRemove = escapeGame.general.timeWindows[0];
 
       const { general } =
         await prepareFestivalActivity.removeTimeWindowFromGeneral(
           escapeGame.id,
-          timeWindowIdToRemove,
+          timeWindowToRemove.id,
         );
 
-      const timeWindow = general.timeWindows.find(
-        (tw) => tw.id === timeWindowIdToRemove,
-      );
-      expect(timeWindow).toBeUndefined();
+      expect(general.timeWindows).not.toContainEqual(timeWindowToRemove);
     });
   });
 });
