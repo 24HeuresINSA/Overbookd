@@ -490,7 +490,10 @@ class ElectricitySupplies {
 
     const updatedSupply = this.generateUpdatedSupply(currentSupply, form);
 
-    this.throwIfAlreadyExists(updatedSupply.id);
+    if (currentSupply.id !== updatedSupply.id) {
+      this.throwIfAlreadyExists(updatedSupply.id);
+    }
+
     const electricitySupplies = updateItemToList(
       this.electricitySupplies,
       currentSupplyIndex,
