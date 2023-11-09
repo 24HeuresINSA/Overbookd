@@ -67,12 +67,19 @@ type DraftInCharge = Omit<InCharge, "team"> & {
   team: string | null;
 };
 
+export const BACHE = "BACHE";
+export const PANNEAU = "PANNEAU";
+export const AFFICHE = "AFFICHE";
+
+export type SignageType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
+
 export type Signage = {
+  id: string;
   quantity: number;
   text: string;
   size: string;
-  type: "BACHE" | "PANNEAU" | "AFFICHE";
-  comment: string;
+  type: SignageType;
+  comment: string | null;
 };
 
 type Signa = {
@@ -88,7 +95,7 @@ type Security = {
   specialNeed: string | null;
 };
 
-const PC16_Prise_classique = "PC16_Prise_classique";
+export const PC16_Prise_classique = "PC16_Prise_classique";
 export const P17_16A_MONO = "P17_16A_MONO";
 const P17_16A_TRI = "P17_16A_TRI";
 export const P17_16A_TETRA = "P17_16A_TETRA";

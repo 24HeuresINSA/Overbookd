@@ -8,6 +8,7 @@ import {
   ElectricityConnection,
   ElectricitySupply,
   InquiryRequest,
+  Signage,
   TimeWindow,
   WithInquiries,
 } from "../festival-activity";
@@ -16,6 +17,8 @@ import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
   InquiryAlreadyExists,
+  SignageAlreadyExists,
+  SignageNotFound,
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import {
@@ -32,6 +35,8 @@ import {
   MATOS,
   BARRIERES,
   ELEC,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
@@ -114,6 +119,33 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
 
   updateSigna(form: PrepareSignaUpdate): Draft {
     const signa = { ...this.activity.signa, ...form };
+    return { ...this.activity, signa };
+  }
+
+  addSignage(signage: PrepareSignageCreation): Draft {
+    const signages = Signages.build(this.activity.signa.signages).add(
+      signage,
+    ).entries;
+
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
+  }
+
+  updateSignage(signage: PrepareSignageUpdate): Draft {
+    const signages = Signages.build(this.activity.signa.signages).update(
+      signage,
+    ).entries;
+
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
+  }
+
+  removeSignage(id: Signage["id"]): Draft {
+    const signages = Signages.build(this.activity.signa.signages).remove(
+      id,
+    ).entries;
+
+    const signa = { ...this.activity.signa, signages };
     return { ...this.activity, signa };
   }
 
@@ -295,10 +327,10 @@ class Contractors {
       throw new ContractorNotFound();
     }
 
-    const updatedContractor = {
-      ...currentContractor,
-      ...contractor,
-    };
+    const updatedContractor = this.generateUpdatedContractor(
+      currentContractor,
+      contractor,
+    );
 
     const contractors = updateItemToList(
       this.contractors,
@@ -315,6 +347,110 @@ class Contractors {
   private generateContractorId(): Contractor["id"] {
     const lastContractorId = this.contractors.at(-1)?.id ?? 0;
     return lastContractorId + 1;
+  }
+
+  private generateUpdatedContractor(
+    previousContractor: Contractor,
+    form: PrepareContractorUpdate,
+  ): Contractor {
+    const updatedContractor = {
+      ...previousContractor,
+      firstname: form.firstname ?? previousContractor.firstname,
+      lastname: form.lastname ?? previousContractor.lastname,
+      phone: form.phone ?? previousContractor.phone,
+      email: form.email === undefined ? previousContractor.email : form.email,
+      company:
+        form.company === undefined ? previousContractor.company : form.company,
+      comment:
+        form.comment === undefined ? previousContractor.comment : form.comment,
+    };
+
+    return updatedContractor;
+  }
+}
+
+class Signages {
+  private constructor(private readonly signages: Signage[]) {}
+
+  get entries(): Signage[] {
+    return this.signages;
+  }
+
+  static build(signages: Signage[]): Signages {
+    return new Signages(signages);
+  }
+
+  add(form: PrepareSignageCreation): Signages {
+    const id = this.generateSignageId(form.type, form.text, form.size);
+    const signage = {
+      ...form,
+      id,
+      comment: form.comment ?? null,
+    };
+
+    this.throwIfAlreadyExists(id);
+
+    return new Signages([...this.signages, signage]);
+  }
+
+  update(form: PrepareSignageUpdate): Signages {
+    const currentSignageIndex = this.signages.findIndex(
+      (signage) => signage.id === form.id,
+    );
+    const currentSignage = this.signages.at(currentSignageIndex);
+    if (currentSignageIndex === -1 || !currentSignage) {
+      throw new SignageNotFound();
+    }
+
+    const updatedSignage = this.generateUpdatedSignage(currentSignage, form);
+    this.throwIfAlreadyExists(updatedSignage.id);
+
+    const signages = updateItemToList(
+      this.signages,
+      currentSignageIndex,
+      updatedSignage,
+    );
+    return new Signages(signages);
+  }
+
+  remove(id: Signage["id"]): Signages {
+    return new Signages(this.signages.filter((s) => s.id !== id));
+  }
+
+  private generateUpdatedSignage(
+    previousSignage: Signage,
+    form: PrepareSignageUpdate,
+  ): Signage {
+    const updatedSignage = {
+      ...previousSignage,
+      text: form.text ?? previousSignage.text,
+      quantity: form.quantity ?? previousSignage.quantity,
+      size: form.size ?? previousSignage.size,
+      type: form.type ?? previousSignage.type,
+      comment:
+        form.comment === undefined ? previousSignage.comment : form.comment,
+    };
+
+    const id = this.generateSignageId(
+      updatedSignage.type,
+      updatedSignage.text,
+      updatedSignage.size,
+    );
+
+    return { ...updatedSignage, id };
+  }
+
+  private generateSignageId(
+    type: Signage["type"],
+    text: Signage["text"],
+    size: Signage["size"],
+  ): string {
+    return SlugifyService.apply(`${type} ${text} ${size}`);
+  }
+
+  private throwIfAlreadyExists(id: string) {
+    const alreadyExists = this.signages.some((signage) => signage.id === id);
+    if (alreadyExists) throw new SignageAlreadyExists();
   }
 }
 
@@ -390,7 +526,8 @@ class ElectricitySupplies {
       device: form.device ?? previousSupply.device,
       power: form.power ?? previousSupply.power,
       count: form.count ?? previousSupply.count,
-      comment: form.comment === undefined ? previousSupply.comment : null,
+      comment:
+        form.comment === undefined ? previousSupply.comment : form.comment,
     };
 
     const id = this.generateElectricitySupplyId(

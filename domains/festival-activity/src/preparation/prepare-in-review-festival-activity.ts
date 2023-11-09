@@ -6,6 +6,7 @@ import {
   ElectricitySupply,
   InReview,
   InquiryRequest,
+  Signage,
   TimeWindow,
 } from "../festival-activity";
 import {
@@ -19,6 +20,8 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
 } from "./prepare-festival-activity.model";
 
 export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
@@ -58,6 +61,18 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
 
   updateSigna(signa: PrepareSignaUpdate): InReview {
     throw new Error("Method not implemented." + signa);
+  }
+
+  addSignage(signage: PrepareSignageCreation): InReview {
+    throw new Error("Method not implemented." + signage);
+  }
+
+  updateSignage(signage: PrepareSignageUpdate): InReview {
+    throw new Error("Method not implemented." + signage);
+  }
+
+  removeSignage(signageId: Signage["id"]): InReview {
+    throw new Error("Method not implemented." + signageId);
   }
 
   updateSecurity(security: PrepareSecurityUpdate): InReview {

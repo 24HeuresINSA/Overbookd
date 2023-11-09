@@ -8,6 +8,12 @@ const TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE =
 const CONTRACTOR_NOT_FOUND_ERROR_MESSAGE =
   "Ce prestataire n'existe pas dans la fiche activité";
 
+const SIGNAGE_NOT_FOUND_ERROR_MESSAGE =
+  "Cette signalétique n'existe pas dans la fiche activité";
+
+const SIGNAGE_ALREADY_EXISTS_ERROR_MESSAGE =
+  "Une signalétique similaire existe déjà dans la fiche activité";
+
 const ELECTRICITY_SUPPLY_NOT_FOUND_ERROR_MESSAGE =
   "Cette demande d'elec n'existe pas dans la fiche activité";
 
@@ -46,6 +52,18 @@ export class TimeWindowAlreadyExists extends FestivalActivityError {
 export class ContractorNotFound extends FestivalActivityError {
   constructor() {
     super(CONTRACTOR_NOT_FOUND_ERROR_MESSAGE);
+  }
+}
+
+export class SignageNotFound extends FestivalActivityError {
+  constructor() {
+    super(SIGNAGE_NOT_FOUND_ERROR_MESSAGE);
+  }
+}
+
+export class SignageAlreadyExists extends FestivalActivityError {
+  constructor() {
+    super(SIGNAGE_ALREADY_EXISTS_ERROR_MESSAGE);
   }
 }
 

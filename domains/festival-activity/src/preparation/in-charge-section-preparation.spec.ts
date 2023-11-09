@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { escapeGame, lea } from "./preparation.test-utils";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
+import { ContractorNotFound } from "../festival-activity.error";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -91,10 +92,9 @@ describe("General section of festival activity preparation", () => {
         contractorToAdd,
       );
 
-      const id = 2;
       const expectedContractor = {
-        id,
         ...contractorToAdd,
+        id: 2,
         email: null,
         company: null,
         comment: null,
@@ -105,22 +105,62 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe("when adherent want to update a contractor", () => {
-    it("should update contractor", async () => {
-      const contractorToUpdate = {
-        id: 1,
-        firstname: "Noel",
-        lastname: "Mouyno",
-        phone: "0123456789",
-        email: "noel@gmail.com",
-        company: "SNCF",
-        comment: null,
-      };
-      const { inCharge } = await prepareFestivalActivity.updateContractor(
-        escapeGame.id,
-        contractorToUpdate,
-      );
+    describe("when adherent want to update all fields of a contractor", () => {
+      it("should update all fields of contractor", async () => {
+        const contractorToUpdate = {
+          id: 1,
+          firstname: "Noel",
+          lastname: "Mouyno",
+          phone: "0123456789",
+          email: "noel@gmail.com",
+          company: "SNCF",
+          comment: null,
+        };
+        const { inCharge } = await prepareFestivalActivity.updateContractor(
+          escapeGame.id,
+          contractorToUpdate,
+        );
 
-      expect(inCharge.contractors).toContainEqual(contractorToUpdate);
+        expect(inCharge.contractors).toContainEqual(contractorToUpdate);
+      });
+    });
+
+    describe("when adherent want to update firstname, phone and comment of a contractor", () => {
+      it("should update firstname, phone and comment of contractor", async () => {
+        const contractorToUpdate = escapeGame.inCharge.contractors[0];
+        const updatedContractor = {
+          id: contractorToUpdate.id,
+          firstname: "Patrick",
+          phone: "0111111111",
+          comment: "J'adore ce mec",
+        };
+        const { inCharge } = await prepareFestivalActivity.updateContractor(
+          escapeGame.id,
+          updatedContractor,
+        );
+        const expectedContractor = {
+          ...contractorToUpdate,
+          ...updatedContractor,
+        };
+
+        expect(inCharge.contractors).toContainEqual(expectedContractor);
+      });
+    });
+
+    describe("when adherent want to update a contractor that does not exist", () => {
+      it("should indicate that contractor does not exist", async () => {
+        const contractorToUpdate = {
+          id: 10,
+          comment: "Oui",
+        };
+
+        await expect(
+          prepareFestivalActivity.updateContractor(
+            escapeGame.id,
+            contractorToUpdate,
+          ),
+        ).rejects.toThrow(ContractorNotFound);
+      });
     });
   });
 
