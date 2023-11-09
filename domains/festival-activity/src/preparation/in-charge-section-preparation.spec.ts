@@ -129,7 +129,7 @@ describe("General section of festival activity preparation", () => {
       it("should update firstname, phone and comment of contractor", async () => {
         const contractorToUpdate = escapeGame.inCharge.contractors[0];
         const updatedContractor = {
-          id: 1,
+          id: contractorToUpdate.id,
           firstname: "Patrick",
           phone: "0111111111",
           comment: "J'adore ce mec",
