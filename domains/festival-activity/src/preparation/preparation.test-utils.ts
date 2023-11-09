@@ -19,6 +19,12 @@ export const lea = {
   firstname: "Lea",
 };
 
+export const george = {
+  id: 3,
+  lastname: "Ergo",
+  firstname: "George",
+};
+
 export const escapeGame: Draft = {
   id: 1,
   status: DRAFT,

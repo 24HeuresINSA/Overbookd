@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { escapeGame, lea } from "./preparation.test-utils";
+import { escapeGame, george, lea } from "./preparation.test-utils";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { ContractorNotFound } from "../festival-activity.error";
 
-describe("General section of festival activity preparation", () => {
+describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
@@ -17,45 +17,27 @@ describe("General section of festival activity preparation", () => {
     );
   });
 
-  describe("when adherent want to update a field", () => {
-    describe("when adherent want to update adherent in charge", () => {
-      it("should only update adherent", async () => {
-        const updateAdherent = { adherent: lea };
-
+  describe.each`
+    fields                 | activityName               | activityId       | update                                  | adherent                        | team                        | contractors
+    ${"adherent"}          | ${escapeGame.general.name} | ${escapeGame.id} | ${{ adherent: lea }}                    | ${lea}                          | ${escapeGame.inCharge.team} | ${escapeGame.inCharge.contractors}
+    ${"team"}              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "plaizir" }}                  | ${escapeGame.inCharge.adherent} | ${"plaizir"}                | ${escapeGame.inCharge.contractors}
+    ${"adherent and team"} | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "Qlture", adherent: george }} | ${george}                       | ${"Qlture"}                 | ${escapeGame.inCharge.contractors}
+  `(
+    "when updating $fields from $activityName",
+    ({ fields, activityId, update, adherent, team, contractors }) => {
+      it(`should only update ${fields}`, async () => {
         const { inCharge } =
           await prepareFestivalActivity.updateInChargeSection(
-            escapeGame.id,
-            updateAdherent,
+            activityId,
+            update,
           );
-
-        expect(inCharge.adherent).toEqual(updateAdherent.adherent);
-
-        const { team, contractors } = escapeGame.inCharge;
-
+        expect(inCharge.adherent).toEqual(adherent);
         expect(inCharge.team).toBe(team);
+
         expect(inCharge.contractors).toEqual(contractors);
       });
-    });
-
-    describe("when adherent want to update team in charge", () => {
-      it("should only update team", async () => {
-        const updateTeam = { team: "plaizir" };
-
-        const { inCharge } =
-          await prepareFestivalActivity.updateInChargeSection(
-            escapeGame.id,
-            updateTeam,
-          );
-
-        expect(inCharge.team).toBe(updateTeam.team);
-
-        const { adherent, contractors } = escapeGame.inCharge;
-
-        expect(inCharge.adherent).toBe(adherent);
-        expect(inCharge.contractors).toEqual(contractors);
-      });
-    });
-  });
+    },
+  );
 
   describe("when adherent want to update multiple fields consecutively", () => {
     describe("when adherent want to update adherent then team in 2 times", () => {
@@ -104,63 +86,47 @@ describe("General section of festival activity preparation", () => {
     });
   });
 
-  describe("when adherent want to update a contractor", () => {
-    describe("when adherent want to update all fields of a contractor", () => {
-      it("should update all fields of contractor", async () => {
-        const contractorToUpdate = {
-          id: 1,
-          firstname: "Noel",
-          lastname: "Mouyno",
-          phone: "0123456789",
-          email: "noel@gmail.com",
-          company: "SNCF",
-          comment: null,
-        };
+  const jeanDupont = escapeGame.inCharge.contractors[0];
+  const jeanDupontName = `${jeanDupont.firstname} ${jeanDupont.lastname}`;
+
+  describe.each`
+    fields                                      | activityName               | activityId       | contractorName    | contractor    | update
+    ${"phone"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ phone: "0612451729" }}
+    ${"email"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ email: "jean@dupont.fr" }}
+    ${"company"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ company: "Auto-Dupont" }}
+    ${"comment"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ comment: "Fait des dad jokes" }}
+    ${"phone and email"}                        | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ phone: "0615372947", email: "jean@dupont.com" }}
+    ${"company and lastname"}                   | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ company: null, lastname: "De La Porte" }}
+    ${"firstname, lastname, company and email"} | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ firstname: "Inco", lastname: "Nito", company: null, email: null }}
+  `(
+    "when updating $fields from $contractorName in $activityName",
+    ({ fields, activityId, contractor, update }) => {
+      it(`should only update ${fields}`, async () => {
         const { inCharge } = await prepareFestivalActivity.updateContractor(
+          activityId,
+          { id: contractor.id, ...update },
+        );
+        expect(inCharge.contractors).toContainEqual({
+          ...contractor,
+          ...update,
+        });
+      });
+    },
+  );
+
+  describe("when adherent updating a contractor that does not exist", () => {
+    it("should indicate that contractor does not exist", async () => {
+      const contractorToUpdate = {
+        id: 10,
+        comment: "Oui",
+      };
+
+      await expect(
+        prepareFestivalActivity.updateContractor(
           escapeGame.id,
           contractorToUpdate,
-        );
-
-        expect(inCharge.contractors).toContainEqual(contractorToUpdate);
-      });
-    });
-
-    describe("when adherent want to update firstname, phone and comment of a contractor", () => {
-      it("should update firstname, phone and comment of contractor", async () => {
-        const contractorToUpdate = escapeGame.inCharge.contractors[0];
-        const updatedContractor = {
-          id: contractorToUpdate.id,
-          firstname: "Patrick",
-          phone: "0111111111",
-          comment: "J'adore ce mec",
-        };
-        const { inCharge } = await prepareFestivalActivity.updateContractor(
-          escapeGame.id,
-          updatedContractor,
-        );
-        const expectedContractor = {
-          ...contractorToUpdate,
-          ...updatedContractor,
-        };
-
-        expect(inCharge.contractors).toContainEqual(expectedContractor);
-      });
-    });
-
-    describe("when adherent want to update a contractor that does not exist", () => {
-      it("should indicate that contractor does not exist", async () => {
-        const contractorToUpdate = {
-          id: 10,
-          comment: "Oui",
-        };
-
-        await expect(
-          prepareFestivalActivity.updateContractor(
-            escapeGame.id,
-            contractorToUpdate,
-          ),
-        ).rejects.toThrow(ContractorNotFound);
-      });
+        ),
+      ).rejects.toThrow(ContractorNotFound);
     });
   });
 
