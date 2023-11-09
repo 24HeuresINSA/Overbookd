@@ -1,24 +1,30 @@
 <template>
   <div>
-    <v-container v-show="usersBornToday.length" class="userBornToday">
+    <v-container
+      v-show="volunteersBornToday.length"
+      class="volunteer-born-today"
+    >
       <v-card
-        v-for="userBornToday in usersBornToday"
-        :key="userBornToday.id"
-        class="userBornToday__card"
+        v-for="volunteer in volunteersBornToday"
+        :key="volunteer.id"
+        class="volunteer-born-today__card"
         color="#FFD700"
       >
         <v-card-title>
-          <ProfilePicture :user="userBornToday" />
+          <ProfilePicture :user="volunteer" />
           <p>Joyeux anniv 🥳</p>
-          <p>{{ formatUserNameWithNickname(userBornToday) }}</p>
+          <p>{{ formatUserNameWithNickname(volunteer) }}</p>
         </v-card-title>
       </v-card>
     </v-container>
     <div class="volunteers">
-      <div v-for="user in users" :key="user.id">
+      <div v-for="volunteer in volunteers" :key="volunteer.id">
         <v-sheet min-height="250">
           <v-lazy>
-            <TrombinoscopeCard :user="user" class="trombinoscopeCard" />
+            <TrombinoscopeCard
+              :volunteer="volunteer"
+              class="trombinoscopeCard"
+            />
           </v-lazy>
         </v-sheet>
       </div>
@@ -28,38 +34,39 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { UserPersonalData } from "@overbookd/user";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 
+type Volunteer = UserPersonalData | UserPersonalDataWithProfilePicture;
+
 export default Vue.extend({
   name: "Trombinoscope",
   components: { TrombinoscopeCard, ProfilePicture },
   computed: {
-    users() {
-      return this.$accessor.user.users;
+    volunteers(): Volunteer[] {
+      return this.$accessor.user.volunteers;
     },
-    usersBornToday() {
-      return this.$accessor.user.users.filter(
-        (user: UserPersonalDataWithProfilePicture) => {
-          const today = new Date();
-          const birthdate = new Date(user.birthdate);
-          return (
-            birthdate.getDate() === today.getDate() &&
-            birthdate.getMonth() === today.getMonth()
-          );
-        },
-      );
+    volunteersBornToday(): Volunteer[] {
+      return this.volunteers.filter((volunteer) => {
+        const today = new Date();
+        const birthdate = new Date(volunteer.birthdate);
+        return (
+          birthdate.getDate() === today.getDate() &&
+          birthdate.getMonth() === today.getMonth()
+        );
+      });
     },
   },
-  created() {
-    if (!this.users.length) this.$accessor.user.fetchUsers();
-  },
-  mounted() {
-    this.usersBornToday.forEach((user: UserPersonalDataWithProfilePicture) => {
-      this.$accessor.user.setProfilePicture(user);
-    });
+  async mounted() {
+    await this.$accessor.user.fetchVolunteers();
+    this.volunteersBornToday.forEach(
+      (user: UserPersonalDataWithProfilePicture) => {
+        this.$accessor.user.setProfilePicture(user);
+      },
+    );
   },
   methods: {
     formatUserNameWithNickname,
@@ -73,7 +80,7 @@ export default Vue.extend({
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
 
-.userBornToday {
+.volunteer-born-today {
   padding: 5px;
   width: 100%;
   margin-left: auto;

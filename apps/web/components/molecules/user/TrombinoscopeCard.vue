@@ -1,14 +1,14 @@
 <template>
   <v-card class="profilePictureCard">
     <v-card-title class="name-with-picture">
-      <ProfilePicture :user="user" />
-      {{ formatUserNameWithNickname(user) }}
+      <ProfilePicture :user="volunteer" />
+      {{ formatUserNameWithNickname(volunteer) }}
     </v-card-title>
     <v-card-subtitle>
-      <TeamChip v-for="team of user.teams" :key="team" :team="team" />
+      <TeamChip v-for="team of volunteer.teams" :key="team" :team="team" />
     </v-card-subtitle>
     <v-card-text class="comment">
-      {{ user.comment }}
+      {{ volunteer.comment }}
     </v-card-text>
   </v-card>
 </template>
@@ -24,7 +24,7 @@ export default Vue.extend({
   name: "TrombinoscopeCard",
   components: { TeamChip, ProfilePicture },
   props: {
-    user: {
+    volunteer: {
       type: Object as () => UserPersonalDataWithProfilePicture,
       required: true,
     },
