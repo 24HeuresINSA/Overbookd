@@ -2,7 +2,7 @@
   <div class="home">
     <AlertListing />
 
-    <h1 class="welcome">Bienvenue sur Overbookd 👋</h1>
+    <h1 class="welcome">{{ welcomeMessage }}</h1>
 
     <nav>
       <v-text-field
@@ -51,6 +51,36 @@ export default Vue.extend({
   computed: {
     me(): MyUserInformation {
       return this.$accessor.user.me;
+    },
+    displayedName(): string {
+      return this.me.nickname ? this.me.nickname : this.me.firstname;
+    },
+    welcomeMessage(): string {
+      const possibleMessages: string[] = [
+        `Bienvenue ${this.displayedName} 👋`,
+        `Bonnnsoiiiiiiir ${this.displayedName} !!!`,
+        `Wassup ${this.displayedName} 👊`,
+        `你好 ${this.displayedName} 🥟`,
+        `Howdy ${this.displayedName} 🤠`,
+        `Salut ${this.displayedName} 👋`,
+        `Je s'appelle ${this.displayedName} 🌲`,
+        `ボンジュール ${this.displayedName} 🥖`,
+        `Hello ${this.displayedName} 👋`,
+        `Bonjour sur Overbookd ${this.displayedName} 👋`,
+        `Mes plus sincères salutations ${this.displayedName} 🥸`,
+        `Guten Abend ${this.displayedName} 🥨`,
+        `おはよう ${this.displayedName} 🍜`,
+
+        `Bonjour ${this.displayedName} \uDE9E\uD83E`
+          .split("")
+          .reverse()
+          .join(""),
+      ];
+
+      // return random element from possibleMessages
+      return possibleMessages[
+        Math.floor(Math.random() * possibleMessages.length)
+      ];
     },
     isDesktop(): boolean {
       return isDesktop();
