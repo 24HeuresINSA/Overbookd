@@ -56,6 +56,11 @@ export default Vue.extend({
       return this.me.nickname ? this.me.nickname : this.me.firstname;
     },
     welcomeMessage(): string {
+      const mirrorMessage = `Bonjour ${this.displayedName} \uDE9E\uD83E`
+        .split("")
+        .reverse()
+        .join("");
+
       const possibleMessages: string[] = [
         `Bienvenue ${this.displayedName} 👋`,
         `Bonnnsoiiiiiiir ${this.displayedName} !!!`,
@@ -66,15 +71,11 @@ export default Vue.extend({
         `Je s'appelle ${this.displayedName} 🌲`,
         `ボンジュール ${this.displayedName} 🥖`,
         `Hello ${this.displayedName} 👋`,
-        `Bonjour sur Overbookd ${this.displayedName} 👋`,
+        `Bienvenue sur Overbookd ${this.displayedName} 👋`,
         `Mes plus sincères salutations ${this.displayedName} 🥸`,
         `Guten Abend ${this.displayedName} 🥨`,
         `おはよう ${this.displayedName} 🍜`,
-
-        `Bonjour ${this.displayedName} \uDE9E\uD83E`
-          .split("")
-          .reverse()
-          .join(""),
+        mirrorMessage,
       ];
 
       // return random element from possibleMessages
