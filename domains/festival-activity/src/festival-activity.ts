@@ -48,7 +48,7 @@ export type Adherent = {
 };
 
 export type Contractor = {
-  id: string;
+  id: number;
   firstname: string;
   lastname: string;
   phone: string;

@@ -57,7 +57,7 @@ export const pcSecurite: Draft = {
   inquiry: {
     timeWindows: [
       {
-        id: "1-202305121900-202305150800",
+        id: "202305121900-202305150800",
         start: new Date("2023-05-12 09:00"),
         end: new Date("2023-05-15 08:00"),
       },
@@ -88,7 +88,7 @@ export const finaleEsport: Draft = {
       {
         start: new Date("2023-05-13 19:00"),
         end: new Date("2023-05-14 01:00"),
-        id: "2-202305131900-202305140100",
+        id: "202305131900-202305140100",
       },
     ],
   },
@@ -107,7 +107,7 @@ export const finaleEsport: Draft = {
   inquiry: {
     timeWindows: [
       {
-        id: "2-202305121900-202305150800",
+        id: "202305121900-202305150800",
         start: new Date("2023-05-12 09:00"),
         end: new Date("2023-05-15 08:00"),
       },

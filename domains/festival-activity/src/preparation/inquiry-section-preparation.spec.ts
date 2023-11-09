@@ -41,7 +41,7 @@ describe("Inquiry section of festival activity preparation", () => {
 
       const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
       const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const id = `${escapeGame.id}-${startDuration.inMinutes}-${endDuration.inMinutes}`;
+      const id = `${startDuration.inMinutes}-${endDuration.inMinutes}`;
 
       const expectedTimeWindow = { id, ...timeWindowToAdd };
       expect(inquiry.timeWindows).toContainEqual(expectedTimeWindow);
@@ -79,7 +79,7 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when adherent want to remove a time window", () => {
     it("should remove the time window", async () => {
-      const timeWindowIdToRemove = "1-28071900-28072140";
+      const timeWindowIdToRemove = "28071900-28072140";
 
       const { inquiry } =
         await prepareFestivalActivity.removeTimeWindowFromInquiry(

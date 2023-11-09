@@ -53,7 +53,7 @@ export type PrepareElectricitySupplyCreation = Pick<
 };
 
 export type PrepareElectricitySupplyUpdate = {
-  id: string;
+  id: ElectricitySupply["id"];
   connection?: ElectricityConnection;
   device?: string;
   power?: number;

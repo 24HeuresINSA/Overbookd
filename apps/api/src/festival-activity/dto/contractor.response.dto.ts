@@ -4,9 +4,9 @@ import { Contractor } from "@overbookd/festival-activity";
 export class ContractorResponseDto implements Contractor {
   @ApiProperty({
     description: "Contractor id",
-    type: String,
+    type: Number,
   })
-  id: string;
+  id: number;
 
   @ApiProperty({
     description: "Contractor first name",

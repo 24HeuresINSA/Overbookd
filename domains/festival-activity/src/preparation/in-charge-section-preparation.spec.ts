@@ -91,7 +91,7 @@ describe("General section of festival activity preparation", () => {
         contractorToAdd,
       );
 
-      const id = "1-2";
+      const id = 2;
       const expectedContractor = {
         id,
         ...contractorToAdd,
@@ -107,7 +107,7 @@ describe("General section of festival activity preparation", () => {
   describe("when adherent want to update a contractor", () => {
     it("should update contractor", async () => {
       const contractorToUpdate = {
-        id: "1-1",
+        id: 1,
         firstname: "Noel",
         lastname: "Mouyno",
         phone: "0123456789",

@@ -55,7 +55,7 @@ describe("General section of festival activity preparation", () => {
         electricitySupplyToAdd,
       );
 
-      const id = "1-ordinateur-p17_16a_mono";
+      const id = "ordinateur-p17_16a_mono";
       const expectedElectricitySupply = {
         id,
         ...electricitySupplyToAdd,
@@ -99,7 +99,7 @@ describe("General section of festival activity preparation", () => {
         updatedelectricitySupply,
       );
 
-      const id = "1-ordinateur-p17_16a_tetra";
+      const id = "ordinateur-p17_16a_tetra";
       const expectedElectricitySupply = {
         ...electricitySupplyToUpdate,
         ...updatedelectricitySupply,
@@ -112,7 +112,7 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to update an electricity supply that does not exist", () => {
       it("should indicate that electricity supply does not exist", async () => {
         const electricitySupplyToUpdate = {
-          id: "1-bonjour-p17_16a_tetra",
+          id: "bonjour-p17_16a_tetra",
           comment: "Ceci est un commentaire",
         };
 
@@ -128,7 +128,7 @@ describe("General section of festival activity preparation", () => {
     describe("when adherent want to update an electricity supply with data that generate existing id", () => {
       it("should indicate that electricity supply already exists", async () => {
         const electricitySupplyToUpdate: PrepareElectricitySupplyUpdate = {
-          id: "1-lumiere-p17_16a_tetra",
+          id: "lumiere-p17_16a_tetra",
           device: "Enceinte",
           connection: P17_32A_TETRA,
         };
