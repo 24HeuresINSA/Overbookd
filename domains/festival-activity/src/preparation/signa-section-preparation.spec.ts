@@ -12,7 +12,7 @@ import {
   SignageNotFound,
 } from "../festival-activity.error";
 
-describe("General section of festival activity preparation", () => {
+describe("Signa section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
@@ -81,82 +81,64 @@ describe("General section of festival activity preparation", () => {
     });
   });
 
-  describe("when adherent want to update a signage", () => {
-    describe("when adherent want to update text and comment of a signage", () => {
-      it("should update text and comment of signage", async () => {
-        const signageToUpdate = escapeGame.signa.signages[0];
-        const updatedSignage = {
-          id: signageToUpdate.id,
-          text: "Bienvenue à l'Escape Game",
-          comment: "Ecris blanc sur noir",
-        };
+  const panneauEscapeGame = escapeGame.signa.signages[0];
+  const bacheEscapeGame = escapeGame.signa.signages[1];
 
+  describe.each`
+    fields                                | activityName               | activityId       | signage              | signageId               | update                                                                                                         | expectedId
+    ${"comment"}                          | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ comment: "Ecris blanc sur noir" }}                                                                         | ${undefined}
+    ${"quantity"}                         | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ quantity: 7 }}                                                                                             | ${undefined}
+    ${"text"}                             | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ text: "Bienvenue à l'escape game" }}                                                                       | ${"panneau-bienvenue-a-l-escape-game-4x3"}
+    ${"size"}                             | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ size: "A0" }}                                                                                              | ${"panneau-escape-game-a0"}
+    ${"type"}                             | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ type: BACHE }}                                                                                             | ${"bache-escape-game-4x3"}
+    ${"quantity and comment"}             | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ quantity: 1000, comment: "Je ne sais pas combien il m'en faut" }}                                          | ${undefined}
+    ${"text and comment"}                 | ${escapeGame.general.name} | ${escapeGame.id} | ${panneauEscapeGame} | ${panneauEscapeGame.id} | ${{ text: "L'Xscape Game", comment: "C'est pas une faute, c'est sur le theme Elon Musk" }}                     | ${"panneau-l-xscape-game-4x3"}
+    ${"text, size and comment"}           | ${escapeGame.general.name} | ${escapeGame.id} | ${bacheEscapeGame}   | ${bacheEscapeGame.id}   | ${{ text: "L'Xscape Game =>", size: "3 héras", comment: "C'est pas une faute, c'est sur le theme Elon Musk" }} | ${"bache-l-xscape-game-=>-3-heras"}
+    ${"quantity, type, size and comment"} | ${escapeGame.general.name} | ${escapeGame.id} | ${bacheEscapeGame}   | ${bacheEscapeGame.id}   | ${{ quantity: 2, type: PANNEAU, size: "2x1 metres", comment: null }}                                           | ${"panneau-bienvenue-2x1-metres"}
+  `(
+    "when updating $fields from $signageId in $activityName",
+    ({ fields, activityId, signage, update, expectedId }) => {
+      const shouldAlsoUpdatId = expectedId ? " and contractor id" : "";
+
+      it(`should only update ${fields}${shouldAlsoUpdatId}`, async () => {
         const { signa } = await prepareFestivalActivity.updateSignage(
-          escapeGame.id,
-          updatedSignage,
+          activityId,
+          { id: signage.id, ...update },
         );
-        const expectedSignage = {
-          ...signageToUpdate,
-          ...updatedSignage,
-          id: "panneau-bienvenue-a-l-escape-game-4x3",
-        };
-
-        expect(signa.signages).toContainEqual(expectedSignage);
+        expect(signa.signages).toContainEqual({
+          ...signage,
+          ...update,
+          id: expectedId ?? signage.id,
+        });
       });
+    },
+  );
+
+  describe("when updating a signage that does not exist", () => {
+    it("should indicate that signage does not exist", async () => {
+      const signageToUpdate = {
+        id: "bache-le-panneau-qui-n-existe-pas-a4",
+        comment: "Oui",
+      };
+
+      await expect(
+        prepareFestivalActivity.updateSignage(escapeGame.id, signageToUpdate),
+      ).rejects.toThrow(SignageNotFound);
     });
+  });
 
-    describe("when adherent want to update quantity, type, size and comment of a signage", () => {
-      it("should update quantity, type, size and comment of signage", async () => {
-        const signageToUpdate = escapeGame.signa.signages[1];
-        const updatedSignage: PrepareSignageUpdate = {
-          id: signageToUpdate.id,
-          quantity: 2,
-          type: PANNEAU,
-          size: "2x1 metres",
-          comment: null,
-        };
+  describe("when updating a signage with data that generate existing id", () => {
+    it("should indicate that signage already exists", async () => {
+      const signageToUpdate: PrepareSignageUpdate = {
+        id: escapeGame.signa.signages[0].id,
+        text: "Bienvenue",
+        size: "10m par 2m",
+        type: BACHE,
+      };
 
-        const { signa } = await prepareFestivalActivity.updateSignage(
-          escapeGame.id,
-          updatedSignage,
-        );
-
-        const expectedSignage = {
-          ...signageToUpdate,
-          ...updatedSignage,
-          id: "panneau-bienvenue-2x1-metres",
-        };
-
-        expect(signa.signages).toContainEqual(expectedSignage);
-      });
-    });
-
-    describe("when adherent want to update a signage that does not exist", () => {
-      it("should indicate that signage does not exist", async () => {
-        const signageToUpdate = {
-          id: "bache-le-panneau-qui-n-existe-pas-a4",
-          comment: "Oui",
-        };
-
-        await expect(
-          prepareFestivalActivity.updateSignage(escapeGame.id, signageToUpdate),
-        ).rejects.toThrow(SignageNotFound);
-      });
-    });
-
-    describe("when adherent want to update a signage with data that generate existing id", () => {
-      it("should indicate that signage already exists", async () => {
-        const signageToUpdate: PrepareSignageUpdate = {
-          id: escapeGame.signa.signages[0].id,
-          text: "Bienvenue",
-          size: "10m par 2m",
-          type: BACHE,
-        };
-
-        await expect(
-          prepareFestivalActivity.updateSignage(escapeGame.id, signageToUpdate),
-        ).rejects.toThrow(SignageAlreadyExists);
-      });
+      await expect(
+        prepareFestivalActivity.updateSignage(escapeGame.id, signageToUpdate),
+      ).rejects.toThrow(SignageAlreadyExists);
     });
   });
 

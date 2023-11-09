@@ -403,7 +403,9 @@ class Signages {
     }
 
     const updatedSignage = this.generateUpdatedSignage(currentSignage, form);
-    this.throwIfAlreadyExists(updatedSignage.id);
+    if (updatedSignage.id !== currentSignage.id) {
+      this.throwIfAlreadyExists(updatedSignage.id);
+    }
 
     const signages = updateItemToList(
       this.signages,
