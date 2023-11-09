@@ -18,27 +18,37 @@ describe("General section of festival activity preparation", () => {
     );
   });
 
-  describe("when adherent want to update a field", () => {
-    describe("when adherent want to update name", () => {
-      it("should only update name", async () => {
-        const nameToUpdate = { name: "Laser game" };
-
+  describe.each`
+    fields                                                       | activityName               | activityId       | update                                                                                                                                                           | name                       | description                       | categories                       | toPublish                       | photoLink                         | isFlagship                       | timeWindows
+    ${"name"}                                                    | ${escapeGame.general.name} | ${escapeGame.id} | ${{ name: "Laser Game" }}                                                                                                                                        | ${"Laser Game"}            | ${escapeGame.general.description} | ${escapeGame.general.categories} | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${escapeGame.general.isFlagship} | ${escapeGame.general.timeWindows}
+    ${"description"}                                             | ${escapeGame.general.name} | ${escapeGame.id} | ${{ description: "Trouve la sortie" }}                                                                                                                           | ${escapeGame.general.name} | ${"Trouve la sortie"}             | ${escapeGame.general.categories} | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${escapeGame.general.isFlagship} | ${escapeGame.general.timeWindows}
+    ${"categories"}                                              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ categories: ["Culture", "Sport"] }}                                                                                                                          | ${escapeGame.general.name} | ${escapeGame.general.description} | ${["Culture", "Sport"]}          | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${escapeGame.general.isFlagship} | ${escapeGame.general.timeWindows}
+    ${"photoLink"}                                               | ${escapeGame.general.name} | ${escapeGame.id} | ${{ photoLink: "https://instagram.com/123456" }}                                                                                                                 | ${escapeGame.general.name} | ${escapeGame.general.description} | ${escapeGame.general.categories} | ${escapeGame.general.toPublish} | ${"https://instagram.com/123456"} | ${escapeGame.general.isFlagship} | ${escapeGame.general.timeWindows}
+    ${"isFlagship"}                                              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ isFlagship: false }}                                                                                                                                         | ${escapeGame.general.name} | ${escapeGame.general.description} | ${escapeGame.general.categories} | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${false}                         | ${escapeGame.general.timeWindows}
+    ${"name and description"}                                    | ${escapeGame.general.name} | ${escapeGame.id} | ${{ name: "Nuit de la Qlture", description: "Montre comment tu es culturé" }}                                                                                    | ${"Nuit de la Qlture"}     | ${"Montre comment tu es culturé"} | ${escapeGame.general.categories} | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${escapeGame.general.isFlagship} | ${escapeGame.general.timeWindows}
+    ${"categories, isFlagship and photoLink"}                    | ${escapeGame.general.name} | ${escapeGame.id} | ${{ categories: ["Sport", "Enfant"], photoLink: "https://pinterest.com/12345", isFlagship: false }}                                                              | ${escapeGame.general.name} | ${escapeGame.general.description} | ${["Sport", "Enfant"]}           | ${escapeGame.general.toPublish} | ${"https://pinterest.com/12345"}  | ${false}                         | ${escapeGame.general.timeWindows}
+    ${"name, description, categories, isFlagship and photoLink"} | ${escapeGame.general.name} | ${escapeGame.id} | ${{ name: "Lancer de haches", description: "Réveille le Viking", categories: ["Sport", "Enfant"], photoLink: "https://pinterest.com/12345", isFlagship: false }} | ${"Lancer de haches"}      | ${"Réveille le Viking"}           | ${["Sport", "Enfant"]}           | ${escapeGame.general.toPublish} | ${"https://pinterest.com/12345"}  | ${false}                         | ${escapeGame.general.timeWindows}
+  `(
+    "when updating $fields from $activityName",
+    ({
+      fields,
+      activityId,
+      update,
+      name,
+      description,
+      categories,
+      toPublish,
+      photoLink,
+      isFlagship,
+      timeWindows,
+    }) => {
+      it(`should only update ${fields}`, async () => {
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGame.id,
-          nameToUpdate,
+          activityId,
+          update,
         );
 
-        expect(general.name).toBe(nameToUpdate.name);
-
-        const {
-          description,
-          categories,
-          toPublish,
-          photoLink,
-          isFlagship,
-          timeWindows,
-        } = escapeGame.general;
-
+        expect(general.name).toBe(name);
         expect(general.description).toBe(description);
         expect(general.categories).toEqual(categories);
         expect(general.toPublish).toBe(toPublish);
@@ -46,87 +56,21 @@ describe("General section of festival activity preparation", () => {
         expect(general.isFlagship).toBe(isFlagship);
         expect(general.timeWindows).toEqual(timeWindows);
       });
-    });
+    },
+  );
 
-    describe("when adherent want to update description", () => {
-      it("should only update description", async () => {
-        const descriptionToUpdate = { description: "Tire sur les cibles" };
+  describe("when setting activity as private", () => {
+    it("should reset photolink and isFlagship", async () => {
+      const update = { toPublish: false };
 
-        const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGame.id,
-          descriptionToUpdate,
-        );
+      const { general } = await prepareFestivalActivity.updateGeneralSection(
+        escapeGame.id,
+        update,
+      );
 
-        expect(general.description).toBe(descriptionToUpdate.description);
-
-        const {
-          name,
-          categories,
-          toPublish,
-          photoLink,
-          isFlagship,
-          timeWindows,
-        } = escapeGame.general;
-
-        expect(general.name).toBe(name);
-        expect(general.categories).toEqual(categories);
-        expect(general.toPublish).toBe(toPublish);
-        expect(general.photoLink).toBe(photoLink);
-        expect(general.isFlagship).toBe(isFlagship);
-        expect(general.timeWindows).toEqual(timeWindows);
-      });
-    });
-
-    describe("when adherent want to update categories", () => {
-      it("should only update categories", async () => {
-        const categoriesToUpdate = { categories: ["Culture", "Sport"] };
-
-        const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGame.id,
-          categoriesToUpdate,
-        );
-
-        expect(general.categories).toEqual(categoriesToUpdate.categories);
-
-        const {
-          name,
-          description,
-          toPublish,
-          photoLink,
-          isFlagship,
-          timeWindows,
-        } = escapeGame.general;
-
-        expect(general.name).toBe(name);
-        expect(general.description).toBe(description);
-        expect(general.toPublish).toBe(toPublish);
-        expect(general.photoLink).toBe(photoLink);
-        expect(general.isFlagship).toBe(isFlagship);
-        expect(general.timeWindows).toEqual(timeWindows);
-      });
-    });
-
-    describe("when adherent want to update festival activity publication status", () => {
-      it("should set toPublish to false and clean publication values", async () => {
-        const toPublishToUpdate = { toPublish: false };
-
-        const { general } = await prepareFestivalActivity.updateGeneralSection(
-          escapeGame.id,
-          toPublishToUpdate,
-        );
-
-        expect(general.toPublish).toEqual(toPublishToUpdate.toPublish);
-        expect(general.photoLink).toBe(null);
-        expect(general.isFlagship).toBe(false);
-
-        const { name, description, categories, timeWindows } =
-          escapeGame.general;
-
-        expect(general.name).toBe(name);
-        expect(general.description).toBe(description);
-        expect(general.categories).toEqual(categories);
-        expect(general.timeWindows).toEqual(timeWindows);
-      });
+      expect(general.isFlagship).toBe(false);
+      expect(general.photoLink).toBe(null);
+      expect(general.isFlagship).toBe(false);
     });
   });
 
