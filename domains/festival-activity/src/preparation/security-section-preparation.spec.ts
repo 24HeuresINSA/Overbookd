@@ -3,7 +3,7 @@ import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { escapeGame } from "./preparation.test-utils";
 
-describe("General section of festival activity preparation", () => {
+describe("Security section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
   let prepareFestivalActivities: InMemoryPrepareFestivalActivityRepository;
 
