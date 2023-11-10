@@ -22,6 +22,7 @@ import { ContributionRepository } from "./contribution.repository";
 import { AlertRepository } from "./alert.repository";
 import { NotificationRepository } from "./notification.repository";
 import { FestivalActivityRepository } from "./festival-activity.repository";
+import { PersonalAccountRepository } from "./personal-account.repository";
 
 const repositories = {
   user: UserRepository,
@@ -49,6 +50,7 @@ const repositories = {
   contribution: ContributionRepository,
   alert: AlertRepository,
   notification: NotificationRepository,
+  personalAccount: PermissionRepository,
 };
 
 type repoKey = keyof typeof repositories;
@@ -80,4 +82,5 @@ export const RepoFactory = {
   ContributionRepository,
   AlertRepository,
   NotificationRepository,
+  PersonalAccountRepository,
 };

@@ -48,6 +48,7 @@ import { AlertModule } from "./alert/alert.module";
 import { NotificationModule } from "./notification/notification.module";
 import { FestivalActivityModule } from "./festival-activity/festival-activity.module";
 import { ONE_MINUTE_IN_MS } from "@overbookd/period";
+import { PersonalAccountModule } from "./personal-account/personal-account.module";
 
 @Module({
   imports: [
@@ -115,6 +116,7 @@ import { ONE_MINUTE_IN_MS } from "@overbookd/period";
     CatalogSignageModule,
     AlertModule,
     NotificationModule,
+    PersonalAccountModule,
   ],
   controllers: [AppController],
   providers: [

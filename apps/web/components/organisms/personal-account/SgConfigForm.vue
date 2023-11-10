@@ -10,25 +10,25 @@
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
           <MoneyField
-            v-model="tempSgConfig.prixFutBlonde"
+            v-model="tempBarrelPrices.prixFutBlonde"
             label="Prix fût blonde"
             @keydown.enter="save"
           >
           </MoneyField>
           <MoneyField
-            v-model="tempSgConfig.prixFutBlanche"
+            v-model="tempBarrelPrices.prixFutBlanche"
             label="Prix fût blanche"
             @keydown.enter="save"
           >
           </MoneyField>
           <MoneyField
-            v-model="tempSgConfig.prixFutTriple"
+            v-model="tempBarrelPrices.prixFutTriple"
             label="Prix fût Triple"
             @keydown.enter="save"
           >
           </MoneyField>
           <MoneyField
-            v-model="tempSgConfig.prixFutFlower"
+            v-model="tempBarrelPrices.prixFutFlower"
             label="Prix fût Flower"
             @keydown.enter="save"
           >
@@ -44,8 +44,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { SgConfig } from "~/utils/models/configuration.model";
-import { Configuration } from "@overbookd/configuration";
+import { BarrelPrices } from "@overbookd/personal-account";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
 export default Vue.extend({
@@ -53,37 +52,35 @@ export default Vue.extend({
   components: { MoneyField },
   data() {
     return {
-      tempSgConfig: {
+      tempBarrelPrices: {
         prixFutBlonde: 0,
         prixFutBlanche: 0,
         prixFutTriple: 0,
         prixFutFlower: 0,
-      } as SgConfig,
+      } as BarrelPrices,
       valid: false,
     };
   },
   computed: {
-    sgConfig(): SgConfig {
+    barrelPrices(): BarrelPrices {
       return (this.$accessor.configuration.get("sg") ||
-        this.tempSgConfig) as SgConfig;
+        this.tempBarrelPrices) as BarrelPrices;
     },
   },
   async mounted() {
     await this.$accessor.configuration.fetch("sg");
-    this.tempSgConfig = { ...this.sgConfig };
+    this.tempBarrelPrices = { ...this.barrelPrices };
   },
   methods: {
     save() {
-      const configuration: Configuration = {
-        key: "sg",
-        value: {
-          prixFutBlonde: +this.tempSgConfig.prixFutBlonde,
-          prixFutBlanche: +this.tempSgConfig.prixFutBlanche,
-          prixFutTriple: +this.tempSgConfig.prixFutTriple,
-          prixFutFlower: +this.tempSgConfig.prixFutFlower,
-        },
+      const prices = {
+        prixFutBlonde: +this.tempBarrelPrices.prixFutBlonde,
+        prixFutBlanche: +this.tempBarrelPrices.prixFutBlanche,
+        prixFutTriple: +this.tempBarrelPrices.prixFutTriple,
+        prixFutFlower: +this.tempBarrelPrices.prixFutFlower,
       };
-      this.$accessor.configuration.save(configuration);
+
+      this.$accessor.configuration.saveBarrelPrices(prices);
       this.closeDialog();
     },
     closeDialog() {
