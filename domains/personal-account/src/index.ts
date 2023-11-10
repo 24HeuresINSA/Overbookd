@@ -32,3 +32,5 @@ export {
   transactionTypes,
   TransferError,
 } from "./transaction";
+
+export type { BarrelPrices } from "./barrel-prices/configuration";
