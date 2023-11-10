@@ -33,7 +33,7 @@ export class PersonalAccountController {
   @Post("barrel-prices")
   @ApiResponse({
     status: 201,
-    description: "Upate barrel prices configuration",
+    description: "Update barrel prices configuration",
     type: BarrelPricesResponseDto,
   })
   async updateBarrelPrices(
