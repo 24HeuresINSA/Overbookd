@@ -2,7 +2,7 @@
   <div class="home">
     <AlertListing />
 
-    <h1 class="welcome">{{ welcomeMessage }}</h1>
+    <h1 class="welcome" :class="{ mirror }">{{ welcomeMessage }}</h1>
 
     <nav>
       <v-text-field
@@ -55,14 +55,17 @@ export default Vue.extend({
     displayedName(): string {
       return this.me.nickname ? this.me.nickname : this.me.firstname;
     },
+    mirrorMessage(): string {
+      return `Bonjour ${this.displayedName} 🪞`;
+    },
+    mirror(): boolean {
+      return this.welcomeMessage === this.mirrorMessage;
+    },
     welcomeMessage(): string {
-      const mirrorMessage = `Bonjour ${this.displayedName} \uDE9E\uD83E`
-        .split("")
-        .reverse()
-        .join("");
+      const defaultMessage = `Bienvenue ${this.displayedName} 👋`;
 
-      const possibleMessages: string[] = [
-        `Bienvenue ${this.displayedName} 👋`,
+      const possibleMessages = [
+        defaultMessage,
         `Bonnnsoiiiiiiir ${this.displayedName} !!!`,
         `Wassup ${this.displayedName} 👊`,
         `你好 ${this.displayedName} 🥟`,
@@ -75,13 +78,11 @@ export default Vue.extend({
         `Mes plus sincères salutations ${this.displayedName} 🥸`,
         `Guten Abend ${this.displayedName} 🥨`,
         `おはよう ${this.displayedName} 🍜`,
-        mirrorMessage,
+        this.mirrorMessage,
       ];
 
-      // return random element from possibleMessages
-      return possibleMessages[
-        Math.floor(Math.random() * possibleMessages.length)
-      ];
+      const randomIndex = Math.floor(Math.random() * possibleMessages.length);
+      return possibleMessages.at(randomIndex) ?? defaultMessage;
     },
     isDesktop(): boolean {
       return isDesktop();
@@ -120,9 +121,12 @@ export default Vue.extend({
 
   .welcome {
     font-size: 4rem;
+    text-align: center;
     @media only screen and (max-width: $mobile-max-width) {
       font-size: xx-large;
-      text-align: center;
+    }
+    &.mirror {
+      transform: scale(-1, 1);
     }
   }
 
