@@ -66,7 +66,7 @@ export default Vue.extend({
 
       const possibleMessages = [
         defaultMessage,
-        `Bonnnsoiiiiiiir ${this.displayedName} !!!`,
+        `BONNNSOIIIIIIIR ${this.displayedName} !!! 🔊`,
         `Wassup ${this.displayedName} 👊`,
         `你好 ${this.displayedName} 🥟`,
         `Howdy ${this.displayedName} 🤠`,
