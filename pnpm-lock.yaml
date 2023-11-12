@@ -470,6 +470,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:^
         version: link:../permission
+      '@overbookd/slugify':
+        specifier: workspace:^
+        version: link:../../libraries/slugify
 
   domains/registration:
     dependencies:
