@@ -1,13 +1,11 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Configuration } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
-import { BarrelPrices } from "@overbookd/personal-account";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 
 const configurationRepo = RepoFactory.ConfigurationRepository;
-const personalAccountRepo = RepoFactory.PersonalAccountRepository;
 
 export const state = () => ({
   configurations: [] as Configuration[],
@@ -68,16 +66,6 @@ export const actions = actionTree(
       });
       if (!res) return;
       commit("SET_CONFIG", res.data);
-    },
-
-    async saveBarrelPrices({ commit }, prices: BarrelPrices) {
-      const res = await safeCall(
-        this,
-        personalAccountRepo.saveBarrelPrices(this, prices),
-        { successMessage: "Prix des futs mis a jour ✅" },
-      );
-      if (!res) return;
-      commit("SET_CONFIG", { key: "sg", value: res.data });
     },
   },
 );

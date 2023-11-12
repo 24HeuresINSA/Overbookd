@@ -24,14 +24,24 @@ function isBarrelPrices(value: JsonValue): value is BarrelPrices {
 export class PrismaConfigurations implements Configurations {
   constructor(private readonly prisma: PrismaService) {}
 
-  async saveConfiguraton(
-    prices: Configuration<BarrelPrices>,
-  ): Promise<BarrelPrices> {
+  async save(prices: Configuration<BarrelPrices>): Promise<BarrelPrices> {
     const { value } = await this.prisma.configuration.upsert({
       where: { key: prices.key },
       create: prices,
       update: prices,
       select: { value: true },
+    });
+
+    if (!isBarrelPrices(value)) {
+      throw new Error("Can't convert as barrel price");
+    }
+
+    return value;
+  }
+
+  async get(key: string): Promise<BarrelPrices> {
+    const { value } = await this.prisma.configuration.findUnique({
+      where: { key },
     });
 
     if (!isBarrelPrices(value)) {

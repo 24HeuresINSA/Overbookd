@@ -13,4 +13,10 @@ export class PersonalAccountRepository {
       prices,
     );
   }
+
+  static getBarrelPrices(context: Context) {
+    return context.$axios.get<HttpStringified<BarrelPrices>>(
+      `${this.basePath}/barrel-prices`,
+    );
+  }
 }
