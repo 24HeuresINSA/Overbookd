@@ -34,3 +34,10 @@ export {
 } from "./transaction";
 
 export type { BarrelPrices } from "./barrel-prices/configuration";
+export type {
+  Barrels,
+  ConfiguredBarrel,
+  NewBarrel,
+  AdjustPrice,
+} from "./barrel-prices/define-barrel-price";
+export { DefineBarrelPrice } from "./barrel-prices/define-barrel-price";

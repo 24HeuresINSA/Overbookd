@@ -66,7 +66,7 @@ export default Vue.extend({
   }),
   computed: {
     barrelPrices(): BarrelPrices {
-      return this.$accessor.personalAccount.barrels || this.tempBarrelPrices;
+      return this.$accessor.personalAccount.barrelPrices || this.tempBarrelPrices;
     },
   },
   async mounted() {
