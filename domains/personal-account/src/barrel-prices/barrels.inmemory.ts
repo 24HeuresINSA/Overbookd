@@ -1,10 +1,6 @@
 import { SlugifyService as Slugify } from "@overbookd/slugify";
 import { updateItemToList } from "@overbookd/list";
-import {
-  Barrels,
-  ConfiguredBarrel,
-  NewBarrel
-} from "./define-barrel-price";
+import { Barrels, ConfiguredBarrel, NewBarrel } from "./define-barrel-price";
 
 export class InMemoryBarrels implements Barrels {
   private barrels: ConfiguredBarrel[];
@@ -22,7 +18,7 @@ export class InMemoryBarrels implements Barrels {
 
   findBySlug(slug: string): Promise<ConfiguredBarrel | undefined> {
     return Promise.resolve(
-      this.barrels.find((barrel) => barrel.slug === Slugify.apply(slug))
+      this.barrels.find((barrel) => barrel.slug === Slugify.apply(slug)),
     );
   }
 
@@ -33,14 +29,14 @@ export class InMemoryBarrels implements Barrels {
 
   remove(slug: string): Promise<void> {
     this.barrels = this.barrels.filter(
-      (barrel) => barrel.slug !== Slugify.apply(slug)
+      (barrel) => barrel.slug !== Slugify.apply(slug),
     );
     return Promise.resolve();
   }
 
   save(barrel: ConfiguredBarrel): Promise<ConfiguredBarrel> {
     const index = this.barrels.findIndex(
-      (existingBarrel) => existingBarrel.slug === barrel.slug
+      (existingBarrel) => existingBarrel.slug === barrel.slug,
     );
     this.barrels = updateItemToList(this.barrels, index, barrel);
     return Promise.resolve(barrel);

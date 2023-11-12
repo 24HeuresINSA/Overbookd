@@ -1,4 +1,3 @@
-
 export class SimilarBarrelExist extends Error {
   constructor(slug: string) {
     const message = `Un fût de ${slug} est déjà configuré.`;
