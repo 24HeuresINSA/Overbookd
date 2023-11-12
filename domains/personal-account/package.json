@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@overbookd/list": "workspace:^",
-    "@overbookd/permission": "workspace:^"
+    "@overbookd/permission": "workspace:^",
+    "@overbookd/slugify": "workspace:^"
   }
 }
