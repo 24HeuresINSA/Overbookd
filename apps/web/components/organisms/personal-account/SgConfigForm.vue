@@ -47,28 +47,29 @@ import Vue from "vue";
 import { BarrelPrices } from "@overbookd/personal-account";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
+type SgConfigFormData = {
+  tempBarrelPrices: BarrelPrices;
+  valid: boolean;
+};
+
 export default Vue.extend({
   name: "SgConfigForm",
   components: { MoneyField },
-  data() {
-    return {
-      tempBarrelPrices: {
-        prixFutBlonde: 0,
-        prixFutBlanche: 0,
-        prixFutTriple: 0,
-        prixFutFlower: 0,
-      } as BarrelPrices,
-      valid: false,
-    };
-  },
+  data: (): SgConfigFormData => ({
+    tempBarrelPrices: {
+      prixFutBlonde: 0,
+      prixFutBlanche: 0,
+      prixFutTriple: 0,
+      prixFutFlower: 0,
+    },
+    valid: false,
+  }),
   computed: {
     barrelPrices(): BarrelPrices {
-      return (this.$accessor.configuration.get("sg") ||
-        this.tempBarrelPrices) as BarrelPrices;
+      return this.$accessor.personalAccount.barrels || this.tempBarrelPrices;
     },
   },
   async mounted() {
-    await this.$accessor.configuration.fetch("sg");
     this.tempBarrelPrices = { ...this.barrelPrices };
   },
   methods: {
@@ -80,7 +81,7 @@ export default Vue.extend({
         prixFutFlower: +this.tempBarrelPrices.prixFutFlower,
       };
 
-      this.$accessor.configuration.saveBarrelPrices(prices);
+      this.$accessor.personalAccount.adjustBarrelPrices(prices);
       this.closeDialog();
     },
     closeDialog() {

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -6,7 +6,10 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { MANAGE_PERSONAL_ACCOUNTS } from "@overbookd/permission";
+import {
+  MANAGE_PERSONAL_ACCOUNTS,
+  HAVE_PERSONAL_ACCOUNT,
+} from "@overbookd/permission";
 import { PersonalAccountService } from "./personal-account.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -40,5 +43,16 @@ export class PersonalAccountController {
     @Body() prices: BarrelPricesRequestDto,
   ): Promise<BarrelPricesResponseDto> {
     return this.personalAccountService.saveBarrelPrices(prices);
+  }
+
+  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Get("barrel-prices")
+  @ApiResponse({
+    status: 200,
+    description: "All configured barrel prices",
+    type: BarrelPricesResponseDto,
+  })
+  async getBarrelPrices(): Promise<BarrelPricesResponseDto> {
+    return this.personalAccountService.getBarrelPrices();
   }
 }
