@@ -2,9 +2,13 @@ import {
   BACHE,
   DRAFT,
   Draft,
+  IN_REVIEW,
+  InReview,
+  NOT_ASKING_TO_REVIEW,
   P17_16A_TETRA,
   P17_32A_TETRA,
   PANNEAU,
+  REVIEWING,
 } from "../festival-activity";
 
 const noel = {
@@ -132,5 +136,107 @@ export const escapeGame: Draft = {
       },
     ],
     water: null,
+  },
+};
+
+export const pcSecurite: InReview = {
+  id: 2,
+  status: IN_REVIEW,
+  general: {
+    name: "PC Securite",
+    description: "Maintenir l'ordre est indispensable",
+    categories: [],
+    toPublish: false,
+    photoLink: null,
+    isFlagship: false,
+    timeWindows: [
+      {
+        id: "28599360-28602600",
+        start: new Date("2024-05-17T18:00+02:00"),
+        end: new Date("2024-05-20T00:00+02:00"),
+      },
+    ],
+  },
+  inCharge: {
+    adherent: lea,
+    team: "secu",
+    contractors: [],
+  },
+  signa: {
+    location: "",
+    signages: [],
+  },
+  security: {
+    specialNeed: null,
+  },
+  supply: {
+    electricity: [],
+    water: null,
+  },
+  inquiry: {
+    timeWindows: [],
+    gears: [],
+    electricity: [],
+    barriers: [],
+  },
+  reviews: {
+    humain: REVIEWING,
+    signa: REVIEWING,
+    secu: REVIEWING,
+    matos: REVIEWING,
+    elec: REVIEWING,
+    barrieres: REVIEWING,
+    comcom: NOT_ASKING_TO_REVIEW,
+  },
+};
+
+export const justDance: InReview = {
+  id: 3,
+  status: IN_REVIEW,
+  general: {
+    name: "Just Dance",
+    description: "Viens t'amuser en defiant tes amis en battle de dance",
+    categories: ["Culture"],
+    toPublish: true,
+    photoLink: "https://pinterest.com/12345",
+    isFlagship: false,
+    timeWindows: [
+      {
+        id: "28071900-28072140",
+        start: new Date("2023-05-17T11:00+02:00"),
+        end: new Date("2023-05-17T15:00+02:00"),
+      },
+    ],
+  },
+  inCharge: {
+    adherent: noel,
+    team: "culture",
+    contractors: [],
+  },
+  signa: {
+    location: "",
+    signages: [],
+  },
+  security: {
+    specialNeed: null,
+  },
+  supply: {
+    electricity: [],
+    water: null,
+  },
+  inquiry: {
+    timeWindows: [],
+    gears: [],
+    electricity: [],
+    barriers: [],
+  },
+  reviews: {
+    humain: REVIEWING,
+    signa: REVIEWING,
+    secu: REVIEWING,
+    matos: REVIEWING,
+    elec: REVIEWING,
+    barrieres: REVIEWING,
+    comcom: REVIEWING,
   },
 };

@@ -1,6 +1,6 @@
 import { Prepare } from "./prepare-festival-activity";
 import { SlugifyService } from "@overbookd/slugify";
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 import {
   Adherent,
   Contractor,
@@ -19,7 +19,6 @@ import {
   InquiryAlreadyExists,
   SignageAlreadyExists,
   SignageNotFound,
-  TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import {
   PrepareGeneralUpdate,
@@ -39,6 +38,7 @@ import {
   PrepareSignageUpdate,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
+import { TimeWindows } from "./prepare-festival-activity";
 
 type PrepareInChargeFormWithAdherent = Omit<
   PrepareInChargeUpdate,
@@ -256,41 +256,6 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
         electricity,
       },
     };
-  }
-}
-
-class TimeWindows {
-  private constructor(private readonly timeWindows: TimeWindow[]) {}
-
-  get entries(): TimeWindow[] {
-    return this.timeWindows;
-  }
-
-  static build(timeWindows: TimeWindow[]): TimeWindows {
-    return new TimeWindows(timeWindows);
-  }
-
-  add(period: IProvidePeriod): TimeWindows {
-    const { start, end } = Period.init(period);
-    const id = this.generateTimeWindowId({ start, end });
-    const timeWindow = { id, start, end };
-
-    const alreadyExists = this.timeWindows.some((tw) => tw.id === id);
-    if (alreadyExists) throw new TimeWindowAlreadyExists();
-
-    return new TimeWindows([...this.timeWindows, timeWindow]);
-  }
-
-  remove(id: TimeWindow["id"]): TimeWindows {
-    return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
-  }
-
-  private generateTimeWindowId(period: IProvidePeriod): TimeWindow["id"] {
-    const { start, end } = period;
-    const startMinutes = Duration.ms(start.getTime()).inMinutes;
-    const endMinutes = Duration.ms(end.getTime()).inMinutes;
-
-    return `${startMinutes}-${endMinutes}`;
   }
 }
 

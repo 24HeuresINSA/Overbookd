@@ -8,7 +8,7 @@ const REQUIRED_CATEGORIES_ON_PUBLIC_ACTIVITY =
 const REQUIRED_TIMEWINDOWS_ON_PUBLIC_ACTIVITY =
   "Au moins un créneau horaire est nécessaire pour les animations publiées";
 
-type PublicDraftGeneral = Draft["general"] & {
+export type PublicDraftGeneral = Draft["general"] & {
   toPublish: true;
 };
 
@@ -61,10 +61,4 @@ export class PublicActivityGeneralSpecification {
   private static hasPhotoLinkSet(section: PublicDraftGeneral) {
     return section.photoLink !== null;
   }
-}
-
-export function isPublicActivity(
-  general: Draft["general"],
-): general is PublicDraftGeneral {
-  return general.toPublish;
 }

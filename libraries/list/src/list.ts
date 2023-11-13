@@ -17,3 +17,7 @@ export function moveAtFirstIndex<T>(list: T[], index: number): T[] {
   if (!item) return list;
   return [item, ...list.slice(0, index), ...list.slice(index + 1)];
 }
+
+export function hasAtLeastOneItem<T>(list: T[]): list is [T, ...T[]] {
+  return list.length > 0;
+}

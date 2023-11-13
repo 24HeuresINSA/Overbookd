@@ -6,9 +6,9 @@ import {
   REVIEWING,
 } from "../festival-activity";
 import {
-  isPublicActivity,
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
+  PublicDraftGeneral,
 } from "./specifications/general-section-specification";
 import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification";
 import { ActivitySignaSpecification } from "./specifications/signa-section-specification";
@@ -27,6 +27,7 @@ import {
   PrivateActivityReviewer,
   PublicActivityReviewer,
 } from "./waiting-for-review";
+import { Draft } from "../festival-activity";
 
 type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
@@ -133,4 +134,10 @@ export class InReviewFestivalActivity implements InReview {
       reviewers: this.isPublic ? [...reviewers, comcom] : reviewers,
     };
   }
+}
+
+function isPublicActivity(
+  general: Draft["general"],
+): general is PublicDraftGeneral {
+  return general.toPublish;
 }
