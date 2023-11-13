@@ -3,7 +3,12 @@ import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { TimeWindowAlreadyExists } from "../festival-activity.error";
 import { EndBeforeStart } from "@overbookd/period";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { escapeGame, justDance, pcSecurite } from "./preparation.test-utils";
+import {
+  bladeEnPoney,
+  escapeGame,
+  justDance,
+  pcSecurite,
+} from "./preparation.test-utils";
 import { NOT_ASKING_TO_REVIEW, REVIEWING, isDraft } from "../festival-activity";
 import {
   IsNotPublicActivity,
@@ -19,6 +24,7 @@ describe("General section of festival activity preparation", () => {
       escapeGame,
       pcSecurite,
       justDance,
+      bladeEnPoney,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -243,16 +249,23 @@ describe("General section of festival activity preparation", () => {
       });
     });
 
-    it("should remove the time window", async () => {
-      const timeWindowToRemove = escapeGame.general.timeWindows[0];
+    it.each`
+      activity        | activityName
+      ${escapeGame}   | ${escapeGame.general.name}
+      ${bladeEnPoney} | ${bladeEnPoney.general.name}
+    `(
+      "should remove the time window from $activityName",
+      async ({ activity }) => {
+        const timeWindowToRemove = activity.general.timeWindows[0];
 
-      const { general } =
-        await prepareFestivalActivity.removeTimeWindowFromGeneral(
-          escapeGame.id,
-          timeWindowToRemove.id,
-        );
+        const { general } =
+          await prepareFestivalActivity.removeTimeWindowFromGeneral(
+            activity.id,
+            timeWindowToRemove.id,
+          );
 
-      expect(general.timeWindows).not.toContainEqual(timeWindowToRemove);
-    });
+        expect(general.timeWindows).not.toContainEqual(timeWindowToRemove);
+      },
+    );
   });
 });

@@ -240,3 +240,59 @@ export const justDance: InReview = {
     comcom: REVIEWING,
   },
 };
+
+export const bladeEnPoney: InReview = {
+  id: 4,
+  status: IN_REVIEW,
+  general: {
+    name: "Balade en poney",
+    description: "Viens faire un tour de campus a dos de poney",
+    categories: ["Enfants", "Divertissement"],
+    toPublish: true,
+    photoLink: "https://pinterest.com/936302",
+    isFlagship: false,
+    timeWindows: [
+      {
+        id: "28600560-28600800",
+        start: new Date("2024-05-18T14:00+02:00"),
+        end: new Date("2024-05-18T18:00+02:00"),
+      },
+      {
+        id: "28602000-28602240",
+        start: new Date("2024-05-19T14:00+02:00"),
+        end: new Date("2024-05-19T18:00+02:00"),
+      },
+    ],
+  },
+  inCharge: {
+    adherent: noel,
+    team: "plaizir",
+    contractors: [],
+  },
+  signa: {
+    location: "",
+    signages: [],
+  },
+  security: {
+    specialNeed: null,
+  },
+  supply: {
+    electricity: [],
+    water: null,
+  },
+  inquiry: {
+    timeWindows: [],
+    gears: [],
+    electricity: [],
+    barriers: [],
+  },
+  reviews: {
+    humain: REVIEWING,
+    signa: REVIEWING,
+    secu: REVIEWING,
+    matos: REVIEWING,
+    elec: REVIEWING,
+    barrieres: REVIEWING,
+    comcom: REVIEWING,
+  },
+};
