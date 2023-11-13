@@ -33,7 +33,7 @@ export type Public = {
 type Private = {
   name: string;
   description: string;
-  categories: [];
+  categories: string[];
   toPublish: false;
   photoLink: null;
   isFlagship: false;
