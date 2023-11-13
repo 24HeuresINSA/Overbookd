@@ -67,13 +67,13 @@
     "vue-safe-html": "3.0.1"
   },
   "devDependencies": {
-    "@babel/preset-env": "7.23.2",
+    "@babel/preset-env": "7.23.3",
     "@jest/globals": "29.7.0",
     "@nuxt/types": "2.17.2",
     "@nuxt/typescript-build": "2.1.0",
     "@nuxtjs/color-mode": "2.1.1",
-    "@types/jest": "29.5.7",
-    "@types/node": "20.8.10",
+    "@types/jest": "29.5.8",
+    "@types/node": "20.9.0",
     "@vue/cli-plugin-babel": "5.0.8",
     "axios": "0.21.1",
     "eslint-plugin-vue": "7.20.0",
