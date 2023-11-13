@@ -44,6 +44,6 @@
     "jwt-decode": "4.0.0"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "9.0.4"
+    "@types/jsonwebtoken": "9.0.5"
   }
 }
