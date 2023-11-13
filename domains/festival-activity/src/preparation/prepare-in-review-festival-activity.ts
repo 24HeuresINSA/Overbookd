@@ -56,7 +56,7 @@ class General {
         ...this.general,
         name,
         description,
-        toPublish,
+        toPublish: false,
         categories,
         isFlagship: false,
         photoLink: null,
