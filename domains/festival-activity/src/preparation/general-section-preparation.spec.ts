@@ -4,7 +4,7 @@ import { TimeWindowAlreadyExists } from "../festival-activity.error";
 import { EndBeforeStart } from "@overbookd/period";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import {
-  bladeEnPoney,
+  baladeEnPoney,
   escapeGame,
   justDance,
   pcSecurite,
@@ -24,7 +24,7 @@ describe("General section of festival activity preparation", () => {
       escapeGame,
       pcSecurite,
       justDance,
-      bladeEnPoney,
+      baladeEnPoney,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -252,7 +252,7 @@ describe("General section of festival activity preparation", () => {
     it.each`
       activity        | activityName
       ${escapeGame}   | ${escapeGame.general.name}
-      ${bladeEnPoney} | ${bladeEnPoney.general.name}
+      ${baladeEnPoney} | ${baladeEnPoney.general.name}
     `(
       "should remove the time window from $activityName",
       async ({ activity }) => {

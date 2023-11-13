@@ -241,7 +241,7 @@ export const justDance: InReview = {
   },
 };
 
-export const bladeEnPoney: InReview = {
+export const baladeEnPoney: InReview = {
   id: 4,
   status: IN_REVIEW,
   general: {
