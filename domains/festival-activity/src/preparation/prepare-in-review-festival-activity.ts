@@ -137,8 +137,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, general };
   }
 
-  updateInCharge(inCharge: PrepareInChargeUpdate): InReview {
-    throw new Error("Method not implemented." + inCharge);
+  updateInCharge(form: PrepareInChargeUpdate): InReview {
+    const adherent = form.adherent ?? this.activity.inCharge.adherent;
+    const team = form.team ?? this.activity.inCharge.team;
+
+    const inCharge = { ...this.activity.inCharge, adherent, team };
+    return { ...this.activity, inCharge };
   }
 
   addContractor(contractor: PrepareContractorCreation): InReview {

@@ -223,7 +223,7 @@ describe("Inquiry section of festival activity preparation", () => {
     });
 
     describe("when adherent want to add an electricity inquiry that already exists", () => {
-      it("should should indicate that the electricity inquiry already exists", async () => {
+      it("should indicate that the electricity inquiry already exists", async () => {
         const existingElecInquiry = escapeGame.inquiry.electricity[0];
         const inquiryToAdd: PrepareInquiryRequestCreation = {
           ...existingElecInquiry,
