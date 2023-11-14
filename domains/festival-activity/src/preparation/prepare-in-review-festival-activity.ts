@@ -1,4 +1,4 @@
-import { Prepare, TimeWindows } from "./prepare-festival-activity";
+import { Contractors, Prepare, TimeWindows } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import {
   Contractor,
@@ -142,7 +142,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   addContractor(contractor: PrepareContractorCreation): InReview {
-    throw new Error("Method not implemented." + contractor);
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).add(contractor).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
   }
 
   updateContractor(contractor: PrepareContractorUpdate): InReview {

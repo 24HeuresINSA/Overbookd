@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { escapeGame, george, lea } from "./preparation.test-utils";
+import {
+  escapeGame,
+  george,
+  justDance,
+  lea,
+  pcSecurite,
+} from "./preparation.test-utils";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { ContractorNotFound } from "../festival-activity.error";
 
@@ -11,6 +17,8 @@ describe("In Charge section of festival activity preparation", () => {
   beforeEach(() => {
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
+      pcSecurite,
+      justDance,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -20,8 +28,11 @@ describe("In Charge section of festival activity preparation", () => {
   describe.each`
     fields                 | activityName               | activityId       | update                                  | adherent                        | team                        | contractors
     ${"adherent"}          | ${escapeGame.general.name} | ${escapeGame.id} | ${{ adherent: lea }}                    | ${lea}                          | ${escapeGame.inCharge.team} | ${escapeGame.inCharge.contractors}
+    ${"adherent"}          | ${justDance.general.name}  | ${justDance.id}  | ${{ adherent: george }}                 | ${george}                       | ${justDance.inCharge.team}  | ${justDance.inCharge.contractors}
     ${"team"}              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "plaizir" }}                  | ${escapeGame.inCharge.adherent} | ${"plaizir"}                | ${escapeGame.inCharge.contractors}
+    ${"team"}              | ${justDance.general.name}  | ${justDance.id}  | ${{ team: "vieux" }}                    | ${justDance.inCharge.adherent}  | ${"vieux"}                  | ${justDance.inCharge.contractors}
     ${"adherent and team"} | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "Qlture", adherent: george }} | ${george}                       | ${"Qlture"}                 | ${escapeGame.inCharge.contractors}
+    ${"adherent and team"} | ${justDance.general.name}  | ${justDance.id}  | ${{ team: "culture", adherent: lea }}   | ${lea}                          | ${"culture"}                | ${justDance.inCharge.contractors}
   `(
     "when updating $fields from $activityName",
     ({ fields, activityId, update, adherent, team, contractors }) => {
@@ -62,29 +73,43 @@ describe("In Charge section of festival activity preparation", () => {
     });
   });
 
-  describe("when adherent want to add a contractor", () => {
-    it("should add contractor", async () => {
-      const contractorToAdd = {
-        firstname: "Lea",
-        lastname: "Mouyno",
-        phone: "0123456789",
-      };
-      const { inCharge } = await prepareFestivalActivity.addContractor(
-        escapeGame.id,
-        contractorToAdd,
-      );
+  describe.each`
+    contractor                                                                                                                                         | activityName               | activity      | expectedFirstname | expectedLastname | expectedPhone   | expectedEmail            | expectedCompany | expectedComment
+    ${{ firstname: "Benjos", lastname: "Le Magicos", phone: "0612345678" }}                                                                            | ${escapeGame.general.name} | ${escapeGame} | ${"Lea"}          | ${"Mouyno"}      | ${"0123456789"} | ${null}                  | ${null}         | ${null}
+    ${{ firstname: "Rick", lastname: "Astley", phone: "0611111111", comment: "Never gonna give you up" }}                                              | ${justDance.general.name}  | ${justDance}  | ${"Rick"}         | ${"Astley"}      | ${"0611111111"} | ${null}                  | ${null}         | ${"Never gonna give you up"}
+    ${{ firstname: "Noel", lastname: "Pere", phone: "0600000000", email: "groenland@gmail.com", company: "Groenland", comment: "Type un peu louche" }} | ${pcSecurite.general.name} | ${pcSecurite} | ${"Noel"}         | ${"Pere"}        | ${"0600000000"} | ${"groenland@gmail.com"} | ${"Groenland"}  | ${"Type un peu louche"}
+  `(
+    "when adherent want to add a contractor in $activityName",
+    ({
+      contractor,
+      activity,
+      expectedFirstname,
+      expectedLastname,
+      expectedPhone,
+      expectedEmail,
+      expectedCompany,
+      expectedComment,
+    }) => {
+      it("should add the contractor", async () => {
+        const { inCharge } = await prepareFestivalActivity.addContractor(
+          activity.id,
+          contractor,
+        );
 
-      const expectedContractor = {
-        ...contractorToAdd,
-        id: 2,
-        email: null,
-        company: null,
-        comment: null,
-      };
+        const expectedContractor = {
+          id: 2,
+          firstname: expectedFirstname,
+          lastname: expectedLastname,
+          phone: expectedPhone,
+          email: expectedEmail,
+          company: expectedCompany,
+          comment: expectedComment,
+        };
 
-      expect(inCharge.contractors).toContainEqual(expectedContractor);
-    });
-  });
+        expect(inCharge.contractors).toContainEqual(expectedContractor);
+      });
+    },
+  );
 
   const jeanDupont = escapeGame.inCharge.contractors[0];
   const jeanDupontName = `${jeanDupont.firstname} ${jeanDupont.lastname}`;
