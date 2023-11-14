@@ -14,6 +14,7 @@ import {
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiNotFoundResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -110,6 +111,12 @@ export class PersonalAccountController {
     description: "Configured barrel updated",
     type: BarrelResponseDto,
   })
+  @ApiParam({
+    name: "slug",
+    type: String,
+    description: "Barrel slug",
+    required: true,
+  })
   async updateBarrel(
     @Param("slug") slug: string,
     @Body() adjustment: AdjustBarrelPriceRequestDto,
@@ -122,6 +129,12 @@ export class PersonalAccountController {
   @ApiResponse({
     status: 204,
     description: "Barrel removed",
+  })
+  @ApiParam({
+    name: "slug",
+    type: String,
+    description: "Barrel slug",
+    required: true,
   })
   async removeBarrel(@Param("slug") slug: string): Promise<void> {
     return this.personalAccountService.removeBarrel(slug);

@@ -2,12 +2,19 @@ import { ApiProperty } from "@nestjs/swagger";
 import { ConfiguredBarrel } from "@overbookd/personal-account";
 
 export class BarrelResponseDto implements ConfiguredBarrel {
-  @ApiProperty({})
+  @ApiProperty({
+    example: "blonde",
+  })
   slug: string;
 
-  @ApiProperty({})
+  @ApiProperty({
+    example: "Blonde",
+  })
   drink: string;
 
-  @ApiProperty({})
+  @ApiProperty({
+    description: "price in cents",
+    example: 7000,
+  })
   price: number;
 }
