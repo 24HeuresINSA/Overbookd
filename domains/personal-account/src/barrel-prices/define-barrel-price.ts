@@ -15,7 +15,7 @@ export type ConfiguredBarrel = {
   price: number;
 };
 
-type AdjustPrice = {
+export type AdjustPrice = {
   slug: string;
   price: number;
 };

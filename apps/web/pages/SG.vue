@@ -301,7 +301,7 @@ export default {
       };
     },
     sgConfig() {
-      return this.$accessor.personalAccount.barrels;
+      return this.$accessor.personalAccount.barrelPrices;
     },
     negativeBalanceMailLink() {
       const inDebtConsumers = this.consumers.filter(
@@ -326,7 +326,7 @@ export default {
   },
 
   async mounted() {
-    await this.$accessor.personalAccount.fetchBarrels();
+    await this.$accessor.personalAccount.fetchBarrelPrices();
     await this.$accessor.user.fetchPersonalAccountConsumers();
     this.totalPrice = this.sgConfig.prixFutBlonde;
     this.users = this.consumers;

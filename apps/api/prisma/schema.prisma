@@ -605,3 +605,11 @@ model CatalogSignage {
 
   @@map("catalog_signage")
 }
+
+model Barrel {
+  slug  String @id
+  drink String
+  price Int
+
+  @@map("barrel")
+}

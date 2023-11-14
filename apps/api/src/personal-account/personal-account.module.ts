@@ -4,6 +4,8 @@ import { PrismaConfigurations } from "./repository/configurations.prisma";
 import { PrismaService } from "../prisma.service";
 import { PrismaModule } from "../prisma.module";
 import { PersonalAccountService } from "./personal-account.service";
+import { PrismaBarrels } from "./repository/barrels.prisma";
+import { DefineBarrelPrice } from "@overbookd/personal-account";
 
 @Module({
   controllers: [PersonalAccountController],
@@ -14,10 +16,22 @@ import { PersonalAccountService } from "./personal-account.service";
       inject: [PrismaService],
     },
     {
+      provide: PrismaBarrels,
+      useFactory: (prisma: PrismaService) => new PrismaBarrels(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: DefineBarrelPrice,
+      useFactory: (barrels: PrismaBarrels) => new DefineBarrelPrice(barrels),
+      inject: [PrismaBarrels],
+    },
+    {
       provide: PersonalAccountService,
-      useFactory: (configurations: PrismaConfigurations) =>
-        new PersonalAccountService(configurations),
-      inject: [PrismaConfigurations],
+      useFactory: (
+        configurations: PrismaConfigurations,
+        defineBarrelPrice: DefineBarrelPrice,
+      ) => new PersonalAccountService(configurations, defineBarrelPrice),
+      inject: [PrismaConfigurations, DefineBarrelPrice],
     },
   ],
   imports: [PrismaModule],
