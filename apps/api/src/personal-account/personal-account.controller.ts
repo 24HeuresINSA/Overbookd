@@ -6,12 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseFilters,
   UseGuards,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiNotFoundResponse,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -28,6 +30,10 @@ import { BarrelPricesRequestDto } from "./dto/barrel-prices.request.dto";
 import { BarrelResponseDto } from "./dto/barrel.response.dto";
 import { AdjustBarrelPriceRequestDto } from "./dto/adjust-barrel-price.request.dto";
 import { CreateBarrelRequestDto } from "./dto/create-barrel.request.dto";
+import {
+  BarrelNotConfiguredFilter,
+  SimilarBarrelExistFilter,
+} from "./personal-account-error.filter";
 
 @ApiTags("personal-account")
 @Controller("personal-account")
@@ -39,6 +45,7 @@ import { CreateBarrelRequestDto } from "./dto/create-barrel.request.dto";
 })
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
+@UseFilters(new SimilarBarrelExistFilter(), new BarrelNotConfiguredFilter())
 export class PersonalAccountController {
   constructor(
     private readonly personalAccountService: PersonalAccountService,
@@ -94,6 +101,9 @@ export class PersonalAccountController {
   }
 
   @Permission(MANAGE_PERSONAL_ACCOUNTS)
+  @ApiNotFoundResponse({
+    description: "Can't find barrel matching requested slug",
+  })
   @Patch("barrels/:slug")
   @ApiResponse({
     status: 200,

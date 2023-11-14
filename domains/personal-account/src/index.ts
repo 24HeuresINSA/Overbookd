@@ -41,3 +41,7 @@ export type {
   AdjustPrice,
 } from "./barrel-prices/define-barrel-price";
 export { DefineBarrelPrice } from "./barrel-prices/define-barrel-price";
+export {
+  BarrelNotConfigured,
+  SimilarBarrelExist,
+} from "./barrel-prices/define-barrel-price.error";
