@@ -155,11 +155,21 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   updateContractor(contractor: PrepareContractorUpdate): InReview {
-    throw new Error("Method not implemented." + contractor);
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).update(contractor).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
   }
 
   removeContractor(id: Contractor["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).remove(id).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
   }
 
   updateSigna(signa: PrepareSignaUpdate): InReview {

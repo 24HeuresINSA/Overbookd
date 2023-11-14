@@ -115,15 +115,21 @@ describe("In Charge section of festival activity preparation", () => {
   const jeanDupont = escapeGame.inCharge.contractors[0];
   const jeanDupontName = `${jeanDupont.firstname} ${jeanDupont.lastname}`;
 
+  const charlesHenry = justDance.inCharge.contractors[0];
+  const charlesHenryName = `${charlesHenry.firstname} ${charlesHenry.lastname}`;
+
   describe.each`
-    fields                                      | activityName               | activityId       | contractorName    | contractor    | update
-    ${"phone"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ phone: "0612451729" }}
-    ${"email"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ email: "jean@dupont.fr" }}
-    ${"company"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ company: "Auto-Dupont" }}
-    ${"comment"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ comment: "Fait des dad jokes" }}
-    ${"phone and email"}                        | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ phone: "0615372947", email: "jean@dupont.com" }}
-    ${"company and lastname"}                   | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ company: null, lastname: "De La Porte" }}
-    ${"firstname, lastname, company and email"} | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName} | ${jeanDupont} | ${{ firstname: "Inco", lastname: "Nito", company: null, email: null }}
+    fields                                      | activityName               | activityId       | contractorName      | contractor      | update
+    ${"phone"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ phone: "0612451729" }}
+    ${"phone"}                                  | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ phone: "0707070707" }}
+    ${"email"}                                  | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ email: "jean@dupont.fr" }}
+    ${"company"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ company: "Auto-Dupont" }}
+    ${"comment"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ comment: "Fait des dad jokes" }}
+    ${"comment"}                                | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ comment: "Avec son gros pif" }}
+    ${"phone and email"}                        | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ phone: "0615372947", email: "jean@dupont.com" }}
+    ${"company and lastname"}                   | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ company: null, lastname: "De La Porte" }}
+    ${"firstname, lastname, company and email"} | ${escapeGame.general.name} | ${escapeGame.id} | ${jeanDupontName}   | ${jeanDupont}   | ${{ firstname: "Inco", lastname: "Nito", company: null, email: null }}
+    ${"firstname, lastname, company and email"} | ${justDance.general.name}  | ${justDance.id}  | ${charlesHenryName} | ${charlesHenry} | ${{ firstname: "Didier", lastname: "Jacques", company: "Didi & co", email: null }}
   `(
     "when updating $fields from $contractorName in $activityName",
     ({ fields, activityId, contractor, update }) => {
@@ -156,15 +162,18 @@ describe("In Charge section of festival activity preparation", () => {
     });
   });
 
-  describe("when adherent want to remove a contractor", () => {
-    it("should remove contractor", async () => {
-      const contractorToRemove = escapeGame.inCharge.contractors[0];
-      const { inCharge } = await prepareFestivalActivity.removeContractor(
-        escapeGame.id,
-        contractorToRemove.id,
-      );
+  describe.each`
+    activity      | activityName
+    ${escapeGame} | ${escapeGame.general.name}
+    ${justDance}  | ${justDance.general.name}
+  `("should remove the contractor from $activityName", async ({ activity }) => {
+    const contractorToRemove = activity.inCharge.contractors[0];
 
-      expect(inCharge.contractors).not.toContainEqual(contractorToRemove);
-    });
+    const { inCharge } = await prepareFestivalActivity.removeContractor(
+      activity.id,
+      contractorToRemove.id,
+    );
+
+    expect(inCharge.contractors).not.toContainEqual(contractorToRemove);
   });
 });
