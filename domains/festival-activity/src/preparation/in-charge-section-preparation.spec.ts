@@ -75,7 +75,7 @@ describe("In Charge section of festival activity preparation", () => {
 
   describe.each`
     contractor                                                                                                                                         | activityName               | activity      | expectedFirstname | expectedLastname | expectedPhone   | expectedEmail            | expectedCompany | expectedComment
-    ${{ firstname: "Benjos", lastname: "Le Magicos", phone: "0612345678" }}                                                                            | ${escapeGame.general.name} | ${escapeGame} | ${"Lea"}          | ${"Mouyno"}      | ${"0123456789"} | ${null}                  | ${null}         | ${null}
+    ${{ firstname: "Benjos", lastname: "Le Magicos", phone: "0612345678" }}                                                                            | ${escapeGame.general.name} | ${escapeGame} | ${"Benjos"}       | ${"Le Magicos"}  | ${"0612345678"} | ${null}                  | ${null}         | ${null}
     ${{ firstname: "Rick", lastname: "Astley", phone: "0611111111", comment: "Never gonna give you up" }}                                              | ${justDance.general.name}  | ${justDance}  | ${"Rick"}         | ${"Astley"}      | ${"0611111111"} | ${null}                  | ${null}         | ${"Never gonna give you up"}
     ${{ firstname: "Noel", lastname: "Pere", phone: "0600000000", email: "groenland@gmail.com", company: "Groenland", comment: "Type un peu louche" }} | ${pcSecurite.general.name} | ${pcSecurite} | ${"Noel"}         | ${"Pere"}        | ${"0600000000"} | ${"groenland@gmail.com"} | ${"Groenland"}  | ${"Type un peu louche"}
   `(
@@ -96,8 +96,9 @@ describe("In Charge section of festival activity preparation", () => {
           contractor,
         );
 
+        const expectedId = inCharge.contractors.at(-1)?.id ?? 0 + 1;
         const expectedContractor = {
-          id: 2,
+          id: expectedId,
           firstname: expectedFirstname,
           lastname: expectedLastname,
           phone: expectedPhone,
