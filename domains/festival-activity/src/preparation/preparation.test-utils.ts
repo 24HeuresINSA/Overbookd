@@ -211,7 +211,17 @@ export const justDance: InReview = {
   inCharge: {
     adherent: noel,
     team: "culture",
-    contractors: [],
+    contractors: [
+      {
+        id: 1,
+        firstname: "Charles",
+        lastname: "Henry",
+        phone: "0111111111",
+        email: "charles.henry@gmail.com",
+        company: "Charles Company",
+        comment: null,
+      },
+    ],
   },
   signa: {
     location: "",

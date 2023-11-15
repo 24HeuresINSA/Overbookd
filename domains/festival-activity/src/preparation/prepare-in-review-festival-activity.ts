@@ -1,4 +1,4 @@
-import { Prepare, TimeWindows } from "./prepare-festival-activity";
+import { Contractors, Prepare, TimeWindows } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import {
   Contractor,
@@ -137,20 +137,39 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, general };
   }
 
-  updateInCharge(inCharge: PrepareInChargeUpdate): InReview {
-    throw new Error("Method not implemented." + inCharge);
+  updateInCharge(form: PrepareInChargeUpdate): InReview {
+    const adherent = form.adherent ?? this.activity.inCharge.adherent;
+    const team = form.team ?? this.activity.inCharge.team;
+
+    const inCharge = { ...this.activity.inCharge, adherent, team };
+    return { ...this.activity, inCharge };
   }
 
   addContractor(contractor: PrepareContractorCreation): InReview {
-    throw new Error("Method not implemented." + contractor);
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).add(contractor).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
   }
 
   updateContractor(contractor: PrepareContractorUpdate): InReview {
-    throw new Error("Method not implemented." + contractor);
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).update(contractor).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
   }
 
   removeContractor(id: Contractor["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+    const contractors = Contractors.build(
+      this.activity.inCharge.contractors,
+    ).remove(id).entries;
+
+    const inCharge = { ...this.activity.inCharge, contractors };
+    return { ...this.activity, inCharge };
   }
 
   updateSigna(signa: PrepareSignaUpdate): InReview {
