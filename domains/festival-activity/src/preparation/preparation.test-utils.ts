@@ -232,7 +232,7 @@ export const justDance: InReview = {
   },
   supply: {
     electricity: [],
-    water: null,
+    water: "Une fontaine pour se rafraichir",
   },
   inquiry: {
     timeWindows: [

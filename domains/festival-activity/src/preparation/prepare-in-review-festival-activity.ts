@@ -204,8 +204,9 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, security };
   }
 
-  updateSupply(supply: PrepareSupplyUpdate): InReview {
-    throw new Error("Method not implemented." + supply);
+  updateSupply(form: PrepareSupplyUpdate): InReview {
+    const supply = { ...this.activity.supply, ...form };
+    return { ...this.activity, supply };
   }
 
   addElectricitySupply(

@@ -93,8 +93,7 @@ export class SecurityRequestDto implements PrepareSecurityUpdate {
 export class SupplyRequestDto implements PrepareSupplyUpdate {
   @ApiProperty({
     description: "Festival activity water supply",
-    required: false,
+    required: true,
   })
-  @IsOptional()
-  water?: string | null;
+  water: string | null;
 }

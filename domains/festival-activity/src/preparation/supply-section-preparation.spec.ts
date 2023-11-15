@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { escapeGame } from "./preparation.test-utils";
+import { escapeGame, justDance } from "./preparation.test-utils";
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
@@ -23,6 +23,7 @@ describe("Supply section of festival activity preparation", () => {
   beforeEach(() => {
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
+      justDance,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -30,19 +31,24 @@ describe("Supply section of festival activity preparation", () => {
   });
 
   describe("when adherent want to update a field", () => {
-    describe("when adherent want to update water supply", () => {
-      it("should only update water", async () => {
-        const updateWater = { water: "Jet d'eau" };
+    describe.each`
+      activityName               | activity      | update                    | expectedWater
+      ${escapeGame.general.name} | ${escapeGame} | ${{ water: "Jet d'eau" }} | ${"Jet d'eau"}
+      ${justDance.general.name}  | ${justDance}  | ${{ water: null }}        | ${null}
+    `(
+      "when updating water from $activityName",
+      ({ activity, update, expectedWater }) => {
+        it("should only update water", async () => {
+          const { supply } = await prepareFestivalActivity.updateSupplySection(
+            activity.id,
+            update,
+          );
 
-        const { supply } = await prepareFestivalActivity.updateSupplySection(
-          escapeGame.id,
-          updateWater,
-        );
-
-        expect(supply.water).toBe(updateWater.water);
-        expect(supply.electricity).toEqual(escapeGame.supply.electricity);
-      });
-    });
+          expect(supply.water).toBe(expectedWater);
+          expect(supply.electricity).toEqual(activity.supply.electricity);
+        });
+      },
+    );
   });
 
   describe("when adherent want to add an electricity supply", () => {

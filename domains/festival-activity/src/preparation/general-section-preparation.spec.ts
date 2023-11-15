@@ -205,7 +205,7 @@ describe("General section of festival activity preparation", () => {
       });
 
       describe("when adherent want to add a time window that already exists", () => {
-        it("should should indicate that the time window already exists", async () => {
+        it("should indicate that the time window already exists", async () => {
           const existingTimeWindow = activity.general.timeWindows[0];
 
           await expect(
@@ -218,7 +218,7 @@ describe("General section of festival activity preparation", () => {
       });
 
       describe("when adherent want to add a time window with end before start", () => {
-        it("should should indicate that end should be after start", async () => {
+        it("should indicate that end should be after start", async () => {
           const invalidTimeWindow = {
             start: new Date("2023-05-17T09:00+02:00"),
             end: new Date("2023-05-17T08:00+02:00"),

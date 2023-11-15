@@ -3,6 +3,7 @@ import {
   ElectricitySupply,
   Signage,
   SignageType,
+  Supply,
 } from "../festival-activity";
 import { Adherent, Contractor, InquiryRequest } from "../festival-activity";
 
@@ -60,7 +61,7 @@ export type PrepareSignageUpdate = {
 };
 
 export type PrepareSupplyUpdate = {
-  water?: string | null;
+  water: Supply["water"];
 };
 
 export type PrepareElectricitySupplyCreation = Pick<
