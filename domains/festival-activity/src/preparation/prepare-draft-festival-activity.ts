@@ -149,8 +149,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, signa };
   }
 
-  updateSecurity(form: FestivalActivity["security"]): Draft {
-    const security = { ...this.activity.security, ...form };
+  updateSecurity(security: FestivalActivity["security"]): Draft {
     return { ...this.activity, security };
   }
 

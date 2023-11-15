@@ -188,8 +188,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     throw new Error("Method not implemented." + id);
   }
 
-  updateSecurity(form: FestivalActivity["security"]): InReview {
-    const security = { ...this.activity.security, ...form };
+  updateSecurity(security: FestivalActivity["security"]): InReview {
     return { ...this.activity, security };
   }
 
