@@ -3,6 +3,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import {
   Contractor,
   ElectricitySupply,
+  FestivalActivity,
   InReview,
   InquiryRequest,
   NOT_ASKING_TO_REVIEW,
@@ -14,7 +15,6 @@ import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareSignaUpdate,
-  PrepareSecurityUpdate,
   PrepareSupplyUpdate,
   PrepareContractorCreation,
   PrepareElectricitySupplyCreation,
@@ -188,7 +188,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     throw new Error("Method not implemented." + id);
   }
 
-  updateSecurity(form: PrepareSecurityUpdate): InReview {
+  updateSecurity(form: FestivalActivity["security"]): InReview {
     const security = { ...this.activity.security, ...form };
     return { ...this.activity, security };
   }
