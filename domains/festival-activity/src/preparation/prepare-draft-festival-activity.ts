@@ -7,6 +7,7 @@ import {
   Draft,
   ElectricityConnection,
   ElectricitySupply,
+  FestivalActivity,
   InquiryRequest,
   Signage,
   TimeWindow,
@@ -22,7 +23,6 @@ import {
 import {
   PrepareGeneralUpdate,
   PrepareSignaUpdate,
-  PrepareSecurityUpdate,
   PrepareSupplyUpdate,
   PrepareInChargeUpdate,
   PrepareContractorCreation,
@@ -149,8 +149,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, signa };
   }
 
-  updateSecurity(form: PrepareSecurityUpdate): Draft {
-    const security = { ...this.activity.security, ...form };
+  updateSecurity(security: FestivalActivity["security"]): Draft {
     return { ...this.activity, security };
   }
 

@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   PrepareGeneralUpdate,
-  PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
 } from "@overbookd/festival-activity";
 import { IsOptional } from "class-validator";
 import { PrepareInChargeForm } from "../festival-activity.service";
+import { FestivalActivity } from "@overbookd/festival-activity";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({
@@ -80,13 +80,14 @@ export class SignaRequestDto implements PrepareSignaUpdate {
   location?: string | null;
 }
 
+type PrepareSecurityUpdate = FestivalActivity["security"];
+
 export class SecurityRequestDto implements PrepareSecurityUpdate {
   @ApiProperty({
     description: "Festival activity special security need",
-    required: false,
+    required: true,
   })
-  @IsOptional()
-  specialNeed?: string | null;
+  specialNeed: string | null;
 }
 
 export class SupplyRequestDto implements PrepareSupplyUpdate {

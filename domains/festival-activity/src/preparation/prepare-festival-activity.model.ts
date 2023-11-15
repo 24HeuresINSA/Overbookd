@@ -59,10 +59,6 @@ export type PrepareSignageUpdate = {
   comment?: string | null;
 };
 
-export type PrepareSecurityUpdate = {
-  specialNeed?: string | null;
-};
-
 export type PrepareSupplyUpdate = {
   water?: string | null;
 };

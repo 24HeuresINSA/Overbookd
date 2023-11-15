@@ -12,7 +12,6 @@ import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareInquiryRequestCreation,
-  PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
@@ -50,7 +49,7 @@ export type Prepare<T extends FestivalActivity> = {
   addSignage(signage: PrepareSignageCreation): T;
   updateSignage(signage: PrepareSignageUpdate): T;
   removeSignage(id: Signage["id"]): T;
-  updateSecurity(security: PrepareSecurityUpdate): T;
+  updateSecurity(security: FestivalActivity["security"]): T;
   updateSupply(supply: PrepareSupplyUpdate): T;
   addElectricitySupply(electricitySupply: PrepareElectricitySupplyCreation): T;
   updateElectricitySupply(electricitySupply: PrepareElectricitySupplyUpdate): T;
@@ -203,7 +202,7 @@ export class PrepareFestivalActivity {
 
   async updateSecuritySection(
     id: FestivalActivity["id"],
-    security: PrepareSecurityUpdate,
+    security: FestivalActivity["security"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(id);
     const prepare = this.getPrepareHelper(existingFA);

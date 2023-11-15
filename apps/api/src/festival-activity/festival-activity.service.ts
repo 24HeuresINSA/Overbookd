@@ -6,7 +6,6 @@ import {
   FestivalActivity,
   PrepareFestivalActivity,
   PrepareGeneralUpdate,
-  PrepareSecurityUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
@@ -73,7 +72,7 @@ export class FestivalActivityService {
 
   saveSecuritySection(
     id: number,
-    security: PrepareSecurityUpdate,
+    security: FestivalActivity["security"],
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }

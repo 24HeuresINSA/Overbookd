@@ -33,7 +33,6 @@ export type {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
   PrepareSignaUpdate,
-  PrepareSecurityUpdate,
   PrepareSupplyUpdate,
 } from "./preparation/prepare-festival-activity.model";
 export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";
