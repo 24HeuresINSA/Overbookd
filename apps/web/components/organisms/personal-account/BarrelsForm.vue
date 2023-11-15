@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import { ConfiguredBarrel } from "@overbookd/personal-account";
-import { defineComponent } from "vue";
+import Vue from "vue";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
 type BarrelsFormData = {
@@ -45,10 +45,9 @@ type BarrelsFormData = {
 
 const TYPING_DELAY = 500;
 
-export default defineComponent({
+export default Vue.extend({
   name: "BarrelsForm",
   components: { MoneyField },
-  emits: ["close-dialog"],
   data: (): BarrelsFormData => ({
     adjustPriceWithDelay: undefined,
     drink: "",
