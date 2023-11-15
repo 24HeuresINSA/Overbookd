@@ -167,7 +167,7 @@ export const pcSecurite: InReview = {
     signages: [],
   },
   security: {
-    specialNeed: null,
+    specialNeed: "Un vigil à l'entrée",
   },
   supply: {
     electricity: [],
