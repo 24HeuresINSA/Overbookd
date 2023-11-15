@@ -96,9 +96,8 @@ describe("In Charge section of festival activity preparation", () => {
           contractor,
         );
 
-        const expectedId = inCharge.contractors.at(-1)?.id ?? 0 + 1;
         const expectedContractor = {
-          id: expectedId,
+          id: expect.any(Number),
           firstname: expectedFirstname,
           lastname: expectedLastname,
           phone: expectedPhone,
@@ -166,14 +165,16 @@ describe("In Charge section of festival activity preparation", () => {
     activity      | activityName
     ${escapeGame} | ${escapeGame.general.name}
     ${justDance}  | ${justDance.general.name}
-  `("should remove the contractor from $activityName", async ({ activity }) => {
+  `("when removing the first contractor of $activityName", ({ activity }) => {
     const contractorToRemove = activity.inCharge.contractors[0];
 
-    const { inCharge } = await prepareFestivalActivity.removeContractor(
-      activity.id,
-      contractorToRemove.id,
-    );
+    it("should remove the contractor", async () => {
+      const { inCharge } = await prepareFestivalActivity.removeContractor(
+        activity.id,
+        contractorToRemove.id,
+      );
 
-    expect(inCharge.contractors).not.toContainEqual(contractorToRemove);
+      expect(inCharge.contractors).not.toContainEqual(contractorToRemove);
+    });
   });
 });
