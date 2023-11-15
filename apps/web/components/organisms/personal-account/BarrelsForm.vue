@@ -38,17 +38,19 @@ import { defineComponent } from "vue";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
 type BarrelsFormData = {
-  adjustPriceTimeout?: ReturnType<typeof setTimeout>;
+  adjustPriceWithDelay?: ReturnType<typeof setTimeout>;
   drink: string;
   price: number;
 };
+
+const TYPING_DELAY = 500;
 
 export default defineComponent({
   name: "BarrelsForm",
   components: { MoneyField },
   emits: ["close-dialog"],
   data: (): BarrelsFormData => ({
-    adjustPriceTimeout: undefined,
+    adjustPriceWithDelay: undefined,
     drink: "",
     price: 0,
   }),
@@ -74,10 +76,10 @@ export default defineComponent({
       this.$emit("close-dialog");
     },
     adjustBarrelPrice(slug: string, price: number) {
-      clearTimeout(this.adjustPriceTimeout?.ref());
-      this.adjustPriceTimeout = setTimeout(
+      clearTimeout(this.adjustPriceWithDelay?.ref());
+      this.adjustPriceWithDelay = setTimeout(
         () => this.$accessor.personalAccount.adjustBarrelPrice({ slug, price }),
-        500,
+        TYPING_DELAY,
       );
     },
     async removeBarrel(barrel: ConfiguredBarrel) {
