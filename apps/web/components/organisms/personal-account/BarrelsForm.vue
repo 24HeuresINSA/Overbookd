@@ -72,7 +72,7 @@ export default defineComponent({
       this.$emit("close-dialog");
     },
     adjustBarrelPrice(slug: string, price: number) {
-      clearTimeout(this.adjustPriceTimeout);
+      clearTimeout(this.adjustPriceTimeout?.ref());
       this.adjustPriceTimeout = setTimeout(
         () => this.$accessor.personalAccount.adjustBarrelPrice({ slug, price }),
         500,
