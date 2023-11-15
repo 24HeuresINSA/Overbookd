@@ -14,18 +14,20 @@
             :value="barrel.price"
             @change="($event) => adjustBarrelPrice(barrel.slug, $event)"
           />
-          <v-btn fab dark small color="primary" @click="removeBarrel(barrel)">
+          <v-btn fab dark small class="delete" @click="removeBarrel(barrel)">
             <v-icon dark> mdi-delete </v-icon>
           </v-btn>
         </div>
       </v-card-text>
-      <v-card-actions class="barrel-form__actions">
+      <v-card-text class="barrel-form__add">
         <div class="barrel">
-          <v-text-field v-model="drink" solo />
+          <v-text-field v-model="drink" solo label="Fût" />
           <MoneyField v-model="price" />
+          <v-btn fab dark small color="primary" @click="addNewBarrel">
+            <v-icon dark> mdi-plus </v-icon>
+          </v-btn>
         </div>
-        <v-btn color="primary" @click="addNewBarrel">Ajouter</v-btn>
-      </v-card-actions>
+      </v-card-text>
     </v-card>
   </div>
 </template>
@@ -96,9 +98,20 @@ export default defineComponent({
       text-align: center;
     }
   }
-  &__actions {
-    display: flex;
-    justify-content: center;
+}
+
+.barrel {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: baseline;
+  .delete {
+    background-color: $red-24h;
+    border-color: $red-24h;
+    &:hover {
+      background-color: change-color($color: $red-24h, $whiteness: 25%);
+      border-color: change-color($color: $red-24h, $whiteness: 25%);
+    }
   }
 }
 </style>
