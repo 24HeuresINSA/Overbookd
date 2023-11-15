@@ -22,6 +22,7 @@ describe("Security section of festival activity preparation", () => {
       activityName               | activityId       | update                                                | expectedSpecialNeed
       ${escapeGame.general.name} | ${escapeGame.id} | ${{ specialNeed: "Une bombe pour plus de réalisme" }} | ${"Une bombe pour plus de réalisme"}
       ${pcSecurite.general.name} | ${pcSecurite.id} | ${{ specialNeed: null }}                              | ${null}
+      ${pcSecurite.general.name} | ${pcSecurite.id} | ${{}}                                                 | ${"Un vigil à l'entrée"}
     `(
       "when updating special need from $activityName",
       ({ activityId, update, expectedSpecialNeed }) => {
