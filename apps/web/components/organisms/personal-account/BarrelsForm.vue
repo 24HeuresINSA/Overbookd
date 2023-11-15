@@ -43,6 +43,7 @@ type BarrelsFormData = {
 
 export default defineComponent({
   name: "BarrelsForm",
+  components: { MoneyField },
   emits: ["close-dialog"],
   data: (): BarrelsFormData => ({
     adjustPriceTimeout: undefined,
@@ -82,7 +83,6 @@ export default defineComponent({
       this.fetchBarrels();
     },
   },
-  components: { MoneyField },
 });
 </script>
 

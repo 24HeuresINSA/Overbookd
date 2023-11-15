@@ -77,13 +77,13 @@
 
           <v-select
             v-if="ready && isCask && useAlpha"
+            v-model="totalPrice"
             prepend-icon="mdi-beer"
             label="Fût"
             outlined
             :items="barrels"
             item-value="price"
             item-text="drink"
-            v-model="totalPrice"
           >
           </v-select>
 
@@ -91,8 +91,8 @@
             Configuration des fûts
           </v-btn>
           <v-btn
-            class="mt-4"
             v-if="isCask && useAlpha"
+            class="mt-4"
             @click="openBarrelsForm"
           >
             Configuration des fûts
