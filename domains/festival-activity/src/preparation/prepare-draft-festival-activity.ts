@@ -1,4 +1,4 @@
-import { Prepare } from "./prepare-festival-activity";
+import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { SlugifyService } from "@overbookd/slugify";
 import { IProvidePeriod } from "@overbookd/period";
 import {
@@ -11,12 +11,10 @@ import {
   InquiryRequest,
   Signage,
   TimeWindow,
-  WithInquiries,
 } from "../festival-activity";
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
-  InquiryAlreadyExists,
   SignageAlreadyExists,
   SignageNotFound,
 } from "../festival-activity.error";
@@ -30,15 +28,13 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
-  MATOS,
-  BARRIERES,
-  ELEC,
   PrepareSignageCreation,
   PrepareSignageUpdate,
 } from "./prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 import { TimeWindows } from "./prepare-festival-activity";
 import { Contractors } from "./prepare-festival-activity";
+import { AlreadyInitialized, Inquiries } from "./inquiries";
 
 type PrepareInChargeFormWithAdherent = Omit<
   PrepareInChargeUpdate,
@@ -189,72 +185,44 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, supply };
   }
 
-  addInquiryTimeWindow(period: IProvidePeriod): Draft {
-    const timeWindows = TimeWindows.build(
-      this.activity.inquiry.timeWindows,
-    ).add(period).entries;
+  initInquiry({ timeWindow, request }: InitInquiry): Draft {
+    if (Inquiries.alreadyInitialized(this.activity.inquiry)) {
+      throw new AlreadyInitialized();
+    }
+    const inquiry = Inquiries.init()
+      .addRequest(request)
+      .addTimeWindow(timeWindow).inquiry;
+    return { ...this.activity, inquiry };
+  }
 
-    const inquiry = { ...this.activity.inquiry, timeWindows };
+  addInquiryTimeWindow(period: IProvidePeriod): Draft {
+    const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
+      period,
+    ).inquiry;
     return { ...this.activity, inquiry };
   }
 
   removeInquiryTimeWindow(id: TimeWindow["id"]): Draft {
-    const timeWindows = TimeWindows.build(
-      this.activity.inquiry.timeWindows,
-    ).remove(id).entries;
-
-    const inquiry = { ...this.activity.inquiry, timeWindows };
+    const inquiry = Inquiries.build(this.activity.inquiry).removeTimeWindow(
+      id,
+    ).inquiry;
     return { ...this.activity, inquiry };
   }
 
   addInquiry(form: PrepareInquiryRequestCreation): Draft {
-    const { owner, ...inquiryToAdd } = form;
-    const updatedInquiry = this.addInquiryToOwnerSection(owner, inquiryToAdd);
-    const inquiry = { ...this.activity.inquiry, ...updatedInquiry };
+    const inquiry = Inquiries.build(this.activity.inquiry).addRequest(
+      form,
+    ).inquiry;
 
     return { ...this.activity, inquiry };
   }
 
-  private addInquiryToOwnerSection(
-    owner: PrepareInquiryRequestCreation["owner"],
-    inquiry: InquiryRequest,
-  ): { [key in keyof WithInquiries]?: [InquiryRequest, ...InquiryRequest[]] } {
-    const { section, inquiries } = this.findOwnerSection(owner);
-    return { [section]: Inquiries.build(inquiries).add(inquiry).entries };
-  }
-
-  private findOwnerSection(owner: PrepareInquiryRequestCreation["owner"]): {
-    section: keyof WithInquiries;
-    inquiries: InquiryRequest[];
-  } {
-    const inquiry = this.activity.inquiry;
-    switch (owner) {
-      case MATOS:
-        return { section: "gears", inquiries: inquiry.gears };
-      case BARRIERES:
-        return { section: "barriers", inquiries: inquiry.barriers };
-      case ELEC:
-        return { section: "electricity", inquiries: inquiry.electricity };
-    }
-  }
-
   removeInquiry(slug: InquiryRequest["slug"]): Draft {
-    const inquiry = this.activity.inquiry;
-    const [gears, barriers, electricity] = [
-      inquiry.gears,
-      inquiry.barriers,
-      inquiry.electricity,
-    ].map((inquiries) => Inquiries.build(inquiries).remove(slug).entries);
+    const inquiry = Inquiries.build(this.activity.inquiry).removeRequest(
+      slug,
+    ).inquiry;
 
-    return {
-      ...this.activity,
-      inquiry: {
-        ...this.activity.inquiry,
-        gears,
-        barriers,
-        electricity,
-      },
-    };
+    return { ...this.activity, inquiry };
   }
 }
 
@@ -430,34 +398,5 @@ class ElectricitySupplies {
     );
 
     return { ...updatedSupply, id };
-  }
-}
-
-class Inquiries {
-  private constructor(private readonly inquiries: InquiryRequest[]) {}
-
-  get entries(): InquiryRequest[] {
-    return this.inquiries;
-  }
-
-  static build(inquiries: InquiryRequest[]): Inquiries {
-    return new Inquiries(inquiries);
-  }
-
-  add({ slug, quantity, name }: InquiryRequest): Inquiries {
-    const inquiry = { slug, quantity, name };
-
-    const alreadyExists = this.inquiries.some(
-      (inquiry) => inquiry.slug === slug,
-    );
-    if (alreadyExists) throw new InquiryAlreadyExists();
-
-    return new Inquiries([...this.inquiries, inquiry]);
-  }
-
-  remove(slug: InquiryRequest["slug"]): Inquiries {
-    return new Inquiries(
-      this.inquiries.filter((inquiry) => inquiry.slug !== slug),
-    );
   }
 }

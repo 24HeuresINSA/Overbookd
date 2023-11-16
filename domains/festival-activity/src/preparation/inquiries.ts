@@ -1,0 +1,168 @@
+import { IProvidePeriod } from "@overbookd/period";
+import {
+  FestivalActivity,
+  InquiryRequest,
+  TimeWindow,
+} from "../festival-activity";
+import { InquiryAlreadyExists } from "../festival-activity.error";
+import { TimeWindows } from "./prepare-festival-activity";
+import {
+  BARRIERES,
+  ELEC,
+  MATOS,
+  PrepareInquiryRequestCreation,
+} from "./prepare-festival-activity.model";
+
+export class AlreadyInitialized extends Error {
+  constructor() {
+    super("La section demande de matos a deja ete initialisee");
+  }
+}
+
+type WithAtLeastOneItem<T> = [T, ...T[]];
+type MaybeWithOneItem<T> = T[] | WithAtLeastOneItem<T>;
+
+export class Inquiries<
+  T extends MaybeWithOneItem<TimeWindow>,
+  Gears extends MaybeWithOneItem<InquiryRequest>,
+  Barriers extends MaybeWithOneItem<InquiryRequest>,
+  Electricity extends MaybeWithOneItem<InquiryRequest>,
+> {
+  private constructor(
+    private readonly timeWindows: TimeWindows<T>,
+    private readonly gears: InquiryRequests<Gears>,
+    private readonly barriers: InquiryRequests<Barriers>,
+    private readonly electricity: InquiryRequests<Electricity>,
+  ) {}
+
+  get inquiry() {
+    return {
+      timeWindows: this.timeWindows.entries,
+      gears: this.gears.entries,
+      barriers: this.barriers.entries,
+      electricity: this.electricity.entries,
+    };
+  }
+
+  static build({
+    timeWindows,
+    gears,
+    barriers,
+    electricity,
+  }: FestivalActivity["inquiry"]) {
+    return new Inquiries(
+      TimeWindows.build(timeWindows),
+      InquiryRequests.build(gears),
+      InquiryRequests.build(barriers),
+      InquiryRequests.build(electricity),
+    );
+  }
+
+  static init() {
+    return new Inquiries(
+      TimeWindows.build([]),
+      InquiryRequests.build([]),
+      InquiryRequests.build([]),
+      InquiryRequests.build([]),
+    );
+  }
+
+  static alreadyInitialized(inquiry: FestivalActivity["inquiry"]): boolean {
+    const hasTimeWindows = inquiry.timeWindows.length > 0;
+    const requests = [
+      ...inquiry.gears,
+      ...inquiry.barriers,
+      ...inquiry.electricity,
+    ];
+    const hasRequests = requests.length > 0;
+
+    return hasTimeWindows || hasRequests;
+  }
+
+  addRequest({ owner, ...request }: PrepareInquiryRequestCreation) {
+    switch (owner) {
+      case MATOS:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears.add(request),
+          this.barriers,
+          this.electricity,
+        );
+      case BARRIERES:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears,
+          this.barriers.add(request),
+          this.electricity,
+        );
+
+      case ELEC:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears,
+          this.barriers,
+          this.electricity.add(request),
+        );
+    }
+  }
+
+  removeRequest(slug: InquiryRequest["slug"]) {
+    return new Inquiries(
+      this.timeWindows,
+      this.gears.remove(slug),
+      this.barriers.remove(slug),
+      this.electricity.remove(slug),
+    );
+  }
+
+  addTimeWindow(timeWindow: IProvidePeriod) {
+    return new Inquiries(
+      this.timeWindows.add(timeWindow),
+      this.gears,
+      this.barriers,
+      this.electricity,
+    );
+  }
+
+  removeTimeWindow(id: TimeWindow["id"]) {
+    return new Inquiries(
+      this.timeWindows.remove(id),
+      this.gears,
+      this.barriers,
+      this.electricity,
+    );
+  }
+}
+
+class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
+  private constructor(private readonly inquiries: T) {}
+
+  get entries(): T {
+    return this.inquiries;
+  }
+
+  static build(inquiries: MaybeWithOneItem<InquiryRequest>) {
+    return new InquiryRequests(inquiries);
+  }
+
+  add({
+    slug,
+    quantity,
+    name,
+  }: InquiryRequest): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
+    const inquiry = { slug, quantity, name };
+
+    const alreadyExists = this.inquiries.some(
+      (inquiry) => inquiry.slug === slug,
+    );
+    if (alreadyExists) throw new InquiryAlreadyExists();
+
+    return new InquiryRequests([inquiry, ...this.inquiries]);
+  }
+
+  remove(slug: InquiryRequest["slug"]): InquiryRequests<InquiryRequest[]> {
+    return new InquiryRequests(
+      this.inquiries.filter((inquiry) => inquiry.slug !== slug),
+    );
+  }
+}

@@ -5,7 +5,13 @@ import {
   TimeWindowAlreadyExists,
 } from "../festival-activity.error";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { escapeGame } from "./preparation.test-utils";
+import {
+  baladeEnPoney,
+  escapeGame,
+  justDance,
+  pcSecurite,
+  qgOrga,
+} from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import {
   BARRIERES,
@@ -13,6 +19,13 @@ import {
   MATOS,
   PrepareInquiryRequestCreation,
 } from "./prepare-festival-activity.model";
+import { AlreadyInitialized } from "./inquiries";
+
+const branleCanisse = {
+  slug: "branle-canisse",
+  name: "Branle canisse",
+  owner: MATOS,
+} as const;
 
 describe("Inquiry section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -21,31 +34,88 @@ describe("Inquiry section of festival activity preparation", () => {
   beforeEach(() => {
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
+      pcSecurite,
+      justDance,
+      baladeEnPoney,
+      qgOrga,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
     );
   });
 
+  describe.each`
+    activityName               | activityId       | timeWindow                                                                                | inquiryRequest
+    ${qgOrga.general.name}     | ${qgOrga.id}     | ${{ start: new Date("2024-05-18T11:00+02:00"), end: new Date("2024-05-18T13:00+02:00") }} | ${{ ...branleCanisse, quantity: 4 }}
+    ${pcSecurite.general.name} | ${pcSecurite.id} | ${{ start: new Date("2024-05-17T16:00+02:00"), end: new Date("2024-05-20T00:00+02:00") }} | ${{ ...branleCanisse, quantity: 10 }}
+  `(
+    "when activity $activityName doesn't have any inquiry request",
+    ({ activityId, timeWindow, inquiryRequest }) => {
+      it("should be able to init inquiry section with first timewindow and first request", async () => {
+        const { inquiry } = await prepareFestivalActivity.initInquiry(
+          activityId,
+          { timeWindow, request: inquiryRequest },
+        );
+        expect(inquiry.timeWindows).toHaveLength(1);
+        const requests = [
+          ...inquiry.barriers,
+          ...inquiry.electricity,
+          ...inquiry.gears,
+        ];
+        expect(requests).toHaveLength(1);
+      });
+    },
+  );
+
+  describe.each`
+    activityName               | activityId
+    ${escapeGame.general.name} | ${escapeGame.id}
+    ${justDance.general.name}  | ${justDance.id}
+  `(
+    "when $activityName already have some inquiry requests",
+    ({ activityId }) => {
+      it("should indicate that inquiry has already been initiate", async () => {
+        const timeWindow = {
+          start: new Date("2024-05-18T20:00+02:00"),
+          end: new Date("2024-05-18T22:00+02:00"),
+        };
+        const request = { ...branleCanisse, quantity: 1 };
+        const initializer = { timeWindow, request };
+
+        expect(
+          async () =>
+            await prepareFestivalActivity.initInquiry(activityId, initializer),
+        ).rejects.toThrow(AlreadyInitialized);
+      });
+    },
+  );
+
   describe("when adherent want to add a time window", () => {
-    it("should add the time window", async () => {
-      const timeWindowToAdd = {
-        start: new Date("2023-05-17T18:00+02:00"),
-        end: new Date("2023-05-17T20:00+02:00"),
-      };
+    describe.each`
+      start                       | end                         | activityId       | activityName
+      ${"2023-05-17T18:00+02:00"} | ${"2023-05-17T20:00+02:00"} | ${escapeGame.id} | ${escapeGame.general.name}
+    `(
+      "when adding $start - $end timewindow to $activityId",
+      ({ start, end, activityId }) => {
+        it("should be listed in timewindows", async () => {
+          const startDate = new Date(start);
+          const endDate = new Date(end);
+          const startTimestamp = Duration.ms(startDate.getTime());
+          const endTimestamp = Duration.ms(endDate.getTime());
+          const expectedId = `${startTimestamp.inMinutes}-${endTimestamp.inMinutes}`;
+          const timeWindowToAdd = { start: startDate, end: endDate };
 
-      const { inquiry } = await prepareFestivalActivity.addTimeWindowInInquiry(
-        escapeGame.id,
-        timeWindowToAdd,
-      );
+          const { inquiry } =
+            await prepareFestivalActivity.addTimeWindowInInquiry(
+              activityId,
+              timeWindowToAdd,
+            );
 
-      const startDuration = Duration.ms(timeWindowToAdd.start.getTime());
-      const endDuration = Duration.ms(timeWindowToAdd.end.getTime());
-      const id = `${startDuration.inMinutes}-${endDuration.inMinutes}`;
-
-      const expectedTimeWindow = { id, ...timeWindowToAdd };
-      expect(inquiry.timeWindows).toContainEqual(expectedTimeWindow);
-    });
+          const expectedTimeWindow = { ...timeWindowToAdd, id: expectedId };
+          expect(inquiry.timeWindows).toContainEqual(expectedTimeWindow);
+        });
+      },
+    );
 
     describe("when adherent want to add a time window that already exists", () => {
       it("should should indicate that the time window already exists", async () => {
@@ -97,10 +167,8 @@ describe("Inquiry section of festival activity preparation", () => {
   describe("when adherent want to add a gear inquiry", () => {
     it("should add the gear inquiry", async () => {
       const inquiryToAdd: PrepareInquiryRequestCreation = {
-        slug: "branle-canisse",
-        name: "Branle canisse",
+        ...branleCanisse,
         quantity: 3,
-        owner: MATOS,
       };
 
       const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
