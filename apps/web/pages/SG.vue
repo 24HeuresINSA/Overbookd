@@ -74,8 +74,28 @@
             <v-radio label="Fut Flower Wager" :value="sgConfig.prixFutFlower">
             </v-radio>
           </v-radio-group>
+
+          <v-select
+            v-if="ready && isCask && useAlpha"
+            v-model="totalPrice"
+            prepend-icon="mdi-beer"
+            label="Fût"
+            outlined
+            :items="barrels"
+            item-value="price"
+            item-text="drink"
+          >
+          </v-select>
+
           <v-btn v-if="isCask" @click="openSgConfigForm">
             Configuration des fûts
+          </v-btn>
+          <v-btn
+            v-if="isCask && useAlpha"
+            class="mt-4"
+            @click="openBarrelsForm"
+          >
+            Gestion des fûts
           </v-btn>
           <v-btn class="mt-4" :href="negativeBalanceMailLink">
             Envoyer un mail aux CP négatifs
@@ -131,6 +151,9 @@
     <v-dialog v-model="isSgConfigDialogOpen" width="600px">
       <SgConfigForm @close-dialog="closeConfigDialog" />
     </v-dialog>
+    <v-dialog v-model="isBarrelsDialogOpen" width="600px">
+      <BarrelsForm @close-dialog="closeBarrelsDialog" />
+    </v-dialog>
     <SnackNotificationContainer />
   </v-container>
 </template>
@@ -144,6 +167,7 @@
  */
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import SgConfigForm from "~/components/organisms/personal-account/SgConfigForm.vue";
+import BarrelsForm from "~/components/organisms/personal-account/BarrelsForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
@@ -157,7 +181,12 @@ const TRANSACTION_PROVISIONS = "PROVISIONS";
 
 export default {
   name: "SG",
-  components: { SnackNotificationContainer, SgConfigForm, MoneyField },
+  components: {
+    SnackNotificationContainer,
+    SgConfigForm,
+    MoneyField,
+    BarrelsForm,
+  },
 
   data: () => {
     return {
@@ -170,6 +199,7 @@ export default {
       mode: "cask", //default mode
       isSwitchDialogOpen: false,
       isSgConfigDialogOpen: false,
+      isBarrelsDialogOpen: false,
       regex: {
         int: new RegExp("^\\d*$"),
         float: new RegExp("^\\d*(\\.\\d+)?$"),
@@ -317,6 +347,12 @@ export default {
 
       return mailLinkForClient(mailVars);
     },
+    barrels() {
+      return this.$accessor.personalAccount.barrels;
+    },
+    useAlpha() {
+      return this.$accessor.user.can("manage-admins");
+    },
   },
 
   watch: {
@@ -326,8 +362,11 @@ export default {
   },
 
   async mounted() {
-    await this.$accessor.personalAccount.fetchBarrelPrices();
-    await this.$accessor.user.fetchPersonalAccountConsumers();
+    await Promise.all([
+      this.$accessor.personalAccount.fetchBarrelPrices(),
+      this.$accessor.user.fetchPersonalAccountConsumers(),
+    ]);
+    this.$accessor.personalAccount.fetchBarrels();
     this.totalPrice = this.sgConfig.prixFutBlonde;
     this.users = this.consumers;
     this.ready = true;
@@ -437,6 +476,12 @@ export default {
     },
     closeConfigDialog() {
       this.isSgConfigDialogOpen = false;
+    },
+    openBarrelsForm() {
+      this.isBarrelsDialogOpen = true;
+    },
+    closeBarrelsDialog() {
+      this.isBarrelsDialogOpen = false;
     },
     spend(consumptions) {
       switch (this.mode) {
