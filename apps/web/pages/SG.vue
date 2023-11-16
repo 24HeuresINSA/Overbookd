@@ -95,7 +95,7 @@
             class="mt-4"
             @click="openBarrelsForm"
           >
-            Configuration des fûts
+            Gestion des fûts
           </v-btn>
           <v-btn class="mt-4" :href="negativeBalanceMailLink">
             Envoyer un mail aux CP négatifs
