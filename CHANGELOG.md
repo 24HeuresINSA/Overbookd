@@ -1,3 +1,40 @@
+## [2.6.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.6.0...v2.6.1) (2023-11-16)
+
+
+### Bug Fixes
+
+* **festival-activity:** section partial update ([b330ab7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b330ab7e34faffba7230a8ae528ee6c8f0d5723c))
+* **personal-account:** use barrel price dedicated endpoint. [#1324](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1324) ([b50a28a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b50a28a5bb281fabb9f52698143a03d991deaf70))
+* **personal-account:** use dedicated endpoints and store for barrel prices. [#1324](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1324) ([600ff1c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/600ff1c20f187abb262b5e69f07c51f97f3c3641))
+* **trombinoscope:** :camera_flash: display only volunteers. [#1260](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1260) ([7e76644](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7e76644cbbc44c16a8d1f685ae2c9da9aefa0b66))
+* **web:** Remove cross to delete role for normal users [#1307](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1307) ([411ac75](https://gitlab.com/24-heures-insa/overbookd-mono/commit/411ac756774798cce6a7eb7864c1dc858aa6968a))
+
+
+### Pre-Features
+
+* **festival-activity:** Add contractors in domain [#1316](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1316) ([444a04d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/444a04d27d45b63b52368b7c40f5581761fc4b32))
+* **festival-activity:** add elec supply in domain [#1317](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1317) ([cd9f3bd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cd9f3bdd1f9bc020bfa1ac4da6d277326ac2a285))
+* **festival-activity:** add gear inquiries in domain [#1320](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1320) ([18833a0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/18833a01163352731955f810ce1299381c5623d3))
+* **festival-activity:** Add inquiry time windows in domain [#1319](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1319) ([4267bca](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4267bca4efa3934b86a2a41ff581d7ac60407789))
+* **festival-activity:** Add signage needs in domain [#1322](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1322) ([41be018](https://gitlab.com/24-heures-insa/overbookd-mono/commit/41be0189a94e3c97bf50553b19a9fd874470e758))
+* **festival-activity:** expose review status for each reviewer. [#1315](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1315) ([6bcdfa7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6bcdfa7e4f7e7c61f04a231f147d3778cdc0edcf))
+* **festival-activity:** implement in review general [#1328](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1328) ([8e9c7c9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8e9c7c96fb18253eb27a3d5fc8b7e0a2bdc3a350))
+* **festival-activity:** Implement InCharge section for In review FA in domain [#1329](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1329) ([1391ca0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1391ca0979ef4d071edc917b418184d0757ce103))
+* **festival-activity:** Implement Security section for In review FA in domain [#1331](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1331) ([00f7f21](https://gitlab.com/24-heures-insa/overbookd-mono/commit/00f7f2161549a478d68a847171403aa0f144b1a5))
+* **personal-account:** better barrel managment for sg. [#1324](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1324) ([f18481f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f18481f5dea0393c327171e30b3418e5281635dd))
+* **personal-account:** manage barrels individually. [#1324](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1324) ([b540d94](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b540d94c77133cae69179e1416ab093f5faa7c96))
+* **personal-account:** update barrel dtos to CRUD. [#1324](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1324) ([7c4c669](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7c4c669bc5f789d289a5747f22b00a440ebe47f0))
+
+
+### Refactor
+
+* **home:** add firstname in home page [#1259](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1259) ([8910ebd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8910ebd2dd851df6829ee4a8df52efed9d396ab2))
+
+
+### CI/CD
+
+* **renovate:** Chore instead of Fix in MR title [#1318](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1318) ([33f87b6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/33f87b6cf454ed01bc1cb2df8ab3bae805b279a7))
+
 ## [2.6.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.5.2...v2.6.0) (2023-11-05)
 
 
