@@ -13,22 +13,31 @@ import {
   qgOrga,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import {
-  BARRIERES,
-  ELEC,
-  MATOS,
-  PrepareInquiryRequestCreation,
-} from "./prepare-festival-activity.model";
+import { BARRIERES, ELEC, MATOS } from "./prepare-festival-activity.model";
 import {
   AlreadyInitialized,
+  CantRemoveLastRequest,
   CantRemoveLastTimeWindow,
   NotYetInitialized,
 } from "./inquiries";
+import { WithInquiries } from "../festival-activity";
 
 const branleCanisse = {
   slug: "branle-canisse",
   name: "Branle canisse",
   owner: MATOS,
+} as const;
+
+const heras = {
+  slug: "heras",
+  name: "Heras",
+  owner: BARRIERES,
+} as const;
+
+const chargeurUsbC = {
+  slug: "chargeur-usb-c",
+  name: "Chargeur USB-C",
+  owner: ELEC,
 } as const;
 
 describe("Inquiry section of festival activity preparation", () => {
@@ -207,7 +216,7 @@ describe("Inquiry section of festival activity preparation", () => {
         expect(timeWindow).toBeUndefined();
       },
     );
-    describe("when removed time window is the last one on In Review activity", () => {
+    describe("when removing the last time window from an 'In Review' activity", () => {
       it("should indicate that we can't remove the last time window", async () => {
         const timeWindowIdToRemove = baladeEnPoney.inquiry.timeWindows[0].id;
 
@@ -222,160 +231,111 @@ describe("Inquiry section of festival activity preparation", () => {
     });
   });
 
-  describe("when adherent want to add a gear inquiry", () => {
-    it("should add the gear inquiry", async () => {
-      const inquiryToAdd: PrepareInquiryRequestCreation = {
-        ...branleCanisse,
-        quantity: 3,
-      };
+  describe("when adherent want to add an inquiry request", () => {
+    describe.each`
+      activityName               | activityId       | requestName           | request                              | group
+      ${escapeGame.general.name} | ${escapeGame.id} | ${branleCanisse.name} | ${{ ...branleCanisse, quantity: 3 }} | ${"gears"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${heras.name}         | ${{ ...heras, quantity: 5 }}         | ${"barriers"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${chargeurUsbC.name}  | ${{ ...chargeurUsbC, quantity: 1 }}  | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${branleCanisse.name} | ${{ ...branleCanisse, quantity: 2 }} | ${"gears"}
+      ${justDance.general.name}  | ${justDance.id}  | ${heras.name}         | ${{ ...heras, quantity: 10 }}        | ${"barriers"}
+      ${justDance.general.name}  | ${justDance.id}  | ${chargeurUsbC.name}  | ${{ ...chargeurUsbC, quantity: 1 }}  | ${"electricity"}
+    `(
+      "when adding $requestName request in $activityName",
+      ({ activityId, request, group }) => {
+        it(`should add it as ${group} request`, async () => {
+          const { owner, ...expectedRequest } = request;
+          const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
+            activityId,
+            request,
+          );
+          expect(inquiry[group as keyof WithInquiries]).toContainEqual(
+            expectedRequest,
+          );
+        });
+      },
+    );
 
-      const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
-        escapeGame.id,
-        inquiryToAdd,
-      );
+    describe.each`
+      activityName                  | activityId          | requestName                               | request
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.gears[0].name}       | ${{ ...escapeGame.inquiry.gears[0], owner: MATOS }}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.barriers[0].name}    | ${{ ...escapeGame.inquiry.barriers[0], owner: BARRIERES }}
+      ${escapeGame.general.name}    | ${escapeGame.id}    | ${escapeGame.inquiry.electricity[0].name} | ${{ ...escapeGame.inquiry.electricity[0], owner: ELEC }}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].name}        | ${{ ...justDance.inquiry.gears[0], owner: MATOS }}
+      ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].name}  | ${{ ...justDance.inquiry.electricity[0], owner: ELEC }}
+      ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].name} | ${{ ...baladeEnPoney.inquiry.barriers[0], owner: BARRIERES }}
+    `(
+      "when adding again $requestName on $activityName",
+      ({ activityId, requestName, request }) => {
+        it(`should indicate that there is already a request for ${requestName}`, async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.addInquiryRequest(
+                activityId,
+                request,
+              ),
+          ).rejects.toThrow(InquiryAlreadyExists);
+        });
+      },
+    );
 
-      const expectedInquiry = {
-        slug: inquiryToAdd.slug,
-        name: inquiryToAdd.name,
-        quantity: inquiryToAdd.quantity,
-      };
-      expect(inquiry.gears).toContainEqual(expectedInquiry);
-    });
+    describe.each`
+      activityName               | activityId       | requestName           | request
+      ${pcSecurite.general.name} | ${pcSecurite.id} | ${branleCanisse.name} | ${{ ...branleCanisse, quantity: 40 }}
+      ${pcSecurite.general.name} | ${pcSecurite.id} | ${heras.name}         | ${{ ...heras, quantity: 100 }}
+      ${pcSecurite.general.name} | ${pcSecurite.id} | ${chargeurUsbC.name}  | ${{ ...chargeurUsbC, quantity: 6 }}
+    `(
+      "when adding $requestName on non initialized inquiry section like in $activityName",
+      ({ activityId, request }) => {
+        it("should indicate that inquiry section must be initialized before", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.addInquiryRequest(
+                activityId,
+                request,
+              ),
+          ).rejects.toThrow(NotYetInitialized);
+        });
+      },
+    );
+  });
 
-    describe("when adherent want to add a gear inquiry that already exists", () => {
-      it("should should indicate that the gear inquiry already exists", async () => {
-        const existingGearInquiry = escapeGame.inquiry.gears[0];
-        const inquiryToAdd: PrepareInquiryRequestCreation = {
-          ...existingGearInquiry,
-          owner: MATOS,
-        };
+  describe("when adherent want to remove an inquiry request", () => {
+    describe.each`
+      activityName               | activityId       | requestName                               | request                              | group
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"gears"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.barriers[0].name}    | ${escapeGame.inquiry.barriers[0]}    | ${"barriers"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"electricity"}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.gears[0].name}       | ${escapeGame.inquiry.gears[0]}       | ${"gears"}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.inquiry.electricity[0].name} | ${escapeGame.inquiry.electricity[0]} | ${"electricity"}
+    `(
+      "when removing $requestName from $activityName",
+      ({ activityId, request, group }) => {
+        it(`should remove it form ${group} requests`, async () => {
+          const { inquiry } =
+            await prepareFestivalActivity.removeInquiryRequest(
+              activityId,
+              request.slug,
+            );
 
-        await expect(
-          prepareFestivalActivity.addInquiryRequest(
-            escapeGame.id,
-            inquiryToAdd,
-          ),
-        ).rejects.toThrow(InquiryAlreadyExists);
+          expect(inquiry[group as keyof WithInquiries]).not.toContainEqual(
+            request,
+          );
+        });
+      },
+    );
+    describe("when removing the last request from an 'In Review' activity", () => {
+      it("should indicate that we can't remove the last request", async () => {
+        const requestSlug = baladeEnPoney.inquiry.barriers[0].slug;
+
+        expect(
+          async () =>
+            await prepareFestivalActivity.removeInquiryRequest(
+              baladeEnPoney.id,
+              requestSlug,
+            ),
+        ).rejects.toThrow(CantRemoveLastRequest);
       });
-    });
-  });
-
-  describe("when adherent want to remove a gear inquiry", () => {
-    it("should remove the gear inquiry", async () => {
-      const inquiryToRemove = escapeGame.inquiry.gears[0];
-
-      const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
-        escapeGame.id,
-        inquiryToRemove.slug,
-      );
-
-      expect(inquiry.gears).not.toContainEqual(inquiryToRemove);
-    });
-  });
-
-  describe("when adherent want to add a barrier inquiry", () => {
-    it("should add the barrier inquiry", async () => {
-      const inquiryToAdd: PrepareInquiryRequestCreation = {
-        slug: "heras",
-        name: "Heras",
-        quantity: 5,
-        owner: BARRIERES,
-      };
-
-      const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
-        escapeGame.id,
-        inquiryToAdd,
-      );
-
-      const expectedInquiry = {
-        slug: inquiryToAdd.slug,
-        name: inquiryToAdd.name,
-        quantity: inquiryToAdd.quantity,
-      };
-      expect(inquiry.barriers).toContainEqual(expectedInquiry);
-    });
-
-    describe("when adherent want to add a barrier inquiry that already exists", () => {
-      it("should should indicate that the barrier inquiry already exists", async () => {
-        const existingBarrierInquiry = escapeGame.inquiry.barriers[0];
-        const inquiryToAdd: PrepareInquiryRequestCreation = {
-          ...existingBarrierInquiry,
-          owner: BARRIERES,
-        };
-
-        await expect(
-          prepareFestivalActivity.addInquiryRequest(
-            escapeGame.id,
-            inquiryToAdd,
-          ),
-        ).rejects.toThrow(InquiryAlreadyExists);
-      });
-    });
-  });
-
-  describe("when adherent want to remove a barrier inquiry", () => {
-    it("should remove the barrier inquiry", async () => {
-      const inquiryToRemove = escapeGame.inquiry.barriers[0];
-
-      const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
-        escapeGame.id,
-        inquiryToRemove.slug,
-      );
-
-      expect(inquiry.barriers).not.toContainEqual(inquiryToRemove);
-    });
-  });
-
-  describe("when adherent want to add an electricity inquiry", () => {
-    it("should add the electricity inquiry", async () => {
-      const inquiryToAdd: PrepareInquiryRequestCreation = {
-        slug: "chargeur-usb-c",
-        name: "Chargeur USB-C",
-        quantity: 1,
-        owner: ELEC,
-      };
-
-      const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
-        escapeGame.id,
-        inquiryToAdd,
-      );
-
-      const expectedInquiry = {
-        slug: inquiryToAdd.slug,
-        name: inquiryToAdd.name,
-        quantity: inquiryToAdd.quantity,
-      };
-      expect(inquiry.electricity).toContainEqual(expectedInquiry);
-    });
-
-    describe("when adherent want to add an electricity inquiry that already exists", () => {
-      it("should indicate that the electricity inquiry already exists", async () => {
-        const existingElecInquiry = escapeGame.inquiry.electricity[0];
-        const inquiryToAdd: PrepareInquiryRequestCreation = {
-          ...existingElecInquiry,
-          owner: ELEC,
-        };
-
-        await expect(
-          prepareFestivalActivity.addInquiryRequest(
-            escapeGame.id,
-            inquiryToAdd,
-          ),
-        ).rejects.toThrow(InquiryAlreadyExists);
-      });
-    });
-  });
-
-  describe("when adherent want to remove an electricity inquiry", () => {
-    it("should remove the electricity inquiry", async () => {
-      const inquiryToRemove = escapeGame.inquiry.electricity[0];
-
-      const { inquiry } = await prepareFestivalActivity.removeInquiryRequest(
-        escapeGame.id,
-        inquiryToRemove.slug,
-      );
-
-      expect(inquiry.electricity).not.toContainEqual(inquiryToRemove);
     });
   });
 });
