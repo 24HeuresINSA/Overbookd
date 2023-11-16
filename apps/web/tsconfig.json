@@ -10,6 +10,7 @@
     "strict": true,
     "experimentalDecorators": true,
     "resolveJsonModule": true,
+    "noImplicitReturns": false,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
