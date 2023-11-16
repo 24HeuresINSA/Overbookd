@@ -19,7 +19,11 @@ import {
   MATOS,
   PrepareInquiryRequestCreation,
 } from "./prepare-festival-activity.model";
-import { AlreadyInitialized } from "./inquiries";
+import {
+  AlreadyInitialized,
+  CantRemoveLastTimeWindow,
+  NotYetInitialized,
+} from "./inquiries";
 
 const branleCanisse = {
   slug: "branle-canisse",
@@ -94,6 +98,7 @@ describe("Inquiry section of festival activity preparation", () => {
     describe.each`
       start                       | end                         | activityId       | activityName
       ${"2023-05-17T18:00+02:00"} | ${"2023-05-17T20:00+02:00"} | ${escapeGame.id} | ${escapeGame.general.name}
+      ${"2023-05-17T17:00+02:00"} | ${"2023-05-17T22:00+02:00"} | ${justDance.id}  | ${justDance.general.name}
     `(
       "when adding $start - $end timewindow to $activityId",
       ({ start, end, activityId }) => {
@@ -117,50 +122,103 @@ describe("Inquiry section of festival activity preparation", () => {
       },
     );
 
-    describe("when adherent want to add a time window that already exists", () => {
-      it("should should indicate that the time window already exists", async () => {
-        const existingTimeWindow = escapeGame.inquiry.timeWindows[0];
+    describe.each`
+      activityName               | activityId       | existingTimeWindow
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.timeWindows[0]}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.timeWindows[0]}
+    `(
+      "when adherent want to add a time window that already exists in $activityName",
+      ({ activityId, existingTimeWindow }) => {
+        it("should should indicate that the time window already exists", async () => {
+          await expect(
+            prepareFestivalActivity.addTimeWindowInInquiry(
+              activityId,
+              existingTimeWindow,
+            ),
+          ).rejects.toThrow(TimeWindowAlreadyExists);
+        });
+      },
+    );
 
-        await expect(
-          prepareFestivalActivity.addTimeWindowInInquiry(
-            escapeGame.id,
-            existingTimeWindow,
-          ),
-        ).rejects.toThrow(TimeWindowAlreadyExists);
-      });
-    });
+    describe.each`
+      activityName               | activityId
+      ${escapeGame.general.name} | ${escapeGame.id}
+      ${justDance.general.name}  | ${justDance.id}
+    `(
+      "when adherent want to add a time window with end before start in $activityName",
+      ({ activityId }) => {
+        it("should should indicate that end should be after start", async () => {
+          const invalidTimeWindow = {
+            start: new Date("2023-05-17T10:00+02:00"),
+            end: new Date("2023-05-17T08:00+02:00"),
+          };
 
-    describe("when adherent want to add a time window with end before start", () => {
-      it("should should indicate that end should be after start", async () => {
-        const invalidTimeWindow = {
-          start: new Date("2023-05-17T10:00+02:00"),
-          end: new Date("2023-05-17T08:00+02:00"),
-        };
+          await expect(
+            prepareFestivalActivity.addTimeWindowInInquiry(
+              activityId,
+              invalidTimeWindow,
+            ),
+          ).rejects.toThrow(EndBeforeStart);
+        });
+      },
+    );
 
-        await expect(
-          prepareFestivalActivity.addTimeWindowInInquiry(
-            escapeGame.id,
-            invalidTimeWindow,
-          ),
-        ).rejects.toThrow(EndBeforeStart);
-      });
-    });
+    describe.each`
+      activityName               | activityId
+      ${pcSecurite.general.name} | ${pcSecurite.id}
+    `(
+      "when trying to add a time window before initiation on $activityName",
+      ({ activityId }) => {
+        it("should indicate that inquiry section must be initialized before", async () => {
+          const timeWindow = {
+            start: new Date("2024-05-18T20:00+02:00"),
+            end: new Date("2024-05-18T22:00+02:00"),
+          };
+
+          expect(
+            async () =>
+              await prepareFestivalActivity.addTimeWindowInInquiry(
+                activityId,
+                timeWindow,
+              ),
+          ).rejects.toThrow(NotYetInitialized);
+        });
+      },
+    );
   });
 
   describe("when adherent want to remove a time window", () => {
-    it("should remove the time window", async () => {
-      const timeWindowIdToRemove = "28071900-28072140";
+    it.each`
+      activityName               | activityId       | timeWindowIdToRemove
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.inquiry.timeWindows[0].id}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.inquiry.timeWindows[0].id}
+    `(
+      "should remove time window $timeWindowIdToRemove in $activityName",
+      async ({ activityId, timeWindowIdToRemove }) => {
+        const { inquiry } =
+          await prepareFestivalActivity.removeTimeWindowFromInquiry(
+            activityId,
+            timeWindowIdToRemove,
+          );
 
-      const { inquiry } =
-        await prepareFestivalActivity.removeTimeWindowFromInquiry(
-          escapeGame.id,
-          timeWindowIdToRemove,
+        const timeWindow = inquiry.timeWindows.find(
+          (tw) => tw.id === timeWindowIdToRemove,
         );
+        expect(timeWindow).toBeUndefined();
+      },
+    );
+    describe("when removed time window is the last one on In Review activity", () => {
+      it("should indicate that we can't remove the last time window", async () => {
+        const timeWindowIdToRemove = baladeEnPoney.inquiry.timeWindows[0].id;
 
-      const timeWindow = inquiry.timeWindows.find(
-        (tw) => tw.id === timeWindowIdToRemove,
-      );
-      expect(timeWindow).toBeUndefined();
+        expect(
+          async () =>
+            await prepareFestivalActivity.removeTimeWindowFromInquiry(
+              baladeEnPoney.id,
+              timeWindowIdToRemove,
+            ),
+        ).rejects.toThrow(CantRemoveLastTimeWindow);
+      });
     });
   });
 

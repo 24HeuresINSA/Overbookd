@@ -19,6 +19,20 @@ export class AlreadyInitialized extends Error {
   }
 }
 
+export class NotYetInitialized extends Error {
+  constructor() {
+    super("La section demande de matos n'a pas encore ete initialisee.");
+  }
+}
+
+export class CantRemoveLastTimeWindow extends Error {
+  constructor() {
+    super(
+      "Il s'agit du dernier creneau matos. Il n'est pas possible de le supprimer",
+    );
+  }
+}
+
 type WithAtLeastOneItem<T> = [T, ...T[]];
 type MaybeWithOneItem<T> = T[] | WithAtLeastOneItem<T>;
 

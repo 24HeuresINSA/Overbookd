@@ -241,11 +241,19 @@ export const justDance: InReview = {
         start: new Date("2023-05-17T11:00+02:00"),
         end: new Date("2023-05-17T15:00+02:00"),
       },
+      {
+        id: "28073340-28073580",
+        start: new Date("2023-05-18T11:00+02:00"),
+        end: new Date("2023-05-18T15:00+02:00"),
+      },
     ],
     gears: [
       { slug: "plateau-de-dance", name: "Plateau de dance", quantity: 1 },
     ],
-    electricity: [],
+    electricity: [
+      { slug: "multiprise-3-prises", name: "Multiprise 3 prises", quantity: 1 },
+      { slug: "nintendo-switch", name: "Nintendo Switch", quantity: 1 },
+    ],
     barriers: [],
   },
   reviews: {
@@ -299,10 +307,16 @@ export const baladeEnPoney: InReview = {
     water: null,
   },
   inquiry: {
-    timeWindows: [],
+    timeWindows: [
+      {
+        id: "28600560-28600800",
+        start: new Date("2024-05-18T14:00+02:00"),
+        end: new Date("2024-05-18T18:00+02:00"),
+      },
+    ],
     gears: [],
     electricity: [],
-    barriers: [],
+    barriers: [{ slug: "vauban", name: "Vauban", quantity: 30 }],
   },
   reviews: {
     humain: REVIEWING,

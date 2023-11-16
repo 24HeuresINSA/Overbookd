@@ -31,7 +31,12 @@ import {
 } from "./prepare-festival-activity.model";
 import { FestivalActivityError } from "../festival-activity.error";
 import { hasAtLeastOneItem } from "@overbookd/list";
-import { AlreadyInitialized, Inquiries } from "./inquiries";
+import {
+  AlreadyInitialized,
+  CantRemoveLastTimeWindow,
+  Inquiries,
+  NotYetInitialized,
+} from "./inquiries";
 
 export class IsNotPublicActivity extends FestivalActivityError {}
 
@@ -230,11 +235,27 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   addInquiryTimeWindow(period: IProvidePeriod): InReview {
-    throw new Error("Method not implemented." + period);
+    if (!Inquiries.alreadyInitialized(this.activity.inquiry)) {
+      throw new NotYetInitialized();
+    }
+
+    const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
+      period,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
   }
 
   removeInquiryTimeWindow(id: string): InReview {
-    throw new Error("Method not implemented." + id);
+    const inquiry = Inquiries.build(this.activity.inquiry).removeTimeWindow(
+      id,
+    ).inquiry;
+
+    if (inquiry.timeWindows.length === 0) {
+      throw new CantRemoveLastTimeWindow();
+    }
+
+    return { ...this.activity, inquiry };
   }
 
   addInquiry(inquiry: PrepareInquiryRequestCreation): InReview {
