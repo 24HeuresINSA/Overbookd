@@ -14,7 +14,7 @@
             :key="team"
             :team="team"
             with-name
-            close
+            :close="canManageUsers"
             @close="removeTeam"
           />
         </div>
