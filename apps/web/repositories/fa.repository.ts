@@ -66,7 +66,7 @@ export class FaRepository {
     faId: number,
     collaborator: Collaborator,
   ) {
-    return context.$axios.post(
+    return context.$axios.post<Collaborator>(
       `${this.basePath}/${faId}/collaborator`,
       collaborator,
     );

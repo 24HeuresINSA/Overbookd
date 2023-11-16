@@ -3,6 +3,15 @@ import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { User } from "@overbookd/user";
 
+type VolunteerWithItPLanning = {
+  volunteer: {
+    firstname: string;
+    lastname: string;
+    id: number;
+  };
+  planningBase64Data: string;
+};
+
 const userRepo = RepoFactory.UserRepository;
 
 export type VolunteerPlanning = {
@@ -46,7 +55,8 @@ export const actions = actionTree(
     },
     async fetchAllPdfPlannings({ commit }, volunteers: User[]) {
       const maxRequests = 5;
-      const planningsRes = [];
+
+      const planningsRes: (VolunteerWithItPLanning | undefined)[] = [];
       for (let i = 0; i < volunteers.length; i += maxRequests) {
         const chunk = volunteers.slice(i, i + maxRequests);
         const plannings = await Promise.all(
