@@ -51,7 +51,7 @@ describe("Inquiry section of festival activity preparation", () => {
   `(
     "when activity $activityName doesn't have any inquiry request",
     ({ activityId, timeWindow, inquiryRequest }) => {
-      it("should be able to init inquiry section with first timewindow and first request", async () => {
+      it("should be able to init inquiry section with first time window and first request", async () => {
         const { inquiry } = await prepareFestivalActivity.initInquiry(
           activityId,
           { timeWindow, request: inquiryRequest },

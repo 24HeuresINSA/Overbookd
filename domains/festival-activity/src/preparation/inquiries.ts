@@ -15,7 +15,7 @@ import {
 
 export class AlreadyInitialized extends Error {
   constructor() {
-    super("La section demande de matos a deja ete initialisee");
+    super("La section Demande de matos a déjà été initialisée");
   }
 }
 
