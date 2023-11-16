@@ -11,6 +11,7 @@
     "experimentalDecorators": true,
     "resolveJsonModule": true,
     "noImplicitReturns": false,
+    "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"],
