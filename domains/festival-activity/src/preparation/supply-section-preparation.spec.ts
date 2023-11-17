@@ -8,13 +8,11 @@ import {
 } from "../festival-activity.error";
 import {
   P17_16A_MONO,
+  P17_16A_TETRA,
   P17_32A_TETRA,
   PC16_Prise_classique,
 } from "../festival-activity";
-import {
-  PrepareElectricitySupplyCreation,
-  PrepareElectricitySupplyUpdate,
-} from "./prepare-festival-activity.model";
+import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model";
 
 describe("Supply section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -52,46 +50,47 @@ describe("Supply section of festival activity preparation", () => {
   });
 
   describe("when adherent want to add an electricity supply", () => {
-    it("should add the electricity supply", async () => {
-      const electricitySupplyToAdd: PrepareElectricitySupplyCreation = {
-        connection: P17_16A_MONO,
-        device: "Ordinateur",
-        power: 300,
-        count: 2,
-      };
+    describe.each`
+      activityName               | activityId       | newSupply                                                                                                           | expectedId
+      ${escapeGame.general.name} | ${escapeGame.id} | ${{ connection: P17_16A_MONO, power: 200, device: "tronçonneuse", count: 2, comment: "Juste pour faire peur tkt" }} | ${"tronconneuse-p17_16a_mono"}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${{ connection: P17_16A_TETRA, power: 50, device: "spot", count: 4 }}                                               | ${"spot-p17_16a_tetra"}
+      ${justDance.general.name}  | ${justDance.id}  | ${{ connection: PC16_Prise_classique, power: 200, device: "boule du fun", count: 2 }}                               | ${"boule-du-fun-pc16_prise_classique"}
+    `(
+      "when adding electricity supply in $activityName",
+      ({ activityId, newSupply, expectedId }) => {
+        it("should add electricity supply", async () => {
+          const { supply } = await prepareFestivalActivity.addElectricitySupply(
+            activityId,
+            newSupply,
+          );
+          const expectedSupply = {
+            ...newSupply,
+            comment: newSupply.comment ?? null,
+            id: expectedId,
+          };
 
-      const { supply } = await prepareFestivalActivity.addElectricitySupply(
-        escapeGame.id,
-        electricitySupplyToAdd,
-      );
+          expect(supply.electricity).toContainEqual(expectedSupply);
+        });
+      },
+    );
 
-      const expectedElectricitySupply = {
-        ...electricitySupplyToAdd,
-        id: "ordinateur-p17_16a_mono",
-        comment: null,
-      };
+    describe.each`
+      activityName               | activityId       | newSupply
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.supply.electricity[0]}
+      ${justDance.general.name}  | ${justDance.id}  | ${justDance.supply.electricity[0]}
+    `(
+      "when adding again electricity supply on $activityName",
+      ({ activityId, newSupply }) => {
+        it("should indicate that electricity supply already exists", async () => {
+          const { id, ...rest } = newSupply;
 
-      expect(supply.electricity).toContainEqual(expectedElectricitySupply);
-    });
-
-    describe("when adherent want to add an electricity supply that already exists", () => {
-      it("should indicate that electricity supply already exists", async () => {
-        const existingElectricitySupply = escapeGame.supply.electricity[0];
-        const electricitySupplyToAdd = {
-          connection: existingElectricitySupply.connection,
-          device: existingElectricitySupply.device,
-          power: existingElectricitySupply.power,
-          count: existingElectricitySupply.count,
-        };
-
-        await expect(
-          prepareFestivalActivity.addElectricitySupply(
-            escapeGame.id,
-            electricitySupplyToAdd,
-          ),
-        ).rejects.toThrow(ElectricitySupplyAlreadyExists);
-      });
-    });
+          expect(
+            async () =>
+              await prepareFestivalActivity.addInquiryRequest(activityId, rest),
+          ).rejects.toThrow(ElectricitySupplyAlreadyExists);
+        });
+      },
+    );
   });
 
   const lumiere = escapeGame.supply.electricity[0];

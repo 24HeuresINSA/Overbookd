@@ -1,5 +1,6 @@
 import {
   Contractors,
+  ElectricitySupplies,
   InitInquiry,
   Prepare,
   TimeWindows,
@@ -212,7 +213,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   addElectricitySupply(
     electricitySupply: PrepareElectricitySupplyCreation,
   ): InReview {
-    throw new Error("Method not implemented." + electricitySupply);
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).add(electricitySupply).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
   }
 
   updateElectricitySupply(
