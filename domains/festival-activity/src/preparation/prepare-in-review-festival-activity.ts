@@ -224,11 +224,21 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   updateElectricitySupply(
     electricitySupply: PrepareElectricitySupplyUpdate,
   ): InReview {
-    throw new Error("Method not implemented." + electricitySupply);
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).update(electricitySupply).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
   }
 
   removeElectricitySupply(id: ElectricitySupply["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).remove(id).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
   }
 
   initInquiry({ request, timeWindow }: InitInquiry): InReview {

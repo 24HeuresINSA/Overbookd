@@ -239,7 +239,7 @@ export const justDance: InReview = {
         count: 1,
         connection: PC16_Prise_classique,
         power: 100,
-        comment: null,
+        comment: "Pour jouer à Just Dance",
       },
     ],
     water: "Une fontaine pour se rafraichir",

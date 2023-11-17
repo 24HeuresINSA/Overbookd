@@ -86,7 +86,10 @@ describe("Supply section of festival activity preparation", () => {
 
           expect(
             async () =>
-              await prepareFestivalActivity.addInquiryRequest(activityId, rest),
+              await prepareFestivalActivity.addElectricitySupply(
+                activityId,
+                rest,
+              ),
           ).rejects.toThrow(ElectricitySupplyAlreadyExists);
         });
       },
@@ -94,17 +97,23 @@ describe("Supply section of festival activity preparation", () => {
   });
 
   const lumiere = escapeGame.supply.electricity[0];
+  const nintendo = justDance.supply.electricity[0];
 
   describe.each`
-    fields                                    | activityName               | activityId       | electricitySupply | supplyId      | update                                                                                              | expectedId
-    ${"comment"}                              | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ comment: "Elle doit être JAUUUUNE" }}                                                           | ${undefined}
-    ${"connection"}                           | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ connection: PC16_Prise_classique }}                                                             | ${"lumiere-pc16_prise_classique"}
-    ${"device"}                               | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ device: "LED" }}                                                                                | ${"led-p17_16a_tetra"}
-    ${"power"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ power: 6 }}                                                                                     | ${undefined}
-    ${"count"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ count: 51 }}                                                                                    | ${undefined}
-    ${"connection and comment"}               | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ connection: P17_16A_MONO, comment: "Ça tape for" }}                                             | ${"lumiere-p17_16a_mono"}
-    ${"connection and device"}                | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ connection: P17_32A_TETRA, device: "Hallogène" }}                                               | ${"hallogene-p17_32a_tetra"}
-    ${"connection, power, count and comment"} | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id} | ${{ connection: PC16_Prise_classique, power: 100, count: 32, comment: "Faut que ça éclaire bien" }} | ${"lumiere-pc16_prise_classique"}
+    fields                                    | activityName               | activityId       | electricitySupply | supplyId       | update                                                                                              | expectedId
+    ${"comment"}                              | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ comment: "Elle doit être JAUUUUNE" }}                                                           | ${undefined}
+    ${"comment"}                              | ${justDance.general.name}  | ${justDance.id}  | ${nintendo}       | ${nintendo.id} | ${{ comment: "Pour brancher la switch et la manette" }}                                             | ${undefined}
+    ${"connection"}                           | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ connection: PC16_Prise_classique }}                                                             | ${"lumiere-pc16_prise_classique"}
+    ${"connection"}                           | ${justDance.general.name}  | ${justDance.id}  | ${nintendo}       | ${nintendo.id} | ${{ connection: P17_16A_MONO }}                                                                     | ${"nintendo-switch-p17_16a_mono"}
+    ${"device"}                               | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ device: "LED" }}                                                                                | ${"led-p17_16a_tetra"}
+    ${"device"}                               | ${justDance.general.name}  | ${justDance.id}  | ${nintendo}       | ${nintendo.id} | ${{ device: "PS5" }}                                                                                | ${"ps5-pc16_prise_classique"}
+    ${"power"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ power: 6 }}                                                                                     | ${undefined}
+    ${"count"}                                | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ count: 51 }}                                                                                    | ${undefined}
+    ${"connection and comment"}               | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ connection: P17_16A_MONO, comment: "Ça tape for" }}                                             | ${"lumiere-p17_16a_mono"}
+    ${"connection and device"}                | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ connection: P17_32A_TETRA, device: "Hallogène" }}                                               | ${"hallogene-p17_32a_tetra"}
+    ${"connection and device"}                | ${justDance.general.name}  | ${justDance.id}  | ${nintendo}       | ${nintendo.id} | ${{ connection: P17_32A_TETRA, device: "PS5" }}                                                     | ${"ps5-p17_32a_tetra"}
+    ${"connection, power, count and comment"} | ${escapeGame.general.name} | ${escapeGame.id} | ${lumiere}        | ${lumiere.id}  | ${{ connection: PC16_Prise_classique, power: 100, count: 32, comment: "Faut que ça éclaire bien" }} | ${"lumiere-pc16_prise_classique"}
+    ${"connection, power, count and comment"} | ${justDance.general.name}  | ${justDance.id}  | ${nintendo}       | ${nintendo.id} | ${{ connection: P17_16A_MONO, power: 100, count: 2, comment: null }}                                | ${"nintendo-switch-p17_16a_mono"}
   `(
     "when updating $fields from $supplyId in $activityName",
     ({ fields, activityId, electricitySupply, update, expectedId }) => {
@@ -168,5 +177,27 @@ describe("Supply section of festival activity preparation", () => {
 
       expect(supply.electricity).not.toContainEqual(electricitySupplyToRemove);
     });
+  });
+
+  describe("when adherent want to remove an electricity supply", () => {
+    describe.each`
+      activityName               | activityId       | supplyId
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.supply.electricity[0].id}
+      ${escapeGame.general.name} | ${escapeGame.id} | ${escapeGame.supply.electricity[1].id}
+      ${justDance.general.name}  | ${justDance.id}  | ${escapeGame.supply.electricity[0].id}
+    `(
+      "when removing electricity supply from $activityName",
+      ({ activityId, request, supplyId }) => {
+        it("should remove the electricity supply", async () => {
+          const { supply } =
+            await prepareFestivalActivity.removeElectricitySupply(
+              activityId,
+              supplyId,
+            );
+
+          expect(supply.electricity).not.toContainEqual(request);
+        });
+      },
+    );
   });
 });

@@ -102,10 +102,10 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, inCharge };
   }
 
-  removeContractor(contractorId: Contractor["id"]): Draft {
+  removeContractor(id: Contractor["id"]): Draft {
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
-    ).remove(contractorId).entries;
+    ).remove(id).entries;
 
     const inCharge = { ...this.activity.inCharge, contractors };
     return { ...this.activity, inCharge };
@@ -174,10 +174,10 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, supply };
   }
 
-  removeElectricitySupply(electricitySupplyId: ElectricitySupply["id"]): Draft {
+  removeElectricitySupply(id: ElectricitySupply["id"]): Draft {
     const electricity = ElectricitySupplies.build(
       this.activity.supply.electricity,
-    ).remove(electricitySupplyId).entries;
+    ).remove(id).entries;
 
     const supply = { ...this.activity.supply, electricity };
     return { ...this.activity, supply };
