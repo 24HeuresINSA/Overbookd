@@ -33,6 +33,7 @@ import { FestivalActivityError } from "../festival-activity.error";
 import { hasAtLeastOneItem } from "@overbookd/list";
 import {
   AlreadyInitialized,
+  CantRemoveLastRequest,
   CantRemoveLastTimeWindow,
   Inquiries,
   NotYetInitialized,
@@ -235,9 +236,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   addInquiryTimeWindow(period: IProvidePeriod): InReview {
-    if (!Inquiries.alreadyInitialized(this.activity.inquiry)) {
-      throw new NotYetInitialized();
-    }
+    this.checkIfAlreadyInitialized();
 
     const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
       period,
@@ -251,18 +250,50 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
       id,
     ).inquiry;
 
-    if (inquiry.timeWindows.length === 0) {
+    if (this.hasNoTimeWindowRemaining(inquiry)) {
       throw new CantRemoveLastTimeWindow();
     }
 
     return { ...this.activity, inquiry };
   }
 
-  addInquiry(inquiry: PrepareInquiryRequestCreation): InReview {
-    throw new Error("Method not implemented." + inquiry);
+  private hasNoTimeWindowRemaining(inquiry: FestivalActivity["inquiry"]) {
+    return inquiry.timeWindows.length === 0;
+  }
+
+  addInquiry(request: PrepareInquiryRequestCreation): InReview {
+    this.checkIfAlreadyInitialized();
+    const inquiry = Inquiries.build(this.activity.inquiry).addRequest(
+      request,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
+  }
+
+  private checkIfAlreadyInitialized() {
+    if (!Inquiries.alreadyInitialized(this.activity.inquiry)) {
+      throw new NotYetInitialized();
+    }
   }
 
   removeInquiry(slug: InquiryRequest["slug"]): InReview {
-    throw new Error("Method not implemented." + slug);
+    const inquiry = Inquiries.build(this.activity.inquiry).removeRequest(
+      slug,
+    ).inquiry;
+
+    if (this.hasNoRequestRemaining(inquiry)) {
+      throw new CantRemoveLastRequest();
+    }
+
+    return { ...this.activity, inquiry };
+  }
+
+  private hasNoRequestRemaining(inquiry: FestivalActivity["inquiry"]) {
+    const requests = [
+      ...inquiry.gears,
+      ...inquiry.barriers,
+      ...inquiry.electricity,
+    ];
+    return requests.length === 0;
   }
 }
