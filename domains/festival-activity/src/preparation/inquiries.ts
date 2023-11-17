@@ -36,7 +36,7 @@ export class CantRemoveLastTimeWindow extends Error {
 export class CantRemoveLastRequest extends Error {
   constructor() {
     super(
-      "Il s'agit de la derniere demande de matos. Il n'est pas possible de la supprimer",
+      "Il s'agit de la dernière demande de matos. Il n'est pas possible de la supprimer",
     );
   }
 }
