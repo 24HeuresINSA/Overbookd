@@ -57,7 +57,13 @@ export type Prepare<T extends FestivalActivity> = {
   addInquiryTimeWindow(period: IProvidePeriod): T;
   removeInquiryTimeWindow(id: TimeWindow["id"]): T;
   addInquiry(inquiry: PrepareInquiryRequestCreation): T;
+  initInquiry(initializer: InitInquiry): T;
   removeInquiry(slug: InquiryRequest["slug"]): T;
+};
+
+export type InitInquiry = {
+  timeWindow: IProvidePeriod;
+  request: PrepareInquiryRequestCreation;
 };
 
 export class PrepareFestivalActivity {
@@ -252,6 +258,17 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.removeElectricitySupply(electricitySupplyId);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async initInquiry(
+    faId: FestivalActivity["id"],
+    inquiryInitializer: InitInquiry,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.initInquiry(inquiryInitializer);
     return this.festivalActivities.save(updatedFA);
   }
 

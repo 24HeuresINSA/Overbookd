@@ -235,8 +235,16 @@ export const justDance: InReview = {
     water: null,
   },
   inquiry: {
-    timeWindows: [],
-    gears: [],
+    timeWindows: [
+      {
+        id: "28071900-28072140",
+        start: new Date("2023-05-17T11:00+02:00"),
+        end: new Date("2023-05-17T15:00+02:00"),
+      },
+    ],
+    gears: [
+      { slug: "plateau-de-dance", name: "Plateau de dance", quantity: 1 },
+    ],
     electricity: [],
     barriers: [],
   },
@@ -304,5 +312,64 @@ export const baladeEnPoney: InReview = {
     elec: REVIEWING,
     barrieres: REVIEWING,
     comcom: REVIEWING,
+  },
+};
+
+export const qgOrga: Draft = {
+  id: 5,
+  status: DRAFT,
+  general: {
+    name: "QG Orga",
+    description: "Endroit ou tout le monde se retrouve",
+    toPublish: false,
+    photoLink: null,
+    isFlagship: false,
+    categories: ["Sport"],
+    timeWindows: [
+      {
+        id: "28071960-28072080",
+        start: new Date("2023-05-17T12:00+02:00"),
+        end: new Date("2023-05-20T00:00+02:00"),
+      },
+    ],
+  },
+  inCharge: {
+    adherent: george,
+    team: "beboo",
+    contractors: [],
+  },
+  signa: {
+    location: "Agora",
+    signages: [],
+  },
+  security: {
+    specialNeed: null,
+  },
+  inquiry: {
+    timeWindows: [],
+    gears: [],
+    electricity: [],
+    barriers: [],
+  },
+  supply: {
+    electricity: [
+      {
+        id: "lumiere-p17_16a_tetra",
+        connection: P17_16A_TETRA,
+        device: "Lumière",
+        power: 100,
+        count: 3,
+        comment: "Ceci est un commentaire",
+      },
+      {
+        id: "enceinte-p17_32a_tetra",
+        connection: P17_32A_TETRA,
+        device: "Enceinte",
+        power: 200,
+        count: 1,
+        comment: null,
+      },
+    ],
+    water: null,
   },
 };

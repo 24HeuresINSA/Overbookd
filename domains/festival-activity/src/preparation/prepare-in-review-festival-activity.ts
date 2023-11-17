@@ -1,4 +1,9 @@
-import { Contractors, Prepare, TimeWindows } from "./prepare-festival-activity";
+import {
+  Contractors,
+  InitInquiry,
+  Prepare,
+  TimeWindows,
+} from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import {
   Contractor,
@@ -26,6 +31,7 @@ import {
 } from "./prepare-festival-activity.model";
 import { FestivalActivityError } from "../festival-activity.error";
 import { hasAtLeastOneItem } from "@overbookd/list";
+import { AlreadyInitialized, Inquiries } from "./inquiries";
 
 export class IsNotPublicActivity extends FestivalActivityError {}
 
@@ -210,6 +216,17 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
 
   removeElectricitySupply(id: ElectricitySupply["id"]): InReview {
     throw new Error("Method not implemented." + id);
+  }
+
+  initInquiry({ request, timeWindow }: InitInquiry): InReview {
+    if (Inquiries.alreadyInitialized(this.activity.inquiry)) {
+      throw new AlreadyInitialized();
+    }
+    const inquiry = Inquiries.init()
+      .addRequest(request)
+      .addTimeWindow(timeWindow).inquiry;
+
+    return { ...this.activity, inquiry };
   }
 
   addInquiryTimeWindow(period: IProvidePeriod): InReview {

@@ -349,13 +349,13 @@ export const actions = actionTree(
      * @deprecated use specific functions to send requests
      */
     save: async function ({ dispatch, state }) {
-      const allPromise = [];
       if (state.mFA.collaborator) {
-        allPromise.push(
-          repo.updateCollaborator(this, state.mFA.id, state.mFA.collaborator),
+        await repo.updateCollaborator(
+          this,
+          state.mFA.id,
+          state.mFA.collaborator,
         );
       }
-      await Promise.all(allPromise);
       dispatch("fetchFa", state.mFA.id);
     },
 
