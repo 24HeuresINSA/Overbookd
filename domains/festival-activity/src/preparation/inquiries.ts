@@ -21,14 +21,14 @@ export class AlreadyInitialized extends Error {
 
 export class NotYetInitialized extends Error {
   constructor() {
-    super("La section demande de matos n'a pas encore ete initialisee.");
+    super("La section Demande de matos n'a pas encore été initialisée.");
   }
 }
 
 export class CantRemoveLastTimeWindow extends Error {
   constructor() {
     super(
-      "Il s'agit du dernier creneau matos. Il n'est pas possible de le supprimer",
+      "Il s'agit du dernier créneau matos. Il n'est pas possible de le supprimer",
     );
   }
 }
