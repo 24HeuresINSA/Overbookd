@@ -59,24 +59,8 @@
             />
           </h3>
 
-          <v-radio-group
-            v-if="ready && isCask"
-            v-model="totalPrice"
-            column
-            style="display: flex; flex-direction: column"
-          >
-            <v-radio label="Fut blonde" :value="sgConfig.prixFutBlonde">
-            </v-radio>
-            <v-radio label="Fut Blanche" :value="sgConfig.prixFutBlanche">
-            </v-radio>
-            <v-radio label="Fut Triple" :value="sgConfig.prixFutTriple">
-            </v-radio>
-            <v-radio label="Fut Flower Wager" :value="sgConfig.prixFutFlower">
-            </v-radio>
-          </v-radio-group>
-
           <v-select
-            v-if="ready && isCask && useAlpha"
+            v-if="ready && isCask"
             v-model="totalPrice"
             prepend-icon="mdi-beer"
             label="Fût"
@@ -87,14 +71,7 @@
           >
           </v-select>
 
-          <v-btn v-if="isCask" @click="openSgConfigForm">
-            Configuration des fûts
-          </v-btn>
-          <v-btn
-            v-if="isCask && useAlpha"
-            class="mt-4"
-            @click="openBarrelsForm"
-          >
+          <v-btn v-if="isCask" class="mt-4" @click="openBarrelsForm">
             Gestion des fûts
           </v-btn>
           <v-btn class="mt-4" :href="negativeBalanceMailLink">
@@ -148,9 +125,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="isSgConfigDialogOpen" width="600px">
-      <SgConfigForm @close-dialog="closeConfigDialog" />
-    </v-dialog>
     <v-dialog v-model="isBarrelsDialogOpen" width="600px">
       <BarrelsForm @close-dialog="closeBarrelsDialog" />
     </v-dialog>
@@ -166,7 +140,6 @@
  * and every user that consumed get charged accordingly
  */
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import SgConfigForm from "~/components/organisms/personal-account/SgConfigForm.vue";
 import BarrelsForm from "~/components/organisms/personal-account/BarrelsForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
 import { RepoFactory } from "~/repositories/repo-factory";
@@ -183,7 +156,6 @@ export default {
   name: "SG",
   components: {
     SnackNotificationContainer,
-    SgConfigForm,
     MoneyField,
     BarrelsForm,
   },
@@ -198,7 +170,6 @@ export default {
 
       mode: "cask", //default mode
       isSwitchDialogOpen: false,
-      isSgConfigDialogOpen: false,
       isBarrelsDialogOpen: false,
       regex: {
         int: new RegExp("^\\d*$"),
@@ -330,9 +301,6 @@ export default {
         reason,
       };
     },
-    sgConfig() {
-      return this.$accessor.personalAccount.barrelPrices;
-    },
     negativeBalanceMailLink() {
       const inDebtConsumers = this.consumers.filter(
         (consumer) => consumer.balance < 0,
@@ -350,9 +318,6 @@ export default {
     barrels() {
       return this.$accessor.personalAccount.barrels;
     },
-    useAlpha() {
-      return this.$accessor.user.can("manage-admins");
-    },
   },
 
   watch: {
@@ -363,11 +328,10 @@ export default {
 
   async mounted() {
     await Promise.all([
-      this.$accessor.personalAccount.fetchBarrelPrices(),
       this.$accessor.user.fetchPersonalAccountConsumers(),
+      this.$accessor.personalAccount.fetchBarrels(),
     ]);
-    this.$accessor.personalAccount.fetchBarrels();
-    this.totalPrice = this.sgConfig.prixFutBlonde;
+    this.totalPrice = this.barrels.at(0)?.price ?? 0;
     this.users = this.consumers;
     this.ready = true;
   },
@@ -470,12 +434,6 @@ export default {
     cleanInputs() {
       this.users = this.consumers;
       this.isSwitchDialogOpen = false;
-    },
-    openSgConfigForm() {
-      this.isSgConfigDialogOpen = true;
-    },
-    closeConfigDialog() {
-      this.isSgConfigDialogOpen = false;
     },
     openBarrelsForm() {
       this.isBarrelsDialogOpen = true;

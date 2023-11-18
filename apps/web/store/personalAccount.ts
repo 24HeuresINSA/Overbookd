@@ -1,7 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
 import {
   AdjustPrice,
-  BarrelPrices,
   ConfiguredBarrel,
   NewBarrel,
 } from "@overbookd/personal-account";
@@ -10,24 +9,14 @@ import { PersonalAccountRepository } from "~/repositories/personal-account.repos
 import { safeCall } from "~/utils/api/calls";
 
 interface State {
-  barrelPrices: BarrelPrices;
   barrels: ConfiguredBarrel[];
 }
 
 export const state = (): State => ({
-  barrelPrices: {
-    prixFutBlonde: 0,
-    prixFutBlanche: 0,
-    prixFutTriple: 0,
-    prixFutFlower: 0,
-  },
   barrels: [],
 });
 
 export const mutations = mutationTree(state, {
-  SET_BARREL_PRICES(state, barrels: BarrelPrices) {
-    state.barrelPrices = barrels;
-  },
   SET_BARRELS(state, barrels: ConfiguredBarrel[]) {
     state.barrels = barrels;
   },
@@ -48,26 +37,6 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchBarrelPrices({ commit }) {
-      const res = await safeCall(
-        this,
-        PersonalAccountRepository.getBarrelPrices(this),
-        { errorMessage: "Impossible de récupérer les fûts et leur prix" },
-      );
-      if (!res) return;
-      commit("SET_BARREL_PRICES", res.data);
-    },
-
-    async adjustBarrelPrices({ commit }, prices: BarrelPrices) {
-      const res = await safeCall(
-        this,
-        PersonalAccountRepository.saveBarrelPrices(this, prices),
-        { successMessage: "Prix des fûts mis a jour ✅" },
-      );
-      if (!res) return;
-      commit("SET_BARREL_PRICES", res.data);
-    },
-
     async fetchBarrels({ commit }) {
       const res = await safeCall(
         this,
