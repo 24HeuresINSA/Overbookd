@@ -29,6 +29,9 @@
         <v-icon small @click="openDeleteSignageDialog(item)">
           mdi-delete
         </v-icon>
+        <v-icon small @click="openAddPictureSignageDialog(item)">
+          mdi-camera
+        </v-icon>
       </template>
 
       <template #no-data> Aucune signalisation trouvée </template>
@@ -140,6 +143,9 @@ export default Vue.extend({
     closeDeleteSignageDialog() {
       this.isDeleteSignageDialogOpen = false;
       this.selectedSignage = undefined;
+    },
+    openAddPictureSignageDialog(signage: Signage) {
+      this.$accessor.dialog.openDialog("signagePicture", signage);
     },
     async deleteSignage() {
       if (!this.selectedSignage) return;
