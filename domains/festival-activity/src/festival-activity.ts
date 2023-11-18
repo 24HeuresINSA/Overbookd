@@ -129,7 +129,7 @@ export type ElectricitySupply = {
   comment: string | null;
 };
 
-type Supply = {
+export type Supply = {
   electricity: ElectricitySupply[];
   water: string | null;
 };

@@ -8,6 +8,7 @@ import {
   P17_16A_TETRA,
   P17_32A_TETRA,
   PANNEAU,
+  PC16_Prise_classique,
   REVIEWING,
 } from "../festival-activity";
 
@@ -231,8 +232,17 @@ export const justDance: InReview = {
     specialNeed: null,
   },
   supply: {
-    electricity: [],
-    water: null,
+    electricity: [
+      {
+        id: "nintendo-switch-pc16_prise_classique",
+        device: "Nintendo Switch",
+        count: 1,
+        connection: PC16_Prise_classique,
+        power: 100,
+        comment: "Pour jouer à Just Dance",
+      },
+    ],
+    water: "Une fontaine pour se rafraichir",
   },
   inquiry: {
     timeWindows: [

@@ -1,5 +1,6 @@
 import {
   Contractors,
+  ElectricitySupplies,
   InitInquiry,
   Prepare,
   TimeWindows,
@@ -204,24 +205,40 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, security };
   }
 
-  updateSupply(supply: PrepareSupplyUpdate): InReview {
-    throw new Error("Method not implemented." + supply);
+  updateSupply(form: PrepareSupplyUpdate): InReview {
+    const supply = { ...this.activity.supply, ...form };
+    return { ...this.activity, supply };
   }
 
   addElectricitySupply(
     electricitySupply: PrepareElectricitySupplyCreation,
   ): InReview {
-    throw new Error("Method not implemented." + electricitySupply);
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).add(electricitySupply).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
   }
 
   updateElectricitySupply(
     electricitySupply: PrepareElectricitySupplyUpdate,
   ): InReview {
-    throw new Error("Method not implemented." + electricitySupply);
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).update(electricitySupply).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
   }
 
   removeElectricitySupply(id: ElectricitySupply["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+    const electricity = ElectricitySupplies.build(
+      this.activity.supply.electricity,
+    ).remove(id).entries;
+
+    const supply = { ...this.activity.supply, electricity };
+    return { ...this.activity, supply };
   }
 
   initInquiry({ request, timeWindow }: InitInquiry): InReview {
