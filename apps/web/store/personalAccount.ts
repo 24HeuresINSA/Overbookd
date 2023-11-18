@@ -1,7 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
 import {
   AdjustPrice,
-  BarrelPrices,
   ConfiguredBarrel,
   NewBarrel,
 } from "@overbookd/personal-account";
