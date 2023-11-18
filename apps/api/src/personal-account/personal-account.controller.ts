@@ -26,8 +26,6 @@ import { PersonalAccountService } from "./personal-account.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { BarrelPricesResponseDto } from "./dto/barrel-prices.response.dto";
-import { BarrelPricesRequestDto } from "./dto/barrel-prices.request.dto";
 import { BarrelResponseDto } from "./dto/barrel.response.dto";
 import { AdjustBarrelPriceRequestDto } from "./dto/adjust-barrel-price.request.dto";
 import { CreateBarrelRequestDto } from "./dto/create-barrel.request.dto";
@@ -51,30 +49,6 @@ export class PersonalAccountController {
   constructor(
     private readonly personalAccountService: PersonalAccountService,
   ) {}
-
-  @Permission(MANAGE_PERSONAL_ACCOUNTS)
-  @Post("barrel-prices")
-  @ApiResponse({
-    status: 201,
-    description: "Update barrel prices configuration",
-    type: BarrelPricesResponseDto,
-  })
-  async updateBarrelPrices(
-    @Body() prices: BarrelPricesRequestDto,
-  ): Promise<BarrelPricesResponseDto> {
-    return this.personalAccountService.saveBarrelPrices(prices);
-  }
-
-  @Permission(HAVE_PERSONAL_ACCOUNT)
-  @Get("barrel-prices")
-  @ApiResponse({
-    status: 200,
-    description: "All configured barrel prices",
-    type: BarrelPricesResponseDto,
-  })
-  async getBarrelPrices(): Promise<BarrelPricesResponseDto> {
-    return this.personalAccountService.getBarrelPrices();
-  }
 
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Get("barrels")

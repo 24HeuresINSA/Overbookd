@@ -33,7 +33,6 @@ export {
   TransferError,
 } from "./transaction";
 
-export type { BarrelPrices } from "./barrel-prices/configuration";
 export type {
   Barrels,
   ConfiguredBarrel,

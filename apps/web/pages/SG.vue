@@ -71,14 +71,7 @@
           >
           </v-select>
 
-          <v-btn v-if="isCask" @click="openSgConfigForm">
-            Configuration des fûts
-          </v-btn>
-          <v-btn
-            v-if="isCask && useAlpha"
-            class="mt-4"
-            @click="openBarrelsForm"
-          >
+          <v-btn v-if="isCask" class="mt-4" @click="openBarrelsForm">
             Gestion des fûts
           </v-btn>
           <v-btn class="mt-4" :href="negativeBalanceMailLink">
