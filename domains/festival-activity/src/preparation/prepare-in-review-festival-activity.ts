@@ -39,6 +39,7 @@ import {
   Inquiries,
   NotYetInitialized,
 } from "./inquiries";
+import { LocationIsRequired, Signages } from "./signages";
 
 export class IsNotPublicActivity extends FestivalActivityError {}
 
@@ -185,20 +186,34 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inCharge };
   }
 
-  updateSigna(signa: PrepareSignaUpdate): InReview {
-    throw new Error("Method not implemented." + signa);
+  updateSigna({ location }: PrepareSignaUpdate): InReview {
+    if (location === null) throw new LocationIsRequired();
+    const signa = { ...this.activity.signa, location };
+    return { ...this.activity, signa };
   }
 
   addSignage(signage: PrepareSignageCreation): InReview {
-    throw new Error("Method not implemented." + signage);
+    const signages = Signages.build(this.activity.signa.signages).add(
+      signage,
+    ).entries;
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
   }
 
   updateSignage(signage: PrepareSignageUpdate): InReview {
-    throw new Error("Method not implemented." + signage);
+    const signages = Signages.build(this.activity.signa.signages).update(
+      signage,
+    ).entries;
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
   }
 
   removeSignage(id: Signage["id"]): InReview {
-    throw new Error("Method not implemented." + id);
+    const signages = Signages.build(this.activity.signa.signages).remove(
+      id,
+    ).entries;
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
   }
 
   updateSecurity(security: FestivalActivity["security"]): InReview {
