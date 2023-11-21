@@ -67,7 +67,7 @@ export class UserService {
   async getUserPassword(email: string): Promise<UserPasswordOnly | null> {
     return this.prisma.user.findUnique({
       where: { email },
-      select: { password: true },
+      select: { password: true, isDeleted: false },
     });
   }
 
