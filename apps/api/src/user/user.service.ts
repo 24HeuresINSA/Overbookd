@@ -3,7 +3,6 @@ import {
   JwtPayload,
   JwtUtil,
 } from "../authentication/entities/jwt-util.entity";
-import { MailService } from "../mail/mail.service";
 import { PrismaService } from "../prisma.service";
 import { retrievePermissions } from "../team/utils/permissions";
 import {
@@ -42,10 +41,14 @@ import {
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
 } from "@overbookd/permission";
+import { ForgetMember } from "@overbookd/registration";
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private mail: MailService) {}
+  constructor(
+    private prisma: PrismaService,
+    private forgetMember: ForgetMember,
+  ) {}
   private logger = new Logger("UserService");
 
   async getById(id: number): Promise<UserPersonalData | null> {
@@ -181,17 +184,14 @@ export class UserService {
   }
 
   async deleteUser(id: number): Promise<void> {
-    const deleteUser = this.prisma.user.update({
+    const user = await this.prisma.user.findUnique({
       where: { id },
-      data: { isDeleted: true },
-      select: { id: true },
+      select: { email: true },
     });
 
-    const removeFriendRequests = this.prisma.friend.deleteMany({
-      where: { OR: [{ requestorId: id }, { friendId: id }] },
-    });
+    if (!user) return;
 
-    await this.prisma.$transaction([deleteUser, removeFriendRequests]);
+    return this.forgetMember.forgetHim(user.email);
   }
 
   async getVolunteerAssignmentStats(

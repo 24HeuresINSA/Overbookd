@@ -77,6 +77,6 @@ import { PrismaNotificationRepository } from "./repository/notification-reposito
     },
   ],
   imports: [PrismaModule, DomainEventModule],
-  exports: [RegisterNewcomer],
+  exports: [RegisterNewcomer, ForgetMember],
 })
 export class RegistrationModule {}

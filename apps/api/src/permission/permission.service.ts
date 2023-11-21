@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { TeamService } from "../team/team.service";
 import { PrismaService } from "../prisma.service";
 import { PermissionRequestDto } from "./dto/permission.request.dto";
 import { PermissionResponseDto } from "./dto/permission.response.dto";
@@ -29,10 +28,7 @@ const SELECT_PERMISSION_TEAM = {
 
 @Injectable()
 export class PermissionService {
-  constructor(
-    private prisma: PrismaService,
-    private teamService: TeamService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
 
   async permission(params: {
     skip?: number;

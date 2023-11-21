@@ -256,7 +256,6 @@ export const actions = actionTree(
     async deleteUser({ commit }, userId: number) {
       const res = await safeCall(this, userRepo.deleteUser(this, userId), {
         successMessage: "Utilisateur supprimé ! 🎉",
-        errorMessage: "Mince, l'utilisateur n'a pas pu être supprimé 😢",
       });
       if (!res) return;
       commit("REMOVE_USER", userId);
