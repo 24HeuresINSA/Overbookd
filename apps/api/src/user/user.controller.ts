@@ -15,6 +15,7 @@ import {
   Res,
   StreamableFile,
   UploadedFile,
+  UseFilters,
   UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
@@ -76,6 +77,7 @@ import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
 import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
+import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
 
 @ApiTags("users")
 @Controller("users")
@@ -354,6 +356,7 @@ export class UserController {
     return this.userService.updateUser(targetUserId, user, req.user);
   }
 
+  @UseFilters(ForgetMemberErrorFilter)
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(MANAGE_USERS)
