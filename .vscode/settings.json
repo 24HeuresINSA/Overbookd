@@ -53,6 +53,7 @@
     "source.fixAll.eslint": true
   },
   "eslint.validate": ["javascript", "typescript"],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
   "eslint.codeActionsOnSave.rules": ["all"],
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
