@@ -1,8 +1,8 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   Credentials,
-  EnrollNewcomersForm,
   IDefineANewcomer,
+  NewcomerToEnroll,
   RegisterForm,
 } from "@overbookd/registration";
 import { HttpStringified } from "~/utils/types/http";
@@ -18,8 +18,10 @@ export class RegistrationRepository {
     );
   }
 
-  static enrollNewcomers(context: Context, body: EnrollNewcomersForm) {
-    return context.$axios.post<void>(`${this.basePath}/enroll`, body);
+  static enrollNewAdherents(context: Context, newcomers: NewcomerToEnroll[]) {
+    return context.$axios.post<void>(`${this.basePath}/enroll-adherent`, {
+      newcomers,
+    });
   }
 
   static generateLink(context: Context) {

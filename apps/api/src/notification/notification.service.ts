@@ -4,7 +4,7 @@ import { Observable, merge } from "rxjs";
 import { ADHERENT_REGISTERED, RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
-import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
+import { ENROLL_ADHERENT, Permission } from "@overbookd/permission";
 import { DomainEvent } from "@overbookd/domain-events";
 
 type AvailableNotification = {
@@ -70,6 +70,6 @@ export class NotificationService implements OnApplicationBootstrap {
 
   private get adherentRegistered(): AvailableNotification {
     const adherentRegistered = this.eventStore.listen(ADHERENT_REGISTERED);
-    return { source: adherentRegistered, permission: ENROLL_NEWCOMER };
+    return { source: adherentRegistered, permission: ENROLL_ADHERENT };
   }
 }

@@ -1,8 +1,4 @@
-import {
-  IDefineANewcomer,
-  JoinableTeam,
-  RegisterForm,
-} from "@overbookd/registration";
+import { IDefineANewcomer, RegisterForm } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import { HttpStringified } from "~/utils/types/http";
 import { RepoFactory } from "~/repositories/repo-factory";
@@ -53,23 +49,15 @@ export const actions = actionTree(
       commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
     },
 
-    async enrollNewcomers(
-      { commit },
-      {
-        team,
-        newcomers,
-      }: { team: JoinableTeam; newcomers: IDefineANewcomer[] },
-    ) {
-      const body = {
-        newcomers: newcomers.map(({ id }) => ({ id })),
-        team,
-      };
+    async enrollNewAdherents({ commit }, newcomers: IDefineANewcomer[]) {
       const res = await safeCall(
         this,
-        registrationRepo.enrollNewcomers(this, body),
+        registrationRepo.enrollNewAdherents(this, newcomers),
         {
-          successMessage: `Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que ${team} ✅`,
-          errorMessage: `Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés ❌`,
+          successMessage:
+            "Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que hards ✅",
+          errorMessage:
+            "Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés ❌",
         },
       );
       if (!res) return;

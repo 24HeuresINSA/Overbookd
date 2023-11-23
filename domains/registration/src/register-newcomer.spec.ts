@@ -8,14 +8,14 @@ import {
 import { RegisterNewcomer } from "./register-newcomer";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory";
 import { AdherentRegistered, NewcomerRegisteredEvent } from "./event";
-import { ENROLL_NEWCOMER, READ_FA, READ_FT } from "@overbookd/permission";
+import { ENROLL_ADHERENT, READ_FA, READ_FT } from "@overbookd/permission";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory";
 import { StoredNotifyee } from "./notification-repository.inmemory";
 
 const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },
   { id: 101, permissions: [READ_FA] },
-  { id: 102, permissions: [READ_FA, READ_FT, ENROLL_NEWCOMER] },
+  { id: 102, permissions: [READ_FA, READ_FT, ENROLL_ADHERENT] },
 ];
 
 const email = "test@example.com";
@@ -123,8 +123,8 @@ describe("Register newcomer", () => {
         "adherent",
       );
     });
-    describe("when a new comer has been registered", () => {
-      it("should generate a notification for 'can enroll' users", async () => {
+    describe("when a new adherent has been registered", () => {
+      it("should generate a notification for 'can enroll adherent' users", async () => {
         const notifees = await registerNewcomer.notifyNewAdherentAwaits(
           newcomerRegistered,
         );

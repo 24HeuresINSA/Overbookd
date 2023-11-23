@@ -4,7 +4,7 @@ import {
   ASK_FOR_HELP,
   BE_AFFECTED,
   DOWNLOAD_PLANNING,
-  ENROLL_NEWCOMER,
+  ENROLL_ADHERENT,
   FILL_AVAILABILITY,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_CONFIG,
@@ -302,7 +302,7 @@ export const permissions = [
     },
   },
   {
-    name: ENROLL_NEWCOMER,
+    name: ENROLL_ADHERENT,
     description: "Peut enrôler des nouveaux",
     teams: {
       createMany: {

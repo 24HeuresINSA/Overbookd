@@ -1,4 +1,4 @@
-import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
+import { ENROLL_ADHERENT, Permission } from "@overbookd/permission";
 
 import { AdherentRegistered } from "./event";
 import {
@@ -82,7 +82,7 @@ export class RegisterNewcomer {
 
   notifyNewAdherentAwaits(newcomer: AdherentRegistered): Promise<Notifyee[]> {
     return this.notificationRepository.add(newcomer, {
-      permission: ENROLL_NEWCOMER,
+      permission: ENROLL_ADHERENT,
     });
   }
 }

@@ -1,7 +1,7 @@
 import {
   AFFECT_VOLUNTEER,
   ASK_FOR_HELP,
-  ENROLL_NEWCOMER,
+  ENROLL_ADHERENT,
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -127,7 +127,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-account-multiple-plus",
     title: "Inscriptions",
-    permission: ENROLL_NEWCOMER,
+    permission: ENROLL_ADHERENT,
     to: "/registrations",
     description:
       "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
