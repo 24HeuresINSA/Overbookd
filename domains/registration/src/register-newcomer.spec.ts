@@ -8,18 +8,9 @@ import {
 import { RegisterNewcomer } from "./register-newcomer";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory";
 import { AdherentRegistered, NewcomerRegisteredEvent } from "./event";
-import {
-  ENROLL_NEWCOMER,
-  Permission,
-  READ_FA,
-  READ_FT,
-} from "@overbookd/permission";
+import { ENROLL_NEWCOMER, READ_FA, READ_FT } from "@overbookd/permission";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory";
 import { StoredNotifyee } from "./notification-repository.inmemory";
-
-export type WithPermissions = {
-  permissions: Permission[];
-};
 
 const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },
@@ -134,7 +125,7 @@ describe("Register newcomer", () => {
     });
     describe("when a new comer has been registered", () => {
       it("should generate a notification for 'can enroll' users", async () => {
-        const notifees = await registerNewcomer.notifyAwaitForValidation(
+        const notifees = await registerNewcomer.notifyNewAdherentAwaits(
           newcomerRegistered,
         );
         expect(notifees).toHaveLength(1);

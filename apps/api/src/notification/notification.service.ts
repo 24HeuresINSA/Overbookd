@@ -34,7 +34,7 @@ export class NotificationService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     this.eventStore.adherentsRegistered.subscribe(async (event) => {
       this.logger.debug(JSON.stringify(event));
-      const users = await this.register.notifyAwaitForValidation(event);
+      const users = await this.register.notifyNewAdherentAwaits(event);
       const notifyees = users.map(({ id }) => id);
       const logMessage = `Users ${notifyees} notified new adherent await validation`;
       this.logger.log(logMessage);

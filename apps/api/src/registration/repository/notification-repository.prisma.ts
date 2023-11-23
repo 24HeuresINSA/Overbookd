@@ -29,7 +29,7 @@ export class PrismaNotificationRepository implements NotificationRepository {
   }
 
   private async findNotifyees(clause: FilterNotifyees) {
-    const where = HAS_PERMISSION(clause.havePermission);
+    const where = HAS_PERMISSION(clause.permission);
     const select = SELECT_NOTIFYEE;
     return this.prisma.user.findMany({ where, select });
   }
