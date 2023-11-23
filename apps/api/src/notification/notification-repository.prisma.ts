@@ -1,14 +1,15 @@
 import { PrismaService } from "../prisma.service";
-import { NotificationRepository } from "./notification.service";
+import { NotificationRepository, Notifications } from "./notification.service";
 
 export class PrismaNotificationRepository implements NotificationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async for(userId: number): Promise<boolean> {
-    const hasNotification = await this.prisma.notification.findFirst({
+  async for(userId: number): Promise<Notifications> {
+    const savedNotifications = await this.prisma.notification.count({
       where: { userId },
     });
-    return hasNotification ? true : false;
+    const hasNotifications = savedNotifications > 0;
+    return { hasNotifications };
   }
 
   async readFrom(userId: number): Promise<void> {

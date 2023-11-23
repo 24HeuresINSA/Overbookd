@@ -13,9 +13,13 @@ type AvailableNotification = {
 };
 
 export interface NotificationRepository {
-  for(userId: number): Promise<boolean>;
+  for(userId: number): Promise<Notifications>;
   readFrom(userId: number): Promise<void>;
 }
+
+export type Notifications = {
+  hasNotifications: boolean;
+};
 
 export class NotificationService implements OnApplicationBootstrap {
   constructor(
@@ -37,7 +41,7 @@ export class NotificationService implements OnApplicationBootstrap {
     });
   }
 
-  async hasNotifications(userId: number): Promise<boolean> {
+  async hasNotifications(userId: number): Promise<Notifications> {
     return this.notifications.for(userId);
   }
 

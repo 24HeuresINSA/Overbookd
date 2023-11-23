@@ -19,6 +19,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { RequestWithUserPayload } from "../app.controller";
 import { Observable } from "rxjs";
 import { DomainEvent } from "@overbookd/domain-events";
+import { NotificationsResponseDto } from "./dto/notifications.response.dto";
 
 @ApiTags("notifications")
 @ApiBearerAuth()
@@ -35,7 +36,7 @@ export class NotificationController {
   @ApiResponse({
     status: 200,
     description: "Volunteer's notifications",
-    type: Boolean,
+    type: NotificationsResponseDto,
   })
   hasNotifications(@Request() { user }: RequestWithUserPayload) {
     return this.notify.hasNotifications(user.id);
