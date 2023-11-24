@@ -41,7 +41,7 @@ export type PrepareContractorUpdate = {
 };
 
 export type PrepareSignaUpdate = {
-  location?: string | null;
+  location: string | null;
 };
 
 export type PrepareSignageCreation = Pick<

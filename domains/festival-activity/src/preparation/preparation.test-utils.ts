@@ -1,4 +1,5 @@
 import {
+  AFFICHE,
   BACHE,
   DRAFT,
   Draft,
@@ -164,7 +165,7 @@ export const pcSecurite: InReview = {
     contractors: [],
   },
   signa: {
-    location: "",
+    location: "BMC",
     signages: [],
   },
   security: {
@@ -225,8 +226,25 @@ export const justDance: InReview = {
     ],
   },
   signa: {
-    location: "",
-    signages: [],
+    location: "Hall de la mde",
+    signages: [
+      {
+        id: "affiche-just-dance-a2",
+        size: "A2",
+        type: AFFICHE,
+        quantity: 24,
+        text: "Just Dance",
+        comment: null,
+      },
+      {
+        id: "affiche-just-dance-10x3",
+        size: "10x3",
+        type: AFFICHE,
+        quantity: 24,
+        text: "Just Dance",
+        comment: "fond bleu",
+      },
+    ],
   },
   security: {
     specialNeed: null,
@@ -306,7 +324,7 @@ export const baladeEnPoney: InReview = {
     contractors: [],
   },
   signa: {
-    location: "",
+    location: "Pelouse des humas",
     signages: [],
   },
   security: {

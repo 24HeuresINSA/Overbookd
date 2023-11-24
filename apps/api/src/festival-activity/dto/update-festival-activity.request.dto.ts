@@ -74,10 +74,9 @@ export class InChargeRequestDto implements PrepareInChargeForm {
 export class SignaRequestDto implements PrepareSignaUpdate {
   @ApiProperty({
     description: "Festival activity location",
-    required: false,
+    required: true,
   })
-  @IsOptional()
-  location?: string | null;
+  location: string | null;
 }
 
 type PrepareSecurityUpdate = FestivalActivity["security"];
