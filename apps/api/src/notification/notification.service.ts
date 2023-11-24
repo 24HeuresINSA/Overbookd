@@ -4,7 +4,7 @@ import { Observable, merge } from "rxjs";
 import { ADHERENT_REGISTERED, RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
-import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
+import { ENROLL_ADHERENT, Permission } from "@overbookd/permission";
 import { DomainEvent } from "@overbookd/domain-events";
 
 type AvailableNotification = {
@@ -13,9 +13,13 @@ type AvailableNotification = {
 };
 
 export interface NotificationRepository {
-  for(userId: number): Promise<boolean>;
+  for(userId: number): Promise<Notifications>;
   readFrom(userId: number): Promise<void>;
 }
+
+export type Notifications = {
+  hasNotifications: boolean;
+};
 
 export class NotificationService implements OnApplicationBootstrap {
   constructor(
@@ -30,14 +34,14 @@ export class NotificationService implements OnApplicationBootstrap {
   onApplicationBootstrap() {
     this.eventStore.adherentsRegistered.subscribe(async (event) => {
       this.logger.debug(JSON.stringify(event));
-      const users = await this.register.notifyAwaitForValidation(event);
+      const users = await this.register.notifyNewAdherentAwaits(event);
       const notifyees = users.map(({ id }) => id);
       const logMessage = `Users ${notifyees} notified new adherent await validation`;
       this.logger.log(logMessage);
     });
   }
 
-  async hasNotifications(userId: number): Promise<boolean> {
+  async hasNotifications(userId: number): Promise<Notifications> {
     return this.notifications.for(userId);
   }
 
@@ -66,6 +70,6 @@ export class NotificationService implements OnApplicationBootstrap {
 
   private get adherentRegistered(): AvailableNotification {
     const adherentRegistered = this.eventStore.listen(ADHERENT_REGISTERED);
-    return { source: adherentRegistered, permission: ENROLL_NEWCOMER };
+    return { source: adherentRegistered, permission: ENROLL_ADHERENT };
   }
 }

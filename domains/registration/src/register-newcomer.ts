@@ -1,4 +1,4 @@
-import { ENROLL_NEWCOMER, Permission } from "@overbookd/permission";
+import { ENROLL_ADHERENT, Permission } from "@overbookd/permission";
 
 import { AdherentRegistered } from "./event";
 import {
@@ -26,7 +26,7 @@ export interface NewcomerRepository {
 }
 
 export type FilterNotifyees = {
-  havePermission: Permission;
+  permission: Permission;
 };
 
 export type Notifyee = {
@@ -80,9 +80,9 @@ export class RegisterNewcomer {
     return this.newcomerRepository.save(fulfilledForm);
   }
 
-  notifyAwaitForValidation(newcomer: AdherentRegistered): Promise<Notifyee[]> {
+  notifyNewAdherentAwaits(newcomer: AdherentRegistered): Promise<Notifyee[]> {
     return this.notificationRepository.add(newcomer, {
-      havePermission: ENROLL_NEWCOMER,
+      permission: ENROLL_ADHERENT,
     });
   }
 }

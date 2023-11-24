@@ -48,28 +48,13 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-menu offset-y>
-        <template #activator="{ attrs, on }">
-          <v-btn
-            class="white--text"
-            v-bind="attrs"
-            color="blue"
-            :disabled="noNewcomerSelected"
-            v-on="on"
-          >
-            Enrôler en tant que
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item v-for="teamCode of joinableTeams" :key="teamCode" link>
-            <v-list-item-title
-              color="green"
-              @click="enrollNewcomersAsMemberOf(teamCode)"
-              v-text="getTeamName(teamCode)"
-            ></v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <v-btn
+        color="primary"
+        :disabled="noNewcomerSelected"
+        @click="enrollNewcomers"
+      >
+        Enrôler en tant que hard
+      </v-btn>
     </v-card-actions>
 
     <SnackNotificationContainer />
@@ -157,11 +142,8 @@ export default Vue.extend({
     getTeamName(teamCode: string): string {
       return this.$accessor.team.getTeamByCode(teamCode).name;
     },
-    enrollNewcomersAsMemberOf(team: JoinableTeam) {
-      this.$accessor.registration.enrollNewcomers({
-        team,
-        newcomers: this.selectedNewcomers,
-      });
+    enrollNewcomers() {
+      this.$accessor.registration.enrollNewAdherents(this.selectedNewcomers);
       this.selectedNewcomers = [];
     },
     toggleLast30DaysNewcomers() {
