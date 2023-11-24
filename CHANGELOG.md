@@ -1,3 +1,27 @@
+## [2.7.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.6.1...v2.7.0) (2023-11-24)
+
+
+### Features
+
+* **personal-account:** use new barrel configuration for sg. [#1324](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1324) ([0f4940f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0f4940fe4539bb4cf74c6a2bce6f5deb78217b55))
+
+
+### Bug Fixes
+
+* **authentication:** block authenticate with deleted user credentials. [#1339](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1339) ([ae4867a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ae4867a54291b6a9cb7e88704558e7d5397ce80f))
+* **conf:** eslint parsing on web files ([2a5b8a0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2a5b8a0ae593fc01d8945b33f73a46219c80f9b9))
+* **notifications:** notify only sg when new adherents are registered. [#1325](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1325) ([e5ff885](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e5ff8852c3b70e6f8e1376a4e538ba5d11fe86e0))
+* **user:** forget user instead of deleting him. [#1340](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1340) ([aa1a0ae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aa1a0ae1d33a92b6f6c523ecf3808b9debacc0b9))
+
+
+### Pre-Features
+
+* **festival-activity:** allow inquiry initialisation. [#1333](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1333) ([3a822ad](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3a822adc95d5c917dba338ed3ceb5ffa2ef32125))
+* **festival-activity:** handle add and remove requests on inquiry for in review activity. [#1333](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1333) ([736408f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/736408fd3a1808e7914a01a757ec1ce17024a2a7))
+* **festival-activity:** handle add and remove time windows on inquiry for in review activity. [#1333](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1333) ([599da74](https://gitlab.com/24-heures-insa/overbookd-mono/commit/599da748ccf63143de177fc4d5d4bb52e24c5590))
+* **festival-activity:** Implement Supply section for In review FA in domain [#1329](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1329) ([65c8c6e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/65c8c6ec46cbb0e34853c7f92f22c02d8193e20b))
+* **festival-activity:** signa section for in review. [#1330](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1330) ([0b871b1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0b871b194b9a286e99d27feaa5e692ffd73c69da))
+
 ## [2.6.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.6.0...v2.6.1) (2023-11-16)
 
 
