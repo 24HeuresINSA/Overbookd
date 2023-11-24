@@ -55,9 +55,9 @@ export const actions = actionTree(
         registrationRepo.enrollNewAdherents(this, newcomers),
         {
           successMessage:
-            "Les nouveaux arrivants sélectionnés ont bien été enrollés en tant que hards ✅",
+            "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
           errorMessage:
-            "Les nouveaux arrivants sélectionnés n'ont pas pu être enrolés ❌",
+            "Les nouveaux arrivants sélectionnés n'ont pas pu être enrôlés ❌",
         },
       );
       if (!res) return;

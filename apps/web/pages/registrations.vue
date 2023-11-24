@@ -51,9 +51,9 @@
       <v-btn
         color="primary"
         :disabled="noNewcomerSelected"
-        @click="enrollNewcomers()"
+        @click="enrollNewcomers"
       >
-        Enrôler en tant que hards
+        Enrôler en tant que hard
       </v-btn>
     </v-card-actions>
 
