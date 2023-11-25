@@ -6,7 +6,7 @@ export function isNumber(value: string | null): boolean | string {
 export function min(minValue: number) {
   const message = `La valeur doit être au moins de ${minValue}`;
   return function (value: string | null) {
-    return (value != undefined && parseInt(value, 10) >= minValue) || message;
+    return (value != undefined && parseFloat(value) >= minValue) || message;
   };
 }
 
