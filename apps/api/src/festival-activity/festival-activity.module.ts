@@ -6,21 +6,25 @@ import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import {
   CreateFestivalActivity,
-  InMemoryCreateFestivalActivityRepository,
-  InMemoryPrepareFestivalActivityRepository,
   PrepareFestivalActivity,
 } from "@overbookd/festival-activity";
+import { PrismaCreateFestivalActivityRepository } from "./repository/create-festival-activity.prisma";
+import { PrismaPrepareFestivalActivityRepository } from "./repository/prepare-festival-activity.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
   providers: [
     {
-      provide: InMemoryCreateFestivalActivityRepository,
-      useFactory: () => new InMemoryCreateFestivalActivityRepository(),
+      provide: PrismaCreateFestivalActivityRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaCreateFestivalActivityRepository(prisma),
+      inject: [PrismaService],
     },
     {
-      provide: InMemoryPrepareFestivalActivityRepository,
-      useFactory: () => new InMemoryPrepareFestivalActivityRepository(),
+      provide: PrismaPrepareFestivalActivityRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaPrepareFestivalActivityRepository(prisma),
+      inject: [PrismaService],
     },
     {
       provide: PrismaAdherentRepository,
@@ -31,16 +35,16 @@ import {
     {
       provide: CreateFestivalActivity,
       useFactory: (
-        festivalActivities: InMemoryCreateFestivalActivityRepository,
+        festivalActivities: PrismaCreateFestivalActivityRepository,
       ) => new CreateFestivalActivity(festivalActivities),
-      inject: [InMemoryCreateFestivalActivityRepository],
+      inject: [PrismaCreateFestivalActivityRepository],
     },
     {
       provide: PrepareFestivalActivity,
       useFactory: (
-        festivalActivities: InMemoryPrepareFestivalActivityRepository,
+        festivalActivities: PrismaPrepareFestivalActivityRepository,
       ) => new PrepareFestivalActivity(festivalActivities),
-      inject: [InMemoryPrepareFestivalActivityRepository],
+      inject: [PrismaPrepareFestivalActivityRepository],
     },
     {
       provide: FestivalActivityService,

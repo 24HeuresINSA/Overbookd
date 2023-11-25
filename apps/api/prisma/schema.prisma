@@ -55,9 +55,10 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments   Assignment[]
-  contributions Contribution[]
-  notifications Notification[]
+  assignments      Assignment[]
+  contributions    Contribution[]
+  notifications    Notification[]
+  festivalActivity FestivalActivityInCharge[]
 
   @@map("user")
 }
@@ -347,6 +348,7 @@ model CatalogGear {
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
+  inquiries        InquiryRequest[]  @relation("inquiry")
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -612,4 +614,204 @@ model Barrel {
   price Int
 
   @@map("barrel")
+}
+
+model FestivalActivity {
+  id     Int                    @id @default(autoincrement())
+  status FestivalActivityStatus
+
+  general  FestivalActivityGeneral?
+  inCharge FestivalActivityInCharge?
+  signa    FestivalActivitySigna?
+  security FestivalActivitySecurity?
+  supply   FestivalActivitySupply?
+  inquiry  FestivalActivityInquiry?
+  reviews  FestivalActivityReviews?
+
+  @@map("festival_activity")
+}
+
+enum FestivalActivityStatus {
+  DRAFT
+  IN_REVIEW
+
+  @@map("festival_activity_status")
+}
+
+model FestivalActivityGeneral {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?
+  toPublish   Boolean                      @default(false) @map("to_publish")
+  photoLink   String?                      @map("photo_link")
+  isFlagship  Boolean                      @default(false) @map("is_flagship")
+  categories  String[]
+  timeWindows FestivalActivityTimeWindow[]
+
+  @@map("festival_activity_general")
+}
+
+model FestivalActivityTimeWindow {
+  id    String   @id
+  start DateTime
+  end   DateTime
+
+  faGeneral                   FestivalActivityGeneral? @relation(fields: [faId], references: [faId])
+  faId                        Int?                     @map("fa_id")
+  FestivalActivityInquiry     FestivalActivityInquiry? @relation(fields: [festivalActivityInquiryFaId], references: [faId])
+  festivalActivityInquiryFaId Int?
+
+  @@map("festival_activity_time_window")
+}
+
+model FestivalActivityInCharge {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  team        String?
+  adherent    User?        @relation(fields: [adherentId], references: [id])
+  adherentId  Int?         @map("adherent_id")
+  contractors Contractor[]
+
+  @@map("festival_activity_in_charge")
+}
+
+model Contractor {
+  id        Int     @id @default(autoincrement())
+  firstname String
+  lastname  String
+  phone     String
+  email     String?
+  company   String?
+  comment   String?
+
+  faInCharge FestivalActivityInCharge? @relation(fields: [faId], references: [faId])
+  faId       Int?                      @map("fa_id")
+}
+
+model FestivalActivitySigna {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  location String?
+  signages FestivalActivitySignage[]
+
+  @@map("festival_activity_signa")
+}
+
+model FestivalActivitySignage {
+  id       String      @id
+  quantity Int
+  text     String
+  size     String      @db.VarChar(50)
+  type     SignageType
+  comment  String?     @db.Text
+
+  faSigna   FestivalActivitySigna @relation(fields: [faSignaId], references: [faId])
+  faSignaId Int                   @map("fa_signa_id")
+
+  @@map("festival_activity_signage")
+}
+
+enum SignageType {
+  BACHE
+  PANNEAU
+  AFFICHE
+
+  @@map("signage_type")
+}
+
+model FestivalActivitySecurity {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  specialNeed String? @map("special_need") @db.Text
+
+  @@map("festival_activity_security")
+}
+
+model FestivalActivitySupply {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  electricity FestivalActivityElectricitySupply[]
+  water       String?
+
+  @@map("festival_activity_supply")
+}
+
+model FestivalActivityElectricitySupply {
+  id         String                @id
+  connection ElectricityConnection
+  device     String
+  power      Int
+  count      Int
+  comment    String?
+
+  faSupply FestivalActivitySupply? @relation(fields: [faId], references: [faId], onDelete: Cascade)
+  faId     Int?                    @map("festival_supply_id")
+
+  @@map("festival_activity_electricity_supply")
+}
+
+enum ElectricityConnection {
+  PC16_Prise_classique
+  P17_16A_MONO
+  P17_16A_TRI
+  P17_16A_TETRA
+  P17_32A_MONO
+  P17_32A_TRI
+  P17_32A_TETRA
+  P17_63A_MONO
+  P17_63A_TRI
+  P17_63A_TETRA
+  P17_125A_TETRA
+
+  @@map("electricity_connection")
+}
+
+model FestivalActivityInquiry {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  timeWindows FestivalActivityTimeWindow[]
+  requests    InquiryRequest[]
+
+  @@map("festival_activity_inquiry")
+}
+
+model InquiryRequest {
+  slug        String      @id
+  catalogItem CatalogGear @relation("inquiry", fields: [slug], references: [slug], onDelete: Cascade)
+  name        String
+  quantity    Int
+
+  faId      Int?                     @map("fa_id")
+  faInquiry FestivalActivityInquiry? @relation(fields: [faId], references: [faId])
+
+  @@map("inquiry_request")
+}
+
+model FestivalActivityReviews {
+  faId Int              @id @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  humain    FestivalActivityReviewStatus
+  signa     FestivalActivityReviewStatus
+  secu      FestivalActivityReviewStatus
+  matos     FestivalActivityReviewStatus
+  elec      FestivalActivityReviewStatus
+  barrieres FestivalActivityReviewStatus
+  comcom    FestivalActivityReviewStatus
+
+  @@map("festival_activity_reviews")
+}
+
+enum FestivalActivityReviewStatus {
+  REVIEWING
+  NOT_ASKING_TO_REVIEW
+
+  @@map("festival_activity_review_status")
 }

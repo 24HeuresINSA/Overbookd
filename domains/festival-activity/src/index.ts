@@ -24,7 +24,6 @@ export type {
   FestivalActivityCreationForm,
   CreateFestivalActivityRepository,
 } from "./creation/creation";
-export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
 
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
@@ -35,7 +34,6 @@ export type {
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
 } from "./preparation/prepare-festival-activity.model";
-export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";
 
 //ASK FOR REVIEW
 export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
