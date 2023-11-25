@@ -80,12 +80,12 @@
             </nuxt-link>
           </template>
 
-          <template #item.team="{ item }">
-            {{ item.team?.name ?? "" }}
+          <template #item.adherent="{ item }">
+            {{ formatUsername(item.adherent) }}
           </template>
 
-          <template #item.userInCharge="{ item }">
-            {{ formatUsername(item.userInCharge) }}
+          <template #item.team="{ item }">
+            <TeamChip :team="item.team" with-name />
           </template>
 
           <template #item.action="{ item }">
@@ -119,7 +119,7 @@
     </v-btn>
 
     <v-dialog v-model="isNewFaDialogOpen" max-width="600">
-      <NewFaCard />
+      <NewFaCard @close-dialog="isNewFaDialogOpen = false" />
     </v-dialog>
 
     <v-dialog v-model="isDeleteDialogOpen" width="600">
@@ -145,6 +145,7 @@ import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FaSimplified,
   FaStatus,
@@ -157,11 +158,12 @@ import {
 } from "~/utils/models/fa.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Team } from "~/utils/models/team.model";
-import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { MANAGE_LOCATION, VIEW_DELETED_FA } from "@overbookd/permission";
+import { PreviewFestivalActivity } from "@overbookd/festival-activity";
+import { User } from "@overbookd/user";
 
 interface FaData {
   headers: Header[];
@@ -182,6 +184,7 @@ export default Vue.extend({
   components: {
     FestivalEventFilter,
     NewFaCard,
+    TeamChip,
     ConfirmationMessage,
     SnackNotificationContainer,
   },
@@ -191,7 +194,7 @@ export default Vue.extend({
       { text: "Validation", value: "validation", sortable: false },
       { text: "Nom", value: "name" },
       { text: "Equipe", value: "team" },
-      { text: "Resp", value: "userInCharge" },
+      { text: "Resp", value: "adherent", sortable: false },
       { text: "Action", value: "action", sortable: false },
     ],
     selectedFa: undefined,
@@ -209,8 +212,8 @@ export default Vue.extend({
     title: "Fiches Activités",
   }),
   computed: {
-    fas(): FaSimplified[] {
-      return this.$accessor.fa.FAs;
+    fas(): PreviewFestivalActivity[] {
+      return this.$accessor.festivalActivity.allActivities;
     },
     validators(): Team[] {
       return this.$accessor.team.faValidators;
@@ -218,13 +221,13 @@ export default Vue.extend({
     statuses(): [FaStatus, FaStatusLabel][] {
       return [...faStatusLabels.entries()];
     },
-    searchableFas(): Searchable<FaSimplified>[] {
+    searchableFas(): Searchable<PreviewFestivalActivity>[] {
       return this.fas.map((fa) => ({
         ...fa,
         searchable: SlugifyService.apply(`${fa.id} ${fa.name}`),
       }));
     },
-    filteredFas(): FaSimplified[] {
+    filteredFas(): PreviewFestivalActivity[] {
       const { team, status, search } = this.filters;
 
       return this.searchableFas.filter((fa) => {
@@ -259,24 +262,26 @@ export default Vue.extend({
   async mounted() {
     await Promise.all([
       this.$accessor.team.fetchFaValidators(),
-      this.$accessor.fa.fetchFAs(),
+      this.$accessor.festivalActivity.fetchAllActivities(),
     ]);
   },
 
   methods: {
-    filterFaByTeam(teamSearched?: Team): (fa: FaSimplified) => boolean {
-      return teamSearched
-        ? (fa) => fa.team?.code === teamSearched.code
-        : () => true;
+    filterFaByTeam(
+      teamSearched?: Team,
+    ): (fa: PreviewFestivalActivity) => boolean {
+      return teamSearched ? (fa) => fa.team === teamSearched.code : () => true;
     },
 
-    filterFaByStatus(statusSearched?: FaStatus): (fa: FaSimplified) => boolean {
+    filterFaByStatus(
+      statusSearched?: FaStatus,
+    ): (fa: PreviewFestivalActivity) => boolean {
       return statusSearched ? (fa) => fa.status === statusSearched : () => true;
     },
 
     filterFaByNameAndId(
       search: string,
-    ): (fa: Searchable<FaSimplified>) => boolean {
+    ): (fa: Searchable<PreviewFestivalActivity>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
@@ -368,7 +373,7 @@ export default Vue.extend({
       this.validatorStatuses.set(team.code, value);
     },
 
-    formatUsername(user?: User) {
+    formatUsername(user?: User): string {
       return user ? formatUsername(user) : "";
     },
   },
