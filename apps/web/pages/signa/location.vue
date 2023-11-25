@@ -26,10 +26,20 @@
         <template #item.action="{ item }">
           <tr>
             <td>
-              <v-btn icon small @click="editLocationDialog(item)">
+              <v-btn
+                v-show="canManageLocations"
+                icon
+                small
+                @click="editLocationDialog(item)"
+              >
                 <v-icon small>mdi-circle-edit-outline</v-icon>
               </v-btn>
-              <v-btn icon small @click="deleteLocationDialog(item)">
+              <v-btn
+                v-show="canManageLocations"
+                icon
+                small
+                @click="deleteLocationDialog(item)"
+              >
                 <v-icon small>mdi-delete</v-icon>
               </v-btn>
             </td>
@@ -39,6 +49,7 @@
     </v-container>
 
     <v-btn
+      v-show="canManageLocations"
       color="secondary"
       class="btn-plus"
       elevation="2"
@@ -92,6 +103,7 @@ import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue
 import NewLocationCard from "~/components/molecules/signa/location/NewLocationCard.vue";
 import EditLocationCard from "~/components/molecules/signa/location/EditLocationCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { MANAGE_LOCATION } from "@overbookd/permission";
 
 interface LocationData {
   headers: Header[];
@@ -130,6 +142,9 @@ export default Vue.extend({
   computed: {
     locations(): SignaLocation[] {
       return this.$accessor.signa.locations;
+    },
+    canManageLocations(): boolean {
+      return this.$accessor.user.can(MANAGE_LOCATION);
     },
   },
   async mounted() {

@@ -21,6 +21,7 @@ import {
   VALIDATE_FA,
   VALIDATE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
+  VIEW_LOCATION,
   VIEW_PLANNING,
   VIEW_TIMELINE,
   VIEW_TROMBINOSCOPE,
@@ -30,7 +31,6 @@ import {
   WRITE_GEAR_CATALOG,
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
-  WRITE_SIGNAGE_LOCATION,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -115,11 +115,11 @@ export const permissions = [
     },
   },
   {
-    name: WRITE_SIGNAGE_LOCATION,
-    description: "Peut éditer les lieux de la signa",
+    name: VIEW_LOCATION,
+    description: "Peut voir les lieux de la signa",
     teams: {
       createMany: {
-        data: [{ teamCode: "signa" }],
+        data: [{ teamCode: "signa" }, { teamCode: "hard" }],
       },
     },
   },

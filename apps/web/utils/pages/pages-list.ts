@@ -12,7 +12,7 @@ import {
   READ_FT,
   READ_GEAR_CATALOG,
   READ_SIGNAGE_CATALOG,
-  WRITE_SIGNAGE_LOCATION,
+  VIEW_LOCATION,
   VIEW_FESTIVAL_EVENTS_STATS,
   VIEW_PLANNING,
   VIEW_TIMELINE,
@@ -270,7 +270,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-map-marker",
     title: "Lieux de la Signa",
-    permission: WRITE_SIGNAGE_LOCATION,
+    permission: VIEW_LOCATION,
     to: "/signa/location",
     description:
       "Permet de définir l'ensemble des lieux disponible sur le festival",

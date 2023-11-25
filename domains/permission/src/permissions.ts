@@ -7,13 +7,13 @@ export const WRITE_GEAR_CATALOG = "write-gear-catalog";
 export const READ_GEAR_CATALOG = "read-gear-catalog";
 export const READ_SIGNAGE_CATALOG = "read-signage-catalog";
 export const WRITE_SIGNAGE_CATALOG = "write-signage-catalog";
-export const WRITE_SIGNAGE_LOCATION = "read-signage-location";
+export const VIEW_LOCATION = "view-location";
+export const MANAGE_LOCATION = "manage-location";
 export const WRITE_INVENTORY = "write-inventory";
 export const MANAGE_PERSONAL_ACCOUNTS = "manage-personal-accounts";
 export const MANAGE_USERS = "manage-users";
 export const AFFECT_VOLUNTEER = "affect-volunteer";
 export const MANAGE_CONFIG = "manage-config";
-export const MANAGE_LOCATION = "manage-location";
 export const VALIDATE_FA = "validate-fa";
 export const VALIDATE_FT = "validate-ft";
 export const READ_ANIMATION_TO_PUBLISH = "read-animation-to-publish";
@@ -47,7 +47,7 @@ const permissions = [
   READ_GEAR_CATALOG,
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
-  WRITE_SIGNAGE_LOCATION,
+  VIEW_LOCATION,
   WRITE_INVENTORY,
   MANAGE_PERSONAL_ACCOUNTS,
   MANAGE_USERS,
