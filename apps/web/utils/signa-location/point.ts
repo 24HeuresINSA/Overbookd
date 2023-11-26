@@ -1,5 +1,6 @@
 import { POINT, PointLocation, Coordinate } from "@overbookd/signa";
 import { Location } from "./location";
+import { distanceBetweenPoints } from "./distance";
 
 export class Point implements PointLocation, Location {
   private constructor(private _coordinates: Coordinate) {}
@@ -12,13 +13,8 @@ export class Point implements PointLocation, Location {
     this._coordinates = coordinate;
   }
 
-  isNear(coordinate: Coordinate, radius: number) {
-    const distance = Math.sqrt(
-      (coordinate.lat - this._coordinates.lat) ** 2 +
-        (coordinate.lng - this._coordinates.lng) ** 2,
-    );
-
-    return distance <= radius;
+  isNear(coordinate: Coordinate, radius: number): boolean {
+    return distanceBetweenPoints(this._coordinates, coordinate) <= radius;
   }
 
   get type(): typeof POINT {
