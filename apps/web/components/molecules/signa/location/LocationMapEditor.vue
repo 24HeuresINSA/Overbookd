@@ -147,7 +147,7 @@ export default defineComponent({
         return null;
       }
       return {
-        center: { ...this.mouseLatlng },
+        center: this.mouseLatlng,
         radius: HOVER_CIRCLE_RADIUS,
       };
     },
