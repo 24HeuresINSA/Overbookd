@@ -55,10 +55,10 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments      Assignment[]
-  contributions    Contribution[]
-  notifications    Notification[]
-  festivalActivity FestivalActivity[]
+  assignments        Assignment[]
+  contributions      Contribution[]
+  notifications      Notification[]
+  festivalActivities FestivalActivity[]
 
   @@map("user")
 }
