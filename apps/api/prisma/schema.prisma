@@ -55,9 +55,10 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments   Assignment[]
-  contributions Contribution[]
-  notifications Notification[]
+  assignments      Assignment[]
+  contributions    Contribution[]
+  notifications    Notification[]
+  festivalActivity FestivalActivity[]
 
   @@map("user")
 }
@@ -347,6 +348,7 @@ model CatalogGear {
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
+  inquiries        InquiryRequest[]  @relation("inquiry-request-catalog")
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -612,4 +614,142 @@ model Barrel {
   price Int
 
   @@map("barrel")
+}
+
+model FestivalActivity {
+  id     Int                    @unique
+  status FestivalActivityStatus
+
+  // General
+  name               String
+  description        String?
+  toPublish          Boolean                      @map("to_publish")
+  photoLink          String?                      @map("photo_link")
+  isFlagship         Boolean                      @map("is_flagship")
+  categories         String[]
+  generalTimeWindows FestivalActivityTimeWindow[] @relation("general-time-window")
+
+  // In charge
+  team        String?
+  adherent    User?        @relation(fields: [adherentId], references: [id])
+  adherentId  Int?         @map("adherent_id")
+  contractors Contractor[]
+
+  // Signa
+  location String?
+  signages FestivalActivitySignage[]
+
+  // Security
+  specialNeed String? @map("special_need")
+
+  // Supply
+  electricity FestivalActivityElectricitySupply[]
+  water       String?
+
+  // Inquiry
+  inquiryTimeWindows FestivalActivityTimeWindow[] @relation("inquiry-time-window")
+  inquiries          InquiryRequest[]
+}
+
+enum FestivalActivityStatus {
+  DRAFT
+  IN_REVIEW
+
+  @@map("festival_activity_status")
+}
+
+model FestivalActivityTimeWindow {
+  id    String
+  start DateTime
+  end   DateTime
+
+  faId         Int               @map("fa_id")
+  faForGeneral FestivalActivity? @relation("general-time-window", fields: [faId], references: [id], map: "fa_general")
+  faForInquiry FestivalActivity? @relation("inquiry-time-window", fields: [faId], references: [id], map: "fa_inquiry")
+
+  @@id([faId, id])
+  @@map("festival_activity_time_window")
+}
+
+model Contractor {
+  id        Int
+  firstname String
+  lastname  String
+  phone     String
+  email     String?
+  company   String?
+  comment   String?
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id])
+  faId Int              @map("fa_id")
+
+  @@unique([faId, id])
+  @@map("contractor")
+}
+
+model FestivalActivitySignage {
+  id       String
+  quantity Int
+  text     String
+  size     String      @db.VarChar(50)
+  type     SignageType
+  comment  String?     @db.Text
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("fa_id")
+
+  @@id([faId, id])
+  @@map("festival_activity_signage")
+}
+
+enum SignageType {
+  BACHE
+  PANNEAU
+  AFFICHE
+
+  @@map("signage_type")
+}
+
+model FestivalActivityElectricitySupply {
+  id         String
+  connection ElectricityConnection
+  device     String
+  power      Int
+  count      Int
+  comment    String?
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("festival_supply_id")
+
+  @@id([faId, id])
+  @@map("festival_activity_electricity_supply")
+}
+
+enum ElectricityConnection {
+  PC16_Prise_classique
+  P17_16A_MONO
+  P17_16A_TRI
+  P17_16A_TETRA
+  P17_32A_MONO
+  P17_32A_TRI
+  P17_32A_TETRA
+  P17_63A_MONO
+  P17_63A_TRI
+  P17_63A_TETRA
+  P17_125A_TETRA
+
+  @@map("electricity_connection")
+}
+
+model InquiryRequest {
+  slug        String
+  catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
+  name        String
+  quantity    Int
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("fa_id")
+
+  @@id([slug, faId])
+  @@map("inquiry_request")
 }
