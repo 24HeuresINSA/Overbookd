@@ -18,6 +18,11 @@
               :lat-lngs="coordinates"
             ></l-polyline>
             <l-polygon v-if="isAreaEdition" :lat-lngs="coordinates"></l-polygon>
+            <l-circle
+              v-if="hoverCircle"
+              :lat-lng="hoverCircle.center"
+              :radius="hoverCircle.radius"
+            />
           </l-map>
         </div>
       </client-only>
@@ -31,9 +36,6 @@
           item-value="key"
         ></v-select>
       </div>
-      <v-btn :disabled="editionDone" @click="finishAction">
-        Finir l'édition
-      </v-btn>
       <v-btn @click="reset(action)">Réinitialiser</v-btn>
     </div>
   </section>
@@ -87,14 +89,14 @@ export default defineComponent({
   props: {
     value: {
       type: Object as () => GeoJson,
-      default: null,
+      required: true,
     },
   },
   emits: ["update:geo-json"],
   data: (): LocationMapEditorData => ({
     ...mapConfiguration,
     actions,
-    editionDone: false,
+    editionDone: true,
     mouseLatlng: mapConfiguration.center,
     location: Point.create(),
   }),
@@ -127,13 +129,12 @@ export default defineComponent({
     coordinates(): Coordinate | Coordinate[] {
       if (!this.geoJson) return mapConfiguration.center;
 
-      if (isPointLocation(this.geoJson)) {
-        return this.geoJson.coordinates;
-      }
-
-      return this.editionDone
+      return isPointLocation(this.geoJson) || this.editionDone || this.hoverCircle
         ? this.geoJson.coordinates
         : [...this.geoJson.coordinates, this.mouseLatlng];
+    },
+    hoverCircle() {
+      return this.computeHoverCircle();
     },
   },
   methods: {
@@ -142,11 +143,12 @@ export default defineComponent({
     },
     userAction({ latlng }: { latlng: Coordinate }) {
       if (this.editionDone) return;
+      if (this.computeHoverCircle()) {
+        this.editionDone = true;
+        return;
+      }
       this.location.addCoordinate(latlng);
       this.geoJson = this.location.geoJson;
-    },
-    finishAction() {
-      this.editionDone = true;
     },
     reset(action: Action) {
       switch (action) {
@@ -162,6 +164,21 @@ export default defineComponent({
       }
       this.geoJson = this.location.geoJson;
       this.editionDone = false;
+    },
+    computeHoverCircle() {
+      if (!this.geoJson || isPointLocation(this.geoJson)) return null;
+      const nearCoordinate = this.geoJson.coordinates.find(
+        (coordinate: Coordinate) =>
+          Math.abs(coordinate.lat - this.mouseLatlng.lat) < 0.0001 &&
+          Math.abs(coordinate.lng - this.mouseLatlng.lng) < 0.0001,
+      );
+      if (nearCoordinate) {
+        return {
+          center: this.mouseLatlng,
+          radius: 10,
+        };
+      }
+      return null;
     },
   },
 });
