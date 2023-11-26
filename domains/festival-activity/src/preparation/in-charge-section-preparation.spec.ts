@@ -2,11 +2,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import {
   escapeGame,
-  george,
   justDance,
-  lea,
   pcSecurite,
 } from "./preparation.test-utils";
+import { george } from "../festival-activity.fake";
+import { lea } from "../festival-activity.fake";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { ContractorNotFound } from "../festival-activity.error";
 

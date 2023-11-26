@@ -1,14 +1,14 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { Signage } from "../festival-activity";
+import { Signage } from "../../festival-activity";
 import {
   FestivalActivityError,
   SignageAlreadyExists,
   SignageNotFound,
-} from "../festival-activity.error";
+} from "../../festival-activity.error";
 import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
-} from "./prepare-festival-activity.model";
+} from "../prepare-festival-activity.model";
 import { updateItemToList } from "@overbookd/list";
 
 export class LocationIsRequired extends FestivalActivityError {

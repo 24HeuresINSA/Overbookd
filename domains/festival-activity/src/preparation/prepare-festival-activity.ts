@@ -1,11 +1,5 @@
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
-import {
-  ContractorNotFound,
-  ElectricitySupplyAlreadyExists,
-  ElectricitySupplyNotFound,
-  FestivalActivityNotFound,
-  TimeWindowAlreadyExists,
-} from "../festival-activity.error";
+import { IProvidePeriod } from "@overbookd/period";
+import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
   PrepareContractorCreation,
   PrepareContractorUpdate,
@@ -21,7 +15,6 @@ import {
 } from "./prepare-festival-activity.model";
 import {
   Contractor,
-  ElectricityConnection,
   ElectricitySupply,
   FestivalActivity,
   InquiryRequest,
@@ -32,8 +25,6 @@ import {
 } from "../festival-activity";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
-import { updateItemToList } from "@overbookd/list";
-import { SlugifyService } from "@overbookd/slugify";
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;
@@ -324,206 +315,5 @@ export class PrepareFestivalActivity {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     return existingFA;
-  }
-}
-
-export class TimeWindows<T extends TimeWindow[]> {
-  private constructor(private readonly timeWindows: T) {}
-
-  get entries(): T {
-    return this.timeWindows;
-  }
-
-  static build<U extends TimeWindow[]>(timeWindows: U): TimeWindows<U> {
-    return new TimeWindows(timeWindows);
-  }
-
-  add(period: IProvidePeriod): TimeWindows<[TimeWindow, ...TimeWindow[]]> {
-    const { start, end } = Period.init(period);
-    const id = this.generateTimeWindowId({ start, end });
-    const timeWindow = { id, start, end };
-
-    const alreadyExists = this.timeWindows.some((tw) => tw.id === id);
-    if (alreadyExists) throw new TimeWindowAlreadyExists();
-
-    return new TimeWindows<[TimeWindow, ...TimeWindow[]]>([
-      timeWindow,
-      ...this.timeWindows,
-    ]);
-  }
-
-  remove(id: TimeWindow["id"]): TimeWindows<TimeWindow[]> {
-    return new TimeWindows(this.timeWindows.filter((tw) => tw.id !== id));
-  }
-
-  private generateTimeWindowId(period: IProvidePeriod): TimeWindow["id"] {
-    const { start, end } = period;
-    const startMinutes = Duration.ms(start.getTime()).inMinutes;
-    const endMinutes = Duration.ms(end.getTime()).inMinutes;
-
-    return `${startMinutes}-${endMinutes}`;
-  }
-}
-
-export class Contractors {
-  private constructor(private readonly contractors: Contractor[]) {}
-
-  get entries(): Contractor[] {
-    return this.contractors;
-  }
-
-  static build(contractors: Contractor[]): Contractors {
-    return new Contractors(contractors);
-  }
-
-  add(form: PrepareContractorCreation): Contractors {
-    const id = this.generateContractorId();
-    const contractor = {
-      ...form,
-      id,
-      email: form.email ?? null,
-      company: form.company ?? null,
-      comment: form.comment ?? null,
-    };
-
-    return new Contractors([...this.contractors, contractor]);
-  }
-
-  update(contractor: PrepareContractorUpdate): Contractors {
-    const currentContractorIndex = this.contractors.findIndex(
-      (c) => c.id === contractor.id,
-    );
-    const currentContractor = this.contractors.at(currentContractorIndex);
-    if (currentContractorIndex === -1 || !currentContractor) {
-      throw new ContractorNotFound();
-    }
-
-    const updatedContractor = this.generateUpdatedContractor(
-      currentContractor,
-      contractor,
-    );
-
-    const contractors = updateItemToList(
-      this.contractors,
-      currentContractorIndex,
-      updatedContractor,
-    );
-    return new Contractors(contractors);
-  }
-
-  remove(id: Contractor["id"]): Contractors {
-    return new Contractors(this.contractors.filter((c) => c.id !== id));
-  }
-
-  private generateContractorId(): Contractor["id"] {
-    const lastContractorId = this.contractors.at(-1)?.id ?? 0;
-    return lastContractorId + 1;
-  }
-
-  private generateUpdatedContractor(
-    previousContractor: Contractor,
-    form: PrepareContractorUpdate,
-  ): Contractor {
-    const updatedContractor = {
-      ...previousContractor,
-      firstname: form.firstname ?? previousContractor.firstname,
-      lastname: form.lastname ?? previousContractor.lastname,
-      phone: form.phone ?? previousContractor.phone,
-      email: form.email === undefined ? previousContractor.email : form.email,
-      company:
-        form.company === undefined ? previousContractor.company : form.company,
-      comment:
-        form.comment === undefined ? previousContractor.comment : form.comment,
-    };
-
-    return updatedContractor;
-  }
-}
-
-export class ElectricitySupplies {
-  private constructor(
-    private readonly electricitySupplies: ElectricitySupply[],
-  ) {}
-
-  get entries(): ElectricitySupply[] {
-    return this.electricitySupplies;
-  }
-
-  static build(supplies: ElectricitySupply[]): ElectricitySupplies {
-    return new ElectricitySupplies(supplies);
-  }
-
-  add(form: PrepareElectricitySupplyCreation): ElectricitySupplies {
-    const id = this.generateElectricitySupplyId(form.device, form.connection);
-    const comment = form.comment ?? null;
-    const supply = { ...form, id, comment };
-
-    this.throwIfAlreadyExists(id);
-
-    return new ElectricitySupplies([...this.electricitySupplies, supply]);
-  }
-
-  update(form: PrepareElectricitySupplyUpdate): ElectricitySupplies {
-    const currentSupplyIndex = this.electricitySupplies.findIndex(
-      (es) => es.id === form.id,
-    );
-    const currentSupply = this.electricitySupplies.at(currentSupplyIndex);
-    if (currentSupplyIndex === -1 || !currentSupply) {
-      throw new ElectricitySupplyNotFound();
-    }
-
-    const updatedSupply = this.generateUpdatedSupply(currentSupply, form);
-
-    if (currentSupply.id !== updatedSupply.id) {
-      this.throwIfAlreadyExists(updatedSupply.id);
-    }
-
-    const electricitySupplies = updateItemToList(
-      this.electricitySupplies,
-      currentSupplyIndex,
-      updatedSupply,
-    );
-    return new ElectricitySupplies(electricitySupplies);
-  }
-
-  remove(id: ElectricitySupply["id"]): ElectricitySupplies {
-    return new ElectricitySupplies(
-      this.electricitySupplies.filter((es) => es.id !== id),
-    );
-  }
-
-  private generateElectricitySupplyId(
-    device: string,
-    connection: ElectricityConnection,
-  ): ElectricitySupply["id"] {
-    const supplyId = SlugifyService.apply(`${device} ${connection}`);
-    return supplyId;
-  }
-
-  private throwIfAlreadyExists(id: string) {
-    const alreadyExists = this.electricitySupplies.some((es) => es.id === id);
-    if (alreadyExists) throw new ElectricitySupplyAlreadyExists();
-  }
-
-  private generateUpdatedSupply(
-    previousSupply: ElectricitySupply,
-    form: PrepareElectricitySupplyUpdate,
-  ): ElectricitySupply {
-    const updatedSupply = {
-      ...previousSupply,
-      connection: form.connection ?? previousSupply.connection,
-      device: form.device ?? previousSupply.device,
-      power: form.power ?? previousSupply.power,
-      count: form.count ?? previousSupply.count,
-      comment:
-        form.comment === undefined ? previousSupply.comment : form.comment,
-    };
-
-    const id = this.generateElectricitySupplyId(
-      updatedSupply.device,
-      updatedSupply.connection,
-    );
-
-    return { ...updatedSupply, id };
   }
 }
