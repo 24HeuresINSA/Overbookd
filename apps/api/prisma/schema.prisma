@@ -76,13 +76,14 @@ model Team {
   color String @default("#000000") @db.VarChar(30)
   icon  String @default("mdi-circle") @db.VarChar(255)
 
-  users           UserTeam[]
-  fa              Fa[]
-  ownedCategories CatalogCategory[] @relation("owner")
-  ftRequests      FtTeamRequest[]
-  ftReviews       FtReview[]
-  permissions     TeamPermission[]
-  ft              Ft[]
+  users              UserTeam[]
+  fa                 Fa[]
+  ownedCategories    CatalogCategory[]  @relation("owner")
+  ftRequests         FtTeamRequest[]
+  ftReviews          FtReview[]
+  permissions        TeamPermission[]
+  ft                 Ft[]
+  festivalActivities FestivalActivity[]
 
   @@map("team")
 }
@@ -621,30 +622,31 @@ model FestivalActivity {
   status FestivalActivityStatus
 
   // General
-  name               String
-  description        String?
+  name               String                       @db.VarChar(30)
+  description        String?                      @db.Text
   toPublish          Boolean                      @map("to_publish")
-  photoLink          String?                      @map("photo_link")
+  photoLink          String?                      @map("photo_link") @db.Text
   isFlagship         Boolean                      @map("is_flagship")
-  categories         String[]
+  categories         String[]                     @db.VarChar(20)
   generalTimeWindows FestivalActivityTimeWindow[] @relation("general-time-window")
 
   // In charge
-  team        String?
+  teamCode    String?      @map("team_code") @db.VarChar(20)
+  team        Team?        @relation(fields: [teamCode], references: [code])
   adherent    User?        @relation(fields: [adherentId], references: [id])
   adherentId  Int?         @map("adherent_id")
   contractors Contractor[]
 
   // Signa
-  location String?
+  location String?                   @db.VarChar(50)
   signages FestivalActivitySignage[]
 
   // Security
-  specialNeed String? @map("special_need")
+  specialNeed String? @map("special_need") @db.Text
 
   // Supply
   electricity FestivalActivityElectricitySupply[]
-  water       String?
+  water       String?                             @db.Text
 
   // Inquiry
   inquiryTimeWindows FestivalActivityTimeWindow[] @relation("inquiry-time-window")
@@ -659,7 +661,7 @@ enum FestivalActivityStatus {
 }
 
 model FestivalActivityTimeWindow {
-  id    String
+  id    String   @db.VarChar(30)
   start DateTime
   end   DateTime
 
@@ -673,12 +675,12 @@ model FestivalActivityTimeWindow {
 
 model Contractor {
   id        Int
-  firstname String
-  lastname  String
-  phone     String
-  email     String?
-  company   String?
-  comment   String?
+  firstname String  @db.VarChar(30)
+  lastname  String  @db.VarChar(30)
+  phone     String  @db.VarChar(20)
+  email     String? @db.VarChar(30)
+  company   String? @db.VarChar(30)
+  comment   String? @db.Text
 
   fa   FestivalActivity @relation(fields: [faId], references: [id])
   faId Int              @map("fa_id")
@@ -688,10 +690,10 @@ model Contractor {
 }
 
 model FestivalActivitySignage {
-  id       String
+  id       String      @db.VarChar(30)
   quantity Int
-  text     String
-  size     String      @db.VarChar(50)
+  text     String      @db.VarChar(30)
+  size     String      @db.VarChar(30)
   type     SignageType
   comment  String?     @db.Text
 
@@ -711,12 +713,12 @@ enum SignageType {
 }
 
 model FestivalActivityElectricitySupply {
-  id         String
+  id         String                @db.VarChar(30)
   connection ElectricityConnection
-  device     String
+  device     String                @db.VarChar(30)
   power      Int
   count      Int
-  comment    String?
+  comment    String?               @db.Text
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId Int              @map("festival_supply_id")
@@ -742,9 +744,9 @@ enum ElectricityConnection {
 }
 
 model InquiryRequest {
-  slug        String
+  slug        String      @db.VarChar(30)
   catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
-  name        String
+  name        String      @db.VarChar(30)
   quantity    Int
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)

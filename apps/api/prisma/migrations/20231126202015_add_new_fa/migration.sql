@@ -11,22 +11,22 @@ CREATE TYPE "electricity_connection" AS ENUM ('PC16_Prise_classique', 'P17_16A_M
 CREATE TABLE "FestivalActivity" (
     "id" INTEGER NOT NULL,
     "status" "festival_activity_status" NOT NULL,
-    "name" TEXT NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
     "description" TEXT,
     "to_publish" BOOLEAN NOT NULL,
     "photo_link" TEXT,
     "is_flagship" BOOLEAN NOT NULL,
-    "categories" TEXT[],
-    "team" TEXT,
+    "categories" VARCHAR(20)[],
+    "team_code" VARCHAR(20),
     "adherent_id" INTEGER,
-    "location" TEXT,
+    "location" VARCHAR(50),
     "special_need" TEXT,
     "water" TEXT
 );
 
 -- CreateTable
 CREATE TABLE "festival_activity_time_window" (
-    "id" TEXT NOT NULL,
+    "id" VARCHAR(30) NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
     "fa_id" INTEGER NOT NULL,
@@ -37,21 +37,21 @@ CREATE TABLE "festival_activity_time_window" (
 -- CreateTable
 CREATE TABLE "contractor" (
     "id" INTEGER NOT NULL,
-    "firstname" TEXT NOT NULL,
-    "lastname" TEXT NOT NULL,
-    "phone" TEXT NOT NULL,
-    "email" TEXT,
-    "company" TEXT,
+    "firstname" VARCHAR(30) NOT NULL,
+    "lastname" VARCHAR(30) NOT NULL,
+    "phone" VARCHAR(20) NOT NULL,
+    "email" VARCHAR(30),
+    "company" VARCHAR(30),
     "comment" TEXT,
     "fa_id" INTEGER NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "festival_activity_signage" (
-    "id" TEXT NOT NULL,
+    "id" VARCHAR(30) NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "text" TEXT NOT NULL,
-    "size" VARCHAR(50) NOT NULL,
+    "text" VARCHAR(30) NOT NULL,
+    "size" VARCHAR(30) NOT NULL,
     "type" "signage_type" NOT NULL,
     "comment" TEXT,
     "fa_id" INTEGER NOT NULL,
@@ -61,9 +61,9 @@ CREATE TABLE "festival_activity_signage" (
 
 -- CreateTable
 CREATE TABLE "festival_activity_electricity_supply" (
-    "id" TEXT NOT NULL,
+    "id" VARCHAR(30) NOT NULL,
     "connection" "electricity_connection" NOT NULL,
-    "device" TEXT NOT NULL,
+    "device" VARCHAR(30) NOT NULL,
     "power" INTEGER NOT NULL,
     "count" INTEGER NOT NULL,
     "comment" TEXT,
@@ -74,8 +74,8 @@ CREATE TABLE "festival_activity_electricity_supply" (
 
 -- CreateTable
 CREATE TABLE "inquiry_request" (
-    "slug" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "slug" VARCHAR(30) NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
     "quantity" INTEGER NOT NULL,
     "fa_id" INTEGER NOT NULL,
 
@@ -87,6 +87,9 @@ CREATE UNIQUE INDEX "FestivalActivity_id_key" ON "FestivalActivity"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "contractor_fa_id_id_key" ON "contractor"("fa_id", "id");
+
+-- AddForeignKey
+ALTER TABLE "FestivalActivity" ADD CONSTRAINT "FestivalActivity_team_code_fkey" FOREIGN KEY ("team_code") REFERENCES "team"("code") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FestivalActivity" ADD CONSTRAINT "FestivalActivity_adherent_id_fkey" FOREIGN KEY ("adherent_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
