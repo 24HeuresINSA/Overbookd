@@ -2,9 +2,8 @@ import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { TimeWindowAlreadyExists } from "../../festival-activity.error";
 import { TimeWindow } from "../../festival-activity";
 
-
 export class TimeWindows<T extends TimeWindow[]> {
-  private constructor(private readonly timeWindows: T) { }
+  private constructor(private readonly timeWindows: T) {}
 
   get entries(): T {
     return this.timeWindows;

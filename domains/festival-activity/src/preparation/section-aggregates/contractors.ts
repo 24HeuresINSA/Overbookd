@@ -1,14 +1,13 @@
 import { ContractorNotFound } from "../../festival-activity.error";
 import {
   PrepareContractorCreation,
-  PrepareContractorUpdate
+  PrepareContractorUpdate,
 } from "../prepare-festival-activity.model";
 import { Contractor } from "../../festival-activity";
 import { updateItemToList } from "@overbookd/list";
 
-
 export class Contractors {
-  private constructor(private readonly contractors: Contractor[]) { }
+  private constructor(private readonly contractors: Contractor[]) {}
 
   get entries(): Contractor[] {
     return this.contractors;
@@ -33,7 +32,7 @@ export class Contractors {
 
   update(contractor: PrepareContractorUpdate): Contractors {
     const currentContractorIndex = this.contractors.findIndex(
-      (c) => c.id === contractor.id
+      (c) => c.id === contractor.id,
     );
     const currentContractor = this.contractors.at(currentContractorIndex);
     if (currentContractorIndex === -1 || !currentContractor) {
@@ -42,13 +41,13 @@ export class Contractors {
 
     const updatedContractor = this.generateUpdatedContractor(
       currentContractor,
-      contractor
+      contractor,
     );
 
     const contractors = updateItemToList(
       this.contractors,
       currentContractorIndex,
-      updatedContractor
+      updatedContractor,
     );
     return new Contractors(contractors);
   }
@@ -64,7 +63,7 @@ export class Contractors {
 
   private generateUpdatedContractor(
     previousContractor: Contractor,
-    form: PrepareContractorUpdate
+    form: PrepareContractorUpdate,
   ): Contractor {
     const updatedContractor = {
       ...previousContractor,
@@ -72,8 +71,10 @@ export class Contractors {
       lastname: form.lastname ?? previousContractor.lastname,
       phone: form.phone ?? previousContractor.phone,
       email: form.email === undefined ? previousContractor.email : form.email,
-      company: form.company === undefined ? previousContractor.company : form.company,
-      comment: form.comment === undefined ? previousContractor.comment : form.comment,
+      company:
+        form.company === undefined ? previousContractor.company : form.company,
+      comment:
+        form.comment === undefined ? previousContractor.comment : form.comment,
     };
 
     return updatedContractor;

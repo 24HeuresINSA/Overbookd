@@ -1,7 +1,4 @@
-import {
-  InitInquiry,
-  Prepare,
-} from "./prepare-festival-activity";
+import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Contractors } from "./section-aggregates/contractors";
 import { TimeWindows } from "./section-aggregates/time-windows";
