@@ -18,6 +18,14 @@ describe("add coordinate to geo-json", () => {
       const point = Point.create(coord1);
       expect(point.type).toBe(POINT);
     });
+    it("should return true if the coordinate is near", () => {
+      const point = Point.create(coord1);
+      expect(point.isNear(coord2, 3)).toBe(true);
+    });
+    it("should return false if the coordinate is not near", () => {
+      const point = Point.create(coord1);
+      expect(point.isNear(coord2, 1)).toBe(false);
+    });
   });
   describe("when the geo json is a line", () => {
     it("should add the new one to the coordinates", () => {
@@ -31,6 +39,16 @@ describe("add coordinate to geo-json", () => {
       const line = Line.create();
       expect(line.type).toBe(ROAD);
     });
+    it("should return true if one of the coordinate is near", () => {
+      const line = Line.create();
+      line.addCoordinate(coord1);
+      expect(line.isNear(coord2, 3)).toBe(true);
+    });
+    it("should return false if none of the coordinate is near", () => {
+      const line = Line.create();
+      line.addCoordinate(coord1);
+      expect(line.isNear(coord2, 1)).toBe(false);
+    });
   });
   describe("when the geo json is a polygon", () => {
     it("should add the new one to the coordinates", () => {
@@ -43,6 +61,16 @@ describe("add coordinate to geo-json", () => {
     it("should return an AreaLocation", () => {
       const polygon = Polygon.create();
       expect(polygon.type).toBe(AREA);
+    });
+    it("should return true if one of the coordinate is near", () => {
+      const line = Line.create();
+      line.addCoordinate(coord1);
+      expect(line.isNear(coord2, 3)).toBe(true);
+    });
+    it("should return false if none of the coordinate is near", () => {
+      const line = Line.create();
+      line.addCoordinate(coord1);
+      expect(line.isNear(coord2, 1)).toBe(false);
     });
   });
 });

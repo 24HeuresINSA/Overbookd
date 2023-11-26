@@ -80,6 +80,9 @@ const actions: ActionItem[] = [
   { key: AREA, value: "Zone" },
 ];
 
+const NEAR_LAT_LONG_DISTANCE = 0.0001;
+const HOVER_CIRCLE_RADIUS = 10;
+
 export default defineComponent({
   name: "LocationMapEditor",
   model: {
@@ -129,12 +132,24 @@ export default defineComponent({
     coordinates(): Coordinate | Coordinate[] {
       if (!this.geoJson) return mapConfiguration.center;
 
-      return isPointLocation(this.geoJson) || this.editionDone || this.hoverCircle
+      return isPointLocation(this.geoJson) ||
+        this.editionDone ||
+        this.hoverCircle
         ? this.geoJson.coordinates
         : [...this.geoJson.coordinates, this.mouseLatlng];
     },
     hoverCircle() {
-      return this.computeHoverCircle();
+      if (
+        !this.geoJson ||
+        isPointLocation(this.geoJson) ||
+        !this.location.isNear(this.mouseLatlng, NEAR_LAT_LONG_DISTANCE)
+      ) {
+        return null;
+      }
+      return {
+        center: this.mouseLatlng,
+        radius: HOVER_CIRCLE_RADIUS,
+      };
     },
   },
   methods: {
@@ -143,7 +158,7 @@ export default defineComponent({
     },
     userAction({ latlng }: { latlng: Coordinate }) {
       if (this.editionDone) return;
-      if (this.computeHoverCircle()) {
+      if (this.hoverCircle) {
         this.editionDone = true;
         return;
       }
@@ -164,21 +179,6 @@ export default defineComponent({
       }
       this.geoJson = this.location.geoJson;
       this.editionDone = false;
-    },
-    computeHoverCircle() {
-      if (!this.geoJson || isPointLocation(this.geoJson)) return null;
-      const nearCoordinate = this.geoJson.coordinates.find(
-        (coordinate: Coordinate) =>
-          Math.abs(coordinate.lat - this.mouseLatlng.lat) < 0.0001 &&
-          Math.abs(coordinate.lng - this.mouseLatlng.lng) < 0.0001,
-      );
-      if (nearCoordinate) {
-        return {
-          center: this.mouseLatlng,
-          radius: 10,
-        };
-      }
-      return null;
     },
   },
 });
