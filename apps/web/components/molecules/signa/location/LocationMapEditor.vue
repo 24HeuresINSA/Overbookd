@@ -80,8 +80,8 @@ const actions: ActionItem[] = [
   { key: AREA, value: "Zone" },
 ];
 
-const NEAR_LAT_LONG_DISTANCE = 0.0001;
 const HOVER_CIRCLE_RADIUS = 10;
+const NEAR_LAT_LONG_DISTANCE = 0.0001;
 
 export default defineComponent({
   name: "LocationMapEditor",
