@@ -1,194 +1,97 @@
-import { DRAFT, Draft } from "../festival-activity";
+import { Draft } from "../festival-activity";
+import { getFactory } from "../festival-activity.factory";
+import {
+  friday09hToMonday08h,
+  saturday19hToSunday01h,
+  robocop,
+  dixCadenasPompier,
+  uneBouilloire,
+  faker,
+  uneMultiprise,
+} from "../festival-activity.fake";
 
-const robocop = {
-  id: 1,
-  nickname: "Robocop",
-  firstname: "Secu",
-  lastname: "Rite",
-};
+const factory = getFactory();
 
-const faker = {
-  id: 2,
-  nickname: "Faker",
-  firstname: "Lee",
-  lastname: "Sang-hyeok",
-};
-
-const dixCadenasPompier = {
-  slug: "cadenas-pompier",
-  name: "Cadenas pompier",
-  quantity: 10,
-};
-const uneBouilloire = {
-  slug: "bouilloire",
-  name: "Bouilloire",
-  quantity: 1,
-};
-const uneMultiprise = {
-  slug: "multiprise",
-  name: "Multiprise",
-  quantity: 1,
-};
-
-export const pcSecurite: Draft = {
-  id: 1,
-  status: DRAFT,
-  general: {
-    name: "PC Securite",
-    description: "Tour de guet",
-    categories: [],
-    toPublish: false,
-    photoLink: null,
-    isFlagship: false,
-    timeWindows: [],
-  },
-  inCharge: {
-    adherent: robocop,
-    team: "secu",
-    contractors: [],
-  },
-  signa: {
-    location: "Pas tes oignons",
-    signages: [],
-  },
-  security: {
-    specialNeed: "Une armee d'AS super malin",
-  },
-  inquiry: {
-    timeWindows: [
-      {
-        id: "202305121900-202305150800",
-        start: new Date("2023-05-12 09:00"),
-        end: new Date("2023-05-15 08:00"),
-      },
-    ],
+export const pcSecurite = factory
+  .draft("PC Securite")
+  .withGeneral({ description: "Tour de guet" })
+  .withInCharge({ adherent: robocop, team: "secu" })
+  .withSigna({ location: "Pas tes oignons" })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [friday09hToMonday08h],
     gears: [dixCadenasPompier, uneBouilloire],
-    electricity: [],
-    barriers: [],
-  },
-  supply: {
-    electricity: [],
-    water: null,
-  },
-};
+  })
+  .build();
 
-export const finaleEsport: Draft = {
-  id: 2,
-  status: DRAFT,
-  general: {
-    name: "Finale esport",
+export const finaleEsport = factory
+  .draft("Finale esport")
+  .withGeneral({
     description:
       "Après une année de championnat de légende venez assister à la conclusion de cette saison !",
+  })
+  .asPublic({
     categories: ["sport"],
-    toPublish: true,
     photoLink:
       "https://tse1.mm.bing.net/th?id=OIP.Gic1SK5Di5WzX5l_Y2bQtAHaEK&pid=Api",
     isFlagship: true,
-    timeWindows: [
-      {
-        start: new Date("2023-05-13 19:00"),
-        end: new Date("2023-05-14 01:00"),
-        id: "202305131900-202305140100",
-      },
-    ],
-  },
-  inCharge: {
-    adherent: faker,
-    team: "plazir",
-    contractors: [],
-  },
-  signa: {
-    location: "Amphi 3000",
-    signages: [],
-  },
-  security: {
-    specialNeed: "Une armee d'AS super malin",
-  },
-  inquiry: {
-    timeWindows: [
-      {
-        id: "202305121900-202305150800",
-        start: new Date("2023-05-12 09:00"),
-        end: new Date("2023-05-15 08:00"),
-      },
-    ],
+    timeWindows: [saturday19hToSunday01h],
+  })
+  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withSigna({ location: "Amphi 3000" })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [saturday19hToSunday01h],
     gears: [uneMultiprise],
-    electricity: [],
-    barriers: [],
-  },
-  supply: {
-    electricity: [],
-    water: null,
-  },
-};
+  })
+  .build();
+
+export const justCreated: Draft = factory.draft("test").build();
 
 export const internalWithoutDescription = {
   ...pcSecurite,
-  id: 3,
+  id: 4,
   general: { ...pcSecurite.general, description: null },
 };
 
 export const publicWithoutPhoto = {
   ...finaleEsport,
-  id: 4,
+  id: 5,
   general: { ...finaleEsport.general, photoLink: null },
 };
 
 export const publicWithoutCategory = {
   ...finaleEsport,
-  id: 5,
+  id: 6,
   general: { ...finaleEsport.general, categories: [] },
 };
 
 export const publicWithoutTimeWindows = {
   ...finaleEsport,
-  id: 6,
+  id: 7,
   general: { ...finaleEsport.general, timeWindows: [] },
 };
 
 export const internalWithoutTeamInCharge = {
   ...pcSecurite,
-  id: 7,
+  id: 8,
   inCharge: { ...pcSecurite.inCharge, team: null },
 };
 
 export const internalWithoutLocation = {
   ...pcSecurite,
-  id: 8,
+  id: 9,
   signa: { ...pcSecurite.signa, location: null },
 };
 
 export const internalWithoutInquiries = {
   ...pcSecurite,
-  id: 9,
+  id: 10,
   inquiry: { ...pcSecurite.inquiry, gears: [] },
 };
 
 export const internalWithoutInquiryTimeWindows = {
   ...pcSecurite,
-  id: 10,
-  inquiry: { ...pcSecurite.inquiry, timeWindows: [] },
-};
-
-export const justCreated: Draft = {
   id: 11,
-  status: DRAFT,
-  inCharge: {
-    adherent: robocop,
-    team: null,
-    contractors: [],
-  },
-  general: {
-    name: "Test",
-    description: null,
-    categories: [],
-    toPublish: false,
-    photoLink: null,
-    isFlagship: false,
-    timeWindows: [],
-  },
-  signa: { location: null, signages: [] },
-  security: { specialNeed: null },
-  supply: { electricity: [], water: null },
-  inquiry: { timeWindows: [], gears: [], barriers: [], electricity: [] },
+  inquiry: { ...pcSecurite.inquiry, timeWindows: [] },
 };

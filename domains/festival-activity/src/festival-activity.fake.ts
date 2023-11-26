@@ -24,7 +24,24 @@ export const george = {
   lastname: "Ergo",
   firstname: "George",
 };
+export const robocop = {
+  id: 4,
+  nickname: "Robocop",
+  firstname: "Secu",
+  lastname: "Rite",
+};
+export const faker = {
+  id: 5,
+  nickname: "Faker",
+  firstname: "Lee",
+  lastname: "Sang-hyeok",
+};
 
+export const friday09hToMonday08h = {
+  id: "28598820-28603080",
+  start: new Date("2024-05-17T09:00+02:00"),
+  end: new Date("2024-05-20T08:00+02:00"),
+};
 export const friday11hToFriday15h = {
   id: "28071900-28072140",
   start: new Date("2023-05-17T11:00+02:00"),
@@ -59,6 +76,11 @@ export const saturday14hToSaturday18h = {
   id: "28600560-28600800",
   start: new Date("2024-05-18T14:00+02:00"),
   end: new Date("2024-05-18T18:00+02:00"),
+};
+export const saturday19hToSunday01h = {
+  start: new Date("2024-05-18T19:00+02:00"),
+  end: new Date("2024-05-19T01:00+02:00"),
+  id: "28600860-28601220",
 };
 export const sunday14hToSunday18h = {
   id: "28602000-28602240",
@@ -143,25 +165,40 @@ export const enceinte: ElectricitySupply = {
   comment: null,
 };
 
-export const plateauDeDance = {
+export const unPlateauDeDance = {
   slug: "plateau-de-dance",
   name: "Plateau de dance",
   quantity: 1,
 };
-export const multiprise3Prises = {
+export const uneMultiprise3Prises = {
   slug: "multiprise-3-prises",
   name: "Multiprise 3 prises",
   quantity: 1,
 };
-export const nintendoSwitch = {
+export const uneNintendoSwitch = {
   slug: "nintendo-switch",
   name: "Nintendo Switch",
   quantity: 1,
 };
-export const vauban = { slug: "vauban", name: "Vauban", quantity: 30 };
-export const marteau = { slug: "marteau", name: "Marteau", quantity: 2 };
-export const priseMurale = {
+export const quinzeVaubans = { slug: "vauban", name: "Vauban", quantity: 30 };
+export const deuxMarteaux = { slug: "marteau", name: "Marteau", quantity: 2 };
+export const unePriseMurale = {
   slug: "prise-murale",
   name: "Prise murale",
+  quantity: 1,
+};
+export const dixCadenasPompier = {
+  slug: "cadenas-pompier",
+  name: "Cadenas pompier",
+  quantity: 10,
+};
+export const uneBouilloire = {
+  slug: "bouilloire",
+  name: "Bouilloire",
+  quantity: 1,
+};
+export const uneMultiprise = {
+  slug: "multiprise",
+  name: "Multiprise",
   quantity: 1,
 };

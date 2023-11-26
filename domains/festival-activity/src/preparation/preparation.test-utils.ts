@@ -8,9 +8,9 @@ import {
   panneauEscapeGame4x3,
   bacheBienvenue10m,
   friday11hToFriday15h,
-  marteau,
-  priseMurale,
-  vauban,
+  deuxMarteaux,
+  unePriseMurale,
+  quinzeVaubans,
   lumiere,
   enceinte,
   videoGameCollectif,
@@ -18,9 +18,9 @@ import {
   afficheJustDance10x3,
   nintendoSwitchSupply,
   saturday11hToSaturday15h,
-  plateauDeDance,
-  multiprise3Prises,
-  nintendoSwitch,
+  unPlateauDeDance,
+  uneMultiprise3Prises,
+  uneNintendoSwitch,
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
   friday12hToMonday00h,
@@ -49,9 +49,9 @@ export const escapeGame = factory
   .withSecurity({ specialNeed: "Pas de besoin particulier" })
   .withInquiry({
     timeWindows: [friday11hToFriday15h],
-    gears: [marteau],
-    electricity: [priseMurale],
-    barriers: [{ ...vauban, quantity: 15 }],
+    gears: [deuxMarteaux],
+    electricity: [unePriseMurale],
+    barriers: [{ ...quinzeVaubans, quantity: 15 }],
   })
   .withSupply({ electricity: [lumiere, enceinte] })
   .build();
@@ -91,8 +91,8 @@ export const justDance = factory
   })
   .withInquiry({
     timeWindows: [friday11hToFriday15h, saturday11hToSaturday15h],
-    gears: [plateauDeDance],
-    electricity: [multiprise3Prises, nintendoSwitch],
+    gears: [unPlateauDeDance],
+    electricity: [uneMultiprise3Prises, uneNintendoSwitch],
   })
   .build();
 
@@ -109,7 +109,7 @@ export const baladeEnPoney = factory
   .withSigna({ location: "Pelouse des humas" })
   .withInquiry({
     timeWindows: [saturday14hToSaturday18h],
-    barriers: [vauban],
+    barriers: [quinzeVaubans],
   })
   .build();
 
