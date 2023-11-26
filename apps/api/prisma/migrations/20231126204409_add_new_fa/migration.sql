@@ -7,6 +7,12 @@ CREATE TYPE "signage_type" AS ENUM ('BACHE', 'PANNEAU', 'AFFICHE');
 -- CreateEnum
 CREATE TYPE "electricity_connection" AS ENUM ('PC16_Prise_classique', 'P17_16A_MONO', 'P17_16A_TRI', 'P17_16A_TETRA', 'P17_32A_MONO', 'P17_32A_TRI', 'P17_32A_TETRA', 'P17_63A_MONO', 'P17_63A_TRI', 'P17_63A_TETRA', 'P17_125A_TETRA');
 
+-- CreateEnum
+CREATE TYPE "festival_activity_reviewer" AS ENUM ('humain', 'signa', 'secu', 'matos', 'elec', 'barrieres', 'comcom');
+
+-- CreateEnum
+CREATE TYPE "festival_activity_review_status" AS ENUM ('REVIEWING', 'NOT_ASKING_TO_REVIEW');
+
 -- CreateTable
 CREATE TABLE "FestivalActivity" (
     "id" INTEGER NOT NULL,
@@ -25,13 +31,23 @@ CREATE TABLE "FestivalActivity" (
 );
 
 -- CreateTable
-CREATE TABLE "festival_activity_time_window" (
-    "id" VARCHAR(30) NOT NULL,
+CREATE TABLE "festival_activity_time_window_general" (
+    "id" TEXT NOT NULL,
     "start" TIMESTAMP(3) NOT NULL,
     "end" TIMESTAMP(3) NOT NULL,
     "fa_id" INTEGER NOT NULL,
 
-    CONSTRAINT "festival_activity_time_window_pkey" PRIMARY KEY ("fa_id","id")
+    CONSTRAINT "festival_activity_time_window_general_pkey" PRIMARY KEY ("fa_id","id")
+);
+
+-- CreateTable
+CREATE TABLE "festival_activity_time_window_inquiry" (
+    "id" TEXT NOT NULL,
+    "start" TIMESTAMP(3) NOT NULL,
+    "end" TIMESTAMP(3) NOT NULL,
+    "fa_id" INTEGER NOT NULL,
+
+    CONSTRAINT "festival_activity_time_window_inquiry_pkey" PRIMARY KEY ("fa_id","id")
 );
 
 -- CreateTable
@@ -82,6 +98,15 @@ CREATE TABLE "inquiry_request" (
     CONSTRAINT "inquiry_request_pkey" PRIMARY KEY ("slug","fa_id")
 );
 
+-- CreateTable
+CREATE TABLE "festival_activity_review" (
+    "team" "festival_activity_reviewer" NOT NULL,
+    "status" "festival_activity_review_status" NOT NULL,
+    "fa_id" INTEGER NOT NULL,
+
+    CONSTRAINT "festival_activity_review_pkey" PRIMARY KEY ("fa_id","team")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "FestivalActivity_id_key" ON "FestivalActivity"("id");
 
@@ -95,10 +120,10 @@ ALTER TABLE "FestivalActivity" ADD CONSTRAINT "FestivalActivity_team_code_fkey" 
 ALTER TABLE "FestivalActivity" ADD CONSTRAINT "FestivalActivity_adherent_id_fkey" FOREIGN KEY ("adherent_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "festival_activity_time_window" ADD CONSTRAINT "fa_general" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "festival_activity_time_window_general" ADD CONSTRAINT "festival_activity_time_window_general_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "festival_activity_time_window" ADD CONSTRAINT "fa_inquiry" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "festival_activity_time_window_inquiry" ADD CONSTRAINT "festival_activity_time_window_inquiry_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "contractor" ADD CONSTRAINT "contractor_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -114,3 +139,6 @@ ALTER TABLE "inquiry_request" ADD CONSTRAINT "inquiry_request_slug_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "inquiry_request" ADD CONSTRAINT "inquiry_request_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "festival_activity_review" ADD CONSTRAINT "festival_activity_review_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "FestivalActivity"("id") ON DELETE CASCADE ON UPDATE CASCADE;

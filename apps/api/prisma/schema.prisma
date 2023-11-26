@@ -618,17 +618,18 @@ model Barrel {
 }
 
 model FestivalActivity {
-  id     Int                    @unique
-  status FestivalActivityStatus
+  id      Int                      @unique
+  status  FestivalActivityStatus
+  reviews FestivalActivityReview[]
 
   // General
-  name               String                       @db.VarChar(30)
-  description        String?                      @db.Text
-  toPublish          Boolean                      @map("to_publish")
-  photoLink          String?                      @map("photo_link") @db.Text
-  isFlagship         Boolean                      @map("is_flagship")
-  categories         String[]                     @db.VarChar(20)
-  generalTimeWindows FestivalActivityTimeWindow[] @relation("general-time-window")
+  name               String                              @db.VarChar(30)
+  description        String?                             @db.Text
+  toPublish          Boolean                             @map("to_publish")
+  photoLink          String?                             @map("photo_link") @db.Text
+  isFlagship         Boolean                             @map("is_flagship")
+  categories         String[]                            @db.VarChar(20)
+  generalTimeWindows FestivalActivityTimeWindowGeneral[]
 
   // In charge
   teamCode    String?      @map("team_code") @db.VarChar(20)
@@ -649,7 +650,7 @@ model FestivalActivity {
   water       String?                             @db.Text
 
   // Inquiry
-  inquiryTimeWindows FestivalActivityTimeWindow[] @relation("inquiry-time-window")
+  inquiryTimeWindows FestivalActivityTimeWindowInquiry[]
   inquiries          InquiryRequest[]
 }
 
@@ -660,17 +661,28 @@ enum FestivalActivityStatus {
   @@map("festival_activity_status")
 }
 
-model FestivalActivityTimeWindow {
-  id    String   @db.VarChar(30)
+model FestivalActivityTimeWindowGeneral {
+  id    String
   start DateTime
   end   DateTime
 
-  faId         Int               @map("fa_id")
-  faForGeneral FestivalActivity? @relation("general-time-window", fields: [faId], references: [id], map: "fa_general")
-  faForInquiry FestivalActivity? @relation("inquiry-time-window", fields: [faId], references: [id], map: "fa_inquiry")
+  faId Int              @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
 
   @@id([faId, id])
-  @@map("festival_activity_time_window")
+  @@map("festival_activity_time_window_general")
+}
+
+model FestivalActivityTimeWindowInquiry {
+  id    String
+  start DateTime
+  end   DateTime
+
+  faId Int              @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  @@id([faId, id])
+  @@map("festival_activity_time_window_inquiry")
 }
 
 model Contractor {
@@ -754,4 +766,34 @@ model InquiryRequest {
 
   @@id([slug, faId])
   @@map("inquiry_request")
+}
+
+model FestivalActivityReview {
+  team   FestivalActivityReviewer
+  status FestivalActivityReviewStatus
+
+  faId Int              @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  @@id([faId, team])
+  @@map("festival_activity_review")
+}
+
+enum FestivalActivityReviewer {
+  humain
+  signa
+  secu
+  matos
+  elec
+  barrieres
+  comcom
+
+  @@map("festival_activity_reviewer")
+}
+
+enum FestivalActivityReviewStatus {
+  REVIEWING
+  NOT_ASKING_TO_REVIEW
+
+  @@map("festival_activity_review_status")
 }
