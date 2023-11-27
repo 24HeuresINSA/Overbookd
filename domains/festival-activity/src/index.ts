@@ -71,3 +71,13 @@ export type {
 
 //ASK FOR REVIEW
 export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
+export type { Reviewer } from "./ask-for-review/waiting-for-review";
+export {
+  humain,
+  comcom,
+  signa,
+  secu,
+  matos,
+  elec,
+  barrieres,
+} from "./ask-for-review/waiting-for-review";

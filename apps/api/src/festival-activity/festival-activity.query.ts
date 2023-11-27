@@ -1,10 +1,15 @@
+const SELECT_REVIEW = {
+  team: true,
+  status: true,
+};
+
 export const SELECT_PREVIEW_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
   name: true,
   teamCode: true,
   adherent: true,
-  reviews: true,
+  reviews: { select: SELECT_REVIEW },
 };
 
 const SELECT_TIME_WINDOW = {
@@ -40,6 +45,7 @@ const SELECT_IN_CHARGE = {
       lastname: true,
       phone: true,
       email: true,
+      company: true,
       comment: true,
     },
   },
@@ -80,14 +86,16 @@ const SELECT_SUPPLY = {
 const SELECT_INQUIRY = {
   inquiryTimeWindows: { select: SELECT_TIME_WINDOW },
   inquiries: {
-    slug: true,
-    quantity: true,
-    catalogItem: {
-      select: {
-        name: true,
-        category: {
-          select: {
-            owner: { select: { code: true } },
+    select: {
+      slug: true,
+      quantity: true,
+      catalogItem: {
+        select: {
+          name: true,
+          category: {
+            select: {
+              owner: { select: { code: true } },
+            },
           },
         },
       },
@@ -98,7 +106,7 @@ const SELECT_INQUIRY = {
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
-  reviews: true,
+  reviews: { select: SELECT_REVIEW },
   ...SELECT_GENERAL,
   ...SELECT_IN_CHARGE,
   ...SELECT_SIGNA,
