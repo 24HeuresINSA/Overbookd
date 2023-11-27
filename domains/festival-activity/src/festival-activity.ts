@@ -309,4 +309,4 @@ export type CreateFestivalActivityForm = {
 
 export function isDraft(activity: FestivalActivity): activity is Draft {
   return activity.status === DRAFT;
-};
+}

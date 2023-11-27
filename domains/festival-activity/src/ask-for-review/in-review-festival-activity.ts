@@ -25,7 +25,7 @@ import {
   barrieres,
   comcom,
   PrivateActivityReviewer,
-  PublicActivityReviewer
+  PublicActivityReviewer,
 } from "../festival-activity";
 import { Draft } from "../festival-activity";
 
