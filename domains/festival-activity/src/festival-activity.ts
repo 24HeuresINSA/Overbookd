@@ -137,7 +137,7 @@ export type WithTimeWindows = {
   timeWindows: [TimeWindow, ...TimeWindow[]];
 };
 
-type BaseInquiryRequest = {
+export type BaseInquiryRequest = {
   slug: string;
   quantity: number;
   name: string;
