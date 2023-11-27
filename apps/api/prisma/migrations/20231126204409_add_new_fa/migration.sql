@@ -91,7 +91,6 @@ CREATE TABLE "festival_activity_electricity_supply" (
 -- CreateTable
 CREATE TABLE "inquiry_request" (
     "slug" VARCHAR(30) NOT NULL,
-    "name" VARCHAR(30) NOT NULL,
     "quantity" INTEGER NOT NULL,
     "fa_id" INTEGER NOT NULL,
 

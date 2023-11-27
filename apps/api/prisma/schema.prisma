@@ -758,7 +758,6 @@ enum ElectricityConnection {
 model InquiryRequest {
   slug        String      @db.VarChar(30)
   catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
-  name        String      @db.VarChar(30)
   quantity    Int
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
