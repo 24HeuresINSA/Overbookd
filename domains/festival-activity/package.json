@@ -34,7 +34,7 @@
     "domain"
   ],
   "engines": {
-    "node": "20.9.0",
+    "node": "20.10.0",
     "pnpm": "8.10.5"
   },
   "dependencies": {
