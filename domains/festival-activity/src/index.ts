@@ -49,7 +49,18 @@ export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS
 export type { ReviewStatus } from "./sections/reviews";
-export { APPROVED, REVIEWING, NOT_ASKING_TO_REVIEW } from "./sections/reviews";
+export {
+  APPROVED,
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW,
+  humain,
+  comcom,
+  signa,
+  secu,
+  matos,
+  elec,
+  barrieres,
+} from "./sections/reviews";
 
 // CREATION
 export { CreateFestivalActivity } from "./creation/creation";
@@ -71,13 +82,3 @@ export type {
 
 //ASK FOR REVIEW
 export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
-export type { Reviewer } from "./ask-for-review/waiting-for-review";
-export {
-  humain,
-  comcom,
-  signa,
-  secu,
-  matos,
-  elec,
-  barrieres,
-} from "./ask-for-review/waiting-for-review";
