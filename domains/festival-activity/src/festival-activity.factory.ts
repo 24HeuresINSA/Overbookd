@@ -21,7 +21,8 @@ type FestivalActivitySections =
   | FestivalActivity["signa"]
   | FestivalActivity["security"]
   | FestivalActivity["supply"]
-  | FestivalActivity["inquiry"];
+  | FestivalActivity["inquiry"]
+  | InReview["reviews"];
 
 type PublicData = Partial<
   Pick<Public, "isFlagship" | "photoLink" | "categories" | "timeWindows">
@@ -124,6 +125,18 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
+  withReviews(
+    reviews: Partial<InReview["reviews"]>,
+  ): FestivalActivityBuilder<T> {
+    if (isDraft(this.festivalActivity)) return this;
+
+    this.festivalActivity = {
+      ...this.festivalActivity,
+      reviews: this.merge(this.festivalActivity.reviews, reviews),
+    };
+    return this;
+  }
+
   private merge<T extends FestivalActivitySections>(
     current: T,
     update: Partial<T>,
@@ -168,7 +181,7 @@ function defaultInReview(id: number, name: string): InReview {
       contractors: [],
     },
     signa: {
-      location: "Rien a declarer",
+      location: "Rien à declarer",
       signages: [],
     },
     security: {

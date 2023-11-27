@@ -310,3 +310,9 @@ export type CreateFestivalActivityForm = {
 export function isDraft(activity: FestivalActivity): activity is Draft {
   return activity.status === DRAFT;
 }
+
+export const MATOS = "matos";
+export const BARRIERES = "barrieres";
+export const ELEC = "elec";
+
+export type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;

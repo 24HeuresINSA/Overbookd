@@ -1,4 +1,5 @@
 import { Drive } from "../festival-activity";
+import { InquiryOwner } from "../festival-activity";
 import {
   ElectricityConnection,
   ElectricitySupply,
@@ -80,12 +81,6 @@ export type PrepareElectricitySupplyUpdate = {
   count?: number;
   comment?: string | null;
 };
-
-export const MATOS = "matos";
-export const BARRIERES = "barrieres";
-export const ELEC = "elec";
-
-type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;
 
 type WithInquiryOwner = {
   owner: InquiryOwner;

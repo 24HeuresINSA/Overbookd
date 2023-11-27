@@ -8,12 +8,13 @@ import { InquiryAlreadyExists } from "../../festival-activity.error";
 import { TimeWindows } from "./time-windows";
 import {
   AssignDrive,
-  BARRIERES,
-  ELEC,
   LinkInquiryDrive,
-  MATOS,
   PrepareInquiryRequestCreation,
 } from "../prepare-festival-activity.model";
+import {
+  BARRIERES,
+  ELEC, MATOS
+} from "../../festival-activity";
 import { updateItemToList } from "@overbookd/list";
 
 export class AlreadyInitialized extends Error {
