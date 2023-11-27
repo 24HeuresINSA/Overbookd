@@ -11,6 +11,10 @@ import {
   SELECT_PREVIEW_FESTIVAL_ACTIVITY,
 } from "../festival-activity.query";
 
+type DatabasePreview = Omit<PreviewFestivalActivity, "team"> & {
+  teamCode: FestivalActivity["inCharge"]["team"];
+};
+
 type DatabaseGeneral = Omit<
   FestivalActivity["general"],
   "team" | "timeWindows"
@@ -51,9 +55,10 @@ export class PrismaPrepareFestivalActivityRepository
   constructor(private prisma: PrismaService) {}
 
   async findAll(): Promise<PreviewFestivalActivity[]> {
-    return this.prisma.festivalActivity.findMany({
+    const activities = await this.prisma.festivalActivity.findMany({
       select: SELECT_PREVIEW_FESTIVAL_ACTIVITY,
     });
+    return activities.map(this.formatPreviewFestivalActivity);
   }
 
   async findById(id: number): Promise<FestivalActivity> {
@@ -67,6 +72,19 @@ export class PrismaPrepareFestivalActivityRepository
   async save(activity: FestivalActivity): Promise<FestivalActivity> {
     // TODO: save activity in database
     return activity;
+  }
+
+  private formatPreviewFestivalActivity(
+    activity: DatabasePreview,
+  ): PreviewFestivalActivity {
+    return {
+      id: activity.id,
+      status: activity.status,
+      name: activity.name,
+      team: activity.teamCode,
+      adherent: activity.adherent,
+      reviews: activity.reviews,
+    };
   }
 
   private formatFestivalActivity(

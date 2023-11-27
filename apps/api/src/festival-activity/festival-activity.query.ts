@@ -1,8 +1,9 @@
 export const SELECT_PREVIEW_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
-  general: { select: { name: true } },
-  inCharge: { select: { teamCode: true, adherent: true } },
+  name: true,
+  teamCode: true,
+  adherent: true,
   reviews: true,
 };
 
