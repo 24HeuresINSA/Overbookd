@@ -55,9 +55,10 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments   Assignment[]
-  contributions Contribution[]
-  notifications Notification[]
+  assignments        Assignment[]
+  contributions      Contribution[]
+  notifications      Notification[]
+  festivalActivities FestivalActivity[]
 
   @@map("user")
 }
@@ -75,13 +76,14 @@ model Team {
   color String @default("#000000") @db.VarChar(30)
   icon  String @default("mdi-circle") @db.VarChar(255)
 
-  users           UserTeam[]
-  fa              Fa[]
-  ownedCategories CatalogCategory[] @relation("owner")
-  ftRequests      FtTeamRequest[]
-  ftReviews       FtReview[]
-  permissions     TeamPermission[]
-  ft              Ft[]
+  users              UserTeam[]
+  fa                 Fa[]
+  ownedCategories    CatalogCategory[]  @relation("owner")
+  ftRequests         FtTeamRequest[]
+  ftReviews          FtReview[]
+  permissions        TeamPermission[]
+  ft                 Ft[]
+  festivalActivities FestivalActivity[]
 
   @@map("team")
 }
@@ -347,6 +349,7 @@ model CatalogGear {
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
+  inquiries        InquiryRequest[]  @relation("inquiry-request-catalog")
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -612,4 +615,184 @@ model Barrel {
   price Int
 
   @@map("barrel")
+}
+
+model FestivalActivity {
+  id      Int                      @unique
+  status  FestivalActivityStatus
+  reviews FestivalActivityReview[]
+
+  // General
+  name               String                              @db.VarChar(30)
+  description        String?                             @db.Text
+  toPublish          Boolean                             @map("to_publish")
+  photoLink          String?                             @map("photo_link") @db.Text
+  isFlagship         Boolean                             @map("is_flagship")
+  categories         String[]                            @db.VarChar(20)
+  generalTimeWindows FestivalActivityTimeWindowGeneral[]
+
+  // In charge
+  teamCode    String?      @map("team_code") @db.VarChar(20)
+  team        Team?        @relation(fields: [teamCode], references: [code])
+  adherent    User?        @relation(fields: [adherentId], references: [id])
+  adherentId  Int?         @map("adherent_id")
+  contractors Contractor[]
+
+  // Signa
+  location String?                   @db.VarChar(50)
+  signages FestivalActivitySignage[]
+
+  // Security
+  specialNeed String? @map("special_need") @db.Text
+
+  // Supply
+  electricity FestivalActivityElectricitySupply[]
+  water       String?                             @db.Text
+
+  // Inquiry
+  inquiryTimeWindows FestivalActivityTimeWindowInquiry[]
+  inquiries          InquiryRequest[]
+}
+
+enum FestivalActivityStatus {
+  DRAFT
+  IN_REVIEW
+
+  @@map("festival_activity_status")
+}
+
+model FestivalActivityTimeWindowGeneral {
+  id    String
+  start DateTime
+  end   DateTime
+
+  faId Int              @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  @@id([faId, id])
+  @@map("festival_activity_time_window_general")
+}
+
+model FestivalActivityTimeWindowInquiry {
+  id    String
+  start DateTime
+  end   DateTime
+
+  faId Int              @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  @@id([faId, id])
+  @@map("festival_activity_time_window_inquiry")
+}
+
+model Contractor {
+  id        Int
+  firstname String  @db.VarChar(30)
+  lastname  String  @db.VarChar(30)
+  phone     String  @db.VarChar(20)
+  email     String? @db.VarChar(30)
+  company   String? @db.VarChar(30)
+  comment   String? @db.Text
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id])
+  faId Int              @map("fa_id")
+
+  @@unique([faId, id])
+  @@map("contractor")
+}
+
+model FestivalActivitySignage {
+  id       String      @db.VarChar(30)
+  quantity Int
+  text     String      @db.VarChar(30)
+  size     String      @db.VarChar(30)
+  type     SignageType
+  comment  String?     @db.Text
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("fa_id")
+
+  @@id([faId, id])
+  @@map("festival_activity_signage")
+}
+
+enum SignageType {
+  BACHE
+  PANNEAU
+  AFFICHE
+
+  @@map("signage_type")
+}
+
+model FestivalActivityElectricitySupply {
+  id         String                @db.VarChar(30)
+  connection ElectricityConnection
+  device     String                @db.VarChar(30)
+  power      Int
+  count      Int
+  comment    String?               @db.Text
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("festival_supply_id")
+
+  @@id([faId, id])
+  @@map("festival_activity_electricity_supply")
+}
+
+enum ElectricityConnection {
+  PC16_Prise_classique
+  P17_16A_MONO
+  P17_16A_TRI
+  P17_16A_TETRA
+  P17_32A_MONO
+  P17_32A_TRI
+  P17_32A_TETRA
+  P17_63A_MONO
+  P17_63A_TRI
+  P17_63A_TETRA
+  P17_125A_TETRA
+
+  @@map("electricity_connection")
+}
+
+model InquiryRequest {
+  slug        String      @db.VarChar(30)
+  catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
+  quantity    Int
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("fa_id")
+
+  @@id([slug, faId])
+  @@map("inquiry_request")
+}
+
+model FestivalActivityReview {
+  team   FestivalActivityReviewer
+  status FestivalActivityReviewStatus
+
+  faId Int              @map("fa_id")
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+
+  @@id([faId, team])
+  @@map("festival_activity_review")
+}
+
+enum FestivalActivityReviewer {
+  humain
+  signa
+  secu
+  matos
+  elec
+  barrieres
+  comcom
+
+  @@map("festival_activity_reviewer")
+}
+
+enum FestivalActivityReviewStatus {
+  REVIEWING
+  NOT_ASKING_TO_REVIEW
+
+  @@map("festival_activity_review_status")
 }
