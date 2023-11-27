@@ -18,6 +18,7 @@ export type {
   ReviewStatus,
 } from "./festival-activity";
 export {
+  APPROVED,
   DRAFT,
   REVIEWING,
   NOT_ASKING_TO_REVIEW,
