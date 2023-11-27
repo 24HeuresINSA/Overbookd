@@ -13,7 +13,7 @@ import {
   qgOrga,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { BARRIERES, ELEC, MATOS } from "./prepare-festival-activity.model";
+import { BARRIERES, ELEC, MATOS } from "../festival-activity";
 import {
   MAGASIN,
   LOCAL_24H,

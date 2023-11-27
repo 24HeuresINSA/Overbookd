@@ -40,7 +40,7 @@ type PrepareInChargeFormWithAdherent = Omit<
 export class AssignDriveInDraftActivity extends FestivalActivityError {
   constructor() {
     super(
-      "Il n'est pas possible d'assigner un lieu à une demande de matos dans une FA en brouillon",
+      "Il n'est pas possible d'attribuer un lieu à une demande de matos dans une FA en brouillon",
     );
   }
 }
