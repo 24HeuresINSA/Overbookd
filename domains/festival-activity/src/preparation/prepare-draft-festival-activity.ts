@@ -23,11 +23,11 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
 } from "./prepare-festival-activity.model";
-import { TimeWindows } from "./prepare-festival-activity";
-import { Contractors } from "./prepare-festival-activity";
-import { AlreadyInitialized, Inquiries } from "./inquiries";
-import { ElectricitySupplies } from "./prepare-festival-activity";
-import { Signages } from "./signages";
+import { TimeWindows } from "./section-aggregates/time-windows";
+import { Contractors } from "./section-aggregates/contractors";
+import { AlreadyInitialized, Inquiries } from "./section-aggregates/inquiries";
+import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
+import { Signages } from "./section-aggregates/signages";
 
 type PrepareInChargeFormWithAdherent = Omit<
   PrepareInChargeUpdate,

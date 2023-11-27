@@ -3,15 +3,15 @@ import {
   FestivalActivity,
   InquiryRequest,
   TimeWindow,
-} from "../festival-activity";
-import { InquiryAlreadyExists } from "../festival-activity.error";
-import { TimeWindows } from "./prepare-festival-activity";
+} from "../../festival-activity";
+import { InquiryAlreadyExists } from "../../festival-activity.error";
+import { TimeWindows } from "./time-windows";
 import {
   BARRIERES,
   ELEC,
   MATOS,
   PrepareInquiryRequestCreation,
-} from "./prepare-festival-activity.model";
+} from "../prepare-festival-activity.model";
 
 export class AlreadyInitialized extends Error {
   constructor() {

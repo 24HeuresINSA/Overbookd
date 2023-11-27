@@ -14,7 +14,7 @@ import {
   SignageAlreadyExists,
   SignageNotFound,
 } from "../festival-activity.error";
-import { LocationIsRequired } from "./signages";
+import { LocationIsRequired } from "./section-aggregates/signages";
 
 describe("Signa section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

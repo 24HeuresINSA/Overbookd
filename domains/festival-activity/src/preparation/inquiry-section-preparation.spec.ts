@@ -19,7 +19,7 @@ import {
   CantRemoveLastRequest,
   CantRemoveLastTimeWindow,
   NotYetInitialized,
-} from "./inquiries";
+} from "./section-aggregates/inquiries";
 import { WithInquiries } from "../festival-activity";
 
 const branleCanisse = {

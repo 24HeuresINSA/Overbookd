@@ -1,10 +1,7 @@
-import {
-  Contractors,
-  ElectricitySupplies,
-  InitInquiry,
-  Prepare,
-  TimeWindows,
-} from "./prepare-festival-activity";
+import { InitInquiry, Prepare } from "./prepare-festival-activity";
+import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
+import { Contractors } from "./section-aggregates/contractors";
+import { TimeWindows } from "./section-aggregates/time-windows";
 import { IProvidePeriod } from "@overbookd/period";
 import {
   Contractor,
@@ -38,8 +35,8 @@ import {
   CantRemoveLastTimeWindow,
   Inquiries,
   NotYetInitialized,
-} from "./inquiries";
-import { LocationIsRequired, Signages } from "./signages";
+} from "./section-aggregates/inquiries";
+import { LocationIsRequired, Signages } from "./section-aggregates/signages";
 
 export class IsNotPublicActivity extends FestivalActivityError {}
 
