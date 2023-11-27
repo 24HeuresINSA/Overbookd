@@ -7,8 +7,8 @@ import {
   humain,
   matos,
   secu,
-  signa,
-} from "./waiting-for-review";
+  signa
+} from "../festival-activity";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
 import {
   DRAFT,

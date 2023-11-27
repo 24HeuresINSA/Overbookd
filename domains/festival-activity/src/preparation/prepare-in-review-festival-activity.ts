@@ -26,6 +26,7 @@ import {
   PrepareInquiryRequestCreation,
   PrepareSignageCreation,
   PrepareSignageUpdate,
+  LinkInquiryDrive,
 } from "./prepare-festival-activity.model";
 import { FestivalActivityError } from "../festival-activity.error";
 import { hasAtLeastOneItem } from "@overbookd/list";
@@ -324,5 +325,13 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
       ...inquiry.electricity,
     ];
     return requests.length === 0;
+  }
+
+  assignInquiryToDrive(link: LinkInquiryDrive): InReview {
+    const inquiry = Inquiries.build(this.activity.inquiry).assignDrive(
+      link,
+    ).inquiry;
+
+    return { ...this.activity, inquiry };
   }
 }

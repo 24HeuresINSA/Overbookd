@@ -7,11 +7,14 @@ import {
 import { InquiryAlreadyExists } from "../../festival-activity.error";
 import { TimeWindows } from "./time-windows";
 import {
+  AssignDrive,
   BARRIERES,
   ELEC,
+  LinkInquiryDrive,
   MATOS,
   PrepareInquiryRequestCreation,
 } from "../prepare-festival-activity.model";
+import { updateItemToList } from "@overbookd/list";
 
 export class AlreadyInitialized extends Error {
   constructor() {
@@ -154,6 +157,33 @@ export class Inquiries<
       this.electricity,
     );
   }
+
+  assignDrive({ owner, ...assign }: LinkInquiryDrive) {
+    switch (owner) {
+      case MATOS:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears.assignDrive(assign),
+          this.barriers,
+          this.electricity,
+        );
+      case BARRIERES:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears,
+          this.barriers.assignDrive(assign),
+          this.electricity,
+        );
+
+      case ELEC:
+        return new Inquiries(
+          this.timeWindows,
+          this.gears,
+          this.barriers,
+          this.electricity.assignDrive(assign),
+        );
+    }
+  }
 }
 
 class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
@@ -186,5 +216,22 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
     return new InquiryRequests(
       this.inquiries.filter((inquiry) => inquiry.slug !== slug),
     );
+  }
+
+  assignDrive({ slug, drive }: AssignDrive): InquiryRequests<InquiryRequest[]> {
+    const inquiryIndex = this.inquiries.findIndex(
+      (inquiry) => inquiry.slug === slug,
+    );
+    const inquiry = this.inquiries.at(inquiryIndex);
+    if (inquiryIndex === -1 || !inquiry) {
+      throw new Error();
+    }
+
+    const inquiries = updateItemToList(this.inquiries, inquiryIndex, {
+      ...inquiry,
+      drive,
+    });
+
+    return new InquiryRequests(inquiries);
   }
 }

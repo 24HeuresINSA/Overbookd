@@ -1,6 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
+  LinkInquiryDrive,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
@@ -54,6 +55,7 @@ export type Prepare<T extends FestivalActivity> = {
   addInquiry(inquiry: PrepareInquiryRequestCreation): T;
   initInquiry(initializer: InitInquiry): T;
   removeInquiry(slug: InquiryRequest["slug"]): T;
+  assignInquiryToDrive(link: LinkInquiryDrive): T;
 };
 
 export type InitInquiry = {
@@ -169,7 +171,7 @@ export class PrepareFestivalActivity {
   }
 
   async addSignage(
-    faId: number,
+    faId: FestivalActivity["id"],
     signage: PrepareSignageCreation,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -180,7 +182,7 @@ export class PrepareFestivalActivity {
   }
 
   async updateSignage(
-    faId: number,
+    faId: FestivalActivity["id"],
     signage: PrepareSignageUpdate,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -191,7 +193,7 @@ export class PrepareFestivalActivity {
   }
 
   async removeSignage(
-    faId: number,
+    faId: FestivalActivity["id"],
     signageId: Signage["id"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -290,7 +292,7 @@ export class PrepareFestivalActivity {
   }
 
   async addInquiryRequest(
-    faId: number,
+    faId: FestivalActivity["id"],
     inquiry: PrepareInquiryRequestCreation,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -301,7 +303,7 @@ export class PrepareFestivalActivity {
   }
 
   async removeInquiryRequest(
-    faId: number,
+    faId: FestivalActivity["id"],
     slug: InquiryRequest["slug"],
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
@@ -311,9 +313,22 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.save(updatedFA);
   }
 
-  private async findActivityIfExists(id: number): Promise<FestivalActivity> {
+  private async findActivityIfExists(
+    id: FestivalActivity["id"],
+  ): Promise<FestivalActivity> {
     const existingFA = await this.festivalActivities.findById(id);
     if (!existingFA) throw new FestivalActivityNotFound(id);
     return existingFA;
+  }
+
+  async assignInquiryToDrive(
+    faId: FestivalActivity["id"],
+    link: LinkInquiryDrive,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.assignInquiryToDrive(link);
+    return this.festivalActivities.save(updatedFA);
   }
 }
