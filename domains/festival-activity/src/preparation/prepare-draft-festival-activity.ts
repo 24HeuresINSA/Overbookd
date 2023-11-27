@@ -28,6 +28,7 @@ import { Contractors } from "./section-aggregates/contractors";
 import { AlreadyInitialized, Inquiries } from "./section-aggregates/inquiries";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Signages } from "./section-aggregates/signages";
+import { FestivalActivityError } from "../festival-activity.error";
 
 type PrepareInChargeFormWithAdherent = Omit<
   PrepareInChargeUpdate,
@@ -35,6 +36,14 @@ type PrepareInChargeFormWithAdherent = Omit<
 > & {
   adherent?: Adherent;
 };
+
+export class AssignDriveInDraftActivity extends FestivalActivityError {
+  constructor() {
+    super(
+      "Il n'est pas possible d'assigner un lieu à une demande de matos dans une FA en brouillon",
+    );
+  }
+}
 
 export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   private constructor(private readonly activity: Draft) {}
@@ -216,5 +225,9 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     ).inquiry;
 
     return { ...this.activity, inquiry };
+  }
+
+  assignInquiryToDrive(): Draft {
+    throw new AssignDriveInDraftActivity();
   }
 }

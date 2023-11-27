@@ -1,5 +1,5 @@
 import { Notifications, Notifyee } from "./ask-for-review";
-import { Reviewer, WaitingForReview } from "./waiting-for-review";
+import { Reviewer, WaitingForReview } from "../festival-activity";
 
 type FestivalActivityToReview = Omit<WaitingForReview, "reviewers">;
 

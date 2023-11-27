@@ -15,12 +15,19 @@ import {
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "./prepare-festival-activity.model";
 import {
+  MAGASIN,
+  LOCAL_24H,
+  PARKING_EIFFEL,
+  barrieres,
+} from "../festival-activity";
+import {
   AlreadyInitialized,
   CantRemoveLastRequest,
   CantRemoveLastTimeWindow,
   NotYetInitialized,
 } from "./section-aggregates/inquiries";
-import { WithInquiries } from "../festival-activity";
+import { WithInquiries, elec, matos } from "../festival-activity";
+import { AssignDriveInDraftActivity } from "./prepare-draft-festival-activity";
 
 const branleCanisse = {
   slug: "branle-canisse",
@@ -336,6 +343,48 @@ describe("Inquiry section of festival activity preparation", () => {
             ),
         ).rejects.toThrow(CantRemoveLastRequest);
       });
+    });
+  });
+
+  describe.each`
+    activityName                  | activityId          | inquiryRequestSlug                        | drive             | owner
+    ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.gears[0].slug}        | ${MAGASIN}        | ${matos}
+    ${justDance.general.name}     | ${justDance.id}     | ${justDance.inquiry.electricity[0].slug}  | ${LOCAL_24H}      | ${elec}
+    ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.inquiry.barriers[0].slug} | ${PARKING_EIFFEL} | ${barrieres}
+  `(
+    "when $owner member want to assign $drive as drive for $inquiryRequestSlug inquiry in $activityName",
+    ({ activityId, inquiryRequestSlug, drive, owner }) => {
+      it("should link the inquiry to the drive", async () => {
+        const { inquiry } = await prepareFestivalActivity.assignInquiryToDrive(
+          activityId,
+          { slug: inquiryRequestSlug, drive, owner },
+        );
+        const requests = [
+          ...inquiry.gears,
+          ...inquiry.barriers,
+          ...inquiry.electricity,
+        ];
+        expect(requests).toContainEqual({
+          quantity: expect.any(Number),
+          name: expect.any(String),
+          drive,
+          slug: inquiryRequestSlug,
+        });
+      });
+    },
+  );
+
+  describe("when trying to assign a drive to an inquiry request from a draft festival activity", () => {
+    it("should indicate that we can't assign drive to inquiry request from draft festival activity", async () => {
+      const vaubanRequest = escapeGame.inquiry.barriers[0].slug;
+      expect(
+        async () =>
+          await prepareFestivalActivity.assignInquiryToDrive(escapeGame.id, {
+            slug: vaubanRequest,
+            drive: PARKING_EIFFEL,
+            owner: barrieres,
+          }),
+      ).rejects.toThrow(AssignDriveInDraftActivity);
     });
   });
 });

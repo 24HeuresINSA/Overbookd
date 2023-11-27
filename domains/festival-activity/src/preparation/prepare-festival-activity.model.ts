@@ -1,3 +1,4 @@
+import { Drive } from "../festival-activity";
 import {
   ElectricityConnection,
   ElectricitySupply,
@@ -86,6 +87,15 @@ export const ELEC = "elec";
 
 type InquiryOwner = typeof MATOS | typeof BARRIERES | typeof ELEC;
 
-export type PrepareInquiryRequestCreation = InquiryRequest & {
+type WithInquiryOwner = {
   owner: InquiryOwner;
 };
+
+export type PrepareInquiryRequestCreation = InquiryRequest & WithInquiryOwner;
+
+export type AssignDrive = {
+  slug: string;
+  drive: Drive;
+};
+
+export type LinkInquiryDrive = AssignDrive & WithInquiryOwner;

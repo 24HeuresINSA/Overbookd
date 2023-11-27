@@ -5,7 +5,7 @@ import {
   Draft,
   DRAFT,
   ElectricitySupply,
-  InquiryRequest,
+  BaseInquiryRequest,
   InquiryWithPotentialRequests,
   Signage,
   TimeWindow,
@@ -221,7 +221,7 @@ class SupplyDto implements Supply {
   water: string | null;
 }
 
-class InquiryRequestDto implements InquiryRequest {
+class InquiryRequestDto implements BaseInquiryRequest {
   @ApiProperty({})
   slug: string;
 
@@ -244,19 +244,19 @@ class InquiryDto implements InquiryWithPotentialRequests {
     isArray: true,
     type: InquiryRequestDto,
   })
-  gears: InquiryRequest[];
+  gears: BaseInquiryRequest[];
 
   @ApiProperty({
     isArray: true,
     type: InquiryRequestDto,
   })
-  electricity: InquiryRequest[];
+  electricity: BaseInquiryRequest[];
 
   @ApiProperty({
     isArray: true,
     type: InquiryRequestDto,
   })
-  barriers: InquiryRequest[];
+  barriers: BaseInquiryRequest[];
 }
 
 export class DraftFestivalActivityDto implements Draft {

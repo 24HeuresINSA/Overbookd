@@ -1,5 +1,6 @@
 export type {
   Adherent,
+  BaseInquiryRequest,
   Contractor,
   Draft,
   InReview,
@@ -16,7 +17,34 @@ export type {
   PreviewFestivalActivity,
   ReviewStatus,
 } from "./festival-activity";
-export { DRAFT, REVIEWING, NOT_ASKING_TO_REVIEW } from "./festival-activity";
+export {
+  APPROVED,
+  DRAFT,
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW,
+  BENNE_COLLETTE_BESSON,
+  BENNE_PARKING_K_FET,
+  PARKING_EIFFEL,
+  CREUX_GCU,
+  CREUX_GM,
+  CAVE_E,
+  CLUB_ROCK,
+  CONTENUR_24H,
+  CONTENEUR_KARNA,
+  CONTENEUR_PARKING_K_FET,
+  CONTENEUR_SCENE_ROOTS,
+  HALL_DES_HUMANITES,
+  LOCAL_24H,
+  MAGASIN,
+  MDE,
+  SALLE_MONTREAL,
+  SALLE_RENE_CHAR,
+  NON_STOCKE,
+  QG_ORGA,
+  BACKLINE,
+  LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_COM,
+} from "./festival-activity";
 
 // CREATION
 export { CreateFestivalActivity } from "./creation/creation";

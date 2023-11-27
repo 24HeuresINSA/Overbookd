@@ -7,7 +7,7 @@ import {
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
-import { Reviewer } from "../ask-for-review/waiting-for-review";
+import { Reviewer } from "../festival-activity";
 
 type DraftReview = Record<Reviewer, typeof NOT_ASKING_TO_REVIEW>;
 

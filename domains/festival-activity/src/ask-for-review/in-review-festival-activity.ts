@@ -26,7 +26,7 @@ import {
   comcom,
   PrivateActivityReviewer,
   PublicActivityReviewer,
-} from "./waiting-for-review";
+} from "../festival-activity";
 import { Draft } from "../festival-activity";
 
 type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
