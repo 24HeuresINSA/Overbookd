@@ -6,6 +6,7 @@ export interface CatalogSignageRepository {
   create(signage: SignageForm): Promise<Signage>;
   update(id: number, signage: SignageForm): Promise<Signage>;
   remove(id: number): Promise<void>;
+  updateImage(id: number, image: FormData): Promise<void>;
 }
 
 @Injectable()
@@ -27,4 +28,10 @@ export class CatalogSignageService {
   async remove(id: number): Promise<void> {
     await this.catalogSignages.remove(id);
   }
-}
+
+  async updateImage(id: number, signage: SignageForm, image: String): Promise<void> {
+   const currentImage = await this.catalogSignages.getImage(id);
+    if (currentSignage) {
+      this.fileService.deleteFile(currentImage);
+    }
+

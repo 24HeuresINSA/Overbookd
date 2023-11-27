@@ -1,5 +1,6 @@
 <template>
   <div>
+    <SignaImageDialog></SignaImageDialog>
     <form class="filter">
       <v-text-field
         v-model="searchName"
@@ -29,7 +30,7 @@
         <v-icon small @click="openDeleteSignageDialog(item)">
           mdi-delete
         </v-icon>
-        <v-icon small @click="openAddPictureSignageDialog(item)">
+        <v-icon small @click="openAddImageSignageDialog(item)">
           mdi-camera
         </v-icon>
       </template>
@@ -62,6 +63,7 @@
         </template>
       </ConfirmationMessage>
     </v-dialog>
+
   </div>
 </template>
 
@@ -71,6 +73,7 @@ import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
+import SignaImageDialog from "~/components/molecules/signa/SignaImageDialog.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 
@@ -85,7 +88,7 @@ interface SignageListingData {
 
 export default Vue.extend({
   name: "SignageListing",
-  components: { ConfirmationMessage, SignageForm },
+  components: { ConfirmationMessage, SignageForm, SignaImageDialog },
   data(): SignageListingData {
     return {
       headers: [
@@ -144,8 +147,9 @@ export default Vue.extend({
       this.isDeleteSignageDialogOpen = false;
       this.selectedSignage = undefined;
     },
-    openAddPictureSignageDialog(signage: Signage) {
-      this.$accessor.dialog.openDialog("signagePicture", signage);
+    openAddImageSignageDialog(signage: Signage) {
+      console.log(signage);
+    this.$store.dispatch("dialog/openDialog", "signaImage");
     },
     async deleteSignage() {
       if (!this.selectedSignage) return;

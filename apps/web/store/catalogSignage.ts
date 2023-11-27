@@ -28,6 +28,11 @@ export const mutations = mutationTree(state, {
   DELETE_SIGNAGE(state, signage: Signage) {
     state.signages = state.signages.filter((s) => s.id !== signage.id);
   },
+  ADD_SIGNAGE_IMAGE(state, { signageId, image }) {
+    const index = state.signages.findIndex((s) => s.id === signageId);
+    if (index < 0) return;
+    state.signages[index].image = image;
+  }
 });
 
 export const actions = actionTree(
@@ -81,5 +86,17 @@ export const actions = actionTree(
       if (!res) return;
       commit("DELETE_SIGNAGE", signage);
     },
+    async uploadSignageImage({ commit }, { signageId, image }): Promise<void> {
+      const res = await safeCall(
+        this,
+        signageRepository.uploadSignageImage(this, signageId, image),
+        {
+          successMessage: `Image de la signalétique mise à jour avec succès ✅`,
+          errorMessage: `Erreur lors de la mise à jour de l'image de la signalétique ❌`,
+        },
+      );
+      if (!res) return;
+      commit("ADD_SIGNAGE_IMAGE", { signageId, image: res.data });
+    }
   },
 );

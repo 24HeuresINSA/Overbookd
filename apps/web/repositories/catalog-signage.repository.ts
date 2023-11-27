@@ -10,6 +10,29 @@ export class CatalogSignageRepository {
     return context.$axios.get<Signage[]>(this.basePath);
   }
 
+  static async fetchSignagePicture(
+    context: Context,
+    signageId: number,
+  ): Promise<string | undefined> {
+    const token = context.$axios.defaults.headers.common["Authorization"];
+    if (!token) return undefined;
+
+    const response = await fetch(
+      `${process.env.BASE_URL}${this.basePath}/${signageId}/image`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+    );
+
+    if (response.status !== 200) return undefined;
+
+    const url = URL.createObjectURL(await response.blob());
+    return url;
+  }
+
   static createSignage(context: Context, signageForm: SignageForm) {
     return context.$axios.post<Signage>(this.basePath, signageForm);
   }
@@ -27,5 +50,8 @@ export class CatalogSignageRepository {
 
   static deleteSignage(context: Context, signageId: number) {
     return context.$axios.delete(`${this.basePath}/${signageId}`);
+  }
+  static uploadSignageImage(context: Context, signageId: number, image: FormData) {
+    return context.$axios.post(`${this.basePath}/${signageId}/image`, image);
   }
 }
