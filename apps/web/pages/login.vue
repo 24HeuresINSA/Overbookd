@@ -25,7 +25,7 @@
         <v-row>
           <v-text-field
             v-model="credentials.password"
-            label="password"
+            label="mot de passe"
             type="password"
             required
             outlined
