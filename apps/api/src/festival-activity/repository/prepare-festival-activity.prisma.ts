@@ -1,7 +1,10 @@
 import {
+  BARRIERES,
+  ELEC,
   FestivalActivity,
   InReview,
   InquiryRequest,
+  MATOS,
   NOT_ASKING_TO_REVIEW,
   PrepareFestivalActivityRepository,
   PreviewFestivalActivity,
@@ -165,15 +168,15 @@ export class PrismaPrepareFestivalActivityRepository
     inquiry: DatabaseInquiry,
   ): FestivalActivity["inquiry"] {
     const gears = inquiry.inquiries
-      .filter((req) => req.catalogItem.category.owner.code === matos)
+      .filter((req) => req.catalogItem.category.owner.code === MATOS)
       .map(this.formatInquiryRequest);
 
     const barriers = inquiry.inquiries
-      .filter((req) => req.catalogItem.category.owner.code === barrieres)
+      .filter((req) => req.catalogItem.category.owner.code === BARRIERES)
       .map(this.formatInquiryRequest);
 
     const electricity = inquiry.inquiries
-      .filter((req) => req.catalogItem.category.owner.code === elec)
+      .filter((req) => req.catalogItem.category.owner.code === ELEC)
       .map(this.formatInquiryRequest);
 
     return {

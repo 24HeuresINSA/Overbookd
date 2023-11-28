@@ -18,6 +18,9 @@ export type {
   WithInquiries,
 } from "./sections/inquiry";
 export {
+  BARRIERES,
+  ELEC,
+  MATOS,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
   PARKING_EIFFEL,
@@ -48,7 +51,7 @@ export type { ElectricitySupply } from "./sections/supply";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS
-export type { ReviewStatus } from "./sections/reviews";
+export type { ReviewStatus, Reviewer } from "./sections/reviews";
 export {
   APPROVED,
   REVIEWING,
