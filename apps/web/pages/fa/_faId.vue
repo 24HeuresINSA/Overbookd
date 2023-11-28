@@ -42,41 +42,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import LogisticTimeWindow from "~/components/molecules/festival-event/logistic/LogisticTimeWindow.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
-import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
-import ChildFtCard from "~/components/organisms/festival-event/fa/ChildFtCard.vue";
-import CollaboratorCard from "~/components/organisms/festival-event/fa/CollaboratorCard.vue";
-import FaDetailCard from "~/components/organisms/festival-event/fa/FaDetailCard.vue";
-import FaGeneralCard from "~/components/organisms/festival-event/fa/FaGeneralCard.vue";
-import FaLogisticsCard from "~/components/organisms/festival-event/fa/FaLogisticsCard.vue";
-import FaTimeWindowCard from "~/components/organisms/festival-event/fa/FaTimeWindowCard.vue";
-import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.vue";
-import SignaCard from "~/components/organisms/festival-event/fa/SignaCard.vue";
-import WaterLogisticCard from "~/components/organisms/festival-event/fa/WaterLogisticCard.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import ElectricityNeedCard from "~/components/organisms/festival-event/fa/ElectricityNeedCard.vue";
+import FaGeneralCard from "~/components/organisms/festival-event/fa/FaGeneralCard.vue";
+import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { FestivalActivity } from "@overbookd/festival-activity";
 
 export default Vue.extend({
   name: "Fa",
   components: {
     FestivalEventSidebar,
-    SignaCard,
-    FaLogisticsCard,
-    FaTimeWindowCard,
-    CollaboratorCard,
-    WaterLogisticCard,
     FaGeneralCard,
-    FaDetailCard,
-    SecurityCard,
     SnackNotificationContainer,
-    LogisticTimeWindow,
-    ChildFtCard,
     FestivalEventBottomBar,
-    FeedbackCard,
-    ElectricityNeedCard,
   },
 
   computed: {
