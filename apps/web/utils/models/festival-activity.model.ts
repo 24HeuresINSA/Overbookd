@@ -16,3 +16,11 @@ export const faStatusLabels = new Map<
   [DRAFT, BROUILLON],
   [IN_REVIEW, SOUMISE_A_VALIDATION],
 ]);
+
+export const activityCategories = {
+  DIVERTISSEMENT: "Divertissement",
+  CULTURE: "Culture",
+  SPORT: "Sport",
+  ENFANT: "Enfant",
+  AUTRE: "Autre",
+};

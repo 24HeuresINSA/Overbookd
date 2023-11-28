@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar fa ft">
-    <h1>{{ titleWithId }}</h1>
-    <h2>{{ name }}</h2>
+    <h1 id="title">{{ titleWithId }}</h1>
+    <h2 id="name">{{ name }}</h2>
     <div id="status">
       <span id="dot" :class="status"></span>
       <h3>{{ statusLabel }}</h3>
@@ -98,13 +98,13 @@ export default Vue.extend({
   padding-right: 20px;
   width: 300px;
 
-  h1 {
+  #title {
     font-size: 1.7rem;
     margin: 16px;
     margin-bottom: 4px;
   }
 
-  h2 {
+  #name {
     font-size: 1.2rem;
     font-weight: normal;
     color: rgb(89, 89, 89);
@@ -114,7 +114,6 @@ export default Vue.extend({
     white-space: nowrap;
     width: auto;
     display: block;
-    overflow: hidden;
   }
 
   #status {
@@ -162,10 +161,10 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: $mobile-max-width) {
   .sidebar {
     width: 100%;
-    height: auto;
+    height: fit-content;
     overflow: visible;
   }
 

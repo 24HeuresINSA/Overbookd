@@ -2,22 +2,25 @@
   <v-data-table
     :headers="headers"
     :items="timeWindows"
-    dense
     item-key="key"
     :items-per-page="-1"
+    hide-default-footer
     :custom-sort="sortTimeWindows"
   >
-    <template #item.startDate="{ item }">
+    <template #item.start="{ item }">
       {{ formatDate(item.start) }}
     </template>
-    <template #item.endDate="{ item }">
+
+    <template #item.end="{ item }">
       {{ formatDate(item.end) }}
     </template>
-    <template #item.action="{ item }">
+
+    <template #item.actions="{ item }">
       <div v-if="!disabled">
         <v-btn icon @click="updateTimeWindow(item)">
           <v-icon>mdi-clock-edit</v-icon>
         </v-btn>
+
         <v-btn icon @click="deleteTimeWindow(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
@@ -30,15 +33,17 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { SortableTimeWindowHeader } from "~/utils/functions/time-window";
-import { faTimeWindowsSorts } from "~/utils/functions/time-window";
-import { Fa, FaTimeWindowWithType } from "~/utils/models/fa.model";
+import {
+  SortableFaTimeWindowHeader,
+  faTimeWindowsSorts,
+} from "~/utils/functions/time-window";
+import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
 
 export default Vue.extend({
   name: "FaTimeWindowTable",
   props: {
     timeWindows: {
-      type: Array as () => FaTimeWindowWithType[],
+      type: Array as () => TimeWindow[],
       required: true,
     },
     disabled: {
@@ -48,33 +53,32 @@ export default Vue.extend({
   },
   data: () => ({
     headers: [
-      { text: "Type", value: "type" },
-      { text: "Date de début", value: "startDate" },
-      { text: "Date de fin", value: "endDate" },
-      { text: "Action", value: "action", sortable: false },
+      { text: "Date de début", value: "start" },
+      { text: "Date de fin", value: "end" },
+      { text: "Actions", value: "actions", sortable: false },
     ],
   }),
   computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
     },
   },
   methods: {
     formatDate(date: string): string {
       return formatDateWithMinutes(date);
     },
-    updateTimeWindow(timeWindow: FaTimeWindowWithType) {
+    updateTimeWindow(timeWindow: TimeWindow) {
       this.$emit("update", timeWindow);
     },
-    deleteTimeWindow(timeWindow: FaTimeWindowWithType) {
+    deleteTimeWindow(timeWindow: TimeWindow) {
       this.$emit("delete", timeWindow);
     },
     sortTimeWindows(
-      timeWindows: FaTimeWindowWithType[],
-      sortsBy: SortableTimeWindowHeader[],
+      timeWindows: TimeWindow[],
+      sortsBy: SortableFaTimeWindowHeader[],
       sortsDesc: boolean[],
     ) {
-      const sortBy = sortsBy.at(0) ?? "startDate";
+      const sortBy = sortsBy.at(0) ?? "start";
       const sortFnc = faTimeWindowsSorts.get(sortBy);
 
       if (!sortFnc) return timeWindows;
