@@ -35,26 +35,23 @@
       <FeedbackCard id="feedback" />
       <ChildFtCard id="ft" />-->
     </v-container>
-    <FestivalEventBottomBar festival-event="FA" />
     <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/fa/FaGeneralCard.vue";
-import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { FestivalActivity } from "@overbookd/festival-activity";
 
-export default Vue.extend({
+export default defineComponent({
   name: "Fa",
   components: {
     FestivalEventSidebar,
     FaGeneralCard,
     SnackNotificationContainer,
-    FestivalEventBottomBar,
   },
 
   computed: {
@@ -85,78 +82,6 @@ export default Vue.extend({
   overflow-y: hidden;
 }
 
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  overflow: auto;
-  padding-right: 20px;
-  width: 300px;
-
-  h1 {
-    font-size: 1.7rem;
-    margin: 16px;
-    margin-bottom: 4px;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: rgb(89, 89, 89);
-    margin: 16px;
-    margin-top: 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: auto;
-    display: block;
-    overflow: hidden;
-  }
-
-  #status {
-    display: flex;
-    align-items: center;
-
-    #dot {
-      height: 25px;
-      width: 25px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 16px;
-      margin-right: 10px;
-    }
-  }
-}
-
-.icons {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 5px 15px 16px;
-
-  .icon {
-    position: relative;
-    display: inline-block;
-
-    .icon-detail {
-      visibility: hidden;
-      width: 60px;
-      font-size: 0.9rem;
-      text-align: center;
-      border-radius: 6px;
-      user-select: none;
-
-      position: absolute;
-      z-index: 1;
-      top: 100%;
-      left: 50%;
-      margin-left: -30px;
-    }
-  }
-
-  .icon:hover .icon-detail {
-    visibility: visible;
-  }
-}
-
 .container {
   display: flex;
   flex-direction: column;
@@ -176,26 +101,10 @@ export default Vue.extend({
   margin-bottom: 8px;
 }
 
-@media only screen and (max-width: 965px) {
-  .container {
-    padding-bottom: 200px;
-  }
-}
-
-@media only screen and (max-width: 750px) {
-  .main {
+@media only screen and (max-width: $mobile-max-width) {
+  .fa-content {
     flex-direction: column;
     overflow-y: scroll;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-
-  .summary {
-    display: none;
   }
 
   .container {

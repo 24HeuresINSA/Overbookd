@@ -140,7 +140,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
@@ -179,7 +179,7 @@ interface FaData {
   };
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "Fa",
   components: {
     FestivalEventFilter,
