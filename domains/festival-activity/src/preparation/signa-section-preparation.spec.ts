@@ -9,7 +9,7 @@ import {
   qgOrga,
 } from "./preparation.test-utils";
 import { PrepareSignageUpdate } from "./prepare-festival-activity.model";
-import { AFFICHE, BACHE, PANNEAU } from "../festival-activity";
+import { AFFICHE, BACHE, PANNEAU } from "../sections/signa";
 import {
   SignageAlreadyExists,
   SignageNotFound,

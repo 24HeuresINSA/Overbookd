@@ -2,9 +2,11 @@ import {
   FestivalActivity,
   IN_REVIEW,
   InReview,
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
 } from "../festival-activity";
+import {
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING
+} from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
@@ -25,8 +27,8 @@ import {
   barrieres,
   comcom,
   PrivateActivityReviewer,
-  PublicActivityReviewer,
-} from "../festival-activity";
+  PublicActivityReviewer
+} from "../sections/reviews";
 import { Draft } from "../festival-activity";
 
 type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &

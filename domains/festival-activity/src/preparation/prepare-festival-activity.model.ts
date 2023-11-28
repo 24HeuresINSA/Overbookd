@@ -1,13 +1,16 @@
-import { Drive } from "../festival-activity";
-import { InquiryOwner } from "../festival-activity";
+import { Drive } from "../sections/inquiry";
+import { InquiryOwner } from "../sections/inquiry";
 import {
   ElectricityConnection,
   ElectricitySupply,
+  Supply
+} from "../sections/supply";
+import {
   Signage,
-  SignageType,
-  Supply,
-} from "../festival-activity";
-import { Adherent, Contractor, InquiryRequest } from "../festival-activity";
+  SignageType
+} from "../sections/signa";
+import { InquiryRequest } from "../sections/inquiry";
+import { Adherent, Contractor } from "../sections/in-charge";
 
 export type PrepareGeneralUpdate = {
   name?: string;

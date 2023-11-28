@@ -1,5 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { Signage } from "../../festival-activity";
+import { Signage } from "../../sections/signa";
 import {
   FestivalActivityError,
   SignageAlreadyExists,

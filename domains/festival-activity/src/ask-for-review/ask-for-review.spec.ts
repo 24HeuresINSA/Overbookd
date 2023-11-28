@@ -7,15 +7,17 @@ import {
   humain,
   matos,
   secu,
-  signa,
-} from "../festival-activity";
+  signa
+} from "../sections/reviews";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
 import {
   DRAFT,
   IN_REVIEW,
-  REVIEWING,
-  NOT_ASKING_TO_REVIEW,
 } from "../festival-activity";
+import {
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW
+} from "../sections/reviews";
 import { AskForReview } from "./ask-for-review";
 import {
   pcSecurite,

@@ -4,16 +4,18 @@ import { Contractors } from "./section-aggregates/contractors";
 import { TimeWindows } from "./section-aggregates/time-windows";
 import { IProvidePeriod } from "@overbookd/period";
 import {
-  Contractor,
-  ElectricitySupply,
   FestivalActivity,
   InReview,
-  InquiryRequest,
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  Signage,
-  TimeWindow,
 } from "../festival-activity";
+import {
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING
+} from "../sections/reviews";
+import { InquiryRequest } from "../sections/inquiry";
+import { ElectricitySupply } from "../sections/supply";
+import { Signage } from "../sections/signa";
+import { Contractor } from "../sections/in-charge";
+import { TimeWindow } from "../sections/time-window";
 import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,

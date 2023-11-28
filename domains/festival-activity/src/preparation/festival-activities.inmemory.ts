@@ -3,11 +3,11 @@ import {
   PreviewFestivalActivity,
   FestivalActivity,
   isDraft,
-  NOT_ASKING_TO_REVIEW,
 } from "../festival-activity";
+import { NOT_ASKING_TO_REVIEW } from "../sections/reviews";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
-import { Reviewer } from "../festival-activity";
+import { Reviewer } from "../sections/reviews";
 
 type DraftReview = Record<Reviewer, typeof NOT_ASKING_TO_REVIEW>;
 

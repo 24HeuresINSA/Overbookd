@@ -13,20 +13,21 @@ import {
   qgOrga,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { BARRIERES, ELEC, MATOS } from "../festival-activity";
+import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
+import { barrieres } from "../sections/reviews";
 import {
   MAGASIN,
   LOCAL_24H,
-  PARKING_EIFFEL,
-  barrieres,
-} from "../festival-activity";
+  PARKING_EIFFEL
+} from "../sections/inquiry";
 import {
   AlreadyInitialized,
   CantRemoveLastRequest,
   CantRemoveLastTimeWindow,
   NotYetInitialized,
 } from "./section-aggregates/inquiries";
-import { WithInquiries, elec, matos } from "../festival-activity";
+import { elec, matos } from "../sections/reviews";
+import { WithInquiries } from "../sections/inquiry";
 import { AssignDriveInDraftActivity } from "./prepare-draft-festival-activity";
 
 const branleCanisse = {

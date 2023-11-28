@@ -9,7 +9,8 @@ import {
   justDance,
   pcSecurite,
 } from "./preparation.test-utils";
-import { NOT_ASKING_TO_REVIEW, REVIEWING, isDraft } from "../festival-activity";
+import { isDraft } from "../festival-activity";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
   IsNotPublicActivity,
   NeedAtLeastOneTimeWindow,

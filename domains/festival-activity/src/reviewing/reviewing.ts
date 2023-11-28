@@ -1,13 +1,11 @@
 import {
-  APPROVED,
   FestivalActivity,
   InReview,
-  NOT_ASKING_TO_REVIEW,
   isDraft,
-  Reviewer,
 } from "../festival-activity";
+import { APPROVED, NOT_ASKING_TO_REVIEW, Reviewer } from "../sections/reviews";
 import { FestivalActivityNotFound } from "../festival-activity.error";
-import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../festival-activity";
+import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
 import {
   InDraft,
   AlreadyApproved,
