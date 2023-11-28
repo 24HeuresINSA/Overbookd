@@ -1,9 +1,9 @@
 <template>
-  <div class="main fa">
+  <div class="fa-content fa">
     <FestivalEventSidebar festival-event="FA" />
     <v-container class="container fa">
       <FaGeneralCard id="general" />
-      <FaDetailCard id="detail" />
+      <!--<FaDetailCard id="detail" />
       <SignaCard id="signa" />
       <FaTimeWindowCard id="timewindow" />
       <SecurityCard id="security" />
@@ -33,7 +33,7 @@
       <ElectricityNeedCard id="elec" />
       <WaterLogisticCard id="water" />
       <FeedbackCard id="feedback" />
-      <ChildFtCard id="ft" />
+      <ChildFtCard id="ft" />-->
     </v-container>
     <FestivalEventBottomBar festival-event="FA" />
     <SnackNotificationContainer />
@@ -56,12 +56,13 @@ import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.
 import SignaCard from "~/components/organisms/festival-event/fa/SignaCard.vue";
 import WaterLogisticCard from "~/components/organisms/festival-event/fa/WaterLogisticCard.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import { Fa } from "~/utils/models/fa.model";
 import ElectricityNeedCard from "~/components/organisms/festival-event/fa/ElectricityNeedCard.vue";
+import { FestivalActivity } from "@overbookd/festival-activity";
 
 export default Vue.extend({
   name: "Fa",
   components: {
+    FestivalEventSidebar,
     SignaCard,
     FaLogisticsCard,
     FaTimeWindowCard,
@@ -70,7 +71,6 @@ export default Vue.extend({
     FaGeneralCard,
     FaDetailCard,
     SecurityCard,
-    FestivalEventSidebar,
     SnackNotificationContainer,
     LogisticTimeWindow,
     ChildFtCard,
@@ -80,8 +80,8 @@ export default Vue.extend({
   },
 
   computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
     },
     faId(): number {
       return +this.$route.params.faId;
@@ -89,25 +89,19 @@ export default Vue.extend({
   },
 
   async mounted() {
-    await this.$accessor.fa.fetchFa(this.faId);
+    await this.$accessor.festivalActivity.fetchActivity(this.faId);
     if (this.mFA.id !== this.faId) {
       alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
-      await this.$router.push({
-        path: "/fa",
-      });
+      this.$router.push({ path: "/fa" });
     }
 
-    let title = "FA " + this.faId;
-    if (this.mFA.name) title += " - " + this.mFA.name;
-    document.title = title;
-
-    this.$accessor.signa.getAllSignaLocations();
+    document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.main {
+.fa-content {
   display: flex;
   height: calc(100vh - 124px);
   overflow-y: hidden;
