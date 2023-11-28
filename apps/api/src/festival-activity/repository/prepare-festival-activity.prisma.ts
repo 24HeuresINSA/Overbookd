@@ -150,10 +150,7 @@ export class PrismaPrepareFestivalActivityRepository
     } as FestivalActivity;
   }
 
-  private formatReviews(
-    reviews: DatabaseReview[],
-  ): InReview["reviews"] | undefined {
-    if (reviews.length === 0) return undefined;
+  private formatReviews(reviews: DatabaseReview[]): InReview["reviews"] {
     return {
       humain: this.findReviewStatusByTeam(reviews, humain),
       signa: this.findReviewStatusByTeam(reviews, signa),
