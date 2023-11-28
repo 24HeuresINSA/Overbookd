@@ -1,5 +1,6 @@
 import {
   BARRIERES,
+  DRAFT,
   ELEC,
   FestivalActivity,
   InReview,
@@ -95,23 +96,31 @@ export class PrismaPrepareFestivalActivityRepository
   private formatPreviewFestivalActivity(
     activity: DatabasePreview,
   ): PreviewFestivalActivity {
+    const reviews = this.isDraft(activity)
+      ? {}
+      : this.formatReviews(activity.reviews);
+
     return {
       id: activity.id,
       status: activity.status,
       name: activity.name,
       team: activity.teamCode,
       adherent: activity.adherent,
-      reviews: this.formatReviews(activity.reviews),
-    };
+      ...reviews,
+    } as PreviewFestivalActivity;
   }
 
   private formatFestivalActivity(
     activity: DatabaseFestivalActivity,
   ): FestivalActivity {
+    const reviews = this.isDraft(activity)
+      ? {}
+      : this.formatReviews(activity.reviews);
+
     return {
       id: activity.id,
       status: activity.status,
-      reviews: this.formatReviews(activity.reviews),
+      ...reviews,
       general: {
         name: activity.name,
         description: activity.description,
@@ -195,5 +204,11 @@ export class PrismaPrepareFestivalActivityRepository
       name: request.catalogItem.name,
       quantity: request.quantity,
     };
+  }
+
+  private isDraft(
+    activity: DatabaseFestivalActivity | DatabasePreview,
+  ): boolean {
+    return activity.status === DRAFT;
   }
 }

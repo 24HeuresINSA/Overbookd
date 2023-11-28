@@ -3,9 +3,11 @@ export type {
   InReview,
   FestivalActivity,
   CreateFestivalActivityForm,
+  PreviewDraft,
+  PreviewInReview,
   PreviewFestivalActivity,
 } from "./festival-activity";
-export { DRAFT } from "./festival-activity";
+export { DRAFT, IN_REVIEW } from "./festival-activity";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 
