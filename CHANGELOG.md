@@ -1,3 +1,30 @@
+## [2.7.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.7.0...v2.7.1) (2023-11-28)
+
+
+### Bug Fixes
+
+* **catalog-signa:** fix permissions signa map [#1341](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1341) ([f78d046](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f78d0464c21162c9c79963620c7c1a0166fd6a23))
+* **login page:** change "password" into "mot de passe" ([0157363](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0157363f68c3da116d4f82864390d7ea172ca5a4))
+* **transfer:** Wrong error message with amounts bellow 1 euro [#1304](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1304) ([b0f8282](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b0f82829553e996e3e668249c64bad88e9c01eec))
+
+
+### Pre-Features
+
+* **festival-activity:** add fa in db [#1343](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1343) ([7785a0b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7785a0b53793dc0515707bda01ad6109c341cb6d))
+* **festival-activity:** allow drive assignment on inquiry requests. [#1334](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1334) ([7b487f2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7b487f293adef0e696902ad887f88c85118100de))
+* **festival-activity:** allow reviewer approval. [#1334](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1334) ([6d76fef](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6d76fefcc08abf5cb57cf8b6feaf31a0ace6b9d1))
+
+
+### Refactor
+
+* **fa:** showing list in fa index page [#1342](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1342) ([9a4f35b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9a4f35b2ae5502436a98aabfc579baf86b421273))
+* **festival-activity:** split test helpers for preparation. [#1334](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1334) ([8c321ea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8c321ea3135ac28bc15f6b93b7a55510831aa6fc))
+
+
+### CI/CD
+
+* update triage rules ([f651ea8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f651ea84403266b49fc4d99d8c49f2146e66d29c))
+
 ## [2.7.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.6.1...v2.7.0) (2023-11-24)
 
 
