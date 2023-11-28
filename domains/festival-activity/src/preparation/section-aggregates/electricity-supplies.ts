@@ -9,7 +9,7 @@ import {
 import {
   ElectricityConnection,
   ElectricitySupply,
-} from "../../festival-activity";
+} from "../../sections/supply";
 import { updateItemToList } from "@overbookd/list";
 import { SlugifyService } from "@overbookd/slugify";
 

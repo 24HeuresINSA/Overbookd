@@ -1,7 +1,7 @@
 import { FestivalActivityNotFound, Review } from "../festival-activity.error";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { FestivalActivity, InReview, isDraft } from "../festival-activity";
-import { Reviewer, WaitingForReview } from "../festival-activity";
+import { Reviewer, WaitingForReview } from "../sections/reviews";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;

@@ -2,11 +2,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { getFactory } from "../festival-activity.factory";
 import {
   APPROVED,
-  BACKLINE,
-  CONTENEUR_SCENE_ROOTS,
-  LOCAL_24H,
-  MAGASIN,
-  PARKING_EIFFEL,
   barrieres,
   comcom,
   elec,
@@ -14,7 +9,14 @@ import {
   matos,
   secu,
   signa,
-} from "../festival-activity";
+} from "../sections/reviews";
+import {
+  BACKLINE,
+  CONTENEUR_SCENE_ROOTS,
+  LOCAL_24H,
+  MAGASIN,
+  PARKING_EIFFEL,
+} from "../sections/inquiry";
 import {
   deuxMarteaux,
   quinzeVaubans,

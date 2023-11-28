@@ -1,27 +1,23 @@
 export type {
-  Adherent,
-  BaseInquiryRequest,
-  Contractor,
   Draft,
   InReview,
-  Public as PublicGeneral,
-  InquiryWithPotentialRequests,
-  InquiryWithRequests,
   FestivalActivity,
-  Signage,
-  ElectricitySupply,
-  InquiryRequest,
-  TimeWindow,
-  WithInquiries,
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
-  ReviewStatus,
 } from "./festival-activity";
+export { DRAFT } from "./festival-activity";
+
+export type { Adherent, Contractor } from "./sections/in-charge";
+
+// INQUIRY
+export type {
+  BaseInquiryRequest,
+  InquiryWithPotentialRequests,
+  InquiryWithRequests,
+  InquiryRequest,
+  WithInquiries,
+} from "./sections/inquiry";
 export {
-  APPROVED,
-  DRAFT,
-  REVIEWING,
-  NOT_ASKING_TO_REVIEW,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
   PARKING_EIFFEL,
@@ -44,7 +40,16 @@ export {
   BACKLINE,
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
-} from "./festival-activity";
+} from "./sections/inquiry";
+
+export type { Public as PublicGeneral } from "./sections/general";
+export type { Signage } from "./sections/signa";
+export type { ElectricitySupply } from "./sections/supply";
+export type { TimeWindow } from "./sections/time-window";
+
+// REVIEWS
+export type { ReviewStatus } from "./sections/reviews";
+export { APPROVED, REVIEWING, NOT_ASKING_TO_REVIEW } from "./sections/reviews";
 
 // CREATION
 export { CreateFestivalActivity } from "./creation/creation";

@@ -15,15 +15,15 @@ import {
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import {
-  Contractor,
-  ElectricitySupply,
   FestivalActivity,
-  InquiryRequest,
   PreviewFestivalActivity,
-  Signage,
-  TimeWindow,
   isDraft,
 } from "../festival-activity";
+import { InquiryRequest } from "../sections/inquiry";
+import { ElectricitySupply } from "../sections/supply";
+import { Signage } from "../sections/signa";
+import { Contractor } from "../sections/in-charge";
+import { TimeWindow } from "../sections/time-window";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
 

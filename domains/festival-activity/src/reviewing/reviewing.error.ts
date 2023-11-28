@@ -1,4 +1,4 @@
-import { Reviewer } from "../festival-activity";
+import { Reviewer } from "../sections/reviews";
 import { FestivalActivityError } from "../festival-activity.error";
 
 export class InDraft extends FestivalActivityError {

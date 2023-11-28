@@ -3,7 +3,7 @@ import {
   PrepareContractorCreation,
   PrepareContractorUpdate,
 } from "../prepare-festival-activity.model";
-import { Contractor } from "../../festival-activity";
+import { Contractor } from "../../sections/in-charge";
 import { updateItemToList } from "@overbookd/list";
 
 export class Contractors {

@@ -2,7 +2,7 @@ import {
   WithTimeWindows,
   InquiryWithPotentialRequests,
   WithInquiries,
-} from "../../festival-activity";
+} from "../../sections/inquiry";
 
 const REQUIRED_INQUIRY_WITH_TIMEWINDOWS =
   "Au moins une demande de matos est nécessaire pour un créneau matos";

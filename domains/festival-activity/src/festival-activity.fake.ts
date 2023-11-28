@@ -1,13 +1,11 @@
+import { AFFICHE, BACHE, PANNEAU } from "./sections/signa";
 import {
-  AFFICHE,
-  BACHE,
   ElectricitySupply,
   P17_16A_TETRA,
   P17_32A_TETRA,
-  PANNEAU,
   PC16_Prise_classique,
-  Signage,
-} from "./festival-activity";
+} from "./sections/supply";
+import { Signage } from "./sections/signa";
 
 export const noel = {
   id: 1,

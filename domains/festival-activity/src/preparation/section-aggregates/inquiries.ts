@@ -1,9 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  FestivalActivity,
-  InquiryRequest,
-  TimeWindow,
-} from "../../festival-activity";
+import { FestivalActivity } from "../../festival-activity";
+import { InquiryRequest } from "../../sections/inquiry";
+import { TimeWindow } from "../../sections/time-window";
 import { InquiryAlreadyExists } from "../../festival-activity.error";
 import { TimeWindows } from "./time-windows";
 import {
@@ -11,7 +9,7 @@ import {
   LinkInquiryDrive,
   PrepareInquiryRequestCreation,
 } from "../prepare-festival-activity.model";
-import { BARRIERES, ELEC, MATOS } from "../../festival-activity";
+import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
 import { updateItemToList } from "@overbookd/list";
 
 export class AlreadyInitialized extends Error {

@@ -11,7 +11,7 @@ import {
   P17_16A_TETRA,
   P17_32A_TETRA,
   PC16_Prise_classique,
-} from "../festival-activity";
+} from "../sections/supply";
 import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model";
 
 describe("Supply section of festival activity preparation", () => {

@@ -4,11 +4,10 @@ import {
   FestivalActivity,
   IN_REVIEW,
   InReview,
-  NOT_ASKING_TO_REVIEW,
-  Public,
-  REVIEWING,
   isDraft,
 } from "./festival-activity";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "./sections/reviews";
+import { Public } from "./sections/general";
 import {
   saturday11hToSaturday18h,
   friday18hToMonday00h,

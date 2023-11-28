@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CreateFestivalActivity } from "./creation";
 import { DRAFT } from "../festival-activity";
-import { Adherent } from "../festival-activity";
+import { Adherent } from "../sections/in-charge";
 import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.inmemory";
 
 const noel: Adherent = {
