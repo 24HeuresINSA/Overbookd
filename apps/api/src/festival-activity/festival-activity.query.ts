@@ -103,6 +103,17 @@ const SELECT_INQUIRY = {
   },
 };
 
+export const SELECT_DRAFT = {
+  id: true,
+  status: true,
+  ...SELECT_GENERAL,
+  ...SELECT_IN_CHARGE,
+  ...SELECT_SIGNA,
+  ...SELECT_SECURITY,
+  ...SELECT_SUPPLY,
+  ...SELECT_INQUIRY,
+};
+
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
