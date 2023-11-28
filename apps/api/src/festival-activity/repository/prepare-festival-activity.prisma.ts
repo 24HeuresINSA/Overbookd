@@ -14,6 +14,7 @@ import {
   barrieres,
   comcom,
   elec,
+  generatePreview,
   humain,
   matos,
   secu,
@@ -77,7 +78,7 @@ export class PrismaPrepareFestivalActivityRepository
     const activities = await this.prisma.festivalActivity.findMany({
       select: SELECT_PREVIEW_FESTIVAL_ACTIVITY,
     });
-    return activities.map(this.formatPreviewFestivalActivity);
+    return activities.map(generatePreview);
   }
 
   async findById(id: FestivalActivity["id"]): Promise<FestivalActivity> {
@@ -91,23 +92,6 @@ export class PrismaPrepareFestivalActivityRepository
   async save(activity: FestivalActivity): Promise<FestivalActivity> {
     // TODO: save activity in database
     return activity;
-  }
-
-  private formatPreviewFestivalActivity(
-    activity: DatabasePreview,
-  ): PreviewFestivalActivity {
-    const reviews = this.isDraft(activity)
-      ? {}
-      : this.formatReviews(activity.reviews);
-
-    return {
-      id: activity.id,
-      status: activity.status,
-      name: activity.name,
-      team: activity.teamCode,
-      adherent: activity.adherent,
-      ...reviews,
-    } as PreviewFestivalActivity;
   }
 
   private formatFestivalActivity(

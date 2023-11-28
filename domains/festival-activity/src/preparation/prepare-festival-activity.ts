@@ -15,8 +15,12 @@ import {
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import {
+  Draft,
   FestivalActivity,
+  InReview,
+  PreviewDraft,
   PreviewFestivalActivity,
+  PreviewInReview,
   isDraft,
 } from "../festival-activity";
 import { InquiryRequest } from "../sections/inquiry";
@@ -331,4 +335,33 @@ export class PrepareFestivalActivity {
     const updatedFA = prepare.assignInquiryToDrive(link);
     return this.festivalActivities.save(updatedFA);
   }
+}
+
+export function generatePreview<T extends FestivalActivity>(
+  festivalActivity: T,
+): PreviewFestivalActivity {
+  return isDraft(festivalActivity)
+    ? generateDraftPreview(festivalActivity)
+    : generateInReviewPreview(festivalActivity);
+}
+
+function generateInReviewPreview(festivalActivity: InReview): PreviewInReview {
+  return {
+    id: festivalActivity.id,
+    name: festivalActivity.general.name,
+    status: festivalActivity.status,
+    adherent: festivalActivity.inCharge.adherent,
+    team: festivalActivity.inCharge.team,
+    reviews: festivalActivity.reviews,
+  };
+}
+
+function generateDraftPreview(festivalActivity: Draft): PreviewDraft {
+  return {
+    id: festivalActivity.id,
+    name: festivalActivity.general.name,
+    status: festivalActivity.status,
+    adherent: festivalActivity.inCharge.adherent,
+    team: festivalActivity.inCharge.team,
+  };
 }
