@@ -5,7 +5,7 @@ export type {
   CreateFestivalActivityForm,
   PreviewFestivalActivity,
 } from "./festival-activity";
-export { DRAFT } from "./festival-activity";
+export { DRAFT, IN_REVIEW } from "./festival-activity";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 
@@ -58,6 +58,7 @@ export type {
   CreateFestivalActivityRepository,
 } from "./creation/creation";
 export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
+export { defaultDraft } from "./festival-activity.factory";
 
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
