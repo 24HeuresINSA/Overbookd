@@ -74,6 +74,7 @@ export type {
   CreateFestivalActivityRepository,
 } from "./creation/creation";
 export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
+export { defaultDraft } from "./festival-activity.factory";
 
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";

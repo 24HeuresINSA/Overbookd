@@ -2,6 +2,7 @@ import {
   CreateFestivalActivityForm,
   FestivalActivity,
   PreviewFestivalActivity,
+  defaultDraft,
 } from "@overbookd/festival-activity";
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
@@ -12,19 +13,19 @@ const repo = RepoFactory.FestivalActivityRepository;
 
 type State = {
   allActivities: PreviewFestivalActivity[];
-  selectedActivity: FestivalActivity | null;
+  selectedActivity: FestivalActivity;
 };
 
 export const state = (): State => ({
   allActivities: [],
-  selectedActivity: null,
+  selectedActivity: defaultDraft(0, "Fake activity"),
 });
 
 export const mutations = mutationTree(state, {
   SET_ALL_ACTIVITIES(state, activities: PreviewFestivalActivity[]) {
     state.allActivities = activities;
   },
-  SET_SELECTED_ACTIVITY(state, activity: FestivalActivity | null) {
+  SET_SELECTED_ACTIVITY(state, activity: FestivalActivity) {
     state.selectedActivity = activity;
   },
 });

@@ -208,7 +208,7 @@ function defaultInReview(id: number, name: string): InReview {
   };
 }
 
-function defaultDraft(id: number, name: string): Draft {
+export function defaultDraft(id: number, name: string): Draft {
   return {
     id,
     general: {
