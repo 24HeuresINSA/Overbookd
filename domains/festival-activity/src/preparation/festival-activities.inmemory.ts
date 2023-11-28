@@ -4,23 +4,8 @@ import {
   FestivalActivity,
   isDraft,
 } from "../festival-activity";
-import { NOT_ASKING_TO_REVIEW } from "../sections/reviews";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
-import { Reviewer } from "../sections/reviews";
-
-type DraftReview = Record<Reviewer, typeof NOT_ASKING_TO_REVIEW>;
-
-const DRAFT_REVIEWS: DraftReview = {
-  humain: NOT_ASKING_TO_REVIEW,
-  signa: NOT_ASKING_TO_REVIEW,
-  secu: NOT_ASKING_TO_REVIEW,
-  matos: NOT_ASKING_TO_REVIEW,
-  elec: NOT_ASKING_TO_REVIEW,
-  barrieres: NOT_ASKING_TO_REVIEW,
-  comcom: NOT_ASKING_TO_REVIEW,
-};
-
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
 {
@@ -30,8 +15,8 @@ export class InMemoryPrepareFestivalActivityRepository
     return Promise.resolve(
       this.festivalActivities.map((festivalActivity) => {
         const reviews = isDraft(festivalActivity)
-          ? DRAFT_REVIEWS
-          : festivalActivity.reviews;
+          ? {}
+          : { reviews: festivalActivity.reviews };
 
         return {
           id: festivalActivity.id,
@@ -39,8 +24,8 @@ export class InMemoryPrepareFestivalActivityRepository
           status: festivalActivity.status,
           adherent: festivalActivity.inCharge.adherent,
           team: festivalActivity.inCharge.team,
-          reviews,
-        };
+          ...reviews,
+        } as PreviewFestivalActivity;
       }),
     );
   }
