@@ -3,12 +3,9 @@ import { InquiryOwner } from "../sections/inquiry";
 import {
   ElectricityConnection,
   ElectricitySupply,
-  Supply
+  Supply,
 } from "../sections/supply";
-import {
-  Signage,
-  SignageType
-} from "../sections/signa";
+import { Signage, SignageType } from "../sections/signa";
 import { InquiryRequest } from "../sections/inquiry";
 import { Adherent, Contractor } from "../sections/in-charge";
 

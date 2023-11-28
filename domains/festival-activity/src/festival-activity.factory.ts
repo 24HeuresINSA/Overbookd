@@ -6,10 +6,7 @@ import {
   InReview,
   isDraft,
 } from "./festival-activity";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING
-} from "./sections/reviews";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "./sections/reviews";
 import { Public } from "./sections/general";
 import {
   saturday11hToSaturday18h,

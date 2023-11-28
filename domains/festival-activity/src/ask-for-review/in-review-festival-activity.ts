@@ -1,12 +1,5 @@
-import {
-  FestivalActivity,
-  IN_REVIEW,
-  InReview,
-} from "../festival-activity";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING
-} from "../sections/reviews";
+import { FestivalActivity, IN_REVIEW, InReview } from "../festival-activity";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
@@ -27,7 +20,7 @@ import {
   barrieres,
   comcom,
   PrivateActivityReviewer,
-  PublicActivityReviewer
+  PublicActivityReviewer,
 } from "../sections/reviews";
 import { Draft } from "../festival-activity";
 

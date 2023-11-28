@@ -1,7 +1,7 @@
 import {
   WithTimeWindows,
   InquiryWithPotentialRequests,
-  WithInquiries
+  WithInquiries,
 } from "../../sections/inquiry";
 
 const REQUIRED_INQUIRY_WITH_TIMEWINDOWS =

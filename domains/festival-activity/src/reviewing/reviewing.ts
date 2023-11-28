@@ -1,8 +1,4 @@
-import {
-  FestivalActivity,
-  InReview,
-  isDraft,
-} from "../festival-activity";
+import { FestivalActivity, InReview, isDraft } from "../festival-activity";
 import { APPROVED, NOT_ASKING_TO_REVIEW, Reviewer } from "../sections/reviews";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";

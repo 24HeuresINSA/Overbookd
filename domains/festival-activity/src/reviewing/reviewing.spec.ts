@@ -8,14 +8,14 @@ import {
   humain,
   matos,
   secu,
-  signa
+  signa,
 } from "../sections/reviews";
 import {
   BACKLINE,
   CONTENEUR_SCENE_ROOTS,
   LOCAL_24H,
   MAGASIN,
-  PARKING_EIFFEL
+  PARKING_EIFFEL,
 } from "../sections/inquiry";
 import {
   deuxMarteaux,

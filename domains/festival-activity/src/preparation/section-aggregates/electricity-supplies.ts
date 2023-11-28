@@ -8,7 +8,7 @@ import {
 } from "../prepare-festival-activity.model";
 import {
   ElectricityConnection,
-  ElectricitySupply
+  ElectricitySupply,
 } from "../../sections/supply";
 import { updateItemToList } from "@overbookd/list";
 import { SlugifyService } from "@overbookd/slugify";

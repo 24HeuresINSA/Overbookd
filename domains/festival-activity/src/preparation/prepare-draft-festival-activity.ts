@@ -1,16 +1,10 @@
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  Draft,
-  FestivalActivity,
-} from "../festival-activity";
+import { Draft, FestivalActivity } from "../festival-activity";
 import { InquiryRequest } from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
-import {
-  Adherent,
-  Contractor
-} from "../sections/in-charge";
+import { Adherent, Contractor } from "../sections/in-charge";
 import { TimeWindow } from "../sections/time-window";
 import {
   PrepareGeneralUpdate,

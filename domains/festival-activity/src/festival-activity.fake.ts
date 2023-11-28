@@ -1,12 +1,9 @@
-import {
-  AFFICHE,
-  BACHE,
-  PANNEAU
-} from "./sections/signa";
+import { AFFICHE, BACHE, PANNEAU } from "./sections/signa";
 import {
   ElectricitySupply,
   P17_16A_TETRA,
-  P17_32A_TETRA, PC16_Prise_classique
+  P17_32A_TETRA,
+  PC16_Prise_classique,
 } from "./sections/supply";
 import { Signage } from "./sections/signa";
 
