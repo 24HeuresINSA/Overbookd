@@ -2,12 +2,14 @@ import { updateItemToList } from "@overbookd/list";
 import {
   PreviewFestivalActivity,
   FestivalActivity,
+  Draft,
+  InReview,
+  PreviewDraft,
+  PreviewInReview,
+  isDraft,
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
-import {
-  PrepareFestivalActivityRepository,
-  generatePreview,
-} from "./prepare-festival-activity";
+import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
 
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
@@ -41,4 +43,33 @@ export class InMemoryPrepareFestivalActivityRepository
     );
     return Promise.resolve(activity);
   }
+}
+
+function generatePreview<T extends FestivalActivity>(
+  festivalActivity: T,
+): PreviewFestivalActivity {
+  return isDraft(festivalActivity)
+    ? generateDraftPreview(festivalActivity)
+    : generateInReviewPreview(festivalActivity);
+}
+
+function generateInReviewPreview(festivalActivity: InReview): PreviewInReview {
+  return {
+    id: festivalActivity.id,
+    name: festivalActivity.general.name,
+    status: festivalActivity.status,
+    adherent: festivalActivity.inCharge.adherent,
+    team: festivalActivity.inCharge.team,
+    reviews: festivalActivity.reviews,
+  };
+}
+
+function generateDraftPreview(festivalActivity: Draft): PreviewDraft {
+  return {
+    id: festivalActivity.id,
+    name: festivalActivity.general.name,
+    status: festivalActivity.status,
+    adherent: festivalActivity.inCharge.adherent,
+    team: festivalActivity.inCharge.team,
+  };
 }

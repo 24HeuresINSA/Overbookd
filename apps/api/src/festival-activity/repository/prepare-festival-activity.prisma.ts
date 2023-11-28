@@ -3,18 +3,20 @@ import {
   DRAFT,
   ELEC,
   FestivalActivity,
+  IN_REVIEW,
   InReview,
   InquiryRequest,
   MATOS,
   NOT_ASKING_TO_REVIEW,
   PrepareFestivalActivityRepository,
+  PreviewDraft,
   PreviewFestivalActivity,
+  PreviewInReview,
   ReviewStatus,
   Reviewer,
   barrieres,
   comcom,
   elec,
-  generatePreview,
   humain,
   matos,
   secu,
@@ -78,7 +80,7 @@ export class PrismaPrepareFestivalActivityRepository
     const activities = await this.prisma.festivalActivity.findMany({
       select: SELECT_PREVIEW_FESTIVAL_ACTIVITY,
     });
-    return activities.map(generatePreview);
+    return activities.map(this.generatePreview);
   }
 
   async findById(id: FestivalActivity["id"]): Promise<FestivalActivity> {
@@ -184,6 +186,35 @@ export class PrismaPrepareFestivalActivityRepository
       slug: request.slug,
       name: request.catalogItem.name,
       quantity: request.quantity,
+    };
+  }
+
+  private generatePreview<T extends DatabasePreview>(
+    festivalActivity: T,
+  ): PreviewFestivalActivity {
+    return this.isDraft(festivalActivity)
+      ? this.generateDraftPreview(festivalActivity)
+      : this.generateInReviewPreview(festivalActivity);
+  }
+
+  private generateInReviewPreview(activity: DatabasePreview): PreviewInReview {
+    return {
+      id: activity.id,
+      name: activity.name,
+      status: IN_REVIEW,
+      adherent: activity.adherent,
+      team: activity.teamCode,
+      reviews: this.formatReviews(activity.reviews),
+    };
+  }
+
+  private generateDraftPreview(activity: DatabasePreview): PreviewDraft {
+    return {
+      id: activity.id,
+      name: activity.name,
+      status: DRAFT,
+      adherent: activity.adherent,
+      team: activity.teamCode,
     };
   }
 

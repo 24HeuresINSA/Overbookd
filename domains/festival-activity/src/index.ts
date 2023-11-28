@@ -76,10 +76,7 @@ export type {
 export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
 
 // PREPARATION
-export {
-  PrepareFestivalActivity,
-  generatePreview,
-} from "./preparation/prepare-festival-activity";
+export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
 export type { PrepareFestivalActivityRepository } from "./preparation/prepare-festival-activity";
 export type {
   PrepareGeneralUpdate,
