@@ -10,6 +10,7 @@ import {
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
+
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
 {
