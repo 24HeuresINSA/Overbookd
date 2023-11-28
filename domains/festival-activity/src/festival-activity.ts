@@ -37,14 +37,24 @@ export type InReview = {
 
 export type FestivalActivity = Draft | InReview;
 
-export type PreviewFestivalActivity = {
-  id: FestivalActivity["id"];
-  name: FestivalActivity["general"]["name"];
-  status: FestivalActivity["status"];
-  adherent: FestivalActivity["inCharge"]["adherent"];
-  team: FestivalActivity["inCharge"]["team"];
-  reviews: Reviews;
+export type PreviewInReview = {
+  id: InReview["id"];
+  name: InReview["general"]["name"];
+  status: InReview["status"];
+  adherent: InReview["inCharge"]["adherent"];
+  team: InReview["inCharge"]["team"];
+  reviews: InReview["reviews"];
 };
+
+export type PreviewDraft = {
+  id: Draft["id"];
+  name: Draft["general"]["name"];
+  status: Draft["status"];
+  adherent: Draft["inCharge"]["adherent"];
+  team: Draft["inCharge"]["team"];
+};
+
+export type PreviewFestivalActivity = PreviewInReview | PreviewDraft;
 
 export type CreateFestivalActivityForm = {
   name: string;
