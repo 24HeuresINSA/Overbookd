@@ -68,7 +68,7 @@ import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.v
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { isTaskValidatedBy } from "~/utils/festival-event/ft.utils";
 import {
-  SortableTimeWindowHeader,
+  SortableFtTimeWindowHeader,
   ftTimeWindowsSorts,
 } from "~/utils/functions/time-window";
 import {
@@ -144,7 +144,7 @@ export default Vue.extend({
     },
     sortTimeWindows(
       timeWindows: FtTimeWindow[],
-      sortsBy: SortableTimeWindowHeader[],
+      sortsBy: SortableFtTimeWindowHeader[],
       sortsDesc: boolean[],
     ) {
       const sortBy = sortsBy.at(0) ?? "startDate";

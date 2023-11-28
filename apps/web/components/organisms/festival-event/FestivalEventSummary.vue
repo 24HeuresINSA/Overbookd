@@ -37,7 +37,7 @@ export default Vue.extend({
   data: () => ({
     faItems: [
       { id: "general", text: "Général", icon: "mdi-card-text" },
-      { id: "detail", text: "Détail", icon: "mdi-text-box" },
+      { id: "in-charge", text: "Responsable", icon: "mdi-account-group" },
       { id: "signa", text: "Signa", icon: "mdi-routes" },
       { id: "timewindow", text: "Créneaux", icon: "mdi-calendar-clock" },
       { id: "security", text: "Sécurité", icon: "mdi-shield" },
