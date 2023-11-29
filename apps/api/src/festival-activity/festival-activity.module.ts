@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
 import { FestivalActivityController } from "./festival-activity.controller";
 import { FestivalActivityService } from "./festival-activity.service";
-import { PrismaAdherentRepository } from "./repository/adherent-repository.prisma";
+import { PrismaAdherent } from "./repository/adherent-repository.prisma";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import {
   CreateFestivalActivity,
   PrepareFestivalActivity,
 } from "@overbookd/festival-activity";
-import { PrismaPrepareFestivalActivityRepository } from "./repository/prepare-festival-activity.prisma";
+import { PrismaPrepareFestivalActivity } from "./repository/prepare-festival-activity.prisma";
 import { PrismaCreateFestivalActivity } from "./repository/create-festival-activity.prisma";
-import { PrismaLocationRepository } from "./repository/location-repository.prisma";
+import { PrismaLocation } from "./repository/location-repository.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -22,21 +22,21 @@ import { PrismaLocationRepository } from "./repository/location-repository.prism
       inject: [PrismaService],
     },
     {
-      provide: PrismaPrepareFestivalActivityRepository,
+      provide: PrismaPrepareFestivalActivity,
       useFactory: (prisma: PrismaService) =>
-        new PrismaPrepareFestivalActivityRepository(prisma),
+        new PrismaPrepareFestivalActivity(prisma),
       inject: [PrismaService],
     },
     {
-      provide: PrismaAdherentRepository,
+      provide: PrismaAdherent,
       useFactory: (prisma: PrismaService) =>
-        new PrismaAdherentRepository(prisma),
+        new PrismaAdherent(prisma),
       inject: [PrismaService],
     },
     {
-      provide: PrismaLocationRepository,
+      provide: PrismaLocation,
       useFactory: (prisma: PrismaService) =>
-        new PrismaLocationRepository(prisma),
+        new PrismaLocation(prisma),
       inject: [PrismaService],
     },
     {
@@ -55,20 +55,21 @@ import { PrismaLocationRepository } from "./repository/location-repository.prism
     {
       provide: PrepareFestivalActivity,
       useFactory: (
-        festivalActivities: PrismaPrepareFestivalActivityRepository,
+        festivalActivities: PrismaPrepareFestivalActivity,
       ) => new PrepareFestivalActivity(festivalActivities),
-      inject: [PrismaPrepareFestivalActivityRepository],
+      inject: [PrismaPrepareFestivalActivity],
     },
     {
       provide: FestivalActivityService,
       useFactory: (
-        adherents: PrismaAdherentRepository,
-        locations: PrismaLocationRepository,
+        adherents: PrismaAdherent,
+        locations: PrismaLocation,
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
       ) => new FestivalActivityService(adherents, locations, create, prepare),
       inject: [
-        PrismaAdherentRepository,
+        PrismaAdherent,
+        PrismaLocation,
         CreateFestivalActivity,
         PrepareFestivalActivity,
       ],

@@ -30,7 +30,7 @@ export class PrismaCreateFestivalActivity
         contractors: {
           create: activity.inCharge.contractors,
         },
-        location: activity.signa.location,
+        locationId: activity.signa.location.id,
         signages: {
           create: activity.signa.signages,
         },
