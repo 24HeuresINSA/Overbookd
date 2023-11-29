@@ -1,12 +1,6 @@
 import { PrismaService } from "../../prisma.service";
 import { Adherents } from "../festival-activity.service";
-
-const SELECT_ADHERENT = {
-  id: true,
-  firstname: true,
-  lastname: true,
-  nickname: true,
-};
+import { SELECT_ADHERENT } from "./adherent.query";
 
 export class PrismaAdherentRepository implements Adherents {
   constructor(private readonly prisma: PrismaService) {}

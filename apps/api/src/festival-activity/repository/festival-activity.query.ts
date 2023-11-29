@@ -1,15 +1,8 @@
+import { SELECT_ADHERENT } from "./adherent.query";
+
 const SELECT_REVIEW = {
   team: true,
   status: true,
-};
-
-export const SELECT_PREVIEW_FESTIVAL_ACTIVITY = {
-  id: true,
-  status: true,
-  name: true,
-  teamCode: true,
-  adherent: true,
-  reviews: { select: SELECT_REVIEW },
 };
 
 const SELECT_TIME_WINDOW = {
@@ -31,12 +24,7 @@ const SELECT_GENERAL = {
 const SELECT_IN_CHARGE = {
   teamCode: true,
   adherent: {
-    select: {
-      id: true,
-      firstname: true,
-      lastname: true,
-      nickname: true,
-    },
+    select: SELECT_ADHERENT,
   },
   contractors: {
     select: {

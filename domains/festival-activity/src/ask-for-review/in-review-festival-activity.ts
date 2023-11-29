@@ -3,7 +3,7 @@ import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
-  PublicDraftGeneral,
+  PublicGeneral,
 } from "./specifications/general-section-specification";
 import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification";
 import { ActivitySignaSpecification } from "./specifications/signa-section-specification";
@@ -22,7 +22,6 @@ import {
   PrivateActivityReviewer,
   PublicActivityReviewer,
 } from "../sections/reviews";
-import { Draft } from "../festival-activity";
 
 type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
@@ -47,10 +46,13 @@ const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
   barrieres: REVIEWING,
 };
 
-class ReadyForReview {
+export type FestivalActivityWithoutStatus = Omit<FestivalActivity, "status">;
+export type InReviewWithoutStatus = Omit<InReview, "status">;
+
+export class InReviewSpecification {
   static isSatisfiedBy(
-    festivalActivity: FestivalActivity,
-  ): festivalActivity is InReview {
+    festivalActivity: FestivalActivityWithoutStatus,
+  ): festivalActivity is InReviewWithoutStatus {
     return this.errors(festivalActivity).length === 0;
   }
 
@@ -60,7 +62,9 @@ class ReadyForReview {
     return new ReadyForReviewException(this.errors(festivalActivity));
   }
 
-  private static errors(festivalActivity: FestivalActivity): string[] {
+  private static errors(
+    festivalActivity: FestivalActivityWithoutStatus,
+  ): string[] {
     const general = isPublicActivity(festivalActivity.general)
       ? PublicActivityGeneralSpecification.errors(festivalActivity.general)
       : ActivityGeneralSpecification.errors(festivalActivity.general);
@@ -95,24 +99,24 @@ export class InReviewFestivalActivity implements InReview {
     return IN_REVIEW;
   }
 
-  static init(draft: FestivalActivity): InReviewFestivalActivity {
-    if (!ReadyForReview.isSatisfiedBy(draft)) {
-      throw ReadyForReview.generateError(draft);
+  static init(activity: FestivalActivity): InReviewFestivalActivity {
+    if (!InReviewSpecification.isSatisfiedBy(activity)) {
+      throw InReviewSpecification.generateError(activity);
     }
 
-    const isPublic = draft.general.toPublish;
+    const isPublic = activity.general.toPublish;
     const reviews = isPublic
       ? PUBLIC_ACTIVITY_REVIEWS
       : PRIVATE_ACTIVITY_REVIEWS;
 
     return new InReviewFestivalActivity(
-      draft.id,
-      draft.general,
-      draft.inCharge,
-      draft.signa,
-      draft.security,
-      draft.supply,
-      draft.inquiry,
+      activity.id,
+      activity.general,
+      activity.inCharge,
+      activity.signa,
+      activity.security,
+      activity.supply,
+      activity.inquiry,
       reviews,
     );
   }
@@ -132,7 +136,7 @@ export class InReviewFestivalActivity implements InReview {
 }
 
 function isPublicActivity(
-  general: Draft["general"],
-): general is PublicDraftGeneral {
+  general: FestivalActivity["general"],
+): general is PublicGeneral {
   return general.toPublish;
 }

@@ -87,3 +87,8 @@ export type {
 
 //ASK FOR REVIEW
 export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
+export type {
+  FestivalActivityWithoutStatus,
+  InReviewWithoutStatus,
+} from "./ask-for-review/in-review-festival-activity";
+export { InReviewSpecification } from "./ask-for-review/in-review-festival-activity";
