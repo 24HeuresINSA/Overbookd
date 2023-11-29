@@ -4,8 +4,10 @@
 
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter
-      <a href="mailto:humain@24heures.org">humain@24heures.org</a>. Tu peux
-      aussi t'aider en allant voir les FA d'avant sur
+      <a href="mailto:humain@24heures.org">humain@24heures.org</a> ou
+      <a href="mailto:comcom@24heures.org">comcom@24heures.org</a> si ton
+      activité est à publier. Tu peux aussi t'aider en allant voir les FA de
+      l'année dernière sur
       <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a> en te
       connectant avec jeuneetcon@24heures.org.
     </v-card-subtitle>
@@ -27,6 +29,7 @@
       <h2>Créneau de l'animation</h2>
       <FaTimeWindowTable
         :time-windows="general.timeWindows"
+        @add="addTimeWindow($event)"
         @update="updateTimeWindow($event)"
         @delete="deleteTimeWindow($event)"
       />
@@ -68,6 +71,7 @@ import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
 import { activityCategories } from "~/utils/models/festival-activity.model";
+import { IProvidePeriod } from "@overbookd/period";
 
 export default defineComponent({
   name: "FaGeneralCard",
@@ -80,7 +84,7 @@ export default defineComponent({
       return this.mFA.general;
     },
     categories(): string[] {
-      return Object.values(activityCategories);
+      return activityCategories;
     },
   },
   methods: {
@@ -107,6 +111,10 @@ export default defineComponent({
     updateIsFlagship(isFlagship: boolean) {
       console.log("update isFlagship", isFlagship);
       // TODO: update isFlagship
+    },
+    addTimeWindow(period: IProvidePeriod) {
+      console.log("add timeWindow", period);
+      // TODO: add timeWindow
     },
     updateTimeWindow(timeWindow: TimeWindow) {
       console.log("update timeWindow", timeWindow);

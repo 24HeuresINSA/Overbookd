@@ -1,11 +1,16 @@
+import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { ftStatuses } from "../ft/ft.model";
 
-const SELECT_USER = {
-  email: true,
+export const SELECT_BASE_USER = {
+  id: true,
   firstname: true,
   lastname: true,
   nickname: true,
-  id: true,
+};
+
+const SELECT_USER = {
+  ...SELECT_BASE_USER,
+  email: true,
   birthdate: true,
   phone: true,
   comment: true,
@@ -115,6 +120,18 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
               category: true,
             },
           },
+        },
+      },
+    },
+  },
+};
+
+export const WHERE_HAVE_PERSONAL_ACCOUNT = {
+  teams: {
+    some: {
+      team: {
+        permissions: {
+          some: { permission: { name: HAVE_PERSONAL_ACCOUNT } },
         },
       },
     },

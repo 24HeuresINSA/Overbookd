@@ -59,7 +59,7 @@ import {
   VolunteerAssignmentStatResponseDto,
 } from "./dto/volunteer-assignment-stat.response.dto";
 import { ProfilePictureService } from "./profile-picture.service";
-import { MyUserInformation, UserPersonalData } from "@overbookd/user";
+import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";
 import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.dto";
 import { MyUserInformationResponseDto } from "./dto/my-user-information.response.dto";
@@ -78,6 +78,7 @@ import { UpdateProfileRequestDto } from "./dto/update-profile.request.dto";
 import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
+import { BaseUserResponseDto } from "./dto/base-user.response.dto";
 
 @ApiTags("users")
 @Controller("users")
@@ -133,6 +134,26 @@ export class UserController {
   })
   getVolunteers(): Promise<UserPersonalData[]> {
     return this.userService.getVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(VIEW_VOLUNTEER)
+  @ApiUnauthorizedResponse({
+    description: "User dont have the right to access this route",
+  })
+  @ApiForbiddenResponse({
+    description: "User can't access this resource",
+  })
+  @Get("/adherents")
+  @ApiResponse({
+    status: 200,
+    description: "Get all adherents",
+    type: BaseUserResponseDto,
+    isArray: true,
+  })
+  getAdherents(): Promise<User[]> {
+    return this.userService.getAdherents();
   }
 
   @UseGuards(JwtAuthGuard)

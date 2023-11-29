@@ -20,9 +20,9 @@
 
       <SearchUser
         :user="inCharge.adherent"
-        label="Adherent"
+        label="Adhérent"
         :boxed="false"
-        :list="volunteers"
+        :list="adherents"
         @change="updateAdherent($event)"
       />
     </v-card-text>
@@ -34,7 +34,7 @@ import { defineComponent } from "vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import { FestivalActivity } from "@overbookd/festival-activity";
-import { User, UserPersonalData } from "@overbookd/user";
+import { User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
 export default defineComponent({
@@ -52,13 +52,13 @@ export default defineComponent({
         ? this.$accessor.team.getTeamByCode(this.inCharge.team)
         : null;
     },
-    volunteers(): UserPersonalData[] {
-      return this.$accessor.user.volunteers;
+    adherents(): User[] {
+      return this.$accessor.user.adherents;
     },
   },
   async mounted() {
-    if (this.volunteers.length === 0) {
-      await this.$accessor.user.fetchVolunteers();
+    if (this.adherents.length === 0) {
+      await this.$accessor.user.fetchAdherents();
     }
   },
   methods: {

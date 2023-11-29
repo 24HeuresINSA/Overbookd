@@ -68,10 +68,11 @@ export default defineComponent({
   async mounted() {
     await this.$accessor.festivalActivity.fetchActivity(this.faId);
     if (this.mFA.id !== this.faId) {
-      alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
+      this.$accessor.notif.pushNotification({
+        message: "Oups 😬 J'ai l'impression que cette FA n'existe pas...",
+      });
       this.$router.push({ path: "/fa" });
     }
-
     document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
   },
 });

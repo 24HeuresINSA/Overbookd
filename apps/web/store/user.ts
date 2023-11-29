@@ -32,6 +32,7 @@ export const state = () => ({
   selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
   personalAccountConsumers: [] as Consumer[],
   volunteers: [] as (UserPersonalData | UserPersonalDataWithProfilePicture)[],
+  adherents: [] as User[],
   friends: [] as User[],
   mFriends: [] as User[],
 });
@@ -114,6 +115,9 @@ export const mutations = mutationTree(state, {
       (volunteer) => volunteer.id !== id,
     );
   },
+  SET_ADHERENTS(state: UserState, adherents: User[]) {
+    state.adherents = adherents;
+  },
 });
 
 export const getters = getterTree(state, {
@@ -162,6 +166,11 @@ export const actions = actionTree(
       if (!res) return;
       const volunteers = res.data.map(castUserWithDate);
       commit("SET_VOLUNTEERS", volunteers);
+    },
+    async fetchAdherents({ commit }) {
+      const res = await safeCall(this, userRepo.getAdherents(this));
+      if (!res) return;
+      commit("SET_ADHERENTS", res.data);
     },
     async fetchFriends({ commit }) {
       const res = await safeCall(this, userRepo.getFriends(this));
