@@ -1,5 +1,6 @@
 import {
   DRAFT,
+  ElectricitySupply,
   FestivalActivity,
   IN_REVIEW,
 } from "@overbookd/festival-activity";
@@ -24,3 +25,5 @@ export const activityCategories = [
   "Enfant",
   "Autre",
 ];
+
+export type NewElectricitySupply = Omit<ElectricitySupply, "id">;
