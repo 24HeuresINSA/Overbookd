@@ -11,6 +11,11 @@ import {
   justDance,
   pcSecurite,
   qgOrga,
+  validatedByAllInquiryOwners,
+  validatedByBarrieres,
+  validatedByElec,
+  validatedByMatos,
+  validatedByMatosAndBarrieres,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
@@ -25,6 +30,14 @@ import {
 import { elec, matos } from "../sections/reviews";
 import { WithInquiries } from "../sections/inquiry";
 import { AssignDriveInDraftActivity } from "./prepare-draft-festival-activity";
+import {
+  cinqGuirlandeLED,
+  quatreHeras,
+  saturday14hToSaturday18h,
+  sunday14hToSunday18h,
+  troisTables,
+} from "../festival-activity.fake";
+import { PrepareError } from "./prepare-in-review-festival-activity";
 
 const branleCanisse = {
   slug: "branle-canisse",
@@ -55,6 +68,11 @@ describe("Inquiry section of festival activity preparation", () => {
       justDance,
       baladeEnPoney,
       qgOrga,
+      validatedByElec,
+      validatedByBarrieres,
+      validatedByMatos,
+      validatedByMatosAndBarrieres,
+      validatedByAllInquiryOwners,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -384,4 +402,113 @@ describe("Inquiry section of festival activity preparation", () => {
       ).rejects.toThrow(AssignDriveInDraftActivity);
     });
   });
+
+  describe.each`
+    activityName                                 | activityId                         | approvedBy                  | gearsAvailable | barriersAvailable | elecAvailable
+    ${validatedByElec.general.name}              | ${validatedByElec.id}              | ${[elec]}                   | ${true}        | ${true}           | ${false}
+    ${validatedByBarrieres.general.name}         | ${validatedByBarrieres.id}         | ${[barrieres]}              | ${true}        | ${false}          | ${true}
+    ${validatedByMatos.general.name}             | ${validatedByMatos.id}             | ${[matos]}                  | ${false}       | ${true}           | ${true}
+    ${validatedByMatosAndBarrieres.general.name} | ${validatedByMatosAndBarrieres.id} | ${[matos, barrieres]}       | ${false}       | ${false}          | ${true}
+    ${validatedByAllInquiryOwners.general.name}  | ${validatedByAllInquiryOwners.id}  | ${[matos, barrieres, elec]} | ${false}       | ${false}          | ${false}
+  `(
+    "when $activityName is already approved by $approvedBy",
+    ({ activityId, gearsAvailable, barriersAvailable, elecAvailable }) => {
+      describe("when trying to add a time window", () => {
+        it("should indicate that time window inquiry section is lock", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.addTimeWindowInInquiry(
+                activityId,
+                saturday14hToSaturday18h,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to remove a time window", () => {
+        it("should indicate that time window inquiry section is lock", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.removeTimeWindowFromInquiry(
+                activityId,
+                sunday14hToSunday18h.id,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to add it first request with time window", () => {
+        it("should indicate that inquiry section is lock", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.initInquiry(activityId, {
+                timeWindow: saturday14hToSaturday18h,
+                request: { ...troisTables, owner: matos },
+              }),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to add a gear inquiry request", () => {
+        if (gearsAvailable) {
+          it("should add it to the current requests", async () => {
+            const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
+              activityId,
+              { ...troisTables, owner: matos },
+            );
+            expect(inquiry.gears).toContainEqual(troisTables);
+          });
+        } else {
+          it("should indicate that gears inquiry requests section is lock", async () => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.addInquiryRequest(activityId, {
+                  ...troisTables,
+                  owner: matos,
+                }),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        }
+      });
+      describe("when trying to add a barrier inquiry request", () => {
+        if (barriersAvailable) {
+          it("should add it to the current requests", async () => {
+            const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
+              activityId,
+              { ...quatreHeras, owner: barrieres },
+            );
+            expect(inquiry.barriers).toContainEqual(quatreHeras);
+          });
+        } else {
+          it("should indicate that barriers inquiry requests section is lock", async () => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.addInquiryRequest(activityId, {
+                  ...quatreHeras,
+                  owner: barrieres,
+                }),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        }
+      });
+      describe("when trying to add an electricity inquiry request", () => {
+        if (elecAvailable) {
+          it("should add it to the current requests", async () => {
+            const { inquiry } = await prepareFestivalActivity.addInquiryRequest(
+              activityId,
+              { ...cinqGuirlandeLED, owner: elec },
+            );
+            expect(inquiry.electricity).toContainEqual(cinqGuirlandeLED);
+          });
+        } else {
+          it("should indicate that electricty inquiry requests section is lock", async () => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.addInquiryRequest(activityId, {
+                  ...cinqGuirlandeLED,
+                  owner: elec,
+                }),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        }
+      });
+    },
+  );
 });

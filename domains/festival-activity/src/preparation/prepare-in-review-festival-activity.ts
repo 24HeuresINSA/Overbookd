@@ -10,13 +10,15 @@ import {
   REVIEWING,
   Reviewer,
   Reviews,
+  barrieres,
   comcom,
   elec,
   humain,
+  matos,
   secu,
   signa,
 } from "../sections/reviews";
-import { InquiryRequest } from "../sections/inquiry";
+import { InquiryOwner, InquiryRequest } from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";
@@ -55,8 +57,11 @@ class NeedAtLeastOneTimeWindow extends FestivalActivityError {
 }
 
 class AlreadyApprovedBy extends FestivalActivityError {
-  constructor(reviewer: Reviewer) {
-    super(`La FA a déjà été validée par l'équipe ${reviewer}.`);
+  constructor(reviewers: Reviewer[]) {
+    const plural = reviewers.length > 1;
+    const noun = plural ? "les équipes" : "l'équipe";
+    const reviewerListing = reviewers.join(" et ");
+    super(`La FA a déjà été validée par ${noun} ${reviewerListing}.`);
   }
 }
 
@@ -147,6 +152,11 @@ class General {
   }
 }
 
+type ApproveReducer = {
+  approved: boolean;
+  teams: InquiryOwner[];
+};
+
 export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   private constructor(private readonly activity: InReview) {}
 
@@ -180,7 +190,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     ).isAlreadyValidatedBy(this.activity.reviews);
 
     if (validated) {
-      throw new AlreadyApprovedBy(reviewer);
+      throw new AlreadyApprovedBy([reviewer]);
     }
   }
 
@@ -208,7 +218,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   private checkIfInChargeAlreadyValidated() {
     const isValidated = this.activity.reviews.humain === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy(humain);
+      throw new AlreadyApprovedBy([humain]);
     }
   }
 
@@ -252,7 +262,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   private checkIfSignaAlreadyValidated() {
     const isValidated = this.activity.reviews.signa === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy(signa);
+      throw new AlreadyApprovedBy([signa]);
     }
   }
 
@@ -291,7 +301,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   private checkIfSecurityAlreadyValidated() {
     const isValidated = this.activity.reviews.secu === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy(secu);
+      throw new AlreadyApprovedBy([secu]);
     }
   }
 
@@ -304,7 +314,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   private checkIfSupplyAlreadyValidated() {
     const isValidated = this.activity.reviews.elec === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy(elec);
+      throw new AlreadyApprovedBy([elec]);
     }
   }
 
@@ -343,6 +353,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   initInquiry({ request, timeWindow }: InitInquiry): InReview {
+    this.checkIfInquiryAlreadyValidatedBy();
     if (Inquiries.alreadyInitialized(this.activity.inquiry)) {
       throw new AlreadyInitialized();
     }
@@ -354,6 +365,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   addInquiryTimeWindow(period: IProvidePeriod): InReview {
+    this.checkIfInquiryAlreadyValidatedBy();
     this.checkIfAlreadyInitialized();
 
     const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
@@ -363,7 +375,51 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inquiry };
   }
 
+  private checkIfInquiryAlreadyValidatedBy(owner?: InquiryOwner) {
+    const { approved, teams } = this.isInquiryApprovedBy(owner);
+    if (approved) {
+      throw new AlreadyApprovedBy(teams);
+    }
+  }
+
+  private isInquiryApprovedBy(owner: InquiryOwner | undefined): ApproveReducer {
+    const hasElecApproved: ApproveReducer = {
+      approved: this.activity.reviews.elec === APPROVED,
+      teams: [elec],
+    };
+    const hasMatosApproved: ApproveReducer = {
+      approved: this.activity.reviews.matos === APPROVED,
+      teams: [matos],
+    };
+    const hasBarrierersApproved: ApproveReducer = {
+      approved: this.activity.reviews.barrieres === APPROVED,
+      teams: [barrieres],
+    };
+    const reviews = [hasBarrierersApproved, hasElecApproved, hasMatosApproved];
+    switch (owner) {
+      case undefined:
+        return reviews.reduce(
+          (acc, approval) => {
+            return {
+              approved: acc.approved || approval.approved,
+              teams: approval.approved
+                ? [...acc.teams, ...approval.teams]
+                : acc.teams,
+            };
+          },
+          { approved: false, teams: [] },
+        );
+      case matos:
+        return hasMatosApproved;
+      case elec:
+        return hasElecApproved;
+      case barrieres:
+        return hasBarrierersApproved;
+    }
+  }
+
   removeInquiryTimeWindow(id: string): InReview {
+    this.checkIfInquiryAlreadyValidatedBy();
     const inquiry = Inquiries.build(this.activity.inquiry).removeTimeWindow(
       id,
     ).inquiry;
@@ -380,6 +436,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
   }
 
   addInquiry(request: PrepareInquiryRequestCreation): InReview {
+    this.checkIfInquiryAlreadyValidatedBy(request.owner);
     this.checkIfAlreadyInitialized();
     const inquiry = Inquiries.build(this.activity.inquiry).addRequest(
       request,

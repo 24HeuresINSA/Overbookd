@@ -179,8 +179,10 @@ export const uneNintendoSwitch = {
   name: "Nintendo Switch",
   quantity: 1,
 };
-export const quinzeVaubans = { slug: "vauban", name: "Vauban", quantity: 30 };
+export const quinzeVaubans = { slug: "vauban", name: "Vauban", quantity: 15 };
+export const quatreHeras = { slug: "heras", name: "Heras", quantity: 4 };
 export const deuxMarteaux = { slug: "marteau", name: "Marteau", quantity: 2 };
+export const troisTables = { slug: "table", name: "Table", quantity: 3 };
 export const unePriseMurale = {
   slug: "prise-murale",
   name: "Prise murale",
@@ -200,6 +202,11 @@ export const uneMultiprise = {
   slug: "multiprise",
   name: "Multiprise",
   quantity: 1,
+};
+export const cinqGuirlandeLED = {
+  slug: "guirlande-led",
+  name: "Guirlande LED",
+  quantity: 5,
 };
 
 export const lafarge: Contractor = {

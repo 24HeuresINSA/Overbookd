@@ -1,6 +1,10 @@
 import { InReview } from "../festival-activity";
 import { getFactory } from "../festival-activity.factory";
-import { friday18hToMonday00h, lafarge } from "../festival-activity.fake";
+import {
+  friday18hToMonday00h,
+  lafarge,
+  uneBouilloire,
+} from "../festival-activity.fake";
 import {
   friday12hToFriday14h,
   noel,
@@ -156,5 +160,55 @@ export const validatedBySigna = factory
 export const validatedByElec = factory
   .inReview("Validée par la log elec")
   .withSupply({ electricity: [lumiere, enceinte], water: "robinet d'eau" })
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
   .withReviews({ elec: APPROVED })
+  .build();
+
+export const validatedByBarrieres = factory
+  .inReview("Validée par les barrieres")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ barrieres: APPROVED })
+  .build();
+
+export const validatedByMatos = factory
+  .inReview("Validée par la log matos")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED })
+  .build();
+
+export const validatedByMatosAndBarrieres = factory
+  .inReview("Validée par la log matos et les barrieres")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED, barrieres: APPROVED })
+  .build();
+
+export const validatedByAllInquiryOwners = factory
+  .inReview("Validée par la log matos, les barrieres et la log elec")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED, barrieres: APPROVED, elec: APPROVED })
   .build();
