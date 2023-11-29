@@ -46,7 +46,7 @@ import FestivalEventSidebar from "~/components/organisms/festival-event/Festival
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
 import SignaCard from "~/components/organisms/festival-event/festival-activity/SignaCard.vue";
-import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.vue";
+import SecurityCard from "~/components/organisms/festival-event/festival-activity/SecurityCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default defineComponent({
