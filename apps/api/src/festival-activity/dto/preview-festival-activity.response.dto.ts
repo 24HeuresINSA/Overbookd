@@ -1,17 +1,17 @@
 import { ApiProperty } from "@nestjs/swagger";
-import type {
-  Adherent,
-  PreviewFestivalActivity,
-  ReviewStatus,
-} from "@overbookd/festival-activity";
 import {
+  Adherent,
+  PreviewDraft,
+  PreviewInReview,
+  ReviewStatus,
   DRAFT,
+  IN_REVIEW,
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 
-type Reviews = PreviewFestivalActivity["reviews"];
+type Reviews = PreviewInReview["reviews"];
 
 class ReviewsDto implements Reviews {
   @ApiProperty({
@@ -57,9 +57,7 @@ class ReviewsDto implements Reviews {
   comcom: ReviewStatus;
 }
 
-export class PreviewFestivalActivityResponseDto
-  implements PreviewFestivalActivity
-{
+export class PreviewDraftFestivalActivityResponseDto implements PreviewDraft {
   @ApiProperty({
     description: "The festival activity id",
     type: Number,
@@ -90,6 +88,41 @@ export class PreviewFestivalActivityResponseDto
     type: String,
   })
   team: string | null;
+}
+
+export class PreviewInReviewFestivalActivityResponseDto
+  implements PreviewInReview
+{
+  @ApiProperty({
+    description: "The festival activity id",
+    type: Number,
+  })
+  id: number;
+
+  @ApiProperty({
+    description: "The festival activity name",
+    type: String,
+  })
+  name: string;
+
+  @ApiProperty({
+    description: "The festival activity status",
+    type: String,
+    example: IN_REVIEW,
+  })
+  status: typeof IN_REVIEW;
+
+  @ApiProperty({
+    description: "The festival activity adherent in charge",
+    type: AdherentResponseDto,
+  })
+  adherent: Adherent;
+
+  @ApiProperty({
+    description: "The festival activity team code",
+    type: String,
+  })
+  team: string;
 
   @ApiProperty({
     type: ReviewsDto,

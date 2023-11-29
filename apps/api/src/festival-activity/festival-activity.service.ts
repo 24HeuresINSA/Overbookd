@@ -33,7 +33,7 @@ export class FestivalActivityService {
     return this.prepareFestivalActivity.findAll();
   }
 
-  findById(id: number): Promise<FestivalActivity | null> {
+  findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     return this.prepareFestivalActivity.findById(id);
   }
 
@@ -43,14 +43,14 @@ export class FestivalActivityService {
   }
 
   saveGeneralSection(
-    id: number,
+    id: FestivalActivity["id"],
     general: PrepareGeneralUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
 
   async saveInChargeSection(
-    id: number,
+    id: FestivalActivity["id"],
     inCharge: PrepareInChargeForm,
   ): Promise<FestivalActivity> {
     const adherent = inCharge.adherentId
@@ -64,21 +64,21 @@ export class FestivalActivityService {
   }
 
   saveSignaSection(
-    id: number,
+    id: FestivalActivity["id"],
     signa: PrepareSignaUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSignaSection(id, signa);
   }
 
   saveSecuritySection(
-    id: number,
+    id: FestivalActivity["id"],
     security: FestivalActivity["security"],
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
-    id: number,
+    id: FestivalActivity["id"],
     supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);

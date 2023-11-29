@@ -1,16 +1,16 @@
-import { Draft } from "../../festival-activity";
+import { FestivalActivity } from "../../festival-activity";
 
 const REQUIRED_LOCATION = "Le lieu est nécessaire";
 
 export class ActivitySignaSpecification {
-  static errors(section: Draft["signa"]): string[] {
+  static errors(section: FestivalActivity["signa"]): string[] {
     if (this.hasLocationSet(section)) {
       return [];
     }
     return [REQUIRED_LOCATION];
   }
 
-  private static hasLocationSet(section: Draft["signa"]) {
+  private static hasLocationSet(section: FestivalActivity["signa"]) {
     return section.location !== null;
   }
 }

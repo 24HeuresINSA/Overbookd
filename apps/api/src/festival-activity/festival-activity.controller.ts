@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
@@ -26,7 +27,6 @@ import type {
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { PreviewFestivalActivityResponseDto } from "./dto/preview-festival-activity.response.dto";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
@@ -38,6 +38,10 @@ import {
   SignaRequestDto,
   SupplyRequestDto,
 } from "./dto/update-festival-activity.request.dto";
+import {
+  PreviewDraftFestivalActivityResponseDto,
+  PreviewInReviewFestivalActivityResponseDto,
+} from "./dto/preview-festival-activity.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -59,7 +63,12 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "All festival activities",
-    type: PreviewFestivalActivityResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(PreviewDraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(PreviewInReviewFestivalActivityResponseDto) },
+      ],
+    },
     isArray: true,
   })
   findAll(): Promise<PreviewFestivalActivity[]> {

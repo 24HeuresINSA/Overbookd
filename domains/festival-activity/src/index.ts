@@ -3,9 +3,11 @@ export type {
   InReview,
   FestivalActivity,
   CreateFestivalActivityForm,
+  PreviewDraft,
+  PreviewInReview,
   PreviewFestivalActivity,
 } from "./festival-activity";
-export { DRAFT } from "./festival-activity";
+export { DRAFT, IN_REVIEW } from "./festival-activity";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 
@@ -18,6 +20,9 @@ export type {
   WithInquiries,
 } from "./sections/inquiry";
 export {
+  BARRIERES,
+  ELEC,
+  MATOS,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
   PARKING_EIFFEL,
@@ -48,8 +53,19 @@ export type { ElectricitySupply } from "./sections/supply";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS
-export type { ReviewStatus } from "./sections/reviews";
-export { APPROVED, REVIEWING, NOT_ASKING_TO_REVIEW } from "./sections/reviews";
+export type { ReviewStatus, Reviewer } from "./sections/reviews";
+export {
+  APPROVED,
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW,
+  humain,
+  comcom,
+  signa,
+  secu,
+  matos,
+  elec,
+  barrieres,
+} from "./sections/reviews";
 
 // CREATION
 export { CreateFestivalActivity } from "./creation/creation";
@@ -68,7 +84,11 @@ export type {
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
 } from "./preparation/prepare-festival-activity.model";
-export { InMemoryPrepareFestivalActivityRepository } from "./preparation/festival-activities.inmemory";
 
 //ASK FOR REVIEW
 export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
+export type {
+  FestivalActivityWithoutStatus,
+  InReviewWithoutStatus,
+} from "./ask-for-review/in-review-festival-activity";
+export { InReviewSpecification } from "./ask-for-review/in-review-festival-activity";
