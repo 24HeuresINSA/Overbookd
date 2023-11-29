@@ -85,7 +85,7 @@
           </template>
 
           <template #item.team="{ item }">
-            <TeamChip :team="item.team" with-name />
+            <TeamChip v-if="item.team" :team="item.team" with-name />
           </template>
 
           <template #item.action="{ item }">
