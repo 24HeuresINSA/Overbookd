@@ -3,13 +3,18 @@
     <v-card-title>Général</v-card-title>
 
     <v-card-subtitle>
-      N'hésite pas si tu as des questions à contacter
-      <a href="mailto:humain@24heures.org">humain@24heures.org</a> ou
-      <a href="mailto:communication@24heures.org">communication@24heures.org</a>
-      si ton activité est à publier. Tu peux aussi t'aider en allant voir les FA
-      de l'année dernière sur
-      <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a> en te
-      connectant avec jeuneetcon@24heures.org.
+      <p>
+        N'hésite pas si tu as des questions à contacter
+        <a :href="`mailto:${contact}`">
+          {{ contact }}
+        </a>
+        .
+      </p>
+      <p>
+        Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
+        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
+        en te connectant avec jeuneetcon@24heures.org.
+      </p>
     </v-card-subtitle>
 
     <v-card-text>
@@ -73,6 +78,9 @@ import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
 import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
 
+const comcomEmail = "communication@24heures.org";
+const humainEmail = "humain@24heures.org";
+
 export default defineComponent({
   name: "FaGeneralCard",
   components: { RichEditor, FaTimeWindowTable },
@@ -85,6 +93,12 @@ export default defineComponent({
     },
     categories(): string[] {
       return activityCategories;
+    },
+    isPublic(): boolean {
+      return this.general.toPublish === true;
+    },
+    contact(): string {
+      return this.isPublic ? comcomEmail : humainEmail;
     },
   },
   methods: {

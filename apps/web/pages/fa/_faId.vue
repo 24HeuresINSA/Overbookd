@@ -1,7 +1,7 @@
 <template>
   <div class="fa-content fa">
     <FestivalEventSidebar festival-event="FA" />
-    <v-container class="container fa">
+    <article class="container fa">
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
       <!--<SignaCard id="signa" />
@@ -34,7 +34,7 @@
       <WaterLogisticCard id="water" />
       <FeedbackCard id="feedback" />
       <ChildFtCard id="ft" />-->
-    </v-container>
+    </article>
     <SnackNotificationContainer />
   </div>
 </template>
@@ -91,6 +91,10 @@ export default defineComponent({
   flex: 1 1 auto;
   overflow: auto;
   scroll-behavior: smooth;
+  width: 100%;
+  padding: 12px;
+  margin-right: auto;
+  margin-left: auto;
   padding-bottom: 50px;
   > * {
     margin-bottom: 30px;
