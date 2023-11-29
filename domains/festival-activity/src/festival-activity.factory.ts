@@ -4,7 +4,6 @@ import {
   FestivalActivity,
   IN_REVIEW,
   InReview,
-  isDraft,
 } from "./festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "./sections/reviews";
 import { Public } from "./sections/general";
@@ -36,23 +35,23 @@ function* numberGenerator(start: number): Generator<number> {
 class FestivalActivityFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
-  inReview(name: string): FestivalActivityBuilder<InReview> {
+  inReview(name: string): InReviewBuilder {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultInReview(id, name);
-    return new FestivalActivityBuilder(festivalActivity);
+    return new InReviewBuilder(festivalActivity);
   }
 
-  draft(name: string): FestivalActivityBuilder<Draft> {
+  draft(name: string): DraftBuilder {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultDraft(id, name);
-    return new FestivalActivityBuilder(festivalActivity);
+    return new DraftBuilder(festivalActivity);
   }
 }
 
 class FestivalActivityBuilder<T extends FestivalActivity> {
-  constructor(private festivalActivity: T) {}
+  constructor(protected festivalActivity: T) {}
 
-  withGeneral(general: Partial<T["general"]>): FestivalActivityBuilder<T> {
+  withGeneral(general: Partial<T["general"]>) {
     this.festivalActivity = {
       ...this.festivalActivity,
       general: this.merge(this.festivalActivity.general, general),
@@ -60,31 +59,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  asPublic(publicData: PublicData): FestivalActivityBuilder<T> {
-    const general: Partial<Public> = {
-      isFlagship: publicData.isFlagship ?? false,
-      toPublish: true,
-      categories: publicData.categories ?? ["public"],
-      timeWindows: publicData.timeWindows ?? [saturday11hToSaturday18h],
-      photoLink:
-        publicData.photoLink ??
-        `https://instagram.com/${this.festivalActivity.id}`,
-    };
-
-    const reviews = isDraft(this.festivalActivity)
-      ? undefined
-      : { ...this.festivalActivity.reviews, comcom: REVIEWING };
-
-    this.festivalActivity = {
-      ...this.festivalActivity,
-      general: this.merge(this.festivalActivity.general, general),
-      reviews,
-    };
-
-    return this;
-  }
-
-  withInCharge(inCharge: Partial<T["inCharge"]>): FestivalActivityBuilder<T> {
+  withInCharge(inCharge: Partial<T["inCharge"]>) {
     this.festivalActivity = {
       ...this.festivalActivity,
       inCharge: this.merge(this.festivalActivity.inCharge, inCharge),
@@ -92,7 +67,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withSigna(signa: Partial<T["signa"]>): FestivalActivityBuilder<T> {
+  withSigna(signa: Partial<T["signa"]>) {
     this.festivalActivity = {
       ...this.festivalActivity,
       signa: this.merge(this.festivalActivity.signa, signa),
@@ -100,7 +75,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withSecurity(security: Partial<T["security"]>): FestivalActivityBuilder<T> {
+  withSecurity(security: Partial<T["security"]>) {
     this.festivalActivity = {
       ...this.festivalActivity,
       security: this.merge(this.festivalActivity.security, security),
@@ -108,7 +83,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withSupply(supply: Partial<T["supply"]>): FestivalActivityBuilder<T> {
+  withSupply(supply: Partial<T["supply"]>) {
     this.festivalActivity = {
       ...this.festivalActivity,
       supply: this.merge(this.festivalActivity.supply, supply),
@@ -116,7 +91,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withInquiry(inquiry: Partial<T["inquiry"]>): FestivalActivityBuilder<T> {
+  withInquiry(inquiry: Partial<T["inquiry"]>) {
     this.festivalActivity = {
       ...this.festivalActivity,
       inquiry: this.merge(this.festivalActivity.inquiry, inquiry),
@@ -124,19 +99,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withReviews(
-    reviews: Partial<InReview["reviews"]>,
-  ): FestivalActivityBuilder<T> {
-    if (isDraft(this.festivalActivity)) return this;
-
-    this.festivalActivity = {
-      ...this.festivalActivity,
-      reviews: this.merge(this.festivalActivity.reviews, reviews),
-    };
-    return this;
-  }
-
-  private merge<T extends FestivalActivitySections>(
+  protected merge<T extends FestivalActivitySections>(
     current: T,
     update: Partial<T>,
   ): T {
@@ -151,6 +114,67 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
 
   build(): T {
     return this.festivalActivity;
+  }
+}
+
+class InReviewBuilder extends FestivalActivityBuilder<InReview> {
+  asPublic(publicData: PublicData): InReviewBuilder {
+    const general: Partial<Public> = {
+      isFlagship: publicData.isFlagship ?? false,
+      toPublish: true,
+      categories: publicData.categories ?? ["public"],
+      timeWindows: publicData.timeWindows ?? [saturday11hToSaturday18h],
+      photoLink:
+        publicData.photoLink ??
+        `https://instagram.com/${this.festivalActivity.id}`,
+    };
+
+    const reviews: InReview["reviews"] = {
+      ...this.festivalActivity.reviews,
+      comcom: REVIEWING,
+    };
+
+    this.festivalActivity = {
+      ...this.festivalActivity,
+      general: this.merge(this.festivalActivity.general, general),
+      reviews,
+    };
+
+    return this;
+  }
+
+  withReviews(reviews: Partial<InReview["reviews"]>): InReviewBuilder {
+    this.festivalActivity = {
+      ...this.festivalActivity,
+      reviews: this.merge(this.festivalActivity.reviews, reviews),
+    };
+
+    return this;
+  }
+}
+
+class DraftBuilder extends FestivalActivityBuilder<Draft> {
+  asPublic(publicData: PublicData): DraftBuilder {
+    const general: Partial<Public> = {
+      isFlagship: publicData.isFlagship ?? false,
+      toPublish: true,
+      categories: publicData.categories ?? ["public"],
+      timeWindows: publicData.timeWindows ?? [saturday11hToSaturday18h],
+      photoLink:
+        publicData.photoLink ??
+        `https://instagram.com/${this.festivalActivity.id}`,
+    };
+
+    this.festivalActivity = {
+      ...this.festivalActivity,
+      general: this.merge(this.festivalActivity.general, general),
+    };
+
+    return this;
+  }
+
+  withReviews(): DraftBuilder {
+    return this;
   }
 }
 

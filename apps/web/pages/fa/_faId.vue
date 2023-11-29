@@ -41,11 +41,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { FestivalActivity } from "@overbookd/festival-activity";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { FestivalActivity } from "@overbookd/festival-activity";
 
 export default defineComponent({
   name: "Fa",
