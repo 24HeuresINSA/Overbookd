@@ -17,10 +17,10 @@ export const faStatusLabels = new Map<
   [IN_REVIEW, SOUMISE_A_VALIDATION],
 ]);
 
-export const activityCategories = {
-  DIVERTISSEMENT: "Divertissement",
-  CULTURE: "Culture",
-  SPORT: "Sport",
-  ENFANT: "Enfant",
-  AUTRE: "Autre",
-};
+export const activityCategories = [
+  "Divertissement",
+  "Culture",
+  "Sport",
+  "Enfant",
+  "Autre",
+];

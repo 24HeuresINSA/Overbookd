@@ -38,6 +38,7 @@ import {
   faTimeWindowsSorts,
 } from "~/utils/functions/time-window";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
+import { IProvidePeriod } from "@overbookd/period";
 
 export default Vue.extend({
   name: "FaTimeWindowTable",
@@ -66,6 +67,9 @@ export default Vue.extend({
   methods: {
     formatDate(date: string): string {
       return formatDateWithMinutes(date);
+    },
+    addTimeWindow(period: IProvidePeriod) {
+      this.$emit("add", period);
     },
     updateTimeWindow(timeWindow: TimeWindow) {
       this.$emit("update", timeWindow);
