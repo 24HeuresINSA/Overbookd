@@ -51,6 +51,8 @@ export type { Public as PublicGeneral } from "./sections/general";
 export type { Signage, Location } from "./sections/signa";
 export type { ElectricitySupply } from "./sections/supply";
 export type { TimeWindow } from "./sections/time-window";
+export type { InquiryOwner } from "./sections/inquiry";
+export { MATOS, BARRIERES, ELEC } from "./sections/inquiry";
 
 // REVIEWS
 export type { ReviewStatus, Reviewer } from "./sections/reviews";

@@ -27,7 +27,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import ElectricitySupplyTable from "~/components/molecules/festival-event/logistic/electricity-supply/ElectricitySupplyTable.vue";
+import ElectricitySupplyTable from "~/components/molecules/festival-event/logistic/supply/ElectricitySupplyTable.vue";
 import {
   FestivalActivity,
   ElectricitySupply,
