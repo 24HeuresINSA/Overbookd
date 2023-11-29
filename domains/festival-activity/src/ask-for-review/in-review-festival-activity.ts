@@ -93,6 +93,7 @@ export class InReviewFestivalActivity implements InReview {
     readonly supply: InReview["supply"],
     readonly inquiry: InReview["inquiry"],
     readonly reviews: InReview["reviews"],
+    readonly feedbacks: InReview["feedbacks"],
   ) {}
 
   get status(): typeof IN_REVIEW {
@@ -118,6 +119,7 @@ export class InReviewFestivalActivity implements InReview {
       activity.supply,
       activity.inquiry,
       reviews,
+      activity.feedbacks,
     );
   }
 

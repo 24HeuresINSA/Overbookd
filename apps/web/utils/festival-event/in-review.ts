@@ -27,6 +27,7 @@ export class CastInReview {
       ...inReview,
       general: this.generalWithDate(inReview.general),
       inquiry: this.inquiryWithDate(inReview.inquiry),
+      feedbacks: this.feedbacksWithDate(inReview.feedbacks),
     };
   }
 
@@ -50,6 +51,15 @@ export class CastInReview {
 
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
     return { ...inquiry, timeWindows };
+  }
+
+  private static feedbacksWithDate(
+    feedbacks: HttpStringified<InReview["feedbacks"]>,
+  ): InReview["feedbacks"] {
+    return feedbacks.map((feedback) => ({
+      ...feedback,
+      createdAt: new Date(feedback.createdAt),
+    }));
   }
 }
 

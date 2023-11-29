@@ -44,8 +44,8 @@ model User {
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
 
-  faInCharge  Fa[]         @relation("in_charge")
-  faFeedbacks FaFeedback[]
+  faInCharge     Fa[]         @relation("in_charge")
+  oldFaFeedbacks FaFeedback[]
 
   ftsInCharge      Ft[]                    @relation("inCharge")
   ftFeedbacks      FtFeedback[]
@@ -60,6 +60,7 @@ model User {
   notifications                Notification[]
   festivalActivities           FestivalActivity[]
   festivalActivityInstigations FestivalActivityHistory[]
+  faFeedbacks                  FestivalActivityFeedback[]
 
   @@map("user")
 }
@@ -620,9 +621,10 @@ model Barrel {
 }
 
 model FestivalActivity {
-  id      Int                      @unique
-  status  FestivalActivityStatus
-  reviews FestivalActivityReview[]
+  id        Int                        @unique
+  status    FestivalActivityStatus
+  reviews   FestivalActivityReview[]
+  feedbacks FestivalActivityFeedback[]
 
   // General
   name               String                              @db.VarChar(30)
@@ -821,4 +823,17 @@ enum FestivalActivityEvent {
   APPROVED
 
   @@map("festival_activity_event")
+}
+
+model FestivalActivityFeedback {
+  comment   String   @db.Text
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int      @map("author_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
+  faId Int              @map("fa_id")
+
+  @@id([faId, authorId, createdAt])
+  @@map("feedback")
 }

@@ -6,6 +6,7 @@ export type {
   PreviewDraft,
   PreviewInReview,
   PreviewFestivalActivity,
+  Feedback,
 } from "./festival-activity";
 export { DRAFT, IN_REVIEW } from "./festival-activity";
 

@@ -205,6 +205,7 @@ function defaultInReview(id: number, name: string): InReview {
       barrieres: REVIEWING,
       communication: NOT_ASKING_TO_REVIEW,
     },
+    feedbacks: [],
   };
 }
 
@@ -240,6 +241,7 @@ export function defaultDraft(id: number, name: string): Draft {
       electricity: [],
       barriers: [],
     },
+    feedbacks: [],
   };
 }
 

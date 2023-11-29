@@ -10,6 +10,7 @@ import {
   Signage,
   TimeWindow,
   Location,
+  Feedback,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
@@ -260,6 +261,19 @@ class InquiryDto implements InquiryWithPotentialRequests {
   barriers: BaseInquiryRequest[];
 }
 
+class FeedbackDto implements Feedback {
+  @ApiProperty({
+    type: AdherentResponseDto,
+  })
+  author: Adherent;
+
+  @ApiProperty({})
+  comment: string;
+
+  @ApiProperty({})
+  createdAt: Date;
+}
+
 export class DraftFestivalActivityDto implements Draft {
   @ApiProperty({})
   id: number;
@@ -302,4 +316,11 @@ export class DraftFestivalActivityDto implements Draft {
 
   @ApiProperty({ enum: [DRAFT] })
   status: typeof DRAFT;
+
+  @ApiProperty({
+    description: "Festival activity feedbacks",
+    isArray: true,
+    type: FeedbackDto,
+  })
+  feedbacks: Feedback[];
 }

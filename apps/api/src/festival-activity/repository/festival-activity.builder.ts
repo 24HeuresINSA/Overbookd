@@ -61,6 +61,7 @@ type DatabaseFestivalActivity = DatabaseGeneral &
     id: FestivalActivity["id"];
     status: FestivalActivity["status"];
     reviews: DatabaseReview[];
+    feedbacks: FestivalActivity["feedbacks"];
   };
 
 type VisualizeFestivalActivity<
@@ -121,6 +122,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
         water: activityData.water,
       },
       inquiry: this.formatInquiry(activityData),
+      feedbacks: activityData.feedbacks,
     };
     return activityWithoutStatus;
   }

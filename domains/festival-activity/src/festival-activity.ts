@@ -1,4 +1,4 @@
-import { DraftInCharge, InCharge } from "./sections/in-charge";
+import { Adherent, DraftInCharge, InCharge } from "./sections/in-charge";
 import { DraftGeneral, General } from "./sections/general";
 import { DraftSigna, Signa } from "./sections/signa";
 import { Supply } from "./sections/supply";
@@ -12,6 +12,12 @@ type Security = {
   specialNeed: string | null;
 };
 
+export type Feedback = {
+  comment: string;
+  createdAt: Date;
+  author: Adherent;
+};
+
 export type Draft = {
   id: number;
   status: typeof DRAFT;
@@ -21,6 +27,7 @@ export type Draft = {
   security: Security;
   supply: Supply;
   inquiry: Inquiry;
+  feedbacks: Feedback[];
 };
 
 export type InReview = {
@@ -33,6 +40,7 @@ export type InReview = {
   supply: Supply;
   inquiry: Inquiry;
   reviews: Reviews;
+  feedbacks: Feedback[];
 };
 
 export type FestivalActivity = Draft | InReview;
