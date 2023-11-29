@@ -7,7 +7,6 @@
       <SignaCard id="signa" />
       <SecurityCard id="security" />
       <!--<FaTimeWindowCard id="timewindow" />
-      <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
       <h4 class="log-text">
