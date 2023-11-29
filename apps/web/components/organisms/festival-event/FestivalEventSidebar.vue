@@ -26,7 +26,7 @@ import {
   FaStatusLabel,
   faStatusLabels,
   BROUILLON as FA_BROUILLON,
-} from "~/utils/models/festival-activity.model";
+} from "~/utils/festival-event/festival-activity.model";
 import {
   Ft,
   FtStatusLabel,
