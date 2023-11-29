@@ -25,7 +25,6 @@ import {
   FestivalActivity,
   InquiryRequest,
   InquiryOwner,
-  MATOS,
   BARRIERES,
   ELEC,
 } from "@overbookd/festival-activity";
@@ -63,14 +62,12 @@ export default defineComponent({
     },
     noDataMessage(): string {
       switch (this.owner) {
-        case MATOS:
-          return "Aucune demande de matos";
         case BARRIERES:
           return "Aucune demande de barrières";
         case ELEC:
           return "Aucune demande d'équipement électrique";
         default:
-          return "Aucune demande";
+          return "Aucune demande de matos";
       }
     },
   },
