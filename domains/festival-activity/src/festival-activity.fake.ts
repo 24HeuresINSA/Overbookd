@@ -6,6 +6,7 @@ import {
   PC16_Prise_classique,
 } from "./sections/supply";
 import { Signage } from "./sections/signa";
+import { Contractor } from "./sections/in-charge";
 
 export const noel = {
   id: 1,
@@ -199,4 +200,14 @@ export const uneMultiprise = {
   slug: "multiprise",
   name: "Multiprise",
   quantity: 1,
+};
+
+export const lafarge: Contractor = {
+  id: 1,
+  firstname: "David",
+  lastname: "Lafarge",
+  phone: "0304010205",
+  email: "david@lafarge.com",
+  company: "Lafarge",
+  comment: "On ne sait rien de lui",
 };

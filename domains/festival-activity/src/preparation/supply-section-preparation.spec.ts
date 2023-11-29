@@ -1,7 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { escapeGame, justDance } from "./preparation.test-utils";
+import {
+  escapeGame,
+  justDance,
+  validatedByElec,
+} from "./preparation.test-utils";
 import {
   ElectricitySupplyAlreadyExists,
   ElectricitySupplyNotFound,
@@ -13,6 +17,9 @@ import {
   PC16_Prise_classique,
 } from "../sections/supply";
 import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model";
+import { elec } from "../sections/reviews";
+import { PrepareError } from "./prepare-in-review-festival-activity";
+import { nintendoSwitchSupply } from "../festival-activity.fake";
 
 describe("Supply section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -22,6 +29,7 @@ describe("Supply section of festival activity preparation", () => {
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
       justDance,
+      validatedByElec,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -199,5 +207,52 @@ describe("Supply section of festival activity preparation", () => {
         });
       },
     );
+  });
+
+  describe(`when ${validatedByElec.general.name} is already validated by ${elec}`, () => {
+    describe("when trying to update water", () => {
+      it("should indicate that supply section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateSupplySection(
+              validatedByElec.id,
+              { water: "2 robinets d'eau potable" },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to add an electricity supply", () => {
+      it("should indicate that supply section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.addElectricitySupply(
+              validatedByElec.id,
+              { ...nintendoSwitchSupply, comment: "Première Gen" },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to update an electricity supply", () => {
+      it("should indicate that supply section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateElectricitySupply(
+              validatedByElec.id,
+              { id: lumiere.id, power: 10 },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to remove an electricity supply", () => {
+      it("should indicate that supply section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.removeElectricitySupply(
+              validatedByElec.id,
+              lumiere.id,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
   });
 });

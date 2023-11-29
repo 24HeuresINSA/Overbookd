@@ -7,6 +7,7 @@ import {
   justDance,
   pcSecurite,
   qgOrga,
+  validatedBySigna,
 } from "./preparation.test-utils";
 import { PrepareSignageUpdate } from "./prepare-festival-activity.model";
 import { AFFICHE, BACHE, PANNEAU } from "../sections/signa";
@@ -15,6 +16,9 @@ import {
   SignageNotFound,
 } from "../festival-activity.error";
 import { LocationIsRequired } from "./section-aggregates/signages";
+import { signa } from "../sections/reviews";
+import { PrepareError } from "./prepare-in-review-festival-activity";
+import { afficheJustDanceA2 } from "../festival-activity.fake";
 
 describe("Signa section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -27,6 +31,7 @@ describe("Signa section of festival activity preparation", () => {
       justDance,
       baladeEnPoney,
       qgOrga,
+      validatedBySigna,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -219,4 +224,56 @@ describe("Signa section of festival activity preparation", () => {
       });
     },
   );
+
+  describe(`when ${validatedBySigna.general.name} is already validated by ${signa}`, () => {
+    describe("when trying to update location", () => {
+      it("should indicate that signa section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateSignaSection(
+              validatedBySigna.id,
+              { location: "Devant GEN" },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to add a signage", () => {
+      it("should indicate that signa section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.addSignage(validatedBySigna.id, {
+              quantity: 10,
+              type: PANNEAU,
+              text: "Ici",
+              size: "A4",
+            }),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to update a signage", () => {
+      it("should indicate that signa section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateSignage(validatedBySigna.id, {
+              id: afficheJustDanceA2.id,
+              quantity: 10,
+              type: PANNEAU,
+              text: "Ici",
+              size: "A4",
+            }),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to remove a signage", () => {
+      it("should indicate that signa section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.removeSignage(
+              validatedBySigna.id,
+              afficheJustDanceA2.id,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+  });
 });

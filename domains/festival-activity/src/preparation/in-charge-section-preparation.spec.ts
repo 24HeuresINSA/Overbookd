@@ -1,10 +1,17 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { escapeGame, justDance, pcSecurite } from "./preparation.test-utils";
-import { george } from "../festival-activity.fake";
+import {
+  escapeGame,
+  justDance,
+  pcSecurite,
+  validatedByHumain,
+} from "./preparation.test-utils";
+import { george, lafarge } from "../festival-activity.fake";
 import { lea } from "../festival-activity.fake";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { ContractorNotFound } from "../festival-activity.error";
+import { humain } from "../sections/reviews";
+import { PrepareError } from "./prepare-in-review-festival-activity";
 
 describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -15,6 +22,7 @@ describe("In Charge section of festival activity preparation", () => {
       escapeGame,
       pcSecurite,
       justDance,
+      validatedByHumain,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -171,6 +179,54 @@ describe("In Charge section of festival activity preparation", () => {
       );
 
       expect(inCharge.contractors).not.toContainEqual(contractorToRemove);
+    });
+  });
+
+  describe(`when ${validatedByHumain.general.name} is already validated by ${humain}`, () => {
+    describe("when trying to update in charge information", () => {
+      it("should indicate that in charge section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateInChargeSection(
+              validatedByHumain.id,
+              { team: "sports" },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to add a contractor", () => {
+      it("should indicate that in charge section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.addContractor(validatedByHumain.id, {
+              firstname: "Benjos",
+              lastname: "Le Magicos",
+              phone: "0612345678",
+            }),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to remove a contractor", () => {
+      it("should indicate that in charge section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.removeContractor(
+              validatedByHumain.id,
+              lafarge.id,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to update a contractor", () => {
+      it("should indicate that in charge section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateContractor(
+              validatedByHumain.id,
+              { id: lafarge.id, firstname: "Davis" },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
     });
   });
 });

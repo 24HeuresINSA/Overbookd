@@ -8,13 +8,19 @@ import {
   escapeGame,
   justDance,
   pcSecurite,
+  qgOrga,
+  validatedByHumain,
+  validatedByComcom,
 } from "./preparation.test-utils";
 import { isDraft } from "../festival-activity";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
-  IsNotPublicActivity,
-  NeedAtLeastOneTimeWindow,
-} from "./prepare-in-review-festival-activity";
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+  comcom,
+  humain,
+} from "../sections/reviews";
+import { PrepareError } from "./prepare-in-review-festival-activity";
+import { sunday14hToSunday18h } from "../festival-activity.fake";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -26,6 +32,9 @@ describe("General section of festival activity preparation", () => {
       pcSecurite,
       justDance,
       baladeEnPoney,
+      qgOrga,
+      validatedByHumain,
+      validatedByComcom,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -138,7 +147,7 @@ describe("General section of festival activity preparation", () => {
                   pcSecurite.id,
                   toPublish,
                 ),
-            ).rejects.toThrow(IsNotPublicActivity);
+            ).rejects.toThrow(PrepareError.IsNotPublicActivity);
           },
         );
       });
@@ -246,7 +255,7 @@ describe("General section of festival activity preparation", () => {
               justDance.id,
               timeWindow.id,
             ),
-        ).rejects.toThrow(NeedAtLeastOneTimeWindow);
+        ).rejects.toThrow(PrepareError.NeedAtLeastOneTimeWindow);
       });
     });
 
@@ -269,4 +278,47 @@ describe("General section of festival activity preparation", () => {
       },
     );
   });
+
+  describe.each`
+    activityName                      | activityId              | reviewer  | timeWindow              | toRemoveId                                     | update
+    ${validatedByHumain.general.name} | ${validatedByHumain.id} | ${humain} | ${sunday14hToSunday18h} | ${validatedByHumain.general.timeWindows[0].id} | ${{ desription: "Awsome" }}
+    ${validatedByComcom.general.name} | ${validatedByComcom.id} | ${comcom} | ${sunday14hToSunday18h} | ${validatedByComcom.general.timeWindows[0].id} | ${{ description: "Awsome" }}
+  `(
+    "when $activityName was already validated by $reviewer",
+    ({ activityId, timeWindow, toRemoveId, update }) => {
+      describe("when trying to add a timeWindow", () => {
+        it("should indicate that general section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.addTimeWindowInGeneral(
+                activityId,
+                timeWindow,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to remove a timeWindow", () => {
+        it("should indicate that general section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.removeTimeWindowFromGeneral(
+                activityId,
+                toRemoveId,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to update general information", () => {
+        it("should indicate that general section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.updateGeneralSection(
+                activityId,
+                update,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+    },
+  );
 });
