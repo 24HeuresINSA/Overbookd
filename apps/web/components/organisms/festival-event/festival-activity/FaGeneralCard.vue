@@ -5,9 +5,9 @@
     <v-card-subtitle>
       N'hésite pas si tu as des questions à contacter
       <a href="mailto:humain@24heures.org">humain@24heures.org</a> ou
-      <a href="mailto:comcom@24heures.org">comcom@24heures.org</a> si ton
-      activité est à publier. Tu peux aussi t'aider en allant voir les FA de
-      l'année dernière sur
+      <a href="mailto:communication@24heures.org">communication@24heures.org</a>
+      si ton activité est à publier. Tu peux aussi t'aider en allant voir les FA
+      de l'année dernière sur
       <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a> en te
       connectant avec jeuneetcon@24heures.org.
     </v-card-subtitle>
