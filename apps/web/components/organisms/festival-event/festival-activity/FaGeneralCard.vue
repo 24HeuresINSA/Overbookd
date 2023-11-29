@@ -70,7 +70,7 @@ import { defineComponent } from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
-import { activityCategories } from "~/utils/models/festival-activity.model";
+import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
 
 export default defineComponent({
