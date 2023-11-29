@@ -60,14 +60,14 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  asPublic(publicData: PublicData): FestivalActivityBuilder<T> {
+  asPublic(publicData?: PublicData): FestivalActivityBuilder<T> {
     const general: Partial<Public> = {
-      isFlagship: publicData.isFlagship ?? false,
+      isFlagship: publicData?.isFlagship ?? false,
       toPublish: true,
-      categories: publicData.categories ?? ["public"],
-      timeWindows: publicData.timeWindows ?? [saturday11hToSaturday18h],
+      categories: publicData?.categories ?? ["public"],
+      timeWindows: publicData?.timeWindows ?? [saturday11hToSaturday18h],
       photoLink:
-        publicData.photoLink ??
+        publicData?.photoLink ??
         `https://instagram.com/${this.festivalActivity.id}`,
     };
 

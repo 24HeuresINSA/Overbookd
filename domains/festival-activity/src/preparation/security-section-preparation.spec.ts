@@ -1,7 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
-import { escapeGame, pcSecurite } from "./preparation.test-utils";
+import {
+  escapeGame,
+  pcSecurite,
+  validatedBySecu,
+} from "./preparation.test-utils";
+import { secu } from "../sections/reviews";
+import { PrepareError } from "./prepare-in-review-festival-activity";
 
 describe("Security section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -11,6 +17,7 @@ describe("Security section of festival activity preparation", () => {
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
       pcSecurite,
+      validatedBySecu,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -36,5 +43,19 @@ describe("Security section of festival activity preparation", () => {
         });
       },
     );
+  });
+
+  describe(`when ${validatedBySecu.general.name} is already validated by ${secu} team`, () => {
+    describe("when trying to update the security information", () => {
+      it("should indicate that security section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateSecuritySection(
+              validatedBySecu.id,
+              { specialNeed: "3 maîtres chien" },
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
   });
 });

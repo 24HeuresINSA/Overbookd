@@ -1,6 +1,10 @@
 import { InReview } from "../festival-activity";
 import { getFactory } from "../festival-activity.factory";
-import { friday18hToMonday00h } from "../festival-activity.fake";
+import {
+  friday18hToMonday00h,
+  lafarge,
+  uneBouilloire,
+} from "../festival-activity.fake";
 import {
   friday12hToFriday14h,
   noel,
@@ -26,6 +30,7 @@ import {
   friday12hToMonday00h,
   george,
 } from "../festival-activity.fake";
+import { APPROVED } from "../sections/reviews";
 
 const factory = getFactory();
 
@@ -123,4 +128,87 @@ export const qgOrga = factory
   .withInCharge({ adherent: george, team: "beboo" })
   .withSigna({ location: "Agora" })
   .withSupply({ electricity: [lumiere, enceinte] })
+  .build();
+
+export const validatedByHumain = factory
+  .inReview("Validée par les humain")
+  .withInCharge({ contractors: [lafarge] })
+  .withReviews({ humain: APPROVED })
+  .build();
+
+export const validatedByComcom = factory
+  .inReview("Validée par la comcom")
+  .asPublic()
+  .withReviews({ comcom: APPROVED })
+  .build();
+
+export const validatedBySecu = factory
+  .inReview("Validée par la sécu")
+  .withSecurity({ specialNeed: "Une armée d'AS (au moins 1000!)" })
+  .withReviews({ secu: APPROVED })
+  .build();
+
+export const validatedBySigna = factory
+  .inReview("Validée par la signa")
+  .withSigna({
+    location: "Pelouse des humas",
+    signages: [afficheJustDanceA2, afficheJustDance10x3],
+  })
+  .withReviews({ signa: APPROVED })
+  .build();
+
+export const validatedByElec = factory
+  .inReview("Validée par la log elec")
+  .withSupply({ electricity: [lumiere, enceinte], water: "robinet d'eau" })
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ elec: APPROVED })
+  .build();
+
+export const validatedByBarrieres = factory
+  .inReview("Validée par les barrieres")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ barrieres: APPROVED })
+  .build();
+
+export const validatedByMatos = factory
+  .inReview("Validée par la log matos")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED })
+  .build();
+
+export const validatedByMatosAndBarrieres = factory
+  .inReview("Validée par la log matos et les barrieres")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED, barrieres: APPROVED })
+  .build();
+
+export const validatedByAllInquiryOwners = factory
+  .inReview("Validée par la log matos, les barrieres et la log elec")
+  .withInquiry({
+    timeWindows: [sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED, barrieres: APPROVED, elec: APPROVED })
   .build();
