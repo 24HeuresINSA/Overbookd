@@ -6,17 +6,19 @@ import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import {
   CreateFestivalActivity,
-  InMemoryCreateFestivalActivityRepository,
   PrepareFestivalActivity,
 } from "@overbookd/festival-activity";
 import { PrismaPrepareFestivalActivityRepository } from "./repository/prepare-festival-activity.prisma";
+import { PrismaCreateFestivalActivity } from "./repository/create-festival-activity.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
   providers: [
     {
-      provide: InMemoryCreateFestivalActivityRepository,
-      useFactory: () => new InMemoryCreateFestivalActivityRepository(),
+      provide: PrismaCreateFestivalActivity,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaCreateFestivalActivity(prisma),
+      inject: [PrismaService],
     },
     {
       provide: PrismaPrepareFestivalActivityRepository,
@@ -32,10 +34,16 @@ import { PrismaPrepareFestivalActivityRepository } from "./repository/prepare-fe
     },
     {
       provide: CreateFestivalActivity,
-      useFactory: (
-        festivalActivities: InMemoryCreateFestivalActivityRepository,
-      ) => new CreateFestivalActivity(festivalActivities),
-      inject: [InMemoryCreateFestivalActivityRepository],
+      useFactory: async (
+        festivalActivities: PrismaCreateFestivalActivity,
+        prisma: PrismaService,
+      ) => {
+        const {
+          _max: { id: maxId },
+        } = await prisma.festivalActivity.aggregate({ _max: { id: true } });
+        return new CreateFestivalActivity(festivalActivities, maxId + 1);
+      },
+      inject: [PrismaCreateFestivalActivity, PrismaService],
     },
     {
       provide: PrepareFestivalActivity,

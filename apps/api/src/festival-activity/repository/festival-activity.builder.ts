@@ -63,9 +63,12 @@ type DatabaseFestivalActivity = DatabaseGeneral &
     reviews: DatabaseReview[];
   };
 
-type VisualizeFestivalActivity = {
-  preview: PreviewFestivalActivity;
-  festivalActivity: FestivalActivity;
+type VisualizeFestivalActivity<
+  Activity extends FestivalActivity = FestivalActivity,
+  Preview extends PreviewFestivalActivity = PreviewFestivalActivity,
+> = {
+  preview: Preview;
+  festivalActivity: Activity;
 };
 
 export class FestivalActivityBuilder<T extends FestivalActivity> {
@@ -74,6 +77,19 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   static fromDatabase(
     activityData: DatabaseFestivalActivity,
   ): VisualizeFestivalActivity {
+    const activityWithoutStatus = this.buildActivityWithoutStatus(activityData);
+
+    switch (activityData.status) {
+      case DRAFT:
+        return DraftBuilder.init(activityWithoutStatus);
+      case IN_REVIEW:
+        return InReviewBuilder.init(activityWithoutStatus);
+    }
+  }
+
+  protected static buildActivityWithoutStatus(
+    activityData: DatabaseFestivalActivity,
+  ) {
     const reviews = this.formatReviews(activityData.reviews);
 
     const activityWithoutStatus = {
@@ -106,13 +122,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       },
       inquiry: this.formatInquiry(activityData),
     };
-
-    switch (activityData.status) {
-      case DRAFT:
-        return DraftBuilder.init(activityWithoutStatus);
-      case IN_REVIEW:
-        return InReviewBuilder.init(activityWithoutStatus);
-    }
+    return activityWithoutStatus;
   }
 
   private static formatInquiry(activity: DatabaseFestivalActivity) {
@@ -170,7 +180,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
 
 class InReviewBuilder
   extends FestivalActivityBuilder<InReview>
-  implements VisualizeFestivalActivity
+  implements VisualizeFestivalActivity<InReview, PreviewInReview>
 {
   static init(activityWithoutStatus: FestivalActivityWithoutStatus) {
     return InReviewSpecification.isSatisfiedBy(activityWithoutStatus)
@@ -178,7 +188,7 @@ class InReviewBuilder
       : DraftBuilder.init(activityWithoutStatus);
   }
 
-  get preview(): PreviewInReview {
+  get preview() {
     return {
       id: this.activity.id,
       name: this.activity.general.name,
@@ -189,20 +199,27 @@ class InReviewBuilder
     };
   }
 
-  get festivalActivity(): InReview {
+  get festivalActivity() {
     return this.activity;
   }
 }
 
-class DraftBuilder
+export class DraftBuilder
   extends FestivalActivityBuilder<Draft>
-  implements VisualizeFestivalActivity
+  implements VisualizeFestivalActivity<Draft, PreviewDraft>
 {
   static init(activityWithoutStatus: FestivalActivityWithoutStatus) {
     return new DraftBuilder({ ...activityWithoutStatus, status: DRAFT });
   }
 
-  get preview(): PreviewDraft {
+  static fromDatabase(
+    activityData: DatabaseFestivalActivity,
+  ): VisualizeFestivalActivity<Draft, PreviewDraft> {
+    const activityWithoutStatus = this.buildActivityWithoutStatus(activityData);
+    return this.init(activityWithoutStatus);
+  }
+
+  get preview() {
     return {
       id: this.activity.id,
       name: this.activity.general.name,
@@ -212,7 +229,7 @@ class DraftBuilder
     };
   }
 
-  get festivalActivity(): Draft {
+  get festivalActivity() {
     return this.activity;
   }
 }

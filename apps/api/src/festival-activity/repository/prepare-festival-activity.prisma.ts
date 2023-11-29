@@ -21,11 +21,12 @@ export class PrismaPrepareFestivalActivityRepository
     );
   }
 
-  async findById(id: FestivalActivity["id"]): Promise<FestivalActivity> {
+  async findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     const activity = await this.prisma.festivalActivity.findUnique({
       where: { id },
       select: SELECT_FESTIVAL_ACTIVITY,
     });
+    if (!activity) return null;
     return FestivalActivityBuilder.fromDatabase(activity).festivalActivity;
   }
 
