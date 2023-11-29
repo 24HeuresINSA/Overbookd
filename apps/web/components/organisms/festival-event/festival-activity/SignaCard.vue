@@ -1,7 +1,6 @@
 <template>
   <div>
-    <v-card :class="validationStatus">
-      <CardErrorList :type="cardType" />
+    <v-card>
       <v-card-title> Signa </v-card-title>
       <v-card-subtitle>
         Contacte la signa via
@@ -14,91 +13,81 @@
           :location="currentLocation"
           label="Lieu"
           :boxed="false"
-          :disabled="isValidatedByOwner"
           @change="updateLocation($event)"
-        ></SearchSignaLocation>
+        />
 
-        <v-card-title> Besoin de signa </v-card-title>
-        <SignaNeedTable
-          :signa-needs="signaNeeds"
-          :disabled="isValidatedByOwner"
+        <v-card-title> Demande de signalétique </v-card-title>
+        <FaSignageTable
+          :signages="signages"
           @update="openEditDialog"
-          @delete="deleteSignaNeed"
-        ></SignaNeedTable>
+          @delete="deleteSignage"
+        />
       </v-card-text>
 
-      <v-card-actions v-if="!isValidatedByOwner">
+      <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="openAddDialog"> Ajouter un besoin de signa </v-btn>
+        <v-btn text @click="openAddDialog"> Ajouter </v-btn>
       </v-card-actions>
     </v-card>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <SignaNeedForm
-        @change="addSignaNeed"
-        @close-dialog="closeAddDialog"
-      ></SignaNeedForm>
+      <SignaNeedForm @change="addSignage" @close-dialog="closeAddDialog" />
     </v-dialog>
+
     <v-dialog v-model="isEditDialogOpen" max-width="600">
       <SignaNeedForm
-        :signa-need="selectedSignaNeed"
-        @change="updateSignaNeed"
+        :signa-need="selectedSignage"
+        @change="updateSignage"
         @close-dialog="closeEditDialog"
-      ></SignaNeedForm>
+      />
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import SignaNeedForm from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedForm.vue";
-import SignaNeedTable from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedTable.vue";
-import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
+import FaSignageTable from "~/components/molecules/festival-event/logistic/signaNeed/FaSignageTable.vue";
 import {
-  getFAValidationStatus,
-  isAnimationValidatedBy,
-} from "~/utils/festival-event/fa.utils";
-import { Fa, FaCardType, FaSignaNeed } from "~/utils/models/fa.model";
-import { SignaLocation } from "@overbookd/signa";
+  FestivalActivity,
+  Signage,
+  Location,
+} from "@overbookd/festival-activity";
 
-export default Vue.extend({
+type SignaCardData = {
+  isAddDialogOpen: boolean;
+  isEditDialogOpen: boolean;
+  selectedSignage: Signage | null;
+};
+
+export default defineComponent({
   name: "SignaCard",
   components: {
-    CardErrorList,
     SearchSignaLocation,
-    SignaNeedTable,
+    FaSignageTable,
     SignaNeedForm,
   },
-  data: () => ({
-    owner: "signa",
-    cardType: FaCardType.SIGNA,
-
+  data: (): SignaCardData => ({
     isAddDialogOpen: false,
     isEditDialogOpen: false,
-
-    selectedSignaNeed: null as FaSignaNeed | null,
+    selectedSignage: null as Signage | null,
   }),
   computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
+    signa(): FestivalActivity["signa"] {
+      return this.$accessor.festivalActivity.selectedActivity.signa;
     },
-    signaNeeds(): FaSignaNeed[] {
-      return this.mFA.signaNeeds;
+    signages(): Signage[] {
+      return this.signa.signages;
     },
-    currentLocation(): SignaLocation | undefined {
-      return this.mFA.location;
-    },
-    isValidatedByOwner(): boolean {
-      return isAnimationValidatedBy(this.mFA, this.owner);
-    },
-    validationStatus(): string {
-      return getFAValidationStatus(this.mFA, this.owner).toLowerCase();
+    currentLocation(): Location | null {
+      return this.signa.location;
     },
   },
   methods: {
-    updateLocation(location: SignaLocation) {
-      this.$accessor.fa.updateFaChunk({ location });
+    updateLocation(location: Location) {
+      console.log("update location", location);
+      // TODO: update location
     },
     openAddDialog() {
       this.isAddDialogOpen = true;
@@ -106,22 +95,25 @@ export default Vue.extend({
     closeAddDialog() {
       this.isAddDialogOpen = false;
     },
-    openEditDialog(signaNeed: FaSignaNeed) {
-      this.selectedSignaNeed = signaNeed;
+    openEditDialog(signage: Signage) {
+      this.selectedSignage = signage;
       this.isEditDialogOpen = true;
     },
     closeEditDialog() {
       this.isEditDialogOpen = false;
-      this.selectedSignaNeed = null;
+      this.selectedSignage = null;
     },
-    addSignaNeed(signaNeed: FaSignaNeed) {
-      this.$accessor.fa.addSignaNeed(signaNeed);
+    addSignage(signage: Signage) {
+      console.log("add signage", signage);
+      // TODO: add signage
     },
-    updateSignaNeed(signaNeed: FaSignaNeed) {
-      this.$accessor.fa.updateSignaNeed(signaNeed);
+    updateSignage(signage: Signage) {
+      console.log("update signage", signage);
+      // TODO: update signage
     },
-    deleteSignaNeed(signaNeed: FaSignaNeed) {
-      this.$accessor.fa.deleteSignaNeed(signaNeed);
+    deleteSignage(signage: Signage) {
+      console.log("delete signage", signage);
+      // TODO: delete signage
     },
   },
 });

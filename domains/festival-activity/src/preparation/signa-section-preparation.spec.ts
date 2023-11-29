@@ -19,6 +19,7 @@ import { LocationIsRequired } from "./section-aggregates/signages";
 import { signa } from "../sections/reviews";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 import { afficheJustDanceA2 } from "../festival-activity.fake";
+import { agora, creuxCgu, local24h } from "../festival-activity.fake";
 
 describe("Signa section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -40,11 +41,11 @@ describe("Signa section of festival activity preparation", () => {
 
   describe.each`
     activityName                  | activity         | location
-    ${escapeGame.general.name}    | ${escapeGame}    | ${"Derrière TC"}
+    ${escapeGame.general.name}    | ${escapeGame}    | ${agora}
     ${escapeGame.general.name}    | ${escapeGame}    | ${null}
     ${escapeGame.general.name}    | ${escapeGame}    | ${null}
-    ${pcSecurite.general.name}    | ${pcSecurite}    | ${"Pas tes oignons"}
-    ${baladeEnPoney.general.name} | ${baladeEnPoney} | ${"Devant le batiment Sadi Carnot"}
+    ${pcSecurite.general.name}    | ${pcSecurite}    | ${creuxCgu}
+    ${baladeEnPoney.general.name} | ${baladeEnPoney} | ${local24h}
   `(
     "when updating $activityName location for $location",
     ({ activity, location }) => {
@@ -56,7 +57,7 @@ describe("Signa section of festival activity preparation", () => {
           updateLocation,
         );
 
-        expect(signa.location).toBe(updateLocation.location);
+        expect(signa.location).toEqual(updateLocation.location);
         expect(signa.signages).toEqual(activity.signa.signages);
       });
     },

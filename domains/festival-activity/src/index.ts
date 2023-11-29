@@ -48,7 +48,7 @@ export {
 } from "./sections/inquiry";
 
 export type { Public as PublicGeneral } from "./sections/general";
-export type { Signage } from "./sections/signa";
+export type { Signage, Location } from "./sections/signa";
 export type { ElectricitySupply } from "./sections/supply";
 export type { TimeWindow } from "./sections/time-window";
 

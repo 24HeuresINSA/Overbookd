@@ -5,7 +5,7 @@ import {
   ElectricitySupply,
   Supply,
 } from "../sections/supply";
-import { Signage, SignageType } from "../sections/signa";
+import { Location, Signage, SignageType } from "../sections/signa";
 import { InquiryRequest } from "../sections/inquiry";
 import { Adherent, Contractor } from "../sections/in-charge";
 
@@ -43,7 +43,7 @@ export type PrepareContractorUpdate = {
 };
 
 export type PrepareSignaUpdate = {
-  location: string | null;
+  location: Location | null;
 };
 
 export type PrepareSignageCreation = Pick<

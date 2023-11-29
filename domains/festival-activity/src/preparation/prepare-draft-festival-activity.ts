@@ -4,7 +4,7 @@ import { Draft, FestivalActivity } from "../festival-activity";
 import { InquiryRequest } from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
-import { Adherent, Contractor } from "../sections/in-charge";
+import { Contractor } from "../sections/in-charge";
 import { TimeWindow } from "../sections/time-window";
 import {
   PrepareGeneralUpdate,
@@ -25,13 +25,6 @@ import { AlreadyInitialized, Inquiries } from "./section-aggregates/inquiries";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Signages } from "./section-aggregates/signages";
 import { FestivalActivityError } from "../festival-activity.error";
-
-type PrepareInChargeFormWithAdherent = Omit<
-  PrepareInChargeUpdate,
-  "adherentId"
-> & {
-  adherent?: Adherent;
-};
 
 export class AssignDriveInDraftActivity extends FestivalActivityError {
   constructor() {
@@ -79,7 +72,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, general };
   }
 
-  updateInCharge(form: PrepareInChargeFormWithAdherent): Draft {
+  updateInCharge(form: PrepareInChargeUpdate): Draft {
     const inCharge = { ...this.activity.inCharge, ...form };
     return { ...this.activity, inCharge };
   }

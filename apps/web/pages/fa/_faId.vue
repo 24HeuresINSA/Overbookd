@@ -4,8 +4,9 @@
     <article class="container fa">
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
-      <!--<SignaCard id="signa" />
-      <FaTimeWindowCard id="timewindow" />
+      <SignaCard id="signa" />
+      <SecurityCard id="security" />
+      <!--<FaTimeWindowCard id="timewindow" />
       <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
@@ -45,14 +46,18 @@ import { FestivalActivity } from "@overbookd/festival-activity";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
+import SignaCard from "~/components/organisms/festival-event/festival-activity/SignaCard.vue";
+import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default defineComponent({
   name: "Fa",
   components: {
-    FestivalEventSidebar,
     FaGeneralCard,
     FaInChargeCard,
+    SignaCard,
+    SecurityCard,
+    FestivalEventSidebar,
     SnackNotificationContainer,
   },
 

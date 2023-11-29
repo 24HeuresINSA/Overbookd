@@ -12,6 +12,7 @@ import {
   saturday11hToSaturday18h,
   friday18hToMonday00h,
   lea,
+  local24h,
 } from "./festival-activity.fake";
 
 type FestivalActivitySections =
@@ -179,7 +180,7 @@ function defaultInReview(id: number, name: string): InReview {
       contractors: [],
     },
     signa: {
-      location: "Rien à declarer",
+      location: local24h,
       signages: [],
     },
     security: {

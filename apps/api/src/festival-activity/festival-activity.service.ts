@@ -3,10 +3,10 @@ import {
   Adherent,
   CreateFestivalActivity,
   Draft,
+  Location,
   FestivalActivity,
   PrepareFestivalActivity,
   PrepareGeneralUpdate,
-  PrepareSignaUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
@@ -17,14 +17,23 @@ export type PrepareInChargeForm = {
   team?: string;
 };
 
+export type PrepareSignaForm = {
+  locationId: number | null;
+};
+
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
+};
+
+export type Locations = {
+  find(id: number): Promise<Location | null>;
 };
 
 @Injectable()
 export class FestivalActivityService {
   constructor(
     private readonly adherents: Adherents,
+    private readonly locations: Locations,
     private readonly createFestivalActivity: CreateFestivalActivity,
     private readonly prepareFestivalActivity: PrepareFestivalActivity,
   ) {}
@@ -63,11 +72,15 @@ export class FestivalActivityService {
     });
   }
 
-  saveSignaSection(
-    id: FestivalActivity["id"],
-    signa: PrepareSignaUpdate,
+  async saveSignaSection(
+    id: number,
+    signa: PrepareSignaForm,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.updateSignaSection(id, signa);
+    const location = signa.locationId
+      ? await this.locations.find(signa.locationId)
+      : null;
+
+    return this.prepareFestivalActivity.updateSignaSection(id, { location });
   }
 
   saveSecuritySection(
