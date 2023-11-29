@@ -29,14 +29,12 @@ import { PrismaLocation } from "./repository/location-repository.prisma";
     },
     {
       provide: PrismaAdherent,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaAdherent(prisma),
+      useFactory: (prisma: PrismaService) => new PrismaAdherent(prisma),
       inject: [PrismaService],
     },
     {
       provide: PrismaLocation,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaLocation(prisma),
+      useFactory: (prisma: PrismaService) => new PrismaLocation(prisma),
       inject: [PrismaService],
     },
     {
@@ -54,9 +52,8 @@ import { PrismaLocation } from "./repository/location-repository.prisma";
     },
     {
       provide: PrepareFestivalActivity,
-      useFactory: (
-        festivalActivities: PrismaPrepareFestivalActivity,
-      ) => new PrepareFestivalActivity(festivalActivities),
+      useFactory: (festivalActivities: PrismaPrepareFestivalActivity) =>
+        new PrepareFestivalActivity(festivalActivities),
       inject: [PrismaPrepareFestivalActivity],
     },
     {
