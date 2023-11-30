@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import FaTimeWindowForm from "~/components/molecules/festival-event/time-window/FaTimeWindowForm.vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import {
@@ -51,7 +51,7 @@ type FaTimeWindowTableData = {
   isAddDialogOpen: boolean;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "FaTimeWindowTable",
   components: { FaTimeWindowForm },
   props: {

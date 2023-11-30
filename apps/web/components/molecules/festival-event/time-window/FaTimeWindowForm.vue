@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { formatDate } from "~/utils/date/date.utils";
 
@@ -39,7 +39,7 @@ interface FaTimeWindowFormData {
   end: Date;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "FaTimeWindowForm",
   components: { DateTimeField },
   data: (): FaTimeWindowFormData => ({
