@@ -2,15 +2,15 @@
   <v-card>
     <v-card-title>Demande de matos</v-card-title>
     <v-card-text>
-      <SearchGear v-model="gear" />
       <v-form class="inquiry-form">
         <v-text-field
           v-model="quantity"
           type="number"
           label="Quantité"
           :rules="[rules.number, rules.min]"
+          class="inquiry-form__quantity"
         />
-        <SearchGear v-model="gear" />
+        <SearchGear v-model="gear" class="inquiry-form__search" />
         <v-btn
           rounded
           class="inquiry-form__btn"
@@ -21,21 +21,32 @@
         </v-btn>
       </v-form>
 
-      <InquiryTable
-        :inquiries="inquiry.gears"
-        :owner="MATOS"
-        @delete="deleteInquiry"
-      />
-      <InquiryTable
-        :inquiries="inquiry.electricity"
-        :owner="ELEC"
-        @delete="deleteInquiry"
-      />
-      <InquiryTable
-        :inquiries="inquiry.barriers"
-        :owner="BARRIERES"
-        @delete="deleteInquiry"
-      />
+      <div class="inquiry-table">
+        <h2>Matos</h2>
+        <InquiryTable
+          :inquiries="inquiry.gears"
+          :owner="MATOS"
+          @delete="deleteInquiry"
+        />
+      </div>
+
+      <div class="inquiry-table">
+        <h2>Elec</h2>
+        <InquiryTable
+          :inquiries="inquiry.electricity"
+          :owner="ELEC"
+          @delete="deleteInquiry"
+        />
+      </div>
+
+      <div class="inquiry-table">
+        <h2>Barrières</h2>
+        <InquiryTable
+          :inquiries="inquiry.barriers"
+          :owner="BARRIERES"
+          @delete="deleteInquiry"
+        />
+      </div>
     </v-card-text>
   </v-card>
 </template>
@@ -56,7 +67,7 @@ import { InputRulesData } from "~/utils/rules/input.rules";
 import { min, isNumber } from "~/utils/rules/input.rules";
 
 type FaInquiryCardData = InputRulesData & {
-  gear?: Gear;
+  gear: Gear | null;
   quantity: number;
 
   MATOS: typeof MATOS;
@@ -68,7 +79,7 @@ export default defineComponent({
   name: "FaInquiryCard",
   components: { InquiryTable, SearchGear },
   data: (): FaInquiryCardData => ({
-    gear: undefined,
+    gear: null,
     quantity: 1,
 
     MATOS,
@@ -84,12 +95,12 @@ export default defineComponent({
       return this.$accessor.festivalActivity.selectedActivity.inquiry;
     },
     canAddInquiry(): boolean {
-      return this.gear !== undefined && this.quantity > 0;
+      return this.gear !== null && this.quantity > 0;
     },
   },
   methods: {
     clearInquiryForm() {
-      this.gear = undefined;
+      this.gear = null;
       this.quantity = 1;
     },
     addInquiry() {
@@ -116,10 +127,33 @@ export default defineComponent({
 .inquiry-form {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1em;
+  margin-bottom: 0;
   &__btn {
     margin-left: 20px;
     margin-bottom: 30px;
+  }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2em;
+    margin-bottom: 30px;
+    &__quantity,
+    &__search {
+      width: 100%;
+    }
+    &__btn {
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+
+.inquiry-table {
+  margin: 15px 0;
+  h2 {
+    font-size: 1rem;
+    margin-bottom: 5px;
   }
 }
 </style>

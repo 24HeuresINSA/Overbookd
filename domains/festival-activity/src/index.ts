@@ -20,9 +20,6 @@ export type {
   WithInquiries,
 } from "./sections/inquiry";
 export {
-  BARRIERES,
-  ELEC,
-  MATOS,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
   PARKING_EIFFEL,

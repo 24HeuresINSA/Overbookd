@@ -52,7 +52,7 @@ export default defineComponent({
   },
   data: (): InquiryTableData => ({
     headers: [
-      { text: "Quantité", value: "quantity" },
+      { text: "Quantité", value: "quantity", width: "30%" },
       { text: "Nom", value: "name" },
     ],
   }),

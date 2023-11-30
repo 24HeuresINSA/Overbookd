@@ -7,7 +7,9 @@
       <SignaCard id="signa" />
       <SecurityCard id="security" />
       <SupplyCard id="supply" />
-      <!--<FaTimeWindowCard id="timewindow" />
+      <FaInquiryCard id="inquiry" />
+      <!--<SignaCard id="signa" />
+      <FaTimeWindowCard id="timewindow" />
       <CollaboratorCard id="presta" />
       <h2 id="log" class="log-text">Logistique 🚚</h2>
       <h4 class="log-text">
@@ -49,6 +51,7 @@ import FaInChargeCard from "~/components/organisms/festival-event/festival-activ
 import SignaCard from "~/components/organisms/festival-event/festival-activity/SignaCard.vue";
 import SecurityCard from "~/components/organisms/festival-event/festival-activity/SecurityCard.vue";
 import SupplyCard from "~/components/organisms/festival-event/festival-activity/SupplyCard.vue";
+import FaInquiryCard from "~/components/organisms/festival-event/festival-activity/FaInquiryCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default defineComponent({
@@ -59,6 +62,7 @@ export default defineComponent({
     SignaCard,
     SecurityCard,
     SupplyCard,
+    FaInquiryCard,
     FestivalEventSidebar,
     SnackNotificationContainer,
   },

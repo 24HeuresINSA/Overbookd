@@ -42,7 +42,7 @@ export default Vue.extend({
       { id: "timewindow", text: "Créneaux", icon: "mdi-calendar-clock" },
       { id: "security", text: "Sécurité", icon: "mdi-shield" },
       { id: "presta", text: "Presta", icon: "mdi-account" },
-      { id: "log", text: "Logistique", icon: "mdi-truck" },
+      { id: "inquiry", text: "Logistique", icon: "mdi-truck" },
       { id: "supply", text: "Besoin elec/eau", icon: "mdi-flash" },
       { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
       { id: "ft", text: "FT", icon: "mdi-format-color-highlight" },
