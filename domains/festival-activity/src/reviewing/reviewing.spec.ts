@@ -19,6 +19,9 @@ import {
 } from "../sections/inquiry";
 import {
   deuxMarteaux,
+  george,
+  lea,
+  noel,
   quinzeVaubans,
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
@@ -93,40 +96,58 @@ describe("Approve festival activity", () => {
     reviewing = new Reviewing(festivalActivities);
   });
   describe.each`
-    team         | festivalActivityName                        | festivalActivityId
-    ${secu}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}
-    ${secu}      | ${extremJump.general.name}                  | ${extremJump.id}
-    ${matos}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}
-    ${matos}     | ${extremJump.general.name}                  | ${extremJump.id}
-    ${matos}     | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id}
-    ${matos}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}
-    ${humain}    | ${pcSecurite.general.name}                  | ${pcSecurite.id}
-    ${humain}    | ${extremJump.general.name}                  | ${extremJump.id}
-    ${elec}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}
-    ${elec}      | ${extremJump.general.name}                  | ${extremJump.id}
-    ${elec}      | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}
-    ${barrieres} | ${pcSecurite.general.name}                  | ${pcSecurite.id}
-    ${barrieres} | ${extremJump.general.name}                  | ${extremJump.id}
-    ${barrieres} | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}
-    ${signa}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}
-    ${signa}     | ${extremJump.general.name}                  | ${extremJump.id}
-    ${comcom}    | ${extremJump.general.name}                  | ${extremJump.id}
+    team         | festivalActivityName                        | festivalActivityId                | approver
+    ${secu}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
+    ${secu}      | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
+    ${matos}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
+    ${matos}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
+    ${matos}     | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${lea}
+    ${matos}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
+    ${humain}    | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
+    ${humain}    | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
+    ${elec}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
+    ${elec}      | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
+    ${elec}      | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
+    ${barrieres} | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
+    ${barrieres} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
+    ${barrieres} | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${noel}
+    ${signa}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
+    ${signa}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
+    ${comcom}    | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
   `(
     "when approving $festivalActivityName as $team member",
-    ({ team, festivalActivityId }) => {
-      it(`should indicate that ${team} approved it`, async () => {
-        const festivalActivity = await reviewing.approve(
+    ({ team, festivalActivityId, approver }) => {
+      it("should generate a Festival Activity Approved event", async () => {
+        const approved = await reviewing.approve(
           festivalActivityId,
           team,
+          approver.id,
         );
-        expect(festivalActivity.reviews).toHaveProperty(team, APPROVED);
+        expect(approved.by).toBe(approver.id);
+        expect(approved.at).toStrictEqual(expect.any(Date));
+        expect(approved.at.getMilliseconds()).toBe(0);
+        expect(approved.id).toStrictEqual(expect.any(Number));
+      });
+      describe("festival activity generated", () => {
+        it(`should indicate that ${team} approved it`, async () => {
+          const { festivalActivity } = await reviewing.approve(
+            festivalActivityId,
+            team,
+            approver.id,
+          );
+          expect(festivalActivity.reviews).toHaveProperty(team, APPROVED);
+        });
       });
     },
   );
   describe("when approving several times from different teams", () => {
     it("should keep all approval", async () => {
-      await reviewing.approve(extremJump.id, secu);
-      const festivalActivity = await reviewing.approve(extremJump.id, comcom);
+      await reviewing.approve(extremJump.id, secu, noel.id);
+      const { festivalActivity } = await reviewing.approve(
+        extremJump.id,
+        comcom,
+        george.id,
+      );
       expect(festivalActivity.reviews.secu).toBe(APPROVED);
       expect(festivalActivity.reviews.comcom).toBe(APPROVED);
     });
@@ -134,28 +155,35 @@ describe("Approve festival activity", () => {
   describe("when approving an already approved festival activity", () => {
     it("should indicate activity already approved", async () => {
       expect(
-        async () => await reviewing.approve(alreadyApprovedByHumain.id, humain),
+        async () =>
+          await reviewing.approve(
+            alreadyApprovedByHumain.id,
+            humain,
+            george.id,
+          ),
       ).rejects.toThrow(AlreadyApproved);
     });
   });
   describe("when approving a private festival activity as comcom", () => {
     it("should indicate that comcom is not asking to review it", async () => {
       expect(
-        async () => await reviewing.approve(privateActivity.id, comcom),
+        async () =>
+          await reviewing.approve(privateActivity.id, comcom, george.id),
       ).rejects.toThrow(NotAskingToReview);
     });
   });
   describe.each`
-    activityName                                    | activityId                            | reviewer
-    ${withInvalidGearInquiries.general.name}        | ${withInvalidGearInquiries.id}        | ${matos}
-    ${withInvalidElectricityInquiries.general.name} | ${withInvalidElectricityInquiries.id} | ${elec}
-    ${withInvalidBarrierInquiries.general.name}     | ${withInvalidBarrierInquiries.id}     | ${barrieres}
+    activityName                                    | activityId                            | reviewer     | approver
+    ${withInvalidGearInquiries.general.name}        | ${withInvalidGearInquiries.id}        | ${matos}     | ${lea}
+    ${withInvalidElectricityInquiries.general.name} | ${withInvalidElectricityInquiries.id} | ${elec}      | ${lea}
+    ${withInvalidBarrierInquiries.general.name}     | ${withInvalidBarrierInquiries.id}     | ${barrieres} | ${noel}
   `(
     "when trying to approve $activityName even with not assigned to drive inquiries as $reviewer",
-    ({ activityId, reviewer }) => {
+    ({ activityId, reviewer, approver }) => {
       it("should indicate that inquiries should been assigned to a drive", async () => {
         expect(
-          async () => await reviewing.approve(activityId, reviewer),
+          async () =>
+            await reviewing.approve(activityId, reviewer, approver.id),
         ).rejects.toThrow(ShouldAssignDrive);
       });
     },

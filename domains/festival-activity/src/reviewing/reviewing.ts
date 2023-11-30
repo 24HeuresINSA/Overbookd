@@ -8,6 +8,8 @@ import {
   NotAskingToReview,
   ShouldAssignDrive,
 } from "./reviewing.error";
+import { Adherent } from "../sections/in-charge";
+import { Approved, FestivalActivityEvents } from "../festival-activity.event";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -19,7 +21,11 @@ export class Reviewing {
     private readonly festivalActivities: ReviewingFestivalActivities,
   ) {}
 
-  async approve(faId: number, team: Reviewer): Promise<InReview> {
+  async approve(
+    faId: number,
+    team: Reviewer,
+    approverId: Adherent["id"],
+  ): Promise<Approved> {
     const festivalActivity = await this.festivalActivities.findById(faId);
     if (!festivalActivity) throw new FestivalActivityNotFound(faId);
     if (isDraft(festivalActivity)) throw new InDraft(faId);
@@ -34,7 +40,11 @@ export class Reviewing {
     }
 
     const reviews = { ...festivalActivity.reviews, [team]: APPROVED };
-    return this.festivalActivities.save({ ...festivalActivity, reviews });
+    const saved = await this.festivalActivities.save({
+      ...festivalActivity,
+      reviews,
+    });
+    return FestivalActivityEvents.approved(saved, approverId);
   }
 
   private checkInquiryDriveAssignment(

@@ -30,6 +30,7 @@ import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { Review } from "../festival-activity.error";
 import { InMemoryNotifications } from "./notifications.inmemory";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory";
+import { george, lea } from "../festival-activity.fake";
 
 function isReviewer(team: string): team is Reviewer {
   return [barrieres, comcom, elec, humain, matos, secu, signa].includes(team);
@@ -58,108 +59,159 @@ describe("Ask for review", () => {
   });
   describe("when asking a review for a draft festival activity", () => {
     describe("when draft festival activity has all required fields fulfilled", () => {
-      it("should indicate festival activity is reviewable", async () => {
-        const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-        expect(inReviewFa.status).toBe(IN_REVIEW);
+      it("should generate a Festival Activity Ready To Review event", async () => {
+        const instigatorId = lea.id;
+        const readyToReview = await askForReview.fromDraft(
+          pcSecurite.id,
+          instigatorId,
+        );
+
+        expect(readyToReview.by).toBe(instigatorId);
+        expect(readyToReview.at).toStrictEqual(expect.any(Date));
+        expect(readyToReview.at.getMilliseconds()).toBe(0);
+        expect(readyToReview.id).toStrictEqual(expect.any(Number));
       });
-      it("should keep draft festival activity sections", async () => {
-        const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-
-        expect(inReviewFa.inCharge).toEqual(pcSecurite.inCharge);
-        expect(inReviewFa.id).toBe(pcSecurite.id);
-        expect(inReviewFa.general).toEqual(pcSecurite.general);
-        expect(inReviewFa.inquiry).toEqual(pcSecurite.inquiry);
-        expect(inReviewFa.security).toEqual(pcSecurite.security);
-        expect(inReviewFa.signa).toEqual(pcSecurite.signa);
-        expect(inReviewFa.supply).toEqual(pcSecurite.supply);
-      });
-      describe("reviews", () => {
-        it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
-          const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-
-          const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-          const barrieresNotification = { team: barrieres, event };
-
-          expect(notifications.entries).toHaveLength(6);
-          expect(notifications.entries).toContainEqual({ team: humain, event });
-          expect(notifications.entries).toContainEqual({ team: signa, event });
-          expect(notifications.entries).toContainEqual({ team: secu, event });
-          expect(notifications.entries).toContainEqual({ team: matos, event });
-          expect(notifications.entries).toContainEqual({ team: elec, event });
-          expect(notifications.entries).toContainEqual(barrieresNotification);
+      describe("generated festival activity", () => {
+        it("should indicate it is reviewable", async () => {
+          const { festivalActivity: inReviewFa } = await askForReview.fromDraft(
+            pcSecurite.id,
+            lea.id,
+          );
+          expect(inReviewFa.status).toBe(IN_REVIEW);
         });
-        it.each`
-          team         | status
-          ${comcom}    | ${NOT_ASKING_TO_REVIEW}
-          ${humain}    | ${REVIEWING}
-          ${signa}     | ${REVIEWING}
-          ${secu}      | ${REVIEWING}
-          ${matos}     | ${REVIEWING}
-          ${elec}      | ${REVIEWING}
-          ${barrieres} | ${REVIEWING}
-        `("should explain $team is $status", async ({ team, status }) => {
-          const inReviewFa = await askForReview.fromDraft(pcSecurite.id);
-          if (!isReviewer(team)) throw new Error();
-          // eslint-disable-next-line security/detect-object-injection
-          expect(inReviewFa.reviews[team]).toBe(status);
+        it("should keep draft festival activity sections", async () => {
+          const { festivalActivity: inReviewFa } = await askForReview.fromDraft(
+            pcSecurite.id,
+            lea.id,
+          );
+
+          expect(inReviewFa.inCharge).toEqual(pcSecurite.inCharge);
+          expect(inReviewFa.id).toBe(pcSecurite.id);
+          expect(inReviewFa.general).toEqual(pcSecurite.general);
+          expect(inReviewFa.inquiry).toEqual(pcSecurite.inquiry);
+          expect(inReviewFa.security).toEqual(pcSecurite.security);
+          expect(inReviewFa.signa).toEqual(pcSecurite.signa);
+          expect(inReviewFa.supply).toEqual(pcSecurite.supply);
         });
-        describe("when festival activity will be published (i.e. is public)", () => {
-          it("should also ask review from comcom", async () => {
-            const inReviewFa = await askForReview.fromDraft(finaleEsport.id);
+        describe("reviews", () => {
+          it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
+            const { festivalActivity: inReviewFa } =
+              await askForReview.fromDraft(pcSecurite.id, lea.id);
 
             const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-            const comcomNotification = { team: comcom, event };
-            const humainNotification = { team: humain, event };
-            const signaNotification = { team: signa, event };
-            const secuNotification = { team: secu, event };
-            const matosNotification = { team: matos, event };
-            const elecNotification = { team: elec, event };
             const barrieresNotification = { team: barrieres, event };
 
-            expect(notifications.entries).toHaveLength(7);
-            expect(notifications.entries).toContainEqual(comcomNotification);
-            expect(notifications.entries).toContainEqual(humainNotification);
-            expect(notifications.entries).toContainEqual(signaNotification);
-            expect(notifications.entries).toContainEqual(secuNotification);
-            expect(notifications.entries).toContainEqual(matosNotification);
-            expect(notifications.entries).toContainEqual(elecNotification);
+            expect(notifications.entries).toHaveLength(6);
+            expect(notifications.entries).toContainEqual({
+              team: humain,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({
+              team: signa,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({ team: secu, event });
+            expect(notifications.entries).toContainEqual({
+              team: matos,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({ team: elec, event });
             expect(notifications.entries).toContainEqual(barrieresNotification);
           });
           it.each`
             team         | status
-            ${comcom}    | ${REVIEWING}
+            ${comcom}    | ${NOT_ASKING_TO_REVIEW}
             ${humain}    | ${REVIEWING}
             ${signa}     | ${REVIEWING}
             ${secu}      | ${REVIEWING}
             ${matos}     | ${REVIEWING}
             ${elec}      | ${REVIEWING}
             ${barrieres} | ${REVIEWING}
-          `(
-            "should explain $team is concern with review",
-            async ({ team, status }) => {
-              const inReviewFa = await askForReview.fromDraft(finaleEsport.id);
-              if (!isReviewer(team)) throw new Error();
-              // eslint-disable-next-line security/detect-object-injection
-              expect(inReviewFa.reviews[team]).toBe(status);
-            },
-          );
-        });
-      });
+          `("should explain $team is $status", async ({ team, status }) => {
+            const { festivalActivity: inReviewFa } =
+              await askForReview.fromDraft(pcSecurite.id, lea.id);
+            if (!isReviewer(team)) throw new Error();
+            // eslint-disable-next-line security/detect-object-injection
+            expect(inReviewFa.reviews[team]).toBe(status);
+          });
+          describe("when it will be published (i.e. is public)", () => {
+            it("should also ask review from comcom", async () => {
+              const { festivalActivity: inReviewFa } =
+                await askForReview.fromDraft(finaleEsport.id, george.id);
 
-      describe("when festival activity will be published (i.e. is public)", () => {
-        it("should also ask review from comcom", async () => {
-          const inReviewFa = await askForReview.fromDraft(finaleEsport.id);
-          expect(notifications.entries).toHaveLength(7);
-          const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-          expect(notifications.entries).toContainEqual({ team: comcom, event });
-          expect(notifications.entries).toContainEqual({ team: humain, event });
-          expect(notifications.entries).toContainEqual({ team: signa, event });
-          expect(notifications.entries).toContainEqual({ team: secu, event });
-          expect(notifications.entries).toContainEqual({ team: matos, event });
-          expect(notifications.entries).toContainEqual({ team: elec, event });
-          expect(notifications.entries).toContainEqual({
-            team: barrieres,
-            event,
+              const event = {
+                id: inReviewFa.id,
+                name: inReviewFa.general.name,
+              };
+              const comcomNotification = { team: comcom, event };
+              const humainNotification = { team: humain, event };
+              const signaNotification = { team: signa, event };
+              const secuNotification = { team: secu, event };
+              const matosNotification = { team: matos, event };
+              const elecNotification = { team: elec, event };
+              const barrieresNotification = { team: barrieres, event };
+
+              expect(notifications.entries).toHaveLength(7);
+              expect(notifications.entries).toContainEqual(comcomNotification);
+              expect(notifications.entries).toContainEqual(humainNotification);
+              expect(notifications.entries).toContainEqual(signaNotification);
+              expect(notifications.entries).toContainEqual(secuNotification);
+              expect(notifications.entries).toContainEqual(matosNotification);
+              expect(notifications.entries).toContainEqual(elecNotification);
+              expect(notifications.entries).toContainEqual(
+                barrieresNotification,
+              );
+            });
+            it.each`
+              team         | status
+              ${comcom}    | ${REVIEWING}
+              ${humain}    | ${REVIEWING}
+              ${signa}     | ${REVIEWING}
+              ${secu}      | ${REVIEWING}
+              ${matos}     | ${REVIEWING}
+              ${elec}      | ${REVIEWING}
+              ${barrieres} | ${REVIEWING}
+            `(
+              "should explain $team is concern with review",
+              async ({ team, status }) => {
+                const { festivalActivity: inReviewFa } =
+                  await askForReview.fromDraft(finaleEsport.id, george.id);
+                if (!isReviewer(team)) throw new Error();
+                // eslint-disable-next-line security/detect-object-injection
+                expect(inReviewFa.reviews[team]).toBe(status);
+              },
+            );
+          });
+        });
+
+        describe("when festival activity will be published (i.e. is public)", () => {
+          it("should also ask review from comcom", async () => {
+            const { festivalActivity: inReviewFa } =
+              await askForReview.fromDraft(finaleEsport.id, george.id);
+            expect(notifications.entries).toHaveLength(7);
+            const event = { id: inReviewFa.id, name: inReviewFa.general.name };
+            expect(notifications.entries).toContainEqual({
+              team: comcom,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({
+              team: humain,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({
+              team: signa,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({ team: secu, event });
+            expect(notifications.entries).toContainEqual({
+              team: matos,
+              event,
+            });
+            expect(notifications.entries).toContainEqual({ team: elec, event });
+            expect(notifications.entries).toContainEqual({
+              team: barrieres,
+              event,
+            });
           });
         });
       });
@@ -168,25 +220,27 @@ describe("Ask for review", () => {
       it("should indicate can't ask for review", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutDescription.id),
+            await askForReview.fromDraft(internalWithoutDescription.id, lea.id),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate description is required", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutDescription.id),
+            await askForReview.fromDraft(internalWithoutDescription.id, lea.id),
         ).rejects.toThrow("- Une description est nécessaire");
       });
     });
     describe("when not providing a photolink on a public activity", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutPhoto.id),
+          async () =>
+            await askForReview.fromDraft(publicWithoutPhoto.id, lea.id),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate photoLink is required on public activity", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutPhoto.id),
+          async () =>
+            await askForReview.fromDraft(publicWithoutPhoto.id, lea.id),
         ).rejects.toThrow(
           "- Une photo est nécessaire pour les animations publiées",
         );
@@ -195,12 +249,14 @@ describe("Ask for review", () => {
     describe("when not providing any category on a public activity", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutCategory.id),
+          async () =>
+            await askForReview.fromDraft(publicWithoutCategory.id, lea.id),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate categories require at least one element on public activity", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutCategory.id),
+          async () =>
+            await askForReview.fromDraft(publicWithoutCategory.id, lea.id),
         ).rejects.toThrow(
           "- Au moins une catégorie est nécessaire pour les animations publiées",
         );
@@ -209,12 +265,14 @@ describe("Ask for review", () => {
     describe("when not providing any timewindows on a public activity", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutTimeWindows.id),
+          async () =>
+            await askForReview.fromDraft(publicWithoutTimeWindows.id, lea.id),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate timeWindows require at least one element on public activity", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutTimeWindows.id),
+          async () =>
+            await askForReview.fromDraft(publicWithoutTimeWindows.id, lea.id),
         ).rejects.toThrow(
           "- Au moins un créneau horaire est nécessaire pour les animations publiées",
         );
@@ -224,37 +282,47 @@ describe("Ask for review", () => {
       it("should indicate can't ask for review", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutTeamInCharge.id),
+            await askForReview.fromDraft(
+              internalWithoutTeamInCharge.id,
+              lea.id,
+            ),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate team in charge is required", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutTeamInCharge.id),
+            await askForReview.fromDraft(
+              internalWithoutTeamInCharge.id,
+              lea.id,
+            ),
         ).rejects.toThrow("- Une équipe responsable est nécessaire");
       });
     });
     describe("when not providing a location", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () => await askForReview.fromDraft(internalWithoutLocation.id),
+          async () =>
+            await askForReview.fromDraft(internalWithoutLocation.id, lea.id),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate location is required", async () => {
         expect(
-          async () => await askForReview.fromDraft(internalWithoutLocation.id),
+          async () =>
+            await askForReview.fromDraft(internalWithoutLocation.id, lea.id),
         ).rejects.toThrow("- Le lieu est nécessaire");
       });
     });
     describe("when there is at least one timeWindows but not any inquiries provided", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () => await askForReview.fromDraft(internalWithoutInquiries.id),
+          async () =>
+            await askForReview.fromDraft(internalWithoutInquiries.id, lea.id),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate at least one inquiry is required", async () => {
         expect(
-          async () => await askForReview.fromDraft(internalWithoutInquiries.id),
+          async () =>
+            await askForReview.fromDraft(internalWithoutInquiries.id, lea.id),
         ).rejects.toThrow(
           "- Au moins une demande de matos est nécessaire pour un créneau matos",
         );
@@ -264,13 +332,19 @@ describe("Ask for review", () => {
       it("should indicate can't ask for review", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutInquiryTimeWindows.id),
+            await askForReview.fromDraft(
+              internalWithoutInquiryTimeWindows.id,
+              lea.id,
+            ),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate timeWindows is required", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutInquiryTimeWindows.id),
+            await askForReview.fromDraft(
+              internalWithoutInquiryTimeWindows.id,
+              lea.id,
+            ),
         ).rejects.toThrow(
           "- Au moins un créneau matos est nécessaire pour une demande matos",
         );
@@ -279,13 +353,13 @@ describe("Ask for review", () => {
     describe("when there is more than one error", () => {
       it("should indicate all", () => {
         expect(
-          async () => await askForReview.fromDraft(justCreated.id),
+          async () => await askForReview.fromDraft(justCreated.id, lea.id),
         ).rejects.toThrow("- Le lieu est nécessaire");
         expect(
-          async () => await askForReview.fromDraft(justCreated.id),
+          async () => await askForReview.fromDraft(justCreated.id, lea.id),
         ).rejects.toThrow("- Une description est nécessaire");
         expect(
-          async () => await askForReview.fromDraft(justCreated.id),
+          async () => await askForReview.fromDraft(justCreated.id, lea.id),
         ).rejects.toThrow("- Une équipe responsable est nécessaire");
       });
     });
@@ -300,7 +374,7 @@ describe("Ask for review", () => {
       });
       it("should indicate that festival activity is already under review", async () => {
         expect(
-          async () => await askForReview.fromDraft(pcSecurite.id),
+          async () => await askForReview.fromDraft(pcSecurite.id, lea.id),
         ).rejects.toThrow(Review.NotInDraft);
       });
     });
