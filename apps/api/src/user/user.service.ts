@@ -15,6 +15,7 @@ import { DatabaseVolunteerAssignmentStat } from "./volunteer-assignment.model";
 import {
   MyUserInformation,
   Profile,
+  User,
   UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
@@ -29,17 +30,20 @@ import {
 } from "./user.model";
 import {
   ACTIVE_NOT_ASSIGNED_FT_CONDITION,
+  SELECT_BASE_USER,
   SELECT_FT_USER_REQUESTS_BY_USER_ID,
   SELECT_MY_USER_INFORMATION,
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
   SELECT_VOLUNTEER_ASSIGNMENTS,
+  hasPermission,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_USERS,
+  PAY_CONTRIBUTION,
 } from "@overbookd/permission";
 import { ForgetMember } from "@overbookd/registration";
 
@@ -100,32 +104,27 @@ export class UserService {
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
-        teams: {
-          some: {
-            team: {
-              permissions: { some: { permissionName: BE_AFFECTED } },
-            },
-          },
-        },
+        ...hasPermission(BE_AFFECTED),
       },
       select: SELECT_USER_PERSONAL_DATA,
     });
     return users.map(UserService.formatToPersonalData);
   }
 
+  getAdherents(): Promise<User[]> {
+    return this.prisma.user.findMany({
+      orderBy: { id: "asc" },
+      where: {
+        isDeleted: false,
+        ...hasPermission(PAY_CONTRIBUTION),
+      },
+      select: SELECT_BASE_USER,
+    });
+  }
+
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const users = await this.prisma.user.findMany({
-      where: {
-        teams: {
-          some: {
-            team: {
-              permissions: {
-                some: { permission: { name: HAVE_PERSONAL_ACCOUNT } },
-              },
-            },
-          },
-        },
-      },
+      where: hasPermission(HAVE_PERSONAL_ACCOUNT),
       select: { ...SELECT_USER_PERSONAL_DATA, balance: true },
     });
     return users.map(UserService.formatToConsumer);

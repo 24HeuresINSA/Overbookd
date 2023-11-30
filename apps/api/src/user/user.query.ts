@@ -1,11 +1,16 @@
 import { ftStatuses } from "../ft/ft.model";
+import { Permission } from "@overbookd/permission";
 
-const SELECT_USER = {
-  email: true,
+export const SELECT_BASE_USER = {
+  id: true,
   firstname: true,
   lastname: true,
   nickname: true,
-  id: true,
+};
+
+const SELECT_USER = {
+  ...SELECT_BASE_USER,
+  email: true,
   birthdate: true,
   phone: true,
   comment: true,
@@ -120,3 +125,17 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
     },
   },
 };
+
+export function hasPermission(permission: Permission) {
+  return {
+    teams: {
+      some: {
+        team: {
+          permissions: {
+            some: { permission: { name: permission } },
+          },
+        },
+      },
+    },
+  };
+}

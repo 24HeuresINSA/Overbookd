@@ -49,6 +49,12 @@ export class UserRepository {
     );
   }
 
+  static getAdherents(context: Context) {
+    return context.$axios.get<HttpStringified<User[]>>(
+      `${this.basePath}/adherents`,
+    );
+  }
+
   static getAllPersonalAccountConsumers(context: Context) {
     return context.$axios.get<HttpStringified<Consumer[]>>(
       `${this.basePath}/personal-account-consumers`,

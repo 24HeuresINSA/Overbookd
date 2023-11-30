@@ -1,10 +1,10 @@
 <template>
-  <div class="main fa">
+  <div class="fa-content fa">
     <FestivalEventSidebar festival-event="FA" />
-    <v-container class="container fa">
+    <article class="container fa">
       <FaGeneralCard id="general" />
-      <FaDetailCard id="detail" />
-      <SignaCard id="signa" />
+      <FaInChargeCard id="in-charge" />
+      <!--<SignaCard id="signa" />
       <FaTimeWindowCard id="timewindow" />
       <SecurityCard id="security" />
       <CollaboratorCard id="presta" />
@@ -33,55 +33,32 @@
       <ElectricityNeedCard id="elec" />
       <WaterLogisticCard id="water" />
       <FeedbackCard id="feedback" />
-      <ChildFtCard id="ft" />
-    </v-container>
-    <FestivalEventBottomBar festival-event="FA" />
+      <ChildFtCard id="ft" />-->
+    </article>
     <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import LogisticTimeWindow from "~/components/molecules/festival-event/logistic/LogisticTimeWindow.vue";
-import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
-import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
-import ChildFtCard from "~/components/organisms/festival-event/fa/ChildFtCard.vue";
-import CollaboratorCard from "~/components/organisms/festival-event/fa/CollaboratorCard.vue";
-import FaDetailCard from "~/components/organisms/festival-event/fa/FaDetailCard.vue";
-import FaGeneralCard from "~/components/organisms/festival-event/fa/FaGeneralCard.vue";
-import FaLogisticsCard from "~/components/organisms/festival-event/fa/FaLogisticsCard.vue";
-import FaTimeWindowCard from "~/components/organisms/festival-event/fa/FaTimeWindowCard.vue";
-import SecurityCard from "~/components/organisms/festival-event/fa/SecurityCard.vue";
-import SignaCard from "~/components/organisms/festival-event/fa/SignaCard.vue";
-import WaterLogisticCard from "~/components/organisms/festival-event/fa/WaterLogisticCard.vue";
+import { defineComponent } from "vue";
+import { FestivalActivity } from "@overbookd/festival-activity";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import { Fa } from "~/utils/models/fa.model";
-import ElectricityNeedCard from "~/components/organisms/festival-event/fa/ElectricityNeedCard.vue";
+import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
+import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: "Fa",
   components: {
-    SignaCard,
-    FaLogisticsCard,
-    FaTimeWindowCard,
-    CollaboratorCard,
-    WaterLogisticCard,
-    FaGeneralCard,
-    FaDetailCard,
-    SecurityCard,
     FestivalEventSidebar,
+    FaGeneralCard,
+    FaInChargeCard,
     SnackNotificationContainer,
-    LogisticTimeWindow,
-    ChildFtCard,
-    FestivalEventBottomBar,
-    FeedbackCard,
-    ElectricityNeedCard,
   },
 
   computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
     },
     faId(): number {
       return +this.$route.params.faId;
@@ -89,100 +66,23 @@ export default Vue.extend({
   },
 
   async mounted() {
-    await this.$accessor.fa.fetchFa(this.faId);
+    await this.$accessor.festivalActivity.fetchActivity(this.faId);
     if (this.mFA.id !== this.faId) {
-      alert("Oups 😬 J'ai l'impression que cette FA n'existe pas...");
-      await this.$router.push({
-        path: "/fa",
+      this.$accessor.notif.pushNotification({
+        message: "Oups 😬 J'ai l'impression que cette FA n'existe pas...",
       });
+      this.$router.push({ path: "/fa" });
     }
-
-    let title = "FA " + this.faId;
-    if (this.mFA.name) title += " - " + this.mFA.name;
-    document.title = title;
-
-    this.$accessor.signa.getAllSignaLocations();
+    document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.main {
+.fa-content {
   display: flex;
   height: calc(100vh - 124px);
   overflow-y: hidden;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  overflow: auto;
-  padding-right: 20px;
-  width: 300px;
-
-  h1 {
-    font-size: 1.7rem;
-    margin: 16px;
-    margin-bottom: 4px;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-    font-weight: normal;
-    color: rgb(89, 89, 89);
-    margin: 16px;
-    margin-top: 0;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: auto;
-    display: block;
-    overflow: hidden;
-  }
-
-  #status {
-    display: flex;
-    align-items: center;
-
-    #dot {
-      height: 25px;
-      width: 25px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 16px;
-      margin-right: 10px;
-    }
-  }
-}
-
-.icons {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 5px 15px 16px;
-
-  .icon {
-    position: relative;
-    display: inline-block;
-
-    .icon-detail {
-      visibility: hidden;
-      width: 60px;
-      font-size: 0.9rem;
-      text-align: center;
-      border-radius: 6px;
-      user-select: none;
-
-      position: absolute;
-      z-index: 1;
-      top: 100%;
-      left: 50%;
-      margin-left: -30px;
-    }
-  }
-
-  .icon:hover .icon-detail {
-    visibility: visible;
-  }
 }
 
 .container {
@@ -191,6 +91,10 @@ export default Vue.extend({
   flex: 1 1 auto;
   overflow: auto;
   scroll-behavior: smooth;
+  width: 100%;
+  padding: 12px;
+  margin-right: auto;
+  margin-left: auto;
   padding-bottom: 50px;
   > * {
     margin-bottom: 30px;
@@ -204,26 +108,10 @@ export default Vue.extend({
   margin-bottom: 8px;
 }
 
-@media only screen and (max-width: 965px) {
-  .container {
-    padding-bottom: 200px;
-  }
-}
-
-@media only screen and (max-width: 750px) {
-  .main {
+@media only screen and (max-width: $mobile-max-width) {
+  .fa-content {
     flex-direction: column;
     overflow-y: scroll;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-
-  .summary {
-    display: none;
   }
 
   .container {

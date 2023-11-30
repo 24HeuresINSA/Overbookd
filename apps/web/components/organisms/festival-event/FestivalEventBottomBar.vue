@@ -187,7 +187,7 @@ import { MyUserInformation, User } from "@overbookd/user";
 import { hasAtLeastOneError } from "~/utils/rules/fa-validation.rules";
 import { hasAtLeastOneFTError } from "~/utils/rules/ft-validation.rules";
 import GearRequestsValidation from "../../molecules/logistic/GearRequestsValidation.vue";
-import FaCheckBeforeSubmitCard from "./fa/FaCheckBeforeSubmitCard.vue";
+import FaCheckBeforeSubmitCard from "./festival-activity/FaCheckBeforeSubmitCard.vue";
 import FtCheckBeforeSubmitCard from "./ft/FtCheckBeforeSubmitCard.vue";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 

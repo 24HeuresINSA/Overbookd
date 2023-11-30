@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar fa ft">
-    <h1>{{ titleWithId }}</h1>
-    <h2>{{ name }}</h2>
+    <h1 id="title">{{ titleWithId }}</h1>
+    <h2 id="name">{{ name }}</h2>
     <div id="status">
       <span id="dot" :class="status"></span>
       <h3>{{ statusLabel }}</h3>
@@ -20,22 +20,21 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { getFAValidationStatus } from "~/utils/festival-event/fa.utils";
+import FestivalEventSummary from "./FestivalEventSummary.vue";
 import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
 import {
-  Fa,
   FaStatusLabel,
   faStatusLabels,
-  BROUILLON as FA_DRAFT,
-} from "~/utils/models/fa.model";
+  BROUILLON as FA_BROUILLON,
+} from "~/utils/festival-event/festival-activity.model";
 import {
   Ft,
   FtStatusLabel,
   ftStatusLabels,
-  BROUILLON as FT_DRAFT,
+  BROUILLON as FT_BROUILLON,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
-import FestivalEventSummary from "./FestivalEventSummary.vue";
+import { FestivalActivity } from "@overbookd/festival-activity";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -47,8 +46,8 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): Fa {
-      return this.$accessor.fa.mFA;
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
     },
     mFT(): Ft {
       return this.$accessor.ft.mFT;
@@ -57,32 +56,34 @@ export default Vue.extend({
       return this.festivalEvent === "FA";
     },
     titleWithId(): string {
-      if (this.isFA) return `Fiche Activité n°${this.$route.params.faId}`;
-      return `Fiche Tâche n°${this.$route.params.ftId}`;
+      return this.isFA
+        ? `Fiche Activité n°${this.$route.params.faId}`
+        : `Fiche Tâche n°${this.$route.params.ftId}`;
     },
     name(): string {
-      return this.isFA ? this.mFA.name : this.mFT.name;
+      return this.isFA ? this.mFA.general.name : this.mFT.name;
     },
-    // TODO : Crée un StatusLabel commun (dans un nouveau model Status ?)
     statusLabel(): FaStatusLabel | FtStatusLabel {
-      if (this.isFA) return faStatusLabels.get(this.mFA.status) ?? FA_DRAFT;
-      return ftStatusLabels.get(this.mFT.status) ?? FT_DRAFT;
+      return this.isFA
+        ? faStatusLabels.get(this.mFA.status) ?? FA_BROUILLON
+        : ftStatusLabels.get(this.mFT.status) ?? FT_BROUILLON;
     },
     validators(): Team[] {
-      if (this.isFA) return this.$accessor.team.faValidators;
-      return this.$accessor.team.ftValidators;
+      return this.isFA
+        ? this.$accessor.team.faValidators
+        : this.$accessor.team.ftValidators;
     },
     status(): string {
-      if (this.isFA) return this.mFA.status.toLowerCase();
-      return this.mFT.status.toLowerCase();
+      return this.isFA
+        ? this.mFA.status.toLowerCase()
+        : this.mFT.status.toLowerCase();
     },
   },
   methods: {
-    getValidatorStatus(validator: Team) {
-      if (this.isFA) {
-        return getFAValidationStatus(this.mFA, validator.code).toLowerCase();
-      }
-      return getFTValidationStatus(this.mFT, validator.code).toLowerCase();
+    getValidatorStatus(validator: Team): string {
+      return this.isFA
+        ? "draft" // TODO: check reviewers status
+        : getFTValidationStatus(this.mFT, validator.code).toLowerCase();
     },
   },
 });
@@ -97,13 +98,13 @@ export default Vue.extend({
   padding-right: 20px;
   width: 300px;
 
-  h1 {
+  #title {
     font-size: 1.7rem;
     margin: 16px;
     margin-bottom: 4px;
   }
 
-  h2 {
+  #name {
     font-size: 1.2rem;
     font-weight: normal;
     color: rgb(89, 89, 89);
@@ -113,7 +114,6 @@ export default Vue.extend({
     white-space: nowrap;
     width: auto;
     display: block;
-    overflow: hidden;
   }
 
   #status {
@@ -161,10 +161,10 @@ export default Vue.extend({
   }
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: $mobile-max-width) {
   .sidebar {
     width: 100%;
-    height: auto;
+    height: fit-content;
     overflow: visible;
   }
 
