@@ -71,17 +71,16 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
         `https://instagram.com/${this.festivalActivity.id}`,
     };
 
-    const reviews = isDraft(this.festivalActivity)
-      ? undefined
-      : { ...this.festivalActivity.reviews, comcom: REVIEWING };
-
     this.festivalActivity = {
       ...this.festivalActivity,
       general: this.merge(this.festivalActivity.general, general),
-      reviews,
     };
 
-    return this;
+    const reviews: Partial<InReview["reviews"]> = isDraft(this.festivalActivity)
+      ? {}
+      : { comcom: REVIEWING };
+
+    return this.withReviews(reviews);
   }
 
   withInCharge(inCharge: Partial<T["inCharge"]>): FestivalActivityBuilder<T> {
