@@ -817,6 +817,8 @@ model FestivalActivityHistory {
 
 enum FestivalActivityEvent {
   CREATED
+  READY_TO_REVIEW
+  APPROVED
 
   @@map("festival_activity_event")
 }
