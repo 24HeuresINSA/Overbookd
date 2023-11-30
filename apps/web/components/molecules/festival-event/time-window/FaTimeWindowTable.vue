@@ -17,14 +17,14 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn v-if="!disabled" icon @click="deleteTimeWindow(item)">
+        <v-btn v-show="!disabled" icon @click="deleteTimeWindow(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </template>
       <template #no-data> Aucun créneau ajouté </template>
     </v-data-table>
 
-    <v-btn color="primary" text @click="openAddDialog">
+    <v-btn v-show="!disabled" color="primary" text @click="openAddDialog">
       Ajouter un créneau
     </v-btn>
 
