@@ -54,10 +54,10 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FtTimeWindowForm from "~/components/molecules/festival-event/timeWindow/FtTimeWindowForm.vue";
-import FtTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FtTimeWindowTable.vue";
-import FtVolunteerRequirementForm from "~/components/molecules/festival-event/timeWindow/FtVolunteerRequirementForm.vue";
-import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
+import FtTimeWindowForm from "~/components/molecules/festival-event/time-window/FtTimeWindowForm.vue";
+import FtTimeWindowTable from "~/components/molecules/festival-event/time-window/FtTimeWindowTable.vue";
+import FtVolunteerRequirementForm from "~/components/molecules/festival-event/time-window/FtVolunteerRequirementForm.vue";
+import FestivalEventCalendar from "~/components/molecules/festival-event/time-window/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import {
   getFTValidationStatusWithMultipleTeams,

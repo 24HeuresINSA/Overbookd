@@ -54,9 +54,9 @@
 <script lang="ts">
 import Vue from "vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import FaTimeWindowForm from "~/components/molecules/festival-event/timeWindow/FaTimeWindowForm.vue";
-import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
-import FestivalEventCalendar from "~/components/molecules/festival-event/timeWindow/FestivalEventCalendar.vue";
+import FaTimeWindowForm from "~/components/molecules/festival-event/time-window/FaTimeWindowForm.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
+import FestivalEventCalendar from "~/components/molecules/festival-event/time-window/FestivalEventCalendar.vue";
 import CardErrorList from "~/components/molecules/festival-event/validation/CardErrorList.vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import {
