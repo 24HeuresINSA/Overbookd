@@ -26,8 +26,6 @@
   </v-data-table>
 </template>
 
-import { electricityConnectionLabels } from
-"~/utils/festival-event/festival-activity.model";
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
