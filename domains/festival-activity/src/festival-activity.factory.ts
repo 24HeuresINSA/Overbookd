@@ -36,23 +36,23 @@ function* numberGenerator(start: number): Generator<number> {
 class FestivalActivityFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
-  inReview(name: string): InReviewBuilder {
+  inReview(name: string): FestivalActivityBuilder<InReview> {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultInReview(id, name);
-    return new InReviewBuilder(festivalActivity);
+    return new FestivalActivityBuilder(festivalActivity);
   }
 
-  draft(name: string): DraftBuilder {
+  draft(name: string): FestivalActivityBuilder<Draft> {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultDraft(id, name);
-    return new DraftBuilder(festivalActivity);
+    return new FestivalActivityBuilder(festivalActivity);
   }
 }
 
 class FestivalActivityBuilder<T extends FestivalActivity> {
-  constructor(protected festivalActivity: T) {}
+  constructor(private festivalActivity: T) {}
 
-  withGeneral(general: Partial<T["general"]>) {
+  withGeneral(general: Partial<T["general"]>): FestivalActivityBuilder<T> {
     this.festivalActivity = {
       ...this.festivalActivity,
       general: this.merge(this.festivalActivity.general, general),
@@ -92,7 +92,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withSigna(signa: Partial<T["signa"]>) {
+  withSigna(signa: Partial<T["signa"]>): FestivalActivityBuilder<T> {
     this.festivalActivity = {
       ...this.festivalActivity,
       signa: this.merge(this.festivalActivity.signa, signa),
@@ -100,7 +100,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withSecurity(security: Partial<T["security"]>) {
+  withSecurity(security: Partial<T["security"]>): FestivalActivityBuilder<T> {
     this.festivalActivity = {
       ...this.festivalActivity,
       security: this.merge(this.festivalActivity.security, security),
@@ -108,7 +108,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withSupply(supply: Partial<T["supply"]>) {
+  withSupply(supply: Partial<T["supply"]>): FestivalActivityBuilder<T> {
     this.festivalActivity = {
       ...this.festivalActivity,
       supply: this.merge(this.festivalActivity.supply, supply),
@@ -116,7 +116,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  withInquiry(inquiry: Partial<T["inquiry"]>) {
+  withInquiry(inquiry: Partial<T["inquiry"]>): FestivalActivityBuilder<T> {
     this.festivalActivity = {
       ...this.festivalActivity,
       inquiry: this.merge(this.festivalActivity.inquiry, inquiry),
@@ -124,7 +124,19 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
     return this;
   }
 
-  protected merge<T extends FestivalActivitySections>(
+  withReviews(
+    reviews: Partial<InReview["reviews"]>,
+  ): FestivalActivityBuilder<T> {
+    if (isDraft(this.festivalActivity)) return this;
+
+    this.festivalActivity = {
+      ...this.festivalActivity,
+      reviews: this.merge(this.festivalActivity.reviews, reviews),
+    };
+    return this;
+  }
+
+  private merge<T extends FestivalActivitySections>(
     current: T,
     update: Partial<T>,
   ): T {
@@ -139,67 +151,6 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
 
   build(): T {
     return this.festivalActivity;
-  }
-}
-
-class InReviewBuilder extends FestivalActivityBuilder<InReview> {
-  asPublic(publicData: PublicData): InReviewBuilder {
-    const general: Partial<Public> = {
-      isFlagship: publicData.isFlagship ?? false,
-      toPublish: true,
-      categories: publicData.categories ?? ["public"],
-      timeWindows: publicData.timeWindows ?? [saturday11hToSaturday18h],
-      photoLink:
-        publicData.photoLink ??
-        `https://instagram.com/${this.festivalActivity.id}`,
-    };
-
-    const reviews: InReview["reviews"] = {
-      ...this.festivalActivity.reviews,
-      comcom: REVIEWING,
-    };
-
-    this.festivalActivity = {
-      ...this.festivalActivity,
-      general: this.merge(this.festivalActivity.general, general),
-      reviews,
-    };
-
-    return this;
-  }
-
-  withReviews(reviews: Partial<InReview["reviews"]>): InReviewBuilder {
-    this.festivalActivity = {
-      ...this.festivalActivity,
-      reviews: this.merge(this.festivalActivity.reviews, reviews),
-    };
-
-    return this;
-  }
-}
-
-class DraftBuilder extends FestivalActivityBuilder<Draft> {
-  asPublic(publicData: PublicData): DraftBuilder {
-    const general: Partial<Public> = {
-      isFlagship: publicData.isFlagship ?? false,
-      toPublish: true,
-      categories: publicData.categories ?? ["public"],
-      timeWindows: publicData.timeWindows ?? [saturday11hToSaturday18h],
-      photoLink:
-        publicData.photoLink ??
-        `https://instagram.com/${this.festivalActivity.id}`,
-    };
-
-    this.festivalActivity = {
-      ...this.festivalActivity,
-      general: this.merge(this.festivalActivity.general, general),
-    };
-
-    return this;
-  }
-
-  withReviews(): DraftBuilder {
-    return this;
   }
 }
 
@@ -257,7 +208,7 @@ function defaultInReview(id: number, name: string): InReview {
   };
 }
 
-export function defaultDraft(id: number, name: string): Draft {
+function defaultDraft(id: number, name: string): Draft {
   return {
     id,
     general: {
