@@ -17,12 +17,13 @@ export type {
   InquiryWithPotentialRequests,
   InquiryWithRequests,
   InquiryRequest,
+  InquiryOwner,
   WithInquiries,
 } from "./sections/inquiry";
 export {
+  MATOS,
   BARRIERES,
   ELEC,
-  MATOS,
   BENNE_COLLETTE_BESSON,
   BENNE_PARKING_K_FET,
   PARKING_EIFFEL,
@@ -47,9 +48,26 @@ export {
   LIVRE_PAR_COM,
 } from "./sections/inquiry";
 
+export type {
+  ElectricitySupply,
+  ElectricityConnection,
+} from "./sections/supply";
+export {
+  PC16_Prise_classique,
+  P17_16A_MONO,
+  P17_16A_TRI,
+  P17_16A_TETRA,
+  P17_32A_MONO,
+  P17_32A_TRI,
+  P17_32A_TETRA,
+  P17_63A_MONO,
+  P17_63A_TRI,
+  P17_63A_TETRA,
+  P17_125A_TETRA,
+} from "./sections/supply";
+
 export type { Public as PublicGeneral } from "./sections/general";
 export type { Signage, Location } from "./sections/signa";
-export type { ElectricitySupply } from "./sections/supply";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS
