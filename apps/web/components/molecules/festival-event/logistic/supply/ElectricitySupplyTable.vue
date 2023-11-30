@@ -8,6 +8,9 @@
     hide-default-footer
     dense
   >
+    <template #[`item.connection`]="{ item }">
+      {{ getConnectionLabel(item.electricityType) }}
+    </template>
     <template #item.power="{ item }"> {{ item.power }} W </template>
     <template #item.actions="{ item }">
       <div v-if="!disabled">
@@ -23,9 +26,15 @@
   </v-data-table>
 </template>
 
+import { electricityConnectionLabels } from
+"~/utils/festival-event/festival-activity.model";
 <script lang="ts">
 import { defineComponent } from "vue";
-import { ElectricitySupply } from "@overbookd/festival-activity";
+import {
+  ElectricitySupply,
+  ElectricityConnection,
+} from "@overbookd/festival-activity";
+import { electricityConnectionLabels } from "~/utils/festival-event/festival-activity.model";
 
 export default defineComponent({
   name: "ElectricitySupplyTable",
@@ -50,6 +59,9 @@ export default defineComponent({
     ],
   }),
   methods: {
+    getConnectionLabel(connection: ElectricityConnection): string {
+      return electricityConnectionLabels.get(connection) ?? "";
+    },
     updateSupply(supply: ElectricitySupply) {
       this.$emit("update", supply);
     },
