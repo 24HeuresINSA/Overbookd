@@ -2,6 +2,13 @@
   <v-card>
     <v-card-title>Demande de matos</v-card-title>
     <v-card-text>
+      <FaTimeWindowTable
+        :time-windows="inquiry.timeWindows"
+        @add="addTimeWindow($event)"
+        @update="updateTimeWindow($event)"
+        @delete="deleteTimeWindow($event)"
+      />
+
       <v-form class="inquiry-form">
         <v-text-field
           v-model="quantity"
@@ -54,6 +61,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/timeWindow/FaTimeWindowTable.vue";
 import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
 import {
   FestivalActivity,
@@ -61,10 +69,12 @@ import {
   MATOS,
   ELEC,
   BARRIERES,
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
 import { min, isNumber } from "~/utils/rules/input.rules";
+import { IProvidePeriod } from "@overbookd/period";
 
 type FaInquiryCardData = InputRulesData & {
   gear: Gear | null;
@@ -77,7 +87,7 @@ type FaInquiryCardData = InputRulesData & {
 
 export default defineComponent({
   name: "FaInquiryCard",
-  components: { InquiryTable, SearchGear },
+  components: { InquiryTable, SearchGear, FaTimeWindowTable },
   data: (): FaInquiryCardData => ({
     gear: null,
     quantity: 1,
@@ -118,6 +128,18 @@ export default defineComponent({
     deleteInquiry(inquiry: InquiryRequest) {
       console.log("delete inquiry", inquiry);
       // TODO: delete inquiry
+    },
+    addTimeWindow(period: IProvidePeriod) {
+      console.log("add timeWindow", period);
+      // TODO: add timeWindow
+    },
+    updateTimeWindow(timeWindow: TimeWindow) {
+      console.log("update timeWindow", timeWindow);
+      // TODO: update timeWindow
+    },
+    deleteTimeWindow(timeWindow: TimeWindow) {
+      console.log("delete timeWindow", timeWindow);
+      // TODO: delete timeWindow
     },
   },
 });
