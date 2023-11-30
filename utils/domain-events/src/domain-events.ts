@@ -3,8 +3,12 @@ import type {
   VolunteerRegisteredEvent,
 } from "@overbookd/registration";
 import { Observable, filter } from "rxjs";
+import { FestivalActivityCreatedEvent } from "./festival-activity";
 
-export type DomainEvent = AdherentRegisteredEvent | VolunteerRegisteredEvent;
+export type DomainEvent =
+  | AdherentRegisteredEvent
+  | VolunteerRegisteredEvent
+  | FestivalActivityCreatedEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,

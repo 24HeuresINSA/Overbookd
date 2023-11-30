@@ -111,3 +111,5 @@ export type {
   InReviewWithoutStatus,
 } from "./ask-for-review/in-review-festival-activity";
 export { InReviewSpecification } from "./ask-for-review/in-review-festival-activity";
+
+export type { Created } from "./festival-activity.event";

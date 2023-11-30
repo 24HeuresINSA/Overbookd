@@ -11,6 +11,8 @@ import {
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -36,6 +38,7 @@ export class FestivalActivityService {
     private readonly locations: Locations,
     private readonly createFestivalActivity: CreateFestivalActivity,
     private readonly prepareFestivalActivity: PrepareFestivalActivity,
+    private readonly eventStore: DomainEventService,
   ) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {
@@ -48,7 +51,12 @@ export class FestivalActivityService {
 
   async create({ id }: JwtPayload, name: string): Promise<Draft> {
     const author = await this.adherents.find(id);
-    return this.createFestivalActivity.create({ author, name });
+    const created = await this.createFestivalActivity.create({
+      author,
+      name,
+    });
+    this.eventStore.publish(FestivalActivityEvents.created(created));
+    return created.festivalActivity;
   }
 
   saveGeneralSection(

@@ -11,6 +11,9 @@ import {
 import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activity.prisma";
 import { PrismaCreateFestivalActivities } from "./repository/create-festival-activity.prisma";
 import { PrismaLocations } from "./repository/location-repository.prisma";
+import { DomainEventModule } from "../domain-event/domain-event.module";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { HistoryModule } from "./history/history.module";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -63,15 +66,24 @@ import { PrismaLocations } from "./repository/location-repository.prisma";
         locations: PrismaLocations,
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
-      ) => new FestivalActivityService(adherents, locations, create, prepare),
+        eventStore: DomainEventService,
+      ) =>
+        new FestivalActivityService(
+          adherents,
+          locations,
+          create,
+          prepare,
+          eventStore,
+        ),
       inject: [
         PrismaAdherents,
         PrismaLocations,
         CreateFestivalActivity,
         PrepareFestivalActivity,
+        DomainEventService,
       ],
     },
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, DomainEventModule, HistoryModule],
 })
 export class FestivalActivityModule {}
