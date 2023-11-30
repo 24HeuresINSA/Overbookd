@@ -49,6 +49,9 @@ export class PrismaCreateFestivalActivities
             ...activity.inquiry.gears,
           ],
         },
+        feedbacks: {
+          create: activity.feedbacks,
+        },
       },
     });
     return DraftBuilder.fromDatabase(saved).festivalActivity;
