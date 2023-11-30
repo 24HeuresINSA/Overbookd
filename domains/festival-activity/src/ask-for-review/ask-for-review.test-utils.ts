@@ -8,6 +8,8 @@ import {
   uneBouilloire,
   faker,
   uneMultiprise,
+  agora,
+  local24h,
 } from "../festival-activity.fake";
 
 const factory = getFactory();
@@ -16,7 +18,7 @@ export const pcSecurite = factory
   .draft("PC Securite")
   .withGeneral({ description: "Tour de guet" })
   .withInCharge({ adherent: robocop, team: "secu" })
-  .withSigna({ location: "Pas tes oignons" })
+  .withSigna({ location: local24h })
   .withSecurity({ specialNeed: "Une armee d'AS super malin" })
   .withInquiry({
     timeWindows: [friday09hToMonday08h],
@@ -38,7 +40,7 @@ export const finaleEsport = factory
     timeWindows: [saturday19hToSunday01h],
   })
   .withInCharge({ adherent: faker, team: "plaizir" })
-  .withSigna({ location: "Amphi 3000" })
+  .withSigna({ location: agora })
   .withSecurity({ specialNeed: "Une armee d'AS super malin" })
   .withInquiry({
     timeWindows: [saturday19hToSunday01h],

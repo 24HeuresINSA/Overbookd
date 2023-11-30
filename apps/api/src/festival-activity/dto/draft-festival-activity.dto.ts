@@ -9,6 +9,7 @@ import {
   InquiryWithPotentialRequests,
   Signage,
   TimeWindow,
+  Location,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
@@ -136,7 +137,7 @@ class SignaDto implements Signa {
     description: "Define where this festival activity take place",
     required: false,
   })
-  location: string | null;
+  location: Location | null;
 
   @ApiProperty({
     description: "Festival activity signages needed",

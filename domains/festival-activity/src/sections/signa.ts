@@ -13,11 +13,16 @@ export type Signage = {
   comment: string | null;
 };
 
+export type Location = {
+  id: number;
+  name: string;
+};
+
 export type Signa = {
-  location: string;
+  location: Location;
   signages: Signage[];
 };
 
 export type DraftSigna = Omit<Signa, "location"> & {
-  location: string | null;
+  location: Location | null;
 };

@@ -4,6 +4,9 @@ import {
   friday18hToMonday00h,
   lafarge,
   uneBouilloire,
+  pelouseHumas,
+  agora,
+  creuxCgu,
 } from "../festival-activity.fake";
 import {
   friday12hToFriday14h,
@@ -48,7 +51,7 @@ export const escapeGame = factory
     contractors: [neverEscape],
   })
   .withSigna({
-    location: "Creux CGU",
+    location: creuxCgu,
     signages: [panneauEscapeGame4x3, bacheBienvenue10m],
   })
   .withSecurity({ specialNeed: "Pas de besoin particulier" })
@@ -87,7 +90,7 @@ export const justDance = factory
     contractors: [videoGameCollectif],
   })
   .withSigna({
-    location: "Hall de la mde",
+    location: agora,
     signages: [afficheJustDanceA2, afficheJustDance10x3],
   })
   .withSupply({
@@ -111,7 +114,7 @@ export const baladeEnPoney = factory
     timeWindows: [saturday14hToSaturday18h, sunday14hToSunday18h],
   })
   .withInCharge({ adherent: noel, team: "plaizir" })
-  .withSigna({ location: "Pelouse des humas" })
+  .withSigna({ location: pelouseHumas })
   .withInquiry({
     timeWindows: [saturday14hToSaturday18h],
     barriers: [quinzeVaubans],
@@ -126,7 +129,7 @@ export const qgOrga = factory
     timeWindows: [friday12hToMonday00h],
   })
   .withInCharge({ adherent: george, team: "beboo" })
-  .withSigna({ location: "Agora" })
+  .withSigna({ location: agora })
   .withSupply({ electricity: [lumiere, enceinte] })
   .build();
 
@@ -151,7 +154,7 @@ export const validatedBySecu = factory
 export const validatedBySigna = factory
   .inReview("Validée par la signa")
   .withSigna({
-    location: "Pelouse des humas",
+    location: pelouseHumas,
     signages: [afficheJustDanceA2, afficheJustDance10x3],
   })
   .withReviews({ signa: APPROVED })

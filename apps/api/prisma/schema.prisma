@@ -198,11 +198,12 @@ enum FaType {
 }
 
 model SignaLocation {
-  id      Int    @id @default(autoincrement())
-  name    String @db.VarChar(255)
-  geoJson Json?  @map("geo_json")
-  fas     Fa[]
-  fts     Ft[]
+  id                 Int                @id @default(autoincrement())
+  name               String             @db.VarChar(255)
+  geoJson            Json?              @map("geo_json")
+  fas                Fa[]
+  fts                Ft[]
+  festivalActivities FestivalActivity[]
 
   @@map("signa_location")
 }
@@ -639,8 +640,9 @@ model FestivalActivity {
   contractors Contractor[]
 
   // Signa
-  location String?                   @db.VarChar(50)
-  signages FestivalActivitySignage[]
+  location   SignaLocation?            @relation(fields: [locationId], references: [id])
+  locationId Int?                      @map("location_id")
+  signages   FestivalActivitySignage[]
 
   // Security
   specialNeed String? @map("special_need") @db.Text

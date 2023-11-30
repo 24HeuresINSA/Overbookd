@@ -1,4 +1,5 @@
 import { SELECT_ADHERENT } from "./adherent.query";
+import { SELECT_LOCATION } from "./location.query";
 
 const SELECT_REVIEW = {
   team: true,
@@ -40,7 +41,7 @@ const SELECT_IN_CHARGE = {
 };
 
 const SELECT_SIGNA = {
-  location: true,
+  location: { select: SELECT_LOCATION },
   signages: {
     select: {
       id: true,

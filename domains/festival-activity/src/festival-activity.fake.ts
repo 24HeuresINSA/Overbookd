@@ -106,6 +106,23 @@ export const neverEscape = {
   comment: "Sympa",
 };
 
+export const local24h = {
+  id: 1,
+  name: "Local 24h",
+};
+export const creuxCgu = {
+  id: 2,
+  name: "Creux CGU",
+};
+export const pelouseHumas = {
+  id: 3,
+  name: "Pelouse des humas",
+};
+export const agora = {
+  id: 4,
+  name: "Agora",
+};
+
 export const afficheJustDanceA2: Signage = {
   id: "affiche-just-dance-a2",
   size: "A2",
