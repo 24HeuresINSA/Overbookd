@@ -36,10 +36,15 @@ import {
   SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
   SELECT_USER_PERSONAL_DATA,
   SELECT_VOLUNTEER_ASSIGNMENTS,
-  WHERE_HAVE_PERSONAL_ACCOUNT,
+  hasPermission,
 } from "./user.query";
 import { TaskCategory } from "@prisma/client";
-import { BE_AFFECTED, MANAGE_USERS } from "@overbookd/permission";
+import {
+  BE_AFFECTED,
+  HAVE_PERSONAL_ACCOUNT,
+  MANAGE_USERS,
+  PAY_CONTRIBUTION,
+} from "@overbookd/permission";
 import { ForgetMember } from "@overbookd/registration";
 
 @Injectable()
@@ -99,13 +104,7 @@ export class UserService {
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
-        teams: {
-          some: {
-            team: {
-              permissions: { some: { permissionName: BE_AFFECTED } },
-            },
-          },
-        },
+        ...hasPermission(BE_AFFECTED),
       },
       select: SELECT_USER_PERSONAL_DATA,
     });
@@ -117,7 +116,7 @@ export class UserService {
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
-        ...WHERE_HAVE_PERSONAL_ACCOUNT,
+        ...hasPermission(PAY_CONTRIBUTION),
       },
       select: SELECT_BASE_USER,
     });
@@ -125,7 +124,7 @@ export class UserService {
 
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const users = await this.prisma.user.findMany({
-      where: WHERE_HAVE_PERSONAL_ACCOUNT,
+      where: hasPermission(HAVE_PERSONAL_ACCOUNT),
       select: { ...SELECT_USER_PERSONAL_DATA, balance: true },
     });
     return users.map(UserService.formatToConsumer);

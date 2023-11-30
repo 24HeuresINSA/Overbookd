@@ -1,5 +1,5 @@
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { ftStatuses } from "../ft/ft.model";
+import { Permission } from "@overbookd/permission";
 
 export const SELECT_BASE_USER = {
   id: true,
@@ -126,14 +126,16 @@ export const SELECT_TIMESPAN_PERIOD_WITH_CATEGORY = {
   },
 };
 
-export const WHERE_HAVE_PERSONAL_ACCOUNT = {
-  teams: {
-    some: {
-      team: {
-        permissions: {
-          some: { permission: { name: HAVE_PERSONAL_ACCOUNT } },
+export function hasPermission(permission: Permission) {
+  return {
+    teams: {
+      some: {
+        team: {
+          permissions: {
+            some: { permission: { name: permission } },
+          },
         },
       },
     },
-  },
-};
+  };
+}
