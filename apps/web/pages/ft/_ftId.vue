@@ -67,8 +67,8 @@ export default Vue.extend({
   },
   methods: {
     async retrieveValidatorsIfNeeded() {
-      if (this.$accessor.team.ftValidators.length) return;
-      return this.$accessor.team.fetchFtValidators();
+      if (this.$accessor.team.ftReviewers.length) return;
+      return this.$accessor.team.fetchFtReviewers();
     },
   },
 });

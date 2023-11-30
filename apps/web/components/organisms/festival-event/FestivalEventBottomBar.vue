@@ -243,8 +243,8 @@ export default Vue.extend({
       return this.isFA ? this.mFA.id : this.mFT.id;
     },
     validators(): Team[] {
-      if (this.isFA) return this.$accessor.team.faValidators;
-      return this.$accessor.team.ftValidators;
+      if (this.isFA) return this.$accessor.team.faReviewers;
+      return this.$accessor.team.ftReviewers;
     },
     mValidators(): Team[] {
       if (!this.validators) return [];

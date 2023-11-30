@@ -3,15 +3,15 @@
     <h1 id="title">{{ titleWithId }}</h1>
     <h2 id="name">{{ name }}</h2>
     <div id="status">
-      <span id="dot" :class="status"></span>
+      <span id="dot" :class="status" />
       <h3>{{ statusLabel }}</h3>
     </div>
     <div class="icons">
-      <div v-for="validator of validators" :key="validator.code" class="icon">
-        <v-icon :class="getValidatorStatus(validator)" size="26">
-          {{ validator.icon }}
+      <div v-for="reviewer of reviewers" :key="reviewer.code" class="icon">
+        <v-icon :class="getReviewerStatus(reviewer)" size="22">
+          {{ reviewer.icon }}
         </v-icon>
-        <span class="icon-detail">{{ validator.name }}</span>
+        <span class="icon-detail">{{ reviewer.name }}</span>
       </div>
     </div>
     <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
@@ -26,6 +26,7 @@ import {
   FaStatusLabel,
   faStatusLabels,
   BROUILLON as FA_BROUILLON,
+  findFaReviewerStatus,
 } from "~/utils/festival-event/festival-activity.model";
 import {
   Ft,
@@ -68,10 +69,10 @@ export default Vue.extend({
         ? faStatusLabels.get(this.mFA.status) ?? FA_BROUILLON
         : ftStatusLabels.get(this.mFT.status) ?? FT_BROUILLON;
     },
-    validators(): Team[] {
+    reviewers(): Team[] {
       return this.isFA
-        ? this.$accessor.team.faValidators
-        : this.$accessor.team.ftValidators;
+        ? this.$accessor.team.faReviewers
+        : this.$accessor.team.ftReviewers;
     },
     status(): string {
       return this.isFA
@@ -79,11 +80,14 @@ export default Vue.extend({
         : this.mFT.status.toLowerCase();
     },
   },
+  async mounted() {
+    await this.$accessor.team.fetchFaReviewers();
+  },
   methods: {
-    getValidatorStatus(validator: Team): string {
+    getReviewerStatus(reviewer: Team): string {
       return this.isFA
-        ? "draft" // TODO: check reviewers status
-        : getFTValidationStatus(this.mFT, validator.code).toLowerCase();
+        ? findFaReviewerStatus(this.mFA, reviewer.code).toLowerCase()
+        : getFTValidationStatus(this.mFT, reviewer.code).toLowerCase();
     },
   },
 });
@@ -96,7 +100,7 @@ export default Vue.extend({
   flex: 0 0 auto;
   overflow: auto;
   padding-right: 20px;
-  width: 300px;
+  width: 320px;
 
   #title {
     font-size: 1.7rem;

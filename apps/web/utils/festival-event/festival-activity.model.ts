@@ -4,6 +4,7 @@ import {
   ElectricitySupply,
   FestivalActivity,
   IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
   P17_125A_TETRA,
   P17_16A_MONO,
   P17_16A_TETRA,
@@ -15,6 +16,8 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
+  isDraft,
+  isReviewer,
 } from "@overbookd/festival-activity";
 
 export const BROUILLON = "Brouillon";
@@ -56,3 +59,14 @@ export const electricityConnectionLabels = new Map<
   [P17_63A_TETRA, "63A Tetra (P17 63A TETRA)"],
   [P17_125A_TETRA, "125A Tetra (P17 125A TETRA)"],
 ]);
+
+export function findFaReviewerStatus(
+  fa: FestivalActivity,
+  reviewer: string,
+): string {
+  const isDraftFa = isDraft(fa);
+  const isNotReviewer = !isReviewer(reviewer);
+  if (isDraftFa || isNotReviewer) return NOT_ASKING_TO_REVIEW;
+  // eslint-disable-next-line security/detect-object-injection
+  return fa.reviews[reviewer];
+}

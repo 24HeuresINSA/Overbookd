@@ -216,7 +216,7 @@ export default defineComponent({
       return this.$accessor.festivalActivity.allActivities;
     },
     validators(): Team[] {
-      return this.$accessor.team.faValidators;
+      return this.$accessor.team.faReviewers;
     },
     statuses(): [FaStatus, FaStatusLabel][] {
       return [...faStatusLabels.entries()];
@@ -261,7 +261,7 @@ export default defineComponent({
 
   async mounted() {
     await Promise.all([
-      this.$accessor.team.fetchFaValidators(),
+      this.$accessor.team.fetchFaReviewers(),
       this.$accessor.festivalActivity.fetchAllActivities(),
     ]);
   },

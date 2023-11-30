@@ -7,7 +7,7 @@ export type {
   PreviewInReview,
   PreviewFestivalActivity,
 } from "./festival-activity";
-export { DRAFT, IN_REVIEW } from "./festival-activity";
+export { DRAFT, IN_REVIEW, isDraft } from "./festival-activity";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 
@@ -91,7 +91,6 @@ export type {
   FestivalActivityCreationForm,
   CreateFestivalActivityRepository,
 } from "./creation/creation";
-export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
 export { defaultDraft } from "./festival-activity.factory";
 
 // PREPARATION
@@ -105,9 +104,9 @@ export type {
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW
-export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
 export type {
   FestivalActivityWithoutStatus,
   InReviewWithoutStatus,
 } from "./ask-for-review/in-review-festival-activity";
 export { InReviewSpecification } from "./ask-for-review/in-review-festival-activity";
+export { isReviewer } from "./ask-for-review/ask-for-review";

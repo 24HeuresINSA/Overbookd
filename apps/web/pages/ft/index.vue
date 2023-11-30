@@ -264,7 +264,7 @@ export default Vue.extend({
       return this.$accessor.user.can(AFFECT_VOLUNTEER);
     },
     validators(): Team[] {
-      return this.$accessor.team.ftValidators;
+      return this.$accessor.team.ftReviewers;
     },
     deletedFTTextClass(): string {
       return this.filters.isDeleted ? "invalid-text" : "valid-text";
@@ -313,7 +313,7 @@ export default Vue.extend({
 
     async retrieveValidatorsIfNeeded(): Promise<void> {
       if (this.validators.length) return;
-      return this.$accessor.team.fetchFtValidators();
+      return this.$accessor.team.fetchFtReviewers();
     },
 
     getFTStatus(status: FtStatus): string {

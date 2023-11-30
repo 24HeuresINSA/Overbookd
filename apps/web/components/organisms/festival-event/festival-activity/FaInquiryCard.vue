@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Demande de matos</v-card-title>
+    <v-card-title>Logistique</v-card-title>
     <v-card-text>
       <FaTimeWindowTable
         :time-windows="inquiry.timeWindows"

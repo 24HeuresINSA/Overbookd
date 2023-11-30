@@ -1,7 +1,17 @@
 import { FestivalActivityNotFound, Review } from "../festival-activity.error";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { FestivalActivity, InReview, isDraft } from "../festival-activity";
-import { Reviewer, WaitingForReview } from "../sections/reviews";
+import {
+  Reviewer,
+  WaitingForReview,
+  barrieres,
+  comcom,
+  elec,
+  humain,
+  matos,
+  secu,
+  signa,
+} from "../sections/reviews";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -31,4 +41,8 @@ export class AskForReview {
     this.notifications.add(inReview.readyForReview);
     return this.festivalActivities.save(inReview);
   }
+}
+
+export function isReviewer(team: string): team is Reviewer {
+  return [barrieres, comcom, elec, humain, matos, secu, signa].includes(team);
 }

@@ -8,14 +8,14 @@ const teamRepo = RepoFactory.TeamRepository;
 // The state types definitions
 interface State {
   teams: Team[];
-  faValidators: Team[];
-  ftValidators: Team[];
+  faReviewers: Team[];
+  ftReviewers: Team[];
 }
 
 export const state = (): State => ({
   teams: [],
-  faValidators: [] as Team[],
-  ftValidators: [] as Team[],
+  faReviewers: [] as Team[],
+  ftReviewers: [] as Team[],
 });
 
 export const getters = getterTree(state, {
@@ -43,11 +43,11 @@ export const mutations = mutationTree(state, {
   SET_TEAMS(state, teams: Team[]) {
     state.teams = teams;
   },
-  SET_FA_VALIDATORS(state, teams: Team[]) {
-    state.faValidators = teams;
+  SET_FA_REVIEWERS(state, teams: Team[]) {
+    state.faReviewers = teams;
   },
-  SET_FT_VALIDATORS(state, teams: Team[]) {
-    state.ftValidators = teams;
+  SET_FT_REVIEWERS(state, teams: Team[]) {
+    state.ftReviewers = teams;
   },
 });
 
@@ -60,16 +60,16 @@ export const actions = actionTree(
       commit("SET_TEAMS", res.data);
     },
 
-    async fetchFaValidators({ commit }): Promise<void> {
+    async fetchFaReviewers({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getFaValidators(this));
       if (!res) return;
-      commit("SET_FA_VALIDATORS", res.data);
+      commit("SET_FA_REVIEWERS", res.data);
     },
 
-    async fetchFtValidators({ commit }): Promise<void> {
+    async fetchFtReviewers({ commit }): Promise<void> {
       const res = await safeCall(this, teamRepo.getFtValidators(this));
       if (!res) return;
-      commit("SET_FT_VALIDATORS", res.data);
+      commit("SET_FT_REVIEWERS", res.data);
     },
 
     async createTeam({ dispatch }, team: Team): Promise<void> {

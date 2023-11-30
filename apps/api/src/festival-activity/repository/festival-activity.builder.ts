@@ -7,7 +7,6 @@ import {
   FestivalActivityWithoutStatus,
   IN_REVIEW,
   InReview,
-  InReviewSpecification,
   InquiryRequest,
   MATOS,
   NOT_ASKING_TO_REVIEW,
@@ -183,9 +182,10 @@ class InReviewBuilder
   implements VisualizeFestivalActivity<InReview, PreviewInReview>
 {
   static init(activityWithoutStatus: FestivalActivityWithoutStatus) {
-    return InReviewSpecification.isSatisfiedBy(activityWithoutStatus)
-      ? new InReviewBuilder({ ...activityWithoutStatus, status: IN_REVIEW })
-      : DraftBuilder.init(activityWithoutStatus);
+    return new InReviewBuilder({
+      ...activityWithoutStatus,
+      status: IN_REVIEW,
+    } as InReview);
   }
 
   get preview() {

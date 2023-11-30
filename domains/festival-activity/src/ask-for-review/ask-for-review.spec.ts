@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  Reviewer,
   barrieres,
   comcom,
   elec,
@@ -30,10 +29,7 @@ import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { Review } from "../festival-activity.error";
 import { InMemoryNotifications } from "./notifications.inmemory";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory";
-
-function isReviewer(team: string): team is Reviewer {
-  return [barrieres, comcom, elec, humain, matos, secu, signa].includes(team);
-}
+import { isReviewer } from "./ask-for-review";
 
 describe("Ask for review", () => {
   let askForReview: AskForReview;
