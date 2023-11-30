@@ -1,5 +1,17 @@
 import { FestivalActivity, InReview, isDraft } from "../festival-activity";
-import { APPROVED, NOT_ASKING_TO_REVIEW, Reviewer } from "../sections/reviews";
+import {
+  APPROVED,
+  NOT_ASKING_TO_REVIEW,
+  Reviewer,
+  Reviews,
+  barrieres,
+  comcom,
+  elec,
+  humain,
+  matos,
+  secu,
+  signa,
+} from "../sections/reviews";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
 import {
@@ -61,11 +73,32 @@ export class Reviewing {
   }
 
   private isAlreadyApprovedBy(festivalActivity: InReview, team: Reviewer) {
-    return festivalActivity.reviews[team] === APPROVED;
+    const teamReview = getTeamReview(festivalActivity.reviews, team);
+    return teamReview === APPROVED;
   }
 
   private isNotAskingToReview(festivalActivity: InReview, team: Reviewer) {
-    return festivalActivity.reviews[team] === NOT_ASKING_TO_REVIEW;
+    const teamReview = getTeamReview(festivalActivity.reviews, team);
+    return teamReview === NOT_ASKING_TO_REVIEW;
+  }
+}
+
+function getTeamReview(reviews: Reviews, team: Reviewer) {
+  switch (team) {
+    case humain:
+      return reviews.humain;
+    case signa:
+      return reviews.signa;
+    case secu:
+      return reviews.secu;
+    case matos:
+      return reviews.matos;
+    case elec:
+      return reviews.elec;
+    case barrieres:
+      return reviews.barrieres;
+    case comcom:
+      return reviews.comcom;
   }
 }
 
