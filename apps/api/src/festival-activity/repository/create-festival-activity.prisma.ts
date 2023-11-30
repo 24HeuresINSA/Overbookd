@@ -6,7 +6,7 @@ import { PrismaService } from "../../prisma.service";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { DraftBuilder } from "./festival-activity.builder";
 
-export class PrismaCreateFestivalActivity
+export class PrismaCreateFestivalActivities
   implements CreateFestivalActivityRepository
 {
   constructor(private readonly prisma: PrismaService) {}

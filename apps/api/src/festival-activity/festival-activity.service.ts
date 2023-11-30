@@ -73,7 +73,7 @@ export class FestivalActivityService {
   }
 
   async saveSignaSection(
-    id: number,
+    id: FestivalActivity["id"],
     signa: PrepareSignaForm,
   ): Promise<FestivalActivity> {
     const location = signa.locationId
