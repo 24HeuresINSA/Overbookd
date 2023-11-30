@@ -4,7 +4,7 @@ import {
   friday18hToMonday00h,
   lafarge,
   uneBouilloire,
-  PelouseHumas,
+  pelouseHumas,
   agora,
   creuxCgu,
 } from "../festival-activity.fake";
@@ -114,7 +114,7 @@ export const baladeEnPoney = factory
     timeWindows: [saturday14hToSaturday18h, sunday14hToSunday18h],
   })
   .withInCharge({ adherent: noel, team: "plaizir" })
-  .withSigna({ location: PelouseHumas })
+  .withSigna({ location: pelouseHumas })
   .withInquiry({
     timeWindows: [saturday14hToSaturday18h],
     barriers: [quinzeVaubans],
@@ -154,7 +154,7 @@ export const validatedBySecu = factory
 export const validatedBySigna = factory
   .inReview("Validée par la signa")
   .withSigna({
-    location: "Pelouse des humas",
+    location: pelouseHumas,
     signages: [afficheJustDanceA2, afficheJustDance10x3],
   })
   .withReviews({ signa: APPROVED })

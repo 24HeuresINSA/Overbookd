@@ -114,7 +114,7 @@ export const creuxCgu = {
   id: 2,
   name: "Creux CGU",
 };
-export const PelouseHumas = {
+export const pelouseHumas = {
   id: 3,
   name: "Pelouse des humas",
 };

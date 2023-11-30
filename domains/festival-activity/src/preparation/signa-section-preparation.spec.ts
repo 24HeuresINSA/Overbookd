@@ -233,7 +233,7 @@ describe("Signa section of festival activity preparation", () => {
           async () =>
             await prepareFestivalActivity.updateSignaSection(
               validatedBySigna.id,
-              { location: "Devant GEN" },
+              { location: agora },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
       });
