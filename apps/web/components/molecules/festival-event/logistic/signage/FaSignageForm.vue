@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="signage-card__title">
-      <h2>{{ statusFormLabel }} une signalétique</h2>
+      <h2>{{ typeFormLabel }} une signalétique</h2>
     </v-card-title>
 
     <v-card-text>
@@ -33,7 +33,7 @@
         @click="confirmSignage"
       >
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
-        {{ statusFormLabel }} le créneau
+        {{ typeFormLabel }} le créneau
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -85,24 +85,18 @@ export default defineComponent({
       return Object.values(signageTypes);
     },
     isUpdate(): boolean {
-      return Boolean(this.signage);
+      return Boolean(this.signage?.id);
     },
     canConfirmSignage(): boolean {
-      if (
+      return (
         !this.type ||
         !this.text?.trim() ||
         !this.size?.trim() ||
         !this.quantity ||
         this.quantity < 1
-      ) {
-        this.$accessor.notif.pushNotification({
-          message: "❌ Tu dois compléter tous les champs obligatoires !",
-        });
-        return false;
-      }
-      return true;
+      );
     },
-    statusFormLabel(): string {
+    typeFormLabel(): string {
       return this.signage !== null ? "Modifier" : "Ajouter";
     },
   },

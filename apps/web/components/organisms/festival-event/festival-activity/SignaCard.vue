@@ -19,20 +19,20 @@
         <h2 class="signage-title">Demande de signalétique</h2>
         <FaSignageTable
           :signages="signa.signages"
-          @update="openUpdateDialog"
+          @update="openUpdateSignageDialog"
           @delete="deleteSignage"
         />
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" text @click="openAddDialog">
+        <v-btn color="primary" text @click="openAddSignageDialog">
           Ajouter une signalétique
         </v-btn>
       </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="isDialogOpen" max-width="600">
+    <v-dialog v-model="isSignageDialogOpen" max-width="600">
       <FaSignageForm
         @add="addSignage"
         @update="updateSignage"
@@ -55,7 +55,7 @@ import {
 import { NewSignage } from "~/utils/festival-event/festival-activity.model";
 
 type SignaCardData = {
-  isDialogOpen: boolean;
+  isSignageDialogOpen: boolean;
   selectedSignage: Signage | null;
 };
 
@@ -67,7 +67,7 @@ export default defineComponent({
     FaSignageForm,
   },
   data: (): SignaCardData => ({
-    isDialogOpen: false,
+    isSignageDialogOpen: false,
     selectedSignage: null as Signage | null,
   }),
   computed: {
@@ -80,18 +80,18 @@ export default defineComponent({
       console.log("update location", location);
       // TODO: update location
     },
-    openAddDialog() {
-      this.isDialogOpen = true;
+    openAddSignageDialog() {
+      this.isSignageDialogOpen = true;
     },
     closeAddDialog() {
-      this.isDialogOpen = false;
+      this.isSignageDialogOpen = false;
     },
-    openUpdateDialog(signage: Signage) {
+    openUpdateSignageDialog(signage: Signage) {
       this.selectedSignage = signage;
-      this.isDialogOpen = true;
+      this.isSignageDialogOpen = true;
     },
     closeUpdateDialog() {
-      this.isDialogOpen = false;
+      this.isSignageDialogOpen = false;
       this.selectedSignage = null;
     },
     addSignage(signage: NewSignage) {
