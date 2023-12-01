@@ -55,10 +55,11 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments        Assignment[]
-  contributions      Contribution[]
-  notifications      Notification[]
-  festivalActivities FestivalActivity[]
+  assignments                  Assignment[]
+  contributions                Contribution[]
+  notifications                Notification[]
+  festivalActivities           FestivalActivity[]
+  festivalActivityInstigations FestivalActivityHistory[]
 
   @@map("user")
 }
@@ -654,6 +655,8 @@ model FestivalActivity {
   // Inquiry
   inquiryTimeWindows FestivalActivityTimeWindowInquiry[]
   inquiries          InquiryRequest[]
+
+  events FestivalActivityHistory[]
 }
 
 enum FestivalActivityStatus {
@@ -797,4 +800,25 @@ enum FestivalActivityReviewStatus {
   NOT_ASKING_TO_REVIEW
 
   @@map("festival_activity_review_status")
+}
+
+model FestivalActivityHistory {
+  id           Int                   @id @default(autoincrement())
+  event        FestivalActivityEvent
+  instigatorId Int
+  instigator   User                  @relation(fields: [instigatorId], references: [id], onDelete: Cascade)
+  faId         Int                   @map("fa_id")
+  fa           FestivalActivity      @relation(fields: [faId], references: [id], onDelete: Cascade)
+  snapshot     Json
+  at           DateTime
+
+  @@map("festival_activity_history")
+}
+
+enum FestivalActivityEvent {
+  CREATED
+  READY_TO_REVIEW
+  APPROVED
+
+  @@map("festival_activity_event")
 }
