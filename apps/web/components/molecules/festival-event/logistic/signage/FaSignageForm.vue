@@ -96,6 +96,13 @@ export default defineComponent({
       return this.signage !== null ? "Modifier" : "Ajouter";
     },
   },
+  watch: {
+    signage: {
+      handler() {
+        this.setSignage();
+      },
+    },
+  },
   methods: {
     confirmSignage() {
       if (!this.canConfirmSignage) return;
@@ -114,12 +121,20 @@ export default defineComponent({
         this.$emit("add", signage);
       }
       this.closeDialog();
-      this.clearFields();
     },
     closeDialog() {
       this.$emit("close-dialog");
     },
-    clearFields() {
+    setSignage() {
+      if (!this.signage) return this.clearSignage();
+
+      this.type = this.signage.type;
+      this.text = this.signage.text;
+      this.quantity = this.signage.quantity;
+      this.size = this.signage.size;
+      this.comment = this.signage.comment;
+    },
+    clearSignage() {
       this.type = PANNEAU;
       this.text = "";
       this.quantity = 1;

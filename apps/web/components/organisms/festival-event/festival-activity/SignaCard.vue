@@ -82,10 +82,12 @@ export default defineComponent({
       // TODO: update location
     },
     openAddSignageDialog() {
+      this.selectedSignage = null;
       this.isSignageDialogOpen = true;
     },
     closeAddDialog() {
       this.isSignageDialogOpen = false;
+      this.selectedSignage = null;
     },
     openUpdateSignageDialog(signage: Signage) {
       this.selectedSignage = signage;
