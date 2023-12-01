@@ -77,7 +77,7 @@ import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
 import { activityCategories } from "~/utils/festival-event/festival-activity.model";
-import { IProvidePeriod } from "@overbookd/period";
+import { Period } from "@overbookd/period";
 
 const comcomEmail = "communication@24heures.org";
 const humainEmail = "humain@24heures.org";
@@ -127,7 +127,7 @@ export default defineComponent({
       console.log("update isFlagship", isFlagship);
       // TODO: update isFlagship
     },
-    addTimeWindow(period: IProvidePeriod) {
+    addTimeWindow(period: Period) {
       console.log("add timeWindow", period);
       // TODO: add timeWindow
     },

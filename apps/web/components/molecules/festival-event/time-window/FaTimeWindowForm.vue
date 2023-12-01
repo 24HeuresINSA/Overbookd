@@ -69,7 +69,8 @@ export default defineComponent({
     },
     addTimeWindow() {
       try {
-        this.validPeriod;
+        const period = this.validPeriod;
+        this.$emit("add", period);
       } catch (e) {
         if (e instanceof Error) {
           const message = e.message;
@@ -77,9 +78,6 @@ export default defineComponent({
           return;
         }
       }
-
-      const period = { start: this.start, end: this.end };
-      this.$emit("add", period);
 
       this.closeDialog();
       this.setDefaultDates();

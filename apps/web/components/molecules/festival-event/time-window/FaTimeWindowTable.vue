@@ -44,7 +44,7 @@ import {
 } from "~/utils/functions/time-window";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
 import { Header } from "~/utils/models/data-table.model";
-import { IProvidePeriod } from "@overbookd/period";
+import { Period } from "@overbookd/period";
 
 type FaTimeWindowTableData = {
   headers: Header[];
@@ -81,7 +81,7 @@ export default defineComponent({
     formatDate(date: string): string {
       return formatDateWithMinutes(date);
     },
-    addTimeWindow(period: IProvidePeriod) {
+    addTimeWindow(period: Period) {
       this.$emit("add", period);
     },
     deleteTimeWindow(timeWindow: TimeWindow) {
