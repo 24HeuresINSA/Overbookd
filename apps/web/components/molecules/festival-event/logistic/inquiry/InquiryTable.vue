@@ -42,7 +42,7 @@ export default defineComponent({
       required: true,
     },
     owner: {
-      type: Object as () => InquiryOwner,
+      type: String as () => InquiryOwner,
       required: true,
     },
     disabled: {

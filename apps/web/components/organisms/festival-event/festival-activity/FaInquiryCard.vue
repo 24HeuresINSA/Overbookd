@@ -74,7 +74,7 @@ import {
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
 import { min, isNumber } from "~/utils/rules/input.rules";
-import { Period } from "@overbookd/period";
+import { IProvidePeriod } from "@overbookd/period";
 
 type FaInquiryCardData = InputRulesData & {
   gear: Gear | null;
@@ -129,7 +129,7 @@ export default defineComponent({
       console.log("delete inquiry", inquiry);
       // TODO: delete inquiry
     },
-    addTimeWindow(period: Period) {
+    addTimeWindow(period: IProvidePeriod) {
       console.log("add timeWindow", period);
       // TODO: add timeWindow
     },
