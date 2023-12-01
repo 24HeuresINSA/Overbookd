@@ -23,7 +23,7 @@ describe("Feedbacks section of festival activity preparation", () => {
     ${escapeGame.general.name} | ${escapeGame.id} | ${noel} | ${"Il faut vérifier l'heure d'ouverture des bâtiments"}
     ${justDance.general.name}  | ${justDance.id}  | ${lea}  | ${"Ça me parait beaucoup comme demande matos"}
   `(
-    "should be able publish a feedback on $activityName",
+    "should be able to publish a feedback on $activityName",
     async ({ activityId, author, content }) => {
       const { feedbacks } = await prepareFestivalActivity.publishFeedback(
         activityId,
