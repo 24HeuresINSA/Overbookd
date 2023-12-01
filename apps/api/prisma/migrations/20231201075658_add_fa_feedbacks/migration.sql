@@ -1,3 +1,9 @@
+/*
+  Warnings:
+
+  - You are about to drop the `FestivalActivity` table. If the table is not empty, all the data it contains will be lost.
+
+*/
 -- DropForeignKey
 ALTER TABLE "FestivalActivity" DROP CONSTRAINT "FestivalActivity_adherent_id_fkey";
 
@@ -14,6 +20,9 @@ ALTER TABLE "contractor" DROP CONSTRAINT "contractor_fa_id_fkey";
 ALTER TABLE "festival_activity_electricity_supply" DROP CONSTRAINT "festival_activity_electricity_supply_festival_supply_id_fkey";
 
 -- DropForeignKey
+ALTER TABLE "festival_activity_history" DROP CONSTRAINT "festival_activity_history_fa_id_fkey";
+
+-- DropForeignKey
 ALTER TABLE "festival_activity_review" DROP CONSTRAINT "festival_activity_review_fa_id_fkey";
 
 -- DropForeignKey
@@ -28,11 +37,29 @@ ALTER TABLE "festival_activity_time_window_inquiry" DROP CONSTRAINT "festival_ac
 -- DropForeignKey
 ALTER TABLE "inquiry_request" DROP CONSTRAINT "inquiry_request_fa_id_fkey";
 
-ALTER TABLE "FestivalActivity" RENAME TO "festival_activity";
+-- DropTable
+DROP TABLE "FestivalActivity";
+
+-- CreateTable
+CREATE TABLE "festival_activity" (
+    "id" INTEGER NOT NULL,
+    "status" "festival_activity_status" NOT NULL,
+    "name" VARCHAR(30) NOT NULL,
+    "description" TEXT,
+    "to_publish" BOOLEAN NOT NULL,
+    "photo_link" TEXT,
+    "is_flagship" BOOLEAN NOT NULL,
+    "categories" VARCHAR(20)[],
+    "team_code" VARCHAR(20),
+    "adherent_id" INTEGER,
+    "location_id" INTEGER,
+    "special_need" TEXT,
+    "water" TEXT
+);
 
 -- CreateTable
 CREATE TABLE "feedback" (
-    "comment" TEXT NOT NULL,
+    "content" TEXT NOT NULL,
     "author_id" INTEGER NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "fa_id" INTEGER NOT NULL,
@@ -72,6 +99,9 @@ ALTER TABLE "inquiry_request" ADD CONSTRAINT "inquiry_request_fa_id_fkey" FOREIG
 
 -- AddForeignKey
 ALTER TABLE "festival_activity_review" ADD CONSTRAINT "festival_activity_review_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "festival_activity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "festival_activity_history" ADD CONSTRAINT "festival_activity_history_fa_id_fkey" FOREIGN KEY ("fa_id") REFERENCES "festival_activity"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "feedback" ADD CONSTRAINT "feedback_author_id_fkey" FOREIGN KEY ("author_id") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

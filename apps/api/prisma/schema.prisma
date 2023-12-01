@@ -828,14 +828,14 @@ enum FestivalActivityEvent {
 }
 
 model FestivalActivityFeedback {
-  comment   String   @db.Text
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int      @map("author_id")
-  createdAt DateTime @default(now()) @map("created_at")
+  content     String   @db.Text
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int      @map("author_id")
+  publishedAt DateTime @default(now()) @map("created_at")
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId Int              @map("fa_id")
 
-  @@id([faId, authorId, createdAt])
+  @@id([faId, authorId, publishedAt])
   @@map("feedback")
 }

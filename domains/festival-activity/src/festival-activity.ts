@@ -13,8 +13,8 @@ type Security = {
 };
 
 export type Feedback = {
-  comment: string;
-  createdAt: Date;
+  content: string;
+  publishedAt: Date;
   author: Adherent;
 };
 

@@ -8,8 +8,8 @@ import { DraftBuilder } from "./festival-activity.builder";
 
 type DatabaseFeedback = {
   authorId: number;
-  comment: string;
-  createdAt: Date;
+  content: string;
+  publishedAt: Date;
 };
 
 export class PrismaCreateFestivalActivities
@@ -66,8 +66,8 @@ export class PrismaCreateFestivalActivities
   private formatFeedbacks(feedbacks: Draft["feedbacks"]): DatabaseFeedback[] {
     return feedbacks.map((feedback) => ({
       authorId: feedback.author.id,
-      comment: feedback.comment,
-      createdAt: feedback.createdAt,
+      content: feedback.content,
+      publishedAt: feedback.publishedAt,
     }));
   }
 }

@@ -96,8 +96,8 @@ const SELECT_FEEDBACKS = {
   feedbacks: {
     select: {
       author: { select: SELECT_ADHERENT },
-      comment: true,
-      createdAt: true,
+      content: true,
+      publishedAt: true,
     },
   },
 };
