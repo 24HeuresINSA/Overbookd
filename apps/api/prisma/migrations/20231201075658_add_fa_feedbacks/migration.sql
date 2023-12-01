@@ -37,34 +37,17 @@ ALTER TABLE "festival_activity_time_window_inquiry" DROP CONSTRAINT "festival_ac
 -- DropForeignKey
 ALTER TABLE "inquiry_request" DROP CONSTRAINT "inquiry_request_fa_id_fkey";
 
--- DropTable
-DROP TABLE "FestivalActivity";
-
--- CreateTable
-CREATE TABLE "festival_activity" (
-    "id" INTEGER NOT NULL,
-    "status" "festival_activity_status" NOT NULL,
-    "name" VARCHAR(30) NOT NULL,
-    "description" TEXT,
-    "to_publish" BOOLEAN NOT NULL,
-    "photo_link" TEXT,
-    "is_flagship" BOOLEAN NOT NULL,
-    "categories" VARCHAR(20)[],
-    "team_code" VARCHAR(20),
-    "adherent_id" INTEGER,
-    "location_id" INTEGER,
-    "special_need" TEXT,
-    "water" TEXT
-);
+-- RenameTable
+ALTER TABLE "FestivalActivity" RENAME TO "festival_activity";
 
 -- CreateTable
 CREATE TABLE "feedback" (
     "content" TEXT NOT NULL,
     "author_id" INTEGER NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "published_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "fa_id" INTEGER NOT NULL,
 
-    CONSTRAINT "feedback_pkey" PRIMARY KEY ("fa_id","author_id","created_at")
+    CONSTRAINT "feedback_pkey" PRIMARY KEY ("fa_id","author_id","published_at")
 );
 
 -- CreateIndex

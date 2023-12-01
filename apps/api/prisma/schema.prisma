@@ -831,7 +831,7 @@ model FestivalActivityFeedback {
   content     String   @db.Text
   author      User     @relation(fields: [authorId], references: [id])
   authorId    Int      @map("author_id")
-  publishedAt DateTime @default(now()) @map("created_at")
+  publishedAt DateTime @default(now()) @map("published_at")
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId Int              @map("fa_id")
