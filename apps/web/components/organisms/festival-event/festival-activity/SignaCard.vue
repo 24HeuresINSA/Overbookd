@@ -34,6 +34,7 @@
 
     <v-dialog v-model="isSignageDialogOpen" max-width="600">
       <FaSignageForm
+        :signage="selectedSignage"
         @add="addSignage"
         @update="updateSignage"
         @close-dialog="closeAddDialog"

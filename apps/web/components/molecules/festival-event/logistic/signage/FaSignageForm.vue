@@ -33,7 +33,7 @@
         @click="confirmSignage"
       >
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
-        {{ typeFormLabel }} le créneau
+        {{ typeFormLabel }} la signalétique
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -59,10 +59,6 @@ interface SignageFormData {
 
 export default defineComponent({
   name: "FaSignageForm",
-  model: {
-    prop: "signage",
-    event: "confirm",
-  },
   props: {
     signage: {
       type: Object as () => Signage | null,
@@ -85,15 +81,15 @@ export default defineComponent({
       return Object.values(signageTypes);
     },
     isUpdate(): boolean {
-      return Boolean(this.signage?.id);
+      return this.signage !== null;
     },
     canConfirmSignage(): boolean {
-      return (
-        !this.type ||
-        !this.text?.trim() ||
-        !this.size?.trim() ||
-        !this.quantity ||
-        this.quantity < 1
+      return Boolean(
+        this.type &&
+          this.text?.trim() &&
+          this.size?.trim() &&
+          this.quantity &&
+          this.quantity > 1,
       );
     },
     typeFormLabel(): string {
@@ -118,9 +114,17 @@ export default defineComponent({
         this.$emit("add", signage);
       }
       this.closeDialog();
+      this.clearFields();
     },
     closeDialog() {
       this.$emit("close-dialog");
+    },
+    clearFields() {
+      this.type = PANNEAU;
+      this.text = "";
+      this.quantity = 1;
+      this.size = "";
+      this.comment = null;
     },
   },
 });
