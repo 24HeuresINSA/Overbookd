@@ -67,10 +67,9 @@ export {
   P17_125A_TETRA,
 } from "./sections/supply";
 
+export type { Public as PublicGeneral } from "./sections/general";
 export type { Signage, Location, SignageType } from "./sections/signa";
 export { BACHE, PANNEAU, AFFICHE } from "./sections/signa";
-
-export type { Public as PublicGeneral } from "./sections/general";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS

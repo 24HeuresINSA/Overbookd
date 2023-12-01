@@ -10,35 +10,33 @@
 
       <v-card-text>
         <SearchSignaLocation
-          :location="currentLocation"
+          :location="signa.location"
           label="Lieu"
           :boxed="false"
           @change="updateLocation($event)"
         />
 
-        <v-card-title> Demande de signalétique </v-card-title>
+        <h2 class="signage-title">Demande de signalétique</h2>
         <FaSignageTable
-          :signages="signages"
-          @update="openEditDialog"
+          :signages="signa.signages"
+          @update="openUpdateDialog"
           @delete="deleteSignage"
         />
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click="openAddDialog"> Ajouter </v-btn>
+        <v-btn color="primary" text @click="openAddDialog">
+          Ajouter une signalétique
+        </v-btn>
       </v-card-actions>
     </v-card>
 
-    <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <SignaNeedForm @change="addSignage" @close-dialog="closeAddDialog" />
-    </v-dialog>
-
-    <v-dialog v-model="isEditDialogOpen" max-width="600">
-      <SignaNeedForm
-        :signa-need="selectedSignage"
-        @change="updateSignage"
-        @close-dialog="closeEditDialog"
+    <v-dialog v-model="isDialogOpen" max-width="600">
+      <FaSignageForm
+        @add="addSignage"
+        @update="updateSignage"
+        @close-dialog="closeAddDialog"
       />
     </v-dialog>
   </div>
@@ -47,17 +45,17 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import SignaNeedForm from "~/components/molecules/festival-event/logistic/signaNeed/SignaNeedForm.vue";
-import FaSignageTable from "~/components/molecules/festival-event/logistic/signaNeed/FaSignageTable.vue";
+import FaSignageForm from "~/components/molecules/festival-event/logistic/signage/FaSignageForm.vue";
+import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 import {
   FestivalActivity,
   Signage,
   Location,
 } from "@overbookd/festival-activity";
+import { NewSignage } from "~/utils/festival-event/festival-activity.model";
 
 type SignaCardData = {
-  isAddDialogOpen: boolean;
-  isEditDialogOpen: boolean;
+  isDialogOpen: boolean;
   selectedSignage: Signage | null;
 };
 
@@ -66,22 +64,15 @@ export default defineComponent({
   components: {
     SearchSignaLocation,
     FaSignageTable,
-    SignaNeedForm,
+    FaSignageForm,
   },
   data: (): SignaCardData => ({
-    isAddDialogOpen: false,
-    isEditDialogOpen: false,
+    isDialogOpen: false,
     selectedSignage: null as Signage | null,
   }),
   computed: {
     signa(): FestivalActivity["signa"] {
       return this.$accessor.festivalActivity.selectedActivity.signa;
-    },
-    signages(): Signage[] {
-      return this.signa.signages;
-    },
-    currentLocation(): Location | null {
-      return this.signa.location;
     },
   },
   methods: {
@@ -90,20 +81,20 @@ export default defineComponent({
       // TODO: update location
     },
     openAddDialog() {
-      this.isAddDialogOpen = true;
+      this.isDialogOpen = true;
     },
     closeAddDialog() {
-      this.isAddDialogOpen = false;
+      this.isDialogOpen = false;
     },
-    openEditDialog(signage: Signage) {
+    openUpdateDialog(signage: Signage) {
       this.selectedSignage = signage;
-      this.isEditDialogOpen = true;
+      this.isDialogOpen = true;
     },
-    closeEditDialog() {
-      this.isEditDialogOpen = false;
+    closeUpdateDialog() {
+      this.isDialogOpen = false;
       this.selectedSignage = null;
     },
-    addSignage(signage: Signage) {
+    addSignage(signage: NewSignage) {
       console.log("add signage", signage);
       // TODO: add signage
     },
@@ -118,3 +109,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.signage-title {
+  margin: 20px 0;
+}
+</style>
