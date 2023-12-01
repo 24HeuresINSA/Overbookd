@@ -659,6 +659,8 @@ model FestivalActivity {
   inquiries          InquiryRequest[]
 
   events FestivalActivityHistory[]
+
+  @@map("festival_activity")
 }
 
 enum FestivalActivityStatus {

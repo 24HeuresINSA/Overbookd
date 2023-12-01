@@ -95,7 +95,7 @@ const SELECT_INQUIRY = {
 const SELECT_FEEDBACKS = {
   feedbacks: {
     select: {
-      author: SELECT_ADHERENT,
+      author: { select: SELECT_ADHERENT },
       comment: true,
       createdAt: true,
     },
