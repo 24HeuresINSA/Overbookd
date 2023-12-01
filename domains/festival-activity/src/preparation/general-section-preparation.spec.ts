@@ -10,13 +10,13 @@ import {
   pcSecurite,
   qgOrga,
   validatedByHumain,
-  validatedByComcom,
+  validatedByCommunication,
 } from "./preparation.test-utils";
 import { isDraft } from "../festival-activity";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
-  comcom,
+  communication,
   humain,
 } from "../sections/reviews";
 import { PrepareError } from "./prepare-in-review-festival-activity";
@@ -34,7 +34,7 @@ describe("General section of festival activity preparation", () => {
       baladeEnPoney,
       qgOrga,
       validatedByHumain,
-      validatedByComcom,
+      validatedByCommunication,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -92,7 +92,7 @@ describe("General section of festival activity preparation", () => {
 
   describe("when setting a public activity as private", () => {
     describe("when activity is in review", () => {
-      it("should remove comcom from reviewers", async () => {
+      it("should remove communication from reviewers", async () => {
         const update = { toPublish: false };
 
         const activity = await prepareFestivalActivity.updateGeneralSection(
@@ -101,7 +101,7 @@ describe("General section of festival activity preparation", () => {
         );
         if (isDraft(activity)) throw new Error("Activity should not be draft");
 
-        expect(activity.reviews.comcom).toBe(NOT_ASKING_TO_REVIEW);
+        expect(activity.reviews.communication).toBe(NOT_ASKING_TO_REVIEW);
       });
     });
 
@@ -152,7 +152,7 @@ describe("General section of festival activity preparation", () => {
         );
       });
 
-      it("should add comcom to reviewers", async () => {
+      it("should add communication to reviewers", async () => {
         const update = {
           toPublish: true,
           photoLink: "https://pinterest.com/123",
@@ -165,7 +165,7 @@ describe("General section of festival activity preparation", () => {
         );
         if (isDraft(activity)) throw new Error("Activity should not be draft");
 
-        expect(activity.reviews.comcom).toBe(REVIEWING);
+        expect(activity.reviews.communication).toBe(REVIEWING);
       });
     });
   });
@@ -280,9 +280,9 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                      | activityId              | reviewer  | timeWindow              | toRemoveId                                     | update
-    ${validatedByHumain.general.name} | ${validatedByHumain.id} | ${humain} | ${sunday14hToSunday18h} | ${validatedByHumain.general.timeWindows[0].id} | ${{ desription: "Awsome" }}
-    ${validatedByComcom.general.name} | ${validatedByComcom.id} | ${comcom} | ${sunday14hToSunday18h} | ${validatedByComcom.general.timeWindows[0].id} | ${{ description: "Awsome" }}
+    activityName                             | activityId                     | reviewer         | timeWindow              | toRemoveId                                            | update
+    ${validatedByHumain.general.name}        | ${validatedByHumain.id}        | ${humain}        | ${sunday14hToSunday18h} | ${validatedByHumain.general.timeWindows[0].id}        | ${{ desription: "Awsome" }}
+    ${validatedByCommunication.general.name} | ${validatedByCommunication.id} | ${communication} | ${sunday14hToSunday18h} | ${validatedByCommunication.general.timeWindows[0].id} | ${{ description: "Awsome" }}
   `(
     "when $activityName was already validated by $reviewer",
     ({ activityId, timeWindow, toRemoveId, update }) => {

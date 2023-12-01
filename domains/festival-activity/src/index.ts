@@ -77,7 +77,7 @@ export {
   REVIEWING,
   NOT_ASKING_TO_REVIEW,
   humain,
-  comcom,
+  communication,
   signa,
   secu,
   matos,

@@ -11,7 +11,7 @@ import {
   Reviewer,
   Reviews,
   barrieres,
-  comcom,
+  communication,
   elec,
   humain,
   matos,
@@ -84,10 +84,10 @@ class General {
   }
 
   isAlreadyValidatedBy(reviews: Reviews): isValidatedBy {
-    const reviewer = this.general.toPublish ? comcom : humain;
+    const reviewer = this.general.toPublish ? communication : humain;
     switch (reviewer) {
-      case comcom:
-        return { validated: reviews.comcom === APPROVED, reviewer };
+      case communication:
+        return { validated: reviews.communication === APPROVED, reviewer };
       case humain:
         return { validated: reviews.humain === APPROVED, reviewer };
     }
@@ -169,7 +169,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     const general = General.init(this.activity.general).update(form);
     const reviews: InReview["reviews"] = {
       ...this.activity.reviews,
-      comcom: general.toPublish ? REVIEWING : NOT_ASKING_TO_REVIEW,
+      communication: general.toPublish ? REVIEWING : NOT_ASKING_TO_REVIEW,
     };
     return { ...this.activity, general, reviews };
   }

@@ -18,7 +18,7 @@ import {
   matos,
   elec,
   barrieres,
-  comcom,
+  communication,
   PrivateActivityReviewer,
   PublicActivityReviewer,
 } from "../sections/reviews";
@@ -27,7 +27,7 @@ type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
 
 const PRIVATE_ACTIVITY_REVIEWS: MandatoryReviews<PrivateActivityReviewer> = {
-  comcom: NOT_ASKING_TO_REVIEW,
+  communication: NOT_ASKING_TO_REVIEW,
   humain: REVIEWING,
   signa: REVIEWING,
   secu: REVIEWING,
@@ -37,7 +37,7 @@ const PRIVATE_ACTIVITY_REVIEWS: MandatoryReviews<PrivateActivityReviewer> = {
 };
 
 const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
-  comcom: REVIEWING,
+  communication: REVIEWING,
   humain: REVIEWING,
   signa: REVIEWING,
   secu: REVIEWING,
@@ -130,7 +130,7 @@ export class InReviewFestivalActivity implements InReview {
     return {
       id: this.id,
       name: this.general.name,
-      reviewers: this.isPublic ? [...reviewers, comcom] : reviewers,
+      reviewers: this.isPublic ? [...reviewers, communication] : reviewers,
     };
   }
 }

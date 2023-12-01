@@ -2,7 +2,7 @@ export const REVIEWING = "REVIEWING";
 export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";
 export const APPROVED = "APPROVED";
 
-export const comcom = "comcom";
+export const communication = "communication";
 export const humain = "humain";
 export const signa = "signa";
 export const secu = "secu";
@@ -18,7 +18,9 @@ export type PrivateActivityReviewer =
   | typeof elec
   | typeof barrieres;
 
-export type PublicActivityReviewer = PrivateActivityReviewer | typeof comcom;
+export type PublicActivityReviewer =
+  | PrivateActivityReviewer
+  | typeof communication;
 
 export type Reviewer = PublicActivityReviewer | PrivateActivityReviewer;
 

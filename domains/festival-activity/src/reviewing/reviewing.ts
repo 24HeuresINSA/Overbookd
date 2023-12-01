@@ -5,7 +5,7 @@ import {
   Reviewer,
   Reviews,
   barrieres,
-  comcom,
+  communication,
   elec,
   humain,
   matos,
@@ -97,8 +97,8 @@ function getTeamReview(reviews: Reviews, team: Reviewer) {
       return reviews.elec;
     case barrieres:
       return reviews.barrieres;
-    case comcom:
-      return reviews.comcom;
+    case communication:
+      return reviews.communication;
   }
 }
 

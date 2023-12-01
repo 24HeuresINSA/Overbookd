@@ -139,10 +139,10 @@ export const validatedByHumain = factory
   .withReviews({ humain: APPROVED })
   .build();
 
-export const validatedByComcom = factory
-  .inReview("Validée par la comcom")
+export const validatedByCommunication = factory
+  .inReview("Validée par l'equipe communication")
   .asPublic()
-  .withReviews({ comcom: APPROVED })
+  .withReviews({ communication: APPROVED })
   .build();
 
 export const validatedBySecu = factory

@@ -51,10 +51,10 @@ class ReviewsDto implements Reviews {
   barrieres: ReviewStatus;
 
   @ApiProperty({
-    description: "'comcom' team review status",
+    description: "'commmunication' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW],
   })
-  comcom: ReviewStatus;
+  communication: ReviewStatus;
 }
 
 export class PreviewDraftFestivalActivityResponseDto implements PreviewDraft {
