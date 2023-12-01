@@ -40,6 +40,7 @@ export class CreateFestivalActivity {
       security: this.generateSecuritySection(),
       supply: this.generateSupplySection(),
       inquiry: this.generateInquirySection(),
+      feedbacks: [],
     };
 
     const saved = await this.festivalActivities.create(activity);

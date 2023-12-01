@@ -92,6 +92,16 @@ const SELECT_INQUIRY = {
   },
 };
 
+const SELECT_FEEDBACKS = {
+  feedbacks: {
+    select: {
+      author: { select: SELECT_ADHERENT },
+      content: true,
+      publishedAt: true,
+    },
+  },
+};
+
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
@@ -102,4 +112,5 @@ export const SELECT_FESTIVAL_ACTIVITY = {
   ...SELECT_SECURITY,
   ...SELECT_SUPPLY,
   ...SELECT_INQUIRY,
+  ...SELECT_FEEDBACKS,
 };

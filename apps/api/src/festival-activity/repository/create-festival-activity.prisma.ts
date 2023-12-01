@@ -6,6 +6,12 @@ import { PrismaService } from "../../prisma.service";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { DraftBuilder } from "./festival-activity.builder";
 
+type DatabaseFeedback = {
+  authorId: number;
+  content: string;
+  publishedAt: Date;
+};
+
 export class PrismaCreateFestivalActivities
   implements CreateFestivalActivityRepository
 {
@@ -49,8 +55,19 @@ export class PrismaCreateFestivalActivities
             ...activity.inquiry.gears,
           ],
         },
+        feedbacks: {
+          create: this.formatFeedbacks(activity.feedbacks),
+        },
       },
     });
     return DraftBuilder.fromDatabase(saved).festivalActivity;
+  }
+
+  private formatFeedbacks(feedbacks: Draft["feedbacks"]): DatabaseFeedback[] {
+    return feedbacks.map((feedback) => ({
+      authorId: feedback.author.id,
+      content: feedback.content,
+      publishedAt: feedback.publishedAt,
+    }));
   }
 }

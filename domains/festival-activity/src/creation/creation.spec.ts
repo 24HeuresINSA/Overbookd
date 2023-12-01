@@ -114,6 +114,7 @@ describe("Festival activity creation", () => {
             electricity: [],
             barriers: [],
           },
+          feedbacks: [],
         });
       });
     });
