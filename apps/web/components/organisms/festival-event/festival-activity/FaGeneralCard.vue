@@ -31,14 +31,14 @@
         @change="updateDescription($event)"
       />
 
-      <article class="time-window">
+      <section class="time-window">
         <h2>Créneau de l'animation</h2>
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
           @add="addTimeWindow($event)"
           @delete="deleteTimeWindow($event)"
         />
-      </article>
+      </section>
 
       <v-switch
         :value="general.toPublish"
