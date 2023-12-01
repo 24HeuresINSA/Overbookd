@@ -79,7 +79,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
 
     const reviews: Partial<InReview["reviews"]> = isDraft(this.festivalActivity)
       ? {}
-      : { comcom: REVIEWING };
+      : { communication: REVIEWING };
 
     return this.withReviews(reviews);
   }
@@ -203,7 +203,7 @@ function defaultInReview(id: number, name: string): InReview {
       matos: REVIEWING,
       elec: REVIEWING,
       barrieres: REVIEWING,
-      comcom: NOT_ASKING_TO_REVIEW,
+      communication: NOT_ASKING_TO_REVIEW,
     },
   };
 }

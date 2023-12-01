@@ -3,7 +3,7 @@ import { getFactory } from "../festival-activity.factory";
 import {
   APPROVED,
   barrieres,
-  comcom,
+  communication,
   elec,
   humain,
   matos,
@@ -96,24 +96,24 @@ describe("Approve festival activity", () => {
     reviewing = new Reviewing(festivalActivities);
   });
   describe.each`
-    team         | festivalActivityName                        | festivalActivityId                | approver
-    ${secu}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
-    ${secu}      | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
-    ${matos}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
-    ${matos}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
-    ${matos}     | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${lea}
-    ${matos}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
-    ${humain}    | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
-    ${humain}    | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
-    ${elec}      | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
-    ${elec}      | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
-    ${elec}      | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
-    ${barrieres} | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
-    ${barrieres} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
-    ${barrieres} | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${noel}
-    ${signa}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
-    ${signa}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
-    ${comcom}    | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
+    team             | festivalActivityName                        | festivalActivityId                | approver
+    ${secu}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
+    ${secu}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
+    ${matos}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
+    ${matos}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
+    ${matos}         | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${lea}
+    ${matos}         | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
+    ${humain}        | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
+    ${humain}        | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
+    ${elec}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
+    ${elec}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
+    ${elec}          | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
+    ${barrieres}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
+    ${barrieres}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
+    ${barrieres}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${noel}
+    ${signa}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
+    ${signa}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
+    ${communication} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
   `(
     "when approving $festivalActivityName as $team member",
     ({ team, festivalActivityId, approver }) => {
@@ -145,11 +145,11 @@ describe("Approve festival activity", () => {
       await reviewing.approve(extremJump.id, secu, noel.id);
       const { festivalActivity } = await reviewing.approve(
         extremJump.id,
-        comcom,
+        communication,
         george.id,
       );
       expect(festivalActivity.reviews.secu).toBe(APPROVED);
-      expect(festivalActivity.reviews.comcom).toBe(APPROVED);
+      expect(festivalActivity.reviews.communication).toBe(APPROVED);
     });
   });
   describe("when approving an already approved festival activity", () => {
@@ -164,11 +164,11 @@ describe("Approve festival activity", () => {
       ).rejects.toThrow(AlreadyApproved);
     });
   });
-  describe("when approving a private festival activity as comcom", () => {
-    it("should indicate that comcom is not asking to review it", async () => {
+  describe("when approving a private festival activity as communication", () => {
+    it("should indicate that communication is not asking to review it", async () => {
       expect(
         async () =>
-          await reviewing.approve(privateActivity.id, comcom, george.id),
+          await reviewing.approve(privateActivity.id, communication, george.id),
       ).rejects.toThrow(NotAskingToReview);
     });
   });

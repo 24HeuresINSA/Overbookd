@@ -790,7 +790,7 @@ enum FestivalActivityReviewer {
   matos
   elec
   barrieres
-  comcom
+  communication
 
   @@map("festival_activity_reviewer")
 }

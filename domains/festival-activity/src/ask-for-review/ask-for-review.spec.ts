@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   Reviewer,
   barrieres,
-  comcom,
+  communication,
   elec,
   humain,
   matos,
@@ -33,7 +33,9 @@ import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activ
 import { george, lea } from "../festival-activity.fake";
 
 function isReviewer(team: string): team is Reviewer {
-  return [barrieres, comcom, elec, humain, matos, secu, signa].includes(team);
+  return [barrieres, communication, elec, humain, matos, secu, signa].includes(
+    team,
+  );
 }
 
 describe("Ask for review", () => {
@@ -119,14 +121,14 @@ describe("Ask for review", () => {
             expect(notifications.entries).toContainEqual(barrieresNotification);
           });
           it.each`
-            team         | status
-            ${comcom}    | ${NOT_ASKING_TO_REVIEW}
-            ${humain}    | ${REVIEWING}
-            ${signa}     | ${REVIEWING}
-            ${secu}      | ${REVIEWING}
-            ${matos}     | ${REVIEWING}
-            ${elec}      | ${REVIEWING}
-            ${barrieres} | ${REVIEWING}
+            team             | status
+            ${communication} | ${NOT_ASKING_TO_REVIEW}
+            ${humain}        | ${REVIEWING}
+            ${signa}         | ${REVIEWING}
+            ${secu}          | ${REVIEWING}
+            ${matos}         | ${REVIEWING}
+            ${elec}          | ${REVIEWING}
+            ${barrieres}     | ${REVIEWING}
           `("should explain $team is $status", async ({ team, status }) => {
             const { festivalActivity: inReviewFa } =
               await askForReview.fromDraft(pcSecurite.id, lea.id);
@@ -135,7 +137,7 @@ describe("Ask for review", () => {
             expect(inReviewFa.reviews[team]).toBe(status);
           });
           describe("when it will be published (i.e. is public)", () => {
-            it("should also ask review from comcom", async () => {
+            it("should also ask review from communication", async () => {
               const { festivalActivity: inReviewFa } =
                 await askForReview.fromDraft(finaleEsport.id, george.id);
 
@@ -143,7 +145,7 @@ describe("Ask for review", () => {
                 id: inReviewFa.id,
                 name: inReviewFa.general.name,
               };
-              const comcomNotification = { team: comcom, event };
+              const communicationNotification = { team: communication, event };
               const humainNotification = { team: humain, event };
               const signaNotification = { team: signa, event };
               const secuNotification = { team: secu, event };
@@ -152,7 +154,9 @@ describe("Ask for review", () => {
               const barrieresNotification = { team: barrieres, event };
 
               expect(notifications.entries).toHaveLength(7);
-              expect(notifications.entries).toContainEqual(comcomNotification);
+              expect(notifications.entries).toContainEqual(
+                communicationNotification,
+              );
               expect(notifications.entries).toContainEqual(humainNotification);
               expect(notifications.entries).toContainEqual(signaNotification);
               expect(notifications.entries).toContainEqual(secuNotification);
@@ -163,14 +167,14 @@ describe("Ask for review", () => {
               );
             });
             it.each`
-              team         | status
-              ${comcom}    | ${REVIEWING}
-              ${humain}    | ${REVIEWING}
-              ${signa}     | ${REVIEWING}
-              ${secu}      | ${REVIEWING}
-              ${matos}     | ${REVIEWING}
-              ${elec}      | ${REVIEWING}
-              ${barrieres} | ${REVIEWING}
+              team             | status
+              ${communication} | ${REVIEWING}
+              ${humain}        | ${REVIEWING}
+              ${signa}         | ${REVIEWING}
+              ${secu}          | ${REVIEWING}
+              ${matos}         | ${REVIEWING}
+              ${elec}          | ${REVIEWING}
+              ${barrieres}     | ${REVIEWING}
             `(
               "should explain $team is concern with review",
               async ({ team, status }) => {
@@ -185,13 +189,13 @@ describe("Ask for review", () => {
         });
 
         describe("when festival activity will be published (i.e. is public)", () => {
-          it("should also ask review from comcom", async () => {
+          it("should also ask review from communication", async () => {
             const { festivalActivity: inReviewFa } =
               await askForReview.fromDraft(finaleEsport.id, george.id);
             expect(notifications.entries).toHaveLength(7);
             const event = { id: inReviewFa.id, name: inReviewFa.general.name };
             expect(notifications.entries).toContainEqual({
-              team: comcom,
+              team: communication,
               event,
             });
             expect(notifications.entries).toContainEqual({
