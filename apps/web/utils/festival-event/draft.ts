@@ -33,7 +33,7 @@ export class CastDraft {
   ): Draft["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
-      createdAt: new Date(feedback.createdAt),
+      publishedAt: new Date(feedback.publishedAt),
     }));
   }
 }

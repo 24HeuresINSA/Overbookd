@@ -268,10 +268,10 @@ class FeedbackDto implements Feedback {
   author: Adherent;
 
   @ApiProperty({})
-  comment: string;
+  content: string;
 
   @ApiProperty({})
-  createdAt: Date;
+  publishedAt: Date;
 }
 
 export class DraftFestivalActivityDto implements Draft {

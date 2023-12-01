@@ -58,7 +58,7 @@ export class CastInReview {
   ): InReview["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
-      createdAt: new Date(feedback.createdAt),
+      publishedAt: new Date(feedback.publishedAt),
     }));
   }
 }
