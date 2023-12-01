@@ -31,20 +31,21 @@
         @change="updateDescription($event)"
       />
 
-      <h2>Créneau de l'animation</h2>
-      <FaTimeWindowTable
-        :time-windows="general.timeWindows"
-        @add="addTimeWindow($event)"
-        @update="updateTimeWindow($event)"
-        @delete="deleteTimeWindow($event)"
-      />
+      <section class="time-windows">
+        <h2>Créneaux de l'animation</h2>
+        <FaTimeWindowTable
+          :time-windows="general.timeWindows"
+          @add="addTimeWindow($event)"
+          @delete="deleteTimeWindow($event)"
+        />
+      </section>
 
       <v-switch
         :value="general.toPublish"
         label="Publier sur le site / plaquette"
         @change="updateToPublish($event)"
       />
-      <div v-if="general.toPublish">
+      <form v-if="general.toPublish">
         <v-text-field
           :value="general.photoLink"
           label="Lien de la photo de l'activité sur le drive"
@@ -65,7 +66,7 @@
           label="Animation phare qui sera mise en avant sur les réseaux sociaux"
           @change="updateIsFlagship($event)"
         />
-      </div>
+      </form>
     </v-card-text>
   </v-card>
 </template>
@@ -129,10 +130,6 @@ export default defineComponent({
     addTimeWindow(period: IProvidePeriod) {
       console.log("add timeWindow", period);
       // TODO: add timeWindow
-    },
-    updateTimeWindow(timeWindow: TimeWindow) {
-      console.log("update timeWindow", timeWindow);
-      // TODO: update timeWindow
     },
     deleteTimeWindow(timeWindow: TimeWindow) {
       console.log("delete timeWindow", timeWindow);

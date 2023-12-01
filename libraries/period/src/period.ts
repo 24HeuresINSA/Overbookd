@@ -4,7 +4,7 @@ export interface IProvidePeriod {
 }
 
 const END_BEFORE_START_ERROR_MESSAGE =
-  "La date de fin doit être après la date de début";
+  "❌ La date de fin doit être après la date de début";
 
 export class EndBeforeStart extends Error {
   constructor() {
