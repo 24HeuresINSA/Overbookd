@@ -22,7 +22,7 @@ import {
 import { InquiryRequest } from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
-import { Contractor } from "../sections/in-charge";
+import { Adherent, Contractor } from "../sections/in-charge";
 import { TimeWindow } from "../sections/time-window";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
@@ -61,6 +61,11 @@ export type Prepare<T extends FestivalActivity> = {
 export type InitInquiry = {
   timeWindow: IProvidePeriod;
   request: PrepareInquiryRequestCreation;
+};
+
+type PublishFeedback = {
+  author: Adherent;
+  content: string;
 };
 
 export class PrepareFestivalActivity {
@@ -329,6 +334,18 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.assignInquiryToDrive(link);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async publishFeedback(
+    faId: FestivalActivity["id"],
+    { author, content }: PublishFeedback,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const feedback = { author, content, publishedAt: new Date() };
+    const feedbacks = [...existingFA.feedbacks, feedback];
+
+    const updatedFA = { ...existingFA, feedbacks };
     return this.festivalActivities.save(updatedFA);
   }
 }
