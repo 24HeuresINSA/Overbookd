@@ -33,7 +33,7 @@
 import { defineComponent } from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { formatDate } from "~/utils/date/date.utils";
-import { Period, END_BEFORE_START_ERROR_MESSAGE } from "@overbookd/period";
+import { Period } from "@overbookd/period";
 
 interface FaTimeWindowFormData {
   start: Date;
@@ -48,17 +48,8 @@ export default defineComponent({
     end: new Date(),
   }),
   computed: {
-    canAddTimeWindow(): boolean {
-      try {
-        Period.init({ start: this.start, end: this.end });
-        return true;
-      } catch (e) {
-        if (e instanceof Error) {
-          const message = END_BEFORE_START_ERROR_MESSAGE;
-          this.$accessor.notif.pushNotification({ message });
-        }
-        return false;
-      }
+    validPeriod(): Period {
+      return Period.init({ start: this.start, end: this.end });
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -77,7 +68,16 @@ export default defineComponent({
       this.end = this.manifDate;
     },
     addTimeWindow() {
-      if (!this.canAddTimeWindow) return;
+      try {
+        this.validPeriod;
+      } catch (e) {
+        if (e instanceof Error) {
+          const message = e.message;
+          this.$accessor.notif.pushNotification({ message });
+          return;
+        }
+      }
+
       const period = { start: this.start, end: this.end };
       this.$emit("add", period);
 

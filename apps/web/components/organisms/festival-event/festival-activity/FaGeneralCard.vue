@@ -31,8 +31,8 @@
         @change="updateDescription($event)"
       />
 
-      <section class="time-window">
-        <h2>Créneau de l'animation</h2>
+      <section class="time-windows">
+        <h2>Créneaux de l'animation</h2>
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
           @add="addTimeWindow($event)"

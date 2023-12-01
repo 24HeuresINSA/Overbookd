@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="time-windows__listing">
     <v-data-table
       :headers="headers"
       :items="timeWindows"
