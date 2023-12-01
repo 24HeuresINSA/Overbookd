@@ -6,6 +6,7 @@ import {
 import { PrismaService } from "../../prisma.service";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
+import { FestivalActivityQueryBuilder } from "./festival-activity.query";
 
 export class PrismaPrepareFestivalActivities
   implements PrepareFestivalActivityRepository
@@ -31,7 +32,11 @@ export class PrismaPrepareFestivalActivities
   }
 
   async save(activity: FestivalActivity): Promise<FestivalActivity> {
-    // TODO: save activity in database
-    return activity;
+    const updated = await this.prisma.festivalActivity.update({
+      where: { id: activity.id },
+      select: SELECT_FESTIVAL_ACTIVITY,
+      data: FestivalActivityQueryBuilder.update(activity),
+    });
+    return FestivalActivityBuilder.fromDatabase(updated).festivalActivity;
   }
 }

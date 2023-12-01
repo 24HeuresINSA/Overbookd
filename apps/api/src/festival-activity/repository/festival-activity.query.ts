@@ -1,3 +1,9 @@
+import {
+  Draft,
+  Feedback,
+  FestivalActivity,
+  TimeWindow,
+} from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
 
@@ -114,3 +120,198 @@ export const SELECT_FESTIVAL_ACTIVITY = {
   ...SELECT_INQUIRY,
   ...SELECT_FEEDBACKS,
 };
+
+export class FestivalActivityQueryBuilder {
+  static create(activity: Draft) {
+    return {
+      ...databaseFestivalActivityWithouListsMapping(activity),
+      generalTimeWindows: {
+        create: activity.general.timeWindows,
+      },
+      contractors: {
+        create: activity.inCharge.contractors,
+      },
+      signages: {
+        create: activity.signa.signages,
+      },
+      electricity: {
+        create: activity.supply.electricity,
+      },
+      inquiryTimeWindows: {
+        create: activity.inquiry.timeWindows,
+      },
+      inquiries: {
+        create: this.listInquiries(activity),
+      },
+      feedbacks: {
+        create: activity.feedbacks.map(feedbackDatabaseMapping),
+      },
+    };
+  }
+
+  static update(activity: FestivalActivity) {
+    const generalTimeWindows = this.upsertTimeWindows(
+      activity.id,
+      activity.general.timeWindows,
+    );
+    const contractors = this.upsertContractors(activity);
+    const signages = this.upsertSignages(activity);
+    const electricity = this.upsertElectricitySupplies(activity);
+    const inquiryTimeWindows = this.upsertTimeWindows(
+      activity.id,
+      activity.inquiry.timeWindows,
+    );
+    const inquiries = this.upsertInquiries(activity);
+    const feedbacks = this.upsertFeedbacks(activity);
+    return {
+      ...databaseFestivalActivityWithouListsMapping(activity),
+      generalTimeWindows,
+      contractors,
+      signages,
+      electricity,
+      inquiryTimeWindows,
+      inquiries,
+      feedbacks,
+    };
+  }
+
+  private static upsertSignages(activity: FestivalActivity) {
+    return {
+      upsert: activity.signa.signages.map((signage) => ({
+        where: { faId_id: { faId: activity.id, id: signage.id } },
+        update: signage,
+        create: signage,
+      })),
+      deleteMany: {
+        faId: activity.id,
+        id: { notIn: activity.signa.signages.map(({ id }) => id) },
+      },
+    };
+  }
+
+  private static upsertElectricitySupplies(activity: FestivalActivity) {
+    return {
+      upsert: activity.supply.electricity.map((electricitySupply) => ({
+        where: { faId_id: { faId: activity.id, id: electricitySupply.id } },
+        update: electricitySupply,
+        create: electricitySupply,
+      })),
+      deleteMany: {
+        faId: activity.id,
+        id: { notIn: activity.supply.electricity.map(({ id }) => id) },
+      },
+    };
+  }
+
+  private static upsertTimeWindows(
+    faId: FestivalActivity["id"],
+    timeWindows: TimeWindow[],
+  ) {
+    return {
+      upsert: timeWindows.map((timeWindow) => ({
+        where: { faId_id: { faId, id: timeWindow.id } },
+        update: timeWindow,
+        create: timeWindow,
+      })),
+      deleteMany: { faId, id: { notIn: timeWindows.map(({ id }) => id) } },
+    };
+  }
+
+  private static upsertInquiries(activity: FestivalActivity) {
+    const inquiries = this.listInquiries(activity);
+    return {
+      upsert: inquiries.map((request) => ({
+        where: { slug_faId: { slug: request.slug, faId: activity.id } },
+        update: request,
+        create: request,
+      })),
+      deleteMany: {
+        faId: activity.id,
+        slug: { notIn: inquiries.map(({ slug }) => slug) },
+      },
+    };
+  }
+
+  private static upsertFeedbacks(activity: FestivalActivity) {
+    return {
+      upsert: activity.feedbacks.map((feedback) => ({
+        where: {
+          faId_authorId_publishedAt: {
+            faId: activity.id,
+            authorId: feedback.author.id,
+            publishedAt: feedback.publishedAt,
+          },
+        },
+        update: feedbackDatabaseMapping(feedback),
+        create: feedbackDatabaseMapping(feedback),
+      })),
+      deleteMany: {
+        faId: activity.id,
+        NOT: {
+          authorId: {
+            in: activity.feedbacks.map(({ author }) => author.id),
+          },
+          publishedAt: {
+            in: activity.feedbacks.map(({ publishedAt }) => publishedAt),
+          },
+        },
+      },
+    };
+  }
+
+  private static upsertContractors(activity: FestivalActivity) {
+    return {
+      upsert: activity.inCharge.contractors.map((contractor) => ({
+        where: { faId_id: { faId: activity.id, id: contractor.id } },
+        update: contractor,
+        create: contractor,
+      })),
+      deleteMany: {
+        faId: activity.id,
+        id: { notIn: activity.inCharge.contractors.map(({ id }) => id) },
+      },
+    };
+  }
+
+  private static listInquiries(activity: FestivalActivity) {
+    return [
+      ...activity.inquiry.barriers,
+      ...activity.inquiry.electricity,
+      ...activity.inquiry.gears,
+    ];
+  }
+}
+
+function databaseFestivalActivityWithouListsMapping(
+  activity: FestivalActivity,
+) {
+  return {
+    id: activity.id,
+    status: activity.status,
+    name: activity.general.name,
+    description: activity.general.description,
+    toPublish: activity.general.toPublish,
+    photoLink: activity.general.photoLink,
+    isFlagship: activity.general.isFlagship,
+    categories: activity.general.categories,
+    teamCode: activity.inCharge.team,
+    adherentId: activity.inCharge.adherent.id,
+    locationId: activity.signa.location?.id,
+    specialNeed: activity.security.specialNeed,
+    water: activity.supply.water,
+  };
+}
+
+type DatabaseFeedback = {
+  authorId: number;
+  content: string;
+  publishedAt: Date;
+};
+
+function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
+  return {
+    authorId: feedback.author.id,
+    content: feedback.content,
+    publishedAt: feedback.publishedAt,
+  };
+}
