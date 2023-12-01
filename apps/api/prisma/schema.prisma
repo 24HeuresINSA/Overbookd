@@ -654,8 +654,6 @@ model FestivalActivity {
   // Inquiry
   inquiryTimeWindows FestivalActivityTimeWindowInquiry[]
   inquiries          InquiryRequest[]
-
-  @@map("festival_activity")
 }
 
 enum FestivalActivityStatus {
