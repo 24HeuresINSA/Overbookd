@@ -12,7 +12,7 @@
         :location="signa.location"
         label="Lieu"
         :boxed="false"
-        @change="updateLocation($event)"
+        @change="updateLocation"
       />
 
       <h2 class="signage-title">Demande de signalétique</h2>

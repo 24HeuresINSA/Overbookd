@@ -21,13 +21,13 @@
       <v-text-field
         :value="general.name"
         label="Nom de l'activité"
-        @change="updateName($event)"
+        @change="updateName"
       />
 
       <v-switch
         :value="general.toPublish"
         label="Publier sur le site / plaquette"
-        @change="updateToPublish($event)"
+        @change="updateToPublish"
       />
 
       <v-label>Description</v-label>
@@ -35,15 +35,15 @@
         :data="general.description ?? ''"
         label="Description"
         class="mb-4"
-        @change="updateDescription($event)"
+        @change="updateDescription"
       />
 
       <section class="time-windows">
         <h2>Créneaux de l'animation</h2>
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
-          @add="addTimeWindow($event)"
-          @remove="removeTimeWindow($event)"
+          @add="addTimeWindow"
+          @remove="removeTimeWindow"
         />
       </section>
 
@@ -55,21 +55,21 @@
         dense
         label="Categories de l'animations"
         :items="categories"
-        @change="updateCategories($event)"
+        @change="updateCategories"
       />
 
       <v-text-field
         v-show="general.toPublish"
         :value="general.photoLink"
         label="Lien de la photo de l'activité sur le drive"
-        @change="updatePhotoLink($event)"
+        @change="updatePhotoLink"
       />
 
       <v-switch
         v-show="general.toPublish"
         :input-value="general.isFlagship"
         label="Animation phare qui sera mise en avant sur les réseaux sociaux"
-        @change="updateIsFlagship($event)"
+        @change="updateIsFlagship"
       />
     </v-card-text>
   </v-card>

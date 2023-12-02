@@ -20,15 +20,25 @@
         label="Adhérent"
         :boxed="false"
         :list="adherents"
-        @change="updateAdherent($event)"
+        @change="updateAdherent"
       />
 
       <SearchTeam
         :team="team"
         label="Équipe"
         :boxed="false"
-        @change="updateTeam($event)"
+        @change="updateTeam"
       />
+
+      <section class="contractors">
+        <h2>Prestataires</h2>
+        <ContractorTable
+          :contractors="inCharge.contractors"
+          @add="addContractor"
+          @update="updateContractor"
+          @remove="removeContractor"
+        />
+      </section>
     </v-card-text>
   </v-card>
 </template>
@@ -37,13 +47,19 @@
 import { defineComponent } from "vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { FestivalActivity, Adherent } from "@overbookd/festival-activity";
+import ContractorTable from "~/components/molecules/festival-event/contractor/ContractorTable.vue";
+import {
+  FestivalActivity,
+  Adherent,
+  PrepareContractorCreation,
+  Contractor,
+} from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
 export default defineComponent({
   name: "FaGeneralCard",
-  components: { SearchUser, SearchTeam },
+  components: { SearchUser, SearchTeam, ContractorTable },
   computed: {
     inCharge(): FestivalActivity["inCharge"] {
       return this.$accessor.festivalActivity.selectedActivity.inCharge;
@@ -69,6 +85,15 @@ export default defineComponent({
     },
     updateTeam(team: Team) {
       this.$accessor.festivalActivity.updateInCharge({ team: team.code });
+    },
+    addContractor(contractor: PrepareContractorCreation) {
+      this.$accessor.festivalActivity.addContractor(contractor);
+    },
+    updateContractor(contractor: Contractor) {
+      this.$accessor.festivalActivity.updateContractor(contractor);
+    },
+    removeContractor(contractor: Contractor) {
+      this.$accessor.festivalActivity.removeContractor(contractor.id);
     },
   },
 });

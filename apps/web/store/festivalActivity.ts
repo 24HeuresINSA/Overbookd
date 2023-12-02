@@ -6,6 +6,9 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
   PrepareSupplyUpdate,
+  PrepareContractorCreation,
+  PrepareContractorUpdate,
+  Contractor,
   PreviewFestivalActivity,
   Signage,
   TimeWindow,
@@ -114,6 +117,48 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
+    async addContractor(
+      { state, commit },
+      contractor: PrepareContractorCreation,
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.addContractor(this, id, contractor),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async updateContractor(
+      { state, commit },
+      contractor: PrepareContractorUpdate,
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.updateContractor(this, id, contractor),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async removeContractor({ state, commit }, contractorId: Contractor["id"]) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.removeContractor(this, id, contractorId),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
     /* UPDATE SIGNA */
     async updateSigna({ state, commit }, signa: PrepareSignaForm) {
       const id = state.selectedActivity.id;
@@ -174,6 +219,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
+    /* PUBLISH FEEDBACK */
     async publishFeedback({ state, commit }, feedback: PrepareFeedbackPublish) {
       const id = state.selectedActivity.id;
       const res = await safeCall(
