@@ -7,7 +7,6 @@
       :items-per-page="-1"
       disable-pagination
       hide-default-footer
-      dense
     >
       <template #item.actions="{ item }">
         <div v-if="!disabled">
