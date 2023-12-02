@@ -14,10 +14,8 @@ import {
   PC16_Prise_classique,
   PrepareGeneralUpdate,
   PrepareSupplyUpdate,
-  AFFICHE,
-  BACHE,
-  PANNEAU,
   SignageType,
+  signageTypes,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -37,7 +35,6 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
 } from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
-import { signageTypes } from "@overbookd/signa";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({
@@ -113,9 +110,9 @@ export class SignaRequestDto implements PrepareSignaForm {
 export class AddSignageRequestDto implements PrepareSignageCreation {
   @ApiProperty({
     required: true,
-    enum: [BACHE, PANNEAU, AFFICHE],
+    enum: signageTypes,
   })
-  @IsEnum([BACHE, PANNEAU, AFFICHE])
+  @IsEnum(signageTypes)
   type: SignageType;
 
   @ApiProperty({ required: true })

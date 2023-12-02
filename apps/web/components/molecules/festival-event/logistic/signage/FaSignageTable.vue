@@ -25,6 +25,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Signage } from "@overbookd/festival-activity";
+import { Header } from "~/utils/models/data-table.model";
+
+type FaSignageTableData = {
+  headers: Header[];
+};
 
 export default defineComponent({
   name: "FaSignageTable",
@@ -38,7 +43,7 @@ export default defineComponent({
       default: false,
     },
   },
-  data: () => ({
+  data: (): FaSignageTableData => ({
     headers: [
       { text: "Quantité", value: "quantity" },
       { text: "Type", value: "type" },
