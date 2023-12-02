@@ -8,21 +8,25 @@
       <h2>{{ typeFormLabel }} un besoin en électricité</h2>
     </v-card-title>
 
+    <v-card-subtitle>
+      Les champs marqués par <strong>*</strong> sont obligatoires.
+    </v-card-subtitle>
+
     <v-img src="/img/log/plugs.png" class="supply-card__img" />
 
     <v-card-text>
       <v-select
         v-model="connection"
         type="select"
-        label="Type de branchement"
+        label="Type de branchement *"
         :items="connectionWithLabels"
         item-value="connection"
         item-text="label"
       />
-      <v-text-field v-model="device" label="Appareil" />
+      <v-text-field v-model="device" label="Appareil *" />
       <v-text-field
         v-model="power"
-        label="Puissance par appareil*"
+        label="Puissance par appareil *"
         type="number"
         suffix="Watts"
         :rules="[rules.number, rules.min]"
@@ -30,7 +34,7 @@
       <v-text-field
         v-model="count"
         type="number"
-        label="Nombre*"
+        label="Nombre *"
         :rules="[rules.number, rules.min]"
       />
       <v-text-field v-model="comment" label="Commentaire" />
@@ -197,6 +201,9 @@ export default defineComponent({
     width: 100%;
     max-width: 350px;
     margin-bottom: 10px;
+  }
+  strong {
+    font-weight: 900;
   }
 }
 </style>

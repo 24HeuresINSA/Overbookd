@@ -8,21 +8,25 @@
       <h2>{{ typeFormLabel }} une signalétique</h2>
     </v-card-title>
 
+    <v-card-subtitle>
+      Les champs marqués par <strong>*</strong> sont obligatoires.
+    </v-card-subtitle>
+
     <v-card-text>
       <v-select
         v-model="type"
         type="select"
-        label="Type"
+        label="Type *"
         :items="signageTypes"
       />
-      <v-text-field v-model="text" label="Texte à écrire" />
+      <v-text-field v-model="text" label="Texte à écrire *" />
       <v-text-field
         v-model="quantity"
-        label="Quantité"
+        label="Quantité *"
         type="number"
         :rules="[rules.number, rules.min]"
       />
-      <v-text-field v-model="size" label="Taille" />
+      <v-text-field v-model="size" label="Taille *" />
       <v-text-field v-model="comment" label="Commentaire" />
     </v-card-text>
 
@@ -169,6 +173,9 @@ export default defineComponent({
     position: absolute;
     top: 3px;
     right: 3px;
+  }
+  strong {
+    font-weight: 900;
   }
 }
 </style>

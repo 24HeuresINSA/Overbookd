@@ -110,7 +110,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin-bottom: 40px;
   }
   &__add {
     max-width: fit-content;

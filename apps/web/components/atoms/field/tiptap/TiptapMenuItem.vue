@@ -72,7 +72,7 @@ export default {
 
   &.is-active,
   &:hover {
-    background-color: #303030;
+    background-color: #535353;
   }
 }
 

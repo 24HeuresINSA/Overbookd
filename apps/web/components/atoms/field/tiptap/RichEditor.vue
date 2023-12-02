@@ -68,7 +68,7 @@ export default {
 <style lang="scss">
 .editor {
   background-color: #fff;
-  border: 3px solid #424242;
+  border: 3px solid #7a7a7a;
   border-radius: 0.75rem;
   color: #0d0d0d;
   display: flex;
@@ -77,8 +77,8 @@ export default {
 
   &__header {
     align-items: center;
-    background: #424242;
-    border-bottom: 3px solid #424242;
+    background: #7a7a7a;
+    border-bottom: 3px solid #7a7a7a;
     border-top-left-radius: 0.25rem;
     border-top-right-radius: 0.25rem;
     display: flex;
@@ -91,8 +91,11 @@ export default {
     flex: 1 1 auto;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 1rem 1rem 0 1rem;
+    padding: 5px;
     -webkit-overflow-scrolling: touch;
+    .tiptap {
+      min-height: 150px;
+    }
   }
 }
 
