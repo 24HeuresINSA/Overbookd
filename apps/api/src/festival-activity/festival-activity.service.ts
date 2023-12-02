@@ -9,10 +9,22 @@ import {
   PrepareGeneralUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
+  TimeWindow,
+  Signage,
+  ElectricitySupply,
 } from "@overbookd/festival-activity";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
+import { IProvidePeriod } from "@overbookd/period";
+import {
+  PrepareElectricitySupplyCreation,
+  PrepareSignageCreation,
+} from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
+import {
+  UpdateElectricitySupplyRequest,
+  UpdateSignageRequest,
+} from "./dto/update-festival-activity.request.dto";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -66,6 +78,23 @@ export class FestivalActivityService {
     return this.prepareFestivalActivity.updateGeneralSection(id, general);
   }
 
+  addGeneralTimeWindow(
+    id: FestivalActivity["id"],
+    timeWindow: IProvidePeriod,
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.addTimeWindowInGeneral(id, timeWindow);
+  }
+
+  removeGeneralTimeWindow(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.removeTimeWindowFromGeneral(
+      faId,
+      timeWindowId,
+    );
+  }
+
   async saveInChargeSection(
     id: FestivalActivity["id"],
     inCharge: PrepareInChargeForm,
@@ -91,6 +120,29 @@ export class FestivalActivityService {
     return this.prepareFestivalActivity.updateSignaSection(id, { location });
   }
 
+  addSignage(
+    id: FestivalActivity["id"],
+    signage: PrepareSignageCreation,
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.addSignage(id, signage);
+  }
+
+  updateSignage(
+    faId: FestivalActivity["id"],
+    signageId: Signage["id"],
+    signageUpdate: UpdateSignageRequest,
+  ): Promise<FestivalActivity> {
+    const signage = { id: signageId, ...signageUpdate };
+    return this.prepareFestivalActivity.updateSignage(faId, signage);
+  }
+
+  removeSignage(
+    faId: FestivalActivity["id"],
+    signageId: Signage["id"],
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.removeSignage(faId, signageId);
+  }
+
   saveSecuritySection(
     id: FestivalActivity["id"],
     security: FestivalActivity["security"],
@@ -103,5 +155,37 @@ export class FestivalActivityService {
     supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
     return this.prepareFestivalActivity.updateSupplySection(id, supply);
+  }
+
+  addElectricitySupply(
+    id: FestivalActivity["id"],
+    electricitySupply: PrepareElectricitySupplyCreation,
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.addElectricitySupply(
+      id,
+      electricitySupply,
+    );
+  }
+
+  updateElectricitySupply(
+    faId: FestivalActivity["id"],
+    electricitySupplyId: ElectricitySupply["id"],
+    electricitySupplyUpdate: UpdateElectricitySupplyRequest,
+  ): Promise<FestivalActivity> {
+    const electricitySupply = {
+      id: electricitySupplyId,
+      ...electricitySupplyUpdate,
+    };
+    return this.prepareFestivalActivity.updateElectricitySupply(
+      faId,
+      electricitySupply,
+    );
+  }
+
+  removeElectricitySupply(
+    faId: FestivalActivity["id"],
+    electricitySupplyId: ElectricitySupply["id"],
+  ): Promise<FestivalActivity> {
+    return this.removeElectricitySupply(faId, electricitySupplyId);
   }
 }
