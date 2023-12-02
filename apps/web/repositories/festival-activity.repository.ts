@@ -7,9 +7,12 @@ import {
 import {
   Contractor,
   CreateFestivalActivityForm,
+  ElectricitySupply,
   FestivalActivity,
   PrepareContractorCreation,
   PrepareContractorUpdate,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
   PrepareSignageCreation,
@@ -191,6 +194,39 @@ export class FestivalActivityRepository {
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/supply`,
       supply,
+    );
+  }
+
+  static addElectricitySupply(
+    context: Context,
+    faId: FestivalActivity["id"],
+    supply: PrepareElectricitySupplyCreation,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/supply/electricity`,
+      supply,
+    );
+  }
+
+  static updateElectricitySupply(
+    context: Context,
+    faId: FestivalActivity["id"],
+    update: PrepareElectricitySupplyUpdate,
+  ) {
+    const { id, ...supply } = update;
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/supply/electricity/${id}`,
+      supply,
+    );
+  }
+
+  static removeElectricitySupply(
+    context: Context,
+    faId: FestivalActivity["id"],
+    supplyId: ElectricitySupply["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/supply/electricity/${supplyId}`,
     );
   }
 

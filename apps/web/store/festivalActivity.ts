@@ -5,10 +5,13 @@ import {
   PrepareGeneralUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
   PrepareSupplyUpdate,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   Contractor,
+  ElectricitySupply,
   PreviewFestivalActivity,
   Signage,
   TimeWindow,
@@ -213,6 +216,51 @@ export const actions = actionTree(
     async updateSupply({ state, commit }, supply: PrepareSupplyUpdate) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.updateSupply(this, id, supply));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async addElectricitySupply(
+      { state, commit },
+      supply: PrepareElectricitySupplyCreation,
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.addElectricitySupply(this, id, supply),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async updateElectricitySupply(
+      { state, commit },
+      supply: PrepareElectricitySupplyUpdate,
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.updateElectricitySupply(this, id, supply),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async removeElectricitySupply(
+      { state, commit },
+      supplyId: ElectricitySupply["id"],
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.removeElectricitySupply(this, id, supplyId),
+      );
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

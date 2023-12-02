@@ -13,7 +13,7 @@
         :supplies="supply.electricity"
         @add="addElectricitySupply"
         @update="updateElectricitySupply"
-        @delete="deleteElectricitySupply"
+        @remove="removeElectricitySupply"
       />
 
       <v-text-field
@@ -31,8 +31,8 @@ import ElectricitySupplyTable from "~/components/molecules/festival-event/logist
 import {
   FestivalActivity,
   ElectricitySupply,
+  PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-activity";
-import { NewElectricitySupply } from "~/utils/festival-event/festival-activity.model";
 
 export default defineComponent({
   name: "SupplyCard",
@@ -43,17 +43,14 @@ export default defineComponent({
     },
   },
   methods: {
-    addElectricitySupply(newSupply: NewElectricitySupply) {
-      console.log("add electricity", newSupply);
-      // TODO: add electricity supply
+    addElectricitySupply(supply: PrepareElectricitySupplyCreation) {
+      this.$accessor.festivalActivity.addElectricitySupply(supply);
     },
     updateElectricitySupply(supply: ElectricitySupply) {
-      console.log("update electricity", supply);
-      // TODO: update electricity supply
+      this.$accessor.festivalActivity.updateElectricitySupply(supply);
     },
-    deleteElectricitySupply(supply: ElectricitySupply) {
-      console.log("delete electricity supply", supply);
-      // TODO: delete electricity supply
+    removeElectricitySupply(supply: ElectricitySupply) {
+      this.$accessor.festivalActivity.removeElectricitySupply(supply.id);
     },
     updateWaterSupply(canBeEmpty: string) {
       const water = canBeEmpty.trim() ? canBeEmpty : null;
