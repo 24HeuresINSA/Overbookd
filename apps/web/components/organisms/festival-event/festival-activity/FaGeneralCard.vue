@@ -107,14 +107,14 @@ export default defineComponent({
       this.$accessor.festivalActivity.updateGeneral({ name });
     },
     updateDescription(canBeEmpty: string) {
-      const description = canBeEmpty ? canBeEmpty : null;
+      const description = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateGeneral({ description });
     },
     updateToPublish(toPublish: boolean) {
       this.$accessor.festivalActivity.updateGeneral({ toPublish });
     },
     updatePhotoLink(canBeEmpty: string) {
-      const photoLink = canBeEmpty ? canBeEmpty : null;
+      const photoLink = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateGeneral({ photoLink });
     },
     updateCategories(categories: string[]) {

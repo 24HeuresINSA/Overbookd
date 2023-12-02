@@ -32,7 +32,7 @@ export default defineComponent({
   },
   methods: {
     updateSpecialNeed(canBeEmpty: string) {
-      const specialNeed = canBeEmpty ? canBeEmpty : null;
+      const specialNeed = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateSecurity({
         specialNeed,
       });
