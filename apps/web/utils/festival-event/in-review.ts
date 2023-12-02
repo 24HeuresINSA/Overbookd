@@ -4,7 +4,7 @@ import {
   PublicGeneral,
   TimeWindow,
 } from "@overbookd/festival-activity";
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
 function isPublic(

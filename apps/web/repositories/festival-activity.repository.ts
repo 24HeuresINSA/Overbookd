@@ -1,12 +1,14 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { HttpStringified } from "~/utils/types/http";
+import {
+  HttpStringified,
+  PrepareInChargeForm,
+  PrepareSignaForm,
+} from "@overbookd/http";
 import {
   CreateFestivalActivityForm,
   FestivalActivity,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
-  PrepareInChargeForm,
-  PrepareSignaForm,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";

@@ -1,5 +1,5 @@
 import { DRAFT, Draft, FestivalActivity } from "@overbookd/festival-activity";
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 import { CastInReview } from "./in-review";
 import { CastDraft } from "./draft";
 

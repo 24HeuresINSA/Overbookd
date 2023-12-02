@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Adherent, PayContributionForm } from "@overbookd/contribution";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 

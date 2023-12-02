@@ -5,7 +5,7 @@ import {
   NewcomerToEnroll,
   RegisterForm,
 } from "@overbookd/registration";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 

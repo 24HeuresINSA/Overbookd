@@ -1,4 +1,4 @@
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
 
 export const TaskCategories = {

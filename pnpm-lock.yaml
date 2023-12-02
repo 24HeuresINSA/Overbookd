@@ -101,6 +101,9 @@ importers:
       '@overbookd/festival-activity':
         specifier: workspace:^
         version: link:../../domains/festival-activity
+      '@overbookd/http':
+        specifier: workspace:^
+        version: link:../../utils/http
       '@overbookd/list':
         specifier: workspace:^
         version: link:../../libraries/list
@@ -294,6 +297,9 @@ importers:
       '@overbookd/festival-activity':
         specifier: workspace:*
         version: link:../../domains/festival-activity
+      '@overbookd/http':
+        specifier: workspace:*
+        version: link:../../utils/http
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
@@ -544,6 +550,8 @@ importers:
       rxjs:
         specifier: 7.8.1
         version: 7.8.1
+
+  utils/http: {}
 
 packages:
 

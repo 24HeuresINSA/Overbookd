@@ -25,7 +25,7 @@ import {
   StoredGearRequest,
 } from "~/utils/models/gear-request.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 

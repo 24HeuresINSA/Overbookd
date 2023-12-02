@@ -12,17 +12,14 @@ import {
   TimeWindow,
   Signage,
   ElectricitySupply,
-  PrepareInChargeForm,
-  PrepareSignaForm,
+  PrepareElectricitySupplyCreation,
+  PrepareSignageCreation,
 } from "@overbookd/festival-activity";
+import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  PrepareElectricitySupplyCreation,
-  PrepareSignageCreation,
-} from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
 import {
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,

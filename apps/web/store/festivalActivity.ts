@@ -3,12 +3,11 @@ import {
   FestivalActivity,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
-  PrepareInChargeForm,
-  PrepareSignaForm,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
   defaultDraft,
 } from "@overbookd/festival-activity";
+import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";

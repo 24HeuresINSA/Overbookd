@@ -1,6 +1,6 @@
 import { IDefineANewcomer, RegisterForm } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";

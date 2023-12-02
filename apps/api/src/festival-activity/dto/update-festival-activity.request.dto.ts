@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  FestivalActivity,
   ElectricityConnection,
   P17_125A_TETRA,
   P17_16A_MONO,
@@ -13,11 +14,13 @@ import {
   P17_63A_TRI,
   PC16_Prise_classique,
   PrepareGeneralUpdate,
-  PrepareInChargeForm,
-  PrepareSignaForm,
   PrepareSupplyUpdate,
   SignageType,
   signageTypes,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -27,13 +30,7 @@ import {
   IsString,
   ValidateIf,
 } from "class-validator";
-import { FestivalActivity } from "@overbookd/festival-activity";
-import {
-  PrepareElectricitySupplyCreation,
-  PrepareElectricitySupplyUpdate,
-  PrepareSignageCreation,
-  PrepareSignageUpdate,
-} from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
+import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({

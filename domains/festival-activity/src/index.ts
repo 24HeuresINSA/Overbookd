@@ -106,8 +106,9 @@ export type {
   PrepareSupplyUpdate,
   PrepareSignageCreation,
   PrepareFeedbackPublish,
-  PrepareInChargeForm,
-  PrepareSignaForm,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+  PrepareSignageUpdate,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

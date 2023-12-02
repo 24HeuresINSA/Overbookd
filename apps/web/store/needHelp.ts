@@ -12,7 +12,7 @@ import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team.model";
 import { castVolunteerTaskWithDate } from "~/utils/models/user.model";
 import { UserName } from "@overbookd/user";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 interface NeedHelpState {
   volunteers: Volunteer[];

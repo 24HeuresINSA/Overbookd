@@ -8,7 +8,7 @@ import {
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriods } from "~/utils/models/period.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;
 

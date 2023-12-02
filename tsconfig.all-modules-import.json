@@ -8,6 +8,7 @@
       "@overbookd/domain-events": ["./utils/domain-events/src"],
       "@overbookd/event": ["./libraries/event/src"],
       "@overbookd/festival-activity": ["./domains/festival-activity/src"],
+      "@overbookd/http": ["./utils/http/src"],
       "@overbookd/list": ["./libraries/list/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./domains/permission/src"],
