@@ -31,7 +31,8 @@ export default defineComponent({
     },
   },
   methods: {
-    updateSpecialNeed(specialNeed: string) {
+    updateSpecialNeed(canBeEmpty: string) {
+      const specialNeed = canBeEmpty ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateSecurity({
         specialNeed,
       });

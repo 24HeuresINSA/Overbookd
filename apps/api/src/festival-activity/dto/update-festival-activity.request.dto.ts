@@ -21,6 +21,7 @@ import {
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
+  IsNumber,
   IsOptional,
   IsPositive,
   IsString,
@@ -47,6 +48,8 @@ export class GeneralRequestDto implements PrepareGeneralUpdate {
     required: false,
   })
   @IsOptional()
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   description?: string | null;
 
   @ApiProperty({
@@ -70,6 +73,8 @@ export class GeneralRequestDto implements PrepareGeneralUpdate {
     required: false,
   })
   @IsOptional()
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   photoLink?: string | null;
 
   @ApiProperty({
@@ -102,6 +107,8 @@ export class SignaRequestDto implements PrepareSignaForm {
     description: "Festival activity location id",
     required: true,
   })
+  @IsNumber()
+  @ValidateIf((_, value) => value !== null)
   locationId: number | null;
 }
 
@@ -172,6 +179,8 @@ export class SecurityRequestDto implements PrepareSecurityUpdate {
     description: "Festival activity special security need",
     required: true,
   })
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   specialNeed: string | null;
 }
 
@@ -180,6 +189,8 @@ export class SupplyRequestDto implements PrepareSupplyUpdate {
     description: "Festival activity water supply",
     required: true,
   })
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   water: string | null;
 }
 
