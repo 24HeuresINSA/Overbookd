@@ -237,7 +237,7 @@ export class FestivalActivityRepository {
     feedback: PrepareFeedbackPublish,
   ) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
-      `${this.basePath}/${faId}/feedback`,
+      `${this.basePath}/${faId}/feedbacks`,
       feedback,
     );
   }

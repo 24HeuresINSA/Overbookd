@@ -70,12 +70,12 @@ export default defineComponent({
   },
   data: (): ContractorData => ({
     headers: [
-      { text: "Prénom", value: "firstname" },
-      { text: "Nom", value: "lastname" },
-      { text: "Téléphone", value: "phone" },
-      { text: "Email", value: "email" },
-      { text: "Société", value: "company" },
-      { text: "Commentaire", value: "comment" },
+      { text: "Prénom", value: "firstname", sortable: false },
+      { text: "Nom", value: "lastname", sortable: false },
+      { text: "Téléphone", value: "phone", sortable: false },
+      { text: "Email", value: "email", sortable: false },
+      { text: "Société", value: "company", sortable: false },
+      { text: "Commentaire", value: "comment", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
 
@@ -118,7 +118,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin-bottom: 40px;
   }
   &__add {
     max-width: fit-content;

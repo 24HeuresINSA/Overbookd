@@ -1,5 +1,5 @@
 <template>
-  <div class="fa">
+  <div class="activity">
     <h1>Fiches Activités</h1>
 
     <div class="custom-container">
@@ -33,24 +33,24 @@
               </v-btn-toggle>
             </div>
 
-            <v-switch
-              v-if="canViewDeletedFa"
-              v-model="filters.isDeleted"
-              label="Afficher les FA supprimées"
-            ></v-switch>
-            <v-btn v-if="canManageLocation" @click="exportCsvSigna()">
+            <v-btn
+              v-if="canManageLocation"
+              class="signa-export"
+              @click="exportCsvSigna"
+            >
               Export signa
             </v-btn>
           </template>
         </FestivalEventFilter>
       </v-container>
 
-      <v-card class="data-table">
+      <v-card class="activity__listing">
         <v-data-table
           :headers="headers"
           :items="filteredFas"
           :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
-          class="elevation-1"
+          class="elevation-1 activity__table"
+          @click:row="openFa"
         >
           <template #item.status="{ item }">
             <v-chip-group>
@@ -74,33 +74,12 @@
             </v-chip-group>
           </template>
 
-          <template #item.name="{ item }">
-            <nuxt-link :to="`/fa/${item.id}`" :class="deletedFaTextClass">
-              {{ item.name }}
-            </nuxt-link>
-          </template>
-
           <template #item.adherent="{ item }">
             {{ formatUsername(item.adherent) }}
           </template>
 
           <template #item.team="{ item }">
             <TeamChip v-if="item.team" :team="item.team" with-name />
-          </template>
-
-          <template #item.action="{ item }">
-            <tr>
-              <td>
-                <div v-if="!filters.isDeleted">
-                  <v-btn icon small :to="`/fa/${item.id}`">
-                    <v-icon small>mdi-circle-edit-outline</v-icon>
-                  </v-btn>
-                  <v-btn icon small @click="preDelete(item)">
-                    <v-icon small>mdi-delete</v-icon>
-                  </v-btn>
-                </div>
-              </td>
-            </tr>
           </template>
 
           <template #no-data> Aucune FA trouvée </template>
@@ -151,7 +130,6 @@ import {
   FaStatus,
   FaStatusLabel,
   faStatusLabels,
-  SearchFa,
   ValidatorStatus,
   ValidatorStatusLabel,
   validatorStatusLabels,
@@ -175,7 +153,6 @@ interface FaData {
     search: string;
     team?: Team;
     status?: FaStatus;
-    isDeleted: boolean;
   };
 }
 
@@ -195,7 +172,6 @@ export default defineComponent({
       { text: "Nom", value: "name" },
       { text: "Equipe", value: "team" },
       { text: "Resp", value: "adherent", sortable: false },
-      { text: "Action", value: "action", sortable: false },
     ],
     selectedFa: undefined,
     isNewFaDialogOpen: false,
@@ -205,7 +181,6 @@ export default defineComponent({
       search: "",
       team: undefined,
       status: undefined,
-      isDeleted: false,
     },
   }),
   head: () => ({
@@ -241,21 +216,11 @@ export default defineComponent({
     validatorStatusLabels(): [ValidatorStatus, ValidatorStatusLabel][] {
       return [...validatorStatusLabels.entries()];
     },
-    deletedFaTextClass(): string {
-      return this.filters.isDeleted ? "invalid-text" : "valid-text";
-    },
     canViewDeletedFa(): boolean {
       return this.$accessor.user.can(VIEW_DELETED_FA);
     },
-
     canManageLocation(): boolean {
       return this.$accessor.user.can(MANAGE_LOCATION);
-    },
-  },
-
-  watch: {
-    async "filters.isDeleted"() {
-      await this.fetchFas();
     },
   },
 
@@ -284,11 +249,6 @@ export default defineComponent({
     ): (fa: Searchable<PreviewFestivalActivity>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
-    },
-
-    async fetchFas() {
-      const searchParams: SearchFa = { isDeleted: this.filters.isDeleted };
-      await this.$accessor.fa.fetchFAs(searchParams);
     },
 
     getFaStatus(status: FaStatus): string {
@@ -376,6 +336,10 @@ export default defineComponent({
     formatUsername(user?: User): string {
       return user ? formatUsername(user) : "";
     },
+
+    openFa(fa: PreviewFestivalActivity) {
+      this.$router.push({ path: `/fa/${fa.id}` });
+    },
   },
 });
 </script>
@@ -395,22 +359,19 @@ h1 {
   width: fit-content;
 }
 
-.data-table {
-  margin-left: 20px;
-  height: fit-content;
-  width: 100vw;
-
-  .valid-text {
-    text-decoration: none;
+.activity {
+  &__listing {
+    margin-left: 20px;
+    height: fit-content;
+    width: 100vw;
   }
-
-  .invalid-text {
-    text-decoration: line-through;
+  &__table {
+    cursor: pointer;
   }
 }
 
-.btn-check {
-  padding: 0 2px;
+.signa-export {
+  margin-top: 10px;
 }
 
 .btn-plus {
@@ -419,7 +380,7 @@ h1 {
   position: fixed;
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: $mobile-max-width) {
   .custom-container {
     flex-direction: column;
   }
@@ -428,9 +389,11 @@ h1 {
     width: 100%;
   }
 
-  .data-table {
-    margin: 0;
-    width: 100%;
+  .activity {
+    &__listing {
+      margin: 0;
+      width: 100%;
+    }
   }
 }
 </style>

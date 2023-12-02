@@ -8,10 +8,14 @@
       <h2>{{ typeFormLabel }} un prestataire</h2>
     </v-card-title>
 
+    <v-card-subtitle>
+      Les champs marqués par <strong>*</strong> sont obligatoires.
+    </v-card-subtitle>
+
     <v-card-text>
-      <v-text-field v-model="firstname" label="Prénom*" />
-      <v-text-field v-model="lastname" label="Nom*" />
-      <v-text-field v-model="phone" label="Téléphone*" />
+      <v-text-field v-model="firstname" label="Prénom *" />
+      <v-text-field v-model="lastname" label="Nom *" />
+      <v-text-field v-model="phone" label="Téléphone *" />
       <v-text-field v-model="email" label="Email" />
       <v-text-field v-model="company" label="Société" />
       <v-text-field v-model="comment" label="Commentaire" />
@@ -154,6 +158,9 @@ export default defineComponent({
     position: absolute;
     top: 3px;
     right: 3px;
+  }
+  strong {
+    font-weight: 900;
   }
 }
 </style>
