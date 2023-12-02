@@ -18,6 +18,7 @@ import {
   InquiryRequest,
   PrepareContractorCreation,
   Contractor,
+  PrepareFeedbackPublish,
 } from "@overbookd/festival-activity";
 import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
@@ -267,5 +268,18 @@ export class FestivalActivityService {
     slug: InquiryRequest["slug"],
   ) {
     return this.prepareFestivalActivity.removeInquiryRequest(faId, slug);
+  }
+
+  async addFeedback(
+    faId: FestivalActivity["id"],
+    { id }: JwtPayload,
+    { content }: PrepareFeedbackPublish,
+  ): Promise<FestivalActivity> {
+    const author = await this.adherents.find(id);
+
+    return this.prepareFestivalActivity.publishFeedback(faId, {
+      author,
+      content,
+    });
   }
 }

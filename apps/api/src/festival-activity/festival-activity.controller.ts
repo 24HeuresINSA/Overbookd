@@ -41,6 +41,7 @@ import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
 import {
   AddContractorRequestDto,
   AddElectricitySupplyRequestDto,
+  AddFeedbackRequestDto,
   AddInquiryRequestDto,
   AddSignageRequestDto,
   GeneralRequestDto,
@@ -677,7 +678,7 @@ export class FestivalActivityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
-  @Post(":faId/inquiry/request")
+  @Post(":faId/inquiry/requests")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -704,7 +705,7 @@ export class FestivalActivityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
-  @Delete(":faId/inquiry/request/:inquirySlug")
+  @Delete(":faId/inquiry/requests/:inquirySlug")
   @HttpCode(200)
   @ApiResponse({
     status: 200,
@@ -728,5 +729,32 @@ export class FestivalActivityController {
     @Param("inquirySlug") slug: InquiryRequest["slug"],
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.removeInquiryRequest(faId, slug);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":faId/feedbacks")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Feedback to add to festival activity",
+    type: AddFeedbackRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  addFeedback(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() feedback: AddFeedbackRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.addFeedback(faId, user, feedback);
   }
 }
