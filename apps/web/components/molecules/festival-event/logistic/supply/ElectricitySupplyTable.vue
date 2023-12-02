@@ -26,7 +26,7 @@
     </v-data-table>
 
     <v-btn color="primary" class="supplies__add" @click="openAddSupplyDialog">
-      Ajouter un besoin d'electricité
+      Ajouter un besoin en electricité
     </v-btn>
 
     <v-dialog v-model="isSupplyDialogOpen" max-width="600">

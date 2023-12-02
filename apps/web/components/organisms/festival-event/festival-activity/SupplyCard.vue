@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>Besoin d'elec/eau</v-card-title>
+    <v-card-title>Besoin en elec/eau</v-card-title>
     <v-card-subtitle>
       Précise tes besoins en électricité : 1 ligne par type d'appareil. Si ton
       animation a besoin d'eau, renseigne le débit dont tu as besoin et comment

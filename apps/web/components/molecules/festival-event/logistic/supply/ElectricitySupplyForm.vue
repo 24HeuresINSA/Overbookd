@@ -43,7 +43,7 @@
         @click="confirmSupply"
       >
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
-        {{ typeFormLabel }} le besoin d'electricité
+        {{ typeFormLabel }} le besoin en electricité
       </v-btn>
     </v-card-actions>
   </v-card>
