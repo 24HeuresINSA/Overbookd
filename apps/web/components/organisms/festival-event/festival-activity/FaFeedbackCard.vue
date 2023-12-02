@@ -33,7 +33,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { formatDate } from "~/utils/date/date.utils";
-import { Feedback, FestivalActivity } from "@overbookd/festival-activity";
+import { Feedback } from "@overbookd/festival-activity";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
@@ -53,9 +53,6 @@ export default Vue.extend({
     newFeedbackContent: "",
   }),
   computed: {
-    mFA(): FestivalActivity {
-      return this.$accessor.festivalActivity.selectedActivity;
-    },
     feedbacks(): Feedback[] {
       return this.$accessor.festivalActivity.selectedActivity.feedbacks;
     },
