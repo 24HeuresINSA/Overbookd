@@ -24,7 +24,7 @@ import {
 import { Reviewer } from "~/utils/models/review.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 import { User } from "@overbookd/user";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 

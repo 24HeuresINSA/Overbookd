@@ -2,7 +2,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { PublicAnimationWithFa } from "~/utils/models/fa.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 export const state = () => ({
   publicAnimations: [] as PublicAnimationWithFa[],

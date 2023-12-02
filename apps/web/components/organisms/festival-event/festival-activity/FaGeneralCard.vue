@@ -23,6 +23,13 @@
         label="Nom de l'activité"
         @change="updateName($event)"
       />
+
+      <v-switch
+        :value="general.toPublish"
+        label="Publier sur le site / plaquette"
+        @change="updateToPublish($event)"
+      />
+
       <v-label>Description</v-label>
       <RichEditor
         :data="general.description ?? ''"
@@ -40,33 +47,30 @@
         />
       </section>
 
-      <v-switch
-        :value="general.toPublish"
-        label="Publier sur le site / plaquette"
-        @change="updateToPublish($event)"
+      <v-combobox
+        :value="general.categories"
+        chips
+        multiple
+        clearable
+        dense
+        label="Categories de l'animations"
+        :items="categories"
+        @change="updateCategories($event)"
       />
-      <form v-if="general.toPublish">
-        <v-text-field
-          :value="general.photoLink"
-          label="Lien de la photo de l'activité sur le drive"
-          @change="updatePhotoLink($event)"
-        />
-        <v-combobox
-          :value="general.categories"
-          chips
-          multiple
-          clearable
-          dense
-          label="Categories de l'animations"
-          :items="categories"
-          @change="updateCategories($event)"
-        />
-        <v-switch
-          :input-value="general.isFlagship"
-          label="Animation phare qui sera mise en avant sur les réseaux sociaux"
-          @change="updateIsFlagship($event)"
-        />
-      </form>
+
+      <v-text-field
+        v-show="general.toPublish"
+        :value="general.photoLink"
+        label="Lien de la photo de l'activité sur le drive"
+        @change="updatePhotoLink($event)"
+      />
+
+      <v-switch
+        v-show="general.toPublish"
+        :input-value="general.isFlagship"
+        label="Animation phare qui sera mise en avant sur les réseaux sociaux"
+        @change="updateIsFlagship($event)"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -104,28 +108,25 @@ export default defineComponent({
   },
   methods: {
     updateName(name: string) {
-      console.log("update name", name);
-      // TODO: update name
+      this.$accessor.festivalActivity.updateGeneral({ name });
     },
-    updateDescription(description: string) {
-      console.log("update description", description);
-      // TODO: update description
+    updateToPublish(canBeNull: boolean) {
+      const toPublish = canBeNull === true;
+      this.$accessor.festivalActivity.updateGeneral({ toPublish });
     },
-    updateToPublish(toPublish: boolean) {
-      console.log("update toPublish", toPublish);
-      // TODO: update toPublish
+    updateDescription(canBeEmpty: string) {
+      const description = canBeEmpty.trim() ? canBeEmpty : null;
+      this.$accessor.festivalActivity.updateGeneral({ description });
     },
-    updatePhotoLink(photoLink: string) {
-      console.log("update photoLink", photoLink);
-      // TODO: update photoLink
+    updatePhotoLink(canBeEmpty: string) {
+      const photoLink = canBeEmpty.trim() ? canBeEmpty : null;
+      this.$accessor.festivalActivity.updateGeneral({ photoLink });
     },
     updateCategories(categories: string[]) {
-      console.log("update categories", categories);
-      // TODO: update categories
+      this.$accessor.festivalActivity.updateGeneral({ categories });
     },
     updateIsFlagship(isFlagship: boolean) {
-      console.log("update isFlagship", isFlagship);
-      // TODO: update isFlagship
+      this.$accessor.festivalActivity.updateGeneral({ isFlagship });
     },
     addTimeWindow(period: IProvidePeriod) {
       console.log("add timeWindow", period);

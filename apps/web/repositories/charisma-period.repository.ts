@@ -3,7 +3,7 @@ import {
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charisma-period.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 

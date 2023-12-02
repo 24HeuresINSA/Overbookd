@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { OrgaNeedsRequest, OrgaNeedsResponse } from "~/store/orgaNeeds";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 

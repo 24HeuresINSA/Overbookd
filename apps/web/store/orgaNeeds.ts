@@ -2,7 +2,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { IProvidePeriod } from "@overbookd/period";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 const orgaNeedsRepo = RepoFactory.OrgaNeedsRepository;
 

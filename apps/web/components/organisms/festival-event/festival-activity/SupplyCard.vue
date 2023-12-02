@@ -55,9 +55,9 @@ export default defineComponent({
       console.log("delete electricity supply", supply);
       // TODO: delete electricity supply
     },
-    updateWaterSupply(water: string) {
-      console.log("update water", water);
-      // TODO: update water supply
+    updateWaterSupply(canBeEmpty: string) {
+      const water = canBeEmpty.trim() ? canBeEmpty : null;
+      this.$accessor.festivalActivity.updateSupply({ water });
     },
   },
 });

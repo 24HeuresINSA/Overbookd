@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 import { BaseFa } from "./fa.model";
 import { FtFeedback } from "./feedback.model";
 import { FtTimeSpan } from "./ft-time-span.model";

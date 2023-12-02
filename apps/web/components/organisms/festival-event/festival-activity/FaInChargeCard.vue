@@ -15,19 +15,19 @@
     </v-card-subtitle>
 
     <v-card-text>
-      <SearchTeam
-        :team="team"
-        label="Équipe"
-        :boxed="false"
-        @change="updateTeam($event)"
-      />
-
       <SearchUser
         :user="inCharge.adherent"
         label="Adhérent"
         :boxed="false"
         :list="adherents"
         @change="updateAdherent($event)"
+      />
+
+      <SearchTeam
+        :team="team"
+        label="Équipe"
+        :boxed="false"
+        @change="updateTeam($event)"
       />
     </v-card-text>
   </v-card>
@@ -37,7 +37,7 @@
 import { defineComponent } from "vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity, Adherent } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
@@ -45,11 +45,8 @@ export default defineComponent({
   name: "FaGeneralCard",
   components: { SearchUser, SearchTeam },
   computed: {
-    mFA(): FestivalActivity {
-      return this.$accessor.festivalActivity.selectedActivity;
-    },
     inCharge(): FestivalActivity["inCharge"] {
-      return this.mFA.inCharge;
+      return this.$accessor.festivalActivity.selectedActivity.inCharge;
     },
     team(): Team | null {
       return this.inCharge.team
@@ -66,13 +63,12 @@ export default defineComponent({
     }
   },
   methods: {
-    updateTeam(team: string) {
-      console.log("update team", team);
-      // TODO: update team
+    updateAdherent(adherent: Adherent) {
+      const adherentId = adherent.id;
+      this.$accessor.festivalActivity.updateInCharge({ adherentId });
     },
-    updateAdherent(adherent: User) {
-      console.log("update adherent", adherent);
-      // TODO: update name
+    updateTeam(team: Team) {
+      this.$accessor.festivalActivity.updateInCharge({ team: team.code });
     },
   },
 });

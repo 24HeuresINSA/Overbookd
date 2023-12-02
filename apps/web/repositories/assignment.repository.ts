@@ -7,7 +7,7 @@ import {
   FtWithTimeSpan,
   TimeSpanWithAssignees,
 } from "~/utils/models/ft-time-span.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 export type Context = { $axios: NuxtAxiosInstance };
 

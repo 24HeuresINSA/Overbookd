@@ -12,28 +12,18 @@ import {
   TimeWindow,
   Signage,
   ElectricitySupply,
+  PrepareElectricitySupplyCreation,
+  PrepareSignageCreation,
 } from "@overbookd/festival-activity";
+import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
 import {
-  PrepareElectricitySupplyCreation,
-  PrepareSignageCreation,
-} from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
-import {
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
-
-export type PrepareInChargeForm = {
-  adherentId?: number;
-  team?: string;
-};
-
-export type PrepareSignaForm = {
-  locationId: number | null;
-};
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;

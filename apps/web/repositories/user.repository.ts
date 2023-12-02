@@ -4,7 +4,7 @@ import {
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 import {
   MyUserInformation,
   Profile,

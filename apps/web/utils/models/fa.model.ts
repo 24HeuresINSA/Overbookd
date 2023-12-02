@@ -1,4 +1,4 @@
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 import { FaFeedback } from "./feedback.model";
 import { FtSimplified } from "./ft.model";
 import { StoredGearRequest } from "./gear-request.model";

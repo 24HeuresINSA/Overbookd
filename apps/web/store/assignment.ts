@@ -27,7 +27,7 @@ import {
   VolunteerTask,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
 
 type AssignmentParameters = {

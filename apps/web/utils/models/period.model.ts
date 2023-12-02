@@ -1,5 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 
 export interface PeriodWithId extends IProvidePeriod {
   id: number;

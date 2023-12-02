@@ -15,7 +15,7 @@ import {
   TimelineTimeSpan,
   TimelineTimeWindow,
 } from "~/utils/models/timeline.model";
-import { HttpStringified } from "~/utils/types/http";
+import { HttpStringified } from "@overbookd/http";
 
 const timelineRepo = RepoFactory.TimelineRepository;
 

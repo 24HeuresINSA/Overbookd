@@ -1,5 +1,5 @@
 import { TimeWindow } from "@overbookd/festival-activity";
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 
 export function castTimeWindowWithDate(
   timeWindow: HttpStringified<TimeWindow>,

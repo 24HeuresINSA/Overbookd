@@ -1,5 +1,5 @@
 import { Draft } from "@overbookd/festival-activity";
-import { HttpStringified } from "../types/http";
+import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
 export class CastDraft {

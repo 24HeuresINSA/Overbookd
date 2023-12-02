@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  FestivalActivity,
   ElectricityConnection,
   P17_125A_TETRA,
   P17_16A_MONO,
@@ -16,25 +17,20 @@ import {
   PrepareSupplyUpdate,
   SignageType,
   signageTypes,
+  PrepareElectricitySupplyCreation,
+  PrepareElectricitySupplyUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
+  IsNumber,
   IsOptional,
   IsPositive,
   IsString,
   ValidateIf,
 } from "class-validator";
-import {
-  PrepareInChargeForm,
-  PrepareSignaForm,
-} from "../festival-activity.service";
-import { FestivalActivity } from "@overbookd/festival-activity";
-import {
-  PrepareElectricitySupplyCreation,
-  PrepareElectricitySupplyUpdate,
-  PrepareSignageCreation,
-  PrepareSignageUpdate,
-} from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
+import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({
@@ -49,6 +45,8 @@ export class GeneralRequestDto implements PrepareGeneralUpdate {
     required: false,
   })
   @IsOptional()
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   description?: string | null;
 
   @ApiProperty({
@@ -72,6 +70,8 @@ export class GeneralRequestDto implements PrepareGeneralUpdate {
     required: false,
   })
   @IsOptional()
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   photoLink?: string | null;
 
   @ApiProperty({
@@ -104,6 +104,8 @@ export class SignaRequestDto implements PrepareSignaForm {
     description: "Festival activity location id",
     required: true,
   })
+  @IsNumber()
+  @ValidateIf((_, value) => value !== null)
   locationId: number | null;
 }
 
@@ -174,6 +176,8 @@ export class SecurityRequestDto implements PrepareSecurityUpdate {
     description: "Festival activity special security need",
     required: true,
   })
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   specialNeed: string | null;
 }
 
@@ -182,6 +186,8 @@ export class SupplyRequestDto implements PrepareSupplyUpdate {
     description: "Festival activity water supply",
     required: true,
   })
+  @IsString()
+  @ValidateIf((_, value) => value !== null)
   water: string | null;
 }
 
