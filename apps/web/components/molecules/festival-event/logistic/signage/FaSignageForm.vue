@@ -41,9 +41,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Signage, PANNEAU } from "@overbookd/festival-activity";
+import { Signage, PANNEAU, signageTypes } from "@overbookd/festival-activity";
 import { isNumber, min } from "~/utils/rules/input.rules";
-import { SignageType, signageTypes } from "@overbookd/signa";
 
 interface SignageFormData {
   type: Signage["type"];
@@ -77,7 +76,7 @@ export default defineComponent({
     },
   }),
   computed: {
-    signageTypes(): SignageType[] {
+    signageTypes(): Signage["type"][] {
       return Object.values(signageTypes);
     },
     isUpdate(): boolean {

@@ -4,6 +4,12 @@ export const AFFICHE = "AFFICHE";
 
 export type SignageType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
 
+export const signageTypes: Record<SignageType, SignageType> = {
+  BACHE,
+  PANNEAU,
+  AFFICHE,
+};
+
 export type Signage = {
   id: string;
   quantity: number;
