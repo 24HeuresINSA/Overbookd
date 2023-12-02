@@ -23,6 +23,13 @@
         label="Nom de l'activité"
         @change="updateName($event)"
       />
+
+      <v-switch
+        :value="general.toPublish"
+        label="Publier sur le site / plaquette"
+        @change="updateToPublish($event)"
+      />
+
       <v-label>Description</v-label>
       <RichEditor
         :data="general.description ?? ''"
@@ -40,33 +47,30 @@
         />
       </section>
 
-      <v-switch
-        :value="general.toPublish"
-        label="Publier sur le site / plaquette"
-        @change="updateToPublish($event)"
+      <v-combobox
+        :value="general.categories"
+        chips
+        multiple
+        clearable
+        dense
+        label="Categories de l'animations"
+        :items="categories"
+        @change="updateCategories($event)"
       />
-      <form v-if="general.toPublish">
-        <v-text-field
-          :value="general.photoLink"
-          label="Lien de la photo de l'activité sur le drive"
-          @change="updatePhotoLink($event)"
-        />
-        <v-combobox
-          :value="general.categories"
-          chips
-          multiple
-          clearable
-          dense
-          label="Categories de l'animations"
-          :items="categories"
-          @change="updateCategories($event)"
-        />
-        <v-switch
-          :input-value="general.isFlagship"
-          label="Animation phare qui sera mise en avant sur les réseaux sociaux"
-          @change="updateIsFlagship($event)"
-        />
-      </form>
+
+      <v-text-field
+        v-show="general.toPublish"
+        :value="general.photoLink"
+        label="Lien de la photo de l'activité sur le drive"
+        @change="updatePhotoLink($event)"
+      />
+
+      <v-switch
+        v-show="general.toPublish"
+        :input-value="general.isFlagship"
+        label="Animation phare qui sera mise en avant sur les réseaux sociaux"
+        @change="updateIsFlagship($event)"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -106,12 +110,13 @@ export default defineComponent({
     updateName(name: string) {
       this.$accessor.festivalActivity.updateGeneral({ name });
     },
+    updateToPublish(canBeNull: boolean) {
+      const toPublish = canBeNull === true;
+      this.$accessor.festivalActivity.updateGeneral({ toPublish });
+    },
     updateDescription(canBeEmpty: string) {
       const description = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateGeneral({ description });
-    },
-    updateToPublish(toPublish: boolean) {
-      this.$accessor.festivalActivity.updateGeneral({ toPublish });
     },
     updatePhotoLink(canBeEmpty: string) {
       const photoLink = canBeEmpty.trim() ? canBeEmpty : null;
