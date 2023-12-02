@@ -119,7 +119,7 @@ export class CatalogSignageController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
-        destination: join(process.cwd(), "public"),
+        destination: join(process.cwd(), "public/signa"),
         filename: (req, file, cb) => {
           const uuid = randomUUID();
           const filenameFragments = file.originalname.split(".");
@@ -140,9 +140,22 @@ export class CatalogSignageController {
   })
   defineSignageImage(
     @Param("id", ParseIntPipe) id: number,
-    @Body() signage: SignageResponseDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Signage> {
-    return null;
+    return this.catalogSignageService.updateSignageImage(id, file.filename);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_SIGNAGE_CATALOG)
+  @Get(":id/image")
+  @ApiResponse({
+    status: 200,
+    description: "Get signage image",
+    type: SignageResponseDto,
+  })
+  async getSignageImage(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<StreamableFile | null> {
+    return this.catalogSignageService.streamSignageImage(id);
   }
 }
