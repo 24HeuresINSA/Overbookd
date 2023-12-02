@@ -13,7 +13,7 @@
         auto-grow
         rows="2"
         prepend-icon="mdi-security"
-        @change="updateSpecialNeed($event)"
+        @change="updateSpecialNeed"
       />
     </v-card-text>
   </v-card>

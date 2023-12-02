@@ -4,8 +4,8 @@
     <v-card-text>
       <FaTimeWindowTable
         :time-windows="inquiry.timeWindows"
-        @add="addTimeWindow($event)"
-        @remove="removeTimeWindow($event)"
+        @add="addTimeWindow"
+        @remove="removeTimeWindow"
       />
 
       <v-form class="inquiry-form">

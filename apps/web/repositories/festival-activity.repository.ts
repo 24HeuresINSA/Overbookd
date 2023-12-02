@@ -5,8 +5,11 @@ import {
   PrepareSignaForm,
 } from "@overbookd/http";
 import {
+  Contractor,
   CreateFestivalActivityForm,
   FestivalActivity,
+  PrepareContractorCreation,
+  PrepareContractorUpdate,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
   PrepareSignageCreation,
@@ -23,6 +26,7 @@ type Context = { $axios: NuxtAxiosInstance };
 export class FestivalActivityRepository {
   private static readonly basePath = "festival-activity";
 
+  /* FETCH */
   static getAll(context: Context) {
     return context.$axios.get<HttpStringified<PreviewFestivalActivity>[]>(
       this.basePath,
@@ -35,6 +39,7 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* CREATE */
   static create(context: Context, data: CreateFestivalActivityForm) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       this.basePath,
@@ -42,6 +47,7 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* UPDATE GENERAL */
   static updateGeneral(
     context: Context,
     faId: FestivalActivity["id"],
@@ -74,6 +80,7 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* UPDATE IN CHARGE */
   static updateInCharge(
     context: Context,
     faId: FestivalActivity["id"],
@@ -85,6 +92,39 @@ export class FestivalActivityRepository {
     );
   }
 
+  static addContractor(
+    context: Context,
+    faId: FestivalActivity["id"],
+    contractor: PrepareContractorCreation,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/in-charge/contractors`,
+      contractor,
+    );
+  }
+
+  static updateContractor(
+    context: Context,
+    faId: FestivalActivity["id"],
+    contractor: PrepareContractorUpdate,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/in-charge/contractors/${contractor.id}`,
+      contractor,
+    );
+  }
+
+  static removeContractor(
+    context: Context,
+    faId: FestivalActivity["id"],
+    contractorId: Contractor["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/in-charge/contractors/${contractorId}`,
+    );
+  }
+
+  /* UPDATE SIGNA */
   static updateSigna(
     context: Context,
     faId: FestivalActivity["id"],
@@ -129,6 +169,7 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* UPDATE SECURITY */
   static updateSecurity(
     context: Context,
     faId: FestivalActivity["id"],
@@ -140,6 +181,7 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* UPDATE SUPPLY */
   static updateSupply(
     context: Context,
     faId: FestivalActivity["id"],
@@ -151,6 +193,7 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* PUBLISH FEEDBACK */
   static publishFeedback(
     context: Context,
     faId: number,

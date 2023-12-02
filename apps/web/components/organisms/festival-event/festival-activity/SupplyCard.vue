@@ -19,7 +19,7 @@
       <v-text-field
         :value="supply.water"
         label="Besoin en eau"
-        @change="updateWaterSupply($event)"
+        @change="updateWaterSupply"
       />
     </v-card-text>
   </v-card>
