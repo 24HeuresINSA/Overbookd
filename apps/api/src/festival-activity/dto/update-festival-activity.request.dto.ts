@@ -24,6 +24,7 @@ import {
   PrepareInquiryRequestCreation,
   PrepareContractorCreation,
   PrepareContractorUpdate,
+  PrepareFeedbackPublish,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -373,4 +374,10 @@ export class InitInquiryRequestDto implements InitInquiryRequest {
   })
   @Type(() => AddInquiryRequestDto)
   request: AddInquiryRequest;
+}
+
+export class AddFeedbackRequestDto implements PrepareFeedbackPublish {
+  @ApiProperty({ required: true })
+  @IsString()
+  content: string;
 }
