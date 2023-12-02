@@ -22,7 +22,7 @@ export default {
       {
         hid: "description",
         name: "description",
-        content: "Overbookd - Event Planning Application",
+        content: "Overbookd - Organisation du festival des 24h de l’INSA",
       },
     ],
   },
