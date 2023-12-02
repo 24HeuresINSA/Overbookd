@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="supply-card__title">
-      <h2>{{ typeFormLabel }} un besoin d'électricité</h2>
+      <h2>{{ typeFormLabel }} un besoin en électricité</h2>
     </v-card-title>
 
     <v-img src="/img/log/plugs.png" class="supply-card__img" />
@@ -43,7 +43,7 @@
         @click="confirmSupply"
       >
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
-        {{ typeFormLabel }} le besoin en electricité
+        {{ typeFormLabel }} le besoin en électricité
       </v-btn>
     </v-card-actions>
   </v-card>

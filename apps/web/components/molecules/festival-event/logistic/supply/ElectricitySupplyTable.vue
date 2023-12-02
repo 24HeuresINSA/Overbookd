@@ -22,11 +22,11 @@
           </v-btn>
         </div>
       </template>
-      <template #no-data> Aucun besoin d'électricité </template>
+      <template #no-data> Aucun besoin en électricité </template>
     </v-data-table>
 
     <v-btn color="primary" class="supplies__add" @click="openAddSupplyDialog">
-      Ajouter un besoin en electricité
+      Ajouter un besoin en électricité
     </v-btn>
 
     <v-dialog v-model="isSupplyDialogOpen" max-width="600">
