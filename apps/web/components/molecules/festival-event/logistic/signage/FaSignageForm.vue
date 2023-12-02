@@ -104,12 +104,13 @@ export default defineComponent({
     confirmSignage() {
       if (!this.canConfirmSignage) return;
 
+      const comment = this.comment?.trim();
       const signage = {
         type: this.type,
         text: this.text.trim(),
         quantity: +this.quantity,
         size: this.size.trim(),
-        comment: this.comment?.trim(),
+        comment: comment !== "" ? comment : null,
       };
 
       if (this.isUpdate) {

@@ -9,9 +9,9 @@
     </v-card-title>
 
     <v-card-text>
-      <v-text-field v-model="firstname" label="Prénom" />
-      <v-text-field v-model="lastname" label="Nom" />
-      <v-text-field v-model="phone" label="Téléphone" />
+      <v-text-field v-model="firstname" label="Prénom*" />
+      <v-text-field v-model="lastname" label="Nom*" />
+      <v-text-field v-model="phone" label="Téléphone*" />
       <v-text-field v-model="email" label="Email" />
       <v-text-field v-model="company" label="Société" />
       <v-text-field v-model="comment" label="Commentaire" />
@@ -84,13 +84,16 @@ export default defineComponent({
     confirmContractor() {
       if (!this.canConfirmContractor) return;
 
+      const email = this.email?.trim();
+      const company = this.company?.trim();
+      const comment = this.comment?.trim();
       const contractor = {
         firstname: this.firstname,
         lastname: this.lastname,
         phone: this.phone,
-        email: this.email,
-        company: this.company,
-        comment: this.comment,
+        email: email !== "" ? email : null,
+        company: company !== "" ? company : null,
+        comment: comment !== "" ? comment : null,
       };
 
       if (this.isUpdate) {

@@ -106,10 +106,11 @@ export class FestivalActivityRepository {
   static updateContractor(
     context: Context,
     faId: FestivalActivity["id"],
-    contractor: PrepareContractorUpdate,
+    update: PrepareContractorUpdate,
   ) {
+    const { id, ...contractor } = update;
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
-      `${this.basePath}/${faId}/in-charge/contractors/${contractor.id}`,
+      `${this.basePath}/${faId}/in-charge/contractors/${id}`,
       contractor,
     );
   }
