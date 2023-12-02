@@ -549,7 +549,7 @@ export class FestivalActivityController {
   })
   updateElectricitySupply(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("electricitySupplyId", ParseIntPipe)
+    @Param("electricitySupplyId")
     electricitySupplyId: ElectricitySupply["id"],
     @Body() electricitySupply: UpdateElectricitySupplyRequestDto,
   ): Promise<FestivalActivity> {

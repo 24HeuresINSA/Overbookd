@@ -287,6 +287,7 @@ export class AddElectricitySupplyRequestDto
   connection: ElectricityConnection;
 
   @ApiProperty({ required: true, example: "Lampe" })
+  @IsString()
   device: string;
 
   @ApiProperty({ required: true, example: 300 })
@@ -299,6 +300,7 @@ export class AddElectricitySupplyRequestDto
 
   @ApiProperty({ required: false })
   @IsOptional()
+  @IsString()
   comment?: string;
 }
 
@@ -317,6 +319,7 @@ export class UpdateElectricitySupplyRequestDto
 
   @ApiProperty({ required: false, example: "Lampe" })
   @IsOptional()
+  @IsString()
   device?: string;
 
   @ApiProperty({ required: false, example: 300 })

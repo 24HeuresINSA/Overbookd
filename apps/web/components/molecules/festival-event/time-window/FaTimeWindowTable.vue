@@ -21,7 +21,7 @@
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </template>
-      <template #no-data> Aucun créneau ajouté </template>
+      <template #no-data> Aucun créneau </template>
     </v-data-table>
 
     <v-btn

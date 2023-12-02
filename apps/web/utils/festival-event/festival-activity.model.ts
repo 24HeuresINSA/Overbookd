@@ -1,7 +1,6 @@
 import {
   DRAFT,
   ElectricityConnection,
-  ElectricitySupply,
   FestivalActivity,
   IN_REVIEW,
   P17_125A_TETRA,
@@ -38,8 +37,6 @@ export const activityCategories = [
   "Autre",
 ];
 
-export type NewElectricitySupply = Omit<ElectricitySupply, "id">;
-
 export const electricityConnectionLabels = new Map<
   ElectricityConnection,
   string
@@ -56,3 +53,8 @@ export const electricityConnectionLabels = new Map<
   [P17_63A_TETRA, "63A Tetra (P17 63A TETRA)"],
   [P17_125A_TETRA, "125A Tetra (P17 125A TETRA)"],
 ]);
+
+export interface ElectricityConnectionWithLabel {
+  connection: ElectricityConnection;
+  label: string;
+}
