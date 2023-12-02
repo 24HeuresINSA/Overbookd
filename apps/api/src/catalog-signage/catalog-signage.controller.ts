@@ -142,7 +142,6 @@ export class CatalogSignageController {
     @Param("id", ParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Signage> {
-    console.log(file);
     return this.catalogSignageService.updateSignageImage(id, file.filename);
   }
 

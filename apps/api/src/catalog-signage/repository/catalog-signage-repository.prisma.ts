@@ -42,9 +42,13 @@ export class PrismaCatalogSignageRepository implements CatalogSignageRepository 
   }
 
   async remove(id: number): Promise<void> {
+    const signage = await this.prisma.catalogSignage.findUnique({ where: { id } });
+    if (signage?.image) {
+      this.fileService.deleteFile(signage.image);
+    }
     await this.prisma.catalogSignage.delete({ where: { id } });
   }
-
+  
   async findSignageImage(id: number): Promise<string | null> {
     const { image } = await this.prisma.catalogSignage.findUnique({
       where: { id },

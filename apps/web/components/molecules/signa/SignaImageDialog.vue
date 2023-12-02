@@ -17,7 +17,7 @@
       />
     </v-card-text>
     <v-card-actions>
-      <v-btn text @click="uploadsignaImage()">Enregistrer </v-btn>
+      <v-btn text @click="uploadSignaImage()">Enregistrer </v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -66,17 +66,17 @@ export default Vue.extend({
     closeDialog(): void {
       this.$emit("close-dialog");
     },
-    async uploadsignaImage() {
+    async uploadSignaImage() {
       if (!this.me || !this.signaImage) {
         return;
       }
       const signaImageForm = new FormData();
       signaImageForm.append("file", this.signaImage, this.signaImage.name);
-      await this.$accessor.catalogSignage.uploadSignageImage({
+      this.$accessor.catalogSignage.uploadSignageImage({
         signageId: this.signage.id,
         signageImage: signaImageForm,
       });
-      this.$store.dispatch("dialog/closeDialog");
+      this.closeDialog();
     },
   },
 });

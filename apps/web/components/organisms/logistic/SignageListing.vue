@@ -22,6 +22,15 @@
       ></v-select>
     </form>
     <v-data-table :headers="headers" :items="filteredSignages">
+      <template #item.image="{ item }">
+        <v-img
+          :src="item.imageBlob "
+          :alt="item.name"
+          width="100"
+          height="100"
+          contain
+        ></v-img>
+      </template>
       <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateSignageDialog(item)">
           mdi-pencil
@@ -70,6 +79,8 @@
       </ConfirmationMessage>
     </v-dialog>
   </div>
+
+
 </template>
 
 <script lang="ts">
@@ -81,6 +92,7 @@ import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
 import SignaImageDialog from "~/components/molecules/signa/SignaImageDialog.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
+import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
 interface SignageListingData {
   headers: Header[];
@@ -113,8 +125,9 @@ export default Vue.extend({
     };
   },
   computed: {
-    signages(): Signage[] {
+    signages(): SignageWithPotentialImage[] {
       return this.$accessor.catalogSignage.signages;
+      
     },
     filteredSignages(): Signage[] {
       return this.signages.filter((signage) => {

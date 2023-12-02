@@ -2,11 +2,15 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
+import { CatalogSignageRepository } from "~/repositories/catalog-signage.repository";
+import { Context } from "~/repositories/assignment.repository";
+import { updateItemToList } from "@overbookd/list";
+import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
 const signageRepository = RepoFactory.CatalogSignageRepository;
 
 interface State {
-  signages: Signage[];
+  signages: SignageWithPotentialImage[];
 }
 
 export const state = (): State => ({
@@ -14,25 +18,20 @@ export const state = (): State => ({
 });
 
 export const mutations = mutationTree(state, {
-  SET_SIGNAGES(state, signages: Signage[]) {
+  SET_SIGNAGES(state, signages: SignageWithPotentialImage[]) {
     state.signages = signages;
   },
-  ADD_SIGNAGE(state, signage: Signage) {
+  ADD_SIGNAGE(state, signage: SignageWithPotentialImage) {
     state.signages.push(signage);
   },
-  UPDATE_SIGNAGE(state, signage: Signage) {
+  UPDATE_SIGNAGE(state, signage: SignageWithPotentialImage) {
     const index = state.signages.findIndex((s) => s.id === signage.id);
     if (index < 0) return;
-    state.signages.splice(index, 1, signage);
+    state.signages = updateItemToList(state.signages, index, signage);
   },
-  DELETE_SIGNAGE(state, signage: Signage) {
+  DELETE_SIGNAGE(state, signage: SignageWithPotentialImage) {
     state.signages = state.signages.filter((s) => s.id !== signage.id);
   },
-  ADD_SIGNAGE_IMAGE(state, { signageId, image }) {
-    const index = state.signages.findIndex((s) => s.id === signageId);
-    if (index < 0) return;
-    state.signages[index].image = image;
-  }
 });
 
 export const actions = actionTree(
@@ -44,7 +43,8 @@ export const actions = actionTree(
         signageRepository.fetchSignages(this),
       );
       if (!res) return;
-      commit("SET_SIGNAGES", res.data);
+      const signages = await fetchSignageImages(this, res.data);
+      commit("SET_SIGNAGES", signages);
     },
 
     async createSignage({ commit }, signageForm: SignageForm): Promise<void> {
@@ -102,7 +102,21 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("ADD_SIGNAGE_IMAGE", { signageId, image: res.data });
+      const imageBlob = await signageRepository.fetchSignageImage(this, signageId);
+      const signage = {...res.data, imageBlob };
+      commit("UPDATE_SIGNAGE", signage);
     },
   },
 );
+
+async function fetchSignageImages(context: Context,signages: Signage[]) {
+  return await Promise.all(signages.map(async (signage) => {
+    const signageImage = await CatalogSignageRepository.fetchSignageImage(context, signage.id);
+    if (!signageImage) return signage;
+    return {
+      ...signage,
+      imageBlob: signageImage,
+    };
+  }));
+}
+

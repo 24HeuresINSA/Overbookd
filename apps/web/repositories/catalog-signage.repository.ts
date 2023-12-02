@@ -10,15 +10,16 @@ export class CatalogSignageRepository {
     return context.$axios.get<Signage[]>(this.basePath);
   }
 
-  static async fetchSignagePicture(
+  static async fetchSignageImage(
     context: Context,
     signageId: number,
   ): Promise<string | undefined> {
     const token = context.$axios.defaults.headers.common["Authorization"];
     if (!token) return undefined;
 
+    const urltest = `${process.env.BASE_URL}${this.basePath}/${signageId}/image`;
     const response = await fetch(
-      `${process.env.BASE_URL}${this.basePath}/${signageId}/image`,
+      urltest,
       {
         method: "GET",
         headers: {
@@ -26,7 +27,7 @@ export class CatalogSignageRepository {
         },
       },
     );
-
+    console.log(urltest);
     if (response.status !== 200) return undefined;
 
     const url = URL.createObjectURL(await response.blob());
@@ -53,7 +54,6 @@ export class CatalogSignageRepository {
   }
 
   static uploadSignageImage(context: Context, signageId: number, signageImage: FormData) {
-    console.log(signageImage);
     return context.$axios.post<Signage>(
       `${this.basePath}/${signageId}/image`,
       signageImage,
