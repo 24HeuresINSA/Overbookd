@@ -24,6 +24,7 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import type {
+  Contractor,
   ElectricitySupply,
   FestivalActivity,
   InquiryRequest,
@@ -38,6 +39,7 @@ import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
 import {
+  AddContractorRequestDto,
   AddElectricitySupplyRequestDto,
   AddInquiryRequestDto,
   AddSignageRequestDto,
@@ -47,6 +49,7 @@ import {
   SecurityRequestDto,
   SignaRequestDto,
   SupplyRequestDto,
+  UpdateContractorRequestDto,
   UpdateElectricitySupplyRequestDto,
   UpdateSignageRequestDto,
 } from "./dto/update-festival-activity.request.dto";
@@ -232,6 +235,98 @@ export class FestivalActivityController {
     @Body() inCharge: InChargeRequestDto,
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.saveInChargeSection(id, inCharge);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":id/in-charge/contractors")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Contractor to add in in-charge section of festival activity",
+    type: AddContractorRequestDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  addContractor(
+    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
+    @Body() contractor: AddContractorRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.addContractor(id, contractor);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Patch(":faId/in-charge/contractors/:contractorId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description:
+      "Contractor data to update in in-charge section of festival activity",
+    type: UpdateContractorRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "contractorId",
+    type: Number,
+    description: "Contractor id",
+    required: true,
+  })
+  updateContractor(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("contractorId", ParseIntPipe) contractorId: Contractor["id"],
+    @Body() contractor: UpdateContractorRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.updateContractor(
+      faId,
+      contractorId,
+      contractor,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Delete(":faId/in-charge/contractors/:contractorId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "contractorId",
+    type: Number,
+    description: "Contractor id",
+    required: true,
+  })
+  removeContractor(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("contractorId", ParseIntPipe) contractorId: Contractor["id"],
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.removeContractor(faId, contractorId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
