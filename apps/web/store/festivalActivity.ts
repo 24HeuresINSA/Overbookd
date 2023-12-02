@@ -3,8 +3,11 @@ import {
   FestivalActivity,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
+  Signage,
   TimeWindow,
   defaultDraft,
 } from "@overbookd/festival-activity";
@@ -115,6 +118,33 @@ export const actions = actionTree(
     async updateSigna({ state, commit }, signa: PrepareSignaForm) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.updateSigna(this, id, signa));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async addSignage({ state, commit }, signage: PrepareSignageCreation) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.addSignage(this, id, signage));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async updateSignage({ state, commit }, signage: PrepareSignageUpdate) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.updateSignage(this, id, signage));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async removeSignage({ state, commit }, signageId: Signage["id"]) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.removeSignage(this, id, signageId));
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
