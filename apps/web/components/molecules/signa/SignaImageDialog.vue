@@ -1,30 +1,44 @@
 <template>
-  <v-dialog v-model="toggled" max-width="600">
-    <v-card>
-      <v-card-text>
-        <v-file-input
-          v-model="signaImage"
-          :rules="rules"
-          label="Photo de la Signa"
-          prepend-icon="mdi-camera"
-          accept="image/png, image/jpeg"
-          show-size
-        />
-      </v-card-text>
-      <v-card-actions>
-        <v-btn text @click="uploadsignaImage()">Enregistrer</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <v-card class="signage">
+    <v-btn class="close-btn" icon @click="closeDialog">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
+    <v-card-title class="signage__title">
+      <h2>Signalisation</h2>
+    </v-card-title>
+    <v-card-text>
+      <v-file-input
+        v-model="signaImage"
+        :rules="rules"
+        label="Photo de la Signa"
+        prepend-icon="mdi-camera"
+        accept="image/png, image/jpeg"
+        show-size
+      />
+    </v-card-text>
+    <v-card-actions>
+      <v-btn text @click="uploadsignaImage()">Enregistrer </v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script lang="ts">
+import { signageTypes } from "@overbookd/signa";
 import Vue from "vue";
 
 const MAX_SIZE = 1024 * 1024 * 2;
 
 export default Vue.extend({
-  name: "signaImageDialog",
+  name: "SignaImageDialog",
+  props: {
+    signage: {
+      type: Object,
+      default: () => ({
+        name: "",
+        type: signageTypes.AFFICHE,
+      }),
+    },
+  },
   data: () => ({
     signaImage: undefined as File | undefined,
     rules: [
@@ -47,35 +61,21 @@ export default Vue.extend({
     me() {
       return this.$accessor.user.me;
     },
-    toggled: {
-      get: function (): boolean | unknown {
-        if (this.type == "signaImage") {
-          return this.open;
-        }
-        if (!this.open) {
-          return false;
-        }
-        return false;
-      },
-      set(val): void {
-        if (!val) {
-          this.$store.dispatch("dialog/closeDialog");
-        }
-      },
-    },
   },
   methods: {
+    closeDialog(): void {
+      this.$emit("close-dialog");
+    },
     async uploadsignaImage() {
       if (!this.me || !this.signaImage) {
         return;
       }
       const signaImageForm = new FormData();
-      signaImageForm.append(
-        "file",
-        this.signaImage,
-        this.signaImage.name,
-      );
-      await this.$accessor.catalogSignage.uploadSignageImage(signaImageForm);
+      signaImageForm.append("file", this.signaImage, this.signaImage.name);
+      await this.$accessor.catalogSignage.uploadSignageImage({
+        signageId: this.signage.id,
+        signageImage: signaImageForm,
+      });
       this.$store.dispatch("dialog/closeDialog");
     },
   },

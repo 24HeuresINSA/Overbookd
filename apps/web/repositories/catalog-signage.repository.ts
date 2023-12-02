@@ -51,7 +51,12 @@ export class CatalogSignageRepository {
   static deleteSignage(context: Context, signageId: number) {
     return context.$axios.delete(`${this.basePath}/${signageId}`);
   }
-  static uploadSignageImage(context: Context, signageId: number, image: FormData) {
-    return context.$axios.post(`${this.basePath}/${signageId}/image`, image);
+
+  static uploadSignageImage(context: Context, signageId: number, signageImage: FormData) {
+    console.log(signageImage);
+    return context.$axios.post<Signage>(
+      `${this.basePath}/${signageId}/image`,
+      signageImage,
+    );
   }
 }

@@ -86,10 +86,16 @@ export const actions = actionTree(
       if (!res) return;
       commit("DELETE_SIGNAGE", signage);
     },
-    async uploadSignageImage({ commit }, { signageId, image }): Promise<void> {
+    async uploadSignageImage(
+      { commit },
+      {
+        signageId,
+        signageImage,
+      }: { signageId: number; signageImage: FormData },
+    ): Promise<void> {
       const res = await safeCall(
         this,
-        signageRepository.uploadSignageImage(this, signageId, image),
+        signageRepository.uploadSignageImage(this, signageId, signageImage),
         {
           successMessage: `Image de la signalétique mise à jour avec succès ✅`,
           errorMessage: `Erreur lors de la mise à jour de l'image de la signalétique ❌`,
@@ -97,6 +103,6 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("ADD_SIGNAGE_IMAGE", { signageId, image: res.data });
-    }
+    },
   },
 );

@@ -119,7 +119,7 @@ export class CatalogSignageController {
   @UseInterceptors(
     FileInterceptor("file", {
       storage: diskStorage({
-        destination: join(process.cwd(), "public/signa"),
+        destination: join(process.cwd(), "public"),
         filename: (req, file, cb) => {
           const uuid = randomUUID();
           const filenameFragments = file.originalname.split(".");
@@ -142,6 +142,7 @@ export class CatalogSignageController {
     @Param("id", ParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Signage> {
+    console.log(file);
     return this.catalogSignageService.updateSignageImage(id, file.filename);
   }
 

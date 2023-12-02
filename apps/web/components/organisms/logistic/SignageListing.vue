@@ -1,6 +1,5 @@
 <template>
   <div>
-    <SignaImageDialog></SignaImageDialog>
     <form class="filter">
       <v-text-field
         v-model="searchName"
@@ -45,6 +44,13 @@
       ></SignageForm>
     </v-dialog>
 
+    <v-dialog v-model="isAddImageSignageDialogOpen" width="600px">
+      <SignaImageDialog
+        :signage="selectedSignage"
+        @close-dialog="closeAddImageSignageDialog"
+      ></SignaImageDialog>
+    </v-dialog>
+
     <v-dialog v-model="isDeleteSignageDialogOpen" width="600px">
       <ConfirmationMessage
         confirm-color="error"
@@ -63,7 +69,6 @@
         </template>
       </ConfirmationMessage>
     </v-dialog>
-
   </div>
 </template>
 
@@ -84,6 +89,7 @@ interface SignageListingData {
   selectedSignage?: Signage;
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
+  isAddImageSignageDialogOpen: boolean;
 }
 
 export default Vue.extend({
@@ -103,6 +109,7 @@ export default Vue.extend({
       selectedSignage: undefined,
       isUpdateSignageDialogOpen: false,
       isDeleteSignageDialogOpen: false,
+      isAddImageSignageDialogOpen: false,
     };
   },
   computed: {
@@ -139,6 +146,10 @@ export default Vue.extend({
       this.selectedSignage = signage;
       this.isDeleteSignageDialogOpen = true;
     },
+    openAddImageSignageDialog(signage: Signage) {
+      this.selectedSignage = signage;
+      this.isAddImageSignageDialogOpen = true;
+    },
     closeUpdateSignageDialog() {
       this.isUpdateSignageDialogOpen = false;
       this.selectedSignage = undefined;
@@ -147,9 +158,9 @@ export default Vue.extend({
       this.isDeleteSignageDialogOpen = false;
       this.selectedSignage = undefined;
     },
-    openAddImageSignageDialog(signage: Signage) {
-      console.log(signage);
-    this.$store.dispatch("dialog/openDialog", "signaImage");
+    closeAddImageSignageDialog() {
+      this.isAddImageSignageDialogOpen = false;
+      this.selectedSignage = undefined;
     },
     async deleteSignage() {
       if (!this.selectedSignage) return;
