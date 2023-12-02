@@ -1,6 +1,7 @@
 import {
   CreateFestivalActivityForm,
   FestivalActivity,
+  PrepareFeedbackPublish,
   PreviewFestivalActivity,
   defaultDraft,
 } from "@overbookd/festival-activity";
@@ -54,6 +55,17 @@ export const actions = actionTree(
       const activity = castActivityWithDate(res.data);
       commit("SET_SELECTED_ACTIVITY", activity);
       await dispatch("fetchAllActivities");
+    },
+
+    async publishFeedback({ state, commit }, feedback: PrepareFeedbackPublish) {
+      const res = await safeCall(
+        this,
+        repo.publishFeedback(this, state.selectedActivity.id, feedback),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
     },
   },
 );

@@ -8,6 +8,7 @@
       <SecurityCard id="security" />
       <SupplyCard id="supply" />
       <FaInquiryCard id="inquiry" />
+      <FaFeedbackCard id="feedback" />
       <!--<SignaCard id="signa" />
       <FaTimeWindowCard id="timewindow" />
       <CollaboratorCard id="presta" />
@@ -52,18 +53,20 @@ import SignaCard from "~/components/organisms/festival-event/festival-activity/S
 import SecurityCard from "~/components/organisms/festival-event/festival-activity/SecurityCard.vue";
 import SupplyCard from "~/components/organisms/festival-event/festival-activity/SupplyCard.vue";
 import FaInquiryCard from "~/components/organisms/festival-event/festival-activity/FaInquiryCard.vue";
+import FaFeedbackCard from "~/components/organisms/festival-event/festival-activity/FaFeedbackCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 export default defineComponent({
   name: "Fa",
   components: {
+    FestivalEventSidebar,
     FaGeneralCard,
     FaInChargeCard,
     SignaCard,
     SecurityCard,
     SupplyCard,
     FaInquiryCard,
-    FestivalEventSidebar,
+    FaFeedbackCard,
     SnackNotificationContainer,
   },
 

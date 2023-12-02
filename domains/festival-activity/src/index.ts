@@ -105,6 +105,7 @@ export type {
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
   PrepareSignageCreation,
+  PrepareFeedbackPublish,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

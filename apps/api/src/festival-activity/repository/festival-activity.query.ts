@@ -105,8 +105,9 @@ const SELECT_FEEDBACKS = {
       content: true,
       publishedAt: true,
     },
+    orderBy: { publishedAt: "asc" },
   },
-};
+} as const;
 
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,

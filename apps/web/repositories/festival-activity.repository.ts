@@ -3,6 +3,7 @@ import { HttpStringified } from "~/utils/types/http";
 import {
   CreateFestivalActivityForm,
   FestivalActivity,
+  PrepareFeedbackPublish,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 
@@ -27,6 +28,17 @@ export class FestivalActivityRepository {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       this.basePath,
       data,
+    );
+  }
+
+  static publishFeedback(
+    context: Context,
+    faId: number,
+    feedback: PrepareFeedbackPublish,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/feedback`,
+      feedback,
     );
   }
 }
