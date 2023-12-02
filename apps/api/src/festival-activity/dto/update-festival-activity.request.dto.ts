@@ -1,13 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   PrepareGeneralUpdate,
+  PrepareInChargeForm,
+  PrepareSignaForm,
   PrepareSupplyUpdate,
 } from "@overbookd/festival-activity";
 import { IsOptional } from "class-validator";
-import {
-  PrepareInChargeForm,
-  PrepareSignaForm,
-} from "../festival-activity.service";
 import { FestivalActivity } from "@overbookd/festival-activity";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {

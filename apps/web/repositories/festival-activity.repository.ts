@@ -3,6 +3,10 @@ import { HttpStringified } from "~/utils/types/http";
 import {
   CreateFestivalActivityForm,
   FestivalActivity,
+  PrepareGeneralUpdate,
+  PrepareInChargeForm,
+  PrepareSignaForm,
+  PrepareSupplyUpdate,
   PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 
@@ -27,6 +31,61 @@ export class FestivalActivityRepository {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       this.basePath,
       data,
+    );
+  }
+
+  static updateGeneral(
+    context: Context,
+    faId: FestivalActivity["id"],
+    general: PrepareGeneralUpdate,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/general`,
+      general,
+    );
+  }
+
+  static updateInCharge(
+    context: Context,
+    faId: FestivalActivity["id"],
+    inCharge: PrepareInChargeForm,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/in-charge`,
+      inCharge,
+    );
+  }
+
+  static updateSigna(
+    context: Context,
+    faId: FestivalActivity["id"],
+    signa: PrepareSignaForm,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/signa`,
+      signa,
+    );
+  }
+
+  static updateSecurity(
+    context: Context,
+    faId: FestivalActivity["id"],
+    security: FestivalActivity["security"],
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/security`,
+      security,
+    );
+  }
+
+  static updateSupply(
+    context: Context,
+    faId: FestivalActivity["id"],
+    supply: PrepareSupplyUpdate,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/supply`,
+      supply,
     );
   }
 }

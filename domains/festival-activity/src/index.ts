@@ -103,6 +103,8 @@ export type {
   PrepareInChargeUpdate,
   PrepareSignaUpdate,
   PrepareSupplyUpdate,
+  PrepareInChargeForm,
+  PrepareSignaForm,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

@@ -9,19 +9,12 @@ import {
   PrepareGeneralUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
+  PrepareInChargeForm,
+  PrepareSignaForm,
 } from "@overbookd/festival-activity";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
-
-export type PrepareInChargeForm = {
-  adherentId?: number;
-  team?: string;
-};
-
-export type PrepareSignaForm = {
-  locationId: number | null;
-};
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
