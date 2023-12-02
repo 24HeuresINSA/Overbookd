@@ -3,7 +3,7 @@ export interface IProvidePeriod {
   end: Date;
 }
 
-const END_BEFORE_START_ERROR_MESSAGE =
+export const END_BEFORE_START_ERROR_MESSAGE =
   "❌ La date de fin doit être après la date de début";
 
 export class EndBeforeStart extends Error {
@@ -11,6 +11,8 @@ export class EndBeforeStart extends Error {
     super(END_BEFORE_START_ERROR_MESSAGE);
   }
 }
+
+type ErrorMessage = typeof END_BEFORE_START_ERROR_MESSAGE;
 
 export class Period {
   start: Date;
@@ -22,10 +24,24 @@ export class Period {
   }
 
   static init({ start, end }: IProvidePeriod): Period {
-    if (start.getTime() > end.getTime()) {
+    if (this.isEndBeforeStart({ start, end })) {
       throw new EndBeforeStart();
     }
     return new Period(start, end);
+  }
+
+  static isValid(period: IProvidePeriod): boolean {
+    return this.errors(period).length === 0;
+  }
+
+  static errors(period: IProvidePeriod): ErrorMessage[] {
+    return Period.isEndBeforeStart(period)
+      ? [END_BEFORE_START_ERROR_MESSAGE]
+      : [];
+  }
+
+  private static isEndBeforeStart({ start, end }: IProvidePeriod): boolean {
+    return end.getTime() < start.getTime();
   }
 
   isIncludedBy(otherPeriod: Period): boolean {

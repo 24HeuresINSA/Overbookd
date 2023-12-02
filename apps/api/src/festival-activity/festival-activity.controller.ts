@@ -309,7 +309,7 @@ export class FestivalActivityController {
   })
   updateSignage(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("signageId", ParseIntPipe) signageId: Signage["id"],
+    @Param("signageId") signageId: Signage["id"],
     @Body() signage: UpdateSignageRequestDto,
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.updateSignage(faId, signageId, signage);
@@ -338,7 +338,7 @@ export class FestivalActivityController {
   })
   removeSignage(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("signageId", ParseIntPipe) signageId: Signage["id"],
+    @Param("signageId") signageId: Signage["id"],
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.removeSignage(faId, signageId);
   }

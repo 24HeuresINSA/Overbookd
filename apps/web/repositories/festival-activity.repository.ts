@@ -9,9 +9,14 @@ import {
   FestivalActivity,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
+  PrepareSignageCreation,
+  PrepareSignageUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
+  Signage,
+  TimeWindow,
 } from "@overbookd/festival-activity";
+import { IProvidePeriod } from "@overbookd/period";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -48,6 +53,27 @@ export class FestivalActivityRepository {
     );
   }
 
+  static addGeneralTimeWindow(
+    context: Context,
+    faId: FestivalActivity["id"],
+    timeWindow: IProvidePeriod,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/general/time-windows`,
+      timeWindow,
+    );
+  }
+
+  static removeGeneralTimeWindow(
+    context: Context,
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/general/time-windows/${timeWindowId}`,
+    );
+  }
+
   static updateInCharge(
     context: Context,
     faId: FestivalActivity["id"],
@@ -67,6 +93,39 @@ export class FestivalActivityRepository {
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/signa`,
       signa,
+    );
+  }
+
+  static addSignage(
+    context: Context,
+    faId: FestivalActivity["id"],
+    signage: PrepareSignageCreation,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/signa/signages`,
+      signage,
+    );
+  }
+
+  static updateSignage(
+    context: Context,
+    faId: FestivalActivity["id"],
+    update: PrepareSignageUpdate,
+  ) {
+    const { id, ...signage } = update;
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/signa/signages/${id}`,
+      signage,
+    );
+  }
+
+  static removeSignage(
+    context: Context,
+    faId: FestivalActivity["id"],
+    signageId: Signage["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/signa/signages/${signageId}`,
     );
   }
 

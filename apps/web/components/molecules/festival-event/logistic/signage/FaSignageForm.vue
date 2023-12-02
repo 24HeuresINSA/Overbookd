@@ -83,13 +83,11 @@ export default defineComponent({
       return this.signage !== null;
     },
     canConfirmSignage(): boolean {
-      return Boolean(
-        this.type &&
-          this.text?.trim() &&
-          this.size?.trim() &&
-          this.quantity &&
-          this.quantity > 1,
-      );
+      const hasType = this.type !== null;
+      const hasAtLeastOne = this.quantity > 0;
+      const hasText = this.text.trim() !== "";
+      const hasSize = this.size.trim() !== "";
+      return hasType && hasAtLeastOne && hasText && hasSize;
     },
     typeFormLabel(): string {
       return this.isUpdate ? "Modifier" : "Ajouter";
@@ -120,6 +118,7 @@ export default defineComponent({
         this.$emit("add", signage);
       }
       this.closeDialog();
+      this.clearSignage();
     },
     closeDialog() {
       this.$emit("close-dialog");

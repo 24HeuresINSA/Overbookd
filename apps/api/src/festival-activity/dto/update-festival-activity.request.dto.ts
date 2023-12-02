@@ -122,12 +122,14 @@ export class AddSignageRequestDto implements PrepareSignageCreation {
   quantity: number;
 
   @ApiProperty({ required: true, example: "Reculez" })
+  @IsString()
   text: string;
 
   @ApiProperty({
     example: "A0",
     required: true,
   })
+  @IsString()
   size: string;
 
   @ApiProperty({
@@ -135,6 +137,7 @@ export class AddSignageRequestDto implements PrepareSignageCreation {
     required: false,
   })
   @IsOptional()
+  @IsString()
   comment?: string;
 }
 
@@ -145,8 +148,8 @@ export class UpdateSignageRequestDto implements UpdateSignageRequest {
     required: false,
     enum: signageTypes,
   })
-  @IsEnum(signageTypes)
   @IsOptional()
+  @IsEnum(signageTypes)
   type?: SignageType;
 
   @ApiProperty({ required: false })
@@ -156,10 +159,12 @@ export class UpdateSignageRequestDto implements UpdateSignageRequest {
 
   @ApiProperty({ required: false, example: "Reculez" })
   @IsOptional()
+  @IsString()
   text?: string;
 
   @ApiProperty({ required: false, example: "A0" })
   @IsOptional()
+  @IsString()
   size?: string;
 
   @ApiProperty({ required: false })
