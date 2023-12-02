@@ -17,11 +17,11 @@
       <DateTimeField v-model="start" label="Début" />
 
       <h3>Fin du créneau</h3>
-      <DateTimeField v-model="end" label="Fin" />
+      <DateTimeField v-model="end" label="Fin" :error-messages="errors" />
     </v-card-text>
 
     <v-card-actions class="time-window-card__actions">
-      <v-btn color="success" dark large @click="addTimeWindow">
+      <v-btn :disabled="!isValid" color="primary" large @click="addTimeWindow">
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
         Ajouter le créneau
       </v-btn>
@@ -33,7 +33,7 @@
 import { defineComponent } from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { formatDate } from "~/utils/date/date.utils";
-import { Period } from "@overbookd/period";
+import { Period, IProvidePeriod } from "@overbookd/period";
 
 interface FaTimeWindowFormData {
   start: Date;
@@ -48,14 +48,20 @@ export default defineComponent({
     end: new Date(),
   }),
   computed: {
-    validPeriod(): Period {
-      return Period.init({ start: this.start, end: this.end });
+    period(): IProvidePeriod {
+      return { start: this.start, end: this.end };
     },
-    manifDate(): Date {
+    eventStartDate(): Date {
       return this.$accessor.configuration.eventStartDate;
     },
     displayedManifDate(): string {
-      return `vendredi ${formatDate(this.manifDate)}`;
+      return `vendredi ${formatDate(this.eventStartDate)}`;
+    },
+    isValid(): boolean {
+      return Period.isValid(this.period);
+    },
+    errors(): string[] {
+      return Period.errors(this.period);
     },
   },
   async mounted() {
@@ -64,20 +70,12 @@ export default defineComponent({
   },
   methods: {
     setDefaultDates() {
-      this.start = this.manifDate;
-      this.end = this.manifDate;
+      this.start = this.eventStartDate;
+      this.end = this.eventStartDate;
     },
     addTimeWindow() {
-      try {
-        const period = this.validPeriod;
-        this.$emit("add", period);
-      } catch (e) {
-        if (e instanceof Error) {
-          const message = e.message;
-          this.$accessor.notif.pushNotification({ message });
-          return;
-        }
-      }
+      if (!this.isValid) return;
+      this.$emit("add", this.period);
 
       this.closeDialog();
       this.setDefaultDates();

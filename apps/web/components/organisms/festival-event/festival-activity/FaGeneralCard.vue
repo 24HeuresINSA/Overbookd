@@ -43,7 +43,7 @@
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
           @add="addTimeWindow($event)"
-          @delete="deleteTimeWindow($event)"
+          @remove="removeTimeWindow($event)"
         />
       </section>
 
@@ -129,12 +129,10 @@ export default defineComponent({
       this.$accessor.festivalActivity.updateGeneral({ isFlagship });
     },
     addTimeWindow(period: IProvidePeriod) {
-      console.log("add timeWindow", period);
-      // TODO: add timeWindow
+      this.$accessor.festivalActivity.addGeneralTimeWindow(period);
     },
-    deleteTimeWindow(timeWindow: TimeWindow) {
-      console.log("delete timeWindow", timeWindow);
-      // TODO: delete timeWindow
+    removeTimeWindow(timeWindow: TimeWindow) {
+      this.$accessor.festivalActivity.removeGeneralTimeWindow(timeWindow.id);
     },
   },
 });

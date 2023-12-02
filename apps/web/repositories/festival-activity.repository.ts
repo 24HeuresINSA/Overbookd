@@ -11,7 +11,9 @@ import {
   PrepareGeneralUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
+  TimeWindow,
 } from "@overbookd/festival-activity";
+import { IProvidePeriod } from "@overbookd/period";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -45,6 +47,27 @@ export class FestivalActivityRepository {
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/general`,
       general,
+    );
+  }
+
+  static addGeneralTimeWindow(
+    context: Context,
+    faId: FestivalActivity["id"],
+    timeWindow: IProvidePeriod,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/general/time-windows`,
+      timeWindow,
+    );
+  }
+
+  static removeGeneralTimeWindow(
+    context: Context,
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/general/time-windows/${timeWindowId}`,
     );
   }
 

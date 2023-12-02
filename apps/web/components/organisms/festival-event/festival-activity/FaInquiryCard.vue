@@ -5,8 +5,7 @@
       <FaTimeWindowTable
         :time-windows="inquiry.timeWindows"
         @add="addTimeWindow($event)"
-        @update="updateTimeWindow($event)"
-        @delete="deleteTimeWindow($event)"
+        @remove="removeTimeWindow($event)"
       />
 
       <v-form class="inquiry-form">
@@ -133,11 +132,7 @@ export default defineComponent({
       console.log("add timeWindow", period);
       // TODO: add timeWindow
     },
-    updateTimeWindow(timeWindow: TimeWindow) {
-      console.log("update timeWindow", timeWindow);
-      // TODO: update timeWindow
-    },
-    deleteTimeWindow(timeWindow: TimeWindow) {
+    removeTimeWindow(timeWindow: TimeWindow) {
       console.log("delete timeWindow", timeWindow);
       // TODO: delete timeWindow
     },

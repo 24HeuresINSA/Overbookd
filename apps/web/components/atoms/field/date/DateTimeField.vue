@@ -6,6 +6,7 @@
     :solo="boxed"
     :filled="boxed"
     :outilned="!boxed"
+    :error-messages="errorMessages"
     return-object
     @change="updateDate"
   >
@@ -38,6 +39,10 @@ export default Vue.extend({
     step: {
       type: Number,
       default: 15,
+    },
+    errorMessages: {
+      type: Array as () => string[],
+      default: () => [],
     },
   },
   data: () => ({

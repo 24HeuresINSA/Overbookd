@@ -17,14 +17,19 @@
       </template>
 
       <template #item.actions="{ item }">
-        <v-btn v-show="!disabled" icon @click="deleteTimeWindow(item)">
+        <v-btn v-show="!disabled" icon @click="removeTimeWindow(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </template>
       <template #no-data> Aucun créneau ajouté </template>
     </v-data-table>
 
-    <v-btn v-show="!disabled" color="primary" text @click="openAddDialog">
+    <v-btn
+      v-show="!disabled"
+      color="primary"
+      class="time-windows__add"
+      @click="openAddDialog"
+    >
       Ajouter un créneau
     </v-btn>
 
@@ -84,8 +89,8 @@ export default defineComponent({
     addTimeWindow(period: IProvidePeriod) {
       this.$emit("add", period);
     },
-    deleteTimeWindow(timeWindow: TimeWindow) {
-      this.$emit("delete", timeWindow);
+    removeTimeWindow(timeWindow: TimeWindow) {
+      this.$emit("remove", timeWindow);
     },
     sortTimeWindows(
       timeWindows: TimeWindow[],
@@ -109,3 +114,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.time-windows {
+  &__listing {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin-bottom: 40px;
+  }
+  &__add {
+    max-width: fit-content;
+    align-self: flex-end;
+  }
+}
+</style>
