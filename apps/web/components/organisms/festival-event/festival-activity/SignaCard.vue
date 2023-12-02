@@ -78,8 +78,8 @@ export default defineComponent({
   },
   methods: {
     updateLocation(location: Location) {
-      console.log("update location", location);
-      // TODO: update location
+      const locationId = location.id;
+      this.$accessor.festivalActivity.updateSigna({ locationId });
     },
     openAddSignageDialog() {
       this.selectedSignage = null;

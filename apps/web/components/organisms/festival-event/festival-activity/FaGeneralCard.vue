@@ -104,28 +104,22 @@ export default defineComponent({
   },
   methods: {
     updateName(name: string) {
-      console.log("update name", name);
-      // TODO: update name
+      this.$accessor.festivalActivity.updateGeneral({ name });
     },
     updateDescription(description: string) {
-      console.log("update description", description);
-      // TODO: update description
+      this.$accessor.festivalActivity.updateGeneral({ description });
     },
     updateToPublish(toPublish: boolean) {
-      console.log("update toPublish", toPublish);
-      // TODO: update toPublish
+      this.$accessor.festivalActivity.updateGeneral({ toPublish });
     },
     updatePhotoLink(photoLink: string) {
-      console.log("update photoLink", photoLink);
-      // TODO: update photoLink
+      this.$accessor.festivalActivity.updateGeneral({ photoLink });
     },
     updateCategories(categories: string[]) {
-      console.log("update categories", categories);
-      // TODO: update categories
+      this.$accessor.festivalActivity.updateGeneral({ categories });
     },
     updateIsFlagship(isFlagship: boolean) {
-      console.log("update isFlagship", isFlagship);
-      // TODO: update isFlagship
+      this.$accessor.festivalActivity.updateGeneral({ isFlagship });
     },
     addTimeWindow(period: IProvidePeriod) {
       console.log("add timeWindow", period);

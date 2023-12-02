@@ -32,8 +32,9 @@ export default defineComponent({
   },
   methods: {
     updateSpecialNeed(specialNeed: string) {
-      console.log("update SpecialNeed", specialNeed);
-      // TODO: update special need
+      this.$accessor.festivalActivity.updateSecurity({
+        specialNeed,
+      });
     },
   },
 });

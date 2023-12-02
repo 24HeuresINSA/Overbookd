@@ -12,6 +12,8 @@ import {
   TimeWindow,
   Signage,
   ElectricitySupply,
+  PrepareInChargeForm,
+  PrepareSignaForm,
 } from "@overbookd/festival-activity";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
@@ -25,15 +27,6 @@ import {
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
-
-export type PrepareInChargeForm = {
-  adherentId?: number;
-  team?: string;
-};
-
-export type PrepareSignaForm = {
-  locationId: number | null;
-};
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;

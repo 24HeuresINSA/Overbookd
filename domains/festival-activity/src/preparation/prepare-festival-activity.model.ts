@@ -24,6 +24,11 @@ export type PrepareInChargeUpdate = {
   team?: string;
 };
 
+export type PrepareInChargeForm = {
+  adherentId?: number;
+  team?: string;
+};
+
 export type PrepareContractorCreation = Pick<
   Contractor,
   "firstname" | "lastname" | "phone"
@@ -45,6 +50,10 @@ export type PrepareContractorUpdate = {
 
 export type PrepareSignaUpdate = {
   location: Location | null;
+};
+
+export type PrepareSignaForm = {
+  locationId: number | null;
 };
 
 export type PrepareSignageCreation = Pick<

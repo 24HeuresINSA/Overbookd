@@ -13,6 +13,8 @@ import {
   P17_63A_TRI,
   PC16_Prise_classique,
   PrepareGeneralUpdate,
+  PrepareInChargeForm,
+  PrepareSignaForm,
   PrepareSupplyUpdate,
   SignageType,
   signageTypes,
@@ -24,10 +26,6 @@ import {
   IsString,
   ValidateIf,
 } from "class-validator";
-import {
-  PrepareInChargeForm,
-  PrepareSignaForm,
-} from "../festival-activity.service";
 import { FestivalActivity } from "@overbookd/festival-activity";
 import {
   PrepareElectricitySupplyCreation,
