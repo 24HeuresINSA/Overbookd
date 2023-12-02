@@ -16,6 +16,8 @@ import {
   PrepareSignageCreation,
   InquiryOwner,
   InquiryRequest,
+  PrepareContractorCreation,
+  Contractor,
 } from "@overbookd/festival-activity";
 import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
@@ -25,6 +27,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import {
   AddInquiryRequest,
   InitInquiryRequest,
+  UpdateContractorRequest,
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
@@ -113,6 +116,29 @@ export class FestivalActivityService {
       ...inCharge,
       ...adherent,
     });
+  }
+
+  addContractor(
+    id: FestivalActivity["id"],
+    contractor: PrepareContractorCreation,
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.addContractor(id, contractor);
+  }
+
+  updateContractor(
+    faId: FestivalActivity["id"],
+    contractorId: Contractor["id"],
+    contractorUpdate: UpdateContractorRequest,
+  ): Promise<FestivalActivity> {
+    const contractor = { id: contractorId, ...contractorUpdate };
+    return this.prepareFestivalActivity.updateContractor(faId, contractor);
+  }
+
+  removeContractor(
+    faId: FestivalActivity["id"],
+    contractorId: Contractor["id"],
+  ): Promise<FestivalActivity> {
+    return this.prepareFestivalActivity.removeContractor(faId, contractorId);
   }
 
   async saveSignaSection(

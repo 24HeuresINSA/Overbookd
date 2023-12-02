@@ -7,7 +7,6 @@
       :items-per-page="-1"
       disable-pagination
       hide-default-footer
-      dense
     >
       <template #item.actions="{ item }">
         <div v-if="!disabled">
@@ -32,7 +31,7 @@
 
     <v-dialog v-model="isContractorDialogOpen" max-width="600">
       <ContractorForm
-        :signage="selectedContractor"
+        :contractor="selectedContractor"
         @add="addContractor"
         @update="updateContractor"
         @close-dialog="closeAddDialog"
