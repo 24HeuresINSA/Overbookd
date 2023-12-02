@@ -143,6 +143,6 @@ export class CatalogSignageController {
     @Body() signage: SignageResponseDto,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Signage> {
-    return this.catalogSignageService.updateSignaImage(id, file.filename);
+    return null;
   }
 }
