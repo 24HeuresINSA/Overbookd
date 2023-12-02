@@ -105,6 +105,7 @@ const SELECT_FEEDBACKS = {
       content: true,
       publishedAt: true,
     },
+    orderBy: { publishedAt: "asc" },
   },
 };
 

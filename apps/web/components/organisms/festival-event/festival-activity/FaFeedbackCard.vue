@@ -57,9 +57,7 @@ export default Vue.extend({
       return this.$accessor.festivalActivity.selectedActivity;
     },
     feedbacks(): Feedback[] {
-      return [...this.mFA.feedbacks].sort(
-        (a, b) => a.publishedAt.getTime() - b.publishedAt.getTime(),
-      );
+      return this.$accessor.festivalActivity.selectedActivity.feedbacks;
     },
     canPublishFeedback(): boolean {
       return this.newFeedbackContent.trim() !== "";
