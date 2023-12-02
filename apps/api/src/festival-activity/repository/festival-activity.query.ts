@@ -4,8 +4,8 @@ import {
   FestivalActivity,
   TimeWindow,
 } from "@overbookd/festival-activity";
-import { SELECT_ADHERENT } from "./adherent.prisma";
-import { SELECT_LOCATION } from "./location.prisma";
+import { SELECT_ADHERENT } from "./adherent.query";
+import { SELECT_LOCATION } from "./location.query";
 
 const SELECT_REVIEW = {
   team: true,

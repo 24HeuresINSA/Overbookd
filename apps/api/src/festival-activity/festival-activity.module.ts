@@ -1,16 +1,16 @@
 import { Module } from "@nestjs/common";
 import { FestivalActivityController } from "./festival-activity.controller";
 import { FestivalActivityService } from "./festival-activity.service";
-import { PrismaAdherents } from "./repository/adherent.prisma";
+import { PrismaAdherents } from "./repository/adherents.prisma";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import {
   CreateFestivalActivity,
   PrepareFestivalActivity,
 } from "@overbookd/festival-activity";
-import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activity.prisma";
-import { PrismaCreateFestivalActivities } from "./repository/create-festival-activity.prisma";
-import { PrismaLocations } from "./repository/location.prisma";
+import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activities.prisma";
+import { PrismaCreateFestivalActivities } from "./repository/create-festival-activities.prisma";
+import { PrismaLocations } from "./repository/locations.prisma";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { HistoryModule } from "./history/history.module";

@@ -1,10 +1,6 @@
 import { PrismaService } from "../../prisma.service";
 import { Locations } from "../festival-activity.service";
-
-export const SELECT_LOCATION = {
-  id: true,
-  name: true,
-};
+import { SELECT_LOCATION } from "./location.query";
 
 export class PrismaLocations implements Locations {
   constructor(private readonly prisma: PrismaService) {}
