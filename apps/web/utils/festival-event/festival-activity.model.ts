@@ -15,7 +15,6 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
-  Signage,
 } from "@overbookd/festival-activity";
 
 export const BROUILLON = "Brouillon";
@@ -57,5 +56,3 @@ export const electricityConnectionLabels = new Map<
   [P17_63A_TETRA, "63A Tetra (P17 63A TETRA)"],
   [P17_125A_TETRA, "125A Tetra (P17 125A TETRA)"],
 ]);
-
-export type NewSignage = Omit<Signage, "id">;

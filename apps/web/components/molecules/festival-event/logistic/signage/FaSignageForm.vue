@@ -93,7 +93,7 @@ export default defineComponent({
       );
     },
     typeFormLabel(): string {
-      return this.signage !== null ? "Modifier" : "Ajouter";
+      return this.isUpdate ? "Modifier" : "Ajouter";
     },
   },
   watch: {

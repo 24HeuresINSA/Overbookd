@@ -52,8 +52,8 @@ import {
   FestivalActivity,
   Signage,
   Location,
+  PrepareSignageCreation,
 } from "@overbookd/festival-activity";
-import { NewSignage } from "~/utils/festival-event/festival-activity.model";
 
 type SignaCardData = {
   isSignageDialogOpen: boolean;
@@ -97,7 +97,7 @@ export default defineComponent({
       this.isSignageDialogOpen = false;
       this.selectedSignage = null;
     },
-    addSignage(signage: NewSignage) {
+    addSignage(signage: PrepareSignageCreation) {
       console.log("add signage", signage);
       // TODO: add signage
     },
