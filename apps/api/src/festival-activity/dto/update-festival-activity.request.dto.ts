@@ -37,6 +37,7 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
 } from "@overbookd/festival-activity/src/preparation/prepare-festival-activity.model";
+import { signageTypes } from "@overbookd/signa";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({
@@ -143,9 +144,9 @@ export type UpdateSignageRequest = Omit<PrepareSignageUpdate, "id">;
 export class UpdateSignageRequestDto implements UpdateSignageRequest {
   @ApiProperty({
     required: false,
-    enum: [BACHE, PANNEAU, AFFICHE],
+    enum: signageTypes,
   })
-  @IsEnum([BACHE, PANNEAU, AFFICHE])
+  @IsEnum(signageTypes)
   @IsOptional()
   type?: SignageType;
 
