@@ -21,6 +21,7 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
+  PrepareInquiryRequestCreation,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -31,6 +32,9 @@ import {
   ValidateIf,
 } from "class-validator";
 import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/period";
+import { PeriodDto } from "./period.dto";
+import { Type } from "class-transformer";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {
   @ApiProperty({
@@ -265,4 +269,40 @@ export class UpdateElectricitySupplyRequestDto
   @IsString()
   @ValidateIf((_, value) => value !== null)
   comment?: string | null;
+}
+
+export type AddInquiryRequest = Pick<
+  PrepareInquiryRequestCreation,
+  "slug" | "quantity"
+>;
+
+export class AddInquiryRequestDto implements AddInquiryRequest {
+  @ApiProperty({ required: true })
+  @IsPositive()
+  quantity: number;
+
+  @ApiProperty({ required: true })
+  @IsString()
+  slug: string;
+}
+
+export type InitInquiryRequest = {
+  timeWindow: IProvidePeriod;
+  request: AddInquiryRequest;
+};
+
+export class InitInquiryRequestDto implements InitInquiryRequest {
+  @ApiProperty({
+    required: true,
+    type: PeriodDto,
+  })
+  @Type(() => PeriodDto)
+  timeWindow: IProvidePeriod;
+
+  @ApiProperty({
+    required: true,
+    type: AddInquiryRequestDto,
+  })
+  @Type(() => AddInquiryRequestDto)
+  request: AddInquiryRequest;
 }

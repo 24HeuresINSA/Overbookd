@@ -14,6 +14,7 @@ import { PrismaLocations } from "./repository/locations.prisma";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { HistoryModule } from "./history/history.module";
+import { PrismaInquiries } from "./repository/inquiries.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -41,6 +42,11 @@ import { HistoryModule } from "./history/history.module";
       inject: [PrismaService],
     },
     {
+      provide: PrismaInquiries,
+      useFactory: (prisma: PrismaService) => new PrismaInquiries(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: CreateFestivalActivity,
       useFactory: async (
         festivalActivities: PrismaCreateFestivalActivities,
@@ -64,6 +70,7 @@ import { HistoryModule } from "./history/history.module";
       useFactory: (
         adherents: PrismaAdherents,
         locations: PrismaLocations,
+        inquiries: PrismaInquiries,
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
         eventStore: DomainEventService,
@@ -71,6 +78,7 @@ import { HistoryModule } from "./history/history.module";
         new FestivalActivityService(
           adherents,
           locations,
+          inquiries,
           create,
           prepare,
           eventStore,
@@ -78,6 +86,7 @@ import { HistoryModule } from "./history/history.module";
       inject: [
         PrismaAdherents,
         PrismaLocations,
+        PrismaInquiries,
         CreateFestivalActivity,
         PrepareFestivalActivity,
         DomainEventService,

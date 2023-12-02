@@ -14,6 +14,8 @@ import {
   ElectricitySupply,
   PrepareElectricitySupplyCreation,
   PrepareSignageCreation,
+  InquiryOwner,
+  InquiryRequest,
 } from "@overbookd/festival-activity";
 import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
@@ -21,9 +23,12 @@ import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
 import {
+  AddInquiryRequest,
+  InitInquiryRequest,
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
+import { PeriodDto } from "./dto/period.dto";
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
@@ -33,11 +38,22 @@ export type Locations = {
   find(id: number): Promise<Location | null>;
 };
 
+export type Gear = {
+  slug: string;
+  name: string;
+  owner: InquiryOwner;
+};
+
+export type Inquiries = {
+  find(slug: string): Promise<Gear>;
+};
+
 @Injectable()
 export class FestivalActivityService {
   constructor(
     private readonly adherents: Adherents,
     private readonly locations: Locations,
+    private readonly inquiries: Inquiries,
     private readonly createFestivalActivity: CreateFestivalActivity,
     private readonly prepareFestivalActivity: PrepareFestivalActivity,
     private readonly eventStore: DomainEventService,
@@ -176,6 +192,54 @@ export class FestivalActivityService {
     faId: FestivalActivity["id"],
     electricitySupplyId: ElectricitySupply["id"],
   ): Promise<FestivalActivity> {
-    return this.removeElectricitySupply(faId, electricitySupplyId);
+    return this.prepareFestivalActivity.removeElectricitySupply(
+      faId,
+      electricitySupplyId,
+    );
+  }
+
+  async initInquiry(
+    faId: FestivalActivity["id"],
+    inquiryInitializer: InitInquiryRequest,
+  ) {
+    const inquiry = await this.inquiries.find(inquiryInitializer.request.slug);
+
+    const request = { ...inquiryInitializer.request, ...inquiry };
+    const initializer = { ...inquiryInitializer, request };
+    return this.prepareFestivalActivity.initInquiry(faId, initializer);
+  }
+
+  addInquiryTimeWindow(faId: FestivalActivity["id"], timeWindow: PeriodDto) {
+    return this.prepareFestivalActivity.addTimeWindowInInquiry(
+      faId,
+      timeWindow,
+    );
+  }
+
+  removeInquiryTimeWindow(
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+  ) {
+    return this.prepareFestivalActivity.removeTimeWindowFromInquiry(
+      faId,
+      timeWindowId,
+    );
+  }
+
+  async addInquiryRequest(
+    faId: FestivalActivity["id"],
+    inquiryRequest: AddInquiryRequest,
+  ) {
+    const inquiry = await this.inquiries.find(inquiryRequest.slug);
+    const request = { ...inquiryRequest, ...inquiry };
+
+    return this.prepareFestivalActivity.addInquiryRequest(faId, request);
+  }
+
+  removeInquiryRequest(
+    faId: FestivalActivity["id"],
+    slug: InquiryRequest["slug"],
+  ) {
+    return this.prepareFestivalActivity.removeInquiryRequest(faId, slug);
   }
 }

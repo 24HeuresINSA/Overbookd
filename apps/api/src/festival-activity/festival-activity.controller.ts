@@ -26,6 +26,7 @@ import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import type {
   ElectricitySupply,
   FestivalActivity,
+  InquiryRequest,
   PreviewFestivalActivity,
   Signage,
   TimeWindow,
@@ -38,9 +39,11 @@ import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity
 import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
 import {
   AddElectricitySupplyRequestDto,
+  AddInquiryRequestDto,
   AddSignageRequestDto,
   GeneralRequestDto,
   InChargeRequestDto,
+  InitInquiryRequestDto,
   SecurityRequestDto,
   SignaRequestDto,
   SupplyRequestDto,
@@ -492,5 +495,143 @@ export class FestivalActivityController {
       faId,
       electricitySupplyId,
     );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":faId/inquiry")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Inquiry section initial request",
+    type: InitInquiryRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  initInquiry(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Body() inquiryInitializer: InitInquiryRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.initInquiry(faId, inquiryInitializer);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":faId/inquiry/time-windows")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Time window to add in inquiry section of festival activity",
+    type: PeriodDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  addInquiryTimeWindow(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Body() timeWindow: PeriodDto,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.addInquiryTimeWindow(faId, timeWindow);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Delete(":faId/inquiry/time-windows/:timeWindowId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "timeWindowId",
+    type: String,
+    description: "Time Window id",
+    required: true,
+  })
+  removeInquiryTimeWindow(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("timeWindowId") timeWindowId: TimeWindow["id"],
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.removeInquiryTimeWindow(
+      faId,
+      timeWindowId,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":faId/inquiry/request")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description:
+      "Inquiry request to add in inquiry section of festival activity",
+    type: AddInquiryRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  addInquiryRequest(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Body() inquiryRequest: AddInquiryRequestDto,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.addInquiryRequest(faId, inquiryRequest);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Delete(":faId/inquiry/request/:inquirySlug")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "inquirySlug",
+    type: Number,
+    description: "Inquiry Request Slug",
+    required: true,
+  })
+  removeInquiryRequest(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Param("inquirySlug") slug: InquiryRequest["slug"],
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.removeInquiryRequest(faId, slug);
   }
 }

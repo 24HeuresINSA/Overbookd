@@ -98,7 +98,10 @@ export { defaultDraft } from "./festival-activity.factory";
 
 // PREPARATION
 export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
-export type { PrepareFestivalActivityRepository } from "./preparation/prepare-festival-activity";
+export type {
+  PrepareFestivalActivityRepository,
+  InitInquiry,
+} from "./preparation/prepare-festival-activity";
 export type {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
@@ -111,6 +114,7 @@ export type {
   PrepareSignageUpdate,
   PrepareContractorCreation,
   PrepareContractorUpdate,
+  PrepareInquiryRequestCreation,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW
