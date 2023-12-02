@@ -96,6 +96,4 @@ export type AssignDrive = {
 
 export type LinkInquiryDrive = AssignDrive & WithInquiryOwner;
 
-export type PrepareFeedbackPublish = Pick<Feedback, "content"> & {
-  authorId: number;
-};
+export type PrepareFeedbackPublish = Pick<Feedback, "content">;

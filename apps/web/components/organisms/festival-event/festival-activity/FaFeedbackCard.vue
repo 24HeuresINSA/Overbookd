@@ -69,11 +69,9 @@ export default Vue.extend({
     async addFeedback() {
       if (!this.canPublishFeedback) return;
 
-      const feedback = {
-        authorId: this.$accessor.user.me.id,
+      this.$accessor.festivalActivity.publishFeedback({
         content: this.newFeedbackContent,
-      };
-      this.$accessor.festivalActivity.publishFeedback(feedback);
+      });
       this.newFeedbackContent = "";
     },
     formatDate,
