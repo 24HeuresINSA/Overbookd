@@ -34,7 +34,7 @@
     </v-btn>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <FaTimeWindowForm @close-dialog="closeAddDialog" @add="addTimeWindow" />
+      <FaTimeWindowForm @add="addTimeWindow" @close-dialog="closeAddDialog" />
     </v-dialog>
   </div>
 </template>

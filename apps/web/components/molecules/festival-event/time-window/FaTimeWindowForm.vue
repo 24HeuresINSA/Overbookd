@@ -14,10 +14,15 @@
 
     <v-card-text class="pb-0">
       <h3>Début du créneau</h3>
-      <DateTimeField v-model="start" label="Début" />
+      <DateTimeField v-model="start" label="Début" @enter="addTimeWindow" />
 
       <h3>Fin du créneau</h3>
-      <DateTimeField v-model="end" label="Fin" :error-messages="errors" />
+      <DateTimeField
+        v-model="end"
+        label="Fin"
+        :error-messages="errors"
+        @enter="addTimeWindow"
+      />
     </v-card-text>
 
     <v-card-actions class="time-window-card__actions">

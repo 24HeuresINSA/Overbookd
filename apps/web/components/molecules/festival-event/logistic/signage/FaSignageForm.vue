@@ -18,16 +18,30 @@
         type="select"
         label="Type *"
         :items="signageTypes"
+        @keydown.enter="confirmSignage"
       />
-      <v-text-field v-model="text" label="Texte à écrire *" />
+      <v-text-field
+        v-model="text"
+        label="Texte à écrire *"
+        @keydown.enter="confirmSignage"
+      />
       <v-text-field
         v-model="quantity"
         label="Quantité *"
         type="number"
         :rules="[rules.number, rules.min]"
+        @keydown.enter="confirmSignage"
       />
-      <v-text-field v-model="size" label="Taille *" />
-      <v-text-field v-model="comment" label="Commentaire" />
+      <v-text-field
+        v-model="size"
+        label="Taille *"
+        @keydown.enter="confirmSignage"
+      />
+      <v-text-field
+        v-model="comment"
+        label="Commentaire"
+        @keydown.enter="confirmSignage"
+      />
     </v-card-text>
 
     <v-card-actions class="signage-card__actions">
