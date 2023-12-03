@@ -33,7 +33,7 @@
         <InquiryTable
           :inquiries="inquiry.gears"
           :owner="MATOS"
-          @delete="deleteInquiry"
+          @remove="removeInquiry"
         />
       </div>
 
@@ -42,7 +42,7 @@
         <InquiryTable
           :inquiries="inquiry.electricity"
           :owner="ELEC"
-          @delete="deleteInquiry"
+          @remove="removeInquiry"
         />
       </div>
 
@@ -51,7 +51,7 @@
         <InquiryTable
           :inquiries="inquiry.barriers"
           :owner="BARRIERES"
-          @delete="deleteInquiry"
+          @remove="removeInquiry"
         />
       </div>
     </v-card-text>
@@ -117,12 +117,12 @@ export default defineComponent({
       if (!this.canAddInquiry) return;
       const inquiry = {
         slug: this.gear?.slug ?? "",
-        quantity: this.quantity,
+        quantity: +this.quantity,
       };
       this.$accessor.festivalActivity.addInquiryRequest(inquiry);
       this.clearInquiryForm();
     },
-    deleteInquiry(inquiry: InquiryRequest) {
+    removeInquiry(inquiry: InquiryRequest) {
       this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);
     },
     addTimeWindow(period: IProvidePeriod) {

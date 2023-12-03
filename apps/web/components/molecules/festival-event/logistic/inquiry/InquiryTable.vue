@@ -8,9 +8,13 @@
     hide-default-footer
     dense
   >
+    <template #item.quantity="{ item }">
+      {{ displayQuantity(item) }}
+    </template>
+
     <template #item.actions="{ item }">
       <div v-if="!disabled">
-        <v-btn icon @click="deleteInquiry(item)">
+        <v-btn icon @click="removeInquiry(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
       </div>
@@ -52,8 +56,9 @@ export default defineComponent({
   },
   data: (): InquiryTableData => ({
     headers: [
-      { text: "Quantité", value: "quantity", width: "30%" },
+      { text: "Quantité", value: "quantity", width: "20%" },
       { text: "Nom", value: "name" },
+      { text: "Actions", value: "actions", width: "10%" },
     ],
   }),
   computed: {
@@ -72,11 +77,22 @@ export default defineComponent({
     },
   },
   methods: {
+    displayQuantity(inquiry: InquiryRequest): string {
+      const gear = this.$accessor.catalogGear.gears.find(
+        ({ slug }) => slug === inquiry.slug,
+      );
+      const isConsumable = gear?.isConsumable ?? false;
+      if (!isConsumable) return `${inquiry.quantity}`;
+
+      const timeWindowCount = this.inquiry.timeWindows.length;
+      const total = timeWindowCount * inquiry.quantity;
+      return `${total} (${timeWindowCount} créneaux X ${inquiry.quantity} demandes)`;
+    },
     addInquiry(inquiry: InquiryRequest) {
       this.$emit("add", inquiry);
     },
-    deleteInquiry(inquiry: InquiryRequest) {
-      this.$emit("delete", inquiry);
+    removeInquiry(inquiry: InquiryRequest) {
+      this.$emit("remove", inquiry);
     },
   },
 });
