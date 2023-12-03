@@ -12,6 +12,7 @@
     :filled="boxed"
     :disabled="disabled"
     return-object
+    :filter="customFilter"
     @change="propagateEvent"
   >
     <template #no-data>
@@ -56,6 +57,10 @@ export default Vue.extend({
       type: Array as () => UserPersonalData[] | null,
       default: () => null,
     },
+    normalization: {
+      type: Boolean,
+      default: false,
+    },
   },
   data(): SearchUserData {
     return {
@@ -77,6 +82,19 @@ export default Vue.extend({
     },
     displayUsername(user: UserPersonalData): string {
       return formatUsername(user);
+    },
+    customFilter(item, typedText, receivedText) {
+      const normalizedQuery = this.normalization
+        ? this.normalizeString(typedText)
+        : typedText;
+      const normalizedItemText = this.normalization
+        ? this.normalizeString(receivedText)
+        : receivedText;
+
+      return normalizedItemText.includes(normalizedQuery);
+    },
+    normalizeString(str) {
+      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     },
   },
 });
