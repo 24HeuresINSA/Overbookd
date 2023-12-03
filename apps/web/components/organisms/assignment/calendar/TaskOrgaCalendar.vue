@@ -87,7 +87,7 @@ export default Vue.extend({
       return `[${assignmentCount}/${quantity}] ${code}`;
     },
     getTeamColor(code: string): string {
-      return this.$accessor.team.getTeamByCode(code).color;
+      return this.$accessor.team.getTeamByCode(code)?.color ?? "blue";
     },
     defineEventColor({
       code,

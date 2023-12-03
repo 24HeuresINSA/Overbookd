@@ -34,7 +34,7 @@ export const getters = getterTree(state, {
     },
   getTeamByCode:
     (state, getters) =>
-    (code: string): Team => {
+    (code: string): Team | undefined => {
       return getters.allTeams.find((t: Team) => t.code === code);
     },
 });

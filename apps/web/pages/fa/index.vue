@@ -2,47 +2,18 @@
   <div class="activity">
     <h1>Fiches Activités</h1>
 
-    <div class="custom-container">
-      <v-container class="sidebar">
-        <FestivalEventFilter
-          :search="filters.search"
-          :team="filters.team"
-          :status="filters.status"
-          @change:search="filters.search = $event"
-          @change:team="filters.team = $event"
-          @change:status="filters.status = $event"
-        >
-          <template #additional-filters>
-            <div v-for="validator of validators" :key="validator.code">
-              <v-btn-toggle
-                tile
-                color="deep-purple accent-3"
-                group
-                @change="changeValidatorStatusFilter(validator, $event)"
-              >
-                <v-icon small>{{ validator.icon }}</v-icon>
-                <v-btn
-                  v-for="[status, label] of validatorStatusLabels"
-                  :key="status"
-                  :value="status"
-                  x-small
-                  @click="changeValidatorStatusFilter(validator, status)"
-                >
-                  {{ label }}
-                </v-btn>
-              </v-btn-toggle>
-            </div>
-
-            <v-btn
-              v-if="canManageLocation"
-              class="signa-export"
-              @click="exportCsvSigna"
-            >
-              Export signa
-            </v-btn>
-          </template>
-        </FestivalEventFilter>
-      </v-container>
+    <main>
+      <FaFilter class="activity__filtering" @change="updateFilters">
+        <template #additional-actions>
+          <v-btn
+            v-if="canManageLocation"
+            class="signa-export"
+            @click="exportCsvSigna"
+          >
+            Export signa
+          </v-btn>
+        </template>
+      </FaFilter>
 
       <v-card class="activity__listing">
         <v-data-table
@@ -85,7 +56,7 @@
           <template #no-data> Aucune FA trouvée </template>
         </v-data-table>
       </v-card>
-    </div>
+    </main>
 
     <v-btn
       color="secondary"
@@ -101,19 +72,6 @@
       <NewFaCard @close-dialog="isNewFaDialogOpen = false" />
     </v-dialog>
 
-    <v-dialog v-model="isDeleteDialogOpen" width="600">
-      <ConfirmationMessage
-        @close-dialog="closeDeleteFaDialog"
-        @confirm="deleteFa"
-      >
-        <template #title> Supprimer la FA </template>
-        <template #statement>
-          Es-tu sûr de vouloir supprimer la FA
-          <strong>{{ selectedFa?.name }}</strong> ?
-        </template>
-      </ConfirmationMessage>
-    </v-dialog>
-
     <SnackNotificationContainer />
   </div>
 </template>
@@ -122,8 +80,6 @@
 import { defineComponent } from "vue";
 import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
-import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import {
   FaSimplified,
@@ -140,30 +96,35 @@ import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { MANAGE_LOCATION, VIEW_DELETED_FA } from "@overbookd/permission";
-import { PreviewFestivalActivity } from "@overbookd/festival-activity";
+import {
+  APPROVED,
+  DRAFT,
+  IN_REVIEW,
+  NOT_ASKING_TO_REVIEW,
+  PreviewFestivalActivity,
+  REVIEWING,
+  ReviewStatus,
+  FestivalActivity,
+} from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
+import FaFilter from "~/components/organisms/festival-event/festival-activity/FaFilter.vue";
+import { Filters } from "~/utils/festival-event/festival-activity.filter";
 
 interface FaData {
   headers: Header[];
   selectedFa?: FaSimplified;
   isNewFaDialogOpen: boolean;
-  isDeleteDialogOpen: boolean;
   validatorStatuses: Map<string, ValidatorStatus>;
-  filters: {
-    search: string;
-    team?: Team;
-    status?: FaStatus;
-  };
+  filters: Filters;
 }
 
 export default defineComponent({
   name: "Fa",
   components: {
-    FestivalEventFilter,
     NewFaCard,
     TeamChip,
-    ConfirmationMessage,
     SnackNotificationContainer,
+    FaFilter,
   },
   data: (): FaData => ({
     headers: [
@@ -171,17 +132,12 @@ export default defineComponent({
       { text: "Validation", value: "validation", sortable: false },
       { text: "Nom", value: "name" },
       { text: "Equipe", value: "team" },
-      { text: "Resp", value: "adherent", sortable: false },
+      { text: "Responsable", value: "adherent", sortable: false },
     ],
     selectedFa: undefined,
     isNewFaDialogOpen: false,
-    isDeleteDialogOpen: false,
     validatorStatuses: new Map(),
-    filters: {
-      search: "",
-      team: undefined,
-      status: undefined,
-    },
+    filters: {},
   }),
   head: () => ({
     title: "Fiches Activités",
@@ -239,15 +195,15 @@ export default defineComponent({
     },
 
     filterFaByStatus(
-      statusSearched?: FaStatus,
+      statusSearched?: FestivalActivity["status"],
     ): (fa: PreviewFestivalActivity) => boolean {
       return statusSearched ? (fa) => fa.status === statusSearched : () => true;
     },
 
     filterFaByNameAndId(
-      search: string,
+      search?: string,
     ): (fa: Searchable<PreviewFestivalActivity>) => boolean {
-      const slugifiedSearch = SlugifyService.apply(search);
+      const slugifiedSearch = SlugifyService.apply(search ?? "");
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
@@ -255,21 +211,35 @@ export default defineComponent({
       return status.toLowerCase();
     },
 
-    preDelete(fa: FaSimplified) {
-      this.selectedFa = fa;
-      this.isDeleteDialogOpen = true;
+    updateFilters(filters: Filters) {
+      this.filters = filters;
     },
 
-    async deleteFa() {
-      if (!this.selectedFa) return;
-      await this.$accessor.fa.deleteFA(this.selectedFa.id);
-      this.isDeleteDialogOpen = false;
-      this.selectedFa = undefined;
+    toFestivalActivityStatus(status: string): FestivalActivity["status"] {
+      switch (status) {
+        case IN_REVIEW:
+          return IN_REVIEW;
+        case DRAFT:
+        default:
+          return DRAFT;
+      }
     },
 
-    closeDeleteFaDialog() {
-      this.selectedFa = undefined;
-      this.isDeleteDialogOpen = false;
+    extractFromQueryParams(param?: string | (string | null)[]): string {
+      if (Array.isArray(param)) return "";
+      return param ?? "";
+    },
+
+    toReviewStatus(status: string): ReviewStatus {
+      switch (status) {
+        case APPROVED:
+          return APPROVED;
+        case REVIEWING:
+          return REVIEWING;
+        case NOT_ASKING_TO_REVIEW:
+        default:
+          return NOT_ASKING_TO_REVIEW;
+      }
     },
 
     /*async exportCsvSecu() {
@@ -360,10 +330,24 @@ h1 {
 }
 
 .activity {
+  main {
+    display: flex;
+    padding: 10px 30px 10px 10px;
+    gap: 15px;
+    @media screen and (max-width: $mobile-max-width) {
+      flex-direction: column;
+      padding: 10px;
+    }
+  }
   &__listing {
     margin-left: 20px;
     height: fit-content;
     width: 100vw;
+    flex-grow: 3;
+  }
+  &__filtering {
+    flex-grow: 1;
+    min-width: 300px;
   }
   &__table {
     cursor: pointer;
@@ -372,12 +356,18 @@ h1 {
 
 .signa-export {
   margin-top: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    display: none;
+  }
 }
 
 .btn-plus {
   right: 20px;
   bottom: 45px;
   position: fixed;
+  @media screen and (max-width: $mobile-max-width) {
+    bottom: 70px;
+  }
 }
 
 @media only screen and (max-width: $mobile-max-width) {

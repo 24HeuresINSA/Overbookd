@@ -65,9 +65,8 @@ export default defineComponent({
       return this.$accessor.festivalActivity.selectedActivity.inCharge;
     },
     team(): Team | null {
-      return this.inCharge.team
-        ? this.$accessor.team.getTeamByCode(this.inCharge.team)
-        : null;
+      const team = this.inCharge.team ?? "";
+      return this.$accessor.team.getTeamByCode(team) ?? null;
     },
     adherents(): User[] {
       return this.$accessor.user.adherents;
