@@ -142,10 +142,6 @@ export class FestivalActivityController {
     description: "A festival activity",
     type: DraftFestivalActivityDto,
   })
-  @ApiBody({
-    description: "Festival activity to ask for review",
-    type: DraftFestivalActivityDto,
-  })
   @ApiParam({
     name: "id",
     type: Number,
