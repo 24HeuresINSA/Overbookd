@@ -91,11 +91,9 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   protected static buildActivityWithoutStatus(
     activityData: DatabaseFestivalActivity,
   ) {
-    const reviews = this.formatReviews(activityData.reviews);
-
     const activityWithoutStatus = {
       id: activityData.id,
-      ...reviews,
+      reviews: this.formatReviews(activityData.reviews),
       general: {
         name: activityData.name,
         description: activityData.description,

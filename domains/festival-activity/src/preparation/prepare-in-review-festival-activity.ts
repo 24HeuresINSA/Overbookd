@@ -48,11 +48,16 @@ import {
 } from "./section-aggregates/inquiries";
 import { LocationIsRequired, Signages } from "./section-aggregates/signages";
 
-class IsNotPublicActivity extends FestivalActivityError {}
+class IsNotPublicActivity extends FestivalActivityError {
+  constructor(missingParts: string[]) {
+    const baseError = "❌ Il n'est pas possible de rendre publique cette FA";
+    super([baseError, ...missingParts].join("\n"));
+  }
+}
 
 class NeedAtLeastOneTimeWindow extends FestivalActivityError {
   constructor() {
-    super("Il faut garder au moins un créneau.");
+    super("❌ Il faut garder au moins un créneau.");
   }
 }
 
@@ -61,7 +66,7 @@ class AlreadyApprovedBy extends FestivalActivityError {
     const plural = reviewers.length > 1;
     const noun = plural ? "les équipes" : "l'équipe";
     const reviewerListing = reviewers.join(" et ");
-    super(`La FA a déjà été validée par ${noun} ${reviewerListing}.`);
+    super(`❌ La FA a déjà été validée par ${noun} ${reviewerListing}.`);
   }
 }
 
@@ -114,14 +119,29 @@ class General {
       };
     }
 
-    if (!this.hasAtLeastOneCategory(categories)) {
-      throw new IsNotPublicActivity("Il faut au moins une catégorie.");
-    }
-    if (!this.hasSetPhotoLink(photoLink)) {
-      throw new IsNotPublicActivity("Il faut définir un lien pour la photo.");
-    }
-    if (!this.hasAtLeastOneTimeWindow(timeWindows)) {
-      throw new IsNotPublicActivity("Il faut au moins un créneau.");
+    if (
+      !this.hasAtLeastOneCategory(categories) ||
+      !this.hasSetPhotoLink(photoLink) ||
+      !this.hasAtLeastOneTimeWindow(timeWindows)
+    ) {
+      const missingPublicParts = [
+        {
+          verify: this.hasAtLeastOneCategory(categories),
+          message: "Il faut au moins une catégorie.",
+        },
+        {
+          verify: this.hasSetPhotoLink(photoLink),
+          message: "Il faut définir un lien pour la photo.",
+        },
+        {
+          verify: this.hasAtLeastOneTimeWindow(timeWindows),
+          message: "Il faut au moins un créneau.",
+        },
+      ]
+        .filter(({ verify }) => !verify)
+        .map(({ message }) => `- ${message}`);
+
+      throw new IsNotPublicActivity(missingPublicParts);
     }
 
     return {

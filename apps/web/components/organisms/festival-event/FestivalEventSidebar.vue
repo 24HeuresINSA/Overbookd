@@ -2,10 +2,12 @@
   <div class="sidebar fa ft">
     <h1 id="title">{{ titleWithId }}</h1>
     <h2 id="name">{{ name }}</h2>
+
     <div id="status">
       <span id="dot" :class="status"></span>
       <h3>{{ statusLabel }}</h3>
     </div>
+
     <div class="icons">
       <div v-for="validator of validators" :key="validator.code" class="icon">
         <v-icon :class="getValidatorStatus(validator)" size="26">
@@ -14,6 +16,16 @@
         <span class="icon-detail">{{ validator.name }}</span>
       </div>
     </div>
+
+    <v-btn
+      v-show="isFA"
+      id="ask-for-review"
+      :disabled="!canAskForReview"
+      @click="askForReview"
+    >
+      Demande de relecture
+    </v-btn>
+
     <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
   </div>
 </template>
@@ -32,9 +44,13 @@ import {
   FtStatusLabel,
   ftStatusLabels,
   BROUILLON as FT_BROUILLON,
+  FtStatus,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import {
+  FestivalActivity,
+  DRAFT as FA_DRAFT,
+} from "@overbookd/festival-activity";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -78,12 +94,26 @@ export default Vue.extend({
         ? this.mFA.status.toLowerCase()
         : this.mFT.status.toLowerCase();
     },
+    canAskForReview(): boolean {
+      return this.isFA
+        ? this.mFA.status === FA_DRAFT
+        : this.mFT.status === FtStatus.DRAFT;
+    },
+  },
+  mounted() {
+    if (this.validators.length > 0) return;
+    this.isFA
+      ? this.$accessor.team.fetchFaValidators()
+      : this.$accessor.team.fetchFtValidators();
   },
   methods: {
     getValidatorStatus(validator: Team): string {
       return this.isFA
         ? "draft" // TODO: check reviewers status
         : getFTValidationStatus(this.mFT, validator.code).toLowerCase();
+    },
+    async askForReview() {
+      await this.$accessor.festivalActivity.askForReview();
     },
   },
 });
@@ -97,6 +127,11 @@ export default Vue.extend({
   overflow: auto;
   padding-right: 20px;
   width: 300px;
+
+  #ask-for-review {
+    background-color: $submitted-color;
+    margin-left: 16px;
+  }
 
   #title {
     font-size: 1.7rem;
@@ -132,7 +167,7 @@ export default Vue.extend({
 
   .icons {
     display: flex;
-    margin: 20px 5px 15px 16px;
+    margin: 20px 5px 20px 16px;
 
     .icon {
       position: relative;
@@ -166,6 +201,13 @@ export default Vue.extend({
     width: 100%;
     height: fit-content;
     overflow: visible;
+    padding: unset;
+
+    #ask-for-review {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   .summary {

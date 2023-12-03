@@ -73,6 +73,17 @@ export const actions = actionTree(
       await dispatch("fetchAllActivities");
     },
 
+    /* ASK FOR REVIEW */
+    async askForReview({ state, commit, dispatch }) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.askForReview(this, id));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+      await dispatch("fetchAllActivities");
+    },
+
     /* UPDATE GENERAL */
     async updateGeneral({ state, commit }, general: PrepareGeneralUpdate) {
       const id = state.selectedActivity.id;

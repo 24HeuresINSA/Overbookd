@@ -8,7 +8,8 @@ export type {
   PreviewFestivalActivity,
   Feedback,
 } from "./festival-activity";
-export { DRAFT, IN_REVIEW } from "./festival-activity";
+export { DRAFT, IN_REVIEW, isDraft } from "./festival-activity";
+export { FestivalActivityError } from "./festival-activity.error";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 
@@ -73,7 +74,11 @@ export { BACHE, PANNEAU, AFFICHE, signageTypes } from "./sections/signa";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS
-export type { ReviewStatus, Reviewer } from "./sections/reviews";
+export type {
+  ReviewStatus,
+  Reviewer,
+  WaitingForReview,
+} from "./sections/reviews";
 export {
   APPROVED,
   REVIEWING,
@@ -124,6 +129,12 @@ export type {
   InReviewWithoutStatus,
 } from "./ask-for-review/in-review-festival-activity";
 export { InReviewSpecification } from "./ask-for-review/in-review-festival-activity";
+export { AskForReview } from "./ask-for-review/ask-for-review";
+export type {
+  AskForReviewFestivalActivityRepository,
+  Notifications,
+  Notifyee,
+} from "./ask-for-review/ask-for-review";
 
 export type {
   Created,

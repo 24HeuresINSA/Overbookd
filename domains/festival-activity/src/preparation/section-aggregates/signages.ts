@@ -13,7 +13,7 @@ import { updateItemToList } from "@overbookd/list";
 
 export class LocationIsRequired extends FestivalActivityError {
   constructor() {
-    super("Le lieux ne peut pas etre remis a zero");
+    super("❌ Le lieu ne peut pas être remis à zero");
   }
 }
 

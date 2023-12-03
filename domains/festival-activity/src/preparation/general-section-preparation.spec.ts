@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
-import { TimeWindowAlreadyExists } from "../festival-activity.error";
+import {
+  FestivalActivityError,
+  TimeWindowAlreadyExists,
+} from "../festival-activity.error";
 import { EndBeforeStart } from "@overbookd/period";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import {
@@ -163,7 +166,8 @@ describe("General section of festival activity preparation", () => {
           pcSecurite.id,
           update,
         );
-        if (isDraft(activity)) throw new Error("Activity should not be draft");
+        if (isDraft(activity))
+          throw new FestivalActivityError("Activity should not be draft");
 
         expect(activity.reviews.communication).toBe(REVIEWING);
       });

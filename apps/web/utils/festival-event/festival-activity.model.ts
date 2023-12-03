@@ -17,16 +17,16 @@ import {
 } from "@overbookd/festival-activity";
 
 export const BROUILLON = "Brouillon";
-const SOUMISE_A_VALIDATION = "Soumise à validation";
+const RELECTURE_EN_COURS = "Relecture en cours";
 
-export type FaStatusLabel = typeof BROUILLON | typeof SOUMISE_A_VALIDATION;
+export type FaStatusLabel = typeof BROUILLON | typeof RELECTURE_EN_COURS;
 
 export const faStatusLabels = new Map<
   FestivalActivity["status"],
   FaStatusLabel
 >([
   [DRAFT, BROUILLON],
-  [IN_REVIEW, SOUMISE_A_VALIDATION],
+  [IN_REVIEW, RELECTURE_EN_COURS],
 ]);
 
 export const activityCategories = [
