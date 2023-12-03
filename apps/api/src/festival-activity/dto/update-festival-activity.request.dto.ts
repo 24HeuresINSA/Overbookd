@@ -21,7 +21,6 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
-  PrepareInquiryRequestCreation,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareFeedbackPublish,
@@ -34,7 +33,11 @@ import {
   IsString,
   ValidateIf,
 } from "class-validator";
-import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
+import {
+  AddInquiryRequest,
+  PrepareInChargeForm,
+  PrepareSignaForm,
+} from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "./period.dto";
 import { Type } from "class-transformer";
@@ -339,11 +342,6 @@ export class UpdateElectricitySupplyRequestDto
   @ValidateIf((_, value) => value !== null)
   comment?: string | null;
 }
-
-export type AddInquiryRequest = Pick<
-  PrepareInquiryRequestCreation,
-  "slug" | "quantity"
->;
 
 export class AddInquiryRequestDto implements AddInquiryRequest {
   @ApiProperty({ required: true })

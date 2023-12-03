@@ -19,6 +19,7 @@
         <SearchGear v-model="gear" class="inquiry-form__search" />
         <v-btn
           rounded
+          color="primary"
           class="inquiry-form__btn"
           :disabled="!canAddInquiry"
           @click="addInquiry"
@@ -32,7 +33,7 @@
         <InquiryTable
           :inquiries="inquiry.gears"
           :owner="MATOS"
-          @delete="deleteInquiry"
+          @remove="removeInquiry"
         />
       </div>
 
@@ -41,7 +42,7 @@
         <InquiryTable
           :inquiries="inquiry.electricity"
           :owner="ELEC"
-          @delete="deleteInquiry"
+          @remove="removeInquiry"
         />
       </div>
 
@@ -50,7 +51,7 @@
         <InquiryTable
           :inquiries="inquiry.barriers"
           :owner="BARRIERES"
-          @delete="deleteInquiry"
+          @remove="removeInquiry"
         />
       </div>
     </v-card-text>
@@ -115,26 +116,20 @@ export default defineComponent({
     addInquiry() {
       if (!this.canAddInquiry) return;
       const inquiry = {
-        slug: this.gear?.slug,
-        name: this.gear?.name,
-        quantity: this.quantity,
-        owner: this.gear?.owner?.code,
+        slug: this.gear?.slug ?? "",
+        quantity: +this.quantity,
       };
-      console.log("add inquiry", inquiry);
-      // TODO: add inquiry
+      this.$accessor.festivalActivity.addInquiryRequest(inquiry);
       this.clearInquiryForm();
     },
-    deleteInquiry(inquiry: InquiryRequest) {
-      console.log("delete inquiry", inquiry);
-      // TODO: delete inquiry
+    removeInquiry(inquiry: InquiryRequest) {
+      this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);
     },
     addTimeWindow(period: IProvidePeriod) {
-      console.log("add timeWindow", period);
-      // TODO: add timeWindow
+      this.$accessor.festivalActivity.addInquiryTimeWindow(period);
     },
     removeTimeWindow(timeWindow: TimeWindow) {
-      console.log("delete timeWindow", timeWindow);
-      // TODO: delete timeWindow
+      this.$accessor.festivalActivity.removeInquiryTimeWindow(timeWindow.id);
     },
   },
 });

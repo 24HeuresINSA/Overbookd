@@ -16,6 +16,7 @@ import {
   Signage,
   TimeWindow,
   defaultDraft,
+  InquiryRequest,
 } from "@overbookd/festival-activity";
 import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
@@ -23,6 +24,7 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
 import { safeCall } from "~/utils/api/calls";
 import { castActivityWithDate } from "~/utils/festival-event/festival-activity.utils";
+import { AddInquiryRequest } from "@overbookd/http";
 
 const repo = FestivalActivityRepository;
 
@@ -271,6 +273,61 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.removeElectricitySupply(this, id, supplyId),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    /* UPDATE INQUIRY */
+    async addInquiryTimeWindow({ state, commit }, timeWindow: IProvidePeriod) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.addInquiryTimeWindow(this, id, timeWindow),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async removeInquiryTimeWindow(
+      { state, commit },
+      timeWindowId: TimeWindow["id"],
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.removeInquiryTimeWindow(this, id, timeWindowId),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async addInquiryRequest({ state, commit }, request: AddInquiryRequest) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.addInquiryRequest(this, id, request),
+      );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async removeInquiryRequest(
+      { state, commit },
+      slug: InquiryRequest["slug"],
+    ) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(
+        this,
+        repo.removeInquiryRequest(this, id, slug),
       );
       if (!res) return;
 

@@ -627,12 +627,12 @@ model FestivalActivity {
   feedbacks FestivalActivityFeedback[]
 
   // General
-  name               String                              @db.VarChar(30)
+  name               String                              @db.Text
   description        String?                             @db.Text
   toPublish          Boolean                             @map("to_publish")
   photoLink          String?                             @map("photo_link") @db.Text
   isFlagship         Boolean                             @map("is_flagship")
-  categories         String[]                            @db.VarChar(20)
+  categories         String[]                            @db.Text
   generalTimeWindows FestivalActivityTimeWindowGeneral[]
 
   // In charge
@@ -696,11 +696,11 @@ model FestivalActivityTimeWindowInquiry {
 
 model Contractor {
   id        Int
-  firstname String  @db.VarChar(30)
-  lastname  String  @db.VarChar(30)
-  phone     String  @db.VarChar(20)
-  email     String? @db.VarChar(30)
-  company   String? @db.VarChar(30)
+  firstname String  @db.Text
+  lastname  String  @db.Text
+  phone     String  @db.Text
+  email     String? @db.Text
+  company   String? @db.Text
   comment   String? @db.Text
 
   fa   FestivalActivity @relation(fields: [faId], references: [id])
@@ -711,10 +711,10 @@ model Contractor {
 }
 
 model FestivalActivitySignage {
-  id       String      @db.VarChar(30)
+  id       String      @db.Text
   quantity Int
-  text     String      @db.VarChar(30)
-  size     String      @db.VarChar(30)
+  text     String      @db.Text
+  size     String      @db.Text
   type     SignageType
   comment  String?     @db.Text
 
@@ -734,9 +734,9 @@ enum SignageType {
 }
 
 model FestivalActivityElectricitySupply {
-  id         String                @db.VarChar(30)
+  id         String                @db.Text
   connection ElectricityConnection
-  device     String                @db.VarChar(30)
+  device     String                @db.Text
   power      Int
   count      Int
   comment    String?               @db.Text
@@ -765,7 +765,7 @@ enum ElectricityConnection {
 }
 
 model InquiryRequest {
-  slug        String      @db.VarChar(30)
+  slug        String      @db.Text
   catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
   quantity    Int
 

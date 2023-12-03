@@ -551,7 +551,11 @@ importers:
         specifier: 7.8.1
         version: 7.8.1
 
-  utils/http: {}
+  utils/http:
+    dependencies:
+      '@overbookd/festival-activity':
+        specifier: workspace:^
+        version: link:../../domains/festival-activity
 
 packages:
 

@@ -232,10 +232,10 @@ export class FestivalActivityQueryBuilder {
   private static upsertInquiries(activity: FestivalActivity) {
     const inquiries = this.listInquiries(activity);
     return {
-      upsert: inquiries.map((request) => ({
-        where: { slug_faId: { slug: request.slug, faId: activity.id } },
-        update: request,
-        create: request,
+      upsert: inquiries.map(({ slug, quantity }) => ({
+        where: { slug_faId: { slug, faId: activity.id } },
+        update: { quantity },
+        create: { slug, quantity },
       })),
       deleteMany: {
         faId: activity.id,
