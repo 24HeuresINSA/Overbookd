@@ -97,13 +97,7 @@ import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { MANAGE_LOCATION, VIEW_DELETED_FA } from "@overbookd/permission";
 import {
-  APPROVED,
-  DRAFT,
-  IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   PreviewFestivalActivity,
-  REVIEWING,
-  ReviewStatus,
   FestivalActivity,
 } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
@@ -213,33 +207,6 @@ export default defineComponent({
 
     updateFilters(filters: Filters) {
       this.filters = filters;
-    },
-
-    toFestivalActivityStatus(status: string): FestivalActivity["status"] {
-      switch (status) {
-        case IN_REVIEW:
-          return IN_REVIEW;
-        case DRAFT:
-        default:
-          return DRAFT;
-      }
-    },
-
-    extractFromQueryParams(param?: string | (string | null)[]): string {
-      if (Array.isArray(param)) return "";
-      return param ?? "";
-    },
-
-    toReviewStatus(status: string): ReviewStatus {
-      switch (status) {
-        case APPROVED:
-          return APPROVED;
-        case REVIEWING:
-          return REVIEWING;
-        case NOT_ASKING_TO_REVIEW:
-        default:
-          return NOT_ASKING_TO_REVIEW;
-      }
     },
 
     /*async exportCsvSecu() {
