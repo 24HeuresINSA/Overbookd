@@ -1,6 +1,6 @@
 <template>
   <v-snackbar v-model="toggle" :timeout="timeout">
-    {{ message }}
+    <p v-for="(part, index) in messages" :key="index">{{ part }}</p>
     <template #action="{ attrs }">
       <v-btn color="white" text v-bind="attrs" @click="toggle = false">
         Close
@@ -40,6 +40,11 @@ export default Vue.extend({
       message: this.setMessage,
     };
   },
+  computed: {
+    messages(): string[] {
+      return this.message.split("\n");
+    },
+  },
   watch: {
     setToggle: function (val) {
       this.toggle = val;
@@ -59,3 +64,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+p {
+  margin-bottom: 5px;
+}
+</style>
