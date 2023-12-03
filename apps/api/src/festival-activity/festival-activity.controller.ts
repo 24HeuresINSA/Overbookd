@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Request,
+  UseFilters,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -59,6 +60,7 @@ import {
   PreviewInReviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
 import { PeriodDto } from "./dto/period.dto";
+import { FestivalActivityErrorFilter } from "./festival-activity-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -68,6 +70,7 @@ import { PeriodDto } from "./dto/period.dto";
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
+@UseFilters(FestivalActivityErrorFilter)
 @Controller("festival-activity")
 export class FestivalActivityController {
   constructor(
@@ -129,6 +132,31 @@ export class FestivalActivityController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.create(user, name);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":id/ask-for-review")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiBody({
+    description: "Festival activity to ask for review",
+    type: DraftFestivalActivityDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  askForReview(
+    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalActivity> {
+    return this.festivalActivityService.askForReview(id, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -5,6 +5,7 @@ import { PrismaAdherents } from "./repository/adherents.prisma";
 import { PrismaModule } from "../prisma.module";
 import { PrismaService } from "../prisma.service";
 import {
+  AskForReview,
   CreateFestivalActivity,
   PrepareFestivalActivity,
 } from "@overbookd/festival-activity";
@@ -15,6 +16,8 @@ import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { HistoryModule } from "./history/history.module";
 import { PrismaInquiries } from "./repository/inquiries.prisma";
+import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
+import { PrismaNotifications } from "./repository/notifications.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -32,6 +35,11 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
       inject: [PrismaService],
     },
     {
+      provide: PrismaAskForReview,
+      useFactory: (prisma: PrismaService) => new PrismaAskForReview(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: PrismaAdherents,
       useFactory: (prisma: PrismaService) => new PrismaAdherents(prisma),
       inject: [PrismaService],
@@ -44,6 +52,11 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
     {
       provide: PrismaInquiries,
       useFactory: (prisma: PrismaService) => new PrismaInquiries(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaNotifications,
+      useFactory: (prisma: PrismaService) => new PrismaNotifications(prisma),
       inject: [PrismaService],
     },
     {
@@ -66,6 +79,14 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
       inject: [PrismaPrepareFestivalActivities],
     },
     {
+      provide: AskForReview,
+      useFactory: (
+        festivalActivities: PrismaAskForReview,
+        notifications: PrismaNotifications,
+      ) => new AskForReview(festivalActivities, notifications),
+      inject: [PrismaAskForReview, PrismaNotifications],
+    },
+    {
       provide: FestivalActivityService,
       useFactory: (
         adherents: PrismaAdherents,
@@ -73,6 +94,7 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
         inquiries: PrismaInquiries,
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
+        askForReview: AskForReview,
         eventStore: DomainEventService,
       ) =>
         new FestivalActivityService(
@@ -81,6 +103,7 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
           inquiries,
           create,
           prepare,
+          askForReview,
           eventStore,
         ),
       inject: [
@@ -89,6 +112,7 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
         PrismaInquiries,
         CreateFestivalActivity,
         PrepareFestivalActivity,
+        AskForReview,
         DomainEventService,
       ],
     },

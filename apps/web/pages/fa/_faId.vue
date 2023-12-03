@@ -80,7 +80,6 @@ export default defineComponent({
   padding: 12px;
   margin-right: auto;
   margin-left: auto;
-  padding-bottom: 50px;
   > * {
     margin-bottom: 30px;
     &:last-child {

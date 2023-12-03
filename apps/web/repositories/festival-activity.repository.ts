@@ -36,7 +36,7 @@ export class FestivalActivityRepository {
     );
   }
 
-  static getOne(context: Context, id: number) {
+  static getOne(context: Context, id: FestivalActivity["id"]) {
     return context.$axios.get<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${id}`,
     );
@@ -47,6 +47,13 @@ export class FestivalActivityRepository {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       this.basePath,
       data,
+    );
+  }
+
+  /* ASK FOR REVIEW */
+  static askForReview(context: Context, id: FestivalActivity["id"]) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${id}/ask-for-review`,
     );
   }
 

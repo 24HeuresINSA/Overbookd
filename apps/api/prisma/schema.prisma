@@ -802,6 +802,7 @@ enum FestivalActivityReviewer {
 enum FestivalActivityReviewStatus {
   REVIEWING
   NOT_ASKING_TO_REVIEW
+  APPROVED
 
   @@map("festival_activity_review_status")
 }

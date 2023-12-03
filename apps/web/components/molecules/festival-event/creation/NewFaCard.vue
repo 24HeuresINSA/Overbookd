@@ -2,7 +2,11 @@
   <v-card>
     <v-card-title>Ajouter une nouvelle Fiche Activité</v-card-title>
     <v-card-text>
-      <v-text-field v-model="name" label="Nom de la FA"></v-text-field>
+      <v-text-field
+        v-model="name"
+        label="Nom de la FA"
+        @keydown.enter="createNewFa"
+      ></v-text-field>
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>

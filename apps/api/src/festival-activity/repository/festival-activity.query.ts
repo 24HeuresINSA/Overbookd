@@ -2,6 +2,9 @@ import {
   Draft,
   Feedback,
   FestivalActivity,
+  InReview,
+  ReviewStatus,
+  Reviewer,
   TimeWindow,
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
@@ -176,6 +179,14 @@ export class FestivalActivityQueryBuilder {
     };
   }
 
+  static askForReview(activity: InReview) {
+    const reviews = this.upsertReviews(activity);
+    return {
+      ...databaseFestivalActivityWithouListsMapping(activity),
+      reviews,
+    };
+  }
+
   private static upsertSignages(activity: FestivalActivity) {
     return {
       upsert: activity.signa.signages.map((signage) => ({
@@ -271,6 +282,20 @@ export class FestivalActivityQueryBuilder {
         faId: activity.id,
         id: { notIn: activity.inCharge.contractors.map(({ id }) => id) },
       },
+    };
+  }
+
+  private static upsertReviews(activity: InReview) {
+    const reviews = Object.entries(activity.reviews)
+      .filter((entry): entry is [Reviewer, ReviewStatus] => true)
+      .map(([team, status]) => ({ team, status }));
+
+    return {
+      upsert: reviews.map((review) => ({
+        where: { faId_team: { faId: activity.id, team: review.team } },
+        update: review,
+        create: review,
+      })),
     };
   }
 

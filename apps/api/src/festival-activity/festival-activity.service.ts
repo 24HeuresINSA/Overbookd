@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import {
   Adherent,
+  AskForReview,
   CreateFestivalActivity,
   Draft,
   Location,
@@ -60,6 +61,7 @@ export class FestivalActivityService {
     private readonly inquiries: Inquiries,
     private readonly createFestivalActivity: CreateFestivalActivity,
     private readonly prepareFestivalActivity: PrepareFestivalActivity,
+    private readonly askForReviewFestivalActivity: AskForReview,
     private readonly eventStore: DomainEventService,
   ) {}
 
@@ -79,6 +81,18 @@ export class FestivalActivityService {
     });
     this.eventStore.publish(FestivalActivityEvents.created(created));
     return created.festivalActivity;
+  }
+
+  async askForReview(
+    id: FestivalActivity["id"],
+    user: JwtPayload,
+  ): Promise<FestivalActivity> {
+    const ready = await this.askForReviewFestivalActivity.fromDraft(
+      id,
+      user.id,
+    );
+    this.eventStore.publish(FestivalActivityEvents.readyToReview(ready));
+    return ready.festivalActivity;
   }
 
   saveGeneralSection(
