@@ -85,16 +85,13 @@ export default Vue.extend({
     },
     customFilter(item, typedText, receivedText) {
       const normalizedQuery = this.normalization
-        ? this.normalizeString(typedText)
+        ? JSON.stringify(typedText)
         : typedText;
       const normalizedItemText = this.normalization
-        ? this.normalizeString(receivedText)
+        ? JSON.stringify(receivedText)
         : receivedText;
 
       return normalizedItemText.includes(normalizedQuery);
-    },
-    normalizeString(str) {
-      return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     },
   },
 });
