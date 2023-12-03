@@ -32,6 +32,9 @@
     "http",
     "utils"
   ],
+  "dependencies": {
+    "@overbookd/festival-activity": "workspace:^"
+  },
   "engines": {
     "node": "20.10.0",
     "pnpm": "8.11.0"

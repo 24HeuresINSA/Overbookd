@@ -9,6 +9,7 @@ import {
   CreateFestivalActivityForm,
   ElectricitySupply,
   FestivalActivity,
+  InquiryRequest,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
@@ -23,6 +24,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
+import { AddInquiryRequest } from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -234,6 +236,49 @@ export class FestivalActivityRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/supply/electricity/${supplyId}`,
+    );
+  }
+
+  /* UPDATE INQUIRY */
+  static addInquiryTimeWindow(
+    context: Context,
+    faId: FestivalActivity["id"],
+    timeWindow: IProvidePeriod,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry/time-windows`,
+      timeWindow,
+    );
+  }
+
+  static removeInquiryTimeWindow(
+    context: Context,
+    faId: FestivalActivity["id"],
+    timeWindowId: TimeWindow["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry/time-windows/${timeWindowId}`,
+    );
+  }
+
+  static addInquiryRequest(
+    context: Context,
+    faId: FestivalActivity["id"],
+    request: AddInquiryRequest,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry/requests`,
+      request,
+    );
+  }
+
+  static removeInquiryRequest(
+    context: Context,
+    faId: FestivalActivity["id"],
+    requestSlug: InquiryRequest["slug"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry/requests/${requestSlug}`,
     );
   }
 
