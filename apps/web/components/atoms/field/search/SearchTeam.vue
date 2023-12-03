@@ -14,6 +14,9 @@
     return-object
     @change="propagateEvent"
   >
+    <template #selection="{ item }">
+      <TeamChip :team="item.code" with-name />
+    </template>
     <template #no-data>
       <v-list-item> Aucune equipe correspondante </v-list-item>
     </template>
@@ -22,6 +25,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Team } from "~/utils/models/team.model";
 
 interface SearchTeamData {
@@ -30,6 +34,7 @@ interface SearchTeamData {
 
 export default Vue.extend({
   name: "SearchTeam",
+  components: { TeamChip },
   model: {
     prop: "team",
     event: "change",

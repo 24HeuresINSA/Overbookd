@@ -2,29 +2,26 @@
   <v-card>
     <v-card-title>Filtres</v-card-title>
     <v-card-text>
-      <v-text-field label="Recherche" @change="changeSearch"></v-text-field>
+      <v-text-field
+        :value="search"
+        label="Recherche"
+        @change="changeSearch"
+      ></v-text-field>
       <SearchTeam
-        :value="team"
+        :team="team"
         label="Équipe"
         :boxed="false"
         @change="changeTeam"
       ></SearchTeam>
 
-      <h3>Statut</h3>
-      <v-list dense>
-        <v-list-item-group :value="status" @change="changeStatus">
-          <v-list-item :value="null">
-            <v-list-item-title>Tous</v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            v-for="[statusValue, statusLabel] in statuses"
-            :key="statusValue"
-            :value="statusValue"
-          >
-            <v-list-item-title> {{ statusLabel }} </v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
+      <v-select
+        :value="status"
+        label="Statut"
+        :items="statusWithLabels"
+        item-value="key"
+        item-text="label"
+        @change="changeStatus"
+      />
 
       <slot name="additional-filters" />
     </v-card-text>
@@ -33,12 +30,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { FestivalActivity } from "@overbookd/festival-activity";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import {
-  FaStatus,
   FaStatusLabel,
   faStatusLabels,
-} from "~/utils/models/fa.model";
+} from "~/utils/festival-event/festival-activity.model";
 import {
   FtStatus,
   FtStatusLabel,
@@ -46,7 +43,11 @@ import {
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
 
-type StatusLabels = ([FaStatus, FaStatusLabel] | [FtStatus, FtStatusLabel])[];
+type StatusLabels = (
+  | { key: FestivalActivity["status"]; label: FaStatusLabel }
+  | { key: FtStatus; label: FtStatusLabel }
+  | { key: null; label: "Tous" }
+)[];
 
 export default Vue.extend({
   name: "FestivalEventFilter",
@@ -65,7 +66,7 @@ export default Vue.extend({
       default: null,
     },
     status: {
-      type: String as () => FaStatus | FtStatus | null,
+      type: String as () => FestivalActivity["status"] | FtStatus | null,
       default: null,
     },
   },
@@ -73,17 +74,22 @@ export default Vue.extend({
     isFa(): boolean {
       return this.festivalEvent === "FA";
     },
-    statuses(): StatusLabels {
-      return this.isFa
+    statusWithLabels(): StatusLabels {
+      const noneOfThem = { key: null, label: "Tous" } as const;
+      const keyWithLabel = this.isFa
         ? [...faStatusLabels.entries()]
         : [...ftStatusLabels.entries()];
+      return [
+        noneOfThem,
+        ...keyWithLabel.map(([key, label]) => ({ key, label })),
+      ];
     },
   },
   methods: {
     changeSearch(search: string) {
       this.$emit("change:search", search);
     },
-    changeStatus(status: FaStatus | FtStatus) {
+    changeStatus(status: FestivalActivity["status"] | FtStatus) {
       this.$emit("change:status", status);
     },
     changeTeam(team: Team) {
