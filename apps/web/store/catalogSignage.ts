@@ -43,7 +43,7 @@ export const actions = actionTree(
         signageRepository.fetchSignages(this),
       );
       if (!res) return;
-      const signages = await fetchSignageImages(this, res.data);
+      const signages = await getSignageImages(this, res.data);
       commit("SET_SIGNAGES", signages);
     },
 
@@ -109,7 +109,7 @@ export const actions = actionTree(
   },
 );
 
-async function fetchSignageImages(context: Context,signages: Signage[]) {
+async function getSignageImages(context: Context,signages: Signage[]) {
   return await Promise.all(signages.map(async (signage) => {
     const signageImage = await CatalogSignageRepository.getSignageImage(context, signage.id);
     if (!signageImage) return signage;
