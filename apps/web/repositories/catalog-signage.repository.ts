@@ -10,26 +10,22 @@ export class CatalogSignageRepository {
     return context.$axios.get<Signage[]>(this.basePath);
   }
 
-  static async fetchSignageImage(
+  static async getSignageImage(
     context: Context,
     signageId: number,
   ): Promise<string | undefined> {
     const token = context.$axios.defaults.headers.common["Authorization"];
     if (!token) return undefined;
-
-    const urltest = `${process.env.BASE_URL}${this.basePath}/${signageId}/image`;
-    const response = await fetch(
-      urltest,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `${token}`,
-        },
-      },
-    );
-    console.log(urltest);
+   const response = await fetch(
+     `${process.env.BASE_URL}${this.basePath}/${signageId}/image`,
+     {
+       method: "GET",
+       headers: {
+         Authorization: `${token}`,
+       },
+     },
+   );
     if (response.status !== 200) return undefined;
-
     const url = URL.createObjectURL(await response.blob());
     return url;
   }
