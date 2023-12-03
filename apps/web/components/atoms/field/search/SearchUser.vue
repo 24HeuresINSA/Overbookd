@@ -12,7 +12,7 @@
     :filled="boxed"
     :disabled="disabled"
     return-object
-    :filter="customFilter"
+    :filter="filterUsers"
     @change="propagateEvent"
   >
     <template #no-data>
@@ -24,7 +24,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { UserPersonalData } from "@overbookd/user";
-import { formatUsername } from "~/utils/user/user.utils";
+import { SlugifyService } from "@overbookd/slugify";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 interface SearchUserData {
   loading: boolean;
@@ -81,17 +82,14 @@ export default Vue.extend({
       this.$emit("change", user);
     },
     displayUsername(user: UserPersonalData): string {
-      return formatUsername(user);
+      return formatUserNameWithNickname(user);
     },
-    customFilter(item, typedText, receivedText) {
-      const normalizedQuery = this.normalization
-        ? JSON.stringify(typedText)
-        : typedText;
-      const normalizedItemText = this.normalization
-        ? JSON.stringify(receivedText)
-        : receivedText;
+    filterUsers(user: UserPersonalData, typedSearch: string) {
+      const { firstname, lastname, nickname } = user;
+      const searchable = `${firstname} ${lastname} ${nickname ?? ""}`;
+      const search = SlugifyService.apply(typedSearch);
 
-      return normalizedItemText.includes(normalizedQuery);
+      return SlugifyService.apply(searchable).includes(search);
     },
   },
 });
