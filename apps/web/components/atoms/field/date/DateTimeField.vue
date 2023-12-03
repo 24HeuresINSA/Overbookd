@@ -9,6 +9,7 @@
     :error-messages="errorMessages"
     return-object
     @change="updateDate"
+    @keydown.enter="enterKeyDown"
   >
   </v-text-field>
 </template>
@@ -64,6 +65,10 @@ export default Vue.extend({
     stringifyDate(date?: Date | string): string {
       if (!date) return "";
       return formatLocalDateTime(new Date(date));
+    },
+    enterKeyDown() {
+      console.log("enter keydown");
+      this.$emit("enter");
     },
   },
 });

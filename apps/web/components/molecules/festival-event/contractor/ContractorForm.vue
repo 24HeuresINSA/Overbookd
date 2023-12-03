@@ -13,12 +13,36 @@
     </v-card-subtitle>
 
     <v-card-text>
-      <v-text-field v-model="firstname" label="Prénom *" />
-      <v-text-field v-model="lastname" label="Nom *" />
-      <v-text-field v-model="phone" label="Téléphone *" />
-      <v-text-field v-model="email" label="Email" />
-      <v-text-field v-model="company" label="Société" />
-      <v-text-field v-model="comment" label="Commentaire" />
+      <v-text-field
+        v-model="firstname"
+        label="Prénom *"
+        @keydown.enter="confirmContractor"
+      />
+      <v-text-field
+        v-model="lastname"
+        label="Nom *"
+        @keydown.enter="confirmContractor"
+      />
+      <v-text-field
+        v-model="phone"
+        label="Téléphone *"
+        @keydown.enter="confirmContractor"
+      />
+      <v-text-field
+        v-model="email"
+        label="Email"
+        @keydown.enter="confirmContractor"
+      />
+      <v-text-field
+        v-model="company"
+        label="Société"
+        @keydown.enter="confirmContractor"
+      />
+      <v-text-field
+        v-model="comment"
+        label="Commentaire"
+        @keydown.enter="confirmContractor"
+      />
     </v-card-text>
 
     <v-card-actions class="contractor-card__actions">

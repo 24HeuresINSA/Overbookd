@@ -22,22 +22,33 @@
         :items="connectionWithLabels"
         item-value="connection"
         item-text="label"
+        @keydown.enter="confirmSupply"
       />
-      <v-text-field v-model="device" label="Appareil *" />
+      <v-text-field
+        v-model="device"
+        label="Appareil *"
+        @keydown.enter="confirmSupply"
+      />
       <v-text-field
         v-model="power"
         label="Puissance par appareil *"
         type="number"
         suffix="Watts"
         :rules="[rules.number, rules.min]"
+        @keydown.enter="confirmSupply"
       />
       <v-text-field
         v-model="count"
         type="number"
         label="Nombre *"
         :rules="[rules.number, rules.min]"
+        @keydown.enter="confirmSupply"
       />
-      <v-text-field v-model="comment" label="Commentaire" />
+      <v-text-field
+        v-model="comment"
+        label="Commentaire"
+        @keydown.enter="confirmSupply"
+      />
     </v-card-text>
 
     <v-card-actions class="supply-card__actions">

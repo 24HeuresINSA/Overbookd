@@ -24,6 +24,7 @@
         rows="5"
         outlined
         hide-details
+        @keydown.enter="publishFeedback"
       />
       <v-btn color="primary" class="feedbacks__add" @click="publishFeedback">
         Ajouter un commentaire
