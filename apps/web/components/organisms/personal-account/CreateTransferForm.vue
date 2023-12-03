@@ -15,7 +15,6 @@
             label="Bénéficiaire"
             :list="adherents"
             :boxed="false"
-            :normalization="true"
           />
           <v-text-field v-model="context" label="Motif" />
         </div>

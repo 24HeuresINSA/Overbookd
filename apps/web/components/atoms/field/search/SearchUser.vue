@@ -58,10 +58,6 @@ export default Vue.extend({
       type: Array as () => UserPersonalData[] | null,
       default: () => null,
     },
-    normalization: {
-      type: Boolean,
-      default: false,
-    },
   },
   data(): SearchUserData {
     return {
