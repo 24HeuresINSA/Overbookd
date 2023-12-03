@@ -67,7 +67,6 @@ export default Vue.extend({
       return formatLocalDateTime(new Date(date));
     },
     enterKeyDown() {
-      console.log("enter keydown");
       this.$emit("enter");
     },
   },
