@@ -1,11 +1,17 @@
 import { OnApplicationBootstrap } from "@nestjs/common";
-import { Approved, Created, ReadyToReview } from "@overbookd/festival-activity";
+import {
+  Approved,
+  Created,
+  ReadyToReview,
+  Rejected,
+} from "@overbookd/festival-activity";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 
 export type Events = {
   saveCreated(created: Created): Promise<void>;
   saveReadyToReview(readyToReview: ReadyToReview): Promise<void>;
   saveApproved(approved: Approved): Promise<void>;
+  saveRejected(rejected: Rejected): Promise<void>;
 };
 
 export class HistoryService implements OnApplicationBootstrap {
@@ -24,6 +30,9 @@ export class HistoryService implements OnApplicationBootstrap {
     this.eventStore.approvedFestivalActivity.subscribe((event) =>
       this.persistApproved(event),
     );
+    this.eventStore.rejectedFestivalActivity.subscribe((event) =>
+      this.persistRejected(event),
+    );
   }
 
   async persistCreated(created: Created) {
@@ -36,5 +45,9 @@ export class HistoryService implements OnApplicationBootstrap {
 
   async persistApproved(approved: Approved) {
     await this.events.saveApproved(approved);
+  }
+
+  async persistRejected(rejected: Rejected) {
+    this.events.saveRejected(rejected);
   }
 }

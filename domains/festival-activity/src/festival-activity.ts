@@ -3,11 +3,16 @@ import { DraftGeneral, General } from "./sections/general";
 import { DraftSigna, Signa } from "./sections/signa";
 import { Supply } from "./sections/supply";
 import { Inquiry } from "./sections/inquiry";
-import { InReviewReviews, ValidatedReviews } from "./sections/reviews";
+import {
+  InReviewReviews,
+  RefusedReviews,
+  ValidatedReviews,
+} from "./sections/reviews";
 
 export const DRAFT = "DRAFT";
 export const IN_REVIEW = "IN_REVIEW";
 export const VALIDATED = "VALIDATED";
+export const REFUSED = "REFUSED";
 
 type Security = {
   specialNeed: string | null;
@@ -47,12 +52,17 @@ export type InReview = ReviewableBase & {
   reviews: InReviewReviews;
 };
 
-type Validated = ReviewableBase & {
+export type Validated = ReviewableBase & {
   status: typeof VALIDATED;
   reviews: ValidatedReviews;
 };
 
-export type Reviewable = InReview | Validated;
+export type Refused = ReviewableBase & {
+  status: typeof REFUSED;
+  reviews: RefusedReviews;
+};
+
+export type Reviewable = InReview | Validated | Refused;
 
 export type FestivalActivity = Draft | Reviewable;
 
@@ -73,7 +83,15 @@ type ValidatedPreview = PreviewReviewableBase & {
   reviews: Validated["reviews"];
 };
 
-export type PreviewReviewable = InReviewPreview | ValidatedPreview;
+type RefusedPreview = PreviewReviewableBase & {
+  status: Refused["status"];
+  reviews: Refused["reviews"];
+};
+
+export type PreviewReviewable =
+  | InReviewPreview
+  | ValidatedPreview
+  | RefusedPreview;
 
 export type PreviewDraft = {
   id: Draft["id"];

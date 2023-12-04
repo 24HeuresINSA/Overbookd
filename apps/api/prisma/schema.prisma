@@ -667,6 +667,7 @@ enum FestivalActivityStatus {
   DRAFT
   IN_REVIEW
   VALIDATED
+  REFUSED
 
   @@map("festival_activity_status")
 }
@@ -804,6 +805,7 @@ enum FestivalActivityReviewStatus {
   REVIEWING
   NOT_ASKING_TO_REVIEW
   APPROVED
+  REJECTED
 
   @@map("festival_activity_review_status")
 }
@@ -817,6 +819,7 @@ model FestivalActivityHistory {
   fa           FestivalActivity      @relation(fields: [faId], references: [id], onDelete: Cascade)
   snapshot     Json
   at           DateTime
+  reason       String?               @db.Text
 
   @@map("festival_activity_history")
 }
@@ -825,6 +828,7 @@ enum FestivalActivityEvent {
   CREATED
   READY_TO_REVIEW
   APPROVED
+  REJECTED
 
   @@map("festival_activity_event")
 }

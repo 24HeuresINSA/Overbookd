@@ -1,4 +1,4 @@
-import { Draft, Reviewable } from "./festival-activity";
+import { Draft, Refused, Reviewable } from "./festival-activity";
 import { Adherent } from "./sections/in-charge";
 
 export type Created = {
@@ -22,6 +22,14 @@ export type Approved = {
   id: Reviewable["id"];
 };
 
+export type Rejected = {
+  festivalActivity: Refused;
+  by: Adherent["id"];
+  at: Date;
+  id: Reviewable["id"];
+  reason: string;
+};
+
 export class FestivalActivityEvents {
   static created(festivalActivity: Draft, by: Adherent["id"]): Created {
     const at = this.computeAt();
@@ -39,6 +47,15 @@ export class FestivalActivityEvents {
   static approved(festivalActivity: Reviewable, by: Adherent["id"]): Approved {
     const at = this.computeAt();
     return { festivalActivity, by, at, id: festivalActivity.id };
+  }
+
+  static rejected(
+    festivalActivity: Refused,
+    by: Adherent["id"],
+    reason: string,
+  ): Rejected {
+    const at = this.computeAt();
+    return { festivalActivity, by, at, id: festivalActivity.id, reason };
   }
 
   private static computeAt() {

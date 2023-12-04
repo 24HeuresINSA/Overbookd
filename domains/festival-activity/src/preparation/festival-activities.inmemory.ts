@@ -9,10 +9,11 @@ import {
   isDraft,
   VALIDATED,
   IN_REVIEW,
+  REFUSED,
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
-import { isValidatedReviews } from "../sections/reviews";
+import { isRefusedReviews, isValidatedReviews } from "../sections/reviews";
 
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
@@ -66,9 +67,14 @@ function generateInReviewPreview(
     team: festivalActivity.inCharge.team,
   };
   const { reviews } = festivalActivity;
+
   if (isValidatedReviews(reviews)) {
     return { ...base, reviews, status: VALIDATED };
   }
+  if (isRefusedReviews(reviews)) {
+    return { ...base, reviews, status: REFUSED };
+  }
+
   return { ...base, reviews, status: IN_REVIEW };
 }
 

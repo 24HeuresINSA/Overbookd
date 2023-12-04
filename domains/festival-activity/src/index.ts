@@ -8,7 +8,13 @@ export type {
   PreviewFestivalActivity,
   Feedback,
 } from "./festival-activity";
-export { DRAFT, IN_REVIEW, VALIDATED, isDraft } from "./festival-activity";
+export {
+  DRAFT,
+  IN_REVIEW,
+  VALIDATED,
+  REFUSED,
+  isDraft,
+} from "./festival-activity";
 export { FestivalActivityError } from "./festival-activity.error";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
@@ -81,10 +87,12 @@ export type {
   InReviewReviews,
   ValidatedReviews,
   ApprovalReviewStatus,
+  ReviewingStatus,
 } from "./sections/reviews";
 export {
   APPROVED,
   REVIEWING,
+  REJECTED,
   NOT_ASKING_TO_REVIEW,
   humain,
   communication,
@@ -94,6 +102,7 @@ export {
   elec,
   barrieres,
   isValidatedReviews,
+  isRefusedReviews,
 } from "./sections/reviews";
 
 // CREATION
@@ -144,4 +153,5 @@ export type {
   Created,
   ReadyToReview,
   Approved,
+  Rejected,
 } from "./festival-activity.event";

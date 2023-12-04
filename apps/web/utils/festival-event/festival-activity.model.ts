@@ -14,17 +14,20 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
+  REFUSED,
   VALIDATED,
 } from "@overbookd/festival-activity";
 
 export const BROUILLON = "Brouillon";
 const RELECTURE_EN_COURS = "Relecture en cours";
 const VALIDEE = "Validée";
+const REFUSEE = "Refusée";
 
 export type FaStatusLabel =
   | typeof BROUILLON
   | typeof RELECTURE_EN_COURS
-  | typeof VALIDEE;
+  | typeof VALIDEE
+  | typeof REFUSEE;
 
 export const faStatusLabels = new Map<
   FestivalActivity["status"],
@@ -33,6 +36,7 @@ export const faStatusLabels = new Map<
   [DRAFT, BROUILLON],
   [IN_REVIEW, RELECTURE_EN_COURS],
   [VALIDATED, VALIDEE],
+  [REFUSED, REFUSEE],
 ]);
 
 export const activityCategories = [

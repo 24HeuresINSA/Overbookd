@@ -25,6 +25,8 @@ import {
   signa,
   isValidatedReviews,
   VALIDATED,
+  isRefusedReviews,
+  REFUSED,
 } from "@overbookd/festival-activity";
 
 type DatabaseReview = {
@@ -191,17 +193,26 @@ class ReviewableBuilder
       return DraftBuilder.init(activityWithoutStatus);
     }
     const { reviews } = activityWithoutStatus;
-    if (!isValidatedReviews(reviews)) {
+
+    if (isValidatedReviews(reviews)) {
       return new ReviewableBuilder({
         ...activityWithoutStatus,
-        status: IN_REVIEW,
+        status: VALIDATED,
+        reviews,
+      });
+    }
+    if (isRefusedReviews(reviews)) {
+      return new ReviewableBuilder({
+        ...activityWithoutStatus,
+        status: REFUSED,
+        reviews,
       });
     }
 
     return new ReviewableBuilder({
       ...activityWithoutStatus,
+      status: IN_REVIEW,
       reviews,
-      status: VALIDATED,
     });
   }
 
@@ -213,14 +224,15 @@ class ReviewableBuilder
       team: this.activity.inCharge.team,
     };
     const { reviews } = this.activity;
+
     if (isValidatedReviews(reviews)) {
       return { ...base, reviews, status: VALIDATED };
     }
-    return {
-      ...base,
-      status: IN_REVIEW,
-      reviews,
-    };
+    if (isRefusedReviews(reviews)) {
+      return { ...base, reviews, status: REFUSED };
+    }
+
+    return { ...base, status: IN_REVIEW, reviews };
   }
 
   get festivalActivity() {
