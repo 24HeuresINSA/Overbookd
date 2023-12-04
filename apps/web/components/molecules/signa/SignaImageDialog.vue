@@ -17,16 +17,18 @@
       />
     </v-card-text>
     <v-card-actions>
-      <v-btn text @click="uploadSignaImage()">Enregistrer </v-btn>
+      <v-btn text :disabled="isImageValid" @click="uploadSignaImage">
+        Enregistrer
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
 import { signageTypes } from "@overbookd/signa";
+import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
 import Vue from "vue";
 
-const MAX_SIZE = 1024 * 1024 * 2;
 
 export default Vue.extend({
   name: "SignaImageDialog",
@@ -41,15 +43,7 @@ export default Vue.extend({
   },
   data: () => ({
     signaImage: undefined as File | undefined,
-    rules: [
-      (value?: File) => !!value || "Une photo vide c'est pas une photo",
-      (value?: File) => (value?.size ?? 0) < MAX_SIZE || "Moins de 2 Mb stp 🙏",
-      (value?: File) => {
-        const extensions = ["image/png", "image/jpeg", "image/gif"];
-        const isSupportedFile = !!value && extensions.includes(value.type);
-        return isSupportedFile || "Seulement des images (png, jpeg ou gif)";
-      },
-    ],
+    rules: imageRules(),
   }),
   computed: {
     type() {
@@ -60,6 +54,9 @@ export default Vue.extend({
     },
     me() {
       return this.$accessor.user.me;
+    },
+    isImageValid(): boolean {
+      return !isImageValid(this.signaImage);
     },
   },
   methods: {

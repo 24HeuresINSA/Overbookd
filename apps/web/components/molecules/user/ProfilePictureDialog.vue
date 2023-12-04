@@ -12,7 +12,9 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn text @click="uploadProfilePicture()">Enregistrer</v-btn>
+        <v-btn text :disabled="isImageValid" @click="uploadProfilePicture">
+          Enregistrer
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -20,22 +22,14 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
 
-const MAX_SIZE = 1024 * 1024 * 2;
 
 export default Vue.extend({
   name: "ProfilePictureDialog",
   data: () => ({
     profilePicture: undefined as File | undefined,
-    rules: [
-      (value?: File) => !!value || "Une photo vide c'est pas une photo",
-      (value?: File) => (value?.size ?? 0) < MAX_SIZE || "Moins de 2 Mb stp 🙏",
-      (value?: File) => {
-        const extensions = ["image/png", "image/jpeg", "image/gif"];
-        const isSupportedFile = !!value && extensions.includes(value.type);
-        return isSupportedFile || "Seulement des images (png, jpeg ou gif)";
-      },
-    ],
+    rules: imageRules(),
   }),
   computed: {
     type() {
@@ -62,6 +56,9 @@ export default Vue.extend({
           this.$store.dispatch("dialog/closeDialog");
         }
       },
+    },
+    isImageValid(): boolean {
+      return !isImageValid(this.profilePicture);
     },
   },
   methods: {
