@@ -1,4 +1,9 @@
-import { FestivalActivity, IN_REVIEW, Reviewable } from "../festival-activity";
+import {
+  FestivalActivity,
+  IN_REVIEW,
+  InReview,
+  Reviewable,
+} from "../festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
@@ -49,7 +54,7 @@ const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
 export type FestivalActivityWithoutStatus = Omit<FestivalActivity, "status">;
 export type InReviewWithoutStatus = Omit<Reviewable, "status">;
 
-export class InReviewSpecification {
+export class ReviewableSpecification {
   static isSatisfiedBy(
     festivalActivity: FestivalActivityWithoutStatus,
   ): festivalActivity is InReviewWithoutStatus {
@@ -83,17 +88,17 @@ export class InReviewSpecification {
   }
 }
 
-export class InReviewFestivalActivity implements Reviewable {
+export class InReviewFestivalActivity implements InReview {
   private constructor(
-    readonly id: Reviewable["id"],
-    readonly general: Reviewable["general"],
-    readonly inCharge: Reviewable["inCharge"],
-    readonly signa: Reviewable["signa"],
-    readonly security: Reviewable["security"],
-    readonly supply: Reviewable["supply"],
-    readonly inquiry: Reviewable["inquiry"],
-    readonly reviews: Reviewable["reviews"],
-    readonly feedbacks: Reviewable["feedbacks"],
+    readonly id: InReview["id"],
+    readonly general: InReview["general"],
+    readonly inCharge: InReview["inCharge"],
+    readonly signa: InReview["signa"],
+    readonly security: InReview["security"],
+    readonly supply: InReview["supply"],
+    readonly inquiry: InReview["inquiry"],
+    readonly reviews: InReview["reviews"],
+    readonly feedbacks: InReview["feedbacks"],
   ) {}
 
   get status(): typeof IN_REVIEW {
@@ -101,8 +106,8 @@ export class InReviewFestivalActivity implements Reviewable {
   }
 
   static init(activity: FestivalActivity): InReviewFestivalActivity {
-    if (!InReviewSpecification.isSatisfiedBy(activity)) {
-      throw InReviewSpecification.generateError(activity);
+    if (!ReviewableSpecification.isSatisfiedBy(activity)) {
+      throw ReviewableSpecification.generateError(activity);
     }
 
     const isPublic = activity.general.toPublish;

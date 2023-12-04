@@ -56,14 +56,24 @@ export type Reviewable = InReview | Validated;
 
 export type FestivalActivity = Draft | Reviewable;
 
-export type PreviewReviewable = {
+type PreviewReviewableBase = {
   id: Reviewable["id"];
   name: Reviewable["general"]["name"];
-  status: Reviewable["status"];
   adherent: Reviewable["inCharge"]["adherent"];
   team: Reviewable["inCharge"]["team"];
-  reviews: Reviewable["reviews"];
 };
+
+type InReviewPreview = PreviewReviewableBase & {
+  status: InReview["status"];
+  reviews: InReview["reviews"];
+};
+
+type ValidatedPreview = PreviewReviewableBase & {
+  status: Validated["status"];
+  reviews: Validated["reviews"];
+};
+
+export type PreviewReviewable = InReviewPreview | ValidatedPreview;
 
 export type PreviewDraft = {
   id: Draft["id"];
