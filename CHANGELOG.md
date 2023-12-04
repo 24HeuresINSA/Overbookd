@@ -1,3 +1,40 @@
+## [2.8.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.7.1...v2.8.0) (2023-12-04)
+
+
+### Features
+
+* **festival-activity:** handle list items life cycle. [#1371](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1371) ([bd540d0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bd540d0ab34e34f6ea3e313ceddea5ba82614d35))
+* **festival-activity:** persist lifecycle events logs. [#1366](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1366) ([3793185](https://gitlab.com/24-heures-insa/overbookd-mono/commit/379318578cb0209ea2478a66c381798f9fdcefb2))
+* **festival-activity:** set VALIDATED when all required reviewers APPROVED. [#1334](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1334) ([ed4699f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed4699f2e38beb45a279e473a2e2a9b9a17eb773))
+
+
+### Bug Fixes
+
+* **fa:** added the interrogation point [#1367](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1367) ([239ab06](https://gitlab.com/24-heures-insa/overbookd-mono/commit/239ab06319f329f7f09f8bb0e8749ab94cafb5a7))
+* **festival-activity:** lock validated sections except inquiry. [#1334](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1334) ([f0dd993](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f0dd99392101926111ed5f942cd80a2c27ef514e))
+* **festival-activity:** time window & signage form [#1373](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1373) ([b27766e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b27766edd394f5772ce0b70e4b8b3c7bf979a3b7))
+* **personal-account:** accent insensitive user search [#1349](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1349) ([c5030cb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c5030cbbacebf2419c552fa63f700e77db83eb7d))
+* **web:** display multiline messages. [#1387](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1387) ([98d7a83](https://gitlab.com/24-heures-insa/overbookd-mono/commit/98d7a835881811e5a898a74ab85a60685f18382e))
+
+
+### Pre-Features
+
+* **festival-activity:** add inquiry timewindows [#1356](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1356) ([67b68f5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/67b68f502bc58085e6b3b28469b8688935122b4b))
+* **festival-activity:** add time window form [#1358](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1358) ([ec167f1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ec167f1d7d542ff62b1660d6206b3a36e69b9088))
+* **festival-activity:** Implement feedbacks in domain et api [#1355](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1355) ([c69846a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c69846a8cc70cb302ac46993dcf47dc8393c9c9f))
+* **festival-activity:** implement find & findAll in api [#1345](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1345) ([4bb9251](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4bb9251efe315833df5f1e20b26ad38533d8f654))
+* **festival-activity:** open fa page & refactor general section [#1352](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1352) ([92fc27b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/92fc27bd3b7a43650d11881c5edb96117d479b2a))
+* **festival-activity:** publish feedback. [#1369](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1369) ([99d575b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/99d575bb05f9c87e75293395db479ae5482cf869))
+
+
+### Refactor
+
+* **fesitval-activity:** remove old components [#1378](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1378) ([dd9f9a2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dd9f9a269a6494291f80bfc1bf3e51dc61221a9a))
+* **festival-activity:** signage form [#1359](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1359) ([eacbc13](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eacbc131c92d84b00c5ae88f23e1ba3a5fbad57d))
+* **festival-activity:** signageTypes variable in dtos. [#1371](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1371) ([71a2a73](https://gitlab.com/24-heures-insa/overbookd-mono/commit/71a2a731d50fe426ee2c57a0199fcd53d5448f36))
+* **festival-activity:** update signa & security card [#1353](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1353) ([ed1be12](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed1be128ff01cedc500d18ffb0fe3f33b9fc2e90))
+* **festival-activity:** update supply & inquiry card [#1354](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1354) ([d0745b3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d0745b398429e12fc165f686118fe2dcb9f5b640))
+
 ## [2.7.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.7.0...v2.7.1) (2023-11-28)
 
 
