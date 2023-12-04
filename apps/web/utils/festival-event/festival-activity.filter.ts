@@ -6,6 +6,7 @@ import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
   ReviewStatus,
+  VALIDATED,
 } from "@overbookd/festival-activity";
 import { Team } from "../models/team.model";
 
@@ -135,6 +136,8 @@ export function findStatus(
   switch (status) {
     case IN_REVIEW:
       return IN_REVIEW;
+    case VALIDATED:
+      return VALIDATED;
     case DRAFT:
     default:
       return DRAFT;
