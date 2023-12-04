@@ -1,10 +1,10 @@
 export type {
   Draft,
-  InReview,
+  Reviewable,
   FestivalActivity,
   CreateFestivalActivityForm,
   PreviewDraft,
-  PreviewInReview,
+  PreviewReviewable,
   PreviewFestivalActivity,
   Feedback,
 } from "./festival-activity";

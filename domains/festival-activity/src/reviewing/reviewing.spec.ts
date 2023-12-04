@@ -36,6 +36,7 @@ import {
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
+import { VALIDATED } from "../festival-activity";
 
 const factory = getFactory();
 
@@ -79,6 +80,28 @@ const withSomeValidInquiries = factory
     barriers: [{ ...quinzeVaubans, drive: PARKING_EIFFEL }],
   })
   .build();
+const privateWithAllApprovedExceptSecurity = factory
+  .inReview("Private all approved except security")
+  .withReviews({
+    humain: APPROVED,
+    matos: APPROVED,
+    elec: APPROVED,
+    barrieres: APPROVED,
+    signa: APPROVED,
+  })
+  .build();
+const publicWithAllApprovedExceptCommunication = factory
+  .inReview("Public all approved except communication")
+  .asPublic()
+  .withReviews({
+    humain: APPROVED,
+    matos: APPROVED,
+    elec: APPROVED,
+    barrieres: APPROVED,
+    signa: APPROVED,
+    secu: APPROVED,
+  })
+  .build();
 
 describe("Approve festival activity", () => {
   let reviewing: Reviewing;
@@ -92,6 +115,8 @@ describe("Approve festival activity", () => {
       withInvalidElectricityInquiries,
       withInvalidBarrierInquiries,
       withSomeValidInquiries,
+      privateWithAllApprovedExceptSecurity,
+      publicWithAllApprovedExceptCommunication,
     ]);
     reviewing = new Reviewing(festivalActivities);
   });
@@ -185,6 +210,24 @@ describe("Approve festival activity", () => {
           async () =>
             await reviewing.approve(activityId, reviewer, approver.id),
         ).rejects.toThrow(ShouldAssignDrive);
+      });
+    },
+  );
+
+  describe.each`
+    activityName                                             | activityId                                     | reviewer         | approver
+    ${privateWithAllApprovedExceptSecurity.general.name}     | ${privateWithAllApprovedExceptSecurity.id}     | ${secu}          | ${noel}
+    ${publicWithAllApprovedExceptCommunication.general.name} | ${publicWithAllApprovedExceptCommunication.id} | ${communication} | ${george}
+  `(
+    "when $secu approved $activityName",
+    ({ activityId, reviewer, approver }) => {
+      it("should update festival activity status to VALIDATED", async () => {
+        const { festivalActivity } = await reviewing.approve(
+          activityId,
+          reviewer,
+          approver,
+        );
+        expect(festivalActivity.status).toBe(VALIDATED);
       });
     },
   );

@@ -3,9 +3,9 @@ import {
   PreviewFestivalActivity,
   FestivalActivity,
   Draft,
-  InReview,
+  Reviewable,
   PreviewDraft,
-  PreviewInReview,
+  PreviewReviewable,
   isDraft,
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
@@ -53,7 +53,7 @@ function generatePreview<T extends FestivalActivity>(
     : generateInReviewPreview(festivalActivity);
 }
 
-function generateInReviewPreview(festivalActivity: InReview): PreviewInReview {
+function generateInReviewPreview(festivalActivity: Reviewable): PreviewReviewable {
   return {
     id: festivalActivity.id,
     name: festivalActivity.general.name,

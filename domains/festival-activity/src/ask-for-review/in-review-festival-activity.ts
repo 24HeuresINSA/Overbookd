@@ -1,4 +1,4 @@
-import { FestivalActivity, IN_REVIEW, InReview } from "../festival-activity";
+import { FestivalActivity, IN_REVIEW, Reviewable } from "../festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
@@ -47,7 +47,7 @@ const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
 };
 
 export type FestivalActivityWithoutStatus = Omit<FestivalActivity, "status">;
-export type InReviewWithoutStatus = Omit<InReview, "status">;
+export type InReviewWithoutStatus = Omit<Reviewable, "status">;
 
 export class InReviewSpecification {
   static isSatisfiedBy(
@@ -83,17 +83,17 @@ export class InReviewSpecification {
   }
 }
 
-export class InReviewFestivalActivity implements InReview {
+export class InReviewFestivalActivity implements Reviewable {
   private constructor(
-    readonly id: InReview["id"],
-    readonly general: InReview["general"],
-    readonly inCharge: InReview["inCharge"],
-    readonly signa: InReview["signa"],
-    readonly security: InReview["security"],
-    readonly supply: InReview["supply"],
-    readonly inquiry: InReview["inquiry"],
-    readonly reviews: InReview["reviews"],
-    readonly feedbacks: InReview["feedbacks"],
+    readonly id: Reviewable["id"],
+    readonly general: Reviewable["general"],
+    readonly inCharge: Reviewable["inCharge"],
+    readonly signa: Reviewable["signa"],
+    readonly security: Reviewable["security"],
+    readonly supply: Reviewable["supply"],
+    readonly inquiry: Reviewable["inquiry"],
+    readonly reviews: Reviewable["reviews"],
+    readonly feedbacks: Reviewable["feedbacks"],
   ) {}
 
   get status(): typeof IN_REVIEW {

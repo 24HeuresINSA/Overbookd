@@ -1,4 +1,4 @@
-import { Draft, InReview } from "./festival-activity";
+import { Draft, Reviewable } from "./festival-activity";
 import { Adherent } from "./sections/in-charge";
 
 export type Created = {
@@ -9,17 +9,17 @@ export type Created = {
 };
 
 export type ReadyToReview = {
-  festivalActivity: InReview;
+  festivalActivity: Reviewable;
   by: Adherent["id"];
   at: Date;
-  id: InReview["id"];
+  id: Reviewable["id"];
 };
 
 export type Approved = {
-  festivalActivity: InReview;
+  festivalActivity: Reviewable;
   by: Adherent["id"];
   at: Date;
-  id: InReview["id"];
+  id: Reviewable["id"];
 };
 
 export class FestivalActivityEvents {
@@ -29,14 +29,14 @@ export class FestivalActivityEvents {
   }
 
   static readyToReview(
-    festivalActivity: InReview,
+    festivalActivity: Reviewable,
     by: Adherent["id"],
   ): ReadyToReview {
     const at = this.computeAt();
     return { festivalActivity, by, at, id: festivalActivity.id };
   }
 
-  static approved(festivalActivity: InReview, by: Adherent["id"]): Approved {
+  static approved(festivalActivity: Reviewable, by: Adherent["id"]): Approved {
     const at = this.computeAt();
     return { festivalActivity, by, at, id: festivalActivity.id };
   }

@@ -1,4 +1,10 @@
-import { FestivalActivity, InReview, isDraft } from "../festival-activity";
+import {
+  FestivalActivity,
+  IN_REVIEW,
+  Reviewable,
+  VALIDATED,
+  isDraft,
+} from "../festival-activity";
 import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
@@ -8,6 +14,7 @@ import {
   communication,
   elec,
   humain,
+  isValidatedReviews,
   matos,
   secu,
   signa,
@@ -25,7 +32,7 @@ import { Approved, FestivalActivityEvents } from "../festival-activity.event";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
-  save(festivalActivity: InReview): Promise<InReview>;
+  save(festivalActivity: Reviewable): Promise<Reviewable>;
 };
 
 export class Reviewing {
@@ -52,15 +59,30 @@ export class Reviewing {
     }
 
     const reviews = { ...festivalActivity.reviews, [team]: APPROVED };
-    const saved = await this.festivalActivities.save({
-      ...festivalActivity,
-      reviews,
-    });
+    const saved = await this.saveFestivalActivity(festivalActivity, reviews);
     return FestivalActivityEvents.approved(saved, approverId);
   }
 
+  private async saveFestivalActivity(
+    storedActivity: Reviewable,
+    reviews: Reviewable["reviews"],
+  ): Promise<Reviewable> {
+    if (isValidatedReviews(reviews)) {
+      return this.festivalActivities.save({
+        ...storedActivity,
+        status: VALIDATED,
+        reviews,
+      });
+    }
+    return this.festivalActivities.save({
+      ...storedActivity,
+      status: IN_REVIEW,
+      reviews,
+    });
+  }
+
   private checkInquiryDriveAssignment(
-    festivalActivity: InReview,
+    festivalActivity: Reviewable,
     owner: InquiryOwner,
   ) {
     const requests = selectMyInquiryRequests(owner, festivalActivity);
@@ -72,12 +94,12 @@ export class Reviewing {
     }
   }
 
-  private isAlreadyApprovedBy(festivalActivity: InReview, team: Reviewer) {
+  private isAlreadyApprovedBy(festivalActivity: Reviewable, team: Reviewer) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === APPROVED;
   }
 
-  private isNotAskingToReview(festivalActivity: InReview, team: Reviewer) {
+  private isNotAskingToReview(festivalActivity: Reviewable, team: Reviewer) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === NOT_ASKING_TO_REVIEW;
   }
@@ -104,7 +126,7 @@ function getTeamReview(reviews: Reviews, team: Reviewer) {
 
 function selectMyInquiryRequests(
   owner: InquiryOwner,
-  festivalActivity: InReview,
+  festivalActivity: Reviewable,
 ) {
   switch (owner) {
     case MATOS:
