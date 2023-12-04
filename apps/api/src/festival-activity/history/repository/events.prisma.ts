@@ -1,4 +1,9 @@
-import { Approved, Created, ReadyToReview } from "@overbookd/festival-activity";
+import {
+  Approved,
+  Created,
+  ReadyToReview,
+  Rejected,
+} from "@overbookd/festival-activity";
 import { Events } from "../history.service";
 import { PrismaService } from "../../../prisma.service";
 import { Prisma } from "@prisma/client";
@@ -6,12 +11,15 @@ import { Prisma } from "@prisma/client";
 const CREATED = "CREATED";
 const READY_TO_REVIEW = "READY_TO_REVIEW";
 const APPROVED = "APPROVED";
+const REJECTED = "REJECTED";
 
 type FestivalActivityEventType =
   | typeof CREATED
   | typeof READY_TO_REVIEW
-  | typeof APPROVED;
-type FestivalActivityEvent = Approved | Created | ReadyToReview;
+  | typeof APPROVED
+  | typeof REJECTED;
+
+type FestivalActivityEvent = Approved | Created | ReadyToReview | Rejected;
 
 export class PrismaEvents implements Events {
   constructor(private readonly prisma: PrismaService) {}
@@ -40,6 +48,16 @@ export class PrismaEvents implements Events {
     await this.prisma.festivalActivityHistory.create({
       select: { id: true },
       data,
+    });
+  }
+
+  async saveRejected(rejected: Rejected): Promise<void> {
+    const data = this.generateDatabaseEvent(rejected, REJECTED);
+    const { reason } = rejected;
+
+    await this.prisma.festivalActivityHistory.create({
+      select: { id: true },
+      data: { ...data, reason },
     });
   }
 

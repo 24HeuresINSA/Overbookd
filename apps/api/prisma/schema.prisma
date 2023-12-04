@@ -819,6 +819,7 @@ model FestivalActivityHistory {
   fa           FestivalActivity      @relation(fields: [faId], references: [id], onDelete: Cascade)
   snapshot     Json
   at           DateTime
+  reason       String?               @db.Text
 
   @@map("festival_activity_history")
 }
@@ -827,6 +828,7 @@ enum FestivalActivityEvent {
   CREATED
   READY_TO_REVIEW
   APPROVED
+  REJECTED
 
   @@map("festival_activity_event")
 }

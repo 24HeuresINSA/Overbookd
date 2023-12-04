@@ -153,4 +153,5 @@ export type {
   Created,
   ReadyToReview,
   Approved,
+  Rejected,
 } from "./festival-activity.event";

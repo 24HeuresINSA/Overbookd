@@ -12,7 +12,13 @@ import {
   VOLUNTEER_REGISTERED,
   VolunteerRegistered,
 } from "@overbookd/registration";
-import { Approved, Created, ReadyToReview } from "@overbookd/festival-activity";
+import {
+  Approved,
+  Created,
+  ReadyToReview,
+  Rejected,
+} from "@overbookd/festival-activity";
+import { FESTIVAL_ACTIVITY_REJECTED } from "@overbookd/domain-events/src/festival-activity";
 
 export class DomainEventService {
   private readonly $events = new ReplaySubject<DomainEvent>();
@@ -59,6 +65,12 @@ export class DomainEventService {
 
   get approvedFestivalActivity(): Observable<Approved> {
     return this.listen(FESTIVAL_ACTIVITY_APPROVED).pipe(
+      map(({ data }) => data),
+    );
+  }
+
+  get rejectedFestivalActivity(): Observable<Rejected> {
+    return this.listen(FESTIVAL_ACTIVITY_REJECTED).pipe(
       map(({ data }) => data),
     );
   }

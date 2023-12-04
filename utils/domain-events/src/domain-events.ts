@@ -7,6 +7,7 @@ import {
   FestivalActivityCreatedEvent,
   FestivalActivityApprovedEvent,
   FestivalActivityReadyToReviewEvent,
+  FestivalActivityRejectedEvent,
 } from "./festival-activity";
 
 export type DomainEvent =
@@ -14,7 +15,8 @@ export type DomainEvent =
   | VolunteerRegisteredEvent
   | FestivalActivityCreatedEvent
   | FestivalActivityReadyToReviewEvent
-  | FestivalActivityApprovedEvent;
+  | FestivalActivityApprovedEvent
+  | FestivalActivityRejectedEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,
