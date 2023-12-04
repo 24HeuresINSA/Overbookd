@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Signage, SignageForm } from "@overbookd/signa";
+import { getImage } from "~/utils/image/image.repository";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -14,20 +15,7 @@ export class CatalogSignageRepository {
     context: Context,
     signageId: number,
   ): Promise<string | undefined> {
-    const token = context.$axios.defaults.headers.common["Authorization"];
-    if (!token) return undefined;
-   const response = await fetch(
-     `${process.env.BASE_URL}${this.basePath}/${signageId}/image`,
-     {
-       method: "GET",
-       headers: {
-         Authorization: `${token}`,
-       },
-     },
-   );
-    if (response.status !== 200) return undefined;
-    const url = URL.createObjectURL(await response.blob());
-    return url;
+    return getImage(context, this.basePath, signageId, "image");
   }
 
   static createSignage(context: Context, signageForm: SignageForm) {
