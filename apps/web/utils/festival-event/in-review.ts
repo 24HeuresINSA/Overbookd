@@ -1,5 +1,5 @@
 import {
-  InReview,
+  Reviewable,
   InquiryWithRequests,
   PublicGeneral,
   TimeWindow,
@@ -8,13 +8,13 @@ import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
 function isPublic(
-  general: HttpStringified<InReview["general"]>,
+  general: HttpStringified<Reviewable["general"]>,
 ): general is HttpStringified<PublicGeneral> {
   return general.toPublish === true;
 }
 
 function hasRequests(
-  inquiry: HttpStringified<InReview["inquiry"]>,
+  inquiry: HttpStringified<Reviewable["inquiry"]>,
 ): inquiry is HttpStringified<InquiryWithRequests> {
   const { barriers, electricity, gears } = inquiry;
   const requests = barriers.length + electricity.length + gears.length;
@@ -22,7 +22,7 @@ function hasRequests(
 }
 
 export class CastInReview {
-  static withDate(inReview: HttpStringified<InReview>): InReview {
+  static withDate(inReview: HttpStringified<Reviewable>): Reviewable {
     return {
       ...inReview,
       general: this.generalWithDate(inReview.general),
@@ -32,8 +32,8 @@ export class CastInReview {
   }
 
   private static generalWithDate(
-    general: HttpStringified<InReview["general"]>,
-  ): InReview["general"] {
+    general: HttpStringified<Reviewable["general"]>,
+  ): Reviewable["general"] {
     if (isPublic(general)) {
       return withAtLeastOneTimeWindowWithDate(general);
     }
@@ -43,8 +43,8 @@ export class CastInReview {
   }
 
   private static inquiryWithDate(
-    inquiry: HttpStringified<InReview["inquiry"]>,
-  ): InReview["inquiry"] {
+    inquiry: HttpStringified<Reviewable["inquiry"]>,
+  ): Reviewable["inquiry"] {
     if (hasRequests(inquiry)) {
       return withAtLeastOneTimeWindowWithDate(inquiry);
     }
@@ -54,8 +54,8 @@ export class CastInReview {
   }
 
   private static feedbacksWithDate(
-    feedbacks: HttpStringified<InReview["feedbacks"]>,
-  ): InReview["feedbacks"] {
+    feedbacks: HttpStringified<Reviewable["feedbacks"]>,
+  ): Reviewable["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),
