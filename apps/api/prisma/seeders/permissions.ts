@@ -189,6 +189,7 @@ export const permissions = [
           { teamCode: "matos" },
           { teamCode: "secu" },
           { teamCode: "signa" },
+          { teamCode: "communication" },
         ],
       },
     },
