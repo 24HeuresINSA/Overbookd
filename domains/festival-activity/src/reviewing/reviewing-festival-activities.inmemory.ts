@@ -1,4 +1,4 @@
-import { FestivalActivity, InReview } from "../festival-activity";
+import { FestivalActivity, Reviewable } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { updateItemToList } from "@overbookd/list";
 import { ReviewingFestivalActivities } from "./reviewing";
@@ -14,7 +14,7 @@ export class InMemoryReviewingFestivalActivities
     );
     return Promise.resolve(festivalActivity ?? null);
   }
-  save(festivalActivity: InReview): Promise<InReview> {
+  save(festivalActivity: Reviewable): Promise<Reviewable> {
     const festivalActivityIndex = this.festivalActivities.findIndex(
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,

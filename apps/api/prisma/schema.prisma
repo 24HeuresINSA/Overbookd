@@ -666,6 +666,7 @@ model FestivalActivity {
 enum FestivalActivityStatus {
   DRAFT
   IN_REVIEW
+  VALIDATED
 
   @@map("festival_activity_status")
 }

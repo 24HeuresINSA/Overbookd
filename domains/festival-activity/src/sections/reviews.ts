@@ -35,4 +35,21 @@ export type ReviewStatus =
   | typeof NOT_ASKING_TO_REVIEW
   | typeof APPROVED;
 
-export type Reviews = Record<Reviewer, ReviewStatus>;
+export type ApprovalReviewStatus =
+  | typeof APPROVED
+  | typeof NOT_ASKING_TO_REVIEW;
+
+export type InReviewReviews = Record<Reviewer, ReviewStatus>;
+export type ValidatedReviews = Record<Reviewer, ApprovalReviewStatus>;
+
+export type Reviews = InReviewReviews | ValidatedReviews;
+
+const APPROVAL_REVIEWS = [APPROVED, NOT_ASKING_TO_REVIEW];
+
+export function isValidatedReviews(
+  reviews: Reviews,
+): reviews is ValidatedReviews {
+  return Object.values(reviews).every((review) =>
+    APPROVAL_REVIEWS.includes(review),
+  );
+}

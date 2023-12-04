@@ -3,10 +3,11 @@ import { DraftGeneral, General } from "./sections/general";
 import { DraftSigna, Signa } from "./sections/signa";
 import { Supply } from "./sections/supply";
 import { Inquiry } from "./sections/inquiry";
-import { Reviews } from "./sections/reviews";
+import { InReviewReviews, ValidatedReviews } from "./sections/reviews";
 
 export const DRAFT = "DRAFT";
 export const IN_REVIEW = "IN_REVIEW";
+export const VALIDATED = "VALIDATED";
 
 type Security = {
   specialNeed: string | null;
@@ -30,29 +31,49 @@ export type Draft = {
   feedbacks: Feedback[];
 };
 
-export type InReview = {
+type ReviewableBase = {
   id: number;
-  status: typeof IN_REVIEW;
   general: General;
   inCharge: InCharge;
   signa: Signa;
   security: Security;
   supply: Supply;
   inquiry: Inquiry;
-  reviews: Reviews;
   feedbacks: Feedback[];
 };
 
-export type FestivalActivity = Draft | InReview;
+export type InReview = ReviewableBase & {
+  status: typeof IN_REVIEW;
+  reviews: InReviewReviews;
+};
 
-export type PreviewInReview = {
-  id: InReview["id"];
-  name: InReview["general"]["name"];
+type Validated = ReviewableBase & {
+  status: typeof VALIDATED;
+  reviews: ValidatedReviews;
+};
+
+export type Reviewable = InReview | Validated;
+
+export type FestivalActivity = Draft | Reviewable;
+
+type PreviewReviewableBase = {
+  id: Reviewable["id"];
+  name: Reviewable["general"]["name"];
+  adherent: Reviewable["inCharge"]["adherent"];
+  team: Reviewable["inCharge"]["team"];
+};
+
+type InReviewPreview = PreviewReviewableBase & {
   status: InReview["status"];
-  adherent: InReview["inCharge"]["adherent"];
-  team: InReview["inCharge"]["team"];
   reviews: InReview["reviews"];
 };
+
+type ValidatedPreview = PreviewReviewableBase & {
+  status: Validated["status"];
+  reviews: Validated["reviews"];
+};
+
+export type PreviewReviewable = InReviewPreview | ValidatedPreview;
 
 export type PreviewDraft = {
   id: Draft["id"];
@@ -62,7 +83,7 @@ export type PreviewDraft = {
   team: Draft["inCharge"]["team"];
 };
 
-export type PreviewFestivalActivity = PreviewInReview | PreviewDraft;
+export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
 
 export type CreateFestivalActivityForm = {
   name: string;

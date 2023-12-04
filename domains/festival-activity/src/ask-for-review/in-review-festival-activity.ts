@@ -1,4 +1,9 @@
-import { FestivalActivity, IN_REVIEW, InReview } from "../festival-activity";
+import {
+  FestivalActivity,
+  IN_REVIEW,
+  InReview,
+  Reviewable,
+} from "../festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
@@ -47,9 +52,9 @@ const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
 };
 
 export type FestivalActivityWithoutStatus = Omit<FestivalActivity, "status">;
-export type InReviewWithoutStatus = Omit<InReview, "status">;
+export type InReviewWithoutStatus = Omit<Reviewable, "status">;
 
-export class InReviewSpecification {
+export class ReviewableSpecification {
   static isSatisfiedBy(
     festivalActivity: FestivalActivityWithoutStatus,
   ): festivalActivity is InReviewWithoutStatus {
@@ -101,8 +106,8 @@ export class InReviewFestivalActivity implements InReview {
   }
 
   static init(activity: FestivalActivity): InReviewFestivalActivity {
-    if (!InReviewSpecification.isSatisfiedBy(activity)) {
-      throw InReviewSpecification.generateError(activity);
+    if (!ReviewableSpecification.isSatisfiedBy(activity)) {
+      throw ReviewableSpecification.generateError(activity);
     }
 
     const isPublic = activity.general.toPublish;

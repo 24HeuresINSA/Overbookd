@@ -3,13 +3,16 @@ import {
   PreviewFestivalActivity,
   FestivalActivity,
   Draft,
-  InReview,
+  Reviewable,
   PreviewDraft,
-  PreviewInReview,
+  PreviewReviewable,
   isDraft,
+  VALIDATED,
+  IN_REVIEW,
 } from "../festival-activity";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
+import { isValidatedReviews } from "../sections/reviews";
 
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
@@ -53,15 +56,20 @@ function generatePreview<T extends FestivalActivity>(
     : generateInReviewPreview(festivalActivity);
 }
 
-function generateInReviewPreview(festivalActivity: InReview): PreviewInReview {
-  return {
+function generateInReviewPreview(
+  festivalActivity: Reviewable,
+): PreviewReviewable {
+  const base = {
     id: festivalActivity.id,
     name: festivalActivity.general.name,
-    status: festivalActivity.status,
     adherent: festivalActivity.inCharge.adherent,
     team: festivalActivity.inCharge.team,
-    reviews: festivalActivity.reviews,
   };
+  const { reviews } = festivalActivity;
+  if (isValidatedReviews(reviews)) {
+    return { ...base, reviews, status: VALIDATED };
+  }
+  return { ...base, reviews, status: IN_REVIEW };
 }
 
 function generateDraftPreview(festivalActivity: Draft): PreviewDraft {

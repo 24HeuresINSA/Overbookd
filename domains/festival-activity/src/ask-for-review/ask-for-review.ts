@@ -1,6 +1,6 @@
 import { FestivalActivityNotFound, Review } from "../festival-activity.error";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
-import { FestivalActivity, InReview, isDraft } from "../festival-activity";
+import { FestivalActivity, Reviewable, isDraft } from "../festival-activity";
 import { Reviewer, WaitingForReview } from "../sections/reviews";
 import { Adherent } from "../sections/in-charge";
 import {
@@ -10,7 +10,7 @@ import {
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
-  save(festivalActivity: InReview): Promise<InReview>;
+  save(festivalActivity: Reviewable): Promise<Reviewable>;
 };
 
 export type Notifyee = {

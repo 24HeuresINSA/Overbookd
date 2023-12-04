@@ -1,4 +1,4 @@
-import { InReview } from "../festival-activity";
+import { Reviewable } from "../festival-activity";
 import { getFactory } from "../festival-activity.factory";
 import {
   friday18hToMonday00h,
@@ -64,7 +64,7 @@ export const escapeGame = factory
   .withSupply({ electricity: [lumiere, enceinte] })
   .build();
 
-export const pcSecurite: InReview = factory
+export const pcSecurite: Reviewable = factory
   .inReview("Pc Securite")
   .withGeneral({
     description: "Maintenir l'ordre est indispensable",

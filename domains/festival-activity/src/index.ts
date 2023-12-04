@@ -1,14 +1,14 @@
 export type {
   Draft,
-  InReview,
+  Reviewable,
   FestivalActivity,
   CreateFestivalActivityForm,
   PreviewDraft,
-  PreviewInReview,
+  PreviewReviewable,
   PreviewFestivalActivity,
   Feedback,
 } from "./festival-activity";
-export { DRAFT, IN_REVIEW, isDraft } from "./festival-activity";
+export { DRAFT, IN_REVIEW, VALIDATED, isDraft } from "./festival-activity";
 export { FestivalActivityError } from "./festival-activity.error";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
@@ -78,6 +78,9 @@ export type {
   ReviewStatus,
   Reviewer,
   WaitingForReview,
+  InReviewReviews,
+  ValidatedReviews,
+  ApprovalReviewStatus,
 } from "./sections/reviews";
 export {
   APPROVED,
@@ -90,6 +93,7 @@ export {
   matos,
   elec,
   barrieres,
+  isValidatedReviews,
 } from "./sections/reviews";
 
 // CREATION
@@ -128,7 +132,7 @@ export type {
   FestivalActivityWithoutStatus,
   InReviewWithoutStatus,
 } from "./ask-for-review/in-review-festival-activity";
-export { InReviewSpecification } from "./ask-for-review/in-review-festival-activity";
+export { ReviewableSpecification } from "./ask-for-review/in-review-festival-activity";
 export { AskForReview } from "./ask-for-review/ask-for-review";
 export type {
   AskForReviewFestivalActivityRepository,

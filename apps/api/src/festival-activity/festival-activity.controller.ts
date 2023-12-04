@@ -56,8 +56,9 @@ import {
   UpdateSignageRequestDto,
 } from "./dto/update-festival-activity.request.dto";
 import {
-  PreviewDraftFestivalActivityResponseDto,
-  PreviewInReviewFestivalActivityResponseDto,
+  DraftPreviewFestivalActivityResponseDto,
+  InReviewPreviewFestivalActivityResponseDto,
+  ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
 import { PeriodDto } from "./dto/period.dto";
 import { FestivalActivityErrorFilter } from "./festival-activity-error.filter";
@@ -85,8 +86,9 @@ export class FestivalActivityController {
     description: "All festival activities",
     schema: {
       oneOf: [
-        { $ref: getSchemaPath(PreviewDraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(PreviewInReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(DraftPreviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewPreviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedPreviewFestivalActivityResponseDto) },
       ],
     },
     isArray: true,

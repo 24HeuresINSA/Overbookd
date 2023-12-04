@@ -3,7 +3,12 @@ import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Contractors } from "./section-aggregates/contractors";
 import { TimeWindows } from "./section-aggregates/time-windows";
 import { IProvidePeriod } from "@overbookd/period";
-import { FestivalActivity, InReview } from "../festival-activity";
+import {
+  FestivalActivity,
+  IN_REVIEW,
+  Reviewable,
+  VALIDATED,
+} from "../festival-activity";
 import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
@@ -14,6 +19,7 @@ import {
   communication,
   elec,
   humain,
+  isValidatedReviews,
   matos,
   secu,
   signa,
@@ -82,9 +88,9 @@ type isValidatedBy = {
 };
 
 class General {
-  private constructor(private readonly general: InReview["general"]) {}
+  private constructor(private readonly general: Reviewable["general"]) {}
 
-  static init(general: InReview["general"]): General {
+  static init(general: Reviewable["general"]): General {
     return new General(general);
   }
 
@@ -98,7 +104,7 @@ class General {
     }
   }
 
-  update(form: PrepareGeneralUpdate): InReview["general"] {
+  update(form: PrepareGeneralUpdate): Reviewable["general"] {
     const name = form.name ?? this.general.name;
     const description = form.description ?? this.general.description;
     const categories = form.categories ?? this.general.categories;
@@ -177,25 +183,33 @@ type ApproveReducer = {
   teams: InquiryOwner[];
 };
 
-export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
-  private constructor(private readonly activity: InReview) {}
+export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
+  private constructor(private readonly activity: Reviewable) {}
 
-  static build(activity: InReview): PrepareInReviewFestivalActivity {
+  static build(activity: Reviewable): PrepareInReviewFestivalActivity {
     return new PrepareInReviewFestivalActivity(activity);
   }
 
-  updateGeneral(form: PrepareGeneralUpdate): InReview {
-    this.checkIfGeneralAlreadyValidated();
+  updateGeneral(form: PrepareGeneralUpdate): Reviewable {
+    this.checkIfGeneralAlreadyApproved();
     const general = General.init(this.activity.general).update(form);
-    const reviews: InReview["reviews"] = {
+    const isSwitchingPrivacy =
+      this.activity.general.toPublish !== general.toPublish;
+
+    if (!isSwitchingPrivacy) return { ...this.activity, general };
+
+    const reviews: Reviewable["reviews"] = {
       ...this.activity.reviews,
       communication: general.toPublish ? REVIEWING : NOT_ASKING_TO_REVIEW,
     };
-    return { ...this.activity, general, reviews };
+    if (isValidatedReviews(reviews)) {
+      return { ...this.activity, general, reviews, status: VALIDATED };
+    }
+    return { ...this.activity, general, reviews, status: IN_REVIEW };
   }
 
-  addGeneralTimeWindow(period: IProvidePeriod): InReview {
-    this.checkIfGeneralAlreadyValidated();
+  addGeneralTimeWindow(period: IProvidePeriod): Reviewable {
+    this.checkIfGeneralAlreadyApproved();
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
     ).add(period).entries;
@@ -204,7 +218,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, general };
   }
 
-  private checkIfGeneralAlreadyValidated() {
+  private checkIfGeneralAlreadyApproved() {
     const { validated, reviewer } = General.init(
       this.activity.general,
     ).isAlreadyValidatedBy(this.activity.reviews);
@@ -214,8 +228,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     }
   }
 
-  removeGeneralTimeWindow(id: TimeWindow["id"]): InReview {
-    this.checkIfGeneralAlreadyValidated();
+  removeGeneralTimeWindow(id: TimeWindow["id"]): Reviewable {
+    this.checkIfGeneralAlreadyApproved();
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
     ).remove(id).entries;
@@ -226,8 +240,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, general };
   }
 
-  updateInCharge(form: PrepareInChargeUpdate): InReview {
-    this.checkIfInChargeAlreadyValidated();
+  updateInCharge(form: PrepareInChargeUpdate): Reviewable {
+    this.checkIfInChargeAlreadyApproved();
     const adherent = form.adherent ?? this.activity.inCharge.adherent;
     const team = form.team ?? this.activity.inCharge.team;
 
@@ -235,15 +249,15 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inCharge };
   }
 
-  private checkIfInChargeAlreadyValidated() {
+  private checkIfInChargeAlreadyApproved() {
     const isValidated = this.activity.reviews.humain === APPROVED;
     if (isValidated) {
       throw new AlreadyApprovedBy([humain]);
     }
   }
 
-  addContractor(contractor: PrepareContractorCreation): InReview {
-    this.checkIfInChargeAlreadyValidated();
+  addContractor(contractor: PrepareContractorCreation): Reviewable {
+    this.checkIfInChargeAlreadyApproved();
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
     ).add(contractor).entries;
@@ -252,8 +266,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inCharge };
   }
 
-  updateContractor(contractor: PrepareContractorUpdate): InReview {
-    this.checkIfInChargeAlreadyValidated();
+  updateContractor(contractor: PrepareContractorUpdate): Reviewable {
+    this.checkIfInChargeAlreadyApproved();
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
     ).update(contractor).entries;
@@ -262,8 +276,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inCharge };
   }
 
-  removeContractor(id: Contractor["id"]): InReview {
-    this.checkIfInChargeAlreadyValidated();
+  removeContractor(id: Contractor["id"]): Reviewable {
+    this.checkIfInChargeAlreadyApproved();
     const contractors = Contractors.build(
       this.activity.inCharge.contractors,
     ).remove(id).entries;
@@ -272,22 +286,22 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inCharge };
   }
 
-  updateSigna({ location }: PrepareSignaUpdate): InReview {
-    this.checkIfSignaAlreadyValidated();
+  updateSigna({ location }: PrepareSignaUpdate): Reviewable {
+    this.checkIfSignaAlreadyApproved();
     if (location === null) throw new LocationIsRequired();
     const signa = { ...this.activity.signa, location };
     return { ...this.activity, signa };
   }
 
-  private checkIfSignaAlreadyValidated() {
+  private checkIfSignaAlreadyApproved() {
     const isValidated = this.activity.reviews.signa === APPROVED;
     if (isValidated) {
       throw new AlreadyApprovedBy([signa]);
     }
   }
 
-  addSignage(signage: PrepareSignageCreation): InReview {
-    this.checkIfSignaAlreadyValidated();
+  addSignage(signage: PrepareSignageCreation): Reviewable {
+    this.checkIfSignaAlreadyApproved();
     const signages = Signages.build(this.activity.signa.signages).add(
       signage,
     ).entries;
@@ -295,8 +309,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, signa };
   }
 
-  updateSignage(signage: PrepareSignageUpdate): InReview {
-    this.checkIfSignaAlreadyValidated();
+  updateSignage(signage: PrepareSignageUpdate): Reviewable {
+    this.checkIfSignaAlreadyApproved();
     const signages = Signages.build(this.activity.signa.signages).update(
       signage,
     ).entries;
@@ -304,8 +318,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, signa };
   }
 
-  removeSignage(id: Signage["id"]): InReview {
-    this.checkIfSignaAlreadyValidated();
+  removeSignage(id: Signage["id"]): Reviewable {
+    this.checkIfSignaAlreadyApproved();
     const signages = Signages.build(this.activity.signa.signages).remove(
       id,
     ).entries;
@@ -313,25 +327,25 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, signa };
   }
 
-  updateSecurity(security: FestivalActivity["security"]): InReview {
-    this.checkIfSecurityAlreadyValidated();
+  updateSecurity(security: FestivalActivity["security"]): Reviewable {
+    this.checkIfSecurityAlreadyApproved();
     return { ...this.activity, security };
   }
 
-  private checkIfSecurityAlreadyValidated() {
+  private checkIfSecurityAlreadyApproved() {
     const isValidated = this.activity.reviews.secu === APPROVED;
     if (isValidated) {
       throw new AlreadyApprovedBy([secu]);
     }
   }
 
-  updateSupply(form: PrepareSupplyUpdate): InReview {
-    this.checkIfSupplyAlreadyValidated();
+  updateSupply(form: PrepareSupplyUpdate): Reviewable {
+    this.checkIfSupplyAlreadyApproved();
     const supply = { ...this.activity.supply, ...form };
     return { ...this.activity, supply };
   }
 
-  private checkIfSupplyAlreadyValidated() {
+  private checkIfSupplyAlreadyApproved() {
     const isValidated = this.activity.reviews.elec === APPROVED;
     if (isValidated) {
       throw new AlreadyApprovedBy([elec]);
@@ -340,8 +354,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
 
   addElectricitySupply(
     electricitySupply: PrepareElectricitySupplyCreation,
-  ): InReview {
-    this.checkIfSupplyAlreadyValidated();
+  ): Reviewable {
+    this.checkIfSupplyAlreadyApproved();
     const electricity = ElectricitySupplies.build(
       this.activity.supply.electricity,
     ).add(electricitySupply).entries;
@@ -352,8 +366,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
 
   updateElectricitySupply(
     electricitySupply: PrepareElectricitySupplyUpdate,
-  ): InReview {
-    this.checkIfSupplyAlreadyValidated();
+  ): Reviewable {
+    this.checkIfSupplyAlreadyApproved();
     const electricity = ElectricitySupplies.build(
       this.activity.supply.electricity,
     ).update(electricitySupply).entries;
@@ -362,8 +376,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, supply };
   }
 
-  removeElectricitySupply(id: ElectricitySupply["id"]): InReview {
-    this.checkIfSupplyAlreadyValidated();
+  removeElectricitySupply(id: ElectricitySupply["id"]): Reviewable {
+    this.checkIfSupplyAlreadyApproved();
     const electricity = ElectricitySupplies.build(
       this.activity.supply.electricity,
     ).remove(id).entries;
@@ -372,8 +386,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, supply };
   }
 
-  initInquiry({ request, timeWindow }: InitInquiry): InReview {
-    this.checkIfInquiryAlreadyValidatedBy();
+  initInquiry({ request, timeWindow }: InitInquiry): Reviewable {
+    this.checkIfInquiryAlreadyApprovedBy();
     if (Inquiries.alreadyInitialized(this.activity.inquiry)) {
       throw new AlreadyInitialized();
     }
@@ -384,8 +398,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inquiry };
   }
 
-  addInquiryTimeWindow(period: IProvidePeriod): InReview {
-    this.checkIfInquiryAlreadyValidatedBy();
+  addInquiryTimeWindow(period: IProvidePeriod): Reviewable {
+    this.checkIfInquiryAlreadyApprovedBy();
     this.checkIfAlreadyInitialized();
 
     const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
@@ -395,7 +409,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return { ...this.activity, inquiry };
   }
 
-  private checkIfInquiryAlreadyValidatedBy(owner?: InquiryOwner) {
+  private checkIfInquiryAlreadyApprovedBy(owner?: InquiryOwner) {
     const { approved, teams } = this.isInquiryApprovedBy(owner);
     if (approved) {
       throw new AlreadyApprovedBy(teams);
@@ -438,8 +452,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     }
   }
 
-  removeInquiryTimeWindow(id: string): InReview {
-    this.checkIfInquiryAlreadyValidatedBy();
+  removeInquiryTimeWindow(id: string): Reviewable {
+    this.checkIfInquiryAlreadyApprovedBy();
     const inquiry = Inquiries.build(this.activity.inquiry).removeTimeWindow(
       id,
     ).inquiry;
@@ -455,8 +469,8 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return inquiry.timeWindows.length === 0;
   }
 
-  addInquiry(request: PrepareInquiryRequestCreation): InReview {
-    this.checkIfInquiryAlreadyValidatedBy(request.owner);
+  addInquiry(request: PrepareInquiryRequestCreation): Reviewable {
+    this.checkIfInquiryAlreadyApprovedBy(request.owner);
     this.checkIfAlreadyInitialized();
     const inquiry = Inquiries.build(this.activity.inquiry).addRequest(
       request,
@@ -471,7 +485,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     }
   }
 
-  removeInquiry(slug: InquiryRequest["slug"]): InReview {
+  removeInquiry(slug: InquiryRequest["slug"]): Reviewable {
     const inquiry = Inquiries.build(this.activity.inquiry).removeRequest(
       slug,
     ).inquiry;
@@ -492,7 +506,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<InReview> {
     return requests.length === 0;
   }
 
-  assignInquiryToDrive(link: LinkInquiryDrive): InReview {
+  assignInquiryToDrive(link: LinkInquiryDrive): Reviewable {
     const inquiry = Inquiries.build(this.activity.inquiry).assignDrive(
       link,
     ).inquiry;

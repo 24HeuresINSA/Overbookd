@@ -3,7 +3,7 @@ import {
   Draft,
   FestivalActivity,
   IN_REVIEW,
-  InReview,
+  Reviewable,
   isDraft,
 } from "./festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "./sections/reviews";
@@ -22,7 +22,7 @@ type FestivalActivitySections =
   | FestivalActivity["security"]
   | FestivalActivity["supply"]
   | FestivalActivity["inquiry"]
-  | InReview["reviews"];
+  | Reviewable["reviews"];
 
 type PublicData = Partial<
   Pick<Public, "isFlagship" | "photoLink" | "categories" | "timeWindows">
@@ -37,7 +37,7 @@ function* numberGenerator(start: number): Generator<number> {
 class FestivalActivityFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
-  inReview(name: string): FestivalActivityBuilder<InReview> {
+  inReview(name: string): FestivalActivityBuilder<Reviewable> {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultInReview(id, name);
     return new FestivalActivityBuilder(festivalActivity);
@@ -77,7 +77,9 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
       general: this.merge(this.festivalActivity.general, general),
     };
 
-    const reviews: Partial<InReview["reviews"]> = isDraft(this.festivalActivity)
+    const reviews: Partial<Reviewable["reviews"]> = isDraft(
+      this.festivalActivity,
+    )
       ? {}
       : { communication: REVIEWING };
 
@@ -125,7 +127,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
   }
 
   withReviews(
-    reviews: Partial<InReview["reviews"]>,
+    reviews: Partial<Reviewable["reviews"]>,
   ): FestivalActivityBuilder<T> {
     if (isDraft(this.festivalActivity)) return this;
 
@@ -161,7 +163,7 @@ function isKeyOf<T extends object>(
   return Object.keys(object).includes(key.toString());
 }
 
-function defaultInReview(id: number, name: string): InReview {
+function defaultInReview(id: number, name: string): Reviewable {
   return {
     id,
     status: IN_REVIEW,
