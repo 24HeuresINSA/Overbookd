@@ -5,7 +5,7 @@ include:
 overbookd/release:
   stage: release
   interruptible: true
-  image: node:20-alpine
+  image: node:20.10.0-alpine
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
     - when: never
