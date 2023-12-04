@@ -47,7 +47,7 @@ export type InReview = ReviewableBase & {
   reviews: InReviewReviews;
 };
 
-export type Validated = ReviewableBase & {
+type Validated = ReviewableBase & {
   status: typeof VALIDATED;
   reviews: ValidatedReviews;
 };
