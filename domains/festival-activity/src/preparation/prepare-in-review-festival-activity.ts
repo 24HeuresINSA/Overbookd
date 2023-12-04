@@ -204,12 +204,14 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
       ...this.activity.reviews,
       communication: general.toPublish ? REVIEWING : NOT_ASKING_TO_REVIEW,
     };
+
     if (isValidatedReviews(reviews)) {
       return { ...this.activity, general, reviews, status: VALIDATED };
     }
     if (isRefusedReviews(reviews)) {
       return { ...this.activity, general, reviews, status: REFUSED };
     }
+
     return { ...this.activity, general, reviews, status: IN_REVIEW };
   }
 

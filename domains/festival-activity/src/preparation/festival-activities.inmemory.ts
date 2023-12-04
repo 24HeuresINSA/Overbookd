@@ -67,12 +67,14 @@ function generateInReviewPreview(
     team: festivalActivity.inCharge.team,
   };
   const { reviews } = festivalActivity;
+
   if (isValidatedReviews(reviews)) {
     return { ...base, reviews, status: VALIDATED };
   }
   if (isRefusedReviews(reviews)) {
     return { ...base, reviews, status: REFUSED };
   }
+
   return { ...base, reviews, status: IN_REVIEW };
 }
 

@@ -7,9 +7,6 @@ export type {
   PreviewReviewable,
   PreviewFestivalActivity,
   Feedback,
-  Validated,
-  Refused,
-  InReview,
 } from "./festival-activity";
 export {
   DRAFT,

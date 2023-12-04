@@ -25,11 +25,8 @@ import {
   signa,
   isValidatedReviews,
   VALIDATED,
-  Validated,
   isRefusedReviews,
-  Refused,
   REFUSED,
-  InReview,
 } from "@overbookd/festival-activity";
 
 type DatabaseReview = {
@@ -198,29 +195,25 @@ class ReviewableBuilder
     const { reviews } = activityWithoutStatus;
 
     if (isValidatedReviews(reviews)) {
-      const activity: Validated = {
+      return new ReviewableBuilder({
         ...activityWithoutStatus,
         status: VALIDATED,
         reviews,
-      };
-      return new ReviewableBuilder(activity);
+      });
     }
-
     if (isRefusedReviews(reviews)) {
-      const activity: Refused = {
+      return new ReviewableBuilder({
         ...activityWithoutStatus,
         status: REFUSED,
         reviews,
-      };
-      return new ReviewableBuilder(activity);
+      });
     }
 
-    const activity: InReview = {
+    return new ReviewableBuilder({
       ...activityWithoutStatus,
       status: IN_REVIEW,
       reviews,
-    };
-    return new ReviewableBuilder(activity);
+    });
   }
 
   get preview(): PreviewReviewable {
@@ -231,12 +224,14 @@ class ReviewableBuilder
       team: this.activity.inCharge.team,
     };
     const { reviews } = this.activity;
+
     if (isValidatedReviews(reviews)) {
       return { ...base, reviews, status: VALIDATED };
     }
     if (isRefusedReviews(reviews)) {
       return { ...base, reviews, status: REFUSED };
     }
+
     return { ...base, status: IN_REVIEW, reviews };
   }
 
