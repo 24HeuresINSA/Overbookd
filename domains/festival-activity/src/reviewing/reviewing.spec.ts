@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { getFactory } from "../festival-activity.factory";
 import {
   APPROVED,
+  REJECTED,
   barrieres,
   communication,
   elec,
@@ -32,11 +33,13 @@ import {
 import { Reviewing } from "./reviewing";
 import {
   AlreadyApproved,
+  AlreadyRejected,
   NotAskingToReview,
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
-import { VALIDATED } from "../festival-activity";
+import { REFUSED, VALIDATED } from "../festival-activity";
+import { Rejected } from "../festival-activity.event";
 
 const factory = getFactory();
 
@@ -101,6 +104,10 @@ const publicWithAllApprovedExceptCommunication = factory
     signa: APPROVED,
     secu: APPROVED,
   })
+  .build();
+const privateValidated = factory.validated("Private Validated").build();
+const alreadyRejectedByHumain = factory
+  .refused("Already Rejected by humain")
   .build();
 
 describe("Approve festival activity", () => {
@@ -231,4 +238,112 @@ describe("Approve festival activity", () => {
       });
     },
   );
+});
+describe("Reject festival activity", () => {
+  let reviewing: Reviewing;
+  beforeEach(() => {
+    const festivalActivities = new InMemoryReviewingFestivalActivities([
+      pcSecurite,
+      extremJump,
+      alreadyApprovedByHumain,
+      privateActivity,
+      withInvalidGearInquiries,
+      withInvalidElectricityInquiries,
+      withInvalidBarrierInquiries,
+      withSomeValidInquiries,
+      privateWithAllApprovedExceptSecurity,
+      publicWithAllApprovedExceptCommunication,
+      privateValidated,
+      alreadyRejectedByHumain,
+    ]);
+    reviewing = new Reviewing(festivalActivities);
+  });
+  describe.each`
+    team             | festivalActivityName             | festivalActivityId     | rejector  | reason
+    ${secu}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${noel}   | ${"Il faut des AS"}
+    ${secu}          | ${privateValidated.general.name} | ${privateValidated.id} | ${noel}   | ${"Il faut des AS"}
+    ${matos}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${lea}    | ${"Il faut du matos"}
+    ${matos}         | ${privateValidated.general.name} | ${privateValidated.id} | ${lea}    | ${"Il faut du matos"}
+    ${humain}        | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${george} | ${"Les horaires ne sont pas pendant la manif"}
+    ${humain}        | ${privateValidated.general.name} | ${privateValidated.id} | ${george} | ${"Les horaires ne sont pas pendant la manif"}
+    ${elec}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${lea}    | ${"Il faut des multiprises"}
+    ${elec}          | ${privateValidated.general.name} | ${privateValidated.id} | ${lea}    | ${"Il faut des multiprises"}
+    ${barrieres}     | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${noel}   | ${"Il faut des heras"}
+    ${barrieres}     | ${privateValidated.general.name} | ${privateValidated.id} | ${noel}   | ${"Il faut des heras"}
+    ${signa}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${george} | ${"Ca manque de panneau"}
+    ${signa}         | ${privateValidated.general.name} | ${privateValidated.id} | ${george} | ${"Ca manque de panneau"}
+    ${communication} | ${extremJump.general.name}       | ${extremJump.id}       | ${george} | ${"Il faut une photo au format paysage"}
+  `(
+    "when rejecting $festivalActivityName as $team member",
+    ({ team, festivalActivityId, rejector, reason }) => {
+      let rejected: Rejected;
+      beforeEach(async () => {
+        rejected = await reviewing.reject(festivalActivityId, {
+          team,
+          rejectorId: rejector.id,
+          reason,
+        });
+      });
+      it("should generate a Festival Activity Approved event", async () => {
+        expect(rejected.by).toBe(rejector.id);
+        expect(rejected.at).toStrictEqual(expect.any(Date));
+        expect(rejected.at.getMilliseconds()).toBe(0);
+        expect(rejected.id).toStrictEqual(expect.any(Number));
+        expect(rejected.reason).toBe(reason);
+      });
+      describe("festival activity generated", () => {
+        it(`should indicate that ${team} rejected it`, async () => {
+          const { festivalActivity } = rejected;
+          expect(festivalActivity.reviews).toHaveProperty(team, REJECTED);
+        });
+        it("should switch to REFUSED festuval activity", () => {
+          const { festivalActivity } = rejected;
+          expect(festivalActivity.status).toBe(REFUSED);
+        });
+      });
+    },
+  );
+
+  describe("when rejecting several times from different teams", () => {
+    it("should keep all rejections", async () => {
+      await reviewing.reject(extremJump.id, {
+        team: secu,
+        rejectorId: noel.id,
+        reason: "Il faut des AS",
+      });
+      const { festivalActivity } = await reviewing.reject(extremJump.id, {
+        team: communication,
+        rejectorId: george.id,
+        reason: "Il faut une meilleure description",
+      });
+      expect(festivalActivity.reviews.secu).toBe(REJECTED);
+      expect(festivalActivity.reviews.communication).toBe(REJECTED);
+    });
+  });
+
+  describe("when rejecting a private festival activity as communication", () => {
+    it("should indicate that communication is not asking to review it", async () => {
+      expect(
+        async () =>
+          await reviewing.reject(privateActivity.id, {
+            team: communication,
+            rejectorId: george.id,
+            reason: "Il faut une meilleure description",
+          }),
+      ).rejects.toThrow(NotAskingToReview);
+    });
+  });
+
+  describe("when rejecting an already rejected festival activity ", () => {
+    it("should indicate activity already rejected", async () => {
+      expect(
+        async () =>
+          await reviewing.reject(alreadyRejectedByHumain.id, {
+            team: humain,
+            rejectorId: george.id,
+            reason: "Il faut une meilleure description",
+          }),
+      ).rejects.toThrow(AlreadyRejected);
+    });
+  });
 });

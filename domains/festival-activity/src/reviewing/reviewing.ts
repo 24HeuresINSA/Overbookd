@@ -1,6 +1,7 @@
 import {
   FestivalActivity,
   IN_REVIEW,
+  REFUSED,
   Reviewable,
   VALIDATED,
   isDraft,
@@ -8,12 +9,14 @@ import {
 import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
+  REJECTED,
   Reviewer,
   Reviews,
   barrieres,
   communication,
   elec,
   humain,
+  isRefusedReviews,
   isValidatedReviews,
   matos,
   secu,
@@ -26,13 +29,24 @@ import {
   AlreadyApproved,
   NotAskingToReview,
   ShouldAssignDrive,
+  AlreadyRejected,
 } from "./reviewing.error";
 import { Adherent } from "../sections/in-charge";
-import { Approved, FestivalActivityEvents } from "../festival-activity.event";
+import {
+  Approved,
+  FestivalActivityEvents,
+  Rejected,
+} from "../festival-activity.event";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
-  save(festivalActivity: Reviewable): Promise<Reviewable>;
+  save<T extends Reviewable>(festivalActivity: T): Promise<T>;
+};
+
+type Rejection = {
+  team: Reviewer;
+  rejectorId: Adherent["id"];
+  reason: string;
 };
 
 export class Reviewing {
@@ -41,7 +55,7 @@ export class Reviewing {
   ) {}
 
   async approve(
-    faId: number,
+    faId: FestivalActivity["id"],
     team: Reviewer,
     approverId: Adherent["id"],
   ): Promise<Approved> {
@@ -63,6 +77,29 @@ export class Reviewing {
     return FestivalActivityEvents.approved(saved, approverId);
   }
 
+  async reject(
+    faId: FestivalActivity["id"],
+    { team, rejectorId, reason }: Rejection,
+  ): Promise<Rejected> {
+    const festivalActivity = await this.festivalActivities.findById(faId);
+    if (!festivalActivity) throw new FestivalActivityNotFound(faId);
+    if (isDraft(festivalActivity)) throw new InDraft(faId);
+    if (this.isNotAskingToReview(festivalActivity, team)) {
+      throw new NotAskingToReview(faId, team);
+    }
+    if (this.isAlreadyRejectedBy(festivalActivity, team)) {
+      throw new AlreadyRejected(faId, team);
+    }
+
+    const reviews = { ...festivalActivity.reviews, [team]: REJECTED };
+    const saved = await this.festivalActivities.save({
+      ...festivalActivity,
+      status: REFUSED,
+      reviews,
+    });
+    return FestivalActivityEvents.rejected(saved, rejectorId, reason);
+  }
+
   private async saveFestivalActivity(
     storedActivity: Reviewable,
     reviews: Reviewable["reviews"],
@@ -74,6 +111,15 @@ export class Reviewing {
         reviews,
       });
     }
+
+    if (isRefusedReviews(reviews)) {
+      return this.festivalActivities.save({
+        ...storedActivity,
+        status: REFUSED,
+        reviews,
+      });
+    }
+
     return this.festivalActivities.save({
       ...storedActivity,
       status: IN_REVIEW,
@@ -97,6 +143,11 @@ export class Reviewing {
   private isAlreadyApprovedBy(festivalActivity: Reviewable, team: Reviewer) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === APPROVED;
+  }
+
+  private isAlreadyRejectedBy(festivalActivity: Reviewable, team: Reviewer) {
+    const teamReview = getTeamReview(festivalActivity.reviews, team);
+    return teamReview === REJECTED;
   }
 
   private isNotAskingToReview(festivalActivity: Reviewable, team: Reviewer) {

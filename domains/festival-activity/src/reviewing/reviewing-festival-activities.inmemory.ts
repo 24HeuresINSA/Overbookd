@@ -14,7 +14,7 @@ export class InMemoryReviewingFestivalActivities
     );
     return Promise.resolve(festivalActivity ?? null);
   }
-  save(festivalActivity: Reviewable): Promise<Reviewable> {
+  save<T extends Reviewable>(festivalActivity: T): Promise<T> {
     const festivalActivityIndex = this.festivalActivities.findIndex(
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,

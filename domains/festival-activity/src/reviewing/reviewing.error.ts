@@ -13,6 +13,14 @@ export class AlreadyApproved extends FestivalActivityError {
     super(message);
   }
 }
+
+export class AlreadyRejected extends FestivalActivityError {
+  constructor(festivalActivityId: number, team: Reviewer) {
+    const message = `❌ La FA #${festivalActivityId} est refusée par l'équipe ${team}`;
+    super(message);
+  }
+}
+
 export class NotAskingToReview extends FestivalActivityError {
   constructor(festivalActivityId: number, team: Reviewer) {
     const message = `❌ La FA #${festivalActivityId} n'est pas à valider par l'équipe ${team}`;

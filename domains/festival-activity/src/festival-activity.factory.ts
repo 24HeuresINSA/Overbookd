@@ -3,10 +3,20 @@ import {
   Draft,
   FestivalActivity,
   IN_REVIEW,
+  InReview,
+  REFUSED,
+  Refused,
   Reviewable,
+  VALIDATED,
+  Validated,
   isDraft,
 } from "./festival-activity";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "./sections/reviews";
+import {
+  APPROVED,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+} from "./sections/reviews";
 import { Public } from "./sections/general";
 import {
   saturday11hToSaturday18h,
@@ -37,7 +47,7 @@ function* numberGenerator(start: number): Generator<number> {
 class FestivalActivityFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
-  inReview(name: string): FestivalActivityBuilder<Reviewable> {
+  inReview(name: string): FestivalActivityBuilder<InReview> {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultInReview(id, name);
     return new FestivalActivityBuilder(festivalActivity);
@@ -46,6 +56,18 @@ class FestivalActivityFactory {
   draft(name: string): FestivalActivityBuilder<Draft> {
     const id = this.idGenerator.next().value;
     const festivalActivity = defaultDraft(id, name);
+    return new FestivalActivityBuilder(festivalActivity);
+  }
+
+  validated(name: string): FestivalActivityBuilder<Validated> {
+    const id = this.idGenerator.next().value;
+    const festivalActivity = defaultValidated(id, name);
+    return new FestivalActivityBuilder(festivalActivity);
+  }
+
+  refused(name: string): FestivalActivityBuilder<Refused> {
+    const id = this.idGenerator.next().value;
+    const festivalActivity = defaultRefused(id, name);
     return new FestivalActivityBuilder(festivalActivity);
   }
 }
@@ -163,7 +185,7 @@ function isKeyOf<T extends object>(
   return Object.keys(object).includes(key.toString());
 }
 
-function defaultInReview(id: number, name: string): Reviewable {
+function defaultInReview(id: number, name: string): InReview {
   return {
     id,
     status: IN_REVIEW,
@@ -204,6 +226,102 @@ function defaultInReview(id: number, name: string): Reviewable {
       secu: REVIEWING,
       matos: REVIEWING,
       elec: REVIEWING,
+      barrieres: REVIEWING,
+      communication: NOT_ASKING_TO_REVIEW,
+    },
+    feedbacks: [],
+  };
+}
+
+function defaultValidated(id: number, name: string): Validated {
+  return {
+    id,
+    status: VALIDATED,
+    general: {
+      name,
+      description: `${name} est indispensable.`,
+      categories: [],
+      toPublish: false,
+      photoLink: null,
+      isFlagship: false,
+      timeWindows: [friday18hToMonday00h],
+    },
+    inCharge: {
+      adherent: lea,
+      team: "secu",
+      contractors: [],
+    },
+    signa: {
+      location: local24h,
+      signages: [],
+    },
+    security: {
+      specialNeed: null,
+    },
+    supply: {
+      electricity: [],
+      water: null,
+    },
+    inquiry: {
+      timeWindows: [],
+      gears: [],
+      electricity: [],
+      barriers: [],
+    },
+    reviews: {
+      humain: APPROVED,
+      signa: APPROVED,
+      secu: APPROVED,
+      matos: APPROVED,
+      elec: APPROVED,
+      barrieres: APPROVED,
+      communication: NOT_ASKING_TO_REVIEW,
+    },
+    feedbacks: [],
+  };
+}
+
+function defaultRefused(id: number, name: string): Refused {
+  return {
+    id,
+    status: REFUSED,
+    general: {
+      name,
+      description: `${name} est indispensable.`,
+      categories: [],
+      toPublish: false,
+      photoLink: null,
+      isFlagship: false,
+      timeWindows: [friday18hToMonday00h],
+    },
+    inCharge: {
+      adherent: lea,
+      team: "secu",
+      contractors: [],
+    },
+    signa: {
+      location: local24h,
+      signages: [],
+    },
+    security: {
+      specialNeed: null,
+    },
+    supply: {
+      electricity: [],
+      water: null,
+    },
+    inquiry: {
+      timeWindows: [],
+      gears: [],
+      electricity: [],
+      barriers: [],
+    },
+    reviews: {
+      humain: REJECTED,
+      signa: APPROVED,
+      secu: REVIEWING,
+      matos: REVIEWING,
+      elec: REJECTED,
       barrieres: REVIEWING,
       communication: NOT_ASKING_TO_REVIEW,
     },
