@@ -77,7 +77,9 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
       general: this.merge(this.festivalActivity.general, general),
     };
 
-    const reviews: Partial<Reviewable["reviews"]> = isDraft(this.festivalActivity)
+    const reviews: Partial<Reviewable["reviews"]> = isDraft(
+      this.festivalActivity,
+    )
       ? {}
       : { communication: REVIEWING };
 
