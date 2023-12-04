@@ -126,7 +126,7 @@ export default Vue.extend({
   flex: 0 0 auto;
   overflow: auto;
   padding-right: 20px;
-  width: 300px;
+  width: 350px;
 
   #ask-for-review {
     background-color: $submitted-color;

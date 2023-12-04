@@ -1,6 +1,6 @@
 <template>
   <div class="fa-content fa">
-    <FestivalEventSidebar festival-event="FA" />
+    <FestivalEventSidebar festival-event="FA" class="sidebar" />
     <article class="container fa">
       <FaGeneralCard id="general" />
       <FaInChargeCard id="in-charge" />
@@ -64,42 +64,47 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+$sidebar-width: 350px;
+
 .fa-content {
   display: flex;
-  height: calc(100vh - 124px);
-  overflow-y: hidden;
+  height: calc(100vh - #{$header-height} - #{$footer-height});
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.sidebar {
+  position: fixed;
+  width: $sidebar-width;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  overflow: auto;
-  scroll-behavior: smooth;
-  width: 100%;
+  min-width: calc(100vw - #{$sidebar-width} - 90px);
   padding: 12px;
-  margin-right: auto;
-  margin-left: auto;
-  > * {
-    margin-bottom: 30px;
-    &:last-child {
-      margin-bottom: 0px;
-    }
-  }
-}
-
-.log-text {
-  margin-bottom: 8px;
+  margin-left: $sidebar-width;
+  gap: 20px;
 }
 
 @media only screen and (max-width: $mobile-max-width) {
   .fa-content {
     flex-direction: column;
     overflow-y: scroll;
+    height: auto;
+  }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    margin: unset;
   }
 
   .container {
     overflow: visible;
+    margin: unset;
+    padding: unset;
   }
 }
 </style>

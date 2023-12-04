@@ -107,6 +107,7 @@ footer {
   background-color: change-color($color: $yellow-24h, $whiteness: 30%);
   padding: 5px 10px;
   width: 100%;
+  z-index: 6;
   @media only screen and (max-width: $mobile-max-width) {
     display: none;
   }
