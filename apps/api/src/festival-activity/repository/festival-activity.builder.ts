@@ -6,14 +6,14 @@ import {
   FestivalActivity,
   FestivalActivityWithoutStatus,
   IN_REVIEW,
-  InReview,
-  InReviewSpecification,
+  Reviewable,
+  ReviewableSpecification,
   InquiryRequest,
   MATOS,
   NOT_ASKING_TO_REVIEW,
   PreviewDraft,
   PreviewFestivalActivity,
-  PreviewInReview,
+  PreviewReviewable,
   ReviewStatus,
   Reviewer,
   barrieres,
@@ -23,6 +23,8 @@ import {
   matos,
   secu,
   signa,
+  isValidatedReviews,
+  VALIDATED,
 } from "@overbookd/festival-activity";
 
 type DatabaseReview = {
@@ -84,7 +86,9 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       case DRAFT:
         return DraftBuilder.init(activityWithoutStatus);
       case IN_REVIEW:
-        return InReviewBuilder.init(activityWithoutStatus);
+        return ReviewableBuilder.init(activityWithoutStatus);
+      case VALIDATED:
+        return ReviewableBuilder.init(activityWithoutStatus);
     }
   }
 
@@ -178,24 +182,44 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   }
 }
 
-class InReviewBuilder
-  extends FestivalActivityBuilder<InReview>
-  implements VisualizeFestivalActivity<InReview, PreviewInReview>
+class ReviewableBuilder
+  extends FestivalActivityBuilder<Reviewable>
+  implements VisualizeFestivalActivity<Reviewable, PreviewReviewable>
 {
   static init(activityWithoutStatus: FestivalActivityWithoutStatus) {
-    return InReviewSpecification.isSatisfiedBy(activityWithoutStatus)
-      ? new InReviewBuilder({ ...activityWithoutStatus, status: IN_REVIEW })
-      : DraftBuilder.init(activityWithoutStatus);
+    if (!ReviewableSpecification.isSatisfiedBy(activityWithoutStatus)) {
+      return DraftBuilder.init(activityWithoutStatus);
+    }
+    const { reviews } = activityWithoutStatus;
+    if (!isValidatedReviews(reviews)) {
+      return new ReviewableBuilder({
+        ...activityWithoutStatus,
+        status: IN_REVIEW,
+      });
+    }
+
+    return new ReviewableBuilder({
+      ...activityWithoutStatus,
+      reviews,
+      status: VALIDATED,
+    });
   }
 
-  get preview() {
-    return {
+  get preview(): PreviewReviewable {
+    const base = {
       id: this.activity.id,
       name: this.activity.general.name,
-      status: this.activity.status,
       adherent: this.activity.inCharge.adherent,
       team: this.activity.inCharge.team,
-      reviews: this.activity.reviews,
+    };
+    const { reviews } = this.activity;
+    if (isValidatedReviews(reviews)) {
+      return { ...base, reviews, status: VALIDATED };
+    }
+    return {
+      ...base,
+      status: IN_REVIEW,
+      reviews,
     };
   }
 

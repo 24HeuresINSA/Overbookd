@@ -2,10 +2,11 @@ import {
   Draft,
   Feedback,
   FestivalActivity,
-  InReview,
+  Reviewable,
   ReviewStatus,
   Reviewer,
   TimeWindow,
+  isDraft,
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
@@ -154,6 +155,9 @@ export class FestivalActivityQueryBuilder {
   }
 
   static update(activity: FestivalActivity) {
+    const reviews = isDraft(activity)
+      ? {}
+      : { reviews: this.upsertReviews(activity) };
     const generalTimeWindows = this.upsertTimeWindows(
       activity.id,
       activity.general.timeWindows,
@@ -176,10 +180,11 @@ export class FestivalActivityQueryBuilder {
       inquiryTimeWindows,
       inquiries,
       feedbacks,
+      ...reviews,
     };
   }
 
-  static askForReview(activity: InReview) {
+  static askForReview(activity: Reviewable) {
     const reviews = this.upsertReviews(activity);
     return {
       ...databaseFestivalActivityWithouListsMapping(activity),
@@ -285,7 +290,7 @@ export class FestivalActivityQueryBuilder {
     };
   }
 
-  private static upsertReviews(activity: InReview) {
+  private static upsertReviews(activity: Reviewable) {
     const reviews = Object.entries(activity.reviews)
       .filter((entry): entry is [Reviewer, ReviewStatus] => true)
       .map(([team, status]) => ({ team, status }));
