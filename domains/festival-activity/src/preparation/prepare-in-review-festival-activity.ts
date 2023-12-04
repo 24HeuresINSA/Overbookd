@@ -6,6 +6,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import {
   FestivalActivity,
   IN_REVIEW,
+  REFUSED,
   Reviewable,
   VALIDATED,
 } from "../festival-activity";
@@ -19,6 +20,7 @@ import {
   communication,
   elec,
   humain,
+  isRefusedReviews,
   isValidatedReviews,
   matos,
   secu,
@@ -204,6 +206,9 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     };
     if (isValidatedReviews(reviews)) {
       return { ...this.activity, general, reviews, status: VALIDATED };
+    }
+    if (isRefusedReviews(reviews)) {
+      return { ...this.activity, general, reviews, status: REFUSED };
     }
     return { ...this.activity, general, reviews, status: IN_REVIEW };
   }

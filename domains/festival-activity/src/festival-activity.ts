@@ -83,7 +83,15 @@ type ValidatedPreview = PreviewReviewableBase & {
   reviews: Validated["reviews"];
 };
 
-export type PreviewReviewable = InReviewPreview | ValidatedPreview;
+type RefusedPreview = PreviewReviewableBase & {
+  status: Refused["status"];
+  reviews: Refused["reviews"];
+};
+
+export type PreviewReviewable =
+  | InReviewPreview
+  | ValidatedPreview
+  | RefusedPreview;
 
 export type PreviewDraft = {
   id: Draft["id"];

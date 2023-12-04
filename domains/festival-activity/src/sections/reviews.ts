@@ -31,7 +31,7 @@ export type WaitingForReview = {
   reviewers: Reviewer[];
 };
 
-export type ReviewStatus =
+export type ReviewingStatus =
   | typeof REVIEWING
   | typeof NOT_ASKING_TO_REVIEW
   | typeof APPROVED;
@@ -46,7 +46,12 @@ type RejectionReviewStatus =
   | typeof APPROVED
   | typeof REJECTED;
 
-export type InReviewReviews = Record<Reviewer, ReviewStatus>;
+export type ReviewStatus =
+  | RejectionReviewStatus
+  | ApprovalReviewStatus
+  | ReviewingStatus;
+
+export type InReviewReviews = Record<Reviewer, ReviewingStatus>;
 export type ValidatedReviews = Record<Reviewer, ApprovalReviewStatus>;
 export type RefusedReviews = Record<Reviewer, RejectionReviewStatus>;
 
