@@ -16,6 +16,8 @@ import {
   PC16_Prise_classique,
   REFUSED,
   VALIDATED,
+  PreviewDraft,
+  PreviewFestivalActivity,
 } from "@overbookd/festival-activity";
 
 export const BROUILLON = "Brouillon";
@@ -67,4 +69,10 @@ export const electricityConnectionLabels = new Map<
 export interface ElectricityConnectionWithLabel {
   connection: ElectricityConnection;
   label: string;
+}
+
+export function isDraftPreview(
+  activity: PreviewFestivalActivity,
+): activity is PreviewDraft {
+  return activity.status === DRAFT;
 }

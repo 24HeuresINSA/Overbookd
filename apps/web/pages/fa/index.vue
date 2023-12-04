@@ -1,12 +1,12 @@
 <template>
-  <div class="activity">
+  <div class="activity fa">
     <h1>Fiches Activités</h1>
 
     <main>
       <FaFilter class="activity__filtering" @change="updateFilters">
         <template #additional-actions>
           <v-btn
-            v-if="canManageLocation"
+            v-if="canExportSignages"
             class="signa-export"
             @click="exportCsvSigna"
           >
@@ -23,24 +23,23 @@
           class="elevation-1 activity__table"
           @click:row="openFa"
         >
-          <template #item.status="{ item }">
-            <v-chip-group>
-              <v-chip :color="getFaStatus(item.status)" small>
+          <template #item.id="{ item }">
+            <v-chip-group id="status">
+              <v-chip id="status" :class="item.status.toLowerCase()" small>
                 {{ item.id }}
               </v-chip>
             </v-chip-group>
           </template>
 
-          <template #item.validation>
-            <v-chip-group column>
+          <template #item.reviews="{ item }">
+            <v-chip-group id="reviewers" column>
               <v-chip
-                v-for="validator of validators"
-                :key="validator.code"
+                v-for="reviewer of reviewers"
+                :key="reviewer.code"
+                :class="getReviewerStatus(item, reviewer)"
                 small
               >
-                <v-icon small>
-                  {{ validator.icon }}
-                </v-icon>
+                <v-icon small> {{ reviewer.icon }} </v-icon>
               </v-chip>
             </v-chip-group>
           </template>
@@ -81,34 +80,27 @@ import { defineComponent } from "vue";
 import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import {
-  FaSimplified,
-  FaStatus,
-  FaStatusLabel,
-  faStatusLabels,
-  ValidatorStatus,
-  ValidatorStatusLabel,
-  validatorStatusLabels,
-} from "~/utils/models/fa.model";
+import FaFilter from "~/components/organisms/festival-event/festival-activity/FaFilter.vue";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Team } from "~/utils/models/team.model";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
-import { MANAGE_LOCATION, VIEW_DELETED_FA } from "@overbookd/permission";
+import { VIEW_DELETED_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import {
   PreviewFestivalActivity,
   FestivalActivity,
 } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
-import FaFilter from "~/components/organisms/festival-event/festival-activity/FaFilter.vue";
-import { Filters } from "~/utils/festival-event/festival-activity.filter";
+import {
+  Filters,
+  findReviewStatus,
+} from "~/utils/festival-event/festival-activity.filter";
+import { isDraftPreview } from "~/utils/festival-event/festival-activity.model";
 
 interface FaData {
   headers: Header[];
-  selectedFa?: FaSimplified;
   isNewFaDialogOpen: boolean;
-  validatorStatuses: Map<string, ValidatorStatus>;
   filters: Filters;
 }
 
@@ -122,15 +114,13 @@ export default defineComponent({
   },
   data: (): FaData => ({
     headers: [
-      { text: "Statut", value: "status", sortable: false },
-      { text: "Validation", value: "validation", sortable: false },
+      { text: "Statut", value: "id" },
+      { text: "Validations", value: "reviews", sortable: false },
       { text: "Nom", value: "name" },
       { text: "Equipe", value: "team" },
       { text: "Responsable", value: "adherent", sortable: false },
     ],
-    selectedFa: undefined,
     isNewFaDialogOpen: false,
-    validatorStatuses: new Map(),
     filters: {},
   }),
   head: () => ({
@@ -140,11 +130,8 @@ export default defineComponent({
     fas(): PreviewFestivalActivity[] {
       return this.$accessor.festivalActivity.allActivities;
     },
-    validators(): Team[] {
+    reviewers(): Team[] {
       return this.$accessor.team.faValidators;
-    },
-    statuses(): [FaStatus, FaStatusLabel][] {
-      return [...faStatusLabels.entries()];
     },
     searchableFas(): Searchable<PreviewFestivalActivity>[] {
       return this.fas.map((fa) => ({
@@ -163,14 +150,11 @@ export default defineComponent({
         );
       });
     },
-    validatorStatusLabels(): [ValidatorStatus, ValidatorStatusLabel][] {
-      return [...validatorStatusLabels.entries()];
-    },
     canViewDeletedFa(): boolean {
       return this.$accessor.user.can(VIEW_DELETED_FA);
     },
-    canManageLocation(): boolean {
-      return this.$accessor.user.can(MANAGE_LOCATION);
+    canExportSignages(): boolean {
+      return this.$accessor.user.can(WRITE_SIGNAGE_CATALOG);
     },
   },
 
@@ -201,12 +185,17 @@ export default defineComponent({
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
-    getFaStatus(status: FaStatus): string {
-      return status.toLowerCase();
-    },
-
     updateFilters(filters: Filters) {
       this.filters = filters;
+    },
+
+    getReviewerStatus(
+      activity: PreviewFestivalActivity,
+      reviewer: Team,
+    ): string {
+      if (isDraftPreview(activity)) return "";
+      const status = activity.reviews[reviewer.code];
+      return (findReviewStatus(status) ?? "").toLowerCase();
     },
 
     /*async exportCsvSecu() {
@@ -264,10 +253,6 @@ export default defineComponent({
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
-    },
-
-    changeValidatorStatusFilter(team: Team, value: ValidatorStatus) {
-      this.validatorStatuses.set(team.code, value);
     },
 
     formatUsername(user?: User): string {
