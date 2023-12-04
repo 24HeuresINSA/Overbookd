@@ -3,6 +3,7 @@ import {
   DRAFT,
   Draft,
   FestivalActivity,
+  REJECTED,
   REVIEWING,
   ReviewStatus,
 } from "@overbookd/festival-activity";
@@ -26,11 +27,13 @@ function isDraft(
 }
 
 const A_RELIRE = "À relire";
-const VALIDEE = "Validée";
+const VALIDEE = "Aprouvée";
+const REJETEE = "Rejetée";
 
-export type ReviewLabel = typeof A_RELIRE | typeof VALIDEE;
+export type ReviewLabel = typeof A_RELIRE | typeof VALIDEE | typeof REJETEE;
 
 export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
   [REVIEWING, A_RELIRE],
   [APPROVED, VALIDEE],
+  [REJECTED, REJETEE],
 ]);
