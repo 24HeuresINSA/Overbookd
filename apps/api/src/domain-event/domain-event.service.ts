@@ -5,6 +5,7 @@ import {
   FESTIVAL_ACTIVITY_CREATED,
   FESTIVAL_ACTIVITY_APPROVED,
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
+  FESTIVAL_ACTIVITY_REJECTED,
 } from "@overbookd/domain-events";
 import {
   ADHERENT_REGISTERED,
@@ -18,7 +19,6 @@ import {
   ReadyToReview,
   Rejected,
 } from "@overbookd/festival-activity";
-import { FESTIVAL_ACTIVITY_REJECTED } from "@overbookd/domain-events/src/festival-activity";
 
 export class DomainEventService {
   private readonly $events = new ReplaySubject<DomainEvent>();
