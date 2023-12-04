@@ -17,7 +17,7 @@ services:
       - certs:/etc/ssl/traefik
 
   traefik:
-    image: traefik:v2.10.5
+    image: traefik:v2.10.6
     restart: unless-stopped
     command:
       # Docker config
