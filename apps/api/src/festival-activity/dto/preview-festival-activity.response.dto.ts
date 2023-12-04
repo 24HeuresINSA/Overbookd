@@ -3,7 +3,6 @@ import {
   Adherent,
   PreviewDraft,
   PreviewReviewable,
-  ReviewStatus,
   DRAFT,
   IN_REVIEW,
   NOT_ASKING_TO_REVIEW,
@@ -13,6 +12,7 @@ import {
   ValidatedReviews,
   ApprovalReviewStatus,
   VALIDATED,
+  ReviewingStatus,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 
@@ -65,43 +65,43 @@ class InReviewReviewsDto implements InReviewReviews {
     description: "'humain' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  humain: ReviewStatus;
+  humain: ReviewingStatus;
 
   @ApiProperty({
     description: "'signa' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  signa: ReviewStatus;
+  signa: ReviewingStatus;
 
   @ApiProperty({
     description: "'secu' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  secu: ReviewStatus;
+  secu: ReviewingStatus;
 
   @ApiProperty({
     description: "'matos' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  matos: ReviewStatus;
+  matos: ReviewingStatus;
 
   @ApiProperty({
     description: "'elec' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  elec: ReviewStatus;
+  elec: ReviewingStatus;
 
   @ApiProperty({
     description: "'barrieres' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  barrieres: ReviewStatus;
+  barrieres: ReviewingStatus;
 
   @ApiProperty({
     description: "'commmunication' team review status",
     examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
   })
-  communication: ReviewStatus;
+  communication: ReviewingStatus;
 }
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {

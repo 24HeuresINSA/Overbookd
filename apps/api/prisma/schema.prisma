@@ -667,6 +667,7 @@ enum FestivalActivityStatus {
   DRAFT
   IN_REVIEW
   VALIDATED
+  REFUSED
 
   @@map("festival_activity_status")
 }
@@ -804,6 +805,7 @@ enum FestivalActivityReviewStatus {
   REVIEWING
   NOT_ASKING_TO_REVIEW
   APPROVED
+  REJECTED
 
   @@map("festival_activity_review_status")
 }
