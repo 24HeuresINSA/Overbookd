@@ -88,8 +88,8 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       case DRAFT:
         return DraftBuilder.init(activityWithoutStatus);
       case IN_REVIEW:
-        return ReviewableBuilder.init(activityWithoutStatus);
       case VALIDATED:
+      case REFUSED:
         return ReviewableBuilder.init(activityWithoutStatus);
     }
   }

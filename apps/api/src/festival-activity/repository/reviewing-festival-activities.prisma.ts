@@ -1,11 +1,14 @@
 import {
   FestivalActivity,
+  Reviewable,
   ReviewingFestivalActivities,
+  isDraft,
 } from "@overbookd/festival-activity";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { FestivalActivityQueryBuilder } from "./festival-activity.query";
+import { BadRequestException } from "@nestjs/common";
 
 export class PrismaReviewingFestivalActivities
   implements ReviewingFestivalActivities
@@ -21,12 +24,12 @@ export class PrismaReviewingFestivalActivities
     return FestivalActivityBuilder.fromDatabase(activity).festivalActivity;
   }
 
-  async save<T extends FestivalActivity>(activity: T): Promise<T> {
+  async save<T extends Reviewable>(activity: T): Promise<T> {
     const updated = await this.prisma.festivalActivity.update({
       where: { id: activity.id },
       select: SELECT_FESTIVAL_ACTIVITY,
       data: FestivalActivityQueryBuilder.update(activity),
     });
-    return FestivalActivityBuilder.fromDatabase(updated).festivalActivity;
+    return FestivalActivityBuilder.fromDatabase(updated).festivalActivity as T;
   }
 }
