@@ -28,63 +28,18 @@ import { SignageResponseDto } from "./signage.response.dto";
 import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
 import { FeedbackResponseDto } from "./feedback.response.dto";
 import {
-  AssignedInquiryRequestResponsDto,
-  UnassignedInquiryRequestResponsDto,
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
 } from "./inquiry-request.response.dto";
 import {
   InReviewReviewsResponseDto,
   ValidatedReviewsResponseDto,
   RefusedReviewsResponseDto,
-} from "./InReviewReviewsResponseDto";
-
-type PublicGeneral = Extract<Reviewable["general"], { toPublish: true }>;
-type PrivateGeneral = Extract<Reviewable["general"], { toPublish: false }>;
-
-class PublicReviewableGeneralResponseDto implements PublicGeneral {
-  @ApiProperty({ required: true })
-  name: string;
-
-  @ApiProperty({ required: true })
-  description: string;
-
-  @ApiProperty({ required: true, type: String, isArray: true })
-  categories: [string, ...string[]];
-
-  @ApiProperty({ required: true })
-  toPublish: true;
-
-  @ApiProperty({ required: true })
-  photoLink: string;
-
-  @ApiProperty({ required: true })
-  isFlagship: boolean;
-
-  @ApiProperty({ required: true, type: TimeWindowResponseDto, isArray: true })
-  timeWindows: [TimeWindow, ...TimeWindow[]];
-}
-
-class PrivateGeneralResponseDto implements PrivateGeneral {
-  @ApiProperty({ required: true })
-  name: string;
-
-  @ApiProperty({ required: true })
-  description: string;
-
-  @ApiProperty({ required: true, isArray: true, type: String })
-  categories: string[];
-
-  @ApiProperty({ required: true })
-  toPublish: false;
-
-  @ApiProperty({ required: true, nullable: true })
-  photoLink: null;
-
-  @ApiProperty({ required: true })
-  isFlagship: false;
-
-  @ApiProperty({ required: true, type: TimeWindowResponseDto, isArray: true })
-  timeWindows: TimeWindow[];
-}
+} from "./reviews.response.dto";
+import {
+  PublicReviewableGeneralResponseDto,
+  PrivateReviewableGeneralResponseDto,
+} from "./reviewable/general.response.dto";
 
 type InCharge = Reviewable["inCharge"];
 
@@ -125,7 +80,7 @@ type Supply = Reviewable["supply"];
 class SupplyResponseDto implements Supply {
   @ApiProperty({
     required: true,
-    nullable: true,
+    isArray: true,
     type: ElectricitySupplyResponseDto,
   })
   electricity: ElectricitySupply[];
@@ -134,7 +89,7 @@ class SupplyResponseDto implements Supply {
   water: string | null;
 }
 
-class InquiryResponseDto implements InquiryWithPotentialRequests {
+class ReviewableInquiryResponseDto implements InquiryWithPotentialRequests {
   @ApiProperty({ required: true, isArray: true, type: TimeWindowResponseDto })
   timeWindows: TimeWindow[];
 
@@ -143,8 +98,8 @@ class InquiryResponseDto implements InquiryWithPotentialRequests {
     isArray: true,
     description: "Barriers related requests",
     oneOf: [
-      { $ref: getSchemaPath(UnassignedInquiryRequestResponsDto) },
-      { $ref: getSchemaPath(AssignedInquiryRequestResponsDto) },
+      { $ref: getSchemaPath(UnassignedInquiryRequestResponseDto) },
+      { $ref: getSchemaPath(AssignedInquiryRequestResponseDto) },
     ],
   })
   barriers: InquiryRequest[];
@@ -154,8 +109,8 @@ class InquiryResponseDto implements InquiryWithPotentialRequests {
     isArray: true,
     description: "Gears related requests",
     oneOf: [
-      { $ref: getSchemaPath(UnassignedInquiryRequestResponsDto) },
-      { $ref: getSchemaPath(AssignedInquiryRequestResponsDto) },
+      { $ref: getSchemaPath(UnassignedInquiryRequestResponseDto) },
+      { $ref: getSchemaPath(AssignedInquiryRequestResponseDto) },
     ],
   })
   gears: InquiryRequest[];
@@ -165,8 +120,8 @@ class InquiryResponseDto implements InquiryWithPotentialRequests {
     isArray: true,
     description: "Electricity related requests",
     oneOf: [
-      { $ref: getSchemaPath(UnassignedInquiryRequestResponsDto) },
-      { $ref: getSchemaPath(AssignedInquiryRequestResponsDto) },
+      { $ref: getSchemaPath(UnassignedInquiryRequestResponseDto) },
+      { $ref: getSchemaPath(AssignedInquiryRequestResponseDto) },
     ],
   })
   electricity: InquiryRequest[];
@@ -180,7 +135,7 @@ class ReviewableBaseResponseDto {
     required: true,
     oneOf: [
       { $ref: getSchemaPath(PublicReviewableGeneralResponseDto) },
-      { $ref: getSchemaPath(PrivateGeneralResponseDto) },
+      { $ref: getSchemaPath(PrivateReviewableGeneralResponseDto) },
     ],
   })
   general: Reviewable["general"];
@@ -197,7 +152,7 @@ class ReviewableBaseResponseDto {
   @ApiProperty({ required: true, type: SupplyResponseDto })
   supply: Reviewable["supply"];
 
-  @ApiProperty({ required: true, type: InquiryResponseDto })
+  @ApiProperty({ required: true, type: ReviewableInquiryResponseDto })
   inquiry: Reviewable["inquiry"];
 
   @ApiProperty({ required: true, isArray: true, type: FeedbackResponseDto })

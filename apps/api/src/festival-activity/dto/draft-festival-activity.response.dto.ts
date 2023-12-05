@@ -20,7 +20,7 @@ import { TimeWindowResponseDto } from "./time-window.response.dto";
 import { LocationResponseDto } from "./location.response.dto";
 import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
 import { FeedbackResponseDto } from "./feedback.response.dto";
-import { UnassignedInquiryRequestResponsDto } from "./inquiry-request.response.dto";
+import { UnassignedInquiryRequestResponseDto } from "./inquiry-request.response.dto";
 
 type General = Draft["general"];
 
@@ -148,19 +148,19 @@ class InquiryDto implements InquiryWithPotentialRequests {
 
   @ApiProperty({
     isArray: true,
-    type: UnassignedInquiryRequestResponsDto,
+    type: UnassignedInquiryRequestResponseDto,
   })
   gears: BaseInquiryRequest[];
 
   @ApiProperty({
     isArray: true,
-    type: UnassignedInquiryRequestResponsDto,
+    type: UnassignedInquiryRequestResponseDto,
   })
   electricity: BaseInquiryRequest[];
 
   @ApiProperty({
     isArray: true,
-    type: UnassignedInquiryRequestResponsDto,
+    type: UnassignedInquiryRequestResponseDto,
   })
   barriers: BaseInquiryRequest[];
 }
