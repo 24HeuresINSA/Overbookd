@@ -98,7 +98,6 @@ import FaTimeWindowTable from "~/components/molecules/festival-event/time-window
 import {
   APPROVED,
   FestivalActivity,
-  Reviewer,
   TimeWindow,
   communication,
   humain,
@@ -142,6 +141,8 @@ export default defineComponent({
           return this.mFA.reviews.humain === APPROVED;
         case communication:
           return this.mFA.reviews.communication === APPROVED;
+        default:
+          return true;
       }
     },
   },
