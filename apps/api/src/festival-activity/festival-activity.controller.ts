@@ -21,6 +21,7 @@ import {
   ApiParam,
   ApiBody,
   getSchemaPath,
+  ApiExtraModels,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
@@ -38,7 +39,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
-import { DraftFestivalActivityDto } from "./dto/draft-festival-activity.dto";
+import { DraftFestivalActivityResponseDto } from "./dto/draft-festival-activity.response.dto";
 import {
   AddContractorRequestDto,
   AddElectricitySupplyRequestDto,
@@ -58,10 +59,24 @@ import {
 import {
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
+  RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
 import { PeriodDto } from "./dto/period.dto";
 import { FestivalActivityErrorFilter } from "./festival-activity-error.filter";
+import {
+  InReviewFestivalActivityResponseDto,
+  RefusedFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
+} from "./dto/reviewable-festival-activity.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "./dto/inquiry-request.response.dto";
+import {
+  PrivateReviewableGeneralResponseDto,
+  PublicReviewableGeneralResponseDto,
+} from "./dto/reviewable/general.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -71,6 +86,20 @@ import { FestivalActivityErrorFilter } from "./festival-activity-error.filter";
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
+@ApiExtraModels(
+  UnassignedInquiryRequestResponseDto,
+  AssignedInquiryRequestResponseDto,
+  PublicReviewableGeneralResponseDto,
+  PrivateReviewableGeneralResponseDto,
+  DraftPreviewFestivalActivityResponseDto,
+  InReviewPreviewFestivalActivityResponseDto,
+  ValidatedPreviewFestivalActivityResponseDto,
+  RefusedPreviewFestivalActivityResponseDto,
+  DraftFestivalActivityResponseDto,
+  InReviewFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
+  RefusedFestivalActivityResponseDto,
+)
 @UseFilters(FestivalActivityErrorFilter)
 @Controller("festival-activity")
 export class FestivalActivityController {
@@ -89,6 +118,7 @@ export class FestivalActivityController {
         { $ref: getSchemaPath(DraftPreviewFestivalActivityResponseDto) },
         { $ref: getSchemaPath(InReviewPreviewFestivalActivityResponseDto) },
         { $ref: getSchemaPath(ValidatedPreviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedPreviewFestivalActivityResponseDto) },
       ],
     },
     isArray: true,
@@ -103,7 +133,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "id",
@@ -123,7 +160,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 201,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Festival activity to create",
@@ -142,7 +186,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "id",
@@ -163,7 +214,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "General section of festival activity to save",
@@ -189,7 +247,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Time window to add in general section of festival activity",
@@ -215,7 +280,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "faId",
@@ -245,7 +317,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "In charge section of festival activity to save",
@@ -271,7 +350,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Contractor to add in in-charge section of festival activity",
@@ -297,7 +383,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description:
@@ -335,7 +428,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "faId",
@@ -362,7 +462,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Signa section of festival activity to save",
@@ -388,7 +495,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Signage to add in signa section of festival activity",
@@ -414,7 +528,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Signage data to update in signa section of festival activity",
@@ -447,7 +568,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "faId",
@@ -474,7 +602,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Security section of festival activity to save",
@@ -499,7 +634,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Supply section of festival activity to save",
@@ -525,7 +667,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description:
@@ -555,7 +704,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description:
@@ -594,7 +750,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "faId",
@@ -626,7 +789,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Inquiry section initial request",
@@ -652,7 +822,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Time window to add in inquiry section of festival activity",
@@ -678,7 +855,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "faId",
@@ -709,7 +893,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description:
@@ -736,7 +927,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "faId",
@@ -764,7 +962,14 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "Festival activity",
-    type: DraftFestivalActivityDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Feedback to add to festival activity",
