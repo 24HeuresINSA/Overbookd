@@ -1,3 +1,10 @@
+## [2.8.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.1...v2.8.2) (2023-12-05)
+
+
+### Bug Fixes
+
+* **festival-activity:** order by ascending ids. [#1393](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1393) ([84f097b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/84f097b1a058701494a499c86e8f864d6dd3b4d3))
+
 ## [2.8.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.0...v2.8.1) (2023-12-05)
 
 
