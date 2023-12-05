@@ -126,27 +126,50 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaInitInquiry from "~/components/molecules/festival-event/logistic/inquiry/FaInitInquiry.vue";
-import FaDefaultInquiry from "~/components/molecules/festival-event/logistic/inquiry/FaDefaultInquiry.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
+import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
+import FaInitInquiryFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaInitInquiryFormCard.vue";
+import FaInquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/FaInquiryFormFields.vue";
 import {
+  BARRIERES,
+  ELEC,
   FestivalActivity,
   InquiryRequest,
   MATOS,
-  ELEC,
-  BARRIERES,
   TimeWindow,
-  InquiryOwner,
   isDraft,
   APPROVED,
   REJECTED,
 } from "@overbookd/festival-activity";
+import { InitInquiryRequest } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/period";
+import { Gear } from "~/utils/models/catalog.model";
+
+type FaInquiryCardData = {
+  isInitInquiryDialogOpen: boolean;
+  gear: Gear | null;
+  quantity: number;
+  MATOS: typeof MATOS;
+  ELEC: typeof ELEC;
+  BARRIERES: typeof BARRIERES;
+};
 
 export default defineComponent({
   name: "FaInquiryCard",
   components: {
-    FaInitInquiry,
-    FaDefaultInquiry,
+    FaTimeWindowTable,
+    InquiryTable,
+    FaInitInquiryFormCard,
+    FaInquiryFormFields,
   },
+  data: (): FaInquiryCardData => ({
+    isInitInquiryDialogOpen: false,
+    gear: null,
+    quantity: 1,
+    MATOS,
+    ELEC,
+    BARRIERES,
+  }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -167,7 +190,10 @@ export default defineComponent({
         this.inquiry.timeWindows.length > 0
       );
     },
-    shouldShowInitInquiry(): boolean {
+    canAddInquiry(): boolean {
+      return this.gear !== null && this.quantity > 0;
+    },
+    shouldInitInquiry(): boolean {
       return !isDraft(this.mFA) && !this.hasInquiry;
     },
     canReviewGears(): boolean {
@@ -242,5 +268,99 @@ export default defineComponent({
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },
   },
+  methods: {
+    addInquiry() {
+      const inquiry = {
+        slug: this.gear?.slug ?? "",
+        quantity: this.quantity,
+      };
+      this.$accessor.festivalActivity.addInquiryRequest(inquiry);
+
+      this.gear = null;
+      this.quantity = 1;
+    },
+    removeInquiry(inquiry: InquiryRequest) {
+      this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);
+    },
+    addTimeWindow(period: IProvidePeriod) {
+      this.$accessor.festivalActivity.addInquiryTimeWindow(period);
+    },
+    removeTimeWindow(timeWindow: TimeWindow) {
+      this.$accessor.festivalActivity.removeInquiryTimeWindow(timeWindow.id);
+    },
+    initInquiry(form: InitInquiryRequest) {
+      this.$accessor.festivalActivity.initInquiry(form);
+    },
+    openInitInquiryDialog(): void {
+      this.isInitInquiryDialogOpen = true;
+    },
+    closeInitInquiryDialog(): void {
+      this.isInitInquiryDialogOpen = false;
+    },
+    updateGear(gear: Gear | null) {
+      this.gear = gear;
+    },
+    updateQuantity(quantity: number) {
+      this.quantity = quantity;
+    },
+  },
 });
 </script>
+
+<style lang="scss" scoped>
+.inquiry-table {
+  margin: 15px 0 30px 0;
+  padding: 5px;
+  &__title {
+    font-size: 1.1rem;
+  }
+}
+
+.inquiry-form {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: 0;
+  &__fields {
+    width: 100%;
+  }
+  &__btn {
+    margin-left: 20px;
+    margin-bottom: 30px;
+  }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2em;
+    margin-bottom: 30px;
+    &__btn {
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+
+.init-inquiry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-bottom: 20px;
+
+  &__btn {
+    max-width: fit-content;
+    align-self: flex-end;
+  }
+}
+
+.review {
+  position: relative;
+  height: 0;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+</style>
