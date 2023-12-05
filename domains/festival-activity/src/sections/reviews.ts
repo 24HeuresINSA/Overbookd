@@ -40,7 +40,7 @@ export type ApprovalReviewStatus =
   | typeof APPROVED
   | typeof NOT_ASKING_TO_REVIEW;
 
-type RejectionReviewStatus =
+export type RejectionReviewStatus =
   | typeof REVIEWING
   | typeof NOT_ASKING_TO_REVIEW
   | typeof APPROVED

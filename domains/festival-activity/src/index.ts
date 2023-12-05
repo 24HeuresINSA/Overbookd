@@ -1,6 +1,9 @@
 export type {
   Draft,
   Reviewable,
+  InReview,
+  Validated,
+  Refused,
   FestivalActivity,
   CreateFestivalActivityForm,
   PreviewDraft,
@@ -27,6 +30,7 @@ export type {
   InquiryRequest,
   InquiryOwner,
   WithInquiries,
+  Drive,
 } from "./sections/inquiry";
 export {
   MATOS,
@@ -86,7 +90,9 @@ export type {
   WaitingForReview,
   InReviewReviews,
   ValidatedReviews,
+  RefusedReviews,
   ApprovalReviewStatus,
+  RejectionReviewStatus,
   ReviewingStatus,
 } from "./sections/reviews";
 export {
