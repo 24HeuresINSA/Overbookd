@@ -35,6 +35,7 @@ import {
 } from "class-validator";
 import {
   AddInquiryRequest,
+  InitInquiryRequest,
   PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
@@ -352,11 +353,6 @@ export class AddInquiryRequestDto implements AddInquiryRequest {
   @IsString()
   slug: string;
 }
-
-export type InitInquiryRequest = {
-  timeWindow: IProvidePeriod;
-  request: AddInquiryRequest;
-};
 
 export class InitInquiryRequestDto implements InitInquiryRequest {
   @ApiProperty({

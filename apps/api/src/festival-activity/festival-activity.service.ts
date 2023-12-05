@@ -23,6 +23,7 @@ import {
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
+  InitInquiryRequest,
   PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
@@ -31,7 +32,6 @@ import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
 import {
-  InitInquiryRequest,
   UpdateContractorRequest,
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,

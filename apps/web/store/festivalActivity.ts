@@ -18,7 +18,11 @@ import {
   defaultDraft,
   InquiryRequest,
 } from "@overbookd/festival-activity";
-import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
+import {
+  InitInquiryRequest,
+  PrepareInChargeForm,
+  PrepareSignaForm,
+} from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
@@ -329,6 +333,15 @@ export const actions = actionTree(
         this,
         repo.removeInquiryRequest(this, id, slug),
       );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async initInquiry({ state, commit }, form: InitInquiryRequest) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.initInquiry(this, id, form));
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

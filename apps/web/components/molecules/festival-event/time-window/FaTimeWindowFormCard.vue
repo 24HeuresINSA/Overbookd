@@ -13,14 +13,11 @@
     </v-card-subtitle>
 
     <v-card-text class="pb-0">
-      <h3>Début du créneau</h3>
-      <DateTimeField v-model="start" label="Début" @enter="addTimeWindow" />
-
-      <h3>Fin du créneau</h3>
-      <DateTimeField
-        v-model="end"
-        label="Fin"
-        :error-messages="errors"
+      <FaTimeWindowFormFields
+        :start="start"
+        :end="end"
+        @update-start="updateStart"
+        @update-end="updateEnd"
         @enter="addTimeWindow"
       />
     </v-card-text>
@@ -36,19 +33,14 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
+import FaTimeWindowFormFields from "./FaTimeWindowFormFields.vue";
 import { formatDate } from "~/utils/date/date.utils";
-import { Period, IProvidePeriod } from "@overbookd/period";
-
-interface FaTimeWindowFormData {
-  start: Date;
-  end: Date;
-}
+import { IProvidePeriod, Period } from "@overbookd/period";
 
 export default defineComponent({
-  name: "FaTimeWindowForm",
-  components: { DateTimeField },
-  data: (): FaTimeWindowFormData => ({
+  name: "FaTimeWindowFormCard",
+  components: { FaTimeWindowFormFields },
+  data: (): IProvidePeriod => ({
     start: new Date(),
     end: new Date(),
   }),
@@ -85,6 +77,12 @@ export default defineComponent({
       this.closeDialog();
       this.setDefaultDates();
     },
+    updateStart(start: Date) {
+      this.start = start;
+    },
+    updateEnd(end: Date) {
+      this.end = end;
+    },
     closeDialog() {
       this.$emit("close-dialog");
     },
@@ -106,9 +104,6 @@ export default defineComponent({
       flex: 1;
       text-align: center;
     }
-  }
-  &__form {
-    padding-bottom: 0;
   }
   &__actions {
     margin-bottom: 10px;

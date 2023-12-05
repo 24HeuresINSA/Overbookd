@@ -1,6 +1,7 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   HttpStringified,
+  InitInquiryRequest,
   PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
@@ -279,6 +280,17 @@ export class FestivalActivityRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/inquiry/requests/${requestSlug}`,
+    );
+  }
+
+  static initInquiry(
+    context: Context,
+    faId: FestivalActivity["id"],
+    form: InitInquiryRequest,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry`,
+      form,
     );
   }
 

@@ -559,6 +559,9 @@ importers:
       '@overbookd/festival-activity':
         specifier: workspace:^
         version: link:../../domains/festival-activity
+      '@overbookd/period':
+        specifier: workspace:^
+        version: link:../../libraries/period
 
 packages:
 

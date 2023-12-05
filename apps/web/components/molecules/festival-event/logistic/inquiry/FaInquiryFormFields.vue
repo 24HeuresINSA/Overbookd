@@ -1,22 +1,18 @@
 <template>
   <v-form class="inquiry-form">
     <v-text-field
-      v-model="quantity"
+      :value="quantity"
       type="number"
       label="Quantité"
       :rules="[rules.number, rules.min]"
       class="inquiry-form__quantity"
+      @change="updateQuantity"
     />
-    <SearchGear v-model="gear" class="inquiry-form__search" />
-    <v-btn
-      rounded
-      color="primary"
-      class="inquiry-form__btn"
-      :disabled="!canAddInquiry"
-      @click="addInquiry"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+    <SearchGear
+      :gear="gear"
+      class="inquiry-form__search"
+      @change="updateGear"
+    />
   </v-form>
 </template>
 
@@ -26,41 +22,36 @@ import SearchGear from "~/components/atoms/field/search/SearchGear.vue";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
-type FaInquiryFormData = InputRulesData & {
-  gear: Gear | null;
-  quantity: number;
-};
-
 export default defineComponent({
-  name: "FaInquiryForm",
+  name: "FaInitInquiryFormFields",
   components: { SearchGear },
-  data: (): FaInquiryFormData => ({
-    gear: null,
-    quantity: 1,
-
+  props: {
+    gear: {
+      type: Object as () => Gear | null,
+      default: () => null,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+    },
+  },
+  data: (): InputRulesData => ({
     rules: {
       number: isNumber,
       min: min(1),
     },
   }),
   computed: {
-    canAddInquiry(): boolean {
+    canConfirmInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;
     },
   },
   methods: {
-    clearInquiryForm() {
-      this.gear = null;
-      this.quantity = 1;
+    updateGear(gear: Gear) {
+      this.$emit("update-gear", gear);
     },
-    addInquiry(): void {
-      if (!this.canAddInquiry) return;
-      const inquiry = {
-        slug: this.gear?.slug ?? "",
-        quantity: +this.quantity,
-      };
-      this.$emit("add", inquiry);
-      this.clearInquiryForm();
+    updateQuantity(quantity: number) {
+      this.$emit("update-quantity", +quantity);
     },
   },
 });
@@ -72,10 +63,6 @@ export default defineComponent({
   align-items: center;
   gap: 1em;
   margin-bottom: 0;
-  &__btn {
-    margin-left: 20px;
-    margin-bottom: 30px;
-  }
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
     align-items: center;
@@ -83,10 +70,6 @@ export default defineComponent({
     margin-bottom: 30px;
     &__quantity,
     &__search {
-      width: 100%;
-    }
-    &__btn {
-      margin: 0;
       width: 100%;
     }
   }

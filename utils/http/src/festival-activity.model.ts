@@ -1,4 +1,5 @@
 import { PrepareInquiryRequestCreation } from "@overbookd/festival-activity";
+import { IProvidePeriod } from "@overbookd/period";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -13,3 +14,8 @@ export type AddInquiryRequest = Pick<
   PrepareInquiryRequestCreation,
   "slug" | "quantity"
 >;
+
+export type InitInquiryRequest = {
+  timeWindow: IProvidePeriod;
+  request: AddInquiryRequest;
+};
