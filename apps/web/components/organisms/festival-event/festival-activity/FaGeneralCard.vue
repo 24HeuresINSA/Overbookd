@@ -1,7 +1,13 @@
 <template>
   <v-card>
     <div v-if="canReview" class="review">
-      <v-btn class="review__action" fab x-small color="success">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="success"
+        @click="approved"
+      >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
       <v-btn class="review__action" fab x-small color="error">
@@ -88,7 +94,13 @@
 import { defineComponent } from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
-import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
+import {
+  FestivalActivity,
+  Reviewer,
+  TimeWindow,
+  communication,
+  humain,
+} from "@overbookd/festival-activity";
 import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
 
@@ -113,6 +125,9 @@ export default defineComponent({
     },
     contact(): string {
       return this.isPublic ? comcomEmail : humainEmail;
+    },
+    reviewer(): Reviewer {
+      return this.isPublic ? communication : humain;
     },
     canReview(): boolean {
       return this.$accessor.user.can("manage-admins");
@@ -145,6 +160,9 @@ export default defineComponent({
     },
     removeTimeWindow(timeWindow: TimeWindow) {
       this.$accessor.festivalActivity.removeGeneralTimeWindow(timeWindow.id);
+    },
+    approved() {
+      this.$accessor.festivalActivity.approveAs(this.reviewer);
     },
   },
 });

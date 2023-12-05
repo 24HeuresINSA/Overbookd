@@ -17,6 +17,7 @@ import {
   TimeWindow,
   defaultDraft,
   InquiryRequest,
+  Reviewer,
 } from "@overbookd/festival-activity";
 import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
@@ -342,6 +343,15 @@ export const actions = actionTree(
         this,
         repo.publishFeedback(this, id, feedback),
       );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async approveAs({ state, commit }, reviewer: Reviewer) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.approve(this, id, reviewer));
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

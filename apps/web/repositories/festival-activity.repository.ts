@@ -20,6 +20,7 @@ import {
   PrepareSignageUpdate,
   PrepareSupplyUpdate,
   PreviewFestivalActivity,
+  Reviewer,
   Signage,
   TimeWindow,
 } from "@overbookd/festival-activity";
@@ -291,6 +292,17 @@ export class FestivalActivityRepository {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/feedbacks`,
       feedback,
+    );
+  }
+
+  static approve(
+    context: Context,
+    faId: FestivalActivity["id"],
+    team: Reviewer,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/approve`,
+      { team },
     );
   }
 }
