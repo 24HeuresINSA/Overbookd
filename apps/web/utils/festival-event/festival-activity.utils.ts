@@ -27,13 +27,13 @@ function isDraft(
 }
 
 const A_RELIRE = "À relire";
-const VALIDEE = "Aprouvée";
+const APPROUVEE = "Approuvée";
 const REJETEE = "Rejetée";
 
-export type ReviewLabel = typeof A_RELIRE | typeof VALIDEE | typeof REJETEE;
+export type ReviewLabel = typeof A_RELIRE | typeof APPROUVEE | typeof REJETEE;
 
 export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
   [REVIEWING, A_RELIRE],
-  [APPROVED, VALIDEE],
+  [APPROVED, APPROUVEE],
   [REJECTED, REJETEE],
 ]);

@@ -351,7 +351,9 @@ export const actions = actionTree(
 
     async approveAs({ state, commit }, reviewer: Reviewer) {
       const id = state.selectedActivity.id;
-      const res = await safeCall(this, repo.approve(this, id, reviewer));
+      const res = await safeCall(this, repo.approve(this, id, reviewer), {
+        successMessage: `✅ FA approuvée pour l'équipe ${reviewer}`,
+      });
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

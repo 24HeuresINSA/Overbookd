@@ -7,6 +7,7 @@
         x-small
         color="success"
         @click="approved"
+        :disabled="cantApprove"
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
@@ -95,11 +96,13 @@ import { defineComponent } from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import {
+  APPROVED,
   FestivalActivity,
   Reviewer,
   TimeWindow,
   communication,
   humain,
+  isDraft,
 } from "@overbookd/festival-activity";
 import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
@@ -126,11 +129,20 @@ export default defineComponent({
     contact(): string {
       return this.isPublic ? comcomEmail : humainEmail;
     },
-    reviewer(): Reviewer {
+    reviewer(): typeof communication | typeof humain {
       return this.isPublic ? communication : humain;
     },
     canReview(): boolean {
       return this.$accessor.user.can("manage-admins");
+    },
+    cantApprove(): boolean {
+      if (isDraft(this.mFA)) return true;
+      switch (this.reviewer) {
+        case humain:
+          return this.mFA.reviews.humain === APPROVED;
+        case communication:
+          return this.mFA.reviews.communication === APPROVED;
+      }
     },
   },
   methods: {

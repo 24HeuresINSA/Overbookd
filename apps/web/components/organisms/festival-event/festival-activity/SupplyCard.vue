@@ -1,7 +1,14 @@
 <template>
   <v-card>
     <div v-if="canReview" class="review">
-      <v-btn class="review__action" fab x-small color="success">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="success"
+        @click="approved"
+        :disabled="cantApprove"
+      >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
       <v-btn class="review__action" fab x-small color="error">
@@ -40,17 +47,28 @@ import {
   FestivalActivity,
   ElectricitySupply,
   PrepareElectricitySupplyCreation,
+  elec,
+  APPROVED,
+  isDraft,
 } from "@overbookd/festival-activity";
 
 export default defineComponent({
   name: "SupplyCard",
   components: { ElectricitySupplyTable },
   computed: {
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
     supply(): FestivalActivity["supply"] {
-      return this.$accessor.festivalActivity.selectedActivity.supply;
+      return this.mFA.supply;
     },
     canReview(): boolean {
       return this.$accessor.user.can("manage-admins");
+    },
+    cantApprove(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.elec === APPROVED;
     },
   },
   methods: {
@@ -66,6 +84,9 @@ export default defineComponent({
     updateWaterSupply(canBeEmpty: string) {
       const water = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateSupply({ water });
+    },
+    approved() {
+      this.$accessor.festivalActivity.approveAs(elec);
     },
   },
 });

@@ -1,7 +1,14 @@
 <template>
   <v-card>
     <div v-if="canReview" class="review">
-      <v-btn class="review__action" fab x-small color="success">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="success"
+        @click="approved"
+        :disabled="cantApprove"
+      >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
       <v-btn class="review__action" fab x-small color="error">
@@ -62,6 +69,9 @@ import {
   Adherent,
   PrepareContractorCreation,
   Contractor,
+  humain,
+  APPROVED,
+  isDraft,
 } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
@@ -70,8 +80,11 @@ export default defineComponent({
   name: "FaGeneralCard",
   components: { SearchUser, SearchTeam, ContractorTable },
   computed: {
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
     inCharge(): FestivalActivity["inCharge"] {
-      return this.$accessor.festivalActivity.selectedActivity.inCharge;
+      return this.mFA.inCharge;
     },
     team(): Team | null {
       const team = this.inCharge.team ?? "";
@@ -82,6 +95,11 @@ export default defineComponent({
     },
     canReview(): boolean {
       return this.$accessor.user.can("manage-admins");
+    },
+    cantApprove(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.humain === APPROVED;
     },
   },
   async mounted() {
@@ -105,6 +123,9 @@ export default defineComponent({
     },
     removeContractor(contractor: Contractor) {
       this.$accessor.festivalActivity.removeContractor(contractor.id);
+    },
+    approved() {
+      this.$accessor.festivalActivity.approveAs(humain);
     },
   },
 });

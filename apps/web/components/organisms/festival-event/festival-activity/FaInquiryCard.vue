@@ -30,7 +30,14 @@
 
       <v-card class="inquiry-table">
         <div v-if="canReview" class="review">
-          <v-btn class="review__action" fab x-small color="success">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="success"
+            @click="approved(MATOS)"
+            :disabled="cantApproveGears"
+          >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
           <v-btn class="review__action" fab x-small color="error">
@@ -47,7 +54,14 @@
 
       <v-card class="inquiry-table">
         <div v-if="canReview" class="review">
-          <v-btn class="review__action" fab x-small color="success">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="success"
+            @click="approved(ELEC)"
+            :disabled="cantApproveElec"
+          >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
           <v-btn class="review__action" fab x-small color="error">
@@ -64,7 +78,14 @@
 
       <v-card class="inquiry-table">
         <div v-if="canReview" class="review">
-          <v-btn class="review__action" fab x-small color="success">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="success"
+            @click="approved(BARRIERES)"
+            :disabled="cantApproveBarriers"
+          >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
           <v-btn class="review__action" fab x-small color="error">
@@ -94,6 +115,9 @@ import {
   ELEC,
   BARRIERES,
   TimeWindow,
+  InquiryOwner,
+  isDraft,
+  APPROVED,
 } from "@overbookd/festival-activity";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
@@ -125,14 +149,32 @@ export default defineComponent({
     },
   }),
   computed: {
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
     inquiry(): FestivalActivity["inquiry"] {
-      return this.$accessor.festivalActivity.selectedActivity.inquiry;
+      return this.mFA.inquiry;
     },
     canAddInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;
     },
     canReview(): boolean {
       return this.$accessor.user.can("manage-admins");
+    },
+    cantApproveGears(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.matos === APPROVED;
+    },
+    cantApproveElec(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.elec === APPROVED;
+    },
+    cantApproveBarriers(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.barrieres === APPROVED;
     },
   },
   methods: {
@@ -157,6 +199,9 @@ export default defineComponent({
     },
     removeTimeWindow(timeWindow: TimeWindow) {
       this.$accessor.festivalActivity.removeInquiryTimeWindow(timeWindow.id);
+    },
+    approved(owner: InquiryOwner) {
+      this.$accessor.festivalActivity.approveAs(owner);
     },
   },
 });
