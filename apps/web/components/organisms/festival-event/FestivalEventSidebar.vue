@@ -17,12 +17,7 @@
       </div>
     </div>
 
-    <v-btn
-      v-show="isFA"
-      id="ask-for-review"
-      :disabled="!canAskForReview"
-      @click="askForReview"
-    >
+    <v-btn v-show="isFA" id="ask-for-review" disabled @click="askForReview">
       Demande de relecture
     </v-btn>
 
