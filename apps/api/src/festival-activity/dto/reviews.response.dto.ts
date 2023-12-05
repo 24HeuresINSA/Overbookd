@@ -1,8 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  APPROVED, ApprovalReviewStatus, InReviewReviews, NOT_ASKING_TO_REVIEW, REJECTED,
-  REVIEWING, RefusedReviews,
-  RejectionReviewStatus, ReviewingStatus, VALIDATED, ValidatedReviews
+  APPROVED,
+  ApprovalReviewStatus,
+  InReviewReviews,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+  RefusedReviews,
+  RejectionReviewStatus,
+  ReviewingStatus,
+  VALIDATED,
+  ValidatedReviews,
 } from "@overbookd/festival-activity";
 
 const validatedReviewStatus: ApprovalReviewStatus[] = [
