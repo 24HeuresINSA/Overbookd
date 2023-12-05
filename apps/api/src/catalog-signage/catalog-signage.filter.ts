@@ -1,10 +1,10 @@
 import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
 import { Response } from "express";
-import { CatalogSignageError } from "./repository/catalog-signage-repository.prisma";
+import { SignageError } from "@overbookd/signa";
 
-@Catch(CatalogSignageError)
+@Catch(SignageError)
 export class CatalogSignageErrorFilter implements ExceptionFilter {
-  catch(exception: CatalogSignageError, host: ArgumentsHost) {
+  catch(exception: SignageError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
