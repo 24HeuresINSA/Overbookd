@@ -1,3 +1,15 @@
+## [2.8.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.0...v2.8.1) (2023-12-05)
+
+
+### Pre-Features
+
+* **festival-activity:** reject for reviewers. [#1389](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1389) ([97012b6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/97012b6f3bf5c3f4ba12bafe6c9fe15eec2c3a84))
+
+
+### Documentation
+
+* **api:** use one of festival activity previews or details dtos. [#1390](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1390) ([ecd6777](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ecd6777e1d9ad01baf1acf7d8658a8db7455f725))
+
 ## [2.8.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.7.1...v2.8.0) (2023-12-04)
 
 
