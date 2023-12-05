@@ -9,11 +9,11 @@
     </div>
 
     <div class="icons">
-      <div v-for="validator of validators" :key="validator.code" class="icon">
-        <v-icon :class="getValidatorStatus(validator)" size="26">
-          {{ validator.icon }}
+      <div v-for="reviewer of reviewers" :key="reviewer.code" class="icon">
+        <v-icon :class="getReviewerStatus(reviewer)" size="26">
+          {{ reviewer.icon }}
         </v-icon>
-        <span class="icon-detail">{{ validator.name }}</span>
+        <span class="icon-detail">{{ reviewer.name }}</span>
       </div>
     </div>
 
@@ -50,7 +50,9 @@ import { Team } from "~/utils/models/team.model";
 import {
   FestivalActivity,
   DRAFT as FA_DRAFT,
+  isDraft,
 } from "@overbookd/festival-activity";
+import { findReviewStatus } from "~/utils/festival-event/festival-activity.filter";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -84,7 +86,7 @@ export default Vue.extend({
         ? faStatusLabels.get(this.mFA.status) ?? FA_BROUILLON
         : ftStatusLabels.get(this.mFT.status) ?? FT_BROUILLON;
     },
-    validators(): Team[] {
+    reviewers(): Team[] {
       return this.isFA
         ? this.$accessor.team.faValidators
         : this.$accessor.team.ftValidators;
@@ -101,7 +103,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    if (this.validators.length > 0) return;
+    if (this.reviewers.length > 0) return;
     this.isFA
       ? this.$accessor.team.fetchFaValidators()
       : this.$accessor.team.fetchFtValidators();
@@ -114,6 +116,11 @@ export default Vue.extend({
     },
     async askForReview() {
       await this.$accessor.festivalActivity.askForReview();
+    },
+    getReviewerStatus(reviewer: Team): string {
+      if (isDraft(this.mFA)) return "";
+      const status = this.mFA.reviews[reviewer.code];
+      return (findReviewStatus(status) ?? "").toLowerCase();
     },
   },
 });
