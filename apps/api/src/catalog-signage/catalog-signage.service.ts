@@ -31,7 +31,7 @@ export class CatalogSignageService {
     await this.catalogSignages.remove(id);
   }
   private async getSignageImage(id: number): Promise<string | null> {
-   return this.catalogSignages.findSignageImage(id);
+    return this.catalogSignages.findSignageImage(id);
   }
 
   async updateSignageImage(id: number, image: string): Promise<Signage> {

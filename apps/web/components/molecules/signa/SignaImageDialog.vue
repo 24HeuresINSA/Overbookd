@@ -29,7 +29,6 @@ import { signageTypes } from "@overbookd/signa";
 import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
 import Vue from "vue";
 
-
 export default Vue.extend({
   name: "SignaImageDialog",
   props: {

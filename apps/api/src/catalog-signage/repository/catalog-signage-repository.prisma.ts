@@ -5,12 +5,14 @@ import { CatalogSignageRepository } from "../catalog-signage.service";
 import { SlugifyService } from "@overbookd/slugify";
 import { StreamableFile } from "@nestjs/common";
 
-export class PrismaCatalogSignageRepository implements CatalogSignageRepository {
+export class PrismaCatalogSignageRepository
+  implements CatalogSignageRepository
+{
   constructor(
     private readonly prisma: PrismaService,
     private readonly fileService: FileService,
   ) {}
-  
+
   async findAll(): Promise<Signage[]> {
     return this.prisma.catalogSignage.findMany();
   }

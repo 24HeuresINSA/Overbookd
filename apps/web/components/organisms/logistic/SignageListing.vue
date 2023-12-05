@@ -24,7 +24,7 @@
     <v-data-table :headers="headers" :items="filteredSignages">
       <template #item.image="{ item }">
         <v-img
-          :src="item.imageBlob "
+          :src="item.imageBlob"
           :alt="item.name"
           width="150"
           height="150"
@@ -79,8 +79,6 @@
       </ConfirmationMessage>
     </v-dialog>
   </div>
-
-
 </template>
 
 <script lang="ts">
@@ -127,7 +125,6 @@ export default Vue.extend({
   computed: {
     signages(): SignageWithPotentialImage[] {
       return this.$accessor.catalogSignage.signages;
-      
     },
     filteredSignages(): Signage[] {
       return this.signages.filter((signage) => {

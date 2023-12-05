@@ -102,21 +102,28 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      const imageBlob = await signageRepository.getSignageImage(this, signageId);
-      const signage = {...res.data, imageBlob };
+      const imageBlob = await signageRepository.getSignageImage(
+        this,
+        signageId,
+      );
+      const signage = { ...res.data, imageBlob };
       commit("UPDATE_SIGNAGE", signage);
     },
   },
 );
 
-async function getSignageImages(context: Context,signages: Signage[]) {
-  return await Promise.all(signages.map(async (signage) => {
-    const signageImage = await CatalogSignageRepository.getSignageImage(context, signage.id);
-    if (!signageImage) return signage;
-    return {
-      ...signage,
-      imageBlob: signageImage,
-    };
-  }));
+async function getSignageImages(context: Context, signages: Signage[]) {
+  return await Promise.all(
+    signages.map(async (signage) => {
+      const signageImage = await CatalogSignageRepository.getSignageImage(
+        context,
+        signage.id,
+      );
+      if (!signageImage) return signage;
+      return {
+        ...signage,
+        imageBlob: signageImage,
+      };
+    }),
+  );
 }
-

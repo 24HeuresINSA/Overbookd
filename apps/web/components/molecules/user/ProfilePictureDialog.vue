@@ -24,7 +24,6 @@
 import Vue from "vue";
 import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
 
-
 export default Vue.extend({
   name: "ProfilePictureDialog",
   data: () => ({

@@ -18,11 +18,7 @@ export function isSupportedImageFile(value?: File | null): string | boolean {
 }
 
 export function imageRules(): ((value?: File | null) => string | boolean)[] {
-  return [
-    isImage,
-    isImageSizeWithinLimit,
-    isSupportedImageFile,
-  ];
+  return [isImage, isImageSizeWithinLimit, isSupportedImageFile];
 }
 
 export function isImageValid(value?: File | null): boolean {
