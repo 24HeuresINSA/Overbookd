@@ -26,8 +26,8 @@
         <v-img
           :src="item.imageBlob "
           :alt="item.name"
-          width="100"
-          height="100"
+          width="150"
+          height="150"
           contain
         ></v-img>
       </template>
