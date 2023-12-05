@@ -29,7 +29,7 @@
       </v-form>
 
       <v-card class="inquiry-table">
-        <div v-if="canReview" class="review">
+        <div v-if="canReviewGears" class="review">
           <v-btn
             class="review__action"
             fab
@@ -53,7 +53,7 @@
       </v-card>
 
       <v-card class="inquiry-table">
-        <div v-if="canReview" class="review">
+        <div v-if="canReviewElec" class="review">
           <v-btn
             class="review__action"
             fab
@@ -77,7 +77,7 @@
       </v-card>
 
       <v-card class="inquiry-table">
-        <div v-if="canReview" class="review">
+        <div v-if="canReviewBarriers" class="review">
           <v-btn
             class="review__action"
             fab
@@ -158,8 +158,14 @@ export default defineComponent({
     canAddInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;
     },
-    canReview(): boolean {
-      return this.$accessor.user.can("manage-admins");
+    canReviewGears(): boolean {
+      return this.$accessor.user.isMemberOf(MATOS);
+    },
+    canReviewElec(): boolean {
+      return this.$accessor.user.isMemberOf(ELEC);
+    },
+    canReviewBarriers(): boolean {
+      return this.$accessor.user.isMemberOf(BARRIERES);
     },
     cantApproveGears(): boolean {
       if (isDraft(this.mFA)) return true;

@@ -63,7 +63,7 @@ export default defineComponent({
       return this.mFA.supply;
     },
     canReview(): boolean {
-      return this.$accessor.user.can("manage-admins");
+      return this.$accessor.user.isMemberOf(elec);
     },
     cantApprove(): boolean {
       if (isDraft(this.mFA)) return true;

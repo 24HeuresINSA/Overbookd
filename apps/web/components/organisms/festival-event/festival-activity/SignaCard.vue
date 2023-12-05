@@ -70,7 +70,7 @@ export default defineComponent({
       return this.mFA.signa;
     },
     canReview(): boolean {
-      return this.$accessor.user.can("manage-admins");
+      return this.$accessor.user.isMemberOf(signa);
     },
     cantApprove(): boolean {
       if (isDraft(this.mFA)) return true;

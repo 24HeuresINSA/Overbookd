@@ -129,6 +129,11 @@ export const getters = getterTree(state, {
       false
     );
   },
+  isMemberOf:
+    ({ me }: UserState) =>
+    (team: string) => {
+      return me.teams.includes("admin") || me.teams.includes(team);
+    },
 });
 
 export const actions = actionTree(

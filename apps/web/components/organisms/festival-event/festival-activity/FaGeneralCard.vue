@@ -133,7 +133,7 @@ export default defineComponent({
       return this.isPublic ? communication : humain;
     },
     canReview(): boolean {
-      return this.$accessor.user.can("manage-admins");
+      return this.$accessor.user.isMemberOf(this.reviewer);
     },
     cantApprove(): boolean {
       if (isDraft(this.mFA)) return true;
