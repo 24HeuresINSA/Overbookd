@@ -28,32 +28,56 @@
         </v-btn>
       </v-form>
 
-      <div class="inquiry-table">
-        <h2>Matos</h2>
+      <v-card class="inquiry-table">
+        <div v-if="canReview" class="review">
+          <v-btn class="review__action" fab x-small color="success">
+            <v-icon>mdi-check-circle-outline</v-icon>
+          </v-btn>
+          <v-btn class="review__action" fab x-small color="error">
+            <v-icon>mdi-close-circle-outline</v-icon>
+          </v-btn>
+        </div>
+        <v-card-title class="inquiry-table__title">Matos</v-card-title>
         <InquiryTable
           :inquiries="inquiry.gears"
           :owner="MATOS"
           @remove="removeInquiry"
         />
-      </div>
+      </v-card>
 
-      <div class="inquiry-table">
-        <h2>Elec</h2>
+      <v-card class="inquiry-table">
+        <div v-if="canReview" class="review">
+          <v-btn class="review__action" fab x-small color="success">
+            <v-icon>mdi-check-circle-outline</v-icon>
+          </v-btn>
+          <v-btn class="review__action" fab x-small color="error">
+            <v-icon>mdi-close-circle-outline</v-icon>
+          </v-btn>
+        </div>
+        <v-card-title class="inquiry-table__title">Elec</v-card-title>
         <InquiryTable
           :inquiries="inquiry.electricity"
           :owner="ELEC"
           @remove="removeInquiry"
         />
-      </div>
+      </v-card>
 
-      <div class="inquiry-table">
-        <h2>Barrières</h2>
+      <v-card class="inquiry-table">
+        <div v-if="canReview" class="review">
+          <v-btn class="review__action" fab x-small color="success">
+            <v-icon>mdi-check-circle-outline</v-icon>
+          </v-btn>
+          <v-btn class="review__action" fab x-small color="error">
+            <v-icon>mdi-close-circle-outline</v-icon>
+          </v-btn>
+        </div>
+        <v-card-title class="inquiry-table__title">Barrières</v-card-title>
         <InquiryTable
           :inquiries="inquiry.barriers"
           :owner="BARRIERES"
           @remove="removeInquiry"
         />
-      </div>
+      </v-card>
     </v-card-text>
   </v-card>
 </template>
@@ -106,6 +130,9 @@ export default defineComponent({
     },
     canAddInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;
+    },
+    canReview(): boolean {
+      return this.$accessor.user.can("manage-admins");
     },
   },
   methods: {
@@ -162,10 +189,22 @@ export default defineComponent({
 }
 
 .inquiry-table {
-  margin: 15px 0;
-  h2 {
-    font-size: 1rem;
-    margin-bottom: 5px;
+  margin: 15px 0 30px 0;
+  padding: 5px;
+  &__title {
+    font-size: 1.1rem;
   }
+}
+
+.review {
+  position: relative;
+  height: 0;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 </style>

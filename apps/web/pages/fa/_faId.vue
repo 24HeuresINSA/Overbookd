@@ -99,6 +99,7 @@ $sidebar-width: 350px;
     position: relative;
     width: 100%;
     margin: unset;
+    margin-bottom: 20px;
   }
 
   .container {

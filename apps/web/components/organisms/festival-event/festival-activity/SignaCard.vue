@@ -1,5 +1,14 @@
 <template>
   <v-card>
+    <div v-if="canReview" class="review">
+      <v-btn class="review__action" fab x-small color="success">
+        <v-icon>mdi-check-circle-outline</v-icon>
+      </v-btn>
+      <v-btn class="review__action" fab x-small color="error">
+        <v-icon>mdi-close-circle-outline</v-icon>
+      </v-btn>
+    </div>
+
     <v-card-title> Signa </v-card-title>
     <v-card-subtitle>
       Contacte la signa via
@@ -47,6 +56,9 @@ export default defineComponent({
     signa(): FestivalActivity["signa"] {
       return this.$accessor.festivalActivity.selectedActivity.signa;
     },
+    canReview(): boolean {
+      return this.$accessor.user.can("manage-admins");
+    },
   },
   methods: {
     updateLocation(location: Location | null) {
@@ -69,5 +81,14 @@ export default defineComponent({
 <style lang="scss" scoped>
 .signage-title {
   margin: 20px 0;
+}
+
+.review {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 </style>

@@ -83,7 +83,7 @@ export const pages: Page[] = [
     to: "/fa",
     description:
       "Liste des FAs, les FAs permettent de décrire tout ce qui va se passer sur le festival",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["fas", "fiches-activites", "animations"],
   },
   {

@@ -1,5 +1,13 @@
 <template>
   <v-card>
+    <div v-if="canReview" class="review">
+      <v-btn class="review__action" fab x-small color="success">
+        <v-icon>mdi-check-circle-outline</v-icon>
+      </v-btn>
+      <v-btn class="review__action" fab x-small color="error">
+        <v-icon>mdi-close-circle-outline</v-icon>
+      </v-btn>
+    </div>
     <v-card-title>Besoin en électricité et eau</v-card-title>
     <v-card-subtitle>
       Précise tes besoins en électricité : 1 ligne par type d'appareil. Si ton
@@ -41,6 +49,9 @@ export default defineComponent({
     supply(): FestivalActivity["supply"] {
       return this.$accessor.festivalActivity.selectedActivity.supply;
     },
+    canReview(): boolean {
+      return this.$accessor.user.can("manage-admins");
+    },
   },
   methods: {
     addElectricitySupply(supply: PrepareElectricitySupplyCreation) {
@@ -59,3 +70,14 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.review {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+</style>
