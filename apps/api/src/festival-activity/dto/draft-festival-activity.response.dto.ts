@@ -15,25 +15,12 @@ import {
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
 import { ContractorResponseDto } from "./contractor.response.dto";
-
-class TimeWindowDto implements TimeWindow {
-  @ApiProperty({
-    description: "Festival activity time window id",
-  })
-  id: string;
-
-  @ApiProperty({
-    description: "Festival activity time window start date",
-    type: Date,
-  })
-  start: Date;
-
-  @ApiProperty({
-    description: "Festival activity time window end date",
-    type: Date,
-  })
-  end: Date;
-}
+import { SignageResponseDto } from "./signage.response.dto";
+import { TimeWindowResponseDto } from "./time-window.response.dto";
+import { LocationResponseDto } from "./location.response.dto";
+import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
+import { FeedbackResponseDto } from "./feedback.response.dto";
+import { UnassignedInquiryRequestResponseDto } from "./inquiry-request.response.dto";
 
 type General = Draft["general"];
 
@@ -76,7 +63,7 @@ class GeneralDto implements General {
   @ApiProperty({
     description: "time windows during which this festival activity occurs",
     isArray: true,
-    type: TimeWindowDto,
+    type: TimeWindowResponseDto,
   })
   timeWindows: TimeWindow[];
 }
@@ -92,7 +79,8 @@ class InChargeDto implements InCharge {
 
   @ApiProperty({
     description: "Team in charge of this festival activity",
-    required: false,
+    required: true,
+    nullable: true,
   })
   team: string | null;
 
@@ -104,46 +92,23 @@ class InChargeDto implements InCharge {
   contractors: Contractor[];
 }
 
-const signaTypes = ["BACHE", "PANNEAU", "AFFICHE"];
-
-class SignageDto implements Signage {
-  @ApiProperty({})
-  id: string;
-
-  @ApiProperty({
-    description: "Wanted quantity for this signage",
-  })
-  quantity: number;
-
-  @ApiProperty({})
-  text: string;
-
-  @ApiProperty({})
-  size: string;
-
-  @ApiProperty({
-    enum: signaTypes,
-    example: "BACHE",
-  })
-  type: "BACHE" | "PANNEAU" | "AFFICHE";
-
-  @ApiProperty({})
-  comment: string;
-}
+export const signaTypes = ["BACHE", "PANNEAU", "AFFICHE"];
 
 type Signa = Draft["signa"];
 
 class SignaDto implements Signa {
   @ApiProperty({
     description: "Define where this festival activity take place",
-    required: false,
+    required: true,
+    nullable: true,
+    type: LocationResponseDto,
   })
   location: Location | null;
 
   @ApiProperty({
     description: "Festival activity signages needed",
     isArray: true,
-    type: SignageDto,
+    type: SignageResponseDto,
   })
   signages: Signage[];
 }
@@ -158,62 +123,12 @@ class SecurityDto implements Security {
   specialNeed: string | null;
 }
 
-const electricitySupplyConnections = [
-  "PC16_Prise_classique",
-  "P17_16A_MONO",
-  "P17_16A_TRI",
-  "P17_16A_TETRA",
-  "P17_32A_MONO",
-  "P17_32A_TRI",
-  "P17_32A_TETRA",
-  "P17_63A_MONO",
-  "P17_63A_TRI",
-  "P17_63A_TETRA",
-  "P17_125A_TETRA",
-];
-
-class ElectricitySupplyDto implements ElectricitySupply {
-  @ApiProperty({})
-  id: string;
-
-  @ApiProperty({
-    enum: electricitySupplyConnections,
-    example: "PC16_Prise_classique",
-  })
-  connection:
-    | "PC16_Prise_classique"
-    | "P17_16A_MONO"
-    | "P17_16A_TRI"
-    | "P17_16A_TETRA"
-    | "P17_32A_MONO"
-    | "P17_32A_TRI"
-    | "P17_32A_TETRA"
-    | "P17_63A_MONO"
-    | "P17_63A_TRI"
-    | "P17_63A_TETRA"
-    | "P17_125A_TETRA";
-
-  @ApiProperty({})
-  device: string;
-
-  @ApiProperty({})
-  power: number;
-
-  @ApiProperty({})
-  count: number;
-
-  @ApiProperty({
-    required: false,
-  })
-  comment: string | null;
-}
-
 type Supply = Draft["supply"];
 
 class SupplyDto implements Supply {
   @ApiProperty({
     isArray: true,
-    type: ElectricitySupplyDto,
+    type: ElectricitySupplyResponseDto,
   })
   electricity: ElectricitySupply[];
 
@@ -221,17 +136,6 @@ class SupplyDto implements Supply {
     required: false,
   })
   water: string | null;
-}
-
-class InquiryRequestDto implements BaseInquiryRequest {
-  @ApiProperty({})
-  slug: string;
-
-  @ApiProperty({})
-  quantity: number;
-
-  @ApiProperty({})
-  name: string;
 }
 
 class InquiryDto implements InquiryWithPotentialRequests {
@@ -244,37 +148,24 @@ class InquiryDto implements InquiryWithPotentialRequests {
 
   @ApiProperty({
     isArray: true,
-    type: InquiryRequestDto,
+    type: UnassignedInquiryRequestResponseDto,
   })
   gears: BaseInquiryRequest[];
 
   @ApiProperty({
     isArray: true,
-    type: InquiryRequestDto,
+    type: UnassignedInquiryRequestResponseDto,
   })
   electricity: BaseInquiryRequest[];
 
   @ApiProperty({
     isArray: true,
-    type: InquiryRequestDto,
+    type: UnassignedInquiryRequestResponseDto,
   })
   barriers: BaseInquiryRequest[];
 }
 
-class FeedbackDto implements Feedback {
-  @ApiProperty({
-    type: AdherentResponseDto,
-  })
-  author: Adherent;
-
-  @ApiProperty({})
-  content: string;
-
-  @ApiProperty({})
-  publishedAt: Date;
-}
-
-export class DraftFestivalActivityDto implements Draft {
+export class DraftFestivalActivityResponseDto implements Draft {
   @ApiProperty({})
   id: number;
 
@@ -320,7 +211,7 @@ export class DraftFestivalActivityDto implements Draft {
   @ApiProperty({
     description: "Festival activity feedbacks",
     isArray: true,
-    type: FeedbackDto,
+    type: FeedbackResponseDto,
   })
   feedbacks: Feedback[];
 }

@@ -5,104 +5,18 @@ import {
   PreviewReviewable,
   DRAFT,
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  APPROVED,
   InReviewReviews,
   ValidatedReviews,
-  ApprovalReviewStatus,
   VALIDATED,
-  ReviewingStatus,
+  REFUSED,
+  RefusedReviews,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
-
-class ValidatedReviewsDto implements ValidatedReviews {
-  @ApiProperty({
-    description: "'humain' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  humain: ApprovalReviewStatus;
-
-  @ApiProperty({
-    description: "'signa' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  signa: ApprovalReviewStatus;
-
-  @ApiProperty({
-    description: "'secu' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  secu: ApprovalReviewStatus;
-
-  @ApiProperty({
-    description: "'matos' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  matos: ApprovalReviewStatus;
-
-  @ApiProperty({
-    description: "'elec' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  elec: ApprovalReviewStatus;
-
-  @ApiProperty({
-    description: "'barrieres' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  barrieres: ApprovalReviewStatus;
-
-  @ApiProperty({
-    description: "'commmunication' team review status",
-    examples: [NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  communication: ApprovalReviewStatus;
-}
-
-class InReviewReviewsDto implements InReviewReviews {
-  @ApiProperty({
-    description: "'humain' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  humain: ReviewingStatus;
-
-  @ApiProperty({
-    description: "'signa' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  signa: ReviewingStatus;
-
-  @ApiProperty({
-    description: "'secu' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  secu: ReviewingStatus;
-
-  @ApiProperty({
-    description: "'matos' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  matos: ReviewingStatus;
-
-  @ApiProperty({
-    description: "'elec' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  elec: ReviewingStatus;
-
-  @ApiProperty({
-    description: "'barrieres' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  barrieres: ReviewingStatus;
-
-  @ApiProperty({
-    description: "'commmunication' team review status",
-    examples: [REVIEWING, NOT_ASKING_TO_REVIEW, APPROVED],
-  })
-  communication: ReviewingStatus;
-}
+import {
+  InReviewReviewsResponseDto,
+  RefusedReviewsResponseDto,
+  ValidatedReviewsResponseDto,
+} from "./reviews.response.dto";
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
   @ApiProperty({
@@ -142,10 +56,14 @@ type ValidatedPreview = Extract<
   PreviewReviewable,
   { status: typeof VALIDATED }
 >;
+type RefusedPreview = Extract<PreviewReviewable, { status: typeof REFUSED }>;
 
-export class InReviewPreviewFestivalActivityResponseDto
-  implements InReviewPreview
-{
+type ReviewablePreviewBase = Pick<
+  PreviewReviewable,
+  "id" | "adherent" | "name" | "team"
+>;
+
+class ReviewablePreviewBaseResponseDto implements ReviewablePreviewBase {
   @ApiProperty({
     description: "The festival activity id",
     type: Number,
@@ -158,6 +76,23 @@ export class InReviewPreviewFestivalActivityResponseDto
   })
   name: string;
 
+  @ApiProperty({
+    description: "The festival activity adherent in charge",
+    type: AdherentResponseDto,
+  })
+  adherent: Adherent;
+
+  @ApiProperty({
+    description: "The festival activity team code",
+    type: String,
+  })
+  team: string;
+}
+
+export class InReviewPreviewFestivalActivityResponseDto
+  extends ReviewablePreviewBaseResponseDto
+  implements InReviewPreview
+{
   @ApiProperty({
     description: "The festival activity status",
     type: String,
@@ -165,39 +100,14 @@ export class InReviewPreviewFestivalActivityResponseDto
   })
   status: typeof IN_REVIEW;
 
-  @ApiProperty({
-    description: "The festival activity adherent in charge",
-    type: AdherentResponseDto,
-  })
-  adherent: Adherent;
-
-  @ApiProperty({
-    description: "The festival activity team code",
-    type: String,
-  })
-  team: string;
-
-  @ApiProperty({
-    type: InReviewReviewsDto,
-  })
+  @ApiProperty({ type: InReviewReviewsResponseDto })
   reviews: InReviewReviews;
 }
 
 export class ValidatedPreviewFestivalActivityResponseDto
+  extends ReviewablePreviewBaseResponseDto
   implements ValidatedPreview
 {
-  @ApiProperty({
-    description: "The festival activity id",
-    type: Number,
-  })
-  id: number;
-
-  @ApiProperty({
-    description: "The festival activity name",
-    type: String,
-  })
-  name: string;
-
   @ApiProperty({
     description: "The festival activity status",
     type: String,
@@ -205,20 +115,21 @@ export class ValidatedPreviewFestivalActivityResponseDto
   })
   status: typeof VALIDATED;
 
-  @ApiProperty({
-    description: "The festival activity adherent in charge",
-    type: AdherentResponseDto,
-  })
-  adherent: Adherent;
-
-  @ApiProperty({
-    description: "The festival activity team code",
-    type: String,
-  })
-  team: string;
-
-  @ApiProperty({
-    type: ValidatedReviewsDto,
-  })
+  @ApiProperty({ type: ValidatedReviewsResponseDto })
   reviews: ValidatedReviews;
+}
+
+export class RefusedPreviewFestivalActivityResponseDto
+  extends ReviewablePreviewBaseResponseDto
+  implements RefusedPreview
+{
+  @ApiProperty({
+    description: "The festival activity status",
+    type: String,
+    example: REFUSED,
+  })
+  status: typeof REFUSED;
+
+  @ApiProperty({ type: RefusedReviewsResponseDto })
+  reviews: RefusedReviews;
 }

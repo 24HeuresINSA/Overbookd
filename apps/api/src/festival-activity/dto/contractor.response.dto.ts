@@ -29,21 +29,24 @@ export class ContractorResponseDto implements Contractor {
   @ApiProperty({
     description: "Contractor email",
     type: String,
-    required: false,
+    required: true,
+    nullable: true,
   })
   email: string | null;
 
   @ApiProperty({
     description: "Contractor company",
     type: String,
-    required: false,
+    required: true,
+    nullable: true,
   })
   company: string | null;
 
   @ApiProperty({
     description: "Comment about the contractor",
     type: String,
-    required: false,
+    required: true,
+    nullable: true,
   })
   comment: string | null;
 }

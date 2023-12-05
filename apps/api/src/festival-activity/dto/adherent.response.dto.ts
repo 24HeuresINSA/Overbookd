@@ -23,6 +23,7 @@ export class AdherentResponseDto implements Adherent {
   @ApiProperty({
     description: "The adherent nickname",
     type: String,
+    required: false,
   })
   nickname?: string;
 }
