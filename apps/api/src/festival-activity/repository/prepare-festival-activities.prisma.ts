@@ -16,6 +16,7 @@ export class PrismaPrepareFestivalActivities
   async findAll(): Promise<PreviewFestivalActivity[]> {
     const activities = await this.prisma.festivalActivity.findMany({
       select: SELECT_FESTIVAL_ACTIVITY,
+      orderBy: { id: "asc" },
     });
     return activities.map(
       (activity) => FestivalActivityBuilder.fromDatabase(activity).preview,
