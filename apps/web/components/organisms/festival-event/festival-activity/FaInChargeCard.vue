@@ -6,8 +6,8 @@
         fab
         x-small
         color="success"
-        @click="approved"
         :disabled="cantApprove"
+        @click="approved"
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>

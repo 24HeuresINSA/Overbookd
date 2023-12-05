@@ -35,8 +35,8 @@
             fab
             x-small
             color="success"
-            @click="approved(MATOS)"
             :disabled="cantApproveGears"
+            @click="approved(MATOS)"
           >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
@@ -59,8 +59,8 @@
             fab
             x-small
             color="success"
-            @click="approved(ELEC)"
             :disabled="cantApproveElec"
+            @click="approved(ELEC)"
           >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
@@ -83,8 +83,8 @@
             fab
             x-small
             color="success"
-            @click="approved(BARRIERES)"
             :disabled="cantApproveBarriers"
+            @click="approved(BARRIERES)"
           >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
