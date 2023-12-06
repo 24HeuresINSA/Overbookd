@@ -31,6 +31,7 @@ import type {
   FestivalActivity,
   InquiryRequest,
   PreviewFestivalActivity,
+  Refused,
   Signage,
   TimeWindow,
 } from "@overbookd/festival-activity";
@@ -78,7 +79,7 @@ import {
   PublicReviewableGeneralResponseDto,
 } from "./dto/reviewable/general.response.dto";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import { ApproveRequestDto } from "./dto/approve.request.dto";
+import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -207,7 +208,7 @@ export class FestivalActivityController {
     @Param("id", ParseIntPipe) id: FestivalActivity["id"],
     @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalActivity> {
-    return this.festivalActivityService.askForReview(id, user);
+    return this.festivalActivityService.toReview(id, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -1023,5 +1024,33 @@ export class FestivalActivityController {
   ): Promise<FestivalActivity> {
     const jwt = new JwtUtil(user);
     return this.festivalActivityService.approve(faId, jwt, team);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FA)
+  @Post(":faId/reject")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    type: RefusedFestivalActivityResponseDto,
+  })
+  @ApiBody({
+    description: "Festival activity rejection",
+    type: RejectRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  reject(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() reject: RejectRequestDto,
+  ): Promise<Refused> {
+    const jwt = new JwtUtil(user);
+    return this.festivalActivityService.reject(faId, jwt, reject);
   }
 }
