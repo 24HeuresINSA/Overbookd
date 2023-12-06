@@ -11,7 +11,8 @@
           rounded
           @click="openSignageCreationDialog"
         >
-          <v-icon dark> mdi-plus </v-icon> Ajouter une signalisation
+          <v-icon dark> mdi-plus</v-icon>
+Ajouter une signalisation
         </v-btn>
       </section>
     </div>
