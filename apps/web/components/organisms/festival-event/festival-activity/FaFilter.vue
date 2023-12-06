@@ -154,6 +154,9 @@ export default defineComponent({
       this.$emit("change", this.filters);
     },
   },
+  mounted() {
+    this.$emit("change", this.filters);
+  },
   methods: {
     updateSearch(search?: string) {
       this.updateQueryParams("search", search);
