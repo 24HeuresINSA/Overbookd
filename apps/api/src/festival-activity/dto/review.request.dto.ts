@@ -9,8 +9,8 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-activity";
+import { ReviewRejection } from "@overbookd/http";
 import { IsEnum, IsString } from "class-validator";
-import { Rejection } from "../festival-activity.service";
 
 const reviewers: Reviewer[] = [
   humain,
@@ -30,7 +30,7 @@ export class ApproveRequestDto {
   team: Reviewer;
 }
 
-export class RejectRequestDto implements Rejection {
+export class RejectRequestDto implements ReviewRejection {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
     message: () => `❌ Seuls ${reviewers.join(", ")} peuvent rejetter une FA`,

@@ -19,7 +19,11 @@ import {
   InquiryRequest,
   Reviewer,
 } from "@overbookd/festival-activity";
-import { PrepareInChargeForm, PrepareSignaForm } from "@overbookd/http";
+import {
+  PrepareInChargeForm,
+  PrepareSignaForm,
+  ReviewRejection,
+} from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
@@ -352,7 +356,18 @@ export const actions = actionTree(
     async approveAs({ state, commit }, reviewer: Reviewer) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.approve(this, id, reviewer), {
-        successMessage: `✅ FA approuvée pour l'équipe ${reviewer}`,
+        successMessage: `✅ FA approuvée par l'équipe ${reviewer}`,
+      });
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async rejectBecause({ state, commit }, rejection: ReviewRejection) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.reject(this, id, rejection), {
+        successMessage: `🛑 FA rejetée par l'équipe ${rejection.team}`,
       });
       if (!res) return;
 

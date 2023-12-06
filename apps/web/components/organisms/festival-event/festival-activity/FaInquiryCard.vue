@@ -40,7 +40,14 @@
           >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
-          <v-btn class="review__action" fab x-small color="error">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="error"
+            :disabled="cantRejectGears"
+            @click="rejected(MATOS)"
+          >
             <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
@@ -64,7 +71,14 @@
           >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
-          <v-btn class="review__action" fab x-small color="error">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="error"
+            :disabled="cantRejectElec"
+            @click="rejected(ELEC)"
+          >
             <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
@@ -88,7 +102,14 @@
           >
             <v-icon>mdi-check-circle-outline</v-icon>
           </v-btn>
-          <v-btn class="review__action" fab x-small color="error">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="error"
+            :disabled="cantRejectBarriers"
+            @click="rejected(BARRIERES)"
+          >
             <v-icon>mdi-close-circle-outline</v-icon>
           </v-btn>
         </div>
@@ -118,6 +139,7 @@ import {
   InquiryOwner,
   isDraft,
   APPROVED,
+  REJECTED,
 } from "@overbookd/festival-activity";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
@@ -172,15 +194,30 @@ export default defineComponent({
 
       return this.mFA.reviews.matos === APPROVED;
     },
+    cantRejectGears(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.matos === REJECTED;
+    },
     cantApproveElec(): boolean {
       if (isDraft(this.mFA)) return true;
 
       return this.mFA.reviews.elec === APPROVED;
     },
+    cantRejectElec(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.elec === REJECTED;
+    },
     cantApproveBarriers(): boolean {
       if (isDraft(this.mFA)) return true;
 
       return this.mFA.reviews.barrieres === APPROVED;
+    },
+    cantRejectBarriers(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.barrieres === REJECTED;
     },
   },
   methods: {
@@ -208,6 +245,11 @@ export default defineComponent({
     },
     approved(owner: InquiryOwner) {
       this.$accessor.festivalActivity.approveAs(owner);
+    },
+    rejected(owner: InquiryOwner) {
+      const reason = `Section demande de matos pour ${owner} non valide`;
+      const rejection = { team: owner, reason };
+      this.$accessor.festivalActivity.rejectBecause(rejection);
     },
   },
 });

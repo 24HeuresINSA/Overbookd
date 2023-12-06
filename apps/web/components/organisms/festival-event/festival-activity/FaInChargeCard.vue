@@ -11,7 +11,14 @@
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
-      <v-btn class="review__action" fab x-small color="error">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="rejected"
+      >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
     </div>
@@ -72,9 +79,11 @@ import {
   humain,
   APPROVED,
   isDraft,
+  REJECTED,
 } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
+import { ReviewRejection } from "@overbookd/http";
 
 export default defineComponent({
   name: "FaGeneralCard",
@@ -101,6 +110,11 @@ export default defineComponent({
 
       return this.mFA.reviews.humain === APPROVED;
     },
+    cantReject(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.humain === REJECTED;
+    },
   },
   async mounted() {
     if (this.adherents.length === 0) {
@@ -126,6 +140,11 @@ export default defineComponent({
     },
     approved() {
       this.$accessor.festivalActivity.approveAs(humain);
+    },
+    rejected() {
+      const reason = "Section responsable non valide";
+      const rejection: ReviewRejection = { team: humain, reason };
+      this.$accessor.festivalActivity.rejectBecause(rejection);
     },
   },
 });

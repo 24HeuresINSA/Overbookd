@@ -11,7 +11,14 @@
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
-      <v-btn class="review__action" fab x-small color="error">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="rejected"
+      >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
     </div>
@@ -50,7 +57,9 @@ import {
   elec,
   APPROVED,
   isDraft,
+  REJECTED,
 } from "@overbookd/festival-activity";
+import { ReviewRejection } from "@overbookd/http";
 
 export default defineComponent({
   name: "SupplyCard",
@@ -70,6 +79,11 @@ export default defineComponent({
 
       return this.mFA.reviews.elec === APPROVED;
     },
+    cantReject(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.elec === REJECTED;
+    },
   },
   methods: {
     addElectricitySupply(supply: PrepareElectricitySupplyCreation) {
@@ -87,6 +101,11 @@ export default defineComponent({
     },
     approved() {
       this.$accessor.festivalActivity.approveAs(elec);
+    },
+    rejected() {
+      const reason = "Section besoin en eau et elec non valide";
+      const rejection: ReviewRejection = { team: elec, reason };
+      this.$accessor.festivalActivity.rejectBecause(rejection);
     },
   },
 });
