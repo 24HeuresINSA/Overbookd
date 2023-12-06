@@ -103,6 +103,7 @@ export default defineComponent({
         },
       };
       this.$accessor.festivalActivity.initInquiry(form);
+      this.closeDialog();
     },
     setDefaultDates() {
       this.start = this.eventStartDate;
