@@ -15,7 +15,8 @@ export class CatalogSignageRepository {
     context: Context,
     signageId: number,
   ): Promise<string | undefined> {
-    return getImage(context, this.basePath, signageId, "image");
+    const path = `${this.basePath}/${signageId}/image`;
+    return getImage(context, path);
   }
 
   static createSignage(context: Context, signageForm: SignageForm) {

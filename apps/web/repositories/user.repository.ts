@@ -73,7 +73,8 @@ export class UserRepository {
     context: Context,
     userId: number,
   ): Promise<string | undefined> {
-    return getImage(context, this.basePath, userId, "profile-picture");
+    const path = `${this.basePath}/${userId}/profile-picture`;
+    return getImage(context, path);
   }
 
   static updateUser(
