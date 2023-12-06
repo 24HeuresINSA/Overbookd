@@ -24,7 +24,7 @@ import {
   ApiExtraModels,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
-import { READ_FA, WRITE_FA } from "@overbookd/permission";
+import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
 import type {
   Contractor,
   ElectricitySupply,
@@ -77,6 +77,8 @@ import {
   PrivateReviewableGeneralResponseDto,
   PublicReviewableGeneralResponseDto,
 } from "./dto/reviewable/general.response.dto";
+import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+import { ApproveRequestDto } from "./dto/approve.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -987,5 +989,39 @@ export class FestivalActivityController {
     @Body() feedback: AddFeedbackRequestDto,
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.addFeedback(faId, user, feedback);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FA)
+  @Post(":faId/approve")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description: "Festival activity approval",
+    type: ApproveRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  approve(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() { team }: ApproveRequestDto,
+  ): Promise<FestivalActivity> {
+    const jwt = new JwtUtil(user);
+    return this.festivalActivityService.approve(faId, jwt, team);
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/domain-events",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Utilitaire pour les évènements métier d'overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",

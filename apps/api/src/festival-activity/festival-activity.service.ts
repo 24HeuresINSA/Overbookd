@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import {
   Adherent,
   AskForReview,
@@ -20,13 +20,18 @@ import {
   PrepareContractorCreation,
   Contractor,
   PrepareFeedbackPublish,
+  Reviewing,
+  Reviewer,
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
   PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
-import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import {
+  JwtPayload,
+  JwtUtil,
+} from "../authentication/entities/jwt-util.entity";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
@@ -65,6 +70,7 @@ export class FestivalActivityService {
     private readonly createFestivalActivity: CreateFestivalActivity,
     private readonly prepareFestivalActivity: PrepareFestivalActivity,
     private readonly askForReviewFestivalActivity: AskForReview,
+    private readonly reviewingFestivalActivity: Reviewing,
     private readonly eventStore: DomainEventService,
   ) {}
 
@@ -298,5 +304,25 @@ export class FestivalActivityService {
       author,
       content,
     });
+  }
+
+  async approve(
+    faId: FestivalActivity["id"],
+    user: JwtUtil,
+    team: Reviewer,
+  ): Promise<FestivalActivity> {
+    if (!user.isMemberOf(team)) {
+      const notMember = `❌ Tu n'es pas membre de l'équipe ${team}`;
+      throw new BadRequestException(notMember);
+    }
+
+    const approved = await this.reviewingFestivalActivity.approve(
+      faId,
+      team,
+      user.id,
+    );
+
+    this.eventStore.publish(FestivalActivityEvents.approved(approved));
+    return approved.festivalActivity;
   }
 }

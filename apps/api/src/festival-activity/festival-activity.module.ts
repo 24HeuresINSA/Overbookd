@@ -8,6 +8,7 @@ import {
   AskForReview,
   CreateFestivalActivity,
   PrepareFestivalActivity,
+  Reviewing,
 } from "@overbookd/festival-activity";
 import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activities.prisma";
 import { PrismaCreateFestivalActivities } from "./repository/create-festival-activities.prisma";
@@ -18,6 +19,7 @@ import { HistoryModule } from "./history/history.module";
 import { PrismaInquiries } from "./repository/inquiries.prisma";
 import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaNotifications } from "./repository/notifications.prisma";
+import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festival-activities.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -60,6 +62,12 @@ import { PrismaNotifications } from "./repository/notifications.prisma";
       inject: [PrismaService],
     },
     {
+      provide: PrismaReviewingFestivalActivities,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaReviewingFestivalActivities(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: CreateFestivalActivity,
       useFactory: async (
         festivalActivities: PrismaCreateFestivalActivities,
@@ -87,6 +95,12 @@ import { PrismaNotifications } from "./repository/notifications.prisma";
       inject: [PrismaAskForReview, PrismaNotifications],
     },
     {
+      provide: Reviewing,
+      useFactory: (festivalActivities: PrismaReviewingFestivalActivities) =>
+        new Reviewing(festivalActivities),
+      inject: [PrismaReviewingFestivalActivities],
+    },
+    {
       provide: FestivalActivityService,
       useFactory: (
         adherents: PrismaAdherents,
@@ -95,6 +109,7 @@ import { PrismaNotifications } from "./repository/notifications.prisma";
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
         askForReview: AskForReview,
+        reviewing: Reviewing,
         eventStore: DomainEventService,
       ) =>
         new FestivalActivityService(
@@ -104,6 +119,7 @@ import { PrismaNotifications } from "./repository/notifications.prisma";
           create,
           prepare,
           askForReview,
+          reviewing,
           eventStore,
         ),
       inject: [
@@ -113,6 +129,7 @@ import { PrismaNotifications } from "./repository/notifications.prisma";
         CreateFestivalActivity,
         PrepareFestivalActivity,
         AskForReview,
+        Reviewing,
         DomainEventService,
       ],
     },
