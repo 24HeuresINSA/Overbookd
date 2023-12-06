@@ -17,7 +17,7 @@
       />
     </v-card-text>
     <v-card-actions>
-      <v-btn text :disabled="isImageValid" @click="uploadSignaImage">
+      <v-btn text :disabled="invalidImage" @click="uploadSignaImage">
         Enregistrer
       </v-btn>
     </v-card-actions>
@@ -54,7 +54,7 @@ export default Vue.extend({
     me() {
       return this.$accessor.user.me;
     },
-    isImageValid(): boolean {
+    invalidImage(): boolean {
       return !isImageValid(this.signaImage);
     },
   },

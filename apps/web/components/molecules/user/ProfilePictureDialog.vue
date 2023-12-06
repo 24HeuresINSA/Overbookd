@@ -12,7 +12,7 @@
         />
       </v-card-text>
       <v-card-actions>
-        <v-btn text :disabled="isImageValid" @click="uploadProfilePicture">
+        <v-btn text :disabled="invalidImage" @click="uploadProfilePicture">
           Enregistrer
         </v-btn>
       </v-card-actions>
@@ -56,7 +56,7 @@ export default Vue.extend({
         }
       },
     },
-    isImageValid(): boolean {
+    invalidImage(): boolean {
       return !isImageValid(this.profilePicture);
     },
   },
