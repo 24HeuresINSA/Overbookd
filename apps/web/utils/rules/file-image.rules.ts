@@ -1,4 +1,3 @@
-// image.rules.ts
 export function isImage(value?: File | null): string | boolean {
   const message = "Une photo vide n'est pas une photo";
   return !!value || message;
