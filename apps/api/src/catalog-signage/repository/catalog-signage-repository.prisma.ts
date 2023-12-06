@@ -1,5 +1,5 @@
 import { Signage, SignageError, SignageForm } from "@overbookd/signa";
-import { FileService } from "../../user/file.service";
+import { FileService } from "../../utils/file.service";
 import { PrismaService } from "../../prisma.service";
 import { CatalogSignageRepository } from "../catalog-signage.service";
 import { SlugifyService } from "@overbookd/slugify";
