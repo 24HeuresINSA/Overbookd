@@ -1,7 +1,14 @@
 <template>
   <v-card>
     <div v-if="canReview" class="review">
-      <v-btn class="review__action" fab x-small color="success">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="success"
+        :disabled="cantApprove"
+        @click="approved"
+      >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
       <v-btn class="review__action" fab x-small color="error">
@@ -44,6 +51,9 @@ import {
   Signage,
   Location,
   PrepareSignageCreation,
+  isDraft,
+  APPROVED,
+  signa,
 } from "@overbookd/festival-activity";
 
 export default defineComponent({
@@ -53,11 +63,19 @@ export default defineComponent({
     FaSignageTable,
   },
   computed: {
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
     signa(): FestivalActivity["signa"] {
-      return this.$accessor.festivalActivity.selectedActivity.signa;
+      return this.mFA.signa;
     },
     canReview(): boolean {
-      return this.$accessor.user.can("manage-admins");
+      return this.$accessor.user.isMemberOf(signa);
+    },
+    cantApprove(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.signa === APPROVED;
     },
   },
   methods: {
@@ -73,6 +91,9 @@ export default defineComponent({
     },
     removeSignage(signage: Signage) {
       this.$accessor.festivalActivity.removeSignage(signage.id);
+    },
+    approved() {
+      this.$accessor.festivalActivity.approveAs(signa);
     },
   },
 });

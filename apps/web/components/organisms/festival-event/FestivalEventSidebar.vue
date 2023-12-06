@@ -34,6 +34,7 @@
 import Vue from "vue";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
 import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
+import { getReviewStatus as getFAReviewStatus } from "~/utils/festival-event/festival-activity.utils";
 import {
   FaStatusLabel,
   faStatusLabels,
@@ -50,9 +51,7 @@ import { Team } from "~/utils/models/team.model";
 import {
   FestivalActivity,
   DRAFT as FA_DRAFT,
-  isDraft,
 } from "@overbookd/festival-activity";
-import { findReviewStatus } from "~/utils/festival-event/festival-activity.filter";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -109,18 +108,13 @@ export default Vue.extend({
       : this.$accessor.team.fetchFtValidators();
   },
   methods: {
-    getValidatorStatus(validator: Team): string {
+    getReviewerStatus(reviewer: Team): string {
       return this.isFA
-        ? "draft" // TODO: check reviewers status
-        : getFTValidationStatus(this.mFT, validator.code).toLowerCase();
+        ? getFAReviewStatus(this.mFA, reviewer.code).toLowerCase()
+        : getFTValidationStatus(this.mFT, reviewer.code).toLowerCase();
     },
     async askForReview() {
       await this.$accessor.festivalActivity.askForReview();
-    },
-    getReviewerStatus(reviewer: Team): string {
-      if (isDraft(this.mFA)) return "";
-      const status = this.mFA.reviews[reviewer.code];
-      return (findReviewStatus(status) ?? "").toLowerCase();
     },
   },
 });

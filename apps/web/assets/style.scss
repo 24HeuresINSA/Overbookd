@@ -19,7 +19,8 @@
     color: white;
   }
 
-  &.draft {
+  &.draft,
+  &.not_asking_to_review {
     background-color: $draft-color;
     color: white;
   }
@@ -40,7 +41,8 @@
     }
 
     &.submitted,
-    &.in_review {
+    &.in_review,
+    &.reviewing {
       border-left: 5px solid $submitted-color;
     }
 
@@ -49,7 +51,8 @@
       border-left: 5px solid $refused-color;
     }
 
-    &.draft {
+    &.draft,
+    &.not_asking_to_review {
       border-left: 5px solid $draft-color;
     }
   }
@@ -66,7 +69,8 @@
       color: $refused-color;
     }
 
-    &.draft {
+    &.draft,
+    &.not_asking_to_review {
       color: $draft-color;
     }
 
