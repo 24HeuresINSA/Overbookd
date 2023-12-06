@@ -43,6 +43,7 @@ import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
 @ApiBearerAuth()
 @ApiTags("signages")
 @Controller("signages")
+@UseFilters(CatalogSignageErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -114,7 +115,6 @@ export class CatalogSignageController {
 
   @UseGuards(JwtAuthGuard)
   @Permission(WRITE_SIGNAGE_CATALOG)
-  @UseFilters(CatalogSignageErrorFilter)
   @Post(":id/image")
   @UseInterceptors(
     FileInterceptor("file", {
