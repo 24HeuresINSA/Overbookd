@@ -12,7 +12,7 @@
           @click="openSignageCreationDialog"
         >
           <v-icon dark> mdi-plus</v-icon>
-Ajouter une signalisation
+          Ajouter une signalisation
         </v-btn>
       </section>
     </div>
