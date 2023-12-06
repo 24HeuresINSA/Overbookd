@@ -1,3 +1,10 @@
+## [2.8.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.2...v2.8.3) (2023-12-06)
+
+
+### Pre-Features
+
+* **api:** allow festival-activity approval. [#1391](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1391) ([a139eff](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a139eff453908ee215a1cd5121833eff887fb323))
+
 ## [2.8.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.1...v2.8.2) (2023-12-05)
 
 
