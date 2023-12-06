@@ -2,13 +2,11 @@ import {
   FestivalActivity,
   Reviewable,
   ReviewingFestivalActivities,
-  isDraft,
 } from "@overbookd/festival-activity";
 import { PrismaService } from "../../prisma.service";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { FestivalActivityQueryBuilder } from "./festival-activity.query";
-import { BadRequestException } from "@nestjs/common";
 
 export class PrismaReviewingFestivalActivities
   implements ReviewingFestivalActivities
