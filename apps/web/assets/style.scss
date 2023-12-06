@@ -66,11 +66,16 @@
       color: $refused-color;
     }
 
-    &.draft,
-    &.submitted,
-    &.in_review {
+    &.draft {
       color: $draft-color;
     }
+
+    &.submitted,
+    &.in_review,
+    &.reviewing {
+      color: $submitted-color;
+    }
+
   }
 
   #status,
