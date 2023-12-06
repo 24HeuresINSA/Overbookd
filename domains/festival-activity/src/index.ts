@@ -19,6 +19,12 @@ export {
   isDraft,
 } from "./festival-activity";
 export { FestivalActivityError } from "./festival-activity.error";
+export type {
+  Created,
+  ReadyToReview,
+  Approved,
+  Rejected,
+} from "./festival-activity.event";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 
@@ -155,9 +161,6 @@ export type {
   Notifyee,
 } from "./ask-for-review/ask-for-review";
 
-export type {
-  Created,
-  ReadyToReview,
-  Approved,
-  Rejected,
-} from "./festival-activity.event";
+// Reviewing
+export { Reviewing } from "./reviewing/reviewing";
+export type { ReviewingFestivalActivities } from "./reviewing/reviewing";

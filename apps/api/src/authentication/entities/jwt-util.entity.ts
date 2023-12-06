@@ -35,4 +35,8 @@ export class JwtUtil implements JwtPayload {
   can(permission: Permission): boolean {
     return this.isAdmin || this.permissions.includes(permission);
   }
+
+  isMemberOf(team: string): boolean {
+    return this.isAdmin || this.teams.includes(team);
+  }
 }
