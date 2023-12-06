@@ -12,7 +12,7 @@ import {
   UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
-import { getImage } from "~/utils/image/image.repository";
+import { ImageRepository } from "~/utils/image/image.repository";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -74,7 +74,7 @@ export class UserRepository {
     userId: number,
   ): Promise<string | undefined> {
     const path = `${this.basePath}/${userId}/profile-picture`;
-    return getImage(context, path);
+    return ImageRepository.getImage(context, path);
   }
 
   static updateUser(

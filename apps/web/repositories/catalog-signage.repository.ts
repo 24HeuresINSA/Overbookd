@@ -1,6 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Signage, SignageForm } from "@overbookd/signa";
-import { getImage } from "~/utils/image/image.repository";
+import { ImageRepository } from "~/utils/image/image.repository";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -16,7 +16,7 @@ export class CatalogSignageRepository {
     signageId: number,
   ): Promise<string | undefined> {
     const path = `${this.basePath}/${signageId}/image`;
-    return getImage(context, path);
+    return ImageRepository.getImage(context, path);
   }
 
   static createSignage(context: Context, signageForm: SignageForm) {
