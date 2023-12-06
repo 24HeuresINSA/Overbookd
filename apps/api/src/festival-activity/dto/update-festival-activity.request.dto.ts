@@ -32,6 +32,7 @@ import {
   IsPositive,
   IsString,
   ValidateIf,
+  ValidateNested,
 } from "class-validator";
 import {
   AddInquiryRequest,
@@ -360,6 +361,7 @@ export class InitInquiryRequestDto implements InitInquiryRequest {
     type: PeriodDto,
   })
   @Type(() => PeriodDto)
+  @ValidateNested()
   timeWindow: IProvidePeriod;
 
   @ApiProperty({
@@ -367,6 +369,7 @@ export class InitInquiryRequestDto implements InitInquiryRequest {
     type: AddInquiryRequestDto,
   })
   @Type(() => AddInquiryRequestDto)
+  @ValidateNested()
   request: AddInquiryRequest;
 }
 
