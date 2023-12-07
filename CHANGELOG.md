@@ -1,3 +1,10 @@
+## [2.9.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.9.0...v2.9.1) (2023-12-07)
+
+
+### Bug Fixes
+
+* **festival-activity:** lock signa approve ([8bf688a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8bf688a86347467446e046ae2bccf6eb0ddd405f))
+
 ## [2.9.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.3...v2.9.0) (2023-12-07)
 
 
