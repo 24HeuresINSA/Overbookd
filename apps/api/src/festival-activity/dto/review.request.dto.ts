@@ -39,7 +39,7 @@ export class RejectRequestDto implements Rejection {
 
   @ApiProperty({
     required: true,
-    description: "Exaplain why festival activity has been rejected",
+    description: "Explain why festival activity has been rejected",
   })
   @IsString()
   reason: string;
