@@ -9,7 +9,7 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-activity";
-import { IsEnum } from "class-validator";
+import { IsEnum, IsString } from "class-validator";
 import { Rejection } from "../festival-activity.service";
 
 const reviewers: Reviewer[] = [
@@ -41,5 +41,6 @@ export class RejectRequestDto implements Rejection {
     required: true,
     description: "Exaplain why festival activity has been rejected",
   })
+  @IsString()
   reason: string;
 }
