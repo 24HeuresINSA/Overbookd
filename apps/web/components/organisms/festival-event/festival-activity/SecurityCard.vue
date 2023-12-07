@@ -87,7 +87,7 @@ export default defineComponent({
       this.$accessor.festivalActivity.approveAs(secu);
     },
     rejected() {
-      const reason = "Section securite non valide";
+      const reason = "Section securité non valide";
       const rejection: ReviewRejection = { team: secu, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },

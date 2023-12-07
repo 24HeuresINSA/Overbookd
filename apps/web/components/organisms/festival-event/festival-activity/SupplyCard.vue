@@ -103,7 +103,7 @@ export default defineComponent({
       this.$accessor.festivalActivity.approveAs(elec);
     },
     rejected() {
-      const reason = "Section besoin en eau et elec non valide";
+      const reason = "Section besoin en eau et élec non valide";
       const rejection: ReviewRejection = { team: elec, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },

@@ -110,7 +110,7 @@ export default defineComponent({
       this.$accessor.festivalActivity.approveAs(signa);
     },
     rejected() {
-      const reason = "Section signaletique non valide";
+      const reason = "Section signalétique non valide";
       const rejection: ReviewRejection = { team: signa, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },
