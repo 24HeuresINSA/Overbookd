@@ -22,6 +22,7 @@ import {
   PrepareFeedbackPublish,
   Reviewing,
   Reviewer,
+  Refused,
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
@@ -61,30 +62,35 @@ export type Inquiries = {
   find(slug: string): Promise<Gear>;
 };
 
+export type Rejection = {
+  team: Reviewer;
+  reason: string;
+};
+
 @Injectable()
 export class FestivalActivityService {
   constructor(
     private readonly adherents: Adherents,
     private readonly locations: Locations,
     private readonly inquiries: Inquiries,
-    private readonly createFestivalActivity: CreateFestivalActivity,
-    private readonly prepareFestivalActivity: PrepareFestivalActivity,
-    private readonly askForReviewFestivalActivity: AskForReview,
-    private readonly reviewingFestivalActivity: Reviewing,
+    private readonly creation: CreateFestivalActivity,
+    private readonly prepare: PrepareFestivalActivity,
+    private readonly askForReview: AskForReview,
+    private readonly reviewing: Reviewing,
     private readonly eventStore: DomainEventService,
   ) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {
-    return this.prepareFestivalActivity.findAll();
+    return this.prepare.findAll();
   }
 
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
-    return this.prepareFestivalActivity.findById(id);
+    return this.prepare.findById(id);
   }
 
   async create({ id }: JwtPayload, name: string): Promise<Draft> {
     const author = await this.adherents.find(id);
-    const created = await this.createFestivalActivity.create({
+    const created = await this.creation.create({
       author,
       name,
     });
@@ -92,14 +98,11 @@ export class FestivalActivityService {
     return created.festivalActivity;
   }
 
-  async askForReview(
+  async toReview(
     id: FestivalActivity["id"],
     user: JwtPayload,
   ): Promise<FestivalActivity> {
-    const ready = await this.askForReviewFestivalActivity.fromDraft(
-      id,
-      user.id,
-    );
+    const ready = await this.askForReview.fromDraft(id, user.id);
     this.eventStore.publish(FestivalActivityEvents.readyToReview(ready));
     return ready.festivalActivity;
   }
@@ -108,24 +111,21 @@ export class FestivalActivityService {
     id: FestivalActivity["id"],
     general: PrepareGeneralUpdate,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.updateGeneralSection(id, general);
+    return this.prepare.updateGeneralSection(id, general);
   }
 
   addGeneralTimeWindow(
     id: FestivalActivity["id"],
     timeWindow: IProvidePeriod,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.addTimeWindowInGeneral(id, timeWindow);
+    return this.prepare.addTimeWindowInGeneral(id, timeWindow);
   }
 
   removeGeneralTimeWindow(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.removeTimeWindowFromGeneral(
-      faId,
-      timeWindowId,
-    );
+    return this.prepare.removeTimeWindowFromGeneral(faId, timeWindowId);
   }
 
   async saveInChargeSection(
@@ -136,7 +136,7 @@ export class FestivalActivityService {
       ? { adherent: await this.adherents.find(inCharge.adherentId) }
       : {};
 
-    return this.prepareFestivalActivity.updateInChargeSection(id, {
+    return this.prepare.updateInChargeSection(id, {
       ...inCharge,
       ...adherent,
     });
@@ -146,7 +146,7 @@ export class FestivalActivityService {
     id: FestivalActivity["id"],
     contractor: PrepareContractorCreation,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.addContractor(id, contractor);
+    return this.prepare.addContractor(id, contractor);
   }
 
   updateContractor(
@@ -155,14 +155,14 @@ export class FestivalActivityService {
     contractorUpdate: UpdateContractorRequest,
   ): Promise<FestivalActivity> {
     const contractor = { id: contractorId, ...contractorUpdate };
-    return this.prepareFestivalActivity.updateContractor(faId, contractor);
+    return this.prepare.updateContractor(faId, contractor);
   }
 
   removeContractor(
     faId: FestivalActivity["id"],
     contractorId: Contractor["id"],
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.removeContractor(faId, contractorId);
+    return this.prepare.removeContractor(faId, contractorId);
   }
 
   async saveSignaSection(
@@ -173,14 +173,14 @@ export class FestivalActivityService {
       ? await this.locations.find(signa.locationId)
       : null;
 
-    return this.prepareFestivalActivity.updateSignaSection(id, { location });
+    return this.prepare.updateSignaSection(id, { location });
   }
 
   addSignage(
     id: FestivalActivity["id"],
     signage: PrepareSignageCreation,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.addSignage(id, signage);
+    return this.prepare.addSignage(id, signage);
   }
 
   updateSignage(
@@ -189,38 +189,35 @@ export class FestivalActivityService {
     signageUpdate: UpdateSignageRequest,
   ): Promise<FestivalActivity> {
     const signage = { id: signageId, ...signageUpdate };
-    return this.prepareFestivalActivity.updateSignage(faId, signage);
+    return this.prepare.updateSignage(faId, signage);
   }
 
   removeSignage(
     faId: FestivalActivity["id"],
     signageId: Signage["id"],
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.removeSignage(faId, signageId);
+    return this.prepare.removeSignage(faId, signageId);
   }
 
   saveSecuritySection(
     id: FestivalActivity["id"],
     security: FestivalActivity["security"],
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.updateSecuritySection(id, security);
+    return this.prepare.updateSecuritySection(id, security);
   }
 
   saveSupplySection(
     id: FestivalActivity["id"],
     supply: PrepareSupplyUpdate,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.updateSupplySection(id, supply);
+    return this.prepare.updateSupplySection(id, supply);
   }
 
   addElectricitySupply(
     id: FestivalActivity["id"],
     electricitySupply: PrepareElectricitySupplyCreation,
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.addElectricitySupply(
-      id,
-      electricitySupply,
-    );
+    return this.prepare.addElectricitySupply(id, electricitySupply);
   }
 
   updateElectricitySupply(
@@ -232,20 +229,14 @@ export class FestivalActivityService {
       id: electricitySupplyId,
       ...electricitySupplyUpdate,
     };
-    return this.prepareFestivalActivity.updateElectricitySupply(
-      faId,
-      electricitySupply,
-    );
+    return this.prepare.updateElectricitySupply(faId, electricitySupply);
   }
 
   removeElectricitySupply(
     faId: FestivalActivity["id"],
     electricitySupplyId: ElectricitySupply["id"],
   ): Promise<FestivalActivity> {
-    return this.prepareFestivalActivity.removeElectricitySupply(
-      faId,
-      electricitySupplyId,
-    );
+    return this.prepare.removeElectricitySupply(faId, electricitySupplyId);
   }
 
   async initInquiry(
@@ -256,24 +247,18 @@ export class FestivalActivityService {
 
     const request = { ...inquiryInitializer.request, ...inquiry };
     const initializer = { ...inquiryInitializer, request };
-    return this.prepareFestivalActivity.initInquiry(faId, initializer);
+    return this.prepare.initInquiry(faId, initializer);
   }
 
   addInquiryTimeWindow(faId: FestivalActivity["id"], timeWindow: PeriodDto) {
-    return this.prepareFestivalActivity.addTimeWindowInInquiry(
-      faId,
-      timeWindow,
-    );
+    return this.prepare.addTimeWindowInInquiry(faId, timeWindow);
   }
 
   removeInquiryTimeWindow(
     faId: FestivalActivity["id"],
     timeWindowId: TimeWindow["id"],
   ) {
-    return this.prepareFestivalActivity.removeTimeWindowFromInquiry(
-      faId,
-      timeWindowId,
-    );
+    return this.prepare.removeTimeWindowFromInquiry(faId, timeWindowId);
   }
 
   async addInquiryRequest(
@@ -283,14 +268,14 @@ export class FestivalActivityService {
     const inquiry = await this.inquiries.find(inquiryRequest.slug);
     const request = { ...inquiryRequest, ...inquiry };
 
-    return this.prepareFestivalActivity.addInquiryRequest(faId, request);
+    return this.prepare.addInquiryRequest(faId, request);
   }
 
   removeInquiryRequest(
     faId: FestivalActivity["id"],
     slug: InquiryRequest["slug"],
   ) {
-    return this.prepareFestivalActivity.removeInquiryRequest(faId, slug);
+    return this.prepare.removeInquiryRequest(faId, slug);
   }
 
   async addFeedback(
@@ -300,10 +285,7 @@ export class FestivalActivityService {
   ): Promise<FestivalActivity> {
     const author = await this.adherents.find(id);
 
-    return this.prepareFestivalActivity.publishFeedback(faId, {
-      author,
-      content,
-    });
+    return this.prepare.publishFeedback(faId, { author, content });
   }
 
   async approve(
@@ -311,18 +293,32 @@ export class FestivalActivityService {
     user: JwtUtil,
     team: Reviewer,
   ): Promise<FestivalActivity> {
+    this.checkMembership(user, team);
+
+    const approved = await this.reviewing.approve(faId, team, user.id);
+
+    this.eventStore.publish(FestivalActivityEvents.approved(approved));
+    return approved.festivalActivity;
+  }
+
+  async reject(
+    faId: number,
+    user: JwtUtil,
+    rejection: Rejection,
+  ): Promise<Refused> {
+    this.checkMembership(user, rejection.team);
+
+    const withRejector = { ...rejection, rejectorId: user.id };
+    const rejected = await this.reviewing.reject(faId, withRejector);
+
+    this.eventStore.publish(FestivalActivityEvents.rejected(rejected));
+    return rejected.festivalActivity;
+  }
+
+  private checkMembership(user: JwtUtil, team: string) {
     if (!user.isMemberOf(team)) {
       const notMember = `❌ Tu n'es pas membre de l'équipe ${team}`;
       throw new BadRequestException(notMember);
     }
-
-    const approved = await this.reviewingFestivalActivity.approve(
-      faId,
-      team,
-      user.id,
-    );
-
-    this.eventStore.publish(FestivalActivityEvents.approved(approved));
-    return approved.festivalActivity;
   }
 }
