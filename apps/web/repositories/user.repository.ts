@@ -12,6 +12,7 @@ import {
   UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
+import { ImageRepository } from "~/utils/image/image.repository";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -72,23 +73,8 @@ export class UserRepository {
     context: Context,
     userId: number,
   ): Promise<string | undefined> {
-    const token = context.$axios.defaults.headers.common["Authorization"];
-    if (!token) return undefined;
-
-    const response = await fetch(
-      `${process.env.BASE_URL}${this.basePath}/${userId}/profile-picture`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `${token}`,
-        },
-      },
-    );
-
-    if (response.status !== 200) return undefined;
-
-    const url = URL.createObjectURL(await response.blob());
-    return url;
+    const path = `${this.basePath}/${userId}/profile-picture`;
+    return ImageRepository.getImage(context, path);
   }
 
   static updateUser(

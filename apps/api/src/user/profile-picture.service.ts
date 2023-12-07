@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, StreamableFile } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
-import { FileService } from "./file.service";
+import { FileService } from "../utils/file.service";
 import { SELECT_MY_USER_INFORMATION } from "./user.query";
 import { UserService } from "./user.service";
 import { MyUserInformation } from "@overbookd/user";

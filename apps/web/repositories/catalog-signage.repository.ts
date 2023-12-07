@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { Signage, SignageForm } from "@overbookd/signa";
+import { ImageRepository } from "~/utils/image/image.repository";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -8,6 +9,14 @@ export class CatalogSignageRepository {
 
   static fetchSignages(context: Context) {
     return context.$axios.get<Signage[]>(this.basePath);
+  }
+
+  static async getSignageImage(
+    context: Context,
+    signageId: number,
+  ): Promise<string | undefined> {
+    const path = `${this.basePath}/${signageId}/image`;
+    return ImageRepository.getImage(context, path);
   }
 
   static createSignage(context: Context, signageForm: SignageForm) {
@@ -27,5 +36,16 @@ export class CatalogSignageRepository {
 
   static deleteSignage(context: Context, signageId: number) {
     return context.$axios.delete(`${this.basePath}/${signageId}`);
+  }
+
+  static uploadSignageImage(
+    context: Context,
+    signageId: number,
+    signageImage: FormData,
+  ) {
+    return context.$axios.post<Signage>(
+      `${this.basePath}/${signageId}/image`,
+      signageImage,
+    );
   }
 }

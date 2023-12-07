@@ -1,5 +1,6 @@
 export * from "./signage/signage";
 export * from "./signage/signage-form.model";
+export * from "./signage/signage-error";
 export type {
   PointLocation,
   RoadLocation,

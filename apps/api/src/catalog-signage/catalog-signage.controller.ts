@@ -10,6 +10,9 @@ import {
   Delete,
   UseGuards,
   UseFilters,
+  UseInterceptors,
+  StreamableFile,
+  UploadedFile,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
@@ -27,15 +30,20 @@ import {
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
 } from "@overbookd/permission";
+import { diskStorage } from "multer";
+import { randomUUID } from "crypto";
 import { SignageResponseDto } from "./dto/signage.response";
 import { Signage } from "@overbookd/signa";
 import { SignageFormRequestDto } from "./dto/signage-form.request";
 import { CatalogSignageErrorFilter } from "./catalog-signage.filter";
+import { FileInterceptor } from "@nestjs/platform-express/multer";
+import { join } from "path";
+import { FileUploadRequestDto } from "../user/dto/file-upload.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("signages")
 @Controller("signages")
-@UseFilters(new CatalogSignageErrorFilter())
+@UseFilters(CatalogSignageErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -103,5 +111,51 @@ export class CatalogSignageController {
   })
   remove(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.catalogSignageService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Permission(WRITE_SIGNAGE_CATALOG)
+  @Post(":id/image")
+  @UseInterceptors(
+    FileInterceptor("file", {
+      storage: diskStorage({
+        destination: join(process.cwd(), "public"),
+        filename: (req, file, cb) => {
+          const uuid = randomUUID();
+          const filenameFragments = file.originalname.split(".");
+          const extension = filenameFragments.at(-1) ?? "jpg";
+          cb(null, `${uuid}.${extension}`);
+        },
+      }),
+    }),
+  )
+  @ApiResponse({
+    status: 201,
+    description: "Add an image to a signage",
+    type: SignageResponseDto,
+  })
+  @ApiBody({
+    description: "Profile picture file",
+    type: FileUploadRequestDto,
+  })
+  defineSignageImage(
+    @Param("id", ParseIntPipe) id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Signage> {
+    return this.catalogSignageService.updateSignageImage(id, file.filename);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_SIGNAGE_CATALOG)
+  @Get(":id/image")
+  @ApiResponse({
+    status: 200,
+    description: "Get signage image",
+    type: SignageResponseDto,
+  })
+  async getSignageImage(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<StreamableFile | null> {
+    return this.catalogSignageService.streamSignageImage(id);
   }
 }

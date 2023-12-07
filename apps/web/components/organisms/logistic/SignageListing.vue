@@ -22,12 +22,24 @@
       ></v-select>
     </form>
     <v-data-table :headers="headers" :items="filteredSignages">
+      <template #item.image="{ item }">
+        <v-img
+          :src="item.imageBlob"
+          :alt="item.name"
+          width="150"
+          height="150"
+          contain
+        ></v-img>
+      </template>
       <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateSignageDialog(item)">
           mdi-pencil
         </v-icon>
         <v-icon small @click="openDeleteSignageDialog(item)">
           mdi-delete
+        </v-icon>
+        <v-icon small @click="openAddImageSignageDialog(item)">
+          mdi-camera
         </v-icon>
       </template>
 
@@ -39,6 +51,13 @@
         :signage="selectedSignage"
         @close-dialog="closeUpdateSignageDialog"
       ></SignageForm>
+    </v-dialog>
+
+    <v-dialog v-model="isAddImageSignageDialogOpen" width="600px">
+      <SignaImageDialog
+        :signage="selectedSignage"
+        @close-dialog="closeAddImageSignageDialog"
+      ></SignaImageDialog>
     </v-dialog>
 
     <v-dialog v-model="isDeleteSignageDialogOpen" width="600px">
@@ -68,8 +87,10 @@ import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
+import SignaImageDialog from "~/components/molecules/signa/SignaImageDialog.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
+import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
 interface SignageListingData {
   headers: Header[];
@@ -78,11 +99,12 @@ interface SignageListingData {
   selectedSignage?: Signage;
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
+  isAddImageSignageDialogOpen: boolean;
 }
 
 export default Vue.extend({
   name: "SignageListing",
-  components: { ConfirmationMessage, SignageForm },
+  components: { ConfirmationMessage, SignageForm, SignaImageDialog },
   data(): SignageListingData {
     return {
       headers: [
@@ -97,10 +119,11 @@ export default Vue.extend({
       selectedSignage: undefined,
       isUpdateSignageDialogOpen: false,
       isDeleteSignageDialogOpen: false,
+      isAddImageSignageDialogOpen: false,
     };
   },
   computed: {
-    signages(): Signage[] {
+    signages(): SignageWithPotentialImage[] {
       return this.$accessor.catalogSignage.signages;
     },
     filteredSignages(): Signage[] {
@@ -133,12 +156,20 @@ export default Vue.extend({
       this.selectedSignage = signage;
       this.isDeleteSignageDialogOpen = true;
     },
+    openAddImageSignageDialog(signage: Signage) {
+      this.selectedSignage = signage;
+      this.isAddImageSignageDialogOpen = true;
+    },
     closeUpdateSignageDialog() {
       this.isUpdateSignageDialogOpen = false;
       this.selectedSignage = undefined;
     },
     closeDeleteSignageDialog() {
       this.isDeleteSignageDialogOpen = false;
+      this.selectedSignage = undefined;
+    },
+    closeAddImageSignageDialog() {
+      this.isAddImageSignageDialogOpen = false;
       this.selectedSignage = undefined;
     },
     async deleteSignage() {
