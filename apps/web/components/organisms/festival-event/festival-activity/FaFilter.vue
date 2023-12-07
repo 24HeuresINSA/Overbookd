@@ -17,6 +17,7 @@
           tile
           color="deep-purple accent-3"
           group
+          :value="filters[reviewer.code]"
           @change="updateReviewer(reviewer.code, $event)"
         >
           <v-icon small>{{ reviewer.icon }}</v-icon>
