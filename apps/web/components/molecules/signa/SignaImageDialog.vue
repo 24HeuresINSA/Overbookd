@@ -42,7 +42,7 @@ export default Vue.extend({
   },
   data: () => ({
     signaImage: undefined as File | undefined,
-    rules: imageRules(),
+    rules: imageRules,
   }),
   computed: {
     type() {

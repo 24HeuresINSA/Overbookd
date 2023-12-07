@@ -28,7 +28,7 @@ export default Vue.extend({
   name: "ProfilePictureDialog",
   data: () => ({
     profilePicture: undefined as File | undefined,
-    rules: imageRules(),
+    rules: imageRules,
   }),
   computed: {
     type() {

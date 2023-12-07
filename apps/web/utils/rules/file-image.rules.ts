@@ -16,10 +16,12 @@ export function isSupportedImageFile(value?: File | null): string | boolean {
   return isSupportedFile || message;
 }
 
-export function imageRules(): ((value?: File | null) => string | boolean)[] {
-  return [isImage, isImageSizeWithinLimit, isSupportedImageFile];
-}
+export const imageRules = [
+  isImage,
+  isImageSizeWithinLimit,
+  isSupportedImageFile,
+];
 
 export function isImageValid(value?: File | null): boolean {
-  return imageRules().every((rule) => rule(value) === true);
+  return imageRules.every((rule) => rule(value) === true);
 }
