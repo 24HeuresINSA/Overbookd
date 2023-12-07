@@ -23,6 +23,13 @@
           </v-btn>
         </div>
 
+        <FaTimeWindowTable
+          :time-windows="inquiry.timeWindows"
+          :disabled="shouldInitInquiry"
+          @add="addTimeWindow"
+          @remove="removeTimeWindow"
+        />
+
         <v-form v-show="!shouldInitInquiry" class="inquiry-form">
           <FaInquiryFormFields
             class="inquiry-form__fields"
@@ -41,13 +48,6 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-form>
-
-        <FaTimeWindowTable
-          :time-windows="inquiry.timeWindows"
-          :disabled="shouldInitInquiry"
-          @add="addTimeWindow"
-          @remove="removeTimeWindow"
-        />
 
         <v-card class="inquiry-table">
           <div v-if="canReviewGears" class="review">
