@@ -4,6 +4,7 @@ import {
   Draft,
   FestivalActivity,
   NOT_ASKING_TO_REVIEW,
+  PreviewFestivalActivity,
   REJECTED,
   REVIEWING,
   ReviewStatus,
@@ -19,6 +20,7 @@ import {
 import { HttpStringified } from "@overbookd/http";
 import { CastInReview } from "./in-review";
 import { CastDraft } from "./draft";
+import { isDraftPreview } from "./festival-activity.model";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivity>,
@@ -67,6 +69,32 @@ export function getReviewStatus(
       return festivalActivity.reviews.barrieres;
     case communication:
       return festivalActivity.reviews.communication;
+    default:
+      return NOT_ASKING_TO_REVIEW;
+  }
+}
+
+export function getPreviewReviewStatus(
+  preview: PreviewFestivalActivity,
+  reviewer: string,
+): ReviewStatus {
+  if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
+
+  switch (reviewer) {
+    case humain:
+      return preview.reviews.humain;
+    case signa:
+      return preview.reviews.signa;
+    case secu:
+      return preview.reviews.secu;
+    case matos:
+      return preview.reviews.matos;
+    case elec:
+      return preview.reviews.elec;
+    case barrieres:
+      return preview.reviews.barrieres;
+    case communication:
+      return preview.reviews.communication;
     default:
       return NOT_ASKING_TO_REVIEW;
   }

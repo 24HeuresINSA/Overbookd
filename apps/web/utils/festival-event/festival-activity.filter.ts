@@ -12,10 +12,7 @@ import {
 } from "@overbookd/festival-activity";
 import { Team } from "../models/team.model";
 
-export type Filters = {
-  search?: string;
-  team?: Team;
-  status?: FestivalActivity["status"];
+export type ReviewsFilter = {
   humain?: ReviewStatus;
   communication?: ReviewStatus;
   matos?: ReviewStatus;
@@ -23,6 +20,12 @@ export type Filters = {
   signa?: ReviewStatus;
   barrieres?: ReviewStatus;
   elec?: ReviewStatus;
+};
+
+export type Filters = ReviewsFilter & {
+  search?: string;
+  team?: Team;
+  status?: FestivalActivity["status"];
 };
 
 type QueryParamsValue = string | (string | null)[];

@@ -94,9 +94,11 @@ import {
 import { User } from "@overbookd/user";
 import {
   Filters,
+  ReviewsFilter,
   findReviewStatus,
 } from "~/utils/festival-event/festival-activity.filter";
 import { isDraftPreview } from "~/utils/festival-event/festival-activity.model";
+import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity.utils";
 
 interface FaData {
   headers: Header[];
@@ -140,13 +142,14 @@ export default defineComponent({
       }));
     },
     filteredFas(): PreviewFestivalActivity[] {
-      const { team, status, search } = this.filters;
+      const { team, status, search, ...reviews } = this.filters;
 
       return this.searchableFas.filter((fa) => {
         return (
           this.filterFaByTeam(team)(fa) &&
           this.filterFaByStatus(status)(fa) &&
-          this.filterFaByNameAndId(search)(fa)
+          this.filterFaByNameAndId(search)(fa) &&
+          this.filterFaByReviews(reviews)(fa)
         );
       });
     },
@@ -183,6 +186,22 @@ export default defineComponent({
     ): (fa: Searchable<PreviewFestivalActivity>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search ?? "");
       return ({ searchable }) => searchable.includes(slugifiedSearch);
+    },
+
+    filterFaByReviews(
+      reviews: ReviewsFilter,
+    ): (fa: Searchable<PreviewFestivalActivity>) => boolean {
+      const reviewersWithStatus = Object.entries(reviews);
+      return (fa) => {
+        const reviewsAreEmpty = reviewersWithStatus.length === 0;
+        if (reviewsAreEmpty) return true;
+        if (isDraftPreview(fa)) return false;
+
+        return reviewersWithStatus.every(
+          ([reviewer, status]) =>
+            getPreviewReviewStatus(fa, reviewer) === status,
+        );
+      };
     },
 
     updateFilters(filters: Filters) {
