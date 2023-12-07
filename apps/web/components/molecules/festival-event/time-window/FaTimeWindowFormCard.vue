@@ -57,9 +57,6 @@ export default defineComponent({
     isValid(): boolean {
       return Period.isValid(this.period);
     },
-    errors(): string[] {
-      return Period.errors(this.period);
-    },
   },
   async mounted() {
     await this.$accessor.configuration.fetch("eventDate");

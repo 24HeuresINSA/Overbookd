@@ -1,107 +1,114 @@
 <template>
-  <v-card>
-    <div v-if="canReview" class="review">
-      <v-btn
-        class="review__action"
-        fab
-        x-small
-        color="success"
-        :disabled="cantApprove"
-        @click="approved"
-      >
-        <v-icon>mdi-check-circle-outline</v-icon>
-      </v-btn>
-      <v-btn
-        class="review__action"
-        fab
-        x-small
-        color="error"
-        :disabled="cantReject"
-        @click="rejected"
-      >
-        <v-icon>mdi-close-circle-outline</v-icon>
-      </v-btn>
-    </div>
+  <div>
+    <v-card>
+      <div v-if="canReview" class="review">
+        <v-btn
+          class="review__action"
+          fab
+          x-small
+          color="success"
+          :disabled="cantApprove"
+          @click="approved"
+        >
+          <v-icon>mdi-check-circle-outline</v-icon>
+        </v-btn>
+        <v-btn
+          class="review__action"
+          fab
+          x-small
+          color="error"
+          :disabled="cantReject"
+          @click="rejected"
+        >
+          <v-icon>mdi-close-circle-outline</v-icon>
+        </v-btn>
+      </div>
 
-    <v-card-title>Général</v-card-title>
+      <v-card-title>Général</v-card-title>
 
-    <v-card-subtitle>
-      <p>
-        N'hésite pas si tu as des questions à contacter
-        <a :href="`mailto:${contact}`">
-          {{ contact }}
-        </a>
-        .
-      </p>
-      <p>
-        Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
-        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
-        en te connectant avec jeuneetcon@24heures.org.
-      </p>
-    </v-card-subtitle>
+      <v-card-subtitle>
+        <p>
+          N'hésite pas si tu as des questions à contacter
+          <a :href="`mailto:${contact}`">
+            {{ contact }}
+          </a>
+          .
+        </p>
+        <p>
+          Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
+          <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
+          en te connectant avec jeuneetcon@24heures.org.
+        </p>
+      </v-card-subtitle>
 
-    <v-card-text>
-      <v-text-field
-        :value="general.name"
-        label="Nom de l'activité"
-        @change="updateName"
-      />
-
-      <v-switch
-        :value="general.toPublish"
-        label="Publier sur le site / plaquette"
-        @change="updateToPublish"
-      />
-
-      <v-label>Description</v-label>
-      <RichEditor
-        :data="general.description ?? ''"
-        label="Description"
-        class="mb-4"
-        @change="updateDescription"
-      />
-
-      <section class="time-windows">
-        <h2>Créneaux de l'activité</h2>
-        <FaTimeWindowTable
-          :time-windows="general.timeWindows"
-          @add="addTimeWindow"
-          @remove="removeTimeWindow"
+      <v-card-text>
+        <v-text-field
+          :value="general.name"
+          label="Nom de l'activité"
+          @change="updateName"
         />
-      </section>
 
-      <v-combobox
-        :value="general.categories"
-        chips
-        multiple
-        clearable
-        dense
-        label="Categories de l'activité"
-        :items="categories"
-        @change="updateCategories"
-      />
+        <v-switch
+          :value="general.toPublish"
+          label="Publier sur le site / plaquette"
+          @change="tryToUpdateToPublish"
+        />
 
-      <v-text-field
-        v-show="general.toPublish"
-        :value="general.photoLink"
-        label="Lien de la photo de l'activité sur le drive"
-        @change="updatePhotoLink"
-      />
+        <v-label>Description</v-label>
+        <RichEditor
+          :data="general.description ?? ''"
+          label="Description"
+          class="mb-4"
+          @change="updateDescription"
+        />
 
-      <v-switch
-        v-show="general.toPublish"
-        :input-value="general.isFlagship"
-        label="Activité phare qui sera mise en avant sur les réseaux sociaux"
-        @change="updateIsFlagship"
-      />
-    </v-card-text>
-  </v-card>
+        <section class="time-windows">
+          <h2>Créneaux de l'activité</h2>
+          <FaTimeWindowTable
+            :time-windows="general.timeWindows"
+            @add="addTimeWindow"
+            @remove="removeTimeWindow"
+          />
+        </section>
+
+        <v-combobox
+          :value="general.categories"
+          chips
+          multiple
+          clearable
+          dense
+          label="Catégories de l'activité"
+          :items="categories"
+          @change="updateCategories"
+        />
+
+        <v-text-field
+          v-show="general.toPublish"
+          :value="general.photoLink"
+          label="Lien de la photo de l'activité sur le drive"
+          @change="updatePhotoLink"
+        />
+
+        <v-switch
+          v-show="general.toPublish"
+          :input-value="general.isFlagship"
+          label="Activité phare qui sera mise en avant sur les réseaux sociaux"
+          @change="updateIsFlagship"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-dialog v-model="isPublishActivityDialogOpen" max-width="600">
+      <PublishActivityFormCard @close-dialog="closePublishActivityDialog" />
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
+import PublishActivityFormCard from "~/components/molecules/festival-event/public-activity/PublishActivityFormCard.vue";
 import {
   APPROVED,
   FestivalActivity,
@@ -120,9 +127,16 @@ const humainEmail = "humain@24heures.org";
 
 type GeneralReviewer = typeof communication | typeof humain;
 
+type FaGeneralCardDate = {
+  isPublishActivityDialogOpen: boolean;
+};
+
 export default defineComponent({
   name: "FaGeneralCard",
-  components: { RichEditor, FaTimeWindowTable },
+  components: { RichEditor, FaTimeWindowTable, PublishActivityFormCard },
+  data: (): FaGeneralCardDate => ({
+    isPublishActivityDialogOpen: false,
+  }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -164,9 +178,18 @@ export default defineComponent({
     updateName(name: string) {
       this.$accessor.festivalActivity.updateGeneral({ name });
     },
-    updateToPublish(canBeNull: boolean) {
+    tryToUpdateToPublish(canBeNull: boolean) {
       const toPublish = canBeNull === true;
+
+      if (toPublish === true && !isDraft(this.mFA)) {
+        this.isPublishActivityDialogOpen = true;
+        return;
+      }
+
       this.$accessor.festivalActivity.updateGeneral({ toPublish });
+    },
+    closePublishActivityDialog() {
+      this.isPublishActivityDialogOpen = false;
     },
     updateDescription(canBeEmpty: string) {
       const description = canBeEmpty.trim() ? canBeEmpty : null;
