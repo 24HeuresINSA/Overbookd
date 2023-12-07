@@ -37,6 +37,7 @@ export default defineComponent({
       required: true,
     },
   },
+  emits: ["update:start", "update:end", "enter"],
   computed: {
     period(): IProvidePeriod {
       return {
@@ -50,10 +51,10 @@ export default defineComponent({
   },
   methods: {
     updateStart(start: Date) {
-      this.$emit("update-start", start);
+      this.$emit("update:start", start);
     },
     updateEnd(end: Date) {
-      this.$emit("update-end", end);
+      this.$emit("update:end", end);
     },
     enterKeyDown() {
       this.$emit("enter");

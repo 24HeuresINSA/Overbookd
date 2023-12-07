@@ -16,8 +16,8 @@
       <FaTimeWindowFormFields
         :start="start"
         :end="end"
-        @update-start="updateStart"
-        @update-end="updateEnd"
+        @update:start="updateStart"
+        @update:end="updateEnd"
         @enter="addTimeWindow"
       />
     </v-card-text>

@@ -62,7 +62,7 @@
       />
 
       <section class="time-windows">
-        <h2>Créneaux de l'animation</h2>
+        <h2>Créneaux de l'activité</h2>
         <FaTimeWindowTable
           :time-windows="general.timeWindows"
           @add="addTimeWindow"
@@ -76,7 +76,7 @@
         multiple
         clearable
         dense
-        label="Categories de l'animations"
+        label="Categories de l'activité"
         :items="categories"
         @change="updateCategories"
       />
@@ -91,7 +91,7 @@
       <v-switch
         v-show="general.toPublish"
         :input-value="general.isFlagship"
-        label="Animation phare qui sera mise en avant sur les réseaux sociaux"
+        label="Activité phare qui sera mise en avant sur les réseaux sociaux"
         @change="updateIsFlagship"
       />
     </v-card-text>

@@ -23,7 +23,7 @@ import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default defineComponent({
-  name: "FaInitInquiryFormFields",
+  name: "FaInquiryFormFields",
   components: { SearchGear },
   props: {
     gear: {
@@ -35,6 +35,7 @@ export default defineComponent({
       default: 1,
     },
   },
+  emits: ["update:gear", "update:quantity"],
   data: (): InputRulesData => ({
     rules: {
       number: isNumber,
@@ -48,10 +49,10 @@ export default defineComponent({
   },
   methods: {
     updateGear(gear: Gear) {
-      this.$emit("update-gear", gear);
+      this.$emit("update:gear", gear);
     },
     updateQuantity(quantity: number) {
-      this.$emit("update-quantity", +quantity);
+      this.$emit("update:quantity", +quantity);
     },
   },
 });

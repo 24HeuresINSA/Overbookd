@@ -12,16 +12,16 @@
       <FaTimeWindowFormFields
         :start="start"
         :end="end"
-        @update-start="updateStart"
-        @update-end="updateEnd"
+        @update:start="updateStart"
+        @update:end="updateEnd"
       />
 
       <h3>Matos</h3>
       <FaInquiryFormFields
         :gear="gear"
         :quantity="quantity"
-        @update-gear="updateGear"
-        @update-quantity="updateQuantity"
+        @update:gear="updateGear"
+        @update:quantity="updateQuantity"
       />
     </v-card-text>
 

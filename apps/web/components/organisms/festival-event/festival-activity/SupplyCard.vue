@@ -25,7 +25,7 @@
     <v-card-title>Besoin en électricité et eau</v-card-title>
     <v-card-subtitle>
       Précise tes besoins en électricité : 1 ligne par type d'appareil. Si ton
-      animation a besoin d'eau, renseigne le débit dont tu as besoin et comment
+      activité a besoin d'eau, renseigne le débit dont tu as besoin et comment
       l'évacuer.<br />
       Pour plus de renseignement, vois avec la Log Elec via
       <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.

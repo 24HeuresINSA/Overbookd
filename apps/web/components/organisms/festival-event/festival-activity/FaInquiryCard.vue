@@ -1,154 +1,187 @@
 <template>
-  <v-card>
-    <v-card-title>Demande de matos</v-card-title>
-    <v-card-text>
-      <FaTimeWindowTable
-        :time-windows="inquiry.timeWindows"
-        @add="addTimeWindow"
-        @remove="removeTimeWindow"
+  <div>
+    <v-card>
+      <v-card-title>Demande de matos</v-card-title>
+      <v-card-subtitle>
+        Si tu as des questions, demande aux orgas matos, élec ou barrières !
+      </v-card-subtitle>
+
+      <v-card-text>
+        <div v-show="shouldInitInquiry" class="init-inquiry">
+          <p>
+            Tu n'as aucune demande de matos et ta FA est en attente de
+            validation. Pour ajouter une demande, tu dois initialiser une
+            demande en ajoutant un créneau et un matos.
+          </p>
+          <v-btn
+            v-show="shouldInitInquiry"
+            color="primary"
+            class="init-inquiry__btn"
+            @click="openInitInquiryDialog"
+          >
+            Initialiser une demande de matos
+          </v-btn>
+        </div>
+
+        <v-form v-show="!shouldInitInquiry" class="inquiry-form">
+          <FaInquiryFormFields
+            class="inquiry-form__fields"
+            :gear="gear"
+            :quantity="quantity"
+            @update:gear="updateGear"
+            @update:quantity="updateQuantity"
+          />
+          <v-btn
+            rounded
+            color="primary"
+            class="inquiry-form__btn"
+            :disabled="!canAddInquiry"
+            @click="addInquiry"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-form>
+
+        <FaTimeWindowTable
+          :time-windows="inquiry.timeWindows"
+          :disabled="shouldInitInquiry"
+          @add="addTimeWindow"
+          @remove="removeTimeWindow"
+        />
+
+        <v-card class="inquiry-table">
+          <div v-if="canReviewGears" class="review">
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="success"
+              :disabled="cantApproveGears"
+              @click="approved(MATOS)"
+            >
+              <v-icon>mdi-check-circle-outline</v-icon>
+            </v-btn>
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="error"
+              :disabled="cantRejectGears"
+              @click="rejected(MATOS)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+          <v-card-title class="inquiry-table__title">Matos</v-card-title>
+          <InquiryTable
+            :inquiries="inquiry.gears"
+            :owner="MATOS"
+            @remove="removeInquiry"
+          />
+        </v-card>
+
+        <v-card class="inquiry-table">
+          <div v-if="canReviewElec" class="review">
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="success"
+              :disabled="cantApproveElec"
+              @click="approved(ELEC)"
+            >
+              <v-icon>mdi-check-circle-outline</v-icon>
+            </v-btn>
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="error"
+              :disabled="cantRejectElec"
+              @click="rejected(ELEC)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+          <v-card-title class="inquiry-table__title">Elec</v-card-title>
+          <InquiryTable
+            :inquiries="inquiry.electricity"
+            :owner="ELEC"
+            @remove="removeInquiry"
+          />
+        </v-card>
+
+        <v-card class="inquiry-table">
+          <div v-if="canReviewBarriers" class="review">
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="success"
+              :disabled="cantApproveBarriers"
+              @click="approved(BARRIERES)"
+            >
+              <v-icon>mdi-check-circle-outline</v-icon>
+            </v-btn>
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="error"
+              :disabled="cantRejectBarriers"
+              @click="rejected(BARRIERES)"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+          <v-card-title class="inquiry-table__title">Barrières</v-card-title>
+          <InquiryTable
+            :inquiries="inquiry.barriers"
+            :owner="BARRIERES"
+            @remove="removeInquiry"
+          />
+        </v-card>
+      </v-card-text>
+    </v-card>
+
+    <v-dialog v-model="isInitInquiryDialogOpen" max-width="600">
+      <FaInitInquiryFormCard
+        @add="initInquiry"
+        @close-dialog="closeInitInquiryDialog"
       />
-
-      <v-form class="inquiry-form">
-        <v-text-field
-          v-model="quantity"
-          type="number"
-          label="Quantité"
-          :rules="[rules.number, rules.min]"
-          class="inquiry-form__quantity"
-        />
-        <SearchGear v-model="gear" class="inquiry-form__search" />
-        <v-btn
-          rounded
-          color="primary"
-          class="inquiry-form__btn"
-          :disabled="!canAddInquiry"
-          @click="addInquiry"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-form>
-
-      <v-card class="inquiry-table">
-        <div v-if="canReviewGears" class="review">
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="success"
-            :disabled="cantApproveGears"
-            @click="approved(MATOS)"
-          >
-            <v-icon>mdi-check-circle-outline</v-icon>
-          </v-btn>
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="error"
-            :disabled="cantRejectGears"
-            @click="rejected(MATOS)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-        <v-card-title class="inquiry-table__title">Matos</v-card-title>
-        <InquiryTable
-          :inquiries="inquiry.gears"
-          :owner="MATOS"
-          @remove="removeInquiry"
-        />
-      </v-card>
-
-      <v-card class="inquiry-table">
-        <div v-if="canReviewElec" class="review">
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="success"
-            :disabled="cantApproveElec"
-            @click="approved(ELEC)"
-          >
-            <v-icon>mdi-check-circle-outline</v-icon>
-          </v-btn>
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="error"
-            :disabled="cantRejectElec"
-            @click="rejected(ELEC)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-        <v-card-title class="inquiry-table__title">Elec</v-card-title>
-        <InquiryTable
-          :inquiries="inquiry.electricity"
-          :owner="ELEC"
-          @remove="removeInquiry"
-        />
-      </v-card>
-
-      <v-card class="inquiry-table">
-        <div v-if="canReviewBarriers" class="review">
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="success"
-            :disabled="cantApproveBarriers"
-            @click="approved(BARRIERES)"
-          >
-            <v-icon>mdi-check-circle-outline</v-icon>
-          </v-btn>
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="error"
-            :disabled="cantRejectBarriers"
-            @click="rejected(BARRIERES)"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-        <v-card-title class="inquiry-table__title">Barrières</v-card-title>
-        <InquiryTable
-          :inquiries="inquiry.barriers"
-          :owner="BARRIERES"
-          @remove="removeInquiry"
-        />
-      </v-card>
-    </v-card-text>
-  </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
-import FaInitInquiryFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaInitInquiryFormCard.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import FaInquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/FaInquiryFormFields.vue";
 import {
-  BARRIERES,
-  ELEC,
   FestivalActivity,
   InquiryRequest,
   MATOS,
+  ELEC,
+  BARRIERES,
   TimeWindow,
+  InquiryOwner,
   isDraft,
   APPROVED,
   REJECTED,
 } from "@overbookd/festival-activity";
-import { InitInquiryRequest } from "@overbookd/http";
-import { IProvidePeriod } from "@overbookd/period";
 import { Gear } from "~/utils/models/catalog.model";
+import { InputRulesData } from "~/utils/rules/input.rules";
+import { min, isNumber } from "~/utils/rules/input.rules";
+import { IProvidePeriod } from "@overbookd/period";
+import { InitInquiryRequest } from "@overbookd/http";
+import FaInitInquiryFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaInitInquiryFormCard.vue";
 
-type FaInquiryCardData = {
+type FaInquiryCardData = InputRulesData & {
   isInitInquiryDialogOpen: boolean;
   gear: Gear | null;
   quantity: number;
+
   MATOS: typeof MATOS;
   ELEC: typeof ELEC;
   BARRIERES: typeof BARRIERES;
@@ -157,18 +190,23 @@ type FaInquiryCardData = {
 export default defineComponent({
   name: "FaInquiryCard",
   components: {
-    FaTimeWindowTable,
     InquiryTable,
-    FaInitInquiryFormCard,
     FaInquiryFormFields,
+    FaTimeWindowTable,
+    FaInitInquiryFormCard,
   },
   data: (): FaInquiryCardData => ({
     isInitInquiryDialogOpen: false,
     gear: null,
     quantity: 1,
+
     MATOS,
     ELEC,
     BARRIERES,
+    rules: {
+      number: isNumber,
+      min: min(1),
+    },
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -190,11 +228,11 @@ export default defineComponent({
         this.inquiry.timeWindows.length > 0
       );
     },
-    canAddInquiry(): boolean {
-      return this.gear !== null && this.quantity > 0;
-    },
     shouldInitInquiry(): boolean {
       return !isDraft(this.mFA) && !this.hasInquiry;
+    },
+    canAddInquiry(): boolean {
+      return this.gear !== null && this.quantity > 0;
     },
     canReviewGears(): boolean {
       return this.$accessor.user.isMemberOf(MATOS);
@@ -241,11 +279,14 @@ export default defineComponent({
       this.gear = null;
       this.quantity = 1;
     },
+    initInquiry(form: InitInquiryRequest) {
+      this.$accessor.festivalActivity.initInquiry(form);
+    },
     addInquiry() {
       if (!this.canAddInquiry) return;
       const inquiry = {
         slug: this.gear?.slug ?? "",
-        quantity: +this.quantity,
+        quantity: this.quantity,
       };
       this.$accessor.festivalActivity.addInquiryRequest(inquiry);
       this.clearInquiryForm();
@@ -266,30 +307,6 @@ export default defineComponent({
       const reason = `Section demande de matos pour ${owner} non valide`;
       const rejection = { team: owner, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
-    },
-  },
-  methods: {
-    addInquiry() {
-      const inquiry = {
-        slug: this.gear?.slug ?? "",
-        quantity: this.quantity,
-      };
-      this.$accessor.festivalActivity.addInquiryRequest(inquiry);
-
-      this.gear = null;
-      this.quantity = 1;
-    },
-    removeInquiry(inquiry: InquiryRequest) {
-      this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);
-    },
-    addTimeWindow(period: IProvidePeriod) {
-      this.$accessor.festivalActivity.addInquiryTimeWindow(period);
-    },
-    removeTimeWindow(timeWindow: TimeWindow) {
-      this.$accessor.festivalActivity.removeInquiryTimeWindow(timeWindow.id);
-    },
-    initInquiry(form: InitInquiryRequest) {
-      this.$accessor.festivalActivity.initInquiry(form);
     },
     openInitInquiryDialog(): void {
       this.isInitInquiryDialogOpen = true;
