@@ -83,8 +83,8 @@ export default defineComponent({
     },
     cantApprove(): boolean {
       if (isDraft(this.mFA)) return true;
-
-      return this.mFA.reviews.signa === APPROVED;
+      return true;
+      //return this.mFA.reviews.signa === APPROVED;
     },
     cantReject(): boolean {
       if (isDraft(this.mFA)) return true;
