@@ -1,3 +1,23 @@
+## [2.9.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.3...v2.9.0) (2023-12-07)
+
+
+### Features
+
+* **festival-activity:** allow approval. [#1391](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1391) ([76f8251](https://gitlab.com/24-heures-insa/overbookd-mono/commit/76f8251fed7ead001c1a2cbf67310197195a574f))
+* **festival-activity:** allow rejection. [#1391](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1391) ([20a6dd6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/20a6dd62e510c408d82cb390a63aa45000d8860c))
+* **signa:** add and display pictures for catalog ([eb995c0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eb995c0615ab03a3ddc3d5035c2931a9bb3dcc6e))
+
+
+### Bug Fixes
+
+* **festival-activity:** filter on page load. [#1395](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1395) ([64486c9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/64486c91f5691e2123e057227a6b5a703f25abd3))
+* **festival-activity:** filter on review status. [#1396](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1396) ([21d5eae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/21d5eaefd4bb960fe1645718e1311254c5af743b))
+
+
+### Pre-Features
+
+* **api:** allow festival-activity rejection. [#1391](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1391) ([03130cd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/03130cd63a93532fe4bc4838ac396f66238cbeb7))
+
 ## [2.8.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.8.2...v2.8.3) (2023-12-06)
 
 
