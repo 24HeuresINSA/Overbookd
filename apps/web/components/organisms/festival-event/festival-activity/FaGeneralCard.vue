@@ -11,7 +11,14 @@
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
-      <v-btn class="review__action" fab x-small color="error">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="rejected"
+      >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
     </div>
@@ -98,6 +105,8 @@ import FaTimeWindowTable from "~/components/molecules/festival-event/time-window
 import {
   APPROVED,
   FestivalActivity,
+  REJECTED,
+  ReviewStatus,
   TimeWindow,
   communication,
   humain,
@@ -108,6 +117,8 @@ import { IProvidePeriod } from "@overbookd/period";
 
 const comcomEmail = "communication@24heures.org";
 const humainEmail = "humain@24heures.org";
+
+type GeneralReviewer = typeof communication | typeof humain;
 
 export default defineComponent({
   name: "FaGeneralCard",
@@ -128,22 +139,25 @@ export default defineComponent({
     contact(): string {
       return this.isPublic ? comcomEmail : humainEmail;
     },
-    reviewer(): typeof communication | typeof humain {
+    reviewer(): GeneralReviewer {
       return this.isPublic ? communication : humain;
     },
     canReview(): boolean {
       return this.$accessor.user.isMemberOf(this.reviewer);
     },
     cantApprove(): boolean {
-      if (isDraft(this.mFA)) return true;
-      switch (this.reviewer) {
-        case humain:
-          return this.mFA.reviews.humain === APPROVED;
-        case communication:
-          return this.mFA.reviews.communication === APPROVED;
-        default:
-          return true;
-      }
+      return this.hasReviewerAlreadyDoneHisReview(
+        this.mFA,
+        this.reviewer,
+        APPROVED,
+      );
+    },
+    cantReject(): boolean {
+      return this.hasReviewerAlreadyDoneHisReview(
+        this.mFA,
+        this.reviewer,
+        REJECTED,
+      );
     },
   },
   methods: {
@@ -176,6 +190,26 @@ export default defineComponent({
     },
     approved() {
       this.$accessor.festivalActivity.approveAs(this.reviewer);
+    },
+    rejected() {
+      const reason = "Section generale non valide";
+      const rejection = { team: this.reviewer, reason };
+      this.$accessor.festivalActivity.rejectBecause(rejection);
+    },
+    hasReviewerAlreadyDoneHisReview(
+      fa: FestivalActivity,
+      reviewer: GeneralReviewer,
+      status: ReviewStatus,
+    ) {
+      if (isDraft(fa)) return true;
+      switch (reviewer) {
+        case humain:
+          return fa.reviews.humain === status;
+        case communication:
+          return fa.reviews.communication === status;
+        default:
+          return true;
+      }
     },
   },
 });

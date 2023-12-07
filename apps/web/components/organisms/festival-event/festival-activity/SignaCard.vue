@@ -11,7 +11,14 @@
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
-      <v-btn class="review__action" fab x-small color="error">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="rejected"
+      >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
     </div>
@@ -54,7 +61,9 @@ import {
   isDraft,
   APPROVED,
   signa,
+  REJECTED,
 } from "@overbookd/festival-activity";
+import { ReviewRejection } from "@overbookd/http";
 
 export default defineComponent({
   name: "SignaCard",
@@ -77,6 +86,11 @@ export default defineComponent({
 
       return this.mFA.reviews.signa === APPROVED;
     },
+    cantReject(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.signa === REJECTED;
+    },
   },
   methods: {
     updateLocation(location: Location | null) {
@@ -94,6 +108,11 @@ export default defineComponent({
     },
     approved() {
       this.$accessor.festivalActivity.approveAs(signa);
+    },
+    rejected() {
+      const reason = "Section signalétique non valide";
+      const rejection: ReviewRejection = { team: signa, reason };
+      this.$accessor.festivalActivity.rejectBecause(rejection);
     },
   },
 });

@@ -3,6 +3,7 @@ import {
   HttpStringified,
   PrepareInChargeForm,
   PrepareSignaForm,
+  ReviewRejection,
 } from "@overbookd/http";
 import {
   Contractor,
@@ -303,6 +304,17 @@ export class FestivalActivityRepository {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/approve`,
       { team },
+    );
+  }
+
+  static reject(
+    context: Context,
+    faId: FestivalActivity["id"],
+    rejection: ReviewRejection,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/reject`,
+      rejection,
     );
   }
 }

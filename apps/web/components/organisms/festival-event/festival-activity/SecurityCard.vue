@@ -11,7 +11,14 @@
       >
         <v-icon>mdi-check-circle-outline</v-icon>
       </v-btn>
-      <v-btn class="review__action" fab x-small color="error">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="rejected"
+      >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
     </div>
@@ -40,9 +47,11 @@ import { defineComponent } from "vue";
 import {
   APPROVED,
   FestivalActivity,
+  REJECTED,
   isDraft,
   secu,
 } from "@overbookd/festival-activity";
+import { ReviewRejection } from "@overbookd/http";
 
 export default defineComponent({
   name: "SecurityCard",
@@ -61,6 +70,11 @@ export default defineComponent({
 
       return this.mFA.reviews.secu === APPROVED;
     },
+    cantReject(): boolean {
+      if (isDraft(this.mFA)) return true;
+
+      return this.mFA.reviews.secu === REJECTED;
+    },
   },
   methods: {
     updateSpecialNeed(canBeEmpty: string) {
@@ -71,6 +85,11 @@ export default defineComponent({
     },
     approved() {
       this.$accessor.festivalActivity.approveAs(secu);
+    },
+    rejected() {
+      const reason = "Section securité non valide";
+      const rejection: ReviewRejection = { team: secu, reason };
+      this.$accessor.festivalActivity.rejectBecause(rejection);
     },
   },
 });

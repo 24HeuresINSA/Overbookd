@@ -28,6 +28,7 @@ import {
   AddInquiryRequest,
   PrepareInChargeForm,
   PrepareSignaForm,
+  ReviewRejection,
 } from "@overbookd/http";
 import {
   JwtPayload,
@@ -60,11 +61,6 @@ export type Gear = {
 
 export type Inquiries = {
   find(slug: string): Promise<Gear>;
-};
-
-export type Rejection = {
-  team: Reviewer;
-  reason: string;
 };
 
 @Injectable()
@@ -304,7 +300,7 @@ export class FestivalActivityService {
   async reject(
     faId: number,
     user: JwtUtil,
-    rejection: Rejection,
+    rejection: ReviewRejection,
   ): Promise<Refused> {
     this.checkMembership(user, rejection.team);
 

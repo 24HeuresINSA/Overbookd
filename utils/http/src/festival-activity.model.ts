@@ -1,4 +1,7 @@
-import { PrepareInquiryRequestCreation } from "@overbookd/festival-activity";
+import {
+  PrepareInquiryRequestCreation,
+  Reviewer,
+} from "@overbookd/festival-activity";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -13,3 +16,8 @@ export type AddInquiryRequest = Pick<
   PrepareInquiryRequestCreation,
   "slug" | "quantity"
 >;
+
+export type ReviewRejection = {
+  team: Reviewer;
+  reason: string;
+};
