@@ -59,7 +59,6 @@ import {
   Location,
   PrepareSignageCreation,
   isDraft,
-  APPROVED,
   signa,
   REJECTED,
 } from "@overbookd/festival-activity";
