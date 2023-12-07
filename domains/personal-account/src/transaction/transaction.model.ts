@@ -10,6 +10,13 @@ type BaseTransaction = {
   date: Date;
 };
 
+export type TransactionUser = {
+  id: number;
+  firstname: string;
+  lastname: string;
+  nickname?: string;
+};
+
 export type DepositTransaction = BaseTransaction & {
   type: typeof DEPOSIT;
 };
@@ -24,12 +31,12 @@ export type ProvisionsTransaction = BaseTransaction & {
 
 export type TransferIReceiveTransaction = BaseTransaction & {
   type: typeof TRANSFER;
-  from: number;
+  from: TransactionUser;
 };
 
 export type TransferISendTransaction = BaseTransaction & {
   type: typeof TRANSFER;
-  to: number;
+  to: TransactionUser;
 };
 
 export type Transaction =

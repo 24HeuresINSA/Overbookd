@@ -1,6 +1,6 @@
-import { User } from "@overbookd/user";
+import { UserName } from "@overbookd/user";
 
-export function formatUsername({ firstname, lastname }: User): string {
+export function formatUsername({ firstname, lastname }: UserName): string {
   return `${firstname} ${lastname}`;
 }
 
@@ -8,7 +8,7 @@ export function formatUserNameWithNickname({
   lastname,
   firstname,
   nickname,
-}: User): string {
+}: UserName): string {
   const displayedNickname = nickname ? `(${nickname})` : "";
   return `${firstname} ${lastname} ${displayedNickname}`;
 }

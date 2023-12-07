@@ -22,6 +22,7 @@ export type {
   DepositTransaction,
   BarrelTransaction,
   ProvisionsTransaction,
+  TransactionUser,
 } from "./transaction";
 export {
   BARREL,

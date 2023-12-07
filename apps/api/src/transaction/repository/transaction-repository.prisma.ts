@@ -6,6 +6,7 @@ import {
   Transaction,
 } from "@overbookd/personal-account";
 import { PrismaService } from "../../prisma.service";
+import { SELECT_TRANSACTION_USER } from "../transaction.query";
 
 export class PrismaTransactionRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -18,14 +19,14 @@ export class PrismaTransactionRepository {
         amount: true,
         context: true,
         createdAt: true,
-        to: true,
-        from: true,
+        payee: { select: SELECT_TRANSACTION_USER },
+        payor: { select: SELECT_TRANSACTION_USER },
       },
       orderBy: { createdAt: "desc" },
     });
 
-    return transactions.map((transactionData) => {
-      const { type, amount, context, createdAt, to, from } = transactionData;
+    return transactions.map((transaction) => {
+      const { type, amount, context, createdAt, payee, payor } = transaction;
       const date = createdAt;
 
       switch (type) {
@@ -34,10 +35,10 @@ export class PrismaTransactionRepository {
         case PROVISIONS:
           return { type, amount, context, date };
         case TRANSFER:
-          if (this.isPayor(from, myId)) {
-            return { type, amount, context, date, to };
+          if (this.isPayor(payor.id, myId)) {
+            return { type, amount, context, date, to: payee };
           }
-          return { type, amount, context, date, from };
+          return { type, amount, context, date, from: payor };
       }
     });
   }
