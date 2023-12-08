@@ -16,9 +16,7 @@
           <v-icon x-large>{{ getTransactionIcon(transaction.type) }}</v-icon>
           <span>
             {{ transaction.context }}
-            <span v-if="isTransfer(transaction)">
-              {{ getTransferMessage(transaction) }}
-            </span>
+            {{ getTransferMessage(transaction) }}
           </span>
         </div>
         <span class="transaction__amount">{{ formatAmount(transaction) }}</span>
@@ -45,10 +43,9 @@ import {
   TRANSFER,
   Transaction,
   TransactionType,
-  TransactionUser,
   doIReceive,
 } from "@overbookd/personal-account";
-import { formatUsername } from "~/utils/user/user.utils";
+import { formatDisplayedNameWithLastname } from "~/utils/user/user.utils";
 
 export default defineComponent({
   name: "TransactionListing",
@@ -97,9 +94,6 @@ export default defineComponent({
     isTransfer(transaction: Transaction): boolean {
       return transaction.type === TRANSFER;
     },
-    getDisplayedName(user: TransactionUser): string {
-      return user.nickname ? user.nickname : formatUsername(user);
-    },
     getTransferMessage(transaction: Transaction): string {
       switch (transaction.type) {
         case BARREL:
@@ -107,9 +101,9 @@ export default defineComponent({
         case DEPOSIT:
           return "";
         case TRANSFER:
-          if (doIReceive(transaction))
-            return `(de ${this.getDisplayedName(transaction.from)})`;
-          else return `(vers ${this.getDisplayedName(transaction.to)})`;
+          return doIReceive(transaction)
+            ? `(de ${formatDisplayedNameWithLastname(transaction.from)})`
+            : `(vers ${formatDisplayedNameWithLastname(transaction.to)})`;
       }
     },
   },
