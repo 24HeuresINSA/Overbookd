@@ -14,6 +14,7 @@ import {
   qgOrga,
   validatedByHumain,
   validatedByCommunication,
+  validatedBySecu,
 } from "./preparation.test-utils";
 import { isDraft } from "../festival-activity";
 import {
@@ -38,6 +39,7 @@ describe("General section of festival activity preparation", () => {
       qgOrga,
       validatedByHumain,
       validatedByCommunication,
+      validatedBySecu,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -250,7 +252,7 @@ describe("General section of festival activity preparation", () => {
   );
 
   describe("when adherent want to remove a time window", () => {
-    describe("when trying to remove the last one on an in review activity", () => {
+    describe("when trying to remove the last one on a public in review activity", () => {
       it("should indicate that we can't remove the last time window", async () => {
         const timeWindow = justDance.general.timeWindows[0];
         expect(
@@ -264,9 +266,10 @@ describe("General section of festival activity preparation", () => {
     });
 
     it.each`
-      activity         | activityName
-      ${escapeGame}    | ${escapeGame.general.name}
-      ${baladeEnPoney} | ${baladeEnPoney.general.name}
+      activity           | activityName
+      ${escapeGame}      | ${escapeGame.general.name}
+      ${baladeEnPoney}   | ${baladeEnPoney.general.name}
+      ${validatedBySecu} | ${validatedBySecu.general.name}
     `(
       "should remove the time window from $activityName",
       async ({ activity }) => {

@@ -55,6 +55,7 @@ import {
   NotYetInitialized,
 } from "./section-aggregates/inquiries";
 import { LocationIsRequired, Signages } from "./section-aggregates/signages";
+import { isPrivate } from "../sections/general";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {
@@ -237,13 +238,20 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
 
   removeGeneralTimeWindow(id: TimeWindow["id"]): Reviewable {
     this.checkIfGeneralAlreadyApproved();
+
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
     ).remove(id).entries;
+    const currentGeneral = this.activity.general;
+
+    if (isPrivate(currentGeneral)) {
+      const general = { ...currentGeneral, timeWindows };
+      return { ...this.activity, general };
+    }
 
     if (!hasAtLeastOneItem(timeWindows)) throw new NeedAtLeastOneTimeWindow();
 
-    const general = { ...this.activity.general, timeWindows };
+    const general = { ...currentGeneral, timeWindows };
     return { ...this.activity, general };
   }
 

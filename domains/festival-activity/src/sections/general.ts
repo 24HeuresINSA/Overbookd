@@ -31,3 +31,7 @@ type Private = {
 };
 
 export type General = Public | Private;
+
+export function isPrivate(general: General): general is Private {
+  return general.toPublish === false;
+}
