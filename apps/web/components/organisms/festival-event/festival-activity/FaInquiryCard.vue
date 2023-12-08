@@ -9,8 +9,7 @@
       <v-card-text>
         <div v-show="shouldInitInquiry" class="init-inquiry">
           <p>
-            Tu n'as aucune demande de matos et ta FA est en attente de
-            validation. Pour ajouter une demande, tu dois initialiser une
+            Tu n'as aucune demande de matos et ta FA est en relecture. Pour ajouter une demande, tu dois initialiser une
             demande en ajoutant un créneau et un matos.
           </p>
           <v-btn
