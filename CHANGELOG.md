@@ -1,3 +1,10 @@
+## [2.9.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.9.1...v2.9.2) (2023-12-08)
+
+
+### Bug Fixes
+
+* **festival-activity:** allow last general time window remove on private activities. [#1400](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1400) ([beeb161](https://gitlab.com/24-heures-insa/overbookd-mono/commit/beeb1611ffe9bd3c8c6ebec7ce04ef2374519ce6))
+
 ## [2.9.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.9.0...v2.9.1) (2023-12-07)
 
 
