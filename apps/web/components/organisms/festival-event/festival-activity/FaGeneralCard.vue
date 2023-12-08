@@ -51,7 +51,7 @@
         <v-switch
           :value="general.toPublish"
           label="Publier sur le site / plaquette"
-          @change="tryToUpdateToPublish"
+          @change="updateToPublishOrAskPublicData"
         />
 
         <v-label>Description</v-label>
@@ -98,8 +98,8 @@
       </v-card-text>
     </v-card>
 
-    <v-dialog v-model="isPublishActivityDialogOpen" max-width="600">
-      <PublishActivityFormCard @close-dialog="closePublishActivityDialog" />
+    <v-dialog v-model="isAskPublicDataDialogOpen" max-width="600">
+      <AskPublicDataFormCard @close-dialog="closeAskPublicDataDialog" />
     </v-dialog>
   </div>
 </template>
@@ -108,7 +108,7 @@
 import { defineComponent } from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
-import PublishActivityFormCard from "~/components/molecules/festival-event/public-activity/PublishActivityFormCard.vue";
+import AskPublicDataFormCard from "~/components/molecules/festival-event/public-activity/AskPublicDataFormCard.vue";
 import {
   APPROVED,
   FestivalActivity,
@@ -128,14 +128,14 @@ const humainEmail = "humain@24heures.org";
 type GeneralReviewer = typeof communication | typeof humain;
 
 type FaGeneralCardDate = {
-  isPublishActivityDialogOpen: boolean;
+  isAskPublicDataDialogOpen: boolean;
 };
 
 export default defineComponent({
   name: "FaGeneralCard",
-  components: { RichEditor, FaTimeWindowTable, PublishActivityFormCard },
+  components: { RichEditor, FaTimeWindowTable, AskPublicDataFormCard },
   data: (): FaGeneralCardDate => ({
-    isPublishActivityDialogOpen: false,
+    isAskPublicDataDialogOpen: false,
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -178,18 +178,18 @@ export default defineComponent({
     updateName(name: string) {
       this.$accessor.festivalActivity.updateGeneral({ name });
     },
-    tryToUpdateToPublish(canBeNull: boolean) {
+    updateToPublishOrAskPublicData(canBeNull: boolean) {
       const toPublish = canBeNull === true;
 
       if (toPublish === true && !isDraft(this.mFA)) {
-        this.isPublishActivityDialogOpen = true;
+        this.isAskPublicDataDialogOpen = true;
         return;
       }
 
       this.$accessor.festivalActivity.updateGeneral({ toPublish });
     },
-    closePublishActivityDialog() {
-      this.isPublishActivityDialogOpen = false;
+    closeAskPublicDataDialog() {
+      this.isAskPublicDataDialogOpen = false;
     },
     updateDescription(canBeEmpty: string) {
       const description = canBeEmpty.trim() ? canBeEmpty : null;

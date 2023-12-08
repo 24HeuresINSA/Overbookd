@@ -8,7 +8,7 @@
       <h2>Publier une activité</h2>
     </v-card-title>
     <v-card-subtitle>
-      Ta FA est en attente de validation. Pour la publier, tu dois renseigner
+      Ta FA est en attente de relecture. Pour la publier, tu dois renseigner
       les informations suivantes.
     </v-card-subtitle>
 
@@ -59,6 +59,7 @@ import FaTimeWindowFormFields from "~/components/molecules/festival-event/time-w
 import { FestivalActivity } from "@overbookd/festival-activity";
 import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod, Period } from "@overbookd/period";
+import { hasAtLeastOneItem } from "@overbookd/list";
 
 type PublishActivityFormCardData = IProvidePeriod & {
   categories: string[];
@@ -66,7 +67,7 @@ type PublishActivityFormCardData = IProvidePeriod & {
 };
 
 export default defineComponent({
-  name: "PublishActivityFormCard",
+  name: "AskPublicDataFormCard",
   components: { FaTimeWindowFormFields },
   data: (): PublishActivityFormCardData => ({
     start: new Date(),
@@ -79,10 +80,10 @@ export default defineComponent({
       return this.$accessor.festivalActivity.selectedActivity.general;
     },
     mustHaveAtLeastOneTimeWindow(): boolean {
-      return this.general.timeWindows.length < 1;
+      return !hasAtLeastOneItem(this.general.timeWindows);
     },
     mustHaveAtLeastOneCategory(): boolean {
-      return this.general.categories.length < 1;
+      return !hasAtLeastOneItem(this.general.categories);
     },
     mustHavePhotoLink(): boolean {
       return this.general.photoLink === null;
@@ -103,7 +104,7 @@ export default defineComponent({
       const isTimeWindowValid = Period.isValid(this.period);
       const isPhotoLinkValid =
         this.photoLink !== null && this.photoLink.trim() !== "";
-      const hasAtLeastOneCategory = this.categories.length > 0;
+      const hasAtLeastOneCategory = hasAtLeastOneItem(this.categories);
 
       return isTimeWindowValid && isPhotoLinkValid && hasAtLeastOneCategory;
     },
