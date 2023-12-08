@@ -8,14 +8,8 @@ import { Transaction as PrismaTransaction } from "@prisma/client";
 import { User } from "@prisma/client";
 import { SELECT_TRANSACTION } from "./transaction.query";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
-import { Transaction } from "@overbookd/personal-account";
+import { Transaction, TransactionUser } from "@overbookd/personal-account";
 import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
-
-export type TransactionUser = {
-  id: number;
-  firstname: string;
-  lastname: string;
-};
 
 export type TransactionWithSenderAndReceiver = Omit<
   PrismaTransaction,

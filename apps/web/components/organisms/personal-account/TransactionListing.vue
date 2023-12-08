@@ -14,7 +14,10 @@
       <v-card-title class="transaction__title">
         <div class="transaction__context">
           <v-icon x-large>{{ getTransactionIcon(transaction.type) }}</v-icon>
-          <span>{{ transaction.context }}</span>
+          <span>
+            {{ transaction.context }}
+            {{ getTransferMessage(transaction) }}
+          </span>
         </div>
         <span class="transaction__amount">{{ formatAmount(transaction) }}</span>
       </v-card-title>
@@ -42,6 +45,7 @@ import {
   TransactionType,
   doIReceive,
 } from "@overbookd/personal-account";
+import { formatDisplayedNameWithLastname } from "~/utils/user/user.utils";
 
 export default defineComponent({
   name: "TransactionListing",
@@ -86,6 +90,21 @@ export default defineComponent({
     },
     formatDate(date: Date): string {
       return formatDateWithExplicitMonthAndDay(date);
+    },
+    isTransfer(transaction: Transaction): boolean {
+      return transaction.type === TRANSFER;
+    },
+    getTransferMessage(transaction: Transaction): string {
+      switch (transaction.type) {
+        case BARREL:
+        case PROVISIONS:
+        case DEPOSIT:
+          return "";
+        case TRANSFER:
+          return doIReceive(transaction)
+            ? `(de ${formatDisplayedNameWithLastname(transaction.from)})`
+            : `(vers ${formatDisplayedNameWithLastname(transaction.to)})`;
+      }
     },
   },
 });

@@ -7,9 +7,11 @@ import {
   PROVISIONS,
   ProvisionsTransaction,
   TRANSFER,
+  TransactionUser,
   TransferIReceiveTransaction,
   TransferISendTransaction,
 } from "@overbookd/personal-account";
+import { UserRepresentation } from "./transaction.response.dto";
 
 class BaseTransactionDto {
   @ApiProperty({
@@ -81,9 +83,9 @@ export class TransferIReceiveTransactionDto
 
   @ApiProperty({
     description: "Transaction sender",
-    type: Number,
+    type: UserRepresentation,
   })
-  from: number;
+  from: TransactionUser;
 }
 
 export class TransferISendTransactionDto
@@ -99,7 +101,7 @@ export class TransferISendTransactionDto
 
   @ApiProperty({
     description: "Transaction reveiver",
-    type: Number,
+    type: UserRepresentation,
   })
-  to: number;
+  to: TransactionUser;
 }
