@@ -8,8 +8,8 @@
       <h2>Publier une activité</h2>
     </v-card-title>
     <v-card-subtitle>
-      Ta FA est en attente de relecture. Pour la publier, tu dois renseigner
-      les informations suivantes.
+      Ta FA est en attente de relecture. Pour la publier, tu dois renseigner les
+      informations suivantes.
     </v-card-subtitle>
 
     <v-card-text>
