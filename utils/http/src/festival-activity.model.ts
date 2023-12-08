@@ -2,6 +2,7 @@ import {
   PrepareInquiryRequestCreation,
   Reviewer,
 } from "@overbookd/festival-activity";
+import { IProvidePeriod } from "@overbookd/period";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -20,4 +21,9 @@ export type AddInquiryRequest = Pick<
 export type ReviewRejection = {
   team: Reviewer;
   reason: string;
+};
+
+export type InitInquiryRequest = {
+  timeWindow: IProvidePeriod;
+  request: AddInquiryRequest;
 };

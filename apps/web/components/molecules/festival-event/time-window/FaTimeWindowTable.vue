@@ -34,14 +34,17 @@
     </v-btn>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <FaTimeWindowForm @add="addTimeWindow" @close-dialog="closeAddDialog" />
+      <FaTimeWindowFormCard
+        @add="addTimeWindow"
+        @close-dialog="closeAddDialog"
+      />
     </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaTimeWindowForm from "~/components/molecules/festival-event/time-window/FaTimeWindowForm.vue";
+import FaTimeWindowFormCard from "~/components/molecules/festival-event/time-window/FaTimeWindowFormCard.vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import {
   SortableFaTimeWindowHeader,
@@ -58,7 +61,7 @@ type FaTimeWindowTableData = {
 
 export default defineComponent({
   name: "FaTimeWindowTable",
-  components: { FaTimeWindowForm },
+  components: { FaTimeWindowFormCard },
   props: {
     timeWindows: {
       type: Array as () => TimeWindow[],

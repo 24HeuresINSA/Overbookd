@@ -23,6 +23,7 @@ import {
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
+  InitInquiryRequest,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
@@ -334,6 +335,15 @@ export const actions = actionTree(
         this,
         repo.removeInquiryRequest(this, id, slug),
       );
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async initInquiry({ state, commit }, form: InitInquiryRequest) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.initInquiry(this, id, form));
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

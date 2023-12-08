@@ -3,5 +3,6 @@ export type {
   PrepareSignaForm,
   AddInquiryRequest,
   ReviewRejection,
+  InitInquiryRequest,
 } from "./festival-activity.model";
 export type { HttpStringified } from "./http-stringified";

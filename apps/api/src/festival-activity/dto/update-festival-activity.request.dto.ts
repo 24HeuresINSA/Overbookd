@@ -32,9 +32,11 @@ import {
   IsPositive,
   IsString,
   ValidateIf,
+  ValidateNested,
 } from "class-validator";
 import {
   AddInquiryRequest,
+  InitInquiryRequest,
   PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
@@ -353,17 +355,13 @@ export class AddInquiryRequestDto implements AddInquiryRequest {
   slug: string;
 }
 
-export type InitInquiryRequest = {
-  timeWindow: IProvidePeriod;
-  request: AddInquiryRequest;
-};
-
 export class InitInquiryRequestDto implements InitInquiryRequest {
   @ApiProperty({
     required: true,
     type: PeriodDto,
   })
   @Type(() => PeriodDto)
+  @ValidateNested()
   timeWindow: IProvidePeriod;
 
   @ApiProperty({
@@ -371,6 +369,7 @@ export class InitInquiryRequestDto implements InitInquiryRequest {
     type: AddInquiryRequestDto,
   })
   @Type(() => AddInquiryRequestDto)
+  @ValidateNested()
   request: AddInquiryRequest;
 }
 
