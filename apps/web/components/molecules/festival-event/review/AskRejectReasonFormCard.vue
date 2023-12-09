@@ -25,7 +25,7 @@
     </v-card-text>
     <v-card-actions class="reject-card__actions">
       <v-btn :disabled="isReasonEmpty" color="primary" large @click="reject">
-        <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
+        <v-icon left> mdi-alert-octagon-outline</v-icon>
         Rejeter la FA
       </v-btn>
     </v-card-actions>
