@@ -33,7 +33,7 @@ export class ApproveRequestDto {
 export class RejectRequestDto implements ReviewRejection {
   @ApiProperty({ required: true, enum: reviewers })
   @IsEnum(reviewers, {
-    message: () => `❌ Seuls ${reviewers.join(", ")} peuvent rejetter une FA`,
+    message: () => `❌ Seuls ${reviewers.join(", ")} peuvent rejeter une FA`,
   })
   team: Reviewer;
 

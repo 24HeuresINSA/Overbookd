@@ -53,7 +53,7 @@
   </v-card>
 </template>
 
-<script lang="ts" scoped>
+<script lang="ts">
 import { defineComponent } from "vue";
 import FaTimeWindowFormFields from "~/components/molecules/festival-event/time-window/FaTimeWindowFormFields.vue";
 import { FestivalActivity } from "@overbookd/festival-activity";
@@ -61,7 +61,7 @@ import { activityCategories } from "~/utils/festival-event/festival-activity.mod
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { hasAtLeastOneItem } from "@overbookd/list";
 
-type PublishActivityFormCardData = IProvidePeriod & {
+type AskPublicDataFormCardData = IProvidePeriod & {
   categories: string[];
   photoLink: string | null;
 };
@@ -69,7 +69,7 @@ type PublishActivityFormCardData = IProvidePeriod & {
 export default defineComponent({
   name: "AskPublicDataFormCard",
   components: { FaTimeWindowFormFields },
-  data: (): PublishActivityFormCardData => ({
+  data: (): AskPublicDataFormCardData => ({
     start: new Date(),
     end: new Date(),
     categories: [],

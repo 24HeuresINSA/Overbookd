@@ -17,7 +17,7 @@
         x-small
         color="error"
         :disabled="cantReject"
-        @click="rejected"
+        @click="reject"
       >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
@@ -49,7 +49,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import ElectricitySupplyTable from "~/components/molecules/festival-event/logistic/supply/ElectricitySupplyTable.vue";
 import {
   FestivalActivity,
   ElectricitySupply,
@@ -59,11 +58,12 @@ import {
   isDraft,
   REJECTED,
 } from "@overbookd/festival-activity";
-import { ReviewRejection } from "@overbookd/http";
+import ElectricitySupplyTable from "~/components/molecules/festival-event/logistic/supply/ElectricitySupplyTable.vue";
 
 export default defineComponent({
   name: "SupplyCard",
   components: { ElectricitySupplyTable },
+  emits: ["reject"],
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -102,10 +102,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(elec);
     },
-    rejected() {
-      const reason = "Section besoin en eau et élec non valide";
-      const rejection: ReviewRejection = { team: elec, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", elec);
     },
   },
 });

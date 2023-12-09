@@ -2,13 +2,19 @@
   <div class="fa-content fa">
     <FestivalEventSidebar festival-event="FA" class="sidebar" />
     <article class="container fa">
-      <FaGeneralCard id="general" />
-      <FaInChargeCard id="in-charge" />
-      <SignaCard id="signa" />
-      <SecurityCard id="security" />
-      <SupplyCard id="supply" />
-      <FaInquiryCard id="inquiry" />
+      <FaGeneralCard id="general" @reject="askReject" />
+      <FaInChargeCard id="in-charge" @reject="askReject" />
+      <SignaCard id="signa" @reject="askReject" />
+      <SecurityCard id="security" @reject="askReject" />
+      <SupplyCard id="supply" @reject="askReject" />
+      <FaInquiryCard id="inquiry" @reject="askReject" />
       <FaFeedbackCard id="feedback" />
+      <v-dialog v-model="isRejectDialogOpen" max-width="600">
+        <AskRejectReasonFormCard
+          @close-dialog="closeRejectDialog"
+          @rejected="rejected"
+        />
+      </v-dialog>
     </article>
     <SnackNotificationContainer />
   </div>
@@ -16,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity, Reviewer } from "@overbookd/festival-activity";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
@@ -25,7 +31,13 @@ import SecurityCard from "~/components/organisms/festival-event/festival-activit
 import SupplyCard from "~/components/organisms/festival-event/festival-activity/SupplyCard.vue";
 import FaInquiryCard from "~/components/organisms/festival-event/festival-activity/FaInquiryCard.vue";
 import FaFeedbackCard from "~/components/organisms/festival-event/festival-activity/FaFeedbackCard.vue";
+import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+
+type FestivalActivityDetailsData = {
+  isRejectDialogOpen: boolean;
+  reviewer?: Reviewer;
+};
 
 export default defineComponent({
   name: "Fa",
@@ -39,8 +51,12 @@ export default defineComponent({
     FaInquiryCard,
     FaFeedbackCard,
     SnackNotificationContainer,
+    AskRejectReasonFormCard,
   },
-
+  data: (): FestivalActivityDetailsData => ({
+    isRejectDialogOpen: false,
+    reviewer: undefined,
+  }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -59,6 +75,20 @@ export default defineComponent({
       this.$router.push({ path: "/fa" });
     }
     document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
+  },
+  methods: {
+    closeRejectDialog() {
+      this.isRejectDialogOpen = false;
+    },
+    askReject(team: Reviewer) {
+      this.reviewer = team;
+      this.isRejectDialogOpen = true;
+    },
+    rejected({ reason }: { reason: string }) {
+      const team = this.reviewer;
+      if (!team) return;
+      this.$accessor.festivalActivity.rejectBecause({ team, reason });
+    },
   },
 });
 </script>

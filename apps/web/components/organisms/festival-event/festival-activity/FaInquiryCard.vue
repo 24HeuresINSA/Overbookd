@@ -67,7 +67,7 @@
               x-small
               color="error"
               :disabled="cantRejectGears"
-              @click="rejected(MATOS)"
+              @click="reject(MATOS)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
@@ -98,7 +98,7 @@
               x-small
               color="error"
               :disabled="cantRejectElec"
-              @click="rejected(ELEC)"
+              @click="reject(ELEC)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
@@ -129,7 +129,7 @@
               x-small
               color="error"
               :disabled="cantRejectBarriers"
-              @click="rejected(BARRIERES)"
+              @click="reject(BARRIERES)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
@@ -195,11 +195,11 @@ export default defineComponent({
     FaTimeWindowTable,
     FaInitInquiryFormCard,
   },
+  emits: ["reject"],
   data: (): FaInquiryCardData => ({
     isInitInquiryDialogOpen: false,
     gear: null,
     quantity: 1,
-
     MATOS,
     ELEC,
     BARRIERES,
@@ -303,10 +303,8 @@ export default defineComponent({
     approved(owner: InquiryOwner) {
       this.$accessor.festivalActivity.approveAs(owner);
     },
-    rejected(owner: InquiryOwner) {
-      const reason = `Section demande de matos pour ${owner} non valide`;
-      const rejection = { team: owner, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject(owner: InquiryOwner) {
+      this.$emit("reject", owner);
     },
     openInitInquiryDialog(): void {
       this.isInitInquiryDialogOpen = true;

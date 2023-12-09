@@ -18,7 +18,7 @@
           x-small
           color="error"
           :disabled="cantReject"
-          @click="rejected"
+          @click="reject"
         >
           <v-icon>mdi-close-circle-outline</v-icon>
         </v-btn>
@@ -106,9 +106,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
-import AskPublicDataFormCard from "~/components/molecules/festival-event/public-activity/AskPublicDataFormCard.vue";
 import {
   APPROVED,
   FestivalActivity,
@@ -119,22 +116,30 @@ import {
   humain,
   isDraft,
 } from "@overbookd/festival-activity";
-import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
+import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
+import AskPublicDataFormCard from "~/components/molecules/festival-event/public-activity/AskPublicDataFormCard.vue";
+import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 
 const comcomEmail = "communication@24heures.org";
 const humainEmail = "humain@24heures.org";
 
 type GeneralReviewer = typeof communication | typeof humain;
 
-type FaGeneralCardDate = {
+type FaGeneralCardData = {
   isAskPublicDataDialogOpen: boolean;
 };
 
 export default defineComponent({
   name: "FaGeneralCard",
-  components: { RichEditor, FaTimeWindowTable, AskPublicDataFormCard },
-  data: (): FaGeneralCardDate => ({
+  components: {
+    RichEditor,
+    FaTimeWindowTable,
+    AskPublicDataFormCard,
+  },
+  emits: ["reject"],
+  data: (): FaGeneralCardData => ({
     isAskPublicDataDialogOpen: false,
   }),
   computed: {
@@ -214,10 +219,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(this.reviewer);
     },
-    rejected() {
-      const reason = "Section generale non valide";
-      const rejection = { team: this.reviewer, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", this.reviewer);
     },
     hasReviewerAlreadyDoneHisReview(
       fa: FestivalActivity,

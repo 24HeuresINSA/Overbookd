@@ -17,7 +17,7 @@
         x-small
         color="error"
         :disabled="cantReject"
-        @click="rejected"
+        @click="reject"
       >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
@@ -51,8 +51,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 import {
   FestivalActivity,
   Signage,
@@ -62,7 +60,8 @@ import {
   signa,
   REJECTED,
 } from "@overbookd/festival-activity";
-import { ReviewRejection } from "@overbookd/http";
+import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
+import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 
 export default defineComponent({
   name: "SignaCard",
@@ -70,6 +69,7 @@ export default defineComponent({
     SearchSignaLocation,
     FaSignageTable,
   },
+  emits: ["reject"],
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -108,10 +108,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(signa);
     },
-    rejected() {
-      const reason = "Section signalétique non valide";
-      const rejection: ReviewRejection = { team: signa, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", signa);
     },
   },
 });

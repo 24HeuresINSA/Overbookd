@@ -17,7 +17,7 @@
         x-small
         color="error"
         :disabled="cantReject"
-        @click="rejected"
+        @click="reject"
       >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
@@ -51,10 +51,10 @@ import {
   isDraft,
   secu,
 } from "@overbookd/festival-activity";
-import { ReviewRejection } from "@overbookd/http";
 
 export default defineComponent({
   name: "SecurityCard",
+  emits: ["reject"],
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -86,10 +86,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(secu);
     },
-    rejected() {
-      const reason = "Section securité non valide";
-      const rejection: ReviewRejection = { team: secu, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", secu);
     },
   },
 });

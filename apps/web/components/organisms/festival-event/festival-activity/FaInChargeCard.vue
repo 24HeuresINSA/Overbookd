@@ -17,7 +17,7 @@
         x-small
         color="error"
         :disabled="cantReject"
-        @click="rejected"
+        @click="reject"
       >
         <v-icon>mdi-close-circle-outline</v-icon>
       </v-btn>
@@ -32,8 +32,8 @@
       </p>
       <p>
         Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
-        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a> en
-        te connectant avec jeuneetcon@24heures.org.
+        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
+        en te connectant avec jeuneetcon@24heures.org.
       </p>
     </v-card-subtitle>
 
@@ -68,9 +68,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
-import ContractorTable from "~/components/molecules/festival-event/contractor/ContractorTable.vue";
 import {
   FestivalActivity,
   Adherent,
@@ -82,12 +79,19 @@ import {
   REJECTED,
 } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
+import ContractorTable from "~/components/molecules/festival-event/contractor/ContractorTable.vue";
 import { Team } from "~/utils/models/team.model";
-import { ReviewRejection } from "@overbookd/http";
 
 export default defineComponent({
   name: "FaGeneralCard",
-  components: { SearchUser, SearchTeam, ContractorTable },
+  components: {
+    SearchUser,
+    SearchTeam,
+    ContractorTable,
+  },
+  emits: ["reject"],
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -141,10 +145,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(humain);
     },
-    rejected() {
-      const reason = "Section responsable non valide";
-      const rejection: ReviewRejection = { team: humain, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", humain);
     },
   },
 });
@@ -160,3 +162,4 @@ export default defineComponent({
   gap: 10px;
 }
 </style>
+./with-reject-dialog.model
