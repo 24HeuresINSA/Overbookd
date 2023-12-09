@@ -67,7 +67,7 @@
               x-small
               color="error"
               :disabled="cantRejectGears"
-              @click="openRejectDialog(MATOS)"
+              @click="reject(MATOS)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
@@ -98,7 +98,7 @@
               x-small
               color="error"
               :disabled="cantRejectElec"
-              @click="openRejectDialog(ELEC)"
+              @click="reject(ELEC)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
@@ -129,7 +129,7 @@
               x-small
               color="error"
               :disabled="cantRejectBarriers"
-              @click="openRejectDialog(BARRIERES)"
+              @click="reject(BARRIERES)"
             >
               <v-icon>mdi-close-circle-outline</v-icon>
             </v-btn>
@@ -148,13 +148,6 @@
       <FaInitInquiryFormCard
         @add="initInquiry"
         @close-dialog="closeInitInquiryDialog"
-      />
-    </v-dialog>
-
-    <v-dialog v-model="isRejectDialogOpen" max-width="600">
-      <AskRejectReasonFormCard
-        @close-dialog="closeRejectDialog"
-        @rejected="rejected"
       />
     </v-dialog>
   </div>
@@ -183,21 +176,16 @@ import { min, isNumber } from "~/utils/rules/input.rules";
 import { IProvidePeriod } from "@overbookd/period";
 import { InitInquiryRequest } from "@overbookd/http";
 import FaInitInquiryFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaInitInquiryFormCard.vue";
-import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
-import { WithRejectDialog } from "./with-reject-dialog.model";
 
-type FaInquiryCardData = WithRejectDialog &
-  InputRulesData & {
-    isInitInquiryDialogOpen: boolean;
-    gear: Gear | null;
-    quantity: number;
+type FaInquiryCardData = InputRulesData & {
+  isInitInquiryDialogOpen: boolean;
+  gear: Gear | null;
+  quantity: number;
 
-    MATOS: typeof MATOS;
-    ELEC: typeof ELEC;
-    BARRIERES: typeof BARRIERES;
-
-    owner: InquiryOwner;
-  };
+  MATOS: typeof MATOS;
+  ELEC: typeof ELEC;
+  BARRIERES: typeof BARRIERES;
+};
 
 export default defineComponent({
   name: "FaInquiryCard",
@@ -206,11 +194,10 @@ export default defineComponent({
     FaInquiryFormFields,
     FaTimeWindowTable,
     FaInitInquiryFormCard,
-    AskRejectReasonFormCard,
   },
+  emits: ["reject"],
   data: (): FaInquiryCardData => ({
     isInitInquiryDialogOpen: false,
-    isRejectDialogOpen: false,
     gear: null,
     quantity: 1,
     MATOS,
@@ -220,7 +207,6 @@ export default defineComponent({
       number: isNumber,
       min: min(1),
     },
-    owner: MATOS,
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -317,19 +303,8 @@ export default defineComponent({
     approved(owner: InquiryOwner) {
       this.$accessor.festivalActivity.approveAs(owner);
     },
-    openRejectDialog(owner: InquiryOwner) {
-      this.owner = owner;
-      console.log("open", owner);
-      this.isRejectDialogOpen = true;
-    },
-    closeRejectDialog() {
-      console.log("close");
-      this.isRejectDialogOpen = false;
-    },
-    rejected({ reason }: { reason: string }) {
-      const owner = this.owner;
-      const rejection = { team: owner, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject(owner: InquiryOwner) {
+      this.$emit("reject", owner);
     },
     openInitInquiryDialog(): void {
       this.isInitInquiryDialogOpen = true;

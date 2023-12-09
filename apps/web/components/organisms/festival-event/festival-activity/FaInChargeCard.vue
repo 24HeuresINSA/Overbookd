@@ -1,78 +1,69 @@
 <template>
-  <div>
-    <v-card>
-      <div v-if="canReview" class="review">
-        <v-btn
-          class="review__action"
-          fab
-          x-small
-          color="success"
-          :disabled="cantApprove"
-          @click="approved"
-        >
-          <v-icon>mdi-check-circle-outline</v-icon>
-        </v-btn>
-        <v-btn
-          class="review__action"
-          fab
-          x-small
-          color="error"
-          :disabled="cantReject"
-          @click="openRejectDialog"
-        >
-          <v-icon>mdi-close-circle-outline</v-icon>
-        </v-btn>
-      </div>
+  <v-card>
+    <div v-if="canReview" class="review">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="success"
+        :disabled="cantApprove"
+        @click="approved"
+      >
+        <v-icon>mdi-check-circle-outline</v-icon>
+      </v-btn>
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="reject"
+      >
+        <v-icon>mdi-close-circle-outline</v-icon>
+      </v-btn>
+    </div>
 
-      <v-card-title>Responsable</v-card-title>
+    <v-card-title>Responsable</v-card-title>
 
-      <v-card-subtitle>
-        <p>
-          N'hésite pas si tu as des questions à contacter
-          <a href="mailto:humain@24heures.org">humain@24heures.org</a>.
-        </p>
-        <p>
-          Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
-          <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
-          en te connectant avec jeuneetcon@24heures.org.
-        </p>
-      </v-card-subtitle>
+    <v-card-subtitle>
+      <p>
+        N'hésite pas si tu as des questions à contacter
+        <a href="mailto:humain@24heures.org">humain@24heures.org</a>.
+      </p>
+      <p>
+        Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
+        <a href="https://cetaitmieuxavant.24heures.org">cetaitmieuxavant</a>
+        en te connectant avec jeuneetcon@24heures.org.
+      </p>
+    </v-card-subtitle>
 
-      <v-card-text>
-        <SearchUser
-          :user="inCharge.adherent"
-          label="Adhérent"
-          :boxed="false"
-          :list="adherents"
-          @change="updateAdherent"
-        />
-
-        <SearchTeam
-          :team="team"
-          label="Équipe"
-          :boxed="false"
-          @change="updateTeam"
-        />
-
-        <section class="contractors">
-          <h2>Prestataires</h2>
-          <ContractorTable
-            :contractors="inCharge.contractors"
-            @add="addContractor"
-            @update="updateContractor"
-            @remove="removeContractor"
-          />
-        </section>
-      </v-card-text>
-    </v-card>
-
-    <v-dialog v-model="isRejectDialogOpen" max-width="600">
-      <AskRejectReasonFormCard
-        @close-dialog="closeRejectDialog"
-        @rejected="rejected"
+    <v-card-text>
+      <SearchUser
+        :user="inCharge.adherent"
+        label="Adhérent"
+        :boxed="false"
+        :list="adherents"
+        @change="updateAdherent"
       />
-    </v-dialog>
-  </div>
+
+      <SearchTeam
+        :team="team"
+        label="Équipe"
+        :boxed="false"
+        @change="updateTeam"
+      />
+
+      <section class="contractors">
+        <h2>Prestataires</h2>
+        <ContractorTable
+          :contractors="inCharge.contractors"
+          @add="addContractor"
+          @update="updateContractor"
+          @remove="removeContractor"
+        />
+      </section>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -87,14 +78,11 @@ import {
   isDraft,
   REJECTED,
 } from "@overbookd/festival-activity";
-import { ReviewRejection } from "@overbookd/http";
 import { User } from "@overbookd/user";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import ContractorTable from "~/components/molecules/festival-event/contractor/ContractorTable.vue";
-import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import { Team } from "~/utils/models/team.model";
-import { WithRejectDialog } from "./with-reject-dialog.model";
 
 export default defineComponent({
   name: "FaGeneralCard",
@@ -102,11 +90,8 @@ export default defineComponent({
     SearchUser,
     SearchTeam,
     ContractorTable,
-    AskRejectReasonFormCard,
   },
-  data: (): WithRejectDialog => ({
-    isRejectDialogOpen: false,
-  }),
+  emits: ["reject"],
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -160,15 +145,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(humain);
     },
-    openRejectDialog() {
-      this.isRejectDialogOpen = true;
-    },
-    closeRejectDialog() {
-      this.isRejectDialogOpen = false;
-    },
-    rejected({ reason }: { reason: string }) {
-      const rejection: ReviewRejection = { team: humain, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", humain);
     },
   },
 });

@@ -1,59 +1,50 @@
 <template>
-  <div>
-    <v-card>
-      <div v-if="canReview" class="review">
-        <v-btn
-          class="review__action"
-          fab
-          x-small
-          color="success"
-          :disabled="cantApprove"
-          @click="approved"
-        >
-          <v-icon>mdi-check-circle-outline</v-icon>
-        </v-btn>
-        <v-btn
-          class="review__action"
-          fab
-          x-small
-          color="error"
-          :disabled="cantReject"
-          @click="openRejectDialog"
-        >
-          <v-icon>mdi-close-circle-outline</v-icon>
-        </v-btn>
-      </div>
-      <v-card-title>Besoin en électricité et eau</v-card-title>
-      <v-card-subtitle>
-        Précise tes besoins en électricité : 1 ligne par type d'appareil. Si ton
-        activité a besoin d'eau, renseigne le débit dont tu as besoin et comment
-        l'évacuer.<br />
-        Pour plus de renseignement, vois avec la Log Elec via
-        <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
-      </v-card-subtitle>
-      <v-card-text>
-        <ElectricitySupplyTable
-          :supplies="supply.electricity"
-          @add="addElectricitySupply"
-          @update="updateElectricitySupply"
-          @remove="removeElectricitySupply"
-        />
-
-        <v-text-field
-          :value="supply.water"
-          label="Besoin en eau"
-          @change="updateWaterSupply"
-        />
-      </v-card-text>
-    </v-card>
-
-    <v-dialog v-model="isRejectDialogOpen" max-width="600">
-      <AskRejectReasonFormCard
-        @close-dialog="closeRejectDialog"
-        @rejected="rejected"
+  <v-card>
+    <div v-if="canReview" class="review">
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="success"
+        :disabled="cantApprove"
+        @click="approved"
+      >
+        <v-icon>mdi-check-circle-outline</v-icon>
+      </v-btn>
+      <v-btn
+        class="review__action"
+        fab
+        x-small
+        color="error"
+        :disabled="cantReject"
+        @click="reject"
+      >
+        <v-icon>mdi-close-circle-outline</v-icon>
+      </v-btn>
+    </div>
+    <v-card-title>Besoin en électricité et eau</v-card-title>
+    <v-card-subtitle>
+      Précise tes besoins en électricité : 1 ligne par type d'appareil. Si ton
+      activité a besoin d'eau, renseigne le débit dont tu as besoin et comment
+      l'évacuer.<br />
+      Pour plus de renseignement, vois avec la Log Elec via
+      <a href="mailto:logistique@24heures.org">logistique@24heures.org</a>.
+    </v-card-subtitle>
+    <v-card-text>
+      <ElectricitySupplyTable
+        :supplies="supply.electricity"
+        @add="addElectricitySupply"
+        @update="updateElectricitySupply"
+        @remove="removeElectricitySupply"
       />
-    </v-dialog>
-  </div>
+
+      <v-text-field
+        :value="supply.water"
+        label="Besoin en eau"
+        @change="updateWaterSupply"
+      />
+    </v-card-text>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -67,17 +58,12 @@ import {
   isDraft,
   REJECTED,
 } from "@overbookd/festival-activity";
-import { ReviewRejection } from "@overbookd/http";
 import ElectricitySupplyTable from "~/components/molecules/festival-event/logistic/supply/ElectricitySupplyTable.vue";
-import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
-import { WithRejectDialog } from "./with-reject-dialog.model";
 
 export default defineComponent({
   name: "SupplyCard",
-  components: { ElectricitySupplyTable, AskRejectReasonFormCard },
-  data: (): WithRejectDialog => ({
-    isRejectDialogOpen: false,
-  }),
+  components: { ElectricitySupplyTable },
+  emits: ["reject"],
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -116,15 +102,8 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(elec);
     },
-    openRejectDialog() {
-      this.isRejectDialogOpen = true;
-    },
-    closeRejectDialog() {
-      this.isRejectDialogOpen = false;
-    },
-    rejected({ reason }: { reason: string }) {
-      const rejection: ReviewRejection = { team: elec, reason };
-      this.$accessor.festivalActivity.rejectBecause(rejection);
+    reject() {
+      this.$emit("reject", elec);
     },
   },
 });
