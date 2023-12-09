@@ -18,7 +18,7 @@
           x-small
           color="error"
           :disabled="cantReject"
-          @click="rejected"
+          @click="openRejectDialog"
         >
           <v-icon>mdi-close-circle-outline</v-icon>
         </v-btn>
@@ -101,14 +101,18 @@
     <v-dialog v-model="isAskPublicDataDialogOpen" max-width="600">
       <AskPublicDataFormCard @close-dialog="closeAskPublicDataDialog" />
     </v-dialog>
+
+    <v-dialog v-model="isRejectDialogOpen" max-width="600">
+      <AskRejectReasonFormCard
+        @close-dialog="closeRejectDialog"
+        @rejected="rejected"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
-import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
-import AskPublicDataFormCard from "~/components/molecules/festival-event/public-activity/AskPublicDataFormCard.vue";
 import {
   APPROVED,
   FestivalActivity,
@@ -119,23 +123,34 @@ import {
   humain,
   isDraft,
 } from "@overbookd/festival-activity";
-import { activityCategories } from "~/utils/festival-event/festival-activity.model";
 import { IProvidePeriod } from "@overbookd/period";
+import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
+import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
+import AskPublicDataFormCard from "~/components/molecules/festival-event/public-activity/AskPublicDataFormCard.vue";
+import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
+import { activityCategories } from "~/utils/festival-event/festival-activity.model";
+import { WithRejectDialog } from "./with-reject-dialog.model";
 
 const comcomEmail = "communication@24heures.org";
 const humainEmail = "humain@24heures.org";
 
 type GeneralReviewer = typeof communication | typeof humain;
 
-type FaGeneralCardDate = {
+type FaGeneralCardData = WithRejectDialog & {
   isAskPublicDataDialogOpen: boolean;
 };
 
 export default defineComponent({
   name: "FaGeneralCard",
-  components: { RichEditor, FaTimeWindowTable, AskPublicDataFormCard },
-  data: (): FaGeneralCardDate => ({
+  components: {
+    RichEditor,
+    FaTimeWindowTable,
+    AskPublicDataFormCard,
+    AskRejectReasonFormCard,
+  },
+  data: (): FaGeneralCardData => ({
     isAskPublicDataDialogOpen: false,
+    isRejectDialogOpen: false,
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -191,6 +206,12 @@ export default defineComponent({
     closeAskPublicDataDialog() {
       this.isAskPublicDataDialogOpen = false;
     },
+    openRejectDialog() {
+      this.isRejectDialogOpen = true;
+    },
+    closeRejectDialog() {
+      this.isRejectDialogOpen = false;
+    },
     updateDescription(canBeEmpty: string) {
       const description = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateGeneral({ description });
@@ -214,8 +235,7 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(this.reviewer);
     },
-    rejected() {
-      const reason = "Section generale non valide";
+    rejected({ reason }: { reason: string }) {
       const rejection = { team: this.reviewer, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },

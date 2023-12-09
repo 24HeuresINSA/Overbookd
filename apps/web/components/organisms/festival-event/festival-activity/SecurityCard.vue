@@ -1,45 +1,54 @@
 <template>
-  <v-card>
-    <div v-if="canReview" class="review">
-      <v-btn
-        class="review__action"
-        fab
-        x-small
-        color="success"
-        :disabled="cantApprove"
-        @click="approved"
-      >
-        <v-icon>mdi-check-circle-outline</v-icon>
-      </v-btn>
-      <v-btn
-        class="review__action"
-        fab
-        x-small
-        color="error"
-        :disabled="cantReject"
-        @click="rejected"
-      >
-        <v-icon>mdi-close-circle-outline</v-icon>
-      </v-btn>
-    </div>
+  <div>
+    <v-card>
+      <div v-if="canReview" class="review">
+        <v-btn
+          class="review__action"
+          fab
+          x-small
+          color="success"
+          :disabled="cantApprove"
+          @click="approved"
+        >
+          <v-icon>mdi-check-circle-outline</v-icon>
+        </v-btn>
+        <v-btn
+          class="review__action"
+          fab
+          x-small
+          color="error"
+          :disabled="cantReject"
+          @click="openRejectDialog"
+        >
+          <v-icon>mdi-close-circle-outline</v-icon>
+        </v-btn>
+      </div>
 
-    <v-card-title>Sécurité</v-card-title>
-    <v-card-subtitle>
-      Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
-      de ton activité, contacte
-      <a href="mailto:securite@24heures.org">securite@24heures.org</a>.
-    </v-card-subtitle>
-    <v-card-text>
-      <v-textarea
-        :value="security.specialNeed"
-        label="Dispositif de sécurité particulier"
-        auto-grow
-        rows="2"
-        prepend-icon="mdi-security"
-        @change="updateSpecialNeed"
+      <v-card-title>Sécurité</v-card-title>
+      <v-card-subtitle>
+        Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
+        de ton activité, contacte
+        <a href="mailto:securite@24heures.org">securite@24heures.org</a>.
+      </v-card-subtitle>
+      <v-card-text>
+        <v-textarea
+          :value="security.specialNeed"
+          label="Dispositif de sécurité particulier"
+          auto-grow
+          rows="2"
+          prepend-icon="mdi-security"
+          @change="updateSpecialNeed"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-dialog v-model="isRejectDialogOpen" max-width="600">
+      <AskRejectReasonFormCard
+        @close-dialog="closeRejectDialog"
+        @rejected="rejected"
       />
-    </v-card-text>
-  </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -52,9 +61,15 @@ import {
   secu,
 } from "@overbookd/festival-activity";
 import { ReviewRejection } from "@overbookd/http";
+import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
+import { WithRejectDialog } from "./with-reject-dialog.model";
 
 export default defineComponent({
   name: "SecurityCard",
+  components: { AskRejectReasonFormCard },
+  data: (): WithRejectDialog => ({
+    isRejectDialogOpen: false,
+  }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -86,8 +101,13 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(secu);
     },
-    rejected() {
-      const reason = "Section securité non valide";
+    openRejectDialog() {
+      this.isRejectDialogOpen = true;
+    },
+    closeRejectDialog() {
+      this.isRejectDialogOpen = false;
+    },
+    rejected({ reason }: { reason: string }) {
       const rejection: ReviewRejection = { team: secu, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },

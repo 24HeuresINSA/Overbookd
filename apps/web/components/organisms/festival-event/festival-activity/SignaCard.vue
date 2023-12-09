@@ -1,58 +1,65 @@
 <template>
-  <v-card>
-    <div v-if="canReview" class="review">
-      <v-btn
-        class="review__action"
-        fab
-        x-small
-        color="success"
-        :disabled="cantApprove"
-        @click="approved"
-      >
-        <v-icon>mdi-check-circle-outline</v-icon>
-      </v-btn>
-      <v-btn
-        class="review__action"
-        fab
-        x-small
-        color="error"
-        :disabled="cantReject"
-        @click="rejected"
-      >
-        <v-icon>mdi-close-circle-outline</v-icon>
-      </v-btn>
-    </div>
+  <div>
+    <v-card>
+      <div v-if="canReview" class="review">
+        <v-btn
+          class="review__action"
+          fab
+          x-small
+          color="success"
+          :disabled="cantApprove"
+          @click="approved"
+        >
+          <v-icon>mdi-check-circle-outline</v-icon>
+        </v-btn>
+        <v-btn
+          class="review__action"
+          fab
+          x-small
+          color="error"
+          :disabled="cantReject"
+          @click="rejected"
+        >
+          <v-icon>mdi-close-circle-outline</v-icon>
+        </v-btn>
+      </div>
 
-    <v-card-title> Signa </v-card-title>
-    <v-card-subtitle>
-      Contacte la signa via
-      <a href="mailto:signaletique@24heures.org">signaletique@24heures.org</a>
-      pour ajouter des lieux non existants dans la liste déroulante.
-    </v-card-subtitle>
+      <v-card-title> Signa </v-card-title>
+      <v-card-subtitle>
+        Contacte la signa via
+        <a href="mailto:signaletique@24heures.org">signaletique@24heures.org</a>
+        pour ajouter des lieux non existants dans la liste déroulante.
+      </v-card-subtitle>
 
-    <v-card-text>
-      <SearchSignaLocation
-        :location="signa.location"
-        label="Lieu"
-        :boxed="false"
-        @change="updateLocation"
+      <v-card-text>
+        <SearchSignaLocation
+          :location="signa.location"
+          label="Lieu"
+          :boxed="false"
+          @change="updateLocation"
+        />
+
+        <h2 class="signage-title">Demande de signalétique</h2>
+        <FaSignageTable
+          :signages="signa.signages"
+          @add="addSignage"
+          @update="updateSignage"
+          @remove="removeSignage"
+        />
+      </v-card-text>
+    </v-card>
+
+    <v-dialog v-model="isRejectDialogOpen" max-width="600">
+      <AskRejectReasonFormCard
+        @close-dialog="closeRejectDialog"
+        @rejected="rejected"
       />
-
-      <h2 class="signage-title">Demande de signalétique</h2>
-      <FaSignageTable
-        :signages="signa.signages"
-        @add="addSignage"
-        @update="updateSignage"
-        @remove="removeSignage"
-      />
-    </v-card-text>
-  </v-card>
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 import {
   FestivalActivity,
   Signage,
@@ -63,13 +70,20 @@ import {
   REJECTED,
 } from "@overbookd/festival-activity";
 import { ReviewRejection } from "@overbookd/http";
-
+import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
+import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
+import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
+import { WithRejectDialog } from "./with-reject-dialog.model";
 export default defineComponent({
   name: "SignaCard",
   components: {
     SearchSignaLocation,
     FaSignageTable,
+    AskRejectReasonFormCard,
   },
+  data: (): WithRejectDialog => ({
+    isRejectDialogOpen: false,
+  }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -108,8 +122,13 @@ export default defineComponent({
     approved() {
       this.$accessor.festivalActivity.approveAs(signa);
     },
-    rejected() {
-      const reason = "Section signalétique non valide";
+    openRejectDialog() {
+      this.isRejectDialogOpen = true;
+    },
+    closeRejectDialog() {
+      this.isRejectDialogOpen = false;
+    },
+    rejected({ reason }: { reason: string }) {
       const rejection: ReviewRejection = { team: signa, reason };
       this.$accessor.festivalActivity.rejectBecause(rejection);
     },
