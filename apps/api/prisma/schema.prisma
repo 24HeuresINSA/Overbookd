@@ -770,6 +770,7 @@ model InquiryRequest {
   slug        String      @db.Text
   catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
   quantity    Int
+  drive       String?
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId Int              @map("fa_id")

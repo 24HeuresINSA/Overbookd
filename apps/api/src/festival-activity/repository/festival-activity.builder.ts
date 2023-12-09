@@ -45,6 +45,7 @@ type DatabaseInCharge = Omit<FestivalActivity["inCharge"], "team"> & {
 type DatabaseInquiryRequest = {
   slug: InquiryRequest["slug"];
   quantity: InquiryRequest["quantity"];
+  drive: string | null;
   catalogItem: {
     name: InquiryRequest["name"];
     category: { owner: { code: string } };
@@ -155,10 +156,12 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   private static formatInquiryRequest(
     request: DatabaseInquiryRequest,
   ): InquiryRequest {
+    const drive = request.drive ? { drive: request.drive } : {};
     return {
       slug: request.slug,
       name: request.catalogItem.name,
       quantity: request.quantity,
+      ...drive,
     };
   }
 
