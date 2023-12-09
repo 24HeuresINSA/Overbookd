@@ -1,3 +1,3 @@
 export type WithRejectDialog = {
-isRejectDialogOpen: boolean;
+  isRejectDialogOpen: boolean;
 };
