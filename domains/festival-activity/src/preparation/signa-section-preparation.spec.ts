@@ -10,7 +10,7 @@ import {
   validatedBySigna,
 } from "./preparation.test-utils";
 import { PrepareSignageUpdate } from "./prepare-festival-activity.model";
-import { AFFICHE, BACHE, PANNEAU, signageTypes } from "../sections/signa";
+import { AFFICHE, BACHE, PANNEAU, SignageCatalogItem } from "../sections/signa";
 import {
   SignageAlreadyExists,
   SignageNotFound,
@@ -22,19 +22,19 @@ import { afficheJustDanceA2 } from "../festival-activity.fake";
 import { agora, creuxCgu, local24h } from "../festival-activity.fake";
 import { AssignCatalogItemInDraftActivity } from "./prepare-draft-festival-activity";
 
-const panneauEscapeGameInCatalog = {
+const panneauEscapeGameInCatalog: SignageCatalogItem = {
   id: 1,
   name: "Panneau Escape Game",
   type: PANNEAU,
 };
 
-const afficheJustDanceInCatalog = {
+const afficheJustDanceInCatalog: SignageCatalogItem = {
   id: 2,
   name: "Just Dance",
   type: AFFICHE,
 };
 
-const bacheBienvenueInCatalog = {
+const bacheBienvenueInCatalog: SignageCatalogItem = {
   id: 3,
   name: "Grande bâche Bienvenue",
   type: BACHE,
@@ -298,25 +298,25 @@ describe("Signa section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                  | activityId          | signageId                             | catalogItemName                   | catalogItem
-    ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.signa.signages[0].id} | ${bacheBienvenueInCatalog.name}   | ${bacheBienvenueInCatalog}
-    ${justDance.general.name}     | ${justDance.id}     | ${justDance.signa.signages[0].id}     | ${afficheJustDanceInCatalog.name} | ${afficheJustDanceInCatalog}
+    activityName                  | activityId          | signageId                             | signage                            | catalogItemName                   | catalogItem
+    ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.signa.signages[0].id} | ${baladeEnPoney.signa.signages[0]} | ${bacheBienvenueInCatalog.name}   | ${bacheBienvenueInCatalog}
+    ${justDance.general.name}     | ${justDance.id}     | ${justDance.signa.signages[0].id}     | ${justDance.signa.signages[0]}     | ${afficheJustDanceInCatalog.name} | ${afficheJustDanceInCatalog}
   `(
     "when signa member want to assign $catalogItemName as catalog item for $signageId signage in $activityName",
-    ({ activityId, signageId, catalogItem }) => {
+    ({ activityId, signageId, signage, catalogItem }) => {
       it("should link the signage to the catalog item", async () => {
         const { signa } =
           await prepareFestivalActivity.assignSignageToCatalogItem(activityId, {
             signageId,
-            catalogItemId: catalogItem.id,
+            catalogItem: catalogItem,
           });
         expect(signa.signages).toContainEqual({
           id: signageId,
-          quantity: expect.any(Number),
-          text: expect.any(String),
-          size: expect.any(String),
-          type: expect.any(signageTypes),
-          comment: expect.any(String || null),
+          quantity: signage.quantity,
+          text: signage.text,
+          size: signage.size,
+          type: signage.type,
+          comment: signage.comment,
           catalogItem,
         });
       });
@@ -331,7 +331,7 @@ describe("Signa section of festival activity preparation", () => {
             escapeGame.id,
             {
               signageId: escapeGame.signa.signages[0].id,
-              catalogItemId: panneauEscapeGameInCatalog,
+              catalogItem: panneauEscapeGameInCatalog,
             },
           ),
       ).rejects.toThrow(AssignCatalogItemInDraftActivity);

@@ -6,6 +6,7 @@ import {
   SignageNotFound,
 } from "../../festival-activity.error";
 import {
+  LinkSignageCatalogItem,
   PrepareSignageCreation,
   PrepareSignageUpdate,
 } from "../prepare-festival-activity.model";
@@ -65,6 +66,23 @@ export class Signages {
 
   remove(id: Signage["id"]): Signages {
     return new Signages(this.signages.filter((s) => s.id !== id));
+  }
+
+  assignCatalogItem({
+    signageId,
+    catalogItem,
+  }: LinkSignageCatalogItem): Signages {
+    const signageIndex = this.signages.findIndex(
+      (inquiry) => inquiry.id === signageId,
+    );
+    const signage = this.signages.at(signageIndex);
+    if (signageIndex === -1 || !signage) throw new SignageNotFound();
+
+    const signages = updateItemToList(this.signages, signageIndex, {
+      ...signage,
+      catalogItem,
+    });
+    return new Signages(signages);
   }
 
   private generateUpdatedSignage(
