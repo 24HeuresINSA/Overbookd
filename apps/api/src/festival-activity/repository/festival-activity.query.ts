@@ -7,8 +7,7 @@ import {
   Reviewer,
   TimeWindow,
   isDraft,
-  InquiryRequest,
-  InquiryRequestAssigned,
+  isAssignedToDrive,
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
@@ -354,10 +353,4 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
     content: feedback.content,
     publishedAt: feedback.publishedAt,
   };
-}
-
-function isAssignedToDrive(
-  request: InquiryRequest,
-): request is InquiryRequestAssigned {
-  return Object.hasOwn(request, "drive");
 }

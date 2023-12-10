@@ -28,6 +28,7 @@ import {
 } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequest } from "@overbookd/http";
+import { LinkDrive } from "~/utils/festival-event/festival-activity.model";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -293,6 +294,17 @@ export class FestivalActivityRepository {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/inquiry`,
       form,
+    );
+  }
+
+  static linkDrive(
+    context: Context,
+    faId: FestivalActivity["id"],
+    { slug, drive }: LinkDrive,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry/requests/${slug}`,
+      { drive },
     );
   }
 

@@ -66,6 +66,7 @@ export {
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
   drives,
+  isAssignedToDrive,
 } from "./sections/inquiry";
 
 export type {

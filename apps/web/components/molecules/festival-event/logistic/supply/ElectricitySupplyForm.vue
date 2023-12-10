@@ -58,7 +58,8 @@
         @click="confirmSupply"
       >
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
-        {{ typeFormLabel }} le besoin en électricité
+        {{ typeFormLabel }} le besoin
+        <span class="desktop">en électricité</span>
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -215,6 +216,11 @@ export default defineComponent({
   }
   strong {
     font-weight: 900;
+  }
+  .desktop {
+    @media only screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
   }
 }
 </style>
