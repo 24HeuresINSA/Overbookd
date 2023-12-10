@@ -312,6 +312,7 @@ h1 {
   }
   &__listing {
     margin-left: 20px;
+    margin-bottom: 40px;
     height: fit-content;
     width: 100vw;
     flex-grow: 3;
