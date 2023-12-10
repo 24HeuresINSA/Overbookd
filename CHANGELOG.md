@@ -1,3 +1,27 @@
+## [2.10.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.9.2...v2.10.0) (2023-12-10)
+
+
+### Features
+
+* **festival-activity:** link inquiry request to drive. [#1405](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1405) ([7cfef23](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7cfef23573984d6f6fb1b65aced5f47337381ed6))
+
+
+### Bug Fixes
+
+* **festival-activity:** add bottom margin in fa listing [#1406](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1406) ([8c982f9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8c982f9cf804ab9ce800f8ae13648b651f48c3fe))
+* **festival-activity:** customize reject reason. [#1404](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1404) ([2ab4f69](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2ab4f69f6e03a02d3b3d2f0257f2c44de932e8ef))
+* **personal-account:** :fire: display payor / payee in transfers between adherents [#1351](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1351) ([413c00f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/413c00fef3cdd5c4f72a4501f61c5378abb6e8c5))
+
+
+### Pre-Features
+
+* **festival-activity:** link drive to inquiry request. [#1405](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1405) ([15e904d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/15e904d38c64ca1b55df4835c4503276c4fcc8f9))
+
+
+### CI/CD
+
+* **triage:** remove 0.4 rule ([a50046f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a50046f9afc5864c69e60f24f189906381fcef5f))
+
 ## [2.9.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.9.1...v2.9.2) (2023-12-08)
 
 
