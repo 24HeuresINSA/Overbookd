@@ -34,6 +34,14 @@ export class AssignDriveInDraftActivity extends FestivalActivityError {
   }
 }
 
+export class AssignCatalogItemInDraftActivity extends FestivalActivityError {
+  constructor() {
+    super(
+      "❌ Il n'est pas possible d'attribuer une signalétique du catalogue à une demande de signalétique dans une FA en brouillon",
+    );
+  }
+}
+
 export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   private constructor(private readonly activity: Draft) {}
 
