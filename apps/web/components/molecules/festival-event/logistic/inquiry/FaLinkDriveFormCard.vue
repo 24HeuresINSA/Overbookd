@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="link-drive-card__title">
-      <h2>Definir les lieux de retrait</h2>
+      <h2>Définir les lieux de retrait</h2>
     </v-card-title>
 
     <v-card-subtitle>
