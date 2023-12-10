@@ -92,8 +92,6 @@ class InChargeDto implements InCharge {
   contractors: Contractor[];
 }
 
-export const signaTypes = ["BACHE", "PANNEAU", "AFFICHE"];
-
 type Signa = Draft["signa"];
 
 class SignaDto implements Signa {
