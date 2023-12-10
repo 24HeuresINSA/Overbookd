@@ -252,7 +252,7 @@ export class FestivalActivityService {
   ) {
     const inquiry = await this.inquiries.find(inquiryInitializer.request.slug);
     if (!inquiry) {
-      throw new NotFoundException("❌ La matos demandé n'existe pas");
+      throw new NotFoundException("❌ Le matos demandé n'existe pas");
     }
 
     const request = { ...inquiryInitializer.request, ...inquiry };
@@ -294,7 +294,7 @@ export class FestivalActivityService {
   ): Promise<FestivalActivity> {
     const inquiry = await this.inquiries.find(slug);
     if (!inquiry) {
-      throw new NotFoundException("❌ La matos recherché n'existe pas");
+      throw new NotFoundException("❌ Le matos recherché n'existe pas");
     }
 
     this.checkMembership(user, inquiry.owner);
