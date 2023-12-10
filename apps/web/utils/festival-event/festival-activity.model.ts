@@ -18,6 +18,8 @@ import {
   VALIDATED,
   PreviewDraft,
   PreviewFestivalActivity,
+  InquiryRequest,
+  Drive,
 } from "@overbookd/festival-activity";
 
 export const BROUILLON = "Brouillon";
@@ -76,3 +78,8 @@ export function isDraftPreview(
 ): activity is PreviewDraft {
   return activity.status === DRAFT;
 }
+
+export type LinkDrive = {
+  slug: InquiryRequest["slug"];
+  drive: Drive;
+};

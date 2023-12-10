@@ -31,6 +31,7 @@ import { FestivalActivityRepository } from "~/repositories/festival-activity.rep
 import { safeCall } from "~/utils/api/calls";
 import { castActivityWithDate } from "~/utils/festival-event/festival-activity.utils";
 import { AddInquiryRequest } from "@overbookd/http";
+import { LinkDrive } from "~/utils/festival-event/festival-activity.model";
 
 const repo = FestivalActivityRepository;
 
@@ -344,6 +345,15 @@ export const actions = actionTree(
     async initInquiry({ state, commit }, form: InitInquiryRequest) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.initInquiry(this, id, form));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async linkDrive({ state, commit }, link: LinkDrive) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.linkDrive(this, id, link));
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

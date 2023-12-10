@@ -12,8 +12,17 @@
       {{ displayQuantity(item) }}
     </template>
 
+    <template #item.drive="{ item }">
+      <v-autocomplete
+        :value="item.drive"
+        :items="drives"
+        :readonly="cantLinkDrive"
+        @change="(drive) => linkDrive(item.slug, drive)"
+      />
+    </template>
+
     <template #item.actions="{ item }">
-      <div v-if="!disabled">
+      <div v-if="!disabled" class="action">
         <v-btn icon @click="removeInquiry(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
@@ -31,6 +40,8 @@ import {
   InquiryOwner,
   BARRIERES,
   ELEC,
+  Drive,
+  drives,
 } from "@overbookd/festival-activity";
 import { Header } from "~/utils/models/data-table.model";
 
@@ -58,12 +69,19 @@ export default defineComponent({
     headers: [
       { text: "Quantité", value: "quantity", width: "20%" },
       { text: "Nom", value: "name" },
-      { text: "Actions", value: "actions", width: "10%" },
+      { text: "Lieux de retrait", value: "drive", width: "150px" },
+      { text: "Actions", value: "actions", width: "100px" },
     ],
   }),
   computed: {
     inquiry(): FestivalActivity["inquiry"] {
       return this.$accessor.festivalActivity.selectedActivity.inquiry;
+    },
+    drives(): Drive[] {
+      return drives;
+    },
+    cantLinkDrive(): boolean {
+      return !this.$accessor.user.isMemberOf(this.owner);
     },
     noDataMessage(): string {
       switch (this.owner) {
@@ -93,6 +111,9 @@ export default defineComponent({
     },
     removeInquiry(inquiry: InquiryRequest) {
       this.$emit("remove", inquiry);
+    },
+    linkDrive(slug: string, drive: Drive) {
+      this.$accessor.festivalActivity.linkDrive({ slug, drive });
     },
   },
 });

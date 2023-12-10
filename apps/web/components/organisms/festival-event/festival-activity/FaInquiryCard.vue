@@ -57,7 +57,7 @@
               x-small
               color="success"
               :disabled="cantApproveGears"
-              @click="approved(MATOS)"
+              @click="openLinkDriveFor(MATOS)"
             >
               <v-icon>mdi-check-circle-outline</v-icon>
             </v-btn>
@@ -88,7 +88,7 @@
               x-small
               color="success"
               :disabled="cantApproveElec"
-              @click="approved(ELEC)"
+              @click="openLinkDriveFor(ELEC)"
             >
               <v-icon>mdi-check-circle-outline</v-icon>
             </v-btn>
@@ -119,7 +119,7 @@
               x-small
               color="success"
               :disabled="cantApproveBarriers"
-              @click="approved(BARRIERES)"
+              @click="openLinkDriveFor(BARRIERES)"
             >
               <v-icon>mdi-check-circle-outline</v-icon>
             </v-btn>
@@ -150,12 +150,21 @@
         @close-dialog="closeInitInquiryDialog"
       />
     </v-dialog>
+
+    <v-dialog v-model="isLinkDriveDialogOpen" max-width="600">
+      <FaLinkDriveFormCard
+        :inquiries="selectedInquiries"
+        @completed="approve"
+        @close-dialog="closeLinkDriveDialog"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
+import FaLinkDriveFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaLinkDriveFormCard.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import FaInquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/FaInquiryFormFields.vue";
 import {
@@ -179,6 +188,9 @@ import FaInitInquiryFormCard from "~/components/molecules/festival-event/logisti
 
 type FaInquiryCardData = InputRulesData & {
   isInitInquiryDialogOpen: boolean;
+  isLinkDriveDialogOpen: boolean;
+  selectedInquiries: InquiryRequest[];
+  selectedOwner: InquiryOwner;
   gear: Gear | null;
   quantity: number;
 
@@ -194,10 +206,14 @@ export default defineComponent({
     FaInquiryFormFields,
     FaTimeWindowTable,
     FaInitInquiryFormCard,
+    FaLinkDriveFormCard,
   },
   emits: ["reject"],
   data: (): FaInquiryCardData => ({
     isInitInquiryDialogOpen: false,
+    isLinkDriveDialogOpen: false,
+    selectedInquiries: [],
+    selectedOwner: MATOS,
     gear: null,
     quantity: 1,
     MATOS,
@@ -300,8 +316,8 @@ export default defineComponent({
     removeTimeWindow(timeWindow: TimeWindow) {
       this.$accessor.festivalActivity.removeInquiryTimeWindow(timeWindow.id);
     },
-    approved(owner: InquiryOwner) {
-      this.$accessor.festivalActivity.approveAs(owner);
+    approve() {
+      this.$accessor.festivalActivity.approveAs(this.selectedOwner);
     },
     reject(owner: InquiryOwner) {
       this.$emit("reject", owner);
@@ -311,6 +327,24 @@ export default defineComponent({
     },
     closeInitInquiryDialog(): void {
       this.isInitInquiryDialogOpen = false;
+    },
+    openLinkDriveFor(owner: InquiryOwner) {
+      this.selectedOwner = owner;
+      switch (owner) {
+        case MATOS:
+          this.selectedInquiries = this.inquiry.gears;
+          break;
+        case BARRIERES:
+          this.selectedInquiries = this.inquiry.barriers;
+          break;
+        case ELEC:
+          this.selectedInquiries = this.inquiry.electricity;
+          break;
+      }
+      this.isLinkDriveDialogOpen = true;
+    },
+    closeLinkDriveDialog() {
+      this.isLinkDriveDialogOpen = false;
     },
     updateGear(gear: Gear | null) {
       this.gear = gear;

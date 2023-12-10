@@ -96,6 +96,12 @@ export type InquiryRequestAssigned = BaseInquiryRequest & WithDrive;
 
 export type InquiryRequest = BaseInquiryRequest | InquiryRequestAssigned;
 
+export function isAssignedToDrive(
+  request: InquiryRequest,
+): request is InquiryRequestAssigned {
+  return Object.hasOwn(request, "drive");
+}
+
 type WithGearInquiries = {
   barriers: InquiryRequest[];
   electricity: InquiryRequest[];
