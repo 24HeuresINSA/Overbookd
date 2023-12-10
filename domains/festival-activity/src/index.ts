@@ -93,8 +93,15 @@ export type {
   Location,
   SignageType,
   BaseSignage,
+  SignageCatalogItem,
 } from "./sections/signa";
-export { BACHE, PANNEAU, AFFICHE, signageTypes } from "./sections/signa";
+export {
+  BACHE,
+  PANNEAU,
+  AFFICHE,
+  signageTypes,
+  isAssignedToCatalogItem,
+} from "./sections/signa";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS
