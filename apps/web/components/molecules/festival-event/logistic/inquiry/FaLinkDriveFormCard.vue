@@ -70,6 +70,7 @@ export default defineComponent({
     },
     complete() {
       this.$emit("completed");
+      this.closeDialog();
     },
     removeInquiry(inquiry: InquiryRequest) {
       this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);
