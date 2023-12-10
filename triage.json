@@ -2,7 +2,6 @@
   "common/0.1.opened_issues.yml",
   "common/0.2.closed_issues.yml",
   "common/0.3.assigned_issues.yml",
-  "common/0.4.unassigned_issues.yml",
   "common/0.5.close_duplicate_tagged.yml",
   "common/0.6.no_priority_label.yml",
   "common/0.7.no_activity_support.yml",
