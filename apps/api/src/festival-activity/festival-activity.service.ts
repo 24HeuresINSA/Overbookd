@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import {
   Adherent,
   AskForReview,
@@ -23,6 +27,7 @@ import {
   Reviewing,
   Reviewer,
   Refused,
+  Drive,
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
@@ -60,7 +65,13 @@ export type Gear = {
 };
 
 export type Inquiries = {
-  find(slug: string): Promise<Gear>;
+  find(slug: string): Promise<Gear | null>;
+};
+
+type LinkDriveToInquiryRequest = {
+  activityId: FestivalActivity["id"];
+  slug: InquiryRequest["slug"];
+  drive: Drive;
 };
 
 @Injectable()
@@ -240,6 +251,9 @@ export class FestivalActivityService {
     inquiryInitializer: InitInquiryRequest,
   ) {
     const inquiry = await this.inquiries.find(inquiryInitializer.request.slug);
+    if (!inquiry) {
+      throw new NotFoundException("❌ Le matos demandé n'existe pas");
+    }
 
     const request = { ...inquiryInitializer.request, ...inquiry };
     const initializer = { ...inquiryInitializer, request };
@@ -272,6 +286,24 @@ export class FestivalActivityService {
     slug: InquiryRequest["slug"],
   ) {
     return this.prepare.removeInquiryRequest(faId, slug);
+  }
+
+  async linkInquiryRequestToDrive(
+    user: JwtUtil,
+    { activityId, slug, drive }: LinkDriveToInquiryRequest,
+  ): Promise<FestivalActivity> {
+    const inquiry = await this.inquiries.find(slug);
+    if (!inquiry) {
+      throw new NotFoundException("❌ Le matos recherché n'existe pas");
+    }
+
+    this.checkMembership(user, inquiry.owner);
+
+    return this.prepare.assignInquiryToDrive(activityId, {
+      drive,
+      slug,
+      owner: inquiry.owner,
+    });
   }
 
   async addFeedback(
@@ -314,7 +346,7 @@ export class FestivalActivityService {
   private checkMembership(user: JwtUtil, team: string) {
     if (!user.isMemberOf(team)) {
       const notMember = `❌ Tu n'es pas membre de l'équipe ${team}`;
-      throw new BadRequestException(notMember);
+      throw new ForbiddenException(notMember);
     }
   }
 }

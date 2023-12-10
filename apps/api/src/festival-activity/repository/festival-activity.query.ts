@@ -7,6 +7,8 @@ import {
   Reviewer,
   TimeWindow,
   isDraft,
+  InquiryRequest,
+  InquiryRequestAssigned,
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
@@ -88,6 +90,7 @@ const SELECT_INQUIRY = {
     select: {
       slug: true,
       quantity: true,
+      drive: true,
       catalogItem: {
         select: {
           name: true,
@@ -237,11 +240,17 @@ export class FestivalActivityQueryBuilder {
   private static upsertInquiries(activity: FestivalActivity) {
     const inquiries = this.listInquiries(activity);
     return {
-      upsert: inquiries.map(({ slug, quantity }) => ({
-        where: { slug_faId: { slug, faId: activity.id } },
-        update: { quantity },
-        create: { slug, quantity },
-      })),
+      upsert: inquiries.map((request) => {
+        const update = isAssignedToDrive(request)
+          ? { quantity: request.quantity, drive: request.drive }
+          : { quantity: request.quantity };
+
+        return {
+          where: { slug_faId: { slug: request.slug, faId: activity.id } },
+          update,
+          create: { slug: request.slug, quantity: request.quantity },
+        };
+      }),
       deleteMany: {
         faId: activity.id,
         slug: { notIn: inquiries.map(({ slug }) => slug) },
@@ -345,4 +354,10 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
     content: feedback.content,
     publishedAt: feedback.publishedAt,
   };
+}
+
+function isAssignedToDrive(
+  request: InquiryRequest,
+): request is InquiryRequestAssigned {
+  return Object.hasOwn(request, "drive");
 }

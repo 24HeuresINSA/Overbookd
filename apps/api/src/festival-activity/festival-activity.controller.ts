@@ -50,6 +50,7 @@ import {
   GeneralRequestDto,
   InChargeRequestDto,
   InitInquiryRequestDto,
+  LinkInquiryDriveRequestDto,
   SecurityRequestDto,
   SignaRequestDto,
   SupplyRequestDto,
@@ -947,7 +948,7 @@ export class FestivalActivityController {
   })
   @ApiParam({
     name: "inquirySlug",
-    type: Number,
+    type: String,
     description: "Inquiry Request Slug",
     required: true,
   })
@@ -956,6 +957,53 @@ export class FestivalActivityController {
     @Param("inquirySlug") slug: InquiryRequest["slug"],
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.removeInquiryRequest(faId, slug);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FA)
+  @Patch(":faId/inquiry/requests/:inquirySlug")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description:
+      "Drive to link inquiry request with in inquiry section of festival activity",
+    type: LinkInquiryDriveRequestDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "inquirySlug",
+    type: String,
+    description: "Inquiry Request Slug",
+    required: true,
+  })
+  linkInquiryRequestToDrive(
+    @Param("faId", ParseIntPipe) activityId: FestivalActivity["id"],
+    @Param("inquirySlug") slug: InquiryRequest["slug"],
+    @Body() { drive }: LinkInquiryDriveRequestDto,
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalActivity> {
+    const jwt = new JwtUtil(user);
+    return this.festivalActivityService.linkInquiryRequestToDrive(jwt, {
+      activityId,
+      slug,
+      drive,
+    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

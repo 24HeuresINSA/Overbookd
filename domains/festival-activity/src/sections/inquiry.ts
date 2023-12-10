@@ -53,6 +53,31 @@ export type Drive =
   | typeof LIVRE_PAR_LOGISTIQUE
   | typeof LIVRE_PAR_COM;
 
+export const drives: Drive[] = [
+  BENNE_COLLETTE_BESSON,
+  BENNE_PARKING_K_FET,
+  PARKING_EIFFEL,
+  CREUX_GCU,
+  CREUX_GM,
+  CAVE_E,
+  CLUB_ROCK,
+  CONTENUR_24H,
+  CONTENEUR_KARNA,
+  CONTENEUR_PARKING_K_FET,
+  CONTENEUR_SCENE_ROOTS,
+  HALL_DES_HUMANITES,
+  LOCAL_24H,
+  MAGASIN,
+  MDE,
+  SALLE_MONTREAL,
+  SALLE_RENE_CHAR,
+  NON_STOCKE,
+  QG_ORGA,
+  BACKLINE,
+  LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_COM,
+];
+
 export type WithTimeWindows = {
   timeWindows: [TimeWindow, ...TimeWindow[]];
 };
@@ -67,7 +92,7 @@ type WithDrive = {
   drive: Drive;
 };
 
-type InquiryRequestAssigned = BaseInquiryRequest & WithDrive;
+export type InquiryRequestAssigned = BaseInquiryRequest & WithDrive;
 
 export type InquiryRequest = BaseInquiryRequest | InquiryRequestAssigned;
 

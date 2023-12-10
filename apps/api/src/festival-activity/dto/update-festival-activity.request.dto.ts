@@ -24,6 +24,8 @@ import {
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareFeedbackPublish,
+  Drive,
+  drives,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -353,6 +355,12 @@ export class AddInquiryRequestDto implements AddInquiryRequest {
   @ApiProperty({ required: true })
   @IsString()
   slug: string;
+}
+
+export class LinkInquiryDriveRequestDto {
+  @ApiProperty({ required: true, enum: drives })
+  @IsEnum(drives)
+  drive: Drive;
 }
 
 export class InitInquiryRequestDto implements InitInquiryRequest {

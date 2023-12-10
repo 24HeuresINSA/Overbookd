@@ -33,6 +33,7 @@ export type {
   BaseInquiryRequest,
   InquiryWithPotentialRequests,
   InquiryWithRequests,
+  InquiryRequestAssigned,
   InquiryRequest,
   InquiryOwner,
   WithInquiries,
@@ -64,6 +65,7 @@ export {
   BACKLINE,
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
+  drives,
 } from "./sections/inquiry";
 
 export type {
