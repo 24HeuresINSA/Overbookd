@@ -1,6 +1,8 @@
 import {
+  FestivalActivity,
   PrepareInquiryRequestCreation,
   Reviewer,
+  Signage,
 } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 
@@ -26,4 +28,10 @@ export type ReviewRejection = {
 export type InitInquiryRequest = {
   timeWindow: IProvidePeriod;
   request: AddInquiryRequest;
+};
+
+export type LinkSignageCatalogItemForm = {
+  activityId: FestivalActivity["id"];
+  signageId: Signage["id"];
+  catalogItemId: number;
 };

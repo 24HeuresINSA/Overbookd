@@ -309,7 +309,7 @@ describe("Signa section of festival activity preparation", () => {
         const { signa } =
           await prepareFestivalActivity.linkSignageToCatalogItem(activityId, {
             signageId,
-            catalogItem: catalogItem,
+            catalogItem,
           });
         expect(signa.signages).toContainEqual({
           id: signageId,

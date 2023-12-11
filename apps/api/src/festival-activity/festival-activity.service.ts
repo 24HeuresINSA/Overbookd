@@ -28,10 +28,13 @@ import {
   Reviewer,
   Refused,
   Drive,
+  SignageCatalogItem,
+  signa,
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
   InitInquiryRequest,
+  LinkSignageCatalogItemForm,
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
@@ -68,6 +71,10 @@ export type Inquiries = {
   find(slug: string): Promise<Gear | null>;
 };
 
+export type CatalogSignages = {
+  find(id: number): Promise<SignageCatalogItem | null>;
+};
+
 type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];
   slug: InquiryRequest["slug"];
@@ -80,6 +87,7 @@ export class FestivalActivityService {
     private readonly adherents: Adherents,
     private readonly locations: Locations,
     private readonly inquiries: Inquiries,
+    private readonly catalogSignages: CatalogSignages,
     private readonly creation: CreateFestivalActivity,
     private readonly prepare: PrepareFestivalActivity,
     private readonly askForReview: AskForReview,
@@ -303,6 +311,25 @@ export class FestivalActivityService {
       drive,
       slug,
       owner: inquiry.owner,
+    });
+  }
+
+  async linkSignageToCatalogItem(
+    user: JwtUtil,
+    { activityId, signageId, catalogItemId }: LinkSignageCatalogItemForm,
+  ): Promise<FestivalActivity> {
+    const catalogItem = await this.catalogSignages.find(catalogItemId);
+    if (!catalogItem) {
+      throw new NotFoundException(
+        "❌ La signalétique n'existe pas dans le catalogue",
+      );
+    }
+
+    this.checkMembership(user, signa);
+
+    return this.prepare.linkSignageToCatalogItem(activityId, {
+      signageId,
+      catalogItem,
     });
   }
 

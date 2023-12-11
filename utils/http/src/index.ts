@@ -4,5 +4,6 @@ export type {
   AddInquiryRequest,
   ReviewRejection,
   InitInquiryRequest,
+  LinkSignageCatalogItemForm,
 } from "./festival-activity.model";
 export type { HttpStringified } from "./http-stringified";

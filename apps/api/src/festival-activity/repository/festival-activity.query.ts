@@ -11,6 +11,7 @@ import {
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
+import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
 
 const SELECT_REVIEW = {
   team: true,
@@ -61,6 +62,9 @@ const SELECT_SIGNA = {
       size: true,
       type: true,
       comment: true,
+      catalogItem: {
+        select: SELECT_CATALOG_SIGNAGE,
+      },
     },
   },
 };
