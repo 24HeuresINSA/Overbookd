@@ -35,10 +35,28 @@ export class UnassignedSignageResponseDto implements BaseSignage {
 
 type SignageAssigned = Extract<Signage, { catalogItem: SignageCatalogItem }>;
 
+class SignageCatalogItemDto implements SignageCatalogItem {
+  @ApiProperty({ required: true })
+  id: number;
+
+  @ApiProperty({ required: true })
+  name: string;
+
+  @ApiProperty({
+    required: true,
+    enum: signageTypes,
+    example: BACHE,
+  })
+  type: SignageType;
+}
+
 export class AssignedSignageResponseDto
   extends UnassignedSignageResponseDto
   implements SignageAssigned
 {
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    required: true,
+    type: SignageCatalogItemDto,
+  })
   catalogItem: SignageCatalogItem;
 }
