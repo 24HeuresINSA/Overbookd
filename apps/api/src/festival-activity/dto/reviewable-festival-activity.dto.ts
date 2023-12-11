@@ -24,7 +24,10 @@ import { AdherentResponseDto } from "./adherent.response.dto";
 import { ContractorResponseDto } from "./contractor.response.dto";
 import { TimeWindowResponseDto } from "./time-window.response.dto";
 import { LocationResponseDto } from "./location.response.dto";
-import { SignageResponseDto } from "./signage.response.dto";
+import {
+  LinkedSignageResponseDto,
+  UnlinkedSignageResponseDto,
+} from "./signage.response.dto";
 import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
 import { FeedbackResponseDto } from "./feedback.response.dto";
 import {
@@ -60,7 +63,14 @@ class SignaResponseDto implements Signa {
   @ApiProperty({ required: true, type: LocationResponseDto })
   location: Location;
 
-  @ApiProperty({ required: true, isArray: true, type: SignageResponseDto })
+  @ApiProperty({
+    required: true,
+    isArray: true,
+    oneOf: [
+      { $ref: getSchemaPath(UnlinkedSignageResponseDto) },
+      { $ref: getSchemaPath(LinkedSignageResponseDto) },
+    ],
+  })
   signages: Signage[];
 }
 

@@ -44,6 +44,7 @@ import {
   PrepareSignageCreation,
   PrepareSignageUpdate,
   LinkInquiryDrive,
+  LinkSignageCatalogItem,
 } from "./prepare-festival-activity.model";
 import { FestivalActivityError } from "../festival-activity.error";
 import { hasAtLeastOneItem } from "@overbookd/list";
@@ -527,5 +528,14 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     ).inquiry;
 
     return { ...this.activity, inquiry };
+  }
+
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
+    const signages = Signages.build(
+      this.activity.signa.signages,
+    ).linkCatalogItem(link).entries;
+
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
   }
 }

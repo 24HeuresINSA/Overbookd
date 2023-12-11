@@ -603,11 +603,12 @@ model Friend {
 }
 
 model CatalogSignage {
-  id    Int       @id @default(autoincrement())
-  name  String    @db.VarChar(40)
-  slug  String    @unique @db.VarChar(40)
-  type  SignaType
-  image String?
+  id                       Int                       @id @default(autoincrement())
+  name                     String                    @db.VarChar(40)
+  slug                     String                    @unique @db.VarChar(40)
+  type                     SignaType
+  image                    String?
+  festivalActivityRequests FestivalActivitySignage[]
 
   @@map("catalog_signage")
 }
@@ -719,6 +720,9 @@ model FestivalActivitySignage {
   size     String      @db.Text
   type     SignageType
   comment  String?     @db.Text
+
+  catalogSignage   CatalogSignage? @relation(fields: [catalogSignageId], references: [id])
+  catalogSignageId Int?
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId Int              @map("fa_id")

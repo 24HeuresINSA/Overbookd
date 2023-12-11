@@ -2,6 +2,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import {
   LinkInquiryDrive,
+  LinkSignageCatalogItem,
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
@@ -56,6 +57,7 @@ export type Prepare<T extends FestivalActivity> = {
   initInquiry(initializer: InitInquiry): T;
   removeInquiry(slug: InquiryRequest["slug"]): T;
   assignInquiryToDrive(link: LinkInquiryDrive): T;
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): T;
 };
 
 export type InitInquiry = {
@@ -334,6 +336,17 @@ export class PrepareFestivalActivity {
     const prepare = this.getPrepareHelper(existingFA);
 
     const updatedFA = prepare.assignInquiryToDrive(link);
+    return this.festivalActivities.save(updatedFA);
+  }
+
+  async linkSignageToCatalogItem(
+    faId: FestivalActivity["id"],
+    link: LinkSignageCatalogItem,
+  ): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.linkSignageToCatalogItem(link);
     return this.festivalActivities.save(updatedFA);
   }
 

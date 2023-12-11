@@ -81,6 +81,10 @@ import {
 } from "./dto/reviewable/general.response.dto";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
+import {
+  LinkedSignageResponseDto,
+  UnlinkedSignageResponseDto,
+} from "./dto/signage.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -93,6 +97,8 @@ import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
+  UnlinkedSignageResponseDto,
+  LinkedSignageResponseDto,
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
   DraftPreviewFestivalActivityResponseDto,

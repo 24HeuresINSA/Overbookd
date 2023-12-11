@@ -88,8 +88,20 @@ export {
 } from "./sections/supply";
 
 export type { Public as PublicGeneral } from "./sections/general";
-export type { Signage, Location, SignageType } from "./sections/signa";
-export { BACHE, PANNEAU, AFFICHE, signageTypes } from "./sections/signa";
+export type {
+  Signage,
+  Location,
+  SignageType,
+  BaseSignage,
+  SignageCatalogItem,
+} from "./sections/signa";
+export {
+  BACHE,
+  PANNEAU,
+  AFFICHE,
+  signageTypes,
+  isAssignedToCatalogItem,
+} from "./sections/signa";
 export type { TimeWindow } from "./sections/time-window";
 
 // REVIEWS

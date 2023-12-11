@@ -1,8 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Signage } from "@overbookd/festival-activity";
-import { signaTypes } from "./draft-festival-activity.response.dto";
+import {
+  BACHE,
+  BaseSignage,
+  Signage,
+  SignageCatalogItem,
+  SignageType,
+  signageTypes,
+} from "@overbookd/festival-activity";
 
-export class SignageResponseDto implements Signage {
+export class UnlinkedSignageResponseDto implements BaseSignage {
   @ApiProperty({})
   id: string;
 
@@ -18,11 +24,39 @@ export class SignageResponseDto implements Signage {
   size: string;
 
   @ApiProperty({
-    enum: signaTypes,
-    example: "BACHE",
+    enum: signageTypes,
+    example: BACHE,
   })
-  type: "BACHE" | "PANNEAU" | "AFFICHE";
+  type: SignageType;
 
   @ApiProperty({})
   comment: string;
+}
+
+type SignageLinked = Extract<Signage, { catalogItem: SignageCatalogItem }>;
+
+class SignageCatalogItemDto implements SignageCatalogItem {
+  @ApiProperty({ required: true })
+  id: number;
+
+  @ApiProperty({ required: true })
+  name: string;
+
+  @ApiProperty({
+    required: true,
+    enum: signageTypes,
+    example: BACHE,
+  })
+  type: SignageType;
+}
+
+export class LinkedSignageResponseDto
+  extends UnlinkedSignageResponseDto
+  implements SignageLinked
+{
+  @ApiProperty({
+    required: true,
+    type: SignageCatalogItemDto,
+  })
+  catalogItem: SignageCatalogItem;
 }

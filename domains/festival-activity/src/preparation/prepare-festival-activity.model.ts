@@ -5,7 +5,12 @@ import {
   ElectricitySupply,
   Supply,
 } from "../sections/supply";
-import { Location, Signage, SignageType } from "../sections/signa";
+import {
+  Location,
+  Signage,
+  SignageCatalogItem,
+  SignageType,
+} from "../sections/signa";
 import { InquiryRequest } from "../sections/inquiry";
 import { Adherent, Contractor } from "../sections/in-charge";
 import { Feedback } from "../festival-activity";
@@ -95,5 +100,10 @@ export type AssignDrive = {
 };
 
 export type LinkInquiryDrive = AssignDrive & WithInquiryOwner;
+
+export type LinkSignageCatalogItem = {
+  signageId: Signage["id"];
+  catalogItem: SignageCatalogItem;
+};
 
 export type PrepareFeedbackPublish = Pick<Feedback, "content">;

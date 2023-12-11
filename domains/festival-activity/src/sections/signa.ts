@@ -10,7 +10,7 @@ export const signageTypes: Record<SignageType, SignageType> = {
   AFFICHE,
 };
 
-export type Signage = {
+export type BaseSignage = {
   id: string;
   quantity: number;
   text: string;
@@ -18,6 +18,26 @@ export type Signage = {
   type: SignageType;
   comment: string | null;
 };
+
+export type SignageCatalogItem = {
+  id: number;
+  name: string;
+  type: SignageType;
+};
+
+type WithCatalogItem = {
+  catalogItem: SignageCatalogItem;
+};
+
+type SignageAssigned = BaseSignage & WithCatalogItem;
+
+export type Signage = BaseSignage | SignageAssigned;
+
+export function isAssignedToCatalogItem(
+  request: Signage,
+): request is SignageAssigned {
+  return Object.hasOwn(request, "catalogItem");
+}
 
 export type Location = {
   id: number;

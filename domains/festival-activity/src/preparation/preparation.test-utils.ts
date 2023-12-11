@@ -114,7 +114,7 @@ export const baladeEnPoney = factory
     timeWindows: [saturday14hToSaturday18h, sunday14hToSunday18h],
   })
   .withInCharge({ adherent: noel, team: "plaizir" })
-  .withSigna({ location: pelouseHumas })
+  .withSigna({ location: pelouseHumas, signages: [bacheBienvenue10m] })
   .withInquiry({
     timeWindows: [saturday14hToSaturday18h],
     barriers: [quinzeVaubans],
