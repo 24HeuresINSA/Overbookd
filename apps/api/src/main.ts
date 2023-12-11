@@ -5,14 +5,6 @@ import basicAuth from "express-basic-auth";
 import { ValidationPipe } from "@nestjs/common";
 import { json, urlencoded } from "body-parser";
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://overbookd.24heures.org",
-  "https://preprod.overbookd.24heures.org",
-  "https://overbookd.traefik.me",
-  "https://cetaitmieuxavant.24heures.org",
-];
-
 const SWAGGER_PROTECT_DOMAINS = [
   "overbookd.24heures.org",
   "preprod.overbookd.24heures.org",
@@ -23,7 +15,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.enableCors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      if (!origin || origin.includes(process.env.DOMAIN)) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
