@@ -82,8 +82,8 @@ import {
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 import {
-  AssignedSignageResponseDto,
-  UnassignedSignageResponseDto,
+  LinkedSignageResponseDto,
+  UnlinkedSignageResponseDto,
 } from "./dto/signage.response.dto";
 
 @ApiBearerAuth()
@@ -97,8 +97,8 @@ import {
 @ApiExtraModels(
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
-  UnassignedSignageResponseDto,
-  AssignedSignageResponseDto,
+  UnlinkedSignageResponseDto,
+  LinkedSignageResponseDto,
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
   DraftPreviewFestivalActivityResponseDto,

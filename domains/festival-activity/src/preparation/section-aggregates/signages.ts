@@ -68,7 +68,7 @@ export class Signages {
     return new Signages(this.signages.filter((s) => s.id !== id));
   }
 
-  assignCatalogItem({
+  linkCatalogItem({
     signageId,
     catalogItem,
   }: LinkSignageCatalogItem): Signages {

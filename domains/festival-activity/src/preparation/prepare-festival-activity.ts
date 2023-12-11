@@ -57,7 +57,7 @@ export type Prepare<T extends FestivalActivity> = {
   initInquiry(initializer: InitInquiry): T;
   removeInquiry(slug: InquiryRequest["slug"]): T;
   assignInquiryToDrive(link: LinkInquiryDrive): T;
-  assignSignageToCatalogItem(link: LinkSignageCatalogItem): T;
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): T;
 };
 
 export type InitInquiry = {
@@ -339,14 +339,14 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.save(updatedFA);
   }
 
-  async assignSignageToCatalogItem(
+  async linkSignageToCatalogItem(
     faId: FestivalActivity["id"],
     link: LinkSignageCatalogItem,
   ): Promise<FestivalActivity> {
     const existingFA = await this.findActivityIfExists(faId);
     const prepare = this.getPrepareHelper(existingFA);
 
-    const updatedFA = prepare.assignSignageToCatalogItem(link);
+    const updatedFA = prepare.linkSignageToCatalogItem(link);
     return this.festivalActivities.save(updatedFA);
   }
 

@@ -530,10 +530,10 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, inquiry };
   }
 
-  assignSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
     const signages = Signages.build(
       this.activity.signa.signages,
-    ).assignCatalogItem(link).entries;
+    ).linkCatalogItem(link).entries;
 
     const signa = { ...this.activity.signa, signages };
     return { ...this.activity, signa };

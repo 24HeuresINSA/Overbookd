@@ -228,7 +228,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     throw new AssignDriveInDraftActivity();
   }
 
-  assignSignageToCatalogItem(): Draft {
+  linkSignageToCatalogItem(): Draft {
     throw new AssignCatalogItemInDraftActivity();
   }
 }

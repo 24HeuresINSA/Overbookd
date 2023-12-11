@@ -302,11 +302,11 @@ describe("Signa section of festival activity preparation", () => {
     ${baladeEnPoney.general.name} | ${baladeEnPoney.id} | ${baladeEnPoney.signa.signages[0].id} | ${baladeEnPoney.signa.signages[0]} | ${bacheBienvenueInCatalog.name}   | ${bacheBienvenueInCatalog}
     ${justDance.general.name}     | ${justDance.id}     | ${justDance.signa.signages[0].id}     | ${justDance.signa.signages[0]}     | ${afficheJustDanceInCatalog.name} | ${afficheJustDanceInCatalog}
   `(
-    "when signa member want to assign $catalogItemName as catalog item for $signageId signage in $activityName",
+    "when signa member want to link $catalogItemName as catalog item for $signageId signage in $activityName",
     ({ activityId, signageId, signage, catalogItem }) => {
       it("should link the signage to the catalog item", async () => {
         const { signa } =
-          await prepareFestivalActivity.assignSignageToCatalogItem(activityId, {
+          await prepareFestivalActivity.linkSignageToCatalogItem(activityId, {
             signageId,
             catalogItem: catalogItem,
           });
@@ -323,11 +323,11 @@ describe("Signa section of festival activity preparation", () => {
     },
   );
 
-  describe("when trying to assign a catalog item to a signage request from a draft festival activity", () => {
-    it("should indicate that we can't assign catalog item to signage request from draft festival activity", async () => {
+  describe("when trying to link a catalog item to a signage request from a draft festival activity", () => {
+    it("should indicate that we can't link catalog item to signage request from draft festival activity", async () => {
       expect(
         async () =>
-          await prepareFestivalActivity.assignSignageToCatalogItem(
+          await prepareFestivalActivity.linkSignageToCatalogItem(
             escapeGame.id,
             {
               signageId: escapeGame.signa.signages[0].id,

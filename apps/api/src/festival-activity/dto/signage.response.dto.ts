@@ -8,7 +8,7 @@ import {
   signageTypes,
 } from "@overbookd/festival-activity";
 
-export class UnassignedSignageResponseDto implements BaseSignage {
+export class UnlinkedSignageResponseDto implements BaseSignage {
   @ApiProperty({})
   id: string;
 
@@ -33,7 +33,7 @@ export class UnassignedSignageResponseDto implements BaseSignage {
   comment: string;
 }
 
-type SignageAssigned = Extract<Signage, { catalogItem: SignageCatalogItem }>;
+type SignageLinked = Extract<Signage, { catalogItem: SignageCatalogItem }>;
 
 class SignageCatalogItemDto implements SignageCatalogItem {
   @ApiProperty({ required: true })
@@ -50,9 +50,9 @@ class SignageCatalogItemDto implements SignageCatalogItem {
   type: SignageType;
 }
 
-export class AssignedSignageResponseDto
-  extends UnassignedSignageResponseDto
-  implements SignageAssigned
+export class LinkedSignageResponseDto
+  extends UnlinkedSignageResponseDto
+  implements SignageLinked
 {
   @ApiProperty({
     required: true,

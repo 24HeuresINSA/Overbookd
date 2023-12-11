@@ -25,8 +25,8 @@ import { ContractorResponseDto } from "./contractor.response.dto";
 import { TimeWindowResponseDto } from "./time-window.response.dto";
 import { LocationResponseDto } from "./location.response.dto";
 import {
-  AssignedSignageResponseDto,
-  UnassignedSignageResponseDto,
+  LinkedSignageResponseDto,
+  UnlinkedSignageResponseDto,
 } from "./signage.response.dto";
 import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
 import { FeedbackResponseDto } from "./feedback.response.dto";
@@ -67,8 +67,8 @@ class SignaResponseDto implements Signa {
     required: true,
     isArray: true,
     oneOf: [
-      { $ref: getSchemaPath(UnassignedSignageResponseDto) },
-      { $ref: getSchemaPath(AssignedSignageResponseDto) },
+      { $ref: getSchemaPath(UnlinkedSignageResponseDto) },
+      { $ref: getSchemaPath(LinkedSignageResponseDto) },
     ],
   })
   signages: Signage[];

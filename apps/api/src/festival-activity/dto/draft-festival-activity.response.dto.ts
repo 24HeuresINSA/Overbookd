@@ -15,7 +15,7 @@ import {
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
 import { ContractorResponseDto } from "./contractor.response.dto";
-import { UnassignedSignageResponseDto } from "./signage.response.dto";
+import { UnlinkedSignageResponseDto } from "./signage.response.dto";
 import { TimeWindowResponseDto } from "./time-window.response.dto";
 import { LocationResponseDto } from "./location.response.dto";
 import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
@@ -106,7 +106,7 @@ class SignaDto implements Signa {
   @ApiProperty({
     description: "Festival activity signages needed",
     isArray: true,
-    type: UnassignedSignageResponseDto,
+    type: UnlinkedSignageResponseDto,
   })
   signages: Signage[];
 }
