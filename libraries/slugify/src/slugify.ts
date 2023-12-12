@@ -25,7 +25,7 @@ export class SlugifyService {
 
   static apply(sentence: string): string {
     const SLUG_SEPARATOR = "-";
-    const spacesOrApostrophes = new RegExp("[ ']+", "gm");
+    const spacesOrApostrophes = new RegExp("[ '/]+", "gm");
     const nonStandardChar = new RegExp("[^A-Za-z0-9]", "gm");
     return sentence
       .toLowerCase()
