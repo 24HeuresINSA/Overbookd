@@ -102,10 +102,11 @@ describe("Signa section of festival activity preparation", () => {
 
   describe("when adherent want to add a signage", () => {
     describe.each`
-      activityName               | activityId       | text            | size       | type       | quantity | comment        | expectedId
-      ${escapeGame.general.name} | ${escapeGame.id} | ${"Affiche 24"} | ${"A3"}    | ${AFFICHE} | ${10}    | ${undefined}   | ${"affiche-affiche-24-a3"}
-      ${justDance.general.name}  | ${justDance.id}  | ${"Dance hard"} | ${"A0"}    | ${AFFICHE} | ${4}     | ${"Fond bleu"} | ${"affiche-dance-hard-a0"}
-      ${justDance.general.name}  | ${justDance.id}  | ${"Par ici"}    | ${"10x2m"} | ${PANNEAU} | ${1}     | ${"Fond bleu"} | ${"panneau-par-ici-10x2m"}
+      activityName               | activityId       | text                              | size       | type       | quantity | comment        | expectedId
+      ${escapeGame.general.name} | ${escapeGame.id} | ${"Affiche 24"}                   | ${"A3"}    | ${AFFICHE} | ${10}    | ${undefined}   | ${"affiche-affiche-24-a3"}
+      ${justDance.general.name}  | ${justDance.id}  | ${"Dance hard"}                   | ${"A0"}    | ${AFFICHE} | ${4}     | ${"Fond bleu"} | ${"affiche-dance-hard-a0"}
+      ${justDance.general.name}  | ${justDance.id}  | ${"Par ici"}                      | ${"10x2m"} | ${PANNEAU} | ${1}     | ${"Fond bleu"} | ${"panneau-par-ici-10x2m"}
+      ${justDance.general.name}  | ${justDance.id}  | ${"FILE 10 MINUTES / COUPE-FILE"} | ${"10/2m"} | ${PANNEAU} | ${1}     | ${"Fond bleu"} | ${"panneau-file-10-minutes-coupe-file-10-2m"}
     `(
       "when adding $type $size $text on $activityName",
       ({ activityId, text, size, type, quantity, comment, expectedId }) => {
