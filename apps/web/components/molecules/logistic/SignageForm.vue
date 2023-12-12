@@ -26,6 +26,15 @@
             :items="signageTypes"
             :rules="[rules.typeRequired]"
           ></v-select>
+          <h3>Image pour la signalisation</h3>
+          <v-file-input
+            v-model="signaImage"
+            :rules="rules.imageRules"
+            label="Photo de la Signa"
+            prepend-icon="mdi-camera"
+            accept="image/png, image/jpeg"
+            show-size
+          />
         </div>
         <v-btn color="success" dark large @click="createOrUpdateSignage">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
@@ -39,6 +48,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { InputRulesData, minLength, required } from "~/utils/rules/input.rules";
+import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
 import {
   Signage,
   SignageForm,
@@ -73,6 +83,7 @@ export default Vue.extend({
         typeRequired: required,
       },
     };
+
   },
   computed: {
     signageTypes(): SignageType[] {
