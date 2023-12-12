@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <form class="filter">
       <v-text-field
@@ -23,7 +23,12 @@
     </form>
     <v-data-table :headers="headers" :items="filteredSignages">
       <template #item.image="{ item }">
-        <v-icon  v-if="item.image" large class="mr-2" @click="openAddImageSignageDialog(item)">
+        <v-icon
+          v-if="item.image"
+          large
+          class="mr-2"
+          @click="openDisplayImageSignageDialog(item)"
+        >
           mdi-image
         </v-icon>
       </template>
@@ -57,10 +62,10 @@
     </v-dialog>
 
     <v-dialog v-model="isDisplayImageSignageDialogOpen" width="600px">
-      <SignaImageDialog
+      <DisplayImageSigna
         :signage="selectedSignage"
         @close-dialog="closeDisplayImageSignageDialog"
-      ></SignaImageDialog>
+      ></DisplayImageSigna>
     </v-dialog>
 
     <v-dialog v-model="isDeleteSignageDialogOpen" width="600px">
@@ -91,6 +96,7 @@ import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
 import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
 import SignaImageDialog from "~/components/molecules/signa/SignaImageDialog.vue";
+import DisplayImageSigna from "~/components/molecules/signa/DisplayImageSigna.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
@@ -108,7 +114,12 @@ interface SignageListingData {
 
 export default Vue.extend({
   name: "SignageListing",
-  components: { ConfirmationMessage, SignageForm, SignaImageDialog },
+  components: {
+    ConfirmationMessage,
+    SignageForm,
+    SignaImageDialog,
+    DisplayImageSigna,
+  },
   data(): SignageListingData {
     return {
       headers: [
