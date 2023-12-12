@@ -155,9 +155,8 @@ export default Vue.extend({
         importFile,
         this.gearRepository,
       );
-      const { records, errors } = await InventoryImport.toRecords(
-        importContainer,
-      );
+      const { records, errors } =
+        await InventoryImport.toRecords(importContainer);
       this.inventoryImportErrors = errors;
       this.inventoryRecords = records;
       this.loading = false;

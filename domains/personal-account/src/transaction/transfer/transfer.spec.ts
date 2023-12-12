@@ -145,9 +145,8 @@ describe("Transfer", () => {
 
           it(`should transfer ${amount} cents from #${from} to #${to}`, async () => {
             const wantedTransfer = Payor.init(from).transferTo(transferToSend);
-            const { from: payor, to: payee } = await transfer.send(
-              wantedTransfer,
-            );
+            const { from: payor, to: payee } =
+              await transfer.send(wantedTransfer);
 
             expect(payor.id).toBe(from);
             expect(payee.id).toBe(to);

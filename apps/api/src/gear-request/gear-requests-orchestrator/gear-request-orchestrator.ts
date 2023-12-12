@@ -127,9 +127,8 @@ export class StandardGearRequest extends GearRequestOrchestrator {
       .filter((gr) => isPeriodWithDuration(gr.rentalPeriod));
 
     const toDeleteGearRequests = impactedGearRequests;
-    const toInsertGearRequests: GearRequest[] = await this.buildGearRequests(
-      updatedGearRequests,
-    );
+    const toInsertGearRequests: GearRequest[] =
+      await this.buildGearRequests(updatedGearRequests);
 
     const gearRequests =
       await this.gearRequestRepository.transactionalMultiOperation({

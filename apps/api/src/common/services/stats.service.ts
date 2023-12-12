@@ -57,10 +57,13 @@ export class StatsService {
   ): Record<FaStatus | FtStatus, number> {
     const statuses = StatsService.sortStatus(teamStats);
 
-    return statuses.reduce((acc, item) => {
-      acc[item.status] = item._count.status;
-      return acc;
-    }, {} as Record<FaStatus | FtStatus, number>);
+    return statuses.reduce(
+      (acc, item) => {
+        acc[item.status] = item._count.status;
+        return acc;
+      },
+      {} as Record<FaStatus | FtStatus, number>,
+    );
   }
 
   private static sortStatus(teamStats: StatsQueryResult[]): StatsQueryResult[] {

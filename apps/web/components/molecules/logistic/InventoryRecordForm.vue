@@ -60,7 +60,7 @@ export default Vue.extend({
             storage: "",
           },
           toInventoryRecord: () => new Error(),
-        } as unknown as DisplayableManualInventoryRecordError),
+        }) as unknown as DisplayableManualInventoryRecordError,
     },
   },
   data(): InventoryRecordFormData {

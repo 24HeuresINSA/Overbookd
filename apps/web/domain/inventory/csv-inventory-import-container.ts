@@ -20,7 +20,10 @@ export class CSVInventoryImportContainer extends InventoryImportContainer {
     nombre: "quantity",
   };
 
-  constructor(private readonly file: File, gearRepository: GearRepository) {
+  constructor(
+    private readonly file: File,
+    gearRepository: GearRepository,
+  ) {
     super(gearRepository);
   }
 

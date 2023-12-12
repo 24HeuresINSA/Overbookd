@@ -125,9 +125,8 @@ describe("Register newcomer", () => {
     });
     describe("when a new adherent has been registered", () => {
       it("should generate a notification for 'can enroll adherent' users", async () => {
-        const notifees = await registerNewcomer.notifyNewAdherentAwaits(
-          newcomerRegistered,
-        );
+        const notifees =
+          await registerNewcomer.notifyNewAdherentAwaits(newcomerRegistered);
         expect(notifees).toHaveLength(1);
       });
     });
