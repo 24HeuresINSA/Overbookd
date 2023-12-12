@@ -98,8 +98,9 @@ export class InMemoryGearRequestRepository implements GearRequestRepository {
       (gearRequestSearch.gear.id
         ? gearRequestSearch.gear.id === gearRequest.gear.id
         : true && gearRequestSearch.gear.isConsumable !== undefined
-        ? gearRequestSearch.gear.isConsumable === gearRequest.gear.isConsumable
-        : true);
+          ? gearRequestSearch.gear.isConsumable ===
+            gearRequest.gear.isConsumable
+          : true);
     const periodSearch =
       !gearRequestSearch.period ||
       (gearRequestSearch.period.start.getTime() <=

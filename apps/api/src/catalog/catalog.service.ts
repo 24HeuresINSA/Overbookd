@@ -114,9 +114,8 @@ export class CatalogService {
     categoryId?: number,
   ): Promise<Category | undefined> {
     if (!categoryId) return undefined;
-    const storedCategory = await this.categoryRepository.getCategory(
-      categoryId,
-    );
+    const storedCategory =
+      await this.categoryRepository.getCategory(categoryId);
 
     const isCategorySpecifiedButNotFound = categoryId && !storedCategory;
     if (isCategorySpecifiedButNotFound) {

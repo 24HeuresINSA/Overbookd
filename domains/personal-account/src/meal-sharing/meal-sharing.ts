@@ -34,7 +34,10 @@ export type Adherents = {
 };
 
 export class MealSharing {
-  constructor(private sharedMeals: SharedMeals, private adherents: Adherents) {}
+  constructor(
+    private sharedMeals: SharedMeals,
+    private adherents: Adherents,
+  ) {}
 
   async offer(
     menu: string,

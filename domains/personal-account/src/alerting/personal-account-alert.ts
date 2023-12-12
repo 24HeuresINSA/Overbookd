@@ -9,5 +9,8 @@ export interface IAlertAboutPersonalAccount {
 }
 
 export class PersonalAccountAlert implements IAlertAboutPersonalAccount {
-  constructor(readonly summary: Summary, readonly balance: number) {}
+  constructor(
+    readonly summary: Summary,
+    readonly balance: number,
+  ) {}
 }

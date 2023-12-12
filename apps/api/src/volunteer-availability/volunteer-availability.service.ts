@@ -17,9 +17,8 @@ export class VolunteerAvailabilityService {
     userId: number,
     periods: PeriodDto[],
   ): Promise<PeriodDto[]> {
-    const previousAvailabilityPeriods = await this.findUserAvailabilities(
-      userId,
-    );
+    const previousAvailabilityPeriods =
+      await this.findUserAvailabilities(userId);
     const periodOrchestrator = PeriodOrchestrator.init(
       previousAvailabilityPeriods,
     );
@@ -58,9 +57,8 @@ export class VolunteerAvailabilityService {
     userId: number,
     newPeriods: PeriodDto[],
   ): Promise<PeriodDto[]> {
-    const previousAvailabilityPeriods = await this.findUserAvailabilities(
-      userId,
-    );
+    const previousAvailabilityPeriods =
+      await this.findUserAvailabilities(userId);
     const periodOrchestrator = PeriodOrchestrator.init();
     newPeriods.map((period) =>
       periodOrchestrator.addPeriod(Period.init(period)),

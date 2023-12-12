@@ -98,17 +98,15 @@ describe("Pay contribution", () => {
           const contributionForm = { adherentId, amount };
 
           it(`should pay ${amount} cents`, async () => {
-            const payedContribution = await payContribution.for(
-              contributionForm,
-            );
+            const payedContribution =
+              await payContribution.for(contributionForm);
 
             expect(payedContribution.amount).toBeGreaterThanOrEqual(amount);
           });
 
           it("should have expiration date after payment date", async () => {
-            const payedContribution = await payContribution.for(
-              contributionForm,
-            );
+            const payedContribution =
+              await payContribution.for(contributionForm);
 
             expect(payedContribution.expirationDate.getTime()).toBeGreaterThan(
               payedContribution.paymentDate.getTime(),
@@ -116,9 +114,8 @@ describe("Pay contribution", () => {
           });
 
           it("should have expiration date before next edition", async () => {
-            const payedContribution = await payContribution.for(
-              contributionForm,
-            );
+            const payedContribution =
+              await payContribution.for(contributionForm);
 
             const duration =
               payedContribution.expirationDate.getTime() -
@@ -128,9 +125,8 @@ describe("Pay contribution", () => {
           });
 
           it("should have expiration date on the last day of August", async () => {
-            const payedContribution = await payContribution.for(
-              contributionForm,
-            );
+            const payedContribution =
+              await payContribution.for(contributionForm);
             const { month, day } = EXPIRATION_DATE;
 
             expect(payedContribution.expirationDate.getMonth()).toBe(month);
@@ -138,9 +134,8 @@ describe("Pay contribution", () => {
           });
 
           it("should save it as a new contribution", async () => {
-            const payedContribution = await payContribution.for(
-              contributionForm,
-            );
+            const payedContribution =
+              await payContribution.for(contributionForm);
 
             expect(contributionRepository.has(payedContribution)).toBe(true);
           });

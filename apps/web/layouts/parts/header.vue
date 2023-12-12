@@ -81,7 +81,9 @@ header {
   align-items: center;
   padding: 0px 5px;
   background-color: $background-color;
-  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+  box-shadow:
+    0 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0 4px 5px 0 rgba(0, 0, 0, 0.14),
     0 1px 10px 0 rgba(0, 0, 0, 0.12);
   height: $header-height;
   @media only screen and (max-width: $mobile-max-width) {
