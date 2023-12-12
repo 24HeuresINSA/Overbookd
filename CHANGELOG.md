@@ -1,3 +1,15 @@
+## [2.10.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.10.0...v2.10.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* **festival-activity:** handle slashes in signage text and size. [#1410](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1410) ([07ca1b8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/07ca1b8a921328b4e1752ed0349987bcaa11bf92))
+
+
+### Pre-Features
+
+* **festival-activity:** add signage assin in domain [#1403](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1403) ([fd0eb1f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fd0eb1f16958f7abf2f2af5be1345b7ebaf867b1))
+
 ## [2.10.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.9.2...v2.10.0) (2023-12-10)
 
 
