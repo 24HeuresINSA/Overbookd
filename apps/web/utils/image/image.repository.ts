@@ -9,7 +9,7 @@ export class ImageRepository {
   ): Promise<string | undefined> {
     const token = context.$axios.defaults.headers.common["Authorization"];
     if (!token) return undefined;
-    const response = await fetch(new URL(path, process.env.BASE_URL), {
+    const response = await fetch(`${process.env.BASE_URL}/${path}`, {
       method: "GET",
       headers: {
         Authorization: `${token}`,
