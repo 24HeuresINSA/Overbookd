@@ -23,13 +23,9 @@
     </form>
     <v-data-table :headers="headers" :items="filteredSignages">
       <template #item.image="{ item }">
-        <v-img
-          :src="item.imageBlob"
-          :alt="item.name"
-          width="150"
-          height="150"
-          contain
-        ></v-img>
+        <v-icon  v-if="item.image" large class="mr-2" @click="openAddImageSignageDialog(item)">
+          mdi-image
+        </v-icon>
       </template>
       <template v-if="isCatalogWriter" #item.actions="{ item }">
         <v-icon small class="mr-2" @click="openUpdateSignageDialog(item)">
@@ -57,6 +53,13 @@
       <SignaImageDialog
         :signage="selectedSignage"
         @close-dialog="closeAddImageSignageDialog"
+      ></SignaImageDialog>
+    </v-dialog>
+
+    <v-dialog v-model="isDisplayImageSignageDialogOpen" width="600px">
+      <SignaImageDialog
+        :signage="selectedSignage"
+        @close-dialog="closeDisplayImageSignageDialog"
       ></SignaImageDialog>
     </v-dialog>
 
@@ -100,6 +103,7 @@ interface SignageListingData {
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
   isAddImageSignageDialogOpen: boolean;
+  isDisplayImageSignageDialogOpen: boolean;
 }
 
 export default Vue.extend({
@@ -120,6 +124,7 @@ export default Vue.extend({
       isUpdateSignageDialogOpen: false,
       isDeleteSignageDialogOpen: false,
       isAddImageSignageDialogOpen: false,
+      isDisplayImageSignageDialogOpen: false,
     };
   },
   computed: {
@@ -158,6 +163,10 @@ export default Vue.extend({
       this.selectedSignage = signage;
       this.isAddImageSignageDialogOpen = true;
     },
+    openDisplayImageSignageDialog(signage: Signage) {
+      this.selectedSignage = signage;
+      this.isDisplayImageSignageDialogOpen = true;
+    },
     closeUpdateSignageDialog() {
       this.isUpdateSignageDialogOpen = false;
       this.selectedSignage = undefined;
@@ -168,6 +177,10 @@ export default Vue.extend({
     },
     closeAddImageSignageDialog() {
       this.isAddImageSignageDialogOpen = false;
+      this.selectedSignage = undefined;
+    },
+    closeDisplayImageSignageDialog() {
+      this.isDisplayImageSignageDialogOpen = false;
       this.selectedSignage = undefined;
     },
     async deleteSignage() {
