@@ -62,7 +62,7 @@ export const actions = actionTree(
       commit("SET_SIGNAGES", signages);
     },
 
-    async createSignage({ commit }, signageForm: SignageForm): Promise<void> {
+    async createSignage({ commit }, signageForm: SignageForm): Promise<Signage | void> {
       const res = await safeCall<Signage>(
         this,
         signageRepository.createSignage(this, signageForm),
@@ -73,6 +73,8 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("ADD_SIGNAGE", res.data);
+            return res.data;
+
     },
 
     async updateSignage({ commit }, form: SignageUpdateForm): Promise<void> {

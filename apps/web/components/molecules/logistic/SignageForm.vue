@@ -28,8 +28,8 @@
           ></v-select>
           <h3>Image pour la signalisation</h3>
           <v-file-input
-            v-model="signaImage"
-            :rules="rules.imageRules"
+            v-model="image"
+            :rules="[fileRules.imageRules]"
             label="Photo de la Signa"
             prepend-icon="mdi-camera"
             accept="image/png, image/jpeg"
@@ -47,8 +47,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { InputRulesData, minLength, required } from "~/utils/rules/input.rules";
-import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
+import {
+  InputRulesDataWithImage,
+  minLength,
+  required,
+  imageRules,
+} from "~/utils/rules/input.rules";
 import {
   Signage,
   SignageForm,
@@ -56,9 +60,10 @@ import {
   signageTypes,
 } from "@overbookd/signa";
 
-interface SignageFormData extends InputRulesData {
+interface SignageFormData extends InputRulesDataWithImage {
   name: string;
   type: SignageType;
+  image: File | undefined;
 }
 
 const nameMinLength = 3;
@@ -68,23 +73,24 @@ export default Vue.extend({
   props: {
     signage: {
       type: Object,
-      default: () => ({
-        name: "",
-        type: signageTypes.AFFICHE,
-      }),
+      default: () => null,
     },
   },
   data(): SignageFormData {
     return {
       name: this.signage.name,
       type: this.signage.type,
+      image: undefined,
       rules: {
         nameMinLength: minLength(nameMinLength),
         typeRequired: required,
       },
+      fileRules: {
+        imageRules: imageRules,
+      },
     };
-
   },
+
   computed: {
     signageTypes(): SignageType[] {
       return Object.values(signageTypes);
@@ -103,14 +109,22 @@ export default Vue.extend({
         name: this.name,
         type: this.type,
       };
-
-      this.signage.id
-        ? this.$accessor.catalogSignage.updateSignage({
+      const newSigna = await this.signage.id
+        ? await this.$accessor.catalogSignage.updateSignage({
             ...signage,
             id: this.signage.id,
           })
-        : this.$accessor.catalogSignage.createSignage(signage);
+        : await this.$accessor.catalogSignage.createSignage(signage);
+      console.log(newSigna)
 
+      if (this.image) {
+        const signageImageForm = new FormData();
+        signageImageForm.append("file", this.image, this.image.name);
+        await this.$accessor.catalogSignage.uploadSignageImage({
+          signageId: this.signage.id,
+          signageImage: signageImageForm,
+        });
+      }
       this.closeDialog();
       this.name = "";
       this.type = signageTypes.AFFICHE;
