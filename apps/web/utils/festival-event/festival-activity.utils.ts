@@ -31,8 +31,10 @@ export function castActivityWithDate(
   return CastInReview.withDate(activity);
 }
 
-export function castHistoryWithDate(history: HttpStringified<KeyEvent[]>): KeyEvent[] {
-  return history.map((event) => ({...event, at: new Date(event.at)}))
+export function castHistoryWithDate(
+  history: HttpStringified<KeyEvent[]>,
+): KeyEvent[] {
+  return history.map((event) => ({ ...event, at: new Date(event.at) }));
 }
 
 function isHttpDraft(
