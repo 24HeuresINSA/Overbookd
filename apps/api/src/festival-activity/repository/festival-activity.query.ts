@@ -207,6 +207,7 @@ export class FestivalActivityQueryBuilder {
       type: signage.type,
       comment: signage.comment,
     }));
+
     return {
       upsert: signages.map((signage) => ({
         where: { faId_id: { faId: activity.id, id: signage.id } },
