@@ -34,7 +34,6 @@ import {
 import {
   AddInquiryRequest,
   InitInquiryRequest,
-  LinkSignageCatalogItemForm,
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
@@ -79,6 +78,12 @@ type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];
   slug: InquiryRequest["slug"];
   drive: Drive;
+};
+
+type LinkSignageToCatalogItem = {
+  activityId: FestivalActivity["id"];
+  signageId: Signage["id"];
+  catalogItemId: SignageCatalogItem["id"];
 };
 
 @Injectable()
@@ -214,6 +219,25 @@ export class FestivalActivityService {
     return this.prepare.removeSignage(faId, signageId);
   }
 
+  async linkSignageToCatalogItem(
+    user: JwtUtil,
+    { activityId, signageId, catalogItemId }: LinkSignageToCatalogItem,
+  ): Promise<FestivalActivity> {
+    const catalogItem = await this.catalogSignages.find(catalogItemId);
+    if (!catalogItem) {
+      throw new NotFoundException(
+        "❌ La signalétique n'existe pas dans le catalogue",
+      );
+    }
+
+    this.checkMembership(user, signa);
+
+    return this.prepare.linkSignageToCatalogItem(activityId, {
+      signageId,
+      catalogItem,
+    });
+  }
+
   saveSecuritySection(
     id: FestivalActivity["id"],
     security: FestivalActivity["security"],
@@ -311,25 +335,6 @@ export class FestivalActivityService {
       drive,
       slug,
       owner: inquiry.owner,
-    });
-  }
-
-  async linkSignageToCatalogItem(
-    user: JwtUtil,
-    { activityId, signageId, catalogItemId }: LinkSignageCatalogItemForm,
-  ): Promise<FestivalActivity> {
-    const catalogItem = await this.catalogSignages.find(catalogItemId);
-    if (!catalogItem) {
-      throw new NotFoundException(
-        "❌ La signalétique n'existe pas dans le catalogue",
-      );
-    }
-
-    this.checkMembership(user, signa);
-
-    return this.prepare.linkSignageToCatalogItem(activityId, {
-      signageId,
-      catalogItem,
     });
   }
 

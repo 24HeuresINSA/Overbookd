@@ -51,6 +51,7 @@ import {
   InChargeRequestDto,
   InitInquiryRequestDto,
   LinkInquiryDriveRequestDto,
+  LinkSignageCatalogItemDto,
   SecurityRequestDto,
   SignaRequestDto,
   SupplyRequestDto,
@@ -604,6 +605,53 @@ export class FestivalActivityController {
     @Param("signageId") signageId: Signage["id"],
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.removeSignage(faId, signageId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FA)
+  @Patch(":faId/signa/signages/:signageId")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description:
+      "Catalog item to link signage with in signa section of festival activity",
+    type: LinkSignageCatalogItemDto,
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "signageId",
+    type: Number,
+    description: "Signage id",
+    required: true,
+  })
+  linkSignageToCatalogItem(
+    @Param("faId", ParseIntPipe) activityId: FestivalActivity["id"],
+    @Param("signageId") signageId: Signage["id"],
+    @Body() { catalogItemId }: LinkSignageCatalogItemDto,
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalActivity> {
+    const jwt = new JwtUtil(user);
+    return this.festivalActivityService.linkSignageToCatalogItem(jwt, {
+      activityId,
+      signageId,
+      catalogItemId,
+    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

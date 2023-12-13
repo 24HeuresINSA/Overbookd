@@ -26,6 +26,7 @@ import {
   PrepareFeedbackPublish,
   Drive,
   drives,
+  SignageCatalogItem,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -39,6 +40,7 @@ import {
 import {
   AddInquiryRequest,
   InitInquiryRequest,
+  LinkSignageCatalogItemForm,
   PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
@@ -249,6 +251,12 @@ export class UpdateSignageRequestDto implements UpdateSignageRequest {
   @IsString()
   @ValidateIf((_, value) => value !== null)
   comment?: string | null;
+}
+
+export class LinkSignageCatalogItemDto implements LinkSignageCatalogItemForm {
+  @ApiProperty({ required: true })
+  @IsNumber()
+  catalogItemId: SignageCatalogItem["id"];
 }
 
 type PrepareSecurityUpdate = FestivalActivity["security"];
