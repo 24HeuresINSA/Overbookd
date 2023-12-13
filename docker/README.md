@@ -25,11 +25,11 @@ pnpm prerelease : update version as realese-candidate (rc) of api and web
 
 Contient toutes les variables d'environnement nécessaires pour le dev. Il est fourni dans se repo.
 
-<!-- ### Le fichier `assets/traefik/tls.yml`
+### Le fichier `assets/traefik/tls.yml`
 
 Contient les certificats TLS pour le dev. Il est fourni dans se repo.
 Sans lui, le domaine `traefik.me` ne sera pas de confiance.
-Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`. -->
+Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`.
 
 ### Le dossier `data`
 
@@ -49,9 +49,9 @@ Tous les docker-compose de prod, preprod et cetaitmieuxavant sont dans le [repo 
 
 ## Les liens utiles
 
-### Avec le domaine local.24heures.org
+### Avec le domaine traefik.me
 
-- Le front : <https://overbookd.local.24heures.org>
-- Le back : <https://overbookd.local.24heures.org/api>
-- Swagger : <https://overbookd.local.24heures.org/api/swagger>
-- Adminer : <https://overbookd.local.24heures.org/adminer/>, petit lien magique pour autofill <https://overbookd.local.24heures.org/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-local&ns=public>
+- Le front : <https://overbookd.traefik.me>
+- Le back : <https://overbookd.traefik.me/api>
+- Swagger : <https://overbookd.traefik.me/api/swagger>
+- Adminer : <https://overbookd.traefik.me/adminer/>, petit lien magique pour autofill <https://overbookd.traefik.me/adminer/?pgsql=overbookd_postgresql&username=overbookd&db=overbookd-local&ns=public>

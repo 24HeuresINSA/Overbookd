@@ -21,7 +21,7 @@
     "dev:init": "docker network create traefik-public && pnpm dev:build",
     "dev:logs": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env logs --tail 100 --follow",
     "dev:restart": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env restart",
-    "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env up --detach traefik api postgresql adminer web",
+    "dev:start": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env up --detach certs-downloader traefik api postgresql adminer web",
     "dev:stop": "MY_GID=$(id -g $USER) MY_UID=$(id -u $USER) docker compose --file ./docker/docker-compose.yml --project-name overbookd --env-file ./docker/.env stop",
     "dev:bash": "docker run --rm --name overbookd_bash --interactive --tty --user $(id -g $USER):$(id -u $USER) -v $(pwd):/overbookd overbookd:dev sh --login",
     "format": "pnpm --recursive run format",

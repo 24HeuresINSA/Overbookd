@@ -5,15 +5,16 @@ networks:
   traefik-public:
     external: true
 
-# volumes:
-#   certs:
+volumes:
+  certs:
+
 
 services:
-  # certs-downloader:
-  #   image: alpine
-  #   command: sh -c "cd /etc/ssl/traefik && wget https://traefik.me/cert.pem -O cert.pem && wget https://traefik.me/privkey.pem -O privkey.pem"
-  #   volumes:
-  #     - certs:/etc/ssl/traefik
+  certs-downloader:
+    image: alpine
+    command: sh -c "cd /etc/ssl/traefik && wget https://traefik.me/cert.pem -O cert.pem && wget https://traefik.me/privkey.pem -O privkey.pem"
+    volumes:
+      - certs:/etc/ssl/traefik
 
   traefik:
     image: traefik:v2.10.7
@@ -39,8 +40,8 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      # - certs:/etc/ssl/traefik
-      # - ./assets/traefik/tls.yml:/etc/traefik/tls.yml
+      - certs:/etc/ssl/traefik
+      - ./assets/traefik/tls.yml:/etc/traefik/tls.yml
     networks:
       - traefik-public
     labels:
