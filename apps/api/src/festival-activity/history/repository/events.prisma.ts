@@ -8,7 +8,6 @@ import {
 } from "@overbookd/festival-activity";
 import { Events } from "../history.service";
 import { PrismaService } from "../../../prisma.service";
-import { SELECT_ADHERENT } from "../../repository/adherent.query";
 import {
   APPROVED,
   Action,
@@ -17,6 +16,7 @@ import {
   READY_TO_REVIEW,
   REJECTED,
 } from "@overbookd/http";
+import { SELECT_KEY_EVENT } from "./events.query";
 
 type FestivalActivityEvent = Approved | Created | ReadyToReview | Rejected;
 
@@ -62,12 +62,7 @@ export class PrismaEvents implements Events {
 
   async forFestivalActivity(faId: FestivalActivity["id"]): Promise<KeyEvent[]> {
     const events = await this.prisma.festivalActivityHistory.findMany({
-      select: {
-        at: true,
-        reason: true,
-        event: true,
-        instigator: { select: SELECT_ADHERENT },
-      },
+      select: SELECT_KEY_EVENT,
       where: { faId },
     });
     return events.map(({ at, reason, event, instigator }) => {
