@@ -19,6 +19,7 @@ export const VALIDATE_FT = "validate-ft";
 export const READ_ANIMATION_TO_PUBLISH = "read-animation-to-publish";
 export const READ_FA = "read-fa";
 export const WRITE_FA = "write-fa";
+export const REMOVE_FA = "remove-fa";
 export const READ_FT = "read-ft";
 export const WRITE_FT = "write-ft";
 export const VIEW_FESTIVAL_EVENTS_STATS = "view-festival-events-stats";
@@ -33,7 +34,6 @@ export const VIEW_VOLUNTEER = "view-volunteer";
 export const SEND_MAIL_TEST = "send-mail-test";
 export const MANAGE_TEAMS = "manage-teams";
 export const MANAGE_PERMISSIONS = "manage-permissions";
-export const VIEW_DELETED_FA = "view-deleted-fa";
 export const VIEW_DELETED_FT = "view-deleted-ft";
 export const MANAGE_ADMINS = "manage-admins";
 export const MANAGE_CONTRIBUTIONS = "manage-contributions";
@@ -59,6 +59,7 @@ const permissions = [
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   WRITE_FA,
+  REMOVE_FA,
   READ_FT,
   WRITE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
@@ -73,7 +74,6 @@ const permissions = [
   SEND_MAIL_TEST,
   MANAGE_TEAMS,
   MANAGE_PERMISSIONS,
-  VIEW_DELETED_FA,
   VIEW_DELETED_FT,
   MANAGE_ADMINS,
   MANAGE_CONTRIBUTIONS,

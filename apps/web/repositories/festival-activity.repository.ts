@@ -70,6 +70,11 @@ export class FestivalActivityRepository {
     );
   }
 
+  /* REMOVE */
+  static remove(context: Context, id: FestivalActivity["id"]) {
+    return context.$axios.delete<void>(`${this.basePath}/${id}`);
+  }
+
   /* UPDATE GENERAL */
   static updateGeneral(
     context: Context,

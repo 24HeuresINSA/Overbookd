@@ -24,7 +24,12 @@ import {
   ApiExtraModels,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
-import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
+import {
+  READ_FA,
+  REMOVE_FA,
+  VALIDATE_FA,
+  WRITE_FA,
+} from "@overbookd/permission";
 import type {
   Contractor,
   ElectricitySupply,
@@ -234,6 +239,24 @@ export class FestivalActivityController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.toReview(id, user);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(REMOVE_FA)
+  @Delete(":id")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Festival activity deleted",
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
+    return this.festivalActivityService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

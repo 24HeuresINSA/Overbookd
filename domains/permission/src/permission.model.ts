@@ -18,6 +18,7 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   WRITE_FA,
+  REMOVE_FA,
   READ_FT,
   WRITE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
@@ -33,7 +34,6 @@ import {
   MANAGE_PERMISSIONS,
   MANAGE_TEAMS,
   VIEW_DELETED_FT,
-  VIEW_DELETED_FA,
   MANAGE_ADMINS,
   MANAGE_CONTRIBUTIONS,
   PAY_CONTRIBUTION,
@@ -59,6 +59,7 @@ export type Permission =
   | typeof READ_ANIMATION_TO_PUBLISH
   | typeof READ_FA
   | typeof WRITE_FA
+  | typeof REMOVE_FA
   | typeof READ_FT
   | typeof WRITE_FT
   | typeof VIEW_FESTIVAL_EVENTS_STATS
@@ -73,7 +74,6 @@ export type Permission =
   | typeof SEND_MAIL_TEST
   | typeof MANAGE_TEAMS
   | typeof MANAGE_PERMISSIONS
-  | typeof VIEW_DELETED_FA
   | typeof VIEW_DELETED_FT
   | typeof MANAGE_ADMINS
   | typeof MANAGE_CONTRIBUTIONS

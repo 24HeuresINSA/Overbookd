@@ -52,6 +52,12 @@
             <TeamChip v-if="item.team" :team="item.team" with-name />
           </template>
 
+          <template #item.actions="{ item }">
+            <v-icon v-show="canRemoveFa" @click.stop="removeFa(item)">
+              mdi-delete
+            </v-icon>
+          </template>
+
           <template #no-data> Aucune FA trouvée </template>
         </v-data-table>
       </v-card>
@@ -86,7 +92,7 @@ import { Team } from "~/utils/models/team.model";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
-import { VIEW_DELETED_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
+import { REMOVE_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import {
   PreviewFestivalActivity,
   FestivalActivity,
@@ -121,6 +127,7 @@ export default defineComponent({
       { text: "Nom", value: "name" },
       { text: "Equipe", value: "team" },
       { text: "Responsable", value: "adherent", sortable: false },
+      { text: "Actions", value: "actions", sortable: false },
     ],
     isNewFaDialogOpen: false,
     filters: {},
@@ -153,8 +160,8 @@ export default defineComponent({
         );
       });
     },
-    canViewDeletedFa(): boolean {
-      return this.$accessor.user.can(VIEW_DELETED_FA);
+    canRemoveFa(): boolean {
+      return this.$accessor.user.can(REMOVE_FA);
     },
     canExportSignages(): boolean {
       return this.$accessor.user.can(WRITE_SIGNAGE_CATALOG);
@@ -280,6 +287,10 @@ export default defineComponent({
 
     openFa(fa: PreviewFestivalActivity) {
       this.$router.push({ path: `/fa/${fa.id}` });
+    },
+
+    removeFa(fa: PreviewFestivalActivity) {
+      this.$accessor.festivalActivity.remove(fa.id);
     },
   },
 });
