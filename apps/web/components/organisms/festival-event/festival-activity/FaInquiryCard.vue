@@ -189,7 +189,6 @@ import FaInitInquiryFormCard from "~/components/molecules/festival-event/logisti
 type FaInquiryCardData = InputRulesData & {
   isInitInquiryDialogOpen: boolean;
   isLinkDriveDialogOpen: boolean;
-  selectedInquiries: InquiryRequest[];
   selectedOwner: InquiryOwner;
   gear: Gear | null;
   quantity: number;
@@ -212,7 +211,6 @@ export default defineComponent({
   data: (): FaInquiryCardData => ({
     isInitInquiryDialogOpen: false,
     isLinkDriveDialogOpen: false,
-    selectedInquiries: [],
     selectedOwner: MATOS,
     gear: null,
     quantity: 1,
@@ -289,6 +287,18 @@ export default defineComponent({
 
       return this.mFA.reviews.barrieres === REJECTED;
     },
+    selectedInquiries(): InquiryRequest[] {
+      switch (this.selectedOwner) {
+        case MATOS:
+          return this.inquiry.gears;
+        case BARRIERES:
+          return this.inquiry.barriers;
+        case ELEC:
+          return this.inquiry.electricity;
+        default:
+          return [];
+      }
+    },
   },
   methods: {
     clearInquiryForm() {
@@ -330,17 +340,6 @@ export default defineComponent({
     },
     openLinkDriveFor(owner: InquiryOwner) {
       this.selectedOwner = owner;
-      switch (owner) {
-        case MATOS:
-          this.selectedInquiries = this.inquiry.gears;
-          break;
-        case BARRIERES:
-          this.selectedInquiries = this.inquiry.barriers;
-          break;
-        case ELEC:
-          this.selectedInquiries = this.inquiry.electricity;
-          break;
-      }
       this.isLinkDriveDialogOpen = true;
     },
     closeLinkDriveDialog() {
