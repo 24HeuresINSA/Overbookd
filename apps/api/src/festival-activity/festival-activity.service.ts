@@ -34,6 +34,7 @@ import {
 import {
   AddInquiryRequest,
   InitInquiryRequest,
+  KeyEvent,
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
@@ -51,6 +52,7 @@ import {
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
 import { PeriodDto } from "./dto/period.dto";
+import { HistoryService } from "./history/history.service";
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
@@ -98,6 +100,7 @@ export class FestivalActivityService {
     private readonly askForReview: AskForReview,
     private readonly reviewing: Reviewing,
     private readonly eventStore: DomainEventService,
+    private readonly history: HistoryService,
   ) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {
@@ -106,6 +109,10 @@ export class FestivalActivityService {
 
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {
     return this.prepare.findById(id);
+  }
+
+  getHistory(faId: FestivalActivity["id"]): Promise<KeyEvent[]> {
+    return this.history.getKeyEvents(faId);
   }
 
   async create({ id }: JwtPayload, name: string): Promise<Draft> {

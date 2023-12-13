@@ -1,23 +1,22 @@
+import { Prisma } from "@prisma/client";
 import {
   Approved,
   Created,
+  FestivalActivity,
   ReadyToReview,
   Rejected,
 } from "@overbookd/festival-activity";
 import { Events } from "../history.service";
 import { PrismaService } from "../../../prisma.service";
-import { Prisma } from "@prisma/client";
-
-const CREATED = "CREATED";
-const READY_TO_REVIEW = "READY_TO_REVIEW";
-const APPROVED = "APPROVED";
-const REJECTED = "REJECTED";
-
-type FestivalActivityEventType =
-  | typeof CREATED
-  | typeof READY_TO_REVIEW
-  | typeof APPROVED
-  | typeof REJECTED;
+import { SELECT_ADHERENT } from "../../repository/adherent.query";
+import {
+  APPROVED,
+  Action,
+  CREATED,
+  KeyEvent,
+  READY_TO_REVIEW,
+  REJECTED,
+} from "@overbookd/http";
 
 type FestivalActivityEvent = Approved | Created | ReadyToReview | Rejected;
 
@@ -61,9 +60,25 @@ export class PrismaEvents implements Events {
     });
   }
 
+  async forFestivalActivity(faId: FestivalActivity["id"]): Promise<KeyEvent[]> {
+    const events = await this.prisma.festivalActivityHistory.findMany({
+      select: {
+        at: true,
+        reason: true,
+        event: true,
+        instigator: { select: SELECT_ADHERENT },
+      },
+      where: { faId },
+    });
+    return events.map(({ at, reason, event, instigator }) => {
+      const description = generateDescription(event, reason);
+      return { at, by: instigator, description, action: event };
+    });
+  }
+
   private generateDatabaseEvent(
     { id, by, festivalActivity, at }: FestivalActivityEvent,
-    type: FestivalActivityEventType,
+    type: Action,
   ) {
     return {
       event: type,
@@ -72,5 +87,18 @@ export class PrismaEvents implements Events {
       snapshot: festivalActivity as unknown as Prisma.JsonObject,
       at,
     } as const;
+  }
+}
+
+function generateDescription(action: Action, reason?: string) {
+  switch (action) {
+    case CREATED:
+      return "FA créée";
+    case READY_TO_REVIEW:
+      return "Demande de relecture de la FA";
+    case APPROVED:
+      return "FA approuvée";
+    case REJECTED:
+      return `FA rejetée pour la raison suivante: ${reason}`;
   }
 }

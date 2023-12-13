@@ -24,12 +24,13 @@ import {
   PrepareSignaForm,
   ReviewRejection,
   InitInquiryRequest,
+  KeyEvent,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
 import { safeCall } from "~/utils/api/calls";
-import { castActivityWithDate } from "~/utils/festival-event/festival-activity.utils";
+import { castActivityWithDate, castHistoryWithDate } from "~/utils/festival-event/festival-activity.utils";
 import { AddInquiryRequest } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity.model";
 
@@ -38,19 +39,22 @@ const repo = FestivalActivityRepository;
 type State = {
   allActivities: PreviewFestivalActivity[];
   selectedActivity: FestivalActivity;
+  selectedHistory: KeyEvent[]
 };
 
 export const state = (): State => ({
   allActivities: [],
   selectedActivity: defaultDraft(0, "Fake activity"),
+  selectedHistory: []
 });
 
 export const mutations = mutationTree(state, {
   SET_ALL_ACTIVITIES(state, activities: PreviewFestivalActivity[]) {
     state.allActivities = activities;
   },
-  SET_SELECTED_ACTIVITY(state, activity: FestivalActivity) {
+  SET_SELECTED_ACTIVITY(state, { activity, history}:{activity: FestivalActivity, history?: KeyEvent[]}) {
     state.selectedActivity = activity;
+    state.selectedHistory = history ?? state.selectedHistory
   },
 });
 
@@ -65,11 +69,12 @@ export const actions = actionTree(
     },
 
     async fetchActivity({ commit }, id: number) {
-      const res = await safeCall(this, repo.getOne(this, id));
-      if (!res) return;
+      const [faRes, historyRes] = await Promise.all([safeCall(this, repo.getOne(this, id)), safeCall(this, repo.getHistory(this, id))]);
+      if (!faRes || !historyRes) return;
 
-      const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      const activity = castActivityWithDate(faRes.data);
+      const history = castHistoryWithDate(historyRes.data)
+      commit("SET_SELECTED_ACTIVITY", {activity, history});
     },
 
     /* CREATE */
@@ -78,7 +83,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
       await dispatch("fetchAllActivities");
     },
 
@@ -89,7 +94,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
       await dispatch("fetchAllActivities");
     },
 
@@ -100,7 +105,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async addGeneralTimeWindow({ state, commit }, timeWindow: IProvidePeriod) {
@@ -112,7 +117,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async removeGeneralTimeWindow(
@@ -127,7 +132,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     /* UPDATE IN CHARGE */
@@ -137,7 +142,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async addContractor(
@@ -152,7 +157,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async updateContractor(
@@ -167,7 +172,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async removeContractor({ state, commit }, contractorId: Contractor["id"]) {
@@ -179,7 +184,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     /* UPDATE SIGNA */
@@ -189,7 +194,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async addSignage({ state, commit }, signage: PrepareSignageCreation) {
@@ -198,7 +203,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async updateSignage({ state, commit }, signage: PrepareSignageUpdate) {
@@ -207,7 +212,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async removeSignage({ state, commit }, signageId: Signage["id"]) {
@@ -216,7 +221,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     /* UPDATE SECURITY */
@@ -229,7 +234,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     /* UPDATE SUPPLY */
@@ -239,7 +244,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async addElectricitySupply(
@@ -254,7 +259,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async updateElectricitySupply(
@@ -269,7 +274,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async removeElectricitySupply(
@@ -284,7 +289,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     /* UPDATE INQUIRY */
@@ -297,7 +302,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async removeInquiryTimeWindow(
@@ -312,7 +317,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async addInquiryRequest({ state, commit }, request: AddInquiryRequest) {
@@ -324,7 +329,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async removeInquiryRequest(
@@ -339,7 +344,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async initInquiry({ state, commit }, form: InitInquiryRequest) {
@@ -348,7 +353,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async linkDrive({ state, commit }, link: LinkDrive) {
@@ -357,7 +362,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     /* PUBLISH FEEDBACK */
@@ -370,7 +375,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async approveAs({ state, commit }, reviewer: Reviewer) {
@@ -381,7 +386,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
 
     async rejectBecause({ state, commit }, rejection: ReviewRejection) {
@@ -392,7 +397,7 @@ export const actions = actionTree(
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);
-      commit("SET_SELECTED_ACTIVITY", activity);
+      commit("SET_SELECTED_ACTIVITY", {activity});
     },
   },
 );

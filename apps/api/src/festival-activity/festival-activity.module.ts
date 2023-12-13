@@ -118,6 +118,7 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
         askForReview: AskForReview,
         reviewing: Reviewing,
         eventStore: DomainEventService,
+        history: HistoryService,
       ) =>
         new FestivalActivityService(
           adherents,
@@ -129,6 +130,7 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
           askForReview,
           reviewing,
           eventStore,
+          history,
         ),
       inject: [
         PrismaAdherents,
@@ -140,6 +142,7 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
         AskForReview,
         Reviewing,
         DomainEventService,
+        HistoryService,
       ],
     },
   ],
