@@ -1,3 +1,21 @@
+## [2.11.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.10.1...v2.11.0) (2023-12-14)
+
+
+### Features
+
+* **festival-activity:** display history with feedbacks. [#1411](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1411) ([9bfbcad](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9bfbcadc580f3bb0dd814eb287ef8ca436a42e78))
+
+
+### Bug Fixes
+
+* **festival-activity:** matos validation form [#1416](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1416) ([49748c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/49748c4657a610147741799f8aec48b0c93ed02b))
+* **repo:** add a "/" to ImageRepo to fix 400 error ([8eaad5b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8eaad5bae2069f23477af347710d610d4212d24e))
+
+
+### Pre-Features
+
+* **festival-activity:** implement signa validation in api [#1409](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1409) ([08be4aa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/08be4aac75aa0c8bdc653cb25b176d5a27cdd5b9))
+
 ## [2.10.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.10.0...v2.10.1) (2023-12-12)
 
 
