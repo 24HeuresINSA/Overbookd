@@ -8,6 +8,17 @@
       disable-pagination
       hide-default-footer
     >
+      <template #item.catalogItem="{ item }">
+        <SearchSignage
+          :signage="item.catalogItem"
+          :type="item.type"
+          :boxed="false"
+          :disabled="cantLinkCatalogItem"
+          dense
+          label=""
+        />
+      </template>
+
       <template #item.actions="{ item }">
         <div v-if="!disabled">
           <v-btn icon @click="openUpdateSignageDialog(item)">
@@ -39,7 +50,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import FaSignageForm from "./FaSignageForm.vue";
-import { Signage } from "@overbookd/festival-activity";
+import SearchSignage from "~/components/atoms/field/search/SearchSignage.vue";
+import { Signage, signa } from "@overbookd/festival-activity";
 import { Header } from "~/utils/models/data-table.model";
 
 type FaSignageTableData = {
@@ -50,7 +62,7 @@ type FaSignageTableData = {
 
 export default defineComponent({
   name: "FaSignageTable",
-  components: { FaSignageForm },
+  components: { FaSignageForm, SearchSignage },
   props: {
     signages: {
       type: Array as () => Signage[],
@@ -68,12 +80,18 @@ export default defineComponent({
       { text: "Texte à écrire", value: "text", sortable: false },
       { text: "Taille", value: "size", sortable: false },
       { text: "Commentaire", value: "comment", sortable: false },
+      { text: "Référence", value: "catalogItem", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
 
     isSignageDialogOpen: false,
     selectedSignage: null,
   }),
+  computed: {
+    cantLinkCatalogItem(): boolean {
+      return !this.$accessor.user.isMemberOf(signa);
+    },
+  },
   methods: {
     addSignage(signage: Signage) {
       this.$emit("add", signage);

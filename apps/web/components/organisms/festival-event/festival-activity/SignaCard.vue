@@ -59,6 +59,8 @@ import {
   isDraft,
   signa,
   REJECTED,
+  APPROVED,
+  isAssignedToCatalogItem,
 } from "@overbookd/festival-activity";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
@@ -82,8 +84,12 @@ export default defineComponent({
     },
     cantApprove(): boolean {
       if (isDraft(this.mFA)) return true;
-      return true;
-      //return this.mFA.reviews.signa === APPROVED;
+      const alreadyApproved = this.mFA.reviews.signa === APPROVED;
+      const missingReference = this.signa.signages.some(
+        (signage: Signage) => !isAssignedToCatalogItem(signage),
+      );
+      console.log(missingReference, this.signa.signages);
+      return alreadyApproved || missingReference;
     },
     cantReject(): boolean {
       if (isDraft(this.mFA)) return true;
