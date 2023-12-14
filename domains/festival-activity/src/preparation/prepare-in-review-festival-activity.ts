@@ -438,10 +438,11 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     const gear: ListAndOwner = [this.activity.inquiry.gears, MATOS];
     const barrier: ListAndOwner = [this.activity.inquiry.barriers, BARRIERES];
 
-    const hasImpact = [elec, gear, barrier].some(
-      ([request, owner]) =>
-        request.length > 0 && this.isInquiryApprovedBy(owner).approved,
-    );
+    const hasImpact = [elec, gear, barrier].some(([request, owner]) => {
+      const hasRequest = request.length > 0;
+      const { approved } = this.isInquiryApprovedBy(owner);
+      return hasRequest && approved;
+    });
 
     const allApproved =
       this.activity.reviews.barrieres === APPROVED &&
