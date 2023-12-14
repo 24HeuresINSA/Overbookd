@@ -1,3 +1,4 @@
+import { SignageCatalogItem } from "@overbookd/festival-activity";
 import {
   PrepareInquiryRequestCreation,
   Reviewer,
@@ -26,4 +27,8 @@ export type ReviewRejection = {
 export type InitInquiryRequest = {
   timeWindow: IProvidePeriod;
   request: AddInquiryRequest;
+};
+
+export type LinkSignageCatalogItemForm = {
+  catalogItemId: SignageCatalogItem["id"];
 };

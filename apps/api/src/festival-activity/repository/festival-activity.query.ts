@@ -11,6 +11,7 @@ import {
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
+import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
 
 const SELECT_REVIEW = {
   team: true,
@@ -61,6 +62,9 @@ const SELECT_SIGNA = {
       size: true,
       type: true,
       comment: true,
+      catalogItem: {
+        select: SELECT_CATALOG_SIGNAGE,
+      },
     },
   },
 };
@@ -195,15 +199,24 @@ export class FestivalActivityQueryBuilder {
   }
 
   private static upsertSignages(activity: FestivalActivity) {
+    const signages = activity.signa.signages.map((signage) => ({
+      id: signage.id,
+      quantity: signage.quantity,
+      text: signage.text,
+      size: signage.size,
+      type: signage.type,
+      comment: signage.comment,
+    }));
+
     return {
-      upsert: activity.signa.signages.map((signage) => ({
+      upsert: signages.map((signage) => ({
         where: { faId_id: { faId: activity.id, id: signage.id } },
         update: signage,
         create: signage,
       })),
       deleteMany: {
         faId: activity.id,
-        id: { notIn: activity.signa.signages.map(({ id }) => id) },
+        id: { notIn: signages.map(({ id }) => id) },
       },
     };
   }

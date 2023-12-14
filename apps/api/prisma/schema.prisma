@@ -721,8 +721,8 @@ model FestivalActivitySignage {
   type     SignageType
   comment  String?     @db.Text
 
-  catalogSignage   CatalogSignage? @relation(fields: [catalogSignageId], references: [id])
-  catalogSignageId Int?
+  catalogItem   CatalogSignage? @relation(fields: [catalogItemId], references: [id])
+  catalogItemId Int?
 
   fa   FestivalActivity @relation(fields: [faId], references: [id], onDelete: Cascade)
   faId Int              @map("fa_id")

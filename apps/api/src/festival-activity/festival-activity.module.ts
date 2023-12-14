@@ -20,6 +20,7 @@ import { PrismaInquiries } from "./repository/inquiries.prisma";
 import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaNotifications } from "./repository/notifications.prisma";
 import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festival-activities.prisma";
+import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -54,6 +55,11 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
     {
       provide: PrismaInquiries,
       useFactory: (prisma: PrismaService) => new PrismaInquiries(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaCatalogSignages,
+      useFactory: (prisma: PrismaService) => new PrismaCatalogSignages(prisma),
       inject: [PrismaService],
     },
     {
@@ -106,6 +112,7 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
         adherents: PrismaAdherents,
         locations: PrismaLocations,
         inquiries: PrismaInquiries,
+        catalogSignages: PrismaCatalogSignages,
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
         askForReview: AskForReview,
@@ -116,6 +123,7 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
           adherents,
           locations,
           inquiries,
+          catalogSignages,
           create,
           prepare,
           askForReview,
@@ -126,6 +134,7 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
         PrismaAdherents,
         PrismaLocations,
         PrismaInquiries,
+        PrismaCatalogSignages,
         CreateFestivalActivity,
         PrepareFestivalActivity,
         AskForReview,

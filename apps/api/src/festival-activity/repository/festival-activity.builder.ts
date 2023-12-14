@@ -27,6 +27,8 @@ import {
   VALIDATED,
   isRefusedReviews,
   REFUSED,
+  BaseSignage,
+  SignageCatalogItem,
 } from "@overbookd/festival-activity";
 
 type DatabaseReview = {
@@ -52,6 +54,15 @@ type DatabaseInquiryRequest = {
   };
 };
 
+type DatabaseSignage = BaseSignage & {
+  catalogItem?: SignageCatalogItem;
+};
+
+type DatabaseSigna = {
+  location: FestivalActivity["signa"]["location"];
+  signages: DatabaseSignage[];
+};
+
 type DatabaseInquiry = {
   inquiryTimeWindows: FestivalActivity["inquiry"]["timeWindows"];
   inquiries: DatabaseInquiryRequest[];
@@ -59,9 +70,9 @@ type DatabaseInquiry = {
 
 type DatabaseFestivalActivity = DatabaseGeneral &
   DatabaseInCharge &
-  FestivalActivity["signa"] &
   FestivalActivity["security"] &
   FestivalActivity["supply"] &
+  DatabaseSigna &
   DatabaseInquiry & {
     id: FestivalActivity["id"];
     status: FestivalActivity["status"];
