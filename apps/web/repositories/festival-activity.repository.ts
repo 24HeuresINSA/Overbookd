@@ -2,7 +2,6 @@ import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   HttpStringified,
   InitInquiryRequest,
-  KeyEvent,
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
@@ -46,12 +45,6 @@ export class FestivalActivityRepository {
   static getOne(context: Context, id: FestivalActivity["id"]) {
     return context.$axios.get<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${id}`,
-    );
-  }
-
-  static getHistory(context: Context, id: FestivalActivity["id"]) {
-    return context.$axios.get<HttpStringified<KeyEvent[]>>(
-      `${this.basePath}/${id}/history`,
     );
   }
 

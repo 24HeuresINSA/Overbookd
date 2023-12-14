@@ -17,8 +17,8 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-activity";
-import { HttpStringified, KeyEvent } from "@overbookd/http";
-import { CastInReview } from "./in-review";
+import { HttpStringified } from "@overbookd/http";
+import { CastReviewable } from "./in-review";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-activity.model";
 
@@ -28,13 +28,7 @@ export function castActivityWithDate(
   if (isHttpDraft(activity)) {
     return CastDraft.withDate(activity);
   }
-  return CastInReview.withDate(activity);
-}
-
-export function castHistoryWithDate(
-  history: HttpStringified<KeyEvent[]>,
-): KeyEvent[] {
-  return history.map((event) => ({ ...event, at: new Date(event.at) }));
+  return CastReviewable.withDate(activity);
 }
 
 function isHttpDraft(

@@ -1,4 +1,4 @@
-import { Draft } from "@overbookd/festival-activity";
+import { Draft, KeyEvent } from "@overbookd/festival-activity";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 
@@ -9,6 +9,7 @@ export class CastDraft {
       general: this.generalWithDate(draft.general),
       inquiry: this.inquiryWithDate(draft.inquiry),
       feedbacks: this.feedbacksWithDate(draft.feedbacks),
+      history: this.historyWithDate(draft.history),
     };
   }
 
@@ -35,5 +36,11 @@ export class CastDraft {
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),
     }));
+  }
+
+  private static historyWithDate(
+    history: HttpStringified<KeyEvent[]>,
+  ): KeyEvent[] {
+    return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
 }

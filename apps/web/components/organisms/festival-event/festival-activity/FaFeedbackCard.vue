@@ -37,17 +37,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { Header } from "~/utils/models/data-table.model";
-import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import {
   APPROVED,
   CREATED,
   KeyEvent,
   READY_TO_REVIEW,
   REJECTED,
-} from "@overbookd/http";
+} from "@overbookd/festival-activity";
+import { defineComponent } from "vue";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { Header } from "~/utils/models/data-table.model";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type FaFeedbackCardData = {
   headers: Header[];
@@ -82,7 +82,7 @@ export default defineComponent({
 
       return [
         ...feedbacksAsKeyEvent,
-        ...this.$accessor.festivalActivity.selectedHistory,
+        ...this.$accessor.festivalActivity.selectedActivity.history,
       ].toSorted((first, second) => first.at.getTime() - second.at.getTime());
     },
     canPublishFeedback(): boolean {
