@@ -166,9 +166,6 @@ export class FestivalActivityController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get(":faId/history")
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post()
   @ApiResponse({
