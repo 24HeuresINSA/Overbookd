@@ -173,7 +173,7 @@ export class FestivalActivityQueryBuilder {
         create: activity.feedbacks.map(feedbackDatabaseMapping),
       },
       events: {
-        create: this.listKeyEvents(activity),
+        create: activity.history.map(keyEventToHistory(activity)),
       },
     };
   }
@@ -330,7 +330,7 @@ export class FestivalActivityQueryBuilder {
           },
         },
         update: { context: keyEvent.description },
-        create: keyEventToHistoryMapping(activity)(keyEvent),
+        create: keyEventToHistory(activity)(keyEvent),
       })),
     };
   }
@@ -370,10 +370,6 @@ export class FestivalActivityQueryBuilder {
       ...activity.inquiry.gears,
     ];
   }
-
-  private static listKeyEvents(activity: Draft) {
-    return activity.history.map(keyEventToHistoryMapping(activity));
-  }
 }
 
 type StoredHistoryKeyEvent = {
@@ -384,7 +380,7 @@ type StoredHistoryKeyEvent = {
   snapshot: Prisma.JsonObject;
 };
 
-function keyEventToHistoryMapping(
+function keyEventToHistory(
   activity: FestivalActivity,
 ): (event: KeyEvent) => StoredHistoryKeyEvent {
   return ({ action, by, at, description }) => ({
