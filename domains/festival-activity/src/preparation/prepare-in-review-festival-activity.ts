@@ -443,12 +443,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
         request.length > 0 && this.isInquiryApprovedBy(owner).approved,
     );
 
-    const AllApproved =
+    const allApproved =
       this.activity.reviews.barrieres === APPROVED &&
       this.activity.reviews.elec === APPROVED &&
       this.activity.reviews.matos === APPROVED;
 
-    if (hasImpact || AllApproved) {
+    if (hasImpact || allApproved) {
       return this.checkIfInquiryAlreadyApprovedBy();
     }
   }
