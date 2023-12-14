@@ -4,7 +4,7 @@
     <v-card-text class="feedbacks__listing">
       <v-data-table
         :headers="headers"
-        :items="feedbacksOrKeyEvents"
+        :items="keyEvents"
         :items-per-page="-1"
         hide-default-footer
         disable-pagination
@@ -39,6 +39,7 @@
 <script lang="ts">
 import {
   APPROVED,
+  COMMENTED,
   CREATED,
   KeyEvent,
   READY_TO_REVIEW,
@@ -54,10 +55,6 @@ type FaFeedbackCardData = {
   newFeedbackContent: string;
 };
 
-type FeedbackOrKeyEvent = Omit<KeyEvent, "action"> & {
-  action?: KeyEvent["action"];
-};
-
 export default defineComponent({
   name: "FaFeedbackCard",
   data: (): FaFeedbackCardData => ({
@@ -70,13 +67,14 @@ export default defineComponent({
     newFeedbackContent: "",
   }),
   computed: {
-    feedbacksOrKeyEvents(): FeedbackOrKeyEvent[] {
-      const feedbacksAsKeyEvent =
+    keyEvents(): KeyEvent[] {
+      const feedbacksAsKeyEvent: KeyEvent[] =
         this.$accessor.festivalActivity.selectedActivity.feedbacks.map(
           ({ author, publishedAt, content }) => ({
             at: publishedAt,
             description: content,
             by: author,
+            action: COMMENTED,
           }),
         );
 
@@ -98,7 +96,7 @@ export default defineComponent({
       });
       this.newFeedbackContent = "";
     },
-    getActionEmoji(action?: FeedbackOrKeyEvent["action"]): string {
+    getActionEmoji(action: KeyEvent["action"]): string {
       switch (action) {
         case CREATED:
           return "🐣";
@@ -108,7 +106,7 @@ export default defineComponent({
           return "✅";
         case REJECTED:
           return "🛑";
-        default:
+        case COMMENTED:
           return "💬";
       }
     },
