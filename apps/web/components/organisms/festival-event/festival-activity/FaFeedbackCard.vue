@@ -10,7 +10,7 @@
         disable-pagination
       >
         <template #item.action="{ item }">
-          <v-icon>{{ getActionIcon(item.action) }}</v-icon>
+          <span class="action__emoji">{{ getActionEmoji(item.action) }}</span>
         </template>
         <template #item.by="{ item }">
           {{ formatUserNameWithNickname(item.by) }}
@@ -98,18 +98,18 @@ export default defineComponent({
       });
       this.newFeedbackContent = "";
     },
-    getActionIcon(action?: FeedbackOrKeyEvent["action"]): string {
+    getActionEmoji(action?: FeedbackOrKeyEvent["action"]): string {
       switch (action) {
         case CREATED:
-          return "mdi-plus-circle-outline";
+          return "🐣";
         case READY_TO_REVIEW:
-          return "mdi-book-open-outline";
+          return "🕵️";
         case APPROVED:
-          return "mdi-checkbox-outline";
+          return "✅";
         case REJECTED:
-          return "mdi-alert-octagon-outline";
+          return "🛑";
         default:
-          return "mdi-comment-outline";
+          return "💬";
       }
     },
     formatDateWithMinutes,
@@ -124,6 +124,9 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+    .action__emoji {
+      font-size: 1.2rem;
+    }
   }
   &__add {
     max-width: fit-content;
