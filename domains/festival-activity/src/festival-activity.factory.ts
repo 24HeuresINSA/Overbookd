@@ -23,7 +23,10 @@ import {
   friday18hToMonday00h,
   lea,
   local24h,
+  george,
+  noel,
 } from "./festival-activity.fake";
+import { FestivalActivityKeyEvents } from "./festival-activity.event";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]
@@ -230,6 +233,10 @@ function defaultInReview(id: number, name: string): InReview {
       communication: NOT_ASKING_TO_REVIEW,
     },
     feedbacks: [],
+    history: [
+      FestivalActivityKeyEvents.created(lea),
+      FestivalActivityKeyEvents.readyToReview(lea),
+    ],
   };
 }
 
@@ -278,6 +285,16 @@ function defaultValidated(id: number, name: string): Validated {
       communication: NOT_ASKING_TO_REVIEW,
     },
     feedbacks: [],
+    history: [
+      FestivalActivityKeyEvents.created(lea),
+      FestivalActivityKeyEvents.readyToReview(lea),
+      FestivalActivityKeyEvents.approved(george),
+      FestivalActivityKeyEvents.approved(george),
+      FestivalActivityKeyEvents.approved(noel),
+      FestivalActivityKeyEvents.approved(noel),
+      FestivalActivityKeyEvents.approved(lea),
+      FestivalActivityKeyEvents.approved(lea),
+    ],
   };
 }
 
@@ -326,6 +343,11 @@ function defaultRefused(id: number, name: string): Refused {
       communication: NOT_ASKING_TO_REVIEW,
     },
     feedbacks: [],
+    history: [
+      FestivalActivityKeyEvents.created(lea),
+      FestivalActivityKeyEvents.readyToReview(lea),
+      FestivalActivityKeyEvents.rejected(george, "Il manque des info"),
+    ],
   };
 }
 
@@ -362,6 +384,7 @@ export function defaultDraft(id: number, name: string): Draft {
       barriers: [],
     },
     feedbacks: [],
+    history: [FestivalActivityKeyEvents.created(lea)],
   };
 }
 

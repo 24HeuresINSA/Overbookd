@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { CreateFestivalActivity } from "./creation";
-import { DRAFT } from "../festival-activity";
+import { CREATED, DRAFT, KeyEvent } from "../festival-activity";
 import { Adherent } from "../sections/in-charge";
 import { InMemoryCreateFestivalActivityRepository } from "./festival-activities.inmemory";
 
@@ -14,108 +14,110 @@ describe("Festival activity creation", () => {
   describe(`when ${noel.firstname} create Escape game activity`, async () => {
     const repository = new InMemoryCreateFestivalActivityRepository();
     const festivalActivity = new CreateFestivalActivity(repository);
-    const created = await festivalActivity.create({
+    const escapeGame = await festivalActivity.create({
       name: "Escape game",
       author: noel,
     });
 
-    it("should generate a Festival Activity Created event", () => {
-      expect(created.by).toBe(noel.id);
-      expect(created.at).toStrictEqual(expect.any(Date));
-      expect(created.at.getMilliseconds()).toBe(0);
-      expect(created.id).toStrictEqual(expect.any(Number));
+    const createdEvent: KeyEvent = {
+      action: CREATED,
+      at: expect.any(Date),
+      by: noel,
+      description: "FA créée",
+    };
+
+    it("should create Escape game activity", () => {
+      expect(escapeGame.general.name).toBe("Escape game");
     });
 
-    describe("festival activity generated", () => {
-      const escapeGame = created.festivalActivity;
-      it("should create Escape game activity", () => {
-        expect(escapeGame.general.name).toBe("Escape game");
-      });
+    it("should set Noel in charge of it", () => {
+      expect(escapeGame.inCharge.adherent).toEqual(noel);
+    });
 
-      it("should set Noel in charge of it", () => {
-        expect(escapeGame.inCharge.adherent).toEqual(noel);
-      });
+    it("should init history with CREATED key event", () => {
+      expect(escapeGame.history).toContainEqual(createdEvent);
+    });
 
-      it(`should set the status to ${DRAFT}`, () => {
-        expect(escapeGame.status).toBe(DRAFT);
-      });
+    it(`should set the status to ${DRAFT}`, () => {
+      expect(escapeGame.status).toBe(DRAFT);
+    });
 
-      it("should generate an id", () => {
-        expect(escapeGame.id).toEqual(expect.any(Number));
-      });
+    it("should generate an id", () => {
+      expect(escapeGame.id).toEqual(expect.any(Number));
+    });
 
-      it("should generate general section with default value", () => {
-        expect(escapeGame.general.description).toBeNull();
-        expect(escapeGame.general.categories).toEqual([]);
-        expect(escapeGame.general.toPublish).toEqual(false);
-        expect(escapeGame.general.photoLink).toBeNull();
-        expect(escapeGame.general.isFlagship).toEqual(false);
-        expect(escapeGame.general.timeWindows).toEqual([]);
-      });
+    it("should generate general section with default value", () => {
+      expect(escapeGame.general.description).toBeNull();
+      expect(escapeGame.general.categories).toEqual([]);
+      expect(escapeGame.general.toPublish).toEqual(false);
+      expect(escapeGame.general.photoLink).toBeNull();
+      expect(escapeGame.general.isFlagship).toEqual(false);
+      expect(escapeGame.general.timeWindows).toEqual([]);
+    });
 
-      it("should generate in charge section with default value", () => {
-        expect(escapeGame.inCharge.team).toBeNull();
-        expect(escapeGame.inCharge.contractors).toEqual([]);
-      });
+    it("should generate in charge section with default value", () => {
+      expect(escapeGame.inCharge.team).toBeNull();
+      expect(escapeGame.inCharge.contractors).toEqual([]);
+    });
 
-      it("should generate signa section with default value", () => {
-        expect(escapeGame.signa.location).toBeNull();
-        expect(escapeGame.signa.signages).toEqual([]);
-      });
+    it("should generate signa section with default value", () => {
+      expect(escapeGame.signa.location).toBeNull();
+      expect(escapeGame.signa.signages).toEqual([]);
+    });
 
-      it("should generate security section with default value", () => {
-        expect(escapeGame.security.specialNeed).toBeNull();
-      });
+    it("should generate security section with default value", () => {
+      expect(escapeGame.security.specialNeed).toBeNull();
+    });
 
-      it("should generate supply section with default value", () => {
-        expect(escapeGame.supply.electricity).toEqual([]);
-        expect(escapeGame.supply.water).toBeNull();
-      });
+    it("should generate supply section with default value", () => {
+      expect(escapeGame.supply.electricity).toEqual([]);
+      expect(escapeGame.supply.water).toBeNull();
+    });
 
-      it("should generate inquiry section with default value", () => {
-        expect(escapeGame.inquiry.timeWindows).toEqual([]);
-        expect(escapeGame.inquiry.gears).toEqual([]);
-        expect(escapeGame.inquiry.electricity).toEqual([]);
-        expect(escapeGame.inquiry.barriers).toEqual([]);
-      });
+    it("should generate inquiry section with default value", () => {
+      expect(escapeGame.inquiry.timeWindows).toEqual([]);
+      expect(escapeGame.inquiry.gears).toEqual([]);
+      expect(escapeGame.inquiry.electricity).toEqual([]);
+      expect(escapeGame.inquiry.barriers).toEqual([]);
+    });
 
-      it("should match festival activity json structure", () => {
-        expect(escapeGame).toEqual({
-          id: expect.any(Number),
-          status: DRAFT,
-          general: {
-            name: "Escape game",
-            description: null,
-            categories: [],
-            toPublish: false,
-            photoLink: null,
-            isFlagship: false,
-            timeWindows: [],
-          },
-          inCharge: {
-            adherent: noel,
-            team: null,
-            contractors: [],
-          },
-          signa: {
-            location: null,
-            signages: [],
-          },
-          security: {
-            specialNeed: null,
-          },
-          supply: {
-            electricity: [],
-            water: null,
-          },
-          inquiry: {
-            timeWindows: [],
-            gears: [],
-            electricity: [],
-            barriers: [],
-          },
-          feedbacks: [],
-        });
+    it("should match festival activity json structure", () => {
+      expect(escapeGame).toEqual({
+        id: expect.any(Number),
+        status: DRAFT,
+        general: {
+          name: "Escape game",
+          description: null,
+          categories: [],
+          toPublish: false,
+          photoLink: null,
+          isFlagship: false,
+          timeWindows: [],
+        },
+        inCharge: {
+          adherent: noel,
+          team: null,
+          contractors: [],
+        },
+        signa: {
+          location: null,
+          signages: [],
+        },
+        security: {
+          specialNeed: null,
+        },
+        supply: {
+          electricity: [],
+          water: null,
+        },
+        inquiry: {
+          timeWindows: [],
+          gears: [],
+          electricity: [],
+          barriers: [],
+        },
+        feedbacks: [],
+        history: [createdEvent],
       });
     });
   });

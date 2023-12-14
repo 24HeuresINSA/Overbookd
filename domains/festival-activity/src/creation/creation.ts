@@ -1,5 +1,5 @@
 import { DRAFT, Draft, FestivalActivity } from "../festival-activity";
-import { FestivalActivityEvents, Created } from "../festival-activity.event";
+import { FestivalActivityKeyEvents } from "../festival-activity.event";
 import { Adherent } from "../sections/in-charge";
 
 function* numberGenerator(start: number): Generator<number> {
@@ -27,10 +27,7 @@ export class CreateFestivalActivity {
     this.idGenerator = numberGenerator(startId);
   }
 
-  async create({
-    name,
-    author,
-  }: FestivalActivityCreationForm): Promise<Created> {
+  async create({ name, author }: FestivalActivityCreationForm): Promise<Draft> {
     const activity: Draft = {
       id: this.generateId(),
       status: DRAFT,
@@ -41,10 +38,10 @@ export class CreateFestivalActivity {
       supply: this.generateSupplySection(),
       inquiry: this.generateInquirySection(),
       feedbacks: [],
+      history: [FestivalActivityKeyEvents.created(author)],
     };
 
-    const saved = await this.festivalActivities.create(activity);
-    return FestivalActivityEvents.created(saved, author.id);
+    return this.festivalActivities.create(activity);
   }
 
   private generateId(): FestivalActivity["id"] {

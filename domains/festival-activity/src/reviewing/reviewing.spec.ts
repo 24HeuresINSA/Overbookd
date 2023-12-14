@@ -38,8 +38,7 @@ import {
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
-import { REFUSED, VALIDATED } from "../festival-activity";
-import { Rejected } from "../festival-activity.event";
+import { REFUSED, Reviewable, VALIDATED } from "../festival-activity";
 
 const factory = getFactory();
 
@@ -128,57 +127,60 @@ describe("Approve festival activity", () => {
     reviewing = new Reviewing(festivalActivities);
   });
   describe.each`
-    team             | festivalActivityName                        | festivalActivityId                | approver
-    ${secu}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
-    ${secu}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
-    ${matos}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
-    ${matos}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
-    ${matos}         | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${lea}
-    ${matos}         | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
-    ${humain}        | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
-    ${humain}        | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
-    ${elec}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${lea}
-    ${elec}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${lea}
-    ${elec}          | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${lea}
-    ${barrieres}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${noel}
-    ${barrieres}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${noel}
-    ${barrieres}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${noel}
-    ${signa}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${george}
-    ${signa}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
-    ${communication} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${george}
+    team             | festivalActivityName                        | festivalActivityId                | history                                | approver
+    ${secu}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${noel}
+    ${secu}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${noel}
+    ${matos}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${lea}
+    ${matos}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${lea}
+    ${matos}         | ${withInvalidBarrierInquiries.general.name} | ${withInvalidBarrierInquiries.id} | ${withInvalidBarrierInquiries.history} | ${lea}
+    ${matos}         | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${lea}
+    ${humain}        | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${george}
+    ${humain}        | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
+    ${elec}          | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${lea}
+    ${elec}          | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${lea}
+    ${elec}          | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${lea}
+    ${barrieres}     | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${noel}
+    ${barrieres}     | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${noel}
+    ${barrieres}     | ${withSomeValidInquiries.general.name}      | ${withSomeValidInquiries.id}      | ${withSomeValidInquiries.history}      | ${noel}
+    ${signa}         | ${pcSecurite.general.name}                  | ${pcSecurite.id}                  | ${pcSecurite.history}                  | ${george}
+    ${signa}         | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
+    ${communication} | ${extremJump.general.name}                  | ${extremJump.id}                  | ${extremJump.history}                  | ${george}
   `(
     "when approving $festivalActivityName as $team member",
-    ({ team, festivalActivityId, approver }) => {
-      it("should generate a Festival Activity Approved event", async () => {
-        const approved = await reviewing.approve(
+    ({ team, festivalActivityId, history, approver }) => {
+      it(`should indicate that ${team} approved it`, async () => {
+        const festivalActivity = await reviewing.approve(
           festivalActivityId,
           team,
           approver.id,
         );
-        expect(approved.by).toBe(approver.id);
-        expect(approved.at).toStrictEqual(expect.any(Date));
-        expect(approved.at.getMilliseconds()).toBe(0);
-        expect(approved.id).toStrictEqual(expect.any(Number));
+        expect(festivalActivity.reviews).toHaveProperty(team, APPROVED);
       });
-      describe("festival activity generated", () => {
-        it(`should indicate that ${team} approved it`, async () => {
-          const { festivalActivity } = await reviewing.approve(
-            festivalActivityId,
-            team,
-            approver.id,
-          );
-          expect(festivalActivity.reviews).toHaveProperty(team, APPROVED);
-        });
+      it("should add APPROVED key event in history", async () => {
+        const festivalActivity = await reviewing.approve(
+          festivalActivityId,
+          team,
+          approver,
+        );
+        expect(festivalActivity.history).toStrictEqual([
+          ...history,
+          {
+            action: APPROVED,
+            by: approver,
+            at: expect.any(Date),
+            description: "FA approuvée",
+          },
+        ]);
       });
     },
   );
   describe("when approving several times from different teams", () => {
     it("should keep all approval", async () => {
-      await reviewing.approve(extremJump.id, secu, noel.id);
-      const { festivalActivity } = await reviewing.approve(
+      await reviewing.approve(extremJump.id, secu, noel);
+      const festivalActivity = await reviewing.approve(
         extremJump.id,
         communication,
-        george.id,
+        george,
       );
       expect(festivalActivity.reviews.secu).toBe(APPROVED);
       expect(festivalActivity.reviews.communication).toBe(APPROVED);
@@ -188,11 +190,7 @@ describe("Approve festival activity", () => {
     it("should indicate activity already approved", async () => {
       expect(
         async () =>
-          await reviewing.approve(
-            alreadyApprovedByHumain.id,
-            humain,
-            george.id,
-          ),
+          await reviewing.approve(alreadyApprovedByHumain.id, humain, george),
       ).rejects.toThrow(AlreadyApproved);
     });
   });
@@ -200,7 +198,7 @@ describe("Approve festival activity", () => {
     it("should indicate that communication is not asking to review it", async () => {
       expect(
         async () =>
-          await reviewing.approve(privateActivity.id, communication, george.id),
+          await reviewing.approve(privateActivity.id, communication, george),
       ).rejects.toThrow(NotAskingToReview);
     });
   });
@@ -229,7 +227,7 @@ describe("Approve festival activity", () => {
     "when $secu approved $activityName",
     ({ activityId, reviewer, approver }) => {
       it("should update festival activity status to VALIDATED", async () => {
-        const { festivalActivity } = await reviewing.approve(
+        const festivalActivity = await reviewing.approve(
           activityId,
           reviewer,
           approver,
@@ -239,6 +237,7 @@ describe("Approve festival activity", () => {
     },
   );
 });
+
 describe("Reject festival activity", () => {
   let reviewing: Reviewing;
   beforeEach(() => {
@@ -259,47 +258,47 @@ describe("Reject festival activity", () => {
     reviewing = new Reviewing(festivalActivities);
   });
   describe.each`
-    team             | festivalActivityName             | festivalActivityId     | rejector  | reason
-    ${secu}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${noel}   | ${"Il faut des AS"}
-    ${secu}          | ${privateValidated.general.name} | ${privateValidated.id} | ${noel}   | ${"Il faut des AS"}
-    ${matos}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${lea}    | ${"Il faut du matos"}
-    ${matos}         | ${privateValidated.general.name} | ${privateValidated.id} | ${lea}    | ${"Il faut du matos"}
-    ${humain}        | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${george} | ${"Les horaires ne sont pas pendant la manif"}
-    ${humain}        | ${privateValidated.general.name} | ${privateValidated.id} | ${george} | ${"Les horaires ne sont pas pendant la manif"}
-    ${elec}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${lea}    | ${"Il faut des multiprises"}
-    ${elec}          | ${privateValidated.general.name} | ${privateValidated.id} | ${lea}    | ${"Il faut des multiprises"}
-    ${barrieres}     | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${noel}   | ${"Il faut des heras"}
-    ${barrieres}     | ${privateValidated.general.name} | ${privateValidated.id} | ${noel}   | ${"Il faut des heras"}
-    ${signa}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${george} | ${"Ca manque de panneau"}
-    ${signa}         | ${privateValidated.general.name} | ${privateValidated.id} | ${george} | ${"Ca manque de panneau"}
-    ${communication} | ${extremJump.general.name}       | ${extremJump.id}       | ${george} | ${"Il faut une photo au format paysage"}
+    team             | festivalActivityName             | festivalActivityId     | history                     | rejector  | reason
+    ${secu}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${noel}   | ${"Il faut des AS"}
+    ${secu}          | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${noel}   | ${"Il faut des AS"}
+    ${matos}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${lea}    | ${"Il faut du matos"}
+    ${matos}         | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${lea}    | ${"Il faut du matos"}
+    ${humain}        | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${george} | ${"Les horaires ne sont pas pendant la manif"}
+    ${humain}        | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${george} | ${"Les horaires ne sont pas pendant la manif"}
+    ${elec}          | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${lea}    | ${"Il faut des multiprises"}
+    ${elec}          | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${lea}    | ${"Il faut des multiprises"}
+    ${barrieres}     | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${noel}   | ${"Il faut des heras"}
+    ${barrieres}     | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${noel}   | ${"Il faut des heras"}
+    ${signa}         | ${pcSecurite.general.name}       | ${pcSecurite.id}       | ${pcSecurite.history}       | ${george} | ${"Ca manque de panneau"}
+    ${signa}         | ${privateValidated.general.name} | ${privateValidated.id} | ${privateValidated.history} | ${george} | ${"Ca manque de panneau"}
+    ${communication} | ${extremJump.general.name}       | ${extremJump.id}       | ${extremJump.history}       | ${george} | ${"Il faut une photo au format paysage"}
   `(
     "when rejecting $festivalActivityName as $team member",
-    ({ team, festivalActivityId, rejector, reason }) => {
-      let rejected: Rejected;
+    ({ team, festivalActivityId, rejector, reason, history }) => {
+      let festivalActivity: Reviewable;
       beforeEach(async () => {
-        rejected = await reviewing.reject(festivalActivityId, {
+        festivalActivity = await reviewing.reject(festivalActivityId, {
           team,
-          rejectorId: rejector.id,
+          rejector,
           reason,
         });
       });
-      it("should generate a Festival Activity Approved event", async () => {
-        expect(rejected.by).toBe(rejector.id);
-        expect(rejected.at).toStrictEqual(expect.any(Date));
-        expect(rejected.at.getMilliseconds()).toBe(0);
-        expect(rejected.id).toStrictEqual(expect.any(Number));
-        expect(rejected.reason).toBe(reason);
+      it(`should indicate that ${team} rejected it`, async () => {
+        expect(festivalActivity.reviews).toHaveProperty(team, REJECTED);
       });
-      describe("festival activity generated", () => {
-        it(`should indicate that ${team} rejected it`, async () => {
-          const { festivalActivity } = rejected;
-          expect(festivalActivity.reviews).toHaveProperty(team, REJECTED);
-        });
-        it("should switch to REFUSED festuval activity", () => {
-          const { festivalActivity } = rejected;
-          expect(festivalActivity.status).toBe(REFUSED);
-        });
+      it("should switch to REFUSED festuval activity", () => {
+        expect(festivalActivity.status).toBe(REFUSED);
+      });
+      it("should add REJECTED key event to history", () => {
+        expect(festivalActivity.history).toStrictEqual([
+          ...history,
+          {
+            action: REJECTED,
+            by: rejector,
+            at: expect.any(Date),
+            description: `FA rejetée pour la raison suivante: ${reason}`,
+          },
+        ]);
       });
     },
   );
@@ -308,12 +307,12 @@ describe("Reject festival activity", () => {
     it("should keep all rejections", async () => {
       await reviewing.reject(extremJump.id, {
         team: secu,
-        rejectorId: noel.id,
+        rejector: noel,
         reason: "Il faut des AS",
       });
-      const { festivalActivity } = await reviewing.reject(extremJump.id, {
+      const festivalActivity = await reviewing.reject(extremJump.id, {
         team: communication,
-        rejectorId: george.id,
+        rejector: george,
         reason: "Il faut une meilleure description",
       });
       expect(festivalActivity.reviews.secu).toBe(REJECTED);
@@ -327,7 +326,7 @@ describe("Reject festival activity", () => {
         async () =>
           await reviewing.reject(privateActivity.id, {
             team: communication,
-            rejectorId: george.id,
+            rejector: george,
             reason: "Il faut une meilleure description",
           }),
       ).rejects.toThrow(NotAskingToReview);
@@ -340,7 +339,7 @@ describe("Reject festival activity", () => {
         async () =>
           await reviewing.reject(alreadyRejectedByHumain.id, {
             team: humain,
-            rejectorId: george.id,
+            rejector: george,
             reason: "Il faut une meilleure description",
           }),
       ).rejects.toThrow(AlreadyRejected);
