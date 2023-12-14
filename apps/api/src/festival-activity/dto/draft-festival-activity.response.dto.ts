@@ -11,6 +11,7 @@ import {
   TimeWindow,
   Location,
   Feedback,
+  KeyEvent,
 } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "./adherent.response.dto";
 import { PeriodDto } from "./period.dto";
@@ -21,6 +22,7 @@ import { LocationResponseDto } from "./location.response.dto";
 import { ElectricitySupplyResponseDto } from "./electricity-supply.response.dto";
 import { FeedbackResponseDto } from "./feedback.response.dto";
 import { UnassignedInquiryRequestResponseDto } from "./inquiry-request.response.dto";
+import { KeyEventResponseDto } from "./key-event.response.dto";
 
 type General = Draft["general"];
 
@@ -212,4 +214,11 @@ export class DraftFestivalActivityResponseDto implements Draft {
     type: FeedbackResponseDto,
   })
   feedbacks: Feedback[];
+
+  @ApiProperty({
+    description: "Festival activity key events",
+    isArray: true,
+    type: KeyEventResponseDto,
+  })
+  history: KeyEvent[];
 }

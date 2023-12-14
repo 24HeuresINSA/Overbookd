@@ -66,6 +66,7 @@ export const actions = actionTree(
 
     async fetchActivity({ commit }, id: number) {
       const res = await safeCall(this, repo.getOne(this, id));
+
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

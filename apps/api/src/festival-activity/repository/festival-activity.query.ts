@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import {
   Draft,
   Feedback,
@@ -8,6 +9,8 @@ import {
   TimeWindow,
   isDraft,
   isAssignedToDrive,
+  KeyEvent,
+  Adherent,
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
@@ -119,6 +122,17 @@ const SELECT_FEEDBACKS = {
   },
 } as const;
 
+const SELECT_HISTORY = {
+  events: {
+    select: {
+      instigator: { select: SELECT_ADHERENT },
+      context: true,
+      at: true,
+      event: true,
+    },
+  },
+};
+
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
@@ -130,6 +144,7 @@ export const SELECT_FESTIVAL_ACTIVITY = {
   ...SELECT_SUPPLY,
   ...SELECT_INQUIRY,
   ...SELECT_FEEDBACKS,
+  ...SELECT_HISTORY,
 };
 
 export class FestivalActivityQueryBuilder {
@@ -157,6 +172,9 @@ export class FestivalActivityQueryBuilder {
       feedbacks: {
         create: activity.feedbacks.map(feedbackDatabaseMapping),
       },
+      events: {
+        create: activity.history.map(keyEventToHistory(activity)),
+      },
     };
   }
 
@@ -177,6 +195,8 @@ export class FestivalActivityQueryBuilder {
     );
     const inquiries = this.upsertInquiries(activity);
     const feedbacks = this.upsertFeedbacks(activity);
+    const events = this.upsertHistory(activity);
+
     return {
       ...databaseFestivalActivityWithouListsMapping(activity),
       generalTimeWindows,
@@ -186,6 +206,7 @@ export class FestivalActivityQueryBuilder {
       inquiryTimeWindows,
       inquiries,
       feedbacks,
+      events,
       ...reviews,
     };
   }
@@ -297,6 +318,23 @@ export class FestivalActivityQueryBuilder {
     };
   }
 
+  private static upsertHistory(activity: FestivalActivity) {
+    return {
+      upsert: activity.history.map((keyEvent) => ({
+        where: {
+          faId_event_instigatorId_at: {
+            faId: activity.id,
+            instigatorId: keyEvent.by.id,
+            event: keyEvent.action,
+            at: keyEvent.at,
+          },
+        },
+        update: { context: keyEvent.description },
+        create: keyEventToHistory(activity)(keyEvent),
+      })),
+    };
+  }
+
   private static upsertContractors(activity: FestivalActivity) {
     return {
       upsert: activity.inCharge.contractors.map((contractor) => ({
@@ -332,6 +370,26 @@ export class FestivalActivityQueryBuilder {
       ...activity.inquiry.gears,
     ];
   }
+}
+
+type StoredHistoryKeyEvent = {
+  event: KeyEvent["action"];
+  instigatorId: Adherent["id"];
+  at: Date;
+  context: KeyEvent["description"];
+  snapshot: Prisma.JsonObject;
+};
+
+function keyEventToHistory(
+  activity: FestivalActivity,
+): (event: KeyEvent) => StoredHistoryKeyEvent {
+  return ({ action, by, at, description }) => ({
+    event: action,
+    instigatorId: by.id,
+    at,
+    context: description,
+    snapshot: activity as unknown as Prisma.JsonObject,
+  });
 }
 
 function databaseFestivalActivityWithouListsMapping(

@@ -10,6 +10,7 @@ export type {
   PreviewReviewable,
   PreviewFestivalActivity,
   Feedback,
+  KeyEvent,
 } from "./festival-activity";
 export {
   DRAFT,
@@ -17,14 +18,11 @@ export {
   VALIDATED,
   REFUSED,
   isDraft,
+  READY_TO_REVIEW,
+  COMMENTED,
+  CREATED,
 } from "./festival-activity";
 export { FestivalActivityError } from "./festival-activity.error";
-export type {
-  Created,
-  ReadyToReview,
-  Approved,
-  Rejected,
-} from "./festival-activity.event";
 
 export type { Adherent, Contractor } from "./sections/in-charge";
 

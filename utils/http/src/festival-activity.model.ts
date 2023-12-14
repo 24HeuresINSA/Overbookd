@@ -1,7 +1,7 @@
-import { SignageCatalogItem } from "@overbookd/festival-activity";
 import {
   PrepareInquiryRequestCreation,
   Reviewer,
+  SignageCatalogItem,
 } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 

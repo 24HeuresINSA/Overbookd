@@ -18,7 +18,7 @@ import {
   signa,
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "@overbookd/http";
-import { CastInReview } from "./in-review";
+import { CastReviewable } from "./reviewable";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-activity.model";
 
@@ -28,7 +28,7 @@ export function castActivityWithDate(
   if (isHttpDraft(activity)) {
     return CastDraft.withDate(activity);
   }
-  return CastInReview.withDate(activity);
+  return CastReviewable.withDate(activity);
 }
 
 function isHttpDraft(

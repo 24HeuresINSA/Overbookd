@@ -29,6 +29,12 @@ import {
   REFUSED,
   BaseSignage,
   SignageCatalogItem,
+  KeyEvent,
+  CREATED,
+  APPROVED,
+  COMMENTED,
+  READY_TO_REVIEW,
+  REJECTED,
 } from "@overbookd/festival-activity";
 
 type DatabaseReview = {
@@ -68,6 +74,13 @@ type DatabaseInquiry = {
   inquiries: DatabaseInquiryRequest[];
 };
 
+type DatabaseKeyEvent = {
+  event: KeyEvent["action"];
+  at: KeyEvent["at"];
+  instigator: KeyEvent["by"];
+  context: KeyEvent["description"];
+};
+
 type DatabaseFestivalActivity = DatabaseGeneral &
   DatabaseInCharge &
   FestivalActivity["security"] &
@@ -78,6 +91,7 @@ type DatabaseFestivalActivity = DatabaseGeneral &
     status: FestivalActivity["status"];
     reviews: DatabaseReview[];
     feedbacks: FestivalActivity["feedbacks"];
+    events: DatabaseKeyEvent[];
   };
 
 type VisualizeFestivalActivity<
@@ -139,6 +153,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       },
       inquiry: this.formatInquiry(activityData),
       feedbacks: activityData.feedbacks,
+      history: this.formatHistory(activityData.events),
     };
     return activityWithoutStatus;
   }
@@ -195,6 +210,15 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
   ): ReviewStatus {
     const review = reviews.find((review) => review.team === reviewer);
     return review?.status ?? NOT_ASKING_TO_REVIEW;
+  }
+
+  private static formatHistory(history: DatabaseKeyEvent[]): KeyEvent[] {
+    return history.map(({ instigator, event, at, context }) => ({
+      action: event,
+      at,
+      description: context ?? getDefaultContext(event),
+      by: instigator,
+    }));
   }
 }
 
@@ -281,5 +305,20 @@ export class DraftBuilder
 
   get festivalActivity() {
     return this.activity;
+  }
+}
+
+function getDefaultContext(action: KeyEvent["action"]): string {
+  switch (action) {
+    case CREATED:
+      return "FA créée";
+    case READY_TO_REVIEW:
+      return "Demande de relecture de la FA";
+    case APPROVED:
+      return "FA approuvée";
+    case REJECTED:
+      return "FA rejetée";
+    case COMMENTED:
+      return "FA commentée";
   }
 }

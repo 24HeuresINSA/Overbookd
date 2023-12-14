@@ -9,6 +9,7 @@ import {
   InReviewReviews,
   InquiryRequest,
   InquiryWithPotentialRequests,
+  KeyEvent,
   Location,
   REFUSED,
   Refused,
@@ -43,6 +44,7 @@ import {
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
 } from "./reviewable/general.response.dto";
+import { KeyEventResponseDto } from "./key-event.response.dto";
 
 type InCharge = Reviewable["inCharge"];
 
@@ -167,6 +169,13 @@ class ReviewableBaseResponseDto {
 
   @ApiProperty({ required: true, isArray: true, type: FeedbackResponseDto })
   feedbacks: Feedback[];
+
+  @ApiProperty({
+    description: "Festival activity key events",
+    isArray: true,
+    type: KeyEventResponseDto,
+  })
+  history: KeyEvent[];
 }
 
 export class InReviewFestivalActivityResponseDto

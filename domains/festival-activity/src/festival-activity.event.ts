@@ -1,61 +1,32 @@
-import { Draft, Refused, Reviewable } from "./festival-activity";
+import { CREATED, KeyEvent, READY_TO_REVIEW } from "./festival-activity";
 import { Adherent } from "./sections/in-charge";
+import { APPROVED, REJECTED } from "./sections/reviews";
 
-export type Created = {
-  festivalActivity: Draft;
-  by: Adherent["id"];
-  at: Date;
-  id: Draft["id"];
-};
-
-export type ReadyToReview = {
-  festivalActivity: Reviewable;
-  by: Adherent["id"];
-  at: Date;
-  id: Reviewable["id"];
-};
-
-export type Approved = {
-  festivalActivity: Reviewable;
-  by: Adherent["id"];
-  at: Date;
-  id: Reviewable["id"];
-};
-
-export type Rejected = {
-  festivalActivity: Refused;
-  by: Adherent["id"];
-  at: Date;
-  id: Reviewable["id"];
-  reason: string;
-};
-
-export class FestivalActivityEvents {
-  static created(festivalActivity: Draft, by: Adherent["id"]): Created {
+export class FestivalActivityKeyEvents {
+  static created(by: Adherent): KeyEvent {
     const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id };
+    return { action: CREATED, by, at, description: "FA créée" };
   }
 
-  static readyToReview(
-    festivalActivity: Reviewable,
-    by: Adherent["id"],
-  ): ReadyToReview {
+  static readyToReview(by: Adherent): KeyEvent {
     const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id };
+    const description = "Demande de relecture de la FA";
+
+    return { action: READY_TO_REVIEW, by, at, description };
   }
 
-  static approved(festivalActivity: Reviewable, by: Adherent["id"]): Approved {
+  static approved(by: Adherent): KeyEvent {
     const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id };
+    const description = "FA approuvée";
+
+    return { action: APPROVED, by, at, description };
   }
 
-  static rejected(
-    festivalActivity: Refused,
-    by: Adherent["id"],
-    reason: string,
-  ): Rejected {
+  static rejected(by: Adherent, reason: string): KeyEvent {
     const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id, reason };
+    const description = `FA rejetée pour la raison suivante: ${reason}`;
+
+    return { action: REJECTED, by, at, description };
   }
 
   private static computeAt() {

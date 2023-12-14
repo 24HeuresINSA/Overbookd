@@ -3,6 +3,7 @@ import {
   InquiryWithRequests,
   PublicGeneral,
   TimeWindow,
+  KeyEvent,
 } from "@overbookd/festival-activity";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
@@ -21,13 +22,14 @@ function hasRequests(
   return inquiry.timeWindows.length > 0 && requests > 0;
 }
 
-export class CastInReview {
-  static withDate(inReview: HttpStringified<Reviewable>): Reviewable {
+export class CastReviewable {
+  static withDate(reviewable: HttpStringified<Reviewable>): Reviewable {
     return {
-      ...inReview,
-      general: this.generalWithDate(inReview.general),
-      inquiry: this.inquiryWithDate(inReview.inquiry),
-      feedbacks: this.feedbacksWithDate(inReview.feedbacks),
+      ...reviewable,
+      general: this.generalWithDate(reviewable.general),
+      inquiry: this.inquiryWithDate(reviewable.inquiry),
+      feedbacks: this.feedbacksWithDate(reviewable.feedbacks),
+      history: this.historyWithDate(reviewable.history),
     };
   }
 
@@ -60,6 +62,12 @@ export class CastInReview {
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),
     }));
+  }
+
+  private static historyWithDate(
+    history: HttpStringified<KeyEvent[]>,
+  ): KeyEvent[] {
+    return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
 }
 

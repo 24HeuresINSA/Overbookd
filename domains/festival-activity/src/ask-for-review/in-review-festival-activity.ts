@@ -27,6 +27,8 @@ import {
   PrivateActivityReviewer,
   PublicActivityReviewer,
 } from "../sections/reviews";
+import { FestivalActivityKeyEvents } from "../festival-activity.event";
+import { Adherent } from "../sections/in-charge";
 
 type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
   Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
@@ -99,13 +101,17 @@ export class InReviewFestivalActivity implements InReview {
     readonly inquiry: InReview["inquiry"],
     readonly reviews: InReview["reviews"],
     readonly feedbacks: InReview["feedbacks"],
+    readonly history: InReview["history"],
   ) {}
 
   get status(): typeof IN_REVIEW {
     return IN_REVIEW;
   }
 
-  static init(activity: FestivalActivity): InReviewFestivalActivity {
+  static init(
+    activity: FestivalActivity,
+    instigator: Adherent,
+  ): InReviewFestivalActivity {
     if (!ReviewableSpecification.isSatisfiedBy(activity)) {
       throw ReviewableSpecification.generateError(activity);
     }
@@ -114,6 +120,11 @@ export class InReviewFestivalActivity implements InReview {
     const reviews = isPublic
       ? PUBLIC_ACTIVITY_REVIEWS
       : PRIVATE_ACTIVITY_REVIEWS;
+
+    const history = [
+      ...activity.history,
+      FestivalActivityKeyEvents.readyToReview(instigator),
+    ];
 
     return new InReviewFestivalActivity(
       activity.id,
@@ -125,6 +136,7 @@ export class InReviewFestivalActivity implements InReview {
       activity.inquiry,
       reviews,
       activity.feedbacks,
+      history,
     );
   }
 

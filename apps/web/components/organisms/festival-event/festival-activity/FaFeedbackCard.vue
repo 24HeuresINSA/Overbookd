@@ -4,16 +4,19 @@
     <v-card-text class="feedbacks__listing">
       <v-data-table
         :headers="headers"
-        :items="feedbacks"
+        :items="keyEvents"
         :items-per-page="-1"
         hide-default-footer
         disable-pagination
       >
-        <template #item.author="{ item }">
-          {{ formatUserNameWithNickname(item.author) }}
+        <template #item.action="{ item }">
+          <span class="action__emoji">{{ getActionEmoji(item.action) }}</span>
         </template>
-        <template #item.publishedAt="{ item }">
-          {{ formatDateWithMinutes(item.publishedAt) }}
+        <template #item.by="{ item }">
+          {{ formatUserNameWithNickname(item.by) }}
+        </template>
+        <template #item.at="{ item }">
+          {{ formatDateWithMinutes(item.at) }}
         </template>
         <template #no-data> Aucun commentaire </template>
       </v-data-table>
@@ -34,9 +37,16 @@
 </template>
 
 <script lang="ts">
+import {
+  APPROVED,
+  COMMENTED,
+  CREATED,
+  KeyEvent,
+  READY_TO_REVIEW,
+  REJECTED,
+} from "@overbookd/festival-activity";
 import { defineComponent } from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { Feedback } from "@overbookd/festival-activity";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
@@ -49,15 +59,29 @@ export default defineComponent({
   name: "FaFeedbackCard",
   data: (): FaFeedbackCardData => ({
     headers: [
-      { text: "Date", value: "publishedAt", width: "15%" },
-      { text: "Auteur", value: "author", sortable: false, width: "20%" },
-      { text: "Commentaire", value: "content", sortable: false },
+      { text: "", value: "action", sortable: false, width: "15px" },
+      { text: "Date", value: "at", width: "15%" },
+      { text: "Auteur", value: "by", sortable: false, width: "20%" },
+      { text: "Commentaire", value: "description", sortable: false },
     ],
     newFeedbackContent: "",
   }),
   computed: {
-    feedbacks(): Feedback[] {
-      return this.$accessor.festivalActivity.selectedActivity.feedbacks;
+    keyEvents(): KeyEvent[] {
+      const feedbacksAsKeyEvent: KeyEvent[] =
+        this.$accessor.festivalActivity.selectedActivity.feedbacks.map(
+          ({ author, publishedAt, content }) => ({
+            at: publishedAt,
+            description: content,
+            by: author,
+            action: COMMENTED,
+          }),
+        );
+
+      return [
+        ...feedbacksAsKeyEvent,
+        ...this.$accessor.festivalActivity.selectedActivity.history,
+      ].toSorted((first, second) => first.at.getTime() - second.at.getTime());
     },
     canPublishFeedback(): boolean {
       return this.newFeedbackContent.trim() !== "";
@@ -72,6 +96,20 @@ export default defineComponent({
       });
       this.newFeedbackContent = "";
     },
+    getActionEmoji(action: KeyEvent["action"]): string {
+      switch (action) {
+        case CREATED:
+          return "🐣";
+        case READY_TO_REVIEW:
+          return "🕵️";
+        case APPROVED:
+          return "✅";
+        case REJECTED:
+          return "🛑";
+        case COMMENTED:
+          return "💬";
+      }
+    },
     formatDateWithMinutes,
     formatUserNameWithNickname,
   },
@@ -84,6 +122,9 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+    .action__emoji {
+      font-size: 1.2rem;
+    }
   }
   &__add {
     max-width: fit-content;
