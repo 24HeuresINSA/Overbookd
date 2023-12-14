@@ -31,9 +31,11 @@ import {
   NotAskingToReview,
   ShouldAssignDrive,
   AlreadyRejected,
+  ShouldAssigCatalogItem,
 } from "./reviewing.error";
 import { Adherent } from "../sections/in-charge";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
+import { isAssignedToCatalogItem } from "../sections/signa";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -67,6 +69,9 @@ export class Reviewing {
     }
     if (isInquiryOwner(team)) {
       this.checkInquiryDriveAssignment(festivalActivity, team);
+    }
+    if (team === signa) {
+      this.checkSignageCatalogItemAssignment(festivalActivity);
     }
 
     const reviews = { ...festivalActivity.reviews, [team]: APPROVED };
@@ -146,6 +151,16 @@ export class Reviewing {
     );
     if (!areAllRequestsAssignedToDrive) {
       throw new ShouldAssignDrive();
+    }
+  }
+
+  private checkSignageCatalogItemAssignment(festivalActivity: Reviewable) {
+    const signages = festivalActivity.signa.signages;
+    const areAllSignagesAssignedToCatalogItem = signages.every((signage) =>
+      isAssignedToCatalogItem(signage),
+    );
+    if (!areAllSignagesAssignedToCatalogItem) {
+      throw new ShouldAssigCatalogItem();
     }
   }
 

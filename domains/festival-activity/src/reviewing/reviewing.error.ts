@@ -34,3 +34,11 @@ export class ShouldAssignDrive extends FestivalActivityError {
     );
   }
 }
+
+export class ShouldAssigCatalogItem extends FestivalActivityError {
+  constructor() {
+    super(
+      "❌ Il faut attribuer des références du catalogue aux demandes de signalétiques avant de valider la FA",
+    );
+  }
+}
