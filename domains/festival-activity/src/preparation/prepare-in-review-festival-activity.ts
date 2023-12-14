@@ -26,7 +26,13 @@ import {
   secu,
   signa,
 } from "../sections/reviews";
-import { InquiryOwner, InquiryRequest } from "../sections/inquiry";
+import {
+  BARRIERES,
+  ELEC,
+  InquiryOwner,
+  InquiryRequest,
+  MATOS,
+} from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";
@@ -415,7 +421,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   addInquiryTimeWindow(period: IProvidePeriod): Reviewable {
-    this.checkIfInquiryAlreadyApprovedBy();
+    this.checkIfHasImpactOnApprovedRequests();
     this.checkIfAlreadyInitialized();
 
     const inquiry = Inquiries.build(this.activity.inquiry).addTimeWindow(
@@ -423,6 +429,28 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     ).inquiry;
 
     return { ...this.activity, inquiry };
+  }
+
+  private checkIfHasImpactOnApprovedRequests() {
+    type ListAndOwner = [InquiryRequest[], InquiryOwner];
+
+    const elec: ListAndOwner = [this.activity.inquiry.electricity, ELEC];
+    const gear: ListAndOwner = [this.activity.inquiry.gears, MATOS];
+    const barrier: ListAndOwner = [this.activity.inquiry.barriers, BARRIERES];
+
+    const hasImpact = [elec, gear, barrier].some(
+      ([request, owner]) =>
+        request.length > 0 && this.isInquiryApprovedBy(owner).approved,
+    );
+
+    const AllApproved =
+      this.activity.reviews.barrieres === APPROVED &&
+      this.activity.reviews.elec === APPROVED &&
+      this.activity.reviews.matos === APPROVED;
+
+    if (hasImpact || AllApproved) {
+      return this.checkIfInquiryAlreadyApprovedBy();
+    }
   }
 
   private checkIfInquiryAlreadyApprovedBy(owner?: InquiryOwner) {
@@ -469,7 +497,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   removeInquiryTimeWindow(id: string): Reviewable {
-    this.checkIfInquiryAlreadyApprovedBy();
+    this.checkIfHasImpactOnApprovedRequests();
     const inquiry = Inquiries.build(this.activity.inquiry).removeTimeWindow(
       id,
     ).inquiry;
