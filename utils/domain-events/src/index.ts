@@ -1,5 +1,11 @@
 export type { DomainEvent } from "./domain-events";
 export { filterEvents, addEventListener } from "./domain-events";
+export type {
+  Approved,
+  Rejected,
+  ReadyToReview,
+  Created,
+} from "./festival-activity";
 export {
   FestivalActivity,
   FESTIVAL_ACTIVITY_CREATED,

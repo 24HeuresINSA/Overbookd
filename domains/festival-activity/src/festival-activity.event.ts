@@ -1,11 +1,6 @@
-import {
-  APPROVED,
-  CREATED,
-  KeyEvent,
-  READY_TO_REVIEW,
-  REJECTED,
-} from "./festival-activity";
+import { CREATED, KeyEvent, READY_TO_REVIEW } from "./festival-activity";
 import { Adherent } from "./sections/in-charge";
+import { APPROVED, REJECTED } from "./sections/reviews";
 
 export class FestivalActivityKeyEvents {
   static created(by: Adherent): KeyEvent {
@@ -34,7 +29,7 @@ export class FestivalActivityKeyEvents {
     return { action: REJECTED, by, at, description };
   }
 
-  static computeAt() {
+  private static computeAt() {
     const at = new Date();
     at.setMilliseconds(0);
     return at;

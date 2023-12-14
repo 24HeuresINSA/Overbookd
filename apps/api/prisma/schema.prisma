@@ -626,6 +626,7 @@ model FestivalActivity {
   status    FestivalActivityStatus
   reviews   FestivalActivityReview[]
   feedbacks FestivalActivityFeedback[]
+  events    FestivalActivityHistory[]
 
   // General
   name               String                              @db.Text
@@ -658,8 +659,6 @@ model FestivalActivity {
   // Inquiry
   inquiryTimeWindows FestivalActivityTimeWindowInquiry[]
   inquiries          InquiryRequest[]
-
-  events FestivalActivityHistory[]
 
   @@map("festival_activity")
 }
@@ -824,8 +823,9 @@ model FestivalActivityHistory {
   fa           FestivalActivity      @relation(fields: [faId], references: [id], onDelete: Cascade)
   snapshot     Json
   at           DateTime
-  reason       String?               @db.Text
+  context      String?               @db.Text
 
+  @@unique([faId, event, instigatorId, at])
   @@map("festival_activity_history")
 }
 
@@ -834,6 +834,7 @@ enum FestivalActivityEvent {
   READY_TO_REVIEW
   APPROVED
   REJECTED
+  COMMENTED
 
   @@map("festival_activity_event")
 }

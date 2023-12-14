@@ -1,18 +1,17 @@
-import { Adherent } from "@overbookd/festival-activity";
-import { ApiProperty } from "@nestjs/swagger";
-import { AdherentResponseDto } from "../../dto/adherent.response.dto";
 import {
   APPROVED,
-  Action,
+  Adherent,
   CREATED,
   KeyEvent,
   READY_TO_REVIEW,
   REJECTED,
-} from "@overbookd/http";
+} from "@overbookd/festival-activity";
+import { ApiProperty } from "@nestjs/swagger";
+import { AdherentResponseDto } from "./adherent.response.dto";
 
 export class KeyEventResponseDto implements KeyEvent {
   @ApiProperty({ enum: [CREATED, READY_TO_REVIEW, APPROVED, REJECTED] })
-  action: Action;
+  action: KeyEvent["action"];
 
   @ApiProperty({ type: AdherentResponseDto })
   by: Adherent;

@@ -15,7 +15,6 @@ import { PrismaCreateFestivalActivities } from "./repository/create-festival-act
 import { PrismaLocations } from "./repository/locations.prisma";
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { HistoryModule } from "./history/history.module";
 import { PrismaInquiries } from "./repository/inquiries.prisma";
 import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaNotifications } from "./repository/notifications.prisma";
@@ -118,7 +117,6 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
         askForReview: AskForReview,
         reviewing: Reviewing,
         eventStore: DomainEventService,
-        history: HistoryService,
       ) =>
         new FestivalActivityService(
           adherents,
@@ -130,7 +128,6 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
           askForReview,
           reviewing,
           eventStore,
-          history,
         ),
       inject: [
         PrismaAdherents,
@@ -142,10 +139,9 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
         AskForReview,
         Reviewing,
         DomainEventService,
-        HistoryService,
       ],
     },
   ],
-  imports: [PrismaModule, DomainEventModule, HistoryModule],
+  imports: [PrismaModule, DomainEventModule],
 })
 export class FestivalActivityModule {}

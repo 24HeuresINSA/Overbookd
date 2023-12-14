@@ -86,8 +86,6 @@ import {
   LinkedSignageResponseDto,
   UnlinkedSignageResponseDto,
 } from "./dto/signage.response.dto";
-import { KeyEvent } from "@overbookd/http";
-import { KeyEventResponseDto } from "./history/dto/key-event.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -170,24 +168,6 @@ export class FestivalActivityController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)
   @Get(":faId/history")
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity key events history",
-    type: KeyEventResponseDto,
-    isArray: true,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  getHistory(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-  ): Promise<KeyEvent[] | null> {
-    return this.festivalActivityService.getHistory(faId);
-  }
-
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post()

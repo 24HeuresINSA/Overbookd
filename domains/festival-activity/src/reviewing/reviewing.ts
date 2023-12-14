@@ -2,6 +2,7 @@ import {
   FestivalActivity,
   IN_REVIEW,
   REFUSED,
+  Refused,
   Reviewable,
   VALIDATED,
   isDraft,
@@ -79,7 +80,7 @@ export class Reviewing {
   async reject(
     faId: FestivalActivity["id"],
     { team, rejector, reason }: Rejection,
-  ): Promise<Reviewable> {
+  ): Promise<Refused> {
     const festivalActivity = await this.festivalActivities.findById(faId);
     if (!festivalActivity) throw new FestivalActivityNotFound(faId);
     if (isDraft(festivalActivity)) throw new InDraft(faId);

@@ -4,7 +4,9 @@ import { DraftSigna, Signa } from "./sections/signa";
 import { Supply } from "./sections/supply";
 import { Inquiry } from "./sections/inquiry";
 import {
+  APPROVED,
   InReviewReviews,
+  REJECTED,
   RefusedReviews,
   ValidatedReviews,
 } from "./sections/reviews";
@@ -27,10 +29,8 @@ export type Feedback = {
 export const CREATED = "CREATED";
 export const COMMENTED = "COMMENTED";
 export const READY_TO_REVIEW = "READY_TO_REVIEW";
-export const APPROVED = "APPROVED";
-export const REJECTED = "REJECTED";
 
-export type Action =
+type Action =
   | typeof CREATED
   | typeof COMMENTED
   | typeof READY_TO_REVIEW

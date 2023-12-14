@@ -41,41 +41,6 @@ export type Rejected = {
   reason: string;
 };
 
-export class FestivalActivityEvents {
-  static created(festivalActivity: Draft, by: Adherent["id"]): Created {
-    const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id };
-  }
-
-  static readyToReview(
-    festivalActivity: Reviewable,
-    by: Adherent["id"],
-  ): ReadyToReview {
-    const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id };
-  }
-
-  static approved(festivalActivity: Reviewable, by: Adherent["id"]): Approved {
-    const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id };
-  }
-
-  static rejected(
-    festivalActivity: Refused,
-    by: Adherent["id"],
-    reason: string,
-  ): Rejected {
-    const at = this.computeAt();
-    return { festivalActivity, by, at, id: festivalActivity.id, reason };
-  }
-
-  static computeAt() {
-    const at = new Date();
-    at.setMilliseconds(0);
-    return at;
-  }
-}
-
 export type FestivalActivityCreatedEvent = Event<
   typeof FESTIVAL_ACTIVITY_CREATED,
   Created
@@ -97,21 +62,46 @@ export type FestivalActivityRejectedEvent = Event<
 >;
 
 export class FestivalActivity {
-  static created(data: Created): FestivalActivityCreatedEvent {
+  static created(
+    festivalActivity: Draft,
+    by: Adherent["id"],
+  ): FestivalActivityCreatedEvent {
+    const at = FestivalActivity.computeAt();
+    const data = { festivalActivity, by, at, id: festivalActivity.id };
     return { type: FESTIVAL_ACTIVITY_CREATED, data };
   }
 
   static readyToReview(
-    data: ReadyToReview,
+    festivalActivity: Reviewable,
+    by: Adherent["id"],
   ): FestivalActivityReadyToReviewEvent {
+    const at = FestivalActivity.computeAt();
+    const data = { festivalActivity, by, at, id: festivalActivity.id };
     return { type: FESTIVAL_ACTIVITY_READY_TO_REVIEW, data };
   }
 
-  static approved(data: Approved): FestivalActivityApprovedEvent {
+  static approved(
+    festivalActivity: Reviewable,
+    by: Adherent["id"],
+  ): FestivalActivityApprovedEvent {
+    const at = FestivalActivity.computeAt();
+    const data = { festivalActivity, by, at, id: festivalActivity.id };
     return { type: FESTIVAL_ACTIVITY_APPROVED, data };
   }
 
-  static rejected(data: Rejected): FestivalActivityRejectedEvent {
+  static rejected(
+    festivalActivity: Refused,
+    by: Adherent["id"],
+    reason: string,
+  ): FestivalActivityRejectedEvent {
+    const at = FestivalActivity.computeAt();
+    const data = { festivalActivity, by, at, id: festivalActivity.id, reason };
     return { type: FESTIVAL_ACTIVITY_REJECTED, data };
+  }
+
+  private static computeAt() {
+    const at = new Date();
+    at.setMilliseconds(0);
+    return at;
   }
 }

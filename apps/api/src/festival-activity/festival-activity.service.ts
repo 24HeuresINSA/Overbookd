@@ -30,11 +30,11 @@ import {
   Drive,
   SignageCatalogItem,
   signa,
+  Reviewable,
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
   InitInquiryRequest,
-  KeyEvent,
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
@@ -52,7 +52,6 @@ import {
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
 import { PeriodDto } from "./dto/period.dto";
-import { HistoryService } from "./history/history.service";
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
@@ -100,7 +99,6 @@ export class FestivalActivityService {
     private readonly askForReview: AskForReview,
     private readonly reviewing: Reviewing,
     private readonly eventStore: DomainEventService,
-    private readonly history: HistoryService,
   ) {}
 
   findAll(): Promise<PreviewFestivalActivity[]> {
@@ -111,27 +109,30 @@ export class FestivalActivityService {
     return this.prepare.findById(id);
   }
 
-  getHistory(faId: FestivalActivity["id"]): Promise<KeyEvent[]> {
-    return this.history.getKeyEvents(faId);
-  }
-
   async create({ id }: JwtPayload, name: string): Promise<Draft> {
     const author = await this.adherents.find(id);
-    const created = await this.creation.create({
+    const activity = await this.creation.create({
       author,
       name,
     });
-    this.eventStore.publish(FestivalActivityEvents.created(created));
-    return created.festivalActivity;
+
+    const event = FestivalActivityEvents.created(activity, author.id);
+    this.eventStore.publish(event);
+
+    return activity;
   }
 
   async toReview(
     id: FestivalActivity["id"],
     user: JwtPayload,
   ): Promise<FestivalActivity> {
-    const ready = await this.askForReview.fromDraft(id, user.id);
-    this.eventStore.publish(FestivalActivityEvents.readyToReview(ready));
-    return ready.festivalActivity;
+    const adherent = await this.adherents.find(user.id);
+    const activity = await this.askForReview.fromDraft(id, adherent);
+
+    const event = FestivalActivityEvents.readyToReview(activity, adherent.id);
+    this.eventStore.publish(event);
+
+    return activity;
   }
 
   saveGeneralSection(
@@ -359,13 +360,16 @@ export class FestivalActivityService {
     faId: FestivalActivity["id"],
     user: JwtUtil,
     team: Reviewer,
-  ): Promise<FestivalActivity> {
+  ): Promise<Reviewable> {
     this.checkMembership(user, team);
 
-    const approved = await this.reviewing.approve(faId, team, user.id);
+    const approver = await this.adherents.find(user.id);
+    const activity = await this.reviewing.approve(faId, team, approver);
 
-    this.eventStore.publish(FestivalActivityEvents.approved(approved));
-    return approved.festivalActivity;
+    const event = FestivalActivityEvents.approved(activity, approver.id);
+    this.eventStore.publish(event);
+
+    return activity;
   }
 
   async reject(
@@ -375,11 +379,18 @@ export class FestivalActivityService {
   ): Promise<Refused> {
     this.checkMembership(user, rejection.team);
 
-    const withRejector = { ...rejection, rejectorId: user.id };
-    const rejected = await this.reviewing.reject(faId, withRejector);
+    const rejector = await this.adherents.find(user.id);
+    const withRejector = { ...rejection, rejector };
+    const activity = await this.reviewing.reject(faId, withRejector);
 
-    this.eventStore.publish(FestivalActivityEvents.rejected(rejected));
-    return rejected.festivalActivity;
+    const event = FestivalActivityEvents.rejected(
+      activity,
+      rejector.id,
+      rejection.reason,
+    );
+    this.eventStore.publish(event);
+
+    return activity;
   }
 
   private checkMembership(user: JwtUtil, team: string) {
