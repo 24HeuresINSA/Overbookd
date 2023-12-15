@@ -1,3 +1,10 @@
+## [2.11.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.1...v2.11.2) (2023-12-15)
+
+
+### Bug Fixes
+
+* **festival-activity:** add in review event in history. [#1419](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1419) ([f14901d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f14901d6e1dc91fbcbac7ac9db23f60f4280a2a0))
+
 ## [2.11.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.0...v2.11.1) (2023-12-15)
 
 
