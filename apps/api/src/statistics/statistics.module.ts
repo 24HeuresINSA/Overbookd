@@ -1,21 +1,21 @@
 import { Module } from "@nestjs/common";
 import { PrismaModule } from "../prisma.module";
 import { StatisticsService } from "./statistics.service";
-import { PrismaFestivalActivities } from "./repository/festival-activities.prisma";
+import { PrismaFestivalActivityStatistics } from "./repository/festival-activities.prisma";
 import { PrismaService } from "../prisma.service";
 @Module({
   providers: [
     {
-      provide: PrismaFestivalActivities,
+      provide: PrismaFestivalActivityStatistics,
       useFactory: (prisma: PrismaService) =>
-        new PrismaFestivalActivities(prisma),
+        new PrismaFestivalActivityStatistics(prisma),
       inject: [PrismaService],
     },
     {
       provide: StatisticsService,
-      useFactory: (festivalActivities: PrismaFestivalActivities) =>
+      useFactory: (festivalActivities: PrismaFestivalActivityStatistics) =>
         new StatisticsService(festivalActivities),
-      inject: [PrismaFestivalActivities],
+      inject: [PrismaFestivalActivityStatistics],
     },
   ],
   imports: [PrismaModule],

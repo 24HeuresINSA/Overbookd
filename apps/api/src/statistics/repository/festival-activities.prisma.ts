@@ -1,6 +1,6 @@
 import { Statistics } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { FestivalActivities } from "../statistics.service";
+import { FestivalActivityStatistics } from "../statistics.service";
 import { PrismaService } from "../../prisma.service";
 
 const INIT_STATUS_STATISTICS: Statistics["status"] = {
@@ -10,7 +10,9 @@ const INIT_STATUS_STATISTICS: Statistics["status"] = {
   REFUSED: 0,
 };
 
-export class PrismaFestivalActivities implements FestivalActivities {
+export class PrismaFestivalActivityStatistics
+  implements FestivalActivityStatistics
+{
   constructor(private readonly prisma: PrismaService) {}
 
   async byTeams(): Promise<Statistics[]> {
@@ -23,46 +25,34 @@ export class PrismaFestivalActivities implements FestivalActivities {
     return statusStatistics.reduce<Statistics[]>(
       (acc, { teamCode, _count, status }) => {
         const teamIndex = acc.findIndex((stat) => stat.teamCode === teamCode);
-        const teamStatistics = acc.at(teamIndex);
+        const previous = acc.at(teamIndex);
 
-        if (teamIndex === -1 || !teamStatistics) {
-          return [...acc, this.initStatistics(teamCode, _count.status, status)];
+        if (teamIndex === -1 || !previous) {
+          return [...acc, this.init(teamCode, _count.status, status)];
         }
 
-        const updatedTeamStatistics = this.updateTeamStatistics(
-          teamStatistics,
-          _count.status,
-          status,
-          teamCode,
-        );
+        const merged = this.merge(previous, _count.status, status, teamCode);
 
-        return updateItemToList(acc, teamIndex, updatedTeamStatistics);
+        return updateItemToList(acc, teamIndex, merged);
       },
       [],
     );
   }
 
-  private initStatistics(
-    teamCode: string,
-    total: number,
-    status: string,
-  ): Statistics {
+  private init(teamCode: string, total: number, status: string): Statistics {
     const firstStatus = { ...INIT_STATUS_STATISTICS, [status]: total };
 
     return { teamCode, total, status: firstStatus };
   }
 
-  private updateTeamStatistics(
-    teamStatistics: Statistics,
+  private merge(
+    previous: Statistics,
     count: number,
     status: string,
     teamCode: string,
   ): Statistics {
-    const total = teamStatistics.total + count;
-    const mergedStatus: Statistics["status"] = {
-      ...teamStatistics.status,
-      [status]: count,
-    };
+    const total = previous.total + count;
+    const mergedStatus = { ...previous.status, [status]: count };
 
     return { teamCode, total, status: mergedStatus };
   }

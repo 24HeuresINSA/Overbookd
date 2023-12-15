@@ -1,13 +1,13 @@
 import { Statistics } from "@overbookd/http";
 
-export type FestivalActivities = {
+export type FestivalActivityStatistics = {
   byTeams(): Promise<Statistics[]>;
 };
 
 export class StatisticsService {
-  constructor(private readonly festivalActivities: FestivalActivities) {}
+  constructor(private readonly statistics: FestivalActivityStatistics) {}
 
   get festivalActivity() {
-    return this.festivalActivities.byTeams();
+    return this.statistics.byTeams();
   }
 }
