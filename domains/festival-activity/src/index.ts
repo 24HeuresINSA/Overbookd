@@ -18,6 +18,7 @@ export {
   VALIDATED,
   REFUSED,
   isDraft,
+  isRefused,
   READY_TO_REVIEW,
   COMMENTED,
   CREATED,

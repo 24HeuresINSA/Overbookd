@@ -2,9 +2,16 @@ import {
   FestivalActivity,
   IN_REVIEW,
   InReview,
+  Refused,
   Reviewable,
 } from "../festival-activity";
-import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
+import {
+  InReviewReviews,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+  RefusedReviews,
+} from "../sections/reviews";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
@@ -90,6 +97,15 @@ export class ReviewableSpecification {
   }
 }
 
+const COMMON_REVIEWERS: Reviewer[] = [
+  humain,
+  signa,
+  secu,
+  matos,
+  elec,
+  barrieres,
+];
+const PUBLIC_REVIEWERS: Reviewer[] = [...COMMON_REVIEWERS, communication];
 export class InReviewFestivalActivity implements InReview {
   private constructor(
     readonly id: InReview["id"],
@@ -102,6 +118,7 @@ export class InReviewFestivalActivity implements InReview {
     readonly reviews: InReview["reviews"],
     readonly feedbacks: InReview["feedbacks"],
     readonly history: InReview["history"],
+    private readonly previousReviews?: RefusedReviews,
   ) {}
 
   get status(): typeof IN_REVIEW {
@@ -140,17 +157,84 @@ export class InReviewFestivalActivity implements InReview {
     );
   }
 
+  static build(
+    activity: Refused,
+    instigator: Adherent,
+  ): InReviewFestivalActivity {
+    const reviews = this.swapRefusedToReviewing(activity.reviews);
+
+    const history = [
+      ...activity.history,
+      FestivalActivityKeyEvents.readyToReview(instigator),
+    ];
+
+    return new InReviewFestivalActivity(
+      activity.id,
+      activity.general,
+      activity.inCharge,
+      activity.signa,
+      activity.security,
+      activity.supply,
+      activity.inquiry,
+      reviews,
+      activity.feedbacks,
+      history,
+      activity.reviews,
+    );
+  }
+
+  private static swapRefusedToReviewing(
+    reviews: RefusedReviews,
+  ): InReviewReviews {
+    return {
+      communication:
+        reviews.communication !== REJECTED ? reviews.communication : REVIEWING,
+      humain: reviews.humain !== REJECTED ? reviews.humain : REVIEWING,
+      signa: reviews.signa !== REJECTED ? reviews.signa : REVIEWING,
+      secu: reviews.secu !== REJECTED ? reviews.secu : REVIEWING,
+      matos: reviews.matos !== REJECTED ? reviews.matos : REVIEWING,
+      elec: reviews.elec !== REJECTED ? reviews.elec : REVIEWING,
+      barrieres: reviews.barrieres !== REJECTED ? reviews.barrieres : REVIEWING,
+    };
+  }
+
   private get isPublic(): boolean {
     return this.general.toPublish;
   }
 
   get readyForReview(): WaitingForReview {
-    const reviewers: Reviewer[] = [humain, signa, secu, matos, elec, barrieres];
     return {
       id: this.id,
       name: this.general.name,
-      reviewers: this.isPublic ? [...reviewers, communication] : reviewers,
+      reviewers: this.reviewersToNotify,
     };
+  }
+
+  private get reviewersToNotify(): Reviewer[] {
+    if (!this.previousReviews) {
+      return this.isPublic ? PUBLIC_REVIEWERS : COMMON_REVIEWERS;
+    }
+
+    return PUBLIC_REVIEWERS.filter((reviewer) => this.hasRejected(reviewer));
+  }
+
+  private hasRejected(reviewer: Reviewer): boolean {
+    switch (reviewer) {
+      case humain:
+        return this.previousReviews?.humain === REJECTED;
+      case signa:
+        return this.previousReviews?.signa === REJECTED;
+      case secu:
+        return this.previousReviews?.secu === REJECTED;
+      case matos:
+        return this.previousReviews?.matos === REJECTED;
+      case elec:
+        return this.previousReviews?.elec === REJECTED;
+      case barrieres:
+        return this.previousReviews?.barrieres === REJECTED;
+      case communication:
+        return this.previousReviews?.communication === REJECTED;
+    }
   }
 }
 

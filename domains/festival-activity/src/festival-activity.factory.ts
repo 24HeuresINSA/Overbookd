@@ -171,7 +171,8 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
       if (!isKeyOf(current, key)) return acc;
 
       // eslint-disable-next-line security/detect-object-injection
-      acc[key] = update[key] ?? current[key];
+      const updated = update[key];
+      acc[key] = updated === undefined ? current[key] : updated;
       return acc;
     }, current);
   }
