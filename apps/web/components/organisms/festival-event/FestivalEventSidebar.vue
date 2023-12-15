@@ -50,7 +50,8 @@ import {
 import { Team } from "~/utils/models/team.model";
 import {
   FestivalActivity,
-  DRAFT as FA_DRAFT,
+  isDraft,
+  isRefused,
 } from "@overbookd/festival-activity";
 
 export default Vue.extend({
@@ -97,7 +98,7 @@ export default Vue.extend({
     },
     canAskForReview(): boolean {
       return this.isFA
-        ? this.mFA.status === FA_DRAFT
+        ? isDraft(this.mFA) || isRefused(this.mFA)
         : this.mFT.status === FtStatus.DRAFT;
     },
   },
