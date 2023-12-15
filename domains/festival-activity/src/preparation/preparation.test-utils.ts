@@ -172,6 +172,18 @@ export const validatedByElec = factory
   .withReviews({ elec: APPROVED })
   .build();
 
+export const validatedByElecWithoutRequests = factory
+  .inReview("Validée par la log elec sans demandes")
+  .withSupply({ electricity: [lumiere, enceinte], water: "robinet d'eau" })
+  .withInquiry({
+    timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
+    electricity: [],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ elec: APPROVED })
+  .build();
+
 export const validatedByBarrieres = factory
   .inReview("Validée par les barrieres")
   .withInquiry({
@@ -183,12 +195,34 @@ export const validatedByBarrieres = factory
   .withReviews({ barrieres: APPROVED })
   .build();
 
+export const validatedByBarrieresWithoutRequests = factory
+  .inReview("Validée par les barrieres sans demandes")
+  .withInquiry({
+    timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [uneBouilloire, deuxMarteaux],
+    barriers: [],
+  })
+  .withReviews({ barrieres: APPROVED })
+  .build();
+
 export const validatedByMatos = factory
   .inReview("Validée par la log matos")
   .withInquiry({
     timeWindows: [sunday14hToSunday18h],
     electricity: [uneMultiprise3Prises],
     gears: [uneBouilloire, deuxMarteaux],
+    barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED })
+  .build();
+
+export const validatedByMatosWithoutRequests = factory
+  .inReview("Validée par la log sans demandes")
+  .withInquiry({
+    timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [],
     barriers: [quinzeVaubans],
   })
   .withReviews({ matos: APPROVED })
@@ -205,6 +239,17 @@ export const validatedByMatosAndBarrieres = factory
   .withReviews({ matos: APPROVED, barrieres: APPROVED })
   .build();
 
+export const validatedByMatosAndBarrieresWithoutRequest = factory
+  .inReview("Validée par la log matos et les barrieres sans demandes")
+  .withInquiry({
+    timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
+    electricity: [uneMultiprise3Prises],
+    gears: [],
+    barriers: [],
+  })
+  .withReviews({ matos: APPROVED, barrieres: APPROVED })
+  .build();
+
 export const validatedByAllInquiryOwners = factory
   .inReview("Validée par la log matos, les barrieres et la log elec")
   .withInquiry({
@@ -212,6 +257,19 @@ export const validatedByAllInquiryOwners = factory
     electricity: [uneMultiprise3Prises],
     gears: [uneBouilloire, deuxMarteaux],
     barriers: [quinzeVaubans],
+  })
+  .withReviews({ matos: APPROVED, barrieres: APPROVED, elec: APPROVED })
+  .build();
+
+export const validatedByAllInquiryOwnersWithoutRequest = factory
+  .inReview(
+    "Validée par la log matos, les barrieres et la log elec sans demandes",
+  )
+  .withInquiry({
+    timeWindows: [],
+    electricity: [],
+    gears: [],
+    barriers: [],
   })
   .withReviews({ matos: APPROVED, barrieres: APPROVED, elec: APPROVED })
   .build();

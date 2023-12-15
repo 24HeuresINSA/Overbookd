@@ -12,10 +12,15 @@ import {
   pcSecurite,
   qgOrga,
   validatedByAllInquiryOwners,
+  validatedByAllInquiryOwnersWithoutRequest,
   validatedByBarrieres,
+  validatedByBarrieresWithoutRequests,
   validatedByElec,
+  validatedByElecWithoutRequests,
   validatedByMatos,
   validatedByMatosAndBarrieres,
+  validatedByMatosAndBarrieresWithoutRequest,
+  validatedByMatosWithoutRequests,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
@@ -32,6 +37,7 @@ import { WithInquiries } from "../sections/inquiry";
 import { AssignDriveInDraftActivity } from "./prepare-draft-festival-activity";
 import {
   cinqGuirlandeLED,
+  friday12hToFriday14h,
   quatreHeras,
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
@@ -69,10 +75,15 @@ describe("Inquiry section of festival activity preparation", () => {
       baladeEnPoney,
       qgOrga,
       validatedByElec,
+      validatedByElecWithoutRequests,
       validatedByBarrieres,
+      validatedByBarrieresWithoutRequests,
       validatedByMatos,
+      validatedByMatosWithoutRequests,
       validatedByMatosAndBarrieres,
+      validatedByMatosAndBarrieresWithoutRequest,
       validatedByAllInquiryOwners,
+      validatedByAllInquiryOwnersWithoutRequest,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -511,4 +522,58 @@ describe("Inquiry section of festival activity preparation", () => {
       });
     },
   );
+
+  describe.each`
+    activityName                                               | activityId                                       | approvedBy            | timeWindow
+    ${validatedByElecWithoutRequests.general.name}             | ${validatedByElecWithoutRequests.id}             | ${[elec]}             | ${saturday14hToSaturday18h}
+    ${validatedByBarrieresWithoutRequests.general.name}        | ${validatedByBarrieresWithoutRequests.id}        | ${[barrieres]}        | ${saturday14hToSaturday18h}
+    ${validatedByMatosWithoutRequests.general.name}            | ${validatedByMatosWithoutRequests.id}            | ${[matos]}            | ${saturday14hToSaturday18h}
+    ${validatedByMatosAndBarrieresWithoutRequest.general.name} | ${validatedByMatosAndBarrieresWithoutRequest.id} | ${[barrieres, matos]} | ${saturday14hToSaturday18h}
+  `(
+    "when $activityName is already approved by $approvedBy",
+    ({ activityId, timeWindow }) => {
+      it("should be possible to add time window", async () => {
+        const activity = await prepareFestivalActivity.addTimeWindowInInquiry(
+          activityId,
+          timeWindow,
+        );
+        expect(activity.inquiry.timeWindows).toContainEqual(timeWindow);
+      });
+      it("should be possible to remove a time window", async () => {
+        const activity =
+          await prepareFestivalActivity.removeTimeWindowFromInquiry(
+            activityId,
+            friday12hToFriday14h.id,
+          );
+        expect(activity.inquiry.timeWindows).not.toContainEqual(
+          friday12hToFriday14h,
+        );
+      });
+    },
+  );
+
+  describe("when all reviewers approved inquiry that doesn't have any request", () => {
+    describe("when trying to add time window", () => {
+      it("should indicate that inquiry section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.addTimeWindowInInquiry(
+              validatedByAllInquiryOwnersWithoutRequest.id,
+              saturday14hToSaturday18h,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+    describe("when trying to remove time window", () => {
+      it("should indicate that inquiry section is locked", async () => {
+        expect(
+          async () =>
+            await prepareFestivalActivity.removeTimeWindowFromInquiry(
+              validatedByAllInquiryOwnersWithoutRequest.id,
+              saturday14hToSaturday18h.id,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+  });
 });
