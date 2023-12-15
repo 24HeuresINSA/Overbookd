@@ -12,7 +12,7 @@ import {
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
 import { DRAFT, IN_REVIEW, READY_TO_REVIEW } from "../festival-activity";
 import { REVIEWING, NOT_ASKING_TO_REVIEW } from "../sections/reviews";
-import { AskForReview } from "./ask-for-review";
+import { AskForReview, Notifications } from "./ask-for-review";
 import {
   pcSecurite,
   finaleEsport,
@@ -25,12 +25,14 @@ import {
   internalWithoutInquiries,
   internalWithoutInquiryTimeWindows,
   justCreated,
+  escapeGame,
+  bubbleFoot,
 } from "./ask-for-review.test-utils";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
-import { Review } from "../festival-activity.error";
 import { InMemoryNotifications } from "./notifications.inmemory";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory";
 import { george, lea } from "../festival-activity.fake";
+import { CantAskForReview } from "../festival-activity.error";
 
 function isReviewer(team: string): team is Reviewer {
   return [barrieres, communication, elec, humain, matos, secu, signa].includes(
@@ -55,6 +57,8 @@ describe("Ask for review", () => {
         internalWithoutInquiries,
         internalWithoutInquiryTimeWindows,
         justCreated,
+        escapeGame,
+        bubbleFoot,
       ]);
     notifications = new InMemoryNotifications();
     askForReview = new AskForReview(festivalActivities, notifications);
@@ -62,11 +66,11 @@ describe("Ask for review", () => {
   describe("when asking a review for a draft festival activity", () => {
     describe("when draft festival activity has all required fields fulfilled", () => {
       it("should indicate it is reviewable", async () => {
-        const inReviewFa = await askForReview.fromDraft(pcSecurite.id, lea);
+        const inReviewFa = await askForReview.from(pcSecurite.id, lea);
         expect(inReviewFa.status).toBe(IN_REVIEW);
       });
       it("should add READY_TO_REVIEW key event to history", async () => {
-        const inReviewFa = await askForReview.fromDraft(pcSecurite.id, lea);
+        const inReviewFa = await askForReview.from(pcSecurite.id, lea);
 
         expect(inReviewFa.history).toStrictEqual([
           ...pcSecurite.history,
@@ -79,7 +83,7 @@ describe("Ask for review", () => {
         ]);
       });
       it("should keep draft festival activity sections", async () => {
-        const inReviewFa = await askForReview.fromDraft(pcSecurite.id, lea);
+        const inReviewFa = await askForReview.from(pcSecurite.id, lea);
 
         expect(inReviewFa.inCharge).toEqual(pcSecurite.inCharge);
         expect(inReviewFa.id).toBe(pcSecurite.id);
@@ -91,7 +95,7 @@ describe("Ask for review", () => {
       });
       describe("reviews", () => {
         it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
-          const inReviewFa = await askForReview.fromDraft(pcSecurite.id, lea);
+          const inReviewFa = await askForReview.from(pcSecurite.id, lea);
 
           const event = { id: inReviewFa.id, name: inReviewFa.general.name };
           const barrieresNotification = { team: barrieres, event };
@@ -123,17 +127,14 @@ describe("Ask for review", () => {
           ${elec}          | ${REVIEWING}
           ${barrieres}     | ${REVIEWING}
         `("should explain $team is $status", async ({ team, status }) => {
-          const inReviewFa = await askForReview.fromDraft(pcSecurite.id, lea);
+          const inReviewFa = await askForReview.from(pcSecurite.id, lea);
           if (!isReviewer(team)) throw new Error();
           // eslint-disable-next-line security/detect-object-injection
           expect(inReviewFa.reviews[team]).toBe(status);
         });
         describe("when it will be published (i.e. is public)", () => {
           it("should also ask review from communication", async () => {
-            const inReviewFa = await askForReview.fromDraft(
-              finaleEsport.id,
-              george,
-            );
+            const inReviewFa = await askForReview.from(finaleEsport.id, george);
 
             const event = {
               id: inReviewFa.id,
@@ -170,7 +171,7 @@ describe("Ask for review", () => {
           `(
             "should explain $team is concern with review",
             async ({ team, status }) => {
-              const inReviewFa = await askForReview.fromDraft(
+              const inReviewFa = await askForReview.from(
                 finaleEsport.id,
                 george,
               );
@@ -184,10 +185,7 @@ describe("Ask for review", () => {
 
       describe("when festival activity will be published (i.e. is public)", () => {
         it("should also ask review from communication", async () => {
-          const inReviewFa = await askForReview.fromDraft(
-            finaleEsport.id,
-            george,
-          );
+          const inReviewFa = await askForReview.from(finaleEsport.id, george);
           expect(notifications.entries).toHaveLength(7);
           const event = { id: inReviewFa.id, name: inReviewFa.general.name };
           expect(notifications.entries).toContainEqual({
@@ -219,25 +217,25 @@ describe("Ask for review", () => {
       it("should indicate can't ask for review", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutDescription.id, lea),
+            await askForReview.from(internalWithoutDescription.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate description is required", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutDescription.id, lea),
+            await askForReview.from(internalWithoutDescription.id, lea),
         ).rejects.toThrow("- Une description est nécessaire");
       });
     });
     describe("when not providing a photolink on a public activity", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutPhoto.id, lea),
+          async () => await askForReview.from(publicWithoutPhoto.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate photoLink is required on public activity", async () => {
         expect(
-          async () => await askForReview.fromDraft(publicWithoutPhoto.id, lea),
+          async () => await askForReview.from(publicWithoutPhoto.id, lea),
         ).rejects.toThrow(
           "- Une photo est nécessaire pour les animations publiées",
         );
@@ -246,14 +244,12 @@ describe("Ask for review", () => {
     describe("when not providing any category on a public activity", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(publicWithoutCategory.id, lea),
+          async () => await askForReview.from(publicWithoutCategory.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate categories require at least one element on public activity", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(publicWithoutCategory.id, lea),
+          async () => await askForReview.from(publicWithoutCategory.id, lea),
         ).rejects.toThrow(
           "- Au moins une catégorie est nécessaire pour les animations publiées",
         );
@@ -262,14 +258,12 @@ describe("Ask for review", () => {
     describe("when not providing any timewindows on a public activity", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(publicWithoutTimeWindows.id, lea),
+          async () => await askForReview.from(publicWithoutTimeWindows.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate timeWindows require at least one element on public activity", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(publicWithoutTimeWindows.id, lea),
+          async () => await askForReview.from(publicWithoutTimeWindows.id, lea),
         ).rejects.toThrow(
           "- Au moins un créneau horaire est nécessaire pour les animations publiées",
         );
@@ -279,41 +273,37 @@ describe("Ask for review", () => {
       it("should indicate can't ask for review", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutTeamInCharge.id, lea),
+            await askForReview.from(internalWithoutTeamInCharge.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate team in charge is required", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(internalWithoutTeamInCharge.id, lea),
+            await askForReview.from(internalWithoutTeamInCharge.id, lea),
         ).rejects.toThrow("- Une équipe responsable est nécessaire");
       });
     });
     describe("when not providing a location", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(internalWithoutLocation.id, lea),
+          async () => await askForReview.from(internalWithoutLocation.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate location is required", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(internalWithoutLocation.id, lea),
+          async () => await askForReview.from(internalWithoutLocation.id, lea),
         ).rejects.toThrow("- Le lieu est nécessaire");
       });
     });
     describe("when there is at least one timeWindows but not any inquiries provided", () => {
       it("should indicate can't ask for review", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(internalWithoutInquiries.id, lea),
+          async () => await askForReview.from(internalWithoutInquiries.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate at least one inquiry is required", async () => {
         expect(
-          async () =>
-            await askForReview.fromDraft(internalWithoutInquiries.id, lea),
+          async () => await askForReview.from(internalWithoutInquiries.id, lea),
         ).rejects.toThrow(
           "- Au moins une demande de matos est nécessaire pour un créneau matos",
         );
@@ -323,19 +313,13 @@ describe("Ask for review", () => {
       it("should indicate can't ask for review", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(
-              internalWithoutInquiryTimeWindows.id,
-              lea,
-            ),
+            await askForReview.from(internalWithoutInquiryTimeWindows.id, lea),
         ).rejects.toThrow(CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE);
       });
       it("should indicate timeWindows is required", async () => {
         expect(
           async () =>
-            await askForReview.fromDraft(
-              internalWithoutInquiryTimeWindows.id,
-              lea,
-            ),
+            await askForReview.from(internalWithoutInquiryTimeWindows.id, lea),
         ).rejects.toThrow(
           "- Au moins un créneau matos est nécessaire pour une demande matos",
         );
@@ -344,13 +328,13 @@ describe("Ask for review", () => {
     describe("when there is more than one error", () => {
       it("should indicate all", () => {
         expect(
-          async () => await askForReview.fromDraft(justCreated.id, lea),
+          async () => await askForReview.from(justCreated.id, lea),
         ).rejects.toThrow("- Le lieu est nécessaire");
         expect(
-          async () => await askForReview.fromDraft(justCreated.id, lea),
+          async () => await askForReview.from(justCreated.id, lea),
         ).rejects.toThrow("- Une description est nécessaire");
         expect(
-          async () => await askForReview.fromDraft(justCreated.id, lea),
+          async () => await askForReview.from(justCreated.id, lea),
         ).rejects.toThrow("- Une équipe responsable est nécessaire");
       });
     });
@@ -368,8 +352,63 @@ describe("Ask for review", () => {
       });
       it("should indicate that festival activity is already under review", async () => {
         expect(
-          async () => await askForReview.fromDraft(pcSecurite.id, lea),
-        ).rejects.toThrow(Review.NotInDraft);
+          async () => await askForReview.from(pcSecurite.id, lea),
+        ).rejects.toThrow(CantAskForReview);
+      });
+    });
+  });
+  describe("when asking a review for a refused festival activity", () => {
+    describe.each`
+      activityName               | activity      | rejectors
+      ${escapeGame.general.name} | ${escapeGame} | ${[communication, secu, humain]}
+      ${bubbleFoot.general.name} | ${bubbleFoot} | ${[barrieres, elec]}
+    `(
+      "when $activityName was rejected by $rejectors",
+      ({ activity, rejectors }) => {
+        it("should indicate it is reviewable", async () => {
+          const author = activity.inCharge.adherent;
+          const inReview = await askForReview.from(activity.id, author);
+          expect(inReview.status).toBe(IN_REVIEW);
+        });
+        it("should add READY_TO_REVIEW key event to history", async () => {
+          const author = activity.inCharge.adherent;
+          const inReview = await askForReview.from(activity.id, author);
+
+          expect(inReview.history).toStrictEqual([
+            ...activity.history,
+            {
+              action: READY_TO_REVIEW,
+              by: author,
+              at: expect.any(Date),
+              description: "Demande de relecture de la FA",
+            },
+          ]);
+        });
+        describe("reviews", () => {
+          it(`should ask review from ${rejectors.join(", ")}`, async () => {
+            const inReviewFa = await askForReview.from(activity.id, lea);
+
+            const event = {
+              id: inReviewFa.id,
+              name: inReviewFa.general.name,
+            };
+
+            expect(notifications.entries).toHaveLength(rejectors.length);
+            rejectors
+              .map((team: Reviewer) => ({ event, team }))
+              .every((expected: Notifications) =>
+                expect(notifications.entries).toContainEqual(expected),
+              );
+          });
+        });
+      },
+    );
+    describe("when asking several time a review for same refused festival activity", () => {
+      it("should indicate festival activity is already in review", async () => {
+        await askForReview.from(escapeGame.id, lea);
+        expect(
+          async () => await askForReview.from(escapeGame.id, lea),
+        ).rejects.toThrow(CantAskForReview);
       });
     });
   });

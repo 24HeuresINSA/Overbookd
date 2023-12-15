@@ -127,7 +127,7 @@ export class FestivalActivityService {
     user: JwtPayload,
   ): Promise<FestivalActivity> {
     const adherent = await this.adherents.find(user.id);
-    const activity = await this.askForReview.fromDraft(id, adherent);
+    const activity = await this.askForReview.from(id, adherent);
 
     const event = FestivalActivityEvents.readyToReview(activity, adherent.id);
     this.eventStore.publish(event);

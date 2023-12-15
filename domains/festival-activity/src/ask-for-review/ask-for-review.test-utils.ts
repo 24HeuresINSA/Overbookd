@@ -10,7 +10,9 @@ import {
   uneMultiprise,
   agora,
   local24h,
+  george,
 } from "../festival-activity.fake";
+import { APPROVED, REJECTED, REVIEWING } from "../sections/reviews";
 
 const factory = getFactory();
 
@@ -50,50 +52,145 @@ export const finaleEsport = factory
 
 export const justCreated: Draft = factory.draft("test").build();
 
-export const internalWithoutDescription = {
-  ...pcSecurite,
-  id: 4,
-  general: { ...pcSecurite.general, description: null },
-};
+export const internalWithoutDescription = factory
+  .draft("Internal without description")
+  .withGeneral({ description: null })
+  .withInCharge({ adherent: robocop, team: "secu" })
+  .withSigna({ location: local24h })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [friday09hToMonday08h],
+    gears: [dixCadenasPompier, uneBouilloire],
+  })
+  .build();
 
-export const publicWithoutPhoto = {
-  ...finaleEsport,
-  id: 5,
-  general: { ...finaleEsport.general, photoLink: null },
-};
+export const publicWithoutPhoto = factory
+  .draft("Finale esport without photo")
+  .asPublic({
+    categories: ["sport"],
+    isFlagship: true,
+    timeWindows: [saturday19hToSunday01h],
+  })
+  .withGeneral({ photoLink: null })
+  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withSigna({ location: agora })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [saturday19hToSunday01h],
+    gears: [uneMultiprise],
+  })
+  .build();
 
-export const publicWithoutCategory = {
-  ...finaleEsport,
-  id: 6,
-  general: { ...finaleEsport.general, categories: [] },
-};
+export const publicWithoutCategory = factory
+  .draft("Finale esport without category")
+  .asPublic({
+    photoLink:
+      "https://tse1.mm.bing.net/th?id=OIP.Gic1SK5Di5WzX5l_Y2bQtAHaEK&pid=Api",
+    isFlagship: true,
+    timeWindows: [saturday19hToSunday01h],
+  })
+  .withGeneral({ categories: [] })
+  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withSigna({ location: agora })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [saturday19hToSunday01h],
+    gears: [uneMultiprise],
+  })
+  .build();
 
-export const publicWithoutTimeWindows = {
-  ...finaleEsport,
-  id: 7,
-  general: { ...finaleEsport.general, timeWindows: [] },
-};
+export const publicWithoutTimeWindows = factory
+  .draft("Finale esport without time windows")
+  .asPublic({
+    categories: ["sport"],
+    photoLink:
+      "https://tse1.mm.bing.net/th?id=OIP.Gic1SK5Di5WzX5l_Y2bQtAHaEK&pid=Api",
+    isFlagship: true,
+    timeWindows: [saturday19hToSunday01h],
+  })
+  .withGeneral({ timeWindows: [] })
+  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withSigna({ location: agora })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [saturday19hToSunday01h],
+    gears: [uneMultiprise],
+  })
+  .build();
 
-export const internalWithoutTeamInCharge = {
-  ...pcSecurite,
-  id: 8,
-  inCharge: { ...pcSecurite.inCharge, team: null },
-};
+export const internalWithoutTeamInCharge = factory
+  .draft("PC Securite without team")
+  .withGeneral({ description: "Tour de guet" })
+  .withInCharge({ adherent: robocop, team: null })
+  .withSigna({ location: local24h })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [friday09hToMonday08h],
+    gears: [dixCadenasPompier, uneBouilloire],
+  })
+  .build();
 
-export const internalWithoutLocation = {
-  ...pcSecurite,
-  id: 9,
-  signa: { ...pcSecurite.signa, location: null },
-};
+export const internalWithoutLocation = factory
+  .draft("PC Securite without location")
+  .withGeneral({ description: "Tour de guet" })
+  .withInCharge({ adherent: robocop, team: "secu" })
+  .withSigna({ location: null })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [friday09hToMonday08h],
+    gears: [dixCadenasPompier, uneBouilloire],
+  })
+  .build();
 
-export const internalWithoutInquiries = {
-  ...pcSecurite,
-  id: 10,
-  inquiry: { ...pcSecurite.inquiry, gears: [] },
-};
+export const internalWithoutInquiries = factory
+  .draft("PC Securite without inquiry requests")
+  .withGeneral({ description: "Tour de guet" })
+  .withInCharge({ adherent: robocop, team: "secu" })
+  .withSigna({ location: local24h })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [friday09hToMonday08h],
+    gears: [],
+  })
+  .build();
 
-export const internalWithoutInquiryTimeWindows = {
-  ...pcSecurite,
-  id: 11,
-  inquiry: { ...pcSecurite.inquiry, timeWindows: [] },
-};
+export const internalWithoutInquiryTimeWindows = factory
+  .draft("PC Securite without inquiry time windows")
+  .withGeneral({ description: "Tour de guet" })
+  .withInCharge({ adherent: robocop, team: "secu" })
+  .withSigna({ location: local24h })
+  .withSecurity({ specialNeed: "Une armee d'AS super malin" })
+  .withInquiry({
+    timeWindows: [],
+    gears: [dixCadenasPompier, uneBouilloire],
+  })
+  .build();
+
+export const escapeGame = factory
+  .refused("Escape Game")
+  .asPublic()
+  .withReviews({
+    communication: REJECTED,
+    secu: REJECTED,
+    humain: REJECTED,
+    signa: APPROVED,
+    elec: REVIEWING,
+    matos: REVIEWING,
+    barrieres: REVIEWING,
+  })
+  .build();
+
+export const bubbleFoot = factory
+  .refused("BubbleFoot")
+  .withInCharge({ adherent: george })
+  .asPublic()
+  .withReviews({
+    communication: APPROVED,
+    secu: APPROVED,
+    humain: APPROVED,
+    signa: REVIEWING,
+    elec: REJECTED,
+    matos: REVIEWING,
+    barrieres: REJECTED,
+  })
+  .build();

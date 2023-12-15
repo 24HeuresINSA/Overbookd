@@ -31,17 +31,13 @@ export class FestivalActivityNotFound extends FestivalActivityError {
   }
 }
 
-class NotInDraft extends FestivalActivityError {
+export class CantAskForReview extends FestivalActivityError {
   constructor(id: number) {
     super(
-      `La fiche activité #${id} n'a pas été passée en demande de relecture. Seules des fiches activités en brouillon le peuvent`,
+      `La fiche activité #${id} n'a pas été passée en demande de relecture. Seules des fiches activités refusées ou en brouillon le peuvent`,
     );
   }
 }
-
-export const Review = {
-  NotInDraft,
-};
 
 export class TimeWindowAlreadyExists extends FestivalActivityError {
   constructor() {
