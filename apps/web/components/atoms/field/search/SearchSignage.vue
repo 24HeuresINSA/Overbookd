@@ -15,7 +15,6 @@
     :hide-details="dense"
     @update:search-input="searchSignage"
     @change="propagateEvent"
-    @focus="initList"
   >
     <template #item="{ item }">
       {{ item.name }}
@@ -94,15 +93,15 @@ export default defineComponent({
       });
     },
   },
+  async mounted() {
+    this.loading = true;
+    await this.$accessor.catalogSignage.fetchSignages();
+    this.loading = false;
+  },
   methods: {
     searchSignage(signageName: string | null) {
       if (signageName && signageName.length < 3) return;
       this.search = signageName || "";
-    },
-    async initList() {
-      this.loading = true;
-      await this.$accessor.catalogSignage.fetchSignages();
-      this.loading = false;
     },
     propagateEvent(signage: Signage) {
       this.$emit("change", signage);

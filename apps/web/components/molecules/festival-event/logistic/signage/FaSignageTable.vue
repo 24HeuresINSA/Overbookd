@@ -16,12 +16,13 @@
           :disabled="cantLinkCatalogItem"
           dense
           label=""
+          @change="linkCatalogItem($event, item)"
         />
       </template>
 
       <template #item.actions="{ item }">
         <div v-if="!disabled">
-          <v-btn icon @click="openUpdateSignageDialog(item)">
+          <v-btn icon @click="updateSignage(item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn icon @click="removeSignage(item)">
@@ -31,41 +32,28 @@
       </template>
       <template #no-data> Aucune demande de signalétique </template>
     </v-data-table>
-
-    <v-btn color="primary" class="signages__add" @click="openAddSignageDialog">
-      Ajouter une signalétique
-    </v-btn>
-
-    <v-dialog v-model="isSignageDialogOpen" max-width="600">
-      <FaSignageForm
-        :signage="selectedSignage"
-        @add="addSignage"
-        @update="updateSignage"
-        @close-dialog="closeAddDialog"
-      />
-    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaSignageForm from "./FaSignageForm.vue";
 import SearchSignage from "~/components/atoms/field/search/SearchSignage.vue";
-import { Signage, signa } from "@overbookd/festival-activity";
+import { Signage as FaSignage, signa } from "@overbookd/festival-activity";
+import { Signage as CatalogSignage } from "@overbookd/signa";
 import { Header } from "~/utils/models/data-table.model";
 
 type FaSignageTableData = {
   headers: Header[];
   isSignageDialogOpen: boolean;
-  selectedSignage: Signage | null;
+  selectedSignage: FaSignage | null;
 };
 
 export default defineComponent({
   name: "FaSignageTable",
-  components: { FaSignageForm, SearchSignage },
+  components: { SearchSignage },
   props: {
     signages: {
-      type: Array as () => Signage[],
+      type: Array as () => FaSignage[],
       required: true,
     },
     disabled: {
@@ -93,30 +81,17 @@ export default defineComponent({
     },
   },
   methods: {
-    addSignage(signage: Signage) {
-      this.$emit("add", signage);
-    },
-    updateSignage(signage: Signage) {
+    updateSignage(signage: FaSignage) {
       this.$emit("update", signage);
     },
-    removeSignage(signage: Signage) {
+    removeSignage(signage: FaSignage) {
       this.$emit("remove", signage);
     },
-    openAddSignageDialog() {
-      this.selectedSignage = null;
-      this.isSignageDialogOpen = true;
-    },
-    closeAddDialog() {
-      this.isSignageDialogOpen = false;
-      this.selectedSignage = null;
-    },
-    openUpdateSignageDialog(signage: Signage) {
-      this.selectedSignage = signage;
-      this.isSignageDialogOpen = true;
-    },
-    closeUpdateDialog() {
-      this.isSignageDialogOpen = false;
-      this.selectedSignage = null;
+    linkCatalogItem(catalogSignage: CatalogSignage, faSignage: FaSignage) {
+      this.$accessor.festivalActivity.linkSignageCatalogItem({
+        signageId: faSignage.id,
+        catalogItem: catalogSignage,
+      });
     },
   },
 });
@@ -128,10 +103,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-  }
-  &__add {
-    max-width: fit-content;
-    align-self: flex-end;
   }
 }
 </style>

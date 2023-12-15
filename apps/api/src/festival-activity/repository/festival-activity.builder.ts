@@ -142,7 +142,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       },
       signa: {
         location: activityData.location,
-        signages: activityData.signages,
+        signages: this.formatSignages(activityData.signages),
       },
       security: {
         specialNeed: activityData.specialNeed,
@@ -178,6 +178,13 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       barriers,
       electricity,
     };
+  }
+
+  private static formatSignages(signages: DatabaseSignage[]) {
+    return signages.map(({ catalogItem, ...signage }) => ({
+      ...signage,
+      catalogItem: catalogItem === null ? undefined : catalogItem,
+    }));
   }
 
   private static formatInquiryRequest(

@@ -160,6 +160,7 @@ export type {
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
+  LinkSignageCatalogItem,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

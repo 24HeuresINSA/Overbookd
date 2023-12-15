@@ -39,15 +39,33 @@
           @change="updateLocation"
         />
 
-        <h2 class="signage-title">Demande de signalétique</h2>
-        <FaSignageTable
-          :signages="signages"
-          @add="addSignage"
-          @update="updateSignage"
-          @remove="removeSignage"
-        />
+        <div class="signage">
+          <h2 class="signage__title">Demande de signalétique</h2>
+          <FaSignageTable
+            :signages="signages"
+            @update="openUpdateSignageDialog"
+            @remove="removeSignage"
+          />
+
+          <v-btn
+            color="primary"
+            class="signage__add"
+            @click="openAddSignageDialog"
+          >
+            Ajouter une signalétique
+          </v-btn>
+        </div>
       </v-card-text>
     </v-card>
+
+    <v-dialog v-model="isSignageDialogOpen" max-width="600">
+      <FaSignageForm
+        :signage="selectedSignage"
+        @add="addSignage"
+        @update="updateSignage"
+        @close-dialog="closeAddDialog"
+      />
+    </v-dialog>
 
     <v-dialog v-model="isLinkCatalogItemDialogOpen" max-width="600">
       <FaLinkCatalogItemFormCard
@@ -70,14 +88,16 @@ import {
   signa,
   REJECTED,
   APPROVED,
-  isAssignedToCatalogItem,
 } from "@overbookd/festival-activity";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 import FaLinkCatalogItemFormCard from "~/components/molecules/festival-event/logistic/signage/FaLinkCatalogItemFormCard.vue";
+import FaSignageForm from "~/components/molecules/festival-event/logistic/signage/FaSignageForm.vue";
 
 type SignaCardData = {
   isLinkCatalogItemDialogOpen: boolean;
+  isSignageDialogOpen: boolean;
+  selectedSignage: Signage | null;
 };
 
 export default defineComponent({
@@ -86,10 +106,13 @@ export default defineComponent({
     SearchSignaLocation,
     FaSignageTable,
     FaLinkCatalogItemFormCard,
+    FaSignageForm,
   },
   emits: ["reject"],
   data: (): SignaCardData => ({
     isLinkCatalogItemDialogOpen: false,
+    isSignageDialogOpen: false,
+    selectedSignage: null,
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -106,12 +129,8 @@ export default defineComponent({
     },
     cantApprove(): boolean {
       if (isDraft(this.mFA)) return true;
-      const alreadyApproved = this.mFA.reviews.signa === APPROVED;
-      const missingReference = this.signages.some(
-        (signage: Signage) => !isAssignedToCatalogItem(signage),
-      );
 
-      return alreadyApproved || missingReference;
+      return this.mFA.reviews.signa === APPROVED;
     },
     cantReject(): boolean {
       if (isDraft(this.mFA)) return true;
@@ -145,13 +164,38 @@ export default defineComponent({
     closeLinkCatalogItemDialog() {
       this.isLinkCatalogItemDialogOpen = false;
     },
+    openAddSignageDialog() {
+      this.selectedSignage = null;
+      this.isSignageDialogOpen = true;
+    },
+    closeAddDialog() {
+      this.isSignageDialogOpen = false;
+      this.selectedSignage = null;
+    },
+    openUpdateSignageDialog(signage: Signage) {
+      this.selectedSignage = signage;
+      this.isSignageDialogOpen = true;
+    },
+    closeUpdateDialog() {
+      this.isSignageDialogOpen = false;
+      this.selectedSignage = null;
+    },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.signage-title {
-  margin: 20px 0;
+.signage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  &__title {
+    margin: 20px 0;
+  }
+  &__add {
+    max-width: fit-content;
+    align-self: flex-end;
+  }
 }
 
 .review {

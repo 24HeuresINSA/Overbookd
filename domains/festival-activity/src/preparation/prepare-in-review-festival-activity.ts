@@ -367,6 +367,15 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, security };
   }
 
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
+    const signages = Signages.build(
+      this.activity.signa.signages,
+    ).linkCatalogItem(link).entries;
+
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
+  }
+
   private checkIfSecurityAlreadyApproved() {
     const isValidated = this.activity.reviews.secu === APPROVED;
     if (isValidated) {
@@ -570,14 +579,5 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     ).inquiry;
 
     return { ...this.activity, inquiry };
-  }
-
-  linkSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
-    const signages = Signages.build(
-      this.activity.signa.signages,
-    ).linkCatalogItem(link).entries;
-
-    const signa = { ...this.activity.signa, signages };
-    return { ...this.activity, signa };
   }
 }
