@@ -1,3 +1,12 @@
+## [2.11.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.0...v2.11.1) (2023-12-15)
+
+
+### Bug Fixes
+
+* **ci:** downgrade docker version on runners. [#1423](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1423) ([548d29b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/548d29b6dd218e0596309ae15abb891d33d13c61))
+* **festival-activity:** allow ask for review on refused activity. [#1419](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1419) ([c30d35c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c30d35ca128f6c9ad20008a71a33b919e6f5474c))
+* **festival-activity:** allow time windows update when approvers don't have requests. [#1413](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1413) ([f44d846](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f44d846c0f1871463b27526d17baa5a8f9cde831))
+
 ## [2.11.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.10.1...v2.11.0) (2023-12-14)
 
 
