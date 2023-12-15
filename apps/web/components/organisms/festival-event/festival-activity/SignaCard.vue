@@ -67,7 +67,7 @@
       />
     </v-dialog>
 
-    <v-dialog v-model="isLinkCatalogItemDialogOpen" max-width="600">
+    <v-dialog v-model="isLinkCatalogItemDialogOpen" max-width="800">
       <FaLinkCatalogItemFormCard
         :signages="signages"
         @completed="approve"
