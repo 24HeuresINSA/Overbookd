@@ -106,6 +106,7 @@ const COMMON_REVIEWERS: Reviewer[] = [
   barrieres,
 ];
 const PUBLIC_REVIEWERS: Reviewer[] = [...COMMON_REVIEWERS, communication];
+
 export class InReviewFestivalActivity implements InReview {
   private constructor(
     readonly id: InReview["id"],

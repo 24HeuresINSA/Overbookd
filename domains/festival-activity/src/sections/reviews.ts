@@ -25,16 +25,6 @@ export type PublicActivityReviewer =
 
 export type Reviewer = PublicActivityReviewer | PrivateActivityReviewer;
 
-export const REVIEWERS: Reviewer[] = [
-  humain,
-  signa,
-  secu,
-  matos,
-  elec,
-  barrieres,
-  communication,
-];
-
 export type WaitingForReview = {
   id: number;
   name: string;
