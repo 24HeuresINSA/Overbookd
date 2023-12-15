@@ -1,4 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
+import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { StatsPayload } from "~/utils/models/stats.model";
@@ -21,14 +22,13 @@ export const actions = actionTree(
   { state },
   {
     async getFaStats(context) {
-      const res = await safeCall<StatsPayload>(
+      const res = await safeCall(
         this,
-        RepoFactory.FaRepository.getFaStats(this),
+        FestivalActivityRepository.getStats(this),
       );
-      if (res) {
-        context.commit("SET_STATS_FA", res.data);
-      }
-      return res;
+      if (!res) return;
+
+      context.commit("SET_STATS_FA", res.data);
     },
     async getFtStats(context) {
       const res = await safeCall<StatsPayload>(

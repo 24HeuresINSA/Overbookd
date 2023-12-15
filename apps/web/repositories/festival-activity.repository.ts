@@ -29,6 +29,7 @@ import {
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequest } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity.model";
+import { StatsPayload } from "~/utils/models/stats.model";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -45,6 +46,12 @@ export class FestivalActivityRepository {
   static getOne(context: Context, id: FestivalActivity["id"]) {
     return context.$axios.get<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${id}`,
+    );
+  }
+
+  static getStats(context: Context) {
+    return context.$axios.get<HttpStringified<StatsPayload[]>>(
+      `${this.basePath}/statistics`,
     );
   }
 

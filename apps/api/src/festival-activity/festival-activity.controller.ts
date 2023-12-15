@@ -86,6 +86,9 @@ import {
   LinkedSignageResponseDto,
   UnlinkedSignageResponseDto,
 } from "./dto/signage.response.dto";
+import { StatisticsService } from "../statistics/statistics.service";
+import { Statistics } from "@overbookd/http";
+import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activity")
@@ -116,6 +119,7 @@ import {
 export class FestivalActivityController {
   constructor(
     private readonly festivalActivityService: FestivalActivityService,
+    private readonly statistics: StatisticsService,
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -136,6 +140,19 @@ export class FestivalActivityController {
   })
   findAll(): Promise<PreviewFestivalActivity[]> {
     return this.festivalActivityService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get("statistics")
+  @ApiResponse({
+    status: 200,
+    description: "Festival activities statistics",
+    isArray: true,
+    type: StatisticsResponseDto,
+  })
+  displayStatistics(): Promise<Statistics[]> {
+    return this.statistics.festivalActivity;
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

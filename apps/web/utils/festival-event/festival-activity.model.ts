@@ -24,8 +24,8 @@ import {
 
 export const BROUILLON = "Brouillon";
 const RELECTURE_EN_COURS = "Relecture en cours";
-const VALIDEE = "Validée";
-const REFUSEE = "Refusée";
+export const VALIDEE = "Validée";
+export const REFUSEE = "Refusée";
 
 export type FaStatusLabel =
   | typeof BROUILLON

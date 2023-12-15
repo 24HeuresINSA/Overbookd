@@ -46,20 +46,18 @@ import Vue from "vue";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { faStatusLabels } from "~/utils/models/fa.model";
-import { FaStatus } from "~/utils/models/fa.model";
 import { FtStatus, ftStatusLabels } from "~/utils/models/ft.model";
+import {
+  VALIDEE,
+  faStatusLabels,
+} from "~/utils/festival-event/festival-activity.model";
 
 interface StatsRowData {
   historyFA: Map<string, number>;
   historyFT: Map<string, number>;
 }
 
-const validStatuses: string[] = [
-  FaStatus.VALIDATED,
-  FtStatus.VALIDATED,
-  FtStatus.READY,
-];
+const validStatuses: string[] = [VALIDEE, FtStatus.VALIDATED, FtStatus.READY];
 
 export default Vue.extend({
   components: { StatsCard },
@@ -76,29 +74,32 @@ export default Vue.extend({
   data(): StatsRowData {
     return {
       historyFA: new Map<string, number>([
+        ["25eme", 1],
+        ["admin", 1],
+        ["accueil-artiste", 4],
         ["bar", 19],
         ["barrieres", 4],
+        ["beboo", 5],
         ["bureau", 1],
-        ["catering", 1],
-        ["communication", 3],
+        ["catering", 6],
+        ["communication", 4],
         ["concert", 2],
-        ["courses", 16],
-        ["culture", 20],
-        ["dd", 28],
-        ["deco", 7],
-        ["elec", 3],
+        ["courses", 20],
+        ["culture", 24],
+        ["dd", 30],
+        ["deco", 12],
+        ["elec", 5],
         ["hard", 2],
         ["humain", 1],
-        ["beboo", 5],
-        ["matos", 6],
+        ["matos", 8],
         ["payant", 3],
-        ["plaizir", 13],
-        ["scene", 9],
-        ["secu", 16],
-        ["signa", 2],
-        ["sponso", 9],
-        ["sports", 20],
-        ["undefined", 0],
+        ["plaizir", 11],
+        ["scene", 8],
+        ["secu", 11],
+        ["signa", 1],
+        ["sponso", 10],
+        ["sports", 30],
+        ["undefined", 4],
       ]),
       historyFT: new Map<string, number>([
         ["bar", 84],
@@ -147,9 +148,9 @@ export default Vue.extend({
         ? this.historyFT.get(teamCode)
         : this.historyFA.get(teamCode);
     },
-    displayHistory(teamCode: string): string {
-      const lastYearValue = this.history(teamCode);
-      return lastYearValue ? lastYearValue.toString() : "N/A";
+    displayHistory(teamCode?: string): number | string {
+      const lastYearValue = this.history(teamCode ?? "undefined");
+      return lastYearValue ?? "N/A";
     },
     historyPercentage(stats: StatsPayload): string {
       const lastYearCount = this.history(stats.teamCode);

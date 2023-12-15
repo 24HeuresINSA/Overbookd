@@ -1,4 +1,5 @@
 import {
+  FestivalActivity,
   PrepareInquiryRequestCreation,
   Reviewer,
   SignageCatalogItem,
@@ -31,4 +32,10 @@ export type InitInquiryRequest = {
 
 export type LinkSignageCatalogItemForm = {
   catalogItemId: SignageCatalogItem["id"];
+};
+
+export type Statistics = {
+  teamCode: string;
+  status: Record<FestivalActivity["status"], number>;
+  total: number;
 };
