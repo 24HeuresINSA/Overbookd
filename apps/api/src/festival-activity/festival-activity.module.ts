@@ -20,6 +20,7 @@ import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaNotifications } from "./repository/notifications.prisma";
 import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festival-activities.prisma";
 import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
+import { StatisticsModule } from "../statistics/statistics.module";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -142,6 +143,6 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
       ],
     },
   ],
-  imports: [PrismaModule, DomainEventModule],
+  imports: [PrismaModule, DomainEventModule, StatisticsModule],
 })
 export class FestivalActivityModule {}

@@ -1,8 +1,8 @@
-import { FaStatus } from "./fa.model";
 import { FtStatus } from "./ft.model";
+import { Statistics } from "@overbookd/http";
 
-export interface StatsPayload {
-  teamCode: string;
-  status: Record<FaStatus | FtStatus, number>;
-  total: number;
-}
+export type StatsPayload =
+  | (Omit<Statistics, "status"> & {
+      status: Record<FtStatus, number>;
+    })
+  | Statistics;
