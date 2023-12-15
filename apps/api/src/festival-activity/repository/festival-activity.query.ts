@@ -213,9 +213,11 @@ export class FestivalActivityQueryBuilder {
 
   static askForReview(activity: Reviewable) {
     const reviews = this.upsertReviews(activity);
+    const events = this.upsertHistory(activity);
     return {
       ...databaseFestivalActivityWithouListsMapping(activity),
       reviews,
+      events,
     };
   }
 
