@@ -63,7 +63,12 @@
         />
 
         <section class="time-windows">
-          <h2>Créneaux de l'activité</h2>
+          <h2>
+            Créneaux de l'activité
+            <v-btn fab dark small color="primary" @click="openCalendar">
+              <v-icon dark> mdi-calendar-blank </v-icon>
+            </v-btn>
+          </h2>
           <FaTimeWindowTable
             :time-windows="general.timeWindows"
             @add="addTimeWindow"
@@ -138,7 +143,7 @@ export default defineComponent({
     FaTimeWindowTable,
     AskPublicDataFormCard,
   },
-  emits: ["reject"],
+  emits: ["reject", "open:calendar"],
   data: (): FaGeneralCardData => ({
     isAskPublicDataDialogOpen: false,
   }),
@@ -236,6 +241,9 @@ export default defineComponent({
         default:
           return true;
       }
+    },
+    openCalendar() {
+      this.$emit("open:calendar");
     },
   },
 });

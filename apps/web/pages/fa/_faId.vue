@@ -2,18 +2,29 @@
   <div class="fa-content fa">
     <FestivalEventSidebar festival-event="FA" class="sidebar" />
     <article class="container fa">
-      <FaGeneralCard id="general" @reject="askReject" />
+      <FaGeneralCard
+        id="general"
+        @reject="askReject"
+        @open:calendar="openCalendar"
+      />
       <FaInChargeCard id="in-charge" @reject="askReject" />
       <SignaCard id="signa" @reject="askReject" />
       <SecurityCard id="security" @reject="askReject" />
       <SupplyCard id="supply" @reject="askReject" />
-      <FaInquiryCard id="inquiry" @reject="askReject" />
+      <FaInquiryCard
+        id="inquiry"
+        @reject="askReject"
+        @open:calendar="openCalendar"
+      />
       <FaFeedbackCard id="feedback" />
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
         <AskRejectReasonFormCard
           @close-dialog="closeRejectDialog"
           @rejected="rejected"
         />
+      </v-dialog>
+      <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
+        <OverCalendar :events="allTimeWindows" :date="eventStartDate" />
       </v-dialog>
     </article>
     <SnackNotificationContainer />
@@ -33,9 +44,12 @@ import FaInquiryCard from "~/components/organisms/festival-event/festival-activi
 import FaFeedbackCard from "~/components/organisms/festival-event/festival-activity/FaFeedbackCard.vue";
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
+import { CalendarEvent } from "~/utils/models/calendar.model";
 
 type FestivalActivityDetailsData = {
   isRejectDialogOpen: boolean;
+  isCalendarDialogOpen: boolean;
   reviewer?: Reviewer;
 };
 
@@ -52,9 +66,11 @@ export default defineComponent({
     FaFeedbackCard,
     SnackNotificationContainer,
     AskRejectReasonFormCard,
+    OverCalendar,
   },
   data: (): FestivalActivityDetailsData => ({
     isRejectDialogOpen: false,
+    isCalendarDialogOpen: false,
     reviewer: undefined,
   }),
   computed: {
@@ -63,6 +79,30 @@ export default defineComponent({
     },
     faId(): number {
       return +this.$route.params.faId;
+    },
+    eventStartDate(): Date {
+      return this.$accessor.configuration.eventStartDate;
+    },
+    allTimeWindows(): CalendarEvent[] {
+      const inquiryEvents: CalendarEvent[] = this.mFA.inquiry.timeWindows.map(
+        ({ start, end }) => ({
+          start,
+          end,
+          name: "Créneau matos",
+          timed: true,
+          color: "grey",
+        }),
+      );
+      const generalEvents: CalendarEvent[] = this.mFA.general.timeWindows.map(
+        ({ start, end }) => ({
+          start,
+          end,
+          name: "Créneau animation",
+          timed: true,
+          color: "blue",
+        }),
+      );
+      return [...inquiryEvents, ...generalEvents];
     },
   },
 
@@ -79,6 +119,9 @@ export default defineComponent({
   methods: {
     closeRejectDialog() {
       this.isRejectDialogOpen = false;
+    },
+    openCalendar() {
+      this.isCalendarDialogOpen = true;
     },
     askReject(team: Reviewer) {
       this.reviewer = team;
