@@ -53,8 +53,8 @@ import {
 } from "./dto/update-festival-activity.request.dto";
 import { PeriodDto } from "./dto/period.dto";
 
-export type RemovalFestivalActivity = {
-  remove(id: FestivalActivity["id"]): Promise<FestivalActivity>;
+export type RemoveFestivalActivities = {
+  remove(id: FestivalActivity["id"]): Promise<void>;
 };
 
 export type Adherents = {
@@ -101,7 +101,7 @@ export class FestivalActivityService {
     private readonly creation: CreateFestivalActivity,
     private readonly prepare: PrepareFestivalActivity,
     private readonly askForReview: AskForReview,
-    private readonly removal: RemovalFestivalActivity,
+    private readonly removal: RemoveFestivalActivities,
     private readonly reviewing: Reviewing,
     private readonly eventStore: DomainEventService,
   ) {}

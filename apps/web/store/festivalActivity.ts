@@ -98,7 +98,9 @@ export const actions = actionTree(
 
     /* REMOVE */
     async remove({ commit, dispatch }, id: FestivalActivity["id"]) {
-      const res = await safeCall(this, repo.remove(this, id));
+      const res = await safeCall(this, repo.remove(this, id), {
+        successMessage: `FA ${id} supprimée 🗑️`,
+      });
       if (!res) return;
 
       commit("SET_SELECTED_ACTIVITY", fakeActivity);

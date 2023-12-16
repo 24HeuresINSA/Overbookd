@@ -18,7 +18,6 @@ import {
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   WRITE_FA,
-  REMOVE_FA,
   READ_FT,
   WRITE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
@@ -59,7 +58,6 @@ export type Permission =
   | typeof READ_ANIMATION_TO_PUBLISH
   | typeof READ_FA
   | typeof WRITE_FA
-  | typeof REMOVE_FA
   | typeof READ_FT
   | typeof WRITE_FT
   | typeof VIEW_FESTIVAL_EVENTS_STATS

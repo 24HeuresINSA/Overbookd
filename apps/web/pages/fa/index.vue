@@ -52,7 +52,7 @@
             <TeamChip v-if="item.team" :team="item.team" with-name />
           </template>
 
-          <template #item.actions="{ item }">
+          <template #item.removal="{ item }">
             <v-icon v-show="canRemoveFa" @click.stop="removeFa(item)">
               mdi-delete
             </v-icon>
@@ -92,7 +92,7 @@ import { Team } from "~/utils/models/team.model";
 import { Header } from "~/utils/models/data-table.model";
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
-import { REMOVE_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
+import { WRITE_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import {
   PreviewFestivalActivity,
   FestivalActivity,
@@ -127,7 +127,7 @@ export default defineComponent({
       { text: "Nom", value: "name" },
       { text: "Equipe", value: "team" },
       { text: "Responsable", value: "adherent", sortable: false },
-      { text: "Actions", value: "actions", sortable: false },
+      { text: "Suppression", value: "removal", sortable: false },
     ],
     isNewFaDialogOpen: false,
     filters: {},
@@ -161,7 +161,7 @@ export default defineComponent({
       });
     },
     canRemoveFa(): boolean {
-      return this.$accessor.user.can(REMOVE_FA);
+      return this.$accessor.user.can(WRITE_FA);
     },
     canExportSignages(): boolean {
       return this.$accessor.user.can(WRITE_SIGNAGE_CATALOG);

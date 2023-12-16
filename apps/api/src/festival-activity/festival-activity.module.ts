@@ -21,6 +21,7 @@ import { PrismaNotifications } from "./repository/notifications.prisma";
 import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festival-activities.prisma";
 import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
 import { StatisticsModule } from "../statistics/statistics.module";
+import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-activities.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -101,6 +102,12 @@ import { StatisticsModule } from "../statistics/statistics.module";
       inject: [PrismaAskForReview, PrismaNotifications],
     },
     {
+      provide: PrismaRemoveFestivalActivities,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaRemoveFestivalActivities(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: Reviewing,
       useFactory: (festivalActivities: PrismaReviewingFestivalActivities) =>
         new Reviewing(festivalActivities),
@@ -116,6 +123,7 @@ import { StatisticsModule } from "../statistics/statistics.module";
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
         askForReview: AskForReview,
+        remove: PrismaRemoveFestivalActivities,
         reviewing: Reviewing,
         eventStore: DomainEventService,
       ) =>
@@ -127,6 +135,7 @@ import { StatisticsModule } from "../statistics/statistics.module";
           create,
           prepare,
           askForReview,
+          remove,
           reviewing,
           eventStore,
         ),
@@ -138,6 +147,7 @@ import { StatisticsModule } from "../statistics/statistics.module";
         CreateFestivalActivity,
         PrepareFestivalActivity,
         AskForReview,
+        PrismaRemoveFestivalActivities,
         Reviewing,
         DomainEventService,
       ],

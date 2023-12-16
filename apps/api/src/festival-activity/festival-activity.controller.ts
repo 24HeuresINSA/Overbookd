@@ -24,12 +24,7 @@ import {
   ApiExtraModels,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
-import {
-  READ_FA,
-  REMOVE_FA,
-  VALIDATE_FA,
-  WRITE_FA,
-} from "@overbookd/permission";
+import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
 import type {
   Contractor,
   ElectricitySupply,
@@ -242,7 +237,7 @@ export class FestivalActivityController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(REMOVE_FA)
+  @Permission(WRITE_FA)
   @Delete(":id")
   @HttpCode(204)
   @ApiResponse({

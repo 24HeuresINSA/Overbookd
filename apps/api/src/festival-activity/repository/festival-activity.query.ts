@@ -400,6 +400,7 @@ function databaseFestivalActivityWithouListsMapping(
   return {
     id: activity.id,
     status: activity.status,
+    isDeleted: false,
     name: activity.general.name,
     description: activity.general.description,
     toPublish: activity.general.toPublish,
@@ -425,5 +426,14 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
     authorId: feedback.author.id,
     content: feedback.content,
     publishedAt: feedback.publishedAt,
+  };
+}
+
+export const IS_NOT_DELETED = { isDeleted: false };
+
+export function buildFestivalActivityCondition(id: FestivalActivity["id"]) {
+  return {
+    id,
+    ...IS_NOT_DELETED,
   };
 }

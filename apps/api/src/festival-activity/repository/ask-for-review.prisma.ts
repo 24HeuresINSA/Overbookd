@@ -10,6 +10,7 @@ import { FestivalActivityBuilder } from "./festival-activity.builder";
 import {
   FestivalActivityQueryBuilder,
   SELECT_FESTIVAL_ACTIVITY,
+  buildFestivalActivityCondition,
 } from "./festival-activity.query";
 
 export class PrismaAskForReview
@@ -19,7 +20,7 @@ export class PrismaAskForReview
 
   async findById(id: number): Promise<FestivalActivity> {
     const activity = await this.prisma.festivalActivity.findUnique({
-      where: { id },
+      where: buildFestivalActivityCondition(id),
       select: SELECT_FESTIVAL_ACTIVITY,
     });
     if (!activity) return null;
@@ -28,7 +29,7 @@ export class PrismaAskForReview
 
   async save(activity: Reviewable): Promise<Reviewable> {
     const updated = await this.prisma.festivalActivity.update({
-      where: { id: activity.id },
+      where: buildFestivalActivityCondition(activity.id),
       select: SELECT_FESTIVAL_ACTIVITY,
       data: FestivalActivityQueryBuilder.askForReview(activity),
     });

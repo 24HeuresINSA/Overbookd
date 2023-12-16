@@ -19,7 +19,6 @@ export const VALIDATE_FT = "validate-ft";
 export const READ_ANIMATION_TO_PUBLISH = "read-animation-to-publish";
 export const READ_FA = "read-fa";
 export const WRITE_FA = "write-fa";
-export const REMOVE_FA = "remove-fa";
 export const READ_FT = "read-ft";
 export const WRITE_FT = "write-ft";
 export const VIEW_FESTIVAL_EVENTS_STATS = "view-festival-events-stats";
@@ -59,7 +58,6 @@ const permissions = [
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
   WRITE_FA,
-  REMOVE_FA,
   READ_FT,
   WRITE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,

@@ -624,6 +624,7 @@ model Barrel {
 model FestivalActivity {
   id        Int                        @unique
   status    FestivalActivityStatus
+  isDeleted Boolean                    @default(false) @map("is_deleted")
   reviews   FestivalActivityReview[]
   feedbacks FestivalActivityFeedback[]
   events    FestivalActivityHistory[]
