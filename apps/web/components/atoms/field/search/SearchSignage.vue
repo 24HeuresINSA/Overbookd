@@ -46,7 +46,7 @@ export default defineComponent({
       default: "Chercher une signalétique",
     },
     signage: {
-      type: Object,
+      type: Object as () => Signage | undefined,
       default: undefined,
     },
     type: {
@@ -79,12 +79,8 @@ export default defineComponent({
       const allSignages = this.$accessor.catalogSignage.signages;
       if (!this.type) return allSignages;
 
-      return this.$accessor.catalogSignage.signages.reduce(
-        (acc: Signage[], signage: Signage) => {
-          if (this.type && signage.type !== this.type) return acc;
-          return [...acc, signage];
-        },
-        [],
+      return this.$accessor.catalogSignage.signages.filter(
+        ({ type }) => type === this.type,
       );
     },
     filteredSignages(): Signage[] {
@@ -100,7 +96,6 @@ export default defineComponent({
   },
   methods: {
     searchSignage(signageName: string | null) {
-      if (signageName && signageName.length < 3) return;
       this.search = signageName || "";
     },
     propagateEvent(signage: Signage) {

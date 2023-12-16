@@ -644,7 +644,7 @@ export class FestivalActivityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FA)
-  @Patch(":faId/signa/signages/link/:signageId")
+  @Patch(":faId/signa/signages/:signageId/link")
   @HttpCode(200)
   @ApiResponse({
     status: 200,

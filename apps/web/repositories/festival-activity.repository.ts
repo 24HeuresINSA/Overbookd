@@ -207,7 +207,7 @@ export class FestivalActivityRepository {
     catalogItem: LinkSignageCatalogItemForm,
   ) {
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
-      `${this.basePath}/${faId}/signa/signages/link/${signageId}`,
+      `${this.basePath}/${faId}/signa/signages/${signageId}/link`,
       catalogItem,
     );
   }
