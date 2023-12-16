@@ -4,6 +4,8 @@ export class Money {
   }
 
   static displayCents(cents: number) {
-    return `${this.inEuros(cents)}  €`;
+    const euros = this.inEuros(cents);
+    const formattedEuros = euros.toFixed(2);
+    return `${formattedEuros} €`;
   }
 }
