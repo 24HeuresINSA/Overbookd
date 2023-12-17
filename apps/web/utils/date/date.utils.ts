@@ -22,6 +22,15 @@ export function formatDate(date: string | Date): string {
   return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
 }
 
+// return format month YYYY
+export function formatMonthWithYear(date: string | Date): string {
+  const displayOptions: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+  };
+  return new Intl.DateTimeFormat("fr", displayOptions).format(new Date(date));
+}
+
 // return format yyyy-mm-ddThh:mm
 export function formatLocalDateTime(date: Date): string {
   const year = date.getFullYear();

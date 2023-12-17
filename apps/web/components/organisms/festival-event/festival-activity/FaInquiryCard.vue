@@ -23,6 +23,13 @@
           </v-btn>
         </div>
 
+        <h3>
+          Créneaux des demandes
+          <v-btn fab dark small color="primary" @click="openCalendar">
+            <v-icon dark> mdi-calendar-blank </v-icon>
+          </v-btn>
+        </h3>
+
         <FaTimeWindowTable
           :time-windows="inquiry.timeWindows"
           :disabled="shouldInitInquiry"
@@ -207,7 +214,7 @@ export default defineComponent({
     FaInitInquiryFormCard,
     FaLinkDriveFormCard,
   },
-  emits: ["reject"],
+  emits: ["reject", "open:calendar"],
   data: (): FaInquiryCardData => ({
     isInitInquiryDialogOpen: false,
     isLinkDriveDialogOpen: false,
@@ -350,6 +357,9 @@ export default defineComponent({
     },
     updateQuantity(quantity: number) {
       this.quantity = quantity;
+    },
+    openCalendar() {
+      this.$emit("open:calendar");
     },
   },
 });
