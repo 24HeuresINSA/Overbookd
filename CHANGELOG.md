@@ -1,3 +1,16 @@
+## [2.11.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.2...v2.11.3) (2023-12-17)
+
+
+### Bug Fixes
+
+* **festival-activit:** dispaly all timewindows on calendar. [#1363](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1363) ([bf8992b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bf8992b586cef2e392085b355808bdf63d581289))
+* **statistics:** adjust to new festival activity model. [#1383](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1383) ([6d8d6e9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6d8d6e9d7897cca97fda77eddcacc198362d8a40))
+
+
+### Pre-Features
+
+* **festival-activity:** add remove fa in web [#1414](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1414) ([63758ef](https://gitlab.com/24-heures-insa/overbookd-mono/commit/63758ef9492134916958fbbb8cc5b37f79325639))
+
 ## [2.11.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.1...v2.11.2) (2023-12-15)
 
 
