@@ -53,7 +53,7 @@
           </template>
 
           <template #item.removal="{ item }">
-            <v-icon v-show="canRemoveFa" @click.stop="removeFa(item)">
+            <v-icon v-show="canRemoveFa" @click.stop="openRemovalDialog(item)">
               mdi-delete
             </v-icon>
           </template>
@@ -68,13 +68,35 @@
       class="btn-plus"
       elevation="2"
       fab
-      @click="isNewFaDialogOpen = true"
+      @click="openNewFaDialog"
     >
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
 
     <v-dialog v-model="isNewFaDialogOpen" max-width="600">
-      <NewFaCard @close-dialog="isNewFaDialogOpen = false" />
+      <NewFaCard @close-dialog="closeNewFaDialog" />
+    </v-dialog>
+
+    <v-dialog v-model="isRemovalDialogOpen" max-width="600">
+      <ConfirmationMessage
+        confirm-color="error"
+        @close-dialog="closeRemovalDialog"
+        @confirm="removeFa"
+      >
+        <template #title>
+          Suppression de la FA #<strong>
+            {{ activityToRemove?.id }}
+          </strong>
+        </template>
+        <template #statement>
+          Tu es sur le point de supprimer la FA
+          <strong>{{ activityToRemove?.name }}</strong
+          >. Es-tu sûr de faire ça ?
+        </template>
+        <template #confirm-btn-content>
+          <v-icon left> mdi-delete </v-icon>Supprimer
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
 
     <SnackNotificationContainer />
@@ -87,6 +109,7 @@ import NewFaCard from "~/components/molecules/festival-event/creation/NewFaCard.
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FaFilter from "~/components/organisms/festival-event/festival-activity/FaFilter.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Team } from "~/utils/models/team.model";
 import { Header } from "~/utils/models/data-table.model";
@@ -109,6 +132,8 @@ import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity
 interface FaData {
   headers: Header[];
   isNewFaDialogOpen: boolean;
+  isRemovalDialogOpen: boolean;
+  activityToRemove?: PreviewFestivalActivity;
   filters: Filters;
 }
 
@@ -119,6 +144,7 @@ export default defineComponent({
     TeamChip,
     SnackNotificationContainer,
     FaFilter,
+    ConfirmationMessage,
   },
   data: (): FaData => ({
     headers: [
@@ -130,6 +156,8 @@ export default defineComponent({
       { text: "Suppression", value: "removal", sortable: false },
     ],
     isNewFaDialogOpen: false,
+    isRemovalDialogOpen: false,
+    activityToRemove: undefined,
     filters: {},
   }),
   head: () => ({
@@ -289,8 +317,24 @@ export default defineComponent({
       this.$router.push({ path: `/fa/${fa.id}` });
     },
 
-    removeFa(fa: PreviewFestivalActivity) {
-      this.$accessor.festivalActivity.remove(fa.id);
+    removeFa() {
+      if (!this.activityToRemove) return;
+      this.$accessor.festivalActivity.remove(this.activityToRemove.id);
+    },
+
+    openNewFaDialog() {
+      this.isNewFaDialogOpen = true;
+    },
+    closeNewFaDialog() {
+      this.isNewFaDialogOpen = false;
+    },
+    openRemovalDialog(fa: PreviewFestivalActivity) {
+      this.activityToRemove = fa;
+      this.isRemovalDialogOpen = true;
+    },
+    closeRemovalDialog() {
+      this.isRemovalDialogOpen = false;
+      this.activityToRemove = undefined;
     },
   },
 });
