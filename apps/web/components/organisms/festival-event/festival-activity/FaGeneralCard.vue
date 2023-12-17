@@ -63,12 +63,12 @@
         />
 
         <section class="time-windows">
-          <h2>
+          <h3>
             Créneaux de l'activité
             <v-btn fab dark small color="primary" @click="openCalendar">
               <v-icon dark> mdi-calendar-blank </v-icon>
             </v-btn>
-          </h2>
+          </h3>
           <FaTimeWindowTable
             :time-windows="general.timeWindows"
             @add="addTimeWindow"
