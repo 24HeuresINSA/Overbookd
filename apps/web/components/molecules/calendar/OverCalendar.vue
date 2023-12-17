@@ -7,7 +7,7 @@
       <v-spacer class="calendar-title">
         <slot name="title">
           <div>
-            {{ title }}
+            {{ title ?? defaultTitle }}
           </div>
         </slot>
       </v-spacer>
@@ -16,9 +16,12 @@
       </v-btn>
     </v-sheet>
     <v-calendar
+      v-for="calendarType in types"
+      :key="calendarType"
       ref="calendar"
       :value="date"
-      type="week"
+      :type="calendarType"
+      :class="`calendar-${calendarType}`"
       :events="events"
       :event-ripple="true"
       :weekdays="weekdays"
@@ -106,7 +109,11 @@
           :formatTime="formatTime"
           :timeSummary="timeSummary"
           :eventSummary="eventSummary"
-        ></slot>
+        >
+          <div class="default-event">
+            <component :is="{ render: eventSummary }" />
+          </div>
+        </slot>
       </template>
     </v-calendar>
   </div>
@@ -116,7 +123,11 @@
 import Vue from "vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
-import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
+import {
+  VuetifyCalendar,
+  VuetifyCalendarType,
+} from "~/utils/calendar/vuetify-calendar";
+import { formatMonthWithYear } from "~/utils/date/date.utils";
 
 export default Vue.extend({
   name: "OverCalendar",
@@ -140,7 +151,7 @@ export default Vue.extend({
     },
     title: {
       type: String,
-      default: () => "",
+      default: () => undefined,
     },
     weekdays: {
       type: Array,
@@ -154,6 +165,12 @@ export default Vue.extend({
   computed: {
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
+    },
+    defaultTitle(): string {
+      return formatMonthWithYear(this.date);
+    },
+    types(): VuetifyCalendarType[] {
+      return ["day", "week"];
     },
   },
   watch: {
@@ -203,6 +220,19 @@ export default Vue.extend({
     font-size: 18px;
     font-weight: 500;
   }
+  &-day {
+    display: none;
+    @media only screen and (max-width: $mobile-max-width) {
+      display: flex;
+    }
+  }
+  &-week {
+    @media only screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
+  }
+}
+.default-event {
+  padding-left: 4px;
 }
 </style>
-./vuetify-calendar../../../utils/calendar/vuetify-calendar
