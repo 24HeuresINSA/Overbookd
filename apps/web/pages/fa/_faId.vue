@@ -24,7 +24,11 @@
         />
       </v-dialog>
       <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
-        <OverCalendar :events="allTimeWindows" :date="eventStartDate" />
+        <OverCalendar
+          :events="allTimeWindows"
+          :date="calendarMarker"
+          @change="updateCalendarMarker"
+        />
       </v-dialog>
     </article>
     <SnackNotificationContainer />
@@ -51,6 +55,7 @@ type FestivalActivityDetailsData = {
   isRejectDialogOpen: boolean;
   isCalendarDialogOpen: boolean;
   reviewer?: Reviewer;
+  calendarMarker: Date;
 };
 
 export default defineComponent({
@@ -72,6 +77,7 @@ export default defineComponent({
     isRejectDialogOpen: false,
     isCalendarDialogOpen: false,
     reviewer: undefined,
+    calendarMarker: new Date(),
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -82,6 +88,16 @@ export default defineComponent({
     },
     eventStartDate(): Date {
       return this.$accessor.configuration.eventStartDate;
+    },
+    calendarStartDate(): Date {
+      const startTimestamps = [
+        ...this.mFA.general.timeWindows,
+        ...this.mFA.inquiry.timeWindows,
+      ].map(({ start }) => start.getTime());
+      const minStart = Math.min(...startTimestamps);
+
+      if (minStart === 0) return this.eventStartDate;
+      return new Date(minStart);
     },
     allTimeWindows(): CalendarEvent[] {
       const inquiryEvents: CalendarEvent[] = this.mFA.inquiry.timeWindows.map(
@@ -115,6 +131,7 @@ export default defineComponent({
       this.$router.push({ path: "/fa" });
     }
     document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
+    this.calendarMarker = this.calendarStartDate;
   },
   methods: {
     closeRejectDialog() {
@@ -122,6 +139,9 @@ export default defineComponent({
     },
     openCalendar() {
       this.isCalendarDialogOpen = true;
+    },
+    updateCalendarMarker(date: Date) {
+      this.calendarMarker = date;
     },
     askReject(team: Reviewer) {
       this.reviewer = team;
