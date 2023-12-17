@@ -238,6 +238,24 @@ export class FestivalActivityController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
+  @Delete(":id")
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Festival activity deleted",
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
+    return this.festivalActivityService.remove(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
   @Patch(":id/general")
   @ApiResponse({
     status: 200,

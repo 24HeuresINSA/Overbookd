@@ -40,9 +40,11 @@ type State = {
   selectedActivity: FestivalActivity;
 };
 
+const fakeActivity = defaultDraft(0, "Fake activity");
+
 export const state = (): State => ({
   allActivities: [],
-  selectedActivity: defaultDraft(0, "Fake activity"),
+  selectedActivity: fakeActivity,
 });
 
 export const mutations = mutationTree(state, {
@@ -91,6 +93,17 @@ export const actions = actionTree(
 
       const activity = castActivityWithDate(res.data);
       commit("SET_SELECTED_ACTIVITY", activity);
+      await dispatch("fetchAllActivities");
+    },
+
+    /* REMOVE */
+    async remove({ commit, dispatch }, id: FestivalActivity["id"]) {
+      const res = await safeCall(this, repo.remove(this, id), {
+        successMessage: `FA #${id} supprimée 🗑️`,
+      });
+      if (!res) return;
+
+      commit("SET_SELECTED_ACTIVITY", fakeActivity);
       await dispatch("fetchAllActivities");
     },
 

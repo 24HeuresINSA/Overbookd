@@ -53,6 +53,10 @@ import {
 } from "./dto/update-festival-activity.request.dto";
 import { PeriodDto } from "./dto/period.dto";
 
+export type RemoveFestivalActivities = {
+  remove(id: FestivalActivity["id"]): Promise<void>;
+};
+
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
 };
@@ -97,6 +101,7 @@ export class FestivalActivityService {
     private readonly creation: CreateFestivalActivity,
     private readonly prepare: PrepareFestivalActivity,
     private readonly askForReview: AskForReview,
+    private readonly removal: RemoveFestivalActivities,
     private readonly reviewing: Reviewing,
     private readonly eventStore: DomainEventService,
   ) {}
@@ -133,6 +138,10 @@ export class FestivalActivityService {
     this.eventStore.publish(event);
 
     return activity;
+  }
+
+  async remove(id: FestivalActivity["id"]): Promise<void> {
+    await this.removal.remove(id);
   }
 
   saveGeneralSection(
