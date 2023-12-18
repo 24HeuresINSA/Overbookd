@@ -18,6 +18,7 @@ export const REFUSED = "REFUSED";
 
 type Security = {
   specialNeed: string | null;
+  freePass: number;
 };
 
 export type Feedback = {

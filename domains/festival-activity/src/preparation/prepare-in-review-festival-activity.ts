@@ -51,8 +51,12 @@ import {
   PrepareSignageUpdate,
   LinkInquiryDrive,
   LinkSignageCatalogItem,
+  PrepareSecurityUpdate,
 } from "./prepare-festival-activity.model";
-import { FestivalActivityError } from "../festival-activity.error";
+import {
+  FestivalActivityError,
+  FreePassMustBePositive,
+} from "../festival-activity.error";
 import { hasAtLeastOneItem } from "@overbookd/list";
 import {
   AlreadyInitialized,
@@ -349,8 +353,17 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, signa };
   }
 
-  updateSecurity(security: FestivalActivity["security"]): Reviewable {
+  updateSecurity(form: PrepareSecurityUpdate): Reviewable {
     this.checkIfSecurityAlreadyApproved();
+    const specialNeed =
+      form.specialNeed === undefined
+        ? this.activity.security.specialNeed
+        : form.specialNeed;
+    const freePass = form.freePass ?? this.activity.security.freePass;
+
+    if (freePass < 0) throw new FreePassMustBePositive();
+
+    const security = { ...this.activity.inCharge, specialNeed, freePass };
     return { ...this.activity, security };
   }
 

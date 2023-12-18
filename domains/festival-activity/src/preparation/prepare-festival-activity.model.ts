@@ -68,6 +68,11 @@ export type PrepareSignageUpdate = {
   comment?: string | null;
 };
 
+export type PrepareSecurityUpdate = {
+  specialNeed?: string | null;
+  freePass?: number;
+};
+
 export type PrepareSupplyUpdate = {
   water: Supply["water"];
 };

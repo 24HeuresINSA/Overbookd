@@ -31,6 +31,7 @@ import {
   SignageCatalogItem,
   signa,
   Reviewable,
+  PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
 import {
   AddInquiryRequest,
@@ -257,7 +258,7 @@ export class FestivalActivityService {
 
   saveSecuritySection(
     id: FestivalActivity["id"],
-    security: FestivalActivity["security"],
+    security: PrepareSecurityUpdate,
   ): Promise<FestivalActivity> {
     return this.prepare.updateSecuritySection(id, security);
   }

@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  FestivalActivity,
   ElectricityConnection,
   P17_125A_TETRA,
   P17_16A_MONO,
@@ -27,6 +26,7 @@ import {
   Drive,
   drives,
   SignageCatalogItem,
+  PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
@@ -259,16 +259,22 @@ export class LinkSignageCatalogItemDto implements LinkSignageCatalogItemForm {
   catalogItemId: SignageCatalogItem["id"];
 }
 
-type PrepareSecurityUpdate = FestivalActivity["security"];
-
 export class SecurityRequestDto implements PrepareSecurityUpdate {
   @ApiProperty({
     description: "Festival activity special security need",
-    required: true,
+    required: false,
   })
   @IsString()
-  @ValidateIf((_, value) => value !== null)
-  specialNeed: string | null;
+  @IsOptional()
+  specialNeed?: string | null;
+
+  @ApiProperty({
+    description: "Festival activity free pass number",
+    required: false,
+  })
+  @IsNumber()
+  @IsOptional()
+  freePass?: number;
 }
 
 export class SupplyRequestDto implements PrepareSupplyUpdate {

@@ -18,6 +18,7 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareFeedbackPublish,
   PrepareGeneralUpdate,
+  PrepareSecurityUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
   PrepareSupplyUpdate,
@@ -202,7 +203,7 @@ export class FestivalActivityRepository {
   static updateSecurity(
     context: Context,
     faId: FestivalActivity["id"],
-    security: FestivalActivity["security"],
+    security: PrepareSecurityUpdate,
   ) {
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/security`,
