@@ -652,7 +652,7 @@ model FestivalActivity {
 
   // Security
   specialNeed String? @map("special_need") @db.Text
-  freePass    Int     @map("free_pass")
+  freePass    Int     @default(0) @map("free_pass")
 
   // Supply
   electricity FestivalActivityElectricitySupply[]
