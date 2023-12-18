@@ -2,7 +2,7 @@ FROM node:20.10.0-alpine AS installer
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@8.11.0
+RUN npm install -g pnpm@8.12.1
 COPY pnpm-lock.yaml ./
 
 RUN pnpm fetch
