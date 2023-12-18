@@ -146,6 +146,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       },
       security: {
         specialNeed: activityData.specialNeed,
+        freePass: activityData.freePass,
       },
       supply: {
         electricity: activityData.electricity,

@@ -7,6 +7,7 @@ import {
   PrepareSignageUpdate,
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
+  PrepareSecurityUpdate,
   PrepareSupplyUpdate,
   PrepareContractorCreation,
   PrepareContractorUpdate,
@@ -234,10 +235,7 @@ export const actions = actionTree(
     },
 
     /* UPDATE SECURITY */
-    async updateSecurity(
-      { state, commit },
-      security: FestivalActivity["security"],
-    ) {
+    async updateSecurity({ state, commit }, security: PrepareSecurityUpdate) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.updateSecurity(this, id, security));
       if (!res) return;

@@ -78,6 +78,7 @@ export class CreateFestivalActivity {
   private generateSecuritySection(): Draft["security"] {
     return {
       specialNeed: null,
+      freePass: 0,
     };
   }
 

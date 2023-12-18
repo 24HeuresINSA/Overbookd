@@ -2,6 +2,9 @@ function buildFestivalActivityNotFoundErrorMessage(id: number) {
   return `La fiche activité #${id} n'a pas été trouvé`;
 }
 
+const FREE_PASS_MUST_BE_POSITIVE_ERROR_MESSAGE =
+  "Le nombre de laissez passer doit être supérieur ou égale à 0";
+
 const TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE =
   "Une créneau existe déjà à ces heures";
 
@@ -42,6 +45,12 @@ export class CantAskForReview extends FestivalActivityError {
 export class TimeWindowAlreadyExists extends FestivalActivityError {
   constructor() {
     super(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);
+  }
+}
+
+export class FreePassMustBePositive extends FestivalActivityError {
+  constructor() {
+    super(FREE_PASS_MUST_BE_POSITIVE_ERROR_MESSAGE);
   }
 }
 

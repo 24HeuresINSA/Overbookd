@@ -213,6 +213,7 @@ function defaultInReview(id: number, name: string): InReview {
     },
     security: {
       specialNeed: null,
+      freePass: 0,
     },
     supply: {
       electricity: [],
@@ -265,6 +266,7 @@ function defaultValidated(id: number, name: string): Validated {
     },
     security: {
       specialNeed: null,
+      freePass: 0,
     },
     supply: {
       electricity: [],
@@ -323,6 +325,7 @@ function defaultRefused(id: number, name: string): Refused {
     },
     security: {
       specialNeed: null,
+      freePass: 0,
     },
     supply: {
       electricity: [],
@@ -373,6 +376,7 @@ export function defaultDraft(id: number, name: string): Draft {
     signa: { location: null, signages: [] },
     security: {
       specialNeed: null,
+      freePass: 0,
     },
     supply: {
       electricity: [],

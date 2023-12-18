@@ -1,6 +1,6 @@
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
-import { Draft, FestivalActivity } from "../festival-activity";
+import { Draft } from "../festival-activity";
 import { InquiryRequest } from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
@@ -18,13 +18,17 @@ import {
   PrepareInquiryRequestCreation,
   PrepareSignageCreation,
   PrepareSignageUpdate,
+  PrepareSecurityUpdate,
 } from "./prepare-festival-activity.model";
 import { TimeWindows } from "./section-aggregates/time-windows";
 import { Contractors } from "./section-aggregates/contractors";
 import { AlreadyInitialized, Inquiries } from "./section-aggregates/inquiries";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Signages } from "./section-aggregates/signages";
-import { FestivalActivityError } from "../festival-activity.error";
+import {
+  FestivalActivityError,
+  FreePassMustBePositive,
+} from "../festival-activity.error";
 
 export class AssignDriveInDraftActivity extends FestivalActivityError {
   constructor() {
@@ -144,7 +148,9 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, signa };
   }
 
-  updateSecurity(security: FestivalActivity["security"]): Draft {
+  updateSecurity(form: PrepareSecurityUpdate): Draft {
+    const security = { ...this.activity.security, ...form };
+    if (security.freePass < 0) throw new FreePassMustBePositive();
     return { ...this.activity, security };
   }
 

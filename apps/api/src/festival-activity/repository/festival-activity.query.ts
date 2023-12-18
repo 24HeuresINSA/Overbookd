@@ -74,6 +74,7 @@ const SELECT_SIGNA = {
 
 const SELECT_SECURITY = {
   specialNeed: true,
+  freePass: true,
 };
 
 const SELECT_SUPPLY = {
@@ -150,7 +151,7 @@ export const SELECT_FESTIVAL_ACTIVITY = {
 export class FestivalActivityQueryBuilder {
   static create(activity: Draft) {
     return {
-      ...databaseFestivalActivityWithouListsMapping(activity),
+      ...databaseFestivalActivityWithoutListsMapping(activity),
       generalTimeWindows: {
         create: activity.general.timeWindows,
       },
@@ -198,7 +199,7 @@ export class FestivalActivityQueryBuilder {
     const events = this.upsertHistory(activity);
 
     return {
-      ...databaseFestivalActivityWithouListsMapping(activity),
+      ...databaseFestivalActivityWithoutListsMapping(activity),
       generalTimeWindows,
       contractors,
       signages,
@@ -215,7 +216,7 @@ export class FestivalActivityQueryBuilder {
     const reviews = this.upsertReviews(activity);
     const events = this.upsertHistory(activity);
     return {
-      ...databaseFestivalActivityWithouListsMapping(activity),
+      ...databaseFestivalActivityWithoutListsMapping(activity),
       reviews,
       events,
     };
@@ -394,7 +395,7 @@ function keyEventToHistory(
   });
 }
 
-function databaseFestivalActivityWithouListsMapping(
+function databaseFestivalActivityWithoutListsMapping(
   activity: FestivalActivity,
 ) {
   return {
@@ -411,6 +412,7 @@ function databaseFestivalActivityWithouListsMapping(
     adherentId: activity.inCharge.adherent.id,
     locationId: activity.signa.location?.id,
     specialNeed: activity.security.specialNeed,
+    freePass: activity.security.freePass,
     water: activity.supply.water,
   };
 }

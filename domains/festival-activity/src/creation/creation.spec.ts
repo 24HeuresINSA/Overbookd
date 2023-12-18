@@ -67,6 +67,7 @@ describe("Festival activity creation", () => {
 
     it("should generate security section with default value", () => {
       expect(escapeGame.security.specialNeed).toBeNull();
+      expect(escapeGame.security.freePass).toEqual(0);
     });
 
     it("should generate supply section with default value", () => {
@@ -105,6 +106,7 @@ describe("Festival activity creation", () => {
         },
         security: {
           specialNeed: null,
+          freePass: 0,
         },
         supply: {
           electricity: [],

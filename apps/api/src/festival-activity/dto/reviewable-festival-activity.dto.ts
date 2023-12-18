@@ -85,6 +85,12 @@ class SecurityResponseDto implements Security {
     nullable: true,
   })
   specialNeed: string | null;
+
+  @ApiProperty({
+    required: true,
+    description: "Number of free pass for this festival activity",
+  })
+  freePass: number;
 }
 
 type Supply = Reviewable["supply"];

@@ -159,6 +159,7 @@ export type {
   PrepareContractorCreation,
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
+  PrepareSecurityUpdate,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

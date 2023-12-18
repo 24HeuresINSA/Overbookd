@@ -121,6 +121,12 @@ class SecurityDto implements Security {
     required: false,
   })
   specialNeed: string | null;
+
+  @ApiProperty({
+    description: "Number of free pass for this festival activity",
+    required: true,
+  })
+  freePass: number;
 }
 
 type Supply = Draft["supply"];

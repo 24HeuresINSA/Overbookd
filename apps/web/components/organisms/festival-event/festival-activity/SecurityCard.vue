@@ -38,6 +38,14 @@
         prepend-icon="mdi-security"
         @change="updateSpecialNeed"
       />
+      <v-text-field
+        :value="security.freePass"
+        label="Nombre de laissez passer"
+        prepend-icon="mdi-car"
+        type="number"
+        :rules="[rules.number, rules.min]"
+        @change="updateFreePass"
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -51,10 +59,17 @@ import {
   isDraft,
   secu,
 } from "@overbookd/festival-activity";
+import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default defineComponent({
   name: "SecurityCard",
   emits: ["reject"],
+  data: (): InputRulesData => ({
+    rules: {
+      number: isNumber,
+      min: min(0),
+    },
+  }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
@@ -81,6 +96,11 @@ export default defineComponent({
       const specialNeed = canBeEmpty.trim() ? canBeEmpty : null;
       this.$accessor.festivalActivity.updateSecurity({
         specialNeed,
+      });
+    },
+    updateFreePass(freePass: number) {
+      this.$accessor.festivalActivity.updateSecurity({
+        freePass: +freePass,
       });
     },
     approved() {
