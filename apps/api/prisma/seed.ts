@@ -9,6 +9,8 @@ import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "../src/team/team.model";
 import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
+import { signages } from "./seeders/signages";
+import { Signage } from "@overbookd/signa";
 
 const prisma = new PrismaClient();
 
@@ -134,6 +136,23 @@ async function main() {
       await Promise.all([...gearsInsert, ...categoriesInsert]);
     }),
   );
+
+  const savedSignages = await Promise.all(
+    signages.map(async (signage) => {
+      const name = signage.name;
+      console.log("----------------------------------------------------------");
+      console.log(`Inserting ${signage.name} as signage`);
+      return prisma.catalogSignage.create({
+        data: {
+          name,
+          slug: signage.slug,
+          type: signage.type as Signage["type"],
+        },
+      });
+    }),
+  );
+
+  console.log(`\n${savedSignages.length} signages inserted`);
 
   const savedPermissions = await Promise.all(
     permissions.map(async (permission) => {

@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="link-catalog-item-card__title">
-      <h2>Définir les référence des signalétiques</h2>
+      <h2>Définir les références des signalétiques</h2>
     </v-card-title>
 
     <v-card-subtitle>

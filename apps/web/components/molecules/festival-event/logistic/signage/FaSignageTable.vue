@@ -38,7 +38,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import SearchSignage from "~/components/atoms/field/search/SearchSignage.vue";
-import { Signage as FaSignage, signa } from "@overbookd/festival-activity";
+import {
+  Signage as FaSignage,
+  signa,
+  FestivalActivity,
+  isDraft,
+  APPROVED,
+} from "@overbookd/festival-activity";
 import { Signage as CatalogSignage } from "@overbookd/signa";
 import { Header } from "~/utils/models/data-table.model";
 
@@ -76,8 +82,14 @@ export default defineComponent({
     selectedSignage: null,
   }),
   computed: {
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
     cantLinkCatalogItem(): boolean {
-      return !this.$accessor.user.isMemberOf(signa);
+      if (isDraft(this.mFA)) return true;
+      const isSignaMember = this.$accessor.user.isMemberOf(signa);
+      const isValidated = this.mFA.reviews.signa === APPROVED;
+      return !isSignaMember || isValidated;
     },
   },
   methods: {

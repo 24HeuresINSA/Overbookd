@@ -13,6 +13,7 @@
     return-object
     :dense="dense"
     :hide-details="dense"
+    :disabled="disabled"
     @update:search-input="searchSignage"
     @change="propagateEvent"
   >
@@ -28,6 +29,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { SignageType, Signage } from "@overbookd/signa";
+import { SlugifyService } from "@overbookd/slugify";
 
 interface SearchSignageData {
   loading: boolean;
@@ -69,6 +71,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: (): SearchSignageData => ({
     loading: false,
@@ -85,7 +91,9 @@ export default defineComponent({
     },
     filteredSignages(): Signage[] {
       return this.signages.filter((signage) => {
-        return signage.name.includes(this.search);
+        const search = SlugifyService.apply(this.search);
+        console.log(search, signage.slug);
+        return signage.slug.includes(search);
       });
     },
   },
