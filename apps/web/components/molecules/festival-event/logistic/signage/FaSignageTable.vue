@@ -13,7 +13,7 @@
           :signage="item.catalogItem"
           :type="item.type"
           :boxed="false"
-          :disabled="cantLinkCatalogItem"
+          :readonly="cantLinkCatalogItem"
           dense
           label=""
           @change="linkCatalogItem($event, item)"

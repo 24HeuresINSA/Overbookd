@@ -13,7 +13,7 @@
     return-object
     :dense="dense"
     :hide-details="dense"
-    :disabled="disabled"
+    :readonly="readonly"
     @update:search-input="searchSignage"
     @change="propagateEvent"
   >
@@ -71,7 +71,7 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    disabled: {
+    readonly: {
       type: Boolean,
       default: false,
     },
@@ -92,7 +92,6 @@ export default defineComponent({
     filteredSignages(): Signage[] {
       return this.signages.filter((signage) => {
         const search = SlugifyService.apply(this.search);
-        console.log(search, signage.slug);
         return signage.slug.includes(search);
       });
     },

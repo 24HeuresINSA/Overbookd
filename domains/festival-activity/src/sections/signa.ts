@@ -49,6 +49,7 @@ export type Signa = {
   signages: Signage[];
 };
 
-export type DraftSigna = Omit<Signa, "location"> & {
+export type DraftSigna = {
   location: Location | null;
+  signages: BaseSignage[];
 };

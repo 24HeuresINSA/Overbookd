@@ -61,7 +61,7 @@ type DatabaseInquiryRequest = {
 };
 
 type DatabaseSignage = BaseSignage & {
-  catalogItem?: SignageCatalogItem;
+  catalogItem: SignageCatalogItem | null;
 };
 
 type DatabaseSigna = {
@@ -142,7 +142,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       },
       signa: {
         location: activityData.location,
-        signages: activityData.signages,
+        signages: this.formatSignages(activityData.signages),
       },
       security: {
         specialNeed: activityData.specialNeed,
@@ -157,6 +157,17 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       history: this.formatHistory(activityData.events),
     };
     return activityWithoutStatus;
+  }
+
+  private static formatSignages(signages: DatabaseSignage[]) {
+    return signages.map((signage) => {
+      const { catalogItem, ...signageWithoutCatalogItem } = signage;
+      const catalogItemLink = catalogItem !== null ? { catalogItem } : {};
+      return {
+        ...signageWithoutCatalogItem,
+        ...catalogItemLink,
+      };
+    });
   }
 
   private static formatInquiry(activity: DatabaseFestivalActivity) {
