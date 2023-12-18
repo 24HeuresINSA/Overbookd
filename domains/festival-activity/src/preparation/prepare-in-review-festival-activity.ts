@@ -353,6 +353,15 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, signa };
   }
 
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
+    const signages = Signages.build(
+      this.activity.signa.signages,
+    ).linkCatalogItem(link).entries;
+
+    const signa = { ...this.activity.signa, signages };
+    return { ...this.activity, signa };
+  }
+
   updateSecurity(form: PrepareSecurityUpdate): Reviewable {
     this.checkIfSecurityAlreadyApproved();
     const specialNeed =
@@ -365,15 +374,6 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
 
     const security = { ...this.activity.inCharge, specialNeed, freePass };
     return { ...this.activity, security };
-  }
-
-  linkSignageToCatalogItem(link: LinkSignageCatalogItem): Reviewable {
-    const signages = Signages.build(
-      this.activity.signa.signages,
-    ).linkCatalogItem(link).entries;
-
-    const signa = { ...this.activity.signa, signages };
-    return { ...this.activity, signa };
   }
 
   private checkIfSecurityAlreadyApproved() {
