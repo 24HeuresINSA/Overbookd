@@ -189,7 +189,7 @@ export class MailService implements OnApplicationBootstrap {
         : `${rejector.firstname} ${rejector.lastname}`;
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: "Fiche Activité rejetée 🙀",
+        subject: `${activity.name} rejetée 🙀`,
         template: "festival-activity-rejected",
         context: {
           activityName: activity.name,
@@ -212,7 +212,7 @@ export class MailService implements OnApplicationBootstrap {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: "Fiche Activité validée 💫",
+        subject: `${activityName} validée 💫`,
         template: "festival-activity-validated",
         context: {
           activityName,
