@@ -1,6 +1,8 @@
-import { AFFICHE, PANNEAU, BACHE } from "@overbookd/signa";
+import { AFFICHE, PANNEAU, BACHE, Signage } from "@overbookd/signa";
 
-export const signages = [
+type CreateSignage = Omit<Signage, "id">;
+
+export const signages: CreateSignage[] = [
   {
     name: "Affiche 24 A2",
     slug: "affiche-24-a2",

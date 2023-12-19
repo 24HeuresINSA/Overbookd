@@ -90,8 +90,8 @@ export default defineComponent({
       );
     },
     filteredSignages(): Signage[] {
+      const search = SlugifyService.apply(this.search);
       return this.signages.filter((signage) => {
-        const search = SlugifyService.apply(this.search);
         return signage.slug.includes(search);
       });
     },

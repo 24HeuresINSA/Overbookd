@@ -88,8 +88,8 @@ export default defineComponent({
     cantLinkCatalogItem(): boolean {
       if (isDraft(this.mFA)) return true;
       const isSignaMember = this.$accessor.user.isMemberOf(signa);
-      const isValidated = this.mFA.reviews.signa === APPROVED;
-      return !isSignaMember || isValidated;
+      const isAlreadyApproved = this.mFA.reviews.signa === APPROVED;
+      return !isSignaMember || isAlreadyApproved;
     },
   },
   methods: {

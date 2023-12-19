@@ -10,7 +10,6 @@ import { Team } from "../src/team/team.model";
 import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
-import { Signage } from "@overbookd/signa";
 
 const prisma = new PrismaClient();
 
@@ -137,23 +136,6 @@ async function main() {
     }),
   );
 
-  const savedSignages = await Promise.all(
-    signages.map(async (signage) => {
-      const name = signage.name;
-      console.log("----------------------------------------------------------");
-      console.log(`Inserting ${signage.name} as signage`);
-      return prisma.catalogSignage.create({
-        data: {
-          name,
-          slug: signage.slug,
-          type: signage.type as Signage["type"],
-        },
-      });
-    }),
-  );
-
-  console.log(`\n${savedSignages.length} signages inserted`);
-
   const savedPermissions = await Promise.all(
     permissions.map(async (permission) => {
       const name = permission.name;
@@ -240,6 +222,12 @@ async function main() {
   );
 
   console.log(`\n${charismaPeriods.length} Charisma Periods inserted 🎉`);
+
+  const savedSignages = await prisma.catalogSignage.createMany({
+    data: signages,
+  });
+
+  console.log(`\n${savedSignages.count} signages inserted 📍`);
 }
 main()
   .then(async () => {

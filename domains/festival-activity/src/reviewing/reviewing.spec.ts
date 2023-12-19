@@ -237,9 +237,9 @@ describe("Approve festival activity", () => {
     ${withInvalidSignage.general.name}      | ${withInvalidSignage.id}      | ${lea}
     ${withSomeInvalidSignages.general.name} | ${withSomeInvalidSignages.id} | ${noel}
   `(
-    "when trying to approve $activityName even with not assigned to catalog item signages as signa",
+    "when trying to approve $activityName even without catalog items linked to signages as signa",
     ({ activityId, approver }) => {
-      it("should indicate that signages should been assigned to a catalog item", async () => {
+      it("should indicate that signages should been linked to a catalog item", async () => {
         expect(
           async () => await reviewing.approve(activityId, signa, approver.id),
         ).rejects.toThrow(ShouldAssigCatalogItem);
