@@ -6,7 +6,10 @@ import {
 import { MailerService } from "@nestjs-modules/mailer";
 import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { DomainEventService } from "../domain-event/domain-event.service";
-import { PreviewFestivalActivity } from "@overbookd/festival-activity";
+import {
+  PreviewFestivalActivity,
+  REJECTED,
+} from "@overbookd/festival-activity";
 import { Rejected } from "@overbookd/domain-events";
 import { Profile } from "@overbookd/user";
 
@@ -64,8 +67,15 @@ export class MailService implements OnApplicationBootstrap {
     });
 
     this.eventStore.rejectedFestivalActivity.subscribe(async (event) => {
+      const { id, general, inCharge, reviews } = event.festivalActivity;
+
+      const rejectionCount = Object.values(reviews).filter(
+        (review) => review === REJECTED,
+      ).length;
+      const hasAlreadySentEmail = rejectionCount > 1;
+      if (hasAlreadySentEmail) return;
+
       this.logger.log("Send festival-activity-rejected mail");
-      const { id, general, inCharge } = event.festivalActivity;
       const activity = { id, name: general.name };
       const reason = event.reason;
 
