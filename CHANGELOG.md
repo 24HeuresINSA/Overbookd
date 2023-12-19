@@ -1,3 +1,20 @@
+## [2.11.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.3...v2.11.4) (2023-12-19)
+
+
+### Bug Fixes
+
+* **slugify:** update service [#1428](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1428) ([e0df1e3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e0df1e3b5ed73e65b5714423ecb89b6ea591a76c))
+
+
+### Pre-Features
+
+* **festival-activity:** add signa validation in web [#1408](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1408) ([49b9c0d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/49b9c0d95c44ed6dd813a4f3fdb44419d4e9c365))
+
+
+### Refactor
+
+* **festival-activity:** Add free pass in security section [#1427](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1427) ([61000c0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/61000c09a329921d088f2a43f92b36bebf4177b8))
+
 ## [2.11.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.2...v2.11.3) (2023-12-17)
 
 
