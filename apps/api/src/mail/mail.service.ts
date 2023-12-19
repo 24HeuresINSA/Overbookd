@@ -1,30 +1,54 @@
 import {
   Logger,
-  Injectable,
   InternalServerErrorException,
   OnApplicationBootstrap,
 } from "@nestjs/common";
 import { MailerService } from "@nestjs-modules/mailer";
 import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { DomainEventService } from "../domain-event/domain-event.service";
+import {
+  PreviewFestivalActivity,
+  REJECTED,
+} from "@overbookd/festival-activity";
+import { Rejected } from "@overbookd/domain-events";
+import { Profile } from "@overbookd/user";
 
-type emailResetPassword = {
+type EmailResetPassword = {
   email: string;
   firstname: string;
   token: string;
 };
 
-type welcomeNewcomer = {
+type WelcomeNewcomer = {
   email: string;
   firstname: string;
   membership: string;
 };
 
-@Injectable()
+export type Member = Pick<
+  Profile,
+  "email" | "firstname" | "lastname" | "nickname"
+>;
+
+type ActivityRejected = {
+  email: string;
+  activity: {
+    id: PreviewFestivalActivity["id"];
+    name: PreviewFestivalActivity["name"];
+  };
+  rejector: Member;
+  reason: Rejected["reason"];
+};
+
+export type Members = {
+  byId(id: number): Promise<Member | null>;
+};
+
 export class MailService implements OnApplicationBootstrap {
   constructor(
     private readonly mailerService: MailerService,
     private readonly eventStore: DomainEventService,
+    private readonly members: Members,
   ) {}
 
   private logger = new Logger("MailService");
@@ -40,6 +64,27 @@ export class MailService implements OnApplicationBootstrap {
       this.logger.log("Send welcome-volunteer mail");
       this.logger.debug(JSON.stringify(event));
       this.welcome(event);
+    });
+
+    this.eventStore.rejectedFestivalActivity.subscribe(async (event) => {
+      const { id, general, inCharge, reviews } = event.festivalActivity;
+
+      const rejectionCount = Object.values(reviews).filter(
+        (review) => review === REJECTED,
+      ).length;
+      const hasAlreadySentEmail = rejectionCount > 1;
+      if (hasAlreadySentEmail) return;
+
+      this.logger.log("Send festival-activity-rejected mail");
+      const activity = { id, name: general.name };
+      const reason = event.reason;
+
+      const [rejector, { email }] = await Promise.all([
+        this.members.byId(event.by),
+        this.members.byId(inCharge.adherent.id),
+      ]);
+
+      this.festivalActivityRejected({ email, reason, rejector, activity });
     });
   }
 
@@ -67,7 +112,7 @@ export class MailService implements OnApplicationBootstrap {
     email,
     firstname,
     token,
-  }: emailResetPassword): Promise<void> {
+  }: EmailResetPassword): Promise<void> {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
@@ -92,7 +137,7 @@ export class MailService implements OnApplicationBootstrap {
     email,
     firstname,
     membership,
-  }: welcomeNewcomer): Promise<void> {
+  }: WelcomeNewcomer): Promise<void> {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
@@ -106,6 +151,37 @@ export class MailService implements OnApplicationBootstrap {
       });
       if (mail) {
         this.logger.log(`Welcome mail sent to ${email}`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  async festivalActivityRejected({
+    email,
+    reason,
+    rejector,
+    activity,
+  }: ActivityRejected) {
+    try {
+      const rejectorName = rejector.nickname
+        ? `${rejector.nickname}`
+        : `${rejector.firstname} ${rejector.lastname}`;
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: "Fiche Activité rejetée 🙀",
+        template: "festival-activity-rejected",
+        context: {
+          activityName: activity.name,
+          rejectorName,
+          reason,
+          activityLink: `https://${process.env.DOMAIN}/fa/${activity.id}`,
+        },
+      });
+      if (mail) {
+        this.logger.log(
+          `Festival activity rejected mail sent to ${email} for activity #${activity.id}`,
+        );
       }
     } catch (error) {
       this.logger.error(error);
