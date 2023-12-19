@@ -3,7 +3,6 @@ import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { CatalogSignageRepository } from "~/repositories/catalog-signage.repository";
-import { Context } from "~/repositories/assignment.repository";
 import { updateItemToList } from "@overbookd/list";
 import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
@@ -43,7 +42,23 @@ export const actions = actionTree(
         signageRepository.fetchSignages(this),
       );
       if (!res) return;
-      const signages = await getSignageImages(this, res.data);
+      commit("SET_SIGNAGES", res.data);
+    },
+
+    async fetchSignagesImages({ state, commit }): Promise<void> {
+      const signages = await Promise.all(
+        state.signages.map(async (signage) => {
+          const signageImage = await CatalogSignageRepository.getSignageImage(
+            this,
+            signage.id,
+          );
+          if (!signageImage) return signage;
+          return {
+            ...signage,
+            imageBlob: signageImage,
+          };
+        }),
+      );
       commit("SET_SIGNAGES", signages);
     },
 
@@ -111,19 +126,3 @@ export const actions = actionTree(
     },
   },
 );
-
-async function getSignageImages(context: Context, signages: Signage[]) {
-  return await Promise.all(
-    signages.map(async (signage) => {
-      const signageImage = await CatalogSignageRepository.getSignageImage(
-        context,
-        signage.id,
-      );
-      if (!signageImage) return signage;
-      return {
-        ...signage,
-        imageBlob: signageImage,
-      };
-    }),
-  );
-}
