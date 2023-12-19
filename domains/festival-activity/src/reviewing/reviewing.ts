@@ -35,7 +35,7 @@ import {
 } from "./reviewing.error";
 import { Adherent } from "../sections/in-charge";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
-import { isAssignedToCatalogItem } from "../sections/signa";
+import { isLinkedToCatalogItem } from "../sections/signa";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -71,7 +71,7 @@ export class Reviewing {
       this.checkInquiryDriveAssignment(festivalActivity, team);
     }
     if (team === signa) {
-      this.checkSignageCatalogItemAssignment(festivalActivity);
+      this.checkSignageCatalogItemLink(festivalActivity);
     }
 
     const reviews = { ...festivalActivity.reviews, [team]: APPROVED };
@@ -154,12 +154,12 @@ export class Reviewing {
     }
   }
 
-  private checkSignageCatalogItemAssignment(festivalActivity: Reviewable) {
+  private checkSignageCatalogItemLink(festivalActivity: Reviewable) {
     const signages = festivalActivity.signa.signages;
-    const areAllSignagesAssignedToCatalogItem = signages.every((signage) =>
-      isAssignedToCatalogItem(signage),
+    const areAllSignagesLinkedToCatalogItem = signages.every((signage) =>
+      isLinkedToCatalogItem(signage),
     );
-    if (!areAllSignagesAssignedToCatalogItem) {
+    if (!areAllSignagesLinkedToCatalogItem) {
       throw new ShouldLinkCatalogItem();
     }
   }

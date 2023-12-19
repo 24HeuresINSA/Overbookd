@@ -99,7 +99,7 @@ export {
   PANNEAU,
   AFFICHE,
   signageTypes,
-  isAssignedToCatalogItem,
+  isLinkedToCatalogItem,
 } from "./sections/signa";
 export type { TimeWindow } from "./sections/time-window";
 

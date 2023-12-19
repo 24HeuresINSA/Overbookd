@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Signage, isAssignedToCatalogItem } from "@overbookd/festival-activity";
+import { Signage, isLinkedToCatalogItem } from "@overbookd/festival-activity";
 import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 
 export default defineComponent({
@@ -57,7 +57,7 @@ export default defineComponent({
       return this.$accessor.festivalActivity.selectedActivity.general.name;
     },
     isMissingCatalogReference(): boolean {
-      return this.signages.some((signage) => !isAssignedToCatalogItem(signage));
+      return this.signages.some((signage) => !isLinkedToCatalogItem(signage));
     },
   },
   methods: {
