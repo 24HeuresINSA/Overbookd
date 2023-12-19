@@ -7,6 +7,8 @@ import { MailerService } from "@nestjs-modules/mailer";
 import { MailTestRequestDto } from "./dto/mail-test.request.dto";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import {
+  APPROVED,
+  NOT_ASKING_TO_REVIEW,
   PreviewFestivalActivity,
   REJECTED,
 } from "@overbookd/festival-activity";
@@ -38,6 +40,11 @@ type ActivityRejected = {
   };
   rejector: Member;
   reason: Rejected["reason"];
+};
+
+type ActivityValidated = {
+  email: string;
+  activityName: PreviewFestivalActivity["name"];
 };
 
 export type Members = {
@@ -85,6 +92,19 @@ export class MailService implements OnApplicationBootstrap {
       ]);
 
       this.festivalActivityRejected({ email, reason, rejector, activity });
+    });
+
+    this.eventStore.approvedFestivalActivity.subscribe(async (event) => {
+      const { reviews, inCharge, general } = event.festivalActivity;
+      const stillInReviewCount = Object.values(reviews).filter(
+        (review) => review !== NOT_ASKING_TO_REVIEW && review !== APPROVED,
+      ).length;
+      if (stillInReviewCount > 0) return;
+
+      this.logger.log("Send festival-activity-validated mail");
+      const { email } = await this.members.byId(inCharge.adherent.id);
+
+      this.festivalActivityValidated({ email, activityName: general.name });
     });
   }
 
@@ -169,7 +189,7 @@ export class MailService implements OnApplicationBootstrap {
         : `${rejector.firstname} ${rejector.lastname}`;
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: "Fiche Activité rejetée 🙀",
+        subject: `${activity.name} rejetée 🙀`,
         template: "festival-activity-rejected",
         context: {
           activityName: activity.name,
@@ -182,6 +202,25 @@ export class MailService implements OnApplicationBootstrap {
         this.logger.log(
           `Festival activity rejected mail sent to ${email} for activity #${activity.id}`,
         );
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  async festivalActivityValidated({ email, activityName }: ActivityValidated) {
+    try {
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: `${activityName} validée 💫`,
+        template: "festival-activity-validated",
+        context: {
+          activityName,
+          statisticsLink: `https://${process.env.DOMAIN}/stats`,
+        },
+      });
+      if (mail) {
+        this.logger.log(`Festival activity validated mail sent to ${email}`);
       }
     } catch (error) {
       this.logger.error(error);
