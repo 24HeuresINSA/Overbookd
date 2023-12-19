@@ -141,13 +141,11 @@ export default Vue.extend({
       return Object.values(signageTypes);
     },
   },
-  beforeMount() {
-    this.fetchSignages();
+  async mounted() {
+    await this.$accessor.catalogSignage.fetchSignages();
+    await this.$accessor.catalogSignage.fetchSignagesImages();
   },
   methods: {
-    async fetchSignages() {
-      await this.$accessor.catalogSignage.fetchSignages();
-    },
     openUpdateSignageDialog(signage: Signage) {
       this.selectedSignage = signage;
       this.isUpdateSignageDialogOpen = true;
