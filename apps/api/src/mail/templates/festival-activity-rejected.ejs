@@ -1,0 +1,32 @@
+<table style="text-align: center">
+  <h1>Rejet d'une Fiche Activité</h1>
+  <p>
+    Attention la FA <%= activityName %>, dont tu es responsable a été rejetée lors de sa relecture !
+    <br />
+  </p>
+  <p>Eh oui selon <%= rejectorName %>: <q><%= reason %></q></p>
+  <h2>
+    Il faut la corriger au plus vite ! <br />
+    <span style="color: red">N'oublie pas que l'ensemble du festival repose sur les FAs</span>
+  </h2>
+  <a
+    id="link-button"
+    href="<%= activityLink %>"
+    style="
+      background-color: #2196f3;
+      padding: 1rem 1rem 1rem 1rem;
+      border-radius: 0.5rem;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin: 1rem;
+    "
+    >Aller corriger ma FA</a
+  >
+  <p>Si le lien ne marche pas, va a cette adresse : <%= activityLink %></p>
+
+  <p>
+    Merci t'es le.a meilleur.e ! <br />
+    La Team OB
+  </p>
+</table>
