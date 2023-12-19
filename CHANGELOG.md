@@ -1,3 +1,12 @@
+## [2.11.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.4...v2.11.5) (2023-12-19)
+
+
+### Bug Fixes
+
+* **festival-activity:** send email on adherent in charge on validation. [#779](https://gitlab.com/24-heures-insa/overbookd-mono/issues/779) ([3687816](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3687816b9f994527b8a063c165f9940527eacec6))
+* **festival-activity:** send email to adherent in charge on first reject. [#779](https://gitlab.com/24-heures-insa/overbookd-mono/issues/779) ([8a30d6a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8a30d6aaf95e6561a056dbe6797f90740cd25134))
+* **signage:** split fetch data & images [#1430](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1430) ([0006514](https://gitlab.com/24-heures-insa/overbookd-mono/commit/00065148ba4500ae05d06f89fb3168c641fa62aa))
+
 ## [2.11.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.3...v2.11.4) (2023-12-19)
 
 
