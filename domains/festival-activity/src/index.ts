@@ -99,7 +99,7 @@ export {
   PANNEAU,
   AFFICHE,
   signageTypes,
-  isAssignedToCatalogItem,
+  isLinkedToCatalogItem,
 } from "./sections/signa";
 export type { TimeWindow } from "./sections/time-window";
 
@@ -160,6 +160,7 @@ export type {
   PrepareContractorUpdate,
   PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
+  LinkSignageCatalogItem,
 } from "./preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW

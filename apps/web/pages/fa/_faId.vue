@@ -94,9 +94,9 @@ export default defineComponent({
         ...this.mFA.general.timeWindows,
         ...this.mFA.inquiry.timeWindows,
       ].map(({ start }) => start.getTime());
-      const minStart = Math.min(...startTimestamps);
+      if (startTimestamps.length === 0) return this.eventStartDate;
 
-      if (minStart === 0) return this.eventStartDate;
+      const minStart = Math.min(...startTimestamps);
       return new Date(minStart);
     },
     allTimeWindows(): CalendarEvent[] {

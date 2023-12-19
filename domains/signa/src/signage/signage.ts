@@ -1,6 +1,6 @@
-const BACHE = "BACHE";
-const PANNEAU = "PANNEAU";
-const AFFICHE = "AFFICHE";
+export const BACHE = "BACHE";
+export const PANNEAU = "PANNEAU";
+export const AFFICHE = "AFFICHE";
 
 export const signageTypes: Record<SignageType, SignageType> = {
   BACHE,

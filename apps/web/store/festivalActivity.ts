@@ -19,6 +19,7 @@ import {
   defaultDraft,
   InquiryRequest,
   Reviewer,
+  LinkSignageCatalogItem,
 } from "@overbookd/festival-activity";
 import {
   PrepareInChargeForm,
@@ -228,6 +229,22 @@ export const actions = actionTree(
     async removeSignage({ state, commit }, signageId: Signage["id"]) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.removeSignage(this, id, signageId));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
+    async linkSignageCatalogItem(
+      { state, commit },
+      { signageId, catalogItem }: LinkSignageCatalogItem,
+    ) {
+      const faId = state.selectedActivity.id;
+      const form = { catalogItemId: catalogItem.id };
+      const res = await safeCall(
+        this,
+        repo.linkSignageCatalogItem(this, faId, signageId, form),
+      );
       if (!res) return;
 
       const activity = castActivityWithDate(res.data);

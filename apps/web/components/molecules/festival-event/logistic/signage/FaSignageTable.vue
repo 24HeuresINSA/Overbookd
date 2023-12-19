@@ -8,9 +8,21 @@
       disable-pagination
       hide-default-footer
     >
+      <template #item.catalogItem="{ item }">
+        <SearchSignage
+          :signage="item.catalogItem"
+          :type="item.type"
+          :boxed="false"
+          :readonly="cantLinkCatalogItem"
+          dense
+          label=""
+          @change="linkCatalogItem($event, item)"
+        />
+      </template>
+
       <template #item.actions="{ item }">
         <div v-if="!disabled">
-          <v-btn icon @click="openUpdateSignageDialog(item)">
+          <v-btn icon @click="updateSignage(item)">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
           <v-btn icon @click="removeSignage(item)">
@@ -20,40 +32,34 @@
       </template>
       <template #no-data> Aucune demande de signalétique </template>
     </v-data-table>
-
-    <v-btn color="primary" class="signages__add" @click="openAddSignageDialog">
-      Ajouter une signalétique
-    </v-btn>
-
-    <v-dialog v-model="isSignageDialogOpen" max-width="600">
-      <FaSignageForm
-        :signage="selectedSignage"
-        @add="addSignage"
-        @update="updateSignage"
-        @close-dialog="closeAddDialog"
-      />
-    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaSignageForm from "./FaSignageForm.vue";
-import { Signage } from "@overbookd/festival-activity";
+import SearchSignage from "~/components/atoms/field/search/SearchSignage.vue";
+import {
+  Signage as FaSignage,
+  signa,
+  FestivalActivity,
+  isDraft,
+  APPROVED,
+} from "@overbookd/festival-activity";
+import { Signage as CatalogSignage } from "@overbookd/signa";
 import { Header } from "~/utils/models/data-table.model";
 
 type FaSignageTableData = {
   headers: Header[];
   isSignageDialogOpen: boolean;
-  selectedSignage: Signage | null;
+  selectedSignage: FaSignage | null;
 };
 
 export default defineComponent({
   name: "FaSignageTable",
-  components: { FaSignageForm },
+  components: { SearchSignage },
   props: {
     signages: {
-      type: Array as () => Signage[],
+      type: Array as () => FaSignage[],
       required: true,
     },
     disabled: {
@@ -68,37 +74,36 @@ export default defineComponent({
       { text: "Texte à écrire", value: "text", sortable: false },
       { text: "Taille", value: "size", sortable: false },
       { text: "Commentaire", value: "comment", sortable: false },
+      { text: "Référence", value: "catalogItem", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
 
     isSignageDialogOpen: false,
     selectedSignage: null,
   }),
-  methods: {
-    addSignage(signage: Signage) {
-      this.$emit("add", signage);
+  computed: {
+    mFA(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
     },
-    updateSignage(signage: Signage) {
+    cantLinkCatalogItem(): boolean {
+      if (isDraft(this.mFA)) return true;
+      const isSignaMember = this.$accessor.user.isMemberOf(signa);
+      const isAlreadyApproved = this.mFA.reviews.signa === APPROVED;
+      return !isSignaMember || isAlreadyApproved;
+    },
+  },
+  methods: {
+    updateSignage(signage: FaSignage) {
       this.$emit("update", signage);
     },
-    removeSignage(signage: Signage) {
+    removeSignage(signage: FaSignage) {
       this.$emit("remove", signage);
     },
-    openAddSignageDialog() {
-      this.selectedSignage = null;
-      this.isSignageDialogOpen = true;
-    },
-    closeAddDialog() {
-      this.isSignageDialogOpen = false;
-      this.selectedSignage = null;
-    },
-    openUpdateSignageDialog(signage: Signage) {
-      this.selectedSignage = signage;
-      this.isSignageDialogOpen = true;
-    },
-    closeUpdateDialog() {
-      this.isSignageDialogOpen = false;
-      this.selectedSignage = null;
+    linkCatalogItem(catalogSignage: CatalogSignage, faSignage: FaSignage) {
+      this.$accessor.festivalActivity.linkSignageCatalogItem({
+        signageId: faSignage.id,
+        catalogItem: catalogSignage,
+      });
     },
   },
 });
@@ -110,10 +115,6 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-  }
-  &__add {
-    max-width: fit-content;
-    align-self: flex-end;
   }
 }
 </style>

@@ -11,6 +11,7 @@ import {
   isAssignedToDrive,
   KeyEvent,
   Adherent,
+  isLinkedToCatalogItem,
 } from "@overbookd/festival-activity";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
@@ -223,14 +224,21 @@ export class FestivalActivityQueryBuilder {
   }
 
   private static upsertSignages(activity: FestivalActivity) {
-    const signages = activity.signa.signages.map((signage) => ({
-      id: signage.id,
-      quantity: signage.quantity,
-      text: signage.text,
-      size: signage.size,
-      type: signage.type,
-      comment: signage.comment,
-    }));
+    const signages = activity.signa.signages.map((signage) => {
+      const catalogItem = isLinkedToCatalogItem(signage)
+        ? { catalogItemId: signage.catalogItem?.id }
+        : {};
+
+      return {
+        id: signage.id,
+        quantity: signage.quantity,
+        text: signage.text,
+        size: signage.size,
+        type: signage.type,
+        comment: signage.comment,
+        ...catalogItem,
+      };
+    });
 
     return {
       upsert: signages.map((signage) => ({

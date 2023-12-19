@@ -47,6 +47,7 @@ export type Prepare<T extends FestivalActivity> = {
   addSignage(signage: PrepareSignageCreation): T;
   updateSignage(signage: PrepareSignageUpdate): T;
   removeSignage(id: Signage["id"]): T;
+  linkSignageToCatalogItem(link: LinkSignageCatalogItem): T;
   updateSecurity(security: PrepareSecurityUpdate): T;
   updateSupply(supply: PrepareSupplyUpdate): T;
   addElectricitySupply(electricitySupply: PrepareElectricitySupplyCreation): T;
@@ -58,7 +59,6 @@ export type Prepare<T extends FestivalActivity> = {
   initInquiry(initializer: InitInquiry): T;
   removeInquiry(slug: InquiryRequest["slug"]): T;
   assignInquiryToDrive(link: LinkInquiryDrive): T;
-  linkSignageToCatalogItem(link: LinkSignageCatalogItem): T;
 };
 
 export type InitInquiry = {

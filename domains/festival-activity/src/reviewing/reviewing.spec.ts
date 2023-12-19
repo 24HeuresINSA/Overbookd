@@ -19,10 +19,13 @@ import {
   PARKING_EIFFEL,
 } from "../sections/inquiry";
 import {
+  afficheJustDanceA2,
+  bacheBienvenue10m,
   deuxMarteaux,
   george,
   lea,
   noel,
+  panneauEscapeGame4x3,
   quinzeVaubans,
   saturday14hToSaturday18h,
   sunday14hToSunday18h,
@@ -35,6 +38,7 @@ import {
   AlreadyApproved,
   AlreadyRejected,
   NotAskingToReview,
+  ShouldLinkCatalogItem,
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
@@ -66,6 +70,14 @@ const withInvalidBarrierInquiries = factory
     timeWindows: [sunday14hToSunday18h],
     barriers: [quinzeVaubans],
   })
+  .build();
+const withInvalidSignage = factory
+  .inReview("Invalid signage")
+  .withSigna({ signages: [bacheBienvenue10m] })
+  .build();
+const withSomeInvalidSignages = factory
+  .inReview("Invalid signages")
+  .withSigna({ signages: [afficheJustDanceA2, panneauEscapeGame4x3] })
   .build();
 const withSomeValidInquiries = factory
   .inReview("Valid inquiries")
@@ -120,6 +132,8 @@ describe("Approve festival activity", () => {
       withInvalidGearInquiries,
       withInvalidElectricityInquiries,
       withInvalidBarrierInquiries,
+      withInvalidSignage,
+      withSomeInvalidSignages,
       withSomeValidInquiries,
       privateWithAllApprovedExceptSecurity,
       publicWithAllApprovedExceptCommunication,
@@ -215,6 +229,20 @@ describe("Approve festival activity", () => {
           async () =>
             await reviewing.approve(activityId, reviewer, approver.id),
         ).rejects.toThrow(ShouldAssignDrive);
+      });
+    },
+  );
+  describe.each`
+    activityName                            | activityId                    | approver
+    ${withInvalidSignage.general.name}      | ${withInvalidSignage.id}      | ${lea}
+    ${withSomeInvalidSignages.general.name} | ${withSomeInvalidSignages.id} | ${noel}
+  `(
+    "when trying to approve $activityName even without catalog items linked to signages as signa",
+    ({ activityId, approver }) => {
+      it("should indicate that signages should been linked to a catalog item", async () => {
+        expect(
+          async () => await reviewing.approve(activityId, signa, approver.id),
+        ).rejects.toThrow(ShouldLinkCatalogItem);
       });
     },
   );

@@ -148,6 +148,10 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
     return { ...this.activity, signa };
   }
 
+  linkSignageToCatalogItem(): Draft {
+    throw new AssignCatalogItemInDraftActivity();
+  }
+
   updateSecurity(form: PrepareSecurityUpdate): Draft {
     const security = { ...this.activity.security, ...form };
     if (security.freePass < 0) throw new FreePassMustBePositive();
@@ -232,9 +236,5 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
 
   assignInquiryToDrive(): Draft {
     throw new AssignDriveInDraftActivity();
-  }
-
-  linkSignageToCatalogItem(): Draft {
-    throw new AssignCatalogItemInDraftActivity();
   }
 }

@@ -9,6 +9,7 @@ import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "../src/team/team.model";
 import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
+import { signages } from "./seeders/signages";
 
 const prisma = new PrismaClient();
 
@@ -221,6 +222,12 @@ async function main() {
   );
 
   console.log(`\n${charismaPeriods.length} Charisma Periods inserted 🎉`);
+
+  const savedSignages = await prisma.catalogSignage.createMany({
+    data: signages,
+  });
+
+  console.log(`\n${savedSignages.count} signages inserted 📍`);
 }
 main()
   .then(async () => {

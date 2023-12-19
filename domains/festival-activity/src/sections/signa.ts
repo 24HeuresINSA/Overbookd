@@ -33,7 +33,7 @@ type SignageAssigned = BaseSignage & WithCatalogItem;
 
 export type Signage = BaseSignage | SignageAssigned;
 
-export function isAssignedToCatalogItem(
+export function isLinkedToCatalogItem(
   request: Signage,
 ): request is SignageAssigned {
   return Object.hasOwn(request, "catalogItem");
@@ -49,6 +49,7 @@ export type Signa = {
   signages: Signage[];
 };
 
-export type DraftSigna = Omit<Signa, "location"> & {
+export type DraftSigna = {
   location: Location | null;
+  signages: BaseSignage[];
 };
