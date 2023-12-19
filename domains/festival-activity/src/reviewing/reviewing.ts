@@ -31,7 +31,7 @@ import {
   NotAskingToReview,
   ShouldAssignDrive,
   AlreadyRejected,
-  ShouldAssigCatalogItem,
+  ShouldLinkCatalogItem,
 } from "./reviewing.error";
 import { Adherent } from "../sections/in-charge";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
@@ -160,7 +160,7 @@ export class Reviewing {
       isAssignedToCatalogItem(signage),
     );
     if (!areAllSignagesAssignedToCatalogItem) {
-      throw new ShouldAssigCatalogItem();
+      throw new ShouldLinkCatalogItem();
     }
   }
 

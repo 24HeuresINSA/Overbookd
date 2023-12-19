@@ -38,7 +38,7 @@ import {
   AlreadyApproved,
   AlreadyRejected,
   NotAskingToReview,
-  ShouldAssigCatalogItem,
+  ShouldLinkCatalogItem,
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
@@ -242,7 +242,7 @@ describe("Approve festival activity", () => {
       it("should indicate that signages should been linked to a catalog item", async () => {
         expect(
           async () => await reviewing.approve(activityId, signa, approver.id),
-        ).rejects.toThrow(ShouldAssigCatalogItem);
+        ).rejects.toThrow(ShouldLinkCatalogItem);
       });
     },
   );
