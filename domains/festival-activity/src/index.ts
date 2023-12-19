@@ -8,7 +8,7 @@ export type {
   CreateFestivalActivityForm,
   PreviewDraft,
   PreviewReviewable,
-  PreviewFestivalActivity,
+  PreviewForAll as PreviewFestivalActivity,
   Feedback,
   KeyEvent,
 } from "./festival-activity";

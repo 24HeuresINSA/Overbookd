@@ -22,6 +22,7 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
 import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
 import { StatisticsModule } from "../statistics/statistics.module";
 import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-activities.prisma";
+import { PrismaPreviews } from "./repository/previews.prisma";
 
 @Module({
   controllers: [FestivalActivityController],
@@ -72,6 +73,11 @@ import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-act
       provide: PrismaReviewingFestivalActivities,
       useFactory: (prisma: PrismaService) =>
         new PrismaReviewingFestivalActivities(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaPreviews,
+      useFactory: (prisma: PrismaService) => new PrismaPreviews(prisma),
       inject: [PrismaService],
     },
     {
@@ -126,6 +132,7 @@ import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-act
         remove: PrismaRemoveFestivalActivities,
         reviewing: Reviewing,
         eventStore: DomainEventService,
+        previews: PrismaPreviews,
       ) =>
         new FestivalActivityService(
           adherents,
@@ -138,6 +145,7 @@ import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-act
           remove,
           reviewing,
           eventStore,
+          previews,
         ),
       inject: [
         PrismaAdherents,
@@ -150,6 +158,7 @@ import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-act
         PrismaRemoveFestivalActivities,
         Reviewing,
         DomainEventService,
+        PrismaPreviews,
       ],
     },
   ],

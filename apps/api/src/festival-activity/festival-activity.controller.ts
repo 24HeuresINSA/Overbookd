@@ -25,15 +25,15 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
-import type {
-  Contractor,
-  ElectricitySupply,
-  FestivalActivity,
-  InquiryRequest,
-  PreviewFestivalActivity,
-  Refused,
-  Signage,
-  TimeWindow,
+import {
+  type Contractor,
+  type ElectricitySupply,
+  type FestivalActivity,
+  type InquiryRequest,
+  type PreviewFestivalActivity,
+  type Refused,
+  type Signage,
+  type TimeWindow,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -62,6 +62,7 @@ import {
 import {
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
+  PreviewForSecuResponseDto,
   RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
@@ -87,7 +88,7 @@ import {
   UnlinkedSignageResponseDto,
 } from "./dto/signage.response.dto";
 import { StatisticsService } from "../statistics/statistics.service";
-import { Statistics } from "@overbookd/http";
+import { PreviewForSecu, Statistics } from "@overbookd/http";
 import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
@@ -140,6 +141,19 @@ export class FestivalActivityController {
   })
   findAll(): Promise<PreviewFestivalActivity[]> {
     return this.festivalActivityService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get("for-security")
+  @ApiResponse({
+    status: 200,
+    description: "All festival activities",
+    type: PreviewForSecuResponseDto,
+    isArray: true,
+  })
+  findAllForSecurity(): Promise<PreviewForSecu[]> {
+    return this.festivalActivityService.findForSecurity();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

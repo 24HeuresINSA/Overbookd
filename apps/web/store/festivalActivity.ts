@@ -26,32 +26,45 @@ import {
   PrepareSignaForm,
   ReviewRejection,
   InitInquiryRequest,
+  PreviewForSecu,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
 import { safeCall } from "~/utils/api/calls";
-import { castActivityWithDate } from "~/utils/festival-event/festival-activity.utils";
+import {
+  castActivityWithDate,
+  castPreviewForSecurityWithDate,
+} from "~/utils/festival-event/festival-activity.utils";
 import { AddInquiryRequest } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity.model";
 
 const repo = FestivalActivityRepository;
 
 type State = {
-  allActivities: PreviewFestivalActivity[];
+  activities: {
+    forSecurity: PreviewForSecu[];
+    forAll: PreviewFestivalActivity[];
+  };
   selectedActivity: FestivalActivity;
 };
 
 const fakeActivity = defaultDraft(0, "Fake activity");
 
 export const state = (): State => ({
-  allActivities: [],
+  activities: {
+    forAll: [],
+    forSecurity: [],
+  },
   selectedActivity: fakeActivity,
 });
 
 export const mutations = mutationTree(state, {
   SET_ALL_ACTIVITIES(state, activities: PreviewFestivalActivity[]) {
-    state.allActivities = activities;
+    state.activities.forAll = activities;
+  },
+  SET_PREVIEW_FOR_SECURITY(state, previews: PreviewForSecu[]) {
+    state.activities.forSecurity = previews;
   },
   SET_SELECTED_ACTIVITY(state, activity: FestivalActivity) {
     state.selectedActivity = activity;
@@ -66,6 +79,15 @@ export const actions = actionTree(
       const res = await safeCall(this, repo.getAll(this));
       if (!res) return;
       commit("SET_ALL_ACTIVITIES", res.data);
+    },
+
+    async fetchSecurityPreviews({ commit }) {
+      const res = await safeCall(this, repo.getSecurityPreviews(this));
+
+      if (!res) return;
+
+      const previews = res.data.map(castPreviewForSecurityWithDate);
+      commit("SET_PREVIEW_FOR_SECURITY", previews);
     },
 
     async fetchActivity({ commit }, id: number) {

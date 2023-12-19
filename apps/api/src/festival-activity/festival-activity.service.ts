@@ -13,7 +13,7 @@ import {
   PrepareFestivalActivity,
   PrepareGeneralUpdate,
   PrepareSupplyUpdate,
-  PreviewFestivalActivity,
+  PreviewFestivalActivity as PreviewForAll,
   TimeWindow,
   Signage,
   ElectricitySupply,
@@ -34,6 +34,7 @@ import {
   PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
 import {
+  PreviewForSecu,
   AddInquiryRequest,
   InitInquiryRequest,
   PrepareInChargeForm,
@@ -92,6 +93,10 @@ type LinkSignageToCatalogItem = {
   catalogItemId: SignageCatalogItem["id"];
 };
 
+export type Previews = {
+  forSecu(): Promise<PreviewForSecu[]>;
+};
+
 @Injectable()
 export class FestivalActivityService {
   constructor(
@@ -105,10 +110,15 @@ export class FestivalActivityService {
     private readonly removal: RemoveFestivalActivities,
     private readonly reviewing: Reviewing,
     private readonly eventStore: DomainEventService,
+    private readonly previews: Previews,
   ) {}
 
-  findAll(): Promise<PreviewFestivalActivity[]> {
+  findAll(): Promise<PreviewForAll[]> {
     return this.prepare.findAll();
+  }
+
+  findForSecurity(): Promise<PreviewForSecu[]> {
+    return this.previews.forSecu();
   }
 
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {

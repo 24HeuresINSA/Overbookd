@@ -18,7 +18,7 @@ import {
 } from "./prepare-festival-activity.model";
 import {
   FestivalActivity,
-  PreviewFestivalActivity,
+  PreviewForAll,
   isDraft,
 } from "../festival-activity";
 import { InquiryRequest } from "../sections/inquiry";
@@ -30,7 +30,7 @@ import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-ac
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
 
 export type PrepareFestivalActivityRepository = {
-  findAll(): Promise<PreviewFestivalActivity[]>;
+  findAll(): Promise<PreviewForAll[]>;
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save(activity: FestivalActivity): Promise<FestivalActivity>;
 };
@@ -76,7 +76,7 @@ export class PrepareFestivalActivity {
     private readonly festivalActivities: PrepareFestivalActivityRepository,
   ) {}
 
-  findAll(): Promise<PreviewFestivalActivity[]> {
+  findAll(): Promise<PreviewForAll[]> {
     return this.festivalActivities.findAll();
   }
 

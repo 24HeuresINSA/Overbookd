@@ -17,6 +17,8 @@ import {
   RefusedReviewsResponseDto,
   ValidatedReviewsResponseDto,
 } from "./reviews.response.dto";
+import { PreviewForSecu } from "@overbookd/http";
+import { TimeWindowResponseDto } from "./time-window.response.dto";
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
   @ApiProperty({
@@ -132,4 +134,43 @@ export class RefusedPreviewFestivalActivityResponseDto
 
   @ApiProperty({ type: RefusedReviewsResponseDto })
   reviews: RefusedReviews;
+}
+
+export class PreviewForSecuResponseDto implements PreviewForSecu {
+  @ApiProperty({
+    description: "The festival activity id",
+    type: Number,
+  })
+  id: PreviewForSecu["id"];
+
+  @ApiProperty({
+    description: "The festival activity name",
+    type: String,
+  })
+  name: PreviewForSecu["name"];
+
+  @ApiProperty({
+    description: "Team in charge of this festival activity",
+    type: String,
+  })
+  team: PreviewForSecu["team"];
+
+  @ApiProperty({
+    description: "The festival activity time windows",
+    type: TimeWindowResponseDto,
+    isArray: true,
+  })
+  timeWindows: PreviewForSecu["timeWindows"];
+
+  @ApiProperty({
+    description: "Festival activity security special needs",
+    type: String,
+  })
+  specialNeeds: PreviewForSecu["specialNeeds"];
+
+  @ApiProperty({
+    description: "Free pass count",
+    type: String,
+  })
+  freePass: PreviewForSecu["freePass"];
 }
