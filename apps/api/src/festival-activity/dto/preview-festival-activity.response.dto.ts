@@ -170,7 +170,7 @@ export class PreviewForSecuResponseDto implements PreviewForSecu {
 
   @ApiProperty({
     description: "Free pass count",
-    type: String,
+    type: Number,
   })
   freePass: PreviewForSecu["freePass"];
 }
