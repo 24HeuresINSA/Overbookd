@@ -1,3 +1,12 @@
+## [2.11.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.5...v2.11.6) (2023-12-20)
+
+
+### Bug Fixes
+
+* **festival-activity:** add security dashboard. [#1417](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1417) ([f554479](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f554479d7ef476e05031725205edeabada5d126a))
+* **festival-activity:** open details on new tab. [#1429](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1429) ([24a8342](https://gitlab.com/24-heures-insa/overbookd-mono/commit/24a8342f16dfcf6de5ce783ee77147462e0fda8d))
+* **web:** calendar previous and next date. [#1431](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1431) ([02a49d1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/02a49d1196d8a5ae8ae50abe3b9b016469034244))
+
 ## [2.11.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.4...v2.11.5) (2023-12-19)
 
 
