@@ -1,121 +1,125 @@
 <template>
-  <div class="calendar">
-    <v-sheet v-if="displayHeader" tile height="54" class="d-flex">
-      <v-btn icon class="ma-2" @click="previousPage">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <v-spacer class="calendar-title">
-        <slot name="title">
-          <div>
-            {{ title ?? defaultTitle }}
-          </div>
-        </slot>
-      </v-spacer>
-      <v-btn icon class="ma-2" @click="nextPage">
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-    </v-sheet>
-    <v-calendar
+  <div>
+    <div
       v-for="calendarType in types"
       :key="calendarType"
-      ref="calendar"
-      :value="date"
-      :type="calendarType"
+      class="calendar"
       :class="`calendar-${calendarType}`"
-      :events="events"
-      :event-ripple="true"
-      :weekdays="weekdays"
-      @input="updateDate"
     >
-      <template
-        #interval="{
-          date: intervalDate,
-          year,
-          mounth,
-          day,
-          hour,
-          minute,
-          weekday,
-          hasDay,
-          hasTime,
-          past,
-          present,
-          future,
-          time,
-          timeToY,
-          timeDelta,
-          minutesToPixels,
-          week,
-        }"
+      <v-sheet v-if="displayHeader" tile height="54" class="d-flex">
+        <v-btn icon class="ma-2" @click="previousPage(calendarType)">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-spacer class="calendar-title">
+          <slot name="title">
+            <div>
+              {{ title ?? defaultTitle }}
+            </div>
+          </slot>
+        </v-spacer>
+        <v-btn icon class="ma-2" @click="nextPage(calendarType)">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+      </v-sheet>
+      <v-calendar
+        :ref="`calendar-${calendarType}`"
+        :value="date"
+        :type="calendarType"
+        :events="events"
+        :event-ripple="true"
+        :weekdays="weekdays"
+        @input="updateDate"
       >
-        <slot
-          name="interval"
-          :date="intervalDate"
-          :year="year"
-          :mounth="mounth"
-          :day="day"
-          :hour="hour"
-          :minute="minute"
-          :weekday="weekday"
-          :hasDay="hasDay"
-          :hasTime="hasTime"
-          :past="past"
-          :present="present"
-          :future="future"
-          :time="time"
-          :timeToY="timeToY"
-          :timeDelta="timeDelta"
-          :minutesToPixels="minutesToPixels"
-          :week="week"
-        ></slot>
-        <div
-          :class="{
-            shift: isShiftHour(hour),
-            'shift-party': isPartyHour(hour),
-            'shift-day': isDayHour(hour),
-            'shift-night': isNightHour(hour),
-            'theme--dark': isDarkTheme,
+        <template
+          #interval="{
+            date: intervalDate,
+            year,
+            mounth,
+            day,
+            hour,
+            minute,
+            weekday,
+            hasDay,
+            hasTime,
+            past,
+            present,
+            future,
+            time,
+            timeToY,
+            timeDelta,
+            minutesToPixels,
+            week,
           }"
-          :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
-        ></div>
-      </template>
-      <template
-        #event="{
-          event,
-          eventParsed,
-          day,
-          outside,
-          start,
-          end,
-          timed,
-          singleline,
-          overlapsNoon,
-          formatTime,
-          timeSummary,
-          eventSummary,
-        }"
-      >
-        <slot
-          name="event"
-          :event="event"
-          :eventParsed="eventParsed"
-          :day="day"
-          :outside="outside"
-          :start="start"
-          :end="end"
-          :timed="timed"
-          :singleline="singleline"
-          :overlapsNoon="overlapsNoon"
-          :formatTime="formatTime"
-          :timeSummary="timeSummary"
-          :eventSummary="eventSummary"
         >
-          <div class="default-event">
-            <component :is="{ render: eventSummary }" />
-          </div>
-        </slot>
-      </template>
-    </v-calendar>
+          <slot
+            name="interval"
+            :date="intervalDate"
+            :year="year"
+            :mounth="mounth"
+            :day="day"
+            :hour="hour"
+            :minute="minute"
+            :weekday="weekday"
+            :hasDay="hasDay"
+            :hasTime="hasTime"
+            :past="past"
+            :present="present"
+            :future="future"
+            :time="time"
+            :timeToY="timeToY"
+            :timeDelta="timeDelta"
+            :minutesToPixels="minutesToPixels"
+            :week="week"
+          ></slot>
+          <div
+            :class="{
+              shift: isShiftHour(hour),
+              'shift-party': isPartyHour(hour),
+              'shift-day': isDayHour(hour),
+              'shift-night': isNightHour(hour),
+              'theme--dark': isDarkTheme,
+            }"
+            :style="{ top: `calc(${timeToY(time)}px - 2px)` }"
+          ></div>
+        </template>
+        <template
+          #event="{
+            event,
+            eventParsed,
+            day,
+            outside,
+            start,
+            end,
+            timed,
+            singleline,
+            overlapsNoon,
+            formatTime,
+            timeSummary,
+            eventSummary,
+          }"
+        >
+          <slot
+            name="event"
+            :event="event"
+            :eventParsed="eventParsed"
+            :day="day"
+            :outside="outside"
+            :start="start"
+            :end="end"
+            :timed="timed"
+            :singleline="singleline"
+            :overlapsNoon="overlapsNoon"
+            :formatTime="formatTime"
+            :timeSummary="timeSummary"
+            :eventSummary="eventSummary"
+          >
+            <div class="default-event">
+              <component :is="{ render: eventSummary }" />
+            </div>
+          </slot>
+        </template>
+      </v-calendar>
+    </div>
   </div>
 </template>
 
@@ -199,12 +203,14 @@ export default Vue.extend({
     updateDate(date: Date) {
       this.$emit("change", date);
     },
-    previousPage() {
-      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
+    previousPage(calendarType: VuetifyCalendarType) {
+      const calendarReferences = this.$refs[`calendar-${calendarType}`];
+      const [calendar] = calendarReferences as unknown as [VuetifyCalendar];
       if (calendar) calendar.prev();
     },
-    nextPage() {
-      const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
+    nextPage(calendarType: VuetifyCalendarType) {
+      const calendarReferences = this.$refs[`calendar-${calendarType}`];
+      const [calendar] = calendarReferences as unknown as [VuetifyCalendar];
       if (calendar) calendar.next();
     },
   },
@@ -223,7 +229,7 @@ export default Vue.extend({
   &-day {
     display: none;
     @media only screen and (max-width: $mobile-max-width) {
-      display: flex;
+      display: inherit;
     }
   }
   &-week {
