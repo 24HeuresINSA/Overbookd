@@ -6,5 +6,6 @@ export type {
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
   Statistics,
+  PreviewForSecu,
 } from "./festival-activity.model";
 export type { HttpStringified } from "./http-stringified";

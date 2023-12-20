@@ -62,6 +62,7 @@ import {
 import {
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
+  PreviewForSecuResponseDto,
   RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
@@ -87,7 +88,7 @@ import {
   UnlinkedSignageResponseDto,
 } from "./dto/signage.response.dto";
 import { StatisticsService } from "../statistics/statistics.service";
-import { Statistics } from "@overbookd/http";
+import { PreviewForSecu, Statistics } from "@overbookd/http";
 import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
@@ -140,6 +141,19 @@ export class FestivalActivityController {
   })
   findAll(): Promise<PreviewFestivalActivity[]> {
     return this.festivalActivityService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get("for-security")
+  @ApiResponse({
+    status: 200,
+    description: "All festival activities",
+    type: PreviewForSecuResponseDto,
+    isArray: true,
+  })
+  findAllForSecurity(): Promise<PreviewForSecu[]> {
+    return this.festivalActivityService.findForSecurity();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -5,6 +5,7 @@ import {
   LinkSignageCatalogItemForm,
   PrepareInChargeForm,
   PrepareSignaForm,
+  PreviewForSecu,
   ReviewRejection,
 } from "@overbookd/http";
 import {
@@ -42,6 +43,12 @@ export class FestivalActivityRepository {
   static getAll(context: Context) {
     return context.$axios.get<HttpStringified<PreviewFestivalActivity>[]>(
       this.basePath,
+    );
+  }
+
+  static getSecurityPreviews(context: Context) {
+    return context.$axios.get<HttpStringified<PreviewForSecu>[]>(
+      `${this.basePath}/for-security`,
     );
   }
 

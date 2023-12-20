@@ -17,10 +17,11 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-activity";
-import { HttpStringified } from "@overbookd/http";
+import { HttpStringified, PreviewForSecu } from "@overbookd/http";
 import { CastReviewable } from "./reviewable";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-activity.model";
+import { castTimeWindowWithDate } from "./cast-time-windows";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivity>,
@@ -29,6 +30,15 @@ export function castActivityWithDate(
     return CastDraft.withDate(activity);
   }
   return CastReviewable.withDate(activity);
+}
+
+export function castPreviewForSecurityWithDate(
+  activity: HttpStringified<PreviewForSecu>,
+): PreviewForSecu {
+  return {
+    ...activity,
+    timeWindows: activity.timeWindows.map(castTimeWindowWithDate),
+  };
 }
 
 function isHttpDraft(

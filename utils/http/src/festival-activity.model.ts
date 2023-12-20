@@ -3,6 +3,7 @@ import {
   PrepareInquiryRequestCreation,
   Reviewer,
   SignageCatalogItem,
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 
@@ -38,4 +39,13 @@ export type Statistics = {
   teamCode: string;
   status: Record<FestivalActivity["status"], number>;
   total: number;
+};
+
+export type PreviewForSecu = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  team: FestivalActivity["inCharge"]["team"];
+  timeWindows: TimeWindow[];
+  specialNeeds: FestivalActivity["security"]["specialNeed"];
+  freePass: FestivalActivity["security"]["freePass"];
 };

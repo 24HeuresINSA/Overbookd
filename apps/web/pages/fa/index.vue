@@ -5,13 +5,24 @@
     <main>
       <FaFilter class="activity__filtering" @change="updateFilters">
         <template #additional-actions>
-          <v-btn
-            v-if="canExportSignages"
-            class="signa-export"
-            @click="exportCsvSigna"
-          >
-            Export signa
-          </v-btn>
+          <div class="additional-actions">
+            <v-btn
+              v-if="canExportSignages"
+              class="signa-export"
+              @click="exportCsvSigna"
+            >
+              Export signa
+            </v-btn>
+            <v-btn
+              v-if="canAccessSecurityDashboard"
+              color="primary"
+              class="security-dashboard"
+              @click="openSecurityDashboard"
+            >
+              <v-icon left>mdi-security</v-icon>
+              Récapitulatif
+            </v-btn>
+          </div>
         </template>
       </FaFilter>
 
@@ -120,6 +131,7 @@ import { WRITE_FA, WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import {
   PreviewFestivalActivity,
   FestivalActivity,
+  secu,
 } from "@overbookd/festival-activity";
 import { User } from "@overbookd/user";
 import {
@@ -166,7 +178,7 @@ export default defineComponent({
   }),
   computed: {
     fas(): PreviewFestivalActivity[] {
-      return this.$accessor.festivalActivity.allActivities;
+      return this.$accessor.festivalActivity.activities.forAll;
     },
     reviewers(): Team[] {
       return this.$accessor.team.faValidators;
@@ -194,6 +206,9 @@ export default defineComponent({
     },
     canExportSignages(): boolean {
       return this.$accessor.user.can(WRITE_SIGNAGE_CATALOG);
+    },
+    canAccessSecurityDashboard(): boolean {
+      return this.$accessor.user.isMemberOf(secu);
     },
   },
 
@@ -326,6 +341,10 @@ export default defineComponent({
       window.open(activityRoute.href, "_blank");
     },
 
+    openSecurityDashboard() {
+      this.$router.push({ path: "/fa/dashboard/security" });
+    },
+
     removeFa() {
       if (!this.activityToRemove) return;
       this.$accessor.festivalActivity.remove(this.activityToRemove.id);
@@ -390,8 +409,10 @@ h1 {
   }
 }
 
-.signa-export {
-  margin-top: 10px;
+.additional-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   @media screen and (max-width: $mobile-max-width) {
     display: none;
   }
