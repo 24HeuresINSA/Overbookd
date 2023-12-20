@@ -22,6 +22,7 @@
           :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
           class="elevation-1 activity__table"
           @click:row="openFa"
+          @auxclick:row="openFaInNewTab"
         >
           <template #item.id="{ item }">
             <v-chip-group id="status">
@@ -313,8 +314,16 @@ export default defineComponent({
       return user ? formatUsername(user) : "";
     },
 
-    openFa(fa: PreviewFestivalActivity) {
+    openFa(fa: PreviewFestivalActivity, _: unknown, event: PointerEvent) {
+      if (event.ctrlKey) {
+        return this.openFaInNewTab(event, { item: fa });
+      }
       this.$router.push({ path: `/fa/${fa.id}` });
+    },
+
+    openFaInNewTab(_: Event, { item: fa }: { item: PreviewFestivalActivity }) {
+      const activityRoute = this.$router.resolve({ path: `/fa/${fa.id}` });
+      window.open(activityRoute.href, "_blank");
     },
 
     removeFa() {
