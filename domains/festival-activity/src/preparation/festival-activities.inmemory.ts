@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
 import {
-  PreviewForAll,
+  PreviewFestivalActivity,
   FestivalActivity,
   Draft,
   Reviewable,
@@ -20,7 +20,7 @@ export class InMemoryPrepareFestivalActivityRepository
 {
   constructor(private festivalActivities: FestivalActivity[] = []) {}
 
-  findAll(): Promise<PreviewForAll[]> {
+  findAll(): Promise<PreviewFestivalActivity[]> {
     return Promise.resolve(this.festivalActivities.map(generatePreview));
   }
 
@@ -51,7 +51,7 @@ export class InMemoryPrepareFestivalActivityRepository
 
 function generatePreview<T extends FestivalActivity>(
   festivalActivity: T,
-): PreviewForAll {
+): PreviewFestivalActivity {
   return isDraft(festivalActivity)
     ? generateDraftPreview(festivalActivity)
     : generateInReviewPreview(festivalActivity);

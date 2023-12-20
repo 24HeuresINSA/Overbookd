@@ -40,7 +40,7 @@ type Action =
 
 export type KeyEvent = {
   action: Action;
-  by: PreviewForAll["adherent"];
+  by: PreviewFestivalActivity["adherent"];
   at: Date;
   description: string;
 };
@@ -124,7 +124,7 @@ export type PreviewDraft = {
   team: Draft["inCharge"]["team"];
 };
 
-export type PreviewForAll = PreviewReviewable | PreviewDraft;
+export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
 
 export type CreateFestivalActivityForm = {
   name: string;
