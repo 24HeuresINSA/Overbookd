@@ -25,15 +25,15 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
-import {
-  type Contractor,
-  type ElectricitySupply,
-  type FestivalActivity,
-  type InquiryRequest,
-  type PreviewFestivalActivity,
-  type Refused,
-  type Signage,
-  type TimeWindow,
+import type {
+  Contractor,
+  ElectricitySupply,
+  FestivalActivity,
+  InquiryRequest,
+  PreviewFestivalActivity,
+  Refused,
+  Signage,
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
