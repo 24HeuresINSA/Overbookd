@@ -1,3 +1,12 @@
+## [2.11.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.6...v2.11.7) (2023-12-21)
+
+
+### Bug Fixes
+
+* **festival-activity:** don't generate time window when one already exist during to public activity switch. [#1434](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1434) ([4537d89](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4537d892b8e826c1166cb9112f02bf2be153b8d3))
+* **personal-account:** filter out deleted transactions. [#1433](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1433) ([8792495](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8792495392f23861fb735e40130b721040252c68))
+* **web:** remove sort on inquiry table action column. [#712](https://gitlab.com/24-heures-insa/overbookd-mono/issues/712) ([ea74098](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ea74098e25bf9859caa3146d3c2995d4f648d202))
+
 ## [2.11.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.5...v2.11.6) (2023-12-20)
 
 
