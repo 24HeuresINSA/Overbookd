@@ -114,7 +114,9 @@ export default defineComponent({
   },
   methods: {
     async publishActivity() {
-      await this.$accessor.festivalActivity.addGeneralTimeWindow(this.period);
+      if (!hasAtLeastOneItem(this.general.timeWindows)) {
+        await this.$accessor.festivalActivity.addGeneralTimeWindow(this.period);
+      }
       await this.$accessor.festivalActivity.updateGeneral({
         toPublish: true,
         categories: this.categories,
