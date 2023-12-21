@@ -70,7 +70,7 @@ export default defineComponent({
       { text: "Quantité", value: "quantity", width: "20%" },
       { text: "Nom", value: "name" },
       { text: "Lieux de retrait", value: "drive", width: "150px" },
-      { text: "Actions", value: "actions", width: "100px" },
+      { text: "Actions", value: "actions", width: "100px", sortable: false },
     ],
   }),
   computed: {
@@ -103,6 +103,8 @@ export default defineComponent({
       if (!isConsumable) return `${inquiry.quantity}`;
 
       const timeWindowCount = this.inquiry.timeWindows.length;
+      if (timeWindowCount === 1) return `${inquiry.quantity}`;
+
       const total = timeWindowCount * inquiry.quantity;
       return `${total} (${timeWindowCount} créneaux X ${inquiry.quantity} demandes)`;
     },
