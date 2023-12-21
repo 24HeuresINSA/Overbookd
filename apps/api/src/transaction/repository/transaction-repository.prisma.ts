@@ -13,7 +13,7 @@ export class PrismaTransactionRepository {
 
   async getMine(myId: number): Promise<Transaction[]> {
     const transactions = await this.prisma.transaction.findMany({
-      where: { OR: [{ from: myId }, { to: myId }] },
+      where: { isDeleted: false, OR: [{ from: myId }, { to: myId }] },
       select: {
         type: true,
         amount: true,
