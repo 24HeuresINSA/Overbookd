@@ -18,6 +18,7 @@ export class PrismaFestivalActivityStatistics
   async byTeams(): Promise<Statistics[]> {
     const statusStatistics = await this.prisma.festivalActivity.groupBy({
       by: ["teamCode", "status"],
+      where: { isDeleted: false },
       _count: { status: true },
       orderBy: { teamCode: "asc" },
     });
