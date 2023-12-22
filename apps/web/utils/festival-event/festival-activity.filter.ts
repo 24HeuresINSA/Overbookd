@@ -11,6 +11,7 @@ import {
   VALIDATED,
 } from "@overbookd/festival-activity";
 import { Team } from "../models/team.model";
+import { User } from "@overbookd/user";
 
 export type ReviewsFilter = {
   humain?: ReviewStatus;
@@ -25,6 +26,7 @@ export type ReviewsFilter = {
 export type Filters = ReviewsFilter & {
   search?: string;
   team?: Team;
+  adherent?: User;
   status?: FestivalActivity["status"];
 };
 
@@ -35,12 +37,14 @@ type IsExistingStatus = (
   value: string,
 ) => FestivalActivity["status"] | undefined;
 type IsExistingTeam = (value: string) => Team | undefined;
+type IsExistingAdherent = (id: User["id"]) => User | undefined;
 type IsExistingReview = (value: string) => ReviewStatus | undefined;
 
 type InitFilterBuilder = {
   isNotEmpty: IsNotEmpty;
   isExistingStatus: IsExistingStatus;
   isExistingTeam: IsExistingTeam;
+  isExistingAdherent: IsExistingAdherent;
   isExistingReview: IsExistingReview;
 };
 
@@ -49,6 +53,7 @@ export class FilterBuilder {
     private readonly isNotEmpty: IsNotEmpty,
     private readonly isExistingStatus: IsExistingStatus,
     private readonly isExistingTeam: IsExistingTeam,
+    private readonly isExistingAdherent: IsExistingAdherent,
     private readonly isExistingReview: IsExistingReview,
   ) {}
 
@@ -57,6 +62,7 @@ export class FilterBuilder {
       initializer.isNotEmpty,
       initializer.isExistingStatus,
       initializer.isExistingTeam,
+      initializer.isExistingAdherent,
       initializer.isExistingReview,
     );
   }
@@ -75,6 +81,12 @@ export class FilterBuilder {
         const teamCode = strigifyQueryParam(params.team);
         const team = this.isExistingTeam(teamCode);
         return team ? { team } : {};
+      }
+      case "adherent": {
+        const adherentId = strigifyQueryParam(params.adherent);
+        const defaultId = isNaN(+adherentId) ? 0 : +adherentId;
+        const adherent = this.isExistingAdherent(defaultId);
+        return adherent ? { adherent } : {};
       }
       case "status": {
         const statusString = strigifyQueryParam(params.status);

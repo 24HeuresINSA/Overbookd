@@ -13,6 +13,13 @@
         :boxed="false"
         @change="changeTeam"
       ></SearchTeam>
+      <SearchUser
+        :user="adherent"
+        label="Responsable"
+        :list="adherents"
+        :boxed="false"
+        @change="changeAdherent"
+      />
 
       <v-select
         :value="status"
@@ -32,6 +39,7 @@
 import Vue from "vue";
 import { FestivalActivity } from "@overbookd/festival-activity";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {
   FaStatusLabel,
   faStatusLabels,
@@ -42,6 +50,7 @@ import {
   ftStatusLabels,
 } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
+import { User } from "@overbookd/user";
 
 type StatusLabels = (
   | { key: FestivalActivity["status"]; label: FaStatusLabel }
@@ -51,7 +60,7 @@ type StatusLabels = (
 
 export default Vue.extend({
   name: "FestivalEventFilter",
-  components: { SearchTeam },
+  components: { SearchTeam, SearchUser },
   props: {
     festivalEvent: {
       type: String,
@@ -65,6 +74,10 @@ export default Vue.extend({
       type: Object as () => Team | null,
       default: null,
     },
+    adherent: {
+      type: Object as () => null,
+      default: null,
+    },
     status: {
       type: String as () => FestivalActivity["status"] | FtStatus | null,
       default: null,
@@ -73,6 +86,9 @@ export default Vue.extend({
   computed: {
     isFa(): boolean {
       return this.festivalEvent === "FA";
+    },
+    adherents(): User[] {
+      return this.$accessor.user.adherents;
     },
     statusWithLabels(): StatusLabels {
       const noneOfThem = { key: null, label: "Tous" } as const;
@@ -94,6 +110,9 @@ export default Vue.extend({
     },
     changeTeam(team: Team) {
       this.$emit("change:team", team);
+    },
+    changeAdherent(adherent: User) {
+      this.$emit("change:adherent", adherent);
     },
   },
 });

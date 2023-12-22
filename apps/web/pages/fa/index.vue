@@ -190,11 +190,12 @@ export default defineComponent({
       }));
     },
     filteredFas(): PreviewFestivalActivity[] {
-      const { team, status, search, ...reviews } = this.filters;
+      const { team, status, search, adherent, ...reviews } = this.filters;
 
       return this.searchableFas.filter((fa) => {
         return (
           this.filterFaByTeam(team)(fa) &&
+          this.filterFaByAdherent(adherent)(fa) &&
           this.filterFaByStatus(status)(fa) &&
           this.filterFaByNameAndId(search)(fa) &&
           this.filterFaByReviews(reviews)(fa)
@@ -216,6 +217,7 @@ export default defineComponent({
     await Promise.all([
       this.$accessor.team.fetchFaValidators(),
       this.$accessor.festivalActivity.fetchAllActivities(),
+      this.$accessor.user.fetchAdherents(),
     ]);
   },
 
@@ -224,6 +226,12 @@ export default defineComponent({
       teamSearched?: Team,
     ): (fa: PreviewFestivalActivity) => boolean {
       return teamSearched ? (fa) => fa.team === teamSearched.code : () => true;
+    },
+
+    filterFaByAdherent(
+      adherent?: User,
+    ): (fa: PreviewFestivalActivity) => boolean {
+      return adherent ? (fa) => fa.adherent.id === adherent.id : () => true;
     },
 
     filterFaByStatus(
