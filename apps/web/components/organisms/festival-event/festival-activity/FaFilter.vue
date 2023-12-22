@@ -2,9 +2,11 @@
   <FestivalEventFilter
     :search="filters.search"
     :team="filters.team"
+    :adherent="filters.adherent"
     :status="filters.status"
     @change:search="updateSearch"
     @change:team="updateTeam"
+    @change:adherent="updateAdherent"
     @change:status="updateStatus"
   >
     <template #additional-filters>
@@ -50,6 +52,7 @@ import {
   secu,
   signa,
 } from "@overbookd/festival-activity";
+import { User } from "@overbookd/user";
 import { defineComponent } from "vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import {
@@ -85,6 +88,7 @@ export default defineComponent({
         isNotEmpty: nonEmptyString,
         isExistingReview: findReviewStatus,
         isExistingStatus: findStatus,
+        isExistingAdherent: this.findAdherentById,
         isExistingTeam: this.$accessor.team.getTeamByCode,
       });
       const search = builder.extractQueryParamsValue(
@@ -92,6 +96,10 @@ export default defineComponent({
         "search",
       );
       const team = builder.extractQueryParamsValue(this.$route.query, "team");
+      const adherent = builder.extractQueryParamsValue(
+        this.$route.query,
+        "adherent",
+      );
       const status = builder.extractQueryParamsValue(
         this.$route.query,
         "status",
@@ -128,6 +136,7 @@ export default defineComponent({
       return {
         ...search,
         ...team,
+        ...adherent,
         ...status,
         ...humainReview,
         ...matosReview,
@@ -165,6 +174,15 @@ export default defineComponent({
 
     updateTeam(team?: Team) {
       this.updateQueryParams("team", team?.code);
+    },
+
+    updateAdherent(adherent?: User) {
+      const id = adherent?.id ? `${adherent.id}` : undefined;
+      this.updateQueryParams("adherent", id);
+    },
+
+    findAdherentById(adherentId: User["id"]): User | undefined {
+      return this.$accessor.user.adherents.find(({ id }) => id === adherentId);
     },
 
     updateStatus(status?: FestivalActivity["status"]) {
