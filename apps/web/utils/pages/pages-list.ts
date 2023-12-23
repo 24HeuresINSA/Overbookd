@@ -20,6 +20,7 @@ import {
   VIEW_VOLUNTEER,
   WRITE_INVENTORY,
   HAVE_PERSONAL_ACCOUNT,
+  MANAGE_ADMINS,
 } from "@overbookd/permission";
 
 export interface Page {
@@ -260,7 +261,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-chart-histogram",
     title: "Récap Matos",
-    permission: WRITE_INVENTORY,
+    permission: MANAGE_ADMINS,
     to: "/matos/gear-recap",
     description:
       "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
