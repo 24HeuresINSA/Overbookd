@@ -258,6 +258,16 @@ export const pages: Page[] = [
     keywords: ["inventaire", "matos", "materiel"],
   },
   {
+    icon: "mdi-chart-histogram",
+    title: "Récap Matos",
+    permission: WRITE_INVENTORY,
+    to: "/matos/gear-recap",
+    description:
+      "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
+    mobileSupport: false,
+    keywords: ["recap-matos"],
+  },
+  {
     icon: "mdi-truck",
     title: "Logistique",
     permission: WRITE_INVENTORY,
