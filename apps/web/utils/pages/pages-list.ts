@@ -20,6 +20,7 @@ import {
   VIEW_VOLUNTEER,
   WRITE_INVENTORY,
   HAVE_PERSONAL_ACCOUNT,
+  MANAGE_ADMINS,
 } from "@overbookd/permission";
 
 export interface Page {
@@ -256,6 +257,16 @@ export const pages: Page[] = [
       "Permet de compter l'ensemble du matériel appartenant à l'association",
     mobileSupport: false,
     keywords: ["inventaire", "matos", "materiel"],
+  },
+  {
+    icon: "mdi-chart-histogram",
+    title: "Récap Matos",
+    permission: MANAGE_ADMINS,
+    to: "/matos/gear-recap",
+    description:
+      "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
+    mobileSupport: false,
+    keywords: ["recap-matos"],
   },
   {
     icon: "mdi-truck",
