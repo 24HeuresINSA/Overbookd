@@ -1,4 +1,4 @@
-import { EndSharedMeal } from "../../meal-sharing/meals.model";
+import { PastSharedMeal } from "../../meal-sharing/meals.model";
 import { SHARED_MEAL } from "../transaction.model";
 
 type SharedMealTransaction = {
@@ -9,16 +9,16 @@ type SharedMealTransaction = {
   type: typeof SHARED_MEAL;
 };
 export class SharedMeal {
-  static refound(meal: EndSharedMeal): SharedMealTransaction[] {
-    const amount = this.divideAmount(meal.amount, meal.guests.length);
-    const context = `Repas partage du ${meal.date}`;
-    const guests = meal.guests.filter((id) => id !== meal.chef.id);
-    return guests.map((from) => ({
+  static refound(meal: PastSharedMeal): SharedMealTransaction[] {
+    const amount = this.divideAmount(meal.expense.amount, meal.shotgunCount);
+    const context = `Repas partage du ${meal.meal.date}`;
+    const guests = meal.shotguns.filter(({ id }) => id !== meal.chef.id);
+    return guests.map(({ id }) => ({
       amount,
       context,
       to: meal.chef.id,
       type: SHARED_MEAL,
-      from,
+      from: id,
     }));
   }
 
