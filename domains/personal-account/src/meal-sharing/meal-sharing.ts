@@ -1,32 +1,42 @@
 import { Adherent } from "./adherent";
-import { isPastMeal } from "./meals.model";
-import { IExposeSharedMeal, IExposePastMeal } from "./meals.model";
+import {
+  OnGoingSharedMeal,
+  PastSharedMeal,
+  SharedMeal,
+  isPastMeal,
+} from "./meals.model";
 import {
   ChefNotFound,
   MealNotFound,
   GuestNotFound,
 } from "./meal-sharing.error";
 import { Expense } from "./meals.model";
+import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
+import { PastSharedMealBuilder } from "./past-shared-meal.builder";
 
 export const SOIR = "SOIR";
 export const MIDI = "MIDI";
 
-type Moment = typeof SOIR | typeof MIDI;
+export type Moment = typeof SOIR | typeof MIDI;
 
-export type IDefineMealDate = { day: Date; moment: Moment };
+export type MealDate = { day: Date; moment: Moment };
 
 export type SharedMealCreation = {
   chef: Adherent;
   menu: string;
-  date: IDefineMealDate;
+  date: MealDate;
 };
 
+export type SharedMealBuilder =
+  | OnGoingSharedMealBuilder
+  | PastSharedMealBuilder;
+
 export type SharedMeals = {
-  create(meal: SharedMealCreation): Promise<IExposeSharedMeal>;
-  find(
-    mealId: number,
-  ): Promise<IExposeSharedMeal | IExposePastMeal | undefined>;
-  close(meal: IExposePastMeal): Promise<IExposePastMeal>;
+  create(meal: SharedMealCreation): Promise<OnGoingSharedMeal>;
+  find(mealId: number): Promise<SharedMealBuilder | undefined>;
+  close(meal: PastSharedMeal): Promise<PastSharedMeal>;
+  list(): Promise<SharedMeal[]>;
+  addShotgun(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
 };
 
 export type Adherents = {
@@ -41,16 +51,16 @@ export class MealSharing {
 
   async offer(
     menu: string,
-    date: IDefineMealDate,
+    date: MealDate,
     chefId: number,
-  ): Promise<IExposeSharedMeal> {
+  ): Promise<OnGoingSharedMeal> {
     const chef = await this.adherents.find(chefId);
     if (!chef) return Promise.reject(new ChefNotFound(chefId));
 
     return this.sharedMeals.create({ menu, date, chef });
   }
 
-  async shotgun(mealId: number, guestId: number): Promise<IExposeSharedMeal> {
+  async shotgun(mealId: number, guestId: number): Promise<OnGoingSharedMeal> {
     const [sharedMeal, guest] = await Promise.all([
       this.sharedMeals.find(mealId),
       this.adherents.find(guestId),
@@ -58,20 +68,24 @@ export class MealSharing {
     if (!sharedMeal) throw new MealNotFound(mealId);
     if (!guest) throw new GuestNotFound(guestId);
 
-    return sharedMeal.shotgunFor(guest);
+    const updatedMeal = sharedMeal.shotgunFor(guest);
+    return this.sharedMeals.addShotgun(updatedMeal);
   }
 
-  async howManyShotgunsFor(mealId: number): Promise<number> {
-    const meal = await this.sharedMeals.find(mealId);
-    if (!meal) throw new MealNotFound(mealId);
+  async findById(mealId: number): Promise<SharedMeal> {
+    const sharedMeal = await this.sharedMeals.find(mealId);
+    if (!sharedMeal) throw new MealNotFound(mealId);
+    return sharedMeal;
+  }
 
-    return meal.shotguns;
+  async findAll(): Promise<SharedMeal[]> {
+    return this.sharedMeals.list();
   }
 
   async recordExpense(
     mealId: number,
     expense: Expense,
-  ): Promise<IExposePastMeal> {
+  ): Promise<PastSharedMeal> {
     const meal = await this.sharedMeals.find(mealId);
 
     if (!meal) throw new MealNotFound(mealId);

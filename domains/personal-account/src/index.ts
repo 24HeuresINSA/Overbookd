@@ -45,3 +45,23 @@ export {
   BarrelNotConfigured,
   SimilarBarrelExist,
 } from "./barrel-prices/define-barrel-price.error";
+
+export { MealSharing, SOIR, MIDI } from "./meal-sharing/meal-sharing";
+export type {
+  MealDate,
+  Moment,
+  Adherents as MealsAdherents,
+  SharedMeals,
+  SharedMealBuilder,
+  SharedMealCreation,
+} from "./meal-sharing/meal-sharing";
+export type {
+  SharedMeal,
+  OnGoingSharedMeal,
+  PastSharedMeal,
+  AboutMeal,
+} from "./meal-sharing/meals.model";
+export type { Adherent } from "./meal-sharing/adherent";
+export { MealSharingError } from "./meal-sharing/meal-sharing.error";
+export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder";
+export { OnGoingSharedMealBuilder } from "./meal-sharing/on-going-shared-meal.builder";
