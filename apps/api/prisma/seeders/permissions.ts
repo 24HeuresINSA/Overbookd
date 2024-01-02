@@ -12,6 +12,7 @@ import {
   MANAGE_LOCATION,
   MANAGE_PERSONAL_ACCOUNTS,
   MANAGE_USERS,
+  MANAGE_TEAMS,
   PAY_CONTRIBUTION,
   READ_ANIMATION_TO_PUBLISH,
   READ_FA,
@@ -147,6 +148,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "bureau" }, { teamCode: "humain" }],
+      },
+    },
+  },
+  {
+    name: MANAGE_TEAMS,
+    description: "Peut gérer les équipes",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "bureau" }],
       },
     },
   },
