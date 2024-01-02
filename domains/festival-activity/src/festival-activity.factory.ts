@@ -27,6 +27,7 @@ import {
   noel,
 } from "./festival-activity.fake";
 import { FestivalActivityKeyEvents } from "./festival-activity.event";
+import { numberGenerator } from "@overbookd/list";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]
@@ -40,12 +41,6 @@ type FestivalActivitySections =
 type PublicData = Partial<
   Pick<Public, "isFlagship" | "photoLink" | "categories" | "timeWindows">
 >;
-
-function* numberGenerator(start: number): Generator<number> {
-  for (let i = start; i < 1000000; i++) {
-    yield i;
-  }
-}
 
 class FestivalActivityFactory {
   constructor(private readonly idGenerator: Generator<number>) {}

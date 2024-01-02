@@ -1,12 +1,7 @@
+import { numberGenerator } from "@overbookd/list";
 import { DRAFT, Draft, FestivalActivity } from "../festival-activity";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
 import { Adherent } from "../sections/in-charge";
-
-function* numberGenerator(start: number): Generator<number> {
-  for (let i = start; i < 1_000_000; i++) {
-    yield i;
-  }
-}
 
 export type FestivalActivityCreationForm = {
   name: string;

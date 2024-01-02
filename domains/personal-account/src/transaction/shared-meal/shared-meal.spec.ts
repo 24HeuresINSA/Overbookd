@@ -1,15 +1,27 @@
 import { describe, it, expect } from "vitest";
-import { EndSharedMeal } from "../../meal-sharing/meals.model";
 import { SHARED_MEAL } from "../transaction.model";
 import { SharedMeal } from "./shared-meal";
+import { PastSharedMealBuilder } from "../../meal-sharing/past-shared-meal.builder";
+
+const julie = { id: 1, name: "Julie" };
+const lea = { id: 2, name: "Lea" };
+const noel = { id: 3, name: "Noel" };
+const georges = { id: 4, name: "Georges" };
 
 describe("Generate all transactions to refound shared meal chef", () => {
-  const sharedMeal: EndSharedMeal = {
-    chef: { id: 1, name: "Julie" },
-    date: "vendredi 13 octobre midi",
-    amount: 2000,
-    guests: [1, 2, 3, 4],
-  };
+  const sharedMeal = PastSharedMealBuilder.build({
+    id: 1,
+    expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
+    chef: julie,
+    meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+    shotguns: [
+      { ...julie, date: new Date("2023-12-29T21:00+02:00") },
+      { ...lea, date: new Date("2023-12-30T10:00+02:00") },
+      { ...noel, date: new Date("2023-12-31T09:00+02:00") },
+      { ...georges, date: new Date("2023-12-31T21:00+02:00") },
+    ],
+  });
+
   it("should generate transactions with individual amount set to 5€", () => {
     const transactions = SharedMeal.refound(sharedMeal);
     expect(transactions.every(({ amount }) => amount === 500)).toBe(true);
@@ -19,12 +31,12 @@ describe("Generate all transactions to refound shared meal chef", () => {
     expect(transactions).toHaveLength(3);
     expect(transactions.every(({ from }) => [2, 3, 4].includes(from)));
   });
-  it("should generate transactions with 'Repas partage du vendredi 13 octobre midi' as context", () => {
+  it("should generate transactions with 'Repas partage du dimanche 31 decembre soir' as context", () => {
     const transactions = SharedMeal.refound(sharedMeal);
     expect(
       transactions.every(
         ({ context }) =>
-          context === "Repas partage du vendredi 13 octobre midi",
+          context === "Repas partage du dimanche 31 decembre soir",
       ),
     ).toBe(true);
   });
@@ -38,12 +50,18 @@ describe("Generate all transactions to refound shared meal chef", () => {
   });
 
   describe("when meal amount can't be divided properly", () => {
-    const undividibleMeal: EndSharedMeal = {
-      chef: { id: 1, name: "Julie" },
-      date: "vendredi 13 octobre soir",
-      amount: 2000,
-      guests: [1, 2, 3],
-    };
+    const undividibleMeal = PastSharedMealBuilder.build({
+      id: 1,
+      expense: { amount: 2000, date: new Date("2023-12-31T10:30+02:00") },
+      chef: julie,
+      meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+      shotguns: [
+        { ...julie, date: new Date("2023-12-29T21:00+02:00") },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00") },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00") },
+      ],
+    });
+
     it("should round up to next 5cents", () => {
       const transactions = SharedMeal.refound(undividibleMeal);
       expect(transactions.every(({ amount }) => amount === 670)).toBe(true);

@@ -1,11 +1,6 @@
+import { numberGenerator } from "@overbookd/list";
 import { FulfilledRegistration } from "./register-form";
 import { NewcomerRepository, Registree } from "./register-newcomer";
-
-export function* numberGenerator(start: number): Generator<number> {
-  for (let i = start; i < 1_000_000; i++) {
-    yield i;
-  }
-}
 
 export class InMemoryNewcomerRepository implements NewcomerRepository {
   private idGenerator: Generator<number>;

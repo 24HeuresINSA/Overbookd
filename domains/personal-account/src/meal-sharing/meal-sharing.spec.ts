@@ -2,13 +2,14 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { MealSharing } from "./meal-sharing";
 import { Adherents } from "./meal-sharing";
 import { SharedMeals } from "./meal-sharing";
-import { SharedMeal } from "./shared-meal";
-import { IExposePastMeal } from "./meals.model";
+import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
+import { AlreadyShotguned } from "./meal-sharing.error";
+import { PastSharedMeal } from "./meals.model";
 import { SOIR, MIDI } from "./meal-sharing";
 import { Meal } from "./meal";
 import { InMemorySharedMeals } from "./shared-meals.inmemory";
 import { InMemoryAdherents } from "./adherents.inmemory";
-import { PAST_MEAL_ERROR } from "./past-meal";
+import { PAST_MEAL_ERROR } from "./past-shared-meal.builder";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
 const lea = { id: 2, name: "Lea Mauyno" };
@@ -27,7 +28,7 @@ const shotguns = [
   { ...shogosse, date: new Date("2023-10-12 13:00") },
 ];
 
-const rizCantonnais = SharedMeal.retrieve({
+const rizCantonnais = OnGoingSharedMealBuilder.build({
   id: 1,
   meal,
   chef: julie,
@@ -82,7 +83,7 @@ describe("Meal Sharing", () => {
             { day, moment },
             expectedChef.id,
           );
-          expect(chef).toEqual(expectedChef);
+          expect(chef).toStrictEqual(expectedChef);
         });
         it("should add chef as a guest", async () => {
           const meal = await mealSharing.offer(
@@ -90,8 +91,11 @@ describe("Meal Sharing", () => {
             { day, moment },
             expectedChef.id,
           );
-          expect(meal.shotguns).toBe(1);
-          expect(meal.hasShotgun(expectedChef)).toBe(true);
+          expect(meal.shotgunCount).toBe(1);
+          expect(meal.shotguns.at(0)).toEqual({
+            ...expectedChef,
+            date: expect.any(Date),
+          });
         });
       },
     );
@@ -105,15 +109,26 @@ describe("Meal Sharing", () => {
     describe("when lea shotgun for riz cantonnais", () => {
       it("should add lea as a guest", async () => {
         const meal = await mealSharing.shotgun(rizCantonnais.id, lea.id);
-        expect(meal.shotguns).toBe(4);
-        expect(meal.hasShotgun(lea)).toBe(true);
+        expect(meal.shotgunCount).toBe(4);
+        expect(meal.shotguns).toContainEqual({
+          ...lea,
+          date: expect.any(Date),
+        });
+      });
+      describe("when lea does it twice", () => {
+        it("should indicate that lea is already a guest", async () => {
+          await mealSharing.shotgun(rizCantonnais.id, lea.id);
+          expect(
+            async () => await mealSharing.shotgun(rizCantonnais.id, lea.id),
+          ).rejects.toThrow(AlreadyShotguned);
+        });
       });
     });
     describe("when noel shotgun again for riz cantonnais", () => {
-      it("should keep guests as they were", async () => {
-        const meal = await mealSharing.shotgun(rizCantonnais.id, noel.id);
-        expect(meal.shotguns).toBe(3);
-        expect(meal.hasShotgun(noel)).toBe(true);
+      it("should indicate that noel is already a guest", async () => {
+        expect(
+          async () => await mealSharing.shotgun(rizCantonnais.id, noel.id),
+        ).rejects.toThrow(AlreadyShotguned);
       });
     });
   });
@@ -124,13 +139,15 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     it("should be able to know how many guests shotguned", async () => {
-      const shotguns = await mealSharing.howManyShotgunsFor(rizCantonnais.id);
+      const { shotgunCount: shotguns } = await mealSharing.findById(
+        rizCantonnais.id,
+      );
       expect(shotguns).toBe(3);
     });
   });
   describe("when chief record expense", () => {
     const expense = { amount: 1000, date: new Date("2023-10-12 12:00") };
-    let pastSharedMeal: IExposePastMeal;
+    let pastSharedMeal: PastSharedMeal;
     beforeEach(async () => {
       sharedMeals = new InMemorySharedMeals([rizCantonnais]);
       adherents = new InMemoryAdherents([...adherentListing]);
@@ -141,7 +158,7 @@ describe("Meal Sharing", () => {
       );
     });
     it("should record amount and date of the expense", async () => {
-      expect(pastSharedMeal.amount).toBe(1000);
+      expect(pastSharedMeal.expense.amount).toBe(1000);
     });
     it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
       expect(async () => {
@@ -152,15 +169,7 @@ describe("Meal Sharing", () => {
       expect(pastSharedMeal.inTimeShotguns).toBe(2);
     });
     it("should count how many shotguns were done", () => {
-      expect(pastSharedMeal.shotguns).toBe(3);
-    });
-    it("should expose a closure event describing shared meal", () => {
-      expect(pastSharedMeal.event).toEqual({
-        chef: julie,
-        amount: 1000,
-        guests: [julie.id, noel.id, shogosse.id],
-        date: "jeudi 12 octobre midi",
-      });
+      expect(pastSharedMeal.shotgunCount).toBe(3);
     });
   });
 });

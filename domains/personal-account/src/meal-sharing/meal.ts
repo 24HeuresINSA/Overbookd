@@ -1,18 +1,18 @@
-import { IInformAboutMeal } from "./meals.model";
-import { IDefineMealDate } from "./meal-sharing";
+import { AboutMeal } from "./meals.model";
+import { MealDate } from "./meal-sharing";
 
-export class Meal implements IInformAboutMeal {
+export class Meal implements AboutMeal {
   private constructor(
     readonly menu: string,
     readonly date: string,
   ) {}
 
-  static init(menu: string, dateDefinition: IDefineMealDate): Meal {
+  static init(menu: string, dateDefinition: MealDate): Meal {
     const date = this.buildDate(dateDefinition);
     return new Meal(menu, date);
   }
 
-  private static buildDate({ day, moment }: IDefineMealDate) {
+  private static buildDate({ day, moment }: MealDate) {
     return `${this.formatDay(day)} ${moment.toLowerCase()}`;
   }
 

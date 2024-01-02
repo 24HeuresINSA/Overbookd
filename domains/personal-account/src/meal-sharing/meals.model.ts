@@ -1,41 +1,27 @@
-import { Adherent } from "./adherent";
+import { Adherent, Shotgun } from "./adherent";
 
 export type Expense = {
   amount: number;
   date: Date;
 };
 
-export type IInformAboutMeal = { menu: string; date: string };
+export type AboutMeal = { menu: string; date: string };
 
-type BaseSharedMeal = {
+export type OnGoingSharedMeal = {
   id: number;
-  meal: IInformAboutMeal;
+  meal: AboutMeal;
   chef: Adherent;
-  shotguns: number;
+  shotgunCount: number;
+  shotguns: Shotgun[];
 };
 
-export type IExposeSharedMeal = BaseSharedMeal & {
-  hasShotgun(adherent: Adherent): boolean;
-  shotgunFor(adherent: Adherent): IExposeSharedMeal;
-  close(expense: Expense): IExposePastMeal;
-};
-
-export type EndSharedMeal = {
-  chef: Adherent;
-  date: string;
-  guests: number[];
-  amount: number;
-};
-
-export type IExposePastMeal = BaseSharedMeal & {
-  shotgunFor(adherent: Adherent): IExposeSharedMeal;
-  amount: number;
+export type PastSharedMeal = OnGoingSharedMeal & {
+  expense: Expense;
   inTimeShotguns: number;
-  event: EndSharedMeal;
 };
 
-export function isPastMeal(
-  meal: IExposeSharedMeal | IExposePastMeal,
-): meal is IExposePastMeal {
+export type SharedMeal = PastSharedMeal | OnGoingSharedMeal;
+
+export function isPastMeal(meal: SharedMeal): meal is PastSharedMeal {
   return "expense" in meal;
 }
