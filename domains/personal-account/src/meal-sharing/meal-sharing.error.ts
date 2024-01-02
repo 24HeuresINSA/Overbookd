@@ -21,7 +21,7 @@ export class GuestNotFound extends MealSharingError {
 }
 
 export class AlreadyShotguned extends MealSharingError {
-  constructor(meal: SharedMeal) {
-    super(`❌ Tu as déjà shotgun pour le repas du ${meal.meal.date}`);
+  constructor({ meal }: SharedMeal) {
+    super(`❌ Tu as déjà shotgun pour le repas du ${meal.date}`);
   }
 }
