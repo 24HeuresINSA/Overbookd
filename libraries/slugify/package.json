@@ -29,7 +29,8 @@
     "test:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
   },
   "keywords": [
-    "slugify"
+    "slugify",
+    "library"
   ],
   "engines": {
     "node": "20.10.0",

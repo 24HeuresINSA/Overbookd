@@ -29,7 +29,8 @@
     "test:ci": "echo 'No tests'"
   },
   "keywords": [
-    "configuration"
+    "configuration",
+    "domain"
   ],
   "engines": {
     "node": "20.10.0",
