@@ -4,7 +4,13 @@
     <v-expansion-panels>
       <v-expansion-panel v-for="gear in gears" :key="gear.slug">
         <v-expansion-panel-header>
-          {{ gear.name }}
+          <div>
+            {{ gear.name }}
+            <div v-show="gear.isConsumable" class="icon">
+              <v-icon size="24"> mdi-delete-empty-outline </v-icon>
+              <span class="icon-detail">Consommable</span>
+            </div>
+          </div>
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           Contenu à définir
@@ -33,3 +39,24 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.icon {
+  position: relative;
+  display: inline-block;
+  .icon-detail {
+    visibility: hidden;
+    font-size: 0.8rem;
+    text-align: center;
+    user-select: none;
+    z-index: 1;
+    opacity: 0.75;
+    @media only screen and (max-width: $mobile-max-width) {
+      display: none;
+    }
+  }
+}
+.icon:hover .icon-detail {
+  visibility: visible;
+}
+</style>
