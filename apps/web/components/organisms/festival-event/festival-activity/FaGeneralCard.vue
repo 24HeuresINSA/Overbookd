@@ -86,43 +86,50 @@
           label="Activité phare qui sera mise en avant sur les réseaux sociaux"
           @change="updateIsFlagship"
         />
-      </v-card-text>
 
-      <section class="time-windows">
-        <div v-if="canReviewTimeWindows" class="review">
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="success"
-            :disabled="cantApproveTimeWindows"
-            @click="approveTimeWindows"
-          >
-            <v-icon>mdi-check-circle-outline</v-icon>
-          </v-btn>
-          <v-btn
-            class="review__action"
-            fab
-            x-small
-            color="error"
-            :disabled="cantRejectTimeWindows"
-            @click="rejectTimeWindows"
-          >
-            <v-icon>mdi-close-circle-outline</v-icon>
-          </v-btn>
-        </div>
-        <h3>
-          Créneaux de l'activité
-          <v-btn fab dark small color="primary" @click="openCalendar">
-            <v-icon dark> mdi-calendar-blank </v-icon>
-          </v-btn>
-        </h3>
-        <FaTimeWindowTable
-          :time-windows="general.timeWindows"
-          @add="addTimeWindow"
-          @remove="removeTimeWindow"
-        />
-      </section>
+        <v-card class="time-window-table">
+          <div v-if="canReviewTimeWindows" class="review">
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="success"
+              :disabled="cantApproveTimeWindows"
+              @click="approveTimeWindows"
+            >
+              <v-icon>mdi-check-circle-outline</v-icon>
+            </v-btn>
+            <v-btn
+              class="review__action"
+              fab
+              x-small
+              color="error"
+              :disabled="cantRejectTimeWindows"
+              @click="rejectTimeWindows"
+            >
+              <v-icon>mdi-close-circle-outline</v-icon>
+            </v-btn>
+          </div>
+          <v-card-title class="time-window-table__title">
+            Créneaux de l'activité
+            <v-btn
+              fab
+              dark
+              small
+              color="primary"
+              class="time-window-table__title-icon"
+              @click="openCalendar"
+            >
+              <v-icon dark> mdi-calendar-blank </v-icon>
+            </v-btn>
+          </v-card-title>
+          <FaTimeWindowTable
+            :time-windows="general.timeWindows"
+            @add="addTimeWindow"
+            @remove="removeTimeWindow"
+          />
+        </v-card>
+      </v-card-text>
     </v-card>
 
     <v-dialog v-model="isAskPublicDataDialogOpen" max-width="600">
@@ -288,11 +295,25 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .review {
-  position: absolute;
+  position: relative;
+  height: 0;
   top: 10px;
   right: 10px;
   display: flex;
   flex-direction: row;
   gap: 10px;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.time-window-table {
+  margin: 15px 0 30px 0;
+  padding: 5px;
+  &__title {
+    font-size: 1.1rem;
+  }
+  &__title-icon {
+    margin-left: 10px;
+  }
 }
 </style>
