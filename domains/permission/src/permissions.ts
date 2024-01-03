@@ -7,6 +7,7 @@ export const WRITE_GEAR_CATALOG = "write-gear-catalog";
 export const READ_GEAR_CATALOG = "read-gear-catalog";
 export const READ_SIGNAGE_CATALOG = "read-signage-catalog";
 export const WRITE_SIGNAGE_CATALOG = "write-signage-catalog";
+export const VIEW_GEAR_SUMMARY = "view-gear-summary";
 export const VIEW_LOCATION = "view-location";
 export const MANAGE_LOCATION = "manage-location";
 export const WRITE_INVENTORY = "write-inventory";
@@ -44,6 +45,7 @@ const permissions = [
   BE_AFFECTED,
   WRITE_GEAR_CATALOG,
   READ_GEAR_CATALOG,
+  VIEW_GEAR_SUMMARY,
   READ_SIGNAGE_CATALOG,
   WRITE_SIGNAGE_CATALOG,
   VIEW_LOCATION,

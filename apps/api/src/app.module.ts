@@ -42,6 +42,7 @@ import { FestivalActivityModule } from "./festival-activity/festival-activity.mo
 import { ONE_MINUTE_IN_MS } from "@overbookd/period";
 import { PersonalAccountModule } from "./personal-account/personal-account.module";
 import { SharedMealModule } from "./shared-meal/shared-meal.module";
+import { SummaryGearModule } from "./summary-gear/summary-gear.module";
 
 @Module({
   imports: [
@@ -103,6 +104,7 @@ import { SharedMealModule } from "./shared-meal/shared-meal.module";
     NotificationModule,
     PersonalAccountModule,
     SharedMealModule,
+    SummaryGearModule,
   ],
   controllers: [AppController],
   providers: [
