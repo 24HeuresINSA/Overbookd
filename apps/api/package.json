@@ -25,7 +25,7 @@
     "start": "nest start --preserveWatchOutput",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch --preserveWatchOutput",
-    "start:migrate:prod": "pnpm prisma:migrate && pnpm run start:prod",
+    "start:migrate:prod": "pnpm database:migrate && pnpm run start:prod",
     "start:prod": "node src/main",
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
