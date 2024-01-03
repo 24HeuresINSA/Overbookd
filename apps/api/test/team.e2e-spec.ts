@@ -62,7 +62,7 @@ describe("Teams (e2e)", () => {
     expect(res.body).toEqual(expect.any(Array));
   });
 
-  describe("/teams (post)", () => {
+  describe("/teams (POST)", () => {
     describe.each`
       code             | data        | expected
       ${"super-admin"} | ${TEAMS[0]} | ${TEAMS[0]}
