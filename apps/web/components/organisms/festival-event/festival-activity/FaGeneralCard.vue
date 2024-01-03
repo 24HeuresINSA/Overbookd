@@ -1,14 +1,14 @@
 <template>
   <div>
     <v-card>
-      <div v-if="canReview" class="review">
+      <div v-if="canReviewGeneralSection" class="review">
         <v-btn
           class="review__action"
           fab
           x-small
           color="success"
-          :disabled="cantApprove"
-          @click="approved"
+          :disabled="cantApproveGeneralSection"
+          @click="approveGeneralSection"
         >
           <v-icon>mdi-check-circle-outline</v-icon>
         </v-btn>
@@ -17,8 +17,8 @@
           fab
           x-small
           color="error"
-          :disabled="cantReject"
-          @click="reject"
+          :disabled="cantRejectGeneralSection"
+          @click="rejectGeneralSection"
         >
           <v-icon>mdi-close-circle-outline</v-icon>
         </v-btn>
@@ -62,20 +62,6 @@
           @change="updateDescription"
         />
 
-        <section class="time-windows">
-          <h3>
-            Créneaux de l'activité
-            <v-btn fab dark small color="primary" @click="openCalendar">
-              <v-icon dark> mdi-calendar-blank </v-icon>
-            </v-btn>
-          </h3>
-          <FaTimeWindowTable
-            :time-windows="general.timeWindows"
-            @add="addTimeWindow"
-            @remove="removeTimeWindow"
-          />
-        </section>
-
         <v-combobox
           :value="general.categories"
           chips
@@ -101,6 +87,42 @@
           @change="updateIsFlagship"
         />
       </v-card-text>
+
+      <section class="time-windows">
+        <div v-if="canReviewTimeWindows" class="review">
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="success"
+            :disabled="cantApproveTimeWindows"
+            @click="approveTimeWindows"
+          >
+            <v-icon>mdi-check-circle-outline</v-icon>
+          </v-btn>
+          <v-btn
+            class="review__action"
+            fab
+            x-small
+            color="error"
+            :disabled="cantRejectTimeWindows"
+            @click="rejectTimeWindows"
+          >
+            <v-icon>mdi-close-circle-outline</v-icon>
+          </v-btn>
+        </div>
+        <h3>
+          Créneaux de l'activité
+          <v-btn fab dark small color="primary" @click="openCalendar">
+            <v-icon dark> mdi-calendar-blank </v-icon>
+          </v-btn>
+        </h3>
+        <FaTimeWindowTable
+          :time-windows="general.timeWindows"
+          @add="addTimeWindow"
+          @remove="removeTimeWindow"
+        />
+      </section>
     </v-card>
 
     <v-dialog v-model="isAskPublicDataDialogOpen" max-width="600">
@@ -163,25 +185,34 @@ export default defineComponent({
     contact(): string {
       return this.isPublic ? comcomEmail : humainEmail;
     },
-    reviewer(): GeneralReviewer {
+    generalReviewer(): GeneralReviewer {
       return this.isPublic ? communication : humain;
     },
-    canReview(): boolean {
-      return this.$accessor.user.isMemberOf(this.reviewer);
+    canReviewGeneralSection(): boolean {
+      return this.$accessor.user.isMemberOf(this.generalReviewer);
     },
-    cantApprove(): boolean {
+    canReviewTimeWindows(): boolean {
+      return this.$accessor.user.isMemberOf(humain);
+    },
+    cantApproveGeneralSection(): boolean {
       return this.hasReviewerAlreadyDoneHisReview(
         this.mFA,
-        this.reviewer,
+        this.generalReviewer,
         APPROVED,
       );
     },
-    cantReject(): boolean {
+    cantRejectGeneralSection(): boolean {
       return this.hasReviewerAlreadyDoneHisReview(
         this.mFA,
-        this.reviewer,
+        this.generalReviewer,
         REJECTED,
       );
+    },
+    cantApproveTimeWindows(): boolean {
+      return this.hasReviewerAlreadyDoneHisReview(this.mFA, humain, APPROVED);
+    },
+    cantRejectTimeWindows(): boolean {
+      return this.hasReviewerAlreadyDoneHisReview(this.mFA, humain, REJECTED);
     },
   },
   methods: {
@@ -221,11 +252,17 @@ export default defineComponent({
     removeTimeWindow(timeWindow: TimeWindow) {
       this.$accessor.festivalActivity.removeGeneralTimeWindow(timeWindow.id);
     },
-    approved() {
-      this.$accessor.festivalActivity.approveAs(this.reviewer);
+    approveGeneralSection() {
+      this.$accessor.festivalActivity.approveAs(this.generalReviewer);
     },
-    reject() {
-      this.$emit("reject", this.reviewer);
+    rejectGeneralSection() {
+      this.$emit("reject", this.generalReviewer);
+    },
+    approveTimeWindows() {
+      this.$accessor.festivalActivity.approveAs(humain);
+    },
+    rejectTimeWindows() {
+      this.$emit("reject", humain);
     },
     hasReviewerAlreadyDoneHisReview(
       fa: FestivalActivity,
