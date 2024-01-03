@@ -7,14 +7,8 @@ import { AssignmentModule } from "./assignment/assignment.module";
 import { AuthenticationModule } from "./authentication/authentication.module";
 import { CatalogModule } from "./catalog/catalog.module";
 import { CharismaPeriodModule } from "./charisma-period/charisma-period.module";
-import { CollaboratorModule } from "./collaborator/collaborator.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
-import { FaFeedbackModule } from "./fa-feedback/fa-feedback.module";
-import { FaModule } from "./fa/fa.module";
-import { FaElectricityNeedModule } from "./fa-electricity-need/fa-electricity-need.module";
-import { FaSignaNeedModule } from "./fa-signa-need/fa-signa-need.module";
 import { PublicAnimationModule } from "./public-animation/public-animation.module";
-import { FaTimeWindowModule } from "./fa-time-window/fa-time-window.module";
 import { FriendModule } from "./friend/friend.module";
 import { FtFeedbackModule } from "./ft-feedback/ft-feedback.module";
 import { FtModule } from "./ft/ft.module";
@@ -58,9 +52,7 @@ import { SharedMealModule } from "./shared-meal/shared-meal.module";
     HashingUtilsModule,
     TeamModule,
     TransactionModule,
-    FaModule,
     FestivalActivityModule,
-    CollaboratorModule,
     MailerModule.forRoot({
       transport: {
         service: "gmail",
@@ -80,10 +72,6 @@ import { SharedMealModule } from "./shared-meal/shared-meal.module";
         },
       },
     }),
-    FaSignaNeedModule,
-    FaFeedbackModule,
-    FaTimeWindowModule,
-    FaElectricityNeedModule,
     CatalogModule,
     CatalogModule,
     ConfigurationModule,
