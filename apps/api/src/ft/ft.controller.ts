@@ -66,7 +66,7 @@ import {
   VIEW_FESTIVAL_EVENTS_STATS,
   WRITE_FT,
 } from "@overbookd/permission";
-import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
+import { StatsResponseDto } from "./dto/stats.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -138,7 +138,7 @@ export class FtController {
     status: 200,
     description: "Get FT stats",
     isArray: true,
-    type: StatisticsResponseDto,
+    type: StatsResponseDto,
   })
   getFtStats(): Promise<StatsPayload[]> {
     return this.ftService.getFtStats();
