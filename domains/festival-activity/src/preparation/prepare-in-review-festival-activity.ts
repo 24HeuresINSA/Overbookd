@@ -96,10 +96,7 @@ export const PrepareError = {
   AlreadyApprovedBy,
 };
 
-type isValidatedBy = {
-  validated: boolean;
-  reviewer: Reviewer;
-};
+type GeneralReviewer = typeof humain | typeof communication;
 
 class General {
   private constructor(private readonly general: Reviewable["general"]) {}
@@ -108,13 +105,12 @@ class General {
     return new General(general);
   }
 
-  isAlreadyValidatedBy(reviews: Reviews): isValidatedBy {
-    const reviewer = this.general.toPublish ? communication : humain;
+  isAlreadyValidatedBy(reviewer: GeneralReviewer, reviews: Reviews): boolean {
     switch (reviewer) {
       case communication:
-        return { validated: reviews.communication === APPROVED, reviewer };
+        return reviews.communication === APPROVED;
       case humain:
-        return { validated: reviews.humain === APPROVED, reviewer };
+        return reviews.humain === APPROVED;
     }
   }
 
@@ -228,7 +224,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   addGeneralTimeWindow(period: IProvidePeriod): Reviewable {
-    this.checkIfGeneralAlreadyApproved();
+    this.checkIfGeneralAlreadyApproved(humain);
     const timeWindows = TimeWindows.build(
       this.activity.general.timeWindows,
     ).add(period).entries;
@@ -237,23 +233,23 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, general };
   }
 
-  private checkIfGeneralAlreadyApproved() {
-    const { validated, reviewer } = General.init(
-      this.activity.general,
-    ).isAlreadyValidatedBy(this.activity.reviews);
+  private checkIfGeneralAlreadyApproved(askingReviewer?: GeneralReviewer) {
+    const { reviews, general: generalData } = this.activity;
+    const defaultReviewer = generalData.toPublish ? communication : humain;
+    const reviewer = askingReviewer ?? defaultReviewer;
+    const general = General.init(generalData);
 
-    if (validated) {
+    if (general.isAlreadyValidatedBy(reviewer, reviews)) {
       throw new AlreadyApprovedBy([reviewer]);
     }
   }
 
   removeGeneralTimeWindow(id: TimeWindow["id"]): Reviewable {
-    this.checkIfGeneralAlreadyApproved();
+    this.checkIfGeneralAlreadyApproved(humain);
 
-    const timeWindows = TimeWindows.build(
-      this.activity.general.timeWindows,
-    ).remove(id).entries;
     const currentGeneral = this.activity.general;
+    const timeWindowsAggregate = TimeWindows.build(currentGeneral.timeWindows);
+    const timeWindows = timeWindowsAggregate.remove(id).entries;
 
     if (isPrivate(currentGeneral)) {
       const general = { ...currentGeneral, timeWindows };

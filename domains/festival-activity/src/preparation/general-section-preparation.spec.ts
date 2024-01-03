@@ -15,14 +15,10 @@ import {
   validatedByHumain,
   validatedByCommunication,
   validatedBySecu,
+  publicValidatedByHumain,
 } from "./preparation.test-utils";
 import { isDraft } from "../festival-activity";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  communication,
-  humain,
-} from "../sections/reviews";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 import { sunday14hToSunday18h } from "../festival-activity.fake";
 
@@ -40,6 +36,7 @@ describe("General section of festival activity preparation", () => {
       validatedByHumain,
       validatedByCommunication,
       validatedBySecu,
+      publicValidatedByHumain,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -287,32 +284,31 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                             | activityId                     | reviewer         | timeWindow              | toRemoveId                                            | update
-    ${validatedByHumain.general.name}        | ${validatedByHumain.id}        | ${humain}        | ${sunday14hToSunday18h} | ${validatedByHumain.general.timeWindows[0].id}        | ${{ desription: "Awsome" }}
-    ${validatedByCommunication.general.name} | ${validatedByCommunication.id} | ${communication} | ${sunday14hToSunday18h} | ${validatedByCommunication.general.timeWindows[0].id} | ${{ description: "Awsome" }}
+    activityName                             | activityId                     | toAdd                   | toRemove                                           | update
+    ${validatedByCommunication.general.name} | ${validatedByCommunication.id} | ${sunday14hToSunday18h} | ${validatedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
   `(
-    "when $activityName was already validated by $reviewer",
-    ({ activityId, timeWindow, toRemoveId, update }) => {
+    "when $activityName was already validated by communication",
+    ({ activityId, toAdd, toRemove, update }) => {
       describe("when trying to add a timeWindow", () => {
-        it("should indicate that general section is locked", async () => {
-          expect(
-            async () =>
-              await prepareFestivalActivity.addTimeWindowInGeneral(
-                activityId,
-                timeWindow,
-              ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        it("should be able to add time window", async () => {
+          const { general } =
+            await prepareFestivalActivity.addTimeWindowInGeneral(
+              activityId,
+              toAdd,
+            );
+
+          expect(general.timeWindows).toContainEqual(toAdd);
         });
       });
       describe("when trying to remove a timeWindow", () => {
-        it("should indicate that general section is locked", async () => {
-          expect(
-            async () =>
-              await prepareFestivalActivity.removeTimeWindowFromGeneral(
-                activityId,
-                toRemoveId,
-              ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        it("should be able to remove time window", async () => {
+          const { general } =
+            await prepareFestivalActivity.removeTimeWindowFromGeneral(
+              activityId,
+              toRemove.id,
+            );
+
+          expect(general.timeWindows).not.toContainEqual(toAdd);
         });
       });
       describe("when trying to update general information", () => {
@@ -328,4 +324,60 @@ describe("General section of festival activity preparation", () => {
       });
     },
   );
+
+  describe.each`
+    activityName                            | activityId                    | toAdd                   | toRemove
+    ${validatedByHumain.general.name}       | ${validatedByHumain.id}       | ${sunday14hToSunday18h} | ${validatedByHumain.general.timeWindows[0]}
+    ${publicValidatedByHumain.general.name} | ${publicValidatedByHumain.id} | ${sunday14hToSunday18h} | ${publicValidatedByHumain.general.timeWindows[0]}
+  `(
+    "when $activityName was already validated by humain",
+    ({ activityId, toAdd, toRemove }) => {
+      describe("when trying to add a timeWindow", () => {
+        it("should indicate that general section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.addTimeWindowInGeneral(
+                activityId,
+                toAdd,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+      describe("when trying to remove a timeWindow", () => {
+        it("should indicate that general section is locked", async () => {
+          expect(
+            async () =>
+              await prepareFestivalActivity.removeTimeWindowFromGeneral(
+                activityId,
+                toRemove.id,
+              ),
+          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        });
+      });
+    },
+  );
+  describe("when trying to update 'description'", () => {
+    describe("when public activity is only validated by humain", () => {
+      it("should be able to update general information", async () => {
+        const update = { description: "An updated description" };
+        const { general } = await prepareFestivalActivity.updateGeneralSection(
+          publicValidatedByHumain.id,
+          update,
+        );
+        expect(general.description).toBe(update.description);
+      });
+    });
+    describe("when private activity is already validated by humain", () => {
+      it("should indicate that general section is locked", async () => {
+        const update = { description: "An updated description" };
+        expect(
+          async () =>
+            await prepareFestivalActivity.updateGeneralSection(
+              validatedByHumain.id,
+              update,
+            ),
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+  });
 });
