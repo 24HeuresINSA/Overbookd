@@ -61,7 +61,7 @@ export type {
   PastSharedMeal,
   AboutMeal,
 } from "./meal-sharing/meals.model";
-export type { Adherent } from "./meal-sharing/adherent";
+export type { Adherent, Shotgun } from "./meal-sharing/adherent";
 export { MealSharingError } from "./meal-sharing/meal-sharing.error";
 export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder";
 export { OnGoingSharedMealBuilder } from "./meal-sharing/on-going-shared-meal.builder";
