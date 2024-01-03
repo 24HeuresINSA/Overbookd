@@ -135,13 +135,29 @@ export const qgOrga = factory
 
 export const validatedByHumain = factory
   .inReview("Validée par les humain")
+  .withGeneral({
+    timeWindows: [friday12hToFriday14h, saturday11hToSaturday15h],
+  })
+  .withInCharge({ contractors: [lafarge] })
+  .withReviews({ humain: APPROVED })
+  .build();
+
+export const publicValidatedByHumain = factory
+  .inReview("Publique validée par les humain")
+  .asPublic()
+  .withGeneral({
+    timeWindows: [friday12hToFriday14h, saturday11hToSaturday15h],
+  })
   .withInCharge({ contractors: [lafarge] })
   .withReviews({ humain: APPROVED })
   .build();
 
 export const validatedByCommunication = factory
-  .inReview("Validée par l'equipe communication")
+  .inReview("Validée par l'équipe communication")
   .asPublic()
+  .withGeneral({
+    timeWindows: [friday12hToFriday14h, saturday11hToSaturday15h],
+  })
   .withReviews({ communication: APPROVED })
   .build();
 
