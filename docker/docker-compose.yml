@@ -8,7 +8,6 @@ networks:
 volumes:
   certs:
 
-
 services:
   certs-downloader:
     image: alpine
@@ -105,7 +104,7 @@ services:
       - POSTGRES_PASSWORD=${OVERBOOKD_DATABASE_PASSWORD}
       - POSTGRES_DB=${OVERBOOKD_DATABASE_NAME}
     ports:
-      - 5432:5432
+      - ${CUSTOM_POSTGRESQL_PORT:-5432}:5432
     networks:
       - overbookd_net-api
     volumes:

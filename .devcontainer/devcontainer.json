@@ -50,7 +50,9 @@
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": {
-    "pre-commit-installation": "pip install pre-commit && pre-commit install --install-hooks --overwrite && pre-commit install --hook-type commit-msg"
+    "pre-commit-installation": "pip install pre-commit && pre-commit install --install-hooks --overwrite && pre-commit install --hook-type commit-msg",
+    "pnpm-autocompletion-bash": "pnpm install-completion bash",
+    "pnpm-autocompletion-zsh": "pnpm install-completion zsh"
   },
   "postStartCommand": {
     "delete-my-uid-in-dot-env": "sed -i '/^MY_UID=[0-9]\\+/d' ./docker/.env",

@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/contribution",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "Gestion des contributions pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -25,11 +25,12 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "vitest --config ../../vitest.config.ts",
-    "test:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
+    "test:unit": "vitest --config ../../vitest.config.ts",
+    "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
   },
   "keywords": [
-    "contribution"
+    "contribution",
+    "domain"
   ],
   "engines": {
     "node": "20.10.0",
