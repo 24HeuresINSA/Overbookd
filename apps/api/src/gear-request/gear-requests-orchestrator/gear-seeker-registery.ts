@@ -1,4 +1,4 @@
-import { faStatuses } from "../../fa/fa.model";
+import { VALIDATED } from "@overbookd/festival-activity";
 import { AnimationAlreadyValidatedError } from "../animations/animation.error";
 import {
   GearRequestIdentifierSeeker,
@@ -29,7 +29,7 @@ export class AnimationGearSeekerRegistery implements GearSeekerRegistery {
 
   async checkSeekerInteractionPossibility(id: number): Promise<void> {
     const animation = await this.animationRepository.getAnimation(id);
-    if (animation.status === faStatuses.VALIDATED)
+    if (animation.status === VALIDATED)
       throw new AnimationAlreadyValidatedError(id);
   }
 

@@ -10,7 +10,6 @@ import {
   JwtPayload,
   JwtUtil,
 } from "../authentication/entities/jwt-util.entity";
-import { faStatuses } from "../fa/fa.model";
 import { CreateFtFeedbackRequestDto } from "../ft-feedback/dto/create-ft-feedback.request.dto";
 import { ftFeedbackSubjectTypes } from "../ft-feedback/ft-feedback.model";
 import { CompleteFtResponseDto } from "../ft/dto/ft.response.dto";
@@ -23,6 +22,7 @@ import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { TimeSpansGenerator } from "./time-spans-generator";
 import { reviewStatuses } from "../ft-review/ft-review.model";
 import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
+import { VALIDATED } from "@overbookd/festival-activity";
 
 @Injectable()
 export class FtReviewService {
@@ -192,7 +192,7 @@ export class FtReviewService {
     if (ft.status !== ftStatuses.VALIDATED) {
       throw new BadRequestException("FT non validée");
     }
-    if (ft.fa.status !== faStatuses.VALIDATED) {
+    if (ft.fa.status !== VALIDATED) {
       throw new BadRequestException("FA non validée");
     }
     await this.hasAtLeastOneConflict(ft);

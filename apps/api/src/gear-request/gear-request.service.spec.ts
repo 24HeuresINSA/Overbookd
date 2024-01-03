@@ -1,6 +1,6 @@
+import { DRAFT, VALIDATED } from "@overbookd/festival-activity";
 import { Gear } from "../catalog/interfaces";
 import { InMemoryGearRepository } from "../catalog/repositories/in-memory";
-import { faStatuses } from "../fa/fa.model";
 import { formatDateWithMinutes } from "../utils/date";
 import {
   APPROVED,
@@ -14,6 +14,7 @@ import { InMemoryGearRequestRepository } from "./repositories/gear-request.repos
 import { InMemoryPeriodRepository } from "./repositories/period.repository.inmemory";
 import { InMemoryTaskRepository } from "./repositories/task.repository.inmemory";
 import { Task, taskStatuses } from "./tasks/task.model";
+import { Animation } from "./animations/animation.model";
 
 const MAGASIN = "Magasin";
 
@@ -35,16 +36,16 @@ const MAY_23 = {
   end: new Date("2022-05-23T19:15:00"),
 };
 
-const CHATEAU_GONFLABLE = {
+const CHATEAU_GONFLABLE: Animation = {
   id: 1,
   name: "Chateau Gonflable",
-  status: faStatuses.DRAFT,
+  status: DRAFT,
 };
-const KRAVMAGA = { id: 2, name: "Kravmaga", status: faStatuses.DRAFT };
-const BAR_DECOUVERTE = {
+const KRAVMAGA: Animation = { id: 2, name: "Kravmaga", status: DRAFT };
+const BAR_DECOUVERTE: Animation = {
   id: 3,
   name: "Bar Decouverte",
-  status: faStatuses.VALIDATED,
+  status: VALIDATED,
 };
 const INSTALLER_CHATEAU_GONFLABLE: Task = {
   id: 1,

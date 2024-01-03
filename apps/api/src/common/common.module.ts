@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { StatsService } from "./services/stats.service";
+import { StatsService } from "../ft/stats.service";
 
 @Module({
   providers: [StatsService],

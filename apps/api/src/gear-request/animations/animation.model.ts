@@ -1,7 +1,7 @@
-import { FaStatus } from "../../fa/fa.model";
+import { FestivalActivity } from "@overbookd/festival-activity";
 
 export interface Animation {
   id: number;
   name: string;
-  status: FaStatus;
+  status: FestivalActivity["status"];
 }

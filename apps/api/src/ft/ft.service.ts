@@ -5,10 +5,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
-import {
-  StatsPayload,
-  StatsService,
-} from "../../src/common/services/stats.service";
+import { StatsPayload, StatsService } from "./stats.service";
 import { DataBaseUserRequest } from "../ft-user-request/dto/ft-user-request.response.dto";
 import { FtUserRequestService } from "../ft-user-request/ft-user-request.service";
 import { PrismaService } from "../prisma.service";
@@ -21,6 +18,7 @@ import { UpdateFtRequestDto } from "./dto/update-ft.request.dto";
 import { FtStatus, ftStatuses } from "./ft.model";
 import {
   COMPLETE_FT_SELECT,
+  CompleteFtResponse,
   FtIdResponse,
   LITE_FT_SELECT,
   TimeWindow,
@@ -36,7 +34,7 @@ type DataBaseTimeWindow = Omit<TimeWindow, "userRequests"> & {
   userRequests: DataBaseUserRequest[];
 };
 
-export type DataBaseCompleteFt = Omit<CompleteFtResponseDto, "timeWindows"> & {
+export type DataBaseCompleteFt = Omit<CompleteFtResponse, "timeWindows"> & {
   timeWindows: DataBaseTimeWindow[];
 };
 

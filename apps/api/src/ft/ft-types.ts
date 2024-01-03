@@ -5,9 +5,9 @@ import { FtStatus } from "./ft.model";
 import { IProvidePeriod } from "@overbookd/period";
 import { TimeSpanBase } from "../assignment/model/ft-time-span.model";
 import { Team } from "../team/team.model";
-import { FaStatus } from "../fa/fa.model";
 import { ReviewStatus } from "../ft-review/ft-review.model";
 import { FtFeedbackSubjectType } from "../ft-feedback/ft-feedback.model";
+import { FestivalActivity } from "@overbookd/festival-activity";
 
 export class SignaLocation {
   id: number;
@@ -71,7 +71,7 @@ export class Feedback {
 export class MinimalFa {
   id: number;
   name: string;
-  status: FaStatus;
+  status: FestivalActivity["status"];
 }
 
 export interface CompleteFtResponse {

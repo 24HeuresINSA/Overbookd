@@ -28,7 +28,7 @@ import { RequestWithUserPayload } from "../../src/app.controller";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { StatsPayload } from "../../src/common/services/stats.service";
+import { StatsPayload } from "./stats.service";
 import { ApproveGearRequestRequestDto } from "../gear-request/dto/approve-gear-request.request.dto";
 import {
   ExistingPeriodGearRequestFormRequestDto,
@@ -59,7 +59,6 @@ import { FtService } from "./ft.service";
 import { FtIdResponse } from "./ft-types";
 import { ReviewerResponseDto } from "./dto/reviewer.response.dto";
 import { ReviewerRequestDto } from "./dto/reviewer.request.dto";
-import { StatsResponseDto } from "../fa/dto/stats.response.dto";
 import { FollowingFtResponseDto } from "./dto/following-ft.response.dto";
 import {
   READ_FT,
@@ -67,6 +66,7 @@ import {
   VIEW_FESTIVAL_EVENTS_STATS,
   WRITE_FT,
 } from "@overbookd/permission";
+import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -138,7 +138,7 @@ export class FtController {
     status: 200,
     description: "Get FT stats",
     isArray: true,
-    type: StatsResponseDto,
+    type: StatisticsResponseDto,
   })
   getFtStats(): Promise<StatsPayload[]> {
     return this.ftService.getFtStats();
