@@ -3,18 +3,31 @@
   stage: test
   interruptible: true
   image: node:20.10.0-alpine
-  variables:
-    SHOULD_CHECK_EXIT_CODE: "true"
   script:
     - pnpm i
     - pnpm --filter "${PNPM_WORKSPACE}^..." run build
-    - pnpm --filter "${PNPM_WORKSPACE}" run test:ci || UNIT_TEST_FAILED=true
-    - |
-      if [ "$SHOULD_CHECK_EXIT_CODE" == true ]; then
-        [[ "$UNIT_TEST_FAILED" == true ]] &&  exit 1 || exit 0
-      fi
+    - pnpm --filter "${PNPM_WORKSPACE}" run test:unit:ci
 
-overbookd/api_test:
+overbookd/api_unit_test:
+  extends: .test
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/api/**/*
+        - pnpm-lock.yaml
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "@overbookd/api"
+  artifacts:
+    when: always
+    reports:
+      junit: apps/api/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: apps/api/coverage/cobertura-coverage.xml
+
+overbookd/api_e2e_test:
   services:
     - name: postgres:15
       alias: integration-tests-prisma
@@ -24,7 +37,6 @@ overbookd/api_test:
     POSTGRES_DB: tests
     DATABASE_URL: postgresql://prisma:password@integration-tests-prisma:5432/tests
     PNPM_WORKSPACE: "@overbookd/api"
-    SHOULD_CHECK_EXIT_CODE: "false"
   extends: .test
   needs: [install]
   rules:
@@ -34,24 +46,16 @@ overbookd/api_test:
         - pnpm-lock.yaml
     - when: never
   script:
-    - !reference [.test, script]
-    - pnpm --filter "${PNPM_WORKSPACE}" run prisma:migrate
-    - pnpm --filter "${PNPM_WORKSPACE}" run prisma:seed
-    - pnpm --filter "${PNPM_WORKSPACE}" run test:e2e:ci || E2E_TEST_FAILED=true
-    - |
-      [[ "$UNIT_TEST_FAILED" == true ||  "$E2E_TEST_FAILED" == true ]] &&  exit 1 || exit 0
-
+    - pnpm i
+    - pnpm --filter "${PNPM_WORKSPACE}^..." run build
+    - pnpm --filter "${PNPM_WORKSPACE}" run database:init
+    - pnpm --filter "${PNPM_WORKSPACE}" run test:e2e:ci
   artifacts:
     when: always
     reports:
-      junit:
-        - apps/api/junit.xml
-        - apps/api/junit-e2e.xml
-      coverage_report:
-        coverage_format: cobertura
-        path: apps/api/coverage/cobertura-coverage.xml
+      junit: apps/api/junit.xml
 
-overbookd/web_test:
+overbookd/web_unit_test:
   extends: .test
   needs: [install]
   rules:
@@ -70,7 +74,7 @@ overbookd/web_test:
         coverage_format: cobertura
         path: apps/web/coverage/cobertura-coverage.xml
 
-overbookd/libraries_test:
+overbookd/libraries_unit_test:
   extends: .test
   needs: [install, overbookd/libraries_build]
   rules:
@@ -86,7 +90,7 @@ overbookd/libraries_test:
     reports:
       junit: libraries/*/junit.xml
 
-overbookd/domains_test:
+overbookd/domains_unit_test:
   extends: .test
   needs: [install, overbookd/domains_build]
   rules:

@@ -25,8 +25,8 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "echo 'No tests'",
-    "test:ci": "echo 'No tests'"
+    "test:unit": "echo 'No tests'",
+    "test:unit:ci": "echo 'No tests'"
   },
   "keywords": [
     "user"

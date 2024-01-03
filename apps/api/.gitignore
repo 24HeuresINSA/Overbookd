@@ -18,7 +18,6 @@ lerna-debug.log*
 /coverage
 /.nyc_output
 junit.xml
-junit-e2e.xml
 
 # IDEs and editors
 /.idea

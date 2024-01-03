@@ -25,8 +25,8 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test": "vitest --config ../../vitest.config.ts",
-    "test:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
+    "test:unit": "vitest --config ../../vitest.config.ts",
+    "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false"
   },
   "keywords": [
     "personal-account",
