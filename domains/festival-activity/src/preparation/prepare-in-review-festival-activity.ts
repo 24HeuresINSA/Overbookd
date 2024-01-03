@@ -234,16 +234,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   private checkIfGeneralAlreadyApproved(askingReviewer?: GeneralReviewer) {
-    const defaultReviewer = this.activity.general.toPublish
-      ? communication
-      : humain;
+    const { reviews, general: generalData } = this.activity;
+    const defaultReviewer = generalData.toPublish ? communication : humain;
     const reviewer = askingReviewer ?? defaultReviewer;
-    const validated = General.init(this.activity.general).isAlreadyValidatedBy(
-      reviewer,
-      this.activity.reviews,
-    );
+    const general = General.init(generalData);
 
-    if (validated) {
+    if (general.isAlreadyValidatedBy(reviewer, reviews)) {
       throw new AlreadyApprovedBy([reviewer]);
     }
   }
@@ -251,10 +247,9 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   removeGeneralTimeWindow(id: TimeWindow["id"]): Reviewable {
     this.checkIfGeneralAlreadyApproved(humain);
 
-    const timeWindows = TimeWindows.build(
-      this.activity.general.timeWindows,
-    ).remove(id).entries;
     const currentGeneral = this.activity.general;
+    const timeWindowsAggregate = TimeWindows.build(currentGeneral.timeWindows);
+    const timeWindows = timeWindowsAggregate.remove(id).entries;
 
     if (isPrivate(currentGeneral)) {
       const general = { ...currentGeneral, timeWindows };
