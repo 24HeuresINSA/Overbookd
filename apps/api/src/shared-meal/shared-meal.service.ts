@@ -15,22 +15,36 @@ export type OfferMeal = {
 export class SharedMealService {
   constructor(private readonly mealSharing: MealSharing) {}
 
-  offer(meal: OfferMeal, chef: JwtPayload): Promise<OnGoingSharedMeal> {
-    return this.mealSharing.offer(meal.menu, meal.date, chef.id);
+  async offer(meal: OfferMeal, chef: JwtPayload): Promise<OnGoingSharedMeal> {
+    const created = await this.mealSharing.offer(meal.menu, meal.date, chef.id);
+    return formatSharedMeal(created);
   }
 
-  find(mealId: SharedMeal["id"]): Promise<SharedMeal> {
-    return this.mealSharing.findById(mealId);
+  async find(mealId: SharedMeal["id"]): Promise<SharedMeal> {
+    const found = await this.mealSharing.findById(mealId);
+    return formatSharedMeal(found);
   }
 
-  all(): Promise<SharedMeal[]> {
-    return this.mealSharing.findAll();
+  async all(): Promise<SharedMeal[]> {
+    const meals = await this.mealSharing.findAll();
+    return meals.map(formatSharedMeal);
   }
 
-  shotgun(
+  async shotgun(
     mealId: SharedMeal["id"],
     guestId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
-    return this.mealSharing.shotgun(mealId, guestId);
+    const updated = await this.mealSharing.shotgun(mealId, guestId);
+    return formatSharedMeal(updated);
   }
+}
+
+function formatSharedMeal(created: OnGoingSharedMeal): OnGoingSharedMeal {
+  return {
+    id: created.id,
+    chef: created.chef,
+    meal: created.meal,
+    shotgunCount: created.shotgunCount,
+    shotguns: created.shotguns,
+  };
 }

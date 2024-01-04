@@ -39,15 +39,23 @@ export class PrismaMeals implements SharedMeals {
   async create(meal: SharedMealCreation): Promise<OnGoingSharedMeal> {
     const id = this.idGenerator.next().value;
     const onGoingMeal = OnGoingSharedMealBuilder.init({ ...meal, id });
-    await this.prisma.sharedMeal.create({
+    const saved = await this.prisma.sharedMeal.create({
       data: {
         menu: onGoingMeal.meal.menu,
         date: onGoingMeal.meal.date,
         chefId: onGoingMeal.chef.id,
+        shotguns: {
+          createMany: {
+            data: onGoingMeal.shotguns.map((shotgun) => ({
+              guestId: shotgun.id,
+              date: shotgun.date,
+            })),
+          },
+        },
       },
-      select: { id: true },
+      select: SELECT_SHARED_MEAL,
     });
-    return onGoingMeal;
+    return buildSharedMeal(saved);
   }
 
   async find(mealId: number): Promise<SharedMealBuilder> {
