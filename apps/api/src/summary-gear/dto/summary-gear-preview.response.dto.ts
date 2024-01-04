@@ -31,7 +31,7 @@ export class SummaryGearPreviewResponseDto implements SummaryGearPreview {
 
   @ApiProperty({
     required: true,
-    description: "Gear delta",
+    description: "Minimum gear delta",
   })
-  delta: number;
+  minDelta: number;
 }

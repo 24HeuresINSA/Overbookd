@@ -51,6 +51,13 @@ export class Period {
     );
   }
 
+  isIncludedByDate(date: Date): boolean {
+    return (
+      date.getTime() >= this.start.getTime() &&
+      date.getTime() < this.end.getTime()
+    );
+  }
+
   isFollowedBy(otherPeriod: Period): boolean {
     return (
       this.start.getTime() <= otherPeriod.end.getTime() &&
@@ -83,5 +90,45 @@ export class Period {
 
   get hasDuration(): boolean {
     return this.start.getTime() !== this.end.getTime();
+  }
+
+  static mergeWithAdjacents(periods: Period[]): Period[] {
+    const sortedPeriods = periods.sort((a, b) =>
+      a.start.getTime() < b.start.getTime() ? -1 : 1,
+    );
+
+    return sortedPeriods.map((currentPeriod, index) => {
+      let mergedPeriod = currentPeriod;
+
+      // Merge with adjacent or overlapping periods
+      while (index < sortedPeriods.length - 1) {
+        const nextPeriod = sortedPeriods[index + 1];
+
+        if (mergedPeriod.isFollowedBy(nextPeriod)) {
+          mergedPeriod = mergedPeriod.mergeWith(nextPeriod);
+          index++;
+        } else {
+          break;
+        }
+      }
+
+      return mergedPeriod;
+    });
+  }
+
+  splitWithIntervalInMs(interval: number): Period[] {
+    const periods: Period[] = [];
+
+    for (
+      let currentTime = this.start.getTime();
+      currentTime < this.end.getTime();
+      currentTime += interval
+    ) {
+      const start = new Date(currentTime);
+      const end = new Date(currentTime + interval);
+      periods.push(Period.init({ start, end }));
+    }
+
+    return periods;
   }
 }
