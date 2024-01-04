@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/permission",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Gestion des permissions pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
