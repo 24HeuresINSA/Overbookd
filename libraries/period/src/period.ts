@@ -128,7 +128,7 @@ export class Period {
     return periods.sort(
       (a, b) =>
         a.start.getTime() - b.start.getTime() ||
-        b.end.getTime() - a.end.getTime(),
+        a.end.getTime() - b.end.getTime(),
     );
   }
 }

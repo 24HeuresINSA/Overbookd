@@ -107,7 +107,8 @@ describe("Sort periods", () => {
   describe.each`
     readablePeriods                                        | periods                                       | expectedPeriods
     ${"friday 09:30 to 10:00 and 08:15 to 08:30"}          | ${[friday09h30to10h, friday08h15to08h30]}     | ${[friday08h15to08h30, friday09h30to10h]}
-    ${"friday 09:00 to 10:00 and 09:00 to saturday 01:00"} | ${[friday09h30to10h, friday09htoSaturday01h]} | ${[friday09htoSaturday01h, friday09h30to10h]}
+    ${"friday 09:30 to 10:00 and 09:00 to saturday 01:00"} | ${[friday09h30to10h, friday09htoSaturday01h]} | ${[friday09htoSaturday01h, friday09h30to10h]}
+    ${"friday 08:00 to 09:00 and 08:00 to 08:30"}          | ${[friday08hto09h, friday08hto08h30]}         | ${[friday08hto08h30, friday08hto09h]}
   `("when periods are $readablePeriods", ({ periods, expectedPeriods }) => {
     it("should sort periods", () => {
       const sortedPeriods = Period.sort(periods);
