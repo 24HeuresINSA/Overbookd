@@ -7,6 +7,8 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  UseFilters,
+  HttpCode,
 } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
@@ -27,9 +29,11 @@ import { RequestWithUserPayload } from "../app.controller";
 import { OfferMealRequestDto } from "./dto/offer-meal.request.dto";
 import { OnGoingSharedMealResponseDto } from "./dto/shared-meal.response.dto";
 import { SharedMeal } from "@overbookd/personal-account";
+import { MealSharingErrorFilter } from "./meal-sharing.filter";
 
 @ApiTags("shared-meals")
 @Controller("shared-meals")
+@UseFilters(MealSharingErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -86,6 +90,7 @@ export class SharedMealController {
 
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Post(":mealId/shotgun")
+  @HttpCode(200)
   @ApiResponse({
     status: 200,
     description: "Selected meal details",
