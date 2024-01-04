@@ -8,6 +8,12 @@ export class SummaryGear {
   public static generatePreview(gear: DatabaseGearPreview): SummaryGearPreview {
     const stockDiscrepancy =
       SummaryGearOrchestrator.computeStockDiscrepancyOn(gear);
-    return { ...gear, stockDiscrepancy };
+    return {
+      id: gear.id,
+      name: gear.name,
+      slug: gear.slug,
+      isConsumable: gear.isConsumable,
+      stockDiscrepancy,
+    };
   }
 }

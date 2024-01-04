@@ -7,14 +7,14 @@ export class SummaryGearOrchestrator {
   public static computeStockDiscrepancyOn(gear: DatabaseGearPreview): number {
     const inquiryTimeWindows = gear.inquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
-      .map(Period.init);
+      .map((period) => Period.init(period));
     const mergedTimeWindows = Period.mergeContiguous(inquiryTimeWindows);
 
     const discrepancies = mergedTimeWindows.map((timeWindow) => {
       return this.computeStockDiscrepancyByTimeWindowOn(gear, timeWindow);
     });
 
-    return Math.min(...discrepancies);
+    return discrepancies.length > 0 ? Math.min(...discrepancies) : 0;
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(
@@ -55,7 +55,9 @@ export class SummaryGearOrchestrator {
     date: Date,
   ): number {
     return inquiries.reduce((total, inquiry) => {
-      const timeWindows = inquiry.fa.inquiryTimeWindows.map(Period.init);
+      const timeWindows = inquiry.fa.inquiryTimeWindows.map((period) =>
+        Period.init(period),
+      );
 
       const isIncluded = timeWindows.some((timeWindow) =>
         timeWindow.isIncluding(date),

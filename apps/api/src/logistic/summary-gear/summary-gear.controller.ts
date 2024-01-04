@@ -15,8 +15,8 @@ import { SummaryGearPreviewResponseDto } from "./dto/summary-gear-preview.respon
 import { SummaryGearPreview } from "@overbookd/http";
 
 @ApiBearerAuth()
-@ApiTags("summary-gears")
-@Controller("summary-gears")
+@ApiTags("logistic/summary-gears")
+@Controller("logistic/summary-gears")
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
