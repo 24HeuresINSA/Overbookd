@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { MIDI, MealDate, Moment, SOIR } from "@overbookd/personal-account";
 import { Type } from "class-transformer";
-import { IsDate, IsEnum } from "class-validator";
+import { IsDate, IsEnum, IsString, ValidateNested } from "class-validator";
 import { OfferMeal } from "../shared-meal.service";
 
 const MOMENTS: Moment[] = [MIDI, SOIR];
@@ -22,11 +22,14 @@ class MealDateRepresentationDto implements MealDate {
 
 export class OfferMealRequestDto implements OfferMeal {
   @ApiProperty({})
+  @IsString()
   menu: string;
 
   @ApiProperty({
     type: MealDateRepresentationDto,
     description: "When meal will take place",
   })
+  @Type(() => MealDateRepresentationDto)
+  @ValidateNested()
   date: MealDate;
 }
