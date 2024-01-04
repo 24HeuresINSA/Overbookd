@@ -15,6 +15,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiTags,
+  ApiBody,
 } from "@nestjs/swagger";
 
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -47,6 +48,7 @@ export class SharedMealController {
     description: "Newly available shared meal",
     type: OnGoingSharedMealResponseDto,
   })
+  @ApiBody({ type: OfferMealRequestDto })
   offerMeal(
     @Body() meal: OfferMealRequestDto,
     @Request() { user }: RequestWithUserPayload,
