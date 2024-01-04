@@ -25,7 +25,7 @@ import { MealSharing } from "@overbookd/personal-account";
       useFactory: (meals: PrismaMeals, adherents: PrismaAdherents) => {
         return new MealSharing(meals, adherents);
       },
-      inject: [PrismaAdherents, PrismaMeals],
+      inject: [PrismaMeals, PrismaAdherents],
     },
     {
       provide: SharedMealService,
