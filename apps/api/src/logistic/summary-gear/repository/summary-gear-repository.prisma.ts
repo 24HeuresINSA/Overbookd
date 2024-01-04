@@ -1,5 +1,5 @@
 import { SummaryGearPreview } from "@overbookd/http";
-import { PrismaService } from "../../prisma.service";
+import { PrismaService } from "../../../prisma.service";
 import { SummaryGears } from "../summary-gear.service";
 import { SELECT_GEAR_PREVIEW } from "./summary-gear.query";
 import { SummaryGear } from "./summary-gear";

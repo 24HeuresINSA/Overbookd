@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../../prisma.service";
 import { SummaryGearController } from "./summary-gear.controller";
 import { SummaryGearService } from "./summary-gear.service";
-import { PrismaModule } from "../prisma.module";
+import { PrismaModule } from "../../prisma.module";
 import { PrismaSummaryGears } from "./repository/summary-gear-repository.prisma";
 
 @Module({

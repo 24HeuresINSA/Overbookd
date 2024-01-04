@@ -8,9 +8,9 @@ import {
 } from "@nestjs/swagger";
 import { SummaryGearService } from "./summary-gear.service";
 import { VIEW_GEAR_SUMMARY } from "@overbookd/permission";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { SummaryGearPreviewResponseDto } from "./dto/summary-gear-preview.response.dto";
 import { SummaryGearPreview } from "@overbookd/http";
 
