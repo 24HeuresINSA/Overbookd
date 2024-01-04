@@ -174,7 +174,6 @@ model CatalogGear {
   slug             String            @unique
   categoryId       Int?              @map("category_id")
   category         CatalogCategory?  @relation("category", fields: [categoryId], references: [id])
-  requests         GearRequest[]     @relation("gear-request-gear")
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
@@ -189,32 +188,6 @@ model Configuration {
   value Json
 
   @@map("configuration")
-}
-
-model Period {
-  id          Int           @id @default(autoincrement())
-  start       DateTime
-  end         DateTime
-  gearRequest GearRequest[] @relation("gear-request-rental-period")
-
-  @@index([start, end])
-  @@map("period")
-}
-
-model GearRequest {
-  taskId         Int?        @map("task_id")
-  task           Ft?         @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
-  rentalPeriodId Int         @map("rental_period_id")
-  rentalPeriod   Period      @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
-  gearId         Int         @map("gear_id")
-  gear           CatalogGear @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
-  quantity       Int
-  status         String
-  drive          String?
-
-  @@unique([gearId, rentalPeriodId])
-  @@index([status])
-  @@map("gear_request")
 }
 
 enum FtStatus {
@@ -257,10 +230,9 @@ model Ft {
   hasPriority    Boolean?          @default(false) @map("has_priority")
   category       TaskCategory?
 
-  feedbacks    FtFeedback[]
-  timeWindows  FtTimeWindow[]
-  reviews      FtReview[]
-  gearRequests GearRequest[]  @relation("gear-request-task")
+  feedbacks   FtFeedback[]
+  timeWindows FtTimeWindow[]
+  reviews     FtReview[]
 
   @@map("ft")
 }
@@ -446,13 +418,13 @@ model Barrel {
 }
 
 model FestivalActivity {
-  id            Int                        @unique
-  status        FestivalActivityStatus
-  isDeleted     Boolean                    @default(false) @map("is_deleted")
-  reviews       FestivalActivityReview[]
-  feedbacks     FestivalActivityFeedback[]
-  events        FestivalActivityHistory[]
-  festivalTasks Ft[]
+  id        Int                        @unique
+  status    FestivalActivityStatus
+  isDeleted Boolean                    @default(false) @map("is_deleted")
+  reviews   FestivalActivityReview[]
+  feedbacks FestivalActivityFeedback[]
+  events    FestivalActivityHistory[]
+  fts       Ft[]
 
   // General
   name               String                              @db.Text

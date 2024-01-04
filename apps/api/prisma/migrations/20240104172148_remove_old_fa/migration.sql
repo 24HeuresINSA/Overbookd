@@ -9,6 +9,8 @@
   - You are about to drop the `fa_signa_need` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `fa_time_window` table. If the table is not empty, all the data it contains will be lost.
   - You are about to drop the `public_animation` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `gear_request` table. If the table is not empty, all the data it contains will be lost.
+  - You are about to drop the `period` table. If the table is not empty, all the data it contains will be lost.
   - Changed the type of `type` on the `catalog_signage` table. No cast exists, the column would be dropped and recreated, which cannot be done if there is data, since the column is required.
 
 */
@@ -96,3 +98,18 @@ ALTER TABLE "ft" ADD CONSTRAINT "ft_parent_fa_id_fkey" FOREIGN KEY ("parent_fa_i
 
 -- DropEnum
 DROP TYPE "electricity_type";
+
+-- DropForeignKey
+ALTER TABLE "gear_request" DROP CONSTRAINT "gear_request_gear_id_fkey";
+
+-- DropForeignKey
+ALTER TABLE "gear_request" DROP CONSTRAINT "gear_request_rental_period_id_fkey";
+
+-- DropForeignKey
+ALTER TABLE "gear_request" DROP CONSTRAINT "gear_request_task_id_fkey";
+
+-- DropTable
+DROP TABLE "gear_request";
+
+-- DropTable
+DROP TABLE "period";

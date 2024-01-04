@@ -8,7 +8,6 @@ import { AuthenticationModule } from "./authentication/authentication.module";
 import { CatalogModule } from "./catalog/catalog.module";
 import { CharismaPeriodModule } from "./charisma-period/charisma-period.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
-import { PublicAnimationModule } from "./public-animation/public-animation.module";
 import { FriendModule } from "./friend/friend.module";
 import { FtFeedbackModule } from "./ft-feedback/ft-feedback.module";
 import { FtModule } from "./ft/ft.module";
@@ -16,7 +15,6 @@ import { FtReviewModule } from "./ft-review/ft-review.module";
 import { FtTeamRequestModule } from "./ft-team-request/ft-team-request.module";
 import { FtTimeWindowModule } from "./ft-time-window/ft-time-window.module";
 import { FtUserRequestModule } from "./ft-user-request/ft-user-request.module";
-import { GearRequestModule } from "./gear-request/gear-request.module";
 import { HashingUtilsModule } from "./hashing-utils/hashing-utils.module";
 import { HashingUtilsService } from "./hashing-utils/hashing-utils.service";
 import { InventoryModule } from "./inventory/inventory.module";
@@ -76,12 +74,10 @@ import { SharedMealModule } from "./shared-meal/shared-meal.module";
     CatalogModule,
     ConfigurationModule,
     SignaLocationModule,
-    PublicAnimationModule,
     PermissionModule,
     InventoryModule,
     FtModule,
     FtTimeWindowModule,
-    GearRequestModule,
     FtFeedbackModule,
     FtUserRequestModule,
     FtReviewModule,
