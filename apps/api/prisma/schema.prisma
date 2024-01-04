@@ -61,6 +61,8 @@ model User {
   festivalActivities           FestivalActivity[]
   festivalActivityInstigations FestivalActivityHistory[]
   faFeedbacks                  FestivalActivityFeedback[]
+  chefMeals                    SharedMeal[]               @relation("chef")
+  shotguns                     Shotgun[]                  @relation("guest")
 
   @@map("user")
 }
@@ -852,4 +854,26 @@ model FestivalActivityFeedback {
 
   @@id([faId, authorId, publishedAt])
   @@map("feedback")
+}
+
+model SharedMeal {
+  id      Int       @id @default(autoincrement())
+  menu    String    @db.Text
+  date    String    @db.Text
+  chefId  Int       @map("chef_id")
+  chef    User      @relation("chef", fields: [chefId], references: [id])
+  amount  Int?
+  payedAt DateTime? @map("payed_at")
+
+  shotguns Shotgun[]
+}
+
+model Shotgun {
+  guestId Int        @map("guest_id")
+  guest   User       @relation("guest", fields: [guestId], references: [id])
+  mealId  Int        @map("meal_id")
+  meal    SharedMeal @relation(fields: [mealId], references: [id])
+  date    DateTime
+
+  @@id([guestId, mealId])
 }
