@@ -51,8 +51,7 @@ ALTER TABLE "gear_request" DROP CONSTRAINT "gear_request_animation_id_fkey";
 ALTER TABLE "public_animation" DROP CONSTRAINT "public_animation_fa_id_fkey";
 
 -- AlterTable
-ALTER TABLE "catalog_signage" DROP COLUMN "type",
-ADD COLUMN     "type" "signage_type" NOT NULL;
+ALTER TABLE "catalog_signage" ALTER COLUMN "type" TYPE "signage_type" USING ("type"::text::"signage_type");
 
 -- AlterTable
 ALTER TABLE "gear_request" DROP COLUMN "animation_id";
