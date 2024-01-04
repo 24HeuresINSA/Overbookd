@@ -23,13 +23,15 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { UserPersonalData } from "@overbookd/user";
+import { User, UserPersonalData } from "@overbookd/user";
 import { SlugifyService } from "@overbookd/slugify";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 interface SearchUserData {
   loading: boolean;
 }
+
+type SearchUser = UserPersonalData | User;
 
 export default Vue.extend({
   name: "SearchUser",
@@ -43,7 +45,7 @@ export default Vue.extend({
       default: "Chercher un utilisateur",
     },
     user: {
-      type: Object as () => UserPersonalData | null,
+      type: Object as () => SearchUser | null,
       default: null,
     },
     boxed: {
@@ -55,8 +57,12 @@ export default Vue.extend({
       default: false,
     },
     list: {
-      type: Array as () => UserPersonalData[] | null,
-      default: () => null,
+      type: Array as () => SearchUser[] | null,
+      default: null,
+    },
+    nobodyField: {
+      type: Boolean,
+      default: false,
     },
   },
   data(): SearchUserData {
@@ -65,8 +71,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    users() {
-      return this.list ?? this.$accessor.user.users;
+    users(): SearchUser[] {
+      const list = this.list ?? this.$accessor.user.users;
+      const nobody: User = { id: -1, firstname: "Aucun", lastname: "" };
+      return this.nobodyField ? [nobody, ...list] : list;
     },
   },
   mounted() {
@@ -74,13 +82,13 @@ export default Vue.extend({
     this.$accessor.user.fetchUsers();
   },
   methods: {
-    propagateEvent(user: UserPersonalData | null) {
+    propagateEvent(user: SearchUser | null) {
       this.$emit("change", user);
     },
-    displayUsername(user: UserPersonalData): string {
+    displayUsername(user: SearchUser): string {
       return formatUserNameWithNickname(user);
     },
-    filterUsers(user: UserPersonalData, typedSearch: string) {
+    filterUsers(user: SearchUser, typedSearch: string) {
       const { firstname, lastname, nickname } = user;
       const searchable = `${firstname} ${lastname} ${nickname ?? ""}`;
       const search = SlugifyService.apply(typedSearch);

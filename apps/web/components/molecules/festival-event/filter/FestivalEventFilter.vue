@@ -2,22 +2,21 @@
   <v-card>
     <v-card-title>Filtres</v-card-title>
     <v-card-text>
-      <v-text-field
-        :value="search"
-        label="Recherche"
-        @change="changeSearch"
-      ></v-text-field>
+      <v-text-field :value="search" label="Recherche" @change="changeSearch" />
+
       <SearchTeam
         :team="team"
         label="Équipe"
         :boxed="false"
         @change="changeTeam"
-      ></SearchTeam>
+      />
+
       <SearchUser
         :user="adherent"
         label="Responsable"
         :list="adherents"
         :boxed="false"
+        nobody-field
         @change="changeAdherent"
       />
 
