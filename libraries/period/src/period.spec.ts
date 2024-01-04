@@ -21,6 +21,10 @@ import {
   friday07hto08h30,
   friday08h45to09h30,
   friday08h45to10h,
+  friday08hto08h45,
+  friday08hto10h,
+  friday08h30to09h30,
+  friday08hto09h30,
 } from "./period.test-utils";
 
 describe("Create a period", () => {
@@ -107,7 +111,6 @@ describe("Sort periods", () => {
   `("when periods are $readablePeriods", ({ periods, expectedPeriods }) => {
     it("should sort periods", () => {
       const sortedPeriods = Period.sort(periods);
-      console.log(sortedPeriods, expectedPeriods);
       expect(sortedPeriods).toEqual(expectedPeriods);
     });
   });
@@ -122,6 +125,9 @@ describe("Merge contiguous periods", () => {
     ${"friday 08:00 to 08:15 and 08:30 to 08:45"}                    | ${[friday08hto08h15, friday08h30to08h45]}                   | ${[friday08hto08h15, friday08h30to08h45]} | ${"friday 08:00 to 08:15 and 08:30 to 08:45"}
     ${"friday 08:00 to 08:15 and 07:00 to 08:30"}                    | ${[friday08hto08h15, friday07hto08h30]}                     | ${[friday07hto08h30]}                     | ${"friday 07:00 to 08:30"}
     ${"friday 08:00 to 08:30 and 08:45 to 09:30 and 09:30 to 10:00"} | ${[friday08hto08h30, friday08h45to09h30, friday09h30to10h]} | ${[friday08hto08h30, friday08h45to10h]}   | ${"friday 08:00 to 08:30 and 08:45 to 10:00"}
+    ${"friday 08:00 to 08:30 and 08:45 to 09:30 and 09:30 to 10:00"} | ${[friday08hto08h30, friday08h45to09h30, friday09h30to10h]} | ${[friday08hto08h30, friday08h45to10h]}   | ${"friday 08:00 to 08:30 and 08:45 to 10:00"}
+    ${"friday 08:00 to 08:45 and 08:30 to 09:30"}                    | ${[friday08hto08h45, friday08h30to09h30]}                   | ${[friday08hto09h30]}                     | ${"friday 08:00 to 09:30"}
+    ${"friday 08:00 to 10:00 and 08:45 to 09:30"}                    | ${[friday08hto10h, friday08h45to09h30]}                     | ${[friday08hto10h]}                       | ${"friday 08:00 to 10:00"}
   `(
     "when periods are $readablePeriods",
     ({ periods, expectedPeriods, readableExpectedPeriods }) => {
