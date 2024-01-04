@@ -46,13 +46,12 @@ export class SummaryGear {
     gear: DatabaseGear,
     date: Date,
   ) {
-    const stock = this.findStockByDate(gear, date);
+    const stock = this.findStockByDate(gear);
     const inquiry = this.findInquiryQuantityByDate(gear, date);
     return stock - inquiry;
   }
 
-  private static findStockByDate(gear: DatabaseGear, date: Date): number {
-    console.log(date);
+  private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {
     // Date will be used in for purchase & loan sheets
     return gear.inventoryRecords.reduce(
       (total, { quantity }) => total + quantity,
