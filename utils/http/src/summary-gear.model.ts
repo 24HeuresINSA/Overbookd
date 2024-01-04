@@ -3,5 +3,5 @@ export interface SummaryGearPreview {
   name: string;
   slug: string;
   isConsumable: boolean;
-  minDelta: number;
+  stockDiscrepancy: number;
 }

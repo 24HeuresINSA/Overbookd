@@ -51,11 +51,10 @@ export class Period {
     );
   }
 
-  isIncludedByDate(date: Date): boolean {
-    return (
-      date.getTime() >= this.start.getTime() &&
-      date.getTime() < this.end.getTime()
-    );
+  isIncluding(date: Date): boolean {
+    const happenAfterStart = date.getTime() >= this.start.getTime();
+    const happenBeforeEnd = date.getTime() < this.end.getTime();
+    return happenAfterStart && happenBeforeEnd;
   }
 
   isFollowedBy(otherPeriod: Period): boolean {
@@ -92,7 +91,7 @@ export class Period {
     return this.start.getTime() !== this.end.getTime();
   }
 
-  static mergeWithAdjacents(periods: Period[]): Period[] {
+  static mergeAdjacents(periods: Period[]): Period[] {
     const sortedPeriods = periods.sort((a, b) =>
       a.start.getTime() < b.start.getTime() ? -1 : 1,
     );
@@ -116,19 +115,27 @@ export class Period {
     });
   }
 
-  splitWithIntervalInMs(interval: number): Period[] {
+  splitWithIntervalInMs(intervalInMs: number): Period[] {
     const periods: Period[] = [];
 
     for (
       let currentTime = this.start.getTime();
       currentTime < this.end.getTime();
-      currentTime += interval
+      currentTime += intervalInMs
     ) {
       const start = new Date(currentTime);
-      const end = new Date(currentTime + interval);
+      const end = new Date(currentTime + intervalInMs);
       periods.push(Period.init({ start, end }));
     }
 
     return periods;
+  }
+
+  static sort(periods: Period[]): Period[] {
+    return periods.sort(
+      (a, b) =>
+        a.start.getTime() - b.start.getTime() ||
+        b.end.getTime() - a.end.getTime(),
+    );
   }
 }

@@ -14,6 +14,6 @@ type WithDatabaseInquiries = {
   inquiries: DatabaseInquiry[];
 };
 
-export type DatabaseGearPreview = Omit<SummaryGearPreview, "minDelta"> &
+export type DatabaseGearPreview = Omit<SummaryGearPreview, "stockDiscrepancy"> &
   WithDatabaseInventory &
   WithDatabaseInquiries;

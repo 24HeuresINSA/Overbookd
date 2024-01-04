@@ -4,33 +4,36 @@ import { DatabaseGearPreview } from "./summary-gear.model";
 export class SummaryGearOrchestrator {
   private constructor() {}
 
-  public static calculeMinDelta(gear: DatabaseGearPreview): number {
+  public static computeStockDiscrepancyOn(gear: DatabaseGearPreview): number {
     const inquiryTimeWindows = gear.inquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map(Period.init);
-    const mergedTimeWindows = Period.mergeWithAdjacents(inquiryTimeWindows);
+    const mergedTimeWindows = Period.mergeAdjacents(inquiryTimeWindows);
 
-    const deltas = mergedTimeWindows.map((timeWindow) => {
-      return this.calculeMinDeltaByTimeWindow(gear, timeWindow);
+    const discrepancies = mergedTimeWindows.map((timeWindow) => {
+      return this.computeStockDiscrepancyByTimeWindowOn(gear, timeWindow);
     });
 
-    return Math.min(...deltas);
+    return Math.min(...discrepancies);
   }
 
-  private static calculeMinDeltaByTimeWindow(
+  private static computeStockDiscrepancyByTimeWindowOn(
     gear: DatabaseGearPreview,
     timeWindow: Period,
   ): number {
     const period = Period.init(timeWindow);
     const periods = period.splitWithIntervalInMs(15 * ONE_MINUTE_IN_MS);
 
-    const deltas = periods.map(({ start }) => {
-      return this.calculeDeltaByDate(gear, start);
+    const discrepancies = periods.map(({ start }) => {
+      return this.computeStockDiscrepancyByDateOn(gear, start);
     });
-    return Math.min(...deltas);
+    return Math.min(...discrepancies);
   }
 
-  private static calculeDeltaByDate(gear: DatabaseGearPreview, date: Date) {
+  private static computeStockDiscrepancyByDateOn(
+    gear: DatabaseGearPreview,
+    date: Date,
+  ) {
     const stock = this.findStockByDate(gear, date);
     const inquiry = this.findInquiryQuantityByDate(gear, date);
     return stock - inquiry;
@@ -54,9 +57,7 @@ export class SummaryGearOrchestrator {
     return inquiries
       .filter((inquiry) => {
         const timeWindows = inquiry.fa.inquiryTimeWindows.map(Period.init);
-        return timeWindows.some((timeWindow) =>
-          timeWindow.isIncludedByDate(date),
-        );
+        return timeWindows.some((timeWindow) => timeWindow.isIncluding(date));
       })
       .map((inquiry) => inquiry.quantity)
       .reduce((total, quantity) => total + quantity, 0);

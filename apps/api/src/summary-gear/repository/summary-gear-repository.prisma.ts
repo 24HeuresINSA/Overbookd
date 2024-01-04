@@ -12,11 +12,12 @@ export class PrismaSummaryGears implements SummaryGears {
     const gears = await this.prisma.catalogGear.findMany({
       select: SELECT_GEAR_PREVIEW,
     });
-    return gears.map(this.formatGearPreview);
+    return gears.map(formatGearPreview);
   }
+}
 
-  private formatGearPreview(gear: DatabaseGearPreview): SummaryGearPreview {
-    const minDelta = SummaryGearOrchestrator.calculeMinDelta(gear);
-    return { ...gear, minDelta };
-  }
+function formatGearPreview(gear: DatabaseGearPreview): SummaryGearPreview {
+  const stockDiscrepancy =
+    SummaryGearOrchestrator.computeStockDiscrepancyOn(gear);
+  return { ...gear, stockDiscrepancy };
 }
