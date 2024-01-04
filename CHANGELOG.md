@@ -1,3 +1,35 @@
+## [2.12.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.7...v2.12.0) (2024-01-04)
+
+
+### Features
+
+* **web:** create gear-recap page and add it to pages-list. [#1420](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1420) ([8b2de34](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8b2de34a0cd1c084b6d8588d9ee3e60bf50f03ef))
+
+
+### Bug Fixes
+
+* **api:** 🚑 rename command ([ef0da6a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ef0da6adb5a1c49f84f6ed20140623354576d48a))
+* **festival-activity:** allow filter on adherent in charge. [#1402](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1402) ([4a6338a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4a6338af1b50d61ad9dd00c560a0978a42028305))
+* **festival-activity:** filter out deleted ones from statistics. [#1435](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1435) ([a4ec1f7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a4ec1f7d1aa6abe4a30d44f3281561bbf4bdc410))
+* **festival-activity:** switch general time windows under humain review. [#1441](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1441) ([3767126](https://gitlab.com/24-heures-insa/overbookd-mono/commit/37671261ff78353351c9e0e8379ed10381c8a9dc))
+
+
+### Pre-Features
+
+* **recap-matos:** add an icon for consumable gear [#1424](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1424) ([55a0572](https://gitlab.com/24-heures-insa/overbookd-mono/commit/55a0572579fd1855f9cacdbb8143121f3fc69040))
+* **recap-matos:** create expansion panels, fetch gear and display the name of the gear [#1421](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1421) ([1844245](https://gitlab.com/24-heures-insa/overbookd-mono/commit/18442457577c386ddebb2b28fc1fabedc8d05d6f))
+
+
+### Refactor
+
+* **festival-activity:** activity time windows always validated by humain [#1442](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1442) ([95dbd6d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/95dbd6d41e1d194db56cda74bdc36e376723686c))
+* **personal-account:** meal sharing with list and details. [#1289](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1289) ([f229e6f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f229e6f2f477c3c5e64393abc358227de2297ac7))
+
+
+### CI/CD
+
+* **api:** 🧪 e2e tests ([03e7862](https://gitlab.com/24-heures-insa/overbookd-mono/commit/03e786290492aae309a96b5d13cffc32e0425ba7))
+
 ## [2.11.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.6...v2.11.7) (2023-12-21)
 
 
