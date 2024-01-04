@@ -875,5 +875,5 @@ model Shotgun {
   meal    SharedMeal @relation(fields: [mealId], references: [id])
   date    DateTime
 
-  @@id(fields: [guestId, mealId])
+  @@id([guestId, mealId])
 }
