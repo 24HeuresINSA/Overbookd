@@ -154,23 +154,6 @@ model SignaLocation {
   @@map("signa_location")
 }
 
-//A définir correctement plus tard, placeholder pour le moment
-enum ElectricityType {
-  PC16_Prise_classique
-  P17_16A_MONO
-  P17_16A_TRI
-  P17_16A_TETRA
-  P17_32A_MONO
-  P17_32A_TRI
-  P17_32A_TETRA
-  P17_63A_MONO
-  P17_63A_TRI
-  P17_63A_TETRA
-  P17_125A_TETRA
-
-  @@map("electricity_type")
-}
-
 model CatalogCategory {
   id             Int               @id @default(autoincrement())
   name           String
