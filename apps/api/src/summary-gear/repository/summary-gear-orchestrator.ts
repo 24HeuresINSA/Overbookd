@@ -8,7 +8,7 @@ export class SummaryGearOrchestrator {
     const inquiryTimeWindows = gear.inquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map(Period.init);
-    const mergedTimeWindows = Period.mergeAdjacents(inquiryTimeWindows);
+    const mergedTimeWindows = Period.mergeContiguous(inquiryTimeWindows);
 
     const discrepancies = mergedTimeWindows.map((timeWindow) => {
       return this.computeStockDiscrepancyByTimeWindowOn(gear, timeWindow);

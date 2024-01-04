@@ -91,28 +91,25 @@ export class Period {
     return this.start.getTime() !== this.end.getTime();
   }
 
-  static mergeAdjacents(periods: Period[]): Period[] {
-    const sortedPeriods = periods.sort((a, b) =>
-      a.start.getTime() < b.start.getTime() ? -1 : 1,
-    );
+  static mergeContiguous(periods: Period[]): Period[] {
+    const sortedPeriods = this.sort(periods);
 
-    return sortedPeriods.map((currentPeriod, index) => {
-      let mergedPeriod = currentPeriod;
+    return sortedPeriods.reduce(
+      (mergedPeriods: Period[], currentPeriod: Period) => {
+        const lastMergedPeriod = mergedPeriods[mergedPeriods.length - 1];
+        if (!lastMergedPeriod) return [currentPeriod];
 
-      // Merge with adjacent or overlapping periods
-      while (index < sortedPeriods.length - 1) {
-        const nextPeriod = sortedPeriods[index + 1];
-
-        if (mergedPeriod.isFollowedBy(nextPeriod)) {
-          mergedPeriod = mergedPeriod.mergeWith(nextPeriod);
-          index++;
-        } else {
-          break;
+        const isMergeable = lastMergedPeriod.isFollowedBy(currentPeriod);
+        if (isMergeable) {
+          const mergedPeriod = lastMergedPeriod.mergeWith(currentPeriod);
+          return [...mergedPeriods.slice(0, -1), mergedPeriod];
         }
-      }
+        mergedPeriods.push(currentPeriod);
 
-      return mergedPeriod;
-    });
+        return mergedPeriods;
+      },
+      [],
+    );
   }
 
   splitWithIntervalInMs(intervalInMs: number): Period[] {
@@ -124,7 +121,9 @@ export class Period {
       currentTime += intervalInMs
     ) {
       const start = new Date(currentTime);
-      const end = new Date(currentTime + intervalInMs);
+      const supposedEnd = new Date(currentTime + intervalInMs);
+      const end =
+        supposedEnd.getTime() < this.end.getTime() ? supposedEnd : this.end;
       periods.push(Period.init({ start, end }));
     }
 
