@@ -1,11 +1,14 @@
-import { SummaryGearPreview } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 
-type WithDatabaseInventory = {
-  inventoryRecords: { quantity: number }[];
+export type InventoryRecord = {
+  quantity: number;
 };
 
-type DatabaseInquiry = {
+type WithDatabaseInventory = {
+  inventoryRecords: InventoryRecord[];
+};
+
+export type DatabaseInquiry = {
   quantity: number;
   fa: { inquiryTimeWindows: IProvidePeriod[] };
 };
@@ -14,6 +17,13 @@ type WithDatabaseInquiries = {
   inquiries: DatabaseInquiry[];
 };
 
-export type DatabaseGearPreview = Omit<SummaryGearPreview, "stockDiscrepancy"> &
+type BaseDatabaseGear = {
+  id: number;
+  name: string;
+  slug: string;
+  isConsumable: boolean;
+};
+
+export type DatabaseGear = BaseDatabaseGear &
   WithDatabaseInventory &
   WithDatabaseInquiries;

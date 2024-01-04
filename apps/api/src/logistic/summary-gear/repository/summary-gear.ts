@@ -1,11 +1,11 @@
 import { SummaryGearPreview } from "@overbookd/http";
-import { DatabaseGearPreview } from "./summary-gear.model";
+import { DatabaseGear } from "./summary-gear.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/period";
 
 export class SummaryGear {
   private constructor() {}
 
-  public static generatePreview(gear: DatabaseGearPreview): SummaryGearPreview {
+  public static generatePreview(gear: DatabaseGear): SummaryGearPreview {
     const stockDiscrepancy = this.computeStockDiscrepancyOn(gear);
     return {
       id: gear.id,
@@ -16,7 +16,7 @@ export class SummaryGear {
     };
   }
 
-  private static computeStockDiscrepancyOn(gear: DatabaseGearPreview): number {
+  private static computeStockDiscrepancyOn(gear: DatabaseGear): number {
     const inquiryTimeWindows = gear.inquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
@@ -30,7 +30,7 @@ export class SummaryGear {
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(
-    gear: DatabaseGearPreview,
+    gear: DatabaseGear,
     timeWindow: Period,
   ): number {
     const period = Period.init(timeWindow);
@@ -43,7 +43,7 @@ export class SummaryGear {
   }
 
   private static computeStockDiscrepancyByDateOn(
-    gear: DatabaseGearPreview,
+    gear: DatabaseGear,
     date: Date,
   ) {
     const stock = this.findStockByDate(gear, date);
@@ -52,7 +52,7 @@ export class SummaryGear {
   }
 
   private static findStockByDate(
-    gear: DatabaseGearPreview,
+    gear: DatabaseGear,
     date: Date,
   ): number {
     console.log(date);
@@ -64,7 +64,7 @@ export class SummaryGear {
   }
 
   private static findInquiryQuantityByDate(
-    { inquiries }: DatabaseGearPreview,
+    { inquiries }: DatabaseGear,
     date: Date,
   ): number {
     return inquiries.reduce((total, inquiry) => {
