@@ -1,41 +1,38 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="publicAnimations">
+    <v-data-table :headers="headers" :items="animations">
       <template #body="{ items }">
         <tbody>
-          <template v-for="publicAnimation in items">
-            <tr :key="publicAnimation.fa.id">
-              <th :rowspan="publicAnimation.fa.timeWindows.length + 1">
-                <nuxt-link
-                  :to="`/fa/${publicAnimation.fa.id}`"
-                  class="name-text"
-                >
+          <template v-for="animation in items">
+            <tr :key="animation.id">
+              <th :rowspan="animation.timeWindows.length + 1">
+                <nuxt-link :to="`/fa/${animation.id}`" class="name-text">
                   <v-chip-group>
-                    <v-chip small>{{ publicAnimation.fa.id }}</v-chip>
+                    <v-chip small>{{ animation.id }}</v-chip>
                   </v-chip-group>
-                  <v-label> - {{ publicAnimation.fa.name }}</v-label>
+                  <v-label> - {{ animation.name }}</v-label>
                 </nuxt-link>
               </th>
               <th
-                :rowspan="publicAnimation.fa.timeWindows.length + 1"
+                :rowspan="animation.timeWindows.length + 1"
                 class="text-center"
               >
                 <v-btn
-                  v-show="publicAnimation.photoLink"
+                  v-show="animation.photoLink"
                   icon
-                  :href="publicAnimation.photoLink"
+                  :href="animation.photoLink"
                   target="_blank"
                 >
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
-              <td :rowspan="publicAnimation.fa.timeWindows.length + 1">
-                {{ publicAnimation.description }}
+              <td :rowspan="animation.timeWindows.length + 1">
+                {{ animation.description }}
               </td>
-              <td :rowspan="publicAnimation.fa.timeWindows.length + 1">
+              <td :rowspan="animation.timeWindows.length + 1">
                 <v-chip-group column>
                   <v-chip
-                    v-for="category in publicAnimation.categories"
+                    v-for="category in animation.categories"
                     :key="category"
                   >
                     {{ category }}
@@ -43,10 +40,10 @@
                 </v-chip-group>
               </td>
               <td
-                :rowspan="publicAnimation.fa.timeWindows.length + 1"
+                :rowspan="animation.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-icon v-if="publicAnimation.isMajor" color="green" large>
+                <v-icon v-if="animation.isFlagship" color="green" large>
                   mdi-check-circle
                 </v-icon>
                 <v-icon v-else color="red" large>mdi-close-circle</v-icon>
@@ -54,15 +51,13 @@
             </tr>
 
             <tr
-              v-for="timeWindow in sortTimeWindows(
-                publicAnimation.fa.timeWindows,
-              )"
+              v-for="timeWindow in sortTimeWindows(animation.timeWindows)"
               :key="timeWindow.id"
             >
               <td class="text-start">
-                {{ formatDate(timeWindow.start) }}
+                {{ formatDateWithMinutes(timeWindow.start) }}
                 <span class="font-weight-bold">-</span>
-                {{ formatDate(timeWindow.end) }}
+                {{ formatDateWithMinutes(timeWindow.end) }}
               </td>
             </tr>
           </template>
@@ -73,17 +68,17 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { PreviewForCommunication } from "@overbookd/http";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
-import { PublicAnimationWithFa } from "~/utils/models/fa.model";
-import { PeriodWithId } from "~/utils/models/period.model";
 
 interface PublicAnimationsData {
   headers: Header[];
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "PublicAnimations",
   data(): PublicAnimationsData {
     return {
@@ -101,25 +96,18 @@ export default Vue.extend({
     title: "Animations à publier",
   }),
   computed: {
-    publicAnimations(): PublicAnimationWithFa[] {
-      return this.$accessor.publicAnimation.publicAnimations;
+    animations(): PreviewForCommunication[] {
+      return this.$accessor.festivalActivity.activities.forCommunication;
     },
   },
-  async beforeMount() {
-    this.$accessor.publicAnimation.fetchAllPublicAnimations();
+  mounted() {
+    this.$accessor.festivalActivity.fetchCommunicationPreviews();
   },
   methods: {
-    formatDate(date: Date): string {
-      return formatDateWithMinutes(date);
-    },
-    sortTimeWindows(timeWindows: PeriodWithId[]): PeriodWithId[] {
-      const sortedTimeWindows = [...timeWindows].sort((a, b) => {
-        if (a.start === b.start) {
-          return a.end.getTime() - b.end.getTime();
-        }
-        return a.start.getTime() - b.start.getTime();
-      });
-      return sortedTimeWindows;
+    formatDateWithMinutes,
+    sortTimeWindows(periods: IProvidePeriod[]): IProvidePeriod[] {
+      const initPeriods = periods.map((period) => Period.init(period));
+      return Period.sort(initPeriods);
     },
   },
 });

@@ -17,7 +17,7 @@ import {
   RefusedReviewsResponseDto,
   ValidatedReviewsResponseDto,
 } from "./reviews.response.dto";
-import { PreviewForSecu } from "@overbookd/http";
+import { PreviewForCommunication, PreviewForSecu } from "@overbookd/http";
 import { TimeWindowResponseDto } from "./time-window.response.dto";
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
@@ -173,4 +173,52 @@ export class PreviewForSecuResponseDto implements PreviewForSecu {
     type: Number,
   })
   freePass: PreviewForSecu["freePass"];
+}
+
+export class PreviewForCommunicationResponseDto
+  implements PreviewForCommunication
+{
+  @ApiProperty({
+    description: "The festival activity id",
+    type: Number,
+  })
+  id: PreviewForCommunication["id"];
+
+  @ApiProperty({
+    description: "The festival activity name",
+    type: String,
+  })
+  name: PreviewForCommunication["name"];
+
+  @ApiProperty({
+    description: "The festival activity time windows",
+    type: TimeWindowResponseDto,
+    isArray: true,
+  })
+  timeWindows: PreviewForCommunication["timeWindows"];
+
+  @ApiProperty({
+    description: "The festival activity description",
+    type: String,
+  })
+  description: PreviewForCommunication["description"];
+
+  @ApiProperty({
+    description: "The festival activity photo link",
+    type: String,
+  })
+  photoLink: PreviewForCommunication["photoLink"];
+
+  @ApiProperty({
+    description: "The festival activity is flagship",
+    type: Boolean,
+  })
+  isFlagship: PreviewForCommunication["isFlagship"];
+
+  @ApiProperty({
+    description: "The festival activity categories",
+    type: String,
+    isArray: true,
+  })
+  categories: PreviewForCommunication["categories"];
 }

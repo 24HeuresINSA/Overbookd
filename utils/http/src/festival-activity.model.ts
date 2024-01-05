@@ -49,3 +49,13 @@ export type PreviewForSecu = {
   specialNeeds: FestivalActivity["security"]["specialNeed"];
   freePass: FestivalActivity["security"]["freePass"];
 };
+
+export type PreviewForCommunication = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  timeWindows: FestivalActivity["general"]["timeWindows"];
+  description: FestivalActivity["general"]["description"];
+  photoLink: FestivalActivity["general"]["photoLink"];
+  isFlagship: FestivalActivity["general"]["isFlagship"];
+  categories: FestivalActivity["general"]["categories"];
+};

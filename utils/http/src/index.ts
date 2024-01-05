@@ -7,6 +7,7 @@ export type {
   LinkSignageCatalogItemForm,
   Statistics,
   PreviewForSecu,
+  PreviewForCommunication,
 } from "./festival-activity.model";
 export type { HttpStringified } from "./http-stringified";
 export type { SummaryGearPreview } from "./summary-gear.model";
