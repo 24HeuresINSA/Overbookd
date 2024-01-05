@@ -124,7 +124,7 @@ export class Period {
     });
   }
 
-  static sort(periods: Period[]): Period[] {
+  static sort<T extends IProvidePeriod>(periods: T[]): T[] {
     return periods.sort(
       (a, b) =>
         a.start.getTime() - b.start.getTime() ||

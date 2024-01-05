@@ -70,6 +70,7 @@ import { PreviewForCommunication } from "@overbookd/http";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { TimeWindow } from "@overbookd/festival-activity";
+import { Period } from "@overbookd/period";
 
 interface PublicAnimationsData {
   headers: Header[];
@@ -119,11 +120,7 @@ export default Vue.extend({
   methods: {
     formatDateWithMinutes,
     sortTimeWindows(timeWindows: TimeWindow[]): TimeWindow[] {
-      return [...timeWindows].sort(
-        (a, b) =>
-          a.start.getTime() - b.start.getTime() ||
-          a.end.getTime() - b.end.getTime(),
-      );
+      return Period.sort([...timeWindows]);
     },
   },
 });
