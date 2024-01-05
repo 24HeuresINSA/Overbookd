@@ -62,6 +62,7 @@ import {
 import {
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
+  PreviewForCommunicationResponseDto,
   PreviewForSecuResponseDto,
   RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
@@ -96,7 +97,7 @@ import {
 import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
-@ApiTags("festival-activity")
+@ApiTags("festival-activities")
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -120,7 +121,7 @@ import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter)
-@Controller("festival-activity")
+@Controller("festival-activities")
 export class FestivalActivityController {
   constructor(
     private readonly festivalActivityService: FestivalActivityService,
@@ -166,7 +167,7 @@ export class FestivalActivityController {
   @ApiResponse({
     status: 200,
     description: "All festival activities",
-    type: PreviewForSecuResponseDto,
+    type: PreviewForCommunicationResponseDto,
     isArray: true,
   })
   findAllForCommunication(): Promise<PreviewForCommunication[]> {

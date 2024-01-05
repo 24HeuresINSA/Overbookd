@@ -38,7 +38,7 @@ import { StatsPayload } from "~/utils/models/stats.model";
 type Context = { $axios: NuxtAxiosInstance };
 
 export class FestivalActivityRepository {
-  private static readonly basePath = "festival-activity";
+  private static readonly basePath = "festival-activities";
 
   /* FETCH */
   static getAll(context: Context) {
