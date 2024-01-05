@@ -6,6 +6,7 @@
     :solo="boxed"
     :filled="boxed"
     :disabled="disabled"
+    :hide-details="hideDetails"
     return-object
     @change="updateDate"
   >
@@ -36,6 +37,10 @@ export default Vue.extend({
       default: true,
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    hideDetails: {
       type: Boolean,
       default: false,
     },

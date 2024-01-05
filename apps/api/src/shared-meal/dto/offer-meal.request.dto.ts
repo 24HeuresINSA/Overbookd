@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { OfferMeal } from "@overbookd/http";
 import { MIDI, MealDate, Moment, SOIR } from "@overbookd/personal-account";
 import { Type } from "class-transformer";
 import { IsDate, IsEnum, IsString, ValidateNested } from "class-validator";
-import { OfferMeal } from "../shared-meal.service";
 
 const MOMENTS: Moment[] = [MIDI, SOIR];
 

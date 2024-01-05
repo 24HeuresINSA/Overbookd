@@ -1,16 +1,11 @@
+import { OfferMeal } from "@overbookd/http";
 import {
   Adherent,
-  MealDate,
   MealSharing,
   OnGoingSharedMeal,
   SharedMeal,
 } from "@overbookd/personal-account";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
-
-export type OfferMeal = {
-  menu: string;
-  date: MealDate;
-};
 
 export class SharedMealService {
   constructor(private readonly mealSharing: MealSharing) {}

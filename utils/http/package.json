@@ -34,7 +34,8 @@
   ],
   "dependencies": {
     "@overbookd/festival-activity": "workspace:^",
-    "@overbookd/period": "workspace:^"
+    "@overbookd/period": "workspace:^",
+    "@overbookd/personal-account": "workspace:^"
   },
   "engines": {
     "node": "20.10.0",
