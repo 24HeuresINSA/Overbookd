@@ -1,18 +1,16 @@
 <template>
-  <div class="fa animation__listing">
+  <div class="fa">
     <v-data-table :headers="headers" :items="animations">
       <template #body="{ items }">
-        <tbody class="animation__body">
+        <tbody>
           <template v-for="animation in items">
-            <tr
-              :key="animation.id"
-              @click="openFa($event, animation)"
-              @auxclick="openFaInNewTab(animation)"
-            >
-              <th id="status" :rowspan="animation.timeWindows.length + 1">
-                <v-chip :class="animation.status.toLowerCase()" small>
-                  {{ animation.id }}
-                </v-chip>
+            <tr :key="animation.id">
+              <th class="status" :rowspan="animation.timeWindows.length + 1">
+                <nuxt-link :to="`/fa/${animation.id}`">
+                  <v-chip :class="animation.status.toLowerCase()" small>
+                    {{ animation.id }}
+                  </v-chip>
+                </nuxt-link>
               </th>
               <th
                 :rowspan="animation.timeWindows.length + 1"
@@ -51,8 +49,6 @@
                 animation.timeWindows,
               )"
               :key="`${animation.id}-${timeWindow.start}-${timeWindow.end}-${index}`"
-              @click="openFa($event, animation)"
-              @auxclick="openFaInNewTab(animation)"
             >
               <td>
                 {{ formatDateWithMinutes(timeWindow.start) }}
@@ -126,24 +122,6 @@ export default Vue.extend({
       const initPeriods = periods.map((period) => Period.init(period));
       return Period.sort(initPeriods);
     },
-    openFa(event: MouseEvent, fa: PreviewForCommunication) {
-      if (event.ctrlKey) {
-        return this.openFaInNewTab(fa);
-      }
-      this.$router.push({ path: `/fa/${fa.id}` });
-    },
-    openFaInNewTab(fa: PreviewForCommunication) {
-      const activityRoute = this.$router.resolve({ path: `/fa/${fa.id}` });
-      window.open(activityRoute.href, "_blank");
-    },
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.animation {
-  &__body {
-    cursor: pointer;
-  }
-}
-</style>
