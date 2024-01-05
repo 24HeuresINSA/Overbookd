@@ -64,7 +64,7 @@ export default defineComponent({
     date(): MealDate {
       return {
         moment: this.moment,
-        day: new Date(this.day.toString()),
+        day: this.day,
       };
     },
     me(): MyUserInformation {
