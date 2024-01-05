@@ -1,7 +1,11 @@
+import { InventoryRecord } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 
-export type InventoryRecord = {
-  quantity: number;
+type BaseDatabaseGear = {
+  id: number;
+  name: string;
+  slug: string;
+  isConsumable: boolean;
 };
 
 type WithDatabaseInventory = {
@@ -15,13 +19,6 @@ export type DatabaseInquiry = {
 
 type WithDatabaseInquiries = {
   inquiries: DatabaseInquiry[];
-};
-
-type BaseDatabaseGear = {
-  id: number;
-  name: string;
-  slug: string;
-  isConsumable: boolean;
 };
 
 export type DatabaseGear = BaseDatabaseGear &

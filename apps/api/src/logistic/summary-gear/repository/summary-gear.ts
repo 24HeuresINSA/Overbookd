@@ -1,4 +1,4 @@
-import { SummaryGearPreview } from "@overbookd/http";
+import { SummaryGearDetails, SummaryGearPreview } from "@overbookd/http";
 import { DatabaseGear } from "./summary-gear.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/period";
 
@@ -14,6 +14,11 @@ export class SummaryGear {
       isConsumable: gear.isConsumable,
       stockDiscrepancy,
     };
+  }
+
+  public static generateDetails(gear: DatabaseGear): SummaryGearDetails[] {
+    console.log("generateDetails", gear);
+    return [];
   }
 
   private static computeStockDiscrepancyOn(gear: DatabaseGear): number {

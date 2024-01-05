@@ -1,8 +1,9 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
+  ApiParam,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -12,7 +13,8 @@ import { Permission } from "../../authentication/permissions-auth.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { SummaryGearPreviewResponseDto } from "./dto/summary-gear-preview.response.dto";
-import { SummaryGearPreview } from "@overbookd/http";
+import { SummaryGearDetails, SummaryGearPreview } from "@overbookd/http";
+import { SummaryGearDetailsResponseDto } from "./dto/summary-gear-details.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("logistic/summary-gears")
@@ -35,7 +37,25 @@ export class SummaryGearController {
     isArray: true,
     type: SummaryGearPreviewResponseDto,
   })
-  search(): Promise<SummaryGearPreview[]> {
+  findAll(): Promise<SummaryGearPreview[]> {
     return this.summaryGearService.findAll();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VIEW_GEAR_SUMMARY)
+  @Get(":slug")
+  @ApiParam({
+    name: "slug",
+    type: String,
+    description: "Gear slug",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Get gear details",
+    type: SummaryGearDetailsResponseDto,
+    isArray: true,
+  })
+  findOne(@Param("slug") slug: string): Promise<SummaryGearDetails[]> {
+    return this.summaryGearService.findOne(slug);
   }
 }

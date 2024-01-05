@@ -1,8 +1,5 @@
-import {
-  DatabaseGear,
-  DatabaseInquiry,
-  InventoryRecord,
-} from "./summary-gear.model";
+import { InventoryRecord } from "@overbookd/http";
+import { DatabaseGear, DatabaseInquiry } from "./summary-gear.model";
 
 const friday08hto09h = {
   start: new Date("2023-05-19T08:00+02:00"),
