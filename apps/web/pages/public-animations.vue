@@ -1,41 +1,35 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="publicAnimations">
+    <v-data-table :headers="headers" :items="animations">
       <template #body="{ items }">
         <tbody>
-          <template v-for="publicAnimation in items">
-            <tr :key="publicAnimation.fa.id">
-              <th :rowspan="publicAnimation.fa.timeWindows.length + 1">
-                <nuxt-link
-                  :to="`/fa/${publicAnimation.fa.id}`"
-                  class="name-text"
-                >
-                  <v-chip-group>
-                    <v-chip small>{{ publicAnimation.fa.id }}</v-chip>
+          <template v-for="activity in items">
+            <tr :key="activity.id">
+              <th class="fa" :rowspan="activity.timeWindows.length + 1">
+                <nuxt-link :to="`/fa/${activity.id}`" class="fa__link">
+                  <v-chip-group class="status">
+                    <v-chip :class="activity.status.toLowerCase()" small>
+                      {{ activity.id }}
+                    </v-chip>
                   </v-chip-group>
-                  <v-label> - {{ publicAnimation.fa.name }}</v-label>
+                  <v-label> - {{ activity.name }}</v-label>
                 </nuxt-link>
               </th>
               <th
-                :rowspan="publicAnimation.fa.timeWindows.length + 1"
+                :rowspan="activity.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-btn
-                  v-show="publicAnimation.photoLink"
-                  icon
-                  :href="publicAnimation.photoLink"
-                  target="_blank"
-                >
+                <v-btn icon :href="activity.photoLink" target="_blank">
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
-              <td :rowspan="publicAnimation.fa.timeWindows.length + 1">
-                {{ publicAnimation.description }}
+              <td :rowspan="activity.timeWindows.length + 1">
+                <div v-safe-html="activity.description" />
               </td>
-              <td :rowspan="publicAnimation.fa.timeWindows.length + 1">
+              <td :rowspan="activity.timeWindows.length + 1">
                 <v-chip-group column>
                   <v-chip
-                    v-for="category in publicAnimation.categories"
+                    v-for="category in activity.categories"
                     :key="category"
                   >
                     {{ category }}
@@ -43,10 +37,10 @@
                 </v-chip-group>
               </td>
               <td
-                :rowspan="publicAnimation.fa.timeWindows.length + 1"
+                :rowspan="activity.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-icon v-if="publicAnimation.isMajor" color="green" large>
+                <v-icon v-if="activity.isFlagship" color="green" large>
                   mdi-check-circle
                 </v-icon>
                 <v-icon v-else color="red" large>mdi-close-circle</v-icon>
@@ -54,15 +48,13 @@
             </tr>
 
             <tr
-              v-for="timeWindow in sortTimeWindows(
-                publicAnimation.fa.timeWindows,
-              )"
+              v-for="timeWindow in sortTimeWindows(activity.timeWindows)"
               :key="timeWindow.id"
             >
-              <td class="text-start">
-                {{ formatDate(timeWindow.start) }}
-                <span class="font-weight-bold">-</span>
-                {{ formatDate(timeWindow.end) }}
+              <td>
+                {{ formatDateWithMinutes(timeWindow.start) }}
+                <span>-</span>
+                {{ formatDateWithMinutes(timeWindow.end) }}
               </td>
             </tr>
           </template>
@@ -74,10 +66,11 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { PreviewForCommunication } from "@overbookd/http";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
-import { PublicAnimationWithFa } from "~/utils/models/fa.model";
-import { PeriodWithId } from "~/utils/models/period.model";
+import { TimeWindow } from "@overbookd/festival-activity";
+import { Period } from "@overbookd/period";
 
 interface PublicAnimationsData {
   headers: Header[];
@@ -88,12 +81,28 @@ export default Vue.extend({
   data(): PublicAnimationsData {
     return {
       headers: [
-        { text: "FA", value: "fa" },
-        { text: "Photo", value: "photoLink", align: "center" },
-        { text: "Description", value: "description" },
-        { text: "Catégories", value: "categories" },
-        { text: "Anim phare", value: "isMajor", align: "center" },
-        { text: "Créneaux", value: "timeWindows" },
+        {
+          text: "FA",
+          value: "fa",
+          sortable: false,
+        },
+        {
+          text: "Photo",
+          value: "photoLink",
+          align: "center",
+          width: "80px",
+          sortable: false,
+        },
+        { text: "Description", value: "description", sortable: false },
+        { text: "Catégories", value: "categories", sortable: false },
+        {
+          text: "Anim phare",
+          value: "isMajor",
+          align: "center",
+          width: "100px",
+          sortable: false,
+        },
+        { text: "Créneaux", value: "timeWindows", sortable: false },
       ],
     };
   },
@@ -101,38 +110,32 @@ export default Vue.extend({
     title: "Animations à publier",
   }),
   computed: {
-    publicAnimations(): PublicAnimationWithFa[] {
-      return this.$accessor.publicAnimation.publicAnimations;
+    animations(): PreviewForCommunication[] {
+      return this.$accessor.festivalActivity.activities.forCommunication;
     },
   },
-  async beforeMount() {
-    this.$accessor.publicAnimation.fetchAllPublicAnimations();
+  mounted() {
+    this.$accessor.festivalActivity.fetchCommunicationPreviews();
   },
   methods: {
-    formatDate(date: Date): string {
-      return formatDateWithMinutes(date);
-    },
-    sortTimeWindows(timeWindows: PeriodWithId[]): PeriodWithId[] {
-      const sortedTimeWindows = [...timeWindows].sort((a, b) => {
-        if (a.start === b.start) {
-          return a.end.getTime() - b.end.getTime();
-        }
-        return a.start.getTime() - b.start.getTime();
-      });
-      return sortedTimeWindows;
+    formatDateWithMinutes,
+    sortTimeWindows(timeWindows: TimeWindow[]): TimeWindow[] {
+      return Period.sort([...timeWindows]);
     },
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.name-text {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
+.fa {
+  &__link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
 
-  .v-label {
-    cursor: pointer;
+    .v-label {
+      cursor: pointer;
+    }
   }
 }
 </style>

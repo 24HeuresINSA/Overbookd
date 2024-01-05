@@ -40,6 +40,7 @@ import {
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
+  PreviewForCommunication,
 } from "@overbookd/http";
 import {
   JwtPayload,
@@ -95,6 +96,7 @@ type LinkSignageToCatalogItem = {
 
 export type Previews = {
   forSecu(): Promise<PreviewForSecu[]>;
+  forCommunication(): Promise<PreviewForCommunication[]>;
 };
 
 @Injectable()
@@ -119,6 +121,10 @@ export class FestivalActivityService {
 
   findForSecurity(): Promise<PreviewForSecu[]> {
     return this.previews.forSecu();
+  }
+
+  findForCommunication(): Promise<PreviewForCommunication[]> {
+    return this.previews.forCommunication();
   }
 
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null> {

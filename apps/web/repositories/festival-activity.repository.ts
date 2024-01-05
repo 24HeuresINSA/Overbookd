@@ -5,6 +5,7 @@ import {
   LinkSignageCatalogItemForm,
   PrepareInChargeForm,
   PrepareSignaForm,
+  PreviewForCommunication,
   PreviewForSecu,
   ReviewRejection,
 } from "@overbookd/http";
@@ -37,7 +38,7 @@ import { StatsPayload } from "~/utils/models/stats.model";
 type Context = { $axios: NuxtAxiosInstance };
 
 export class FestivalActivityRepository {
-  private static readonly basePath = "festival-activity";
+  private static readonly basePath = "festival-activities";
 
   /* FETCH */
   static getAll(context: Context) {
@@ -49,6 +50,12 @@ export class FestivalActivityRepository {
   static getSecurityPreviews(context: Context) {
     return context.$axios.get<HttpStringified<PreviewForSecu>[]>(
       `${this.basePath}/for-security`,
+    );
+  }
+
+  static getCommunicationPreviews(context: Context) {
+    return context.$axios.get<HttpStringified<PreviewForCommunication>[]>(
+      `${this.basePath}/for-communication`,
     );
   }
 

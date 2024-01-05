@@ -19,7 +19,6 @@ import * as notif from "./notif";
 import * as orgaNeeds from "./orgaNeeds";
 import * as permission from "./permission";
 import * as planning from "./planning";
-import * as publicAnimation from "./publicAnimation";
 import * as registration from "./registration";
 import * as signa from "./signa";
 import * as stats from "./stats";
@@ -64,7 +63,6 @@ export const accessorType = getAccessorType({
     catalogSignage,
     configuration,
     signa,
-    publicAnimation,
     permission,
     stats,
     inventory,

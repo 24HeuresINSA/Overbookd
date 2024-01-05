@@ -378,6 +378,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   gap: 1em;
+  margin-top: 10px;
   margin-bottom: 0;
   &__fields {
     width: 100%;

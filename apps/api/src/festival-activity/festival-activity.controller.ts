@@ -62,6 +62,7 @@ import {
 import {
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
+  PreviewForCommunicationResponseDto,
   PreviewForSecuResponseDto,
   RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
@@ -88,11 +89,15 @@ import {
   UnlinkedSignageResponseDto,
 } from "./dto/signage.response.dto";
 import { StatisticsService } from "../statistics/statistics.service";
-import { PreviewForSecu, Statistics } from "@overbookd/http";
+import {
+  PreviewForCommunication,
+  PreviewForSecu,
+  Statistics,
+} from "@overbookd/http";
 import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
-@ApiTags("festival-activity")
+@ApiTags("festival-activities")
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })
@@ -116,7 +121,7 @@ import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto
   RefusedFestivalActivityResponseDto,
 )
 @UseFilters(FestivalActivityErrorFilter)
-@Controller("festival-activity")
+@Controller("festival-activities")
 export class FestivalActivityController {
   constructor(
     private readonly festivalActivityService: FestivalActivityService,
@@ -154,6 +159,19 @@ export class FestivalActivityController {
   })
   findAllForSecurity(): Promise<PreviewForSecu[]> {
     return this.festivalActivityService.findForSecurity();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FA)
+  @Get("for-communication")
+  @ApiResponse({
+    status: 200,
+    description: "All festival activities",
+    type: PreviewForCommunicationResponseDto,
+    isArray: true,
+  })
+  findAllForCommunication(): Promise<PreviewForCommunication[]> {
+    return this.festivalActivityService.findForCommunication();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

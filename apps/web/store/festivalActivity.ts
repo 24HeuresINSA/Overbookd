@@ -27,6 +27,7 @@ import {
   ReviewRejection,
   InitInquiryRequest,
   PreviewForSecu,
+  PreviewForCommunication,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
@@ -34,6 +35,7 @@ import { FestivalActivityRepository } from "~/repositories/festival-activity.rep
 import { safeCall } from "~/utils/api/calls";
 import {
   castActivityWithDate,
+  castPreviewForCommunicationWithDate,
   castPreviewForSecurityWithDate,
 } from "~/utils/festival-event/festival-activity.utils";
 import { AddInquiryRequest } from "@overbookd/http";
@@ -43,8 +45,9 @@ const repo = FestivalActivityRepository;
 
 type State = {
   activities: {
-    forSecurity: PreviewForSecu[];
     forAll: PreviewFestivalActivity[];
+    forSecurity: PreviewForSecu[];
+    forCommunication: PreviewForCommunication[];
   };
   selectedActivity: FestivalActivity;
 };
@@ -55,6 +58,7 @@ export const state = (): State => ({
   activities: {
     forAll: [],
     forSecurity: [],
+    forCommunication: [],
   },
   selectedActivity: fakeActivity,
 });
@@ -65,6 +69,9 @@ export const mutations = mutationTree(state, {
   },
   SET_PREVIEW_FOR_SECURITY(state, previews: PreviewForSecu[]) {
     state.activities.forSecurity = previews;
+  },
+  SET_PREVIEW_FOR_COMMUNICATION(state, previews: PreviewForCommunication[]) {
+    state.activities.forCommunication = previews;
   },
   SET_SELECTED_ACTIVITY(state, activity: FestivalActivity) {
     state.selectedActivity = activity;
@@ -88,6 +95,15 @@ export const actions = actionTree(
 
       const previews = res.data.map(castPreviewForSecurityWithDate);
       commit("SET_PREVIEW_FOR_SECURITY", previews);
+    },
+
+    async fetchCommunicationPreviews({ commit }) {
+      const res = await safeCall(this, repo.getCommunicationPreviews(this));
+
+      if (!res) return;
+
+      const previews = res.data.map(castPreviewForCommunicationWithDate);
+      commit("SET_PREVIEW_FOR_COMMUNICATION", previews);
     },
 
     async fetchActivity({ commit }, id: number) {
