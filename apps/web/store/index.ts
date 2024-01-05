@@ -31,6 +31,7 @@ import * as volunteerAvailability from "./volunteerAvailability";
 import * as contribution from "./contribution";
 import * as alert from "./alert";
 import * as personalAccount from "./personalAccount";
+import * as mealSharing from "./mealSharing";
 
 export const state = () => ({});
 
@@ -78,5 +79,6 @@ export const accessorType = getAccessorType({
     contribution,
     alert,
     personalAccount,
+    mealSharing,
   },
 });

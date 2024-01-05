@@ -562,6 +562,9 @@ importers:
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period
+      '@overbookd/personal-account':
+        specifier: workspace:^
+        version: link:../../domains/personal-account
 
 packages:
 
