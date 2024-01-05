@@ -58,7 +58,7 @@
         <RichEditor
           :data="general.description ?? ''"
           label="Description"
-          class="mb-4"
+          class="mb-6"
           @change="updateDescription"
         />
 

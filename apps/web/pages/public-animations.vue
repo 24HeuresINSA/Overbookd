@@ -1,41 +1,29 @@
 <template>
-  <div>
-    <v-data-table
-      :headers="headers"
-      :items="animations"
-      @click:row="openFa"
-      @auxclick:row="openFaInNewTab"
-    >
+  <div class="fa animation__listing">
+    <v-data-table :headers="headers" :items="animations">
       <template #body="{ items }">
-        <tbody>
+        <tbody class="animation__body">
           <template v-for="animation in items">
-            <tr :key="animation.id">
-              <th :rowspan="animation.timeWindows.length + 1">
-                <v-chip-group id="status">
-                  <v-chip
-                    id="status"
-                    :class="animation.status.toLowerCase()"
-                    small
-                  >
-                    {{ animation.id }}
-                  </v-chip>
-                </v-chip-group>
+            <tr
+              :key="animation.id"
+              @click="openFa($event, animation)"
+              @auxclick="openFaInNewTab(animation)"
+            >
+              <th id="status" :rowspan="animation.timeWindows.length + 1">
+                <v-chip :class="animation.status.toLowerCase()" small>
+                  {{ animation.id }}
+                </v-chip>
               </th>
               <th
                 :rowspan="animation.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-btn
-                  v-show="animation.photoLink"
-                  icon
-                  :href="animation.photoLink"
-                  target="_blank"
-                >
+                <v-btn icon :href="animation.photoLink" target="_blank">
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
               <td :rowspan="animation.timeWindows.length + 1">
-                {{ animation.description }}
+                <div v-safe-html="animation.description" />
               </td>
               <td :rowspan="animation.timeWindows.length + 1">
                 <v-chip-group column>
@@ -59,12 +47,16 @@
             </tr>
 
             <tr
-              v-for="timeWindow in sortTimeWindows(animation.timeWindows)"
-              :key="timeWindow.id"
+              v-for="(timeWindow, index) in sortTimeWindows(
+                animation.timeWindows,
+              )"
+              :key="`${animation.id}-${timeWindow.start}-${timeWindow.end}-${index}`"
+              @click="openFa($event, animation)"
+              @auxclick="openFaInNewTab(animation)"
             >
-              <td class="text-start">
+              <td>
                 {{ formatDateWithMinutes(timeWindow.start) }}
-                <span class="font-weight-bold">-</span>
+                <span>-</span>
                 {{ formatDateWithMinutes(timeWindow.end) }}
               </td>
             </tr>
@@ -76,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import Vue from "vue";
 import { PreviewForCommunication } from "@overbookd/http";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
@@ -86,17 +78,34 @@ interface PublicAnimationsData {
   headers: Header[];
 }
 
-export default defineComponent({
+export default Vue.extend({
   name: "PublicAnimations",
   data(): PublicAnimationsData {
     return {
       headers: [
-        { text: "FA", value: "fa" },
-        { text: "Photo", value: "photoLink", align: "center" },
-        { text: "Description", value: "description" },
-        { text: "Catégories", value: "categories" },
-        { text: "Anim phare", value: "isMajor", align: "center" },
-        { text: "Créneaux", value: "timeWindows" },
+        {
+          text: "FA",
+          value: "fa",
+          width: "80px",
+          sortable: false,
+        },
+        {
+          text: "Photo",
+          value: "photoLink",
+          align: "center",
+          width: "80px",
+          sortable: false,
+        },
+        { text: "Description", value: "description", sortable: false },
+        { text: "Catégories", value: "categories", sortable: false },
+        {
+          text: "Anim phare",
+          value: "isMajor",
+          align: "center",
+          width: "100px",
+          sortable: false,
+        },
+        { text: "Créneaux", value: "timeWindows", sortable: false },
       ],
     };
   },
@@ -117,13 +126,13 @@ export default defineComponent({
       const initPeriods = periods.map((period) => Period.init(period));
       return Period.sort(initPeriods);
     },
-    openFa(fa: PreviewForCommunication, _: unknown, event: PointerEvent) {
+    openFa(event: MouseEvent, fa: PreviewForCommunication) {
       if (event.ctrlKey) {
-        return this.openFaInNewTab(event, { item: fa });
+        return this.openFaInNewTab(fa);
       }
       this.$router.push({ path: `/fa/${fa.id}` });
     },
-    openFaInNewTab(_: Event, { item: fa }: { item: PreviewForCommunication }) {
+    openFaInNewTab(fa: PreviewForCommunication) {
       const activityRoute = this.$router.resolve({ path: `/fa/${fa.id}` });
       window.open(activityRoute.href, "_blank");
     },
@@ -132,12 +141,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.name-text {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-
-  .v-label {
+.animation {
+  &__body {
     cursor: pointer;
   }
 }
