@@ -23,6 +23,10 @@ export class Period {
     this.end = end;
   }
 
+  get hasDuration(): boolean {
+    return this.start.getTime() !== this.end.getTime();
+  }
+
   static init({ start, end }: IProvidePeriod): Period {
     if (this.isEndBeforeStart({ start, end })) {
       throw new EndBeforeStart();
@@ -49,6 +53,12 @@ export class Period {
       otherPeriod.start.getTime() <= this.start.getTime() &&
       otherPeriod.end.getTime() >= this.start.getTime()
     );
+  }
+
+  isIncluding(date: Date): boolean {
+    const happenAfterStart = date.getTime() >= this.start.getTime();
+    const happenBeforeEnd = date.getTime() < this.end.getTime();
+    return happenAfterStart && happenBeforeEnd;
   }
 
   isFollowedBy(otherPeriod: Period): boolean {
@@ -81,7 +91,44 @@ export class Period {
     return [pastPeriod, futurPeriod].filter((period) => period.hasDuration);
   }
 
-  get hasDuration(): boolean {
-    return this.start.getTime() !== this.end.getTime();
+  static mergeContiguous(periods: Period[]): Period[] {
+    const sortedPeriods = this.sort(periods);
+
+    return sortedPeriods.reduce(
+      (mergedPeriods: Period[], currentPeriod: Period) => {
+        const lastMergedPeriod = mergedPeriods[mergedPeriods.length - 1];
+        if (!lastMergedPeriod) return [currentPeriod];
+
+        const isMergeable = lastMergedPeriod.isFollowedBy(currentPeriod);
+        if (isMergeable) {
+          const mergedPeriod = lastMergedPeriod.mergeWith(currentPeriod);
+          return [...mergedPeriods.slice(0, -1), mergedPeriod];
+        }
+        mergedPeriods.push(currentPeriod);
+
+        return mergedPeriods;
+      },
+      [],
+    );
+  }
+
+  splitWithIntervalInMs(intervalInMs: number): Period[] {
+    const periodCount = Math.ceil(
+      (this.end.getTime() - this.start.getTime()) / intervalInMs,
+    );
+
+    return Array.from({ length: periodCount }, (_, index) => {
+      const start = new Date(this.start.getTime() + index * intervalInMs);
+      const end = new Date(start.getTime() + intervalInMs);
+      return Period.init({ start, end: end < this.end ? end : this.end });
+    });
+  }
+
+  static sort(periods: Period[]): Period[] {
+    return periods.sort(
+      (a, b) =>
+        a.start.getTime() - b.start.getTime() ||
+        a.end.getTime() - b.end.getTime(),
+    );
   }
 }

@@ -36,6 +36,7 @@ import {
   MANAGE_ADMINS,
   MANAGE_CONTRIBUTIONS,
   PAY_CONTRIBUTION,
+  VIEW_GEAR_SUMMARY,
 } from "./permissions";
 
 export type Permission =
@@ -44,6 +45,7 @@ export type Permission =
   | typeof BE_AFFECTED
   | typeof WRITE_GEAR_CATALOG
   | typeof READ_GEAR_CATALOG
+  | typeof VIEW_GEAR_SUMMARY
   | typeof READ_SIGNAGE_CATALOG
   | typeof WRITE_SIGNAGE_CATALOG
   | typeof VIEW_LOCATION
