@@ -51,10 +51,7 @@ export class SummaryGear {
     return stock - inquiry;
   }
 
-  private static findStockByDate(
-    gear: DatabaseGear,
-    date: Date,
-  ): number {
+  private static findStockByDate(gear: DatabaseGear, date: Date): number {
     console.log(date);
     // Date will be used in for purchase & loan sheets
     return gear.inventoryRecords.reduce(
