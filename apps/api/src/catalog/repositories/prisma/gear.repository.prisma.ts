@@ -8,7 +8,7 @@ import {
   SearchGear,
 } from "../../interfaces";
 
-export type DatabaseGear = {
+type DatabaseGear = {
   id: number;
   name: string;
   slug: string;

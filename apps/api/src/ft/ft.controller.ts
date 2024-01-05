@@ -28,24 +28,7 @@ import { RequestWithUserPayload } from "../../src/app.controller";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { StatsPayload } from "../../src/common/services/stats.service";
-import { ApproveGearRequestRequestDto } from "../gear-request/dto/approve-gear-request.request.dto";
-import {
-  ExistingPeriodGearRequestFormRequestDto,
-  GearRequestRequestDto,
-  NewPeriodGearRequestFormRequestDto,
-} from "../gear-request/dto/gear-request.request.dto";
-import {
-  ApprovedGearRequestResponseDto,
-  GearRequestResponseDto,
-} from "../gear-request/dto/gear-request.response.dto";
-import { UpdateGearRequestRequestDto } from "../gear-request/dto/update-gear-request.request.dto";
-import {
-  ApprovedGearRequest,
-  GearSeekerType,
-} from "../gear-request/gear-request.model";
-import { GearRequestService } from "../gear-request/gear-request.service";
-import { PeriodDto } from "../../src/volunteer-availability/dto/period.dto";
+import { StatsPayload } from "./stats.service";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { CreateFtRequestDto } from "./dto/create-ft.request.dto";
 import {
@@ -59,7 +42,6 @@ import { FtService } from "./ft.service";
 import { FtIdResponse } from "./ft-types";
 import { ReviewerResponseDto } from "./dto/reviewer.response.dto";
 import { ReviewerRequestDto } from "./dto/reviewer.request.dto";
-import { StatsResponseDto } from "../fa/dto/stats.response.dto";
 import { FollowingFtResponseDto } from "./dto/following-ft.response.dto";
 import {
   READ_FT,
@@ -67,6 +49,7 @@ import {
   VIEW_FESTIVAL_EVENTS_STATS,
   WRITE_FT,
 } from "@overbookd/permission";
+import { StatsResponseDto } from "./dto/stats.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("ft")
@@ -78,10 +61,7 @@ import {
 })
 @Controller("ft")
 export class FtController {
-  constructor(
-    private readonly ftService: FtService,
-    private readonly gearRequestService: GearRequestService,
-  ) {}
+  constructor(private readonly ftService: FtService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
@@ -263,207 +243,6 @@ export class FtController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<FtIdResponse | null> {
     return this.ftService.findNext(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
-  @Post(":id/gear-requests")
-  @ApiResponse({
-    status: 201,
-    description: "Creating a new gear request",
-    type: GearRequestResponseDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Task id",
-    required: true,
-  })
-  @ApiBody({ type: GearRequestRequestDto })
-  addGearRequest(
-    @Param("id", ParseIntPipe) id: number,
-    @Body()
-    gearRequestForm:
-      | NewPeriodGearRequestFormRequestDto
-      | ExistingPeriodGearRequestFormRequestDto,
-  ): Promise<GearRequestResponseDto> {
-    return this.gearRequestService.addTaskRequest({
-      ...gearRequestForm,
-      seekerId: id,
-    });
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FT)
-  @Get(":id/gear-requests")
-  @ApiResponse({
-    status: 200,
-    description: "Get task gear requests",
-    isArray: true,
-    type: GearRequestResponseDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Task id",
-    required: true,
-  })
-  getGearRequests(
-    @Param("id", ParseIntPipe) id: number,
-  ): Promise<GearRequestResponseDto[]> {
-    return this.gearRequestService.getTaskRequests(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
-  @Delete(":taskId/gear-requests/")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Delete gear requests on a dedicated period",
-  })
-  @ApiParam({
-    name: "taskId",
-    type: Number,
-    description: "Task id",
-    required: true,
-  })
-  @ApiBody({
-    type: PeriodDto,
-    description: "Period to remove gear requests on",
-    required: true,
-  })
-  async deleteGearRequests(
-    @Param("taskId", ParseIntPipe) taskId: number,
-    @Body() period: PeriodDto,
-  ): Promise<void> {
-    await this.gearRequestService.removeTaskRequests(taskId, period);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
-  @Delete(":taskId/gear-requests/:gearId/rental-period/:rentalPeriodId")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Gear request deleted",
-  })
-  @ApiParam({
-    name: "taskId",
-    type: Number,
-    description: "Task id",
-    required: true,
-  })
-  @ApiParam({
-    name: "gearId",
-    type: Number,
-    description: "Gear id",
-    required: true,
-  })
-  @ApiParam({
-    name: "rentalPeriodId",
-    type: Number,
-    description: "Rental period id",
-    required: true,
-  })
-  deleteGearRequest(
-    @Param("taskId", ParseIntPipe) taskId: number,
-    @Param("gearId", ParseIntPipe) gearId: number,
-    @Param("rentalPeriodId", ParseIntPipe) rentalPeriodId: number,
-  ): Promise<void> {
-    return this.gearRequestService.removeTaskRequest(
-      taskId,
-      gearId,
-      rentalPeriodId,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FT)
-  @Patch(":taskId/gear-requests/:gearId/rental-period/:rentalPeriodId")
-  @ApiResponse({
-    status: 200,
-    description: "Update an existing gear request",
-    type: GearRequestResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
-  @ApiParam({
-    name: "taskId",
-    type: Number,
-    description: "Task id",
-    required: true,
-  })
-  @ApiParam({
-    name: "gearId",
-    type: Number,
-    description: "Gear id",
-    required: true,
-  })
-  @ApiParam({
-    name: "rentalPeriodId",
-    type: Number,
-    description: "Rental period id",
-    required: true,
-  })
-  updateGearRequest(
-    @Param("taskId", ParseIntPipe) taskId: number,
-    @Param("gearId", ParseIntPipe) gearId: number,
-    @Param("rentalPeriodId", ParseIntPipe) rentalPeriodId: number,
-    @Body() gearRequestForm: UpdateGearRequestRequestDto,
-  ): Promise<GearRequestResponseDto> {
-    return this.gearRequestService.updateTaskRequest(
-      taskId,
-      gearId,
-      rentalPeriodId,
-      gearRequestForm,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FT)
-  @Patch(":taskId/gear-requests/:gearId/rental-period/:rentalPeriodId/approve")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Gear request approved",
-    type: ApprovedGearRequestResponseDto,
-  })
-  @ApiNotFoundResponse({
-    description: "Can't find a requested resource",
-  })
-  @ApiParam({
-    name: "taskId",
-    type: Number,
-    description: "Task id",
-    required: true,
-  })
-  @ApiParam({
-    name: "gearId",
-    type: Number,
-    description: "Gear id",
-    required: true,
-  })
-  @ApiParam({
-    name: "rentalPeriodId",
-    type: Number,
-    description: "Rental period id",
-    required: true,
-  })
-  approveGearRequest(
-    @Param("taskId", ParseIntPipe) taskId: number,
-    @Param("gearId", ParseIntPipe) gearId: number,
-    @Param("rentalPeriodId", ParseIntPipe) rentalPeriodId: number,
-    @Body() approveForm: ApproveGearRequestRequestDto,
-  ): Promise<ApprovedGearRequest> {
-    const gearRequestId = {
-      seeker: { type: GearSeekerType.Task, id: taskId },
-      gearId,
-      rentalPeriodId,
-    };
-    const { drive } = approveForm;
-    return this.gearRequestService.approveGearRequest(gearRequestId, drive);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

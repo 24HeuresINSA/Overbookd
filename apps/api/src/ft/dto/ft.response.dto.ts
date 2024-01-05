@@ -17,7 +17,6 @@ import {
   UserName,
   UserNameWithId,
 } from "../ft-types";
-import { FaStatus, faStatuses } from "../../fa/fa.model";
 import { SignaLocationRepresentation } from "../../signa-location/signa-location.model";
 import {
   FtFeedbackSubjectType,
@@ -25,6 +24,7 @@ import {
 } from "../../ft-feedback/ft-feedback.model";
 import { ReviewStatus, reviewStatuses } from "../../ft-review/ft-review.model";
 import { Team } from "../../team/team.model";
+import { FestivalActivity } from "@overbookd/festival-activity";
 
 class Author implements UserName {
   firstname: string;
@@ -92,8 +92,7 @@ class ReviewRepresentation implements Review {
 class MinimalFaRepresentation implements MinimalFa {
   id: number;
   name: string;
-  @ApiProperty({ enum: faStatuses })
-  status: FaStatus;
+  status: FestivalActivity["status"];
 }
 
 export class CompleteFtResponseDto implements CompleteFtResponse {

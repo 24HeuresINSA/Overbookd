@@ -33,7 +33,7 @@ export class TimelineService {
     const where = this.buildTimelineCondition(start, end);
     const select = this.buildTimelineSelection(start, end);
 
-    const timelines = await this.prisma.fa.findMany({
+    const timelines = await this.prisma.festivalActivity.findMany({
       where,
       select,
     });

@@ -44,9 +44,6 @@ model User {
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
 
-  faInCharge     Fa[]         @relation("in_charge")
-  oldFaFeedbacks FaFeedback[]
-
   ftsInCharge      Ft[]                    @relation("inCharge")
   ftFeedbacks      FtFeedback[]
   ftUserRequests   FtUserRequest[]
@@ -81,7 +78,6 @@ model Team {
   icon  String @default("mdi-circle") @db.VarChar(255)
 
   users              UserTeam[]
-  fa                 Fa[]
   ownedCategories    CatalogCategory[]  @relation("owner")
   ftRequests         FtTeamRequest[]
   ftReviews          FtReview[]
@@ -148,186 +144,14 @@ model Contribution {
   @@map("contribution")
 }
 
-enum FaStatus {
-  DRAFT
-  SUBMITTED
-  VALIDATED
-  REFUSED
-
-  @@map("fa_status")
-}
-
-model Fa {
-  id               Int                 @id @default(autoincrement())
-  name             String              @db.VarChar(255)
-  type             FaType?
-  userInCharge     User?               @relation(fields: [userInChargeId], references: [id], name: "in_charge")
-  userInChargeId   Int?                @map("user_in_charge_id")
-  team             Team?               @relation(fields: [teamCode], references: [code])
-  teamCode         String?             @map("team_code") @db.VarChar(20)
-  createdAt        DateTime?           @default(now()) @map("created_at")
-  location         SignaLocation?      @relation(fields: [locationId], references: [id])
-  locationId       Int?                @map("location_id")
-  status           FaStatus            @default(DRAFT)
-  description      String?             @db.Text
-  securityNeed     String?             @map("security_need") @db.Text
-  numberOfPass     Int?                @map("number_of_pass")
-  waterNeed        String?             @map("water_need") @db.Text
-  isDeleted        Boolean             @default(false) @map("is_deleted")
-  electricityNeeds FaElectricityNeed[]
-  signaNeeds       FaSignaNeed[]
-  feedbacks        FaFeedback[]
-  timeWindows      FaTimeWindow[]
-  gearRequests     GearRequest[]       @relation("gear-request-animation")
-  publicAnimation  PublicAnimation?
-  fts              Ft[]
-  collaborator     Collaborator?       @relation(fields: [collaboratorId], references: [id])
-  collaboratorId   Int?                @map("collaborator_id")
-
-  @@map("fa")
-}
-
-enum FaType {
-  Concert
-  Course
-  Divertissement
-  Initiation
-  Tournoi
-  Vente
-  Prevention
-  Spectacle
-  Autre
-
-  @@map("fa_type")
-}
-
 model SignaLocation {
   id                 Int                @id @default(autoincrement())
   name               String             @db.VarChar(255)
   geoJson            Json?              @map("geo_json")
-  fas                Fa[]
   fts                Ft[]
   festivalActivities FestivalActivity[]
 
   @@map("signa_location")
-}
-
-model Collaborator {
-  id        Int     @id @default(autoincrement())
-  firstname String  @db.VarChar(30)
-  lastname  String  @db.VarChar(30)
-  phone     String  @db.VarChar(30)
-  email     String? @db.VarChar(60)
-  company   String? @db.VarChar(30)
-  comment   String? @db.Text
-  fas       Fa[]
-
-  @@unique([firstname, lastname])
-  @@map("collaborator")
-}
-
-//A définir correctement plus tard, placeholder pour le moment
-enum ElectricityType {
-  PC16_Prise_classique
-  P17_16A_MONO
-  P17_16A_TRI
-  P17_16A_TETRA
-  P17_32A_MONO
-  P17_32A_TRI
-  P17_32A_TETRA
-  P17_63A_MONO
-  P17_63A_TRI
-  P17_63A_TETRA
-  P17_125A_TETRA
-
-  @@map("electricity_type")
-}
-
-model FaElectricityNeed {
-  id              Int             @id @default(autoincrement())
-  fa              Fa              @relation(fields: [faId], references: [id])
-  faId            Int             @map("fa_id")
-  electricityType ElectricityType @map("electricity_type")
-  device          String          @db.Text
-  power           Int             @default(1)
-  count           Int             @default(1)
-  comment         String?         @db.Text
-
-  @@map("fa_electricity_need")
-}
-
-enum SignaType {
-  BACHE
-  PANNEAU
-  AFFICHE
-
-  @@map("signa_type")
-}
-
-model FaSignaNeed {
-  id        Int       @id @default(autoincrement())
-  fa        Fa        @relation(fields: [faId], references: [id])
-  faId      Int       @map("fa_id")
-  signaType SignaType @map("signa_type")
-  text      String    @db.Text
-  count     Int       @default(1)
-  size      String?   @db.VarChar(50)
-  comment   String?   @db.Text
-
-  @@map("fa_signa_need")
-}
-
-enum FaFeedbackSubjectType {
-  REFUSED
-  SUBMIT
-  VALIDATED
-  COMMENT
-
-  @@map("fa_feedback_subject_type")
-}
-
-model FaFeedback {
-  id        Int                   @id @default(autoincrement())
-  fa        Fa                    @relation(fields: [faId], references: [id])
-  faId      Int                   @map("fa_id")
-  comment   String                @db.Text
-  subject   FaFeedbackSubjectType
-  author    User                  @relation(fields: [authorId], references: [id])
-  authorId  Int                   @map("author_id")
-  createdAt DateTime              @default(now()) @map("created_at")
-
-  @@map("fa_feedback")
-}
-
-model PublicAnimation {
-  fa          Fa                  @relation(fields: [faId], references: [id], onDelete: Cascade)
-  faId        Int                 @id @map("fa_id")
-  photoLink   String              @default("") @map("photo_link") @db.Text
-  description String              @default("") @db.Text
-  isFlagship  Boolean             @default(false) @map("is_flagship")
-  categories  AnimationCategory[]
-
-  @@map("public_animation")
-}
-
-enum AnimationCategory {
-  Divertissement
-  Culture
-  Sport
-  Enfant
-  Autre
-
-  @@map("animation_category")
-}
-
-model FaTimeWindow {
-  id    Int      @id @default(autoincrement())
-  fa    Fa       @relation(fields: [faId], references: [id])
-  faId  Int      @map("fa_id")
-  start DateTime
-  end   DateTime
-
-  @@map("fa_time_window")
 }
 
 model CatalogCategory {
@@ -350,7 +174,6 @@ model CatalogGear {
   slug             String            @unique
   categoryId       Int?              @map("category_id")
   category         CatalogCategory?  @relation("category", fields: [categoryId], references: [id])
-  requests         GearRequest[]     @relation("gear-request-gear")
   isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
   isConsumable     Boolean           @default(false) @map("is_consumable")
   inventoryRecords InventoryRecord[] @relation()
@@ -365,34 +188,6 @@ model Configuration {
   value Json
 
   @@map("configuration")
-}
-
-model Period {
-  id          Int           @id @default(autoincrement())
-  start       DateTime
-  end         DateTime
-  gearRequest GearRequest[] @relation("gear-request-rental-period")
-
-  @@index([start, end])
-  @@map("period")
-}
-
-model GearRequest {
-  animationId    Int?        @map("animation_id")
-  animation      Fa?         @relation("gear-request-animation", fields: [animationId], references: [id], onDelete: Cascade)
-  taskId         Int?        @map("task_id")
-  task           Ft?         @relation("gear-request-task", fields: [taskId], references: [id], onDelete: Cascade)
-  rentalPeriodId Int         @map("rental_period_id")
-  rentalPeriod   Period      @relation("gear-request-rental-period", fields: [rentalPeriodId], references: [id], onDelete: Cascade)
-  gearId         Int         @map("gear_id")
-  gear           CatalogGear @relation("gear-request-gear", fields: [gearId], references: [id], onDelete: Cascade)
-  quantity       Int
-  status         String
-  drive          String?
-
-  @@unique([gearId, rentalPeriodId])
-  @@index([status])
-  @@map("gear_request")
 }
 
 enum FtStatus {
@@ -416,29 +211,28 @@ enum TaskCategory {
 }
 
 model Ft {
-  id             Int            @id @default(autoincrement())
+  id             Int               @id @default(autoincrement())
   name           String
-  status         FtStatus       @default(DRAFT)
-  fa             Fa?            @relation(fields: [parentFaId], references: [id])
-  parentFaId     Int?           @map("parent_fa_id")
-  isStatic       Boolean        @default(false) @map("is_static")
-  description    String?        @db.Text
-  userInCharge   User?          @relation(fields: [userInChargeId], references: [id], name: "inCharge")
-  userInChargeId Int?           @map("user_in_charge_id")
-  team           Team?          @relation(fields: [teamCode], references: [code])
-  teamCode       String?        @map("team_code") @db.VarChar(20)
-  location       SignaLocation? @relation(fields: [locationId], references: [id])
-  locationId     Int?           @map("location_id")
-  isDeleted      Boolean        @default(false) @map("is_deleted")
-  reviewerId     Int?           @map("reviewer_id")
-  reviewer       User?          @relation("reviewer", fields: [reviewerId], references: [id])
-  hasPriority    Boolean?       @default(false) @map("has_priority")
+  status         FtStatus          @default(DRAFT)
+  fa             FestivalActivity? @relation(fields: [parentFaId], references: [id])
+  parentFaId     Int?              @map("parent_fa_id")
+  isStatic       Boolean           @default(false) @map("is_static")
+  description    String?           @db.Text
+  userInCharge   User?             @relation(fields: [userInChargeId], references: [id], name: "inCharge")
+  userInChargeId Int?              @map("user_in_charge_id")
+  team           Team?             @relation(fields: [teamCode], references: [code])
+  teamCode       String?           @map("team_code") @db.VarChar(20)
+  location       SignaLocation?    @relation(fields: [locationId], references: [id])
+  locationId     Int?              @map("location_id")
+  isDeleted      Boolean           @default(false) @map("is_deleted")
+  reviewerId     Int?              @map("reviewer_id")
+  reviewer       User?             @relation("reviewer", fields: [reviewerId], references: [id])
+  hasPriority    Boolean?          @default(false) @map("has_priority")
   category       TaskCategory?
 
-  feedbacks    FtFeedback[]
-  timeWindows  FtTimeWindow[]
-  reviews      FtReview[]
-  gearRequests GearRequest[]  @relation("gear-request-task")
+  feedbacks   FtFeedback[]
+  timeWindows FtTimeWindow[]
+  reviews     FtReview[]
 
   @@map("ft")
 }
@@ -608,7 +402,7 @@ model CatalogSignage {
   id                       Int                       @id @default(autoincrement())
   name                     String                    @db.VarChar(40)
   slug                     String                    @unique @db.VarChar(40)
-  type                     SignaType
+  type                     SignageType
   image                    String?
   festivalActivityRequests FestivalActivitySignage[]
 
@@ -630,6 +424,7 @@ model FestivalActivity {
   reviews   FestivalActivityReview[]
   feedbacks FestivalActivityFeedback[]
   events    FestivalActivityHistory[]
+  fts       Ft[]
 
   // General
   name               String                              @db.Text
