@@ -1,17 +1,25 @@
 <template>
   <div>
-    <v-data-table :headers="headers" :items="animations">
+    <v-data-table
+      :headers="headers"
+      :items="animations"
+      @click:row="openFa"
+      @auxclick:row="openFaInNewTab"
+    >
       <template #body="{ items }">
         <tbody>
           <template v-for="animation in items">
             <tr :key="animation.id">
               <th :rowspan="animation.timeWindows.length + 1">
-                <nuxt-link :to="`/fa/${animation.id}`" class="name-text">
-                  <v-chip-group>
-                    <v-chip small>{{ animation.id }}</v-chip>
-                  </v-chip-group>
-                  <v-label> - {{ animation.name }}</v-label>
-                </nuxt-link>
+                <v-chip-group id="status">
+                  <v-chip
+                    id="status"
+                    :class="animation.status.toLowerCase()"
+                    small
+                  >
+                    {{ animation.id }}
+                  </v-chip>
+                </v-chip-group>
               </th>
               <th
                 :rowspan="animation.timeWindows.length + 1"
@@ -108,6 +116,16 @@ export default defineComponent({
     sortTimeWindows(periods: IProvidePeriod[]): IProvidePeriod[] {
       const initPeriods = periods.map((period) => Period.init(period));
       return Period.sort(initPeriods);
+    },
+    openFa(fa: PreviewForCommunication, _: unknown, event: PointerEvent) {
+      if (event.ctrlKey) {
+        return this.openFaInNewTab(event, { item: fa });
+      }
+      this.$router.push({ path: `/fa/${fa.id}` });
+    },
+    openFaInNewTab(_: Event, { item: fa }: { item: PreviewForCommunication }) {
+      const activityRoute = this.$router.resolve({ path: `/fa/${fa.id}` });
+      window.open(activityRoute.href, "_blank");
     },
   },
 });

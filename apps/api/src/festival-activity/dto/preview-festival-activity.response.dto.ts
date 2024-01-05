@@ -175,6 +175,8 @@ export class PreviewForSecuResponseDto implements PreviewForSecu {
   freePass: PreviewForSecu["freePass"];
 }
 
+const statuses = [DRAFT, IN_REVIEW, VALIDATED, REFUSED];
+
 export class PreviewForCommunicationResponseDto
   implements PreviewForCommunication
 {
@@ -183,6 +185,12 @@ export class PreviewForCommunicationResponseDto
     type: Number,
   })
   id: PreviewForCommunication["id"];
+
+  @ApiProperty({
+    description: "The festival activity status",
+    enum: statuses,
+  })
+  status: PreviewForCommunication["status"];
 
   @ApiProperty({
     description: "The festival activity name",

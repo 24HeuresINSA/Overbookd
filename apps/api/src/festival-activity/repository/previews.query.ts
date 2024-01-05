@@ -22,6 +22,7 @@ export const IS_PUBLIC = {
 
 export const SELECT_PREVIEW_FOR_COMMUNICATION_DASHBOARD = {
   id: true,
+  status: true,
   name: true,
   generalTimeWindows: { select: { start: true, end: true, id: true } },
   description: true,

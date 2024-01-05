@@ -52,6 +52,7 @@ export type PreviewForSecu = {
 
 export type PreviewForCommunication = {
   id: FestivalActivity["id"];
+  status: FestivalActivity["status"];
   name: FestivalActivity["general"]["name"];
   timeWindows: FestivalActivity["general"]["timeWindows"];
   description: FestivalActivity["general"]["description"];
