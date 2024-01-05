@@ -1,32 +1,35 @@
 <template>
-  <div class="fa">
+  <div>
     <v-data-table :headers="headers" :items="animations">
       <template #body="{ items }">
         <tbody>
-          <template v-for="animation in items">
-            <tr :key="animation.id">
-              <th class="status" :rowspan="animation.timeWindows.length + 1">
-                <nuxt-link :to="`/fa/${animation.id}`">
-                  <v-chip :class="animation.status.toLowerCase()" small>
-                    {{ animation.id }}
-                  </v-chip>
+          <template v-for="activity in items">
+            <tr :key="activity.id">
+              <th class="fa" :rowspan="activity.timeWindows.length + 1">
+                <nuxt-link :to="`/fa/${activity.id}`" class="fa__link">
+                  <v-chip-group class="status">
+                    <v-chip :class="activity.status.toLowerCase()" small>
+                      {{ activity.id }}
+                    </v-chip>
+                  </v-chip-group>
+                  <v-label> - {{ activity.name }}</v-label>
                 </nuxt-link>
               </th>
               <th
-                :rowspan="animation.timeWindows.length + 1"
+                :rowspan="activity.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-btn icon :href="animation.photoLink" target="_blank">
+                <v-btn icon :href="activity.photoLink" target="_blank">
                   <v-icon large>mdi-camera</v-icon>
                 </v-btn>
               </th>
-              <td :rowspan="animation.timeWindows.length + 1">
-                <div v-safe-html="animation.description" />
+              <td :rowspan="activity.timeWindows.length + 1">
+                <div v-safe-html="activity.description" />
               </td>
-              <td :rowspan="animation.timeWindows.length + 1">
+              <td :rowspan="activity.timeWindows.length + 1">
                 <v-chip-group column>
                   <v-chip
-                    v-for="category in animation.categories"
+                    v-for="category in activity.categories"
                     :key="category"
                   >
                     {{ category }}
@@ -34,10 +37,10 @@
                 </v-chip-group>
               </td>
               <td
-                :rowspan="animation.timeWindows.length + 1"
+                :rowspan="activity.timeWindows.length + 1"
                 class="text-center"
               >
-                <v-icon v-if="animation.isFlagship" color="green" large>
+                <v-icon v-if="activity.isFlagship" color="green" large>
                   mdi-check-circle
                 </v-icon>
                 <v-icon v-else color="red" large>mdi-close-circle</v-icon>
@@ -45,10 +48,8 @@
             </tr>
 
             <tr
-              v-for="(timeWindow, index) in sortTimeWindows(
-                animation.timeWindows,
-              )"
-              :key="`${animation.id}-${timeWindow.start}-${timeWindow.end}-${index}`"
+              v-for="timeWindow in sortTimeWindows(activity.timeWindows)"
+              :key="timeWindow.id"
             >
               <td>
                 {{ formatDateWithMinutes(timeWindow.start) }}
@@ -66,9 +67,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { PreviewForCommunication } from "@overbookd/http";
-import { IProvidePeriod, Period } from "@overbookd/period";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
+import { TimeWindow } from "@overbookd/festival-activity";
 
 interface PublicAnimationsData {
   headers: Header[];
@@ -82,7 +83,6 @@ export default Vue.extend({
         {
           text: "FA",
           value: "fa",
-          width: "80px",
           sortable: false,
         },
         {
@@ -118,10 +118,27 @@ export default Vue.extend({
   },
   methods: {
     formatDateWithMinutes,
-    sortTimeWindows(periods: IProvidePeriod[]): IProvidePeriod[] {
-      const initPeriods = periods.map((period) => Period.init(period));
-      return Period.sort(initPeriods);
+    sortTimeWindows(timeWindows: TimeWindow[]): TimeWindow[] {
+      return [...timeWindows].sort(
+        (a, b) =>
+          a.start.getTime() - b.start.getTime() ||
+          a.end.getTime() - b.end.getTime(),
+      );
     },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.fa {
+  &__link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+
+    .v-label {
+      cursor: pointer;
+    }
+  }
+}
+</style>
