@@ -6,9 +6,11 @@ import {
   gearWithOneInquiryAndOneInventoryRecord,
   gearWithTwoInquiryAndTwoInventoryRecord,
   friday08hto09h30,
+  gearWithNoInquiryDetails,
 } from "./summary-gear.test-utils";
 import { SummaryGear } from "./summary-gear";
 import { gearWithOneInquiryAndOneInventoryRecordDetails } from "./summary-gear.test-utils";
+import { Period } from "@overbookd/period";
 
 describe("Summarize gear as preview", () => {
   describe.each`
@@ -40,12 +42,13 @@ describe("Summarize gear as preview", () => {
 describe("Summarize gear as details", () => {
   describe.each`
     gear                                       | period              | expectedDetails
+    ${gearWithNoInquiry}                       | ${friday08hto09h30} | ${gearWithNoInquiryDetails}
     ${gearWithOneInquiryAndOneInventoryRecord} | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordDetails}
   `(
     "when gear has $gear.inquiries.length inquiries and $gear.inventoryRecords.length inventory records",
     ({ gear, period, expectedDetails }) => {
       it(`should return details with ${expectedDetails.length} items`, () => {
-        const details = SummaryGear.generateDetails(gear, period);
+        const details = SummaryGear.generateDetails(gear, Period.init(period));
         expect(details).toEqual(expectedDetails);
       });
     },

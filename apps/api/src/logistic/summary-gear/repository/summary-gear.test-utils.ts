@@ -19,7 +19,7 @@ const friday10hto11h = {
 };
 export const friday08hto09h30 = {
   start: new Date("2024-05-17T08:00+02:00"),
-  end: new Date("2024-05-17T10:00+02:00"),
+  end: new Date("2024-05-17T09:30+02:00"),
 };
 const friday08hto08h15 = {
   start: new Date("2024-05-17T08:00+02:00"),
@@ -140,6 +140,14 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
   ],
 };
 
+export const gearWithNoInquiryDetails: SummaryGearDetails[] = [
+  { ...friday08hto08h15, activities: [], inventory: 0 },
+  { ...friday08h15to08h30, activities: [], inventory: 0 },
+  { ...friday08h30to08h45, activities: [], inventory: 0 },
+  { ...friday08h45to09h, activities: [], inventory: 0 },
+  { ...friday09hto09h15, activities: [], inventory: 0 },
+  { ...friday09h15to09h30, activities: [], inventory: 0 },
+];
 export const gearWithOneInquiryAndOneInventoryRecordDetails: SummaryGearDetails[] =
   [
     {

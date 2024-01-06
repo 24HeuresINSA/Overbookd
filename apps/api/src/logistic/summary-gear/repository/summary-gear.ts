@@ -95,14 +95,21 @@ export class SummaryGear {
     gear: DatabaseGear,
     start: Date,
   ): SummaryGearDetails["activities"] {
-    return gear.inquiries.reduce((total, inquiry) => {
+    return gear.inquiries.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),
       );
 
       return isIncluded
-        ? [...total, { id: inquiry.fa.id, name: inquiry.fa.name }]
-        : total;
+        ? [
+            ...activities,
+            {
+              id: inquiry.fa.id,
+              name: inquiry.fa.name,
+              quantity: inquiry.quantity,
+            },
+          ]
+        : activities;
     }, []);
   }
 }
