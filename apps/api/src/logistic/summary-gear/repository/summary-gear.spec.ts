@@ -6,10 +6,11 @@ import {
   gearWithOneInquiryAndOneInventoryRecord,
   gearWithTwoInquiryAndTwoInventoryRecord,
   friday08hto09h30,
-  gearWithNoInquiryDetails,
+  gearWithNoInquiryForGraph,
+  gearWithOneInquiryAndOneInventoryRecordForGraph,
+  gearWithTwoInquiryAndTwoInventoryRecordForGraph,
 } from "./summary-gear.test-utils";
 import { SummaryGear } from "./summary-gear";
-import { gearWithOneInquiryAndOneInventoryRecordDetails } from "./summary-gear.test-utils";
 import { Period } from "@overbookd/period";
 
 describe("Summarize gear as preview", () => {
@@ -39,17 +40,21 @@ describe("Summarize gear as preview", () => {
   );
 });
 
-describe("Summarize gear as details", () => {
+describe("Summarize gear for graph", () => {
   describe.each`
-    gear                                       | period              | expectedDetails
-    ${gearWithNoInquiry}                       | ${friday08hto09h30} | ${gearWithNoInquiryDetails}
-    ${gearWithOneInquiryAndOneInventoryRecord} | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordDetails}
+    gear                                       | period              | expectedData
+    ${gearWithNoInquiry}                       | ${friday08hto09h30} | ${gearWithNoInquiryForGraph}
+    ${gearWithOneInquiryAndOneInventoryRecord} | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordForGraph}
+    ${gearWithTwoInquiryAndTwoInventoryRecord} | ${friday08hto09h30} | ${gearWithTwoInquiryAndTwoInventoryRecordForGraph}
   `(
     "when gear has $gear.inquiries.length inquiries and $gear.inventoryRecords.length inventory records",
-    ({ gear, period, expectedDetails }) => {
-      it(`should return details with ${expectedDetails.length} items`, () => {
-        const details = SummaryGear.generateDetails(gear, Period.init(period));
-        expect(details).toEqual(expectedDetails);
+    ({ gear, period, expectedData }) => {
+      it(`should return gear for graph with ${expectedData.length} periods`, () => {
+        const gearForGraph = SummaryGear.generateForGraph(
+          gear,
+          Period.init(period),
+        );
+        expect(gearForGraph).toEqual(expectedData);
       });
     },
   );

@@ -1,12 +1,12 @@
 import { FestivalActivity } from "@overbookd/festival-activity";
 
-export interface SummaryGearPreview {
+export type SummaryGearPreview = {
   id: number;
   name: string;
   slug: string;
   isConsumable: boolean;
   stockDiscrepancy: number;
-}
+};
 
 export type ActivityInquiry = {
   id: FestivalActivity["id"];
@@ -14,9 +14,18 @@ export type ActivityInquiry = {
   quantity: number;
 };
 
-export interface SummaryGearDetails {
-  start: Date;
-  end: Date;
+export type SummaryGearDetails = {
   activities: ActivityInquiry[];
   inventory: number;
-}
+};
+
+type WithDetails = {
+  details: SummaryGearDetails;
+};
+
+export type SummaryGearForGraph = WithDetails & {
+  start: Date;
+  end: Date;
+  inquiry: number;
+  stock: number;
+};

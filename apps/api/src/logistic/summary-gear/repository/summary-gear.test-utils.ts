@@ -1,4 +1,4 @@
-import { SummaryGearDetails } from "@overbookd/http";
+import { SummaryGearForGraph } from "@overbookd/http";
 import {
   DatabaseGear,
   DatabaseInquiry,
@@ -140,44 +140,143 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
   ],
 };
 
-export const gearWithNoInquiryDetails: SummaryGearDetails[] = [
-  { ...friday08hto08h15, activities: [], inventory: 0 },
-  { ...friday08h15to08h30, activities: [], inventory: 0 },
-  { ...friday08h30to08h45, activities: [], inventory: 0 },
-  { ...friday08h45to09h, activities: [], inventory: 0 },
-  { ...friday09hto09h15, activities: [], inventory: 0 },
-  { ...friday09h15to09h30, activities: [], inventory: 0 },
+const emptyGearForGraphWithoutPeriod = {
+  stock: 0,
+  inquiry: 0,
+  details: { activities: [], inventory: 0 },
+};
+export const gearWithNoInquiryForGraph: SummaryGearForGraph[] = [
+  { ...friday08hto08h15, ...emptyGearForGraphWithoutPeriod },
+  { ...friday08h15to08h30, ...emptyGearForGraphWithoutPeriod },
+  { ...friday08h30to08h45, ...emptyGearForGraphWithoutPeriod },
+  { ...friday08h45to09h, ...emptyGearForGraphWithoutPeriod },
+  { ...friday09hto09h15, ...emptyGearForGraphWithoutPeriod },
+  { ...friday09h15to09h30, ...emptyGearForGraphWithoutPeriod },
 ];
-export const gearWithOneInquiryAndOneInventoryRecordDetails: SummaryGearDetails[] =
+export const gearWithOneInquiryAndOneInventoryRecordForGraph: SummaryGearForGraph[] =
   [
     {
       ...friday08hto08h15,
-      activities: [{ ...escapeGameActivity, quantity: 10 }],
-      inventory: 25,
+      stock: 25,
+      inquiry: 10,
+      details: {
+        activities: [{ ...escapeGameActivity, quantity: 10 }],
+        inventory: 25,
+      },
     },
     {
       ...friday08h15to08h30,
-      activities: [{ ...escapeGameActivity, quantity: 10 }],
-      inventory: 25,
+      stock: 25,
+      inquiry: 10,
+      details: {
+        activities: [{ ...escapeGameActivity, quantity: 10 }],
+        inventory: 25,
+      },
     },
     {
       ...friday08h30to08h45,
-      activities: [{ ...escapeGameActivity, quantity: 10 }],
-      inventory: 25,
+      stock: 25,
+      inquiry: 10,
+      details: {
+        activities: [{ ...escapeGameActivity, quantity: 10 }],
+        inventory: 25,
+      },
     },
     {
       ...friday08h45to09h,
-      activities: [{ ...escapeGameActivity, quantity: 10 }],
-      inventory: 25,
+      stock: 25,
+      inquiry: 10,
+      details: {
+        activities: [{ ...escapeGameActivity, quantity: 10 }],
+        inventory: 25,
+      },
     },
     {
       ...friday09hto09h15,
-      activities: [],
-      inventory: 25,
+      stock: 25,
+      inquiry: 0,
+      details: {
+        activities: [],
+        inventory: 25,
+      },
     },
     {
       ...friday09h15to09h30,
-      activities: [],
-      inventory: 25,
+      stock: 25,
+      inquiry: 0,
+      details: {
+        activities: [],
+        inventory: 25,
+      },
+    },
+  ];
+
+export const gearWithTwoInquiryAndTwoInventoryRecordForGraph: SummaryGearForGraph[] =
+  [
+    {
+      ...friday08hto08h15,
+      stock: 30,
+      inquiry: 40,
+      details: {
+        activities: [
+          { ...escapeGameActivity, quantity: 10 },
+          { ...justeDanceActivity, quantity: 30 },
+        ],
+        inventory: 30,
+      },
+    },
+    {
+      ...friday08h15to08h30,
+      stock: 30,
+      inquiry: 40,
+      details: {
+        activities: [
+          { ...escapeGameActivity, quantity: 10 },
+          { ...justeDanceActivity, quantity: 30 },
+        ],
+        inventory: 30,
+      },
+    },
+    {
+      ...friday08h30to08h45,
+      stock: 30,
+      inquiry: 40,
+      details: {
+        activities: [
+          { ...escapeGameActivity, quantity: 10 },
+          { ...justeDanceActivity, quantity: 30 },
+        ],
+        inventory: 30,
+      },
+    },
+    {
+      ...friday08h45to09h,
+      stock: 30,
+      inquiry: 40,
+      details: {
+        activities: [
+          { ...escapeGameActivity, quantity: 10 },
+          { ...justeDanceActivity, quantity: 30 },
+        ],
+        inventory: 30,
+      },
+    },
+    {
+      ...friday09hto09h15,
+      stock: 30,
+      inquiry: 0,
+      details: {
+        activities: [],
+        inventory: 30,
+      },
+    },
+    {
+      ...friday09h15to09h30,
+      stock: 30,
+      inquiry: 0,
+      details: {
+        activities: [],
+        inventory: 30,
+      },
     },
   ];

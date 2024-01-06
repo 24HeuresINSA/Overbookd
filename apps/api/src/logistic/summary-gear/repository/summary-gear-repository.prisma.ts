@@ -1,4 +1,4 @@
-import { SummaryGearDetails, SummaryGearPreview } from "@overbookd/http";
+import { SummaryGearForGraph, SummaryGearPreview } from "@overbookd/http";
 import { PrismaService } from "../../../prisma.service";
 import { SummaryGears } from "../summary-gear.service";
 import { SELECT_GEAR } from "./summary-gear.query";
@@ -15,11 +15,11 @@ export class PrismaSummaryGears implements SummaryGears {
     return gears.map(SummaryGear.generatePreview);
   }
 
-  async findOne(slug: string, period: Period): Promise<SummaryGearDetails[]> {
+  async findOne(slug: string, period: Period): Promise<SummaryGearForGraph[]> {
     const gears = await this.prisma.catalogGear.findUnique({
       where: { slug },
       select: SELECT_GEAR,
     });
-    return SummaryGear.generateDetails(gears, period);
+    return SummaryGear.generateForGraph(gears, period);
   }
 }

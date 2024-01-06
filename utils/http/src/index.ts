@@ -14,5 +14,6 @@ export type { OfferMeal } from "./shared-meal.model";
 export type {
   ActivityInquiry,
   SummaryGearDetails,
+  SummaryGearForGraph,
   SummaryGearPreview,
 } from "./summary-gear.model";

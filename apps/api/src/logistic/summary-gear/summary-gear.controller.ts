@@ -14,8 +14,8 @@ import { Permission } from "../../authentication/permissions-auth.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { SummaryGearPreviewResponseDto } from "./dto/summary-gear-preview.response.dto";
-import { SummaryGearDetails, SummaryGearPreview } from "@overbookd/http";
-import { SummaryGearDetailsResponseDto } from "./dto/summary-gear-details.response.dto";
+import { SummaryGearForGraph, SummaryGearPreview } from "@overbookd/http";
+import { SummaryGearForGraphResponseDto } from "./dto/summary-gear-for-graph.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("logistic/summary-gears")
@@ -44,11 +44,11 @@ export class SummaryGearController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VIEW_GEAR_SUMMARY)
-  @Get(":slug")
+  @Get(":slug/for-graph")
   @ApiResponse({
     status: 200,
-    description: "Get gear details",
-    type: SummaryGearDetailsResponseDto,
+    description: "Get gear for graph",
+    type: SummaryGearForGraphResponseDto,
     isArray: true,
   })
   @ApiParam({
@@ -70,7 +70,7 @@ export class SummaryGearController {
     @Param("slug") slug: string,
     @Query("start") start: Date,
     @Query("end") end: Date,
-  ): Promise<SummaryGearDetails[]> {
+  ): Promise<SummaryGearForGraph[]> {
     return this.summaryGearService.findOne(slug, start, end);
   }
 }
