@@ -1,9 +1,10 @@
-import { Controller, Get, Param, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, Query, UseGuards } from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiForbiddenResponse,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
@@ -44,18 +45,32 @@ export class SummaryGearController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VIEW_GEAR_SUMMARY)
   @Get(":slug")
-  @ApiParam({
-    name: "slug",
-    type: String,
-    description: "Gear slug",
-  })
   @ApiResponse({
     status: 200,
     description: "Get gear details",
     type: SummaryGearDetailsResponseDto,
     isArray: true,
   })
-  findOne(@Param("slug") slug: string): Promise<SummaryGearDetails[]> {
-    return this.summaryGearService.findOne(slug);
+  @ApiParam({
+    name: "slug",
+    type: String,
+    description: "Gear slug",
+  })
+  @ApiQuery({
+    name: "start",
+    required: true,
+    type: Date,
+  })
+  @ApiQuery({
+    name: "end",
+    required: true,
+    type: Date,
+  })
+  findOne(
+    @Param("slug") slug: string,
+    @Query("start") start: Date,
+    @Query("end") end: Date,
+  ): Promise<SummaryGearDetails[]> {
+    return this.summaryGearService.findOne(slug, start, end);
   }
 }

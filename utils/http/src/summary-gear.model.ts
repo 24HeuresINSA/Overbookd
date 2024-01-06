@@ -14,13 +14,9 @@ export type ActivityInquiry = {
   quantity: number;
 };
 
-export type InventoryRecord = {
-  quantity: number;
-};
-
 export interface SummaryGearDetails {
   start: Date;
   end: Date;
   activities: ActivityInquiry[];
-  inventoryRecords: InventoryRecord[];
+  inventory: number;
 }

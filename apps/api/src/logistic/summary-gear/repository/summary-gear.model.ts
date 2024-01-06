@@ -1,4 +1,4 @@
-import { InventoryRecord } from "@overbookd/http";
+import { FestivalActivity } from "@overbookd/festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 
 type BaseDatabaseGear = {
@@ -8,13 +8,23 @@ type BaseDatabaseGear = {
   isConsumable: boolean;
 };
 
+export type InventoryRecord = {
+  quantity: number;
+};
+
 type WithDatabaseInventory = {
   inventoryRecords: InventoryRecord[];
 };
 
+type DatabaseActivity = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  inquiryTimeWindows: IProvidePeriod[];
+};
+
 export type DatabaseInquiry = {
   quantity: number;
-  fa: { inquiryTimeWindows: IProvidePeriod[] };
+  fa: DatabaseActivity;
 };
 
 type WithDatabaseInquiries = {

@@ -16,9 +16,19 @@ export class SummaryGear {
     };
   }
 
-  public static generateDetails(gear: DatabaseGear): SummaryGearDetails[] {
-    console.log("generateDetails", gear);
-    return [];
+  public static generateDetails(
+    gear: DatabaseGear,
+    period: Period,
+  ): SummaryGearDetails[] {
+    const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
+    return periods.map(({ start, end }) => {
+      return {
+        start,
+        end,
+        activities: this.findActivitiesByDate(gear, start),
+        inventory: this.findInventoryQuantity(gear),
+      };
+    });
   }
 
   private static computeStockDiscrepancyOn(gear: DatabaseGear): number {
@@ -58,6 +68,10 @@ export class SummaryGear {
 
   private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {
     // Date will be used in for purchase & loan sheets
+    return this.findInventoryQuantity(gear);
+  }
+
+  private static findInventoryQuantity(gear: DatabaseGear): number {
     return gear.inventoryRecords.reduce(
       (total, { quantity }) => total + quantity,
       0,
@@ -75,5 +89,20 @@ export class SummaryGear {
 
       return isIncluded ? total + inquiry.quantity : total;
     }, 0);
+  }
+
+  private static findActivitiesByDate(
+    gear: DatabaseGear,
+    start: Date,
+  ): SummaryGearDetails["activities"] {
+    return gear.inquiries.reduce((total, inquiry) => {
+      const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
+        Period.init(period).isIncluding(start),
+      );
+
+      return isIncluded
+        ? [...total, { id: inquiry.fa.id, name: inquiry.fa.name }]
+        : total;
+    }, []);
   }
 }

@@ -1,10 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-activity";
-import {
-  ActivityInquiry,
-  InventoryRecord,
-  SummaryGearDetails,
-} from "@overbookd/http";
+import { ActivityInquiry, SummaryGearDetails } from "@overbookd/http";
 
 class ActivityInquiryResponseDto implements ActivityInquiry {
   @ApiProperty({ type: Number })
@@ -13,11 +9,6 @@ class ActivityInquiryResponseDto implements ActivityInquiry {
   @ApiProperty({ type: String })
   name: FestivalActivity["general"]["name"];
 
-  @ApiProperty({ type: Number })
-  quantity: number;
-}
-
-class InventoryRecordResponseDto implements InventoryRecord {
   @ApiProperty({ type: Number })
   quantity: number;
 }
@@ -35,9 +26,6 @@ export class SummaryGearDetailsResponseDto implements SummaryGearDetails {
   })
   activities: ActivityInquiry[];
 
-  @ApiProperty({
-    type: InventoryRecordResponseDto,
-    isArray: true,
-  })
-  inventoryRecords: InventoryRecord[];
+  @ApiProperty({ type: Number })
+  inventory: number;
 }

@@ -1,34 +1,82 @@
-import { InventoryRecord } from "@overbookd/http";
-import { DatabaseGear, DatabaseInquiry } from "./summary-gear.model";
+import { SummaryGearDetails } from "@overbookd/http";
+import {
+  DatabaseGear,
+  DatabaseInquiry,
+  InventoryRecord,
+} from "./summary-gear.model";
 
 const friday08hto09h = {
-  start: new Date("2023-05-19T08:00+02:00"),
-  end: new Date("2023-05-19T09:00+02:00"),
+  start: new Date("2024-05-17T08:00+02:00"),
+  end: new Date("2024-05-17T09:00+02:00"),
 };
 const friday09hto10h = {
-  start: new Date("2023-05-19T09:00+02:00"),
-  end: new Date("2023-05-19T10:00+02:00"),
+  start: new Date("2024-05-17T09:00+02:00"),
+  end: new Date("2024-05-17T10:00+02:00"),
 };
 const friday10hto11h = {
-  start: new Date("2023-05-19T10:00+02:00"),
-  end: new Date("2023-05-19T11:00+02:00"),
+  start: new Date("2024-05-17T10:00+02:00"),
+  end: new Date("2024-05-17T11:00+02:00"),
+};
+export const friday08hto09h30 = {
+  start: new Date("2024-05-17T08:00+02:00"),
+  end: new Date("2024-05-17T10:00+02:00"),
+};
+const friday08hto08h15 = {
+  start: new Date("2024-05-17T08:00+02:00"),
+  end: new Date("2024-05-17T08:15+02:00"),
+};
+const friday08h15to08h30 = {
+  start: new Date("2024-05-17T08:15+02:00"),
+  end: new Date("2024-05-17T08:30+02:00"),
+};
+const friday08h30to08h45 = {
+  start: new Date("2024-05-17T08:30+02:00"),
+  end: new Date("2024-05-17T08:45+02:00"),
+};
+const friday08h45to09h = {
+  start: new Date("2024-05-17T08:45+02:00"),
+  end: new Date("2024-05-17T09:00+02:00"),
+};
+const friday09hto09h15 = {
+  start: new Date("2024-05-17T09:00+02:00"),
+  end: new Date("2024-05-17T09:15+02:00"),
+};
+const friday09h15to09h30 = {
+  start: new Date("2024-05-17T09:15+02:00"),
+  end: new Date("2024-05-17T09:30+02:00"),
+};
+
+const escapeGameActivity = {
+  id: 1,
+  name: "Escape Game",
+};
+const pcSecuActivity = {
+  id: 2,
+  name: "PC Secu",
+};
+const justeDanceActivity = {
+  id: 3,
+  name: "Juste Dance",
 };
 
 const inquiryFromFriday08hto09h: DatabaseInquiry = {
   quantity: 10,
   fa: {
+    ...escapeGameActivity,
     inquiryTimeWindows: [friday08hto09h],
   },
 };
 const inquiryFromFriday09hto10h: DatabaseInquiry = {
   quantity: 20,
   fa: {
+    ...pcSecuActivity,
     inquiryTimeWindows: [friday09hto10h],
   },
 };
 const inquiryFromFriday08hto09hAnd10hto12h: DatabaseInquiry = {
   quantity: 30,
   fa: {
+    ...justeDanceActivity,
     inquiryTimeWindows: [friday08hto09h, friday10hto11h],
   },
 };
@@ -91,3 +139,37 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
     inventoryRecordWith25Quantity,
   ],
 };
+
+export const gearWithOneInquiryAndOneInventoryRecordDetails: SummaryGearDetails[] =
+  [
+    {
+      ...friday08hto08h15,
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
+    },
+    {
+      ...friday08h15to08h30,
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
+    },
+    {
+      ...friday08h30to08h45,
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
+    },
+    {
+      ...friday08h45to09h,
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
+    },
+    {
+      ...friday09hto09h15,
+      activities: [],
+      inventory: 25,
+    },
+    {
+      ...friday09h15to09h30,
+      activities: [],
+      inventory: 25,
+    },
+  ];
