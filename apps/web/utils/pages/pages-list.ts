@@ -21,6 +21,7 @@ import {
   WRITE_INVENTORY,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_ADMINS,
+  SHOTGUN_SHARED_MEAL,
 } from "@overbookd/permission";
 
 export interface Page {
@@ -65,6 +66,22 @@ export const pages: Page[] = [
       "persos",
       "consos",
       "consomations",
+    ],
+  },
+  {
+    icon: "mdi-food-variant",
+    title: "Repas partagés",
+    permission: SHOTGUN_SHARED_MEAL,
+    to: "/shared-meals",
+    description: "Page pour proposer et shotgun des repas partagés",
+    mobileSupport: true,
+    keywords: [
+      "repas-partages",
+      "shotguns",
+      "comptes",
+      "persos",
+      "menus",
+      "repas-orgas",
     ],
   },
   {

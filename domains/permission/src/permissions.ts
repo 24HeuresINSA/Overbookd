@@ -38,6 +38,8 @@ export const VIEW_DELETED_FT = "view-deleted-ft";
 export const MANAGE_ADMINS = "manage-admins";
 export const MANAGE_CONTRIBUTIONS = "manage-contributions";
 export const PAY_CONTRIBUTION = "pay-contribution";
+export const OFFER_SHARED_MEAL = "offer-shared-meal";
+export const SHOTGUN_SHARED_MEAL = "shotgun-shared-meal";
 
 const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -78,6 +80,8 @@ const permissions = [
   MANAGE_ADMINS,
   MANAGE_CONTRIBUTIONS,
   PAY_CONTRIBUTION,
+  OFFER_SHARED_MEAL,
+  SHOTGUN_SHARED_MEAL,
 ];
 
 export function isPermission(permission: string): permission is Permission {
