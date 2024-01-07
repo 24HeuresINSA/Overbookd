@@ -13,3 +13,5 @@ export {
   FESTIVAL_ACTIVITY_READY_TO_REVIEW,
   FESTIVAL_ACTIVITY_REJECTED,
 } from "./festival-activity";
+export type { SharedMealClosedEvent } from "./shared-meal";
+export { SHARED_MEAL_CLOSED } from "./shared-meal";

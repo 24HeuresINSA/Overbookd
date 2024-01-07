@@ -27,3 +27,4 @@ export type {
 export { Payor } from "./transfer/payor";
 export type { CreateTransferForm, TransferForm } from "./transfer/payor";
 export { TransferError } from "./transfer/transfer.error";
+export { SharedMeal as SharedMealPayment } from "./shared-meal/shared-meal";

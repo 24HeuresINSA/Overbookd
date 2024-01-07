@@ -7,7 +7,7 @@ export type {
   IAlertAboutPersonalAccount,
   Summary,
 } from "./alerting/personal-account-alert";
-export { Payor, Transfer } from "./transaction";
+export { Payor, Transfer, SharedMealPayment } from "./transaction";
 export type {
   CreateTransferForm,
   Member,
@@ -23,6 +23,7 @@ export type {
   BarrelTransaction,
   ProvisionsTransaction,
   TransactionUser,
+  SharedMealTransaction,
 } from "./transaction";
 export {
   BARREL,

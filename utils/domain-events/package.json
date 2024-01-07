@@ -29,9 +29,10 @@
     "test:unit:ci": "echo 'No tests'"
   },
   "dependencies": {
-    "@overbookd/registration": "workspace:^",
     "@overbookd/event": "workspace:^",
     "@overbookd/festival-activity": "workspace:^",
+    "@overbookd/personal-account": "workspace:^",
+    "@overbookd/registration": "workspace:^",
     "rxjs": "7.8.1"
   },
   "keywords": [

@@ -10,6 +10,7 @@ import {
   Created,
   ReadyToReview,
   Rejected,
+  SHARED_MEAL_CLOSED,
 } from "@overbookd/domain-events";
 import {
   ADHERENT_REGISTERED,
@@ -17,6 +18,7 @@ import {
   VOLUNTEER_REGISTERED,
   VolunteerRegistered,
 } from "@overbookd/registration";
+import { PastSharedMeal } from "@overbookd/personal-account";
 
 export class DomainEventService {
   private readonly $events = new ReplaySubject<DomainEvent>();
@@ -71,5 +73,9 @@ export class DomainEventService {
     return this.listen(FESTIVAL_ACTIVITY_REJECTED).pipe(
       map(({ data }) => data),
     );
+  }
+
+  get closedShatedMeal(): Observable<PastSharedMeal> {
+    return this.listen(SHARED_MEAL_CLOSED).pipe(map(({ data }) => data));
   }
 }

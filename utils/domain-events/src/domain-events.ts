@@ -1,14 +1,15 @@
+import { Observable, filter } from "rxjs";
 import type {
   AdherentRegisteredEvent,
   VolunteerRegisteredEvent,
 } from "@overbookd/registration";
-import { Observable, filter } from "rxjs";
-import {
+import type {
   FestivalActivityCreatedEvent,
   FestivalActivityApprovedEvent,
   FestivalActivityReadyToReviewEvent,
   FestivalActivityRejectedEvent,
 } from "./festival-activity";
+import type { SharedMealClosedEvent } from "./shared-meal";
 
 export type DomainEvent =
   | AdherentRegisteredEvent
@@ -16,7 +17,8 @@ export type DomainEvent =
   | FestivalActivityCreatedEvent
   | FestivalActivityReadyToReviewEvent
   | FestivalActivityApprovedEvent
-  | FestivalActivityRejectedEvent;
+  | FestivalActivityRejectedEvent
+  | SharedMealClosedEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
   type: T,
