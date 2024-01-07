@@ -14,7 +14,7 @@ export class MealSharingRepository {
     );
   }
 
-  static find(context: Context, mealId: number) {
+  static find(context: Context, mealId: SharedMeal["id"]) {
     return context.$axios.get<HttpStringified<SharedMeal>>(
       `${this.basePath}/${mealId}`,
     );
@@ -22,5 +22,11 @@ export class MealSharingRepository {
 
   static all(context: Context) {
     return context.$axios.get<HttpStringified<SharedMeal[]>>(this.basePath);
+  }
+
+  static shotgun(context: Context, mealId: SharedMeal["id"]) {
+    return context.$axios.post<HttpStringified<SharedMeal>>(
+      `${this.basePath}/${mealId}/shotgun`,
+    );
   }
 }

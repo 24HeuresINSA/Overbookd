@@ -21,17 +21,11 @@
       </div>
 
       <div class="shotgun">
-        <span class="shotgun__numbers">{{ shared.shotgunCount }} convives</span>
-        <v-btn
-          v-if="hasShotgun"
-          class="shotgun__action"
-          color="primary"
-          dark
-          large
-        >
-          Partager <v-icon right>mdi-share</v-icon>
-        </v-btn>
-        <v-btn v-else class="shotgun__action" color="primary" dark large>
+        <span>
+          {{ shared.shotgunCount }} {{ guests }}
+          <span v-show="hasShotgun"> (dont toi)</span>
+        </span>
+        <v-btn color="primary" large :disabled="hasShotgun" @click="shotgun">
           Shotgun <v-icon right>mdi-account-multiple-plus</v-icon>
         </v-btn>
       </div>
@@ -41,7 +35,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Adherent, SharedMeal } from "@overbookd/personal-account";
+import {
+  Adherent,
+  OnGoingSharedMealBuilder,
+  SharedMeal,
+} from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
 
 export default defineComponent({
@@ -58,13 +56,24 @@ export default defineComponent({
       const { id, ...me } = this.$accessor.user.me;
       return { id, name: nicknameOrName(me) };
     },
+    guests(): string {
+      return this.shared.shotgunCount > 1 ? "convives" : "convive";
+    },
     hasShotgun(): boolean {
-      return false;
+      return this.builder.hasShotgun(this.me.id);
+    },
+    builder(): OnGoingSharedMealBuilder {
+      return OnGoingSharedMealBuilder.build(this.shared);
     },
     chefPersonalData() {
       return this.$accessor.user.users.find(
         ({ id }) => id === this.$accessor.mealSharing.sharedMeal?.chef.id,
       );
+    },
+  },
+  methods: {
+    shotgun(): void {
+      this.$accessor.mealSharing.shotgun(this.shared.id);
     },
   },
 });
