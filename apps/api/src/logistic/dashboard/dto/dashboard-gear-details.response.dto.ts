@@ -2,8 +2,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-activity";
 import {
   ActivityInquiry,
-  SummaryGearDetails,
-  SummaryGearForGraph,
+  DashboardGearDetails,
+  DashboardGearForGraph,
 } from "@overbookd/http";
 
 class ActivityInquiryResponseDto implements ActivityInquiry {
@@ -17,7 +17,7 @@ class ActivityInquiryResponseDto implements ActivityInquiry {
   quantity: number;
 }
 
-class SummaryGearDetailsResponseDto implements SummaryGearDetails {
+class DashboardGearDetailsResponseDto implements DashboardGearDetails {
   @ApiProperty({
     type: ActivityInquiryResponseDto,
     isArray: true,
@@ -28,7 +28,7 @@ class SummaryGearDetailsResponseDto implements SummaryGearDetails {
   inventory: number;
 }
 
-export class SummaryGearForGraphResponseDto implements SummaryGearForGraph {
+export class DashboardGearForGraphResponseDto implements DashboardGearForGraph {
   @ApiProperty({ type: Date })
   start: Date;
 
@@ -41,6 +41,6 @@ export class SummaryGearForGraphResponseDto implements SummaryGearForGraph {
   @ApiProperty({ type: Number })
   stock: number;
 
-  @ApiProperty({ type: SummaryGearDetailsResponseDto })
-  details: SummaryGearDetails;
+  @ApiProperty({ type: DashboardGearDetailsResponseDto })
+  details: DashboardGearDetails;
 }

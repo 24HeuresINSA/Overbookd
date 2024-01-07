@@ -1,9 +1,9 @@
-import { SummaryGearForGraph } from "@overbookd/http";
+import { DashboardGearForGraph } from "@overbookd/http";
 import {
   DatabaseGear,
   DatabaseInquiry,
   InventoryRecord,
-} from "./summary-gear.model";
+} from "./dashboard.model";
 
 const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),
@@ -145,7 +145,7 @@ const emptyGearForGraphWithoutPeriod = {
   inquiry: 0,
   details: { activities: [], inventory: 0 },
 };
-export const gearWithNoInquiryForGraph: SummaryGearForGraph[] = [
+export const gearWithNoInquiryForGraph: DashboardGearForGraph[] = [
   { ...friday08hto08h15, ...emptyGearForGraphWithoutPeriod },
   { ...friday08h15to08h30, ...emptyGearForGraphWithoutPeriod },
   { ...friday08h30to08h45, ...emptyGearForGraphWithoutPeriod },
@@ -153,7 +153,7 @@ export const gearWithNoInquiryForGraph: SummaryGearForGraph[] = [
   { ...friday09hto09h15, ...emptyGearForGraphWithoutPeriod },
   { ...friday09h15to09h30, ...emptyGearForGraphWithoutPeriod },
 ];
-export const gearWithOneInquiryAndOneInventoryRecordForGraph: SummaryGearForGraph[] =
+export const gearWithOneInquiryAndOneInventoryRecordForGraph: DashboardGearForGraph[] =
   [
     {
       ...friday08hto08h15,
@@ -211,7 +211,7 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: SummaryGearForGrap
     },
   ];
 
-export const gearWithTwoInquiryAndTwoInventoryRecordForGraph: SummaryGearForGraph[] =
+export const gearWithTwoInquiryAndTwoInventoryRecordForGraph: DashboardGearForGraph[] =
   [
     {
       ...friday08hto08h15,

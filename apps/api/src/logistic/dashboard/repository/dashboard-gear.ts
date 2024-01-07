@@ -1,15 +1,15 @@
 import {
-  SummaryGearDetails,
-  SummaryGearForGraph,
-  SummaryGearPreview,
+  DashboardGearDetails,
+  DashboardGearForGraph,
+  DashboardGearPreview,
 } from "@overbookd/http";
-import { DatabaseGear } from "./summary-gear.model";
+import { DatabaseGear } from "./dashboard.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/period";
 
-export class SummaryGear {
+export class DashboardGear {
   private constructor() {}
 
-  public static generatePreview(gear: DatabaseGear): SummaryGearPreview {
+  public static generatePreview(gear: DatabaseGear): DashboardGearPreview {
     const stockDiscrepancy = this.computeStockDiscrepancyOn(gear);
     return {
       id: gear.id,
@@ -23,7 +23,7 @@ export class SummaryGear {
   public static generateForGraph(
     gear: DatabaseGear,
     period: Period,
-  ): SummaryGearForGraph[] {
+  ): DashboardGearForGraph[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
     return periods.map(({ start, end }) => {
@@ -44,7 +44,7 @@ export class SummaryGear {
   private static generateDetails(
     gear: DatabaseGear,
     date: Date,
-  ): SummaryGearDetails {
+  ): DashboardGearDetails {
     return {
       activities: this.findActivitiesByDate(gear, date),
       inventory: this.findInventoryQuantity(gear),
@@ -114,22 +114,18 @@ export class SummaryGear {
   private static findActivitiesByDate(
     gear: DatabaseGear,
     start: Date,
-  ): SummaryGearDetails["activities"] {
+  ): DashboardGearDetails["activities"] {
     return gear.inquiries.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),
       );
 
-      return isIncluded
-        ? [
-            ...activities,
-            {
-              id: inquiry.fa.id,
-              name: inquiry.fa.name,
-              quantity: inquiry.quantity,
-            },
-          ]
-        : activities;
+      if (!isIncluded) return activities;
+
+      const { id, name } = inquiry.fa;
+      const { quantity } = inquiry;
+      const activity = { id, name, quantity };
+      return [...activities, activity];
     }, []);
   }
 }

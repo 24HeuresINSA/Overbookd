@@ -32,7 +32,7 @@ import {
   WRITE_GEAR_CATALOG,
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
-  VIEW_GEAR_SUMMARY,
+  VIEW_GEAR_DASHBOARD,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -99,7 +99,7 @@ export const permissions = [
     },
   },
   {
-    name: VIEW_GEAR_SUMMARY,
+    name: VIEW_GEAR_DASHBOARD,
     description: "Peut voir le recap du matos",
     teams: {
       createMany: {

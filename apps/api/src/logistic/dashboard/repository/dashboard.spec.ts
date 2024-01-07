@@ -9,8 +9,8 @@ import {
   gearWithNoInquiryForGraph,
   gearWithOneInquiryAndOneInventoryRecordForGraph,
   gearWithTwoInquiryAndTwoInventoryRecordForGraph,
-} from "./summary-gear.test-utils";
-import { SummaryGear } from "./summary-gear";
+} from "./dashboard-gear.test-utils";
+import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
 
 describe("Summarize gear as preview", () => {
@@ -26,7 +26,7 @@ describe("Summarize gear as preview", () => {
     "when gear has $gear.inquiries.length inquiries and $gear.inventoryRecords.length inventory records",
     ({ gear, expectedStockDiscrepancy }) => {
       it(`should return preview with ${expectedStockDiscrepancy} as stock discrepancy`, () => {
-        const preview = SummaryGear.generatePreview(gear);
+        const preview = DashboardGear.generatePreview(gear);
         const expectedPreview = {
           id: gear.id,
           name: gear.name,
@@ -50,7 +50,7 @@ describe("Summarize gear for graph", () => {
     "when gear has $gear.inquiries.length inquiries and $gear.inventoryRecords.length inventory records",
     ({ gear, period, expectedData }) => {
       it(`should return gear for graph with ${expectedData.length} periods`, () => {
-        const gearForGraph = SummaryGear.generateForGraph(
+        const gearForGraph = DashboardGear.generateForGraph(
           gear,
           Period.init(period),
         );

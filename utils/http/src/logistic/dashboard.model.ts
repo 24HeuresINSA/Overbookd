@@ -1,6 +1,6 @@
 import { FestivalActivity } from "@overbookd/festival-activity";
 
-export type SummaryGearPreview = {
+export type DashboardGearPreview = {
   id: number;
   name: string;
   slug: string;
@@ -14,16 +14,16 @@ export type ActivityInquiry = {
   quantity: number;
 };
 
-export type SummaryGearDetails = {
+export type DashboardGearDetails = {
   activities: ActivityInquiry[];
   inventory: number;
 };
 
 type WithDetails = {
-  details: SummaryGearDetails;
+  details: DashboardGearDetails;
 };
 
-export type SummaryGearForGraph = WithDetails & {
+export type DashboardGearForGraph = WithDetails & {
   start: Date;
   end: Date;
   inquiry: number;

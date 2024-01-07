@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { SummaryGearPreview } from "@overbookd/http";
+import { DashboardGearPreview } from "@overbookd/http";
 
-export class SummaryGearPreviewResponseDto implements SummaryGearPreview {
+export class DashboardGearPreviewResponseDto implements DashboardGearPreview {
   @ApiProperty({
     required: true,
     description: "Gear id",
