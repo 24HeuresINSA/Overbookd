@@ -663,7 +663,7 @@ model SharedMeal {
 
   shotguns Shotgun[]
 
-  @@map("shared-meal")
+  @@map("shared_meal")
 }
 
 model Shotgun {
