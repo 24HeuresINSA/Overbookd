@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-activity";
-import { ActivityInquiry, DashboardGearDetails } from "@overbookd/http";
+import { ActivityInquiry, GearDetails } from "@overbookd/http";
 
 class ActivityInquiryResponseDto implements ActivityInquiry {
   @ApiProperty({ type: Number })
@@ -13,7 +13,7 @@ class ActivityInquiryResponseDto implements ActivityInquiry {
   quantity: number;
 }
 
-export class DashboardGearDetailsResponseDto implements DashboardGearDetails {
+export class GearDetailsResponseDto implements GearDetails {
   @ApiProperty({ type: Date })
   start: Date;
 

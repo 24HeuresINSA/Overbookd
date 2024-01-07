@@ -1,6 +1,6 @@
 import { FestivalActivity } from "@overbookd/festival-activity";
 
-export type DashboardGearPreview = {
+export type GearPreview = {
   id: number;
   name: string;
   slug: string;
@@ -14,7 +14,7 @@ export type ActivityInquiry = {
   quantity: number;
 };
 
-export type DashboardGearDetails = {
+export type GearDetails = {
   start: Date;
   end: Date;
   inquiry: number;

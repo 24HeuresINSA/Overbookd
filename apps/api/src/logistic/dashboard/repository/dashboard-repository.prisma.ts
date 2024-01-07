@@ -3,12 +3,12 @@ import { DashboardGears } from "../dashboard.service";
 import { SELECT_GEAR } from "./dashboard.query";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
-import { DashboardGearDetails, DashboardGearPreview } from "@overbookd/http";
+import { GearDetails, GearPreview } from "@overbookd/http";
 
 export class PrismaDashboardGears implements DashboardGears {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getSummaries(): Promise<DashboardGearPreview[]> {
+  async getSummaries(): Promise<GearPreview[]> {
     const gears = await this.prisma.catalogGear.findMany({
       select: SELECT_GEAR,
     });
@@ -18,7 +18,7 @@ export class PrismaDashboardGears implements DashboardGears {
   async getDetails(
     slug: string,
     period: Period,
-  ): Promise<DashboardGearDetails[]> {
+  ): Promise<GearDetails[]> {
     const gears = await this.prisma.catalogGear.findUnique({
       where: { slug },
       select: SELECT_GEAR,

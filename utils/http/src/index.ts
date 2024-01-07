@@ -13,6 +13,6 @@ export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";
 export type {
   ActivityInquiry,
-  DashboardGearDetails,
-  DashboardGearPreview,
+  GearDetails,
+  GearPreview,
 } from "./logistic/dashboard.model";

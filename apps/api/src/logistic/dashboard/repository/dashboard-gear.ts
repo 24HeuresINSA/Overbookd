@@ -1,11 +1,11 @@
-import { DashboardGearDetails, DashboardGearPreview } from "@overbookd/http";
+import { GearDetails, GearPreview } from "@overbookd/http";
 import { DatabaseGear } from "./dashboard.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/period";
 
 export class DashboardGear {
   private constructor() {}
 
-  public static generatePreview(gear: DatabaseGear): DashboardGearPreview {
+  public static generatePreview(gear: DatabaseGear): GearPreview {
     const stockDiscrepancy = this.computeStockDiscrepancyOn(gear);
     return {
       id: gear.id,
@@ -19,7 +19,7 @@ export class DashboardGear {
   public static generateDetails(
     gear: DatabaseGear,
     period: Period,
-  ): DashboardGearDetails[] {
+  ): GearDetails[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
     return periods.map(({ start, end }) => {
@@ -102,7 +102,7 @@ export class DashboardGear {
   private static findActivitiesByDate(
     gear: DatabaseGear,
     start: Date,
-  ): DashboardGearDetails["activities"] {
+  ): GearDetails["activities"] {
     return gear.inquiries.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),

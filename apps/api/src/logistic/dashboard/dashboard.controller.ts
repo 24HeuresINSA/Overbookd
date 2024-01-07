@@ -13,9 +13,9 @@ import { VIEW_GEAR_DASHBOARD } from "@overbookd/permission";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { DashboardGearPreviewResponseDto } from "./dto/dashboard-gear-preview.response.dto";
-import { DashboardGearDetailsResponseDto } from "./dto/dashboard-gear-details.response.dto";
-import { DashboardGearDetails, DashboardGearPreview } from "@overbookd/http";
+import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
+import { GearDetailsResponseDto } from "./dto/gear-details.response.dto";
+import { GearDetails, GearPreview } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("logistic/dashboard")
@@ -36,9 +36,9 @@ export class DashboardController {
     status: 200,
     description: "Get all gear previews",
     isArray: true,
-    type: DashboardGearPreviewResponseDto,
+    type: GearPreviewResponseDto,
   })
-  getSummaries(): Promise<DashboardGearPreview[]> {
+  getSummaries(): Promise<GearPreview[]> {
     return this.dashboardService.getSummaries();
   }
 
@@ -48,7 +48,7 @@ export class DashboardController {
   @ApiResponse({
     status: 200,
     description: "Get gear",
-    type: DashboardGearDetailsResponseDto,
+    type: GearDetailsResponseDto,
     isArray: true,
   })
   @ApiParam({
@@ -70,7 +70,7 @@ export class DashboardController {
     @Param("slug") slug: string,
     @Query("start") start: Date,
     @Query("end") end: Date,
-  ): Promise<DashboardGearDetails[]> {
+  ): Promise<GearDetails[]> {
     return this.dashboardService.getDetails(slug, start, end);
   }
 }
