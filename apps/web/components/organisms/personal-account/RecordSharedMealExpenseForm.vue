@@ -3,7 +3,7 @@
     <v-btn v-if="closable" class="close-btn" icon @click="closeDialog">
       <v-icon>mdi-close</v-icon>
     </v-btn>
-    <v-card-title>
+    <v-card-title id="expense-meal">
       <h2>Dépense du repas</h2>
       <h3>{{ shared.meal.date }}</h3>
     </v-card-title>
@@ -80,9 +80,15 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 form {
-  margin-top: 10px;
+  margin-top: 30px;
   display: flex;
   gap: 10px;
   flex-direction: column;
+}
+#expense-meal {
+  display: block;
+  h3 {
+    margin-top: 20px;
+  }
 }
 </style>
