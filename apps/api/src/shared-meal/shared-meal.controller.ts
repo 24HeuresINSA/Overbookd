@@ -18,6 +18,8 @@ import {
   ApiParam,
   ApiTags,
   ApiBody,
+  getSchemaPath,
+  ApiExtraModels,
 } from "@nestjs/swagger";
 
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -27,9 +29,13 @@ import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
 import { SharedMealService } from "./shared-meal.service";
 import { RequestWithUserPayload } from "../app.controller";
 import { OfferMealRequestDto } from "./dto/offer-meal.request.dto";
-import { OnGoingSharedMealResponseDto } from "./dto/shared-meal.response.dto";
-import { SharedMeal } from "@overbookd/personal-account";
+import {
+  OnGoingSharedMealResponseDto,
+  PastSharedMealResponseDto,
+} from "./dto/shared-meal.response.dto";
+import { PastSharedMeal, SharedMeal } from "@overbookd/personal-account";
 import { MealSharingErrorFilter } from "./meal-sharing.filter";
+import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
 
 @ApiTags("shared-meals")
 @Controller("shared-meals")
@@ -42,6 +48,7 @@ import { MealSharingErrorFilter } from "./meal-sharing.filter";
 })
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
+@ApiExtraModels(OnGoingSharedMealResponseDto, PastSharedMealResponseDto)
 export class SharedMealController {
   constructor(private readonly sharedMeal: SharedMealService) {}
 
@@ -65,10 +72,15 @@ export class SharedMealController {
   @ApiResponse({
     status: 200,
     description: "Meals available",
-    type: OnGoingSharedMealResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(OnGoingSharedMealResponseDto) },
+        { $ref: getSchemaPath(PastSharedMealResponseDto) },
+      ],
+    },
     isArray: true,
   })
-  allMeals(): Promise<OnGoingSharedMealResponseDto[]> {
+  allMeals(): Promise<SharedMeal[]> {
     return this.sharedMeal.all();
   }
 
@@ -106,5 +118,27 @@ export class SharedMealController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<OnGoingSharedMealResponseDto> {
     return this.sharedMeal.shotgun(mealId, user.id);
+  }
+
+  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Post(":mealId/expense")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Expense recorded and shared meal closed",
+    type: PastSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  @ApiBody({ type: RecordExpenseRequestDto })
+  recordExpense(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() expense: RecordExpenseRequestDto,
+  ): Promise<PastSharedMeal> {
+    return this.sharedMeal.recordExpense(mealId, user, expense);
   }
 }

@@ -1,13 +1,15 @@
 import { Module } from "@nestjs/common";
+import { Transfer } from "@overbookd/personal-account";
 import { TransactionService } from "./transaction.service";
 import { TransactionController } from "./transaction.controller";
 import { PrismaService } from "../prisma.service";
 import { PrismaModule } from "../prisma.module";
 import { PrismaTransferRepository } from "./repository/transfer-repository.prisma";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
-import { Transfer } from "@overbookd/personal-account";
 import { TransferService } from "./transfer.service";
 import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
+import { DomainEventModule } from "../domain-event/domain-event.module";
+import { DomainEventService } from "../domain-event/domain-event.service";
 
 @Module({
   controllers: [TransactionController],
@@ -23,8 +25,9 @@ import { PrismaTransactionRepository } from "./repository/transaction-repository
       useFactory: (
         transactions: PrismaTransactionRepository,
         prisma: PrismaService,
-      ) => new TransactionService(transactions, prisma),
-      inject: [PrismaTransactionRepository, PrismaService],
+        eventStore: DomainEventService,
+      ) => new TransactionService(transactions, prisma, eventStore),
+      inject: [PrismaTransactionRepository, PrismaService, DomainEventService],
     },
     {
       provide: PrismaTransferRepository,
@@ -51,6 +54,6 @@ import { PrismaTransactionRepository } from "./repository/transaction-repository
       inject: [Transfer],
     },
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, DomainEventModule],
 })
 export class TransactionModule {}

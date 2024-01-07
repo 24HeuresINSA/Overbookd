@@ -1,15 +1,24 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationBootstrap,
 } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { Transaction as PrismaTransaction } from "@prisma/client";
 import { User } from "@prisma/client";
 import { SELECT_TRANSACTION } from "./transaction.query";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
-import { Transaction, TransactionUser } from "@overbookd/personal-account";
+import {
+  PastSharedMeal,
+  SharedMealPayment,
+  SharedMealTransaction,
+  Transaction,
+  TransactionUser,
+} from "@overbookd/personal-account";
 import { PrismaTransactionRepository } from "./repository/transaction-repository.prisma";
+import { DomainEventService } from "../domain-event/domain-event.service";
 
 export type TransactionWithSenderAndReceiver = Omit<
   PrismaTransaction,
@@ -20,11 +29,22 @@ export type TransactionWithSenderAndReceiver = Omit<
 };
 
 @Injectable()
-export class TransactionService {
+export class TransactionService implements OnApplicationBootstrap {
+  private logger = new Logger(TransactionService.name);
+
   constructor(
     private readonly transactions: PrismaTransactionRepository,
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
+    private readonly eventStore: DomainEventService,
   ) {}
+
+  onApplicationBootstrap() {
+    this.eventStore.closedSharedMeal.subscribe((event) => {
+      const mealTransactionsMessage = `Shared meal #${event.id} closed... Generating related transactions`;
+      this.logger.log(mealTransactionsMessage);
+      this.generateForMeal(event);
+    });
+  }
 
   async getAllTransactions(): Promise<TransactionWithSenderAndReceiver[]> {
     return this.prisma.transaction.findMany({
@@ -86,6 +106,54 @@ export class TransactionService {
     const operations = [updateTransactionOperation, ...balanceOperations];
     await this.prisma.$transaction(operations);
     return;
+  }
+
+  private async generateForMeal(event: PastSharedMeal) {
+    const transactions = SharedMealPayment.refound(event);
+    const unitAmount = transactions.at(0)?.amount ?? 0;
+
+    await this.prisma.$transaction([
+      this.createMealTransactions(transactions, event),
+      this.updateChefBalance(transactions, unitAmount, event),
+      this.updateGuestsBalance(transactions, unitAmount),
+    ]);
+  }
+
+  private updateGuestsBalance(
+    transactions: SharedMealTransaction[],
+    unitAmount: number,
+  ) {
+    const guestBalanceUpdateMessage = `Decrementing ${transactions.length} balances by ${unitAmount}`;
+    this.logger.debug(guestBalanceUpdateMessage);
+    return this.prisma.user.updateMany({
+      where: { id: { in: transactions.map(({ from }) => from) } },
+      data: { balance: { decrement: unitAmount } },
+    });
+  }
+
+  private updateChefBalance(
+    transactions: SharedMealTransaction[],
+    unitAmount: number,
+    event: PastSharedMeal,
+  ) {
+    const chefBalanceIncrement = transactions.length * unitAmount;
+    const chefBalanceIncrementMessage = `Incrementing ${event.chef.name} balance by ${chefBalanceIncrement}`;
+    this.logger.debug(chefBalanceIncrementMessage);
+    return this.prisma.user.update({
+      where: { id: event.chef.id },
+      data: { balance: { increment: chefBalanceIncrement } },
+    });
+  }
+
+  private createMealTransactions(
+    transactions: SharedMealTransaction[],
+    event: PastSharedMeal,
+  ) {
+    const mealTransactionsMessage = `Generating ${transactions.length} transactions for meal #${event.id}`;
+    this.logger.log(mealTransactionsMessage);
+    return this.prisma.transaction.createMany({
+      data: transactions,
+    });
   }
 
   private async userExists(userIds: number[]): Promise<User[]> {

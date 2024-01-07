@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/domain-events",
-  "version": "1.0.32",
+  "version": "1.0.33",
   "description": "Utilitaire pour les évènements métier d'overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -29,9 +29,10 @@
     "test:unit:ci": "echo 'No tests'"
   },
   "dependencies": {
-    "@overbookd/registration": "workspace:^",
     "@overbookd/event": "workspace:^",
     "@overbookd/festival-activity": "workspace:^",
+    "@overbookd/personal-account": "workspace:^",
+    "@overbookd/registration": "workspace:^",
     "rxjs": "7.8.1"
   },
   "keywords": [

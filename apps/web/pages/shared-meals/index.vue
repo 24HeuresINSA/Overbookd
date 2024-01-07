@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { SharedMeal } from "@overbookd/personal-account";
+import { OnGoingSharedMeal } from "@overbookd/personal-account";
 import { defineComponent } from "vue";
 import OfferSharedMealForm from "~/components/organisms/personal-account/OfferSharedMealForm.vue";
 import SharedMealCard from "~/components/molecules/personal-account/SharedMealCard.vue";
@@ -50,8 +50,8 @@ export default defineComponent({
     isOfferDialogOpen: false,
   }),
   computed: {
-    meals(): SharedMeal[] {
-      return this.$accessor.mealSharing.meals;
+    meals(): OnGoingSharedMeal[] {
+      return this.$accessor.mealSharing.onGoingMeals;
     },
   },
   mounted() {

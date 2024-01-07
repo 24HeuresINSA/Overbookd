@@ -41,6 +41,7 @@ import {
   DEPOSIT,
   PROVISIONS,
   TRANSFER,
+  SHARED_MEAL,
   Transaction,
   TransactionType,
   doIReceive,
@@ -66,6 +67,7 @@ export default defineComponent({
         case DEPOSIT:
           return true;
         case TRANSFER:
+        case SHARED_MEAL:
           return doIReceive(transaction);
       }
     },
@@ -82,6 +84,8 @@ export default defineComponent({
           return "mdi-food";
         case TRANSFER:
           return "mdi-swap-vertical";
+        case SHARED_MEAL:
+          return "mdi-food-variant";
       }
     },
     formatAmount(transaction: Transaction): string {
@@ -101,6 +105,7 @@ export default defineComponent({
         case DEPOSIT:
           return "";
         case TRANSFER:
+        case SHARED_MEAL:
           return doIReceive(transaction)
             ? `(de ${formatDisplayedNameWithLastname(transaction.from)})`
             : `(vers ${formatDisplayedNameWithLastname(transaction.to)})`;

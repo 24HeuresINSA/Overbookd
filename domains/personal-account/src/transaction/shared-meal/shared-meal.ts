@@ -1,13 +1,14 @@
 import { PastSharedMeal } from "../../meal-sharing/meals.model";
 import { SHARED_MEAL } from "../transaction.model";
 
-type SharedMealTransaction = {
+export type SharedMealTransaction = {
   amount: number;
   context: string;
   to: number;
   from: number;
   type: typeof SHARED_MEAL;
 };
+
 export class SharedMeal {
   static refound(meal: PastSharedMeal): SharedMealTransaction[] {
     const amount = this.divideAmount(meal.expense.amount, meal.shotgunCount);

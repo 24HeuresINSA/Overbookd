@@ -25,3 +25,7 @@ export type SharedMeal = PastSharedMeal | OnGoingSharedMeal;
 export function isPastMeal(meal: SharedMeal): meal is PastSharedMeal {
   return "expense" in meal;
 }
+
+export function isOnGoingMeal(meal: SharedMeal): meal is OnGoingSharedMeal {
+  return !("expense" in meal);
+}

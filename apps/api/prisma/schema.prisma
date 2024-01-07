@@ -16,6 +16,7 @@ enum TransactionType {
   TRANSFER
   BARREL
   PROVISIONS
+  SHARED_MEAL
 
   @@map("transaction_type")
 }
@@ -661,6 +662,8 @@ model SharedMeal {
   payedAt DateTime? @map("payed_at")
 
   shotguns Shotgun[]
+
+  @@map("shared_meal")
 }
 
 model Shotgun {
@@ -671,4 +674,5 @@ model Shotgun {
   date    DateTime
 
   @@id([guestId, mealId])
+  @@map("shotgun")
 }

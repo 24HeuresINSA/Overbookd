@@ -1,7 +1,14 @@
 import { OfferMeal } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { SharedMeal } from "@overbookd/personal-account";
-import { actionTree, mutationTree } from "typed-vuex";
+import {
+  Expense,
+  OnGoingSharedMeal,
+  PastSharedMeal,
+  SharedMeal,
+  isOnGoingMeal,
+  isPastMeal,
+} from "@overbookd/personal-account";
+import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import { MealSharingRepository } from "~/repositories/meal-sharing.repository";
 import { safeCall } from "~/utils/api/calls";
 
@@ -25,11 +32,20 @@ export const mutations = mutationTree(state, {
   RESET_SHARED_MEAL(state) {
     state.sharedMeal = undefined;
   },
-  ADD_GUEST(state, sharedMeal: SharedMeal) {
+  UPDATE_MEAL_INSIDE_MEALS(state, sharedMeal: SharedMeal) {
     const mealIndex = state.meals.findIndex(({ id }) => id === sharedMeal.id);
     if (mealIndex === -1) return;
 
     state.meals = updateItemToList(state.meals, mealIndex, sharedMeal);
+  },
+});
+
+export const getters = getterTree(state, {
+  onGoingMeals(state): OnGoingSharedMeal[] {
+    return state.meals.filter(isOnGoingMeal);
+  },
+  pastMeals(state): PastSharedMeal[] {
+    return state.meals.filter(isPastMeal);
   },
 });
 
@@ -71,7 +87,20 @@ export const actions = actionTree(
       );
 
       if (!res) return;
-      commit("ADD_GUEST", res.data);
+      commit("UPDATE_MEAL_INSIDE_MEALS", res.data);
+    },
+
+    async recordExpense(
+      { commit },
+      { mealId, expense }: { mealId: SharedMeal["id"]; expense: Expense },
+    ) {
+      const res = await safeCall(
+        this,
+        MealSharingRepository.recordExpense(this, mealId, expense),
+      );
+
+      if (!res) return;
+      commit("UPDATE_MEAL_INSIDE_MEALS", res.data);
     },
   },
 );

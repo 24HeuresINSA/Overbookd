@@ -2,10 +2,14 @@
   <v-text-field
     :value="valueInEuros"
     type="number"
+    :solo="boxed"
+    :filled="boxed"
+    :outilned="!boxed"
     :label="label"
     suffix="€"
     :rules="[rules.number, rules.min]"
     :readonly="readonly"
+    :hide-details="hideDetails"
     @input="propagateValue"
     @update:error="propagateError"
   ></v-text-field>
@@ -36,6 +40,14 @@ export default Vue.extend({
       default: 0,
     },
     readonly: {
+      type: Boolean,
+      default: false,
+    },
+    boxed: {
+      type: Boolean,
+      default: true,
+    },
+    hideDetails: {
       type: Boolean,
       default: false,
     },

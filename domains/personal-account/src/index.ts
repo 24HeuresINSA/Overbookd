@@ -7,7 +7,7 @@ export type {
   IAlertAboutPersonalAccount,
   Summary,
 } from "./alerting/personal-account-alert";
-export { Payor, Transfer } from "./transaction";
+export { Payor, Transfer, SharedMealPayment } from "./transaction";
 export type {
   CreateTransferForm,
   Member,
@@ -23,12 +23,14 @@ export type {
   BarrelTransaction,
   ProvisionsTransaction,
   TransactionUser,
+  SharedMealTransaction,
 } from "./transaction";
 export {
   BARREL,
   DEPOSIT,
   PROVISIONS,
   TRANSFER,
+  SHARED_MEAL,
   doIReceive,
   transactionTypes,
   TransferError,
@@ -60,7 +62,9 @@ export type {
   OnGoingSharedMeal,
   PastSharedMeal,
   AboutMeal,
+  Expense,
 } from "./meal-sharing/meals.model";
+export { isOnGoingMeal, isPastMeal } from "./meal-sharing/meals.model";
 export type { Adherent, Shotgun } from "./meal-sharing/adherent";
 export { MealSharingError } from "./meal-sharing/meal-sharing.error";
 export { PastSharedMealBuilder } from "./meal-sharing/past-shared-meal.builder";

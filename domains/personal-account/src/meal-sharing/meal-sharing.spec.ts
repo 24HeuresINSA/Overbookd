@@ -3,7 +3,10 @@ import { MealSharing } from "./meal-sharing";
 import { Adherents } from "./meal-sharing";
 import { SharedMeals } from "./meal-sharing";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
-import { AlreadyShotguned } from "./meal-sharing.error";
+import {
+  AlreadyShotguned,
+  RecordExpenseByChiefOnly,
+} from "./meal-sharing.error";
 import { PastSharedMeal } from "./meals.model";
 import { SOIR, MIDI } from "./meal-sharing";
 import { Meal } from "./meal";
@@ -145,31 +148,44 @@ describe("Meal Sharing", () => {
       expect(shotguns).toBe(3);
     });
   });
-  describe("when chief record expense", () => {
+  describe("Record exoense", () => {
     const expense = { amount: 1000, date: new Date("2023-10-12 12:00") };
     let pastSharedMeal: PastSharedMeal;
     beforeEach(async () => {
       sharedMeals = new InMemorySharedMeals([rizCantonnais]);
       adherents = new InMemoryAdherents([...adherentListing]);
       mealSharing = new MealSharing(sharedMeals, adherents);
-      pastSharedMeal = await mealSharing.recordExpense(
-        rizCantonnais.id,
-        expense,
-      );
     });
-    it("should record amount and date of the expense", async () => {
-      expect(pastSharedMeal.expense.amount).toBe(1000);
+    describe("when adherent other than chief try to record expense", () => {
+      it("should indicate that only chief can record expense", () => {
+        expect(
+          async () =>
+            await mealSharing.recordExpense(rizCantonnais.id, lea.id, expense),
+        ).rejects.toThrow(RecordExpenseByChiefOnly);
+      });
     });
-    it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
-      expect(async () => {
-        await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
-      }).rejects.toThrow(PAST_MEAL_ERROR);
-    });
-    it("should count how many shotguns were before the expense", () => {
-      expect(pastSharedMeal.inTimeShotguns).toBe(2);
-    });
-    it("should count how many shotguns were done", () => {
-      expect(pastSharedMeal.shotgunCount).toBe(3);
+    describe("when chief record expense", () => {
+      beforeEach(async () => {
+        pastSharedMeal = await mealSharing.recordExpense(
+          rizCantonnais.id,
+          julie.id,
+          expense,
+        );
+      });
+      it("should record amount and date of the expense", async () => {
+        expect(pastSharedMeal.expense.amount).toBe(1000);
+      });
+      it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
+        expect(async () => {
+          await mealSharing.shotgun(rizCantonnais.id, tatouin.id);
+        }).rejects.toThrow(PAST_MEAL_ERROR);
+      });
+      it("should count how many shotguns were before the expense", () => {
+        expect(pastSharedMeal.inTimeShotguns).toBe(2);
+      });
+      it("should count how many shotguns were done", () => {
+        expect(pastSharedMeal.shotgunCount).toBe(3);
+      });
     });
   });
 });

@@ -1,6 +1,10 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import { HttpStringified, OfferMeal } from "@overbookd/http";
-import { SharedMeal } from "@overbookd/personal-account";
+import {
+  Expense,
+  PastSharedMeal,
+  SharedMeal,
+} from "@overbookd/personal-account";
 
 export type Context = { $axios: NuxtAxiosInstance };
 
@@ -27,6 +31,17 @@ export class MealSharingRepository {
   static shotgun(context: Context, mealId: SharedMeal["id"]) {
     return context.$axios.post<HttpStringified<SharedMeal>>(
       `${this.basePath}/${mealId}/shotgun`,
+    );
+  }
+
+  static recordExpense(
+    context: Context,
+    mealId: SharedMeal["id"],
+    expense: Expense,
+  ) {
+    return context.$axios.post<HttpStringified<PastSharedMeal>>(
+      `${this.basePath}/${mealId}/expense`,
+      expense,
     );
   }
 }

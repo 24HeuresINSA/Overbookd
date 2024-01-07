@@ -547,6 +547,9 @@ importers:
       '@overbookd/festival-activity':
         specifier: workspace:^
         version: link:../../domains/festival-activity
+      '@overbookd/personal-account':
+        specifier: workspace:^
+        version: link:../../domains/personal-account
       '@overbookd/registration':
         specifier: workspace:^
         version: link:../../domains/registration
