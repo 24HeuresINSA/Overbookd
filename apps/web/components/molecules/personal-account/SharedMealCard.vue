@@ -23,7 +23,7 @@
       <div class="shotgun">
         <span>
           {{ shared.shotgunCount }} {{ guests }}
-          <span v-show="hasShotgun"> (dont toi)</span>
+          <span v-show="hasShotgun"> (dont moi)</span>
         </span>
         <v-btn color="primary" large :disabled="hasShotgun" @click="shotgun">
           Shotgun <v-icon right>mdi-account-multiple-plus</v-icon>
