@@ -16,6 +16,7 @@ enum TransactionType {
   TRANSFER
   BARREL
   PROVISIONS
+  SHARED_MEAL
 
   @@map("transaction_type")
 }

@@ -10,6 +10,18 @@ type BaseTransaction = {
   date: Date;
 };
 
+type ReceiveOrSendTransaction = typeof SHARED_MEAL | typeof TRANSFER;
+
+type Send<T extends ReceiveOrSendTransaction> = BaseTransaction & {
+  type: T;
+  to: TransactionUser;
+};
+
+type Receive<T extends ReceiveOrSendTransaction> = BaseTransaction & {
+  type: T;
+  from: TransactionUser;
+};
+
 export type TransactionUser = {
   id: number;
   firstname: string;
@@ -29,22 +41,22 @@ export type ProvisionsTransaction = BaseTransaction & {
   type: typeof PROVISIONS;
 };
 
-export type TransferIReceiveTransaction = BaseTransaction & {
-  type: typeof TRANSFER;
-  from: TransactionUser;
-};
+export type TransferIReceiveTransaction = Receive<typeof TRANSFER>;
 
-export type TransferISendTransaction = BaseTransaction & {
-  type: typeof TRANSFER;
-  to: TransactionUser;
-};
+export type TransferISendTransaction = Send<typeof TRANSFER>;
+
+export type SharedMealIOfferTransaction = Receive<typeof SHARED_MEAL>;
+
+export type SharedMealIShotgunTransaction = Send<typeof SHARED_MEAL>;
 
 export type Transaction =
   | DepositTransaction
   | BarrelTransaction
   | ProvisionsTransaction
   | TransferIReceiveTransaction
-  | TransferISendTransaction;
+  | TransferISendTransaction
+  | SharedMealIOfferTransaction
+  | SharedMealIShotgunTransaction;
 
 export type TransactionType = Transaction["type"];
 
@@ -53,10 +65,11 @@ export const transactionTypes: TransactionType[] = [
   BARREL,
   PROVISIONS,
   TRANSFER,
+  SHARED_MEAL,
 ];
 
-export function doIReceive(
-  transfer: TransferIReceiveTransaction | TransferISendTransaction,
-): transfer is TransferIReceiveTransaction {
+export function doIReceive<T extends ReceiveOrSendTransaction>(
+  transfer: Receive<T> | Send<T>,
+): transfer is Receive<T> {
   return "from" in transfer;
 }

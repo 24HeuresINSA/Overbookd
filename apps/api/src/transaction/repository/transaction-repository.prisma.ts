@@ -2,6 +2,7 @@ import {
   BARREL,
   DEPOSIT,
   PROVISIONS,
+  SHARED_MEAL,
   TRANSFER,
   Transaction,
 } from "@overbookd/personal-account";
@@ -35,6 +36,11 @@ export class PrismaTransactionRepository {
         case PROVISIONS:
           return { type, amount, context, date };
         case TRANSFER:
+          if (this.isPayor(payor.id, myId)) {
+            return { type, amount, context, date, to: payee };
+          }
+          return { type, amount, context, date, from: payor };
+        case SHARED_MEAL:
           if (this.isPayor(payor.id, myId)) {
             return { type, amount, context, date, to: payee };
           }

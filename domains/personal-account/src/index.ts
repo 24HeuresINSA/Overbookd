@@ -29,6 +29,7 @@ export {
   DEPOSIT,
   PROVISIONS,
   TRANSFER,
+  SHARED_MEAL,
   doIReceive,
   transactionTypes,
   TransferError,
