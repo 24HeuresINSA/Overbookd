@@ -1,3 +1,6 @@
+-- AlterEnum
+ALTER TYPE "transaction_type" ADD VALUE 'SHARED_MEAL';
+
 -- DropForeignKey
 ALTER TABLE "SharedMeal" DROP CONSTRAINT "SharedMeal_chef_id_fkey";
 
