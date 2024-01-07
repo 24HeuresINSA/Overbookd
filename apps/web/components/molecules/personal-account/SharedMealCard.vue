@@ -1,36 +1,53 @@
 <template>
-  <v-card class="shared-meal">
-    <v-card-title class="meal-title">
-      {{ shared.meal.date }}
-    </v-card-title>
-    <v-card-text class="presentation">
-      <div class="chief">
-        <v-icon>mdi-chef-hat</v-icon>
-        <span>{{ shared.chef.name }}</span>
-      </div>
+  <div>
+    <v-card class="shared-meal">
+      <v-card-title class="meal-title">
+        {{ shared.meal.date }}
+      </v-card-title>
+      <v-card-text class="presentation">
+        <div class="chief">
+          <v-icon>mdi-chef-hat</v-icon>
+          <span>{{ shared.chef.name }}</span>
+        </div>
 
-      <div class="menu">
-        <v-textarea
-          outlined
-          label="Au menu 🍴"
-          :value="shared.meal.menu"
-          readonly
-          hide-details
-          :rows="4"
-        ></v-textarea>
-      </div>
+        <div class="menu">
+          <v-textarea
+            outlined
+            label="Au menu 🍴"
+            :value="shared.meal.menu"
+            readonly
+            hide-details
+            :rows="4"
+          ></v-textarea>
+        </div>
 
-      <div class="shotgun">
-        <span>
-          {{ shared.shotgunCount }} {{ guests }}
-          <span v-show="hasShotgun"> (dont moi)</span>
-        </span>
-        <v-btn color="primary" large :disabled="hasShotgun" @click="shotgun">
-          Shotgun <v-icon right>mdi-account-multiple-plus</v-icon>
-        </v-btn>
-      </div>
-    </v-card-text>
-  </v-card>
+        <div class="shotgun">
+          <span>
+            {{ shared.shotgunCount }} {{ guests }}
+            <span v-show="hasShotgun"> (dont moi)</span>
+          </span>
+          <v-btn color="primary" large :disabled="hasShotgun" @click="shotgun">
+            Shotgun <v-icon right>mdi-account-multiple-plus</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="iAmChef"
+            color="secondary"
+            large
+            @click="openRecordExpenseDialog"
+          >
+            Renseigner une dépense <v-icon right>mdi-cash-multiple</v-icon>
+          </v-btn>
+        </div>
+      </v-card-text>
+    </v-card>
+    <v-dialog v-model="isRecordExpenseDialogOpen" max-width="600px">
+      <RecordSharedMealExpenseForm
+        :meal="shared"
+        closable
+        @close-dialog="closeRecordExpenseDialog"
+      />
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -41,20 +58,31 @@ import {
   SharedMeal,
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
+import RecordSharedMealExpenseForm from "~/components/organisms/personal-account/RecordSharedMealExpenseForm.vue";
+
+type SharedMealCardData = {
+  isRecordExpenseDialogOpen: boolean;
+};
 
 export default defineComponent({
   name: "SharedMealCard",
-  components: {},
+  components: { RecordSharedMealExpenseForm },
   props: {
     shared: {
       type: Object as () => SharedMeal,
       required: true,
     },
   },
+  data: (): SharedMealCardData => ({
+    isRecordExpenseDialogOpen: false,
+  }),
   computed: {
     me(): Adherent {
       const { id, ...me } = this.$accessor.user.me;
       return { id, name: nicknameOrName(me) };
+    },
+    iAmChef(): boolean {
+      return this.shared.chef.id === this.me.id;
     },
     guests(): string {
       return this.shared.shotgunCount > 1 ? "convives" : "convive";
@@ -74,6 +102,12 @@ export default defineComponent({
   methods: {
     shotgun(): void {
       this.$accessor.mealSharing.shotgun(this.shared.id);
+    },
+    openRecordExpenseDialog() {
+      this.isRecordExpenseDialogOpen = true;
+    },
+    closeRecordExpenseDialog() {
+      this.isRecordExpenseDialogOpen = false;
     },
   },
 });

@@ -4,6 +4,7 @@ import {
   Expense,
   MealSharing,
   OnGoingSharedMeal,
+  PastSharedMeal,
   SharedMeal,
   isPastMeal,
 } from "@overbookd/personal-account";
@@ -44,13 +45,14 @@ export class SharedMealService {
     mealId: SharedMeal["id"],
     user: JwtPayload,
     expense: Expense,
-  ) {
+  ): Promise<PastSharedMeal> {
     const pastMeal = await this.mealSharing.recordExpense(
       mealId,
       user.id,
       expense,
     );
     this.eventStore.publish({ data: pastMeal, type: SHARED_MEAL_CLOSED });
+    return formatSharedMeal(pastMeal);
   }
 }
 
@@ -64,8 +66,8 @@ function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
   };
 }
 
-function formatSharedMeal(meal: SharedMeal): SharedMeal {
-  const baseMeal = {
+function formatSharedMeal<T extends SharedMeal>(meal: T): T {
+  const baseMeal: OnGoingSharedMeal = {
     id: meal.id,
     chef: meal.chef,
     meal: meal.meal,
@@ -73,7 +75,7 @@ function formatSharedMeal(meal: SharedMeal): SharedMeal {
     shotguns: meal.shotguns,
   };
 
-  if (!isPastMeal(meal)) return baseMeal;
+  if (!isPastMeal(meal)) return baseMeal as T;
 
-  return { ...baseMeal, expense: meal.expense };
+  return { ...baseMeal, expense: meal.expense } as T;
 }

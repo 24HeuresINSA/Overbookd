@@ -33,7 +33,7 @@ import {
   OnGoingSharedMealResponseDto,
   PastSharedMealResponseDto,
 } from "./dto/shared-meal.response.dto";
-import { SharedMeal } from "@overbookd/personal-account";
+import { PastSharedMeal, SharedMeal } from "@overbookd/personal-account";
 import { MealSharingErrorFilter } from "./meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
 
@@ -122,10 +122,11 @@ export class SharedMealController {
 
   @Permission(HAVE_PERSONAL_ACCOUNT)
   @Post(":mealId/expense")
-  @HttpCode(204)
+  @HttpCode(200)
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: "Expense recorded and shared meal closed",
+    type: PastSharedMealResponseDto,
   })
   @ApiParam({
     name: "mealId",
@@ -137,7 +138,7 @@ export class SharedMealController {
     @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
     @Request() { user }: RequestWithUserPayload,
     @Body() expense: RecordExpenseRequestDto,
-  ): Promise<void> {
+  ): Promise<PastSharedMeal> {
     return this.sharedMeal.recordExpense(mealId, user, expense);
   }
 }

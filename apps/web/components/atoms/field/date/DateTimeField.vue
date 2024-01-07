@@ -6,6 +6,7 @@
     :solo="boxed"
     :filled="boxed"
     :outilned="!boxed"
+    :hide-details="hideDetails"
     :error-messages="errorMessages"
     return-object
     @change="updateDate"
@@ -44,6 +45,10 @@ export default Vue.extend({
     errorMessages: {
       type: Array as () => string[],
       default: () => [],
+    },
+    hideDetails: {
+      type: Boolean,
+      default: false,
     },
   },
   data: () => ({
