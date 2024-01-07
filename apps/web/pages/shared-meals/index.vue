@@ -24,6 +24,7 @@
     <v-dialog v-model="isOfferDialogOpen" max-width="600px">
       <OfferSharedMealForm closable @close-dialog="closeOfferDialog" />
     </v-dialog>
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -32,6 +33,7 @@ import { SharedMeal } from "@overbookd/personal-account";
 import { defineComponent } from "vue";
 import OfferSharedMealForm from "~/components/organisms/personal-account/OfferSharedMealForm.vue";
 import SharedMealCard from "~/components/molecules/personal-account/SharedMealCard.vue";
+import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
 type SharedMealsData = {
   isOfferDialogOpen: boolean;
@@ -39,7 +41,11 @@ type SharedMealsData = {
 
 export default defineComponent({
   name: "SharedMeals",
-  components: { OfferSharedMealForm, SharedMealCard },
+  components: {
+    OfferSharedMealForm,
+    SharedMealCard,
+    SnackNotificationContainer,
+  },
   data: (): SharedMealsData => ({
     isOfferDialogOpen: false,
   }),
