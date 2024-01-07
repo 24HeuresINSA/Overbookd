@@ -37,6 +37,8 @@ import {
   MANAGE_CONTRIBUTIONS,
   PAY_CONTRIBUTION,
   VIEW_GEAR_SUMMARY,
+  OFFER_SHARED_MEAL,
+  SHOTGUN_SHARED_MEAL,
 } from "./permissions";
 
 export type Permission =
@@ -77,4 +79,6 @@ export type Permission =
   | typeof VIEW_DELETED_FT
   | typeof MANAGE_ADMINS
   | typeof MANAGE_CONTRIBUTIONS
-  | typeof PAY_CONTRIBUTION;
+  | typeof PAY_CONTRIBUTION
+  | typeof OFFER_SHARED_MEAL
+  | typeof SHOTGUN_SHARED_MEAL;

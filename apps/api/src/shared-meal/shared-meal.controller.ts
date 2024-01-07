@@ -25,7 +25,7 @@ import {
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
-import { HAVE_PERSONAL_ACCOUNT } from "@overbookd/permission";
+import { OFFER_SHARED_MEAL, SHOTGUN_SHARED_MEAL } from "@overbookd/permission";
 import { SharedMealService } from "./shared-meal.service";
 import { RequestWithUserPayload } from "../app.controller";
 import { OfferMealRequestDto } from "./dto/offer-meal.request.dto";
@@ -52,7 +52,7 @@ import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
 export class SharedMealController {
   constructor(private readonly sharedMeal: SharedMealService) {}
 
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permission(OFFER_SHARED_MEAL)
   @Post()
   @ApiResponse({
     status: 201,
@@ -67,7 +67,7 @@ export class SharedMealController {
     return this.sharedMeal.offer(meal, user);
   }
 
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permission(SHOTGUN_SHARED_MEAL)
   @Get("")
   @ApiResponse({
     status: 200,
@@ -84,7 +84,7 @@ export class SharedMealController {
     return this.sharedMeal.all();
   }
 
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permission(SHOTGUN_SHARED_MEAL)
   @Get(":mealId")
   @ApiResponse({
     status: 200,
@@ -100,7 +100,7 @@ export class SharedMealController {
     return this.sharedMeal.find(mealId);
   }
 
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permission(SHOTGUN_SHARED_MEAL)
   @Post(":mealId/shotgun")
   @HttpCode(200)
   @ApiResponse({
@@ -120,7 +120,7 @@ export class SharedMealController {
     return this.sharedMeal.shotgun(mealId, user.id);
   }
 
-  @Permission(HAVE_PERSONAL_ACCOUNT)
+  @Permission(OFFER_SHARED_MEAL)
   @Post(":mealId/expense")
   @HttpCode(200)
   @ApiResponse({
