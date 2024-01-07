@@ -25,3 +25,9 @@ export class AlreadyShotguned extends MealSharingError {
     super(`❌ Tu as déjà shotgun pour le repas du ${meal.date}`);
   }
 }
+
+export class RecordExpenseByChiefOnly extends MealSharingError {
+  constructor({ chef }: SharedMeal) {
+    super(`❌ Seul le.a chef.fe ${chef.name} peut renseigner une dépense`);
+  }
+}

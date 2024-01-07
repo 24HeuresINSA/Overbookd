@@ -1,7 +1,13 @@
 import { OfferMeal } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { SharedMeal } from "@overbookd/personal-account";
-import { actionTree, mutationTree } from "typed-vuex";
+import {
+  OnGoingSharedMeal,
+  PastSharedMeal,
+  SharedMeal,
+  isOnGoingMeal,
+  isPastMeal,
+} from "@overbookd/personal-account";
+import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import { MealSharingRepository } from "~/repositories/meal-sharing.repository";
 import { safeCall } from "~/utils/api/calls";
 
@@ -30,6 +36,15 @@ export const mutations = mutationTree(state, {
     if (mealIndex === -1) return;
 
     state.meals = updateItemToList(state.meals, mealIndex, sharedMeal);
+  },
+});
+
+export const getters = getterTree(state, {
+  onGoingMeals(state): OnGoingSharedMeal[] {
+    return state.meals.filter(isOnGoingMeal);
+  },
+  pastMeals(state): PastSharedMeal[] {
+    return state.meals.filter(isPastMeal);
   },
 });
 

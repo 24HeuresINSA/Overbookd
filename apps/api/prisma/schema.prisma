@@ -662,6 +662,8 @@ model SharedMeal {
   payedAt DateTime? @map("payed_at")
 
   shotguns Shotgun[]
+
+  @@map("shared-meal")
 }
 
 model Shotgun {
@@ -672,4 +674,5 @@ model Shotgun {
   date    DateTime
 
   @@id([guestId, mealId])
+  @@map("shotgun")
 }

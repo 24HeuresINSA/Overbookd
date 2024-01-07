@@ -6,6 +6,8 @@ import { PrismaService } from "../prisma.service";
 import { PrismaMeals } from "./repository/meals.prisma";
 import { SharedMealService } from "./shared-meal.service";
 import { MealSharing } from "@overbookd/personal-account";
+import { DomainEventModule } from "../domain-event/domain-event.module";
+import { DomainEventService } from "../domain-event/domain-event.service";
 
 @Module({
   controllers: [SharedMealController],
@@ -29,13 +31,16 @@ import { MealSharing } from "@overbookd/personal-account";
     },
     {
       provide: SharedMealService,
-      useFactory: (mealSharing: MealSharing) => {
-        return new SharedMealService(mealSharing);
+      useFactory: (
+        mealSharing: MealSharing,
+        eventStore: DomainEventService,
+      ) => {
+        return new SharedMealService(mealSharing, eventStore);
       },
-      inject: [MealSharing],
+      inject: [MealSharing, DomainEventService],
     },
   ],
-  imports: [PrismaModule],
+  imports: [PrismaModule, DomainEventModule],
   exports: [SharedMealService],
 })
 export class SharedMealModule {}

@@ -5,6 +5,7 @@ import type {
   SharedMealBuilder,
   SharedMealCreation,
   PastSharedMeal,
+  Expense,
 } from "@overbookd/personal-account";
 import { OnGoingSharedMealBuilder } from "@overbookd/personal-account";
 import { PastSharedMealBuilder } from "@overbookd/personal-account";
@@ -24,8 +25,11 @@ const SELECT_SHARED_MEAL = {
   menu: true,
   date: true,
   chef: { select: SELECT_ADHERENT },
+  amount: true,
+  payedAt: true,
   shotguns: { select: SELECT_SHOTGUN },
 };
+
 export class PrismaMeals implements SharedMeals {
   private idGenerator: Generator<number>;
 
@@ -58,11 +62,12 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
-  async find(mealId: number): Promise<SharedMealBuilder> {
+  async find(mealId: number): Promise<SharedMealBuilder | undefined> {
     const saved = await this.prisma.sharedMeal.findUnique({
       where: { id: mealId },
       select: SELECT_SHARED_MEAL,
     });
+    if (!saved) return undefined;
     return buildSharedMeal(saved);
   }
 
@@ -98,6 +103,7 @@ export class PrismaMeals implements SharedMeals {
   async list(): Promise<SharedMeal[]> {
     const meals = await this.prisma.sharedMeal.findMany({
       select: SELECT_SHARED_MEAL,
+      orderBy: { id: "desc" },
     });
     return meals.map(buildSharedMeal);
   }
@@ -115,6 +121,8 @@ type DatabaseSharedMeal = {
   menu: string;
   date: string;
   chef: DatabaseAdherent;
+  amount?: number;
+  payedAt?: Date;
   shotguns: {
     date: Date;
     guest: DatabaseAdherent;
@@ -123,22 +131,34 @@ type DatabaseSharedMeal = {
 
 function buildSharedMeal(saved: DatabaseSharedMeal) {
   const builder = convertToBuilder(saved);
+  if (hasExpense(builder)) {
+    return PastSharedMealBuilder.build(builder);
+  }
   return OnGoingSharedMealBuilder.build(builder);
 }
 
 function convertToBuilder(saved: DatabaseSharedMeal) {
+  const { amount, payedAt } = saved;
   const name = nicknameOrName(saved.chef);
   const chef = { id: saved.chef.id, name };
+  const meal = { menu: saved.menu, date: saved.date };
   const shotguns = saved.shotguns.map((shotgun) => ({
     id: shotgun.guest.id,
     name: nicknameOrName(shotgun.guest),
     date: shotgun.date,
   }));
 
-  return {
-    id: saved.id,
-    meal: { menu: saved.menu, date: saved.date },
-    chef,
-    shotguns,
-  };
+  const baseBuilder = { id: saved.id, meal, chef, shotguns };
+
+  if (!amount || !payedAt) return baseBuilder;
+
+  return { ...baseBuilder, expense: { amount, date: payedAt } };
+}
+
+type BuildSharedMeal = ReturnType<typeof convertToBuilder>;
+
+function hasExpense(
+  builder: BuildSharedMeal,
+): builder is Extract<BuildSharedMeal, { expense: Expense }> {
+  return Object.hasOwn(builder, "expense");
 }

@@ -4,6 +4,8 @@ import {
   OnGoingSharedMeal,
   AboutMeal,
   Shotgun,
+  PastSharedMeal,
+  Expense,
 } from "@overbookd/personal-account";
 
 class AboutMealResponseDto implements AboutMeal {
@@ -45,4 +47,23 @@ export class OnGoingSharedMealResponseDto implements OnGoingSharedMeal {
 
   @ApiProperty({ description: "shoutguns counter" })
   shotgunCount: number;
+}
+
+class ExpenseResponseDto implements Expense {
+  @ApiProperty({ description: "total meal amount in cents" })
+  amount: number;
+
+  @ApiProperty({ description: "when expense occured", type: Date })
+  date: Date;
+}
+
+export class PastSharedMealResponseDto
+  extends OnGoingSharedMealResponseDto
+  implements PastSharedMeal
+{
+  @ApiProperty({ type: ExpenseResponseDto })
+  expense: Expense;
+
+  @ApiProperty({ description: "guests that shotgun before expense occur" })
+  inTimeShotguns: number;
 }

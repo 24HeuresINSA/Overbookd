@@ -1,18 +1,25 @@
 import { OfferMeal } from "@overbookd/http";
 import {
   Adherent,
+  Expense,
   MealSharing,
   OnGoingSharedMeal,
   SharedMeal,
+  isPastMeal,
 } from "@overbookd/personal-account";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { SHARED_MEAL_CLOSED } from "@overbookd/domain-events";
 
 export class SharedMealService {
-  constructor(private readonly mealSharing: MealSharing) {}
+  constructor(
+    private readonly mealSharing: MealSharing,
+    private readonly eventStore: DomainEventService,
+  ) {}
 
   async offer(meal: OfferMeal, chef: JwtPayload): Promise<OnGoingSharedMeal> {
     const created = await this.mealSharing.offer(meal.menu, meal.date, chef.id);
-    return formatSharedMeal(created);
+    return formatCreatedMeal(created);
   }
 
   async find(mealId: SharedMeal["id"]): Promise<SharedMeal> {
@@ -32,14 +39,41 @@ export class SharedMealService {
     const updated = await this.mealSharing.shotgun(mealId, guestId);
     return formatSharedMeal(updated);
   }
+
+  async recordExpense(
+    mealId: SharedMeal["id"],
+    user: JwtPayload,
+    expense: Expense,
+  ) {
+    const pastMeal = await this.mealSharing.recordExpense(
+      mealId,
+      user.id,
+      expense,
+    );
+    this.eventStore.publish({ data: pastMeal, type: SHARED_MEAL_CLOSED });
+  }
 }
 
-function formatSharedMeal(created: OnGoingSharedMeal): OnGoingSharedMeal {
+function formatCreatedMeal(meal: OnGoingSharedMeal): OnGoingSharedMeal {
   return {
-    id: created.id,
-    chef: created.chef,
-    meal: created.meal,
-    shotgunCount: created.shotgunCount,
-    shotguns: created.shotguns,
+    id: meal.id,
+    chef: meal.chef,
+    meal: meal.meal,
+    shotgunCount: meal.shotgunCount,
+    shotguns: meal.shotguns,
   };
+}
+
+function formatSharedMeal(meal: SharedMeal): SharedMeal {
+  const baseMeal = {
+    id: meal.id,
+    chef: meal.chef,
+    meal: meal.meal,
+    shotgunCount: meal.shotgunCount,
+    shotguns: meal.shotguns,
+  };
+
+  if (!isPastMeal(meal)) return baseMeal;
+
+  return { ...baseMeal, expense: meal.expense };
 }

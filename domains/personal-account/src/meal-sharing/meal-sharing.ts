@@ -9,6 +9,7 @@ import {
   ChefNotFound,
   MealNotFound,
   GuestNotFound,
+  RecordExpenseByChiefOnly,
 } from "./meal-sharing.error";
 import { Expense } from "./meals.model";
 import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
@@ -83,13 +84,15 @@ export class MealSharing {
   }
 
   async recordExpense(
-    mealId: number,
+    mealId: SharedMeal["id"],
+    recorder: Adherent["id"],
     expense: Expense,
   ): Promise<PastSharedMeal> {
     const meal = await this.sharedMeals.find(mealId);
 
     if (!meal) throw new MealNotFound(mealId);
     if (isPastMeal(meal)) return meal;
+    if (recorder !== meal.chef.id) throw new RecordExpenseByChiefOnly(meal);
 
     const pastSharedMeal = meal.close(expense);
     return this.sharedMeals.close(pastSharedMeal);
