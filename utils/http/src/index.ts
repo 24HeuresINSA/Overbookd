@@ -10,5 +10,9 @@ export type {
   PreviewForCommunication,
 } from "./festival-activity.model";
 export type { HttpStringified } from "./http-stringified";
-export type { SummaryGearPreview } from "./summary-gear.model";
 export type { OfferMeal } from "./shared-meal.model";
+export type {
+  ActivityInquiry,
+  GearDetails,
+  GearPreview,
+} from "./logistic/dashboard.model";

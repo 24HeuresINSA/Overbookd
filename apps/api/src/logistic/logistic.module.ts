@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { SummaryGearModule } from "./summary-gear/summary-gear.module";
+import { DashboardModule } from "./dashboard/dashboard.module";
 
 @Module({
-  imports: [SummaryGearModule],
+  imports: [DashboardModule],
 })
 export class LogisticModule {}

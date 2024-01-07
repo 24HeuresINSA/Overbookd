@@ -19,6 +19,8 @@ const SELECT_GEAR_INQUIRIES = {
       quantity: true,
       fa: {
         select: {
+          id: true,
+          name: true,
           inquiryTimeWindows: {
             select: {
               start: true,

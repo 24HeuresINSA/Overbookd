@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { SummaryGearPreview } from "@overbookd/http";
+import { GearPreview } from "@overbookd/http";
 
-export class SummaryGearPreviewResponseDto implements SummaryGearPreview {
+export class GearPreviewResponseDto implements GearPreview {
   @ApiProperty({
     required: true,
     description: "Gear id",
