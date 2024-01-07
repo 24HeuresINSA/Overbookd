@@ -15,10 +15,7 @@ export class PrismaDashboardGears implements DashboardGears {
     return gears.map(DashboardGear.generatePreview);
   }
 
-  async getDetails(
-    slug: string,
-    period: Period,
-  ): Promise<GearDetails[]> {
+  async getDetails(slug: string, period: Period): Promise<GearDetails[]> {
     const gears = await this.prisma.catalogGear.findUnique({
       where: { slug },
       select: SELECT_GEAR,
