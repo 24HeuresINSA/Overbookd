@@ -1,3 +1,27 @@
+## [2.13.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.12.0...v2.13.0) (2024-01-07)
+
+
+### Features
+
+* **personal-account:** enable shared meals. [#1450](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1450) ([9f97953](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f97953ea653ec22eeb1aafea7a6251a60d7c4fd))
+* **public-animation:** adapt page with new fa [#1448](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1448) ([b7e3222](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b7e322287babc6bfa46964cd14fc6207760984ea))
+
+
+### Bug Fixes
+
+* **festival-activity:** remove old fa modules in api [#1370](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1370) ([f7668a1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f7668a1c906575571f1e64eecdb3c84aaff6d60b))
+* **festival-ativity:** migration to remove old fa ([c93e0a7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c93e0a73278e763cf51c3dc5f94249a35545d2e0))
+* **web:** enable shared meal shotgun. [#1449](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1449) ([3f5277a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3f5277a989311c443a097b31117eb87532597809))
+
+
+### Pre-Features
+
+* **gear-dashboard:** get gear details for graph [#1440](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1440) ([cc17faa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cc17faa88c365cd57e60810ab85da2d0a4840b73))
+* **personal-account:** enable expense record. [#1451](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1451) ([576656f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/576656fd63ebad46b1e8f44e1a4aeb11da19b202))
+* **personal-account:** enable shared meal api. [#1289](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1289) ([8721775](https://gitlab.com/24-heures-insa/overbookd-mono/commit/872177504bc7db6a9082e96bd615cf2913bd34ff))
+* **personal-account:** shared meal list page. [#1289](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1289) ([10c8fd0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/10c8fd08b5dcde291e41812ff9c4d5ebee91fcc2))
+* **summary-gear:** create api module [#1439](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1439) ([34008a0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/34008a05cb73edc6851277288b150fa49c879202))
+
 ## [2.12.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.11.7...v2.12.0) (2024-01-04)
 
 
