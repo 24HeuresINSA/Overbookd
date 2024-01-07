@@ -45,9 +45,9 @@ export type TransferIReceiveTransaction = Receive<typeof TRANSFER>;
 
 export type TransferISendTransaction = Send<typeof TRANSFER>;
 
-export type SharedMealIOfferTransaction = Receive<typeof SHARED_MEAL>;
+type SharedMealIOfferTransaction = Receive<typeof SHARED_MEAL>;
 
-export type SharedMealIShotgunTransaction = Send<typeof SHARED_MEAL>;
+type SharedMealIShotgunTransaction = Send<typeof SHARED_MEAL>;
 
 export type Transaction =
   | DepositTransaction
