@@ -5,13 +5,13 @@
     </v-btn>
     <v-card-title>
       <h2>Dépense du repas</h2>
-      <h3>{{ meal.meal.date }}</h3>
+      <h3>{{ shared.meal.date }}</h3>
     </v-card-title>
     <v-card-text>
       <v-textarea
         outlined
         label="Au menu 🍴"
-        :value="meal.meal.menu"
+        :value="shared.meal.menu"
         readonly
         hide-details
         :rows="4"
@@ -54,7 +54,7 @@ export default defineComponent({
       type: Boolean,
       default: () => false,
     },
-    meal: {
+    shared: {
       type: Object as () => OnGoingSharedMeal,
       required: true,
     },
@@ -69,7 +69,7 @@ export default defineComponent({
       this.$emit("close-dialog");
     },
     recordExpense() {
-      const mealId = this.meal.id;
+      const mealId = this.shared.id;
       const expense = { amount: this.amount, date: this.date };
       this.$accessor.mealSharing.recordExpense({ mealId, expense });
       this.closeDialog();
