@@ -39,7 +39,7 @@ export class TransactionService implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
-    this.eventStore.closedShatedMeal.subscribe((event) => {
+    this.eventStore.closedSharedMeal.subscribe((event) => {
       const mealTransactionsMessage = `Shared meal #${event.id} closed... Generating related transactions`;
       this.logger.log(mealTransactionsMessage);
       this.generateForMeal(event);

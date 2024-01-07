@@ -75,7 +75,7 @@ export class DomainEventService {
     );
   }
 
-  get closedShatedMeal(): Observable<PastSharedMeal> {
+  get closedSharedMeal(): Observable<PastSharedMeal> {
     return this.listen(SHARED_MEAL_CLOSED).pipe(map(({ data }) => data));
   }
 }
