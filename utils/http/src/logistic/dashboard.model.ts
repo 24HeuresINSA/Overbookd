@@ -15,17 +15,10 @@ export type ActivityInquiry = {
 };
 
 export type DashboardGearDetails = {
-  activities: ActivityInquiry[];
-  inventory: number;
-};
-
-type WithDetails = {
-  details: DashboardGearDetails;
-};
-
-export type DashboardGearForGraph = WithDetails & {
   start: Date;
   end: Date;
   inquiry: number;
   stock: number;
+  activities: ActivityInquiry[];
+  inventory: number;
 };

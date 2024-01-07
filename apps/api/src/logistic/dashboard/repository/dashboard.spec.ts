@@ -50,7 +50,7 @@ describe("Summarize gear for graph", () => {
     "when gear has $gear.inquiries.length inquiries and $gear.inventoryRecords.length inventory records",
     ({ gear, period, expectedData }) => {
       it(`should return gear for graph with ${expectedData.length} periods`, () => {
-        const gearForGraph = DashboardGear.generateForGraph(
+        const gearForGraph = DashboardGear.generateDetails(
           gear,
           Period.init(period),
         );

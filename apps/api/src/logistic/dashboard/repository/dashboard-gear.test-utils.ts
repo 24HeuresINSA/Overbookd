@@ -1,4 +1,4 @@
-import { DashboardGearForGraph } from "@overbookd/http";
+import { DashboardGearDetails } from "@overbookd/http";
 import {
   DatabaseGear,
   DatabaseInquiry,
@@ -140,143 +140,121 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
   ],
 };
 
-const emptyGearForGraphWithoutPeriod = {
+const emptyGearDetailsWithoutPeriod = {
   stock: 0,
   inquiry: 0,
-  details: { activities: [], inventory: 0 },
+  activities: [],
+  inventory: 0,
 };
-export const gearWithNoInquiryForGraph: DashboardGearForGraph[] = [
-  { ...friday08hto08h15, ...emptyGearForGraphWithoutPeriod },
-  { ...friday08h15to08h30, ...emptyGearForGraphWithoutPeriod },
-  { ...friday08h30to08h45, ...emptyGearForGraphWithoutPeriod },
-  { ...friday08h45to09h, ...emptyGearForGraphWithoutPeriod },
-  { ...friday09hto09h15, ...emptyGearForGraphWithoutPeriod },
-  { ...friday09h15to09h30, ...emptyGearForGraphWithoutPeriod },
+
+export const gearWithNoInquiryForGraph: DashboardGearDetails[] = [
+  { ...friday08hto08h15, ...emptyGearDetailsWithoutPeriod },
+  { ...friday08h15to08h30, ...emptyGearDetailsWithoutPeriod },
+  { ...friday08h30to08h45, ...emptyGearDetailsWithoutPeriod },
+  { ...friday08h45to09h, ...emptyGearDetailsWithoutPeriod },
+  { ...friday09hto09h15, ...emptyGearDetailsWithoutPeriod },
+  { ...friday09h15to09h30, ...emptyGearDetailsWithoutPeriod },
 ];
-export const gearWithOneInquiryAndOneInventoryRecordForGraph: DashboardGearForGraph[] =
+export const gearWithOneInquiryAndOneInventoryRecordForGraph: DashboardGearDetails[] =
   [
     {
       ...friday08hto08h15,
       stock: 25,
       inquiry: 10,
-      details: {
-        activities: [{ ...escapeGameActivity, quantity: 10 }],
-        inventory: 25,
-      },
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
     },
     {
       ...friday08h15to08h30,
       stock: 25,
       inquiry: 10,
-      details: {
-        activities: [{ ...escapeGameActivity, quantity: 10 }],
-        inventory: 25,
-      },
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
     },
     {
       ...friday08h30to08h45,
       stock: 25,
       inquiry: 10,
-      details: {
-        activities: [{ ...escapeGameActivity, quantity: 10 }],
-        inventory: 25,
-      },
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
     },
     {
       ...friday08h45to09h,
       stock: 25,
       inquiry: 10,
-      details: {
-        activities: [{ ...escapeGameActivity, quantity: 10 }],
-        inventory: 25,
-      },
+      activities: [{ ...escapeGameActivity, quantity: 10 }],
+      inventory: 25,
     },
     {
       ...friday09hto09h15,
       stock: 25,
       inquiry: 0,
-      details: {
-        activities: [],
-        inventory: 25,
-      },
+      activities: [],
+      inventory: 25,
     },
     {
       ...friday09h15to09h30,
       stock: 25,
       inquiry: 0,
-      details: {
-        activities: [],
-        inventory: 25,
-      },
+      activities: [],
+      inventory: 25,
     },
   ];
 
-export const gearWithTwoInquiryAndTwoInventoryRecordForGraph: DashboardGearForGraph[] =
+export const gearWithTwoInquiryAndTwoInventoryRecordForGraph: DashboardGearDetails[] =
   [
     {
       ...friday08hto08h15,
       stock: 30,
       inquiry: 40,
-      details: {
-        activities: [
-          { ...escapeGameActivity, quantity: 10 },
-          { ...justeDanceActivity, quantity: 30 },
-        ],
-        inventory: 30,
-      },
+      activities: [
+        { ...escapeGameActivity, quantity: 10 },
+        { ...justeDanceActivity, quantity: 30 },
+      ],
+      inventory: 30,
     },
     {
       ...friday08h15to08h30,
       stock: 30,
       inquiry: 40,
-      details: {
-        activities: [
-          { ...escapeGameActivity, quantity: 10 },
-          { ...justeDanceActivity, quantity: 30 },
-        ],
-        inventory: 30,
-      },
+      activities: [
+        { ...escapeGameActivity, quantity: 10 },
+        { ...justeDanceActivity, quantity: 30 },
+      ],
+      inventory: 30,
     },
     {
       ...friday08h30to08h45,
       stock: 30,
       inquiry: 40,
-      details: {
-        activities: [
-          { ...escapeGameActivity, quantity: 10 },
-          { ...justeDanceActivity, quantity: 30 },
-        ],
-        inventory: 30,
-      },
+      activities: [
+        { ...escapeGameActivity, quantity: 10 },
+        { ...justeDanceActivity, quantity: 30 },
+      ],
+      inventory: 30,
     },
     {
       ...friday08h45to09h,
       stock: 30,
       inquiry: 40,
-      details: {
-        activities: [
-          { ...escapeGameActivity, quantity: 10 },
-          { ...justeDanceActivity, quantity: 30 },
-        ],
-        inventory: 30,
-      },
+      activities: [
+        { ...escapeGameActivity, quantity: 10 },
+        { ...justeDanceActivity, quantity: 30 },
+      ],
+      inventory: 30,
     },
     {
       ...friday09hto09h15,
       stock: 30,
       inquiry: 0,
-      details: {
-        activities: [],
-        inventory: 30,
-      },
+      activities: [],
+      inventory: 30,
     },
     {
       ...friday09h15to09h30,
       stock: 30,
       inquiry: 0,
-      details: {
-        activities: [],
-        inventory: 30,
-      },
+      activities: [],
+      inventory: 30,
     },
   ];

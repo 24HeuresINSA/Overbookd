@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { DashboardGearForGraph, DashboardGearPreview } from "@overbookd/http";
+import { DashboardGearDetails, DashboardGearPreview } from "@overbookd/http";
 import { Period } from "@overbookd/period";
 
 export interface DashboardGears {
   getSummaries(): Promise<DashboardGearPreview[]>;
-  getDetails(slug: string, period: Period): Promise<DashboardGearForGraph[]>;
+  getDetails(slug: string, period: Period): Promise<DashboardGearDetails[]>;
 }
 
 @Injectable()
@@ -19,7 +19,7 @@ export class DashboardService {
     slug: string,
     start: Date,
     end: Date,
-  ): Promise<DashboardGearForGraph[]> {
+  ): Promise<DashboardGearDetails[]> {
     const period = Period.init({ start: new Date(start), end: new Date(end) });
     return this.dashboardGears.getDetails(slug, period);
   }

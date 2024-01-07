@@ -14,6 +14,5 @@ export type { OfferMeal } from "./shared-meal.model";
 export type {
   ActivityInquiry,
   DashboardGearDetails,
-  DashboardGearForGraph,
   DashboardGearPreview,
 } from "./logistic/dashboard.model";

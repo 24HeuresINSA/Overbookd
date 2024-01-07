@@ -1,8 +1,4 @@
-import {
-  DashboardGearDetails,
-  DashboardGearForGraph,
-  DashboardGearPreview,
-} from "@overbookd/http";
+import { DashboardGearDetails, DashboardGearPreview } from "@overbookd/http";
 import { DatabaseGear } from "./dashboard.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/period";
 
@@ -20,35 +16,27 @@ export class DashboardGear {
     };
   }
 
-  public static generateForGraph(
+  public static generateDetails(
     gear: DatabaseGear,
     period: Period,
-  ): DashboardGearForGraph[] {
+  ): DashboardGearDetails[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
     return periods.map(({ start, end }) => {
-      const details = this.generateDetails(gear, start);
       const stock = this.findStockByDate(gear);
       const inquiry = this.findInquiryQuantityByDate(gear, start);
+      const activities = this.findActivitiesByDate(gear, start);
+      const inventory = this.findInventoryQuantity(gear);
 
       return {
         start,
         end,
         inquiry,
         stock,
-        details,
+        activities,
+        inventory,
       };
     });
-  }
-
-  private static generateDetails(
-    gear: DatabaseGear,
-    date: Date,
-  ): DashboardGearDetails {
-    return {
-      activities: this.findActivitiesByDate(gear, date),
-      inventory: this.findInventoryQuantity(gear),
-    };
   }
 
   private static computeStockDiscrepancyOn(gear: DatabaseGear): number {

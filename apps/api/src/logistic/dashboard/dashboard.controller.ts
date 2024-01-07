@@ -14,8 +14,8 @@ import { Permission } from "../../authentication/permissions-auth.decorator";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { DashboardGearPreviewResponseDto } from "./dto/dashboard-gear-preview.response.dto";
-import { DashboardGearForGraphResponseDto } from "./dto/dashboard-gear-details.response.dto";
-import { DashboardGearForGraph, DashboardGearPreview } from "@overbookd/http";
+import { DashboardGearDetailsResponseDto } from "./dto/dashboard-gear-details.response.dto";
+import { DashboardGearDetails, DashboardGearPreview } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("logistic/dashboard")
@@ -48,7 +48,7 @@ export class DashboardController {
   @ApiResponse({
     status: 200,
     description: "Get gear",
-    type: DashboardGearForGraphResponseDto,
+    type: DashboardGearDetailsResponseDto,
     isArray: true,
   })
   @ApiParam({
@@ -70,7 +70,7 @@ export class DashboardController {
     @Param("slug") slug: string,
     @Query("start") start: Date,
     @Query("end") end: Date,
-  ): Promise<DashboardGearForGraph[]> {
+  ): Promise<DashboardGearDetails[]> {
     return this.dashboardService.getDetails(slug, start, end);
   }
 }
