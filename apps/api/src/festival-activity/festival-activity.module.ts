@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 
 import { FestivalActivityCommonModule } from "./common/festival-activity-common.module";
-import { DomainEventModule } from "../domain-event/domain-event.module";
 import { StatisticsModule } from "../statistics/statistics.module";
 import { GeneralSectionController } from "./sections/general-section/general-section.controller";
 import { GeneralSectionModule } from "./sections/general-section/general-section.module";
@@ -35,7 +34,6 @@ import { FestivalActivityReviewModule } from "./review/festival-activity-review.
     SupplySectionController,
   ],
   imports: [
-    DomainEventModule,
     StatisticsModule,
     FestivalActivityCommonModule,
     FestivalActivityPreviewModule,
