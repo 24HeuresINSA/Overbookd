@@ -20,9 +20,15 @@ import { PrismaRemoveFestivalActivities } from "./common/repository/remove-festi
 import { PrismaAdherents } from "./common/repository/adherents.prisma";
 import { GeneralSectionController } from "./general-section/general-section.controller";
 import { GeneralSectionModule } from "./general-section/general-section.module";
+import { InChargeSectionController } from "./in-charge-section/in-charge-section.controller";
+import { InChargeSectionModule } from "./in-charge-section/in-charge-section.module";
 
 @Module({
-  controllers: [FestivalActivityController, GeneralSectionController],
+  controllers: [
+    FestivalActivityController,
+    GeneralSectionController,
+    InChargeSectionController,
+  ],
   providers: [
     {
       provide: FestivalActivityService,
@@ -73,6 +79,7 @@ import { GeneralSectionModule } from "./general-section/general-section.module";
     StatisticsModule,
     FestivalActivityCommonModule,
     GeneralSectionModule,
+    InChargeSectionModule,
   ],
 })
 export class FestivalActivityModule {}

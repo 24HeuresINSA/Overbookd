@@ -19,8 +19,6 @@ import {
   PrepareElectricitySupplyUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
-  PrepareContractorCreation,
-  PrepareContractorUpdate,
   PrepareFeedbackPublish,
   Drive,
   drives,
@@ -40,91 +38,11 @@ import {
   AddInquiryRequest,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
-  PrepareInChargeForm,
   PrepareSignaForm,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "../common/dto/period.dto";
 import { Type } from "class-transformer";
-
-export class InChargeRequestDto implements PrepareInChargeForm {
-  @ApiProperty({
-    description: "Festival activity adherent id in charge",
-    required: false,
-  })
-  @IsOptional()
-  adherentId?: number;
-
-  @ApiProperty({
-    description: "Festival activity team in charge",
-    required: false,
-  })
-  @IsOptional()
-  team?: string;
-}
-
-export class AddContractorRequestDto implements PrepareContractorCreation {
-  @ApiProperty({ required: true })
-  @IsString()
-  firstname: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  lastname: string;
-
-  @ApiProperty({ required: true })
-  @IsString()
-  phone: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  email?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  company?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  comment?: string;
-}
-
-export type UpdateContractorRequest = Omit<PrepareContractorUpdate, "id">;
-
-export class UpdateContractorRequestDto implements UpdateContractorRequest {
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  firstname?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  lastname?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  phone?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  email?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  company?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  comment?: string;
-}
 
 export class SignaRequestDto implements PrepareSignaForm {
   @ApiProperty({

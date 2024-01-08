@@ -26,7 +26,6 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
 import type {
-  Contractor,
   ElectricitySupply,
   FestivalActivity,
   InquiryRequest,
@@ -42,19 +41,16 @@ import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
 import {
-  AddContractorRequestDto,
   AddElectricitySupplyRequestDto,
   AddFeedbackRequestDto,
   AddInquiryRequestDto,
   AddSignageRequestDto,
-  InChargeRequestDto,
   InitInquiryRequestDto,
   LinkInquiryDriveRequestDto,
   LinkSignageCatalogItemDto,
   SecurityRequestDto,
   SignaRequestDto,
   SupplyRequestDto,
-  UpdateContractorRequestDto,
   UpdateElectricitySupplyRequestDto,
   UpdateSignageRequestDto,
 } from "./dto/update-festival-activity.request.dto";
@@ -67,7 +63,7 @@ import {
   ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
 import { PeriodDto } from "./common/dto/period.dto";
-import { FestivalActivityErrorFilter } from "./festival-activity-error.filter";
+import { FestivalActivityErrorFilter } from "./common/festival-activity-error.filter";
 import { RefusedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
 import { ValidatedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
 import { InReviewFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
@@ -279,151 +275,6 @@ export class FestivalActivityController {
   })
   remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
     return this.festivalActivityService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":id/in-charge")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "In charge section of festival activity to save",
-    type: InChargeRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  saveInChargeSection(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() inCharge: InChargeRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.saveInChargeSection(id, inCharge);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":id/in-charge/contractors")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Contractor to add in in-charge section of festival activity",
-    type: AddContractorRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  addContractor(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() contractor: AddContractorRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addContractor(id, contractor);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":faId/in-charge/contractors/:contractorId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description:
-      "Contractor data to update in in-charge section of festival activity",
-    type: UpdateContractorRequestDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "contractorId",
-    type: Number,
-    description: "Contractor id",
-    required: true,
-  })
-  updateContractor(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("contractorId", ParseIntPipe) contractorId: Contractor["id"],
-    @Body() contractor: UpdateContractorRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.updateContractor(
-      faId,
-      contractorId,
-      contractor,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":faId/in-charge/contractors/:contractorId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "contractorId",
-    type: Number,
-    description: "Contractor id",
-    required: true,
-  })
-  removeContractor(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("contractorId", ParseIntPipe) contractorId: Contractor["id"],
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.removeContractor(faId, contractorId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -18,8 +18,6 @@ import {
   PrepareElectricitySupplyCreation,
   PrepareSignageCreation,
   InquiryRequest,
-  PrepareContractorCreation,
-  Contractor,
   PrepareFeedbackPublish,
   Reviewing,
   Reviewer,
@@ -30,11 +28,10 @@ import {
   Reviewable,
   PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
-import {
+import type {
   PreviewForSecu,
   AddInquiryRequest,
   InitInquiryRequest,
-  PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
   PreviewForCommunication,
@@ -47,7 +44,6 @@ import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
 import {
-  UpdateContractorRequest,
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
@@ -152,43 +148,6 @@ export class FestivalActivityService {
     timeWindowId: TimeWindow["id"],
   ): Promise<FestivalActivity> {
     return this.prepare.removeTimeWindowFromGeneral(faId, timeWindowId);
-  }
-
-  async saveInChargeSection(
-    id: FestivalActivity["id"],
-    inCharge: PrepareInChargeForm,
-  ): Promise<FestivalActivity> {
-    const adherent = inCharge.adherentId
-      ? { adherent: await this.adherents.find(inCharge.adherentId) }
-      : {};
-
-    return this.prepare.updateInChargeSection(id, {
-      ...inCharge,
-      ...adherent,
-    });
-  }
-
-  addContractor(
-    id: FestivalActivity["id"],
-    contractor: PrepareContractorCreation,
-  ): Promise<FestivalActivity> {
-    return this.prepare.addContractor(id, contractor);
-  }
-
-  updateContractor(
-    faId: FestivalActivity["id"],
-    contractorId: Contractor["id"],
-    contractorUpdate: UpdateContractorRequest,
-  ): Promise<FestivalActivity> {
-    const contractor = { id: contractorId, ...contractorUpdate };
-    return this.prepare.updateContractor(faId, contractor);
-  }
-
-  removeContractor(
-    faId: FestivalActivity["id"],
-    contractorId: Contractor["id"],
-  ): Promise<FestivalActivity> {
-    return this.prepare.removeContractor(faId, contractorId);
   }
 
   async saveSignaSection(
