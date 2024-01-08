@@ -1,8 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
-  Get,
   HttpCode,
   Param,
   ParseIntPipe,
@@ -23,13 +21,12 @@ import {
   ApiExtraModels,
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
-import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
+import { VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
 import type { FestivalActivity, Refused } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
-import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
 import { AddFeedbackRequestDto } from "./dto/update-festival-activity.request.dto";
 import { RefusedPreviewFestivalActivityResponseDto } from "./preview/dto/preview-refused-festival-activity.response.dto";
@@ -53,8 +50,6 @@ import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 import { LinkedSignageResponseDto } from "./common/dto/signage.response.dto";
 import { UnlinkedSignageResponseDto } from "./common/dto/signage.response.dto";
 import { StatisticsService } from "../statistics/statistics.service";
-import { Statistics } from "@overbookd/http";
-import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -89,72 +84,6 @@ export class FestivalActivityController {
   ) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get("statistics")
-  @ApiResponse({
-    status: 200,
-    description: "Festival activities statistics",
-    isArray: true,
-    type: StatisticsResponseDto,
-  })
-  displayStatistics(): Promise<Statistics[]> {
-    return this.statistics.festivalActivity;
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get(":id")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  findById(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-  ): Promise<FestivalActivity | null> {
-    return this.festivalActivityService.findById(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post()
-  @ApiResponse({
-    status: 201,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Festival activity to create",
-    type: CreateFestivalActivityRequestDto,
-  })
-  create(
-    @Body() { name }: CreateFestivalActivityRequestDto,
-    @Request() { user }: RequestWithUserPayload,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.create(user, name);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
   @Post(":id/ask-for-review")
   @ApiResponse({
@@ -180,24 +109,6 @@ export class FestivalActivityController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalActivity> {
     return this.festivalActivityService.toReview(id, user);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":id")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Festival activity deleted",
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
-    return this.festivalActivityService.remove(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
