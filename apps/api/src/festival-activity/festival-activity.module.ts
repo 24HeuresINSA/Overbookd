@@ -1,167 +1,50 @@
 import { Module } from "@nestjs/common";
-import { FestivalActivityController } from "./festival-activity.controller";
-import { FestivalActivityService } from "./festival-activity.service";
-import { PrismaAdherents } from "./repository/adherents.prisma";
-import { PrismaModule } from "../prisma.module";
-import { PrismaService } from "../prisma.service";
-import {
-  AskForReview,
-  CreateFestivalActivity,
-  PrepareFestivalActivity,
-  Reviewing,
-} from "@overbookd/festival-activity";
-import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activities.prisma";
-import { PrismaCreateFestivalActivities } from "./repository/create-festival-activities.prisma";
-import { PrismaLocations } from "./repository/locations.prisma";
-import { DomainEventModule } from "../domain-event/domain-event.module";
-import { DomainEventService } from "../domain-event/domain-event.service";
-import { PrismaInquiries } from "./repository/inquiries.prisma";
-import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
-import { PrismaNotifications } from "./repository/notifications.prisma";
-import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festival-activities.prisma";
-import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
+
+import { FestivalActivityCommonModule } from "./common/festival-activity-common.module";
 import { StatisticsModule } from "../statistics/statistics.module";
-import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-activities.prisma";
-import { PrismaPreviews } from "./repository/previews.prisma";
+import { GeneralSectionController } from "./sections/general-section/general-section.controller";
+import { GeneralSectionModule } from "./sections/general-section/general-section.module";
+import { InChargeSectionController } from "./sections/in-charge-section/in-charge-section.controller";
+import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-section.module";
+import { SignaSectionController } from "./sections/signa-section/signa-section.controller";
+import { SignaSectionModule } from "./sections/signa-section/signa-section.module";
+import { SecuritySectionController } from "./sections/security-section/security-section.controller";
+import { SecuritySectionModule } from "./sections/security-section/security-section.module";
+import { SupplySectionController } from "./sections/supply-section/supply-section.controller";
+import { InquirySectionController } from "./sections/inquiry-section/inquiry-section.controller";
+import { InquirySectionModule } from "./sections/inquiry-section/inquiry-section.module";
+import { SupplySectionModule } from "./sections/supply-section/supply-section.module";
+import { FestivalActivityPreviewController } from "./preview/festival-activity-preview.controller";
+import { FestivalActivityPreviewModule } from "./preview/festival-activity-preview.module";
+import { FestivalActivityOverviewModule } from "./overview/festival-activity-overview.module";
+import { FestivalActivityOverviewController } from "./overview/festival-activity-overview.controller";
+import { FestivalActivityReviewController } from "./review/festival-activity-review.controller";
+import { FestivalActivityReviewModule } from "./review/festival-activity-review.module";
 
 @Module({
-  controllers: [FestivalActivityController],
-  providers: [
-    {
-      provide: PrismaCreateFestivalActivities,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaCreateFestivalActivities(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaPrepareFestivalActivities,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaPrepareFestivalActivities(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaAskForReview,
-      useFactory: (prisma: PrismaService) => new PrismaAskForReview(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaAdherents,
-      useFactory: (prisma: PrismaService) => new PrismaAdherents(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaLocations,
-      useFactory: (prisma: PrismaService) => new PrismaLocations(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaInquiries,
-      useFactory: (prisma: PrismaService) => new PrismaInquiries(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaCatalogSignages,
-      useFactory: (prisma: PrismaService) => new PrismaCatalogSignages(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaNotifications,
-      useFactory: (prisma: PrismaService) => new PrismaNotifications(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaReviewingFestivalActivities,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaReviewingFestivalActivities(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaPreviews,
-      useFactory: (prisma: PrismaService) => new PrismaPreviews(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: CreateFestivalActivity,
-      useFactory: async (
-        festivalActivities: PrismaCreateFestivalActivities,
-        prisma: PrismaService,
-      ) => {
-        const {
-          _max: { id: maxId },
-        } = await prisma.festivalActivity.aggregate({ _max: { id: true } });
-        return new CreateFestivalActivity(festivalActivities, maxId + 1);
-      },
-      inject: [PrismaCreateFestivalActivities, PrismaService],
-    },
-    {
-      provide: PrepareFestivalActivity,
-      useFactory: (festivalActivities: PrismaPrepareFestivalActivities) =>
-        new PrepareFestivalActivity(festivalActivities),
-      inject: [PrismaPrepareFestivalActivities],
-    },
-    {
-      provide: AskForReview,
-      useFactory: (
-        festivalActivities: PrismaAskForReview,
-        notifications: PrismaNotifications,
-      ) => new AskForReview(festivalActivities, notifications),
-      inject: [PrismaAskForReview, PrismaNotifications],
-    },
-    {
-      provide: PrismaRemoveFestivalActivities,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaRemoveFestivalActivities(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: Reviewing,
-      useFactory: (festivalActivities: PrismaReviewingFestivalActivities) =>
-        new Reviewing(festivalActivities),
-      inject: [PrismaReviewingFestivalActivities],
-    },
-    {
-      provide: FestivalActivityService,
-      useFactory: (
-        adherents: PrismaAdherents,
-        locations: PrismaLocations,
-        inquiries: PrismaInquiries,
-        catalogSignages: PrismaCatalogSignages,
-        create: CreateFestivalActivity,
-        prepare: PrepareFestivalActivity,
-        askForReview: AskForReview,
-        remove: PrismaRemoveFestivalActivities,
-        reviewing: Reviewing,
-        eventStore: DomainEventService,
-        previews: PrismaPreviews,
-      ) =>
-        new FestivalActivityService(
-          adherents,
-          locations,
-          inquiries,
-          catalogSignages,
-          create,
-          prepare,
-          askForReview,
-          remove,
-          reviewing,
-          eventStore,
-          previews,
-        ),
-      inject: [
-        PrismaAdherents,
-        PrismaLocations,
-        PrismaInquiries,
-        PrismaCatalogSignages,
-        CreateFestivalActivity,
-        PrepareFestivalActivity,
-        AskForReview,
-        PrismaRemoveFestivalActivities,
-        Reviewing,
-        DomainEventService,
-        PrismaPreviews,
-      ],
-    },
+  controllers: [
+    FestivalActivityPreviewController,
+    FestivalActivityOverviewController,
+    FestivalActivityReviewController,
+    GeneralSectionController,
+    InChargeSectionController,
+    InquirySectionController,
+    SecuritySectionController,
+    SignaSectionController,
+    SupplySectionController,
   ],
-  imports: [PrismaModule, DomainEventModule, StatisticsModule],
+  imports: [
+    StatisticsModule,
+    FestivalActivityCommonModule,
+    FestivalActivityPreviewModule,
+    FestivalActivityOverviewModule,
+    FestivalActivityReviewModule,
+    GeneralSectionModule,
+    InChargeSectionModule,
+    InquirySectionModule,
+    SecuritySectionModule,
+    SignaSectionModule,
+    SupplySectionModule,
+  ],
 })
 export class FestivalActivityModule {}

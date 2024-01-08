@@ -20,7 +20,7 @@ import {
 import {
   HttpStringified,
   PreviewForCommunication,
-  PreviewForSecu,
+  PreviewForSecurity,
 } from "@overbookd/http";
 import { CastReviewable } from "./reviewable";
 import { CastDraft } from "./draft";
@@ -37,8 +37,8 @@ export function castActivityWithDate(
 }
 
 export function castPreviewForSecurityWithDate(
-  activity: HttpStringified<PreviewForSecu>,
-): PreviewForSecu {
+  activity: HttpStringified<PreviewForSecurity>,
+): PreviewForSecurity {
   return {
     ...activity,
     timeWindows: activity.timeWindows.map(castTimeWindowWithDate),
