@@ -6,7 +6,6 @@ import {
   HttpCode,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
   Request,
   UseFilters,
@@ -27,10 +26,8 @@ import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
 import type {
   FestivalActivity,
-  InquiryRequest,
   PreviewFestivalActivity,
   Refused,
-  TimeWindow,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
@@ -38,12 +35,7 @@ import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
-import {
-  AddFeedbackRequestDto,
-  AddInquiryRequestDto,
-  InitInquiryRequestDto,
-  LinkInquiryDriveRequestDto,
-} from "./dto/update-festival-activity.request.dto";
+import { AddFeedbackRequestDto } from "./dto/update-festival-activity.request.dto";
 import {
   DraftPreviewFestivalActivityResponseDto,
   InReviewPreviewFestivalActivityResponseDto,
@@ -52,7 +44,6 @@ import {
   RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
-import { PeriodDto } from "./common/dto/period.dto";
 import { FestivalActivityErrorFilter } from "./common/festival-activity-error.filter";
 import { RefusedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
 import { ValidatedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
@@ -265,226 +256,6 @@ export class FestivalActivityController {
   })
   remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
     return this.festivalActivityService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":faId/inquiry")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Inquiry section initial request",
-    type: InitInquiryRequestDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  initInquiry(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Body() inquiryInitializer: InitInquiryRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.initInquiry(faId, inquiryInitializer);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":faId/inquiry/time-windows")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Time window to add in inquiry section of festival activity",
-    type: PeriodDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  addInquiryTimeWindow(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Body() timeWindow: PeriodDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addInquiryTimeWindow(faId, timeWindow);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":faId/inquiry/time-windows/:timeWindowId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "timeWindowId",
-    type: String,
-    description: "Time Window id",
-    required: true,
-  })
-  removeInquiryTimeWindow(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("timeWindowId") timeWindowId: TimeWindow["id"],
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.removeInquiryTimeWindow(
-      faId,
-      timeWindowId,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":faId/inquiry/requests")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description:
-      "Inquiry request to add in inquiry section of festival activity",
-    type: AddInquiryRequestDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  addInquiryRequest(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Body() inquiryRequest: AddInquiryRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addInquiryRequest(faId, inquiryRequest);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":faId/inquiry/requests/:inquirySlug")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "inquirySlug",
-    type: String,
-    description: "Inquiry Request Slug",
-    required: true,
-  })
-  removeInquiryRequest(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("inquirySlug") slug: InquiryRequest["slug"],
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.removeInquiryRequest(faId, slug);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FA)
-  @Patch(":faId/inquiry/requests/:inquirySlug")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description:
-      "Drive to link inquiry request with in inquiry section of festival activity",
-    type: LinkInquiryDriveRequestDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "inquirySlug",
-    type: String,
-    description: "Inquiry Request Slug",
-    required: true,
-  })
-  linkInquiryRequestToDrive(
-    @Param("faId", ParseIntPipe) activityId: FestivalActivity["id"],
-    @Param("inquirySlug") slug: InquiryRequest["slug"],
-    @Body() { drive }: LinkInquiryDriveRequestDto,
-    @Request() { user }: RequestWithUserPayload,
-  ): Promise<FestivalActivity> {
-    const jwt = new JwtUtil(user);
-    return this.festivalActivityService.linkInquiryRequestToDrive(jwt, {
-      activityId,
-      slug,
-      drive,
-    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

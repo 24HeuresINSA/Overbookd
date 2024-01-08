@@ -22,7 +22,6 @@ import {
   Reviewing,
   Reviewer,
   Refused,
-  Drive,
   Reviewable,
   PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
@@ -49,12 +48,6 @@ import { Inquiries } from "./common/festival-activity-common.model";
 import { Locations } from "./common/festival-activity-common.model";
 import { Previews } from "./common/festival-activity-common.model";
 import { RemoveFestivalActivities } from "./common/festival-activity-common.model";
-
-type LinkDriveToInquiryRequest = {
-  activityId: FestivalActivity["id"];
-  slug: InquiryRequest["slug"];
-  drive: Drive;
-};
 
 @Injectable()
 export class FestivalActivityService {
@@ -252,24 +245,6 @@ export class FestivalActivityService {
     slug: InquiryRequest["slug"],
   ) {
     return this.prepare.removeInquiryRequest(faId, slug);
-  }
-
-  async linkInquiryRequestToDrive(
-    user: JwtUtil,
-    { activityId, slug, drive }: LinkDriveToInquiryRequest,
-  ): Promise<FestivalActivity> {
-    const inquiry = await this.inquiries.find(slug);
-    if (!inquiry) {
-      throw new NotFoundException("❌ Le matos recherché n'existe pas");
-    }
-
-    this.checkMembership(user, inquiry.owner);
-
-    return this.prepare.assignInquiryToDrive(activityId, {
-      drive,
-      slug,
-      owner: inquiry.owner,
-    });
   }
 
   async addFeedback(
