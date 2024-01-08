@@ -26,7 +26,7 @@ import {
   PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
 import type {
-  PreviewForSecu,
+  PreviewForSecurity,
   AddInquiryRequest,
   InitInquiryRequest,
   PrepareSignaForm,
@@ -68,8 +68,8 @@ export class FestivalActivityService {
     return this.prepare.findAll();
   }
 
-  findForSecurity(): Promise<PreviewForSecu[]> {
-    return this.previews.forSecu();
+  findForSecurity(): Promise<PreviewForSecurity[]> {
+    return this.previews.forSecurity();
   }
 
   findForCommunication(): Promise<PreviewForCommunication[]> {

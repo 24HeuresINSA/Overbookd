@@ -29,10 +29,13 @@ import { SupplySectionController } from "./sections/supply-section/supply-sectio
 import { InquirySectionController } from "./sections/inquiry-section/inquiry-section.controller";
 import { InquirySectionModule } from "./sections/inquiry-section/inquiry-section.module";
 import { SupplySectionModule } from "./sections/supply-section/supply-section.module";
+import { FestivalActivityPreviewController } from "./preview/festival-activity-preview.controller";
+import { FestivalActivityPreviewModule } from "./preview/festival-activity-preview.module";
 
 @Module({
   controllers: [
     FestivalActivityController,
+    FestivalActivityPreviewController,
     GeneralSectionController,
     InChargeSectionController,
     InquirySectionController,
@@ -86,6 +89,7 @@ import { SupplySectionModule } from "./sections/supply-section/supply-section.mo
     DomainEventModule,
     StatisticsModule,
     FestivalActivityCommonModule,
+    FestivalActivityPreviewModule,
     GeneralSectionModule,
     InChargeSectionModule,
     InquirySectionModule,

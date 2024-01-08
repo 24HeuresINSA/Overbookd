@@ -41,7 +41,7 @@ export type Statistics = {
   total: number;
 };
 
-export type PreviewForSecu = {
+export type PreviewForSecurity = {
   id: FestivalActivity["id"];
   name: FestivalActivity["general"]["name"];
   team: FestivalActivity["inCharge"]["team"];

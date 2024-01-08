@@ -24,11 +24,7 @@ import {
 } from "@nestjs/swagger";
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
-import type {
-  FestivalActivity,
-  PreviewFestivalActivity,
-  Refused,
-} from "@overbookd/festival-activity";
+import type { FestivalActivity, Refused } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
@@ -36,14 +32,10 @@ import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
 import { AddFeedbackRequestDto } from "./dto/update-festival-activity.request.dto";
-import {
-  DraftPreviewFestivalActivityResponseDto,
-  InReviewPreviewFestivalActivityResponseDto,
-  PreviewForCommunicationResponseDto,
-  PreviewForSecuResponseDto,
-  RefusedPreviewFestivalActivityResponseDto,
-  ValidatedPreviewFestivalActivityResponseDto,
-} from "./dto/preview-festival-activity.response.dto";
+import { RefusedPreviewFestivalActivityResponseDto } from "./preview/dto/preview-refused-festival-activity.response.dto";
+import { ValidatedPreviewFestivalActivityResponseDto } from "./preview/dto/preview-validated-festival-activity.response.dto";
+import { InReviewPreviewFestivalActivityResponseDto } from "./preview/dto/preview-in-review-festival-activity.response.dto";
+import { DraftPreviewFestivalActivityResponseDto } from "./preview/dto/preview-draft-festival-activity.response.dto";
 import { FestivalActivityErrorFilter } from "./common/festival-activity-error.filter";
 import { RefusedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
 import { ValidatedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
@@ -61,11 +53,7 @@ import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 import { LinkedSignageResponseDto } from "./common/dto/signage.response.dto";
 import { UnlinkedSignageResponseDto } from "./common/dto/signage.response.dto";
 import { StatisticsService } from "../statistics/statistics.service";
-import {
-  PreviewForCommunication,
-  PreviewForSecu,
-  Statistics,
-} from "@overbookd/http";
+import { Statistics } from "@overbookd/http";
 import { StatisticsResponseDto } from "../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
@@ -99,52 +87,6 @@ export class FestivalActivityController {
     private readonly festivalActivityService: FestivalActivityService,
     private readonly statistics: StatisticsService,
   ) {}
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get()
-  @ApiResponse({
-    status: 200,
-    description: "All festival activities",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftPreviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewPreviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedPreviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedPreviewFestivalActivityResponseDto) },
-      ],
-    },
-    isArray: true,
-  })
-  findAll(): Promise<PreviewFestivalActivity[]> {
-    return this.festivalActivityService.findAll();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get("for-security")
-  @ApiResponse({
-    status: 200,
-    description: "All festival activities",
-    type: PreviewForSecuResponseDto,
-    isArray: true,
-  })
-  findAllForSecurity(): Promise<PreviewForSecu[]> {
-    return this.festivalActivityService.findForSecurity();
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_FA)
-  @Get("for-communication")
-  @ApiResponse({
-    status: 200,
-    description: "All festival activities",
-    type: PreviewForCommunicationResponseDto,
-    isArray: true,
-  })
-  findAllForCommunication(): Promise<PreviewForCommunication[]> {
-    return this.festivalActivityService.findForCommunication();
-  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FA)

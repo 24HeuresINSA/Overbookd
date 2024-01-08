@@ -1,4 +1,4 @@
-import { PreviewForCommunication, PreviewForSecu } from "@overbookd/http";
+import { PreviewForCommunication, PreviewForSecurity } from "@overbookd/http";
 import { Previews } from "../festival-activity-common.model";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -11,7 +11,7 @@ import {
 export class PrismaPreviews implements Previews {
   constructor(private readonly prisma: PrismaService) {}
 
-  async forSecu(): Promise<PreviewForSecu[]> {
+  async forSecurity(): Promise<PreviewForSecurity[]> {
     const fromDatabase = await this.prisma.festivalActivity.findMany({
       where: SHOULD_BE_IN_SECURITY_DASHBOARD,
       select: SELECT_PREVIEW_FOR_SECURITY_DASHBOARD,
