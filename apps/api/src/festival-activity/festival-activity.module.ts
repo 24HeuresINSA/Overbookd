@@ -19,6 +19,7 @@ import { PrismaPreviews } from "./common/repository/previews.prisma";
 import { PrismaRemoveFestivalActivities } from "./common/repository/remove-festival-activities.prisma";
 import { PrismaAdherents } from "./common/repository/adherents.prisma";
 import { GeneralSectionController } from "./general-section/general-section.controller";
+import { GeneralSectionModule } from "./general-section/general-section.module";
 
 @Module({
   controllers: [FestivalActivityController, GeneralSectionController],
@@ -71,6 +72,7 @@ import { GeneralSectionController } from "./general-section/general-section.cont
     DomainEventModule,
     StatisticsModule,
     FestivalActivityCommonModule,
+    GeneralSectionModule,
   ],
 })
 export class FestivalActivityModule {}
