@@ -13,5 +13,6 @@ import { FestivalActivityCommonModule } from "../common/festival-activity-common
     },
   ],
   imports: [FestivalActivityCommonModule],
+  exports: [GeneralSectionService],
 })
 export class GeneralSectionModule {}
