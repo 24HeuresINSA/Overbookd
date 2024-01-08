@@ -1,16 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  PreviewReviewable, IN_REVIEW,
-  InReviewReviews
+  PreviewReviewable,
+  IN_REVIEW,
+  InReviewReviews,
 } from "@overbookd/festival-activity";
 import { InReviewReviewsResponseDto } from "../../dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview-festival-activity.response.dto";
 
-type InReviewPreview = Extract<PreviewReviewable, { status: typeof IN_REVIEW; }>;
+type InReviewPreview = Extract<PreviewReviewable, { status: typeof IN_REVIEW }>;
 
 export class InReviewPreviewFestivalActivityResponseDto
   extends ReviewablePreviewBaseResponseDto
-  implements InReviewPreview {
+  implements InReviewPreview
+{
   @ApiProperty({
     description: "The festival activity status",
     type: String,

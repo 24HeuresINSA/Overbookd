@@ -6,7 +6,6 @@ import { PeriodDto } from "../../../common/dto/period.dto";
 import { Type } from "class-transformer";
 import { AddInquiryRequestDto } from "./add-inquiry-request.request.dto";
 
-
 export class InitInquiryRequestDto implements InitInquiryRequest {
   @ApiProperty({
     required: true,

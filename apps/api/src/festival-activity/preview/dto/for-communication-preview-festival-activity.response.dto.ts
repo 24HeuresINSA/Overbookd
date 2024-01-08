@@ -3,7 +3,7 @@ import {
   DRAFT,
   IN_REVIEW,
   VALIDATED,
-  REFUSED
+  REFUSED,
 } from "@overbookd/festival-activity";
 import { PreviewForCommunication } from "@overbookd/http";
 import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto";
@@ -11,7 +11,8 @@ import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto
 const statuses = [DRAFT, IN_REVIEW, VALIDATED, REFUSED];
 
 export class PreviewForCommunicationResponseDto
-  implements PreviewForCommunication {
+  implements PreviewForCommunication
+{
   @ApiProperty({
     description: "The festival activity id",
     type: Number,
