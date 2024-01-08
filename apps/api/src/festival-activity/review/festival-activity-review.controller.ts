@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Body,
   Request,
+  Controller,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -67,6 +68,7 @@ import { FestivalActivityReviewService } from "./festival-activity-review.servic
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
+@Controller("festival-activities")
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
 
