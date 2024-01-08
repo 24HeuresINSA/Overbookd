@@ -4,7 +4,7 @@ import {
   REFUSED,
   RefusedReviews,
 } from "@overbookd/festival-activity";
-import { RefusedReviewsResponseDto } from "../../dto/reviews.response.dto";
+import { RefusedReviewsResponseDto } from "../../review/dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview-festival-activity.response.dto";
 
 type RefusedPreview = Extract<PreviewReviewable, { status: typeof REFUSED }>;

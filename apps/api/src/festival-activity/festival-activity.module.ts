@@ -1,22 +1,8 @@
 import { Module } from "@nestjs/common";
-import { FestivalActivityController } from "./festival-activity.controller";
-import { FestivalActivityService } from "./festival-activity.service";
-import { PrismaModule } from "../prisma.module";
-import {
-  AskForReview,
-  CreateFestivalActivity,
-  PrepareFestivalActivity,
-  Reviewing,
-} from "@overbookd/festival-activity";
+
 import { FestivalActivityCommonModule } from "./common/festival-activity-common.module";
 import { DomainEventModule } from "../domain-event/domain-event.module";
-import { DomainEventService } from "../domain-event/domain-event.service";
 import { StatisticsModule } from "../statistics/statistics.module";
-import { PrismaInquiries } from "./common/repository/inquiries.prisma";
-import { PrismaLocations } from "./common/repository/locations.prisma";
-import { PrismaPreviews } from "./common/repository/previews.prisma";
-import { PrismaRemoveFestivalActivities } from "./common/repository/remove-festival-activities.prisma";
-import { PrismaAdherents } from "./common/repository/adherents.prisma";
 import { GeneralSectionController } from "./sections/general-section/general-section.controller";
 import { GeneralSectionModule } from "./sections/general-section/general-section.module";
 import { InChargeSectionController } from "./sections/in-charge-section/in-charge-section.controller";
@@ -33,12 +19,14 @@ import { FestivalActivityPreviewController } from "./preview/festival-activity-p
 import { FestivalActivityPreviewModule } from "./preview/festival-activity-preview.module";
 import { FestivalActivityOverviewModule } from "./overview/festival-activity-overview.module";
 import { FestivalActivityOverviewController } from "./overview/festival-activity-overview.controller";
+import { FestivalActivityReviewController } from "./review/festival-activity-review.controller";
+import { FestivalActivityReviewModule } from "./review/festival-activity-review.module";
 
 @Module({
   controllers: [
-    FestivalActivityController,
     FestivalActivityPreviewController,
     FestivalActivityOverviewController,
+    FestivalActivityReviewController,
     GeneralSectionController,
     InChargeSectionController,
     InquirySectionController,
@@ -46,54 +34,13 @@ import { FestivalActivityOverviewController } from "./overview/festival-activity
     SignaSectionController,
     SupplySectionController,
   ],
-  providers: [
-    {
-      provide: FestivalActivityService,
-      useFactory: (
-        adherents: PrismaAdherents,
-        locations: PrismaLocations,
-        inquiries: PrismaInquiries,
-        create: CreateFestivalActivity,
-        prepare: PrepareFestivalActivity,
-        askForReview: AskForReview,
-        remove: PrismaRemoveFestivalActivities,
-        reviewing: Reviewing,
-        eventStore: DomainEventService,
-        previews: PrismaPreviews,
-      ) =>
-        new FestivalActivityService(
-          adherents,
-          locations,
-          inquiries,
-          create,
-          prepare,
-          askForReview,
-          remove,
-          reviewing,
-          eventStore,
-          previews,
-        ),
-      inject: [
-        PrismaAdherents,
-        PrismaLocations,
-        PrismaInquiries,
-        CreateFestivalActivity,
-        PrepareFestivalActivity,
-        AskForReview,
-        PrismaRemoveFestivalActivities,
-        Reviewing,
-        DomainEventService,
-        PrismaPreviews,
-      ],
-    },
-  ],
   imports: [
-    PrismaModule,
     DomainEventModule,
     StatisticsModule,
     FestivalActivityCommonModule,
     FestivalActivityPreviewModule,
     FestivalActivityOverviewModule,
+    FestivalActivityReviewModule,
     GeneralSectionModule,
     InChargeSectionModule,
     InquirySectionModule,

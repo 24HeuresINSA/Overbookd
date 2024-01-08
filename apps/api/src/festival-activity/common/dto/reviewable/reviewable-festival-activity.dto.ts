@@ -18,7 +18,7 @@ import {
   InReviewReviewsResponseDto,
   RefusedReviewsResponseDto,
   ValidatedReviewsResponseDto,
-} from "../../../dto/reviews.response.dto";
+} from "../../../review/dto/reviews.response.dto";
 import {
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,

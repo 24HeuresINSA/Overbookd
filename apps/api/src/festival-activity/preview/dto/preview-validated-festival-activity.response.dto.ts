@@ -4,7 +4,7 @@ import {
   ValidatedReviews,
   VALIDATED,
 } from "@overbookd/festival-activity";
-import { ValidatedReviewsResponseDto } from "../../dto/reviews.response.dto";
+import { ValidatedReviewsResponseDto } from "../../review/dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview-festival-activity.response.dto";
 
 type ValidatedPreview = Extract<

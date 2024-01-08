@@ -4,7 +4,7 @@ import {
   IN_REVIEW,
   InReviewReviews,
 } from "@overbookd/festival-activity";
-import { InReviewReviewsResponseDto } from "../../dto/reviews.response.dto";
+import { InReviewReviewsResponseDto } from "../../review/dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview-festival-activity.response.dto";
 
 type InReviewPreview = Extract<PreviewReviewable, { status: typeof IN_REVIEW }>;

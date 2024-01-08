@@ -1,55 +1,51 @@
 import {
-  Body,
-  Controller,
+  UseGuards,
+  Post,
   HttpCode,
   Param,
   ParseIntPipe,
-  Post,
+  Body,
   Request,
-  UseFilters,
-  UseGuards,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiTags,
   ApiBadRequestResponse,
   ApiForbiddenResponse,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  getSchemaPath,
   ApiExtraModels,
+  ApiResponse,
+  getSchemaPath,
+  ApiBody,
+  ApiParam,
 } from "@nestjs/swagger";
-import { FestivalActivityService } from "./festival-activity.service";
-import { VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
-import type { FestivalActivity, Refused } from "@overbookd/festival-activity";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { RequestWithUserPayload } from "../app.controller";
-import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
-import { AddFeedbackRequestDto } from "./dto/update-festival-activity.request.dto";
-import { RefusedPreviewFestivalActivityResponseDto } from "./preview/dto/preview-refused-festival-activity.response.dto";
-import { ValidatedPreviewFestivalActivityResponseDto } from "./preview/dto/preview-validated-festival-activity.response.dto";
-import { InReviewPreviewFestivalActivityResponseDto } from "./preview/dto/preview-in-review-festival-activity.response.dto";
-import { DraftPreviewFestivalActivityResponseDto } from "./preview/dto/preview-draft-festival-activity.response.dto";
-import { FestivalActivityErrorFilter } from "./common/festival-activity-error.filter";
-import { RefusedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
-import { ValidatedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
-import { InReviewFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
+import { FestivalActivity, Refused } from "@overbookd/festival-activity";
+import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
+import { RequestWithUserPayload } from "../../app.controller";
+import { JwtUtil } from "../../authentication/entities/jwt-util.entity";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
+import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
 import {
-  AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
-} from "./common/dto/inquiry-request.response.dto";
+  AssignedInquiryRequestResponseDto,
+} from "../common/dto/inquiry-request.response.dto";
 import {
-  PrivateReviewableGeneralResponseDto,
+  InReviewFestivalActivityResponseDto,
+  ValidatedFestivalActivityResponseDto,
+  RefusedFestivalActivityResponseDto,
+} from "../common/dto/reviewable/reviewable-festival-activity.dto";
+import {
   PublicReviewableGeneralResponseDto,
-} from "./common/dto/reviewable/reviewable-general.response.dto";
-import { JwtUtil } from "../authentication/entities/jwt-util.entity";
+  PrivateReviewableGeneralResponseDto,
+} from "../common/dto/reviewable/reviewable-general.response.dto";
+import {
+  UnlinkedSignageResponseDto,
+  LinkedSignageResponseDto,
+} from "../common/dto/signage.response.dto";
 import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
-import { LinkedSignageResponseDto } from "./common/dto/signage.response.dto";
-import { UnlinkedSignageResponseDto } from "./common/dto/signage.response.dto";
-import { StatisticsService } from "../statistics/statistics.service";
+import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
+import { FestivalActivityReviewService } from "./festival-activity-review.service";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -66,50 +62,13 @@ import { StatisticsService } from "../statistics/statistics.service";
   LinkedSignageResponseDto,
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
-  DraftPreviewFestivalActivityResponseDto,
-  InReviewPreviewFestivalActivityResponseDto,
-  ValidatedPreviewFestivalActivityResponseDto,
-  RefusedPreviewFestivalActivityResponseDto,
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
-@Controller("festival-activities")
-export class FestivalActivityController {
-  constructor(
-    private readonly festivalActivityService: FestivalActivityService,
-    private readonly statistics: StatisticsService,
-  ) {}
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":id/ask-for-review")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  askForReview(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Request() { user }: RequestWithUserPayload,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.toReview(id, user);
-  }
+export class FestivalActivityReviewController {
+  constructor(private readonly reviewService: FestivalActivityReviewService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
@@ -142,7 +101,35 @@ export class FestivalActivityController {
     @Request() { user }: RequestWithUserPayload,
     @Body() feedback: AddFeedbackRequestDto,
   ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addFeedback(faId, user, feedback);
+    return this.reviewService.addFeedback(faId, user, feedback);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
+  @Post(":faId/ask-for-review")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  askForReview(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalActivity> {
+    return this.reviewService.toReview(faId, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -176,7 +163,7 @@ export class FestivalActivityController {
     @Body() { team }: ApproveRequestDto,
   ): Promise<FestivalActivity> {
     const jwt = new JwtUtil(user);
-    return this.festivalActivityService.approve(faId, jwt, team);
+    return this.reviewService.approve(faId, jwt, team);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -204,6 +191,6 @@ export class FestivalActivityController {
     @Body() reject: RejectRequestDto,
   ): Promise<Refused> {
     const jwt = new JwtUtil(user);
-    return this.festivalActivityService.reject(faId, jwt, reject);
+    return this.reviewService.reject(faId, jwt, reject);
   }
 }
