@@ -29,7 +29,7 @@ import {
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
 } from "../common/dto/reviewable/reviewable-general.response.dto";
-import { FestivalActivityErrorFilter } from "../festival-activity-error.filter";
+import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 import { GeneralSectionService } from "./general-section.service";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
 import { WRITE_FA } from "@overbookd/permission";
