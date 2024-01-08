@@ -41,7 +41,7 @@ import {
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
-import { UpdateElectricitySupplyRequest } from "./dto/update-festival-activity.request.dto";
+import { UpdateElectricitySupplyRequest } from "./sections/supply-section/dto/update-electricity-supply.request.dto";
 import { UpdateSignageRequest } from "./sections/signa-section/dto/update-signage.request.dto";
 import { PeriodDto } from "./common/dto/period.dto";
 import { Adherents } from "./common/festival-activity-common.model";

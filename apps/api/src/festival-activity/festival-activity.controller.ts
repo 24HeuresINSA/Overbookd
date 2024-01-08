@@ -26,7 +26,6 @@ import {
 import { FestivalActivityService } from "./festival-activity.service";
 import { READ_FA, VALIDATE_FA, WRITE_FA } from "@overbookd/permission";
 import type {
-  ElectricitySupply,
   FestivalActivity,
   InquiryRequest,
   PreviewFestivalActivity,
@@ -40,13 +39,10 @@ import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
 import {
-  AddElectricitySupplyRequestDto,
   AddFeedbackRequestDto,
   AddInquiryRequestDto,
   InitInquiryRequestDto,
   LinkInquiryDriveRequestDto,
-  SupplyRequestDto,
-  UpdateElectricitySupplyRequestDto,
 } from "./dto/update-festival-activity.request.dto";
 import {
   DraftPreviewFestivalActivityResponseDto,
@@ -269,160 +265,6 @@ export class FestivalActivityController {
   })
   remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
     return this.festivalActivityService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":id/supply")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Supply section of festival activity to save",
-    type: SupplyRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  saveSupplySection(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() supply: SupplyRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.saveSupplySection(id, supply);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":id/supply/electricity")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description:
-      "Electricity supply to add in supply section of festival activity",
-    type: AddElectricitySupplyRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  addElectricitySupply(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() electricitySupply: AddElectricitySupplyRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addElectricitySupply(
-      id,
-      electricitySupply,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":faId/supply/electricity/:electricitySupplyId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description:
-      "Electricity supply data to update in supply section of festival activity",
-    type: UpdateElectricitySupplyRequestDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "electricitySupplyId",
-    type: String,
-    description: "Electricity supply id",
-    required: true,
-  })
-  updateElectricitySupply(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("electricitySupplyId")
-    electricitySupplyId: ElectricitySupply["id"],
-    @Body() electricitySupply: UpdateElectricitySupplyRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.updateElectricitySupply(
-      faId,
-      electricitySupplyId,
-      electricitySupply,
-    );
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":faId/supply/electricity/:electricitySupplyId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "electricitySupplyId",
-    type: String,
-    description: "Electricity supply id",
-    required: true,
-  })
-  removeElectricitySupply(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("electricitySupplyId", ParseIntPipe)
-    electricitySupplyId: ElectricitySupply["id"],
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.removeElectricitySupply(
-      faId,
-      electricitySupplyId,
-    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
