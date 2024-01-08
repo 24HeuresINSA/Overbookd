@@ -23,6 +23,8 @@ import { InChargeSectionController } from "./sections/in-charge-section/in-charg
 import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-section.module";
 import { SignaSectionController } from "./sections/signa-section/signa-section.controller";
 import { SignaSectionModule } from "./sections/signa-section/signa-section.module";
+import { SecuritySectionController } from "./sections/security-section/security-section.controller";
+import { SecuritySectionModule } from "./sections/security-section/security-section.module";
 
 @Module({
   controllers: [
@@ -30,6 +32,7 @@ import { SignaSectionModule } from "./sections/signa-section/signa-section.modul
     GeneralSectionController,
     InChargeSectionController,
     SignaSectionController,
+    SecuritySectionController,
   ],
   providers: [
     {
@@ -80,6 +83,7 @@ import { SignaSectionModule } from "./sections/signa-section/signa-section.modul
     GeneralSectionModule,
     InChargeSectionModule,
     SignaSectionModule,
+    SecuritySectionModule,
   ],
 })
 export class FestivalActivityModule {}

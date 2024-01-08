@@ -18,11 +18,9 @@ import {
   PrepareFeedbackPublish,
   Drive,
   drives,
-  PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
-  IsNumber,
   IsOptional,
   IsPositive,
   IsString,
@@ -33,24 +31,6 @@ import { AddInquiryRequest, InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "../common/dto/period.dto";
 import { Type } from "class-transformer";
-
-export class SecurityRequestDto implements PrepareSecurityUpdate {
-  @ApiProperty({
-    description: "Festival activity special security need",
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  specialNeed?: string | null;
-
-  @ApiProperty({
-    description: "Festival activity free pass number",
-    required: false,
-  })
-  @IsNumber()
-  @IsOptional()
-  freePass?: number;
-}
 
 export class SupplyRequestDto implements PrepareSupplyUpdate {
   @ApiProperty({

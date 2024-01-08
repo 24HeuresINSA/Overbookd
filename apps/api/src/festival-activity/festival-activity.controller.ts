@@ -45,7 +45,6 @@ import {
   AddInquiryRequestDto,
   InitInquiryRequestDto,
   LinkInquiryDriveRequestDto,
-  SecurityRequestDto,
   SupplyRequestDto,
   UpdateElectricitySupplyRequestDto,
 } from "./dto/update-festival-activity.request.dto";
@@ -270,38 +269,6 @@ export class FestivalActivityController {
   })
   remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
     return this.festivalActivityService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":id/security")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Security section of festival activity to save",
-    type: SecurityRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  saveSecuritySection(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() security: SecurityRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.saveSecuritySection(id, security);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
