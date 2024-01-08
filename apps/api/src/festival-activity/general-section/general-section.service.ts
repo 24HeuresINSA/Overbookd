@@ -1,12 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import {
+import type {
   FestivalActivity,
-  PrepareFestivalActivity,
   PrepareGeneralUpdate,
   TimeWindow,
 } from "@overbookd/festival-activity";
-
-import { IProvidePeriod } from "@overbookd/period";
+import { PrepareFestivalActivity } from "@overbookd/festival-activity";
+import type { IProvidePeriod } from "@overbookd/period";
 
 @Injectable()
 export class GeneralSectionService {
