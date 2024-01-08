@@ -1,9 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  Adherent,
-  Contractor,
-  Draft
-} from "@overbookd/festival-activity";
+import { Adherent, Contractor, Draft } from "@overbookd/festival-activity";
 import { AdherentResponseDto } from "../adherent.response.dto";
 import { ContractorResponseDto } from "../contractor.response.dto";
 

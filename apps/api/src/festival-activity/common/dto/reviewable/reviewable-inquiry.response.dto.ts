@@ -1,15 +1,18 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
   InquiryRequest,
-  InquiryWithPotentialRequests, TimeWindow
+  InquiryWithPotentialRequests,
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { TimeWindowResponseDto } from "../time-window.response.dto";
 import {
   AssignedInquiryRequestResponseDto,
-  UnassignedInquiryRequestResponseDto
+  UnassignedInquiryRequestResponseDto,
 } from "../inquiry-request.response.dto";
 
-export class ReviewableInquiryResponseDto implements InquiryWithPotentialRequests {
+export class ReviewableInquiryResponseDto
+  implements InquiryWithPotentialRequests
+{
   @ApiProperty({ required: true, isArray: true, type: TimeWindowResponseDto })
   timeWindows: TimeWindow[];
 

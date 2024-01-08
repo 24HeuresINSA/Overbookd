@@ -22,7 +22,8 @@ export class GeneralDto implements General {
   categories: string[];
 
   @ApiProperty({
-    description: "Do we whant to publish this festival activity to our web site",
+    description:
+      "Do we whant to publish this festival activity to our web site",
   })
   toPublish: boolean;
 
@@ -33,7 +34,8 @@ export class GeneralDto implements General {
   photoLink: string | null;
 
   @ApiProperty({
-    description: "Define which festival activities are most important ones (i.e. are flagship)",
+    description:
+      "Define which festival activities are most important ones (i.e. are flagship)",
   })
   isFlagship: boolean;
 

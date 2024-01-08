@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   BaseInquiryRequest,
   InquiryWithPotentialRequests,
-  TimeWindow
+  TimeWindow,
 } from "@overbookd/festival-activity";
 import { PeriodDto } from "../period.dto";
 import { UnassignedInquiryRequestResponseDto } from "../inquiry-request.response.dto";

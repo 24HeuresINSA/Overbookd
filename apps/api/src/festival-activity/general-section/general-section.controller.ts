@@ -58,9 +58,7 @@ import { Permission } from "../../authentication/permissions-auth.decorator";
 @UseFilters(FestivalActivityErrorFilter)
 @Controller("festival-activities")
 export class GeneralSectionController {
-  constructor(
-    private readonly generalService: GeneralSectionService,
-  ) {}
+  constructor(private readonly generalService: GeneralSectionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
