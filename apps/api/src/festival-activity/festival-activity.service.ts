@@ -23,8 +23,6 @@ import {
   Reviewer,
   Refused,
   Drive,
-  SignageCatalogItem,
-  signa,
   Reviewable,
   PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
@@ -43,13 +41,10 @@ import {
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  UpdateElectricitySupplyRequest,
-  UpdateSignageRequest,
-} from "./dto/update-festival-activity.request.dto";
+import { UpdateElectricitySupplyRequest } from "./dto/update-festival-activity.request.dto";
+import { UpdateSignageRequest } from "./sections/signa-section/dto/update-signage.request.dto";
 import { PeriodDto } from "./common/dto/period.dto";
 import { Adherents } from "./common/festival-activity-common.model";
-import { CatalogSignages } from "./common/festival-activity-common.model";
 import { Inquiries } from "./common/festival-activity-common.model";
 import { Locations } from "./common/festival-activity-common.model";
 import { Previews } from "./common/festival-activity-common.model";
@@ -61,19 +56,12 @@ type LinkDriveToInquiryRequest = {
   drive: Drive;
 };
 
-type LinkSignageToCatalogItem = {
-  activityId: FestivalActivity["id"];
-  signageId: Signage["id"];
-  catalogItemId: SignageCatalogItem["id"];
-};
-
 @Injectable()
 export class FestivalActivityService {
   constructor(
     private readonly adherents: Adherents,
     private readonly locations: Locations,
     private readonly inquiries: Inquiries,
-    private readonly catalogSignages: CatalogSignages,
     private readonly creation: CreateFestivalActivity,
     private readonly prepare: PrepareFestivalActivity,
     private readonly askForReview: AskForReview,
@@ -182,25 +170,6 @@ export class FestivalActivityService {
     signageId: Signage["id"],
   ): Promise<FestivalActivity> {
     return this.prepare.removeSignage(faId, signageId);
-  }
-
-  async linkSignageToCatalogItem(
-    user: JwtUtil,
-    { activityId, signageId, catalogItemId }: LinkSignageToCatalogItem,
-  ): Promise<FestivalActivity> {
-    const catalogItem = await this.catalogSignages.find(catalogItemId);
-    if (!catalogItem) {
-      throw new NotFoundException(
-        "❌ La signalétique n'existe pas dans le catalogue",
-      );
-    }
-
-    this.checkMembership(user, signa);
-
-    return this.prepare.linkSignageToCatalogItem(activityId, {
-      signageId,
-      catalogItem,
-    });
   }
 
   saveSecuritySection(

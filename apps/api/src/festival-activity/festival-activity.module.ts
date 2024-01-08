@@ -12,7 +12,6 @@ import { FestivalActivityCommonModule } from "./common/festival-activity-common.
 import { DomainEventModule } from "../domain-event/domain-event.module";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { StatisticsModule } from "../statistics/statistics.module";
-import { PrismaCatalogSignages } from "./common/repository/catalog-signages.prisma";
 import { PrismaInquiries } from "./common/repository/inquiries.prisma";
 import { PrismaLocations } from "./common/repository/locations.prisma";
 import { PrismaPreviews } from "./common/repository/previews.prisma";
@@ -22,12 +21,15 @@ import { GeneralSectionController } from "./sections/general-section/general-sec
 import { GeneralSectionModule } from "./sections/general-section/general-section.module";
 import { InChargeSectionController } from "./sections/in-charge-section/in-charge-section.controller";
 import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-section.module";
+import { SignaSectionController } from "./sections/signa-section/signa-section.controller";
+import { SignaSectionModule } from "./sections/signa-section/signa-section.module";
 
 @Module({
   controllers: [
     FestivalActivityController,
     GeneralSectionController,
     InChargeSectionController,
+    SignaSectionController,
   ],
   providers: [
     {
@@ -36,7 +38,6 @@ import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-se
         adherents: PrismaAdherents,
         locations: PrismaLocations,
         inquiries: PrismaInquiries,
-        catalogSignages: PrismaCatalogSignages,
         create: CreateFestivalActivity,
         prepare: PrepareFestivalActivity,
         askForReview: AskForReview,
@@ -49,7 +50,6 @@ import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-se
           adherents,
           locations,
           inquiries,
-          catalogSignages,
           create,
           prepare,
           askForReview,
@@ -62,7 +62,6 @@ import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-se
         PrismaAdherents,
         PrismaLocations,
         PrismaInquiries,
-        PrismaCatalogSignages,
         CreateFestivalActivity,
         PrepareFestivalActivity,
         AskForReview,
@@ -80,6 +79,7 @@ import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-se
     FestivalActivityCommonModule,
     GeneralSectionModule,
     InChargeSectionModule,
+    SignaSectionModule,
   ],
 })
 export class FestivalActivityModule {}

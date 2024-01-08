@@ -31,7 +31,6 @@ import type {
   InquiryRequest,
   PreviewFestivalActivity,
   Refused,
-  Signage,
   TimeWindow,
 } from "@overbookd/festival-activity";
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
@@ -44,15 +43,11 @@ import {
   AddElectricitySupplyRequestDto,
   AddFeedbackRequestDto,
   AddInquiryRequestDto,
-  AddSignageRequestDto,
   InitInquiryRequestDto,
   LinkInquiryDriveRequestDto,
-  LinkSignageCatalogItemDto,
   SecurityRequestDto,
-  SignaRequestDto,
   SupplyRequestDto,
   UpdateElectricitySupplyRequestDto,
-  UpdateSignageRequestDto,
 } from "./dto/update-festival-activity.request.dto";
 import {
   DraftPreviewFestivalActivityResponseDto,
@@ -275,193 +270,6 @@ export class FestivalActivityController {
   })
   remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
     return this.festivalActivityService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":id/signa")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Signa section of festival activity to save",
-    type: SignaRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  saveSignaSection(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() signa: SignaRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.saveSignaSection(id, signa);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":id/signa/signages")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Signage to add in signa section of festival activity",
-    type: AddSignageRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  addSignage(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() signage: AddSignageRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addSignage(id, signage);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":faId/signa/signages/:signageId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Signage data to update in signa section of festival activity",
-    type: AddSignageRequestDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "signageId",
-    type: String,
-    description: "Signage id",
-    required: true,
-  })
-  updateSignage(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("signageId") signageId: Signage["id"],
-    @Body() signage: UpdateSignageRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.updateSignage(faId, signageId, signage);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":faId/signa/signages/:signageId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "signageId",
-    type: String,
-    description: "Signage id",
-    required: true,
-  })
-  removeSignage(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("signageId") signageId: Signage["id"],
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.removeSignage(faId, signageId);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(VALIDATE_FA)
-  @Patch(":faId/signa/signages/:signageId/link")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "Festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description:
-      "Catalog item to link signage with in signa section of festival activity",
-    type: LinkSignageCatalogItemDto,
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "signageId",
-    type: Number,
-    description: "Signage id",
-    required: true,
-  })
-  linkSignageToCatalogItem(
-    @Param("faId", ParseIntPipe) activityId: FestivalActivity["id"],
-    @Param("signageId") signageId: Signage["id"],
-    @Body() { catalogItemId }: LinkSignageCatalogItemDto,
-    @Request() { user }: RequestWithUserPayload,
-  ): Promise<FestivalActivity> {
-    const jwt = new JwtUtil(user);
-    return this.festivalActivityService.linkSignageToCatalogItem(jwt, {
-      activityId,
-      signageId,
-      catalogItemId,
-    });
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

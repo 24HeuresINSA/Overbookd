@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   Logger,
   NotFoundException,
@@ -122,6 +123,13 @@ export class TeamService {
         },
       },
     };
+  }
+
+  static checkMembership(user: JwtUtil, team: string) {
+    if (!user.isMemberOf(team)) {
+      const notMember = `❌ Tu n'es pas membre de l'équipe ${team}`;
+      throw new ForbiddenException(notMember);
+    }
   }
 
   private async fetchExistingTeams(teams: string[]): Promise<string[]> {

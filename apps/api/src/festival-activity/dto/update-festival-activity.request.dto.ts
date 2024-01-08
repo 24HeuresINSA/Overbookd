@@ -13,16 +13,11 @@ import {
   P17_63A_TRI,
   PC16_Prise_classique,
   PrepareSupplyUpdate,
-  SignageType,
-  signageTypes,
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
-  PrepareSignageCreation,
-  PrepareSignageUpdate,
   PrepareFeedbackPublish,
   Drive,
   drives,
-  SignageCatalogItem,
   PrepareSecurityUpdate,
 } from "@overbookd/festival-activity";
 import {
@@ -34,96 +29,10 @@ import {
   ValidateIf,
   ValidateNested,
 } from "class-validator";
-import {
-  AddInquiryRequest,
-  InitInquiryRequest,
-  LinkSignageCatalogItemForm,
-  PrepareSignaForm,
-} from "@overbookd/http";
+import { AddInquiryRequest, InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PeriodDto } from "../common/dto/period.dto";
 import { Type } from "class-transformer";
-
-export class SignaRequestDto implements PrepareSignaForm {
-  @ApiProperty({
-    description: "Festival activity location id",
-    required: true,
-  })
-  @IsNumber()
-  @ValidateIf((_, value) => value !== null)
-  locationId: number | null;
-}
-
-export class AddSignageRequestDto implements PrepareSignageCreation {
-  @ApiProperty({
-    required: true,
-    enum: signageTypes,
-  })
-  @IsEnum(signageTypes)
-  type: SignageType;
-
-  @ApiProperty({ required: true })
-  @IsPositive()
-  quantity: number;
-
-  @ApiProperty({ required: true, example: "Reculez" })
-  @IsString()
-  text: string;
-
-  @ApiProperty({
-    example: "A0",
-    required: true,
-  })
-  @IsString()
-  size: string;
-
-  @ApiProperty({
-    type: String,
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  comment?: string;
-}
-
-export type UpdateSignageRequest = Omit<PrepareSignageUpdate, "id">;
-
-export class UpdateSignageRequestDto implements UpdateSignageRequest {
-  @ApiProperty({
-    required: false,
-    enum: signageTypes,
-  })
-  @IsOptional()
-  @IsEnum(signageTypes)
-  type?: SignageType;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsPositive()
-  quantity?: number;
-
-  @ApiProperty({ required: false, example: "Reculez" })
-  @IsOptional()
-  @IsString()
-  text?: string;
-
-  @ApiProperty({ required: false, example: "A0" })
-  @IsOptional()
-  @IsString()
-  size?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  @ValidateIf((_, value) => value !== null)
-  comment?: string | null;
-}
-
-export class LinkSignageCatalogItemDto implements LinkSignageCatalogItemForm {
-  @ApiProperty({ required: true })
-  @IsNumber()
-  catalogItemId: SignageCatalogItem["id"];
-}
 
 export class SecurityRequestDto implements PrepareSecurityUpdate {
   @ApiProperty({
