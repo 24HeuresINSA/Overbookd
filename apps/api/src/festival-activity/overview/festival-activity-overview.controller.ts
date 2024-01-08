@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   Request,
+  Controller,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -70,6 +71,7 @@ import { FestivalActivityOverviewService } from "./festival-activity-overview.se
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
+@Controller("festival-activities")
 export class FestivalActivityOverviewController {
   constructor(
     private readonly overviewService: FestivalActivityOverviewService,
