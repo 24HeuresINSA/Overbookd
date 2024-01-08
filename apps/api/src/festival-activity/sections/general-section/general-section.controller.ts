@@ -21,23 +21,23 @@ import {
   ApiResponse,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
-import { RefusedFestivalActivityResponseDto } from "../common/dto/reviewable/reviewable-festival-activity.dto";
-import { ValidatedFestivalActivityResponseDto } from "../common/dto/reviewable/reviewable-festival-activity.dto";
-import { InReviewFestivalActivityResponseDto } from "../common/dto/reviewable/reviewable-festival-activity.dto";
+import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
+import { WRITE_FA } from "@overbookd/permission";
+import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
+import { Permission } from "../../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
+import { PeriodDto } from "../../common/dto/period.dto";
+import { RefusedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
+import { ValidatedFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
+import { InReviewFestivalActivityResponseDto } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import {
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
-} from "../common/dto/reviewable/reviewable-general.response.dto";
-import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
-import { GeneralSectionService } from "./general-section.service";
-import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
-import { WRITE_FA } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { PeriodDto } from "../common/dto/period.dto";
+} from "../../common/dto/reviewable/reviewable-general.response.dto";
+import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { GeneralRequestDto } from "./dto/update-general.request.dto";
-import { Permission } from "../../authentication/permissions-auth.decorator";
+import { GeneralSectionService } from "./general-section.service";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")

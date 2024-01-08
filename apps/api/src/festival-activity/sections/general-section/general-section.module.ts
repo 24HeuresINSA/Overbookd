@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
-import { GeneralSectionService } from "./general-section.service";
 import { PrepareFestivalActivity } from "@overbookd/festival-activity";
-import { FestivalActivityCommonModule } from "../common/festival-activity-common.module";
+import { FestivalActivityCommonModule } from "../../common/festival-activity-common.module";
+import { GeneralSectionService } from "./general-section.service";
 
 @Module({
   providers: [

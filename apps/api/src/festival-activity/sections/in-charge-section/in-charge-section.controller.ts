@@ -23,20 +23,20 @@ import {
 } from "@nestjs/swagger";
 import { Contractor, FestivalActivity } from "@overbookd/festival-activity";
 import { WRITE_FA } from "@overbookd/permission";
-import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
-import { Permission } from "../../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
+import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
+import { Permission } from "../../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
+import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
 import {
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
-} from "../common/dto/reviewable/reviewable-festival-activity.dto";
+} from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import {
   PublicReviewableGeneralResponseDto,
   PrivateReviewableGeneralResponseDto,
-} from "../common/dto/reviewable/reviewable-general.response.dto";
-import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
+} from "../../common/dto/reviewable/reviewable-general.response.dto";
+import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { UpdateContractorRequestDto } from "./dto/update-contractor.request.dto";
 import { AddContractorRequestDto } from "./dto/add-contractor.request.dto";
 import { InChargeRequestDto } from "./dto/update-in-charge.request.dto";

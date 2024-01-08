@@ -18,10 +18,10 @@ import { PrismaLocations } from "./common/repository/locations.prisma";
 import { PrismaPreviews } from "./common/repository/previews.prisma";
 import { PrismaRemoveFestivalActivities } from "./common/repository/remove-festival-activities.prisma";
 import { PrismaAdherents } from "./common/repository/adherents.prisma";
-import { GeneralSectionController } from "./general-section/general-section.controller";
-import { GeneralSectionModule } from "./general-section/general-section.module";
-import { InChargeSectionController } from "./in-charge-section/in-charge-section.controller";
-import { InChargeSectionModule } from "./in-charge-section/in-charge-section.module";
+import { GeneralSectionController } from "./sections/general-section/general-section.controller";
+import { GeneralSectionModule } from "./sections/general-section/general-section.module";
+import { InChargeSectionController } from "./sections/in-charge-section/in-charge-section.controller";
+import { InChargeSectionModule } from "./sections/in-charge-section/in-charge-section.module";
 
 @Module({
   controllers: [
