@@ -4,11 +4,9 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import {
-  Adherent,
   AskForReview,
   CreateFestivalActivity,
   Draft,
-  Location,
   FestivalActivity,
   PrepareFestivalActivity,
   PrepareGeneralUpdate,
@@ -19,7 +17,6 @@ import {
   ElectricitySupply,
   PrepareElectricitySupplyCreation,
   PrepareSignageCreation,
-  InquiryOwner,
   InquiryRequest,
   PrepareContractorCreation,
   Contractor,
@@ -54,33 +51,13 @@ import {
   UpdateElectricitySupplyRequest,
   UpdateSignageRequest,
 } from "./dto/update-festival-activity.request.dto";
-import { PeriodDto } from "./dto/period.dto";
-
-export type RemoveFestivalActivities = {
-  remove(id: FestivalActivity["id"]): Promise<void>;
-};
-
-export type Adherents = {
-  find(id: number): Promise<Adherent | null>;
-};
-
-export type Locations = {
-  find(id: number): Promise<Location | null>;
-};
-
-export type Gear = {
-  slug: string;
-  name: string;
-  owner: InquiryOwner;
-};
-
-export type Inquiries = {
-  find(slug: string): Promise<Gear | null>;
-};
-
-export type CatalogSignages = {
-  find(id: number): Promise<SignageCatalogItem | null>;
-};
+import { PeriodDto } from "./common/dto/period.dto";
+import { Adherents } from "./common/festival-activity-common.model";
+import { CatalogSignages } from "./common/festival-activity-common.model";
+import { Inquiries } from "./common/festival-activity-common.model";
+import { Locations } from "./common/festival-activity-common.model";
+import { Previews } from "./common/festival-activity-common.model";
+import { RemoveFestivalActivities } from "./common/festival-activity-common.model";
 
 type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];
@@ -92,11 +69,6 @@ type LinkSignageToCatalogItem = {
   activityId: FestivalActivity["id"];
   signageId: Signage["id"];
   catalogItemId: SignageCatalogItem["id"];
-};
-
-export type Previews = {
-  forSecu(): Promise<PreviewForSecu[]>;
-  forCommunication(): Promise<PreviewForCommunication[]>;
 };
 
 @Injectable()

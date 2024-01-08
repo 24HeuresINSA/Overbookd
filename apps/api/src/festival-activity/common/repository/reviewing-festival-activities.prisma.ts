@@ -3,7 +3,7 @@ import {
   Reviewable,
   ReviewingFestivalActivities,
 } from "@overbookd/festival-activity";
-import { PrismaService } from "../../prisma.service";
+import { PrismaService } from "../../../prisma.service";
 import {
   SELECT_FESTIVAL_ACTIVITY,
   buildFestivalActivityCondition,

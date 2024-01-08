@@ -8,6 +8,8 @@ import {
   signageTypes,
 } from "@overbookd/festival-activity";
 
+type SignageLinked = Extract<Signage, { catalogItem: SignageCatalogItem }>;
+
 export class UnlinkedSignageResponseDto implements BaseSignage {
   @ApiProperty({})
   id: string;
@@ -32,8 +34,6 @@ export class UnlinkedSignageResponseDto implements BaseSignage {
   @ApiProperty({})
   comment: string;
 }
-
-type SignageLinked = Extract<Signage, { catalogItem: SignageCatalogItem }>;
 
 class SignageCatalogItemDto implements SignageCatalogItem {
   @ApiProperty({ required: true })

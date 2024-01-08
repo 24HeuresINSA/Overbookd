@@ -1,6 +1,6 @@
 import { PreviewForCommunication, PreviewForSecu } from "@overbookd/http";
-import { Previews } from "../festival-activity.service";
-import { PrismaService } from "../../prisma.service";
+import { Previews } from "../festival-activity-common.model";
+import { PrismaService } from "../../../prisma.service";
 import {
   SHOULD_BE_IN_SECURITY_DASHBOARD,
   SELECT_PREVIEW_FOR_SECURITY_DASHBOARD,

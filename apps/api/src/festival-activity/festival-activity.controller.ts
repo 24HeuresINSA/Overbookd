@@ -40,14 +40,13 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { RequestWithUserPayload } from "../app.controller";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
-import { DraftFestivalActivityResponseDto } from "./dto/draft-festival-activity.response.dto";
+import { DraftFestivalActivityResponseDto } from "./common/dto/draft/draft-festival-activity.response.dto";
 import {
   AddContractorRequestDto,
   AddElectricitySupplyRequestDto,
   AddFeedbackRequestDto,
   AddInquiryRequestDto,
   AddSignageRequestDto,
-  GeneralRequestDto,
   InChargeRequestDto,
   InitInquiryRequestDto,
   LinkInquiryDriveRequestDto,
@@ -67,27 +66,23 @@ import {
   RefusedPreviewFestivalActivityResponseDto,
   ValidatedPreviewFestivalActivityResponseDto,
 } from "./dto/preview-festival-activity.response.dto";
-import { PeriodDto } from "./dto/period.dto";
+import { PeriodDto } from "./common/dto/period.dto";
 import { FestivalActivityErrorFilter } from "./festival-activity-error.filter";
-import {
-  InReviewFestivalActivityResponseDto,
-  RefusedFestivalActivityResponseDto,
-  ValidatedFestivalActivityResponseDto,
-} from "./dto/reviewable-festival-activity.dto";
+import { RefusedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
+import { ValidatedFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
+import { InReviewFestivalActivityResponseDto } from "./common/dto/reviewable/reviewable-festival-activity.dto";
 import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
-} from "./dto/inquiry-request.response.dto";
+} from "./common/dto/inquiry-request.response.dto";
 import {
   PrivateReviewableGeneralResponseDto,
   PublicReviewableGeneralResponseDto,
-} from "./dto/reviewable/general.response.dto";
+} from "./common/dto/reviewable/reviewable-general.response.dto";
 import { JwtUtil } from "../authentication/entities/jwt-util.entity";
 import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
-import {
-  LinkedSignageResponseDto,
-  UnlinkedSignageResponseDto,
-} from "./dto/signage.response.dto";
+import { LinkedSignageResponseDto } from "./common/dto/signage.response.dto";
+import { UnlinkedSignageResponseDto } from "./common/dto/signage.response.dto";
 import { StatisticsService } from "../statistics/statistics.service";
 import {
   PreviewForCommunication,
@@ -284,109 +279,6 @@ export class FestivalActivityController {
   })
   remove(@Param("id", ParseIntPipe) id: FestivalActivity["id"]): Promise<void> {
     return this.festivalActivityService.remove(id);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Patch(":id/general")
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "General section of festival activity to save",
-    type: GeneralRequestDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  saveGeneralSection(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() general: GeneralRequestDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.saveGeneralSection(id, general);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Post(":id/general/time-windows")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiBody({
-    description: "Time window to add in general section of festival activity",
-    type: PeriodDto,
-  })
-  @ApiParam({
-    name: "id",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  addGeneralTimeWindow(
-    @Param("id", ParseIntPipe) id: FestivalActivity["id"],
-    @Body() timeWindow: PeriodDto,
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.addGeneralTimeWindow(id, timeWindow);
-  }
-
-  @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
-  @Delete(":faId/general/time-windows/:timeWindowId")
-  @HttpCode(200)
-  @ApiResponse({
-    status: 200,
-    description: "A festival activity",
-    schema: {
-      oneOf: [
-        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
-        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
-      ],
-    },
-  })
-  @ApiParam({
-    name: "faId",
-    type: Number,
-    description: "Festival activity id",
-    required: true,
-  })
-  @ApiParam({
-    name: "timeWindowId",
-    type: String,
-    description: "Time Window id",
-    required: true,
-  })
-  removeGeneralTimeWindow(
-    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("timeWindowId") timeWindowId: TimeWindow["id"],
-  ): Promise<FestivalActivity> {
-    return this.festivalActivityService.removeGeneralTimeWindow(
-      faId,
-      timeWindowId,
-    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

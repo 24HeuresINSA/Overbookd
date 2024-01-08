@@ -1,5 +1,5 @@
-import { PrismaService } from "../../prisma.service";
-import { CatalogSignages } from "../festival-activity.service";
+import { PrismaService } from "../../../prisma.service";
+import { CatalogSignages } from "../festival-activity-common.model";
 import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
 
 export class PrismaCatalogSignages implements CatalogSignages {

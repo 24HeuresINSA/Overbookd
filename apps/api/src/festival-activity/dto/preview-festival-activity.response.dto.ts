@@ -11,14 +11,14 @@ import {
   REFUSED,
   RefusedReviews,
 } from "@overbookd/festival-activity";
-import { AdherentResponseDto } from "./adherent.response.dto";
+import { AdherentResponseDto } from "../common/dto/adherent.response.dto";
 import {
   InReviewReviewsResponseDto,
   RefusedReviewsResponseDto,
   ValidatedReviewsResponseDto,
 } from "./reviews.response.dto";
 import { PreviewForCommunication, PreviewForSecu } from "@overbookd/http";
-import { TimeWindowResponseDto } from "./time-window.response.dto";
+import { TimeWindowResponseDto } from "../common/dto/time-window.response.dto";
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
   @ApiProperty({

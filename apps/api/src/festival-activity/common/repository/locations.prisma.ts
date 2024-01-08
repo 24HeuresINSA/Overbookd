@@ -1,5 +1,5 @@
-import { PrismaService } from "../../prisma.service";
-import { Locations } from "../festival-activity.service";
+import { PrismaService } from "../../../prisma.service";
+import { Locations } from "../festival-activity-common.model";
 import { SELECT_LOCATION } from "./location.query";
 
 export class PrismaLocations implements Locations {

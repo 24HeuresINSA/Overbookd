@@ -1,5 +1,5 @@
-import { PrismaService } from "../../prisma.service";
-import { Adherents } from "../festival-activity.service";
+import { PrismaService } from "../../../prisma.service";
+import { Adherents } from "../festival-activity-common.model";
 import { SELECT_ADHERENT } from "./adherent.query";
 
 export class PrismaAdherents implements Adherents {

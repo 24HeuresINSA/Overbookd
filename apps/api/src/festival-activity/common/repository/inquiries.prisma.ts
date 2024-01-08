@@ -4,8 +4,8 @@ import {
   InquiryOwner,
   MATOS,
 } from "@overbookd/festival-activity";
-import { Gear, Inquiries } from "../festival-activity.service";
-import { PrismaService } from "../../prisma.service";
+import { Gear, Inquiries } from "../festival-activity-common.model";
+import { PrismaService } from "../../../prisma.service";
 import { SELECT_GEAR_WITH_OWNER } from "./inquiry.query";
 
 const owners: InquiryOwner[] = [MATOS, BARRIERES, ELEC];
