@@ -1,24 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   ElectricityConnection,
-  PrepareElectricitySupplyUpdate
+  PrepareElectricitySupplyUpdate,
 } from "@overbookd/festival-activity";
 import {
   IsEnum,
   IsOptional,
   IsPositive,
   IsString,
-  ValidateIf
+  ValidateIf,
 } from "class-validator";
 import { connections } from "./connections";
 
-
 export type UpdateElectricitySupplyRequest = Omit<
-  PrepareElectricitySupplyUpdate, "id"
+  PrepareElectricitySupplyUpdate,
+  "id"
 >;
 
 export class UpdateElectricitySupplyRequestDto
-  implements UpdateElectricitySupplyRequest {
+  implements UpdateElectricitySupplyRequest
+{
   @ApiProperty({ required: false, enum: connections })
   @IsOptional()
   @IsEnum(connections)
