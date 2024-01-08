@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { PrepareContractorCreation } from "@overbookd/festival-activity";
 import { IsOptional, IsString } from "class-validator";
 
-
 export class AddContractorRequestDto implements PrepareContractorCreation {
   @ApiProperty({ required: true })
   @IsString()

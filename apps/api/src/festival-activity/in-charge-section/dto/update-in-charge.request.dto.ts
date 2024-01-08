@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
 import { PrepareInChargeForm } from "@overbookd/http";
 
-
 export class InChargeRequestDto implements PrepareInChargeForm {
   @ApiProperty({
     description: "Festival activity adherent id in charge",

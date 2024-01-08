@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { PrepareContractorUpdate } from "@overbookd/festival-activity";
 import { IsOptional, IsString } from "class-validator";
 
-
 export type UpdateContractorRequest = Omit<PrepareContractorUpdate, "id">;
 
 export class UpdateContractorRequestDto implements UpdateContractorRequest {
