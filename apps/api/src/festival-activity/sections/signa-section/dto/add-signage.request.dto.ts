@@ -1,14 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   SignageType,
-  signageTypes, PrepareSignageCreation
+  signageTypes,
+  PrepareSignageCreation,
 } from "@overbookd/festival-activity";
-import {
-  IsEnum, IsOptional,
-  IsPositive,
-  IsString
-} from "class-validator";
-
+import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class AddSignageRequestDto implements PrepareSignageCreation {
   @ApiProperty({

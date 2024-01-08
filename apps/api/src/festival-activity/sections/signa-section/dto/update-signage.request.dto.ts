@@ -1,15 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   SignageType,
-  signageTypes, PrepareSignageUpdate
+  signageTypes,
+  PrepareSignageUpdate,
 } from "@overbookd/festival-activity";
 import {
-  IsEnum, IsOptional,
+  IsEnum,
+  IsOptional,
   IsPositive,
   IsString,
-  ValidateIf
+  ValidateIf,
 } from "class-validator";
-
 
 export type UpdateSignageRequest = Omit<PrepareSignageUpdate, "id">;
 
