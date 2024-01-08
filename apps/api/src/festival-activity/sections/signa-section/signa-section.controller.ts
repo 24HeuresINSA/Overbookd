@@ -36,9 +36,9 @@ import {
   RefusedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
 import {
-  PublicReviewableGeneralResponseDto,
-  PrivateReviewableGeneralResponseDto,
-} from "../../common/dto/reviewable/reviewable-general.response.dto";
+  UnlinkedSignageResponseDto,
+  LinkedSignageResponseDto,
+} from "../../common/dto/signage.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { SignaSectionService } from "./signa-section.service";
 import { LinkSignageCatalogItemRequestDto } from "./dto/link-signage-catalog-item.request.dto";
@@ -55,8 +55,8 @@ import { UpdateSignageRequestDto } from "./dto/update-signage.request.dto";
   description: "User can't access this resource",
 })
 @ApiExtraModels(
-  PublicReviewableGeneralResponseDto,
-  PrivateReviewableGeneralResponseDto,
+  UnlinkedSignageResponseDto,
+  LinkedSignageResponseDto,
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,

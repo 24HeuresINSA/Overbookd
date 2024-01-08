@@ -29,10 +29,6 @@ import {
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
-import {
-  PublicReviewableGeneralResponseDto,
-  PrivateReviewableGeneralResponseDto,
-} from "../../common/dto/reviewable/reviewable-general.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { SecurityRequestDto } from "./dto/update-security.request.dto";
 import { SecuritySectionService } from "./security-section.service";
@@ -46,8 +42,6 @@ import { SecuritySectionService } from "./security-section.service";
   description: "User can't access this resource",
 })
 @ApiExtraModels(
-  PublicReviewableGeneralResponseDto,
-  PrivateReviewableGeneralResponseDto,
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,

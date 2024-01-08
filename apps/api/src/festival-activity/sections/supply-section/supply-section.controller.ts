@@ -35,10 +35,6 @@ import {
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 } from "../../common/dto/reviewable/reviewable-festival-activity.dto";
-import {
-  PublicReviewableGeneralResponseDto,
-  PrivateReviewableGeneralResponseDto,
-} from "../../common/dto/reviewable/reviewable-general.response.dto";
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { UpdateElectricitySupplyRequestDto } from "./dto/update-electricity-supply.request.dto";
 import { AddElectricitySupplyRequestDto } from "./dto/add-electricity-supply.request.dto";
@@ -54,8 +50,6 @@ import { SupplySectionService } from "./supply-section.service";
   description: "User can't access this resource",
 })
 @ApiExtraModels(
-  PublicReviewableGeneralResponseDto,
-  PrivateReviewableGeneralResponseDto,
   DraftFestivalActivityResponseDto,
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
