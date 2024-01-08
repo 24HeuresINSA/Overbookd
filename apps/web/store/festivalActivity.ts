@@ -26,7 +26,7 @@ import {
   PrepareSignaForm,
   ReviewRejection,
   InitInquiryRequest,
-  PreviewForSecu,
+  PreviewForSecurity,
   PreviewForCommunication,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
@@ -46,7 +46,7 @@ const repo = FestivalActivityRepository;
 type State = {
   activities: {
     forAll: PreviewFestivalActivity[];
-    forSecurity: PreviewForSecu[];
+    forSecurity: PreviewForSecurity[];
     forCommunication: PreviewForCommunication[];
   };
   selectedActivity: FestivalActivity;
@@ -67,7 +67,7 @@ export const mutations = mutationTree(state, {
   SET_ALL_ACTIVITIES(state, activities: PreviewFestivalActivity[]) {
     state.activities.forAll = activities;
   },
-  SET_PREVIEW_FOR_SECURITY(state, previews: PreviewForSecu[]) {
+  SET_PREVIEW_FOR_SECURITY(state, previews: PreviewForSecurity[]) {
     state.activities.forSecurity = previews;
   },
   SET_PREVIEW_FOR_COMMUNICATION(state, previews: PreviewForCommunication[]) {

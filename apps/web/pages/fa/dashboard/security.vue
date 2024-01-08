@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { PreviewForSecu } from "@overbookd/http";
+import { PreviewForSecurity } from "@overbookd/http";
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatDateToHumanReadable } from "~/utils/date/date.utils";
@@ -66,7 +66,7 @@ export default defineComponent({
     ],
   }),
   computed: {
-    activities(): PreviewForSecu[] {
+    activities(): PreviewForSecurity[] {
       return this.$accessor.festivalActivity.activities.forSecurity;
     },
   },
@@ -78,12 +78,12 @@ export default defineComponent({
     displayDate(date: Date): string {
       return formatDateToHumanReadable(date);
     },
-    endingTimeWindow(timeWindows: PreviewForSecu["timeWindows"]) {
+    endingTimeWindow(timeWindows: PreviewForSecurity["timeWindows"]) {
       const ends = timeWindows.map(({ end }) => end);
       const maxTimestamp = Math.max(...ends.map((end) => end.getTime()));
       return new Date(maxTimestamp);
     },
-    startingTimeWindow(timeWindows: PreviewForSecu["timeWindows"]) {
+    startingTimeWindow(timeWindows: PreviewForSecurity["timeWindows"]) {
       const starts = timeWindows.map(({ start }) => start);
       const minTimestamp = Math.min(...starts.map((end) => end.getTime()));
       return new Date(minTimestamp);
