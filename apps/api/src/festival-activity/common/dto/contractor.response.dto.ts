@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Contractor } from "@overbookd/festival-activity";
+import { Contractor } from "@overbookd/festival-event";
 
 export class ContractorResponseDto implements Contractor {
   @ApiProperty({

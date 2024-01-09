@@ -5,7 +5,7 @@ import {
   InquiryRequest,
   PrepareFestivalActivity,
   TimeWindow,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { InitInquiryRequest, AddInquiryRequest } from "@overbookd/http";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 import { PeriodDto } from "../../common/dto/period.dto";

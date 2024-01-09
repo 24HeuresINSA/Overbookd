@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Contractor } from "@overbookd/festival-activity";
+import { Contractor } from "@overbookd/festival-event";
 
 interface ContractorFormData {
   firstname: string;

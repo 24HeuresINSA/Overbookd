@@ -1,4 +1,4 @@
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
 import { RemoveFestivalActivities } from "../festival-activity-common.model";
 import { buildFestivalActivityCondition } from "./festival-activity.query";

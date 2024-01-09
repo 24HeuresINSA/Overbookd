@@ -3,8 +3,8 @@ import type {
   FestivalActivity,
   PrepareGeneralUpdate,
   TimeWindow,
-} from "@overbookd/festival-activity";
-import { PrepareFestivalActivity } from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
+import { PrepareFestivalActivity } from "@overbookd/festival-event";
 import type { IProvidePeriod } from "@overbookd/period";
 
 @Injectable()

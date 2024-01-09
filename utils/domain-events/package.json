@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@overbookd/event": "workspace:^",
-    "@overbookd/festival-activity": "workspace:^",
+    "@overbookd/festival-event": "workspace:^",
     "@overbookd/personal-account": "workspace:^",
     "@overbookd/registration": "workspace:^",
     "rxjs": "7.8.1"

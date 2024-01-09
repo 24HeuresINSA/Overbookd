@@ -5,7 +5,7 @@ import {
   InquiryWithPotentialRequests,
   Feedback,
   KeyEvent,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { FeedbackResponseDto } from "../feedback.response.dto";
 import { KeyEventResponseDto } from "../key-event.response.dto";
 import { GeneralDto, General } from "./draft-general.response.dto";

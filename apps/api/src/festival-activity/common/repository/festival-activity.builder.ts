@@ -35,7 +35,7 @@ import {
   COMMENTED,
   READY_TO_REVIEW,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 type DatabaseReview = {
   team: Reviewer;

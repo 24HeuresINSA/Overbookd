@@ -98,9 +98,9 @@ importers:
       '@overbookd/domain-events':
         specifier: workspace:^
         version: link:../../utils/domain-events
-      '@overbookd/festival-activity':
+      '@overbookd/festival-event':
         specifier: workspace:^
-        version: link:../../domains/festival-activity
+        version: link:../../domains/festival-event
       '@overbookd/http':
         specifier: workspace:^
         version: link:../../utils/http
@@ -294,9 +294,9 @@ importers:
       '@overbookd/domain-events':
         specifier: workspace:*
         version: link:../../utils/domain-events
-      '@overbookd/festival-activity':
+      '@overbookd/festival-event':
         specifier: workspace:*
-        version: link:../../domains/festival-activity
+        version: link:../../domains/festival-event
       '@overbookd/http':
         specifier: workspace:*
         version: link:../../utils/http
@@ -454,7 +454,7 @@ importers:
         specifier: workspace:*
         version: link:../permission
 
-  domains/festival-activity:
+  domains/festival-event:
     dependencies:
       '@overbookd/list':
         specifier: workspace:*
@@ -544,9 +544,9 @@ importers:
       '@overbookd/event':
         specifier: workspace:^
         version: link:../../libraries/event
-      '@overbookd/festival-activity':
+      '@overbookd/festival-event':
         specifier: workspace:^
-        version: link:../../domains/festival-activity
+        version: link:../../domains/festival-event
       '@overbookd/personal-account':
         specifier: workspace:^
         version: link:../../domains/personal-account
@@ -559,9 +559,9 @@ importers:
 
   utils/http:
     dependencies:
-      '@overbookd/festival-activity':
+      '@overbookd/festival-event':
         specifier: workspace:^
-        version: link:../../domains/festival-activity
+        version: link:../../domains/festival-event
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period
@@ -21086,7 +21086,7 @@ packages:
       spdy: 4.0.2
       webpack: 5.89.0
       webpack-dev-middleware: 5.3.3(webpack@5.89.0)
-      ws: 8.14.2
+      ws: 8.16.0
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -21489,7 +21489,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: false
 
   /xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}

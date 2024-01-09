@@ -5,7 +5,7 @@ import type {
   Draft,
   FestivalActivity,
   PrepareFestivalActivity,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
 import {
   Adherents,

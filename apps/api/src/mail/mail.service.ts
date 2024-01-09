@@ -11,7 +11,7 @@ import {
   NOT_ASKING_TO_REVIEW,
   PreviewFestivalActivity,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Rejected } from "@overbookd/domain-events";
 import { Profile } from "@overbookd/user";
 

@@ -4,7 +4,7 @@ import {
   Reviewer,
   SignageCatalogItem,
   TimeWindow,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 
 export type PrepareInChargeForm = {

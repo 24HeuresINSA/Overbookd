@@ -3,7 +3,7 @@ import {
   FestivalActivity,
   PrepareFestivalActivity,
   PrepareSecurityUpdate,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 @Injectable()
 export class SecuritySectionService {

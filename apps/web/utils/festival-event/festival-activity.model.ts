@@ -20,7 +20,7 @@ import {
   PreviewFestivalActivity,
   InquiryRequest,
   Drive,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 export const BROUILLON = "Brouillon";
 const RELECTURE_EN_COURS = "Relecture en cours";

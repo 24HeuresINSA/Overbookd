@@ -33,7 +33,7 @@
     "utils"
   ],
   "dependencies": {
-    "@overbookd/festival-activity": "workspace:^",
+    "@overbookd/festival-event": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/personal-account": "workspace:^"
   },

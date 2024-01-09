@@ -5,7 +5,7 @@ import {
   PrepareElectricitySupplyCreation,
   PrepareFestivalActivity,
   PrepareSupplyUpdate,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { UpdateElectricitySupplyRequest } from "./dto/update-electricity-supply.request.dto";
 
 @Injectable()

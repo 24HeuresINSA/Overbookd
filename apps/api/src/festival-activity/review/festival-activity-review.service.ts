@@ -9,7 +9,7 @@ import {
   Reviewable,
   Reviewer,
   Reviewing,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { ReviewRejection } from "@overbookd/http";
 import {
   JwtPayload,

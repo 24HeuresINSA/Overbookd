@@ -4,7 +4,7 @@ import { PrismaAdherents } from "../common/repository/adherents.prisma";
 import {
   CreateFestivalActivity,
   PrepareFestivalActivity,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { PrismaRemoveFestivalActivities } from "../common/repository/remove-festival-activities.prisma";
 import { FestivalActivityCommonModule } from "../common/festival-activity-common.module";

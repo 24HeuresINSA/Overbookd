@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   ElectricityConnection,
   PrepareElectricitySupplyCreation,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
 import { connections } from "./connections";
 

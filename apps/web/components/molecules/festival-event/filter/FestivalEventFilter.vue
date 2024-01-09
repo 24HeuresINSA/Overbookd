@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {

@@ -52,7 +52,7 @@ import {
   FestivalActivity,
   isDraft,
   isRefused,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",

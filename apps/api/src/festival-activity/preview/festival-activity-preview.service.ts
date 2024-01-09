@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {
   PrepareFestivalActivity,
   PreviewFestivalActivity as PreviewForAll,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 import { Previews } from "../common/festival-activity-common.model";
 

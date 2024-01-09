@@ -20,7 +20,7 @@ import {
   InquiryRequest,
   Reviewer,
   LinkSignageCatalogItem,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import {
   PrepareInChargeForm,
   PrepareSignaForm,

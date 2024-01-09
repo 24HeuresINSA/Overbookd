@@ -2,7 +2,7 @@ import {
   Notifications,
   Notifyee,
   WaitingForReview,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
 import { Logger } from "@nestjs/common";
 

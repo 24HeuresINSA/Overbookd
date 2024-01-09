@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Adherent, PreviewDraft, DRAFT } from "@overbookd/festival-activity";
+import { Adherent, PreviewDraft, DRAFT } from "@overbookd/festival-event";
 import { AdherentResponseDto } from "../../common/dto/adherent.response.dto";
 
 export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {

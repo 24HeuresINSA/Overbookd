@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Reviewable } from "@overbookd/festival-activity";
+import { Reviewable } from "@overbookd/festival-event";
 
 type Security = Reviewable["security"];
 export class SecurityResponseDto implements Security {

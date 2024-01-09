@@ -12,7 +12,7 @@ import {
   KeyEvent,
   Adherent,
   isLinkedToCatalogItem,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { SELECT_ADHERENT } from "./adherent.query";
 import { SELECT_LOCATION } from "./location.query";
 import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";

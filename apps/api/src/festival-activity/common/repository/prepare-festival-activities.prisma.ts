@@ -2,7 +2,7 @@ import {
   FestivalActivity,
   PrepareFestivalActivityRepository,
   PreviewFestivalActivity,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
 import {
   SELECT_FESTIVAL_ACTIVITY,

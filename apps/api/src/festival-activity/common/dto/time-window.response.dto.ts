@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { TimeWindow } from "@overbookd/festival-activity";
+import { TimeWindow } from "@overbookd/festival-event";
 
 export class TimeWindowResponseDto implements TimeWindow {
   @ApiProperty({

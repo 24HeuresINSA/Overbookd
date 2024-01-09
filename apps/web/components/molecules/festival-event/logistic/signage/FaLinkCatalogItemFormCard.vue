@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Signage, isLinkedToCatalogItem } from "@overbookd/festival-activity";
+import { Signage, isLinkedToCatalogItem } from "@overbookd/festival-event";
 import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 
 export default defineComponent({

@@ -70,7 +70,7 @@ import {
   ElectricityConnection,
   ElectricitySupply,
   PC16_Prise_classique,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import {
   electricityConnectionLabels,

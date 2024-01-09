@@ -3,7 +3,7 @@ import {
   InquiryRequest,
   InquiryWithPotentialRequests,
   TimeWindow,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { TimeWindowResponseDto } from "../time-window.response.dto";
 import {
   AssignedInquiryRequestResponseDto,

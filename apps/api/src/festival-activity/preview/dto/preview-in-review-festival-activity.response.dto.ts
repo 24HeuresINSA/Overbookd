@@ -3,7 +3,7 @@ import {
   PreviewReviewable,
   IN_REVIEW,
   InReviewReviews,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { InReviewReviewsResponseDto } from "../../review/dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview-festival-activity.response.dto";
 

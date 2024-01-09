@@ -8,7 +8,7 @@ import {
   matos,
   secu,
   signa,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { ReviewRejection } from "@overbookd/http";
 import { IsEnum, IsString } from "class-validator";
 

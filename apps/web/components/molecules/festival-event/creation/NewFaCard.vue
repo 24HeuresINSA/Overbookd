@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 
 export default defineComponent({

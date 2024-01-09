@@ -4,7 +4,7 @@ import {
   IN_REVIEW,
   VALIDATED,
   REFUSED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PreviewForCommunication } from "@overbookd/http";
 import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto";
 

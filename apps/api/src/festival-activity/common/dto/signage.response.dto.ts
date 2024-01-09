@@ -6,7 +6,7 @@ import {
   SignageCatalogItem,
   SignageType,
   signageTypes,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 type SignageLinked = Extract<Signage, { catalogItem: SignageCatalogItem }>;
 

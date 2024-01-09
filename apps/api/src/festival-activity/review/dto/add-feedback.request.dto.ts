@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PrepareFeedbackPublish } from "@overbookd/festival-activity";
+import { PrepareFeedbackPublish } from "@overbookd/festival-event";
 import { IsString } from "class-validator";
 
 export class AddFeedbackRequestDto implements PrepareFeedbackPublish {

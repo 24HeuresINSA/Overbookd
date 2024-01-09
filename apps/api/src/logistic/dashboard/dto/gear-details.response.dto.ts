@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { ActivityInquiry, GearDetails } from "@overbookd/http";
 
 class ActivityInquiryResponseDto implements ActivityInquiry {

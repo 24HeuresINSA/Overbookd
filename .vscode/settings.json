@@ -29,7 +29,8 @@
     "registration",
     "deps",
     "tools",
-    "festival-activity"
+    "festival-activity",
+    "festival-event"
   ],
   "cSpell.enabled": false,
   "colorize.languages": ["javascript", "json"],

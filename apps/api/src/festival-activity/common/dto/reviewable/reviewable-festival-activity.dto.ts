@@ -12,7 +12,7 @@ import {
   VALIDATED,
   Validated,
   ValidatedReviews,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { FeedbackResponseDto } from "../feedback.response.dto";
 import {
   InReviewReviewsResponseDto,

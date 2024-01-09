@@ -57,7 +57,7 @@ import {
   APPROVED,
   isDraft,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import ElectricitySupplyTable from "~/components/molecules/festival-event/logistic/supply/ElectricitySupplyTable.vue";
 
 export default defineComponent({

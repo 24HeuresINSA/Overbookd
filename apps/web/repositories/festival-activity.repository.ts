@@ -29,7 +29,7 @@ import {
   Reviewer,
   Signage,
   TimeWindow,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequest } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity.model";

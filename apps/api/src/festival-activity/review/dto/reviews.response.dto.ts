@@ -11,7 +11,7 @@ import {
   ReviewingStatus,
   VALIDATED,
   ValidatedReviews,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 const validatedReviewStatus: ApprovalReviewStatus[] = [
   NOT_ASKING_TO_REVIEW,

@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { SupplySectionService } from "./supply-section.service";
-import { PrepareFestivalActivity } from "@overbookd/festival-activity";
+import { PrepareFestivalActivity } from "@overbookd/festival-event";
 import { FestivalActivityCommonModule } from "../../common/festival-activity-common.module";
 
 @Module({

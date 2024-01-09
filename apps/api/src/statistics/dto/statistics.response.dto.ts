@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { Statistics } from "@overbookd/http";
 
 class StatusResponseDto implements Record<FestivalActivity["status"], number> {

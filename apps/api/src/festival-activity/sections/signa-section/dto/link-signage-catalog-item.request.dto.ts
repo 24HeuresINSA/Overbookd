@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { SignageCatalogItem } from "@overbookd/festival-activity";
+import { SignageCatalogItem } from "@overbookd/festival-event";
 import { IsNumber } from "class-validator";
 import { LinkSignageCatalogItemForm } from "@overbookd/http";
 

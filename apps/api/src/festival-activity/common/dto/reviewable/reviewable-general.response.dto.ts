@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Reviewable, TimeWindow } from "@overbookd/festival-activity";
+import { Reviewable, TimeWindow } from "@overbookd/festival-event";
 import { TimeWindowResponseDto } from "../time-window.response.dto";
 
 type PublicGeneral = Extract<Reviewable["general"], { toPublish: true }>;

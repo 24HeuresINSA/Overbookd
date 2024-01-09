@@ -4,7 +4,7 @@ import {
   PrepareFestivalActivity,
   AskForReview,
   Reviewing,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { StatisticsModule } from "../../statistics/statistics.module";

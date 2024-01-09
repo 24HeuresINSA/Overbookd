@@ -1,4 +1,4 @@
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 
 export type GearPreview = {
   id: number;

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PrepareSecurityUpdate } from "@overbookd/festival-activity";
+import { PrepareSecurityUpdate } from "@overbookd/festival-event";
 import { IsNumber, IsOptional, IsString } from "class-validator";
 
 export class SecurityRequestDto implements PrepareSecurityUpdate {

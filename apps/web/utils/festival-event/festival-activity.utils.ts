@@ -16,7 +16,7 @@ import {
   matos,
   secu,
   signa,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import {
   HttpStringified,
   PreviewForCommunication,

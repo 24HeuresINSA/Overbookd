@@ -44,7 +44,7 @@ import {
   KeyEvent,
   READY_TO_REVIEW,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";

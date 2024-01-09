@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Adherent, PreviewReviewable } from "@overbookd/festival-activity";
+import { Adherent, PreviewReviewable } from "@overbookd/festival-event";
 import { AdherentResponseDto } from "../../common/dto/adherent.response.dto";
 
 type ReviewablePreviewBase = Pick<
