@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Location } from "@overbookd/festival-activity";
+import { Location } from "@overbookd/festival-event";
 
 export class LocationResponseDto implements Location {
   @ApiProperty({ required: true })

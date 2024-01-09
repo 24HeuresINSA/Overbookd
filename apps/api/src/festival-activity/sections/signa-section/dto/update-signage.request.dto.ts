@@ -3,7 +3,7 @@ import {
   SignageType,
   signageTypes,
   PrepareSignageUpdate,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import {
   IsEnum,
   IsOptional,

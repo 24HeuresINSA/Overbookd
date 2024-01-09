@@ -58,7 +58,7 @@ import {
   REJECTED,
   isDraft,
   secu,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default defineComponent({

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, ElectricitySupply } from "@overbookd/festival-activity";
+import { Draft, ElectricitySupply } from "@overbookd/festival-event";
 import { ElectricitySupplyResponseDto } from "../electricity-supply.response.dto";
 
 export type Supply = Draft["supply"];

@@ -1,5 +1,5 @@
 import { FtTimeWindow, FtTimeWindowSortFunction } from "../models/ft.model";
-import { TimeWindow as FaTimeWindow } from "@overbookd/festival-activity";
+import { TimeWindow as FaTimeWindow } from "@overbookd/festival-event";
 
 export type SortableFtTimeWindowHeader = "startDate" | "endDate";
 

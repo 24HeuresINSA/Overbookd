@@ -149,7 +149,7 @@ import {
   communication,
   humain,
   isDraft,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";

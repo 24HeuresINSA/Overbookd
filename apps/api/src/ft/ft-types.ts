@@ -7,7 +7,7 @@ import { TimeSpanBase } from "../assignment/model/ft-time-span.model";
 import { Team } from "../team/team.model";
 import { ReviewStatus } from "../ft-review/ft-review.model";
 import { FtFeedbackSubjectType } from "../ft-feedback/ft-feedback.model";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 
 export class SignaLocation {
   id: number;

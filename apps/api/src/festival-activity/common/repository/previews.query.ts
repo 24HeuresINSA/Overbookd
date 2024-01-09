@@ -1,4 +1,4 @@
-import { APPROVED, secu } from "@overbookd/festival-activity";
+import { APPROVED, secu } from "@overbookd/festival-event";
 
 export const SELECT_PREVIEW_FOR_SECURITY_DASHBOARD = {
   id: true,

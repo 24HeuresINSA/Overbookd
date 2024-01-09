@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, Signage, Location } from "@overbookd/festival-activity";
+import { Draft, Signage, Location } from "@overbookd/festival-event";
 import { UnlinkedSignageResponseDto } from "../signage.response.dto";
 import { LocationResponseDto } from "../location.response.dto";
 

@@ -69,7 +69,7 @@ import Vue from "vue";
 import { PreviewForCommunication } from "@overbookd/http";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
-import { TimeWindow } from "@overbookd/festival-activity";
+import { TimeWindow } from "@overbookd/festival-event";
 import { Period } from "@overbookd/period";
 
 interface PublicAnimationsData {

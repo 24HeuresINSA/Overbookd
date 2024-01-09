@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { SignaSectionService } from "./signa-section.service";
-import { PrepareFestivalActivity } from "@overbookd/festival-activity";
+import { PrepareFestivalActivity } from "@overbookd/festival-event";
 import { PrismaCatalogSignages } from "../../common/repository/catalog-signages.prisma";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
 import { FestivalActivityCommonModule } from "../../common/festival-activity-common.module";

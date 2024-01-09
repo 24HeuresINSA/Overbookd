@@ -5,7 +5,7 @@ import {
   KeyEvent,
   READY_TO_REVIEW,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { ApiProperty } from "@nestjs/swagger";
 import { AdherentResponseDto } from "./adherent.response.dto";
 

@@ -22,7 +22,7 @@ import { UpsertFtReviewRequestDto } from "./dto/upsert-ft-review.request.dto";
 import { TimeSpansGenerator } from "./time-spans-generator";
 import { reviewStatuses } from "../ft-review/ft-review.model";
 import { AFFECT_VOLUNTEER, VALIDATE_FT } from "@overbookd/permission";
-import { VALIDATED } from "@overbookd/festival-activity";
+import { VALIDATED } from "@overbookd/festival-event";
 
 @Injectable()
 export class FtReviewService {

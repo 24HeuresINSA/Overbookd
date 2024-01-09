@@ -4,7 +4,7 @@ import {
   InquiryOwner,
   Location,
   SignageCatalogItem,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 
 export type Adherents = {

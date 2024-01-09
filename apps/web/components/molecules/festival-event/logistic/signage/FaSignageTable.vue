@@ -44,7 +44,7 @@ import {
   FestivalActivity,
   isDraft,
   APPROVED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Signage as CatalogSignage } from "@overbookd/signa";
 import { Header } from "~/utils/models/data-table.model";
 

@@ -1,3 +1,4 @@
+import { numberGenerator } from "@overbookd/list";
 import {
   DRAFT,
   Draft,
@@ -27,7 +28,6 @@ import {
   noel,
 } from "./festival-activity.fake";
 import { FestivalActivityKeyEvents } from "./festival-activity.event";
-import { numberGenerator } from "@overbookd/list";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]

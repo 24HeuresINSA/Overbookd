@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import type { Adherent } from "@overbookd/festival-activity";
+import type { Adherent } from "@overbookd/festival-event";
 
 export class AdherentResponseDto implements Adherent {
   @ApiProperty({

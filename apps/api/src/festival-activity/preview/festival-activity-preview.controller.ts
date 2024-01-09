@@ -8,7 +8,7 @@ import {
   ApiResponse,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { PreviewFestivalActivity } from "@overbookd/festival-activity";
+import { PreviewFestivalActivity } from "@overbookd/festival-event";
 import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
 import { READ_FA } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";

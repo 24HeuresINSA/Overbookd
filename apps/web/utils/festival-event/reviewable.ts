@@ -4,7 +4,7 @@ import {
   PublicGeneral,
   TimeWindow,
   KeyEvent,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 

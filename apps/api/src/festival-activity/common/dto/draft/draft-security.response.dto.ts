@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft } from "@overbookd/festival-activity";
+import { Draft } from "@overbookd/festival-event";
 
 export type Security = Draft["security"];
 export class SecurityDto implements Security {

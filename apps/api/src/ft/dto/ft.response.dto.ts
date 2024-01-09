@@ -24,7 +24,7 @@ import {
 } from "../../ft-feedback/ft-feedback.model";
 import { ReviewStatus, reviewStatuses } from "../../ft-review/ft-review.model";
 import { Team } from "../../team/team.model";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 
 class Author implements UserName {
   firstname: string;

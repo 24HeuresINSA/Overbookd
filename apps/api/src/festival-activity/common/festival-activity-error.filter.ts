@@ -1,5 +1,5 @@
 import { ExceptionFilter, Catch, ArgumentsHost } from "@nestjs/common";
-import { FestivalActivityError } from "@overbookd/festival-activity";
+import { FestivalActivityError } from "@overbookd/festival-event";
 import { Response } from "express";
 
 @Catch(FestivalActivityError)

@@ -3,7 +3,7 @@ import {
   SignageType,
   signageTypes,
   PrepareSignageCreation,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
 
 export class AddSignageRequestDto implements PrepareSignageCreation {

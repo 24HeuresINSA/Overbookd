@@ -4,7 +4,7 @@ import {
   Draft,
   Refused,
   Reviewable,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 export const FESTIVAL_ACTIVITY_CREATED = "festival-activity-created";
 export const FESTIVAL_ACTIVITY_READY_TO_REVIEW =

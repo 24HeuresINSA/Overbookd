@@ -5,7 +5,7 @@ import {
   InquiryRequest,
   MAGASIN,
   drives,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 export class UnassignedInquiryRequestResponseDto implements BaseInquiryRequest {
   @ApiProperty({})

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PrepareGeneralUpdate } from "@overbookd/festival-activity";
+import { PrepareGeneralUpdate } from "@overbookd/festival-event";
 import { IsOptional, IsString, ValidateIf } from "class-validator";
 
 export class GeneralRequestDto implements PrepareGeneralUpdate {

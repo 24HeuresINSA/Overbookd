@@ -21,7 +21,7 @@ import {
   ApiResponse,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
+import { FestivalActivity, TimeWindow } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";

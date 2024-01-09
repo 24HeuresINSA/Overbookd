@@ -46,7 +46,7 @@ import ContractorForm from "./ContractorForm.vue";
 import {
   Contractor,
   PrepareContractorCreation,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Header } from "~/utils/models/data-table.model";
 
 type ContractorData = {

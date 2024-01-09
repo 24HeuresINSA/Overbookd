@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, TimeWindow } from "@overbookd/festival-activity";
+import { Draft, TimeWindow } from "@overbookd/festival-event";
 import { TimeWindowResponseDto } from "../time-window.response.dto";
 
 export type General = Draft["general"];

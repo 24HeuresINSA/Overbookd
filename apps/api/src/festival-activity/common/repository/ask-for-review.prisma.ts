@@ -5,7 +5,7 @@ import {
   AskForReviewFestivalActivityRepository,
   isDraft,
   FestivalActivityError,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import {
   FestivalActivityQueryBuilder,

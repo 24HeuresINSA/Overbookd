@@ -18,7 +18,7 @@ import {
   ApiBody,
   ApiParam,
 } from "@nestjs/swagger";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { WRITE_FA } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";

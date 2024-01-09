@@ -1,7 +1,7 @@
 import {
   CreateFestivalActivityRepository,
   Draft,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
 import {
   FestivalActivityQueryBuilder,

@@ -1,4 +1,4 @@
-import { TimeWindow } from "@overbookd/festival-activity";
+import { TimeWindow } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 
 export function castTimeWindowWithDate(

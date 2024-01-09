@@ -6,7 +6,7 @@ import {
   Signage,
   SignageCatalogItem,
   signa,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { PrepareSignaForm } from "@overbookd/http";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 import { TeamService } from "../../../team/team.service";

@@ -9,7 +9,7 @@ import {
   REVIEWING,
   ReviewStatus,
   VALIDATED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Team } from "../models/team.model";
 import { User } from "@overbookd/user";
 

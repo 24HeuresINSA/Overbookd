@@ -47,7 +47,7 @@ import {
   ElectricitySupply,
   ElectricityConnection,
   PrepareElectricitySupplyCreation,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { electricityConnectionLabels } from "~/utils/festival-event/festival-activity.model";
 import { Header } from "~/utils/models/data-table.model";
 

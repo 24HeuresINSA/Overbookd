@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PrepareContractorCreation } from "@overbookd/festival-activity";
+import { PrepareContractorCreation } from "@overbookd/festival-event";
 import { IsOptional, IsString } from "class-validator";
 
 export class AddContractorRequestDto implements PrepareContractorCreation {

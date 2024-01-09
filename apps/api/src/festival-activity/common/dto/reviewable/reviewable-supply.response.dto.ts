@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ElectricitySupply, Reviewable } from "@overbookd/festival-activity";
+import { ElectricitySupply, Reviewable } from "@overbookd/festival-event";
 import { ElectricitySupplyResponseDto } from "../electricity-supply.response.dto";
 
 type Supply = Reviewable["supply"];

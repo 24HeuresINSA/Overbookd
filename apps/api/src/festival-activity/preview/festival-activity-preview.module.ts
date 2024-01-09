@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
-import { PrepareFestivalActivity } from "@overbookd/festival-activity";
+import { PrepareFestivalActivity } from "@overbookd/festival-event";
 import { PrismaPreviews } from "../common/repository/previews.prisma";
 import { FestivalActivityCommonModule } from "../common/festival-activity-common.module";
 

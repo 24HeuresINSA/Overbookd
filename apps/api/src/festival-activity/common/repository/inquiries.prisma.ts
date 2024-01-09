@@ -3,7 +3,7 @@ import {
   ELEC,
   InquiryOwner,
   MATOS,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Gear, Inquiries } from "../festival-activity-common.model";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_GEAR_WITH_OWNER } from "./inquiry.query";

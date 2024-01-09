@@ -77,7 +77,7 @@ import {
   APPROVED,
   isDraft,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";

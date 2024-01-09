@@ -3,8 +3,8 @@ import type {
   Contractor,
   FestivalActivity,
   PrepareContractorCreation,
-} from "@overbookd/festival-activity";
-import { PrepareFestivalActivity } from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
+import { PrepareFestivalActivity } from "@overbookd/festival-event";
 import type { PrepareInChargeForm } from "@overbookd/http";
 import type { Adherents } from "../../common/festival-activity-common.model";
 import type { UpdateContractorRequest } from "./dto/update-contractor.request.dto";

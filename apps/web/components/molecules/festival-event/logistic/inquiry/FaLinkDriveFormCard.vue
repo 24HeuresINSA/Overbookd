@@ -45,7 +45,7 @@ import {
   InquiryRequest,
   MATOS,
   isAssignedToDrive,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
 
 export default defineComponent({

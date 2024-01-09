@@ -1,4 +1,4 @@
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 
 type BaseDatabaseGear = {

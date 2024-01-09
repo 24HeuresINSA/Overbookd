@@ -1,4 +1,4 @@
-import { Draft, KeyEvent } from "@overbookd/festival-activity";
+import { Draft, KeyEvent } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "./cast-time-windows";
 

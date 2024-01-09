@@ -10,7 +10,7 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 export const connections = [
   PC16_Prise_classique,

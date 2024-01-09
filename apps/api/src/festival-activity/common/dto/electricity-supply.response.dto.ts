@@ -13,7 +13,7 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 
 const electricitySupplyConnections = [
   PC16_Prise_classique,

@@ -42,7 +42,7 @@ import {
   ELEC,
   Drive,
   drives,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Header } from "~/utils/models/data-table.model";
 
 type InquiryTableData = {

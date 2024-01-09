@@ -51,7 +51,7 @@ import {
   matos,
   secu,
   signa,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { defineComponent } from "vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";

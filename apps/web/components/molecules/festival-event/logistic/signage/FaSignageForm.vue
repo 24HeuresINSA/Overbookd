@@ -59,7 +59,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { Signage, PANNEAU, signageTypes } from "@overbookd/festival-activity";
+import { Signage, PANNEAU, signageTypes } from "@overbookd/festival-event";
 import { isNumber, min } from "~/utils/rules/input.rules";
 
 interface SignageFormData {

@@ -88,7 +88,7 @@ import {
   signa,
   REJECTED,
   APPROVED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import FaSignageTable from "~/components/molecules/festival-event/logistic/signage/FaSignageTable.vue";
 import FaLinkCatalogItemFormCard from "~/components/molecules/festival-event/logistic/signage/FaLinkCatalogItemFormCard.vue";

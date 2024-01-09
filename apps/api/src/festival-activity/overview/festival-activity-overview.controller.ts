@@ -22,7 +22,7 @@ import {
   ApiBody,
 } from "@nestjs/swagger";
 import { Statistics } from "@overbookd/http";
-import { FestivalActivity } from "@overbookd/festival-activity";
+import { FestivalActivity } from "@overbookd/festival-event";
 import { READ_FA, WRITE_FA } from "@overbookd/permission";
 import { RequestWithUserPayload } from "../../app.controller";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";

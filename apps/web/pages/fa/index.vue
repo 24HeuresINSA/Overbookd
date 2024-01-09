@@ -132,7 +132,7 @@ import {
   PreviewFestivalActivity,
   FestivalActivity,
   secu,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import {
   Filters,

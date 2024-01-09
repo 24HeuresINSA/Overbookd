@@ -11,7 +11,7 @@ export type {
   PreviewFestivalActivity,
   Feedback,
   KeyEvent,
-} from "./festival-activity";
+} from "./festival-activity/festival-activity";
 export {
   DRAFT,
   IN_REVIEW,
@@ -22,10 +22,13 @@ export {
   READY_TO_REVIEW,
   COMMENTED,
   CREATED,
-} from "./festival-activity";
-export { FestivalActivityError } from "./festival-activity.error";
+} from "./festival-activity/festival-activity";
+export { FestivalActivityError } from "./festival-activity/festival-activity.error";
 
-export type { Adherent, Contractor } from "./sections/in-charge";
+export type {
+  Adherent,
+  Contractor,
+} from "./festival-activity/sections/in-charge";
 
 // INQUIRY
 export type {
@@ -37,7 +40,7 @@ export type {
   InquiryOwner,
   WithInquiries,
   Drive,
-} from "./sections/inquiry";
+} from "./festival-activity/sections/inquiry";
 export {
   MATOS,
   BARRIERES,
@@ -66,12 +69,12 @@ export {
   LIVRE_PAR_COM,
   drives,
   isAssignedToDrive,
-} from "./sections/inquiry";
+} from "./festival-activity/sections/inquiry";
 
 export type {
   ElectricitySupply,
   ElectricityConnection,
-} from "./sections/supply";
+} from "./festival-activity/sections/supply";
 export {
   PC16_Prise_classique,
   P17_16A_MONO,
@@ -84,24 +87,24 @@ export {
   P17_63A_TRI,
   P17_63A_TETRA,
   P17_125A_TETRA,
-} from "./sections/supply";
+} from "./festival-activity/sections/supply";
 
-export type { Public as PublicGeneral } from "./sections/general";
+export type { Public as PublicGeneral } from "./festival-activity/sections/general";
 export type {
   Signage,
   Location,
   SignageType,
   BaseSignage,
   SignageCatalogItem,
-} from "./sections/signa";
+} from "./festival-activity/sections/signa";
 export {
   BACHE,
   PANNEAU,
   AFFICHE,
   signageTypes,
   isLinkedToCatalogItem,
-} from "./sections/signa";
-export type { TimeWindow } from "./sections/time-window";
+} from "./festival-activity/sections/signa";
+export type { TimeWindow } from "./festival-activity/sections/time-window";
 
 // REVIEWS
 export type {
@@ -114,7 +117,7 @@ export type {
   ApprovalReviewStatus,
   RejectionReviewStatus,
   ReviewingStatus,
-} from "./sections/reviews";
+} from "./festival-activity/sections/reviews";
 export {
   APPROVED,
   REVIEWING,
@@ -129,23 +132,23 @@ export {
   barrieres,
   isValidatedReviews,
   isRefusedReviews,
-} from "./sections/reviews";
+} from "./festival-activity/sections/reviews";
 
 // CREATION
-export { CreateFestivalActivity } from "./creation/creation";
+export { CreateFestivalActivity } from "./festival-activity/creation/creation";
 export type {
   FestivalActivityCreationForm,
   CreateFestivalActivityRepository,
-} from "./creation/creation";
-export { InMemoryCreateFestivalActivityRepository } from "./creation/festival-activities.inmemory";
-export { defaultDraft } from "./festival-activity.factory";
+} from "./festival-activity/creation/creation";
+export { InMemoryCreateFestivalActivityRepository } from "./festival-activity/creation/festival-activities.inmemory";
+export { defaultDraft } from "./festival-activity/festival-activity.factory";
 
 // PREPARATION
-export { PrepareFestivalActivity } from "./preparation/prepare-festival-activity";
+export { PrepareFestivalActivity } from "./festival-activity/preparation/prepare-festival-activity";
 export type {
   PrepareFestivalActivityRepository,
   InitInquiry,
-} from "./preparation/prepare-festival-activity";
+} from "./festival-activity/preparation/prepare-festival-activity";
 export type {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,
@@ -161,22 +164,22 @@ export type {
   PrepareInquiryRequestCreation,
   PrepareSecurityUpdate,
   LinkSignageCatalogItem,
-} from "./preparation/prepare-festival-activity.model";
+} from "./festival-activity/preparation/prepare-festival-activity.model";
 
 //ASK FOR REVIEW
-export { InMemoryAskForReviewFestivalActivityRepository } from "./ask-for-review/festival-activities.inmemory";
+export { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activity/ask-for-review/festival-activities.inmemory";
 export type {
   FestivalActivityWithoutStatus,
   InReviewWithoutStatus,
-} from "./ask-for-review/in-review-festival-activity";
-export { ReviewableSpecification } from "./ask-for-review/in-review-festival-activity";
-export { AskForReview } from "./ask-for-review/ask-for-review";
+} from "./festival-activity/ask-for-review/in-review-festival-activity";
+export { ReviewableSpecification } from "./festival-activity/ask-for-review/in-review-festival-activity";
+export { AskForReview } from "./festival-activity/ask-for-review/ask-for-review";
 export type {
   AskForReviewFestivalActivityRepository,
   Notifications,
   Notifyee,
-} from "./ask-for-review/ask-for-review";
+} from "./festival-activity/ask-for-review/ask-for-review";
 
 // Reviewing
-export { Reviewing } from "./reviewing/reviewing";
-export type { ReviewingFestivalActivities } from "./reviewing/reviewing";
+export { Reviewing } from "./festival-activity/reviewing/reviewing";
+export type { ReviewingFestivalActivities } from "./festival-activity/reviewing/reviewing";

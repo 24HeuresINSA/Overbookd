@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { FestivalActivity, Reviewer } from "@overbookd/festival-activity";
+import { FestivalActivity, Reviewer } from "@overbookd/festival-event";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";

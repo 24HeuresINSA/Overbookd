@@ -50,7 +50,7 @@ import {
   SortableFaTimeWindowHeader,
   faTimeWindowsSorts,
 } from "~/utils/functions/time-window";
-import { FestivalActivity, TimeWindow } from "@overbookd/festival-activity";
+import { FestivalActivity, TimeWindow } from "@overbookd/festival-event";
 import { Header } from "~/utils/models/data-table.model";
 import { IProvidePeriod } from "@overbookd/period";
 

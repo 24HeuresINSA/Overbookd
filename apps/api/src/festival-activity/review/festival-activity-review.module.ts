@@ -5,7 +5,7 @@ import {
   AskForReview,
   PrepareFestivalActivity,
   Reviewing,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { FestivalActivityCommonModule } from "../common/festival-activity-common.module";
 import { DomainEventModule } from "../../domain-event/domain-event.module";

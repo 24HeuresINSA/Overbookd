@@ -185,7 +185,7 @@ import {
   isDraft,
   APPROVED,
   REJECTED,
-} from "@overbookd/festival-activity";
+} from "@overbookd/festival-event";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
 import { min, isNumber } from "~/utils/rules/input.rules";
