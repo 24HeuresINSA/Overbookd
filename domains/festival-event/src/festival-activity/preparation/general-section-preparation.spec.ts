@@ -284,7 +284,7 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                             | activityId                     | toAdd                   | toRemove                                           | update
+    activityName                            | activityId                    | toAdd                   | toRemove                                          | update
     ${approvedByCommunication.general.name} | ${approvedByCommunication.id} | ${sunday14hToSunday18h} | ${approvedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
   `(
     "when $activityName was already validated by communication",
@@ -326,7 +326,7 @@ describe("General section of festival activity preparation", () => {
   );
 
   describe.each`
-    activityName                            | activityId                    | toAdd                   | toRemove
+    activityName                           | activityId                   | toAdd                   | toRemove
     ${approvedByHumain.general.name}       | ${approvedByHumain.id}       | ${sunday14hToSunday18h} | ${approvedByHumain.general.timeWindows[0]}
     ${publicApprovedByHumain.general.name} | ${publicApprovedByHumain.id} | ${sunday14hToSunday18h} | ${publicApprovedByHumain.general.timeWindows[0]}
   `(
