@@ -2,7 +2,10 @@ import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivity } from "../../festival-activity";
 import { InquiryRequest } from "../../sections/inquiry";
 import { TimeWindow } from "../../sections/time-window";
-import { InquiryAlreadyExists } from "../../festival-activity.error";
+import {
+  FestivalActivityError,
+  InquiryAlreadyExists,
+} from "../../festival-activity.error";
 import { TimeWindows } from "./time-windows";
 import {
   AssignDrive,
@@ -12,30 +15,30 @@ import {
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
 import { updateItemToList } from "@overbookd/list";
 
-export class AlreadyInitialized extends Error {
+export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
-    super("La section Demande de matos a déjà été initialisée");
+    super("❌ La section Demande de matos a déjà été initialisée");
   }
 }
 
-export class NotYetInitialized extends Error {
+export class NotYetInitialized extends FestivalActivityError {
   constructor() {
-    super("La section Demande de matos n'a pas encore été initialisée.");
+    super("❌ La section Demande de matos n'a pas encore été initialisée.");
   }
 }
 
-export class CantRemoveLastTimeWindow extends Error {
+export class CantRemoveLastTimeWindow extends FestivalActivityError {
   constructor() {
     super(
-      "Il s'agit du dernier créneau matos. Il n'est pas possible de le supprimer",
+      "❌ Il s'agit du dernier créneau matos. Il n'est pas possible de le supprimer",
     );
   }
 }
 
-export class CantRemoveLastRequest extends Error {
+export class CantRemoveLastRequest extends FestivalActivityError {
   constructor() {
     super(
-      "Il s'agit de la dernière demande de matos. Il n'est pas possible de la supprimer",
+      "❌ Il s'agit de la dernière demande de matos. Il n'est pas possible de la supprimer",
     );
   }
 }

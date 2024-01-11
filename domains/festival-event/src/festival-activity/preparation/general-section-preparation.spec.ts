@@ -12,10 +12,10 @@ import {
   justDance,
   pcSecurite,
   qgOrga,
-  validatedByHumain,
-  validatedByCommunication,
+  approvedByHumain,
+  approvedByCommunication,
   validatedBySecu,
-  publicValidatedByHumain,
+  publicApprovedByHumain,
 } from "./preparation.test-utils";
 import { isDraft } from "../festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../sections/reviews";
@@ -33,10 +33,10 @@ describe("General section of festival activity preparation", () => {
       justDance,
       baladeEnPoney,
       qgOrga,
-      validatedByHumain,
-      validatedByCommunication,
+      approvedByHumain,
+      approvedByCommunication,
       validatedBySecu,
-      publicValidatedByHumain,
+      publicApprovedByHumain,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -284,8 +284,8 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                             | activityId                     | toAdd                   | toRemove                                           | update
-    ${validatedByCommunication.general.name} | ${validatedByCommunication.id} | ${sunday14hToSunday18h} | ${validatedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
+    activityName                            | activityId                    | toAdd                   | toRemove                                          | update
+    ${approvedByCommunication.general.name} | ${approvedByCommunication.id} | ${sunday14hToSunday18h} | ${approvedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
   `(
     "when $activityName was already validated by communication",
     ({ activityId, toAdd, toRemove, update }) => {
@@ -326,9 +326,9 @@ describe("General section of festival activity preparation", () => {
   );
 
   describe.each`
-    activityName                            | activityId                    | toAdd                   | toRemove
-    ${validatedByHumain.general.name}       | ${validatedByHumain.id}       | ${sunday14hToSunday18h} | ${validatedByHumain.general.timeWindows[0]}
-    ${publicValidatedByHumain.general.name} | ${publicValidatedByHumain.id} | ${sunday14hToSunday18h} | ${publicValidatedByHumain.general.timeWindows[0]}
+    activityName                           | activityId                   | toAdd                   | toRemove
+    ${approvedByHumain.general.name}       | ${approvedByHumain.id}       | ${sunday14hToSunday18h} | ${approvedByHumain.general.timeWindows[0]}
+    ${publicApprovedByHumain.general.name} | ${publicApprovedByHumain.id} | ${sunday14hToSunday18h} | ${publicApprovedByHumain.general.timeWindows[0]}
   `(
     "when $activityName was already validated by humain",
     ({ activityId, toAdd, toRemove }) => {
@@ -361,7 +361,7 @@ describe("General section of festival activity preparation", () => {
       it("should be able to update general information", async () => {
         const update = { description: "An updated description" };
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          publicValidatedByHumain.id,
+          publicApprovedByHumain.id,
           update,
         );
         expect(general.description).toBe(update.description);
@@ -373,7 +373,7 @@ describe("General section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.updateGeneralSection(
-              validatedByHumain.id,
+              approvedByHumain.id,
               update,
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);

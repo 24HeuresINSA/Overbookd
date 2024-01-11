@@ -418,6 +418,15 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
+    async clearInquiry({ state, commit }) {
+      const id = state.selectedActivity.id;
+      const res = await safeCall(this, repo.clearInquiry(this, id));
+      if (!res) return;
+
+      const activity = castActivityWithDate(res.data);
+      commit("SET_SELECTED_ACTIVITY", activity);
+    },
+
     async linkDrive({ state, commit }, link: LinkDrive) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.linkDrive(this, id, link));

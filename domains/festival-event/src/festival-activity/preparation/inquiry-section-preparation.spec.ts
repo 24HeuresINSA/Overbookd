@@ -11,16 +11,16 @@ import {
   justDance,
   pcSecurite,
   qgOrga,
-  validatedByAllInquiryOwners,
-  validatedByAllInquiryOwnersWithoutRequest,
-  validatedByBarrieres,
-  validatedByBarrieresWithoutRequests,
-  validatedByElec,
-  validatedByElecWithoutRequests,
-  validatedByMatos,
-  validatedByMatosAndBarrieres,
-  validatedByMatosAndBarrieresWithoutRequest,
-  validatedByMatosWithoutRequests,
+  approvedByAllInquiryOwners,
+  approvedByAllInquiryOwnersWithoutRequest,
+  approvedByBarrieres,
+  approvedByBarrieresWithoutRequests,
+  approvedByElec,
+  approvedByElecWithoutRequests,
+  approvedByMatos,
+  approvedByMatosAndBarrieres,
+  approvedByMatosAndBarrieresWithoutRequest,
+  approvedByMatosWithoutRequests,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
@@ -74,16 +74,16 @@ describe("Inquiry section of festival activity preparation", () => {
       justDance,
       baladeEnPoney,
       qgOrga,
-      validatedByElec,
-      validatedByElecWithoutRequests,
-      validatedByBarrieres,
-      validatedByBarrieresWithoutRequests,
-      validatedByMatos,
-      validatedByMatosWithoutRequests,
-      validatedByMatosAndBarrieres,
-      validatedByMatosAndBarrieresWithoutRequest,
-      validatedByAllInquiryOwners,
-      validatedByAllInquiryOwnersWithoutRequest,
+      approvedByElec,
+      approvedByElecWithoutRequests,
+      approvedByBarrieres,
+      approvedByBarrieresWithoutRequests,
+      approvedByMatos,
+      approvedByMatosWithoutRequests,
+      approvedByMatosAndBarrieres,
+      approvedByMatosAndBarrieresWithoutRequest,
+      approvedByAllInquiryOwners,
+      approvedByAllInquiryOwnersWithoutRequest,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -415,12 +415,12 @@ describe("Inquiry section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                                 | activityId                         | approvedBy                  | gearsAvailable | barriersAvailable | elecAvailable
-    ${validatedByElec.general.name}              | ${validatedByElec.id}              | ${[elec]}                   | ${true}        | ${true}           | ${false}
-    ${validatedByBarrieres.general.name}         | ${validatedByBarrieres.id}         | ${[barrieres]}              | ${true}        | ${false}          | ${true}
-    ${validatedByMatos.general.name}             | ${validatedByMatos.id}             | ${[matos]}                  | ${false}       | ${true}           | ${true}
-    ${validatedByMatosAndBarrieres.general.name} | ${validatedByMatosAndBarrieres.id} | ${[matos, barrieres]}       | ${false}       | ${false}          | ${true}
-    ${validatedByAllInquiryOwners.general.name}  | ${validatedByAllInquiryOwners.id}  | ${[matos, barrieres, elec]} | ${false}       | ${false}          | ${false}
+    activityName                                | activityId                        | approvedBy                  | gearsAvailable | barriersAvailable | elecAvailable
+    ${approvedByElec.general.name}              | ${approvedByElec.id}              | ${[elec]}                   | ${true}        | ${true}           | ${false}
+    ${approvedByBarrieres.general.name}         | ${approvedByBarrieres.id}         | ${[barrieres]}              | ${true}        | ${false}          | ${true}
+    ${approvedByMatos.general.name}             | ${approvedByMatos.id}             | ${[matos]}                  | ${false}       | ${true}           | ${true}
+    ${approvedByMatosAndBarrieres.general.name} | ${approvedByMatosAndBarrieres.id} | ${[matos, barrieres]}       | ${false}       | ${false}          | ${true}
+    ${approvedByAllInquiryOwners.general.name}  | ${approvedByAllInquiryOwners.id}  | ${[matos, barrieres, elec]} | ${false}       | ${false}          | ${false}
   `(
     "when $activityName is already approved by $approvedBy",
     ({ activityId, gearsAvailable, barriersAvailable, elecAvailable }) => {
@@ -524,11 +524,11 @@ describe("Inquiry section of festival activity preparation", () => {
   );
 
   describe.each`
-    activityName                                               | activityId                                       | approvedBy            | timeWindow
-    ${validatedByElecWithoutRequests.general.name}             | ${validatedByElecWithoutRequests.id}             | ${[elec]}             | ${saturday14hToSaturday18h}
-    ${validatedByBarrieresWithoutRequests.general.name}        | ${validatedByBarrieresWithoutRequests.id}        | ${[barrieres]}        | ${saturday14hToSaturday18h}
-    ${validatedByMatosWithoutRequests.general.name}            | ${validatedByMatosWithoutRequests.id}            | ${[matos]}            | ${saturday14hToSaturday18h}
-    ${validatedByMatosAndBarrieresWithoutRequest.general.name} | ${validatedByMatosAndBarrieresWithoutRequest.id} | ${[barrieres, matos]} | ${saturday14hToSaturday18h}
+    activityName                                              | activityId                                      | approvedBy            | timeWindow
+    ${approvedByElecWithoutRequests.general.name}             | ${approvedByElecWithoutRequests.id}             | ${[elec]}             | ${saturday14hToSaturday18h}
+    ${approvedByBarrieresWithoutRequests.general.name}        | ${approvedByBarrieresWithoutRequests.id}        | ${[barrieres]}        | ${saturday14hToSaturday18h}
+    ${approvedByMatosWithoutRequests.general.name}            | ${approvedByMatosWithoutRequests.id}            | ${[matos]}            | ${saturday14hToSaturday18h}
+    ${approvedByMatosAndBarrieresWithoutRequest.general.name} | ${approvedByMatosAndBarrieresWithoutRequest.id} | ${[barrieres, matos]} | ${saturday14hToSaturday18h}
   `(
     "when $activityName is already approved by $approvedBy",
     ({ activityId, timeWindow }) => {
@@ -558,7 +558,7 @@ describe("Inquiry section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.addTimeWindowInInquiry(
-              validatedByAllInquiryOwnersWithoutRequest.id,
+              approvedByAllInquiryOwnersWithoutRequest.id,
               saturday14hToSaturday18h,
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -569,10 +569,86 @@ describe("Inquiry section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.removeTimeWindowFromInquiry(
-              validatedByAllInquiryOwnersWithoutRequest.id,
+              approvedByAllInquiryOwnersWithoutRequest.id,
               saturday14hToSaturday18h.id,
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      });
+    });
+  });
+
+  describe("clear inquiry section", () => {
+    describe("when activity is still in draft", () => {
+      it.each`
+        activityName               | activityId
+        ${escapeGame.general.name} | ${escapeGame.id}
+        ${qgOrga.general.name}     | ${qgOrga.id}
+      `(
+        "should reset $activityName inquiries and time windows",
+        async ({ activityId }) => {
+          const activity =
+            await prepareFestivalActivity.clearInquiry(activityId);
+          expect(activity.inquiry.gears).toStrictEqual([]);
+          expect(activity.inquiry.electricity).toStrictEqual([]);
+          expect(activity.inquiry.barriers).toStrictEqual([]);
+          expect(activity.inquiry.timeWindows).toStrictEqual([]);
+        },
+      );
+    });
+    describe("when activity is under review", () => {
+      describe("when none of logistic team approved activity yet", () => {
+        it.each`
+          activityName                  | activityId
+          ${justDance.general.name}     | ${justDance.id}
+          ${baladeEnPoney.general.name} | ${baladeEnPoney.id}
+        `(
+          "should reset $activityName inquiries and time windows",
+          async ({ activityId }) => {
+            const activity =
+              await prepareFestivalActivity.clearInquiry(activityId);
+            expect(activity.inquiry.gears).toStrictEqual([]);
+            expect(activity.inquiry.electricity).toStrictEqual([]);
+            expect(activity.inquiry.barriers).toStrictEqual([]);
+            expect(activity.inquiry.timeWindows).toStrictEqual([]);
+          },
+        );
+      });
+      describe("when one of logistic team with requests already approved activity", () => {
+        it.each`
+          activityName                                | activityId
+          ${approvedByElec.general.name}              | ${approvedByElec.id}
+          ${approvedByAllInquiryOwners.general.name}  | ${approvedByAllInquiryOwners.id}
+          ${approvedByBarrieres.general.name}         | ${approvedByBarrieres.id}
+          ${approvedByMatos.general.name}             | ${approvedByMatos.id}
+          ${approvedByMatosAndBarrieres.general.name} | ${approvedByMatosAndBarrieres.id}
+        `(
+          "should indicate that $activityName is already approved by logistic team",
+          async ({ activityId }) => {
+            expect(
+              async () =>
+                await prepareFestivalActivity.clearInquiry(activityId),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          },
+        );
+      });
+      describe("when none of logistic team with requests approved activity yet", () => {
+        it.each`
+          activityName                                              | activityId
+          ${approvedByBarrieresWithoutRequests.general.name}        | ${approvedByBarrieresWithoutRequests.id}
+          ${approvedByElecWithoutRequests.general.name}             | ${approvedByElecWithoutRequests.id}
+          ${approvedByMatosWithoutRequests.general.name}            | ${approvedByMatosWithoutRequests.id}
+          ${approvedByMatosAndBarrieresWithoutRequest.general.name} | ${approvedByMatosAndBarrieresWithoutRequest.id}
+        `(
+          "should reset $activityName inquiries and time windows",
+          async ({ activityId }) => {
+            const activity =
+              await prepareFestivalActivity.clearInquiry(activityId);
+            expect(activity.inquiry.gears).toStrictEqual([]);
+            expect(activity.inquiry.electricity).toStrictEqual([]);
+            expect(activity.inquiry.barriers).toStrictEqual([]);
+            expect(activity.inquiry.timeWindows).toStrictEqual([]);
+          },
+        );
       });
     });
   });

@@ -106,6 +106,34 @@ export class InquirySectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FA)
+  @Delete(":faId/inquiry")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival activity",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalActivityResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalActivityResponseDto) },
+      ],
+    },
+  })
+  @ApiParam({
+    name: "faId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  clearInquiry(
+    @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
+  ): Promise<FestivalActivity> {
+    return this.inquiryService.clearInquiry(faId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FA)
   @Post(":faId/inquiry/time-windows")
   @HttpCode(200)
   @ApiResponse({
