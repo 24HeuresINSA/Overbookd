@@ -4,7 +4,7 @@ import {
   escapeGame,
   justDance,
   pcSecurite,
-  validatedByHumain,
+  approvedByHumain,
 } from "./preparation.test-utils";
 import { george, lafarge } from "../festival-activity.fake";
 import { lea } from "../festival-activity.fake";
@@ -22,7 +22,7 @@ describe("In Charge section of festival activity preparation", () => {
       escapeGame,
       pcSecurite,
       justDance,
-      validatedByHumain,
+      approvedByHumain,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -182,13 +182,13 @@ describe("In Charge section of festival activity preparation", () => {
     });
   });
 
-  describe(`when ${validatedByHumain.general.name} is already validated by ${humain}`, () => {
+  describe(`when ${approvedByHumain.general.name} is already validated by ${humain}`, () => {
     describe("when trying to update in charge information", () => {
       it("should indicate that in charge section is locked", async () => {
         expect(
           async () =>
             await prepareFestivalActivity.updateInChargeSection(
-              validatedByHumain.id,
+              approvedByHumain.id,
               { team: "sports" },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -198,7 +198,7 @@ describe("In Charge section of festival activity preparation", () => {
       it("should indicate that in charge section is locked", async () => {
         expect(
           async () =>
-            await prepareFestivalActivity.addContractor(validatedByHumain.id, {
+            await prepareFestivalActivity.addContractor(approvedByHumain.id, {
               firstname: "Benjos",
               lastname: "Le Magicos",
               phone: "0612345678",
@@ -211,7 +211,7 @@ describe("In Charge section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.removeContractor(
-              validatedByHumain.id,
+              approvedByHumain.id,
               lafarge.id,
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -222,7 +222,7 @@ describe("In Charge section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.updateContractor(
-              validatedByHumain.id,
+              approvedByHumain.id,
               { id: lafarge.id, firstname: "Davis" },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);

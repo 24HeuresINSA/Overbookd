@@ -133,7 +133,7 @@ export const qgOrga = factory
   .withSupply({ electricity: [lumiere, enceinte] })
   .build();
 
-export const validatedByHumain = factory
+export const approvedByHumain = factory
   .inReview("Validée par les humain")
   .withGeneral({
     timeWindows: [friday12hToFriday14h, saturday11hToSaturday15h],
@@ -142,7 +142,7 @@ export const validatedByHumain = factory
   .withReviews({ humain: APPROVED })
   .build();
 
-export const publicValidatedByHumain = factory
+export const publicApprovedByHumain = factory
   .inReview("Publique validée par les humain")
   .asPublic()
   .withGeneral({
@@ -152,7 +152,7 @@ export const publicValidatedByHumain = factory
   .withReviews({ humain: APPROVED })
   .build();
 
-export const validatedByCommunication = factory
+export const approvedByCommunication = factory
   .inReview("Validée par l'équipe communication")
   .asPublic()
   .withGeneral({
@@ -167,7 +167,7 @@ export const validatedBySecu = factory
   .withReviews({ secu: APPROVED })
   .build();
 
-export const validatedBySigna = factory
+export const approvedBySigna = factory
   .inReview("Validée par la signa")
   .withSigna({
     location: pelouseHumas,
@@ -176,7 +176,7 @@ export const validatedBySigna = factory
   .withReviews({ signa: APPROVED })
   .build();
 
-export const validatedByElec = factory
+export const approvedByElec = factory
   .inReview("Validée par la log elec")
   .withSupply({ electricity: [lumiere, enceinte], water: "robinet d'eau" })
   .withInquiry({
@@ -188,7 +188,7 @@ export const validatedByElec = factory
   .withReviews({ elec: APPROVED })
   .build();
 
-export const validatedByElecWithoutRequests = factory
+export const approvedByElecWithoutRequests = factory
   .inReview("Validée par la log elec sans demandes")
   .withSupply({ electricity: [lumiere, enceinte], water: "robinet d'eau" })
   .withInquiry({
@@ -200,7 +200,7 @@ export const validatedByElecWithoutRequests = factory
   .withReviews({ elec: APPROVED })
   .build();
 
-export const validatedByBarrieres = factory
+export const approvedByBarrieres = factory
   .inReview("Validée par les barrieres")
   .withInquiry({
     timeWindows: [sunday14hToSunday18h],
@@ -211,7 +211,7 @@ export const validatedByBarrieres = factory
   .withReviews({ barrieres: APPROVED })
   .build();
 
-export const validatedByBarrieresWithoutRequests = factory
+export const approvedByBarrieresWithoutRequests = factory
   .inReview("Validée par les barrieres sans demandes")
   .withInquiry({
     timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
@@ -222,7 +222,7 @@ export const validatedByBarrieresWithoutRequests = factory
   .withReviews({ barrieres: APPROVED })
   .build();
 
-export const validatedByMatos = factory
+export const approvedByMatos = factory
   .inReview("Validée par la log matos")
   .withInquiry({
     timeWindows: [sunday14hToSunday18h],
@@ -233,7 +233,7 @@ export const validatedByMatos = factory
   .withReviews({ matos: APPROVED })
   .build();
 
-export const validatedByMatosWithoutRequests = factory
+export const approvedByMatosWithoutRequests = factory
   .inReview("Validée par la log sans demandes")
   .withInquiry({
     timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
@@ -244,7 +244,7 @@ export const validatedByMatosWithoutRequests = factory
   .withReviews({ matos: APPROVED })
   .build();
 
-export const validatedByMatosAndBarrieres = factory
+export const approvedByMatosAndBarrieres = factory
   .inReview("Validée par la log matos et les barrieres")
   .withInquiry({
     timeWindows: [sunday14hToSunday18h],
@@ -255,7 +255,7 @@ export const validatedByMatosAndBarrieres = factory
   .withReviews({ matos: APPROVED, barrieres: APPROVED })
   .build();
 
-export const validatedByMatosAndBarrieresWithoutRequest = factory
+export const approvedByMatosAndBarrieresWithoutRequest = factory
   .inReview("Validée par la log matos et les barrieres sans demandes")
   .withInquiry({
     timeWindows: [friday12hToFriday14h, sunday14hToSunday18h],
@@ -266,7 +266,7 @@ export const validatedByMatosAndBarrieresWithoutRequest = factory
   .withReviews({ matos: APPROVED, barrieres: APPROVED })
   .build();
 
-export const validatedByAllInquiryOwners = factory
+export const approvedByAllInquiryOwners = factory
   .inReview("Validée par la log matos, les barrieres et la log elec")
   .withInquiry({
     timeWindows: [sunday14hToSunday18h],
@@ -277,7 +277,7 @@ export const validatedByAllInquiryOwners = factory
   .withReviews({ matos: APPROVED, barrieres: APPROVED, elec: APPROVED })
   .build();
 
-export const validatedByAllInquiryOwnersWithoutRequest = factory
+export const approvedByAllInquiryOwnersWithoutRequest = factory
   .inReview(
     "Validée par la log matos, les barrieres et la log elec sans demandes",
   )

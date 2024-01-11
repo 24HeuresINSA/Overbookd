@@ -4,7 +4,7 @@ import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities
 import {
   escapeGame,
   justDance,
-  validatedByElec,
+  approvedByElec,
 } from "./preparation.test-utils";
 import {
   ElectricitySupplyAlreadyExists,
@@ -29,7 +29,7 @@ describe("Supply section of festival activity preparation", () => {
     prepareFestivalActivities = new InMemoryPrepareFestivalActivityRepository([
       escapeGame,
       justDance,
-      validatedByElec,
+      approvedByElec,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -209,13 +209,13 @@ describe("Supply section of festival activity preparation", () => {
     );
   });
 
-  describe(`when ${validatedByElec.general.name} is already validated by ${elec}`, () => {
+  describe(`when ${approvedByElec.general.name} is already validated by ${elec}`, () => {
     describe("when trying to update water", () => {
       it("should indicate that supply section is locked", async () => {
         expect(
           async () =>
             await prepareFestivalActivity.updateSupplySection(
-              validatedByElec.id,
+              approvedByElec.id,
               { water: "2 robinets d'eau potable" },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -226,7 +226,7 @@ describe("Supply section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.addElectricitySupply(
-              validatedByElec.id,
+              approvedByElec.id,
               { ...nintendoSwitchSupply, comment: "Première Gen" },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -237,7 +237,7 @@ describe("Supply section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.updateElectricitySupply(
-              validatedByElec.id,
+              approvedByElec.id,
               { id: lumiere.id, power: 10 },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -248,7 +248,7 @@ describe("Supply section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.removeElectricitySupply(
-              validatedByElec.id,
+              approvedByElec.id,
               lumiere.id,
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);

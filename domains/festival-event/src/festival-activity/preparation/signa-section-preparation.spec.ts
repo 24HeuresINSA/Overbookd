@@ -7,7 +7,7 @@ import {
   justDance,
   pcSecurite,
   qgOrga,
-  validatedBySigna,
+  approvedBySigna,
 } from "./preparation.test-utils";
 import { PrepareSignageUpdate } from "./prepare-festival-activity.model";
 import { AFFICHE, BACHE, PANNEAU, SignageCatalogItem } from "../sections/signa";
@@ -51,7 +51,7 @@ describe("Signa section of festival activity preparation", () => {
       justDance,
       baladeEnPoney,
       qgOrga,
-      validatedBySigna,
+      approvedBySigna,
     ]);
     prepareFestivalActivity = new PrepareFestivalActivity(
       prepareFestivalActivities,
@@ -246,13 +246,13 @@ describe("Signa section of festival activity preparation", () => {
     },
   );
 
-  describe(`when ${validatedBySigna.general.name} is already validated by ${signa}`, () => {
+  describe(`when ${approvedBySigna.general.name} is already validated by ${signa}`, () => {
     describe("when trying to update location", () => {
       it("should indicate that signa section is locked", async () => {
         expect(
           async () =>
             await prepareFestivalActivity.updateSignaSection(
-              validatedBySigna.id,
+              approvedBySigna.id,
               { location: agora },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
@@ -262,7 +262,7 @@ describe("Signa section of festival activity preparation", () => {
       it("should indicate that signa section is locked", async () => {
         expect(
           async () =>
-            await prepareFestivalActivity.addSignage(validatedBySigna.id, {
+            await prepareFestivalActivity.addSignage(approvedBySigna.id, {
               quantity: 10,
               type: PANNEAU,
               text: "Ici",
@@ -275,7 +275,7 @@ describe("Signa section of festival activity preparation", () => {
       it("should indicate that signa section is locked", async () => {
         expect(
           async () =>
-            await prepareFestivalActivity.updateSignage(validatedBySigna.id, {
+            await prepareFestivalActivity.updateSignage(approvedBySigna.id, {
               id: afficheJustDanceA2.id,
               quantity: 10,
               type: PANNEAU,
@@ -290,7 +290,7 @@ describe("Signa section of festival activity preparation", () => {
         expect(
           async () =>
             await prepareFestivalActivity.removeSignage(
-              validatedBySigna.id,
+              approvedBySigna.id,
               afficheJustDanceA2.id,
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);

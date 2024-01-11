@@ -277,6 +277,14 @@ export class PrepareFestivalActivity {
     return this.festivalActivities.save(updatedFA);
   }
 
+  async clearInquiry(faId: FestivalActivity["id"]): Promise<FestivalActivity> {
+    const existingFA = await this.findActivityIfExists(faId);
+    const prepare = this.getPrepareHelper(existingFA);
+
+    const updatedFA = prepare.clearInquiry();
+    return this.festivalActivities.save(updatedFA);
+  }
+
   async addTimeWindowInInquiry(
     faId: FestivalActivity["id"],
     period: IProvidePeriod,

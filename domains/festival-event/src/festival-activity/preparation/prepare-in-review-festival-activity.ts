@@ -438,6 +438,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     return { ...this.activity, inquiry };
   }
 
+  clearInquiry(): Reviewable {
+    this.checkIfHasImpactOnApprovedRequests();
+    const inquiry = Inquiries.init().inquiry;
+    return { ...this.activity, inquiry };
+  }
+
   addInquiryTimeWindow(period: IProvidePeriod): Reviewable {
     this.checkIfHasImpactOnApprovedRequests();
     this.checkIfAlreadyInitialized();
