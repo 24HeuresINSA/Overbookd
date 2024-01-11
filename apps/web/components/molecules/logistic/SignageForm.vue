@@ -36,7 +36,7 @@
             show-size
           />
         </div>
-        <v-btn color="success" dark large @click="createOrUpdateSignage">
+        <v-btn color="success" dark large :disabled="invalidForm" @click="createOrUpdateSignage">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
           Sauvegarder la signalisation
         </v-btn>
@@ -63,7 +63,7 @@ import {
 interface SignageFormData extends InputRulesDataWithImage {
   name: string;
   type: SignageType;
-  image: File | undefined;
+  image: File | void;
 }
 
 const nameMinLength = 3;
@@ -73,7 +73,10 @@ export default Vue.extend({
   props: {
     signage: {
       type: Object,
-      default: () => null,
+      default: () => ({
+        name: "",
+        type: signageTypes.AFFICHE,
+      }),
     },
   },
   data(): SignageFormData {
@@ -95,6 +98,14 @@ export default Vue.extend({
     signageTypes(): SignageType[] {
       return Object.values(signageTypes);
     },
+    invalidForm(): boolean {
+    const isNameValid = this.name.length >= nameMinLength;
+    const isTypeValid = !!this.type;
+    const isUploadValid = this.image ? imageRules(this.image) : true;
+
+    return !isNameValid || !isTypeValid || !isUploadValid;
+  },
+
   },
   watch: {
     signage(signage: Signage) {
@@ -109,22 +120,27 @@ export default Vue.extend({
         name: this.name,
         type: this.type,
       };
-      const newSigna = await this.signage.id
-        ? await this.$accessor.catalogSignage.updateSignage({
+
+      let newSigna;
+
+      if (this.signage.id) {
+        newSigna = await this.$accessor.catalogSignage.updateSignage({
             ...signage,
             id: this.signage.id,
-          })
-        : await this.$accessor.catalogSignage.createSignage(signage);
-      console.log(newSigna)
+          });
+      } else {
+        newSigna = await this.$accessor.catalogSignage.createSignage(signage);
+      }
 
       if (this.image) {
-        const signageImageForm = new FormData();
-        signageImageForm.append("file", this.image, this.image.name);
-        await this.$accessor.catalogSignage.uploadSignageImage({
-          signageId: this.signage.id,
-          signageImage: signageImageForm,
+        const signaImageForm = new FormData();
+        signaImageForm.append("file", this.image, this.image.name);
+        this.$accessor.catalogSignage.uploadSignageImage({
+          signageId: this.signage.id || newSigna.id,
+          signageImage: signaImageForm,
         });
       }
+
       this.closeDialog();
       this.name = "";
       this.type = signageTypes.AFFICHE;

@@ -108,7 +108,6 @@ export function imageRules(value?: File | null): string | boolean {
 
 export interface InputRulesData {
   rules: Record<string, (value: string | null) => string | boolean>;
-  fileRules?: Record<string, (value?: File | null) => string | boolean>;
 }
 
 export interface InputRulesDataWithImage {

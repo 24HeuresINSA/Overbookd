@@ -6,7 +6,7 @@
     <v-card-title class="signage__title">
       <h2>Signalisation</h2>
     </v-card-title>
-    <v-img :src="signage.imageBlob" :alt="signage.name" contain></v-img>
+    <v-img :src="imageBlob" :alt="signage.name" contain></v-img>
   </v-card>
 </template>
 
@@ -25,7 +25,11 @@ export default Vue.extend({
       }),
     },
   },
+  data: () => ({
+    imageBlob: undefined as string | undefined,
+  }),
   computed: {
+
     type() {
       return this.$accessor.dialog.type;
     },
@@ -36,10 +40,18 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
   },
+  beforeMount() {
+  this.getImage();
+  },
   methods: {
+    async getImage() {
+    this.imageBlob = await this.$accessor.catalogSignage.getSignageImage(this.signage);
+    console.log(this.imageBlob);
+    },
     closeDialog(): void {
       this.$emit("close-dialog");
     },
   },
+
 });
 </script>

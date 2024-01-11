@@ -61,7 +61,7 @@
       ></SignaImageDialog>
     </v-dialog>
 
-    <v-dialog v-model="isDisplayImageSignageDialogOpen" width="600px">
+    <v-dialog v-model="isDisplayImageSignageDialogOpen">
       <DisplayImageSigna
         :signage="selectedSignage"
         @close-dialog="closeDisplayImageSignageDialog"
@@ -105,7 +105,7 @@ interface SignageListingData {
   headers: Header[];
   searchName: string | null;
   searchType: SignageType | null;
-  selectedSignage?: Signage;
+  selectedSignage?: SignageWithPotentialImage;
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
   isAddImageSignageDialogOpen: boolean;
@@ -174,7 +174,7 @@ export default Vue.extend({
       this.selectedSignage = signage;
       this.isAddImageSignageDialogOpen = true;
     },
-    openDisplayImageSignageDialog(signage: Signage) {
+    openDisplayImageSignageDialog(signage: SignageWithPotentialImage) {
       this.selectedSignage = signage;
       this.isDisplayImageSignageDialogOpen = true;
     },

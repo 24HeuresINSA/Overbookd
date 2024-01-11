@@ -20,6 +20,11 @@ export const mutations = mutationTree(state, {
   SET_SIGNAGES(state, signages: SignageWithPotentialImage[]) {
     state.signages = signages;
   },
+  SET_SIGNAGE_IMAGE(state, signage: SignageWithPotentialImage) {
+    const index = state.signages.findIndex((s) => s.id === signage.id);
+    if (index < 0) return;
+    state.signages = updateItemToList(state.signages, index, signage);
+  },
   ADD_SIGNAGE(state, signage: SignageWithPotentialImage) {
     state.signages.push(signage);
   },
@@ -45,21 +50,12 @@ export const actions = actionTree(
       commit("SET_SIGNAGES", res.data);
     },
 
-    async fetchSignagesImages({ state, commit }): Promise<void> {
-      const signages = await Promise.all(
-        state.signages.map(async (signage) => {
-          const signageImage = await CatalogSignageRepository.getSignageImage(
-            this,
-            signage.id,
-          );
-          if (!signageImage) return signage;
-          return {
-            ...signage,
-            imageBlob: signageImage,
-          };
-        }),
-      );
-      commit("SET_SIGNAGES", signages);
+    async getSignageImage({ commit }, signage: Signage): Promise<string | undefined> {
+      const res = await signageRepository.getSignageImage(this, signage.id);
+      if (!res) return;
+      const signageWithImage = { ...signage, imageBlob: res };
+      commit("SET_SIGNAGE_IMAGE", signageWithImage);
+      return signageWithImage.imageBlob;
     },
 
     async createSignage({ commit }, signageForm: SignageForm): Promise<Signage | void> {
@@ -73,7 +69,7 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("ADD_SIGNAGE", res.data);
-            return res.data;
+      return res.data;
 
     },
 
