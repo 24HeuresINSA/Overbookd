@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { Reviewer } from "../../common/review";
 import {
-  Reviewer,
   barrieres,
   communication,
   elec,
@@ -8,10 +8,11 @@ import {
   matos,
   secu,
   signa,
-} from "../sections/reviews";
+} from "../../common/review";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "./ready-for-review.error";
-import { DRAFT, IN_REVIEW, READY_TO_REVIEW } from "../festival-activity";
-import { REVIEWING, NOT_ASKING_TO_REVIEW } from "../sections/reviews";
+import { READY_TO_REVIEW } from "../../common/action";
+import { DRAFT, IN_REVIEW } from "../../common/status";
+import { REVIEWING, NOT_ASKING_TO_REVIEW } from "../../common/review";
 import { AskForReview, Notifications } from "./ask-for-review";
 import {
   pcSecurite,
@@ -34,7 +35,7 @@ import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activ
 import { george, lea } from "../festival-activity.fake";
 import { CantAskForReview } from "../festival-activity.error";
 
-function isReviewer(team: string): team is Reviewer {
+function isReviewer(team: string): team is Reviewer<"FA"> {
   return [barrieres, communication, elec, humain, matos, secu, signa].includes(
     team,
   );
@@ -395,7 +396,7 @@ describe("Ask for review", () => {
 
             expect(notifications.entries).toHaveLength(rejectors.length);
             rejectors
-              .map((team: Reviewer) => ({ event, team }))
+              .map((team: Reviewer<"FA">) => ({ event, team }))
               .every((expected: Notifications) =>
                 expect(notifications.entries).toContainEqual(expected),
               );

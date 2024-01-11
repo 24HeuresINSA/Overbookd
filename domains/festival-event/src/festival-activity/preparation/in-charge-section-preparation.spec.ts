@@ -10,7 +10,7 @@ import { george, lafarge } from "../festival-activity.fake";
 import { lea } from "../festival-activity.fake";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory";
 import { ContractorNotFound } from "../festival-activity.error";
-import { humain } from "../sections/reviews";
+import { humain } from "../../common/review";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 
 describe("In Charge section of festival activity preparation", () => {

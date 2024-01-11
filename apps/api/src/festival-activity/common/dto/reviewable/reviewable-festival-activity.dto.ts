@@ -87,7 +87,7 @@ export class InReviewFestivalActivityResponseDto
   status: typeof IN_REVIEW;
 
   @ApiProperty({ required: true, type: InReviewReviewsResponseDto })
-  reviews: InReviewReviews;
+  reviews: InReviewReviews<"FA">;
 }
 
 export class ValidatedFestivalActivityResponseDto

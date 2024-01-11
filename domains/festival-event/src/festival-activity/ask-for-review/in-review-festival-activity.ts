@@ -1,17 +1,13 @@
 import {
   FestivalActivity,
-  IN_REVIEW,
   InReview,
   Refused,
   Reviewable,
 } from "../festival-activity";
-import {
-  InReviewReviews,
-  NOT_ASKING_TO_REVIEW,
-  REJECTED,
-  REVIEWING,
-  RefusedReviews,
-} from "../sections/reviews";
+import { IN_REVIEW } from "../../common/status";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review";
+import { InReviewReviews, RefusedReviews } from "../../common/review";
+import { REJECTED } from "../../common/action";
 import {
   PublicActivityGeneralSpecification,
   ActivityGeneralSpecification,
@@ -21,9 +17,13 @@ import { ActivityInChargeSpecification } from "./specifications/in-charge-sectio
 import { ActivitySignaSpecification } from "./specifications/signa-section-specification";
 import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification";
 import { ReadyForReviewException } from "./ready-for-review.error";
+import { WaitingForReview } from "../sections/reviews";
 import {
-  WaitingForReview,
   Reviewer,
+  PrivateActivityReviewer,
+  PublicActivityReviewer,
+} from "../../common/review";
+import {
   humain,
   signa,
   secu,
@@ -31,14 +31,12 @@ import {
   elec,
   barrieres,
   communication,
-  PrivateActivityReviewer,
-  PublicActivityReviewer,
-} from "../sections/reviews";
+} from "../../common/review";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
-import { Adherent } from "../sections/in-charge";
+import { Adherent } from "../../common/adherent";
 
-type MandatoryReviews<T extends Reviewer> = Record<T, typeof REVIEWING> &
-  Record<Exclude<Reviewer, T>, typeof NOT_ASKING_TO_REVIEW>;
+type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING> &
+  Record<Exclude<Reviewer<"FA">, T>, typeof NOT_ASKING_TO_REVIEW>;
 
 const PRIVATE_ACTIVITY_REVIEWS: MandatoryReviews<PrivateActivityReviewer> = {
   communication: NOT_ASKING_TO_REVIEW,
@@ -97,7 +95,7 @@ export class ReviewableSpecification {
   }
 }
 
-const COMMON_REVIEWERS: Reviewer[] = [
+const COMMON_REVIEWERS: Reviewer<"FA">[] = [
   humain,
   signa,
   secu,
@@ -105,7 +103,7 @@ const COMMON_REVIEWERS: Reviewer[] = [
   elec,
   barrieres,
 ];
-const PUBLIC_REVIEWERS: Reviewer[] = [...COMMON_REVIEWERS, communication];
+const PUBLIC_REVIEWERS: Reviewer<"FA">[] = [...COMMON_REVIEWERS, communication];
 
 export class InReviewFestivalActivity implements InReview {
   private constructor(
@@ -119,7 +117,7 @@ export class InReviewFestivalActivity implements InReview {
     readonly reviews: InReview["reviews"],
     readonly feedbacks: InReview["feedbacks"],
     readonly history: InReview["history"],
-    private readonly previousReviews?: RefusedReviews,
+    private readonly previousReviews?: RefusedReviews<"FA">,
   ) {}
 
   get status(): typeof IN_REVIEW {
@@ -185,8 +183,8 @@ export class InReviewFestivalActivity implements InReview {
   }
 
   private static swapRefusedToReviewing(
-    reviews: RefusedReviews,
-  ): InReviewReviews {
+    reviews: RefusedReviews<"FA">,
+  ): InReviewReviews<"FA"> {
     return {
       communication:
         reviews.communication !== REJECTED ? reviews.communication : REVIEWING,
@@ -211,7 +209,7 @@ export class InReviewFestivalActivity implements InReview {
     };
   }
 
-  private get reviewersToNotify(): Reviewer[] {
+  private get reviewersToNotify(): Reviewer<"FA">[] {
     if (!this.previousReviews) {
       return this.isPublic ? PUBLIC_REVIEWERS : COMMON_REVIEWERS;
     }
@@ -219,7 +217,7 @@ export class InReviewFestivalActivity implements InReview {
     return PUBLIC_REVIEWERS.filter((reviewer) => this.hasRejected(reviewer));
   }
 
-  private hasRejected(reviewer: Reviewer): boolean {
+  private hasRejected(reviewer: Reviewer<"FA">): boolean {
     switch (reviewer) {
       case humain:
         return this.previousReviews?.humain === REJECTED;

@@ -23,7 +23,7 @@ export type AddInquiryRequest = Pick<
 >;
 
 export type ReviewRejection = {
-  team: Reviewer;
+  team: Reviewer<"FA">;
   reason: string;
 };
 

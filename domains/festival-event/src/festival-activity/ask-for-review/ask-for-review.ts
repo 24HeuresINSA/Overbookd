@@ -11,8 +11,9 @@ import {
   isDraft,
   isRefused,
 } from "../festival-activity";
-import { Reviewer, WaitingForReview } from "../sections/reviews";
-import { Adherent } from "../sections/in-charge";
+import { WaitingForReview } from "../sections/reviews";
+import { Reviewer } from "../../common/review";
+import { Adherent } from "../../common/adherent";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
@@ -20,7 +21,7 @@ export type AskForReviewFestivalActivityRepository = {
 };
 
 export type Notifyee = {
-  team: Reviewer;
+  team: Reviewer<"FA">;
 };
 
 export type Notifications = {

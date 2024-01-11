@@ -1,16 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { getFactory } from "../festival-activity.factory";
 import {
-  APPROVED,
-  REJECTED,
   barrieres,
   communication,
   elec,
   humain,
   matos,
   secu,
-  signa,
-} from "../sections/reviews";
+  signa
+} from "../../common/review";
+import {
+  APPROVED,
+  REJECTED
+} from "../../common/action";
 import {
   BACKLINE,
   CONTENEUR_SCENE_ROOTS,
@@ -42,7 +44,8 @@ import {
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
-import { REFUSED, Reviewable, VALIDATED } from "../festival-activity";
+import { Reviewable } from "../festival-activity";
+import { REFUSED, VALIDATED } from "../../common/status";
 
 const factory = getFactory();
 

@@ -24,7 +24,7 @@ import {
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
-import { barrieres } from "../sections/reviews";
+import { barrieres } from "../../common/review";
 import { MAGASIN, LOCAL_24H, PARKING_EIFFEL } from "../sections/inquiry";
 import {
   AlreadyInitialized,
@@ -32,7 +32,7 @@ import {
   CantRemoveLastTimeWindow,
   NotYetInitialized,
 } from "./section-aggregates/inquiries";
-import { elec, matos } from "../sections/reviews";
+import { elec, matos } from "../../common/review";
 import { WithInquiries } from "../sections/inquiry";
 import { AssignDriveInDraftActivity } from "./prepare-draft-festival-activity";
 import {

@@ -25,7 +25,7 @@ const refusedReviewStatus: RejectionReviewStatus[] = [
   ...inReviewReviewStatus,
   REJECTED,
 ];
-export class InReviewReviewsResponseDto implements InReviewReviews {
+export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
   @ApiProperty({
     required: true,
     enum: inReviewReviewStatus,

@@ -12,8 +12,9 @@ import {
   SignageType,
 } from "../sections/signa";
 import { InquiryRequest } from "../sections/inquiry";
-import { Adherent, Contractor } from "../sections/in-charge";
-import { Feedback } from "../festival-activity";
+import { Contractor } from "../sections/in-charge";
+import { Adherent } from "../../common/adherent";
+import { Feedback } from "../../common/feedback";
 
 export type PrepareGeneralUpdate = {
   name?: string;

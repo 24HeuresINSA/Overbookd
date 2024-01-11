@@ -1,23 +1,19 @@
 import { numberGenerator } from "@overbookd/list";
 import {
-  DRAFT,
   Draft,
   FestivalActivity,
-  IN_REVIEW,
   InReview,
-  REFUSED,
   Refused,
   Reviewable,
-  VALIDATED,
   Validated,
   isDraft,
 } from "./festival-activity";
+import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
 import {
-  APPROVED,
   NOT_ASKING_TO_REVIEW,
-  REJECTED,
-  REVIEWING,
-} from "./sections/reviews";
+  REVIEWING
+} from "../common/review";
+import { APPROVED, REJECTED } from "../common/action";
 import { Public } from "./sections/general";
 import {
   saturday11hToSaturday18h,

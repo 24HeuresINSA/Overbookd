@@ -16,7 +16,7 @@ import {
   SignageNotFound,
 } from "../festival-activity.error";
 import { LocationIsRequired } from "./section-aggregates/signages";
-import { signa } from "../sections/reviews";
+import { signa } from "../../common/review";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 import { afficheJustDanceA2 } from "../festival-activity.fake";
 import { agora, creuxCgu, local24h } from "../festival-activity.fake";

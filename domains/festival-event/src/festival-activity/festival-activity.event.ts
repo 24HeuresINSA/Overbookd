@@ -1,6 +1,7 @@
-import { CREATED, KeyEvent, READY_TO_REVIEW } from "./festival-activity";
-import { Adherent } from "./sections/in-charge";
-import { APPROVED, REJECTED } from "./sections/reviews";
+import { KeyEvent } from "./festival-activity";
+import { CREATED, READY_TO_REVIEW } from "../common/action";
+import { Adherent } from "../common/adherent";
+import { APPROVED, REJECTED } from "../common/action";
 
 export class FestivalActivityKeyEvents {
   static created(by: Adherent): KeyEvent {

@@ -1,4 +1,4 @@
-import { Reviewer } from "../sections/reviews";
+import { Reviewer } from "../../common/review";
 import { FestivalActivityError } from "../festival-activity.error";
 
 export class InDraft extends FestivalActivityError {
@@ -8,21 +8,21 @@ export class InDraft extends FestivalActivityError {
   }
 }
 export class AlreadyApproved extends FestivalActivityError {
-  constructor(festivalActivityId: number, team: Reviewer) {
+  constructor(festivalActivityId: number, team: Reviewer<"FA">) {
     const message = `❌ La FA #${festivalActivityId} est validée par l'équipe ${team}`;
     super(message);
   }
 }
 
 export class AlreadyRejected extends FestivalActivityError {
-  constructor(festivalActivityId: number, team: Reviewer) {
+  constructor(festivalActivityId: number, team: Reviewer<"FA">) {
     const message = `❌ La FA #${festivalActivityId} est refusée par l'équipe ${team}`;
     super(message);
   }
 }
 
 export class NotAskingToReview extends FestivalActivityError {
-  constructor(festivalActivityId: number, team: Reviewer) {
+  constructor(festivalActivityId: number, team: Reviewer<"FA">) {
     const message = `❌ La FA #${festivalActivityId} n'est pas à valider par l'équipe ${team}`;
     super(message);
   }

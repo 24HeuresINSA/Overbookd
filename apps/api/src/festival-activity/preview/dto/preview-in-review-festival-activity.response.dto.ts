@@ -21,5 +21,5 @@ export class InReviewPreviewFestivalActivityResponseDto
   status: typeof IN_REVIEW;
 
   @ApiProperty({ type: InReviewReviewsResponseDto })
-  reviews: InReviewReviews;
+  reviews: InReviewReviews<"FA">;
 }

@@ -1,10 +1,11 @@
 import { Notifications, Notifyee } from "./ask-for-review";
-import { Reviewer, WaitingForReview } from "../sections/reviews";
+import { WaitingForReview } from "../sections/reviews";
+import { Reviewer } from "../../common/review";
 
 type FestivalActivityToReview = Omit<WaitingForReview, "reviewers">;
 
 type Notification = {
-  team: Reviewer;
+  team: Reviewer<"FA">;
   event: FestivalActivityToReview;
 };
 

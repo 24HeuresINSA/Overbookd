@@ -18,13 +18,14 @@ import {
 } from "./prepare-festival-activity.model";
 import {
   FestivalActivity,
-  PreviewFestivalActivity,
   isDraft,
 } from "../festival-activity";
+import { PreviewFestivalActivity } from "../../preview/festival-activity";
 import { InquiryRequest } from "../sections/inquiry";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
-import { Adherent, Contractor } from "../sections/in-charge";
+import { Contractor } from "../sections/in-charge";
+import { Adherent } from "../../common/adherent";
 import { TimeWindow } from "../sections/time-window";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";

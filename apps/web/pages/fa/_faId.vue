@@ -54,7 +54,7 @@ import { CalendarEvent } from "~/utils/models/calendar.model";
 type FestivalActivityDetailsData = {
   isRejectDialogOpen: boolean;
   isCalendarDialogOpen: boolean;
-  reviewer?: Reviewer;
+  reviewer?: Reviewer<"FA">;
   calendarMarker: Date;
 };
 
@@ -143,7 +143,7 @@ export default defineComponent({
     updateCalendarMarker(date: Date) {
       this.calendarMarker = date;
     },
-    askReject(team: Reviewer) {
+    askReject(team: Reviewer<"FA">) {
       this.reviewer = team;
       this.isRejectDialogOpen = true;
     },
