@@ -1,3 +1,15 @@
+## [2.13.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.0...v2.13.1) (2024-01-11)
+
+
+### Bug Fixes
+
+* **festival-event:** allow inquiry clearance. [#1456](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1456) ([89a1cae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/89a1cae6ee8bfe9a1e056aae41a6b704c11e41c1))
+
+
+### Refactor
+
+* **festival-activity:** rename package to festival-event. [#1454](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1454) ([24e0a3b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/24e0a3be2e30786d0bcf0d428274a929666fc8b0))
+
 ## [2.13.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.12.0...v2.13.0) (2024-01-07)
 
 
