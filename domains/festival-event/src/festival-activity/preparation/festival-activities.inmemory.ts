@@ -6,14 +6,11 @@ import {
   isDraft,
 } from "../festival-activity";
 import {
-  PreviewFestivalActivity, PreviewDraft,
-  PreviewReviewable
+  PreviewFestivalActivity,
+  PreviewDraft,
+  PreviewReviewable,
 } from "../../preview/festival-activity";
-import {
-  VALIDATED,
-  IN_REVIEW,
-  REFUSED
-} from "../../common/status";
+import { VALIDATED, IN_REVIEW, REFUSED } from "../../common/status";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
 import { isRefusedReviews, isValidatedReviews } from "../sections/reviews";

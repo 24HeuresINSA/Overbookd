@@ -9,10 +9,7 @@ import {
   isDraft,
 } from "./festival-activity";
 import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING
-} from "../common/review";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import { APPROVED, REJECTED } from "../common/action";
 import { Public } from "./sections/general";
 import {

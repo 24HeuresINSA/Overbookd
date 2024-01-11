@@ -7,12 +7,9 @@ import {
   humain,
   matos,
   secu,
-  signa
+  signa,
 } from "../../common/review";
-import {
-  APPROVED,
-  REJECTED
-} from "../../common/action";
+import { APPROVED, REJECTED } from "../../common/action";
 import {
   BACKLINE,
   CONTENEUR_SCENE_ROOTS,
