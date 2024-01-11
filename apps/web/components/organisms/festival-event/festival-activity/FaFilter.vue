@@ -69,7 +69,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 
 type ReviewerTeam = Team & {
-  code: Reviewer;
+  code: Reviewer<"FA">;
 };
 
 export default defineComponent({
@@ -147,7 +147,7 @@ export default defineComponent({
         ...secuReview,
       };
     },
-    reviewers(): Reviewer[] {
+    reviewers(): Reviewer<"FA">[] {
       return [humain, matos, secu, barrieres, signa, elec, communication];
     },
     reviewerTeams(): ReviewerTeam[] {
@@ -189,7 +189,7 @@ export default defineComponent({
       this.updateQueryParams("status", status);
     },
 
-    updateReviewer(reviewer: Reviewer, review: ReviewStatus) {
+    updateReviewer(reviewer: Reviewer<"FA">, review: ReviewStatus) {
       this.updateQueryParams(reviewer, review);
     },
 

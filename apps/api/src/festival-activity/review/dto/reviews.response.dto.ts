@@ -82,7 +82,7 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FA"> {
   })
   communication: ReviewingStatus;
 }
-export class ValidatedReviewsResponseDto implements ValidatedReviews {
+export class ValidatedReviewsResponseDto implements ValidatedReviews<"FA"> {
   @ApiProperty({
     required: true,
     enum: validatedReviewStatus,
@@ -139,7 +139,7 @@ export class ValidatedReviewsResponseDto implements ValidatedReviews {
   })
   communication: ApprovalReviewStatus;
 }
-export class RefusedReviewsResponseDto implements RefusedReviews {
+export class RefusedReviewsResponseDto implements RefusedReviews<"FA"> {
   @ApiProperty({
     required: true,
     enum: refusedReviewStatus,

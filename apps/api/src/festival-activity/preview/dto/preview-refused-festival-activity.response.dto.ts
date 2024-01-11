@@ -21,5 +21,5 @@ export class RefusedPreviewFestivalActivityResponseDto
   status: typeof REFUSED;
 
   @ApiProperty({ type: RefusedReviewsResponseDto })
-  reviews: RefusedReviews;
+  reviews: RefusedReviews<"FA">;
 }
