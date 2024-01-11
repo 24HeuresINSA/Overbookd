@@ -22,6 +22,22 @@
             Initialiser une demande de matos
           </v-btn>
         </div>
+        <div v-show="canClearInquiry" class="init-inquiry">
+          <p>
+            Tu as déjà des demandes de matos et ta FA est en relecture. Pour
+            supprimer <strong>toutes</strong> tes demandes et les crénaux
+            associés tu dois les réinitialiser.
+          </p>
+          <v-btn
+            v-show="canClearInquiry"
+            color="deep-orange"
+            dark
+            class="init-inquiry__btn"
+            @click="clearInquiry"
+          >
+            Réinitialiser les demandes de matos
+          </v-btn>
+        </div>
 
         <h3>
           Créneaux des demandes
@@ -252,6 +268,9 @@ export default defineComponent({
     shouldInitInquiry(): boolean {
       return !isDraft(this.mFA) && !this.hasInquiry;
     },
+    canClearInquiry(): boolean {
+      return this.hasInquiry;
+    },
     canAddInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;
     },
@@ -351,6 +370,9 @@ export default defineComponent({
     },
     closeLinkDriveDialog() {
       this.isLinkDriveDialogOpen = false;
+    },
+    clearInquiry() {
+      this.$accessor.festivalActivity.clearInquiry();
     },
     updateGear(gear: Gear | null) {
       this.gear = gear;

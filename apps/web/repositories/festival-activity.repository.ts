@@ -337,6 +337,12 @@ export class FestivalActivityRepository {
     );
   }
 
+  static clearInquiry(context: Context, faId: FestivalActivity["id"]) {
+    return context.$axios.delete<HttpStringified<FestivalActivity>>(
+      `${this.basePath}/${faId}/inquiry`,
+    );
+  }
+
   static linkDrive(
     context: Context,
     faId: FestivalActivity["id"],

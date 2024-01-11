@@ -39,6 +39,10 @@ export class InquirySectionService {
     return this.prepare.initInquiry(faId, initializer);
   }
 
+  async clearInquiry(faId: FestivalActivity["id"]): Promise<FestivalActivity> {
+    return this.prepare.clearInquiry(faId);
+  }
+
   addInquiryTimeWindow(faId: FestivalActivity["id"], timeWindow: PeriodDto) {
     return this.prepare.addTimeWindowInInquiry(faId, timeWindow);
   }
