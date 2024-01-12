@@ -1,3 +1,10 @@
+## [2.13.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.1...v2.13.2) (2024-01-12)
+
+
+### Bug Fixes
+
+* **festival-activity:** download preview for logistic. [#1457](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1457) ([0e7d41b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0e7d41bd791fb03c54471af497475153391ea9d5))
+
 ## [2.13.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.0...v2.13.1) (2024-01-11)
 
 
