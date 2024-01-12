@@ -5,7 +5,11 @@ import {
   Location,
   SignageCatalogItem,
 } from "@overbookd/festival-event";
-import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
+import {
+  PreviewForSecurity,
+  PreviewForCommunication,
+  PreviewForLogistic,
+} from "@overbookd/http";
 
 export type Adherents = {
   find(id: number): Promise<Adherent | null>;
@@ -32,6 +36,7 @@ export type Locations = {
 export type Previews = {
   forSecurity(): Promise<PreviewForSecurity[]>;
   forCommunication(): Promise<PreviewForCommunication[]>;
+  forLogistic(): Promise<PreviewForLogistic[]>;
 };
 
 export type RemoveFestivalActivities = {
