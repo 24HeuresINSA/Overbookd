@@ -4,7 +4,7 @@ import {
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
-import { HttpStringified } from "@overbookd/http";
+import { HttpStringified, PDF } from "@overbookd/http";
 import {
   MyUserInformation,
   Profile,
@@ -136,13 +136,13 @@ export class UserRepository {
 
   static getMyPdfPlanning(context: Context) {
     return context.$axios.get<string>(`${this.basePath}/me/planning`, {
-      headers: { accept: "application/pdf" },
+      headers: { accept: PDF },
     });
   }
 
   static getPdfPlanning(context: Context, id: number) {
     return context.$axios.get<string>(`${this.basePath}/${id}/planning`, {
-      headers: { accept: "application/pdf" },
+      headers: { accept: PDF },
     });
   }
 
