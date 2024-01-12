@@ -14,6 +14,15 @@
               Export signa
             </v-btn>
             <v-btn
+              v-if="canExportLogisticDashboard"
+              color="primary"
+              class="logistic-export"
+              @click="exportLogisticDashboard"
+            >
+              <v-icon left>mdi-truck</v-icon>
+              Export
+            </v-btn>
+            <v-btn
               v-if="canAccessSecurityDashboard"
               color="primary"
               class="security-dashboard"
@@ -132,6 +141,8 @@ import {
   PreviewFestivalActivity,
   FestivalActivity,
   secu,
+  matos,
+  elec,
 } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import {
@@ -210,6 +221,11 @@ export default defineComponent({
     },
     canAccessSecurityDashboard(): boolean {
       return this.$accessor.user.isMemberOf(secu);
+    },
+    canExportLogisticDashboard(): boolean {
+      const isMatosMember = this.$accessor.user.isMemberOf(matos);
+      const isElecMember = this.$accessor.user.isMemberOf(elec);
+      return isMatosMember || isElecMember;
     },
   },
 
@@ -315,6 +331,12 @@ export default defineComponent({
       const regex = new RegExp(/undefined/i, "g");
       const parsedCSV = csv.replace(regex, "");
       this.download("exportSigna.csv", parsedCSV);
+    },
+
+    async exportLogisticDashboard() {
+      await this.$accessor.festivalActivity.fetchLogisticPreviews();
+      const csv = this.$accessor.festivalActivity.activities.forLogistic.csv;
+      this.download("export-logistic.csv", csv);
     },
 
     download(filename: string, text: string) {

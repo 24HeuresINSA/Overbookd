@@ -1,3 +1,4 @@
+import { InquiryRequestAssigned } from "@overbookd/festival-event";
 import {
   FestivalActivity,
   PrepareInquiryRequestCreation,
@@ -59,4 +60,29 @@ export type PreviewForCommunication = {
   photoLink: FestivalActivity["general"]["photoLink"];
   isFlagship: FestivalActivity["general"]["isFlagship"];
   categories: FestivalActivity["general"]["categories"];
+};
+
+export type LogisticInquiry = InquiryRequestAssigned & {
+  gear: {
+    id: number;
+    isPonctualUsage: boolean;
+    isConsumable: boolean;
+    category: {
+      name: string;
+      path: string;
+      id: number;
+      owner: {
+        name: string;
+        code: string;
+      };
+    };
+  };
+};
+
+export type PreviewForLogistic = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  status: FestivalActivity["status"];
+  timeWindows: FestivalActivity["inquiry"]["timeWindows"];
+  inquiries: LogisticInquiry[];
 };

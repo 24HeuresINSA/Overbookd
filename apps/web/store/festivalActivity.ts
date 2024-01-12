@@ -48,6 +48,7 @@ type State = {
     forAll: PreviewFestivalActivity[];
     forSecurity: PreviewForSecurity[];
     forCommunication: PreviewForCommunication[];
+    forLogistic: { csv: string };
   };
   selectedActivity: FestivalActivity;
 };
@@ -59,6 +60,7 @@ export const state = (): State => ({
     forAll: [],
     forSecurity: [],
     forCommunication: [],
+    forLogistic: { csv: "" },
   },
   selectedActivity: fakeActivity,
 });
@@ -75,6 +77,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_ACTIVITY(state, activity: FestivalActivity) {
     state.selectedActivity = activity;
+  },
+  SET_CSV_PREVIEW_FOR_LOGISTIC(state, previews: string) {
+    state.activities.forLogistic.csv = previews;
   },
 });
 
@@ -104,6 +109,14 @@ export const actions = actionTree(
 
       const previews = res.data.map(castPreviewForCommunicationWithDate);
       commit("SET_PREVIEW_FOR_COMMUNICATION", previews);
+    },
+
+    async fetchLogisticPreviews({ commit }) {
+      const res = await safeCall(this, repo.getCSVLogisticPreviews(this));
+
+      if (!res) return;
+
+      commit("SET_CSV_PREVIEW_FOR_LOGISTIC", res.data);
     },
 
     async fetchActivity({ commit }, id: number) {

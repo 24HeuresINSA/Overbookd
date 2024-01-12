@@ -3,7 +3,11 @@ import {
   PrepareFestivalActivity,
   PreviewFestivalActivity as PreviewForAll,
 } from "@overbookd/festival-event";
-import { PreviewForSecurity, PreviewForCommunication } from "@overbookd/http";
+import {
+  PreviewForSecurity,
+  PreviewForCommunication,
+  PreviewForLogistic,
+} from "@overbookd/http";
 import { Previews } from "../common/festival-activity-common.model";
 
 @Injectable()
@@ -23,5 +27,9 @@ export class FestivalActivityPreviewService {
 
   findForCommunication(): Promise<PreviewForCommunication[]> {
     return this.previews.forCommunication();
+  }
+
+  findForLogistic(): Promise<PreviewForLogistic[]> {
+    return this.previews.forLogistic();
   }
 }

@@ -1,5 +1,6 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
+  CSV,
   HttpStringified,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
@@ -57,6 +58,12 @@ export class FestivalActivityRepository {
     return context.$axios.get<HttpStringified<PreviewForCommunication>[]>(
       `${this.basePath}/for-communication`,
     );
+  }
+
+  static getCSVLogisticPreviews(context: Context) {
+    return context.$axios.get<string>(`${this.basePath}/for-logistic`, {
+      headers: { accept: CSV },
+    });
   }
 
   static getOne(context: Context, id: FestivalActivity["id"]) {
