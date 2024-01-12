@@ -1,21 +1,17 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Logger,
-  NestInterceptor,
-} from "@nestjs/common";
-import { Observable, tap } from "rxjs";
+import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
+import { Request, Response } from "express";
+import { Observable, filter, tap } from "rxjs";
+import { RouteLogger } from "./route-logger";
 
 export class RouteLoggerInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(RouteLoggerInterceptor.name);
-
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    const { url, method } = context.switchToHttp().getRequest<Request>();
+    const { statusCode } = context.switchToHttp().getResponse<Response>();
+
     return next.handle().pipe(
+      filter(() => url !== "/"),
       tap(() => {
-        const request = context.switchToHttp().getRequest();
-        const response = context.switchToHttp().getResponse();
-        const logMessage = `[${response.statusCode}] ${request.method} ${request.route.path}`;
-        this.logger.log(logMessage);
+        RouteLogger.logRouteContext({ statusCode, method, url });
       }),
     );
   }

@@ -3,18 +3,24 @@ import {
   BarrelNotConfigured,
   SimilarBarrelExist,
 } from "@overbookd/personal-account";
-import { Response } from "express";
+import { Response, Request } from "express";
+import { RouteLogger } from "../route-logger";
 
 @Catch(BarrelNotConfigured)
 export class BarrelNotConfiguredFilter implements ExceptionFilter {
   catch(exception: BarrelNotConfigured, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const { method, url } = ctx.getRequest<Request>();
+    const statusCode = 404;
 
-    response.status(404).json({
+    RouteLogger.logRouteContext({ statusCode, method, url });
+    RouteLogger.logErrorMessage(exception);
+
+    response.status(statusCode).json({
       message: exception.message,
       error: "Not Found",
-      statusCode: 404,
+      statusCode,
     });
   }
 }
@@ -24,11 +30,16 @@ export class SimilarBarrelExistFilter implements ExceptionFilter {
   catch(exception: SimilarBarrelExist, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const { method, url } = ctx.getRequest<Request>();
+    const statusCode = 400;
 
-    response.status(400).json({
+    RouteLogger.logRouteContext({ statusCode, method, url });
+    RouteLogger.logErrorMessage(exception);
+
+    response.status(statusCode).json({
       message: exception.message,
       error: "Bad Request",
-      statusCode: 400,
+      statusCode,
     });
   }
 }
