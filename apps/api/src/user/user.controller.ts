@@ -40,12 +40,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
 import { TaskResponseDto } from "../volunteer-planning/dto/task.response.dto";
 import { VolunteerSubscriptionPlanningResponseDto } from "../volunteer-planning/dto/volunter-subscription-planning.response.dto";
-import {
-  IcalType,
-  JsonType,
-  PdfType,
-  PlanningRenderStrategy,
-} from "../volunteer-planning/render/render-strategy";
+import { PlanningRenderStrategy } from "../volunteer-planning/render/render-strategy";
 import {
   PlanningSubscription,
   SubscriptionService,
@@ -79,6 +74,7 @@ import { Consumer } from "./user.model";
 import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
 import { BaseUserResponseDto } from "./dto/base-user.response.dto";
+import { ICAL, JSON, PDF } from "@overbookd/http";
 
 @ApiTags("users")
 @Controller("users")
@@ -180,7 +176,7 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
-  @ApiProduces(JsonType, IcalType, PdfType)
+  @ApiProduces(JSON, ICAL, PDF)
   async getCurrentVolunteerPlanning(
     @RequestDecorator() request: RequestWithUserPayload,
     @Res() response: Response,
@@ -308,7 +304,7 @@ export class UserController {
     isArray: true,
     type: TaskResponseDto,
   })
-  @ApiProduces(JsonType, IcalType, PdfType)
+  @ApiProduces(JSON, ICAL, PDF)
   async getVolunteerPlanning(
     @Param("id", ParseIntPipe) volunteerId: number,
     @RequestDecorator() request: Request,
