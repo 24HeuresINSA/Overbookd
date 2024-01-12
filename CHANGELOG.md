@@ -1,3 +1,11 @@
+## [2.13.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.2...v2.13.3) (2024-01-12)
+
+
+### Bug Fixes
+
+* **api:** log filtering inside tap to avoid crash. [#1458](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1458) ([84a4168](https://gitlab.com/24-heures-insa/overbookd-mono/commit/84a4168b1c788db78b24cb338bfb51ae1d1c9421))
+* **signa:** allow signage update. [#1459](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1459) ([241fe29](https://gitlab.com/24-heures-insa/overbookd-mono/commit/241fe296af8aeb3277ca2a4bdc8d11b253f05258))
+
 ## [2.13.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.1...v2.13.2) (2024-01-12)
 
 
