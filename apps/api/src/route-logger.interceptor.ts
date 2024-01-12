@@ -9,8 +9,8 @@ export class RouteLoggerInterceptor implements NestInterceptor {
     const { statusCode } = context.switchToHttp().getResponse<Response>();
 
     return next.handle().pipe(
-      filter(() => url !== "/"),
       tap(() => {
+        if (url === "/") return;
         RouteLogger.logRouteContext({ statusCode, method, url });
       }),
     );
