@@ -41,6 +41,7 @@ import { DraftPreviewFestivalActivityResponseDto } from "./dto/preview-draft-fes
 import { FestivalActivityPreviewService } from "./festival-activity-preview.service";
 import { RequestWithUserPayload } from "../../app.controller";
 import { LogisticPreview } from "./logistic-preview";
+import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview-festival-activity.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -118,7 +119,7 @@ export class FestivalActivityPreviewController {
   @ApiResponse({
     status: 200,
     description: "All festival activities",
-    type: PreviewForCommunicationResponseDto,
+    type: PreviewForLogisticResponseDto,
     isArray: true,
   })
   @ApiProduces(JSON, CSV)

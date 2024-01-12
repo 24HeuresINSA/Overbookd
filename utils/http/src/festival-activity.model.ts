@@ -62,7 +62,7 @@ export type PreviewForCommunication = {
   categories: FestivalActivity["general"]["categories"];
 };
 
-type LogisticInquiry = InquiryRequestAssigned & {
+export type LogisticInquiry = InquiryRequestAssigned & {
   gear: {
     id: number;
     isPonctualUsage: boolean;

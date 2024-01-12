@@ -8,6 +8,7 @@ export type {
   Statistics,
   PreviewForSecurity,
   PreviewForCommunication,
+  LogisticInquiry,
   PreviewForLogistic,
 } from "./festival-activity.model";
 export type { HttpStringified } from "./http-stringified";
