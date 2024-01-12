@@ -30,9 +30,6 @@ export class CatalogSignageService {
   async remove(id: number): Promise<void> {
     await this.catalogSignages.remove(id);
   }
-  private async getSignageImage(id: number): Promise<string | null> {
-    return this.catalogSignages.findSignageImage(id);
-  }
 
   async updateSignageImage(id: number, image: string): Promise<Signage> {
     return this.catalogSignages.uploadImage(id, image);

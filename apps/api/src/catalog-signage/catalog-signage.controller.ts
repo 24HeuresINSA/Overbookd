@@ -96,7 +96,7 @@ export class CatalogSignageController {
   })
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() signage: SignageResponseDto,
+    @Body() signage: SignageFormRequestDto,
   ): Promise<Signage> {
     return this.catalogSignageService.update(id, signage);
   }
