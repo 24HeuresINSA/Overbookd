@@ -44,7 +44,10 @@ type ActivityRejected = {
 
 type ActivityValidated = {
   email: string;
-  activityName: PreviewFestivalActivity["name"];
+  activity: {
+    id: PreviewFestivalActivity["id"];
+    name: PreviewFestivalActivity["name"];
+  };
 };
 
 export type Members = {
@@ -95,7 +98,7 @@ export class MailService implements OnApplicationBootstrap {
     });
 
     this.eventStore.approvedFestivalActivity.subscribe(async (event) => {
-      const { reviews, inCharge, general } = event.festivalActivity;
+      const { reviews, inCharge, general, id } = event.festivalActivity;
       const stillInReviewCount = Object.values(reviews).filter(
         (review) => review !== NOT_ASKING_TO_REVIEW && review !== APPROVED,
       ).length;
@@ -103,8 +106,9 @@ export class MailService implements OnApplicationBootstrap {
 
       this.logger.log("Send festival-activity-validated mail");
       const { email } = await this.members.byId(inCharge.adherent.id);
+      const activity = { name: general.name, id };
 
-      this.festivalActivityValidated({ email, activityName: general.name });
+      this.festivalActivityValidated({ email, activity });
     });
   }
 
@@ -208,19 +212,20 @@ export class MailService implements OnApplicationBootstrap {
     }
   }
 
-  async festivalActivityValidated({ email, activityName }: ActivityValidated) {
+  async festivalActivityValidated({ email, activity }: ActivityValidated) {
     try {
       const mail = await this.mailerService.sendMail({
         to: email,
-        subject: `${activityName} validée 💫`,
+        subject: `${activity.name} validée 💫`,
         template: "festival-activity-validated",
         context: {
-          activityName,
+          activityName: activity.name,
           statisticsLink: `https://${process.env.DOMAIN}/stats`,
         },
       });
       if (mail) {
-        this.logger.log(`Festival activity validated mail sent to ${email}`);
+        const logMessage = `Festival activity validated mail sent to ${email} for activity #${activity.id}`;
+        this.logger.log(logMessage);
       }
     } catch (error) {
       this.logger.error(error);

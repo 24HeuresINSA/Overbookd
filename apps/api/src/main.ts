@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import basicAuth from "express-basic-auth";
 import { ValidationPipe } from "@nestjs/common";
 import { json, urlencoded } from "body-parser";
+import { RouteLoggerInterceptor } from "./route-logger.interceptor";
 
 const SWAGGER_PROTECT_DOMAINS = [
   "overbookd.24heures.org",
@@ -13,6 +14,7 @@ const SWAGGER_PROTECT_DOMAINS = [
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.useGlobalInterceptors(new RouteLoggerInterceptor());
   app.enableCors({
     origin: (origin, callback) => {
       if (!origin || origin.includes(process.env.DOMAIN)) {
