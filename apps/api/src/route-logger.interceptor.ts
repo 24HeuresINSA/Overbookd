@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
 import { Request, Response } from "express";
-import { Observable, filter, tap } from "rxjs";
+import { Observable, tap } from "rxjs";
 import { RouteLogger } from "./route-logger";
 
 export class RouteLoggerInterceptor implements NestInterceptor {
