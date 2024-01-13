@@ -8,8 +8,8 @@ import {
 import {
   PreviewFestivalActivity,
   PreviewDraft,
-  PreviewReviewable,
-} from "../../preview/festival-activity";
+  PreviewReviewable
+} from "../festival-activity";
 import { VALIDATED, IN_REVIEW, REFUSED } from "../../common/status";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";

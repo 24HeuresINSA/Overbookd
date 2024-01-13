@@ -1,4 +1,4 @@
-import { PreviewFestivalActivity } from "../preview/festival-activity";
+import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
 import { DRAFT } from "../common/status";
 import { Adherent } from "../common/adherent";

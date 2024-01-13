@@ -17,7 +17,7 @@ import {
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
 import { FestivalActivity, isDraft } from "../festival-activity";
-import { PreviewFestivalActivity } from "../../preview/festival-activity";
+import { PreviewFestivalActivity } from "../festival-activity";
 import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";

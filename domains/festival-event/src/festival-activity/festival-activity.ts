@@ -12,7 +12,6 @@ import { APPROVED, REJECTED } from "../common/action";
 import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "../common/status";
 import { CREATED, COMMENTED, READY_TO_REVIEW } from "../common/action";
 import { Feedback } from "../common/feedback";
-import { PreviewFestivalActivity } from "../preview/festival-activity";
 
 type Security = {
   specialNeed: string | null;
@@ -88,3 +87,40 @@ export function isDraft(activity: FestivalActivity): activity is Draft {
 export function isRefused(activity: FestivalActivity): activity is Refused {
   return activity.status === REFUSED;
 }
+
+type PreviewBase = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  adherent: FestivalActivity["inCharge"]["adherent"];
+};
+
+type PreviewReviewableBase = PreviewBase & {
+  team: Reviewable["inCharge"]["team"];
+};
+
+type InReviewPreview = PreviewReviewableBase & {
+  status: InReview["status"];
+  reviews: InReviewReviews<"FA">;
+};
+
+type ValidatedPreview = PreviewReviewableBase & {
+  status: Validated["status"];
+  reviews: ValidatedReviews<"FA">;
+};
+
+type RefusedPreview = PreviewReviewableBase & {
+  status: Refused["status"];
+  reviews: RefusedReviews<"FA">;
+};
+
+export type PreviewReviewable =
+  | InReviewPreview
+  | ValidatedPreview
+  | RefusedPreview;
+
+export type PreviewDraft = PreviewBase & {
+  status: Draft["status"];
+  team: Draft["inCharge"]["team"];
+};
+
+export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
