@@ -2,7 +2,7 @@ import { FestivalTask } from "./festival-task";
 import { PreviewFestivalTask } from "./festival-task";
 
 export class FestivalTaskBuilder {
-  private constructor(private readonly task: FestivalTask) { }
+  private constructor(private readonly task: FestivalTask) {}
   static build(task: FestivalTask) {
     return new FestivalTaskBuilder(task);
   }

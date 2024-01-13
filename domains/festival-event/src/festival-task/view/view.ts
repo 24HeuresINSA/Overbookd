@@ -7,7 +7,7 @@ export type FestivalTasksForView = {
   one(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
 };
 export class ViewFestivalTask {
-  constructor(private readonly festivalTasks: FestivalTasksForView) { }
+  constructor(private readonly festivalTasks: FestivalTasksForView) {}
 
   all(): Promise<PreviewFestivalTask[]> {
     return this.festivalTasks.all();
