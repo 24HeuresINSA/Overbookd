@@ -45,3 +45,5 @@ export type Draft = {
   volunteerInquiries: unknown[];
   gearInquiries: unknown[];
 };
+
+export type FestivalTask = Draft;
