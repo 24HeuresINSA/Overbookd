@@ -6,8 +6,6 @@ import { FestivalActivity, Draft } from "../festival-task";
 
 const FT_420 = 420;
 
-const FT_420 = 420;
-
 type FestivalTaskCreation = {
   name: string;
   festivalActivity: FestivalActivity;
