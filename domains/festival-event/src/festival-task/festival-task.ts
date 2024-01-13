@@ -18,7 +18,7 @@ export type FestivalActivity = {
   };
 };
 
-export type Contact = Adherent & {
+type Contact = Adherent & {
   phone: string;
 };
 
