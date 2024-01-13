@@ -1,7 +1,11 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { Draft, FestivalTask } from "../festival-task";
+import { FestivalTask } from "../festival-task";
 import { escapeGame, noel } from "../festival-task.test-util";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
+import { FestivalTaskNotFound } from "../festival-task.error";
+import { ViewFestivalTask } from "./view";
+import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
+import { PreviewDraft, PreviewFestivalTask } from "../festival-task";
 
 const installEscapeGame: FestivalTask = {
   id: 1,
@@ -26,16 +30,6 @@ const installEscapeGame: FestivalTask = {
   volunteerInquiries: [],
   gearInquiries: [],
 };
-
-type PreviewDraft = {
-  id: Draft["id"];
-  status: Draft["status"];
-  name: Draft["general"]["name"];
-  administrator: Draft["general"]["administrator"];
-  team: Draft["general"]["team"];
-};
-
-type PreviewFestivalTask = PreviewDraft;
 
 const installEscapeGamePreview: PreviewDraft = {
   id: installEscapeGame.id,
@@ -76,63 +70,6 @@ const uninstallEscapeGamePreview: PreviewDraft = {
   administrator: uninstallEscapeGame.general.administrator,
   team: uninstallEscapeGame.general.team,
 };
-
-type FestivalTasksForView = {
-  all(): Promise<PreviewFestivalTask[]>;
-  one(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
-};
-
-class FestivalTaskBuilder {
-  private constructor(private readonly task: FestivalTask) {}
-  static build(task: FestivalTask) {
-    return new FestivalTaskBuilder(task);
-  }
-
-  get overview(): FestivalTask {
-    return this.task;
-  }
-
-  get preview(): PreviewFestivalTask {
-    const { id, status, general } = this.task;
-    const { name, administrator, team } = general;
-    return { id, status, name, administrator, team };
-  }
-}
-
-class InMemoryFestivalTasks implements FestivalTasksForView {
-  constructor(private readonly tasks: FestivalTask[]) {}
-
-  one(ftId: number): Promise<FestivalTask | null> {
-    return Promise.resolve(this.tasks.find(({ id }) => id === ftId) ?? null);
-  }
-
-  all(): Promise<PreviewFestivalTask[]> {
-    return Promise.resolve(
-      this.tasks.map((task) => FestivalTaskBuilder.build(task).preview),
-    );
-  }
-}
-
-class FestivalTaskNotFound extends Error {
-  constructor(ftId: FestivalTask["id"]) {
-    const message = `La fiche tache #${ftId} n'a pas été trouvé`;
-    super(message);
-  }
-}
-
-class ViewFestivalTask {
-  constructor(private readonly festivalTasks: FestivalTasksForView) {}
-
-  all(): Promise<PreviewFestivalTask[]> {
-    return this.festivalTasks.all();
-  }
-
-  async one(ftId: FestivalTask["id"]): Promise<FestivalTask> {
-    const task = await this.festivalTasks.one(ftId);
-    if (!task) throw new FestivalTaskNotFound(ftId);
-    return task;
-  }
-}
 
 describe("View festival tasks", () => {
   let view: ViewFestivalTask;
