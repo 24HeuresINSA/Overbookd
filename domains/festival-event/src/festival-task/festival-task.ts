@@ -5,6 +5,7 @@ import { Adherent } from "../common/adherent";
 import { TimeWindow } from "../festival-activity/sections/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { KeyEvent } from "./festival-task.event";
+import { Location } from "../common/location";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
@@ -31,6 +32,7 @@ export type Draft = {
   };
   festivalActivity: FestivalActivity;
   instructions: {
+    appointment: Location | null;
     contacts: Contact[];
     global: string | null;
     inCharge: {

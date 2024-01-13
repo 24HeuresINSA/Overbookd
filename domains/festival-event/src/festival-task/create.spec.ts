@@ -87,11 +87,13 @@ describe("Create festival task", () => {
     });
 
     it("should generate instructions section with default value", () => {
-      const { global, inCharge, contacts } = intsallEscapeGame.instructions;
+      const { instructions } = intsallEscapeGame;
+      const { global, inCharge, contacts, appointment } = instructions;
       expect(global).toBeNull();
       expect(inCharge.adherents).toStrictEqual([]);
       expect(inCharge.instruction).toBeNull();
       expect(contacts).toStrictEqual([]);
+      expect(appointment).toBeNull();
     });
 
     it("should init feedbacks with empty list", () => {
