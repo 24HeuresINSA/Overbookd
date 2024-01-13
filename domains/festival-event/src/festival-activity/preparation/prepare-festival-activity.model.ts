@@ -6,12 +6,12 @@ import {
   Supply,
 } from "../sections/supply";
 import {
-  Location,
   Signage,
   SignageCatalogItem,
   SignageType,
 } from "../sections/signa";
-import { InquiryRequest } from "../sections/inquiry";
+import { Location } from "../../common/location";
+import { InquiryRequest } from "../../common/inquiry-request";
 import { Contractor } from "../sections/in-charge";
 import { Adherent } from "../../common/adherent";
 import { Feedback } from "../../common/feedback";

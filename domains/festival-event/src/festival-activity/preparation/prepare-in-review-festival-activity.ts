@@ -27,9 +27,9 @@ import {
   BARRIERES,
   ELEC,
   InquiryOwner,
-  InquiryRequest,
   MATOS,
 } from "../sections/inquiry";
+import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";

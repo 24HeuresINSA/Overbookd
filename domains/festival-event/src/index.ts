@@ -1,5 +1,5 @@
 //  **********************
-//  FESTIVAL ACTIVITY MODULE
+//  COMMON MODULE
 //  **********************
 export type { Feedback } from "./common/feedback";
 export {
@@ -32,6 +32,13 @@ export {
   elec,
   barrieres,
 } from "./common/review";
+export type { Location } from "./common/location";
+export type {
+  InquiryRequestAssigned,
+  InquiryRequest,
+  BaseInquiryRequest,
+} from "./common/inquiry-request";
+export { isAssignedToDrive } from "./common/inquiry-request";
 
 //  **********************
 //  PREVIEW MODULE
@@ -62,11 +69,8 @@ export type { Contractor } from "./festival-activity/sections/in-charge";
 
 // INQUIRY
 export type {
-  BaseInquiryRequest,
   InquiryWithPotentialRequests,
   InquiryWithRequests,
-  InquiryRequestAssigned,
-  InquiryRequest,
   InquiryOwner,
   WithInquiries,
   Drive,
@@ -98,7 +102,6 @@ export {
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
   drives,
-  isAssignedToDrive,
 } from "./festival-activity/sections/inquiry";
 
 export type {
@@ -122,7 +125,6 @@ export {
 export type { Public as PublicGeneral } from "./festival-activity/sections/general";
 export type {
   Signage,
-  Location,
   SignageType,
   BaseSignage,
   SignageCatalogItem,

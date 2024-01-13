@@ -1,7 +1,7 @@
 import { InitInquiry, Prepare } from "./prepare-festival-activity";
 import { IProvidePeriod } from "@overbookd/period";
 import { Draft } from "../festival-activity";
-import { InquiryRequest } from "../sections/inquiry";
+import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";

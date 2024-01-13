@@ -1,6 +1,6 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivity } from "../../festival-activity";
-import { InquiryRequest } from "../../sections/inquiry";
+import { InquiryRequest } from "../../../common/inquiry-request";
 import { TimeWindow } from "../../sections/time-window";
 import {
   FestivalActivityError,

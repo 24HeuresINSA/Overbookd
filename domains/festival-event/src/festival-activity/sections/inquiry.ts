@@ -1,3 +1,4 @@
+import { InquiryRequest } from "../../common/inquiry-request";
 import { TimeWindow } from "./time-window";
 
 export const MATOS = "matos";
@@ -81,26 +82,6 @@ export const drives: Drive[] = [
 export type WithTimeWindows = {
   timeWindows: [TimeWindow, ...TimeWindow[]];
 };
-
-export type BaseInquiryRequest = {
-  slug: string;
-  quantity: number;
-  name: string;
-};
-
-type WithDrive = {
-  drive: Drive;
-};
-
-export type InquiryRequestAssigned = BaseInquiryRequest & WithDrive;
-
-export type InquiryRequest = BaseInquiryRequest | InquiryRequestAssigned;
-
-export function isAssignedToDrive(
-  request: InquiryRequest,
-): request is InquiryRequestAssigned {
-  return Object.hasOwn(request, "drive");
-}
 
 type WithGearInquiries = {
   barriers: InquiryRequest[];
