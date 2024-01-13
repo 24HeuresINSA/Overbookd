@@ -5,11 +5,7 @@ import {
   ElectricitySupply,
   Supply,
 } from "../sections/supply";
-import {
-  Signage,
-  SignageCatalogItem,
-  SignageType,
-} from "../sections/signa";
+import { Signage, SignageCatalogItem, SignageType } from "../sections/signa";
 import { Location } from "../../common/location";
 import { InquiryRequest } from "../../common/inquiry-request";
 import { Contractor } from "../sections/in-charge";

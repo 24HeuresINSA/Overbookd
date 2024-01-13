@@ -23,12 +23,7 @@ import {
   signa,
 } from "../../common/review";
 import { APPROVED } from "../../common/action";
-import {
-  BARRIERES,
-  ELEC,
-  InquiryOwner,
-  MATOS,
-} from "../sections/inquiry";
+import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
 import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
