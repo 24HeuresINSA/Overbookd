@@ -45,7 +45,7 @@ describe("Create festival task", () => {
   describe(`when ${noel.firstname} create Install escape game task`, async () => {
     const festivalTasks = new InMemoryFestivalTasks();
     const create = new CreateFestivalTask(festivalTasks);
-    const intsallEscapeGame = await create.apply({
+    const installEscapeGame = await create.apply({
       name: "Install escape game",
       festivalActivity: escapeGame,
       author: noel,
@@ -59,35 +59,35 @@ describe("Create festival task", () => {
     };
 
     it("should create Install escape game task", () => {
-      expect(intsallEscapeGame.general.name).toBe("Install escape game");
+      expect(installEscapeGame.general.name).toBe("Install escape game");
     });
 
     it("should set Noel as administrator of it", () => {
-      expect(intsallEscapeGame.general.administrator).toEqual(noel);
+      expect(installEscapeGame.general.administrator).toEqual(noel);
     });
 
     it("should init history with CREATED key event", () => {
-      expect(intsallEscapeGame.history).toContainEqual(createdEvent);
+      expect(installEscapeGame.history).toContainEqual(createdEvent);
     });
 
     it(`should set the status to ${DRAFT}`, () => {
-      expect(intsallEscapeGame.status).toBe(DRAFT);
+      expect(installEscapeGame.status).toBe(DRAFT);
     });
 
     it("should generate an id", () => {
-      expect(intsallEscapeGame.id).toEqual(expect.any(Number));
+      expect(installEscapeGame.id).toEqual(expect.any(Number));
     });
 
     it(`should link it to ${escapeGame.name}`, () => {
-      expect(intsallEscapeGame.festivalActivity).toStrictEqual(escapeGame);
+      expect(installEscapeGame.festivalActivity).toStrictEqual(escapeGame);
     });
 
     it("should generate general section with default value", () => {
-      expect(intsallEscapeGame.general.team).toBeNull();
+      expect(installEscapeGame.general.team).toBeNull();
     });
 
     it("should generate instructions section with default value", () => {
-      const { instructions } = intsallEscapeGame;
+      const { instructions } = installEscapeGame;
       const { global, inCharge, contacts, appointment } = instructions;
       expect(global).toBeNull();
       expect(inCharge.adherents).toStrictEqual([]);
@@ -97,19 +97,19 @@ describe("Create festival task", () => {
     });
 
     it("should init feedbacks with empty list", () => {
-      expect(intsallEscapeGame.feedbacks).toStrictEqual([]);
+      expect(installEscapeGame.feedbacks).toStrictEqual([]);
     });
 
     it("should init gearInquiries with empty list", () => {
-      expect(intsallEscapeGame.gearInquiries).toStrictEqual([]);
+      expect(installEscapeGame.gearInquiries).toStrictEqual([]);
     });
 
     it("should init volunteerInquiries with empty list", () => {
-      expect(intsallEscapeGame.volunteerInquiries).toStrictEqual([]);
+      expect(installEscapeGame.volunteerInquiries).toStrictEqual([]);
     });
 
     it("should save it to the repository", () => {
-      expect(festivalTasks.all).toContainEqual(intsallEscapeGame);
+      expect(festivalTasks.all).toContainEqual(installEscapeGame);
     });
   });
 
@@ -117,13 +117,13 @@ describe("Create festival task", () => {
     describe(`when ${noel.firstname} create Install escape game task`, async () => {
       const festivalTasks = new InMemoryFestivalTasks();
       const create = new CreateFestivalTask(festivalTasks, 420);
-      const intsallEscapeGame = await create.apply({
+      const installEscapeGame = await create.apply({
         name: "Install escape game",
         festivalActivity: escapeGame,
         author: noel,
       });
       it("should skip id 420", () => {
-        expect(intsallEscapeGame.id).toBe(421);
+        expect(installEscapeGame.id).toBe(421);
       });
     });
   });

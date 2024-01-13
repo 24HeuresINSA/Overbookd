@@ -4,20 +4,23 @@ import { Adherent } from "../common/adherent";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import { FestivalActivity, Draft } from "./festival-task";
 
+const FT_420 = 420;
+
 type FestivalTaskCreation = {
   name: string;
   festivalActivity: FestivalActivity;
   author: Adherent;
 };
-const FT_420 = 420;
-export type FestivalTasks = {
+
+export type FestivalTasksForCreate = {
   add(festivalTask: Draft): Promise<Draft>;
 };
+
 export class CreateFestivalTask {
   private idGenerator: Generator<number>;
 
   constructor(
-    private readonly festivalTasks: FestivalTasks,
+    private readonly festivalTasks: FestivalTasksForCreate,
     startId: number = 1,
   ) {
     this.idGenerator = numberGenerator(startId, [FT_420]);

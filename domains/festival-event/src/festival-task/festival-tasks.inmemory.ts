@@ -1,7 +1,7 @@
 import { Draft } from "./festival-task";
-import { FestivalTasks } from "./create";
+import { FestivalTasksForCreate } from "./create";
 
-export class InMemoryFestivalTasks implements FestivalTasks {
+export class InMemoryFestivalTasks implements FestivalTasksForCreate {
   constructor(private festivalTasks: Draft[] = []) {}
 
   add(festivalTask: Draft): Promise<Draft> {
