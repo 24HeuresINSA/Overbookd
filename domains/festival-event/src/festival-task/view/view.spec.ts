@@ -79,23 +79,44 @@ const uninstallEscapeGamePreview: PreviewDraft = {
 
 type FestivalTasksForView = {
   all(): Promise<PreviewFestivalTask[]>;
+  one(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
 };
+
+class FestivalTaskBuilder {
+  private constructor(private readonly task: FestivalTask) {}
+  static build(task: FestivalTask) {
+    return new FestivalTaskBuilder(task);
+  }
+
+  get overview(): FestivalTask {
+    return this.task;
+  }
+
+  get preview(): PreviewFestivalTask {
+    const { id, status, general } = this.task;
+    const { name, administrator, team } = general;
+    return { id, status, name, administrator, team };
+  }
+}
 
 class InMemoryFestivalTasks implements FestivalTasksForView {
   constructor(private readonly tasks: FestivalTask[]) {}
 
+  one(ftId: number): Promise<FestivalTask | null> {
+    return Promise.resolve(this.tasks.find(({ id }) => id === ftId) ?? null);
+  }
+
   all(): Promise<PreviewFestivalTask[]> {
     return Promise.resolve(
-      this.tasks.map(
-        ({ id, status, general: { name, administrator, team } }) => ({
-          id,
-          status,
-          name,
-          administrator,
-          team,
-        }),
-      ),
+      this.tasks.map((task) => FestivalTaskBuilder.build(task).preview),
     );
+  }
+}
+
+class FestivalTaskNotFound extends Error {
+  constructor(ftId: FestivalTask["id"]) {
+    const message = `La fiche tache #${ftId} n'a pas été trouvé`;
+    super(message);
   }
 }
 
@@ -104,6 +125,12 @@ class ViewFestivalTask {
 
   all(): Promise<PreviewFestivalTask[]> {
     return this.festivalTasks.all();
+  }
+
+  async one(ftId: FestivalTask["id"]): Promise<FestivalTask> {
+    const task = await this.festivalTasks.one(ftId);
+    if (!task) throw new FestivalTaskNotFound(ftId);
+    return task;
   }
 }
 
@@ -130,5 +157,33 @@ describe("View festival tasks", () => {
         );
       });
     });
+  });
+  describe("View one task", () => {
+    describe.each`
+      nbTasks | tasks                                       | existingTaskId            | expectedTask           | nonExistingId
+      ${1}    | ${[installEscapeGame]}                      | ${installEscapeGame.id}   | ${installEscapeGame}   | ${uninstallEscapeGame.id}
+      ${2}    | ${[installEscapeGame, uninstallEscapeGame]} | ${uninstallEscapeGame.id} | ${uninstallEscapeGame} | ${3}
+    `(
+      "with $nbTasks tasks known",
+      ({ tasks, existingTaskId, expectedTask, nonExistingId }) => {
+        beforeAll(() => {
+          const festivalTasks = new InMemoryFestivalTasks(tasks);
+          view = new ViewFestivalTask(festivalTasks);
+        });
+        describe("when looking for a known task", () => {
+          it("should expose task detail", async () => {
+            const task = await view.one(existingTaskId);
+            expect(task).toStrictEqual(expectedTask);
+          });
+        });
+        describe("when looking for an unknown task", () => {
+          it("should indicate task not found", () => {
+            expect(async () => await view.one(nonExistingId)).rejects.toThrow(
+              FestivalTaskNotFound,
+            );
+          });
+        });
+      },
+    );
   });
 });
