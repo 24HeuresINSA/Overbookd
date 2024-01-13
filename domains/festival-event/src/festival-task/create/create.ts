@@ -1,8 +1,10 @@
 import { numberGenerator } from "@overbookd/list";
-import { DRAFT } from "../common/status";
-import { Adherent } from "../common/adherent";
-import { FestivalTaskKeyEvents } from "./festival-task.event";
-import { FestivalActivity, Draft } from "./festival-task";
+import { DRAFT } from "../../common/status";
+import { Adherent } from "../../common/adherent";
+import { FestivalTaskKeyEvents } from "../festival-task.event";
+import { FestivalActivity, Draft } from "../festival-task";
+
+const FT_420 = 420;
 
 const FT_420 = 420;
 
