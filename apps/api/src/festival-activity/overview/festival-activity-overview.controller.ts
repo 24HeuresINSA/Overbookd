@@ -9,6 +9,7 @@ import {
   HttpCode,
   Request,
   Controller,
+  UseFilters,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -50,6 +51,7 @@ import {
 } from "../common/dto/signage.response.dto";
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
+import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -71,6 +73,7 @@ import { FestivalActivityOverviewService } from "./festival-activity-overview.se
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
+@UseFilters(FestivalActivityErrorFilter)
 @Controller("festival-activities")
 export class FestivalActivityOverviewController {
   constructor(
