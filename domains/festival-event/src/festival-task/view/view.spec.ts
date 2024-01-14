@@ -1,35 +1,10 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { FestivalTask } from "../festival-task";
-import { escapeGame, noel } from "../festival-task.test-util";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { ViewFestivalTask } from "./view";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PreviewDraft, PreviewFestivalTask } from "../festival-task";
-
-const installEscapeGame: FestivalTask = {
-  id: 1,
-  status: "DRAFT",
-  general: {
-    name: "Install Escape Game",
-    administrator: noel,
-    team: null,
-  },
-  festivalActivity: escapeGame,
-  instructions: {
-    appointment: null,
-    contacts: [],
-    global: null,
-    inCharge: {
-      adherents: [],
-      instruction: null,
-    },
-  },
-  history: [FestivalTaskKeyEvents.created(noel)],
-  feedbacks: [],
-  volunteerInquiries: [],
-  gearInquiries: [],
-};
+import { installEscapeGame } from "../festival-task.test-util";
+import { uninstallEscapeGame } from "../festival-task.test-util";
 
 const installEscapeGamePreview: PreviewDraft = {
   id: installEscapeGame.id,
@@ -37,30 +12,6 @@ const installEscapeGamePreview: PreviewDraft = {
   name: installEscapeGame.general.name,
   administrator: installEscapeGame.general.administrator,
   team: installEscapeGame.general.team,
-};
-
-const uninstallEscapeGame: FestivalTask = {
-  id: 2,
-  status: "DRAFT",
-  general: {
-    name: "Uninstall Escape Game",
-    administrator: noel,
-    team: null,
-  },
-  festivalActivity: escapeGame,
-  instructions: {
-    appointment: null,
-    contacts: [],
-    global: null,
-    inCharge: {
-      adherents: [],
-      instruction: null,
-    },
-  },
-  history: [FestivalTaskKeyEvents.created(noel)],
-  feedbacks: [],
-  volunteerInquiries: [],
-  gearInquiries: [],
 };
 
 const uninstallEscapeGamePreview: PreviewDraft = {
