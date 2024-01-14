@@ -7,6 +7,7 @@ import {
   Body,
   Request,
   Controller,
+  UseFilters,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -47,6 +48,7 @@ import {
 import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
 import { FestivalActivityReviewService } from "./festival-activity-review.service";
+import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -68,6 +70,7 @@ import { FestivalActivityReviewService } from "./festival-activity-review.servic
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
+@UseFilters(FestivalActivityErrorFilter)
 @Controller("festival-activities")
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}
