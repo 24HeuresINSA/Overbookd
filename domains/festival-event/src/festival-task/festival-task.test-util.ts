@@ -3,6 +3,7 @@ import { FestivalActivity, FestivalTask } from "./festival-task";
 import { TimeWindow } from "../festival-activity/sections/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
+import { Location } from "../common/location";
 
 export const noel = {
   id: 1,
@@ -32,6 +33,11 @@ const deuxTables: InquiryRequest = {
   name: "Table",
   slug: "table",
   quantity: 2,
+};
+
+export const humaGrass: Location = {
+  id: 1,
+  name: "Huma grass",
 };
 
 export const escapeGame: FestivalActivity = {
@@ -79,7 +85,7 @@ export const uninstallEscapeGame: FestivalTask = {
   },
   festivalActivity: escapeGame,
   instructions: {
-    appointment: null,
+    appointment: humaGrass,
     contacts: [],
     global: null,
     inCharge: {
@@ -105,10 +111,10 @@ export const presentEscapeGame: FestivalTask = {
   instructions: {
     appointment: null,
     contacts: [],
-    global: null,
+    global: "Some instructions for everyone",
     inCharge: {
       adherents: [],
-      instruction: null,
+      instruction: "Some instructions for in charge only",
     },
   },
   history: [FestivalTaskKeyEvents.created(noel)],

@@ -43,7 +43,7 @@ export type Draft = {
   history: KeyEvent[];
   feedbacks: Feedback[];
   volunteerInquiries: unknown[];
-  gearInquiries: unknown[];
+  gearInquiries: InquiryRequest[];
 };
 
 export type FestivalTask = Draft;
