@@ -1,3 +1,10 @@
+## [2.13.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.3...v2.13.4) (2024-01-14)
+
+
+### Bug Fixes
+
+* **festival-activity:** intercept errors on review and overview. [#1464](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1464) ([96316d8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/96316d8c6482827a8dd1d3aa5fe0790517f94181))
+
 ## [2.13.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.2...v2.13.3) (2024-01-12)
 
 
