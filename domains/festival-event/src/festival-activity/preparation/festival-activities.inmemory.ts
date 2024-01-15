@@ -1,16 +1,16 @@
 import { updateItemToList } from "@overbookd/list";
 import {
-  PreviewFestivalActivity,
   FestivalActivity,
   Draft,
   Reviewable,
+  isDraft,
+} from "../festival-activity";
+import {
+  PreviewFestivalActivity,
   PreviewDraft,
   PreviewReviewable,
-  isDraft,
-  VALIDATED,
-  IN_REVIEW,
-  REFUSED,
-} from "../festival-activity";
+} from "../../preview/festival-activity";
+import { VALIDATED, IN_REVIEW, REFUSED } from "../../common/status";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
 import { isRefusedReviews, isValidatedReviews } from "../sections/reviews";

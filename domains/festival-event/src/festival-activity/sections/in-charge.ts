@@ -1,9 +1,4 @@
-export type Adherent = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  nickname?: string;
-};
+import { Adherent } from "../../common/adherent";
 
 export type Contractor = {
   id: number;

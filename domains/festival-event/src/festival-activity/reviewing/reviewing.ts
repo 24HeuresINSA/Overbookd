@@ -1,28 +1,27 @@
 import {
   FestivalActivity,
-  IN_REVIEW,
-  REFUSED,
   Refused,
   Reviewable,
-  VALIDATED,
   isDraft,
 } from "../festival-activity";
+import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
 import {
-  APPROVED,
-  NOT_ASKING_TO_REVIEW,
-  REJECTED,
-  Reviewer,
   Reviews,
+  isRefusedReviews,
+  isValidatedReviews,
+} from "../sections/reviews";
+import { Reviewer } from "../../common/review";
+import {
+  NOT_ASKING_TO_REVIEW,
   barrieres,
   communication,
   elec,
   humain,
-  isRefusedReviews,
-  isValidatedReviews,
   matos,
   secu,
   signa,
-} from "../sections/reviews";
+} from "../../common/review";
+import { APPROVED, REJECTED } from "../../common/action";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
 import {
@@ -33,7 +32,7 @@ import {
   AlreadyRejected,
   ShouldLinkCatalogItem,
 } from "./reviewing.error";
-import { Adherent } from "../sections/in-charge";
+import { Adherent } from "../../common/adherent";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
 import { isLinkedToCatalogItem } from "../sections/signa";
 
@@ -43,7 +42,7 @@ export type ReviewingFestivalActivities = {
 };
 
 type Rejection = {
-  team: Reviewer;
+  team: Reviewer<"FA">;
   rejector: Adherent;
   reason: string;
 };
@@ -55,7 +54,7 @@ export class Reviewing {
 
   async approve(
     faId: FestivalActivity["id"],
-    team: Reviewer,
+    team: Reviewer<"FA">,
     approver: Adherent,
   ): Promise<Reviewable> {
     const festivalActivity = await this.festivalActivities.findById(faId);
@@ -164,23 +163,32 @@ export class Reviewing {
     }
   }
 
-  private isAlreadyApprovedBy(festivalActivity: Reviewable, team: Reviewer) {
+  private isAlreadyApprovedBy(
+    festivalActivity: Reviewable,
+    team: Reviewer<"FA">,
+  ) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === APPROVED;
   }
 
-  private isAlreadyRejectedBy(festivalActivity: Reviewable, team: Reviewer) {
+  private isAlreadyRejectedBy(
+    festivalActivity: Reviewable,
+    team: Reviewer<"FA">,
+  ) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === REJECTED;
   }
 
-  private isNotAskingToReview(festivalActivity: Reviewable, team: Reviewer) {
+  private isNotAskingToReview(
+    festivalActivity: Reviewable,
+    team: Reviewer<"FA">,
+  ) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === NOT_ASKING_TO_REVIEW;
   }
 }
 
-function getTeamReview(reviews: Reviews, team: Reviewer) {
+function getTeamReview(reviews: Reviews, team: Reviewer<"FA">) {
   switch (team) {
     case humain:
       return reviews.humain;
@@ -213,6 +221,8 @@ function selectMyInquiryRequests(
   }
 }
 
-function isInquiryOwner(team: Reviewer | InquiryOwner): team is InquiryOwner {
+function isInquiryOwner(
+  team: Reviewer<"FA"> | InquiryOwner,
+): team is InquiryOwner {
   return [MATOS, ELEC, BARRIERES].includes(team);
 }

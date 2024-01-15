@@ -1,35 +1,23 @@
-import { Adherent, DraftInCharge, InCharge } from "./sections/in-charge";
+import { DraftInCharge, InCharge } from "./sections/in-charge";
 import { DraftGeneral, General } from "./sections/general";
 import { DraftSigna, Signa } from "./sections/signa";
 import { Supply } from "./sections/supply";
 import { Inquiry } from "./sections/inquiry";
 import {
-  APPROVED,
   InReviewReviews,
-  REJECTED,
   RefusedReviews,
   ValidatedReviews,
-} from "./sections/reviews";
-
-export const DRAFT = "DRAFT";
-export const IN_REVIEW = "IN_REVIEW";
-export const VALIDATED = "VALIDATED";
-export const REFUSED = "REFUSED";
+} from "../common/review";
+import { APPROVED, REJECTED } from "../common/action";
+import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "../common/status";
+import { CREATED, COMMENTED, READY_TO_REVIEW } from "../common/action";
+import { Feedback } from "../common/feedback";
+import { PreviewFestivalActivity } from "../preview/festival-activity";
 
 type Security = {
   specialNeed: string | null;
   freePass: number;
 };
-
-export type Feedback = {
-  content: string;
-  publishedAt: Date;
-  author: Adherent;
-};
-
-export const CREATED = "CREATED";
-export const COMMENTED = "COMMENTED";
-export const READY_TO_REVIEW = "READY_TO_REVIEW";
 
 type Action =
   | typeof CREATED
@@ -72,59 +60,22 @@ type ReviewableBase = {
 
 export type InReview = ReviewableBase & {
   status: typeof IN_REVIEW;
-  reviews: InReviewReviews;
+  reviews: InReviewReviews<"FA">;
 };
 
 export type Validated = ReviewableBase & {
   status: typeof VALIDATED;
-  reviews: ValidatedReviews;
+  reviews: ValidatedReviews<"FA">;
 };
 
 export type Refused = ReviewableBase & {
   status: typeof REFUSED;
-  reviews: RefusedReviews;
+  reviews: RefusedReviews<"FA">;
 };
 
 export type Reviewable = InReview | Validated | Refused;
 
 export type FestivalActivity = Draft | Reviewable;
-
-type PreviewReviewableBase = {
-  id: Reviewable["id"];
-  name: Reviewable["general"]["name"];
-  adherent: Reviewable["inCharge"]["adherent"];
-  team: Reviewable["inCharge"]["team"];
-};
-
-type InReviewPreview = PreviewReviewableBase & {
-  status: InReview["status"];
-  reviews: InReview["reviews"];
-};
-
-type ValidatedPreview = PreviewReviewableBase & {
-  status: Validated["status"];
-  reviews: Validated["reviews"];
-};
-
-type RefusedPreview = PreviewReviewableBase & {
-  status: Refused["status"];
-  reviews: Refused["reviews"];
-};
-
-export type PreviewReviewable =
-  | InReviewPreview
-  | ValidatedPreview
-  | RefusedPreview;
-
-export type PreviewDraft = {
-  id: Draft["id"];
-  name: Draft["general"]["name"];
-  status: Draft["status"];
-  adherent: Draft["inCharge"]["adherent"];
-  team: Draft["inCharge"]["team"];
-};
-
-export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
 
 export type CreateFestivalActivityForm = {
   name: string;

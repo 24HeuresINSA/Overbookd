@@ -38,7 +38,7 @@ import {
 } from "@overbookd/festival-event";
 
 type DatabaseReview = {
-  team: Reviewer;
+  team: Reviewer<"FA">;
   status: ReviewStatus;
 };
 
@@ -218,7 +218,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
 
   private static findReviewStatusByTeam(
     reviews: DatabaseReview[],
-    reviewer: Reviewer,
+    reviewer: Reviewer<"FA">,
   ): ReviewStatus {
     const review = reviews.find((review) => review.team === reviewer);
     return review?.status ?? NOT_ASKING_TO_REVIEW;

@@ -3,36 +3,28 @@ import { ElectricitySupplies } from "./section-aggregates/electricity-supplies";
 import { Contractors } from "./section-aggregates/contractors";
 import { TimeWindows } from "./section-aggregates/time-windows";
 import { IProvidePeriod } from "@overbookd/period";
+import { FestivalActivity, Reviewable } from "../festival-activity";
+import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
 import {
-  FestivalActivity,
-  IN_REVIEW,
-  REFUSED,
-  Reviewable,
-  VALIDATED,
-} from "../festival-activity";
+  Reviews,
+  isRefusedReviews,
+  isValidatedReviews,
+} from "../sections/reviews";
+import { Reviewer } from "../../common/review";
 import {
-  APPROVED,
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
-  Reviewer,
-  Reviews,
   barrieres,
   communication,
   elec,
   humain,
-  isRefusedReviews,
-  isValidatedReviews,
   matos,
   secu,
   signa,
-} from "../sections/reviews";
-import {
-  BARRIERES,
-  ELEC,
-  InquiryOwner,
-  InquiryRequest,
-  MATOS,
-} from "../sections/inquiry";
+} from "../../common/review";
+import { APPROVED } from "../../common/action";
+import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
+import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";
@@ -82,7 +74,7 @@ class NeedAtLeastOneTimeWindow extends FestivalActivityError {
 }
 
 class AlreadyApprovedBy extends FestivalActivityError {
-  constructor(reviewers: Reviewer[]) {
+  constructor(reviewers: Reviewer<"FA">[]) {
     const plural = reviewers.length > 1;
     const noun = plural ? "les équipes" : "l'équipe";
     const reviewerListing = reviewers.join(" et ");

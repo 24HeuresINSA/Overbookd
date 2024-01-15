@@ -33,7 +33,7 @@ import {
   friday12hToMonday00h,
   george,
 } from "../festival-activity.fake";
-import { APPROVED } from "../sections/reviews";
+import { APPROVED } from "../../common/action";
 
 const factory = getFactory();
 

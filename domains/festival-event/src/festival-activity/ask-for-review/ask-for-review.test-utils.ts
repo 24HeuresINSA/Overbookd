@@ -12,7 +12,8 @@ import {
   local24h,
   george,
 } from "../festival-activity.fake";
-import { APPROVED, REJECTED, REVIEWING } from "../sections/reviews";
+import { REVIEWING } from "../../common/review";
+import { APPROVED, REJECTED } from "../../common/action";
 
 const factory = getFactory();
 

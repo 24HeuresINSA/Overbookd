@@ -6,7 +6,7 @@ import {
   pcSecurite,
   validatedBySecu,
 } from "./preparation.test-utils";
-import { secu } from "../sections/reviews";
+import { secu } from "../../common/review";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 import { FreePassMustBePositive } from "../festival-activity.error";
 

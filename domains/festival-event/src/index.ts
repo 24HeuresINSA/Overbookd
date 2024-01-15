@@ -1,3 +1,57 @@
+//  **********************
+//  COMMON MODULE
+//  **********************
+export type { Feedback } from "./common/feedback";
+export {
+  CREATED,
+  COMMENTED,
+  READY_TO_REVIEW,
+  APPROVED,
+  REJECTED,
+} from "./common/action";
+export { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "./common/status";
+export type { Adherent } from "./common/adherent";
+export type {
+  ReviewStatus,
+  Reviewer,
+  InReviewReviews,
+  ValidatedReviews,
+  RefusedReviews,
+  ApprovalReviewStatus,
+  RejectionReviewStatus,
+  ReviewingStatus,
+} from "./common/review";
+export {
+  REVIEWING,
+  NOT_ASKING_TO_REVIEW,
+  humain,
+  communication,
+  signa,
+  secu,
+  matos,
+  elec,
+  barrieres,
+} from "./common/review";
+export type { Location } from "./common/location";
+export type {
+  InquiryRequestAssigned,
+  InquiryRequest,
+  BaseInquiryRequest,
+} from "./common/inquiry-request";
+export { isAssignedToDrive } from "./common/inquiry-request";
+
+//  **********************
+//  PREVIEW MODULE
+//  **********************
+export type {
+  PreviewDraft,
+  PreviewReviewable,
+  PreviewFestivalActivity,
+} from "./preview/festival-activity";
+
+//  **********************
+//  FESTIVAL ACTIVITY MODULE
+//  **********************
 export type {
   Draft,
   Reviewable,
@@ -6,37 +60,17 @@ export type {
   Refused,
   FestivalActivity,
   CreateFestivalActivityForm,
-  PreviewDraft,
-  PreviewReviewable,
-  PreviewFestivalActivity,
-  Feedback,
   KeyEvent,
 } from "./festival-activity/festival-activity";
-export {
-  DRAFT,
-  IN_REVIEW,
-  VALIDATED,
-  REFUSED,
-  isDraft,
-  isRefused,
-  READY_TO_REVIEW,
-  COMMENTED,
-  CREATED,
-} from "./festival-activity/festival-activity";
+export { isDraft, isRefused } from "./festival-activity/festival-activity";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error";
 
-export type {
-  Adherent,
-  Contractor,
-} from "./festival-activity/sections/in-charge";
+export type { Contractor } from "./festival-activity/sections/in-charge";
 
 // INQUIRY
 export type {
-  BaseInquiryRequest,
   InquiryWithPotentialRequests,
   InquiryWithRequests,
-  InquiryRequestAssigned,
-  InquiryRequest,
   InquiryOwner,
   WithInquiries,
   Drive,
@@ -68,7 +102,6 @@ export {
   LIVRE_PAR_LOGISTIQUE,
   LIVRE_PAR_COM,
   drives,
-  isAssignedToDrive,
 } from "./festival-activity/sections/inquiry";
 
 export type {
@@ -92,7 +125,6 @@ export {
 export type { Public as PublicGeneral } from "./festival-activity/sections/general";
 export type {
   Signage,
-  Location,
   SignageType,
   BaseSignage,
   SignageCatalogItem,
@@ -107,29 +139,8 @@ export {
 export type { TimeWindow } from "./festival-activity/sections/time-window";
 
 // REVIEWS
-export type {
-  ReviewStatus,
-  Reviewer,
-  WaitingForReview,
-  InReviewReviews,
-  ValidatedReviews,
-  RefusedReviews,
-  ApprovalReviewStatus,
-  RejectionReviewStatus,
-  ReviewingStatus,
-} from "./festival-activity/sections/reviews";
+export type { WaitingForReview } from "./festival-activity/sections/reviews";
 export {
-  APPROVED,
-  REVIEWING,
-  REJECTED,
-  NOT_ASKING_TO_REVIEW,
-  humain,
-  communication,
-  signa,
-  secu,
-  matos,
-  elec,
-  barrieres,
   isValidatedReviews,
   isRefusedReviews,
 } from "./festival-activity/sections/reviews";

@@ -24,5 +24,5 @@ export class ValidatedPreviewFestivalActivityResponseDto
   status: typeof VALIDATED;
 
   @ApiProperty({ type: ValidatedReviewsResponseDto })
-  reviews: ValidatedReviews;
+  reviews: ValidatedReviews<"FA">;
 }

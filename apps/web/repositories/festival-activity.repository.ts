@@ -376,7 +376,7 @@ export class FestivalActivityRepository {
   static approve(
     context: Context,
     faId: FestivalActivity["id"],
-    team: Reviewer,
+    team: Reviewer<"FA">,
   ) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/approve`,

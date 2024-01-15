@@ -462,7 +462,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
-    async approveAs({ state, commit }, reviewer: Reviewer) {
+    async approveAs({ state, commit }, reviewer: Reviewer<"FA">) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.approve(this, id, reviewer), {
         successMessage: `✅ FA approuvée par l'équipe ${reviewer}`,

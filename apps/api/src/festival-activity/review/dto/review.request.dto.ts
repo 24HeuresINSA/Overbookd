@@ -12,7 +12,7 @@ import {
 import { ReviewRejection } from "@overbookd/http";
 import { IsEnum, IsString } from "class-validator";
 
-const reviewers: Reviewer[] = [
+const reviewers: Reviewer<"FA">[] = [
   humain,
   matos,
   elec,
@@ -27,7 +27,7 @@ export class ApproveRequestDto {
   @IsEnum(reviewers, {
     message: () => `❌ Seuls ${reviewers.join(", ")} peuvent approuver une FA`,
   })
-  team: Reviewer;
+  team: Reviewer<"FA">;
 }
 
 export class RejectRequestDto implements ReviewRejection {
@@ -35,7 +35,7 @@ export class RejectRequestDto implements ReviewRejection {
   @IsEnum(reviewers, {
     message: () => `❌ Seuls ${reviewers.join(", ")} peuvent rejeter une FA`,
   })
-  team: Reviewer;
+  team: Reviewer<"FA">;
 
   @ApiProperty({
     required: true,

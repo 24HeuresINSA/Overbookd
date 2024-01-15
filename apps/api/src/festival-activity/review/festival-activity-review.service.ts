@@ -55,7 +55,7 @@ export class FestivalActivityReviewService {
   async approve(
     faId: FestivalActivity["id"],
     user: JwtUtil,
-    team: Reviewer,
+    team: Reviewer<"FA">,
   ): Promise<Reviewable> {
     TeamService.checkMembership(user, team);
 

@@ -77,7 +77,7 @@ export class RefusedFestivalActivityResponseDto
   status: typeof REFUSED;
 
   @ApiProperty({ required: true, type: RefusedReviewsResponseDto })
-  reviews: RefusedReviews;
+  reviews: RefusedReviews<"FA">;
 }
 export class InReviewFestivalActivityResponseDto
   extends ReviewableBaseResponseDto
@@ -87,7 +87,7 @@ export class InReviewFestivalActivityResponseDto
   status: typeof IN_REVIEW;
 
   @ApiProperty({ required: true, type: InReviewReviewsResponseDto })
-  reviews: InReviewReviews;
+  reviews: InReviewReviews<"FA">;
 }
 
 export class ValidatedFestivalActivityResponseDto
@@ -98,5 +98,5 @@ export class ValidatedFestivalActivityResponseDto
   status: typeof VALIDATED;
 
   @ApiProperty({ required: true, type: ValidatedReviewsResponseDto })
-  reviews: ValidatedReviews;
+  reviews: ValidatedReviews<"FA">;
 }

@@ -1,3 +1,5 @@
+import { Location } from "../../common/location";
+
 export const BACHE = "BACHE";
 export const PANNEAU = "PANNEAU";
 export const AFFICHE = "AFFICHE";
@@ -38,11 +40,6 @@ export function isLinkedToCatalogItem(
 ): request is SignageAssigned {
   return Object.hasOwn(request, "catalogItem");
 }
-
-export type Location = {
-  id: number;
-  name: string;
-};
 
 export type Signa = {
   location: Location;

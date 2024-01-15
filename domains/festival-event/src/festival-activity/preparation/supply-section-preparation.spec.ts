@@ -17,7 +17,7 @@ import {
   PC16_Prise_classique,
 } from "../sections/supply";
 import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model";
-import { elec } from "../sections/reviews";
+import { elec } from "../../common/review";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 import { nintendoSwitchSupply } from "../festival-activity.fake";
 
