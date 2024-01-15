@@ -200,6 +200,12 @@ export const approvedByElecWithoutRequests = factory
   .withReviews({ elec: APPROVED })
   .build();
 
+export const approvedByElecWithNoRequestAtAll = factory
+  .inReview("Validée par la log elec sans aucune demandes")
+  .withSupply({ electricity: [lumiere, enceinte], water: "robinet d'eau" })
+  .withReviews({ elec: APPROVED })
+  .build();
+
 export const approvedByBarrieres = factory
   .inReview("Validée par les barrieres")
   .withInquiry({

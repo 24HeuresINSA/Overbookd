@@ -21,6 +21,7 @@ import {
   approvedByMatosAndBarrieres,
   approvedByMatosAndBarrieresWithoutRequest,
   approvedByMatosWithoutRequests,
+  approvedByElecWithNoRequestAtAll,
 } from "./preparation.test-utils";
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
@@ -76,6 +77,7 @@ describe("Inquiry section of festival activity preparation", () => {
       qgOrga,
       approvedByElec,
       approvedByElecWithoutRequests,
+      approvedByElecWithNoRequestAtAll,
       approvedByBarrieres,
       approvedByBarrieresWithoutRequests,
       approvedByMatos,
@@ -91,9 +93,10 @@ describe("Inquiry section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName               | activityId       | timeWindow                                                                                | inquiryRequest
-    ${qgOrga.general.name}     | ${qgOrga.id}     | ${{ start: new Date("2024-05-18T11:00+02:00"), end: new Date("2024-05-18T13:00+02:00") }} | ${{ ...branleCanisse, quantity: 4 }}
-    ${pcSecurite.general.name} | ${pcSecurite.id} | ${{ start: new Date("2024-05-17T16:00+02:00"), end: new Date("2024-05-20T00:00+02:00") }} | ${{ ...branleCanisse, quantity: 10 }}
+    activityName                                     | activityId                             | timeWindow                                                                                | inquiryRequest
+    ${qgOrga.general.name}                           | ${qgOrga.id}                           | ${{ start: new Date("2024-05-18T11:00+02:00"), end: new Date("2024-05-18T13:00+02:00") }} | ${{ ...branleCanisse, quantity: 4 }}
+    ${pcSecurite.general.name}                       | ${pcSecurite.id}                       | ${{ start: new Date("2024-05-17T16:00+02:00"), end: new Date("2024-05-20T00:00+02:00") }} | ${{ ...branleCanisse, quantity: 10 }}
+    ${approvedByElecWithNoRequestAtAll.general.name} | ${approvedByElecWithNoRequestAtAll.id} | ${{ start: new Date("2024-05-17T16:00+02:00"), end: new Date("2024-05-20T00:00+02:00") }} | ${{ ...branleCanisse, quantity: 10 }}
   `(
     "when activity $activityName doesn't have any inquiry request",
     ({ activityId, timeWindow, inquiryRequest }) => {
@@ -112,6 +115,21 @@ describe("Inquiry section of festival activity preparation", () => {
       });
     },
   );
+
+  describe("when activity doesn't have any inquiry request but is already approved", () => {
+    it("should indicate that inquiry section is lock", async () => {
+      expect(
+        async () =>
+          await prepareFestivalActivity.initInquiry(
+            approvedByElecWithNoRequestAtAll.id,
+            {
+              timeWindow: saturday14hToSaturday18h,
+              request: { ...chargeurUsbC, quantity: 3 },
+            },
+          ),
+      ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+    });
+  });
 
   describe.each`
     activityName               | activityId
@@ -454,7 +472,7 @@ describe("Inquiry section of festival activity preparation", () => {
                 timeWindow: saturday14hToSaturday18h,
                 request: { ...troisTables, owner: matos },
               }),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow(AlreadyInitialized);
         });
       });
       describe("when trying to add a gear inquiry request", () => {

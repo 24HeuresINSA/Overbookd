@@ -419,10 +419,11 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   initInquiry({ request, timeWindow }: InitInquiry): Reviewable {
-    this.checkIfInquiryAlreadyApprovedBy();
     if (Inquiries.alreadyInitialized(this.activity.inquiry)) {
       throw new AlreadyInitialized();
     }
+    this.checkIfInquiryAlreadyApprovedBy(request.owner);
+
     const inquiry = Inquiries.init()
       .addRequest(request)
       .addTimeWindow(timeWindow).inquiry;
