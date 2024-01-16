@@ -206,7 +206,7 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
     const alreadyExists = this.inquiries.some(
       (inquiry) => inquiry.slug === slug,
     );
-    if (alreadyExists) throw new InquiryAlreadyExists();
+    if (alreadyExists) throw new InquiryAlreadyExists(name);
 
     return new InquiryRequests([inquiry, ...this.inquiries]);
   }
