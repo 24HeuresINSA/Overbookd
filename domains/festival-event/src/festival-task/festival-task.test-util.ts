@@ -1,5 +1,5 @@
 import { VALIDATED } from "../common/status";
-import { FestivalActivity, FestivalTask } from "./festival-task";
+import { Contact, FestivalActivity, FestivalTask } from "./festival-task";
 import { TimeWindow } from "../festival-activity/sections/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
@@ -11,11 +11,15 @@ export const noel = {
   firstname: "Noel",
 };
 
+export const noelContact: Contact = { ...noel, phone: "0601020304" };
+
 export const lea = {
   id: 2,
   lastname: "Mouyno",
   firstname: "Lea",
 };
+
+export const leaContact: Contact = { ...lea, phone: "0602030405" };
 
 const friday10hfriday19h: TimeWindow = {
   start: new Date("2024-05-17T10:00+02:00"),
@@ -65,7 +69,7 @@ export const installEscapeGame: FestivalTask = {
     contacts: [],
     global: null,
     inCharge: {
-      adherents: [],
+      volunteers: [],
       instruction: null,
     },
   },
@@ -86,10 +90,10 @@ export const uninstallEscapeGame: FestivalTask = {
   festivalActivity: escapeGame,
   instructions: {
     appointment: humaGrass,
-    contacts: [],
+    contacts: [noelContact],
     global: null,
     inCharge: {
-      adherents: [],
+      volunteers: [lea],
       instruction: null,
     },
   },
@@ -110,10 +114,10 @@ export const presentEscapeGame: FestivalTask = {
   festivalActivity: escapeGame,
   instructions: {
     appointment: null,
-    contacts: [],
+    contacts: [noelContact],
     global: "Some instructions for everyone",
     inCharge: {
-      adherents: [],
+      volunteers: [noel],
       instruction: "Some instructions for in charge only",
     },
   },
