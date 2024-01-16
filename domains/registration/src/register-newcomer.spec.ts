@@ -2,6 +2,7 @@ import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {
   FulfilledRegistration,
   KARNA_CODE,
+  RegistrationError,
   TECKOS_CODE,
   Teams,
 } from "./register-form";
@@ -87,6 +88,25 @@ describe("Register newcomer", () => {
           email: registerEmail,
         });
         expect(email).toBe(expectedEmail);
+      },
+    );
+  });
+  describe("when receiving newcomer with space(s) in email", () => {
+    it.each`
+      registerEmail
+      ${" T adk @gmail.com"}
+      ${"Tadk @gmail.com"}
+      ${"t adk@gmail.com"}
+    `(
+      "should indicate that $registerEmail is not valid email",
+      async ({ registerEmail }) => {
+        expect(
+          async () =>
+            await registerNewcomer.fromRegisterForm({
+              ...registerForm,
+              email: registerEmail,
+            }),
+        ).rejects.toThrow(RegistrationError);
       },
     );
   });
