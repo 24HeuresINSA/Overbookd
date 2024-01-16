@@ -106,21 +106,24 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Add in charge volunteers", () => {
     describe.each`
-     taskName | task | volunteer
-     ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame} | ${noel}
-     ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${lea}
-    `("when a new in charge volunteer is added to $taskName", ({task, volunteer}) => {
-      it("should add vounteer to in charge volunteers list", async () => {
-        const { instructions } = await prepare.addInchargeVolunteer(
-          task.id,
-          volunteer,
-        );
-        expect(instructions.inCharge.volunteers).toContainEqual(volunteer);
-        expect(instructions.inCharge.volunteers).toHaveLength(
-          task.instructions.inCharge.volunteers.length + 1,
-        );
-      });
-    });
+      taskName                            | task                   | volunteer
+      ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame} | ${noel}
+      ${presentEscapeGame.general.name}   | ${presentEscapeGame}   | ${lea}
+    `(
+      "when a new in charge volunteer is added to $taskName",
+      ({ task, volunteer }) => {
+        it("should add vounteer to in charge volunteers list", async () => {
+          const { instructions } = await prepare.addInchargeVolunteer(
+            task.id,
+            volunteer,
+          );
+          expect(instructions.inCharge.volunteers).toContainEqual(volunteer);
+          expect(instructions.inCharge.volunteers).toHaveLength(
+            task.instructions.inCharge.volunteers.length + 1,
+          );
+        });
+      },
+    );
     describe("when an already registered in charge volunteer is added", () => {
       it("should keep in charge voulunteers list unchanged", async () => {
         const volunteer = lea;
