@@ -1,4 +1,4 @@
-import { PreviewFestivalActivity } from "../preview/festival-activity";
+import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
 import { DRAFT } from "../common/status";
 import { Adherent } from "../common/adherent";
@@ -45,3 +45,15 @@ export type Draft = {
   volunteerInquiries: unknown[];
   gearInquiries: unknown[];
 };
+
+export type FestivalTask = Draft;
+
+export type PreviewDraft = {
+  id: Draft["id"];
+  status: Draft["status"];
+  name: Draft["general"]["name"];
+  administrator: Draft["general"]["administrator"];
+  team: Draft["general"]["team"];
+};
+
+export type PreviewFestivalTask = PreviewDraft;

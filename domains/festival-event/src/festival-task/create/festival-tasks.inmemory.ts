@@ -1,4 +1,4 @@
-import { Draft } from "./festival-task";
+import { Draft } from "../festival-task";
 import { FestivalTasksForCreate } from "./create";
 
 export class InMemoryFestivalTasks implements FestivalTasksForCreate {

@@ -41,15 +41,6 @@ export type {
 export { isAssignedToDrive } from "./common/inquiry-request";
 
 //  **********************
-//  PREVIEW MODULE
-//  **********************
-export type {
-  PreviewDraft,
-  PreviewReviewable,
-  PreviewFestivalActivity,
-} from "./preview/festival-activity";
-
-//  **********************
 //  FESTIVAL ACTIVITY MODULE
 //  **********************
 export type {
@@ -61,6 +52,9 @@ export type {
   FestivalActivity,
   CreateFestivalActivityForm,
   KeyEvent,
+  PreviewDraft,
+  PreviewReviewable,
+  PreviewFestivalActivity,
 } from "./festival-activity/festival-activity";
 export { isDraft, isRefused } from "./festival-activity/festival-activity";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error";
