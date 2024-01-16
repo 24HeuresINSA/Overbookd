@@ -98,7 +98,8 @@ describe("Register newcomer", () => {
       ${"Tadk @gmail.com"}
       ${"t adk@gmail.com"}
       ${ takd@gmail.com}
-      ${tadk@gmail.com }
+      ${" takd@gmail.com"}
+      ${"tadk@gmail.com "}
     `(
       "should indicate that $registerEmail is not valid email",
       async ({ registerEmail }) => {
