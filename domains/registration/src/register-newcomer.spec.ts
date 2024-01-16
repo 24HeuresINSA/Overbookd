@@ -1,7 +1,8 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import {
   FulfilledRegistration,
   KARNA_CODE,
+  RegistrationError,
   TECKOS_CODE,
   Teams,
 } from "./register-form";
@@ -59,6 +60,58 @@ describe("Register newcomer", () => {
       const { password, ...personalData } = registerForm;
       expect(registree).toStrictEqual({ ...personalData, id: 1 });
     });
+  });
+  describe("when receiving newcomer with upper chars in email", () => {
+    const SCHLAGOS_PROTONMAIL = "schla.gos@protonmail.com";
+    beforeEach(() => {
+      const newcomerRepository = new InMemoryNewcomerRepository();
+      const notificationRepository = new InMemoryNotificationRepository(
+        notifyees,
+      );
+      registerNewcomer = new RegisterNewcomer(
+        newcomerRepository,
+        notificationRepository,
+      );
+    });
+    it.each`
+      registerEmail                 | expectedEmail
+      ${"Schla.gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
+      ${"Schla.Gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
+      ${"SchLa.gos@protonmail.com"} | ${SCHLAGOS_PROTONMAIL}
+      ${"schla.gos@protonmail.Com"} | ${SCHLAGOS_PROTONMAIL}
+      ${"SCHLA.GOS@PROTONMAIL.COM"} | ${SCHLAGOS_PROTONMAIL}
+    `(
+      "should register $registerEmail new comer with $expectedEmail as email",
+      async ({ registerEmail, expectedEmail }) => {
+        const { email } = await registerNewcomer.fromRegisterForm({
+          ...registerForm,
+          email: registerEmail,
+        });
+        expect(email).toBe(expectedEmail);
+      },
+    );
+  });
+  describe("when receiving newcomer with space(s) in email", () => {
+    it.each`
+      registerEmail
+      ${" T adk @gmail.com"}
+      ${"Tadk @gmail.com"}
+      ${"t adk@gmail.com"}
+      ${" takd@gmail.com"}
+      ${" takd@gmail.com"}
+      ${"tadk@gmail.com "}
+    `(
+      "should indicate that $registerEmail is not valid email",
+      async ({ registerEmail }) => {
+        expect(
+          async () =>
+            await registerNewcomer.fromRegisterForm({
+              ...registerForm,
+              email: registerEmail,
+            }),
+        ).rejects.toThrow(RegistrationError);
+      },
+    );
   });
   describe("when 2 newcomers are receiving", () => {
     it("should generate different id for both", async () => {

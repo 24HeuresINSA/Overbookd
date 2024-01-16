@@ -201,6 +201,6 @@ export class RegistrationError extends Error {
 
 class NotFulfilledRegistration extends RegistrationError {
   constructor(reasons: string[]) {
-    super(reasons, "L'inscription n'est pas complete");
+    super(reasons, "L'inscription n'est pas complète");
   }
 }
