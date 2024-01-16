@@ -9,7 +9,7 @@ import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { FestivalTaskNotFound } from "../festival-task.error";
 
-describe("Prepare festival task general section", () => {
+describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
     const festivalTasks = new InMemoryFestivalTasks([
