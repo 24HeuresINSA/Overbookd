@@ -54,7 +54,7 @@ describe("Create festival task", () => {
       const { instructions } = installEscapeGame;
       const { global, inCharge, contacts, appointment } = instructions;
       expect(global).toBeNull();
-      expect(inCharge.adherents).toStrictEqual([]);
+      expect(inCharge.volunteers).toStrictEqual([]);
       expect(inCharge.instruction).toBeNull();
       expect(contacts).toStrictEqual([]);
       expect(appointment).toBeNull();

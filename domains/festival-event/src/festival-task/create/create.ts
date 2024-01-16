@@ -44,7 +44,7 @@ export class CreateFestivalTask {
         appointment: null,
         global: null,
         inCharge: {
-          adherents: [],
+          volunteers: [],
           instruction: null,
         },
         contacts: [],

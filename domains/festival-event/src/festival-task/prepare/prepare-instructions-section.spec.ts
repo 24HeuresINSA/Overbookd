@@ -2,6 +2,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   humaGrass,
   installEscapeGame,
+  lea,
+  leaContact,
+  noel,
+  noelContact,
   presentEscapeGame,
   uninstallEscapeGame,
 } from "../festival-task.test-util";
@@ -69,6 +73,68 @@ describe("Prepare festival task instructions section", () => {
 
         expect(instructions.global).toBe(updateGlobal.global);
         expect(instructions.appointment).toBe(updateAppointment.appointment);
+      });
+    });
+  });
+
+  describe("Add contacts", () => {
+    describe.each`
+      taskName                          | task                 | contact
+      ${installEscapeGame.general.name} | ${installEscapeGame} | ${noelContact}
+      ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${leaContact}
+    `("when a new contact is added to $taskName", ({ task, contact }) => {
+      it("add contact to contacts list", async () => {
+        const { instructions } = await prepare.addContact(task.id, contact);
+        expect(instructions.contacts).toContainEqual(contact);
+        expect(instructions.contacts).toHaveLength(
+          task.instructions.contacts.length + 1,
+        );
+      });
+    });
+    describe("when an already registered contact is added", () => {
+      it("should keep contacts list unchanged", async () => {
+        const { instructions } = await prepare.addContact(
+          uninstallEscapeGame.id,
+          noelContact,
+        );
+        expect(instructions.contacts).toStrictEqual(
+          uninstallEscapeGame.instructions.contacts,
+        );
+      });
+    });
+  });
+
+  describe("Add in charge volunteers", () => {
+    describe.each`
+      taskName                            | task                   | volunteer
+      ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame} | ${noel}
+      ${presentEscapeGame.general.name}   | ${presentEscapeGame}   | ${lea}
+    `(
+      "when a new in charge volunteer is added to $taskName",
+      ({ task, volunteer }) => {
+        it("should add vounteer to in charge volunteers list", async () => {
+          const { instructions } = await prepare.addInchargeVolunteer(
+            task.id,
+            volunteer,
+          );
+          expect(instructions.inCharge.volunteers).toContainEqual(volunteer);
+          expect(instructions.inCharge.volunteers).toHaveLength(
+            task.instructions.inCharge.volunteers.length + 1,
+          );
+        });
+      },
+    );
+    describe("when an already registered in charge volunteer is added", () => {
+      it("should keep in charge voulunteers list unchanged", async () => {
+        const volunteer = lea;
+        const task = uninstallEscapeGame;
+        const { instructions } = await prepare.addInchargeVolunteer(
+          task.id,
+          volunteer,
+        );
+        expect(instructions.inCharge.volunteers).toStrictEqual(
+          task.instructions.inCharge.volunteers,
+        );
       });
     });
   });

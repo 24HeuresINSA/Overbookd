@@ -18,9 +18,11 @@ export type FestivalActivity = {
   };
 };
 
-type Contact = Adherent & {
+export type Contact = Adherent & {
   phone: string;
 };
+
+export type Volunteer = Adherent;
 
 export type Draft = {
   id: number;
@@ -36,7 +38,7 @@ export type Draft = {
     contacts: Contact[];
     global: string | null;
     inCharge: {
-      adherents: Adherent[];
+      volunteers: Volunteer[];
       instruction: string | null;
     };
   };
