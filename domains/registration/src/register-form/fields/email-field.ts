@@ -24,7 +24,7 @@ export class EmailField implements Field<string> {
   }
 
   get value(): string {
-    return this.email;
+    return this.email.toLowerCase();
   }
 
   private get rules(): Rule<unknown>[] {
