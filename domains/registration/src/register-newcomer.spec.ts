@@ -97,7 +97,7 @@ describe("Register newcomer", () => {
       ${" T adk @gmail.com"}
       ${"Tadk @gmail.com"}
       ${"t adk@gmail.com"}
-      ${ takd@gmail.com}
+      ${" takd@gmail.com"}
       ${" takd@gmail.com"}
       ${"tadk@gmail.com "}
     `(
