@@ -1,3 +1,19 @@
+## [2.13.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.4...v2.13.5) (2024-01-16)
+
+
+### Bug Fixes
+
+* **festival-event:** allow to init inquiry section when only not impacted reviewers already approved. [#1469](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1469) ([cf9df7a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cf9df7a5af40ff6018f14c81ff23014dc245e66e))
+* **registration:** register with lower case email. [#1282](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1282) ([f295710](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f2957109e2214096ac4c46bc440ae08dd7f214a6))
+
+
+### Pre-Features
+
+* **festival-event:** add festival-task and share structures into common. [#1455](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1455) ([7e45584](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7e455848fa3e12714c25b93944b8b674104a1433))
+* **festival-task:** add contacts and in charge volunteers. [#1465](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1465) ([4b1cb31](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4b1cb3119699662889ad6df330f68c168743cde3))
+* **festival-task:** enable view task's previews and details. [#1460](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1460) ([d16a8c5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d16a8c520e6d615c3047b230d261b352471ea22e))
+* **festival-task:** update general and instructions section. [#1461](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1461) ([3bc9f5e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3bc9f5e211b81772f2293439cbc2a56e1af7b0e4))
+
 ## [2.13.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.3...v2.13.4) (2024-01-14)
 
 
