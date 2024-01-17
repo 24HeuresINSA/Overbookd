@@ -27,7 +27,7 @@ const friday10hfriday19h: TimeWindow = {
   id: "28598880-28599420",
 };
 
-export const friday11hfriday18h: TimeWindow = {
+const friday11hfriday18h: TimeWindow = {
   start: new Date("2024-05-17T11:00+02:00"),
   end: new Date("2024-05-17T18:00+02:00"),
   id: "28598940-28599360",
@@ -41,7 +41,7 @@ export const friday11hfriday18hMobilization = {
   durationSplitInHour: null,
 };
 
-export const saturday11hsaturday18h: TimeWindow = {
+const saturday11hsaturday18h: TimeWindow = {
   start: new Date("2024-05-18T11:00+02:00"),
   end: new Date("2024-05-18T18:00+02:00"),
   id: "28600380-28600800",
