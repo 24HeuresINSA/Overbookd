@@ -7,9 +7,6 @@
     <v-card-subtitle>
       <TeamChip v-for="team of volunteer.teams" :key="team" :team="team" />
     </v-card-subtitle>
-    <v-card-text class="comment">
-      {{ volunteer.comment }}
-    </v-card-text>
   </v-card>
 </template>
 
