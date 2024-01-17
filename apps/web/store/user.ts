@@ -370,6 +370,10 @@ export const actions = actionTree(
         ...user,
         profilePictureBlob,
       });
+      commit("UPDATE_VOLUNTEER", {
+        ...user,
+        profilePictureBlob,
+      });
     },
 
     async getVolunteerAssignments({ commit }, userId: number) {
