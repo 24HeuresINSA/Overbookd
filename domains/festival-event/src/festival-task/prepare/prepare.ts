@@ -269,7 +269,7 @@ type IProvideSplitablePeriod = {
 class SplitablePeriod {
   static checkValidity({ start, end, splitDuration }: IProvideSplitablePeriod) {
     const period = Period.init({ start, end });
-    if (!period.duration.isDividedBy(splitDuration)) {
+    if (!period.duration.canBeDividedBy(splitDuration)) {
       throw new SplitDurationIsNotPeriodDivider(splitDuration);
     }
     return;

@@ -27,7 +27,7 @@ export class Duration {
     return Math.ceil(this.milliseconds / ONE_HOUR_IN_MS);
   }
 
-  isDividedBy(divider: Duration): boolean {
+  canBeDividedBy(divider: Duration): boolean {
     return this.milliseconds % divider.milliseconds === 0;
   }
 }
