@@ -1,3 +1,10 @@
+## [2.13.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.5...v2.13.6) (2024-01-17)
+
+
+### Bug Fixes
+
+* **festival-activity:** change electricity supply id expected type from number to string in controller. [#1473](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1473) ([1d2b02d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1d2b02d1d4dea4bcbbc8895f16111d99aee02a3c))
+
 ## [2.13.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.4...v2.13.5) (2024-01-16)
 
 
