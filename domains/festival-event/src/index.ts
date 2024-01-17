@@ -188,3 +188,8 @@ export type {
 // Reviewing
 export { Reviewing } from "./festival-activity/reviewing/reviewing";
 export type { ReviewingFestivalActivities } from "./festival-activity/reviewing/reviewing";
+
+//  **********************
+//  FESTIVAL TASK MODULE
+//  **********************
+export { FestivalTaskError } from "./festival-task/festival-task.error";
