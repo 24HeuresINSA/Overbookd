@@ -199,8 +199,7 @@ export class SupplySectionController {
   })
   removeElectricitySupply(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Param("electricitySupplyId", ParseIntPipe)
-    electricitySupplyId: ElectricitySupply["id"],
+    @Param("electricitySupplyId") electricitySupplyId: ElectricitySupply["id"],
   ): Promise<FestivalActivity> {
     return this.supplyService.removeElectricitySupply(
       faId,
