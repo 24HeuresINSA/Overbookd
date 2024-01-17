@@ -69,7 +69,7 @@ describe("Create festival task", () => {
     });
 
     it("should init volunteerInquiries with empty list", () => {
-      expect(installEscapeGame.volunteerInquiries).toStrictEqual([]);
+      expect(installEscapeGame.mobilizations).toStrictEqual([]);
     });
 
     it("should save it to the repository", () => {

@@ -51,7 +51,7 @@ export class CreateFestivalTask {
       },
       history: [FestivalTaskKeyEvents.created(author)],
       feedbacks: [],
-      volunteerInquiries: [],
+      mobilizations: [],
       gearInquiries: [],
     };
 

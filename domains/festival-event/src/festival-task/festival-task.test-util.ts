@@ -1,6 +1,6 @@
 import { VALIDATED } from "../common/status";
 import { Contact, FestivalActivity, FestivalTask } from "./festival-task";
-import { TimeWindow } from "../festival-activity/sections/time-window";
+import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import { Location } from "../common/location";
@@ -31,6 +31,26 @@ const friday11hfriday18h: TimeWindow = {
   start: new Date("2024-05-17T11:00+02:00"),
   end: new Date("2024-05-17T18:00+02:00"),
   id: "28598940-28599360",
+};
+
+export const friday11hfriday18hMobilization = {
+  start: friday11hfriday18h.start,
+  end: friday11hfriday18h.end,
+  volunteers: [noel],
+  teams: [{ count: 2, team: "bénévole" }],
+  durationSplitInHour: null,
+};
+
+const saturday11hsaturday18h: TimeWindow = {
+  start: new Date("2024-05-18T11:00+02:00"),
+  end: new Date("2024-05-18T18:00+02:00"),
+  id: "28600380-28600800",
+};
+
+export const saturday11hsaturday18hMobilization = {
+  ...friday11hfriday18hMobilization,
+  start: saturday11hsaturday18h.start,
+  end: saturday11hsaturday18h.end,
 };
 
 const deuxTables: InquiryRequest = {
@@ -75,7 +95,7 @@ export const installEscapeGame: FestivalTask = {
   },
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
-  volunteerInquiries: [],
+  mobilizations: [],
   gearInquiries: [],
 };
 
@@ -99,7 +119,7 @@ export const uninstallEscapeGame: FestivalTask = {
   },
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
-  volunteerInquiries: [],
+  mobilizations: [],
   gearInquiries: [],
 };
 
@@ -123,6 +143,8 @@ export const presentEscapeGame: FestivalTask = {
   },
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
-  volunteerInquiries: [],
+  mobilizations: [
+    { ...saturday11hsaturday18hMobilization, id: saturday11hsaturday18h.id },
+  ],
   gearInquiries: [],
 };

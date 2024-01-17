@@ -1,5 +1,5 @@
 import { InquiryRequest } from "../../common/inquiry-request";
-import { TimeWindow } from "./time-window";
+import { TimeWindow } from "../../common/time-window";
 
 export const MATOS = "matos";
 export const BARRIERES = "barrieres";
