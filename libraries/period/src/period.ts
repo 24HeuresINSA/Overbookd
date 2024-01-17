@@ -1,3 +1,5 @@
+import { Duration } from "./duration";
+
 export interface IProvidePeriod {
   start: Date;
   end: Date;
@@ -130,5 +132,11 @@ export class Period {
         a.start.getTime() - b.start.getTime() ||
         a.end.getTime() - b.end.getTime(),
     );
+  }
+
+  get duration(): Duration {
+    const startTimestamp = this.start.getTime();
+    const endTimestamp = this.end.getTime();
+    return Duration.ms(endTimestamp - startTimestamp);
   }
 }

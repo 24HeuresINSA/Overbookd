@@ -23,7 +23,7 @@ import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";
 import { Adherent } from "../../common/adherent";
-import { TimeWindow } from "../sections/time-window";
+import { TimeWindow } from "../../common/time-window";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
 

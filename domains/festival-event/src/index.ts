@@ -21,6 +21,7 @@ export type {
   RejectionReviewStatus,
   ReviewingStatus,
 } from "./common/review";
+export type { TimeWindow } from "./common/time-window";
 export {
   REVIEWING,
   NOT_ASKING_TO_REVIEW,
@@ -130,7 +131,6 @@ export {
   signageTypes,
   isLinkedToCatalogItem,
 } from "./festival-activity/sections/signa";
-export type { TimeWindow } from "./festival-activity/sections/time-window";
 
 // REVIEWS
 export type { WaitingForReview } from "./festival-activity/sections/reviews";

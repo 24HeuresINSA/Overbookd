@@ -1,5 +1,15 @@
-import { Contact, FestivalTask, Volunteer } from "../festival-task";
-import { FestivalTaskNotFound } from "../festival-task.error";
+import { Duration, IProvidePeriod , Period} from "@overbookd/period";
+import {
+  Contact,
+  FestivalTask,
+  Mobilization,
+  Volunteer,
+} from "../festival-task";
+import {
+  FestivalTaskNotFound,
+  MobilizationAlreadyExist,
+  SplitDurationIsNotPeriodDivider,
+} from "../festival-task.error";
 
 type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -17,6 +27,8 @@ export type FestivalTasksForPrepare = {
   findById(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
   save(task: FestivalTask): Promise<FestivalTask>;
 };
+
+type AddMobilization = Omit<Mobilization, "id">;
 
 export class PrepareFestivalTask {
   constructor(private readonly festivalTasks: FestivalTasksForPrepare) {}
@@ -66,6 +78,18 @@ export class PrepareFestivalTask {
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
     return this.festivalTasks.save({ ...task, instructions });
+  }
+
+  async addMobilization(
+    taskId: FestivalTask["id"],
+    mobilization: AddMobilization,
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Mobilizations.build(task.mobilizations);
+    const mobilizations = builder.add(mobilization).json;
+    return this.festivalTasks.save({ ...task, mobilizations });
   }
 }
 
@@ -174,5 +198,81 @@ class Volunteers {
 
   get json(): Volunteer[] {
     return [...this.volunteers];
+  }
+}
+
+class Mobilizations {
+  private constructor(private readonly mobilization: Mobilization[]) {}
+
+  static build(mobilizations: Mobilization[]) {
+    return new Mobilizations(mobilizations);
+  }
+
+  add(form: AddMobilization): Mobilizations {
+    const mobilization = MobilizationFactory.init(form).json;
+
+    if (this.has(mobilization)) throw new MobilizationAlreadyExist();
+
+    return new Mobilizations([...this.mobilization, mobilization]);
+  }
+
+  private has(mobilization: Mobilization) {
+    return this.mobilization.some(({ id }) => id === mobilization.id);
+  }
+
+  get json(): Mobilization[] {
+    return [...this.mobilization];
+  }
+}
+
+class MobilizationFactory {
+  private constructor(private readonly mobilization: Mobilization) {}
+
+  static init(form: AddMobilization): MobilizationFactory {
+    const { durationSplitInHour, teams, volunteers, ...period } = form;
+    this.checkPeriod(durationSplitInHour, period);
+    const id = this.generateId(period);
+
+    return new MobilizationFactory({ ...form, id });
+  }
+
+  private static checkPeriod(
+    durationSplitInHour: Mobilization["durationSplitInHour"],
+    period: IProvidePeriod,
+  ) {
+    if (!durationSplitInHour) {
+      return Period.init(period);
+    }
+    const splitDuration = Duration.hours(durationSplitInHour);
+    return SplitablePeriod.checkValidity({ ...period, splitDuration });
+  }
+
+  private static generateId(period: IProvidePeriod): Mobilization["id"] {
+    const { start, end } = period;
+    const startMinutes = Duration.ms(start.getTime()).inMinutes;
+    const endMinutes = Duration.ms(end.getTime()).inMinutes;
+
+    return `${startMinutes}-${endMinutes}`;
+  }
+
+  get json(): Mobilization {
+    return this.mobilization;
+  }
+}
+
+type IProvideSplitablePeriod = {
+  start: Date;
+  end: Date;
+  splitDuration: Duration;
+};
+
+class SplitablePeriod {
+
+  static checkValidity({ start, end, splitDuration }: IProvideSplitablePeriod) {
+    const period = Period.init({ start, end });
+    if (!period.duration.isDividedBy(splitDuration)) {
+      throw new SplitDurationIsNotPeriodDivider(splitDuration);
+    }
+    return;
   }
 }

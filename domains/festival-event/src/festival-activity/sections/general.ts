@@ -1,4 +1,4 @@
-import { TimeWindow } from "./time-window";
+import { TimeWindow } from "../../common/time-window";
 
 export type DraftGeneral = {
   name: string;

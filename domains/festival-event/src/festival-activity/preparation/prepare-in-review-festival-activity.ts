@@ -28,7 +28,7 @@ import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
 import { Signage } from "../sections/signa";
 import { Contractor } from "../sections/in-charge";
-import { TimeWindow } from "../sections/time-window";
+import { TimeWindow } from "../../common/time-window";
 import {
   PrepareGeneralUpdate,
   PrepareInChargeUpdate,

@@ -2,7 +2,7 @@ import { PreviewFestivalActivity } from "../festival-activity/festival-activity"
 import { Feedback } from "../common/feedback";
 import { DRAFT } from "../common/status";
 import { Adherent } from "../common/adherent";
-import { TimeWindow } from "../festival-activity/sections/time-window";
+import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { KeyEvent } from "./festival-task.event";
 import { Location } from "../common/location";
@@ -24,6 +24,14 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
+type TeamMobilization = { count: number; team: string };
+
+export type Mobilization = TimeWindow & {
+  volunteers: Volunteer[];
+  teams: TeamMobilization[];
+  durationSplitInHour: null | number;
+};
+
 export type Draft = {
   id: number;
   status: typeof DRAFT;
@@ -44,7 +52,7 @@ export type Draft = {
   };
   history: KeyEvent[];
   feedbacks: Feedback[];
-  volunteerInquiries: unknown[];
+  mobilizations: Mobilization[];
   gearInquiries: InquiryRequest[];
 };
 
