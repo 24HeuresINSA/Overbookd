@@ -1,4 +1,4 @@
-import { Duration, IProvidePeriod , Period} from "@overbookd/period";
+import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import {
   Contact,
   FestivalTask,
@@ -267,7 +267,6 @@ type IProvideSplitablePeriod = {
 };
 
 class SplitablePeriod {
-
   static checkValidity({ start, end, splitDuration }: IProvideSplitablePeriod) {
     const period = Period.init({ start, end });
     if (!period.duration.isDividedBy(splitDuration)) {
