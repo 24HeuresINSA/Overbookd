@@ -5,7 +5,7 @@ import {
   ApiBadRequestResponse,
   ApiForbiddenResponse,
 } from "@nestjs/swagger";
-import { GeneralSectionService } from "./general-section.service";
+import { InstructionsSectionService } from "./instructions-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 
 @ApiBearerAuth()
@@ -18,6 +18,8 @@ import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter
 })
 @UseFilters(FestivalTaskErrorFilter)
 @Controller("festival-tasks")
-export class GeneralSectionController {
-  constructor(private readonly generalService: GeneralSectionService) {}
+export class InstructionsSectionController {
+  constructor(
+    private readonly instructionsService: InstructionsSectionService,
+  ) {}
 }
