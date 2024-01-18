@@ -15,7 +15,7 @@ CREATE TABLE "festival_task" (
     "team_code" VARCHAR(20),
     "festival_activity_id" INTEGER,
     "appointment_id" INTEGER,
-    "global" TEXT,
+    "global_instruction" TEXT,
     "in_charge_instruction" TEXT
 );
 

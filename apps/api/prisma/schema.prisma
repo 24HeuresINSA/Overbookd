@@ -680,7 +680,7 @@ model FestivalTask {
   // Instructions
   appointment         SignaLocation? @relation(fields: [appointmentId], references: [id])
   appointmentId       Int?           @map("appointment_id")
-  global              String?        @db.Text
+  globalInstruction   String?        @map("global_instruction") @db.Text
   contacts            User[]         @relation("task-contact")
   inChargeVolunteers  User[]         @relation("task-in-charge-volunteer")
   inChargeInstruction String?        @map("in_charge_instruction") @db.Text
