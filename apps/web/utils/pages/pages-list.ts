@@ -259,7 +259,7 @@ export const pages: Page[] = [
     icon: "mdi-bookshelf",
     title: "Catalogue Matos",
     permission: READ_GEAR_CATALOG,
-    to: "/matos/catalog",
+    to: "/logistic/catalog",
     description:
       "Permet de définir l'ensemble du matériel disponible sur le festival",
     mobileSupport: false,
@@ -269,7 +269,7 @@ export const pages: Page[] = [
     icon: "mdi-warehouse",
     title: "Inventaire",
     permission: WRITE_INVENTORY,
-    to: "/matos/inventory",
+    to: "/logistic/inventory",
     description:
       "Permet de compter l'ensemble du matériel appartenant à l'association",
     mobileSupport: false,
@@ -279,21 +279,11 @@ export const pages: Page[] = [
     icon: "mdi-chart-histogram",
     title: "Récap Matos",
     permission: MANAGE_ADMINS,
-    to: "/matos/gear-recap",
+    to: "/logistic/dashboard",
     description:
       "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
     mobileSupport: false,
-    keywords: ["recap-matos"],
-  },
-  {
-    icon: "mdi-truck",
-    title: "Logistique",
-    permission: WRITE_INVENTORY,
-    to: "/matos/logistic",
-    description:
-      "Permet de visualiser l'ensemble des demandes de matériel sur le festival",
-    mobileSupport: false,
-    keywords: ["demandes-matos", "demandes-materiel"],
+    keywords: ["recap-matos", "dashboard"],
   },
   {
     icon: "mdi-map-marker",

@@ -3,11 +3,11 @@
     <h1>Récap Matos</h1>
     <GearFilter v-model="filter" @change="searchGears" />
     <v-expansion-panels>
-      <v-expansion-panel v-for="gear in gears" :key="gear.slug">
+      <v-expansion-panel v-for="preview in previews" :key="preview.slug">
         <v-expansion-panel-header>
           <div class="gear-recap__header-content">
-            <h2>{{ gear.name }}</h2>
-            <div v-show="gear.isConsumable" class="icon">
+            <h2>{{ preview.name }}</h2>
+            <div v-show="preview.isConsumable" class="icon">
               <v-icon size="24"> mdi-delete-empty-outline </v-icon>
               <span class="icon-detail">Consommable</span>
             </div>
@@ -24,9 +24,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalogGear";
-import { Gear } from "~/utils/models/catalog.model";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
+import { GearPreview } from "@overbookd/http";
 
 interface GearRecapData {
   filter: FilterGear;
@@ -48,8 +48,8 @@ export default Vue.extend({
     title: "Récap Matos",
   }),
   computed: {
-    gears(): Gear[] {
-      return this.$accessor.catalogGear.gears;
+    previews(): GearPreview[] {
+      return this.$accessor.logisticDashboard.previews;
     },
     canSearch(): boolean {
       const { name, category, team } = this.filter;
@@ -61,7 +61,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.$accessor.catalogGear.fetchGears({});
+    this.$accessor.logisticDashboard.fetchPreviews();
   },
   methods: {
     async searchGears() {

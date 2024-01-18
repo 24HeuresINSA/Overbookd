@@ -6,7 +6,7 @@ export class DashboardGear {
   private constructor() {}
 
   public static generatePreview(gear: DatabaseGear): GearPreview {
-    const stockDiscrepancy = this.computeStockDiscrepancyOn(gear);
+    const stockDiscrepancy = DashboardGear.computeStockDiscrepancyOn(gear);
     return {
       id: gear.id,
       name: gear.name,
@@ -23,10 +23,10 @@ export class DashboardGear {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
     return periods.map(({ start, end }) => {
-      const stock = this.findStockByDate(gear);
-      const inquiry = this.findInquiryQuantityByDate(gear, start);
-      const activities = this.findActivitiesByDate(gear, start);
-      const inventory = this.findInventoryQuantity(gear);
+      const stock = DashboardGear.findStockByDate(gear);
+      const inquiry = DashboardGear.findInquiryQuantityByDate(gear, start);
+      const activities = DashboardGear.findActivitiesByDate(gear, start);
+      const inventory = DashboardGear.findInventoryQuantity(gear);
 
       return {
         start,
@@ -46,7 +46,10 @@ export class DashboardGear {
     const mergedTimeWindows = Period.mergeContiguous(inquiryTimeWindows);
 
     const discrepancies = mergedTimeWindows.map((timeWindow) => {
-      return this.computeStockDiscrepancyByTimeWindowOn(gear, timeWindow);
+      return DashboardGear.computeStockDiscrepancyByTimeWindowOn(
+        gear,
+        timeWindow,
+      );
     });
 
     return discrepancies.length > 0 ? Math.min(...discrepancies) : 0;
@@ -60,7 +63,7 @@ export class DashboardGear {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
     const discrepancies = periods.map(({ start }) => {
-      return this.computeStockDiscrepancyByDateOn(gear, start);
+      return DashboardGear.computeStockDiscrepancyByDateOn(gear, start);
     });
     return Math.min(...discrepancies);
   }
@@ -69,14 +72,14 @@ export class DashboardGear {
     gear: DatabaseGear,
     date: Date,
   ) {
-    const stock = this.findStockByDate(gear);
-    const inquiry = this.findInquiryQuantityByDate(gear, date);
+    const stock = DashboardGear.findStockByDate(gear);
+    const inquiry = DashboardGear.findInquiryQuantityByDate(gear, date);
     return stock - inquiry;
   }
 
   private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {
     // Date will be used in for purchase & loan sheets
-    return this.findInventoryQuantity(gear);
+    return DashboardGear.findInventoryQuantity(gear);
   }
 
   private static findInventoryQuantity(gear: DatabaseGear): number {
