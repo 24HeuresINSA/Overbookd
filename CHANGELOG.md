@@ -1,3 +1,15 @@
+## [2.13.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.6...v2.13.7) (2024-01-18)
+
+
+### Bug Fixes
+
+* **trombinoscope:** display volunteers' profile picture and remove comment. [#1418](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1418) ([08ba3c0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/08ba3c05842e083c49112df8142671f9f420b798))
+
+
+### Pre-Features
+
+* **festival-task:** allow add mobilization. [#1466](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1466) ([8336b18](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8336b18d909e142c8b2d38c548411255fca04095))
+
 ## [2.13.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.5...v2.13.6) (2024-01-17)
 
 
