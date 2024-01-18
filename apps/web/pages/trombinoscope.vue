@@ -19,8 +19,8 @@
     </v-container>
     <div class="volunteers">
       <div v-for="volunteer in volunteers" :key="volunteer.id">
-        <v-sheet min-height="250">
-          <v-lazy>
+        <v-sheet min-height="250" class="contain-card">
+          <v-lazy class="contain-card">
             <TrombinoscopeCard
               :volunteer="volunteer"
               class="trombinoscopeCard"
@@ -77,7 +77,15 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .volunteers {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  align-items: stretch;
+  .contain-card {
+    height: 100%;
+    .trombinoscopeCard {
+      height: 100%;
+    }
+  }
 }
 
 .volunteer-born-today {
@@ -86,7 +94,7 @@ export default Vue.extend({
   margin-left: auto;
   margin-right: auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   place-items: center;
   gap: 10px;
 
@@ -113,10 +121,5 @@ export default Vue.extend({
       }
     }
   }
-}
-
-.trombinoscopeCard {
-  margin: 5px;
-  height: 300px;
 }
 </style>
