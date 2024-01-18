@@ -2,10 +2,12 @@
   <v-card class="profilePictureCard">
     <v-card-title class="name-with-picture">
       <ProfilePicture :user="volunteer" />
-      {{ formatUserNameWithNickname(volunteer) }}
+      <span class="name">{{ formatUserNameWithNickname(volunteer) }}</span>
     </v-card-title>
     <v-card-subtitle>
-      <TeamChip v-for="team of volunteer.teams" :key="team" :team="team" />
+      <div class="teams">
+        <TeamChip v-for="team of volunteer.teams" :key="team" :team="team" />
+      </div>
     </v-card-subtitle>
   </v-card>
 </template>
@@ -33,8 +35,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.comment {
-  overflow-y: scroll;
+.name {
+  font-size: 1.1rem;
+  text-wrap: pretty;
+}
+
+.teams {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 
 .profilePictureCard {

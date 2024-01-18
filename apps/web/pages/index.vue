@@ -150,7 +150,9 @@ export default Vue.extend({
   }
 
   .pages {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-items: center;
     gap: 20px;
     width: 90%;
     max-width: 90%;
@@ -164,6 +166,8 @@ export default Vue.extend({
     max-height: 355px;
     flex-wrap: wrap;
     @media only screen and (max-width: $mobile-max-width) {
+      display: flex;
+      gap: 20px;
       width: 100%;
       max-width: 100%;
       flex-direction: column;
