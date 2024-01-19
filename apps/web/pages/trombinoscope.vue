@@ -1,22 +1,12 @@
 <template>
   <div>
-    <v-container
-      v-show="volunteersBornToday.length"
-      class="volunteer-born-today"
-    >
-      <v-card
+    <div v-show="volunteersBornToday.length" class="volunteers">
+      <BirthdayCard
         v-for="volunteer in volunteersBornToday"
         :key="volunteer.id"
-        class="volunteer-born-today__card"
-        color="#FFD700"
-      >
-        <v-card-title>
-          <ProfilePicture :user="volunteer" />
-          <p>Joyeux anniv 🥳</p>
-          <p>{{ formatUserNameWithNickname(volunteer) }}</p>
-        </v-card-title>
-      </v-card>
-    </v-container>
+        :volunteer="volunteer"
+      />
+    </div>
     <div class="volunteers">
       <div v-for="volunteer in volunteers" :key="volunteer.id">
         <v-sheet min-height="250" class="contain-card">
@@ -36,15 +26,15 @@
 import Vue from "vue";
 import { UserPersonalData } from "@overbookd/user";
 import TrombinoscopeCard from "~/components/molecules/user/TrombinoscopeCard.vue";
+import BirthdayCard from "~/components/molecules/user/BirthdayCard.vue";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
-import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 
 type Volunteer = UserPersonalData | UserPersonalDataWithProfilePicture;
 
 export default Vue.extend({
   name: "Trombinoscope",
-  components: { TrombinoscopeCard, ProfilePicture },
+  components: { TrombinoscopeCard, BirthdayCard },
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.user.volunteers;
@@ -84,41 +74,6 @@ export default Vue.extend({
     height: 100%;
     .trombinoscopeCard {
       height: 100%;
-    }
-  }
-}
-
-.volunteer-born-today {
-  padding: 5px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  place-items: center;
-  gap: 10px;
-
-  &__card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 350px;
-    min-height: 100%;
-    .userProfilePicture {
-      max-height: 50%;
-    }
-
-    .defaultProfilePicture {
-      justify-self: center;
-    }
-    .v-card__title {
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      p {
-        margin: 0;
-      }
     }
   }
 }
