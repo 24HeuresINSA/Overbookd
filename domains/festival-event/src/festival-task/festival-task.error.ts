@@ -1,7 +1,7 @@
 import { Duration } from "@overbookd/period";
 import { FestivalTask } from "./festival-task";
 
-class FestivalTaskError extends Error {}
+export class FestivalTaskError extends Error {}
 
 export class FestivalTaskNotFound extends FestivalTaskError {
   constructor(ftId: FestivalTask["id"]) {

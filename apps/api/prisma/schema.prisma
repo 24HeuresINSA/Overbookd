@@ -62,6 +62,10 @@ model User {
   chefMeals                    SharedMeal[]               @relation("chef")
   shotguns                     Shotgun[]                  @relation("guest")
 
+  festivalTaskAdministrated FestivalTask[]                  @relation("task-administrator")
+  festivalTaskInCharge      FestivalTaskInChargeVolunteer[]
+  festivalTaskContacts      FestivalTaskContact[]
+
   @@map("user")
 }
 
@@ -85,6 +89,7 @@ model Team {
   permissions        TeamPermission[]
   ft                 Ft[]
   festivalActivities FestivalActivity[]
+  festivalTasks      FestivalTask[]
 
   @@map("team")
 }
@@ -151,6 +156,7 @@ model SignaLocation {
   geoJson            Json?              @map("geo_json")
   fts                Ft[]
   festivalActivities FestivalActivity[]
+  FestivalTask       FestivalTask[]
 
   @@map("signa_location")
 }
@@ -212,23 +218,24 @@ enum TaskCategory {
 }
 
 model Ft {
-  id             Int               @id @default(autoincrement())
-  name           String
-  status         FtStatus          @default(DRAFT)
-  fa             FestivalActivity? @relation(fields: [parentFaId], references: [id])
-  parentFaId     Int?              @map("parent_fa_id")
-  isStatic       Boolean           @default(false) @map("is_static")
-  description    String?           @db.Text
-  userInCharge   User?             @relation(fields: [userInChargeId], references: [id], name: "inCharge")
-  userInChargeId Int?              @map("user_in_charge_id")
-  team           Team?             @relation(fields: [teamCode], references: [code])
-  teamCode       String?           @map("team_code") @db.VarChar(20)
-  location       SignaLocation?    @relation(fields: [locationId], references: [id])
-  locationId     Int?              @map("location_id")
-  isDeleted      Boolean           @default(false) @map("is_deleted")
-  reviewerId     Int?              @map("reviewer_id")
-  reviewer       User?             @relation("reviewer", fields: [reviewerId], references: [id])
-  hasPriority    Boolean?          @default(false) @map("has_priority")
+  id         Int               @id @default(autoincrement())
+  name       String
+  status     FtStatus          @default(DRAFT)
+  fa         FestivalActivity? @relation(fields: [parentFaId], references: [id])
+  parentFaId Int?              @map("parent_fa_id")
+
+  isStatic       Boolean        @default(false) @map("is_static")
+  description    String?        @db.Text
+  userInCharge   User?          @relation(fields: [userInChargeId], references: [id], name: "inCharge")
+  userInChargeId Int?           @map("user_in_charge_id")
+  team           Team?          @relation(fields: [teamCode], references: [code])
+  teamCode       String?        @map("team_code") @db.VarChar(20)
+  location       SignaLocation? @relation(fields: [locationId], references: [id])
+  locationId     Int?           @map("location_id")
+  isDeleted      Boolean        @default(false) @map("is_deleted")
+  reviewerId     Int?           @map("reviewer_id")
+  reviewer       User?          @relation("reviewer", fields: [reviewerId], references: [id])
+  hasPriority    Boolean?       @default(false) @map("has_priority")
   category       TaskCategory?
 
   feedbacks   FtFeedback[]
@@ -419,13 +426,14 @@ model Barrel {
 }
 
 model FestivalActivity {
-  id        Int                        @unique
-  status    FestivalActivityStatus
-  isDeleted Boolean                    @default(false) @map("is_deleted")
-  reviews   FestivalActivityReview[]
-  feedbacks FestivalActivityFeedback[]
-  events    FestivalActivityHistory[]
-  fts       Ft[]
+  id            Int                        @unique
+  status        FestivalActivityStatus
+  isDeleted     Boolean                    @default(false) @map("is_deleted")
+  reviews       FestivalActivityReview[]
+  feedbacks     FestivalActivityFeedback[]
+  events        FestivalActivityHistory[]
+  fts           Ft[] // TO REMOVE
+  festivalTasks FestivalTask[]
 
   // General
   name               String                              @db.Text
@@ -650,6 +658,63 @@ model FestivalActivityFeedback {
 
   @@id([faId, authorId, publishedAt])
   @@map("feedback")
+}
+
+model FestivalTask {
+  id        Int                @unique
+  status    FestivalTaskStatus
+  isDeleted Boolean            @default(false) @map("is_deleted")
+
+  // General
+  name            String  @db.Text
+  administrator   User    @relation(fields: [administratorId], references: [id], "task-administrator")
+  administratorId Int     @map("administrator_id")
+  team            Team?   @relation(fields: [teamCode], references: [code])
+  teamCode        String? @map("team_code") @db.VarChar(20)
+
+  // Festival activity
+  festivalActivity   FestivalActivity? @relation(fields: [festivalActivityId], references: [id])
+  festivalActivityId Int?              @map("festival_activity_id")
+
+  // Instructions
+  appointment         SignaLocation?                  @relation(fields: [appointmentId], references: [id])
+  appointmentId       Int?                            @map("appointment_id")
+  globalInstruction   String?                         @map("global_instruction") @db.Text
+  contacts            FestivalTaskContact[]
+  inChargeInstruction String?                         @map("in_charge_instruction") @db.Text
+  inChargeVolunteers  FestivalTaskInChargeVolunteer[]
+
+  @@map("festival_task")
+}
+
+enum FestivalTaskStatus {
+  DRAFT
+  IN_REVIEW
+  VALIDATED
+  REFUSED
+  READY
+
+  @@map("festival_task_status")
+}
+
+model FestivalTaskContact {
+  contact        User         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId      Int          @map("contact_id")
+  festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int          @map("festival_task_id")
+
+  @@id([contactId, festivalTaskId])
+  @@map("festival_task_contact")
+}
+
+model FestivalTaskInChargeVolunteer {
+  volunteer      User         @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  volunteerId    Int          @map("volunteer_id")
+  festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int          @map("festival_task_id")
+
+  @@id([volunteerId, festivalTaskId])
+  @@map("festival_task_in_charge_volunteer")
 }
 
 model SharedMeal {

@@ -43,6 +43,7 @@ import { ONE_MINUTE_IN_MS } from "@overbookd/period";
 import { PersonalAccountModule } from "./personal-account/personal-account.module";
 import { SharedMealModule } from "./shared-meal/shared-meal.module";
 import { LogisticModule } from "./logistic/logistic.module";
+import { FestivalTaskModule } from "./festival-task/festival-task.module";
 
 @Module({
   imports: [
@@ -105,6 +106,7 @@ import { LogisticModule } from "./logistic/logistic.module";
     PersonalAccountModule,
     SharedMealModule,
     LogisticModule,
+    FestivalTaskModule,
   ],
   controllers: [AppController],
   providers: [
