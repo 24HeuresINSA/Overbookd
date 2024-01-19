@@ -4,4 +4,5 @@ import type { IAlertAboutContribution } from "@overbookd/contribution";
 export type Alerts = {
   personalAccount?: IAlertAboutPersonalAccount;
   contribution?: IAlertAboutContribution;
+  profilePicture?: boolean;
 };

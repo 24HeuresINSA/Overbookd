@@ -73,6 +73,7 @@ export default Vue.extend({
       );
       await this.$accessor.user.addProfilePicture(profilePictureForm);
       this.$accessor.user.setMyProfilePicture();
+      this.$accessor.alert.dismiss("profilePicture");
       this.$store.dispatch("dialog/closeDialog");
     },
   },
