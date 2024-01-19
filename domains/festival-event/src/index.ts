@@ -193,3 +193,8 @@ export type { ReviewingFestivalActivities } from "./festival-activity/reviewing/
 //  FESTIVAL TASK MODULE
 //  **********************
 export { FestivalTaskError } from "./festival-task/festival-task.error";
+export type { FestivalTasksForCreate } from "./festival-task/create/create";
+export type {
+  FestivalTask,
+  Draft as FestivalTaskDraft,
+} from "./festival-task/festival-task";
