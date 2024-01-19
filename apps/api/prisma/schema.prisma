@@ -62,11 +62,9 @@ model User {
   chefMeals                    SharedMeal[]               @relation("chef")
   shotguns                     Shotgun[]                  @relation("guest")
 
-  festivalTaskAdministrated FestivalTask[] @relation("task-administrator")
-  festivalTaskInCharge      FestivalTask?  @relation(fields: [festivalTaskInChargeId], references: [id], "task-in-charge-volunteer")
-  festivalTaskInChargeId    Int?           @map("festival_task_in_charge_id")
-  festivalTaskContact       FestivalTask?  @relation(fields: [festivalTaskContactId], references: [id], "task-contact")
-  festivalTaskContactId     Int?           @map("festival_task_contact_id")
+  festivalTaskAdministrated FestivalTask[]                  @relation("task-administrator")
+  festivalTaskInCharge      FestivalTaskInChargeVolunteer[]
+  festivalTaskContacts      FestivalTaskContact[]
 
   @@map("user")
 }
@@ -220,23 +218,21 @@ enum TaskCategory {
 }
 
 model Ft {
-  id             Int               @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   name           String
-  status         FtStatus          @default(DRAFT)
-  fa             FestivalActivity? @relation(fields: [parentFaId], references: [id])
-  parentFaId     Int?              @map("parent_fa_id")
-  isStatic       Boolean           @default(false) @map("is_static")
-  description    String?           @db.Text
-  userInCharge   User?             @relation(fields: [userInChargeId], references: [id], name: "inCharge")
-  userInChargeId Int?              @map("user_in_charge_id")
-  team           Team?             @relation(fields: [teamCode], references: [code])
-  teamCode       String?           @map("team_code") @db.VarChar(20)
-  location       SignaLocation?    @relation(fields: [locationId], references: [id])
-  locationId     Int?              @map("location_id")
-  isDeleted      Boolean           @default(false) @map("is_deleted")
-  reviewerId     Int?              @map("reviewer_id")
-  reviewer       User?             @relation("reviewer", fields: [reviewerId], references: [id])
-  hasPriority    Boolean?          @default(false) @map("has_priority")
+  status         FtStatus       @default(DRAFT)
+  isStatic       Boolean        @default(false) @map("is_static")
+  description    String?        @db.Text
+  userInCharge   User?          @relation(fields: [userInChargeId], references: [id], name: "inCharge")
+  userInChargeId Int?           @map("user_in_charge_id")
+  team           Team?          @relation(fields: [teamCode], references: [code])
+  teamCode       String?        @map("team_code") @db.VarChar(20)
+  location       SignaLocation? @relation(fields: [locationId], references: [id])
+  locationId     Int?           @map("location_id")
+  isDeleted      Boolean        @default(false) @map("is_deleted")
+  reviewerId     Int?           @map("reviewer_id")
+  reviewer       User?          @relation("reviewer", fields: [reviewerId], references: [id])
+  hasPriority    Boolean?       @default(false) @map("has_priority")
   category       TaskCategory?
 
   feedbacks   FtFeedback[]
@@ -434,7 +430,6 @@ model FestivalActivity {
   feedbacks     FestivalActivityFeedback[]
   events        FestivalActivityHistory[]
   festivalTasks FestivalTask[]
-  fts           Ft[]
 
   // General
   name               String                              @db.Text
@@ -678,12 +673,12 @@ model FestivalTask {
   festivalActivityId Int?              @map("festival_activity_id")
 
   // Instructions
-  appointment         SignaLocation? @relation(fields: [appointmentId], references: [id])
-  appointmentId       Int?           @map("appointment_id")
-  globalInstruction   String?        @map("global_instruction") @db.Text
-  contacts            User[]         @relation("task-contact")
-  inChargeVolunteers  User[]         @relation("task-in-charge-volunteer")
-  inChargeInstruction String?        @map("in_charge_instruction") @db.Text
+  appointment         SignaLocation?                  @relation(fields: [appointmentId], references: [id])
+  appointmentId       Int?                            @map("appointment_id")
+  globalInstruction   String?                         @map("global_instruction") @db.Text
+  contacts            FestivalTaskContact[]
+  inChargeInstruction String?                         @map("in_charge_instruction") @db.Text
+  inChargeVolunteers  FestivalTaskInChargeVolunteer[]
 
   @@map("festival_task")
 }
@@ -696,6 +691,26 @@ enum FestivalTaskStatus {
   READY
 
   @@map("festival_task_status")
+}
+
+model FestivalTaskContact {
+  contact        User         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId      Int          @map("contact_id")
+  festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int          @map("festival_task_id")
+
+  @@id([contactId, festivalTaskId])
+  @@map("festival_task_contact")
+}
+
+model FestivalTaskInChargeVolunteer {
+  volunteer      User         @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  volunteerId    Int          @map("contact_id")
+  festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int          @map("festival_task_id")
+
+  @@id([volunteerId, festivalTaskId])
+  @@map("festival_task_in_charge_volunteer")
 }
 
 model SharedMeal {
