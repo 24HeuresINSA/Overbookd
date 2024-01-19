@@ -32,6 +32,7 @@ import * as contribution from "./contribution";
 import * as alert from "./alert";
 import * as personalAccount from "./personalAccount";
 import * as mealSharing from "./mealSharing";
+import * as logisticDashboard from "./logisticDashboard";
 
 export const state = () => ({});
 
@@ -80,5 +81,6 @@ export const accessorType = getAccessorType({
     alert,
     personalAccount,
     mealSharing,
+    logisticDashboard,
   },
 });
