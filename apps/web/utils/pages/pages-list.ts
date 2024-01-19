@@ -283,7 +283,7 @@ export const pages: Page[] = [
     description:
       "Permet de visualiser l'évolution du besoin / stock du matos sur l'année",
     mobileSupport: false,
-    keywords: ["recap-matos", "dashboard"],
+    keywords: ["recap-matos", "dashboard", "demandes-matos", "demandes-materiel"],
   },
   {
     icon: "mdi-map-marker",
