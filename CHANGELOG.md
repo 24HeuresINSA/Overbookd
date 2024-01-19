@@ -1,3 +1,23 @@
+## [2.14.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.7...v2.14.0) (2024-01-19)
+
+
+### Features
+
+* **web:** create GearFilter and add it to recap-matos. [#1422](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1422) ([0ea3d45](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0ea3d4561159f3def0c9643a0bf7bcee80bcf6c4))
+
+
+### Bug Fixes
+
+* **mail:** fa validation mistake [#1465](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1465) ([2e5a2bd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2e5a2bdd60f443774ac2ee21529b24c3fe10245f))
+* **trombinoscope:** add profile picture missing alert. [#1336](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1336) ([056fba3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/056fba32f212bc5d9f3407c5eada150f74ccdcf9))
+* **trombinoscope:** group volunteers. [#1337](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1337) ([90707eb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/90707eb785146984c270d4f47bfd9b3132291694))
+
+
+### Pre-Features
+
+* **festival-task:** create api template & db table ([e6cd136](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e6cd1364f7fa5f2cea6e8994ad1cf10ddf4f0aa5))
+* **logistic-dashboard:** implement API in WEB, renaming and organising [#1446](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1446) ([0eb88c5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0eb88c569b51c58ccfde93764ebb0e1d41e82d54))
+
 ## [2.13.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.13.6...v2.13.7) (2024-01-18)
 
 
