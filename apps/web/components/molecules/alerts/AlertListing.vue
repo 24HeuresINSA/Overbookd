@@ -11,6 +11,11 @@
       :alert="contributionAlert"
       @dismiss="dismiss('contribution')"
     />
+    <ProfilePictureAlert
+      v-if="profilePictureAlert"
+      id="profile-picture"
+      @dismiss="dismiss('profilePicture')"
+    />
   </div>
 </template>
 
@@ -21,12 +26,14 @@ import { Alerts } from "@overbookd/alerts";
 import { SettleAlert } from "@overbookd/contribution";
 import PersonalAccount from "~/components/atoms/alerts/PersonalAccount.vue";
 import Contribution from "~/components/atoms/alerts/Contribution.vue";
+import ProfilePictureAlert from "~/components/atoms/alerts/ProfilePictureAlert.vue";
 
 export default Vue.extend({
   name: "AlertListing",
   components: {
     PersonalAccount,
     Contribution,
+    ProfilePictureAlert,
   },
   computed: {
     personalAccountAlert(): PersonalAccountAlert | undefined {
@@ -34,6 +41,9 @@ export default Vue.extend({
     },
     contributionAlert(): SettleAlert | undefined {
       return this.$accessor.alert.alerts.contribution;
+    },
+    profilePictureAlert(): boolean | undefined {
+      return this.$accessor.alert.alerts.profilePicture;
     },
   },
   methods: {
@@ -45,8 +55,12 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-#contribution {
+#contribution,
+#profile-picture {
   background-color: $yellow-24h;
   border-color: $yellow-24h;
+  a {
+    color: $red-24h;
+  }
 }
 </style>
