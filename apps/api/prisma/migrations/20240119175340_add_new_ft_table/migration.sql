@@ -1,17 +1,5 @@
-/*
-  Warnings:
-
-  - You are about to drop the column `parent_fa_id` on the `ft` table. All the data in the column will be lost.
-
-*/
 -- CreateEnum
 CREATE TYPE "festival_task_status" AS ENUM ('DRAFT', 'IN_REVIEW', 'VALIDATED', 'REFUSED', 'READY');
-
--- DropForeignKey
-ALTER TABLE "ft" DROP CONSTRAINT "ft_parent_fa_id_fkey";
-
--- AlterTable
-ALTER TABLE "ft" DROP COLUMN "parent_fa_id";
 
 -- CreateTable
 CREATE TABLE "festival_task" (
