@@ -709,7 +709,7 @@ model FestivalTaskContact {
 
 model FestivalTaskInChargeVolunteer {
   volunteer      User         @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
-  volunteerId    Int          @map("contact_id")
+  volunteerId    Int          @map("volunteer_id")
   festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
   festivalTaskId Int          @map("festival_task_id")
 

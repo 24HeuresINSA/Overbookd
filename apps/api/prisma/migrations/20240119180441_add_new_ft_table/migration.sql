@@ -25,10 +25,10 @@ CREATE TABLE "festival_task_contact" (
 
 -- CreateTable
 CREATE TABLE "festival_task_in_charge_volunteer" (
-    "contact_id" INTEGER NOT NULL,
+    "volunteer_id" INTEGER NOT NULL,
     "festival_task_id" INTEGER NOT NULL,
 
-    CONSTRAINT "festival_task_in_charge_volunteer_pkey" PRIMARY KEY ("contact_id","festival_task_id")
+    CONSTRAINT "festival_task_in_charge_volunteer_pkey" PRIMARY KEY ("volunteer_id","festival_task_id")
 );
 
 -- CreateIndex
@@ -53,7 +53,7 @@ ALTER TABLE "festival_task_contact" ADD CONSTRAINT "festival_task_contact_contac
 ALTER TABLE "festival_task_contact" ADD CONSTRAINT "festival_task_contact_festival_task_id_fkey" FOREIGN KEY ("festival_task_id") REFERENCES "festival_task"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "festival_task_in_charge_volunteer" ADD CONSTRAINT "festival_task_in_charge_volunteer_contact_id_fkey" FOREIGN KEY ("contact_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "festival_task_in_charge_volunteer" ADD CONSTRAINT "festival_task_in_charge_volunteer_volunteer_id_fkey" FOREIGN KEY ("volunteer_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "festival_task_in_charge_volunteer" ADD CONSTRAINT "festival_task_in_charge_volunteer_festival_task_id_fkey" FOREIGN KEY ("festival_task_id") REFERENCES "festival_task"("id") ON DELETE CASCADE ON UPDATE CASCADE;
