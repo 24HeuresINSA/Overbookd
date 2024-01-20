@@ -1,4 +1,9 @@
-import { FestivalTask, FestivalTaskDraft } from "@overbookd/festival-event";
+import {
+  Contact,
+  FestivalTask,
+  FestivalTaskDraft,
+  Volunteer,
+} from "@overbookd/festival-event";
 import { SELECT_ADHERENT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
@@ -40,10 +45,71 @@ export class FestivalTaskQueryBuilder {
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts: {
-        create: task.instructions.contacts,
+        create: task.instructions.contacts.map((contact) => ({
+          contact: { connect: { id: contact.id } },
+        })),
       },
       inChargeVolunteers: {
-        create: task.instructions.inCharge.volunteers,
+        create: task.instructions.inCharge.volunteers.map((volunteer) => ({
+          volunteer: { connect: { id: volunteer.id } },
+        })),
+      },
+    };
+  }
+
+  static update(task: FestivalTask) {
+    const contacts = this.upsertContacts(task.id, task.instructions.contacts);
+    const inChargeVolunteers = this.upsertInChargeVolunteers(
+      task.id,
+      task.instructions.inCharge.volunteers,
+    );
+    return {
+      ...databaseFestivalTaskWithoutListsMapping(task),
+      contacts,
+      inChargeVolunteers,
+    };
+  }
+
+  private static upsertContacts(
+    festivalTaskId: FestivalTask["id"],
+    contacts: Contact[],
+  ) {
+    return {
+      upsert: contacts.map((contact) => ({
+        where: {
+          contactId_festivalTaskId: {
+            contactId: contact.id,
+            festivalTaskId,
+          },
+        },
+        create: { contact: { connect: { id: contact.id } } },
+        update: { contact: { connect: { id: contact.id } } },
+      })),
+      deleteMany: {
+        festivalTaskId,
+        contactId: { notIn: contacts.map(({ id }) => id) },
+      },
+    };
+  }
+
+  private static upsertInChargeVolunteers(
+    festivalTaskId: FestivalTask["id"],
+    volunteers: Volunteer[],
+  ) {
+    return {
+      upsert: volunteers.map((volunteer) => ({
+        where: {
+          volunteerId_festivalTaskId: {
+            volunteerId: volunteer.id,
+            festivalTaskId,
+          },
+        },
+        create: { volunteer: { connect: { id: volunteer.id } } },
+        update: { volunteer: { connect: { id: volunteer.id } } },
+      })),
+      deleteMany: {
+        festivalTaskId,
+        volunteerId: { notIn: volunteers.map(({ id }) => id) },
       },
     };
   }
