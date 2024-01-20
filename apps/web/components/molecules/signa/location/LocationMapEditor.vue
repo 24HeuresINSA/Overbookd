@@ -1,5 +1,10 @@
 <template>
   <section class="map-section">
+    <p class="instructions">
+      Pour activer et désactiver la modification sur la carte tu peux utiliser
+      le clic droit.
+    </p>
+    <v-switch v-model="editing" class="editing" inset label="Mode édition" />
     <v-lazy>
       <client-only>
         <div class="map">
@@ -95,7 +100,7 @@ export default defineComponent({
     actions,
     editing: false,
     mouseLatlng: mapConfiguration.center,
-    location: Point.create(),
+    location: Point.create(mapConfiguration.center),
   }),
   computed: {
     geoJson: {
@@ -161,7 +166,7 @@ export default defineComponent({
     },
     setLocation(geoJson: GeoJson) {
       if (!geoJson) {
-        this.location = Point.create();
+        this.location = Point.create(this.center);
         return;
       }
       switch (geoJson.type) {
@@ -179,7 +184,7 @@ export default defineComponent({
     reset(action: Action) {
       switch (action) {
         case POINT:
-          this.location = Point.create();
+          this.location = Point.create(this.center);
           break;
         case ROAD:
           this.location = Line.create();
@@ -196,6 +201,15 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.instructions {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.editing {
+  margin-top: 5px;
+}
+
 .map {
   height: 60vh;
 }
