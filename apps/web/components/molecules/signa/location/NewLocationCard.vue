@@ -18,8 +18,10 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { Point } from "~/utils/signa-location/point";
 import LocationMapEditor from "./LocationMapEditor.vue";
 import { CreateLocation } from "~/utils/models/signa-location.model";
+import { mapConfiguration } from "~/utils/models/signa-location.model";
 
 interface NewLocationCardDate {
   newLocation: CreateLocation;
@@ -27,7 +29,7 @@ interface NewLocationCardDate {
 
 const defaultLocation: CreateLocation = {
   name: "",
-  geoJson: null,
+  geoJson: Point.create(mapConfiguration.center),
 };
 
 export default defineComponent({
