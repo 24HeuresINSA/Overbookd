@@ -139,8 +139,12 @@ export default defineComponent({
   },
   mounted() {
     this.setLocation(this.geoJson);
+    this.initEditing();
   },
   methods: {
+    initEditing() {
+      this.editing = this.geoJson === null;
+    },
     updateZoom(zoom: number) {
       this.zoom = zoom;
     },
