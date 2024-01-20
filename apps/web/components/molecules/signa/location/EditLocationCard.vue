@@ -6,6 +6,10 @@
         v-model="newLocation.name"
         label="Nom du lieu"
       ></v-text-field>
+      <p class="instructions">
+        Pour activer et desactiver la modification sur la carte il faut utiliser
+        le clic droit.
+      </p>
       <LocationMapEditor v-model="newLocation.geoJson" />
     </v-card-text>
     <v-card-actions>
@@ -52,3 +56,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.instructions {
+  font-weight: bold;
+}
+</style>

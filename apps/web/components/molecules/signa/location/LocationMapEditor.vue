@@ -9,7 +9,9 @@
             :center="center"
             :options="{ name: 'LocationMapEditor' }"
             @click="userAction"
+            @contextmenu="switchEditing"
             @mousemove="userHover"
+            @update:zoom="updateZoom"
           >
             <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
             <l-marker v-if="isPointEdition" :lat-lng="coordinates"></l-marker>
@@ -18,11 +20,6 @@
               :lat-lngs="coordinates"
             ></l-polyline>
             <l-polygon v-if="isAreaEdition" :lat-lngs="coordinates"></l-polygon>
-            <l-circle
-              v-if="hoverCircle"
-              :lat-lng="hoverCircle.center"
-              :radius="hoverCircle.radius"
-            />
           </l-map>
         </div>
       </client-only>
@@ -69,7 +66,7 @@ interface LocationMapEditorData {
   zoom: number;
   center: Coordinate;
   actions: ActionItem[];
-  editionDone: boolean;
+  editing: boolean;
   mouseLatlng: Coordinate;
   location: Location;
 }
@@ -79,9 +76,6 @@ const actions: ActionItem[] = [
   { key: ROAD, value: "Route" },
   { key: AREA, value: "Zone" },
 ];
-
-const HOVER_CIRCLE_RADIUS = 10;
-const NEAR_LAT_LONG_DISTANCE = 0.0001;
 
 export default defineComponent({
   name: "LocationMapEditor",
@@ -99,7 +93,7 @@ export default defineComponent({
   data: (): LocationMapEditorData => ({
     ...mapConfiguration,
     actions,
-    editionDone: true,
+    editing: false,
     mouseLatlng: mapConfiguration.center,
     location: Point.create(),
   }),
@@ -110,6 +104,7 @@ export default defineComponent({
       },
       set(geoJson: GeoJson) {
         this.$emit("update:geo-json", geoJson);
+        this.setLocation(geoJson);
       },
     },
     action: {
@@ -129,41 +124,53 @@ export default defineComponent({
     isAreaEdition(): boolean {
       return this.action === AREA;
     },
+    previewNextCoordinate(): boolean {
+      if (isPointLocation(this.geoJson)) return false;
+
+      return this.editing;
+    },
     coordinates(): Coordinate | Coordinate[] {
       if (!this.geoJson) return mapConfiguration.center;
 
-      return isPointLocation(this.geoJson) ||
-        this.editionDone ||
-        this.hoverCircle
+      return isPointLocation(this.geoJson) || !this.editing
         ? this.geoJson.coordinates
         : [...this.geoJson.coordinates, this.mouseLatlng];
     },
-    hoverCircle() {
-      if (
-        !this.geoJson ||
-        isPointLocation(this.geoJson) ||
-        !this.location.isNear(this.mouseLatlng, NEAR_LAT_LONG_DISTANCE)
-      ) {
-        return null;
-      }
-      return {
-        center: this.mouseLatlng,
-        radius: HOVER_CIRCLE_RADIUS,
-      };
-    },
+  },
+  mounted() {
+    this.setLocation(this.geoJson);
   },
   methods: {
+    updateZoom(zoom: number) {
+      this.zoom = zoom;
+    },
+    switchEditing() {
+      this.editing = !this.editing;
+    },
     userHover({ latlng }: { latlng: Coordinate }) {
       this.mouseLatlng = latlng;
     },
     userAction({ latlng }: { latlng: Coordinate }) {
-      if (this.editionDone) return;
-      if (this.hoverCircle) {
-        this.editionDone = true;
-        return;
-      }
+      if (!this.editing) return;
       this.location.addCoordinate(latlng);
       this.geoJson = this.location.geoJson;
+    },
+    setLocation(geoJson: GeoJson) {
+      if (!geoJson) {
+        this.location = Point.create();
+        return;
+      }
+      switch (geoJson.type) {
+        case POINT:
+          this.location = Point.create(geoJson.coordinates);
+          break;
+        case "ROAD":
+          this.location = Line.create(geoJson.coordinates);
+          break;
+        case "AREA":
+          this.location = Polygon.create(geoJson.coordinates);
+          break;
+      }
     },
     reset(action: Action) {
       switch (action) {
@@ -178,7 +185,7 @@ export default defineComponent({
           break;
       }
       this.geoJson = this.location.geoJson;
-      this.editionDone = false;
+      this.editing = true;
     },
   },
 });
