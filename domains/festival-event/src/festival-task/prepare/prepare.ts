@@ -42,6 +42,10 @@ type AddMobilization = Omit<Mobilization, "id">;
 export class PrepareFestivalTask {
   constructor(private readonly festivalTasks: FestivalTasksForPrepare) {}
 
+  findById(id: FestivalTask["id"]): Promise<FestivalTask | null> {
+    return this.festivalTasks.findById(id);
+  }
+
   async updateGeneralSection(
     taskId: FestivalTask["id"],
     update: UpdateGeneral,

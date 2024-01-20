@@ -1,6 +1,39 @@
 import { FestivalTask, FestivalTaskDraft } from "@overbookd/festival-event";
+import { SELECT_ADHERENT } from "./adherent/adherent.query";
+import { SELECT_LOCATION } from "./location.query";
+import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 
-export const SELECT_FESTIVAL_TASK = {};
+export const SELECT_FESTIVAL_TASK = {
+  id: true,
+  status: true,
+  name: true,
+  teamCode: true,
+  administrator: {
+    select: SELECT_ADHERENT,
+  },
+  appointment: {
+    select: SELECT_LOCATION,
+  },
+  festivalActivity: {
+    select: SELECT_FESTIVAL_ACTIVITY,
+  },
+  contacts: {
+    select: {
+      contact: {
+        select: SELECT_ADHERENT,
+      },
+    },
+  },
+  globalInstruction: true,
+  inChargeInstruction: true,
+  inChargeVolunteers: {
+    select: {
+      volunteer: {
+        select: SELECT_ADHERENT,
+      },
+    },
+  },
+};
 
 export class FestivalTaskQueryBuilder {
   static create(task: FestivalTaskDraft) {
@@ -26,7 +59,16 @@ function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
     teamCode: task.general.team,
     festivalActivityId: task.festivalActivity.id,
     appointmentId: task.instructions.appointment.id,
-    global: task.instructions.global,
+    globalInstruction: task.instructions.global,
     inChargeInstruction: task.instructions.inCharge.instruction,
+  };
+}
+
+export const IS_NOT_DELETED = { isDeleted: false };
+
+export function buildFestivalTaskCondition(id: FestivalTask["id"]) {
+  return {
+    id,
+    ...IS_NOT_DELETED,
   };
 }

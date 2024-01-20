@@ -10,7 +10,8 @@ export type {
   PreviewForCommunication,
   LogisticInquiry,
   PreviewForLogistic,
-} from "./festival-activity.model";
+} from "./festival-event/festival-activity.model";
+export type { FestivalTaskCreationForm } from "./festival-event/festival-task.model";
 export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";
 export type {
