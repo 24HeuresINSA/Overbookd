@@ -33,26 +33,25 @@
 <script lang="ts">
 import Vue from "vue";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
-import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
-import { getReviewStatus as getFAReviewStatus } from "~/utils/festival-event/festival-activity.utils";
+import { getReviewStatus as getFaReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
   FaStatusLabel,
   faStatusLabels,
   BROUILLON as FA_BROUILLON,
-} from "~/utils/festival-event/festival-activity.model";
-import {
-  Ft,
-  FtStatusLabel,
-  ftStatusLabels,
-  BROUILLON as FT_BROUILLON,
-  FtStatus,
-} from "~/utils/models/ft.model";
+} from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { Team } from "~/utils/models/team.model";
 import {
+  DRAFT,
   FestivalActivity,
+  FestivalTask,
   isDraft,
   isRefused,
 } from "@overbookd/festival-event";
+import {
+  FtStatusLabel,
+  ftStatusLabels,
+  BROUILLON as FT_BROUILLON,
+} from "~/utils/festival-event/festival-task/festival-task.model";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -67,8 +66,8 @@ export default Vue.extend({
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
     },
-    mFT(): Ft {
-      return this.$accessor.ft.mFT;
+    mFT(): FestivalTask {
+      return this.$accessor.festivalTask.selectedTask;
     },
     isFA(): boolean {
       return this.festivalEvent === "FA";
@@ -79,7 +78,7 @@ export default Vue.extend({
         : `Fiche Tâche n°${this.$route.params.ftId}`;
     },
     name(): string {
-      return this.isFA ? this.mFA.general.name : this.mFT.name;
+      return this.isFA ? this.mFA.general.name : this.mFT.general.name;
     },
     statusLabel(): FaStatusLabel | FtStatusLabel {
       return this.isFA
@@ -99,7 +98,7 @@ export default Vue.extend({
     canAskForReview(): boolean {
       return this.isFA
         ? isDraft(this.mFA) || isRefused(this.mFA)
-        : this.mFT.status === FtStatus.DRAFT;
+        : this.mFT.status === DRAFT; // TODO for FT
     },
   },
   mounted() {
@@ -111,8 +110,8 @@ export default Vue.extend({
   methods: {
     getReviewerStatus(reviewer: Team): string {
       return this.isFA
-        ? getFAReviewStatus(this.mFA, reviewer.code).toLowerCase()
-        : getFTValidationStatus(this.mFT, reviewer.code).toLowerCase();
+        ? getFaReviewStatus(this.mFA, reviewer.code).toLowerCase()
+        : ""; // TODO for FT
     },
     async askForReview() {
       await this.$accessor.festivalActivity.askForReview();

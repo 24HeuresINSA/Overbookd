@@ -66,7 +66,7 @@
 import Vue from "vue";
 import VolunteerRequestChip from "~/components/atoms/chip/VolunteerRequestChip.vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
-import { isTaskValidatedBy } from "~/utils/festival-event/ft.utils";
+import { isTaskValidatedBy } from "~/utils/festival-event/festival-task/ft.utils";
 import {
   SortableFtTimeWindowHeader,
   ftTimeWindowsSorts,

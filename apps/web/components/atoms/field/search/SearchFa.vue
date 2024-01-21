@@ -1,15 +1,16 @@
 <template>
   <v-autocomplete
     :value="fa"
-    :items="FAs"
+    :items="fas"
     :loading="loading"
     chips
     clearable
     item-value="id"
-    :item-text="displayFAInformation"
+    :item-text="displayFaInformation"
     :label="label"
     :solo="boxed"
     :filled="boxed"
+    :filter="matchingFa"
     :disabled="disabled"
     return-object
     @change="propagateEvent"
@@ -22,11 +23,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { BaseFa } from "~/utils/models/fa.model";
+import { PreviewFestivalActivity } from "@overbookd/festival-event";
+import { SlugifyService } from "@overbookd/slugify";
 
-interface SearchFaData {
+type MinimalFa = Pick<PreviewFestivalActivity, "id" | "name">;
+
+type SearchFaData = {
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchFa",
@@ -40,7 +44,7 @@ export default Vue.extend({
       default: "Chercher une FA",
     },
     fa: {
-      type: Object as () => BaseFa | null,
+      type: Object as () => MinimalFa | null,
       default: () => null,
     },
     boxed: {
@@ -58,19 +62,27 @@ export default Vue.extend({
     };
   },
   computed: {
-    FAs() {
-      return this.$accessor.fa.FAs;
+    fas(): PreviewFestivalActivity[] {
+      return this.$accessor.festivalActivity.activities.forAll;
     },
   },
-  mounted() {
-    if (this.FAs.length) return;
-    this.$accessor.fa.fetchFAs();
+  async mounted() {
+    if (this.fas.length) return;
+    this.loading = true;
+    await this.$accessor.festivalActivity.fetchAllActivities();
+    this.loading = false;
   },
   methods: {
-    propagateEvent(fa: BaseFa | null) {
+    propagateEvent(fa: PreviewFestivalActivity | null) {
       this.$emit("change", fa);
     },
-    displayFAInformation({ id, name }: BaseFa): string {
+    matchingFa(fa: PreviewFestivalActivity, queryText: string | null) {
+      if (queryText === null) return true;
+      const search = SlugifyService.apply(queryText);
+      const searchable = SlugifyService.apply(`${fa.id} ${fa.name}`);
+      return searchable.includes(search);
+    },
+    displayFaInformation({ id, name }: PreviewFestivalActivity): string {
       return `${id} - ${name}`;
     },
   },

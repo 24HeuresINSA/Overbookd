@@ -50,7 +50,7 @@ import { FtStatus, ftStatusLabels } from "~/utils/models/ft.model";
 import {
   VALIDEE,
   faStatusLabels,
-} from "~/utils/festival-event/festival-activity.model";
+} from "~/utils/festival-event/festival-activity/festival-activity.model";
 
 interface StatsRowData {
   historyFA: Map<string, number>;

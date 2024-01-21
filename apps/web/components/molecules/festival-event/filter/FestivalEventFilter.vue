@@ -43,7 +43,7 @@ import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {
   FaStatusLabel,
   faStatusLabels,
-} from "~/utils/festival-event/festival-activity.model";
+} from "~/utils/festival-event/festival-activity/festival-activity.model";
 import {
   FtStatus,
   FtStatusLabel,

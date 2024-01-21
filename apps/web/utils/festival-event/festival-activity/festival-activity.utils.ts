@@ -25,7 +25,7 @@ import {
 import { CastReviewable } from "./reviewable";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-activity.model";
-import { castTimeWindowWithDate } from "./cast-time-windows";
+import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivity>,

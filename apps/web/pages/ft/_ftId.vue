@@ -1,118 +1,87 @@
 <template>
-  <div class="main">
-    <FestivalEventSidebar festival-event="FT" />
-    <v-container class="container ft">
-      <FtGeneralCard id="general" />
-      <ParentFaCard id="fa" />
-      <FtDetailCard id="detail" />
-      <FtTimeWindowCard id="timewindow" />
-      <FtLogisticsCard id="matos" title="Matos" />
-      <FeedbackCard id="feedback" form="FT" />
-    </v-container>
-    <FestivalEventBottomBar festival-event="FT" />
+  <div class="ft-content ft">
+    <FestivalEventSidebar festival-event="FT" class="sidebar" />
+    <v-container class="container ft"> </v-container>
     <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
-import FestivalEventBottomBar from "~/components/organisms/festival-event/FestivalEventBottomBar.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import FtDetailCard from "~/components/organisms/festival-event/ft/FtDetailCard.vue";
-import FtGeneralCard from "~/components/organisms/festival-event/ft/FtGeneralCard.vue";
-import FtLogisticsCard from "~/components/organisms/festival-event/ft/FtLogisticsCard.vue";
-import FtTimeWindowCard from "~/components/organisms/festival-event/ft/FtTimeWindowCard.vue";
-import ParentFaCard from "~/components/organisms/festival-event/ft/ParentFaCard.vue";
+import { FestivalTask } from "@overbookd/festival-event";
 
-export default Vue.extend({
-  name: "FT",
+export default defineComponent({
+  name: "Ft",
   components: {
     FestivalEventSidebar,
-    FtGeneralCard,
-    ParentFaCard,
-    FtDetailCard,
-    FtTimeWindowCard,
-    FtLogisticsCard,
     SnackNotificationContainer,
-    FeedbackCard,
-    FestivalEventBottomBar,
   },
   computed: {
-    mFT() {
-      return this.$accessor.ft.mFT;
+    selectedTask(): FestivalTask {
+      return this.$accessor.festivalTask.selectedTask;
     },
     ftId(): number {
       return +this.$route.params.ftId;
     },
-    title(): string {
-      const baseTitle = `FT ${this.ftId}`;
-      if (!this.mFT.name) return baseTitle;
-      return `${baseTitle} - ${this.mFT.name}`;
-    },
   },
   async mounted() {
-    await this.$accessor.ft.fetchFT(this.ftId);
-
-    if (this.mFT.id !== this.ftId) {
-      alert("Oups 😬 J'ai l'impression que cette FT n'existe pas...");
-      return this.$router.push({
-        path: "/ft",
+    await this.$accessor.festivalTask.fetchTask(this.ftId);
+    if (this.selectedTask.id !== this.ftId) {
+      this.$accessor.notif.pushNotification({
+        message: "Oups 😬 J'ai l'impression que cette FT n'existe pas...",
       });
+      this.$router.push({ path: "/ft" });
     }
-
-    this.retrieveValidatorsIfNeeded();
-    document.title = this.title;
-  },
-  methods: {
-    async retrieveValidatorsIfNeeded() {
-      if (this.$accessor.team.ftValidators.length) return;
-      return this.$accessor.team.fetchFtValidators();
-    },
+    document.title = `FT ${this.ftId} - ${this.selectedTask.general.name}`;
   },
 });
 </script>
 
 <style lang="scss" scoped>
-.main {
+$sidebar-width: 350px;
+
+.ft-content {
   display: flex;
-  height: calc(100vh - 124px);
-  overflow-y: hidden;
+  height: calc(100vh - #{$header-height} - #{$footer-height});
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.sidebar {
+  position: fixed;
+  width: $sidebar-width;
 }
 
 .container {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  overflow: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 50px;
-  > * {
-    margin-bottom: 30px;
-    &:last-child {
-      margin-bottom: 0px;
-    }
-  }
+  min-width: calc(100vw - #{$sidebar-width} - 90px);
+  padding: 12px;
+  margin-left: $sidebar-width;
+  gap: 20px;
 }
 
-.log-text {
-  margin-bottom: 8px;
-}
-
-@media only screen and (max-width: 965px) {
-  .container {
-    padding-bottom: 200px;
-  }
-}
-
-@media only screen and (max-width: 750px) {
-  .main {
+@media only screen and (max-width: $mobile-max-width) {
+  .ft-content {
     flex-direction: column;
     overflow-y: scroll;
+    height: auto;
   }
+
+  .sidebar {
+    position: relative;
+    width: 100%;
+    margin: unset;
+    margin-bottom: 20px;
+  }
+
   .container {
     overflow: visible;
+    margin: unset;
+    padding: unset;
   }
 }
 </style>

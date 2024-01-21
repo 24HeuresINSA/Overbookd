@@ -49,7 +49,7 @@ import CardErrorList from "~/components/molecules/festival-event/validation/Card
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ft.utils";
+} from "~/utils/festival-event/festival-task/ft.utils";
 import { Ft, FtCardType } from "~/utils/models/ft.model";
 import { SignaLocation } from "@overbookd/signa";
 import { Team } from "~/utils/models/team.model";

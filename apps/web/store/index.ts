@@ -11,6 +11,7 @@ import * as dialog from "./dialog";
 import * as fa from "./fa";
 import * as festivalActivity from "./festivalActivity";
 import * as ft from "./ft";
+import * as festivalTask from "./festivalTask";
 import * as gearRequest from "./gearRequest";
 import * as inventory from "./inventory";
 import * as needHelp from "./needHelp";
@@ -58,6 +59,7 @@ export const accessorType = getAccessorType({
     fa,
     festivalActivity,
     ft,
+    festivalTask,
     team,
     assignment,
     catalog,

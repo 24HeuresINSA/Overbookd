@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h1>Fiche Tâche</h1>
-
     <v-container
       style="
         display: flex;
@@ -11,8 +9,8 @@
     >
       <h2>FT: 420</h2>
       <h2>Validé et prêt a affectation</h2>
-      <v-icon v-for="(validator, i) of teams" :key="i" color="green">
-        {{ validator.icon }}
+      <v-icon v-for="(reviewer, i) of teams" :key="i" color="green">
+        {{ reviewer.icon }}
       </v-icon>
     </v-container>
 
@@ -210,5 +208,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style scoped></style>

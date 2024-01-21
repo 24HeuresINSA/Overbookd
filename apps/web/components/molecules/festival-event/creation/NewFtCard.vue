@@ -1,49 +1,88 @@
 <template>
   <v-card>
-    <v-card-title>Ajouter une nouvelle FT</v-card-title>
+    <v-card-title>Ajouter une nouvelle Fiche tâche</v-card-title>
     <v-card-text>
-      <v-text-field v-model="ftName" label="Nom de la FT"></v-text-field>
+      <v-text-field v-model="name" label="Nom de la FT" />
+      <SearchFa v-model="selectedFa" :boxed="false" label="FA associée" />
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn :disabled="!ftName" @click="createNewFT">Créer la FT</v-btn>
+      <v-btn :disabled="cantCreateFt" @click="createNewFt">Créer la FT</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Ft, FtCreation } from "~/utils/models/ft.model";
+import {
+  FestivalActivity,
+  FestivalTask,
+  PreviewFestivalActivity,
+} from "@overbookd/festival-event";
+import SearchFa from "~/components/atoms/field/search/SearchFa.vue";
+
+type MinimalFa = Pick<PreviewFestivalActivity, "id" | "name">;
+
+type NewFtCardData = {
+  name: string;
+  selectedFa: MinimalFa | null;
+};
 
 export default Vue.extend({
   name: "NewFtCard",
+  components: { SearchFa },
   props: {
-    faId: {
-      type: Number,
-      default: undefined,
+    withSelectedFa: {
+      type: Boolean,
+      default: false,
     },
   },
-  data: () => ({
-    ftName: "",
+  data: (): NewFtCardData => ({
+    name: "",
+    selectedFa: null,
   }),
   computed: {
-    mFT(): Ft {
-      return this.$accessor.ft.mFT;
+    selectedActivity(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
+    selectedTask(): FestivalTask {
+      return this.$accessor.festivalTask.selectedTask;
+    },
+    cantCreateFt(): boolean {
+      return !this.name || !this.selectedFa;
     },
   },
+  watch: {
+    selectedActivity() {
+      this.initSelectedFa();
+    },
+  },
+  mounted() {
+    this.initSelectedFa();
+  },
   methods: {
-    async createNewFT() {
-      if (!this.ftName) return;
-      const blankFT: FtCreation = {
-        name: this.ftName,
-        parentFaId: this.faId,
+    async createNewFt() {
+      if (!this.name || !this.selectedFa) return;
+      const blankFt = {
+        name: this.name,
+        festivalActivityId: this.selectedFa.id,
       };
 
-      await this.$accessor.ft.createFT(blankFT);
-      if (!this.mFT?.id) return;
+      await this.$accessor.festivalTask.create(blankFt);
+      if (!this.selectedTask.id) return;
 
       this.$emit("close-dialog");
-      this.$router.push({ path: `/ft/${this.mFT.id}` });
+      this.$router.push({ path: `/ft/${this.selectedTask.id}` });
+    },
+    initSelectedFa() {
+      if (!this.withSelectedFa) {
+        this.selectedFa = null;
+        return;
+      }
+      this.selectedFa = {
+        id: this.selectedActivity.id,
+        name: this.selectedActivity.general.name,
+      };
     },
   },
 });

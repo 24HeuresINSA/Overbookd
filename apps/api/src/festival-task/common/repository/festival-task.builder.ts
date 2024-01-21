@@ -2,6 +2,7 @@ import {
   DRAFT,
   FestivalTask,
   FestivalTaskDraft,
+  PreviewFestivalTask,
   PreviewFestivalTaskDraft,
   Contact,
   Volunteer,

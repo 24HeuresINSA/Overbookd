@@ -57,7 +57,7 @@
 import { defineComponent } from "vue";
 import FaTimeWindowFormFields from "~/components/molecules/festival-event/time-window/FaTimeWindowFormFields.vue";
 import { FestivalActivity } from "@overbookd/festival-event";
-import { activityCategories } from "~/utils/festival-event/festival-activity.model";
+import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { hasAtLeastOneItem } from "@overbookd/list";
 

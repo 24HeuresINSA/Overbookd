@@ -56,6 +56,7 @@ type FestivalActivityDetailsData = {
   isCalendarDialogOpen: boolean;
   reviewer?: Reviewer<"FA">;
   calendarMarker: Date;
+  isNewFtDialogOpen: boolean;
 };
 
 export default defineComponent({
@@ -78,6 +79,7 @@ export default defineComponent({
     isCalendarDialogOpen: false,
     reviewer: undefined,
     calendarMarker: new Date(),
+    isNewFtDialogOpen: false,
   }),
   computed: {
     mFA(): FestivalActivity {
@@ -151,6 +153,12 @@ export default defineComponent({
       const team = this.reviewer;
       if (!team) return;
       this.$accessor.festivalActivity.rejectBecause({ team, reason });
+    },
+    openNewFtDialog() {
+      this.isNewFtDialogOpen = true;
+    },
+    closeNewFtDialog() {
+      this.isNewFtDialogOpen = false;
     },
   },
 });

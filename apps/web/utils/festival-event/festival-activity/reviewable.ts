@@ -6,7 +6,7 @@ import {
   KeyEvent,
 } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
-import { castTimeWindowWithDate } from "./cast-time-windows";
+import { castTimeWindowWithDate } from "../cast-time-windows";
 
 function isPublic(
   general: HttpStringified<Reviewable["general"]>,

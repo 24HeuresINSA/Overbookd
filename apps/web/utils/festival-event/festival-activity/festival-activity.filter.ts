@@ -10,7 +10,7 @@ import {
   ReviewStatus,
   VALIDATED,
 } from "@overbookd/festival-event";
-import { Team } from "../models/team.model";
+import { Team } from "../../models/team.model";
 import { User } from "@overbookd/user";
 
 export type ReviewsFilter = {
