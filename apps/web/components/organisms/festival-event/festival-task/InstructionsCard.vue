@@ -7,21 +7,21 @@
         :location="instructions.appointment"
         label="Lieu"
         :boxed="false"
-        @change="updateAppointment($event)"
+        @change="updateAppointment"
       />
 
       <v-label>Description globale</v-label>
       <RichEditor
         :data="instructions.global ?? ''"
         class="mb-6"
-        @change="updateGlobal($event)"
+        @change="updateGlobal"
       />
 
       <v-label>Description du/des responsable(s) de la tâche</v-label>
       <RichEditor
         :data="instructions.inCharge.instruction ?? ''"
         class="mb-6"
-        @change="updateInChargeInstruction($event)"
+        @change="updateInChargeInstruction"
       />
     </v-card-text>
   </v-card>
