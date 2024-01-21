@@ -52,7 +52,7 @@ export class CreateFestivalTask {
       history: [FestivalTaskKeyEvents.created(author)],
       feedbacks: [],
       mobilizations: [],
-      gearInquiries: [],
+      inquiries: [],
     };
 
     return this.festivalTasks.add(festivalTask);

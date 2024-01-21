@@ -1,5 +1,9 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import {
+  BaseInquiryRequest,
+  InquiryRequest,
+} from "../../common/inquiry-request";
+import {
   Contact,
   FestivalTask,
   Mobilization,
@@ -7,6 +11,7 @@ import {
 } from "../festival-task";
 import {
   FestivalTaskNotFound,
+  GearAlreadyRequested,
   MobilizationAlreadyExist,
   SplitDurationIsNotPeriodDivider,
 } from "../festival-task.error";
@@ -90,6 +95,18 @@ export class PrepareFestivalTask {
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
     return this.festivalTasks.save({ ...task, mobilizations });
+  }
+
+  async addInquiry(
+    taskId: FestivalTask["id"],
+    inquiry: BaseInquiryRequest,
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Inquiries.build(task.inquiries);
+    const inquiries = builder.add(inquiry).json;
+    return this.festivalTasks.save({ ...task, inquiries: inquiries });
   }
 }
 
@@ -273,5 +290,27 @@ class SplitablePeriod {
       throw new SplitDurationIsNotPeriodDivider(splitDuration);
     }
     return;
+  }
+}
+
+class Inquiries {
+  private constructor(private inquiries: InquiryRequest[]) {}
+
+  static build(inquiries: InquiryRequest[]) {
+    return new Inquiries(inquiries);
+  }
+
+  add(inquiry: BaseInquiryRequest) {
+    if (this.has(inquiry)) throw new GearAlreadyRequested(inquiry.name);
+
+    return new Inquiries([...this.inquiries, inquiry]);
+  }
+
+  private has(inquiry: InquiryRequest): boolean {
+    return this.inquiries.some(({ slug }) => slug === inquiry.slug);
+  }
+
+  get json(): InquiryRequest[] {
+    return [...this.inquiries];
   }
 }

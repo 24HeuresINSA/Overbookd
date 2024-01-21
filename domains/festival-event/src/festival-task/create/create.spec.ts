@@ -65,7 +65,7 @@ describe("Create festival task", () => {
     });
 
     it("should init gearInquiries with empty list", () => {
-      expect(installEscapeGame.gearInquiries).toStrictEqual([]);
+      expect(installEscapeGame.inquiries).toStrictEqual([]);
     });
 
     it("should init volunteerInquiries with empty list", () => {

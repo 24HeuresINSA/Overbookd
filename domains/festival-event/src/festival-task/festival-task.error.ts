@@ -1,5 +1,6 @@
 import { Duration } from "@overbookd/period";
 import { FestivalTask } from "./festival-task";
+import { InquiryRequest } from "../common/inquiry-request";
 
 export class FestivalTaskError extends Error {}
 
@@ -20,5 +21,12 @@ export class SplitDurationIsNotPeriodDivider extends FestivalTaskError {
 export class MobilizationAlreadyExist extends FestivalTaskError {
   constructor() {
     super("❌ Un autre créneau existe sur cette même période");
+  }
+}
+
+export class GearAlreadyRequested extends FestivalTaskError {
+  constructor(name: InquiryRequest["name"]) {
+    const message = `❌ Une demande de matos existe déjà pour ${name}`;
+    super(message);
   }
 }
