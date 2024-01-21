@@ -53,7 +53,7 @@ export type Draft = {
   history: KeyEvent[];
   feedbacks: Feedback[];
   mobilizations: Mobilization[];
-  gearInquiries: InquiryRequest[];
+  inquiries: InquiryRequest[];
 };
 
 export type FestivalTask = Draft;

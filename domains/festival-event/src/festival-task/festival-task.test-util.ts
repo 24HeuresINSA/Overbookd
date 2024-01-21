@@ -64,6 +64,16 @@ export const humaGrass: Location = {
   name: "Huma grass",
 };
 
+export const ficelle = {
+  slug: "ficelle-en-mettre",
+  name: "ficelle (en metre)",
+};
+
+export const sacPoubelle = {
+  slug: "sac-poubelle-rouleau",
+  name: "Sac Poubelle (rouleau)",
+};
+
 export const escapeGame: FestivalActivity = {
   id: 1,
   name: "Escape game",
@@ -96,7 +106,7 @@ export const installEscapeGame: FestivalTask = {
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
   mobilizations: [],
-  gearInquiries: [],
+  inquiries: [],
 };
 
 export const uninstallEscapeGame: FestivalTask = {
@@ -120,7 +130,7 @@ export const uninstallEscapeGame: FestivalTask = {
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
   mobilizations: [],
-  gearInquiries: [],
+  inquiries: [{ ...sacPoubelle, quantity: 2 }],
 };
 
 export const presentEscapeGame: FestivalTask = {
@@ -146,5 +156,5 @@ export const presentEscapeGame: FestivalTask = {
   mobilizations: [
     { ...saturday11hsaturday18hMobilization, id: saturday11hsaturday18h.id },
   ],
-  gearInquiries: [],
+  inquiries: [],
 };

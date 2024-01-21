@@ -7,7 +7,7 @@ import {
 } from "../sections/supply";
 import { Signage, SignageCatalogItem, SignageType } from "../sections/signa";
 import { Location } from "../../common/location";
-import { InquiryRequest } from "../../common/inquiry-request";
+import { BaseInquiryRequest } from "../../common/inquiry-request";
 import { Contractor } from "../sections/in-charge";
 import { Adherent } from "../../common/adherent";
 import { Feedback } from "../../common/feedback";
@@ -94,7 +94,8 @@ type WithInquiryOwner = {
   owner: InquiryOwner;
 };
 
-export type PrepareInquiryRequestCreation = InquiryRequest & WithInquiryOwner;
+export type PrepareInquiryRequestCreation = BaseInquiryRequest &
+  WithInquiryOwner;
 
 export type AssignDrive = {
   slug: string;
