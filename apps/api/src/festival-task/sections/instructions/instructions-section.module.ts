@@ -10,7 +10,7 @@ import { PrismaLocations } from "../../common/repository/location/locations.pris
       provide: InstructionsSectionService,
       useFactory: (prepare: PrepareFestivalTask, locations: PrismaLocations) =>
         new InstructionsSectionService(prepare, locations),
-      inject: [PrepareFestivalTask],
+      inject: [PrepareFestivalTask, PrismaLocations],
     },
   ],
   imports: [FestivalTaskCommonModule],
