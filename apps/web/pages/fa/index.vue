@@ -403,16 +403,6 @@ h1 {
   margin-left: 15px;
 }
 
-.custom-container {
-  display: flex;
-  margin: 1%;
-}
-
-.sidebar {
-  padding: 0;
-  width: fit-content;
-}
-
 .activity {
   main {
     display: flex;
@@ -458,14 +448,6 @@ h1 {
 }
 
 @media only screen and (max-width: $mobile-max-width) {
-  .custom-container {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-  }
-
   .activity {
     &__listing {
       margin: 0;

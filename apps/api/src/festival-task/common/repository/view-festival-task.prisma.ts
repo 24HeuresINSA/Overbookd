@@ -4,6 +4,7 @@ import {
   PreviewFestivalTask,
 } from "@overbookd/festival-event";
 import {
+  IS_NOT_DELETED,
   SELECT_FESTIVAL_TASK,
   buildFestivalTaskCondition,
 } from "./festival-task.query";
@@ -13,8 +14,12 @@ import { FestivalTaskBuilder } from "./festival-task.builder";
 export class PrismaViewFestivalTasks implements FestivalTasksForView {
   constructor(private readonly prisma: PrismaService) {}
 
-  all(): Promise<PreviewFestivalTask[]> {
-    throw new Error("Method not implemented.");
+  async all(): Promise<PreviewFestivalTask[]> {
+    const tasks = await this.prisma.festivalTask.findMany({
+      where: IS_NOT_DELETED,
+      select: SELECT_FESTIVAL_TASK,
+    });
+    return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
   }
 
   async one(id: number): Promise<FestivalTask> {

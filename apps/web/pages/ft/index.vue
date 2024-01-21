@@ -1,181 +1,112 @@
 <template>
-  <div class="ft">
+  <div class="task ft">
     <h1>Fiches Tâches</h1>
 
-    <div class="custom_container">
-      <v-container class="sidebar">
-        <v-card>
-          <v-card-title>Filtres</v-card-title>
-          <v-card-text>
-            <v-text-field
-              v-model="filters.search"
-              label="Rechercher une FT"
-            ></v-text-field>
-            <SearchTeam
-              v-model="filters.team"
-              label="Équipe"
-              :boxed="false"
-            ></SearchTeam>
-
-            <h3>Statut</h3>
-            <v-list dense shaped>
-              <v-list-item-group v-model="filters.status">
-                <v-list-item :value="null">
-                  <v-list-item-title>Tous</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  v-for="[status, label] in statuses"
-                  :key="status"
-                  :value="status"
-                >
-                  <v-list-item-title>
-                    {{ label }}
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list-item-group>
-            </v-list>
-            <v-switch
-              v-if="canViewDeletedFt"
-              v-model="filters.isDeleted"
-              label="FT supprimées"
-            ></v-switch>
-            <v-switch v-model="filters.myFTs" label="Mes FT"></v-switch>
-          </v-card-text>
-        </v-card>
-      </v-container>
-
-      <v-card class="data-table">
+    <main>
+      <v-card class="task__listing">
         <v-data-table
           :headers="headers"
           :items="filteredFts"
           :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
-          class="elevation-1"
+          class="elevation-1 task__table"
+          @click:row="openFt"
+          @auxclick:row="openFtInNewTab"
         >
-          <template #item.status="{ item }">
+          <template #item.id="{ item }">
             <v-chip-group id="status">
-              <v-chip :color="getFtStatus(item.status)" small>
+              <v-chip id="status" :class="item.status.toLowerCase()" small>
                 {{ item.id }}
               </v-chip>
             </v-chip-group>
           </template>
 
-          <template #item.validation="{ item }">
-            <v-chip-group id="validators">
-              <v-chip
-                v-for="(validator, i) of validators"
-                :key="i"
-                small
-                :color="getValidatorStatus(item, validator)"
-              >
-                <v-icon small>
-                  {{ validator.icon }}
-                </v-icon>
+          <template #item.reviews>
+            <v-chip-group id="reviewers" column>
+              <v-chip v-for="reviewer of reviewers" :key="reviewer.code" small>
+                <v-icon small> {{ reviewer.icon }} </v-icon>
               </v-chip>
             </v-chip-group>
           </template>
 
-          <template #item.name="{ item }">
-            <nuxt-link :to="`/ft/${item.id}`" :class="deletedFTTextClass">
-              {{ item.name }}
-            </nuxt-link>
-          </template>
-
-          <template #item.fa="{ item }">
-            <v-chip v-if="item.fa" :to="`fa/${item.fa.id}`" small>
-              {{ item.fa.id }} - {{ item.fa.name }}
-            </v-chip>
-          </template>
-
           <template #item.team="{ item }">
-            {{ item.team?.name ?? "" }}
+            <TeamChip v-if="item.team" :team="item.team" with-name />
           </template>
 
-          <template #item.userInCharge="{ item }">
-            {{ displayUsername(item.userInCharge) }}
+          <template #item.administrator="{ item }">
+            {{ formatUsername(item.administrator) }}
           </template>
 
-          <template #item.action="{ item }">
-            <v-btn
-              v-if="filters.isDeleted === false"
-              icon
-              @click="preDeleteFT(item)"
-            >
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
-            <v-btn v-else icon @click="preRestoreFT(item)"
-              ><v-icon>mdi-delete-restore</v-icon></v-btn
-            >
+          <template #item.removal="{ item }">
+            <v-icon v-show="canRemoveFt" @click.stop="openRemovalDialog(item)">
+              mdi-delete
+            </v-icon>
           </template>
 
           <template #no-data> Aucune FT trouvée </template>
         </v-data-table>
       </v-card>
-    </div>
+    </main>
 
     <v-btn
       color="secondary"
       class="btn-plus"
       elevation="2"
       fab
-      @click="isNewFTDialogOpen = true"
+      @click="openNewFtDialog"
     >
       <v-icon> mdi-plus-thick</v-icon>
     </v-btn>
 
-    <v-dialog v-model="isNewFTDialogOpen" width="600">
-      <NewFtCard />
+    <v-dialog v-model="isNewFtDialogOpen" width="600">
+      <NewFtCard @close-dialog="closeNewFtDialog" />
     </v-dialog>
 
-    <v-dialog v-model="isDeleteDialogOpen" width="600">
-      <v-card>
-        <v-img src="/img/sure.jpeg"></v-img>
-        <v-card-title>t'es sûr bébé ?</v-card-title>
-        <v-card-actions>
-          <v-btn right text @click="deleteFT()">oui 😏</v-btn>
-        </v-card-actions>
-      </v-card>
+    <v-dialog v-model="isRemovalDialogOpen" max-width="600">
+      <ConfirmationMessage
+        confirm-color="error"
+        @close-dialog="closeRemovalDialog"
+        @confirm="removeFt"
+      >
+        <template #title>
+          Suppression de la FT #<strong>
+            {{ taskToRemove?.id }}
+          </strong>
+        </template>
+        <template #statement>
+          Tu es sur le point de supprimer la FT
+          <strong>{{ taskToRemove?.name }}</strong
+          >. Es-tu sûr de faire ça ?
+        </template>
+        <template #confirm-btn-content>
+          <v-icon left> mdi-delete </v-icon>Supprimer
+        </template>
+      </ConfirmationMessage>
     </v-dialog>
 
-    <v-dialog v-model="isRestoreDialogOpen" width="600">
-      <v-card>
-        <v-img src="/img/sure.jpeg"></v-img>
-        <v-card-title>t'es sûr bébé ?</v-card-title>
-        <v-card-actions>
-          <v-btn right text @click="restoreFT()">oui 😏</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <SnackNotificationContainer />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { SlugifyService } from "@overbookd/slugify";
-import { getFTValidationStatus } from "~/utils/festival-event/festival-task/ft.utils";
 import { Header } from "~/utils/models/data-table.model";
-import {
-  Ft,
-  FtStatus,
-  FtStatusLabel,
-  ftStatusLabels,
-} from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
 import { MyUserInformation, User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Searchable } from "~/utils/search/search.utils";
-import { AFFECT_VOLUNTEER, VIEW_DELETED_FT } from "@overbookd/permission";
+import { WRITE_FT } from "@overbookd/permission";
 import { FestivalTask, PreviewFestivalTask } from "@overbookd/festival-event";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 
 interface Data {
   headers: Header[];
-  selectedFT?: Ft;
-  isDeleteDialogOpen: boolean;
-  isRestoreDialogOpen: boolean;
-  isNewFTDialogOpen: boolean;
+  isNewFtDialogOpen: boolean;
+  isRemovalDialogOpen: boolean;
+  taskToRemove?: PreviewFestivalTask;
 
   filters: {
     search: string;
@@ -188,17 +119,21 @@ interface Data {
 
 export default Vue.extend({
   name: "Ft",
-  components: { SnackNotificationContainer, SearchTeam, NewFtCard },
+  components: {
+    SnackNotificationContainer,
+    NewFtCard,
+    ConfirmationMessage,
+    TeamChip,
+  },
   data(): Data {
     return {
       headers: [
-        { text: "Statut", value: "status" },
-        { text: "Validation", value: "validation" },
+        { text: "Statut", value: "id" },
+        { text: "Validations", value: "reviews", sortable: false },
         { text: "Nom", value: "name" },
-        { text: "FA", value: "fa" },
-        { text: "Resp", value: "userInCharge" },
         { text: "Equipe", value: "team" },
-        { text: "Action", value: "action", sortable: false },
+        { text: "Gestionnaire", value: "administrator", sortable: false },
+        { text: "Suppression", value: "removal", sortable: false },
       ],
       filters: {
         search: "",
@@ -207,10 +142,9 @@ export default Vue.extend({
         status: undefined,
         isDeleted: false,
       },
-      selectedFT: undefined,
-      isRestoreDialogOpen: false,
-      isDeleteDialogOpen: false,
-      isNewFTDialogOpen: false,
+      isNewFtDialogOpen: false,
+      isRemovalDialogOpen: false,
+      taskToRemove: undefined,
     };
   },
 
@@ -243,20 +177,11 @@ export default Vue.extend({
         );
       });
     },
-    statuses(): [FtStatus, FtStatusLabel][] {
-      return [...ftStatusLabels.entries()];
+    canRemoveFt(): boolean {
+      return this.$accessor.user.can(WRITE_FT);
     },
-    canViewDeletedFt(): boolean {
-      return this.$accessor.user.can(VIEW_DELETED_FT);
-    },
-    canAffect(): boolean {
-      return this.$accessor.user.can(AFFECT_VOLUNTEER);
-    },
-    validators(): Team[] {
+    reviewers(): Team[] {
       return this.$accessor.team.ftValidators;
-    },
-    deletedFTTextClass(): string {
-      return this.filters.isDeleted ? "invalid-text" : "valid-text";
     },
   },
 
@@ -294,41 +219,40 @@ export default Vue.extend({
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
-    getFtStatus(status: FtStatus): string {
-      return status.toLowerCase();
+    formatUsername(user?: User): string {
+      return user ? formatUsername(user) : "";
     },
 
-    getValidatorStatus(ft: Ft, validator: Team) {
-      return getFTValidationStatus(ft, validator.code).toLowerCase();
+    removeFt() {
+      if (!this.taskToRemove) return;
+      this.$accessor.festivalTask.remove(this.taskToRemove.id);
     },
 
-    displayUsername(user: User | null): string {
-      if (!user) return "";
-      return formatUsername(user);
+    openFt(ft: PreviewFestivalTask, _: unknown, event: PointerEvent) {
+      if (event.ctrlKey) {
+        return this.openFtInNewTab(event, { item: ft });
+      }
+      this.$router.push({ path: `/ft/${ft.id}` });
     },
 
-    preDeleteFT(ft: Ft) {
-      this.selectedFT = ft;
-      this.isDeleteDialogOpen = true;
+    openFtInNewTab(_: Event, { item: ft }: { item: PreviewFestivalTask }) {
+      const taskRoute = this.$router.resolve({ path: `/ft/${ft.id}` });
+      window.open(taskRoute.href, "_blank");
     },
 
-    async deleteFT() {
-      if (!this.selectedFT) return;
-      await this.$accessor.ft.deleteFT(this.selectedFT);
-      this.isDeleteDialogOpen = false;
-      this.selectedFT = undefined;
+    openNewFtDialog() {
+      this.isNewFtDialogOpen = true;
     },
-
-    preRestoreFT(ft: Ft) {
-      this.selectedFT = ft;
-      this.isRestoreDialogOpen = true;
+    closeNewFtDialog() {
+      this.isNewFtDialogOpen = false;
     },
-
-    async restoreFT() {
-      if (!this.selectedFT) return;
-      await this.$accessor.ft.restoreFT(this.selectedFT);
-      this.isRestoreDialogOpen = false;
-      this.selectedFT = undefined;
+    openRemovalDialog(ft: PreviewFestivalTask) {
+      this.taskToRemove = ft;
+      this.isRemovalDialogOpen = true;
+    },
+    closeRemovalDialog() {
+      this.isRemovalDialogOpen = false;
+      this.taskToRemove = undefined;
     },
   },
 });
@@ -336,31 +260,32 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 h1 {
-  margin-left: 12px;
+  margin-left: 15px;
 }
 
-.custom_container {
-  display: flex;
-  margin: 1%;
-
-  .sidebar {
-    padding: 0;
-    width: fit-content;
+.task {
+  main {
+    display: flex;
+    padding: 10px 30px 10px 10px;
+    gap: 15px;
+    @media screen and (max-width: $mobile-max-width) {
+      flex-direction: column;
+      padding: 10px;
+    }
   }
-
-  .data-table {
+  &__listing {
     margin-left: 20px;
-    margin-bottom: 45px;
+    margin-bottom: 40px;
     height: fit-content;
     width: 100vw;
-
-    .valid-text {
-      text-decoration: none;
-    }
-
-    .invalid-text {
-      text-decoration: line-through;
-    }
+    flex-grow: 3;
+  }
+  &__filtering {
+    flex-grow: 1;
+    min-width: 300px;
+  }
+  &__table {
+    cursor: pointer;
   }
 }
 
@@ -368,17 +293,14 @@ h1 {
   right: 20px;
   bottom: 45px;
   position: fixed;
+  @media screen and (max-width: $mobile-max-width) {
+    bottom: 70px;
+  }
 }
 
-@media only screen and (max-width: 800px) {
-  .custom_container {
-    flex-direction: column;
-
-    .sidebar {
-      width: 100%;
-    }
-
-    .data-table {
+@media only screen and (max-width: $mobile-max-width) {
+  .task {
+    &__listing {
       margin: 0;
       width: 100%;
     }
