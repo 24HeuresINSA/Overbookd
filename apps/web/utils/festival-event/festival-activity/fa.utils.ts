@@ -1,4 +1,4 @@
-import { Fa, FaRefuse, FaStatus, FaValidation } from "../models/fa.model";
+import { Fa, FaRefuse, FaStatus, FaValidation } from "../../models/fa.model";
 
 export function isAnimationValidatedBy(fa: Fa, teamCode: string): boolean {
   return (fa.faValidation ?? []).some(

@@ -106,7 +106,7 @@ function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
     administratorId: task.general.administrator.id,
     teamCode: task.general.team,
     festivalActivityId: task.festivalActivity.id,
-    appointmentId: task.instructions.appointment.id,
+    appointmentId: task.instructions.appointment?.id,
     globalInstruction: task.instructions.global,
     inChargeInstruction: task.instructions.inCharge.instruction,
   };

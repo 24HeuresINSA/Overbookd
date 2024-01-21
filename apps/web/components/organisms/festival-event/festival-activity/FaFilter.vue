@@ -61,11 +61,11 @@ import {
   findReviewStatus,
   findStatus,
   Filters,
-} from "~/utils/festival-event/festival-activity.filter";
+} from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import {
   ReviewLabel,
   reviewStatusLabel,
-} from "~/utils/festival-event/festival-activity.utils";
+} from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import { Team } from "~/utils/models/team.model";
 
 type ReviewerTeam = Team & {

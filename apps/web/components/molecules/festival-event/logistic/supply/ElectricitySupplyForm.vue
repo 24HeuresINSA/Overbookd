@@ -75,7 +75,7 @@ import { defineComponent } from "vue";
 import {
   electricityConnectionLabels,
   ElectricityConnectionWithLabel,
-} from "~/utils/festival-event/festival-activity.model";
+} from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { isNumber, min } from "~/utils/rules/input.rules";
 
 interface ElectricityNeedData {

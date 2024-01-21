@@ -33,7 +33,7 @@ import {
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequest } from "@overbookd/http";
-import { LinkDrive } from "~/utils/festival-event/festival-activity.model";
+import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 
 type Context = { $axios: NuxtAxiosInstance };

@@ -48,9 +48,6 @@ export default Vue.extend({
     ftItems: [
       { id: "general", text: "Général", icon: "mdi-card-text" },
       { id: "fa", text: "FA associée", icon: "mdi-chart-bubble" },
-      { id: "detail", text: "Détail", icon: "mdi-text-box" },
-      { id: "timewindow", text: "Créneaux", icon: "mdi-calendar-clock" },
-      { id: "matos", text: "Matos", icon: "mdi-truck" },
       { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
     ],
   }),

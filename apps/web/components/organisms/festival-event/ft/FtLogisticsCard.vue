@@ -37,7 +37,7 @@ import FTLogisticsTable from "~/components/molecules/festival-event/logistic/FTL
 import {
   getFTValidationStatus,
   isTaskValidatedBy,
-} from "~/utils/festival-event/ft.utils";
+} from "~/utils/festival-event/festival-task/ft.utils";
 import { Gear } from "~/utils/models/catalog.model";
 import { Ft } from "~/utils/models/ft.model";
 import { isNumber, min } from "~/utils/rules/input.rules";

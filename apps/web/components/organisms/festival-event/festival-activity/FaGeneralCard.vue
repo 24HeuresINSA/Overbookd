@@ -154,7 +154,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import AskPublicDataFormCard from "~/components/molecules/festival-event/public-activity/AskPublicDataFormCard.vue";
-import { activityCategories } from "~/utils/festival-event/festival-activity.model";
+import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 
 const comcomEmail = "communication@24heures.org";
 const humainEmail = "humain@24heures.org";

@@ -149,9 +149,9 @@ import {
   Filters,
   ReviewsFilter,
   findReviewStatus,
-} from "~/utils/festival-event/festival-activity.filter";
-import { isDraftPreview } from "~/utils/festival-event/festival-activity.model";
-import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity.utils";
+} from "~/utils/festival-event/festival-activity/festival-activity.filter";
+import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
+import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 
 interface FaData {
   headers: Header[];

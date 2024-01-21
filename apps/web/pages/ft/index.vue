@@ -40,32 +40,26 @@
               label="FT supprimées"
             ></v-switch>
             <v-switch v-model="filters.myFTs" label="Mes FT"></v-switch>
-            <v-switch
-              v-if="canAffect"
-              v-model="filters.myFTsToReview"
-              label="Mes FT à valider"
-            ></v-switch>
           </v-card-text>
         </v-card>
       </v-container>
 
       <v-card class="data-table">
-        <!--<v-btn color="green" width="100%" href="ft/ft_420">FT 420 🍃</v-btn>-->
         <v-data-table
           :headers="headers"
-          :items="filteredFTs"
+          :items="filteredFts"
           :footer-props="{ 'items-per-page-options': [20, 100, -1] }"
           class="elevation-1"
         >
-          <template #[`item.status`]="{ item }">
+          <template #item.status="{ item }">
             <v-chip-group id="status">
-              <v-chip :color="getFTStatus(item.status)" small>
+              <v-chip :color="getFtStatus(item.status)" small>
                 {{ item.id }}
               </v-chip>
             </v-chip-group>
           </template>
 
-          <template #[`item.validation`]="{ item }">
+          <template #item.validation="{ item }">
             <v-chip-group id="validators">
               <v-chip
                 v-for="(validator, i) of validators"
@@ -80,27 +74,27 @@
             </v-chip-group>
           </template>
 
-          <template #[`item.name`]="{ item }">
+          <template #item.name="{ item }">
             <nuxt-link :to="`/ft/${item.id}`" :class="deletedFTTextClass">
               {{ item.name }}
             </nuxt-link>
           </template>
 
-          <template #[`item.fa`]="{ item }">
+          <template #item.fa="{ item }">
             <v-chip v-if="item.fa" :to="`fa/${item.fa.id}`" small>
               {{ item.fa.id }} - {{ item.fa.name }}
             </v-chip>
           </template>
 
-          <template #[`item.team`]="{ item }">
+          <template #item.team="{ item }">
             {{ item.team?.name ?? "" }}
           </template>
 
-          <template #[`item.userInCharge`]="{ item }">
+          <template #item.userInCharge="{ item }">
             {{ displayUsername(item.userInCharge) }}
           </template>
 
-          <template #[`item.action`]="{ item }">
+          <template #item.action="{ item }">
             <v-btn
               v-if="filters.isDeleted === false"
               icon
@@ -112,6 +106,8 @@
               ><v-icon>mdi-delete-restore</v-icon></v-btn
             >
           </template>
+
+          <template #no-data> Aucune FT trouvée </template>
         </v-data-table>
       </v-card>
     </div>
@@ -149,7 +145,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <SnackNotificationContainer></SnackNotificationContainer>
+    <SnackNotificationContainer />
   </div>
 </template>
 
@@ -159,12 +155,10 @@ import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { SlugifyService } from "@overbookd/slugify";
-import { getFTValidationStatus } from "~/utils/festival-event/ft.utils";
+import { getFTValidationStatus } from "~/utils/festival-event/festival-task/ft.utils";
 import { Header } from "~/utils/models/data-table.model";
 import {
   Ft,
-  FtSearch,
-  FtSimplified,
   FtStatus,
   FtStatusLabel,
   ftStatusLabels,
@@ -174,6 +168,7 @@ import { MyUserInformation, User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
 import { Searchable } from "~/utils/search/search.utils";
 import { AFFECT_VOLUNTEER, VIEW_DELETED_FT } from "@overbookd/permission";
+import { FestivalTask, PreviewFestivalTask } from "@overbookd/festival-event";
 
 interface Data {
   headers: Header[];
@@ -187,8 +182,7 @@ interface Data {
     team?: Team;
     myFTs: boolean;
     isDeleted: boolean;
-    status?: FtStatus;
-    myFTsToReview: boolean;
+    status?: FestivalTask["status"];
   };
 }
 
@@ -212,7 +206,6 @@ export default Vue.extend({
         myFTs: false,
         status: undefined,
         isDeleted: false,
-        myFTsToReview: false,
       },
       selectedFT: undefined,
       isRestoreDialogOpen: false,
@@ -229,28 +222,24 @@ export default Vue.extend({
     me(): MyUserInformation {
       return this.$accessor.user.me;
     },
-    mFT(): Ft {
-      return this.$accessor.ft.mFT;
+    tasks(): PreviewFestivalTask[] {
+      return this.$accessor.festivalTask.tasks.forAll;
     },
-    FTs(): FtSimplified[] {
-      return this.$accessor.ft.FTs;
-    },
-    searchableFTs(): Searchable<FtSimplified>[] {
-      return this.FTs.map((ft) => ({
+    searchableFts(): Searchable<PreviewFestivalTask>[] {
+      return this.tasks.map((ft) => ({
         ...ft,
         searchable: SlugifyService.apply(`${ft.id} ${ft.name}`),
       }));
     },
-    filteredFTs(): FtSimplified[] {
-      const { search, team, myFTs, status, myFTsToReview } = this.filters;
+    filteredFts(): PreviewFestivalTask[] {
+      const { search, team, myFTs, status } = this.filters;
 
-      return this.searchableFTs.filter((ft) => {
+      return this.searchableFts.filter((ft) => {
         return (
-          this.filterFTByTeam(team)(ft) &&
-          this.filterFTByOwnership(myFTs)(ft) &&
-          this.filterFTByStatus(status)(ft) &&
-          this.filterFTByReviewer(myFTsToReview)(ft) &&
-          this.filterFTByName(search)(ft)
+          this.filterFtByTeam(team)(ft) &&
+          this.filterFtByOwnership(myFTs)(ft) &&
+          this.filterFtByStatus(status)(ft) &&
+          this.filterFtByName(search)(ft)
         );
       });
     },
@@ -271,52 +260,41 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    async "filters.isDeleted"() {
-      await this.fetchFTs();
-    },
-  },
-
   async mounted() {
-    await Promise.all([this.fetchFTs(), this.retrieveValidatorsIfNeeded()]);
+    await Promise.all([
+      this.$accessor.team.fetchFtValidators(),
+      this.$accessor.festivalTask.fetchAllTasks(),
+      this.$accessor.user.fetchAdherents(),
+    ]);
   },
 
   methods: {
-    filterFTByTeam(teamSearched?: Team): (ft: FtSimplified) => boolean {
-      return teamSearched
-        ? (ft) => ft.team?.code === teamSearched.code
+    filterFtByTeam(teamSearched?: Team): (ft: PreviewFestivalTask) => boolean {
+      return teamSearched ? (ft) => ft.team === teamSearched.code : () => true;
+    },
+
+    filterFtByOwnership(
+      searchMyFts: boolean,
+    ): (ft: PreviewFestivalTask) => boolean {
+      return searchMyFts
+        ? (ft) => ft.administrator.id === this.me.id
         : () => true;
     },
 
-    filterFTByOwnership(searchMyFTs: boolean): (ft: FtSimplified) => boolean {
-      return searchMyFTs
-        ? (ft) => ft.userInCharge?.id === this.me.id
-        : () => true;
-    },
-
-    filterFTByStatus(statusSearched?: FtStatus): (ft: FtSimplified) => boolean {
+    filterFtByStatus(
+      statusSearched?: FestivalTask["status"],
+    ): (ft: PreviewFestivalTask) => boolean {
       return statusSearched ? (ft) => ft.status === statusSearched : () => true;
     },
 
-    filterFTByReviewer(
-      searchMyFTsToReview: boolean,
-    ): (ft: FtSimplified) => boolean {
-      return searchMyFTsToReview
-        ? (ft) => ft.reviewer?.id === this.me.id
-        : () => true;
-    },
-
-    filterFTByName(search: string): (ft: Searchable<FtSimplified>) => boolean {
+    filterFtByName(
+      search: string,
+    ): (ft: Searchable<PreviewFestivalTask>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search);
       return ({ searchable }) => searchable.includes(slugifiedSearch);
     },
 
-    async retrieveValidatorsIfNeeded(): Promise<void> {
-      if (this.validators.length) return;
-      return this.$accessor.team.fetchFtValidators();
-    },
-
-    getFTStatus(status: FtStatus): string {
+    getFtStatus(status: FtStatus): string {
       return status.toLowerCase();
     },
 
@@ -327,14 +305,6 @@ export default Vue.extend({
     displayUsername(user: User | null): string {
       if (!user) return "";
       return formatUsername(user);
-    },
-
-    async fetchFTs() {
-      const searchParams: FtSearch = {
-        isDeleted: this.filters.isDeleted,
-        status: this.filters.status,
-      };
-      await this.$accessor.ft.fetchFTs(searchParams);
     },
 
     preDeleteFT(ft: Ft) {

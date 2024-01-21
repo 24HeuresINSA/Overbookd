@@ -1,6 +1,6 @@
 import { Draft, KeyEvent } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
-import { castTimeWindowWithDate } from "./cast-time-windows";
+import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export class CastDraft {
   static withDate(draft: HttpStringified<Draft>): Draft {

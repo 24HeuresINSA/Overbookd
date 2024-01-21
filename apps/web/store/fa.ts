@@ -1,7 +1,7 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
 import { safeCall } from "~/utils/api/calls";
-import { isAnimationValidatedBy } from "~/utils/festival-event/fa.utils";
+import { isAnimationValidatedBy } from "~/utils/festival-event/festival-activity/fa.utils";
 import {
   generateGearRequestCreationBuilder,
   isSimilarPeriod,
