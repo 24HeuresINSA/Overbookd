@@ -18,6 +18,7 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 import { updateItemToList } from "@overbookd/list";
+import { Adherent } from "../../common/adherent";
 
 type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -110,6 +111,23 @@ export class PrepareFestivalTask {
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addTeamTo(mobilizationId, team).json;
+
+    return this.festivalTasks.save({ ...task, mobilizations });
+  }
+
+  async addVolunteerToMobilization(
+    taskId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    volunteer: Volunteer,
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Mobilizations.build(task.mobilizations);
+    const mobilizations = builder.addVolunteerTo(
+      mobilizationId,
+      volunteer,
+    ).json;
 
     return this.festivalTasks.save({ ...task, mobilizations });
   }
@@ -269,6 +287,20 @@ class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
+  addVolunteerTo(mobilizationId: Mobilization["id"], volunteer: Adherent) {
+    const { index, value } = this.retrieveMobilization(mobilizationId);
+    if (index === -1 || !value) return this;
+
+    const builder = MobilizationFactory.build(value);
+    const mobilizations = updateItemToList(
+      this.mobilizations,
+      index,
+      builder.addVolunteer(volunteer).json,
+    );
+
+    return new Mobilizations(mobilizations);
+  }
+
   private retrieveMobilization(id: Mobilization["id"]): ListItem<Mobilization> {
     const index = this.mobilizations.findIndex(
       ({ id: currentId }) => currentId === id,
@@ -322,15 +354,27 @@ class MobilizationFactory {
   }
 
   addTeam(team: TeamMobilization) {
-    if (this.has(team)) throw new TeamAlreadyPartOfMobilization(team.team);
+    if (this.hasTeam(team)) throw new TeamAlreadyPartOfMobilization(team.team);
 
     const teams = [...this.mobilization.teams, team];
 
     return new MobilizationFactory({ ...this.mobilization, teams });
   }
 
-  private has({ team }: TeamMobilization) {
+  private hasTeam({ team }: TeamMobilization) {
     return this.mobilization.teams.some((request) => request.team === team);
+  }
+
+  addVolunteer(volunteer: Adherent) {
+    if (this.hasVolunteer(volunteer)) return this;
+
+    const volunteers = [...this.mobilization.volunteers, volunteer];
+
+    return new MobilizationFactory({ ...this.mobilization, volunteers });
+  }
+
+  private hasVolunteer(volunteer: Adherent) {
+    return this.mobilization.volunteers.some(({ id }) => id === volunteer.id);
   }
 
   get json(): Mobilization {
