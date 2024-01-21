@@ -65,6 +65,7 @@ import { PrismaRemoveFestivalTasks } from "./repository/remove-festival-tasks.pr
   imports: [PrismaModule],
   exports: [
     PrismaAdherents,
+    PrismaFestivalActivities,
     CreateFestivalTask,
     PrepareFestivalTask,
     PrismaRemoveFestivalTasks,
