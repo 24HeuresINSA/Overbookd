@@ -5,6 +5,7 @@ import {
   presentEscapeGame,
   friday11hfriday18hMobilization,
   saturday11hsaturday18hMobilization,
+  noel,
 } from "../festival-task.test-util";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
@@ -107,6 +108,46 @@ describe("Prepare festival task mobilizations list", () => {
           async () =>
             await prepare.addTeamToMobilization(task.id, mobilization.id, team),
         ).rejects.toThrow(TeamAlreadyPartOfMobilization);
+      });
+    });
+  });
+  describe("Add volunteer to existing mobilization", () => {
+    describe("when volunteer is not yet part of the mobilization", () => {
+      it("should add volunteer to the mobilization", async () => {
+        const task = presentEscapeGame;
+        const mobilization = presentEscapeGame.mobilizations[0];
+        const volunteer = {
+          firstname: "Georges",
+          lastname: "Hette",
+          nickname: "gh",
+          id: 100,
+        };
+
+        const { mobilizations } = await prepare.addVolunteerToMobilization(
+          task.id,
+          mobilization.id,
+          volunteer,
+        );
+
+        const mergedMobilization = {
+          ...mobilization,
+          volunteers: [...mobilization.volunteers, volunteer],
+        };
+        expect(mobilizations).toContainEqual(mergedMobilization);
+      });
+    });
+    describe("when volunteer is alredy part of the mobilization", () => {
+      it("should keep mobilization unchanged", async () => {
+        const task = presentEscapeGame;
+        const mobilization = presentEscapeGame.mobilizations[0];
+        const volunteer = noel;
+
+        const { mobilizations } = await prepare.addVolunteerToMobilization(
+          task.id,
+          mobilization.id,
+          volunteer,
+        );
+        expect(mobilizations).toStrictEqual(task.mobilizations);
       });
     });
   });
