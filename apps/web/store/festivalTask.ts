@@ -50,7 +50,7 @@ const fakeTask: FestivalTask = {
     },
   },
   feedbacks: [],
-  gearInquiries: [],
+  inquiries: [],
   history: [],
   mobilizations: [],
 };
