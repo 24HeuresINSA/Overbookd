@@ -50,15 +50,13 @@ export default Vue.extend({
       const appointmentId = appointment.id;
       this.$accessor.festivalTask.updateInstructions({ appointmentId });
     },
-    updateGlobal(global: string) {
-      this.$accessor.festivalTask.updateInstructions({
-        global: global.trim() || null,
-      });
+    updateGlobal(canBeEmpty: string) {
+      const global = canBeEmpty.trim() || null;
+      this.$accessor.festivalTask.updateInstructions({ global });
     },
-    updateInChargeInstruction(inCharge: string) {
-      this.$accessor.festivalTask.updateInstructions({
-        inCharge: inCharge.trim() || null,
-      });
+    updateInChargeInstruction(canBeEmpty: string) {
+      const inCharge = canBeEmpty.trim() || null;
+      this.$accessor.festivalTask.updateInstructions({ inCharge });
     },
   },
 });
