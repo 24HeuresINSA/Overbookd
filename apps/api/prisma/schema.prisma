@@ -689,10 +689,6 @@ model FestivalTask {
 
 enum FestivalTaskStatus {
   DRAFT
-  IN_REVIEW
-  VALIDATED
-  REFUSED
-  READY
 
   @@map("festival_task_status")
 }

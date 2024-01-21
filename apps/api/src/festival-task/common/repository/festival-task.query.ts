@@ -4,7 +4,7 @@ import {
   FestivalTaskDraft,
   Volunteer,
 } from "@overbookd/festival-event";
-import { SELECT_ADHERENT } from "./adherent/adherent.query";
+import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 
@@ -13,31 +13,13 @@ export const SELECT_FESTIVAL_TASK = {
   status: true,
   name: true,
   teamCode: true,
-  administrator: {
-    select: SELECT_ADHERENT,
-  },
-  appointment: {
-    select: SELECT_LOCATION,
-  },
-  festivalActivity: {
-    select: SELECT_FESTIVAL_ACTIVITY,
-  },
-  contacts: {
-    select: {
-      contact: {
-        select: SELECT_ADHERENT,
-      },
-    },
-  },
+  administrator: { select: SELECT_ADHERENT },
+  appointment: { select: SELECT_LOCATION },
+  festivalActivity: { select: SELECT_FESTIVAL_ACTIVITY },
+  contacts: { select: { contact: { select: SELECT_CONTACT } } },
   globalInstruction: true,
   inChargeInstruction: true,
-  inChargeVolunteers: {
-    select: {
-      volunteer: {
-        select: SELECT_ADHERENT,
-      },
-    },
-  },
+  inChargeVolunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
 };
 
 export class FestivalTaskQueryBuilder {

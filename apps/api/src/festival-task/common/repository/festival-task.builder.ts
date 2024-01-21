@@ -30,7 +30,7 @@ type DatabaseFestivalTask = {
   festivalActivity: DatabaseFestivalActivity;
   contacts: { contact: Contact }[];
   globalInstruction: FestivalTask["instructions"]["global"];
-  inChargeInstruction: FestivalTask["instructions"]["inCharge"];
+  inChargeInstruction: FestivalTask["instructions"]["inCharge"]["instruction"];
   inChargeVolunteers: { volunteer: Volunteer }[];
 };
 
@@ -69,7 +69,7 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
           volunteers: taskData.inChargeVolunteers.map(
             ({ volunteer }) => volunteer,
           ),
-          instruction: taskData.inChargeInstruction.instruction,
+          instruction: taskData.inChargeInstruction,
         },
       },
       festivalActivity: FestivalActivityBuilder.fromDatabase(
