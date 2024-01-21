@@ -31,7 +31,7 @@ export class DraftFestivalTaskResponseDto implements FestivalTaskDraft {
 
   mobilizations: FestivalTaskDraft["mobilizations"];
 
-  gearInquiries: FestivalTaskDraft["gearInquiries"];
+  inquiries: FestivalTaskDraft["inquiries"];
 
   history: FestivalTaskDraft["history"];
 

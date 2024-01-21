@@ -75,7 +75,7 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
       festivalActivity: FestivalActivityBuilder.fromDatabase(
         taskData.festivalActivity,
       ),
-      gearInquiries: [],
+      inquiries: [],
       mobilizations: [],
       feedbacks: [],
       history: [],
