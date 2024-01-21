@@ -31,12 +31,6 @@ type NewFtCardData = {
 export default Vue.extend({
   name: "NewFtCard",
   components: { SearchFa },
-  props: {
-    withSelectedFa: {
-      type: Boolean,
-      default: false,
-    },
-  },
   data: (): NewFtCardData => ({
     name: "",
     selectedFa: null,
@@ -52,14 +46,6 @@ export default Vue.extend({
       return !this.name || !this.selectedFa;
     },
   },
-  watch: {
-    selectedActivity() {
-      this.initSelectedFa();
-    },
-  },
-  mounted() {
-    this.initSelectedFa();
-  },
   methods: {
     async createNewFt() {
       if (!this.name || !this.selectedFa) return;
@@ -73,16 +59,6 @@ export default Vue.extend({
 
       this.$emit("close-dialog");
       this.$router.push({ path: `/ft/${this.selectedTask.id}` });
-    },
-    initSelectedFa() {
-      if (!this.withSelectedFa) {
-        this.selectedFa = null;
-        return;
-      }
-      this.selectedFa = {
-        id: this.selectedActivity.id,
-        name: this.selectedActivity.general.name,
-      };
     },
   },
 });

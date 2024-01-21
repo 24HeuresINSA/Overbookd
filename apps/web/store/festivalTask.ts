@@ -74,7 +74,7 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    /* FETCH */
+    /* VIEW */
     async fetchAllTasks({ commit }) {
       const res = await safeCall(this, repo.getAll(this));
       if (!res) return;

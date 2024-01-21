@@ -7,7 +7,7 @@ type Context = { $axios: NuxtAxiosInstance };
 export class FestivalTaskRepository {
   private static readonly basePath = "festival-tasks";
 
-  /* FETCH */
+  /* VIEW */
   static getAll(context: Context) {
     return context.$axios.get<HttpStringified<PreviewFestivalTask>[]>(
       this.basePath,
