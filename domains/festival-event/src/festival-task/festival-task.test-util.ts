@@ -65,7 +65,7 @@ export const humaGrass: Location = {
 };
 
 export const ficelle = {
-  slug: "ficelle-en-mettre",
+  slug: "ficelle-en-metre",
   name: "ficelle (en metre)",
 };
 
