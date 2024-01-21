@@ -19,7 +19,7 @@ import {
 import { GeneralSectionService } from "./general-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
-import { WRITE_FA } from "@overbookd/permission";
+import { WRITE_FT } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
@@ -40,7 +40,7 @@ export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_FA)
+  @Permission(WRITE_FT)
   @Patch(":id/general")
   @ApiResponse({
     status: 200,
