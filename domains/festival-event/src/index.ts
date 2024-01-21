@@ -198,6 +198,7 @@ export { CreateFestivalTask } from "./festival-task/create/create";
 export type {
   FestivalTasksForPrepare,
   UpdateGeneral,
+  UpdateInstructions,
 } from "./festival-task/prepare/prepare";
 export { PrepareFestivalTask } from "./festival-task/prepare/prepare";
 export type { FestivalTasksForView } from "./festival-task/view/view";

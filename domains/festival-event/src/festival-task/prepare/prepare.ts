@@ -26,7 +26,7 @@ export type UpdateGeneral = {
   team?: FestivalTask["general"]["team"];
 };
 
-type UpdateInstructions = {
+export type UpdateInstructions = {
   appointment?: FestivalTask["instructions"]["appointment"];
   global?: FestivalTask["instructions"]["global"];
   inCharge?: FestivalTask["instructions"]["inCharge"]["instruction"];

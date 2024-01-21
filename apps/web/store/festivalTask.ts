@@ -5,7 +5,11 @@ import {
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
-import { FestivalTaskCreationForm, UpdateGeneralForm } from "@overbookd/http";
+import {
+  FestivalTaskCreationForm,
+  UpdateGeneralForm,
+  UpdateInstructionsForm,
+} from "@overbookd/http";
 import { FestivalTaskRepository } from "~/repositories/festival-task.repository";
 import { castTaskWithDate } from "~/utils/festival-event/festival-task/festival-task.utils";
 
@@ -114,6 +118,22 @@ export const actions = actionTree(
     async updateGeneral({ state, commit }, general: UpdateGeneralForm) {
       const id = state.selectedTask.id;
       const res = await safeCall(this, repo.updateGeneral(this, id, general));
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    /* UPDATE INSTRUCTIONS */
+    async updateInstructions(
+      { state, commit },
+      instructions: UpdateInstructionsForm,
+    ) {
+      const id = state.selectedTask.id;
+      const res = await safeCall(
+        this,
+        repo.updateInstructions(this, id, instructions),
+      );
       if (!res) return;
 
       const task = castTaskWithDate(res.data);
