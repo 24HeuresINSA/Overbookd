@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import FtTimeSpanDetails from "~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue";
+import FtTimeSpanDetails from "~/components/organisms/festival-event/festival-task/FtTimeSpanDetails.vue";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { CalendarEvent } from "~/utils/models/calendar.model";

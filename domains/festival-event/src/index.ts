@@ -195,7 +195,10 @@ export type { ReviewingFestivalActivities } from "./festival-activity/reviewing/
 export { FestivalTaskError } from "./festival-task/festival-task.error";
 export type { FestivalTasksForCreate } from "./festival-task/create/create";
 export { CreateFestivalTask } from "./festival-task/create/create";
-export type { FestivalTasksForPrepare } from "./festival-task/prepare/prepare";
+export type {
+  FestivalTasksForPrepare,
+  UpdateGeneral,
+} from "./festival-task/prepare/prepare";
 export { PrepareFestivalTask } from "./festival-task/prepare/prepare";
 export type { FestivalTasksForView } from "./festival-task/view/view";
 export { ViewFestivalTask } from "./festival-task/view/view";

@@ -48,7 +48,7 @@
 import Vue from "vue";
 import { IProvidePeriod } from "@overbookd/period";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import FtTimeSpanDetails from "~/components/organisms/festival-event/ft/FtTimeSpanDetails.vue";
+import FtTimeSpanDetails from "~/components/organisms/festival-event/festival-task/FtTimeSpanDetails.vue";
 import {
   TimelineEvent,
   TimelineFt,
