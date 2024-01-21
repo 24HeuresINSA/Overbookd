@@ -10,7 +10,7 @@ import { PrismaAdherents } from "../../common/repository/adherent/adherents.pris
       provide: GeneralSectionService,
       useFactory: (prepare: PrepareFestivalTask, adherents: PrismaAdherents) =>
         new GeneralSectionService(prepare, adherents),
-      inject: [PrepareFestivalTask],
+      inject: [PrepareFestivalTask, PrismaAdherents],
     },
   ],
   imports: [FestivalTaskCommonModule],
