@@ -11,6 +11,7 @@ import { PrepareFestivalTask } from "./prepare";
 import {
   MobilizationAlreadyExist,
   SplitDurationIsNotPeriodDivider,
+  TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 
 describe("Prepare festival task mobilizations list", () => {
@@ -73,6 +74,39 @@ describe("Prepare festival task mobilizations list", () => {
               saturday11hsaturday18hMobilization,
             ),
         ).rejects.toThrow(MobilizationAlreadyExist);
+      });
+    });
+  });
+  describe("Add team to existing mobilization", () => {
+    describe("when team is not yet part of the mobilization", () => {
+      it("should add team to the mobilization", async () => {
+        const task = presentEscapeGame;
+        const mobilization = presentEscapeGame.mobilizations[0];
+        const team = { team: "hard", count: 2 };
+
+        const { mobilizations } = await prepare.addTeamToMobilization(
+          task.id,
+          mobilization.id,
+          team,
+        );
+
+        const mergedMobilization = {
+          ...mobilization,
+          teams: [...mobilization.teams, team],
+        };
+        expect(mobilizations).toContainEqual(mergedMobilization);
+      });
+    });
+    describe("when team is already part of the mobilization", () => {
+      it("should indicate that team is already part of the mobilization", async () => {
+        const task = presentEscapeGame;
+        const mobilization = task.mobilizations[0];
+        const team = { team: "bénévole", count: 5 };
+
+        expect(
+          async () =>
+            await prepare.addTeamToMobilization(task.id, mobilization.id, team),
+        ).rejects.toThrow(TeamAlreadyPartOfMobilization);
       });
     });
   });
