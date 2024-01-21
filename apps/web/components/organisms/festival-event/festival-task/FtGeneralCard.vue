@@ -19,19 +19,19 @@
       <v-text-field
         :value="general.name"
         label="Nom de la FT"
-        @change="updateName($event)"
+        @change="updateName"
       />
       <SearchUser
         :user="general.administrator"
         label="Responsable de la FT"
         :boxed="false"
-        @change="updateAdministrator($event)"
+        @change="updateAdministrator"
       />
       <SearchTeam
         :team="general.team"
         label="Équipe"
         :boxed="false"
-        @change="updateTeam($event)"
+        @change="updateTeam"
       />
     </v-card-text>
   </v-card>
