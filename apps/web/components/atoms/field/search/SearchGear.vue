@@ -12,6 +12,7 @@
     :solo="boxed"
     return-object
     :dense="dense"
+    :filter="matchingGear"
     :hide-details="dense"
     @update:search-input="searchGear"
     @change="propagateEvent"
@@ -32,6 +33,7 @@
 </template>
 
 <script lang="ts">
+import { SlugifyService } from "@overbookd/slugify";
 import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalogGear";
 import { Gear } from "~/utils/models/catalog.model";
@@ -109,6 +111,11 @@ export default Vue.extend({
     },
     propagateEvent(gear: Gear) {
       this.$emit("change", gear);
+    },
+    matchingGear(gear: Gear, queryText: string | null) {
+      if (queryText === null) return true;
+      const search = SlugifyService.apply(queryText);
+      return gear.slug.includes(search);
     },
   },
 });
