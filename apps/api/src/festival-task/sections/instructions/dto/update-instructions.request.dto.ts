@@ -23,7 +23,7 @@ export class InstructionsRequestDto implements UpdateInstructionsForm {
     description: "In charge volunteers",
     required: false,
   })
-  @IsNumber()
+  @IsString()
   @IsOptional()
   inCharge?: string;
 }

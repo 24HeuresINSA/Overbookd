@@ -19,12 +19,12 @@ import {
 import { InstructionsSectionService } from "./instructions-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 import { WRITE_FT } from "@overbookd/permission";
-import { FestivalTask } from "@prisma/client";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
+import { FestivalTask } from "@overbookd/festival-event";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -61,8 +61,8 @@ export class InstructionsSectionController {
   })
   save(
     @Param("id", ParseIntPipe) id: FestivalTask["id"],
-    @Body() general: InstructionsRequestDto,
+    @Body() instructions: InstructionsRequestDto,
   ): Promise<FestivalTask> {
-    return this.instructionsService.save(id, general);
+    return this.instructionsService.save(id, instructions);
   }
 }

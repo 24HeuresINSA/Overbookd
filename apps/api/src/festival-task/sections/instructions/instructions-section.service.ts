@@ -1,18 +1,26 @@
 import { Injectable } from "@nestjs/common";
-import {
-  FestivalTask,
-  PrepareFestivalTask,
-  UpdateInstructions,
-} from "@overbookd/festival-event";
+import { FestivalTask, PrepareFestivalTask } from "@overbookd/festival-event";
+import { UpdateInstructionsForm } from "@overbookd/http";
+import { Locations } from "../../common/festival-task-common.model";
 
 @Injectable()
 export class InstructionsSectionService {
-  constructor(private readonly prepare: PrepareFestivalTask) {}
+  constructor(
+    private readonly prepare: PrepareFestivalTask,
+    private readonly locations: Locations,
+  ) {}
 
-  save(
+  async save(
     id: FestivalTask["id"],
-    instructions: UpdateInstructions,
+    instructions: UpdateInstructionsForm,
   ): Promise<FestivalTask> {
-    return this.prepare.updateInstructionsSection(id, instructions);
+    const appointment = instructions.appointmentId
+      ? { appointment: await this.locations.find(instructions.appointmentId) }
+      : {};
+
+    return this.prepare.updateInstructionsSection(id, {
+      ...instructions,
+      ...appointment,
+    });
   }
 }
