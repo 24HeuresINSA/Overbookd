@@ -112,7 +112,7 @@ function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
   };
 }
 
-const IS_NOT_DELETED = { isDeleted: false };
+export const IS_NOT_DELETED = { isDeleted: false };
 
 export function buildFestivalTaskCondition(id: FestivalTask["id"]) {
   return {

@@ -6,16 +6,20 @@ import { InstructionsSectionModule } from "./sections/instructions/instructions-
 import { FestivalTaskCommonModule } from "./common/festival-task-common.module";
 import { FestivalTaskOverviewModule } from "./overview/festival-activity-overview.module";
 import { FestivalTaskOverviewController } from "./overview/festival-task-overview.controller";
+import { FestivalTaskPreviewModule } from "./preview/festival-task-preview.module";
+import { FestivalTaskPreviewController } from "./preview/festival-task-preview.controller";
 
 @Module({
   controllers: [
     FestivalTaskOverviewController,
+    FestivalTaskPreviewController,
     GeneralSectionController,
     InstructionsSectionController,
   ],
   imports: [
     FestivalTaskCommonModule,
     FestivalTaskOverviewModule,
+    FestivalTaskPreviewModule,
     GeneralSectionModule,
     InstructionsSectionModule,
   ],
