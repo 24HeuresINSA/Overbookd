@@ -2,22 +2,20 @@
   <div>
     <h1>Récap Matos</h1>
     <GearFilter v-model="filter" @change="searchGears" />
-    <v-expansion-panels>
-      <v-expansion-panel v-for="preview in previews" :key="preview.slug">
-        <v-expansion-panel-header>
-          <div class="gear-recap__header-content">
-            <h2>{{ preview.name }}</h2>
-            <div v-show="preview.isConsumable" class="icon">
-              <v-icon size="24"> mdi-delete-empty-outline </v-icon>
-              <span class="icon-detail">Consommable</span>
-            </div>
-          </div>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          Contenu à définir
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <v-data-table
+      :items="previews"
+      :headers="headers"
+      show-expand
+      :name="filter.name"
+    >
+      <template #item.isConsumable="{ item }">
+        <div v-show="item.isConsumable" class="icon">
+          <v-icon size="24"> mdi-delete-empty-outline </v-icon>
+          <span class="icon-detail">Consommable</span>
+        </div>
+      </template>
+      <template #expanded-item>{{ details }}</template>
+    </v-data-table>
   </div>
 </template>
 
@@ -26,7 +24,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalogGear";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
-import { GearPreview } from "@overbookd/http";
+import { GearDetails, GearPreview } from "@overbookd/http";
 
 interface GearRecapData {
   filter: FilterGear;
@@ -50,6 +48,19 @@ export default Vue.extend({
   computed: {
     previews(): GearPreview[] {
       return this.$accessor.logisticDashboard.previews;
+    },
+    details(): GearDetails[] {
+      const selectedGear = this.$accessor.logisticDashboard.selectedGear;
+
+      if (!selectedGear) return [];
+      return selectedGear.details;
+    },
+    headers() {
+      return [
+        { text: "Matos", value: "name" },
+        { text: "Matos consommable", value: "isConsumable" },
+        { text: "Delta", value: "stockDiscrepancy" },
+      ];
     },
     canSearch(): boolean {
       const { name, category, team } = this.filter;
