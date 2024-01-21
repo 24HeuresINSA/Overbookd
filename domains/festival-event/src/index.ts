@@ -204,7 +204,6 @@ export type {
   Draft as FestivalTaskDraft,
   PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
-  PreviewFestivalTask,
   Contact,
   Volunteer,
 } from "./festival-task/festival-task";
