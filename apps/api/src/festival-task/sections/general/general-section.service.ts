@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
+import { PrepareFestivalTask } from "@overbookd/festival-event";
 
 @Injectable()
 export class GeneralSectionService {
-  constructor() {}
+  constructor(private readonly prepare: PrepareFestivalTask) {}
 }
