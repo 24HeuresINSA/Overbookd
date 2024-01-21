@@ -14,6 +14,7 @@ export class DraftGeneralResponseDto implements DraftGeneral {
   @ApiProperty({
     description: "The festival task team",
     type: String,
+    required: false,
   })
   team: DraftGeneral["team"];
 

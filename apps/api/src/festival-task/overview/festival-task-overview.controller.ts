@@ -18,7 +18,6 @@ import {
   ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
-  getSchemaPath,
   ApiParam,
   ApiBody,
 } from "@nestjs/swagger";
@@ -75,9 +74,7 @@ export class FestivalTaskOverviewController {
   @ApiResponse({
     status: 200,
     description: "A festival task",
-    schema: {
-      oneOf: [{ $ref: getSchemaPath(DraftFestivalTaskResponseDto) }],
-    },
+    type: DraftFestivalTaskResponseDto,
   })
   @ApiParam({
     name: "id",
@@ -97,9 +94,7 @@ export class FestivalTaskOverviewController {
   @ApiResponse({
     status: 201,
     description: "A festival task",
-    schema: {
-      oneOf: [{ $ref: getSchemaPath(DraftFestivalTaskResponseDto) }],
-    },
+    type: DraftFestivalTaskResponseDto,
   })
   @ApiBody({
     description: "Festival task to create",
@@ -109,7 +104,7 @@ export class FestivalTaskOverviewController {
     @Body() form: CreateFestivalTaskRequestDto,
     @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.overviewService.create(user, form);
+    return this.overviewService.createOne(user, form);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -127,6 +122,6 @@ export class FestivalTaskOverviewController {
     required: true,
   })
   remove(@Param("id", ParseIntPipe) id: FestivalTask["id"]): Promise<void> {
-    return this.overviewService.remove(id);
+    return this.overviewService.removeOn(id);
   }
 }

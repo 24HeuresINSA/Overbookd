@@ -9,5 +9,5 @@ export type Adherents = {
 };
 
 export type RemoveFestivalTasks = {
-  remove(id: FestivalTask["id"]): Promise<void>;
+  apply(id: FestivalTask["id"]): Promise<void>;
 };

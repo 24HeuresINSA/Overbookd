@@ -197,10 +197,13 @@ export type { FestivalTasksForCreate } from "./festival-task/create/create";
 export { CreateFestivalTask } from "./festival-task/create/create";
 export type { FestivalTasksForPrepare } from "./festival-task/prepare/prepare";
 export { PrepareFestivalTask } from "./festival-task/prepare/prepare";
+export type { FestivalTasksForView } from "./festival-task/view/view";
+export { ViewFestivalTask } from "./festival-task/view/view";
 export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
   PreviewDraft as PreviewFestivalTaskDraft,
+  PreviewFestivalTask,
   Contact,
   Volunteer,
 } from "./festival-task/festival-task";

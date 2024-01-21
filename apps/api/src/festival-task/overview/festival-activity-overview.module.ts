@@ -3,7 +3,7 @@ import { FestivalTaskOverviewService } from "./festival-activity-overview.servic
 import { PrismaAdherents } from "../common/repository/adherent/adherents.prisma";
 import {
   CreateFestivalTask,
-  PrepareFestivalTask,
+  ViewFestivalTask,
 } from "@overbookd/festival-event";
 import { PrismaRemoveFestivalTasks } from "../common/repository/remove-festival-tasks.prisma";
 import { PrismaFestivalActivities } from "../common/repository/festival-activity/festival-activities.prisma";
@@ -16,22 +16,22 @@ import { FestivalTaskCommonModule } from "../common/festival-task-common.module"
       useFactory: (
         adherents: PrismaAdherents,
         festivalActivities: PrismaFestivalActivities,
-        creation: CreateFestivalTask,
-        preparation: PrepareFestivalTask,
-        removal: PrismaRemoveFestivalTasks,
+        create: CreateFestivalTask,
+        view: ViewFestivalTask,
+        remove: PrismaRemoveFestivalTasks,
       ) =>
         new FestivalTaskOverviewService(
           adherents,
           festivalActivities,
-          creation,
-          preparation,
-          removal,
+          create,
+          view,
+          remove,
         ),
       inject: [
         PrismaAdherents,
         PrismaFestivalActivities,
         CreateFestivalTask,
-        PrepareFestivalTask,
+        ViewFestivalTask,
         PrismaRemoveFestivalTasks,
       ],
     },

@@ -5,8 +5,8 @@ import {
   PreviewFestivalTaskDraft,
   Contact,
   Volunteer,
+  PreviewFestivalTask,
 } from "@overbookd/festival-event";
-import { PreviewFestivalTask } from "@overbookd/festival-event/src/festival-task/festival-task";
 import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
 

@@ -6,7 +6,7 @@ import { buildFestivalTaskCondition } from "./festival-task.query";
 export class PrismaRemoveFestivalTasks implements RemoveFestivalTasks {
   constructor(private readonly prisma: PrismaService) {}
 
-  async remove(id: FestivalActivity["id"]): Promise<void> {
+  async apply(id: FestivalActivity["id"]): Promise<void> {
     await this.prisma.festivalTask.update({
       where: buildFestivalTaskCondition(id),
       data: { isDeleted: true },

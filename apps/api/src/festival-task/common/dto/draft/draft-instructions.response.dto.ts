@@ -9,14 +9,14 @@ type InCharge = DraftInstructions["inCharge"];
 
 class InChargeDto implements InCharge {
   @ApiProperty({
-    description: "The draft instructions in charge volunteers",
+    description: "List of volunteers in charge of the task",
     type: AdherentResponseDto,
     isArray: true,
   })
   volunteers: InCharge["volunteers"];
 
   @ApiProperty({
-    description: "The draft instructions in charge instruction",
+    description: "Dedicated instruction for volunteers in charge of the task",
     type: String,
   })
   instruction: InCharge["instruction"];
@@ -24,20 +24,20 @@ class InChargeDto implements InCharge {
 
 export class DraftInstructionsResponseDto implements DraftInstructions {
   @ApiProperty({
-    description: "The draft instructions id",
+    description: "Appointment location",
     type: AppointmentResponseDto,
   })
   appointment: DraftInstructions["appointment"];
 
   @ApiProperty({
-    description: "The draft instructions contacts",
+    description: "Volunteers to contact in case of issue",
     type: ContactResponseDto,
     isArray: true,
   })
   contacts: DraftInstructions["contacts"];
 
   @ApiProperty({
-    description: "The draft instructions global",
+    description: "Instruction to handle the task",
     type: String,
   })
   global: DraftInstructions["global"];

@@ -8,7 +8,7 @@ import {
   CreateFestivalTask,
   FestivalTask,
   FestivalTaskDraft,
-  PrepareFestivalTask,
+  ViewFestivalTask,
 } from "@overbookd/festival-event";
 import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
 import { FestivalTaskCreationForm } from "@overbookd/http";
@@ -18,16 +18,16 @@ export class FestivalTaskOverviewService {
   constructor(
     private readonly adherents: Adherents,
     private readonly festivalActivities: FestivalActivities,
-    private readonly creation: CreateFestivalTask,
-    private readonly preparation: PrepareFestivalTask,
-    private readonly removal: RemoveFestivalTasks,
+    private readonly create: CreateFestivalTask,
+    private readonly view: ViewFestivalTask,
+    private readonly remove: RemoveFestivalTasks,
   ) {}
 
   findById(id: FestivalTask["id"]): Promise<FestivalTask | null> {
-    return this.preparation.findById(id);
+    return this.view.one(id);
   }
 
-  async create(
+  async createOne(
     { id }: JwtPayload,
     { name, festivalActivityId }: FestivalTaskCreationForm,
   ): Promise<FestivalTaskDraft> {
@@ -35,16 +35,14 @@ export class FestivalTaskOverviewService {
     const festivalActivity =
       await this.festivalActivities.find(festivalActivityId);
 
-    const activity = await this.creation.apply({
+    return this.create.apply({
       author,
       name,
       festivalActivity,
     });
-
-    return activity;
   }
 
-  async remove(id: FestivalTask["id"]): Promise<void> {
-    await this.removal.remove(id);
+  async removeOn(id: FestivalTask["id"]): Promise<void> {
+    await this.remove.apply(id);
   }
 }
