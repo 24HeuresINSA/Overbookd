@@ -2,9 +2,7 @@ import { Module } from "@nestjs/common";
 import { FestivalTaskOverviewService } from "./festival-activity-overview.service";
 import { PrismaAdherents } from "../common/repository/adherent/adherents.prisma";
 import {
-  CreateFestivalActivity,
   CreateFestivalTask,
-  PrepareFestivalActivity,
   PrepareFestivalTask,
 } from "@overbookd/festival-event";
 import { PrismaRemoveFestivalTasks } from "../common/repository/remove-festival-tasks.prisma";
@@ -32,8 +30,8 @@ import { FestivalTaskCommonModule } from "../common/festival-task-common.module"
       inject: [
         PrismaAdherents,
         PrismaFestivalActivities,
-        CreateFestivalActivity,
-        PrepareFestivalActivity,
+        CreateFestivalTask,
+        PrepareFestivalTask,
         PrismaRemoveFestivalTasks,
       ],
     },
