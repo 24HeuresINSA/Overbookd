@@ -132,7 +132,7 @@ export default Vue.extend({
         { text: "Validations", value: "reviews", sortable: false },
         { text: "Nom", value: "name" },
         { text: "Equipe", value: "team" },
-        { text: "Responsable", value: "administrator", sortable: false },
+        { text: "Gestionnaire", value: "administrator", sortable: false },
         { text: "Suppression", value: "removal", sortable: false },
       ],
       filters: {
