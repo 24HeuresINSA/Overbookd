@@ -1,15 +1,26 @@
 import { Injectable } from "@nestjs/common";
-import {
-  FestivalTask,
-  PrepareFestivalTask,
-  UpdateGeneral,
-} from "@overbookd/festival-event";
+import { FestivalTask, PrepareFestivalTask } from "@overbookd/festival-event";
+import { Adherents } from "../../common/festival-task-common.model";
+import { UpdateGeneralForm } from "@overbookd/http";
 
 @Injectable()
 export class GeneralSectionService {
-  constructor(private readonly prepare: PrepareFestivalTask) {}
+  constructor(
+    private readonly prepare: PrepareFestivalTask,
+    private readonly adherents: Adherents,
+  ) {}
 
-  save(id: FestivalTask["id"], general: UpdateGeneral): Promise<FestivalTask> {
-    return this.prepare.updateGeneralSection(id, general);
+  async save(
+    id: FestivalTask["id"],
+    general: UpdateGeneralForm,
+  ): Promise<FestivalTask> {
+    const administrator = general.administratorId
+      ? { administrator: await this.adherents.find(general.administratorId) }
+      : {};
+
+    return this.prepare.updateGeneralSection(id, {
+      ...general,
+      ...administrator,
+    });
   }
 }
