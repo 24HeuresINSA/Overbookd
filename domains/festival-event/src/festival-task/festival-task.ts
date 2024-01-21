@@ -24,7 +24,7 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
-type TeamMobilization = { count: number; team: string };
+export type TeamMobilization = { count: number; team: string };
 
 export type Mobilization = TimeWindow & {
   volunteers: Volunteer[];

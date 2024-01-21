@@ -7,6 +7,7 @@ import {
   Contact,
   FestivalTask,
   Mobilization,
+  TeamMobilization,
   Volunteer,
 } from "../festival-task";
 import {
@@ -14,7 +15,9 @@ import {
   GearAlreadyRequested,
   MobilizationAlreadyExist,
   SplitDurationIsNotPeriodDivider,
+  TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
+import { updateItemToList } from "@overbookd/list";
 
 type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -94,6 +97,20 @@ export class PrepareFestivalTask {
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
+    return this.festivalTasks.save({ ...task, mobilizations });
+  }
+
+  async addTeamToMobilization(
+    taskId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    team: TeamMobilization,
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Mobilizations.build(task.mobilizations);
+    const mobilizations = builder.addTeamTo(mobilizationId, team).json;
+
     return this.festivalTasks.save({ ...task, mobilizations });
   }
 
@@ -218,8 +235,13 @@ class Volunteers {
   }
 }
 
+type ListItem<T> = {
+  index: number;
+  value?: T;
+};
+
 class Mobilizations {
-  private constructor(private readonly mobilization: Mobilization[]) {}
+  private constructor(private readonly mobilizations: Mobilization[]) {}
 
   static build(mobilizations: Mobilization[]) {
     return new Mobilizations(mobilizations);
@@ -230,15 +252,38 @@ class Mobilizations {
 
     if (this.has(mobilization)) throw new MobilizationAlreadyExist();
 
-    return new Mobilizations([...this.mobilization, mobilization]);
+    return new Mobilizations([...this.mobilizations, mobilization]);
+  }
+
+  addTeamTo(mobilizationId: Mobilization["id"], team: TeamMobilization) {
+    const { index, value } = this.retrieveMobilization(mobilizationId);
+    if (index === -1 || !value) return this;
+
+    const builder = MobilizationFactory.build(value);
+    const mobilizations = updateItemToList(
+      this.mobilizations,
+      index,
+      builder.addTeam(team).json,
+    );
+
+    return new Mobilizations(mobilizations);
+  }
+
+  private retrieveMobilization(id: Mobilization["id"]): ListItem<Mobilization> {
+    const index = this.mobilizations.findIndex(
+      ({ id: currentId }) => currentId === id,
+    );
+    const value = this.mobilizations.at(index);
+
+    return { index, value };
   }
 
   private has(mobilization: Mobilization) {
-    return this.mobilization.some(({ id }) => id === mobilization.id);
+    return this.mobilizations.some(({ id }) => id === mobilization.id);
   }
 
   get json(): Mobilization[] {
-    return [...this.mobilization];
+    return [...this.mobilizations];
   }
 }
 
@@ -251,6 +296,10 @@ class MobilizationFactory {
     const id = this.generateId(period);
 
     return new MobilizationFactory({ ...form, id });
+  }
+
+  static build(mobilization: Mobilization) {
+    return new MobilizationFactory(mobilization);
   }
 
   private static checkPeriod(
@@ -270,6 +319,18 @@ class MobilizationFactory {
     const endMinutes = Duration.ms(end.getTime()).inMinutes;
 
     return `${startMinutes}-${endMinutes}`;
+  }
+
+  addTeam(team: TeamMobilization) {
+    if (this.has(team)) throw new TeamAlreadyPartOfMobilization(team.team);
+
+    const teams = [...this.mobilization.teams, team];
+
+    return new MobilizationFactory({ ...this.mobilization, teams });
+  }
+
+  private has({ team }: TeamMobilization) {
+    return this.mobilization.teams.some((request) => request.team === team);
   }
 
   get json(): Mobilization {
