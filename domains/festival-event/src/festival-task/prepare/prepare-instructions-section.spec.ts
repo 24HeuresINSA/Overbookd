@@ -168,4 +168,34 @@ describe("Prepare festival task instructions section", () => {
       });
     });
   });
+
+  describe("Remove in charge volunteers", () => {
+    describe("when removing a known volunteer", () => {
+      it("should remove it from volunteers list", async () => {
+        const volunteerId = lea.id;
+        const task = uninstallEscapeGame;
+        const expectedLength = task.instructions.inCharge.volunteers.length - 1;
+
+        const { instructions } = await prepare.removeInchargeVolunteer(
+          task.id,
+          volunteerId,
+        );
+
+        expect(instructions.inCharge.volunteers).toHaveLength(expectedLength);
+      });
+    });
+    describe("when removing an unknown volunteer", () => {
+      it("should keep in charge volunteers list unchanged", async () => {
+        const volunteerId = -1;
+        const task = uninstallEscapeGame;
+
+        const { instructions } = await prepare.removeInchargeVolunteer(
+          task.id,
+          volunteerId,
+        );
+
+        expect(instructions).toStrictEqual(task.instructions);
+      });
+    });
+  });
 });
