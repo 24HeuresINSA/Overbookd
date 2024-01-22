@@ -65,6 +65,7 @@ model User {
   festivalTaskAdministrated FestivalTask[]                  @relation("task-administrator")
   festivalTaskInCharge      FestivalTaskInChargeVolunteer[]
   festivalTaskContacts      FestivalTaskContact[]
+  festivalTaskInstigations  FestivalTaskHistory[]
 
   @@map("user")
 }
@@ -661,9 +662,10 @@ model FestivalActivityFeedback {
 }
 
 model FestivalTask {
-  id        Int                @unique
+  id        Int                   @unique
   status    FestivalTaskStatus
-  isDeleted Boolean            @default(false) @map("is_deleted")
+  isDeleted Boolean               @default(false) @map("is_deleted")
+  events    FestivalTaskHistory[]
 
   // General
   name            String  @db.Text
@@ -711,6 +713,27 @@ model FestivalTaskInChargeVolunteer {
 
   @@id([volunteerId, festivalTaskId])
   @@map("festival_task_in_charge_volunteer")
+}
+
+model FestivalTaskHistory {
+  id           Int               @id @default(autoincrement())
+  event        FestivalTaskEvent
+  instigatorId Int
+  instigator   User              @relation(fields: [instigatorId], references: [id], onDelete: Cascade)
+  ftId         Int               @map("fa_id")
+  ft           FestivalTask      @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  snapshot     Json
+  at           DateTime
+  context      String?           @db.Text
+
+  @@unique([ftId, event, instigatorId, at])
+  @@map("festival_task_history")
+}
+
+enum FestivalTaskEvent {
+  CREATED
+
+  @@map("festival_task_event")
 }
 
 model SharedMeal {

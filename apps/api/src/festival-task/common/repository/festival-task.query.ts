@@ -1,12 +1,15 @@
 import {
+  Adherent,
   Contact,
   FestivalTask,
   FestivalTaskDraft,
+  KeyEvent,
   Volunteer,
 } from "@overbookd/festival-event";
 import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location/location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
+import { Prisma } from "@prisma/client";
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -35,6 +38,9 @@ export class FestivalTaskQueryBuilder {
         create: task.instructions.inCharge.volunteers.map((volunteer) => ({
           volunteer: { connect: { id: volunteer.id } },
         })),
+      },
+      events: {
+        create: task.history.map(keyEventToHistory(task)),
       },
     };
   }
@@ -95,6 +101,26 @@ export class FestivalTaskQueryBuilder {
       },
     };
   }
+}
+
+type StoredHistoryKeyEvent = {
+  event: KeyEvent["action"];
+  instigatorId: Adherent["id"];
+  at: Date;
+  context: KeyEvent["description"];
+  snapshot: Prisma.JsonObject;
+};
+
+function keyEventToHistory(
+  task: FestivalTask,
+): (event: KeyEvent) => StoredHistoryKeyEvent {
+  return ({ action, by, at, description }) => ({
+    event: action,
+    instigatorId: by.id,
+    at,
+    context: description,
+    snapshot: task as unknown as Prisma.JsonObject,
+  });
 }
 
 function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
