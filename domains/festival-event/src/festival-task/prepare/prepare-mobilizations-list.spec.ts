@@ -78,6 +78,36 @@ describe("Prepare festival task mobilizations list", () => {
       });
     });
   });
+  describe("Remove mobilization", () => {
+    describe("when removing an existing mobilization", () => {
+      it("should remove it from mobilizations list", async () => {
+        const task = presentEscapeGame;
+        const mobilization = task.mobilizations[0];
+        const expectedLength = task.mobilizations.length - 1;
+
+        const { mobilizations } = await prepare.removeMobilization(
+          task.id,
+          mobilization.id,
+        );
+
+        expect(mobilizations).toHaveLength(expectedLength);
+        expect(mobilizations).not.toContainEqual(mobilization);
+      });
+    });
+    describe("when removing an unexisting mobilization", () => {
+      it("should keep mobilizations list unchanged", async () => {
+        const task = presentEscapeGame;
+        const mobilizationId = "1234567-2458204";
+
+        const { mobilizations } = await prepare.removeMobilization(
+          task.id,
+          mobilizationId,
+        );
+
+        expect(mobilizations).toStrictEqual(task.mobilizations);
+      });
+    });
+  });
   describe("Add team to existing mobilization", () => {
     describe("when team is not yet part of the mobilization", () => {
       it("should add team to the mobilization", async () => {
