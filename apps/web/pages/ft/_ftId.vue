@@ -1,7 +1,9 @@
 <template>
   <div class="ft-content ft">
     <FestivalEventSidebar festival-event="FT" class="sidebar" />
-    <v-container class="container ft"> </v-container>
+    <v-container class="container ft">
+      <FtGeneralCard id="general" />
+    </v-container>
     <SnackNotificationContainer />
   </div>
 </template>
@@ -11,12 +13,14 @@ import { defineComponent } from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import { FestivalTask } from "@overbookd/festival-event";
+import FtGeneralCard from "~/components/organisms/festival-event/festival-task/FtGeneralCard.vue";
 
 export default defineComponent({
   name: "Ft",
   components: {
     FestivalEventSidebar,
     SnackNotificationContainer,
+    FtGeneralCard,
   },
   computed: {
     selectedTask(): FestivalTask {

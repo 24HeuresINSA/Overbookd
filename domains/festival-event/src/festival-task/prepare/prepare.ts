@@ -20,7 +20,7 @@ import {
 import { updateItemToList } from "@overbookd/list";
 import { Adherent } from "../../common/adherent";
 
-type UpdateGeneral = {
+export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
   administrator?: FestivalTask["general"]["administrator"];
   team?: FestivalTask["general"]["team"];

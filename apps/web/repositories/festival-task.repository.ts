@@ -1,5 +1,9 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
-import { FestivalTaskCreationForm, HttpStringified } from "@overbookd/http";
+import {
+  FestivalTaskCreationForm,
+  HttpStringified,
+  UpdateGeneralForm,
+} from "@overbookd/http";
 import { PreviewFestivalTask, FestivalTask } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -31,5 +35,17 @@ export class FestivalTaskRepository {
   /* REMOVE */
   static remove(context: Context, id: FestivalTask["id"]) {
     return context.$axios.delete<void>(`${this.basePath}/${id}`);
+  }
+
+  /* UPDATE GENERAL */
+  static updateGeneral(
+    context: Context,
+    ftId: FestivalTask["id"],
+    general: UpdateGeneralForm,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/general`,
+      general,
+    );
   }
 }
