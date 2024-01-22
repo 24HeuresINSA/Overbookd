@@ -101,6 +101,18 @@ export class PrepareFestivalTask {
     return this.festivalTasks.save({ ...task, instructions });
   }
 
+  async removeInchargeVolunteer(
+    taskId: FestivalTask["id"],
+    volunteerId: Volunteer["id"],
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Instructions.build(task.instructions);
+    const instructions = builder.removeVolunteer(volunteerId).json;
+    return this.festivalTasks.save({ ...task, instructions });
+  }
+
   async addMobilization(
     taskId: FestivalTask["id"],
     mobilization: AddMobilization,
@@ -197,6 +209,13 @@ class Instructions {
     return new Instructions({ ...this.instructions, inCharge });
   }
 
+  removeVolunteer(volunteerId: Volunteer["id"]) {
+    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
+    const inCharge = inChargeBuilder.removeVolunteer(volunteerId).json;
+
+    return new Instructions({ ...this.instructions, inCharge });
+  }
+
   get json(): FestivalTask["instructions"] {
     return { ...this.instructions };
   }
@@ -219,6 +238,13 @@ class InCharge {
   addVolunteer(volunteer: Volunteer) {
     const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
     const volunteers = volunteerBuilder.add(volunteer).json;
+
+    return new InCharge({ ...this.inCharge, volunteers });
+  }
+
+  removeVolunteer(volunteerId: Volunteer["id"]) {
+    const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
+    const volunteers = volunteerBuilder.remove(volunteerId).json;
 
     return new InCharge({ ...this.inCharge, volunteers });
   }
@@ -265,6 +291,12 @@ class Volunteers {
     if (this.has(volunteer)) return this;
 
     return new Volunteers([...this.volunteers, volunteer]);
+  }
+
+  remove(volunteerId: Volunteer["id"]) {
+    const volunteers = this.volunteers.filter(({ id }) => id !== volunteerId);
+
+    return new Volunteers(volunteers);
   }
 
   private has(volunteer: Volunteer): boolean {
