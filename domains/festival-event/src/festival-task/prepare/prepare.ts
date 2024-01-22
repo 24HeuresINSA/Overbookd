@@ -179,6 +179,18 @@ export class PrepareFestivalTask {
     const inquiries = builder.add(inquiry).json;
     return this.festivalTasks.save({ ...task, inquiries: inquiries });
   }
+
+  async removeInquiry(
+    taskId: FestivalTask["id"],
+    slug: InquiryRequest["slug"],
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+    const builder = Inquiries.build(task.inquiries);
+
+    const inquiries = builder.remove(slug).json;
+    return this.festivalTasks.save({ ...task, inquiries: inquiries });
+  }
 }
 
 class Instructions {
@@ -482,6 +494,12 @@ class Inquiries {
     if (this.has(inquiry)) throw new GearAlreadyRequested(inquiry.name);
 
     return new Inquiries([...this.inquiries, inquiry]);
+  }
+
+  remove(slug: InquiryRequest["slug"]) {
+    const inquiries = this.inquiries.filter((inquiry) => inquiry.slug !== slug);
+
+    return new Inquiries(inquiries);
   }
 
   private has(inquiry: InquiryRequest): boolean {

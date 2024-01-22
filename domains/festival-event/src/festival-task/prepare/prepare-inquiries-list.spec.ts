@@ -57,4 +57,30 @@ describe("Prepare festival task inquiries list", () => {
       });
     });
   });
+  describe("Remove inquiry", () => {
+    describe("when removing a requested inquiry", () => {
+      it("should remove it from inquiries list", async () => {
+        const task = uninstallEscapeGame;
+        const inquiry = task.inquiries[0];
+        const expectedLength = task.inquiries.length - 1;
+
+        const { inquiries } = await prepare.removeInquiry(
+          task.id,
+          inquiry.slug,
+        );
+
+        expect(inquiries).toHaveLength(expectedLength);
+      });
+    });
+    describe("when removing not requested inquiry", () => {
+      it("should keep inquiries list unchanged", async () => {
+        const task = uninstallEscapeGame;
+        const slug = "not-requested-inquiry";
+
+        const { inquiries } = await prepare.removeInquiry(task.id, slug);
+
+        expect(inquiries).toStrictEqual(task.inquiries);
+      });
+    });
+  });
 });
