@@ -5,7 +5,7 @@ import {
   Volunteer,
 } from "@overbookd/festival-event";
 import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
-import { SELECT_LOCATION } from "./location.query";
+import { SELECT_LOCATION } from "./location/location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 
 export const SELECT_FESTIVAL_TASK = {

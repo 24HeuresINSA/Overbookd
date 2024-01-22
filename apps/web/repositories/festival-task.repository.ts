@@ -3,6 +3,7 @@ import {
   FestivalTaskCreationForm,
   HttpStringified,
   UpdateGeneralForm,
+  UpdateInstructionsForm,
 } from "@overbookd/http";
 import { PreviewFestivalTask, FestivalTask } from "@overbookd/festival-event";
 
@@ -46,6 +47,18 @@ export class FestivalTaskRepository {
     return context.$axios.patch<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/general`,
       general,
+    );
+  }
+
+  /* UPDATE INSTRUCTIONS */
+  static updateInstructions(
+    context: Context,
+    ftId: FestivalTask["id"],
+    instructions: UpdateInstructionsForm,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/instructions`,
+      instructions,
     );
   }
 }

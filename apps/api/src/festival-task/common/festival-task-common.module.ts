@@ -12,6 +12,7 @@ import {
 } from "@overbookd/festival-event";
 import { PrismaRemoveFestivalTasks } from "./repository/remove-festival-tasks.prisma";
 import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma";
+import { PrismaLocations } from "./repository/location/locations.prisma";
 
 @Module({
   providers: [
@@ -36,6 +37,11 @@ import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma"
     {
       provide: PrismaAdherents,
       useFactory: (prisma: PrismaService) => new PrismaAdherents(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaLocations,
+      useFactory: (prisma: PrismaService) => new PrismaLocations(prisma),
       inject: [PrismaService],
     },
     {
@@ -79,6 +85,7 @@ import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma"
   imports: [PrismaModule],
   exports: [
     PrismaAdherents,
+    PrismaLocations,
     PrismaFestivalActivities,
     CreateFestivalTask,
     PrepareFestivalTask,

@@ -10,7 +10,7 @@ export class GeneralSectionService {
     private readonly adherents: Adherents,
   ) {}
 
-  async save(
+  async update(
     id: FestivalTask["id"],
     general: UpdateGeneralForm,
   ): Promise<FestivalTask> {

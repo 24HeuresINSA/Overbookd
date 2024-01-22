@@ -57,10 +57,10 @@ export class GeneralSectionController {
     description: "Festival activity id",
     required: true,
   })
-  save(
+  update(
     @Param("id", ParseIntPipe) id: FestivalTask["id"],
     @Body() general: GeneralRequestDto,
   ): Promise<FestivalTask> {
-    return this.generalService.save(id, general);
+    return this.generalService.update(id, general);
   }
 }

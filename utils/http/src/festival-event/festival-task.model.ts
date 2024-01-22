@@ -1,4 +1,4 @@
-import { Adherent } from "@overbookd/festival-event";
+import { Adherent, UpdateInstructions } from "@overbookd/festival-event";
 import { UpdateGeneral } from "@overbookd/festival-event";
 import { FestivalTask } from "@overbookd/festival-event";
 
@@ -9,4 +9,8 @@ export type FestivalTaskCreationForm = {
 
 export type UpdateGeneralForm = Omit<UpdateGeneral, "administrator"> & {
   administratorId?: Adherent["id"];
+};
+
+export type UpdateInstructionsForm = Omit<UpdateInstructions, "appointment"> & {
+  appointmentId?: number;
 };

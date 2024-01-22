@@ -47,6 +47,11 @@ export default Vue.extend({
     ],
     ftItems: [
       { id: "general", text: "Général", icon: "mdi-card-text" },
+      {
+        id: "instructions",
+        text: "Instructions",
+        icon: "mdi-order-bool-descending-variant",
+      },
       { id: "fa", text: "FA associée", icon: "mdi-chart-bubble" },
       { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
     ],
