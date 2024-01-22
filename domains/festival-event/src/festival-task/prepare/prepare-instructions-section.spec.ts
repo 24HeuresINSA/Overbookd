@@ -120,7 +120,7 @@ describe("Prepare festival task instructions section", () => {
       });
     });
     describe("when removing an unknown contact", () => {
-      it("should keep task unchanged", async () => {
+      it("should keep contacts list unchanged", async () => {
         const task = uninstallEscapeGame;
         const contactId = -1;
 
