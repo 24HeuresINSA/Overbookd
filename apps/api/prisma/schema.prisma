@@ -718,9 +718,9 @@ model FestivalTaskInChargeVolunteer {
 model FestivalTaskHistory {
   id           Int               @id @default(autoincrement())
   event        FestivalTaskEvent
-  instigatorId Int
+  instigatorId Int               @map("instigator_id")
   instigator   User              @relation(fields: [instigatorId], references: [id], onDelete: Cascade)
-  ftId         Int               @map("fa_id")
+  ftId         Int               @map("ft_id")
   ft           FestivalTask      @relation(fields: [ftId], references: [id], onDelete: Cascade)
   snapshot     Json
   at           DateTime

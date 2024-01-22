@@ -3,7 +3,7 @@ import {
   Contact,
   FestivalTask,
   FestivalTaskDraft,
-  KeyEvent,
+  FestivalTaskKeyEvent as KeyEvent,
   Volunteer,
 } from "@overbookd/festival-event";
 import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";

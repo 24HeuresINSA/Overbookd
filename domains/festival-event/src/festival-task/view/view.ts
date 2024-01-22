@@ -1,15 +1,15 @@
 import { FestivalTask } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
-import { PreviewFestivalTask } from "../festival-task";
+import { Preview } from "../festival-task";
 
 export type FestivalTasksForView = {
-  all(): Promise<PreviewFestivalTask[]>;
+  all(): Promise<Preview[]>;
   one(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
 };
 export class ViewFestivalTask {
   constructor(private readonly festivalTasks: FestivalTasksForView) {}
 
-  all(): Promise<PreviewFestivalTask[]> {
+  all(): Promise<Preview[]> {
     return this.festivalTasks.all();
   }
 

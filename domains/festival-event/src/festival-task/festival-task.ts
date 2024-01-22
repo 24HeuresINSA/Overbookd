@@ -4,8 +4,8 @@ import { DRAFT } from "../common/status";
 import { Adherent } from "../common/adherent";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
-import { KeyEvent } from "./festival-task.event";
 import { Location } from "../common/location";
+import { CREATED } from "../common/action";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
@@ -66,4 +66,13 @@ export type PreviewDraft = {
   team: Draft["general"]["team"];
 };
 
-export type PreviewFestivalTask = PreviewDraft;
+export type Preview = PreviewDraft;
+
+type Action = typeof CREATED;
+
+export type KeyEvent = {
+  action: Action;
+  by: Preview["administrator"];
+  at: Date;
+  description: string;
+};

@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { ViewFestivalTask } from "./view";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { PreviewDraft, PreviewFestivalTask } from "../festival-task";
+import { PreviewDraft, Preview } from "../festival-task";
 import { installEscapeGame } from "../festival-task.test-util";
 import { uninstallEscapeGame } from "../festival-task.test-util";
 
@@ -40,7 +40,7 @@ describe("View festival tasks", () => {
       });
       it("should generate preview for all tasks", async () => {
         const all = await view.all();
-        previews.every((preview: PreviewFestivalTask) =>
+        previews.every((preview: Preview) =>
           expect(all).toContainEqual(preview),
         );
       });
