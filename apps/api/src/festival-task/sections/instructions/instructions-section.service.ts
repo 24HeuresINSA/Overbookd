@@ -10,7 +10,7 @@ export class InstructionsSectionService {
     private readonly locations: Locations,
   ) {}
 
-  async save(
+  async update(
     id: FestivalTask["id"],
     instructions: UpdateInstructionsForm,
   ): Promise<FestivalTask> {

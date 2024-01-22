@@ -20,7 +20,7 @@ export class InstructionsRequestDto implements UpdateInstructionsForm {
   global?: string;
 
   @ApiProperty({
-    description: "In charge volunteers",
+    description: "In charge instructions",
     required: false,
   })
   @IsString()

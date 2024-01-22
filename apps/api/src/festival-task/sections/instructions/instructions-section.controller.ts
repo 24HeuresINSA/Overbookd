@@ -59,10 +59,10 @@ export class InstructionsSectionController {
     description: "Festival activity id",
     required: true,
   })
-  save(
+  update(
     @Param("id", ParseIntPipe) id: FestivalTask["id"],
     @Body() instructions: InstructionsRequestDto,
   ): Promise<FestivalTask> {
-    return this.instructionsService.save(id, instructions);
+    return this.instructionsService.update(id, instructions);
   }
 }
