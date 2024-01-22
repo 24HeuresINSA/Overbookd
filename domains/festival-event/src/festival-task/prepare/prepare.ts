@@ -77,6 +77,18 @@ export class PrepareFestivalTask {
     return this.festivalTasks.save({ ...task, instructions });
   }
 
+  async removeContact(
+    taskId: FestivalTask["id"],
+    contactId: Contact["id"],
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Instructions.build(task.instructions);
+    const instructions = builder.removeContact(contactId).json;
+    return this.festivalTasks.save({ ...task, instructions });
+  }
+
   async addInchargeVolunteer(
     taskId: FestivalTask["id"],
     volunteer: Volunteer,
@@ -171,6 +183,13 @@ class Instructions {
     return new Instructions({ ...this.instructions, contacts });
   }
 
+  removeContact(contactId: Contact["id"]) {
+    const contactsBuilder = Contacts.build(this.instructions.contacts);
+    const contacts = contactsBuilder.remove(contactId).json;
+
+    return new Instructions({ ...this.instructions, contacts });
+  }
+
   addVolunteer(volunteer: Volunteer) {
     const inChargeBuilder = InCharge.build(this.instructions.inCharge);
     const inCharge = inChargeBuilder.addVolunteer(volunteer).json;
@@ -220,6 +239,10 @@ class Contacts {
     if (this.has(contact)) return this;
 
     return new Contacts([...this.contacts, contact]);
+  }
+
+  remove(contactId: Contact["id"]) {
+    return new Contacts(this.contacts.filter(({ id }) => id !== contactId));
   }
 
   private has(contact: Contact): boolean {

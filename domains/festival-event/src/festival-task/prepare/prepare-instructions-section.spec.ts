@@ -104,6 +104,36 @@ describe("Prepare festival task instructions section", () => {
     });
   });
 
+  describe("Remove contact", () => {
+    describe("when removing a known contact", () => {
+      it("should remove it from contacts list", async () => {
+        const task = uninstallEscapeGame;
+        const contactId = noelContact.id;
+        const expectedLength = task.instructions.contacts.length - 1;
+
+        const { instructions } = await prepare.removeContact(
+          task.id,
+          contactId,
+        );
+
+        expect(instructions.contacts).toHaveLength(expectedLength);
+      });
+    });
+    describe("when removing an unknown contact", () => {
+      it("should keep contacts list unchanged", async () => {
+        const task = uninstallEscapeGame;
+        const contactId = -1;
+
+        const { instructions } = await prepare.removeContact(
+          task.id,
+          contactId,
+        );
+
+        expect(instructions.contacts).toStrictEqual(task.instructions.contacts);
+      });
+    });
+  });
+
   describe("Add in charge volunteers", () => {
     describe.each`
       taskName                            | task                   | volunteer
