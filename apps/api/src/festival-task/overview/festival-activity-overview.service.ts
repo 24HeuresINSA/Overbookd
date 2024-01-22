@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
 import {
   Adherents,
   FestivalActivities,
@@ -12,6 +13,7 @@ import {
 } from "@overbookd/festival-event";
 import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
 import { FestivalTaskCreationForm } from "@overbookd/http";
+import { DomainEventService } from "../../domain-event/domain-event.service";
 
 @Injectable()
 export class FestivalTaskOverviewService {
@@ -21,6 +23,7 @@ export class FestivalTaskOverviewService {
     private readonly create: CreateFestivalTask,
     private readonly view: ViewFestivalTask,
     private readonly remove: RemoveFestivalTasks,
+    private readonly eventStore: DomainEventService,
   ) {}
 
   findById(id: FestivalTask["id"]): Promise<FestivalTask | null> {
@@ -35,11 +38,16 @@ export class FestivalTaskOverviewService {
     const festivalActivity =
       await this.festivalActivities.find(festivalActivityId);
 
-    return this.create.apply({
+    const task = await this.create.apply({
       author,
       name,
       festivalActivity,
     });
+
+    const event = FestivalTaskEvents.created(task, author.id);
+    this.eventStore.publish(event);
+
+    return task;
   }
 
   async removeOn(id: FestivalTask["id"]): Promise<void> {

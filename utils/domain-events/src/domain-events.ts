@@ -10,6 +10,7 @@ import type {
   FestivalActivityRejectedEvent,
 } from "./festival-activity";
 import type { SharedMealClosedEvent } from "./shared-meal";
+import { FestivalTaskCreatedEvent } from "./festival-task";
 
 export type DomainEvent =
   | AdherentRegisteredEvent
@@ -18,6 +19,7 @@ export type DomainEvent =
   | FestivalActivityReadyToReviewEvent
   | FestivalActivityApprovedEvent
   | FestivalActivityRejectedEvent
+  | FestivalTaskCreatedEvent
   | SharedMealClosedEvent;
 
 export function filterEvents<T extends DomainEvent["type"]>(
