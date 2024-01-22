@@ -125,6 +125,18 @@ export class PrepareFestivalTask {
     return this.festivalTasks.save({ ...task, mobilizations });
   }
 
+  async removeMobilization(
+    taskId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Mobilizations.build(task.mobilizations);
+    const mobilizations = builder.remove(mobilizationId).json;
+    return this.festivalTasks.save({ ...task, mobilizations });
+  }
+
   async addTeamToMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
@@ -326,6 +338,12 @@ class Mobilizations {
     if (this.has(mobilization)) throw new MobilizationAlreadyExist();
 
     return new Mobilizations([...this.mobilizations, mobilization]);
+  }
+
+  remove(mobilizationId: Mobilization["id"]) {
+    return new Mobilizations(
+      this.mobilizations.filter(({ id }) => id !== mobilizationId),
+    );
   }
 
   addTeamTo(mobilizationId: Mobilization["id"], team: TeamMobilization) {
