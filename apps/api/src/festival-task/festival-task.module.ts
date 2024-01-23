@@ -9,6 +9,7 @@ import { FestivalTaskOverviewController } from "./overview/festival-task-overvie
 import { FestivalTaskPreviewModule } from "./preview/festival-task-preview.module";
 import { FestivalTaskPreviewController } from "./preview/festival-task-preview.controller";
 import { MobilizationSectionModule } from "./sections/mobilization/mobilization-section.module";
+import { MobilizationSectionController } from "./sections/mobilization/mobilization-section.controller";
 
 @Module({
   controllers: [
@@ -16,6 +17,7 @@ import { MobilizationSectionModule } from "./sections/mobilization/mobilization-
     FestivalTaskPreviewController,
     GeneralSectionController,
     InstructionsSectionController,
+    MobilizationSectionController,
   ],
   imports: [
     FestivalTaskCommonModule,
