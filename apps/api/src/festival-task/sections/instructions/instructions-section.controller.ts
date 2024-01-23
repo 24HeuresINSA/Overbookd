@@ -71,27 +71,27 @@ export class InstructionsSectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
-  @Post(":id/instructions/contacts")
+  @Post(":ftId/instructions/contacts")
   @ApiResponse({
     status: 200,
     description: "A festival activity",
     type: DraftFestivalTaskResponseDto,
   })
   @ApiBody({
-    description: "Contact to ass",
+    description: "Contact to add",
     type: AddContactRequestDto,
   })
   @ApiParam({
-    name: "id",
+    name: "ftId",
     type: Number,
     description: "Festival activity id",
     required: true,
   })
   addContact(
-    @Param("id", ParseIntPipe) id: FestivalTask["id"],
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Body() { contactId }: AddContactRequestDto,
   ): Promise<FestivalTask> {
-    return this.instructionsService.addContact(id, contactId);
+    return this.instructionsService.addContact(ftId, contactId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
