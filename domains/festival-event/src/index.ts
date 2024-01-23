@@ -211,5 +211,4 @@ export type {
   Contact,
   Volunteer,
 } from "./festival-task/festival-task";
-export { FestivalTaskKeyEvents } from "./festival-task/festival-task.event";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";

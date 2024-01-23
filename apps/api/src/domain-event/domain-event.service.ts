@@ -11,6 +11,8 @@ import {
   ReadyToReview,
   Rejected,
   SHARED_MEAL_CLOSED,
+  FestivalTaskCreated,
+  FESTIVAL_TASK_CREATED,
 } from "@overbookd/domain-events";
 import {
   ADHERENT_REGISTERED,
@@ -73,6 +75,10 @@ export class DomainEventService {
     return this.listen(FESTIVAL_ACTIVITY_REJECTED).pipe(
       map(({ data }) => data),
     );
+  }
+
+  get createdFestivalTask(): Observable<FestivalTaskCreated> {
+    return this.listen(FESTIVAL_TASK_CREATED).pipe(map(({ data }) => data));
   }
 
   get closedSharedMeal(): Observable<PastSharedMeal> {

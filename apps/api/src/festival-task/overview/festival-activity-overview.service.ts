@@ -8,9 +8,9 @@ import {
   CreateFestivalTask,
   FestivalTask,
   FestivalTaskDraft,
-  FestivalTaskKeyEvents,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
+import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
 import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
 import { FestivalTaskCreationForm } from "@overbookd/http";
 import { DomainEventService } from "../../domain-event/domain-event.service";
@@ -44,7 +44,7 @@ export class FestivalTaskOverviewService {
       festivalActivity,
     });
 
-    const event = FestivalTaskKeyEvents.created(author);
+    const event = FestivalTaskEvents.created(task, author.id);
     this.eventStore.publish(event);
 
     return task;
