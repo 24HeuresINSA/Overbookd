@@ -18,7 +18,6 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 import { updateItemToList } from "@overbookd/list";
-import { Adherent } from "../../common/adherent";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -185,7 +184,7 @@ export class PrepareFestivalTask {
   async removeVolunteerFromMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
-    volunteerId: Adherent["id"],
+    volunteerId: Volunteer["id"],
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
@@ -420,7 +419,7 @@ class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
-  addVolunteerTo(mobilizationId: Mobilization["id"], volunteer: Adherent) {
+  addVolunteerTo(mobilizationId: Mobilization["id"], volunteer: Volunteer) {
     const { index, value } = this.retrieveMobilization(mobilizationId);
     if (index === -1 || !value) return this;
 
@@ -436,7 +435,7 @@ class Mobilizations {
 
   removeVolunteerFrom(
     mobilizationId: Mobilization["id"],
-    volunteerId: Adherent["id"],
+    volunteerId: Volunteer["id"],
   ) {
     const { index, value } = this.retrieveMobilization(mobilizationId);
     if (index === -1 || !value) return this;
@@ -521,7 +520,7 @@ class MobilizationFactory {
     return this.mobilization.teams.some((request) => request.team === team);
   }
 
-  addVolunteer(volunteer: Adherent) {
+  addVolunteer(volunteer: Volunteer) {
     if (this.hasVolunteer(volunteer)) return this;
 
     const volunteers = [...this.mobilization.volunteers, volunteer];
@@ -529,7 +528,7 @@ class MobilizationFactory {
     return new MobilizationFactory({ ...this.mobilization, volunteers });
   }
 
-  removeVolunteer(volunteerId: Adherent["id"]) {
+  removeVolunteer(volunteerId: Volunteer["id"]) {
     const volunteers = this.mobilization.volunteers.filter(
       ({ id }) => id !== volunteerId,
     );
@@ -537,7 +536,7 @@ class MobilizationFactory {
     return new MobilizationFactory({ ...this.mobilization, volunteers });
   }
 
-  private hasVolunteer(volunteer: Adherent) {
+  private hasVolunteer(volunteer: Volunteer) {
     return this.mobilization.volunteers.some(({ id }) => id === volunteer.id);
   }
 
