@@ -8,6 +8,8 @@ import {
 import { PrismaRemoveFestivalTasks } from "../common/repository/remove-festival-tasks.prisma";
 import { PrismaFestivalActivities } from "../common/repository/festival-activity/festival-activities.prisma";
 import { FestivalTaskCommonModule } from "../common/festival-task-common.module";
+import { DomainEventService } from "../../domain-event/domain-event.service";
+import { DomainEventModule } from "../../domain-event/domain-event.module";
 
 @Module({
   providers: [
@@ -19,6 +21,7 @@ import { FestivalTaskCommonModule } from "../common/festival-task-common.module"
         create: CreateFestivalTask,
         view: ViewFestivalTask,
         remove: PrismaRemoveFestivalTasks,
+        eventStore: DomainEventService,
       ) =>
         new FestivalTaskOverviewService(
           adherents,
@@ -26,6 +29,7 @@ import { FestivalTaskCommonModule } from "../common/festival-task-common.module"
           create,
           view,
           remove,
+          eventStore,
         ),
       inject: [
         PrismaAdherents,
@@ -33,10 +37,11 @@ import { FestivalTaskCommonModule } from "../common/festival-task-common.module"
         CreateFestivalTask,
         ViewFestivalTask,
         PrismaRemoveFestivalTasks,
+        DomainEventService,
       ],
     },
   ],
-  imports: [FestivalTaskCommonModule],
+  imports: [FestivalTaskCommonModule, DomainEventModule],
   exports: [FestivalTaskOverviewService],
 })
 export class FestivalTaskOverviewModule {}

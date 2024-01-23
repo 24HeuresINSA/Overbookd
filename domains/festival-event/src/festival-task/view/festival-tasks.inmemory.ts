@@ -1,7 +1,7 @@
 import { FestivalTask } from "../festival-task";
 import { FestivalTaskBuilder } from "../festival-task.builder";
 import { FestivalTasksForView } from "./view";
-import { PreviewFestivalTask } from "../festival-task";
+import { Preview } from "../festival-task";
 
 export class InMemoryFestivalTasks implements FestivalTasksForView {
   constructor(private readonly tasks: FestivalTask[]) {}
@@ -10,7 +10,7 @@ export class InMemoryFestivalTasks implements FestivalTasksForView {
     return Promise.resolve(this.tasks.find(({ id }) => id === ftId) ?? null);
   }
 
-  all(): Promise<PreviewFestivalTask[]> {
+  all(): Promise<Preview[]> {
     return Promise.resolve(
       this.tasks.map((task) => FestivalTaskBuilder.build(task).preview),
     );

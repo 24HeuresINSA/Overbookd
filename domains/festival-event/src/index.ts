@@ -206,8 +206,9 @@ export { ViewFestivalTask } from "./festival-task/view/view";
 export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
-  PreviewFestivalTask,
+  Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
   Contact,
   Volunteer,
 } from "./festival-task/festival-task";
+export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
