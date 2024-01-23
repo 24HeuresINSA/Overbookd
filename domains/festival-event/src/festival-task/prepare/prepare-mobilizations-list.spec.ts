@@ -216,4 +216,37 @@ describe("Prepare festival task mobilizations list", () => {
       });
     });
   });
+  describe("Remove volunteer from existing mobilization", () => {
+    describe("when volunteer is part of the mobilization", () => {
+      it("should remove it from mobilization volunteers list", async () => {
+        const task = presentEscapeGame;
+        const mobilization = task.mobilizations[0];
+        const volunteerId = noel.id;
+        const expectedMobilization = { ...mobilization, volunteers: [] };
+
+        const { mobilizations } = await prepare.removeVolunteerFromMobilization(
+          task.id,
+          mobilization.id,
+          volunteerId,
+        );
+
+        expect(mobilizations).toContainEqual(expectedMobilization);
+      });
+    });
+    describe("when volunteer is not part of the mobilization", () => {
+      it("should keep mobilization unchanged", async () => {
+        const task = presentEscapeGame;
+        const mobilization = task.mobilizations[0];
+        const volunteerId = -1;
+
+        const { mobilizations } = await prepare.removeVolunteerFromMobilization(
+          task.id,
+          mobilization.id,
+          volunteerId,
+        );
+
+        expect(mobilizations).toContainEqual(mobilization);
+      });
+    });
+  });
 });
