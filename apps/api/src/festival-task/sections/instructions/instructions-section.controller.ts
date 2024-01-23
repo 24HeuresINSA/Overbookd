@@ -6,6 +6,8 @@ import {
   ParseIntPipe,
   Patch,
   UseGuards,
+  Post,
+  Delete,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -24,7 +26,8 @@ import { PermissionsGuard } from "../../../authentication/permissions-auth.guard
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { FestivalTask } from "@overbookd/festival-event";
+import { Contact, FestivalTask } from "@overbookd/festival-event";
+import { AddContactRequestDto } from "./dto/add-contact.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -64,5 +67,57 @@ export class InstructionsSectionController {
     @Body() instructions: InstructionsRequestDto,
   ): Promise<FestivalTask> {
     return this.instructionsService.update(id, instructions);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
+  @Post(":id/instructions/contacts")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalTaskResponseDto,
+  })
+  @ApiBody({
+    description: "Contact to ass",
+    type: AddContactRequestDto,
+  })
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  addContact(
+    @Param("id", ParseIntPipe) id: FestivalTask["id"],
+    @Body() { contactId }: AddContactRequestDto,
+  ): Promise<FestivalTask> {
+    return this.instructionsService.addContact(id, contactId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
+  @Delete(":ftId/instructions/contacts/:contactId")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalTaskResponseDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "contactId",
+    type: Number,
+    description: "Contact id",
+    required: true,
+  })
+  removeContact(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Param("contactId", ParseIntPipe) contactId: Contact["id"],
+  ): Promise<FestivalTask> {
+    return this.instructionsService.removeContact(ftId, contactId);
   }
 }

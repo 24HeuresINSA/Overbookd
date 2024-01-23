@@ -15,7 +15,7 @@ export class GeneralSectionService {
     general: UpdateGeneralForm,
   ): Promise<FestivalTask> {
     const administrator = general.administratorId
-      ? { administrator: await this.adherents.find(general.administratorId) }
+      ? { administrator: await this.adherents.findOne(general.administratorId) }
       : {};
 
     return this.prepare.updateGeneralSection(id, {

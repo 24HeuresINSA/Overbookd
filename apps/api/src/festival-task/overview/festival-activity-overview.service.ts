@@ -34,7 +34,7 @@ export class FestivalTaskOverviewService {
     { id }: JwtPayload,
     { name, festivalActivityId }: FestivalTaskCreationForm,
   ): Promise<FestivalTaskDraft> {
-    const author = await this.adherents.find(id);
+    const author = await this.adherents.findOne(id);
     const festivalActivity =
       await this.festivalActivities.find(festivalActivityId);
 
