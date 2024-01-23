@@ -10,6 +10,7 @@ import {
 import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
 import { DatabaseEvent } from "./event.query";
+import { DatabaseMobilization } from "./mobilization.query";
 
 type VisualizeFestivalTask<
   Task extends FestivalTask = FestivalTask,
@@ -33,6 +34,7 @@ type DatabaseFestivalTask = {
   globalInstruction: FestivalTask["instructions"]["global"];
   inChargeInstruction: FestivalTask["instructions"]["inCharge"]["instruction"];
   inChargeVolunteers: { volunteer: Volunteer }[];
+  mobilizations: DatabaseMobilization[];
   events: DatabaseEvent[];
 };
 
@@ -78,10 +80,21 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
         taskData.festivalActivity,
       ),
       inquiries: [],
-      mobilizations: [],
+      mobilizations: this.buildMobilizations(taskData.mobilizations),
       feedbacks: [],
       history: this.buildHistory(taskData.events),
     };
+  }
+
+  private static buildMobilizations(mobilizations: DatabaseMobilization[]) {
+    return mobilizations.map((mobilization) => ({
+      ...mobilization,
+      volunteers: mobilization.volunteers.map(({ volunteer }) => volunteer),
+      teams: mobilization.teams.map((team) => ({
+        ...team,
+        team: team.teamCode,
+      })),
+    }));
   }
 
   private static buildHistory(events: DatabaseEvent[]) {

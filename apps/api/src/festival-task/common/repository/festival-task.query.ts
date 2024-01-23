@@ -4,6 +4,7 @@ import {
   FestivalTask,
   FestivalTaskDraft,
   FestivalTaskKeyEvent as KeyEvent,
+  Mobilization,
   Volunteer,
 } from "@overbookd/festival-event";
 import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
@@ -11,6 +12,7 @@ import { SELECT_LOCATION } from "./location/location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 import { Prisma } from "@prisma/client";
 import { SELECT_EVENT } from "./event.query";
+import { SELECT_MOBILIZATION } from "./mobilization.query";
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -24,6 +26,7 @@ export const SELECT_FESTIVAL_TASK = {
   globalInstruction: true,
   inChargeInstruction: true,
   inChargeVolunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
+  mobilizations: { select: SELECT_MOBILIZATION },
   events: { select: SELECT_EVENT },
 };
 
@@ -41,6 +44,7 @@ export class FestivalTaskQueryBuilder {
           volunteer: { connect: { id: volunteer.id } },
         })),
       },
+      // TODO: add mobilizations
       events: {
         create: task.history.map(keyEventToHistory(task)),
       },
@@ -53,10 +57,13 @@ export class FestivalTaskQueryBuilder {
       task.id,
       task.instructions.inCharge.volunteers,
     );
+    const mobilizations = this.upsertMobilizations(task.id, task.mobilizations);
+
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts,
       inChargeVolunteers,
+      mobilizations,
     };
   }
 
@@ -102,6 +109,14 @@ export class FestivalTaskQueryBuilder {
         volunteerId: { notIn: volunteers.map(({ id }) => id) },
       },
     };
+  }
+
+  private static upsertMobilizations(
+    festivalTaskId: FestivalTask["id"],
+    mobilizations: Mobilization[],
+  ) {
+    // TODO: implement
+    return [];
   }
 }
 
