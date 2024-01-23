@@ -10,6 +10,7 @@ import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location/location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 import { Prisma } from "@prisma/client";
+import { SELECT_EVENT } from "./event.query";
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -23,6 +24,7 @@ export const SELECT_FESTIVAL_TASK = {
   globalInstruction: true,
   inChargeInstruction: true,
   inChargeVolunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
+  events: { select: SELECT_EVENT },
 };
 
 export class FestivalTaskQueryBuilder {
