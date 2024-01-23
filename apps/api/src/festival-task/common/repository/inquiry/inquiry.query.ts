@@ -1,4 +1,3 @@
-import { Drive } from "@overbookd/festival-event";
 
 export const SELECT_INQUIRY_REQUEST = {
   slug: true,
