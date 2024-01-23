@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
 import {
   Adherents,
   FestivalActivities,
@@ -9,6 +8,7 @@ import {
   CreateFestivalTask,
   FestivalTask,
   FestivalTaskDraft,
+  FestivalTaskKeyEvents,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
 import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
@@ -44,7 +44,7 @@ export class FestivalTaskOverviewService {
       festivalActivity,
     });
 
-    const event = FestivalTaskEvents.created(task, author.id);
+    const event = FestivalTaskKeyEvents.created(author);
     this.eventStore.publish(event);
 
     return task;
