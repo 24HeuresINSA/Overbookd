@@ -147,7 +147,7 @@ describe("Prepare festival task mobilizations list", () => {
       it("should remove it from mobilization teams list mobilization", async () => {
         const task = presentEscapeGame;
         const mobilization = presentEscapeGame.mobilizations[0];
-        const teams: TeamMobilization[] = []
+        const teams: TeamMobilization[] = [];
         const team = "bénévole";
 
         const { mobilizations } = await prepare.removeTeamFromMobilization(
@@ -156,7 +156,7 @@ describe("Prepare festival task mobilizations list", () => {
           team,
         );
 
-        const expectedMobilization = {...mobilization, teams}
+        const expectedMobilization = { ...mobilization, teams };
         expect(mobilizations).toContainEqual(expectedMobilization);
       });
     });
@@ -166,9 +166,13 @@ describe("Prepare festival task mobilizations list", () => {
         const mobilization = task.mobilizations[0];
         const team = "hard";
 
-        const {mobilizations} = await prepare.removeTeamFromMobilization(task.id, mobilization.id, team)
+        const { mobilizations } = await prepare.removeTeamFromMobilization(
+          task.id,
+          mobilization.id,
+          team,
+        );
 
-        expect(mobilizations).toContainEqual(mobilization)
+        expect(mobilizations).toContainEqual(mobilization);
       });
     });
   });

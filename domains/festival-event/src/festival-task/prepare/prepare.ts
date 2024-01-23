@@ -151,7 +151,11 @@ export class PrepareFestivalTask {
     return this.festivalTasks.save({ ...task, mobilizations });
   }
 
-  async removeTeamFromMobilization(taskId: FestivalTask["id"], mobilizationId: Mobilization["id"], team: TeamMobilization["team"]): Promise<FestivalTask> {
+  async removeTeamFromMobilization(
+    taskId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    team: TeamMobilization["team"],
+  ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -382,7 +386,10 @@ class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
-  removeTeamFrom(mobilizationId: Mobilization["id"], team: TeamMobilization["team"]) {
+  removeTeamFrom(
+    mobilizationId: Mobilization["id"],
+    team: TeamMobilization["team"],
+  ) {
     const { index, value } = this.retrieveMobilization(mobilizationId);
     if (index === -1 || !value) return this;
 
@@ -393,7 +400,7 @@ class Mobilizations {
       builder.removeTeam(team).json,
     );
 
-    return new Mobilizations(mobilizations)
+    return new Mobilizations(mobilizations);
   }
 
   addVolunteerTo(mobilizationId: Mobilization["id"], volunteer: Adherent) {
@@ -473,7 +480,7 @@ class MobilizationFactory {
   removeTeam(team: TeamMobilization["team"]) {
     const teams = this.mobilization.teams.filter((t) => t.team !== team);
 
-    return new MobilizationFactory({...this.mobilization, teams})
+    return new MobilizationFactory({ ...this.mobilization, teams });
   }
 
   private hasTeam({ team }: TeamMobilization) {
