@@ -1,7 +1,7 @@
+export type { AddInquiryRequestForm } from "./festival-event/common.model";
 export type {
   PrepareInChargeForm,
   PrepareSignaForm,
-  AddInquiryRequest,
   ReviewRejection,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,

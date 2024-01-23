@@ -1,12 +1,12 @@
 import { InquiryRequestAssigned } from "@overbookd/festival-event";
 import {
   FestivalActivity,
-  PrepareInquiryRequestCreation,
   Reviewer,
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
+import { AddInquiryRequestForm } from "./common.model";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -17,11 +17,6 @@ export type PrepareSignaForm = {
   locationId: number | null;
 };
 
-export type AddInquiryRequest = Pick<
-  PrepareInquiryRequestCreation,
-  "slug" | "quantity"
->;
-
 export type ReviewRejection = {
   team: Reviewer<"FA">;
   reason: string;
@@ -29,7 +24,7 @@ export type ReviewRejection = {
 
 export type InitInquiryRequest = {
   timeWindow: IProvidePeriod;
-  request: AddInquiryRequest;
+  request: AddInquiryRequestForm;
 };
 
 export type LinkSignageCatalogItemForm = {

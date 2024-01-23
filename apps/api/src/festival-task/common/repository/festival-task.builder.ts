@@ -11,6 +11,7 @@ import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
 import { DatabaseEvent } from "./event.query";
 import { DatabaseMobilization } from "./mobilization.query";
+import { DatabaseInquiryRequest } from "./inquiry/inquiry.query";
 
 type VisualizeFestivalTask<
   Task extends FestivalTask = FestivalTask,
@@ -35,6 +36,7 @@ type DatabaseFestivalTask = {
   inChargeInstruction: FestivalTask["instructions"]["inCharge"]["instruction"];
   inChargeVolunteers: { volunteer: Volunteer }[];
   mobilizations: DatabaseMobilization[];
+  inquiries: DatabaseInquiryRequest[];
   events: DatabaseEvent[];
 };
 
@@ -79,8 +81,8 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
       festivalActivity: FestivalActivityBuilder.fromDatabase(
         taskData.festivalActivity,
       ),
-      inquiries: [],
       mobilizations: this.buildMobilizations(taskData.mobilizations),
+      inquiries: this.buildInquiries(taskData.inquiries),
       feedbacks: [],
       history: this.buildHistory(taskData.events),
     };
@@ -94,6 +96,13 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
         ...team,
         team: team.teamCode,
       })),
+    }));
+  }
+
+  private static buildInquiries(inquiries: DatabaseInquiryRequest[]) {
+    return inquiries.map((inquiry) => ({
+      ...inquiry,
+      name: inquiry.catalogItem.name,
     }));
   }
 

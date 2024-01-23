@@ -179,15 +179,16 @@ model CatalogCategory {
 }
 
 model CatalogGear {
-  id               Int               @id @default(autoincrement())
-  name             String
-  slug             String            @unique
-  categoryId       Int?              @map("category_id")
-  category         CatalogCategory?  @relation("category", fields: [categoryId], references: [id])
-  isPonctualUsage  Boolean           @default(false) @map("is_ponctual_usage")
-  isConsumable     Boolean           @default(false) @map("is_consumable")
-  inventoryRecords InventoryRecord[] @relation()
-  inquiries        InquiryRequest[]  @relation("inquiry-request-catalog")
+  id                         Int                          @id @default(autoincrement())
+  name                       String
+  slug                       String                       @unique
+  categoryId                 Int?                         @map("category_id")
+  category                   CatalogCategory?             @relation("category", fields: [categoryId], references: [id])
+  isPonctualUsage            Boolean                      @default(false) @map("is_ponctual_usage")
+  isConsumable               Boolean                      @default(false) @map("is_consumable")
+  inventoryRecords           InventoryRecord[]            @relation()
+  inquiries                  InquiryRequest[]             @relation("inquiry-request-catalog")
+  festivalTaskInquiryRequest FestivalTaskInquiryRequest[] @relation("task-inquiry-request-catalog")
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -687,6 +688,7 @@ model FestivalTask {
   contacts            FestivalTaskContact[]
   inChargeInstruction String?                         @map("in_charge_instruction") @db.Text
   inChargeVolunteers  FestivalTaskInChargeVolunteer[]
+  inquiries           FestivalTaskInquiryRequest[]
 
   mobilizations FestivalTaskMobilization[]
 
@@ -755,6 +757,19 @@ model FestivalTaskMobilizationTeam {
 
   @@id([teamCode, mobilizationId, mobilizationftId])
   @@map("festival_task_mobilization_team")
+}
+
+model FestivalTaskInquiryRequest {
+  slug        String      @db.Text
+  catalogItem CatalogGear @relation("task-inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
+  quantity    Int
+  drive       String?
+
+  festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int          @map("ft_id")
+
+  @@id([slug, festivalTaskId])
+  @@map("festival_task_inquiry_request")
 }
 
 model FestivalTaskHistory {

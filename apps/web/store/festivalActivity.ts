@@ -38,7 +38,7 @@ import {
   castPreviewForCommunicationWithDate,
   castPreviewForSecurityWithDate,
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
-import { AddInquiryRequest } from "@overbookd/http";
+import { AddInquiryRequestForm } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 
 const repo = FestivalActivityRepository;
@@ -394,7 +394,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
-    async addInquiryRequest({ state, commit }, request: AddInquiryRequest) {
+    async addInquiryRequest({ state, commit }, request: AddInquiryRequestForm) {
       const id = state.selectedActivity.id;
       const res = await safeCall(
         this,

@@ -1,13 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsPositive, IsString } from "class-validator";
+import { IsNumber, IsPositive, IsString } from "class-validator";
 import { AddInquiryRequestForm } from "@overbookd/http";
 
 export class AddInquiryRequestDto implements AddInquiryRequestForm {
-  @ApiProperty({ required: true })
+  @ApiProperty({ type: Number, required: true })
+  @IsNumber()
   @IsPositive()
   quantity: number;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({ type: String, required: true })
   @IsString()
   slug: string;
 }
