@@ -14,3 +14,7 @@ export type UpdateGeneralForm = Omit<UpdateGeneral, "administrator"> & {
 export type UpdateInstructionsForm = Omit<UpdateInstructions, "appointment"> & {
   appointmentId?: number;
 };
+
+export type AddContactForm = {
+  contactId: Adherent["id"];
+};

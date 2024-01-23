@@ -15,6 +15,7 @@ export type {
   FestivalTaskCreationForm,
   UpdateGeneralForm,
   UpdateInstructionsForm,
+  AddContactForm,
 } from "./festival-event/festival-task.model";
 export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";

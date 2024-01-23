@@ -1,11 +1,17 @@
-import { Adherent, FestivalTask, Location } from "@overbookd/festival-event";
+import {
+  Adherent,
+  Contact,
+  FestivalTask,
+  Location,
+} from "@overbookd/festival-event";
 
 export type FestivalActivities = {
   find(id: number): Promise<FestivalTask["festivalActivity"] | null>;
 };
 
 export type Adherents = {
-  find(id: number): Promise<Adherent | null>;
+  findOne(id: number): Promise<Adherent | null>;
+  findContact(id: number): Promise<Contact | null>;
 };
 
 export type Locations = {

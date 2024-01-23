@@ -1,13 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { FestivalTask, PrepareFestivalTask } from "@overbookd/festival-event";
+import {
+  Contact,
+  FestivalTask,
+  PrepareFestivalTask,
+} from "@overbookd/festival-event";
 import { UpdateInstructionsForm } from "@overbookd/http";
-import { Locations } from "../../common/festival-task-common.model";
+import { Adherents, Locations } from "../../common/festival-task-common.model";
 
 @Injectable()
 export class InstructionsSectionService {
   constructor(
     private readonly prepare: PrepareFestivalTask,
     private readonly locations: Locations,
+    private readonly adherents: Adherents,
   ) {}
 
   async update(
@@ -22,5 +27,20 @@ export class InstructionsSectionService {
       ...instructions,
       ...appointment,
     });
+  }
+
+  async addContact(
+    id: FestivalTask["id"],
+    contactId: Contact["id"],
+  ): Promise<FestivalTask> {
+    const contact = await this.adherents.findContact(contactId);
+    return this.prepare.addContact(id, contact);
+  }
+
+  async removeContact(
+    id: FestivalTask["id"],
+    contactId: Contact["id"],
+  ): Promise<FestivalTask> {
+    return this.prepare.removeContact(id, contactId);
   }
 }
