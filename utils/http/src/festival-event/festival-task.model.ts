@@ -5,7 +5,6 @@ import {
   AddMobilization,
   TeamMobilization,
 } from "@overbookd/festival-event";
-import { InquiryRequest } from "@overbookd/festival-event";
 import { UpdateGeneral } from "@overbookd/festival-event";
 import { FestivalTask } from "@overbookd/festival-event";
 

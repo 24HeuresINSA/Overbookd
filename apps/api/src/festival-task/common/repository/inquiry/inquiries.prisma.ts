@@ -1,4 +1,3 @@
-import { InquiryOwner } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
 import { Gear, Inquiries } from "../../festival-task-common.model";
 import { SELECT_GEAR } from "./inquiry.query";
