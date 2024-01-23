@@ -1,4 +1,3 @@
-
 export const SELECT_INQUIRY_REQUEST = {
   slug: true,
   quantity: true,
