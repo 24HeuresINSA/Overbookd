@@ -199,6 +199,7 @@ export type {
   FestivalTasksForPrepare,
   UpdateGeneral,
   UpdateInstructions,
+  AddMobilization,
 } from "./festival-task/prepare/prepare";
 export { PrepareFestivalTask } from "./festival-task/prepare/prepare";
 export type { FestivalTasksForView } from "./festival-task/view/view";
@@ -210,5 +211,7 @@ export type {
   PreviewDraft as PreviewFestivalTaskDraft,
   Contact,
   Volunteer,
+  Mobilization,
+  TeamMobilization,
 } from "./festival-task/festival-task";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";

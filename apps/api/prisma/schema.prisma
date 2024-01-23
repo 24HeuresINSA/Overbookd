@@ -62,10 +62,11 @@ model User {
   chefMeals                    SharedMeal[]               @relation("chef")
   shotguns                     Shotgun[]                  @relation("guest")
 
-  festivalTaskAdministrated FestivalTask[]                  @relation("task-administrator")
+  festivalTaskAdministrated FestivalTask[]                      @relation("task-administrator")
   festivalTaskInCharge      FestivalTaskInChargeVolunteer[]
   festivalTaskContacts      FestivalTaskContact[]
   festivalTaskInstigations  FestivalTaskHistory[]
+  festivalTaskMobilizations FestivalTaskMobilizationVolunteer[]
 
   @@map("user")
 }
@@ -83,14 +84,15 @@ model Team {
   color String @default("#000000") @db.VarChar(30)
   icon  String @default("mdi-circle") @db.VarChar(255)
 
-  users              UserTeam[]
-  ownedCategories    CatalogCategory[]  @relation("owner")
-  ftRequests         FtTeamRequest[]
-  ftReviews          FtReview[]
-  permissions        TeamPermission[]
-  ft                 Ft[]
-  festivalActivities FestivalActivity[]
-  festivalTasks      FestivalTask[]
+  users                     UserTeam[]
+  ownedCategories           CatalogCategory[]              @relation("owner")
+  ftRequests                FtTeamRequest[]
+  ftReviews                 FtReview[]
+  permissions               TeamPermission[]
+  ft                        Ft[]
+  festivalActivities        FestivalActivity[]
+  festivalTasks             FestivalTask[]
+  festivalTaskMobilizations FestivalTaskMobilizationTeam[]
 
   @@map("team")
 }
@@ -686,6 +688,8 @@ model FestivalTask {
   inChargeInstruction String?                         @map("in_charge_instruction") @db.Text
   inChargeVolunteers  FestivalTaskInChargeVolunteer[]
 
+  mobilizations FestivalTaskMobilization[]
+
   @@map("festival_task")
 }
 
@@ -713,6 +717,44 @@ model FestivalTaskInChargeVolunteer {
 
   @@id([volunteerId, festivalTaskId])
   @@map("festival_task_in_charge_volunteer")
+}
+
+model FestivalTaskMobilization {
+  id                  String
+  start               DateTime
+  end                 DateTime
+  volunteers          FestivalTaskMobilizationVolunteer[]
+  teams               FestivalTaskMobilizationTeam[]
+  durationSplitInHour Int?                                @map("duration_split_in_hour")
+
+  ftId Int          @map("ft_id")
+  ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+
+  @@id([ftId, id])
+  @@map("festival_task_mobilization")
+}
+
+model FestivalTaskMobilizationVolunteer {
+  volunteer        User                     @relation(fields: [volunteerId], references: [id], onDelete: Cascade)
+  volunteerId      Int                      @map("volunteer_id")
+  mobilization     FestivalTaskMobilization @relation(fields: [mobilizationId, mobilizationftId], references: [id, ftId], onDelete: Cascade)
+  mobilizationId   String                   @map("mobilization_id")
+  mobilizationftId Int                      @map("mobilization_ft_id")
+
+  @@id([volunteerId, mobilizationId, mobilizationftId])
+  @@map("festival_task_moblilization_volunteer")
+}
+
+model FestivalTaskMobilizationTeam {
+  count            Int
+  team             Team                     @relation(fields: [teamCode], references: [code], onDelete: Cascade)
+  teamCode         String                   @map("team_code")
+  mobilization     FestivalTaskMobilization @relation(fields: [mobilizationId, mobilizationftId], references: [id, ftId], onDelete: Cascade)
+  mobilizationId   String                   @map("mobilization_id")
+  mobilizationftId Int                      @map("mobilization_ft_id")
+
+  @@id([teamCode, mobilizationId, mobilizationftId])
+  @@map("festival_task_mobilization_team")
 }
 
 model FestivalTaskHistory {

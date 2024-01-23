@@ -9,7 +9,7 @@
 
 ### Pre-Features
 
-* **festival-activity:** add creation & basic update [#1472](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1472) ([b02b0e3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b02b0e3a7e79246bc804ae4b33bed2fe777da274))
+* **festival-task:** add creation & basic update [#1472](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1472) ([b02b0e3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b02b0e3a7e79246bc804ae4b33bed2fe777da274))
 * **festival-task:** add creation logs [#1489](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1489) ([0b89e54](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0b89e549a85cacbceb5be3699d325b7a05ca59d5))
 * **festival-task:** add general section in web & api [#1485](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1485) ([0587e84](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0587e84e18248f6c8b6a355f3edb4456d583f1c2))
 * **festival-task:** add instructions section request [#1486](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1486) ([17df120](https://gitlab.com/24-heures-insa/overbookd-mono/commit/17df120d22068dac112df9c2524574e4ee2b622b))

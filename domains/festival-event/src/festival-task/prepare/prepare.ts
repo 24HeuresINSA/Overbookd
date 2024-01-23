@@ -37,7 +37,7 @@ export type FestivalTasksForPrepare = {
   save(task: FestivalTask): Promise<FestivalTask>;
 };
 
-type AddMobilization = Omit<Mobilization, "id">;
+export type AddMobilization = Omit<Mobilization, "id">;
 
 export class PrepareFestivalTask {
   constructor(private readonly festivalTasks: FestivalTasksForPrepare) {}

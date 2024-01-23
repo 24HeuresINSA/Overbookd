@@ -2,6 +2,8 @@ import {
   Adherent,
   UpdateInstructions,
   Volunteer,
+  AddMobilization,
+  TeamMobilization,
 } from "@overbookd/festival-event";
 import { UpdateGeneral } from "@overbookd/festival-event";
 import { FestivalTask } from "@overbookd/festival-event";
@@ -25,4 +27,12 @@ export type AddContactForm = {
 
 export type AddInChargeVolunteerForm = {
   volunteerId: Volunteer["id"];
+};
+
+export type AddMobilizationForm = Omit<
+  AddMobilization,
+  "volunteers" | "teams"
+> & {
+  volunteers: Adherent["id"][];
+  teams: TeamMobilization[];
 };

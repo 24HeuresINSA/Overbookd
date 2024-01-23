@@ -4,6 +4,7 @@ import {
   FestivalTask,
   FestivalTaskDraft,
   FestivalTaskKeyEvent as KeyEvent,
+  Mobilization,
   Volunteer,
 } from "@overbookd/festival-event";
 import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
@@ -11,6 +12,7 @@ import { SELECT_LOCATION } from "./location/location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 import { Prisma } from "@prisma/client";
 import { SELECT_EVENT } from "./event.query";
+import { SELECT_MOBILIZATION } from "./mobilization.query";
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -24,6 +26,7 @@ export const SELECT_FESTIVAL_TASK = {
   globalInstruction: true,
   inChargeInstruction: true,
   inChargeVolunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
+  mobilizations: { select: SELECT_MOBILIZATION },
   events: { select: SELECT_EVENT },
 };
 
@@ -41,6 +44,11 @@ export class FestivalTaskQueryBuilder {
           volunteer: { connect: { id: volunteer.id } },
         })),
       },
+      mobilizations: {
+        create: task.mobilizations.map((mobilization) =>
+          toDatabaseMobilization(mobilization),
+        ),
+      },
       events: {
         create: task.history.map(keyEventToHistory(task)),
       },
@@ -53,10 +61,13 @@ export class FestivalTaskQueryBuilder {
       task.id,
       task.instructions.inCharge.volunteers,
     );
+    const mobilizations = this.upsertMobilizations(task.id, task.mobilizations);
+
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts,
       inChargeVolunteers,
+      mobilizations,
     };
   }
 
@@ -103,6 +114,27 @@ export class FestivalTaskQueryBuilder {
       },
     };
   }
+
+  private static upsertMobilizations(
+    festivalTaskId: FestivalTask["id"],
+    mobilizations: Mobilization[],
+  ) {
+    return {
+      upsert: mobilizations.map((mobilization) => {
+        const dbMobilization = toDatabaseMobilization(mobilization);
+
+        return {
+          where: { ftId_id: { ftId: festivalTaskId, id: mobilization.id } },
+          update: dbMobilization,
+          create: dbMobilization,
+        };
+      }),
+      deleteMany: {
+        ftId: festivalTaskId,
+        id: { notIn: mobilizations.map(({ id }) => id) },
+      },
+    };
+  }
 }
 
 type StoredHistoryKeyEvent = {
@@ -123,6 +155,30 @@ function keyEventToHistory(
     context: description,
     snapshot: task as unknown as Prisma.JsonObject,
   });
+}
+
+function toDatabaseMobilization(mobilization: Mobilization) {
+  return {
+    id: mobilization.id,
+    start: mobilization.start,
+    end: mobilization.end,
+    durationSplitInHour: mobilization.durationSplitInHour,
+    volunteers: {
+      create: mobilization.volunteers.map(({ id }) => ({ volunteerId: id })),
+      deleteMany: {
+        volunteerId: { notIn: mobilization.volunteers.map(({ id }) => id) },
+      },
+    },
+    teams: {
+      create: mobilization.teams.map(({ count, team }) => ({
+        count,
+        teamCode: team,
+      })),
+      deleteMany: {
+        teamCode: { notIn: mobilization.teams.map(({ team }) => team) },
+      },
+    },
+  };
 }
 
 function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
