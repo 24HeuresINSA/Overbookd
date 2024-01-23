@@ -3,6 +3,7 @@ import { DRAFT, FestivalTaskDraft } from "@overbookd/festival-event";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { DraftGeneralResponseDto } from "./draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";
+import { KeyEventResponseDto } from "../key-event.response.dto";
 
 export class DraftFestivalTaskResponseDto implements FestivalTaskDraft {
   @ApiProperty({})
@@ -33,6 +34,11 @@ export class DraftFestivalTaskResponseDto implements FestivalTaskDraft {
 
   inquiries: FestivalTaskDraft["inquiries"];
 
+  @ApiProperty({
+    description: "Festival activity key events",
+    isArray: true,
+    type: KeyEventResponseDto,
+  })
   history: FestivalTaskDraft["history"];
 
   feedbacks: FestivalTaskDraft["feedbacks"];

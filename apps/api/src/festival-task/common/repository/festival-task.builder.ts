@@ -9,6 +9,7 @@ import {
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
+import { DatabaseEvent } from "./event.query";
 
 type VisualizeFestivalTask<
   Task extends FestivalTask = FestivalTask,
@@ -32,6 +33,7 @@ type DatabaseFestivalTask = {
   globalInstruction: FestivalTask["instructions"]["global"];
   inChargeInstruction: FestivalTask["instructions"]["inCharge"]["instruction"];
   inChargeVolunteers: { volunteer: Volunteer }[];
+  events: DatabaseEvent[];
 };
 
 export class FestivalTaskBuilder<T extends FestivalTask> {
@@ -78,8 +80,17 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
       inquiries: [],
       mobilizations: [],
       feedbacks: [],
-      history: [],
+      history: this.buildHistory(taskData.events),
     };
+  }
+
+  private static buildHistory(events: DatabaseEvent[]) {
+    return events.map((event) => ({
+      action: event.event,
+      by: event.instigator,
+      at: event.at,
+      description: event.context,
+    }));
   }
 }
 
