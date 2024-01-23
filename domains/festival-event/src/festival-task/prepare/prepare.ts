@@ -182,6 +182,23 @@ export class PrepareFestivalTask {
     return this.festivalTasks.save({ ...task, mobilizations });
   }
 
+  async removeVolunteerFromMobilization(
+    taskId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    volunteerId: Adherent["id"],
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Mobilizations.build(task.mobilizations);
+    const mobilizations = builder.removeVolunteerFrom(
+      mobilizationId,
+      volunteerId,
+    ).json;
+
+    return this.festivalTasks.save({ ...task, mobilizations });
+  }
+
   async addInquiry(
     taskId: FestivalTask["id"],
     inquiry: BaseInquiryRequest,
@@ -417,6 +434,23 @@ class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
+  removeVolunteerFrom(
+    mobilizationId: Mobilization["id"],
+    volunteerId: Adherent["id"],
+  ) {
+    const { index, value } = this.retrieveMobilization(mobilizationId);
+    if (index === -1 || !value) return this;
+
+    const builder = MobilizationFactory.build(value);
+    const mobilizations = updateItemToList(
+      this.mobilizations,
+      index,
+      builder.removeVolunteer(volunteerId).json,
+    );
+
+    return new Mobilizations(mobilizations);
+  }
+
   private retrieveMobilization(id: Mobilization["id"]): ListItem<Mobilization> {
     const index = this.mobilizations.findIndex(
       ({ id: currentId }) => currentId === id,
@@ -491,6 +525,14 @@ class MobilizationFactory {
     if (this.hasVolunteer(volunteer)) return this;
 
     const volunteers = [...this.mobilization.volunteers, volunteer];
+
+    return new MobilizationFactory({ ...this.mobilization, volunteers });
+  }
+
+  removeVolunteer(volunteerId: Adherent["id"]) {
+    const volunteers = this.mobilization.volunteers.filter(
+      ({ id }) => id !== volunteerId,
+    );
 
     return new MobilizationFactory({ ...this.mobilization, volunteers });
   }
