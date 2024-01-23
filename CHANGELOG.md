@@ -3,7 +3,7 @@
 
 ### Bug Fixes
 
-* **festival-activity:** find gears according to slug in web. [#1480](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1480) ([8501a63](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8501a63c87a832ae485b8df8d4cdb07051bd4f2b))
+* **festival-task:** find gears according to slug in web. [#1480](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1480) ([8501a63](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8501a63c87a832ae485b8df8d4cdb07051bd4f2b))
 * **trombinoscope:** enable on mobile. [#1481](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1481) ([fe049bf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fe049bf9aadfa45b288db5d593b1e3f48d9cd44a))
 
 
