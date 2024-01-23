@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
-import { IsDateString, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDateString, IsNotEmpty, IsNumber } from "class-validator";
 import { TeamMobilizationRequestDto } from "./team-mobilization.request.dto";
 
 export class AddMobilizationRequestDto implements AddMobilizationForm {
