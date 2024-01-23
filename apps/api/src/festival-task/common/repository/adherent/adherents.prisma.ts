@@ -13,7 +13,7 @@ export class PrismaAdherents implements Adherents {
     });
   }
 
-  findMany(ids: number[]): Promise<Adherent[]> {
+  findMatching(ids: number[]): Promise<Adherent[]> {
     return this.prisma.user.findMany({
       where: { id: { in: ids } },
       select: SELECT_ADHERENT,

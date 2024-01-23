@@ -18,7 +18,7 @@ export class MobilizationSectionService {
     id: FestivalTask["id"],
     form: AddMobilizationForm,
   ): Promise<FestivalTask> {
-    const volunteers = await this.adherents.findMany(form.volunteers);
+    const volunteers = await this.adherents.findMatching(form.volunteers);
     const mobilization = { ...form, volunteers };
 
     return this.prepare.addMobilization(id, mobilization);
