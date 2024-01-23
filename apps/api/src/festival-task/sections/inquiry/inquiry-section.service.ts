@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { FestivalTask, PrepareFestivalTask } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  InquiryRequest,
+  PrepareFestivalTask,
+} from "@overbookd/festival-event";
 import { AddInquiryRequestForm } from "@overbookd/http";
-import { InquiryRequest } from "@prisma/client";
 import { Inquiries } from "../../common/festival-task-common.model";
 
 @Injectable()
