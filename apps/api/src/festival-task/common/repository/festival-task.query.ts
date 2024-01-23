@@ -44,7 +44,11 @@ export class FestivalTaskQueryBuilder {
           volunteer: { connect: { id: volunteer.id } },
         })),
       },
-      // TODO: add mobilizations
+      mobilizations: {
+        create: task.mobilizations.map((mobilization) =>
+          toDatabaseMobilization(mobilization),
+        ),
+      },
       events: {
         create: task.history.map(keyEventToHistory(task)),
       },
@@ -115,8 +119,21 @@ export class FestivalTaskQueryBuilder {
     festivalTaskId: FestivalTask["id"],
     mobilizations: Mobilization[],
   ) {
-    // TODO: implement
-    return [];
+    return {
+      upsert: mobilizations.map((mobilization) => {
+        const dbMobilization = toDatabaseMobilization(mobilization);
+
+        return {
+          where: { ftId_id: { ftId: festivalTaskId, id: mobilization.id } },
+          update: dbMobilization,
+          create: dbMobilization,
+        };
+      }),
+      deleteMany: {
+        ftId: festivalTaskId,
+        id: { notIn: mobilizations.map(({ id }) => id) },
+      },
+    };
   }
 }
 
@@ -138,6 +155,30 @@ function keyEventToHistory(
     context: description,
     snapshot: task as unknown as Prisma.JsonObject,
   });
+}
+
+function toDatabaseMobilization(mobilization: Mobilization) {
+  return {
+    id: mobilization.id,
+    start: mobilization.start,
+    end: mobilization.end,
+    durationSplitInHour: mobilization.durationSplitInHour,
+    volunteers: {
+      create: mobilization.volunteers.map(({ id }) => ({ volunteerId: id })),
+      deleteMany: {
+        volunteerId: { notIn: mobilization.volunteers.map(({ id }) => id) },
+      },
+    },
+    teams: {
+      create: mobilization.teams.map(({ count, team }) => ({
+        count,
+        teamCode: team,
+      })),
+      deleteMany: {
+        teamCode: { notIn: mobilization.teams.map(({ team }) => team) },
+      },
+    },
+  };
 }
 
 function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
