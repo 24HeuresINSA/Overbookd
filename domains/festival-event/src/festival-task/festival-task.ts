@@ -5,7 +5,7 @@ import { Adherent } from "../common/adherent";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
-import { CREATED } from "../common/action";
+import { KeyEvent } from "./festival-task.event";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
@@ -67,12 +67,3 @@ export type PreviewDraft = {
 };
 
 export type Preview = PreviewDraft;
-
-type Action = typeof CREATED;
-
-export type KeyEvent = {
-  action: Action;
-  by: Preview["administrator"];
-  at: Date;
-  description: string;
-};
