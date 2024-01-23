@@ -3,6 +3,7 @@ import {
   Contact,
   FestivalTask,
   PrepareFestivalTask,
+  Volunteer,
 } from "@overbookd/festival-event";
 import { UpdateInstructionsForm } from "@overbookd/http";
 import { Adherents, Locations } from "../../common/festival-task-common.model";
@@ -42,5 +43,20 @@ export class InstructionsSectionService {
     contactId: Contact["id"],
   ): Promise<FestivalTask> {
     return this.prepare.removeContact(id, contactId);
+  }
+
+  async addInChargeVolunteer(
+    id: FestivalTask["id"],
+    volunteerId: Volunteer["id"],
+  ): Promise<FestivalTask> {
+    const contact = await this.adherents.findOne(volunteerId);
+    return this.prepare.addInchargeVolunteer(id, contact);
+  }
+
+  async removeInChargeVolunteer(
+    id: FestivalTask["id"],
+    volunteerId: Volunteer["id"],
+  ): Promise<FestivalTask> {
+    return this.prepare.removeInchargeVolunteer(id, volunteerId);
   }
 }
