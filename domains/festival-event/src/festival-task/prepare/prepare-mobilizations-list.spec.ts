@@ -14,6 +14,7 @@ import {
   SplitDurationIsNotPeriodDivider,
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
+import { TeamMobilization } from "../festival-task";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -138,6 +139,40 @@ describe("Prepare festival task mobilizations list", () => {
           async () =>
             await prepare.addTeamToMobilization(task.id, mobilization.id, team),
         ).rejects.toThrow(TeamAlreadyPartOfMobilization);
+      });
+    });
+  });
+  describe("Remove team from existing mobilization", () => {
+    describe("when team is part of the mobilization", () => {
+      it("should remove it from mobilization teams list mobilization", async () => {
+        const task = presentEscapeGame;
+        const mobilization = presentEscapeGame.mobilizations[0];
+        const teams: TeamMobilization[] = [];
+        const team = "bénévole";
+
+        const { mobilizations } = await prepare.removeTeamFromMobilization(
+          task.id,
+          mobilization.id,
+          team,
+        );
+
+        const expectedMobilization = { ...mobilization, teams };
+        expect(mobilizations).toContainEqual(expectedMobilization);
+      });
+    });
+    describe("when team is not part of the mobilization", () => {
+      it("should keep mobilization unchanged", async () => {
+        const task = presentEscapeGame;
+        const mobilization = task.mobilizations[0];
+        const team = "hard";
+
+        const { mobilizations } = await prepare.removeTeamFromMobilization(
+          task.id,
+          mobilization.id,
+          team,
+        );
+
+        expect(mobilizations).toContainEqual(mobilization);
       });
     });
   });
