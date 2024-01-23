@@ -179,16 +179,16 @@ model CatalogCategory {
 }
 
 model CatalogGear {
-  id                         Int                          @id @default(autoincrement())
-  name                       String
-  slug                       String                       @unique
-  categoryId                 Int?                         @map("category_id")
-  category                   CatalogCategory?             @relation("category", fields: [categoryId], references: [id])
-  isPonctualUsage            Boolean                      @default(false) @map("is_ponctual_usage")
-  isConsumable               Boolean                      @default(false) @map("is_consumable")
-  inventoryRecords           InventoryRecord[]            @relation()
-  inquiries                  InquiryRequest[]             @relation("inquiry-request-catalog")
-  festivalTaskInquiryRequest FestivalTaskInquiryRequest[] @relation("task-inquiry-request-catalog")
+  id                        Int                              @id @default(autoincrement())
+  name                      String
+  slug                      String                           @unique
+  categoryId                Int?                             @map("category_id")
+  category                  CatalogCategory?                 @relation("category", fields: [categoryId], references: [id])
+  isPonctualUsage           Boolean                          @default(false) @map("is_ponctual_usage")
+  isConsumable              Boolean                          @default(false) @map("is_consumable")
+  inventoryRecords          InventoryRecord[]                @relation()
+  festivalActivityInquiries FestivalActivityInquiryRequest[] @relation("activity-inquiry-request-catalog")
+  festivalTaskInquiries     FestivalTaskInquiryRequest[]     @relation("task-inquiry-request-catalog")
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -470,7 +470,7 @@ model FestivalActivity {
 
   // Inquiry
   inquiryTimeWindows FestivalActivityTimeWindowInquiry[]
-  inquiries          InquiryRequest[]
+  inquiries          FestivalActivityInquiryRequest[]
 
   @@map("festival_activity")
 }
@@ -581,9 +581,9 @@ enum ElectricityConnection {
   @@map("electricity_connection")
 }
 
-model InquiryRequest {
+model FestivalActivityInquiryRequest {
   slug        String      @db.Text
-  catalogItem CatalogGear @relation("inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
+  catalogItem CatalogGear @relation("activity-inquiry-request-catalog", fields: [slug], references: [slug], onDelete: Cascade)
   quantity    Int
   drive       String?
 
@@ -591,7 +591,7 @@ model InquiryRequest {
   faId Int              @map("fa_id")
 
   @@id([slug, faId])
-  @@map("inquiry_request")
+  @@map("festival_activity_inquiry_request")
 }
 
 model FestivalActivityReview {
