@@ -17,6 +17,6 @@ export const SELECT_GEAR = {
 export type DatabaseInquiryRequest = {
   slug: string;
   quantity: number;
-  drive: Drive;
+  drive: string;
   catalogItem: { name: string };
 };

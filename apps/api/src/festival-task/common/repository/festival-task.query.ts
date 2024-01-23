@@ -47,15 +47,16 @@ export class FestivalTaskQueryBuilder {
           volunteer: { connect: { id } },
         })),
       },
-      inquiries: {
-        create: task.inquiries.map((inquiry) => ({
-          inquiryRequest: { connect: inquiry },
-        })),
-      },
       mobilizations: {
         create: task.mobilizations.map((mobilization) =>
           toDatabaseMobilization(mobilization),
         ),
+      },
+      inquiries: {
+        create: task.inquiries.map((inquiry) => ({
+          ...inquiry,
+          festivalTaskId: task.id,
+        })),
       },
       events: {
         create: task.history.map(keyEventToHistory(task)),

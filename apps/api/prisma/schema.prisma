@@ -765,10 +765,10 @@ model FestivalTaskInquiryRequest {
   quantity    Int
   drive       String?
 
-  festivalTask   FestivalTask @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
-  festivalTaskId Int          @map("ft_id")
+  ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId Int          @map("ft_id")
 
-  @@id([slug, festivalTaskId])
+  @@id([slug, ftId])
   @@map("festival_task_inquiry_request")
 }
 
