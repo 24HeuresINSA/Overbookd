@@ -26,8 +26,9 @@ import { PermissionsGuard } from "../../../authentication/permissions-auth.guard
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { InstructionsRequestDto } from "./dto/update-instructions.request.dto";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
-import { Contact, FestivalTask } from "@overbookd/festival-event";
+import { Contact, FestivalTask, Volunteer } from "@overbookd/festival-event";
 import { AddContactRequestDto } from "./dto/add-contact.request.dto";
+import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -119,5 +120,57 @@ export class InstructionsSectionController {
     @Param("contactId", ParseIntPipe) contactId: Contact["id"],
   ): Promise<FestivalTask> {
     return this.instructionsService.removeContact(ftId, contactId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
+  @Post(":ftId/instructions/in-charge/volunteers")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalTaskResponseDto,
+  })
+  @ApiBody({
+    description: "Volunteer to add",
+    type: AddInChargeVolunteerRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  addInChargeVolunteer(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Body() { volunteerId }: AddInChargeVolunteerRequestDto,
+  ): Promise<FestivalTask> {
+    return this.instructionsService.addInChargeVolunteer(ftId, volunteerId);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
+  @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalTaskResponseDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  @ApiParam({
+    name: "volunteerId",
+    type: Number,
+    description: "Volunteer id",
+    required: true,
+  })
+  removeInChargeVolunteer(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Param("volunteerId", ParseIntPipe) volunteerId: Volunteer["id"],
+  ): Promise<FestivalTask> {
+    return this.instructionsService.removeInChargeVolunteer(ftId, volunteerId);
   }
 }
