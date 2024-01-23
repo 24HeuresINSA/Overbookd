@@ -18,11 +18,7 @@ export class MobilizationSectionService {
     id: FestivalTask["id"],
     form: AddMobilizationForm,
   ): Promise<FestivalTask> {
-    const volunteers = await Promise.all(
-      form.volunteers.map((volunteerId) => {
-        return this.adherents.findOne(volunteerId);
-      }),
-    );
+    const volunteers = await this.adherents.findMany(form.volunteers);
     const mobilization = { ...form, volunteers };
 
     return this.prepare.addMobilization(id, mobilization);

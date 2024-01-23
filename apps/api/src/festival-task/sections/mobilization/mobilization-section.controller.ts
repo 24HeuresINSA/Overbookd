@@ -51,7 +51,7 @@ export class MobilizationSectionController {
     type: DraftFestivalTaskResponseDto,
   })
   @ApiBody({
-    description: "Contact to add",
+    description: "Mobilization to add",
     type: AddMobilizationRequestDto,
   })
   @ApiParam({
@@ -60,7 +60,7 @@ export class MobilizationSectionController {
     description: "Festival activity id",
     required: true,
   })
-  addContact(
+  addMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Body() mobilization: AddMobilizationRequestDto,
   ): Promise<FestivalTask> {
@@ -87,7 +87,7 @@ export class MobilizationSectionController {
     description: "Mobilization id",
     required: true,
   })
-  removeContact(
+  removeMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
   ): Promise<FestivalTask> {

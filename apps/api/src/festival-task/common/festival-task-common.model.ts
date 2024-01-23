@@ -11,6 +11,7 @@ export type FestivalActivities = {
 
 export type Adherents = {
   findOne(id: number): Promise<Adherent | null>;
+  findMany(ids: number[]): Promise<Adherent[]>;
   findContact(id: number): Promise<Contact | null>;
 };
 
