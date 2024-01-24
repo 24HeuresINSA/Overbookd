@@ -1,6 +1,8 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   AddInquiryRequestForm,
+  AddContactForm,
+  AddInChargeVolunteerForm,
   FestivalTaskCreationForm,
   HttpStringified,
   UpdateGeneralForm,
@@ -10,6 +12,8 @@ import {
   PreviewFestivalTask,
   FestivalTask,
   InquiryRequest,
+  Contact,
+  Volunteer,
 } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -86,6 +90,48 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
+    );
+  }
+
+  static addContact(
+    context: Context,
+    ftId: FestivalTask["id"],
+    contact: AddContactForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/instructions/contacts`,
+      contact,
+    );
+  }
+
+  static removeContact(
+    context: Context,
+    ftId: FestivalTask["id"],
+    contactId: Contact["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/instructions/contacts/${contactId}`,
+    );
+  }
+
+  static addInChargeVolunteer(
+    context: Context,
+    ftId: FestivalTask["id"],
+    volunteer: AddInChargeVolunteerForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/instructions/in-charge/volunteers`,
+      volunteer,
+    );
+  }
+
+  static removeInChargeVolunteer(
+    context: Context,
+    ftId: FestivalTask["id"],
+    volunteerId: Volunteer["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/instructions/in-charge/volunteers/${volunteerId}`,
     );
   }
 }
