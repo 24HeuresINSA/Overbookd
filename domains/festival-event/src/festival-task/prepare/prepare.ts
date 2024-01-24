@@ -39,7 +39,7 @@ export type FestivalTasksForPrepare = {
 
 export type AddMobilization = Omit<Mobilization, "id">;
 
-type UpdateMobilization = {
+export type UpdateMobilization = {
   durationSplitInHour?: number | null;
   start?: Date;
   end?: Date;

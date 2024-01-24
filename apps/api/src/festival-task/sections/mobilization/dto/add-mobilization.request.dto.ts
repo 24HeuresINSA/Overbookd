@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
-import { IsDateString, IsNotEmpty, IsNumber } from "class-validator";
+import { IsDate, IsNotEmpty, IsNumber } from "class-validator";
 import { TeamMobilizationRequestDto } from "./team-mobilization.request.dto";
+import { Type } from "class-transformer";
 
 export class AddMobilizationRequestDto implements AddMobilizationForm {
   @ApiProperty({
@@ -10,7 +11,8 @@ export class AddMobilizationRequestDto implements AddMobilizationForm {
     type: Date,
   })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   start: Date;
 
   @ApiProperty({
@@ -18,7 +20,8 @@ export class AddMobilizationRequestDto implements AddMobilizationForm {
     type: Date,
   })
   @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   end: Date;
 
   @ApiProperty({
