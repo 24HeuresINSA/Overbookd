@@ -122,6 +122,6 @@ export class FestivalTaskOverviewController {
     required: true,
   })
   remove(@Param("id", ParseIntPipe) id: FestivalTask["id"]): Promise<void> {
-    return this.overviewService.removeOn(id);
+    return this.overviewService.removeOne(id);
   }
 }
