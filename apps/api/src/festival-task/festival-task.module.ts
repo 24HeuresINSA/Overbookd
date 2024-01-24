@@ -10,6 +10,8 @@ import { FestivalTaskPreviewModule } from "./preview/festival-task-preview.modul
 import { FestivalTaskPreviewController } from "./preview/festival-task-preview.controller";
 import { MobilizationSectionModule } from "./sections/mobilization/mobilization-section.module";
 import { MobilizationSectionController } from "./sections/mobilization/mobilization-section.controller";
+import { InquirySectionModule } from "./sections/inquiry/inquiry-section.module";
+import { InquirySectionController } from "./sections/inquiry/inquiry-section.controller";
 
 @Module({
   controllers: [
@@ -18,6 +20,7 @@ import { MobilizationSectionController } from "./sections/mobilization/mobilizat
     GeneralSectionController,
     InstructionsSectionController,
     MobilizationSectionController,
+    InquirySectionController,
   ],
   imports: [
     FestivalTaskCommonModule,
@@ -26,6 +29,7 @@ import { MobilizationSectionController } from "./sections/mobilization/mobilizat
     GeneralSectionModule,
     InstructionsSectionModule,
     MobilizationSectionModule,
+    InquirySectionModule,
   ],
 })
 export class FestivalTaskModule {}

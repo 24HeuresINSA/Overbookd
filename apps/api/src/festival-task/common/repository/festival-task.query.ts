@@ -6,6 +6,7 @@ import {
   FestivalTaskKeyEvent as KeyEvent,
   Mobilization,
   Volunteer,
+  isAssignedToDrive,
 } from "@overbookd/festival-event";
 import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location/location.query";
@@ -13,6 +14,7 @@ import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.
 import { Prisma } from "@prisma/client";
 import { SELECT_EVENT } from "./event.query";
 import { SELECT_MOBILIZATION } from "./mobilization.query";
+import { SELECT_INQUIRY_REQUEST } from "./inquiry/inquiry.query";
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -27,6 +29,7 @@ export const SELECT_FESTIVAL_TASK = {
   inChargeInstruction: true,
   inChargeVolunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
   mobilizations: { select: SELECT_MOBILIZATION },
+  inquiries: { select: SELECT_INQUIRY_REQUEST },
   events: { select: SELECT_EVENT },
 };
 
@@ -35,19 +38,25 @@ export class FestivalTaskQueryBuilder {
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts: {
-        create: task.instructions.contacts.map((contact) => ({
-          contact: { connect: { id: contact.id } },
+        create: task.instructions.contacts.map(({ id }) => ({
+          contact: { connect: { id } },
         })),
       },
       inChargeVolunteers: {
-        create: task.instructions.inCharge.volunteers.map((volunteer) => ({
-          volunteer: { connect: { id: volunteer.id } },
+        create: task.instructions.inCharge.volunteers.map(({ id }) => ({
+          volunteer: { connect: { id } },
         })),
       },
       mobilizations: {
         create: task.mobilizations.map((mobilization) =>
           toDatabaseMobilization(mobilization),
         ),
+      },
+      inquiries: {
+        create: task.inquiries.map((inquiry) => ({
+          ...inquiry,
+          festivalTaskId: task.id,
+        })),
       },
       events: {
         create: task.history.map(keyEventToHistory(task)),
@@ -62,12 +71,14 @@ export class FestivalTaskQueryBuilder {
       task.instructions.inCharge.volunteers,
     );
     const mobilizations = this.upsertMobilizations(task.id, task.mobilizations);
+    const inquiries = this.upsertInquiries(task);
 
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts,
       inChargeVolunteers,
       mobilizations,
+      inquiries,
     };
   }
 
@@ -132,6 +143,26 @@ export class FestivalTaskQueryBuilder {
       deleteMany: {
         ftId: festivalTaskId,
         id: { notIn: mobilizations.map(({ id }) => id) },
+      },
+    };
+  }
+
+  private static upsertInquiries(task: FestivalTask) {
+    return {
+      upsert: task.inquiries.map((request) => {
+        const update = isAssignedToDrive(request)
+          ? { quantity: request.quantity, drive: request.drive }
+          : { quantity: request.quantity };
+
+        return {
+          where: { slug_ftId: { slug: request.slug, ftId: task.id } },
+          update,
+          create: { slug: request.slug, quantity: request.quantity },
+        };
+      }),
+      deleteMany: {
+        ftId: task.id,
+        slug: { notIn: task.inquiries.map(({ slug }) => slug) },
       },
     };
   }

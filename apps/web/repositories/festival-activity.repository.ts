@@ -32,7 +32,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { AddInquiryRequest } from "@overbookd/http";
+import { AddInquiryRequestForm } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 
@@ -315,7 +315,7 @@ export class FestivalActivityRepository {
   static addInquiryRequest(
     context: Context,
     faId: FestivalActivity["id"],
-    request: AddInquiryRequest,
+    request: AddInquiryRequestForm,
   ) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/inquiry/requests`,

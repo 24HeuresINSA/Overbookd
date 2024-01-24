@@ -13,6 +13,7 @@ import {
 import { PrismaRemoveFestivalTasks } from "./repository/remove-festival-tasks.prisma";
 import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma";
 import { PrismaLocations } from "./repository/location/locations.prisma";
+import { PrismaInquiries } from "./repository/inquiry/inquiries.prisma";
 
 @Module({
   providers: [
@@ -42,6 +43,11 @@ import { PrismaLocations } from "./repository/location/locations.prisma";
     {
       provide: PrismaLocations,
       useFactory: (prisma: PrismaService) => new PrismaLocations(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaInquiries,
+      useFactory: (prisma: PrismaService) => new PrismaInquiries(prisma),
       inject: [PrismaService],
     },
     {
@@ -86,6 +92,7 @@ import { PrismaLocations } from "./repository/location/locations.prisma";
   exports: [
     PrismaAdherents,
     PrismaLocations,
+    PrismaInquiries,
     PrismaFestivalActivities,
     CreateFestivalTask,
     PrepareFestivalTask,
