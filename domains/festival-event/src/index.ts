@@ -200,6 +200,7 @@ export type {
   UpdateGeneral,
   UpdateInstructions,
   AddMobilization,
+  UpdateMobilization,
 } from "./festival-task/prepare/prepare";
 export { PrepareFestivalTask } from "./festival-task/prepare/prepare";
 export type { FestivalTasksForView } from "./festival-task/view/view";
