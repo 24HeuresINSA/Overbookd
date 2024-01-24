@@ -18,6 +18,7 @@ export class PrismaViewFestivalTasks implements FestivalTasksForView {
     const tasks = await this.prisma.festivalTask.findMany({
       where: IS_NOT_DELETED,
       select: SELECT_FESTIVAL_TASK,
+      orderBy: { id: "asc" },
     });
     return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
   }

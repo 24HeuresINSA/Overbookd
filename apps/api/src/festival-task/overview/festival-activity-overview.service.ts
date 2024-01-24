@@ -50,7 +50,7 @@ export class FestivalTaskOverviewService {
     return task;
   }
 
-  async removeOn(id: FestivalTask["id"]): Promise<void> {
+  async removeOne(id: FestivalTask["id"]): Promise<void> {
     await this.remove.apply(id);
   }
 }
