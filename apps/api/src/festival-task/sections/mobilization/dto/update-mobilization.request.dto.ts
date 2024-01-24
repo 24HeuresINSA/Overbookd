@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { UpdateMobilization } from "@overbookd/festival-event";
-import { IsDateString, IsOptional } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsOptional } from "class-validator";
 
 export class UpdateMobilizationRequestDto implements UpdateMobilization {
   @ApiProperty({
@@ -9,7 +10,8 @@ export class UpdateMobilizationRequestDto implements UpdateMobilization {
     required: false,
   })
   @IsOptional()
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   start: Date;
 
   @ApiProperty({
@@ -18,7 +20,8 @@ export class UpdateMobilizationRequestDto implements UpdateMobilization {
     required: false,
   })
   @IsOptional()
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   end: Date;
 
   @ApiProperty({

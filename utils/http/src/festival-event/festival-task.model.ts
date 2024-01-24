@@ -33,6 +33,10 @@ export type AddMobilizationForm = Omit<
   AddMobilization,
   "volunteers" | "teams"
 > & {
-  volunteers: Adherent["id"][];
+  volunteers: Volunteer["id"][];
   teams: TeamMobilization[];
+};
+
+export type AddVolunteerToMobilizationForm = {
+  volunteerId: Volunteer["id"];
 };

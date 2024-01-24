@@ -33,6 +33,7 @@ import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festi
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { UpdateMobilizationRequestDto } from "./dto/update-mobilization.request.dto";
 import { TeamMobilizationRequestDto } from "./dto/team-mobilization.request.dto";
+import { AddVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -155,12 +156,12 @@ export class MobilizationSectionController {
   })
   @ApiBody({
     description: "Volunteer id",
-    type: Number,
+    type: AddVolunteerRequestDto,
   })
   addVolunteer(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
-    @Body("volunteerId", ParseIntPipe) volunteerId: number,
+    @Body() { volunteerId }: AddVolunteerRequestDto,
   ): Promise<FestivalTask> {
     return this.mobilizationService.addVolunteer(
       ftId,
