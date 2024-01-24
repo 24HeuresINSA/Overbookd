@@ -14,6 +14,7 @@ import {
   FestivalTaskNotFound,
   GearAlreadyRequested,
   MobilizationAlreadyExist,
+  MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
@@ -37,6 +38,12 @@ export type FestivalTasksForPrepare = {
 };
 
 export type AddMobilization = Omit<Mobilization, "id">;
+
+type UpdateMobilization = {
+  durationSplitInHour?: number | null;
+  start?: Date;
+  end?: Date;
+};
 
 export class PrepareFestivalTask {
   constructor(private readonly festivalTasks: FestivalTasksForPrepare) {}
@@ -133,6 +140,19 @@ export class PrepareFestivalTask {
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.remove(mobilizationId).json;
+    return this.festivalTasks.save({ ...task, mobilizations });
+  }
+
+  async updateMobilization(
+    taskId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    update: UpdateMobilization,
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Mobilizations.build(task.mobilizations);
+    const mobilizations = builder.update(mobilizationId, update).json;
     return this.festivalTasks.save({ ...task, mobilizations });
   }
 
@@ -388,6 +408,20 @@ class Mobilizations {
     );
   }
 
+  update(mobilizationId: Mobilization["id"], update: UpdateMobilization) {
+    const { index, value } = this.retrieveMobilization(mobilizationId);
+    if (index === -1 || !value) throw new MobilizationNotFound();
+
+    const builder = MobilizationFactory.build(value);
+    const mobilizations = updateItemToList(
+      this.mobilizations,
+      index,
+      builder.update(update).json,
+    );
+
+    return new Mobilizations(mobilizations);
+  }
+
   addTeamTo(mobilizationId: Mobilization["id"], team: TeamMobilization) {
     const { index, value } = this.retrieveMobilization(mobilizationId);
     if (index === -1 || !value) return this;
@@ -500,6 +534,12 @@ class MobilizationFactory {
     const endMinutes = Duration.ms(end.getTime()).inMinutes;
 
     return `${startMinutes}-${endMinutes}`;
+  }
+
+  update(update: UpdateMobilization) {
+    const form = { ...this.mobilization, ...update };
+
+    return MobilizationFactory.init(form);
   }
 
   addTeam(team: TeamMobilization) {
