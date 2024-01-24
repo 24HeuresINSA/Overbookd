@@ -17,7 +17,7 @@
       />
 
       <h3>Matos</h3>
-      <FaInquiryFormFields
+      <InquiryFormFields
         :gear="gear"
         :quantity="quantity"
         @update:gear="updateGear"
@@ -42,7 +42,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import FaTimeWindowFormFields from "../../time-window/FaTimeWindowFormFields.vue";
-import FaInquiryFormFields from "./FaInquiryFormFields.vue";
+import InquiryFormFields from "./InquiryFormFields.vue";
 import { InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
@@ -56,7 +56,7 @@ type FaInitInquiryCardData = InputRulesData &
 
 export default defineComponent({
   name: "FaInitInquiryFormCard",
-  components: { FaTimeWindowFormFields, FaInquiryFormFields },
+  components: { FaTimeWindowFormFields, InquiryFormFields },
   data: (): FaInitInquiryCardData => ({
     start: new Date(),
     end: new Date(),

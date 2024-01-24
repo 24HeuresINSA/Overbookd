@@ -2,10 +2,12 @@ import {
   PreviewFestivalTask,
   FestivalTask,
   DRAFT,
+  InquiryRequest,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
 import {
+  AddInquiryRequestForm,
   FestivalTaskCreationForm,
   UpdateGeneralForm,
   UpdateInstructionsForm,
@@ -133,6 +135,32 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.updateInstructions(this, id, instructions),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    /* UPDATE INQUIRY */
+    async addInquiryRequest({ state, commit }, inquiry: AddInquiryRequestForm) {
+      const res = await safeCall(
+        this,
+        repo.addInquiryRequest(this, state.selectedTask.id, inquiry),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async removeInquiryRequest(
+      { state, commit },
+      inquirySlug: InquiryRequest["slug"],
+    ) {
+      const res = await safeCall(
+        this,
+        repo.removeInquiryRequest(this, state.selectedTask.id, inquirySlug),
       );
       if (!res) return;
 

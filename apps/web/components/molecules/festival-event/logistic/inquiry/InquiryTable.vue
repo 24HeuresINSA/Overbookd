@@ -57,8 +57,8 @@ export default defineComponent({
       required: true,
     },
     owner: {
-      type: String as () => InquiryOwner,
-      required: true,
+      type: String as () => InquiryOwner | null,
+      default: () => null,
     },
     disabled: {
       type: Boolean,
@@ -81,6 +81,7 @@ export default defineComponent({
       return drives;
     },
     cantLinkDrive(): boolean {
+      if (!this.owner) return true;
       return !this.$accessor.user.isMemberOf(this.owner);
     },
     noDataMessage(): string {
