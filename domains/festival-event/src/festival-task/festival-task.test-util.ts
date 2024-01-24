@@ -127,7 +127,7 @@ export const saturday11h: BuildTimeWindow = {
   date: new Date("2024-05-18T11:00+02:00"),
   id: "28600380",
 };
-export const saturday18h: BuildTimeWindow = {
+const saturday18h: BuildTimeWindow = {
   date: new Date("2024-05-18T18:00+02:00"),
   id: "28600800",
 };
