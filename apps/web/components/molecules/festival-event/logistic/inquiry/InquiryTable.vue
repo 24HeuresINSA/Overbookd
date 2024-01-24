@@ -1,19 +1,21 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="dataTableHeaders"
     :items="inquiries"
     item-key="key"
     :items-per-page="-1"
     disable-pagination
     hide-default-footer
-    dense
+    :dense="dense"
   >
     <template #item.quantity="{ item }">
       {{ displayQuantity(item) }}
     </template>
 
     <template #item.drive="{ item }">
+      <p v-if="disabled">{{ item.drive }}</p>
       <v-autocomplete
+        v-else
         :value="item.drive"
         :items="drives"
         :readonly="cantLinkDrive"
@@ -47,6 +49,7 @@ import { Header } from "~/utils/models/data-table.model";
 
 type InquiryTableData = {
   headers: Header[];
+  actionHeader: Header;
 };
 
 export default defineComponent({
@@ -64,14 +67,23 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    dense: {
+      type: Boolean,
+      default: false,
+    },
   },
   data: (): InquiryTableData => ({
     headers: [
       { text: "Quantité", value: "quantity", width: "20%" },
       { text: "Nom", value: "name" },
       { text: "Lieux de retrait", value: "drive", width: "150px" },
-      { text: "Actions", value: "actions", width: "100px", sortable: false },
     ],
+    actionHeader: {
+      text: "Actions",
+      value: "actions",
+      width: "100px",
+      sortable: false,
+    },
   }),
   computed: {
     inquiry(): FestivalActivity["inquiry"] {
@@ -93,6 +105,11 @@ export default defineComponent({
         default:
           return "Aucune demande de matos";
       }
+    },
+    dataTableHeaders(): Header[] {
+      return this.disabled
+        ? this.headers
+        : [...this.headers, this.actionHeader];
     },
   },
   methods: {
