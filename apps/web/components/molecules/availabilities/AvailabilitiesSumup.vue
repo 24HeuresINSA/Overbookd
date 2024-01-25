@@ -32,9 +32,7 @@ import {
   hasAvailabilityPeriodError,
   isEndOfAvailabilityPeriod,
 } from "~/utils/availabilities/availabilities";
-import {
-  formatDateWithExplicitMonth,
-} from "~/utils/date/date.utils";
+import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { UserPersonalData } from "@overbookd/user";
