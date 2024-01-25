@@ -9,7 +9,7 @@
     </v-card-title>
 
     <v-card-text class="pb-0">
-      <FaTimeWindowFormFields
+      <PeriodFormFields
         :start="start"
         :end="end"
         @update:start="updateStart"
@@ -41,7 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaTimeWindowFormFields from "../../time-window/FaTimeWindowFormFields.vue";
+import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import InquiryFormFields from "./InquiryFormFields.vue";
 import { InitInquiryRequest } from "@overbookd/http";
 import { IProvidePeriod, Period } from "@overbookd/period";
@@ -56,7 +56,7 @@ type FaInitInquiryCardData = InputRulesData &
 
 export default defineComponent({
   name: "FaInitInquiryFormCard",
-  components: { FaTimeWindowFormFields, InquiryFormFields },
+  components: { PeriodFormFields, InquiryFormFields },
   data: (): FaInitInquiryCardData => ({
     start: new Date(),
     end: new Date(),

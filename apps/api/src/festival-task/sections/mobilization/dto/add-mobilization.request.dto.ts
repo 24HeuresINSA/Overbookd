@@ -1,7 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
-import { IsDate, IsNotEmpty, IsNumber } from "class-validator";
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+} from "class-validator";
 import { TeamMobilizationRequestDto } from "./team-mobilization.request.dto";
 import { Type } from "class-transformer";
 
@@ -29,6 +35,8 @@ export class AddMobilizationRequestDto implements AddMobilizationForm {
     type: Number,
     required: false,
   })
+  @IsOptional()
+  @IsNumber()
   durationSplitInHour: number | null;
 
   @ApiProperty({
@@ -44,5 +52,6 @@ export class AddMobilizationRequestDto implements AddMobilizationForm {
     type: TeamMobilizationRequestDto,
     isArray: true,
   })
+  @IsObject({ each: true })
   teams: TeamMobilization[];
 }

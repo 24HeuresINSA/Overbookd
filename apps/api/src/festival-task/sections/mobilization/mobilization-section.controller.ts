@@ -61,6 +61,7 @@ export class MobilizationSectionController {
   @ApiBody({
     description: "Mobilization to add",
     type: AddMobilizationRequestDto,
+    isArray: true,
   })
   @ApiParam({
     name: "ftId",

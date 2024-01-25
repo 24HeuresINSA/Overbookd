@@ -13,7 +13,7 @@
     </v-card-subtitle>
 
     <v-card-text>
-      <FaTimeWindowFormFields
+      <PeriodFormFields
         v-show="mustHaveAtLeastOneTimeWindow"
         :start="start"
         :end="end"
@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaTimeWindowFormFields from "~/components/molecules/festival-event/time-window/FaTimeWindowFormFields.vue";
+import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import { FestivalActivity } from "@overbookd/festival-event";
 import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { IProvidePeriod, Period } from "@overbookd/period";
@@ -68,7 +68,7 @@ type AskPublicDataFormCardData = IProvidePeriod & {
 
 export default defineComponent({
   name: "AskPublicDataFormCard",
-  components: { FaTimeWindowFormFields },
+  components: { PeriodFormFields },
   data: (): AskPublicDataFormCardData => ({
     start: new Date(),
     end: new Date(),
