@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { isReadonly } from "vue";
+import Vue from "vue";
 import { Period } from "@overbookd/period";
 import {
   AvailabilityDate,
@@ -30,13 +30,10 @@ import {
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   hasAvailabilityPeriodError,
-  isAvailabilityPeriodSelected,
   isEndOfAvailabilityPeriod,
 } from "~/utils/availabilities/availabilities";
-import { generateNewPeriod } from "~/utils/availabilities/period";
 import {
   formatDateWithExplicitMonth,
-  setDateHour,
 } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";

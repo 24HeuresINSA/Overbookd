@@ -42,19 +42,15 @@ import {
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   hasAvailabilityPeriodError,
-  isAvailabilityPeriodSaved,
-  isAvailabilityPeriodSelected,
   isEndOfAvailabilityPeriod,
   isPeriodIncludedByAnother,
 } from "~/utils/availabilities/availabilities";
-import { generateNewPeriod } from "~/utils/availabilities/period";
 import { getCharismaByDate } from "~/utils/models/charisma-period.model";
 import { isPartyShift } from "~/utils/shift/shift";
 import {
   formatDateDayName,
   formatDateDayNumber,
   computeTomorrowDate,
-  setDateHour,
 } from "~/utils/date/date.utils";
 
 const ALL_STARTING_HOURS = [
