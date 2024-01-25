@@ -61,11 +61,16 @@
         :items-per-page="-1"
         hide-default-footer
       >
+        <template #item.volunteer="{ item }">
+          {{ formatUserNameWithNickname(item) }}
+        </template>
+
         <template #item.actions="{ item }">
           <v-btn icon @click="removeContact(item)">
             <v-icon>mdi-trash-can</v-icon>
           </v-btn>
         </template>
+
         <template #no-data> Aucun contact </template>
       </v-data-table>
     </v-card-text>
@@ -82,6 +87,7 @@ import { FestivalTask } from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type InstructionsCardData = {
   contact: User | null;
@@ -94,9 +100,7 @@ export default Vue.extend({
   data: (): InstructionsCardData => ({
     contact: null,
     contactHeaders: [
-      { text: "Prénom", value: "firstname" },
-      { text: "Nom", value: "lastname" },
-      { text: "Surnom", value: "nickname" },
+      { text: "Bénévole", value: "volunteer" },
       { text: "Téléphone", value: "phone" },
       { text: "Actions", value: "actions", sortable: false },
     ],
@@ -145,6 +149,7 @@ export default Vue.extend({
     removeInChargeVolunteer(volunteer: User) {
       this.$accessor.festivalTask.removeInChargeVolunteer(volunteer.id);
     },
+    formatUserNameWithNickname,
   },
 });
 </script>
