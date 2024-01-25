@@ -2,22 +2,7 @@
   <div>
     <h1>Récap Matos</h1>
     <GearFilter v-model="filter" @change="searchGears" />
-    <v-expansion-panels>
-      <v-expansion-panel v-for="preview in previews" :key="preview.slug">
-        <v-expansion-panel-header>
-          <div class="gear-recap__header-content">
-            <h2>{{ preview.name }}</h2>
-            <div v-show="preview.isConsumable" class="icon">
-              <v-icon size="24"> mdi-delete-empty-outline </v-icon>
-              <span class="icon-detail">Consommable</span>
-            </div>
-          </div>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          Contenu à définir
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <DahsboardGearListing />
   </div>
 </template>
 
@@ -26,7 +11,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalogGear";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
-import { GearPreview } from "@overbookd/http";
+import DahsboardGearListing from "~/components/organisms/logistic/DahsboardGearListing.vue";
 
 interface GearRecapData {
   filter: FilterGear;
@@ -34,7 +19,7 @@ interface GearRecapData {
 
 export default Vue.extend({
   name: "GearRecap",
-  components: { GearFilter },
+  components: { GearFilter, DahsboardGearListing },
   data(): GearRecapData {
     return {
       filter: {
@@ -48,9 +33,6 @@ export default Vue.extend({
     title: "Récap Matos",
   }),
   computed: {
-    previews(): GearPreview[] {
-      return this.$accessor.logisticDashboard.previews;
-    },
     canSearch(): boolean {
       const { name, category, team } = this.filter;
       return (
@@ -59,9 +41,6 @@ export default Vue.extend({
         ) || [name, category, team].every((searchOption) => !searchOption)
       );
     },
-  },
-  mounted() {
-    this.$accessor.logisticDashboard.fetchPreviews();
   },
   methods: {
     async searchGears() {
@@ -89,30 +68,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.gear-recap {
-  &__header-content {
-    display: flex;
-    gap: 5px;
-  }
-}
-.icon {
-  position: relative;
-  display: inline-block;
-  .icon-detail {
-    visibility: hidden;
-    font-size: 0.8rem;
-    text-align: center;
-    user-select: none;
-    z-index: 1;
-    opacity: 0.75;
-    @media only screen and (max-width: $mobile-max-width) {
-      display: none;
-    }
-  }
-}
-.icon:hover .icon-detail {
-  visibility: visible;
-}
-</style>
