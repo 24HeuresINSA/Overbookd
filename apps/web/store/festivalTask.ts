@@ -5,11 +5,14 @@ import {
   InquiryRequest,
   Contact,
   Volunteer,
+  UpdateMobilization,
+  Mobilization,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
 import {
   AddInquiryRequestForm,
+  AddMobilizationForm,
   FestivalTaskCreationForm,
   UpdateGeneralForm,
   UpdateInstructionsForm,
@@ -186,6 +189,56 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.removeInChargeVolunteer(this, state.selectedTask.id, volunteerId),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    /* UPDATE MOBILIZATION */
+    async addMobilization(
+      { state, commit },
+      mobilization: AddMobilizationForm,
+    ) {
+      const res = await safeCall(
+        this,
+        repo.addMobilization(this, state.selectedTask.id, mobilization),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async updateMobilization(
+      { state, commit },
+      {
+        mobilizationId,
+        mobilization,
+      }: {
+        mobilizationId: Mobilization["id"];
+        mobilization: UpdateMobilization;
+      },
+    ) {
+      const ftId = state.selectedTask.id;
+      const res = await safeCall(
+        this,
+        repo.updateMobilization(this, ftId, mobilizationId, mobilization),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async removeMobilization(
+      { state, commit },
+      mobilizationId: Mobilization["id"],
+    ) {
+      const res = await safeCall(
+        this,
+        repo.removeMobilization(this, state.selectedTask.id, mobilizationId),
       );
       if (!res) return;
 

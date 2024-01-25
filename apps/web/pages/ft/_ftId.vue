@@ -5,6 +5,7 @@
       <FtGeneralCard id="general" />
       <InstructionsCard id="instructions" />
       <ParentFaCard id="fa" />
+      <MobilizationCard id="mobilization" />
       <FtInquityCard id="inquiry" />
     </v-container>
     <SnackNotificationContainer />
@@ -17,12 +18,12 @@ import FtGeneralCard from "~/components/organisms/festival-event/festival-task/F
 import InstructionsCard from "~/components/organisms/festival-event/festival-task/InstructionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import { FestivalTask } from "@overbookd/festival-event";
 import FtInquityCard from "~/components/organisms/festival-event/festival-task/FtInquityCard.vue";
 import ParentFaCard from "~/components/organisms/festival-event/festival-task/ParentFaCard.vue";
+import MobilizationCard from "~/components/organisms/festival-event/festival-task/MobilizationCard.vue";
+import { FestivalTask } from "@overbookd/festival-event";
 
 export default defineComponent({
-  name: "Ft",
   components: {
     FestivalEventSidebar,
     SnackNotificationContainer,
@@ -30,6 +31,7 @@ export default defineComponent({
     InstructionsCard,
     FtInquityCard,
     ParentFaCard,
+    MobilizationCard,
   },
   computed: {
     selectedTask(): FestivalTask {
