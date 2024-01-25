@@ -107,8 +107,14 @@ export default Vue.extend({
     search() {
       // EASTER EGG: flip the content when user write "bde" in the search bar
       const search = this.search.toLowerCase();
-      if (search === "bde") this.$nuxt.$emit("flip");
-      if (search === "ebd") this.$nuxt.$emit("unflip");
+      switch (search) {
+        case "bde":
+          this.$nuxt.$emit("flip");
+          break;
+        case "ebd":
+          this.$nuxt.$emit("unflip");
+          break;
+      }
       // END EASTER EGG
     },
   },
