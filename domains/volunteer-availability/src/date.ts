@@ -15,8 +15,8 @@ type October = "10";
 type November = "11";
 type December = "12";
 
-type With30Days = April | July | September | November;
-type With31Days = January | March | May | June | August | October | December;
+type With30Days = April | June | September | November;
+type With31Days = January | March | May | July | August | October | December;
 
 type TwentyEightDays =
   | "01"
