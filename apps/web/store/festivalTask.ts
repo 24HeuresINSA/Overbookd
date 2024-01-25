@@ -3,6 +3,8 @@ import {
   FestivalTask,
   DRAFT,
   InquiryRequest,
+  Contact,
+  Volunteer,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
@@ -131,10 +133,59 @@ export const actions = actionTree(
       { state, commit },
       instructions: UpdateInstructionsForm,
     ) {
-      const id = state.selectedTask.id;
       const res = await safeCall(
         this,
-        repo.updateInstructions(this, id, instructions),
+        repo.updateInstructions(this, state.selectedTask.id, instructions),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async addContact({ state, commit }, contactId: Contact["id"]) {
+      const res = await safeCall(
+        this,
+        repo.addContact(this, state.selectedTask.id, { contactId }),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async removeContact({ state, commit }, contactId: Contact["id"]) {
+      const res = await safeCall(
+        this,
+        repo.removeContact(this, state.selectedTask.id, contactId),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async addInChargeVolunteer(
+      { state, commit },
+      volunteerId: Volunteer["id"],
+    ) {
+      const res = await safeCall(
+        this,
+        repo.addInChargeVolunteer(this, state.selectedTask.id, { volunteerId }),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async removeInChargeVolunteer(
+      { state, commit },
+      volunteerId: Volunteer["id"],
+    ) {
+      const res = await safeCall(
+        this,
+        repo.removeInChargeVolunteer(this, state.selectedTask.id, volunteerId),
       );
       if (!res) return;
 
