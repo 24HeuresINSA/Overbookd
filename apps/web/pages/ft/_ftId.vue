@@ -4,6 +4,7 @@
     <v-container class="container ft">
       <FtGeneralCard id="general" />
       <InstructionsCard id="instructions" />
+      <FtInquityCard id="inquiry" />
     </v-container>
     <SnackNotificationContainer />
   </div>
@@ -16,6 +17,7 @@ import InstructionsCard from "~/components/organisms/festival-event/festival-tas
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import { FestivalTask } from "@overbookd/festival-event";
+import FtInquityCard from "~/components/organisms/festival-event/festival-task/FtInquityCard.vue";
 
 export default defineComponent({
   name: "Ft",
@@ -24,6 +26,7 @@ export default defineComponent({
     SnackNotificationContainer,
     FtGeneralCard,
     InstructionsCard,
+    FtInquityCard,
   },
   computed: {
     selectedTask(): FestivalTask {

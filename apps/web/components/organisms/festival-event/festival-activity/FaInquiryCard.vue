@@ -54,7 +54,7 @@
         />
 
         <v-form v-show="!shouldInitInquiry" class="inquiry-form">
-          <FaInquiryFormFields
+          <InquiryFormFields
             class="inquiry-form__fields"
             :gear="gear"
             :quantity="quantity"
@@ -189,7 +189,7 @@ import { defineComponent } from "vue";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
 import FaLinkDriveFormCard from "~/components/molecules/festival-event/logistic/inquiry/FaLinkDriveFormCard.vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
-import FaInquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/FaInquiryFormFields.vue";
+import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
 import {
   FestivalActivity,
   InquiryRequest,
@@ -225,7 +225,7 @@ export default defineComponent({
   name: "FaInquiryCard",
   components: {
     InquiryTable,
-    FaInquiryFormFields,
+    InquiryFormFields,
     FaTimeWindowTable,
     FaInitInquiryFormCard,
     FaLinkDriveFormCard,
@@ -406,8 +406,7 @@ export default defineComponent({
     width: 100%;
   }
   &__btn {
-    margin-left: 20px;
-    margin-bottom: 30px;
+    margin: 10px 0 30px 20px;
   }
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;

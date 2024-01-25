@@ -23,7 +23,7 @@ import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 
 export default defineComponent({
-  name: "FaInquiryFormFields",
+  name: "InquiryFormFields",
   components: { SearchGear },
   props: {
     gear: {

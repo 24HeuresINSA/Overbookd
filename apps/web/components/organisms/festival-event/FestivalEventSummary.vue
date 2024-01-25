@@ -53,6 +53,7 @@ export default Vue.extend({
         icon: "mdi-order-bool-descending-variant",
       },
       { id: "fa", text: "FA associée", icon: "mdi-chart-bubble" },
+      { id: "inquiry", text: "Demande de matos", icon: "mdi-truck" },
       { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
     ],
   }),

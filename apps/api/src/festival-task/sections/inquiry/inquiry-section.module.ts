@@ -10,10 +10,10 @@ import { PrismaInquiries } from "../../common/repository/inquiry/inquiries.prism
       provide: InquirySectionService,
       useFactory: (prepare: PrepareFestivalTask, inquiries: PrismaInquiries) =>
         new InquirySectionService(prepare, inquiries),
-      inject: [PrepareFestivalTask],
+      inject: [PrepareFestivalTask, PrismaInquiries],
     },
   ],
-  imports: [FestivalTaskCommonModule, PrismaInquiries],
+  imports: [FestivalTaskCommonModule],
   exports: [InquirySectionService],
 })
 export class InquirySectionModule {}

@@ -1,11 +1,16 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
+  AddInquiryRequestForm,
   FestivalTaskCreationForm,
   HttpStringified,
   UpdateGeneralForm,
   UpdateInstructionsForm,
 } from "@overbookd/http";
-import { PreviewFestivalTask, FestivalTask } from "@overbookd/festival-event";
+import {
+  PreviewFestivalTask,
+  FestivalTask,
+  InquiryRequest,
+} from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
 
@@ -59,6 +64,28 @@ export class FestivalTaskRepository {
     return context.$axios.patch<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/instructions`,
       instructions,
+    );
+  }
+
+  /* UPDATE INQUIRY */
+  static addInquiryRequest(
+    context: Context,
+    ftId: FestivalTask["id"],
+    inquiry: AddInquiryRequestForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/inquiry/requests`,
+      inquiry,
+    );
+  }
+
+  static removeInquiryRequest(
+    context: Context,
+    ftId: FestivalTask["id"],
+    inquirySlug: InquiryRequest["slug"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
     );
   }
 }
