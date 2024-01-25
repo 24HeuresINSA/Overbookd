@@ -79,8 +79,8 @@ export default defineComponent({
   emits: ["add", "remove"],
   data: (): MobilizationTableData => ({
     headers: [
-      { text: "Début", value: "name" },
-      { text: "Fin", value: "date" },
+      { text: "Début", value: "start" },
+      { text: "Fin", value: "end" },
       { text: "Découpage", value: "durationSplitInHour" },
       { text: "Bénévoles requis", value: "volunteers" },
       { text: "Equipes requises", value: "teams" },

@@ -49,7 +49,7 @@ export class FestivalTaskQueryBuilder {
       },
       mobilizations: {
         create: task.mobilizations.map((mobilization) =>
-          toDatabaseMobilization(mobilization),
+          databaseMobilizationForCreation(mobilization),
         ),
       },
       inquiries: {
@@ -131,15 +131,11 @@ export class FestivalTaskQueryBuilder {
     mobilizations: Mobilization[],
   ) {
     return {
-      upsert: mobilizations.map((mobilization) => {
-        const dbMobilization = toDatabaseMobilization(mobilization);
-
-        return {
-          where: { ftId_id: { ftId: festivalTaskId, id: mobilization.id } },
-          update: dbMobilization,
-          create: dbMobilization,
-        };
-      }),
+      upsert: mobilizations.map((mobilization) => ({
+        where: { ftId_id: { ftId: festivalTaskId, id: mobilization.id } },
+        update: databaseMobilisationForUpdate(mobilization),
+        create: databaseMobilizationForCreation(mobilization),
+      })),
       deleteMany: {
         ftId: festivalTaskId,
         id: { notIn: mobilizations.map(({ id }) => id) },
@@ -188,7 +184,7 @@ function keyEventToHistory(
   });
 }
 
-function toDatabaseMobilization(mobilization: Mobilization) {
+function databaseMobilisationForUpdate(mobilization: Mobilization) {
   return {
     id: mobilization.id,
     start: mobilization.start,
@@ -208,6 +204,24 @@ function toDatabaseMobilization(mobilization: Mobilization) {
       deleteMany: {
         teamCode: { notIn: mobilization.teams.map(({ team }) => team) },
       },
+    },
+  };
+}
+
+function databaseMobilizationForCreation(mobilization: Mobilization) {
+  return {
+    id: mobilization.id,
+    start: mobilization.start,
+    end: mobilization.end,
+    durationSplitInHour: mobilization.durationSplitInHour,
+    volunteers: {
+      create: mobilization.volunteers.map(({ id }) => ({ volunteerId: id })),
+    },
+    teams: {
+      create: mobilization.teams.map(({ count, team }) => ({
+        count,
+        teamCode: team,
+      })),
     },
   };
 }
