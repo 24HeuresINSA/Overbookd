@@ -74,16 +74,21 @@ export default Vue.extend({
     });
 
     // EASTER EGG: flip the content when user write "bde" in the search bar
-    this.isContentFlipped = localStorage.getItem("flip") === "true";
+    this.isContentFlipped = localStorage.getItem("flip") === "1";
     this.$nuxt.$on("flip", () => this.flipContent());
+    this.$nuxt.$on("unflip", () => this.unflipContent());
   },
   destroyed() {
     this.notificationSource?.close();
   },
   methods: {
     flipContent() {
-      this.isContentFlipped = !this.isContentFlipped;
-      localStorage.setItem("flip", this.isContentFlipped.toString());
+      this.isContentFlipped = true;
+      localStorage.setItem("flip", "1");
+    },
+    unflipContent() {
+      this.isContentFlipped = false;
+      localStorage.removeItem("flip");
     },
   },
 });
