@@ -1,11 +1,12 @@
 <template>
   <div class="time-windows__listing">
     <v-data-table
-      :headers="headers"
+      :headers="dataTableHeaders"
       :items="timeWindows"
       item-key="key"
       :items-per-page="-1"
       hide-default-footer
+      dense
       :custom-sort="sortTimeWindows"
     >
       <template #item.start="{ item }">
@@ -56,6 +57,7 @@ import { IProvidePeriod } from "@overbookd/period";
 
 type FaTimeWindowTableData = {
   headers: Header[];
+  actionHeader: Header;
   isAddDialogOpen: boolean;
 };
 
@@ -76,13 +78,22 @@ export default defineComponent({
     headers: [
       { text: "Date de début", value: "start" },
       { text: "Date de fin", value: "end" },
-      { text: "Actions", value: "actions", sortable: false },
     ],
+    actionHeader: {
+      text: "Actions",
+      value: "actions",
+      sortable: false,
+    },
     isAddDialogOpen: false,
   }),
   computed: {
     mFA(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
+    },
+    dataTableHeaders(): Header[] {
+      return this.disabled
+        ? this.headers
+        : [...this.headers, this.actionHeader];
     },
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <v-data-table
-    :headers="headers"
+    :headers="dataTableHeaders"
     :items="inquiries"
     item-key="key"
     :items-per-page="-1"
@@ -13,10 +13,11 @@
     </template>
 
     <template #item.drive="{ item }">
+      <p v-if="cantLinkDrive">{{ item.drive }}</p>
       <v-autocomplete
+        v-else
         :value="item.drive"
         :items="drives"
-        :readonly="cantLinkDrive"
         @change="(drive) => linkDrive(item.slug, drive)"
       />
     </template>
@@ -47,6 +48,7 @@ import { Header } from "~/utils/models/data-table.model";
 
 type InquiryTableData = {
   headers: Header[];
+  actionHeader: Header;
 };
 
 export default defineComponent({
@@ -57,8 +59,8 @@ export default defineComponent({
       required: true,
     },
     owner: {
-      type: String as () => InquiryOwner | null,
-      default: () => null,
+      type: String as () => InquiryOwner,
+      required: true,
     },
     disabled: {
       type: Boolean,
@@ -70,8 +72,13 @@ export default defineComponent({
       { text: "Quantité", value: "quantity", width: "20%" },
       { text: "Nom", value: "name" },
       { text: "Lieux de retrait", value: "drive", width: "150px" },
-      { text: "Actions", value: "actions", width: "100px", sortable: false },
     ],
+    actionHeader: {
+      text: "Actions",
+      value: "actions",
+      width: "100px",
+      sortable: false,
+    },
   }),
   computed: {
     inquiry(): FestivalActivity["inquiry"] {
@@ -81,7 +88,6 @@ export default defineComponent({
       return drives;
     },
     cantLinkDrive(): boolean {
-      if (!this.owner) return true;
       return !this.$accessor.user.isMemberOf(this.owner);
     },
     noDataMessage(): string {
@@ -93,6 +99,11 @@ export default defineComponent({
         default:
           return "Aucune demande de matos";
       }
+    },
+    dataTableHeaders(): Header[] {
+      return this.disabled
+        ? this.headers
+        : [...this.headers, this.actionHeader];
     },
   },
   methods: {

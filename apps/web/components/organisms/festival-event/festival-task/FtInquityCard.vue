@@ -22,15 +22,19 @@
         </v-btn>
       </v-form>
 
-      <InquiryTable :inquiries="inquiries" @remove="removeInquiry" />
+      <InquiryTable
+        :inquiries="inquiries"
+        :owner="MATOS"
+        @remove="removeInquiry"
+      />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts">
-import { FestivalTask, InquiryRequest } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
+import { FestivalTask, InquiryRequest, MATOS } from "@overbookd/festival-event";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
@@ -38,6 +42,7 @@ import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 type FtInquiryCardData = InputRulesData & {
   gear: Gear | null;
   quantity: number;
+  MATOS: typeof MATOS;
 };
 
 export default defineComponent({
@@ -46,6 +51,7 @@ export default defineComponent({
   data: (): FtInquiryCardData => ({
     gear: null,
     quantity: 1,
+    MATOS,
     rules: {
       number: isNumber,
       min: min(1),
