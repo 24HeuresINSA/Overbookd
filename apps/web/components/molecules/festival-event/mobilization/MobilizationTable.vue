@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mobilizations__listing">
     <v-data-table
       :headers="headers"
       :items="selectedTask.mobilizations"
@@ -48,12 +48,12 @@
       <template #no-data> Aucune mobilisation </template>
     </v-data-table>
 
-    <v-btn color="primary" @click="openAddDialog">
+    <v-btn color="primary" class="mobilizations__add" @click="openAddDialog">
       Ajouter une mobilisation
     </v-btn>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <PeriodForm @add="addMobilization" @close-dialog="closeAddDialog" />
+      <MobilizationForm @add="addMobilization" @close-dialog="closeAddDialog" />
     </v-dialog>
   </div>
 </template>
@@ -61,7 +61,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import PeriodForm from "~/components/molecules/period/PeriodForm.vue";
+import MobilizationForm from "./MobilizationForm.vue";
 import { Header } from "~/utils/models/data-table.model";
 import { FestivalTask, Mobilization } from "@overbookd/festival-event";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
@@ -75,7 +75,7 @@ type MobilizationTableData = {
 
 export default defineComponent({
   name: "MobilizationTable",
-  components: { TeamChip, PeriodForm },
+  components: { TeamChip, MobilizationForm },
   emits: ["add", "remove"],
   data: (): MobilizationTableData => ({
     headers: [
@@ -100,13 +100,7 @@ export default defineComponent({
       return duration ? `${duration}h` : "";
     },
     addMobilization(mobilization: AddMobilizationForm) {
-      const form = {
-        ...mobilization,
-        durationSplitInHour: null,
-        volunteers: [],
-        teams: [],
-      };
-      this.$emit("add", form);
+      this.$emit("add", mobilization);
     },
     removeMobilization(mobilization: Mobilization) {
       this.$emit("remove", mobilization);
@@ -120,3 +114,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.mobilizations {
+  &__listing {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin-bottom: 5px;
+  }
+  &__add {
+    max-width: fit-content;
+    align-self: flex-end;
+  }
+}
+</style>

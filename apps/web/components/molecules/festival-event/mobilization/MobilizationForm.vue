@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="mobilization-card__title">
-      <h2>Ajouter un créneau</h2>
+      <h2>Ajouter une mobilisation</h2>
     </v-card-title>
 
     <v-card-subtitle>
@@ -18,12 +18,17 @@
         :end="end"
         @update:start="updateStart"
         @update:end="updateEnd"
-        @enter="addTimeWindow"
+        @enter="addMobilization"
       />
     </v-card-text>
 
     <v-card-actions class="mobilization-card__actions">
-      <v-btn :disabled="!isValid" color="primary" large @click="addTimeWindow">
+      <v-btn
+        :disabled="!canAddMobilization"
+        color="primary"
+        large
+        @click="addMobilization"
+      >
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
         Ajouter la mobilisation
       </v-btn>
@@ -36,18 +41,35 @@ import { defineComponent } from "vue";
 import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import { formatDate } from "~/utils/date/date.utils";
 import { IProvidePeriod, Period } from "@overbookd/period";
+import { TeamMobilization } from "@overbookd/festival-event";
+import { AddMobilizationForm } from "@overbookd/http";
+
+type MobilizationFormData = IProvidePeriod & {
+  durationSplitInHour: number | null;
+  teams: TeamMobilization[];
+  volunteers: number[];
+};
 
 export default defineComponent({
   name: "MobilizationForm",
   components: { PeriodFormFields },
   emits: ["add", "close-dialog"],
-  data: (): IProvidePeriod => ({
+  data: (): MobilizationFormData => ({
     start: new Date(),
     end: new Date(),
+    durationSplitInHour: null,
+    teams: [],
+    volunteers: [],
   }),
   computed: {
-    period(): IProvidePeriod {
-      return { start: this.start, end: this.end };
+    mobilization(): AddMobilizationForm {
+      return {
+        start: this.start,
+        end: this.end,
+        durationSplitInHour: this.durationSplitInHour,
+        teams: this.teams,
+        volunteers: this.volunteers,
+      };
     },
     eventStartDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -55,25 +77,35 @@ export default defineComponent({
     displayedManifDate(): string {
       return `vendredi ${formatDate(this.eventStartDate)}`;
     },
-    isValid(): boolean {
-      return Period.isValid(this.period);
+    canAddMobilization(): boolean {
+      const isPeriodValid = Period.isValid({
+        start: this.start,
+        end: this.end,
+      });
+      const isDurationValid =
+        this.durationSplitInHour === null || this.durationSplitInHour > 0;
+
+      return isPeriodValid && isDurationValid;
     },
   },
   async mounted() {
     await this.$accessor.configuration.fetch("eventDate");
-    this.setDefaultDates();
+    this.clearData();
   },
   methods: {
-    setDefaultDates() {
+    clearData() {
       this.start = this.eventStartDate;
       this.end = this.eventStartDate;
+      this.durationSplitInHour = null;
+      this.teams = [];
+      this.volunteers = [];
     },
-    addTimeWindow() {
-      if (!this.isValid) return;
-      this.$emit("add", this.period);
+    addMobilization() {
+      if (!this.canAddMobilization) return;
+      this.$emit("add", this.mobilization);
 
       this.closeDialog();
-      this.setDefaultDates();
+      this.clearData();
     },
     updateStart(start: Date) {
       this.start = start;
