@@ -156,21 +156,9 @@ export default Vue.extend({
   gap: 1em;
   margin-top: 10px;
   margin-bottom: 0;
+  gap: 1em;
   &__fields {
     width: 100%;
-  }
-  &__btn {
-    margin: 10px 0 30px 20px;
-  }
-  @media screen and (max-width: $mobile-max-width) {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2em;
-    margin-bottom: 30px;
-    &__btn {
-      margin: 0;
-      width: 100%;
-    }
   }
 }
 </style>
