@@ -24,6 +24,7 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PeriodDto } from "./dto/period.dto";
 import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { AvailabilitiesRequestDto } from "./dto/availabilities.dto";
 
 @ApiBearerAuth()
 @ApiTags("volunteer-availability")
@@ -51,9 +52,8 @@ export class VolunteerAvailabilityController {
     description: "User not found.",
   })
   @ApiBody({
-    type: PeriodDto,
+    type: AvailabilitiesRequestDto,
     description: "The availability periods to add.",
-    isArray: true,
   })
   @ApiParam({
     name: "userId",
@@ -63,9 +63,12 @@ export class VolunteerAvailabilityController {
   })
   add(
     @Param("userId", ParseIntPipe) userId: number,
-    @Body() periods: PeriodDto[],
+    @Body() { availabilities }: AvailabilitiesRequestDto,
   ): Promise<PeriodDto[]> {
-    return this.volunteerAvailabilityService.addAvailabilities(userId, periods);
+    return this.volunteerAvailabilityService.addAvailabilities(
+      userId,
+      availabilities,
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -99,9 +102,8 @@ export class VolunteerAvailabilityController {
     required: true,
   })
   @ApiBody({
-    type: PeriodDto,
+    type: AvailabilitiesRequestDto,
     description: "The availability periods to add.",
-    isArray: true,
   })
   @ApiResponse({
     status: 201,
@@ -114,11 +116,11 @@ export class VolunteerAvailabilityController {
   })
   overrideHuman(
     @Param("userId", ParseIntPipe) userId: number,
-    @Body() periods: PeriodDto[],
+    @Body() { availabilities }: AvailabilitiesRequestDto,
   ): Promise<PeriodDto[]> {
     return this.volunteerAvailabilityService.addAvailabilitiesWithoutCheck(
       userId,
-      periods,
+      availabilities,
     );
   }
 }

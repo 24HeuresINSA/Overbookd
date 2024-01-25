@@ -16,22 +16,22 @@ export class VolunteerAvailabilityRepository {
   static async updateVolunteerAvailabilities(
     context: Context,
     userId: number,
-    periods: Period[],
+    availabilities: Period[],
   ) {
     return context.$axios.post<HttpStringified<Period[]>>(
       `${this.basePath}/${userId}`,
-      periods,
+      { availabilities },
     );
   }
 
   static async overrideVolunteerAvailabilities(
     context: Context,
     userId: number,
-    periods: Period[],
+    availabilities: Period[],
   ) {
     return context.$axios.patch<HttpStringified<Period[]>>(
       `${this.basePath}/${userId}`,
-      periods,
+      { availabilities },
     );
   }
 }
