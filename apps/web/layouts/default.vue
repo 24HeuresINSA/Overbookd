@@ -4,7 +4,7 @@
     <div class="side-with-main">
       <SideNav />
       <div class="main">
-        <nuxt class="content" />
+        <nuxt class="content" :class="{ flip: isContentFlipped }" />
         <footer>
           <span>Fait avec ❤️ par {{ randomAuthor }}</span>
         </footer>
@@ -41,6 +41,7 @@ const AUTHORS = [
 
 interface LayoutData {
   notificationSource?: EventSource;
+  isContentFlipped: boolean;
 }
 
 export default Vue.extend({
@@ -51,6 +52,7 @@ export default Vue.extend({
   },
   data: (): LayoutData => ({
     notificationSource: undefined,
+    isContentFlipped: false,
   }),
   computed: {
     randomAuthor(): string {
@@ -70,9 +72,24 @@ export default Vue.extend({
     addEventListener(this.notificationSource, ADHERENT_REGISTERED, () => {
       this.$accessor.notification.received();
     });
+
+    // EASTER EGG: flip the content when user write "bde" in the search bar
+    this.isContentFlipped = localStorage.getItem("flip") === "1";
+    this.$nuxt.$on("flip", () => this.flipContent());
+    this.$nuxt.$on("unflip", () => this.unflipContent());
   },
   destroyed() {
     this.notificationSource?.close();
+  },
+  methods: {
+    flipContent() {
+      this.isContentFlipped = true;
+      localStorage.setItem("flip", "1");
+    },
+    unflipContent() {
+      this.isContentFlipped = false;
+      localStorage.removeItem("flip");
+    },
   },
 });
 </script>
@@ -99,6 +116,10 @@ export default Vue.extend({
       @media only screen and (max-width: $mobile-max-width) {
         padding: 0 5px 5px 5px;
       }
+    }
+
+    .flip {
+      transform: rotate(180deg);
     }
   }
 }
