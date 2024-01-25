@@ -2,20 +2,7 @@
   <div>
     <h1>Récap Matos</h1>
     <GearFilter v-model="filter" @change="searchGears" />
-    <v-data-table
-      :items="previews"
-      :headers="headers"
-      show-expand
-      :name="filter.name"
-    >
-      <template #item.isConsumable="{ item }">
-        <div v-show="item.isConsumable" class="icon">
-          <v-icon size="24"> mdi-delete-empty-outline </v-icon>
-          <span class="icon-detail">Consommable</span>
-        </div>
-      </template>
-      <template #expanded-item>{{ details }}</template>
-    </v-data-table>
+    <DahsboardGearListing />
   </div>
 </template>
 
@@ -24,7 +11,7 @@ import Vue from "vue";
 import { GearSearchOptions } from "~/store/catalogGear";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
-import { GearDetails, GearPreview } from "@overbookd/http";
+import DahsboardGearListing from "~/components/organisms/logistic/DahsboardGearListing.vue";
 
 interface GearRecapData {
   filter: FilterGear;
@@ -32,7 +19,7 @@ interface GearRecapData {
 
 export default Vue.extend({
   name: "GearRecap",
-  components: { GearFilter },
+  components: { GearFilter, DahsboardGearListing },
   data(): GearRecapData {
     return {
       filter: {
@@ -46,22 +33,6 @@ export default Vue.extend({
     title: "Récap Matos",
   }),
   computed: {
-    previews(): GearPreview[] {
-      return this.$accessor.logisticDashboard.previews;
-    },
-    details(): GearDetails[] {
-      const selectedGear = this.$accessor.logisticDashboard.selectedGear;
-
-      if (!selectedGear) return [];
-      return selectedGear.details;
-    },
-    headers() {
-      return [
-        { text: "Matos", value: "name" },
-        { text: "Matos consommable", value: "isConsumable" },
-        { text: "Delta", value: "stockDiscrepancy" },
-      ];
-    },
     canSearch(): boolean {
       const { name, category, team } = this.filter;
       return (
@@ -70,9 +41,6 @@ export default Vue.extend({
         ) || [name, category, team].every((searchOption) => !searchOption)
       );
     },
-  },
-  mounted() {
-    this.$accessor.logisticDashboard.fetchPreviews();
   },
   methods: {
     async searchGears() {
@@ -100,30 +68,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.gear-recap {
-  &__header-content {
-    display: flex;
-    gap: 5px;
-  }
-}
-.icon {
-  position: relative;
-  display: inline-block;
-  .icon-detail {
-    visibility: hidden;
-    font-size: 0.8rem;
-    text-align: center;
-    user-select: none;
-    z-index: 1;
-    opacity: 0.75;
-    @media only screen and (max-width: $mobile-max-width) {
-      display: none;
-    }
-  }
-}
-.icon:hover .icon-detail {
-  visibility: visible;
-}
-</style>
