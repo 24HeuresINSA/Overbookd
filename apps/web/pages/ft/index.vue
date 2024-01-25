@@ -14,7 +14,7 @@
         >
           <template #item.id="{ item }">
             <v-chip-group id="status">
-              <v-chip id="status" :class="item.status.toLowerCase()" small>
+              <v-chip :class="item.status.toLowerCase()" small>
                 {{ item.id }}
               </v-chip>
             </v-chip-group>
@@ -286,6 +286,9 @@ h1 {
   }
   &__table {
     cursor: pointer;
+  }
+  #status {
+    font-weight: bold;
   }
 }
 

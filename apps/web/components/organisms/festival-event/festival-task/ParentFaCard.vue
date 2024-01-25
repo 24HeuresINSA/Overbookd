@@ -3,16 +3,17 @@
     <v-card-title>FA associée</v-card-title>
 
     <v-card-text>
-      <v-chip-group id="status">
-        <v-chip
-          :href="`/fa/${festivalActivity.id}`"
-          :class="festivalActivity.status.toLowerCase()"
-          :ripple="false"
-          :disabled="!festivalActivity"
-        >
-          {{ festivalActivity.id }} - {{ festivalActivity.name }}
-        </v-chip>
-      </v-chip-group>
+      <div class="festival-activity">
+        <v-chip-group id="status">
+          <v-chip
+            :class="festivalActivity.status.toLowerCase()"
+            @click="openFa"
+          >
+            {{ festivalActivity.id }}
+          </v-chip>
+        </v-chip-group>
+        <h2 class="festival-activity__name">{{ festivalActivity.name }}</h2>
+      </div>
 
       <h3>Déroulement de l'activité</h3>
       <FaTimeWindowTable
@@ -56,10 +57,33 @@ export default defineComponent({
       return this.$accessor.festivalTask.selectedTask.festivalActivity;
     },
   },
+  methods: {
+    openFa(event: PointerEvent) {
+      if (event.ctrlKey) return this.openFaInNewTab();
+      this.$router.push({ path: `/fa/${this.festivalActivity.id}` });
+    },
+    openFaInNewTab() {
+      const activityRoute = this.$router.resolve({
+        path: `/fa/${this.festivalActivity.id}`,
+      });
+      window.open(activityRoute.href, "_blank");
+    },
+  },
 });
 </script>
 
 <style lang="scss" scoped>
+.festival-activity {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-weight: bold;
+  &__name {
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.8);
+  }
+}
+
 h3 {
   font-size: 1.1rem;
   margin: 25px 0 10px 0;
