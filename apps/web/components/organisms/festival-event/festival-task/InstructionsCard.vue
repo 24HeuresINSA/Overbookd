@@ -100,8 +100,8 @@ export default Vue.extend({
   data: (): InstructionsCardData => ({
     contact: null,
     contactHeaders: [
-      { text: "Bénévole", value: "volunteer" },
-      { text: "Téléphone", value: "phone" },
+      { text: "Bénévole", value: "volunteer", sortable: false },
+      { text: "Téléphone", value: "phone", sortable: false },
       { text: "Actions", value: "actions", sortable: false },
     ],
   }),
