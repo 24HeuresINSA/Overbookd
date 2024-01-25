@@ -33,14 +33,41 @@
         @change="updateInChargeInstruction"
       />
 
-      <SearchUsers
-        :users="instructions.contacts"
-        label="Bénévoles à contacter"
-        :boxed="false"
-        deletable-chips
-        @add="addContact"
-        @remove="removeContact"
-      />
+      <v-form class="contact-form">
+        <SearchUser
+          v-model="contact"
+          :list="adherents"
+          label="Bénévoles à contacter"
+          :boxed="false"
+          class="contact-form__fields"
+          @add="addContact"
+          @remove="removeContact"
+        />
+        <v-btn
+          rounded
+          color="primary"
+          class="contact-form__btn"
+          :disabled="!canAddContact"
+          @click="addContact"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-form>
+
+      <v-data-table
+        :headers="contactHeaders"
+        :items="instructions.contacts"
+        item-key="key"
+        :items-per-page="-1"
+        hide-default-footer
+      >
+        <template #item.actions="{ item }">
+          <v-btn icon @click="removeContact(item)">
+            <v-icon>mdi-trash-can</v-icon>
+          </v-btn>
+        </template>
+        <template #no-data> Aucun contact </template>
+      </v-data-table>
     </v-card-text>
   </v-card>
 </template>
@@ -49,14 +76,31 @@
 import Vue from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import SearchUsers from "~/components/atoms/field/search/SearchUsers.vue";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import { FestivalTask } from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
+import { Header } from "~/utils/models/data-table.model";
+
+type InstructionsCardData = {
+  contact: User | null;
+  contactHeaders: Header[];
+};
 
 export default Vue.extend({
   name: "InstructionsCard",
-  components: { SearchSignaLocation, RichEditor, SearchUsers },
+  components: { SearchSignaLocation, RichEditor, SearchUsers, SearchUser },
+  data: (): InstructionsCardData => ({
+    contact: null,
+    contactHeaders: [
+      { text: "Prénom", value: "firstname" },
+      { text: "Nom", value: "lastname" },
+      { text: "Surnom", value: "nickname" },
+      { text: "Téléphone", value: "phone" },
+      { text: "Actions", value: "actions", sortable: false },
+    ],
+  }),
   computed: {
     mFT(): FestivalTask {
       return this.$accessor.festivalTask.selectedTask;
@@ -64,6 +108,16 @@ export default Vue.extend({
     instructions(): FestivalTask["instructions"] {
       return this.mFT.instructions;
     },
+    adherents(): User[] {
+      return this.$accessor.user.adherents;
+    },
+    canAddContact(): boolean {
+      return Boolean(this.contact);
+    },
+  },
+  mounted() {
+    if (this.adherents.length) return;
+    this.$accessor.user.fetchAdherents();
   },
   methods: {
     updateAppointment(appointment: SignaLocation) {
@@ -78,8 +132,9 @@ export default Vue.extend({
       const inCharge = canBeEmpty.trim() || null;
       this.$accessor.festivalTask.updateInstructions({ inCharge });
     },
-    addContact(contact: User) {
-      this.$accessor.festivalTask.addContact(contact.id);
+    addContact() {
+      if (!this.contact) return;
+      this.$accessor.festivalTask.addContact(this.contact.id);
     },
     removeContact(contact: User) {
       this.$accessor.festivalTask.removeContact(contact.id);
@@ -93,3 +148,29 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.contact-form {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-top: 10px;
+  margin-bottom: 0;
+  &__fields {
+    width: 100%;
+  }
+  &__btn {
+    margin: 10px 0 30px 20px;
+  }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2em;
+    margin-bottom: 30px;
+    &__btn {
+      margin: 0;
+      width: 100%;
+    }
+  }
+}
+</style>
