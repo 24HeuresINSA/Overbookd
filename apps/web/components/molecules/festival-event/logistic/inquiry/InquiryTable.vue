@@ -6,19 +6,18 @@
     :items-per-page="-1"
     disable-pagination
     hide-default-footer
-    :dense="dense"
+    dense
   >
     <template #item.quantity="{ item }">
       {{ displayQuantity(item) }}
     </template>
 
     <template #item.drive="{ item }">
-      <p v-if="disabled">{{ item.drive }}</p>
+      <p v-if="cantLinkDrive">{{ item.drive }}</p>
       <v-autocomplete
         v-else
         :value="item.drive"
         :items="drives"
-        :readonly="cantLinkDrive"
         @change="(drive) => linkDrive(item.slug, drive)"
       />
     </template>
@@ -60,14 +59,10 @@ export default defineComponent({
       required: true,
     },
     owner: {
-      type: String as () => InquiryOwner | null,
-      default: () => null,
+      type: String as () => InquiryOwner,
+      required: true,
     },
     disabled: {
-      type: Boolean,
-      default: false,
-    },
-    dense: {
       type: Boolean,
       default: false,
     },
@@ -93,7 +88,6 @@ export default defineComponent({
       return drives;
     },
     cantLinkDrive(): boolean {
-      if (!this.owner) return true;
       return !this.$accessor.user.isMemberOf(this.owner);
     },
     noDataMessage(): string {

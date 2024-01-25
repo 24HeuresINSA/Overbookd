@@ -5,7 +5,6 @@
     <v-card-text>
       <v-chip-group id="status">
         <v-chip
-          v-if="festivalActivity"
           :href="`/fa/${festivalActivity.id}`"
           :class="festivalActivity.status.toLowerCase()"
           :ripple="false"
@@ -15,22 +14,23 @@
         </v-chip>
       </v-chip-group>
 
-      <h2>Créneaux de l'activité</h2>
+      <h3>Déroulement de l'activité</h3>
       <FaTimeWindowTable
         :time-windows="festivalActivity.timeWindows"
         disabled
-        dense
       />
 
-      <h2>Créneaux du matos</h2>
+      <h3>Demandes de matos</h3>
       <FaTimeWindowTable
         :time-windows="festivalActivity.inquiry.timeWindows"
         disabled
-        dense
       />
 
-      <h2>Demandes de matos</h2>
-      <InquiryTable :inquiries="festivalActivity.inquiry.all" disabled dense />
+      <InquiryTable
+        :inquiries="festivalActivity.inquiry.all"
+        :owner="MATOS"
+        disabled
+      />
     </v-card-text>
   </v-card>
 </template>
@@ -39,11 +39,18 @@
 import { defineComponent } from "vue";
 import FaTimeWindowTable from "~/components/molecules/festival-event/time-window/FaTimeWindowTable.vue";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
-import { FestivalTask } from "@overbookd/festival-event";
+import { FestivalTask, MATOS } from "@overbookd/festival-event";
+
+type ParentFaCardData = {
+  MATOS: typeof MATOS;
+};
 
 export default defineComponent({
   name: "ParentFaCard",
   components: { FaTimeWindowTable, InquiryTable },
+  data: (): ParentFaCardData => ({
+    MATOS,
+  }),
   computed: {
     festivalActivity(): FestivalTask["festivalActivity"] {
       return this.$accessor.festivalTask.selectedTask.festivalActivity;
@@ -53,7 +60,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-h2 {
+h3 {
   font-size: 1.1rem;
   margin: 25px 0 10px 0;
 }

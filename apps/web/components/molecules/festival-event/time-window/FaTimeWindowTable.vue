@@ -6,7 +6,7 @@
       item-key="key"
       :items-per-page="-1"
       hide-default-footer
-      :dense="dense"
+      dense
       :custom-sort="sortTimeWindows"
     >
       <template #item.start="{ item }">
@@ -70,10 +70,6 @@ export default defineComponent({
       required: true,
     },
     disabled: {
-      type: Boolean,
-      default: false,
-    },
-    dense: {
       type: Boolean,
       default: false,
     },
