@@ -60,6 +60,7 @@ export default defineComponent({
       default: () => null,
     },
   },
+  emits: ["add", "remove"],
   data(): SearchUserData {
     return {
       loading: false,
@@ -76,8 +77,6 @@ export default defineComponent({
   },
   methods: {
     propagateChange(users: User[]) {
-      this.$emit("change", users);
-
       const addedUsers = users.filter((user) => !this.users.includes(user));
       const removedUsers = this.users.filter((user) => !users.includes(user));
 
