@@ -111,7 +111,7 @@ export default Vue.extend({
         case "bde":
           this.$nuxt.$emit("flip");
           break;
-        case "ebd":
+        case "edb":
           this.$nuxt.$emit("unflip");
           break;
       }
