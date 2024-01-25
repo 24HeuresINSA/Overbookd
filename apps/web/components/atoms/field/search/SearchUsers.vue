@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { User } from "@overbookd/user";
 import { SlugifyService } from "@overbookd/slugify";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
@@ -32,12 +32,8 @@ interface SearchUserData {
   loading: boolean;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "SearchUsers",
-  model: {
-    prop: "users",
-    event: "change",
-  },
   props: {
     label: {
       type: String,
