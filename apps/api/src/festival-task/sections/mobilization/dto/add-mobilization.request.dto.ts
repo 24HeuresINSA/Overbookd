@@ -2,11 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
 import {
+  IsArray,
   IsDate,
   IsNotEmpty,
   IsNumber,
-  IsObject,
   IsOptional,
+  ValidateNested,
 } from "class-validator";
 import { TeamMobilizationRequestDto } from "./team-mobilization.request.dto";
 import { Type } from "class-transformer";
@@ -44,6 +45,7 @@ export class AddMobilizationRequestDto implements AddMobilizationForm {
     type: Number,
     isArray: true,
   })
+  @IsArray()
   @IsNumber({}, { each: true })
   volunteers: number[];
 
@@ -52,6 +54,8 @@ export class AddMobilizationRequestDto implements AddMobilizationForm {
     type: TeamMobilizationRequestDto,
     isArray: true,
   })
-  @IsObject({ each: true })
+  @IsArray()
+  @Type(() => TeamMobilizationRequestDto)
+  @ValidateNested({ each: true })
   teams: TeamMobilization[];
 }
