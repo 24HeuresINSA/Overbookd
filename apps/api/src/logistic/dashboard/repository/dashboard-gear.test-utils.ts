@@ -93,7 +93,7 @@ export const gearWithNoInquiry: DatabaseGear = {
   name: "gear with no inquiry",
   slug: "gear-with-no-inquiry",
   isConsumable: false,
-  inquiries: [],
+  festivalActivityInquiries: [],
   inventoryRecords: [],
 };
 export const gearWithOneInquiry: DatabaseGear = {
@@ -101,7 +101,7 @@ export const gearWithOneInquiry: DatabaseGear = {
   name: "gear with one inquiry",
   slug: "gear-with-one-inquiry",
   isConsumable: false,
-  inquiries: [inquiryFromFriday08hto09h],
+  festivalActivityInquiries: [inquiryFromFriday08hto09h],
   inventoryRecords: [],
 };
 export const gearWithTwoInquiries: DatabaseGear = {
@@ -109,7 +109,10 @@ export const gearWithTwoInquiries: DatabaseGear = {
   name: "gear with two inquiries",
   slug: "gear-with-two-inquiries",
   isConsumable: false,
-  inquiries: [inquiryFromFriday08hto09h, inquiryFromFriday09hto10h],
+  festivalActivityInquiries: [
+    inquiryFromFriday08hto09h,
+    inquiryFromFriday09hto10h,
+  ],
   inventoryRecords: [],
 };
 export const gearWithOneInquiryWithTwoTimeWindows: DatabaseGear = {
@@ -117,7 +120,7 @@ export const gearWithOneInquiryWithTwoTimeWindows: DatabaseGear = {
   name: "gear with one inquiry with two time windows",
   slug: "gear-with-one-inquiry-with-two-time-windows",
   isConsumable: false,
-  inquiries: [inquiryFromFriday08hto09hAnd10hto12h],
+  festivalActivityInquiries: [inquiryFromFriday08hto09hAnd10hto12h],
   inventoryRecords: [],
 };
 export const gearWithOneInquiryAndOneInventoryRecord: DatabaseGear = {
@@ -125,7 +128,7 @@ export const gearWithOneInquiryAndOneInventoryRecord: DatabaseGear = {
   name: "gear with one inquiry and one inventory record",
   slug: "gear-with-one-inquiry-and-one-inventory-record",
   isConsumable: false,
-  inquiries: [inquiryFromFriday08hto09h],
+  festivalActivityInquiries: [inquiryFromFriday08hto09h],
   inventoryRecords: [inventoryRecordWith25Quantity],
 };
 export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
@@ -133,7 +136,10 @@ export const gearWithTwoInquiryAndTwoInventoryRecord: DatabaseGear = {
   name: "gear with one inquiry and one inventory record",
   slug: "gear-with-one-inquiry-and-one-inventory-record",
   isConsumable: false,
-  inquiries: [inquiryFromFriday08hto09h, inquiryFromFriday08hto09hAnd10hto12h],
+  festivalActivityInquiries: [
+    inquiryFromFriday08hto09h,
+    inquiryFromFriday08hto09hAnd10hto12h,
+  ],
   inventoryRecords: [
     inventoryRecordWith5Quantity,
     inventoryRecordWith25Quantity,

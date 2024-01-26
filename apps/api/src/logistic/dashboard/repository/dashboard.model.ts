@@ -28,7 +28,7 @@ export type DatabaseInquiry = {
 };
 
 type WithDatabaseInquiries = {
-  inquiries: DatabaseInquiry[];
+  festivalActivityInquiries: DatabaseInquiry[];
 };
 
 export type DatabaseGear = BaseDatabaseGear &

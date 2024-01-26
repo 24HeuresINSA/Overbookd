@@ -40,7 +40,7 @@ export class DashboardGear {
   }
 
   private static computeStockDiscrepancyOn(gear: DatabaseGear): number {
-    const inquiryTimeWindows = gear.inquiries
+    const inquiryTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
     const mergedTimeWindows = Period.mergeContiguous(inquiryTimeWindows);
@@ -90,10 +90,10 @@ export class DashboardGear {
   }
 
   private static findInquiryQuantityByDate(
-    { inquiries }: DatabaseGear,
+    { festivalActivityInquiries }: DatabaseGear,
     date: Date,
   ): number {
-    return inquiries.reduce((total, inquiry) => {
+    return festivalActivityInquiries.reduce((total, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(date),
       );
@@ -106,7 +106,7 @@ export class DashboardGear {
     gear: DatabaseGear,
     start: Date,
   ): GearDetails["activities"] {
-    return gear.inquiries.reduce((activities, inquiry) => {
+    return gear.festivalActivityInquiries.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),
       );

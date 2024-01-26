@@ -14,7 +14,7 @@ const SELECT_GEAR_STOCK = {
 };
 
 const SELECT_GEAR_INQUIRIES = {
-  inquiries: {
+  festivalActivityInquiries: {
     select: {
       quantity: true,
       fa: {
