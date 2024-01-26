@@ -3,6 +3,7 @@
     <h1>Fiches Tâches</h1>
 
     <main>
+      <FtFilter class="task__filtering" @update:filters="updateFilters" />
       <v-card class="task__listing">
         <v-data-table
           :headers="headers"
@@ -101,6 +102,8 @@ import { WRITE_FT } from "@overbookd/permission";
 import { FestivalTask, PreviewFestivalTask } from "@overbookd/festival-event";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import FtFilter from "~/components/organisms/festival-event/festival-task/FtFilter.vue";
+import { TaskFilters } from "~/utils/festival-event/festival-task/festival-task.filter";
 
 interface Data {
   headers: Header[];
@@ -108,13 +111,7 @@ interface Data {
   isRemovalDialogOpen: boolean;
   taskToRemove?: PreviewFestivalTask;
 
-  filters: {
-    search: string;
-    team?: Team;
-    myFTs: boolean;
-    isDeleted: boolean;
-    status?: FestivalTask["status"];
-  };
+  filters: TaskFilters;
 }
 
 export default Vue.extend({
@@ -124,6 +121,7 @@ export default Vue.extend({
     NewFtCard,
     ConfirmationMessage,
     TeamChip,
+    FtFilter,
   },
   data(): Data {
     return {
@@ -135,13 +133,7 @@ export default Vue.extend({
         { text: "Gestionnaire", value: "administrator", sortable: false },
         { text: "Suppression", value: "removal", sortable: false },
       ],
-      filters: {
-        search: "",
-        team: undefined,
-        myFTs: false,
-        status: undefined,
-        isDeleted: false,
-      },
+      filters: {},
       isNewFtDialogOpen: false,
       isRemovalDialogOpen: false,
       taskToRemove: undefined,
@@ -166,14 +158,14 @@ export default Vue.extend({
       }));
     },
     filteredFts(): PreviewFestivalTask[] {
-      const { search, team, myFTs, status } = this.filters;
+      const { search, team, status, adherent } = this.filters;
 
       return this.searchableFts.filter((ft) => {
         return (
           this.filterFtByTeam(team)(ft) &&
-          this.filterFtByOwnership(myFTs)(ft) &&
+          this.filterFtByAdministrator(adherent)(ft) &&
           this.filterFtByStatus(status)(ft) &&
-          this.filterFtByName(search)(ft)
+          this.filterFtByNameAndId(search)(ft)
         );
       });
     },
@@ -198,11 +190,11 @@ export default Vue.extend({
       return teamSearched ? (ft) => ft.team === teamSearched.code : () => true;
     },
 
-    filterFtByOwnership(
-      searchMyFts: boolean,
+    filterFtByAdministrator(
+      adherent?: User,
     ): (ft: PreviewFestivalTask) => boolean {
-      return searchMyFts
-        ? (ft) => ft.administrator.id === this.me.id
+      return adherent
+        ? (ft) => ft.administrator.id === adherent.id
         : () => true;
     },
 
@@ -212,11 +204,15 @@ export default Vue.extend({
       return statusSearched ? (ft) => ft.status === statusSearched : () => true;
     },
 
-    filterFtByName(
-      search: string,
+    filterFtByNameAndId(
+      search?: string,
     ): (ft: Searchable<PreviewFestivalTask>) => boolean {
-      const slugifiedSearch = SlugifyService.apply(search);
+      const slugifiedSearch = SlugifyService.apply(search ?? "");
       return ({ searchable }) => searchable.includes(slugifiedSearch);
+    },
+
+    updateFilters(filters: TaskFilters) {
+      this.filters = filters;
     },
 
     formatUsername(user?: User): string {

@@ -1,6 +1,5 @@
 import { DRAFT, FestivalTask } from "@overbookd/festival-event";
-
-export const BROUILLON = "Brouillon";
+import { BROUILLON } from "../festival-event.model";
 
 export type FtStatusLabel = typeof BROUILLON;
 

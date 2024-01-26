@@ -43,21 +43,19 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { VALIDATED } from "@overbookd/festival-event";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { FtStatus, ftStatusLabels } from "~/utils/models/ft.model";
-import {
-  VALIDEE,
-  faStatusLabels,
-} from "~/utils/festival-event/festival-activity/festival-activity.model";
+import { ftStatusLabels } from "~/utils/models/ft.model";
+import { faStatusLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
 
 interface StatsRowData {
   historyFA: Map<string, number>;
   historyFT: Map<string, number>;
 }
 
-const validStatuses: string[] = [VALIDEE, FtStatus.VALIDATED, FtStatus.READY];
+const validStatuses: string[] = [VALIDATED];
 
 export default Vue.extend({
   components: { StatsCard },
@@ -174,3 +172,4 @@ export default Vue.extend({
   },
 });
 </script>
+import { VALIDEE } from "~/utils/festival-event/festival-activity/BROUILLON";

@@ -146,8 +146,8 @@ import {
 } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import {
-  Filters,
-  ReviewsFilter,
+  ActivityFilters,
+  ActivityReviewsFilter,
   findReviewStatus,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
@@ -158,7 +158,7 @@ interface FaData {
   isNewFaDialogOpen: boolean;
   isRemovalDialogOpen: boolean;
   activityToRemove?: PreviewFestivalActivity;
-  filters: Filters;
+  filters: ActivityFilters;
 }
 
 export default defineComponent({
@@ -264,7 +264,7 @@ export default defineComponent({
     },
 
     filterFaByReviews(
-      reviews: ReviewsFilter,
+      reviews: ActivityReviewsFilter,
     ): (fa: Searchable<PreviewFestivalActivity>) => boolean {
       const reviewersWithStatus = Object.entries(reviews);
       return (fa) => {
@@ -279,7 +279,7 @@ export default defineComponent({
       };
     },
 
-    updateFilters(filters: Filters) {
+    updateFilters(filters: ActivityFilters) {
       this.filters = filters;
     },
 

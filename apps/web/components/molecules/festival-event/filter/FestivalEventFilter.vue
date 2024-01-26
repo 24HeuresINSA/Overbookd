@@ -37,24 +37,20 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { FestivalActivity } from "@overbookd/festival-event";
+import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import {
   FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import {
-  FtStatus,
-  FtStatusLabel,
-  ftStatusLabels,
-} from "~/utils/models/ft.model";
+import { FtStatusLabel, ftStatusLabels } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
 import { User } from "@overbookd/user";
 
 type StatusLabels = (
   | { key: FestivalActivity["status"]; label: FaStatusLabel }
-  | { key: FtStatus; label: FtStatusLabel }
+  | { key: FestivalTask["status"]; label: FtStatusLabel }
   | { key: null; label: "Tous" }
 )[];
 
@@ -79,7 +75,10 @@ export default Vue.extend({
       default: null,
     },
     status: {
-      type: String as () => FestivalActivity["status"] | FtStatus | null,
+      type: String as () =>
+        | FestivalActivity["status"]
+        | FestivalTask["status"]
+        | null,
       default: null,
     },
   },
@@ -105,7 +104,7 @@ export default Vue.extend({
     changeSearch(search: string) {
       this.$emit("change:search", search);
     },
-    changeStatus(status: FestivalActivity["status"] | FtStatus) {
+    changeStatus(status: FestivalActivity["status"] | FestivalTask["status"]) {
       this.$emit("change:status", status);
     },
     changeTeam(team: Team) {

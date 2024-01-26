@@ -37,7 +37,6 @@ import { getReviewStatus as getFaReviewStatus } from "~/utils/festival-event/fes
 import {
   FaStatusLabel,
   faStatusLabels,
-  BROUILLON as FA_BROUILLON,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { Team } from "~/utils/models/team.model";
 import {
@@ -50,8 +49,8 @@ import {
 import {
   FtStatusLabel,
   ftStatusLabels,
-  BROUILLON as FT_BROUILLON,
 } from "~/utils/festival-event/festival-task/festival-task.model";
+import { BROUILLON } from "~/utils/festival-event/festival-event.model";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -82,8 +81,8 @@ export default Vue.extend({
     },
     statusLabel(): FaStatusLabel | FtStatusLabel {
       return this.isFA
-        ? faStatusLabels.get(this.mFA.status) ?? FA_BROUILLON
-        : ftStatusLabels.get(this.mFT.status) ?? FT_BROUILLON;
+        ? faStatusLabels.get(this.mFA.status) ?? BROUILLON
+        : ftStatusLabels.get(this.mFT.status) ?? BROUILLON;
     },
     reviewers(): Team[] {
       return this.isFA
@@ -217,3 +216,5 @@ export default Vue.extend({
   }
 }
 </style>
+import { BROUILLON as FA_BROUILLON } from
+"~/utils/festival-event/festival-activity/BROUILLON";

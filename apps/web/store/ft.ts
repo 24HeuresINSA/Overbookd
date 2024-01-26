@@ -25,7 +25,6 @@ import {
   FtPageId,
   FtSearch,
   FtSimplified,
-  FtStatus,
   FtTeamRequest,
   FtTeamRequestUpdate,
   FtTimeWindow,
@@ -48,6 +47,7 @@ import { Review, Reviewer } from "~/utils/models/review.model";
 import { Team } from "~/utils/models/team.model";
 import { User } from "@overbookd/user";
 import { formatUsername } from "~/utils/user/user.utils";
+import { DRAFT } from "@overbookd/festival-event";
 
 const repo = RepoFactory.FtRepository;
 
@@ -928,7 +928,7 @@ export const actions = actionTree(
 function defaultState(): Omit<Ft, "id"> {
   return {
     name: "",
-    status: FtStatus.DRAFT,
+    status: DRAFT,
     description: "",
     isStatic: false,
     timeWindows: [],

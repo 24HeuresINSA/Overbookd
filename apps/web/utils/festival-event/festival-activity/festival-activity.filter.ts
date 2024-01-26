@@ -12,8 +12,9 @@ import {
 } from "@overbookd/festival-event";
 import { Team } from "../../models/team.model";
 import { User } from "@overbookd/user";
+import { strigifyQueryParam } from "../festival-event.filter";
 
-export type ReviewsFilter = {
+export type ActivityReviewsFilter = {
   humain?: ReviewStatus;
   communication?: ReviewStatus;
   matos?: ReviewStatus;
@@ -23,14 +24,14 @@ export type ReviewsFilter = {
   elec?: ReviewStatus;
 };
 
-export type Filters = ReviewsFilter & {
+export type ActivityFilters = ActivityReviewsFilter & {
   search?: string;
   team?: Team;
   adherent?: User;
   status?: FestivalActivity["status"];
 };
 
-type QueryParamsValue = string | (string | null)[];
+export type QueryParamsValue = string | (string | null)[];
 
 type IsNotEmpty = (value: string) => string | undefined;
 type IsExistingStatus = (
@@ -48,7 +49,7 @@ type InitFilterBuilder = {
   isExistingReview: IsExistingReview;
 };
 
-export class FilterBuilder {
+export class ActivityFilterBuilder {
   private constructor(
     private readonly isNotEmpty: IsNotEmpty,
     private readonly isExistingStatus: IsExistingStatus,
@@ -58,7 +59,7 @@ export class FilterBuilder {
   ) {}
 
   static init(initializer: InitFilterBuilder) {
-    return new FilterBuilder(
+    return new ActivityFilterBuilder(
       initializer.isNotEmpty,
       initializer.isExistingStatus,
       initializer.isExistingTeam,
@@ -69,8 +70,8 @@ export class FilterBuilder {
 
   extractQueryParamsValue(
     params: Record<string, QueryParamsValue>,
-    key: keyof Filters,
-  ): Filters {
+    key: keyof ActivityFilters,
+  ): ActivityFilters {
     switch (key) {
       case "search": {
         const searchString = strigifyQueryParam(params.search);
@@ -163,13 +164,4 @@ export function findStatus(
     default:
       return DRAFT;
   }
-}
-
-function strigifyQueryParam(param?: QueryParamsValue): string {
-  if (Array.isArray(param)) return "";
-  return param ?? "";
-}
-
-export function nonEmptyString(value: string): string | undefined {
-  return value ? value : undefined;
 }

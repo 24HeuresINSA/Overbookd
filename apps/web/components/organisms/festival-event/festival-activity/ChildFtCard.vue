@@ -40,15 +40,15 @@
 </template>
 
 <script lang="ts">
+import { FestivalTask } from "@overbookd/festival-event";
 import Vue from "vue";
 import NewFtCard from "~/components/molecules/festival-event/creation/NewFtCard.vue";
+import { BROUILLON } from "~/utils/festival-event/festival-event.model";
 import { Fa } from "~/utils/models/fa.model";
 import {
   FtSimplified,
-  FtStatus,
   FtStatusLabel,
   ftStatusLabels,
-  BROUILLON,
 } from "~/utils/models/ft.model";
 
 export default Vue.extend({
@@ -71,10 +71,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    getFTStatus(status: FtStatus): string {
+    getFTStatus(status: FestivalTask["status"]): string {
       return status.toLowerCase();
     },
-    getStatusLabel(status: FtStatus): FtStatusLabel {
+    getStatusLabel(status: FestivalTask["status"]): FtStatusLabel {
       return ftStatusLabels.get(status) ?? BROUILLON;
     },
     openNewFTDialog() {

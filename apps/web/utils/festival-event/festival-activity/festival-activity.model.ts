@@ -21,11 +21,12 @@ import {
   InquiryRequest,
   Drive,
 } from "@overbookd/festival-event";
-
-export const BROUILLON = "Brouillon";
-const RELECTURE_EN_COURS = "Relecture en cours";
-export const VALIDEE = "Validée";
-export const REFUSEE = "Refusée";
+import {
+  BROUILLON,
+  RELECTURE_EN_COURS,
+  VALIDEE,
+  REFUSEE,
+} from "../festival-event.model";
 
 export type FaStatusLabel =
   | typeof BROUILLON

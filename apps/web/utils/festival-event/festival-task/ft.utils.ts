@@ -1,4 +1,3 @@
-import { Ft, FtStatus } from "../../models/ft.model";
 import { Review, ReviewStatus } from "../../models/review.model";
 
 export function isTaskValidatedBy(
@@ -12,23 +11,6 @@ export function isTaskValidatedBy(
 export function isTaskRefusedBy(reviews: Review[], teamCode: string): boolean {
   const refusalReviews = getRefusalReviews(reviews);
   return refusalReviews.some((review) => review.team.code === teamCode);
-}
-
-export function getFTValidationStatus(ft: Ft, teamCode: string): FtStatus {
-  if (ft.status === FtStatus.DRAFT) return FtStatus.DRAFT;
-  if (isTaskValidatedBy(ft.reviews, teamCode)) return FtStatus.VALIDATED;
-  if (isTaskRefusedBy(ft.reviews, teamCode)) return FtStatus.REFUSED;
-  return FtStatus.SUBMITTED;
-}
-
-export function getFTValidationStatusWithMultipleTeams(
-  ft: Ft,
-  teamCodes: string[],
-): FtStatus {
-  if (ft.status === FtStatus.DRAFT) return FtStatus.DRAFT;
-  if (hasAllFTValidations(ft.reviews, teamCodes)) return FtStatus.VALIDATED;
-  if (hasAllFTRefusals(ft.reviews, teamCodes)) return FtStatus.REFUSED;
-  return FtStatus.SUBMITTED;
 }
 
 export function hasAtLeastOneFTValidation(

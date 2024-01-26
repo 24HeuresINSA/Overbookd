@@ -1,12 +1,12 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { FestivalTask } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
-import { FtStatus } from "./ft.model";
-import { TaskCategory } from "./ft-time-span.model";
+import { IProvidePeriod } from "@overbookd/period";
 import {
   MyUserInformation,
   UserPersonalData,
   UserUpdateForm,
 } from "@overbookd/user";
+import { TaskCategory } from "./ft-time-span.model";
 
 type WithPotentialProfilePicture = {
   profilePicture?: string;
@@ -22,7 +22,7 @@ export type MyUserInformationWithProfilePicture = MyUserInformation &
 export interface Task {
   id: number;
   name: string;
-  status: FtStatus;
+  status: FestivalTask["status"];
 }
 
 export interface VolunteerTask extends IProvidePeriod {

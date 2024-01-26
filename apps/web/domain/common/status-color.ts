@@ -1,4 +1,10 @@
-import { FtStatus } from "~/utils/models/ft.model";
+import {
+  DRAFT,
+  FestivalActivity,
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event";
 
 const GREY = "grey";
 const RED = "red";
@@ -13,14 +19,15 @@ export type StatusColor =
   | typeof GREEN
   | typeof PURPLE;
 
-const statusColors = new Map<FtStatus, StatusColor>([
-  [FtStatus.DRAFT, GREY],
-  [FtStatus.REFUSED, RED],
-  [FtStatus.SUBMITTED, ORANGE],
-  [FtStatus.VALIDATED, GREEN],
-  [FtStatus.READY, PURPLE],
+const statusColors = new Map<FestivalActivity["status"], StatusColor>([
+  [DRAFT, GREY],
+  [REFUSED, RED],
+  [IN_REVIEW, ORANGE],
+  [VALIDATED, GREEN],
 ]);
 
-export function getColorByStatus(status: FtStatus): StatusColor {
+export function getColorByStatus(
+  status: FestivalActivity["status"],
+): StatusColor {
   return statusColors.get(status) || "grey";
 }

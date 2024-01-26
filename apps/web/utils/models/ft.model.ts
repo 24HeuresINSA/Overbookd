@@ -7,48 +7,19 @@ import { Review } from "./review.model";
 import { SignaLocation } from "@overbookd/signa";
 import { Team } from "./team.model";
 import { User } from "@overbookd/user";
+import { BROUILLON } from "../festival-event/festival-event.model";
+import { DRAFT, FestivalTask } from "@overbookd/festival-event";
 
-export enum FtStatus {
-  DRAFT = "DRAFT",
-  REFUSED = "REFUSED",
-  SUBMITTED = "SUBMITTED",
-  VALIDATED = "VALIDATED",
-  READY = "READY",
-}
+export type FtStatusLabel = typeof BROUILLON;
 
-export const BROUILLON = "Brouillon";
-const REFUSEE = "Refusée";
-const SOUMISE_A_VALIDATION = "Soumise à validation";
-const VALIDEE = "Validée";
-const PRETE_POUR_AFFECTATION = "Prête à affectation";
-
-export type FtStatusLabel =
-  | typeof BROUILLON
-  | typeof REFUSEE
-  | typeof SOUMISE_A_VALIDATION
-  | typeof VALIDEE
-  | typeof PRETE_POUR_AFFECTATION;
-
-export const ftStatusLabels = new Map<FtStatus, FtStatusLabel>([
-  [FtStatus.DRAFT, BROUILLON],
-  [FtStatus.REFUSED, REFUSEE],
-  [FtStatus.SUBMITTED, SOUMISE_A_VALIDATION],
-  [FtStatus.VALIDATED, VALIDEE],
-  [FtStatus.READY, PRETE_POUR_AFFECTATION],
+export const ftStatusLabels = new Map<FestivalTask["status"], FtStatusLabel>([
+  [DRAFT, BROUILLON],
 ]);
-
-export enum FtCardType {
-  GENERAL = "GENERAL",
-  PARENT_FA = "PARENT_FA",
-  DETAIL = "DETAIL",
-  TIME_WINDOW = "TIME_WINDOW",
-  LOGISTICS = "LOGISTICS",
-}
 
 interface BaseFt {
   id: number;
   name: string;
-  status: FtStatus;
+  status: FestivalTask["status"];
 }
 
 export interface FtCreation {
@@ -96,7 +67,7 @@ export interface FtUpdate
 
 export interface FtSearch {
   isDeleted?: boolean;
-  status?: FtStatus;
+  status?: FestivalTask["status"];
 }
 
 export interface FtPageId {

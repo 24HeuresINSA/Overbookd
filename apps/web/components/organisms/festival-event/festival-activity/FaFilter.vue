@@ -56,16 +56,16 @@ import { User } from "@overbookd/user";
 import { defineComponent } from "vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import {
-  FilterBuilder,
-  nonEmptyString,
+  ActivityFilterBuilder,
   findReviewStatus,
   findStatus,
-  Filters,
+  ActivityFilters,
 } from "~/utils/festival-event/festival-activity/festival-activity.filter";
 import {
   ReviewLabel,
   reviewStatusLabel,
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
+import { nonEmptyString } from "~/utils/festival-event/festival-event.filter";
 import { Team } from "~/utils/models/team.model";
 
 type ReviewerTeam = Team & {
@@ -83,8 +83,8 @@ export default defineComponent({
   },
   emits: ["change"],
   computed: {
-    filters(): Filters {
-      const builder = FilterBuilder.init({
+    filters(): ActivityFilters {
+      const builder = ActivityFilterBuilder.init({
         isNotEmpty: nonEmptyString,
         isExistingReview: findReviewStatus,
         isExistingStatus: findStatus,
@@ -193,7 +193,7 @@ export default defineComponent({
       this.updateQueryParams(reviewer, review);
     },
 
-    updateQueryParams(key: keyof Filters, value?: string) {
+    updateQueryParams(key: keyof ActivityFilters, value?: string) {
       const currentQuery = this.$route.query;
       const path = this.$route.path;
       if (!value) {
@@ -215,3 +215,5 @@ export default defineComponent({
   }
 }
 </style>
+import { nonEmptyString } from
+"~/utils/festival-event/festival-activity/strigifyQueryParam";

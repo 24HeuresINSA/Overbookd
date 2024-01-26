@@ -1,36 +1,39 @@
+import {
+  DRAFT,
+  FestivalActivity,
+  IN_REVIEW,
+  REFUSED,
+  VALIDATED,
+} from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
+import { User } from "@overbookd/user";
 import { FaFeedback } from "./feedback.model";
 import { FtSimplified } from "./ft.model";
 import { StoredGearRequest } from "./gear-request.model";
 import { PeriodWithId } from "./period.model";
 import { SignaLocation } from "@overbookd/signa";
 import { Team } from "./team.model";
-import { User } from "@overbookd/user";
-
-export enum FaStatus {
-  DRAFT = "DRAFT",
-  REFUSED = "REFUSED",
-  SUBMITTED = "SUBMITTED",
-  VALIDATED = "VALIDATED",
-}
-
-export const BROUILLON = "Brouillon";
-const REFUSEE = "Refusée";
-const SOUMISE_A_VALIDATION = "Soumise à validation";
-const VALIDEE = "Validée";
-const A_VALIDER = "À valider";
+import {
+  BROUILLON,
+  REFUSEE,
+  VALIDEE,
+  RELECTURE_EN_COURS,
+} from "../festival-event/festival-event.model";
 
 export type FaStatusLabel =
   | typeof BROUILLON
   | typeof REFUSEE
-  | typeof SOUMISE_A_VALIDATION
+  | typeof RELECTURE_EN_COURS
   | typeof VALIDEE;
 
-export const faStatusLabels = new Map<FaStatus, FaStatusLabel>([
-  [FaStatus.DRAFT, BROUILLON],
-  [FaStatus.REFUSED, REFUSEE],
-  [FaStatus.SUBMITTED, SOUMISE_A_VALIDATION],
-  [FaStatus.VALIDATED, VALIDEE],
+export const faStatusLabels = new Map<
+  FestivalActivity["status"],
+  FaStatusLabel
+>([
+  [DRAFT, BROUILLON],
+  [REFUSED, REFUSEE],
+  [IN_REVIEW, RELECTURE_EN_COURS],
+  [VALIDATED, VALIDEE],
 ]);
 
 export enum ValidatorStatus {
@@ -42,7 +45,7 @@ export enum ValidatorStatus {
 export type ValidatorStatusLabel =
   | typeof VALIDEE
   | typeof REFUSEE
-  | typeof A_VALIDER;
+  | typeof RELECTURE_EN_COURS;
 
 export const validatorStatusLabels = new Map<
   ValidatorStatus,
@@ -50,7 +53,7 @@ export const validatorStatusLabels = new Map<
 >([
   [ValidatorStatus.VALIDATED, VALIDEE],
   [ValidatorStatus.REFUSED, REFUSEE],
-  [ValidatorStatus.TO_VALIDATE, A_VALIDER],
+  [ValidatorStatus.TO_VALIDATE, RELECTURE_EN_COURS],
 ]);
 
 const PC16_Prise_classique = "PC16_Prise_classique";
@@ -140,7 +143,7 @@ export type PublicAnimationCategoryType =
 export interface BaseFa {
   id: number;
   name: string;
-  status: FaStatus;
+  status: FestivalActivity["status"];
 }
 
 export interface Fa extends BaseFa {
@@ -245,7 +248,7 @@ export interface FaValidationBody {
 
 export interface SearchFa {
   isDeleted?: boolean;
-  status?: FaStatus;
+  status?: FestivalActivity["status"];
 }
 
 export interface FaPageId {

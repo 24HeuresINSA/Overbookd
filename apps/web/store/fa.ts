@@ -17,7 +17,6 @@ import {
   FaSignaNeed,
   FaSignaNeedsExportCsv,
   FaSimplified,
-  FaStatus,
   FaTimeWindow,
   SearchFa,
   PublicAnimation,
@@ -45,6 +44,7 @@ import { User } from "@overbookd/user";
 import { sendNotification } from "./catalog";
 import { formatUsername } from "~/utils/user/user.utils";
 import { RepoFactory } from "~/repositories/repo-factory";
+import { DRAFT, FestivalActivity, IN_REVIEW } from "@overbookd/festival-event";
 
 const repo = RepoFactory.FaRepository;
 
@@ -94,7 +94,7 @@ export const mutations = mutationTree(state, {
     state.mFA = { ...state.mFA, ...fa };
   },
 
-  UPDATE_STATUS({ mFA }, status: FaStatus) {
+  UPDATE_STATUS({ mFA }, status: FestivalActivity["status"]) {
     mFA.status = status;
   },
 
@@ -341,7 +341,7 @@ export const actions = actionTree(
         createdAt: new Date(),
       };
       dispatch("addFeedback", feedback);
-      commit("UPDATE_STATUS", FaStatus.SUBMITTED);
+      commit("UPDATE_STATUS", IN_REVIEW);
       dispatch("save");
     },
 
@@ -871,7 +871,7 @@ export const actions = actionTree(
 function defaultState(): Omit<Fa, "id"> {
   return {
     name: "",
-    status: FaStatus.DRAFT,
+    status: DRAFT,
     description: "",
     timeWindows: [],
     feedbacks: [],
