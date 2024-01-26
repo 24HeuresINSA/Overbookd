@@ -100,10 +100,10 @@ export class AvailabilityDate {
       .split(":");
     const hour = +hourWithPad;
 
-    const [day, mounth, year] = Intl.DateTimeFormat("fr", PARIS_TIMEZONE)
+    const [day, month, year] = Intl.DateTimeFormat("fr", PARIS_TIMEZONE)
       .format(international)
       .split("/");
-    const date = `${year}-${mounth}-${day}`;
+    const date = `${year}-${month}-${day}`;
 
     if (!isDateString(date)) throw new Error();
 
