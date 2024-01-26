@@ -39,7 +39,7 @@ import {
   DateString,
   Hour,
   PeriodOrchestrator,
-isHour,
+  isHour,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
@@ -94,7 +94,7 @@ export default Vue.extend({
         const start = date.date;
         const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
         const period = Period.init({ start, end: tomorrow });
-        return this.selectedAvailabilities.some(period.isIncludedBy)
+        return this.selectedAvailabilities.some(period.isIncludedBy);
       };
     },
     isSaved(): (date: DateString, hour: Hour) => boolean {
@@ -188,19 +188,17 @@ export default Vue.extend({
       return charisma * this.getPeriodDurationInHours(hour);
     },
     incrementCharismaByDate(date: Date) {
-      const dateHours = date.getHours()
-      const hour = isHour(dateHours) ? dateHours : 0
+      const dateHours = date.getHours();
+      const hour = isHour(dateHours) ? dateHours : 0;
       this.$accessor.volunteerAvailability.incrementCharisma(
-        this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(hour),
+        this.getCharismaByDate(date) * this.getPeriodDurationInHours(hour),
       );
     },
     decrementCharismaByDate(date: Date) {
-      const dateHours = date.getHours()
-      const hour = isHour(dateHours) ? dateHours : 0
+      const dateHours = date.getHours();
+      const hour = isHour(dateHours) ? dateHours : 0;
       this.$accessor.volunteerAvailability.decrementCharisma(
-        this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(hour),
+        this.getCharismaByDate(date) * this.getPeriodDurationInHours(hour),
       );
     },
   },
