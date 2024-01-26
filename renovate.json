@@ -62,6 +62,7 @@
     },
     {
       "description": "Group all Dockerfile dependencies",
+      "matchDatasources": ["docker"],
       "matchFileNames": ["**/Dockerfile", "**/docker-compose.yml"],
       "addLabels": ["Scope::CI", "docker"],
       "groupName": "Dockerfile dependencies",
