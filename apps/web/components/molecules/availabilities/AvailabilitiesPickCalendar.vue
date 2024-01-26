@@ -37,6 +37,7 @@ import { IProvidePeriod, ONE_DAY_IN_MS, Period } from "@overbookd/period";
 import {
   AvailabilityDate,
   DateString,
+  Hour,
   PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -78,8 +79,8 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    isSelected(): (date: DateString, hour: number) => boolean {
-      return (date: DateString, hour: number) => {
+    isSelected(): (date: DateString, hour: Hour) => boolean {
+      return (date: DateString, hour: Hour) => {
         const availabilityDate = AvailabilityDate.init({ date, hour });
         const periods = [
           ...this.selectedAvailabilities,
@@ -98,8 +99,8 @@ export default Vue.extend({
         );
       };
     },
-    isSaved(): (date: DateString, hour: number) => boolean {
-      return (date: DateString, hour: number) => {
+    isSaved(): (date: DateString, hour: Hour) => boolean {
+      return (date: DateString, hour: Hour) => {
         const availabilityDate = AvailabilityDate.init({ date, hour });
         return availabilityDate.isIncludedBy(this.savedAvailabilities);
       };
@@ -130,7 +131,7 @@ export default Vue.extend({
       const tomorrow = computeTomorrowDate(date);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(dateString: DateString, hour: number) {
+    selectPeriod(dateString: DateString, hour: Hour) {
       if (this.isSaved(dateString, hour)) return;
 
       const { period } = AvailabilityDate.init({ date: dateString, hour });
@@ -182,7 +183,7 @@ export default Vue.extend({
         this.$accessor.charismaPeriod.charismaPeriods ?? [];
       return getCharismaByDate(charismaPeriods, date);
     },
-    getDisplayedCharisma(date: DateString, hour: number): number {
+    getDisplayedCharisma(date: DateString, hour: Hour): number {
       const charisma = this.getCharismaByDate(
         AvailabilityDate.init({ date, hour }).date,
       );
