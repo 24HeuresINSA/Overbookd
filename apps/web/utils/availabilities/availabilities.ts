@@ -1,5 +1,9 @@
 import { IProvidePeriod } from "@overbookd/period";
-import { Hour, PeriodOrchestrator, isHour } from "@overbookd/volunteer-availability";
+import {
+  Hour,
+  PeriodOrchestrator,
+  isHour,
+} from "@overbookd/volunteer-availability";
 import { setDateHour } from "../date/date.utils";
 import { isPartyShift } from "../shift/shift";
 import {
@@ -8,8 +12,11 @@ import {
   isSamePeriod,
 } from "./period";
 
-export const ALL_HOURS: Hour[] = Array.from({ length: 24 }, (_, hour) => hour).filter((hour): hour is Hour =>
-  isEndOfAvailabilityPeriod(hour) && isHour(hour),
+export const ALL_HOURS: Hour[] = Array.from(
+  { length: 24 },
+  (_, hour) => hour,
+).filter(
+  (hour): hour is Hour => isEndOfAvailabilityPeriod(hour) && isHour(hour),
 );
 
 export function isEndOfAvailabilityPeriod(hour: number): boolean {
