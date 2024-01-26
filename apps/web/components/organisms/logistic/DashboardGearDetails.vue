@@ -30,13 +30,23 @@ type Tooltip = {
   yLabel: number;
 };
 
+type DashboardGearDetailsData = {
+  courbs: ChartData;
+  datasetOptions: {
+    borderWidth: number;
+    pointRadius: number;
+    pointHitRadius: number;
+  };
+  options: unknown;
+};
+
 export default defineComponent({
   name: "DashboardGearDetails",
-  data: () => ({
+  data: (): DashboardGearDetailsData => ({
     courbs: {
       labels: [],
       datasets: [],
-    } as ChartData,
+    },
     datasetOptions: {
       borderWidth: 2,
       pointRadius: 0,
