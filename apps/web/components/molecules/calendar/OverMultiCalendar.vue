@@ -84,7 +84,11 @@
           ></div>
           <div
             :class="{
-              available: isVolunteerAvailable(date, time, +category),
+              available: isVolunteerAvailableDuringThisHour(
+                date,
+                hour,
+                +category,
+              ),
             }"
           ></div>
         </slot>
@@ -96,12 +100,12 @@
 <script lang="ts">
 import Vue from "vue";
 import { PlanningEvent } from "~/domain/common/planning-events";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/date.utils";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
+import { DateString, Hour } from "@overbookd/volunteer-availability";
+import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 
 export default Vue.extend({
   name: "OverMultiCalendar",
@@ -180,20 +184,15 @@ export default Vue.extend({
         this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
       );
     },
-    isVolunteerAvailable(
-      date: string,
-      time: string,
+    isVolunteerAvailableDuringThisHour(
+      date: DateString,
+      hour: Hour,
       volunteerId: number,
     ): boolean {
       const volunteer = this.retrieveVolunteer(volunteerId);
       if (!volunteer) return false;
 
-      const start = new Date(`${date} ${time}`);
-      const end = computeNextHourDate(start);
-
-      return volunteer.availabilities.some(
-        isPeriodIncludedByAnother({ start, end }),
-      );
+      return isItAvailableDuringThisHour(volunteer.availabilities, date, hour);
     },
     buildPreviewEvents(eventToAdd: PlanningEvent): CalendarEvent[] {
       return this.volunteerIds.map((category) => ({

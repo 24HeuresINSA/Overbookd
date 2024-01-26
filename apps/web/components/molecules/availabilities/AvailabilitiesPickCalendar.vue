@@ -39,7 +39,6 @@ import {
   DateString,
   Hour,
   PeriodOrchestrator,
-  isHour,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
@@ -147,7 +146,7 @@ export default Vue.extend({
     },
     addPeriod(period: Period) {
       this.$accessor.volunteerAvailability.addAvailabilityPeriod(period);
-      this.incrementCharismaByDate(period.start);
+      this.incrementCharismaByPeriod(period);
     },
     addPeriodsInDay(date: DateString) {
       const periodsToAdd = ALL_HOURS.filter(
@@ -155,14 +154,14 @@ export default Vue.extend({
       ).map((hour) => AvailabilityDate.init({ date, hour }).period);
 
       this.$accessor.volunteerAvailability.addAvailabilityPeriods(periodsToAdd);
-      periodsToAdd.map((period) => this.incrementCharismaByDate(period.start));
+      periodsToAdd.map((period) => this.incrementCharismaByPeriod(period));
     },
     getPeriodDurationInHours(hour: Hour): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
     removePeriod(period: Period) {
       this.$accessor.volunteerAvailability.removeAvailabilityPeriod(period);
-      this.decrementCharismaByDate(period.start);
+      this.decrementCharismaByPeriod(period);
     },
     removePeriodsInDay(date: DateString) {
       const periodsToRemove = ALL_HOURS.filter((hour) =>
@@ -172,9 +171,7 @@ export default Vue.extend({
       this.$accessor.volunteerAvailability.removeAvailabilityPeriods(
         periodsToRemove,
       );
-      periodsToRemove.map((period) =>
-        this.decrementCharismaByDate(period.start),
-      );
+      periodsToRemove.map((period) => this.decrementCharismaByPeriod(period));
     },
     getCharismaByDate(date: Date): number {
       const charismaPeriods =
@@ -187,18 +184,14 @@ export default Vue.extend({
       );
       return charisma * this.getPeriodDurationInHours(hour);
     },
-    incrementCharismaByDate(date: Date) {
-      const dateHours = date.getHours();
-      const hour = isHour(dateHours) ? dateHours : 0;
+    incrementCharismaByPeriod(period: Period) {
       this.$accessor.volunteerAvailability.incrementCharisma(
-        this.getCharismaByDate(date) * this.getPeriodDurationInHours(hour),
+        this.getCharismaByDate(period.start) * period.duration.inHours,
       );
     },
-    decrementCharismaByDate(date: Date) {
-      const dateHours = date.getHours();
-      const hour = isHour(dateHours) ? dateHours : 0;
+    decrementCharismaByPeriod(period: Period) {
       this.$accessor.volunteerAvailability.decrementCharisma(
-        this.getCharismaByDate(date) * this.getPeriodDurationInHours(hour),
+        this.getCharismaByDate(period.start) * period.duration.inHours,
       );
     },
   },
