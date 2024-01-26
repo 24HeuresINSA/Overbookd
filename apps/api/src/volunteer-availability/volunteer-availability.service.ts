@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { ONE_HOUR_IN_MS, Period } from "@overbookd/period";
+import { IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/period";
 import {
   PeriodOrchestrator,
   PeriodWithError,
@@ -15,8 +15,9 @@ export class VolunteerAvailabilityService {
 
   async addAvailabilities(
     userId: number,
-    periods: PeriodDto[],
-  ): Promise<PeriodDto[]> {
+    periods: IProvidePeriod[],
+  ): Promise<IProvidePeriod[]> {
+    console.error(periods);
     const previousAvailabilityPeriods =
       await this.findUserAvailabilities(userId);
     const periodOrchestrator = PeriodOrchestrator.init(
@@ -41,7 +42,7 @@ export class VolunteerAvailabilityService {
     return this.findUserAvailabilities(userId);
   }
 
-  async findUserAvailabilities(userId: number): Promise<PeriodDto[]> {
+  async findUserAvailabilities(userId: number): Promise<IProvidePeriod[]> {
     return this.prisma.volunteerAvailability.findMany({
       where: {
         userId,

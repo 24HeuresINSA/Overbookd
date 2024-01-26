@@ -98,7 +98,7 @@ export class Period {
 
     return sortedPeriods.reduce(
       (mergedPeriods: Period[], currentPeriod: Period) => {
-        const lastMergedPeriod = mergedPeriods[mergedPeriods.length - 1];
+        const lastMergedPeriod = mergedPeriods.at(mergedPeriods.length - 1);
         if (!lastMergedPeriod) return [currentPeriod];
 
         const isMergeable = lastMergedPeriod.isFollowedBy(currentPeriod);
@@ -106,9 +106,8 @@ export class Period {
           const mergedPeriod = lastMergedPeriod.mergeWith(currentPeriod);
           return [...mergedPeriods.slice(0, -1), mergedPeriod];
         }
-        mergedPeriods.push(currentPeriod);
 
-        return mergedPeriods;
+        return [...mergedPeriods, currentPeriod];
       },
       [],
     );

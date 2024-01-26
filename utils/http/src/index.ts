@@ -28,3 +28,4 @@ export type {
   GearPreview,
 } from "./logistic/dashboard.model";
 export { JSON, CSV, ICAL, PDF } from "./mime";
+export type { AvailabilityForm } from "./volunteer-availability";

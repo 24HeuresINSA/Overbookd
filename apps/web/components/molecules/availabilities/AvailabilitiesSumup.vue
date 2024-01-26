@@ -22,18 +22,17 @@
 <script lang="ts">
 import Vue from "vue";
 import { Period } from "@overbookd/period";
-import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
+import {
+  AvailabilityDate,
+  DateString,
+  PeriodOrchestrator,
+} from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   hasAvailabilityPeriodError,
-  isAvailabilityPeriodSelected,
   isEndOfAvailabilityPeriod,
 } from "~/utils/availabilities/availabilities";
-import { generateNewPeriod } from "~/utils/availabilities/period";
-import {
-  formatDateWithExplicitMonth,
-  setDateHour,
-} from "~/utils/date/date.utils";
+import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { UserPersonalData } from "@overbookd/user";
@@ -60,8 +59,12 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    isSelected(): (date: string | Date, hour: number) => boolean {
-      return isAvailabilityPeriodSelected(this.selectedAvailabilities, []);
+    isSelected(): (date: DateString, hour: number) => boolean {
+      return (date: DateString, hour: number) => {
+        const availabilityDate = AvailabilityDate.init({ date, hour });
+        const periods = this.selectedAvailabilities;
+        return availabilityDate.isIncludedBy(periods);
+      };
     },
     hasError(): (date: string | Date, hour: number) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
@@ -95,22 +98,18 @@ export default Vue.extend({
     isPartyShift(hour: number): boolean {
       return isPartyShift(hour);
     },
-    togglePeriod(dateString: string, hour: number) {
+    togglePeriod(dateString: DateString, hour: number) {
       if (this.isReadonly) return;
-      const date = new Date(dateString);
-      const updatedDate = setDateHour(date, hour);
-      if (this.isSelected(date, hour)) return this.removePeriod(updatedDate);
-      this.addPeriod(updatedDate);
+
+      const { period } = AvailabilityDate.init({ date: dateString, hour });
+      if (this.isSelected(dateString, hour)) return this.removePeriod(period);
+      this.addPeriod(period);
     },
-    addPeriod(date: Date) {
-      const periodToAdd = generateNewPeriod(date);
-      this.$accessor.volunteerAvailability.addAvailabilityPeriod(periodToAdd);
+    addPeriod(period: Period) {
+      this.$accessor.volunteerAvailability.addAvailabilityPeriod(period);
     },
-    removePeriod(date: Date) {
-      const periodToRemove = generateNewPeriod(date);
-      this.$accessor.volunteerAvailability.removeAvailabilityPeriod(
-        periodToRemove,
-      );
+    removePeriod(period: Period) {
+      this.$accessor.volunteerAvailability.removeAvailabilityPeriod(period);
     },
   },
 });

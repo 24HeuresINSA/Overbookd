@@ -100,8 +100,8 @@ export default Vue.extend({
       return {
         title: "Pré-pré-festival",
         period: {
-          start: new Date("2023-05-01"),
-          end: new Date("2023-05-07"),
+          start: new Date("2024-05-06"),
+          end: new Date("2024-05-12"),
         },
       };
     },
@@ -109,8 +109,8 @@ export default Vue.extend({
       return {
         title: "Pré-festival",
         period: {
-          start: new Date("2023-05-08"),
-          end: new Date("2023-05-11"),
+          start: new Date("2024-05-13"),
+          end: new Date("2024-05-16"),
         },
       };
     },
@@ -118,8 +118,8 @@ export default Vue.extend({
       return {
         title: "Festival",
         period: {
-          start: new Date("2023-05-12"),
-          end: new Date("2023-05-15"),
+          start: new Date("2024-05-17"),
+          end: new Date("2024-05-20"),
         },
       };
     },
@@ -127,8 +127,8 @@ export default Vue.extend({
       return {
         title: "Post-festival",
         period: {
-          start: new Date("2023-05-16"),
-          end: new Date("2023-05-17"),
+          start: new Date("2024-05-21"),
+          end: new Date("2024-05-23"),
         },
       };
     },

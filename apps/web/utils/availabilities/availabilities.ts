@@ -8,6 +8,10 @@ import {
   isSamePeriod,
 } from "./period";
 
+export const ALL_HOURS = Array.from({ length: 24 }, (_, hour) => hour).filter(
+  isEndOfAvailabilityPeriod,
+);
+
 export function isEndOfAvailabilityPeriod(hour: number): boolean {
   return isPartyShift(hour) || hour % 2 === 0;
 }
