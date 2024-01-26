@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { isReadonly } from "vue";
+import Vue from "vue";
 import { DateString, Hour, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { UserPersonalData } from "@overbookd/user";

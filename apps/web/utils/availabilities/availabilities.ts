@@ -2,9 +2,7 @@ import {
   DateString,
   Hour,
   IProvidePeriod,
-  ONE_HOUR_IN_MS,
   OverDate,
-  Period,
   isHour,
 } from "@overbookd/period";
 import {
