@@ -37,6 +37,7 @@ import { IProvidePeriod, ONE_DAY_IN_MS, Period } from "@overbookd/period";
 import {
   AvailabilityDate,
   DateString,
+  Hour,
   PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -44,7 +45,6 @@ import {
   ALL_HOURS,
   hasAvailabilityPeriodError,
   isEndOfAvailabilityPeriod,
-  isPeriodIncludedByAnother,
 } from "~/utils/availabilities/availabilities";
 import { getCharismaByDate } from "~/utils/models/charisma-period.model";
 import { isPartyShift } from "~/utils/shift/shift";
@@ -78,8 +78,8 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    isSelected(): (date: DateString, hour: number) => boolean {
-      return (date: DateString, hour: number) => {
+    isSelected(): (date: DateString, hour: Hour) => boolean {
+      return (date: DateString, hour: Hour) => {
         const availabilityDate = AvailabilityDate.init({ date, hour });
         const periods = [
           ...this.selectedAvailabilities,
@@ -92,19 +92,17 @@ export default Vue.extend({
       return (date: AvailabilityDate) => {
         const start = date.date;
         const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
-        const period = { start, end: tomorrow };
-        return this.selectedAvailabilities.some(
-          isPeriodIncludedByAnother(period),
-        );
+        const period = Period.init({ start, end: tomorrow });
+        return this.selectedAvailabilities.some(period.isIncludedBy);
       };
     },
-    isSaved(): (date: DateString, hour: number) => boolean {
-      return (date: DateString, hour: number) => {
+    isSaved(): (date: DateString, hour: Hour) => boolean {
+      return (date: DateString, hour: Hour) => {
         const availabilityDate = AvailabilityDate.init({ date, hour });
         return availabilityDate.isIncludedBy(this.savedAvailabilities);
       };
     },
-    hasError(): (date: string | Date, hour: number) => boolean {
+    hasError(): (date: DateString, hour: Hour) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     weekdayNumbers(): number[] {
@@ -112,16 +110,16 @@ export default Vue.extend({
     },
   },
   methods: {
-    isEndOfPeriod(hour: number): boolean {
+    isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
     },
-    isPartyShift(hour: number): boolean {
+    isPartyShift(hour: Hour): boolean {
       return isPartyShift(hour);
     },
-    formatDateDay(dateString: string): string {
+    formatDateDay(dateString: DateString): string {
       return formatDateDayName(dateString);
     },
-    formatDateDayNumber(dateString: string): string {
+    formatDateDayNumber(dateString: DateString): string {
       return formatDateDayNumber(dateString);
     },
     generateWeekdayList(weekdays: number[], date: Date): number[] {
@@ -130,7 +128,7 @@ export default Vue.extend({
       const tomorrow = computeTomorrowDate(date);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(dateString: DateString, hour: number) {
+    selectPeriod(dateString: DateString, hour: Hour) {
       if (this.isSaved(dateString, hour)) return;
 
       const { period } = AvailabilityDate.init({ date: dateString, hour });
@@ -148,7 +146,7 @@ export default Vue.extend({
     },
     addPeriod(period: Period) {
       this.$accessor.volunteerAvailability.addAvailabilityPeriod(period);
-      this.incrementCharismaByDate(period.start);
+      this.incrementCharismaByPeriod(period);
     },
     addPeriodsInDay(date: DateString) {
       const periodsToAdd = ALL_HOURS.filter(
@@ -156,14 +154,14 @@ export default Vue.extend({
       ).map((hour) => AvailabilityDate.init({ date, hour }).period);
 
       this.$accessor.volunteerAvailability.addAvailabilityPeriods(periodsToAdd);
-      periodsToAdd.map((period) => this.incrementCharismaByDate(period.start));
+      periodsToAdd.map((period) => this.incrementCharismaByPeriod(period));
     },
-    getPeriodDurationInHours(hour: number): number {
+    getPeriodDurationInHours(hour: Hour): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
     removePeriod(period: Period) {
       this.$accessor.volunteerAvailability.removeAvailabilityPeriod(period);
-      this.decrementCharismaByDate(period.start);
+      this.decrementCharismaByPeriod(period);
     },
     removePeriodsInDay(date: DateString) {
       const periodsToRemove = ALL_HOURS.filter((hour) =>
@@ -173,31 +171,27 @@ export default Vue.extend({
       this.$accessor.volunteerAvailability.removeAvailabilityPeriods(
         periodsToRemove,
       );
-      periodsToRemove.map((period) =>
-        this.decrementCharismaByDate(period.start),
-      );
+      periodsToRemove.map((period) => this.decrementCharismaByPeriod(period));
     },
     getCharismaByDate(date: Date): number {
       const charismaPeriods =
         this.$accessor.charismaPeriod.charismaPeriods ?? [];
       return getCharismaByDate(charismaPeriods, date);
     },
-    getDisplayedCharisma(date: DateString, hour: number): number {
+    getDisplayedCharisma(date: DateString, hour: Hour): number {
       const charisma = this.getCharismaByDate(
         AvailabilityDate.init({ date, hour }).date,
       );
       return charisma * this.getPeriodDurationInHours(hour);
     },
-    incrementCharismaByDate(date: Date) {
+    incrementCharismaByPeriod(period: Period) {
       this.$accessor.volunteerAvailability.incrementCharisma(
-        this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours()),
+        this.getCharismaByDate(period.start) * period.duration.inHours,
       );
     },
-    decrementCharismaByDate(date: Date) {
+    decrementCharismaByPeriod(period: Period) {
       this.$accessor.volunteerAvailability.decrementCharisma(
-        this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours()),
+        this.getCharismaByDate(period.start) * period.duration.inHours,
       );
     },
   },

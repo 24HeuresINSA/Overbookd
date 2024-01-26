@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { IProvidePeriod, Period } from "@overbookd/period";
 import { HttpStringified } from "@overbookd/http";
 
 export interface CharismaPeriod extends IProvidePeriod {
@@ -33,8 +33,8 @@ export function getCharismaByDate(
 ): number {
   return (
     charismaPeriods.find((charismaPeriod) => {
-      const { start, end } = charismaPeriod;
-      return date >= start && date < end;
+      const period = Period.init(charismaPeriod);
+      return period.isIncluding(date);
     })?.charisma ?? 0
   );
 }

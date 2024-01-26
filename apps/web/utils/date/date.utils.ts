@@ -1,4 +1,4 @@
-import { ONE_HOUR_IN_MS } from "@overbookd/period";
+import { ONE_DAY_IN_MS, ONE_HOUR_IN_MS } from "@overbookd/period";
 
 // return format dd/mm/yyyy hh:mm
 export function formatDateWithMinutes(date: string | Date): string {
@@ -100,20 +100,8 @@ export function formatDateDayNumber(date: Date | string): string {
   });
 }
 
-export function setDateHour(date: Date, hour: number): Date {
-  return new Date(new Date(date.setHours(hour)).setMinutes(0));
-}
-
 export function computeTomorrowDate(date: Date): Date {
-  const tomorrow = new Date(date);
-  tomorrow.setDate(date.getDate() + 1);
-  return tomorrow;
-}
-
-export function computeNextHourDate(date: Date): Date {
-  const nextHour = new Date(date);
-  nextHour.setHours(date.getHours() + 1);
-  return nextHour;
+  return new Date(date.getTime() + ONE_DAY_IN_MS);
 }
 
 export function formatDateToHumanReadable(date: Date | string): string {

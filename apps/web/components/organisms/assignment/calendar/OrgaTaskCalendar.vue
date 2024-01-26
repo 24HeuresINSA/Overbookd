@@ -11,8 +11,10 @@
         <AssignmentUserStats :stats="stats" class="title__stats" />
       </div>
     </template>
-    <template #interval="{ date, time }">
-      <div :class="{ available: isVolunteerAvailable(date, time) }" />
+    <template #interval="{ date, hour }">
+      <div
+        :class="{ available: isVolunteerAvailableDuringThisHour(date, hour) }"
+      />
     </template>
     <template #event="{ event }">
       <div
@@ -28,12 +30,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Availability } from "@overbookd/volunteer-availability";
+import {
+  Availability,
+  DateString,
+  Hour,
+} from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/date.utils";
 import { Volunteer } from "~/utils/models/assignment.model";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { AvailableTimeSpan } from "~/utils/models/ft-time-span.model";
@@ -42,6 +46,7 @@ import {
   VolunteerTask,
 } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
+import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 
 interface CalendarItemWithTask extends CalendarEvent {
   timeSpanId?: number;
@@ -101,12 +106,8 @@ export default Vue.extend({
     this.calendarMarker = this.manifDate;
   },
   methods: {
-    isVolunteerAvailable(date: string, time: string) {
-      const start = new Date(`${date} ${time}`);
-      const end = computeNextHourDate(start);
-      return this.availabilities.some(
-        isPeriodIncludedByAnother({ start, end }),
-      );
+    isVolunteerAvailableDuringThisHour(date: DateString, hour: Hour) {
+      return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
     selectTimeSpanToDisplayDetails(timeSpanId?: number) {
       if (!timeSpanId) {

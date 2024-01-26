@@ -66,6 +66,16 @@ export type DateString =
   | With30DaysDateString
   | With31DaysDateString;
 
+// https://stackoverflow.com/questions/39494689/is-it-possible-to-restrict-number-to-a-certain-range/70307091#39495173
+type Enumerate<
+  N extends number,
+  Acc extends number[] = [],
+> = Acc["length"] extends N
+  ? Acc[number]
+  : Enumerate<N, [...Acc, Acc["length"]]>;
+
+export type Hour = Enumerate<24>;
+
 const PARIS_TIMEZONE: Intl.DateTimeFormatOptions = {
   timeZone: "Europe/Paris",
 };
@@ -79,10 +89,10 @@ const DISPLAY_HOUR: Intl.DateTimeFormatOptions = {
 export class AvailabilityDate {
   constructor(
     private readonly _date: Date,
-    private readonly _hour: number,
+    private readonly _hour: Hour,
   ) {}
 
-  static init({ date, hour }: { date: DateString; hour: number }) {
+  static init({ date, hour }: { date: DateString; hour: Hour }) {
     const isOdd = hour % 2 !== 0;
     const happenOutsideNightShift =
       AvailabilityDate.happenOutsidePartyShift(hour);
@@ -105,7 +115,7 @@ export class AvailabilityDate {
       .split("/");
     const date = `${year}-${month}-${day}`;
 
-    if (!isDateString(date)) throw new Error();
+    if (!isDateString(date) || !isHour(hour)) throw new Error();
 
     return AvailabilityDate.init({ date, hour });
   }
@@ -114,7 +124,7 @@ export class AvailabilityDate {
     return this._date;
   }
 
-  get hour(): number {
+  get hour(): Hour {
     return this._hour;
   }
 
@@ -131,7 +141,7 @@ export class AvailabilityDate {
     return durationInHours * ONE_HOUR_IN_MS;
   }
 
-  private static happenOutsidePartyShift(hour: number) {
+  private static happenOutsidePartyShift(hour: Hour) {
     const happenBeforePartyShift = hour < SHIFT_HOURS.PARTY;
     const happenAfterNightShift = hour >= SHIFT_HOURS.NIGHT;
     return happenBeforePartyShift && happenAfterNightShift;
@@ -149,4 +159,8 @@ export function isDateString(dateString: string): dateString is DateString {
   if (isNaN(date.getTime())) return false;
 
   return dateString.split("-").length === DATE_TEMPORAL_PARTS;
+}
+
+export function isHour(hour: number): hour is Hour {
+  return hour >= 0 && hour < 24;
 }

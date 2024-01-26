@@ -1,54 +1,67 @@
-import { IProvidePeriod } from "@overbookd/period";
-import { PeriodOrchestrator } from "@overbookd/volunteer-availability";
-import { setDateHour } from "../date/date.utils";
-import { isPartyShift } from "../shift/shift";
+import { IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/period";
 import {
-  generateNewPeriod,
-  isDateIncludedByPeriod,
-  isSamePeriod,
-} from "./period";
+  AvailabilityDate,
+  DateString,
+  Hour,
+  PeriodOrchestrator,
+  isHour,
+} from "@overbookd/volunteer-availability";
+import { isPartyShift } from "../shift/shift";
+import { isSamePeriod } from "./period";
 
-export const ALL_HOURS = Array.from({ length: 24 }, (_, hour) => hour).filter(
-  isEndOfAvailabilityPeriod,
+export const ALL_HOURS: Hour[] = Array.from(
+  { length: 24 },
+  (_, hour) => hour,
+).filter(
+  (hour): hour is Hour => isHour(hour) && isEndOfAvailabilityPeriod(hour),
 );
 
-export function isEndOfAvailabilityPeriod(hour: number): boolean {
+export function isEndOfAvailabilityPeriod(hour: Hour): boolean {
   return isPartyShift(hour) || hour % 2 === 0;
 }
 
 export function isAvailabilityPeriodSelected(
   selectedAvailabilities: IProvidePeriod[],
   savedAvailabilities: IProvidePeriod[],
-): (date: string | Date, hour: number) => boolean {
-  return (date: string | Date, hour: number) =>
-    selectedAvailabilities.some(
-      isDateIncludedByPeriod(setDateHour(new Date(date), hour)),
-    ) && !isAvailabilityPeriodSaved(savedAvailabilities)(date, hour);
+): (date: DateString, hour: Hour) => boolean {
+  return (date: DateString, hour: Hour) => {
+    const availabilityDate = AvailabilityDate.init({ date, hour });
+    const isSelected = availabilityDate.isIncludedBy(selectedAvailabilities);
+    const isSaved = availabilityDate.isIncludedBy(savedAvailabilities);
+
+    return isSelected && !isSaved;
+  };
 }
 
 export function isAvailabilityPeriodSaved(
   savedAvailabilities: IProvidePeriod[],
-): (date: string | Date, hour: number) => boolean {
-  return (date: string | Date, hour: number) => {
-    const updatedDate = setDateHour(new Date(date), hour);
-    return savedAvailabilities.some(isDateIncludedByPeriod(updatedDate));
+): (date: DateString, hour: Hour) => boolean {
+  return (date: DateString, hour: Hour) => {
+    const availabilityDate = AvailabilityDate.init({ date, hour });
+    return availabilityDate.isIncludedBy(savedAvailabilities);
   };
 }
 
 export function hasAvailabilityPeriodError(
   periodOrchestrator: PeriodOrchestrator,
-): (date: string | Date, hour: number) => boolean {
-  return (date: string | Date, hour: number) => {
-    const updatedDate = setDateHour(new Date(date), hour);
-    const period = generateNewPeriod(updatedDate);
+): (date: DateString, hour: Hour) => boolean {
+  return (date: DateString, hour: Hour) => {
+    const { period } = AvailabilityDate.init({ date, hour });
     return periodOrchestrator.errors.some(isSamePeriod(period));
   };
 }
 
-export function isPeriodIncludedByAnother(
-  period: IProvidePeriod,
-): (value: IProvidePeriod) => boolean {
-  return (anotherPeriod) =>
-    anotherPeriod.start.getTime() <= period.start.getTime() &&
-    anotherPeriod.end.getTime() >= period.end.getTime();
+export function isItAvailableDuringThisHour(
+  availabilities: IProvidePeriod[],
+  date: DateString,
+  hour: Hour,
+) {
+  const availabilityDate = AvailabilityDate.init({ date, hour });
+  const start = availabilityDate.date;
+  const end = new Date(start.getTime() + ONE_HOUR_IN_MS);
+  const period = Period.init({ start, end });
+
+  return availabilities.some((availability) =>
+    period.isIncludedBy(Period.init(availability)),
+  );
 }

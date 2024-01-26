@@ -21,8 +21,8 @@
         class="user-stats"
       ></AssignmentUserStats>
     </template>
-    <template #interval="{ date, time }">
-      <div :class="{ available: isUserAvailable(date, time) }" />
+    <template #interval="{ date, hour }">
+      <div :class="{ available: isUserAvailable(date, hour) }" />
     </template>
     <template #event="{ event }">
       <div
@@ -38,12 +38,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Availability } from "@overbookd/volunteer-availability";
+import {
+  Availability,
+  DateString,
+  Hour,
+} from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
-import { isPeriodIncludedByAnother } from "~/utils/availabilities/availabilities";
-import { computeNextHourDate } from "~/utils/date/date.utils";
 
 import {
   Task,
@@ -54,6 +56,7 @@ import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { UserPersonalData } from "@overbookd/user";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 
 interface CalendarEventWithFt {
   start: Date;
@@ -133,12 +136,8 @@ export default Vue.extend({
     updateDate(date: Date) {
       this.calendarCentralDate = date;
     },
-    isUserAvailable(date: string, time: string): boolean {
-      const start = new Date(`${date} ${time}`);
-      const end = computeNextHourDate(start);
-      return this.availabilities.some(
-        isPeriodIncludedByAnother({ start, end }),
-      );
+    isUserAvailable(date: DateString, hour: Hour): boolean {
+      return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
     openFt(ftId: number) {
       this.$router.push({ path: `/ft/${ftId}` });
