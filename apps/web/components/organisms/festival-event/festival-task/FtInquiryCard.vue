@@ -8,6 +8,7 @@
           class="inquiry-form__fields"
           :gear="gear"
           :quantity="quantity"
+          ponctual-usage
           @update:gear="updateGear"
           @update:quantity="updateQuantity"
         />

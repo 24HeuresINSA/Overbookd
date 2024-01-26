@@ -11,6 +11,7 @@
     <SearchGear
       :gear="gear"
       class="inquiry-form__search"
+      :ponctual-usage="ponctualUsage"
       @change="updateGear"
     />
   </v-form>
@@ -33,6 +34,10 @@ export default defineComponent({
     quantity: {
       type: Number,
       default: 1,
+    },
+    ponctualUsage: {
+      type: Boolean,
+      default: () => undefined,
     },
   },
   emits: ["update:gear", "update:quantity"],
