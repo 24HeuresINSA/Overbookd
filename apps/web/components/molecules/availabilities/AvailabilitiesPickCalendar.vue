@@ -91,7 +91,7 @@ export default Vue.extend({
     isAllPeriodsInDaySelected(): (date: AvailabilityDate) => boolean {
       return (date: AvailabilityDate) => {
         const start = date.date;
-        const tomorrow = new Date(start.getTime() * ONE_DAY_IN_MS);
+        const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
         const period = { start, end: tomorrow };
         return this.selectedAvailabilities.some(
           isPeriodIncludedByAnother(period),
