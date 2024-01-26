@@ -47,14 +47,14 @@ export default Vue.extend({
     ],
     ftItems: [
       { id: "general", text: "Général", icon: "mdi-card-text" },
+      { id: "fa", text: "FA associée", icon: "mdi-chart-bubble" },
+      { id: "inquiry", text: "Demandes de matos", icon: "mdi-truck" },
       {
         id: "instructions",
         text: "Instructions",
         icon: "mdi-order-bool-descending-variant",
       },
-      { id: "fa", text: "FA associée", icon: "mdi-chart-bubble" },
       { id: "mobilization", text: "Mobilisations", icon: "mdi-calendar-badge" },
-      { id: "inquiry", text: "Demandes de matos", icon: "mdi-truck" },
       { id: "feedback", text: "Commentaires", icon: "mdi-comment" },
     ],
   }),

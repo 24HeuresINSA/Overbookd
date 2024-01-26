@@ -5,7 +5,7 @@
     <v-card-text>
       <SearchSignaLocation
         :location="instructions.appointment"
-        label="Lieu"
+        label="Lieu de rendez-vous"
         :boxed="false"
         @change="updateAppointment"
       />

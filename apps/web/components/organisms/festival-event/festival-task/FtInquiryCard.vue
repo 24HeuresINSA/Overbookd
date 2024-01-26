@@ -46,7 +46,7 @@ type FtInquiryCardData = InputRulesData & {
 };
 
 export default defineComponent({
-  name: "FtInquityCard",
+  name: "FtInquiryCard",
   components: { InquiryTable, InquiryFormFields },
   data: (): FtInquiryCardData => ({
     gear: null,

@@ -3,10 +3,10 @@
     <FestivalEventSidebar festival-event="FT" class="sidebar" />
     <v-container class="container ft">
       <FtGeneralCard id="general" />
-      <InstructionsCard id="instructions" />
       <ParentFaCard id="fa" />
+      <FtInquiryCard id="inquiry" />
+      <InstructionsCard id="instructions" />
       <MobilizationCard id="mobilization" />
-      <FtInquityCard id="inquiry" />
     </v-container>
     <SnackNotificationContainer />
   </div>
@@ -18,7 +18,7 @@ import FtGeneralCard from "~/components/organisms/festival-event/festival-task/F
 import InstructionsCard from "~/components/organisms/festival-event/festival-task/InstructionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
-import FtInquityCard from "~/components/organisms/festival-event/festival-task/FtInquityCard.vue";
+import FtInquiryCard from "~/components/organisms/festival-event/festival-task/FtInquiryCard.vue";
 import ParentFaCard from "~/components/organisms/festival-event/festival-task/ParentFaCard.vue";
 import MobilizationCard from "~/components/organisms/festival-event/festival-task/MobilizationCard.vue";
 import { FestivalTask } from "@overbookd/festival-event";
@@ -29,7 +29,7 @@ export default defineComponent({
     SnackNotificationContainer,
     FtGeneralCard,
     InstructionsCard,
-    FtInquityCard,
+    FtInquiryCard,
     ParentFaCard,
     MobilizationCard,
   },
