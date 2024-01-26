@@ -1,4 +1,4 @@
-import { QueryParamsValue } from "./festival-activity/festival-activity.filter";
+export type QueryParamsValue = string | (string | null)[];
 
 export function strigifyQueryParam(param?: QueryParamsValue): string {
   if (Array.isArray(param)) return "";

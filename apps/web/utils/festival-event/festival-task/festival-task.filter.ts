@@ -1,7 +1,7 @@
 import { DRAFT, FestivalTask } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { Team } from "../../models/team.model";
-import { strigifyQueryParam } from "../festival-event.filter";
+import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
 
 export type TaskFilters = {
   search?: string;
@@ -9,8 +9,6 @@ export type TaskFilters = {
   adherent?: User;
   status?: FestivalTask["status"];
 };
-
-type QueryParamsValue = string | (string | null)[];
 
 type IsNotEmpty = (value: string) => string | undefined;
 type IsExistingStatus = (value: string) => FestivalTask["status"] | undefined;

@@ -12,7 +12,7 @@ import {
 } from "@overbookd/festival-event";
 import { Team } from "../../models/team.model";
 import { User } from "@overbookd/user";
-import { strigifyQueryParam } from "../festival-event.filter";
+import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
 
 export type ActivityReviewsFilter = {
   humain?: ReviewStatus;
@@ -30,8 +30,6 @@ export type ActivityFilters = ActivityReviewsFilter & {
   adherent?: User;
   status?: FestivalActivity["status"];
 };
-
-export type QueryParamsValue = string | (string | null)[];
 
 type IsNotEmpty = (value: string) => string | undefined;
 type IsExistingStatus = (
