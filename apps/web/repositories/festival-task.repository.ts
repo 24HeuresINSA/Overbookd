@@ -7,6 +7,7 @@ import {
   HttpStringified,
   UpdateGeneralForm,
   UpdateInstructionsForm,
+  AddMobilizationForm,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -14,6 +15,8 @@ import {
   InquiryRequest,
   Contact,
   Volunteer,
+  UpdateMobilization,
+  Mobilization,
 } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -71,28 +74,6 @@ export class FestivalTaskRepository {
     );
   }
 
-  /* UPDATE INQUIRY */
-  static addInquiryRequest(
-    context: Context,
-    ftId: FestivalTask["id"],
-    inquiry: AddInquiryRequestForm,
-  ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
-      `${this.basePath}/${ftId}/inquiry/requests`,
-      inquiry,
-    );
-  }
-
-  static removeInquiryRequest(
-    context: Context,
-    ftId: FestivalTask["id"],
-    inquirySlug: InquiryRequest["slug"],
-  ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
-      `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
-    );
-  }
-
   static addContact(
     context: Context,
     ftId: FestivalTask["id"],
@@ -132,6 +113,62 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/instructions/in-charge/volunteers/${volunteerId}`,
+    );
+  }
+
+  /* UPDATE MOBILIZATION */
+  static addMobilization(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilization: AddMobilizationForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations`,
+      mobilization,
+    );
+  }
+
+  static updateMobilization(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    mobilization: UpdateMobilization,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations/${mobilizationId}`,
+      mobilization,
+    );
+  }
+
+  static removeMobilization(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations/${mobilizationId}`,
+    );
+  }
+
+  /* UPDATE INQUIRY */
+  static addInquiryRequest(
+    context: Context,
+    ftId: FestivalTask["id"],
+    inquiry: AddInquiryRequestForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/inquiry/requests`,
+      inquiry,
+    );
+  }
+
+  static removeInquiryRequest(
+    context: Context,
+    ftId: FestivalTask["id"],
+    inquirySlug: InquiryRequest["slug"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
     );
   }
 }

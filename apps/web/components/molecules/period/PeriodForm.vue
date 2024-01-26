@@ -1,10 +1,10 @@
 <template>
-  <v-card class="time-window-card">
-    <v-btn class="time-window-card__close-btn" icon @click="closeDialog">
+  <v-card class="period-card">
+    <v-btn class="period-card__close-btn" icon @click="closeDialog">
       <v-icon>mdi-close</v-icon>
     </v-btn>
 
-    <v-card-title class="time-window-card__title">
+    <v-card-title class="period-card__title">
       <h2>Ajouter un créneau</h2>
     </v-card-title>
 
@@ -13,7 +13,7 @@
     </v-card-subtitle>
 
     <v-card-text class="pb-0">
-      <FaTimeWindowFormFields
+      <PeriodFormFields
         :start="start"
         :end="end"
         @update:start="updateStart"
@@ -22,7 +22,7 @@
       />
     </v-card-text>
 
-    <v-card-actions class="time-window-card__actions">
+    <v-card-actions class="period-card__actions">
       <v-btn :disabled="!isValid" color="primary" large @click="addTimeWindow">
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
         Ajouter le créneau
@@ -33,13 +33,14 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import FaTimeWindowFormFields from "./FaTimeWindowFormFields.vue";
+import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import { formatDate } from "~/utils/date/date.utils";
 import { IProvidePeriod, Period } from "@overbookd/period";
 
 export default defineComponent({
-  name: "FaTimeWindowFormCard",
-  components: { FaTimeWindowFormFields },
+  name: "PeriodForm",
+  components: { PeriodFormFields },
+  emits: ["add", "close-dialog"],
   data: (): IProvidePeriod => ({
     start: new Date(),
     end: new Date(),
@@ -88,7 +89,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.time-window-card {
+.period-card {
   display: flex;
   flex-direction: column;
   align-items: center;

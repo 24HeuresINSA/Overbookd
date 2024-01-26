@@ -25,7 +25,7 @@ import { defineComponent } from "vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 
 export default defineComponent({
-  name: "FaTimeWindowFormFields",
+  name: "PeriodFormFields",
   components: { DateTimeField },
   props: {
     start: {
