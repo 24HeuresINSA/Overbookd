@@ -1,10 +1,15 @@
-import { IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/period";
 import {
-  AvailabilityDate,
   DateString,
   Hour,
-  PeriodOrchestrator,
+  IProvidePeriod,
+  ONE_HOUR_IN_MS,
+  OverDate,
+  Period,
   isHour,
+} from "@overbookd/period";
+import {
+  AvailabilityDate,
+  PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import { isPartyShift } from "../shift/shift";
 import { isSamePeriod } from "./period";
@@ -46,8 +51,12 @@ export function hasAvailabilityPeriodError(
   periodOrchestrator: PeriodOrchestrator,
 ): (date: DateString, hour: Hour) => boolean {
   return (date: DateString, hour: Hour) => {
-    const { period } = AvailabilityDate.init({ date, hour });
-    return periodOrchestrator.errors.some(isSamePeriod(period));
+    try {
+      const { period } = AvailabilityDate.init({ date, hour });
+      return periodOrchestrator.errors.some(isSamePeriod(period));
+    } catch (e) {
+      return false;
+    }
   };
 }
 
@@ -56,12 +65,6 @@ export function isItAvailableDuringThisHour(
   date: DateString,
   hour: Hour,
 ) {
-  const availabilityDate = AvailabilityDate.init({ date, hour });
-  const start = availabilityDate.date;
-  const end = new Date(start.getTime() + ONE_HOUR_IN_MS);
-  const period = Period.init({ start, end });
-
-  return availabilities.some((availability) =>
-    period.isIncludedBy(Period.init(availability)),
-  );
+  const overDate = OverDate.init({ date, hour });
+  return overDate.isIncludedBy(availabilities);
 }

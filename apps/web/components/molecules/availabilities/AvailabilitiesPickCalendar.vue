@@ -33,11 +33,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { IProvidePeriod, ONE_DAY_IN_MS, Period } from "@overbookd/period";
 import {
-  AvailabilityDate,
   DateString,
   Hour,
+  IProvidePeriod,
+  ONE_DAY_IN_MS,
+  OverDate,
+  Period,
+} from "@overbookd/period";
+import {
+  AvailabilityDate,
   PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -80,7 +85,7 @@ export default Vue.extend({
     },
     isSelected(): (date: DateString, hour: Hour) => boolean {
       return (date: DateString, hour: Hour) => {
-        const availabilityDate = AvailabilityDate.init({ date, hour });
+        const availabilityDate = OverDate.init({ date, hour });
         const periods = [
           ...this.selectedAvailabilities,
           ...this.savedAvailabilities,
@@ -98,7 +103,7 @@ export default Vue.extend({
     },
     isSaved(): (date: DateString, hour: Hour) => boolean {
       return (date: DateString, hour: Hour) => {
-        const availabilityDate = AvailabilityDate.init({ date, hour });
+        const availabilityDate = OverDate.init({ date, hour });
         return availabilityDate.isIncludedBy(this.savedAvailabilities);
       };
     },
@@ -180,7 +185,7 @@ export default Vue.extend({
     },
     getDisplayedCharisma(date: DateString, hour: Hour): number {
       const charisma = this.getCharismaByDate(
-        AvailabilityDate.init({ date, hour }).date,
+        OverDate.init({ date, hour }).date,
       );
       return charisma * this.getPeriodDurationInHours(hour);
     },

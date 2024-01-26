@@ -99,12 +99,12 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { DateString, Hour } from "@overbookd/period";
 import { PlanningEvent } from "~/domain/common/planning-events";
 import { CalendarEvent, CalendarUser } from "~/utils/models/calendar.model";
 import { SHIFT_HOURS } from "~/utils/shift/shift";
 import NeedHelpVolunteerResumeCalendarHeader from "../need-help/NeedHelpVolunteerResumeCalendarHeader.vue";
 import { VuetifyCalendar } from "~/utils/calendar/vuetify-calendar";
-import { DateString, Hour } from "@overbookd/volunteer-availability";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 
 export default Vue.extend({
