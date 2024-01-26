@@ -100,10 +100,6 @@ export function formatDateDayNumber(date: Date | string): string {
   });
 }
 
-export function setDateHour(date: Date, hour: number): Date {
-  return new Date(new Date(date.setHours(hour)).setMinutes(0));
-}
-
 export function computeTomorrowDate(date: Date): Date {
   const tomorrow = new Date(date);
   tomorrow.setDate(date.getDate() + 1);

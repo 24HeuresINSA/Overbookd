@@ -25,6 +25,7 @@ import { Period } from "@overbookd/period";
 import {
   AvailabilityDate,
   DateString,
+  Hour,
   PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -59,14 +60,14 @@ export default Vue.extend({
     selectedAvailabilities(): Period[] {
       return this.periodOrchestrator.availabilityPeriods;
     },
-    isSelected(): (date: DateString, hour: number) => boolean {
-      return (date: DateString, hour: number) => {
+    isSelected(): (date: DateString, hour: Hour) => boolean {
+      return (date: DateString, hour: Hour) => {
         const availabilityDate = AvailabilityDate.init({ date, hour });
         const periods = this.selectedAvailabilities;
         return availabilityDate.isIncludedBy(periods);
       };
     },
-    hasError(): (date: string | Date, hour: number) => boolean {
+    hasError(): (date: DateString, hour: Hour) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     isReadonly(): boolean {
@@ -92,13 +93,13 @@ export default Vue.extend({
         this.selectedVolunteer.id,
       );
     },
-    isEndOfPeriod(hour: number): boolean {
+    isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
     },
-    isPartyShift(hour: number): boolean {
+    isPartyShift(hour: Hour): boolean {
       return isPartyShift(hour);
     },
-    togglePeriod(dateString: DateString, hour: number) {
+    togglePeriod(dateString: DateString, hour: Hour) {
       if (this.isReadonly) return;
 
       const { period } = AvailabilityDate.init({ date: dateString, hour });

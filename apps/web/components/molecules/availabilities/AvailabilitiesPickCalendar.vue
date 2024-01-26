@@ -39,13 +39,13 @@ import {
   DateString,
   Hour,
   PeriodOrchestrator,
+isHour,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   ALL_HOURS,
   hasAvailabilityPeriodError,
   isEndOfAvailabilityPeriod,
-  isPeriodIncludedByAnother,
 } from "~/utils/availabilities/availabilities";
 import { getCharismaByDate } from "~/utils/models/charisma-period.model";
 import { isPartyShift } from "~/utils/shift/shift";
@@ -93,10 +93,8 @@ export default Vue.extend({
       return (date: AvailabilityDate) => {
         const start = date.date;
         const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
-        const period = { start, end: tomorrow };
-        return this.selectedAvailabilities.some(
-          isPeriodIncludedByAnother(period),
-        );
+        const period = Period.init({ start, end: tomorrow });
+        return this.selectedAvailabilities.some(period.isIncludedBy)
       };
     },
     isSaved(): (date: DateString, hour: Hour) => boolean {
@@ -105,7 +103,7 @@ export default Vue.extend({
         return availabilityDate.isIncludedBy(this.savedAvailabilities);
       };
     },
-    hasError(): (date: string | Date, hour: number) => boolean {
+    hasError(): (date: DateString, hour: Hour) => boolean {
       return hasAvailabilityPeriodError(this.periodOrchestrator);
     },
     weekdayNumbers(): number[] {
@@ -113,16 +111,16 @@ export default Vue.extend({
     },
   },
   methods: {
-    isEndOfPeriod(hour: number): boolean {
+    isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
     },
-    isPartyShift(hour: number): boolean {
+    isPartyShift(hour: Hour): boolean {
       return isPartyShift(hour);
     },
-    formatDateDay(dateString: string): string {
+    formatDateDay(dateString: DateString): string {
       return formatDateDayName(dateString);
     },
-    formatDateDayNumber(dateString: string): string {
+    formatDateDayNumber(dateString: DateString): string {
       return formatDateDayNumber(dateString);
     },
     generateWeekdayList(weekdays: number[], date: Date): number[] {
@@ -159,7 +157,7 @@ export default Vue.extend({
       this.$accessor.volunteerAvailability.addAvailabilityPeriods(periodsToAdd);
       periodsToAdd.map((period) => this.incrementCharismaByDate(period.start));
     },
-    getPeriodDurationInHours(hour: number): number {
+    getPeriodDurationInHours(hour: Hour): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
     removePeriod(period: Period) {
@@ -190,15 +188,19 @@ export default Vue.extend({
       return charisma * this.getPeriodDurationInHours(hour);
     },
     incrementCharismaByDate(date: Date) {
+      const dateHours = date.getHours()
+      const hour = isHour(dateHours) ? dateHours : 0
       this.$accessor.volunteerAvailability.incrementCharisma(
         this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours()),
+          this.getPeriodDurationInHours(hour),
       );
     },
     decrementCharismaByDate(date: Date) {
+      const dateHours = date.getHours()
+      const hour = isHour(dateHours) ? dateHours : 0
       this.$accessor.volunteerAvailability.decrementCharisma(
         this.getCharismaByDate(date) *
-          this.getPeriodDurationInHours(date.getHours()),
+          this.getPeriodDurationInHours(hour),
       );
     },
   },
