@@ -41,6 +41,7 @@ import {
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
+  ALL_HOURS,
   hasAvailabilityPeriodError,
   isEndOfAvailabilityPeriod,
   isPeriodIncludedByAnother,
@@ -52,10 +53,6 @@ import {
   formatDateDayNumber,
   computeTomorrowDate,
 } from "~/utils/date/date.utils";
-
-const ALL_STARTING_HOURS = [
-  0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 18, 19, 20, 21, 22, 23,
-];
 
 export default Vue.extend({
   name: "AvailabilitiesPickCalendar",
@@ -154,7 +151,7 @@ export default Vue.extend({
       this.incrementCharismaByDate(period.start);
     },
     addPeriodsInDay(date: DateString) {
-      const periodsToAdd = ALL_STARTING_HOURS.filter(
+      const periodsToAdd = ALL_HOURS.filter(
         (hour) => !this.isSelected(date, hour),
       ).map((hour) => AvailabilityDate.init({ date, hour }).period);
 
@@ -169,7 +166,7 @@ export default Vue.extend({
       this.decrementCharismaByDate(period.start);
     },
     removePeriodsInDay(date: DateString) {
-      const periodsToRemove = ALL_STARTING_HOURS.filter((hour) =>
+      const periodsToRemove = ALL_HOURS.filter((hour) =>
         this.isSelected(date, hour),
       ).map((hour) => AvailabilityDate.init({ date, hour }).period);
 
