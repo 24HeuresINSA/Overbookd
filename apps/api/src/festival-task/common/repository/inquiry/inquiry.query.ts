@@ -13,11 +13,7 @@ export const SELECT_GEAR = {
 };
 
 export const IS_PONCTUAL_USAGE = {
-  catalogItem: {
-    select: {
-      isPonctualUsage: true,
-    },
-  },
+  catalogItem: { isPonctualUsage: true },
 };
 
 export type DatabaseInquiryRequest = {
