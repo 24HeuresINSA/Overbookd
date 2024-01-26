@@ -21,11 +21,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Period } from "@overbookd/period";
+import { DateString, Hour, Period } from "@overbookd/period";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { UserPersonalData } from "@overbookd/user";
 import {
   AvailabilityDate,
-  DateString,
-  Hour,
   PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -35,8 +35,6 @@ import {
 } from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { UserPersonalData } from "@overbookd/user";
 
 export default Vue.extend({
   name: "AvailabilitiesSumup",

@@ -30,11 +30,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import {
-  Availability,
-  DateString,
-  Hour,
-} from "@overbookd/volunteer-availability";
+import { Availability } from "@overbookd/volunteer-availability";
+import { DateString, Hour } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
