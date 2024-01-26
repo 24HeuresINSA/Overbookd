@@ -1,3 +1,41 @@
+## [2.15.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.14.1...v2.15.0) (2024-01-26)
+
+
+### Features
+
+* **dashboard:** change details table into a graph ([acb0f1e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/acb0f1ebbf9dc334c0856dc565b78763a2a31009))
+
+
+### Bug Fixes
+
+* **festival-task:** order preview list on id. [#1506](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1506) ([8ce343b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8ce343ba8ae4ac9756574077b46ddd8a5730975e))
+* **volunteer-availability:** store availabilities date at Paris timezone. [#1058](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1058) ([960f80f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/960f80f9e53824dc4ffce27b2800c045a531b0b0))
+* **web:** availability pages. [#1514](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1514) ([f6c191f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f6c191f937f82e9564737ac65460aeefaafb74e1))
+
+
+### Pre-Features
+
+* **fesitval-task:** add parent fa component [#1487](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1487) ([3e7f76d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3e7f76d49a3febbac91aa295cf03d9be30b3260c))
+* **festival-task:** add & remove contact in api [#1497](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1497) ([3f57ff8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3f57ff827916e6f46a17aaa72c5e9484c5688e21))
+* **festival-task:** add & remove in charge volunteer in api [#1498](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1498) ([c801ba8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c801ba833fdd58a0d9bbc78c0f40dbf07fb6b1d5))
+* **festival-task:** add requests to update mobilization [#1502](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1502) ([43dd033](https://gitlab.com/24-heures-insa/overbookd-mono/commit/43dd033db32805ddf265bd8bcebee85aee5aefaf))
+* **festival-task:** enable remove team from mobilization. [#1495](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1495) ([7ac6e90](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7ac6e90008cb1b697a467f141b33528e2049eec1))
+* **festival-task:** enable remove volunteer from mobilization. [#1494](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1494) ([b26f9dc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b26f9dc05b1bd442f1e1eec35a220d6b6714d83b))
+* **festival-task:** enable update on mobilization. [#1501](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1501) ([2ca00ec](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2ca00ecc87fb8cde6e5159d4850fd9754fe8f840))
+* **festival-task:** implement base mobilization in web [#1505](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1505) ([e0eae2a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e0eae2ac9317fed75a6c5a014e7405d53e8519cf))
+* **festival-task:** implement in charge volunteers and contacts in web [#1503](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1503) ([3d1e3f7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3d1e3f7281e039a6f61bec7466d82634a5051251))
+* **festival-task:** implement inquiries in api [#1500](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1500) ([52e7714](https://gitlab.com/24-heures-insa/overbookd-mono/commit/52e7714b4389074f4fb4f67689bb1395e3d56519))
+* **festival-task:** implement inquiries in web [#1504](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1504) ([1f2199b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f2199bd444b283d4e3900742a99eada046fcf0f))
+* **festival-task:** implement mobilizations in api [#1499](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1499) ([1712425](https://gitlab.com/24-heures-insa/overbookd-mono/commit/17124250c171c91e1f27dde8bb3067973531b50a))
+* **festival-task:** return history from api [#1496](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1496) ([d4e4853](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d4e485398fc08ffd3b4540877bc0a8ee360f9810))
+
+
+### Refactor
+
+* **dashboard:** change expansion panels into a data table [#1482](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1482) ([601c790](https://gitlab.com/24-heures-insa/overbookd-mono/commit/601c7906c24c55bd7a32ad600851aaa72e0561a3))
+* **festival-task:** sections order [#1510](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1510) ([bec540d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bec540d97a919e445108a12a8ba49d6b99c526a0))
+* **volunteer-availability:** add hour type. [#1058](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1058) ([54a55db](https://gitlab.com/24-heures-insa/overbookd-mono/commit/54a55db6343e81666e40abed01914b05c38424ca))
+
 ## [2.14.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.14.0...v2.14.1) (2024-01-23)
 
 
