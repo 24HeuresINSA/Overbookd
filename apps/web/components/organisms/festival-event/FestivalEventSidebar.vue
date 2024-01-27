@@ -216,5 +216,3 @@ export default Vue.extend({
   }
 }
 </style>
-import { BROUILLON as FA_BROUILLON } from
-"~/utils/festival-event/festival-activity/BROUILLON";

@@ -215,5 +215,3 @@ export default defineComponent({
   }
 }
 </style>
-import { nonEmptyString } from
-"~/utils/festival-event/festival-activity/strigifyQueryParam";

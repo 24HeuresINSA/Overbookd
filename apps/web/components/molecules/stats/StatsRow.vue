@@ -172,4 +172,3 @@ export default Vue.extend({
   },
 });
 </script>
-import { VALIDEE } from "~/utils/festival-event/festival-activity/BROUILLON";
