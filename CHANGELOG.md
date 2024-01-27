@@ -1,3 +1,16 @@
+## [2.15.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.0...v2.15.1) (2024-01-27)
+
+
+### Pre-Features
+
+* **festival-task:** add filter on listing. [#1516](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1516) ([cf057f2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cf057f202e752002b10a56d69cfa6e315ade0910))
+* **festival-task:** show ponctual usage gear [#1519](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1519) ([971bfc3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/971bfc325d538d5a88c2fffca7961cafae70fc2c))
+
+
+### CI/CD
+
+* **renovate:** set datasource to docker for docker dependancies ([02635d9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/02635d9fdcbd7e5f40a9d81eddeaa7bdefa6cc16))
+
 ## [2.15.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.14.1...v2.15.0) (2024-01-26)
 
 
