@@ -26,7 +26,7 @@
         @remove="removeInChargeVolunteer"
       />
 
-      <v-label>Description du/des responsable(s) de la tâche</v-label>
+      <v-label>Description pour le.s responsable.s de la tache</v-label>
       <RichEditor
         :data="instructions.inCharge.instruction ?? ''"
         class="mb-6"
@@ -37,7 +37,7 @@
         <SearchUser
           v-model="contact"
           :list="adherents"
-          label="Bénévoles à contacter"
+          label="Orga à contacter pour les bénévoles en cas de problème"
           :boxed="false"
           class="contact-form__fields"
           @add="addContact"
