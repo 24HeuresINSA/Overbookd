@@ -26,7 +26,7 @@
         @remove="removeInChargeVolunteer"
       />
 
-      <v-label>Description pour le.s responsable.s de la tache</v-label>
+      <v-label>Description pour le.s responsable.s de la tâche</v-label>
       <RichEditor
         :data="instructions.inCharge.instruction ?? ''"
         class="mb-6"
