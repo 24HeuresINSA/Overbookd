@@ -20,23 +20,28 @@
       </template>
 
       <template #item.volunteers="{ item }">
-        <NuxtLink
-          v-for="volunteer in item.volunteers"
-          :key="volunteer"
-          :to="`/planning/${item.id}`"
-        >
-          <v-chip> {{ formatUserNameWithNickname(item) }} </v-chip>
-        </NuxtLink>
+        <div class="mobilizations__volunteers">
+          <NuxtLink
+            v-for="volunteer in item.volunteers"
+            :key="volunteer"
+            :to="`/planning/${volunteer.id}`"
+          >
+            <v-chip> {{ formatUserNameWithNickname(volunteer) }} </v-chip>
+          </NuxtLink>
+        </div>
       </template>
 
       <template #item.teams="{ item }">
-        <TeamChip
-          v-for="team in item.teams"
-          :key="team"
-          :team="team"
-          with-name
-          show-hidden
-        />
+        <div class="mobilizations__teams">
+          <TeamChip
+            v-for="team in item.teams"
+            :key="team"
+            :team="team.team"
+            :count="team.count"
+            with-name
+            show-hidden
+          />
+        </div>
       </template>
 
       <template #item.actions="{ item }">
@@ -126,6 +131,11 @@ export default defineComponent({
   &__add {
     max-width: fit-content;
     align-self: flex-end;
+  }
+  &__teams,
+  &__volunteers {
+    display: flex;
+    gap: 5px;
   }
 }
 </style>

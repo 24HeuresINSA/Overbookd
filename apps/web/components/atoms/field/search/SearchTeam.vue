@@ -11,6 +11,7 @@
     :solo="boxed"
     :filled="boxed"
     :disabled="disabled"
+    :hide-details="hideDetails"
     return-object
     @change="propagateEvent"
   >
@@ -53,6 +54,10 @@ export default Vue.extend({
       default: true,
     },
     disabled: {
+      type: Boolean,
+      default: false,
+    },
+    hideDetails: {
       type: Boolean,
       default: false,
     },

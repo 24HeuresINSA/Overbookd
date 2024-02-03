@@ -11,6 +11,7 @@
     :solo="boxed"
     :filled="boxed"
     :disabled="disabled"
+    :hide-details="hideDetails"
     return-object
     :filter="filterUsers"
     @change="propagateEvent"
@@ -57,6 +58,10 @@ export default Vue.extend({
     list: {
       type: Array as () => UserPersonalData[] | null,
       default: () => null,
+    },
+    hideDetails: {
+      type: Boolean,
+      default: false,
     },
   },
   data(): SearchUserData {

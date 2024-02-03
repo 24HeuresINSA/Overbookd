@@ -8,6 +8,7 @@ import {
   UpdateGeneralForm,
   UpdateInstructionsForm,
   AddMobilizationForm,
+  AddVolunteerToMobilizationForm,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -17,6 +18,7 @@ import {
   Volunteer,
   UpdateMobilization,
   Mobilization,
+  TeamMobilization,
 } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -147,6 +149,52 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}`,
+    );
+  }
+
+  static addMobilizationVolunteer(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    volunteer: AddVolunteerToMobilizationForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/volunteers`,
+      volunteer,
+    );
+  }
+
+  static removeMobilizationVolunteer(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    volunteerId: Volunteer["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/volunteers/${volunteerId}`,
+    );
+  }
+
+  static addMobilizationTeam(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    team: TeamMobilization,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/teams`,
+      team,
+    );
+  }
+
+  static removeMobilizationTeam(
+    context: Context,
+    ftId: FestivalTask["id"],
+    mobilizationId: Mobilization["id"],
+    team: TeamMobilization["team"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/teams/${team}`,
     );
   }
 
