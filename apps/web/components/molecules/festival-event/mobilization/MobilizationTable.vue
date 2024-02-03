@@ -23,10 +23,12 @@
         <div class="mobilizations__volunteers">
           <NuxtLink
             v-for="volunteer in item.volunteers"
-            :key="volunteer"
+            :key="`${item.id}-${volunteer.id}`"
             :to="`/planning/${volunteer.id}`"
           >
-            <v-chip> {{ formatUserNameWithNickname(volunteer) }} </v-chip>
+            <v-chip close @click:close="removeVolunteer(item, volunteer.id)">
+              {{ formatUserNameWithNickname(volunteer) }}
+            </v-chip>
           </NuxtLink>
         </div>
       </template>
@@ -35,11 +37,13 @@
         <div class="mobilizations__teams">
           <TeamChip
             v-for="team in item.teams"
-            :key="team"
+            :key="`${item.id}-${team.team}`"
             :team="team.team"
             :count="team.count"
             with-name
             show-hidden
+            close
+            @close="removeTeam(item, team)"
           />
         </div>
       </template>
@@ -68,7 +72,12 @@ import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import MobilizationForm from "./MobilizationForm.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { FestivalTask, Mobilization } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  Mobilization,
+  TeamMobilization,
+  Volunteer,
+} from "@overbookd/festival-event";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { AddMobilizationForm } from "@overbookd/http";
@@ -109,6 +118,18 @@ export default defineComponent({
     },
     removeMobilization(mobilization: Mobilization) {
       this.$emit("remove", mobilization);
+    },
+    removeVolunteer(mobilization: Mobilization, volunteerId: Volunteer["id"]) {
+      this.$accessor.festivalTask.removeMobilizationVolunteer({
+        mobilizationId: mobilization.id,
+        volunteerId,
+      });
+    },
+    removeTeam(mobilization: Mobilization, { team }: TeamMobilization) {
+      this.$accessor.festivalTask.removeMobilizationTeam({
+        mobilizationId: mobilization.id,
+        team,
+      });
     },
     openAddDialog() {
       this.isAddDialogOpen = true;
