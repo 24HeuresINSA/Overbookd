@@ -191,16 +191,22 @@ function databaseMobilisationForUpdate(mobilization: Mobilization) {
     end: mobilization.end,
     durationSplitInHour: mobilization.durationSplitInHour,
     volunteers: {
-      create: mobilization.volunteers.map(({ id }) => ({ volunteerId: id })),
+      createMany: {
+        data: mobilization.volunteers.map(({ id }) => ({ volunteerId: id })),
+        skipDuplicates: true,
+      },
       deleteMany: {
         volunteerId: { notIn: mobilization.volunteers.map(({ id }) => id) },
       },
     },
     teams: {
-      create: mobilization.teams.map(({ count, team }) => ({
-        count,
-        teamCode: team,
-      })),
+      createMany: {
+        data: mobilization.teams.map(({ count, team }) => ({
+          count,
+          teamCode: team,
+        })),
+        skipDuplicates: true,
+      },
       deleteMany: {
         teamCode: { notIn: mobilization.teams.map(({ team }) => team) },
       },

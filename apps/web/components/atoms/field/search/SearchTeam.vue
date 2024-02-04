@@ -16,7 +16,7 @@
     @change="propagateEvent"
   >
     <template #selection="{ item }">
-      <TeamChip :team="item.code" with-name />
+      <TeamChip :team="item.code" with-name show-hidden />
     </template>
     <template #no-data>
       <v-list-item> Aucune equipe correspondante </v-list-item>
