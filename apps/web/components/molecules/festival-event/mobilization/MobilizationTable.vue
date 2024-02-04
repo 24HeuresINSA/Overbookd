@@ -120,13 +120,13 @@ export default defineComponent({
       this.$emit("remove", mobilization);
     },
     removeVolunteer(mobilization: Mobilization, volunteerId: Volunteer["id"]) {
-      this.$accessor.festivalTask.removeMobilizationVolunteer({
+      this.$accessor.festivalTask.removeVolunteerFromMobilization({
         mobilizationId: mobilization.id,
         volunteerId,
       });
     },
     removeTeam(mobilization: Mobilization, { team }: TeamMobilization) {
-      this.$accessor.festivalTask.removeMobilizationTeam({
+      this.$accessor.festivalTask.removeTeamFromMobilization({
         mobilizationId: mobilization.id,
         team,
       });

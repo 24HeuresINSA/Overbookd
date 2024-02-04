@@ -247,7 +247,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_TASK", task);
     },
 
-    async addMobilizationVolunteer(
+    async addVolunteerToMobilization(
       { state, commit },
       {
         mobilizationId,
@@ -261,7 +261,7 @@ export const actions = actionTree(
       const form = { volunteerId };
       const res = await safeCall(
         this,
-        repo.addMobilizationVolunteer(this, ftId, mobilizationId, form),
+        repo.addVolunteerToMobilization(this, ftId, mobilizationId, form),
       );
       if (!res) return;
 
@@ -269,7 +269,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_TASK", task);
     },
 
-    async removeMobilizationVolunteer(
+    async removeVolunteerFromMobilization(
       { state, commit },
       {
         mobilizationId,
@@ -282,7 +282,7 @@ export const actions = actionTree(
       const ftId = state.selectedTask.id;
       const res = await safeCall(
         this,
-        repo.removeMobilizationVolunteer(
+        repo.removeVolunteerFromMobilization(
           this,
           ftId,
           mobilizationId,
@@ -295,7 +295,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_TASK", task);
     },
 
-    async addMobilizationTeam(
+    async addTeamToMobilization(
       { state, commit },
       {
         mobilizationId,
@@ -308,7 +308,7 @@ export const actions = actionTree(
       const ftId = state.selectedTask.id;
       const res = await safeCall(
         this,
-        repo.addMobilizationTeam(this, ftId, mobilizationId, team),
+        repo.addTeamToMobilization(this, ftId, mobilizationId, team),
       );
       if (!res) return;
 
@@ -316,7 +316,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_TASK", task);
     },
 
-    async removeMobilizationTeam(
+    async removeTeamFromMobilization(
       { state, commit },
       {
         mobilizationId,
@@ -329,7 +329,7 @@ export const actions = actionTree(
       const ftId = state.selectedTask.id;
       const res = await safeCall(
         this,
-        repo.removeMobilizationTeam(this, ftId, mobilizationId, team),
+        repo.removeTeamFromMobilization(this, ftId, mobilizationId, team),
       );
       if (!res) return;
 

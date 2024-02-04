@@ -46,12 +46,11 @@
       <div class="mobilization-card__form">
         <SearchUser
           v-model="volunteerToAdd"
-          :list="allVolunteers"
+          :list="addableVolunteers"
           hide-details
         />
         <v-btn
           class="mobilization-card__form-btn"
-          :disabled="!canAddVolunteer"
           rounded
           hide-details
           @click="addVolunteer"
@@ -63,30 +62,25 @@
       <h3>Ajouter des bénévoles d'une équipe</h3>
       <v-chip-group>
         <TeamChip
-          v-for="(team, i) in teams"
-          :key="i"
+          v-for="team in teams"
+          :key="team.team"
           :team="team.team"
           :count="team.count"
           with-name
           show-hidden
           close
-          @click:close="removeTeam(team)"
+          @close="removeTeam(team)"
         />
       </v-chip-group>
       <div class="mobilization-card__form">
         <v-text-field
           v-model="teamQuantity"
           type="number"
-          label="Quantité"
+          label="Nombre de bénévoles"
           :rules="[rules.number, rules.min]"
         />
-        <SearchTeam v-model="teamToAdd" hide-details />
-        <v-btn
-          class="mobilization-card__form-btn"
-          :disabled="!canAddTeam"
-          rounded
-          @click="addTeam"
-        >
+        <SearchTeam v-model="teamToAdd" :list="addableTeams" hide-details />
+        <v-btn class="mobilization-card__form-btn" rounded @click="addTeam">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </div>
@@ -111,6 +105,7 @@ import { defineComponent } from "vue";
 import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatDate } from "~/utils/date/date.utils";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { TeamMobilization, Volunteer } from "@overbookd/festival-event";
@@ -118,8 +113,6 @@ import { AddMobilizationForm } from "@overbookd/http";
 import { Team } from "~/utils/models/team.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 import { User } from "@overbookd/user";
-import { removeItemAtIndex } from "@overbookd/list";
-import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type MobilizationFormData = IProvidePeriod &
@@ -170,18 +163,6 @@ export default defineComponent({
     displayedManifDate(): string {
       return `vendredi ${formatDate(this.eventStartDate)}`;
     },
-    canAddVolunteer(): boolean {
-      if (!this.volunteerToAdd) return false;
-      const isAlreadyAdded = this.volunteers.includes(this.volunteerToAdd);
-      return !isAlreadyAdded;
-    },
-    canAddTeam(): boolean {
-      if (!this.teamToAdd) return false;
-      const isAlreadyAdded = this.teams.some(
-        (t) => t.team === this.teamToAdd?.code,
-      );
-      return !isAlreadyAdded && this.teamQuantity > 0;
-    },
     canAddMobilization(): boolean {
       const isPeriodValid = Period.isValid({
         start: this.start,
@@ -192,8 +173,15 @@ export default defineComponent({
 
       return isPeriodValid && isDurationValid;
     },
-    allVolunteers(): User[] {
-      return this.$accessor.user.volunteers;
+    addableVolunteers(): User[] {
+      return this.$accessor.user.volunteers.filter(
+        (volunteer) => !this.volunteers.some((v) => v.id === volunteer.id),
+      );
+    },
+    addableTeams(): Team[] {
+      return this.$accessor.team.teams.filter(
+        (team) => !this.teams.some((t) => t.team === team.code),
+      );
     },
   },
   async mounted() {
@@ -227,27 +215,24 @@ export default defineComponent({
       this.end = end;
     },
     addTeam() {
-      if (!this.canAddTeam) return;
-      const team = this.teamToAdd?.code ?? "";
+      if (!this.teamToAdd) return;
+      const team = this.teamToAdd.code;
       const count = +this.teamQuantity;
       this.teams = [...this.teams, { team, count }];
 
       this.teamToAdd = null;
       this.teamQuantity = 1;
     },
-    removeTeam(team: TeamMobilization) {
-      const index = this.teams.findIndex((t) => t === team);
-      this.teams = removeItemAtIndex(this.teams, index);
+    removeTeam({ team }: TeamMobilization) {
+      this.teams = this.teams.filter((t) => t.team !== team);
     },
     addVolunteer() {
-      if (!this.canAddVolunteer) return;
-      const volunteer = this.volunteerToAdd as Volunteer;
-      this.volunteers = [...this.volunteers, volunteer];
+      if (!this.volunteerToAdd || this.teamQuantity < 1) return;
+      this.volunteers = [...this.volunteers, this.volunteerToAdd];
       this.volunteerToAdd = null;
     },
     removeVolunteer(volunteerId: Volunteer["id"]) {
-      const index = this.volunteers.findIndex((v) => v.id === volunteerId);
-      this.volunteers = removeItemAtIndex(this.volunteers, index);
+      this.volunteers = this.volunteers.filter((v) => v.id !== volunteerId);
     },
     closeDialog() {
       this.$emit("close-dialog");

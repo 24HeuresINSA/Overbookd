@@ -152,7 +152,7 @@ export class FestivalTaskRepository {
     );
   }
 
-  static addMobilizationVolunteer(
+  static addVolunteerToMobilization(
     context: Context,
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
@@ -164,7 +164,7 @@ export class FestivalTaskRepository {
     );
   }
 
-  static removeMobilizationVolunteer(
+  static removeVolunteerFromMobilization(
     context: Context,
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
@@ -175,7 +175,7 @@ export class FestivalTaskRepository {
     );
   }
 
-  static addMobilizationTeam(
+  static addTeamToMobilization(
     context: Context,
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
@@ -187,7 +187,7 @@ export class FestivalTaskRepository {
     );
   }
 
-  static removeMobilizationTeam(
+  static removeTeamFromMobilization(
     context: Context,
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],

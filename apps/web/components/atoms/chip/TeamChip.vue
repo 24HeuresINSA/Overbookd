@@ -83,7 +83,7 @@ export default Vue.extend({
     },
     teamText(): string {
       const count = this.count ? `${this.count} ` : "";
-      return count + this.teamMetadata?.name ?? "";
+      return `${count}${this.teamMetadata?.name}`;
     },
     color(): string {
       return this.teamMetadata?.color ?? "grey";

@@ -61,6 +61,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    list: {
+      type: Array as () => Team[] | null,
+      default: null,
+    },
   },
   data(): SearchTeamData {
     return {
@@ -69,7 +73,7 @@ export default Vue.extend({
   },
   computed: {
     teams(): Team[] {
-      return this.$accessor.team.teams;
+      return this.list ?? this.$accessor.team.teams;
     },
   },
   mounted() {
