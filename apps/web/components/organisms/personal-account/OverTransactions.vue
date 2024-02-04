@@ -4,7 +4,7 @@
       :headers="headers"
       :items="transactions"
       dense
-      :items-per-page="-1"
+      :items-per-page="200"
     >
       <template #group.summary="{ group }">
         {{ new Date(group).toLocaleString() }}

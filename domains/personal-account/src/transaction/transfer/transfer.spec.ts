@@ -4,6 +4,7 @@ import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import {
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
   NEGATIVE_AMOUNT_ERROR_MESSAGE,
+  NegativePersonalAccount,
   PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
   PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
   TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
@@ -32,7 +33,12 @@ const neimad = {
   balance: 0,
   permissions: [] as Permission[],
 };
-const adherents = [lea, noel, tatouin];
+const nodorf = {
+  id: 5,
+  balance: -10,
+  permissions: [HAVE_PERSONAL_ACCOUNT] as Permission[],
+};
+const adherents = [lea, noel, tatouin, nodorf];
 
 const members = [...adherents, neimad];
 
@@ -109,6 +115,21 @@ describe("Transfer", () => {
         expect(sendTransfer).rejects.toThrow(
           PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
         );
+      });
+    });
+
+    describe("when adherent with negative personal account try to transfer", () => {
+      const transferToSend = {
+        to: lea.id,
+        amount: 10,
+        context: "Miam miam",
+      };
+
+      it("should indicate that adherent is not allowed to transfer", () => {
+        const wantedTransfer = Payor.init(nodorf.id).transferTo(transferToSend);
+        const sendTransfer = () => transfer.send(wantedTransfer);
+
+        expect(sendTransfer).rejects.toThrow(NegativePersonalAccount);
       });
     });
 

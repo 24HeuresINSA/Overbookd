@@ -34,12 +34,13 @@ import {
   PastSharedMealResponseDto,
 } from "./dto/shared-meal.response.dto";
 import { PastSharedMeal, SharedMeal } from "@overbookd/personal-account";
-import { MealSharingErrorFilter } from "./meal-sharing.filter";
+import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
+import { SharedMealErrorFilter } from "./filter/shared-meal.filter";
 
 @ApiTags("shared-meals")
 @Controller("shared-meals")
-@UseFilters(MealSharingErrorFilter)
+@UseFilters(MealSharingErrorFilter, SharedMealErrorFilter)
 @ApiBadRequestResponse({
   description: "Request is not formated as expected",
 })

@@ -12,6 +12,9 @@ export const PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
 export const PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
   "Tu n'as pas de compte personnel";
 
+const NEGATIVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
+  "Le montant de ton compte perso doit être positif pour faire un virement";
+
 export class TransferError extends Error {}
 
 export class NegativeAmount extends TransferError {
@@ -41,5 +44,11 @@ export class PayeeNotHavePersonalAccount extends TransferError {
 export class PayorNotHavePersonalAccount extends TransferError {
   constructor() {
     super(PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE);
+  }
+}
+
+export class NegativePersonalAccount extends TransferError {
+  constructor() {
+    super(NEGATIVE_PERSONAL_ACCOUNT_ERROR_MESSAGE);
   }
 }

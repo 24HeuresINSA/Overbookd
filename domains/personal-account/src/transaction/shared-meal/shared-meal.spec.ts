@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { SHARED_MEAL } from "../transaction.model";
 import { SharedMeal } from "./shared-meal";
 import { PastSharedMealBuilder } from "../../meal-sharing/past-shared-meal.builder";
+import { AmountTooHigh } from "./shared-meal.error";
 
 const julie = { id: 1, name: "Julie" };
 const lea = { id: 2, name: "Lea" };
@@ -65,6 +66,25 @@ describe("Generate all transactions to refound shared meal chef", () => {
     it("should round up to next 5cents", () => {
       const transactions = SharedMeal.refound(undividibleMeal);
       expect(transactions.every(({ amount }) => amount === 670)).toBe(true);
+    });
+  });
+
+  describe("when amount exceeds 1000€", () => {
+    const expensiveMeal = PastSharedMealBuilder.build({
+      id: 1,
+      expense: { amount: 200000, date: new Date("2023-12-31T10:30+02:00") },
+      chef: julie,
+      meal: { menu: "Something", date: "dimanche 31 decembre soir" },
+      shotguns: [
+        { ...julie, date: new Date("2023-12-29T21:00+02:00") },
+        { ...lea, date: new Date("2023-12-30T10:00+02:00") },
+        { ...noel, date: new Date("2023-12-31T09:00+02:00") },
+      ],
+    });
+
+    it("should indicate that amount is too high", () => {
+      const refound = () => SharedMeal.refound(expensiveMeal);
+      expect(refound).toThrow(AmountTooHigh);
     });
   });
 });

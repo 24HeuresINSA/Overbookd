@@ -4,6 +4,8 @@ export const PROVISIONS = "PROVISIONS";
 export const TRANSFER = "TRANSFER";
 export const SHARED_MEAL = "SHARED_MEAL";
 
+export const ONE_EURO_IN_CENTS = 100;
+
 type BaseTransaction = {
   amount: number;
   context: string;
