@@ -18,7 +18,7 @@
     ></SearchCategory>
     <SearchTeam
       v-model="team"
-      label="Choissisez l'equipe responsable"
+      label="Choisis l'équipe responsable"
       :boxed="false"
       @change="updateFilterGear"
     ></SearchTeam>

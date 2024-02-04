@@ -21,11 +21,11 @@
           ></v-text-field>
           <SearchTeamVue
             v-model="owner"
-            label="Choissisez l'equipe responsable"
+            label="Choisis l'équipe responsable"
           ></SearchTeamVue>
           <SearchCategoryVue
             v-model="parent"
-            label="Choisisez un parent"
+            label="Choisis un parent"
           ></SearchCategoryVue>
         </div>
         <v-btn color="success" dark large @click="createOrUpdateCategory">
