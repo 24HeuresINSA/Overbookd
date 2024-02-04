@@ -1,3 +1,21 @@
+## [2.15.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.1...v2.15.2) (2024-02-04)
+
+
+### Bug Fixes
+
+* **logistic-dashboard:** add the possibility to chose the date window [#1524](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1524) ([bbf3c34](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bbf3c3495182f07b9ac6b3d4ce4046dbc2e18fce))
+* **personal-account:** CP overflow [#1526](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1526) ([acab842](https://gitlab.com/24-heures-insa/overbookd-mono/commit/acab8428ee312cc79f9b12ef79a66742b8349ae9))
+
+
+### Refactor
+
+* **festival-task:** rename instructions for more clarity [#1523](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1523) ([7bc582f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7bc582f3eaa4b9a4bd328abbbe5fa23a15edff06))
+
+
+### CI/CD
+
+* **renovate:** 🏗 set docker versioning ([b037620](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b0376202c30b70c6b21ac78712c2e0b2552e141d))
+
 ## [2.15.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.0...v2.15.1) (2024-01-27)
 
 
