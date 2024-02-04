@@ -1,5 +1,5 @@
 import { PastSharedMeal } from "../../meal-sharing/meals.model";
-import { SHARED_MEAL } from "../transaction.model";
+import { ONE_EURO_IN_CENTS, SHARED_MEAL } from "../transaction.model";
 import { AmountTooHigh } from "./shared-meal.error";
 
 export type SharedMealTransaction = {
@@ -10,7 +10,7 @@ export type SharedMealTransaction = {
   type: typeof SHARED_MEAL;
 };
 
-export const MAX_AMOUNT = 100000;
+export const MAX_AMOUNT = ONE_EURO_IN_CENTS * 1000;
 
 export class SharedMeal {
   static refound(meal: PastSharedMeal): SharedMealTransaction[] {
