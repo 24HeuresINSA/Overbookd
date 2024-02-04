@@ -2,7 +2,21 @@
   <div>
     <h1>Récap Matos</h1>
     <GearFilter v-model="filter" @change="searchGears" />
-    <DahsboardGearListing />
+    <div class="datepicker">
+      <div>
+        <h3>Début du créneau</h3>
+        <DateTimeField
+          v-model="start"
+          label="Début"
+          @change="updateSelectedGear"
+        />
+      </div>
+      <div>
+        <h3>Fin du créneau</h3>
+        <DateTimeField v-model="end" label="Fin" @change="updateSelectedGear" />
+      </div>
+    </div>
+    <DahsboardGearListing :start="start" :end="end" />
   </div>
 </template>
 
@@ -12,14 +26,20 @@ import { GearSearchOptions } from "~/store/catalogGear";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
 import DahsboardGearListing from "~/components/organisms/logistic/DahsboardGearListing.vue";
+import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
+import { ONE_DAY_IN_MS } from "@overbookd/period";
+
+const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 
 interface GearRecapData {
   filter: FilterGear;
+  start: Date;
+  end: Date;
 }
 
 export default Vue.extend({
   name: "GearRecap",
-  components: { GearFilter, DahsboardGearListing },
+  components: { GearFilter, DahsboardGearListing, DateTimeField },
   data(): GearRecapData {
     return {
       filter: {
@@ -27,6 +47,8 @@ export default Vue.extend({
         category: null,
         team: null,
       },
+      start: new Date(),
+      end: new Date(),
     };
   },
   head: () => ({
@@ -41,6 +63,11 @@ export default Vue.extend({
         ) || [name, category, team].every((searchOption) => !searchOption)
       );
     },
+  },
+  async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
+    this.start = this.$accessor.configuration.eventStartDate;
+    this.end = new Date(this.start.getTime() + FOUR_DAYS_IN_MS);
   },
   methods: {
     async searchGears() {
@@ -65,6 +92,22 @@ export default Vue.extend({
       }
       return searchOptions;
     },
+    updateSelectedGear() {
+      if (this.$accessor.logisticDashboard.selectedGear === undefined) return;
+      this.$accessor.logisticDashboard.fetchDetails({
+        slug: this.$accessor.logisticDashboard.selectedGear.slug,
+        start: this.start,
+        end: this.end,
+      });
+    },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.datepicker {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+</style>

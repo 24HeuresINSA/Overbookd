@@ -26,6 +26,16 @@ import DashboardGearDetails from "./DashboardGearDetails.vue";
 export default defineComponent({
   name: "DashboardGearListing",
   components: { DashboardGearDetails },
+  props: {
+    start: {
+      type: Date,
+      required: true,
+    },
+    end: {
+      type: Date,
+      required: true,
+    },
+  },
   computed: {
     previews(): GearPreview[] {
       return this.$accessor.logisticDashboard.previews;
@@ -45,10 +55,11 @@ export default defineComponent({
     selectGear(event: { item: GearPreview; value: boolean }) {
       const closingDetails = !event.value;
       if (closingDetails) return;
-      const slug = event.item.slug;
-      const start = new Date("2024-05-17T00:00+01:00");
-      const end = new Date("2024-05-20T00:00+01:00");
-      this.$accessor.logisticDashboard.fetchDetails({ slug, start, end });
+      this.$accessor.logisticDashboard.fetchDetails({
+        slug: event.item.slug,
+        start: this.start,
+        end: this.end,
+      });
     },
   },
 });
