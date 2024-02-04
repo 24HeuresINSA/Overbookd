@@ -9,6 +9,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { GearDetails } from "@overbookd/http";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
 
 type Dataset = {
   label: string;
@@ -90,7 +91,7 @@ export default defineComponent({
       return selectedGear.details;
     },
     labels(): string[] {
-      return this.details.map((stat) => stat.start.toLocaleString());
+      return this.details.map((stat) => formatDateWithMinutes(stat.start));
     },
     stock(): Dataset {
       return {
