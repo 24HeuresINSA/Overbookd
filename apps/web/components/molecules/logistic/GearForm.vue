@@ -33,7 +33,7 @@
           ></v-switch>
           <SearchCategory
             v-model="category"
-            label="Choisisez une categorie associee"
+            label="Choisis une categorie associée"
           ></SearchCategory>
         </div>
         <v-btn color="success" dark large @click="createOrUpdateGear">
