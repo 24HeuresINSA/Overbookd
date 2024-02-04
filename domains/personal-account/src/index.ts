@@ -35,6 +35,7 @@ export {
   transactionTypes,
   TransferError,
 } from "./transaction";
+export { SharedMealError } from "./transaction/shared-meal/shared-meal.error";
 
 export type {
   Barrels,

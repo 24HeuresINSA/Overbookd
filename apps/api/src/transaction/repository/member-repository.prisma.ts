@@ -12,6 +12,8 @@ export class PrismaMemberRepository implements MemberRepository {
         ...CAN_HAVE_PERSONAL_ACCOUNT,
       },
     });
-    return { havePersonalAccount: Boolean(member) };
+    const havePersonalAccount = Boolean(member);
+    const balance = havePersonalAccount ? member.balance : undefined;
+    return { havePersonalAccount, balance };
   }
 }

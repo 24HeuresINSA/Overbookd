@@ -1,15 +1,23 @@
 import {
   InsufficientAmount,
   NegativeAmount,
+  NegativePersonalAccount,
   PayeeNotHavePersonalAccount,
   PayorNotHavePersonalAccount,
   TransferToYourself,
 } from "./transfer.error";
 import { TransferForm } from "./payor";
 
-export type Member = {
-  havePersonalAccount: boolean;
+type NonAdherent = {
+  havePersonalAccount: false;
 };
+
+type Adherent = {
+  havePersonalAccount: true;
+  balance: number;
+};
+
+export type Member = NonAdherent | Adherent;
 
 type TransferParticipant = {
   id: number;
@@ -46,12 +54,9 @@ export class Transfer {
       this.members.getById(transfer.to),
     ]);
 
-    if (!payor.havePersonalAccount) {
-      throw new PayorNotHavePersonalAccount();
-    }
-    if (!payee.havePersonalAccount) {
-      throw new PayeeNotHavePersonalAccount();
-    }
+    if (!payor.havePersonalAccount) throw new PayorNotHavePersonalAccount();
+    if (payor.balance < 0) throw new NegativePersonalAccount();
+    if (!payee.havePersonalAccount) throw new PayeeNotHavePersonalAccount();
 
     return this.transfers.create(transfer);
   }
