@@ -15,6 +15,9 @@ export const PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
 const NEGATIVE_PERSONAL_ACCOUNT_ERROR_MESSAGE =
   "Le montant de ton compte perso doit être positif pour faire un virement";
 
+const AMOUNT_TOO_HIGH_ERRROR_MESSAGE =
+  "Le montant de la transaction est trop élevé";
+
 export class TransferError extends Error {}
 
 export class NegativeAmount extends TransferError {
@@ -50,5 +53,11 @@ export class PayorNotHavePersonalAccount extends TransferError {
 export class NegativePersonalAccount extends TransferError {
   constructor() {
     super(NEGATIVE_PERSONAL_ACCOUNT_ERROR_MESSAGE);
+  }
+}
+
+export class AmountTooHigh extends TransferError {
+  constructor() {
+    super(AMOUNT_TOO_HIGH_ERRROR_MESSAGE);
   }
 }
