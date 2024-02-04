@@ -10,7 +10,7 @@ export type SharedMealTransaction = {
   type: typeof SHARED_MEAL;
 };
 
-export const MAX_AMOUNT = ONE_EURO_IN_CENTS * 1000;
+const MAX_AMOUNT = ONE_EURO_IN_CENTS * 1000;
 
 export class SharedMeal {
   static refound(meal: PastSharedMeal): SharedMealTransaction[] {
