@@ -12,10 +12,6 @@ export const SELECT_GEAR = {
   name: true,
 };
 
-export const IS_PONCTUAL_USAGE = {
-  catalogItem: { isPonctualUsage: true },
-};
-
 export type DatabaseInquiryRequest = {
   slug: string;
   quantity: number;
