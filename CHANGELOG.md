@@ -1,3 +1,10 @@
+## [2.15.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.2...v2.15.3) (2024-02-05)
+
+
+### Bug Fixes
+
+* **personal-account:** add transfer limit [#1527](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1527) ([571f71c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/571f71c22120d34c04c3bc135fa5b18d60081de2))
+
 ## [2.15.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.1...v2.15.2) (2024-02-04)
 
 
