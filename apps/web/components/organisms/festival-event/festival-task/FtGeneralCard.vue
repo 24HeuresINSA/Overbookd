@@ -28,7 +28,7 @@
         @change="updateAdministrator"
       />
       <SearchTeam
-        :team="general.team"
+        :team="inChargeTeam"
         label="Équipe"
         :boxed="false"
         @change="updateTeam"
@@ -54,6 +54,9 @@ export default Vue.extend({
     },
     general(): FestivalTask["general"] {
       return this.mFT.general;
+    },
+    inChargeTeam(): Team | undefined {
+      return this.$accessor.team.getTeamByCode(this.general.team ?? "");
     },
   },
   methods: {

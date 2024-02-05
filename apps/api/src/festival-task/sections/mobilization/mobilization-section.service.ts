@@ -71,7 +71,7 @@ export class MobilizationSectionService {
     );
   }
 
-  async removeVolunteer(
+  removeVolunteer(
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     volunteerId: Volunteer["id"],

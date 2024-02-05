@@ -19,6 +19,7 @@
       <TeamChip
         :team="item.code"
         with-name
+        show-hidden
         close
         @close="propagateEventWithoutTeam"
       />

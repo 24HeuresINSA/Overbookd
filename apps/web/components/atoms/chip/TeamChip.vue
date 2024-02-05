@@ -13,20 +13,20 @@
     <v-tooltip top>
       <template #activator="{ on, attrs }">
         <v-icon
-          v-if="teamMetadate"
+          v-if="teamMetadata"
           :small="small"
           :large="large"
           v-bind="attrs"
           color="white"
           v-on="on"
         >
-          {{ teamMetadate.icon }}
+          {{ teamMetadata.icon }}
         </v-icon>
         <span v-if="withName" class="name">
-          {{ teamMetadate.name }}
+          {{ teamText }}
         </span>
       </template>
-      <span>{{ teamMetadate?.name ?? "" }}</span>
+      <span>{{ teamText }}</span>
     </v-tooltip>
   </v-chip>
 </template>
@@ -62,6 +62,10 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    count: {
+      type: Number,
+      default: null,
+    },
   },
   computed: {
     small(): boolean {
@@ -70,15 +74,19 @@ export default Vue.extend({
     large(): boolean {
       return this.size === "large";
     },
-    teamMetadate(): Team {
-      return this.$accessor.team.getTeams([this.team])?.[0];
+    teamMetadata(): Team | undefined {
+      return this.$accessor.team.getTeamByCode(this.team);
     },
     showTeam(): boolean {
       const hiddenTeams = ["benevole"];
       return this.showHidden || !hiddenTeams.includes(this.team);
     },
+    teamText(): string {
+      const count = this.count ? `${this.count} ` : "";
+      return `${count}${this.teamMetadata?.name}`;
+    },
     color(): string {
-      return this.teamMetadate?.color ?? "grey";
+      return this.teamMetadata?.color ?? "grey";
     },
     classes(): Record<string, boolean> {
       return {
@@ -89,7 +97,7 @@ export default Vue.extend({
   },
   methods: {
     sendEvent() {
-      this.$emit("click", this.teamMetadate);
+      this.$emit("click", this.teamMetadata);
     },
     sendCloseEvent() {
       this.$emit("close", this.team);

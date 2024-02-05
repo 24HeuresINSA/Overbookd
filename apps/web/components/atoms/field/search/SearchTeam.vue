@@ -11,11 +11,12 @@
     :solo="boxed"
     :filled="boxed"
     :disabled="disabled"
+    :hide-details="hideDetails"
     return-object
     @change="propagateEvent"
   >
     <template #selection="{ item }">
-      <TeamChip :team="item.code" with-name />
+      <TeamChip :team="item.code" with-name show-hidden />
     </template>
     <template #no-data>
       <v-list-item> Aucune equipe correspondante </v-list-item>
@@ -56,6 +57,14 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
+    hideDetails: {
+      type: Boolean,
+      default: false,
+    },
+    list: {
+      type: Array as () => Team[] | null,
+      default: null,
+    },
   },
   data(): SearchTeamData {
     return {
@@ -64,7 +73,7 @@ export default Vue.extend({
   },
   computed: {
     teams(): Team[] {
-      return this.$accessor.team.teams;
+      return this.list ?? this.$accessor.team.teams;
     },
   },
   mounted() {

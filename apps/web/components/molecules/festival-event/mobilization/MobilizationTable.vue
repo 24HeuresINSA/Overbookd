@@ -20,23 +20,32 @@
       </template>
 
       <template #item.volunteers="{ item }">
-        <NuxtLink
-          v-for="volunteer in item.volunteers"
-          :key="volunteer"
-          :to="`/planning/${item.id}`"
-        >
-          <v-chip> {{ formatUserNameWithNickname(item) }} </v-chip>
-        </NuxtLink>
+        <div class="mobilizations__volunteers">
+          <NuxtLink
+            v-for="volunteer in item.volunteers"
+            :key="`${item.id}-${volunteer.id}`"
+            :to="`/planning/${volunteer.id}`"
+          >
+            <v-chip close @click:close="removeVolunteer(item, volunteer.id)">
+              {{ formatUserNameWithNickname(volunteer) }}
+            </v-chip>
+          </NuxtLink>
+        </div>
       </template>
 
       <template #item.teams="{ item }">
-        <TeamChip
-          v-for="team in item.teams"
-          :key="team"
-          :team="team"
-          with-name
-          show-hidden
-        />
+        <div class="mobilizations__teams">
+          <TeamChip
+            v-for="team in item.teams"
+            :key="`${item.id}-${team.team}`"
+            :team="team.team"
+            :count="team.count"
+            with-name
+            show-hidden
+            close
+            @close="removeTeam(item, team)"
+          />
+        </div>
       </template>
 
       <template #item.actions="{ item }">
@@ -63,7 +72,12 @@ import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import MobilizationForm from "./MobilizationForm.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { FestivalTask, Mobilization } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  Mobilization,
+  TeamMobilization,
+  Volunteer,
+} from "@overbookd/festival-event";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { AddMobilizationForm } from "@overbookd/http";
@@ -105,6 +119,18 @@ export default defineComponent({
     removeMobilization(mobilization: Mobilization) {
       this.$emit("remove", mobilization);
     },
+    removeVolunteer(mobilization: Mobilization, volunteerId: Volunteer["id"]) {
+      this.$accessor.festivalTask.removeVolunteerFromMobilization({
+        mobilizationId: mobilization.id,
+        volunteerId,
+      });
+    },
+    removeTeam(mobilization: Mobilization, { team }: TeamMobilization) {
+      this.$accessor.festivalTask.removeTeamFromMobilization({
+        mobilizationId: mobilization.id,
+        team,
+      });
+    },
     openAddDialog() {
       this.isAddDialogOpen = true;
     },
@@ -126,6 +152,11 @@ export default defineComponent({
   &__add {
     max-width: fit-content;
     align-self: flex-end;
+  }
+  &__teams,
+  &__volunteers {
+    display: flex;
+    gap: 5px;
   }
 }
 </style>

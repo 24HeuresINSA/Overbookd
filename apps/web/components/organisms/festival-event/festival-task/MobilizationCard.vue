@@ -9,10 +9,10 @@
 </template>
 
 <script lang="ts">
-import { Mobilization } from "@overbookd/festival-event";
-import { AddMobilizationForm } from "@overbookd/http";
 import { defineComponent } from "vue";
 import MobilizationTable from "~/components/molecules/festival-event/mobilization/MobilizationTable.vue";
+import { Mobilization } from "@overbookd/festival-event";
+import { AddMobilizationForm } from "@overbookd/http";
 
 export default defineComponent({
   name: "MobilizationCard",

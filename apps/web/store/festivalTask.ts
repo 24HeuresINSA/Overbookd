@@ -7,6 +7,7 @@ import {
   Volunteer,
   UpdateMobilization,
   Mobilization,
+  TeamMobilization,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
@@ -239,6 +240,96 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.removeMobilization(this, state.selectedTask.id, mobilizationId),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async addVolunteerToMobilization(
+      { state, commit },
+      {
+        mobilizationId,
+        volunteerId,
+      }: {
+        mobilizationId: Mobilization["id"];
+        volunteerId: Volunteer["id"];
+      },
+    ) {
+      const ftId = state.selectedTask.id;
+      const form = { volunteerId };
+      const res = await safeCall(
+        this,
+        repo.addVolunteerToMobilization(this, ftId, mobilizationId, form),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async removeVolunteerFromMobilization(
+      { state, commit },
+      {
+        mobilizationId,
+        volunteerId,
+      }: {
+        mobilizationId: Mobilization["id"];
+        volunteerId: Volunteer["id"];
+      },
+    ) {
+      const ftId = state.selectedTask.id;
+      const res = await safeCall(
+        this,
+        repo.removeVolunteerFromMobilization(
+          this,
+          ftId,
+          mobilizationId,
+          volunteerId,
+        ),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async addTeamToMobilization(
+      { state, commit },
+      {
+        mobilizationId,
+        team,
+      }: {
+        mobilizationId: Mobilization["id"];
+        team: TeamMobilization;
+      },
+    ) {
+      const ftId = state.selectedTask.id;
+      const res = await safeCall(
+        this,
+        repo.addTeamToMobilization(this, ftId, mobilizationId, team),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async removeTeamFromMobilization(
+      { state, commit },
+      {
+        mobilizationId,
+        team,
+      }: {
+        mobilizationId: Mobilization["id"];
+        team: TeamMobilization["team"];
+      },
+    ) {
+      const ftId = state.selectedTask.id;
+      const res = await safeCall(
+        this,
+        repo.removeTeamFromMobilization(this, ftId, mobilizationId, team),
       );
       if (!res) return;
 

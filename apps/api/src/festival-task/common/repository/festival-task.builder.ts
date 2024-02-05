@@ -93,7 +93,7 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
       ...mobilization,
       volunteers: mobilization.volunteers.map(({ volunteer }) => volunteer),
       teams: mobilization.teams.map((team) => ({
-        ...team,
+        count: team.count,
         team: team.teamCode,
       })),
     }));
