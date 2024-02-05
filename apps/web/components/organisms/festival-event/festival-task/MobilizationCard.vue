@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> Moblisations </v-card-title>
+    <v-card-title> Mobilisations </v-card-title>
 
     <v-card-text>
       <MobilizationTable @add="addMobilization" @remove="removeMobilization" />
