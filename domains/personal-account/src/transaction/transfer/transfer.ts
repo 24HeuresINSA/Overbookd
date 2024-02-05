@@ -1,4 +1,5 @@
 import {
+  AmountTooHigh,
   InsufficientAmount,
   NegativeAmount,
   NegativePersonalAccount,
@@ -7,6 +8,7 @@ import {
   TransferToYourself,
 } from "./transfer.error";
 import { TransferForm } from "./payor";
+import { ONE_EURO_IN_CENTS } from "../transaction.model";
 
 type NonAdherent = {
   havePersonalAccount: false;
@@ -37,6 +39,8 @@ export interface TransferRepository {
   create: (transfer: TransferForm) => Promise<TransferResponse>;
 }
 
+const MAX_TRANSFER_AMOUNT = ONE_EURO_IN_CENTS * 500;
+
 export class Transfer {
   constructor(
     private readonly transfers: TransferRepository,
@@ -48,6 +52,7 @@ export class Transfer {
 
     if (transfer.amount < 0) throw new NegativeAmount();
     if (transfer.amount == 0) throw new InsufficientAmount();
+    if (transfer.amount > MAX_TRANSFER_AMOUNT) throw new AmountTooHigh();
 
     const [payor, payee] = await Promise.all([
       this.members.getById(transfer.from),

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { InMemoryTransferRepository } from "./transfer-repository.inmemory";
 import { HAVE_PERSONAL_ACCOUNT, Permission } from "@overbookd/permission";
 import {
+  AmountTooHigh,
   INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
   NEGATIVE_AMOUNT_ERROR_MESSAGE,
   NegativePersonalAccount,
@@ -98,6 +99,21 @@ describe("Transfer", () => {
         const sendTransfer = () => transfer.send(wantedTransfer);
 
         expect(sendTransfer).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+      });
+    });
+
+    describe("when adherent try to transfer more than 500€", () => {
+      const transferToSend = {
+        to: noel.id,
+        amount: 60000,
+        context: "Miam miam",
+      };
+
+      it("should indicate that the amount is too high", () => {
+        const wantedTransfer = Payor.init(lea.id).transferTo(transferToSend);
+        const sendTransfer = () => transfer.send(wantedTransfer);
+
+        expect(sendTransfer).rejects.toThrow(AmountTooHigh);
       });
     });
 
