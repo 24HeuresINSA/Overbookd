@@ -52,8 +52,8 @@ export class Period {
 
   isIncludedBy(otherPeriod: Period): boolean {
     return (
-      otherPeriod.start.getTime() <= this.start.getTime() &&
-      otherPeriod.end.getTime() >= this.start.getTime()
+      otherPeriod.start.getTime() < this.end.getTime() &&
+      otherPeriod.end.getTime() > this.start.getTime()
     );
   }
 
