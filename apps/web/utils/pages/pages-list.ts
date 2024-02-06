@@ -111,7 +111,7 @@ export const pages: Page[] = [
     to: "/ft",
     description:
       "Liste des FTs, les FTs permettent de décrire tout ce qui doit être fait pour le bon déroulement du festival",
-    mobileSupport: false,
+    mobileSupport: true,
     keywords: ["fts", "fiche-taches"],
   },
   {
