@@ -1,3 +1,18 @@
+## [2.15.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.3...v2.15.4) (2024-02-06)
+
+
+### Bug Fixes
+
+* **festival-task:** add inquiry [#1529](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1529) ([1f9f422](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f9f4225f342f4a815860dacb4f639172259102e))
+* **festival-task:** add volunteers & teams to existing mobilization [#1530](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1530) ([1ba9c6c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1ba9c6cbd18545cb34f2c833cc81daedcc4930d8))
+* **festival-task:** remove volunteer from mobilization [#1531](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1531) ([47f78fc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/47f78fca857969e81d271d0fe8538a22e793959f))
+* **volunteer-availability:** remove availability and select entire day. [#1512](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1512) ([6ffef9f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6ffef9ff32c2c5c1bc34b6b5dbc8cc6e85fbaa93))
+
+
+### Pre-Features
+
+* **festival-task:** complete mobilization for creation [#1509](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1509) ([ef0d4a1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ef0d4a1c89dcec0859a3e55b0d565ae198624423))
+
 ## [2.15.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.2...v2.15.3) (2024-02-05)
 
 
