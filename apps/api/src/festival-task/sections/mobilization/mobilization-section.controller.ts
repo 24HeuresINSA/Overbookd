@@ -199,7 +199,7 @@ export class MobilizationSectionController {
   removeVolunteer(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
-    @Param("volunteerId") volunteerId: Volunteer["id"],
+    @Param("volunteerId", ParseIntPipe) volunteerId: Volunteer["id"],
   ): Promise<FestivalTask> {
     return this.mobilizationService.removeVolunteer(
       ftId,
