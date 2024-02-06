@@ -4,6 +4,7 @@ import {
   FestivalActivity,
   FestivalTask,
   Mobilization,
+  VolunteerMobilization,
 } from "./festival-task";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
@@ -95,6 +96,11 @@ export const noel = {
 
 export const noelContact: Contact = { ...noel, phone: "0601020304" };
 
+export const noelMobilization: VolunteerMobilization = {
+  ...noel,
+  isAlreadyAssigned: false,
+};
+
 export const lea = {
   id: 2,
   lastname: "Mouyno",
@@ -142,7 +148,7 @@ const friday11hfriday18h = TimeWindowFactory.create(friday11h, friday18h);
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
   end: friday18h,
-  volunteers: [noel],
+  volunteers: [noelMobilization],
   teams: [{ count: 2, team: "bénévole" }],
 });
 export const friday18hsaturday10hMobilization = MobilizationBuilder.init({

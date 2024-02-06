@@ -24,10 +24,14 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
+export type VolunteerMobilization = Volunteer & {
+  isAlreadyAssigned: boolean;
+};
+
 export type TeamMobilization = { count: number; team: string };
 
 export type Mobilization = TimeWindow & {
-  volunteers: Volunteer[];
+  volunteers: VolunteerMobilization[];
   teams: TeamMobilization[];
   durationSplitInHour: null | number;
 };

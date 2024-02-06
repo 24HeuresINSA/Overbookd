@@ -214,5 +214,6 @@ export type {
   Volunteer,
   Mobilization,
   TeamMobilization,
+  VolunteerMobilization,
 } from "./festival-task/festival-task";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
