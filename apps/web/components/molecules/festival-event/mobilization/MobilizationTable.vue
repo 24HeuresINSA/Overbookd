@@ -20,7 +20,7 @@
       </template>
 
       <template #item.volunteers="{ item }">
-        <div class="mobilizations__volunteers">
+        <v-chip-group column class="mobilizations__volunteers">
           <NuxtLink
             v-for="volunteer in item.volunteers"
             :key="`${item.id}-${volunteer.id}`"
@@ -30,11 +30,20 @@
               {{ formatUserNameWithNickname(volunteer) }}
             </v-chip>
           </NuxtLink>
-        </div>
+          <v-btn
+            color="primary"
+            elevation="2"
+            x-small
+            fab
+            @click="openAddVolunteerDialog(item)"
+          >
+            <v-icon> mdi-plus-thick</v-icon>
+          </v-btn>
+        </v-chip-group>
       </template>
 
       <template #item.teams="{ item }">
-        <div class="mobilizations__teams">
+        <v-chip-group column class="mobilizations__teams">
           <TeamChip
             v-for="team in item.teams"
             :key="`${item.id}-${team.team}`"
@@ -45,7 +54,16 @@
             close
             @close="removeTeam(item, team)"
           />
-        </div>
+          <v-btn
+            color="primary"
+            elevation="2"
+            x-small
+            fab
+            @click="openAddTeamDialog(item)"
+          >
+            <v-icon> mdi-plus-thick</v-icon>
+          </v-btn>
+        </v-chip-group>
       </template>
 
       <template #item.actions="{ item }">
@@ -64,11 +82,27 @@
     <v-dialog v-model="isAddDialogOpen" max-width="600">
       <MobilizationForm @add="addMobilization" @close-dialog="closeAddDialog" />
     </v-dialog>
+
+    <v-dialog v-model="isAddVolunteerDialogOpen" max-width="600">
+      <AddVolunteerInMobilizationForm
+        :mobilization="selectedMobilization"
+        @close-dialog="closeAddVolunteerDialog"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="isAddTeamDialogOpen" max-width="600">
+      <AddTeamInMobilizationForm
+        :mobilization="selectedMobilization"
+        @close-dialog="closeAddTeamDialog"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import AddVolunteerInMobilizationForm from "./AddVolunteerInMobilizationForm.vue";
+import AddTeamInMobilizationForm from "./AddTeamInMobilizationForm.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import MobilizationForm from "./MobilizationForm.vue";
 import { Header } from "~/utils/models/data-table.model";
@@ -85,11 +119,19 @@ import { AddMobilizationForm } from "@overbookd/http";
 type MobilizationTableData = {
   headers: Header[];
   isAddDialogOpen: boolean;
+  isAddVolunteerDialogOpen: boolean;
+  isAddTeamDialogOpen: boolean;
+  selectedMobilization: Mobilization | null;
 };
 
 export default defineComponent({
   name: "MobilizationTable",
-  components: { TeamChip, MobilizationForm },
+  components: {
+    TeamChip,
+    MobilizationForm,
+    AddVolunteerInMobilizationForm,
+    AddTeamInMobilizationForm,
+  },
   emits: ["add", "remove"],
   data: (): MobilizationTableData => ({
     headers: [
@@ -101,6 +143,9 @@ export default defineComponent({
       { text: "Actions", value: "actions" },
     ],
     isAddDialogOpen: false,
+    isAddVolunteerDialogOpen: false,
+    isAddTeamDialogOpen: false,
+    selectedMobilization: null,
   }),
   computed: {
     selectedTask(): FestivalTask {
@@ -125,6 +170,13 @@ export default defineComponent({
         volunteerId,
       });
     },
+    addTeam(mobilization: Mobilization, team: TeamMobilization) {
+      this.$accessor.festivalTask.addTeamToMobilization({
+        mobilizationId: mobilization.id,
+        team,
+      });
+      this.closeAddTeamDialog();
+    },
     removeTeam(mobilization: Mobilization, { team }: TeamMobilization) {
       this.$accessor.festivalTask.removeTeamFromMobilization({
         mobilizationId: mobilization.id,
@@ -136,6 +188,22 @@ export default defineComponent({
     },
     closeAddDialog() {
       this.isAddDialogOpen = false;
+    },
+    openAddVolunteerDialog(mobilization: Mobilization) {
+      this.selectedMobilization = mobilization;
+      this.isAddVolunteerDialogOpen = true;
+    },
+    closeAddVolunteerDialog() {
+      this.isAddVolunteerDialogOpen = false;
+      this.selectedMobilization = null;
+    },
+    openAddTeamDialog(mobilization: Mobilization) {
+      this.selectedMobilization = mobilization;
+      this.isAddTeamDialogOpen = true;
+    },
+    closeAddTeamDialog() {
+      this.isAddTeamDialogOpen = false;
+      this.selectedMobilization = null;
     },
   },
 });
@@ -156,6 +224,7 @@ export default defineComponent({
   &__teams,
   &__volunteers {
     display: flex;
+    align-items: center;
     gap: 5px;
   }
 }
