@@ -11,6 +11,7 @@ export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
   name: PreviewFestivalActivity["name"];
   status: PreviewFestivalActivity["status"];
+  location: Location | null;
   timeWindows: TimeWindow[];
   inquiry: {
     timeWindows: TimeWindow[];

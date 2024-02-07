@@ -9,6 +9,7 @@ import {
   AssignedInquiryRequestResponseDto,
   UnassignedInquiryRequestResponseDto,
 } from "./inquiry-request.response.dto";
+import { AppointmentResponseDto } from "./appointment.response.dto";
 
 type FestivalActivity = FestivalTask["festivalActivity"];
 
@@ -51,6 +52,12 @@ export class FestivalActivityResponseDto implements FestivalActivity {
     type: String,
   })
   status: FestivalActivity["status"];
+
+  @ApiProperty({
+    description: "Appointment location",
+    type: AppointmentResponseDto,
+  })
+  location: FestivalActivity["location"];
 
   @ApiProperty({
     description: "The festival activity time windows",

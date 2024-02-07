@@ -38,6 +38,7 @@ const fakeTask: FestivalTask = {
     name: "Fake FA",
     status: DRAFT,
     timeWindows: [],
+    location: null,
     inquiry: {
       all: [],
       timeWindows: [],
