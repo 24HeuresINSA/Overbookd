@@ -166,7 +166,7 @@ export default {
       users: [],
       totalConsumption: 0,
       totalPrice: 0,
-      settledStickPrice: 50,
+      settledStickPrice: 60,
 
       mode: "cask", //default mode
       isSwitchDialogOpen: false,
