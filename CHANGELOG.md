@@ -1,3 +1,16 @@
+## [2.15.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.4...v2.15.5) (2024-02-07)
+
+
+### Bug Fixes
+
+* **festival-task:** indicate festival-activity location. [#1537](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1537) ([6b42c4e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6b42c4e770493988677203a2830debafb2a85197))
+* **festival-task:** page available on mobile [#1421](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1421) ([fd7d35a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fd7d35a40ef527e3af12269190ee3e6b10788077))
+
+
+### Refactor
+
+* **sg:** default stick price to 60 cents [#1538](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1538) ([297e105](https://gitlab.com/24-heures-insa/overbookd-mono/commit/297e105779c15fc59b96cdcebbbe46e994a4904a))
+
 ## [2.15.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.3...v2.15.4) (2024-02-06)
 
 
