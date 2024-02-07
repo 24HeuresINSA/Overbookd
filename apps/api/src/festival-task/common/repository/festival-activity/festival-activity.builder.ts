@@ -9,6 +9,7 @@ export class FestivalActivityBuilder {
       id: activityData.id,
       name: activityData.name,
       status: activityData.status,
+      location: activityData.location,
       timeWindows: activityData.generalTimeWindows,
       inquiry: {
         timeWindows: activityData.inquiryTimeWindows,

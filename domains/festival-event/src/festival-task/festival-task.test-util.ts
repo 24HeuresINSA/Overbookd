@@ -178,6 +178,7 @@ export const sacPoubelle = {
 export const escapeGame: FestivalActivity = {
   id: 1,
   name: "Escape game",
+  location: humaGrass,
   status: VALIDATED,
   timeWindows: [friday11hfriday18h],
   inquiry: {

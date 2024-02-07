@@ -13,6 +13,11 @@
         <v-icon>mdi-open-in-new</v-icon>
       </NuxtLink>
 
+      <span v-show="festivalActivity.location">
+        <v-icon>mdi-map</v-icon>
+        {{ festivalActivity.location?.name }}
+      </span>
+
       <h3>Déroulement de l'activité</h3>
       <FaTimeWindowTable
         :time-windows="festivalActivity.timeWindows"
