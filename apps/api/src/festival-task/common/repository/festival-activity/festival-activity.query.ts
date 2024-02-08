@@ -32,6 +32,10 @@ export const SELECT_FESTIVAL_ACTIVITY = {
       },
     },
   },
+  water: true,
+  electricity: {
+    select: { id: true },
+  },
 };
 
 type DatabaseInquiry = {
@@ -41,6 +45,10 @@ type DatabaseInquiry = {
   catalogItem: { name: string };
 };
 
+type DatabaseElectricitySupply = {
+  id: string;
+};
+
 export type DatabaseFestivalActivity = {
   id: FestivalTask["festivalActivity"]["id"];
   name: FestivalTask["festivalActivity"]["name"];
@@ -48,5 +56,7 @@ export type DatabaseFestivalActivity = {
   location: FestivalTask["festivalActivity"]["location"];
   generalTimeWindows: FestivalTask["festivalActivity"]["timeWindows"];
   inquiryTimeWindows: FestivalTask["festivalActivity"]["inquiry"]["timeWindows"];
+  water: string | null;
+  electricity?: DatabaseElectricitySupply[];
   inquiries: DatabaseInquiry[];
 };

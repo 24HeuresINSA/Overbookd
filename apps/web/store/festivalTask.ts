@@ -39,6 +39,7 @@ const fakeTask: FestivalTask = {
     status: DRAFT,
     timeWindows: [],
     location: null,
+    hasSupplyRequest: false,
     inquiry: {
       all: [],
       timeWindows: [],

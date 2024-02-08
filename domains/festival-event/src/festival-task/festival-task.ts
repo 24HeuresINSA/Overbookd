@@ -13,6 +13,7 @@ export type FestivalActivity = {
   status: PreviewFestivalActivity["status"];
   location: Location | null;
   timeWindows: TimeWindow[];
+  hasSupplyRequest: boolean;
   inquiry: {
     timeWindows: TimeWindow[];
     all: InquiryRequest[];

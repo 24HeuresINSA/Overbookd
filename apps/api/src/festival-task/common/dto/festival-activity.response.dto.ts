@@ -54,10 +54,16 @@ export class FestivalActivityResponseDto implements FestivalActivity {
   status: FestivalActivity["status"];
 
   @ApiProperty({
-    description: "Appointment location",
+    description: "Activity location",
     type: AppointmentResponseDto,
   })
   location: FestivalActivity["location"];
+
+  @ApiProperty({
+    description: "Is activity requesting water or electricity supply",
+    type: Boolean,
+  })
+  hasSupplyRequest: boolean;
 
   @ApiProperty({
     description: "The festival activity time windows",

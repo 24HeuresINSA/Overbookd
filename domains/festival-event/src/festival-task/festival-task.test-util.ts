@@ -180,6 +180,7 @@ export const escapeGame: FestivalActivity = {
   name: "Escape game",
   location: humaGrass,
   status: VALIDATED,
+  hasSupplyRequest: true,
   timeWindows: [friday11hfriday18h],
   inquiry: {
     timeWindows: [friday10hfriday19h],
