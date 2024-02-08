@@ -29,14 +29,15 @@ const AUTHORS = [
   "Tom - Nimbus 🧹",
   "Paul - Nuts 💥",
   "Thomas - Ginny 💡",
-  "Thibaut - Moule 🍑",
+  "Thibaut - Moule 🦪",
   "Antoine - Gyneco 🩺",
   "Damien - Hublot 🖐",
   "Léo - Shagasse 😼",
-  "Léon - Trotski 🦁",
+  "Léon - Moto 🏍️",
   "Mathieu - Mussex 🐁",
   "Lucas - Conforama 🏪",
   "Adèle - Franck 🍷",
+  "Luc - Q 🍑",
 ];
 
 interface LayoutData {
