@@ -9,7 +9,7 @@ import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import { Location } from "../common/location";
-import { AddMobilization } from "./prepare/prepare";
+import { AddMobilization, InitMobilization } from "./prepare/prepare";
 
 type BuildTimeWindow = {
   date: Date;
@@ -24,7 +24,7 @@ class TimeWindowFactory {
 }
 
 type InitMobilizationBuilder = Partial<
-  Pick<AddMobilization, "durationSplitInHour" | "teams" | "volunteers">
+  Pick<InitMobilization, "durationSplitInHour" | "teams" | "volunteers">
 > & {
   start?: BuildTimeWindow;
   end?: BuildTimeWindow;
@@ -142,8 +142,18 @@ const friday11hfriday18h = TimeWindowFactory.create(friday11h, friday18h);
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
   end: friday18h,
-  volunteers: [noel],
+  volunteers: [{ ...noel, alsoRequestedBy: [] }],
   teams: [{ count: 2, team: "bénévole" }],
+});
+export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
+  start: saturday18h,
+  end: saturday19h,
+  volunteers: [{ ...lea, alsoRequestedBy: [] }],
+});
+export const friday10hfriday18hMobilization = MobilizationBuilder.init({
+  start: friday10h,
+  end: friday18h,
+  teams: [{ count: 5, team: "hard" }],
 });
 export const friday18hsaturday10hMobilization = MobilizationBuilder.init({
   start: friday18h,
@@ -280,6 +290,9 @@ export const guardEscapeGame: FestivalTask = {
   },
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
-  mobilizations: [friday18hsaturday10hMobilization.mobilization],
+  mobilizations: [
+    friday18hsaturday10hMobilization.mobilization,
+    saturday18hsaturday19hMobilization.mobilization,
+  ],
   inquiries: [],
 };

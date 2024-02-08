@@ -26,10 +26,19 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
+export type TaskLink = {
+  id: FestivalTask["id"];
+  name: FestivalTask["general"]["name"];
+};
+
+type VolunteerMobilization = Volunteer & {
+  alsoRequestedBy: TaskLink[];
+};
+
 export type TeamMobilization = { count: number; team: string };
 
 export type Mobilization = TimeWindow & {
-  volunteers: Volunteer[];
+  volunteers: VolunteerMobilization[];
   teams: TeamMobilization[];
   durationSplitInHour: null | number;
 };

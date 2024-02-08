@@ -12,17 +12,29 @@ import {
   friday19h,
   saturday11h,
   friday18hsaturday10hMobilization,
+  saturday18hsaturday19hMobilization,
+  friday10hfriday18hMobilization,
+  lea,
 } from "../festival-task.test-util";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
-import { PrepareFestivalTask } from "./prepare";
+import { AlsoRequestedByTasks, PrepareFestivalTask } from "./prepare";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
-import { TeamMobilization } from "../festival-task";
-import { EndBeforeStart } from "@overbookd/period";
+import { TaskLink, TeamMobilization, Volunteer } from "../festival-task";
+import { EndBeforeStart, IProvidePeriod } from "@overbookd/period";
+
+class InMemoryAlsoRequestedByTasks implements AlsoRequestedByTasks {
+  on(
+    period: IProvidePeriod,
+    volunteerId: Volunteer["id"],
+  ): Promise<TaskLink[]> {
+    throw new Error("Method not implemented.");
+  }
+}
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -37,16 +49,46 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Add mobilization", () => {
     describe("when a new mobilization is added", () => {
-      it("should add mobilization to mobilizations list", async () => {
-        const task = installEscapeGame;
-        const { mobilizations } = await prepare.addMobilization(
-          task.id,
-          friday11hfriday18hMobilization.form,
-        );
-        expect(mobilizations).toHaveLength(task.mobilizations.length + 1);
-        expect(mobilizations).toContainEqual(
-          friday11hfriday18hMobilization.mobilization,
-        );
+      it.each`
+        explaination                    | task                 | form                                       | expectedMobilization
+        ${"whitout team nor volunteer"} | ${installEscapeGame} | ${friday18hsaturday10hMobilization.form}   | ${friday18hsaturday10hMobilization.mobilization}
+        ${"with team and volunteer"}    | ${installEscapeGame} | ${friday11hfriday18hMobilization.form}     | ${friday11hfriday18hMobilization.mobilization}
+        ${"with team only"}             | ${installEscapeGame} | ${friday10hfriday18hMobilization.form}     | ${friday10hfriday18hMobilization.mobilization}
+        ${"with volunteer only"}        | ${installEscapeGame} | ${saturday18hsaturday19hMobilization.form} | ${saturday18hsaturday19hMobilization.mobilization}
+      `(
+        "should add mobilization $explaination to mobilizations list",
+        async ({ task, form, expectedMobilization }) => {
+          const { mobilizations } = await prepare.addMobilization(
+            task.id,
+            form,
+          );
+          expect(mobilizations).toHaveLength(task.mobilizations.length + 1);
+          expect(mobilizations).toContainEqual(expectedMobilization);
+        },
+      );
+
+      describe("when volunteer is requested at the same time on any mobilization", () => {
+        it("should list tasks that are requesting the same volunteer at the same time", async () => {
+          const task = presentEscapeGame;
+          const helper = saturday18hsaturday19hMobilization;
+          const { mobilizations } = await prepare.addMobilization(
+            task.id,
+            helper.form,
+          );
+          const mobilization = mobilizations.find(
+            (mobilization) => mobilization.id === helper.mobilization.id,
+          );
+          const volunteer = mobilization?.volunteers.find(
+            (volunteer) => volunteer.id === lea.id,
+          );
+          const expectedRequestedBy = [
+            {
+              id: guardEscapeGame.id,
+              name: guardEscapeGame.general.name,
+            },
+          ];
+          expect(volunteer?.alsoRequestedBy).toEqual(expectedRequestedBy);
+        });
       });
     });
     describe("with split duration that is not period divider", () => {

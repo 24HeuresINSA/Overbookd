@@ -7,6 +7,7 @@ import {
   Contact,
   FestivalTask,
   Mobilization,
+  TaskLink,
   TeamMobilization,
   Volunteer,
 } from "../festival-task";
@@ -37,7 +38,15 @@ export type FestivalTasksForPrepare = {
   save(task: FestivalTask): Promise<FestivalTask>;
 };
 
-export type AddMobilization = Omit<Mobilization, "id">;
+export type AlsoRequestedByTasks = {
+  on(period: IProvidePeriod, volunteerId: Volunteer["id"]): Promise<TaskLink[]>;
+};
+
+export type InitMobilization = Omit<Mobilization, "id">;
+
+export type AddMobilization = Omit<Mobilization, "id" | "volunteers"> & {
+  volunteers: Volunteer[];
+};
 
 export type UpdateMobilization = {
   durationSplitInHour?: number | null;
@@ -46,7 +55,10 @@ export type UpdateMobilization = {
 };
 
 export class PrepareFestivalTask {
-  constructor(private readonly festivalTasks: FestivalTasksForPrepare) {}
+  constructor(
+    private readonly festivalTasks: FestivalTasksForPrepare,
+    private readonly alsoRequestedByTasks: AlsoRequestedByTasks,
+  ) {}
 
   async updateGeneralSection(
     taskId: FestivalTask["id"],
@@ -127,7 +139,17 @@ export class PrepareFestivalTask {
     if (!task) throw new FestivalTaskNotFound(taskId);
 
     const builder = Mobilizations.build(task.mobilizations);
-    const mobilizations = builder.add(mobilization).json;
+    const volunteers = await Promise.all(
+      mobilization.volunteers.map(async (volunteer) => {
+        const period = { start: mobilization.start, end: mobilization.end };
+        const alsoRequestedBy = await this.alsoRequestedByTasks.on(
+          period,
+          volunteer.id,
+        );
+        return { ...volunteer, alsoRequestedBy };
+      }),
+    );
+    const mobilizations = builder.add({ ...mobilization, volunteers }).json;
     return this.festivalTasks.save({ ...task, mobilizations });
   }
 
@@ -394,7 +416,7 @@ class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
-  add(form: AddMobilization): Mobilizations {
+  add(form: InitMobilization): Mobilizations {
     const mobilization = MobilizationFactory.init(form).json;
 
     if (this.has(mobilization)) throw new MobilizationAlreadyExist();
@@ -505,7 +527,7 @@ class Mobilizations {
 class MobilizationFactory {
   private constructor(private readonly mobilization: Mobilization) {}
 
-  static init(form: AddMobilization): MobilizationFactory {
+  static init(form: InitMobilization): MobilizationFactory {
     const { durationSplitInHour, teams, volunteers, ...period } = form;
     this.checkPeriod(durationSplitInHour, period);
     const id = this.generateId(period);
@@ -563,7 +585,10 @@ class MobilizationFactory {
   addVolunteer(volunteer: Volunteer) {
     if (this.hasVolunteer(volunteer)) return this;
 
-    const volunteers = [...this.mobilization.volunteers, volunteer];
+    const volunteers = [
+      ...this.mobilization.volunteers,
+      { ...volunteer, alsoRequestedBy: [] },
+    ];
 
     return new MobilizationFactory({ ...this.mobilization, volunteers });
   }
