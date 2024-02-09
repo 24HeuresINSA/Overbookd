@@ -64,7 +64,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  static update(task: FestivalTask) {
+  static update(task: FestivalTask<Mobilization<Volunteer>>) {
     const contacts = this.upsertContacts(task.id, task.instructions.contacts);
     const inChargeVolunteers = this.upsertInChargeVolunteers(
       task.id,
@@ -128,7 +128,7 @@ export class FestivalTaskQueryBuilder {
 
   private static upsertMobilizations(
     festivalTaskId: FestivalTask["id"],
-    mobilizations: Mobilization[],
+    mobilizations: Mobilization<Volunteer>[],
   ) {
     return {
       upsert: mobilizations.map((mobilization) => ({
@@ -143,7 +143,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertInquiries(task: FestivalTask) {
+  private static upsertInquiries(task: FestivalTask<Mobilization<Volunteer>>) {
     return {
       upsert: task.inquiries.map((request) => {
         const update = isAssignedToDrive(request)
@@ -184,7 +184,7 @@ function keyEventToHistory(
   });
 }
 
-function databaseMobilisationForUpdate(mobilization: Mobilization) {
+function databaseMobilisationForUpdate(mobilization: Mobilization<Volunteer>) {
   return {
     id: mobilization.id,
     start: mobilization.start,
@@ -214,7 +214,9 @@ function databaseMobilisationForUpdate(mobilization: Mobilization) {
   };
 }
 
-function databaseMobilizationForCreation(mobilization: Mobilization) {
+function databaseMobilizationForCreation(
+  mobilization: Mobilization<Volunteer>,
+) {
   return {
     id: mobilization.id,
     start: mobilization.start,
@@ -232,7 +234,9 @@ function databaseMobilizationForCreation(mobilization: Mobilization) {
   };
 }
 
-function databaseFestivalTaskWithoutListsMapping(task: FestivalTask) {
+function databaseFestivalTaskWithoutListsMapping(
+  task: FestivalTask<Mobilization<Volunteer>>,
+) {
   return {
     id: task.id,
     status: task.status,

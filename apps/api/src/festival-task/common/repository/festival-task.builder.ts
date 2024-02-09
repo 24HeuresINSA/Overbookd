@@ -6,6 +6,7 @@ import {
   PreviewFestivalTaskDraft,
   Contact,
   Volunteer,
+  Mobilization,
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
@@ -13,15 +14,17 @@ import { DatabaseEvent } from "./event.query";
 import { DatabaseMobilization } from "./mobilization.query";
 import { DatabaseInquiryRequest } from "./inquiry/inquiry.query";
 
+type FestivalTaskWithoutConflicts = FestivalTask<Mobilization<Volunteer>>;
+
 type VisualizeFestivalTask<
-  Task extends FestivalTask = FestivalTask,
+  Task extends FestivalTaskWithoutConflicts = FestivalTaskWithoutConflicts,
   Preview extends PreviewFestivalTask = PreviewFestivalTask,
 > = {
   preview: Preview;
   festivalTask: Task;
 };
 
-type FestivalTaskWithoutStatus = Omit<FestivalTask, "status">;
+type FestivalTaskWithoutStatus = Omit<FestivalTaskWithoutConflicts, "status">;
 
 type DatabaseFestivalTask = {
   id: FestivalTask["id"];
@@ -40,7 +43,7 @@ type DatabaseFestivalTask = {
   events: DatabaseEvent[];
 };
 
-export class FestivalTaskBuilder<T extends FestivalTask> {
+export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
   constructor(protected readonly task: T) {}
 
   static fromDatabase(taskData: DatabaseFestivalTask): VisualizeFestivalTask {
@@ -116,9 +119,12 @@ export class FestivalTaskBuilder<T extends FestivalTask> {
   }
 }
 
-export class DraftBuilder
-  extends FestivalTaskBuilder<FestivalTaskDraft>
-  implements VisualizeFestivalTask<FestivalTaskDraft, PreviewFestivalTaskDraft>
+export class DraftBuilder<
+    M extends Mobilization<Volunteer> = Mobilization<Volunteer>,
+  >
+  extends FestivalTaskBuilder<FestivalTaskDraft<M>>
+  implements
+    VisualizeFestivalTask<FestivalTaskDraft<M>, PreviewFestivalTaskDraft>
 {
   static init(taskWithoutStatus: FestivalTaskWithoutStatus) {
     return new DraftBuilder({ ...taskWithoutStatus, status: DRAFT });
@@ -126,7 +132,10 @@ export class DraftBuilder
 
   static fromDatabase(
     taskData: DatabaseFestivalTask,
-  ): VisualizeFestivalTask<FestivalTaskDraft, PreviewFestivalTask> {
+  ): VisualizeFestivalTask<
+    FestivalTaskDraft<Mobilization<Volunteer>>,
+    PreviewFestivalTask
+  > {
     const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
     return this.init(taskWithoutStatus);
   }
@@ -141,7 +150,7 @@ export class DraftBuilder
     };
   }
 
-  get festivalTask(): FestivalTaskDraft {
+  get festivalTask(): FestivalTaskDraft<M> {
     return this.task;
   }
 }

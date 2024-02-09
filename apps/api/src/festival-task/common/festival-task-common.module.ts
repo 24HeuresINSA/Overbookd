@@ -14,6 +14,7 @@ import { PrismaRemoveFestivalTasks } from "./repository/remove-festival-tasks.pr
 import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma";
 import { PrismaLocations } from "./repository/location/locations.prisma";
 import { PrismaInquiries } from "./repository/inquiry/inquiries.prisma";
+import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prisma";
 
 @Module({
   providers: [
@@ -70,10 +71,18 @@ import { PrismaInquiries } from "./repository/inquiry/inquiries.prisma";
       inject: [PrismaCreateFestivalTasks, PrismaService],
     },
     {
+      provide: PrismaVolunteerConflicts,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaVolunteerConflicts(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: PrepareFestivalTask,
-      useFactory: (festivalTasks: PrismaPrepareFestivalTasks) =>
-        new PrepareFestivalTask(festivalTasks),
-      inject: [PrismaPrepareFestivalTasks],
+      useFactory: (
+        festivalTasks: PrismaPrepareFestivalTasks,
+        volunteerConflicts: PrismaVolunteerConflicts,
+      ) => new PrepareFestivalTask(festivalTasks, volunteerConflicts),
+      inject: [PrismaPrepareFestivalTasks, PrismaVolunteerConflicts],
     },
     {
       provide: ViewFestivalTask,

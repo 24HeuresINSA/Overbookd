@@ -1,4 +1,4 @@
-import { Adherent } from "@overbookd/festival-event";
+import { Volunteer } from "@overbookd/festival-event";
 import { SELECT_ADHERENT } from "./adherent/adherent.query";
 
 const SELECT_TEAM = {
@@ -24,7 +24,7 @@ export type DatabaseMobilization = {
   id: string;
   start: Date;
   end: Date;
-  volunteers: { volunteer: Adherent }[];
+  volunteers: { volunteer: Volunteer }[];
   teams: DatabaseTeam[];
   durationSplitInHour: null | number;
 };
