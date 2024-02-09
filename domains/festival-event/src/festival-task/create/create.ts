@@ -2,7 +2,12 @@ import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { FestivalActivity, Draft, Mobilization, Volunteer } from "../festival-task";
+import {
+  FestivalActivity,
+  Draft,
+  Mobilization,
+  Volunteer,
+} from "../festival-task";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 const FT_420 = 420;
@@ -14,7 +19,9 @@ type FestivalTaskCreation = {
 };
 
 export type FestivalTasksForCreate = {
-  add(festivalTask: Draft<Mobilization<Volunteer>>): Promise<Draft<Mobilization<Volunteer>>>;
+  add(
+    festivalTask: Draft<Mobilization<Volunteer>>,
+  ): Promise<Draft<Mobilization<Volunteer>>>;
 };
 
 export class CreateFestivalTask {

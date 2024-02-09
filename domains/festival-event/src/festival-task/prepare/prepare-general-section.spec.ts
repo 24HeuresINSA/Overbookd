@@ -14,11 +14,7 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts";
 describe("Prepare festival task general section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const tasks = [
-      installEscapeGame,
-      uninstallEscapeGame,
-      presentEscapeGame,
-    ];
+    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
     const translator = new FestivalTaskTranslator(volunteerConflicts);

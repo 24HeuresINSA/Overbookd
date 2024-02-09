@@ -8,7 +8,7 @@ import {
 } from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
-  constructor(private tasks: FestivalTask[]) { }
+  constructor(private tasks: FestivalTask[]) {}
 
   on(
     taskId: FestivalTask["id"],
@@ -34,7 +34,7 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
 }
 
 class MobilizationHelper {
-  private constructor(private readonly mobilization: Mobilization) { }
+  private constructor(private readonly mobilization: Mobilization) {}
 
   static build(mobilization: Mobilization): MobilizationHelper {
     return new MobilizationHelper(mobilization);

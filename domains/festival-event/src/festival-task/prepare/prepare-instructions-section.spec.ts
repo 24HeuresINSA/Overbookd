@@ -18,11 +18,7 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const tasks = [
-      installEscapeGame,
-      uninstallEscapeGame,
-      presentEscapeGame,
-    ];
+    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
     const translator = new FestivalTaskTranslator(volunteerConflicts);

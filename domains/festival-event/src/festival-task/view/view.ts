@@ -5,10 +5,15 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 export type FestivalTasksForView = {
   all(): Promise<Preview[]>;
-  one(ftId: FestivalTask["id"]): Promise<FestivalTask<Mobilization<Volunteer>> | null>;
+  one(
+    ftId: FestivalTask["id"],
+  ): Promise<FestivalTask<Mobilization<Volunteer>> | null>;
 };
 export class ViewFestivalTask {
-  constructor(private readonly festivalTasks: FestivalTasksForView, private readonly festivalTaskTranslator: FestivalTaskTranslator) { }
+  constructor(
+    private readonly festivalTasks: FestivalTasksForView,
+    private readonly festivalTaskTranslator: FestivalTaskTranslator,
+  ) {}
 
   all(): Promise<Preview[]> {
     return this.festivalTasks.all();

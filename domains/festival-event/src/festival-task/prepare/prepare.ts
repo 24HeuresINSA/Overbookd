@@ -52,7 +52,7 @@ export class PrepareFestivalTask {
   constructor(
     private readonly festivalTasks: FestivalTasksForPrepare,
     private readonly festivalTaskTranslator: FestivalTaskTranslator,
-  ) { }
+  ) {}
 
   async updateGeneralSection(
     taskId: FestivalTask["id"],
@@ -260,7 +260,7 @@ export class PrepareFestivalTask {
 class Instructions {
   private constructor(
     private readonly instructions: FestivalTask["instructions"],
-  ) { }
+  ) {}
   static build(instructions: FestivalTask["instructions"]) {
     return new Instructions(instructions);
   }
@@ -312,7 +312,7 @@ class Instructions {
 class InCharge {
   private constructor(
     private readonly inCharge: FestivalTask["instructions"]["inCharge"],
-  ) { }
+  ) {}
 
   static build(inCharge: FestivalTask["instructions"]["inCharge"]) {
     return new InCharge(inCharge);
@@ -343,7 +343,7 @@ class InCharge {
 }
 
 class Contacts {
-  private constructor(private contacts: Contact[]) { }
+  private constructor(private contacts: Contact[]) {}
 
   static build(contacts: Contact[]) {
     return new Contacts(contacts);
@@ -369,7 +369,7 @@ class Contacts {
 }
 
 class Volunteers {
-  private constructor(private volunteers: Volunteer[]) { }
+  private constructor(private volunteers: Volunteer[]) {}
 
   static build(volunteers: Volunteer[]) {
     return new Volunteers(volunteers);
@@ -402,7 +402,7 @@ type ListItem<T> = {
 };
 
 class Mobilizations<V extends Volunteer = Volunteer> {
-  private constructor(private readonly mobilizations: Mobilization<V>[]) { }
+  private constructor(private readonly mobilizations: Mobilization<V>[]) {}
 
   static build(mobilizations: Mobilization<Volunteer>[]) {
     return new Mobilizations(mobilizations);
@@ -519,7 +519,7 @@ class Mobilizations<V extends Volunteer = Volunteer> {
 }
 
 class MobilizationFactory<V extends Volunteer = Volunteer> {
-  private constructor(private readonly mobilization: Mobilization<V>) { }
+  private constructor(private readonly mobilization: Mobilization<V>) {}
 
   static init(form: AddMobilization): MobilizationFactory {
     const { durationSplitInHour, teams, volunteers, ...period } = form;
@@ -629,7 +629,7 @@ class SplitablePeriod {
 }
 
 class Inquiries {
-  private constructor(private inquiries: InquiryRequest[]) { }
+  private constructor(private inquiries: InquiryRequest[]) {}
 
   static build(inquiries: InquiryRequest[]) {
     return new Inquiries(inquiries);
