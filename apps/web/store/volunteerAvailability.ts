@@ -34,10 +34,6 @@ export const mutations = mutationTree(state, {
     state.periodOrchestrator = PeriodOrchestrator.init(periods);
   },
 
-  ADD_VOLUNTEER_AVAILABILITY(state, period: Period) {
-    state.availabilityRegistery.addPeriod(period);
-  },
-
   ADD_PERIOD_IN_PERIOD_ORCHESTRATOR(state, period: Period) {
     state.periodOrchestrator.addPeriod(period);
   },
@@ -111,10 +107,6 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
-    },
-
-    async addVolunteerAvailability({ commit }, availability: Availability) {
-      commit("ADD_VOLUNTEER_AVAILABILITY", availability);
     },
 
     addAvailabilityPeriod({ commit }, period: Period) {

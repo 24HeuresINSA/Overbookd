@@ -18,7 +18,8 @@ export class PeriodOrchestrator {
   }
 
   addPeriod(period: Period) {
-    this.periods = [...this.periods, period];
+    const periods = [...this.periods, period];
+    this.periods = this.mergePeriods(periods);
   }
 
   removePeriod(period: Period) {
@@ -48,7 +49,7 @@ export class PeriodOrchestrator {
   }
 
   get availabilityPeriods(): Period[] {
-    return this.mergePeriods(this.periods);
+    return this.periods;
   }
 
   private mergePeriods(periods: Period[]): Period[] {
