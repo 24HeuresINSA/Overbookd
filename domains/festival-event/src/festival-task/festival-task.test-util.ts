@@ -259,7 +259,7 @@ export const humaGrass: Location = {
   name: "Huma grass",
 };
 
-export const hallMde: Location = {
+const hallMde: Location = {
   id: 2,
   name: "Hall MDE",
 };
@@ -287,7 +287,7 @@ export const escapeGame: FestivalActivity = {
   },
 };
 
-export const justDance: FestivalActivity = {
+const justDance: FestivalActivity = {
   id: 2,
   name: "Just Dance",
   location: hallMde,
@@ -502,7 +502,7 @@ export const onboardJustDanceCollaborator: FestivalTask = {
   inquiries: [],
 };
 
-const presentJustDanceCollaboratorFriday = justDanceMobilization
+const presentJustDanceFriday = justDanceMobilization
   .withStart(friday11h)
   .withEnd(friday18h)
   .withVolunteers([
@@ -510,7 +510,7 @@ const presentJustDanceCollaboratorFriday = justDanceMobilization
     { ...george, conflicts: presentJustDanceConflicts },
   ]);
 
-const presentJustDanceCollaboratorSaturday = justDanceMobilization
+const presentJustDanceSaturday = justDanceMobilization
   .withStart(saturday11h)
   .withEnd(saturday18h)
   .withVolunteers([
@@ -518,7 +518,7 @@ const presentJustDanceCollaboratorSaturday = justDanceMobilization
     { ...george, conflicts: presentJustDanceConflicts },
   ]);
 
-export const presentJustDanceCollaborator: FestivalTask = {
+export const presentJustDance: FestivalTask = {
   id: justDanceTasks.present.id,
   status: "DRAFT",
   general: {
@@ -539,8 +539,8 @@ export const presentJustDanceCollaborator: FestivalTask = {
   history: [FestivalTaskKeyEvents.created(george)],
   feedbacks: [],
   mobilizations: [
-    presentJustDanceCollaboratorFriday.mobilization,
-    presentJustDanceCollaboratorSaturday.mobilization,
+    presentJustDanceFriday.mobilization,
+    presentJustDanceSaturday.mobilization,
   ],
   inquiries: [],
 };
