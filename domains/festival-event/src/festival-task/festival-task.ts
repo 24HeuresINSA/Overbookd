@@ -26,24 +26,32 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
-export type TaskLink = {
+export type Conflict = {
   id: FestivalTask["id"];
   name: FestivalTask["general"]["name"];
 };
 
-type VolunteerMobilization = Volunteer & {
-  alsoRequestedBy: TaskLink[];
+type WithConflicts = {
+  conflicts: Conflict[];
 };
+
+export type VolunteerWithConflicts = Volunteer & WithConflicts;
+
+export type VolunteerMobilization = Volunteer | VolunteerWithConflicts;
 
 export type TeamMobilization = { count: number; team: string };
 
-export type Mobilization = TimeWindow & {
-  volunteers: VolunteerMobilization[];
+export type Mobilization<
+  T extends VolunteerMobilization = VolunteerWithConflicts,
+> = TimeWindow & {
+  volunteers: T[];
   teams: TeamMobilization[];
   durationSplitInHour: null | number;
 };
 
-export type Draft = {
+export type Draft<
+  M extends Mobilization<VolunteerMobilization> = Mobilization,
+> = {
   id: number;
   status: typeof DRAFT;
   general: {
@@ -63,11 +71,13 @@ export type Draft = {
   };
   history: KeyEvent[];
   feedbacks: Feedback[];
-  mobilizations: Mobilization[];
+  mobilizations: M[];
   inquiries: InquiryRequest[];
 };
 
-export type FestivalTask = Draft;
+export type FestivalTask<
+  M extends Mobilization<VolunteerMobilization> = Mobilization,
+> = Draft<M>;
 
 export type PreviewDraft = {
   id: Draft["id"];

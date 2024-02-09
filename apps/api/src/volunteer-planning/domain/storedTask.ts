@@ -73,7 +73,7 @@ export class StoredTask {
   canMergeWith(task: StoredTask): boolean {
     return (
       task.isSameTask(this.storedTask) &&
-      (this.isFollowedBy(task) || this.IsOverlapedBy(task))
+      (this.isFollowedBy(task) || this.isOverlapedBy(task))
     );
   }
 
@@ -84,7 +84,7 @@ export class StoredTask {
     };
   }
 
-  private IsOverlapedBy(task: StoredTask) {
+  private isOverlapedBy(task: StoredTask) {
     return (
       this.start.getTime() < task.end.getTime() &&
       this.end.getTime() > task.start.getTime()
