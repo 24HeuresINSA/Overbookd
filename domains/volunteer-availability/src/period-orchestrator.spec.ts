@@ -264,4 +264,37 @@ describe("Period orchestrator", () => {
       });
     });
   });
+  describe("when adding periods then removing some", () => {
+    const periodOrchestrator = PeriodOrchestrator.init();
+    const friday03hTo06h = Period.init({
+      start: new Date("2023-05-12 03:00+02:00"),
+      end: new Date("2023-05-12 06:00+02:00"),
+    });
+    const friday06hTo10h = Period.init({
+      start: new Date("2023-05-12 06:00+02:00"),
+      end: new Date("2023-05-12 10:00+02:00"),
+    });
+    const friday08hTo10h = Period.init({
+      start: new Date("2023-05-12 08:00+02:00"),
+      end: new Date("2023-05-12 10:00+02:00"),
+    });
+    const friday06hTo08h = Period.init({
+      start: new Date("2023-05-12 06:00+02:00"),
+      end: new Date("2023-05-12 08:00+02:00"),
+    });
+    periodOrchestrator.addPeriod(friday03hTo06h);
+    periodOrchestrator.addPeriod(friday06hTo10h);
+    periodOrchestrator.removePeriod(friday06hTo08h);
+
+    it("shouldn't have any error in the report", () => {
+      expect(periodOrchestrator.errors).toEqual([]);
+    });
+    it("should keep 2 periods (03h-06h) and (08h-10h)", () => {
+      expect(periodOrchestrator.availabilityPeriods).toHaveLength(2);
+      expect(periodOrchestrator.availabilityPeriods).toEqual([
+        friday03hTo06h,
+        friday08hTo10h,
+      ]);
+    });
+  });
 });

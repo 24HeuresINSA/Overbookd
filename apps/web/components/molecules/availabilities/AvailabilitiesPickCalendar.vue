@@ -146,6 +146,7 @@ export default Vue.extend({
     selectDay(dateString: DateString) {
       const date = AvailabilityDate.init({ date: dateString, hour: 0 });
       if (this.isAllPeriodsInDaySelected(date)) {
+        console.log("here");
         return this.removePeriodsInDay(dateString);
       }
 
