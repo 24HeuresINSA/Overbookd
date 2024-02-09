@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { EndBeforeStart } from "@overbookd/period";
-import { InMemoryVolunteerConflicts } from "./volunteer-conflicts.inmemory";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
 import { TeamMobilization, VolunteerMobilization } from "../festival-task";
@@ -32,6 +32,7 @@ import {
   saturday7h,
   saturday8h,
 } from "../festival-task.test-util";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -43,8 +44,9 @@ describe("Prepare festival task mobilizations list", () => {
       guardEscapeGame,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
-    const alsoRequestedByTasks = new InMemoryVolunteerConflicts(tasks);
-    prepare = new PrepareFestivalTask(festivalTasks, alsoRequestedByTasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const translator = new FestivalTaskTranslator(volunteerConflicts);
+    prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe("Add mobilization", () => {
     describe("when a new mobilization is added", () => {

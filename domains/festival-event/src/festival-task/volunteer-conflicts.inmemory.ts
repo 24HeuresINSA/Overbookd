@@ -1,14 +1,14 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { VolunteerConflicts } from "./prepare";
+import { VolunteerConflicts } from "./volunteer-conflicts";
 import {
   FestivalTask,
   Conflict,
   Volunteer,
   Mobilization,
-} from "../festival-task";
+} from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
-  constructor(private tasks: FestivalTask[]) {}
+  constructor(private tasks: FestivalTask[]) { }
 
   on(
     taskId: FestivalTask["id"],
@@ -34,7 +34,7 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
 }
 
 class MobilizationHelper {
-  private constructor(private readonly mobilization: Mobilization) {}
+  private constructor(private readonly mobilization: Mobilization) { }
 
   static build(mobilization: Mobilization): MobilizationHelper {
     return new MobilizationHelper(mobilization);

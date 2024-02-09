@@ -2,7 +2,8 @@ import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { FestivalActivity, Draft } from "../festival-task";
+import { FestivalActivity, Draft, Mobilization, Volunteer } from "../festival-task";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 const FT_420 = 420;
 
@@ -13,7 +14,7 @@ type FestivalTaskCreation = {
 };
 
 export type FestivalTasksForCreate = {
-  add(festivalTask: Draft): Promise<Draft>;
+  add(festivalTask: Draft<Mobilization<Volunteer>>): Promise<Draft<Mobilization<Volunteer>>>;
 };
 
 export class CreateFestivalTask {
@@ -21,6 +22,7 @@ export class CreateFestivalTask {
 
   constructor(
     private readonly festivalTasks: FestivalTasksForCreate,
+    private readonly festivalTaskTranslator: FestivalTaskTranslator,
     startId: number = 1,
   ) {
     this.idGenerator = numberGenerator(startId, [FT_420]);
@@ -55,7 +57,8 @@ export class CreateFestivalTask {
       inquiries: [],
     };
 
-    return this.festivalTasks.add(festivalTask);
+    const created = await this.festivalTasks.add(festivalTask);
+    return this.festivalTaskTranslator.translate(created);
   }
 
   private generateId(): number {

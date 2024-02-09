@@ -7,7 +7,6 @@ import {
   Contact,
   FestivalTask,
   Mobilization,
-  Conflict,
   TeamMobilization,
   Volunteer,
 } from "../festival-task";
@@ -20,6 +19,7 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 import { updateItemToList } from "@overbookd/list";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -40,14 +40,6 @@ export type FestivalTasksForPrepare<
   save(task: FestivalTask<M>): Promise<FestivalTask<M>>;
 };
 
-export type VolunteerConflicts = {
-  on(
-    taskId: FestivalTask["id"],
-    period: IProvidePeriod,
-    volunteerId: Volunteer["id"],
-  ): Promise<Conflict[]>;
-};
-
 export type AddMobilization = Omit<Mobilization<Volunteer>, "id">;
 
 export type UpdateMobilization = {
@@ -59,8 +51,8 @@ export type UpdateMobilization = {
 export class PrepareFestivalTask {
   constructor(
     private readonly festivalTasks: FestivalTasksForPrepare,
-    private readonly volunteerConflicts: VolunteerConflicts,
-  ) {}
+    private readonly festivalTaskTranslator: FestivalTaskTranslator,
+  ) { }
 
   async updateGeneralSection(
     taskId: FestivalTask["id"],
@@ -150,33 +142,7 @@ export class PrepareFestivalTask {
     toSave: FestivalTask<Mobilization<Volunteer>>,
   ): Promise<FestivalTask> {
     const updated = await this.festivalTasks.save(toSave);
-    const mobilizations = await this.buildVolunteerConflicts(
-      updated.mobilizations,
-      toSave.id,
-    );
-    return { ...updated, mobilizations };
-  }
-
-  private async buildVolunteerConflicts(
-    mobilizations: Mobilization<Volunteer>[],
-    taskId: number,
-  ): Promise<Mobilization[]> {
-    return Promise.all(
-      mobilizations.map(async ({ volunteers, ...mobilization }) => ({
-        ...mobilization,
-        volunteers: await Promise.all(
-          volunteers.map(async (volunteer) => {
-            const period = { start: mobilization.start, end: mobilization.end };
-            const conflicts = await this.volunteerConflicts.on(
-              taskId,
-              period,
-              volunteer.id,
-            );
-            return { ...volunteer, conflicts };
-          }),
-        ),
-      })),
-    );
+    return this.festivalTaskTranslator.translate(updated);
   }
 
   async removeMobilization(
@@ -294,7 +260,7 @@ export class PrepareFestivalTask {
 class Instructions {
   private constructor(
     private readonly instructions: FestivalTask["instructions"],
-  ) {}
+  ) { }
   static build(instructions: FestivalTask["instructions"]) {
     return new Instructions(instructions);
   }
@@ -346,7 +312,7 @@ class Instructions {
 class InCharge {
   private constructor(
     private readonly inCharge: FestivalTask["instructions"]["inCharge"],
-  ) {}
+  ) { }
 
   static build(inCharge: FestivalTask["instructions"]["inCharge"]) {
     return new InCharge(inCharge);
@@ -377,7 +343,7 @@ class InCharge {
 }
 
 class Contacts {
-  private constructor(private contacts: Contact[]) {}
+  private constructor(private contacts: Contact[]) { }
 
   static build(contacts: Contact[]) {
     return new Contacts(contacts);
@@ -403,7 +369,7 @@ class Contacts {
 }
 
 class Volunteers {
-  private constructor(private volunteers: Volunteer[]) {}
+  private constructor(private volunteers: Volunteer[]) { }
 
   static build(volunteers: Volunteer[]) {
     return new Volunteers(volunteers);
@@ -436,7 +402,7 @@ type ListItem<T> = {
 };
 
 class Mobilizations<V extends Volunteer = Volunteer> {
-  private constructor(private readonly mobilizations: Mobilization<V>[]) {}
+  private constructor(private readonly mobilizations: Mobilization<V>[]) { }
 
   static build(mobilizations: Mobilization<Volunteer>[]) {
     return new Mobilizations(mobilizations);
@@ -553,7 +519,7 @@ class Mobilizations<V extends Volunteer = Volunteer> {
 }
 
 class MobilizationFactory<V extends Volunteer = Volunteer> {
-  private constructor(private readonly mobilization: Mobilization<V>) {}
+  private constructor(private readonly mobilization: Mobilization<V>) { }
 
   static init(form: AddMobilization): MobilizationFactory {
     const { durationSplitInHour, teams, volunteers, ...period } = form;
@@ -663,7 +629,7 @@ class SplitablePeriod {
 }
 
 class Inquiries {
-  private constructor(private inquiries: InquiryRequest[]) {}
+  private constructor(private inquiries: InquiryRequest[]) { }
 
   static build(inquiries: InquiryRequest[]) {
     return new Inquiries(inquiries);

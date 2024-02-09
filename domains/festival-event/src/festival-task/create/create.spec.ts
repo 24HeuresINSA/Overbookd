@@ -4,11 +4,15 @@ import { DRAFT } from "../../common/status";
 import { CreateFestivalTask } from "./create";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { noel, escapeGame } from "../festival-task.test-util";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 describe("Create festival task", () => {
   describe(`when ${noel.firstname} create Install escape game task`, async () => {
     const festivalTasks = new InMemoryFestivalTasks();
-    const create = new CreateFestivalTask(festivalTasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts([]);
+    const translator = new FestivalTaskTranslator(volunteerConflicts);
+    const create = new CreateFestivalTask(festivalTasks, translator);
     const installEscapeGame = await create.apply({
       name: "Install escape game",
       festivalActivity: escapeGame,
@@ -80,7 +84,9 @@ describe("Create festival task", () => {
   describe("when previous task id is 419", () => {
     describe(`when ${noel.firstname} create Install escape game task`, async () => {
       const festivalTasks = new InMemoryFestivalTasks();
-      const create = new CreateFestivalTask(festivalTasks, 420);
+      const volunteerConflicts = new InMemoryVolunteerConflicts([]);
+      const translator = new FestivalTaskTranslator(volunteerConflicts);
+      const create = new CreateFestivalTask(festivalTasks, translator, 420);
       const installEscapeGame = await create.apply({
         name: "Install escape game",
         festivalActivity: escapeGame,
