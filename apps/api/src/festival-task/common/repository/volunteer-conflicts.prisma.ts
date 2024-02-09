@@ -18,8 +18,8 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     const conflicts = await this.prisma.festivalTaskMobilization.findMany({
       where: {
         ft: { isDeleted: false },
-        start: { lt: start },
-        end: { gt: end },
+        start: { lt: end },
+        end: { gt: start },
         volunteers: { some: { volunteerId } },
         NOT: { ft: { id: taskId }, start, end },
       },

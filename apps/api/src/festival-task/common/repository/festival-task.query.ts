@@ -34,7 +34,7 @@ export const SELECT_FESTIVAL_TASK = {
 };
 
 export class FestivalTaskQueryBuilder {
-  static create(task: FestivalTaskDraft) {
+  static create(task: FestivalTaskDraft<Mobilization<Volunteer>>) {
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts: {
@@ -173,7 +173,7 @@ type StoredHistoryKeyEvent = {
 };
 
 function keyEventToHistory(
-  task: FestivalTask,
+  task: FestivalTask<Mobilization<Volunteer>>,
 ): (event: KeyEvent) => StoredHistoryKeyEvent {
   return ({ action, by, at, description }) => ({
     event: action,

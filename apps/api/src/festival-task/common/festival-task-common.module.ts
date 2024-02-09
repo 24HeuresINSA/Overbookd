@@ -7,6 +7,7 @@ import { PrismaAdherents } from "./repository/adherent/adherents.prisma";
 import { PrismaFestivalActivities } from "./repository/festival-activity/festival-activities.prisma";
 import {
   CreateFestivalTask,
+  FestivalTaskTranslator,
   PrepareFestivalTask,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
@@ -58,37 +59,50 @@ import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prism
       inject: [PrismaService],
     },
     {
-      provide: CreateFestivalTask,
-      useFactory: async (
-        festivalTasks: PrismaCreateFestivalTasks,
-        prisma: PrismaService,
-      ) => {
-        const {
-          _max: { id: maxId },
-        } = await prisma.festivalTask.aggregate({ _max: { id: true } });
-        return new CreateFestivalTask(festivalTasks, maxId + 1);
-      },
-      inject: [PrismaCreateFestivalTasks, PrismaService],
-    },
-    {
       provide: PrismaVolunteerConflicts,
       useFactory: (prisma: PrismaService) =>
         new PrismaVolunteerConflicts(prisma),
       inject: [PrismaService],
     },
     {
+      provide: FestivalTaskTranslator,
+      useFactory: (volunteerConflicts: PrismaVolunteerConflicts) =>
+        new FestivalTaskTranslator(volunteerConflicts),
+      inject: [PrismaVolunteerConflicts],
+    },
+    {
+      provide: CreateFestivalTask,
+      useFactory: async (
+        festivalTasks: PrismaCreateFestivalTasks,
+        translator: FestivalTaskTranslator,
+        prisma: PrismaService,
+      ) => {
+        const {
+          _max: { id: maxId },
+        } = await prisma.festivalTask.aggregate({ _max: { id: true } });
+        return new CreateFestivalTask(festivalTasks, translator, maxId + 1);
+      },
+      inject: [
+        PrismaCreateFestivalTasks,
+        FestivalTaskTranslator,
+        PrismaService,
+      ],
+    },
+    {
       provide: PrepareFestivalTask,
       useFactory: (
         festivalTasks: PrismaPrepareFestivalTasks,
-        volunteerConflicts: PrismaVolunteerConflicts,
-      ) => new PrepareFestivalTask(festivalTasks, volunteerConflicts),
-      inject: [PrismaPrepareFestivalTasks, PrismaVolunteerConflicts],
+        translator: FestivalTaskTranslator,
+      ) => new PrepareFestivalTask(festivalTasks, translator),
+      inject: [PrismaPrepareFestivalTasks, FestivalTaskTranslator],
     },
     {
       provide: ViewFestivalTask,
-      useFactory: (festivalTasks: PrismaViewFestivalTasks) =>
-        new ViewFestivalTask(festivalTasks),
-      inject: [PrismaViewFestivalTasks],
+      useFactory: (
+        festivalTasks: PrismaViewFestivalTasks,
+        translator: FestivalTaskTranslator,
+      ) => new ViewFestivalTask(festivalTasks, translator),
+      inject: [PrismaViewFestivalTasks, FestivalTaskTranslator],
     },
     {
       provide: PrismaRemoveFestivalTasks,

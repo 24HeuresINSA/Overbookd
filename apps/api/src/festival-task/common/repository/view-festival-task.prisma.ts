@@ -1,7 +1,9 @@
 import {
   FestivalTask,
   FestivalTasksForView,
+  Mobilization,
   PreviewFestivalTask,
+  Volunteer,
 } from "@overbookd/festival-event";
 import {
   IS_NOT_DELETED,
@@ -23,7 +25,7 @@ export class PrismaViewFestivalTasks implements FestivalTasksForView {
     return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
   }
 
-  async one(id: number): Promise<FestivalTask> {
+  async one(id: number): Promise<FestivalTask<Mobilization<Volunteer>>> {
     const task = await this.prisma.festivalTask.findUnique({
       where: buildFestivalTaskCondition(id),
       select: SELECT_FESTIVAL_TASK,
