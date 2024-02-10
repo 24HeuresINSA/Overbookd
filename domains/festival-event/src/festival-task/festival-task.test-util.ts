@@ -4,6 +4,7 @@ import {
   FestivalActivity,
   FestivalTask,
   Mobilization,
+  VolunteerWithConflicts,
 } from "./festival-task";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
@@ -24,10 +25,11 @@ class TimeWindowFactory {
 }
 
 type InitMobilizationBuilder = Partial<
-  Pick<AddMobilization, "durationSplitInHour" | "teams" | "volunteers">
+  Pick<AddMobilization, "durationSplitInHour" | "teams">
 > & {
   start?: BuildTimeWindow;
   end?: BuildTimeWindow;
+  volunteers?: VolunteerWithConflicts[];
 };
 
 class MobilizationBuilder {
@@ -119,6 +121,18 @@ export const friday19h: BuildTimeWindow = {
   date: new Date("2024-05-17T19:00+02:00"),
   id: "28599420",
 };
+export const saturday7h: BuildTimeWindow = {
+  date: new Date("2024-05-18T07:00+02:00"),
+  id: "28600140",
+};
+export const saturday8h: BuildTimeWindow = {
+  date: new Date("2024-05-18T08:00+02:00"),
+  id: "28600200",
+};
+export const saturday9h: BuildTimeWindow = {
+  date: new Date("2024-05-18T09:00+02:00"),
+  id: "28600260",
+};
 export const saturday10h: BuildTimeWindow = {
   date: new Date("2024-05-18T10:00+02:00"),
   id: "28600320",
@@ -126,6 +140,10 @@ export const saturday10h: BuildTimeWindow = {
 export const saturday11h: BuildTimeWindow = {
   date: new Date("2024-05-18T11:00+02:00"),
   id: "28600380",
+};
+export const saturday12h: BuildTimeWindow = {
+  date: new Date("2024-05-18T12:00+02:00"),
+  id: "28600440",
 };
 const saturday18h: BuildTimeWindow = {
   date: new Date("2024-05-18T18:00+02:00"),
@@ -142,8 +160,23 @@ const friday11hfriday18h = TimeWindowFactory.create(friday11h, friday18h);
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
   end: friday18h,
-  volunteers: [noel],
+  volunteers: [{ ...noel, conflicts: [] }],
   teams: [{ count: 2, team: "bénévole" }],
+});
+export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
+  start: saturday18h,
+  end: saturday19h,
+  volunteers: [{ ...lea, conflicts: [] }],
+});
+export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
+  start: saturday8h,
+  end: saturday11h,
+  volunteers: [{ ...lea, conflicts: [] }],
+});
+export const friday10hfriday18hMobilization = MobilizationBuilder.init({
+  start: friday10h,
+  end: friday18h,
+  teams: [{ count: 5, team: "hard" }],
 });
 export const friday18hsaturday10hMobilization = MobilizationBuilder.init({
   start: friday18h,
@@ -280,6 +313,9 @@ export const guardEscapeGame: FestivalTask = {
   },
   history: [FestivalTaskKeyEvents.created(noel)],
   feedbacks: [],
-  mobilizations: [friday18hsaturday10hMobilization.mobilization],
+  mobilizations: [
+    friday18hsaturday10hMobilization.mobilization,
+    saturday08hsaturday11hMobilization.mobilization,
+  ],
   inquiries: [],
 };

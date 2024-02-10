@@ -8,16 +8,17 @@ import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
 import { ficelle, sacPoubelle } from "../festival-task.test-util";
 import { GearAlreadyRequested } from "../festival-task.error";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const festivalTasks = new InMemoryFestivalTasks([
-      installEscapeGame,
-      uninstallEscapeGame,
-      presentEscapeGame,
-    ]);
-    prepare = new PrepareFestivalTask(festivalTasks);
+    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
+    const festivalTasks = new InMemoryFestivalTasks(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const translator = new FestivalTaskTranslator(volunteerConflicts);
+    prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe("Add inquiry", () => {
     describe("when inquiry is about a new gear", () => {

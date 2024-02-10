@@ -19,6 +19,7 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 import { updateItemToList } from "@overbookd/list";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -32,12 +33,14 @@ export type UpdateInstructions = {
   inCharge?: FestivalTask["instructions"]["inCharge"]["instruction"];
 };
 
-export type FestivalTasksForPrepare = {
-  findById(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
-  save(task: FestivalTask): Promise<FestivalTask>;
+export type FestivalTasksForPrepare<
+  M extends Mobilization<Volunteer> = Mobilization<Volunteer>,
+> = {
+  findById(ftId: FestivalTask["id"]): Promise<FestivalTask<M> | null>;
+  save(task: FestivalTask<M>): Promise<FestivalTask<M>>;
 };
 
-export type AddMobilization = Omit<Mobilization, "id">;
+export type AddMobilization = Omit<Mobilization<Volunteer>, "id">;
 
 export type UpdateMobilization = {
   durationSplitInHour?: number | null;
@@ -46,7 +49,10 @@ export type UpdateMobilization = {
 };
 
 export class PrepareFestivalTask {
-  constructor(private readonly festivalTasks: FestivalTasksForPrepare) {}
+  constructor(
+    private readonly festivalTasks: FestivalTasksForPrepare,
+    private readonly festivalTaskTranslator: FestivalTaskTranslator,
+  ) {}
 
   async updateGeneralSection(
     taskId: FestivalTask["id"],
@@ -56,7 +62,7 @@ export class PrepareFestivalTask {
     if (!task) throw new FestivalTaskNotFound(taskId);
 
     const general = { ...task.general, ...update };
-    return this.festivalTasks.save({ ...task, general });
+    return this.save({ ...task, general });
   }
 
   async updateInstructionsSection(
@@ -68,7 +74,7 @@ export class PrepareFestivalTask {
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
-    return this.festivalTasks.save({ ...task, instructions });
+    return this.save({ ...task, instructions });
   }
 
   async addContact(
@@ -80,7 +86,7 @@ export class PrepareFestivalTask {
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addContact(contact).json;
-    return this.festivalTasks.save({ ...task, instructions });
+    return this.save({ ...task, instructions });
   }
 
   async removeContact(
@@ -92,7 +98,7 @@ export class PrepareFestivalTask {
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeContact(contactId).json;
-    return this.festivalTasks.save({ ...task, instructions });
+    return this.save({ ...task, instructions });
   }
 
   async addInchargeVolunteer(
@@ -104,7 +110,7 @@ export class PrepareFestivalTask {
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
-    return this.festivalTasks.save({ ...task, instructions });
+    return this.save({ ...task, instructions });
   }
 
   async removeInchargeVolunteer(
@@ -116,7 +122,7 @@ export class PrepareFestivalTask {
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeVolunteer(volunteerId).json;
-    return this.festivalTasks.save({ ...task, instructions });
+    return this.save({ ...task, instructions });
   }
 
   async addMobilization(
@@ -128,7 +134,15 @@ export class PrepareFestivalTask {
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
-    return this.festivalTasks.save({ ...task, mobilizations });
+    const toSave = { ...task, mobilizations };
+    return this.save(toSave);
+  }
+
+  private async save(
+    toSave: FestivalTask<Mobilization<Volunteer>>,
+  ): Promise<FestivalTask> {
+    const updated = await this.festivalTasks.save(toSave);
+    return this.festivalTaskTranslator.translate(updated);
   }
 
   async removeMobilization(
@@ -140,7 +154,7 @@ export class PrepareFestivalTask {
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.remove(mobilizationId).json;
-    return this.festivalTasks.save({ ...task, mobilizations });
+    return this.save({ ...task, mobilizations });
   }
 
   async updateMobilization(
@@ -153,7 +167,7 @@ export class PrepareFestivalTask {
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.update(mobilizationId, update).json;
-    return this.festivalTasks.save({ ...task, mobilizations });
+    return this.save({ ...task, mobilizations });
   }
 
   async addTeamToMobilization(
@@ -167,7 +181,7 @@ export class PrepareFestivalTask {
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addTeamTo(mobilizationId, team).json;
 
-    return this.festivalTasks.save({ ...task, mobilizations });
+    return this.save({ ...task, mobilizations });
   }
 
   async removeTeamFromMobilization(
@@ -181,7 +195,7 @@ export class PrepareFestivalTask {
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeTeamFrom(mobilizationId, team).json;
 
-    return this.festivalTasks.save({ ...task, mobilizations });
+    return this.save({ ...task, mobilizations });
   }
 
   async addVolunteerToMobilization(
@@ -198,7 +212,7 @@ export class PrepareFestivalTask {
       volunteer,
     ).json;
 
-    return this.festivalTasks.save({ ...task, mobilizations });
+    return this.save({ ...task, mobilizations });
   }
 
   async removeVolunteerFromMobilization(
@@ -215,7 +229,7 @@ export class PrepareFestivalTask {
       volunteerId,
     ).json;
 
-    return this.festivalTasks.save({ ...task, mobilizations });
+    return this.save({ ...task, mobilizations });
   }
 
   async addInquiry(
@@ -227,7 +241,7 @@ export class PrepareFestivalTask {
 
     const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.add(inquiry).json;
-    return this.festivalTasks.save({ ...task, inquiries: inquiries });
+    return this.save({ ...task, inquiries: inquiries });
   }
 
   async removeInquiry(
@@ -239,7 +253,7 @@ export class PrepareFestivalTask {
     const builder = Inquiries.build(task.inquiries);
 
     const inquiries = builder.remove(slug).json;
-    return this.festivalTasks.save({ ...task, inquiries: inquiries });
+    return this.save({ ...task, inquiries: inquiries });
   }
 }
 
@@ -387,14 +401,14 @@ type ListItem<T> = {
   value?: T;
 };
 
-class Mobilizations {
-  private constructor(private readonly mobilizations: Mobilization[]) {}
+class Mobilizations<V extends Volunteer = Volunteer> {
+  private constructor(private readonly mobilizations: Mobilization<V>[]) {}
 
-  static build(mobilizations: Mobilization[]) {
+  static build(mobilizations: Mobilization<Volunteer>[]) {
     return new Mobilizations(mobilizations);
   }
 
-  add(form: AddMobilization): Mobilizations {
+  add(form: AddMobilization): Mobilizations<Volunteer> {
     const mobilization = MobilizationFactory.init(form).json;
 
     if (this.has(mobilization)) throw new MobilizationAlreadyExist();
@@ -484,7 +498,9 @@ class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
-  private retrieveMobilization(id: Mobilization["id"]): ListItem<Mobilization> {
+  private retrieveMobilization(
+    id: Mobilization["id"],
+  ): ListItem<Mobilization<V>> {
     const index = this.mobilizations.findIndex(
       ({ id: currentId }) => currentId === id,
     );
@@ -493,27 +509,35 @@ class Mobilizations {
     return { index, value };
   }
 
-  private has(mobilization: Mobilization) {
+  private has(mobilization: Mobilization<Volunteer>) {
     return this.mobilizations.some(({ id }) => id === mobilization.id);
   }
 
-  get json(): Mobilization[] {
+  get json(): Mobilization<V>[] {
     return [...this.mobilizations];
   }
 }
 
-class MobilizationFactory {
-  private constructor(private readonly mobilization: Mobilization) {}
+class MobilizationFactory<V extends Volunteer = Volunteer> {
+  private constructor(private readonly mobilization: Mobilization<V>) {}
 
   static init(form: AddMobilization): MobilizationFactory {
     const { durationSplitInHour, teams, volunteers, ...period } = form;
     this.checkPeriod(durationSplitInHour, period);
     const id = this.generateId(period);
+    const volunteersWithEmptyConflict = volunteers.map((volunteer) => ({
+      ...volunteer,
+      conflicts: [],
+    }));
 
-    return new MobilizationFactory({ ...form, id });
+    return new MobilizationFactory({
+      ...form,
+      id,
+      volunteers: volunteersWithEmptyConflict,
+    });
   }
 
-  static build(mobilization: Mobilization) {
+  static build(mobilization: Mobilization<Volunteer>) {
     return new MobilizationFactory(mobilization);
   }
 
@@ -560,10 +584,13 @@ class MobilizationFactory {
     return this.mobilization.teams.some((request) => request.team === team);
   }
 
-  addVolunteer(volunteer: Volunteer) {
+  addVolunteer(volunteer: Volunteer): MobilizationFactory {
     if (this.hasVolunteer(volunteer)) return this;
 
-    const volunteers = [...this.mobilization.volunteers, volunteer];
+    const volunteers = [
+      ...this.mobilization.volunteers,
+      { ...volunteer, conflicts: [] },
+    ];
 
     return new MobilizationFactory({ ...this.mobilization, volunteers });
   }
@@ -580,7 +607,7 @@ class MobilizationFactory {
     return this.mobilization.volunteers.some(({ id }) => id === volunteer.id);
   }
 
-  get json(): Mobilization {
+  get json(): Mobilization<V> {
     return this.mobilization;
   }
 }

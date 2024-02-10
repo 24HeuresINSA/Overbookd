@@ -8,16 +8,17 @@ import {
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 describe("Prepare festival task general section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const festivalTasks = new InMemoryFestivalTasks([
-      installEscapeGame,
-      uninstallEscapeGame,
-      presentEscapeGame,
-    ]);
-    prepare = new PrepareFestivalTask(festivalTasks);
+    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
+    const festivalTasks = new InMemoryFestivalTasks(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const translator = new FestivalTaskTranslator(volunteerConflicts);
+    prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe.each`
     fields                            | taskName                            | taskId                    | update                                                                              | name                                 | administrator                                | team

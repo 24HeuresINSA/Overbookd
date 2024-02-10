@@ -12,16 +12,17 @@ import {
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { FestivalTaskNotFound } from "../festival-task.error";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const festivalTasks = new InMemoryFestivalTasks([
-      installEscapeGame,
-      uninstallEscapeGame,
-      presentEscapeGame,
-    ]);
-    prepare = new PrepareFestivalTask(festivalTasks);
+    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
+    const festivalTasks = new InMemoryFestivalTasks(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const translator = new FestivalTaskTranslator(volunteerConflicts);
+    prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe.each`
     fields                                | taskName                            | taskId                    | update                                                                                                                  | appointment                                   | global                                     | inCharge

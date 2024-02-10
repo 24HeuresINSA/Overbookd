@@ -5,6 +5,8 @@ import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PreviewDraft, Preview } from "../festival-task";
 import { installEscapeGame } from "../festival-task.test-util";
 import { uninstallEscapeGame } from "../festival-task.test-util";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 const installEscapeGamePreview: PreviewDraft = {
   id: installEscapeGame.id,
@@ -32,7 +34,9 @@ describe("View festival tasks", () => {
     `("when $nbTasks are known", ({ tasks, previews }) => {
       beforeAll(() => {
         const festivalTasks = new InMemoryFestivalTasks(tasks);
-        view = new ViewFestivalTask(festivalTasks);
+        const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+        const translator = new FestivalTaskTranslator(volunteerConflicts);
+        view = new ViewFestivalTask(festivalTasks, translator);
       });
       it("should expose all known tasks", async () => {
         const all = await view.all();
@@ -56,7 +60,9 @@ describe("View festival tasks", () => {
       ({ tasks, existingTaskId, expectedTask, nonExistingId }) => {
         beforeAll(() => {
           const festivalTasks = new InMemoryFestivalTasks(tasks);
-          view = new ViewFestivalTask(festivalTasks);
+          const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+          const translator = new FestivalTaskTranslator(volunteerConflicts);
+          view = new ViewFestivalTask(festivalTasks, translator);
         });
         describe("when looking for a known task", () => {
           it("should expose task detail", async () => {

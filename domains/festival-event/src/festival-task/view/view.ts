@@ -1,13 +1,19 @@
-import { FestivalTask } from "../festival-task";
+import { FestivalTask, Mobilization, Volunteer } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Preview } from "../festival-task";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 export type FestivalTasksForView = {
   all(): Promise<Preview[]>;
-  one(ftId: FestivalTask["id"]): Promise<FestivalTask | null>;
+  one(
+    ftId: FestivalTask["id"],
+  ): Promise<FestivalTask<Mobilization<Volunteer>> | null>;
 };
 export class ViewFestivalTask {
-  constructor(private readonly festivalTasks: FestivalTasksForView) {}
+  constructor(
+    private readonly festivalTasks: FestivalTasksForView,
+    private readonly festivalTaskTranslator: FestivalTaskTranslator,
+  ) {}
 
   all(): Promise<Preview[]> {
     return this.festivalTasks.all();
@@ -16,6 +22,6 @@ export class ViewFestivalTask {
   async one(ftId: FestivalTask["id"]): Promise<FestivalTask> {
     const task = await this.festivalTasks.one(ftId);
     if (!task) throw new FestivalTaskNotFound(ftId);
-    return task;
+    return this.festivalTaskTranslator.translate(task);
   }
 }
