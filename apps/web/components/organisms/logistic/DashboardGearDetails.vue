@@ -94,7 +94,7 @@ export default defineComponent({
           position: "nearest",
           callbacks: {
             label: tooltipLabel,
-            afterLabel: tooltipDetails(allDetails),
+            afterLabel: listStockAndInquiriesSources(allDetails),
           },
         },
       };
@@ -110,21 +110,23 @@ export default defineComponent({
   },
 });
 
-function tooltipDetails(allDetails: GearDetails[]) {
+function listStockAndInquiriesSources(allDetails: GearDetails[]) {
   return function (tooltipItem: Tooltip) {
     const details = allDetails[tooltipItem.index];
     const bullet = "•";
 
-    // STOCK
-    if (tooltipItem.datasetIndex === 0) {
+    const isStock = tooltipItem.datasetIndex === 0;
+    if (isStock) {
       return details.inventory > 0 ? `Inventaire: ${details.inventory}\n` : "";
     }
 
-    // INQUIRIES
-    if (tooltipItem.datasetIndex === 1) {
+    const isInquiry = tooltipItem.datasetIndex === 1;
+    if (isInquiry) {
       const faTitle = "FA:\n";
       const faContent = details.activities
-        .map(({ id, name, quantity }) => `${bullet} ${id} ${name}: ${quantity}`)
+        .map(
+          ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
+        )
         .join("\n");
       return details.activities.length > 0 ? `${faTitle}${faContent}` : "";
     }
