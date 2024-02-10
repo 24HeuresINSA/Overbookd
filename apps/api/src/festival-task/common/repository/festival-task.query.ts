@@ -34,7 +34,7 @@ export const SELECT_FESTIVAL_TASK = {
 };
 
 export class FestivalTaskQueryBuilder {
-  static create(task: FestivalTaskDraft<Mobilization<Volunteer>>) {
+  static create(task: FestivalTaskDraft<{ withConflicts: false }>) {
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts: {
@@ -64,7 +64,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  static update(task: FestivalTask<Mobilization<Volunteer>>) {
+  static update(task: FestivalTask<{ withConflicts: false }>) {
     const contacts = this.upsertContacts(task.id, task.instructions.contacts);
     const inChargeVolunteers = this.upsertInChargeVolunteers(
       task.id,
@@ -128,7 +128,7 @@ export class FestivalTaskQueryBuilder {
 
   private static upsertMobilizations(
     festivalTaskId: FestivalTask["id"],
-    mobilizations: Mobilization<Volunteer>[],
+    mobilizations: Mobilization<{ withConflicts: false }>[],
   ) {
     return {
       upsert: mobilizations.map((mobilization) => ({
@@ -143,7 +143,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertInquiries(task: FestivalTask<Mobilization<Volunteer>>) {
+  private static upsertInquiries(task: FestivalTask<{ withConflicts: false }>) {
     return {
       upsert: task.inquiries.map((request) => {
         const update = isAssignedToDrive(request)
@@ -173,7 +173,7 @@ type StoredHistoryKeyEvent = {
 };
 
 function keyEventToHistory(
-  task: FestivalTask<Mobilization<Volunteer>>,
+  task: FestivalTask<{ withConflicts: false }>,
 ): (event: KeyEvent) => StoredHistoryKeyEvent {
   return ({ action, by, at, description }) => ({
     event: action,
@@ -184,7 +184,9 @@ function keyEventToHistory(
   });
 }
 
-function databaseMobilisationForUpdate(mobilization: Mobilization<Volunteer>) {
+function databaseMobilisationForUpdate(
+  mobilization: Mobilization<{ withConflicts: false }>,
+) {
   return {
     id: mobilization.id,
     start: mobilization.start,
@@ -215,7 +217,7 @@ function databaseMobilisationForUpdate(mobilization: Mobilization<Volunteer>) {
 }
 
 function databaseMobilizationForCreation(
-  mobilization: Mobilization<Volunteer>,
+  mobilization: Mobilization<{ withConflicts: false }>,
 ) {
   return {
     id: mobilization.id,
@@ -235,7 +237,7 @@ function databaseMobilizationForCreation(
 }
 
 function databaseFestivalTaskWithoutListsMapping(
-  task: FestivalTask<Mobilization<Volunteer>>,
+  task: FestivalTask<{ withConflicts: false }>,
 ) {
   return {
     id: task.id,
