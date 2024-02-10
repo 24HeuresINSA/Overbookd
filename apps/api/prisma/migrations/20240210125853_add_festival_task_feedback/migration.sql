@@ -27,3 +27,5 @@ ALTER TABLE "festival_task_feedback" ADD CONSTRAINT "festival_task_feedback_auth
 -- AddForeignKey
 ALTER TABLE "festival_task_feedback" ADD CONSTRAINT "festival_task_feedback_ft_id_fkey" FOREIGN KEY ("ft_id") REFERENCES "festival_task"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- AlterEnum
+ALTER TYPE "festival_task_event" ADD VALUE 'COMMENTED';

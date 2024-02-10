@@ -16,7 +16,11 @@
         @reject="askReject"
         @open:calendar="openCalendar"
       />
-      <FeedbackCard id="feedback" />
+      <FeedbackCard
+        id="feedback"
+        :key-events="keyEvents"
+        @publish="publishFeedback"
+      />
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
         <AskRejectReasonFormCard
           @close-dialog="closeRejectDialog"
@@ -37,7 +41,12 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { FestivalActivity, Reviewer } from "@overbookd/festival-event";
+import {
+  COMMENTED,
+  FestivalActivity,
+  FestivalActivityKeyEvent,
+  Reviewer,
+} from "@overbookd/festival-event";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
@@ -80,7 +89,7 @@ export default defineComponent({
     calendarMarker: new Date(),
   }),
   computed: {
-    mFA(): FestivalActivity {
+    selectedActivity(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
     },
     faId(): number {
@@ -91,8 +100,8 @@ export default defineComponent({
     },
     calendarStartDate(): Date {
       const startTimestamps = [
-        ...this.mFA.general.timeWindows,
-        ...this.mFA.inquiry.timeWindows,
+        ...this.selectedActivity.general.timeWindows,
+        ...this.selectedActivity.inquiry.timeWindows,
       ].map(({ start }) => start.getTime());
       if (startTimestamps.length === 0) return this.eventStartDate;
 
@@ -100,37 +109,51 @@ export default defineComponent({
       return new Date(minStart);
     },
     allTimeWindows(): CalendarEvent[] {
-      const inquiryEvents: CalendarEvent[] = this.mFA.inquiry.timeWindows.map(
-        ({ start, end }) => ({
+      const inquiryEvents: CalendarEvent[] =
+        this.selectedActivity.inquiry.timeWindows.map(({ start, end }) => ({
           start,
           end,
           name: "Créneau matos",
           timed: true,
           color: "grey",
-        }),
-      );
-      const generalEvents: CalendarEvent[] = this.mFA.general.timeWindows.map(
-        ({ start, end }) => ({
+        }));
+      const generalEvents: CalendarEvent[] =
+        this.selectedActivity.general.timeWindows.map(({ start, end }) => ({
           start,
           end,
           name: "Créneau animation",
           timed: true,
           color: "blue",
-        }),
-      );
+        }));
       return [...inquiryEvents, ...generalEvents];
+    },
+    keyEvents(): FestivalActivityKeyEvent[] {
+      const feedbacksAsKeyEvent: FestivalActivityKeyEvent[] =
+        this.selectedActivity.feedbacks.map(
+          ({ author, publishedAt, content }) => ({
+            at: publishedAt,
+            description: content,
+            by: author,
+            action: COMMENTED,
+          }),
+        );
+
+      return [
+        ...feedbacksAsKeyEvent,
+        ...this.selectedActivity.history,
+      ].toSorted((first, second) => first.at.getTime() - second.at.getTime());
     },
   },
 
   async mounted() {
     await this.$accessor.festivalActivity.fetchActivity(this.faId);
-    if (this.mFA.id !== this.faId) {
+    if (this.selectedActivity.id !== this.faId) {
       this.$accessor.notif.pushNotification({
         message: "Oups 😬 J'ai l'impression que cette FA n'existe pas...",
       });
       this.$router.push({ path: "/fa" });
     }
-    document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
+    document.title = `FA ${this.faId} - ${this.selectedActivity.general.name}`;
     this.calendarMarker = this.calendarStartDate;
   },
   methods: {
@@ -151,6 +174,9 @@ export default defineComponent({
       const team = this.reviewer;
       if (!team) return;
       this.$accessor.festivalActivity.rejectBecause({ team, reason });
+    },
+    publishFeedback(content: string) {
+      this.$accessor.festivalActivity.publishFeedback({ content });
     },
   },
 });

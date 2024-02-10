@@ -27,7 +27,7 @@ import {
   InitInquiryRequest,
   PreviewForSecurity,
   PreviewForCommunication,
-  PrepareFeedbackPublish,
+  PublishFeedbackForm,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";
@@ -449,7 +449,7 @@ export const actions = actionTree(
     },
 
     /* PUBLISH FEEDBACK */
-    async publishFeedback({ state, commit }, feedback: PrepareFeedbackPublish) {
+    async publishFeedback({ state, commit }, feedback: PublishFeedbackForm) {
       const id = state.selectedActivity.id;
       const res = await safeCall(
         this,

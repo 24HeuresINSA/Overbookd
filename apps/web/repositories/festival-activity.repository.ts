@@ -31,7 +31,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { AddInquiryRequestForm, PrepareFeedbackPublish } from "@overbookd/http";
+import { AddInquiryRequestForm, PublishFeedbackForm } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 
@@ -364,7 +364,7 @@ export class FestivalActivityRepository {
   static publishFeedback(
     context: Context,
     faId: FestivalActivity["id"],
-    feedback: PrepareFeedbackPublish,
+    feedback: PublishFeedbackForm,
   ) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/feedbacks`,

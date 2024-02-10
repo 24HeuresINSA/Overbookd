@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { FestivalTask, PrepareFestivalTask } from "@overbookd/festival-event";
-import { PrepareFeedbackPublish } from "@overbookd/http";
+import { PublishFeedbackForm } from "@overbookd/http";
 import { JwtPayload } from "../../authentication/entities/jwt-util.entity";
 import { Adherents } from "../common/festival-task-common.model";
 
@@ -11,10 +11,10 @@ export class FestivalTaskReviewService {
     private readonly prepare: PrepareFestivalTask,
   ) {}
 
-  async addFeedback(
+  async publishFeedback(
     ftId: FestivalTask["id"],
     { id }: JwtPayload,
-    { content }: PrepareFeedbackPublish,
+    { content }: PublishFeedbackForm,
   ): Promise<FestivalTask> {
     const author = await this.adherents.findOne(id);
 

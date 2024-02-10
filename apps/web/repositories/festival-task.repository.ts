@@ -9,7 +9,7 @@ import {
   UpdateInstructionsForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
-  PrepareFeedbackPublish,
+  PublishFeedbackForm,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -225,7 +225,7 @@ export class FestivalTaskRepository {
   static publishFeedback(
     context: Context,
     ftId: FestivalTask["id"],
-    feedback: PrepareFeedbackPublish,
+    feedback: PublishFeedbackForm,
   ) {
     return context.$axios.post<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/feedbacks`,

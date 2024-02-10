@@ -24,7 +24,7 @@ import { RequestWithUserPayload } from "../../app.controller";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
-import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
+import { PublishFeedbackRequestDto } from "./dto/publish-feedback.request.dto";
 import { FestivalTaskReviewService } from "./festival-task-review.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
@@ -53,7 +53,7 @@ export class FestivalTaskReviewController {
   })
   @ApiBody({
     description: "Feedback to add to festival task",
-    type: AddFeedbackRequestDto,
+    type: PublishFeedbackRequestDto,
   })
   @ApiParam({
     name: "ftId",
@@ -61,11 +61,11 @@ export class FestivalTaskReviewController {
     description: "Festival task id",
     required: true,
   })
-  addFeedback(
+  publishFeedback(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Request() { user }: RequestWithUserPayload,
-    @Body() feedback: AddFeedbackRequestDto,
+    @Body() feedback: PublishFeedbackRequestDto,
   ): Promise<FestivalTask> {
-    return this.reviewService.addFeedback(ftId, user, feedback);
+    return this.reviewService.publishFeedback(ftId, user, feedback);
   }
 }

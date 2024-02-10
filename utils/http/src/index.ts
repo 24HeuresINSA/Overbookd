@@ -1,6 +1,6 @@
 export type {
   AddInquiryRequestForm,
-  PrepareFeedbackPublish,
+  PublishFeedbackForm,
 } from "./festival-event/common.model";
 export type {
   PrepareInChargeForm,

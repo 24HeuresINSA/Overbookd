@@ -791,6 +791,7 @@ model FestivalTaskHistory {
 
 enum FestivalTaskEvent {
   CREATED
+  COMMENTED
 
   @@map("festival_task_event")
 }

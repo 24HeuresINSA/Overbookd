@@ -41,8 +41,6 @@ import {
   APPROVED,
   COMMENTED,
   CREATED,
-  FestivalActivity,
-  FestivalTask,
   FestivalActivityKeyEvent,
   FestivalTaskKeyEvent,
   READY_TO_REVIEW,
@@ -54,9 +52,6 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type KeyEvent = FestivalActivityKeyEvent | FestivalTaskKeyEvent;
-type FestivalEvent = FestivalActivity | FestivalTask;
-
-type FestivalEventProp = "FA" | "FT";
 
 type FaFeedbackCardData = {
   headers: Header[];
@@ -66,11 +61,12 @@ type FaFeedbackCardData = {
 export default defineComponent({
   name: "FeedbackCard",
   props: {
-    festivalEvent: {
-      type: String as () => FestivalEventProp,
-      default: "FA",
+    keyEvents: {
+      type: Array as () => KeyEvent[],
+      required: true,
     },
   },
+  emits: ["publish"],
   data: (): FaFeedbackCardData => ({
     headers: [
       { text: "", value: "action", sortable: false, width: "15px" },
@@ -81,43 +77,14 @@ export default defineComponent({
     newFeedbackContent: "",
   }),
   computed: {
-    selectedEvent(): FestivalEvent {
-      return this.isFestivalActivity
-        ? this.$accessor.festivalActivity.selectedActivity
-        : this.$accessor.festivalTask.selectedTask;
-    },
-    isFestivalActivity(): boolean {
-      return this.festivalEvent === "FA";
-    },
-    keyEvents(): KeyEvent[] {
-      const feedbacksAsKeyEvent: KeyEvent[] = this.selectedEvent.feedbacks.map(
-        ({ author, publishedAt, content }) => ({
-          at: publishedAt,
-          description: content,
-          by: author,
-          action: COMMENTED,
-        }),
-      );
-
-      return [...feedbacksAsKeyEvent, ...this.selectedEvent.history].toSorted(
-        (first, second) => first.at.getTime() - second.at.getTime(),
-      );
-    },
     canPublishFeedback(): boolean {
       return this.newFeedbackContent.trim() !== "";
     },
   },
   methods: {
-    async publishFeedback() {
+    publishFeedback() {
       if (!this.canPublishFeedback) return;
-      const form = { content: this.newFeedbackContent };
-
-      if (this.isFestivalActivity) {
-        this.$accessor.festivalActivity.publishFeedback(form);
-        this.newFeedbackContent = "";
-        return;
-      }
-      this.$accessor.festivalTask.publishFeedback(form);
+      this.$emit("publish", this.newFeedbackContent);
       this.newFeedbackContent = "";
     },
     getActionEmoji(action: KeyEvent["action"]): string {

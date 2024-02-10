@@ -15,7 +15,7 @@ import {
   AddInquiryRequestForm,
   AddMobilizationForm,
   FestivalTaskCreationForm,
-  PrepareFeedbackPublish,
+  PublishFeedbackForm,
   UpdateGeneralForm,
   UpdateInstructionsForm,
 } from "@overbookd/http";
@@ -367,7 +367,7 @@ export const actions = actionTree(
     },
 
     /* PUBLISH FEEDBACK */
-    async publishFeedback({ state, commit }, feedback: PrepareFeedbackPublish) {
+    async publishFeedback({ state, commit }, feedback: PublishFeedbackForm) {
       const id = state.selectedTask.id;
       const res = await safeCall(
         this,

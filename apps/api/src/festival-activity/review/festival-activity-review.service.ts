@@ -9,7 +9,7 @@ import {
   Reviewer,
   Reviewing,
 } from "@overbookd/festival-event";
-import { ReviewRejection, PrepareFeedbackPublish } from "@overbookd/http";
+import { ReviewRejection, PublishFeedbackForm } from "@overbookd/http";
 import {
   JwtPayload,
   JwtUtil,
@@ -31,7 +31,7 @@ export class FestivalActivityReviewService {
   async addFeedback(
     faId: FestivalActivity["id"],
     { id }: JwtPayload,
-    { content }: PrepareFeedbackPublish,
+    { content }: PublishFeedbackForm,
   ): Promise<FestivalActivity> {
     const author = await this.adherents.find(id);
 
