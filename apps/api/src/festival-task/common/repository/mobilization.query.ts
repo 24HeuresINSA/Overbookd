@@ -1,5 +1,5 @@
 import { Volunteer } from "@overbookd/festival-event";
-import { SELECT_ADHERENT } from "./adherent/adherent.query";
+import { SELECT_VOLUNTEER } from "./adherent/adherent.query";
 
 const SELECT_TEAM = {
   count: true,
@@ -10,7 +10,7 @@ export const SELECT_MOBILIZATION = {
   id: true,
   start: true,
   end: true,
-  volunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
+  volunteers: { select: { volunteer: { select: SELECT_VOLUNTEER } } },
   teams: { select: SELECT_TEAM },
   durationSplitInHour: true,
 };

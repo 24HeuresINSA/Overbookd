@@ -1,117 +1,142 @@
 <template>
-  <v-card>
-    <v-card-title>Historique de validation</v-card-title>
-    <v-card-text>
+  <v-card class="feedbacks">
+    <v-card-title>Commentaires</v-card-title>
+    <v-card-text class="feedbacks__listing">
       <v-data-table
         :headers="headers"
-        :items="sortedFeedbacks"
-        hide-default-footer
+        :items="keyEvents"
         :items-per-page="-1"
+        hide-default-footer
+        disable-pagination
       >
-        <template #[`item.author`]="{ item }">
-          {{ getAuthorName(item.author) }}
+        <template #item.action="{ item }">
+          <span class="action__emoji">{{ getActionEmoji(item.action) }}</span>
         </template>
-        <template #[`item.createdAt`]="{ item }">
-          {{ formatDate(item.createdAt) }}
+        <template #item.by="{ item }">
+          {{ formatUserNameWithNickname(item.by) }}
         </template>
+        <template #item.at="{ item }">
+          {{ formatDateWithMinutes(item.at) }}
+        </template>
+        <template #no-data> Aucun commentaire </template>
       </v-data-table>
-      <v-textarea v-model="comment" label="Commentaire" rows="3"></v-textarea>
+
+      <v-textarea
+        v-model="newFeedbackContent"
+        label="Commentaire"
+        rows="5"
+        outlined
+        hide-details
+        @keydown.enter="publishFeedback"
+      />
+      <v-btn color="primary" class="feedbacks__add" @click="publishFeedback">
+        Ajouter un commentaire
+      </v-btn>
     </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn text @click="addFeedback">ajouter un commentaire</v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { formatDate } from "~/utils/date/date.utils";
 import {
-  FaFeedback,
-  FaFeedbackSubjectType,
-  Feedback,
-  FtFeedback,
-  FtFeedbackSubjectType,
-} from "~/utils/models/feedback.model";
-import { MyUserInformation, User } from "@overbookd/user";
+  APPROVED,
+  COMMENTED,
+  CREATED,
+  FestivalActivity,
+  FestivalActivityKeyEvent,
+  FestivalTask,
+  FestivalTaskKeyEvent,
+  READY_TO_REVIEW,
+  REJECTED,
+} from "@overbookd/festival-event";
+import { defineComponent } from "vue";
+import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { Header } from "~/utils/models/data-table.model";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
-export default Vue.extend({
+type FestivalEvent = FestivalActivity | FestivalTask;
+type KeyEvent = FestivalActivityKeyEvent | FestivalTaskKeyEvent;
+
+type FaFeedbackCardData = {
+  headers: Header[];
+  newFeedbackContent: string;
+};
+
+export default defineComponent({
   name: "FeedbackCard",
   props: {
-    form: {
-      type: String,
-      default: () => "FA",
+    festivalEvent: {
+      type: Object as () => FestivalEvent,
+      required: true,
     },
   },
-  data: () => ({
+  emits: ["publish"],
+  data: (): FaFeedbackCardData => ({
     headers: [
-      { text: "Auteur", value: "author" },
-      { text: "Sujet", value: "subject" },
-      { text: "Commentaire", value: "comment" },
-      { text: "Date", value: "createdAt" },
+      { text: "", value: "action", sortable: false, width: "15px" },
+      { text: "Date", value: "at", width: "15%" },
+      { text: "Auteur", value: "by", sortable: false, width: "20%" },
+      { text: "Commentaire", value: "description", sortable: false },
     ],
-    comment: "",
+    newFeedbackContent: "",
   }),
   computed: {
-    sortedFeedbacks(): Feedback[] {
-      const feedbacks: (FaFeedback | FtFeedback)[] = this.isFa
-        ? [...this.faFeedbacks]
-        : [...this.fatFeedbacks];
-      return feedbacks.sort(
-        (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+    keyEvents(): KeyEvent[] {
+      const feedbacksAsKeyEvent: KeyEvent[] = this.festivalEvent.feedbacks.map(
+        ({ author, publishedAt, content }) => ({
+          at: publishedAt,
+          description: content,
+          by: author,
+          action: COMMENTED,
+        }),
+      );
+
+      return [...feedbacksAsKeyEvent, ...this.festivalEvent.history].toSorted(
+        (first, second) => first.at.getTime() - second.at.getTime(),
       );
     },
-    faFeedbacks(): FaFeedback[] {
-      return this.$accessor.fa.mFA.feedbacks ?? [];
-    },
-    fatFeedbacks(): FtFeedback[] {
-      return this.$accessor.ft.mFT.feedbacks;
-    },
-    me(): MyUserInformation {
-      return this.$accessor.user.me;
-    },
-    isFa(): boolean {
-      return this.form === "FA";
+    canPublishFeedback(): boolean {
+      return this.newFeedbackContent.trim() !== "";
     },
   },
   methods: {
-    async addFeedback() {
-      const trimedComment = this.comment.trim();
-      if (!trimedComment) return;
-
-      const author: User = {
-        id: this.me.id,
-        firstname: this.me.firstname,
-        lastname: this.me.lastname,
-      };
-
-      if (this.isFa) {
-        const feedback: FaFeedback = {
-          subject: FaFeedbackSubjectType.COMMENT,
-          comment: trimedComment,
-          author,
-          createdAt: new Date(),
-        };
-        await this.$accessor.fa.addFeedback(feedback);
-      } else {
-        const feedback: FtFeedback = {
-          subject: FtFeedbackSubjectType.COMMENT,
-          comment: trimedComment,
-          author,
-          createdAt: new Date(),
-        };
-        await this.$accessor.ft.addFeedback(feedback);
+    publishFeedback() {
+      if (!this.canPublishFeedback) return;
+      this.$emit("publish", this.newFeedbackContent);
+      this.newFeedbackContent = "";
+    },
+    getActionEmoji(action: KeyEvent["action"]): string {
+      switch (action) {
+        case CREATED:
+          return "🐣";
+        case READY_TO_REVIEW:
+          return "🕵️";
+        case APPROVED:
+          return "✅";
+        case REJECTED:
+          return "🛑";
+        case COMMENTED:
+          return "💬";
       }
-      this.comment = "";
     },
-    getAuthorName(user?: User) {
-      if (!user) return `${this.me.firstname} ${this.me.lastname}`;
-      return `${user.firstname} ${user.lastname}`;
-    },
-    formatDate(date: Date | string): string {
-      return formatDate(date);
-    },
+    formatDateWithMinutes,
+    formatUserNameWithNickname,
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.feedbacks {
+  &__listing {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    .action__emoji {
+      font-size: 1.2rem;
+    }
+  }
+  &__add {
+    max-width: fit-content;
+    align-self: flex-end;
+  }
+}
+</style>

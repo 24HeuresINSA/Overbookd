@@ -16,6 +16,7 @@ import {
 } from "../festival-task.error";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
+import { Adherent } from "../../common/adherent";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -45,6 +46,11 @@ export type UpdateMobilization = {
   durationSplitInHour?: number | null;
   start?: Date;
   end?: Date;
+};
+
+type PublishFeedback = {
+  author: Adherent;
+  content: string;
 };
 
 export class PrepareFestivalTask {
@@ -238,7 +244,7 @@ export class PrepareFestivalTask {
 
     const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.add(inquiry).json;
-    return this.save({ ...task, inquiries: inquiries });
+    return this.save({ ...task, inquiries });
   }
 
   async removeInquiry(
@@ -250,7 +256,19 @@ export class PrepareFestivalTask {
     const builder = Inquiries.build(task.inquiries);
 
     const inquiries = builder.remove(slug).json;
-    return this.save({ ...task, inquiries: inquiries });
+    return this.save({ ...task, inquiries });
+  }
+
+  async publishFeedback(
+    taskId: FestivalTask["id"],
+    { author, content }: PublishFeedback,
+  ): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const feedback = { author, content, publishedAt: new Date() };
+    const feedbacks = [...task.feedbacks, feedback];
+    return this.save({ ...task, feedbacks });
   }
 }
 

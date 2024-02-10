@@ -16,7 +16,11 @@
         @reject="askReject"
         @open:calendar="openCalendar"
       />
-      <FaFeedbackCard id="feedback" />
+      <FeedbackCard
+        id="feedback"
+        :festival-event="selectedActivity"
+        @publish="publishFeedback"
+      />
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
         <AskRejectReasonFormCard
           @close-dialog="closeRejectDialog"
@@ -45,7 +49,7 @@ import SignaCard from "~/components/organisms/festival-event/festival-activity/S
 import SecurityCard from "~/components/organisms/festival-event/festival-activity/SecurityCard.vue";
 import SupplyCard from "~/components/organisms/festival-event/festival-activity/SupplyCard.vue";
 import FaInquiryCard from "~/components/organisms/festival-event/festival-activity/FaInquiryCard.vue";
-import FaFeedbackCard from "~/components/organisms/festival-event/festival-activity/FaFeedbackCard.vue";
+import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -68,7 +72,7 @@ export default defineComponent({
     SecurityCard,
     SupplyCard,
     FaInquiryCard,
-    FaFeedbackCard,
+    FeedbackCard,
     SnackNotificationContainer,
     AskRejectReasonFormCard,
     OverCalendar,
@@ -80,7 +84,7 @@ export default defineComponent({
     calendarMarker: new Date(),
   }),
   computed: {
-    mFA(): FestivalActivity {
+    selectedActivity(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
     },
     faId(): number {
@@ -91,8 +95,8 @@ export default defineComponent({
     },
     calendarStartDate(): Date {
       const startTimestamps = [
-        ...this.mFA.general.timeWindows,
-        ...this.mFA.inquiry.timeWindows,
+        ...this.selectedActivity.general.timeWindows,
+        ...this.selectedActivity.inquiry.timeWindows,
       ].map(({ start }) => start.getTime());
       if (startTimestamps.length === 0) return this.eventStartDate;
 
@@ -100,37 +104,35 @@ export default defineComponent({
       return new Date(minStart);
     },
     allTimeWindows(): CalendarEvent[] {
-      const inquiryEvents: CalendarEvent[] = this.mFA.inquiry.timeWindows.map(
-        ({ start, end }) => ({
+      const inquiryEvents: CalendarEvent[] =
+        this.selectedActivity.inquiry.timeWindows.map(({ start, end }) => ({
           start,
           end,
           name: "Créneau matos",
           timed: true,
           color: "grey",
-        }),
-      );
-      const generalEvents: CalendarEvent[] = this.mFA.general.timeWindows.map(
-        ({ start, end }) => ({
+        }));
+      const generalEvents: CalendarEvent[] =
+        this.selectedActivity.general.timeWindows.map(({ start, end }) => ({
           start,
           end,
           name: "Créneau animation",
           timed: true,
           color: "blue",
-        }),
-      );
+        }));
       return [...inquiryEvents, ...generalEvents];
     },
   },
 
   async mounted() {
     await this.$accessor.festivalActivity.fetchActivity(this.faId);
-    if (this.mFA.id !== this.faId) {
+    if (this.selectedActivity.id !== this.faId) {
       this.$accessor.notif.pushNotification({
         message: "Oups 😬 J'ai l'impression que cette FA n'existe pas...",
       });
       this.$router.push({ path: "/fa" });
     }
-    document.title = `FA ${this.faId} - ${this.mFA.general.name}`;
+    document.title = `FA ${this.faId} - ${this.selectedActivity.general.name}`;
     this.calendarMarker = this.calendarStartDate;
   },
   methods: {
@@ -151,6 +153,9 @@ export default defineComponent({
       const team = this.reviewer;
       if (!team) return;
       this.$accessor.festivalActivity.rejectBecause({ team, reason });
+    },
+    publishFeedback(content: string) {
+      this.$accessor.festivalActivity.publishFeedback({ content });
     },
   },
 });

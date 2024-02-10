@@ -9,6 +9,7 @@ import {
   UpdateInstructionsForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
+  PublishFeedbackForm,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -217,6 +218,18 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalTask>>(
       `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
+    );
+  }
+
+  /* PUBLISH FEEDBACK */
+  static publishFeedback(
+    context: Context,
+    ftId: FestivalTask["id"],
+    feedback: PublishFeedbackForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/feedbacks`,
+      feedback,
     );
   }
 }

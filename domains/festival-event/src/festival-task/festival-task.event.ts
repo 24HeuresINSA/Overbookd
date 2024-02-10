@@ -1,8 +1,10 @@
-import { CREATED } from "../common/action";
+import { COMMENTED, CREATED } from "../common/action";
 import { Adherent } from "../common/adherent";
 
+type Action = typeof CREATED | typeof COMMENTED;
+
 export type KeyEvent = {
-  action: typeof CREATED;
+  action: Action;
   by: Adherent;
   at: Date;
   description: string;

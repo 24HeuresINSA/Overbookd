@@ -1,9 +1,9 @@
 import { FestivalTaskKeyEvent as KeyEvent } from "@overbookd/festival-event";
-import { SELECT_ADHERENT } from "./adherent/adherent.query";
+import { SELECT_VOLUNTEER } from "./adherent/adherent.query";
 
 export const SELECT_EVENT = {
   event: true,
-  instigator: { select: SELECT_ADHERENT },
+  instigator: { select: SELECT_VOLUNTEER },
   at: true,
   context: true,
 };

@@ -4,7 +4,7 @@ import {
   IN_REVIEW,
   InReview,
   InReviewReviews,
-  KeyEvent,
+  FestivalActivityKeyEvent as KeyEvent,
   REFUSED,
   Refused,
   RefusedReviews,
