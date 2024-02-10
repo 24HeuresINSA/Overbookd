@@ -29,6 +29,7 @@ type ChartData = {
 type Tooltip = {
   datasetIndex: number;
   yLabel: number;
+  index: number;
 };
 
 type DashboardGearDetailsData = {
@@ -38,7 +39,6 @@ type DashboardGearDetailsData = {
     pointRadius: number;
     pointHitRadius: number;
   };
-  options: unknown;
 };
 
 export default defineComponent({
@@ -52,36 +52,6 @@ export default defineComponent({
       borderWidth: 2,
       pointRadius: 0,
       pointHitRadius: 10,
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        xAxes: [
-          {
-            ticks: {
-              autoSkip: true,
-              maxTicksLimit: 20,
-            },
-          },
-        ],
-      },
-      hover: {
-        mode: "nearest",
-        intersect: true,
-      },
-      tooltips: {
-        mode: "index",
-        position: "nearest",
-        callbacks: {
-          label: function (tooltipItem: Tooltip, data: ChartData) {
-            const datasetLabel =
-              data.datasets[tooltipItem.datasetIndex].label || "";
-            const dataPoint = tooltipItem.yLabel;
-            return `${datasetLabel}: ${dataPoint}`;
-          },
-        },
-      },
     },
   }),
   computed: {
@@ -111,6 +81,24 @@ export default defineComponent({
         ...this.datasetOptions,
       };
     },
+    options(): unknown {
+      const allDetails = this.details;
+
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: { xAxes: [{ ticks: { autoSkip: true, maxTicksLimit: 20 } }] },
+        hover: { mode: "nearest", intersect: true },
+        tooltips: {
+          mode: "index",
+          position: "nearest",
+          callbacks: {
+            label: tooltipLabel,
+            afterLabel: tooltipDetails(allDetails),
+          },
+        },
+      };
+    },
   },
   watch: {
     details() {
@@ -121,4 +109,31 @@ export default defineComponent({
     },
   },
 });
+
+function tooltipDetails(allDetails: GearDetails[]) {
+  return function (tooltipItem: Tooltip) {
+    const details = allDetails[tooltipItem.index];
+    const bullet = "•";
+
+    // STOCK
+    if (tooltipItem.datasetIndex === 0) {
+      return details.inventory > 0 ? `Inventaire: ${details.inventory}\n` : "";
+    }
+
+    // INQUIRIES
+    if (tooltipItem.datasetIndex === 1) {
+      const faTitle = "FA:\n";
+      const faContent = details.activities
+        .map(({ id, name, quantity }) => `${bullet} ${id} ${name}: ${quantity}`)
+        .join("\n");
+      return details.activities.length > 0 ? `${faTitle}${faContent}` : "";
+    }
+  };
+}
+
+function tooltipLabel(tooltipItem: Tooltip, data: ChartData) {
+  const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || "";
+  const dataPoint = tooltipItem.yLabel;
+  return `${datasetLabel}: ${dataPoint}`;
+}
 </script>
