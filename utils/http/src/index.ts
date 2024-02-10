@@ -26,7 +26,7 @@ export type {
 export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";
 export type {
-  ActivityInquiry,
+  Inquiry,
   GearDetails,
   GearPreview,
 } from "./logistic/dashboard.model";

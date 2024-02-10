@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-event";
-import { ActivityInquiry, GearDetails } from "@overbookd/http";
+import { Inquiry, GearDetails } from "@overbookd/http";
 
-class ActivityInquiryResponseDto implements ActivityInquiry {
+class InquiryResponseDto implements Inquiry {
   @ApiProperty({ type: Number })
   id: FestivalActivity["id"];
 
@@ -27,10 +27,16 @@ export class GearDetailsResponseDto implements GearDetails {
   stock: number;
 
   @ApiProperty({
-    type: ActivityInquiryResponseDto,
+    type: InquiryResponseDto,
     isArray: true,
   })
-  activities: ActivityInquiry[];
+  activities: Inquiry[];
+
+  @ApiProperty({
+    type: InquiryResponseDto,
+    isArray: true,
+  })
+  tasks: Inquiry[];
 
   @ApiProperty({ type: Number })
   inventory: number;

@@ -1,5 +1,3 @@
-import { FestivalActivity } from "@overbookd/festival-event";
-
 export type GearPreview = {
   id: number;
   name: string;
@@ -8,9 +6,9 @@ export type GearPreview = {
   stockDiscrepancy: number;
 };
 
-export type ActivityInquiry = {
-  id: FestivalActivity["id"];
-  name: FestivalActivity["general"]["name"];
+export type Inquiry = {
+  id: number;
+  name: string;
   quantity: number;
 };
 
@@ -19,6 +17,7 @@ export type GearDetails = {
   end: Date;
   inquiry: number;
   stock: number;
-  activities: ActivityInquiry[];
+  activities: Inquiry[];
+  tasks: Inquiry[];
   inventory: number;
 };

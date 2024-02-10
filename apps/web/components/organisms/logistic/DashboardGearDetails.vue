@@ -122,13 +122,28 @@ function listStockAndInquiriesSources(allDetails: GearDetails[]) {
 
     const isInquiry = tooltipItem.datasetIndex === 1;
     if (isInquiry) {
+      // FA
       const faTitle = "FA:\n";
       const faContent = details.activities
         .map(
           ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
         )
         .join("\n");
-      return details.activities.length > 0 ? `${faTitle}${faContent}` : "";
+      const hasFa = details.activities.length > 0;
+      const faDetails = hasFa ? `${faTitle}${faContent}` : "";
+
+      // FT
+      const ftTitle = "FT:\n";
+      const ftContent = details.tasks
+        .map(
+          ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
+        )
+        .join("\n");
+      const hasFt = details.tasks.length > 0;
+      const ftDetails = hasFt ? `${ftTitle}${ftContent}` : "";
+
+      const lineBreak = hasFa && hasFt ? "\n" : "";
+      return `${faDetails}${lineBreak}${ftDetails}`;
     }
   };
 }

@@ -22,13 +22,25 @@ type DatabaseActivity = {
   inquiryTimeWindows: IProvidePeriod[];
 };
 
-export type DatabaseInquiry = {
+type DatabaseTask = {
+  id: FestivalActivity["id"];
+  name: FestivalActivity["general"]["name"];
+  mobilizations: IProvidePeriod[];
+};
+
+export type DatabaseActivityInquiry = {
   quantity: number;
   fa: DatabaseActivity;
 };
 
+export type DatabaseTaskInquiry = {
+  quantity: number;
+  ft: DatabaseTask;
+};
+
 type WithDatabaseInquiries = {
-  festivalActivityInquiries: DatabaseInquiry[];
+  festivalActivityInquiries: DatabaseActivityInquiry[];
+  festivalTaskInquiries: DatabaseTaskInquiry[];
 };
 
 export type DatabaseGear = BaseDatabaseGear &

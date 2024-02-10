@@ -1,5 +1,9 @@
 import { GearDetails, GearPreview } from "@overbookd/http";
-import { DatabaseGear } from "./dashboard.model";
+import {
+  DatabaseActivityInquiry,
+  DatabaseGear,
+  DatabaseTaskInquiry,
+} from "./dashboard.model";
 import { Period, QUARTER_IN_MS } from "@overbookd/period";
 
 export class DashboardGear {
@@ -26,6 +30,7 @@ export class DashboardGear {
       const stock = DashboardGear.findStockByDate(gear);
       const inquiry = DashboardGear.findInquiryQuantityByDate(gear, start);
       const activities = DashboardGear.findActivitiesByDate(gear, start);
+      const tasks = DashboardGear.findTasksByDate(gear, start);
       const inventory = DashboardGear.findInventoryQuantity(gear);
 
       return {
@@ -34,6 +39,7 @@ export class DashboardGear {
         inquiry,
         stock,
         activities,
+        tasks,
         inventory,
       };
     });
@@ -90,10 +96,25 @@ export class DashboardGear {
   }
 
   private static findInquiryQuantityByDate(
-    { festivalActivityInquiries }: DatabaseGear,
+    { festivalActivityInquiries, festivalTaskInquiries }: DatabaseGear,
     date: Date,
   ): number {
-    return festivalActivityInquiries.reduce((total, inquiry) => {
+    const activityQuantity = DashboardGear.findActivityInquiryQuantityByDate(
+      festivalActivityInquiries,
+      date,
+    );
+    const taskQuantity = DashboardGear.findTaskInquiryQuantityByDate(
+      festivalTaskInquiries,
+      date,
+    );
+    return activityQuantity + taskQuantity;
+  }
+
+  private static findActivityInquiryQuantityByDate(
+    inquiries: DatabaseActivityInquiry[],
+    date: Date,
+  ): number {
+    return inquiries.reduce((total, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(date),
       );
@@ -102,11 +123,24 @@ export class DashboardGear {
     }, 0);
   }
 
+  private static findTaskInquiryQuantityByDate(
+    inquiries: DatabaseTaskInquiry[],
+    date: Date,
+  ): number {
+    return inquiries.reduce((total, inquiry) => {
+      const isIncluded = inquiry.ft.mobilizations.some((period) =>
+        Period.init(period).isIncluding(date),
+      );
+
+      return isIncluded ? total + inquiry.quantity : total;
+    }, 0);
+  }
+
   private static findActivitiesByDate(
-    gear: DatabaseGear,
+    { festivalActivityInquiries }: DatabaseGear,
     start: Date,
   ): GearDetails["activities"] {
-    return gear.festivalActivityInquiries.reduce((activities, inquiry) => {
+    return festivalActivityInquiries.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),
       );
@@ -114,6 +148,24 @@ export class DashboardGear {
       if (!isIncluded) return activities;
 
       const { id, name } = inquiry.fa;
+      const { quantity } = inquiry;
+      const activity = { id, name, quantity };
+      return [...activities, activity];
+    }, []);
+  }
+
+  private static findTasksByDate(
+    { festivalTaskInquiries }: DatabaseGear,
+    start: Date,
+  ): GearDetails["tasks"] {
+    return festivalTaskInquiries.reduce((activities, inquiry) => {
+      const isIncluded = inquiry.ft.mobilizations.some((period) =>
+        Period.init(period).isIncluding(start),
+      );
+
+      if (!isIncluded) return activities;
+
+      const { id, name } = inquiry.ft;
       const { quantity } = inquiry;
       const activity = { id, name, quantity };
       return [...activities, activity];

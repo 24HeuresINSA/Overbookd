@@ -13,7 +13,7 @@ const SELECT_GEAR_STOCK = {
   },
 };
 
-const SELECT_GEAR_INQUIRIES = {
+const SELECT_ACTIVITY_GEAR_INQUIRIES = {
   festivalActivityInquiries: {
     select: {
       quantity: true,
@@ -33,8 +33,29 @@ const SELECT_GEAR_INQUIRIES = {
   },
 };
 
+const SELECT_TASK_GEAR_INQUIRIES = {
+  festivalTaskInquiries: {
+    select: {
+      quantity: true,
+      ft: {
+        select: {
+          id: true,
+          name: true,
+          mobilizations: {
+            select: {
+              start: true,
+              end: true,
+            },
+          },
+        },
+      },
+    },
+  },
+};
+
 export const SELECT_GEAR = {
   ...SELECT_BASE_GEAR,
   ...SELECT_GEAR_STOCK,
-  ...SELECT_GEAR_INQUIRIES,
+  ...SELECT_ACTIVITY_GEAR_INQUIRIES,
+  ...SELECT_TASK_GEAR_INQUIRIES,
 };
