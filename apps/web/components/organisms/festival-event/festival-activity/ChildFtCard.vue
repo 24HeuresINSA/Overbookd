@@ -47,8 +47,8 @@ export default defineComponent({
   data: (): ChildFtCardData => ({
     headers: [
       { text: "Numéro", value: "id" },
-      { text: "Nom", value: "name", sortable: false },
-      { text: "Statut", value: "status", sortable: false },
+      { text: "Nom", value: "name" },
+      { text: "Statut", value: "status" },
     ],
   }),
   computed: {
