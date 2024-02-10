@@ -3,7 +3,7 @@ import {
   InquiryWithRequests,
   PublicGeneral,
   TimeWindow,
-  KeyEvent,
+  FestivalActivityKeyEvent as KeyEvent,
 } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";

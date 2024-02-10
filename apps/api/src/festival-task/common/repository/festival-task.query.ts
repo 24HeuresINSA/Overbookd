@@ -1,6 +1,7 @@
 import {
   Adherent,
   Contact,
+  Feedback,
   FestivalTask,
   FestivalTaskDraft,
   FestivalTaskKeyEvent as KeyEvent,
@@ -8,29 +9,31 @@ import {
   Volunteer,
   isAssignedToDrive,
 } from "@overbookd/festival-event";
-import { SELECT_ADHERENT, SELECT_CONTACT } from "./adherent/adherent.query";
+import { SELECT_VOLUNTEER, SELECT_CONTACT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location/location.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity/festival-activity.query";
 import { Prisma } from "@prisma/client";
 import { SELECT_EVENT } from "./event.query";
 import { SELECT_MOBILIZATION } from "./mobilization.query";
 import { SELECT_INQUIRY_REQUEST } from "./inquiry/inquiry.query";
+import { SELECT_FEEDBACKS } from "./feedback.query";
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
   status: true,
   name: true,
   teamCode: true,
-  administrator: { select: SELECT_ADHERENT },
+  administrator: { select: SELECT_VOLUNTEER },
   appointment: { select: SELECT_LOCATION },
   festivalActivity: { select: SELECT_FESTIVAL_ACTIVITY },
   contacts: { select: { contact: { select: SELECT_CONTACT } } },
   globalInstruction: true,
   inChargeInstruction: true,
-  inChargeVolunteers: { select: { volunteer: { select: SELECT_ADHERENT } } },
+  inChargeVolunteers: { select: { volunteer: { select: SELECT_VOLUNTEER } } },
   mobilizations: { select: SELECT_MOBILIZATION },
   inquiries: { select: SELECT_INQUIRY_REQUEST },
   events: { select: SELECT_EVENT },
+  ...SELECT_FEEDBACKS,
 };
 
 export class FestivalTaskQueryBuilder {
@@ -72,6 +75,8 @@ export class FestivalTaskQueryBuilder {
     );
     const mobilizations = this.upsertMobilizations(task.id, task.mobilizations);
     const inquiries = this.upsertInquiries(task);
+    const feedbacks = this.upsertFeedbacks(task);
+    const events = this.upsertHistory(task);
 
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
@@ -79,6 +84,8 @@ export class FestivalTaskQueryBuilder {
       inChargeVolunteers,
       mobilizations,
       inquiries,
+      feedbacks,
+      events,
     };
   }
 
@@ -160,6 +167,50 @@ export class FestivalTaskQueryBuilder {
         ftId: task.id,
         slug: { notIn: task.inquiries.map(({ slug }) => slug) },
       },
+    };
+  }
+
+  private static upsertFeedbacks(task: FestivalTask<{ withConflicts: false }>) {
+    return {
+      upsert: task.feedbacks.map((feedback) => ({
+        where: {
+          ftId_authorId_publishedAt: {
+            ftId: task.id,
+            authorId: feedback.author.id,
+            publishedAt: feedback.publishedAt,
+          },
+        },
+        update: feedbackDatabaseMapping(feedback),
+        create: feedbackDatabaseMapping(feedback),
+      })),
+      deleteMany: {
+        ftId: task.id,
+        NOT: {
+          authorId: {
+            in: task.feedbacks.map(({ author }) => author.id),
+          },
+          publishedAt: {
+            in: task.feedbacks.map(({ publishedAt }) => publishedAt),
+          },
+        },
+      },
+    };
+  }
+
+  private static upsertHistory(task: FestivalTask<{ withConflicts: false }>) {
+    return {
+      upsert: task.history.map((keyEvent) => ({
+        where: {
+          ftId_event_instigatorId_at: {
+            ftId: task.id,
+            instigatorId: keyEvent.by.id,
+            event: keyEvent.action,
+            at: keyEvent.at,
+          },
+        },
+        update: { context: keyEvent.description },
+        create: keyEventToHistory(task)(keyEvent),
+      })),
     };
   }
 }
@@ -250,6 +301,20 @@ function databaseFestivalTaskWithoutListsMapping(
     appointmentId: task.instructions.appointment?.id,
     globalInstruction: task.instructions.global,
     inChargeInstruction: task.instructions.inCharge.instruction,
+  };
+}
+
+type DatabaseFeedback = {
+  authorId: number;
+  content: string;
+  publishedAt: Date;
+};
+
+function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
+  return {
+    authorId: feedback.author.id,
+    content: feedback.content,
+    publishedAt: feedback.publishedAt,
   };
 }
 

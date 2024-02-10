@@ -29,7 +29,7 @@ import {
   REFUSED,
   BaseSignage,
   SignageCatalogItem,
-  KeyEvent,
+  FestivalActivityKeyEvent as KeyEvent,
   CREATED,
   APPROVED,
   COMMENTED,

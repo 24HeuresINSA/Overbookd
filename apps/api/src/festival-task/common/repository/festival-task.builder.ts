@@ -39,6 +39,7 @@ type DatabaseFestivalTask = {
   inChargeVolunteers: { volunteer: Volunteer }[];
   mobilizations: DatabaseMobilization[];
   inquiries: DatabaseInquiryRequest[];
+  feedbacks: FestivalTask["feedbacks"];
   events: DatabaseEvent[];
 };
 
@@ -85,7 +86,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
       ),
       mobilizations: this.buildMobilizations(taskData.mobilizations),
       inquiries: this.buildInquiries(taskData.inquiries),
-      feedbacks: [],
+      feedbacks: taskData.feedbacks,
       history: this.buildHistory(taskData.events),
     };
   }

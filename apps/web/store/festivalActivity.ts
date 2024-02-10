@@ -1,7 +1,6 @@
 import {
   CreateFestivalActivityForm,
   FestivalActivity,
-  PrepareFeedbackPublish,
   PrepareGeneralUpdate,
   PrepareSignageCreation,
   PrepareSignageUpdate,
@@ -28,6 +27,7 @@ import {
   InitInquiryRequest,
   PreviewForSecurity,
   PreviewForCommunication,
+  PrepareFeedbackPublish,
 } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { actionTree, mutationTree } from "typed-vuex";

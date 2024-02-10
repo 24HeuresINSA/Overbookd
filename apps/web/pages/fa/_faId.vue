@@ -16,7 +16,7 @@
         @reject="askReject"
         @open:calendar="openCalendar"
       />
-      <FaFeedbackCard id="feedback" />
+      <FeedbackCard id="feedback" />
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
         <AskRejectReasonFormCard
           @close-dialog="closeRejectDialog"
@@ -45,7 +45,7 @@ import SignaCard from "~/components/organisms/festival-event/festival-activity/S
 import SecurityCard from "~/components/organisms/festival-event/festival-activity/SecurityCard.vue";
 import SupplyCard from "~/components/organisms/festival-event/festival-activity/SupplyCard.vue";
 import FaInquiryCard from "~/components/organisms/festival-event/festival-activity/FaInquiryCard.vue";
-import FaFeedbackCard from "~/components/organisms/festival-event/festival-activity/FaFeedbackCard.vue";
+import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -68,7 +68,7 @@ export default defineComponent({
     SecurityCard,
     SupplyCard,
     FaInquiryCard,
-    FaFeedbackCard,
+    FeedbackCard,
     SnackNotificationContainer,
     AskRejectReasonFormCard,
     OverCalendar,

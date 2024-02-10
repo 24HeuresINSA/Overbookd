@@ -46,7 +46,6 @@ model User {
   transactionsTo   Transaction[] @relation("to")
 
   ftsInCharge      Ft[]                    @relation("inCharge")
-  ftFeedbacks      FtFeedback[]
   ftUserRequests   FtUserRequest[]
   availabilities   VolunteerAvailability[]
   friendRequestors Friend[]                @relation("friend_requestor")
@@ -59,6 +58,7 @@ model User {
   festivalActivities           FestivalActivity[]
   festivalActivityInstigations FestivalActivityHistory[]
   faFeedbacks                  FestivalActivityFeedback[]
+  ftFeedbacks                  FestivalTaskFeedback[]
   chefMeals                    SharedMeal[]               @relation("chef")
   shotguns                     Shotgun[]                  @relation("guest")
 
@@ -67,6 +67,8 @@ model User {
   festivalTaskContacts      FestivalTaskContact[]
   festivalTaskInstigations  FestivalTaskHistory[]
   festivalTaskMobilizations FestivalTaskMobilizationVolunteer[]
+
+  oldFtFeedbacks FtFeedback[]
 
   @@map("user")
 }
@@ -661,13 +663,14 @@ model FestivalActivityFeedback {
   faId Int              @map("fa_id")
 
   @@id([faId, authorId, publishedAt])
-  @@map("feedback")
+  @@map("festival_activity_feedback")
 }
 
 model FestivalTask {
-  id        Int                   @unique
+  id        Int                    @unique
   status    FestivalTaskStatus
-  isDeleted Boolean               @default(false) @map("is_deleted")
+  isDeleted Boolean                @default(false) @map("is_deleted")
+  feedbacks FestivalTaskFeedback[]
   events    FestivalTaskHistory[]
 
   // General
@@ -791,6 +794,19 @@ enum FestivalTaskEvent {
   CREATED
 
   @@map("festival_task_event")
+}
+
+model FestivalTaskFeedback {
+  content     String   @db.Text
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int      @map("author_id")
+  publishedAt DateTime @default(now()) @map("published_at")
+
+  ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId Int          @map("ft_id")
+
+  @@id([ftId, authorId, publishedAt])
+  @@map("festival_task_feedback")
 }
 
 model SharedMeal {

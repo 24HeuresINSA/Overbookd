@@ -2,7 +2,7 @@ import {
   APPROVED,
   Adherent,
   CREATED,
-  KeyEvent,
+  FestivalActivityKeyEvent as KeyEvent,
   READY_TO_REVIEW,
   REJECTED,
 } from "@overbookd/festival-event";

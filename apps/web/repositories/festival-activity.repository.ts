@@ -20,7 +20,6 @@ import {
   PrepareContractorUpdate,
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
-  PrepareFeedbackPublish,
   PrepareGeneralUpdate,
   PrepareSecurityUpdate,
   PrepareSignageCreation,
@@ -32,7 +31,7 @@ import {
   TimeWindow,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { AddInquiryRequestForm } from "@overbookd/http";
+import { AddInquiryRequestForm, PrepareFeedbackPublish } from "@overbookd/http";
 import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 
@@ -364,7 +363,7 @@ export class FestivalActivityRepository {
   /* PUBLISH FEEDBACK */
   static publishFeedback(
     context: Context,
-    faId: number,
+    faId: FestivalActivity["id"],
     feedback: PrepareFeedbackPublish,
   ) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(

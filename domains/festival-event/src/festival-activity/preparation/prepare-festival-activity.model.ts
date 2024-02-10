@@ -10,7 +10,6 @@ import { Location } from "../../common/location";
 import { BaseInquiryRequest } from "../../common/inquiry-request";
 import { Contractor } from "../sections/in-charge";
 import { Adherent } from "../../common/adherent";
-import { Feedback } from "../../common/feedback";
 
 export type PrepareGeneralUpdate = {
   name?: string;
@@ -108,5 +107,3 @@ export type LinkSignageCatalogItem = {
   signageId: Signage["id"];
   catalogItem: SignageCatalogItem;
 };
-
-export type PrepareFeedbackPublish = Pick<Feedback, "content">;

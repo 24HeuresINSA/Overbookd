@@ -9,7 +9,7 @@ import {
   TimeWindow,
   isDraft,
   isAssignedToDrive,
-  KeyEvent,
+  FestivalActivityKeyEvent as KeyEvent,
   Adherent,
   isLinkedToCatalogItem,
 } from "@overbookd/festival-event";

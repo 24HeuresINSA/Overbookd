@@ -1,4 +1,4 @@
-import { Draft, KeyEvent } from "@overbookd/festival-event";
+import { Draft, FestivalActivity } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
@@ -39,8 +39,8 @@ export class CastDraft {
   }
 
   private static historyWithDate(
-    history: HttpStringified<KeyEvent[]>,
-  ): KeyEvent[] {
+    history: HttpStringified<FestivalActivity["history"]>,
+  ): FestivalActivity["history"] {
     return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
 }
