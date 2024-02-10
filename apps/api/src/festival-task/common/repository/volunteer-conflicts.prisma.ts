@@ -2,7 +2,7 @@ import {
   VolunteerConflicts,
   FestivalTask,
   Volunteer,
-  Conflict,
+  FestivalTaskLink,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../../prisma.service";
@@ -14,7 +14,7 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     taskId: FestivalTask["id"],
     { start, end }: IProvidePeriod,
     volunteerId: Volunteer["id"],
-  ): Promise<Conflict[]> {
+  ): Promise<FestivalTaskLink[]> {
     const conflicts = await this.prisma.festivalTaskMobilization.findMany({
       where: {
         ft: { isDeleted: false },

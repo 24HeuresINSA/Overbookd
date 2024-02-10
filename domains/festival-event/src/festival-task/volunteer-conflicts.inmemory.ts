@@ -2,7 +2,7 @@ import { IProvidePeriod, Period } from "@overbookd/period";
 import { VolunteerConflicts } from "./volunteer-conflicts";
 import {
   FestivalTask,
-  Conflict,
+  FestivalTaskLink,
   Volunteer,
   Mobilization,
 } from "./festival-task";
@@ -14,7 +14,7 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
     taskId: FestivalTask["id"],
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
-  ): Promise<Conflict[]> {
+  ): Promise<FestivalTaskLink[]> {
     const requestedPeriod = Period.init(period);
     const tasks = this.tasks
       .filter(({ mobilizations, id }) => {
