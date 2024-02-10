@@ -19,6 +19,7 @@
     <v-card-text>
       <InquiryTable
         :inquiries="inquiries"
+        :time-windows="timeWindows"
         :owner="owner"
         @remove="removeInquiry"
       />
@@ -41,9 +42,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
+  FestivalActivity,
   InquiryOwner,
   InquiryRequest,
   MATOS,
+  TimeWindow,
   isAssignedToDrive,
 } from "@overbookd/festival-event";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
@@ -57,8 +60,14 @@ export default defineComponent({
   },
   emits: ["completed", "close-dialog"],
   computed: {
+    selectedActivity(): FestivalActivity {
+      return this.$accessor.festivalActivity.selectedActivity;
+    },
     activityName(): string {
-      return this.$accessor.festivalActivity.selectedActivity.general.name;
+      return this.selectedActivity.general.name;
+    },
+    timeWindows(): TimeWindow[] {
+      return this.selectedActivity.inquiry.timeWindows;
     },
     isMissingDrives(): boolean {
       return this.inquiries.some((request) => !isAssignedToDrive(request));

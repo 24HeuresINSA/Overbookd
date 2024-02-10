@@ -32,6 +32,7 @@
 
       <InquiryTable
         :inquiries="festivalActivity.inquiry.all"
+        :time-windows="festivalActivity.inquiry.timeWindows"
         :owner="MATOS"
         disabled
       />

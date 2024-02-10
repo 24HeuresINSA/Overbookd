@@ -25,6 +25,7 @@
 
       <InquiryTable
         :inquiries="inquiries"
+        :time-windows="timeWindows"
         :owner="MATOS"
         @remove="removeInquiry"
       />
@@ -35,7 +36,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
-import { FestivalTask, InquiryRequest, MATOS } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  InquiryRequest,
+  MATOS,
+  TimeWindow,
+} from "@overbookd/festival-event";
 import InquiryTable from "~/components/molecules/festival-event/logistic/inquiry/InquiryTable.vue";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
@@ -61,6 +67,9 @@ export default defineComponent({
   computed: {
     inquiries(): FestivalTask["inquiries"] {
       return this.$accessor.festivalTask.selectedTask.inquiries;
+    },
+    timeWindows(): TimeWindow[] {
+      return this.$accessor.festivalTask.selectedTask.mobilizations;
     },
     canAddInquiry(): boolean {
       return this.gear !== null && this.quantity > 0;

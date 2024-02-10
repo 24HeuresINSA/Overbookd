@@ -98,6 +98,7 @@
           <v-card-title class="inquiry-table__title">Matos</v-card-title>
           <InquiryTable
             :inquiries="inquiry.gears"
+            :time-windows="inquiry.timeWindows"
             :owner="MATOS"
             @remove="removeInquiry"
           />
@@ -129,6 +130,7 @@
           <v-card-title class="inquiry-table__title">Elec</v-card-title>
           <InquiryTable
             :inquiries="inquiry.electricity"
+            :time-windows="inquiry.timeWindows"
             :owner="ELEC"
             @remove="removeInquiry"
           />
@@ -160,6 +162,7 @@
           <v-card-title class="inquiry-table__title">Barrières</v-card-title>
           <InquiryTable
             :inquiries="inquiry.barriers"
+            :time-windows="inquiry.timeWindows"
             :owner="BARRIERES"
             @remove="removeInquiry"
           />
