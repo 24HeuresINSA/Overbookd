@@ -47,7 +47,7 @@ describe("Prepare festival task mobilizations list", () => {
       guardEscapeGame,
       installJustDance,
       onboardJustDanceCollaborator,
-      presentJustDance
+      presentJustDance,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
