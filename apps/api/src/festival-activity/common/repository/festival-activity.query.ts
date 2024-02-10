@@ -135,6 +135,16 @@ const SELECT_HISTORY = {
   },
 };
 
+const SELECT_FESTIVAL_TASKS = {
+  festivalTasks: {
+    select: {
+      id: true,
+      name: true,
+      status: true,
+    },
+  },
+};
+
 export const SELECT_FESTIVAL_ACTIVITY = {
   id: true,
   status: true,
@@ -147,6 +157,7 @@ export const SELECT_FESTIVAL_ACTIVITY = {
   ...SELECT_INQUIRY,
   ...SELECT_FEEDBACKS,
   ...SELECT_HISTORY,
+  ...SELECT_FESTIVAL_TASKS,
 };
 
 export class FestivalActivityQueryBuilder {

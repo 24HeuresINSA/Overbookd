@@ -122,6 +122,7 @@ describe("Festival activity creation", () => {
         },
         feedbacks: [],
         history: [createdEvent],
+        tasks: [],
       });
     });
   });

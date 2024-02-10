@@ -56,6 +56,7 @@ export type {
   PreviewDraft,
   PreviewReviewable,
   PreviewFestivalActivity,
+  FestivalTaskChild,
 } from "./festival-activity/festival-activity";
 export { isDraft, isRefused } from "./festival-activity/festival-activity";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error";
