@@ -1,18 +1,17 @@
-import { FestivalTask, Mobilization, Volunteer } from "../festival-task";
+import { FestivalTask } from "../festival-task";
 import { updateItemToList } from "@overbookd/list";
 import { FestivalTasksForPrepare } from "./prepare";
 
-export class InMemoryFestivalTasks<
-  M extends Mobilization<Volunteer> = Mobilization<Volunteer>,
-> implements FestivalTasksForPrepare<M>
-{
-  constructor(private tasks: FestivalTask<M>[]) {}
+type WithoutConflicts = FestivalTask<{ withConflicts: false }>;
 
-  findById(ftId: number): Promise<FestivalTask<M> | null> {
+export class InMemoryFestivalTasks implements FestivalTasksForPrepare {
+  constructor(private tasks: WithoutConflicts[]) {}
+
+  findById(ftId: number): Promise<WithoutConflicts | null> {
     return Promise.resolve(this.tasks.find(({ id }) => id === ftId) ?? null);
   }
 
-  save(task: FestivalTask<M>): Promise<FestivalTask<M>> {
+  save(task: WithoutConflicts): Promise<WithoutConflicts> {
     const taskIndex = this.tasks.findIndex(({ id }) => id === task.id);
     if (taskIndex === -1) throw new Error();
 

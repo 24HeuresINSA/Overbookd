@@ -1,4 +1,4 @@
-import { Duration, IProvidePeriod, Period } from "@overbookd/period";
+import { Duration } from "@overbookd/period";
 import {
   BaseInquiryRequest,
   InquiryRequest,
@@ -13,13 +13,9 @@ import {
 import {
   FestivalTaskNotFound,
   GearAlreadyRequested,
-  MobilizationAlreadyExist,
-  MobilizationNotFound,
-  SplitDurationIsNotPeriodDivider,
-  TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
-import { updateItemToList } from "@overbookd/list";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { Mobilizations } from "./sections/mobilizations";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -33,14 +29,17 @@ export type UpdateInstructions = {
   inCharge?: FestivalTask["instructions"]["inCharge"]["instruction"];
 };
 
-export type FestivalTasksForPrepare<
-  M extends Mobilization<Volunteer> = Mobilization<Volunteer>,
-> = {
-  findById(ftId: FestivalTask["id"]): Promise<FestivalTask<M> | null>;
-  save(task: FestivalTask<M>): Promise<FestivalTask<M>>;
+type WithoutConflicts = FestivalTask<{ withConflicts: false }>;
+
+export type FestivalTasksForPrepare = {
+  findById(ftId: FestivalTask["id"]): Promise<WithoutConflicts | null>;
+  save(task: WithoutConflicts): Promise<WithoutConflicts>;
 };
 
-export type AddMobilization = Omit<Mobilization<Volunteer>, "id">;
+export type AddMobilization = Omit<
+  Mobilization<{ withConflicts: false }>,
+  "id"
+>;
 
 export type UpdateMobilization = {
   durationSplitInHour?: number | null;
@@ -138,9 +137,7 @@ export class PrepareFestivalTask {
     return this.save(toSave);
   }
 
-  private async save(
-    toSave: FestivalTask<Mobilization<Volunteer>>,
-  ): Promise<FestivalTask> {
+  private async save(toSave: WithoutConflicts): Promise<FestivalTask> {
     const updated = await this.festivalTasks.save(toSave);
     return this.festivalTaskTranslator.translate(updated);
   }
@@ -396,237 +393,11 @@ class Volunteers {
   }
 }
 
-type ListItem<T> = {
-  index: number;
-  value?: T;
-};
-
-class Mobilizations<V extends Volunteer = Volunteer> {
-  private constructor(private readonly mobilizations: Mobilization<V>[]) {}
-
-  static build(mobilizations: Mobilization<Volunteer>[]) {
-    return new Mobilizations(mobilizations);
-  }
-
-  add(form: AddMobilization): Mobilizations<Volunteer> {
-    const mobilization = MobilizationFactory.init(form).json;
-
-    if (this.has(mobilization)) throw new MobilizationAlreadyExist();
-
-    return new Mobilizations([...this.mobilizations, mobilization]);
-  }
-
-  remove(mobilizationId: Mobilization["id"]) {
-    return new Mobilizations(
-      this.mobilizations.filter(({ id }) => id !== mobilizationId),
-    );
-  }
-
-  update(mobilizationId: Mobilization["id"], update: UpdateMobilization) {
-    const { index, value } = this.retrieveMobilization(mobilizationId);
-    if (index === -1 || !value) throw new MobilizationNotFound();
-
-    const builder = MobilizationFactory.build(value);
-    const mobilizations = updateItemToList(
-      this.mobilizations,
-      index,
-      builder.update(update).json,
-    );
-
-    return new Mobilizations(mobilizations);
-  }
-
-  addTeamTo(mobilizationId: Mobilization["id"], team: TeamMobilization) {
-    const { index, value } = this.retrieveMobilization(mobilizationId);
-    if (index === -1 || !value) return this;
-
-    const builder = MobilizationFactory.build(value);
-    const mobilizations = updateItemToList(
-      this.mobilizations,
-      index,
-      builder.addTeam(team).json,
-    );
-
-    return new Mobilizations(mobilizations);
-  }
-
-  removeTeamFrom(
-    mobilizationId: Mobilization["id"],
-    team: TeamMobilization["team"],
-  ) {
-    const { index, value } = this.retrieveMobilization(mobilizationId);
-    if (index === -1 || !value) return this;
-
-    const builder = MobilizationFactory.build(value);
-    const mobilizations = updateItemToList(
-      this.mobilizations,
-      index,
-      builder.removeTeam(team).json,
-    );
-
-    return new Mobilizations(mobilizations);
-  }
-
-  addVolunteerTo(mobilizationId: Mobilization["id"], volunteer: Volunteer) {
-    const { index, value } = this.retrieveMobilization(mobilizationId);
-    if (index === -1 || !value) return this;
-
-    const builder = MobilizationFactory.build(value);
-    const mobilizations = updateItemToList(
-      this.mobilizations,
-      index,
-      builder.addVolunteer(volunteer).json,
-    );
-
-    return new Mobilizations(mobilizations);
-  }
-
-  removeVolunteerFrom(
-    mobilizationId: Mobilization["id"],
-    volunteerId: Volunteer["id"],
-  ) {
-    const { index, value } = this.retrieveMobilization(mobilizationId);
-    if (index === -1 || !value) return this;
-
-    const builder = MobilizationFactory.build(value);
-    const mobilizations = updateItemToList(
-      this.mobilizations,
-      index,
-      builder.removeVolunteer(volunteerId).json,
-    );
-
-    return new Mobilizations(mobilizations);
-  }
-
-  private retrieveMobilization(
-    id: Mobilization["id"],
-  ): ListItem<Mobilization<V>> {
-    const index = this.mobilizations.findIndex(
-      ({ id: currentId }) => currentId === id,
-    );
-    const value = this.mobilizations.at(index);
-
-    return { index, value };
-  }
-
-  private has(mobilization: Mobilization<Volunteer>) {
-    return this.mobilizations.some(({ id }) => id === mobilization.id);
-  }
-
-  get json(): Mobilization<V>[] {
-    return [...this.mobilizations];
-  }
-}
-
-class MobilizationFactory<V extends Volunteer = Volunteer> {
-  private constructor(private readonly mobilization: Mobilization<V>) {}
-
-  static init(form: AddMobilization): MobilizationFactory {
-    const { durationSplitInHour, teams, volunteers, ...period } = form;
-    this.checkPeriod(durationSplitInHour, period);
-    const id = this.generateId(period);
-    const volunteersWithEmptyConflict = volunteers.map((volunteer) => ({
-      ...volunteer,
-      conflicts: [],
-    }));
-
-    return new MobilizationFactory({
-      ...form,
-      id,
-      volunteers: volunteersWithEmptyConflict,
-    });
-  }
-
-  static build(mobilization: Mobilization<Volunteer>) {
-    return new MobilizationFactory(mobilization);
-  }
-
-  private static checkPeriod(
-    durationSplitInHour: Mobilization["durationSplitInHour"],
-    period: IProvidePeriod,
-  ) {
-    if (!durationSplitInHour) {
-      return Period.init(period);
-    }
-    const splitDuration = Duration.hours(durationSplitInHour);
-    return SplitablePeriod.checkValidity({ ...period, splitDuration });
-  }
-
-  private static generateId(period: IProvidePeriod): Mobilization["id"] {
-    const { start, end } = period;
-    const startMinutes = Duration.ms(start.getTime()).inMinutes;
-    const endMinutes = Duration.ms(end.getTime()).inMinutes;
-
-    return `${startMinutes}-${endMinutes}`;
-  }
-
-  update(update: UpdateMobilization) {
-    const form = { ...this.mobilization, ...update };
-
-    return MobilizationFactory.init(form);
-  }
-
-  addTeam(team: TeamMobilization) {
-    if (this.hasTeam(team)) throw new TeamAlreadyPartOfMobilization(team.team);
-
-    const teams = [...this.mobilization.teams, team];
-
-    return new MobilizationFactory({ ...this.mobilization, teams });
-  }
-
-  removeTeam(team: TeamMobilization["team"]) {
-    const teams = this.mobilization.teams.filter((t) => t.team !== team);
-
-    return new MobilizationFactory({ ...this.mobilization, teams });
-  }
-
-  private hasTeam({ team }: TeamMobilization) {
-    return this.mobilization.teams.some((request) => request.team === team);
-  }
-
-  addVolunteer(volunteer: Volunteer): MobilizationFactory {
-    if (this.hasVolunteer(volunteer)) return this;
-
-    const volunteers = [
-      ...this.mobilization.volunteers,
-      { ...volunteer, conflicts: [] },
-    ];
-
-    return new MobilizationFactory({ ...this.mobilization, volunteers });
-  }
-
-  removeVolunteer(volunteerId: Volunteer["id"]) {
-    const volunteers = this.mobilization.volunteers.filter(
-      ({ id }) => id !== volunteerId,
-    );
-
-    return new MobilizationFactory({ ...this.mobilization, volunteers });
-  }
-
-  private hasVolunteer(volunteer: Volunteer) {
-    return this.mobilization.volunteers.some(({ id }) => id === volunteer.id);
-  }
-
-  get json(): Mobilization<V> {
-    return this.mobilization;
-  }
-}
-
-type IProvideSplitablePeriod = {
+export type IProvideSplitablePeriod = {
   start: Date;
   end: Date;
   splitDuration: Duration;
 };
-
-class SplitablePeriod {
-  static checkValidity({ start, end, splitDuration }: IProvideSplitablePeriod) {
-    const period = Period.init({ start, end });
-    if (!period.duration.canBeDividedBy(splitDuration)) {
-      throw new SplitDurationIsNotPeriodDivider(splitDuration);
-    }
-    return;
-  }
-}
 
 class Inquiries {
   private constructor(private inquiries: InquiryRequest[]) {}

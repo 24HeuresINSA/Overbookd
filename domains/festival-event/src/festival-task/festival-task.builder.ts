@@ -1,13 +1,15 @@
 import { FestivalTask } from "./festival-task";
 import { Preview } from "./festival-task";
 
+type WithoutConflicts = FestivalTask<{ withConflicts: false }>;
+
 export class FestivalTaskBuilder {
-  private constructor(private readonly task: FestivalTask) {}
-  static build(task: FestivalTask) {
+  private constructor(private readonly task: WithoutConflicts) {}
+  static build(task: WithoutConflicts) {
     return new FestivalTaskBuilder(task);
   }
 
-  get overview(): FestivalTask {
+  get overview(): WithoutConflicts {
     return this.task;
   }
 

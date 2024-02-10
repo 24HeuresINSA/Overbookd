@@ -99,11 +99,11 @@ describe("Prepare festival task mobilizations list", () => {
                 name: guardEscapeGame.general.name,
               },
             ];
-            expect(volunteer?.conflicts).toEqual(expectedRequestedBy);
+            expect(volunteer?.conflicts?.tasks).toEqual(expectedRequestedBy);
             expect(
               mobilizations.flatMap(({ volunteers }) =>
-                volunteers.flatMap(({ conflicts }) =>
-                  conflicts.flatMap(({ id }) => id),
+                volunteers.flatMap(({ conflicts: { tasks } }) =>
+                  tasks.flatMap(({ id }) => id),
                 ),
               ),
             ).not.toContain(task.id);
@@ -132,7 +132,7 @@ describe("Prepare festival task mobilizations list", () => {
             const volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === lea.id,
             );
-            expect(volunteer?.conflicts).toEqual([]);
+            expect(volunteer?.conflicts?.tasks).toEqual([]);
           });
         },
       );
@@ -366,7 +366,7 @@ describe("Prepare festival task mobilizations list", () => {
           lastname: "Hette",
           nickname: "gh",
           id: 100,
-          conflicts: [],
+          conflicts: { tasks: [] },
         };
 
         const { mobilizations } = await prepare.addVolunteerToMobilization(

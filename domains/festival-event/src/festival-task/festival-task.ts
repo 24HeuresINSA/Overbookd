@@ -26,31 +26,43 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
-export type Conflict = {
+export type FestivalTaskLink = {
   id: FestivalTask["id"];
   name: FestivalTask["general"]["name"];
 };
 
-type WithConflicts = {
-  conflicts: Conflict[];
+type FestivalTaskOptions = {
+  withConflicts: boolean;
 };
 
-export type VolunteerWithConflicts = Volunteer & WithConflicts;
+const defaultFestivalTaskOptions = { withConflicts: true } as const;
+
+export type MobilizationOptions = FestivalTaskOptions;
+
+const defaultMobilizationOptions = defaultFestivalTaskOptions;
+
+type Conflicts = {
+  tasks: FestivalTaskLink[];
+};
+
+export type VolunteerWithConflicts = Volunteer & { conflicts: Conflicts };
 
 export type VolunteerMobilization = Volunteer | VolunteerWithConflicts;
 
 export type TeamMobilization = { count: number; team: string };
 
 export type Mobilization<
-  T extends VolunteerMobilization = VolunteerWithConflicts,
+  Options extends MobilizationOptions = typeof defaultMobilizationOptions,
 > = TimeWindow & {
-  volunteers: T[];
+  volunteers: Options["withConflicts"] extends true
+    ? VolunteerWithConflicts[]
+    : Volunteer[];
   teams: TeamMobilization[];
   durationSplitInHour: null | number;
 };
 
 export type Draft<
-  M extends Mobilization<VolunteerMobilization> = Mobilization,
+  Options extends FestivalTaskOptions = typeof defaultFestivalTaskOptions,
 > = {
   id: number;
   status: typeof DRAFT;
@@ -71,13 +83,13 @@ export type Draft<
   };
   history: KeyEvent[];
   feedbacks: Feedback[];
-  mobilizations: M[];
+  mobilizations: Mobilization<Options>[];
   inquiries: InquiryRequest[];
 };
 
 export type FestivalTask<
-  M extends Mobilization<VolunteerMobilization> = Mobilization,
-> = Draft<M>;
+  Options extends FestivalTaskOptions = typeof defaultFestivalTaskOptions,
+> = Draft<Options>;
 
 export type PreviewDraft = {
   id: Draft["id"];
