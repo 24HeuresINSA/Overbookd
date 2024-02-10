@@ -37,7 +37,7 @@ type FestivalTaskOptions = {
 
 const defaultFestivalTaskOptions = { withConflicts: true } as const;
 
-export type MobilizationOptions = FestivalTaskOptions;
+type MobilizationOptions = FestivalTaskOptions;
 
 const defaultMobilizationOptions = defaultFestivalTaskOptions;
 
