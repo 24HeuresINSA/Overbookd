@@ -35,6 +35,7 @@ import {
   COMMENTED,
   READY_TO_REVIEW,
   REJECTED,
+  FestivalTaskChild,
 } from "@overbookd/festival-event";
 
 type DatabaseReview = {
@@ -92,6 +93,7 @@ type DatabaseFestivalActivity = DatabaseGeneral &
     reviews: DatabaseReview[];
     feedbacks: FestivalActivity["feedbacks"];
     events: DatabaseKeyEvent[];
+    festivalTasks: FestivalTaskChild[];
   };
 
 type VisualizeFestivalActivity<
@@ -155,6 +157,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
       inquiry: this.formatInquiry(activityData),
       feedbacks: activityData.feedbacks,
       history: this.formatHistory(activityData.events),
+      tasks: activityData.festivalTasks,
     };
     return activityWithoutStatus;
   }

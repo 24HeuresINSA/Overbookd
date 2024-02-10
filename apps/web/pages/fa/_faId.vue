@@ -21,6 +21,8 @@
         :festival-event="selectedActivity"
         @publish="publishFeedback"
       />
+      <ChildFtCard id="ft" />
+
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
         <AskRejectReasonFormCard
           @close-dialog="closeRejectDialog"
@@ -54,6 +56,7 @@ import AskRejectReasonFormCard from "~/components/molecules/festival-event/revie
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
+import ChildFtCard from "~/components/organisms/festival-event/festival-activity/ChildFtCard.vue";
 
 type FestivalActivityDetailsData = {
   isRejectDialogOpen: boolean;
@@ -76,6 +79,7 @@ export default defineComponent({
     SnackNotificationContainer,
     AskRejectReasonFormCard,
     OverCalendar,
+    ChildFtCard,
   },
   data: (): FestivalActivityDetailsData => ({
     isRejectDialogOpen: false,

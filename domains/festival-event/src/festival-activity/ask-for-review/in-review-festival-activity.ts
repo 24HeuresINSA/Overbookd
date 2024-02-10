@@ -117,6 +117,7 @@ export class InReviewFestivalActivity implements InReview {
     readonly reviews: InReview["reviews"],
     readonly feedbacks: InReview["feedbacks"],
     readonly history: InReview["history"],
+    readonly tasks: InReview["tasks"],
     private readonly previousReviews?: RefusedReviews<"FA">,
   ) {}
 
@@ -153,6 +154,7 @@ export class InReviewFestivalActivity implements InReview {
       reviews,
       activity.feedbacks,
       history,
+      activity.tasks,
     );
   }
 
@@ -178,6 +180,7 @@ export class InReviewFestivalActivity implements InReview {
       reviews,
       activity.feedbacks,
       history,
+      activity.tasks,
       activity.reviews,
     );
   }

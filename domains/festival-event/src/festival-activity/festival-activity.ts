@@ -43,6 +43,7 @@ export type Draft = {
   inquiry: Inquiry;
   feedbacks: Feedback[];
   history: KeyEvent[];
+  tasks: FestivalTaskChild[];
 };
 
 type ReviewableBase = {
@@ -55,6 +56,7 @@ type ReviewableBase = {
   inquiry: Inquiry;
   feedbacks: Feedback[];
   history: KeyEvent[];
+  tasks: FestivalTaskChild[];
 };
 
 export type InReview = ReviewableBase & {
@@ -124,3 +126,9 @@ export type PreviewDraft = PreviewBase & {
 };
 
 export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
+
+export type FestivalTaskChild = {
+  id: number;
+  name: string;
+  status: typeof DRAFT;
+};

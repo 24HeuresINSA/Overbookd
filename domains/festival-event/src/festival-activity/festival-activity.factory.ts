@@ -227,6 +227,7 @@ function defaultInReview(id: number, name: string): InReview {
       FestivalActivityKeyEvents.created(lea),
       FestivalActivityKeyEvents.readyToReview(lea),
     ],
+    tasks: [],
   };
 }
 
@@ -286,6 +287,7 @@ function defaultValidated(id: number, name: string): Validated {
       FestivalActivityKeyEvents.approved(lea),
       FestivalActivityKeyEvents.approved(lea),
     ],
+    tasks: [],
   };
 }
 
@@ -340,6 +342,7 @@ function defaultRefused(id: number, name: string): Refused {
       FestivalActivityKeyEvents.readyToReview(lea),
       FestivalActivityKeyEvents.rejected(george, "Il manque des info"),
     ],
+    tasks: [],
   };
 }
 
@@ -378,6 +381,7 @@ export function defaultDraft(id: number, name: string): Draft {
     },
     feedbacks: [],
     history: [FestivalActivityKeyEvents.created(lea)],
+    tasks: [],
   };
 }
 

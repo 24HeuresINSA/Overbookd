@@ -29,6 +29,7 @@ import { SignaResponseDto } from "./reviewable-signa.response.dto";
 import { SecurityResponseDto } from "./reviewable-security.response.dto";
 import { SupplyResponseDto } from "./reviewable-supply.response.dto";
 import { ReviewableInquiryResponseDto } from "./reviewable-inquiry.response.dto";
+import { FestivalTaskResponseDto } from "../festival-task.response.dto";
 
 class ReviewableBaseResponseDto {
   @ApiProperty({ required: true })
@@ -67,6 +68,13 @@ class ReviewableBaseResponseDto {
     type: KeyEventResponseDto,
   })
   history: KeyEvent[];
+
+  @ApiProperty({
+    description: "Festival activity tasks",
+    isArray: true,
+    type: FestivalTaskResponseDto,
+  })
+  tasks: Reviewable["tasks"];
 }
 
 export class RefusedFestivalActivityResponseDto

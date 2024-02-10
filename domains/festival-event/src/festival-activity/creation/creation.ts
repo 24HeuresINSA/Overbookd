@@ -35,6 +35,7 @@ export class CreateFestivalActivity {
       inquiry: this.generateInquirySection(),
       feedbacks: [],
       history: [FestivalActivityKeyEvents.created(author)],
+      tasks: [],
     };
 
     return this.festivalActivities.create(activity);
