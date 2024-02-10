@@ -215,6 +215,7 @@ export type {
   Mobilization,
   TeamMobilization,
   FestivalTaskLink,
+  VolunteerWithConflicts,
 } from "./festival-task/festival-task";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
 export type { VolunteerConflicts } from "./festival-task/volunteer-conflicts";
