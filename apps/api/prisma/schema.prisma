@@ -46,6 +46,7 @@ model User {
   transactionsTo   Transaction[] @relation("to")
 
   ftsInCharge      Ft[]                    @relation("inCharge")
+  oldFtFeedbacks   FtFeedback[]
   ftUserRequests   FtUserRequest[]
   availabilities   VolunteerAvailability[]
   friendRequestors Friend[]                @relation("friend_requestor")
@@ -67,8 +68,6 @@ model User {
   festivalTaskContacts      FestivalTaskContact[]
   festivalTaskInstigations  FestivalTaskHistory[]
   festivalTaskMobilizations FestivalTaskMobilizationVolunteer[]
-
-  oldFtFeedbacks FtFeedback[]
 
   @@map("user")
 }

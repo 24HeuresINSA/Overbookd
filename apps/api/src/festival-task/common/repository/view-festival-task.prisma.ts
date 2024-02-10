@@ -10,18 +10,6 @@ import {
 } from "./festival-task.query";
 import { PrismaService } from "../../../prisma.service";
 import { FestivalTaskBuilder } from "./festival-task.builder";
-import { SELECT_VOLUNTEER } from "./adherent/adherent.query";
-
-export const SELECT_FEEDBACKS = {
-  feedbacks: {
-    select: {
-      author: { select: SELECT_VOLUNTEER },
-      content: true,
-      publishedAt: true,
-    },
-    orderBy: { publishedAt: "asc" },
-  },
-} as const;
 
 export class PrismaViewFestivalTasks implements FestivalTasksForView {
   constructor(private readonly prisma: PrismaService) {}
