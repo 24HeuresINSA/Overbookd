@@ -31,9 +31,6 @@ import {
   saturday9h,
   saturday7h,
   saturday8h,
-  installJustDance,
-  onboardJustDanceCollaborator,
-  presentJustDance,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
@@ -45,9 +42,6 @@ describe("Prepare festival task mobilizations list", () => {
       uninstallEscapeGame,
       presentEscapeGame,
       guardEscapeGame,
-      installJustDance,
-      onboardJustDanceCollaborator,
-      presentJustDance,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
