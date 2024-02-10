@@ -36,13 +36,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
-  FestivalActivity,
   InquiryRequest,
   InquiryOwner,
   BARRIERES,
   ELEC,
   Drive,
   drives,
+  TimeWindow,
 } from "@overbookd/festival-event";
 import { Header } from "~/utils/models/data-table.model";
 
@@ -56,6 +56,10 @@ export default defineComponent({
   props: {
     inquiries: {
       type: Array as () => InquiryRequest[],
+      required: true,
+    },
+    timeWindows: {
+      type: Array as () => TimeWindow[],
       required: true,
     },
     owner: {
@@ -81,9 +85,6 @@ export default defineComponent({
     },
   }),
   computed: {
-    inquiry(): FestivalActivity["inquiry"] {
-      return this.$accessor.festivalActivity.selectedActivity.inquiry;
-    },
     drives(): Drive[] {
       return drives;
     },
@@ -114,7 +115,7 @@ export default defineComponent({
       const isConsumable = gear?.isConsumable ?? false;
       if (!isConsumable) return `${inquiry.quantity}`;
 
-      const timeWindowCount = this.inquiry.timeWindows.length;
+      const timeWindowCount = this.timeWindows.length;
       if (timeWindowCount === 1) return `${inquiry.quantity}`;
 
       const total = timeWindowCount * inquiry.quantity;
