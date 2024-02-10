@@ -9,7 +9,7 @@
       <MobilizationCard id="mobilization" />
       <FeedbackCard
         id="feedback"
-        :key-events="keyEvents"
+        :festival-event="selectedTask"
         @publish="publishFeedback"
       />
     </v-container>
@@ -27,11 +27,7 @@ import FtInquiryCard from "~/components/organisms/festival-event/festival-task/F
 import ParentFaCard from "~/components/organisms/festival-event/festival-task/ParentFaCard.vue";
 import MobilizationCard from "~/components/organisms/festival-event/festival-task/MobilizationCard.vue";
 import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
-import {
-  COMMENTED,
-  FestivalTask,
-  FestivalTaskKeyEvent,
-} from "@overbookd/festival-event";
+import { FestivalTask } from "@overbookd/festival-event";
 
 export default defineComponent({
   components: {
@@ -50,19 +46,6 @@ export default defineComponent({
     },
     ftId(): number {
       return +this.$route.params.ftId;
-    },
-    keyEvents(): FestivalTaskKeyEvent[] {
-      const feedbacksAsKeyEvent: FestivalTaskKeyEvent[] =
-        this.selectedTask.feedbacks.map(({ author, publishedAt, content }) => ({
-          at: publishedAt,
-          description: content,
-          by: author,
-          action: COMMENTED,
-        }));
-
-      return [...feedbacksAsKeyEvent, ...this.selectedTask.history].toSorted(
-        (first, second) => first.at.getTime() - second.at.getTime(),
-      );
     },
   },
   async mounted() {

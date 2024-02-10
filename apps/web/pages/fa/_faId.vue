@@ -18,7 +18,7 @@
       />
       <FeedbackCard
         id="feedback"
-        :key-events="keyEvents"
+        :festival-event="selectedActivity"
         @publish="publishFeedback"
       />
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
@@ -41,12 +41,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import {
-  COMMENTED,
-  FestivalActivity,
-  FestivalActivityKeyEvent,
-  Reviewer,
-} from "@overbookd/festival-event";
+import { FestivalActivity, Reviewer } from "@overbookd/festival-event";
 import FestivalEventSidebar from "~/components/organisms/festival-event/FestivalEventSidebar.vue";
 import FaGeneralCard from "~/components/organisms/festival-event/festival-activity/FaGeneralCard.vue";
 import FaInChargeCard from "~/components/organisms/festival-event/festival-activity/FaInChargeCard.vue";
@@ -126,22 +121,6 @@ export default defineComponent({
           color: "blue",
         }));
       return [...inquiryEvents, ...generalEvents];
-    },
-    keyEvents(): FestivalActivityKeyEvent[] {
-      const feedbacksAsKeyEvent: FestivalActivityKeyEvent[] =
-        this.selectedActivity.feedbacks.map(
-          ({ author, publishedAt, content }) => ({
-            at: publishedAt,
-            description: content,
-            by: author,
-            action: COMMENTED,
-          }),
-        );
-
-      return [
-        ...feedbacksAsKeyEvent,
-        ...this.selectedActivity.history,
-      ].toSorted((first, second) => first.at.getTime() - second.at.getTime());
     },
   },
 

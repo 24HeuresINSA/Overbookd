@@ -41,7 +41,9 @@ import {
   APPROVED,
   COMMENTED,
   CREATED,
+  FestivalActivity,
   FestivalActivityKeyEvent,
+  FestivalTask,
   FestivalTaskKeyEvent,
   READY_TO_REVIEW,
   REJECTED,
@@ -51,6 +53,7 @@ import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
+type FestivalEvent = FestivalActivity | FestivalTask;
 type KeyEvent = FestivalActivityKeyEvent | FestivalTaskKeyEvent;
 
 type FaFeedbackCardData = {
@@ -61,8 +64,8 @@ type FaFeedbackCardData = {
 export default defineComponent({
   name: "FeedbackCard",
   props: {
-    keyEvents: {
-      type: Array as () => KeyEvent[],
+    festivalEvent: {
+      type: Object as () => FestivalEvent,
       required: true,
     },
   },
@@ -77,6 +80,20 @@ export default defineComponent({
     newFeedbackContent: "",
   }),
   computed: {
+    keyEvents(): KeyEvent[] {
+      const feedbacksAsKeyEvent: KeyEvent[] = this.festivalEvent.feedbacks.map(
+        ({ author, publishedAt, content }) => ({
+          at: publishedAt,
+          description: content,
+          by: author,
+          action: COMMENTED,
+        }),
+      );
+
+      return [...feedbacksAsKeyEvent, ...this.festivalEvent.history].toSorted(
+        (first, second) => first.at.getTime() - second.at.getTime(),
+      );
+    },
     canPublishFeedback(): boolean {
       return this.newFeedbackContent.trim() !== "";
     },
