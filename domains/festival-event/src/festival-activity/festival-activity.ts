@@ -12,7 +12,6 @@ import { APPROVED, REJECTED } from "../common/action";
 import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "../common/status";
 import { CREATED, COMMENTED, READY_TO_REVIEW } from "../common/action";
 import { Feedback } from "../common/feedback";
-import { FestivalTask } from "../festival-task/festival-task";
 
 type Security = {
   specialNeed: string | null;
@@ -129,7 +128,7 @@ export type PreviewDraft = PreviewBase & {
 export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
 
 export type FestivalTaskChild = {
-  id: FestivalTask["id"];
-  name: FestivalTask["general"]["name"];
-  status: FestivalTask["status"];
+  id: number;
+  name: string;
+  status: typeof DRAFT;
 };
