@@ -50,10 +50,17 @@ export class Period {
     return end.getTime() < start.getTime();
   }
 
-  isIncludedBy(otherPeriod: Period): boolean {
+  isOverlapping(otherPeriod: Period): boolean {
     return (
       this.start.getTime() < otherPeriod.end.getTime() &&
       this.end.getTime() > otherPeriod.start.getTime()
+    );
+  }
+
+  includes(otherPeriod: Period): boolean {
+    return (
+      this.start.getTime() <= otherPeriod.start.getTime() &&
+      this.end.getTime() >= otherPeriod.end.getTime()
     );
   }
 

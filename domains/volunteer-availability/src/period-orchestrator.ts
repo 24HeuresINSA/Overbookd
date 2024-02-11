@@ -24,7 +24,7 @@ export class PeriodOrchestrator {
 
   removePeriod(period: Period) {
     this.periods = this.periods.reduce((periods, currentPeriod) => {
-      const isPeriodIncluded = period.isIncludedBy(currentPeriod);
+      const isPeriodIncluded = period.isOverlapping(currentPeriod);
       if (!isPeriodIncluded) return [...periods, currentPeriod];
 
       const splitedPeriods = currentPeriod.splitFrom(period);
