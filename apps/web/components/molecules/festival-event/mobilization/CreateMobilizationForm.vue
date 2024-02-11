@@ -13,23 +13,13 @@
     </v-card-subtitle>
 
     <v-card-text class="pb-0">
-      <PeriodFormFields
+      <MobilizationPeriodFormFields
         :start="start"
         :end="end"
+        :duration-split-in-hour="durationSplitInHour"
         @update:start="updateStart"
         @update:end="updateEnd"
-        @enter="addMobilization"
-      />
-
-      <h3>Découpage du créneau (par heures)</h3>
-      <v-checkbox v-model="toSplit" label="Découper" />
-      <v-slider
-        v-model="durationSplitInHour"
-        :disabled="!toSplit"
-        min="0.5"
-        max="4"
-        step="0.5"
-        thumb-label="always"
+        @update:duration-split-in-hour="updateDurationSplitInHour"
       />
 
       <h3>Ajouter un bénévole</h3>
@@ -106,6 +96,7 @@ import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
+import MobilizationPeriodFormFields from "./MobilizationPeriodFormFields.vue";
 import { formatDate } from "~/utils/date/date.utils";
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { TeamMobilization, Volunteer } from "@overbookd/festival-event";
@@ -115,28 +106,32 @@ import { InputRulesData, isNumber, min } from "~/utils/rules/input.rules";
 import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
-type MobilizationFormData = IProvidePeriod &
+type CreateMobilizationFormData = IProvidePeriod &
   InputRulesData & {
     durationSplitInHour: number | null;
     teams: TeamMobilization[];
     volunteers: Volunteer[];
-    toSplit: boolean;
     volunteerToAdd: Volunteer | null;
     teamToAdd: Team | null;
     teamQuantity: number;
   };
 
 export default defineComponent({
-  name: "MobilizationForm",
-  components: { PeriodFormFields, SearchUser, SearchTeam, TeamChip },
+  name: "CreateMobilizationForm",
+  components: {
+    PeriodFormFields,
+    SearchUser,
+    SearchTeam,
+    TeamChip,
+    MobilizationPeriodFormFields,
+  },
   emits: ["add", "close-dialog"],
-  data: (): MobilizationFormData => ({
+  data: (): CreateMobilizationFormData => ({
     start: new Date(),
     end: new Date(),
     durationSplitInHour: null,
     teams: [],
     volunteers: [],
-    toSplit: false,
 
     volunteerToAdd: null,
     teamToAdd: null,
@@ -152,7 +147,7 @@ export default defineComponent({
       return {
         start: this.start,
         end: this.end,
-        durationSplitInHour: this.toSplit ? this.durationSplitInHour : null,
+        durationSplitInHour: this.durationSplitInHour,
         teams: this.teams,
         volunteers: this.volunteers.map((volunteer) => volunteer.id),
       };
@@ -196,7 +191,6 @@ export default defineComponent({
       this.durationSplitInHour = null;
       this.teams = [];
       this.volunteers = [];
-      this.toSplit = false;
       this.volunteerToAdd = null;
       this.teamToAdd = null;
       this.teamQuantity = 1;
@@ -213,6 +207,9 @@ export default defineComponent({
     },
     updateEnd(end: Date) {
       this.end = end;
+    },
+    updateDurationSplitInHour(durationSplitInHour: number | null) {
+      this.durationSplitInHour = durationSplitInHour;
     },
     addTeam() {
       if (!this.teamToAdd) return;

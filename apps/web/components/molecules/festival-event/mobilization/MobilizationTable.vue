@@ -64,6 +64,9 @@
       </template>
 
       <template #item.actions="{ item }">
+        <v-btn icon @click="openUpdateDialog(item)">
+          <v-icon>mdi-clock-edit</v-icon>
+        </v-btn>
         <v-btn icon @click="removeMobilization(item)">
           <v-icon>mdi-trash-can</v-icon>
         </v-btn>
@@ -77,7 +80,18 @@
     </v-btn>
 
     <v-dialog v-model="isAddDialogOpen" max-width="600">
-      <MobilizationForm @add="addMobilization" @close-dialog="closeAddDialog" />
+      <CreateMobilizationForm
+        @add="addMobilization"
+        @close-dialog="closeAddDialog"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="isUpdateDialogOpen" max-width="600">
+      <UpdateMobilizationForm
+        :mobilization="selectedMobilization"
+        @update="updateMobilization"
+        @close-dialog="closeUpdateDialog"
+      />
     </v-dialog>
 
     <v-dialog v-model="isAddVolunteerDialogOpen" max-width="600">
@@ -101,12 +115,14 @@ import { defineComponent } from "vue";
 import AddVolunteerInMobilizationForm from "./AddVolunteerInMobilizationForm.vue";
 import AddTeamInMobilizationForm from "./AddTeamInMobilizationForm.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import MobilizationForm from "./MobilizationForm.vue";
+import CreateMobilizationForm from "./CreateMobilizationForm.vue";
+import UpdateMobilizationForm from "./UpdateMobilizationForm.vue";
 import VolunteerWithConflictsChip from "~/components/atoms/chip/VolunteerWithConflictsChip.vue";
 import { Header } from "~/utils/models/data-table.model";
 import {
   FestivalTask,
   Mobilization,
+  UpdateMobilization,
   TeamMobilization,
   Volunteer,
 } from "@overbookd/festival-event";
@@ -117,6 +133,7 @@ import { AddMobilizationForm } from "@overbookd/http";
 type MobilizationTableData = {
   headers: Header[];
   isAddDialogOpen: boolean;
+  isUpdateDialogOpen: boolean;
   isAddVolunteerDialogOpen: boolean;
   isAddTeamDialogOpen: boolean;
   selectedMobilization: Mobilization | null;
@@ -126,12 +143,13 @@ export default defineComponent({
   name: "MobilizationTable",
   components: {
     TeamChip,
-    MobilizationForm,
+    CreateMobilizationForm,
+    UpdateMobilizationForm,
     AddVolunteerInMobilizationForm,
     AddTeamInMobilizationForm,
     VolunteerWithConflictsChip,
   },
-  emits: ["add", "remove"],
+  emits: ["add", "update", "remove"],
   data: (): MobilizationTableData => ({
     headers: [
       { text: "Début", value: "start" },
@@ -142,6 +160,7 @@ export default defineComponent({
       { text: "Actions", value: "actions" },
     ],
     isAddDialogOpen: false,
+    isUpdateDialogOpen: false,
     isAddVolunteerDialogOpen: false,
     isAddTeamDialogOpen: false,
     selectedMobilization: null,
@@ -159,6 +178,9 @@ export default defineComponent({
     },
     addMobilization(mobilization: AddMobilizationForm) {
       this.$emit("add", mobilization);
+    },
+    updateMobilization(mobilization: UpdateMobilization) {
+      this.$emit("update", mobilization);
     },
     removeMobilization(mobilization: Mobilization) {
       this.$emit("remove", mobilization);
@@ -187,6 +209,14 @@ export default defineComponent({
     },
     closeAddDialog() {
       this.isAddDialogOpen = false;
+    },
+    openUpdateDialog(mobilization: Mobilization) {
+      this.selectedMobilization = mobilization;
+      this.isUpdateDialogOpen = true;
+    },
+    closeUpdateDialog() {
+      this.isUpdateDialogOpen = false;
+      this.selectedMobilization = null;
     },
     openAddVolunteerDialog(mobilization: Mobilization) {
       this.selectedMobilization = mobilization;
