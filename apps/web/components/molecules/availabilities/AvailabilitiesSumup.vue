@@ -12,7 +12,7 @@
             'is-error': hasError(date, hour),
             'read-only': isReadonly,
           }"
-          @click="togglePeriod(date, hour)"
+          @click="toggleAvailability(date, hour)"
         ></div>
       </template>
     </OverCalendar>
@@ -21,20 +21,22 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { DateString, Hour, Period } from "@overbookd/period";
+import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { UserPersonalData } from "@overbookd/user";
 import {
   AvailabilityDate,
-  PeriodOrchestrator,
+  AvailabilityErrorMessage,
+  InitOverDate,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import {
-  hasAvailabilityPeriodError,
-  isEndOfAvailabilityPeriod,
-} from "~/utils/availabilities/availabilities";
+import { isEndOfAvailabilityPeriod } from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
+import {
+  SavedCharismaPeriod,
+  getPeriodCharisma,
+} from "~/utils/models/charisma-period.model";
 
 export default Vue.extend({
   name: "AvailabilitiesSumup",
@@ -43,8 +45,17 @@ export default Vue.extend({
     calendarMarker: new Date(),
   }),
   computed: {
+    charismaPeriods(): SavedCharismaPeriod[] {
+      return this.$accessor.charismaPeriod.charismaPeriods ?? [];
+    },
     selectedVolunteer(): UserPersonalData {
       return this.$accessor.user.selectedUser;
+    },
+    selectedAvailabilities(): Period[] {
+      return this.$accessor.volunteerAvailability.availabilities.list;
+    },
+    errors(): AvailabilityErrorMessage[] {
+      return this.$accessor.volunteerAvailability.availabilities.errors;
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -52,21 +63,19 @@ export default Vue.extend({
     calendarTitle(): string {
       return formatDateWithExplicitMonth(this.calendarMarker);
     },
-    periodOrchestrator(): PeriodOrchestrator {
-      return this.$accessor.volunteerAvailability.periodOrchestrator;
-    },
-    selectedAvailabilities(): Period[] {
-      return this.periodOrchestrator.availabilityPeriods;
-    },
     isSelected(): (date: DateString, hour: Hour) => boolean {
       return (date: DateString, hour: Hour) => {
-        const availabilityDate = AvailabilityDate.init({ date, hour });
-        const periods = this.selectedAvailabilities;
-        return availabilityDate.isIncludedBy(periods);
+        const { period } = OverDate.init({ date, hour });
+        return this.selectedAvailabilities.some((availability) =>
+          availability.includes(period),
+        );
       };
     },
     hasError(): (date: DateString, hour: Hour) => boolean {
-      return hasAvailabilityPeriodError(this.periodOrchestrator);
+      return (date: DateString, hour: Hour) => {
+        const start = OverDate.init({ date, hour }).date;
+        return this.errors.some(({ period }) => period.isIncluding(start));
+      };
     },
     isReadonly(): boolean {
       return !this.$accessor.user.can(AFFECT_VOLUNTEER);
@@ -82,7 +91,10 @@ export default Vue.extend({
   },
   async created() {
     await this.$accessor.configuration.fetch("eventDate");
-    await this.fetchAvailabilities();
+    await Promise.all([
+      this.fetchAvailabilities(),
+      this.$accessor.charismaPeriod.fetchCharismaPeriods(),
+    ]);
   },
   methods: {
     fetchAvailabilities() {
@@ -97,18 +109,31 @@ export default Vue.extend({
     isPartyShift(hour: Hour): boolean {
       return isPartyShift(hour);
     },
-    togglePeriod(dateString: DateString, hour: Hour) {
+    toggleAvailability(dateString: DateString, hour: Hour) {
       if (this.isReadonly) return;
 
-      const { period } = AvailabilityDate.init({ date: dateString, hour });
-      if (this.isSelected(dateString, hour)) return this.removePeriod(period);
-      this.addPeriod(period);
+      const selection = { date: dateString, hour };
+      if (this.isSelected(dateString, hour))
+        return this.unSelectAvailability(selection);
+      this.selectAvailability(selection);
     },
-    addPeriod(period: Period) {
-      this.$accessor.volunteerAvailability.addAvailabilityPeriod(period);
+    selectAvailability(date: InitOverDate) {
+      const charisma = this.getAssociatedCharisma(date);
+      const selection = { date, charisma };
+
+      this.$accessor.volunteerAvailability.selectAvailability(selection);
     },
-    removePeriod(period: Period) {
-      this.$accessor.volunteerAvailability.removeAvailabilityPeriod(period);
+    unSelectAvailability(date: InitOverDate) {
+      const charisma = this.getAssociatedCharisma(date);
+      const selection = { date, charisma };
+
+      this.$accessor.volunteerAvailability.removeRecordedAvailability(
+        selection,
+      );
+    },
+    getAssociatedCharisma(date: InitOverDate): number {
+      const { period } = AvailabilityDate.init(date);
+      return getPeriodCharisma(this.charismaPeriods, period);
     },
   },
 });

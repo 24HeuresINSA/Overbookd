@@ -23,9 +23,9 @@
           saved: isSaved(date, hour),
           'is-error': hasError(date, hour),
         }"
-        @click="selectPeriod(date, hour)"
+        @click="selectHour(date, hour)"
       >
-        {{ getDisplayedCharisma(date, hour) }}
+        {{ getAssociatedCharisma(date, hour) }}
       </div>
     </template>
   </OverCalendar>
@@ -36,22 +36,25 @@ import Vue from "vue";
 import {
   DateString,
   Hour,
-  IProvidePeriod,
   ONE_DAY_IN_MS,
   OverDate,
   Period,
 } from "@overbookd/period";
 import {
   AvailabilityDate,
+  AvailabilityErrorMessage,
+  InitOverDate,
   PeriodOrchestrator,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   ALL_HOURS,
-  hasAvailabilityPeriodError,
   isEndOfAvailabilityPeriod,
 } from "~/utils/availabilities/availabilities";
-import { getCharismaByDate } from "~/utils/models/charisma-period.model";
+import {
+  SavedCharismaPeriod,
+  getPeriodCharisma,
+} from "~/utils/models/charisma-period.model";
 import { isPartyShift } from "~/utils/shift/shift";
 import {
   formatDateDayName,
@@ -73,44 +76,60 @@ export default Vue.extend({
     },
   },
   computed: {
-    savedAvailabilities(): IProvidePeriod[] {
-      return this.$accessor.volunteerAvailability.availabilityRegistery
-        .availabilities;
+    charismaPeriods(): SavedCharismaPeriod[] {
+      return this.$accessor.charismaPeriod.charismaPeriods ?? [];
+    },
+    selectedAvailabilities(): Period[] {
+      return this.$accessor.volunteerAvailability.availabilities.selected;
+    },
+    savedAvailabilities(): Period[] {
+      return this.$accessor.volunteerAvailability.availabilities.recorded;
+    },
+    availabilities(): Period[] {
+      return this.$accessor.volunteerAvailability.availabilities.list;
+    },
+    errors(): AvailabilityErrorMessage[] {
+      return this.$accessor.volunteerAvailability.availabilities.errors;
     },
     periodOrchestrator(): PeriodOrchestrator {
       return this.$accessor.volunteerAvailability.periodOrchestrator;
     },
-    selectedAvailabilities(): Period[] {
-      return this.periodOrchestrator.availabilityPeriods;
-    },
     isSelected(): (date: DateString, hour: Hour) => boolean {
       return (date: DateString, hour: Hour) => {
-        const availabilityDate = OverDate.init({ date, hour });
-        const periods = [
-          ...this.selectedAvailabilities,
-          ...this.savedAvailabilities,
-        ];
-        return availabilityDate.isIncludedBy(periods);
+        const { period } = OverDate.init({ date, hour });
+        return this.selectedAvailabilities.some((availability) =>
+          availability.includes(period),
+        );
       };
     },
-    isAllPeriodsInDaySelected(): (date: AvailabilityDate) => boolean {
+    isAllDaySelected(): (date: AvailabilityDate) => boolean {
       return (date: AvailabilityDate) => {
         const start = date.date;
         const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
         const period = Period.init({ start, end: tomorrow });
-        return this.selectedAvailabilities.every((availability) =>
-          period.includes(availability),
+        return this.availabilities.some((availability) =>
+          availability.includes(period),
         );
       };
     },
     isSaved(): (date: DateString, hour: Hour) => boolean {
       return (date: DateString, hour: Hour) => {
-        const availabilityDate = OverDate.init({ date, hour });
-        return availabilityDate.isIncludedBy(this.savedAvailabilities);
+        const { period } = OverDate.init({ date, hour });
+        return this.savedAvailabilities.some((availability) =>
+          availability.includes(period),
+        );
+      };
+    },
+    isAvailableOn(): (date: DateString, hour: Hour) => boolean {
+      return (date: DateString, hour: Hour) => {
+        return this.isSaved(date, hour) || this.isSelected(date, hour);
       };
     },
     hasError(): (date: DateString, hour: Hour) => boolean {
-      return hasAvailabilityPeriodError(this.periodOrchestrator);
+      return (date: DateString, hour: Hour) => {
+        const start = OverDate.init({ date, hour }).date;
+        return this.errors.some(({ period }) => period.isIncluding(start));
+      };
     },
     weekdayNumbers(): number[] {
       return this.generateWeekdayList([], new Date(this.period.start));
@@ -135,71 +154,56 @@ export default Vue.extend({
       const tomorrow = computeTomorrowDate(date);
       return this.generateWeekdayList([...weekdays, weekday], tomorrow);
     },
-    selectPeriod(dateString: DateString, hour: Hour) {
+    selectHour(dateString: DateString, hour: Hour) {
       if (this.isSaved(dateString, hour)) return;
 
-      const { period } = AvailabilityDate.init({ date: dateString, hour });
-      if (this.isSelected(dateString, hour)) return this.removePeriod(period);
+      const overDate = { date: dateString, hour };
+      if (this.isSelected(dateString, hour))
+        return this.unSelectAvailability(overDate);
 
-      this.addPeriod(period);
+      this.selectAvailability({ date: dateString, hour });
     },
     selectDay(dateString: DateString) {
       const date = AvailabilityDate.init({ date: dateString, hour: 0 });
-      if (this.isAllPeriodsInDaySelected(date)) {
-        return this.removePeriodsInDay(dateString);
+      if (this.isAllDaySelected(date)) {
+        return this.unSelectAvailabilities(dateString);
       }
 
-      this.addPeriodsInDay(dateString);
+      this.selectAvailabilities(dateString);
     },
-    addPeriod(period: Period) {
-      this.$accessor.volunteerAvailability.addAvailabilityPeriod(period);
-      this.incrementCharismaByPeriod(period);
-    },
-    addPeriodsInDay(date: DateString) {
-      const periodsToAdd = ALL_HOURS.filter(
-        (hour) => !this.isSelected(date, hour),
-      ).map((hour) => AvailabilityDate.init({ date, hour }).period);
+    selectAvailability(date: InitOverDate) {
+      const charisma = this.getAssociatedCharisma(date.date, date.hour);
+      const selection = { date, charisma };
 
-      this.$accessor.volunteerAvailability.addAvailabilityPeriods(periodsToAdd);
-      periodsToAdd.map((period) => this.incrementCharismaByPeriod(period));
+      this.$accessor.volunteerAvailability.selectAvailability(selection);
+    },
+    selectAvailabilities(date: DateString) {
+      ALL_HOURS.filter((hour) => !this.isAvailableOn(date, hour)).map(
+        (hour) => {
+          const overDate = { date, hour };
+          this.selectAvailability(overDate);
+        },
+      );
     },
     getPeriodDurationInHours(hour: Hour): number {
       return this.isPartyShift(hour) ? 1 : 2;
     },
-    removePeriod(period: Period) {
-      this.$accessor.volunteerAvailability.removeAvailabilityPeriod(period);
-      this.decrementCharismaByPeriod(period);
-    },
-    removePeriodsInDay(date: DateString) {
-      const periodsToRemove = ALL_HOURS.filter((hour) =>
-        this.isSelected(date, hour),
-      ).map((hour) => AvailabilityDate.init({ date, hour }).period);
+    unSelectAvailability(date: InitOverDate) {
+      const charisma = this.getAssociatedCharisma(date.date, date.hour);
+      const selection = { date, charisma };
 
-      this.$accessor.volunteerAvailability.removeAvailabilityPeriods(
-        periodsToRemove,
-      );
-      periodsToRemove.map((period) => this.decrementCharismaByPeriod(period));
+      this.$accessor.volunteerAvailability.unSelectAvailability(selection);
     },
-    getCharismaByDate(date: Date): number {
-      const charismaPeriods =
-        this.$accessor.charismaPeriod.charismaPeriods ?? [];
-      return getCharismaByDate(charismaPeriods, date);
+    unSelectAvailabilities(date: DateString) {
+      ALL_HOURS.filter((hour) => this.isSelected(date, hour)).map((hour) => {
+        const overDate = { date, hour };
+        this.unSelectAvailability(overDate);
+      });
     },
-    getDisplayedCharisma(date: DateString, hour: Hour): number {
-      const charisma = this.getCharismaByDate(
-        OverDate.init({ date, hour }).date,
-      );
-      return charisma * this.getPeriodDurationInHours(hour);
-    },
-    incrementCharismaByPeriod(period: Period) {
-      this.$accessor.volunteerAvailability.incrementCharisma(
-        this.getCharismaByDate(period.start) * period.duration.inHours,
-      );
-    },
-    decrementCharismaByPeriod(period: Period) {
-      this.$accessor.volunteerAvailability.decrementCharisma(
-        this.getCharismaByDate(period.start) * period.duration.inHours,
-      );
+
+    getAssociatedCharisma(date: DateString, hour: Hour): number {
+      const { period } = AvailabilityDate.init({ date, hour });
+      return getPeriodCharisma(this.charismaPeriods, period);
     },
   },
 });
