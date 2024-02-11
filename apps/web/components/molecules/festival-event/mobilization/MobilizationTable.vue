@@ -21,15 +21,12 @@
 
       <template #item.volunteers="{ item }">
         <v-chip-group column class="mobilizations__volunteers">
-          <NuxtLink
+          <VolunteerWithConflictsChip
             v-for="volunteer in item.volunteers"
             :key="`${item.id}-${volunteer.id}`"
-            :to="`/planning/${volunteer.id}`"
-          >
-            <v-chip close @click:close="removeVolunteer(item, volunteer.id)">
-              {{ formatUserNameWithNickname(volunteer) }}
-            </v-chip>
-          </NuxtLink>
+            :volunteer="volunteer"
+            @remove="removeVolunteer(item, volunteer.id)"
+          />
           <v-btn
             color="primary"
             elevation="2"
@@ -105,6 +102,7 @@ import AddVolunteerInMobilizationForm from "./AddVolunteerInMobilizationForm.vue
 import AddTeamInMobilizationForm from "./AddTeamInMobilizationForm.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import MobilizationForm from "./MobilizationForm.vue";
+import VolunteerWithConflictsChip from "~/components/atoms/chip/VolunteerWithConflictsChip.vue";
 import { Header } from "~/utils/models/data-table.model";
 import {
   FestivalTask,
@@ -131,6 +129,7 @@ export default defineComponent({
     MobilizationForm,
     AddVolunteerInMobilizationForm,
     AddTeamInMobilizationForm,
+    VolunteerWithConflictsChip,
   },
   emits: ["add", "remove"],
   data: (): MobilizationTableData => ({
