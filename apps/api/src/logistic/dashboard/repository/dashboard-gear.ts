@@ -158,17 +158,17 @@ export class DashboardGear {
     { festivalTaskInquiries }: DatabaseGear,
     start: Date,
   ): GearDetails["tasks"] {
-    return festivalTaskInquiries.reduce((activities, inquiry) => {
+    return festivalTaskInquiries.reduce((tasks, inquiry) => {
       const isIncluded = inquiry.ft.mobilizations.some((period) =>
         Period.init(period).isIncluding(start),
       );
 
-      if (!isIncluded) return activities;
+      if (!isIncluded) return tasks;
 
       const { id, name } = inquiry.ft;
       const { quantity } = inquiry;
-      const activity = { id, name, quantity };
-      return [...activities, activity];
+      const task = { id, name, quantity };
+      return [...tasks, task];
     }, []);
   }
 }

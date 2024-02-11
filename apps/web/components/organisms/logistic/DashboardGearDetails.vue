@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { GearDetails } from "@overbookd/http";
+import { GearDetails, GearDetailsInquiry } from "@overbookd/http";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 
 type Dataset = {
@@ -112,38 +112,28 @@ export default defineComponent({
 
 function listStockAndInquiriesSources(allDetails: GearDetails[]) {
   return function (tooltipItem: Tooltip) {
-    const details = allDetails[tooltipItem.index];
-    const bullet = "•";
+    const { inventory, activities, tasks } = allDetails[tooltipItem.index];
 
     const isStock = tooltipItem.datasetIndex === 0;
     if (isStock) {
-      return details.inventory > 0 ? `Inventaire: ${details.inventory}\n` : "";
+      return inventory > 0 ? `Inventaire: ${inventory}\n` : "";
     }
 
     const isInquiry = tooltipItem.datasetIndex === 1;
     if (isInquiry) {
-      // FA
-      const faTitle = "FA:\n";
-      const faContent = details.activities
-        .map(
-          ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
-        )
-        .join("\n");
-      const hasFa = details.activities.length > 0;
-      const faDetails = hasFa ? `${faTitle}${faContent}` : "";
+      const faDetails = listInquirySources({
+        title: "FA",
+        sources: activities,
+      });
+      const ftDetails = listInquirySources({
+        title: "FT",
+        sources: tasks,
+      });
+      const sourceDetails = [faDetails, ftDetails].filter(
+        (details) => details !== "",
+      );
 
-      // FT
-      const ftTitle = "FT:\n";
-      const ftContent = details.tasks
-        .map(
-          ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
-        )
-        .join("\n");
-      const hasFt = details.tasks.length > 0;
-      const ftDetails = hasFt ? `${ftTitle}${ftContent}` : "";
-
-      const lineBreak = hasFa && hasFt ? "\n" : "";
-      return `${faDetails}${lineBreak}${ftDetails}`;
+      return sourceDetails.join("\n");
     }
   };
 }
@@ -152,5 +142,20 @@ function tooltipLabel(tooltipItem: Tooltip, data: ChartData) {
   const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || "";
   const dataPoint = tooltipItem.yLabel;
   return `${datasetLabel}: ${dataPoint}`;
+}
+
+function listInquirySources({
+  title,
+  sources,
+}: {
+  title: string;
+  sources: GearDetailsInquiry[];
+}): string {
+  if (sources.length === 0) return "";
+  const bullet = "•";
+  const sourceListing = sources.map(
+    ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
+  );
+  return [title, ...sourceListing].join("\n");
 }
 </script>
