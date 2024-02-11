@@ -68,7 +68,7 @@ describe("Select and unselect availabilities", () => {
       },
     );
     describe(`when selecting ${festivalStartDate} at 10h then at 16h`, () => {
-      it("should list two periods [10h-12] and [16h-18h]", () => {
+      it("should list two periods [10h-12h] and [16h-18h]", () => {
         const selected10H = { date: festivalStartDate, hour: 10 } as const;
         const selected16H = { date: festivalStartDate, hour: 16 } as const;
 
