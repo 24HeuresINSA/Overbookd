@@ -43,7 +43,8 @@ import {
 import {
   AvailabilityDate,
   AvailabilityErrorMessage,
-  InitOverDate,} from "@overbookd/volunteer-availability";
+  InitOverDate,
+} from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   ALL_HOURS,
