@@ -113,8 +113,9 @@ export default Vue.extend({
       if (this.isReadonly) return;
 
       const selection = { date: dateString, hour };
-      if (this.isSelected(dateString, hour))
+      if (this.isSelected(dateString, hour)) {
         return this.unSelectAvailability(selection);
+      }
       this.selectAvailability(selection);
     },
     selectAvailability(date: InitOverDate) {
