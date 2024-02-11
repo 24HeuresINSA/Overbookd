@@ -26,9 +26,10 @@ export type {
 export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";
 export type {
-  ActivityInquiry,
+  Inquiry,
   GearDetails,
   GearPreview,
+  Inquiry as GearDetailsInquiry,
 } from "./logistic/dashboard.model";
 export { JSON, CSV, ICAL, PDF } from "./mime";
 export type { AvailabilityForm } from "./volunteer-availability";
