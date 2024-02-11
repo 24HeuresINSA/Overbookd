@@ -5,7 +5,7 @@
     </v-btn>
 
     <v-card-title class="mobilization-card__title">
-      <h2>Ajouter une mobilisation</h2>
+      <h2>Modifier une mobilisation</h2>
     </v-card-title>
 
     <v-card-subtitle>
@@ -53,13 +53,14 @@ type UpdateMobilizationFormData = IProvidePeriod &
 export default defineComponent({
   name: "UpdateMobilizationForm",
   components: { MobilizationPeriodFormFields },
-  emits: ["update", "close-dialog"],
   props: {
     mobilization: {
       type: Object as () => Mobilization,
-      required: true,
+      required: false,
+      default: null,
     },
   },
+  emits: ["update", "close-dialog"],
   data: (): UpdateMobilizationFormData => ({
     start: new Date(),
     end: new Date(),
@@ -94,24 +95,24 @@ export default defineComponent({
       return isPeriodValid && isDurationValid;
     },
   },
-  async mounted() {
-    await this.$accessor.configuration.fetch("eventDate");
-    this.updateDataWithMobilizationToUpdate();
-  },
   watch: {
     mobilization() {
       this.updateDataWithMobilizationToUpdate();
     },
   },
+  async mounted() {
+    await this.$accessor.configuration.fetch("eventDate");
+    this.updateDataWithMobilizationToUpdate();
+  },
   methods: {
     updateDataWithMobilizationToUpdate() {
-      this.start = this.mobilization.start;
-      this.end = this.mobilization.end;
-      this.durationSplitInHour = this.mobilization.durationSplitInHour;
+      this.start = this.mobilization?.start ?? this.eventStartDate;
+      this.end = this.mobilization?.end ?? this.eventStartDate;
+      this.durationSplitInHour = this.mobilization?.durationSplitInHour ?? null;
     },
     updateMobilization() {
       if (!this.canUpdateMobilization) return;
-      this.$emit("update", this.mobilizationBuilt);
+      this.$emit("update", this.mobilization?.id, this.mobilizationBuilt);
 
       this.closeDialog();
       this.updateDataWithMobilizationToUpdate();

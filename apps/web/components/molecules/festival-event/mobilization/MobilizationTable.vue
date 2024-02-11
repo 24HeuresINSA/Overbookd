@@ -88,7 +88,7 @@
 
     <v-dialog v-model="isUpdateDialogOpen" max-width="600">
       <UpdateMobilizationForm
-        :mobilization="selectedMobilization"
+        :mobilization="selectedMobilization ?? undefined"
         @update="updateMobilization"
         @close-dialog="closeUpdateDialog"
       />
@@ -179,8 +179,11 @@ export default defineComponent({
     addMobilization(mobilization: AddMobilizationForm) {
       this.$emit("add", mobilization);
     },
-    updateMobilization(mobilization: UpdateMobilization) {
-      this.$emit("update", mobilization);
+    updateMobilization(
+      mobilizationId: Mobilization["id"],
+      mobilization: UpdateMobilization,
+    ) {
+      this.$emit("update", mobilizationId, mobilization);
     },
     removeMobilization(mobilization: Mobilization) {
       this.$emit("remove", mobilization);

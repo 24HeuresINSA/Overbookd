@@ -92,7 +92,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import PeriodFormFields from "~/components/molecules/period/PeriodFormFields.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
@@ -119,7 +118,6 @@ type CreateMobilizationFormData = IProvidePeriod &
 export default defineComponent({
   name: "CreateMobilizationForm",
   components: {
-    PeriodFormFields,
     SearchUser,
     SearchTeam,
     TeamChip,

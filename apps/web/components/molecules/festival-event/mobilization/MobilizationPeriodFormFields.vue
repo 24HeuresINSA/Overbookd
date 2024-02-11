@@ -34,7 +34,6 @@ const DEFAULT_DURATION_SPLIT_VALUE = 2;
 export default defineComponent({
   name: "MobilizationPeriodFormFields",
   components: { PeriodFormFields },
-  emits: ["update:start", "update:end", "update:duration-split-in-hour"],
   props: {
     start: {
       type: Date,
@@ -45,15 +44,20 @@ export default defineComponent({
       required: true,
     },
     durationSplitInHour: {
-      type: Number,
+      validator(value: number | null) {
+        return value === null || (typeof value === "number" && value > 0);
+      },
       required: true,
     },
   },
+  emits: ["update:start", "update:end", "update:duration-split-in-hour"],
   data: (): MobilizationPeriodFormFieldsData => ({
     toSplit: false,
   }),
-  mounted() {
-    this.updateToSplit(this.durationSplitInHour === null);
+  watch: {
+    durationSplitInHour(value: number | null) {
+      this.toSplit = value !== null;
+    },
   },
   methods: {
     updateStart(start: Date) {
@@ -65,9 +69,12 @@ export default defineComponent({
     updateDurationSplitInHour(durationSplitInHour: number | null) {
       this.$emit("update:duration-split-in-hour", durationSplitInHour);
     },
-    updateToSplit(toSplit: boolean) {
-      this.toSplit = toSplit;
-      if (!toSplit) this.updateDurationSplitInHour(null);
+    updateToSplit(toSplit: boolean | null) {
+      this.toSplit = toSplit === true;
+      if (!toSplit) {
+        this.updateDurationSplitInHour(null);
+        return;
+      }
       this.updateDurationSplitInHour(DEFAULT_DURATION_SPLIT_VALUE);
     },
   },

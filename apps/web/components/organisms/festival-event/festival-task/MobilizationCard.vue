@@ -25,8 +25,14 @@ export default defineComponent({
     addMobilization(mobilization: AddMobilizationForm) {
       this.$accessor.festivalTask.addMobilization(mobilization);
     },
-    updateMobilization(mobilization: UpdateMobilization) {
-      this.$accessor.festivalTask.updateMobilization(mobilization);
+    updateMobilization(
+      mobilizationId: Mobilization["id"],
+      mobilization: UpdateMobilization,
+    ) {
+      this.$accessor.festivalTask.updateMobilization({
+        mobilizationId,
+        mobilization,
+      });
     },
     removeMobilization(mobilization: Mobilization) {
       this.$accessor.festivalTask.removeMobilization(mobilization.id);
