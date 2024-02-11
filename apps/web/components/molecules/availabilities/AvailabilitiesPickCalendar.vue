@@ -98,8 +98,8 @@ export default Vue.extend({
         const start = date.date;
         const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
         const period = Period.init({ start, end: tomorrow });
-        return this.selectedAvailabilities.some((availability) =>
-          period.isIncludedBy(availability),
+        return this.selectedAvailabilities.every((availability) =>
+          period.includes(availability),
         );
       };
     },
