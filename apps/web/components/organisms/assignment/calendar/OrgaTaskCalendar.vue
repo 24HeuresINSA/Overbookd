@@ -30,8 +30,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Availability } from "@overbookd/volunteer-availability";
-import { DateString, Hour } from "@overbookd/period";
+import { DateString, Hour, Period } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { getColorByStatus } from "~/domain/common/status-color";
@@ -67,8 +66,8 @@ export default Vue.extend({
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
     },
-    availabilities(): Availability[] {
-      return this.$accessor.volunteerAvailability.mAvailabilities;
+    availabilities(): Period[] {
+      return this.$accessor.volunteerAvailability.availabilities.list;
     },
     hoverTimeSpan(): AvailableTimeSpan | null {
       return this.$accessor.assignment.hoverTimeSpan;

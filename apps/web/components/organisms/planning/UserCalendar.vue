@@ -38,8 +38,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { DateString, Hour } from "@overbookd/period";
-import { Availability } from "@overbookd/volunteer-availability";
+import { DateString, Hour, Period } from "@overbookd/period";
+import { UserPersonalData } from "@overbookd/user";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
@@ -50,8 +51,6 @@ import {
 } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
-import { UserPersonalData } from "@overbookd/user";
-import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 
 interface CalendarEventWithFt {
@@ -77,8 +76,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    availabilities(): Availability[] {
-      return this.$accessor.volunteerAvailability.mAvailabilities;
+    availabilities(): Period[] {
+      return this.$accessor.volunteerAvailability.availabilities.list;
     },
     ftRequests(): VolunteerTask[] {
       return this.$accessor.user.selectedUserFtRequests;

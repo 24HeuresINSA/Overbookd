@@ -3,11 +3,14 @@ import { AvailabilityDate, InitOverDate } from "./date";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error";
 
 const MINIMIM_PERIOD_DURATION_HOURS = 2;
-type AvailabilityError = { message: string; period: Period };
+
+export type AvailabilityErrorMessage = { message: string; period: Period };
+
 type InitAvailabilities = {
   selected?: Period[];
   recorded?: Period[];
 };
+
 export class Availabilities {
   private constructor(
     readonly recorded: Period[],
@@ -51,16 +54,19 @@ export class Availabilities {
     return Period.sort(Period.mergeContiguous(periods));
   }
 
-  get errors(): AvailabilityError[] {
-    return this.list.reduce((errors: AvailabilityError[], availability) => {
-      if (availability.duration.inHours >= MINIMIM_PERIOD_DURATION_HOURS)
-        return errors;
+  get errors(): AvailabilityErrorMessage[] {
+    return this.list.reduce(
+      (errors: AvailabilityErrorMessage[], availability) => {
+        if (availability.duration.inHours >= MINIMIM_PERIOD_DURATION_HOURS)
+          return errors;
 
-      const error = {
-        period: availability,
-        message: AVAILABILITY_ERROR_MESSAGES.MINIMUM_PERIOD_DURATION,
-      };
-      return [...errors, error];
-    }, []);
+        const error = {
+          period: availability,
+          message: AVAILABILITY_ERROR_MESSAGES.MINIMUM_PERIOD_DURATION,
+        };
+        return [...errors, error];
+      },
+      [],
+    );
   }
 }
