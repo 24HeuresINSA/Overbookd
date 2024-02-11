@@ -3,7 +3,7 @@ import { SHIFT_HOURS } from "./shift.constant";
 export const AVAILABILITY_ERROR_MESSAGES = {
   PERIOD_TIMELINE: "start should be before end",
   START_HOUR: "start should be a pair hour",
-  MINIMUM_PERIOD_DURATION: "period should last at least 2 hours",
+  MINIMUM_PERIOD_DURATION: "❌ La disponibilité doit durer au moins 2 heures",
   PERIODS_JOINT: "periods should overlap or follow to be added",
   ODD_HOUR: buildOddHourError(),
 };

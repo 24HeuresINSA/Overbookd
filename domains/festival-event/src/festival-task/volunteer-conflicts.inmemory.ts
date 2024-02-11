@@ -46,7 +46,7 @@ class MobilizationHelper {
   ): boolean {
     const { start, end, volunteers } = this.mobilization;
     const otherPeriod = Period.init({ start, end });
-    const happenAtSameTime = otherPeriod.isIncludedBy(period);
+    const happenAtSameTime = otherPeriod.isOverlapping(period);
     const isVolunteerRequired = volunteers.some(({ id }) => id === volunteerId);
     return isVolunteerRequired && happenAtSameTime;
   }
