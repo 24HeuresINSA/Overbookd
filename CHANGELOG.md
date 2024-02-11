@@ -1,3 +1,28 @@
+## [2.16.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.5...v2.16.0) (2024-02-11)
+
+
+### Features
+
+* **festival-task:** implement feedbacks [#1545](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1545) ([6151739](https://gitlab.com/24-heures-insa/overbookd-mono/commit/61517393abe4145002ea799ecf2a2c336d963359))
+* **festival-task:** indicate when volunteers are also requested on other task. [#1534](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1534) ([8d27afe](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8d27afe96892e6a74a9b96a5c98c252dc91da169))
+
+
+### Bug Fixes
+
+* **festival-task:** indicate activity does request water or electricity supply. [#1536](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1536) ([209d5bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/209d5bb005f257aa737544aa9934ab8e57577286))
+* **festival-task:** quantity displayed for fa consumable [#1522](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1522) ([aa15aa5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aa15aa55399a93e799b886e97931b368d9a30b8f))
+* **logistic-dashboard:** display gear details in tooltip [#1532](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1532) ([21fe257](https://gitlab.com/24-heures-insa/overbookd-mono/commit/21fe2579547d5cfe9e7e055e6fecff57c2cb0ae1))
+* update authors' surnames. [#1541](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1541) ([23b5bc8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/23b5bc87b0568ce1dbabbe509d44a8e536f9ee89))
+
+
+### Refactor
+
+* **dashboard-logisctic:** implement festival tasks [#1547](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1547) ([edafa03](https://gitlab.com/24-heures-insa/overbookd-mono/commit/edafa031a6053634a1f6823752fd5ff13a43cf86))
+* **festival-activity:** display child festival tasks [#1533](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1533) ([dfbc8aa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/dfbc8aa435e404ed5231ceb986dc81ea4373dcee))
+* **festival-task:** display volunteer conflicts in web [#1546](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1546) ([f5eee40](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f5eee4053f8edd990b575b5eac2b0e72256c6307))
+* **festival-task:** use options on mobilization type. [#1544](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1544) ([5ab3325](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5ab3325d78098e66c34418233d39fc02b8dab4c2))
+* **volunteer-availability:** keep merged periods on orchestrator. [#1542](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1542) ([8fec90a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8fec90a4e3c51e71875a819b6cc025794d2172b5))
+
 ## [2.15.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.4...v2.15.5) (2024-02-07)
 
 
