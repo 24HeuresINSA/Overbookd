@@ -3,7 +3,7 @@ import { AvailabilityDate, InitOverDate } from "./date";
 import { AVAILABILITY_ERROR_MESSAGES } from "./volunteer-availability.error";
 
 const MINIMIM_PERIOD_DURATION_HOURS = 2;
-type AvailabilityError = { message: string; period: Period; };
+type AvailabilityError = { message: string; period: Period };
 type InitAvailabilities = {
   selected?: Period[];
   recorded?: Period[];
@@ -11,8 +11,8 @@ type InitAvailabilities = {
 export class Availabilities {
   private constructor(
     readonly recorded: Period[],
-    readonly selected: Period[]
-  ) { }
+    readonly selected: Period[],
+  ) {}
 
   static init(state?: InitAvailabilities): Availabilities {
     const selected = state?.selected ?? [];
@@ -22,7 +22,8 @@ export class Availabilities {
 
   select(date: InitOverDate): Availabilities {
     const period = AvailabilityDate.init(date).period;
-    const isAlreadyRecorded = this.recorded.some((availability) => availability.includes(period)
+    const isAlreadyRecorded = this.recorded.some((availability) =>
+      availability.includes(period),
     );
     if (isAlreadyRecorded) return this;
 
@@ -40,7 +41,7 @@ export class Availabilities {
         const splitedPeriods = availability.splitFrom(period);
         return [...availabilities, ...splitedPeriods];
       },
-      []
+      [],
     );
     return new Availabilities(this.recorded, periods);
   }
