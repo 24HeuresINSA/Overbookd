@@ -134,8 +134,7 @@ export default Vue.extend({
     },
     hasAvailabilityError(): boolean {
       return (
-        this.$accessor.volunteerAvailability.periodOrchestrator.errors.length >
-        0
+        this.$accessor.volunteerAvailability.availabilities.errors.length > 0
       );
     },
   },

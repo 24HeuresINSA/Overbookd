@@ -1,37 +1,23 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, mutationTree } from "typed-vuex";
 import { Period } from "@overbookd/period";
 import {
-  PeriodOrchestrator,
-  Availability,
-  AvailabilityRegistery,
   Availabilities,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriods } from "~/utils/models/period.model";
-import { HttpStringified } from "@overbookd/http";
 
 const repo = RepoFactory.VolunteerAvailabilityRepository;
 
 type VolunteerAvailabilityState = {
   availabilities: Availabilities;
   currentCharisma: number;
-  availabilityRegistery: AvailabilityRegistery;
-  periodOrchestrator: PeriodOrchestrator;
 };
 
 export const state = (): VolunteerAvailabilityState => ({
-  availabilityRegistery: AvailabilityRegistery.init(),
-  periodOrchestrator: PeriodOrchestrator.init(),
   availabilities: Availabilities.init(),
   currentCharisma: 0,
-});
-
-export const getters = getterTree(state, {
-  mAvailabilities(state) {
-    return state.availabilityRegistery.availabilities;
-  },
 });
 
 type AvailabilitySelection = {
@@ -40,11 +26,6 @@ type AvailabilitySelection = {
 };
 
 export const mutations = mutationTree(state, {
-  SET_VOLUNTEER_AVAILABILITIES(state, availabilities: Availability[]) {
-    state.availabilityRegistery =
-      AvailabilityRegistery.fromAvailabilities(availabilities);
-  },
-
   INIT_AVAILABILITIES(state, recorded: Period[]) {
     state.availabilities = Availabilities.init({ recorded });
   },
@@ -73,7 +54,6 @@ export const actions = actionTree(
   { state },
   {
     clearVolunteerAvailabilities({ commit }) {
-      commit("SET_VOLUNTEER_AVAILABILITIES", []);
       commit("INIT_AVAILABILITIES", []);
       commit("SET_CURRENT_CHARISMA", 0);
     },
@@ -85,7 +65,6 @@ export const actions = actionTree(
         repo.getVolunteerAvailabilities(this, userId),
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
       commit("INIT_AVAILABILITIES", castPeriods(res.data));
     },
 
@@ -106,7 +85,6 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
       commit("INIT_AVAILABILITIES", castPeriods(res.data));
 
       dispatch("user/fetchMyInformation", null, { root: true });
@@ -130,7 +108,6 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("SET_VOLUNTEER_AVAILABILITIES", castToAvailabilities(res.data));
       commit("INIT_AVAILABILITIES", castPeriods(res.data));
 
       dispatch("user/findUserById", rootState.user.selectedUser.id, {
@@ -152,7 +129,3 @@ export const actions = actionTree(
     },
   },
 );
-
-function castToAvailabilities(periods: HttpStringified<Period[]>) {
-  return castPeriods(periods).map(Availability.fromPeriod);
-}

@@ -43,9 +43,7 @@ import {
 import {
   AvailabilityDate,
   AvailabilityErrorMessage,
-  InitOverDate,
-  PeriodOrchestrator,
-} from "@overbookd/volunteer-availability";
+  InitOverDate,} from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   ALL_HOURS,
@@ -90,9 +88,6 @@ export default Vue.extend({
     },
     errors(): AvailabilityErrorMessage[] {
       return this.$accessor.volunteerAvailability.availabilities.errors;
-    },
-    periodOrchestrator(): PeriodOrchestrator {
-      return this.$accessor.volunteerAvailability.periodOrchestrator;
     },
     isSelected(): (date: DateString, hour: Hour) => boolean {
       return (date: DateString, hour: Hour) => {

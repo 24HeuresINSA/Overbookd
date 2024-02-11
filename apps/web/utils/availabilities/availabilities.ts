@@ -5,12 +5,8 @@ import {
   OverDate,
   isHour,
 } from "@overbookd/period";
-import {
-  AvailabilityDate,
-  PeriodOrchestrator,
-} from "@overbookd/volunteer-availability";
+import { AvailabilityDate } from "@overbookd/volunteer-availability";
 import { isPartyShift } from "../shift/shift";
-import { isSamePeriod } from "./period";
 
 export const ALL_HOURS: Hour[] = Array.from(
   { length: 24 },
@@ -42,19 +38,6 @@ export function isAvailabilityPeriodSaved(
   return (date: DateString, hour: Hour) => {
     const availabilityDate = AvailabilityDate.init({ date, hour });
     return availabilityDate.isIncludedBy(savedAvailabilities);
-  };
-}
-
-export function hasAvailabilityPeriodError(
-  periodOrchestrator: PeriodOrchestrator,
-): (date: DateString, hour: Hour) => boolean {
-  return (date: DateString, hour: Hour) => {
-    try {
-      const { period } = AvailabilityDate.init({ date, hour });
-      return periodOrchestrator.errors.some(isSamePeriod(period));
-    } catch (e) {
-      return false;
-    }
   };
 }
 
