@@ -170,18 +170,18 @@ const friday11hfriday18h = TimeWindowFactory.create(friday11h, friday18h);
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
   end: friday18h,
-  volunteers: [{ ...noel, conflicts: { tasks: [], isAvailable: true } }],
+  volunteers: [{ ...noel, conflicts: { tasks: [], availability: false } }],
   teams: [{ count: 2, team: "bénévole" }],
 });
 export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
   start: saturday18h,
   end: saturday19h,
-  volunteers: [{ ...noel, conflicts: { tasks: [], isAvailable: true } }],
+  volunteers: [{ ...noel, conflicts: { tasks: [], availability: false } }],
 });
 export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
   start: saturday8h,
   end: saturday11h,
-  volunteers: [{ ...lea, conflicts: { tasks: [], isAvailable: true } }],
+  volunteers: [{ ...lea, conflicts: { tasks: [], availability: false } }],
 });
 export const friday10hfriday18hMobilization = MobilizationBuilder.init({
   start: friday10h,

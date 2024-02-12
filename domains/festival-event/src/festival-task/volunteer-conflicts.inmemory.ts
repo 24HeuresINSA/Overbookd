@@ -23,13 +23,13 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
     volunteerId: Volunteer["id"],
   ): Promise<Conflicts> {
     const tasks = await this.onTask(taskId, period, volunteerId);
-    const isAvailable = await this.isAvailable(period, volunteerId);
+    const availability = await this.onAvailability(period, volunteerId);
 
-    const conflicts = { tasks, isAvailable };
+    const conflicts = { tasks, availability };
     return Promise.resolve(conflicts);
   }
 
-  onTask(
+  private onTask(
     taskId: FestivalTask["id"],
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
@@ -51,7 +51,7 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
     return Promise.resolve(tasks);
   }
 
-  isAvailable(
+  private onAvailability(
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
   ): Promise<boolean> {
@@ -60,10 +60,9 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
       ({ volunteer }) => volunteer.id === volunteerId,
     );
     const availabilities = (volunteer?.availabilities ?? []).filter(
-      (availability) =>
-        Period.init(availability).isOverlapping(requestedPeriod),
+      (availability) => Period.init(availability).includes(requestedPeriod),
     );
-    return Promise.resolve(availabilities.length > 0);
+    return Promise.resolve(availabilities.length === 0);
   }
 }
 

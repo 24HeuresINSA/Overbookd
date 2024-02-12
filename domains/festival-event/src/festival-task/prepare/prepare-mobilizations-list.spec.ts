@@ -3,12 +3,7 @@ import { EndBeforeStart } from "@overbookd/period";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
-import {
-  Mobilization,
-  TeamMobilization,
-  VolunteerMobilization,
-  VolunteerWithConflicts,
-} from "../festival-task";
+import { TeamMobilization, VolunteerMobilization } from "../festival-task";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
@@ -90,32 +85,27 @@ describe("Prepare festival task mobilizations list", () => {
       `(
         "when volunteer is requested on $indication on any mobilization",
         ({ task, start, end }) => {
-          let mobilizations: Mobilization[];
-          let volunteer: VolunteerWithConflicts | undefined;
-
-          beforeEach(async () => {
+          it("should list tasks that are requesting the same volunteer at the same time", async () => {
             const helper = saturday08hsaturday11hMobilization
               .withStart(start)
               .withEnd(end);
-            mobilizations = (
-              await prepare.addMobilization(task.id, helper.form)
-            ).mobilizations;
+            const { mobilizations } = await prepare.addMobilization(
+              task.id,
+              helper.form,
+            );
             const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
             );
-            volunteer = mobilization?.volunteers.find(
+            const volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === lea.id,
             );
-          });
-
-          it("should list tasks that are requesting the same volunteer at the same time", async () => {
             const expectedRequestedBy = [
               {
                 id: guardEscapeGame.id,
                 name: guardEscapeGame.general.name,
               },
             ];
-            expect(volunteer?.conflicts?.tasks).toEqual(expectedRequestedBy);
+            expect(volunteer?.conflicts.tasks).toEqual(expectedRequestedBy);
             expect(
               mobilizations.flatMap(({ volunteers }) =>
                 volunteers.flatMap(({ conflicts: { tasks } }) =>
@@ -123,10 +113,6 @@ describe("Prepare festival task mobilizations list", () => {
                 ),
               ),
             ).not.toContain(task.id);
-          });
-
-          it("should indicate that volunteer is available", async () => {
-            expect(volunteer?.conflicts.isAvailable).toBe(true);
           });
         },
       );
@@ -138,10 +124,7 @@ describe("Prepare festival task mobilizations list", () => {
       `(
         "when volunteer is requested on contigous $indication period on any mobilization",
         ({ task, start, end }) => {
-          let mobilization: Mobilization | undefined;
-          let volunteer: VolunteerWithConflicts | undefined;
-
-          beforeEach(async () => {
+          it("shouldn't list it as task that are requesting the same volunteer at the same time", async () => {
             const helper = saturday08hsaturday11hMobilization
               .withStart(start)
               .withEnd(end);
@@ -149,20 +132,43 @@ describe("Prepare festival task mobilizations list", () => {
               task.id,
               helper.form,
             );
-            mobilization = mobilizations.find(
+            const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
             );
-            volunteer = mobilization?.volunteers.find(
+            const volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === lea.id,
             );
-          });
-
-          it("shouldn't list it as task that are requesting the same volunteer at the same time", async () => {
             expect(volunteer?.conflicts.tasks).toEqual([]);
           });
+        },
+      );
 
-          it("shouldn't indicate that volunteer is available", async () => {
-            expect(volunteer?.conflicts.isAvailable).toBe(false);
+      describe.each`
+        indication                       | task                 | start          | end            | hasAvailabilityConflict
+        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h} | ${false}
+        ${"including period"}            | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h} | ${true}
+        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h} | ${true}
+        ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${true}
+      `(
+        "when volunteer is requested on any mobilization and available on $indication",
+        ({ task, start, end, hasAvailabilityConflict }) => {
+          it(`should indicate that availability conflict is ${hasAvailabilityConflict}`, async () => {
+            const helper = saturday08hsaturday11hMobilization
+              .withStart(start)
+              .withEnd(end);
+            const { mobilizations } = await prepare.addMobilization(
+              task.id,
+              helper.form,
+            );
+            const mobilization = mobilizations.find(
+              (mobilization) => mobilization.id === helper.mobilization.id,
+            );
+            const volunteer = mobilization?.volunteers.find(
+              (volunteer) => volunteer.id === lea.id,
+            );
+            expect(volunteer?.conflicts.availability).toBe(
+              hasAvailabilityConflict,
+            );
           });
         },
       );
@@ -397,7 +403,7 @@ describe("Prepare festival task mobilizations list", () => {
           lastname: "Hette",
           nickname: "gh",
           id: 100,
-          conflicts: { tasks: [], isAvailable: false },
+          conflicts: { tasks: [], availability: true },
         };
 
         const { mobilizations } = await prepare.addVolunteerToMobilization(

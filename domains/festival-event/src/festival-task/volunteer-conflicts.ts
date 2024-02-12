@@ -5,7 +5,6 @@ import {
   Mobilization,
   VolunteerWithConflicts,
   Conflicts,
-  FestivalTaskLink,
 } from "./festival-task";
 
 export type VolunteerAvailabilities = {
@@ -19,17 +18,6 @@ export type VolunteerConflicts = {
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
   ): Promise<Conflicts>;
-
-  onTask(
-    taskId: FestivalTask["id"],
-    period: IProvidePeriod,
-    volunteerId: Volunteer["id"],
-  ): Promise<FestivalTaskLink[]>;
-
-  isAvailable(
-    period: IProvidePeriod,
-    volunteerId: Volunteer["id"],
-  ): Promise<boolean>;
 };
 
 export class FestivalTaskTranslator {

@@ -39,14 +39,14 @@ export default defineComponent({
   emits: ["remove"],
   computed: {
     isNotAvailable(): boolean {
-      return !this.volunteer.conflicts.isAvailable;
+      return this.volunteer.conflicts.availability;
     },
     isAlsoRequested(): boolean {
       return this.volunteer.conflicts.tasks.length > 0;
     },
     volunteerStatus(): string {
-      if (this.isNotAvailable) return "not-available";
       if (this.isAlsoRequested) return "also-requested-by-ft";
+      if (this.isNotAvailable) return "not-available";
       return "";
     },
     hasErrors(): boolean {

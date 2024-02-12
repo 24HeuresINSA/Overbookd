@@ -17,11 +17,11 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     volunteerId: Volunteer["id"],
   ): Promise<Conflicts> {
     const tasks = await this.onTask(taskId, period, volunteerId);
-    const isAvailable = await this.isAvailable(period, volunteerId);
-    return { tasks, isAvailable };
+    const availability = await this.onAvailability(period, volunteerId);
+    return { tasks, availability };
   }
 
-  async onTask(
+  private async onTask(
     taskId: FestivalTask["id"],
     { start, end }: IProvidePeriod,
     volunteerId: Volunteer["id"],
@@ -41,17 +41,17 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     return conflicts.map(({ ft }) => ft);
   }
 
-  async isAvailable(
+  private async onAvailability(
     { start, end }: IProvidePeriod,
     userId: Volunteer["id"],
   ): Promise<boolean> {
-    const availabilities = await this.prisma.volunteerAvailability.findMany({
+    const availabilities = await this.prisma.volunteerAvailability.count({
       where: {
         userId,
         start: { lte: start },
         end: { gte: end },
       },
     });
-    return availabilities.length > 0;
+    return availabilities === 0;
   }
 }
