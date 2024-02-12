@@ -27,7 +27,7 @@ export default Vue.extend({
   name: "ContributionAlert",
   props: {
     alert: {
-      type: SettleAlert,
+      type: Object as () => SettleAlert,
       required: true,
     },
   },

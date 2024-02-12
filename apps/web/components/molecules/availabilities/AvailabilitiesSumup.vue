@@ -82,7 +82,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    userId() {
+    selectedVolunteer() {
       this.fetchAvailabilities();
     },
   },
