@@ -3,9 +3,6 @@
     <v-btn class="close-btn" icon @click="closeDialog">
       <v-icon>mdi-close</v-icon>
     </v-btn>
-    <v-card-title class="signage__title">
-      <h2>Signalisation</h2>
-    </v-card-title>
     <v-img :src="imageBlob" :alt="signage.name" contain></v-img>
   </v-card>
 </template>
@@ -29,29 +26,27 @@ export default Vue.extend({
     imageBlob: undefined as string | undefined,
   }),
   computed: {
-
     type() {
       return this.$accessor.dialog.type;
     },
-    open() {
-      return this.$accessor.dialog.open;
-    },
-    me() {
-      return this.$accessor.user.me;
+  },
+  watch: {
+    signage() {
+      this.getImage();
     },
   },
-  beforeMount() {
-  this.getImage();
+  mounted() {
+    this.getImage();
   },
   methods: {
     async getImage() {
-    this.imageBlob = await this.$accessor.catalogSignage.getSignageImage(this.signage);
-    console.log(this.imageBlob);
+      this.imageBlob = await this.$accessor.catalogSignage.getSignageImage(
+        this.signage,
+      );
     },
     closeDialog(): void {
       this.$emit("close-dialog");
     },
   },
-
 });
 </script>

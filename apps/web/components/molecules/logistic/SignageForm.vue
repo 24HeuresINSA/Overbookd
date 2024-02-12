@@ -36,7 +36,7 @@
             show-size
           />
         </div>
-        <v-btn color="success" dark large :disabled="invalidForm" @click="createOrUpdateSignage">
+        <v-btn color="success" :disabled="invalidForm" @click="createOrUpdateSignage">
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
           Sauvegarder la signalisation
         </v-btn>
