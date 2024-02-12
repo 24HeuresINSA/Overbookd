@@ -40,6 +40,13 @@ export default {
       editor: null,
     };
   },
+  computed: {
+    emptyContent() {
+      const html = this.editor.getHTML();
+      const textContent = html.replace(/<[^>]+>/g, "");
+      return textContent.trim() === "";
+    },
+  },
   watch: {
     data() {
       this.editor.commands.setContent(this.data ?? "");
@@ -59,7 +66,7 @@ export default {
   },
   methods: {
     update() {
-      this.$emit("change", this.editor.getHTML());
+      this.$emit("change", this.emptyContent ? "" : this.editor.getHTML());
     },
   },
 };

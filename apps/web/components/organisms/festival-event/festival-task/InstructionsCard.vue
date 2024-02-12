@@ -17,21 +17,28 @@
         @change="updateGlobal"
       />
 
-      <SearchUsers
-        :users="instructions.inCharge.volunteers"
-        label="Responsables de la tâche"
-        :boxed="false"
-        deletable-chips
-        @add="addInChargeVolunteer"
-        @remove="removeInChargeVolunteer"
+      <v-switch
+        :value="hasInChargeInstructions"
+        label="Ajouter une descripiton pour le.s responsable.s de la tâche"
+        @change="toggleInChargeInstructions"
       />
+      <div v-show="hasInChargeInstructions">
+        <SearchUsers
+          :users="instructions.inCharge.volunteers"
+          label="Responsables de la tâche"
+          :boxed="false"
+          deletable-chips
+          @add="addInChargeVolunteer"
+          @remove="removeInChargeVolunteer"
+        />
 
-      <v-label>Description pour le.s responsable.s de la tâche</v-label>
-      <RichEditor
-        :data="instructions.inCharge.instruction ?? ''"
-        class="mb-6"
-        @change="updateInChargeInstruction"
-      />
+        <v-label>Description pour le.s responsable.s de la tâche</v-label>
+        <RichEditor
+          :data="instructions.inCharge.instruction ?? ''"
+          class="mb-6"
+          @change="updateInChargeInstruction"
+        />
+      </div>
 
       <v-form class="contact-form">
         <SearchUser
@@ -78,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import SearchUsers from "~/components/atoms/field/search/SearchUsers.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
@@ -92,13 +99,15 @@ import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 type InstructionsCardData = {
   contact: User | null;
   contactHeaders: Header[];
+  hasInChargeInstructions: boolean;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "InstructionsCard",
   components: { SearchSignaLocation, RichEditor, SearchUsers, SearchUser },
   data: (): InstructionsCardData => ({
     contact: null,
+    hasInChargeInstructions: false,
     contactHeaders: [
       { text: "Bénévole", value: "volunteer", sortable: false },
       { text: "Téléphone", value: "phone", sortable: false },
@@ -106,11 +115,14 @@ export default Vue.extend({
     ],
   }),
   computed: {
-    mFT(): FestivalTask {
+    selectedTask(): FestivalTask {
       return this.$accessor.festivalTask.selectedTask;
     },
+    selectedTaskId(): FestivalTask["id"] {
+      return this.selectedTask.id;
+    },
     instructions(): FestivalTask["instructions"] {
-      return this.mFT.instructions;
+      return this.selectedTask.instructions;
     },
     adherents(): User[] {
       return this.$accessor.user.adherents;
@@ -119,11 +131,27 @@ export default Vue.extend({
       return Boolean(this.contact);
     },
   },
+  watch: {
+    selectedTaskId() {
+      this.checkActiveInChargeInstructions();
+    },
+  },
   mounted() {
     if (this.adherents.length) return;
     this.$accessor.user.fetchAdherents();
+    this.checkActiveInChargeInstructions();
   },
   methods: {
+    checkActiveInChargeInstructions() {
+      const hasVolunteers = this.instructions.inCharge.volunteers.length > 0;
+      const hasInstruction = this.instructions.inCharge.instruction !== null;
+      this.hasInChargeInstructions = hasVolunteers || hasInstruction;
+    },
+    toggleInChargeInstructions() {
+      this.hasInChargeInstructions = !this.hasInChargeInstructions;
+      if (!this.hasInChargeInstructions) this.updateInChargeInstruction("");
+      // TODO: remove volunteers
+    },
     updateAppointment(appointment: SignaLocation) {
       const appointmentId = appointment.id;
       this.$accessor.festivalTask.updateInstructions({ appointmentId });
