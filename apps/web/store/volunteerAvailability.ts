@@ -69,7 +69,7 @@ export const actions = actionTree(
     },
 
     async updateVolunteerAvailabilities(
-      { commit, dispatch, state, rootState },
+      { commit, dispatch, state },
       userId: number,
     ) {
       const res = await safeCall(
@@ -88,7 +88,6 @@ export const actions = actionTree(
       commit("INIT_AVAILABILITIES", castPeriods(res.data));
 
       dispatch("user/fetchMyInformation", null, { root: true });
-      commit("SET_CURRENT_CHARISMA", rootState.user.me.charisma);
     },
 
     async overrideVolunteerAvailabilities(
