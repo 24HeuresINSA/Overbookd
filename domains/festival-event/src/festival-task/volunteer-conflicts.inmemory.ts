@@ -1,35 +1,63 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { VolunteerConflicts } from "./volunteer-conflicts";
+import {
+  VolunteerAvailabilities,
+  VolunteerConflicts,
+} from "./volunteer-conflicts";
 import {
   FestivalTask,
   FestivalTaskLink,
   Volunteer,
   Mobilization,
+  Conflicts,
 } from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
-  constructor(private tasks: FestivalTask[]) {}
+  constructor(
+    private readonly tasks: FestivalTask[],
+    private readonly availabilities: VolunteerAvailabilities[],
+  ) {}
 
   on(
     taskId: FestivalTask["id"],
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
-  ): Promise<FestivalTaskLink[]> {
+  ): Promise<Conflicts> {
     const requestedPeriod = Period.init(period);
-    const tasks = this.tasks
+    const tasks = this.onTask(taskId, requestedPeriod, volunteerId);
+    const isAvailable = this.isAvailable(requestedPeriod, volunteerId);
+
+    const conflicts = { tasks, isAvailable };
+    return Promise.resolve(conflicts);
+  }
+
+  private onTask(
+    taskId: FestivalTask["id"],
+    period: Period,
+    volunteerId: Volunteer["id"],
+  ): FestivalTaskLink[] {
+    return this.tasks
       .filter(({ mobilizations, id }) => {
         const isDifferentTask = taskId !== id;
         const isAlsoRequestingVolunteer = mobilizations.some((mobilization) =>
           MobilizationHelper.build(mobilization).isRequestingVolunteerOn(
             volunteerId,
-            requestedPeriod,
+            period,
           ),
         );
         return isDifferentTask && isAlsoRequestingVolunteer;
       })
       .map(({ id, general: { name } }) => ({ id, name }));
+  }
 
-    return Promise.resolve(tasks);
+  private isAvailable(period: Period, volunteerId: Volunteer["id"]): boolean {
+    const volunteer = this.availabilities.find(
+      ({ volunteer }) => volunteer.id === volunteerId,
+    );
+    return (
+      (volunteer?.availabilities ?? []).filter((availability) =>
+        Period.init(availability).isOverlapping(period),
+      ).length > 0
+    );
   }
 }
 

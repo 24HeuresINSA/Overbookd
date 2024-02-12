@@ -41,8 +41,9 @@ type MobilizationOptions = FestivalTaskOptions;
 
 const defaultMobilizationOptions = defaultFestivalTaskOptions;
 
-type Conflicts = {
+export type Conflicts = {
   tasks: FestivalTaskLink[];
+  isAvailable: boolean;
 };
 
 export type VolunteerWithConflicts = Volunteer & { conflicts: Conflicts };

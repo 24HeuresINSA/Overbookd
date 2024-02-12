@@ -11,6 +11,7 @@ import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import { Location } from "../common/location";
 import { AddMobilization } from "./prepare/prepare";
+import { VolunteerAvailabilities } from "./volunteer-conflicts";
 
 type BuildTimeWindow = {
   date: Date;
@@ -154,24 +155,33 @@ export const saturday19h: BuildTimeWindow = {
   id: "28600860",
 };
 
+export const noelAvailabilities: VolunteerAvailabilities = {
+  volunteer: noel,
+  availabilities: [{ start: friday10h.date, end: saturday19h.date }],
+};
+export const leaAvailabilities: VolunteerAvailabilities = {
+  volunteer: lea,
+  availabilities: [{ start: saturday8h.date, end: saturday11h.date }],
+};
+
 const friday10hfriday19h = TimeWindowFactory.create(friday10h, friday19h);
 const friday11hfriday18h = TimeWindowFactory.create(friday11h, friday18h);
 
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
   end: friday18h,
-  volunteers: [{ ...noel, conflicts: { tasks: [] } }],
+  volunteers: [{ ...noel, conflicts: { tasks: [], isAvailable: true } }],
   teams: [{ count: 2, team: "bénévole" }],
 });
 export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
   start: saturday18h,
   end: saturday19h,
-  volunteers: [{ ...lea, conflicts: { tasks: [] } }],
+  volunteers: [{ ...noel, conflicts: { tasks: [], isAvailable: true } }],
 });
 export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
   start: saturday8h,
   end: saturday11h,
-  volunteers: [{ ...lea, conflicts: { tasks: [] } }],
+  volunteers: [{ ...lea, conflicts: { tasks: [], isAvailable: true } }],
 });
 export const friday10hfriday18hMobilization = MobilizationBuilder.init({
   start: friday10h,

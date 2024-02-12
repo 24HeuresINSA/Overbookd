@@ -3,7 +3,12 @@ import { EndBeforeStart } from "@overbookd/period";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
-import { TeamMobilization, VolunteerMobilization } from "../festival-task";
+import {
+  Mobilization,
+  TeamMobilization,
+  VolunteerMobilization,
+  VolunteerWithConflicts,
+} from "../festival-task";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
@@ -31,6 +36,8 @@ import {
   saturday9h,
   saturday7h,
   saturday8h,
+  leaAvailabilities,
+  noelAvailabilities,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
@@ -43,8 +50,12 @@ describe("Prepare festival task mobilizations list", () => {
       presentEscapeGame,
       guardEscapeGame,
     ];
+    const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(
+      tasks,
+      availabilities,
+    );
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
@@ -79,20 +90,25 @@ describe("Prepare festival task mobilizations list", () => {
       `(
         "when volunteer is requested on $indication on any mobilization",
         ({ task, start, end }) => {
-          it("should list tasks that are requesting the same volunteer at the same time", async () => {
+          let mobilizations: Mobilization[];
+          let volunteer: VolunteerWithConflicts | undefined;
+
+          beforeEach(async () => {
             const helper = saturday08hsaturday11hMobilization
               .withStart(start)
               .withEnd(end);
-            const { mobilizations } = await prepare.addMobilization(
-              task.id,
-              helper.form,
-            );
+            mobilizations = (
+              await prepare.addMobilization(task.id, helper.form)
+            ).mobilizations;
             const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
             );
-            const volunteer = mobilization?.volunteers.find(
+            volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === lea.id,
             );
+          });
+
+          it("should list tasks that are requesting the same volunteer at the same time", async () => {
             const expectedRequestedBy = [
               {
                 id: guardEscapeGame.id,
@@ -108,6 +124,10 @@ describe("Prepare festival task mobilizations list", () => {
               ),
             ).not.toContain(task.id);
           });
+
+          it("should indicate that volunteer is available", async () => {
+            expect(volunteer?.conflicts.isAvailable).toBe(true);
+          });
         },
       );
 
@@ -118,7 +138,10 @@ describe("Prepare festival task mobilizations list", () => {
       `(
         "when volunteer is requested on contigous $indication period on any mobilization",
         ({ task, start, end }) => {
-          it("shouldn't list it as task that are requesting the same volunteer at the same time", async () => {
+          let mobilization: Mobilization | undefined;
+          let volunteer: VolunteerWithConflicts | undefined;
+
+          beforeEach(async () => {
             const helper = saturday08hsaturday11hMobilization
               .withStart(start)
               .withEnd(end);
@@ -126,17 +149,25 @@ describe("Prepare festival task mobilizations list", () => {
               task.id,
               helper.form,
             );
-            const mobilization = mobilizations.find(
+            mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
             );
-            const volunteer = mobilization?.volunteers.find(
+            volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === lea.id,
             );
-            expect(volunteer?.conflicts?.tasks).toEqual([]);
+          });
+
+          it("shouldn't list it as task that are requesting the same volunteer at the same time", async () => {
+            expect(volunteer?.conflicts.tasks).toEqual([]);
+          });
+
+          it("shouldn't indicate that volunteer is available", async () => {
+            expect(volunteer?.conflicts.isAvailable).toBe(false);
           });
         },
       );
     });
+
     describe("with split duration that is not period divider", () => {
       describe("when trying to add this as mobilization", () => {
         it("should indicate that split duration doesn't match period duration", async () => {
@@ -366,7 +397,7 @@ describe("Prepare festival task mobilizations list", () => {
           lastname: "Hette",
           nickname: "gh",
           id: 100,
-          conflicts: { tasks: [] },
+          conflicts: { tasks: [], isAvailable: false },
         };
 
         const { mobilizations } = await prepare.addVolunteerToMobilization(

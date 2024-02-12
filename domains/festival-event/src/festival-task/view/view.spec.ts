@@ -34,7 +34,7 @@ describe("View festival tasks", () => {
     `("when $nbTasks are known", ({ tasks, previews }) => {
       beforeAll(() => {
         const festivalTasks = new InMemoryFestivalTasks(tasks);
-        const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+        const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
         const translator = new FestivalTaskTranslator(volunteerConflicts);
         view = new ViewFestivalTask(festivalTasks, translator);
       });
@@ -60,7 +60,7 @@ describe("View festival tasks", () => {
       ({ tasks, existingTaskId, expectedTask, nonExistingId }) => {
         beforeAll(() => {
           const festivalTasks = new InMemoryFestivalTasks(tasks);
-          const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+          const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
           const translator = new FestivalTaskTranslator(volunteerConflicts);
           view = new ViewFestivalTask(festivalTasks, translator);
         });
