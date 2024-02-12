@@ -19,7 +19,7 @@
 
       <v-switch
         :value="hasInChargeInstructions"
-        label="Ajouter une descripiton pour le.s responsable.s de la tâche"
+        label="Ajouter une description pour le.s responsable.s de la tâche"
         @change="toggleInChargeInstructions"
       />
       <div v-show="hasInChargeInstructions">
