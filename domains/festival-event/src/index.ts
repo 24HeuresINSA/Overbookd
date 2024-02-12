@@ -210,6 +210,7 @@ export type {
   Draft as FestivalTaskDraft,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
+  Conflicts,
   Contact,
   Volunteer,
   Mobilization,

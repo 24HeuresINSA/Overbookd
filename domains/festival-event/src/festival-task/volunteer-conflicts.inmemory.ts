@@ -17,47 +17,53 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
     private readonly availabilities: VolunteerAvailabilities[],
   ) {}
 
-  on(
+  async on(
     taskId: FestivalTask["id"],
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
   ): Promise<Conflicts> {
-    const requestedPeriod = Period.init(period);
-    const tasks = this.onTask(taskId, requestedPeriod, volunteerId);
-    const isAvailable = this.isAvailable(requestedPeriod, volunteerId);
+    const tasks = await this.onTask(taskId, period, volunteerId);
+    const isAvailable = await this.isAvailable(period, volunteerId);
 
     const conflicts = { tasks, isAvailable };
     return Promise.resolve(conflicts);
   }
 
-  private onTask(
+  onTask(
     taskId: FestivalTask["id"],
-    period: Period,
+    period: IProvidePeriod,
     volunteerId: Volunteer["id"],
-  ): FestivalTaskLink[] {
-    return this.tasks
+  ): Promise<FestivalTaskLink[]> {
+    const requestedPeriod = Period.init(period);
+    const tasks = this.tasks
       .filter(({ mobilizations, id }) => {
         const isDifferentTask = taskId !== id;
         const isAlsoRequestingVolunteer = mobilizations.some((mobilization) =>
           MobilizationHelper.build(mobilization).isRequestingVolunteerOn(
             volunteerId,
-            period,
+            requestedPeriod,
           ),
         );
         return isDifferentTask && isAlsoRequestingVolunteer;
       })
       .map(({ id, general: { name } }) => ({ id, name }));
+
+    return Promise.resolve(tasks);
   }
 
-  private isAvailable(period: Period, volunteerId: Volunteer["id"]): boolean {
+  isAvailable(
+    period: IProvidePeriod,
+    volunteerId: Volunteer["id"],
+  ): Promise<boolean> {
+    const requestedPeriod = Period.init(period);
     const volunteer = this.availabilities.find(
       ({ volunteer }) => volunteer.id === volunteerId,
     );
-    return (
-      (volunteer?.availabilities ?? []).filter((availability) =>
-        Period.init(availability).isOverlapping(period),
-      ).length > 0
+    const availabilities = (volunteer?.availabilities ?? []).filter(
+      (availability) =>
+        Period.init(availability).isOverlapping(requestedPeriod),
     );
+    return Promise.resolve(availabilities.length > 0);
   }
 }
 
