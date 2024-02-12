@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { issueTemplate } from "~/utils/bug-report/bug-report.constant";
+import { BugReport } from "~/utils/bug-report/bug-report.constant";
 
 export default Vue.extend({
   name: "BugReport",
@@ -53,7 +53,7 @@ export default Vue.extend({
       this.$accessor.notif.pushNotification({ message: "Email copié ✅" });
     },
     async copyIssueTemplate() {
-      await navigator.clipboard.writeText(issueTemplate);
+      await navigator.clipboard.writeText(BugReport.template);
       this.$accessor.notif.pushNotification({ message: "Modèle copié ✅" });
     },
   },

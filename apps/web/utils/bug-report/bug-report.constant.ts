@@ -1,4 +1,6 @@
-export const issueTemplate = `# URL or page
+export class BugReport {
+  static get template(): string {
+    return `# URL or page
 ${window.location.href}
 
 # Expected behavior
@@ -19,3 +21,5 @@ version: ${process.env.OVERBOOKD_VERSION}
 user agent: ${navigator.userAgent}
 date: ${Date().toLocaleString()}
 resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
+  }
+}
