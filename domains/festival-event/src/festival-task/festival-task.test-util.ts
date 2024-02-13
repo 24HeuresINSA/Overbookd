@@ -1,13 +1,7 @@
 import { VALIDATED } from "../common/status";
-import {
-  FestivalActivity,
-  FestivalTask,
-} from "./festival-task";
+import { FestivalActivity, FestivalTask } from "./festival-task";
 import { Contact } from "./sections/instructions";
-import {
-  Mobilization,
-  VolunteerWithConflicts
-} from "./sections/mobilizations";
+import { Mobilization, VolunteerWithConflicts } from "./sections/mobilizations";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
