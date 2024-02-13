@@ -22,14 +22,14 @@ export interface OrgaNeedsResponse {
 const SELECT_REQUESTED_VOLUNTEERS = {
   start: true,
   end: true,
-  teamRequests: {
+  teams: {
     select: {
-      quantity: true,
+      count: true,
     },
   },
   _count: {
     select: {
-      userRequests: true,
+      volunteers: true,
     },
   },
 };
@@ -140,18 +140,17 @@ export class OrgaNeedsService {
   private async getRequestedVolunteers(
     orgaNeedsRequest: OrgaNeedsRequest,
   ): Promise<RequestedVolunteersOverPeriod[]> {
-    const timeWindows = await this.prisma.ftTimeWindow.findMany({
+    const timeWindows = await this.prisma.festivalTaskMobilization.findMany({
       where: {
         ...this.periodIncludedCondition(orgaNeedsRequest),
-        ...this.teamRequestedCondition(orgaNeedsRequest.teams),
+        ...this.hasTeamCondition(orgaNeedsRequest.teams),
       },
       select: SELECT_REQUESTED_VOLUNTEERS,
     });
 
-    return timeWindows.map(({ start, end, teamRequests, _count }) => {
+    return timeWindows.map(({ start, end, teams, _count }) => {
       const requestedVolunteers =
-        teamRequests.reduce((acc, { quantity }) => acc + quantity, 0) +
-        _count.userRequests;
+        teams.reduce((acc, { count }) => acc + count, 0) + _count.volunteers;
 
       return { start, end, requestedVolunteers };
     });
@@ -193,19 +192,24 @@ export class OrgaNeedsService {
       getPeriodDuration(period) / QUARTER_IN_MS,
     );
 
-    return Array(numberOfIntervals)
-      .fill({})
-      .map((_, index) => {
-        const start = new Date(period.start.getTime() + index * QUARTER_IN_MS);
-        const end = new Date(start.getTime() + QUARTER_IN_MS);
-        return { start, end };
-      });
+    return Array.from({ length: numberOfIntervals }).map((_, index) => {
+      const start = new Date(period.start.getTime() + index * QUARTER_IN_MS);
+      const end = new Date(start.getTime() + QUARTER_IN_MS);
+      return { start, end };
+    });
   }
 
   private periodIncludedCondition({ start, end }: IProvidePeriod) {
     return {
       start: { lte: end },
       end: { gte: start },
+    };
+  }
+
+  private hasTeamCondition(teams: string[]) {
+    if (teams.length === 0) return {};
+    return {
+      teams: { some: { teamCode: { in: teams } } },
     };
   }
 
