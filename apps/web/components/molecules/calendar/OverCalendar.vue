@@ -7,7 +7,12 @@
       :class="`calendar-${calendarType}`"
     >
       <v-sheet v-if="displayHeader" tile height="54" class="d-flex">
-        <v-btn icon class="ma-2" @click="previousPage(calendarType)">
+        <v-btn
+          icon
+          class="ma-2"
+          :disabled="disablePrevious"
+          @click="previousPage(calendarType)"
+        >
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
         <v-spacer class="calendar-title">
@@ -17,7 +22,12 @@
             </div>
           </slot>
         </v-spacer>
-        <v-btn icon class="ma-2" @click="nextPage(calendarType)">
+        <v-btn
+          icon
+          class="ma-2"
+          :disabled="disableNext"
+          @click="nextPage(calendarType)"
+        >
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-sheet>
@@ -28,7 +38,8 @@
         :events="events"
         :event-ripple="true"
         :weekdays="weekdays"
-        @input="updateDate"
+        @click:date="selectDate"
+        @moved="updateDate"
       >
         <template
           #interval="{
@@ -124,20 +135,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
+import { DateString, OverDate } from "@overbookd/period";
+import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
 import { CalendarEvent } from "~/utils/models/calendar.model";
-import { SHIFT_HOURS } from "~/utils/shift/shift";
 import {
   VuetifyCalendar,
   VuetifyCalendarType,
 } from "~/utils/calendar/vuetify-calendar";
 import { formatMonthWithYear } from "~/utils/date/date.utils";
 
-export default Vue.extend({
+export default defineComponent({
   name: "OverCalendar",
   model: {
     prop: "date",
-    event: "change",
+    event: "update:date",
   },
   props: {
     events: {
@@ -153,6 +165,14 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
+    disablePrevious: {
+      type: Boolean,
+      default: false,
+    },
+    disableNext: {
+      type: Boolean,
+      default: false,
+    },
     title: {
       type: String,
       default: () => undefined,
@@ -166,6 +186,7 @@ export default Vue.extend({
       default: null,
     },
   },
+  emits: ["update:date", "select:date"],
   computed: {
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
@@ -200,8 +221,9 @@ export default Vue.extend({
         this.isDayHour(hour) || this.isNightHour(hour) || this.isPartyHour(hour)
       );
     },
-    updateDate(date: Date) {
-      this.$emit("change", date);
+    updateDate({ date }: { date: DateString }) {
+      const newDate = OverDate.init({ date, hour: 0 }).date;
+      this.$emit("update:date", newDate);
     },
     previousPage(calendarType: VuetifyCalendarType) {
       const calendarReferences = this.$refs[`calendar-${calendarType}`];
@@ -212,6 +234,9 @@ export default Vue.extend({
       const calendarReferences = this.$refs[`calendar-${calendarType}`];
       const [calendar] = calendarReferences as unknown as [VuetifyCalendar];
       if (calendar) calendar.next();
+    },
+    selectDate({ date }: { date: DateString }) {
+      this.$emit("select:date", date);
     },
   },
 });

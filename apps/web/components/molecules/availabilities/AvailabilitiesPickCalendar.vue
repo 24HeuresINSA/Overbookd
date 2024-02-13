@@ -1,10 +1,12 @@
 <template>
   <OverCalendar
-    :date="period.start"
-    :display-header="false"
+    :date="date"
     :weekdays="weekdayNumbers"
+    :disable-previous="disablePrevious"
+    :disable-next="disableNext"
     class="no-scroll elevation-2"
-    @change="selectDay"
+    @select:date="selectDay"
+    @update:date="updateDate"
   >
     <template #day-label-header="{ date }">
       <div class="day-header">
@@ -32,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import {
   DateString,
   Hour,
@@ -61,20 +63,37 @@ import {
   computeTomorrowDate,
 } from "~/utils/date/date.utils";
 
-export default Vue.extend({
+export default defineComponent({
   name: "AvailabilitiesPickCalendar",
   components: { OverCalendar },
   props: {
     period: {
       type: Object as () => Period,
       required: true,
-      default: () => ({
-        start: new Date(),
-        end: new Date(),
-      }),
+    },
+    disablePreviousPeriod: {
+      type: Boolean,
+      required: true,
+    },
+    disableNextPeriod: {
+      type: Boolean,
+      required: true,
     },
   },
+  emits: ["reach:period-end", "reach:period-start"],
+  data: () => ({
+    date: new Date(),
+  }),
   computed: {
+    disablePrevious(): boolean {
+      const isStartOfPeriod =
+        this.period.start.getTime() === this.date.getTime();
+      return this.disablePreviousPeriod && isStartOfPeriod;
+    },
+    disableNext(): boolean {
+      const isEndOfPeriod = this.period.end.getTime() === this.date.getTime();
+      return this.disableNextPeriod && isEndOfPeriod;
+    },
     charismaPeriods(): SavedCharismaPeriod[] {
       return this.$accessor.charismaPeriod.charismaPeriods ?? [];
     },
@@ -131,7 +150,25 @@ export default Vue.extend({
       return this.generateWeekdayList([], new Date(this.period.start));
     },
   },
+  watch: {
+    period() {
+      this.date = this.period.start;
+    },
+  },
+  mounted() {
+    this.date = this.period.start;
+  },
   methods: {
+    updateDate(date: string) {
+      const nextDate = new Date(date);
+      if (nextDate.getTime() > this.period.end.getTime()) {
+        return this.$emit("reach:period-end");
+      }
+      if (nextDate.getTime() < this.period.start.getTime()) {
+        return this.$emit("reach:period-start");
+      }
+      this.date = nextDate;
+    },
     isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
     },

@@ -30,11 +30,7 @@
         />
       </v-dialog>
       <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
-        <OverCalendar
-          :events="allTimeWindows"
-          :date="calendarMarker"
-          @change="updateCalendarMarker"
-        />
+        <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
       </v-dialog>
     </article>
     <SnackNotificationContainer />
@@ -145,9 +141,6 @@ export default defineComponent({
     },
     openCalendar() {
       this.isCalendarDialogOpen = true;
-    },
-    updateCalendarMarker(date: Date) {
-      this.calendarMarker = date;
     },
     askReject(team: Reviewer<"FA">) {
       this.reviewer = team;

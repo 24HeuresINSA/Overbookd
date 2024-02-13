@@ -19,19 +19,8 @@
         :step="index + 1"
         class="content-calendar"
       >
-        <v-card-actions>
-          <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
-          <v-spacer></v-spacer>
+        <v-card-actions class="cta">
           <v-btn
-            v-if="index < calendarSteps.length - 1"
-            color="primary"
-            :disabled="hasAvailabilityError"
-            @click="incrementStep"
-          >
-            Suivant
-          </v-btn>
-          <v-btn
-            v-else
             color="success"
             :disabled="hasAvailabilityError"
             @click="saveAvailabilities"
@@ -40,21 +29,16 @@
           </v-btn>
         </v-card-actions>
 
-        <AvailabilitiesPickCalendar :period="period" />
+        <AvailabilitiesPickCalendar
+          :period="period"
+          :disable-next-period="shouldDisableNextOn(index + 1)"
+          :disable-previous-period="shouldDisablePreviousOn(index + 1)"
+          @reach:period-end="incrementStep"
+          @reach:period-start="decrementStep"
+        />
 
-        <v-card-actions>
-          <v-btn v-if="index > 0" @click="decrementStep"> Précédent </v-btn>
-          <v-spacer></v-spacer>
+        <v-card-actions class="cta">
           <v-btn
-            v-if="index < calendarSteps.length - 1"
-            color="primary"
-            :disabled="hasAvailabilityError"
-            @click="incrementStep"
-          >
-            Suivant
-          </v-btn>
-          <v-btn
-            v-else
             color="success"
             :disabled="hasAvailabilityError"
             @click="saveAvailabilities"
@@ -69,16 +53,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { IProvidePeriod } from "@overbookd/period";
+import { OverDate, Period } from "@overbookd/period";
 import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue";
 
 interface CalendarStep {
   title: string;
-  period: IProvidePeriod;
+  period: Period;
 }
 
 export default Vue.extend({
-  name: "AvailabilitiesStepsCard",
+  name: "AvailabilitiesStepper",
   components: { AvailabilitiesPickCalendar },
   data: () => ({
     step: 1,
@@ -99,37 +83,37 @@ export default Vue.extend({
     prePreManifStep(): CalendarStep {
       return {
         title: "Pré-pré-festival",
-        period: {
-          start: new Date("2024-05-06"),
-          end: new Date("2024-05-12"),
-        },
+        period: Period.init({
+          start: OverDate.init({ date: "2024-05-06", hour: 0 }).date,
+          end: OverDate.init({ date: "2024-05-12", hour: 0 }).date,
+        }),
       };
     },
     preManifStep(): CalendarStep {
       return {
         title: "Pré-festival",
-        period: {
-          start: new Date("2024-05-13"),
-          end: new Date("2024-05-16"),
-        },
+        period: Period.init({
+          start: OverDate.init({ date: "2024-05-13", hour: 0 }).date,
+          end: OverDate.init({ date: "2024-05-16", hour: 0 }).date,
+        }),
       };
     },
     manifStep(): CalendarStep {
       return {
         title: "Festival",
-        period: {
-          start: new Date("2024-05-17"),
-          end: new Date("2024-05-20"),
-        },
+        period: Period.init({
+          start: OverDate.init({ date: "2024-05-17", hour: 0 }).date,
+          end: OverDate.init({ date: "2024-05-20", hour: 0 }).date,
+        }),
       };
     },
     postManifStep(): CalendarStep {
       return {
         title: "Post-festival",
-        period: {
-          start: new Date("2024-05-21"),
-          end: new Date("2024-05-23"),
-        },
+        period: Period.init({
+          start: OverDate.init({ date: "2024-05-21", hour: 0 }).date,
+          end: OverDate.init({ date: "2024-05-23", hour: 0 }).date,
+        }),
       };
     },
     hasAvailabilityError(): boolean {
@@ -139,6 +123,14 @@ export default Vue.extend({
     },
   },
   methods: {
+    shouldDisableNextOn(periodCount: number): boolean {
+      const isLastPeriod = this.calendarSteps.length === periodCount;
+      return isLastPeriod;
+    },
+    shouldDisablePreviousOn(periodCount: number): boolean {
+      const isFirstPeriod = periodCount === 1;
+      return isFirstPeriod;
+    },
     decrementStep() {
       this.step--;
     },
@@ -157,6 +149,11 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .content-calendar {
   padding-top: 5px;
+}
+
+.cta {
+  display: flex;
+  justify-content: center;
 }
 
 @media only screen and (max-width: 960px) {
