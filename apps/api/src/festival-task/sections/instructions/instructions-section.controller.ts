@@ -173,4 +173,24 @@ export class InstructionsSectionController {
   ): Promise<FestivalTask> {
     return this.instructionsService.removeInChargeVolunteer(ftId, volunteerId);
   }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
+  @Delete(":ftId/instructions/in-charge")
+  @ApiResponse({
+    status: 200,
+    description: "A festival activity",
+    type: DraftFestivalTaskResponseDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival activity id",
+    required: true,
+  })
+  clearInCharge(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+  ): Promise<FestivalTask> {
+    return this.instructionsService.clearInCharge(ftId);
+  }
 }

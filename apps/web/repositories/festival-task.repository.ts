@@ -119,6 +119,12 @@ export class FestivalTaskRepository {
     );
   }
 
+  static clearInCharge(context: Context, ftId: FestivalTask["id"]) {
+    return context.$axios.delete<HttpStringified<FestivalTask>>(
+      `${this.basePath}/${ftId}/instructions/in-charge`,
+    );
+  }
+
   /* UPDATE MOBILIZATION */
   static addMobilization(
     context: Context,

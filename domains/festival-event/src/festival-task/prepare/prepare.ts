@@ -130,6 +130,15 @@ export class PrepareFestivalTask {
     return this.save({ ...task, instructions });
   }
 
+  async clearIncharge(taskId: FestivalTask["id"]): Promise<FestivalTask> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+
+    const builder = Instructions.build(task.instructions);
+    const instructions = builder.clear().json;
+    return this.save({ ...task, instructions });
+  }
+
   async addMobilization(
     taskId: FestivalTask["id"],
     mobilization: AddMobilization,
@@ -319,6 +328,13 @@ class Instructions {
     return new Instructions({ ...this.instructions, inCharge });
   }
 
+  clear() {
+    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
+    const inCharge = inChargeBuilder.clear().json;
+
+    return new Instructions({ ...this.instructions, inCharge });
+  }
+
   get json(): FestivalTask["instructions"] {
     return { ...this.instructions };
   }
@@ -350,6 +366,13 @@ class InCharge {
     const volunteers = volunteerBuilder.remove(volunteerId).json;
 
     return new InCharge({ ...this.inCharge, volunteers });
+  }
+
+  clear() {
+    const volunteers = Volunteers.build([]).json;
+    const instruction = null;
+
+    return new InCharge({ ...this.inCharge, volunteers, instruction });
   }
 
   get json(): FestivalTask["instructions"]["inCharge"] {
