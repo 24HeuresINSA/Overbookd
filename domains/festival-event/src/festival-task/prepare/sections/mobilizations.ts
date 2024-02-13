@@ -1,6 +1,9 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { Volunteer } from "../../sections/instructions";
-import { DraftMobilization, TeamMobilization } from "../../sections/mobilizations";
+import {
+  DraftMobilization,
+  TeamMobilization,
+} from "../../sections/mobilizations";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
@@ -29,7 +32,9 @@ class SplitablePeriod {
 }
 export class Mobilizations {
   private constructor(
-    private readonly mobilizations: DraftMobilization<{ withConflicts: false }>[],
+    private readonly mobilizations: DraftMobilization<{
+      withConflicts: false;
+    }>[],
   ) {}
 
   static build(mobilizations: DraftMobilization<{ withConflicts: false }>[]) {
@@ -95,7 +100,10 @@ export class Mobilizations {
     return new Mobilizations(mobilizations);
   }
 
-  addVolunteerTo(mobilizationId: DraftMobilization["id"], volunteer: Volunteer) {
+  addVolunteerTo(
+    mobilizationId: DraftMobilization["id"],
+    volunteer: Volunteer,
+  ) {
     const { index, value } = this.retrieveMobilization(mobilizationId);
     if (index === -1 || !value) return this;
 

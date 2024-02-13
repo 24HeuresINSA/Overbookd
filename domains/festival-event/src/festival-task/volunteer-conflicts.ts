@@ -1,7 +1,5 @@
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  FestivalTask,
-} from "./festival-task";
+import { FestivalTask } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { FestivalTaskLink } from "./sections/mobilizations";
 import { DraftMobilization } from "./sections/mobilizations";

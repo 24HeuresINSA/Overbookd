@@ -3,7 +3,10 @@ import { EndBeforeStart } from "@overbookd/period";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
-import { TeamMobilization, VolunteerMobilization } from "../sections/mobilizations";
+import {
+  TeamMobilization,
+  VolunteerMobilization,
+} from "../sections/mobilizations";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,

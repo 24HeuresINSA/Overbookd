@@ -1,12 +1,9 @@
 import { VALIDATED } from "../common/status";
-import {
-  FestivalActivity,
-  FestivalTask,
-} from "./festival-task";
+import { FestivalActivity, FestivalTask } from "./festival-task";
 import { Contact } from "./sections/instructions";
 import {
   DraftMobilization,
-  VolunteerWithConflicts
+  VolunteerWithConflicts,
 } from "./sections/mobilizations";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
@@ -70,7 +67,9 @@ class MobilizationBuilder {
     return new MobilizationBuilder({ ...this.mobilization, ...timeWindow });
   }
 
-  withDurationSplit(durationSplitInHour: DraftMobilization["durationSplitInHour"]) {
+  withDurationSplit(
+    durationSplitInHour: DraftMobilization["durationSplitInHour"],
+  ) {
     return new MobilizationBuilder({
       ...this.mobilization,
       durationSplitInHour,
