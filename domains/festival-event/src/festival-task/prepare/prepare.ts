@@ -369,8 +369,7 @@ class InCharge {
   }
 
   clear() {
-    const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
-    const volunteers = volunteerBuilder.clear().json;
+    const volunteers = Volunteers.build([]).json;
     const instruction = null;
 
     return new InCharge({ ...this.inCharge, volunteers, instruction });
@@ -424,10 +423,6 @@ class Volunteers {
     const volunteers = this.volunteers.filter(({ id }) => id !== volunteerId);
 
     return new Volunteers(volunteers);
-  }
-
-  clear() {
-    return new Volunteers([]);
   }
 
   private has(volunteer: Volunteer): boolean {
