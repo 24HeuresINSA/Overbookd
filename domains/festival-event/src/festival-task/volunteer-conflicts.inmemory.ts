@@ -1,16 +1,35 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
-import { VolunteerConflicts } from "./volunteer-conflicts";
+import {
+  VolunteerAvailabilities,
+  VolunteerConflicts,
+} from "./volunteer-conflicts";
 import {
   FestivalTask,
   FestivalTaskLink,
   Volunteer,
   Mobilization,
+  Conflicts,
 } from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
-  constructor(private tasks: FestivalTask[]) {}
+  constructor(
+    private readonly tasks: FestivalTask[],
+    private readonly availabilities: VolunteerAvailabilities[],
+  ) {}
 
-  on(
+  async on(
+    taskId: FestivalTask["id"],
+    period: IProvidePeriod,
+    volunteerId: Volunteer["id"],
+  ): Promise<Conflicts> {
+    const tasks = await this.onTask(taskId, period, volunteerId);
+    const availability = await this.onAvailability(period, volunteerId);
+
+    const conflicts = { tasks, availability };
+    return Promise.resolve(conflicts);
+  }
+
+  private onTask(
     taskId: FestivalTask["id"],
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
@@ -30,6 +49,20 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
       .map(({ id, general: { name } }) => ({ id, name }));
 
     return Promise.resolve(tasks);
+  }
+
+  private onAvailability(
+    period: IProvidePeriod,
+    volunteerId: Volunteer["id"],
+  ): Promise<boolean> {
+    const requestedPeriod = Period.init(period);
+    const volunteer = this.availabilities.find(
+      ({ volunteer }) => volunteer.id === volunteerId,
+    );
+    const availabilities = (volunteer?.availabilities ?? []).filter(
+      (availability) => Period.init(availability).includes(requestedPeriod),
+    );
+    return Promise.resolve(availabilities.length === 0);
   }
 }
 

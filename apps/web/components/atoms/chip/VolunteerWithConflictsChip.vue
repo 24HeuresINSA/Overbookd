@@ -1,6 +1,6 @@
 <template>
   <div class="volunteer-request">
-    <v-tooltip top color="error" :disabled="!isAlsoRequested">
+    <v-tooltip top color="error" :disabled="!hasErrors">
       <template #activator="{ on, attrs }">
         <NuxtLink :to="`/planning/${volunteer.id}`">
           <v-chip
@@ -14,7 +14,7 @@
           </v-chip>
         </NuxtLink>
       </template>
-      <v-list-item v-for="(message, i) in alsoRequestedByErrors" :key="i" dark>
+      <v-list-item v-for="(message, i) in errorMessages" :key="i" dark>
         <v-list-item-content>
           <v-list-item-title> {{ message }} </v-list-item-title>
         </v-list-item-content>
@@ -38,17 +38,31 @@ export default defineComponent({
   },
   emits: ["remove"],
   computed: {
+    isNotAvailable(): boolean {
+      return this.volunteer.conflicts.availability;
+    },
     isAlsoRequested(): boolean {
       return this.volunteer.conflicts.tasks.length > 0;
     },
     volunteerStatus(): string {
       if (this.isAlsoRequested) return "also-requested-by-ft";
+      if (this.isNotAvailable) return "not-available";
       return "";
+    },
+    hasErrors(): boolean {
+      return this.isNotAvailable || this.isAlsoRequested;
+    },
+    errorMessages(): string[] {
+      if (!this.hasErrors) return [];
+      return [...this.notAvailableErrors, ...this.alsoRequestedByErrors];
     },
     alsoRequestedByErrors(): string[] {
       return this.volunteer.conflicts.tasks.map(
         ({ id, name }) => `Aussi demandé dans la FT #${id} - ${name}`,
       );
+    },
+    notAvailableErrors(): string[] {
+      return this.isNotAvailable ? ["N'est pas disponible sur le créneau"] : [];
     },
   },
   methods: {

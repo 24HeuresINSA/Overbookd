@@ -31,6 +31,8 @@ import {
   saturday9h,
   saturday7h,
   saturday8h,
+  leaAvailabilities,
+  noelAvailabilities,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
@@ -43,8 +45,12 @@ describe("Prepare festival task mobilizations list", () => {
       presentEscapeGame,
       guardEscapeGame,
     ];
+    const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(
+      tasks,
+      availabilities,
+    );
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
@@ -99,7 +105,7 @@ describe("Prepare festival task mobilizations list", () => {
                 name: guardEscapeGame.general.name,
               },
             ];
-            expect(volunteer?.conflicts?.tasks).toEqual(expectedRequestedBy);
+            expect(volunteer?.conflicts.tasks).toEqual(expectedRequestedBy);
             expect(
               mobilizations.flatMap(({ volunteers }) =>
                 volunteers.flatMap(({ conflicts: { tasks } }) =>
@@ -132,11 +138,43 @@ describe("Prepare festival task mobilizations list", () => {
             const volunteer = mobilization?.volunteers.find(
               (volunteer) => volunteer.id === lea.id,
             );
-            expect(volunteer?.conflicts?.tasks).toEqual([]);
+            expect(volunteer?.conflicts.tasks).toEqual([]);
+          });
+        },
+      );
+
+      describe.each`
+        indication                       | task                 | start          | end            | hasAvailabilityConflict
+        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h} | ${false}
+        ${"including period"}            | ${presentEscapeGame} | ${saturday9h}  | ${saturday10h} | ${false}
+        ${"overlapping period"}          | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h} | ${true}
+        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h} | ${true}
+        ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${true}
+      `(
+        "when volunteer is requested on any mobilization and available on $indication",
+        ({ task, start, end, hasAvailabilityConflict }) => {
+          it(`should indicate that availability conflict is ${hasAvailabilityConflict}`, async () => {
+            const helper = saturday08hsaturday11hMobilization
+              .withStart(start)
+              .withEnd(end);
+            const { mobilizations } = await prepare.addMobilization(
+              task.id,
+              helper.form,
+            );
+            const mobilization = mobilizations.find(
+              (mobilization) => mobilization.id === helper.mobilization.id,
+            );
+            const volunteer = mobilization?.volunteers.find(
+              (volunteer) => volunteer.id === lea.id,
+            );
+            expect(volunteer?.conflicts.availability).toBe(
+              hasAvailabilityConflict,
+            );
           });
         },
       );
     });
+
     describe("with split duration that is not period divider", () => {
       describe("when trying to add this as mobilization", () => {
         it("should indicate that split duration doesn't match period duration", async () => {
@@ -366,7 +404,7 @@ describe("Prepare festival task mobilizations list", () => {
           lastname: "Hette",
           nickname: "gh",
           id: 100,
-          conflicts: { tasks: [] },
+          conflicts: { tasks: [], availability: true },
         };
 
         const { mobilizations } = await prepare.addVolunteerToMobilization(

@@ -16,7 +16,7 @@ describe("Prepare festival task feedbacks section", () => {
   beforeEach(() => {
     const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });

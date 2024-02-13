@@ -1,17 +1,23 @@
 import { IProvidePeriod } from "@overbookd/period";
 import {
   FestivalTask,
-  FestivalTaskLink,
   Volunteer,
   Mobilization,
+  VolunteerWithConflicts,
+  Conflicts,
 } from "./festival-task";
+
+export type VolunteerAvailabilities = {
+  volunteer: Volunteer;
+  availabilities: IProvidePeriod[];
+};
 
 export type VolunteerConflicts = {
   on(
     taskId: FestivalTask["id"],
     period: IProvidePeriod,
     volunteerId: Volunteer["id"],
-  ): Promise<FestivalTaskLink[]>;
+  ): Promise<Conflicts>;
 };
 
 export class FestivalTaskTranslator {
@@ -35,16 +41,15 @@ export class FestivalTaskTranslator {
   private async assignConflictsToVolunteers(
     mobilization: Mobilization<{ withConflicts: false }>,
     taskId: FestivalTask["id"],
-  ) {
+  ): Promise<VolunteerWithConflicts[]> {
     return Promise.all(
       mobilization.volunteers.map(async (volunteer) => {
         const period = { start: mobilization.start, end: mobilization.end };
-        const tasks = await this.volunteerConflicts.on(
+        const conflicts = await this.volunteerConflicts.on(
           taskId,
           period,
           volunteer.id,
         );
-        const conflicts = { tasks };
         return { ...volunteer, conflicts };
       }),
     );
