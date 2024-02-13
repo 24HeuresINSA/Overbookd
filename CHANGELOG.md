@@ -1,3 +1,10 @@
+## [2.16.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.1...v2.16.2) (2024-02-13)
+
+
+### Bug Fixes
+
+* **logistic-dashboard:** return requested gears. [#1560](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1560) ([f141fb6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f141fb6c5d045126a48f0f82b31dbcdb4bf9e70f))
+
 ## [2.16.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.0...v2.16.1) (2024-02-13)
 
 
