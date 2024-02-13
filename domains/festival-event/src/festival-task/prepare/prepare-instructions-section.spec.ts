@@ -199,4 +199,12 @@ describe("Prepare festival task instructions section", () => {
       });
     });
   });
+
+  describe("Clear in charge volunteers", () => {
+    it("should remove all in charge volunteers", async () => {
+      const task = uninstallEscapeGame;
+      const { instructions } = await prepare.clearInchargeVolunteers(task.id);
+      expect(instructions.inCharge.volunteers).toHaveLength(0);
+    });
+  });
 });

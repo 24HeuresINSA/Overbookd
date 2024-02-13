@@ -19,7 +19,7 @@
 
       <v-switch
         :value="hasInChargeInstructions"
-        label="Ajouter une description pour le.s responsable.s de la tâche"
+        label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
         @change="toggleInChargeInstructions"
       />
       <div v-show="hasInChargeInstructions">
@@ -32,7 +32,7 @@
           @remove="removeInChargeVolunteer"
         />
 
-        <v-label>Description pour le.s responsable.s de la tâche</v-label>
+        <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
         <RichEditor
           :data="instructions.inCharge.instruction ?? ''"
           class="mb-6"
@@ -149,8 +149,10 @@ export default defineComponent({
     },
     toggleInChargeInstructions() {
       this.hasInChargeInstructions = !this.hasInChargeInstructions;
-      if (!this.hasInChargeInstructions) this.updateInChargeInstruction("");
-      // TODO: remove volunteers
+      if (!this.hasInChargeInstructions) {
+        this.updateInChargeInstruction("");
+        this.clearInChargeVolunteers();
+      }
     },
     updateAppointment(appointment: SignaLocation) {
       const appointmentId = appointment.id;
@@ -176,6 +178,9 @@ export default defineComponent({
     },
     removeInChargeVolunteer(volunteer: User) {
       this.$accessor.festivalTask.removeInChargeVolunteer(volunteer.id);
+    },
+    clearInChargeVolunteers() {
+      this.$accessor.festivalTask.clearInChargeVolunteers();
     },
     formatUserNameWithNickname,
   },

@@ -200,6 +200,17 @@ export const actions = actionTree(
       commit("SET_SELECTED_TASK", task);
     },
 
+    async clearInChargeVolunteers({ state, commit }) {
+      const res = await safeCall(
+        this,
+        repo.clearInChargeVolunteers(this, state.selectedTask.id),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
     /* UPDATE MOBILIZATION */
     async addMobilization(
       { state, commit },

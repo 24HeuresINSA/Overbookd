@@ -59,4 +59,8 @@ export class InstructionsSectionService {
   ): Promise<FestivalTask> {
     return this.prepare.removeInchargeVolunteer(id, volunteerId);
   }
+
+  async clearInChargeVolunteers(id: FestivalTask["id"]): Promise<FestivalTask> {
+    return this.prepare.clearInchargeVolunteers(id);
+  }
 }
