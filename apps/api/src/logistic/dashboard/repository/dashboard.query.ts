@@ -13,6 +13,9 @@ const SELECT_GEAR_STOCK = {
   },
 };
 
+const ACTIVE_FA = { fa: { isDeleted: false } };
+const ACTIVE_FT = { ft: { isDeleted: false } };
+
 const SELECT_ACTIVITY_GEAR_INQUIRIES = {
   festivalActivityInquiries: {
     select: {
@@ -28,9 +31,9 @@ const SELECT_ACTIVITY_GEAR_INQUIRIES = {
             },
           },
         },
-        where: { isDeleted: false },
       },
     },
+    where: ACTIVE_FA,
   },
 };
 
@@ -49,9 +52,9 @@ const SELECT_TASK_GEAR_INQUIRIES = {
             },
           },
         },
-        where: { isDeleted: false },
       },
     },
+    where: ACTIVE_FT,
   },
 };
 
