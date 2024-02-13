@@ -1,25 +1,26 @@
 export class BugReport {
   static get template(): string {
-    return `# URL or page
+    return `# URL ou page
 ${window.location.href}
 
-# Expected behavior
-<!---What did you expected--->
+# Comportement attendu
+<!---Décrivez ci-dessous le comportement souhaité.--->
 
 
-# Actual behavior
-<!---What is happening--->
+# Comportement constaté
+<!---Décrivez ci-dessous le comportement observé.--->
 
-# Steps to reproduce
+# Étapes pour reproduire
+<!---Listez ci-dessous les étapes à suivre pour reproduire le problème.--->
 
- - Step 1
- - Step 2
+ - Étape 1
+ - Étape 2
  ...
 
-# Additional info
-version: ${process.env.OVERBOOKD_VERSION}
-user agent: ${navigator.userAgent}
-date: ${Date().toLocaleString()}
+# Informations complémentaires
+version: ${process.env.OVERBOOKD_VERSION}  
+user agent: ${navigator.userAgent}  
+date: ${Date().toLocaleString()}  
 resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
   }
 }
