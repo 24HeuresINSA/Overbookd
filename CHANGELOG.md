@@ -1,3 +1,25 @@
+## [2.16.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.0...v2.16.1) (2024-02-13)
+
+
+### Bug Fixes
+
+* **availabilities:** refresh in volunteer list [#1545](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1545) ([15b2645](https://gitlab.com/24-heures-insa/overbookd-mono/commit/15b2645765bb177b78b706552e96c326fa105a9f))
+* **logistic-dashboard:** use not deleted fa & ft [#1559](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1559) ([e6e658f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e6e658f83cabc2d780fb16fed2fbf8a89cccf2c2))
+* **volunteer-availabilities:** expose availabilities aggregate. [#1543](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1543) ([e639c0d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e639c0d056a939c152839b3a820a7bbddbb60a88))
+* **volunteer-availability:** keep current charisma. [#1549](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1549) ([c008963](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c0089630f42f48f6be90ba6ba5977bda720dd9de))
+* **volunteer-availability:** use availabilities aggregate on web. [#1543](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1543) ([f4f319e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f4f319e281a7a143ce02d06b95825571a9d9272a))
+
+
+### Pre-Features
+
+* **festival-task:** add volunteer availability conflict [#1535](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1535) ([b0d5039](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b0d503951fd3865dcc5cc4d80a7b24f0efae723e))
+* **festival-task:** enable mobiliation update [#1548](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1548) ([6770adf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6770adfa503c29bb04e29c58c992c67ed1be816f))
+
+
+### Refactor
+
+* **festival-task:** add in charge instructions toggle [#1557](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1557) ([eacc4ea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eacc4ea095ea5114db63d4c3dcce68ee2c856d32))
+
 ## [2.16.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.15.5...v2.16.0) (2024-02-11)
 
 
