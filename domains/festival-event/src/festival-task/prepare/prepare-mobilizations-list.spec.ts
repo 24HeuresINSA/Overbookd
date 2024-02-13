@@ -146,10 +146,10 @@ describe("Prepare festival task mobilizations list", () => {
       describe.each`
         indication                       | task                 | start          | end            | hasAvailabilityConflict
         ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h} | ${false}
-        ${"including period"}            | ${presentEscapeGame} | ${saturday9h}  | ${saturday10h} | ${false}
-        ${"overlapping period"}          | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h} | ${true}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h} | ${true}
-        ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${true}
+        ${"larger period including mobilization"}    | ${presentEscapeGame} | ${saturday9h}  | ${saturday10h} | ${false}
+        ${"smaller period included by mobilization"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h} | ${true}
+        ${"overlapping period on start"}             | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h} | ${true}
+        ${"overlapping period on end"}               | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${true}
       `(
         "when volunteer is requested on any mobilization and available on $indication",
         ({ task, start, end, hasAvailabilityConflict }) => {
