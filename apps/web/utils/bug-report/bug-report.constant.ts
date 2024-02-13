@@ -1,6 +1,6 @@
 export class BugReport {
   static get template(): string {
-    return `# URL or page
+    return `# URL ou page
 ${window.location.href}
 
 # Comportement attendu
@@ -18,9 +18,9 @@ ${window.location.href}
  ...
 
 # Informations complémentaires
-version: ${process.env.OVERBOOKD_VERSION}
-user agent: ${navigator.userAgent}
-date: ${Date().toLocaleString()}
+version: ${process.env.OVERBOOKD_VERSION}  
+user agent: ${navigator.userAgent}  
+date: ${Date().toLocaleString()}  
 resolution: ${window.screen.availWidth}x${window.screen.availHeight}`;
   }
 }
