@@ -144,8 +144,8 @@ describe("Prepare festival task mobilizations list", () => {
       );
 
       describe.each`
-        indication                       | task                 | start          | end            | hasAvailabilityConflict
-        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h} | ${false}
+        indication                                   | task                 | start          | end            | hasAvailabilityConflict
+        ${"period with same boundaries"}             | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h} | ${false}
         ${"larger period including mobilization"}    | ${presentEscapeGame} | ${saturday9h}  | ${saturday10h} | ${false}
         ${"smaller period included by mobilization"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h} | ${true}
         ${"overlapping period on start"}             | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h} | ${true}
