@@ -149,10 +149,7 @@ export default defineComponent({
     },
     toggleInChargeInstructions() {
       this.hasInChargeInstructions = !this.hasInChargeInstructions;
-      if (!this.hasInChargeInstructions) {
-        this.updateInChargeInstruction("");
-        this.clearInChargeVolunteers();
-      }
+      if (!this.hasInChargeInstructions) this.clearInCharge();
     },
     updateAppointment(appointment: SignaLocation) {
       const appointmentId = appointment.id;
@@ -179,8 +176,8 @@ export default defineComponent({
     removeInChargeVolunteer(volunteer: User) {
       this.$accessor.festivalTask.removeInChargeVolunteer(volunteer.id);
     },
-    clearInChargeVolunteers() {
-      this.$accessor.festivalTask.clearInChargeVolunteers();
+    clearInCharge() {
+      this.$accessor.festivalTask.clearInCharge();
     },
     formatUserNameWithNickname,
   },

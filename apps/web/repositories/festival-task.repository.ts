@@ -119,9 +119,9 @@ export class FestivalTaskRepository {
     );
   }
 
-  static clearInChargeVolunteers(context: Context, ftId: FestivalTask["id"]) {
+  static clearInCharge(context: Context, ftId: FestivalTask["id"]) {
     return context.$axios.delete<HttpStringified<FestivalTask>>(
-      `${this.basePath}/${ftId}/instructions/in-charge/volunteers`,
+      `${this.basePath}/${ftId}/instructions/in-charge`,
     );
   }
 

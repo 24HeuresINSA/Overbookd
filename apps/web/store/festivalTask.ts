@@ -200,10 +200,10 @@ export const actions = actionTree(
       commit("SET_SELECTED_TASK", task);
     },
 
-    async clearInChargeVolunteers({ state, commit }) {
+    async clearInCharge({ state, commit }) {
       const res = await safeCall(
         this,
-        repo.clearInChargeVolunteers(this, state.selectedTask.id),
+        repo.clearInCharge(this, state.selectedTask.id),
       );
       if (!res) return;
 

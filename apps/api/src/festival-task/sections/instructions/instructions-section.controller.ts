@@ -176,7 +176,7 @@ export class InstructionsSectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
-  @Delete(":ftId/instructions/in-charge/volunteers")
+  @Delete(":ftId/instructions/in-charge")
   @ApiResponse({
     status: 200,
     description: "A festival activity",
@@ -188,9 +188,9 @@ export class InstructionsSectionController {
     description: "Festival activity id",
     required: true,
   })
-  clearInChargeVolunteers(
+  clearInCharge(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
   ): Promise<FestivalTask> {
-    return this.instructionsService.clearInChargeVolunteers(ftId);
+    return this.instructionsService.clearInCharge(ftId);
   }
 }

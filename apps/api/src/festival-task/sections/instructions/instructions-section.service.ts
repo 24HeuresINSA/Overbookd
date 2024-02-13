@@ -60,7 +60,7 @@ export class InstructionsSectionService {
     return this.prepare.removeInchargeVolunteer(id, volunteerId);
   }
 
-  async clearInChargeVolunteers(id: FestivalTask["id"]): Promise<FestivalTask> {
-    return this.prepare.clearInchargeVolunteers(id);
+  async clearInCharge(id: FestivalTask["id"]): Promise<FestivalTask> {
+    return this.prepare.clearIncharge(id);
   }
 }
