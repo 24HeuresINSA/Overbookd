@@ -208,15 +208,17 @@ export { ViewFestivalTask } from "./festival-task/view/view";
 export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
+  Reviewable as FestivalTaskReviewable,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
-  Contact,
-  Volunteer,
-  Mobilization,
+} from "./festival-task/festival-task";
+export type { Volunteer, Contact } from "./festival-task/sections/instructions";
+export type {
+  DraftMobilization as Mobilization,
   TeamMobilization,
   FestivalTaskLink,
   VolunteerWithConflicts,
-} from "./festival-task/festival-task";
+} from "./festival-task/sections/mobilizations";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
 export type { VolunteerConflicts } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";

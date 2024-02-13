@@ -1,10 +1,10 @@
 import { IProvidePeriod } from "@overbookd/period";
 import {
   FestivalTask,
-  FestivalTaskLink,
-  Volunteer,
-  Mobilization,
 } from "./festival-task";
+import { Volunteer } from "./sections/instructions";
+import { FestivalTaskLink } from "./sections/mobilizations";
+import { DraftMobilization } from "./sections/mobilizations";
 
 export type VolunteerConflicts = {
   on(
@@ -33,7 +33,7 @@ export class FestivalTaskTranslator {
   }
 
   private async assignConflictsToVolunteers(
-    mobilization: Mobilization<{ withConflicts: false }>,
+    mobilization: DraftMobilization<{ withConflicts: false }>,
     taskId: FestivalTask["id"],
   ) {
     return Promise.all(

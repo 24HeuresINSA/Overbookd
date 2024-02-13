@@ -1,11 +1,13 @@
 import { VALIDATED } from "../common/status";
 import {
-  Contact,
   FestivalActivity,
   FestivalTask,
-  Mobilization,
-  VolunteerWithConflicts,
 } from "./festival-task";
+import { Contact } from "./sections/instructions";
+import {
+  DraftMobilization,
+  VolunteerWithConflicts
+} from "./sections/mobilizations";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
@@ -33,7 +35,7 @@ type InitMobilizationBuilder = Partial<
 };
 
 class MobilizationBuilder {
-  private constructor(readonly mobilization: Mobilization) {}
+  private constructor(readonly mobilization: DraftMobilization) {}
 
   static init(initialisation?: InitMobilizationBuilder) {
     const start = initialisation?.start ?? friday11h;
@@ -68,18 +70,18 @@ class MobilizationBuilder {
     return new MobilizationBuilder({ ...this.mobilization, ...timeWindow });
   }
 
-  withDurationSplit(durationSplitInHour: Mobilization["durationSplitInHour"]) {
+  withDurationSplit(durationSplitInHour: DraftMobilization["durationSplitInHour"]) {
     return new MobilizationBuilder({
       ...this.mobilization,
       durationSplitInHour,
     });
   }
 
-  withTeams(teams: Mobilization["teams"]) {
+  withTeams(teams: DraftMobilization["teams"]) {
     return new MobilizationBuilder({ ...this.mobilization, teams });
   }
 
-  withVolunteers(volunteers: Mobilization["volunteers"]) {
+  withVolunteers(volunteers: DraftMobilization["volunteers"]) {
     return new MobilizationBuilder({ ...this.mobilization, volunteers });
   }
 

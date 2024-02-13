@@ -4,12 +4,14 @@ import {
   InquiryRequest,
 } from "../../common/inquiry-request";
 import {
-  Contact,
   FestivalTask,
-  Mobilization,
-  TeamMobilization,
-  Volunteer,
 } from "../festival-task";
+import { Volunteer } from "../sections/instructions";
+import { Contact } from "../sections/instructions";
+import {
+  DraftMobilization,
+  TeamMobilization
+} from "../sections/mobilizations";
 import {
   FestivalTaskNotFound,
   GearAlreadyRequested,
@@ -38,7 +40,7 @@ export type FestivalTasksForPrepare = {
 };
 
 export type AddMobilization = Omit<
-  Mobilization<{ withConflicts: false }>,
+  DraftMobilization<{ withConflicts: false }>,
   "id"
 >;
 
@@ -150,7 +152,7 @@ export class PrepareFestivalTask {
 
   async removeMobilization(
     taskId: FestivalTask["id"],
-    mobilizationId: Mobilization["id"],
+    mobilizationId: DraftMobilization["id"],
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
@@ -162,7 +164,7 @@ export class PrepareFestivalTask {
 
   async updateMobilization(
     taskId: FestivalTask["id"],
-    mobilizationId: Mobilization["id"],
+    mobilizationId: DraftMobilization["id"],
     update: UpdateMobilization,
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
@@ -175,7 +177,7 @@ export class PrepareFestivalTask {
 
   async addTeamToMobilization(
     taskId: FestivalTask["id"],
-    mobilizationId: Mobilization["id"],
+    mobilizationId: DraftMobilization["id"],
     team: TeamMobilization,
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
@@ -189,7 +191,7 @@ export class PrepareFestivalTask {
 
   async removeTeamFromMobilization(
     taskId: FestivalTask["id"],
-    mobilizationId: Mobilization["id"],
+    mobilizationId: DraftMobilization["id"],
     team: TeamMobilization["team"],
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
@@ -203,7 +205,7 @@ export class PrepareFestivalTask {
 
   async addVolunteerToMobilization(
     taskId: FestivalTask["id"],
-    mobilizationId: Mobilization["id"],
+    mobilizationId: DraftMobilization["id"],
     volunteer: Volunteer,
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
@@ -220,7 +222,7 @@ export class PrepareFestivalTask {
 
   async removeVolunteerFromMobilization(
     taskId: FestivalTask["id"],
-    mobilizationId: Mobilization["id"],
+    mobilizationId: DraftMobilization["id"],
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
