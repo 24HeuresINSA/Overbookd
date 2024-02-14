@@ -18,7 +18,7 @@
       </p>
       <h2>Mon Charisme : {{ charisma }} 😎</h2>
     </div>
-    <AvailabilitiesStepsCard />
+    <AvailabilitiesStepper />
     <SnackNotificationContainer />
   </div>
 </template>
@@ -26,11 +26,11 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import AvailabilitiesStepsCard from "~/components/organisms/availabilities/AvailabilitiesStepsCard.vue";
+import AvailabilitiesStepper from "~/components/organisms/availabilities/AvailabilitiesStepper.vue";
 
 export default Vue.extend({
   name: "Availabilities",
-  components: { AvailabilitiesStepsCard, SnackNotificationContainer },
+  components: { AvailabilitiesStepper, SnackNotificationContainer },
   head: () => ({
     title: "Mes dispos",
   }),
