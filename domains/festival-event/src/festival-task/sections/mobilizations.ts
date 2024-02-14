@@ -5,7 +5,7 @@ import { FilledArray } from "@overbookd/list";
 
 type MobilizationOptions = { withConflicts: boolean };
 
-export const defaultMobilizationOptions = { withConflicts: true } as const;
+const defaultMobilizationOptions = { withConflicts: true } as const;
 
 export type Conflicts = {
   tasks: FestivalTaskLink[];

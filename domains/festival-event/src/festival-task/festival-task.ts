@@ -23,11 +23,11 @@ export type FestivalActivity = {
   };
 };
 
-export type FestivalTaskOptions = {
+type FestivalTaskOptions = {
   withConflicts: boolean;
 };
 
-export const defaultFestivalTaskOptions = { withConflicts: true } as const;
+const defaultFestivalTaskOptions = { withConflicts: true } as const;
 
 export type Draft<
   Options extends FestivalTaskOptions = typeof defaultFestivalTaskOptions,

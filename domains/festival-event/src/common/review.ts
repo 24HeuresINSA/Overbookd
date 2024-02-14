@@ -24,11 +24,9 @@ export type PublicActivityReviewer =
   | PrivateActivityReviewer
   | typeof communication;
 
-export type ElectricityLessTaskReviewer = typeof humain | typeof matos;
+type ElectricityLessTaskReviewer = typeof humain | typeof matos;
 
-export type ElectricityNessTaskReviewer =
-  | ElectricityLessTaskReviewer
-  | typeof elec;
+type ElectricityNessTaskReviewer = ElectricityLessTaskReviewer | typeof elec;
 
 export type Reviewer<T extends FestivalEvent> = T extends typeof FA
   ? PublicActivityReviewer | PrivateActivityReviewer
