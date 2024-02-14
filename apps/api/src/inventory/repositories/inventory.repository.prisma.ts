@@ -93,7 +93,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
   }
 
   private deleteAllRecords() {
-    return this.prismaService.inventoryRecord.deleteMany({ where: {} });
+    return this.prismaService.inventoryRecord.deleteMany({});
   }
 
   private insertRecords(records: InventoryRecord[]) {
