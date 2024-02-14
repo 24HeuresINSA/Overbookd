@@ -56,7 +56,11 @@ export class OrgaNeedsController {
     @Query("end") end: Date,
     @Query("teams") teams?: string[],
   ): Promise<OrgaNeedsResponseDto[]> {
-    const periodAndTeams = { start, end, teams: teams ?? [] };
+    const periodAndTeams = {
+      start: new Date(start),
+      end: new Date(end),
+      teams: teams ?? [],
+    };
     return this.orgaNeedsService.computeOrgaStats(periodAndTeams);
   }
 }
