@@ -1,4 +1,4 @@
-import { FilledArray } from "@overbookd/list";
+import { WithAtLeastOneItem } from "@overbookd/list";
 import { TimeWindow } from "../../common/time-window";
 
 export type DraftGeneral = {
@@ -14,11 +14,11 @@ export type DraftGeneral = {
 export type Public = {
   name: string;
   description: string;
-  categories: FilledArray<string>;
+  categories: WithAtLeastOneItem<string>;
   toPublish: true;
   photoLink: string;
   isFlagship: boolean;
-  timeWindows: FilledArray<TimeWindow>;
+  timeWindows: WithAtLeastOneItem<TimeWindow>;
 };
 
 type Private = {

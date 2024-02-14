@@ -1,7 +1,7 @@
 import { Volunteer } from "./instructions";
 import { TimeWindow } from "../../common/time-window";
 import { FestivalTask } from "../festival-task";
-import { FilledArray } from "@overbookd/list";
+import { WithAtLeastOneItem } from "@overbookd/list";
 
 type MobilizationOptions = { withConflicts: boolean };
 
@@ -33,14 +33,14 @@ type AtLeastOneVolunteer<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,
   "volunteers"
 > & {
-  volunteers: FilledArray<MobilizationVolunteer<Options>>;
+  volunteers: WithAtLeastOneItem<MobilizationVolunteer<Options>>;
 };
 
 type AtLeastOneTeam<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,
   "teams"
 > & {
-  teams: FilledArray<TeamMobilization>;
+  teams: WithAtLeastOneItem<TeamMobilization>;
 };
 
 export type ReviewableMobilization<
