@@ -1,6 +1,7 @@
 import { Volunteer } from "./instructions";
 import { TimeWindow } from "../../common/time-window";
 import { FestivalTask } from "../festival-task";
+import { FilledArray } from "@overbookd/list";
 
 type MobilizationOptions = { withConflicts: boolean };
 
@@ -28,18 +29,18 @@ export type Mobilization<
   durationSplitInHour: null | number;
 };
 
-type AtLeastOneVolunteer<
-  Options extends MobilizationOptions,
-  V = MobilizationVolunteer<Options>,
-> = Omit<Mobilization<Options>, "volunteers"> & {
-  volunteers: [V, ...V[]];
+type AtLeastOneVolunteer<Options extends MobilizationOptions> = Omit<
+  Mobilization<Options>,
+  "volunteers"
+> & {
+  volunteers: FilledArray<MobilizationVolunteer<Options>>;
 };
 
 type AtLeastOneTeam<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,
   "teams"
 > & {
-  teams: [TeamMobilization, ...TeamMobilization[]];
+  teams: FilledArray<TeamMobilization>;
 };
 
 export type ReviewableMobilization<

@@ -1,3 +1,4 @@
+import { FilledArray } from "@overbookd/list";
 import { Adherent } from "../../common/adherent";
 import { Location } from "../../common/location";
 
@@ -14,7 +15,7 @@ type WithoutInChargeInstructions = {
 
 type WithInChargeInstructions = {
   instruction: string;
-  volunteers: [Volunteer, ...Volunteer[]];
+  volunteers: FilledArray<Volunteer>;
 };
 
 export type DraftInstructions = {
@@ -29,7 +30,7 @@ export type DraftInstructions = {
 
 export type Instructions = {
   appointment: Location;
-  contacts: [Contact, ...Contact[]];
+  contacts: FilledArray<Contact>;
   global: string;
   inCharge: WithoutInChargeInstructions | WithInChargeInstructions;
 };

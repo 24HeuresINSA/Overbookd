@@ -211,11 +211,11 @@ export type {
   Reviewable as FestivalTaskReviewable,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
-  Conflicts,
 } from "./festival-task/festival-task";
 export type { Volunteer, Contact } from "./festival-task/sections/instructions";
 export type {
-  Mobilization as Mobilization,
+  Mobilization,
+  Conflicts,
   TeamMobilization,
   FestivalTaskLink,
   VolunteerWithConflicts,

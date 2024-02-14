@@ -13,7 +13,7 @@ import {
   PrepareInquiryRequestCreation,
 } from "../prepare-festival-activity.model";
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
-import { updateItemToList } from "@overbookd/list";
+import { FilledArray, updateItemToList } from "@overbookd/list";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
@@ -43,8 +43,7 @@ export class CantRemoveLastRequest extends FestivalActivityError {
   }
 }
 
-type WithAtLeastOneItem<T> = [T, ...T[]];
-type MaybeWithOneItem<T> = T[] | WithAtLeastOneItem<T>;
+type MaybeWithOneItem<T> = T[] | FilledArray<T>;
 
 export class Inquiries<
   T extends MaybeWithOneItem<TimeWindow>,
@@ -200,7 +199,7 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
     slug,
     quantity,
     name,
-  }: InquiryRequest): InquiryRequests<WithAtLeastOneItem<InquiryRequest>> {
+  }: InquiryRequest): InquiryRequests<FilledArray<InquiryRequest>> {
     const inquiry = { slug, quantity, name };
 
     const alreadyExists = this.inquiries.some(

@@ -1,3 +1,4 @@
+import { FilledArray } from "@overbookd/list";
 import { InquiryRequest } from "../../common/inquiry-request";
 import { TimeWindow } from "../../common/time-window";
 
@@ -80,24 +81,24 @@ export const drives: Drive[] = [
 ];
 
 export type WithTimeWindows = {
-  timeWindows: [TimeWindow, ...TimeWindow[]];
+  timeWindows: FilledArray<TimeWindow>;
 };
 
 type WithGearInquiries = {
   barriers: InquiryRequest[];
   electricity: InquiryRequest[];
-  gears: [InquiryRequest, ...InquiryRequest[]];
+  gears: FilledArray<InquiryRequest>;
 };
 
 type WithBarrierInquiries = {
-  barriers: [InquiryRequest, ...InquiryRequest[]];
+  barriers: FilledArray<InquiryRequest>;
   electricity: InquiryRequest[];
   gears: InquiryRequest[];
 };
 
 type WithElectricityInquiries = {
   barriers: InquiryRequest[];
-  electricity: [InquiryRequest, ...InquiryRequest[]];
+  electricity: FilledArray<InquiryRequest>;
   gears: InquiryRequest[];
 };
 

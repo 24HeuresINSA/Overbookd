@@ -6,6 +6,7 @@ import {
   FestivalActivityKeyEvent as KeyEvent,
 } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
+import { FilledArray } from "@overbookd/list";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 function isPublic(
@@ -72,7 +73,7 @@ export class CastReviewable {
 }
 
 type WithTimeWindows = {
-  timeWindows: [TimeWindow, ...TimeWindow[]];
+  timeWindows: FilledArray<TimeWindow>;
 };
 type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
 
@@ -81,7 +82,7 @@ function withAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
 ): T & WithTimeWindows {
   const [timeWindow, ...others] = hasAtLeastOneTimeWindow.timeWindows;
   const first = castTimeWindowWithDate(timeWindow);
-  const timeWindows: [TimeWindow, ...TimeWindow[]] = [
+  const timeWindows: FilledArray<TimeWindow> = [
     first,
     ...others.map(castTimeWindowWithDate),
   ];
