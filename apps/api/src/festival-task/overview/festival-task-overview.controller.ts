@@ -42,6 +42,9 @@ import {
   UnassignedInquiryRequestResponseDto,
 } from "../common/dto/inquiry-request.response.dto";
 import { TimeWindowResponseDto } from "../common/dto/time-window.response.dto";
+import { StatisticsService } from "../../statistics/statistics.service";
+import { Statistics } from "@overbookd/http";
+import { StatisticsResponseDto } from "../../statistics/dto/statistics.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -66,7 +69,23 @@ import { TimeWindowResponseDto } from "../common/dto/time-window.response.dto";
 @UseFilters(FestivalTaskErrorFilter)
 @Controller("festival-tasks")
 export class FestivalTaskOverviewController {
-  constructor(private readonly overviewService: FestivalTaskOverviewService) {}
+  constructor(
+    private readonly overviewService: FestivalTaskOverviewService,
+    private readonly statistics: StatisticsService,
+  ) {}
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(READ_FT)
+  @Get("statistics")
+  @ApiResponse({
+    status: 200,
+    description: "Festival activities statistics",
+    isArray: true,
+    type: StatisticsResponseDto<FestivalTask>,
+  })
+  displayStatistics(): Promise<Statistics<FestivalTask>[]> {
+    return this.statistics.festivalTask;
+  }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(READ_FT)

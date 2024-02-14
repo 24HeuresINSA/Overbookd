@@ -221,3 +221,8 @@ export type {
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
 export type { VolunteerConflicts } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
+
+//  **********************
+//  FESTIVAL EVENT MODULE
+//  **********************
+export type { FestivalEvent } from "./festival-event";

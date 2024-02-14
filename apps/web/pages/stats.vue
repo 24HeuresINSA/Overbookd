@@ -18,6 +18,7 @@
 import Vue from "vue";
 import { StatsPayload } from "~/utils/models/stats.model";
 import StatsRow from "~/components/molecules/stats/StatsRow.vue";
+import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 
 export default Vue.extend({
   name: "Stats",
@@ -25,7 +26,9 @@ export default Vue.extend({
   data() {
     return {
       switchType: false,
-      dataset: [] as StatsPayload[],
+      dataset: [] as
+        | StatsPayload<FestivalActivity>[]
+        | StatsPayload<FestivalTask>[],
       name: "FA",
     };
   },

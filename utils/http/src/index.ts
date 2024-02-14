@@ -8,12 +8,12 @@ export type {
   ReviewRejection,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
-  Statistics,
   PreviewForSecurity,
   PreviewForCommunication,
   LogisticInquiry,
   PreviewForLogistic,
 } from "./festival-event/festival-activity.model";
+export type { Statistics } from "./festival-event/festival-event.model";
 export type {
   FestivalTaskCreationForm,
   UpdateGeneralForm,

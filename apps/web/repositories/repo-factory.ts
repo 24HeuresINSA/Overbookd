@@ -29,7 +29,6 @@ const repositories = {
   transaction: TransactionRepository,
   FA: FaRepository,
   festivalActivity: FestivalActivityRepository,
-  FT: FtRepository,
   auth: AuthRepository,
   team: TeamRepository,
   gear: GearsRepository,

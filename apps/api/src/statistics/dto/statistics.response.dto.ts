@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { FestivalActivity } from "@overbookd/festival-event";
+import { FestivalEvent } from "@overbookd/festival-event";
 import { Statistics } from "@overbookd/http";
 
-class StatusResponseDto implements Record<FestivalActivity["status"], number> {
+class StatusResponseDto implements Record<FestivalEvent["status"], number> {
   @ApiProperty({ description: "activities in draft counter" })
   DRAFT: number;
 
@@ -16,7 +16,9 @@ class StatusResponseDto implements Record<FestivalActivity["status"], number> {
   REFUSED: number;
 }
 
-export class StatisticsResponseDto implements Statistics {
+export class StatisticsResponseDto<T extends FestivalEvent>
+  implements Statistics<T>
+{
   @ApiProperty({ description: "team in charge of activities" })
   teamCode: string;
 
@@ -24,7 +26,7 @@ export class StatisticsResponseDto implements Statistics {
     description: "count for each activity status",
     type: StatusResponseDto,
   })
-  status: Record<FestivalActivity["status"], number>;
+  status: Record<T["status"], number>;
 
   @ApiProperty({ description: "activities count" })
   total: number;

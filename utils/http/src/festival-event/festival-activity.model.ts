@@ -31,12 +31,6 @@ export type LinkSignageCatalogItemForm = {
   catalogItemId: SignageCatalogItem["id"];
 };
 
-export type Statistics = {
-  teamCode: string;
-  status: Record<FestivalActivity["status"], number>;
-  total: number;
-};
-
 export type PreviewForSecurity = {
   id: FestivalActivity["id"];
   name: FestivalActivity["general"]["name"];
