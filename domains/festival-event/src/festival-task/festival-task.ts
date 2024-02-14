@@ -8,6 +8,7 @@ import { KeyEvent } from "./festival-task.event";
 import { DraftGeneral, General } from "./sections/general";
 import { Mobilization, ReviewableMobilization } from "./sections/mobilizations";
 import { DraftInstructions, Instructions } from "./sections/instructions";
+import { InReviewReviews } from "../common/review";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
@@ -54,6 +55,7 @@ export type Reviewable<
   feedbacks: Feedback[];
   mobilizations: ReviewableMobilization<Options>[];
   inquiries: InquiryRequest[];
+  reviews: InReviewReviews<"FT">;
 };
 
 export type FestivalTask<
