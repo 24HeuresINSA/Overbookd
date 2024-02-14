@@ -43,7 +43,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { VALIDATED } from "@overbookd/festival-event";
+import {
+  FestivalActivity,
+  FestivalTask,
+  VALIDATED,
+} from "@overbookd/festival-event";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
@@ -57,6 +61,11 @@ interface StatsRowData {
 
 const validStatuses: string[] = [VALIDATED];
 
+type FaOrFtStatsPayloads =
+  | StatsPayload<FestivalActivity>[]
+  | StatsPayload<FestivalTask>[];
+type Item<T extends Array<unknown>> = T[number];
+
 export default Vue.extend({
   components: { StatsCard },
   props: {
@@ -65,7 +74,7 @@ export default Vue.extend({
       required: true,
     },
     dataset: {
-      type: Array as () => StatsPayload[],
+      type: Array as () => FaOrFtStatsPayloads,
       required: true,
     },
   },
@@ -100,29 +109,30 @@ export default Vue.extend({
         ["undefined", 4],
       ]),
       historyFT: new Map<string, number>([
-        ["bar", 84],
-        ["barrieres", 37],
-        ["bureau", 3],
-        ["catering", 8],
-        ["communication", 27],
-        ["concert", 8],
-        ["courses", 58],
-        ["culture", 86],
-        ["dd", 56],
-        ["deco", 16],
-        ["elec", 25],
-        ["hard", 5],
-        ["humain", 10],
-        ["beboo", 9],
-        ["matos", 61],
-        ["payant", 18],
-        ["plaizir", 45],
-        ["scene", 87],
-        ["secu", 76],
-        ["signa", 28],
-        ["sponso", 35],
-        ["sports", 61],
-        ["undefined", 46],
+        ["25eme", 1],
+        ["accueil-artiste", 29],
+        ["bar", 83],
+        ["barrieres", 25],
+        ["beboo", 15],
+        ["bureau", 7],
+        ["catering", 9],
+        ["communication", 26],
+        ["concert", 22],
+        ["conducteur-fen", 4],
+        ["courses", 55],
+        ["culture", 52],
+        ["dd", 55],
+        ["deco", 31],
+        ["elec", 28],
+        ["humain", 19],
+        ["matos", 66],
+        ["payant", 17],
+        ["plaizir", 34],
+        ["scene", 50],
+        ["secu", 86],
+        ["signa", 26],
+        ["sponso", 25],
+        ["sports", 66],
       ]),
     };
   },
@@ -133,7 +143,7 @@ export default Vue.extend({
     allStatusLabels(): typeof faStatusLabels | typeof ftStatusLabels {
       return this.isFT ? ftStatusLabels : faStatusLabels;
     },
-    teamStats(): StatsPayload[] {
+    teamStats(): FaOrFtStatsPayloads {
       return this.dataset;
     },
   },
@@ -150,7 +160,7 @@ export default Vue.extend({
       const lastYearValue = this.history(teamCode ?? "undefined");
       return lastYearValue ?? "N/A";
     },
-    historyPercentage(stats: StatsPayload): string {
+    historyPercentage(stats: Item<FaOrFtStatsPayloads>): string {
       const lastYearCount = this.history(stats.teamCode);
       if (!lastYearCount || lastYearCount === 0) {
         return "N/A";

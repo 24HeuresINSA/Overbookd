@@ -1,19 +1,20 @@
 import { actionTree, mutationTree } from "typed-vuex";
+import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import { FestivalActivityRepository } from "~/repositories/festival-activity.repository";
-import { RepoFactory } from "~/repositories/repo-factory";
+import { FestivalTaskRepository } from "~/repositories/festival-task.repository";
 import { safeCall } from "~/utils/api/calls";
 import { StatsPayload } from "~/utils/models/stats.model";
 
 export const state = () => ({
-  statsFA: [] as StatsPayload[],
-  statsFT: [] as StatsPayload[],
+  statsFA: [] as StatsPayload<FestivalActivity>[],
+  statsFT: [] as StatsPayload<FestivalTask>[],
 });
 
 export const mutations = mutationTree(state, {
-  SET_STATS_FA(state, data: StatsPayload[]) {
+  SET_STATS_FA(state, data: StatsPayload<FestivalActivity>[]) {
     state.statsFA = data;
   },
-  SET_STATS_FT(state, data: StatsPayload[]) {
+  SET_STATS_FT(state, data: StatsPayload<FestivalTask>[]) {
     state.statsFT = data;
   },
 });
@@ -31,10 +32,7 @@ export const actions = actionTree(
       context.commit("SET_STATS_FA", res.data);
     },
     async getFtStats(context) {
-      const res = await safeCall<StatsPayload>(
-        this,
-        RepoFactory.FtRepository.getFtStats(this),
-      );
+      const res = await safeCall(this, FestivalTaskRepository.getStats(this));
       if (res) {
         context.commit("SET_STATS_FT", res.data);
       }

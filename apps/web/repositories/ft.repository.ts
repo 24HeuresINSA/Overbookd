@@ -22,7 +22,6 @@ import {
   StoredGearRequest,
 } from "~/utils/models/gear-request.model";
 import { Reviewer } from "~/utils/models/review.model";
-import { StatsPayload } from "~/utils/models/stats.model";
 import { User } from "@overbookd/user";
 import { HttpStringified } from "@overbookd/http";
 
@@ -43,10 +42,6 @@ export class FtRepository {
 
   static createFT(context: Context, ft: FtCreation) {
     return context.$axios.post<HttpStringified<Ft>>(this.basePath, ft);
-  }
-
-  static getFtStats(context: Context) {
-    return context.$axios.get<StatsPayload>(`${this.basePath}/stats`);
   }
 
   static updateFT(context: Context, ft: FtUpdate) {

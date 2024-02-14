@@ -72,9 +72,9 @@ export class FestivalActivityRepository {
   }
 
   static getStats(context: Context) {
-    return context.$axios.get<HttpStringified<StatsPayload[]>>(
-      `${this.basePath}/statistics`,
-    );
+    return context.$axios.get<
+      HttpStringified<StatsPayload<FestivalActivity>[]>
+    >(`${this.basePath}/statistics`);
   }
 
   /* CREATE */

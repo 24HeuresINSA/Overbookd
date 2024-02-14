@@ -1,24 +1,20 @@
-import { FestivalActivity } from "@overbookd/festival-event";
+import { FestivalTask } from "@overbookd/festival-event";
 import { Statistics } from "@overbookd/http";
 import { FestivalEventStatistics } from "../statistics.service";
 import { PrismaService } from "../../prisma.service";
 import { FestivalEventStatisticsBuilder } from "./festival-event-statistics.builder";
 
-const INIT_STATUS_STATISTICS: Statistics["status"] = {
+const INIT_STATUS_STATISTICS: Statistics<FestivalTask>["status"] = {
   DRAFT: 0,
-  IN_REVIEW: 0,
-  VALIDATED: 0,
-  REFUSED: 0,
 };
 
-export class PrismaFestivalActivityStatistics<
-  T extends FestivalActivity = FestivalActivity,
-> implements FestivalEventStatistics<T>
+export class PrismaFestivalTaskStatistics<T extends FestivalTask = FestivalTask>
+  implements FestivalEventStatistics<T>
 {
   constructor(private readonly prisma: PrismaService) {}
 
   async byTeams(): Promise<Statistics<T>[]> {
-    const statusStatistics = await this.prisma.festivalActivity.groupBy(
+    const statusStatistics = await this.prisma.festivalTask.groupBy(
       FestivalEventStatisticsBuilder.groupByTeamAndStatus,
     );
 

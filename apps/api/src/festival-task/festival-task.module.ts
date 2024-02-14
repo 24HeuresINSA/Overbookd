@@ -14,6 +14,7 @@ import { InquirySectionModule } from "./sections/inquiry/inquiry-section.module"
 import { InquirySectionController } from "./sections/inquiry/inquiry-section.controller";
 import { FestivalTaskReviewController } from "./review/festival-task-review.controller";
 import { FestivalTaskReviewModule } from "./review/festival-task-review.module";
+import { StatisticsModule } from "../statistics/statistics.module";
 
 @Module({
   controllers: [
@@ -34,6 +35,7 @@ import { FestivalTaskReviewModule } from "./review/festival-task-review.module";
     InstructionsSectionModule,
     MobilizationSectionModule,
     InquirySectionModule,
+    StatisticsModule,
   ],
 })
 export class FestivalTaskModule {}

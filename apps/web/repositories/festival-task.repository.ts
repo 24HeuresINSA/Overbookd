@@ -10,6 +10,7 @@ import {
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
   PublishFeedbackForm,
+  Statistics,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -37,6 +38,12 @@ export class FestivalTaskRepository {
   static getOne(context: Context, id: FestivalTask["id"]) {
     return context.$axios.get<HttpStringified<FestivalTask>>(
       `${this.basePath}/${id}`,
+    );
+  }
+
+  static getStats(context: Context) {
+    return context.$axios.get<HttpStringified<Statistics<FestivalTask>>>(
+      `${this.basePath}/statistics`,
     );
   }
 
