@@ -1,11 +1,11 @@
 import { IProvidePeriod } from "@overbookd/period";
+import { FestivalTask } from "./festival-task";
+import { Volunteer } from "./sections/instructions";
 import {
-  FestivalTask,
-  Volunteer,
+  Conflicts,
   Mobilization,
   VolunteerWithConflicts,
-  Conflicts,
-} from "./festival-task";
+} from "./sections/mobilizations";
 
 export type VolunteerAvailabilities = {
   volunteer: Volunteer;

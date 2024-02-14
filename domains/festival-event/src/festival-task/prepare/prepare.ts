@@ -4,12 +4,14 @@ import {
   InquiryRequest,
 } from "../../common/inquiry-request";
 import {
-  Contact,
   FestivalTask,
-  Mobilization,
-  TeamMobilization,
-  Volunteer,
 } from "../festival-task";
+import { Volunteer } from "../sections/instructions";
+import { Contact } from "../sections/instructions";
+import {
+  Mobilization,
+  TeamMobilization
+} from "../sections/mobilizations";
 import {
   FestivalTaskNotFound,
   GearAlreadyRequested,

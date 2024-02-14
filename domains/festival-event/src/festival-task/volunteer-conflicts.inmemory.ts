@@ -3,13 +3,10 @@ import {
   VolunteerAvailabilities,
   VolunteerConflicts,
 } from "./volunteer-conflicts";
-import {
-  FestivalTask,
-  FestivalTaskLink,
-  Volunteer,
-  Mobilization,
-  Conflicts,
-} from "./festival-task";
+import { FestivalTask } from "./festival-task";
+import { Volunteer } from "./sections/instructions";
+import { Conflicts, FestivalTaskLink } from "./sections/mobilizations";
+import { Mobilization } from "./sections/mobilizations";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(
