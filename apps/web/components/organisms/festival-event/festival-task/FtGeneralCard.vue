@@ -23,7 +23,7 @@
       />
       <SearchUser
         :user="general.administrator"
-        label="Responsable de la FT"
+        label="Gestionnaire de la FT"
         :boxed="false"
         @change="updateAdministrator"
       />
