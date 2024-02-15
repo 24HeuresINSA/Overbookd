@@ -13,7 +13,7 @@ import {
   PrepareInquiryRequestCreation,
 } from "../prepare-festival-activity.model";
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
-import { updateItemToList } from "@overbookd/list";
+import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
@@ -43,7 +43,6 @@ export class CantRemoveLastRequest extends FestivalActivityError {
   }
 }
 
-type WithAtLeastOneItem<T> = [T, ...T[]];
 type MaybeWithOneItem<T> = T[] | WithAtLeastOneItem<T>;
 
 export class Inquiries<

@@ -24,9 +24,13 @@ export type PublicActivityReviewer =
   | PrivateActivityReviewer
   | typeof communication;
 
+type NoSupplyRequestTaskReviewer = typeof humain | typeof matos;
+
+type TaskWithSupplyRequestReviewer = NoSupplyRequestTaskReviewer | typeof elec;
+
 export type Reviewer<T extends FestivalEvent> = T extends typeof FA
   ? PublicActivityReviewer | PrivateActivityReviewer
-  : never;
+  : NoSupplyRequestTaskReviewer | TaskWithSupplyRequestReviewer;
 
 export type ReviewingStatus =
   | typeof REVIEWING

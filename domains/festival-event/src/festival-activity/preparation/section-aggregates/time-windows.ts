@@ -1,6 +1,7 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
 import { TimeWindowAlreadyExists } from "../../festival-activity.error";
 import { TimeWindow } from "../../../common/time-window";
+import { WithAtLeastOneItem } from "@overbookd/list";
 
 export class TimeWindows<T extends TimeWindow[]> {
   private constructor(private readonly timeWindows: T) {}
@@ -13,7 +14,7 @@ export class TimeWindows<T extends TimeWindow[]> {
     return new TimeWindows(timeWindows);
   }
 
-  add(period: IProvidePeriod): TimeWindows<[TimeWindow, ...TimeWindow[]]> {
+  add(period: IProvidePeriod): TimeWindows<WithAtLeastOneItem<TimeWindow>> {
     const { start, end } = Period.init(period);
     const id = this.generateTimeWindowId({ start, end });
     const timeWindow = { id, start, end };
@@ -21,7 +22,7 @@ export class TimeWindows<T extends TimeWindow[]> {
     const alreadyExists = this.timeWindows.some((tw) => tw.id === id);
     if (alreadyExists) throw new TimeWindowAlreadyExists();
 
-    return new TimeWindows<[TimeWindow, ...TimeWindow[]]>([
+    return new TimeWindows<WithAtLeastOneItem<TimeWindow>>([
       timeWindow,
       ...this.timeWindows,
     ]);

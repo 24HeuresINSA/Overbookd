@@ -128,13 +128,13 @@ class General {
     }
 
     if (
-      !this.hasAtLeastOneCategory(categories) ||
+      !hasAtLeastOneItem(categories) ||
       !this.hasSetPhotoLink(photoLink) ||
-      !this.hasAtLeastOneTimeWindow(timeWindows)
+      !hasAtLeastOneItem(timeWindows)
     ) {
       const missingPublicParts = [
         {
-          verify: this.hasAtLeastOneCategory(categories),
+          verify: hasAtLeastOneItem(categories),
           message: "Il faut au moins une catégorie.",
         },
         {
@@ -142,7 +142,7 @@ class General {
           message: "Il faut définir un lien pour la photo.",
         },
         {
-          verify: this.hasAtLeastOneTimeWindow(timeWindows),
+          verify: hasAtLeastOneItem,
           message: "Il faut au moins un créneau.",
         },
       ]
@@ -165,18 +165,6 @@ class General {
 
   private hasSetPhotoLink(photoLink: string | null): photoLink is string {
     return photoLink !== null;
-  }
-
-  private hasAtLeastOneCategory(
-    categories: string[],
-  ): categories is [string, ...string[]] {
-    return hasAtLeastOneItem(categories);
-  }
-
-  private hasAtLeastOneTimeWindow(
-    timeWindows: TimeWindow[],
-  ): timeWindows is [TimeWindow, ...TimeWindow[]] {
-    return hasAtLeastOneItem(timeWindows);
   }
 }
 

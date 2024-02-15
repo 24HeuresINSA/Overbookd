@@ -18,6 +18,10 @@ export function moveAtFirstIndex<T>(list: T[], index: number): T[] {
   return [item, ...list.slice(0, index), ...list.slice(index + 1)];
 }
 
-export function hasAtLeastOneItem<T>(list: T[]): list is [T, ...T[]] {
+export type WithAtLeastOneItem<T> = [T, ...T[]];
+
+export type Item<T extends Array<unknown>> = T[number];
+
+export function hasAtLeastOneItem<T>(list: T[]): list is WithAtLeastOneItem<T> {
   return list.length > 0;
 }

@@ -48,6 +48,7 @@ import {
   FestivalTask,
   VALIDATED,
 } from "@overbookd/festival-event";
+import { Item } from "@overbookd/list";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
@@ -64,7 +65,6 @@ const validStatuses: string[] = [VALIDATED];
 type FaOrFtStatsPayloads =
   | StatsPayload<FestivalActivity>[]
   | StatsPayload<FestivalTask>[];
-type Item<T extends Array<unknown>> = T[number];
 
 export default Vue.extend({
   components: { StatsCard },

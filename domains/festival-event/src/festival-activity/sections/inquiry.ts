@@ -1,3 +1,4 @@
+import { WithAtLeastOneItem } from "@overbookd/list";
 import { InquiryRequest } from "../../common/inquiry-request";
 import { TimeWindow } from "../../common/time-window";
 
@@ -80,24 +81,24 @@ export const drives: Drive[] = [
 ];
 
 export type WithTimeWindows = {
-  timeWindows: [TimeWindow, ...TimeWindow[]];
+  timeWindows: WithAtLeastOneItem<TimeWindow>;
 };
 
 type WithGearInquiries = {
   barriers: InquiryRequest[];
   electricity: InquiryRequest[];
-  gears: [InquiryRequest, ...InquiryRequest[]];
+  gears: WithAtLeastOneItem<InquiryRequest>;
 };
 
 type WithBarrierInquiries = {
-  barriers: [InquiryRequest, ...InquiryRequest[]];
+  barriers: WithAtLeastOneItem<InquiryRequest>;
   electricity: InquiryRequest[];
   gears: InquiryRequest[];
 };
 
 type WithElectricityInquiries = {
   barriers: InquiryRequest[];
-  electricity: [InquiryRequest, ...InquiryRequest[]];
+  electricity: WithAtLeastOneItem<InquiryRequest>;
   gears: InquiryRequest[];
 };
 

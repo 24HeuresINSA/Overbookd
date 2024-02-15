@@ -1,5 +1,6 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/period";
-import { Mobilization, TeamMobilization, Volunteer } from "../../festival-task";
+import { Volunteer } from "../../sections/instructions";
+import { Mobilization, TeamMobilization } from "../../sections/mobilizations";
 import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
@@ -17,6 +18,7 @@ type ListItem<T> = {
   index: number;
   value?: T;
 };
+
 class SplitablePeriod {
   static checkValidity({ start, end, splitDuration }: IProvideSplitablePeriod) {
     const period = Period.init({ start, end });
@@ -26,6 +28,7 @@ class SplitablePeriod {
     return;
   }
 }
+
 export class Mobilizations {
   private constructor(
     private readonly mobilizations: Mobilization<{ withConflicts: false }>[],
