@@ -1,3 +1,18 @@
+## [2.16.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.2...v2.16.3) (2024-02-15)
+
+
+### Bug Fixes
+
+* **festival-task:** display stats. [#1561](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1561) ([ce31ecc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ce31ecc2e5094116a160532725fbfdccdf1ae241))
+* **festival-task:** display volunteers requested dashboard. [#1562](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1562) ([8869c9b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8869c9beb7b0eff590ab23ea95d7b032d69ad90f))
+* **inventory:** delete all previous records on reset. [#1563](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1563) ([b6a89b9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b6a89b9b8a9b553fa404e30239bdfcf2c3d3ebe6))
+* **inventory:** parse quantities from the body. [#1563](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1563) ([4137ada](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4137adad2dda5782eb78f382b95fa1529bc55197))
+
+
+### Pre-Features
+
+* **festival-task:** add reviewable type [#1558](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1558) ([7b11f85](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7b11f852c8eacd1c985ac2ee5bf7698a4a031f6e))
+
 ## [2.16.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.1...v2.16.2) (2024-02-13)
 
 
