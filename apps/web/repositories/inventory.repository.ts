@@ -5,7 +5,7 @@ import { InventoryGroupedRecord } from "~/store/inventory";
 export type Context = { $axios: NuxtAxiosInstance };
 
 export class InventoryRepository {
-  private static readonly basePath = "inventory";
+  private static readonly basePath = "logistic/inventory";
 
   static setupInventory(context: Context, inventoryRecords: InventoryRecord[]) {
     const records = inventoryRecords.map((record) => record.toJson());

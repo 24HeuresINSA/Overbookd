@@ -4,17 +4,12 @@ import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.reposit
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
 import { RepoFactory } from "~/repositories/repo-factory";
+import { GearSearchOptions } from "@overbookd/http";
 
 const gearRepository = RepoFactory.GearsRepository;
 
 interface State {
   gears: Gear[];
-}
-
-export interface GearSearchOptions {
-  name?: string;
-  category?: string;
-  owner?: string;
 }
 
 export interface GearForm {

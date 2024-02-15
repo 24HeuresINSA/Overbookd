@@ -1,10 +1,9 @@
 import { Module } from "@nestjs/common";
 import { CatalogService } from "./catalog.service";
 import { CategoryService } from "./category.service";
-import { CommonModule } from "../common/common.module";
 import { CategoryController } from "./category.controller";
 import { GearController } from "./gear.controller";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../../prisma.service";
 import {
   PrismaCategoryRepository,
   PrismaGearRepository,
@@ -12,7 +11,6 @@ import {
 } from "./repositories";
 
 @Module({
-  imports: [CommonModule],
   providers: [
     PrismaService,
     CatalogService,

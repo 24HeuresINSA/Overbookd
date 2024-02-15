@@ -22,18 +22,18 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CatalogService } from "./catalog.service";
 import { GearFormRequestDto } from "./dto/gear-form.request.dto";
 import { GearResponseDto } from "./dto/gear.response.dto";
-import { GearSearchRequestDto } from "./dto/gear-search.request.dto";
 import { Gear } from "./interfaces";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
+import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 
-@Controller("gears")
-@ApiTags("catalog")
+@Controller("logistic/gears")
+@ApiTags("logistic/catalog")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiUnauthorizedResponse({

@@ -56,7 +56,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalogGear";
+import { GearSearchOptions } from "@overbookd/http";
 import { Gear } from "~/utils/models/catalog.model";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";

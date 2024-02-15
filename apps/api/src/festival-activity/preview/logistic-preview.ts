@@ -1,5 +1,5 @@
 import { CSV, JSON, PreviewForLogistic } from "@overbookd/http";
-import { GearReferenceCodeService } from "../../catalog/gear-reference-code.service";
+import { GearReferenceCodeService } from "../../logistic/catalog/gear-reference-code.service";
 
 type Formater<T, U> = {
   format(raw: T): U;

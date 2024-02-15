@@ -16,7 +16,7 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
 import { GearDetailsResponseDto } from "./dto/gear-details.response.dto";
 import { GearDetails, GearPreview } from "@overbookd/http";
-import { GearSearchRequestDto } from "./dto/gear-search.request.dto";
+import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("logistic/dashboard")

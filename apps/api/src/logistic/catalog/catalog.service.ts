@@ -89,11 +89,11 @@ export class CatalogService {
     owner,
     ponctualUsage,
   }: GearSearchRequest): Promise<Gear[]> {
-    const slug = SlugifyService.applyOnOptional(name);
+    const nameSlug = SlugifyService.applyOnOptional(name);
     const categorySlug = SlugifyService.applyOnOptional(category);
     const ownerSlug = SlugifyService.applyOnOptional(owner);
     return this.gearRepository.searchGear({
-      slug,
+      name: nameSlug,
       category: categorySlug,
       owner: ownerSlug,
       ponctualUsage,

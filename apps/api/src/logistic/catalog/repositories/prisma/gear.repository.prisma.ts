@@ -1,12 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { GearReferenceCodeService } from "../../gear-reference-code.service";
-import { PrismaService } from "../../../prisma.service";
-import {
-  Gear,
-  GearAlreadyExists,
-  GearRepository,
-  SearchGear,
-} from "../../interfaces";
+import { PrismaService } from "../../../../prisma.service";
+import { Gear, GearAlreadyExists, GearRepository } from "../../interfaces";
+import { GearSearchOptions } from "@overbookd/http";
+import { GearQueryBuilder } from "../../../common/gear.query";
 
 type DatabaseGear = {
   id: number;
@@ -124,57 +121,13 @@ export class PrismaGearRepository implements GearRepository {
     await this.prismaService.catalogGear.delete({ where: { id } });
   }
 
-  async searchGear(search: SearchGear): Promise<Gear[]> {
-    const where = this.buildSearchConditions(search);
+  async searchGear(options: GearSearchOptions): Promise<Gear[]> {
+    const where = GearQueryBuilder.find(options);
     return (
       await this.prismaService.catalogGear.findMany({
         select: this.SELECT_GEAR,
         where,
       })
     ).map(convertGearToApiContract);
-  }
-
-  private buildSearchConditions({
-    slug,
-    category,
-    owner,
-    ponctualUsage,
-  }: SearchGear) {
-    const slugCondition = slug ? { slug: { contains: slug } } : {};
-    const categoryCondition = this.buildCategorySearchCondition(
-      category,
-      owner,
-    );
-    const ponctualUsageCondition = this.buildUsageCondition(ponctualUsage);
-
-    return {
-      ...slugCondition,
-      ...categoryCondition,
-      ...ponctualUsageCondition,
-    };
-  }
-
-  private buildUsageCondition(ponctualUsage: boolean) {
-    return ponctualUsage !== undefined
-      ? { isPonctualUsage: ponctualUsage }
-      : {};
-  }
-
-  private buildCategorySearchCondition(category: string, owner: string) {
-    if (!owner && !category) return {};
-
-    const baseCategoryNameCondition = category
-      ? { path: { contains: category } }
-      : {};
-    const baseCategoryOwnerCondition = owner
-      ? { owner: { code: { contains: owner } } }
-      : {};
-
-    return {
-      category: {
-        ...baseCategoryNameCondition,
-        ...baseCategoryOwnerCondition,
-      },
-    };
   }
 }
