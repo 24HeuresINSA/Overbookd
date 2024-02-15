@@ -83,7 +83,7 @@ export default Vue.extend({
     return {
       name: this.signage.name,
       type: this.signage.type,
-      image: undefined,
+      image: null,
       rules: {
         nameMinLength: minLength(nameMinLength),
         typeRequired: required,
