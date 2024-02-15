@@ -1,13 +1,15 @@
 import { VALIDATED } from "../common/status";
-import { FestivalActivity, FestivalTask } from "./festival-task";
+import { FestivalActivity } from "./festival-task";
 import { Contact } from "./sections/instructions";
 import { Mobilization, VolunteerWithConflicts } from "./sections/mobilizations";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
-import { FestivalTaskKeyEvents } from "./festival-task.event";
 import { Location } from "../common/location";
 import { AddMobilization } from "./prepare/prepare";
 import { VolunteerAvailabilities } from "./volunteer-conflicts";
+import { getFactory } from "./festival-task.factory";
+
+const factory = getFactory();
 
 type BuildTimeWindow = {
   date: Date;
@@ -160,8 +162,14 @@ export const leaAvailabilities: VolunteerAvailabilities = {
   availabilities: [{ start: saturday8h.date, end: saturday11h.date }],
 };
 
-const friday10hfriday19h = TimeWindowFactory.create(friday10h, friday19h);
-const friday11hfriday18h = TimeWindowFactory.create(friday11h, friday18h);
+export const friday10hfriday19h = TimeWindowFactory.create(
+  friday10h,
+  friday19h,
+);
+export const friday11hfriday18h = TimeWindowFactory.create(
+  friday11h,
+  friday18h,
+);
 
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
@@ -193,7 +201,7 @@ export const saturday11hsaturday18hMobilization = friday11hfriday18hMobilization
   .withStart(saturday11h)
   .withEnd(saturday18h);
 
-const deuxTables: InquiryRequest = {
+export const deuxTables: InquiryRequest = {
   name: "Table",
   slug: "table",
   quantity: 2,
@@ -227,101 +235,54 @@ export const escapeGame: FestivalActivity = {
   },
 };
 
-export const installEscapeGame: FestivalTask = {
-  id: 1,
-  status: "DRAFT",
-  general: {
-    name: "Install Escape Game",
-    administrator: noel,
-    team: null,
-  },
-  festivalActivity: escapeGame,
-  instructions: {
-    appointment: null,
-    contacts: [],
-    global: null,
-    inCharge: {
-      volunteers: [],
-      instruction: null,
-    },
-  },
-  history: [FestivalTaskKeyEvents.created(noel)],
-  feedbacks: [],
-  mobilizations: [],
-  inquiries: [],
-};
+export const installEscapeGame = factory
+  .draft("Install Escape Game")
+  .withFestivalActivity(escapeGame)
+  .build();
 
-export const uninstallEscapeGame: FestivalTask = {
-  id: 2,
-  status: "DRAFT",
-  general: {
-    name: "Uninstall Escape Game",
-    administrator: noel,
-    team: null,
-  },
-  festivalActivity: escapeGame,
-  instructions: {
+export const uninstallEscapeGame = factory
+  .draft("Uninstall Escape Game")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
     appointment: humaGrass,
     contacts: [noelContact],
-    global: null,
     inCharge: {
       volunteers: [lea],
       instruction: null,
     },
-  },
-  history: [FestivalTaskKeyEvents.created(noel)],
-  feedbacks: [],
-  mobilizations: [],
-  inquiries: [{ ...sacPoubelle, quantity: 2 }],
-};
+  })
+  .withInquiries([{ ...sacPoubelle, quantity: 2 }])
+  .build();
 
-export const presentEscapeGame: FestivalTask = {
-  id: 3,
-  status: "DRAFT",
-  general: {
-    name: "Present Escape Game",
-    administrator: noel,
-    team: "sports",
-  },
-  festivalActivity: escapeGame,
-  instructions: {
-    appointment: null,
+export const presentEscapeGame = factory
+  .draft("Present Escape Game")
+  .withGeneral({ team: "sport" })
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
     contacts: [noelContact],
     global: "Some instructions for everyone",
     inCharge: {
       volunteers: [noel],
       instruction: "Some instructions for in charge only",
     },
-  },
-  history: [FestivalTaskKeyEvents.created(noel)],
-  feedbacks: [],
-  mobilizations: [saturday11hsaturday18hMobilization.mobilization],
-  inquiries: [],
-};
+  })
+  .withMobilizations([saturday11hsaturday18hMobilization.mobilization])
+  .build();
 
-export const guardEscapeGame: FestivalTask = {
-  id: 4,
-  status: "DRAFT",
-  general: {
-    name: "Guard Escape Game",
-    administrator: noel,
-    team: "sports",
-  },
-  festivalActivity: escapeGame,
-  instructions: {
-    appointment: null,
+export const guardEscapeGame = factory
+  .draft("Guard Escape Game")
+  .withGeneral({ team: "sports" })
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
     contacts: [noelContact],
     global: "Some instructions for everyone",
     inCharge: {
       volunteers: [noel],
       instruction: "Some instructions for in charge only",
     },
-  },
-  history: [FestivalTaskKeyEvents.created(noel)],
-  feedbacks: [],
-  mobilizations: [
+  })
+  .withMobilizations([
     friday18hsaturday10hMobilization.mobilization,
     saturday08hsaturday11hMobilization.mobilization,
-  ],
-  inquiries: [],
-};
+  ])
+  .build();
