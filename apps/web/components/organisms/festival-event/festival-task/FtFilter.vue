@@ -5,6 +5,7 @@
     :team="filters.team"
     :adherent="filters.adherent"
     :status="filters.status"
+    adherent-label="Gestionnaire"
     @change:search="updateSearch"
     @change:team="updateTeam"
     @change:adherent="updateAdherent"

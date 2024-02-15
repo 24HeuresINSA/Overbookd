@@ -15,7 +15,7 @@
       ></SearchTeam>
       <SearchUser
         :user="adherent"
-        label="Responsable"
+        :label="adherentLabel"
         :list="adherents"
         :boxed="false"
         @change="changeAdherent"
@@ -73,6 +73,10 @@ export default Vue.extend({
     adherent: {
       type: Object as () => null,
       default: null,
+    },
+    adherentLabel: {
+      type: String,
+      default: "Responsable",
     },
     status: {
       type: String as () =>
