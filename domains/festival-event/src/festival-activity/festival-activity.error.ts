@@ -1,3 +1,5 @@
+import { FestivalEventError } from "../festival-event";
+
 function buildFestivalActivityNotFoundErrorMessage(id: number) {
   return `❌ La fiche activité #${id} n'a pas été trouvé`;
 }
@@ -26,7 +28,7 @@ const ELECTRICITY_SUPPLY_ALREADY_EXISTS_ERROR_MESSAGE =
 const INQUIRY_ALREADY_EXISTS_ERROR_MESSAGE =
   "❌ Une demande de matos existe déjà pour";
 
-export class FestivalActivityError extends Error {}
+export class FestivalActivityError extends FestivalEventError {}
 
 export class FestivalActivityNotFound extends FestivalActivityError {
   constructor(id: number) {

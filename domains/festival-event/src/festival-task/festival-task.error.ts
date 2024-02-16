@@ -2,8 +2,9 @@ import { Duration } from "@overbookd/period";
 import { FestivalTask } from "./festival-task";
 import { TeamMobilization } from "./sections/mobilizations";
 import { InquiryRequest } from "../common/inquiry-request";
+import { FestivalEventError } from "../festival-event";
 
-export class FestivalTaskError extends Error {}
+export class FestivalTaskError extends FestivalEventError {}
 
 export class FestivalTaskNotFound extends FestivalTaskError {
   constructor(ftId: FestivalTask["id"]) {
