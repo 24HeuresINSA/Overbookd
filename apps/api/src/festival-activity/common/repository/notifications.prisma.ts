@@ -1,4 +1,5 @@
 import {
+  FestivalEventIdentifier,
   Notifications,
   Notifyee,
   WaitingForReview,
@@ -6,12 +7,14 @@ import {
 import { PrismaService } from "../../../prisma.service";
 import { Logger } from "@nestjs/common";
 
-export class PrismaNotifications implements Notifications {
+export class PrismaNotifications<T extends FestivalEventIdentifier>
+  implements Notifications<T>
+{
   constructor(private readonly prisma: PrismaService) {}
 
   private readonly logger = new Logger(PrismaNotifications.name);
 
-  add(event: WaitingForReview): Promise<Notifyee[]> {
+  add(event: WaitingForReview<T>): Promise<Notifyee<T>[]> {
     const notifications = event.reviewers.map((team) => ({
       team,
       event: { id: event.id, name: event.name },

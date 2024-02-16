@@ -699,6 +699,7 @@ model FestivalTask {
 
 enum FestivalTaskStatus {
   DRAFT
+  IN_REVIEW
 
   @@map("festival_task_status")
 }
@@ -792,6 +793,7 @@ model FestivalTaskHistory {
 enum FestivalTaskEvent {
   CREATED
   COMMENTED
+  READY_TO_REVIEW
 
   @@map("festival_task_event")
 }

@@ -10,6 +10,7 @@ export {
 } from "./common/action";
 export type { Adherent } from "./common/adherent";
 export type { Feedback } from "./common/feedback";
+export type { FestivalEventIdentifier } from "./common/festival-event";
 export { isAssignedToDrive } from "./common/inquiry-request";
 export type {
   InquiryRequestAssigned,
