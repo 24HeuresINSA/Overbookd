@@ -529,3 +529,39 @@ export const withInChargeInstructionButWithNotInChargeVolunteer = factory
   })
   .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
   .build();
+
+export const withoutAnyMobilization = factory
+  .draft("Task with NOT ANY MOBILIZATION")
+  .withGeneral({ team: "test" })
+  .withFestivalActivity(preventionVillage)
+  .withInstructions({
+    appointment: mdeHall,
+    contacts: [noelContact],
+    global: "Some instructions for everyone",
+    inCharge: {
+      volunteers: [noel],
+      instruction: "Some instructions for in charge only",
+    },
+  })
+  .withMobilizations([])
+  .build();
+
+export const withSomeMobilizationsWithoutRequest = factory
+  .draft("Task with SOME MOBILIZATIONS WITHOUT REQUEST")
+  .withGeneral({ team: "test" })
+  .withFestivalActivity(preventionVillage)
+  .withInstructions({
+    appointment: mdeHall,
+    contacts: [noelContact],
+    global: "Some instructions for everyone",
+    inCharge: {
+      volunteers: [noel],
+      instruction: "Some instructions for in charge only",
+    },
+  })
+  .withMobilizations([
+    twoVolunteersOnFriday10hToFriday11h.mobilization,
+    MobilizationBuilder.init({ start: friday11h, end: friday18h }).mobilization,
+  ])
+  .build();
+withSomeMobilizationsWithoutRequest;

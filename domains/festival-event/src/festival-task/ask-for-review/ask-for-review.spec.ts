@@ -12,6 +12,8 @@ import {
   guardPreventionVillage,
   withInChargeVolunteerButWithNotInChargeInstruction,
   withInChargeInstructionButWithNotInChargeVolunteer,
+  withoutAnyMobilization,
+  withSomeMobilizationsWithoutRequest,
 } from "../festival-task.test-util";
 import { DRAFT, IN_REVIEW } from "../../common/status";
 import { Draft, FestivalTask, InReview } from "../festival-task";
@@ -29,7 +31,7 @@ import {
   humain,
   matos,
 } from "../../common/review";
-import { updateItemToList } from "@overbookd/list";
+import { Item, updateItemToList } from "@overbookd/list";
 import { ReadyForReviewError } from "../../common/ready-for-review.error";
 
 type AskForReviewTasks = {
@@ -93,6 +95,7 @@ class InReviewConversion {
     return [
       ...GeneralSpecification.generateErrors(task.general),
       ...InstructionsSpecification.generateErrors(task.instructions),
+      ...MobilizationsSpecification.generateErrors(task.mobilizations),
     ];
   }
 
@@ -131,6 +134,46 @@ class GeneralSpecification {
 
   static get teamIsMandatory(): string {
     return "Une équipe responsable est nécessaire";
+  }
+}
+
+class MobilizationsSpecification {
+  static generateErrors(mobilizations: Draft["mobilizations"]): string[] {
+    return [
+      ...this.minumumMobilizationError(mobilizations),
+      ...this.requestError(mobilizations),
+    ];
+  }
+
+  private static requestError(mobilizations: Draft["mobilizations"]): string[] {
+    const isMissingRequest = mobilizations.some(
+      (mobilization) => !this.hasRequest(mobilization),
+    );
+    return isMissingRequest ? [this.allMobilizationsHaveRequest] : [];
+  }
+
+  private static minumumMobilizationError(
+    mobilizations: Draft["mobilizations"],
+  ): string[] {
+    const hasNotMobilizations = mobilizations.length === 0;
+    return hasNotMobilizations ? [this.atLeastOneMobilizationIsMandatory] : [];
+  }
+
+  private static hasRequest(
+    mobilization: Item<Draft["mobilizations"]>,
+  ): boolean {
+    const requestVolunteers = mobilization.volunteers.length > 0;
+    const requestTeamMembers =
+      mobilization.teams.reduce((sum, { count }) => sum + count, 0) > 0;
+    return requestVolunteers || requestTeamMembers;
+  }
+
+  static get atLeastOneMobilizationIsMandatory(): string {
+    return "Au moins une mobilisation est nécessaire";
+  }
+
+  static get allMobilizationsHaveRequest(): string {
+    return "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)";
   }
 }
 
@@ -240,6 +283,8 @@ describe("Festival Task - ask for review", () => {
       withNotAnyContactTask,
       withInChargeVolunteerButWithNotInChargeInstruction,
       withInChargeInstructionButWithNotInChargeVolunteer,
+      withoutAnyMobilization,
+      withSomeMobilizationsWithoutRequest,
     ]);
     notifications = new InMemoryNotifications<"FT">();
     askForReview = new AskForReview(tasks, notifications);
@@ -317,6 +362,8 @@ describe("Festival Task - ask for review", () => {
         ${"without any contact"}                                          | ${withNotAnyContactTask}                              | ${noel}    | ${"Au moins une personne à contacter est nécessaire"}
         ${"with in charge volunteers but with no in charge instructions"} | ${withInChargeVolunteerButWithNotInChargeInstruction} | ${noel}    | ${"Des instructions spécifiques sont nécessaires pour les responsables"}
         ${"with in charge instructions but with no in charge volunteers"} | ${withInChargeInstructionButWithNotInChargeVolunteer} | ${noel}    | ${"Des responsables sont nécessaires pour les instructions spécifiques"}
+        ${"without any mobilization"}                                     | ${withoutAnyMobilization}                             | ${noel}    | ${"Au moins une mobilisation est nécessaire"}
+        ${"with some mobilizations without any volunteer requests"}       | ${withSomeMobilizationsWithoutRequest}                | ${noel}    | ${"Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)"}
       `("when task is $indication", ({ task, instigator, explanation }) => {
         it("should indicate can't ask for review with explanation", async () => {
           expect(
