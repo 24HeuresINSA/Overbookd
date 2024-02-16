@@ -2,7 +2,7 @@ import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { FestivalActivity, Draft } from "../festival-task";
+import { FestivalActivity, Draft, isDraft } from "../festival-task";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 const FT_420 = 420;
@@ -60,7 +60,10 @@ export class CreateFestivalTask {
     };
 
     const created = await this.festivalTasks.add(festivalTask);
-    return this.festivalTaskTranslator.translate(created);
+    const withConflicts = await this.festivalTaskTranslator.translate(created);
+    if (!isDraft(withConflicts)) throw new Error("");
+
+    return withConflicts;
   }
 
   private generateId(): number {

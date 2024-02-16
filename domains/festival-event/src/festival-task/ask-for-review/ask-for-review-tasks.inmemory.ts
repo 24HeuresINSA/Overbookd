@@ -1,6 +1,5 @@
 import { updateItemToList } from "@overbookd/list";
-import { DRAFT } from "../../common/status";
-import { Draft, FestivalTask, InReview } from "../festival-task";
+import { Draft, FestivalTask, InReview, isDraft } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { AskForReviewTasks } from "./ask-for-review";
 
@@ -25,8 +24,4 @@ export class InMemoryAskForReviewTasks implements AskForReviewTasks {
   get entries(): FestivalTask[] {
     return this.tasks;
   }
-}
-
-function isDraft(task: FestivalTask): task is Draft {
-  return task.status === DRAFT;
 }

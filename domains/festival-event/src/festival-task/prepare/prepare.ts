@@ -3,11 +3,12 @@ import {
   BaseInquiryRequest,
   InquiryRequest,
 } from "../../common/inquiry-request";
-import { FestivalTask } from "../festival-task";
+import { FestivalTask, isDraft } from "../festival-task";
 import { Volunteer } from "../sections/instructions";
 import { Contact } from "../sections/instructions";
 import { Mobilization, TeamMobilization } from "../sections/mobilizations";
 import {
+  FestivalTaskError,
   FestivalTaskNotFound,
   GearAlreadyRequested,
 } from "../festival-task.error";
@@ -62,6 +63,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const general = { ...task.general, ...update };
     return this.save({ ...task, general });
@@ -73,6 +75,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
@@ -85,6 +88,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addContact(contact).json;
@@ -97,6 +101,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeContact(contactId).json;
@@ -109,6 +114,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
@@ -121,6 +127,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeVolunteer(volunteerId).json;
@@ -130,6 +137,7 @@ export class PrepareFestivalTask {
   async clearIncharge(taskId: FestivalTask["id"]): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.clear().json;
@@ -142,6 +150,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
@@ -160,6 +169,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.remove(mobilizationId).json;
@@ -173,6 +183,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.update(mobilizationId, update).json;
@@ -186,6 +197,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addTeamTo(mobilizationId, team).json;
@@ -200,6 +212,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeTeamFrom(mobilizationId, team).json;
@@ -214,6 +227,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addVolunteerTo(
@@ -231,6 +245,7 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeVolunteerFrom(

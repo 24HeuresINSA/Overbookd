@@ -80,3 +80,9 @@ export type PreviewInReview = {
 };
 
 export type Preview = PreviewDraft | PreviewInReview;
+
+export function isDraft<Options extends FestivalTaskOptions>(
+  task: FestivalTask<Options>,
+): task is Draft<Options> {
+  return task.status === DRAFT;
+}
