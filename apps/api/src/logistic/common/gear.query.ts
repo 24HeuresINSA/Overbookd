@@ -1,11 +1,16 @@
 import { GearSearchOptions } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
 
 export class GearQueryBuilder {
   static find({ name, category, owner, ponctualUsage }: GearSearchOptions) {
-    const slugCondition = name ? { slug: { contains: name } } : {};
+    const slug = SlugifyService.applyOnOptional(name);
+    const categorySlug = SlugifyService.applyOnOptional(category);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
+
+    const slugCondition = slug ? { slug: { contains: slug } } : {};
     const categoryCondition = GearQueryBuilder.buildCategorySearchCondition(
-      category,
-      owner,
+      categorySlug,
+      ownerSlug,
     );
     const ponctualUsageCondition =
       GearQueryBuilder.buildUsageCondition(ponctualUsage);

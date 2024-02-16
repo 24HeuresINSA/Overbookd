@@ -4,6 +4,7 @@ import { GearReferenceCodeService } from "../../gear-reference-code.service";
 import { GearNotFoundException } from "../../catalog.service";
 import { Gear, GearAlreadyExists, GearRepository } from "../../interfaces";
 import { GearSearchOptions } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
 
 class GearSearchBuilder {
   private ownerCondition = true;
@@ -100,10 +101,14 @@ export class InMemoryGearRepository implements GearRepository {
     { category, name, owner, ponctualUsage }: GearSearchOptions,
     gear: Gear,
   ): boolean {
+    const slug = SlugifyService.applyOnOptional(name);
+    const categorySlug = SlugifyService.applyOnOptional(category);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
+
     const search = new GearSearchBuilder(gear)
-      .addCategoryCondition(category)
-      .addSlugCondition(name)
-      .addOwnerCondition(owner)
+      .addCategoryCondition(categorySlug)
+      .addSlugCondition(slug)
+      .addOwnerCondition(ownerSlug)
       .addPonctualUsageCondition(ponctualUsage);
     return search.match;
   }
