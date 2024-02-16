@@ -1,7 +1,6 @@
 //  **********************
 //  COMMON MODULE
 //  **********************
-export type { Feedback } from "./common/feedback";
 export {
   CREATED,
   COMMENTED,
@@ -9,19 +8,20 @@ export {
   APPROVED,
   REJECTED,
 } from "./common/action";
-export { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "./common/status";
 export type { Adherent } from "./common/adherent";
+export type { Feedback } from "./common/feedback";
+export { isAssignedToDrive } from "./common/inquiry-request";
 export type {
-  ReviewStatus,
-  Reviewer,
-  InReviewReviews,
-  ValidatedReviews,
-  RefusedReviews,
-  ApprovalReviewStatus,
-  RejectionReviewStatus,
-  ReviewingStatus,
-} from "./common/review";
-export type { TimeWindow } from "./common/time-window";
+  InquiryRequestAssigned,
+  InquiryRequest,
+  BaseInquiryRequest,
+} from "./common/inquiry-request";
+export type { Location } from "./common/location";
+export type {
+  WaitingForReview,
+  Notifications,
+  Notifyee,
+} from "./common/notifications";
 export {
   REVIEWING,
   NOT_ASKING_TO_REVIEW,
@@ -33,13 +33,18 @@ export {
   elec,
   barrieres,
 } from "./common/review";
-export type { Location } from "./common/location";
 export type {
-  InquiryRequestAssigned,
-  InquiryRequest,
-  BaseInquiryRequest,
-} from "./common/inquiry-request";
-export { isAssignedToDrive } from "./common/inquiry-request";
+  ReviewStatus,
+  Reviewer,
+  InReviewReviews,
+  ValidatedReviews,
+  RefusedReviews,
+  ApprovalReviewStatus,
+  RejectionReviewStatus,
+  ReviewingStatus,
+} from "./common/review";
+export { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "./common/status";
+export type { TimeWindow } from "./common/time-window";
 
 //  **********************
 //  FESTIVAL ACTIVITY MODULE
@@ -134,7 +139,6 @@ export {
 } from "./festival-activity/sections/signa";
 
 // REVIEWS
-export type { WaitingForReview } from "./festival-activity/sections/reviews";
 export {
   isValidatedReviews,
   isRefusedReviews,
@@ -179,11 +183,7 @@ export type {
 } from "./festival-activity/ask-for-review/in-review-festival-activity";
 export { ReviewableSpecification } from "./festival-activity/ask-for-review/in-review-festival-activity";
 export { AskForReview } from "./festival-activity/ask-for-review/ask-for-review";
-export type {
-  AskForReviewFestivalActivityRepository,
-  Notifications,
-  Notifyee,
-} from "./festival-activity/ask-for-review/ask-for-review";
+export type { AskForReviewFestivalActivityRepository } from "./festival-activity/ask-for-review/ask-for-review";
 
 // Reviewing
 export { Reviewing } from "./festival-activity/reviewing/reviewing";
@@ -208,7 +208,7 @@ export { ViewFestivalTask } from "./festival-task/view/view";
 export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
-  Reviewable as FestivalTaskReviewable,
+  InReview as FestivalTaskInReview,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
 } from "./festival-task/festival-task";

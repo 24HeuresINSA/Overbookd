@@ -43,7 +43,7 @@ export type Draft<
   inquiries: InquiryRequest[];
 };
 
-export type Reviewable<
+export type InReview<
   Options extends FestivalTaskOptions = typeof defaultFestivalTaskOptions,
 > = {
   id: number;
@@ -60,7 +60,7 @@ export type Reviewable<
 
 export type FestivalTask<
   Options extends FestivalTaskOptions = typeof defaultFestivalTaskOptions,
-> = Draft<Options>;
+> = Draft<Options> | InReview<Options>;
 
 export type PreviewDraft = {
   id: Draft["id"];
@@ -70,4 +70,13 @@ export type PreviewDraft = {
   team: Draft["general"]["team"];
 };
 
-export type Preview = PreviewDraft;
+export type PreviewInReview = {
+  id: InReview["id"];
+  status: InReview["status"];
+  name: InReview["general"]["name"];
+  administrator: InReview["general"]["administrator"];
+  team: InReview["general"]["team"];
+  reviews: InReview["reviews"];
+};
+
+export type Preview = PreviewDraft | PreviewInReview;

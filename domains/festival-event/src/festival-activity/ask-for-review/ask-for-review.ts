@@ -11,21 +11,12 @@ import {
   isDraft,
   isRefused,
 } from "../festival-activity";
-import { WaitingForReview } from "../sections/reviews";
-import { Reviewer } from "../../common/review";
 import { Adherent } from "../../common/adherent";
+import { Notifications } from "../../common/notifications";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save(festivalActivity: Reviewable): Promise<Reviewable>;
-};
-
-export type Notifyee = {
-  team: Reviewer<"FA">;
-};
-
-export type Notifications = {
-  add(event: WaitingForReview): Promise<Notifyee[]>;
 };
 
 export class AskForReview {
