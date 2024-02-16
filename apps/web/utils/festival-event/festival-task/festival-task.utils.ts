@@ -12,12 +12,7 @@ export function castTaskWithDate(
   return CastInReview.withDate(task);
 }
 
-type Draft = Extract<
-  FestivalTask,
-  {
-    status: typeof DRAFT;
-  }
->;
+type Draft = Extract<FestivalTask, { status: typeof DRAFT }>;
 
 function isHttpDraft(
   task: HttpStringified<FestivalTask>,

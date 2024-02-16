@@ -54,10 +54,8 @@ export class InReviewSpecification {
   }
 
   static convert(task: WithoutStatus<InReview>, adherent: Adherent) {
-    const history = [
-      ...task.history,
-      FestivalTaskKeyEvents.readyToReview(adherent),
-    ];
+    const readyToReview = FestivalTaskKeyEvents.readyToReview(adherent);
+    const history = [...task.history, readyToReview];
 
     const reviews = task.festivalActivity.hasSupplyRequest
       ? TASK_WITH_SUPPLY_REQUEST_REVIEWS
@@ -72,11 +70,7 @@ export class InReviewSpecification {
       ? SUPPLY_REQUEST_REVIEWERS
       : COMMON_REVIEWERS;
 
-    return {
-      id: this.task.id,
-      name: this.task.general.name,
-      reviewers,
-    };
+    return { id: this.task.id, name: this.task.general.name, reviewers };
   }
 }
 

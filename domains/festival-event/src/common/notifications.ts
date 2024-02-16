@@ -7,9 +7,7 @@ export type WaitingForReview<T extends FestivalEventIdentifier> = {
   reviewers: Reviewer<T>[];
 };
 
-export type Notifyee<T extends FestivalEventIdentifier> = {
-  team: Reviewer<T>;
-};
+export type Notifyee<T extends FestivalEventIdentifier> = { team: Reviewer<T> };
 
 export type Notifications<T extends FestivalEventIdentifier = "FA"> = {
   add(event: WaitingForReview<T>): Promise<Notifyee<T>[]>;

@@ -12,9 +12,7 @@ export function castTimeWindowWithDate(
   };
 }
 
-type WithTimeWindows = {
-  timeWindows: WithAtLeastOneItem<TimeWindow>;
-};
+type WithTimeWindows = { timeWindows: WithAtLeastOneItem<TimeWindow> };
 type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
 
 export function withAtLeastOneTimeWindowWithDate<
