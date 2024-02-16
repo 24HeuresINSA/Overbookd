@@ -2,12 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { GearReferenceCodeService } from "../../gear-reference-code.service";
 import { GearNotFoundException } from "../../catalog.service";
-import {
-  Gear,
-  GearAlreadyExists,
-  GearRepository,
-  SearchGear,
-} from "../../interfaces";
+import { Gear, GearAlreadyExists, GearRepository } from "../../interfaces";
+import { GearSearchOptions } from "@overbookd/http";
+import { SlugifyService } from "@overbookd/slugify";
 
 class GearSearchBuilder {
   private ownerCondition = true;
@@ -94,20 +91,24 @@ export class InMemoryGearRepository implements GearRepository {
     return Promise.resolve();
   }
 
-  searchGear(search: SearchGear): Promise<Gear[]> {
+  searchGear(search: GearSearchOptions): Promise<Gear[]> {
     return Promise.resolve(
       this.gears.filter((gear) => this.isMatchingSearch(search, gear)),
     );
   }
 
   private isMatchingSearch(
-    { category, slug, owner, ponctualUsage }: SearchGear,
+    { category, name, owner, ponctualUsage }: GearSearchOptions,
     gear: Gear,
   ): boolean {
+    const slug = SlugifyService.applyOnOptional(name);
+    const categorySlug = SlugifyService.applyOnOptional(category);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
+
     const search = new GearSearchBuilder(gear)
-      .addCategoryCondition(category)
+      .addCategoryCondition(categorySlug)
       .addSlugCondition(slug)
-      .addOwnerCondition(owner)
+      .addOwnerCondition(ownerSlug)
       .addPonctualUsageCondition(ponctualUsage);
     return search.match;
   }

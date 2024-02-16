@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { GearDetails, GearPreview } from "@overbookd/http";
+import { GearDetails, GearPreview, GearSearchOptions } from "@overbookd/http";
 import { Period } from "@overbookd/period";
 
 export interface DashboardGears {
-  getSummaries(): Promise<GearPreview[]>;
+  getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]>;
   getDetails(slug: string, period: Period): Promise<GearDetails[]>;
 }
 
@@ -11,8 +11,8 @@ export interface DashboardGears {
 export class DashboardService {
   constructor(private readonly dashboardGears: DashboardGears) {}
 
-  async getSummaries(): Promise<GearPreview[]> {
-    return this.dashboardGears.getSummaries();
+  async getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]> {
+    return this.dashboardGears.getSummaries(searchOptions);
   }
 
   async getDetails(

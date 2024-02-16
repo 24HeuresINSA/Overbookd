@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { groupBy } from "../common/util/group-by";
 import { FtStatus, ftStatuses } from "./ft.model";
 
 export type StatsPayload = {
@@ -72,4 +71,18 @@ export class StatsService {
       0,
     );
   }
+}
+
+function groupBy<T, K extends string | number | symbol>(
+  arr: T[],
+  key: (i: T) => K,
+): T[][] {
+  const groups = arr.reduce(
+    (groups, item) => {
+      (groups[key(item)] ||= []).push(item);
+      return groups;
+    },
+    {} as Record<K, T[]>,
+  );
+  return Object.values(groups);
 }

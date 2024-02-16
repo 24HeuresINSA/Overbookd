@@ -15,6 +15,7 @@
     <template #expanded-item>
       <td :colspan="headers.length"><DashboardGearDetails /></td>
     </template>
+    <template #no-data>Aucun matos</template>
   </v-data-table>
 </template>
 

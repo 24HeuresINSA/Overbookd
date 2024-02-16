@@ -1,4 +1,9 @@
-import { GearDetails, GearPreview, HttpStringified } from "@overbookd/http";
+import {
+  GearDetails,
+  GearPreview,
+  GearSearchOptions,
+  HttpStringified,
+} from "@overbookd/http";
 import { mutationTree, actionTree } from "typed-vuex";
 import { LogisticDashboardRepository } from "~/repositories/logistic-dashboard.repository";
 import { safeCall } from "~/utils/api/calls";
@@ -30,10 +35,13 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchPreviews({ commit }): Promise<void> {
+    async fetchPreviews(
+      { commit },
+      gearSearchOptions?: GearSearchOptions,
+    ): Promise<void> {
       const res = await safeCall(
         this,
-        LogisticDashboardRepository.getPreviews(this),
+        LogisticDashboardRepository.getPreviews(this, gearSearchOptions),
       );
       if (!res) return;
       commit("SET_PREVIEWS", res.data);

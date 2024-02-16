@@ -83,21 +83,8 @@ export class CatalogService {
     return this.gearRepository.removeGear(id);
   }
 
-  async search({
-    name,
-    category,
-    owner,
-    ponctualUsage,
-  }: GearSearchRequest): Promise<Gear[]> {
-    const slug = SlugifyService.applyOnOptional(name);
-    const categorySlug = SlugifyService.applyOnOptional(category);
-    const ownerSlug = SlugifyService.applyOnOptional(owner);
-    return this.gearRepository.searchGear({
-      slug,
-      category: categorySlug,
-      owner: ownerSlug,
-      ponctualUsage,
-    });
+  async search(searchOptions: GearSearchRequest): Promise<Gear[]> {
+    return this.gearRepository.searchGear(searchOptions);
   }
 
   private async generateComputedProperties(name: string, categoryId: number) {

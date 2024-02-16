@@ -5,7 +5,6 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AssignmentModule } from "./assignment/assignment.module";
 import { AuthenticationModule } from "./authentication/authentication.module";
-import { CatalogModule } from "./catalog/catalog.module";
 import { CharismaPeriodModule } from "./charisma-period/charisma-period.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { FriendModule } from "./friend/friend.module";
@@ -17,7 +16,6 @@ import { FtTimeWindowModule } from "./ft-time-window/ft-time-window.module";
 import { FtUserRequestModule } from "./ft-user-request/ft-user-request.module";
 import { HashingUtilsModule } from "./hashing-utils/hashing-utils.module";
 import { HashingUtilsService } from "./hashing-utils/hashing-utils.service";
-import { InventoryModule } from "./inventory/inventory.module";
 import { NeedHelpModule } from "./need-help/need-help.module";
 import { OrgaNeedsModule } from "./orga-needs/orga-needs.module";
 import { PermissionModule } from "./permission/permission.module";
@@ -72,12 +70,9 @@ import { FestivalTaskModule } from "./festival-task/festival-task.module";
         },
       },
     }),
-    CatalogModule,
-    CatalogModule,
     ConfigurationModule,
     SignaLocationModule,
     PermissionModule,
-    InventoryModule,
     FtModule,
     FtTimeWindowModule,
     FtFeedbackModule,

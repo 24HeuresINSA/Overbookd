@@ -23,19 +23,19 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
 import { Category, CategoryTree } from "./interfaces";
 import { CategoryResponseDto } from "./dto/category.response.dto";
 import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
 import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 @ApiBearerAuth()
-@ApiTags("catalog")
-@Controller("categories")
+@ApiTags("logistic/catalog")
+@Controller("logistic/categories")
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiUnauthorizedResponse({
   description: "User must be authenticated",

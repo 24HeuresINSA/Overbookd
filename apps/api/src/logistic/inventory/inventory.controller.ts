@@ -21,16 +21,16 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { WRITE_INVENTORY } from "@overbookd/permission";
-import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
-import { Permission } from "../authentication/permissions-auth.decorator";
-import { PermissionsGuard } from "../authentication/permissions-auth.guard";
+import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
+import { Permission } from "../../authentication/permissions-auth.decorator";
+import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { InventoryGroupedRecordResponseDto } from "./dto/inventory-grouped-record.response.dto";
 import { InventoryGroupedRecordSearchRequestDto } from "./dto/inventory-grouped-record-search.request.dto";
 import { InventoryRecordDto } from "./dto/inventory-record.dto";
 import { InventoryService } from "./inventory.service";
 
-@Controller("inventory")
-@ApiTags("inventory")
+@Controller("logistic/inventory")
+@ApiTags("logistic/inventory")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiUnauthorizedResponse({

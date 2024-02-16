@@ -16,6 +16,7 @@ import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
 import { GearDetailsResponseDto } from "./dto/gear-details.response.dto";
 import { GearDetails, GearPreview } from "@overbookd/http";
+import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("logistic/dashboard")
@@ -38,8 +39,28 @@ export class DashboardController {
     isArray: true,
     type: GearPreviewResponseDto,
   })
-  getSummaries(): Promise<GearPreview[]> {
-    return this.dashboardService.getSummaries();
+  @ApiQuery({
+    name: "name",
+    required: false,
+    type: String,
+    description: "Get gears that match the name",
+  })
+  @ApiQuery({
+    name: "category",
+    required: false,
+    type: String,
+    description: "Get gears that match the category with category name",
+  })
+  @ApiQuery({
+    name: "owner",
+    required: false,
+    type: String,
+    description: "Get gears that are owned by team that match name",
+  })
+  getSummaries(
+    @Query() searchOptions: GearSearchRequestDto,
+  ): Promise<GearPreview[]> {
+    return this.dashboardService.getSummaries(searchOptions);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

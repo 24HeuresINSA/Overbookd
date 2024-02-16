@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { GearSearchOptions } from "@overbookd/http";
 import { Transform } from "class-transformer";
 import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
-import { SearchGear } from "../interfaces";
 
-export class GearSearchRequestDto implements SearchGear {
+export class GearSearchRequestDto implements GearSearchOptions {
   @ApiProperty({
     required: false,
     description: "Gear name",

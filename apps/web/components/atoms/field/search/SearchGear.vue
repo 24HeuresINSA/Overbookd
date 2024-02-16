@@ -35,7 +35,7 @@
 <script lang="ts">
 import { SlugifyService } from "@overbookd/slugify";
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalogGear";
+import { GearSearchOptions } from "@overbookd/http";
 import { Gear } from "~/utils/models/catalog.model";
 
 interface SearchGearData {
@@ -64,7 +64,7 @@ export default Vue.extend({
     },
     ponctualUsage: {
       type: Boolean,
-      default: () => undefined,
+      default: undefined,
     },
     dense: {
       type: Boolean,

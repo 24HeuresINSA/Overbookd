@@ -22,12 +22,12 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { GearSearchOptions } from "~/store/catalogGear";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
 import DahsboardGearListing from "~/components/organisms/logistic/DahsboardGearListing.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
+import { GearSearchOptions } from "@overbookd/http";
 
 const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 
@@ -73,7 +73,7 @@ export default Vue.extend({
     async searchGears() {
       if (!this.canSearch) return;
       const searchOptions = this.buildSearchOptions();
-      await this.$accessor.catalogGear.fetchGears(searchOptions);
+      await this.$accessor.logisticDashboard.fetchPreviews(searchOptions);
     },
     isValidSearchOption(searchOption: string | null | undefined): boolean {
       return Boolean(searchOption);

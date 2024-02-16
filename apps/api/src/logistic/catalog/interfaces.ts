@@ -1,4 +1,5 @@
 import { BadRequestException } from "@nestjs/common";
+import { GearSearchOptions } from "@overbookd/http";
 
 export interface Category {
   id: number;
@@ -30,13 +31,6 @@ export interface Gear {
   isConsumable: boolean;
 }
 
-export interface SearchGear {
-  slug?: string;
-  category?: string;
-  owner?: string;
-  ponctualUsage?: boolean;
-}
-
 export interface SearchCategory {
   name?: string;
   owner?: string;
@@ -47,7 +41,7 @@ export interface GearRepository {
   addGear(gear: Omit<Gear, "id">): Promise<Gear | undefined>;
   updateGear(gear: Omit<Gear, "owner">): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
-  searchGear(searchedGear: SearchGear): Promise<Gear[]>;
+  searchGear(searchedGear: GearSearchOptions): Promise<Gear[]>;
 }
 
 export interface CategoryRepository {
