@@ -42,7 +42,7 @@ function isReviewer(team: string): team is Reviewer<"FA"> {
   );
 }
 
-describe("Ask for review", () => {
+describe("Festival Activity - ask for review", () => {
   let askForReview: AskForReview;
   let notifications: InMemoryNotifications<"FA">;
   beforeEach(() => {

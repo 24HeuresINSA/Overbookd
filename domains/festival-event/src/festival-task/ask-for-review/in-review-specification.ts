@@ -204,6 +204,16 @@ class InstructionsSpecification {
   }
 }
 
+type WithDedicatedInstructions = Extract<
+  InReview["instructions"]["inCharge"],
+  { instruction: string }
+>;
+
+type WithNoOneInCharge = Extract<
+  InReview["instructions"]["inCharge"],
+  { instruction: null }
+>;
+
 class InChargeInstructionsSpecification {
   static isSatisfiedBy(
     inCharge: Draft["instructions"]["inCharge"],
@@ -213,10 +223,7 @@ class InChargeInstructionsSpecification {
 
   private static isFilled(
     inCharge: Draft["instructions"]["inCharge"],
-  ): inCharge is Extract<
-    InReview["instructions"]["inCharge"],
-    { instruction: string }
-  > {
+  ): inCharge is WithDedicatedInstructions {
     return (
       hasAtLeastOneItem(inCharge.volunteers) && inCharge.instruction !== null
     );
@@ -224,10 +231,7 @@ class InChargeInstructionsSpecification {
 
   private static isEmpty(
     inCharge: Draft["instructions"]["inCharge"],
-  ): inCharge is Extract<
-    InReview["instructions"]["inCharge"],
-    { instruction: null }
-  > {
+  ): inCharge is WithNoOneInCharge {
     return inCharge.instruction === null && isEmpty(inCharge.volunteers);
   }
 
