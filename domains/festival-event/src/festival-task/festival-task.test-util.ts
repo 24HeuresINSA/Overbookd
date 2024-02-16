@@ -105,24 +105,24 @@ export const lea = {
 
 export const leaContact: Contact = { ...lea, phone: "0602030405" };
 
-export const justDanceInstaller = {
+const justDanceInstaller = {
   id: 3,
   lastname: "Dance",
   firstname: "Just",
 };
 
-export const justDanceInstallerContact: Contact = {
+const justDanceInstallerContact: Contact = {
   ...justDanceInstaller,
   phone: "0603040506",
 };
 
-export const justDanceInstallerBis = {
+const justDanceInstallerBis = {
   id: 4,
   lastname: "Dance Bis",
   firstname: "Just",
 };
 
-export const justDanceInstallerBisContact: Contact = {
+const justDanceInstallerBisContact: Contact = {
   ...justDanceInstallerBis,
   phone: "0604050607",
 };
@@ -239,7 +239,7 @@ export const humaGrass: Location = {
   name: "Huma grass",
 };
 
-export const mdeHall: Location = {
+const mdeHall: Location = {
   id: 2,
   name: "MDE Hall",
 };
@@ -319,7 +319,7 @@ export const guardEscapeGame = factory
   ])
   .build();
 
-export const justDance: FestivalActivity = {
+const justDance: FestivalActivity = {
   id: 2,
   name: "Just Dance",
   location: humaGrass,

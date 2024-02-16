@@ -16,7 +16,7 @@ type FestivalTaskSection =
   | FestivalTask["festivalActivity"]
   | FestivalTask["instructions"];
 
-export class FestivalTaskFactory {
+class FestivalTaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
   draft(name: string): FestivalTaskBuilder<Draft> {
