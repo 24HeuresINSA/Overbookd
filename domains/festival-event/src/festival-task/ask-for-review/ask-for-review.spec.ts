@@ -52,7 +52,7 @@ describe("Festival Task - ask for review", () => {
     notifications = new InMemoryNotifications<"FT">();
     askForReview = new AskForReview(tasks, notifications);
   });
-  describe("when asking a review for draft festival activity", () => {
+  describe("when asking a review for draft festival task", () => {
     describe.each`
       task                        | instigator | reviewers
       ${installJustDance}         | ${noel}    | ${[humain, matos, elec]}
@@ -65,7 +65,7 @@ describe("Festival Task - ask for review", () => {
           const inReview = await askForReview.from(task.id, instigator);
           expect(inReview.status).toBe(IN_REVIEW);
         });
-        it("should keep draft festival activity sections", async () => {
+        it("should keep draft festival task sections", async () => {
           const inReview = await askForReview.from(task.id, instigator);
 
           expect(inReview.general).toEqual(task.general);
