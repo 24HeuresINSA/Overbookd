@@ -23,6 +23,7 @@
       "groupName": "API dependencies",
       "groupSlug": "api-dependencies",
       "matchDatasources": ["npm"],
+      "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
@@ -32,6 +33,7 @@
       "groupName": "Web dependencies",
       "groupSlug": "web-dependencies",
       "matchDatasources": ["npm"],
+      "versioning": "npm",
       "minimumReleaseAge": "3 days",
       "excludePackageNames": ["axios"]
     },
@@ -42,6 +44,7 @@
       "groupName": "Libs dependencies",
       "groupSlug": "libs-dependencies",
       "matchDatasources": ["npm"],
+      "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
@@ -51,6 +54,7 @@
       "groupName": "Domain dependencies",
       "groupSlug": "domain-dependencies",
       "matchDatasources": ["npm"],
+      "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
@@ -83,6 +87,7 @@
       "groupName": "Root package dependencies",
       "groupSlug": "root-package-dependencies",
       "matchDatasources": ["npm"],
+      "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
@@ -91,6 +96,7 @@
       "groupName": "Pnpm update",
       "groupSlug": "pnpm-update",
       "matchDatasources": ["npm"],
+      "versioning": "npm",
       "minimumReleaseAge": "3 days"
     },
     {
@@ -103,6 +109,5 @@
       "allowedVersions": "<3"
     }
   ],
-  "rangeStrategy": "pin",
-  "versioning": "npm"
+  "rangeStrategy": "pin"
 }
