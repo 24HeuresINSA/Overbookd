@@ -97,7 +97,7 @@ services:
 
   postgresql:
     container_name: overbookd_postgresql
-    image: postgres:15
+    image: postgres:15.6
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
