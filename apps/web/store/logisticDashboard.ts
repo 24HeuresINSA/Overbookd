@@ -2,6 +2,7 @@ import {
   GearDetails,
   GearPreview,
   GearSearchOptions,
+  GearWithDetails,
   HttpStringified,
 } from "@overbookd/http";
 import { mutationTree, actionTree } from "typed-vuex";
@@ -11,12 +12,6 @@ import { safeCall } from "~/utils/api/calls";
 type State = {
   previews: GearPreview[];
   selectedGear?: GearWithDetails;
-};
-
-export type GearWithDetails = {
-  slug: string;
-  name: string;
-  details: GearDetails[];
 };
 
 export const state = (): State => ({
@@ -49,7 +44,7 @@ export const actions = actionTree(
     },
 
     async fetchDetails(
-      { commit, state },
+      { commit },
       { slug, start, end }: { slug: string; start: Date; end: Date },
     ): Promise<void> {
       const res = await safeCall(
@@ -57,12 +52,9 @@ export const actions = actionTree(
         LogisticDashboardRepository.getDetails(this, slug, start, end),
       );
       if (!res) return;
-      const preview = state.previews.find((gear) => gear.slug === slug);
-      const name = preview?.name ?? slug;
       const gear = {
-        name,
-        slug,
-        details: res.data.map(castGearDetailsWithDate),
+        ...res.data,
+        details: res.data.details.map(castGearDetailsWithDate),
       };
       commit("SET_SELECTED_GEAR", gear);
     },

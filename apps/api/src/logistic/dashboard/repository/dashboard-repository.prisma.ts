@@ -3,7 +3,11 @@ import { DashboardGears } from "../dashboard.service";
 import { SELECT_GEAR } from "./dashboard.query";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
-import { GearDetails, GearPreview, GearSearchOptions } from "@overbookd/http";
+import {
+  GearPreview,
+  GearSearchOptions,
+  GearWithDetails,
+} from "@overbookd/http";
 import { GearQueryBuilder } from "../../common/gear.query";
 
 export class PrismaDashboardGears implements DashboardGears {
@@ -18,11 +22,13 @@ export class PrismaDashboardGears implements DashboardGears {
     return gears.map(DashboardGear.generatePreview);
   }
 
-  async getDetails(slug: string, period: Period): Promise<GearDetails[]> {
-    const gears = await this.prisma.catalogGear.findUnique({
+  async getDetails(slug: string, period: Period): Promise<GearWithDetails> {
+    const gear = await this.prisma.catalogGear.findUnique({
       where: { slug },
       select: SELECT_GEAR,
     });
-    return DashboardGear.generateDetails(gears, period);
+    const details = DashboardGear.generateDetails(gear, period);
+
+    return { name: gear.name, details };
   }
 }

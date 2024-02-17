@@ -1,8 +1,8 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
-  GearDetails,
   GearPreview,
   GearSearchOptions,
+  GearWithDetails,
   HttpStringified,
 } from "@overbookd/http";
 
@@ -18,7 +18,7 @@ export class LogisticDashboardRepository {
   }
 
   static getDetails(context: Context, slug: string, start: Date, end: Date) {
-    return context.$axios.get<HttpStringified<GearDetails[]>>(
+    return context.$axios.get<HttpStringified<GearWithDetails>>(
       `${this.basePath}/${slug}?start=${start}&end=${end}`,
     );
   }

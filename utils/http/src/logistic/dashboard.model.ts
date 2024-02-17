@@ -23,3 +23,8 @@ export type GearDetails = {
   tasks: Inquiry[];
   inventory: number;
 };
+
+export type GearWithDetails = {
+  name: string;
+  details: GearDetails[];
+};
