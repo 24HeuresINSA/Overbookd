@@ -23,7 +23,7 @@ type WithConflictsFilter = {
 };
 
 export type WithoutConflicts = Exclude<FestivalTask, WithConflictsFilter>;
-export type FestivalTask = Extract<FestivalTask, WithConflictsFilter>;
+export type WithConflicts = Extract<FestivalTask, WithConflictsFilter>;
 
 export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
 export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
