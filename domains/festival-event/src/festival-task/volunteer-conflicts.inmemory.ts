@@ -1,16 +1,17 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import {
+  WithConflicts,
   VolunteerAvailabilities,
   VolunteerConflicts,
 } from "./volunteer-conflicts";
-import { FestivalTask } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts, FestivalTaskLink } from "./sections/mobilizations";
 import { Mobilization } from "./sections/mobilizations";
+import { FestivalTask } from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(
-    private readonly tasks: FestivalTask[],
+    private readonly tasks: WithConflicts[],
     private readonly availabilities: VolunteerAvailabilities[],
   ) {}
 
@@ -76,8 +77,10 @@ class MobilizationHelper {
   ): boolean {
     const { start, end, volunteers } = this.mobilization;
     const otherPeriod = Period.init({ start, end });
+
     const happenAtSameTime = otherPeriod.isOverlapping(period);
     const isVolunteerRequired = volunteers.some(({ id }) => id === volunteerId);
+
     return isVolunteerRequired && happenAtSameTime;
   }
 }

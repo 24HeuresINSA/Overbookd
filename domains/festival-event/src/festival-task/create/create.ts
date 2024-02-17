@@ -2,8 +2,11 @@ import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { FestivalActivity, Draft } from "../festival-task";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { FestivalActivity, Draft, isDraft } from "../festival-task";
+import {
+  DraftWithoutConflicts,
+  FestivalTaskTranslator,
+} from "../volunteer-conflicts";
 
 const FT_420 = 420;
 
@@ -12,8 +15,6 @@ type FestivalTaskCreation = {
   festivalActivity: FestivalActivity;
   author: Adherent;
 };
-
-type DraftWithoutConflicts = Draft<{ withConflicts: false }>;
 
 export type FestivalTasksForCreate = {
   add(festivalTask: DraftWithoutConflicts): Promise<DraftWithoutConflicts>;
@@ -60,7 +61,10 @@ export class CreateFestivalTask {
     };
 
     const created = await this.festivalTasks.add(festivalTask);
-    return this.festivalTaskTranslator.translate(created);
+    const withConflicts = await this.festivalTaskTranslator.translate(created);
+    if (!isDraft(withConflicts)) throw new Error("");
+
+    return withConflicts;
   }
 
   private generateId(): number {

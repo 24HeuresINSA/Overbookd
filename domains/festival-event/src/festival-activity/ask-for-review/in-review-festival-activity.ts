@@ -16,8 +16,8 @@ import {
 import { ActivityInChargeSpecification } from "./specifications/in-charge-section-specification";
 import { ActivitySignaSpecification } from "./specifications/signa-section-specification";
 import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification";
-import { ReadyForReviewException } from "./ready-for-review.error";
-import { WaitingForReview } from "../sections/reviews";
+import { ReadyForReviewError } from "../../common/ready-for-review.error";
+import { WaitingForReview } from "../../common/notifications";
 import {
   Reviewer,
   PrivateActivityReviewer,
@@ -70,8 +70,8 @@ export class ReviewableSpecification {
 
   static generateError(
     festivalActivity: FestivalActivity,
-  ): ReadyForReviewException {
-    return new ReadyForReviewException(this.errors(festivalActivity));
+  ): ReadyForReviewError {
+    return new ReadyForReviewError(this.errors(festivalActivity));
   }
 
   private static errors(
@@ -204,7 +204,7 @@ export class InReviewFestivalActivity implements InReview {
     return this.general.toPublish;
   }
 
-  get readyForReview(): WaitingForReview {
+  get readyForReview(): WaitingForReview<"FA"> {
     return {
       id: this.id,
       name: this.general.name,

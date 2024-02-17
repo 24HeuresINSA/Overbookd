@@ -1,5 +1,5 @@
 import {
-  FestivalTask,
+  FestivalTaskWithoutConflicts,
   FestivalTasksForView,
   PreviewFestivalTask,
 } from "@overbookd/festival-event";
@@ -23,7 +23,7 @@ export class PrismaViewFestivalTasks implements FestivalTasksForView {
     return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
   }
 
-  async one(id: number): Promise<FestivalTask<{ withConflicts: false }>> {
+  async one(id: number): Promise<FestivalTaskWithoutConflicts> {
     const task = await this.prisma.festivalTask.findUnique({
       where: buildFestivalTaskCondition(id),
       select: SELECT_FESTIVAL_TASK,

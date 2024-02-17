@@ -1,5 +1,6 @@
 import {
   FestivalTask,
+  FestivalTaskWithoutConflicts,
   FestivalTasksForPrepare,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
@@ -15,7 +16,7 @@ export class PrismaPrepareFestivalTasks implements FestivalTasksForPrepare {
 
   async findById(
     id: FestivalTask["id"],
-  ): Promise<FestivalTask<{ withConflicts: false }> | null> {
+  ): Promise<FestivalTaskWithoutConflicts | null> {
     const task = await this.prisma.festivalTask.findUnique({
       where: buildFestivalTaskCondition(id),
       select: SELECT_FESTIVAL_TASK,
@@ -25,8 +26,8 @@ export class PrismaPrepareFestivalTasks implements FestivalTasksForPrepare {
   }
 
   async save(
-    task: FestivalTask<{ withConflicts: false }>,
-  ): Promise<FestivalTask<{ withConflicts: false }>> {
+    task: FestivalTaskWithoutConflicts,
+  ): Promise<FestivalTaskWithoutConflicts> {
     const updated = await this.prisma.festivalTask.update({
       where: buildFestivalTaskCondition(task.id),
       select: SELECT_FESTIVAL_TASK,

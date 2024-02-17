@@ -4,6 +4,9 @@ import {
   Volunteer,
   AddMobilization,
   TeamMobilization,
+  FestivalTaskWithConflicts,
+  FestivalTaskDraft,
+  FestivalTaskInReview,
 } from "@overbookd/festival-event";
 import { Contact } from "@overbookd/festival-event";
 import { UpdateGeneral } from "@overbookd/festival-event";
@@ -41,3 +44,6 @@ export type AddMobilizationForm = Omit<
 export type AddVolunteerToMobilizationForm = {
   volunteerId: Volunteer["id"];
 };
+
+export type Draft = Extract<FestivalTaskWithConflicts, FestivalTaskDraft>;
+export type InReview = Extract<FestivalTaskWithConflicts, FestivalTaskInReview>;

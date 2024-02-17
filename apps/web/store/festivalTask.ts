@@ -1,6 +1,5 @@
 import {
   PreviewFestivalTask,
-  FestivalTask,
   DRAFT,
   InquiryRequest,
   Contact,
@@ -8,6 +7,7 @@ import {
   UpdateMobilization,
   Mobilization,
   TeamMobilization,
+  FestivalTaskWithConflicts,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
@@ -28,10 +28,10 @@ type State = {
   tasks: {
     forAll: PreviewFestivalTask[];
   };
-  selectedTask: FestivalTask;
+  selectedTask: FestivalTaskWithConflicts;
 };
 
-const fakeTask: FestivalTask = {
+const fakeTask: FestivalTaskWithConflicts = {
   id: 0,
   status: DRAFT,
   festivalActivity: {
@@ -81,7 +81,7 @@ export const mutations = mutationTree(state, {
   SET_ALL_TASKS(state, tasks: PreviewFestivalTask[]) {
     state.tasks.forAll = tasks;
   },
-  SET_SELECTED_TASK(state, task: FestivalTask) {
+  SET_SELECTED_TASK(state, task: FestivalTaskWithConflicts) {
     state.selectedTask = task;
   },
 });
@@ -115,7 +115,7 @@ export const actions = actionTree(
     },
 
     /* REMOVE */
-    async remove({ commit, dispatch }, id: FestivalTask["id"]) {
+    async remove({ commit, dispatch }, id: FestivalTaskWithConflicts["id"]) {
       const res = await safeCall(this, repo.remove(this, id), {
         successMessage: `FT #${id} supprimée 🗑️`,
       });

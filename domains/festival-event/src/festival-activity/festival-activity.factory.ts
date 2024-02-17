@@ -21,6 +21,7 @@ import {
   noel,
 } from "./festival-activity.fake";
 import { FestivalActivityKeyEvents } from "./festival-activity.event";
+import { isKeyOf } from "../is-key-of";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]
@@ -160,21 +161,15 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
 
       // eslint-disable-next-line security/detect-object-injection
       const updated = update[key];
-      acc[key] = updated === undefined ? current[key] : updated;
-      return acc;
+      if (updated === undefined) return acc;
+
+      return { ...acc, [key]: updated };
     }, current);
   }
 
   build(): T {
     return this.festivalActivity;
   }
-}
-
-function isKeyOf<T extends object>(
-  object: T,
-  key: string | number | symbol,
-): key is keyof T {
-  return Object.keys(object).includes(key.toString());
 }
 
 function defaultInReview(id: number, name: string): InReview {

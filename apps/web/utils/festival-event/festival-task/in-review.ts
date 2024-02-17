@@ -1,20 +1,23 @@
-import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
+import {
+  HttpStringified,
+  InReviewWithConflicts as InReview,
+} from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
-export class CastDraft {
-  static withDate(draft: HttpStringified<Draft>): Draft {
+export class CastInReview {
+  static withDate(inReview: HttpStringified<InReview>): InReview {
     return {
-      ...draft,
-      festivalActivity: this.castActivityWithDate(draft.festivalActivity),
-      mobilizations: this.mobilizationsWithDate(draft.mobilizations),
-      feedbacks: this.feedbacksWithDate(draft.feedbacks),
-      history: this.historyWithDate(draft.history),
+      ...inReview,
+      festivalActivity: this.castActivityWithDate(inReview.festivalActivity),
+      mobilizations: this.mobilizationsWithDate(inReview.mobilizations),
+      feedbacks: this.feedbacksWithDate(inReview.feedbacks),
+      history: this.historyWithDate(inReview.history),
     };
   }
 
   private static castActivityWithDate(
-    festivalActivity: HttpStringified<Draft["festivalActivity"]>,
-  ): Draft["festivalActivity"] {
+    festivalActivity: HttpStringified<InReview["festivalActivity"]>,
+  ): InReview["festivalActivity"] {
     return {
       ...festivalActivity,
       timeWindows: festivalActivity.timeWindows.map(castTimeWindowWithDate),
@@ -28,8 +31,8 @@ export class CastDraft {
   }
 
   private static mobilizationsWithDate(
-    mobilizations: HttpStringified<Draft["mobilizations"]>,
-  ): Draft["mobilizations"] {
+    mobilizations: HttpStringified<InReview["mobilizations"]>,
+  ): InReview["mobilizations"] {
     return mobilizations.map((mobilization) => ({
       ...mobilization,
       ...castTimeWindowWithDate(mobilization),
@@ -37,8 +40,8 @@ export class CastDraft {
   }
 
   private static feedbacksWithDate(
-    feedbacks: HttpStringified<Draft["feedbacks"]>,
-  ): Draft["feedbacks"] {
+    feedbacks: HttpStringified<InReview["feedbacks"]>,
+  ): InReview["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),
@@ -46,8 +49,8 @@ export class CastDraft {
   }
 
   private static historyWithDate(
-    history: HttpStringified<Draft["history"]>,
-  ): Draft["history"] {
+    history: HttpStringified<InReview["history"]>,
+  ): InReview["history"] {
     return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
 }

@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { FestivalTask } from "@overbookd/festival-event";
+import { FestivalTaskDraft } from "@overbookd/festival-event";
 import { AppointmentResponseDto } from "../appointment.response.dto";
 import { ContactResponseDto } from "../contact.response.dto";
 import { AdherentResponseDto } from "../adherent.response.dto";
 
-type DraftInstructions = FestivalTask["instructions"];
+type DraftInstructions = FestivalTaskDraft["instructions"];
 type InCharge = DraftInstructions["inCharge"];
 
 class InChargeDto implements InCharge {

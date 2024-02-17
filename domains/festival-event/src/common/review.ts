@@ -1,4 +1,4 @@
-import { FestivalEvent, FA } from "./festival-event";
+import { FestivalEventIdentifier, FA } from "./festival-event";
 import { APPROVED, REJECTED } from "./action";
 
 export const REVIEWING = "REVIEWING";
@@ -28,7 +28,7 @@ type NoSupplyRequestTaskReviewer = typeof humain | typeof matos;
 
 type TaskWithSupplyRequestReviewer = NoSupplyRequestTaskReviewer | typeof elec;
 
-export type Reviewer<T extends FestivalEvent> = T extends typeof FA
+export type Reviewer<T extends FestivalEventIdentifier> = T extends typeof FA
   ? PublicActivityReviewer | PrivateActivityReviewer
   : NoSupplyRequestTaskReviewer | TaskWithSupplyRequestReviewer;
 
@@ -52,15 +52,15 @@ export type ReviewStatus =
   | ApprovalReviewStatus
   | ReviewingStatus;
 
-export type InReviewReviews<T extends FestivalEvent> = Record<
+export type InReviewReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
   ReviewingStatus
 >;
-export type ValidatedReviews<T extends FestivalEvent> = Record<
+export type ValidatedReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
   ApprovalReviewStatus
 >;
-export type RefusedReviews<T extends FestivalEvent> = Record<
+export type RefusedReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
   RejectionReviewStatus
 >;

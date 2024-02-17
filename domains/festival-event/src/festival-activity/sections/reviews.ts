@@ -5,13 +5,6 @@ import {
   RefusedReviews,
 } from "../../common/review";
 import { NOT_ASKING_TO_REVIEW } from "../../common/review";
-import { Reviewer } from "../../common/review";
-
-export type WaitingForReview = {
-  id: number;
-  name: string;
-  reviewers: Reviewer<"FA">[];
-};
 
 export type Reviews =
   | InReviewReviews<"FA">

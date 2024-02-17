@@ -2,12 +2,11 @@ import {
   Reviewable,
   InquiryWithRequests,
   PublicGeneral,
-  TimeWindow,
   FestivalActivityKeyEvent as KeyEvent,
 } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
-import { WithAtLeastOneItem } from "@overbookd/list";
 import { castTimeWindowWithDate } from "../cast-time-windows";
+import { withAtLeastOneTimeWindowWithDate } from "../cast-time-windows";
 
 function isPublic(
   general: HttpStringified<Reviewable["general"]>,
@@ -70,22 +69,4 @@ export class CastReviewable {
   ): KeyEvent[] {
     return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
-}
-
-type WithTimeWindows = {
-  timeWindows: WithAtLeastOneItem<TimeWindow>;
-};
-type WithStringifiedTimeWindows = HttpStringified<WithTimeWindows>;
-
-function withAtLeastOneTimeWindowWithDate<T extends WithStringifiedTimeWindows>(
-  hasAtLeastOneTimeWindow: T,
-): T & WithTimeWindows {
-  const [timeWindow, ...others] = hasAtLeastOneTimeWindow.timeWindows;
-  const first = castTimeWindowWithDate(timeWindow);
-  const timeWindows: WithAtLeastOneItem<TimeWindow> = [
-    first,
-    ...others.map(castTimeWindowWithDate),
-  ];
-
-  return { ...hasAtLeastOneTimeWindow, timeWindows };
 }

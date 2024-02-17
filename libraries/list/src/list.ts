@@ -25,3 +25,7 @@ export type Item<T extends Array<unknown>> = T[number];
 export function hasAtLeastOneItem<T>(list: T[]): list is WithAtLeastOneItem<T> {
   return list.length > 0;
 }
+
+export function isEmpty<T>(list: T[]): list is [] {
+  return list.length === 0;
+}
