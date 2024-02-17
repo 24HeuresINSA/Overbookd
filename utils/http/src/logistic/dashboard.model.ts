@@ -26,5 +26,6 @@ export type GearDetails = {
 
 export type GearWithDetails = {
   name: string;
+  slug: string;
   details: GearDetails[];
 };

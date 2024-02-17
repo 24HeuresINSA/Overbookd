@@ -29,6 +29,6 @@ export class PrismaDashboardGears implements DashboardGears {
     });
     const details = DashboardGear.generateDetails(gear, period);
 
-    return { name: gear.name, details };
+    return { name: gear.name, slug: gear.slug, details };
   }
 }

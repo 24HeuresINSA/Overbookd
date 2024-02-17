@@ -46,6 +46,9 @@ export class GearWithDetailsResponseDto implements GearWithDetails {
   @ApiProperty({ type: String })
   name: string;
 
+  @ApiProperty({ type: String })
+  slug: string;
+
   @ApiProperty({ isArray: true, type: GearDetailsResponseDto })
   details: GearDetails[];
 }

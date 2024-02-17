@@ -31,10 +31,9 @@
 </template>
 
 <script lang="ts">
-import { GearDetails, GearPreview } from "@overbookd/http";
 import { defineComponent } from "vue";
+import { GearDetails, GearPreview, GearWithDetails } from "@overbookd/http";
 import DashboardGearDetailsGraph from "./DashboardGearDetailsGraph.vue";
-import { GearWithDetails } from "~/store/logisticDashboard";
 import DashboardGearDetailsCard from "./DashboardGearDetailsCard.vue";
 
 type DashboardGearListingData = {
