@@ -1,13 +1,13 @@
 import {
   Adherent,
   Contact,
-  DRAFT,
+  DraftWithoutConflicts,
   Feedback,
   FestivalTask,
+  FestivalTaskWithoutConflicts,
   FestivalTaskKeyEvent as KeyEvent,
   Mobilization,
   Volunteer,
-  WithConflicts,
   isAssignedToDrive,
 } from "@overbookd/festival-event";
 import { SELECT_VOLUNTEER, SELECT_CONTACT } from "./adherent/adherent.query";
@@ -36,12 +36,6 @@ export const SELECT_FESTIVAL_TASK = {
   events: { select: SELECT_EVENT },
   ...SELECT_FEEDBACKS,
 };
-
-type TaskWithoutConflicts = Exclude<FestivalTask, WithConflicts>;
-type DraftWithoutConflicts = Extract<
-  TaskWithoutConflicts,
-  { status: typeof DRAFT }
->;
 
 export class FestivalTaskQueryBuilder {
   static create(task: DraftWithoutConflicts) {
@@ -74,7 +68,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  static update(task: TaskWithoutConflicts) {
+  static update(task: FestivalTaskWithoutConflicts) {
     const contacts = this.upsertContacts(task.id, task.instructions.contacts);
     const inChargeVolunteers = this.upsertInChargeVolunteers(
       task.id,
@@ -157,7 +151,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertInquiries(task: TaskWithoutConflicts) {
+  private static upsertInquiries(task: FestivalTaskWithoutConflicts) {
     return {
       upsert: task.inquiries.map((request) => {
         const update = isAssignedToDrive(request)
@@ -177,7 +171,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertFeedbacks(task: TaskWithoutConflicts) {
+  private static upsertFeedbacks(task: FestivalTaskWithoutConflicts) {
     return {
       upsert: task.feedbacks.map((feedback) => ({
         where: {
@@ -204,7 +198,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertHistory(task: TaskWithoutConflicts) {
+  private static upsertHistory(task: FestivalTaskWithoutConflicts) {
     return {
       upsert: task.history.map((keyEvent) => ({
         where: {
@@ -231,7 +225,7 @@ type StoredHistoryKeyEvent = {
 };
 
 function keyEventToHistory(
-  task: TaskWithoutConflicts,
+  task: FestivalTaskWithoutConflicts,
 ): (event: KeyEvent) => StoredHistoryKeyEvent {
   return ({ action, by, at, description }) => ({
     event: action,
@@ -294,7 +288,9 @@ function databaseMobilizationForCreation(
   };
 }
 
-function databaseFestivalTaskWithoutListsMapping(task: TaskWithoutConflicts) {
+function databaseFestivalTaskWithoutListsMapping(
+  task: FestivalTaskWithoutConflicts,
+) {
   return {
     id: task.id,
     status: task.status,

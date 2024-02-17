@@ -1,9 +1,10 @@
 import { FestivalTask } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Preview } from "../festival-task";
-import { FestivalTaskTranslator, WithConflicts } from "../volunteer-conflicts";
-
-type WithoutConflicts = Exclude<FestivalTask, WithConflicts>;
+import {
+  FestivalTaskTranslator,
+  WithoutConflicts,
+} from "../volunteer-conflicts";
 
 export type FestivalTasksForView = {
   all(): Promise<Preview[]>;

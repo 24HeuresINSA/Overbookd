@@ -4,8 +4,8 @@ import {
   Volunteer,
   AddMobilization,
   TeamMobilization,
-  WithConflicts,
-  DRAFT,
+  FestivalTaskWithConflicts,
+  FestivalTaskDraft,
 } from "@overbookd/festival-event";
 import { Contact } from "@overbookd/festival-event";
 import { UpdateGeneral } from "@overbookd/festival-event";
@@ -44,8 +44,7 @@ export type AddVolunteerToMobilizationForm = {
   volunteerId: Volunteer["id"];
 };
 
-export type FestivalTaskWithConflicts = Extract<FestivalTask, WithConflicts>;
 export type DraftWithConflicts = Extract<
   FestivalTaskWithConflicts,
-  { status: typeof DRAFT }
+  FestivalTaskDraft
 >;

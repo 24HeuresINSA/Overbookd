@@ -1,7 +1,6 @@
 import {
-  FestivalTaskDraft,
+  DraftWithoutConflicts,
   FestivalTasksForCreate,
-  WithConflicts,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -9,8 +8,6 @@ import {
   SELECT_FESTIVAL_TASK,
 } from "./festival-task.query";
 import { DraftBuilder } from "./festival-task.builder";
-
-type DraftWithoutConflicts = Exclude<FestivalTaskDraft, WithConflicts>;
 
 export class PrismaCreateFestivalTasks implements FestivalTasksForCreate {
   constructor(private readonly prisma: PrismaService) {}

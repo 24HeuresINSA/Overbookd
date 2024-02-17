@@ -22,7 +22,6 @@ export type {
   AddInChargeVolunteerForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
-  FestivalTaskWithConflicts,
   DraftWithConflicts,
 } from "./festival-event/festival-task.model";
 export type { HttpStringified } from "./http-stringified";

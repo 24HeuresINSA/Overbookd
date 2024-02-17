@@ -1,17 +1,17 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import {
+  WithConflicts,
   VolunteerAvailabilities,
   VolunteerConflicts,
-  WithConflicts,
 } from "./volunteer-conflicts";
-import { FestivalTask } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts, FestivalTaskLink } from "./sections/mobilizations";
 import { Mobilization } from "./sections/mobilizations";
+import { FestivalTask } from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(
-    private readonly tasks: Extract<FestivalTask, WithConflicts>[],
+    private readonly tasks: WithConflicts[],
     private readonly availabilities: VolunteerAvailabilities[],
   ) {}
 

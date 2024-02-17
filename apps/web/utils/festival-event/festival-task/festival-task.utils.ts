@@ -1,4 +1,8 @@
-import { DRAFT, FestivalTask } from "@overbookd/festival-event";
+import {
+  DRAFT,
+  FestivalTask,
+  FestivalTaskDraft as Draft,
+} from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
 import { CastInReview } from "./in-review";
@@ -11,8 +15,6 @@ export function castTaskWithDate(
   }
   return CastInReview.withDate(task);
 }
-
-type Draft = Extract<FestivalTask, { status: typeof DRAFT }>;
 
 function isHttpDraft(
   task: HttpStringified<FestivalTask>,

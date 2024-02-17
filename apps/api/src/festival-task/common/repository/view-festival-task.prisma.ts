@@ -1,8 +1,7 @@
 import {
-  FestivalTask,
+  FestivalTaskWithoutConflicts,
   FestivalTasksForView,
   PreviewFestivalTask,
-  WithConflicts,
 } from "@overbookd/festival-event";
 import {
   IS_NOT_DELETED,
@@ -11,8 +10,6 @@ import {
 } from "./festival-task.query";
 import { PrismaService } from "../../../prisma.service";
 import { FestivalTaskBuilder } from "./festival-task.builder";
-
-type TaskWithoutConflicts = Exclude<FestivalTask, WithConflicts>;
 
 export class PrismaViewFestivalTasks implements FestivalTasksForView {
   constructor(private readonly prisma: PrismaService) {}
@@ -26,7 +23,7 @@ export class PrismaViewFestivalTasks implements FestivalTasksForView {
     return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
   }
 
-  async one(id: number): Promise<TaskWithoutConflicts> {
+  async one(id: number): Promise<FestivalTaskWithoutConflicts> {
     const task = await this.prisma.festivalTask.findUnique({
       where: buildFestivalTaskCondition(id),
       select: SELECT_FESTIVAL_TASK,

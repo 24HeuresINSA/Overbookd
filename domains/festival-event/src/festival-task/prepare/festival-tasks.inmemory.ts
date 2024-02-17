@@ -1,9 +1,6 @@
-import { FestivalTask } from "../festival-task";
 import { updateItemToList } from "@overbookd/list";
 import { FestivalTasksForPrepare } from "./prepare";
-import { WithConflicts } from "../volunteer-conflicts";
-
-type WithoutConflicts = Exclude<FestivalTask, WithConflicts>;
+import { WithoutConflicts } from "../volunteer-conflicts";
 
 export class InMemoryFestivalTasks implements FestivalTasksForPrepare {
   constructor(private tasks: WithoutConflicts[]) {}

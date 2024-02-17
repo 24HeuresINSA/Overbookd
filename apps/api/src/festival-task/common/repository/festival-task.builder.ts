@@ -5,15 +5,14 @@ import {
   PreviewFestivalTaskDraft,
   Contact,
   Volunteer,
-  WithConflicts,
+  FestivalTaskWithoutConflicts,
+  DraftWithoutConflicts,
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
 import { DatabaseEvent } from "./event.query";
 import { DatabaseMobilization } from "./mobilization.query";
 import { DatabaseInquiryRequest } from "./inquiry/inquiry.query";
-
-type FestivalTaskWithoutConflicts = Exclude<FestivalTask, WithConflicts>;
 
 type VisualizeFestivalTask<
   Task extends FestivalTaskWithoutConflicts = FestivalTaskWithoutConflicts,
@@ -118,11 +117,6 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
     }));
   }
 }
-
-type DraftWithoutConflicts = Extract<
-  FestivalTaskWithoutConflicts,
-  { status: typeof DRAFT }
->;
 
 export class DraftBuilder
   extends FestivalTaskBuilder<DraftWithoutConflicts>

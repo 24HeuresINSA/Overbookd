@@ -1,8 +1,6 @@
-import { FestivalTask, IN_REVIEW } from "@overbookd/festival-event";
+import { FestivalTaskInReview as InReview } from "@overbookd/festival-event";
 import { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
-
-type InReview = Extract<FestivalTask, { status: typeof IN_REVIEW }>;
 
 export class CastInReview {
   static withDate(inReview: HttpStringified<InReview>): InReview {

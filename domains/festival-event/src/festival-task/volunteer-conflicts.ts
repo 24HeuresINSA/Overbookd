@@ -1,6 +1,6 @@
 import { Item } from "@overbookd/list";
 import { IProvidePeriod } from "@overbookd/period";
-import { FestivalTask } from "./festival-task";
+import { Draft, FestivalTask, InReview } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts } from "./sections/mobilizations";
 import { DRAFT } from "../common/status";
@@ -18,16 +18,22 @@ export type VolunteerConflicts = {
   ): Promise<Conflicts>;
 };
 
-export type WithConflicts = {
+type WithConflictsFilter = {
   mobilizations: { volunteers: (Volunteer & { conflicts: Conflicts })[] }[];
 };
+
+export type WithoutConflicts = Exclude<FestivalTask, WithConflictsFilter>;
+export type WithConflicts = Extract<FestivalTask, WithConflictsFilter>;
+
+export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
+export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
 
 export class FestivalTaskTranslator {
   constructor(private readonly volunteerConflicts: VolunteerConflicts) {}
 
   async translate<T extends FestivalTask>(
-    task: Exclude<T, WithConflicts>,
-  ): Promise<Extract<T, WithConflicts>> {
+    task: Exclude<T, WithConflictsFilter>,
+  ): Promise<Extract<T, WithConflictsFilter>> {
     const mobilizations = await Promise.all(
       task.mobilizations.map(async (mobilization) => {
         const volunteers = await this.assignConflictsToVolunteers(
@@ -45,9 +51,11 @@ export class FestivalTaskTranslator {
   }
 
   private async assignConflictsToVolunteers<T extends FestivalTask>(
-    mobilization: Item<Exclude<T, WithConflicts>["mobilizations"]>,
+    mobilization: Item<Exclude<T, WithConflictsFilter>["mobilizations"]>,
     taskId: FestivalTask["id"],
-  ): Promise<Item<Extract<T, WithConflicts>["mobilizations"]>["volunteers"]> {
+  ): Promise<
+    Item<Extract<T, WithConflictsFilter>["mobilizations"]>["volunteers"]
+  > {
     return Promise.all(
       mobilization.volunteers.map(async (volunteer) => {
         const period = { start: mobilization.start, end: mobilization.end };
@@ -64,7 +72,7 @@ export class FestivalTaskTranslator {
 
 function isWithConflicts<T extends FestivalTask>(
   task: T,
-): task is Extract<T, WithConflicts> {
+): task is Extract<T, WithConflictsFilter> {
   return task.mobilizations.every((mobilization) =>
     mobilization.volunteers.every((volunteer) =>
       Object.hasOwn(volunteer, "conflicts"),
