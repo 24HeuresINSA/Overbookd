@@ -1,13 +1,13 @@
 import { FestivalTask } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Preview } from "../festival-task";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { FestivalTaskTranslator, WithConflicts } from "../volunteer-conflicts";
+
+type WithoutConflicts = Exclude<FestivalTask, WithConflicts>;
 
 export type FestivalTasksForView = {
   all(): Promise<Preview[]>;
-  one(
-    ftId: FestivalTask["id"],
-  ): Promise<FestivalTask<{ withConflicts: false }> | null>;
+  one(ftId: FestivalTask["id"]): Promise<WithoutConflicts | null>;
 };
 export class ViewFestivalTask {
   constructor(

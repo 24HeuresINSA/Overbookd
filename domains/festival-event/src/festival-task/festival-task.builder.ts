@@ -7,8 +7,9 @@ import {
   PreviewInReview,
 } from "./festival-task";
 import { Preview } from "./festival-task";
+import { WithConflicts } from "./volunteer-conflicts";
 
-type WithoutConflicts = FestivalTask<{ withConflicts: false }>;
+type WithoutConflicts = Exclude<FestivalTask, WithConflicts>;
 
 export class FestivalTaskBuilder {
   private constructor(private readonly task: WithoutConflicts) {}
@@ -28,7 +29,7 @@ export class FestivalTaskBuilder {
 }
 
 class DraftBuilder {
-  static preview(task: Draft<{ withConflicts: false }>): PreviewDraft {
+  static preview(task: Extract<WithoutConflicts, Draft>): PreviewDraft {
     const { id, status, general } = task;
     const { name, administrator, team } = general;
     return { id, status, name, administrator, team };
@@ -36,7 +37,7 @@ class DraftBuilder {
 }
 
 class InReviewBuidler {
-  static preview(task: InReview<{ withConflicts: false }>): PreviewInReview {
+  static preview(task: Extract<WithoutConflicts, InReview>): PreviewInReview {
     const { id, status, general, reviews } = task;
     const { name, administrator, team } = general;
     return { id, status, name, administrator, team, reviews };
@@ -45,6 +46,6 @@ class InReviewBuidler {
 
 function isDraft(
   task: WithoutConflicts,
-): task is Draft<{ withConflicts: false }> {
+): task is Extract<WithoutConflicts, Draft> {
   return task.status === DRAFT;
 }

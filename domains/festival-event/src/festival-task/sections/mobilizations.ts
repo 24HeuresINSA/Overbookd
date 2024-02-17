@@ -1,7 +1,7 @@
+import { WithAtLeastOneItem } from "@overbookd/list";
 import { Volunteer } from "./instructions";
 import { TimeWindow } from "../../common/time-window";
 import { FestivalTask } from "../festival-task";
-import { WithAtLeastOneItem } from "@overbookd/list";
 
 type MobilizationOptions = { withConflicts: boolean };
 

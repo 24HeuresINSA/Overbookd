@@ -2,8 +2,9 @@ import { FestivalTask } from "../festival-task";
 import { FestivalTaskBuilder } from "../festival-task.builder";
 import { FestivalTasksForView } from "./view";
 import { Preview } from "../festival-task";
+import { WithConflicts } from "../volunteer-conflicts";
 
-type WithoutConflicts = FestivalTask<{ withConflicts: false }>;
+type WithoutConflicts = Exclude<FestivalTask, WithConflicts>;
 
 export class InMemoryFestivalTasks implements FestivalTasksForView {
   constructor(private readonly tasks: WithoutConflicts[]) {}

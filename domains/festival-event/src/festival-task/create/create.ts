@@ -3,7 +3,7 @@ import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { FestivalActivity, Draft, isDraft } from "../festival-task";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { FestivalTaskTranslator, WithConflicts } from "../volunteer-conflicts";
 
 const FT_420 = 420;
 
@@ -13,7 +13,7 @@ type FestivalTaskCreation = {
   author: Adherent;
 };
 
-type DraftWithoutConflicts = Draft<{ withConflicts: false }>;
+type DraftWithoutConflicts = Exclude<Draft, WithConflicts>;
 
 export type FestivalTasksForCreate = {
   add(festivalTask: DraftWithoutConflicts): Promise<DraftWithoutConflicts>;

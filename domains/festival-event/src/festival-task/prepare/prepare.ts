@@ -12,7 +12,7 @@ import {
   FestivalTaskNotFound,
   GearAlreadyRequested,
 } from "../festival-task.error";
-import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { FestivalTaskTranslator, WithConflicts } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
 
@@ -28,7 +28,7 @@ export type UpdateInstructions = {
   inCharge?: FestivalTask["instructions"]["inCharge"]["instruction"];
 };
 
-type WithoutConflicts = FestivalTask<{ withConflicts: false }>;
+type WithoutConflicts = Exclude<FestivalTask, WithConflicts>;
 
 export type FestivalTasksForPrepare = {
   findById(ftId: FestivalTask["id"]): Promise<WithoutConflicts | null>;
