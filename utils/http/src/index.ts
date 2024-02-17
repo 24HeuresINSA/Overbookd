@@ -31,6 +31,7 @@ export type {
   Inquiry,
   GearDetails,
   GearPreview,
+  GearWithDetails,
   Inquiry as GearDetailsInquiry,
 } from "./logistic/dashboard.model";
 export type { GearSearchOptions } from "./logistic/gear.model";

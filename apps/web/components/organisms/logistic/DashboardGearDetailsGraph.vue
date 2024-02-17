@@ -42,7 +42,8 @@ type DashboardGearDetailsData = {
 };
 
 export default defineComponent({
-  name: "DashboardGearDetails",
+  name: "DashboardGearDetailsGraph",
+  emits: ["select:gear-details"],
   data: (): DashboardGearDetailsData => ({
     courbs: {
       labels: [],
@@ -89,6 +90,11 @@ export default defineComponent({
         maintainAspectRatio: false,
         scales: { xAxes: [{ ticks: { autoSkip: true, maxTicksLimit: 20 } }] },
         hover: { mode: "nearest", intersect: true },
+        onClick: (_event: unknown, elements: { _index: number }[]) => {
+          const [first] = elements;
+          if (!first) return;
+          this.$emit("select:gear-details", first._index);
+        },
         tooltips: {
           mode: "index",
           position: "nearest",

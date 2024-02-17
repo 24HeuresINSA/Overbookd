@@ -2,6 +2,7 @@ import {
   GearDetails,
   GearPreview,
   GearSearchOptions,
+  GearWithDetails,
   HttpStringified,
 } from "@overbookd/http";
 import { mutationTree, actionTree } from "typed-vuex";
@@ -11,11 +12,6 @@ import { safeCall } from "~/utils/api/calls";
 type State = {
   previews: GearPreview[];
   selectedGear?: GearWithDetails;
-};
-
-type GearWithDetails = {
-  slug: string;
-  details: GearDetails[];
 };
 
 export const state = (): State => ({
@@ -57,8 +53,8 @@ export const actions = actionTree(
       );
       if (!res) return;
       const gear = {
-        slug,
-        details: res.data.map(castGearDetailsWithDate),
+        ...res.data,
+        details: res.data.details.map(castGearDetailsWithDate),
       };
       commit("SET_SELECTED_GEAR", gear);
     },
