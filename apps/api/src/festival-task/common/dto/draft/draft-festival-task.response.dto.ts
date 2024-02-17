@@ -1,45 +1,46 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { DRAFT, FestivalTaskDraft } from "@overbookd/festival-event";
+import { DRAFT } from "@overbookd/festival-event";
+import { DraftWithConflicts } from "@overbookd/http";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { DraftGeneralResponseDto } from "./draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";
 import { KeyEventResponseDto } from "../key-event.response.dto";
 
-export class DraftFestivalTaskResponseDto implements FestivalTaskDraft {
+export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   @ApiProperty({})
-  id: FestivalTaskDraft["id"];
+  id: DraftWithConflicts["id"];
 
   @ApiProperty({ enum: [DRAFT] })
-  status: FestivalTaskDraft["status"];
+  status: DraftWithConflicts["status"];
 
   @ApiProperty({
     description: "The festival activity linked",
     type: FestivalActivityResponseDto,
   })
-  festivalActivity: FestivalTaskDraft["festivalActivity"];
+  festivalActivity: DraftWithConflicts["festivalActivity"];
 
   @ApiProperty({
     description: "The festival task general",
     type: DraftGeneralResponseDto,
   })
-  general: FestivalTaskDraft["general"];
+  general: DraftWithConflicts["general"];
 
   @ApiProperty({
     description: "The festival task instructions",
     type: DraftInstructionsResponseDto,
   })
-  instructions: FestivalTaskDraft["instructions"];
+  instructions: DraftWithConflicts["instructions"];
 
-  mobilizations: FestivalTaskDraft["mobilizations"];
+  mobilizations: DraftWithConflicts["mobilizations"];
 
-  inquiries: FestivalTaskDraft["inquiries"];
+  inquiries: DraftWithConflicts["inquiries"];
 
   @ApiProperty({
     description: "Festival activity key events",
     isArray: true,
     type: KeyEventResponseDto,
   })
-  history: FestivalTaskDraft["history"];
+  history: DraftWithConflicts["history"];
 
-  feedbacks: FestivalTaskDraft["feedbacks"];
+  feedbacks: DraftWithConflicts["feedbacks"];
 }

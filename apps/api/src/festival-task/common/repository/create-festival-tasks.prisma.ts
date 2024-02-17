@@ -1,6 +1,7 @@
 import {
   FestivalTaskDraft,
   FestivalTasksForCreate,
+  WithConflicts,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../prisma.service";
 import {
@@ -9,12 +10,12 @@ import {
 } from "./festival-task.query";
 import { DraftBuilder } from "./festival-task.builder";
 
+type DraftWithoutConflicts = Exclude<FestivalTaskDraft, WithConflicts>;
+
 export class PrismaCreateFestivalTasks implements FestivalTasksForCreate {
   constructor(private readonly prisma: PrismaService) {}
 
-  async add(
-    task: FestivalTaskDraft<{ withConflicts: false }>,
-  ): Promise<FestivalTaskDraft<{ withConflicts: false }>> {
+  async add(task: DraftWithoutConflicts): Promise<DraftWithoutConflicts> {
     const saved = await this.prisma.festivalTask.create({
       select: SELECT_FESTIVAL_TASK,
       data: FestivalTaskQueryBuilder.create(task),

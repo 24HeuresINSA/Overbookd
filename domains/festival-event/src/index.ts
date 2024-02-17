@@ -222,7 +222,10 @@ export type {
   VolunteerWithConflicts,
 } from "./festival-task/sections/mobilizations";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
-export type { VolunteerConflicts } from "./festival-task/volunteer-conflicts";
+export type {
+  VolunteerConflicts,
+  WithConflicts,
+} from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
 
 //  **********************

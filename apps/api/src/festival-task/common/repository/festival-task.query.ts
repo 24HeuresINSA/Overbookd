@@ -1,12 +1,13 @@
 import {
   Adherent,
   Contact,
+  DRAFT,
   Feedback,
   FestivalTask,
-  FestivalTaskDraft,
   FestivalTaskKeyEvent as KeyEvent,
   Mobilization,
   Volunteer,
+  WithConflicts,
   isAssignedToDrive,
 } from "@overbookd/festival-event";
 import { SELECT_VOLUNTEER, SELECT_CONTACT } from "./adherent/adherent.query";
@@ -36,8 +37,14 @@ export const SELECT_FESTIVAL_TASK = {
   ...SELECT_FEEDBACKS,
 };
 
+type TaskWithoutConflicts = Exclude<FestivalTask, WithConflicts>;
+type DraftWithoutConflicts = Extract<
+  TaskWithoutConflicts,
+  { status: typeof DRAFT }
+>;
+
 export class FestivalTaskQueryBuilder {
-  static create(task: FestivalTaskDraft<{ withConflicts: false }>) {
+  static create(task: DraftWithoutConflicts) {
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       contacts: {
@@ -67,7 +74,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  static update(task: FestivalTask<{ withConflicts: false }>) {
+  static update(task: TaskWithoutConflicts) {
     const contacts = this.upsertContacts(task.id, task.instructions.contacts);
     const inChargeVolunteers = this.upsertInChargeVolunteers(
       task.id,
@@ -150,7 +157,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertInquiries(task: FestivalTask<{ withConflicts: false }>) {
+  private static upsertInquiries(task: TaskWithoutConflicts) {
     return {
       upsert: task.inquiries.map((request) => {
         const update = isAssignedToDrive(request)
@@ -170,7 +177,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertFeedbacks(task: FestivalTask<{ withConflicts: false }>) {
+  private static upsertFeedbacks(task: TaskWithoutConflicts) {
     return {
       upsert: task.feedbacks.map((feedback) => ({
         where: {
@@ -197,7 +204,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertHistory(task: FestivalTask<{ withConflicts: false }>) {
+  private static upsertHistory(task: TaskWithoutConflicts) {
     return {
       upsert: task.history.map((keyEvent) => ({
         where: {
@@ -224,7 +231,7 @@ type StoredHistoryKeyEvent = {
 };
 
 function keyEventToHistory(
-  task: FestivalTask<{ withConflicts: false }>,
+  task: TaskWithoutConflicts,
 ): (event: KeyEvent) => StoredHistoryKeyEvent {
   return ({ action, by, at, description }) => ({
     event: action,
@@ -287,9 +294,7 @@ function databaseMobilizationForCreation(
   };
 }
 
-function databaseFestivalTaskWithoutListsMapping(
-  task: FestivalTask<{ withConflicts: false }>,
-) {
+function databaseFestivalTaskWithoutListsMapping(task: TaskWithoutConflicts) {
   return {
     id: task.id,
     status: task.status,
