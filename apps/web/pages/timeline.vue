@@ -12,5 +12,8 @@ import TimelineComponent from "~/components/organisms/timeline/Timeline.vue";
 export default Vue.extend({
   name: "Timeline",
   components: { TimelineComponent },
+  head: () => ({
+    title: "Timeline",
+  }),
 });
 </script>

@@ -48,6 +48,9 @@ export default Vue.extend({
       teams: [] as string[],
     };
   },
+  head: () => ({
+    title: "Besoin orgas",
+  }),
   computed: {
     stats(): OrgaNeedsResponse[] {
       return this.$accessor.orgaNeeds.stats;

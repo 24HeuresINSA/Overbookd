@@ -19,6 +19,9 @@ import NeedHelpVolunteerList from "~/components/molecules/need-help/NeedHelpVolu
 export default Vue.extend({
   name: "NeedHelp",
   components: { NeedHelpFormCard, NeedHelpVolunteerList, CalendarList },
+  head: () => ({
+    title: "A l'aide !",
+  }),
 });
 </script>
 

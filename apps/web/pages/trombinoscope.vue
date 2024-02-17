@@ -31,6 +31,9 @@ type Volunteer = UserPersonalData | UserPersonalDataWithProfilePicture;
 export default Vue.extend({
   name: "Trombinoscope",
   components: { BirthdayCard, TrombinoscopeGroup },
+  head: () => ({
+    title: "Trombinoscope",
+  }),
   computed: {
     volunteers(): Volunteer[] {
       return this.$accessor.user.volunteers;

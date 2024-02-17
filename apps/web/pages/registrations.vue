@@ -106,6 +106,9 @@ export default Vue.extend({
     searchNewcomer: "",
     selectedNewcomers: [],
   }),
+  head: () => ({
+    title: "Nouvelles inscriptions",
+  }),
   computed: {
     searchableNewcomers(): Searchable<IDefineANewcomer>[] {
       return this.$accessor.registration.newcomers.map((newcomer) => ({
