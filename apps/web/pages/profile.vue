@@ -17,6 +17,9 @@ export default Vue.extend({
     UserCard,
     SnackNotificationContainer,
   },
+  head: () => ({
+    title: "Mon profil",
+  }),
 });
 </script>
 

@@ -49,6 +49,9 @@ export default defineComponent({
   data: (): SharedMealsData => ({
     isOfferDialogOpen: false,
   }),
+  head: () => ({
+    title: "Repas partagés",
+  }),
   computed: {
     meals(): OnGoingSharedMeal[] {
       return this.$accessor.mealSharing.onGoingMeals;

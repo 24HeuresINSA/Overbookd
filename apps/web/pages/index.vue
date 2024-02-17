@@ -48,6 +48,9 @@ export default Vue.extend({
   data: () => ({
     search: "",
   }),
+  head: () => ({
+    title: "Acceuil",
+  }),
   computed: {
     me(): MyUserInformation {
       return this.$accessor.user.me;
