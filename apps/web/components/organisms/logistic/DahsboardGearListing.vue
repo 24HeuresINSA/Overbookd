@@ -1,32 +1,50 @@
 <template>
-  <v-data-table
-    :items="previews"
-    :headers="headers"
-    show-expand
-    single-expand
-    @item-expanded="selectGear"
-  >
-    <template #item.isConsumable="{ item }">
-      <div v-show="item.isConsumable" class="icon">
-        <v-icon size="24"> mdi-delete-empty-outline </v-icon>
-        <span class="icon-detail">Consommable</span>
-      </div>
-    </template>
-    <template #expanded-item>
-      <td :colspan="headers.length"><DashboardGearDetails /></td>
-    </template>
-    <template #no-data>Aucun matos</template>
-  </v-data-table>
+  <div class="dashboard-gear-listing">
+    <v-data-table
+      :items="previews"
+      :headers="headers"
+      show-expand
+      single-expand
+      @item-expanded="selectGear"
+    >
+      <template #item.isConsumable="{ item }">
+        <div v-show="item.isConsumable" class="icon">
+          <v-icon size="24"> mdi-delete-empty-outline </v-icon>
+          <span class="icon-detail">Consommable</span>
+        </div>
+      </template>
+      <template #expanded-item>
+        <td :colspan="headers.length">
+          <DashboardGearDetailsGraph @select:gear-details="selectGearDetails" />
+        </td>
+      </template>
+      <template #no-data>Aucun matos</template>
+    </v-data-table>
+    <v-dialog v-model="isGearDetailsOpen" max-width="1200">
+      <DashboardGearDetailsCard
+        v-if="selectedGearDetails"
+        :gear-details="selectedGearDetails"
+        @close-dialog="closeDialog"
+      />
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
-import { GearPreview } from "@overbookd/http";
+import { GearDetails, GearPreview } from "@overbookd/http";
 import { defineComponent } from "vue";
-import DashboardGearDetails from "./DashboardGearDetails.vue";
+import DashboardGearDetailsGraph from "./DashboardGearDetailsGraph.vue";
+import { GearWithDetails } from "~/store/logisticDashboard";
+import DashboardGearDetailsCard from "./DashboardGearDetailsCard.vue";
+
+type DashboardGearListingData = {
+  selectedGearDetails: (GearDetails & { name: string }) | undefined;
+  isGearDetailsOpen: boolean;
+};
 
 export default defineComponent({
   name: "DashboardGearListing",
-  components: { DashboardGearDetails },
+  components: { DashboardGearDetailsGraph, DashboardGearDetailsCard },
   props: {
     start: {
       type: Date,
@@ -37,9 +55,16 @@ export default defineComponent({
       required: true,
     },
   },
+  data: (): DashboardGearListingData => ({
+    selectedGearDetails: undefined,
+    isGearDetailsOpen: false,
+  }),
   computed: {
     previews(): GearPreview[] {
       return this.$accessor.logisticDashboard.previews;
+    },
+    selectedGear(): GearWithDetails | undefined {
+      return this.$accessor.logisticDashboard.selectedGear;
     },
     headers() {
       return [
@@ -61,6 +86,17 @@ export default defineComponent({
         start: this.start,
         end: this.end,
       });
+    },
+    selectGearDetails(index: number) {
+      if (!this.selectedGear) return;
+      const details = this.selectedGear.details.at(index);
+      if (!details) return;
+
+      this.selectedGearDetails = { ...details, name: this.selectedGear.name };
+      this.isGearDetailsOpen = true;
+    },
+    closeDialog() {
+      this.isGearDetailsOpen = false;
     },
   },
 });

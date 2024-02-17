@@ -13,8 +13,9 @@ type State = {
   selectedGear?: GearWithDetails;
 };
 
-type GearWithDetails = {
+export type GearWithDetails = {
   slug: string;
+  name: string;
   details: GearDetails[];
 };
 
@@ -48,7 +49,7 @@ export const actions = actionTree(
     },
 
     async fetchDetails(
-      { commit },
+      { commit, state },
       { slug, start, end }: { slug: string; start: Date; end: Date },
     ): Promise<void> {
       const res = await safeCall(
@@ -56,7 +57,10 @@ export const actions = actionTree(
         LogisticDashboardRepository.getDetails(this, slug, start, end),
       );
       if (!res) return;
+      const preview = state.previews.find((gear) => gear.slug === slug);
+      const name = preview?.name ?? slug;
       const gear = {
+        name,
         slug,
         details: res.data.map(castGearDetailsWithDate),
       };
