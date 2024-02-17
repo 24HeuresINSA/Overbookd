@@ -224,7 +224,7 @@ export type {
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
 export type {
   VolunteerConflicts,
-  WithConflicts as FestivalTaskWithConflicts,
+  FestivalTask as FestivalTaskWithConflicts,
   WithoutConflicts as FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
 } from "./festival-task/volunteer-conflicts";

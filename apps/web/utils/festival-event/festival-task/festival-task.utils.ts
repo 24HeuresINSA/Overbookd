@@ -1,9 +1,8 @@
 import {
   DRAFT,
-  FestivalTask,
-  FestivalTaskDraft as Draft,
+  FestivalTaskWithConflicts as FestivalTask,
 } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
+import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
 import { CastInReview } from "./in-review";
 

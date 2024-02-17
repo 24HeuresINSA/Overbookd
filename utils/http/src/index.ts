@@ -22,7 +22,8 @@ export type {
   AddInChargeVolunteerForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
-  DraftWithConflicts,
+  Draft as DraftWithConflicts,
+  InReview as InReviewWithConflicts,
 } from "./festival-event/festival-task.model";
 export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";

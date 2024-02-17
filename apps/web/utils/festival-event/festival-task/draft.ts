@@ -1,11 +1,8 @@
-import { Draft, FestivalTaskDraft } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
+import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export class CastDraft {
-  static withDate(
-    draft: HttpStringified<FestivalTaskDraft>,
-  ): FestivalTaskDraft {
+  static withDate(draft: HttpStringified<Draft>): Draft {
     return {
       ...draft,
       festivalActivity: this.castActivityWithDate(draft.festivalActivity),
@@ -16,8 +13,8 @@ export class CastDraft {
   }
 
   private static castActivityWithDate(
-    festivalActivity: HttpStringified<FestivalTaskDraft["festivalActivity"]>,
-  ): FestivalTaskDraft["festivalActivity"] {
+    festivalActivity: HttpStringified<Draft["festivalActivity"]>,
+  ): Draft["festivalActivity"] {
     return {
       ...festivalActivity,
       timeWindows: festivalActivity.timeWindows.map(castTimeWindowWithDate),
@@ -31,8 +28,8 @@ export class CastDraft {
   }
 
   private static mobilizationsWithDate(
-    mobilizations: HttpStringified<FestivalTaskDraft["mobilizations"]>,
-  ): FestivalTaskDraft["mobilizations"] {
+    mobilizations: HttpStringified<Draft["mobilizations"]>,
+  ): Draft["mobilizations"] {
     return mobilizations.map((mobilization) => ({
       ...mobilization,
       ...castTimeWindowWithDate(mobilization),
@@ -40,7 +37,7 @@ export class CastDraft {
   }
 
   private static feedbacksWithDate(
-    feedbacks: HttpStringified<FestivalTaskDraft["feedbacks"]>,
+    feedbacks: HttpStringified<Draft["feedbacks"]>,
   ): Draft["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
@@ -49,8 +46,8 @@ export class CastDraft {
   }
 
   private static historyWithDate(
-    history: HttpStringified<FestivalTaskDraft["history"]>,
-  ): FestivalTaskDraft["history"] {
+    history: HttpStringified<Draft["history"]>,
+  ): Draft["history"] {
     return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
 }

@@ -1,5 +1,7 @@
-import { FestivalTaskInReview as InReview } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
+import {
+  HttpStringified,
+  InReviewWithConflicts as InReview,
+} from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export class CastInReview {

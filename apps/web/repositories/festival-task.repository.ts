@@ -14,13 +14,13 @@ import {
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
-  FestivalTask,
   InquiryRequest,
   Contact,
   Volunteer,
   UpdateMobilization,
   Mobilization,
   TeamMobilization,
+  FestivalTaskWithConflicts,
 } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -35,38 +35,38 @@ export class FestivalTaskRepository {
     );
   }
 
-  static getOne(context: Context, id: FestivalTask["id"]) {
-    return context.$axios.get<HttpStringified<FestivalTask>>(
+  static getOne(context: Context, id: FestivalTaskWithConflicts["id"]) {
+    return context.$axios.get<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${id}`,
     );
   }
 
   static getStats(context: Context) {
-    return context.$axios.get<HttpStringified<Statistics<FestivalTask>>>(
-      `${this.basePath}/statistics`,
-    );
+    return context.$axios.get<
+      HttpStringified<Statistics<FestivalTaskWithConflicts>>
+    >(`${this.basePath}/statistics`);
   }
 
   /* CREATE */
   static create(context: Context, data: FestivalTaskCreationForm) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       this.basePath,
       data,
     );
   }
 
   /* REMOVE */
-  static remove(context: Context, id: FestivalTask["id"]) {
+  static remove(context: Context, id: FestivalTaskWithConflicts["id"]) {
     return context.$axios.delete<void>(`${this.basePath}/${id}`);
   }
 
   /* UPDATE GENERAL */
   static updateGeneral(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     general: UpdateGeneralForm,
   ) {
-    return context.$axios.patch<HttpStringified<FestivalTask>>(
+    return context.$axios.patch<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/general`,
       general,
     );
@@ -75,10 +75,10 @@ export class FestivalTaskRepository {
   /* UPDATE INSTRUCTIONS */
   static updateInstructions(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     instructions: UpdateInstructionsForm,
   ) {
-    return context.$axios.patch<HttpStringified<FestivalTask>>(
+    return context.$axios.patch<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions`,
       instructions,
     );
@@ -86,10 +86,10 @@ export class FestivalTaskRepository {
 
   static addContact(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     contact: AddContactForm,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions/contacts`,
       contact,
     );
@@ -97,20 +97,20 @@ export class FestivalTaskRepository {
 
   static removeContact(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     contactId: Contact["id"],
   ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions/contacts/${contactId}`,
     );
   }
 
   static addInChargeVolunteer(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     volunteer: AddInChargeVolunteerForm,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions/in-charge/volunteers`,
       volunteer,
     );
@@ -118,16 +118,19 @@ export class FestivalTaskRepository {
 
   static removeInChargeVolunteer(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     volunteerId: Volunteer["id"],
   ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions/in-charge/volunteers/${volunteerId}`,
     );
   }
 
-  static clearInCharge(context: Context, ftId: FestivalTask["id"]) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+  static clearInCharge(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+  ) {
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions/in-charge`,
     );
   }
@@ -135,10 +138,10 @@ export class FestivalTaskRepository {
   /* UPDATE MOBILIZATION */
   static addMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilization: AddMobilizationForm,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations`,
       mobilization,
     );
@@ -146,11 +149,11 @@ export class FestivalTaskRepository {
 
   static updateMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilizationId: Mobilization["id"],
     mobilization: UpdateMobilization,
   ) {
-    return context.$axios.patch<HttpStringified<FestivalTask>>(
+    return context.$axios.patch<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}`,
       mobilization,
     );
@@ -158,21 +161,21 @@ export class FestivalTaskRepository {
 
   static removeMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilizationId: Mobilization["id"],
   ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}`,
     );
   }
 
   static addVolunteerToMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilizationId: Mobilization["id"],
     volunteer: AddVolunteerToMobilizationForm,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/volunteers`,
       volunteer,
     );
@@ -180,22 +183,22 @@ export class FestivalTaskRepository {
 
   static removeVolunteerFromMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilizationId: Mobilization["id"],
     volunteerId: Volunteer["id"],
   ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/volunteers/${volunteerId}`,
     );
   }
 
   static addTeamToMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/teams`,
       team,
     );
@@ -203,11 +206,11 @@ export class FestivalTaskRepository {
 
   static removeTeamFromMobilization(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization["team"],
   ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/mobilizations/${mobilizationId}/teams/${team}`,
     );
   }
@@ -215,10 +218,10 @@ export class FestivalTaskRepository {
   /* UPDATE INQUIRY */
   static addInquiryRequest(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     inquiry: AddInquiryRequestForm,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/inquiry/requests`,
       inquiry,
     );
@@ -226,10 +229,10 @@ export class FestivalTaskRepository {
 
   static removeInquiryRequest(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     inquirySlug: InquiryRequest["slug"],
   ) {
-    return context.$axios.delete<HttpStringified<FestivalTask>>(
+    return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
     );
   }
@@ -237,10 +240,10 @@ export class FestivalTaskRepository {
   /* PUBLISH FEEDBACK */
   static publishFeedback(
     context: Context,
-    ftId: FestivalTask["id"],
+    ftId: FestivalTaskWithConflicts["id"],
     feedback: PublishFeedbackForm,
   ) {
-    return context.$axios.post<HttpStringified<FestivalTask>>(
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/feedbacks`,
       feedback,
     );
