@@ -162,6 +162,7 @@ export default defineComponent({
     updateDate(date: string) {
       const nextDate = new Date(date);
       if (nextDate.getTime() > this.period.end.getTime()) {
+        if (this.disableNextPeriod) return;
         return this.$emit("reach:period-end");
       }
       if (nextDate.getTime() < this.period.start.getTime()) {
