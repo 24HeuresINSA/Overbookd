@@ -3,6 +3,7 @@
     v-model="dateStringified"
     :label="label"
     type="datetime-local"
+    :step="fieldStep"
     :solo="boxed"
     :filled="boxed"
     :outilned="!boxed"
@@ -16,8 +17,11 @@
 </template>
 
 <script lang="ts">
+import { ONE_MINUTE_IN_MS, ONE_SECOND_IN_MS } from "@overbookd/period";
 import Vue from "vue";
 import { formatLocalDateTime, roundMinutes } from "~/utils/date/date.utils";
+
+const ONE_MINUTE_IN_SECONDS = ONE_MINUTE_IN_MS / ONE_SECOND_IN_MS;
 
 export default Vue.extend({
   name: "DateTimeField",
@@ -54,6 +58,11 @@ export default Vue.extend({
   data: () => ({
     dateStringified: "",
   }),
+  computed: {
+    fieldStep(): number {
+      return this.step * ONE_MINUTE_IN_SECONDS;
+    },
+  },
   watch: {
     date() {
       this.dateStringified = this.stringifyDate(this.date);
