@@ -13,6 +13,7 @@
     :disabled="disabled"
     :hide-details="hideDetails"
     return-object
+    :filter="filterTeams"
     @change="propagateEvent"
   >
     <template #selection="{ item }">
@@ -25,6 +26,7 @@
 </template>
 
 <script lang="ts">
+import { SlugifyService } from "@overbookd/slugify";
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Team } from "~/utils/models/team.model";
@@ -83,6 +85,10 @@ export default Vue.extend({
   methods: {
     propagateEvent(team: Team | null) {
       this.$emit("change", team);
+    },
+    filterTeams(team: Team, typedSearch: string) {
+      const search = SlugifyService.apply(typedSearch);
+      return SlugifyService.apply(team.name).includes(search);
     },
   },
 });
