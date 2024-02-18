@@ -38,8 +38,6 @@ export type Conflicts = {
 
 export type VolunteerWithConflicts = Volunteer & { conflicts: Conflicts };
 
-export type VolunteerMobilization = Volunteer | VolunteerWithConflicts;
-
 export type TeamMobilization = { count: number; team: string };
 
 type MobilizationVolunteer<Options extends MobilizationOptions> =
