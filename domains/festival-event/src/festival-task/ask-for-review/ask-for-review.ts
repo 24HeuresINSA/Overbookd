@@ -10,7 +10,7 @@ export type AskForReviewTasks = {
   save(task: InReview): Promise<InReview>;
 };
 
-type ReviewerStat = {
+export type ReviewerStat = {
   adherent: Adherent;
   count: number;
 };
@@ -18,14 +18,6 @@ type ReviewerStat = {
 export type Reviewers = {
   getAll(): Promise<ReviewerStat[]>;
 };
-
-export class InMemoryReviewers implements Reviewers {
-  constructor(private readonly stats: ReviewerStat[] = []) {}
-
-  getAll(): Promise<ReviewerStat[]> {
-    return Promise.resolve(this.stats);
-  }
-}
 
 export class AskForReview {
   constructor(

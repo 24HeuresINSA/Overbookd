@@ -27,7 +27,8 @@ import {
   matos,
 } from "../../common/review";
 import { ReadyForReviewError } from "../../common/ready-for-review.error";
-import { AskForReview, InMemoryReviewers } from "./ask-for-review";
+import { AskForReview } from "./ask-for-review";
+import { InMemoryReviewers } from "./reviewers.inmemory";
 import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory";
 
 describe("Festival Task - ask for review", () => {
