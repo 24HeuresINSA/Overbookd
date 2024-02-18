@@ -27,7 +27,7 @@
     <template #event="{ event }">
       <div
         class="event underline-on-hover"
-        @click="openFt(event.ft.id)"
+        @click="openFt(event.link)"
         @mouseup.middle="openFtInNewTab(event.ft.id)"
       >
         {{ `[${event.ft.id}] ${event.ft.name}` }}
@@ -43,23 +43,15 @@ import { UserPersonalData } from "@overbookd/user";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
+import { getColorByStatus } from "~/domain/common/status-color";
 import {
-  Task,
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
-
-interface CalendarEventWithFt {
-  start: Date;
-  end: Date;
-  ft: Task;
-  color: StatusColor;
-  timed: boolean;
-}
+import { CalendarEvent } from "~/utils/models/calendar.model";
 
 export default Vue.extend({
   name: "UserCalendar",
@@ -88,12 +80,13 @@ export default Vue.extend({
     stats(): VolunteerAssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
-    events(): CalendarEventWithFt[] {
+    events(): CalendarEvent[] {
       return [...this.ftRequests, ...this.assignments].map(
         ({ start, end, ft }) => ({
           start,
           end,
-          ft,
+          name: ft.name,
+          link: `/ft/${ft.id}`,
           color: getColorByStatus(ft.status),
           timed: true,
         }),
@@ -134,11 +127,12 @@ export default Vue.extend({
     isUserAvailable(date: DateString, hour: Hour): boolean {
       return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
-    openFt(ftId: number) {
-      this.$router.push({ path: `/ft/${ftId}` });
+    openFt(path?: string) {
+      if (!path) return;
+      this.$router.push({ path });
     },
-    openFtInNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`);
+    openFtInNewTab(path?: string) {
+      if (!path) window.open(path);
     },
   },
 });
