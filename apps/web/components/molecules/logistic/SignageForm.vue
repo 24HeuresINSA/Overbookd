@@ -63,7 +63,7 @@ import {
 interface SignageFormData extends InputRulesDataWithImage {
   name: string;
   type: SignageType;
-  image: File | void;
+  image: File | null;
 }
 
 const nameMinLength = 3;
