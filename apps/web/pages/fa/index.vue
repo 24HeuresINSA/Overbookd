@@ -311,26 +311,7 @@ export default defineComponent({
     },*/
 
     async exportCsvSigna() {
-      const signaNeeds = await this.$accessor.fa.getSignaNeedsForCsv();
-      if (!signaNeeds) return;
-      const csvHeader =
-        "Numéro FA;Nom FA;Type;Texte;Nombre;Taille;Commentaire;";
-      const csvRows = signaNeeds.map((signaNeed) => {
-        const rowData = [
-          signaNeed.faId,
-          signaNeed.faName,
-          signaNeed.signaType,
-          signaNeed.text,
-          signaNeed.count,
-          signaNeed.size,
-          signaNeed.comment,
-        ];
-        return `${rowData.join(";")}`;
-      });
-      const csv = [csvHeader, ...csvRows].join("\n");
-      const regex = new RegExp(/undefined/i, "g");
-      const parsedCSV = csv.replace(regex, "");
-      this.download("exportSigna.csv", parsedCSV);
+      //TODO
     },
 
     async exportLogisticDashboard() {

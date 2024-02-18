@@ -8,7 +8,6 @@ import * as catalogSignage from "./catalogSignage";
 import * as charismaPeriod from "./charismaPeriod";
 import * as configuration from "./configuration";
 import * as dialog from "./dialog";
-import * as fa from "./fa";
 import * as festivalActivity from "./festivalActivity";
 import * as ft from "./ft";
 import * as festivalTask from "./festivalTask";
@@ -56,7 +55,6 @@ export const accessorType = getAccessorType({
     notification,
     user,
     transaction,
-    fa,
     festivalActivity,
     ft,
     festivalTask,
