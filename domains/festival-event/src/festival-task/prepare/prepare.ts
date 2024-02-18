@@ -84,7 +84,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    const general = General.build(task.general).update(update).json;
+    const general = { ...task.general, ...update };
     const updatedTask = checkValidity({ ...task, general });
 
     return this.save(updatedTask);
@@ -319,22 +319,6 @@ export class PrepareFestivalTask {
     const feedback = { author, content, publishedAt: new Date() };
     const feedbacks = [...task.feedbacks, feedback];
     return this.save({ ...task, feedbacks });
-  }
-}
-
-class General {
-  private constructor(private readonly general: FestivalTask["general"]) {}
-
-  static build(general: FestivalTask["general"]) {
-    return new General(general);
-  }
-
-  update(update: UpdateGeneral) {
-    return new General({ ...this.general, ...update });
-  }
-
-  get json(): FestivalTask["general"] {
-    return { ...this.general };
   }
 }
 

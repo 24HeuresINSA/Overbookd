@@ -95,7 +95,7 @@ class GeneralSpecification {
     return this.hasTeam(general);
   }
 
-  static generateErrors(general: FestivalTask["general"]): string[] {
+  static generateErrors(general: Draft["general"]): string[] {
     const hasNotTeam = !this.hasTeam(general);
     return hasNotTeam ? [this.teamIsMandatory] : [];
   }
