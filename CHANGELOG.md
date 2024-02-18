@@ -1,3 +1,23 @@
+## [2.16.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.3...v2.16.4) (2024-02-18)
+
+
+### Bug Fixes
+
+* **logistic-dashboard:** open detail card when click on graph. [#1566](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1566) ([728d4d3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/728d4d3c578bd3c7873614218bfbf2eca2853f75))
+* **logistic-dashboard:** repair the filters on the page [#1525](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1525) ([db4fcdc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/db4fcdcc6c18f9f8953e903e9b213db9c01d5ab6))
+* **volunteer-availability:** stay on latest period. [#1567](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1567) ([ce0a0e5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ce0a0e5c92744ce0474316017831561d16f1edb6))
+* **web:** use native step on date picker to increment minutes by fifteen minutes. [#1569](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1569) ([d8515b9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d8515b9a98f4b0e3d55ec3b4f05ed83a7aef1248))
+
+
+### Pre-Features
+
+* **festival-task:** enable ask for review. [#1565](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1565) ([32f35d2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/32f35d250998293553da2dd2ab1f30fc1cd9bec4))
+
+
+### CI/CD
+
+* **renovate:** :construction_worker: unset versionning globaly ([2dc3620](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2dc36202647a3c6e74a77f9c51b5366ca281c35a)), closes [/github.com/renovatebot/renovate/discussions/26877#discussioncomment-8278988](https://gitlab.com/24-heures-insa//github.com/renovatebot/renovate/discussions/26877/issues/discussioncomment-8278988)
+
 ## [2.16.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.2...v2.16.3) (2024-02-15)
 
 
