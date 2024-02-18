@@ -156,8 +156,10 @@ export default defineComponent({
       this.$accessor.festivalTask.updateInstructions({ appointmentId });
     },
     updateGlobal(canBeEmpty: string) {
+      console.log(canBeEmpty);
       const global = canBeEmpty.trim() || null;
       this.$accessor.festivalTask.updateInstructions({ global });
+      console.log(this.instructions.global);
     },
     updateInChargeInstruction(canBeEmpty: string) {
       const inCharge = canBeEmpty.trim() || null;
