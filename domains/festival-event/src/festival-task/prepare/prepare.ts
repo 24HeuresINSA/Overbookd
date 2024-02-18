@@ -16,6 +16,7 @@ import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
   InReviewWithoutConflicts,
+  WithConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
@@ -83,7 +84,7 @@ export class PrepareFestivalTask {
   async updateGeneralSection(
     taskId: FestivalTask["id"],
     update: UpdateGeneral,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -96,7 +97,7 @@ export class PrepareFestivalTask {
   async updateInstructionsSection(
     taskId: FestivalTask["id"],
     update: UpdateInstructions,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -110,7 +111,7 @@ export class PrepareFestivalTask {
   async addContact(
     taskId: FestivalTask["id"],
     contact: Contact,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -124,7 +125,7 @@ export class PrepareFestivalTask {
   async removeContact(
     taskId: FestivalTask["id"],
     contactId: Contact["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -138,7 +139,7 @@ export class PrepareFestivalTask {
   async addInChargeVolunteer(
     taskId: FestivalTask["id"],
     volunteer: Volunteer,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -152,7 +153,7 @@ export class PrepareFestivalTask {
   async removeInChargeVolunteer(
     taskId: FestivalTask["id"],
     volunteerId: Volunteer["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -163,7 +164,7 @@ export class PrepareFestivalTask {
     return this.save(updatedTask);
   }
 
-  async clearIncharge(taskId: FestivalTask["id"]): Promise<FestivalTask> {
+  async clearIncharge(taskId: FestivalTask["id"]): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -177,7 +178,7 @@ export class PrepareFestivalTask {
   async addMobilization(
     taskId: FestivalTask["id"],
     mobilization: AddMobilization,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -188,7 +189,7 @@ export class PrepareFestivalTask {
     return this.save(toSave);
   }
 
-  private async save(toSave: WithoutConflicts): Promise<FestivalTask> {
+  private async save(toSave: WithoutConflicts): Promise<WithConflicts> {
     const updated = await this.festivalTasks.save(toSave);
     return this.festivalTaskTranslator.translate(updated);
   }
@@ -196,7 +197,7 @@ export class PrepareFestivalTask {
   async removeMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -210,7 +211,7 @@ export class PrepareFestivalTask {
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     update: UpdateMobilization,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -224,7 +225,7 @@ export class PrepareFestivalTask {
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -239,7 +240,7 @@ export class PrepareFestivalTask {
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization["team"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -254,7 +255,7 @@ export class PrepareFestivalTask {
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     volunteer: Volunteer,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -272,7 +273,7 @@ export class PrepareFestivalTask {
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     volunteerId: Volunteer["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
@@ -289,7 +290,7 @@ export class PrepareFestivalTask {
   async addInquiry(
     taskId: FestivalTask["id"],
     inquiry: BaseInquiryRequest,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -301,7 +302,7 @@ export class PrepareFestivalTask {
   async removeInquiry(
     taskId: FestivalTask["id"],
     slug: InquiryRequest["slug"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     const builder = Inquiries.build(task.inquiries);
@@ -313,7 +314,7 @@ export class PrepareFestivalTask {
   async publishFeedback(
     taskId: FestivalTask["id"],
     { author, content }: PublishFeedback,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 

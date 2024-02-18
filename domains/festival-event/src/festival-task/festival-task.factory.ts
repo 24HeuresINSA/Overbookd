@@ -1,12 +1,7 @@
 import { numberGenerator } from "@overbookd/list";
 import { DRAFT, IN_REVIEW, VALIDATED } from "../common/status";
 import { isKeyOf } from "../is-key-of";
-import {
-  Draft,
-  FestivalActivity,
-  FestivalTask,
-  InReview,
-} from "./festival-task";
+import { Draft, FestivalActivity, InReview } from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
   deuxTables,
@@ -18,36 +13,40 @@ import {
   noelContact,
 } from "./festival-task.test-util";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
+import { WithConflicts } from "./volunteer-conflicts";
 
 type FestivalTaskSection =
-  | FestivalTask["general"]
-  | FestivalTask["festivalActivity"]
-  | FestivalTask["instructions"];
+  | WithConflicts["general"]
+  | WithConflicts["festivalActivity"]
+  | WithConflicts["instructions"];
+
+type DraftWithConflicts = Extract<WithConflicts, Draft>;
+type InReviewWithConflicts = Extract<WithConflicts, InReview>;
 
 class FestivalTaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
 
-  draft(name: string): FestivalTaskBuilder<Draft> {
+  draft(name: string): FestivalTaskBuilder<DraftWithConflicts> {
     const id = this.idGenerator.next().value;
     const task = defaultDraft(id, name);
     return FestivalTaskBuilder.init(task);
   }
 
-  inReview(name: string): FestivalTaskBuilder<InReview> {
+  inReview(name: string): FestivalTaskBuilder<InReviewWithConflicts> {
     const id = this.idGenerator.next().value;
     const task = defaultInReview(id, name);
     return FestivalTaskBuilder.init(task);
   }
 }
 
-class FestivalTaskBuilder<T extends FestivalTask> {
+class FestivalTaskBuilder<T extends WithConflicts> {
   private constructor(private festivalTask: T) {}
 
-  static init<T extends FestivalTask>(festivalTask: T) {
+  static init<T extends WithConflicts>(festivalTask: T) {
     return new FestivalTaskBuilder<T>(festivalTask);
   }
 
-  withGeneral(general: Partial<FestivalTask["general"]>) {
+  withGeneral(general: Partial<T["general"]>) {
     const festivalTask = {
       ...this.festivalTask,
       general: this.merge(this.festivalTask.general, general),
@@ -55,9 +54,7 @@ class FestivalTaskBuilder<T extends FestivalTask> {
     return new FestivalTaskBuilder(festivalTask);
   }
 
-  withFestivalActivity(
-    festivalActivity: Partial<FestivalTask["festivalActivity"]>,
-  ) {
+  withFestivalActivity(festivalActivity: Partial<T["festivalActivity"]>) {
     const festivalTask = {
       ...this.festivalTask,
       festivalActivity: this.merge(
@@ -68,7 +65,7 @@ class FestivalTaskBuilder<T extends FestivalTask> {
     return new FestivalTaskBuilder(festivalTask);
   }
 
-  withInstructions(instructions: Partial<FestivalTask["instructions"]>) {
+  withInstructions(instructions: Partial<T["instructions"]>) {
     const festivalTask = {
       ...this.festivalTask,
       instructions: this.merge(this.festivalTask.instructions, instructions),
@@ -76,7 +73,7 @@ class FestivalTaskBuilder<T extends FestivalTask> {
     return new FestivalTaskBuilder(festivalTask);
   }
 
-  withInquiries(inquiries: FestivalTask["inquiries"]) {
+  withInquiries(inquiries: T["inquiries"]) {
     const festivalTask = {
       ...this.festivalTask,
       inquiries,
@@ -85,7 +82,7 @@ class FestivalTaskBuilder<T extends FestivalTask> {
     return new FestivalTaskBuilder(festivalTask);
   }
 
-  withMobilizations(mobilizations: FestivalTask["mobilizations"]) {
+  withMobilizations(mobilizations: T["mobilizations"]) {
     const festivalTask = {
       ...this.festivalTask,
       mobilizations,
@@ -113,7 +110,7 @@ class FestivalTaskBuilder<T extends FestivalTask> {
   }
 }
 
-function defaultDraft(id: number, name: string): Draft {
+function defaultDraft(id: number, name: string): DraftWithConflicts {
   return {
     id,
     status: DRAFT,
@@ -139,7 +136,7 @@ function defaultDraft(id: number, name: string): Draft {
   };
 }
 
-function defaultInReview(id: number, name: string): InReview {
+function defaultInReview(id: number, name: string): InReviewWithConflicts {
   return {
     id,
     status: IN_REVIEW,

@@ -1,17 +1,18 @@
 import { VALIDATED } from "../common/status";
-import { FestivalActivity } from "./festival-task";
+import { FestivalActivity, InReview } from "./festival-task";
 import { Contact } from "./sections/instructions";
-import { Mobilization, VolunteerWithConflicts } from "./sections/mobilizations";
+import { VolunteerWithConflicts } from "./sections/mobilizations";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
 import { AddMobilization } from "./prepare/prepare";
-import { VolunteerAvailabilities } from "./volunteer-conflicts";
+import { VolunteerAvailabilities, WithConflicts } from "./volunteer-conflicts";
 import { getFactory } from "./festival-task.factory";
 import {
   george,
   saturday11hToSaturday18h,
 } from "../festival-activity/festival-activity.fake";
+import { Item } from "@overbookd/list";
 
 const factory = getFactory();
 
@@ -35,10 +36,14 @@ type InitMobilizationBuilder = Partial<
   volunteers?: VolunteerWithConflicts[];
 };
 
-class MobilizationBuilder {
-  private constructor(readonly mobilization: Mobilization) {}
+type InReviewWithConflicts = Extract<WithConflicts, InReview>;
 
-  static init(initialisation?: InitMobilizationBuilder) {
+class MobilizationBuilder<T extends WithConflicts> {
+  private constructor(readonly mobilization: Item<T["mobilizations"]>) {}
+
+  static init<T extends WithConflicts>(
+    initialisation?: InitMobilizationBuilder,
+  ) {
     const start = initialisation?.start ?? friday11h;
     const end = initialisation?.end ?? friday18h;
     const durationSplitInHour = initialisation?.durationSplitInHour ?? null;
@@ -47,7 +52,7 @@ class MobilizationBuilder {
 
     const timeWindow = TimeWindowFactory.create(start, end);
 
-    return new MobilizationBuilder({
+    return new MobilizationBuilder<T>({
       ...timeWindow,
       teams,
       volunteers,
@@ -60,7 +65,7 @@ class MobilizationBuilder {
     const end = { id: endId, date: this.mobilization.end };
     const timeWindow = TimeWindowFactory.create(start, end);
 
-    return new MobilizationBuilder({ ...this.mobilization, ...timeWindow });
+    return new MobilizationBuilder<T>({ ...this.mobilization, ...timeWindow });
   }
 
   withEnd(end: BuildTimeWindow) {
@@ -68,22 +73,24 @@ class MobilizationBuilder {
     const start = { id: startId, date: this.mobilization.start };
     const timeWindow = TimeWindowFactory.create(start, end);
 
-    return new MobilizationBuilder({ ...this.mobilization, ...timeWindow });
+    return new MobilizationBuilder<T>({ ...this.mobilization, ...timeWindow });
   }
 
-  withDurationSplit(durationSplitInHour: Mobilization["durationSplitInHour"]) {
-    return new MobilizationBuilder({
+  withDurationSplit(
+    durationSplitInHour: Item<T["mobilizations"]>["durationSplitInHour"],
+  ) {
+    return new MobilizationBuilder<T>({
       ...this.mobilization,
       durationSplitInHour,
     });
   }
 
-  withTeams(teams: Mobilization["teams"]) {
-    return new MobilizationBuilder({ ...this.mobilization, teams });
+  withTeams(teams: Item<T["mobilizations"]>["teams"]) {
+    return new MobilizationBuilder<T>({ ...this.mobilization, teams });
   }
 
-  withVolunteers(volunteers: Mobilization["volunteers"]) {
-    return new MobilizationBuilder({ ...this.mobilization, volunteers });
+  withVolunteers(volunteers: Item<T["mobilizations"]>["volunteers"]) {
+    return new MobilizationBuilder<T>({ ...this.mobilization, volunteers });
   }
 
   get form(): AddMobilization {
@@ -395,13 +402,13 @@ export const guardJustDance = factory
     global: "Install just dance",
   })
   .withMobilizations([
-    MobilizationBuilder.init({
+    MobilizationBuilder.init<InReviewWithConflicts>({
       start: friday11h,
       end: friday18h,
       volunteers: [],
       teams: [{ count: 2, team: "bénévole" }],
     }).mobilization,
-    MobilizationBuilder.init({
+    MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday11h,
       end: saturday18h,
       volunteers: [],
@@ -424,13 +431,13 @@ export const serveWaterOnJustDance = factory
     },
   })
   .withMobilizations([
-    MobilizationBuilder.init({
+    MobilizationBuilder.init<InReviewWithConflicts>({
       start: friday11h,
       end: friday18h,
       volunteers: [],
       teams: [{ count: 2, team: "bénévole" }],
     }).mobilization,
-    MobilizationBuilder.init({
+    MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday11h,
       end: saturday18h,
       volunteers: [],
