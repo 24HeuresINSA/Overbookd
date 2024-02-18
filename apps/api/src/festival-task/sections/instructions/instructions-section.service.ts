@@ -50,17 +50,17 @@ export class InstructionsSectionService {
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTask> {
     const contact = await this.adherents.findOne(volunteerId);
-    return this.prepare.addInchargeVolunteer(id, contact);
+    return this.prepare.addInChargeVolunteer(id, contact);
   }
 
   async removeInChargeVolunteer(
     id: FestivalTask["id"],
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTask> {
-    return this.prepare.removeInchargeVolunteer(id, volunteerId);
+    return this.prepare.removeInChargeVolunteer(id, volunteerId);
   }
 
   async clearInCharge(id: FestivalTask["id"]): Promise<FestivalTask> {
-    return this.prepare.clearIncharge(id);
+    return this.prepare.clearInCharge(id);
   }
 }

@@ -160,7 +160,7 @@ export class PrepareFestivalTask {
     return this.save(updatedTask);
   }
 
-  async clearIncharge(taskId: FestivalTask["id"]): Promise<WithConflicts> {
+  async clearInCharge(taskId: FestivalTask["id"]): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 

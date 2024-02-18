@@ -256,7 +256,7 @@ describe("Prepare festival task instructions section", () => {
     `(
       "should clear $taskName in charge instructions section",
       async ({ task }) => {
-        const { instructions } = await prepare.clearIncharge(task.id);
+        const { instructions } = await prepare.clearInCharge(task.id);
         expect(instructions.inCharge.volunteers).toHaveLength(0);
         expect(instructions.inCharge.instruction).toBe(null);
       },
