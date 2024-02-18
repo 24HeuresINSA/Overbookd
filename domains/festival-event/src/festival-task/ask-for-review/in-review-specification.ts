@@ -88,7 +88,7 @@ export class InReviewSpecification {
   }
 }
 
-export class GeneralSpecification {
+class GeneralSpecification {
   static isSatisfiedBy(
     general: Draft["general"],
   ): general is InReview["general"] {
@@ -161,7 +161,7 @@ class MobilizationsSpecification {
   }
 }
 
-export class InstructionsSpecification {
+class InstructionsSpecification {
   static isSatisfiedBy(
     instructions: Draft["instructions"],
   ): instructions is InReview["instructions"] {
