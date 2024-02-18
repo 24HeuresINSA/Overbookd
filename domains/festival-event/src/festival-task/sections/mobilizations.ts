@@ -3,6 +3,30 @@ import { Volunteer } from "./instructions";
 import { TimeWindow } from "../../common/time-window";
 import { FestivalTask } from "../festival-task";
 
+const benevole = "benevole";
+const hard = "hard";
+const confiance = "confiance";
+const vieux = "vieux";
+const conducteur = "conducteur";
+const bde = "bde";
+const karna = "karna";
+const kfet = "kfet";
+const strasbourg = "strasbourg";
+const soft = "soft";
+
+export const requirableTeams = [
+  benevole,
+  hard,
+  confiance,
+  vieux,
+  conducteur,
+  bde,
+  karna,
+  kfet,
+  strasbourg,
+] as const;
+export const requirableTeamsExtended = [...requirableTeams, soft] as const;
+
 type MobilizationOptions = { withConflicts: boolean };
 
 const defaultMobilizationOptions = { withConflicts: true } as const;

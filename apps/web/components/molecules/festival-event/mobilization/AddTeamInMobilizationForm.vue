@@ -12,7 +12,7 @@
         label="Nombre de bénévoles"
         :rules="[rules.number, rules.min]"
       />
-      <SearchTeam v-model="team" :list="addableTeams" hide-details />
+      <SearchTeam v-model="team" :list="selectableTeams" hide-details />
     </template>
     <template #confirm-btn-content>
       <v-icon left> mdi-plus-circle-outline </v-icon>Ajouter
@@ -51,11 +51,11 @@ export default defineComponent({
     },
   }),
   computed: {
-    addableTeams(): Team[] {
-      return this.$accessor.team.teams.filter(
-        (team) =>
-          !(this.mobilization?.teams ?? []).some((t) => t.team === team.code),
-      );
+    selectableTeams(): Team[] {
+      return this.$accessor.team.mobilizableTeams.filter((team) => {
+        const teams = this.mobilization?.teams ?? [];
+        return !teams.some((t) => t.team === team.code);
+      });
     },
   },
   methods: {
