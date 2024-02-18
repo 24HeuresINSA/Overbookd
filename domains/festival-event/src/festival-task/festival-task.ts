@@ -9,6 +9,7 @@ import { DraftGeneral, General } from "./sections/general";
 import { Mobilization, ReviewableMobilization } from "./sections/mobilizations";
 import { DraftInstructions, Instructions } from "./sections/instructions";
 import { InReviewReviews } from "../common/review";
+import { Adherent } from "../common/adherent";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];
@@ -54,6 +55,7 @@ type BaseInReview = {
   feedbacks: Feedback[];
   inquiries: InquiryRequest[];
   reviews: InReviewReviews<"FT">;
+  reviewer: Adherent;
 };
 
 type InReviewWithConflicts = BaseInReview & {
