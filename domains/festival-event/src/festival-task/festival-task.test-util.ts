@@ -8,10 +8,7 @@ import { Location } from "../common/location";
 import { AddMobilization } from "./prepare/prepare";
 import { VolunteerAvailabilities, WithConflicts } from "./volunteer-conflicts";
 import { getFactory } from "./festival-task.factory";
-import {
-  george,
-  saturday11hToSaturday18h,
-} from "../festival-activity/festival-activity.fake";
+import { saturday11hToSaturday18h } from "../festival-activity/festival-activity.fake";
 import { Item } from "@overbookd/list";
 
 const factory = getFactory();
@@ -148,6 +145,12 @@ const justDanceGuardContact: Contact = {
   phone: "0605060708",
 };
 
+export const george = {
+  id: 5,
+  lastname: "Ergo",
+  firstname: "George",
+};
+
 const friday10h: BuildTimeWindow = {
   date: new Date("2024-05-17T10:00+02:00"),
   id: "28598880",
@@ -195,6 +198,10 @@ const saturday18h: BuildTimeWindow = {
 export const saturday19h: BuildTimeWindow = {
   date: new Date("2024-05-18T19:00+02:00"),
   id: "28600860",
+};
+const saturday20h: BuildTimeWindow = {
+  date: new Date("2024-05-18T20:00+02:00"),
+  id: "28600920",
 };
 
 export const noelAvailabilities: VolunteerAvailabilities = {
@@ -403,16 +410,13 @@ export const guardJustDance = factory
   })
   .withMobilizations([
     MobilizationBuilder.init<InReviewWithConflicts>({
-      start: friday11h,
-      end: friday18h,
-      volunteers: [],
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-    MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday11h,
       end: saturday18h,
       volunteers: [],
-      teams: [{ count: 2, team: "bénévole" }],
+      teams: [
+        { count: 2, team: "bénévole" },
+        { count: 1, team: "confiance" },
+      ],
     }).mobilization,
   ])
   .build();
@@ -438,10 +442,21 @@ export const serveWaterOnJustDance = factory
       teams: [{ count: 2, team: "bénévole" }],
     }).mobilization,
     MobilizationBuilder.init<InReviewWithConflicts>({
-      start: saturday11h,
-      end: saturday18h,
-      volunteers: [],
+      start: saturday19h,
+      end: saturday20h,
+      volunteers: [
+        { ...noel, conflicts: { tasks: [], availability: false } },
+        { ...george, conflicts: { tasks: [], availability: false } },
+      ],
       teams: [{ count: 2, team: "bénévole" }],
+    }).mobilization,
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: saturday18h,
+      end: saturday20h,
+      volunteers: [
+        { ...george, conflicts: { tasks: [], availability: false } },
+      ],
+      teams: [],
     }).mobilization,
   ])
   .build();

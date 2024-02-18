@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  george,
   guardJustDance,
   humaGrass,
   installEscapeGame,
@@ -16,7 +17,6 @@ import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
-import { george } from "../../festival-activity/festival-activity.fake";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
