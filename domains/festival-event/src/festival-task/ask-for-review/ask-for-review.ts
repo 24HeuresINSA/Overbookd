@@ -10,10 +10,28 @@ export type AskForReviewTasks = {
   save(task: InReview): Promise<InReview>;
 };
 
+type ReviewerStat = {
+  adherent: Adherent;
+  count: number;
+};
+
+export type Reviewers = {
+  getAll(): Promise<ReviewerStat[]>;
+};
+
+export class InMemoryReviewers implements Reviewers {
+  constructor(private readonly stats: ReviewerStat[] = []) {}
+
+  getAll(): Promise<ReviewerStat[]> {
+    return Promise.resolve(this.stats);
+  }
+}
+
 export class AskForReview {
   constructor(
     private readonly tasks: AskForReviewTasks,
     private readonly notifications: Notifications<"FT">,
+    private readonly reviewers: Reviewers,
   ) {}
 
   async from(taskId: FestivalTask["id"], adherent: Adherent) {
@@ -24,8 +42,21 @@ export class AskForReview {
       throw new AskForReviewError(task);
     }
 
-    const conversion = InReviewSpecification.convert(task, adherent);
+    const reviewer = await this.findReviewer();
+
+    const conversion = InReviewSpecification.convert(task, adherent, reviewer);
     this.notifications.add(conversion.event);
     return this.tasks.save(conversion.task);
+  }
+
+  private async findReviewer(): Promise<Adherent> {
+    const reviewers = await this.reviewers.getAll();
+
+    const minReviewsCount = Math.min(...reviewers.map(({ count }) => count));
+    const reviewer = reviewers.find(({ count }) => count === minReviewsCount);
+
+    if (!reviewer) throw new Error();
+
+    return reviewer.adherent;
   }
 }

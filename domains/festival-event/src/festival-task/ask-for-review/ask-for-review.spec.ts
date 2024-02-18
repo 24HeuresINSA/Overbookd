@@ -27,7 +27,7 @@ import {
   matos,
 } from "../../common/review";
 import { ReadyForReviewError } from "../../common/ready-for-review.error";
-import { AskForReview } from "./ask-for-review";
+import { AskForReview, InMemoryReviewers } from "./ask-for-review";
 import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory";
 
 describe("Festival Task - ask for review", () => {
@@ -49,8 +49,9 @@ describe("Festival Task - ask for review", () => {
       withoutAnyMobilization,
       withSomeMobilizationsWithoutRequest,
     ]);
+    const reviewers = new InMemoryReviewers([{ adherent: noel, count: 0 }]);
     notifications = new InMemoryNotifications<"FT">();
-    askForReview = new AskForReview(tasks, notifications);
+    askForReview = new AskForReview(tasks, notifications, reviewers);
   });
   describe("when asking a review for draft festival task", () => {
     describe.each`
@@ -86,6 +87,22 @@ describe("Festival Task - ask for review", () => {
               description: "Demande de relecture de la FT",
             },
           ]);
+        });
+        describe.each`
+          humainReviews                                                  | expectedReviewer
+          ${[{ adherent: noel, count: 1 }, { adherent: lea, count: 2 }]} | ${noel}
+          ${[{ adherent: lea, count: 1 }, { adherent: noel, count: 2 }]} | ${lea}
+          ${[{ adherent: lea, count: 1 }, { adherent: noel, count: 1 }]} | ${lea}
+          ${[{ adherent: noel, count: 1 }, { adherent: lea, count: 1 }]} | ${noel}
+        `("humain reviewer", ({ humainReviews, expectedReviewer }) => {
+          beforeEach(() => {
+            const reviewers = new InMemoryReviewers(humainReviews);
+            askForReview = new AskForReview(tasks, notifications, reviewers);
+          });
+          it("should assign one humain reviewer to task", async () => {
+            const inReview = await askForReview.from(task.id, instigator);
+            expect(inReview.reviewer).toBe(expectedReviewer);
+          });
         });
         it("should be stored in task repository", async () => {
           const inReview = await askForReview.from(task.id, instigator);

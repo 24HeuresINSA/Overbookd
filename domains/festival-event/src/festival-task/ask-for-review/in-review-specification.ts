@@ -14,7 +14,10 @@ import { Draft, FestivalTask, InReview } from "../festival-task";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { DraftGeneral } from "../sections/general";
 
-type WithoutStatus<T extends FestivalTask> = Omit<T, "status">;
+type WithoutStatus<T extends FestivalTask> = Omit<
+  T,
+  "status" | "reviews" | "reviewer"
+>;
 
 const NO_SUPPLY_REQUEST_TASK_REVIEWS = {
   elec: NOT_ASKING_TO_REVIEW,
@@ -53,7 +56,11 @@ export class InReviewSpecification {
     ];
   }
 
-  static convert(task: WithoutStatus<InReview>, adherent: Adherent) {
+  static convert(
+    task: WithoutStatus<InReview>,
+    adherent: Adherent,
+    reviewer: Adherent,
+  ) {
     const readyToReview = FestivalTaskKeyEvents.readyToReview(adherent);
     const history = [...task.history, readyToReview];
 
@@ -61,7 +68,14 @@ export class InReviewSpecification {
       ? TASK_WITH_SUPPLY_REQUEST_REVIEWS
       : NO_SUPPLY_REQUEST_TASK_REVIEWS;
 
-    const inReview = { ...task, status: IN_REVIEW, history, reviews } as const;
+    const inReview = {
+      ...task,
+      status: IN_REVIEW,
+      history,
+      reviews,
+      reviewer,
+    } as const;
+
     return new InReviewSpecification(inReview);
   }
 
