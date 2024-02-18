@@ -2,6 +2,11 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { Team } from "~/utils/models/team.model";
 import { safeCall } from "~/utils/api/calls";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import {
+  requirableTeams,
+  requirableTeamsExtended,
+} from "@overbookd/festival-event";
 
 const teamRepo = RepoFactory.TeamRepository;
 
@@ -37,6 +42,15 @@ export const getters = getterTree(state, {
     (code: string): Team | undefined => {
       return getters.allTeams.find((t: Team) => t.code === code);
     },
+  mobilizableTeams(state, _getters, _rootState, rootGetters): Team[] {
+    const mobilizableTeams = rootGetters["user/can"](AFFECT_VOLUNTEER)
+      ? requirableTeamsExtended
+      : requirableTeams;
+
+    return state.teams.filter((team) =>
+      mobilizableTeams.some((t) => t === team.code),
+    );
+  },
 });
 
 export const mutations = mutationTree(state, {

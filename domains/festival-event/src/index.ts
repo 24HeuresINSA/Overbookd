@@ -221,6 +221,10 @@ export type {
   FestivalTaskLink,
   VolunteerWithConflicts,
 } from "./festival-task/sections/mobilizations";
+export {
+  requirableTeams,
+  requirableTeamsExtended,
+} from "./festival-task/sections/mobilizations";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event";
 export type {
   VolunteerConflicts,

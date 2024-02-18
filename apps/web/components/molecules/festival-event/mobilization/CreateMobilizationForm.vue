@@ -69,7 +69,7 @@
           label="Nombre de bénévoles"
           :rules="[rules.number, rules.min]"
         />
-        <SearchTeam v-model="teamToAdd" :list="addableTeams" hide-details />
+        <SearchTeam v-model="teamToAdd" :list="selectableTeams" hide-details />
         <v-btn class="mobilization-card__form-btn" rounded @click="addTeam">
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -171,8 +171,8 @@ export default defineComponent({
         (volunteer) => !this.volunteers.some((v) => v.id === volunteer.id),
       );
     },
-    addableTeams(): Team[] {
-      return this.$accessor.team.teams.filter(
+    selectableTeams(): Team[] {
+      return this.$accessor.team.mobilizableTeams.filter(
         (team) => !this.teams.some((t) => t.team === team.code),
       );
     },
