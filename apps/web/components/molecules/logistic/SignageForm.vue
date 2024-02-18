@@ -121,29 +121,42 @@ export default Vue.extend({
         type: this.type,
       };
 
-      let newSigna;
-
-      if (this.signage.id) {
-        newSigna = await this.$accessor.catalogSignage.updateSignage({
-            ...signage,
-            id: this.signage.id,
-          });
-      } else {
-        newSigna = await this.$accessor.catalogSignage.createSignage(signage);
-      }
-
-      if (this.image) {
-        const signaImageForm = new FormData();
-        signaImageForm.append("file", this.image, this.image.name);
-        this.$accessor.catalogSignage.uploadSignageImage({
-          signageId: this.signage.id || newSigna.id,
-          signageImage: signaImageForm,
-        });
+      try {
+      await this.upsertSignage(signage);
+        if (this.image) {
+          await this.updateImage(this.image);
+        }
+        this.closeDialog();
+        this.name = "";
+        this.type = signageTypes.AFFICHE;
+      } catch (error) {
+        console.error(error);
       }
 
       this.closeDialog();
       this.name = "";
       this.type = signageTypes.AFFICHE;
+    },
+
+    upsertSignage(signage: SignageForm) {
+      if (this.signage.id) {
+       return this.$accessor.catalogSignage.updateSignage({
+          ...signage,
+          id: this.signage.id,
+        });
+      }
+      return this.$accessor.catalogSignage.createSignage(signage);
+    
+    },
+
+
+    updateImage (image: File) {
+      const signaImageForm = new FormData();
+      signaImageForm.append("file", image, image.name);
+      return this.$accessor.catalogSignage.uploadSignageImage({
+        signageId: this.signage.id,
+        signageImage: signaImageForm,
+      });
     },
     closeDialog(): void {
       this.$emit("close-dialog");
