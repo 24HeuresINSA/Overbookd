@@ -111,6 +111,12 @@ const justDanceInstaller = {
   firstname: "Just",
 };
 
+const justDanceGuard = {
+  id: 4,
+  lastname: "Dance",
+  firstname: "Just",
+};
+
 const justDanceInstallerContact: Contact = {
   ...justDanceInstaller,
   phone: "0603040506",
@@ -125,6 +131,11 @@ const justDanceInstallerBis = {
 const justDanceInstallerBisContact: Contact = {
   ...justDanceInstallerBis,
   phone: "0604050607",
+};
+
+const justDanceGuardContact: Contact = {
+  ...justDanceGuard,
+  phone: "0605060708",
 };
 
 const friday10h: BuildTimeWindow = {
@@ -371,6 +382,31 @@ export const installJustDance = factory
   ])
   .build();
 
+export const guardJustDance = factory
+  .inReview("Guard Just Dance")
+  .withGeneral({ team: "plaizir" })
+  .withFestivalActivity(justDance)
+  .withInstructions({
+    appointment: mdeHall,
+    contacts: [justDanceGuardContact],
+    global: "Install just dance",
+  })
+  .withMobilizations([
+    MobilizationBuilder.init({
+      start: friday11h,
+      end: friday18h,
+      volunteers: [],
+      teams: [{ count: 2, team: "bénévole" }],
+    }).mobilization,
+    MobilizationBuilder.init({
+      start: saturday11h,
+      end: saturday18h,
+      volunteers: [],
+      teams: [{ count: 2, team: "bénévole" }],
+    }).mobilization,
+  ])
+  .build();
+
 const preventionVillage: FestivalActivity = {
   id: 3,
   name: "Prevention Village",
@@ -564,4 +600,3 @@ export const withSomeMobilizationsWithoutRequest = factory
     MobilizationBuilder.init({ start: friday11h, end: friday18h }).mobilization,
   ])
   .build();
-withSomeMobilizationsWithoutRequest;

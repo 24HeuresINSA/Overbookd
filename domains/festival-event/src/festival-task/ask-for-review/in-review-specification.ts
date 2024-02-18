@@ -88,14 +88,14 @@ export class InReviewSpecification {
   }
 }
 
-class GeneralSpecification {
+export class GeneralSpecification {
   static isSatisfiedBy(
     general: Draft["general"],
   ): general is InReview["general"] {
     return this.hasTeam(general);
   }
 
-  static generateErrors(general: Draft["general"]): string[] {
+  static generateErrors(general: FestivalTask["general"]): string[] {
     const hasNotTeam = !this.hasTeam(general);
     return hasNotTeam ? [this.teamIsMandatory] : [];
   }
@@ -161,7 +161,7 @@ class MobilizationsSpecification {
   }
 }
 
-class InstructionsSpecification {
+export class InstructionsSpecification {
   static isSatisfiedBy(
     instructions: Draft["instructions"],
   ): instructions is InReview["instructions"] {

@@ -1,15 +1,23 @@
 import { numberGenerator } from "@overbookd/list";
-import { DRAFT, VALIDATED } from "../common/status";
+import { DRAFT, IN_REVIEW, VALIDATED } from "../common/status";
 import { isKeyOf } from "../is-key-of";
-import { Draft, FestivalActivity, FestivalTask } from "./festival-task";
+import {
+  Draft,
+  FestivalActivity,
+  FestivalTask,
+  InReview,
+} from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
   deuxTables,
   friday10hfriday19h,
   friday11hfriday18h,
   humaGrass,
+  lea,
   noel,
+  noelContact,
 } from "./festival-task.test-util";
+import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 
 type FestivalTaskSection =
   | FestivalTask["general"]
@@ -22,6 +30,12 @@ class FestivalTaskFactory {
   draft(name: string): FestivalTaskBuilder<Draft> {
     const id = this.idGenerator.next().value;
     const task = defaultDraft(id, name);
+    return FestivalTaskBuilder.init(task);
+  }
+
+  inReview(name: string): FestivalTaskBuilder<InReview> {
+    const id = this.idGenerator.next().value;
+    const task = defaultInReview(id, name);
     return FestivalTaskBuilder.init(task);
   }
 }
@@ -122,6 +136,38 @@ function defaultDraft(id: number, name: string): Draft {
     feedbacks: [],
     inquiries: [],
     mobilizations: [],
+  };
+}
+
+function defaultInReview(id: number, name: string): InReview {
+  return {
+    id,
+    status: IN_REVIEW,
+    general: {
+      name,
+      administrator: noel,
+      team: "plaizir",
+    },
+    festivalActivity: defaultActivity(name),
+    instructions: {
+      appointment: humaGrass,
+      contacts: [noelContact],
+      global: "Des instructions globales",
+      inCharge: {
+        instruction: null,
+        volunteers: [],
+      },
+    },
+    history: [FestivalTaskKeyEvents.created(noel)],
+    feedbacks: [],
+    inquiries: [],
+    mobilizations: [],
+    reviews: {
+      humain: REVIEWING,
+      matos: REVIEWING,
+      elec: NOT_ASKING_TO_REVIEW,
+    },
+    reviewer: lea,
   };
 }
 

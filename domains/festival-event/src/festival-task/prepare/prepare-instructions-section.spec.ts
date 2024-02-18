@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  guardJustDance,
   humaGrass,
   installEscapeGame,
   lea,
@@ -18,7 +19,12 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
+    const tasks = [
+      installEscapeGame,
+      uninstallEscapeGame,
+      presentEscapeGame,
+      guardJustDance,
+    ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
@@ -35,6 +41,8 @@ describe("Prepare festival task instructions section", () => {
     ${"global and inCharge"}              | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ inCharge: null, global: null }}                                                                                     | ${presentEscapeGame.instructions.appointment} | ${null}                                    | ${null}
     ${"global and inCharge"}              | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ inCharge: "Some instruction for in charge only", global: "Some instruction for everyone" }}                         | ${presentEscapeGame.instructions.appointment} | ${"Some instruction for everyone"}         | ${"Some instruction for in charge only"}
     ${"global, inCharge and appointment"} | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ inCharge: "Some instruction for in charge only", global: "Some instruction for everyone", appointment: humaGrass }} | ${humaGrass}                                  | ${"Some instruction for everyone"}         | ${"Some instruction for in charge only"}
+    ${"global"}                           | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ global: "Some instruction for everyone" }}                                                                          | ${guardJustDance.instructions.appointment}    | ${"Some instruction for everyone"}         | ${guardJustDance.instructions.inCharge.instruction}
+    ${"global and appointment"}           | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ global: "Some instruction for everyone", appointment: humaGrass }}                                                  | ${humaGrass}                                  | ${"Some instruction for everyone"}         | ${guardJustDance.instructions.inCharge.instruction}
   `(
     "when updating $fields from $taskName",
     ({ fields, taskId, update, appointment, global, inCharge }) => {
@@ -47,6 +55,21 @@ describe("Prepare festival task instructions section", () => {
         expect(instructions.appointment).toBe(appointment);
         expect(instructions.global).toStrictEqual(global);
         expect(instructions.inCharge.instruction).toBe(inCharge);
+      });
+    },
+  );
+  describe.each`
+    task              | update                               | expectedError
+    ${guardJustDance} | ${{ global: null }}                  | ${"Des instructions sont nécessaires"}
+    ${guardJustDance} | ${{ inCharge: "Some instructions" }} | ${"Des responsables sont nécessaires pour les instructions spécifiques"}
+    ${guardJustDance} | ${{ appointment: null }}             | ${"Un lieu de rendez-vous est nécessaire"}
+  `(
+    "when trying to clear mandatory field of an in review task",
+    ({ task, update, expectedError }) => {
+      it("should indicate the mandatory field is required", async () => {
+        expect(
+          async () => await prepare.updateInstructionsSection(task.id, update),
+        ).rejects.toThrow(expectedError);
       });
     },
   );
