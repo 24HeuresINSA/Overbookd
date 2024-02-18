@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  george,
+  guardJustDance,
   humaGrass,
   installEscapeGame,
   lea,
@@ -7,6 +9,7 @@ import {
   noel,
   noelContact,
   presentEscapeGame,
+  serveWaterOnJustDance,
   uninstallEscapeGame,
 } from "../festival-task.test-util";
 import { PrepareFestivalTask } from "./prepare";
@@ -18,23 +21,32 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
+    const tasks = [
+      installEscapeGame,
+      uninstallEscapeGame,
+      presentEscapeGame,
+      guardJustDance,
+      serveWaterOnJustDance,
+    ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe.each`
-    fields                                | taskName                            | taskId                    | update                                                                                                                  | appointment                                   | global                                     | inCharge
-    ${"appointment"}                      | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ appointment: humaGrass }}                                                                                           | ${humaGrass}                                  | ${installEscapeGame.instructions.global}   | ${installEscapeGame.instructions.inCharge.instruction}
-    ${"appointment"}                      | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ appointment: null }}                                                                                                | ${null}                                       | ${uninstallEscapeGame.instructions.global} | ${uninstallEscapeGame.instructions.inCharge.instruction}
-    ${"global"}                           | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ global: "Some instruction for everyone" }}                                                                          | ${installEscapeGame.instructions.appointment} | ${"Some instruction for everyone"}         | ${installEscapeGame.instructions.inCharge.instruction}
-    ${"global"}                           | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ global: null }}                                                                                                     | ${presentEscapeGame.instructions.appointment} | ${null}                                    | ${presentEscapeGame.instructions.inCharge.instruction}
-    ${"inCharge"}                         | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ inCharge: "Some instruction for incharge only" }}                                                                   | ${installEscapeGame.instructions.appointment} | ${installEscapeGame.instructions.global}   | ${"Some instruction for incharge only"}
-    ${"inCharge"}                         | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ inCharge: null }}                                                                                                   | ${presentEscapeGame.instructions.appointment} | ${presentEscapeGame.instructions.global}   | ${null}
-    ${"global and inCharge"}              | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ inCharge: null, global: null }}                                                                                     | ${presentEscapeGame.instructions.appointment} | ${null}                                    | ${null}
-    ${"global and inCharge"}              | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ inCharge: "Some instruction for in charge only", global: "Some instruction for everyone" }}                         | ${presentEscapeGame.instructions.appointment} | ${"Some instruction for everyone"}         | ${"Some instruction for in charge only"}
-    ${"global, inCharge and appointment"} | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ inCharge: "Some instruction for in charge only", global: "Some instruction for everyone", appointment: humaGrass }} | ${humaGrass}                                  | ${"Some instruction for everyone"}         | ${"Some instruction for in charge only"}
+    fields                                | taskName                              | taskId                      | update                                                                                                                  | appointment                                       | global                                       | inCharge
+    ${"appointment"}                      | ${installEscapeGame.general.name}     | ${installEscapeGame.id}     | ${{ appointment: humaGrass }}                                                                                           | ${humaGrass}                                      | ${installEscapeGame.instructions.global}     | ${installEscapeGame.instructions.inCharge.instruction}
+    ${"appointment"}                      | ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame.id}   | ${{ appointment: null }}                                                                                                | ${null}                                           | ${uninstallEscapeGame.instructions.global}   | ${uninstallEscapeGame.instructions.inCharge.instruction}
+    ${"global"}                           | ${installEscapeGame.general.name}     | ${installEscapeGame.id}     | ${{ global: "Some instruction for everyone" }}                                                                          | ${installEscapeGame.instructions.appointment}     | ${"Some instruction for everyone"}           | ${installEscapeGame.instructions.inCharge.instruction}
+    ${"global"}                           | ${presentEscapeGame.general.name}     | ${presentEscapeGame.id}     | ${{ global: null }}                                                                                                     | ${presentEscapeGame.instructions.appointment}     | ${null}                                      | ${presentEscapeGame.instructions.inCharge.instruction}
+    ${"inCharge"}                         | ${installEscapeGame.general.name}     | ${installEscapeGame.id}     | ${{ inCharge: "Some instruction for incharge only" }}                                                                   | ${installEscapeGame.instructions.appointment}     | ${installEscapeGame.instructions.global}     | ${"Some instruction for incharge only"}
+    ${"inCharge"}                         | ${presentEscapeGame.general.name}     | ${presentEscapeGame.id}     | ${{ inCharge: null }}                                                                                                   | ${presentEscapeGame.instructions.appointment}     | ${presentEscapeGame.instructions.global}     | ${null}
+    ${"global and inCharge"}              | ${presentEscapeGame.general.name}     | ${presentEscapeGame.id}     | ${{ inCharge: null, global: null }}                                                                                     | ${presentEscapeGame.instructions.appointment}     | ${null}                                      | ${null}
+    ${"global and inCharge"}              | ${installEscapeGame.general.name}     | ${installEscapeGame.id}     | ${{ inCharge: "Some instruction for in charge only", global: "Some instruction for everyone" }}                         | ${presentEscapeGame.instructions.appointment}     | ${"Some instruction for everyone"}           | ${"Some instruction for in charge only"}
+    ${"global, inCharge and appointment"} | ${installEscapeGame.general.name}     | ${installEscapeGame.id}     | ${{ inCharge: "Some instruction for in charge only", global: "Some instruction for everyone", appointment: humaGrass }} | ${humaGrass}                                      | ${"Some instruction for everyone"}           | ${"Some instruction for in charge only"}
+    ${"global"}                           | ${guardJustDance.general.name}        | ${guardJustDance.id}        | ${{ global: "Some instruction for everyone" }}                                                                          | ${guardJustDance.instructions.appointment}        | ${"Some instruction for everyone"}           | ${guardJustDance.instructions.inCharge.instruction}
+    ${"global and appointment"}           | ${guardJustDance.general.name}        | ${guardJustDance.id}        | ${{ global: "Some instruction for everyone", appointment: humaGrass }}                                                  | ${humaGrass}                                      | ${"Some instruction for everyone"}           | ${guardJustDance.instructions.inCharge.instruction}
+    ${"inCharge"}                         | ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.id} | ${{ inCharge: "Il faut aller chercher l'eau dans les toilettes" }}                                                      | ${serveWaterOnJustDance.instructions.appointment} | ${serveWaterOnJustDance.instructions.global} | ${"Il faut aller chercher l'eau dans les toilettes"}
   `(
     "when updating $fields from $taskName",
     ({ fields, taskId, update, appointment, global, inCharge }) => {
@@ -47,6 +59,21 @@ describe("Prepare festival task instructions section", () => {
         expect(instructions.appointment).toBe(appointment);
         expect(instructions.global).toStrictEqual(global);
         expect(instructions.inCharge.instruction).toBe(inCharge);
+      });
+    },
+  );
+  describe.each`
+    task              | update                               | expectedError
+    ${guardJustDance} | ${{ global: null }}                  | ${"Des instructions sont nécessaires"}
+    ${guardJustDance} | ${{ inCharge: "Some instructions" }} | ${"Des responsables sont nécessaires pour les instructions spécifiques"}
+    ${guardJustDance} | ${{ appointment: null }}             | ${"Un lieu de rendez-vous est nécessaire"}
+  `(
+    "when trying to clear mandatory field of an in review task",
+    ({ task, update, expectedError }) => {
+      it("should indicate the mandatory field is required", async () => {
+        expect(
+          async () => await prepare.updateInstructionsSection(task.id, update),
+        ).rejects.toThrow(expectedError);
       });
     },
   );
@@ -80,9 +107,11 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Add contacts", () => {
     describe.each`
-      taskName                          | task                 | contact
-      ${installEscapeGame.general.name} | ${installEscapeGame} | ${noelContact}
-      ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${leaContact}
+      taskName                              | task                     | contact
+      ${installEscapeGame.general.name}     | ${installEscapeGame}     | ${noelContact}
+      ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${leaContact}
+      ${guardJustDance.general.name}        | ${guardJustDance}        | ${leaContact}
+      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${leaContact}
     `("when a new contact is added to $taskName", ({ task, contact }) => {
       it("add contact to contacts list", async () => {
         const { instructions } = await prepare.addContact(task.id, contact);
@@ -106,10 +135,12 @@ describe("Prepare festival task instructions section", () => {
   });
 
   describe("Remove contact", () => {
-    describe("when removing a known contact", () => {
+    describe.each`
+      taskName                              | task                     | contactId
+      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}   | ${noelContact.id}
+      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${noelContact.id}
+    `("when removing a known contact on $taskName", ({ task, contactId }) => {
       it("should remove it from contacts list", async () => {
-        const task = uninstallEscapeGame;
-        const contactId = noelContact.id;
         const expectedLength = task.instructions.contacts.length - 1;
 
         const { instructions } = await prepare.removeContact(
@@ -137,14 +168,15 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Add in charge volunteers", () => {
     describe.each`
-      taskName                            | task                   | volunteer
-      ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame} | ${noel}
-      ${presentEscapeGame.general.name}   | ${presentEscapeGame}   | ${lea}
+      taskName                              | task                     | volunteer
+      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}   | ${noel}
+      ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${lea}
+      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${lea}
     `(
       "when a new in charge volunteer is added to $taskName",
       ({ task, volunteer }) => {
         it("should add vounteer to in charge volunteers list", async () => {
-          const { instructions } = await prepare.addInchargeVolunteer(
+          const { instructions } = await prepare.addInChargeVolunteer(
             task.id,
             volunteer,
           );
@@ -159,7 +191,7 @@ describe("Prepare festival task instructions section", () => {
       it("should keep in charge voulunteers list unchanged", async () => {
         const volunteer = lea;
         const task = uninstallEscapeGame;
-        const { instructions } = await prepare.addInchargeVolunteer(
+        const { instructions } = await prepare.addInChargeVolunteer(
           task.id,
           volunteer,
         );
@@ -168,29 +200,45 @@ describe("Prepare festival task instructions section", () => {
         );
       });
     });
+    describe("when task is under review and doesn't have in charge instructions", () => {
+      it("should indicate instructions are also required", async () => {
+        expect(
+          async () =>
+            await prepare.addInChargeVolunteer(guardJustDance.id, noelContact),
+        ).rejects.toThrow(
+          "Des instructions spécifiques sont nécessaires pour les responsables",
+        );
+      });
+    });
   });
 
   describe("Remove in charge volunteers", () => {
-    describe("when removing a known volunteer", () => {
-      it("should remove it from volunteers list", async () => {
-        const volunteerId = lea.id;
-        const task = uninstallEscapeGame;
-        const expectedLength = task.instructions.inCharge.volunteers.length - 1;
+    describe.each`
+      taskName                              | task                     | volunteerId
+      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}   | ${lea.id}
+      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${george.id}
+    `(
+      "when removing a known volunteer on $taskName",
+      ({ task, volunteerId }) => {
+        it("should remove it from volunteers list", async () => {
+          const expectedLength =
+            task.instructions.inCharge.volunteers.length - 1;
 
-        const { instructions } = await prepare.removeInchargeVolunteer(
-          task.id,
-          volunteerId,
-        );
+          const { instructions } = await prepare.removeInChargeVolunteer(
+            task.id,
+            volunteerId,
+          );
 
-        expect(instructions.inCharge.volunteers).toHaveLength(expectedLength);
-      });
-    });
+          expect(instructions.inCharge.volunteers).toHaveLength(expectedLength);
+        });
+      },
+    );
     describe("when removing an unknown volunteer", () => {
       it("should keep in charge volunteers list unchanged", async () => {
         const volunteerId = -1;
         const task = uninstallEscapeGame;
 
-        const { instructions } = await prepare.removeInchargeVolunteer(
+        const { instructions } = await prepare.removeInChargeVolunteer(
           task.id,
           volunteerId,
         );
@@ -201,11 +249,17 @@ describe("Prepare festival task instructions section", () => {
   });
 
   describe("Clear in charge", () => {
-    it("should clear in charge instructions section", async () => {
-      const task = uninstallEscapeGame;
-      const { instructions } = await prepare.clearIncharge(task.id);
-      expect(instructions.inCharge.volunteers).toHaveLength(0);
-      expect(instructions.inCharge.instruction).toBe(null);
-    });
+    it.each`
+      taskName                              | task
+      ${uninstallEscapeGame.general.name}   | ${uninstallEscapeGame}
+      ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance}
+    `(
+      "should clear $taskName in charge instructions section",
+      async ({ task }) => {
+        const { instructions } = await prepare.clearInCharge(task.id);
+        expect(instructions.inCharge.volunteers).toHaveLength(0);
+        expect(instructions.inCharge.instruction).toBe(null);
+      },
+    );
   });
 });

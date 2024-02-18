@@ -1,8 +1,8 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import {
-  WithConflicts,
   VolunteerAvailabilities,
   VolunteerConflicts,
+  WithConflicts,
 } from "./volunteer-conflicts";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts, FestivalTaskLink } from "./sections/mobilizations";

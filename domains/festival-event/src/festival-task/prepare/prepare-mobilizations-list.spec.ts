@@ -4,10 +4,6 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
 import {
-  TeamMobilization,
-  VolunteerMobilization,
-} from "../sections/mobilizations";
-import {
   MobilizationAlreadyExist,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
@@ -36,6 +32,9 @@ import {
   saturday8h,
   leaAvailabilities,
   noelAvailabilities,
+  guardJustDance,
+  serveWaterOnJustDance,
+  george,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
@@ -47,6 +46,8 @@ describe("Prepare festival task mobilizations list", () => {
       uninstallEscapeGame,
       presentEscapeGame,
       guardEscapeGame,
+      guardJustDance,
+      serveWaterOnJustDance,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
@@ -65,6 +66,9 @@ describe("Prepare festival task mobilizations list", () => {
         ${"with team and volunteer"}    | ${installEscapeGame} | ${friday11hfriday18hMobilization.form}     | ${friday11hfriday18hMobilization.mobilization}
         ${"with team only"}             | ${installEscapeGame} | ${friday10hfriday18hMobilization.form}     | ${friday10hfriday18hMobilization.mobilization}
         ${"with volunteer only"}        | ${installEscapeGame} | ${saturday18hsaturday19hMobilization.form} | ${saturday18hsaturday19hMobilization.mobilization}
+        ${"with team and volunteer"}    | ${guardJustDance}    | ${friday11hfriday18hMobilization.form}     | ${friday11hfriday18hMobilization.mobilization}
+        ${"with team only"}             | ${guardJustDance}    | ${friday10hfriday18hMobilization.form}     | ${friday10hfriday18hMobilization.mobilization}
+        ${"with volunteer only"}        | ${guardJustDance}    | ${saturday18hsaturday19hMobilization.form} | ${saturday18hsaturday19hMobilization.mobilization}
       `(
         "should add mobilization $explaination to mobilizations list",
         async ({ task, form, expectedMobilization }) => {
@@ -76,6 +80,18 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
+
+      describe("when task is under review and mobilization has not volunteer nor team requested", () => {
+        it("should indicate a mobilization should have at least one volunteer or team", async () => {
+          const task = guardJustDance;
+          const form = friday18hsaturday10hMobilization.form;
+          expect(
+            async () => await prepare.addMobilization(task.id, form),
+          ).rejects.toThrow(
+            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+          );
+        });
+      });
 
       describe.each`
         indication                       | task                 | start          | end
@@ -177,7 +193,6 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
     });
-
     describe("with split duration that is not period divider", () => {
       describe("when trying to add this as mobilization", () => {
         it("should indicate that split duration doesn't match period duration", async () => {
@@ -220,18 +235,33 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Remove mobilization", () => {
     describe("when removing an existing mobilization", () => {
-      it("should remove it from mobilizations list", async () => {
-        const task = presentEscapeGame;
-        const mobilization = task.mobilizations[0];
-        const expectedLength = task.mobilizations.length - 1;
+      it.each`
+        taskName                              | task                     | mobilization
+        ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${presentEscapeGame.mobilizations[0]}
+        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[0]}
+      `(
+        "should remove it from $taskName mobilizations list",
+        async ({ task, mobilization }) => {
+          const expectedLength = task.mobilizations.length - 1;
 
-        const { mobilizations } = await prepare.removeMobilization(
-          task.id,
-          mobilization.id,
-        );
+          const { mobilizations } = await prepare.removeMobilization(
+            task.id,
+            mobilization.id,
+          );
 
-        expect(mobilizations).toHaveLength(expectedLength);
-        expect(mobilizations).not.toContainEqual(mobilization);
+          expect(mobilizations).toHaveLength(expectedLength);
+          expect(mobilizations).not.toContainEqual(mobilization);
+        },
+      );
+      describe("when removing the last mobilization of an under review task", () => {
+        it("should indicate that at least one mobilization is mandatory", async () => {
+          const task = guardJustDance;
+          const mobilization = guardJustDance.mobilizations[0];
+          expect(
+            async () =>
+              await prepare.removeMobilization(task.id, mobilization.id),
+          ).rejects.toThrow("Au moins une mobilisation est nécessaire");
+        });
       });
     });
     describe("when removing an unexisting mobilization", () => {
@@ -257,6 +287,7 @@ describe("Prepare festival task mobilizations list", () => {
         ${["start"]}                                | ${presentEscapeGame} | ${{ start: saturday10h.date }}                                                | ${presentEscapeGame.mobilizations[0]} | ${{ ...presentEscapeGame.mobilizations[0], start: saturday10h.date, id: "28600320-28600800" }}
         ${["start", "durationSplitInHours"]}        | ${presentEscapeGame} | ${{ start: saturday10h.date, durationSplitInHour: 1 }}                        | ${presentEscapeGame.mobilizations[0]} | ${{ ...presentEscapeGame.mobilizations[0], start: saturday10h.date, id: "28600320-28600800", durationSplitInHour: 1 }}
         ${["start", "end", "durationSplitInHours"]} | ${presentEscapeGame} | ${{ start: saturday10h.date, durationSplitInHour: 3, end: saturday19h.date }} | ${presentEscapeGame.mobilizations[0]} | ${{ ...presentEscapeGame.mobilizations[0], start: saturday10h.date, end: saturday19h.date, id: "28600320-28600860", durationSplitInHour: 3 }}
+        ${["durationSplitInHours"]}                 | ${guardJustDance}    | ${{ durationSplitInHour: 1 }}                                                 | ${guardJustDance.mobilizations[0]}    | ${{ ...guardJustDance.mobilizations[0], durationSplitInHour: 1 }}
       `(
         "when updating $fields with valid data",
         ({
@@ -332,23 +363,26 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Add team to existing mobilization", () => {
     describe("when team is not yet part of the mobilization", () => {
-      it("should add team to the mobilization", async () => {
-        const task = presentEscapeGame;
-        const mobilization = presentEscapeGame.mobilizations[0];
-        const team = { team: "hard", count: 2 };
+      it.each`
+        taskName                          | task                 | mobilization                          | team
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: "hard", count: 2 }}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: "hard", count: 2 }}
+      `(
+        "should add team to $taskName mobilization",
+        async ({ task, mobilization, team }) => {
+          const { mobilizations } = await prepare.addTeamToMobilization(
+            task.id,
+            mobilization.id,
+            team,
+          );
 
-        const { mobilizations } = await prepare.addTeamToMobilization(
-          task.id,
-          mobilization.id,
-          team,
-        );
-
-        const mergedMobilization = {
-          ...mobilization,
-          teams: [...mobilization.teams, team],
-        };
-        expect(mobilizations).toContainEqual(mergedMobilization);
-      });
+          const mergedMobilization = {
+            ...mobilization,
+            teams: [...mobilization.teams, team],
+          };
+          expect(mobilizations).toContainEqual(mergedMobilization);
+        },
+      );
     });
     describe("when team is already part of the mobilization", () => {
       it("should indicate that team is already part of the mobilization", async () => {
@@ -365,20 +399,42 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Remove team from existing mobilization", () => {
     describe("when team is part of the mobilization", () => {
-      it("should remove it from mobilization teams list mobilization", async () => {
-        const task = presentEscapeGame;
-        const mobilization = presentEscapeGame.mobilizations[0];
-        const teams: TeamMobilization[] = [];
-        const team = "bénévole";
+      it.each`
+        taskName                          | task                 | mobilization                          | team          | expectedTeams
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${"bénévole"} | ${[]}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${"bénévole"} | ${[{ team: "confiance", count: 1 }]}
+      `(
+        "should remove it from $taskName mobilization teams list mobilization",
+        async ({ task, mobilization, team, expectedTeams }) => {
+          const { mobilizations } = await prepare.removeTeamFromMobilization(
+            task.id,
+            mobilization.id,
+            team,
+          );
 
-        const { mobilizations } = await prepare.removeTeamFromMobilization(
-          task.id,
-          mobilization.id,
-          team,
-        );
-
-        const expectedMobilization = { ...mobilization, teams };
-        expect(mobilizations).toContainEqual(expectedMobilization);
+          const expectedMobilization = {
+            ...mobilization,
+            teams: expectedTeams,
+          };
+          expect(mobilizations).toContainEqual(expectedMobilization);
+        },
+      );
+      describe("when removing the last team of an under review task", () => {
+        it("should indicate that at least one team or one volunteer is mandatory", async () => {
+          const task = serveWaterOnJustDance;
+          const mobilization = serveWaterOnJustDance.mobilizations[0];
+          const team = "bénévole";
+          expect(
+            async () =>
+              await prepare.removeTeamFromMobilization(
+                task.id,
+                mobilization.id,
+                team,
+              ),
+          ).rejects.toThrow(
+            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+          );
+        });
       });
     });
     describe("when team is not part of the mobilization", () => {
@@ -399,31 +455,28 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Add volunteer to existing mobilization", () => {
     describe("when volunteer is not yet part of the mobilization", () => {
-      it("should add volunteer to the mobilization", async () => {
-        const task = presentEscapeGame;
-        const mobilization = presentEscapeGame.mobilizations[0];
-        const volunteer: VolunteerMobilization = {
-          firstname: "Georges",
-          lastname: "Hette",
-          nickname: "gh",
-          id: 100,
-          conflicts: { tasks: [], availability: true },
-        };
+      it.each`
+        taskName                          | task                 | mobilization                          | volunteer
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ ...george, conflicts: { tasks: [], availability: true } }}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ ...george, conflicts: { tasks: [], availability: true } }}
+      `(
+        "should add volunteer to $taskName mobilization",
+        async ({ task, mobilization, volunteer }) => {
+          const { mobilizations } = await prepare.addVolunteerToMobilization(
+            task.id,
+            mobilization.id,
+            volunteer,
+          );
 
-        const { mobilizations } = await prepare.addVolunteerToMobilization(
-          task.id,
-          mobilization.id,
-          volunteer,
-        );
-
-        const mergedMobilization = {
-          ...mobilization,
-          volunteers: [...mobilization.volunteers, volunteer],
-        };
-        expect(mobilizations).toContainEqual(mergedMobilization);
-      });
+          const mergedMobilization = {
+            ...mobilization,
+            volunteers: [...mobilization.volunteers, volunteer],
+          };
+          expect(mobilizations).toContainEqual(mergedMobilization);
+        },
+      );
     });
-    describe("when volunteer is alredy part of the mobilization", () => {
+    describe("when volunteer is already part of the mobilization", () => {
       it("should keep mobilization unchanged", async () => {
         const task = presentEscapeGame;
         const mobilization = presentEscapeGame.mobilizations[0];
@@ -440,19 +493,39 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Remove volunteer from existing mobilization", () => {
     describe("when volunteer is part of the mobilization", () => {
-      it("should remove it from mobilization volunteers list", async () => {
-        const task = presentEscapeGame;
-        const mobilization = task.mobilizations[0];
-        const volunteerId = noel.id;
-        const expectedMobilization = { ...mobilization, volunteers: [] };
+      it.each`
+        taskName                              | task                     | mobilization                              | volunteerId | expectedMobilization
+        ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${presentEscapeGame.mobilizations[0]}     | ${noel.id}  | ${{ ...presentEscapeGame.mobilizations[0], volunteers: [] }}
+        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[1]} | ${noel.id}  | ${{ ...serveWaterOnJustDance.mobilizations[1], volunteers: [{ ...george, conflicts: { tasks: [], availability: true } }] }}
+      `(
+        "should remove it from $taskName mobilization volunteers list",
+        async ({ task, mobilization, volunteerId, expectedMobilization }) => {
+          const { mobilizations } =
+            await prepare.removeVolunteerFromMobilization(
+              task.id,
+              mobilization.id,
+              volunteerId,
+            );
 
-        const { mobilizations } = await prepare.removeVolunteerFromMobilization(
-          task.id,
-          mobilization.id,
-          volunteerId,
-        );
-
-        expect(mobilizations).toContainEqual(expectedMobilization);
+          expect(mobilizations).toContainEqual(expectedMobilization);
+        },
+      );
+      describe("when removing the last volunteer of an under review task", () => {
+        it("should indicate that at least one volunteer or one team is mandatory", async () => {
+          const task = serveWaterOnJustDance;
+          const mobilization = serveWaterOnJustDance.mobilizations[2];
+          const volunteerId = george.id;
+          expect(
+            async () =>
+              await prepare.removeVolunteerFromMobilization(
+                task.id,
+                mobilization.id,
+                volunteerId,
+              ),
+          ).rejects.toThrow(
+            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+          );
+        });
       });
     });
     describe("when volunteer is not part of the mobilization", () => {

@@ -3,7 +3,7 @@ import {
   BaseInquiryRequest,
   InquiryRequest,
 } from "../../common/inquiry-request";
-import { FestivalTask, isDraft } from "../festival-task";
+import { FestivalTask } from "../festival-task";
 import { Volunteer } from "../sections/instructions";
 import { Contact } from "../sections/instructions";
 import { Mobilization, TeamMobilization } from "../sections/mobilizations";
@@ -13,11 +13,15 @@ import {
   GearAlreadyRequested,
 } from "../festival-task.error";
 import {
+  DraftWithoutConflicts,
   FestivalTaskTranslator,
+  InReviewWithoutConflicts,
+  WithConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
+import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -52,6 +56,21 @@ type PublishFeedback = {
   content: string;
 };
 
+class PrepareFestivalTaskError extends FestivalTaskError {
+  constructor(errors: string[]) {
+    const message = errors.map((error) => `❌ ${error}`).join("\n");
+    super(message);
+  }
+}
+
+type UpdatedTask<Properties extends keyof FestivalTask> =
+  | ({
+      [Property in Properties]: FestivalTask[Property];
+    } & Omit<DraftWithoutConflicts, Properties>)
+  | ({
+      [Property in Properties]: FestivalTask[Property];
+    } & Omit<InReviewWithoutConflicts, Properties>);
+
 export class PrepareFestivalTask {
   constructor(
     private readonly festivalTasks: FestivalTasksForPrepare,
@@ -61,105 +80,112 @@ export class PrepareFestivalTask {
   async updateGeneralSection(
     taskId: FestivalTask["id"],
     update: UpdateGeneral,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const general = { ...task.general, ...update };
-    return this.save({ ...task, general });
+    const updatedTask = checkValidity({ ...task, general });
+
+    return this.save(updatedTask);
   }
 
   async updateInstructionsSection(
     taskId: FestivalTask["id"],
     update: UpdateInstructions,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
   async addContact(
     taskId: FestivalTask["id"],
     contact: Contact,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addContact(contact).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
   async removeContact(
     taskId: FestivalTask["id"],
     contactId: Contact["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeContact(contactId).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
-  async addInchargeVolunteer(
+  async addInChargeVolunteer(
     taskId: FestivalTask["id"],
     volunteer: Volunteer,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
-  async removeInchargeVolunteer(
+  async removeInChargeVolunteer(
     taskId: FestivalTask["id"],
     volunteerId: Volunteer["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeVolunteer(volunteerId).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
-  async clearIncharge(taskId: FestivalTask["id"]): Promise<FestivalTask> {
+  async clearInCharge(taskId: FestivalTask["id"]): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.clear().json;
-    return this.save({ ...task, instructions });
+    const updatedTask = checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
   async addMobilization(
     taskId: FestivalTask["id"],
     mobilization: AddMobilization,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
-    const toSave = { ...task, mobilizations };
-    return this.save(toSave);
+    const updatedTask = checkValidity({ ...task, mobilizations });
+
+    return this.save(updatedTask);
   }
 
-  private async save(toSave: WithoutConflicts): Promise<FestivalTask> {
+  private async save(toSave: WithoutConflicts): Promise<WithConflicts> {
     const updated = await this.festivalTasks.save(toSave);
     return this.festivalTaskTranslator.translate(updated);
   }
@@ -167,100 +193,102 @@ export class PrepareFestivalTask {
   async removeMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.remove(mobilizationId).json;
-    return this.save({ ...task, mobilizations });
+    const updatedTask = checkValidity({ ...task, mobilizations });
+
+    return this.save(updatedTask);
   }
 
   async updateMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     update: UpdateMobilization,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.update(mobilizationId, update).json;
-    return this.save({ ...task, mobilizations });
+    const updatedTask = checkValidity({ ...task, mobilizations });
+
+    return this.save(updatedTask);
   }
 
   async addTeamToMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addTeamTo(mobilizationId, team).json;
+    const updatedTask = checkValidity({ ...task, mobilizations });
 
-    return this.save({ ...task, mobilizations });
+    return this.save(updatedTask);
   }
 
   async removeTeamFromMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization["team"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeTeamFrom(mobilizationId, team).json;
+    const updatedTask = checkValidity({ ...task, mobilizations });
 
-    return this.save({ ...task, mobilizations });
+    return this.save(updatedTask);
   }
 
   async addVolunteerToMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     volunteer: Volunteer,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addVolunteerTo(
       mobilizationId,
       volunteer,
     ).json;
+    const updatedTask = checkValidity({ ...task, mobilizations });
 
-    return this.save({ ...task, mobilizations });
+    return this.save(updatedTask);
   }
 
   async removeVolunteerFromMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     volunteerId: Volunteer["id"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeVolunteerFrom(
       mobilizationId,
       volunteerId,
     ).json;
+    const updatedTask = checkValidity({ ...task, mobilizations });
 
-    return this.save({ ...task, mobilizations });
+    return this.save(updatedTask);
   }
 
   async addInquiry(
     taskId: FestivalTask["id"],
     inquiry: BaseInquiryRequest,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -272,7 +300,7 @@ export class PrepareFestivalTask {
   async removeInquiry(
     taskId: FestivalTask["id"],
     slug: InquiryRequest["slug"],
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     const builder = Inquiries.build(task.inquiries);
@@ -284,7 +312,7 @@ export class PrepareFestivalTask {
   async publishFeedback(
     taskId: FestivalTask["id"],
     { author, content }: PublishFeedback,
-  ): Promise<FestivalTask> {
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
@@ -306,11 +334,13 @@ class Instructions {
     const inChargeBuilder = InCharge.build(this.instructions.inCharge);
     const updatedInCharge = inChargeBuilder.update(inCharge).json;
 
-    return new Instructions({
+    const instructions = {
       ...this.instructions,
       ...form,
       inCharge: updatedInCharge,
-    });
+    };
+
+    return new Instructions(instructions);
   }
 
   addContact(contact: Contact) {
@@ -478,5 +508,23 @@ class Inquiries {
 
   get json(): InquiryRequest[] {
     return [...this.inquiries];
+  }
+}
+
+function checkValidity<
+  T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
+>(task: T): FestivalTask {
+  switch (task.status) {
+    case "DRAFT":
+      return task;
+    case "IN_REVIEW": {
+      if (!InReviewSpecification.isSatisfiedBy(task)) {
+        const errors = InReviewSpecification.generateErrors(task);
+        throw new PrepareFestivalTaskError(errors);
+      }
+      return task;
+    }
+    default:
+      throw new FestivalTaskError("Pas encore supporté");
   }
 }
