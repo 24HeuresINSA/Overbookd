@@ -8,7 +8,10 @@ import { Location } from "../common/location";
 import { AddMobilization } from "./prepare/prepare";
 import { VolunteerAvailabilities } from "./volunteer-conflicts";
 import { getFactory } from "./festival-task.factory";
-import { saturday11hToSaturday18h } from "../festival-activity/festival-activity.fake";
+import {
+  george,
+  saturday11hToSaturday18h,
+} from "../festival-activity/festival-activity.fake";
 
 const factory = getFactory();
 
@@ -390,6 +393,35 @@ export const guardJustDance = factory
     appointment: mdeHall,
     contacts: [justDanceGuardContact],
     global: "Install just dance",
+  })
+  .withMobilizations([
+    MobilizationBuilder.init({
+      start: friday11h,
+      end: friday18h,
+      volunteers: [],
+      teams: [{ count: 2, team: "bénévole" }],
+    }).mobilization,
+    MobilizationBuilder.init({
+      start: saturday11h,
+      end: saturday18h,
+      volunteers: [],
+      teams: [{ count: 2, team: "bénévole" }],
+    }).mobilization,
+  ])
+  .build();
+
+export const serveWaterOnJustDance = factory
+  .inReview("Serve water during Just Dance")
+  .withGeneral({ team: "plaizir" })
+  .withFestivalActivity(justDance)
+  .withInstructions({
+    appointment: mdeHall,
+    contacts: [justDanceGuardContact, noelContact],
+    global: "Install just dance",
+    inCharge: {
+      volunteers: [noel, george],
+      instruction: "Some dedicated instruction",
+    },
   })
   .withMobilizations([
     MobilizationBuilder.init({

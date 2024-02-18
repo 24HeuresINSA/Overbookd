@@ -13,7 +13,9 @@ import {
   GearAlreadyRequested,
 } from "../festival-task.error";
 import {
+  DraftWithoutConflicts,
   FestivalTaskTranslator,
+  InReviewWithoutConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
@@ -23,7 +25,6 @@ import {
   InReviewSpecification,
   InstructionsSpecification,
 } from "../ask-for-review/in-review-specification";
-import { DRAFT, IN_REVIEW } from "../../common/status";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -65,6 +66,14 @@ class PrepareFestivalTaskError extends FestivalTaskError {
   }
 }
 
+type UpdatedTask<Properties extends keyof FestivalTask> =
+  | ({
+      [Property in Properties]: FestivalTask[Property];
+    } & Omit<DraftWithoutConflicts, Properties>)
+  | ({
+      [Property in Properties]: FestivalTask[Property];
+    } & Omit<InReviewWithoutConflicts, Properties>);
+
 export class PrepareFestivalTask {
   constructor(
     private readonly festivalTasks: FestivalTasksForPrepare,
@@ -78,22 +87,10 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    const general = { ...task.general, ...update };
-    const updatedTask = { ...task, general };
+    const general = General.build(task.general).update(update).json;
+    const updatedTask = General.checkValidity({ ...task, general });
 
-    switch (updatedTask.status) {
-      case DRAFT:
-        return this.save(updatedTask);
-      case IN_REVIEW: {
-        if (InReviewSpecification.isSatisfiedBy(updatedTask)) {
-          return this.save(updatedTask);
-        }
-        const errors = GeneralSpecification.generateErrors(general);
-        throw new PrepareFestivalTaskError(errors);
-      }
-      default:
-        throw new FestivalTaskError("Pas encore supporté");
-    }
+    return this.save(updatedTask);
   }
 
   async updateInstructionsSection(
@@ -105,21 +102,9 @@ export class PrepareFestivalTask {
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
-    const updatedTask = { ...task, instructions };
+    const updatedTask = Instructions.checkValidity({ ...task, instructions });
 
-    switch (updatedTask.status) {
-      case DRAFT:
-        return this.save(updatedTask);
-      case IN_REVIEW: {
-        if (InReviewSpecification.isSatisfiedBy(updatedTask)) {
-          return this.save(updatedTask);
-        }
-        const errors = InstructionsSpecification.generateErrors(instructions);
-        throw new PrepareFestivalTaskError(errors);
-      }
-      default:
-        throw new FestivalTaskError("Pas encore supporté");
-    }
+    return this.save(updatedTask);
   }
 
   async addContact(
@@ -128,11 +113,12 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addContact(contact).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = Instructions.checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
   async removeContact(
@@ -141,47 +127,51 @@ export class PrepareFestivalTask {
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeContact(contactId).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = Instructions.checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
-  async addInchargeVolunteer(
+  async addInChargeVolunteer(
     taskId: FestivalTask["id"],
     volunteer: Volunteer,
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = Instructions.checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
-  async removeInchargeVolunteer(
+  async removeInChargeVolunteer(
     taskId: FestivalTask["id"],
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeVolunteer(volunteerId).json;
-    return this.save({ ...task, instructions });
+    const updatedTask = Instructions.checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
   async clearIncharge(taskId: FestivalTask["id"]): Promise<FestivalTask> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!isDraft(task)) throw new FestivalTaskError("Pas encore supporté");
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.clear().json;
-    return this.save({ ...task, instructions });
+    const updatedTask = Instructions.checkValidity({ ...task, instructions });
+
+    return this.save(updatedTask);
   }
 
   async addMobilization(
@@ -333,6 +323,38 @@ export class PrepareFestivalTask {
   }
 }
 
+class General {
+  private constructor(private readonly general: FestivalTask["general"]) {}
+
+  static build(general: FestivalTask["general"]) {
+    return new General(general);
+  }
+
+  static checkValidity(task: UpdatedTask<"general">): FestivalTask {
+    switch (task.status) {
+      case "DRAFT":
+        return task;
+      case "IN_REVIEW": {
+        if (!InReviewSpecification.isSatisfiedBy(task)) {
+          const errors = GeneralSpecification.generateErrors(task.general);
+          throw new PrepareFestivalTaskError(errors);
+        }
+        return task;
+      }
+      default:
+        throw new FestivalTaskError("Pas encore supporté");
+    }
+  }
+
+  update(update: UpdateGeneral) {
+    return new General({ ...this.general, ...update });
+  }
+
+  get json(): FestivalTask["general"] {
+    return { ...this.general };
+  }
+}
+
 class Instructions {
   private constructor(
     private readonly instructions: FestivalTask["instructions"],
@@ -341,15 +363,35 @@ class Instructions {
     return new Instructions(instructions);
   }
 
+  static checkValidity(task: UpdatedTask<"instructions">): FestivalTask {
+    switch (task.status) {
+      case "DRAFT":
+        return task;
+      case "IN_REVIEW": {
+        if (!InReviewSpecification.isSatisfiedBy(task)) {
+          const errors = InstructionsSpecification.generateErrors(
+            task.instructions,
+          );
+          throw new PrepareFestivalTaskError(errors);
+        }
+        return task;
+      }
+      default:
+        throw new FestivalTaskError("Pas encore supporté");
+    }
+  }
+
   update({ inCharge, ...form }: UpdateInstructions) {
     const inChargeBuilder = InCharge.build(this.instructions.inCharge);
     const updatedInCharge = inChargeBuilder.update(inCharge).json;
 
-    return new Instructions({
+    const instructions = {
       ...this.instructions,
       ...form,
       inCharge: updatedInCharge,
-    });
+    };
+
+    return new Instructions(instructions);
   }
 
   addContact(contact: Contact) {
