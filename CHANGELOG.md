@@ -1,3 +1,23 @@
+## [2.16.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.4...v2.16.5) (2024-02-18)
+
+
+### Bug Fixes
+
+* **festival-task:** :lipstick: update overflow to make sidebar scrollable ([a5e6e31](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a5e6e3141b1801fd468a65e6ab427b17c534c278))
+* **festival-task:** limit mobilizable teams in UI [#1576](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1576) ([6e3eb9f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6e3eb9fcdbe062349949a9bb29068c0bbd345b3e))
+* **web:** slugify tam name on search [#1578](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1578) ([33b683a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/33b683a198f0b37a3066c4ec48bbe8363fc9b3b8))
+
+
+### Pre-Features
+
+* **festival-task:** assign humain reviewer on reviewing task. [#1577](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1577) ([9be1ca4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9be1ca49edf266b7973ed3e5f5ff2345a3717492))
+* **festival-task:** enable update on task under review [#1573](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1573) ([095a7a2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/095a7a27e5dce38fb0e2719ef9a05d5d17797b79))
+
+
+### Refactor
+
+* **fa:** :fire: remove reference to old fa store ([97362df](https://gitlab.com/24-heures-insa/overbookd-mono/commit/97362df3cdbf9e9bdce08107bb28d8c91adf56f2))
+
 ## [2.16.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.3...v2.16.4) (2024-02-18)
 
 
