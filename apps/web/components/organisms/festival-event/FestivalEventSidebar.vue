@@ -124,9 +124,10 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   flex: 0 0 auto;
-  overflow: auto;
   padding-right: 20px;
   width: 350px;
+  height: 80vh;
+  overflow-y: auto;
 
   #ask-for-review {
     background-color: $submitted-color;
@@ -145,7 +146,6 @@ export default Vue.extend({
     color: rgb(89, 89, 89);
     margin: 16px;
     margin-top: 0;
-    overflow-x: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     width: auto;
