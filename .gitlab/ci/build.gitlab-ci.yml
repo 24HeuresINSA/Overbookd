@@ -2,14 +2,14 @@
   stage: build
   extends: .setup-pnpm
   interruptible: true
-  image: node:20.11.0-alpine
+  image: node:20.11.1-alpine
   script:
     - pnpm i --filter "${PNPM_WORKSPACE}..."
     - pnpm run --filter "${PNPM_WORKSPACE}..." build:ci
 
 overbookd/api_build:
   extends: .build
-  image: node:20.11.0-alpine
+  image: node:20.11.1-alpine
   needs: [install]
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'

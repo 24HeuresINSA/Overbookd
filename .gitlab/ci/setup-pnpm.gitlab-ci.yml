@@ -1,5 +1,5 @@
 .setup-pnpm:
-  image: node:20.11.0-alpine
+  image: node:20.11.1-alpine
   interruptible: true
   before_script:
     - npm install -g pnpm@8.15.3
