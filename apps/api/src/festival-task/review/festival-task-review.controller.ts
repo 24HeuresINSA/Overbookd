@@ -28,6 +28,7 @@ import { PublishFeedbackRequestDto } from "./dto/publish-feedback.request.dto";
 import { FestivalTaskReviewService } from "./festival-task-review.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
+import { ReviewableFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -67,5 +68,26 @@ export class FestivalTaskReviewController {
     @Body() feedback: PublishFeedbackRequestDto,
   ): Promise<FestivalTask> {
     return this.reviewService.publishFeedback(ftId, user, feedback);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
+  @Post(":ftId/ask-for-review")
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    type: ReviewableFestivalTaskResponseDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  askForReview(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalTask> {
+    return this.reviewService.toReview(ftId, user);
   }
 }

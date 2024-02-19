@@ -4,9 +4,10 @@ import { FestivalTaskNotFound } from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
 import { AskForReviewError } from "./ask-for-review.error";
 import { InReviewSpecification } from "./in-review-specification";
+import { DraftWithoutConflicts } from "../volunteer-conflicts";
 
 export type AskForReviewTasks = {
-  findById(id: FestivalTask["id"]): Promise<Draft | null>;
+  findById(id: FestivalTask["id"]): Promise<DraftWithoutConflicts | null>;
   save(task: InReview): Promise<InReview>;
 };
 

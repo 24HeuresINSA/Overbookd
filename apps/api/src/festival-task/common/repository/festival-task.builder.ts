@@ -7,6 +7,16 @@ import {
   Volunteer,
   FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
+  IN_REVIEW,
+  InReviewWithoutConflicts,
+  PreviewFestivalTaskInReview,
+  ReviewStatus,
+  Reviewer,
+  NOT_ASKING_TO_REVIEW,
+  humain,
+  elec,
+  matos,
+  Adherent,
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity/festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity/festival-activity.builder";
@@ -20,6 +30,11 @@ type VisualizeFestivalTask<
 > = {
   preview: Preview;
   festivalTask: Task;
+};
+
+type DatabaseReview = {
+  team: Reviewer<"FT">;
+  status: ReviewStatus;
 };
 
 type FestivalTaskWithoutStatus = Omit<FestivalTaskWithoutConflicts, "status">;
@@ -40,6 +55,8 @@ type DatabaseFestivalTask = {
   inquiries: DatabaseInquiryRequest[];
   feedbacks: FestivalTask["feedbacks"];
   events: DatabaseEvent[];
+  reviews: DatabaseReview[];
+  reviewer: Adherent | null;
 };
 
 export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
@@ -48,22 +65,19 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
   static fromDatabase(taskData: DatabaseFestivalTask): VisualizeFestivalTask {
     const activityWithoutStatus = this.buildTaskWithoutStatus(taskData);
 
-    return DraftBuilder.init(activityWithoutStatus);
-    /*switch (taskData.status) {
+    switch (taskData.status) {
       case DRAFT:
         return DraftBuilder.init(activityWithoutStatus);
       case IN_REVIEW:
-      case VALIDATED:
-      case REFUSED:
-        return ReviewableBuilder.init(activityWithoutStatus);
-    }*/
+        return InReviewBuilder.init(activityWithoutStatus);
+    }
   }
 
-  protected static buildTaskWithoutStatus(
-    taskData: DatabaseFestivalTask,
-  ): FestivalTaskWithoutStatus {
+  protected static buildTaskWithoutStatus(taskData: DatabaseFestivalTask) {
     return {
       id: taskData.id,
+      reviews: this.formatReviews(taskData.reviews),
+      reviewer: this.formatReviewer(taskData.reviewer),
       general: {
         name: taskData.name,
         administrator: taskData.administrator,
@@ -116,6 +130,27 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
       description: event.context,
     }));
   }
+
+  private static formatReviews(reviews: DatabaseReview[]) {
+    if (reviews.length === 0) return {};
+    return {
+      humain: this.findReviewStatusByTeam(reviews, humain),
+      elec: this.findReviewStatusByTeam(reviews, elec),
+      matos: this.findReviewStatusByTeam(reviews, matos),
+    };
+  }
+
+  private static findReviewStatusByTeam(
+    reviews: DatabaseReview[],
+    reviewer: Reviewer<"FT">,
+  ): ReviewStatus {
+    const review = reviews.find((review) => review.team === reviewer);
+    return review?.status ?? NOT_ASKING_TO_REVIEW;
+  }
+
+  private static formatReviewer(reviewer: Adherent | null) {
+    return reviewer === null ? {} : { reviewer };
+  }
 }
 
 export class DraftBuilder
@@ -145,6 +180,41 @@ export class DraftBuilder
   }
 
   get festivalTask(): DraftWithoutConflicts {
+    return this.task;
+  }
+}
+
+export class InReviewBuilder
+  extends FestivalTaskBuilder<InReviewWithoutConflicts>
+  implements
+    VisualizeFestivalTask<
+      InReviewWithoutConflicts,
+      PreviewFestivalTaskInReview
+    >
+{
+  static init(taskWithoutStatus: FestivalTaskWithoutStatus) {
+    return new InReviewBuilder({ ...taskWithoutStatus, status: IN_REVIEW });
+  }
+
+  static fromDatabase(
+    taskData: DatabaseFestivalTask,
+  ): VisualizeFestivalTask<InReviewWithoutConflicts, PreviewFestivalTask> {
+    const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
+    return this.init(taskWithoutStatus);
+  }
+
+  get preview(): PreviewFestivalTaskInReview {
+    return {
+      id: this.task.id,
+      name: this.task.general.name,
+      status: this.task.status,
+      administrator: this.task.general.administrator,
+      team: this.task.general.team,
+      reviews: this.task.reviews,
+    };
+  }
+
+  get festivalTask(): InReviewWithoutConflicts {
     return this.task;
   }
 }

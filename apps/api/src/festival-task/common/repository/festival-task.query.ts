@@ -4,11 +4,15 @@ import {
   DraftWithoutConflicts,
   Feedback,
   FestivalTask,
+  FestivalTaskInReview,
   FestivalTaskWithoutConflicts,
   FestivalTaskKeyEvent as KeyEvent,
   Mobilization,
+  Reviewer,
+  ReviewingStatus,
   Volunteer,
   isAssignedToDrive,
+  isFestivalTaskDraft,
 } from "@overbookd/festival-event";
 import { SELECT_VOLUNTEER, SELECT_CONTACT } from "./adherent/adherent.query";
 import { SELECT_LOCATION } from "./location/location.query";
@@ -18,6 +22,15 @@ import { SELECT_EVENT } from "./event.query";
 import { SELECT_MOBILIZATION } from "./mobilization.query";
 import { SELECT_INQUIRY_REQUEST } from "./inquiry/inquiry.query";
 import { SELECT_FEEDBACKS } from "./feedback.query";
+
+export const SELECT_REVIEWS = {
+  reviews: {
+    select: {
+      team: true,
+      status: true,
+    },
+  },
+};
 
 export const SELECT_FESTIVAL_TASK = {
   id: true,
@@ -35,6 +48,8 @@ export const SELECT_FESTIVAL_TASK = {
   inquiries: { select: SELECT_INQUIRY_REQUEST },
   events: { select: SELECT_EVENT },
   ...SELECT_FEEDBACKS,
+  ...SELECT_REVIEWS,
+  reviewer: { select: SELECT_VOLUNTEER },
 };
 
 export class FestivalTaskQueryBuilder {
@@ -69,6 +84,9 @@ export class FestivalTaskQueryBuilder {
   }
 
   static update(task: FestivalTaskWithoutConflicts) {
+    const reviews = isFestivalTaskDraft(task)
+      ? {}
+      : { reviews: this.upsertReviews(task) };
     const contacts = this.upsertContacts(task.id, task.instructions.contacts);
     const inChargeVolunteers = this.upsertInChargeVolunteers(
       task.id,
@@ -81,12 +99,37 @@ export class FestivalTaskQueryBuilder {
 
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
+      reviews,
       contacts,
       inChargeVolunteers,
       mobilizations,
       inquiries,
       feedbacks,
       events,
+    };
+  }
+
+  static askForReview(task: FestivalTaskInReview) {
+    const reviews = this.upsertReviews(task);
+    const events = this.upsertHistory(task);
+    return {
+      ...databaseFestivalTaskWithoutListsMapping(task),
+      reviews,
+      events,
+    };
+  }
+
+  private static upsertReviews(task: FestivalTaskInReview) {
+    const reviews = Object.entries(task.reviews)
+      .filter((entry): entry is [Reviewer<"FT">, ReviewingStatus] => true)
+      .map(([team, status]) => ({ team, status }));
+
+    return {
+      upsert: reviews.map((review) => ({
+        where: { ftId_team: { ftId: task.id, team: review.team } },
+        update: review,
+        create: review,
+      })),
     };
   }
 
@@ -291,6 +334,9 @@ function databaseMobilizationForCreation(
 function databaseFestivalTaskWithoutListsMapping(
   task: FestivalTaskWithoutConflicts,
 ) {
+  const reviewer = isFestivalTaskDraft(task)
+    ? {}
+    : { reviewerId: task.reviewer?.id };
   return {
     id: task.id,
     status: task.status,
@@ -302,6 +348,7 @@ function databaseFestivalTaskWithoutListsMapping(
     appointmentId: task.instructions.appointment?.id,
     globalInstruction: task.instructions.global,
     inChargeInstruction: task.instructions.inCharge.instruction,
+    ...reviewer,
   };
 }
 
@@ -322,8 +369,5 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
 export const IS_NOT_DELETED = { isDeleted: false };
 
 export function buildFestivalTaskCondition(id: FestivalTask["id"]) {
-  return {
-    id,
-    ...IS_NOT_DELETED,
-  };
+  return { id, ...IS_NOT_DELETED };
 }

@@ -60,9 +60,8 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
       inject: [PrismaService],
     },
     {
-      provide: PrismaNotifications<"FA">,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaNotifications<"FA">(prisma),
+      provide: PrismaNotifications,
+      useFactory: (prisma: PrismaService) => new PrismaNotifications(prisma),
       inject: [PrismaService],
     },
     {
@@ -99,9 +98,9 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
       provide: AskForReview,
       useFactory: (
         festivalActivities: PrismaAskForReview,
-        notifications: PrismaNotifications<"FA">,
+        notifications: PrismaNotifications,
       ) => new AskForReview(festivalActivities, notifications),
-      inject: [PrismaAskForReview, PrismaNotifications<"FA">],
+      inject: [PrismaAskForReview, PrismaNotifications],
     },
     {
       provide: PrismaRemoveFestivalActivities,

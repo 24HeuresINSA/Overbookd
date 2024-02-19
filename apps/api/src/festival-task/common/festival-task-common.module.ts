@@ -6,6 +6,7 @@ import { PrismaPrepareFestivalTasks } from "./repository/prepare-festival-tasks.
 import { PrismaAdherents } from "./repository/adherent/adherents.prisma";
 import { PrismaFestivalActivities } from "./repository/festival-activity/festival-activities.prisma";
 import {
+  AskForReviewTask,
   CreateFestivalTask,
   FestivalTaskTranslator,
   PrepareFestivalTask,
@@ -16,6 +17,9 @@ import { PrismaViewFestivalTasks } from "./repository/view-festival-task.prisma"
 import { PrismaLocations } from "./repository/location/locations.prisma";
 import { PrismaInquiries } from "./repository/inquiry/inquiries.prisma";
 import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prisma";
+import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
+import { PrismaNotifications } from "./repository/notifications.prisma";
+import { PrismaReviewers } from "./repository/reviewers.prisma";
 
 @Module({
   providers: [
@@ -35,6 +39,11 @@ import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prism
       provide: PrismaViewFestivalTasks,
       useFactory: (prisma: PrismaService) =>
         new PrismaViewFestivalTasks(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaAskForReview,
+      useFactory: (prisma: PrismaService) => new PrismaAskForReview(prisma),
       inject: [PrismaService],
     },
     {
@@ -62,6 +71,16 @@ import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prism
       provide: PrismaVolunteerConflicts,
       useFactory: (prisma: PrismaService) =>
         new PrismaVolunteerConflicts(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaNotifications,
+      useFactory: (prisma: PrismaService) => new PrismaNotifications(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaReviewers,
+      useFactory: (prisma: PrismaService) => new PrismaReviewers(prisma),
       inject: [PrismaService],
     },
     {
@@ -105,6 +124,15 @@ import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prism
       inject: [PrismaViewFestivalTasks, FestivalTaskTranslator],
     },
     {
+      provide: AskForReviewTask,
+      useFactory: (
+        festivalActivities: PrismaAskForReview,
+        notifications: PrismaNotifications,
+        reviewers: PrismaReviewers,
+      ) => new AskForReviewTask(festivalActivities, notifications, reviewers),
+      inject: [PrismaAskForReview, PrismaNotifications],
+    },
+    {
       provide: PrismaRemoveFestivalTasks,
       useFactory: (prisma: PrismaService) =>
         new PrismaRemoveFestivalTasks(prisma),
@@ -120,6 +148,7 @@ import { PrismaVolunteerConflicts } from "./repository/volunteer-conflicts.prism
     CreateFestivalTask,
     PrepareFestivalTask,
     ViewFestivalTask,
+    AskForReviewTask,
     PrismaRemoveFestivalTasks,
   ],
 })
