@@ -23,6 +23,7 @@ import { FestivalActivityBuilder } from "./festival-activity/festival-activity.b
 import { DatabaseEvent } from "./event.query";
 import { DatabaseMobilization } from "./mobilization.query";
 import { DatabaseInquiryRequest } from "./inquiry/inquiry.query";
+import { InReviewSpecification } from "@overbookd/festival-event/src/festival-task/ask-for-review/in-review-specification";
 
 type VisualizeFestivalTask<
   Task extends FestivalTaskWithoutConflicts = FestivalTaskWithoutConflicts,
@@ -184,7 +185,7 @@ export class DraftBuilder
   }
 }
 
-export class InReviewBuilder
+class InReviewBuilder
   extends FestivalTaskBuilder<InReviewWithoutConflicts>
   implements
     VisualizeFestivalTask<
@@ -193,14 +194,16 @@ export class InReviewBuilder
     >
 {
   static init(taskWithoutStatus: FestivalTaskWithoutStatus) {
-    return new InReviewBuilder({ ...taskWithoutStatus, status: IN_REVIEW });
-  }
-
-  static fromDatabase(
-    taskData: DatabaseFestivalTask,
-  ): VisualizeFestivalTask<InReviewWithoutConflicts, PreviewFestivalTask> {
-    const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
-    return this.init(taskWithoutStatus);
+    if (!InReviewSpecification.isSatisfiedBy(taskWithoutStatus)) {
+      return DraftBuilder.init(taskWithoutStatus);
+    }
+    const { reviews, reviewer } = taskWithoutStatus;
+    return new InReviewBuilder({
+      ...taskWithoutStatus,
+      status: IN_REVIEW,
+      reviews,
+      reviewer,
+    });
   }
 
   get preview(): PreviewFestivalTaskInReview {

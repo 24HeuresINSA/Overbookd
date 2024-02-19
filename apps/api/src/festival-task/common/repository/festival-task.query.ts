@@ -23,7 +23,7 @@ import { SELECT_MOBILIZATION } from "./mobilization.query";
 import { SELECT_INQUIRY_REQUEST } from "./inquiry/inquiry.query";
 import { SELECT_FEEDBACKS } from "./feedback.query";
 
-export const SELECT_REVIEWS = {
+const SELECT_REVIEWS = {
   reviews: {
     select: {
       team: true,
@@ -121,7 +121,12 @@ export class FestivalTaskQueryBuilder {
 
   private static upsertReviews(task: FestivalTaskInReview) {
     const reviews = Object.entries(task.reviews)
-      .filter((entry): entry is [Reviewer<"FT">, ReviewingStatus] => true)
+      .filter(
+        (
+          entry,
+        ): entry is [Reviewer<"FT">, Exclude<ReviewingStatus, "APPROVED">] =>
+          true,
+      )
       .map(([team, status]) => ({ team, status }));
 
     return {

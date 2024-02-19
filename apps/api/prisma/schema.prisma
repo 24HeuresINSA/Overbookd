@@ -836,7 +836,7 @@ model FestivalTaskReview {
   team   FestivalTaskReviewer
   status FestivalTaskReviewStatus
 
-  ftId Int          @map("fa_id")
+  ftId Int          @map("ft_id")
   ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
 
   @@id([ftId, team])
