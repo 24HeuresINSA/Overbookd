@@ -138,7 +138,7 @@ export class FestivalTaskQueryBuilder {
         update: review,
         create: review,
       })),
-    } as const;
+    };
   }
 
   private static upsertContacts(
