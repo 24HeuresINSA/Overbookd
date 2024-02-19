@@ -5,7 +5,7 @@ import {
   FestivalTaskInReview,
   isFestivalTaskDraft,
 } from "@overbookd/festival-event";
-import { FestivalTaskBuilder } from "./festival-task.builder";
+import { DraftBuilder, FestivalTaskBuilder } from "./festival-task.builder";
 import {
   FestivalTaskQueryBuilder,
   SELECT_FESTIVAL_TASK,
@@ -22,11 +22,11 @@ export class PrismaAskForReview implements AskForReviewTasks {
       select: SELECT_FESTIVAL_TASK,
     });
     if (!task) return null;
-    return FestivalTaskBuilder.fromDatabase(task).festivalTask;
+    return DraftBuilder.fromDatabase(task).festivalTask;
   }
 
   async save(task: FestivalTaskInReview): Promise<FestivalTaskInReview> {
-    const updated = await this.prisma.festivalActivity.update({
+    const updated = await this.prisma.festivalTask.update({
       where: buildFestivalTaskCondition(task.id),
       select: SELECT_FESTIVAL_TASK,
       data: FestivalTaskQueryBuilder.askForReview(task),

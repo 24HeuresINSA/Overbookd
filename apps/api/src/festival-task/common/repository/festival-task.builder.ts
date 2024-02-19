@@ -64,13 +64,13 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
   constructor(protected readonly task: T) {}
 
   static fromDatabase(taskData: DatabaseFestivalTask): VisualizeFestivalTask {
-    const activityWithoutStatus = this.buildTaskWithoutStatus(taskData);
+    const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
 
     switch (taskData.status) {
       case DRAFT:
-        return DraftBuilder.init(activityWithoutStatus);
+        return DraftBuilder.init(taskWithoutStatus);
       case IN_REVIEW:
-        return InReviewBuilder.init(activityWithoutStatus);
+        return InReviewBuilder.init(taskWithoutStatus);
     }
   }
 

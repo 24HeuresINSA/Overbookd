@@ -14,10 +14,7 @@ import { Draft, FestivalTask, InReview } from "../festival-task";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { DraftGeneral } from "../sections/general";
 
-type WithoutStatus<T extends FestivalTask> = Omit<
-  T,
-  "status" | "reviews" | "reviewer"
->;
+type WithoutStatus<T extends FestivalTask> = Omit<T, "status">;
 
 const NO_SUPPLY_REQUEST_TASK_REVIEWS = {
   elec: NOT_ASKING_TO_REVIEW,

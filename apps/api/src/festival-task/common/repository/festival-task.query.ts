@@ -99,7 +99,7 @@ export class FestivalTaskQueryBuilder {
 
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
-      reviews,
+      ...reviews,
       contacts,
       inChargeVolunteers,
       mobilizations,
@@ -111,10 +111,13 @@ export class FestivalTaskQueryBuilder {
 
   static askForReview(task: FestivalTaskInReview) {
     const reviews = this.upsertReviews(task);
+    const reviewerId = task.reviewer?.id;
     const events = this.upsertHistory(task);
+
     return {
       ...databaseFestivalTaskWithoutListsMapping(task),
       reviews,
+      reviewerId,
       events,
     };
   }
@@ -135,7 +138,7 @@ export class FestivalTaskQueryBuilder {
         update: review,
         create: review,
       })),
-    };
+    } as const;
   }
 
   private static upsertContacts(
@@ -339,9 +342,7 @@ function databaseMobilizationForCreation(
 function databaseFestivalTaskWithoutListsMapping(
   task: FestivalTaskWithoutConflicts,
 ) {
-  const reviewer = isFestivalTaskDraft(task)
-    ? {}
-    : { reviewerId: task.reviewer?.id };
+  const reviewerId = isFestivalTaskDraft(task) ? null : task.reviewer?.id;
   return {
     id: task.id,
     status: task.status,
@@ -353,7 +354,7 @@ function databaseFestivalTaskWithoutListsMapping(
     appointmentId: task.instructions.appointment?.id,
     globalInstruction: task.instructions.global,
     inChargeInstruction: task.instructions.inCharge.instruction,
-    ...reviewer,
+    reviewerId,
   };
 }
 
