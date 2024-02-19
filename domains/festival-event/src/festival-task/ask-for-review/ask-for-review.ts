@@ -1,4 +1,4 @@
-import { Draft, FestivalTask, InReview } from "../festival-task";
+import { FestivalTask, InReview } from "../festival-task";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
