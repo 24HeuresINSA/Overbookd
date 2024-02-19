@@ -29,7 +29,7 @@ import { DomainEventService } from "../../domain-event/domain-event.service";
         PrismaAdherents,
         PrepareFestivalTask,
         AskForReviewTask,
-        DomainEventModule,
+        DomainEventService,
       ],
     },
   ],
