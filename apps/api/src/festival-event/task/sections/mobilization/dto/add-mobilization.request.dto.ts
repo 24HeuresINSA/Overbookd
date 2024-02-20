@@ -1,12 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
 import { AddMobilizationForm } from "@overbookd/http";
-import {
-  IsArray,
-  IsNumber,
-  IsOptional,
-  ValidateNested,
-} from "class-validator";
+import { IsArray, IsNumber, IsOptional, ValidateNested } from "class-validator";
 import { TeamMobilizationRequestDto } from "./team-mobilization.request.dto";
 import { Type } from "class-transformer";
 import { PeriodDto } from "../../../../common/dto/period.dto";
