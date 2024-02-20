@@ -8,8 +8,8 @@ import {
   signa,
 } from "@overbookd/festival-event";
 import { PrepareSignaForm } from "@overbookd/http";
-import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
-import { TeamService } from "../../../team/team.service";
+import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
+import { TeamService } from "../../../../team/team.service";
 import { CatalogSignages } from "../../common/festival-activity-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
 import { UpdateSignageRequest } from "./dto/update-signage.request.dto";
