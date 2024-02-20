@@ -1,5 +1,5 @@
 import { FestivalTask } from "@overbookd/festival-event";
-import { HttpStringified } from "@overbookd/http";
+import { HttpStringified, PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import {
   MyUserInformation,
@@ -68,6 +68,19 @@ export function castVolunteerTaskWithDate(
     ...task,
     start: new Date(task.start),
     end: new Date(task.end),
+  }));
+}
+
+export function castVolunteerPlanningTasksWithDate(
+  tasks: HttpStringified<PlanningTask[]>,
+): PlanningTask[] {
+  return tasks.map(({ timeWindow, ...task }) => ({
+    ...task,
+    timeWindow: {
+      ...timeWindow,
+      start: new Date(timeWindow.start),
+      end: new Date(timeWindow.end),
+    },
   }));
 }
 

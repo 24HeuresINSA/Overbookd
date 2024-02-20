@@ -28,9 +28,9 @@
       <div
         class="event underline-on-hover"
         @click="openFt(event.link)"
-        @mouseup.middle="openFtInNewTab(event.ft.id)"
+        @mouseup.middle="openFtInNewTab(event.link)"
       >
-        {{ `[${event.ft.id}] ${event.ft.name}` }}
+        {{ event.name }}
       </div>
     </template>
   </OverCalendar>
@@ -52,6 +52,7 @@ import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 import { CalendarEvent } from "~/utils/models/calendar.model";
+import { PlanningTask } from "@overbookd/http";
 
 export default Vue.extend({
   name: "UserCalendar",
@@ -71,26 +72,37 @@ export default Vue.extend({
     availabilities(): Period[] {
       return this.$accessor.volunteerAvailability.availabilities.list;
     },
-    ftRequests(): VolunteerTask[] {
-      return this.$accessor.user.selectedUserFtRequests;
-    },
     assignments(): VolunteerTask[] {
       return this.$accessor.user.selectedUserAssignments;
+    },
+    tasks(): PlanningTask[] {
+      return this.$accessor.user.selectedUserTasks;
     },
     stats(): VolunteerAssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
     events(): CalendarEvent[] {
-      return [...this.ftRequests, ...this.assignments].map(
-        ({ start, end, ft }) => ({
+      const assignmentEvents = this.assignments.map(
+        ({ start, end, ft }): CalendarEvent => ({
           start,
           end,
-          name: ft.name,
+          name: `[${ft.id}] ${ft.name}`,
           link: `/ft/${ft.id}`,
           color: getColorByStatus(ft.status),
           timed: true,
         }),
       );
+      const tasksEvents = this.tasks.map(
+        ({ name, id, status, timeWindow: { start, end } }): CalendarEvent => ({
+          start,
+          end,
+          name: `[${id}] ${name}`,
+          link: `/ft/${id}`,
+          color: getColorByStatus(status),
+          timed: true,
+        }),
+      );
+      return [...assignmentEvents, ...tasksEvents];
     },
     user(): UserPersonalData {
       return this.$accessor.user.selectedUser;
@@ -110,6 +122,7 @@ export default Vue.extend({
         this.userId,
       ),
       this.$accessor.user.getVolunteerAssignments(this.userId),
+      this.$accessor.user.getVolunteerTasks(this.userId),
     ]);
 
     if (this.shouldShowStats) {

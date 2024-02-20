@@ -306,6 +306,7 @@ export const actions = actionTree(
     fetchSelectedVolunteerPlanning({ dispatch }, volunteerId: number) {
       dispatch("user/getUserFtRequests", volunteerId, { root: true });
       dispatch("user/getVolunteerAssignments", volunteerId, { root: true });
+      dispatch("user/getVolunteerTasks", volunteerId, { root: true });
     },
 
     setHoverTimeSpan({ commit }, timeSpan: AvailableTimeSpan | null) {
@@ -319,13 +320,17 @@ export const actions = actionTree(
     },
 
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
-      const [userRequestsRes, assignmentRes, availabilitiesRes] =
+      const [userRequestsRes, assignmentRes, availabilitiesRes, _tasks] =
         await Promise.all([
           safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
           safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
           safeCall(
             this,
             AvailabilityRepo.getVolunteerAvailabilities(this, volunteerId),
+          ),
+          safeCall(
+            this,
+            UserRepo.getMobilizationsVolunteerTakePartOf(this, volunteerId),
           ),
         ]);
       const volunteerFriendsRes = await Promise.all(

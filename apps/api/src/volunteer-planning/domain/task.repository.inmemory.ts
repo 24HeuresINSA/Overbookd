@@ -1,3 +1,4 @@
+import { PlanningTask } from "@overbookd/http";
 import { arePeriodsOverlapping } from "../../utils/period";
 import { TaskRepository } from "./planning";
 import { JsonStoredTask } from "./storedTask";
@@ -19,6 +20,10 @@ export class InMemoryTaskRepository implements TaskRepository {
         })
         .sort((a, b) => a.period.start.getTime() - b.period.start.getTime()),
     );
+  }
+
+  getVolunteerTasksHeIsPartOf(): Promise<PlanningTask[]> {
+    return Promise.resolve([]);
   }
 
   private findAllOtherAssignees(task: JsonStoredTask, volunteerId: number) {

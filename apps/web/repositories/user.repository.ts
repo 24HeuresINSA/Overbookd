@@ -4,7 +4,7 @@ import {
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
-import { HttpStringified, PDF } from "@overbookd/http";
+import { HttpStringified, PDF, PlanningTask } from "@overbookd/http";
 import {
   MyUserInformation,
   Profile,
@@ -113,6 +113,15 @@ export class UserRepository {
   static getUserFtRequests(context: Context, userId: number) {
     return context.$axios.get<HttpStringified<VolunteerTask[]>>(
       `${this.basePath}/${userId}/ft-requests`,
+    );
+  }
+
+  static getMobilizationsVolunteerTakePartOf(
+    context: Context,
+    volunteerId: number,
+  ) {
+    return context.$axios.get<HttpStringified<PlanningTask[]>>(
+      `${this.basePath}/${volunteerId}/mobilizations`,
     );
   }
 

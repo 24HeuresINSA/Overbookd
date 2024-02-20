@@ -232,13 +232,13 @@ describe("Planning", () => {
   describe("retrieve volunteer tasks", () => {
     describe("when volunteer is not assigned to any task", () => {
       it("should retrieve an empty tasks list", async () => {
-        const tasks = await planning.getVolunteerTasks(julien.id);
+        const tasks = await planning.generateForVolunteer(julien.id);
         expect(tasks).toEqual([]);
       });
     });
     describe("when volunteer is assigned to 'Debarierrage Avenue des Arts' from 2023-05-15 12:00 to 2023-05-15 14:00", () => {
       it("should retrieve 'Debarierrage Avenue des Arts' in tasks list", async () => {
-        const tasks = await planning.getVolunteerTasks(vincent.id);
+        const tasks = await planning.generateForVolunteer(vincent.id);
         const { assignees, id, ...barrierageAvenueDesArtShift } =
           debarrierageAvenueDesArtsOn12hTo14hMay15;
         expect(tasks).toMatchObject([barrierageAvenueDesArtShift]);
@@ -246,7 +246,7 @@ describe("Planning", () => {
     });
     describe("when volunteer is assigned to both 'Debarierrage Avenue des Arts' from 2023-05-15 12:00 to 2023-05-15 14:00 and from 2023-05-15 14:00 to 2023-05-15 16:00", () => {
       it("should retrieve 'Debarierrage Avenue des Arts' in tasks list", async () => {
-        const tasks = await planning.getVolunteerTasks(antonin.id);
+        const tasks = await planning.generateForVolunteer(antonin.id);
         const { assignees, id, ...debarrierageAvenueDesArtShift } =
           debarrierageAvenueDesArtsOn12hTo14hMay15;
         const globalDebarrierageAvenueDesArtShift = {
@@ -261,7 +261,7 @@ describe("Planning", () => {
     });
     describe("when volunteer is assigned to different tasks from 2023-05-12 20:00 to 2023-05-12 22:00 and from 2023-05-12 22:00 to 2023-05-13 00:00", () => {
       it("should retrieve both in tasks list", async () => {
-        const tasks = await planning.getVolunteerTasks(valerie.id);
+        const tasks = await planning.generateForVolunteer(valerie.id);
         const expectedShifts = [
           deplacerLeFenOn20hTo22hMay12,
           debarrierageAvenueDesArtsOn14hTo16hMay15,
@@ -271,7 +271,7 @@ describe("Planning", () => {
     });
     describe("when volunteer is assigned to various tasks, including some similar", () => {
       it("should retrieve grouped tasks for similar tasks only in tasks list", async () => {
-        const tasks = await planning.getVolunteerTasks(lina.id);
+        const tasks = await planning.generateForVolunteer(lina.id);
         const expectedShifts = [
           deplacerLeFenOn12hTo14hMay12,
           {
@@ -287,7 +287,7 @@ describe("Planning", () => {
     });
     describe("when volunteer is assigned to same task with a break beetween shifts", () => {
       it("should retrieve separated tasks in tasks list", async () => {
-        const tasks = await planning.getVolunteerTasks(elodie.id);
+        const tasks = await planning.generateForVolunteer(elodie.id);
         const expectedShifts = [
           deplacerLeFenOn12hTo14hMay12,
           deplacerLeFenOn20hTo22hMay12,
@@ -314,7 +314,7 @@ describe("Planning", () => {
             - Constantin
             - Ambre
           `, async () => {
-            const tasks = await planning.getVolunteerTasks(ana.id);
+            const tasks = await planning.generateForVolunteer(ana.id);
             expect(tasks.at(0)?.assignments).toHaveLength(2);
             expect(tasks.at(0)?.assignments).toEqual([
               {
@@ -361,7 +361,7 @@ describe("Planning", () => {
             - Tristan
             - Constantin
           `, async () => {
-            const tasks = await planning.getVolunteerTasks(loic.id);
+            const tasks = await planning.generateForVolunteer(loic.id);
             expect(tasks.at(0)?.assignments).toHaveLength(7);
             expect(tasks.at(0)?.assignments).toContainEqual({
               period: shift18hTo20hMay12,
@@ -418,7 +418,7 @@ describe("Planning", () => {
             - Constantin
             - Michel
           `, async () => {
-            const tasks = await planning.getVolunteerTasks(antoine.id);
+            const tasks = await planning.generateForVolunteer(antoine.id);
             expect(tasks.at(0)?.assignments).toHaveLength(2);
             expect(tasks.at(0)?.assignments).toContainEqual({
               period: {
@@ -439,7 +439,7 @@ describe("Planning", () => {
       });
       describe("when volunteer is alone on a period", () => {
         it("should not generate an assigment for this period", async () => {
-          const tasks = await planning.getVolunteerTasks(brenda.id);
+          const tasks = await planning.generateForVolunteer(brenda.id);
           expect(tasks.at(0)?.assignments).toHaveLength(0);
         });
       });

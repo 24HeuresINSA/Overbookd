@@ -75,6 +75,7 @@ import { ConsumerResponseDto } from "./dto/consumer.response.dto";
 import { ForgetMemberErrorFilter } from "../registration/registration-error.filter";
 import { BaseUserResponseDto } from "./dto/base-user.response.dto";
 import { ICAL, JSON, PDF } from "@overbookd/http";
+import { PlanningTaskResponseDto } from "../volunteer-planning/dto/planning-task.response.dto";
 
 @ApiTags("users")
 @Controller("users")
@@ -276,6 +277,22 @@ export class UserController {
     @Param("id", ParseIntPipe) id: number,
   ): Promise<VolunteerAssignmentDto[]> {
     return this.userService.getFtUserRequestsByUserId(id);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(VIEW_VOLUNTEER)
+  @Get(":id/mobilizations")
+  @ApiResponse({
+    status: 200,
+    description: "Get mobilizations a volunteer is required on",
+    isArray: true,
+    type: PlanningTaskResponseDto,
+  })
+  async getMobilizationsUserTakePartOf(
+    @Param("id", ParseIntPipe) id: number,
+  ): Promise<PlanningTaskResponseDto[]> {
+    return this.planningService.getVolunteerTasks(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
