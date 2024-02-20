@@ -8,12 +8,6 @@ import { AuthenticationModule } from "./authentication/authentication.module";
 import { CharismaPeriodModule } from "./charisma-period/charisma-period.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { FriendModule } from "./friend/friend.module";
-import { FtFeedbackModule } from "./ft-feedback/ft-feedback.module";
-import { FtModule } from "./ft/ft.module";
-import { FtReviewModule } from "./ft-review/ft-review.module";
-import { FtTeamRequestModule } from "./ft-team-request/ft-team-request.module";
-import { FtTimeWindowModule } from "./ft-time-window/ft-time-window.module";
-import { FtUserRequestModule } from "./ft-user-request/ft-user-request.module";
 import { HashingUtilsModule } from "./hashing-utils/hashing-utils.module";
 import { HashingUtilsService } from "./hashing-utils/hashing-utils.service";
 import { NeedHelpModule } from "./need-help/need-help.module";
@@ -73,12 +67,6 @@ import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
     ConfigurationModule,
     SignaLocationModule,
     PermissionModule,
-    FtModule,
-    FtTimeWindowModule,
-    FtFeedbackModule,
-    FtUserRequestModule,
-    FtReviewModule,
-    FtTeamRequestModule,
     CharismaPeriodModule,
     VolunteerAvailabilityModule,
     FriendModule,
