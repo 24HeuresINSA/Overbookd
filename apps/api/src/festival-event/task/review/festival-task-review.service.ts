@@ -10,12 +10,20 @@ import { JwtPayload } from "../../../authentication/entities/jwt-util.entity";
 import { Adherents } from "../common/festival-task-common.model";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 
+type UseCases = {
+  prepare: Readonly<PrepareFestivalTask>;
+  askForReview: Readonly<AskForReviewTask>;
+};
+
+type Repositories = {
+  adherents: Adherents;
+};
+
 @Injectable()
 export class FestivalTaskReviewService {
   constructor(
-    private readonly adherents: Adherents,
-    private readonly prepare: PrepareFestivalTask,
-    private readonly askForReview: AskForReviewTask,
+    private readonly useCases: UseCases,
+    private readonly repositories: Repositories,
     private readonly eventStore: DomainEventService,
   ) {}
 
@@ -24,17 +32,17 @@ export class FestivalTaskReviewService {
     { id }: JwtPayload,
     { content }: PublishFeedbackForm,
   ): Promise<FestivalTask> {
-    const author = await this.adherents.findOne(id);
+    const author = await this.repositories.adherents.findOne(id);
 
-    return this.prepare.publishFeedback(ftId, { author, content });
+    return this.useCases.prepare.publishFeedback(ftId, { author, content });
   }
 
   async toReview(
     ftId: FestivalTask["id"],
     user: JwtPayload,
   ): Promise<FestivalTask> {
-    const adherent = await this.adherents.findOne(user.id);
-    const task = await this.askForReview.from(ftId, adherent);
+    const adherent = await this.repositories.adherents.findOne(user.id);
+    const task = await this.useCases.askForReview.from(ftId, adherent);
 
     const event = FestivalTaskEvents.readyToReview(task, adherent.id);
     this.eventStore.publish(event);

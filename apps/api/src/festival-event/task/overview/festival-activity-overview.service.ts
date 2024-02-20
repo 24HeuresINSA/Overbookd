@@ -15,30 +15,38 @@ import { JwtPayload } from "../../../authentication/entities/jwt-util.entity";
 import { FestivalTaskCreationForm } from "@overbookd/http";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 
+type UseCases = {
+  create: Readonly<CreateFestivalTask>;
+  view: Readonly<ViewFestivalTask>;
+  remove: Readonly<RemoveFestivalTasks>;
+};
+
+type Repositories = {
+  adherents: Adherents;
+  festivalActivities: FestivalActivities;
+};
+
 @Injectable()
 export class FestivalTaskOverviewService {
   constructor(
-    private readonly adherents: Adherents,
-    private readonly festivalActivities: FestivalActivities,
-    private readonly create: CreateFestivalTask,
-    private readonly view: ViewFestivalTask,
-    private readonly remove: RemoveFestivalTasks,
+    private readonly useCases: UseCases,
+    private readonly repositories: Repositories,
     private readonly eventStore: DomainEventService,
   ) {}
 
   findById(id: FestivalTask["id"]): Promise<FestivalTask | null> {
-    return this.view.one(id);
+    return this.useCases.view.one(id);
   }
 
   async createOne(
     { id }: JwtPayload,
     { name, festivalActivityId }: FestivalTaskCreationForm,
   ): Promise<FestivalTaskDraft> {
-    const author = await this.adherents.findOne(id);
+    const author = await this.repositories.adherents.findOne(id);
     const festivalActivity =
-      await this.festivalActivities.find(festivalActivityId);
+      await this.repositories.festivalActivities.find(festivalActivityId);
 
-    const task = await this.create.apply({
+    const task = await this.useCases.create.apply({
       author,
       name,
       festivalActivity,
@@ -51,6 +59,6 @@ export class FestivalTaskOverviewService {
   }
 
   async removeOne(id: FestivalTask["id"]): Promise<void> {
-    await this.remove.apply(id);
+    await this.useCases.remove.apply(id);
   }
 }

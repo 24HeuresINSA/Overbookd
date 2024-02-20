@@ -16,19 +16,16 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
     {
       provide: FestivalTaskOverviewService,
       useFactory: (
-        adherents: PrismaAdherents,
-        festivalActivities: PrismaFestivalActivities,
         create: CreateFestivalTask,
         view: ViewFestivalTask,
         remove: PrismaRemoveFestivalTasks,
+        adherents: PrismaAdherents,
+        festivalActivities: PrismaFestivalActivities,
         eventStore: DomainEventService,
       ) =>
         new FestivalTaskOverviewService(
-          adherents,
-          festivalActivities,
-          create,
-          view,
-          remove,
+          { create, view, remove },
+          { adherents, festivalActivities },
           eventStore,
         ),
       inject: [

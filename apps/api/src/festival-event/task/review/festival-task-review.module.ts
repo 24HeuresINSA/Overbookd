@@ -14,15 +14,14 @@ import { DomainEventService } from "../../../domain-event/domain-event.service";
     {
       provide: FestivalTaskReviewService,
       useFactory: (
-        adherents: PrismaAdherents,
         prepare: PrepareFestivalTask,
         askForReview: AskForReviewTask,
+        adherents: PrismaAdherents,
         eventStore: DomainEventService,
       ) =>
         new FestivalTaskReviewService(
-          adherents,
-          prepare,
-          askForReview,
+          { prepare, askForReview },
+          { adherents },
           eventStore,
         ),
       inject: [
