@@ -4,7 +4,10 @@ import { FestivalTaskNotFound } from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
 import { AskForReviewError } from "./ask-for-review.error";
 import { InReviewSpecification } from "./in-review-specification";
-import { DraftWithoutConflicts } from "../volunteer-conflicts";
+import {
+  DraftWithoutConflicts,
+  FestivalTaskTranslator,
+} from "../volunteer-conflicts";
 
 export type AskForReviewTasks = {
   findById(id: FestivalTask["id"]): Promise<DraftWithoutConflicts | null>;
@@ -25,6 +28,7 @@ export class AskForReview {
     private readonly tasks: AskForReviewTasks,
     private readonly notifications: Notifications<"FT">,
     private readonly reviewers: Reviewers,
+    private readonly translator: FestivalTaskTranslator,
   ) {}
 
   async from(taskId: FestivalTask["id"], adherent: Adherent) {
@@ -39,7 +43,9 @@ export class AskForReview {
 
     const conversion = InReviewSpecification.convert(task, adherent, reviewer);
     this.notifications.add(conversion.event);
-    return this.tasks.save(conversion.task);
+
+    const saved = await this.tasks.save(conversion.task);
+    return this.translator.translate<InReview>(saved);
   }
 
   private async findReviewer(): Promise<Adherent> {

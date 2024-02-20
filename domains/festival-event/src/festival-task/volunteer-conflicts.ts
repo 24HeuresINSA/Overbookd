@@ -3,7 +3,6 @@ import { IProvidePeriod } from "@overbookd/period";
 import { Draft, FestivalTask, InReview } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts } from "./sections/mobilizations";
-import { DRAFT } from "../common/status";
 
 export type VolunteerAvailabilities = {
   volunteer: Volunteer;
@@ -47,7 +46,7 @@ export class FestivalTaskTranslator {
     if (!isWithConflicts<T>(translated)) {
       throw new Error("Invalid Type");
     }
-    return { ...translated, status: DRAFT };
+    return translated;
   }
 
   private async assignConflictsToVolunteers<T extends FestivalTask>(

@@ -31,7 +31,7 @@ import { PermissionsGuard } from "../../../authentication/permissions-auth.guard
 import { CreateFestivalTaskRequestDto } from "./dto/create-festival-task.request.dto";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
-import { FestivalTaskOverviewService } from "./festival-activity-overview.service";
+import { FestivalTaskOverviewService } from "./festival-task-overview.service";
 import { DraftGeneralResponseDto } from "../common/dto/draft/draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "../common/dto/draft/draft-instructions.response.dto";
 import { ContactResponseDto } from "../common/dto/contact.response.dto";

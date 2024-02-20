@@ -130,8 +130,20 @@ import { PrismaNotifications } from "../../common/repository/notifications.prism
         festivalTasks: PrismaAskForReview,
         notifications: PrismaNotifications<"FT">,
         reviewers: PrismaReviewers,
-      ) => new AskForReviewTask(festivalTasks, notifications, reviewers),
-      inject: [PrismaAskForReview, PrismaNotifications<"FT">, PrismaReviewers],
+        translator: FestivalTaskTranslator,
+      ) =>
+        new AskForReviewTask(
+          festivalTasks,
+          notifications,
+          reviewers,
+          translator,
+        ),
+      inject: [
+        PrismaAskForReview,
+        PrismaNotifications<"FT">,
+        PrismaReviewers,
+        FestivalTaskTranslator,
+      ],
     },
     {
       provide: PrismaRemoveFestivalTasks,
