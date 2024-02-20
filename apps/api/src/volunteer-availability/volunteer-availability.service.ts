@@ -17,7 +17,6 @@ export class VolunteerAvailabilityService {
     userId: number,
     periods: IProvidePeriod[],
   ): Promise<IProvidePeriod[]> {
-    console.error(periods);
     const previousAvailabilityPeriods =
       await this.findUserAvailabilities(userId);
     const periodOrchestrator = PeriodOrchestrator.init(
