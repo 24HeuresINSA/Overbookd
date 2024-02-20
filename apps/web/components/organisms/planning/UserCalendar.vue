@@ -24,7 +24,7 @@
     <template #interval="{ date, hour }">
       <div :class="{ available: isUserAvailable(date, hour) }" />
     </template>
-    <template #event="{ event }">
+    <!-- <template #event="{ event }">
       <div
         class="event underline-on-hover"
         @click="openFt(event.link)"
@@ -32,7 +32,7 @@
       >
         {{ event.name }}
       </div>
-    </template>
+    </template> -->
   </OverCalendar>
 </template>
 
