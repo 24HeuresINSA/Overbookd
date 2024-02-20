@@ -29,6 +29,7 @@ export const ASK_FOR_HELP = "ask-for-help";
 export const VIEW_PLANNING = "view-planning";
 export const DOWNLOAD_PLANNING = "download-planning";
 export const ENROLL_ADHERENT = "enroll-adherent";
+export const ENROLL_VOLUNTEER = "enroll-volunteer";
 export const VIEW_TROMBINOSCOPE = "view-trombinoscope";
 export const VIEW_VOLUNTEER = "view-volunteer";
 export const SEND_MAIL_TEST = "send-mail-test";
@@ -71,6 +72,7 @@ const permissions = [
   VIEW_PLANNING,
   DOWNLOAD_PLANNING,
   ENROLL_ADHERENT,
+  ENROLL_VOLUNTEER,
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
   SEND_MAIL_TEST,

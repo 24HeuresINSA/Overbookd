@@ -2,6 +2,7 @@ import {
   AFFECT_VOLUNTEER,
   ASK_FOR_HELP,
   ENROLL_ADHERENT,
+  ENROLL_VOLUNTEER,
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -151,6 +152,16 @@ export const pages: Page[] = [
       "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
     mobileSupport: true,
     keywords: ["arrivants", "inscriptions"],
+  },
+  {
+    icon: "mdi-account-multiple-check",
+    title: "Admissions",
+    permission: ENROLL_VOLUNTEER,
+    to: "/volunteers-registration",
+    description:
+      "Permet de visualiser tous les nouveaux bénévoles arrivants sur Overbookd et de les enrôler",
+    mobileSupport: false,
+    keywords: ["arrivants", "inscriptions", "admissions", "benevoles", "soft"],
   },
   {
     icon: "mdi-cash-multiple",
