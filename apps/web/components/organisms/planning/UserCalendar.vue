@@ -24,15 +24,6 @@
     <template #interval="{ date, hour }">
       <div :class="{ available: isUserAvailable(date, hour) }" />
     </template>
-    <!-- <template #event="{ event }">
-      <div
-        class="event underline-on-hover"
-        @click="openFt(event.link)"
-        @mouseup.middle="openFtInNewTab(event.link)"
-      >
-        {{ event.name }}
-      </div>
-    </template> -->
   </OverCalendar>
 </template>
 
