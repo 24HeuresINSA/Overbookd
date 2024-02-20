@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
   WithInChargeInstructions,
   WithoutInChargeInstructions,
@@ -63,9 +63,10 @@ export class InReviewInstructionsResponseDto implements Instructions {
 
   @ApiProperty({
     description: "The draft instructions in charge",
-    type: {
-      oneOf: [WithInChargeInstructionsDto, WithoutInChargeInstructionsDto],
-    },
+    oneOf: [
+      { $ref: getSchemaPath(WithInChargeInstructionsDto) },
+      { $ref: getSchemaPath(WithoutInChargeInstructionsDto) },
+    ],
   })
   inCharge: Instructions["inCharge"];
 }
