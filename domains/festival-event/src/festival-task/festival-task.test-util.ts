@@ -380,7 +380,7 @@ export const installJustDance = factory
       volunteers: [
         {
           ...justDanceInstaller,
-          conflicts: { tasks: [], availability: false },
+          conflicts: { tasks: [], availability: true },
         },
       ],
       teams: [{ count: 2, team: "bénévole" }],
@@ -391,7 +391,7 @@ export const installJustDance = factory
       volunteers: [
         {
           ...justDanceInstallerBis,
-          conflicts: { tasks: [], availability: false },
+          conflicts: { tasks: [], availability: true },
         },
       ],
       teams: [{ count: 2, team: "bénévole" }],
