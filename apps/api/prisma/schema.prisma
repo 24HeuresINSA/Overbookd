@@ -68,6 +68,7 @@ model User {
   festivalTaskContacts      FestivalTaskContact[]
   festivalTaskInstigations  FestivalTaskHistory[]
   festivalTaskMobilizations FestivalTaskMobilizationVolunteer[]
+  festivalTasksToReview     FestivalTask[]                      @relation("task-reviewer")
 
   @@map("user")
 }
@@ -672,6 +673,11 @@ model FestivalTask {
   feedbacks FestivalTaskFeedback[]
   events    FestivalTaskHistory[]
 
+  // Review
+  reviews    FestivalTaskReview[]
+  reviewerId Int?                 @map("reviewer_id")
+  reviewer   User?                @relation("task-reviewer", fields: [reviewerId], references: [id])
+
   // General
   name            String  @db.Text
   administrator   User    @relation(fields: [administratorId], references: [id], "task-administrator")
@@ -809,6 +815,32 @@ model FestivalTaskFeedback {
 
   @@id([ftId, authorId, publishedAt])
   @@map("festival_task_feedback")
+}
+
+enum FestivalTaskReviewer {
+  humain
+  matos
+  elec
+
+  @@map("festival_task_reviewer")
+}
+
+enum FestivalTaskReviewStatus {
+  REVIEWING
+  NOT_ASKING_TO_REVIEW
+
+  @@map("festival_task_review_status")
+}
+
+model FestivalTaskReview {
+  team   FestivalTaskReviewer
+  status FestivalTaskReviewStatus
+
+  ftId Int          @map("ft_id")
+  ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+
+  @@id([ftId, team])
+  @@map("festival_task_review")
 }
 
 model SharedMeal {

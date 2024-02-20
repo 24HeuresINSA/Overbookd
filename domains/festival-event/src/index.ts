@@ -197,6 +197,13 @@ export { FestivalTaskError } from "./festival-task/festival-task.error";
 export type { FestivalTasksForCreate } from "./festival-task/create/create";
 export { CreateFestivalTask } from "./festival-task/create/create";
 export type {
+  AskForReviewTasks,
+  Reviewers,
+  ReviewerStat,
+} from "./festival-task/ask-for-review/ask-for-review";
+export { AskForReview as AskForReviewTask } from "./festival-task/ask-for-review/ask-for-review";
+export { InReviewSpecification } from "./festival-task/ask-for-review/in-review-specification";
+export type {
   FestivalTasksForPrepare,
   UpdateGeneral,
   UpdateInstructions,
@@ -212,14 +219,23 @@ export type {
   InReview as FestivalTaskInReview,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
+  PreviewInReview as PreviewFestivalTaskInReview,
 } from "./festival-task/festival-task";
-export type { Volunteer, Contact } from "./festival-task/sections/instructions";
+export type {
+  Volunteer,
+  Contact,
+  WithoutInChargeInstructions,
+  WithInChargeInstructions,
+} from "./festival-task/sections/instructions";
 export type {
   Mobilization,
+  ReviewableMobilization,
   Conflicts,
   TeamMobilization,
   FestivalTaskLink,
   VolunteerWithConflicts,
+  AtLeastOneVolunteer,
+  AtLeastOneTeam,
 } from "./festival-task/sections/mobilizations";
 export {
   requirableTeams,
@@ -231,8 +247,10 @@ export type {
   WithConflicts as FestivalTaskWithConflicts,
   WithoutConflicts as FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
+  InReviewWithoutConflicts,
 } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
+export { isDraft as isFestivalTaskDraft } from "./festival-task/festival-task";
 
 //  **********************
 //  FESTIVAL EVENT MODULE

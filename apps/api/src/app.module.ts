@@ -36,12 +36,12 @@ import { ContributionModule } from "./contribution/contribution.module";
 import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
 import { AlertModule } from "./alert/alert.module";
 import { NotificationModule } from "./notification/notification.module";
-import { FestivalActivityModule } from "./festival-activity/festival-activity.module";
+import { FestivalActivityModule } from "./festival-event/activity/festival-activity.module";
 import { ONE_MINUTE_IN_MS } from "@overbookd/period";
 import { PersonalAccountModule } from "./personal-account/personal-account.module";
 import { SharedMealModule } from "./shared-meal/shared-meal.module";
 import { LogisticModule } from "./logistic/logistic.module";
-import { FestivalTaskModule } from "./festival-task/festival-task.module";
+import { FestivalTaskModule } from "./festival-event/task/festival-task.module";
 
 @Module({
   imports: [
