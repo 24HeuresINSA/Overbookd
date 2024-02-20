@@ -72,12 +72,10 @@ export class InReviewFestivalTaskResponseDto implements InReviewWithConflicts {
   @ApiProperty({
     description: "The festival task mobilizations",
     isArray: true,
-    type: {
-      oneOf: [
-        { $ref: getSchemaPath(MobilizationWithAtLeastOneVolunteerDto) },
-        { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
-      ],
-    },
+    oneOf: [
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneVolunteerDto) },
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
+    ],
   })
   mobilizations: InReviewWithConflicts["mobilizations"];
 
