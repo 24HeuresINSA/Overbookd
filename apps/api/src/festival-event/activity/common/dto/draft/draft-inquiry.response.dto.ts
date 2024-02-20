@@ -4,14 +4,14 @@ import {
   InquiryWithPotentialRequests,
   TimeWindow,
 } from "@overbookd/festival-event";
-import { PeriodDto } from "../../../../common/dto/period.dto";
+import { PeriodResponseDto } from "../../../../common/dto/period.response.dto";
 import { UnassignedInquiryRequestResponseDto } from "../inquiry-request.response.dto";
 
 export class InquiryDto implements InquiryWithPotentialRequests {
   @ApiProperty({
     description: "time windows during which you need requested stuff",
     isArray: true,
-    type: PeriodDto,
+    type: PeriodResponseDto,
   })
   timeWindows: TimeWindow[];
 

@@ -34,7 +34,7 @@ import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { DraftFestivalActivityResponseDto } from "../../common/dto/draft/draft-festival-activity.response.dto";
-import { PeriodDto } from "../../../common/dto/period.dto";
+import { PeriodRequestDto } from "../../../common/dto/period.request.dto";
 import {
   InReviewFestivalActivityResponseDto,
   ValidatedFestivalActivityResponseDto,
@@ -150,7 +150,7 @@ export class InquirySectionController {
   })
   @ApiBody({
     description: "Time window to add in inquiry section of festival activity",
-    type: PeriodDto,
+    type: PeriodRequestDto,
   })
   @ApiParam({
     name: "faId",
@@ -160,7 +160,7 @@ export class InquirySectionController {
   })
   addInquiryTimeWindow(
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
-    @Body() timeWindow: PeriodDto,
+    @Body() timeWindow: PeriodRequestDto,
   ): Promise<FestivalActivity> {
     return this.inquiryService.addInquiryTimeWindow(faId, timeWindow);
   }

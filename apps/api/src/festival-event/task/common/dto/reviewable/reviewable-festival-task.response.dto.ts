@@ -1,5 +1,8 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
-import { IN_REVIEW } from "@overbookd/festival-event";
+import {
+  IN_REVIEW,
+  FestivalTaskInReview as InReview,
+} from "@overbookd/festival-event";
 import { InReviewWithConflicts } from "@overbookd/http";
 import { InReviewGeneralResponseDto } from "./reviewable-general.response.dto";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
@@ -17,46 +20,44 @@ import {
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 
-export class ReviewableFestivalTaskResponseDto
-  implements InReviewWithConflicts
-{
+export class InReviewFestivalTaskResponseDto implements InReviewWithConflicts {
   @ApiProperty({})
-  id: InReviewWithConflicts["id"];
+  id: InReview["id"];
 
   @ApiProperty({ enum: [IN_REVIEW] })
-  status: InReviewWithConflicts["status"];
+  status: InReview["status"];
 
   @ApiProperty({
     description: "The festival task general",
     type: InReviewGeneralResponseDto,
   })
-  general: InReviewWithConflicts["general"];
+  general: InReview["general"];
 
   @ApiProperty({
     description: "The festival activity linked",
     type: FestivalActivityResponseDto,
   })
-  festivalActivity: InReviewWithConflicts["festivalActivity"];
+  festivalActivity: InReview["festivalActivity"];
 
   @ApiProperty({
     description: "The festival task instructions",
     type: InReviewInstructionsResponseDto,
   })
-  instructions: InReviewWithConflicts["instructions"];
+  instructions: InReview["instructions"];
 
   @ApiProperty({
     description: "Festival activity key events",
     isArray: true,
     type: KeyEventResponseDto,
   })
-  history: InReviewWithConflicts["history"];
+  history: InReview["history"];
 
   @ApiProperty({
     description: "The feedbacks",
     isArray: true,
     type: FeedbackResponseDto,
   })
-  feedbacks: InReviewWithConflicts["feedbacks"];
+  feedbacks: InReview["feedbacks"];
 
   @ApiProperty({
     description: "The inquiry requests",
@@ -66,7 +67,7 @@ export class ReviewableFestivalTaskResponseDto
     ],
     isArray: true,
   })
-  inquiries: InReviewWithConflicts["inquiries"];
+  inquiries: InReview["inquiries"];
 
   @ApiProperty({
     description: "The festival task mobilizations",
@@ -84,11 +85,11 @@ export class ReviewableFestivalTaskResponseDto
     description: "The festival task reviews",
     type: InReviewReviewsResponseDto,
   })
-  reviews: InReviewWithConflicts["reviews"];
+  reviews: InReview["reviews"];
 
   @ApiProperty({
     description: "The festival task reviewer",
     type: AdherentResponseDto,
   })
-  reviewer: InReviewWithConflicts["reviewer"];
+  reviewer: InReview["reviewer"];
 }

@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { InReviewWithConflicts } from "@overbookd/http";
+import { FestivalTaskInReview as InReview } from "@overbookd/festival-event";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 
-type General = InReviewWithConflicts["general"];
+type General = InReview["general"];
 
 export class InReviewGeneralResponseDto implements General {
   @ApiProperty({

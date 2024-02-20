@@ -28,7 +28,7 @@ import { PublishFeedbackRequestDto } from "./dto/publish-feedback.request.dto";
 import { FestivalTaskReviewService } from "./festival-task-review.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
-import { ReviewableFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
+import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -76,7 +76,7 @@ export class FestivalTaskReviewController {
   @ApiResponse({
     status: 200,
     description: "Festival task",
-    type: ReviewableFestivalTaskResponseDto,
+    type: InReviewFestivalTaskResponseDto,
   })
   @ApiParam({
     name: "ftId",

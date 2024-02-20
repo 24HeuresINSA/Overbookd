@@ -1,5 +1,5 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
-import { DRAFT } from "@overbookd/festival-event";
+import { DRAFT, FestivalTaskDraft as Draft } from "@overbookd/festival-event";
 import { DraftWithConflicts } from "@overbookd/http";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { DraftGeneralResponseDto } from "./draft-general.response.dto";
@@ -14,28 +14,28 @@ import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dt
 
 export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   @ApiProperty({})
-  id: DraftWithConflicts["id"];
+  id: Draft["id"];
 
   @ApiProperty({ enum: [DRAFT] })
-  status: DraftWithConflicts["status"];
+  status: Draft["status"];
 
   @ApiProperty({
     description: "The festival activity linked",
     type: FestivalActivityResponseDto,
   })
-  festivalActivity: DraftWithConflicts["festivalActivity"];
+  festivalActivity: Draft["festivalActivity"];
 
   @ApiProperty({
     description: "The festival task general",
     type: DraftGeneralResponseDto,
   })
-  general: DraftWithConflicts["general"];
+  general: Draft["general"];
 
   @ApiProperty({
     description: "The festival task instructions",
     type: DraftInstructionsResponseDto,
   })
-  instructions: DraftWithConflicts["instructions"];
+  instructions: Draft["instructions"];
 
   @ApiProperty({
     description: "The festival task mobilizations",
@@ -52,19 +52,19 @@ export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
     ],
     isArray: true,
   })
-  inquiries: DraftWithConflicts["inquiries"];
+  inquiries: Draft["inquiries"];
 
   @ApiProperty({
     description: "Festival activity key events",
     isArray: true,
     type: KeyEventResponseDto,
   })
-  history: DraftWithConflicts["history"];
+  history: Draft["history"];
 
   @ApiProperty({
     description: "The feedbacks",
     isArray: true,
     type: FeedbackResponseDto,
   })
-  feedbacks: DraftWithConflicts["feedbacks"];
+  feedbacks: Draft["feedbacks"];
 }

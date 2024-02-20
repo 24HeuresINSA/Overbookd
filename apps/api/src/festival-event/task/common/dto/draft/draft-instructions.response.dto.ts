@@ -26,6 +26,7 @@ export class DraftInstructionsResponseDto implements DraftInstructions {
   @ApiProperty({
     description: "Appointment location",
     type: LocationResponseDto,
+    nullable: true,
   })
   appointment: DraftInstructions["appointment"];
 

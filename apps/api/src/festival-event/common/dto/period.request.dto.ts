@@ -3,7 +3,7 @@ import { IProvidePeriod } from "@overbookd/period";
 import { Type } from "class-transformer";
 import { IsDate } from "class-validator";
 
-export class PeriodDto implements IProvidePeriod {
+export class PeriodRequestDto implements IProvidePeriod {
   @ApiProperty({})
   @IsDate()
   @Type(() => Date)

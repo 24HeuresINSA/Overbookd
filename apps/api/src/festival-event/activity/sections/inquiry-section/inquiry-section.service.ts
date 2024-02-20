@@ -8,9 +8,9 @@ import {
 } from "@overbookd/festival-event";
 import { InitInquiryRequest, AddInquiryRequestForm } from "@overbookd/http";
 import { JwtUtil } from "../../../../authentication/entities/jwt-util.entity";
-import { PeriodDto } from "../../../common/dto/period.dto";
 import { Inquiries } from "../../common/festival-activity-common.model";
 import { TeamService } from "../../../../team/team.service";
+import { IProvidePeriod } from "@overbookd/period";
 
 type LinkDriveToInquiryRequest = {
   activityId: FestivalActivity["id"];
@@ -43,7 +43,10 @@ export class InquirySectionService {
     return this.prepare.clearInquiry(faId);
   }
 
-  addInquiryTimeWindow(faId: FestivalActivity["id"], timeWindow: PeriodDto) {
+  addInquiryTimeWindow(
+    faId: FestivalActivity["id"],
+    timeWindow: IProvidePeriod,
+  ) {
     return this.prepare.addTimeWindowInInquiry(faId, timeWindow);
   }
 

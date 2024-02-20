@@ -2,13 +2,14 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   WithInChargeInstructions,
   WithoutInChargeInstructions,
+  FestivalTaskInReview as InReview,
 } from "@overbookd/festival-event";
 import { ContactResponseDto } from "../contact.response.dto";
-import { InReviewWithConflicts } from "@overbookd/http";
+import {} from "@overbookd/http";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 import { LocationResponseDto } from "../../../../common/dto/location.response.dto";
 
-type Instructions = InReviewWithConflicts["instructions"];
+type Instructions = InReview["instructions"];
 
 class WithInChargeInstructionsDto implements WithInChargeInstructions {
   @ApiProperty({
