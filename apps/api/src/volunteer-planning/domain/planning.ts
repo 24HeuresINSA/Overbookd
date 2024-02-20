@@ -1,17 +1,20 @@
 import { updateItemToList } from "@overbookd/list";
 import { JsonStoredTask, StoredTask } from "./storedTask";
 import { Task } from "./task.model";
+import { PlanningTask } from "@overbookd/http";
 
 export interface TaskRepository {
   getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
   ): Promise<JsonStoredTask[]>;
+
+  getVolunteerTasksHeIsPartOf(volunteerId: number): Promise<PlanningTask[]>;
 }
 
 export class Planning {
   constructor(private readonly taskRepository: TaskRepository) {}
 
-  async getVolunteerTasks(volunteerId: number): Promise<Task[]> {
+  async generateForVolunteer(volunteerId: number): Promise<Task[]> {
     const tasks =
       await this.taskRepository.getVolunteerTasksInChronologicalOrder(
         volunteerId,
@@ -21,6 +24,10 @@ export class Planning {
       [] as StoredTask[],
     );
     return groupedTasks.map((storedTask) => storedTask.toTask());
+  }
+
+  async listVolunteerTasks(volunteerId: number): Promise<PlanningTask[]> {
+    return this.taskRepository.getVolunteerTasksHeIsPartOf(volunteerId);
   }
 
   private groupTasks(

@@ -24,15 +24,6 @@
     <template #interval="{ date, hour }">
       <div :class="{ available: isUserAvailable(date, hour) }" />
     </template>
-    <template #event="{ event }">
-      <div
-        class="event underline-on-hover"
-        @click="openFt(event.ft.id)"
-        @mouseup.middle="openFtInNewTab(event.ft.id)"
-      >
-        {{ `[${event.ft.id}] ${event.ft.name}` }}
-      </div>
-    </template>
   </OverCalendar>
 </template>
 
@@ -43,23 +34,16 @@ import { UserPersonalData } from "@overbookd/user";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
-import { StatusColor, getColorByStatus } from "~/domain/common/status-color";
+import { getColorByStatus } from "~/domain/common/status-color";
 import {
-  Task,
   VolunteerAssignmentStat,
   VolunteerTask,
 } from "~/utils/models/user.model";
 import { formatUsername } from "~/utils/user/user.utils";
 import AssignmentUserStats from "~/components/molecules/user/AssignmentUserStats.vue";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
-
-interface CalendarEventWithFt {
-  start: Date;
-  end: Date;
-  ft: Task;
-  color: StatusColor;
-  timed: boolean;
-}
+import { CalendarEvent } from "~/utils/models/calendar.model";
+import { PlanningTask } from "@overbookd/http";
 
 export default Vue.extend({
   name: "UserCalendar",
@@ -79,25 +63,37 @@ export default Vue.extend({
     availabilities(): Period[] {
       return this.$accessor.volunteerAvailability.availabilities.list;
     },
-    ftRequests(): VolunteerTask[] {
-      return this.$accessor.user.selectedUserFtRequests;
-    },
     assignments(): VolunteerTask[] {
       return this.$accessor.user.selectedUserAssignments;
+    },
+    tasks(): PlanningTask[] {
+      return this.$accessor.user.selectedUserTasks;
     },
     stats(): VolunteerAssignmentStat[] {
       return this.$accessor.user.selectedUserAssignmentStats;
     },
-    events(): CalendarEventWithFt[] {
-      return [...this.ftRequests, ...this.assignments].map(
-        ({ start, end, ft }) => ({
+    events(): CalendarEvent[] {
+      const assignmentEvents = this.assignments.map(
+        ({ start, end, ft }): CalendarEvent => ({
           start,
           end,
-          ft,
+          name: `[${ft.id}] ${ft.name}`,
+          link: `/ft/${ft.id}`,
           color: getColorByStatus(ft.status),
           timed: true,
         }),
       );
+      const tasksEvents = this.tasks.map(
+        ({ name, id, status, timeWindow: { start, end } }): CalendarEvent => ({
+          start,
+          end,
+          name: `[${id}] ${name}`,
+          link: `/ft/${id}`,
+          color: getColorByStatus(status),
+          timed: true,
+        }),
+      );
+      return [...assignmentEvents, ...tasksEvents];
     },
     user(): UserPersonalData {
       return this.$accessor.user.selectedUser;
@@ -117,6 +113,7 @@ export default Vue.extend({
         this.userId,
       ),
       this.$accessor.user.getVolunteerAssignments(this.userId),
+      this.$accessor.user.getVolunteerTasks(this.userId),
     ]);
 
     if (this.shouldShowStats) {
@@ -134,11 +131,12 @@ export default Vue.extend({
     isUserAvailable(date: DateString, hour: Hour): boolean {
       return isItAvailableDuringThisHour(this.availabilities, date, hour);
     },
-    openFt(ftId: number) {
-      this.$router.push({ path: `/ft/${ftId}` });
+    openFt(path?: string) {
+      if (!path) return;
+      this.$router.push({ path });
     },
-    openFtInNewTab(ftId: number) {
-      window.open(`/ft/${ftId}`);
+    openFtInNewTab(path?: string) {
+      if (!path) window.open(path);
     },
   },
 });

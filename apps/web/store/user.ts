@@ -9,6 +9,7 @@ import {
   VolunteerTask,
   castToUserUpdateForm,
   castUserWithDate,
+  castVolunteerPlanningTasksWithDate,
   castVolunteerTaskWithDate,
 } from "~/utils/models/user.model";
 import {
@@ -19,22 +20,44 @@ import {
 } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 import { Consumer } from "~/utils/models/user.model";
+import { PlanningTask } from "@overbookd/http";
 
 const userRepo = RepoFactory.UserRepository;
 
-export const state = () => ({
+type UserDataWithPotentialyProfilePicture =
+  | UserPersonalData
+  | UserPersonalDataWithProfilePicture;
+
+type State = {
+  me: MyUserInformation | MyUserInformationWithProfilePicture;
+  users: UserDataWithPotentialyProfilePicture[];
+  selectedUser: UserDataWithPotentialyProfilePicture;
+  selectedUserFriends: User[];
+  selectedUserFtRequests: VolunteerTask[];
+  selectedUserAssignments: VolunteerTask[];
+  selectedUserTasks: PlanningTask[];
+  selectedUserAssignmentStats: VolunteerAssignmentStat[];
+  personalAccountConsumers: Consumer[];
+  volunteers: UserDataWithPotentialyProfilePicture[];
+  adherents: User[];
+  friends: User[];
+  mFriends: User[];
+};
+
+export const state = (): State => ({
   me: {} as MyUserInformation | MyUserInformationWithProfilePicture,
-  users: [] as (UserPersonalData | UserPersonalDataWithProfilePicture)[],
-  selectedUser: {} as UserPersonalData | UserPersonalDataWithProfilePicture,
-  selectedUserFriends: [] as User[],
-  selectedUserFtRequests: [] as VolunteerTask[],
-  selectedUserAssignments: [] as VolunteerTask[],
-  selectedUserAssignmentStats: [] as VolunteerAssignmentStat[],
-  personalAccountConsumers: [] as Consumer[],
-  volunteers: [] as (UserPersonalData | UserPersonalDataWithProfilePicture)[],
-  adherents: [] as User[],
-  friends: [] as User[],
-  mFriends: [] as User[],
+  users: [],
+  selectedUser: {} as UserDataWithPotentialyProfilePicture,
+  selectedUserFriends: [],
+  selectedUserFtRequests: [],
+  selectedUserAssignments: [],
+  selectedUserTasks: [],
+  selectedUserAssignmentStats: [],
+  personalAccountConsumers: [],
+  volunteers: [],
+  adherents: [],
+  friends: [],
+  mFriends: [],
 });
 
 export type UserState = ReturnType<typeof state>;
@@ -64,6 +87,9 @@ export const mutations = mutationTree(state, {
   },
   SET_SELECTED_USER_ASSIGNMENT(state: UserState, assignments: VolunteerTask[]) {
     state.selectedUserAssignments = assignments;
+  },
+  SET_SELECTED_USER_TASKS(state: UserState, tasks: PlanningTask[]) {
+    state.selectedUserTasks = tasks;
   },
   SET_SELECTED_USER_ASSIGNMENT_STATS(
     state: UserState,
@@ -374,6 +400,17 @@ export const actions = actionTree(
         ...user,
         profilePictureBlob,
       });
+    },
+
+    async getVolunteerTasks({ commit }, volunteerId: number) {
+      const res = await safeCall(
+        this,
+        userRepo.getMobilizationsVolunteerTakePartOf(this, volunteerId),
+      );
+
+      if (!res) return;
+      const tasks = castVolunteerPlanningTasksWithDate(res.data);
+      commit("SET_SELECTED_USER_TASKS", tasks);
     },
 
     async getVolunteerAssignments({ commit }, userId: number) {

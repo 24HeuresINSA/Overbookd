@@ -1,9 +1,58 @@
 import { Injectable } from "@nestjs/common";
+import { PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../src/prisma.service";
 import { buildVolunteerDisplayName } from "../../src/utils/volunteer";
 import { TaskRepository } from "./domain/planning";
 import { JsonStoredTask } from "./domain/storedTask";
+
+const SELECT_LEGACY_TASK = {
+  timeWindow: {
+    select: {
+      ft: {
+        select: {
+          id: true,
+          description: true,
+          name: true,
+          location: { select: { name: true } },
+        },
+      },
+    },
+  },
+  start: true,
+  end: true,
+};
+
+const SELECT_LEGACY_ASSIGNMENT = {
+  assignee: {
+    select: { id: true, firstname: true, lastname: true },
+  },
+  timeSpan: {
+    select: {
+      start: true,
+      end: true,
+      timeWindow: { select: { ftId: true } },
+    },
+  },
+};
+
+const SELECT_LOCATION = { id: true, name: true };
+const SELECT_FESTIVAL_TASK = {
+  id: true,
+  name: true,
+  status: true,
+  appointment: { select: SELECT_LOCATION },
+};
+const SELECT_MOBILIZATION = {
+  id: true,
+  start: true,
+  end: true,
+  ft: {
+    select: SELECT_FESTIVAL_TASK,
+  },
+};
+
+const IS_NOT_DELETED = { isDeleted: false };
 
 type DatabaseStoredTask = {
   start: Date;
@@ -27,48 +76,6 @@ type DatabaseAssignment = {
 
 @Injectable()
 export class PrismaTaskRepository implements TaskRepository {
-  private SELECT_TASK = {
-    timeWindow: {
-      select: {
-        ft: {
-          select: {
-            id: true,
-            description: true,
-            name: true,
-            location: {
-              select: {
-                name: true,
-              },
-            },
-          },
-        },
-      },
-    },
-    start: true,
-    end: true,
-  };
-
-  private SELECT_ASSIGNMENT = {
-    assignee: {
-      select: {
-        id: true,
-        firstname: true,
-        lastname: true,
-      },
-    },
-    timeSpan: {
-      select: {
-        start: true,
-        end: true,
-        timeWindow: {
-          select: {
-            ftId: true,
-          },
-        },
-      },
-    },
-  };
-
   constructor(private readonly prisma: PrismaService) {}
 
   async getVolunteerTasksInChronologicalOrder(
@@ -76,7 +83,7 @@ export class PrismaTaskRepository implements TaskRepository {
   ): Promise<JsonStoredTask[]> {
     const tasks = await this.prisma.ftTimeSpan.findMany({
       where: { assignments: { some: { assigneeId: volunteerId } } },
-      select: this.SELECT_TASK,
+      select: SELECT_LEGACY_TASK,
       orderBy: { start: "asc" },
     });
     const taskIds = tasks.map(({ timeWindow }) => timeWindow.ft.id);
@@ -85,7 +92,7 @@ export class PrismaTaskRepository implements TaskRepository {
         timeSpan: { timeWindow: { ftId: { in: taskIds } } },
         NOT: { assigneeId: volunteerId },
       },
-      select: this.SELECT_ASSIGNMENT,
+      select: SELECT_LEGACY_ASSIGNMENT,
       orderBy: { timeSpan: { start: "asc" } },
     });
 
@@ -116,5 +123,22 @@ export class PrismaTaskRepository implements TaskRepository {
       location: location.name,
       assignees,
     };
+  }
+
+  async getVolunteerTasksHeIsPartOf(
+    volunteerId: number,
+  ): Promise<PlanningTask[]> {
+    const volunteerIsPartOfMobilization = {
+      volunteers: { some: { volunteerId } },
+    };
+
+    const mobilizations = await this.prisma.festivalTaskMobilization.findMany({
+      where: { ...volunteerIsPartOfMobilization, ft: IS_NOT_DELETED },
+      select: SELECT_MOBILIZATION,
+    });
+
+    return mobilizations.map(({ ft, ...timeWindow }) => {
+      return { ...ft, timeWindow };
+    });
   }
 }

@@ -124,9 +124,11 @@
             :timeSummary="timeSummary"
             :eventSummary="eventSummary"
           >
-            <div class="default-event">
-              <component :is="{ render: eventSummary }" />
-            </div>
+            <nuxt-link :to="event.link ?? ''" class="calendar-event">
+              <div class="default-event">
+                <component :is="{ render: eventSummary }" />
+              </div>
+            </nuxt-link>
           </slot>
         </template>
       </v-calendar>
@@ -261,6 +263,14 @@ export default defineComponent({
     @media only screen and (max-width: $mobile-max-width) {
       display: none;
     }
+  }
+  &-event {
+    color: unset;
+    &:visited {
+      color: unset;
+    }
+    display: block;
+    min-height: 100%;
   }
 }
 .default-event {

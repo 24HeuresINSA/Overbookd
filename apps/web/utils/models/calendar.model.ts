@@ -5,6 +5,7 @@ export interface CalendarEvent {
   start: Date;
   end: Date;
   name: string;
+  link?: string;
   category?: string;
   color?: string;
   timed: true;
