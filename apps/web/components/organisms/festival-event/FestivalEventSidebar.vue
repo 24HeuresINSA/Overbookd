@@ -18,7 +18,6 @@
     </div>
 
     <v-btn
-      v-show="isFA"
       id="ask-for-review"
       :disabled="!canAskForReview"
       @click="askForReview"
@@ -33,17 +32,17 @@
 <script lang="ts">
 import Vue from "vue";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
-import { getReviewStatus as getFaReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
+import { getActivityReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
   FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { Team } from "~/utils/models/team.model";
 import {
-  DRAFT,
   FestivalActivity,
   FestivalTask,
   isDraft,
+  isFestivalTaskDraft,
   isRefused,
 } from "@overbookd/festival-event";
 import {
@@ -51,6 +50,7 @@ import {
   ftStatusLabels,
 } from "~/utils/festival-event/festival-task/festival-task.model";
 import { BROUILLON } from "~/utils/festival-event/festival-event.model";
+import { getTaskReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -97,7 +97,7 @@ export default Vue.extend({
     canAskForReview(): boolean {
       return this.isFA
         ? isDraft(this.mFA) || isRefused(this.mFA)
-        : this.mFT.status === DRAFT; // TODO for FT
+        : isFestivalTaskDraft(this.mFT);
     },
   },
   mounted() {
@@ -109,11 +109,15 @@ export default Vue.extend({
   methods: {
     getReviewerStatus(reviewer: Team): string {
       return this.isFA
-        ? getFaReviewStatus(this.mFA, reviewer.code).toLowerCase()
-        : ""; // TODO for FT
+        ? getActivityReviewStatus(this.mFA, reviewer.code).toLowerCase()
+        : getTaskReviewStatus(this.mFT, reviewer.code).toLowerCase();
     },
     async askForReview() {
-      await this.$accessor.festivalActivity.askForReview();
+      if (this.isFA) {
+        await this.$accessor.festivalActivity.askForReview();
+        return;
+      }
+      await this.$accessor.festivalTask.askForReview();
     },
   },
 });

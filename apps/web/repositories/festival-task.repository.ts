@@ -55,6 +55,13 @@ export class FestivalTaskRepository {
     );
   }
 
+  /* ASK FOR REVIEW */
+  static askForReview(context: Context, id: FestivalTaskWithConflicts["id"]) {
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
+      `${this.basePath}/${id}/ask-for-review`,
+    );
+  }
+
   /* REMOVE */
   static remove(context: Context, id: FestivalTaskWithConflicts["id"]) {
     return context.$axios.delete<void>(`${this.basePath}/${id}`);
