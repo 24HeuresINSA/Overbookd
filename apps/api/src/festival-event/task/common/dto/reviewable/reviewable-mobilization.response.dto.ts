@@ -2,8 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   AtLeastOneTeam,
   AtLeastOneVolunteer,
-  Mobilization,
-  ReviewableMobilization,
   TeamMobilization,
   VolunteerWithConflicts,
 } from "@overbookd/festival-event";

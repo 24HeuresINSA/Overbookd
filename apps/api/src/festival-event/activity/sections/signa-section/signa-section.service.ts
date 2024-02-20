@@ -10,9 +10,7 @@ import {
 import { PrepareSignaForm } from "@overbookd/http";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 import { TeamService } from "../../../team/team.service";
-import {
-  CatalogSignages,
-} from "../../common/festival-activity-common.model";
+import { CatalogSignages } from "../../common/festival-activity-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
 import { UpdateSignageRequest } from "./dto/update-signage.request.dto";
 
