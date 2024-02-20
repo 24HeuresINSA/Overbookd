@@ -49,6 +49,7 @@ import { AddInquiryRequestDto } from "./dto/add-inquiry-request.request.dto";
 import { InitInquiryRequestDto } from "./dto/init-inquiry.request.dto";
 import { LinkInquiryDriveRequestDto } from "./dto/link-inquiry-drive.request.dto";
 import { InquirySectionService } from "./inquiry-section.service";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -66,7 +67,7 @@ import { InquirySectionService } from "./inquiry-section.service";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}

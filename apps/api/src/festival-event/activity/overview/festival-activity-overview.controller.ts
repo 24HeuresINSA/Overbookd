@@ -52,6 +52,7 @@ import {
 import { CreateFestivalActivityRequestDto } from "./dto/create-festival-activity.request.dto";
 import { FestivalActivityOverviewService } from "./festival-activity-overview.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -73,7 +74,7 @@ import { FestivalActivityErrorFilter } from "../common/festival-activity-error.f
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class FestivalActivityOverviewController {
   constructor(

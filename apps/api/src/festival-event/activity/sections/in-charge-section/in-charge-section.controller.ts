@@ -37,6 +37,7 @@ import { UpdateContractorRequestDto } from "./dto/update-contractor.request.dto"
 import { AddContractorRequestDto } from "./dto/add-contractor.request.dto";
 import { InChargeRequestDto } from "./dto/update-in-charge.request.dto";
 import { InChargeSectionService } from "./in-charge-section.service";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -52,7 +53,7 @@ import { InChargeSectionService } from "./in-charge-section.service";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class InChargeSectionController {
   constructor(private readonly inChargeService: InChargeSectionService) {}

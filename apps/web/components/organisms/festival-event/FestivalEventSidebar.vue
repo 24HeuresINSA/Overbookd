@@ -40,7 +40,7 @@ import {
 import { Team } from "~/utils/models/team.model";
 import {
   FestivalActivity,
-  FestivalTask,
+  FestivalTaskWithConflicts as FestivalTask,
   isDraft,
   isFestivalTaskDraft,
   isRefused,
@@ -62,60 +62,64 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): FestivalActivity {
+    selectedActivity(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
     },
-    mFT(): FestivalTask {
+    selectedTask(): FestivalTask {
       return this.$accessor.festivalTask.selectedTask;
     },
-    isFA(): boolean {
+    isActivity(): boolean {
       return this.festivalEvent === "FA";
     },
     titleWithId(): string {
-      return this.isFA
+      return this.isActivity
         ? `Fiche Activité n°${this.$route.params.faId}`
         : `Fiche Tâche n°${this.$route.params.ftId}`;
     },
     name(): string {
-      return this.isFA ? this.mFA.general.name : this.mFT.general.name;
+      return this.isActivity
+        ? this.selectedActivity.general.name
+        : this.selectedTask.general.name;
     },
     statusLabel(): FaStatusLabel | FtStatusLabel {
-      return this.isFA
-        ? faStatusLabels.get(this.mFA.status) ?? BROUILLON
-        : ftStatusLabels.get(this.mFT.status) ?? BROUILLON;
+      return this.isActivity
+        ? faStatusLabels.get(this.selectedActivity.status) ?? BROUILLON
+        : ftStatusLabels.get(this.selectedTask.status) ?? BROUILLON;
     },
     reviewers(): Team[] {
-      return this.isFA
+      return this.isActivity
         ? this.$accessor.team.faValidators
         : this.$accessor.team.ftValidators;
     },
     status(): string {
-      return this.isFA
-        ? this.mFA.status.toLowerCase()
-        : this.mFT.status.toLowerCase();
+      return this.isActivity
+        ? this.selectedActivity.status.toLowerCase()
+        : this.selectedTask.status.toLowerCase();
     },
     canAskForReview(): boolean {
-      return this.isFA
-        ? isDraft(this.mFA) || isRefused(this.mFA)
-        : isFestivalTaskDraft(this.mFT);
+      return this.isActivity
+        ? isDraft(this.selectedActivity) || isRefused(this.selectedActivity)
+        : isFestivalTaskDraft(this.selectedTask);
     },
   },
   mounted() {
     if (this.reviewers.length > 0) return;
-    this.isFA
+    this.isActivity
       ? this.$accessor.team.fetchFaValidators()
       : this.$accessor.team.fetchFtValidators();
   },
   methods: {
     getReviewerStatus(reviewer: Team): string {
-      return this.isFA
-        ? getActivityReviewStatus(this.mFA, reviewer.code).toLowerCase()
-        : getTaskReviewStatus(this.mFT, reviewer.code).toLowerCase();
+      return this.isActivity
+        ? getActivityReviewStatus(
+            this.selectedActivity,
+            reviewer.code,
+          ).toLowerCase()
+        : getTaskReviewStatus(this.selectedTask, reviewer.code).toLowerCase();
     },
     async askForReview() {
-      if (this.isFA) {
-        await this.$accessor.festivalActivity.askForReview();
-        return;
+      if (this.isActivity) {
+        return this.$accessor.festivalActivity.askForReview();
       }
       await this.$accessor.festivalTask.askForReview();
     },

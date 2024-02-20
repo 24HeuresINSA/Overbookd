@@ -1,29 +1,25 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  Adherent,
-  DRAFT,
-  PreviewFestivalTaskDraft,
-} from "@overbookd/festival-event";
+import { DRAFT, PreviewFestivalTaskDraft } from "@overbookd/festival-event";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 
-export class PreviewFestivalTaskResponseDto
+export class PreviewFestivalTaskDraftResponseDto
   implements PreviewFestivalTaskDraft
 {
   @ApiProperty({
     description: "The festival task id",
     type: Number,
   })
-  id: number;
+  id: PreviewFestivalTaskDraft["id"];
 
   @ApiProperty({
     description: "The festival task name",
     type: String,
   })
-  name: string;
+  name: PreviewFestivalTaskDraft["name"];
 
   @ApiProperty({
     description: "The festival task status",
-    type: String,
+    enum: [DRAFT],
     example: DRAFT,
   })
   status: typeof DRAFT;
@@ -32,11 +28,11 @@ export class PreviewFestivalTaskResponseDto
     description: "The festival task adherent in charge",
     type: AdherentResponseDto,
   })
-  administrator: Adherent;
+  administrator: PreviewFestivalTaskDraft["administrator"];
 
   @ApiProperty({
     description: "The festival task team code",
     type: String,
   })
-  team: string | null;
+  team: PreviewFestivalTaskDraft["team"];
 }

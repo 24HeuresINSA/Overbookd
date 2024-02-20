@@ -17,6 +17,7 @@ import {
   ApiBody,
   ApiParam,
   ApiResponse,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { InstructionsSectionService } from "./instructions-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
@@ -29,6 +30,8 @@ import { Permission } from "../../../../authentication/permissions-auth.decorato
 import { Contact, FestivalTask, Volunteer } from "@overbookd/festival-event";
 import { AddContactRequestDto } from "./dto/add-contact.request.dto";
 import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -38,7 +41,7 @@ import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto"
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@UseFilters(FestivalTaskErrorFilter)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
 export class InstructionsSectionController {
   constructor(
@@ -51,7 +54,12 @@ export class InstructionsSectionController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Instructions section of festival activity to save",
@@ -76,7 +84,12 @@ export class InstructionsSectionController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Contact to add",
@@ -101,7 +114,12 @@ export class InstructionsSectionController {
   @ApiResponse({
     status: 200,
     description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "ftId",
@@ -127,8 +145,13 @@ export class InstructionsSectionController {
   @Post(":ftId/instructions/in-charge/volunteers")
   @ApiResponse({
     status: 200,
-    description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    description: "A festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Volunteer to add",
@@ -137,7 +160,7 @@ export class InstructionsSectionController {
   @ApiParam({
     name: "ftId",
     type: Number,
-    description: "Festival activity id",
+    description: "Festival task id",
     required: true,
   })
   addInChargeVolunteer(
@@ -152,13 +175,18 @@ export class InstructionsSectionController {
   @Delete(":ftId/instructions/in-charge/volunteers/:volunteerId")
   @ApiResponse({
     status: 200,
-    description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    description: "A festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "ftId",
     type: Number,
-    description: "Festival activity id",
+    description: "Festival task id",
     required: true,
   })
   @ApiParam({
@@ -179,13 +207,18 @@ export class InstructionsSectionController {
   @Delete(":ftId/instructions/in-charge")
   @ApiResponse({
     status: 200,
-    description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    description: "A festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "ftId",
     type: Number,
-    description: "Festival activity id",
+    description: "Festival task id",
     required: true,
   })
   clearInCharge(

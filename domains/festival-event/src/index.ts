@@ -256,3 +256,4 @@ export { isDraft as isFestivalTaskDraft } from "./festival-task/festival-task";
 //  FESTIVAL EVENT MODULE
 //  **********************
 export type { FestivalEvent } from "./festival-event";
+export { FestivalEventError } from "./festival-event";

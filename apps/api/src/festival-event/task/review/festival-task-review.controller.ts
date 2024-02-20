@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiParam,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { FestivalTask } from "@overbookd/festival-event";
 import { WRITE_FT } from "@overbookd/permission";
@@ -29,6 +30,7 @@ import { FestivalTaskReviewService } from "./festival-task-review.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
 import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -38,7 +40,7 @@ import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/review
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@UseFilters(FestivalTaskErrorFilter)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
 export class FestivalTaskReviewController {
   constructor(private readonly reviewService: FestivalTaskReviewService) {}
@@ -50,7 +52,12 @@ export class FestivalTaskReviewController {
   @ApiResponse({
     status: 200,
     description: "Festival task",
-    type: DraftFestivalTaskResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Feedback to add to festival task",

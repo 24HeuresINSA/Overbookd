@@ -29,11 +29,11 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
           eventStore,
         ),
       inject: [
-        PrismaAdherents,
-        PrismaFestivalActivities,
         CreateFestivalTask,
         ViewFestivalTask,
         PrismaRemoveFestivalTasks,
+        PrismaAdherents,
+        PrismaFestivalActivities,
         DomainEventService,
       ],
     },

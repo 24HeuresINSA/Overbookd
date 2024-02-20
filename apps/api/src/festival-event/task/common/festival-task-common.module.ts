@@ -127,11 +127,11 @@ import { PrismaNotifications } from "../../common/repository/notifications.prism
     {
       provide: AskForReviewTask,
       useFactory: (
-        festivalActivities: PrismaAskForReview,
+        festivalTasks: PrismaAskForReview,
         notifications: PrismaNotifications<"FT">,
         reviewers: PrismaReviewers,
-      ) => new AskForReviewTask(festivalActivities, notifications, reviewers),
-      inject: [PrismaAskForReview, PrismaNotifications<"FT">],
+      ) => new AskForReviewTask(festivalTasks, notifications, reviewers),
+      inject: [PrismaAskForReview, PrismaNotifications<"FT">, PrismaReviewers],
     },
     {
       provide: PrismaRemoveFestivalTasks,
