@@ -8,12 +8,12 @@ export type Contact = Adherent & {
 
 export type Volunteer = Adherent;
 
-type WithoutInChargeInstructions = {
+export type WithoutInChargeInstructions = {
   instruction: null;
   volunteers: [];
 };
 
-type WithInChargeInstructions = {
+export type WithInChargeInstructions = {
   instruction: string;
   volunteers: WithAtLeastOneItem<Volunteer>;
 };

@@ -1,10 +1,16 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { DRAFT } from "@overbookd/festival-event";
 import { DraftWithConflicts } from "@overbookd/http";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { DraftGeneralResponseDto } from "./draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "./draft-instructions.response.dto";
 import { KeyEventResponseDto } from "../key-event.response.dto";
+import {
+  AssignedInquiryRequestResponseDto,
+  UnassignedInquiryRequestResponseDto,
+} from "../inquiry-request.response.dto";
+import { FeedbackResponseDto } from "../feedback.response.dto";
+import { DraftMobilizationResponseDto } from "./draft-mobilization.response.dto";
 
 export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   @ApiProperty({})
@@ -31,8 +37,21 @@ export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   })
   instructions: DraftWithConflicts["instructions"];
 
+  @ApiProperty({
+    description: "The festival task mobilizations",
+    type: DraftMobilizationResponseDto,
+    isArray: true,
+  })
   mobilizations: DraftWithConflicts["mobilizations"];
 
+  @ApiProperty({
+    description: "The inquiry requests",
+    oneOf: [
+      { $ref: getSchemaPath(UnassignedInquiryRequestResponseDto) },
+      { $ref: getSchemaPath(AssignedInquiryRequestResponseDto) },
+    ],
+    isArray: true,
+  })
   inquiries: DraftWithConflicts["inquiries"];
 
   @ApiProperty({
@@ -42,5 +61,10 @@ export class DraftFestivalTaskResponseDto implements DraftWithConflicts {
   })
   history: DraftWithConflicts["history"];
 
+  @ApiProperty({
+    description: "The feedbacks",
+    isArray: true,
+    type: FeedbackResponseDto,
+  })
   feedbacks: DraftWithConflicts["feedbacks"];
 }

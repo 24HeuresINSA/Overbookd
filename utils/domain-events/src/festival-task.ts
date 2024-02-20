@@ -1,7 +1,7 @@
 import type { Event } from "@overbookd/event";
 import {
   Adherent,
-  FestivalTask as Draft,
+  FestivalTaskDraft as Draft,
   FestivalTaskInReview as InReview,
 } from "@overbookd/festival-event";
 

@@ -220,13 +220,21 @@ export type {
   PreviewDraft as PreviewFestivalTaskDraft,
   PreviewInReview as PreviewFestivalTaskInReview,
 } from "./festival-task/festival-task";
-export type { Volunteer, Contact } from "./festival-task/sections/instructions";
+export type {
+  Volunteer,
+  Contact,
+  WithoutInChargeInstructions,
+  WithInChargeInstructions,
+} from "./festival-task/sections/instructions";
 export type {
   Mobilization,
+  ReviewableMobilization,
   Conflicts,
   TeamMobilization,
   FestivalTaskLink,
   VolunteerWithConflicts,
+  AtLeastOneVolunteer,
+  AtLeastOneTeam,
 } from "./festival-task/sections/mobilizations";
 export {
   requirableTeams,

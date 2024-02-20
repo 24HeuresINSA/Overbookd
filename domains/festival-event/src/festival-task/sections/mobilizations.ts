@@ -51,14 +51,14 @@ export type Mobilization<
   durationSplitInHour: null | number;
 };
 
-type AtLeastOneVolunteer<Options extends MobilizationOptions> = Omit<
+export type AtLeastOneVolunteer<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,
   "volunteers"
 > & {
   volunteers: WithAtLeastOneItem<MobilizationVolunteer<Options>>;
 };
 
-type AtLeastOneTeam<Options extends MobilizationOptions> = Omit<
+export type AtLeastOneTeam<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,
   "teams"
 > & {

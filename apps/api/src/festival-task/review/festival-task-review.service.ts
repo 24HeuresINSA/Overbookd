@@ -34,11 +34,11 @@ export class FestivalTaskReviewService {
     user: JwtPayload,
   ): Promise<FestivalTask> {
     const adherent = await this.adherents.findOne(user.id);
-    const activity = await this.askForReview.from(ftId, adherent);
+    const task = await this.askForReview.from(ftId, adherent);
 
-    const event = FestivalTaskEvents.readyToReview(activity, adherent.id);
+    const event = FestivalTaskEvents.readyToReview(task, adherent.id);
     this.eventStore.publish(event);
 
-    return activity;
+    return task;
   }
 }
