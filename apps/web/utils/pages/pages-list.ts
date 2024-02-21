@@ -147,7 +147,7 @@ export const pages: Page[] = [
     icon: "mdi-account-multiple-plus",
     title: "Inscriptions",
     permission: ENROLL_ADHERENT,
-    to: "/registrations",
+    to: "/registrations/hards",
     description:
       "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
     mobileSupport: true,
@@ -157,7 +157,7 @@ export const pages: Page[] = [
     icon: "mdi-account-multiple-check",
     title: "Admissions",
     permission: ENROLL_VOLUNTEER,
-    to: "/volunteers-registration",
+    to: "/registrations/volunteers",
     description:
       "Permet de visualiser tous les nouveaux bénévoles arrivants sur Overbookd et de les enrôler",
     mobileSupport: false,

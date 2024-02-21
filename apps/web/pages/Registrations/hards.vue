@@ -87,7 +87,7 @@ interface RegistrationsData {
 type Filter = (newcomer: Searchable<IDefineANewcomer>) => boolean;
 
 export default Vue.extend({
-  name: "Registrations",
+  name: "Hards",
   components: {
     TeamChip,
     SnackNotificationContainer,
