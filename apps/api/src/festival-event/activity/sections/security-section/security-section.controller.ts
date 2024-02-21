@@ -32,6 +32,7 @@ import {
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { SecurityRequestDto } from "./dto/update-security.request.dto";
 import { SecuritySectionService } from "./security-section.service";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -47,7 +48,7 @@ import { SecuritySectionService } from "./security-section.service";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class SecuritySectionController {
   constructor(private readonly securityService: SecuritySectionService) {}

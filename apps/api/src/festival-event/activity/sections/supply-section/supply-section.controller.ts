@@ -37,6 +37,7 @@ import { UpdateElectricitySupplyRequestDto } from "./dto/update-electricity-supp
 import { AddElectricitySupplyRequestDto } from "./dto/add-electricity-supply.request.dto";
 import { SupplyRequestDto } from "./dto/update-supply.request.dto";
 import { SupplySectionService } from "./supply-section.service";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -52,7 +53,7 @@ import { SupplySectionService } from "./supply-section.service";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class SupplySectionController {
   constructor(private readonly supplyService: SupplySectionService) {}

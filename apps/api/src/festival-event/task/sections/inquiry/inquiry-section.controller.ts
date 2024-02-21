@@ -16,6 +16,7 @@ import {
   ApiBody,
   ApiParam,
   ApiResponse,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
@@ -26,6 +27,8 @@ import { PermissionsGuard } from "../../../../authentication/permissions-auth.gu
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { FestivalTask, InquiryRequest } from "@overbookd/festival-event";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
+import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -35,7 +38,7 @@ import { FestivalTask, InquiryRequest } from "@overbookd/festival-event";
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@UseFilters(FestivalTaskErrorFilter)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
 export class InquirySectionController {
   constructor(private readonly inquiryService: InquirySectionService) {}
@@ -45,8 +48,13 @@ export class InquirySectionController {
   @Post(":ftId/inquiry/requests")
   @ApiResponse({
     status: 200,
-    description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    description: "A festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiBody({
     description: "Inquiry request to add",
@@ -55,7 +63,7 @@ export class InquirySectionController {
   @ApiParam({
     name: "ftId",
     type: Number,
-    description: "Festival activity id",
+    description: "Festival task id",
     required: true,
   })
   addInquiryRequest(
@@ -70,13 +78,18 @@ export class InquirySectionController {
   @Delete(":ftId/inquiry/requests/:inquirySlug")
   @ApiResponse({
     status: 200,
-    description: "A festival activity",
-    type: DraftFestivalTaskResponseDto,
+    description: "A festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "ftId",
     type: Number,
-    description: "Festival activity id",
+    description: "Festival task id",
     required: true,
   })
   @ApiParam({

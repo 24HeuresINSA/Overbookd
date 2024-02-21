@@ -30,29 +30,39 @@ import { ReadyForReviewError } from "../../common/ready-for-review.error";
 import { AskForReview } from "./ask-for-review";
 import { InMemoryReviewers } from "./reviewers.inmemory";
 import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 describe("Festival Task - ask for review", () => {
   let notifications: InMemoryNotifications<"FT">;
   let askForReview: AskForReview;
-  let tasks: InMemoryAskForReviewTasks;
+  let festivalTasks: InMemoryAskForReviewTasks;
+  let translator: FestivalTaskTranslator;
+  const tasks = [
+    installJustDance,
+    guardEscapeGame,
+    installPreventionVillage,
+    guardPreventionVillage,
+    withNoTeamTask,
+    withNoAppointmentTask,
+    withNoGlobalInstructionsTask,
+    withNotAnyContactTask,
+    withInChargeVolunteerButWithNotInChargeInstruction,
+    withInChargeInstructionButWithNotInChargeVolunteer,
+    withoutAnyMobilization,
+    withSomeMobilizationsWithoutRequest,
+  ];
   beforeEach(() => {
-    tasks = new InMemoryAskForReviewTasks([
-      installJustDance,
-      guardEscapeGame,
-      installPreventionVillage,
-      guardPreventionVillage,
-      withNoTeamTask,
-      withNoAppointmentTask,
-      withNoGlobalInstructionsTask,
-      withNotAnyContactTask,
-      withInChargeVolunteerButWithNotInChargeInstruction,
-      withInChargeInstructionButWithNotInChargeVolunteer,
-      withoutAnyMobilization,
-      withSomeMobilizationsWithoutRequest,
-    ]);
+    festivalTasks = new InMemoryAskForReviewTasks(tasks);
     const reviewers = new InMemoryReviewers([{ adherent: noel, count: 0 }]);
     notifications = new InMemoryNotifications<"FT">();
-    askForReview = new AskForReview(tasks, notifications, reviewers);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
+    translator = new FestivalTaskTranslator(volunteerConflicts);
+    askForReview = new AskForReview(
+      festivalTasks,
+      { notifications, reviewers },
+      translator,
+    );
   });
   describe("when asking a review for draft festival task", () => {
     describe.each`
@@ -98,7 +108,11 @@ describe("Festival Task - ask for review", () => {
         `("humain reviewer", ({ humainReviews, expectedReviewer }) => {
           beforeEach(() => {
             const reviewers = new InMemoryReviewers(humainReviews);
-            askForReview = new AskForReview(tasks, notifications, reviewers);
+            askForReview = new AskForReview(
+              festivalTasks,
+              { notifications, reviewers },
+              translator,
+            );
           });
           it("should assign one humain reviewer to task", async () => {
             const inReview = await askForReview.from(task.id, instigator);
@@ -107,7 +121,7 @@ describe("Festival Task - ask for review", () => {
         });
         it("should be stored in task repository", async () => {
           const inReview = await askForReview.from(task.id, instigator);
-          expect(tasks.entries).toContainEqual(inReview);
+          expect(festivalTasks.entries).toContainEqual(inReview);
         });
         describe("reviews", () => {
           it(`should ask review from ${reviewers}`, async () => {

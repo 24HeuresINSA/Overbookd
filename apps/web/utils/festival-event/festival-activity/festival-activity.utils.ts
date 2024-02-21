@@ -72,7 +72,7 @@ export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
   [REJECTED, REJETEE],
 ]);
 
-export function getReviewStatus(
+export function getActivityReviewStatus(
   festivalActivity: FestivalActivity,
   reviewer: string,
 ): ReviewStatus {

@@ -65,7 +65,6 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
 
   static fromDatabase(taskData: DatabaseFestivalTask): VisualizeFestivalTask {
     const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
-
     switch (taskData.status) {
       case DRAFT:
         return DraftBuilder.init(taskWithoutStatus);

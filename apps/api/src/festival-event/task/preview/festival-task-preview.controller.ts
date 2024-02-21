@@ -6,15 +6,18 @@ import {
   ApiForbiddenResponse,
   ApiExtraModels,
   ApiResponse,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { PreviewFestivalTask } from "@overbookd/festival-event";
 import { READ_FT } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
-import { PreviewFestivalTaskResponseDto } from "./dto/preview-festival-activity.response.dto";
+import { PreviewFestivalTaskDraftResponseDto } from "./dto/preview-festival-task-draft.response.dto";
 import { FestivalTaskPreviewService } from "./festival-task-preview.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-task-in-review.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -24,8 +27,11 @@ import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 @ApiForbiddenResponse({
   description: "User can't access this resource",
 })
-@ApiExtraModels(PreviewFestivalTaskResponseDto)
-@UseFilters(FestivalTaskErrorFilter)
+@ApiExtraModels(
+  PreviewFestivalTaskDraftResponseDto,
+  PreviewFestivalTaskInReviewResponseDto,
+)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
 export class FestivalTaskPreviewController {
   constructor(private readonly previewService: FestivalTaskPreviewService) {}
@@ -35,8 +41,13 @@ export class FestivalTaskPreviewController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: "All festival activities",
-    type: PreviewFestivalTaskResponseDto,
+    description: "All festival tasks",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(PreviewFestivalTaskDraftResponseDto) },
+        { $ref: getSchemaPath(PreviewFestivalTaskInReviewResponseDto) },
+      ],
+    },
     isArray: true,
   })
   findAll(): Promise<PreviewFestivalTask[]> {

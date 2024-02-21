@@ -25,9 +25,9 @@ import { DomainEventService } from "../../../domain-event/domain-event.service";
           eventStore,
         ),
       inject: [
-        PrismaAdherents,
         PrepareFestivalTask,
         AskForReviewTask,
+        PrismaAdherents,
         DomainEventService,
       ],
     },

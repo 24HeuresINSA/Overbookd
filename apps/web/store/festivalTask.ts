@@ -114,6 +114,17 @@ export const actions = actionTree(
       await dispatch("fetchAllTasks");
     },
 
+    /* ASK FOR REVIEW */
+    async askForReview({ state, commit, dispatch }) {
+      const id = state.selectedTask.id;
+      const res = await safeCall(this, repo.askForReview(this, id));
+      if (!res) return;
+
+      const activity = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", activity);
+      await dispatch("fetchAllTasks");
+    },
+
     /* REMOVE */
     async remove({ commit, dispatch }, id: FestivalTaskWithConflicts["id"]) {
       const res = await safeCall(this, repo.remove(this, id), {

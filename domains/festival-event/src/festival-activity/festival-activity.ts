@@ -82,10 +82,6 @@ export type CreateFestivalActivityForm = {
   name: string;
 };
 
-export function isDraft(activity: FestivalActivity): activity is Draft {
-  return activity.status === DRAFT;
-}
-
 export function isRefused(activity: FestivalActivity): activity is Refused {
   return activity.status === REFUSED;
 }

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { FestivalTaskOverviewService } from "./festival-activity-overview.service";
+import { FestivalTaskOverviewService } from "./festival-task-overview.service";
 import { PrismaAdherents } from "../common/repository/adherents.prisma";
 import {
   CreateFestivalTask,
@@ -29,11 +29,11 @@ import { DomainEventModule } from "../../../domain-event/domain-event.module";
           eventStore,
         ),
       inject: [
-        PrismaAdherents,
-        PrismaFestivalActivities,
         CreateFestivalTask,
         ViewFestivalTask,
         PrismaRemoveFestivalTasks,
+        PrismaAdherents,
+        PrismaFestivalActivities,
         DomainEventService,
       ],
     },

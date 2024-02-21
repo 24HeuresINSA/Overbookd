@@ -1,10 +1,5 @@
 import { updateItemToList } from "@overbookd/list";
-import {
-  FestivalActivity,
-  Draft,
-  Reviewable,
-  isDraft,
-} from "../festival-activity";
+import { FestivalActivity, Draft, Reviewable } from "../festival-activity";
 import {
   PreviewFestivalActivity,
   PreviewDraft,
@@ -14,6 +9,7 @@ import { VALIDATED, IN_REVIEW, REFUSED } from "../../common/status";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
 import { isRefusedReviews, isValidatedReviews } from "../sections/reviews";
+import { isDraft } from "../../festival-event";
 
 export class InMemoryPrepareFestivalActivityRepository
   implements PrepareFestivalActivityRepository
@@ -52,7 +48,7 @@ export class InMemoryPrepareFestivalActivityRepository
 function generatePreview<T extends FestivalActivity>(
   festivalActivity: T,
 ): PreviewFestivalActivity {
-  return isDraft(festivalActivity)
+  return isDraft<FestivalActivity>(festivalActivity)
     ? generateDraftPreview(festivalActivity)
     : generateInReviewPreview(festivalActivity);
 }

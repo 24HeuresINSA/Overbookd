@@ -45,6 +45,7 @@ import { LinkSignageCatalogItemRequestDto } from "./dto/link-signage-catalog-ite
 import { AddSignageRequestDto } from "./dto/add-signage.request.dto";
 import { UpdateSignaRequestDto } from "./dto/update-signa.request.dto";
 import { UpdateSignageRequestDto } from "./dto/update-signage.request.dto";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -62,7 +63,7 @@ import { UpdateSignageRequestDto } from "./dto/update-signage.request.dto";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class SignaSectionController {
   constructor(private readonly signaService: SignaSectionService) {}

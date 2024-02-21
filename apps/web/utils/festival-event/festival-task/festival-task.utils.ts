@@ -1,6 +1,12 @@
 import {
   DRAFT,
+  ReviewStatus,
   FestivalTaskWithConflicts as FestivalTask,
+  humain,
+  matos,
+  elec,
+  NOT_ASKING_TO_REVIEW,
+  isDraft,
 } from "@overbookd/festival-event";
 import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
@@ -13,6 +19,23 @@ export function castTaskWithDate(
     return CastDraft.withDate(task);
   }
   return CastInReview.withDate(task);
+}
+
+export function getTaskReviewStatus(
+  festivalTask: FestivalTask,
+  reviewer: string,
+): ReviewStatus {
+  if (isDraft(festivalTask)) return NOT_ASKING_TO_REVIEW;
+  switch (reviewer) {
+    case humain:
+      return festivalTask.reviews.humain;
+    case matos:
+      return festivalTask.reviews.matos;
+    case elec:
+      return festivalTask.reviews.elec;
+    default:
+      return NOT_ASKING_TO_REVIEW;
+  }
 }
 
 function isHttpDraft(

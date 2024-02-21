@@ -12,7 +12,7 @@ import {
   ReviewingStatus,
   Volunteer,
   isAssignedToDrive,
-  isFestivalTaskDraft,
+  isDraft,
 } from "@overbookd/festival-event";
 import { SELECT_CONTACT } from "./adherent.query";
 import { SELECT_FESTIVAL_ACTIVITY } from "./festival-activity.query";
@@ -85,9 +85,7 @@ export class FestivalTaskQueryBuilder {
   }
 
   static update(task: FestivalTaskWithoutConflicts) {
-    const reviews = isFestivalTaskDraft(task)
-      ? {}
-      : { reviews: this.upsertReviews(task) };
+    const reviews = isDraft(task) ? {} : { reviews: this.upsertReviews(task) };
     const contacts = this.upsertContacts(task.id, task.instructions.contacts);
     const inChargeVolunteers = this.upsertInChargeVolunteers(
       task.id,
@@ -343,7 +341,7 @@ function databaseMobilizationForCreation(
 function databaseFestivalTaskWithoutListsMapping(
   task: FestivalTaskWithoutConflicts,
 ) {
-  const reviewerId = isFestivalTaskDraft(task) ? null : task.reviewer?.id;
+  const reviewerId = isDraft(task) ? null : task.reviewer?.id;
   return {
     id: task.id,
     status: task.status,

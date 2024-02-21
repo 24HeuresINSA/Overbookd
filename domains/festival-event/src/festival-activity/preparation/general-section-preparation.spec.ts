@@ -17,10 +17,10 @@ import {
   validatedBySecu,
   publicApprovedByHumain,
 } from "./preparation.test-utils";
-import { isDraft } from "../festival-activity";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../../common/review";
 import { PrepareError } from "./prepare-in-review-festival-activity";
 import { sunday14hToSunday18h } from "../festival-activity.fake";
+import { isDraft } from "../../festival-event";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

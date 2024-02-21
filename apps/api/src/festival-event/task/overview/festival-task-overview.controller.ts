@@ -20,6 +20,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  getSchemaPath,
 } from "@nestjs/swagger";
 import { FestivalTask } from "@overbookd/festival-event";
 import { READ_FT, WRITE_FT } from "@overbookd/permission";
@@ -30,7 +31,7 @@ import { PermissionsGuard } from "../../../authentication/permissions-auth.guard
 import { CreateFestivalTaskRequestDto } from "./dto/create-festival-task.request.dto";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
-import { FestivalTaskOverviewService } from "./festival-activity-overview.service";
+import { FestivalTaskOverviewService } from "./festival-task-overview.service";
 import { DraftGeneralResponseDto } from "../common/dto/draft/draft-general.response.dto";
 import { DraftInstructionsResponseDto } from "../common/dto/draft/draft-instructions.response.dto";
 import { ContactResponseDto } from "../common/dto/contact.response.dto";
@@ -45,6 +46,8 @@ import { StatisticsResponseDto } from "../../../statistics/dto/statistics.respon
 import { LocationResponseDto } from "../../common/dto/location.response.dto";
 import { AdherentResponseDto } from "../../common/dto/adherent.response.dto";
 import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -66,7 +69,7 @@ import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto
   AssignedInquiryRequestResponseDto,
   TimeWindowResponseDto,
 )
-@UseFilters(FestivalTaskErrorFilter)
+@UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
 export class FestivalTaskOverviewController {
   constructor(
@@ -79,7 +82,7 @@ export class FestivalTaskOverviewController {
   @Get("statistics")
   @ApiResponse({
     status: 200,
-    description: "Festival activities statistics",
+    description: "Festival tasks statistics",
     isArray: true,
     type: StatisticsResponseDto<FestivalTask>,
   })
@@ -93,7 +96,12 @@ export class FestivalTaskOverviewController {
   @ApiResponse({
     status: 200,
     description: "A festival task",
-    type: DraftFestivalTaskResponseDto,
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
   })
   @ApiParam({
     name: "id",

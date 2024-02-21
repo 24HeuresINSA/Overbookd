@@ -18,7 +18,6 @@
     </div>
 
     <v-btn
-      v-show="isFA"
       id="ask-for-review"
       :disabled="!canAskForReview"
       @click="askForReview"
@@ -33,16 +32,15 @@
 <script lang="ts">
 import Vue from "vue";
 import FestivalEventSummary from "./FestivalEventSummary.vue";
-import { getReviewStatus as getFaReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
+import { getActivityReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import {
   FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { Team } from "~/utils/models/team.model";
 import {
-  DRAFT,
   FestivalActivity,
-  FestivalTask,
+  FestivalTaskWithConflicts as FestivalTask,
   isDraft,
   isRefused,
 } from "@overbookd/festival-event";
@@ -51,6 +49,7 @@ import {
   ftStatusLabels,
 } from "~/utils/festival-event/festival-task/festival-task.model";
 import { BROUILLON } from "~/utils/festival-event/festival-event.model";
+import { getTaskReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 export default Vue.extend({
   name: "FestivalEventSidebar",
@@ -62,58 +61,66 @@ export default Vue.extend({
     },
   },
   computed: {
-    mFA(): FestivalActivity {
+    selectedActivity(): FestivalActivity {
       return this.$accessor.festivalActivity.selectedActivity;
     },
-    mFT(): FestivalTask {
+    selectedTask(): FestivalTask {
       return this.$accessor.festivalTask.selectedTask;
     },
-    isFA(): boolean {
+    isActivity(): boolean {
       return this.festivalEvent === "FA";
     },
     titleWithId(): string {
-      return this.isFA
+      return this.isActivity
         ? `Fiche Activité n°${this.$route.params.faId}`
         : `Fiche Tâche n°${this.$route.params.ftId}`;
     },
     name(): string {
-      return this.isFA ? this.mFA.general.name : this.mFT.general.name;
+      return this.isActivity
+        ? this.selectedActivity.general.name
+        : this.selectedTask.general.name;
     },
     statusLabel(): FaStatusLabel | FtStatusLabel {
-      return this.isFA
-        ? faStatusLabels.get(this.mFA.status) ?? BROUILLON
-        : ftStatusLabels.get(this.mFT.status) ?? BROUILLON;
+      return this.isActivity
+        ? faStatusLabels.get(this.selectedActivity.status) ?? BROUILLON
+        : ftStatusLabels.get(this.selectedTask.status) ?? BROUILLON;
     },
     reviewers(): Team[] {
-      return this.isFA
+      return this.isActivity
         ? this.$accessor.team.faValidators
         : this.$accessor.team.ftValidators;
     },
     status(): string {
-      return this.isFA
-        ? this.mFA.status.toLowerCase()
-        : this.mFT.status.toLowerCase();
+      return this.isActivity
+        ? this.selectedActivity.status.toLowerCase()
+        : this.selectedTask.status.toLowerCase();
     },
     canAskForReview(): boolean {
-      return this.isFA
-        ? isDraft(this.mFA) || isRefused(this.mFA)
-        : this.mFT.status === DRAFT; // TODO for FT
+      return this.isActivity
+        ? isDraft(this.selectedActivity) || isRefused(this.selectedActivity)
+        : isDraft(this.selectedTask);
     },
   },
   mounted() {
     if (this.reviewers.length > 0) return;
-    this.isFA
+    this.isActivity
       ? this.$accessor.team.fetchFaValidators()
       : this.$accessor.team.fetchFtValidators();
   },
   methods: {
     getReviewerStatus(reviewer: Team): string {
-      return this.isFA
-        ? getFaReviewStatus(this.mFA, reviewer.code).toLowerCase()
-        : ""; // TODO for FT
+      return this.isActivity
+        ? getActivityReviewStatus(
+            this.selectedActivity,
+            reviewer.code,
+          ).toLowerCase()
+        : getTaskReviewStatus(this.selectedTask, reviewer.code).toLowerCase();
     },
     async askForReview() {
-      await this.$accessor.festivalActivity.askForReview();
+      if (this.isActivity) {
+        return this.$accessor.festivalActivity.askForReview();
+      }
+      await this.$accessor.festivalTask.askForReview();
     },
   },
 });

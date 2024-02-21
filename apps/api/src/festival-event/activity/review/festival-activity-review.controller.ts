@@ -49,6 +49,7 @@ import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 import { AddFeedbackRequestDto } from "./dto/add-feedback.request.dto";
 import { FestivalActivityReviewService } from "./festival-activity-review.service";
 import { FestivalActivityErrorFilter } from "../common/festival-activity-error.filter";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -70,7 +71,7 @@ import { FestivalActivityErrorFilter } from "../common/festival-activity-error.f
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class FestivalActivityReviewController {
   constructor(private readonly reviewService: FestivalActivityReviewService) {}

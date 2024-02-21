@@ -38,6 +38,7 @@ import {
 import { FestivalActivityErrorFilter } from "../../common/festival-activity-error.filter";
 import { GeneralRequestDto } from "./dto/update-general.request.dto";
 import { GeneralSectionService } from "./general-section.service";
+import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -55,7 +56,7 @@ import { GeneralSectionService } from "./general-section.service";
   ValidatedFestivalActivityResponseDto,
   RefusedFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class GeneralSectionController {
   constructor(private readonly generalService: GeneralSectionService) {}

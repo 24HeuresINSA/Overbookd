@@ -42,6 +42,7 @@ import { FestivalActivityPreviewService } from "./festival-activity-preview.serv
 import { RequestWithUserPayload } from "../../../app.controller";
 import { LogisticPreview } from "./logistic-preview";
 import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview-festival-activity.response.dto";
+import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 
 @ApiBearerAuth()
 @ApiTags("festival-activities")
@@ -57,7 +58,7 @@ import { PreviewForLogisticResponseDto } from "./dto/for-logistic-preview-festiv
   ValidatedPreviewFestivalActivityResponseDto,
   RefusedPreviewFestivalActivityResponseDto,
 )
-@UseFilters(FestivalActivityErrorFilter)
+@UseFilters(FestivalActivityErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-activities")
 export class FestivalActivityPreviewController {
   constructor(

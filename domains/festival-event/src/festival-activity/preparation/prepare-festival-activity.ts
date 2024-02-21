@@ -16,7 +16,7 @@ import {
   PrepareSignageUpdate,
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model";
-import { FestivalActivity, isDraft } from "../festival-activity";
+import { FestivalActivity } from "../festival-activity";
 import { PreviewFestivalActivity } from "../festival-activity";
 import { InquiryRequest } from "../../common/inquiry-request";
 import { ElectricitySupply } from "../sections/supply";
@@ -26,6 +26,7 @@ import { Adherent } from "../../common/adherent";
 import { TimeWindow } from "../../common/time-window";
 import { PrepareInReviewFestivalActivity } from "./prepare-in-review-festival-activity";
 import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity";
+import { isDraft } from "../../festival-event";
 
 export type PrepareFestivalActivityRepository = {
   findAll(): Promise<PreviewFestivalActivity[]>;

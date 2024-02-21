@@ -6,7 +6,6 @@ import {
   Refused,
   Reviewable,
   Validated,
-  isDraft,
 } from "./festival-activity";
 import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
@@ -22,6 +21,7 @@ import {
 } from "./festival-activity.fake";
 import { FestivalActivityKeyEvents } from "./festival-activity.event";
 import { isKeyOf } from "../is-key-of";
+import { isDraft } from "../festival-event";
 
 type FestivalActivitySections =
   | FestivalActivity["general"]
@@ -143,7 +143,7 @@ class FestivalActivityBuilder<T extends FestivalActivity> {
   withReviews(
     reviews: Partial<Reviewable["reviews"]>,
   ): FestivalActivityBuilder<T> {
-    if (isDraft(this.festivalActivity)) return this;
+    if (isDraft<FestivalActivity>(this.festivalActivity)) return this;
 
     this.festivalActivity = {
       ...this.festivalActivity,

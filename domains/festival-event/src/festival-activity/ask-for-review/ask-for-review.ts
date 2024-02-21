@@ -8,11 +8,11 @@ import {
   FestivalActivity,
   Refused,
   Reviewable,
-  isDraft,
   isRefused,
 } from "../festival-activity";
 import { Adherent } from "../../common/adherent";
 import { Notifications } from "../../common/notifications";
+import { isDraft } from "../../festival-event";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
