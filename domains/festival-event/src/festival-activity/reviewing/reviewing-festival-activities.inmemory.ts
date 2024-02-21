@@ -19,8 +19,9 @@ export class InMemoryReviewingFestivalActivities
       (festivalActivityToUpdate) =>
         festivalActivityToUpdate.id === festivalActivity.id,
     );
-    if (festivalActivityIndex == -1)
+    if (festivalActivityIndex === -1) {
       throw new FestivalActivityNotFound(festivalActivity.id);
+    }
 
     this.festivalActivities = updateItemToList(
       this.festivalActivities,

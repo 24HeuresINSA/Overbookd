@@ -1,6 +1,6 @@
 import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
-import { DRAFT, IN_REVIEW } from "../common/status";
+import { DRAFT, IN_REVIEW, REFUSED } from "../common/status";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
@@ -8,7 +8,7 @@ import { KeyEvent } from "./festival-task.event";
 import { DraftGeneral, General } from "./sections/general";
 import { Mobilization, ReviewableMobilization } from "./sections/mobilizations";
 import { DraftInstructions, Instructions } from "./sections/instructions";
-import { InReviewReviews } from "../common/review";
+import { InReviewReviews, RefusedReviews } from "../common/review";
 import { Adherent } from "../common/adherent";
 
 export type FestivalActivity = {
@@ -45,30 +45,47 @@ type DraftWithoutConflicts = BaseDraft & {
 
 export type Draft = DraftWithConflicts | DraftWithoutConflicts;
 
-type BaseInReview = {
+type MobilizationsWithoutConflicts = {
+  mobilizations: ReviewableMobilization<{
+    withConflicts: false;
+  }>[];
+};
+
+type MobilizationsWithConflicts = {
+  mobilizations: ReviewableMobilization[];
+};
+
+type BaseReviewable = {
   id: number;
-  status: typeof IN_REVIEW;
   general: General;
   festivalActivity: FestivalActivity;
   instructions: Instructions;
   history: KeyEvent[];
   feedbacks: Feedback[];
   inquiries: InquiryRequest[];
-  reviews: InReviewReviews<"FT">;
   reviewer: Adherent;
 };
 
-type InReviewWithConflicts = BaseInReview & {
-  mobilizations: ReviewableMobilization[];
+type BaseInReview = BaseReviewable & {
+  status: typeof IN_REVIEW;
+  reviews: InReviewReviews<"FT">;
 };
 
-type InReviewWithoutConflicts = BaseInReview & {
-  mobilizations: ReviewableMobilization<{ withConflicts: false }>[];
+type BaseRefused = BaseReviewable & {
+  status: typeof REFUSED;
+  reviews: RefusedReviews<"FT">;
 };
 
-export type InReview = InReviewWithConflicts | InReviewWithoutConflicts;
+type GenerateConflictUnion<T extends BaseInReview | BaseRefused> =
+  | (T & MobilizationsWithConflicts)
+  | (T & MobilizationsWithoutConflicts);
 
-export type FestivalTask = Draft | InReview;
+export type InReview = GenerateConflictUnion<BaseInReview>;
+export type Refused = GenerateConflictUnion<BaseRefused>;
+
+export type Reviewable = InReview | Refused;
+
+export type FestivalTask = Draft | Reviewable;
 
 export type PreviewDraft = {
   id: Draft["id"];

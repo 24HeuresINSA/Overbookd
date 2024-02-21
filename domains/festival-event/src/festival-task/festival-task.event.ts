@@ -1,7 +1,16 @@
-import { COMMENTED, CREATED, READY_TO_REVIEW } from "../common/action";
+import {
+  COMMENTED,
+  CREATED,
+  READY_TO_REVIEW,
+  REJECTED,
+} from "../common/action";
 import { Adherent } from "../common/adherent";
 
-type Action = typeof CREATED | typeof COMMENTED | typeof READY_TO_REVIEW;
+type Action =
+  | typeof CREATED
+  | typeof COMMENTED
+  | typeof READY_TO_REVIEW
+  | typeof REJECTED;
 
 export type KeyEvent = {
   action: Action;
@@ -19,6 +28,13 @@ export class FestivalTaskKeyEvents {
     const at = this.computeAt();
     const description = "Demande de relecture de la FT";
     return { action: READY_TO_REVIEW, by, at, description };
+  }
+
+  static rejected(by: Adherent, reason: string): KeyEvent {
+    const at = this.computeAt();
+    const description = `FT rejetée pour la raison suivante: ${reason}`;
+
+    return { action: REJECTED, by, at, description };
   }
 
   private static computeAt() {
