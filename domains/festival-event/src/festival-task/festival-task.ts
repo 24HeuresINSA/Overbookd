@@ -87,6 +87,15 @@ export type Reviewable = InReview | Refused;
 
 export type FestivalTask = Draft | Reviewable;
 
+export type GeneratePreview<T extends Reviewable> = {
+  id: T["id"];
+  status: T["status"];
+  name: T["general"]["name"];
+  administrator: T["general"]["administrator"];
+  team: T["general"]["team"];
+  reviews: T["reviews"];
+};
+
 export type PreviewDraft = {
   id: Draft["id"];
   status: Draft["status"];
@@ -95,16 +104,12 @@ export type PreviewDraft = {
   team: Draft["general"]["team"];
 };
 
-export type PreviewInReview = {
-  id: InReview["id"];
-  status: InReview["status"];
-  name: InReview["general"]["name"];
-  administrator: InReview["general"]["administrator"];
-  team: InReview["general"]["team"];
-  reviews: InReview["reviews"];
-};
+export type PreviewInReview = GeneratePreview<InReview>;
+export type PreviewRefused = GeneratePreview<Refused>;
 
-export type Preview = PreviewDraft | PreviewInReview;
+export type PreviewReviewable = PreviewInReview | PreviewRefused;
+
+export type Preview = PreviewDraft | PreviewReviewable;
 
 export function isDraft(task: FestivalTask): task is Draft {
   return task.status === DRAFT;

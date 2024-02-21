@@ -16,11 +16,13 @@ import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
   InReviewWithoutConflicts,
+  RefusedWithoutConflicts,
   WithConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
+import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 
 export type UpdateGeneral = {
@@ -69,7 +71,10 @@ type UpdatedTask<Properties extends keyof FestivalTask> =
     } & Omit<DraftWithoutConflicts, Properties>)
   | ({
       [Property in Properties]: FestivalTask[Property];
-    } & Omit<InReviewWithoutConflicts, Properties>);
+    } & Omit<InReviewWithoutConflicts, Properties>)
+  | ({
+      [Property in Properties]: FestivalTask[Property];
+    } & Omit<RefusedWithoutConflicts, Properties>);
 
 export class PrepareFestivalTask {
   constructor(
@@ -515,9 +520,10 @@ function checkValidity<
   T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
 >(task: T): FestivalTask {
   switch (task.status) {
-    case "DRAFT":
+    case DRAFT:
       return task;
-    case "IN_REVIEW": {
+    case IN_REVIEW:
+    case REFUSED: {
       if (!InReviewSpecification.isSatisfiedBy(task)) {
         const errors = InReviewSpecification.generateErrors(task);
         throw new PrepareFestivalTaskError(errors);
