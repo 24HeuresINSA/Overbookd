@@ -1,6 +1,7 @@
 import {
   DRAFT,
   ReviewStatus,
+  PreviewFestivalTask,
   FestivalTaskWithConflicts as FestivalTask,
   humain,
   matos,
@@ -11,6 +12,7 @@ import {
 import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
 import { CastInReview } from "./in-review";
+import { isDraftPreview } from "./festival-task.model";
 
 export function castTaskWithDate(
   task: HttpStringified<FestivalTask>,
@@ -42,4 +44,22 @@ function isHttpDraft(
   task: HttpStringified<FestivalTask>,
 ): task is HttpStringified<Draft> {
   return task.status === DRAFT;
+}
+
+export function getPreviewReviewStatus(
+  preview: PreviewFestivalTask,
+  reviewer: string,
+): ReviewStatus {
+  if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
+
+  switch (reviewer) {
+    case humain:
+      return preview.reviews.humain;
+    case matos:
+      return preview.reviews.matos;
+    case elec:
+      return preview.reviews.elec;
+    default:
+      return NOT_ASKING_TO_REVIEW;
+  }
 }

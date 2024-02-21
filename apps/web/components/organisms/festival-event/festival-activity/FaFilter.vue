@@ -64,7 +64,7 @@ import {
 import {
   ReviewLabel,
   reviewStatusLabel,
-} from "~/utils/festival-event/festival-activity/festival-activity.utils";
+} from "~/utils/festival-event/festival-event.utils";
 import { nonEmptyString } from "~/utils/festival-event/festival-event.filter";
 import { Team } from "~/utils/models/team.model";
 

@@ -110,9 +110,11 @@ import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FtFilter from "~/components/organisms/festival-event/festival-task/FtFilter.vue";
 import {
   TaskFilters,
+  TaskReviewsFilter,
   findReviewStatus,
 } from "~/utils/festival-event/festival-task/festival-task.filter";
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
+import { getPreviewReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 interface Data {
   headers: Header[];
@@ -167,14 +169,15 @@ export default Vue.extend({
       }));
     },
     filteredFts(): PreviewFestivalTask[] {
-      const { search, team, status, adherent } = this.filters;
+      const { search, team, status, adherent, ...reviews } = this.filters;
 
       return this.searchableFts.filter((ft) => {
         return (
           this.filterFtByTeam(team)(ft) &&
           this.filterFtByAdministrator(adherent)(ft) &&
           this.filterFtByStatus(status)(ft) &&
-          this.filterFtByNameAndId(search)(ft)
+          this.filterFtByNameAndId(search)(ft) &&
+          this.filterFtByReviews(reviews)(ft)
         );
       });
     },
@@ -218,6 +221,22 @@ export default Vue.extend({
     ): (ft: Searchable<PreviewFestivalTask>) => boolean {
       const slugifiedSearch = SlugifyService.apply(search ?? "");
       return ({ searchable }) => searchable.includes(slugifiedSearch);
+    },
+
+    filterFtByReviews(
+      reviews: TaskReviewsFilter,
+    ): (ft: Searchable<PreviewFestivalTask>) => boolean {
+      const reviewersWithStatus = Object.entries(reviews);
+      return (ft) => {
+        const reviewsAreEmpty = reviewersWithStatus.length === 0;
+        if (reviewsAreEmpty) return true;
+        if (isDraftPreview(ft)) return false;
+
+        return reviewersWithStatus.every(
+          ([reviewer, status]) =>
+            getPreviewReviewStatus(ft, reviewer) === status,
+        );
+      };
     },
 
     updateFilters(filters: TaskFilters) {

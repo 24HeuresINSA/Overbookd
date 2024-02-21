@@ -11,7 +11,13 @@ import { User } from "@overbookd/user";
 import { Team } from "../../models/team.model";
 import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
 
-export type TaskFilters = {
+export type TaskReviewsFilter = {
+  humain?: ReviewStatus;
+  matos?: ReviewStatus;
+  elec?: ReviewStatus;
+};
+
+export type TaskFilters = TaskReviewsFilter & {
   search?: string;
   team?: Team;
   adherent?: User;
@@ -22,12 +28,14 @@ type IsNotEmpty = (value: string) => string | undefined;
 type IsExistingStatus = (value: string) => FestivalTask["status"] | undefined;
 type IsExistingTeam = (value: string) => Team | undefined;
 type IsExistingAdherent = (id: User["id"]) => User | undefined;
+type IsExistingReview = (value: string) => ReviewStatus | undefined;
 
 type InitFilterBuilder = {
   isNotEmpty: IsNotEmpty;
   isExistingStatus: IsExistingStatus;
   isExistingTeam: IsExistingTeam;
   isExistingAdherent: IsExistingAdherent;
+  isExistingReview: IsExistingReview;
 };
 
 export class TaskFilterBuilder {
@@ -36,6 +44,7 @@ export class TaskFilterBuilder {
     private readonly isExistingStatus: IsExistingStatus,
     private readonly isExistingTeam: IsExistingTeam,
     private readonly isExistingAdherent: IsExistingAdherent,
+    private readonly isExistingReview: IsExistingReview,
   ) {}
 
   static init(initializer: InitFilterBuilder) {
@@ -44,6 +53,7 @@ export class TaskFilterBuilder {
       initializer.isExistingStatus,
       initializer.isExistingTeam,
       initializer.isExistingAdherent,
+      initializer.isExistingReview,
     );
   }
 
@@ -72,6 +82,21 @@ export class TaskFilterBuilder {
         const statusString = strigifyQueryParam(params.status);
         const status = this.isExistingStatus(statusString);
         return status ? { status } : {};
+      }
+      case "humain": {
+        const review = strigifyQueryParam(params.humain);
+        const humain = this.isExistingReview(review);
+        return humain ? { humain } : {};
+      }
+      case "matos": {
+        const review = strigifyQueryParam(params.matos);
+        const matos = this.isExistingReview(review);
+        return matos ? { matos } : {};
+      }
+      case "elec": {
+        const review = strigifyQueryParam(params.elec);
+        const elec = this.isExistingReview(review);
+        return elec ? { elec } : {};
       }
     }
   }
