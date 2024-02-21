@@ -12,7 +12,7 @@ import {
 import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
 import { isDraftPreview } from "./festival-task.model";
-import { CastReviewable } from "./in-review";
+import { CastReviewable } from "./reviewable";
 
 export function castTaskWithDate(
   task: HttpStringified<FestivalTask>,
