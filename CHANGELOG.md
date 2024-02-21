@@ -1,3 +1,22 @@
+## [2.17.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.5...v2.17.0) (2024-02-21)
+
+
+### Features
+
+* **festival-task:** implement ask for review in web [#1583](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1583) ([f130b7c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f130b7c68ff5702b43c95bf348720799c4c31ee2))
+
+
+### Bug Fixes
+
+* **api:** dto definition. [#1588](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1588) ([7aa1c25](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7aa1c252ef47f9e002b657fde6d36ff81a8009a1))
+* **festival-task:** display reviewers color in list [#1586](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1586) ([ab43939](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ab43939461dd7e1fd1b31e460647ea61275cf3b3))
+* **planning:** display mobilzations user is part of on it calendar. [#1572](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1572) ([baadbab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/baadbab5c1d9bd4d43b80cbeb7bd17ba0bc86530))
+
+
+### Pre-Features
+
+* **festival-task:** implement ask-for-review in api [#1580](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1580) ([acfe6a5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/acfe6a53b7b9176e527f231e6cb4c095f0edf5b9))
+
 ## [2.16.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.4...v2.16.5) (2024-02-18)
 
 
