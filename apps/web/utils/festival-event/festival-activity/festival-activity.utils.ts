@@ -1,12 +1,9 @@
 import {
-  APPROVED,
   DRAFT,
   Draft,
   FestivalActivity,
   NOT_ASKING_TO_REVIEW,
   PreviewFestivalActivity,
-  REJECTED,
-  REVIEWING,
   ReviewStatus,
   barrieres,
   communication,
@@ -59,18 +56,6 @@ function isHttpDraft(
 ): festivalActivity is HttpStringified<Draft> {
   return festivalActivity.status === DRAFT;
 }
-
-const A_RELIRE = "À relire";
-const APPROUVEE = "Approuvée";
-const REJETEE = "Rejetée";
-
-export type ReviewLabel = typeof A_RELIRE | typeof APPROUVEE | typeof REJETEE;
-
-export const reviewStatusLabel = new Map<ReviewStatus, ReviewLabel>([
-  [REVIEWING, A_RELIRE],
-  [APPROVED, APPROUVEE],
-  [REJECTED, REJETEE],
-]);
 
 export function getActivityReviewStatus(
   festivalActivity: FestivalActivity,

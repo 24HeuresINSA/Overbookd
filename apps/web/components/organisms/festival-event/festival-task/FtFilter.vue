@@ -10,21 +10,65 @@
     @change:team="updateTeam"
     @change:adherent="updateAdherent"
     @change:status="updateStatus"
-  ></FestivalEventFilter>
+  >
+    <template #additional-filters>
+      <div
+        v-for="reviewer of reviewerTeams"
+        :key="reviewer.code"
+        class="desktop"
+      >
+        <v-btn-toggle
+          tile
+          color="deep-purple accent-3"
+          group
+          :value="filters[reviewer.code]"
+          @change="updateReviewer(reviewer.code, $event)"
+        >
+          <v-icon small>{{ reviewer.icon }}</v-icon>
+          <v-btn
+            v-for="[status, label] of reviewStatusLabel"
+            :key="status"
+            :value="status"
+            x-small
+          >
+            {{ label }}
+          </v-btn>
+        </v-btn-toggle>
+      </div>
+
+      <slot name="additional-actions" />
+    </template>
+  </FestivalEventFilter>
 </template>
 
 <script lang="ts">
-import { FestivalTask } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  ReviewStatus,
+  Reviewer,
+  humain,
+  matos,
+  elec,
+} from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { defineComponent } from "vue";
 import FestivalEventFilter from "~/components/molecules/festival-event/filter/FestivalEventFilter.vue";
 import { nonEmptyString } from "~/utils/festival-event/festival-event.filter";
 import {
   TaskFilterBuilder,
+  findReviewStatus,
   TaskFilters,
   findStatus,
 } from "~/utils/festival-event/festival-task/festival-task.filter";
+import {
+  ReviewLabel,
+  reviewStatusLabel,
+} from "~/utils/festival-event/festival-event.utils";
 import { Team } from "~/utils/models/team.model";
+
+type ReviewerTeam = Team & {
+  code: Reviewer<"FT">;
+};
 
 export default defineComponent({
   name: "FtFilter",
@@ -34,6 +78,7 @@ export default defineComponent({
     filters(): TaskFilters {
       const builder = TaskFilterBuilder.init({
         isNotEmpty: nonEmptyString,
+        isExistingReview: findReviewStatus,
         isExistingStatus: findStatus,
         isExistingAdherent: this.findAdherentById,
         isExistingTeam: this.$accessor.team.getTeamByCode,
@@ -51,13 +96,39 @@ export default defineComponent({
         this.$route.query,
         "status",
       );
+      const humainReview = builder.extractQueryParamsValue(
+        this.$route.query,
+        humain,
+      );
+      const matosReview = builder.extractQueryParamsValue(
+        this.$route.query,
+        matos,
+      );
+      const elecReview = builder.extractQueryParamsValue(
+        this.$route.query,
+        elec,
+      );
 
       return {
         ...search,
         ...team,
         ...adherent,
         ...status,
+        ...humainReview,
+        ...matosReview,
+        ...elecReview,
       };
+    },
+    reviewers(): Reviewer<"FT">[] {
+      return [humain, matos, elec];
+    },
+    reviewerTeams(): ReviewerTeam[] {
+      return this.reviewers
+        .map((reviewer) => this.$accessor.team.getTeamByCode(reviewer))
+        .filter((team): team is ReviewerTeam => team !== undefined);
+    },
+    reviewStatusLabel(): [ReviewStatus, ReviewLabel][] {
+      return [...reviewStatusLabel.entries()];
     },
   },
   watch: {
@@ -84,6 +155,10 @@ export default defineComponent({
 
     updateStatus(status?: FestivalTask["status"]) {
       this.updateQueryParams("status", status);
+    },
+
+    updateReviewer(reviewer: Reviewer<"FT">, review: ReviewStatus) {
+      this.updateQueryParams(reviewer, review);
     },
 
     updateQueryParams(key: keyof TaskFilters, value?: string) {
