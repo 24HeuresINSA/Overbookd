@@ -17,6 +17,8 @@ import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
 import { SELECT_CATALOG_SIGNAGE } from "./catalog-signage.query";
 
+export const IS_NOT_DELETED = { isDeleted: false };
+
 const SELECT_REVIEW = {
   team: true,
   status: true,
@@ -142,6 +144,7 @@ const SELECT_FESTIVAL_TASKS = {
       name: true,
       status: true,
     },
+    where: IS_NOT_DELETED,
   },
 };
 
@@ -449,8 +452,6 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
     publishedAt: feedback.publishedAt,
   };
 }
-
-export const IS_NOT_DELETED = { isDeleted: false };
 
 export function buildFestivalActivityCondition(id: FestivalActivity["id"]) {
   return {
