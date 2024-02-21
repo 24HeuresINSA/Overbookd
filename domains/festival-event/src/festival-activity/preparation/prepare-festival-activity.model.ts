@@ -1,4 +1,4 @@
-import { Drive } from "../sections/inquiry";
+import { Drive } from "../../common/inquiry-request";
 import { InquiryOwner } from "../sections/inquiry";
 import {
   ElectricityConnection,

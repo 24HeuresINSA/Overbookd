@@ -16,7 +16,7 @@ import {
   LOCAL_24H,
   MAGASIN,
   PARKING_EIFFEL,
-} from "../sections/inquiry";
+} from "../../common/inquiry-request";
 import {
   afficheJustDanceA2,
   bacheBienvenue10m,

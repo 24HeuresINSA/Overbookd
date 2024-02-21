@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  deuxTables,
+  troisMarteaux,
   george,
   guardJustDance,
   lea,
@@ -8,13 +10,71 @@ import {
   uninstallPreventionVillage,
 } from "../festival-task.test-util";
 import { elec, humain, matos } from "../../common/review";
-import { REJECTED } from "../../common/action";
+import { APPROVED, REJECTED } from "../../common/action";
 import { REFUSED } from "../../common/status";
 import { NotAskingToReview } from "../../common/review.error";
 import { Review } from "./review";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request";
+import { getFactory } from "../festival-task.factory";
+
+const factory = getFactory();
+
+const caissierBar = factory.inReview("Caissier Bar").build();
+const withSupplyRequest = factory
+  .inReview("Avec besoin en eau ou en elec")
+  .withFestivalActivity({ hasSupplyRequest: true })
+  .build();
+const withoutSupplyRequest = factory
+  .inReview("Sans besoin en eau ou en elec")
+  .withFestivalActivity({ hasSupplyRequest: false })
+  .build();
+const alreadyApprovedByHumain = factory
+  .inReview("Deja Approvee par les humains")
+  .withReviews({ humain: APPROVED })
+  .build();
+const withInvalidInquiries = factory
+  .inReview("Invalid gear inquiries")
+  .withInquiries([deuxTables])
+  .build();
+const withSomeValidInquiries = factory
+  .inReview("Valid inquiries")
+  .withInquiries([
+    { ...deuxTables, drive: LOCAL_24H },
+    { ...troisMarteaux, drive: MAGASIN },
+  ])
+  .build();
+const withoutSupplyRequestAndAllApprovedExceptMatos = factory
+  .inReview("Without supply request and all approved except matos")
+  .withReviews({ humain: APPROVED })
+  .build();
+const withSupplyRequestAndAllApprovedExceptElec = factory
+  .inReview("With supply request and all approved except elec")
+  .withFestivalActivity({ hasSupplyRequest: true })
+  .withReviews({ humain: APPROVED, matos: APPROVED })
+  .build();
+
+describe("Approve festival task", () => {
+  let review: Review;
+  beforeEach(() => {
+    const tasks = [
+      caissierBar,
+      withSupplyRequest,
+      withoutSupplyRequest,
+      alreadyApprovedByHumain,
+      withInvalidInquiries,
+      withSomeValidInquiries,
+      withoutSupplyRequestAndAllApprovedExceptMatos,
+      withSupplyRequestAndAllApprovedExceptElec,
+    ];
+    const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const translator = new FestivalTaskTranslator(conflicts);
+    review = new Review(festivalTasks, translator);
+  });
+});
 
 describe("Reject festival task", () => {
   let review: Review;

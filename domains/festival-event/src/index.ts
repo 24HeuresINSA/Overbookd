@@ -11,11 +11,37 @@ export {
 export type { Adherent } from "./common/adherent";
 export type { Feedback } from "./common/feedback";
 export type { FestivalEventIdentifier } from "./common/festival-event";
-export { isAssignedToDrive } from "./common/inquiry-request";
+export {
+  isAssignedToDrive,
+  BENNE_COLLETTE_BESSON,
+  BENNE_PARKING_K_FET,
+  PARKING_EIFFEL,
+  CREUX_GCU,
+  CREUX_GM,
+  CAVE_E,
+  CLUB_ROCK,
+  CONTENUR_24H,
+  CONTENEUR_KARNA,
+  CONTENEUR_PARKING_K_FET,
+  CONTENEUR_SCENE_ROOTS,
+  HALL_DES_HUMANITES,
+  LOCAL_24H,
+  MAGASIN,
+  MDE,
+  SALLE_MONTREAL,
+  SALLE_RENE_CHAR,
+  NON_STOCKE,
+  QG_ORGA,
+  BACKLINE,
+  LIVRE_PAR_LOGISTIQUE,
+  LIVRE_PAR_COM,
+  drives,
+} from "./common/inquiry-request";
 export type {
   InquiryRequestAssigned,
   InquiryRequest,
   BaseInquiryRequest,
+  Drive,
 } from "./common/inquiry-request";
 export type { Location } from "./common/location";
 export type {
@@ -75,36 +101,8 @@ export type {
   InquiryWithRequests,
   InquiryOwner,
   WithInquiries,
-  Drive,
 } from "./festival-activity/sections/inquiry";
-export {
-  MATOS,
-  BARRIERES,
-  ELEC,
-  BENNE_COLLETTE_BESSON,
-  BENNE_PARKING_K_FET,
-  PARKING_EIFFEL,
-  CREUX_GCU,
-  CREUX_GM,
-  CAVE_E,
-  CLUB_ROCK,
-  CONTENUR_24H,
-  CONTENEUR_KARNA,
-  CONTENEUR_PARKING_K_FET,
-  CONTENEUR_SCENE_ROOTS,
-  HALL_DES_HUMANITES,
-  LOCAL_24H,
-  MAGASIN,
-  MDE,
-  SALLE_MONTREAL,
-  SALLE_RENE_CHAR,
-  NON_STOCKE,
-  QG_ORGA,
-  BACKLINE,
-  LIVRE_PAR_LOGISTIQUE,
-  LIVRE_PAR_COM,
-  drives,
-} from "./festival-activity/sections/inquiry";
+export { MATOS, BARRIERES, ELEC } from "./festival-activity/sections/inquiry";
 
 export type {
   ElectricitySupply,
