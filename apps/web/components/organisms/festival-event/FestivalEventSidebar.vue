@@ -42,7 +42,6 @@ import {
   FestivalActivity,
   FestivalTaskWithConflicts as FestivalTask,
   isDraft,
-  isFestivalTaskDraft,
   isRefused,
 } from "@overbookd/festival-event";
 import {
@@ -99,7 +98,7 @@ export default Vue.extend({
     canAskForReview(): boolean {
       return this.isActivity
         ? isDraft(this.selectedActivity) || isRefused(this.selectedActivity)
-        : isFestivalTaskDraft(this.selectedTask);
+        : isDraft(this.selectedTask);
     },
   },
   mounted() {

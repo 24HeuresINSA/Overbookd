@@ -5,8 +5,8 @@ import {
   humain,
   matos,
   elec,
-  isFestivalTaskDraft,
   NOT_ASKING_TO_REVIEW,
+  isDraft,
 } from "@overbookd/festival-event";
 import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
@@ -25,7 +25,7 @@ export function getTaskReviewStatus(
   festivalTask: FestivalTask,
   reviewer: string,
 ): ReviewStatus {
-  if (isFestivalTaskDraft(festivalTask)) return NOT_ASKING_TO_REVIEW;
+  if (isDraft(festivalTask)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
     case humain:
       return festivalTask.reviews.humain;

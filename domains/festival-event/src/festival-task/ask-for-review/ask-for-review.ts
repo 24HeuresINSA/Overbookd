@@ -23,11 +23,15 @@ export type Reviewers = {
   getAll(): Promise<ReviewerStat[]>;
 };
 
+type Repositories = {
+  notifications: Notifications<"FT">;
+  reviewers: Reviewers;
+};
+
 export class AskForReview {
   constructor(
     private readonly tasks: AskForReviewTasks,
-    private readonly notifications: Notifications<"FT">,
-    private readonly reviewers: Reviewers,
+    private readonly repositories: Repositories,
     private readonly translator: FestivalTaskTranslator,
   ) {}
 
@@ -42,14 +46,14 @@ export class AskForReview {
     const reviewer = await this.findReviewer();
 
     const conversion = InReviewSpecification.convert(task, adherent, reviewer);
-    this.notifications.add(conversion.event);
+    this.repositories.notifications.add(conversion.event);
 
     const saved = await this.tasks.save(conversion.task);
     return this.translator.translate<InReview>(saved);
   }
 
   private async findReviewer(): Promise<Adherent> {
-    const reviewers = await this.reviewers.getAll();
+    const reviewers = await this.repositories.reviewers.getAll();
 
     const minReviewsCount = Math.min(...reviewers.map(({ count }) => count));
     const reviewer = reviewers.find(({ count }) => count === minReviewsCount);

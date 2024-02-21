@@ -134,8 +134,7 @@ import { PrismaNotifications } from "../../common/repository/notifications.prism
       ) =>
         new AskForReviewTask(
           festivalTasks,
-          notifications,
-          reviewers,
+          { notifications, reviewers },
           translator,
         ),
       inject: [

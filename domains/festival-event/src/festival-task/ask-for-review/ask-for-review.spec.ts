@@ -60,8 +60,7 @@ describe("Festival Task - ask for review", () => {
     translator = new FestivalTaskTranslator(volunteerConflicts);
     askForReview = new AskForReview(
       festivalTasks,
-      notifications,
-      reviewers,
+      { notifications, reviewers },
       translator,
     );
   });
@@ -111,8 +110,7 @@ describe("Festival Task - ask for review", () => {
             const reviewers = new InMemoryReviewers(humainReviews);
             askForReview = new AskForReview(
               festivalTasks,
-              notifications,
-              reviewers,
+              { notifications, reviewers },
               translator,
             );
           });

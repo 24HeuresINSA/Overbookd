@@ -64,7 +64,7 @@ export type {
   PreviewFestivalActivity,
   FestivalTaskChild,
 } from "./festival-activity/festival-activity";
-export { isDraft, isRefused } from "./festival-activity/festival-activity";
+export { isRefused } from "./festival-activity/festival-activity";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error";
 
 export type { Contractor } from "./festival-activity/sections/in-charge";
@@ -250,10 +250,9 @@ export type {
   InReviewWithoutConflicts,
 } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
-export { isDraft as isFestivalTaskDraft } from "./festival-task/festival-task";
 
 //  **********************
 //  FESTIVAL EVENT MODULE
 //  **********************
 export type { FestivalEvent } from "./festival-event";
-export { FestivalEventError } from "./festival-event";
+export { FestivalEventError, isDraft } from "./festival-event";

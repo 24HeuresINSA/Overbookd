@@ -1,9 +1,4 @@
-import {
-  FestivalActivity,
-  Refused,
-  Reviewable,
-  isDraft,
-} from "../festival-activity";
+import { FestivalActivity, Refused, Reviewable } from "../festival-activity";
 import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
 import {
   Reviews,
@@ -35,6 +30,7 @@ import {
 import { Adherent } from "../../common/adherent";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
 import { isLinkedToCatalogItem } from "../sections/signa";
+import { isDraft } from "../../festival-event";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
