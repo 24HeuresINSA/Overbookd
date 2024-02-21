@@ -7,6 +7,7 @@ import { InReviewSpecification } from "./in-review-specification";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
+  InReviewWithoutConflicts,
 } from "../volunteer-conflicts";
 
 export type AskForReviewTasks = {
@@ -35,7 +36,10 @@ export class AskForReview {
     private readonly translator: FestivalTaskTranslator,
   ) {}
 
-  async from(taskId: FestivalTask["id"], adherent: Adherent) {
+  async from(
+    taskId: FestivalTask["id"],
+    adherent: Adherent,
+  ): Promise<InReviewWithoutConflicts> {
     const task = await this.tasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
