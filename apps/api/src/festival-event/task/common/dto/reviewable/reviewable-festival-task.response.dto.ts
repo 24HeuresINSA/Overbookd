@@ -20,7 +20,9 @@ import {
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 
-export class InReviewFestivalTaskResponseDto implements ReviewableWithConflicts {
+export class InReviewFestivalTaskResponseDto
+  implements ReviewableWithConflicts
+{
   @ApiProperty({})
   id: InReview["id"];
 
