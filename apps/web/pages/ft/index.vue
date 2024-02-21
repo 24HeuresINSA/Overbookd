@@ -225,7 +225,7 @@ export default Vue.extend({
 
     filterFtByReviews(
       reviews: TaskReviewsFilter,
-    ): (fa: Searchable<PreviewFestivalTask>) => boolean {
+    ): (ft: Searchable<PreviewFestivalTask>) => boolean {
       const reviewersWithStatus = Object.entries(reviews);
       return (ft) => {
         const reviewsAreEmpty = reviewersWithStatus.length === 0;
