@@ -23,7 +23,7 @@ export type {
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
   Draft as DraftWithConflicts,
-  InReview as InReviewWithConflicts,
+  Reviewable as ReviewableWithConflicts,
 } from "./festival-event/festival-task.model";
 export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";
