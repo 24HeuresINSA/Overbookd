@@ -5,6 +5,7 @@ import { FestivalTasksForReview } from "./review";
 
 export class InMemoryFestivalTasksForReview implements FestivalTasksForReview {
   constructor(private tasks: ReviewableWithoutConflicts[]) {}
+
   findById(ftId: number): Promise<ReviewableWithoutConflicts | null> {
     const task = this.tasks.find(({ id }) => id === ftId);
     return Promise.resolve(task ?? null);

@@ -3,7 +3,6 @@ import { Adherent } from "../../common/adherent";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
 import { AskForReviewError } from "./ask-for-review.error";
-
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
