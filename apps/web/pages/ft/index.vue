@@ -21,9 +21,14 @@
             </v-chip-group>
           </template>
 
-          <template #item.reviews>
+          <template #item.reviews="{ item }">
             <v-chip-group id="reviewers" column>
-              <v-chip v-for="reviewer of reviewers" :key="reviewer.code" small>
+              <v-chip
+                v-for="reviewer of reviewers"
+                :key="reviewer.code"
+                :class="getReviewerStatus(item, reviewer)"
+                small
+              >
                 <v-icon small> {{ reviewer.icon }} </v-icon>
               </v-chip>
             </v-chip-group>
@@ -103,7 +108,11 @@ import { FestivalTask, PreviewFestivalTask } from "@overbookd/festival-event";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import FtFilter from "~/components/organisms/festival-event/festival-task/FtFilter.vue";
-import { TaskFilters } from "~/utils/festival-event/festival-task/festival-task.filter";
+import {
+  TaskFilters,
+  findReviewStatus,
+} from "~/utils/festival-event/festival-task/festival-task.filter";
+import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
 
 interface Data {
   headers: Header[];
@@ -213,6 +222,12 @@ export default Vue.extend({
 
     updateFilters(filters: TaskFilters) {
       this.filters = filters;
+    },
+
+    getReviewerStatus(task: PreviewFestivalTask, reviewer: Team): string {
+      if (isDraftPreview(task)) return "";
+      const status = task.reviews[reviewer.code];
+      return (findReviewStatus(status) ?? "").toLowerCase();
     },
 
     formatUsername(user?: User): string {

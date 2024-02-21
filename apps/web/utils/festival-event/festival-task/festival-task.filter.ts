@@ -1,4 +1,12 @@
-import { DRAFT, FestivalTask } from "@overbookd/festival-event";
+import {
+  APPROVED,
+  DRAFT,
+  FestivalTask,
+  NOT_ASKING_TO_REVIEW,
+  REJECTED,
+  REVIEWING,
+  ReviewStatus,
+} from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { Team } from "../../models/team.model";
 import { QueryParamsValue, strigifyQueryParam } from "../festival-event.filter";
@@ -66,6 +74,22 @@ export class TaskFilterBuilder {
         return status ? { status } : {};
       }
     }
+  }
+}
+
+export function findReviewStatus(status: string): ReviewStatus | undefined {
+  if (!status) return undefined;
+
+  switch (status) {
+    case REJECTED:
+      return REJECTED;
+    case APPROVED:
+      return APPROVED;
+    case REVIEWING:
+      return REVIEWING;
+    case NOT_ASKING_TO_REVIEW:
+    default:
+      return NOT_ASKING_TO_REVIEW;
   }
 }
 
