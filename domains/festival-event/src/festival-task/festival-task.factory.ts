@@ -1,7 +1,7 @@
 import { numberGenerator } from "@overbookd/list";
 import { DRAFT, IN_REVIEW, VALIDATED } from "../common/status";
 import { isKeyOf } from "../is-key-of";
-import { Draft, FestivalActivity, InReview, isDraft } from "./festival-task";
+import { Draft, FestivalActivity, InReview } from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
   deuxTables,
@@ -14,6 +14,7 @@ import {
 } from "./festival-task.test-util";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import { WithConflicts } from "./volunteer-conflicts";
+import { isDraft } from "../festival-event";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -61,7 +62,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     );
     const festivalTask = { ...this.festivalTask, festivalActivity };
 
-    if (isDraft(festivalTask)) {
+    if (isDraft<WithConflicts>(festivalTask)) {
       return new FestivalTaskBuilder<T>(festivalTask);
     }
 

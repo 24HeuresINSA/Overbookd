@@ -217,6 +217,7 @@ export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
   InReview as FestivalTaskInReview,
+  Reviewable as FestivalTaskReviewable,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
   PreviewInReview as PreviewFestivalTaskInReview,
@@ -255,4 +256,4 @@ export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
 //  FESTIVAL EVENT MODULE
 //  **********************
 export type { FestivalEvent } from "./festival-event";
-export { FestivalEventError, isDraft } from "./festival-event";
+export { FestivalEventError, isDraft, isInReview } from "./festival-event";

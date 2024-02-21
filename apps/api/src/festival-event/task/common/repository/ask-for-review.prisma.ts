@@ -3,7 +3,7 @@ import {
   DraftWithoutConflicts,
   FestivalTaskError,
   FestivalTaskInReview,
-  isDraft,
+  isInReview,
 } from "@overbookd/festival-event";
 import { DraftBuilder, FestivalTaskBuilder } from "./festival-task.builder";
 import {
@@ -32,7 +32,7 @@ export class PrismaAskForReview implements AskForReviewTasks {
       data: FestivalTaskQueryBuilder.askForReview(task),
     });
     const { festivalTask } = FestivalTaskBuilder.fromDatabase(updated);
-    if (isDraft(festivalTask)) {
+    if (!isInReview(festivalTask)) {
       throw new FestivalTaskError("❌ La FT n'est pas encore en relecture");
     }
     return festivalTask;
