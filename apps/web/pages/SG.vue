@@ -455,15 +455,18 @@ export default {
     defineContext(consumptions) {
       switch (this.mode) {
         case "cask":
-          return `Conso au local de ${consumptions} bâton à ${Money.displayCents(
+          return `Conso au local de ${consumptions} ${this.goodPlural(consumptions)} à ${Money.displayCents(
             this.stickPrice,
           )}`;
         case "closet":
-          return `Conso placard:  ${consumptions} bâtons`;
+          return `Conso placard:  ${consumptions} ${this.goodPlural(consumptions)}`;
         case "deposit":
         default:
           return "Recharge de compte perso";
       }
+    },
+    goodPlural(consumptions) {
+      return consumptions > 1 ? `bâtons` : `bâton`;
     },
   },
 };
