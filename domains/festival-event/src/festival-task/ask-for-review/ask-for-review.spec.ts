@@ -211,7 +211,7 @@ describe("Festival Task - ask for review", () => {
               expect(notifications.entries).toContainEqual({ team, event }),
             );
           });
-          it("should set reset rejected reviews to reviewing", async () => {
+          it("should reset rejected reviews to reviewing", async () => {
             const inReview = await askForReview.from(task.id, instigator);
             const resetReviews = Object.fromEntries(
               reviewers.map((reviewer: string) => [reviewer, REVIEWING]),
