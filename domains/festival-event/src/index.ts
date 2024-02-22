@@ -64,7 +64,6 @@ export type {
   PreviewFestivalActivity,
   FestivalTaskChild,
 } from "./festival-activity/festival-activity";
-export { isRefused } from "./festival-activity/festival-activity";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error";
 
 export type { Contractor } from "./festival-activity/sections/in-charge";
@@ -256,4 +255,9 @@ export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
 //  FESTIVAL EVENT MODULE
 //  **********************
 export type { FestivalEvent } from "./festival-event";
-export { FestivalEventError, isDraft, isInReview } from "./festival-event";
+export {
+  FestivalEventError,
+  isDraft,
+  isInReview,
+  isRefused,
+} from "./festival-event";

@@ -1,17 +1,21 @@
-import { FestivalTask, InReview } from "../festival-task";
+import { Draft, FestivalTask, InReview, Refused } from "../festival-task";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
-import { AskForReviewError } from "./ask-for-review.error";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
   InReviewWithoutConflicts,
+  RefusedWithoutConflicts,
 } from "../volunteer-conflicts";
-import { InReviewSpecification } from "./in-review-specification";
+import { InReviewFestivalTask } from "./in-review-festival-task";
+import { isDraft, isRefused } from "../../festival-event";
+import { CantAskForReview } from "../../common/review.error";
 
 export type AskForReviewTasks = {
-  findById(id: FestivalTask["id"]): Promise<DraftWithoutConflicts | null>;
+  findById(
+    id: FestivalTask["id"],
+  ): Promise<DraftWithoutConflicts | RefusedWithoutConflicts | null>;
   save(task: InReview): Promise<InReview>;
 };
 
@@ -38,22 +42,30 @@ export class AskForReview {
 
   async from(
     taskId: FestivalTask["id"],
-    adherent: Adherent,
+    instigator: Adherent,
   ): Promise<InReviewWithoutConflicts> {
     const task = await this.tasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    if (!InReviewSpecification.isSatisfiedBy(task)) {
-      throw new AskForReviewError(task);
+    if (!isDraft(task) && !isRefused(task)) {
+      throw new CantAskForReview(taskId);
     }
 
-    const reviewer = await this.findReviewer();
+    const inReview = await this.convertInReview(task, instigator);
 
-    const conversion = InReviewSpecification.convert(task, adherent, reviewer);
-    this.repositories.notifications.add(conversion.event);
+    this.repositories.notifications.add(inReview.event);
 
-    const saved = await this.tasks.save(conversion.task);
+    const saved = await this.tasks.save(inReview.task);
     return this.translator.translate<InReview>(saved);
+  }
+
+  private async convertInReview(task: Draft | Refused, instigator: Adherent) {
+    if (isDraft(task)) {
+      const reviewer = await this.findReviewer();
+      return InReviewFestivalTask.fromDraft(task, instigator, reviewer);
+    }
+
+    return InReviewFestivalTask.fromRefused(task, instigator);
   }
 
   private async findReviewer(): Promise<Adherent> {

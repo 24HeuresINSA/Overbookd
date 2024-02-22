@@ -34,7 +34,7 @@ import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import { InMemoryNotifications } from "./notifications.inmemory";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory";
 import { george, lea } from "../festival-activity.fake";
-import { CantAskForReview } from "../festival-activity.error";
+import { CantAskForReview } from "../../common/review.error";
 
 function isReviewer(team: string): team is Reviewer<"FA"> {
   return [barrieres, communication, elec, humain, matos, secu, signa].includes(

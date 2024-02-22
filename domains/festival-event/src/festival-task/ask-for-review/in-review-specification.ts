@@ -1,37 +1,8 @@
 import { Item, hasAtLeastOneItem, isEmpty } from "@overbookd/list";
-import { Adherent } from "../../common/adherent";
-import { WaitingForReview } from "../../common/notifications";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-  Reviewer,
-  humain,
-  matos,
-  elec,
-} from "../../common/review";
-import { IN_REVIEW } from "../../common/status";
 import { Draft, FestivalTask, InReview } from "../festival-task";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { DraftGeneral } from "../sections/general";
 
-type WithoutStatus<T extends FestivalTask> = Omit<T, "status">;
-
-const NO_SUPPLY_REQUEST_TASK_REVIEWS = {
-  elec: NOT_ASKING_TO_REVIEW,
-  matos: REVIEWING,
-  humain: REVIEWING,
-} as const;
-
-const TASK_WITH_SUPPLY_REQUEST_REVIEWS = {
-  elec: REVIEWING,
-  matos: REVIEWING,
-  humain: REVIEWING,
-} as const;
-
-const COMMON_REVIEWERS: Reviewer<"FT">[] = [humain, matos];
-
-const SUPPLY_REQUEST_REVIEWERS: Reviewer<"FT">[] = [...COMMON_REVIEWERS, elec];
-
+export type WithoutStatus<T extends FestivalTask> = Omit<T, "status">;
 export class InReviewSpecification {
   private constructor(readonly task: InReview) {}
 
@@ -51,37 +22,6 @@ export class InReviewSpecification {
       ...InstructionsSpecification.generateErrors(task.instructions),
       ...MobilizationsSpecification.generateErrors(task.mobilizations),
     ];
-  }
-
-  static convert(
-    task: WithoutStatus<InReview>,
-    adherent: Adherent,
-    reviewer: Adherent,
-  ) {
-    const readyToReview = FestivalTaskKeyEvents.readyToReview(adherent);
-    const history = [...task.history, readyToReview];
-
-    const reviews = task.festivalActivity.hasSupplyRequest
-      ? TASK_WITH_SUPPLY_REQUEST_REVIEWS
-      : NO_SUPPLY_REQUEST_TASK_REVIEWS;
-
-    const inReview = {
-      ...task,
-      status: IN_REVIEW,
-      history,
-      reviews,
-      reviewer,
-    } as const;
-
-    return new InReviewSpecification(inReview);
-  }
-
-  get event(): WaitingForReview<"FT"> {
-    const reviewers = this.task.festivalActivity.hasSupplyRequest
-      ? SUPPLY_REQUEST_REVIEWERS
-      : COMMON_REVIEWERS;
-
-    return { id: this.task.id, name: this.task.general.name, reviewers };
   }
 }
 

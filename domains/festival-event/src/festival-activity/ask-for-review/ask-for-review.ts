@@ -1,18 +1,15 @@
-import {
-  CantAskForReview,
-  FestivalActivityNotFound,
-} from "../festival-activity.error";
+import { FestivalActivityNotFound } from "../festival-activity.error";
+import { CantAskForReview } from "../../common/review.error";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import {
   Draft,
   FestivalActivity,
   Refused,
   Reviewable,
-  isRefused,
 } from "../festival-activity";
 import { Adherent } from "../../common/adherent";
 import { Notifications } from "../../common/notifications";
-import { isDraft } from "../../festival-event";
+import { isDraft, isRefused } from "../../festival-event";
 
 export type AskForReviewFestivalActivityRepository = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
