@@ -5,6 +5,7 @@ import {
   lea,
   noel,
   presentEscapeGame,
+  rejectedByHumanOnly,
   uninstallEscapeGame,
 } from "../festival-task.test-util";
 import { FestivalTaskNotFound } from "../festival-task.error";
@@ -21,6 +22,7 @@ describe("Prepare festival task general section", () => {
       uninstallEscapeGame,
       presentEscapeGame,
       guardJustDance,
+      rejectedByHumanOnly,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -83,6 +85,17 @@ describe("Prepare festival task general section", () => {
         expect(general.name).toBe(updateName.name);
         expect(general.team).toBe(updateTeam.team);
       });
+    });
+  });
+  describe("when updating a task rejected by human", () => {
+    it("should update the task", async () => {
+      const update = { name: "Install escape game on friday" };
+      const { general } = await prepare.updateGeneralSection(
+        rejectedByHumanOnly.id,
+        update,
+      );
+
+      expect(general.name).toBe(update.name);
     });
   });
 });

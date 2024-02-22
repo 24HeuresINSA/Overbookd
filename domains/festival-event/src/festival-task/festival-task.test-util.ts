@@ -1,4 +1,4 @@
-import { VALIDATED } from "../common/status";
+import { IN_REVIEW, VALIDATED } from "../common/status";
 import { FestivalActivity, InReview } from "./festival-task";
 import { Contact } from "./sections/instructions";
 import { VolunteerWithConflicts } from "./sections/mobilizations";
@@ -670,4 +670,14 @@ export const withSomeMobilizationsWithoutRequest = factory
     twoVolunteersOnFriday10hToFriday11h.mobilization,
     MobilizationBuilder.init({ start: friday11h, end: friday18h }).mobilization,
   ])
+  .build();
+
+export const rejectedByHumanOnly = factory
+  .refused("Refused by human")
+  .withGeneral({ team: "test" })
+  .withFestivalActivity(preventionVillage)
+  .withReviews({
+    humain: REJECTED,
+    matos: IN_REVIEW,
+  })
   .build();
