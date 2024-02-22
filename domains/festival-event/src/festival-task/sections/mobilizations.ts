@@ -13,6 +13,7 @@ const karna = "karna";
 const kfet = "kfet";
 const strasbourg = "strasbourg";
 const soft = "soft";
+const cvl = "cvl";
 
 export const requirableTeams = [
   benevole,
@@ -24,6 +25,7 @@ export const requirableTeams = [
   karna,
   kfet,
   strasbourg,
+  cvl,
 ] as const;
 export const requirableTeamsExtended = [...requirableTeams, soft] as const;
 
