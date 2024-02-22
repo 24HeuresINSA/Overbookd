@@ -1,7 +1,14 @@
 import { numberGenerator } from "@overbookd/list";
-import { DRAFT, IN_REVIEW, VALIDATED } from "../common/status";
+import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
 import { isKeyOf } from "../is-key-of";
-import { Draft, FestivalActivity, InReview } from "./festival-task";
+import {
+  Draft,
+  FestivalActivity,
+  FestivalTask,
+  InReview,
+  Refused,
+  Reviewable,
+} from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
   deuxTables,
@@ -15,14 +22,18 @@ import {
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import { WithConflicts } from "./volunteer-conflicts";
 import { isDraft } from "../festival-event";
+import { REJECTED } from "../common/action";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
   | WithConflicts["festivalActivity"]
+  | Reviewable["reviews"]
   | WithConflicts["instructions"];
 
 type DraftWithConflicts = Extract<WithConflicts, Draft>;
 type InReviewWithConflicts = Extract<WithConflicts, InReview>;
+type RefusedWithConflicts = Extract<WithConflicts, Refused>;
+type ReviewableWithConflicts = Extract<WithConflicts, Reviewable>;
 
 class FestivalTaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
@@ -36,6 +47,12 @@ class FestivalTaskFactory {
   inReview(name: string): FestivalTaskBuilder<InReviewWithConflicts> {
     const id = this.idGenerator.next().value;
     const task = defaultInReview(id, name);
+    return FestivalTaskBuilder.init(task);
+  }
+
+  refused(name: string): FestivalTaskBuilder<RefusedWithConflicts> {
+    const id = this.idGenerator.next().value;
+    const task = defaultRefused(id, name);
     return FestivalTaskBuilder.init(task);
   }
 }
@@ -72,7 +89,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
 
   private buildReviews(
     festivalActivity: FestivalActivity,
-    festivalTask: Exclude<WithConflicts, Draft>,
+    festivalTask: ReviewableWithConflicts,
   ) {
     const elecIsNotAskingToReview = !festivalActivity.hasSupplyRequest;
     const elecHasAlreadyStatus =
@@ -85,6 +102,18 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     if (elecHasAlreadyStatus) return festivalTask.reviews;
 
     return { ...festivalTask.reviews, elec: IN_REVIEW };
+  }
+
+  withReviews<
+    Reviews = T extends ReviewableWithConflicts ? Partial<T["reviews"]> : null,
+  >(reviews: Reviews) {
+    if (isDraft<FestivalTask>(this.festivalTask) || !reviews) return this;
+
+    const festivalTask = {
+      ...this.festivalTask,
+      reviews: this.merge(this.festivalTask.reviews, reviews),
+    } as const;
+    return new FestivalTaskBuilder<T>(festivalTask);
   }
 
   withInstructions(instructions: Partial<T["instructions"]>) {
@@ -205,6 +234,41 @@ function defaultActivity(name: string): FestivalActivity {
       all: [deuxTables],
     },
     timeWindows: [friday11hfriday18h],
+  };
+}
+
+function defaultRefused(id: number, name: string): RefusedWithConflicts {
+  return {
+    id,
+    status: REFUSED,
+    general: {
+      name,
+      administrator: noel,
+      team: "plaizir",
+    },
+    festivalActivity: defaultActivity(name),
+    instructions: {
+      appointment: humaGrass,
+      contacts: [noelContact],
+      global: "Des instructions globales",
+      inCharge: {
+        instruction: null,
+        volunteers: [],
+      },
+    },
+    history: [
+      FestivalTaskKeyEvents.created(noel),
+      FestivalTaskKeyEvents.readyToReview(noel),
+    ],
+    feedbacks: [],
+    inquiries: [],
+    mobilizations: [],
+    reviews: {
+      humain: REJECTED,
+      matos: REVIEWING,
+      elec: NOT_ASKING_TO_REVIEW,
+    },
+    reviewer: lea,
   };
 }
 
