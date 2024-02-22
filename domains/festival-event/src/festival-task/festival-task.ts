@@ -1,6 +1,6 @@
 import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
-import { DRAFT, IN_REVIEW, REFUSED } from "../common/status";
+import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
@@ -8,7 +8,11 @@ import { KeyEvent } from "./festival-task.event";
 import { DraftGeneral, General } from "./sections/general";
 import { Mobilization, ReviewableMobilization } from "./sections/mobilizations";
 import { DraftInstructions, Instructions } from "./sections/instructions";
-import { InReviewReviews, RefusedReviews } from "../common/review";
+import {
+  InReviewReviews,
+  RefusedReviews,
+  ValidatedReviews,
+} from "../common/review";
 import { Adherent } from "../common/adherent";
 
 export type FestivalActivity = {
@@ -76,14 +80,20 @@ type BaseRefused = BaseReviewable & {
   reviews: RefusedReviews<"FT">;
 };
 
-type GenerateConflictUnion<T extends BaseInReview | BaseRefused> =
-  | (T & MobilizationsWithConflicts)
-  | (T & MobilizationsWithoutConflicts);
+type BaseValidated = BaseReviewable & {
+  status: typeof VALIDATED;
+  reviews: ValidatedReviews<"FT">;
+};
+
+type GenerateConflictUnion<
+  T extends BaseInReview | BaseRefused | BaseValidated,
+> = (T & MobilizationsWithConflicts) | (T & MobilizationsWithoutConflicts);
 
 export type InReview = GenerateConflictUnion<BaseInReview>;
 export type Refused = GenerateConflictUnion<BaseRefused>;
+export type Validated = GenerateConflictUnion<BaseValidated>;
 
-export type Reviewable = InReview | Refused;
+export type Reviewable = InReview | Refused | Validated;
 
 export type FestivalTask = Draft | Reviewable;
 

@@ -55,11 +55,6 @@ class Approve {
     task: ReviewableWithoutConflicts,
     approval: Approval<"FT">,
   ): ReviewableWithoutConflicts {
-    if (Approve.isAlreadyApprovedBy(task, approval.team)) {
-      throw new AlreadyApproved(task.id, approval.team, "FT");
-    }
-    Approve.checkInquiryDriveAssignment(task);
-
     const reviews = {
       ...task.reviews,
       [approval.team]: APPROVED,
@@ -78,23 +73,6 @@ class Approve {
     return Object.values(reviews).every(
       (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
     );
-  }
-
-  private static checkInquiryDriveAssignment(task: ReviewableWithoutConflicts) {
-    const areAllRequestsAssignedToDrive = task.inquiries.every((request) =>
-      Object.hasOwn(request, "drive"),
-    );
-    if (!areAllRequestsAssignedToDrive) {
-      throw new ShouldAssignDrive("FT");
-    }
-  }
-
-  private static isAlreadyApprovedBy(
-    festivalActivity: ReviewableWithoutConflicts,
-    team: Reviewer<"FT">,
-  ) {
-    const teamReview = getTeamReview(festivalActivity.reviews, team);
-    return teamReview === APPROVED;
   }
 }
 
@@ -125,8 +103,30 @@ export class Review {
       throw new NotAskingToReview(task.id, approval.team, "FT");
     }
 
+    if (this.isAlreadyApprovedBy(task, approval.team)) {
+      throw new AlreadyApproved(task.id, approval.team, "FT");
+    }
+    this.checkInquiryDriveAssignment(task);
+
     const approved = Approve.from(task, approval);
     return this.tasks.save(approved);
+  }
+
+  private checkInquiryDriveAssignment(task: ReviewableWithoutConflicts) {
+    const areAllRequestsAssignedToDrive = task.inquiries.every((request) =>
+      Object.hasOwn(request, "drive"),
+    );
+    if (!areAllRequestsAssignedToDrive) {
+      throw new ShouldAssignDrive("FT");
+    }
+  }
+
+  private isAlreadyApprovedBy(
+    festivalActivity: ReviewableWithoutConflicts,
+    team: Reviewer<"FT">,
+  ) {
+    const teamReview = getTeamReview(festivalActivity.reviews, team);
+    return teamReview === APPROVED;
   }
 }
 

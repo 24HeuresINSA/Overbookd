@@ -110,9 +110,9 @@ describe("Approve festival task", () => {
     });
   });
   describe.each`
-    team     | taskName                                                  | task                                         | reviewer
-    ${matos} | ${alreadyApprovedByHumain.general.name}                   | ${alreadyApprovedByHumain}                   | ${noel}
-    ${elec}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name} | ${withSupplyRequestAndAllApprovedExceptElec} | ${lea}
+    team     | taskName                                                      | task                                             | reviewer
+    ${matos} | ${withoutSupplyRequestAndAllApprovedExceptMatos.general.name} | ${withoutSupplyRequestAndAllApprovedExceptMatos} | ${noel}
+    ${elec}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name}     | ${withSupplyRequestAndAllApprovedExceptElec}     | ${lea}
   `("when last reviewer approves $taskName", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it("should switch to VALIDATED festival task", async () => {
@@ -122,9 +122,8 @@ describe("Approve festival task", () => {
   });
   describe("when approving several times from different teams", () => {
     it("should keep all approval", async () => {
-      const task = caissierBar;
-      await review.approve(task.id, { team: humain, reviewer: lea });
-      const festivalActivity = await review.approve(task.id, {
+      await review.approve(caissierBar.id, { team: humain, reviewer: lea });
+      const festivalActivity = await review.approve(caissierBar.id, {
         team: matos,
         reviewer: noel,
       });
@@ -134,20 +133,26 @@ describe("Approve festival task", () => {
   });
   describe("when trying to approve task even with not assigned to drive inquiries as matos", () => {
     it("should indicate that inquiries should been assigned to a drive", async () => {
-      const task = withInvalidInquiries;
       const approval: Approval<"FT"> = { team: matos, reviewer: noel };
       expect(
-        async () => await review.approve(task.id, approval),
+        async () => await review.approve(withInvalidInquiries.id, approval),
       ).rejects.toThrow(new ShouldAssignDrive("FT"));
     });
   });
-  describe("when approving an already approved festival activity", () => {
-    it("should indicate activity already approved", async () => {
-      const task = alreadyApprovedByHumain;
+  describe("when approving an already approved festival task", () => {
+    it("should indicate task already approved", async () => {
       const approval: Approval<"FT"> = { team: humain, reviewer: george };
       expect(
-        async () => await review.approve(task.id, approval),
+        async () => await review.approve(alreadyApprovedByHumain.id, approval),
       ).rejects.toThrow(AlreadyApproved);
+    });
+  });
+  describe("when approving a festival task without supply request as elec", () => {
+    it("should indicate that elec is not asking to review it", async () => {
+      const approval: Approval<"FT"> = { team: elec, reviewer: george };
+      expect(
+        async () => await review.approve(caissierBar.id, approval),
+      ).rejects.toThrow(NotAskingToReview);
     });
   });
 });
