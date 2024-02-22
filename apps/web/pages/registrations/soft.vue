@@ -13,7 +13,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "Volunteers",
+  name: "RegistrationsSoft",
   data() {
     return {
       headers: [
@@ -24,10 +24,12 @@ export default defineComponent({
         { text: "Équipes", value: "teams", sortable: false },
         { text: "Action", value: "action", sortable: false },
       ],
-      volunteersToEnroll: [
-        /* data */
-      ],
     };
+  },
+  computed: {
+    volunteersToEnroll() {
+      return [];
+    },
   },
 });
 </script>
