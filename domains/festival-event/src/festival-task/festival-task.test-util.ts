@@ -283,7 +283,7 @@ export const sacPoubelle = {
   name: "Sac Poubelle (rouleau)",
 };
 
-export const chaise = {
+const chaise = {
   slug: "chaise",
   name: "Chaise",
 };
@@ -301,7 +301,7 @@ export const escapeGame: FestivalActivity = {
   },
 };
 
-export const barbecue: FestivalActivity = {
+const barbecue: FestivalActivity = {
   id: 1,
   name: "Barbecue",
   location: humaGrass,
