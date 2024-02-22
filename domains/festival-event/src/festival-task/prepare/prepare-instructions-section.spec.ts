@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  installBarbecue,
   george,
   guardJustDance,
   humaGrass,
@@ -27,6 +28,7 @@ describe("Prepare festival task instructions section", () => {
       presentEscapeGame,
       guardJustDance,
       serveWaterOnJustDance,
+      installBarbecue,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -47,6 +49,7 @@ describe("Prepare festival task instructions section", () => {
     ${"global"}                           | ${guardJustDance.general.name}        | ${guardJustDance.id}        | ${{ global: "Some instruction for everyone" }}                                                                          | ${guardJustDance.instructions.appointment}        | ${"Some instruction for everyone"}           | ${guardJustDance.instructions.inCharge.instruction}
     ${"global and appointment"}           | ${guardJustDance.general.name}        | ${guardJustDance.id}        | ${{ global: "Some instruction for everyone", appointment: humaGrass }}                                                  | ${humaGrass}                                      | ${"Some instruction for everyone"}           | ${guardJustDance.instructions.inCharge.instruction}
     ${"inCharge"}                         | ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.id} | ${{ inCharge: "Il faut aller chercher l'eau dans les toilettes" }}                                                      | ${serveWaterOnJustDance.instructions.appointment} | ${serveWaterOnJustDance.instructions.global} | ${"Il faut aller chercher l'eau dans les toilettes"}
+    ${"global"}                           | ${installBarbecue.general.name}       | ${installBarbecue.id}       | ${{ global: "Some instruction for everyone" }}                                                                          | ${installBarbecue.instructions.appointment}       | ${"Some instruction for everyone"}           | ${installBarbecue.instructions.inCharge.instruction}
   `(
     "when updating $fields from $taskName",
     ({ fields, taskId, update, appointment, global, inCharge }) => {
@@ -63,10 +66,11 @@ describe("Prepare festival task instructions section", () => {
     },
   );
   describe.each`
-    task              | update                               | expectedError
-    ${guardJustDance} | ${{ global: null }}                  | ${"Des instructions sont nécessaires"}
-    ${guardJustDance} | ${{ inCharge: "Some instructions" }} | ${"Des responsables sont nécessaires pour les instructions spécifiques"}
-    ${guardJustDance} | ${{ appointment: null }}             | ${"Un lieu de rendez-vous est nécessaire"}
+    task               | update                               | expectedError
+    ${guardJustDance}  | ${{ global: null }}                  | ${"Des instructions sont nécessaires"}
+    ${guardJustDance}  | ${{ inCharge: "Some instructions" }} | ${"Des responsables sont nécessaires pour les instructions spécifiques"}
+    ${guardJustDance}  | ${{ appointment: null }}             | ${"Un lieu de rendez-vous est nécessaire"}
+    ${installBarbecue} | ${{ global: null }}                  | ${"Des instructions sont nécessaires"}
   `(
     "when trying to clear mandatory field of an in review task",
     ({ task, update, expectedError }) => {

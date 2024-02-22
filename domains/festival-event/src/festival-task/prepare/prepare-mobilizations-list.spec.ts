@@ -35,6 +35,8 @@ import {
   guardJustDance,
   serveWaterOnJustDance,
   george,
+  installBarbecue,
+  uninstallBarbecue,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
@@ -48,6 +50,8 @@ describe("Prepare festival task mobilizations list", () => {
       guardEscapeGame,
       guardJustDance,
       serveWaterOnJustDance,
+      installBarbecue,
+      uninstallBarbecue,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
@@ -80,19 +84,23 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
-
-      describe("when task is under review and mobilization has not volunteer nor team requested", () => {
-        it("should indicate a mobilization should have at least one volunteer or team", async () => {
-          const task = guardJustDance;
-          const form = friday18hsaturday10hMobilization.form;
-          expect(
-            async () => await prepare.addMobilization(task.id, form),
-          ).rejects.toThrow(
-            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
-          );
-        });
-      });
-
+      describe.each`
+        taskName                        | taskStatus                | task               | mobilization
+        ${guardJustDance.general.name}  | ${guardJustDance.status}  | ${guardJustDance}  | ${friday18hsaturday10hMobilization}
+        ${installBarbecue.general.name} | ${installBarbecue.status} | ${installBarbecue} | ${friday18hsaturday10hMobilization}
+      `(
+        "when $taskName task is $taskStatus and mobilization has not volunteer nor team requested",
+        ({ task, mobilization }) => {
+          it("should indicate a mobilization should have at least one volunteer or team", async () => {
+            expect(
+              async () =>
+                await prepare.addMobilization(task.id, mobilization.form),
+            ).rejects.toThrow(
+              "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+            );
+          });
+        },
+      );
       describe.each`
         indication                       | task                 | start          | end
         ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h}
@@ -253,16 +261,21 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).not.toContainEqual(mobilization);
         },
       );
-      describe("when removing the last mobilization of an under review task", () => {
-        it("should indicate that at least one mobilization is mandatory", async () => {
-          const task = guardJustDance;
-          const mobilization = guardJustDance.mobilizations[0];
-          expect(
-            async () =>
-              await prepare.removeMobilization(task.id, mobilization.id),
-          ).rejects.toThrow("Au moins une mobilisation est nécessaire");
-        });
-      });
+      describe.each`
+        taskName                          | taskStatus                  | task                 | mobilization
+        ${guardJustDance.general.name}    | ${guardJustDance.status}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}
+        ${uninstallBarbecue.general.name} | ${uninstallBarbecue.status} | ${uninstallBarbecue} | ${uninstallBarbecue.mobilizations[0]}
+      `(
+        "when removing the last mobilization of $taskName task with status $taskStatus",
+        ({ task, mobilization }) => {
+          it("should indicate that at least one mobilization is mandatory", async () => {
+            expect(
+              async () =>
+                await prepare.removeMobilization(task.id, mobilization.id),
+            ).rejects.toThrow("Au moins une mobilisation est nécessaire");
+          });
+        },
+      );
     });
     describe("when removing an unexisting mobilization", () => {
       it("should keep mobilizations list unchanged", async () => {
@@ -419,23 +432,27 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
-      describe("when removing the last team of an under review task", () => {
-        it("should indicate that at least one team or one volunteer is mandatory", async () => {
-          const task = serveWaterOnJustDance;
-          const mobilization = serveWaterOnJustDance.mobilizations[0];
-          const team = "bénévole";
-          expect(
-            async () =>
-              await prepare.removeTeamFromMobilization(
-                task.id,
-                mobilization.id,
-                team,
-              ),
-          ).rejects.toThrow(
-            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
-          );
-        });
-      });
+      describe.each`
+        taskName                              | taskStatus                      | task                     | mobilization                              | team
+        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[0]} | ${"bénévole"}
+        ${installBarbecue.general.name}       | ${installBarbecue.status}       | ${installBarbecue}       | ${installBarbecue.mobilizations[1]}       | ${"vieux"}
+      `(
+        "when removing the last team of a $taskName task with status $taskStatus",
+        ({ task, mobilization, team }) => {
+          it("should indicate that at least one team or one volunteer is mandatory", async () => {
+            expect(
+              async () =>
+                await prepare.removeTeamFromMobilization(
+                  task.id,
+                  mobilization.id,
+                  team,
+                ),
+            ).rejects.toThrow(
+              "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+            );
+          });
+        },
+      );
     });
     describe("when team is not part of the mobilization", () => {
       it("should keep mobilization unchanged", async () => {
@@ -510,23 +527,27 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
-      describe("when removing the last volunteer of an under review task", () => {
-        it("should indicate that at least one volunteer or one team is mandatory", async () => {
-          const task = serveWaterOnJustDance;
-          const mobilization = serveWaterOnJustDance.mobilizations[2];
-          const volunteerId = george.id;
-          expect(
-            async () =>
-              await prepare.removeVolunteerFromMobilization(
-                task.id,
-                mobilization.id,
-                volunteerId,
-              ),
-          ).rejects.toThrow(
-            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
-          );
-        });
-      });
+      describe.each`
+        taskName                              | taskStatus                      | task                     | mobilization                              | volunteer
+        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[2]} | ${george}
+        ${installBarbecue.general.name}       | ${installBarbecue.status}       | ${installBarbecue}       | ${installBarbecue.mobilizations[0]}       | ${george}
+      `(
+        "when removing the last volunteer of a $taskName task with status $taskStatus",
+        ({ task, mobilization, volunteer }) => {
+          it("should indicate that at least one team or one volunteer is mandatory", async () => {
+            expect(
+              async () =>
+                await prepare.removeVolunteerFromMobilization(
+                  task.id,
+                  mobilization.id,
+                  volunteer.id,
+                ),
+            ).rejects.toThrow(
+              "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+            );
+          });
+        },
+      );
     });
     describe("when volunteer is not part of the mobilization", () => {
       it("should keep mobilization unchanged", async () => {

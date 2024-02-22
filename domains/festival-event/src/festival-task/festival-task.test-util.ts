@@ -283,9 +283,27 @@ export const sacPoubelle = {
   name: "Sac Poubelle (rouleau)",
 };
 
+const chaise = {
+  slug: "chaise",
+  name: "Chaise",
+};
+
 export const escapeGame: FestivalActivity = {
   id: 1,
   name: "Escape game",
+  location: humaGrass,
+  status: VALIDATED,
+  hasSupplyRequest: true,
+  timeWindows: [friday11hfriday18h],
+  inquiry: {
+    timeWindows: [friday10hfriday19h],
+    all: [deuxTables],
+  },
+};
+
+const barbecue: FestivalActivity = {
+  id: 1,
+  name: "Barbecue",
   location: humaGrass,
   status: VALIDATED,
   hasSupplyRequest: true,
@@ -420,6 +438,7 @@ export const guardJustDance = factory
       ],
     }).mobilization,
   ])
+  .withInquiries([{ ...chaise, quantity: 2 }])
   .build();
 
 export const serveWaterOnJustDance = factory
@@ -670,4 +689,49 @@ export const withSomeMobilizationsWithoutRequest = factory
     twoVolunteersOnFriday10hToFriday11h.mobilization,
     MobilizationBuilder.init({ start: friday11h, end: friday18h }).mobilization,
   ])
+  .build();
+
+export const installBarbecue = factory
+  .refused("Install Barbecue")
+  .withFestivalActivity(barbecue)
+  .withInquiries([{ ...chaise, quantity: 2 }])
+  .withMobilizations([
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: friday10h,
+      end: friday11h,
+      volunteers: [
+        { ...george, conflicts: { tasks: [], availability: false } },
+      ],
+      teams: [],
+    }).mobilization,
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: friday10h,
+      end: friday18h,
+      volunteers: [],
+      teams: [{ count: 20, team: "vieux" }],
+    }).mobilization,
+  ])
+  .withReviews({
+    humain: REJECTED,
+    matos: REJECTED,
+    elec: REJECTED,
+  })
+  .build();
+
+export const uninstallBarbecue = factory
+  .refused("Uninstall Barbecue")
+  .withFestivalActivity(barbecue)
+  .withMobilizations([
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: friday10h,
+      end: friday18h,
+      volunteers: [],
+      teams: [{ count: 1, team: "vieux" }],
+    }).mobilization,
+  ])
+  .withReviews({
+    humain: REJECTED,
+    matos: REJECTED,
+    elec: REJECTED,
+  })
   .build();
