@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="festival-event-filter">
     <v-card-title>Filtres</v-card-title>
     <v-card-text>
       <v-text-field
@@ -120,3 +120,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.festival-event-filter {
+  height: fit-content;
+}
+</style>
