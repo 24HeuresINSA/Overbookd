@@ -3,10 +3,9 @@ import {
   guardJustDance,
   installEscapeGame,
   lea,
-  noel,
   presentEscapeGame,
   uninstallEscapeGame,
-  animateEscapeGame,
+  installBarbecue,
 } from "../festival-task.test-util";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { PrepareFestivalTask } from "./prepare";
@@ -22,7 +21,7 @@ describe("Prepare festival task general section", () => {
       uninstallEscapeGame,
       presentEscapeGame,
       guardJustDance,
-      animateEscapeGame,
+      installBarbecue,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -41,8 +40,9 @@ describe("Prepare festival task general section", () => {
     ${"name and team"}                | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ team: null, name: "Present escape game on saturday" }}                                 | ${"Present escape game on saturday"}         | ${presentEscapeGame.general.administrator}   | ${null}
     ${"name and administrator"}       | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ name: "Present escape game on saturday", administrator: lea }}                         | ${"Present escape game on saturday"}         | ${lea}                                       | ${presentEscapeGame.general.team}
     ${"name, administrator and team"} | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ name: "Install escape game on saturday", administrator: lea, team: "plaizir" }}        | ${"Install escape game on saturday"}         | ${lea}                                       | ${"plaizir"}
-    ${"name"}                         | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday" }}                                     | ${"Guard just dance on friday and saturday"} | ${noel}                                      | ${"plaizir"}
+    ${"name"}                         | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday" }}                                     | ${"Guard just dance on friday and saturday"} | ${guardJustDance.general.administrator}      | ${guardJustDance.general.team}
     ${"name, administrator and team"} | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday", administrator: lea, team: "humain" }} | ${"Guard just dance on friday and saturday"} | ${lea}                                       | ${"humain"}
+    ${"name"}                         | ${installBarbecue.general.name}     | ${installBarbecue.id}     | ${{ name: "Install barbecue on friday" }}                                                  | ${"Install barbecue on friday"}              | ${installBarbecue.general.administrator}     | ${installBarbecue.general.team}
   `(
     "when updating $fields from $taskName",
     ({ fields, taskId, update, name, administrator, team }) => {
@@ -62,17 +62,6 @@ describe("Prepare festival task general section", () => {
         async () =>
           await prepare.updateGeneralSection(guardJustDance.id, update),
       ).rejects.toThrow("Une équipe responsable est nécessaire");
-    });
-  });
-  describe("when trying to update field of a refused task", () => {
-    it("should update field", async () => {
-      const name = "Refused FT";
-      const { general } = await prepare.updateGeneralSection(
-        animateEscapeGame.id,
-        { name },
-      );
-
-      expect(general.name).toBe(name);
     });
   });
   describe("when trying to update an unexisting task", () => {

@@ -3,6 +3,8 @@ import {
   installEscapeGame,
   uninstallEscapeGame,
   presentEscapeGame,
+  guardJustDance,
+  installBarbecue,
 } from "../festival-task.test-util";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
@@ -14,7 +16,13 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts";
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
   beforeEach(() => {
-    const tasks = [installEscapeGame, uninstallEscapeGame, presentEscapeGame];
+    const tasks = [
+      installEscapeGame,
+      uninstallEscapeGame,
+      presentEscapeGame,
+      guardJustDance,
+      installBarbecue,
+    ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
@@ -48,6 +56,28 @@ describe("Prepare festival task inquiries list", () => {
         expect(inquiries).toContainEqual(sacPoubelleInquiry);
       });
     });
+    describe("when addinq inquiry in an in review task", () => {
+      it("should add inquiry to the list", async () => {
+        const task = guardJustDance;
+        const inquiry = { ...ficelle, quantity: 1 };
+
+        const { inquiries } = await prepare.addInquiry(task.id, inquiry);
+
+        expect(inquiries).toHaveLength(task.inquiries.length + 1);
+        expect(inquiries).toContainEqual(inquiry);
+      });
+    });
+    describe("when addinq inquiry in a refused task", () => {
+      it("should add inquiry to the list", async () => {
+        const task = installBarbecue;
+        const inquiry = { ...ficelle, quantity: 1 };
+
+        const { inquiries } = await prepare.addInquiry(task.id, inquiry);
+
+        expect(inquiries).toHaveLength(task.inquiries.length + 1);
+        expect(inquiries).toContainEqual(inquiry);
+      });
+    });
     describe("when inquiry is about an already required gear", () => {
       it("should indicate that there is already a request for it", () => {
         const task = uninstallEscapeGame;
@@ -62,6 +92,34 @@ describe("Prepare festival task inquiries list", () => {
     describe("when removing a requested inquiry", () => {
       it("should remove it from inquiries list", async () => {
         const task = uninstallEscapeGame;
+        const inquiry = task.inquiries[0];
+        const expectedLength = task.inquiries.length - 1;
+
+        const { inquiries } = await prepare.removeInquiry(
+          task.id,
+          inquiry.slug,
+        );
+
+        expect(inquiries).toHaveLength(expectedLength);
+      });
+    });
+    describe("when removing inquiry in an in review task", () => {
+      it("should remove it from inquiries list", async () => {
+        const task = guardJustDance;
+        const inquiry = task.inquiries[0];
+        const expectedLength = task.inquiries.length - 1;
+
+        const { inquiries } = await prepare.removeInquiry(
+          task.id,
+          inquiry.slug,
+        );
+
+        expect(inquiries).toHaveLength(expectedLength);
+      });
+    });
+    describe("when removing inquiry in a refused task", () => {
+      it("should remove it from inquiries list", async () => {
+        const task = installBarbecue;
         const inquiry = task.inquiries[0];
         const expectedLength = task.inquiries.length - 1;
 

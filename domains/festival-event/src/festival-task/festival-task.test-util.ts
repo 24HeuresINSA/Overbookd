@@ -36,7 +36,7 @@ type InitMobilizationBuilder = Partial<
 
 type InReviewWithConflicts = Extract<WithConflicts, InReview>;
 
-export class MobilizationBuilder<T extends WithConflicts> {
+class MobilizationBuilder<T extends WithConflicts> {
   private constructor(readonly mobilization: Item<T["mobilizations"]>) {}
 
   static init<T extends WithConflicts>(
@@ -152,11 +152,11 @@ export const george = {
   firstname: "George",
 };
 
-export const friday10h: BuildTimeWindow = {
+const friday10h: BuildTimeWindow = {
   date: new Date("2024-05-17T10:00+02:00"),
   id: "28598880",
 };
-export const friday11h: BuildTimeWindow = {
+const friday11h: BuildTimeWindow = {
   date: new Date("2024-05-17T11:00+02:00"),
   id: "28598940",
 };
@@ -283,9 +283,27 @@ export const sacPoubelle = {
   name: "Sac Poubelle (rouleau)",
 };
 
+export const chaise = {
+  slug: "chaise",
+  name: "Chaise",
+};
+
 export const escapeGame: FestivalActivity = {
   id: 1,
   name: "Escape game",
+  location: humaGrass,
+  status: VALIDATED,
+  hasSupplyRequest: true,
+  timeWindows: [friday11hfriday18h],
+  inquiry: {
+    timeWindows: [friday10hfriday19h],
+    all: [deuxTables],
+  },
+};
+
+export const barbecue: FestivalActivity = {
+  id: 1,
+  name: "Barbecue",
   location: humaGrass,
   status: VALIDATED,
   hasSupplyRequest: true,
@@ -420,6 +438,7 @@ export const guardJustDance = factory
       ],
     }).mobilization,
   ])
+  .withInquiries([{ ...chaise, quantity: 2 }])
   .build();
 
 export const serveWaterOnJustDance = factory
@@ -672,12 +691,55 @@ export const withSomeMobilizationsWithoutRequest = factory
   ])
   .build();
 
-export const animateEscapeGame = factory
-  .refused("Animate Escape Game")
-  .withFestivalActivity(escapeGame)
+export const installBarbecue = factory
+  .refused("Install Barbecue")
+  .withFestivalActivity(barbecue)
+  .withInquiries([{ ...chaise, quantity: 2 }])
+  .withMobilizations([
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: friday10h,
+      end: friday11h,
+      volunteers: [
+        { ...george, conflicts: { tasks: [], availability: false } },
+      ],
+      teams: [],
+    }).mobilization,
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: friday10h,
+      end: friday18h,
+      volunteers: [],
+      teams: [{ count: 20, team: "vieux" }],
+    }).mobilization,
+  ])
   .withReviews({
     humain: REJECTED,
     matos: REJECTED,
     elec: REJECTED,
   })
   .build();
+
+export const uninstallBarbecue = factory
+  .refused("Uninstall Barbecue")
+  .withFestivalActivity(barbecue)
+  .withMobilizations([
+    MobilizationBuilder.init<InReviewWithConflicts>({
+      start: friday10h,
+      end: friday18h,
+      volunteers: [],
+      teams: [{ count: 1, team: "vieux" }],
+    }).mobilization,
+  ])
+  .withReviews({
+    humain: REJECTED,
+    matos: REJECTED,
+    elec: REJECTED,
+  })
+  .build();
+
+export const defaultReviewableMobilization =
+  MobilizationBuilder.init<InReviewWithConflicts>({
+    start: friday10h,
+    end: friday11h,
+    volunteers: [],
+    teams: [{ count: 1, team: "bénévole" }],
+  }).mobilization;
