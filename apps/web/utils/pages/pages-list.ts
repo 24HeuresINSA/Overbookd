@@ -1,8 +1,8 @@
 import {
   AFFECT_VOLUNTEER,
   ASK_FOR_HELP,
-  ENROLL_ADHERENT,
-  ENROLL_VOLUNTEER,
+  ENROLL_HARD,
+  ENROLL_SOFT,
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -146,7 +146,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-account-multiple-plus",
     title: "Admissions hard",
-    permission: ENROLL_ADHERENT,
+    permission: ENROLL_HARD,
     to: "/registrations/hard",
     description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
     mobileSupport: true,
@@ -155,7 +155,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-account-multiple-check",
     title: "Admissions soft",
-    permission: ENROLL_VOLUNTEER,
+    permission: ENROLL_SOFT,
     to: "/registrations/soft",
     description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
     mobileSupport: false,
