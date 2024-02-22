@@ -1,15 +1,16 @@
 import { updateItemToList } from "@overbookd/list";
-import { Draft, FestivalTask, InReview } from "../festival-task";
+import { Draft, FestivalTask, InReview, Refused } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { AskForReviewTasks } from "./ask-for-review";
-import { isDraft } from "../../festival-event";
+import { isDraft, isRefused } from "../../festival-event";
 
 export class InMemoryAskForReviewTasks implements AskForReviewTasks {
   constructor(private tasks: FestivalTask[]) {}
 
-  findById(id: FestivalTask["id"]): Promise<Draft | null> {
+  findById(id: FestivalTask["id"]): Promise<Draft | Refused | null> {
     const task = this.tasks.find(
-      (task): task is Draft => task.id === id && isDraft(task),
+      (task): task is Draft | Refused =>
+        task.id === id && (isDraft(task) || isRefused(task)),
     );
     return Promise.resolve(task ?? null);
   }

@@ -10,9 +10,11 @@ import {
   elec,
 } from "../../common/review";
 import { IN_REVIEW } from "../../common/status";
-import { Draft, FestivalTask, InReview } from "../festival-task";
+import { Draft, FestivalTask, InReview, Refused } from "../festival-task";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import { DraftGeneral } from "../sections/general";
+import { AskForReviewError } from "./ask-for-review.error";
+import { REJECTED } from "../../common/action";
 
 type WithoutStatus<T extends FestivalTask> = Omit<T, "status">;
 
@@ -31,6 +33,84 @@ const TASK_WITH_SUPPLY_REQUEST_REVIEWS = {
 const COMMON_REVIEWERS: Reviewer<"FT">[] = [humain, matos];
 
 const SUPPLY_REQUEST_REVIEWERS: Reviewer<"FT">[] = [...COMMON_REVIEWERS, elec];
+
+export class InReviewFestivalTask {
+  private constructor(
+    private readonly _task: WithoutStatus<InReview>,
+    private readonly previousReview?: Refused["reviews"],
+  ) {}
+
+  static fromDraft(task: Draft, instigator: Adherent, reviewer: Adherent) {
+    if (!InReviewSpecification.isSatisfiedBy(task)) {
+      throw new AskForReviewError(task);
+    }
+
+    const readyToReview = FestivalTaskKeyEvents.readyToReview(instigator);
+    const history = [...task.history, readyToReview];
+
+    const reviews = task.festivalActivity.hasSupplyRequest
+      ? TASK_WITH_SUPPLY_REQUEST_REVIEWS
+      : NO_SUPPLY_REQUEST_TASK_REVIEWS;
+
+    const inReview = {
+      ...task,
+      history,
+      reviews,
+      reviewer,
+    } as const;
+
+    return new InReviewFestivalTask(inReview);
+  }
+
+  static fromRefused(task: Refused, instigator: Adherent) {
+    const readyToReview = FestivalTaskKeyEvents.readyToReview(instigator);
+    const history = [...task.history, readyToReview];
+
+    const reviews = task.festivalActivity.hasSupplyRequest
+      ? TASK_WITH_SUPPLY_REQUEST_REVIEWS
+      : NO_SUPPLY_REQUEST_TASK_REVIEWS;
+
+    const inReview = {
+      ...task,
+      history,
+      reviews,
+    } as const;
+
+    return new InReviewFestivalTask(inReview, task.reviews);
+  }
+
+  get event(): WaitingForReview<"FT"> {
+    const reviewers = this.reviewers;
+
+    return { id: this._task.id, name: this._task.general.name, reviewers };
+  }
+
+  private get reviewers() {
+    const { hasSupplyRequest } = this._task.festivalActivity;
+    if (!this.previousReview) {
+      return hasSupplyRequest ? SUPPLY_REQUEST_REVIEWERS : COMMON_REVIEWERS;
+    }
+
+    return SUPPLY_REQUEST_REVIEWERS.filter((reviewer) =>
+      this.hasRefused(reviewer),
+    );
+  }
+
+  private hasRefused(reviewer: Reviewer<"FT">) {
+    switch (reviewer) {
+      case humain:
+        return this.previousReview?.humain === REJECTED;
+      case matos:
+        return this.previousReview?.matos === REJECTED;
+      case elec:
+        return this.previousReview?.elec === REJECTED;
+    }
+  }
+
+  get task(): InReview {
+    return { ...this._task, status: IN_REVIEW };
+  }
+}
 
 export class InReviewSpecification {
   private constructor(readonly task: InReview) {}
@@ -51,37 +131,6 @@ export class InReviewSpecification {
       ...InstructionsSpecification.generateErrors(task.instructions),
       ...MobilizationsSpecification.generateErrors(task.mobilizations),
     ];
-  }
-
-  static convert(
-    task: WithoutStatus<InReview>,
-    adherent: Adherent,
-    reviewer: Adherent,
-  ) {
-    const readyToReview = FestivalTaskKeyEvents.readyToReview(adherent);
-    const history = [...task.history, readyToReview];
-
-    const reviews = task.festivalActivity.hasSupplyRequest
-      ? TASK_WITH_SUPPLY_REQUEST_REVIEWS
-      : NO_SUPPLY_REQUEST_TASK_REVIEWS;
-
-    const inReview = {
-      ...task,
-      status: IN_REVIEW,
-      history,
-      reviews,
-      reviewer,
-    } as const;
-
-    return new InReviewSpecification(inReview);
-  }
-
-  get event(): WaitingForReview<"FT"> {
-    const reviewers = this.task.festivalActivity.hasSupplyRequest
-      ? SUPPLY_REQUEST_REVIEWERS
-      : COMMON_REVIEWERS;
-
-    return { id: this.task.id, name: this.task.general.name, reviewers };
   }
 }
 

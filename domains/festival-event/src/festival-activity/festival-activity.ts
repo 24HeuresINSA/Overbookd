@@ -82,10 +82,6 @@ export type CreateFestivalActivityForm = {
   name: string;
 };
 
-export function isRefused(activity: FestivalActivity): activity is Refused {
-  return activity.status === REFUSED;
-}
-
 type PreviewBase = {
   id: FestivalActivity["id"];
   name: FestivalActivity["general"]["name"];

@@ -36,14 +36,6 @@ export class FestivalActivityNotFound extends FestivalActivityError {
   }
 }
 
-export class CantAskForReview extends FestivalActivityError {
-  constructor(id: number) {
-    super(
-      `La fiche activité #${id} n'a pas été passée en demande de relecture. Seules des fiches activités refusées ou en brouillon le peuvent`,
-    );
-  }
-}
-
 export class TimeWindowAlreadyExists extends FestivalActivityError {
   constructor() {
     super(TIME_WINDOW_ALREADY_EXISTS_ERROR_MESSAGE);

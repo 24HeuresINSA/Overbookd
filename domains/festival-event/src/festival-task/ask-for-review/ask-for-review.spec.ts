@@ -14,6 +14,8 @@ import {
   withInChargeInstructionButWithNotInChargeVolunteer,
   withoutAnyMobilization,
   withSomeMobilizationsWithoutRequest,
+  flashMobOnPreventionVillage,
+  flashMobOnJustDance,
 } from "../festival-task.test-util";
 import { IN_REVIEW } from "../../common/status";
 import { READY_TO_REVIEW } from "../../common/action";
@@ -51,6 +53,8 @@ describe("Festival Task - ask for review", () => {
     withInChargeInstructionButWithNotInChargeVolunteer,
     withoutAnyMobilization,
     withSomeMobilizationsWithoutRequest,
+    flashMobOnPreventionVillage,
+    flashMobOnJustDance,
   ];
   beforeEach(() => {
     festivalTasks = new InMemoryAskForReviewTasks(tasks);
@@ -90,7 +94,7 @@ describe("Festival Task - ask for review", () => {
           const inReview = await askForReview.from(task.id, instigator);
 
           expect(inReview.history).toStrictEqual([
-            ...installJustDance.history,
+            ...task.history,
             {
               action: READY_TO_REVIEW,
               by: instigator,
@@ -170,6 +174,55 @@ describe("Festival Task - ask for review", () => {
         });
       });
     });
+  });
+  describe("when asking a review for refused festival task", () => {
+    describe.each`
+      taskName                                    | task                           | reviewers         | instigator
+      ${flashMobOnPreventionVillage.general.name} | ${flashMobOnPreventionVillage} | ${[humain]}       | ${noel}
+      ${flashMobOnJustDance.general.name}         | ${flashMobOnJustDance}         | ${[humain, elec]} | ${noel}
+    `(
+      "when $taskName was rejected by $reviewers",
+      ({ task, instigator, reviewers }) => {
+        it("should indicate it is in review", async () => {
+          const inReview = await askForReview.from(task.id, instigator);
+          expect(inReview.status).toBe(IN_REVIEW);
+        });
+        it("should add READY_TO_REVIEW key event to history", async () => {
+          const inReview = await askForReview.from(task.id, instigator);
+
+          expect(inReview.history).toStrictEqual([
+            ...task.history,
+            {
+              action: READY_TO_REVIEW,
+              by: instigator,
+              at: expect.any(Date),
+              description: "Demande de relecture de la FT",
+            },
+          ]);
+        });
+        describe("reviews", () => {
+          it(`should ask review from ${reviewers}`, async () => {
+            const inReview = await askForReview.from(task.id, instigator);
+
+            expect(notifications.entries).toHaveLength(reviewers.length);
+
+            const event = { id: inReview.id, name: inReview.general.name };
+            reviewers.every((team: string) =>
+              expect(notifications.entries).toContainEqual({ team, event }),
+            );
+          });
+          it("should set reset rejected reviews to reviewing", async () => {
+            const inReview = await askForReview.from(task.id, instigator);
+            const resetReviews = Object.fromEntries(
+              reviewers.map((reviewer: string) => [reviewer, REVIEWING]),
+            );
+            const expectedReviews = { ...task.reviews, ...resetReviews };
+
+            expect(inReview.reviews).toEqual(expectedReviews);
+          });
+        });
+      },
+    );
   });
 });
 

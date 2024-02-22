@@ -10,6 +10,7 @@ import { VolunteerAvailabilities, WithConflicts } from "./volunteer-conflicts";
 import { getFactory } from "./festival-task.factory";
 import { saturday11hToSaturday18h } from "../festival-activity/festival-activity.fake";
 import { Item } from "@overbookd/list";
+import { REJECTED } from "../common/action";
 
 const factory = getFactory();
 
@@ -461,6 +462,12 @@ export const serveWaterOnJustDance = factory
   ])
   .build();
 
+export const flashMobOnJustDance = factory
+  .refused("Flash Mob on Just Dance")
+  .withFestivalActivity(justDance)
+  .withReviews({ humain: REJECTED, elec: REJECTED })
+  .build();
+
 const preventionVillage: FestivalActivity = {
   id: 3,
   name: "Prevention Village",
@@ -528,6 +535,11 @@ export const guardPreventionVillage = factory
 
 export const uninstallPreventionVillage = factory
   .inReview("Install Prevention Village")
+  .withFestivalActivity(preventionVillage)
+  .build();
+
+export const flashMobOnPreventionVillage = factory
+  .refused("Flash Mob on Prevention Village")
   .withFestivalActivity(preventionVillage)
   .build();
 
