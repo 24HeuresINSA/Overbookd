@@ -1,4 +1,4 @@
-import { IN_REVIEW, VALIDATED } from "../common/status";
+import { VALIDATED } from "../common/status";
 import { FestivalActivity, InReview } from "./festival-task";
 import { Contact } from "./sections/instructions";
 import { VolunteerWithConflicts } from "./sections/mobilizations";
@@ -36,7 +36,7 @@ type InitMobilizationBuilder = Partial<
 
 type InReviewWithConflicts = Extract<WithConflicts, InReview>;
 
-class MobilizationBuilder<T extends WithConflicts> {
+export class MobilizationBuilder<T extends WithConflicts> {
   private constructor(readonly mobilization: Item<T["mobilizations"]>) {}
 
   static init<T extends WithConflicts>(
@@ -152,11 +152,11 @@ export const george = {
   firstname: "George",
 };
 
-const friday10h: BuildTimeWindow = {
+export const friday10h: BuildTimeWindow = {
   date: new Date("2024-05-17T10:00+02:00"),
   id: "28598880",
 };
-const friday11h: BuildTimeWindow = {
+export const friday11h: BuildTimeWindow = {
   date: new Date("2024-05-17T11:00+02:00"),
   id: "28598940",
 };
@@ -672,12 +672,12 @@ export const withSomeMobilizationsWithoutRequest = factory
   ])
   .build();
 
-export const rejectedByHumanOnly = factory
-  .refused("Refused by human")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
+export const animateEscapeGame = factory
+  .refused("Animate Escape Game")
+  .withFestivalActivity(escapeGame)
   .withReviews({
     humain: REJECTED,
-    matos: IN_REVIEW,
+    matos: REJECTED,
+    elec: REJECTED,
   })
   .build();

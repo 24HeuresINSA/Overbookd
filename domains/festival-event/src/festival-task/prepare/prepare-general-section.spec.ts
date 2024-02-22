@@ -5,8 +5,8 @@ import {
   lea,
   noel,
   presentEscapeGame,
-  rejectedByHumanOnly,
   uninstallEscapeGame,
+  animateEscapeGame,
 } from "../festival-task.test-util";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { PrepareFestivalTask } from "./prepare";
@@ -22,7 +22,7 @@ describe("Prepare festival task general section", () => {
       uninstallEscapeGame,
       presentEscapeGame,
       guardJustDance,
-      rejectedByHumanOnly,
+      animateEscapeGame,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -64,6 +64,17 @@ describe("Prepare festival task general section", () => {
       ).rejects.toThrow("Une équipe responsable est nécessaire");
     });
   });
+  describe("when trying to update field of a refused task", () => {
+    it("should update field", async () => {
+      const name = "Refused FT";
+      const { general } = await prepare.updateGeneralSection(
+        animateEscapeGame.id,
+        { name },
+      );
+
+      expect(general.name).toBe(name);
+    });
+  });
   describe("when trying to update an unexisting task", () => {
     it("should indicate task not found", async () => {
       expect(
@@ -85,17 +96,6 @@ describe("Prepare festival task general section", () => {
         expect(general.name).toBe(updateName.name);
         expect(general.team).toBe(updateTeam.team);
       });
-    });
-  });
-  describe("when updating a task rejected by human", () => {
-    it("should update the task", async () => {
-      const update = { name: "Install escape game on friday" };
-      const { general } = await prepare.updateGeneralSection(
-        rejectedByHumanOnly.id,
-        update,
-      );
-
-      expect(general.name).toBe(update.name);
     });
   });
 });

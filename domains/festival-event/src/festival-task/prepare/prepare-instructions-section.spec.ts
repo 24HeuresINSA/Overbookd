@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  animateEscapeGame,
   george,
   guardJustDance,
   humaGrass,
@@ -27,6 +28,7 @@ describe("Prepare festival task instructions section", () => {
       presentEscapeGame,
       guardJustDance,
       serveWaterOnJustDance,
+      animateEscapeGame,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -77,14 +79,24 @@ describe("Prepare festival task instructions section", () => {
       });
     },
   );
-  describe("when trying to update an unexisting task", () => {
-    it("should indicate task not found", async () => {
-      expect(
-        async () =>
-          await prepare.updateInstructionsSection(10000, { global: "Test" }),
-      ).rejects.toThrow(FestivalTaskNotFound);
+  describe("when trying to update a refused task", () => {
+    it("should update field", async () => {
+      const { instructions } = await prepare.updateInstructionsSection(
+        animateEscapeGame.id,
+        { global: "Some instructions" },
+      );
+
+      expect(instructions.global).toBe("Some instructions");
     });
-  });
+  }),
+    describe("when trying to update an unexisting task", () => {
+      it("should indicate task not found", async () => {
+        expect(
+          async () =>
+            await prepare.updateInstructionsSection(10000, { global: "Test" }),
+        ).rejects.toThrow(FestivalTaskNotFound);
+      });
+    });
   describe("Several update on same task", () => {
     describe("when updating global then appointment consecutively", () => {
       it("should update both global and appointment", async () => {

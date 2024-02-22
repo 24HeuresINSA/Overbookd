@@ -11,8 +11,11 @@ import {
 } from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
+  MobilizationBuilder,
   deuxTables,
+  friday10h,
   friday10hfriday19h,
+  friday11h,
   friday11hfriday18h,
   humaGrass,
   lea,
@@ -262,7 +265,14 @@ function defaultRefused(id: number, name: string): RefusedWithConflicts {
     ],
     feedbacks: [],
     inquiries: [],
-    mobilizations: [],
+    mobilizations: [
+      MobilizationBuilder.init<InReviewWithConflicts>({
+        start: friday10h,
+        end: friday11h,
+        volunteers: [],
+        teams: [{ count: 1, team: "bénévole" }],
+      }).mobilization,
+    ],
     reviews: {
       humain: REJECTED,
       matos: REVIEWING,
