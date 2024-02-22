@@ -8,7 +8,7 @@ import {
   InReviewWithoutConflicts,
   RefusedWithoutConflicts,
 } from "../volunteer-conflicts";
-import { InReviewFestivalTask } from "./in-review-specification";
+import { InReviewFestivalTask } from "./in-review-festival-task";
 import { isDraft, isRefused } from "../../festival-event";
 import { CantAskForReview } from "../../common/review.error";
 
