@@ -2,7 +2,9 @@ import {
   APPROVED,
   DRAFT,
   FestivalTask,
+  IN_REVIEW,
   NOT_ASKING_TO_REVIEW,
+  REFUSED,
   REJECTED,
   REVIEWING,
   ReviewStatus,
@@ -121,6 +123,10 @@ export function findReviewStatus(status: string): ReviewStatus | undefined {
 export function findStatus(status: string): FestivalTask["status"] | undefined {
   if (!status) return undefined;
   switch (status) {
+    case IN_REVIEW:
+      return IN_REVIEW;
+    case REFUSED:
+      return REFUSED;
     case DRAFT:
     default:
       return DRAFT;
