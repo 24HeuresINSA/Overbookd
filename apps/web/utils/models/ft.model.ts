@@ -7,13 +7,17 @@ import { Review } from "./review.model";
 import { SignaLocation } from "@overbookd/signa";
 import { Team } from "./team.model";
 import { User } from "@overbookd/user";
-import { BROUILLON } from "../festival-event/festival-event.model";
-import { DRAFT, FestivalTask } from "@overbookd/festival-event";
+import {
+  BROUILLON,
+  RELECTURE_EN_COURS,
+} from "../festival-event/festival-event.model";
+import { DRAFT, FestivalTask, IN_REVIEW } from "@overbookd/festival-event";
 
-export type FtStatusLabel = typeof BROUILLON;
+export type FtStatusLabel = typeof BROUILLON | typeof RELECTURE_EN_COURS;
 
 export const ftStatusLabels = new Map<FestivalTask["status"], FtStatusLabel>([
   [DRAFT, BROUILLON],
+  [IN_REVIEW, RELECTURE_EN_COURS],
 ]);
 
 interface BaseFt {
