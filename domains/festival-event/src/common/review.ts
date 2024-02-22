@@ -72,6 +72,11 @@ export type Rejection<T extends FestivalEventIdentifier> = {
   reason: string;
 };
 
+export type Approval<T extends FestivalEventIdentifier> = {
+  team: Reviewer<T>;
+  reviewer: Adherent;
+};
+
 export type Reviews<T extends FestivalEventIdentifier> =
   | InReviewReviews<T>
   | ValidatedReviews<T>

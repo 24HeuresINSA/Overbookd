@@ -1,7 +1,15 @@
 import { FestivalTask } from "../festival-task";
-import { NOT_ASKING_TO_REVIEW, Rejection } from "../../common/review";
-import { REJECTED } from "../../common/action";
-import { REFUSED } from "../../common/status";
+import {
+  Approval,
+  NOT_ASKING_TO_REVIEW,
+  Rejection,
+  Reviewer,
+  elec,
+  humain,
+  matos,
+} from "../../common/review";
+import { APPROVED, REJECTED } from "../../common/action";
+import { REFUSED, VALIDATED } from "../../common/status";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {
   FestivalTaskTranslator,
@@ -10,7 +18,11 @@ import {
   ReviewableWithoutConflicts,
 } from "../volunteer-conflicts";
 import { FestivalTaskNotFound } from "../festival-task.error";
-import { NotAskingToReview } from "../../common/review.error";
+import {
+  AlreadyApproved,
+  NotAskingToReview,
+  ShouldAssignDrive,
+} from "../../common/review.error";
 
 export type FestivalTasksForReview = {
   findById(
@@ -38,6 +50,54 @@ class Reject {
   }
 }
 
+class Approve {
+  static from(
+    task: ReviewableWithoutConflicts,
+    approval: Approval<"FT">,
+  ): ReviewableWithoutConflicts {
+    if (Approve.isAlreadyApprovedBy(task, approval.team)) {
+      throw new AlreadyApproved(task.id, approval.team, "FT");
+    }
+    Approve.checkInquiryDriveAssignment(task);
+
+    const reviews = {
+      ...task.reviews,
+      [approval.team]: APPROVED,
+    };
+    const status = Approve.hasAllApproved(reviews) ? VALIDATED : task.status;
+    const history = [
+      ...task.history,
+      FestivalTaskKeyEvents.approved(approval.reviewer),
+    ];
+    return { ...task, reviews, status, history };
+  }
+
+  private static hasAllApproved(
+    reviews: ReviewableWithoutConflicts["reviews"],
+  ) {
+    return Object.values(reviews).every(
+      (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
+    );
+  }
+
+  private static checkInquiryDriveAssignment(task: ReviewableWithoutConflicts) {
+    const areAllRequestsAssignedToDrive = task.inquiries.every((request) =>
+      Object.hasOwn(request, "drive"),
+    );
+    if (!areAllRequestsAssignedToDrive) {
+      throw new ShouldAssignDrive("FT");
+    }
+  }
+
+  private static isAlreadyApprovedBy(
+    festivalActivity: ReviewableWithoutConflicts,
+    team: Reviewer<"FT">,
+  ) {
+    const teamReview = getTeamReview(festivalActivity.reviews, team);
+    return teamReview === APPROVED;
+  }
+}
+
 export class Review {
   constructor(
     private readonly tasks: FestivalTasksForReview,
@@ -56,5 +116,30 @@ export class Review {
 
     const rejected = await this.tasks.save(Reject.from(task, rejection));
     return this.translator.translate(rejected);
+  }
+
+  async approve(taskId: FestivalTask["id"], approval: Approval<"FT">) {
+    const task = await this.tasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+    if (task.reviews[approval.team] === NOT_ASKING_TO_REVIEW) {
+      throw new NotAskingToReview(task.id, approval.team, "FT");
+    }
+
+    const approved = Approve.from(task, approval);
+    return this.tasks.save(approved);
+  }
+}
+
+function getTeamReview(
+  reviews: ReviewableWithoutConflicts["reviews"],
+  team: Reviewer<"FT">,
+) {
+  switch (team) {
+    case humain:
+      return reviews.humain;
+    case matos:
+      return reviews.matos;
+    case elec:
+      return reviews.elec;
   }
 }

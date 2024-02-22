@@ -9,9 +9,9 @@ import {
   serveWaterOnJustDance,
   uninstallPreventionVillage,
 } from "../festival-task.test-util";
-import { elec, humain, matos } from "../../common/review";
+import { Approval, elec, humain, matos } from "../../common/review";
 import { APPROVED, REJECTED } from "../../common/action";
-import { REFUSED } from "../../common/status";
+import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
 import { NotAskingToReview } from "../../common/review.error";
 import { Review } from "./review";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory";
@@ -19,6 +19,8 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request";
 import { getFactory } from "../festival-task.factory";
+import { ShouldAssignDrive } from "../../common/review.error";
+import { AlreadyApproved } from "../../common/review.error";
 
 const factory = getFactory();
 
@@ -73,6 +75,80 @@ describe("Approve festival task", () => {
     const conflicts = new InMemoryVolunteerConflicts(tasks, []);
     const translator = new FestivalTaskTranslator(conflicts);
     review = new Review(festivalTasks, translator);
+  });
+  describe.each`
+    team      | taskName                               | task                      | reviewer
+    ${humain} | ${caissierBar.general.name}            | ${caissierBar}            | ${george}
+    ${matos}  | ${withSomeValidInquiries.general.name} | ${withSomeValidInquiries} | ${noel}
+    ${elec}   | ${withSupplyRequest.general.name}      | ${withSupplyRequest}      | ${lea}
+  `("when approving $task.name as $team member", ({ task, team, reviewer }) => {
+    const approval = { team, reviewer };
+    it(`should indicate ${team} approved it`, async () => {
+      const { reviews } = await review.approve(task.id, approval);
+      expect(reviews).toHaveProperty(team, APPROVED);
+    });
+    it("should stay to IN_REVIEW festival task", async () => {
+      const { status } = await review.approve(task.id, approval);
+      expect(status).toBe(IN_REVIEW);
+    });
+    it("should add APPROVED key event to history", async () => {
+      const { history } = await review.approve(task.id, approval);
+      expect(history).toStrictEqual([
+        ...task.history,
+        {
+          action: APPROVED,
+          by: reviewer,
+          at: expect.any(Date),
+          description: "FT approuvée",
+        },
+      ]);
+    });
+    it("should keep other task info as they were", async () => {
+      const { status, history, reviews, ...previous } = task;
+      const updated = await review.approve(task.id, approval);
+      expect(updated).toMatchObject(previous);
+    });
+  });
+  describe.each`
+    team     | taskName                                                  | task                                         | reviewer
+    ${matos} | ${alreadyApprovedByHumain.general.name}                   | ${alreadyApprovedByHumain}                   | ${noel}
+    ${elec}  | ${withSupplyRequestAndAllApprovedExceptElec.general.name} | ${withSupplyRequestAndAllApprovedExceptElec} | ${lea}
+  `("when last reviewer approves $taskName", ({ task, team, reviewer }) => {
+    const approval = { team, reviewer };
+    it("should switch to VALIDATED festival task", async () => {
+      const { status } = await review.approve(task.id, approval);
+      expect(status).toBe(VALIDATED);
+    });
+  });
+  describe("when approving several times from different teams", () => {
+    it("should keep all approval", async () => {
+      const task = caissierBar;
+      await review.approve(task.id, { team: humain, reviewer: lea });
+      const festivalActivity = await review.approve(task.id, {
+        team: matos,
+        reviewer: noel,
+      });
+      expect(festivalActivity.reviews.humain).toBe(APPROVED);
+      expect(festivalActivity.reviews.matos).toBe(APPROVED);
+    });
+  });
+  describe("when trying to approve task even with not assigned to drive inquiries as matos", () => {
+    it("should indicate that inquiries should been assigned to a drive", async () => {
+      const task = withInvalidInquiries;
+      const approval: Approval<"FT"> = { team: matos, reviewer: noel };
+      expect(
+        async () => await review.approve(task.id, approval),
+      ).rejects.toThrow(new ShouldAssignDrive("FT"));
+    });
+  });
+  describe("when approving an already approved festival activity", () => {
+    it("should indicate activity already approved", async () => {
+      const task = alreadyApprovedByHumain;
+      const approval: Approval<"FT"> = { team: humain, reviewer: george };
+      expect(
+        async () => await review.approve(task.id, approval),
+      ).rejects.toThrow(AlreadyApproved);
+    });
   });
 });
 
