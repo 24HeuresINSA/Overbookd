@@ -1,3 +1,23 @@
+## [2.18.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.17.0...v2.18.0) (2024-02-22)
+
+
+### Features
+
+* **festival-task:** add reviewers filter. [#1589](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1589) ([2a0e804](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2a0e8042ded668a781fc15480287f4e165d8fb26))
+* **festival-task:** enable reject. [#1586](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1586) ([b480829](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b480829890850fc1dadb34bbe41ff0db30afb640))
+
+
+### Bug Fixes
+
+* **festival-activity:** hide deleted linked festival tasks [#1597](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1597) ([67bda90](https://gitlab.com/24-heures-insa/overbookd-mono/commit/67bda90ba920138e2515740289750b44060b72e6))
+* **festival-task:** add in review status in filter [#1599](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1599) ([6e5a6b8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6e5a6b8fc086c5219dd301c4dde8ce50ab609617))
+* **festival-task:** filter on task status. [#1600](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1600) ([e25380e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e25380e949c77212000ab087f98c124855f80927))
+
+
+### Pre-Features
+
+* **festival-event:** allow ask for review on refused tasks. [#1595](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1595) ([c8be005](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c8be005a30365b9d846cc60779ea5157ba43f539))
+
 ## [2.17.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.16.5...v2.17.0) (2024-02-21)
 
 
