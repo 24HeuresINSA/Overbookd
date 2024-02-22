@@ -1,6 +1,4 @@
-import {
-  FestivalActivityNotFound,
-} from "../festival-activity.error";
+import { FestivalActivityNotFound } from "../festival-activity.error";
 import { CantAskForReview } from "../../common/review.error";
 import { InReviewFestivalActivity } from "./in-review-festival-activity";
 import {
