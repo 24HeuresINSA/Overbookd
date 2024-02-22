@@ -9,14 +9,14 @@ import {
 import { RegisterNewcomer } from "./register-newcomer";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory";
 import { AdherentRegistered, NewcomerRegisteredEvent } from "./event";
-import { ENROLL_ADHERENT, READ_FA, READ_FT } from "@overbookd/permission";
+import { ENROLL_HARD, READ_FA, READ_FT } from "@overbookd/permission";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory";
 import { StoredNotifyee } from "./notification-repository.inmemory";
 
 const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },
   { id: 101, permissions: [READ_FA] },
-  { id: 102, permissions: [READ_FA, READ_FT, ENROLL_ADHERENT] },
+  { id: 102, permissions: [READ_FA, READ_FT, ENROLL_HARD] },
 ];
 
 const email = "test@example.com";

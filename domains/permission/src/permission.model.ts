@@ -26,7 +26,8 @@ import {
   ASK_FOR_HELP,
   VIEW_PLANNING,
   DOWNLOAD_PLANNING,
-  ENROLL_ADHERENT,
+  ENROLL_HARD,
+  ENROLL_SOFT,
   VIEW_TROMBINOSCOPE,
   VIEW_VOLUNTEER,
   SEND_MAIL_TEST,
@@ -70,7 +71,8 @@ export type Permission =
   | typeof ASK_FOR_HELP
   | typeof VIEW_PLANNING
   | typeof DOWNLOAD_PLANNING
-  | typeof ENROLL_ADHERENT
+  | typeof ENROLL_HARD
+  | typeof ENROLL_SOFT
   | typeof VIEW_TROMBINOSCOPE
   | typeof VIEW_VOLUNTEER
   | typeof SEND_MAIL_TEST

@@ -31,7 +31,7 @@ import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { IDefineANewcomer } from "@overbookd/registration";
 import { NewcomerResponseDto } from "./dto/newcomer.response.dto";
 import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
-import { ENROLL_ADHERENT, MANAGE_USERS } from "@overbookd/permission";
+import { ENROLL_HARD, MANAGE_USERS } from "@overbookd/permission";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
 
 @ApiBearerAuth()
@@ -84,7 +84,7 @@ export class RegistrationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(ENROLL_ADHERENT)
+  @Permission(ENROLL_HARD)
   @Post("/enroll-adherent")
   @ApiBody({
     description: "Newcomers to enroll to a team",

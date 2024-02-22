@@ -1,7 +1,8 @@
 import {
   AFFECT_VOLUNTEER,
   ASK_FOR_HELP,
-  ENROLL_ADHERENT,
+  ENROLL_HARD,
+  ENROLL_SOFT,
   FILL_AVAILABILITY,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -144,13 +145,21 @@ export const pages: Page[] = [
   },
   {
     icon: "mdi-account-multiple-plus",
-    title: "Inscriptions",
-    permission: ENROLL_ADHERENT,
-    to: "/registrations",
-    description:
-      "Permet de visualiser tous les nouveaux arrivants sur Overbookd et de les enrôler",
+    title: "Admissions hard",
+    permission: ENROLL_HARD,
+    to: "/registrations/hard",
+    description: "Permet d'enrôler les nouveaux arrivants en tant que hard",
     mobileSupport: true,
-    keywords: ["arrivants", "inscriptions"],
+    keywords: ["arrivants", "inscriptions", "admissions", "orgas", "hards"],
+  },
+  {
+    icon: "mdi-account-multiple-check",
+    title: "Admissions soft",
+    permission: ENROLL_SOFT,
+    to: "/registrations/soft",
+    description: "Permet d'enrôler les nouveaux arrivants en tant que soft",
+    mobileSupport: false,
+    keywords: ["arrivants", "inscriptions", "admissions", "benevoles", "softs"],
   },
   {
     icon: "mdi-cash-multiple",
