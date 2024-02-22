@@ -14,6 +14,7 @@ import {
 } from "./festival-task.test-util";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import { WithConflicts } from "./volunteer-conflicts";
+import { isDraft } from "../festival-event";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -54,15 +55,36 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     return new FestivalTaskBuilder(festivalTask);
   }
 
-  withFestivalActivity(festivalActivity: Partial<T["festivalActivity"]>) {
-    const festivalTask = {
-      ...this.festivalTask,
-      festivalActivity: this.merge(
-        this.festivalTask.festivalActivity,
-        festivalActivity,
-      ),
-    };
-    return new FestivalTaskBuilder(festivalTask);
+  withFestivalActivity(override: Partial<T["festivalActivity"]>) {
+    const festivalActivity = this.merge(
+      this.festivalTask.festivalActivity,
+      override,
+    );
+    const festivalTask = { ...this.festivalTask, festivalActivity };
+
+    if (isDraft<WithConflicts>(festivalTask)) {
+      return new FestivalTaskBuilder<T>(festivalTask);
+    }
+
+    const reviews = this.buildReviews(festivalActivity, festivalTask);
+    return new FestivalTaskBuilder<T>({ ...festivalTask, reviews });
+  }
+
+  private buildReviews(
+    festivalActivity: FestivalActivity,
+    festivalTask: Exclude<WithConflicts, Draft>,
+  ) {
+    const elecIsNotAskingToReview = !festivalActivity.hasSupplyRequest;
+    const elecHasAlreadyStatus =
+      festivalTask.reviews.elec !== NOT_ASKING_TO_REVIEW;
+
+    if (elecIsNotAskingToReview) {
+      return { ...festivalTask.reviews, elec: NOT_ASKING_TO_REVIEW };
+    }
+
+    if (elecHasAlreadyStatus) return festivalTask.reviews;
+
+    return { ...festivalTask.reviews, elec: IN_REVIEW };
   }
 
   withInstructions(instructions: Partial<T["instructions"]>) {
@@ -155,7 +177,10 @@ function defaultInReview(id: number, name: string): InReviewWithConflicts {
         volunteers: [],
       },
     },
-    history: [FestivalTaskKeyEvents.created(noel)],
+    history: [
+      FestivalTaskKeyEvents.created(noel),
+      FestivalTaskKeyEvents.readyToReview(noel),
+    ],
     feedbacks: [],
     inquiries: [],
     mobilizations: [],

@@ -526,6 +526,11 @@ export const guardPreventionVillage = factory
   ])
   .build();
 
+export const uninstallPreventionVillage = factory
+  .inReview("Install Prevention Village")
+  .withFestivalActivity(preventionVillage)
+  .build();
+
 export const withNoTeamTask = factory
   .draft("Task with NO TEAM")
   .withFestivalActivity(preventionVillage)

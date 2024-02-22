@@ -4,7 +4,7 @@ import {
   DraftWithoutConflicts,
   Feedback,
   FestivalTask,
-  FestivalTaskInReview,
+  FestivalTaskReviewable,
   FestivalTaskWithoutConflicts,
   FestivalTaskKeyEvent as KeyEvent,
   Mobilization,
@@ -108,7 +108,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  static askForReview(task: FestivalTaskInReview) {
+  static askForReview(task: FestivalTaskReviewable) {
     const reviews = this.upsertReviews(task);
     const reviewerId = task.reviewer?.id;
     const events = this.upsertHistory(task);
@@ -121,7 +121,7 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
-  private static upsertReviews(task: FestivalTaskInReview) {
+  private static upsertReviews(task: FestivalTaskReviewable) {
     const reviews = Object.entries(task.reviews)
       .filter(
         (

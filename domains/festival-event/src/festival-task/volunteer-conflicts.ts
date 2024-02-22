@@ -1,6 +1,12 @@
 import { Item } from "@overbookd/list";
 import { IProvidePeriod } from "@overbookd/period";
-import { Draft, FestivalTask, InReview } from "./festival-task";
+import {
+  Draft,
+  FestivalTask,
+  InReview,
+  Refused,
+  Reviewable,
+} from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts } from "./sections/mobilizations";
 
@@ -26,6 +32,8 @@ export type WithConflicts = Extract<FestivalTask, WithConflictsFilter>;
 
 export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
 export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
+export type RefusedWithoutConflicts = Extract<WithoutConflicts, Refused>;
+export type ReviewableWithoutConflicts = Extract<WithoutConflicts, Reviewable>;
 
 export class FestivalTaskTranslator {
   constructor(private readonly volunteerConflicts: VolunteerConflicts) {}

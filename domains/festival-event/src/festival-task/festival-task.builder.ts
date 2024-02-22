@@ -1,9 +1,10 @@
-import { DRAFT } from "../common/status";
-import { PreviewDraft, PreviewInReview } from "./festival-task";
+import { isDraft, isInReview } from "../festival-event";
+import { PreviewDraft, PreviewInReview, PreviewRefused } from "./festival-task";
 import { Preview } from "./festival-task";
 import {
   DraftWithoutConflicts,
   InReviewWithoutConflicts,
+  RefusedWithoutConflicts,
   WithoutConflicts,
 } from "./volunteer-conflicts";
 
@@ -20,7 +21,9 @@ export class FestivalTaskBuilder {
   get preview(): Preview {
     if (isDraft(this.task)) return DraftBuilder.preview(this.task);
 
-    return InReviewBuidler.preview(this.task);
+    if (isInReview(this.task)) return InReviewBuidler.preview(this.task);
+
+    return RefusedBuidler.preview(this.task);
   }
 }
 
@@ -40,6 +43,10 @@ class InReviewBuidler {
   }
 }
 
-function isDraft(task: WithoutConflicts): task is DraftWithoutConflicts {
-  return task.status === DRAFT;
+class RefusedBuidler {
+  static preview(task: RefusedWithoutConflicts): PreviewRefused {
+    const { id, status, general, reviews } = task;
+    const { name, administrator, team } = general;
+    return { id, status, name, administrator, team, reviews };
+  }
 }

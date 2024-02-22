@@ -2,11 +2,12 @@ import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { FestivalActivity, Draft, isDraft } from "../festival-task";
+import { FestivalActivity, Draft } from "../festival-task";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
 } from "../volunteer-conflicts";
+import { isDraft } from "../../festival-event";
 
 const FT_420 = 420;
 

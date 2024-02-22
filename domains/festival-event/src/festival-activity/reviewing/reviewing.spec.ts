@@ -36,13 +36,13 @@ import { Reviewing } from "./reviewing";
 import {
   AlreadyApproved,
   AlreadyRejected,
-  NotAskingToReview,
   ShouldLinkCatalogItem,
   ShouldAssignDrive,
 } from "./reviewing.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
 import { Reviewable } from "../festival-activity";
 import { REFUSED, VALIDATED } from "../../common/status";
+import { NotAskingToReview } from "../../common/review.error";
 
 const factory = getFactory();
 
@@ -314,7 +314,7 @@ describe("Reject festival activity", () => {
       it(`should indicate that ${team} rejected it`, async () => {
         expect(festivalActivity.reviews).toHaveProperty(team, REJECTED);
       });
-      it("should switch to REFUSED festuval activity", () => {
+      it("should switch to REFUSED festival activity", () => {
         expect(festivalActivity.status).toBe(REFUSED);
       });
       it("should add REJECTED key event to history", () => {

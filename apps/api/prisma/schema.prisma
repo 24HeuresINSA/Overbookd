@@ -706,6 +706,7 @@ model FestivalTask {
 enum FestivalTaskStatus {
   DRAFT
   IN_REVIEW
+  REFUSED
 
   @@map("festival_task_status")
 }
@@ -800,6 +801,7 @@ enum FestivalTaskEvent {
   CREATED
   COMMENTED
   READY_TO_REVIEW
+  REJECTED
 
   @@map("festival_task_event")
 }
@@ -828,6 +830,7 @@ enum FestivalTaskReviewer {
 enum FestivalTaskReviewStatus {
   REVIEWING
   NOT_ASKING_TO_REVIEW
+  REJECTED
 
   @@map("festival_task_review_status")
 }

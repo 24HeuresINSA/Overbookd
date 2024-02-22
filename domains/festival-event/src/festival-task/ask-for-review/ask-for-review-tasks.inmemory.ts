@@ -1,7 +1,8 @@
 import { updateItemToList } from "@overbookd/list";
-import { Draft, FestivalTask, InReview, isDraft } from "../festival-task";
+import { Draft, FestivalTask, InReview } from "../festival-task";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { AskForReviewTasks } from "./ask-for-review";
+import { isDraft } from "../../festival-event";
 
 export class InMemoryAskForReviewTasks implements AskForReviewTasks {
   constructor(private tasks: FestivalTask[]) {}

@@ -3,7 +3,7 @@ import {
   IN_REVIEW,
   FestivalTaskInReview as InReview,
 } from "@overbookd/festival-event";
-import { InReviewWithConflicts } from "@overbookd/http";
+import { ReviewableWithConflicts } from "@overbookd/http";
 import { InReviewGeneralResponseDto } from "./reviewable-general.response.dto";
 import { FestivalActivityResponseDto } from "../festival-activity.response.dto";
 import { InReviewInstructionsResponseDto } from "./reviewable-instructions.response.dto";
@@ -19,6 +19,8 @@ import {
 } from "./reviewable-mobilization.response.dto";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
+
+type InReviewWithConflicts = Extract<ReviewableWithConflicts, InReview>;
 
 export class InReviewFestivalTaskResponseDto implements InReviewWithConflicts {
   @ApiProperty({})
@@ -77,7 +79,7 @@ export class InReviewFestivalTaskResponseDto implements InReviewWithConflicts {
       { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
     ],
   })
-  mobilizations: InReviewWithConflicts["mobilizations"];
+  mobilizations: ReviewableWithConflicts["mobilizations"];
 
   @ApiProperty({
     description: "The festival task reviews",

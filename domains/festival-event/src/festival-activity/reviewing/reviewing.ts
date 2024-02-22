@@ -22,7 +22,6 @@ import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
 import {
   InDraft,
   AlreadyApproved,
-  NotAskingToReview,
   ShouldAssignDrive,
   AlreadyRejected,
   ShouldLinkCatalogItem,
@@ -30,17 +29,13 @@ import {
 import { Adherent } from "../../common/adherent";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
 import { isLinkedToCatalogItem } from "../sections/signa";
+import { NotAskingToReview } from "../../common/review.error";
+import { Rejection } from "../../common/review";
 import { isDraft } from "../../festival-event";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save<T extends Reviewable>(festivalActivity: T): Promise<T>;
-};
-
-type Rejection = {
-  team: Reviewer<"FA">;
-  rejector: Adherent;
-  reason: string;
 };
 
 export class Reviewing {
@@ -60,7 +55,7 @@ export class Reviewing {
       throw new AlreadyApproved(faId, team);
     }
     if (this.isNotAskingToReview(festivalActivity, team)) {
-      throw new NotAskingToReview(faId, team);
+      throw new NotAskingToReview(faId, team, "FA");
     }
     if (isInquiryOwner(team)) {
       this.checkInquiryDriveAssignment(festivalActivity, team);
@@ -79,13 +74,13 @@ export class Reviewing {
 
   async reject(
     faId: FestivalActivity["id"],
-    { team, rejector, reason }: Rejection,
+    { team, rejector, reason }: Rejection<"FA">,
   ): Promise<Refused> {
     const festivalActivity = await this.festivalActivities.findById(faId);
     if (!festivalActivity) throw new FestivalActivityNotFound(faId);
     if (isDraft(festivalActivity)) throw new InDraft(faId);
     if (this.isNotAskingToReview(festivalActivity, team)) {
-      throw new NotAskingToReview(faId, team);
+      throw new NotAskingToReview(faId, team, "FA");
     }
     if (this.isAlreadyRejectedBy(festivalActivity, team)) {
       throw new AlreadyRejected(faId, team);

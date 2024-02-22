@@ -1,23 +1,23 @@
 import {
   HttpStringified,
-  InReviewWithConflicts as InReview,
+  ReviewableWithConflicts as Reviewable,
 } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
-export class CastInReview {
-  static withDate(inReview: HttpStringified<InReview>): InReview {
+export class CastReviewable {
+  static withDate(reviewable: HttpStringified<Reviewable>): Reviewable {
     return {
-      ...inReview,
-      festivalActivity: this.castActivityWithDate(inReview.festivalActivity),
-      mobilizations: this.mobilizationsWithDate(inReview.mobilizations),
-      feedbacks: this.feedbacksWithDate(inReview.feedbacks),
-      history: this.historyWithDate(inReview.history),
+      ...reviewable,
+      festivalActivity: this.castActivityWithDate(reviewable.festivalActivity),
+      mobilizations: this.mobilizationsWithDate(reviewable.mobilizations),
+      feedbacks: this.feedbacksWithDate(reviewable.feedbacks),
+      history: this.historyWithDate(reviewable.history),
     };
   }
 
   private static castActivityWithDate(
-    festivalActivity: HttpStringified<InReview["festivalActivity"]>,
-  ): InReview["festivalActivity"] {
+    festivalActivity: HttpStringified<Reviewable["festivalActivity"]>,
+  ): Reviewable["festivalActivity"] {
     return {
       ...festivalActivity,
       timeWindows: festivalActivity.timeWindows.map(castTimeWindowWithDate),
@@ -31,8 +31,8 @@ export class CastInReview {
   }
 
   private static mobilizationsWithDate(
-    mobilizations: HttpStringified<InReview["mobilizations"]>,
-  ): InReview["mobilizations"] {
+    mobilizations: HttpStringified<Reviewable["mobilizations"]>,
+  ): Reviewable["mobilizations"] {
     return mobilizations.map((mobilization) => ({
       ...mobilization,
       ...castTimeWindowWithDate(mobilization),
@@ -40,8 +40,8 @@ export class CastInReview {
   }
 
   private static feedbacksWithDate(
-    feedbacks: HttpStringified<InReview["feedbacks"]>,
-  ): InReview["feedbacks"] {
+    feedbacks: HttpStringified<Reviewable["feedbacks"]>,
+  ): Reviewable["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),
@@ -49,8 +49,8 @@ export class CastInReview {
   }
 
   private static historyWithDate(
-    history: HttpStringified<InReview["history"]>,
-  ): InReview["history"] {
+    history: HttpStringified<Reviewable["history"]>,
+  ): Reviewable["history"] {
     return history.map((event) => ({ ...event, at: new Date(event.at) }));
   }
 }

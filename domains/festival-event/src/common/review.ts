@@ -1,5 +1,6 @@
 import { FestivalEventIdentifier, FA } from "./festival-event";
 import { APPROVED, REJECTED } from "./action";
+import { Adherent } from "./adherent";
 
 export const REVIEWING = "REVIEWING";
 export const NOT_ASKING_TO_REVIEW = "NOT_ASKING_TO_REVIEW";
@@ -64,3 +65,9 @@ export type RefusedReviews<T extends FestivalEventIdentifier> = Record<
   Reviewer<T>,
   RejectionReviewStatus
 >;
+
+export type Rejection<T extends FestivalEventIdentifier> = {
+  team: Reviewer<T>;
+  rejector: Adherent;
+  reason: string;
+};

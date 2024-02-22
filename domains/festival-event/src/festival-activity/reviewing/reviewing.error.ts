@@ -21,12 +21,6 @@ export class AlreadyRejected extends FestivalActivityError {
   }
 }
 
-export class NotAskingToReview extends FestivalActivityError {
-  constructor(festivalActivityId: number, team: Reviewer<"FA">) {
-    const message = `❌ La FA #${festivalActivityId} n'est pas à valider par l'équipe ${team}`;
-    super(message);
-  }
-}
 export class ShouldAssignDrive extends FestivalActivityError {
   constructor() {
     super(

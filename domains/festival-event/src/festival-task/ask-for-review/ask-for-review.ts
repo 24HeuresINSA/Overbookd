@@ -3,12 +3,12 @@ import { Adherent } from "../../common/adherent";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
 import { AskForReviewError } from "./ask-for-review.error";
-import { InReviewSpecification } from "./in-review-specification";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
   InReviewWithoutConflicts,
 } from "../volunteer-conflicts";
+import { InReviewSpecification } from "./in-review-specification";
 
 export type AskForReviewTasks = {
   findById(id: FestivalTask["id"]): Promise<DraftWithoutConflicts | null>;
