@@ -160,7 +160,7 @@ import {
   TENDRESTIVAL_CODE,
   TeamCode,
   Teams,
-  WOODSTOWER_CODE,
+  CVL_CODE,
 } from "@overbookd/registration";
 import {
   InputRulesData,
@@ -252,7 +252,7 @@ export default Vue.extend({
         STRASBOURG_CODE,
         KFET_CODE,
         KARNA_CODE,
-        WOODSTOWER_CODE,
+        CVL_CODE,
         TECKOS_CODE,
         TENDRESTIVAL_CODE,
       ];
