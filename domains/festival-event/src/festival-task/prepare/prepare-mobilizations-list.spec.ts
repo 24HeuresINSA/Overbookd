@@ -84,31 +84,23 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
-
-      describe("when task is under review and mobilization has not volunteer nor team requested", () => {
-        it("should indicate a mobilization should have at least one volunteer or team", async () => {
-          const task = guardJustDance;
-          const form = friday18hsaturday10hMobilization.form;
-          expect(
-            async () => await prepare.addMobilization(task.id, form),
-          ).rejects.toThrow(
-            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
-          );
-        });
-      });
-
-      describe("when task is refused and mobilization has not volunteer nor team requested", () => {
-        it("should indicate a mobilization should have at least one volunteer or team", async () => {
-          const task = installBarbecue;
-          const form = friday18hsaturday10hMobilization.form;
-          expect(
-            async () => await prepare.addMobilization(task.id, form),
-          ).rejects.toThrow(
-            "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
-          );
-        });
-      });
-
+      describe.each`
+        taskName                        | taskStatus                | task               | mobilization
+        ${guardJustDance.general.name}  | ${guardJustDance.status}  | ${guardJustDance}  | ${friday18hsaturday10hMobilization}
+        ${installBarbecue.general.name} | ${installBarbecue.status} | ${installBarbecue} | ${friday18hsaturday10hMobilization}
+      `(
+        "when $taskName task is $taskStatus and mobilization has not volunteer nor team requested",
+        ({ task, mobilization }) => {
+          it("should indicate a mobilization should have at least one volunteer or team", async () => {
+            expect(
+              async () =>
+                await prepare.addMobilization(task.id, mobilization.form),
+            ).rejects.toThrow(
+              "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
+            );
+          });
+        },
+      );
       describe.each`
         indication                       | task                 | start          | end
         ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h}
