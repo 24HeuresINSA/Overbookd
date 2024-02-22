@@ -11,7 +11,6 @@ import {
 } from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
-  defaultReviewableMobilization,
   deuxTables,
   friday10hfriday19h,
   friday11hfriday18h,
@@ -213,7 +212,7 @@ function defaultInReview(id: number, name: string): InReviewWithConflicts {
     ],
     feedbacks: [],
     inquiries: [],
-    mobilizations: [defaultReviewableMobilization],
+    mobilizations: [],
     reviews: {
       humain: REVIEWING,
       matos: REVIEWING,
@@ -263,7 +262,7 @@ function defaultRefused(id: number, name: string): RefusedWithConflicts {
     ],
     feedbacks: [],
     inquiries: [],
-    mobilizations: [defaultReviewableMobilization],
+    mobilizations: [],
     reviews: {
       humain: REJECTED,
       matos: REVIEWING,

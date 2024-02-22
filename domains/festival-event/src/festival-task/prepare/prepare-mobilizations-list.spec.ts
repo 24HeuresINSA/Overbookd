@@ -261,26 +261,21 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).not.toContainEqual(mobilization);
         },
       );
-      describe("when removing the last mobilization of an under review task", () => {
-        it("should indicate that at least one mobilization is mandatory", async () => {
-          const task = guardJustDance;
-          const mobilization = guardJustDance.mobilizations[0];
-          expect(
-            async () =>
-              await prepare.removeMobilization(task.id, mobilization.id),
-          ).rejects.toThrow("Au moins une mobilisation est nécessaire");
-        });
-      });
-      describe("when removing the last mobilization of a refued task", () => {
-        it("should indicate that at least one mobilization is mandatory", async () => {
-          const task = uninstallBarbecue;
-          const mobilization = uninstallBarbecue.mobilizations[0];
-          expect(
-            async () =>
-              await prepare.removeMobilization(task.id, mobilization.id),
-          ).rejects.toThrow("Au moins une mobilisation est nécessaire");
-        });
-      });
+      describe.each`
+        taskName                          | taskStatus                  | task                 | mobilization
+        ${guardJustDance.general.name}    | ${guardJustDance.status}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}
+        ${uninstallBarbecue.general.name} | ${uninstallBarbecue.status} | ${uninstallBarbecue} | ${uninstallBarbecue.mobilizations[0]}
+      `(
+        "when removing the last mobilization of $taskName task with status $taskStatus",
+        ({ task, mobilization }) => {
+          it("should indicate that at least one mobilization is mandatory", async () => {
+            expect(
+              async () =>
+                await prepare.removeMobilization(task.id, mobilization.id),
+            ).rejects.toThrow("Au moins une mobilisation est nécessaire");
+          });
+        },
+      );
     });
     describe("when removing an unexisting mobilization", () => {
       it("should keep mobilizations list unchanged", async () => {

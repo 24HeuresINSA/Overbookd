@@ -735,11 +735,3 @@ export const uninstallBarbecue = factory
     elec: REJECTED,
   })
   .build();
-
-export const defaultReviewableMobilization =
-  MobilizationBuilder.init<InReviewWithConflicts>({
-    start: friday10h,
-    end: friday11h,
-    volunteers: [],
-    teams: [{ count: 1, team: "bénévole" }],
-  }).mobilization;
