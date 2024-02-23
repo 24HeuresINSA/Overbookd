@@ -8,6 +8,7 @@ const INIT_STATUS_STATISTICS: Statistics<FestivalTask>["status"] = {
   DRAFT: 0,
   IN_REVIEW: 0,
   REFUSED: 0,
+  VALIDATED: 0,
 };
 
 export class PrismaFestivalTaskStatistics<T extends FestivalTask = FestivalTask>
