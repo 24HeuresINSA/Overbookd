@@ -45,24 +45,24 @@ class DraftBuilder {
 
 class InReviewBuidler {
   static preview(task: InReviewWithoutConflicts): PreviewInReview {
-    const { id, status, general, reviews } = task;
+    const { id, status, general, reviews, reviewer } = task;
     const { name, administrator, team } = general;
-    return { id, status, name, administrator, team, reviews };
+    return { id, status, name, administrator, team, reviews, reviewer };
   }
 }
 
 class RefusedBuidler {
   static preview(task: RefusedWithoutConflicts): PreviewRefused {
-    const { id, status, general, reviews } = task;
+    const { id, status, general, reviews, reviewer } = task;
     const { name, administrator, team } = general;
-    return { id, status, name, administrator, team, reviews };
+    return { id, status, name, administrator, team, reviews, reviewer };
   }
 }
 
 class ValidatedBuidler {
   static preview(task: ValidatedWithoutConflicts): PreviewValidated {
-    const { id, status, general, reviews } = task;
+    const { id, status, general, reviews, reviewer } = task;
     const { name, administrator, team } = general;
-    return { id, status, name, administrator, team, reviews };
+    return { id, status, name, administrator, team, reviews, reviewer };
   }
 }

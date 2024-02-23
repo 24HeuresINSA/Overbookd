@@ -1,4 +1,4 @@
-import { ReviewerStat, Reviewers } from "@overbookd/festival-event";
+import { ReviewerStat, Reviewers, humain } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 
@@ -11,6 +11,13 @@ export class PrismaReviewers implements Reviewers {
         ...SELECT_VOLUNTEER,
         _count: {
           select: { festivalTasksToReview: true },
+        },
+      },
+      where: {
+        teams: {
+          some: {
+            team: { code: humain },
+          },
         },
       },
     });

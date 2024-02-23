@@ -83,7 +83,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
     return {
       id: taskData.id,
       reviews: this.formatReviews(taskData.reviews),
-      reviewer: this.formatReviewer(taskData.reviewer),
+      ...this.formatReviewer(taskData.reviewer),
       general: {
         name: taskData.name,
         administrator: taskData.administrator,
@@ -229,6 +229,7 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       status: this.task.status,
       administrator: this.task.general.administrator,
       team: this.task.general.team,
+      reviewer: this.task.reviewer,
     };
     const { reviews } = this.task;
 

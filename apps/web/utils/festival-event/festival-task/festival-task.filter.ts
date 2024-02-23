@@ -24,6 +24,7 @@ export type TaskFilters = TaskReviewsFilter & {
   team?: Team;
   adherent?: User;
   status?: FestivalTask["status"];
+  reviewer?: User;
 };
 
 type IsNotEmpty = (value: string) => string | undefined;
@@ -99,6 +100,12 @@ export class TaskFilterBuilder {
         const review = strigifyQueryParam(params.elec);
         const elec = this.isExistingReview(review);
         return elec ? { elec } : {};
+      }
+      case "reviewer": {
+        const reviewerId = strigifyQueryParam(params.reviewer);
+        const defaultId = isNaN(+reviewerId) ? 0 : +reviewerId;
+        const reviewer = this.isExistingAdherent(defaultId);
+        return reviewer ? { reviewer } : {};
       }
     }
   }
