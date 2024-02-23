@@ -1,19 +1,19 @@
 <table style="text-align: center">
-  <h1>Rejet d'une Fiche Activité</h1>
+  <h1>Rejet d'une Fiche Tâche</h1>
   <p>
-    Attention la FA <strong><%= activityName %></strong>, dont tu es responsable a été rejetée lors de sa relecture !
+    Attention la FT <strong><%= taskName %></strong>, dont tu es le gestionnaire a été rejetée lors de sa relecture !
     <br />
   </p>
   <p>Eh oui selon <%= rejectorName %>: <q><%= reason %></q></p>
   <h2>
     Il faut la corriger au plus vite ! <br />
     <span style="color: red">
-      N'oublie pas que l'ensemble du festival repose sur les FAs
+      N'oublie pas que les FTs sont essentielles pour que le festival se déroule sans encombre
     </span>
   </h2>
   <a
     id="link-button"
-    href="<%= activityLink %>"
+    href="<%= taskLink %>"
     style="
       background-color: #2196f3;
       padding: 1rem 1rem 1rem 1rem;
@@ -23,9 +23,9 @@
       display: inline-block;
       margin: 1rem;
     "
-    >Aller corriger ma FA</a
+    >Aller corriger ma FT</a
   >
-  <p>Si le lien ne marche pas, va à cette adresse : <%= activityLink %></p>
+  <p>Si le lien ne marche pas, va à cette adresse : <%= taskLink %></p>
 
   <p>
     Merci t'es le.a meilleur.e ! 🫶 <br />

@@ -8,8 +8,6 @@ import {
   FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
   IN_REVIEW,
-  InReviewWithoutConflicts,
-  PreviewFestivalTaskInReview,
   ReviewStatus,
   Reviewer,
   NOT_ASKING_TO_REVIEW,
@@ -18,6 +16,10 @@ import {
   matos,
   Adherent,
   InReviewSpecification,
+  REFUSED,
+  isRefusedReviews,
+  ReviewableWithoutConflicts,
+  PreviewFestivalTaskReviewable,
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
@@ -69,7 +71,8 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
       case DRAFT:
         return DraftBuilder.init(taskWithoutStatus);
       case IN_REVIEW:
-        return InReviewBuilder.init(taskWithoutStatus);
+      case REFUSED:
+        return ReviewableBuilder.init(taskWithoutStatus);
     }
   }
 
@@ -155,8 +158,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
 
 export class DraftBuilder
   extends FestivalTaskBuilder<DraftWithoutConflicts>
-  implements
-    VisualizeFestivalTask<DraftWithoutConflicts, PreviewFestivalTaskDraft>
+  implements VisualizeFestivalTask<DraftWithoutConflicts>
 {
   static init(taskWithoutStatus: FestivalTaskWithoutStatus) {
     return new DraftBuilder({ ...taskWithoutStatus, status: DRAFT });
@@ -164,7 +166,7 @@ export class DraftBuilder
 
   static fromDatabase(
     taskData: DatabaseFestivalTask,
-  ): VisualizeFestivalTask<DraftWithoutConflicts, PreviewFestivalTask> {
+  ): VisualizeFestivalTask<DraftWithoutConflicts> {
     const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
     return this.init(taskWithoutStatus);
   }
@@ -184,39 +186,49 @@ export class DraftBuilder
   }
 }
 
-class InReviewBuilder
-  extends FestivalTaskBuilder<InReviewWithoutConflicts>
-  implements
-    VisualizeFestivalTask<
-      InReviewWithoutConflicts,
-      PreviewFestivalTaskInReview
-    >
+export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
+  extends FestivalTaskBuilder<T>
+  implements VisualizeFestivalTask<T, PreviewFestivalTaskReviewable>
 {
   static init(taskWithoutStatus: FestivalTaskWithoutStatus) {
     if (!InReviewSpecification.isSatisfiedBy(taskWithoutStatus)) {
       return DraftBuilder.init(taskWithoutStatus);
     }
-    const { reviews, reviewer } = taskWithoutStatus;
-    return new InReviewBuilder({
+    const { reviews } = taskWithoutStatus;
+
+    if (isRefusedReviews(reviews)) {
+      return new ReviewableBuilder({
+        ...taskWithoutStatus,
+        status: REFUSED,
+        reviews,
+      });
+    }
+
+    return new ReviewableBuilder({
       ...taskWithoutStatus,
       status: IN_REVIEW,
       reviews,
-      reviewer,
     });
   }
 
-  get preview(): PreviewFestivalTaskInReview {
-    return {
+  get preview(): PreviewFestivalTaskReviewable {
+    const base = {
       id: this.task.id,
       name: this.task.general.name,
       status: this.task.status,
       administrator: this.task.general.administrator,
       team: this.task.general.team,
-      reviews: this.task.reviews,
     };
+    const { reviews } = this.task;
+
+    if (isRefusedReviews(reviews)) {
+      return { ...base, reviews, status: REFUSED };
+    }
+
+    return { ...base, status: IN_REVIEW, reviews };
   }
 
-  get festivalTask(): InReviewWithoutConflicts {
+  get festivalTask(): T {
     return this.task;
   }
 }

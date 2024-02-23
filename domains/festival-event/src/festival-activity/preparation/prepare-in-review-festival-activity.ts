@@ -5,11 +5,9 @@ import { TimeWindows } from "./section-aggregates/time-windows";
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivity, Reviewable } from "../festival-activity";
 import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
-import {
-  Reviews,
-  isRefusedReviews,
-  isValidatedReviews,
-} from "../sections/reviews";
+import { isValidatedReviews } from "../sections/reviews";
+import { Reviews } from "../../common/review";
+import { isRefusedReviews } from "../../common/review";
 import { Reviewer } from "../../common/review";
 import {
   NOT_ASKING_TO_REVIEW,
@@ -97,7 +95,10 @@ class General {
     return new General(general);
   }
 
-  isAlreadyValidatedBy(reviewer: GeneralReviewer, reviews: Reviews): boolean {
+  isAlreadyValidatedBy(
+    reviewer: GeneralReviewer,
+    reviews: Reviews<"FA">,
+  ): boolean {
     switch (reviewer) {
       case communication:
         return reviews.communication === APPROVED;

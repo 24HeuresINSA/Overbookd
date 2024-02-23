@@ -19,8 +19,8 @@ import {
   ApiParam,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { FestivalTask } from "@overbookd/festival-event";
-import { WRITE_FT } from "@overbookd/permission";
+import { FestivalTask, FestivalTaskRefused } from "@overbookd/festival-event";
+import { VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
 import { RequestWithUserPayload } from "../../../app.controller";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
@@ -29,8 +29,13 @@ import { PublishFeedbackRequestDto } from "./dto/publish-feedback.request.dto";
 import { FestivalTaskReviewService } from "./festival-task-review.service";
 import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
-import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
+import {
+  InReviewFestivalTaskResponseDto,
+  RefusedFestivalTaskResponseDto,
+} from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
+import { RejectRequestDto } from "./dto/review.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -96,5 +101,33 @@ export class FestivalTaskReviewController {
     @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
     return this.reviewService.toReview(ftId, user);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FT)
+  @Post(":ftId/reject")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    type: RefusedFestivalTaskResponseDto,
+  })
+  @ApiBody({
+    description: "Festival task rejection",
+    type: RejectRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  reject(
+    @Param("ftId", ParseIntPipe) faId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() reject: RejectRequestDto,
+  ): Promise<FestivalTaskRefused> {
+    const jwt = new JwtUtil(user);
+    return this.reviewService.reject(faId, jwt, reject);
   }
 }
