@@ -197,7 +197,7 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
     if (!InReviewSpecification.isSatisfiedBy(taskWithoutStatus)) {
       return DraftBuilder.init(taskWithoutStatus);
     }
-    const { reviews, reviewer } = taskWithoutStatus;
+    const { reviews } = taskWithoutStatus;
 
     if (isRefusedReviews(reviews)) {
       return new ReviewableBuilder({
@@ -212,7 +212,6 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
         ...taskWithoutStatus,
         status: VALIDATED,
         reviews,
-        reviewer,
       });
     }
 
@@ -220,7 +219,6 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       ...taskWithoutStatus,
       status: IN_REVIEW,
       reviews,
-      reviewer,
     });
   }
 
@@ -231,14 +229,15 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       status: this.task.status,
       administrator: this.task.general.administrator,
       team: this.task.general.team,
+      reviewer: this.task.reviewer,
     };
-    const { reviews, reviewer } = this.task;
+    const { reviews } = this.task;
 
     if (isRefusedReviews(reviews)) {
-      return { ...base, reviews, status: REFUSED, reviewer };
+      return { ...base, reviews, status: REFUSED };
     }
 
-    return { ...base, status: IN_REVIEW, reviews, reviewer };
+    return { ...base, status: IN_REVIEW, reviews };
   }
 
   get festivalTask(): T {
