@@ -10,6 +10,7 @@ import {
   CreateFestivalTask,
   FestivalTaskTranslator,
   PrepareFestivalTask,
+  ReviewTask,
   ViewFestivalTask,
 } from "@overbookd/festival-event";
 import { PrismaRemoveFestivalTasks } from "./repository/remove-festival-tasks.prisma";
@@ -20,6 +21,7 @@ import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaReviewers } from "./repository/reviewers.prisma";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
 import { PrismaNotifications } from "../../common/repository/notifications.prisma";
+import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks.prisma";
 
 @Module({
   providers: [
@@ -150,6 +152,18 @@ import { PrismaNotifications } from "../../common/repository/notifications.prism
         new PrismaRemoveFestivalTasks(prisma),
       inject: [PrismaService],
     },
+    {
+      provide: PrismaFestivalTasksForReview,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaFestivalTasksForReview(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: ReviewTask,
+      useFactory: (festivalTasks: PrismaFestivalTasksForReview) =>
+        new ReviewTask(festivalTasks),
+      inject: [PrismaFestivalTasksForReview],
+    },
   ],
   imports: [PrismaModule],
   exports: [
@@ -162,6 +176,7 @@ import { PrismaNotifications } from "../../common/repository/notifications.prism
     ViewFestivalTask,
     AskForReviewTask,
     PrismaRemoveFestivalTasks,
+    ReviewTask,
   ],
 })
 export class FestivalTaskCommonModule {}

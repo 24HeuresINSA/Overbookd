@@ -7,6 +7,7 @@ import {
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequestForm } from "./common.model";
+import { FestivalEventIdentifier } from "@overbookd/festival-event";
 
 export type PrepareInChargeForm = {
   adherentId?: number;
@@ -17,8 +18,8 @@ export type PrepareSignaForm = {
   locationId: number | null;
 };
 
-export type ReviewRejection = {
-  team: Reviewer<"FA">;
+export type ReviewRejection<T extends FestivalEventIdentifier> = {
+  team: Reviewer<T>;
   reason: string;
 };
 

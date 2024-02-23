@@ -8,7 +8,8 @@ import {
 import { VALIDATED, IN_REVIEW, REFUSED } from "../../common/status";
 import { FestivalActivityNotFound } from "../festival-activity.error";
 import { PrepareFestivalActivityRepository } from "./prepare-festival-activity";
-import { isRefusedReviews, isValidatedReviews } from "../sections/reviews";
+import { isValidatedReviews } from "../sections/reviews";
+import { isRefusedReviews } from "../../common/review";
 import { isDraft } from "../../festival-event";
 
 export class InMemoryPrepareFestivalActivityRepository

@@ -33,6 +33,7 @@ export {
   matos,
   elec,
   barrieres,
+  isRefusedReviews,
 } from "./common/review";
 export type {
   ReviewStatus,
@@ -139,10 +140,7 @@ export {
 } from "./festival-activity/sections/signa";
 
 // REVIEWS
-export {
-  isValidatedReviews,
-  isRefusedReviews,
-} from "./festival-activity/sections/reviews";
+export { isValidatedReviews } from "./festival-activity/sections/reviews";
 
 // CREATION
 export { CreateFestivalActivity } from "./festival-activity/creation/creation";
@@ -216,10 +214,13 @@ export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
   InReview as FestivalTaskInReview,
+  Refused as FestivalTaskRefused,
   Reviewable as FestivalTaskReviewable,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
   PreviewInReview as PreviewFestivalTaskInReview,
+  PreviewRefused as PreviewFestivalTaskRefused,
+  PreviewReviewable as PreviewFestivalTaskReviewable,
 } from "./festival-task/festival-task";
 export type {
   Volunteer,
@@ -247,9 +248,11 @@ export type {
   WithConflicts as FestivalTaskWithConflicts,
   WithoutConflicts as FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
-  InReviewWithoutConflicts,
+  ReviewableWithoutConflicts,
 } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
+export { Review as ReviewTask } from "./festival-task/review/review";
+export type { FestivalTasksForReview } from "./festival-task/review/review";
 
 //  **********************
 //  FESTIVAL EVENT MODULE

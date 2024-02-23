@@ -70,7 +70,7 @@ export class FestivalActivityReviewService {
   async reject(
     faId: number,
     user: JwtUtil,
-    rejection: ReviewRejection,
+    rejection: ReviewRejection<"FA">,
   ): Promise<Refused> {
     TeamService.checkMembership(user, rejection.team);
 

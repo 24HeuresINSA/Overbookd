@@ -454,8 +454,5 @@ function feedbackDatabaseMapping(feedback: Feedback): DatabaseFeedback {
 }
 
 export function buildFestivalActivityCondition(id: FestivalActivity["id"]) {
-  return {
-    id,
-    ...IS_NOT_DELETED,
-  };
+  return { id, ...IS_NOT_DELETED };
 }

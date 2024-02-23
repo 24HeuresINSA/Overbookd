@@ -13,11 +13,12 @@ import { READ_FT } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../../authentication/permissions-auth.guard";
-import { PreviewFestivalTaskDraftResponseDto } from "./dto/preview-festival-task-draft.response.dto";
 import { FestivalTaskPreviewService } from "./festival-task-preview.service";
-import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
+import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
+import { PreviewFestivalTaskDraftResponseDto } from "./dto/preview-festival-task-draft.response.dto";
 import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-task-in-review.response.dto";
+import { PreviewFestivalTaskRefusedResponseDto } from "./dto/preview-festival-task-refused.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -30,6 +31,7 @@ import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-t
 @ApiExtraModels(
   PreviewFestivalTaskDraftResponseDto,
   PreviewFestivalTaskInReviewResponseDto,
+  PreviewFestivalTaskRefusedResponseDto,
 )
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
@@ -46,6 +48,7 @@ export class FestivalTaskPreviewController {
       oneOf: [
         { $ref: getSchemaPath(PreviewFestivalTaskDraftResponseDto) },
         { $ref: getSchemaPath(PreviewFestivalTaskInReviewResponseDto) },
+        { $ref: getSchemaPath(PreviewFestivalTaskRefusedResponseDto) },
       ],
     },
     isArray: true,

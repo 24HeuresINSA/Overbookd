@@ -4,7 +4,7 @@ import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dt
 
 type General = InReview["general"];
 
-export class InReviewGeneralResponseDto implements General {
+export class ReviewableGeneralResponseDto implements General {
   @ApiProperty({
     description: "The festival task name",
     type: Number,

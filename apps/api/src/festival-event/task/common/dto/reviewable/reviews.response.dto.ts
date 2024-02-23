@@ -2,7 +2,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import {
   InReviewReviews,
   NOT_ASKING_TO_REVIEW,
+  REJECTED,
   REVIEWING,
+  RefusedReviews,
+  RejectionReviewStatus,
   ReviewingStatus,
 } from "@overbookd/festival-event";
 
@@ -32,4 +35,32 @@ export class InReviewReviewsResponseDto implements InReviewReviews<"FT"> {
     description: "Elec reviewing status",
   })
   elec: ReviewingStatus;
+}
+
+const rejectedReviewStatuses = [...reviewStatuses, REJECTED];
+
+export class RefusedReviewsResponseDto implements RefusedReviews<"FT"> {
+  @ApiProperty({
+    required: true,
+    enum: rejectedReviewStatuses,
+    example: REJECTED,
+    description: "Humain reviewing status",
+  })
+  humain: RejectionReviewStatus;
+
+  @ApiProperty({
+    required: true,
+    enum: rejectedReviewStatuses,
+    example: REVIEWING,
+    description: "Matos reviewing status",
+  })
+  matos: RejectionReviewStatus;
+
+  @ApiProperty({
+    required: true,
+    enum: rejectedReviewStatuses,
+    example: NOT_ASKING_TO_REVIEW,
+    description: "Elec reviewing status",
+  })
+  elec: RejectionReviewStatus;
 }

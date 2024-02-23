@@ -71,3 +71,14 @@ export type Rejection<T extends FestivalEventIdentifier> = {
   rejector: Adherent;
   reason: string;
 };
+
+export type Reviews<T extends FestivalEventIdentifier> =
+  | InReviewReviews<T>
+  | ValidatedReviews<T>
+  | RefusedReviews<T>;
+
+export function isRefusedReviews<T extends FestivalEventIdentifier>(
+  reviews: Reviews<T>,
+): reviews is RefusedReviews<T> {
+  return Object.values(reviews).some((review) => review === REJECTED);
+}

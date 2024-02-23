@@ -386,7 +386,7 @@ export class FestivalActivityRepository {
   static reject(
     context: Context,
     faId: FestivalActivity["id"],
-    rejection: ReviewRejection,
+    rejection: ReviewRejection<"FA">,
   ) {
     return context.$axios.post<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/reject`,

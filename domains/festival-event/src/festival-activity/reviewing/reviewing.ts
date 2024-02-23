@@ -1,10 +1,8 @@
 import { FestivalActivity, Refused, Reviewable } from "../festival-activity";
 import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
-import {
-  Reviews,
-  isRefusedReviews,
-  isValidatedReviews,
-} from "../sections/reviews";
+import { isValidatedReviews } from "../sections/reviews";
+import { Reviews } from "../../common/review";
+import { isRefusedReviews } from "../../common/review";
 import { Reviewer } from "../../common/review";
 import {
   NOT_ASKING_TO_REVIEW,
@@ -179,7 +177,7 @@ export class Reviewing {
   }
 }
 
-function getTeamReview(reviews: Reviews, team: Reviewer<"FA">) {
+function getTeamReview(reviews: Reviews<"FA">, team: Reviewer<"FA">) {
   switch (team) {
     case humain:
       return reviews.humain;

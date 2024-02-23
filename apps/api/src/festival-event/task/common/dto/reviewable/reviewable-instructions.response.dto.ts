@@ -41,7 +41,7 @@ class WithoutInChargeInstructionsDto implements WithoutInChargeInstructions {
   instruction: WithoutInChargeInstructions["instruction"];
 }
 
-export class InReviewInstructionsResponseDto implements Instructions {
+export class ReviewableInstructionsResponseDto implements Instructions {
   @ApiProperty({
     description: "Appointment location",
     type: LocationResponseDto,

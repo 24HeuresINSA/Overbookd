@@ -10,9 +10,10 @@ import {
   APPROVED,
   NOT_ASKING_TO_REVIEW,
   PreviewFestivalActivity,
+  PreviewFestivalTask,
   REJECTED,
 } from "@overbookd/festival-event";
-import { Rejected } from "@overbookd/domain-events";
+import { Rejected, FestivalTaskRejected } from "@overbookd/domain-events";
 import { Profile } from "@overbookd/user";
 
 type EmailResetPassword = {
@@ -40,6 +41,16 @@ type ActivityRejected = {
   };
   rejector: Member;
   reason: Rejected["reason"];
+};
+
+type TaskRejected = {
+  email: string;
+  task: {
+    id: PreviewFestivalTask["id"];
+    name: PreviewFestivalTask["name"];
+  };
+  rejector: Member;
+  reason: FestivalTaskRejected["reason"];
 };
 
 type ActivityValidated = {
@@ -95,6 +106,27 @@ export class MailService implements OnApplicationBootstrap {
       ]);
 
       this.festivalActivityRejected({ email, reason, rejector, activity });
+    });
+
+    this.eventStore.rejectedFestivalTask.subscribe(async (event) => {
+      const { id, general, reviews } = event.festivalTask;
+
+      const rejectionCount = Object.values(reviews).filter(
+        (review) => review === REJECTED,
+      ).length;
+      const hasAlreadySentEmail = rejectionCount > 1;
+      if (hasAlreadySentEmail) return;
+
+      this.logger.log("Send festival-task-rejected mail");
+      const task = { id, name: general.name };
+      const reason = event.reason;
+
+      const [rejector, { email }] = await Promise.all([
+        this.members.byId(event.by),
+        this.members.byId(general.administrator.id),
+      ]);
+
+      this.festivalTaskRejected({ email, reason, rejector, task });
     });
 
     this.eventStore.approvedFestivalActivity.subscribe(async (event) => {
@@ -205,6 +237,32 @@ export class MailService implements OnApplicationBootstrap {
       if (mail) {
         this.logger.log(
           `Festival activity rejected mail sent to ${email} for activity #${activity.id}`,
+        );
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  async festivalTaskRejected({ email, reason, rejector, task }: TaskRejected) {
+    try {
+      const rejectorName = rejector.nickname
+        ? `${rejector.nickname}`
+        : `${rejector.firstname} ${rejector.lastname}`;
+      const mail = await this.mailerService.sendMail({
+        to: email,
+        subject: `[FT] ${task.name} rejetée 🙀`,
+        template: "festival-task-rejected",
+        context: {
+          taskName: task.name,
+          rejectorName,
+          reason,
+          taskLink: `https://${process.env.DOMAIN}/ft/${task.id}`,
+        },
+      });
+      if (mail) {
+        this.logger.log(
+          `Festival task rejected mail sent to ${email} for task #${task.id}`,
         );
       }
     } catch (error) {

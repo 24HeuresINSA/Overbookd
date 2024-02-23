@@ -472,7 +472,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
-    async rejectBecause({ state, commit }, rejection: ReviewRejection) {
+    async rejectBecause({ state, commit }, rejection: ReviewRejection<"FA">) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.reject(this, id, rejection), {
         successMessage: `🛑 FA rejetée par l'équipe ${rejection.team}`,
