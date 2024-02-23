@@ -87,3 +87,11 @@ export function isRefusedReviews<T extends FestivalEventIdentifier>(
 ): reviews is RefusedReviews<T> {
   return Object.values(reviews).some((review) => review === REJECTED);
 }
+
+export function isValidatedReviews<T extends FestivalEventIdentifier>(
+  reviews: Reviews<T>,
+): reviews is ValidatedReviews<T> {
+  return Object.values(reviews).every(
+    (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
+  );
+}

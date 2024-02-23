@@ -20,6 +20,8 @@ import {
   isRefusedReviews,
   ReviewableWithoutConflicts,
   PreviewFestivalTaskReviewable,
+  VALIDATED,
+  isValidatedReviews,
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
@@ -72,6 +74,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
         return DraftBuilder.init(taskWithoutStatus);
       case IN_REVIEW:
       case REFUSED:
+      case VALIDATED:
         return ReviewableBuilder.init(taskWithoutStatus);
     }
   }
@@ -200,6 +203,14 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       return new ReviewableBuilder({
         ...taskWithoutStatus,
         status: REFUSED,
+        reviews,
+      });
+    }
+
+    if (isValidatedReviews(reviews)) {
+      return new ReviewableBuilder({
+        ...taskWithoutStatus,
+        status: VALIDATED,
         reviews,
       });
     }

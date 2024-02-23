@@ -60,6 +60,7 @@ export {
   elec,
   barrieres,
   isRefusedReviews,
+  isValidatedReviews,
 } from "./common/review";
 export type {
   ReviewStatus,
@@ -137,9 +138,6 @@ export {
   isLinkedToCatalogItem,
 } from "./festival-activity/sections/signa";
 
-// REVIEWS
-export { isValidatedReviews } from "./festival-activity/sections/reviews";
-
 // CREATION
 export { CreateFestivalActivity } from "./festival-activity/creation/creation";
 export type {
@@ -213,11 +211,13 @@ export type {
   Draft as FestivalTaskDraft,
   InReview as FestivalTaskInReview,
   Refused as FestivalTaskRefused,
+  Validated as FestivalTaskValidated,
   Reviewable as FestivalTaskReviewable,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
   PreviewInReview as PreviewFestivalTaskInReview,
   PreviewRefused as PreviewFestivalTaskRefused,
+  PreviewValidated as PreviewFestivalTaskValidated,
   PreviewReviewable as PreviewFestivalTaskReviewable,
 } from "./festival-task/festival-task";
 export type {

@@ -1,4 +1,5 @@
 import type { Event } from "@overbookd/event";
+import { Validated } from "@overbookd/festival-event";
 import {
   Adherent,
   FestivalTaskDraft as Draft,
@@ -9,6 +10,7 @@ import {
 export const FESTIVAL_TASK_CREATED = "festival-task-created";
 export const FESTIVAL_TASK_READY_TO_REVIEW = "festival-task-ready-to-review";
 export const FESTIVAL_TASK_REJECTED = "festival-task-rejected";
+export const FESTIVAL_TASK_APPROVED = "festival-task-approved";
 
 export type Created = {
   festivalTask: Draft;
@@ -32,6 +34,15 @@ export type Rejected = {
   reason: string;
 };
 
+type FestivalTaskForApproval = InReview | Validated;
+
+export type Approved = {
+  festivalTask: FestivalTaskForApproval;
+  by: Adherent["id"];
+  at: Date;
+  id: FestivalTaskForApproval["id"];
+};
+
 export type FestivalTaskCreatedEvent = Event<
   typeof FESTIVAL_TASK_CREATED,
   Created
@@ -45,6 +56,11 @@ export type FestivalTaskReadyToReviewEvent = Event<
 export type FestivalTaskRejectedEvent = Event<
   typeof FESTIVAL_TASK_REJECTED,
   Rejected
+>;
+
+export type FestivalTaskApprovedEvent = Event<
+  typeof FESTIVAL_TASK_APPROVED,
+  Approved
 >;
 
 export class FestivalTask {
@@ -74,6 +90,15 @@ export class FestivalTask {
     const at = FestivalTask.computeAt();
     const data = { festivalTask, by, at, id: festivalTask.id, reason };
     return { type: FESTIVAL_TASK_REJECTED, data };
+  }
+
+  static approved(
+    festivalTask: FestivalTaskForApproval,
+    by: Adherent["id"],
+  ): FestivalTaskApprovedEvent {
+    const at = FestivalTask.computeAt();
+    const data = { festivalTask, by, at, id: festivalTask.id };
+    return { type: FESTIVAL_TASK_APPROVED, data };
   }
 
   private static computeAt() {

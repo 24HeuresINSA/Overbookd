@@ -5,7 +5,7 @@ import { TimeWindows } from "./section-aggregates/time-windows";
 import { IProvidePeriod } from "@overbookd/period";
 import { FestivalActivity, Reviewable } from "../festival-activity";
 import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
-import { isValidatedReviews } from "../sections/reviews";
+import { isValidatedReviews } from "../../common/review";
 import { Reviews } from "../../common/review";
 import { isRefusedReviews } from "../../common/review";
 import { Reviewer } from "../../common/review";

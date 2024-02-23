@@ -19,6 +19,7 @@ import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { PreviewFestivalTaskDraftResponseDto } from "./dto/preview-festival-task-draft.response.dto";
 import { PreviewFestivalTaskInReviewResponseDto } from "./dto/preview-festival-task-in-review.response.dto";
 import { PreviewFestivalTaskRefusedResponseDto } from "./dto/preview-festival-task-refused.response.dto";
+import { PreviewFestivalTaskValidatedResponseDto } from "./dto/preview-festival-task-validated.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -32,6 +33,7 @@ import { PreviewFestivalTaskRefusedResponseDto } from "./dto/preview-festival-ta
   PreviewFestivalTaskDraftResponseDto,
   PreviewFestivalTaskInReviewResponseDto,
   PreviewFestivalTaskRefusedResponseDto,
+  PreviewFestivalTaskValidatedResponseDto,
 )
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
@@ -49,6 +51,7 @@ export class FestivalTaskPreviewController {
         { $ref: getSchemaPath(PreviewFestivalTaskDraftResponseDto) },
         { $ref: getSchemaPath(PreviewFestivalTaskInReviewResponseDto) },
         { $ref: getSchemaPath(PreviewFestivalTaskRefusedResponseDto) },
+        { $ref: getSchemaPath(PreviewFestivalTaskValidatedResponseDto) },
       ],
     },
     isArray: true,
