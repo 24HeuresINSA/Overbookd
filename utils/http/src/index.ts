@@ -6,6 +6,7 @@ export type {
   PrepareInChargeForm,
   PrepareSignaForm,
   ReviewRejection,
+  ReviewApproval,
   InitInquiryRequest,
   LinkSignageCatalogItemForm,
   PreviewForSecurity,

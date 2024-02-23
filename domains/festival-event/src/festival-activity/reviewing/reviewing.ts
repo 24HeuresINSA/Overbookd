@@ -1,6 +1,6 @@
 import { FestivalActivity, Refused, Reviewable } from "../festival-activity";
 import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
-import { isValidatedReviews } from "../sections/reviews";
+import { isValidatedReviews } from "../../common/review";
 import { Reviews } from "../../common/review";
 import { isRefusedReviews } from "../../common/review";
 import { Reviewer } from "../../common/review";
@@ -19,11 +19,11 @@ import { FestivalActivityNotFound } from "../festival-activity.error";
 import { BARRIERES, ELEC, InquiryOwner, MATOS } from "../sections/inquiry";
 import {
   InDraft,
-  AlreadyApproved,
-  ShouldAssignDrive,
   AlreadyRejected,
   ShouldLinkCatalogItem,
 } from "./reviewing.error";
+import { AlreadyApproved } from "../../common/review.error";
+import { ShouldAssignDrive } from "../../common/review.error";
 import { Adherent } from "../../common/adherent";
 import { FestivalActivityKeyEvents } from "../festival-activity.event";
 import { isLinkedToCatalogItem } from "../sections/signa";
@@ -50,7 +50,7 @@ export class Reviewing {
     if (!festivalActivity) throw new FestivalActivityNotFound(faId);
     if (isDraft(festivalActivity)) throw new InDraft(faId);
     if (this.isAlreadyApprovedBy(festivalActivity, team)) {
-      throw new AlreadyApproved(faId, team);
+      throw new AlreadyApproved(faId, team, "FA");
     }
     if (this.isNotAskingToReview(festivalActivity, team)) {
       throw new NotAskingToReview(faId, team, "FA");

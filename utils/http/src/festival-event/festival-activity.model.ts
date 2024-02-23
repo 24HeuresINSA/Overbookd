@@ -23,6 +23,10 @@ export type ReviewRejection<T extends FestivalEventIdentifier> = {
   reason: string;
 };
 
+export type ReviewApproval<T extends FestivalEventIdentifier> = {
+  team: Reviewer<T>;
+};
+
 export type InitInquiryRequest = {
   timeWindow: IProvidePeriod;
   request: AddInquiryRequestForm;

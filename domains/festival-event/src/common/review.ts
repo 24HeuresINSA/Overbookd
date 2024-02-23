@@ -72,6 +72,11 @@ export type Rejection<T extends FestivalEventIdentifier> = {
   reason: string;
 };
 
+export type Approval<T extends FestivalEventIdentifier> = {
+  team: Reviewer<T>;
+  reviewer: Adherent;
+};
+
 export type Reviews<T extends FestivalEventIdentifier> =
   | InReviewReviews<T>
   | ValidatedReviews<T>
@@ -81,4 +86,12 @@ export function isRefusedReviews<T extends FestivalEventIdentifier>(
   reviews: Reviews<T>,
 ): reviews is RefusedReviews<T> {
   return Object.values(reviews).some((review) => review === REJECTED);
+}
+
+export function isValidatedReviews<T extends FestivalEventIdentifier>(
+  reviews: Reviews<T>,
+): reviews is ValidatedReviews<T> {
+  return Object.values(reviews).every(
+    (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
+  );
 }

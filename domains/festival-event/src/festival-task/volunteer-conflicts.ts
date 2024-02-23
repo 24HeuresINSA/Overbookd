@@ -6,6 +6,7 @@ import {
   InReview,
   Refused,
   Reviewable,
+  Validated,
 } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts } from "./sections/mobilizations";
@@ -33,6 +34,7 @@ export type WithConflicts = Extract<FestivalTask, WithConflictsFilter>;
 export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
 export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
 export type RefusedWithoutConflicts = Extract<WithoutConflicts, Refused>;
+export type ValidatedWithoutConflicts = Extract<WithoutConflicts, Validated>;
 export type ReviewableWithoutConflicts = Extract<WithoutConflicts, Reviewable>;
 
 export type DraftWithConflicts = Extract<WithConflicts, Draft>;

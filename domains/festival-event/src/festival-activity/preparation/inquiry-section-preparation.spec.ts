@@ -26,7 +26,11 @@ import {
 import { PrepareFestivalActivity } from "./prepare-festival-activity";
 import { BARRIERES, ELEC, MATOS } from "../sections/inquiry";
 import { barrieres } from "../../common/review";
-import { MAGASIN, LOCAL_24H, PARKING_EIFFEL } from "../sections/inquiry";
+import {
+  MAGASIN,
+  LOCAL_24H,
+  PARKING_EIFFEL,
+} from "../../common/inquiry-request";
 import {
   AlreadyInitialized,
   CantRemoveLastRequest,

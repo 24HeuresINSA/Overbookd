@@ -122,5 +122,5 @@ export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
 export type FestivalTaskChild = {
   id: number;
   name: string;
-  status: typeof DRAFT | typeof IN_REVIEW | typeof REFUSED;
+  status: typeof DRAFT | typeof IN_REVIEW | typeof REFUSED | typeof VALIDATED;
 };

@@ -17,12 +17,14 @@ export type {
   Created as FestivalTaskCreated,
   ReadyToReview as FestivalTaskReadyToReview,
   Rejected as FestivalTaskRejected,
+  Approved as FestivalTaskApproved,
 } from "./festival-task";
 export {
   FestivalTask,
   FESTIVAL_TASK_CREATED,
   FESTIVAL_TASK_READY_TO_REVIEW,
   FESTIVAL_TASK_REJECTED,
+  FESTIVAL_TASK_APPROVED,
 } from "./festival-task";
 export type { SharedMealClosedEvent } from "./shared-meal";
 export { SHARED_MEAL_CLOSED } from "./shared-meal";

@@ -16,7 +16,7 @@ import {
   LOCAL_24H,
   MAGASIN,
   PARKING_EIFFEL,
-} from "../sections/inquiry";
+} from "../../common/inquiry-request";
 import {
   afficheJustDanceA2,
   bacheBienvenue10m,
@@ -33,12 +33,9 @@ import {
   uneMultiprise3Prises,
 } from "../festival-activity.fake";
 import { Reviewing } from "./reviewing";
-import {
-  AlreadyApproved,
-  AlreadyRejected,
-  ShouldLinkCatalogItem,
-  ShouldAssignDrive,
-} from "./reviewing.error";
+import { AlreadyRejected, ShouldLinkCatalogItem } from "./reviewing.error";
+import { AlreadyApproved } from "../../common/review.error";
+import { ShouldAssignDrive } from "../../common/review.error";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory";
 import { Reviewable } from "../festival-activity";
 import { REFUSED, VALIDATED } from "../../common/status";

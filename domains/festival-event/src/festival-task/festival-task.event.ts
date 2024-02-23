@@ -1,4 +1,5 @@
 import {
+  APPROVED,
   COMMENTED,
   CREATED,
   READY_TO_REVIEW,
@@ -10,7 +11,8 @@ type Action =
   | typeof CREATED
   | typeof COMMENTED
   | typeof READY_TO_REVIEW
-  | typeof REJECTED;
+  | typeof REJECTED
+  | typeof APPROVED;
 
 export type KeyEvent = {
   action: Action;
@@ -35,6 +37,13 @@ export class FestivalTaskKeyEvents {
     const description = `FT rejetée pour la raison suivante: ${reason}`;
 
     return { action: REJECTED, by, at, description };
+  }
+
+  static approved(by: Adherent): KeyEvent {
+    const at = this.computeAt();
+    const description = "FT approuvée";
+
+    return { action: APPROVED, by, at, description };
   }
 
   private static computeAt() {

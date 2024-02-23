@@ -263,6 +263,12 @@ export const deuxTables: InquiryRequest = {
   quantity: 2,
 };
 
+export const troisMarteaux: InquiryRequest = {
+  name: "Marteau",
+  slug: "marteau",
+  quantity: 3,
+};
+
 export const humaGrass: Location = {
   id: 1,
   name: "Huma grass",

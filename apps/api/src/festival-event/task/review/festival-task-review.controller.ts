@@ -32,10 +32,11 @@ import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival
 import {
   InReviewFestivalTaskResponseDto,
   RefusedFestivalTaskResponseDto,
+  ValidatedFestivalTaskResponseDto,
 } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
-import { RejectRequestDto } from "./dto/review.request.dto";
+import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -129,5 +130,39 @@ export class FestivalTaskReviewController {
   ): Promise<FestivalTaskRefused> {
     const jwt = new JwtUtil(user);
     return this.reviewService.reject(faId, jwt, reject);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FT)
+  @Post(":ftId/reject")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description: "Festival task approval",
+    type: ApproveRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  approve(
+    @Param("ftId", ParseIntPipe) faId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() approve: ApproveRequestDto,
+  ): Promise<FestivalTask> {
+    const jwt = new JwtUtil(user);
+    return this.reviewService.approve(faId, jwt, approve);
   }
 }

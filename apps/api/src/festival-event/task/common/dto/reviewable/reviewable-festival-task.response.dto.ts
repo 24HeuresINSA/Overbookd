@@ -5,6 +5,8 @@ import {
   REFUSED,
   FestivalTaskRefused as Refused,
   FestivalTaskReviewable as Reviewable,
+  FestivalTaskValidated as Validated,
+  VALIDATED,
 } from "@overbookd/festival-event";
 import { ReviewableWithConflicts } from "@overbookd/http";
 import { ReviewableGeneralResponseDto } from "./reviewable-general.response.dto";
@@ -15,7 +17,10 @@ import {
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
 } from "../inquiry-request.response.dto";
-import { InReviewReviewsResponseDto } from "./reviews.response.dto";
+import {
+  InReviewReviewsResponseDto,
+  ValidatedReviewsResponseDto,
+} from "./reviews.response.dto";
 import {
   MobilizationWithAtLeastOneTeamDto,
   MobilizationWithAtLeastOneVolunteerDto,
@@ -25,6 +30,7 @@ import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dt
 
 type InReviewWithConflicts = Extract<ReviewableWithConflicts, InReview>;
 type RefusedWithConflicts = Extract<ReviewableWithConflicts, Refused>;
+type ValidatedWithConflicts = Extract<ReviewableWithConflicts, Validated>;
 type BaseReviewableWithConflicts = Omit<
   ReviewableWithConflicts,
   "status" | "reviews"
@@ -121,4 +127,18 @@ export class RefusedFestivalTaskResponseDto
     type: InReviewReviewsResponseDto,
   })
   reviews: Refused["reviews"];
+}
+
+export class ValidatedFestivalTaskResponseDto
+  extends BaseReviewableWithConflictsResponseDto
+  implements ValidatedWithConflicts
+{
+  @ApiProperty({ enum: [VALIDATED] })
+  status: Validated["status"];
+
+  @ApiProperty({
+    description: "The festival task reviews",
+    type: ValidatedReviewsResponseDto,
+  })
+  reviews: Validated["reviews"];
 }

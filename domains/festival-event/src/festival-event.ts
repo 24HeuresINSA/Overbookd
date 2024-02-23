@@ -1,4 +1,4 @@
-import { DRAFT, IN_REVIEW, REFUSED } from "./common/status";
+import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "./common/status";
 import { FestivalActivity } from "./festival-activity/festival-activity";
 import { FestivalTask } from "./festival-task/festival-task";
 
@@ -22,4 +22,10 @@ export function isRefused<T extends FestivalEvent>(
   event: T,
 ): event is Extract<T, { status: typeof REFUSED }> {
   return event.status === REFUSED;
+}
+
+export function isValidated<T extends FestivalEvent>(
+  event: T,
+): event is Extract<T, { status: typeof VALIDATED }> {
+  return event.status === VALIDATED;
 }

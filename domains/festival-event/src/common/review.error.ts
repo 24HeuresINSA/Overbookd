@@ -18,3 +18,20 @@ export class CantAskForReview extends FestivalEventError {
     );
   }
 }
+
+export class ShouldAssignDrive extends FestivalEventError {
+  constructor(identifier: FestivalEventIdentifier = FA) {
+    super(
+      `❌ Il faut attribuer des lieux de retrait aux demandes de matos avant de valider la ${identifier}`,
+    );
+  }
+}
+
+export class AlreadyApproved<
+  T extends FestivalEventIdentifier,
+> extends FestivalEventError {
+  constructor(eventId: number, team: Reviewer<T>, identifier: T) {
+    const message = `❌ La ${identifier} #${eventId} est validée par l'équipe ${team}`;
+    super(message);
+  }
+}
