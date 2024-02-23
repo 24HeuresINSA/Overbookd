@@ -13,6 +13,7 @@
   >
     <template #additional-filters>
       <SearchUser
+        v-if="isHumainMember"
         :user="filters.reviewer"
         label="Relecteur"
         :list="assignedReviewers"
@@ -56,8 +57,6 @@ import {
   humain,
   matos,
   elec,
-  PreviewFestivalTaskReviewable,
-  DRAFT,
 } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { defineComponent } from "vue";
@@ -86,12 +85,12 @@ export default defineComponent({
   emits: ["update:filters"],
   computed: {
     assignedReviewers(): User[] {
-      return this.$accessor.festivalTask.tasks.forAll
-        .filter(
-          (task): task is PreviewFestivalTaskReviewable =>
-            task.status !== DRAFT,
-        )
-        .map(({ reviewer }) => reviewer);
+      return this.$accessor.user.users.filter(({ teams }) =>
+        teams.includes(humain),
+      );
+    },
+    isHumainMember(): boolean {
+      return this.$accessor.user.isMemberOf(humain);
     },
     filters(): TaskFilters {
       const builder = TaskFilterBuilder.init({
