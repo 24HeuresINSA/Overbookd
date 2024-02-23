@@ -1,3 +1,22 @@
+## [2.19.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.18.1...v2.19.0) (2024-02-23)
+
+
+### Features
+
+* **festival-task:** enable reject tasks. [#1608](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1608) ([64c6784](https://gitlab.com/24-heures-insa/overbookd-mono/commit/64c67842891fd179a4e8dae2646c7033e751df2d))
+
+
+### Bug Fixes
+
+* **festival-task:** assign and filter reviewer. [#1590](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1590) [#1609](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1609) ([80d2c81](https://gitlab.com/24-heures-insa/overbookd-mono/commit/80d2c81eed100ee5b560db3105e133cdb8768f9a))
+* **festival-task:** reviewer list in filter [#1609](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1609) ([10cad68](https://gitlab.com/24-heures-insa/overbookd-mono/commit/10cad68620fa9e0da2de587238a8837ffb1ab618))
+
+
+### Pre-Features
+
+* **api:** implement ft reject. [#1601](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1601) ([5c4ae6e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5c4ae6e15982a08451acf9124f54055f8252ece4))
+* **festival-task:** add validation in domain [#1593](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1593) ([d383bf3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d383bf378a7a872f5ddd92cbfa810ebb9fb47484))
+
 ## [2.18.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.18.0...v2.18.1) (2024-02-23)
 
 
