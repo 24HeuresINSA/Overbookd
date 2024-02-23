@@ -43,4 +43,10 @@ export class PreviewFestivalTaskRefusedResponseDto
     type: RefusedReviewsResponseDto,
   })
   reviews: PreviewFestivalTaskRefused["reviews"];
+
+  @ApiProperty({
+    description: "The festival task main reviewer",
+    type: AdherentResponseDto,
+  })
+  reviewer: PreviewFestivalTaskRefused["reviewer"];
 }

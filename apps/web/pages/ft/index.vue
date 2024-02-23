@@ -169,7 +169,8 @@ export default Vue.extend({
       }));
     },
     filteredFts(): PreviewFestivalTask[] {
-      const { search, team, status, adherent, ...reviews } = this.filters;
+      const { search, team, status, adherent, reviewer, ...reviews } =
+        this.filters;
 
       return this.searchableFts.filter((ft) => {
         return (
@@ -177,6 +178,7 @@ export default Vue.extend({
           this.filterFtByAdministrator(adherent)(ft) &&
           this.filterFtByStatus(status)(ft) &&
           this.filterFtByNameAndId(search)(ft) &&
+          this.filterFtByReviewer(reviewer)(ft) &&
           this.filterFtByReviews(reviews)(ft)
         );
       });
@@ -237,6 +239,11 @@ export default Vue.extend({
             getPreviewReviewStatus(ft, reviewer) === status,
         );
       };
+    },
+    filterFtByReviewer(reviewer?: User): (ft: PreviewFestivalTask) => boolean {
+      return reviewer
+        ? (ft) => !isDraftPreview(ft) && ft.reviewer.id === reviewer.id
+        : () => true;
     },
 
     updateFilters(filters: TaskFilters) {

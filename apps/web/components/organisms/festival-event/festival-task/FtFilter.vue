@@ -12,6 +12,13 @@
     @change:status="updateStatus"
   >
     <template #additional-filters>
+      <SearchUser
+        :user="filters.reviewer"
+        label="Relecteur"
+        :list="assignedReviewers"
+        :boxed="false"
+        @change="updateReviewer"
+      />
       <div
         v-for="reviewer of reviewerTeams"
         :key="reviewer.code"
@@ -22,7 +29,7 @@
           color="deep-purple accent-3"
           group
           :value="filters[reviewer.code]"
-          @change="updateReviewer(reviewer.code, $event)"
+          @change="updateReview(reviewer.code, $event)"
         >
           <v-icon small>{{ reviewer.icon }}</v-icon>
           <v-btn
@@ -49,6 +56,8 @@ import {
   humain,
   matos,
   elec,
+  PreviewFestivalTaskReviewable,
+  DRAFT,
 } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { defineComponent } from "vue";
@@ -65,6 +74,7 @@ import {
   reviewStatusLabel,
 } from "~/utils/festival-event/festival-event.utils";
 import { Team } from "~/utils/models/team.model";
+import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 
 type ReviewerTeam = Team & {
   code: Reviewer<"FT">;
@@ -72,9 +82,17 @@ type ReviewerTeam = Team & {
 
 export default defineComponent({
   name: "FtFilter",
-  components: { FestivalEventFilter },
+  components: { FestivalEventFilter, SearchUser },
   emits: ["update:filters"],
   computed: {
+    assignedReviewers(): User[] {
+      return this.$accessor.festivalTask.tasks.forAll
+        .filter(
+          (task): task is PreviewFestivalTaskReviewable =>
+            task.status !== DRAFT,
+        )
+        .map(({ reviewer }) => reviewer);
+    },
     filters(): TaskFilters {
       const builder = TaskFilterBuilder.init({
         isNotEmpty: nonEmptyString,
@@ -108,6 +126,10 @@ export default defineComponent({
         this.$route.query,
         elec,
       );
+      const reviewer = builder.extractQueryParamsValue(
+        this.$route.query,
+        "reviewer",
+      );
 
       return {
         ...search,
@@ -117,6 +139,7 @@ export default defineComponent({
         ...humainReview,
         ...matosReview,
         ...elecReview,
+        ...reviewer,
       };
     },
     reviewers(): Reviewer<"FT">[] {
@@ -157,8 +180,13 @@ export default defineComponent({
       this.updateQueryParams("status", status);
     },
 
-    updateReviewer(reviewer: Reviewer<"FT">, review: ReviewStatus) {
+    updateReview(reviewer: Reviewer<"FT">, review: ReviewStatus) {
       this.updateQueryParams(reviewer, review);
+    },
+
+    updateReviewer(reviewer?: User) {
+      const id = reviewer?.id ? `${reviewer.id}` : undefined;
+      this.updateQueryParams("reviewer", id);
     },
 
     updateQueryParams(key: keyof TaskFilters, value?: string) {

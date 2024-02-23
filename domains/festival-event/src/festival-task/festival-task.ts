@@ -104,6 +104,7 @@ type GeneratePreview<T extends Reviewable> = {
   administrator: T["general"]["administrator"];
   team: T["general"]["team"];
   reviews: T["reviews"];
+  reviewer: T["reviewer"];
 };
 
 export type PreviewDraft = {

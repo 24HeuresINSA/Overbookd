@@ -83,7 +83,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
     return {
       id: taskData.id,
       reviews: this.formatReviews(taskData.reviews),
-      reviewer: this.formatReviewer(taskData.reviewer),
+      ...this.formatReviewer(taskData.reviewer),
       general: {
         name: taskData.name,
         administrator: taskData.administrator,
@@ -197,7 +197,7 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
     if (!InReviewSpecification.isSatisfiedBy(taskWithoutStatus)) {
       return DraftBuilder.init(taskWithoutStatus);
     }
-    const { reviews } = taskWithoutStatus;
+    const { reviews, reviewer } = taskWithoutStatus;
 
     if (isRefusedReviews(reviews)) {
       return new ReviewableBuilder({
@@ -212,6 +212,7 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
         ...taskWithoutStatus,
         status: VALIDATED,
         reviews,
+        reviewer,
       });
     }
 
@@ -219,6 +220,7 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       ...taskWithoutStatus,
       status: IN_REVIEW,
       reviews,
+      reviewer,
     });
   }
 
@@ -230,13 +232,13 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       administrator: this.task.general.administrator,
       team: this.task.general.team,
     };
-    const { reviews } = this.task;
+    const { reviews, reviewer } = this.task;
 
     if (isRefusedReviews(reviews)) {
-      return { ...base, reviews, status: REFUSED };
+      return { ...base, reviews, status: REFUSED, reviewer };
     }
 
-    return { ...base, status: IN_REVIEW, reviews };
+    return { ...base, status: IN_REVIEW, reviews, reviewer };
   }
 
   get festivalTask(): T {

@@ -46,4 +46,10 @@ export class PreviewFestivalTaskInReviewResponseDto
     type: InReviewReviewsResponseDto,
   })
   reviews: PreviewFestivalTaskInReview["reviews"];
+
+  @ApiProperty({
+    description: "The festival task main reviewer",
+    type: AdherentResponseDto,
+  })
+  reviewer: PreviewFestivalTaskInReview["reviewer"];
 }
