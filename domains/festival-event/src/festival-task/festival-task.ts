@@ -116,7 +116,11 @@ export type PreviewDraft = {
 
 export type PreviewInReview = GeneratePreview<InReview>;
 export type PreviewRefused = GeneratePreview<Refused>;
+export type PreviewValidated = GeneratePreview<Validated>;
 
-export type PreviewReviewable = PreviewInReview | PreviewRefused;
+export type PreviewReviewable =
+  | PreviewInReview
+  | PreviewRefused
+  | PreviewValidated;
 
 export type Preview = PreviewDraft | PreviewReviewable;

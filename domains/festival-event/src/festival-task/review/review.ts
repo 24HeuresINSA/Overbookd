@@ -1,4 +1,4 @@
-import { FestivalTask } from "../festival-task";
+import { FestivalTask, Validated } from "../festival-task";
 import {
   Approval,
   NOT_ASKING_TO_REVIEW,
@@ -16,6 +16,7 @@ import {
   RefusedWithConflicts,
   RefusedWithoutConflicts,
   ReviewableWithoutConflicts,
+  ValidatedWithoutConflicts,
 } from "../volunteer-conflicts";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import {
@@ -51,25 +52,27 @@ class Reject {
 }
 
 class Approve {
-  static from(
-    task: ReviewableWithoutConflicts,
+  static from<T extends ReviewableWithoutConflicts>(
+    task: T,
     approval: Approval<"FT">,
-  ): ReviewableWithoutConflicts {
-    const reviews = {
-      ...task.reviews,
-      [approval.team]: APPROVED,
-    };
-    const status = Approve.hasAllApproved(reviews) ? VALIDATED : task.status;
+  ): T | ValidatedWithoutConflicts {
+    const reviews = { ...task.reviews, [approval.team]: APPROVED };
+
     const history = [
       ...task.history,
       FestivalTaskKeyEvents.approved(approval.reviewer),
     ];
-    return { ...task, reviews, status, history };
+
+    if (Approve.hasAllApproved(reviews)) {
+      return { ...task, reviews, status: VALIDATED, history };
+    }
+
+    return { ...task, reviews, history };
   }
 
   private static hasAllApproved(
     reviews: ReviewableWithoutConflicts["reviews"],
-  ) {
+  ): reviews is Validated["reviews"] {
     return Object.values(reviews).every(
       (review) => review === APPROVED || review === NOT_ASKING_TO_REVIEW,
     );

@@ -24,6 +24,7 @@ import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
 import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
+import { isValidated } from "../../festival-event";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -89,6 +90,8 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
+    if (isValidated(task)) throw new Error();
+
     const general = { ...task.general, ...update };
     const updatedTask = checkValidity({ ...task, general });
 
@@ -101,6 +104,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
@@ -115,6 +119,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addContact(contact).json;
@@ -129,6 +134,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeContact(contactId).json;
@@ -143,6 +149,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
@@ -157,6 +164,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeVolunteer(volunteerId).json;
@@ -168,6 +176,7 @@ export class PrepareFestivalTask {
   async clearInCharge(taskId: FestivalTask["id"]): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.clear().json;
@@ -182,6 +191,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
@@ -201,6 +211,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.remove(mobilizationId).json;
@@ -216,6 +227,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.update(mobilizationId, update).json;
@@ -231,6 +243,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addTeamTo(mobilizationId, team).json;
@@ -246,6 +259,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeTeamFrom(mobilizationId, team).json;
@@ -261,6 +275,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addVolunteerTo(
@@ -279,6 +294,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isValidated(task)) throw new Error();
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeVolunteerFrom(
