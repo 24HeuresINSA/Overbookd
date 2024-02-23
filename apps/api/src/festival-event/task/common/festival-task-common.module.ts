@@ -129,16 +129,12 @@ import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks
     {
       provide: AskForReviewTask,
       useFactory: (
-        festivalTasks: PrismaAskForReview,
+        tasks: PrismaAskForReview,
         notifications: PrismaNotifications<"FT">,
         reviewers: PrismaReviewers,
         translator: FestivalTaskTranslator,
       ) =>
-        new AskForReviewTask(
-          festivalTasks,
-          { notifications, reviewers },
-          translator,
-        ),
+        new AskForReviewTask({ tasks, notifications, reviewers }, translator),
       inject: [
         PrismaAskForReview,
         PrismaNotifications<"FT">,
@@ -160,9 +156,11 @@ import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks
     },
     {
       provide: ReviewTask,
-      useFactory: (festivalTasks: PrismaFestivalTasksForReview) =>
-        new ReviewTask(festivalTasks),
-      inject: [PrismaFestivalTasksForReview],
+      useFactory: (
+        festivalTasks: PrismaFestivalTasksForReview,
+        translator: FestivalTaskTranslator,
+      ) => new ReviewTask(festivalTasks, translator),
+      inject: [PrismaFestivalTasksForReview, FestivalTaskTranslator],
     },
   ],
   imports: [PrismaModule],

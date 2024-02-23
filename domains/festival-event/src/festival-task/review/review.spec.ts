@@ -13,16 +13,21 @@ import { REFUSED } from "../../common/status";
 import { NotAskingToReview } from "../../common/review.error";
 import { Review } from "./review";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 
 describe("Reject festival task", () => {
   let review: Review;
   beforeEach(() => {
-    const tasks = new InMemoryFestivalTasksForReview([
+    const tasks = [
       guardJustDance,
       serveWaterOnJustDance,
       uninstallPreventionVillage,
-    ]);
-    review = new Review(tasks);
+    ];
+    const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const translator = new FestivalTaskTranslator(conflicts);
+    review = new Review(festivalTasks, translator);
   });
   describe.each`
     team      | taskName                              | task                     | rejector  | reason

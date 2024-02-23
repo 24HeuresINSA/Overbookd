@@ -1,6 +1,21 @@
 <template>
   <div class="ft-content ft">
-    <FestivalEventSidebar festival-event="FT" class="sidebar" />
+    <FestivalEventSidebar festival-event="FT" class="sidebar">
+      <template #additional-actions>
+        <div class="reviews">
+          <div v-for="team in reviewers" :key="team" class="team-review">
+            <v-btn
+              :id="`${team}-reject`"
+              class="reject"
+              :disabled="!canRejectAs(team)"
+              @click="askReject(team)"
+            >
+              Rejeter pour {{ team }}
+            </v-btn>
+          </div>
+        </div>
+      </template>
+    </FestivalEventSidebar>
     <v-container class="container ft">
       <FtGeneralCard id="general" />
       <ParentFaCard id="fa" />
@@ -12,6 +27,14 @@
         :festival-event="selectedTask"
         @publish="publishFeedback"
       />
+
+      <v-dialog v-model="isRejectDialogOpen" max-width="600">
+        <AskRejectReasonFormCard
+          identifier="FT"
+          @close-dialog="closeRejectDialog"
+          @rejected="rejected"
+        />
+      </v-dialog>
     </v-container>
     <SnackNotificationContainer />
   </div>
@@ -19,6 +42,16 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import {
+  FestivalTask,
+  REJECTED,
+  ReviewStatus,
+  Reviewer,
+  elec,
+  humain,
+  isDraft,
+  matos,
+} from "@overbookd/festival-event";
 import FtGeneralCard from "~/components/organisms/festival-event/festival-task/FtGeneralCard.vue";
 import InstructionsCard from "~/components/organisms/festival-event/festival-task/InstructionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
@@ -27,7 +60,12 @@ import FtInquiryCard from "~/components/organisms/festival-event/festival-task/F
 import ParentFaCard from "~/components/organisms/festival-event/festival-task/ParentFaCard.vue";
 import MobilizationCard from "~/components/organisms/festival-event/festival-task/MobilizationCard.vue";
 import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
-import { FestivalTask } from "@overbookd/festival-event";
+import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
+
+type FestivalTaskDetailsData = {
+  isRejectDialogOpen: boolean;
+  reviewer?: Reviewer<"FT">;
+};
 
 export default defineComponent({
   components: {
@@ -39,13 +77,22 @@ export default defineComponent({
     ParentFaCard,
     MobilizationCard,
     FeedbackCard,
+    AskRejectReasonFormCard,
   },
+  data: (): FestivalTaskDetailsData => ({
+    isRejectDialogOpen: false,
+  }),
   computed: {
     selectedTask(): FestivalTask {
       return this.$accessor.festivalTask.selectedTask;
     },
     ftId(): number {
       return +this.$route.params.ftId;
+    },
+    reviewers(): Reviewer<"FT">[] {
+      return this.selectedTask.festivalActivity.hasSupplyRequest
+        ? [humain, matos, elec]
+        : [humain, matos];
     },
   },
   async mounted() {
@@ -61,6 +108,42 @@ export default defineComponent({
   methods: {
     publishFeedback(content: string) {
       this.$accessor.festivalTask.publishFeedback({ content });
+    },
+    canRejectAs(team: Reviewer<"FT">): boolean {
+      const isAlredyRejectedBy = this.hasReviewerAlreadyDoneHisReview(
+        this.selectedTask,
+        team,
+        REJECTED,
+      );
+      const isTeamMember = this.$accessor.user.isMemberOf(team);
+      return !isAlredyRejectedBy && isTeamMember;
+    },
+    hasReviewerAlreadyDoneHisReview(
+      task: FestivalTask,
+      reviewer: Reviewer<"FT">,
+      status: ReviewStatus,
+    ) {
+      if (isDraft(task)) return true;
+      switch (reviewer) {
+        case humain:
+          return task.reviews.humain === status;
+        case matos:
+          return task.reviews.matos === status;
+        case elec:
+          return task.reviews.elec === status;
+      }
+    },
+    askReject(team: Reviewer<"FT">) {
+      this.reviewer = team;
+      this.isRejectDialogOpen = true;
+    },
+    closeRejectDialog() {
+      this.isRejectDialogOpen = false;
+    },
+    rejected({ reason }: { reason: string }) {
+      const team = this.reviewer;
+      if (!team) return;
+      this.$accessor.festivalTask.rejectBecause({ team, reason });
     },
   },
 });
@@ -91,6 +174,29 @@ $sidebar-width: 350px;
   gap: 20px;
 }
 
+.reviews {
+  margin: 10px 0px 10px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-review {
+  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  .reject {
+    background-color: $refused-color;
+    color: whitesmoke;
+    font-weight: bolder;
+    min-width: 100%;
+  }
+}
+
 @media only screen and (max-width: $mobile-max-width) {
   .ft-content {
     flex-direction: column;
@@ -109,6 +215,12 @@ $sidebar-width: 350px;
     overflow: visible;
     margin: unset;
     padding: unset;
+  }
+
+  .reviews {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 </style>

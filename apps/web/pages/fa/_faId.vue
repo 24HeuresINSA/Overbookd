@@ -25,6 +25,7 @@
 
       <v-dialog v-model="isRejectDialogOpen" max-width="600">
         <AskRejectReasonFormCard
+          identifier="FA"
           @close-dialog="closeRejectDialog"
           @rejected="rejected"
         />
