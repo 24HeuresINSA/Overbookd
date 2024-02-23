@@ -35,6 +35,10 @@ export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
 export type RefusedWithoutConflicts = Extract<WithoutConflicts, Refused>;
 export type ReviewableWithoutConflicts = Extract<WithoutConflicts, Reviewable>;
 
+export type DraftWithConflicts = Extract<WithConflicts, Draft>;
+export type InReviewWithConflicts = Extract<WithConflicts, InReview>;
+export type RefusedWithConflicts = Extract<WithConflicts, Refused>;
+
 export class FestivalTaskTranslator {
   constructor(private readonly volunteerConflicts: VolunteerConflicts) {}
 

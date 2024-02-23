@@ -465,17 +465,15 @@ export const serveWaterOnJustDance = factory
       start: saturday19h,
       end: saturday20h,
       volunteers: [
-        { ...noel, conflicts: { tasks: [], availability: false } },
-        { ...george, conflicts: { tasks: [], availability: false } },
+        { ...noel, conflicts: { tasks: [], availability: true } },
+        { ...george, conflicts: { tasks: [], availability: true } },
       ],
       teams: [{ count: 2, team: "bénévole" }],
     }).mobilization,
     MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday18h,
       end: saturday20h,
-      volunteers: [
-        { ...george, conflicts: { tasks: [], availability: false } },
-      ],
+      volunteers: [{ ...george, conflicts: { tasks: [], availability: true } }],
       teams: [],
     }).mobilization,
   ])

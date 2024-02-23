@@ -2,8 +2,9 @@ import { numberGenerator } from "@overbookd/list";
 import { DRAFT } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { FestivalActivity, Draft } from "../festival-task";
+import { FestivalActivity } from "../festival-task";
 import {
+  DraftWithConflicts,
   DraftWithoutConflicts,
   FestivalTaskTranslator,
 } from "../volunteer-conflicts";
@@ -36,7 +37,7 @@ export class CreateFestivalTask {
     name,
     author,
     festivalActivity,
-  }: FestivalTaskCreation): Promise<Draft> {
+  }: FestivalTaskCreation): Promise<DraftWithConflicts> {
     const festivalTask: DraftWithoutConflicts = {
       id: this.generateId(),
       status: DRAFT,

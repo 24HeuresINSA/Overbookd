@@ -63,8 +63,7 @@ describe("Festival Task - ask for review", () => {
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
     translator = new FestivalTaskTranslator(volunteerConflicts);
     askForReview = new AskForReview(
-      festivalTasks,
-      { notifications, reviewers },
+      { notifications, reviewers, tasks: festivalTasks },
       translator,
     );
   });
@@ -113,8 +112,11 @@ describe("Festival Task - ask for review", () => {
           beforeEach(() => {
             const reviewers = new InMemoryReviewers(humainReviews);
             askForReview = new AskForReview(
-              festivalTasks,
-              { notifications, reviewers },
+              {
+                tasks: festivalTasks,
+                notifications,
+                reviewers,
+              },
               translator,
             );
           });

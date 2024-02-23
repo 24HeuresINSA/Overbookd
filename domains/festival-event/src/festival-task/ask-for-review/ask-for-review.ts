@@ -5,6 +5,7 @@ import { Notifications } from "../../common/notifications";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
+  InReviewWithConflicts,
   InReviewWithoutConflicts,
   RefusedWithoutConflicts,
 } from "../volunteer-conflicts";
@@ -16,7 +17,7 @@ export type AskForReviewTasks = {
   findById(
     id: FestivalTask["id"],
   ): Promise<DraftWithoutConflicts | RefusedWithoutConflicts | null>;
-  save(task: InReview): Promise<InReview>;
+  save(task: InReview): Promise<InReviewWithoutConflicts>;
 };
 
 export type ReviewerStat = {
@@ -29,13 +30,13 @@ export type Reviewers = {
 };
 
 type Repositories = {
+  tasks: AskForReviewTasks;
   notifications: Notifications<"FT">;
   reviewers: Reviewers;
 };
 
 export class AskForReview {
   constructor(
-    private readonly tasks: AskForReviewTasks,
     private readonly repositories: Repositories,
     private readonly translator: FestivalTaskTranslator,
   ) {}
@@ -43,8 +44,8 @@ export class AskForReview {
   async from(
     taskId: FestivalTask["id"],
     instigator: Adherent,
-  ): Promise<InReviewWithoutConflicts> {
-    const task = await this.tasks.findById(taskId);
+  ): Promise<InReviewWithConflicts> {
+    const task = await this.repositories.tasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
     if (!isDraft(task) && !isRefused(task)) {
@@ -55,7 +56,7 @@ export class AskForReview {
 
     this.repositories.notifications.add(inReview.event);
 
-    const saved = await this.tasks.save(inReview.task);
+    const saved = await this.repositories.tasks.save(inReview.task);
     return this.translator.translate<InReview>(saved);
   }
 

@@ -25,6 +25,8 @@
       Demande de relecture
     </v-btn>
 
+    <slot name="additional-actions" />
+
     <FestivalEventSummary class="summary" :festival-event="festivalEvent" />
   </div>
 </template>
@@ -98,7 +100,7 @@ export default Vue.extend({
     canAskForReview(): boolean {
       return this.isActivity
         ? isDraft(this.selectedActivity) || isRefused(this.selectedActivity)
-        : isDraft(this.selectedTask);
+        : isDraft(this.selectedTask) || isRefused(this.selectedTask);
     },
   },
   mounted() {

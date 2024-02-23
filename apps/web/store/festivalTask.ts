@@ -16,6 +16,7 @@ import {
   AddMobilizationForm,
   FestivalTaskCreationForm,
   PublishFeedbackForm,
+  ReviewRejection,
   UpdateGeneralForm,
   UpdateInstructionsForm,
 } from "@overbookd/http";
@@ -395,6 +396,17 @@ export const actions = actionTree(
         this,
         repo.publishFeedback(this, id, feedback),
       );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async rejectBecause({ state, commit }, rejection: ReviewRejection<"FT">) {
+      const id = state.selectedTask.id;
+      const res = await safeCall(this, repo.reject(this, id, rejection), {
+        successMessage: `🛑 FT rejetée par l'équipe ${rejection.team}`,
+      });
       if (!res) return;
 
       const task = castTaskWithDate(res.data);

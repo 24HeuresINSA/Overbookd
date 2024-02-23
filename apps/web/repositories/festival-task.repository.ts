@@ -11,6 +11,7 @@ import {
   AddVolunteerToMobilizationForm,
   PublishFeedbackForm,
   Statistics,
+  ReviewRejection,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -253,6 +254,17 @@ export class FestivalTaskRepository {
     return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/feedbacks`,
       feedback,
+    );
+  }
+
+  static reject(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+    rejection: ReviewRejection<"FT">,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
+      `${this.basePath}/${ftId}/reject`,
+      rejection,
     );
   }
 }
