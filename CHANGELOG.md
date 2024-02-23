@@ -1,3 +1,17 @@
+## [2.18.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.18.0...v2.18.1) (2024-02-23)
+
+
+### Bug Fixes
+
+* enable register as cvl team member and ask them on mobilizations. [#1606](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1606) [#1607](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1607) ([60cb648](https://gitlab.com/24-heures-insa/overbookd-mono/commit/60cb648e85db21a688d452ddbaa63e920457b409))
+* **festival-event:** Prevent event filters from expanding vertically [#1605](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1605) ([5aac7c9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5aac7c99f79f72a496734592e5cb01f6deaf3797))
+* **personal-account:** correct plural forms of consuption messages [#1585](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1585) ([3c9a9b8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3c9a9b81c80d87651561ab5d1162d4abe3e95839))
+
+
+### Pre-Features
+
+* **registration:** basic setup of the new page for volunteers registration and reorganization [#1574](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1574) ([833c675](https://gitlab.com/24-heures-insa/overbookd-mono/commit/833c675297d454afe548c3defad6fdb14b668b00))
+
 ## [2.18.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.17.0...v2.18.0) (2024-02-22)
 
 
