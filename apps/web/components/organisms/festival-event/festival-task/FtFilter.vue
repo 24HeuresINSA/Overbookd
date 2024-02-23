@@ -16,7 +16,7 @@
         v-if="isHumainMember"
         :user="filters.reviewer"
         label="Relecteur"
-        :list="assignedReviewers"
+        :list="assignableReviewers"
         :boxed="false"
         @change="updateReviewer"
       />
