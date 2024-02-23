@@ -81,7 +81,7 @@ describe("Approve festival task", () => {
     ${humain} | ${caissierBar.general.name}            | ${caissierBar}            | ${george}
     ${matos}  | ${withSomeValidInquiries.general.name} | ${withSomeValidInquiries} | ${noel}
     ${elec}   | ${withSupplyRequest.general.name}      | ${withSupplyRequest}      | ${lea}
-  `("when approving $task.name as $team member", ({ task, team, reviewer }) => {
+  `("when approving $taskName as $team member", ({ task, team, reviewer }) => {
     const approval = { team, reviewer };
     it(`should indicate ${team} approved it`, async () => {
       const { reviews } = await review.approve(task.id, approval);
