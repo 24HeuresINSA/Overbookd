@@ -84,7 +84,7 @@ export default defineComponent({
   components: { FestivalEventFilter, SearchUser },
   emits: ["update:filters"],
   computed: {
-    assignedReviewers(): User[] {
+    assignableReviewers(): User[] {
       return this.$accessor.user.users.filter(({ teams }) =>
         teams.includes(humain),
       );
