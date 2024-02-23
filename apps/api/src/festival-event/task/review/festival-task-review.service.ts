@@ -7,7 +7,11 @@ import {
   ReviewTask,
 } from "@overbookd/festival-event";
 import { FestivalTask as FestivalTaskEvents } from "@overbookd/domain-events";
-import { PublishFeedbackForm, ReviewRejection } from "@overbookd/http";
+import {
+  PublishFeedbackForm,
+  ReviewApproval,
+  ReviewRejection,
+} from "@overbookd/http";
 import {
   JwtPayload,
   JwtUtil,
@@ -58,7 +62,7 @@ export class FestivalTaskReviewService {
   }
 
   async reject(
-    faId: number,
+    ftId: number,
     user: JwtUtil,
     rejection: ReviewRejection<"FT">,
   ): Promise<FestivalTaskRefused> {
@@ -66,7 +70,7 @@ export class FestivalTaskReviewService {
 
     const rejector = await this.repositories.adherents.findOne(user.id);
     const withRejector = { ...rejection, rejector };
-    const task = await this.useCases.review.reject(faId, withRejector);
+    const task = await this.useCases.review.reject(ftId, withRejector);
 
     const event = FestivalTaskEvents.rejected(
       task,
@@ -76,5 +80,14 @@ export class FestivalTaskReviewService {
     this.eventStore.publish(event);
 
     return task;
+  }
+
+  approve(
+    faId: number,
+    user: JwtUtil,
+    approval: ReviewApproval<"FT">,
+  ): Promise<FestivalTask> {
+    console.log(faId, user, approval);
+    throw new Error("Not yet implemented");
   }
 }
