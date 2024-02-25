@@ -11,6 +11,7 @@
     :filled="boxed"
     :disabled="disabled"
     return-object
+    :filter="filterFriends"
     @change="propagateEvent"
   >
     <template #no-data>
@@ -23,6 +24,7 @@
 import Vue from "vue";
 import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+import { SlugifyService } from "@overbookd/slugify";
 
 interface SearchFriendData {
   loading: boolean;
@@ -72,6 +74,13 @@ export default Vue.extend({
     },
     displayUsername(friend: User): string {
       return formatUserNameWithNickname(friend);
+    },
+    filterFriends(friend: User, typedSearch: string) {
+      const { firstname, lastname, nickname } = friend;
+      const searchable = `${firstname} ${lastname} ${nickname ?? ""}`;
+      const search = SlugifyService.apply(typedSearch);
+
+      return SlugifyService.apply(searchable).includes(search);
     },
   },
 });

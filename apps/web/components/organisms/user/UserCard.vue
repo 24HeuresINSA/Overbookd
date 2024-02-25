@@ -92,20 +92,23 @@
           ></v-text-field>
         </v-form>
       </v-card-text>
-      <v-textarea
-        v-model="comment"
-        class="comment"
-        label="Commentaire"
-        hint="Laisse nous un petit mot. 💌"
-        persistent-hint
-        @input="defectSave"
-      ></v-textarea>
+      <v-card-text class="comment-friends">
+        <v-textarea
+          v-model="comment"
+          class="comment"
+          label="Commentaire"
+          hint="Laisse nous un petit mot. 💌"
+          persistent-hint
+          @input="defectSave"
+        ></v-textarea>
+        <FriendsCard id="friends" />
+      </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePictureDialog from "~/components/molecules/user/ProfilePictureDialog.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
@@ -118,6 +121,7 @@ import {
   required,
 } from "~/utils/rules/input.rules";
 import { formatLocalDate } from "~/utils/date/date.utils";
+import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 
 interface UserCardData extends InputRulesData {
   firstname: string;
@@ -130,9 +134,9 @@ interface UserCardData extends InputRulesData {
   delay?: ReturnType<typeof setTimeout>;
 }
 
-export default Vue.extend({
+export default defineComponent({
   name: "UserCard",
-  components: { TeamChip, ProfilePictureDialog, ProfilePicture },
+  components: { TeamChip, ProfilePictureDialog, ProfilePicture, FriendsCard },
   data(): UserCardData {
     return {
       firstname: "",
@@ -299,6 +303,15 @@ export default Vue.extend({
   }
   .comment {
     padding: 0px 16px;
+  }
+
+  .comment-friends {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    @media only screen and (min-width: $mobile-max-width) {
+      flex-direction: row;
+    }
   }
 }
 .profilePicture {
