@@ -1,15 +1,8 @@
-import { UpdatedTask, PrepareFestivalTaskError } from "../prepare";
 import {
   InquiryRequest,
   BaseInquiryRequest,
 } from "../../../common/inquiry-request";
-import { DRAFT, IN_REVIEW, REFUSED } from "../../../common/status";
-import { InReviewSpecification } from "../../ask-for-review/in-review-specification";
-import { FestivalTask } from "../../festival-task";
-import {
-  GearAlreadyRequested,
-  FestivalTaskError,
-} from "../../festival-task.error";
+import { GearAlreadyRequested } from "../../festival-task.error";
 
 export class Inquiries {
   private constructor(private inquiries: InquiryRequest[]) {}
@@ -36,23 +29,5 @@ export class Inquiries {
 
   get json(): InquiryRequest[] {
     return [...this.inquiries];
-  }
-}
-export function checkValidity<
-  T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
->(task: T): FestivalTask {
-  switch (task.status) {
-    case DRAFT:
-      return task;
-    case IN_REVIEW:
-    case REFUSED: {
-      if (!InReviewSpecification.isSatisfiedBy(task)) {
-        const errors = InReviewSpecification.generateErrors(task);
-        throw new PrepareFestivalTaskError(errors);
-      }
-      return task;
-    }
-    default:
-      throw new FestivalTaskError("Pas encore supporté");
   }
 }

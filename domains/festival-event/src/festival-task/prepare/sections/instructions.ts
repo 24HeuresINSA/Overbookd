@@ -62,6 +62,7 @@ export class Instructions {
     return { ...this.instructions };
   }
 }
+
 class InCharge {
   private constructor(
     private readonly inCharge: FestivalTask["instructions"]["inCharge"],
@@ -101,6 +102,7 @@ class InCharge {
     return { ...this.inCharge };
   }
 }
+
 class Contacts {
   private constructor(private contacts: Contact[]) {}
 
@@ -126,6 +128,7 @@ class Contacts {
     return [...this.contacts];
   }
 }
+
 class Volunteers {
   private constructor(private volunteers: Volunteer[]) {}
 

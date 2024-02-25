@@ -21,13 +21,14 @@ import {
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
-import { IN_REVIEW } from "../../common/status";
+import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
 import { isDraft, isValidated } from "../../festival-event";
 import { Reviewer, matos } from "../../common/review";
 import { APPROVED, REJECTED } from "../../common/action";
 import { AlreadyApprovedBy } from "../../common/review.error";
-import { checkValidity, Inquiries } from "./sections/inquiries";
-import { Instructions } from "./sections/insctructions";
+import { Inquiries } from "./sections/inquiries";
+import { Instructions } from "./sections/instructions";
+import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -373,5 +374,24 @@ export class PrepareFestivalTask {
       ),
     };
     return { ...task, reviews } as Reviewable;
+  }
+}
+
+export function checkValidity<
+  T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
+>(task: T): FestivalTask {
+  switch (task.status) {
+    case DRAFT:
+      return task;
+    case IN_REVIEW:
+    case REFUSED: {
+      if (!InReviewSpecification.isSatisfiedBy(task)) {
+        const errors = InReviewSpecification.generateErrors(task);
+        throw new PrepareFestivalTaskError(errors);
+      }
+      return task;
+    }
+    default:
+      throw new FestivalTaskError("Pas encore supporté");
   }
 }

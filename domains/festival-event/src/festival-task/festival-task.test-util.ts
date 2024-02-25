@@ -740,11 +740,17 @@ export const uninstallBarbecue = factory
   })
   .build();
 
-export const approvedByMatos = factory
+export const onlyApprovedByMatos = factory
   .inReview("Approved by matos")
   .withReviews({ matos: APPROVED })
   .withInquiries([
     { ...deuxTables, drive: BACKLINE },
     { ...troisMarteaux, drive: MAGASIN },
   ])
+  .build();
+
+export const onlyApprovedByHumain = factory
+  .inReview("Approved by humain")
+  .withReviews({ humain: APPROVED })
+  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
   .build();
