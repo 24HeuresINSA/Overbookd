@@ -1,15 +1,11 @@
 <template>
-  <v-card
-    v-if="me"
-    height="100%"
-    class="d-flex flex-column justify-space-between"
-  >
+  <v-card height="100%" class="d-flex flex-column justify-space-between">
     <div>
       <v-card-title>Amis ❤️</v-card-title>
       <v-card-text class="friends-card__content">
         <v-list dense class="friends-list">
           <v-list-item-group>
-            <v-list-item v-for="(friend, index) in mFriends" :key="index">
+            <v-list-item v-for="(friend, index) in myFriends" :key="index">
               <v-list-item-content>
                 {{ displayFriend(friend) }}
               </v-list-item-content>
@@ -19,7 +15,7 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-        <v-container v-if="!mFriends.length">
+        <v-container v-if="myFriends.length === 0">
           <v-img
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
             class="mb-2"
@@ -71,7 +67,7 @@ export default Vue.extend({
     me() {
       return this.$accessor.user.me;
     },
-    mFriends(): User[] {
+    myFriends(): User[] {
       return this.$accessor.user.mFriends;
     },
   },
@@ -81,7 +77,8 @@ export default Vue.extend({
   methods: {
     async sendFriendRequest() {
       if (!this.newFriend.id) return;
-      if (+this.me.id === this.newFriend.id) {
+      const isAskingHimSelf = this.me.id === this.newFriend.id;
+      if (isAskingHimSelf) {
         // asked himself to be friend
         window.open(
           "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690",
