@@ -16,6 +16,7 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { onlyApprovedByMatos } from "../festival-task.test-util";
 import { APPROVED } from "../../common/action";
 import { REVIEWING } from "../../common/review";
+import { isDraft } from "../../festival-event";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
@@ -105,8 +106,16 @@ describe("Prepare festival task inquiries list", () => {
 
         expect(inquiries).toHaveLength(task.inquiries.length + 1);
         expect(inquiries).toContainEqual(inquiry);
-        expect(task.reviews.humain).toBe(APPROVED);
-        expect(task.reviews.matos).toBe(REVIEWING);
+      });
+      it("should keep same reviews", async () => {
+        const task = onlyApprovedByHumain;
+        const inquiry = { ...ficelle, quantity: 1 };
+
+        const updatedTask = await prepare.addInquiry(task.id, inquiry);
+        if (isDraft(updatedTask)) throw new Error();
+
+        expect(updatedTask.reviews.humain).toBe(APPROVED);
+        expect(updatedTask.reviews.matos).toBe(REVIEWING);
       });
     });
     describe("when inquiry is about an already required gear", () => {

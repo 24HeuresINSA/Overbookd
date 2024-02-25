@@ -24,7 +24,7 @@ import { Adherent } from "../../common/adherent";
 import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
 import { isDraft, isValidated } from "../../festival-event";
 import { Reviewer, matos } from "../../common/review";
-import { APPROVED, REJECTED } from "../../common/action";
+import { APPROVED } from "../../common/action";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { Inquiries } from "./sections/inquiries";
 import { Instructions } from "./sections/instructions";
@@ -316,6 +316,9 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+    if (this.isApprovedBy(matos, task)) {
+      throw new AlreadyApprovedBy([matos], "FT");
+    }
 
     const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.add(inquiry).json;
@@ -323,7 +326,7 @@ export class PrepareFestivalTask {
     if (isDraft(task)) return this.save({ ...task, inquiries });
 
     const updatedTask = { ...task, inquiries };
-    const taskWithReviews = this.updateReviewOwners(updatedTask, [matos]);
+    const taskWithReviews = this.updateOwnersReview(updatedTask, [matos]);
     return this.save(taskWithReviews);
   }
 
@@ -351,21 +354,15 @@ export class PrepareFestivalTask {
     return this.save({ ...task, feedbacks });
   }
 
-  private updateReviewOwners(
+  private updateOwnersReview(
     task: Reviewable,
     owners: Reviewer<"FT">[],
   ): Reviewable {
     const approvals = owners.filter(
       (reviewer) => task.reviews[reviewer] === APPROVED,
     );
-    const rejections = owners.filter(
-      (reviewer) => task.reviews[reviewer] === REJECTED,
-    );
-    if (approvals.length > 0 && rejections.length === 0) {
-      throw new AlreadyApprovedBy(approvals, "FT");
-    }
-
     if (approvals.length === 0) return task;
+
     const reviews = {
       ...task.reviews,
       ...approvals.reduce(
@@ -374,6 +371,11 @@ export class PrepareFestivalTask {
       ),
     };
     return { ...task, reviews } as Reviewable;
+  }
+
+  private isApprovedBy(reviewer: Reviewer<"FT">, task: FestivalTask): boolean {
+    if (isDraft(task)) return false;
+    return task.reviews[reviewer] === APPROVED;
   }
 }
 
