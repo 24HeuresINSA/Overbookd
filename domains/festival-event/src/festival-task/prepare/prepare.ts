@@ -1,16 +1,15 @@
-import { Duration } from "@overbookd/period";
+/* eslint-disable security/detect-object-injection */
 import {
   BaseInquiryRequest,
   InquiryRequest,
 } from "../../common/inquiry-request";
-import { FestivalTask } from "../festival-task";
+import { FestivalTask, Reviewable } from "../festival-task";
 import { Volunteer } from "../sections/instructions";
 import { Contact } from "../sections/instructions";
 import { Mobilization, TeamMobilization } from "../sections/mobilizations";
 import {
   FestivalTaskError,
   FestivalTaskNotFound,
-  GearAlreadyRequested,
 } from "../festival-task.error";
 import {
   DraftWithoutConflicts,
@@ -22,9 +21,13 @@ import {
 } from "../volunteer-conflicts";
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
-import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
-import { InReviewSpecification } from "../ask-for-review/in-review-specification";
-import { isValidated } from "../../festival-event";
+import { IN_REVIEW } from "../../common/status";
+import { isDraft, isValidated } from "../../festival-event";
+import { Reviewer, matos } from "../../common/review";
+import { APPROVED, REJECTED } from "../../common/action";
+import { AlreadyApprovedBy } from "../../common/review.error";
+import { checkValidity, Inquiries } from "./sections/inquiries";
+import { Instructions } from "./sections/insctructions";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -59,14 +62,14 @@ type PublishFeedback = {
   content: string;
 };
 
-class PrepareFestivalTaskError extends FestivalTaskError {
+export class PrepareFestivalTaskError extends FestivalTaskError {
   constructor(errors: string[]) {
     const message = errors.map((error) => `❌ ${error}`).join("\n");
     super(message);
   }
 }
 
-type UpdatedTask<Properties extends keyof FestivalTask> =
+export type UpdatedTask<Properties extends keyof FestivalTask> =
   | ({
       [Property in Properties]: FestivalTask[Property];
     } & Omit<DraftWithoutConflicts, Properties>)
@@ -315,7 +318,12 @@ export class PrepareFestivalTask {
 
     const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.add(inquiry).json;
-    return this.save({ ...task, inquiries });
+
+    if (isDraft(task)) return this.save({ ...task, inquiries });
+
+    const updatedTask = { ...task, inquiries };
+    const taskWithReviews = this.updateReviewOwners(updatedTask, [matos]);
+    return this.save(taskWithReviews);
   }
 
   async removeInquiry(
@@ -341,212 +349,29 @@ export class PrepareFestivalTask {
     const feedbacks = [...task.feedbacks, feedback];
     return this.save({ ...task, feedbacks });
   }
-}
 
-class Instructions {
-  private constructor(
-    private readonly instructions: FestivalTask["instructions"],
-  ) {}
-  static build(instructions: FestivalTask["instructions"]) {
-    return new Instructions(instructions);
-  }
-
-  update({ inCharge, ...form }: UpdateInstructions) {
-    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
-    const updatedInCharge = inChargeBuilder.update(inCharge).json;
-
-    const instructions = {
-      ...this.instructions,
-      ...form,
-      inCharge: updatedInCharge,
-    };
-
-    return new Instructions(instructions);
-  }
-
-  addContact(contact: Contact) {
-    const contactsBuilder = Contacts.build(this.instructions.contacts);
-    const contacts = contactsBuilder.add(contact).json;
-
-    return new Instructions({ ...this.instructions, contacts });
-  }
-
-  removeContact(contactId: Contact["id"]) {
-    const contactsBuilder = Contacts.build(this.instructions.contacts);
-    const contacts = contactsBuilder.remove(contactId).json;
-
-    return new Instructions({ ...this.instructions, contacts });
-  }
-
-  addVolunteer(volunteer: Volunteer) {
-    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
-    const inCharge = inChargeBuilder.addVolunteer(volunteer).json;
-
-    return new Instructions({ ...this.instructions, inCharge });
-  }
-
-  removeVolunteer(volunteerId: Volunteer["id"]) {
-    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
-    const inCharge = inChargeBuilder.removeVolunteer(volunteerId).json;
-
-    return new Instructions({ ...this.instructions, inCharge });
-  }
-
-  clear() {
-    const inChargeBuilder = InCharge.build(this.instructions.inCharge);
-    const inCharge = inChargeBuilder.clear().json;
-
-    return new Instructions({ ...this.instructions, inCharge });
-  }
-
-  get json(): FestivalTask["instructions"] {
-    return { ...this.instructions };
-  }
-}
-
-class InCharge {
-  private constructor(
-    private readonly inCharge: FestivalTask["instructions"]["inCharge"],
-  ) {}
-
-  static build(inCharge: FestivalTask["instructions"]["inCharge"]) {
-    return new InCharge(inCharge);
-  }
-
-  update(instruction: UpdateInstructions["inCharge"]) {
-    if (instruction === undefined) return this;
-    return new InCharge({ ...this.inCharge, instruction });
-  }
-
-  addVolunteer(volunteer: Volunteer) {
-    const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
-    const volunteers = volunteerBuilder.add(volunteer).json;
-
-    return new InCharge({ ...this.inCharge, volunteers });
-  }
-
-  removeVolunteer(volunteerId: Volunteer["id"]) {
-    const volunteerBuilder = Volunteers.build(this.inCharge.volunteers);
-    const volunteers = volunteerBuilder.remove(volunteerId).json;
-
-    return new InCharge({ ...this.inCharge, volunteers });
-  }
-
-  clear() {
-    const volunteers = Volunteers.build([]).json;
-    const instruction = null;
-
-    return new InCharge({ ...this.inCharge, volunteers, instruction });
-  }
-
-  get json(): FestivalTask["instructions"]["inCharge"] {
-    return { ...this.inCharge };
-  }
-}
-
-class Contacts {
-  private constructor(private contacts: Contact[]) {}
-
-  static build(contacts: Contact[]) {
-    return new Contacts(contacts);
-  }
-
-  add(contact: Contact) {
-    if (this.has(contact)) return this;
-
-    return new Contacts([...this.contacts, contact]);
-  }
-
-  remove(contactId: Contact["id"]) {
-    return new Contacts(this.contacts.filter(({ id }) => id !== contactId));
-  }
-
-  private has(contact: Contact): boolean {
-    return this.contacts.some(({ id }) => id === contact.id);
-  }
-
-  get json(): Contact[] {
-    return [...this.contacts];
-  }
-}
-
-class Volunteers {
-  private constructor(private volunteers: Volunteer[]) {}
-
-  static build(volunteers: Volunteer[]) {
-    return new Volunteers(volunteers);
-  }
-
-  add(volunteer: Volunteer) {
-    if (this.has(volunteer)) return this;
-
-    return new Volunteers([...this.volunteers, volunteer]);
-  }
-
-  remove(volunteerId: Volunteer["id"]) {
-    const volunteers = this.volunteers.filter(({ id }) => id !== volunteerId);
-
-    return new Volunteers(volunteers);
-  }
-
-  private has(volunteer: Volunteer): boolean {
-    return this.volunteers.some(({ id }) => id === volunteer.id);
-  }
-
-  get json(): Volunteer[] {
-    return [...this.volunteers];
-  }
-}
-
-export type IProvideSplitablePeriod = {
-  start: Date;
-  end: Date;
-  splitDuration: Duration;
-};
-
-class Inquiries {
-  private constructor(private inquiries: InquiryRequest[]) {}
-
-  static build(inquiries: InquiryRequest[]) {
-    return new Inquiries(inquiries);
-  }
-
-  add(inquiry: BaseInquiryRequest) {
-    if (this.has(inquiry)) throw new GearAlreadyRequested(inquiry.name);
-
-    return new Inquiries([...this.inquiries, inquiry]);
-  }
-
-  remove(slug: InquiryRequest["slug"]) {
-    const inquiries = this.inquiries.filter((inquiry) => inquiry.slug !== slug);
-
-    return new Inquiries(inquiries);
-  }
-
-  private has(inquiry: InquiryRequest): boolean {
-    return this.inquiries.some(({ slug }) => slug === inquiry.slug);
-  }
-
-  get json(): InquiryRequest[] {
-    return [...this.inquiries];
-  }
-}
-
-function checkValidity<
-  T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
->(task: T): FestivalTask {
-  switch (task.status) {
-    case DRAFT:
-      return task;
-    case IN_REVIEW:
-    case REFUSED: {
-      if (!InReviewSpecification.isSatisfiedBy(task)) {
-        const errors = InReviewSpecification.generateErrors(task);
-        throw new PrepareFestivalTaskError(errors);
-      }
-      return task;
+  private updateReviewOwners(
+    task: Reviewable,
+    owners: Reviewer<"FT">[],
+  ): Reviewable {
+    const approvals = owners.filter(
+      (reviewer) => task.reviews[reviewer] === APPROVED,
+    );
+    const rejections = owners.filter(
+      (reviewer) => task.reviews[reviewer] === REJECTED,
+    );
+    if (approvals.length > 0 && rejections.length === 0) {
+      throw new AlreadyApprovedBy(approvals, "FT");
     }
-    default:
-      throw new FestivalTaskError("Pas encore supporté");
+
+    if (approvals.length === 0) return task;
+    const reviews = {
+      ...task.reviews,
+      ...approvals.reduce(
+        (acc, reviewer) => ({ ...acc, [reviewer]: IN_REVIEW }),
+        {},
+      ),
+    };
+    return { ...task, reviews } as Reviewable;
   }
 }

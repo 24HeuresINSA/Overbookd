@@ -12,6 +12,7 @@ import { ficelle, sacPoubelle } from "../festival-task.test-util";
 import { GearAlreadyRequested } from "../festival-task.error";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { approvedByMatos } from "../festival-task.test-util";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
@@ -22,6 +23,7 @@ describe("Prepare festival task inquiries list", () => {
       presentEscapeGame,
       guardJustDance,
       installBarbecue,
+      approvedByMatos,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -82,6 +84,14 @@ describe("Prepare festival task inquiries list", () => {
         });
       },
     );
+    describe("when adding inquiry when matos approved the task", () => {
+      it("should indicate that inquiries are locked", async () => {
+        const inquiry = { ...ficelle, quantity: 1 };
+        expect(
+          async () => await prepare.addInquiry(approvedByMatos.id, inquiry),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
+      });
+    });
     describe("when inquiry is about an already required gear", () => {
       it("should indicate that there is already a request for it", () => {
         const task = uninstallEscapeGame;
@@ -124,6 +134,14 @@ describe("Prepare festival task inquiries list", () => {
         });
       },
     );
+    describe("when removing inquiry when matos approved the task", () => {
+      it("should indicate that inquiries are locked", async () => {
+        const inquiry = { ...ficelle, quantity: 1 };
+        expect(
+          async () => await prepare.addInquiry(approvedByMatos.id, inquiry),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
+      });
+    });
     describe("when removing not requested inquiry", () => {
       it("should keep inquiries list unchanged", async () => {
         const task = uninstallEscapeGame;

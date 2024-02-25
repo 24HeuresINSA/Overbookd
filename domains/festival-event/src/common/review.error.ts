@@ -35,3 +35,16 @@ export class AlreadyApproved<
     super(message);
   }
 }
+
+export class AlreadyApprovedBy<
+  T extends FestivalEventIdentifier,
+> extends FestivalEventError {
+  constructor(reviewers: Reviewer<T>[], identifier: T) {
+    const plural = reviewers.length > 1;
+    const noun = plural ? "les équipes" : "l'équipe";
+    const reviewerListing = reviewers.join(" et ");
+    super(
+      `❌ La ${identifier} a déjà été validée par ${noun} ${reviewerListing}.`,
+    );
+  }
+}

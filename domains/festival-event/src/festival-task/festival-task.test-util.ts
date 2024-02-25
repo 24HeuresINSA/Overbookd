@@ -3,14 +3,14 @@ import { FestivalActivity, InReview } from "./festival-task";
 import { Contact } from "./sections/instructions";
 import { VolunteerWithConflicts } from "./sections/mobilizations";
 import { TimeWindow } from "../common/time-window";
-import { InquiryRequest } from "../common/inquiry-request";
+import { BACKLINE, InquiryRequest, MAGASIN } from "../common/inquiry-request";
 import { Location } from "../common/location";
 import { AddMobilization } from "./prepare/prepare";
 import { VolunteerAvailabilities, WithConflicts } from "./volunteer-conflicts";
 import { getFactory } from "./festival-task.factory";
 import { saturday11hToSaturday18h } from "../festival-activity/festival-activity.fake";
 import { Item } from "@overbookd/list";
-import { REJECTED } from "../common/action";
+import { APPROVED, REJECTED } from "../common/action";
 
 const factory = getFactory();
 
@@ -738,4 +738,13 @@ export const uninstallBarbecue = factory
     matos: REJECTED,
     elec: REJECTED,
   })
+  .build();
+
+export const approvedByMatos = factory
+  .inReview("Approved by matos")
+  .withReviews({ matos: APPROVED })
+  .withInquiries([
+    { ...deuxTables, drive: BACKLINE },
+    { ...troisMarteaux, drive: MAGASIN },
+  ])
   .build();
