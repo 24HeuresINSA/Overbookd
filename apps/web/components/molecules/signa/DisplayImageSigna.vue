@@ -3,7 +3,7 @@
     <v-btn class="close-btn" icon @click="closeDialog">
       <v-icon>mdi-close</v-icon>
     </v-btn>
-    <img :src="image" alt="image"  />
+    <img :src="image" alt="image" />
   </v-card>
 </template>
 
@@ -31,19 +31,19 @@ export default Vue.extend({
     },
     image() {
       return this.$accessor.catalogSignage.signage?.imageBlob;
+    },
   },
-},
   watch: {
     signage() {
-      this.getImage();
+      this.fetchImage();
     },
   },
   mounted() {
-    this.getImage();
+    this.fetchImage();
   },
   methods: {
-    async getImage() {
-   return this.$accessor.catalogSignage.getSignageImage(this.signage);
+    async fetchImage() {
+      this.$accessor.catalogSignage.getSignageImage(this.signage);
     },
     closeDialog(): void {
       this.$emit("close-dialog");
@@ -52,8 +52,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" >
-
+<style lang="scss">
 .signage {
   display: flex;
   flex-direction: column;
@@ -69,5 +68,4 @@ export default Vue.extend({
     right: 10px;
   }
 }
-
 </style>

@@ -36,7 +36,11 @@
             show-size
           />
         </div>
-        <v-btn color="success" :disabled="invalidForm" @click="createOrUpdateSignage">
+        <v-btn
+          color="success"
+          :disabled="invalidForm"
+          @click="createOrUpdateSignage"
+        >
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
           Sauvegarder la signalisation
         </v-btn>
@@ -99,13 +103,12 @@ export default Vue.extend({
       return Object.values(signageTypes);
     },
     invalidForm(): boolean {
-    const isNameValid = this.name.length >= nameMinLength;
-    const isTypeValid = !!this.type;
-    const isUploadValid = this.image ? imageRules(this.image) : true;
+      const isNameValid = this.name.length >= nameMinLength;
+      const isTypeValid = !!this.type;
+      const isUploadValid = this.image ? imageRules(this.image) : true;
 
-    return !isNameValid || !isTypeValid || !isUploadValid;
-  },
-
+      return !isNameValid || !isTypeValid || !isUploadValid;
+    },
   },
   watch: {
     signage(signage: Signage) {
@@ -121,18 +124,10 @@ export default Vue.extend({
         type: this.type,
       };
 
-      try {
       await this.upsertSignage(signage);
-        if (this.image) {
-          await this.updateImage(this.image);
-        }
-        this.closeDialog();
-        this.name = "";
-        this.type = signageTypes.AFFICHE;
-      } catch (error) {
-        console.error(error);
+      if (this.image) {
+        await this.updateImage(this.image);
       }
-
       this.closeDialog();
       this.name = "";
       this.type = signageTypes.AFFICHE;
@@ -140,17 +135,15 @@ export default Vue.extend({
 
     upsertSignage(signage: SignageForm) {
       if (this.signage.id) {
-       return this.$accessor.catalogSignage.updateSignage({
+        return this.$accessor.catalogSignage.updateSignage({
           ...signage,
           id: this.signage.id,
         });
       }
       return this.$accessor.catalogSignage.createSignage(signage);
-    
     },
 
-
-    updateImage (image: File) {
+    updateImage(image: File) {
       const signaImageForm = new FormData();
       signaImageForm.append("file", image, image.name);
       return this.$accessor.catalogSignage.uploadSignageImage({
