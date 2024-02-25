@@ -63,14 +63,14 @@ type PublishFeedback = {
   content: string;
 };
 
-export class PrepareFestivalTaskError extends FestivalTaskError {
+class PrepareFestivalTaskError extends FestivalTaskError {
   constructor(errors: string[]) {
     const message = errors.map((error) => `❌ ${error}`).join("\n");
     super(message);
   }
 }
 
-export type UpdatedTask<Properties extends keyof FestivalTask> =
+type UpdatedTask<Properties extends keyof FestivalTask> =
   | ({
       [Property in Properties]: FestivalTask[Property];
     } & Omit<DraftWithoutConflicts, Properties>)
@@ -377,7 +377,7 @@ export class PrepareFestivalTask {
   }
 }
 
-export function checkValidity<
+function checkValidity<
   T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
 >(task: T): FestivalTask {
   switch (task.status) {
