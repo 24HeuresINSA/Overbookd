@@ -98,13 +98,10 @@ export function isSupportedImageFile(value?: File | null): string | boolean {
 }
 
 export function imageRules(value?: File | null): string | boolean {
-  return [
-    isImage,
-    isImageSizeWithinLimit,
-    isSupportedImageFile,
-  ].every((rule) => rule(value) === true);
+  return [isImage, isImageSizeWithinLimit, isSupportedImageFile].every(
+    (rule) => rule(value) === true,
+  );
 }
-
 
 export interface InputRulesData {
   rules: Record<string, (value: string | null) => string | boolean>;

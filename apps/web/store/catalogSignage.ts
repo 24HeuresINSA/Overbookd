@@ -5,7 +5,6 @@ import { CatalogSignageRepository } from "~/repositories/catalog-signage.reposit
 import { updateItemToList } from "@overbookd/list";
 import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
-
 interface State {
   signages: SignageWithPotentialImage[];
   signage: SignageWithPotentialImage | null;
@@ -47,7 +46,10 @@ export const actions = actionTree(
     },
 
     async getSignageImage({ commit }, signage: Signage): Promise<void> {
-      const res = await CatalogSignageRepository.getSignageImage(this, signage.id);
+      const res = await CatalogSignageRepository.getSignageImage(
+        this,
+        signage.id,
+      );
       if (!res) return;
       const signageWithImage = { ...signage, imageBlob: res };
       commit("UPDATE_SIGNAGE", signageWithImage);
@@ -101,7 +103,11 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = await safeCall(
         this,
-        CatalogSignageRepository.uploadSignageImage(this, signageId, signageImage),
+        CatalogSignageRepository.uploadSignageImage(
+          this,
+          signageId,
+          signageImage,
+        ),
         {
           successMessage: `Image de la signalétique mise à jour avec succès ✅`,
           errorMessage: `Erreur lors de la mise à jour de l'image de la signalétique ❌`,
