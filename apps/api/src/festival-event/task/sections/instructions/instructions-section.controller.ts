@@ -8,6 +8,7 @@ import {
   UseGuards,
   Post,
   Delete,
+  Request,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -32,6 +33,7 @@ import { AddContactRequestDto } from "./dto/add-contact.request.dto";
 import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
+import { RequestWithUserPayload } from "../../../../app.controller";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -74,8 +76,9 @@ export class InstructionsSectionController {
   update(
     @Param("id", ParseIntPipe) id: FestivalTask["id"],
     @Body() instructions: InstructionsRequestDto,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.instructionsService.update(id, instructions);
+    return this.instructionsService.update(id, instructions, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
