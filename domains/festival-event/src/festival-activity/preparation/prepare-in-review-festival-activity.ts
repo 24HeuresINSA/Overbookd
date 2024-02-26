@@ -8,7 +8,6 @@ import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";
 import { isValidatedReviews } from "../../common/review";
 import { Reviews } from "../../common/review";
 import { isRefusedReviews } from "../../common/review";
-import { Reviewer } from "../../common/review";
 import {
   NOT_ASKING_TO_REVIEW,
   REVIEWING,
@@ -57,6 +56,7 @@ import {
 } from "./section-aggregates/inquiries";
 import { LocationIsRequired, Signages } from "./section-aggregates/signages";
 import { isPrivate } from "../sections/general";
+import { AlreadyApprovedBy } from "../../common/review.error";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {
@@ -68,15 +68,6 @@ class IsNotPublicActivity extends FestivalActivityError {
 class NeedAtLeastOneTimeWindow extends FestivalActivityError {
   constructor() {
     super("❌ Il faut garder au moins un créneau.");
-  }
-}
-
-class AlreadyApprovedBy extends FestivalActivityError {
-  constructor(reviewers: Reviewer<"FA">[]) {
-    const plural = reviewers.length > 1;
-    const noun = plural ? "les équipes" : "l'équipe";
-    const reviewerListing = reviewers.join(" et ");
-    super(`❌ La FA a déjà été validée par ${noun} ${reviewerListing}.`);
   }
 }
 
@@ -221,7 +212,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
     const general = General.init(generalData);
 
     if (general.isAlreadyValidatedBy(reviewer, reviews)) {
-      throw new AlreadyApprovedBy([reviewer]);
+      throw new AlreadyApprovedBy([reviewer], "FA");
     }
   }
 
@@ -255,7 +246,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfInChargeAlreadyApproved() {
     const isValidated = this.activity.reviews.humain === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([humain]);
+      throw new AlreadyApprovedBy([humain], "FA");
     }
   }
 
@@ -299,7 +290,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfSignaAlreadyApproved() {
     const isValidated = this.activity.reviews.signa === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([signa]);
+      throw new AlreadyApprovedBy([signa], "FA");
     }
   }
 
@@ -356,7 +347,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfSecurityAlreadyApproved() {
     const isValidated = this.activity.reviews.secu === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([secu]);
+      throw new AlreadyApprovedBy([secu], "FA");
     }
   }
 
@@ -369,7 +360,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfSupplyAlreadyApproved() {
     const isValidated = this.activity.reviews.elec === APPROVED;
     if (isValidated) {
-      throw new AlreadyApprovedBy([elec]);
+      throw new AlreadyApprovedBy([elec], "FA");
     }
   }
 
@@ -463,7 +454,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   private checkIfInquiryAlreadyApprovedBy(owner?: InquiryOwner) {
     const { approved, teams } = this.isInquiryApprovedBy(owner);
     if (approved) {
-      throw new AlreadyApprovedBy(teams);
+      throw new AlreadyApprovedBy(teams, "FA");
     }
   }
 

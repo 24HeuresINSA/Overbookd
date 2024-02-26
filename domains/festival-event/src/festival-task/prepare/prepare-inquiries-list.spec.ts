@@ -5,6 +5,7 @@ import {
   presentEscapeGame,
   guardJustDance,
   installBarbecue,
+  onlyApprovedByHumain,
 } from "../festival-task.test-util";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
@@ -12,6 +13,10 @@ import { ficelle, sacPoubelle } from "../festival-task.test-util";
 import { GearAlreadyRequested } from "../festival-task.error";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { onlyApprovedByMatos } from "../festival-task.test-util";
+import { APPROVED } from "../../common/action";
+import { REVIEWING } from "../../common/review";
+import { isDraft } from "../../festival-event";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
@@ -22,6 +27,8 @@ describe("Prepare festival task inquiries list", () => {
       presentEscapeGame,
       guardJustDance,
       installBarbecue,
+      onlyApprovedByMatos,
+      onlyApprovedByHumain,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -74,7 +81,7 @@ describe("Prepare festival task inquiries list", () => {
     `(
       "when adding inquiry from $taskName task with status $taskStatus",
       ({ task, inquiry }) => {
-        it("should remove it from inquiries list", async () => {
+        it("should add it to inquiries list", async () => {
           const { inquiries } = await prepare.addInquiry(task.id, inquiry);
 
           expect(inquiries).toHaveLength(task.inquiries.length + 1);
@@ -82,6 +89,35 @@ describe("Prepare festival task inquiries list", () => {
         });
       },
     );
+    describe("when adding inquiry when matos approved the task", () => {
+      it("should indicate that inquiries are locked", async () => {
+        const inquiry = { ...ficelle, quantity: 1 };
+        expect(
+          async () => await prepare.addInquiry(onlyApprovedByMatos.id, inquiry),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
+      });
+    });
+    describe("when adding inquiry when only humain approved the task", () => {
+      it("should add it to inquiries list", async () => {
+        const task = onlyApprovedByHumain;
+        const inquiry = { ...ficelle, quantity: 1 };
+
+        const { inquiries } = await prepare.addInquiry(task.id, inquiry);
+
+        expect(inquiries).toHaveLength(task.inquiries.length + 1);
+        expect(inquiries).toContainEqual(inquiry);
+      });
+      it("should keep same reviews", async () => {
+        const task = onlyApprovedByHumain;
+        const inquiry = { ...ficelle, quantity: 1 };
+
+        const updatedTask = await prepare.addInquiry(task.id, inquiry);
+        if (isDraft(updatedTask)) throw new Error();
+
+        expect(updatedTask.reviews.humain).toBe(APPROVED);
+        expect(updatedTask.reviews.matos).toBe(REVIEWING);
+      });
+    });
     describe("when inquiry is about an already required gear", () => {
       it("should indicate that there is already a request for it", () => {
         const task = uninstallEscapeGame;
@@ -124,6 +160,14 @@ describe("Prepare festival task inquiries list", () => {
         });
       },
     );
+    describe("when removing inquiry when matos approved the task", () => {
+      it("should indicate that inquiries are locked", async () => {
+        const inquiry = { ...ficelle, quantity: 1 };
+        expect(
+          async () => await prepare.addInquiry(onlyApprovedByMatos.id, inquiry),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
+      });
+    });
     describe("when removing not requested inquiry", () => {
       it("should keep inquiries list unchanged", async () => {
         const task = uninstallEscapeGame;

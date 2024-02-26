@@ -8,15 +8,17 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../../festival-task.error";
 import { updateItemToList } from "@overbookd/list";
-import {
-  IProvideSplitablePeriod,
-  AddMobilization,
-  UpdateMobilization,
-} from "../prepare";
+import { AddMobilization, UpdateMobilization } from "../prepare";
 
 type ListItem<T> = {
   index: number;
   value?: T;
+};
+
+type IProvideSplitablePeriod = {
+  start: Date;
+  end: Date;
+  splitDuration: Duration;
 };
 
 class SplitablePeriod {
