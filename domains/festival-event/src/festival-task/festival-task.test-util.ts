@@ -727,8 +727,14 @@ const friday10hFriday18hInReviewMobilization =
   MobilizationBuilder.init<InReviewWithConflicts>({
     start: friday10h,
     end: friday18h,
-    volunteers: [],
-    teams: [{ count: 1, team: "vieux" }],
+    volunteers: [
+      { ...george, conflicts: { tasks: [], availability: false } },
+      { ...lea, conflicts: { tasks: [], availability: false } },
+    ],
+    teams: [
+      { count: 2, team: "vieux" },
+      { count: 5, team: "confiance" },
+    ],
   }).mobilization;
 
 export const uninstallBarbecue = factory

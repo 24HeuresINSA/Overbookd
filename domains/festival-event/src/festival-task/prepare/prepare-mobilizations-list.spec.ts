@@ -37,6 +37,8 @@ import {
   george,
   installBarbecue,
   uninstallBarbecue,
+  onlyApprovedByHumain,
+  onlyApprovedByMatos,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
@@ -52,6 +54,8 @@ describe("Prepare festival task mobilizations list", () => {
       serveWaterOnJustDance,
       installBarbecue,
       uninstallBarbecue,
+      onlyApprovedByHumain,
+      onlyApprovedByMatos,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
@@ -397,6 +401,21 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
     });
+    describe("when humain approved the task", () => {
+      it("should indicate that mobilization teams are locked", async () => {
+        const mobilization = onlyApprovedByHumain.mobilizations[0];
+        const team = { team: "elec", count: 5 };
+
+        expect(
+          async () =>
+            await prepare.addTeamToMobilization(
+              onlyApprovedByHumain.id,
+              mobilization.id,
+              team,
+            ),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
+      });
+    });
     describe("when team is already part of the mobilization", () => {
       it("should indicate that team is already part of the mobilization", async () => {
         const task = presentEscapeGame;
@@ -432,6 +451,19 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
+      describe("when humain approved the task", () => {
+        it("should indicate that mobilization teams are locked", async () => {
+          const mobilization = onlyApprovedByHumain.mobilizations[0];
+          expect(
+            async () =>
+              await prepare.removeTeamFromMobilization(
+                onlyApprovedByHumain.id,
+                mobilization.id,
+                "vieux",
+              ),
+          ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
+        });
+      });
       describe.each`
         taskName                              | taskStatus                      | task                     | mobilization                              | team
         ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[0]} | ${"bénévole"}
@@ -493,6 +525,20 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
     });
+    describe("when humain approved the task", () => {
+      it("should indicate that mobilization volunteers are locked", async () => {
+        const mobilization = onlyApprovedByHumain.mobilizations[0];
+
+        expect(
+          async () =>
+            await prepare.addVolunteerToMobilization(
+              onlyApprovedByHumain.id,
+              mobilization.id,
+              noel,
+            ),
+        ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
+      });
+    });
     describe("when volunteer is already part of the mobilization", () => {
       it("should keep mobilization unchanged", async () => {
         const task = presentEscapeGame;
@@ -527,6 +573,19 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
+      describe("when humain approved the task", () => {
+        it("should indicate that mobilization volunteers are locked", async () => {
+          const mobilization = onlyApprovedByHumain.mobilizations[0];
+          expect(
+            async () =>
+              await prepare.removeVolunteerFromMobilization(
+                onlyApprovedByHumain.id,
+                mobilization.id,
+                george.id,
+              ),
+          ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
+        });
+      });
       describe.each`
         taskName                              | taskStatus                      | task                     | mobilization                              | volunteer
         ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[2]} | ${george}
