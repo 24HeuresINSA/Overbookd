@@ -2,7 +2,7 @@ import {
   BaseInquiryRequest,
   InquiryRequest,
 } from "../../common/inquiry-request";
-import { FestivalTask, Reviewable } from "../festival-task";
+import { FestivalTask, Reviewable, Validated } from "../festival-task";
 import { Volunteer } from "../sections/instructions";
 import { Contact } from "../sections/instructions";
 import { Mobilization, TeamMobilization } from "../sections/mobilizations";
@@ -21,13 +21,26 @@ import {
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
 import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
-import { isDraft, isValidated } from "../../festival-event";
-import { REVIEWING, Reviewer, elec, humain, matos } from "../../common/review";
+import {
+  isDraft,
+  isInReview,
+  isRefused,
+  isValidated,
+} from "../../festival-event";
+import {
+  REVIEWING,
+  RejectionReviewStatus,
+  Reviewer,
+  elec,
+  humain,
+  matos,
+} from "../../common/review";
 import { APPROVED } from "../../common/action";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { Inquiries } from "./sections/inquiries";
 import { Instructions } from "./sections/instructions";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
+import { FestivalTaskKeyEvents } from "../festival-task.event";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -80,6 +93,8 @@ type UpdatedTask<Properties extends keyof FestivalTask> =
       [Property in Properties]: FestivalTask[Property];
     } & Omit<RefusedWithoutConflicts, Properties>);
 
+type UpdatableFestivalTask = Exclude<FestivalTask, Validated>;
+
 export class PrepareFestivalTask {
   constructor(
     private readonly festivalTasks: FestivalTasksForPrepare,
@@ -110,16 +125,59 @@ export class PrepareFestivalTask {
   async updateInstructionsSection(
     taskId: FestivalTask["id"],
     update: UpdateInstructions,
+    instigator: Adherent,
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (!this.canUpdateInstructions(task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
-    const updatedTask = checkValidity({ ...task, instructions });
+    const validTask = checkValidity({ ...task, instructions });
 
+    const updatedTask = this.resetApproversReview(
+      validTask,
+      instigator,
+      update,
+    );
     return this.save(updatedTask);
+  }
+
+  private resetApproversReview<T extends UpdatableFestivalTask>(
+    task: T,
+    instigator: Adherent,
+    update: UpdateInstructions,
+  ): T {
+    if (isDraft<FestivalTask>(task) || isInReview<FestivalTask>(task))
+      return task;
+
+    const humain = this.resetApproval(task.reviews.humain);
+    const matos = this.resetApproval(task.reviews.matos);
+    const elec = this.resetApproval(task.reviews.elec);
+
+    const history = [
+      ...task.history,
+      FestivalTaskKeyEvents.resetReview(instigator, update),
+    ];
+
+    return { ...task, reviews: { humain, matos, elec }, history };
+  }
+
+  private resetApproval(
+    previous: RejectionReviewStatus,
+  ): RejectionReviewStatus {
+    return previous === APPROVED ? REVIEWING : previous;
+  }
+
+  private canUpdateInstructions(
+    task: FestivalTask,
+  ): task is UpdatableFestivalTask {
+    if (isDraft(task) || isRefused(task)) return true;
+    if (isValidated(task)) return false;
+
+    return !this.isApprovedBy(humain, task);
   }
 
   async addContact(
@@ -129,6 +187,9 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addContact(contact).json;
@@ -144,6 +205,9 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeContact(contactId).json;
@@ -159,6 +223,9 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.addVolunteer(volunteer).json;
@@ -174,6 +241,9 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.removeVolunteer(volunteerId).json;
@@ -391,7 +461,7 @@ export class PrepareFestivalTask {
 
 function checkValidity<
   T extends UpdatedTask<"general" | "mobilizations" | "instructions">,
->(task: T): FestivalTask {
+>(task: T): UpdatableFestivalTask {
   switch (task.status) {
     case DRAFT:
       return task;

@@ -4,15 +4,18 @@ import {
   CREATED,
   READY_TO_REVIEW,
   REJECTED,
+  RESET_REVIEW,
 } from "../common/action";
 import { Adherent } from "../common/adherent";
+import { UpdateInstructions } from "./prepare/prepare";
 
 type Action =
   | typeof CREATED
   | typeof COMMENTED
   | typeof READY_TO_REVIEW
   | typeof REJECTED
-  | typeof APPROVED;
+  | typeof APPROVED
+  | typeof RESET_REVIEW;
 
 export type KeyEvent = {
   action: Action;
@@ -24,6 +27,15 @@ export class FestivalTaskKeyEvents {
   static created(by: Adherent): KeyEvent {
     const at = this.computeAt();
     return { action: CREATED, by, at, description: "FT créée" };
+  }
+
+  static resetReview(by: Adherent, update: UpdateInstructions): KeyEvent {
+    const at = this.computeAt();
+    const field = update.global
+      ? "instructions"
+      : "instructions des responsables";
+    const description = `Précédentes approbations réinitialisées par un changement sur le champs ${field}`;
+    return { action: RESET_REVIEW, by, at, description };
   }
 
   static readyToReview(by: Adherent): KeyEvent {

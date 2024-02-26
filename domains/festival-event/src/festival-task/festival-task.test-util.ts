@@ -11,6 +11,7 @@ import { getFactory } from "./festival-task.factory";
 import { saturday11hToSaturday18h } from "../festival-activity/festival-activity.fake";
 import { Item } from "@overbookd/list";
 import { APPROVED, REJECTED } from "../common/action";
+import { REVIEWING } from "../common/review";
 
 const factory = getFactory();
 
@@ -274,7 +275,7 @@ export const humaGrass: Location = {
   name: "Huma grass",
 };
 
-const mdeHall: Location = {
+export const mdeHall: Location = {
   id: 2,
   name: "MDE Hall",
 };
@@ -753,7 +754,73 @@ export const onlyApprovedByMatos = factory
 
 export const onlyApprovedByHumain = factory
   .inReview("Approved by humain")
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
   .withReviews({ humain: APPROVED })
+  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
+  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .build();
+
+export const approvedByHumainRejectedByMatos = factory
+  .refused("Approved by humain rejected by matos")
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ humain: APPROVED, matos: REJECTED })
+  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
+  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .build();
+
+export const approvedByHumainAndElecRejectedByMatos = factory
+  .refused("Approved by humain and elec rejected by matos")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ humain: APPROVED, elec: APPROVED, matos: REJECTED })
+  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
+  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .build();
+
+export const approvedByElecRejectedByMatos = factory
+  .refused("Approved by elec rejected by matos")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ humain: REVIEWING, elec: APPROVED, matos: REJECTED })
+  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
+  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .build();
+
+export const approvedByMatosRejectedByHumainAndElec = factory
+  .refused("Approved by matos rejected by humain and elec")
+  .withFestivalActivity(escapeGame)
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
+  .withReviews({ humain: REJECTED, elec: REJECTED, matos: APPROVED })
   .withInquiries([{ ...deuxTables, drive: BACKLINE }])
   .withMobilizations([friday10hFriday18hInReviewMobilization])
   .build();
