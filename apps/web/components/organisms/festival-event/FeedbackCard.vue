@@ -47,6 +47,7 @@ import {
   FestivalTaskKeyEvent,
   READY_TO_REVIEW,
   REJECTED,
+  RESET_REVIEW,
 } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
@@ -116,6 +117,8 @@ export default defineComponent({
           return "🛑";
         case COMMENTED:
           return "💬";
+        case RESET_REVIEW:
+          return "🌪️";
       }
     },
     formatDateWithMinutes,

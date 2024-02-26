@@ -8,6 +8,7 @@ import {
 import { UpdateInstructionsForm } from "@overbookd/http";
 import { Adherents } from "../../common/festival-task-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
+import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
 
 @Injectable()
 export class InstructionsSectionService {
@@ -20,15 +21,19 @@ export class InstructionsSectionService {
   async update(
     id: FestivalTask["id"],
     instructions: UpdateInstructionsForm,
+    user: JwtPayload,
   ): Promise<FestivalTask> {
+    const instigator = await this.adherents.findOne(user.id);
     const appointment = instructions.appointmentId
       ? { appointment: await this.locations.find(instructions.appointmentId) }
       : {};
 
-    return this.prepare.updateInstructionsSection(id, {
-      ...instructions,
-      ...appointment,
-    });
+    const updateInstructions = { ...instructions, ...appointment };
+    return this.prepare.updateInstructionsSection(
+      id,
+      updateInstructions,
+      instigator,
+    );
   }
 
   async addContact(

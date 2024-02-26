@@ -7,6 +7,7 @@ export {
   READY_TO_REVIEW,
   APPROVED,
   REJECTED,
+  RESET_REVIEW,
 } from "./common/action";
 export type { Adherent } from "./common/adherent";
 export type { Feedback } from "./common/feedback";

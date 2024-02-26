@@ -12,12 +12,28 @@ import {
   presentEscapeGame,
   serveWaterOnJustDance,
   uninstallEscapeGame,
+  mdeHall,
+  onlyApprovedByHumain,
+  approvedByHumainRejectedByMatos,
+  approvedByHumainAndElecRejectedByMatos,
+  approvedByElecRejectedByMatos,
+  approvedByMatosRejectedByHumainAndElec,
 } from "../festival-task.test-util";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { AlreadyApprovedBy } from "../../common/review.error";
+import { isDraft } from "../../festival-event";
+import {
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+  elec,
+  humain,
+  matos,
+} from "../../common/review";
+import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
@@ -29,6 +45,11 @@ describe("Prepare festival task instructions section", () => {
       guardJustDance,
       serveWaterOnJustDance,
       installBarbecue,
+      onlyApprovedByHumain,
+      approvedByHumainRejectedByMatos,
+      approvedByHumainAndElecRejectedByMatos,
+      approvedByElecRejectedByMatos,
+      approvedByMatosRejectedByHumainAndElec,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -57,6 +78,7 @@ describe("Prepare festival task instructions section", () => {
         const { instructions } = await prepare.updateInstructionsSection(
           taskId,
           update,
+          noel,
         );
 
         expect(instructions.appointment).toBe(appointment);
@@ -76,7 +98,8 @@ describe("Prepare festival task instructions section", () => {
     ({ task, update, expectedError }) => {
       it("should indicate the mandatory field is required", async () => {
         expect(
-          async () => await prepare.updateInstructionsSection(task.id, update),
+          async () =>
+            await prepare.updateInstructionsSection(task.id, update, noel),
         ).rejects.toThrow(expectedError);
       });
     },
@@ -85,7 +108,11 @@ describe("Prepare festival task instructions section", () => {
     it("should indicate task not found", async () => {
       expect(
         async () =>
-          await prepare.updateInstructionsSection(10000, { global: "Test" }),
+          await prepare.updateInstructionsSection(
+            10000,
+            { global: "Test" },
+            noel,
+          ),
       ).rejects.toThrow(FestivalTaskNotFound);
     });
   });
@@ -97,10 +124,12 @@ describe("Prepare festival task instructions section", () => {
         await prepare.updateInstructionsSection(
           installEscapeGame.id,
           updateGlobal,
+          noel,
         );
         const { instructions } = await prepare.updateInstructionsSection(
           installEscapeGame.id,
           updateAppointment,
+          noel,
         );
 
         expect(instructions.global).toBe(updateGlobal.global);
@@ -263,6 +292,141 @@ describe("Prepare festival task instructions section", () => {
         const { instructions } = await prepare.clearInCharge(task.id);
         expect(instructions.inCharge.volunteers).toHaveLength(0);
         expect(instructions.inCharge.instruction).toBe(null);
+      },
+    );
+  });
+
+  describe("Update after approvals", () => {
+    describe.each`
+      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task
+      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
+      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
+      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
+      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
+      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+    `(
+      "when $approvers approved the task $taskName",
+      ({ approvers, task, rejectors, humain, matos, elec }) => {
+        if (approvers.includes(humain)) {
+          describe("humain ownership", () => {
+            describe("when trying to update appointment location", () => {
+              it("should indicate task is already approved by humain", () => {
+                const update = { appointment: mdeHall };
+                expect(
+                  async () =>
+                    await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      noel,
+                    ),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+            describe("when trying to add a contact", () => {
+              it("should indicate task is already approved by humain", () => {
+                expect(
+                  async () => await prepare.addContact(task.id, leaContact),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+            describe("when trying to remove a contact", () => {
+              it("should indicate task is already approved by humain", () => {
+                const contactId = task.instructions.contacts.at(0).id;
+                expect(
+                  async () => await prepare.removeContact(task.id, contactId),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+            describe("when trying to add an in charge volunteer", () => {
+              it("should indicate task is already approved by humain", () => {
+                expect(
+                  async () => await prepare.addInChargeVolunteer(task.id, lea),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+            describe("when trying to remove an in charge volunteer", () => {
+              it("should indicate task is already approved by humain", () => {
+                const volunteerId =
+                  task.instructions.inCharge.volunteers.at(0).id;
+                expect(
+                  async () =>
+                    await prepare.removeInChargeVolunteer(task.id, volunteerId),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+          });
+        }
+        if (rejectors.length === 0) {
+          describe("when none of other reviewers rejects task", () => {
+            describe.each`
+              field                       | update
+              ${"global instructions"}    | ${{ global: "Update global instruction" }}
+              ${"in charge instructions"} | ${{ inCharge: { instructions: "Update global instruction" } }}
+            `("when trying to update $field on $taskName", ({ update }) => {
+              it("should indicate task is already approved by humain", () => {
+                expect(
+                  async () =>
+                    await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      noel,
+                    ),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+          });
+        } else {
+          describe("when another reviewer rejects task", () => {
+            describe.each`
+              field                              | instigator | update                                           | global                         | inCharge
+              ${"instructions"}                  | ${noel}    | ${{ global: "Update global instruction" }}       | ${"Update global instruction"} | ${task.instructions.inCharge.instruction}
+              ${"instructions des responsables"} | ${noel}    | ${{ inCharge: "Update dedicated instructions" }} | ${task.instructions.global}    | ${"Update dedicated instructions"}
+            `(
+              "when trying to update $field",
+              ({ update, global, inCharge, field, instigator }) => {
+                it(`should update ${field} accordingly`, async () => {
+                  const { instructions } =
+                    await prepare.updateInstructionsSection(
+                      task.id,
+                      update,
+                      instigator,
+                    );
+
+                  expect(instructions.global).toStrictEqual(global);
+                  expect(instructions.inCharge.instruction).toBe(inCharge);
+                });
+                it("should reset all approver review status to under review", async () => {
+                  const updated = await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    instigator,
+                  );
+                  if (isDraft(updated)) return;
+
+                  expect(updated.reviews.humain).toBe(humain);
+                  expect(updated.reviews.matos).toBe(matos);
+                  expect(updated.reviews.elec).toBe(elec);
+                });
+                it("should add RESET_REVIEW key event to history", async () => {
+                  const { history } = await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    instigator,
+                  );
+                  expect(history).toStrictEqual([
+                    ...task.history,
+                    {
+                      action: RESET_REVIEW,
+                      by: instigator,
+                      at: expect.any(Date),
+                      description: `Précédentes approbations réinitialisées par un changement sur le champs ${field}`,
+                    },
+                  ]);
+                });
+              },
+            );
+          });
+        }
       },
     );
   });

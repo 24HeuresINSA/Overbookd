@@ -804,6 +804,7 @@ enum FestivalTaskEvent {
   READY_TO_REVIEW
   REJECTED
   APPROVED
+  RESET_REVIEW
 
   @@map("festival_task_event")
 }
