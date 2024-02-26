@@ -9,6 +9,7 @@ import { SettleAlerting } from "@overbookd/contribution";
 import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
+import { PrismaFriendsAlerting as PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
 
 @Module({
   controllers: [AlertController],
@@ -50,16 +51,29 @@ import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alert
       inject: [PrismaService],
     },
     {
+      provide: PrismaFriendsAlerting,
+      useFactory: (prisma: PrismaService) => new PrismaFriendsAlerting(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: AlertService,
       useFactory: (
         personalAccount: PersonalAccountAlerting,
         contribution: SettleAlerting,
         profilePicture: PrismaProfilePictureAlerting,
-      ) => new AlertService(personalAccount, contribution, profilePicture),
+        friends: PrismaFriendsAlerting,
+      ) =>
+        new AlertService(
+          personalAccount,
+          contribution,
+          profilePicture,
+          friends,
+        ),
       inject: [
         PersonalAccountAlerting,
         SettleAlerting,
         PrismaProfilePictureAlerting,
+        PrismaFriendsAlerting,
       ],
     },
   ],

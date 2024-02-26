@@ -16,6 +16,7 @@
       id="profile-picture"
       @dismiss="dismiss('profilePicture')"
     />
+    <FriendsAlert v-if="friendsAlert" @dismiss="dismiss('friends')" />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import { SettleAlert } from "@overbookd/contribution";
 import PersonalAccount from "~/components/atoms/alerts/PersonalAccount.vue";
 import Contribution from "~/components/atoms/alerts/Contribution.vue";
 import ProfilePictureAlert from "~/components/atoms/alerts/ProfilePictureAlert.vue";
+import FriendsAlert from "~/components/atoms/alerts/FriendsAlert.vue";
 
 export default Vue.extend({
   name: "AlertListing",
@@ -34,6 +36,7 @@ export default Vue.extend({
     PersonalAccount,
     Contribution,
     ProfilePictureAlert,
+    FriendsAlert,
   },
   computed: {
     personalAccountAlert(): PersonalAccountAlert | undefined {
@@ -44,6 +47,9 @@ export default Vue.extend({
     },
     profilePictureAlert(): boolean | undefined {
       return this.$accessor.alert.alerts.profilePicture;
+    },
+    friendsAlert(): boolean | undefined {
+      return this.$accessor.alert.alerts.friends;
     },
   },
   methods: {
