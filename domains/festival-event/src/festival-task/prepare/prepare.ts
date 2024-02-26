@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-object-injection */
 import {
   BaseInquiryRequest,
   InquiryRequest,
@@ -23,7 +22,7 @@ import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
 import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
 import { isDraft, isValidated } from "../../festival-event";
-import { Reviewer, matos } from "../../common/review";
+import { REVIEWING, Reviewer, elec, humain, matos } from "../../common/review";
 import { APPROVED } from "../../common/action";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { Inquiries } from "./sections/inquiries";
@@ -358,24 +357,29 @@ export class PrepareFestivalTask {
     task: Reviewable,
     owners: Reviewer<"FT">[],
   ): Reviewable {
-    const approvals = owners.filter(
-      (reviewer) => task.reviews[reviewer] === APPROVED,
+    const approvals = owners.filter((reviewer) =>
+      this.isApprovedBy(reviewer, task),
     );
     if (approvals.length === 0) return task;
 
     const reviews = {
-      ...task.reviews,
-      ...approvals.reduce(
-        (acc, reviewer) => ({ ...acc, [reviewer]: IN_REVIEW }),
-        {},
-      ),
+      humain: approvals.includes(humain) ? REVIEWING : task.reviews.humain,
+      matos: approvals.includes(matos) ? REVIEWING : task.reviews.matos,
+      elec: approvals.includes(elec) ? REVIEWING : task.reviews.elec,
     };
     return { ...task, reviews } as Reviewable;
   }
 
   private isApprovedBy(reviewer: Reviewer<"FT">, task: FestivalTask): boolean {
     if (isDraft(task)) return false;
-    return task.reviews[reviewer] === APPROVED;
+    switch (reviewer) {
+      case humain:
+        return task.reviews.humain === APPROVED;
+      case matos:
+        return task.reviews.matos === APPROVED;
+      case elec:
+        return task.reviews.elec === APPROVED;
+    }
   }
 }
 

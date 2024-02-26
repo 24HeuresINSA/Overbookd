@@ -98,7 +98,7 @@ describe("Prepare festival task inquiries list", () => {
       });
     });
     describe("when adding inquiry when only humain approved the task", () => {
-      it("should add it to inquiries list and keep same reviews", async () => {
+      it("should add it to inquiries list", async () => {
         const task = onlyApprovedByHumain;
         const inquiry = { ...ficelle, quantity: 1 };
 
