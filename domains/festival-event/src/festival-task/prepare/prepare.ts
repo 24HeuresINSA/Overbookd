@@ -94,11 +94,17 @@ export class PrepareFestivalTask {
     if (!task) throw new FestivalTaskNotFound(taskId);
 
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const general = { ...task.general, ...update };
     const updatedTask = checkValidity({ ...task, general });
 
-    return this.save(updatedTask);
+    if (isDraft(updatedTask)) return this.save(updatedTask);
+
+    const taskWithReviews = this.updateOwnersReview(updatedTask, [humain]);
+    return this.save(taskWithReviews);
   }
 
   async updateInstructionsSection(

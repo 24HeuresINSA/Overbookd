@@ -6,12 +6,17 @@ import {
   presentEscapeGame,
   uninstallEscapeGame,
   installBarbecue,
+  onlyApprovedByHumain,
+  onlyApprovedByMatos,
 } from "../festival-task.test-util";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { isDraft } from "../../festival-event";
+import { REVIEWING } from "../../common/review";
+import { APPROVED } from "../../common/action";
 
 describe("Prepare festival task general section", () => {
   let prepare: PrepareFestivalTask;
@@ -22,6 +27,8 @@ describe("Prepare festival task general section", () => {
       presentEscapeGame,
       guardJustDance,
       installBarbecue,
+      onlyApprovedByHumain,
+      onlyApprovedByMatos,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
@@ -85,6 +92,35 @@ describe("Prepare festival task general section", () => {
         expect(general.name).toBe(updateName.name);
         expect(general.team).toBe(updateTeam.team);
       });
+    });
+  });
+  describe("when updating name when humain approved the task", () => {
+    it("should indicate that general section are locked", async () => {
+      const name = "Task with locked general section";
+      expect(
+        async () =>
+          await prepare.updateGeneralSection(onlyApprovedByHumain.id, { name }),
+      ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
+    });
+  });
+  describe("when updating name when only matos approved the task", () => {
+    it("should update it and keep same reviews", async () => {
+      const task = onlyApprovedByMatos;
+      const update = { name: "Task with updated name" };
+
+      const { general } = await prepare.updateGeneralSection(task.id, update);
+
+      expect(general.name).toBe(update.name);
+    });
+    it("should keep same reviews", async () => {
+      const task = onlyApprovedByMatos;
+      const update = { name: "Task with updated name" };
+
+      const updatedTask = await prepare.updateGeneralSection(task.id, update);
+      if (isDraft(updatedTask)) throw new Error();
+
+      expect(updatedTask.reviews.humain).toBe(REVIEWING);
+      expect(updatedTask.reviews.matos).toBe(APPROVED);
     });
   });
 });
