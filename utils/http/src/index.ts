@@ -39,3 +39,4 @@ export type { GearSearchOptions } from "./logistic/gear.model";
 export { JSON, CSV, ICAL, PDF } from "./mime";
 export type { AvailabilityForm } from "./volunteer-availability";
 export type { Task as PlanningTask } from "./planning";
+export type { EnrollableAdherent } from "./registration";

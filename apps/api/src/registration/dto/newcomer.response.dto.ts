@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IDefineANewcomer, Teams } from "@overbookd/registration";
+import { EnrollableAdherent } from "@overbookd/http";
+import { Teams } from "@overbookd/registration";
 
-export class NewcomerResponseDto implements IDefineANewcomer {
+export class EnrollableAdherentResponseDto implements EnrollableAdherent {
   @ApiProperty({
     required: true,
     description: "The newcomer id",

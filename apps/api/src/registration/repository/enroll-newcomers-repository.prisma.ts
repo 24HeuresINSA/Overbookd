@@ -2,17 +2,17 @@ import {
   ADHERENT,
   BENEVOLE_CODE,
   EnrolledNewcomer,
-  IDefineANewcomer,
   Teams,
   isJoinableTeams,
 } from "@overbookd/registration";
 import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
 import { PrismaService } from "../../prisma.service";
 import {
-  DatabaseNewcomer,
+  DatabaseNewcomer as DatabaseEnrollableAdherent,
   DatabaseTeamCode,
-  SELECT_NEWCOMER,
+  SELECT_NEWCOMER as SELECT_ADHERENT,
 } from "./enroll-newcomers.query";
+import { EnrollableAdherent } from "@overbookd/http";
 
 export class PrismaEnrollNewcomersRepository
   implements EnrollNewcomersRepository
@@ -35,8 +35,8 @@ export class PrismaEnrollNewcomersRepository
     await this.prisma.$transaction(allRequests);
   }
 
-  async findEnrollable(): Promise<IDefineANewcomer[]> {
-    const newcomers = await this.prisma.user.findMany({
+  async findEnrollableAdherents(): Promise<EnrollableAdherent[]> {
+    const adherents = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
@@ -47,13 +47,15 @@ export class PrismaEnrollNewcomersRepository
           },
         },
       },
-      select: SELECT_NEWCOMER,
+      select: SELECT_ADHERENT,
     });
-    return newcomers.map(formatToNewcomer);
+    return adherents.map(formatToEnrollable);
   }
 }
 
-function formatToNewcomer(newcomer: DatabaseNewcomer): IDefineANewcomer {
+function formatToEnrollable(
+  newcomer: DatabaseEnrollableAdherent,
+): EnrollableAdherent {
   const teams = formatTeamsToJoinableTeams(newcomer.teams);
   return {
     id: newcomer.id,
