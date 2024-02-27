@@ -19,7 +19,6 @@ export function readablePeriodFrom({ start, end }: IProvidePeriod): string {
 }
 
 export function readablePeriodFromId(id: TimeWindow["id"]): string {
-  console.log(id.split("-"));
   const startTimestamp = parseInt(id.split("-")[0]) * ONE_MINUTE_IN_MS;
   const endTimestamp = parseInt(id.split("-")[1]) * ONE_MINUTE_IN_MS;
   const start = new Date(startTimestamp);
