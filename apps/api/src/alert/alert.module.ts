@@ -9,6 +9,8 @@ import { SettleAlerting } from "@overbookd/contribution";
 import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
+import { PrismaNotVolunteerPeriods } from "./repository/not-volunteer-periods.prisma";
+import { AvailabilitiesAlerting } from "@overbookd/volunteer-availability";
 
 @Module({
   controllers: [AlertController],
@@ -27,6 +29,12 @@ import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alert
     {
       provide: PrismaContributions,
       useFactory: (prisma: PrismaService) => new PrismaContributions(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaNotVolunteerPeriods,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaNotVolunteerPeriods(prisma),
       inject: [PrismaService],
     },
     {
@@ -50,16 +58,30 @@ import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alert
       inject: [PrismaService],
     },
     {
+      provide: AvailabilitiesAlerting,
+      useFactory: (volunteerPeriods: PrismaNotVolunteerPeriods) =>
+        new AvailabilitiesAlerting(volunteerPeriods),
+      inject: [PrismaNotVolunteerPeriods],
+    },
+    {
       provide: AlertService,
       useFactory: (
         personalAccount: PersonalAccountAlerting,
         contribution: SettleAlerting,
         profilePicture: PrismaProfilePictureAlerting,
-      ) => new AlertService(personalAccount, contribution, profilePicture),
+        availabilities: AvailabilitiesAlerting,
+      ) =>
+        new AlertService(
+          personalAccount,
+          contribution,
+          profilePicture,
+          availabilities,
+        ),
       inject: [
         PersonalAccountAlerting,
         SettleAlerting,
         PrismaProfilePictureAlerting,
+        AvailabilitiesAlerting,
       ],
     },
   ],
