@@ -1,12 +1,13 @@
 import {
+  ADHERENT,
   BENEVOLE_CODE,
   EnrolledNewcomer,
   IDefineANewcomer,
   Teams,
+  isJoinableTeams,
 } from "@overbookd/registration";
 import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
 import { PrismaService } from "../../prisma.service";
-import { isJoinableTeams } from "@overbookd/registration";
 import {
   DatabaseNewcomer,
   DatabaseTeamCode,
@@ -39,6 +40,7 @@ export class PrismaEnrollNewcomersRepository
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
+        registrationMembership: ADHERENT,
         teams: {
           none: {
             team: { code: BENEVOLE_CODE },

@@ -19,11 +19,11 @@ import {
   FESTIVAL_TASK_REJECTED,
   FestivalTaskApproved,
   FESTIVAL_TASK_APPROVED,
+  ADHERENT_REGISTERED,
+  VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
 import {
-  ADHERENT_REGISTERED,
   AdherentRegistered,
-  VOLUNTEER_REGISTERED,
   VolunteerRegistered,
 } from "@overbookd/registration";
 import { PastSharedMeal } from "@overbookd/personal-account";

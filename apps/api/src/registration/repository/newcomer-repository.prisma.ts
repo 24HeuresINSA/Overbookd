@@ -1,7 +1,8 @@
 import {
   FulfilledRegistration,
+  Membership,
+  NewcomerRegistered,
   NewcomerRepository,
-  Registree,
   TeamCode,
 } from "@overbookd/registration";
 import { PrismaService } from "../../prisma.service";
@@ -21,7 +22,10 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     return existing !== null;
   }
 
-  async save(fulfilledForm: FulfilledRegistration): Promise<Registree> {
+  async save<T extends Membership>(
+    fulfilledForm: FulfilledRegistration,
+    registrationMembership: T,
+  ): Promise<NewcomerRegistered<T>> {
     const { mobilePhone, ...similarProperties } = fulfilledForm;
     const teams = {
       createMany: {
@@ -30,13 +34,18 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
         })),
       },
     };
-    const password = await this.crypto.hash(fulfilledForm.password);
-    const data = { ...similarProperties, phone: mobilePhone, teams, password };
+    const data = {
+      ...similarProperties,
+      teams,
+      phone: mobilePhone,
+      password: await this.crypto.hash(fulfilledForm.password),
+      registrationMembership,
+    };
     const { id } = await this.prisma.user.create({
       data,
       select: { id: true },
     });
 
-    return { ...fulfilledForm, id };
+    return { ...fulfilledForm, id, membership: registrationMembership };
   }
 }

@@ -1,11 +1,11 @@
 import { Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { Observable, merge } from "rxjs";
-import { ADHERENT_REGISTERED, RegisterNewcomer } from "@overbookd/registration";
+import { RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
-import { DomainEvent } from "@overbookd/domain-events";
+import { ADHERENT_REGISTERED, DomainEvent } from "@overbookd/domain-events";
 
 type AvailableNotification = {
   source: Observable<DomainEvent>;

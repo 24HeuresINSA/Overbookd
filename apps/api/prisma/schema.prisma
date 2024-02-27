@@ -21,24 +21,32 @@ enum TransactionType {
   @@map("transaction_type")
 }
 
+enum RegistrationMembership {
+  ADHERENT
+  VOLUNTEER
+
+  @@map("registration_membership")
+}
+
 model User {
-  id                   Int       @id @default(autoincrement())
-  firstname            String    @db.VarChar(30)
-  lastname             String    @db.VarChar(30)
-  nickname             String?   @db.VarChar(30)
-  email                String    @unique
-  birthdate            DateTime
-  phone                String    @db.VarChar(30)
-  comment              String?
-  resetPasswordToken   String?   @unique @map("reset_password_token")
-  resetPasswordExpires DateTime? @map("reset_password_expires")
-  profilePicture       String?   @map("profile_picture")
-  charisma             Int       @default(0)
-  balance              Int       @default(0)
-  password             String    @default("")
-  createdAt            DateTime  @default(now()) @map("created_at")
-  updatedAt            DateTime  @updatedAt @map("updated_at")
-  isDeleted            Boolean   @default(false) @map("is_deleted")
+  id                     Int                     @id @default(autoincrement())
+  firstname              String                  @db.VarChar(30)
+  lastname               String                  @db.VarChar(30)
+  nickname               String?                 @db.VarChar(30)
+  email                  String                  @unique
+  birthdate              DateTime
+  phone                  String                  @db.VarChar(30)
+  comment                String?
+  resetPasswordToken     String?                 @unique @map("reset_password_token")
+  resetPasswordExpires   DateTime?               @map("reset_password_expires")
+  profilePicture         String?                 @map("profile_picture")
+  charisma               Int                     @default(0)
+  balance                Int                     @default(0)
+  password               String                  @default("")
+  createdAt              DateTime                @default(now()) @map("created_at")
+  updatedAt              DateTime                @updatedAt @map("updated_at")
+  isDeleted              Boolean                 @default(false) @map("is_deleted")
+  registrationMembership RegistrationMembership? @map("registration_membership")
 
   teams UserTeam[]
 

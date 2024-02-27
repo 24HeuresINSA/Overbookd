@@ -1,8 +1,5 @@
 import { Observable, filter } from "rxjs";
-import type {
-  AdherentRegisteredEvent,
-  VolunteerRegisteredEvent,
-} from "@overbookd/registration";
+
 import type {
   FestivalActivityCreatedEvent,
   FestivalActivityApprovedEvent,
@@ -16,6 +13,10 @@ import {
   FestivalTaskReadyToReviewEvent,
   FestivalTaskRejectedEvent,
 } from "./festival-task";
+import {
+  AdherentRegisteredEvent,
+  VolunteerRegisteredEvent,
+} from "./registration";
 
 export type DomainEvent =
   | AdherentRegisteredEvent
