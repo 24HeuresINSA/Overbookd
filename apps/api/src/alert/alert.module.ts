@@ -9,7 +9,7 @@ import { SettleAlerting } from "@overbookd/contribution";
 import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
-import { PrismaFriendsAlerting as PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
+import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
 
 @Module({
   controllers: [AlertController],

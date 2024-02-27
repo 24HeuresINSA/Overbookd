@@ -17,4 +17,10 @@ export class AlertsResponseDto implements Alerts {
     required: false,
   })
   contribution?: IAlertAboutContribution;
+
+  @ApiProperty({ required: false })
+  profilePicture?: boolean;
+
+  @ApiProperty({ required: false })
+  friends?: boolean;
 }
