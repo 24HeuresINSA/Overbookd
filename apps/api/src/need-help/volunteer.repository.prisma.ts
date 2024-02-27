@@ -13,7 +13,7 @@ import {
 import { VolunteerTask } from "../user/user.model";
 import {
   DatabaseAssignment,
-  DatabaseFtUserRequest,
+  DatabaseVolunteer,
 } from "../assignment/model/assignment.model";
 import {
   formatAssignmentAsTask,
@@ -28,7 +28,7 @@ type DatabaseVolunteer = {
   teams: { team: { code: string } }[];
   availabilities: IProvidePeriod[];
   assignments: DatabaseAssignment[];
-  ftUserRequests: DatabaseFtUserRequest[];
+  ftUserRequests: DatabaseVolunteer[];
 };
 
 const SELECT_VOLUNTEER = {
@@ -103,7 +103,7 @@ function formatVolunteerAssignments(
 }
 
 function formatVolunteerRequirements(
-  ftUserRequests: DatabaseFtUserRequest[],
+  ftUserRequests: DatabaseVolunteer[],
 ): VolunteerTask[] {
   return ftUserRequests.map(formatRequirementAsTask);
 }

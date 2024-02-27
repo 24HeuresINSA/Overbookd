@@ -1,17 +1,17 @@
+import { FestivalTask } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
-import { FtStatus } from "../../ft/ft.model";
 
 type DatabaseFt = {
-  name: string;
-  id: number;
-  status: FtStatus;
+  id: FestivalTask["id"];
+  name: FestivalTask["general"]["name"];
+  status: FestivalTask["status"];
 };
 
 type WithDatabaseFt = {
   ft: DatabaseFt;
 };
 
-export type DatabaseFtUserRequest = {
+export type DatabaseVolunteer = {
   ftTimeWindows: IProvidePeriod & WithDatabaseFt;
 };
 

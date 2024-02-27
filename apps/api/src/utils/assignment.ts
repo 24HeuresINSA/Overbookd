@@ -1,6 +1,6 @@
 import {
   DatabaseAssignment,
-  DatabaseFtUserRequest,
+  DatabaseVolunteer,
 } from "../assignment/model/assignment.model";
 import { VolunteerTask } from "../../src/user/user.model";
 
@@ -15,7 +15,7 @@ export function formatAssignmentAsTask({
 
 export function formatRequirementAsTask({
   ftTimeWindows: { start, end, ft },
-}: DatabaseFtUserRequest): VolunteerTask {
+}: DatabaseVolunteer): VolunteerTask {
   return {
     start,
     end,

@@ -53,13 +53,9 @@ model User {
   transactionsFrom Transaction[] @relation("from")
   transactionsTo   Transaction[] @relation("to")
 
-  ftsInCharge      Ft[]                    @relation("inCharge")
-  oldFtFeedbacks   FtFeedback[]
-  ftUserRequests   FtUserRequest[]
   availabilities   VolunteerAvailability[]
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
-  ftsInReview      Ft[]                    @relation("reviewer")
 
   assignments                  Assignment[]
   contributions                Contribution[]
@@ -96,10 +92,7 @@ model Team {
 
   users                     UserTeam[]
   ownedCategories           CatalogCategory[]              @relation("owner")
-  ftRequests                FtTeamRequest[]
-  ftReviews                 FtReview[]
   permissions               TeamPermission[]
-  ft                        Ft[]
   festivalActivities        FestivalActivity[]
   festivalTasks             FestivalTask[]
   festivalTaskMobilizations FestivalTaskMobilizationTeam[]
@@ -167,7 +160,6 @@ model SignaLocation {
   id                 Int                @id @default(autoincrement())
   name               String             @db.VarChar(255)
   geoJson            Json?              @map("geo_json")
-  fts                Ft[]
   festivalActivities FestivalActivity[]
   FestivalTask       FestivalTask[]
 
@@ -211,166 +203,41 @@ model Configuration {
   @@map("configuration")
 }
 
-enum FtStatus {
-  DRAFT
-  SUBMITTED
-  VALIDATED
-  REFUSED
-  READY
-
-  @@map("ft_status")
-}
-
-enum TaskCategory {
-  STATIQUE
-  BAR
-  MANUTENTION
-  FUN
-  RELOU
-
-  @@map("task_category")
-}
-
-model Ft {
-  id         Int               @id @default(autoincrement())
-  name       String
-  status     FtStatus          @default(DRAFT)
-  fa         FestivalActivity? @relation(fields: [parentFaId], references: [id])
-  parentFaId Int?              @map("parent_fa_id")
-
-  isStatic       Boolean        @default(false) @map("is_static")
-  description    String?        @db.Text
-  userInCharge   User?          @relation(fields: [userInChargeId], references: [id], name: "inCharge")
-  userInChargeId Int?           @map("user_in_charge_id")
-  team           Team?          @relation(fields: [teamCode], references: [code])
-  teamCode       String?        @map("team_code") @db.VarChar(20)
-  location       SignaLocation? @relation(fields: [locationId], references: [id])
-  locationId     Int?           @map("location_id")
-  isDeleted      Boolean        @default(false) @map("is_deleted")
-  reviewerId     Int?           @map("reviewer_id")
-  reviewer       User?          @relation("reviewer", fields: [reviewerId], references: [id])
-  hasPriority    Boolean?       @default(false) @map("has_priority")
-  category       TaskCategory?
-
-  feedbacks   FtFeedback[]
-  timeWindows FtTimeWindow[]
-  reviews     FtReview[]
-
-  @@map("ft")
-}
-
-enum FtFeedbackSubjectType {
-  REFUSED
-  SUBMIT
-  VALIDATED
-  COMMENT
-  READY
-
-  @@map("ft_feedback_subject_type")
-}
-
-model FtFeedback {
-  id        Int                   @id @default(autoincrement())
-  ft        Ft                    @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId      Int                   @map("ft_id")
-  comment   String                @db.Text
-  subject   FtFeedbackSubjectType
-  author    User                  @relation(fields: [authorId], references: [id])
-  authorId  Int                   @map("author_id")
-  createdAt DateTime              @default(now()) @map("created_at")
-
-  @@map("ft_feedback")
-}
-
-model FtTimeWindow {
-  id           Int             @id @default(autoincrement())
-  ft           Ft              @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId         Int             @map("ft_id")
-  start        DateTime
-  end          DateTime
-  sliceTime    Float?          @map("slice_time")
-  userRequests FtUserRequest[]
-  teamRequests FtTeamRequest[]
-  timeSpans    FtTimeSpan[]
-
-  @@index([start(sort: Asc)])
-  @@index([end(sort: Desc)])
-  @@map("ft_time_window")
-}
-
-model FtUserRequest {
-  id              Int          @id @default(autoincrement())
-  ftTimeWindows   FtTimeWindow @relation(fields: [ftTimeWindowsId], references: [id], onDelete: Cascade)
-  ftTimeWindowsId Int          @map("ft_time_window_id")
-  user            User         @relation(fields: [userId], references: [id])
-  userId          Int          @map("user_id")
-
-  assignments Assignment[]
-
-  @@unique([ftTimeWindowsId, userId])
-  @@map("ft_user_request")
-}
-
-model FtTeamRequest {
-  id            Int          @id @default(autoincrement())
-  timeWindows   FtTimeWindow @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
-  timeWindowsId Int          @map("ft_time_window_id")
-  quantity      Int
-  team          Team         @relation(fields: [teamCode], references: [code], onDelete: Cascade)
-  teamCode      String       @map("team_code") @db.VarChar(20)
-  assignments   Assignment[]
-
-  @@unique([timeWindowsId, teamCode])
-  @@map("ft_team_request")
-}
-
-model FtTimeSpan {
-  id           Int          @id @default(autoincrement())
-  timeWindow   FtTimeWindow @relation(fields: [timeWindowId], references: [id], onDelete: Cascade)
-  timeWindowId Int          @map("ft_time_window_id")
-  start        DateTime
-  end          DateTime
-
-  assignments Assignment[]
-
-  @@unique([timeWindowId, start, end])
-  @@index([start(sort: Asc)])
-  @@index([end(sort: Desc)])
-  @@index([start(sort: Asc), end(sort: Asc)])
-  @@map("ft_time_span")
-}
-
 model Assignment {
-  id            Int            @id @default(autoincrement())
-  timeSpanId    Int            @map("time_span_id")
-  timeSpan      FtTimeSpan     @relation(fields: [timeSpanId], references: [id], onDelete: Cascade)
-  userRequest   FtUserRequest? @relation(fields: [userRequestId], references: [id], onDelete: Cascade)
-  userRequestId Int?           @map("user_request_id")
-  teamRequest   FtTeamRequest? @relation(fields: [teamRequestId], references: [id], onDelete: Cascade)
-  teamRequestId Int?           @map("team_request_id")
-  assignee      User           @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
-  assigneeId    Int            @map("assignee_id")
+  id         Int              @id @default(autoincrement())
+  periodId   Int              @map("period_id")
+  period     AssignmentPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  assigneeId Int              @map("assignee_id")
+  assignee   User             @relation(fields: [assigneeId], references: [id], onDelete: Cascade)
 
-  @@unique([timeSpanId, assigneeId])
+  volunteerId    Int?                               @map("user_request_id")
+  volunteer      FestivalTaskMobilizationVolunteer? @relation(fields: [volunteerId, ftId, mobilizationId], references: [volunteerId, mobilizationftId, mobilizationId], onDelete: Cascade)
+  teamCode       String?                            @map("team_request_id")
+  team           FestivalTaskMobilizationTeam?      @relation(fields: [teamCode, ftId, mobilizationId], references: [teamCode, mobilizationftId, mobilizationId], onDelete: Cascade)
+  ftId           Int                                @map("ft_id")
+  ft             FestivalTask                       @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  mobilizationId String                             @map("mobilization_id")
+  mobilization   FestivalTaskMobilization           @relation(fields: [mobilizationId, ftId], references: [id, ftId], onDelete: Cascade)
+
+  @@unique([periodId, assigneeId])
   @@map("assignment")
 }
 
-enum ReviewStatus {
-  VALIDATED
-  REFUSED
+model AssignmentPeriod {
+  id             Int                      @id @default(autoincrement())
+  mobilizationId String                   @map("mobilization_id")
+  mobilization   FestivalTaskMobilization @relation(fields: [mobilizationId, ftId], references: [id, ftId], onDelete: Cascade)
+  ftId           Int                      @map("ft_id")
+  ft             FestivalTask             @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  start          DateTime
+  end            DateTime
+  assignments    Assignment[]
 
-  @@map("review_status")
-}
-
-model FtReview {
-  ft       Ft           @relation(fields: [ftId], references: [id], onDelete: Cascade)
-  ftId     Int          @map("ft_id")
-  team     Team         @relation(fields: [teamCode], references: [code], onDelete: Cascade)
-  teamCode String       @map("team_code") @db.VarChar(20)
-  status   ReviewStatus
-
-  @@unique([ftId, teamCode])
-  @@map("ft_review")
+  @@unique([mobilizationId, start, end])
+  @@index([start(sort: Asc)])
+  @@index([end(sort: Desc)])
+  @@index([start(sort: Asc), end(sort: Asc)])
+  @@map("assignment_period")
 }
 
 model InventoryRecord {
@@ -446,7 +313,6 @@ model FestivalActivity {
   reviews       FestivalActivityReview[]
   feedbacks     FestivalActivityFeedback[]
   events        FestivalActivityHistory[]
-  fts           Ft[] // TO REMOVE
   festivalTasks FestivalTask[]
 
   // General
@@ -674,6 +540,16 @@ model FestivalActivityFeedback {
   @@map("festival_activity_feedback")
 }
 
+enum TaskCategory {
+  STATIQUE
+  BAR
+  MANUTENTION
+  FUN
+  RELOU
+
+  @@map("task_category")
+}
+
 model FestivalTask {
   id        Int                    @unique
   status    FestivalTaskStatus
@@ -706,7 +582,10 @@ model FestivalTask {
   inChargeVolunteers  FestivalTaskInChargeVolunteer[]
   inquiries           FestivalTaskInquiryRequest[]
 
-  mobilizations FestivalTaskMobilization[]
+  mobilizations     FestivalTaskMobilization[]
+  assignmentPeriods AssignmentPeriod[]
+  assignments       Assignment[]
+  category          TaskCategory
 
   @@map("festival_task")
 }
@@ -748,8 +627,10 @@ model FestivalTaskMobilization {
   teams               FestivalTaskMobilizationTeam[]
   durationSplitInHour Int?                                @map("duration_split_in_hour")
 
-  ftId Int          @map("ft_id")
-  ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId              Int                @map("ft_id")
+  ft                FestivalTask       @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  assignmentPeriods AssignmentPeriod[]
+  assignments       Assignment[]
 
   @@id([ftId, id])
   @@map("festival_task_mobilization")
@@ -761,6 +642,7 @@ model FestivalTaskMobilizationVolunteer {
   mobilization     FestivalTaskMobilization @relation(fields: [mobilizationId, mobilizationftId], references: [id, ftId], onDelete: Cascade)
   mobilizationId   String                   @map("mobilization_id")
   mobilizationftId Int                      @map("mobilization_ft_id")
+  assignments      Assignment[]
 
   @@id([volunteerId, mobilizationId, mobilizationftId])
   @@map("festival_task_moblilization_volunteer")
@@ -773,6 +655,7 @@ model FestivalTaskMobilizationTeam {
   mobilization     FestivalTaskMobilization @relation(fields: [mobilizationId, mobilizationftId], references: [id, ftId], onDelete: Cascade)
   mobilizationId   String                   @map("mobilization_id")
   mobilizationftId Int                      @map("mobilization_ft_id")
+  assignments      Assignment[]
 
   @@id([teamCode, mobilizationId, mobilizationftId])
   @@map("festival_task_mobilization_team")
