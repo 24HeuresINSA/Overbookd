@@ -103,6 +103,7 @@ describe("Prepare festival task mobilizations list", () => {
           const { mobilizations } = await prepare.addMobilization(
             task.id,
             form,
+            noel,
           );
           expect(mobilizations).toHaveLength(task.mobilizations.length + 1);
           expect(mobilizations).toContainEqual(expectedMobilization);
@@ -118,7 +119,7 @@ describe("Prepare festival task mobilizations list", () => {
           it("should indicate a mobilization should have at least one volunteer or team", async () => {
             expect(
               async () =>
-                await prepare.addMobilization(task.id, mobilization.form),
+                await prepare.addMobilization(task.id, mobilization.form, noel),
             ).rejects.toThrow(
               "Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)",
             );
@@ -143,6 +144,7 @@ describe("Prepare festival task mobilizations list", () => {
             const { mobilizations } = await prepare.addMobilization(
               task.id,
               helper.form,
+              noel,
             );
             const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
@@ -182,6 +184,7 @@ describe("Prepare festival task mobilizations list", () => {
             const { mobilizations } = await prepare.addMobilization(
               task.id,
               helper.form,
+              noel,
             );
             const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
@@ -211,6 +214,7 @@ describe("Prepare festival task mobilizations list", () => {
             const { mobilizations } = await prepare.addMobilization(
               task.id,
               helper.form,
+              noel,
             );
             const mobilization = mobilizations.find(
               (mobilization) => mobilization.id === helper.mobilization.id,
@@ -233,7 +237,7 @@ describe("Prepare festival task mobilizations list", () => {
             friday11hfriday18hMobilization.withDurationSplit(2);
           expect(
             async () =>
-              await prepare.addMobilization(task.id, mobilization.form),
+              await prepare.addMobilization(task.id, mobilization.form, noel),
           ).rejects.toThrow(SplitDurationIsNotPeriodDivider);
         });
       });
@@ -244,10 +248,12 @@ describe("Prepare festival task mobilizations list", () => {
         await prepare.addMobilization(
           task.id,
           friday11hfriday18hMobilization.form,
+          noel,
         );
         const { mobilizations } = await prepare.addMobilization(
           task.id,
           saturday11hsaturday18hMobilization.form,
+          noel,
         );
         expect(mobilizations).toHaveLength(2);
       });
@@ -260,6 +266,7 @@ describe("Prepare festival task mobilizations list", () => {
             await prepare.addMobilization(
               task.id,
               saturday11hsaturday18hMobilization.form,
+              noel,
             ),
         ).rejects.toThrow(MobilizationAlreadyExist);
       });
@@ -279,6 +286,7 @@ describe("Prepare festival task mobilizations list", () => {
           const { mobilizations } = await prepare.removeMobilization(
             task.id,
             mobilization.id,
+            noel,
           );
 
           expect(mobilizations).toHaveLength(expectedLength);
@@ -295,7 +303,11 @@ describe("Prepare festival task mobilizations list", () => {
           it("should indicate that at least one mobilization is mandatory", async () => {
             expect(
               async () =>
-                await prepare.removeMobilization(task.id, mobilization.id),
+                await prepare.removeMobilization(
+                  task.id,
+                  mobilization.id,
+                  noel,
+                ),
             ).rejects.toThrow("Au moins une mobilisation est nécessaire");
           });
         },
@@ -309,6 +321,7 @@ describe("Prepare festival task mobilizations list", () => {
         const { mobilizations } = await prepare.removeMobilization(
           task.id,
           mobilizationId,
+          noel,
         );
 
         expect(mobilizations).toStrictEqual(task.mobilizations);
@@ -682,7 +695,8 @@ describe("Prepare festival task mobilizations list", () => {
               it(`should indicate task is already approved by ${approvers}`, async () => {
                 const form = friday18hsaturday10hMobilization.form;
                 expect(
-                  async () => await prepare.addMobilization(task.id, form),
+                  async () =>
+                    await prepare.addMobilization(task.id, form, noel),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
@@ -695,6 +709,7 @@ describe("Prepare festival task mobilizations list", () => {
                       await prepare.removeMobilization(
                         task.id,
                         mobilization.id,
+                        noel,
                       ),
                   ).rejects.toThrow(AlreadyApprovedBy);
                 });
@@ -726,96 +741,154 @@ describe("Prepare festival task mobilizations list", () => {
         } else {
           describe("when another reviewer rejects task", () => {
             describe("when trying to add mobilization", () => {
+              const form = friday10hfriday11hMobilization.form;
               it("should add mobilization", async () => {
-                const form = friday10hfriday11hMobilization.form;
                 const { mobilizations } = await prepare.addMobilization(
                   task.id,
                   form,
+                  noel,
                 );
                 expect(mobilizations).toHaveLength(
                   task.mobilizations.length + 1,
                 );
               });
+              it("should reset all approver review status to under review", async () => {
+                const updated = await prepare.addMobilization(
+                  task.id,
+                  form,
+                  noel,
+                );
+                if (isDraft(updated)) return;
+
+                expect(updated.reviews.humain).toBe(humain);
+                expect(updated.reviews.matos).toBe(matos);
+                expect(updated.reviews.elec).toBe(elec);
+              });
+              it("should add RESET_REVIEW key event to history", async () => {
+                const { history } = await prepare.addMobilization(
+                  task.id,
+                  form,
+                  noel,
+                );
+                expect(history).toStrictEqual([
+                  ...task.history,
+                  {
+                    action: RESET_REVIEW,
+                    by: noel,
+                    at: expect.any(Date),
+                    description:
+                      "Précédentes approbations réinitialisées par un changement sur le champ mobilisation",
+                  },
+                ]);
+              });
             });
             if (task.mobilizations.length > 1) {
               describe("when trying to remove mobilization which is not the last", () => {
+                const mobilization = task.mobilizations[0];
                 it("should remove mobilization", async () => {
-                  const mobilization = task.mobilizations[0];
                   const { mobilizations } = await prepare.removeMobilization(
                     task.id,
                     mobilization.id,
+                    noel,
                   );
                   expect(mobilizations).toHaveLength(
                     task.mobilizations.length - 1,
                   );
                 });
+                it("should reset all approver review status to under review", async () => {
+                  const updated = await prepare.removeMobilization(
+                    task.id,
+                    mobilization.id,
+                    noel,
+                  );
+                  if (isDraft(updated)) return;
+
+                  expect(updated.reviews.humain).toBe(humain);
+                  expect(updated.reviews.matos).toBe(matos);
+                  expect(updated.reviews.elec).toBe(elec);
+                });
+                it("should add RESET_REVIEW key event to history", async () => {
+                  const { history } = await prepare.removeMobilization(
+                    task.id,
+                    mobilization.id,
+                    noel,
+                  );
+                  expect(history).toStrictEqual([
+                    ...task.history,
+                    {
+                      action: RESET_REVIEW,
+                      by: noel,
+                      at: expect.any(Date),
+                      description:
+                        "Précédentes approbations réinitialisées par un changement sur le champ mobilisation",
+                    },
+                  ]);
+                });
               });
             }
-            if (task.mobilizations.length > 0) {
-              describe.each`
-                field               | instigator | update                        | start                          | end                          | durationSplitInHour
-                ${"start"}          | ${noel}    | ${{ start: friday9h.date }}   | ${friday9h.date}               | ${task.mobilizations[0].end} | ${task.mobilizations[0].durationSplitInHour}
-                ${"end"}            | ${noel}    | ${{ end: saturday19h.date }}  | ${task.mobilizations[0].start} | ${saturday19h.date}          | ${task.mobilizations[0].durationSplitInHour}
-                ${"split duration"} | ${noel}    | ${{ durationSplitInHour: 1 }} | ${task.mobilizations[0].start} | ${task.mobilizations[0].end} | ${1}
-              `(
-                "when trying to update $field of existing mobilization",
-                ({
-                  field,
-                  instigator,
-                  update,
-                  start,
-                  end,
-                  durationSplitInHour,
-                }) => {
-                  const mobilization = task.mobilizations[0];
-                  it(`should update ${field} accordingly`, async () => {
-                    const { mobilizations } = await prepare.updateMobilization(
-                      task.id,
-                      mobilization.id,
-                      update,
-                      instigator,
-                    );
-                    const updated = mobilizations[0];
+            describe.each`
+              field                     | instigator | update                        | start                          | end                          | durationSplitInHour
+              ${"début"}                | ${noel}    | ${{ start: friday9h.date }}   | ${friday9h.date}               | ${task.mobilizations[0].end} | ${task.mobilizations[0].durationSplitInHour}
+              ${"fin"}                  | ${noel}    | ${{ end: saturday19h.date }}  | ${task.mobilizations[0].start} | ${saturday19h.date}          | ${task.mobilizations[0].durationSplitInHour}
+              ${"découpage du créneau"} | ${noel}    | ${{ durationSplitInHour: 1 }} | ${task.mobilizations[0].start} | ${task.mobilizations[0].end} | ${1}
+            `(
+              "when trying to update $field of existing mobilization",
+              ({
+                field,
+                instigator,
+                update,
+                start,
+                end,
+                durationSplitInHour,
+              }) => {
+                const mobilization = task.mobilizations[0];
+                it(`should update ${field} accordingly`, async () => {
+                  const { mobilizations } = await prepare.updateMobilization(
+                    task.id,
+                    mobilization.id,
+                    update,
+                    instigator,
+                  );
+                  const updated = mobilizations[0];
 
-                    expect(updated?.start).toBe(start);
-                    expect(updated?.end).toBe(end);
-                    expect(updated?.durationSplitInHour).toBe(
-                      durationSplitInHour,
-                    );
-                  });
-                  it("should reset all approver review status to under review", async () => {
-                    const updated = await prepare.updateMobilization(
-                      task.id,
-                      mobilization.id,
-                      update,
-                      instigator,
-                    );
-                    if (isDraft(updated)) return;
+                  expect(updated?.start).toBe(start);
+                  expect(updated?.end).toBe(end);
+                  expect(updated?.durationSplitInHour).toBe(
+                    durationSplitInHour,
+                  );
+                });
+                it("should reset all approver review status to under review", async () => {
+                  const updated = await prepare.updateMobilization(
+                    task.id,
+                    mobilization.id,
+                    update,
+                    instigator,
+                  );
+                  if (isDraft(updated)) return;
 
-                    expect(updated.reviews.humain).toBe(humain);
-                    expect(updated.reviews.matos).toBe(matos);
-                    expect(updated.reviews.elec).toBe(elec);
-                  });
-                  it("should add RESET_REVIEW key event to history", async () => {
-                    const { history } = await prepare.updateMobilization(
-                      task.id,
-                      mobilization.id,
-                      update,
-                      instigator,
-                    );
-                    expect(history).toStrictEqual([
-                      ...task.history,
-                      {
-                        action: RESET_REVIEW,
-                        by: instigator,
-                        at: expect.any(Date),
-                        description: `Précédentes approbations réinitialisées par un changement sur le champ ${field}`,
-                      },
-                    ]);
-                  });
-                },
-              );
-            }
+                  expect(updated.reviews.humain).toBe(humain);
+                  expect(updated.reviews.matos).toBe(matos);
+                  expect(updated.reviews.elec).toBe(elec);
+                });
+                it("should add RESET_REVIEW key event to history", async () => {
+                  const { history } = await prepare.updateMobilization(
+                    task.id,
+                    mobilization.id,
+                    update,
+                    instigator,
+                  );
+                  expect(history).toStrictEqual([
+                    ...task.history,
+                    {
+                      action: RESET_REVIEW,
+                      by: instigator,
+                      at: expect.any(Date),
+                      description: `Précédentes approbations réinitialisées par un changement sur le champ ${field}`,
+                    },
+                  ]);
+                });
+              },
+            );
           });
         }
       },
