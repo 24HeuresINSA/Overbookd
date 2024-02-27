@@ -732,6 +732,14 @@ export const installBarbecue = factory
   })
   .build();
 
+const friday09hFriday10hInReviewMobilization =
+  MobilizationBuilder.init<InReviewWithConflicts>({
+    start: friday9h,
+    end: friday10h,
+    volunteers: [],
+    teams: [{ count: 5, team: "hard" }],
+  }).mobilization;
+
 const friday10hFriday18hInReviewMobilization =
   MobilizationBuilder.init<InReviewWithConflicts>({
     start: friday10h,
@@ -799,7 +807,10 @@ export const approvedByHumainRejectedByMatos = factory
   })
   .withReviews({ humain: APPROVED, matos: REJECTED })
   .withInquiries([{ ...deuxTables, drive: BACKLINE }])
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
+  .withMobilizations([
+    friday10hFriday18hInReviewMobilization,
+    friday09hFriday10hInReviewMobilization,
+  ])
   .build();
 
 export const approvedByHumainAndElecRejectedByMatos = factory

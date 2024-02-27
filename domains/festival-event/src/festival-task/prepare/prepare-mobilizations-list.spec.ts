@@ -57,6 +57,7 @@ import {
 } from "../../common/review";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { isDraft } from "../../festival-event";
+import { readablePeriodFrom } from "../../common/time-window";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -770,14 +771,14 @@ describe("Prepare festival task mobilizations list", () => {
                   form,
                   noel,
                 );
+                const readablePeriod = readablePeriodFrom(form);
                 expect(history).toStrictEqual([
                   ...task.history,
                   {
                     action: RESET_REVIEW,
                     by: noel,
                     at: expect.any(Date),
-                    description:
-                      "Précédentes approbations réinitialisées par un changement sur le champ mobilisation",
+                    description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation du ${readablePeriod}`,
                   },
                 ]);
               });
@@ -813,14 +814,14 @@ describe("Prepare festival task mobilizations list", () => {
                     mobilization.id,
                     noel,
                   );
+                  const readablePeriod = readablePeriodFrom(mobilization);
                   expect(history).toStrictEqual([
                     ...task.history,
                     {
                       action: RESET_REVIEW,
                       by: noel,
                       at: expect.any(Date),
-                      description:
-                        "Précédentes approbations réinitialisées par un changement sur le champ mobilisation",
+                      description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation du ${readablePeriod}`,
                     },
                   ]);
                 });
