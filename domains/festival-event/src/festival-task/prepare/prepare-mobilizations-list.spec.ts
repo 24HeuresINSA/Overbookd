@@ -39,8 +39,24 @@ import {
   uninstallBarbecue,
   onlyApprovedByHumain,
   onlyApprovedByMatos,
+  approvedByHumainRejectedByMatos,
+  approvedByHumainAndElecRejectedByMatos,
+  approvedByElecRejectedByMatos,
+  approvedByMatosRejectedByHumainAndElec,
+  friday10hfriday11hMobilization,
+  friday9h,
 } from "../festival-task.test-util";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
+import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";
+import {
+  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
+  elec,
+  humain,
+  matos,
+} from "../../common/review";
+import { AlreadyApprovedBy } from "../../common/review.error";
+import { isDraft } from "../../festival-event";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -54,8 +70,12 @@ describe("Prepare festival task mobilizations list", () => {
       serveWaterOnJustDance,
       installBarbecue,
       uninstallBarbecue,
-      onlyApprovedByHumain,
       onlyApprovedByMatos,
+      onlyApprovedByHumain,
+      approvedByHumainRejectedByMatos,
+      approvedByHumainAndElecRejectedByMatos,
+      approvedByElecRejectedByMatos,
+      approvedByMatosRejectedByHumainAndElec,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
@@ -319,6 +339,7 @@ describe("Prepare festival task mobilizations list", () => {
               task.id,
               currentMobilization.id,
               update,
+              noel,
             );
             expect(mobilizations).toContainEqual(expectedMobilization);
             expect(mobilizations).toHaveLength(task.mobilizations.length);
@@ -340,6 +361,7 @@ describe("Prepare festival task mobilizations list", () => {
                   task.id,
                   mobilization.id,
                   update,
+                  noel,
                 ),
             ).rejects.toThrow(SplitDurationIsNotPeriodDivider);
           },
@@ -359,6 +381,7 @@ describe("Prepare festival task mobilizations list", () => {
                   task.id,
                   mobilization.id,
                   update,
+                  noel,
                 ),
             ).rejects.toThrow(EndBeforeStart);
           },
@@ -373,7 +396,12 @@ describe("Prepare festival task mobilizations list", () => {
 
         expect(
           async () =>
-            await prepare.updateMobilization(task.id, mobilizationId, update),
+            await prepare.updateMobilization(
+              task.id,
+              mobilizationId,
+              update,
+              noel,
+            ),
         ).rejects.toThrow(MobilizationNotFound);
       });
     });
@@ -400,21 +428,6 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(mergedMobilization);
         },
       );
-    });
-    describe("when humain approved the task", () => {
-      it("should indicate that mobilization teams are locked", async () => {
-        const mobilization = onlyApprovedByHumain.mobilizations[0];
-        const team = { team: "elec", count: 5 };
-
-        expect(
-          async () =>
-            await prepare.addTeamToMobilization(
-              onlyApprovedByHumain.id,
-              mobilization.id,
-              team,
-            ),
-        ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
-      });
     });
     describe("when team is already part of the mobilization", () => {
       it("should indicate that team is already part of the mobilization", async () => {
@@ -451,19 +464,6 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
-      describe("when humain approved the task", () => {
-        it("should indicate that mobilization teams are locked", async () => {
-          const mobilization = onlyApprovedByHumain.mobilizations[0];
-          expect(
-            async () =>
-              await prepare.removeTeamFromMobilization(
-                onlyApprovedByHumain.id,
-                mobilization.id,
-                "vieux",
-              ),
-          ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
-        });
-      });
       describe.each`
         taskName                              | taskStatus                      | task                     | mobilization                              | team
         ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[0]} | ${"bénévole"}
@@ -525,20 +525,6 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
     });
-    describe("when humain approved the task", () => {
-      it("should indicate that mobilization volunteers are locked", async () => {
-        const mobilization = onlyApprovedByHumain.mobilizations[0];
-
-        expect(
-          async () =>
-            await prepare.addVolunteerToMobilization(
-              onlyApprovedByHumain.id,
-              mobilization.id,
-              noel,
-            ),
-        ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
-      });
-    });
     describe("when volunteer is already part of the mobilization", () => {
       it("should keep mobilization unchanged", async () => {
         const task = presentEscapeGame;
@@ -573,19 +559,6 @@ describe("Prepare festival task mobilizations list", () => {
           expect(mobilizations).toContainEqual(expectedMobilization);
         },
       );
-      describe("when humain approved the task", () => {
-        it("should indicate that mobilization volunteers are locked", async () => {
-          const mobilization = onlyApprovedByHumain.mobilizations[0];
-          expect(
-            async () =>
-              await prepare.removeVolunteerFromMobilization(
-                onlyApprovedByHumain.id,
-                mobilization.id,
-                george.id,
-              ),
-          ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");
-        });
-      });
       describe.each`
         taskName                              | taskStatus                      | task                     | mobilization                              | volunteer
         ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance.status} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[2]} | ${george}
@@ -623,5 +596,229 @@ describe("Prepare festival task mobilizations list", () => {
         expect(mobilizations).toContainEqual(mobilization);
       });
     });
+  });
+  describe("Update after approvals", () => {
+    describe.each`
+      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task
+      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
+      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}
+      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
+      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
+      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
+      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+    `(
+      "when $approvers approved the task $taskName",
+      ({ approvers, task, rejectors, humain, matos, elec }) => {
+        if (approvers.includes(humain)) {
+          describe("humain ownership", () => {
+            describe("when trying to add volunteer to existing mobilization", () => {
+              it("should indicate task is already approved by humain", async () => {
+                const mobilization = task.mobilizations[0];
+                expect(
+                  async () =>
+                    await prepare.addVolunteerToMobilization(
+                      task.id,
+                      mobilization.id,
+                      noel,
+                    ),
+                ).rejects.toThrow(
+                  "La FT a déjà été validée par l'équipe humain.",
+                );
+              });
+            });
+            describe("when trying to remove volunteer from existing mobilization", () => {
+              it("should indicate task is already approved by humain", async () => {
+                const mobilization = task.mobilizations[0];
+                const volunteer = mobilization.volunteers[0];
+                expect(
+                  async () =>
+                    await prepare.removeVolunteerFromMobilization(
+                      task.id,
+                      mobilization.id,
+                      volunteer.id,
+                    ),
+                ).rejects.toThrow(
+                  "La FT a déjà été validée par l'équipe humain.",
+                );
+              });
+            });
+            describe("when trying to add team to existing mobilization", () => {
+              it("should indicate task is already approved by humain", async () => {
+                const mobilization = task.mobilizations[0];
+                const team = { team: "elec", count: 5 };
+                expect(
+                  async () =>
+                    await prepare.addTeamToMobilization(
+                      task.id,
+                      mobilization.id,
+                      team,
+                    ),
+                ).rejects.toThrow(
+                  "La FT a déjà été validée par l'équipe humain.",
+                );
+              });
+            });
+            describe("when trying to remove team from existing mobilization", () => {
+              it("should indicate task is already approved by humain", async () => {
+                const mobilization = task.mobilizations[0];
+                const { team } = mobilization.teams[0];
+                expect(
+                  async () =>
+                    await prepare.removeTeamFromMobilization(
+                      task.id,
+                      mobilization.id,
+                      team,
+                    ),
+                ).rejects.toThrow(
+                  "La FT a déjà été validée par l'équipe humain.",
+                );
+              });
+            });
+          });
+        }
+        if (rejectors.length === 0) {
+          describe("when none of other reviewers rejects task", () => {
+            describe("when trying to add mobilization", () => {
+              it(`should indicate task is already approved by ${approvers}`, async () => {
+                const form = friday18hsaturday10hMobilization.form;
+                expect(
+                  async () => await prepare.addMobilization(task.id, form),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+            if (task.mobilizations.length > 1) {
+              describe("when trying to remove mobilization which is not the last", () => {
+                it(`should indicate task is already approved by ${approvers}`, async () => {
+                  const mobilization = task.mobilizations[0];
+                  expect(
+                    async () =>
+                      await prepare.removeMobilization(
+                        task.id,
+                        mobilization.id,
+                      ),
+                  ).rejects.toThrow(AlreadyApprovedBy);
+                });
+              });
+            }
+            describe.each`
+              field               | update
+              ${"start"}          | ${{ start: saturday10h.date }}
+              ${"end"}            | ${{ end: saturday10h.date }}
+              ${"split duration"} | ${{ durationSplitInHour: 1 }}
+            `(
+              "when trying to update $field of existing mobilization",
+              ({ update }) => {
+                it(`should indicate task is already approved by ${approvers}`, async () => {
+                  const mobilization = task.mobilizations[0];
+                  expect(
+                    async () =>
+                      await prepare.updateMobilization(
+                        task.id,
+                        mobilization.id,
+                        update,
+                        noel,
+                      ),
+                  ).rejects.toThrow(AlreadyApprovedBy);
+                });
+              },
+            );
+          });
+        } else {
+          describe("when another reviewer rejects task", () => {
+            describe("when trying to add mobilization", () => {
+              it("should add mobilization", async () => {
+                const form = friday10hfriday11hMobilization.form;
+                const { mobilizations } = await prepare.addMobilization(
+                  task.id,
+                  form,
+                );
+                expect(mobilizations).toHaveLength(
+                  task.mobilizations.length + 1,
+                );
+              });
+            });
+            if (task.mobilizations.length > 1) {
+              describe("when trying to remove mobilization which is not the last", () => {
+                it("should remove mobilization", async () => {
+                  const mobilization = task.mobilizations[0];
+                  const { mobilizations } = await prepare.removeMobilization(
+                    task.id,
+                    mobilization.id,
+                  );
+                  expect(mobilizations).toHaveLength(
+                    task.mobilizations.length - 1,
+                  );
+                });
+              });
+            }
+            if (task.mobilizations.length > 0) {
+              describe.each`
+                field               | instigator | update                        | start                          | end                          | durationSplitInHour
+                ${"start"}          | ${noel}    | ${{ start: friday9h.date }}   | ${friday9h.date}               | ${task.mobilizations[0].end} | ${task.mobilizations[0].durationSplitInHour}
+                ${"end"}            | ${noel}    | ${{ end: saturday19h.date }}  | ${task.mobilizations[0].start} | ${saturday19h.date}          | ${task.mobilizations[0].durationSplitInHour}
+                ${"split duration"} | ${noel}    | ${{ durationSplitInHour: 1 }} | ${task.mobilizations[0].start} | ${task.mobilizations[0].end} | ${1}
+              `(
+                "when trying to update $field of existing mobilization",
+                ({
+                  field,
+                  instigator,
+                  update,
+                  start,
+                  end,
+                  durationSplitInHour,
+                }) => {
+                  const mobilization = task.mobilizations[0];
+                  it(`should update ${field} accordingly`, async () => {
+                    const { mobilizations } = await prepare.updateMobilization(
+                      task.id,
+                      mobilization.id,
+                      update,
+                      instigator,
+                    );
+                    const updated = mobilizations[0];
+
+                    expect(updated?.start).toBe(start);
+                    expect(updated?.end).toBe(end);
+                    expect(updated?.durationSplitInHour).toBe(
+                      durationSplitInHour,
+                    );
+                  });
+                  it("should reset all approver review status to under review", async () => {
+                    const updated = await prepare.updateMobilization(
+                      task.id,
+                      mobilization.id,
+                      update,
+                      instigator,
+                    );
+                    if (isDraft(updated)) return;
+
+                    expect(updated.reviews.humain).toBe(humain);
+                    expect(updated.reviews.matos).toBe(matos);
+                    expect(updated.reviews.elec).toBe(elec);
+                  });
+                  it("should add RESET_REVIEW key event to history", async () => {
+                    const { history } = await prepare.updateMobilization(
+                      task.id,
+                      mobilization.id,
+                      update,
+                      instigator,
+                    );
+                    expect(history).toStrictEqual([
+                      ...task.history,
+                      {
+                        action: RESET_REVIEW,
+                        by: instigator,
+                        at: expect.any(Date),
+                        description: `Précédentes approbations réinitialisées par un changement sur le champ ${field}`,
+                      },
+                    ]);
+                  });
+                },
+              );
+            }
+          });
+        }
+      },
+    );
   });
 });

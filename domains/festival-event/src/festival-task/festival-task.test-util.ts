@@ -153,6 +153,10 @@ export const george = {
   firstname: "George",
 };
 
+export const friday9h: BuildTimeWindow = {
+  date: new Date("2024-05-17T09:00+02:00"),
+  id: "28598820",
+};
 const friday10h: BuildTimeWindow = {
   date: new Date("2024-05-17T10:00+02:00"),
   id: "28598880",
@@ -243,6 +247,11 @@ export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
   start: saturday8h,
   end: saturday11h,
   volunteers: [{ ...lea, conflicts: { tasks: [], availability: false } }],
+});
+export const friday10hfriday11hMobilization = MobilizationBuilder.init({
+  start: friday10h,
+  end: friday11h,
+  teams: [{ count: 5, team: "bénévole" }],
 });
 export const friday10hfriday18hMobilization = MobilizationBuilder.init({
   start: friday10h,
@@ -755,6 +764,13 @@ export const onlyApprovedByMatos = factory
     { ...deuxTables, drive: BACKLINE },
     { ...troisMarteaux, drive: MAGASIN },
   ])
+  .withInstructions({
+    contacts: [noelContact, justDanceInstallerContact],
+    inCharge: {
+      instruction: "Dedicated instruction",
+      volunteers: [noel, george],
+    },
+  })
   .withMobilizations([friday10hFriday18hInReviewMobilization])
   .build();
 
