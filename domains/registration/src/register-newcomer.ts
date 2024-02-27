@@ -1,28 +1,24 @@
-import { ENROLL_HARD, Permission } from "@overbookd/permission";
+import { ENROLL_HARD, ENROLL_SOFT, Permission } from "@overbookd/permission";
 
-import { AdherentRegistered } from "./event";
 import {
   FulfilledRegistration,
   RegisterForm,
   RegistrationError,
-  Teams,
 } from "./register-form";
-
-export type Registree = {
-  id: number;
-  email: string;
-  firstname: string;
-  lastname: string;
-  mobilePhone: string;
-  nickname?: string;
-  birthdate: Date;
-  comment?: string;
-  teams: Teams;
-};
+import {
+  AdherentRegistered,
+  Membership,
+  NewcomerRegistered,
+  VolunteerRegistered,
+  MemberRegistered,
+} from "./newcomer";
 
 export interface NewcomerRepository {
   isEmailUsed(email: string): Promise<boolean>;
-  save: (fulfilledForm: FulfilledRegistration) => Promise<Registree>;
+  save: <T extends Membership>(
+    fulfilledForm: FulfilledRegistration,
+    membership: T,
+  ) => Promise<NewcomerRegistered<T>>;
 }
 
 export type FilterNotifyees = {
@@ -34,7 +30,7 @@ export type Notifyee = {
 };
 
 export interface NotificationRepository {
-  add(event: AdherentRegistered, clause: FilterNotifyees): Promise<Notifyee[]>;
+  add(event: MemberRegistered, clause: FilterNotifyees): Promise<Notifyee[]>;
 }
 
 export class RegisterNewcomer {
@@ -53,7 +49,10 @@ export class RegisterNewcomer {
     return form.fillNickname(nickname);
   }
 
-  async fromRegisterForm(form: Partial<FulfilledRegistration>) {
+  async fromRegisterForm(
+    form: Partial<FulfilledRegistration>,
+    membership: Membership,
+  ) {
     const fulfilledForm = this.commentAction(
       this.nicknameAction(RegisterForm.init(), form.nickname),
       form.comment,
@@ -77,12 +76,18 @@ export class RegisterNewcomer {
       ]);
     }
 
-    return this.newcomerRepository.save(fulfilledForm);
+    return this.newcomerRepository.save(fulfilledForm, membership);
   }
 
   notifyNewAdherentAwaits(newcomer: AdherentRegistered): Promise<Notifyee[]> {
     return this.notificationRepository.add(newcomer, {
       permission: ENROLL_HARD,
+    });
+  }
+
+  notifyNewVolunteerAwaits(newcomer: VolunteerRegistered): Promise<Notifyee[]> {
+    return this.notificationRepository.add(newcomer, {
+      permission: ENROLL_SOFT,
     });
   }
 }

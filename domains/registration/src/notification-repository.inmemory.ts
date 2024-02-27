@@ -1,9 +1,9 @@
+import { AdherentRegistered } from "./newcomer";
 import {
   FilterNotifyees,
   NotificationRepository,
   Notifyee,
 } from "./register-newcomer";
-import { AdherentRegistered } from "./event";
 import { Permission } from "@overbookd/permission";
 
 type StoredNotification = {

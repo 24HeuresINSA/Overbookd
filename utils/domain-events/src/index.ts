@@ -28,3 +28,8 @@ export {
 } from "./festival-task";
 export type { SharedMealClosedEvent } from "./shared-meal";
 export { SHARED_MEAL_CLOSED } from "./shared-meal";
+export type {
+  AdherentRegisteredEvent,
+  VolunteerRegisteredEvent,
+} from "./registration";
+export { ADHERENT_REGISTERED, VOLUNTEER_REGISTERED } from "./registration";

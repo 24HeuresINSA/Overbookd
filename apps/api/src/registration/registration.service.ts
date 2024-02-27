@@ -4,23 +4,26 @@ import {
   EnrollNewcomersForm,
   FulfilledRegistration,
   IDefineANewcomer,
-  NewcomerRegisteredEvent,
   RegisterNewcomer,
-  Registree,
   VOLUNTEER,
   ADHERENT,
   EnrollNewcomers,
   Credentials,
   ForgetMember,
-  ADHERENT_REGISTERED,
-  VOLUNTEER_REGISTERED,
+  Membership,
+  NewcomerRegistered,
+  isAdherentRegistered,
+  isVolunteerRegistered,
 } from "@overbookd/registration";
 import { jwtConstants } from "../authentication/constants";
 import { InviteNewAdherents } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
 import { isString } from "class-validator";
-import { DomainEvent } from "@overbookd/domain-events";
+import {
+  ADHERENT_REGISTERED,
+  VOLUNTEER_REGISTERED,
+} from "@overbookd/domain-events";
 
 export class RegistrationService {
   constructor(
@@ -40,25 +43,36 @@ export class RegistrationService {
       throw new BadRequestException("Le lien d'invitation a exipré");
     }
 
+    const membership = this.getMembership(token);
+
     const registree = await this.registerNewcomer.fromRegisterForm(
       fulfilledRegistration,
+      membership,
     );
 
-    this.publishNewcomerRegisteredEvent(registree, token);
+    this.publishNewcomerRegisteredEvent(registree);
   }
 
-  private publishNewcomerRegisteredEvent(registree: Registree, token?: string) {
-    const event: DomainEvent = token
-      ? {
-          type: ADHERENT_REGISTERED,
-          data: NewcomerRegisteredEvent.create(registree, ADHERENT),
-        }
-      : {
-          type: VOLUNTEER_REGISTERED,
-          data: NewcomerRegisteredEvent.create(registree, VOLUNTEER),
-        };
+  private getMembership(token?: string): Membership {
+    return token ? ADHERENT : VOLUNTEER;
+  }
 
-    this.eventStore.publish(event);
+  private publishNewcomerRegisteredEvent(
+    registree: NewcomerRegistered<Membership>,
+  ) {
+    if (isAdherentRegistered(registree)) {
+      return this.eventStore.publish({
+        type: ADHERENT_REGISTERED,
+        data: registree,
+      });
+    }
+
+    if (isVolunteerRegistered(registree)) {
+      return this.eventStore.publish({
+        type: VOLUNTEER_REGISTERED,
+        data: registree,
+      });
+    }
   }
 
   private checkInvitationValidity(token?: string) {
