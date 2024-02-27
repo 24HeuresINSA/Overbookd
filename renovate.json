@@ -15,6 +15,11 @@
   "pre-commit": {
     "enabled": true
   },
+  "rangeStrategy": "pin",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["after 5pm on the first day of the month"]
+  },
   "packageRules": [
     {
       "description": "Group all dependencies from the api directory",
@@ -108,6 +113,5 @@
       ],
       "allowedVersions": "<3"
     }
-  ],
-  "rangeStrategy": "pin"
+  ]
 }
