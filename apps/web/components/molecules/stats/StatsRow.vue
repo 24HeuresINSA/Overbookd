@@ -52,8 +52,8 @@ import { Item } from "@overbookd/list";
 import StatsCard from "~/components/atoms/card/StatsCard.vue";
 import { Team } from "~/utils/models/team.model";
 import { StatsPayload } from "~/utils/models/stats.model";
-import { ftStatusLabels } from "~/utils/models/ft.model";
 import { faStatusLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
+import { ftStatusLabels } from "~/utils/festival-event/festival-task/festival-task.model";
 
 interface StatsRowData {
   historyFA: Map<string, number>;
