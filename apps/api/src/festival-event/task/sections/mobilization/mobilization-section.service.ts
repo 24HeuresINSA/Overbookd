@@ -9,6 +9,7 @@ import {
 } from "@overbookd/festival-event";
 import { Adherents } from "../../common/festival-task-common.model";
 import { AddMobilizationForm } from "@overbookd/http";
+import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
 
 @Injectable()
 export class MobilizationSectionService {
@@ -27,12 +28,19 @@ export class MobilizationSectionService {
     return this.prepare.addMobilization(id, mobilization);
   }
 
-  update(
+  async update(
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     mobilization: UpdateMobilization,
+    user: JwtPayload,
   ): Promise<FestivalTask> {
-    return this.prepare.updateMobilization(ftId, mobilizationId, mobilization);
+    const instigator = await this.adherents.findOne(user.id);
+    return this.prepare.updateMobilization(
+      ftId,
+      mobilizationId,
+      mobilization,
+      instigator,
+    );
   }
 
   remove(
