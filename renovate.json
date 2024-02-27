@@ -113,5 +113,21 @@
       ],
       "allowedVersions": "<3"
     }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update pnpm version on gitlabci file",
+      "datasourceTemplate": "npm",
+      "fileMatch": [
+        "^\\.gitlab/ci/.*\\.gitlab-ci.ya?ml$",
+        "^apps/.*/[Dd]ockerfile$",
+        "^docker/[Dd]ockerfile$"
+      ],
+      "matchStrings": [
+        "\\s*- npm install -g (?<depName>.*?)@(?<currentValue>.*?)\\n",
+        "RUN npm install -g (?<depName>.*?)@(?<currentValue>.*?)\n"
+      ]
+    }
   ]
 }
