@@ -21,11 +21,15 @@ export class MobilizationSectionService {
   async add(
     id: FestivalTask["id"],
     form: AddMobilizationForm,
+    user: JwtPayload,
   ): Promise<FestivalTask> {
-    const volunteers = await this.adherents.findMatching(form.volunteers);
+    const [instigator, volunteers] = await Promise.all([
+      this.adherents.findOne(user.id),
+      this.adherents.findMatching(form.volunteers),
+    ]);
     const mobilization = { ...form, volunteers };
 
-    return this.prepare.addMobilization(id, mobilization);
+    return this.prepare.addMobilization(id, mobilization, instigator);
   }
 
   async update(
@@ -43,11 +47,13 @@ export class MobilizationSectionService {
     );
   }
 
-  remove(
+  async remove(
     id: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
+    user: JwtPayload,
   ): Promise<FestivalTask> {
-    return this.prepare.removeMobilization(id, mobilizationId);
+    const instigator = await this.adherents.findOne(user.id);
+    return this.prepare.removeMobilization(id, mobilizationId, instigator);
   }
 
   addTeam(

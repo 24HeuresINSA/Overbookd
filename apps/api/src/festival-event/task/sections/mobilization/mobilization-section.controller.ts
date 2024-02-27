@@ -81,8 +81,9 @@ export class MobilizationSectionController {
   addMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Body() mobilization: AddMobilizationRequestDto,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.mobilizationService.add(ftId, mobilization);
+    return this.mobilizationService.add(ftId, mobilization, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -156,8 +157,9 @@ export class MobilizationSectionController {
   removeMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.mobilizationService.remove(ftId, mobilizationId);
+    return this.mobilizationService.remove(ftId, mobilizationId, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
