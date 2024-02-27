@@ -138,6 +138,7 @@ export function findStatus(status: string): FestivalTask["status"] | undefined {
     case VALIDATED:
       return VALIDATED;
     case DRAFT:
+    default:
       return DRAFT;
   }
 }
