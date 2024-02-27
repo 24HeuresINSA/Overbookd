@@ -1,6 +1,6 @@
 <template>
   <v-alert
-    color="error"
+    :color="color"
     icon="mdi-clock"
     border="left"
     prominent
@@ -13,7 +13,7 @@
       <nuxt-link to="/availabilities">mes disponibilités</nuxt-link>.
     </p>
     <p class="details">
-      Sans dispos tu ne pourras pas faire partie de l'aventure.
+      {{ details }}
     </p>
   </v-alert>
 </template>
@@ -28,6 +28,19 @@ export default Vue.extend({
     alert: {
       type: Object as () => AvailabilitesAlert,
       required: true,
+    },
+  },
+  computed: {
+    hasNoAvailabilities(): boolean {
+      return this.alert.nbPeriods === 0;
+    },
+    color(): string {
+      return this.hasNoAvailabilities ? "error" : "info";
+    },
+    details(): string {
+      return this.hasNoAvailabilities
+        ? "Sans dispos tu ne pourras pas faire partie de l'aventure."
+        : `${this.alert.nbPeriods}`;
     },
   },
   methods: {
