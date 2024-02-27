@@ -6,12 +6,15 @@
     dismissible
     @input="dismiss"
   >
-    <h2 class="summary">Pas d'amis 😕</h2>
-    <p class="catch-phrase">Tu veux profiter du festival avec tes amis ?</p>
-    <p class="details">
+    <h2 class="summary">Tu veux profiter du festival avec tes amis ? 🤩</h2>
+    <p class="catch-phrase">
       Tu peux ajouter des amis à tout moment sur
-      <nuxt-link to="/profile">ton profil</nuxt-link>. Renseigne tes amis et
-      nous ferons notre maximum pour que tu aies le plus de créneaux avec eux !
+      <nuxt-link to="/profile">ton profil</nuxt-link>.
+    </p>
+    <p class="details">
+      Renseigne tes amis et nous ferons notre maximum pour que tu aies le plus
+      de créneaux avec eux ! C'est quand même plus sympa de profiter du festival
+      avec ses amis, non ? 😉
     </p>
   </v-alert>
 </template>
