@@ -11,6 +11,6 @@ export class PrismaFriendsAlerting implements FriendsAlerting {
         OR: [{ friendId: id }, { requestorId: id }],
       },
     });
-    return count > 0;
+    return count === 0;
   }
 }

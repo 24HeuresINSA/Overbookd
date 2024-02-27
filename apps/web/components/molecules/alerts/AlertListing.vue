@@ -16,7 +16,11 @@
       id="profile-picture"
       @dismiss="dismiss('profilePicture')"
     />
-    <FriendsAlert v-if="friendsAlert" @dismiss="dismiss('friends')" />
+    <FriendsAlert
+      v-if="friendsAlert"
+      id="friends-alert"
+      @dismiss="dismiss('friends')"
+    />
   </div>
 </template>
 
@@ -62,7 +66,8 @@ export default Vue.extend({
 
 <style lang="scss">
 #contribution,
-#profile-picture {
+#profile-picture,
+#friends-alert {
   background-color: $yellow-24h;
   border-color: $yellow-24h;
   a {

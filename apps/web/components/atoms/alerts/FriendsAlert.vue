@@ -1,13 +1,13 @@
 <template>
   <v-alert
     icon="mdi-account-heart"
-    border="'left'"
+    border="left"
     prominent
     dismissible
     @input="dismiss"
   >
     <h2 class="summary">Pas d'amis 😕</h2>
-    <p class="catch-phrase">Tu veux profiter du festival avec tes amis ?!</p>
+    <p class="catch-phrase">Tu veux profiter du festival avec tes amis ?</p>
     <p class="details">
       Tu peux ajouter des amis à tout moment sur
       <nuxt-link to="/profile">ton profil</nuxt-link>. Renseigne tes amis et
