@@ -111,7 +111,7 @@ describe("Register newcomer", () => {
           },
         );
       });
-      describe("when 2 newcomers are receiving", () => {
+      describe("when 2 newcomers are received", () => {
         it("should generate different id for both", async () => {
           const fistForm = {
             ...registerForm,
