@@ -574,6 +574,7 @@ export const uninstallPreventionVillage = factory
 export const flashMobOnPreventionVillage = factory
   .refused("Flash Mob on Prevention Village")
   .withFestivalActivity(preventionVillage)
+  .withReviews({ humain: REJECTED })
   .build();
 
 export const withNoTeamTask = factory
