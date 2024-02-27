@@ -261,7 +261,7 @@ export class PrepareFestivalTask {
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      `mobilisation du ${readablePeriod}`,
+      `mobilisation ${readablePeriod}`,
     );
     return this.save(updatedTask);
   }
@@ -286,7 +286,7 @@ export class PrepareFestivalTask {
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      `mobilisation du ${readablePeriod}`,
+      `mobilisation ${readablePeriod}`,
     );
     return this.save(updatedTask);
   }

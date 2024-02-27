@@ -613,16 +613,24 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Update after approvals", () => {
     describe.each`
-      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task
-      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
-      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}
-      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
-      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
-      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
-      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task                                      | firstMobilizationHumanReadable
+      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}                   | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}                    | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}        | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}          | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
     `(
       "when $approvers approved the task $taskName",
-      ({ approvers, task, rejectors, humain, matos, elec }) => {
+      ({
+        approvers,
+        task,
+        rejectors,
+        humain,
+        matos,
+        elec,
+        firstMobilizationHumanReadable,
+      }) => {
         if (approvers.includes(humain)) {
           describe("humain ownership", () => {
             describe("when trying to add volunteer to existing mobilization", () => {
@@ -743,6 +751,8 @@ describe("Prepare festival task mobilizations list", () => {
           describe("when another reviewer rejects task", () => {
             describe("when trying to add mobilization", () => {
               const form = friday10hfriday11hMobilization.form;
+              const expectedReadable =
+                "du vendredi 17 mai à 10:00 au vendredi 17 mai à 11:00";
               it("should add mobilization", async () => {
                 const { mobilizations } = await prepare.addMobilization(
                   task.id,
@@ -772,13 +782,14 @@ describe("Prepare festival task mobilizations list", () => {
                   noel,
                 );
                 const readablePeriod = readablePeriodFrom(form);
+                expect(readablePeriod).toBe(expectedReadable);
                 expect(history).toStrictEqual([
                   ...task.history,
                   {
                     action: RESET_REVIEW,
                     by: noel,
                     at: expect.any(Date),
-                    description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation du ${readablePeriod}`,
+                    description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation ${readablePeriod}`,
                   },
                 ]);
               });
@@ -815,13 +826,14 @@ describe("Prepare festival task mobilizations list", () => {
                     noel,
                   );
                   const readablePeriod = readablePeriodFrom(mobilization);
+                  expect(readablePeriod).toBe(firstMobilizationHumanReadable);
                   expect(history).toStrictEqual([
                     ...task.history,
                     {
                       action: RESET_REVIEW,
                       by: noel,
                       at: expect.any(Date),
-                      description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation du ${readablePeriod}`,
+                      description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation ${readablePeriod}`,
                     },
                   ]);
                 });
