@@ -28,9 +28,9 @@ export class FestivalTaskKeyEvents {
     return { action: CREATED, by, at, description: "FT créée" };
   }
 
-  static resetReview(by: Adherent, updatedField: string): KeyEvent {
+  static resetReview(by: Adherent, reason: string): KeyEvent {
     const at = this.computeAt();
-    const description = `Précédentes approbations réinitialisées par un changement sur le champ ${updatedField}`;
+    const description = `Précédentes approbations réinitialisées par ${reason}`;
     return { action: RESET_REVIEW, by, at, description };
   }
 

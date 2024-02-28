@@ -57,7 +57,6 @@ import {
 } from "../../common/review";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { isDraft } from "../../festival-event";
-import { readablePeriodFrom } from "../../common/time-window";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -751,8 +750,6 @@ describe("Prepare festival task mobilizations list", () => {
           describe("when another reviewer rejects task", () => {
             describe("when trying to add mobilization", () => {
               const form = friday10hfriday11hMobilization.form;
-              const expectedReadable =
-                "du vendredi 17 mai à 10:00 au vendredi 17 mai à 11:00";
               it("should add mobilization", async () => {
                 const { mobilizations } = await prepare.addMobilization(
                   task.id,
@@ -781,15 +778,14 @@ describe("Prepare festival task mobilizations list", () => {
                   form,
                   noel,
                 );
-                const readablePeriod = readablePeriodFrom(form);
-                expect(readablePeriod).toBe(expectedReadable);
                 expect(history).toStrictEqual([
                   ...task.history,
                   {
                     action: RESET_REVIEW,
                     by: noel,
                     at: expect.any(Date),
-                    description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation ${readablePeriod}`,
+                    description:
+                      "Précédentes approbations réinitialisées par l'ajout d'une mobilisation",
                   },
                 ]);
               });
@@ -825,25 +821,23 @@ describe("Prepare festival task mobilizations list", () => {
                     mobilization.id,
                     noel,
                   );
-                  const readablePeriod = readablePeriodFrom(mobilization);
-                  expect(readablePeriod).toBe(firstMobilizationHumanReadable);
                   expect(history).toStrictEqual([
                     ...task.history,
                     {
                       action: RESET_REVIEW,
                       by: noel,
                       at: expect.any(Date),
-                      description: `Précédentes approbations réinitialisées par un changement sur le champ mobilisation ${readablePeriod}`,
+                      description: `Précédentes approbations réinitialisées par la suppression de la mobilisation ${firstMobilizationHumanReadable}`,
                     },
                   ]);
                 });
               });
             }
             describe.each`
-              field                     | instigator | update                        | start                          | end                          | durationSplitInHour
-              ${"début"}                | ${noel}    | ${{ start: friday9h.date }}   | ${friday9h.date}               | ${task.mobilizations[0].end} | ${task.mobilizations[0].durationSplitInHour}
-              ${"fin"}                  | ${noel}    | ${{ end: saturday19h.date }}  | ${task.mobilizations[0].start} | ${saturday19h.date}          | ${task.mobilizations[0].durationSplitInHour}
-              ${"découpage du créneau"} | ${noel}    | ${{ durationSplitInHour: 1 }} | ${task.mobilizations[0].start} | ${task.mobilizations[0].end} | ${1}
+              field               | instigator | update                        | start                          | end                          | durationSplitInHour
+              ${"start"}          | ${noel}    | ${{ start: friday9h.date }}   | ${friday9h.date}               | ${task.mobilizations[0].end} | ${task.mobilizations[0].durationSplitInHour}
+              ${"end"}            | ${noel}    | ${{ end: saturday19h.date }}  | ${task.mobilizations[0].start} | ${saturday19h.date}          | ${task.mobilizations[0].durationSplitInHour}
+              ${"split duration"} | ${noel}    | ${{ durationSplitInHour: 1 }} | ${task.mobilizations[0].start} | ${task.mobilizations[0].end} | ${1}
             `(
               "when trying to update $field of existing mobilization",
               ({
@@ -896,7 +890,7 @@ describe("Prepare festival task mobilizations list", () => {
                       action: RESET_REVIEW,
                       by: instigator,
                       at: expect.any(Date),
-                      description: `Précédentes approbations réinitialisées par un changement sur le champ ${field}`,
+                      description: `Précédentes approbations réinitialisées par un changement sur la mobilisation ${firstMobilizationHumanReadable}`,
                     },
                   ]);
                 });

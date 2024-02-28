@@ -36,10 +36,7 @@ import { Inquiries } from "./sections/inquiries";
 import { Instructions } from "./sections/instructions";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import {
-  readablePeriodFromId,
-  readablePeriodFrom,
-} from "../../common/time-window";
+import { readablePeriodFromId } from "../../common/time-window";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -140,7 +137,7 @@ export class PrepareFestivalTask {
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      field,
+      `un changement sur le champ ${field}`,
     );
     return this.save(updatedTask);
   }
@@ -257,11 +254,10 @@ export class PrepareFestivalTask {
     const mobilizations = builder.add(mobilization).json;
     const validTask = checkValidity({ ...task, mobilizations });
 
-    const readablePeriod = readablePeriodFrom(mobilization);
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      `mobilisation ${readablePeriod}`,
+      "l'ajout d'une mobilisation",
     );
     return this.save(updatedTask);
   }
@@ -286,7 +282,7 @@ export class PrepareFestivalTask {
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      `mobilisation ${readablePeriod}`,
+      `la suppression de la mobilisation ${readablePeriod}`,
     );
     return this.save(updatedTask);
   }
@@ -308,16 +304,11 @@ export class PrepareFestivalTask {
     const mobilizations = builder.update(mobilizationId, update).json;
     const validTask = checkValidity({ ...task, mobilizations });
 
-    const field =
-      update.start !== undefined
-        ? "début"
-        : update.end !== undefined
-          ? "fin"
-          : "découpage du créneau";
+    const readablePeriod = readablePeriodFromId(mobilizationId);
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      field,
+      `un changement sur la mobilisation ${readablePeriod}`,
     );
     return this.save(updatedTask);
   }
@@ -490,7 +481,7 @@ export class PrepareFestivalTask {
   private resetApproversReviewOnRefusedTask<T extends UpdatableFestivalTask>(
     task: T,
     instigator: Adherent,
-    updatedField: string,
+    reason: string,
   ): T {
     if (!isRefused<FestivalTask>(task)) return task;
 
@@ -500,7 +491,7 @@ export class PrepareFestivalTask {
 
     const history = [
       ...task.history,
-      FestivalTaskKeyEvents.resetReview(instigator, updatedField),
+      FestivalTaskKeyEvents.resetReview(instigator, reason),
     ];
 
     return { ...task, reviews: { humain, matos, elec }, history };
