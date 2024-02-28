@@ -45,7 +45,7 @@ export default defineComponent({
     details(): string {
       return this.hasNoAvailabilities
         ? "Sans disponibilités tu ne pourras malheureusement pas faire partie de l'aventure. 😢"
-        : `Tu n'as pas encore été validé par les responsables bénévoles. N'hésite pas a compléter tes disponibilités pour augmenter tes chances. 😉`;
+        : "N'hésite pas a compléter tes disponibilités pour augmenter tes chances d'être accepté en tant que bénévole.";
     },
   },
   methods: {

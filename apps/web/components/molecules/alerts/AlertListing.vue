@@ -81,11 +81,10 @@ export default Vue.extend({
     border-color: $red-24h;
   }
   &.has-availabilities {
-    background-color: $blue-24h;
-    border-color: $blue-24h;
+    background-color: $yellow-24h;
+    border-color: $yellow-24h;
     a {
-      color: $yellow-24h;
-      font-weight: bold;
+      color: $red-24h;
     }
   }
 }
