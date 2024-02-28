@@ -4,14 +4,14 @@ import { PrismaService } from "../../prisma.service";
 export class PrismaNotVolunteerPeriods implements NotVolunteerPeriods {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getNbPeriods(adherentId: number): Promise<number> {
+  async getNbPeriods(notVolunteerId: number): Promise<number> {
     const notVolunteer = await this.prisma.user.findUnique({
       where: {
-        id: adherentId,
+        id: notVolunteerId,
         teams: { none: { team: { code: "benevole" } } },
       },
       select: { availabilities: true },
     });
-    return notVolunteer.availabilities.length ?? -1;
+    return notVolunteer?.availabilities.length ?? -1;
   }
 }
