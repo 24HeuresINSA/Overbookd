@@ -18,7 +18,7 @@
     />
     <Availabilities
       v-if="availabilitiesAlert"
-      id="no-availabilities"
+      id="availabilities"
       :alert="availabilitiesAlert"
       @dismiss="dismiss('availabilities')"
     />
@@ -73,6 +73,20 @@ export default Vue.extend({
   border-color: $yellow-24h;
   a {
     color: $red-24h;
+  }
+}
+#availabilities {
+  &.no-availabilities {
+    background-color: $red-24h;
+    border-color: $red-24h;
+  }
+  &.has-availabilities {
+    background-color: $blue-24h;
+    border-color: $blue-24h;
+    a {
+      color: $yellow-24h;
+      font-weight: bold;
+    }
   }
 }
 </style>

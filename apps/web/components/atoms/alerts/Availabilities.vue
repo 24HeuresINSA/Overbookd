@@ -1,6 +1,6 @@
 <template>
   <v-alert
-    :color="color"
+    :class="alertClass"
     :icon="icon"
     border="left"
     prominent
@@ -34,8 +34,10 @@ export default defineComponent({
     hasNoAvailabilities(): boolean {
       return this.alert.availabilitiesCount === 0;
     },
-    color(): string {
-      return this.hasNoAvailabilities ? "error" : "info";
+    alertClass(): string {
+      return this.hasNoAvailabilities
+        ? "no-availabilities"
+        : "has-availabilities";
     },
     icon(): string {
       return this.hasNoAvailabilities ? "mdi-clock-alert" : "mdi-clock";
@@ -55,10 +57,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.info a {
-  color: $yellow-24h;
-}
-
 .summary {
   @media only screen and (max-width: $mobile-max-width) {
     font-size: large;
