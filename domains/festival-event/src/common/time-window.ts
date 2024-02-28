@@ -5,7 +5,7 @@ export type TimeWindow = IProvidePeriod & {
   id: string;
 };
 
-function readablePeriodFrom({ start, end }: IProvidePeriod): string {
+export function readablePeriodFrom({ start, end }: IProvidePeriod): string {
   const locales = "fr-FR";
   const options: Intl.DateTimeFormatOptions = {
     weekday: "long",

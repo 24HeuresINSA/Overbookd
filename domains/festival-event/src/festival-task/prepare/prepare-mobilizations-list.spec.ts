@@ -773,6 +773,8 @@ describe("Prepare festival task mobilizations list", () => {
                 expect(updated.reviews.elec).toBe(elec);
               });
               it("should add RESET_REVIEW key event to history", async () => {
+                const readablePeriod =
+                  "du vendredi 17 mai à 10:00 au vendredi 17 mai à 11:00";
                 const { history } = await prepare.addMobilization(
                   task.id,
                   form,
@@ -784,8 +786,7 @@ describe("Prepare festival task mobilizations list", () => {
                     action: RESET_REVIEW,
                     by: noel,
                     at: expect.any(Date),
-                    description:
-                      "Précédentes approbations réinitialisées par l'ajout d'une mobilisation",
+                    description: `Précédentes approbations réinitialisées par l'ajout d'une mobilisation ${readablePeriod}`,
                   },
                 ]);
               });

@@ -36,7 +36,10 @@ import { Inquiries } from "./sections/inquiries";
 import { Instructions } from "./sections/instructions";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
-import { readablePeriodFromId } from "../../common/time-window";
+import {
+  readablePeriodFrom,
+  readablePeriodFromId,
+} from "../../common/time-window";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -254,10 +257,11 @@ export class PrepareFestivalTask {
     const mobilizations = builder.add(mobilization).json;
     const validTask = checkValidity({ ...task, mobilizations });
 
+    const readablePeriod = readablePeriodFrom(mobilization);
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      "l'ajout d'une mobilisation",
+      `l'ajout d'une mobilisation ${readablePeriod}`,
     );
     return this.save(updatedTask);
   }
