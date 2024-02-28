@@ -173,6 +173,7 @@ function castVolunteersWithDate(
   return volunteers.map((volunteer) => ({
     ...volunteer,
     registeredAt: new Date(volunteer.registeredAt),
+    birthdate: new Date(volunteer.birthdate),
     availabilities: castPeriods(volunteer.availabilities),
   }));
 }
