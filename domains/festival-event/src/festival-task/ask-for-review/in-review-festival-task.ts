@@ -62,7 +62,7 @@ export class InReviewFestivalTask {
 
   static fromRefused(task: Refused, instigator: Adherent) {
     const history = this.addReadyToReviewEvent(task.history, instigator);
-    const reviews = InReviewFestivalTask.resetReviewsFromRefused(task.reviews);
+    const reviews = InReviewFestivalTask.resetReviews(task.reviews);
 
     const inReview = { ...task, history, reviews } as const;
 
@@ -75,7 +75,7 @@ export class InReviewFestivalTask {
     return NO_SUPPLY_REQUEST_TASK_REVIEWS;
   }
 
-  private static resetReviewsFromRefused(reviews: Refused["reviews"]) {
+  private static resetReviews(reviews: Refused["reviews"]) {
     return {
       humain: reviews.humain === REJECTED ? REVIEWING : reviews.humain,
       matos: reviews.matos === REJECTED ? REVIEWING : reviews.matos,
