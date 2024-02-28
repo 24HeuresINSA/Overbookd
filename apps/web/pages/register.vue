@@ -9,7 +9,9 @@
         class="register-illustration"
         src="https://www.24heures.org/wp-content/uploads/2022/01/img_24h_44e_benevoles_dosscene.jpg"
       >
-        <v-card-title class="register-title"> 👋 Inscription 👋 </v-card-title>
+        <v-card-title class="register-title">
+          👋 Inscription {{ membership }} 👋
+        </v-card-title>
       </v-img>
       <v-stepper v-model="step" vertical>
         <v-stepper-step :complete="step > 1" step="1" @click="step = 1">
@@ -225,9 +227,15 @@ export default Vue.extend({
 
       return token ?? undefined;
     },
+    isVolunteerRegistration(): boolean {
+      return this.token !== undefined;
+    },
     cleanComment(): string | undefined {
       if (!this.comment) return undefined;
       return this.comment;
+    },
+    membership(): string {
+      return this.isVolunteerRegistration ? "Bénévole" : "Organisateur";
     },
     cleanNickname(): string | undefined {
       if (!this.nickname) return undefined;
