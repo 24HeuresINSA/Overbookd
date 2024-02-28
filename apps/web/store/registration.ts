@@ -1,12 +1,18 @@
-import { IDefineANewcomer, RegisterForm } from "@overbookd/registration";
+import { RegisterForm } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
-import { HttpStringified } from "@overbookd/http";
+import {
+  EnrollableAdherent,
+  EnrollableVolunteer,
+  HttpStringified,
+} from "@overbookd/http";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";
+import { castPeriods } from "~/utils/models/period.model";
 
 type State = {
-  newcomers: IDefineANewcomer[];
+  adherents: EnrollableAdherent[];
+  volunteers: EnrollableVolunteer[];
   inviteNewAdherentLink?: URL;
 };
 
@@ -16,19 +22,29 @@ const configurationRepo = RepoFactory.ConfigurationRepository;
 const INVITE_NEW_ADHERENT_LINK = "inviteNewAdherentLink";
 
 export const state = (): State => ({
-  newcomers: [],
+  adherents: [],
+  volunteers: [],
   inviteNewAdherentLink: undefined,
 });
 
 export const mutations = mutationTree(state, {
-  SET_NEWCOMERS(state, newcomers: IDefineANewcomer[]) {
-    state.newcomers = newcomers;
+  SET_ADHERENTS(state, adherents: EnrollableAdherent[]) {
+    state.adherents = adherents;
   },
-  REMOVE_ENROLLED_NEWCOMERS(state, newcomers: IDefineANewcomer[]) {
-    state.newcomers = state.newcomers.filter(
-      (newcomer) =>
-        !newcomers.some(
-          (enrolledNewcomer) => enrolledNewcomer.id === newcomer.id,
+  SET_VOLUNTEERS(state, volunteers: EnrollableVolunteer[]) {
+    state.volunteers = volunteers;
+  },
+  REMOVE_ENROLLED_NEWCOMERS(state, enrolled: EnrollableAdherent[]) {
+    state.adherents = state.adherents.filter(
+      (adherent) =>
+        !enrolled.some(
+          (enrolledNewcomer) => enrolledNewcomer.id === adherent.id,
+        ),
+    );
+    state.volunteers = state.volunteers.filter(
+      (volunteer) =>
+        !enrolled.some(
+          (enrolledNewcomer) => enrolledNewcomer.id === volunteer.id,
         ),
     );
   },
@@ -43,16 +59,22 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async getNewcomers({ commit }) {
-      const res = await registrationRepo.getNewcomers(this);
+    async getAdherents({ commit }) {
+      const res = await registrationRepo.getAdherents(this);
       if (!res) return;
-      commit("SET_NEWCOMERS", castNewcomersWithDate(res.data));
+      commit("SET_ADHERENTS", castAdherentsWithDate(res.data));
     },
 
-    async enrollNewAdherents({ commit }, newcomers: IDefineANewcomer[]) {
+    async getVolunteers({ commit }) {
+      const res = await registrationRepo.getVolunteers(this);
+      if (!res) return;
+      commit("SET_VOLUNTEERS", castVolunteersWithDate(res.data));
+    },
+
+    async enrollNewAdherents({ commit }, adherents: EnrollableAdherent[]) {
       const res = await safeCall(
         this,
-        registrationRepo.enrollNewAdherents(this, newcomers),
+        registrationRepo.enrollNewAdherents(this, adherents),
         {
           successMessage:
             "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
@@ -61,7 +83,22 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("REMOVE_ENROLLED_NEWCOMERS", newcomers);
+      commit("REMOVE_ENROLLED_NEWCOMERS", adherents);
+    },
+
+    async enrollNewVolunteers({ commit }, volunteers: EnrollableVolunteer[]) {
+      const res = await safeCall(
+        this,
+        registrationRepo.enrollNewVolunteers(this, volunteers),
+        {
+          successMessage:
+            "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que softs ✅",
+          errorMessage:
+            "Les nouveaux arrivants sélectionnés n'ont pas pu être enrôlés ❌",
+        },
+      );
+      if (!res) return;
+      commit("REMOVE_ENROLLED_NEWCOMERS", volunteers);
     },
 
     async fetchInviteNewAdherentLink({ commit }) {
@@ -116,16 +153,27 @@ export const actions = actionTree(
     async forgetHim({ dispatch }, email: string) {
       const res = await safeCall(this, registrationRepo.forgetHim(this, email));
       if (!res) return;
-      dispatch("getNewcomers");
+      dispatch("getAdherents");
     },
   },
 );
 
-function castNewcomersWithDate(
-  newcomers: HttpStringified<IDefineANewcomer[]>,
-): IDefineANewcomer[] {
-  return newcomers.map((newcomer) => ({
-    ...newcomer,
-    registeredAt: new Date(newcomer.registeredAt),
+function castAdherentsWithDate(
+  adherents: HttpStringified<EnrollableAdherent[]>,
+): EnrollableAdherent[] {
+  return adherents.map((adherent) => ({
+    ...adherent,
+    registeredAt: new Date(adherent.registeredAt),
+  }));
+}
+
+function castVolunteersWithDate(
+  volunteers: HttpStringified<EnrollableVolunteer[]>,
+): EnrollableVolunteer[] {
+  return volunteers.map((volunteer) => ({
+    ...volunteer,
+    registeredAt: new Date(volunteer.registeredAt),
+    birthdate: new Date(volunteer.birthdate),
+    availabilities: castPeriods(volunteer.availabilities),
   }));
 }

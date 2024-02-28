@@ -28,15 +28,18 @@ import {
 import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
-import { IDefineANewcomer } from "@overbookd/registration";
-import { NewcomerResponseDto } from "./dto/newcomer.response.dto";
+import {
+  EnrollableAdherentResponseDto,
+  EnrollableVolunteerResponseDto,
+} from "./dto/newcomer.response.dto";
 import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
-import { ENROLL_HARD, MANAGE_USERS } from "@overbookd/permission";
+import { ENROLL_HARD, ENROLL_SOFT } from "@overbookd/permission";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
+import { EnrollableAdherent } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("registration")
-@Controller("newcomers")
+@Controller("registrations")
 @ApiBadRequestResponse({
   description: "Bad Request",
 })
@@ -70,36 +73,71 @@ export class RegistrationController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
-  @Permission(MANAGE_USERS)
-  @Get()
+  @Permission(ENROLL_HARD)
+  @Get("adherents")
   @ApiResponse({
     status: 200,
-    description: "Get all newcomers",
-    type: NewcomerResponseDto,
+    description: "Get all adherents",
+    type: EnrollableAdherentResponseDto,
     isArray: true,
   })
-  getNewcomers(): Promise<IDefineANewcomer[]> {
-    return this.registrationService.getNewcomers();
+  getEnrollableAdherents(): Promise<EnrollableAdherent[]> {
+    return this.registrationService.getAdherents();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
-  @Post("/enroll-adherent")
+  @Post("adherents/enroll")
   @ApiBody({
-    description: "Newcomers to enroll to a team",
+    description: "Adherents to enroll to a team",
     type: EnrollNewcomersRequestDto,
   })
   @ApiResponse({
     status: 201,
-    description: "Enroll newcomers to a team",
+    description: "Enroll adherents to a team",
   })
-  enrollNewcomers(
+  enrollAdherents(
     @Body() { newcomers }: EnrollNewcomersRequestDto,
   ): Promise<void> {
     return this.registrationService.enrollNewcomers({
       newcomers,
       team: "hard",
+    });
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_SOFT)
+  @Get("volunteers")
+  @ApiResponse({
+    status: 200,
+    description: "Get all volunteers",
+    type: EnrollableVolunteerResponseDto,
+    isArray: true,
+  })
+  getEnrollableVolunteers(): Promise<EnrollableVolunteerResponseDto[]> {
+    return this.registrationService.getVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_SOFT)
+  @Post("volunteers/enroll")
+  @ApiBody({
+    description: "Volunteer to enroll to a team",
+    type: EnrollNewcomersRequestDto,
+  })
+  @ApiResponse({
+    status: 201,
+    description: "Enroll volunteer to a team",
+  })
+  enrollVolunteer(
+    @Body() { newcomers }: EnrollNewcomersRequestDto,
+  ): Promise<void> {
+    return this.registrationService.enrollNewcomers({
+      newcomers,
+      team: "soft",
     });
   }
 

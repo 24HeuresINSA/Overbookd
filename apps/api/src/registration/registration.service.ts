@@ -3,7 +3,6 @@ import { BadRequestException } from "@nestjs/common";
 import {
   EnrollNewcomersForm,
   FulfilledRegistration,
-  IDefineANewcomer,
   RegisterNewcomer,
   VOLUNTEER,
   ADHERENT,
@@ -24,6 +23,7 @@ import {
   ADHERENT_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
+import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
 
 export class RegistrationService {
   constructor(
@@ -90,8 +90,12 @@ export class RegistrationService {
     return InviteNewAdherents.byLink({ domain, secret });
   }
 
-  async getNewcomers(): Promise<IDefineANewcomer[]> {
-    return this.enrollNewcomersRepository.findEnrollable();
+  getAdherents(): Promise<EnrollableAdherent[]> {
+    return this.enrollNewcomersRepository.findEnrollableAdherents();
+  }
+
+  getVolunteers(): Promise<EnrollableVolunteer[]> {
+    return this.enrollNewcomersRepository.findEnrollableVolunteers();
   }
 
   async enrollNewcomers({

@@ -1,7 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IDefineANewcomer, Teams } from "@overbookd/registration";
+import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/period";
+import { Teams } from "@overbookd/registration";
+import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 
-export class NewcomerResponseDto implements IDefineANewcomer {
+export class EnrollableAdherentResponseDto implements EnrollableAdherent {
   @ApiProperty({
     required: true,
     description: "The newcomer id",
@@ -43,4 +46,24 @@ export class NewcomerResponseDto implements IDefineANewcomer {
     example: ["teckos"],
   })
   teams: Teams;
+}
+
+export class EnrollableVolunteerResponseDto
+  extends EnrollableAdherentResponseDto
+  implements EnrollableVolunteer
+{
+  @ApiProperty({ required: true })
+  charisma: number;
+
+  @ApiProperty({ required: true })
+  mobilePhone: string;
+
+  @ApiProperty({ required: true, isArray: true, type: PeriodDto })
+  availabilities: IProvidePeriod[];
+
+  @ApiProperty({ required: false })
+  comment?: string;
+
+  @ApiProperty({ required: true, type: Date })
+  birthdate: Date;
 }

@@ -1,25 +1,40 @@
 import { NuxtAxiosInstance } from "@nuxtjs/axios";
 import {
   Credentials,
-  IDefineANewcomer,
   NewcomerToEnroll,
   RegisterForm,
 } from "@overbookd/registration";
-import { HttpStringified } from "@overbookd/http";
+import {
+  EnrollableAdherent,
+  EnrollableVolunteer,
+  HttpStringified,
+} from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class RegistrationRepository {
-  private static readonly basePath = "newcomers";
+  private static readonly basePath = "registrations";
 
-  static getNewcomers(context: Context) {
-    return context.$axios.get<HttpStringified<IDefineANewcomer[]>>(
-      this.basePath,
+  static getAdherents(context: Context) {
+    return context.$axios.get<HttpStringified<EnrollableAdherent[]>>(
+      `${this.basePath}/adherents`,
     );
   }
 
   static enrollNewAdherents(context: Context, newcomers: NewcomerToEnroll[]) {
-    return context.$axios.post<void>(`${this.basePath}/enroll-adherent`, {
+    return context.$axios.post<void>(`${this.basePath}/adherents/enroll`, {
+      newcomers,
+    });
+  }
+
+  static getVolunteers(context: Context) {
+    return context.$axios.get<HttpStringified<EnrollableVolunteer[]>>(
+      `${this.basePath}/volunteers`,
+    );
+  }
+
+  static enrollNewVolunteers(context: Context, newcomers: NewcomerToEnroll[]) {
+    return context.$axios.post<void>(`${this.basePath}/volunteers/enroll`, {
       newcomers,
     });
   }

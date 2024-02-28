@@ -4,7 +4,7 @@
     <RegistrationConfiguration class="registration-configuration" />
     <v-divider></v-divider>
     <v-data-table
-      v-model="selectedNewcomers"
+      v-model="selectedAdherents"
       :headers="headers"
       :items="filteredNewcomers"
       :items-per-page="30"
@@ -50,7 +50,7 @@
       <v-spacer></v-spacer>
       <v-btn
         color="primary"
-        :disabled="noNewcomerSelected"
+        :disabled="noAdherentSelected"
         @click="enrollNewcomers"
       >
         Enrôler en tant que hard
@@ -65,26 +65,23 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Header } from "~/utils/models/data-table.model";
-import {
-  IDefineANewcomer,
-  JoinableTeam,
-  joinableTeams,
-} from "@overbookd/registration";
+import { JoinableTeam, joinableTeams } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 import RegistrationConfiguration from "~/components/molecules/registration/RegistrationConfiguration.vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { EnrollableAdherent } from "@overbookd/http";
 
 interface RegistrationsData {
   headers: Header[];
   last30DaysNewcomers: boolean;
   searchNewcomer: string;
-  selectedNewcomers: IDefineANewcomer[];
+  selectedAdherents: EnrollableAdherent[];
 }
 
-type Filter = (newcomer: Searchable<IDefineANewcomer>) => boolean;
+type Filter = (newcomer: Searchable<EnrollableAdherent>) => boolean;
 
 export default Vue.extend({
   name: "RegistrationsHard",
@@ -104,21 +101,21 @@ export default Vue.extend({
     ],
     last30DaysNewcomers: true,
     searchNewcomer: "",
-    selectedNewcomers: [],
+    selectedAdherents: [],
   }),
   head: () => ({
     title: "Nouvelles inscriptions",
   }),
   computed: {
-    searchableNewcomers(): Searchable<IDefineANewcomer>[] {
-      return this.$accessor.registration.newcomers.map((newcomer) => ({
+    searchableNewcomers(): Searchable<EnrollableAdherent>[] {
+      return this.$accessor.registration.adherents.map((newcomer) => ({
         ...newcomer,
         searchable: SlugifyService.apply(
           `${newcomer.firstname} ${newcomer.lastname}`,
         ),
       }));
     },
-    filteredNewcomers(): IDefineANewcomer[] {
+    filteredNewcomers(): EnrollableAdherent[] {
       const search = SlugifyService.apply(this.searchNewcomer);
       const thirtyDaysAgo = Date.now() - 30 * ONE_DAY_IN_MS;
       return this.searchableNewcomers.filter((newcomer) => {
@@ -131,33 +128,33 @@ export default Vue.extend({
     joinableTeams(): JoinableTeam[] {
       return Object.values(joinableTeams);
     },
-    noNewcomerSelected(): boolean {
-      return this.selectedNewcomers.length === 0;
+    noAdherentSelected(): boolean {
+      return this.selectedAdherents.length === 0;
     },
   },
   mounted() {
-    this.$accessor.registration.getNewcomers();
+    this.$accessor.registration.getAdherents();
   },
   methods: {
     formatDate(date: Date): string {
       return formatLocalDate(date);
     },
     enrollNewcomers() {
-      this.$accessor.registration.enrollNewAdherents(this.selectedNewcomers);
-      this.selectedNewcomers = [];
+      this.$accessor.registration.enrollNewAdherents(this.selectedAdherents);
+      this.selectedAdherents = [];
     },
     toggleLast30DaysNewcomers() {
       this.last30DaysNewcomers = !this.last30DaysNewcomers;
     },
     isMatchingNameSearch(search: string): Filter {
-      return ({ searchable }: Searchable<IDefineANewcomer>) =>
+      return ({ searchable }: Searchable<EnrollableAdherent>) =>
         searchable.includes(search);
     },
     forgetHim(email: string) {
       this.$accessor.registration.forgetHim(email);
     },
     isMatchingRegistrationDateLimit(dateLimit: number): Filter {
-      return ({ registeredAt }: IDefineANewcomer) => {
+      return ({ registeredAt }: EnrollableAdherent) => {
         if (!this.last30DaysNewcomers) return true;
         return registeredAt.getTime() > dateLimit;
       };

@@ -1,18 +1,21 @@
 import {
   ADHERENT,
-  BENEVOLE_CODE,
   EnrolledNewcomer,
-  IDefineANewcomer,
   Teams,
+  VOLUNTEER,
   isJoinableTeams,
 } from "@overbookd/registration";
 import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
 import { PrismaService } from "../../prisma.service";
 import {
-  DatabaseNewcomer,
+  DatabaseEnrollableAdherent as DatabaseEnrollableAdherent,
   DatabaseTeamCode,
-  SELECT_NEWCOMER,
+  SELECT_ADHERENT,
+  NOT_VOLUNTEER_YET,
+  DatabaseEnrollableVolunteer,
 } from "./enroll-newcomers.query";
+import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
 
 export class PrismaEnrollNewcomersRepository
   implements EnrollNewcomersRepository
@@ -35,32 +38,59 @@ export class PrismaEnrollNewcomersRepository
     await this.prisma.$transaction(allRequests);
   }
 
-  async findEnrollable(): Promise<IDefineANewcomer[]> {
-    const newcomers = await this.prisma.user.findMany({
+  async findEnrollableAdherents(): Promise<EnrollableAdherent[]> {
+    const adherents = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
         registrationMembership: ADHERENT,
-        teams: {
-          none: {
-            team: { code: BENEVOLE_CODE },
-          },
-        },
+        ...NOT_VOLUNTEER_YET,
       },
-      select: SELECT_NEWCOMER,
+      select: SELECT_ADHERENT,
     });
-    return newcomers.map(formatToNewcomer);
+    return adherents.map(formatToEnrollableAdherent);
+  }
+
+  async findEnrollableVolunteers(): Promise<EnrollableVolunteer[]> {
+    const volunteers = await this.prisma.user.findMany({
+      orderBy: { id: "desc" },
+      where: {
+        isDeleted: false,
+        OR: [
+          { registrationMembership: null },
+          { registrationMembership: VOLUNTEER },
+        ],
+        ...NOT_VOLUNTEER_YET,
+      },
+      select: SELECT_VOLUNTEER,
+    });
+    return volunteers.map(formatToEnrollableVolunteer);
   }
 }
 
-function formatToNewcomer(newcomer: DatabaseNewcomer): IDefineANewcomer {
-  const teams = formatTeamsToJoinableTeams(newcomer.teams);
+function formatToEnrollableVolunteer(
+  volunteer: DatabaseEnrollableVolunteer,
+): EnrollableVolunteer {
   return {
-    id: newcomer.id,
-    firstname: newcomer.firstname,
-    lastname: newcomer.lastname,
-    email: newcomer.email,
-    registeredAt: newcomer.createdAt,
+    ...formatToEnrollableAdherent(volunteer),
+    charisma: volunteer.charisma,
+    availabilities: volunteer.availabilities,
+    mobilePhone: volunteer.phone,
+    comment: volunteer.comment,
+    birthdate: volunteer.birthdate,
+  };
+}
+
+function formatToEnrollableAdherent(
+  adherent: DatabaseEnrollableAdherent,
+): EnrollableAdherent {
+  const teams = formatTeamsToJoinableTeams(adherent.teams);
+  return {
+    id: adherent.id,
+    firstname: adherent.firstname,
+    lastname: adherent.lastname,
+    email: adherent.email,
+    registeredAt: adherent.createdAt,
     teams,
   };
 }
