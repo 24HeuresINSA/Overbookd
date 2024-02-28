@@ -1,12 +1,18 @@
 import { RegisterForm } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
-import { EnrollableAdherent, HttpStringified } from "@overbookd/http";
+import {
+  EnrollableAdherent,
+  EnrollableVolunteer,
+  HttpStringified,
+} from "@overbookd/http";
 import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";
+import { castPeriods } from "~/utils/models/period.model";
 
 type State = {
   adherents: EnrollableAdherent[];
+  volunteers: EnrollableVolunteer[];
   inviteNewAdherentLink?: URL;
 };
 
@@ -17,18 +23,28 @@ const INVITE_NEW_ADHERENT_LINK = "inviteNewAdherentLink";
 
 export const state = (): State => ({
   adherents: [],
+  volunteers: [],
   inviteNewAdherentLink: undefined,
 });
 
 export const mutations = mutationTree(state, {
-  SET_ADHERENTS(state, newcomers: EnrollableAdherent[]) {
-    state.adherents = newcomers;
+  SET_ADHERENTS(state, adherents: EnrollableAdherent[]) {
+    state.adherents = adherents;
+  },
+  SET_VOLUNTEERS(state, volunteers: EnrollableVolunteer[]) {
+    state.volunteers = volunteers;
   },
   REMOVE_ENROLLED_NEWCOMERS(state, enrolled: EnrollableAdherent[]) {
     state.adherents = state.adherents.filter(
-      (adherents) =>
+      (adherent) =>
         !enrolled.some(
-          (enrolledNewcomer) => enrolledNewcomer.id === adherents.id,
+          (enrolledNewcomer) => enrolledNewcomer.id === adherent.id,
+        ),
+    );
+    state.volunteers = state.volunteers.filter(
+      (volunteer) =>
+        !enrolled.some(
+          (enrolledNewcomer) => enrolledNewcomer.id === volunteer.id,
         ),
     );
   },
@@ -49,6 +65,12 @@ export const actions = actionTree(
       commit("SET_ADHERENTS", castAdherentsWithDate(res.data));
     },
 
+    async getVolunteers({ commit }) {
+      const res = await registrationRepo.getVolunteers(this);
+      if (!res) return;
+      commit("SET_VOLUNTEERS", castVolunteersWithDate(res.data));
+    },
+
     async enrollNewAdherents({ commit }, adherents: EnrollableAdherent[]) {
       const res = await safeCall(
         this,
@@ -62,6 +84,21 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("REMOVE_ENROLLED_NEWCOMERS", adherents);
+    },
+
+    async enrollNewVolunteers({ commit }, volunteers: EnrollableVolunteer[]) {
+      const res = await safeCall(
+        this,
+        registrationRepo.enrollNewVolunteers(this, volunteers),
+        {
+          successMessage:
+            "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que softs ✅",
+          errorMessage:
+            "Les nouveaux arrivants sélectionnés n'ont pas pu être enrôlés ❌",
+        },
+      );
+      if (!res) return;
+      commit("REMOVE_ENROLLED_NEWCOMERS", volunteers);
     },
 
     async fetchInviteNewAdherentLink({ commit }) {
@@ -127,5 +164,15 @@ function castAdherentsWithDate(
   return adherents.map((adherent) => ({
     ...adherent,
     registeredAt: new Date(adherent.registeredAt),
+  }));
+}
+
+function castVolunteersWithDate(
+  volunteers: HttpStringified<EnrollableVolunteer[]>,
+): EnrollableVolunteer[] {
+  return volunteers.map((volunteer) => ({
+    ...volunteer,
+    registeredAt: new Date(volunteer.registeredAt),
+    availabilities: castPeriods(volunteer.availabilities),
   }));
 }

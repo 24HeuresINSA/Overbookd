@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { EnrollableAdherent } from "@overbookd/http";
+import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { IProvidePeriod } from "@overbookd/period";
 import { Teams } from "@overbookd/registration";
+import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 
 export class EnrollableAdherentResponseDto implements EnrollableAdherent {
   @ApiProperty({
@@ -44,4 +46,24 @@ export class EnrollableAdherentResponseDto implements EnrollableAdherent {
     example: ["teckos"],
   })
   teams: Teams;
+}
+
+export class EnrollableVolunteerResponseDto
+  extends EnrollableAdherentResponseDto
+  implements EnrollableVolunteer
+{
+  @ApiProperty({ required: true })
+  charisma: number;
+
+  @ApiProperty({ required: true })
+  mobilePhone: string;
+
+  @ApiProperty({ required: true, isArray: true, type: PeriodDto })
+  availabilities: IProvidePeriod[];
+
+  @ApiProperty({ required: false })
+  comment?: string;
+
+  @ApiProperty({ required: true, type: Date })
+  birthdate: Date;
 }

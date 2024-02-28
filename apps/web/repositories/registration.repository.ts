@@ -4,12 +4,16 @@ import {
   NewcomerToEnroll,
   RegisterForm,
 } from "@overbookd/registration";
-import { EnrollableAdherent, HttpStringified } from "@overbookd/http";
+import {
+  EnrollableAdherent,
+  EnrollableVolunteer,
+  HttpStringified,
+} from "@overbookd/http";
 
 type Context = { $axios: NuxtAxiosInstance };
 
 export class RegistrationRepository {
-  private static readonly basePath = "newcomers";
+  private static readonly basePath = "registrations";
 
   static getAdherents(context: Context) {
     return context.$axios.get<HttpStringified<EnrollableAdherent[]>>(
@@ -19,6 +23,18 @@ export class RegistrationRepository {
 
   static enrollNewAdherents(context: Context, newcomers: NewcomerToEnroll[]) {
     return context.$axios.post<void>(`${this.basePath}/adherents/enroll`, {
+      newcomers,
+    });
+  }
+
+  static getVolunteers(context: Context) {
+    return context.$axios.get<HttpStringified<EnrollableVolunteer[]>>(
+      `${this.basePath}/volunteers`,
+    );
+  }
+
+  static enrollNewVolunteers(context: Context, newcomers: NewcomerToEnroll[]) {
+    return context.$axios.post<void>(`${this.basePath}/volunteers/enroll`, {
       newcomers,
     });
   }

@@ -1,7 +1,8 @@
-import { TeamCode } from "@overbookd/registration";
+import { BENEVOLE_CODE, TeamCode } from "@overbookd/registration";
 import { SELECT_USER_TEAMS } from "../../user/user.query";
+import { IProvidePeriod } from "@overbookd/period";
 
-export const SELECT_NEWCOMER = {
+export const SELECT_ADHERENT = {
   id: true,
   firstname: true,
   lastname: true,
@@ -10,13 +11,33 @@ export const SELECT_NEWCOMER = {
   ...SELECT_USER_TEAMS,
 };
 
-export interface DatabaseNewcomer {
+export const SELECT_VOLUNTEER = {
+  ...SELECT_ADHERENT,
+  charisma: true,
+  availabilities: { select: { start: true, end: true } },
+  phone: true,
+  birthdate: true,
+};
+
+export const NOT_VOLUNTEER_YET = {
+  teams: { none: { team: { code: BENEVOLE_CODE } } },
+};
+
+export type DatabaseEnrollableAdherent = {
   id: number;
   firstname: string;
   lastname: string;
   email: string;
   createdAt: Date;
   teams: DatabaseTeamCode[];
-}
+};
+
+export type DatabaseEnrollableVolunteer = DatabaseEnrollableAdherent & {
+  availabilities: IProvidePeriod[];
+  charisma: number;
+  phone: string;
+  comment?: string;
+  birthdate: Date;
+};
 
 export type DatabaseTeamCode = { team: { code: TeamCode } };

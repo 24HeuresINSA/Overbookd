@@ -23,7 +23,7 @@ import {
   ADHERENT_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
-import { EnrollableAdherent } from "@overbookd/http";
+import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
 
 export class RegistrationService {
   constructor(
@@ -90,8 +90,12 @@ export class RegistrationService {
     return InviteNewAdherents.byLink({ domain, secret });
   }
 
-  async getAdherents(): Promise<EnrollableAdherent[]> {
+  getAdherents(): Promise<EnrollableAdherent[]> {
     return this.enrollNewcomersRepository.findEnrollableAdherents();
+  }
+
+  getVolunteers(): Promise<EnrollableVolunteer[]> {
+    return this.enrollNewcomersRepository.findEnrollableVolunteers();
   }
 
   async enrollNewcomers({
