@@ -59,8 +59,8 @@ import { AvailabilitiesAlerting } from "@overbookd/volunteer-availability";
     },
     {
       provide: AvailabilitiesAlerting,
-      useFactory: (volunteerPeriods: PrismaAvailabilitiesForAlert) =>
-        new AvailabilitiesAlerting(volunteerPeriods),
+      useFactory: (availabilities: PrismaAvailabilitiesForAlert) =>
+        new AvailabilitiesAlerting(availabilities),
       inject: [PrismaAvailabilitiesForAlert],
     },
     {
