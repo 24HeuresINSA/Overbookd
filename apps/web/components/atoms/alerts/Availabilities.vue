@@ -1,7 +1,7 @@
 <template>
   <v-alert
     :color="color"
-    icon="mdi-clock"
+    :icon="icon"
     border="left"
     prominent
     dismissible
@@ -9,7 +9,7 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
-      Tu peux en ajouter sur
+      Tu peux ajouter des créneaux sur
       <nuxt-link to="/availabilities">mes disponibilités</nuxt-link>.
     </p>
     <p class="details">
@@ -37,10 +37,13 @@ export default Vue.extend({
     color(): string {
       return this.hasNoAvailabilities ? "error" : "info";
     },
+    icon(): string {
+      return this.hasNoAvailabilities ? "mdi-clock-alert" : "mdi-clock";
+    },
     details(): string {
       return this.hasNoAvailabilities
-        ? "Sans dispos tu ne pourras pas faire partie de l'aventure."
-        : `${this.alert.nbPeriods}`;
+        ? "Sans disponibilitéss tu ne pourras malheureusement pas faire partie de l'aventure. 😢"
+        : `Tu est actuellement disponible sur ${this.alert.nbPeriods} créneaux. Plus tu as de charisme (donc de dispos) et plus tu auras de chance d'être pris. 😉`;
     },
   },
   methods: {
@@ -52,6 +55,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.info a {
+  color: $yellow-24h;
+}
+
 .summary {
   @media only screen and (max-width: $mobile-max-width) {
     font-size: large;
