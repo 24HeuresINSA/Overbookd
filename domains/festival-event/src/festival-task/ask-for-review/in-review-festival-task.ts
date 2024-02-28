@@ -53,7 +53,7 @@ export class InReviewFestivalTask {
     const inReview = {
       ...task,
       history: this.addReadyToReviewEvent(task.history, instigator),
-      reviews: this.resetReviewsFromDraft(task.festivalActivity),
+      reviews: this.initReviews(task.festivalActivity),
       reviewer,
     } as const;
 
@@ -69,7 +69,7 @@ export class InReviewFestivalTask {
     return new InReviewFestivalTask(inReview, task.reviews);
   }
 
-  private static resetReviewsFromDraft({ hasSupplyRequest }: FestivalActivity) {
+  private static initReviews({ hasSupplyRequest }: FestivalActivity) {
     if (hasSupplyRequest) return TASK_WITH_SUPPLY_REQUEST_REVIEWS;
 
     return NO_SUPPLY_REQUEST_TASK_REVIEWS;
