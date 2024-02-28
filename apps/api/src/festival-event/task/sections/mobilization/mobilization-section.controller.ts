@@ -8,6 +8,7 @@ import {
   Post,
   UseGuards,
   Patch,
+  Request,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -37,6 +38,7 @@ import { TeamMobilizationRequestDto } from "./dto/team-mobilization.request.dto"
 import { AddVolunteerRequestDto } from "./dto/add-volunteer.request.dto";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
+import { RequestWithUserPayload } from "../../../../app.controller";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -79,8 +81,9 @@ export class MobilizationSectionController {
   addMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Body() mobilization: AddMobilizationRequestDto,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.mobilizationService.add(ftId, mobilization);
+    return this.mobilizationService.add(ftId, mobilization, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -116,8 +119,14 @@ export class MobilizationSectionController {
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
     @Body() mobilization: UpdateMobilizationRequestDto,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.mobilizationService.update(ftId, mobilizationId, mobilization);
+    return this.mobilizationService.update(
+      ftId,
+      mobilizationId,
+      mobilization,
+      user,
+    );
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -148,8 +157,9 @@ export class MobilizationSectionController {
   removeMobilization(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.mobilizationService.remove(ftId, mobilizationId);
+    return this.mobilizationService.remove(ftId, mobilizationId, user);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

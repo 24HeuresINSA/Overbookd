@@ -21,12 +21,7 @@ import {
 import { Mobilizations } from "./sections/mobilizations";
 import { Adherent } from "../../common/adherent";
 import { DRAFT, IN_REVIEW, REFUSED } from "../../common/status";
-import {
-  isDraft,
-  isInReview,
-  isRefused,
-  isValidated,
-} from "../../festival-event";
+import { isDraft, isRefused, isValidated } from "../../festival-event";
 import {
   REVIEWING,
   RejectionReviewStatus,
@@ -41,6 +36,10 @@ import { Inquiries } from "./sections/inquiries";
 import { Instructions } from "./sections/instructions";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
+import {
+  readablePeriodFrom,
+  readablePeriodFromId,
+} from "../../common/time-window";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -116,10 +115,7 @@ export class PrepareFestivalTask {
     const general = { ...task.general, ...update };
     const updatedTask = checkValidity({ ...task, general });
 
-    if (isDraft(updatedTask)) return this.save(updatedTask);
-
-    const taskWithReviews = this.updateOwnersReview(updatedTask, [humain]);
-    return this.save(taskWithReviews);
+    return this.save(updatedTask);
   }
 
   async updateInstructionsSection(
@@ -129,55 +125,36 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (!this.canUpdateInstructions(task)) {
-      throw new AlreadyApprovedBy([humain], "FT");
+    if (!this.canUpdateInstructions(task, update)) {
+      const approvers = this.extractApprovers(task);
+      throw new AlreadyApprovedBy(approvers, "FT");
     }
 
     const builder = Instructions.build(task.instructions);
     const instructions = builder.update(update).json;
     const validTask = checkValidity({ ...task, instructions });
 
-    const updatedTask = this.resetApproversReview(
+    const field = update.global
+      ? "instructions"
+      : "instructions des responsables";
+    const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      update,
+      `un changement sur le champ ${field}`,
     );
     return this.save(updatedTask);
   }
 
-  private resetApproversReview<T extends UpdatableFestivalTask>(
-    task: T,
-    instigator: Adherent,
-    update: UpdateInstructions,
-  ): T {
-    if (isDraft<FestivalTask>(task) || isInReview<FestivalTask>(task))
-      return task;
-
-    const humain = this.resetApproval(task.reviews.humain);
-    const matos = this.resetApproval(task.reviews.matos);
-    const elec = this.resetApproval(task.reviews.elec);
-
-    const history = [
-      ...task.history,
-      FestivalTaskKeyEvents.resetReview(instigator, update),
-    ];
-
-    return { ...task, reviews: { humain, matos, elec }, history };
-  }
-
-  private resetApproval(
-    previous: RejectionReviewStatus,
-  ): RejectionReviewStatus {
-    return previous === APPROVED ? REVIEWING : previous;
-  }
-
   private canUpdateInstructions(
     task: FestivalTask,
+    update: UpdateInstructions,
   ): task is UpdatableFestivalTask {
-    if (isDraft(task) || isRefused(task)) return true;
-    if (isValidated(task)) return false;
+    const isUpdatingSharedFields =
+      update.global !== undefined || update.inCharge !== undefined;
 
-    return !this.isApprovedBy(humain, task);
+    return isUpdatingSharedFields
+      ? this.hasReviewersAllowUpdate(task)
+      : !this.isApprovedBy(humain, task);
   }
 
   async addContact(
@@ -267,35 +244,50 @@ export class PrepareFestivalTask {
   async addMobilization(
     taskId: FestivalTask["id"],
     mobilization: AddMobilization,
+    instigator: Adherent,
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (!this.hasReviewersAllowUpdate(task)) {
+      const approvers = this.extractApprovers(task);
+      throw new AlreadyApprovedBy(approvers, "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.add(mobilization).json;
-    const updatedTask = checkValidity({ ...task, mobilizations });
+    const validTask = checkValidity({ ...task, mobilizations });
 
+    const readablePeriod = readablePeriodFrom(mobilization);
+    const updatedTask = this.resetApproversReviewOnRefusedTask(
+      validTask,
+      instigator,
+      `l'ajout d'une mobilisation ${readablePeriod}`,
+    );
     return this.save(updatedTask);
-  }
-
-  private async save(toSave: WithoutConflicts): Promise<WithConflicts> {
-    const updated = await this.festivalTasks.save(toSave);
-    return this.festivalTaskTranslator.translate(updated);
   }
 
   async removeMobilization(
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
+    instigator: Adherent,
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (!this.hasReviewersAllowUpdate(task)) {
+      const approvers = this.extractApprovers(task);
+      throw new AlreadyApprovedBy(approvers, "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.remove(mobilizationId).json;
-    const updatedTask = checkValidity({ ...task, mobilizations });
+    const validTask = checkValidity({ ...task, mobilizations });
 
+    const readablePeriod = readablePeriodFromId(mobilizationId);
+    const updatedTask = this.resetApproversReviewOnRefusedTask(
+      validTask,
+      instigator,
+      `la suppression de la mobilisation ${readablePeriod}`,
+    );
     return this.save(updatedTask);
   }
 
@@ -303,15 +295,25 @@ export class PrepareFestivalTask {
     taskId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     update: UpdateMobilization,
+    instigator: Adherent,
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (!this.hasReviewersAllowUpdate(task)) {
+      const approvers = this.extractApprovers(task);
+      throw new AlreadyApprovedBy(approvers, "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.update(mobilizationId, update).json;
-    const updatedTask = checkValidity({ ...task, mobilizations });
+    const validTask = checkValidity({ ...task, mobilizations });
 
+    const readablePeriod = readablePeriodFromId(mobilizationId);
+    const updatedTask = this.resetApproversReviewOnRefusedTask(
+      validTask,
+      instigator,
+      `un changement sur la mobilisation ${readablePeriod}`,
+    );
     return this.save(updatedTask);
   }
 
@@ -322,7 +324,11 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addTeamTo(mobilizationId, team).json;
@@ -338,7 +344,11 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeTeamFrom(mobilizationId, team).json;
@@ -354,7 +364,11 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.addVolunteerTo(
@@ -373,7 +387,11 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
+
     if (isValidated(task)) throw new Error();
+    if (this.isApprovedBy(humain, task)) {
+      throw new AlreadyApprovedBy([humain], "FT");
+    }
 
     const builder = Mobilizations.build(task.mobilizations);
     const mobilizations = builder.removeVolunteerFrom(
@@ -398,11 +416,7 @@ export class PrepareFestivalTask {
     const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.add(inquiry).json;
 
-    if (isDraft(task)) return this.save({ ...task, inquiries });
-
-    const updatedTask = { ...task, inquiries };
-    const taskWithReviews = this.updateOwnersReview(updatedTask, [matos]);
-    return this.save(taskWithReviews);
+    return this.save({ ...task, inquiries });
   }
 
   async removeInquiry(
@@ -429,21 +443,9 @@ export class PrepareFestivalTask {
     return this.save({ ...task, feedbacks });
   }
 
-  private updateOwnersReview(
-    task: Reviewable,
-    owners: Reviewer<"FT">[],
-  ): Reviewable {
-    const approvals = owners.filter((reviewer) =>
-      this.isApprovedBy(reviewer, task),
-    );
-    if (approvals.length === 0) return task;
-
-    const reviews = {
-      humain: approvals.includes(humain) ? REVIEWING : task.reviews.humain,
-      matos: approvals.includes(matos) ? REVIEWING : task.reviews.matos,
-      elec: approvals.includes(elec) ? REVIEWING : task.reviews.elec,
-    };
-    return { ...task, reviews } as Reviewable;
+  private async save(toSave: WithoutConflicts): Promise<WithConflicts> {
+    const updated = await this.festivalTasks.save(toSave);
+    return this.festivalTaskTranslator.translate(updated);
   }
 
   private isApprovedBy(reviewer: Reviewer<"FT">, task: FestivalTask): boolean {
@@ -456,6 +458,53 @@ export class PrepareFestivalTask {
       case elec:
         return task.reviews.elec === APPROVED;
     }
+  }
+
+  private extractApprovers(task: Reviewable): Reviewer<"FT">[] {
+    const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
+    const approvers = reviewers.filter((reviewer) =>
+      this.isApprovedBy(reviewer, task),
+    );
+    return approvers;
+  }
+
+  private hasReviewersAllowUpdate(
+    task: FestivalTask,
+  ): task is UpdatableFestivalTask {
+    if (isDraft(task) || isRefused(task)) return true;
+    if (isValidated(task)) return false;
+
+    const noneOfTheReviewersApproved =
+      !this.isApprovedBy(humain, task) &&
+      !this.isApprovedBy(matos, task) &&
+      !this.isApprovedBy(elec, task);
+
+    return noneOfTheReviewersApproved;
+  }
+
+  private resetApproversReviewOnRefusedTask<T extends UpdatableFestivalTask>(
+    task: T,
+    instigator: Adherent,
+    reason: string,
+  ): T {
+    if (!isRefused<FestivalTask>(task)) return task;
+
+    const humain = this.resetApproval(task.reviews.humain);
+    const matos = this.resetApproval(task.reviews.matos);
+    const elec = this.resetApproval(task.reviews.elec);
+
+    const history = [
+      ...task.history,
+      FestivalTaskKeyEvents.resetReview(instigator, reason),
+    ];
+
+    return { ...task, reviews: { humain, matos, elec }, history };
+  }
+
+  private resetApproval(
+    previous: RejectionReviewStatus,
+  ): RejectionReviewStatus {
+    return previous === APPROVED ? REVIEWING : previous;
   }
 }
 

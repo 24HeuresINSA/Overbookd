@@ -18,6 +18,7 @@ import {
   approvedByHumainAndElecRejectedByMatos,
   approvedByElecRejectedByMatos,
   approvedByMatosRejectedByHumainAndElec,
+  onlyApprovedByMatos,
 } from "../festival-task.test-util";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
@@ -46,6 +47,7 @@ describe("Prepare festival task instructions section", () => {
       serveWaterOnJustDance,
       installBarbecue,
       onlyApprovedByHumain,
+      onlyApprovedByMatos,
       approvedByHumainRejectedByMatos,
       approvedByHumainAndElecRejectedByMatos,
       approvedByElecRejectedByMatos,
@@ -300,6 +302,7 @@ describe("Prepare festival task instructions section", () => {
     describe.each`
       approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task
       ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
+      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}
       ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
       ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
       ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
@@ -361,9 +364,9 @@ describe("Prepare festival task instructions section", () => {
             describe.each`
               field                       | update
               ${"global instructions"}    | ${{ global: "Update global instruction" }}
-              ${"in charge instructions"} | ${{ inCharge: { instructions: "Update global instruction" } }}
+              ${"in charge instructions"} | ${{ inCharge: "Update global instruction" }}
             `("when trying to update $field on $taskName", ({ update }) => {
-              it("should indicate task is already approved by humain", () => {
+              it(`should indicate task is already approved by ${approvers}`, () => {
                 expect(
                   async () =>
                     await prepare.updateInstructionsSection(
@@ -392,7 +395,7 @@ describe("Prepare festival task instructions section", () => {
                       instigator,
                     );
 
-                  expect(instructions.global).toStrictEqual(global);
+                  expect(instructions.global).toBe(global);
                   expect(instructions.inCharge.instruction).toBe(inCharge);
                 });
                 it("should reset all approver review status to under review", async () => {
@@ -419,7 +422,7 @@ describe("Prepare festival task instructions section", () => {
                       action: RESET_REVIEW,
                       by: instigator,
                       at: expect.any(Date),
-                      description: `Précédentes approbations réinitialisées par un changement sur le champs ${field}`,
+                      description: `Précédentes approbations réinitialisées par un changement sur le champ ${field}`,
                     },
                   ]);
                 });

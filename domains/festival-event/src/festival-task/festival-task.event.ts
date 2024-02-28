@@ -7,7 +7,6 @@ import {
   RESET_REVIEW,
 } from "../common/action";
 import { Adherent } from "../common/adherent";
-import { UpdateInstructions } from "./prepare/prepare";
 
 type Action =
   | typeof CREATED
@@ -29,12 +28,9 @@ export class FestivalTaskKeyEvents {
     return { action: CREATED, by, at, description: "FT créée" };
   }
 
-  static resetReview(by: Adherent, update: UpdateInstructions): KeyEvent {
+  static resetReview(by: Adherent, reason: string): KeyEvent {
     const at = this.computeAt();
-    const field = update.global
-      ? "instructions"
-      : "instructions des responsables";
-    const description = `Précédentes approbations réinitialisées par un changement sur le champs ${field}`;
+    const description = `Précédentes approbations réinitialisées par ${reason}`;
     return { action: RESET_REVIEW, by, at, description };
   }
 
