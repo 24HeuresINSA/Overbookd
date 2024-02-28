@@ -34,7 +34,7 @@
   ],
   "engines": {
     "node": "20.11.0",
-    "pnpm": "8.15.3"
+    "pnpm": "8.15.4"
   },
   "dependencies": {
     "@overbookd/period": "workspace:*",
