@@ -13,7 +13,7 @@ export class AvailabilitiesResponseDto implements IAlertAboutAvailabilities {
 
   @ApiProperty({
     type: Number,
-    description: "Number of periods the not yet volunteer is available for",
+    description: "Number of periods the volunteer is available for",
   })
-  nbPeriods: number;
+  availabilitiesCount: number;
 }

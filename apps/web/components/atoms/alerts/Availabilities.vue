@@ -19,10 +19,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { AvailabilitesAlert } from "@overbookd/volunteer-availability";
 
-export default Vue.extend({
+export default defineComponent({
   name: "AvailabilitiesAlert",
   props: {
     alert: {
@@ -32,7 +32,7 @@ export default Vue.extend({
   },
   computed: {
     hasNoAvailabilities(): boolean {
-      return this.alert.nbPeriods === 0;
+      return this.alert.availabilitiesCount === 0;
     },
     color(): string {
       return this.hasNoAvailabilities ? "error" : "info";
@@ -42,8 +42,8 @@ export default Vue.extend({
     },
     details(): string {
       return this.hasNoAvailabilities
-        ? "Sans disponibilitéss tu ne pourras malheureusement pas faire partie de l'aventure. 😢"
-        : `Tu est actuellement disponible sur ${this.alert.nbPeriods} créneaux. Plus tu as de charisme (donc de dispos) et plus tu auras de chance d'être pris. 😉`;
+        ? "Sans disponibilités tu ne pourras malheureusement pas faire partie de l'aventure. 😢"
+        : `Tu n'as pas encore été validé par les responsables bénévoles. N'hésite pas a compléter tes disponibilités pour augmenter tes chances. 😉`;
     },
   },
   methods: {

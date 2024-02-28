@@ -7,12 +7,12 @@ export type Summary = typeof NO_AVAILABILITIES | typeof NOT_YET_VOLUNTEER;
 
 export interface IAlertAboutAvailabilities {
   summary: Summary;
-  nbPeriods: number;
+  availabilitiesCount: number;
 }
 
 export class AvailabilitesAlert implements IAlertAboutAvailabilities {
   constructor(
     readonly summary: Summary,
-    readonly nbPeriods: number,
+    readonly availabilitiesCount: number,
   ) {}
 }

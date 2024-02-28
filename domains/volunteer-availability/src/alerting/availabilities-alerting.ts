@@ -1,4 +1,4 @@
-import { NotVolunteerPeriods } from "./not-volunteer-periods";
+import { AvailabilitiesForAlert } from "./availabilities-for-alert";
 import { AvailabilitesAlert } from "./availabilities-alert";
 import {
   NO_AVAILABILITIES,
@@ -6,14 +6,15 @@ import {
 } from "./availabilities-alerting.constant";
 
 export class AvailabilitiesAlerting {
-  constructor(private readonly notVolunteerPeriods: NotVolunteerPeriods) {}
+  constructor(private readonly availabilities: AvailabilitiesForAlert) {}
 
   async for(volunteerID: number) {
-    const nbPeriods = await this.notVolunteerPeriods.getNbPeriods(volunteerID);
-    if (nbPeriods === 0)
-      return new AvailabilitesAlert(NO_AVAILABILITIES, nbPeriods);
-    if (nbPeriods > 0)
-      return new AvailabilitesAlert(NOT_YET_VOLUNTEER, nbPeriods);
+    const availabilitiesCount =
+      await this.availabilities.getCountFor(volunteerID);
+    if (availabilitiesCount === 0)
+      return new AvailabilitesAlert(NO_AVAILABILITIES, availabilitiesCount);
+    if (availabilitiesCount > 0)
+      return new AvailabilitesAlert(NOT_YET_VOLUNTEER, availabilitiesCount);
     return undefined;
   }
 }

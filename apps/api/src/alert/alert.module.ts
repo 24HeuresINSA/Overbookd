@@ -9,7 +9,7 @@ import { SettleAlerting } from "@overbookd/contribution";
 import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
-import { PrismaNotVolunteerPeriods } from "./repository/not-volunteer-periods.prisma";
+import { PrismaAvailabilitiesForAlert } from "./repository/availabilities-for-alert.prisma";
 import { AvailabilitiesAlerting } from "@overbookd/volunteer-availability";
 
 @Module({
@@ -32,9 +32,9 @@ import { AvailabilitiesAlerting } from "@overbookd/volunteer-availability";
       inject: [PrismaService],
     },
     {
-      provide: PrismaNotVolunteerPeriods,
+      provide: PrismaAvailabilitiesForAlert,
       useFactory: (prisma: PrismaService) =>
-        new PrismaNotVolunteerPeriods(prisma),
+        new PrismaAvailabilitiesForAlert(prisma),
       inject: [PrismaService],
     },
     {
@@ -59,9 +59,9 @@ import { AvailabilitiesAlerting } from "@overbookd/volunteer-availability";
     },
     {
       provide: AvailabilitiesAlerting,
-      useFactory: (volunteerPeriods: PrismaNotVolunteerPeriods) =>
+      useFactory: (volunteerPeriods: PrismaAvailabilitiesForAlert) =>
         new AvailabilitiesAlerting(volunteerPeriods),
-      inject: [PrismaNotVolunteerPeriods],
+      inject: [PrismaAvailabilitiesForAlert],
     },
     {
       provide: AlertService,
