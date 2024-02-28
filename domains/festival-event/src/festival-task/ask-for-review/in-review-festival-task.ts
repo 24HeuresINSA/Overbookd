@@ -53,7 +53,7 @@ export class InReviewFestivalTask {
     const inReview = {
       ...task,
       history: this.addReadyToReviewEvent(task.history, instigator),
-      reviews: this.resetReviews(task.festivalActivity),
+      reviews: this.initReviews(task.festivalActivity),
       reviewer,
     } as const;
 
@@ -62,17 +62,25 @@ export class InReviewFestivalTask {
 
   static fromRefused(task: Refused, instigator: Adherent) {
     const history = this.addReadyToReviewEvent(task.history, instigator);
-    const reviews = InReviewFestivalTask.resetReviews(task.festivalActivity);
+    const reviews = InReviewFestivalTask.resetReviews(task.reviews);
 
     const inReview = { ...task, history, reviews } as const;
 
     return new InReviewFestivalTask(inReview, task.reviews);
   }
 
-  private static resetReviews({ hasSupplyRequest }: FestivalActivity) {
+  private static initReviews({ hasSupplyRequest }: FestivalActivity) {
     if (hasSupplyRequest) return TASK_WITH_SUPPLY_REQUEST_REVIEWS;
 
     return NO_SUPPLY_REQUEST_TASK_REVIEWS;
+  }
+
+  private static resetReviews(reviews: Refused["reviews"]) {
+    return {
+      humain: reviews.humain === REJECTED ? REVIEWING : reviews.humain,
+      matos: reviews.matos === REJECTED ? REVIEWING : reviews.matos,
+      elec: reviews.elec === REJECTED ? REVIEWING : reviews.elec,
+    };
   }
 
   private static addReadyToReviewEvent(

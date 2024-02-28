@@ -16,6 +16,7 @@ import {
   withSomeMobilizationsWithoutRequest,
   flashMobOnPreventionVillage,
   flashMobOnJustDance,
+  approvedByElecRejectedByMatos,
 } from "../festival-task.test-util";
 import { IN_REVIEW } from "../../common/status";
 import { READY_TO_REVIEW } from "../../common/action";
@@ -55,6 +56,7 @@ describe("Festival Task - ask for review", () => {
     withSomeMobilizationsWithoutRequest,
     flashMobOnPreventionVillage,
     flashMobOnJustDance,
+    approvedByElecRejectedByMatos,
   ];
   beforeEach(() => {
     festivalTasks = new InMemoryAskForReviewTasks(tasks);
@@ -179,12 +181,13 @@ describe("Festival Task - ask for review", () => {
   });
   describe("when asking a review for refused festival task", () => {
     describe.each`
-      taskName                                    | task                           | reviewers         | instigator
-      ${flashMobOnPreventionVillage.general.name} | ${flashMobOnPreventionVillage} | ${[humain]}       | ${noel}
-      ${flashMobOnJustDance.general.name}         | ${flashMobOnJustDance}         | ${[humain, elec]} | ${noel}
+      taskName                                      | task                             | rejectors         | instigator
+      ${flashMobOnPreventionVillage.general.name}   | ${flashMobOnPreventionVillage}   | ${[humain]}       | ${noel}
+      ${flashMobOnJustDance.general.name}           | ${flashMobOnJustDance}           | ${[humain, elec]} | ${noel}
+      ${approvedByElecRejectedByMatos.general.name} | ${approvedByElecRejectedByMatos} | ${[matos]}        | ${noel}
     `(
-      "when $taskName was rejected by $reviewers",
-      ({ task, instigator, reviewers }) => {
+      "when $taskName was rejected by $rejectors",
+      ({ task, instigator, rejectors }) => {
         it("should indicate it is in review", async () => {
           const inReview = await askForReview.from(task.id, instigator);
           expect(inReview.status).toBe(IN_REVIEW);
@@ -203,20 +206,20 @@ describe("Festival Task - ask for review", () => {
           ]);
         });
         describe("reviews", () => {
-          it(`should ask review from ${reviewers}`, async () => {
+          it(`should ask review from ${rejectors}`, async () => {
             const inReview = await askForReview.from(task.id, instigator);
 
-            expect(notifications.entries).toHaveLength(reviewers.length);
+            expect(notifications.entries).toHaveLength(rejectors.length);
 
             const event = { id: inReview.id, name: inReview.general.name };
-            reviewers.every((team: string) =>
+            rejectors.every((team: string) =>
               expect(notifications.entries).toContainEqual({ team, event }),
             );
           });
           it("should reset rejected reviews to reviewing", async () => {
             const inReview = await askForReview.from(task.id, instigator);
             const resetReviews = Object.fromEntries(
-              reviewers.map((reviewer: string) => [reviewer, REVIEWING]),
+              rejectors.map((reviewer: string) => [reviewer, REVIEWING]),
             );
             const expectedReviews = { ...task.reviews, ...resetReviews };
 
