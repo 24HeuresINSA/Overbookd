@@ -4,7 +4,7 @@
       <h1>Mes disponibilités</h1>
       <p>
         Remplis tes disponibilités, plus tu as de points de charisme, plus tu as
-        de chances de faire parti de l'aventure.
+        de chances de faire partie de l'aventure.
       </p>
       <p class="mb-3">
         Coche tout ce que tu peux, nous ne t'affecterons bien évidemment pas à
