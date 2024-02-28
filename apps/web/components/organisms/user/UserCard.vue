@@ -93,14 +93,7 @@
         </v-form>
       </v-card-text>
       <v-card-text class="comment-friends">
-        <v-textarea
-          v-model="comment"
-          class="comment"
-          label="Commentaire"
-          hint="Laisse nous un petit mot. 💌"
-          persistent-hint
-          @input="defectSave"
-        ></v-textarea>
+        <CommentField v-model="comment" @update:comment="defectSave" />
         <FriendsCard id="friends" />
       </v-card-text>
     </v-card>
@@ -122,6 +115,7 @@ import {
 } from "~/utils/rules/input.rules";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
+import CommentField from "~/components/atoms/field/comment/CommentField.vue";
 
 interface UserCardData extends InputRulesData {
   firstname: string;
@@ -136,7 +130,13 @@ interface UserCardData extends InputRulesData {
 
 export default defineComponent({
   name: "UserCard",
-  components: { TeamChip, ProfilePictureDialog, ProfilePicture, FriendsCard },
+  components: {
+    TeamChip,
+    ProfilePictureDialog,
+    ProfilePicture,
+    FriendsCard,
+    CommentField,
+  },
   data(): UserCardData {
     return {
       firstname: "",

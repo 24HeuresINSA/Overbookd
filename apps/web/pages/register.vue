@@ -104,12 +104,7 @@
               persistent-hint
               :rules="[twoTeamsMaximumRule]"
             ></v-select>
-            <v-textarea
-              v-model="comment"
-              label="Commentaire"
-              hint="Laisse nous un petit mot. 💌"
-              persistent-hint
-            ></v-textarea>
+            <CommentField v-model="comment" />
           </v-form>
           <v-btn color="primary" @click="step = 4"> On se capte 🤙 </v-btn>
           <v-btn text @click="step = 2"> Revenir </v-btn>
@@ -176,6 +171,7 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
+import CommentField from "~/components/atoms/field/comment/CommentField.vue";
 
 interface RegisterData extends InputRulesData {
   step: number;
@@ -194,7 +190,7 @@ interface RegisterData extends InputRulesData {
 export default Vue.extend({
   name: "Register",
   auth: false,
-  components: { SnackNotificationContainer },
+  components: { SnackNotificationContainer, CommentField },
   layout: "none",
   data(): RegisterData {
     return {
