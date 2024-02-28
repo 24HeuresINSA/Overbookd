@@ -62,7 +62,7 @@ export class FestivalTaskReviewService {
   }
 
   async reject(
-    ftId: number,
+    ftId: FestivalTask["id"],
     user: JwtUtil,
     rejection: ReviewRejection<"FT">,
   ): Promise<FestivalTaskRefused> {
@@ -82,12 +82,20 @@ export class FestivalTaskReviewService {
     return task;
   }
 
-  approve(
-    faId: number,
+  async approve(
+    ftId: FestivalTask["id"],
     user: JwtUtil,
     approval: ReviewApproval<"FT">,
   ): Promise<FestivalTask> {
-    console.log(faId, user, approval);
-    throw new Error("Not yet implemented");
+    TeamService.checkMembership(user, approval.team);
+
+    const reviewer = await this.repositories.adherents.findOne(user.id);
+    const withApprover = { ...approval, reviewer };
+    const task = await this.useCases.review.approve(ftId, withApprover);
+
+    const event = FestivalTaskEvents.approved(task, reviewer.id);
+    this.eventStore.publish(event);
+
+    return task;
   }
 }

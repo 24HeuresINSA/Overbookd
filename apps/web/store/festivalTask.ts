@@ -16,6 +16,7 @@ import {
   AddMobilizationForm,
   FestivalTaskCreationForm,
   PublishFeedbackForm,
+  ReviewApproval,
   ReviewRejection,
   UpdateGeneralForm,
   UpdateInstructionsForm,
@@ -406,6 +407,17 @@ export const actions = actionTree(
       const id = state.selectedTask.id;
       const res = await safeCall(this, repo.reject(this, id, rejection), {
         successMessage: `🛑 FT rejetée par l'équipe ${rejection.team}`,
+      });
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async approve({ state, commit }, approval: ReviewApproval<"FT">) {
+      const id = state.selectedTask.id;
+      const res = await safeCall(this, repo.approve(this, id, approval), {
+        successMessage: `✅ FT approuvée par l'équipe ${approval.team}`,
       });
       if (!res) return;
 

@@ -134,7 +134,7 @@ export class FestivalTaskReviewController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(VALIDATE_FT)
-  @Post(":ftId/reject")
+  @Post(":ftId/approve")
   @HttpCode(200)
   @ApiResponse({
     status: 200,

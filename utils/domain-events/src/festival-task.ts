@@ -1,10 +1,10 @@
 import type { Event } from "@overbookd/event";
-import { Validated } from "@overbookd/festival-event";
 import {
   Adherent,
   FestivalTaskDraft as Draft,
   FestivalTaskInReview as InReview,
   FestivalTaskRefused as Refused,
+  FestivalTaskReviewable as Reviewable,
 } from "@overbookd/festival-event";
 
 export const FESTIVAL_TASK_CREATED = "festival-task-created";
@@ -34,13 +34,11 @@ export type Rejected = {
   reason: string;
 };
 
-type FestivalTaskForApproval = InReview | Validated;
-
 export type Approved = {
-  festivalTask: FestivalTaskForApproval;
+  festivalTask: Reviewable;
   by: Adherent["id"];
   at: Date;
-  id: FestivalTaskForApproval["id"];
+  id: Reviewable["id"];
 };
 
 export type FestivalTaskCreatedEvent = Event<
@@ -93,7 +91,7 @@ export class FestivalTask {
   }
 
   static approved(
-    festivalTask: FestivalTaskForApproval,
+    festivalTask: Reviewable,
     by: Adherent["id"],
   ): FestivalTaskApprovedEvent {
     const at = FestivalTask.computeAt();

@@ -4,6 +4,10 @@
   &.approved {
     background-color: $validated-color;
     color: white;
+
+    .v-icon {
+      color: white;
+    }
   }
 
   &.submitted,
@@ -11,23 +15,39 @@
   &.reviewing {
     background-color: $submitted-color;
     color: black;
+
+    .v-icon {
+      color: black;
+    }
   }
 
   &.refused,
   &.rejected {
     background-color: $refused-color;
     color: white;
+
+    .v-icon {
+      color: white;
+    }
   }
 
   &.draft,
   &.not_asking_to_review {
     background-color: $draft-color;
     color: white;
+
+    .v-icon {
+      color: white;
+    }
   }
 
   &.ready {
     background-color: $ready-color;
     color: white;
+
+    .v-icon {
+      color: white;
+    }
   }
 }
 
