@@ -33,6 +33,11 @@ export type AddInChargeVolunteerForm = {
   volunteerId: Volunteer["id"];
 };
 
+export type InitInChargeForm = {
+  volunteers: number[];
+  instruction: string;
+};
+
 export type AddMobilizationForm = Omit<
   AddMobilization,
   "volunteers" | "teams"

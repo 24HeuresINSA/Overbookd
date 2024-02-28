@@ -291,11 +291,26 @@ describe("Prepare festival task instructions section", () => {
     `(
       "should clear $taskName in charge instructions section",
       async ({ task }) => {
-        const { instructions } = await prepare.clearInCharge(task.id);
+        const { instructions } = await prepare.clearInCharge(task.id, noel);
         expect(instructions.inCharge.volunteers).toHaveLength(0);
         expect(instructions.inCharge.instruction).toBe(null);
       },
     );
+  });
+
+  describe("Initialize in charge section when task is in review", () => {
+    it("should init in charge section", async () => {
+      const task = guardJustDance;
+      const volunteers = [noel, lea];
+      const instruction = "Some instructions for in charge only";
+      const { instructions } = await prepare.initInCharge(
+        task.id,
+        { volunteers, instruction },
+        noel,
+      );
+      expect(instructions.inCharge.volunteers).toStrictEqual(volunteers);
+      expect(instructions.inCharge.instruction).toBe(instruction);
+    });
   });
 
   describe("Update after approvals", () => {
@@ -377,26 +392,83 @@ describe("Prepare festival task instructions section", () => {
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
+            describe("when trying to clear in charge section", () => {
+              it("should indicate task is already approved", () => {
+                expect(
+                  async () => await prepare.clearInCharge(task.id, noel),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
+            describe("when trying to init in charge section", () => {
+              it("should indicate task is already approved", () => {
+                const form = {
+                  volunteers: [noel],
+                  instruction: "Some instruction",
+                };
+                expect(
+                  async () => await prepare.initInCharge(task.id, form, noel),
+                ).rejects.toThrow(AlreadyApprovedBy);
+              });
+            });
           });
         } else {
           describe("when another reviewer rejects task", () => {
-            describe.each`
-              field                              | instigator | update                                           | global                         | inCharge
-              ${"instructions"}                  | ${noel}    | ${{ global: "Update global instruction" }}       | ${"Update global instruction"} | ${task.instructions.inCharge.instruction}
-              ${"instructions des responsables"} | ${noel}    | ${{ inCharge: "Update dedicated instructions" }} | ${task.instructions.global}    | ${"Update dedicated instructions"}
-            `(
-              "when trying to update $field",
-              ({ update, global, inCharge, field, instigator }) => {
-                it(`should update ${field} accordingly`, async () => {
+            describe("when trying to update global instructions", () => {
+              const instigator = noel;
+              const update = { global: "Update global instruction" };
+              it("should update it", async () => {
+                const { instructions } =
+                  await prepare.updateInstructionsSection(
+                    task.id,
+                    update,
+                    instigator,
+                  );
+                expect(instructions.global).toBe(update.global);
+              });
+              it("should reset all approver review status to under review", async () => {
+                const updated = await prepare.updateInstructionsSection(
+                  task.id,
+                  update,
+                  instigator,
+                );
+                if (isDraft(updated)) return;
+
+                expect(updated.reviews.humain).toBe(humain);
+                expect(updated.reviews.matos).toBe(matos);
+                expect(updated.reviews.elec).toBe(elec);
+              });
+              it("should add RESET_REVIEW key event to history", async () => {
+                const { history } = await prepare.updateInstructionsSection(
+                  task.id,
+                  update,
+                  instigator,
+                );
+                expect(history).toStrictEqual([
+                  ...task.history,
+                  {
+                    action: RESET_REVIEW,
+                    by: instigator,
+                    at: expect.any(Date),
+                    description:
+                      "Précédentes approbations réinitialisées par un changement sur le champ instructions",
+                  },
+                ]);
+              });
+            });
+            if (task.instructions.inCharge.volunteers.length > 0) {
+              describe("when trying to update in charge instructions", () => {
+                const instigator = noel;
+                const update = { inCharge: "Update global instruction" };
+                it("should update it", async () => {
                   const { instructions } =
                     await prepare.updateInstructionsSection(
                       task.id,
                       update,
                       instigator,
                     );
-
-                  expect(instructions.global).toBe(global);
-                  expect(instructions.inCharge.instruction).toBe(inCharge);
+                  expect(instructions.inCharge.instruction).toBe(
+                    update.inCharge,
+                  );
                 });
                 it("should reset all approver review status to under review", async () => {
                   const updated = await prepare.updateInstructionsSection(
@@ -422,12 +494,103 @@ describe("Prepare festival task instructions section", () => {
                       action: RESET_REVIEW,
                       by: instigator,
                       at: expect.any(Date),
-                      description: `Précédentes approbations réinitialisées par un changement sur le champ ${field}`,
+                      description:
+                        "Précédentes approbations réinitialisées par un changement sur le champ instructions des responsables",
                     },
                   ]);
                 });
-              },
-            );
+              });
+            }
+            if (
+              task.instructions.inCharge.instruction ||
+              task.instructions.inCharge.volunteers.length > 0
+            ) {
+              describe("when trying to clear in charge section when exists", () => {
+                const instigator = noel;
+                it("should clear it", async () => {
+                  const { instructions } = await prepare.clearInCharge(
+                    task.id,
+                    instigator,
+                  );
+                  expect(instructions.inCharge.volunteers).toHaveLength(0);
+                  expect(instructions.inCharge.instruction).toBe(null);
+                });
+                it("should reset all approver review status to under review", async () => {
+                  const updated = await prepare.clearInCharge(
+                    task.id,
+                    instigator,
+                  );
+                  if (isDraft(updated)) return;
+
+                  expect(updated.reviews.humain).toBe(humain);
+                  expect(updated.reviews.matos).toBe(matos);
+                  expect(updated.reviews.elec).toBe(elec);
+                });
+                it("should add RESET_REVIEW key event to history", async () => {
+                  const { history } = await prepare.clearInCharge(
+                    task.id,
+                    instigator,
+                  );
+                  expect(history).toStrictEqual([
+                    ...task.history,
+                    {
+                      action: RESET_REVIEW,
+                      by: instigator,
+                      at: expect.any(Date),
+                      description:
+                        "Précédentes approbations réinitialisées par la suppression des instructions additionnelles",
+                    },
+                  ]);
+                });
+              });
+            } else {
+              describe("when trying to initialize in charge section", () => {
+                const volunteers = [noel, lea];
+                const instruction = "Some instruction";
+                const form = { volunteers, instruction };
+                const instigator = noel;
+                it("should initialize it", async () => {
+                  const { instructions } = await prepare.initInCharge(
+                    task.id,
+                    form,
+                    instigator,
+                  );
+                  expect(instructions.inCharge.volunteers).toStrictEqual(
+                    volunteers,
+                  );
+                  expect(instructions.inCharge.instruction).toBe(instruction);
+                });
+                it("should reset all approver review status to under review", async () => {
+                  const updated = await prepare.initInCharge(
+                    task.id,
+                    form,
+                    instigator,
+                  );
+                  if (isDraft(updated)) return;
+
+                  expect(updated.reviews.humain).toBe(humain);
+                  expect(updated.reviews.matos).toBe(matos);
+                  expect(updated.reviews.elec).toBe(elec);
+                });
+                it("should add RESET_REVIEW key event to history", async () => {
+                  const { history } = await prepare.initInCharge(
+                    task.id,
+                    form,
+                    instigator,
+                  );
+                  expect(history).toStrictEqual([
+                    ...task.history,
+                    {
+                      action: RESET_REVIEW,
+                      by: instigator,
+                      at: expect.any(Date),
+                      description:
+                        "Précédentes approbations réinitialisées par l'initialisation des instructions additionnelles",
+                    },
+                  ]);
+                });
+              });
+            }
           });
         }
       },

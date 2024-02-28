@@ -33,7 +33,7 @@ import {
 import { APPROVED } from "../../common/action";
 import { AlreadyApprovedBy } from "../../common/review.error";
 import { Inquiries } from "./sections/inquiries";
-import { Instructions } from "./sections/instructions";
+import { InitInCharge, Instructions } from "./sections/instructions";
 import { InReviewSpecification } from "../ask-for-review/in-review-specification";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {
@@ -229,14 +229,49 @@ export class PrepareFestivalTask {
     return this.save(updatedTask);
   }
 
-  async clearInCharge(taskId: FestivalTask["id"]): Promise<WithConflicts> {
+  async clearInCharge(
+    taskId: FestivalTask["id"],
+    instigator: Adherent,
+  ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (!this.hasReviewersAllowUpdate(task)) {
+      const approvers = this.extractApprovers(task);
+      throw new AlreadyApprovedBy(approvers, "FT");
+    }
 
     const builder = Instructions.build(task.instructions);
-    const instructions = builder.clear().json;
-    const updatedTask = checkValidity({ ...task, instructions });
+    const instructions = builder.clearInCharge().json;
+    const validTask = checkValidity({ ...task, instructions });
+    const updatedTask = this.resetApproversReviewOnRefusedTask(
+      validTask,
+      instigator,
+      "la suppression des instructions additionnelles",
+    );
+
+    return this.save(updatedTask);
+  }
+
+  async initInCharge(
+    taskId: FestivalTask["id"],
+    { volunteers, instruction }: InitInCharge,
+    instigator: Adherent,
+  ): Promise<WithConflicts> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+    if (!this.hasReviewersAllowUpdate(task)) {
+      const approvers = this.extractApprovers(task);
+      throw new AlreadyApprovedBy(approvers, "FT");
+    }
+
+    const builder = Instructions.build(task.instructions);
+    const instructions = builder.initInCharge(volunteers, instruction).json;
+    const validTask = checkValidity({ ...task, instructions });
+    const updatedTask = this.resetApproversReviewOnRefusedTask(
+      validTask,
+      instigator,
+      "l'initialisation des instructions additionnelles",
+    );
 
     return this.save(updatedTask);
   }

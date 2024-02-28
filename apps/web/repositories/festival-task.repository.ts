@@ -13,6 +13,7 @@ import {
   Statistics,
   ReviewRejection,
   ReviewApproval,
+  InitInChargeForm,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -132,6 +133,17 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/instructions/in-charge/volunteers/${volunteerId}`,
+    );
+  }
+
+  static initInCharge(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+    form: InitInChargeForm,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
+      `${this.basePath}/${ftId}/instructions/in-charge`,
+      form,
     );
   }
 

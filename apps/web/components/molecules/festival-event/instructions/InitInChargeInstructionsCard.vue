@@ -72,7 +72,13 @@ export default defineComponent({
   },
   methods: {
     initInChargeInstructions() {
-      // TODO init
+      if (this.instruction === null || this.instruction.trim() === "") return;
+      const volunteers = this.volunteers.map(({ id }) => id);
+
+      this.$accessor.festivalTask.initInCharge({
+        volunteers,
+        instruction: this.instruction,
+      });
       this.closeDialog();
     },
     updateInChargeInstruction(canBeEmpty: string) {

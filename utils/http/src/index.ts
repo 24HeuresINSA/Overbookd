@@ -21,6 +21,7 @@ export type {
   UpdateInstructionsForm,
   AddContactForm,
   AddInChargeVolunteerForm,
+  InitInChargeForm,
   AddMobilizationForm,
   AddVolunteerToMobilizationForm,
   Draft as DraftWithConflicts,

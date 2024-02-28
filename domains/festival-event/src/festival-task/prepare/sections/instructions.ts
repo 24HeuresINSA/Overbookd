@@ -2,6 +2,11 @@ import { FestivalTask } from "../../festival-task";
 import { Contact, Volunteer } from "../../sections/instructions";
 import { UpdateInstructions } from "../prepare";
 
+export type InitInCharge = {
+  volunteers: Volunteer[];
+  instruction: string;
+};
+
 export class Instructions {
   private constructor(
     private readonly instructions: FestivalTask["instructions"],
@@ -51,9 +56,15 @@ export class Instructions {
     return new Instructions({ ...this.instructions, inCharge });
   }
 
-  clear() {
+  clearInCharge() {
     const inChargeBuilder = InCharge.build(this.instructions.inCharge);
     const inCharge = inChargeBuilder.clear().json;
+
+    return new Instructions({ ...this.instructions, inCharge });
+  }
+
+  initInCharge(volunteers: Volunteer[], instruction: string) {
+    const inCharge = InCharge.build({ volunteers, instruction }).json;
 
     return new Instructions({ ...this.instructions, inCharge });
   }

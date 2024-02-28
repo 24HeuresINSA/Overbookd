@@ -835,8 +835,8 @@ export const approvedByElecRejectedByMatos = factory
   .withInstructions({
     contacts: [noelContact, justDanceInstallerContact],
     inCharge: {
-      instruction: "Dedicated instruction",
-      volunteers: [noel, george],
+      instruction: null,
+      volunteers: [],
     },
   })
   .withReviews({ humain: REVIEWING, elec: APPROVED, matos: REJECTED })
