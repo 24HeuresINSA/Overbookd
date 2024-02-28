@@ -2,17 +2,13 @@
   <v-card class="festival-event-filter">
     <v-card-title>Filtres</v-card-title>
     <v-card-text>
-      <v-text-field
-        :value="search"
-        label="Recherche"
-        @change="changeSearch"
-      ></v-text-field>
+      <v-text-field :value="search" label="Recherche" @change="changeSearch" />
       <SearchTeam
         :team="team"
         label="Équipe"
         :boxed="false"
         @change="changeTeam"
-      ></SearchTeam>
+      />
       <SearchUser
         :user="adherent"
         :label="adherentLabel"
@@ -44,9 +40,12 @@ import {
   FaStatusLabel,
   faStatusLabels,
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
-import { FtStatusLabel, ftStatusLabels } from "~/utils/models/ft.model";
 import { Team } from "~/utils/models/team.model";
 import { User } from "@overbookd/user";
+import {
+  FtStatusLabel,
+  ftStatusLabels,
+} from "~/utils/festival-event/festival-task/festival-task.model";
 
 type StatusLabels = (
   | { key: FestivalActivity["status"]; label: FaStatusLabel }

@@ -5,22 +5,26 @@ import {
   PreviewFestivalTask as Preview,
   PreviewFestivalTaskDraft as PreviewDraft,
   REFUSED,
+  VALIDATED,
 } from "@overbookd/festival-event";
 import {
   BROUILLON,
   REFUSEE,
   RELECTURE_EN_COURS,
+  VALIDEE,
 } from "../festival-event.model";
 
 export type FtStatusLabel =
   | typeof BROUILLON
   | typeof RELECTURE_EN_COURS
-  | typeof REFUSEE;
+  | typeof REFUSEE
+  | typeof VALIDEE;
 
 export const ftStatusLabels = new Map<FestivalTask["status"], FtStatusLabel>([
   [DRAFT, BROUILLON],
   [IN_REVIEW, RELECTURE_EN_COURS],
   [REFUSED, REFUSEE],
+  [VALIDATED, VALIDEE],
 ]);
 
 export function isDraftPreview(task: Preview): task is PreviewDraft {

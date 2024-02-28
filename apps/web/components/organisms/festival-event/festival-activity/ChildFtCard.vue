@@ -35,8 +35,11 @@ import {
 } from "@overbookd/festival-event";
 import { defineComponent } from "vue";
 import { BROUILLON } from "~/utils/festival-event/festival-event.model";
+import {
+  FtStatusLabel,
+  ftStatusLabels,
+} from "~/utils/festival-event/festival-task/festival-task.model";
 import { Header } from "~/utils/models/data-table.model";
-import { FtStatusLabel, ftStatusLabels } from "~/utils/models/ft.model";
 
 type ChildFtCardData = {
   headers: Header[];

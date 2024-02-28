@@ -8,6 +8,7 @@ import {
   REJECTED,
   REVIEWING,
   ReviewStatus,
+  VALIDATED,
 } from "@overbookd/festival-event";
 import { User } from "@overbookd/user";
 import { Team } from "../../models/team.model";
@@ -122,18 +123,20 @@ export function findReviewStatus(status: string): ReviewStatus | undefined {
     case REVIEWING:
       return REVIEWING;
     case NOT_ASKING_TO_REVIEW:
-    default:
       return NOT_ASKING_TO_REVIEW;
   }
 }
 
 export function findStatus(status: string): FestivalTask["status"] | undefined {
   if (!status) return undefined;
+
   switch (status) {
     case IN_REVIEW:
       return IN_REVIEW;
     case REFUSED:
       return REFUSED;
+    case VALIDATED:
+      return VALIDATED;
     case DRAFT:
     default:
       return DRAFT;
