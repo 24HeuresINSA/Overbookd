@@ -237,6 +237,10 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
       return { ...base, reviews, status: REFUSED };
     }
 
+    if (isValidatedReviews(reviews)) {
+      return { ...base, reviews, status: VALIDATED };
+    }
+
     return { ...base, status: IN_REVIEW, reviews };
   }
 

@@ -12,6 +12,7 @@ import {
   PublishFeedbackForm,
   Statistics,
   ReviewRejection,
+  ReviewApproval,
 } from "@overbookd/http";
 import {
   PreviewFestivalTask,
@@ -265,6 +266,17 @@ export class FestivalTaskRepository {
     return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/reject`,
       rejection,
+    );
+  }
+
+  static approve(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+    approval: ReviewApproval<"FT">,
+  ) {
+    return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
+      `${this.basePath}/${ftId}/approve`,
+      approval,
     );
   }
 }

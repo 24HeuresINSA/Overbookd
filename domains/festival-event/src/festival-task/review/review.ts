@@ -112,7 +112,8 @@ export class Review {
     this.checkInquiryDriveAssignment(task);
 
     const approved = Approve.from(task, approval);
-    return this.tasks.save(approved);
+    const saved = await this.tasks.save(approved);
+    return this.translator.translate(saved);
   }
 
   private checkInquiryDriveAssignment(task: ReviewableWithoutConflicts) {

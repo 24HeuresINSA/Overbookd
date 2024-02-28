@@ -5,6 +5,14 @@
         <div class="reviews">
           <div v-for="team in reviewers" :key="team" class="team-review">
             <v-btn
+              :id="`${team}-approve`"
+              class="approve"
+              :disabled="!canApproveAs(team)"
+              @click="approved(team)"
+            >
+              Approuver pour {{ team }}
+            </v-btn>
+            <v-btn
               :id="`${team}-reject`"
               class="reject"
               :disabled="!canRejectAs(team)"
@@ -43,6 +51,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
+  APPROVED,
   FestivalTask,
   REJECTED,
   ReviewStatus,
@@ -110,13 +119,22 @@ export default defineComponent({
       this.$accessor.festivalTask.publishFeedback({ content });
     },
     canRejectAs(team: Reviewer<"FT">): boolean {
-      const isAlredyRejectedBy = this.hasReviewerAlreadyDoneHisReview(
+      const isAlreadyRejectedBy = this.hasReviewerAlreadyDoneHisReview(
         this.selectedTask,
         team,
         REJECTED,
       );
       const isTeamMember = this.$accessor.user.isMemberOf(team);
-      return !isAlredyRejectedBy && isTeamMember;
+      return !isAlreadyRejectedBy && isTeamMember;
+    },
+    canApproveAs(team: Reviewer<"FT">): boolean {
+      const isAlreadyApprovedBy = this.hasReviewerAlreadyDoneHisReview(
+        this.selectedTask,
+        team,
+        APPROVED,
+      );
+      const isTeamMember = this.$accessor.user.isMemberOf(team);
+      return !isAlreadyApprovedBy && isTeamMember;
     },
     hasReviewerAlreadyDoneHisReview(
       task: FestivalTask,
@@ -144,6 +162,9 @@ export default defineComponent({
       const team = this.reviewer;
       if (!team) return;
       this.$accessor.festivalTask.rejectBecause({ team, reason });
+    },
+    approved(team: Reviewer<"FT">) {
+      this.$accessor.festivalTask.approve({ team });
     },
   },
 });
@@ -191,6 +212,12 @@ $sidebar-width: 350px;
 
   .reject {
     background-color: $refused-color;
+    color: whitesmoke;
+    font-weight: bolder;
+    min-width: 100%;
+  }
+  .approve {
+    background-color: $validated-color;
     color: whitesmoke;
     font-weight: bolder;
     min-width: 100%;
