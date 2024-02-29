@@ -3,7 +3,6 @@ import {
   ASK_FOR_HELP,
   ENROLL_HARD,
   ENROLL_SOFT,
-  FILL_AVAILABILITY,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
   MANAGE_PERSONAL_ACCOUNTS,
@@ -127,7 +126,6 @@ export const pages: Page[] = [
   {
     icon: "mdi-clock",
     title: "Mes dispos",
-    permission: FILL_AVAILABILITY,
     to: "/availabilities",
     description:
       "Permet de renseigner quand tu es disponible pour aider sur le festival",

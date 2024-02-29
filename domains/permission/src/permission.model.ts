@@ -21,7 +21,6 @@ import {
   READ_FT,
   WRITE_FT,
   VIEW_FESTIVAL_EVENTS_STATS,
-  FILL_AVAILABILITY,
   VIEW_TIMELINE,
   ASK_FOR_HELP,
   VIEW_PLANNING,
@@ -66,7 +65,6 @@ export type Permission =
   | typeof READ_FT
   | typeof WRITE_FT
   | typeof VIEW_FESTIVAL_EVENTS_STATS
-  | typeof FILL_AVAILABILITY
   | typeof VIEW_TIMELINE
   | typeof ASK_FOR_HELP
   | typeof VIEW_PLANNING
