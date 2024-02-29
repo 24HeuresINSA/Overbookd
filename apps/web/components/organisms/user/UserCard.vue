@@ -101,7 +101,7 @@
           persistent-hint
           @input="defectSave"
         ></v-textarea>
-        <FriendsCard id="friends" class="friends" />
+        <FriendsCard id="friends" />
       </v-card-text>
     </v-card>
   </div>
@@ -310,7 +310,7 @@ export default defineComponent({
     }
 
     .comment,
-    .friends {
+    #friends {
       width: 100%;
       padding: 0px 16px;
     }
