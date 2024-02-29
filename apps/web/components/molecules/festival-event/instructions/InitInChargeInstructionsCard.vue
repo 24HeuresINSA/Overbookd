@@ -18,25 +18,20 @@
         label="Responsables de la tâche"
         :boxed="false"
         deletable-chips
-        @add="addInChargeVolunteer"
-        @remove="removeInChargeVolunteer"
+        @add="addVolunteer"
+        @remove="removeVolunteer"
       />
 
       <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
       <RichEditor
         :data="instruction ?? ''"
         class="mb-6"
-        @change="updateInChargeInstruction"
+        @change="updateInstruction"
       />
     </v-card-text>
 
     <v-card-actions class="instructions-card__actions">
-      <v-btn
-        :disabled="!canInitInChargeInstructions"
-        color="primary"
-        large
-        @click="initInChargeInstructions"
-      >
+      <v-btn :disabled="!canInit" color="primary" large @click="init">
         <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
         Ajouter des instructions
       </v-btn>
@@ -63,7 +58,7 @@ export default defineComponent({
     instruction: null,
   }),
   computed: {
-    canInitInChargeInstructions(): boolean {
+    canInit(): boolean {
       const hasVolunteers = this.volunteers.length > 0;
       const hasInstruction =
         this.instruction !== null && this.instruction.trim() !== "";
@@ -71,24 +66,24 @@ export default defineComponent({
     },
   },
   methods: {
-    initInChargeInstructions() {
+    async init() {
       if (this.instruction === null || this.instruction.trim() === "") return;
       const volunteers = this.volunteers.map(({ id }) => id);
 
-      this.$accessor.festivalTask.initInCharge({
+      await this.$accessor.festivalTask.initInCharge({
         volunteers,
         instruction: this.instruction,
       });
       this.closeDialog();
     },
-    updateInChargeInstruction(canBeEmpty: string) {
+    updateInstruction(canBeEmpty: string) {
       const instruction = canBeEmpty.trim() || null;
       this.instruction = instruction;
     },
-    addInChargeVolunteer(volunteer: User) {
+    addVolunteer(volunteer: User) {
       this.volunteers = [...this.volunteers, volunteer];
     },
-    removeInChargeVolunteer(volunteer: User) {
+    removeVolunteer(volunteer: User) {
       this.volunteers = this.volunteers.filter((v) => v.id !== volunteer.id);
     },
     clearForm() {
