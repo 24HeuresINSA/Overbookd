@@ -17,6 +17,8 @@ import { onlyApprovedByMatos } from "../festival-task.test-util";
 import { APPROVED } from "../../common/action";
 import { REVIEWING } from "../../common/review";
 import { isDraft } from "../../festival-event";
+import { PARKING_EIFFEL } from "../../common/inquiry-request";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error";
 
 describe("Prepare festival task inquiries list", () => {
   let prepare: PrepareFestivalTask;
@@ -162,9 +164,10 @@ describe("Prepare festival task inquiries list", () => {
     );
     describe("when removing inquiry when matos approved the task", () => {
       it("should indicate that inquiries are locked", async () => {
-        const inquiry = { ...ficelle, quantity: 1 };
+        const inquiry = onlyApprovedByMatos.inquiries[0];
         expect(
-          async () => await prepare.addInquiry(onlyApprovedByMatos.id, inquiry),
+          async () =>
+            await prepare.removeInquiry(onlyApprovedByMatos.id, inquiry.slug),
         ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
       });
     });
@@ -176,6 +179,33 @@ describe("Prepare festival task inquiries list", () => {
         const { inquiries } = await prepare.removeInquiry(task.id, slug);
 
         expect(inquiries).toStrictEqual(task.inquiries);
+      });
+    });
+  });
+  describe("Assign inquiry to drive", () => {
+    describe("when trying to assign a drive to an inquiry request from a draft festival task", () => {
+      it("should indicate that we can't assign drive to inquiry request from draft festival task", async () => {
+        expect(
+          async () =>
+            await prepare.assignInquiryToDrive(installEscapeGame.id, {
+              slug: ficelle.slug,
+              drive: PARKING_EIFFEL,
+            }),
+        ).rejects.toThrow(AssignDriveInDraft);
+      });
+    });
+    describe("when assigning a drive to an inquiry request", () => {
+      it("should update the inquiry request", async () => {
+        const task = guardJustDance;
+        const inquiry = task.inquiries[0];
+        const drive = PARKING_EIFFEL;
+
+        const { inquiries } = await prepare.assignInquiryToDrive(task.id, {
+          slug: inquiry.slug,
+          drive,
+        });
+
+        expect(inquiries).toContainEqual({ ...inquiry, drive });
       });
     });
   });

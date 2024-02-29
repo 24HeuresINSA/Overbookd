@@ -89,3 +89,8 @@ export function isAssignedToDrive(
 ): request is InquiryRequestAssigned {
   return Object.hasOwn(request, "drive");
 }
+
+export type AssignDrive = {
+  slug: string;
+  drive: Drive;
+};

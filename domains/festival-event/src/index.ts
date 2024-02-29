@@ -43,6 +43,7 @@ export type {
   InquiryRequest,
   BaseInquiryRequest,
   Drive,
+  AssignDrive,
 } from "./common/inquiry-request";
 export type { Location } from "./common/location";
 export type {

@@ -71,6 +71,7 @@ export default defineComponent({
       default: false,
     },
   },
+  emits: ["add", "remove", "link-drive"],
   data: (): InquiryTableData => ({
     headers: [
       { text: "Quantité", value: "quantity", width: "20%" },
@@ -128,7 +129,7 @@ export default defineComponent({
       this.$emit("remove", inquiry);
     },
     linkDrive(slug: string, drive: Drive) {
-      this.$accessor.festivalActivity.linkDrive({ slug, drive });
+      this.$emit("link-drive", { slug, drive });
     },
   },
 });

@@ -100,6 +100,7 @@
             :inquiries="inquiry.gears"
             :time-windows="inquiry.timeWindows"
             :owner="MATOS"
+            @link-drive="linkDrive"
             @remove="removeInquiry"
           />
         </v-card>
@@ -132,6 +133,7 @@
             :inquiries="inquiry.electricity"
             :time-windows="inquiry.timeWindows"
             :owner="ELEC"
+            @link-drive="linkDrive"
             @remove="removeInquiry"
           />
         </v-card>
@@ -164,6 +166,7 @@
             :inquiries="inquiry.barriers"
             :time-windows="inquiry.timeWindows"
             :owner="BARRIERES"
+            @link-drive="linkDrive"
             @remove="removeInquiry"
           />
         </v-card>
@@ -204,6 +207,7 @@ import {
   isDraft,
   APPROVED,
   REJECTED,
+  AssignDrive,
 } from "@overbookd/festival-event";
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
@@ -348,6 +352,9 @@ export default defineComponent({
     },
     removeInquiry(inquiry: InquiryRequest) {
       this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);
+    },
+    linkDrive(link: AssignDrive) {
+      this.$accessor.festivalActivity.linkDrive(link);
     },
     addTimeWindow(period: IProvidePeriod) {
       this.$accessor.festivalActivity.addInquiryTimeWindow(period);

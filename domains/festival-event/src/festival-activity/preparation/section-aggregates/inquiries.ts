@@ -8,10 +8,10 @@ import {
 } from "../../festival-activity.error";
 import { TimeWindows } from "./time-windows";
 import {
-  AssignDrive,
   LinkInquiryDrive,
   PrepareInquiryRequestCreation,
 } from "../prepare-festival-activity.model";
+import { AssignDrive } from "../../../common/inquiry-request";
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
 import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
 
