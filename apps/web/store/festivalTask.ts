@@ -15,6 +15,7 @@ import {
   AddInquiryRequestForm,
   AddMobilizationForm,
   FestivalTaskCreationForm,
+  InitInChargeForm,
   PublishFeedbackForm,
   ReviewApproval,
   ReviewRejection,
@@ -206,6 +207,17 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.removeInChargeVolunteer(this, state.selectedTask.id, volunteerId),
+      );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async initInCharge({ state, commit }, form: InitInChargeForm) {
+      const res = await safeCall(
+        this,
+        repo.initInCharge(this, state.selectedTask.id, form),
       );
       if (!res) return;
 

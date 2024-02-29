@@ -1,87 +1,93 @@
 <template>
-  <v-card>
-    <v-card-title>Instructions</v-card-title>
+  <div>
+    <v-card>
+      <v-card-title>Instructions</v-card-title>
 
-    <v-card-text>
-      <SearchSignaLocation
-        :location="instructions.appointment"
-        label="Lieu de rendez-vous"
-        :boxed="false"
-        @change="updateAppointment"
-      />
-
-      <v-label>Description globale</v-label>
-      <RichEditor
-        :data="instructions.global ?? ''"
-        class="mb-6"
-        @change="updateGlobal"
-      />
-
-      <v-switch
-        :value="hasInChargeInstructions"
-        label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
-        @change="toggleInChargeInstructions"
-      />
-      <div v-show="hasInChargeInstructions">
-        <SearchUsers
-          :users="instructions.inCharge.volunteers"
-          label="Responsables de la tâche"
+      <v-card-text>
+        <SearchSignaLocation
+          :location="instructions.appointment"
+          label="Lieu de rendez-vous"
           :boxed="false"
-          deletable-chips
-          @add="addInChargeVolunteer"
-          @remove="removeInChargeVolunteer"
+          @change="updateAppointment"
         />
 
-        <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
+        <v-label>Description globale</v-label>
         <RichEditor
-          :data="instructions.inCharge.instruction ?? ''"
+          :data="instructions.global ?? ''"
           class="mb-6"
-          @change="updateInChargeInstruction"
+          @change="updateGlobal"
         />
-      </div>
 
-      <v-form class="contact-form">
-        <SearchUser
-          v-model="contact"
-          :list="adherents"
-          label="Orga à contacter pour les bénévoles en cas de problème"
-          :boxed="false"
-          class="contact-form__fields"
-          @add="addContact"
-          @remove="removeContact"
+        <v-switch
+          :value="hasInChargeInstructions"
+          label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
+          @change="toggleInChargeInstructions"
         />
-        <v-btn
-          rounded
-          color="primary"
-          class="contact-form__btn"
-          :disabled="!canAddContact"
-          @click="addContact"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </v-form>
+        <div v-show="hasInChargeInstructions">
+          <SearchUsers
+            :users="instructions.inCharge.volunteers"
+            label="Responsables de la tâche"
+            :boxed="false"
+            deletable-chips
+            @add="addInChargeVolunteer"
+            @remove="removeInChargeVolunteer"
+          />
 
-      <v-data-table
-        :headers="contactHeaders"
-        :items="instructions.contacts"
-        item-key="key"
-        :items-per-page="-1"
-        hide-default-footer
-      >
-        <template #item.volunteer="{ item }">
-          {{ formatUserNameWithNickname(item) }}
-        </template>
+          <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
+          <RichEditor
+            :data="instructions.inCharge.instruction ?? ''"
+            class="mb-6"
+            @change="updateInChargeInstruction"
+          />
+        </div>
 
-        <template #item.actions="{ item }">
-          <v-btn icon @click="removeContact(item)">
-            <v-icon>mdi-trash-can</v-icon>
+        <v-form class="contact-form">
+          <SearchUser
+            v-model="contact"
+            :list="adherents"
+            label="Orga à contacter pour les bénévoles en cas de problème"
+            :boxed="false"
+            class="contact-form__fields"
+            @add="addContact"
+            @remove="removeContact"
+          />
+          <v-btn
+            rounded
+            color="primary"
+            class="contact-form__btn"
+            :disabled="!canAddContact"
+            @click="addContact"
+          >
+            <v-icon>mdi-plus</v-icon>
           </v-btn>
-        </template>
+        </v-form>
 
-        <template #no-data> Aucun contact </template>
-      </v-data-table>
-    </v-card-text>
-  </v-card>
+        <v-data-table
+          :headers="contactHeaders"
+          :items="instructions.contacts"
+          item-key="key"
+          :items-per-page="-1"
+          hide-default-footer
+        >
+          <template #item.volunteer="{ item }">
+            {{ formatUserNameWithNickname(item) }}
+          </template>
+
+          <template #item.actions="{ item }">
+            <v-btn icon @click="removeContact(item)">
+              <v-icon>mdi-trash-can</v-icon>
+            </v-btn>
+          </template>
+
+          <template #no-data> Aucun contact </template>
+        </v-data-table>
+      </v-card-text>
+    </v-card>
+
+    <v-dialog v-model="isInitInChargeDialogOpen" max-width="800">
+      <InitInChargeInstructionsCard @close-dialog="closeInitInChargeDialog" />
+    </v-dialog>
+  </div>
 </template>
 
 <script lang="ts">
@@ -90,24 +96,33 @@ import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import SearchUsers from "~/components/atoms/field/search/SearchUsers.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import { FestivalTask } from "@overbookd/festival-event";
+import { FestivalTask, isDraft } from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+import InitInChargeInstructionsCard from "~/components/molecules/festival-event/instructions/InitInChargeInstructionsCard.vue";
 
 type InstructionsCardData = {
   contact: User | null;
   contactHeaders: Header[];
   hasInChargeInstructions: boolean;
+  isInitInChargeDialogOpen: boolean;
 };
 
 export default defineComponent({
   name: "InstructionsCard",
-  components: { SearchSignaLocation, RichEditor, SearchUsers, SearchUser },
+  components: {
+    SearchSignaLocation,
+    RichEditor,
+    SearchUsers,
+    SearchUser,
+    InitInChargeInstructionsCard,
+  },
   data: (): InstructionsCardData => ({
     contact: null,
     hasInChargeInstructions: false,
+    isInitInChargeDialogOpen: false,
     contactHeaders: [
       { text: "Bénévole", value: "volunteer", sortable: false },
       { text: "Téléphone", value: "phone", sortable: false },
@@ -149,7 +164,8 @@ export default defineComponent({
     },
     toggleInChargeInstructions() {
       this.hasInChargeInstructions = !this.hasInChargeInstructions;
-      if (!this.hasInChargeInstructions) this.clearInCharge();
+      if (!this.hasInChargeInstructions) return this.clearInCharge();
+      if (!isDraft(this.selectedTask)) this.openInitInChargeDialog();
     },
     updateAppointment(appointment: SignaLocation) {
       const appointmentId = appointment.id;
@@ -178,6 +194,13 @@ export default defineComponent({
     },
     clearInCharge() {
       this.$accessor.festivalTask.clearInCharge();
+    },
+    openInitInChargeDialog() {
+      this.isInitInChargeDialogOpen = true;
+    },
+    closeInitInChargeDialog() {
+      this.checkActiveInChargeInstructions();
+      this.isInitInChargeDialogOpen = false;
     },
     formatUserNameWithNickname,
   },

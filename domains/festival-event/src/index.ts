@@ -196,7 +196,10 @@ export type {
   ReviewerStat,
 } from "./festival-task/ask-for-review/ask-for-review";
 export { AskForReview as AskForReviewTask } from "./festival-task/ask-for-review/ask-for-review";
-export { InReviewSpecification } from "./festival-task/ask-for-review/in-review-specification";
+export {
+  InReviewSpecification,
+  InChargeInstructionsSpecification,
+} from "./festival-task/ask-for-review/in-review-specification";
 export type {
   FestivalTasksForPrepare,
   UpdateGeneral,

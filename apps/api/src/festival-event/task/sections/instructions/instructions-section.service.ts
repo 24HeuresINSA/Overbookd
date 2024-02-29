@@ -5,7 +5,7 @@ import {
   PrepareFestivalTask,
   Volunteer,
 } from "@overbookd/festival-event";
-import { UpdateInstructionsForm } from "@overbookd/http";
+import { InitInChargeForm, UpdateInstructionsForm } from "@overbookd/http";
 import { Adherents } from "../../common/festival-task-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
 import { JwtPayload } from "../../../../authentication/entities/jwt-util.entity";
@@ -66,7 +66,24 @@ export class InstructionsSectionService {
     return this.prepare.removeInChargeVolunteer(id, volunteerId);
   }
 
-  async clearInCharge(id: FestivalTask["id"]): Promise<FestivalTask> {
-    return this.prepare.clearInCharge(id);
+  async initInCharge(
+    id: FestivalTask["id"],
+    { volunteers, instruction }: InitInChargeForm,
+    user: JwtPayload,
+  ): Promise<FestivalTask> {
+    const instigator = await this.adherents.findOne(user.id);
+    const form = {
+      volunteers: await this.adherents.findMatching(volunteers),
+      instruction,
+    };
+    return this.prepare.initInCharge(id, form, instigator);
+  }
+
+  async clearInCharge(
+    id: FestivalTask["id"],
+    user: JwtPayload,
+  ): Promise<FestivalTask> {
+    const instigator = await this.adherents.findOne(user.id);
+    return this.prepare.clearInCharge(id, instigator);
   }
 }

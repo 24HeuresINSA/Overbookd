@@ -123,12 +123,12 @@ describe("Approve festival task", () => {
   describe("when approving several times from different teams", () => {
     it("should keep all approval", async () => {
       await review.approve(caissierBar.id, { team: humain, reviewer: lea });
-      const festivalActivity = await review.approve(caissierBar.id, {
+      const festivalTask = await review.approve(caissierBar.id, {
         team: matos,
         reviewer: noel,
       });
-      expect(festivalActivity.reviews.humain).toBe(APPROVED);
-      expect(festivalActivity.reviews.matos).toBe(APPROVED);
+      expect(festivalTask.reviews.humain).toBe(APPROVED);
+      expect(festivalTask.reviews.matos).toBe(APPROVED);
     });
   });
   describe("when trying to approve task even with not assigned to drive inquiries as matos", () => {

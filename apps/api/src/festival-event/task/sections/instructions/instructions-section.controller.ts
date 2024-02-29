@@ -34,6 +34,7 @@ import { AddInChargeVolunteerRequestDto } from "./dto/add-volunteer.request.dto"
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
 import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { RequestWithUserPayload } from "../../../../app.controller";
+import { InitInChargeRequestDto } from "./dto/init-in-charge.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -207,6 +208,37 @@ export class InstructionsSectionController {
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @Permission(WRITE_FT)
+  @Post(":ftId/instructions/in-charge")
+  @ApiResponse({
+    status: 200,
+    description: "A festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description: "Init in charge form",
+    type: InitInChargeRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  initInCharge(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Body() form: InitInChargeRequestDto,
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<FestivalTask> {
+    return this.instructionsService.initInCharge(ftId, form, user);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(WRITE_FT)
   @Delete(":ftId/instructions/in-charge")
   @ApiResponse({
     status: 200,
@@ -226,7 +258,8 @@ export class InstructionsSectionController {
   })
   clearInCharge(
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<FestivalTask> {
-    return this.instructionsService.clearInCharge(ftId);
+    return this.instructionsService.clearInCharge(ftId, user);
   }
 }

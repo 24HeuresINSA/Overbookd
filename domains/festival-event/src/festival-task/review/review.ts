@@ -99,7 +99,10 @@ export class Review {
     return this.translator.translate(rejected);
   }
 
-  async approve(taskId: FestivalTask["id"], approval: Approval<"FT">) {
+  async approve(
+    taskId: FestivalTask["id"],
+    approval: Approval<"FT">,
+  ): Promise<ReviewableWithoutConflicts> {
     const task = await this.tasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (task.reviews[approval.team] === NOT_ASKING_TO_REVIEW) {
