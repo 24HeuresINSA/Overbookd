@@ -16,8 +16,7 @@
   >
     <template #no-data>
       <v-list-item>
-        Si tu ne trouves pas un bénévole, alors il n'est pas encore inscrit sur
-        le site.
+        Il ne doit pas encore être inscrit sur le site.
       </v-list-item>
     </template>
   </v-autocomplete>

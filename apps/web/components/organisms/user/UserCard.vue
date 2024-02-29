@@ -313,9 +313,6 @@ export default defineComponent({
     .friends {
       width: 100%;
       padding: 0px 16px;
-      @media only screen and (min-width: $mobile-max-width) {
-        flex-direction: row;
-      }
     }
   }
 }
