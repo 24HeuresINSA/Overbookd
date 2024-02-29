@@ -5,7 +5,6 @@ import {
   BE_AFFECTED,
   DOWNLOAD_PLANNING,
   ENROLL_HARD,
-  FILL_AVAILABILITY,
   HAVE_PERSONAL_ACCOUNT,
   MANAGE_CONFIG,
   MANAGE_CONTRIBUTIONS,
@@ -278,15 +277,6 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
-      },
-    },
-  },
-  {
-    name: FILL_AVAILABILITY,
-    description: "Peut remplir ses disponibilités",
-    teams: {
-      createMany: {
-        data: [{ teamCode: "benevole" }],
       },
     },
   },
