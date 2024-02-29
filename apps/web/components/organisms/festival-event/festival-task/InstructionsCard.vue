@@ -87,27 +87,42 @@
     <v-dialog v-model="isInitInChargeDialogOpen" max-width="800">
       <InitInChargeInstructionsCard @close-dialog="closeInitInChargeDialog" />
     </v-dialog>
+
+    <v-dialog v-model="isResetApprovalsDialogOpen" max-width="600">
+      <ResetApprovalsCard
+        @reset="updateAfterApprovalsReset"
+        @close-dialog="closeResetApprovalsDialog"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import InitInChargeInstructionsCard from "~/components/molecules/festival-event/instructions/InitInChargeInstructionsCard.vue";
+import ResetApprovalsCard from "~/components/molecules/festival-event/review/ResetApprovalsCard.vue";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import SearchUsers from "~/components/atoms/field/search/SearchUsers.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
-import { FestivalTask, isDraft } from "@overbookd/festival-event";
+import {
+  FestivalTask,
+  FestivalTaskWithConflicts,
+  isDraft,
+} from "@overbookd/festival-event";
 import { SignaLocation } from "@overbookd/signa";
 import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
-import InitInChargeInstructionsCard from "~/components/molecules/festival-event/instructions/InitInChargeInstructionsCard.vue";
+import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
 
 type InstructionsCardData = {
   contact: User | null;
   contactHeaders: Header[];
   hasInChargeInstructions: boolean;
   isInitInChargeDialogOpen: boolean;
+  isResetApprovalsDialogOpen: boolean;
+  updateAfterApprovalsReset: () => void;
 };
 
 export default defineComponent({
@@ -118,11 +133,14 @@ export default defineComponent({
     SearchUsers,
     SearchUser,
     InitInChargeInstructionsCard,
+    ResetApprovalsCard,
   },
   data: (): InstructionsCardData => ({
     contact: null,
     hasInChargeInstructions: false,
     isInitInChargeDialogOpen: false,
+    isResetApprovalsDialogOpen: false,
+    updateAfterApprovalsReset: () => {},
     contactHeaders: [
       { text: "Bénévole", value: "volunteer", sortable: false },
       { text: "Téléphone", value: "phone", sortable: false },
@@ -130,7 +148,7 @@ export default defineComponent({
     ],
   }),
   computed: {
-    selectedTask(): FestivalTask {
+    selectedTask(): FestivalTaskWithConflicts {
       return this.$accessor.festivalTask.selectedTask;
     },
     selectedTaskId(): FestivalTask["id"] {
@@ -145,10 +163,16 @@ export default defineComponent({
     canAddContact(): boolean {
       return Boolean(this.contact);
     },
+    shouldResetApprovals(): boolean {
+      return shouldResetTaskApprovals(this.selectedTask);
+    },
   },
   watch: {
     selectedTaskId() {
       this.checkActiveInChargeInstructions();
+    },
+    isInitInChargeDialogOpen(value: boolean) {
+      if (!value) this.checkActiveInChargeInstructions();
     },
   },
   mounted() {
@@ -171,9 +195,24 @@ export default defineComponent({
       const appointmentId = appointment.id;
       this.$accessor.festivalTask.updateInstructions({ appointmentId });
     },
+    tryToUpdateGlobal(canBeEmpty: string) {
+      if (!this.shouldResetApprovals) {
+        return this.updateGlobal(canBeEmpty);
+      }
+      this.updateAfterApprovalsReset = () => this.updateGlobal(canBeEmpty);
+      this.openResetApprovalsDialog();
+    },
     updateGlobal(canBeEmpty: string) {
       const global = canBeEmpty.trim() || null;
       this.$accessor.festivalTask.updateInstructions({ global });
+    },
+    tryToUpdateInChargeInstruction(canBeEmpty: string) {
+      if (!this.shouldResetApprovals) {
+        return this.updateGlobal(canBeEmpty);
+      }
+      this.updateAfterApprovalsReset = () =>
+        this.updateInChargeInstruction(canBeEmpty);
+      this.openResetApprovalsDialog();
     },
     updateInChargeInstruction(canBeEmpty: string) {
       const inCharge = canBeEmpty.trim() || null;
@@ -201,6 +240,13 @@ export default defineComponent({
     closeInitInChargeDialog() {
       this.checkActiveInChargeInstructions();
       this.isInitInChargeDialogOpen = false;
+    },
+    openResetApprovalsDialog() {
+      this.isResetApprovalsDialogOpen = true;
+    },
+    closeResetApprovalsDialog() {
+      this.isResetApprovalsDialogOpen = false;
+      this.updateAfterApprovalsReset = () => {};
     },
     formatUserNameWithNickname,
   },

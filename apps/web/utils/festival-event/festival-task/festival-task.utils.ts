@@ -8,6 +8,8 @@ import {
   elec,
   NOT_ASKING_TO_REVIEW,
   isDraft,
+  extractApprovers,
+  isRefused,
 } from "@overbookd/festival-event";
 import { DraftWithConflicts as Draft, HttpStringified } from "@overbookd/http";
 import { CastDraft } from "./draft";
@@ -62,4 +64,11 @@ export function getPreviewReviewStatus(
     default:
       return NOT_ASKING_TO_REVIEW;
   }
+}
+
+export function shouldResetTaskApprovals(task: FestivalTask): boolean {
+  if (isDraft(task)) return false;
+  const isTaskRefused = isRefused(task);
+  const hasApprovals = extractApprovers(task).length > 0;
+  return isTaskRefused && hasApprovals;
 }
