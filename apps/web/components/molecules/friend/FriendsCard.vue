@@ -1,5 +1,5 @@
 <template>
-  <v-card height="100%" class="d-flex flex-column justify-space-between">
+  <v-card class="friends-card">
     <div>
       <v-card-title>Amis ❤️</v-card-title>
       <v-card-text class="friends-card__content">
@@ -18,14 +18,16 @@
         <v-container v-if="myFriends.length === 0">
           <v-img
             src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
-            class="mb-2"
-          ></v-img>
+            class="mb-4"
+          />
           <p class="text-justify">
-            N'hésites pas à demander d'autres bénévoles en ami !
+            Renseigne tes amis et nous ferons notre maximum pour que tu aies le
+            plus de créneaux avec eux ! C'est quand même plus sympa de profiter
+            du festival avec ses amis, non ? 😉
           </p>
           <p class="text-justify">
-            Si tu ne trouves pas son nom, alors il n'est pas encore inscrit sur
-            le site.
+            Si tu ne trouves pas un bénévole, alors il n'est pas encore inscrit
+            sur le site.
           </p>
         </v-container>
       </v-card-text>
@@ -103,6 +105,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+.friends-card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0;
+  &__content {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}
 .friend-search {
   display: flex;
   flex-direction: column;
@@ -116,7 +127,6 @@ export default Vue.extend({
   padding-top: 0;
   padding-bottom: 0;
 }
-
 .text-justify {
   text-align: justify;
 }

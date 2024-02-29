@@ -101,7 +101,7 @@
           persistent-hint
           @input="defectSave"
         ></v-textarea>
-        <FriendsCard id="friends" />
+        <FriendsCard id="friends" class="friends" />
       </v-card-text>
     </v-card>
   </div>
@@ -301,16 +301,21 @@ export default defineComponent({
       margin-bottom: 10px;
     }
   }
-  .comment {
-    padding: 0px 16px;
-  }
-
   .comment-friends {
     display: flex;
     gap: 10px;
     flex-direction: column;
     @media only screen and (min-width: $mobile-max-width) {
       flex-direction: row;
+    }
+
+    .comment,
+    .friends {
+      width: 100%;
+      padding: 0px 16px;
+      @media only screen and (min-width: $mobile-max-width) {
+        flex-direction: row;
+      }
     }
   }
 }
