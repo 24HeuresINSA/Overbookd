@@ -11,6 +11,7 @@ import {
   ReviewRejection,
 } from "@overbookd/http";
 import {
+  AssignDrive,
   Contractor,
   CreateFestivalActivityForm,
   ElectricitySupply,
@@ -32,7 +33,6 @@ import {
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { AddInquiryRequestForm, PublishFeedbackForm } from "@overbookd/http";
-import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { StatsPayload } from "~/utils/models/stats.model";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -352,7 +352,7 @@ export class FestivalActivityRepository {
   static linkDrive(
     context: Context,
     faId: FestivalActivity["id"],
-    { slug, drive }: LinkDrive,
+    { slug, drive }: AssignDrive,
   ) {
     return context.$axios.patch<HttpStringified<FestivalActivity>>(
       `${this.basePath}/${faId}/inquiry/requests/${slug}`,

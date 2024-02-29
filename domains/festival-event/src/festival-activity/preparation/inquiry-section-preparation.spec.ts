@@ -39,7 +39,7 @@ import {
 } from "./section-aggregates/inquiries";
 import { elec, matos } from "../../common/review";
 import { WithInquiries } from "../sections/inquiry";
-import { AssignDriveInDraftActivity } from "./prepare-draft-festival-activity";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error";
 import {
   cinqGuirlandeLED,
   friday12hToFriday14h,
@@ -432,7 +432,7 @@ describe("Inquiry section of festival activity preparation", () => {
             drive: PARKING_EIFFEL,
             owner: barrieres,
           }),
-      ).rejects.toThrow(AssignDriveInDraftActivity);
+      ).rejects.toThrow(AssignDriveInDraft);
     });
   });
 

@@ -27,6 +27,7 @@
         :inquiries="inquiries"
         :time-windows="timeWindows"
         :owner="MATOS"
+        @link-drive="linkDrive"
         @remove="removeInquiry"
       />
     </v-card-text>
@@ -37,6 +38,7 @@
 import { defineComponent } from "vue";
 import InquiryFormFields from "~/components/molecules/festival-event/logistic/inquiry/InquiryFormFields.vue";
 import {
+  AssignDrive,
   FestivalTask,
   InquiryRequest,
   MATOS,
@@ -84,6 +86,9 @@ export default defineComponent({
       };
       this.$accessor.festivalTask.addInquiryRequest(inquiry);
       this.clearInquiryForm();
+    },
+    linkDrive(link: AssignDrive) {
+      this.$accessor.festivalTask.linkDrive(link);
     },
     removeInquiry(inquiry: InquiryRequest) {
       this.$accessor.festivalTask.removeInquiryRequest(inquiry.slug);

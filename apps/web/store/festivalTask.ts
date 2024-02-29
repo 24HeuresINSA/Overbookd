@@ -8,6 +8,7 @@ import {
   Mobilization,
   TeamMobilization,
   FestivalTaskWithConflicts,
+  AssignDrive,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
@@ -396,6 +397,15 @@ export const actions = actionTree(
         this,
         repo.removeInquiryRequest(this, state.selectedTask.id, inquirySlug),
       );
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async linkDrive({ state, commit }, link: AssignDrive) {
+      const id = state.selectedTask.id;
+      const res = await safeCall(this, repo.linkDrive(this, id, link));
       if (!res) return;
 
       const task = castTaskWithDate(res.data);

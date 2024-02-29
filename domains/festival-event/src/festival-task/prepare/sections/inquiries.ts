@@ -1,6 +1,7 @@
 import {
   InquiryRequest,
   BaseInquiryRequest,
+  AssignDrive,
 } from "../../../common/inquiry-request";
 import { GearAlreadyRequested } from "../../festival-task.error";
 
@@ -19,6 +20,14 @@ export class Inquiries {
 
   remove(slug: InquiryRequest["slug"]) {
     const inquiries = this.inquiries.filter((inquiry) => inquiry.slug !== slug);
+
+    return new Inquiries(inquiries);
+  }
+
+  assignToDrive(link: AssignDrive) {
+    const inquiries = this.inquiries.map((inquiry) =>
+      inquiry.slug === link.slug ? { ...inquiry, drive: link.drive } : inquiry,
+    );
 
     return new Inquiries(inquiries);
   }

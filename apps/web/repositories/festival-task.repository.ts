@@ -24,6 +24,7 @@ import {
   Mobilization,
   TeamMobilization,
   FestivalTaskWithConflicts,
+  AssignDrive,
 } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
@@ -255,6 +256,17 @@ export class FestivalTaskRepository {
   ) {
     return context.$axios.delete<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/inquiry/requests/${inquirySlug}`,
+    );
+  }
+
+  static linkDrive(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+    { slug, drive }: AssignDrive,
+  ) {
+    return context.$axios.patch<HttpStringified<FestivalTaskWithConflicts>>(
+      `${this.basePath}/${ftId}/inquiry/requests/${slug}`,
+      { drive },
     );
   }
 

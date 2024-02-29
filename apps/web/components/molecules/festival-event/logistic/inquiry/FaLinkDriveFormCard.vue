@@ -21,6 +21,7 @@
         :inquiries="inquiries"
         :time-windows="timeWindows"
         :owner="owner"
+        @link-drive="linkDrive"
         @remove="removeInquiry"
       />
     </v-card-text>
@@ -42,6 +43,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
+  AssignDrive,
   FestivalActivity,
   InquiryOwner,
   InquiryRequest,
@@ -80,6 +82,9 @@ export default defineComponent({
     complete() {
       this.$emit("completed");
       this.closeDialog();
+    },
+    linkDrive(link: AssignDrive) {
+      this.$accessor.festivalActivity.linkDrive(link);
     },
     removeInquiry(inquiry: InquiryRequest) {
       this.$accessor.festivalActivity.removeInquiryRequest(inquiry.slug);

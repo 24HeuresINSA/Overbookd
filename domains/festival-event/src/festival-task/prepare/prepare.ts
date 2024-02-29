@@ -1,4 +1,5 @@
 import {
+  AssignDrive,
   BaseInquiryRequest,
   InquiryRequest,
 } from "../../common/inquiry-request";
@@ -40,6 +41,7 @@ import {
   readablePeriodFrom,
   readablePeriodFromId,
 } from "../../common/time-window";
+import { AssignDriveInDraft } from "../../common/inquiry-request.error";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];
@@ -460,9 +462,27 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    const builder = Inquiries.build(task.inquiries);
+    if (this.isApprovedBy(matos, task)) {
+      throw new AlreadyApprovedBy([matos], "FT");
+    }
 
+    const builder = Inquiries.build(task.inquiries);
     const inquiries = builder.remove(slug).json;
+
+    return this.save({ ...task, inquiries });
+  }
+
+  async assignInquiryToDrive(
+    taskId: FestivalTask["id"],
+    link: AssignDrive,
+  ): Promise<WithConflicts> {
+    const task = await this.festivalTasks.findById(taskId);
+    if (!task) throw new FestivalTaskNotFound(taskId);
+    if (isDraft(task)) throw new AssignDriveInDraft("FT");
+
+    const builder = Inquiries.build(task.inquiries);
+    const inquiries = builder.assignToDrive(link).json;
+
     return this.save({ ...task, inquiries });
   }
 

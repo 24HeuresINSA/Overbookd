@@ -19,6 +19,7 @@ import {
   InquiryRequest,
   Reviewer,
   LinkSignageCatalogItem,
+  AssignDrive,
 } from "@overbookd/festival-event";
 import {
   PrepareInChargeForm,
@@ -39,7 +40,6 @@ import {
   castPreviewForSecurityWithDate,
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import { AddInquiryRequestForm } from "@overbookd/http";
-import { LinkDrive } from "~/utils/festival-event/festival-activity/festival-activity.model";
 
 const repo = FestivalActivityRepository;
 
@@ -439,7 +439,7 @@ export const actions = actionTree(
       commit("SET_SELECTED_ACTIVITY", activity);
     },
 
-    async linkDrive({ state, commit }, link: LinkDrive) {
+    async linkDrive({ state, commit }, link: AssignDrive) {
       const id = state.selectedActivity.id;
       const res = await safeCall(this, repo.linkDrive(this, id, link));
       if (!res) return;

@@ -1,4 +1,3 @@
-import { Drive } from "../../common/inquiry-request";
 import { InquiryOwner } from "../sections/inquiry";
 import {
   ElectricityConnection,
@@ -10,6 +9,7 @@ import { Location } from "../../common/location";
 import { BaseInquiryRequest } from "../../common/inquiry-request";
 import { Contractor } from "../sections/in-charge";
 import { Adherent } from "../../common/adherent";
+import { AssignDrive } from "../../common/inquiry-request";
 
 export type PrepareGeneralUpdate = {
   name?: string;
@@ -95,11 +95,6 @@ type WithInquiryOwner = {
 
 export type PrepareInquiryRequestCreation = BaseInquiryRequest &
   WithInquiryOwner;
-
-export type AssignDrive = {
-  slug: string;
-  drive: Drive;
-};
 
 export type LinkInquiryDrive = AssignDrive & WithInquiryOwner;
 

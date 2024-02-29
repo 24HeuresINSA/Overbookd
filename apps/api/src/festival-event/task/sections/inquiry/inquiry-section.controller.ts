@@ -7,6 +7,8 @@ import {
   Post,
   UseGuards,
   Delete,
+  Patch,
+  HttpCode,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -21,14 +23,19 @@ import {
 import { InquirySectionService } from "./inquiry-section.service";
 import { FestivalTaskErrorFilter } from "../../common/festival-task-error.filter";
 import { AddInquiryRequestDto } from "./dto/add-inquiry-request.request.dto";
-import { WRITE_FT } from "@overbookd/permission";
+import { VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../../../authentication/permissions-auth.guard";
 import { DraftFestivalTaskResponseDto } from "../../common/dto/draft/draft-festival-task.response.dto";
 import { Permission } from "../../../../authentication/permissions-auth.decorator";
 import { FestivalTask, InquiryRequest } from "@overbookd/festival-event";
 import { FestivalEventErrorFilter } from "../../../common/festival-event-error.filter";
-import { InReviewFestivalTaskResponseDto } from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
+import {
+  InReviewFestivalTaskResponseDto,
+  RefusedFestivalTaskResponseDto,
+  ValidatedFestivalTaskResponseDto,
+} from "../../common/dto/reviewable/reviewable-festival-task.response.dto";
+import { LinkInquiryDriveRequestDto } from "../../../common/dto/link-inquiry-drive.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -53,6 +60,7 @@ export class InquirySectionController {
       oneOf: [
         { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
         { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
       ],
     },
   })
@@ -83,6 +91,7 @@ export class InquirySectionController {
       oneOf: [
         { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
         { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
       ],
     },
   })
@@ -103,5 +112,49 @@ export class InquirySectionController {
     @Param("inquirySlug") inquirySlug: InquiryRequest["slug"],
   ): Promise<FestivalTask> {
     return this.inquiryService.removeInquiryRequest(ftId, inquirySlug);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(VALIDATE_FT)
+  @Patch(":ftId/inquiry/requests/:inquirySlug")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    schema: {
+      oneOf: [
+        { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalTaskResponseDto) },
+      ],
+    },
+  })
+  @ApiBody({
+    description:
+      "Drive to link inquiry request with in inquiry section of festival activity",
+    type: LinkInquiryDriveRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  @ApiParam({
+    name: "inquirySlug",
+    type: String,
+    description: "Inquiry Request Slug",
+    required: true,
+  })
+  linkInquiryRequestToDrive(
+    @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
+    @Param("inquirySlug") slug: InquiryRequest["slug"],
+    @Body() { drive }: LinkInquiryDriveRequestDto,
+  ): Promise<FestivalTask> {
+    return this.inquiryService.linkInquiryRequestToDrive(ftId, {
+      slug,
+      drive,
+    });
   }
 }

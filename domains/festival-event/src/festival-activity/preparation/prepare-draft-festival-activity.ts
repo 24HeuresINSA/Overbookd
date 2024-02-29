@@ -29,14 +29,7 @@ import {
   FestivalActivityError,
   FreePassMustBePositive,
 } from "../festival-activity.error";
-
-export class AssignDriveInDraftActivity extends FestivalActivityError {
-  constructor() {
-    super(
-      "❌ Il n'est pas possible d'attribuer un lieu à une demande de matos dans une FA en brouillon",
-    );
-  }
-}
+import { AssignDriveInDraft } from "../../common/inquiry-request.error";
 
 export class AssignCatalogItemInDraftActivity extends FestivalActivityError {
   constructor() {
@@ -240,6 +233,6 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   }
 
   assignInquiryToDrive(): Draft {
-    throw new AssignDriveInDraftActivity();
+    throw new AssignDriveInDraft("FA");
   }
 }
