@@ -1,3 +1,34 @@
+## [2.20.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.19.0...v2.20.0) (2024-02-29)
+
+
+### Features
+
+* **festival-task:** implement validation [#1621](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1621) ([afb939b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/afb939b5b85c7810482ae13a7eafc3f01e459f4f))
+
+
+### Bug Fixes
+
+* **festival-task:** add refused and validated filters in web [#1620](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1620) ([8802384](https://gitlab.com/24-heures-insa/overbookd-mono/commit/880238448d0030c8319106d2c1d145d53901a634))
+* **festival-task:** do not clear approved status when asking for review [#1622](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1622) ([0da892c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0da892cfd1d5d3c70cfd95d5dc490a8c8b9ba722))
+* **profile:** enable friends selection. [#1603](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1603) ([87b205d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/87b205dcb6fafccb6f18a2249928784887219270))
+* **registration:** filter new comers on membership. [#1614](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1614) ([2b8ad3a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2b8ad3a2d9d39130611675f282915c90f8452e79))
+* **registration:** indicate membership on form. [#1626](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1626) ([1f21a37](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f21a37f1f4a8957100a2b12cd2ad6d6f80167c1))
+* **registration:** list registered volunteers. [#1615](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1615) ([6323ecd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6323ecd28948e4e3288ef6f8d9086474cad757dc))
+
+
+### Pre-Features
+
+* **festival-task:** add tests for mobilization volunteer request update [#1613](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1613) ([128e524](https://gitlab.com/24-heures-insa/overbookd-mono/commit/128e52462f2a0f28ba218b20c833278f441037c2))
+* **festival-task:** general section update based on reviews [#1610](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1610) ([9cb9f0b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9cb9f0bff5fe1c25e3f393888fb02e021ce3a157))
+* **festival-task:** inquiries update based on reviews [#1610](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1610) ([ed8bb10](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ed8bb100172fb3346aa6b3dee8d1c97be4644161))
+* **festival-task:** limit update on instructions section once approved. [#1612](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1612) ([8d869ac](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8d869ac678cb83781d0379190e5c123c6c21a8a7))
+
+
+### CI/CD
+
+* **renovate:** include gitlabci & Dockerfile for pnpm update ([e309e1f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e309e1fd38a016d0486971b27f1cc890daac32aa))
+* **renovate:** lockfile maintenance all month ([253bb3c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/253bb3c8df6da75dc61bc0bd3532c29390d9a632))
+
 ## [2.19.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.18.1...v2.19.0) (2024-02-23)
 
 
