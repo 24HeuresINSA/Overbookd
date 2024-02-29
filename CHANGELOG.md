@@ -1,3 +1,12 @@
+## [2.20.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.20.0...v2.20.1) (2024-02-29)
+
+
+### Bug Fixes
+
+* **alerts:** add a notification when you do not have friends [#1604](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1604) ([3597eb0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3597eb0778385eef39ad0ab742dc8738684a89fd))
+* **availabilities:** remove page permission [#1629](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1629) ([01e68f7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/01e68f78cdad4cf622ba3890f4737ecc4406b41e))
+* **festival-task:** add init in charge instructions form [#1618](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1618) ([033bf1b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/033bf1bd21d32934011411ad7909c9d1542f21d1))
+
 ## [2.20.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.19.0...v2.20.0) (2024-02-29)
 
 
