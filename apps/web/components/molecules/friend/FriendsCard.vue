@@ -25,10 +25,6 @@
             plus de créneaux avec eux ! C'est quand même plus sympa de profiter
             du festival avec ses amis, non ? 😉
           </p>
-          <p class="text-justify">
-            Si tu ne trouves pas un bénévole, alors il n'est pas encore inscrit
-            sur le site.
-          </p>
         </v-container>
       </v-card-text>
     </div>

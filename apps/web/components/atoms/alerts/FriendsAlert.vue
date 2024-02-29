@@ -8,13 +8,12 @@
   >
     <h2 class="summary">Profite du festival avec tes amis ! 🤩</h2>
     <p class="catch-phrase">
-      Tu peux ajouter des amis à tout moment sur
-      <nuxt-link to="/profile#friends">ton profil</nuxt-link>.
+      C'est quand même plus sympa
+      <nuxt-link to="/profile#friends">avec ses amis</nuxt-link> non ? 😉
     </p>
     <p class="details">
       Renseigne tes amis et nous ferons notre maximum pour que tu aies le plus
-      de créneaux avec eux ! C'est quand même plus sympa de profiter du festival
-      avec ses amis, non ? 😉
+      de créneaux avec eux !
     </p>
   </v-alert>
 </template>
