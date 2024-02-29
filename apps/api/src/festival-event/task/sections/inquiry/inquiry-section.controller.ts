@@ -132,7 +132,7 @@ export class InquirySectionController {
   })
   @ApiBody({
     description:
-      "Drive to link inquiry request with in inquiry section of festival activity",
+      "Drive to link inquiry request with in inquiry section of festival task",
     type: LinkInquiryDriveRequestDto,
   })
   @ApiParam({
