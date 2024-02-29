@@ -15,7 +15,9 @@
     @change="propagateEvent"
   >
     <template #no-data>
-      <v-list-item> Aucun bénévole correspondant </v-list-item>
+      <v-list-item>
+        Il ne doit pas encore être inscrit sur le site.
+      </v-list-item>
     </template>
   </v-autocomplete>
 </template>
