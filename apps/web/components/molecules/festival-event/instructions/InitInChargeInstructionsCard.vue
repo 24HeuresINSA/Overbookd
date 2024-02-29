@@ -62,6 +62,7 @@ export default defineComponent({
   }),
   computed: {
     canInit(): boolean {
+      if (this.instruction === null) return false;
       return InChargeInstructionsSpecification.isSatisfiedBy({
         volunteers: this.volunteers,
         instruction: this.instruction,
