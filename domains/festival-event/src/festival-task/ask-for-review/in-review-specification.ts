@@ -165,7 +165,7 @@ type WithNoOneInCharge = Extract<
   { instruction: null }
 >;
 
-class InChargeInstructionsSpecification {
+export class InChargeInstructionsSpecification {
   static isSatisfiedBy(
     inCharge: Draft["instructions"]["inCharge"],
   ): inCharge is InReview["instructions"]["inCharge"] {

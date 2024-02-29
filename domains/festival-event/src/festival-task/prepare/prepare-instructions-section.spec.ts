@@ -538,7 +538,7 @@ describe("Prepare festival task instructions section", () => {
                       by: instigator,
                       at: expect.any(Date),
                       description:
-                        "Précédentes approbations réinitialisées par la suppression des instructions additionnelles",
+                        "Précédentes approbations réinitialisées par la suppression des instructions des responsables",
                     },
                   ]);
                 });
@@ -585,7 +585,7 @@ describe("Prepare festival task instructions section", () => {
                       by: instigator,
                       at: expect.any(Date),
                       description:
-                        "Précédentes approbations réinitialisées par l'initialisation des instructions additionnelles",
+                        "Précédentes approbations réinitialisées par l'initialisation des instructions des responsables",
                     },
                   ]);
                 });

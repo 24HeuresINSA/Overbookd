@@ -41,12 +41,15 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { User } from "@overbookd/user";
+import {
+  Adherent,
+  InChargeInstructionsSpecification,
+} from "@overbookd/festival-event";
 import RichEditor from "~/components/atoms/field/tiptap/RichEditor.vue";
 import SearchUsers from "~/components/atoms/field/search/SearchUsers.vue";
 
 type InitInChargeInstructionsData = {
-  volunteers: User[];
+  volunteers: Adherent[];
   instruction: string | null;
 };
 
@@ -59,10 +62,10 @@ export default defineComponent({
   }),
   computed: {
     canInit(): boolean {
-      const hasVolunteers = this.volunteers.length > 0;
-      const hasInstruction =
-        this.instruction !== null && this.instruction.trim() !== "";
-      return hasVolunteers && hasInstruction;
+      return InChargeInstructionsSpecification.isSatisfiedBy({
+        volunteers: this.volunteers,
+        instruction: this.instruction,
+      });
     },
   },
   methods: {
@@ -80,10 +83,10 @@ export default defineComponent({
       const instruction = canBeEmpty.trim() || null;
       this.instruction = instruction;
     },
-    addVolunteer(volunteer: User) {
+    addVolunteer(volunteer: Adherent) {
       this.volunteers = [...this.volunteers, volunteer];
     },
-    removeVolunteer(volunteer: User) {
+    removeVolunteer(volunteer: Adherent) {
       this.volunteers = this.volunteers.filter((v) => v.id !== volunteer.id);
     },
     clearForm() {

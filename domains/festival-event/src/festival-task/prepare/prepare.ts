@@ -246,7 +246,7 @@ export class PrepareFestivalTask {
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      "la suppression des instructions additionnelles",
+      "la suppression des instructions des responsables",
     );
 
     return this.save(updatedTask);
@@ -270,7 +270,7 @@ export class PrepareFestivalTask {
     const updatedTask = this.resetApproversReviewOnRefusedTask(
       validTask,
       instigator,
-      "l'initialisation des instructions additionnelles",
+      "l'initialisation des instructions des responsables",
     );
 
     return this.save(updatedTask);
