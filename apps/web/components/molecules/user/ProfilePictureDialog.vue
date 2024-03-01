@@ -22,7 +22,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { isImage, isImageSizeWithinLimit, isSupportedImageFile } from "~/utils/rules/input.rules";
+import {
+  isImage,
+  isImageSizeWithinLimit,
+  isSupportedImageFile,
+} from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "ProfilePictureDialog",
@@ -41,7 +45,7 @@ export default Vue.extend({
       return this.$accessor.user.me;
     },
     invalidImage() {
-      return this.rules.some(rule => rule(this.profilePicture) !== true);
+      return this.rules.some((rule) => rule(this.profilePicture) !== true);
     },
     toggled: {
       get: function (): boolean | unknown {

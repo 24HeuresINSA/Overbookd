@@ -29,7 +29,11 @@
           <h3>Image pour la signalisation</h3>
           <v-file-input
             v-model="image"
-            :rules="[fileRules.isImage, fileRules.isImageSizeWithinLimit, fileRules.isSupportedImageFile]"
+            :rules="[
+              fileRules.isImage,
+              fileRules.isImageSizeWithinLimit,
+              fileRules.isSupportedImageFile,
+            ]"
             label="Photo de la Signa"
             prepend-icon="mdi-camera"
             accept="image/png, image/jpeg"
