@@ -83,7 +83,7 @@ import Vue from "vue";
 import { Header } from "~/utils/models/data-table.model";
 import ConfirmationMessage from "../../atoms/card/ConfirmationMessage.vue";
 import { Signage, SignageType, signageTypes } from "@overbookd/signa";
-import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
+import SignageForm from "~/components/molecules/signa/SignageForm.vue";
 import DisplayImageSigna from "~/components/molecules/signa/DisplayImageSigna.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
