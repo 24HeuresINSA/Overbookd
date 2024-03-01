@@ -1,8 +1,13 @@
 <template>
   <v-card class="friends-card">
-    <div>
-      <v-card-title>Amis ❤️</v-card-title>
-      <v-card-text class="friends-card__content">
+    <v-card-title>Amis ❤️</v-card-title>
+    <v-card-subtitle>
+      Nous ferons notre maximum pour que vous soyez ensemble pendant vos
+      créneaux.
+    </v-card-subtitle>
+    <v-card-text class="friends-card__content">
+      <img :src="image.link" :alt="image.description" />
+      <div class="friends-management">
         <v-list dense class="friends-list">
           <v-list-item-group>
             <v-list-item v-for="(friend, index) in myFriends" :key="index">
@@ -15,25 +20,13 @@
             </v-list-item>
           </v-list-item-group>
         </v-list>
-        <v-container v-if="myFriends.length === 0">
-          <v-img
-            src="https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif"
-            class="mb-4"
-          />
-          <p class="text-justify">
-            Renseigne tes amis et nous ferons notre maximum pour que tu aies le
-            plus de créneaux avec eux ! C'est quand même plus sympa de profiter
-            du festival avec ses amis, non ? 😉
-          </p>
-        </v-container>
-      </v-card-text>
-    </div>
-    <v-card-actions class="friend-search">
-      <SearchFriend v-model="newFriend" class="friend-search__input" />
-      <v-btn text class="friend-search__action" @click="sendFriendRequest">
-        demander en ami
-      </v-btn>
-    </v-card-actions>
+        <SearchFriend
+          v-model="newFriend"
+          class="friend-search__input"
+          @change="sendFriendRequest"
+        />
+      </div>
+    </v-card-text>
   </v-card>
 </template>
 
@@ -44,8 +37,26 @@ import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 interface FriendsCardData {
-  newFriend: User;
+  newFriend: User | null;
 }
+
+type Image = {
+  link: string;
+  description: string;
+};
+
+const alone: Image = {
+  link: "https://media.giphy.com/media/ISOckXUybVfQ4/giphy.gif",
+  description: "Sans aucun amis",
+};
+
+const friendship: Image = {
+  link: "https://media2.giphy.com/media/BIA2rRLTq0ibe/giphy.gif?cid=ecf05e472yvzffzma8wziiay5p05ow11knrlj7ecwvzdckyg&ep=v1_gifs_related&rid=giphy.gif&ct=g",
+  description: "Avec quelques amis",
+};
+
+const howToMakeFriends =
+  "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690";
 
 export default Vue.extend({
   name: "FriendsCard",
@@ -54,11 +65,7 @@ export default Vue.extend({
   },
   data(): FriendsCardData {
     return {
-      newFriend: {
-        id: 0,
-        firstname: "",
-        lastname: "",
-      },
+      newFriend: null,
     };
   },
   computed: {
@@ -68,27 +75,23 @@ export default Vue.extend({
     myFriends(): User[] {
       return this.$accessor.user.mFriends;
     },
+    image(): Image {
+      return this.myFriends.length > 0 ? friendship : alone;
+    },
   },
   async mounted() {
     await this.$accessor.user.fetchMyFriends();
   },
   methods: {
     async sendFriendRequest() {
-      if (!this.newFriend.id) return;
+      if (this.newFriend === null) return;
       const isAskingHimSelf = this.me.id === this.newFriend.id;
       if (isAskingHimSelf) {
-        // asked himself to be friend
-        window.open(
-          "https://www.santemagazine.fr/psycho-sexo/psycho/10-facons-de-se-faire-des-amis-178690",
-        );
+        window.open(howToMakeFriends);
         return;
       }
       this.$accessor.user.addFriend(this.newFriend);
-      this.newFriend = {
-        id: 0,
-        firstname: "",
-        lastname: "",
-      };
+      this.newFriend = { id: 0, firstname: "", lastname: "" };
     },
     displayFriend(friend: User): string {
       return formatUserNameWithNickname(friend);
@@ -106,22 +109,35 @@ export default Vue.extend({
   margin-bottom: 20px;
   padding: 0;
   &__content {
-    padding-top: 0;
-    padding-bottom: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    img,
+    .friends-management {
+      flex-grow: 1;
+    }
+    img {
+      max-width: 50%;
+    }
+    @media screen and (max-width: $mobile-max-width) {
+      flex-direction: column;
+      img,
+      .friends-management {
+        min-width: 100%;
+      }
+    }
   }
 }
 .friend-search {
-  display: flex;
-  flex-direction: column;
-  &__input {
-    width: 90%;
+  &__input,
+  &__action {
+    width: 100%;
   }
 }
 
 .friends-card__content,
 .friends-list {
   padding-top: 0;
-  padding-bottom: 0;
 }
 .text-justify {
   text-align: justify;

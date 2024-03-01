@@ -2,14 +2,14 @@
   <div class="user-card">
     <ProfilePictureDialog />
     <v-card>
-      <v-card-title class="presentation">
-        <div class="presentation__picture">
+      <v-card-text class="user-card__content">
+        <div class="picture">
           <ProfilePicture :user="me" class="profilePicture" />
           <v-btn text @click="openProfilePictureDialog">
             📸 {{ me.profilePicture ? `Changer` : `Ajouter` }}
           </v-btn>
         </div>
-        <v-form class="presentation__name">
+        <v-form class="identity">
           <v-text-field
             v-model="firstname"
             prepend-icon="mdi-account"
@@ -36,31 +36,26 @@
             @input="defectSave"
           ></v-text-field>
         </v-form>
-      </v-card-title>
-      <v-card-text class="further-info">
-        <div class="further-info__teams-and-stats">
-          <div>
-            <div class="teams">
-              <TeamChip
-                v-for="team of me.teams"
-                :key="team"
-                :team="team"
-                with-name
-              ></TeamChip>
-            </div>
-            <p>
-              <v-icon>mdi-emoticon-cool-outline</v-icon>
-              {{ me.charisma || 0 }} points de charisme
-            </p>
-            <p><v-icon>mdi-account-multiple</v-icon> {{ friends }} amis</p>
-            <p>
-              <v-icon>mdi-account-hard-hat</v-icon>
-              {{ me.tasksCount }} tâches affectées
-            </p>
+        <div class="team-and-stats">
+          <div class="teams">
+            <TeamChip
+              v-for="team of me.teams"
+              :key="team"
+              :team="team"
+              with-name
+            ></TeamChip>
           </div>
+          <p>
+            <v-icon>mdi-emoticon-cool-outline</v-icon>
+            {{ me.charisma || 0 }} points de charisme
+          </p>
+          <p><v-icon>mdi-account-multiple</v-icon> {{ friends }} amis</p>
+          <p>
+            <v-icon>mdi-account-hard-hat</v-icon>
+            {{ me.tasksCount }} tâches affectées
+          </p>
         </div>
-
-        <v-form class="further-info__personal">
+        <v-form class="personal-information">
           <v-text-field
             v-model="phone"
             prepend-icon="mdi-phone"
@@ -91,9 +86,11 @@
             @input="defectSave"
           ></v-text-field>
         </v-form>
-      </v-card-text>
-      <v-card-text class="comment-friends">
-        <CommentField v-model="comment" @update:comment="defectSave" />
+        <CommentField
+          class="comment"
+          v-model="comment"
+          @update:comment="defectSave"
+        />
         <FriendsCard id="friends" />
       </v-card-text>
     </v-card>
@@ -240,15 +237,29 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .user-card {
-  .presentation {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    @media only screen and (min-width: $mobile-max-width) {
-      flex-direction: row;
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 15px;
+    > * {
+      justify-self: center;
+      align-self: stretch;
     }
-    &__picture {
+    @media only screen and (max-width: $mobile-max-width) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      gap: 10px;
+      > * {
+        align-self: unset;
+      }
+    }
+    form {
+      min-width: 100%;
+    }
+    .picture {
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -258,61 +269,6 @@ export default defineComponent({
       @media only screen and (min-width: $mobile-max-width) {
         width: 50%;
       }
-    }
-    &__name {
-      display: flex;
-      flex-direction: column;
-      align-content: center;
-      justify-content: center;
-      width: 100%;
-      @media only screen and (min-width: $mobile-max-width) {
-        width: 50%;
-      }
-    }
-  }
-  .further-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    @media only screen and (min-width: $mobile-max-width) {
-      flex-direction: row;
-    }
-    gap: 10px;
-    padding-bottom: 0px;
-
-    &__teams-and-stats {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      @media only screen and (min-width: $mobile-max-width) {
-        width: 50%;
-      }
-    }
-
-    &__personal {
-      width: 100%;
-      @media only screen and (min-width: $mobile-max-width) {
-        width: 50%;
-      }
-    }
-
-    .teams {
-      margin-bottom: 10px;
-    }
-  }
-  .comment-friends {
-    display: flex;
-    gap: 10px;
-    flex-direction: column;
-    @media only screen and (min-width: $mobile-max-width) {
-      flex-direction: row;
-    }
-
-    .comment,
-    #friends {
-      width: 100%;
-      padding: 0px 16px;
     }
   }
 }
