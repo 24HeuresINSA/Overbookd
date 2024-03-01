@@ -29,7 +29,7 @@
           <h3>Image pour la signalisation</h3>
           <v-file-input
             v-model="image"
-            :rules="[fileRules.imageRules]"
+            :rules="[fileRules.isImage, fileRules.isImageSizeWithinLimit, fileRules.isSupportedImageFile]"
             label="Photo de la Signa"
             prepend-icon="mdi-camera"
             accept="image/png, image/jpeg"
@@ -55,7 +55,9 @@ import {
   InputRulesDataWithImage,
   minLength,
   required,
-  imageRules,
+  isImage,
+  isImageSizeWithinLimit,
+  isSupportedImageFile,
 } from "~/utils/rules/input.rules";
 import {
   Signage,
@@ -93,7 +95,9 @@ export default Vue.extend({
         typeRequired: required,
       },
       fileRules: {
-        imageRules: imageRules,
+        isImage,
+        isImageSizeWithinLimit,
+        isSupportedImageFile,
       },
     };
   },
@@ -105,9 +109,16 @@ export default Vue.extend({
     invalidForm(): boolean {
       const isNameValid = this.name.length >= nameMinLength;
       const isTypeValid = !!this.type;
-      const isUploadValid = this.image ? imageRules(this.image) : true;
+      const isUploadValid = this.image ? !this.invalidImage : true;
 
       return !isNameValid || !isTypeValid || !isUploadValid;
+    },
+    invalidImage() {
+      return (
+        this.fileRules.isImage(this.image) !== true ||
+        this.fileRules.isImageSizeWithinLimit(this.image) !== true ||
+        this.fileRules.isSupportedImageFile(this.image) !== true
+      );
     },
   },
   watch: {

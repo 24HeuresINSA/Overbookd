@@ -45,7 +45,7 @@ export const actions = actionTree(
       commit("SET_SIGNAGES", res.data);
     },
 
-    async getSignageImage({ commit }, signage: Signage): Promise<void> {
+    async fetchSignageImage({ commit }, signage: Signage): Promise<void> {
       const res = await CatalogSignageRepository.getSignageImage(
         this,
         signage.id,

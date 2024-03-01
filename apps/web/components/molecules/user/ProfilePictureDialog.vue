@@ -22,13 +22,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { imageRules, isImageValid } from "~/utils/rules/file-image.rules";
+import { isImage, isImageSizeWithinLimit, isSupportedImageFile } from "~/utils/rules/input.rules";
 
 export default Vue.extend({
   name: "ProfilePictureDialog",
   data: () => ({
     profilePicture: undefined as File | undefined,
-    rules: imageRules,
+    rules: [isImage, isSupportedImageFile, isImageSizeWithinLimit],
   }),
   computed: {
     type() {
@@ -39,6 +39,9 @@ export default Vue.extend({
     },
     me() {
       return this.$accessor.user.me;
+    },
+    invalidImage() {
+      return this.rules.some(rule => rule(this.profilePicture) !== true);
     },
     toggled: {
       get: function (): boolean | unknown {
@@ -55,9 +58,6 @@ export default Vue.extend({
           this.$store.dispatch("dialog/closeDialog");
         }
       },
-    },
-    invalidImage(): boolean {
-      return !isImageValid(this.profilePicture);
     },
   },
   methods: {

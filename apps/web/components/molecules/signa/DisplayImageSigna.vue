@@ -43,7 +43,7 @@ export default Vue.extend({
   },
   methods: {
     async fetchImage() {
-      this.$accessor.catalogSignage.getSignageImage(this.signage);
+      this.$accessor.catalogSignage.fetchSignageImage(this.signage);
     },
     closeDialog(): void {
       this.$emit("close-dialog");
