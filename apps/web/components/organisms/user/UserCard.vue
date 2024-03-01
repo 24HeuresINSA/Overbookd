@@ -87,8 +87,8 @@
           ></v-text-field>
         </v-form>
         <CommentField
-          class="comment"
           v-model="comment"
+          class="comment"
           @update:comment="defectSave"
         />
         <FriendsCard id="friends" />
