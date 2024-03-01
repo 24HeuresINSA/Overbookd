@@ -60,7 +60,8 @@ export default Vue.extend({
   justify-content: center;
   padding: 20px;
   img {
-    height: 80%;
+    max-width: 100%;
+    max-height: 100%;
   }
   .close-btn {
     position: absolute;
