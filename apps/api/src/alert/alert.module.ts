@@ -10,6 +10,8 @@ import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
 import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
+import { PrismaHardAvailabilitiesAlerting } from "./repository/hard-availabilities-alerting.prisma";
+import { PrismaRegistreeAvailabilitiesAlerting } from "./repository/registree-availabilities-alerting.prisma";
 
 @Module({
   controllers: [AlertController],
@@ -56,24 +58,42 @@ import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
       inject: [PrismaService],
     },
     {
+      provide: PrismaHardAvailabilitiesAlerting,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaHardAvailabilitiesAlerting(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaRegistreeAvailabilitiesAlerting,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaRegistreeAvailabilitiesAlerting(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: AlertService,
       useFactory: (
         personalAccount: PersonalAccountAlerting,
         contribution: SettleAlerting,
         profilePicture: PrismaProfilePictureAlerting,
         friends: PrismaFriendsAlerting,
+        hardAvailabilities: PrismaHardAvailabilitiesAlerting,
+        registreeAvailabilities: PrismaRegistreeAvailabilitiesAlerting,
       ) =>
         new AlertService(
           personalAccount,
           contribution,
           profilePicture,
           friends,
+          hardAvailabilities,
+          registreeAvailabilities,
         ),
       inject: [
         PersonalAccountAlerting,
         SettleAlerting,
         PrismaProfilePictureAlerting,
         PrismaFriendsAlerting,
+        PrismaHardAvailabilitiesAlerting,
+        PrismaRegistreeAvailabilitiesAlerting,
       ],
     },
   ],
