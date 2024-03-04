@@ -8,23 +8,19 @@
     <v-card-text class="friends-card__content">
       <img :src="image.link" :alt="image.description" />
       <div class="friends-management">
-        <v-list dense class="friends-list">
-          <v-list-item-group>
-            <v-list-item v-for="(friend, index) in myFriends" :key="index">
-              <v-list-item-content>
-                {{ displayFriend(friend) }}
-              </v-list-item-content>
-              <v-list-item-action>
-                <v-icon @click="removeFriend(friend)">mdi-close</v-icon>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
-        <SearchFriend
-          v-model="newFriend"
-          class="friend-search__input"
-          @change="sendFriendRequest"
-        />
+        <ul class="friends-list">
+          <li v-for="(friend, index) in myFriends" :key="index" class="friend">
+            <span class="name">{{ displayFriend(friend) }}</span>
+            <v-btn icon @click="removeFriend(friend)">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </li>
+          <SearchFriend
+            v-model="newFriend"
+            class="friend-search"
+            @change="sendFriendRequest"
+          />
+        </ul>
       </div>
     </v-card-text>
   </v-card>
@@ -105,41 +101,60 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .friends-card {
-  margin-top: 20px;
-  margin-bottom: 20px;
   padding: 0;
   &__content {
     display: flex;
-    gap: 10px;
-    align-items: center;
-    img,
+    gap: 20px;
     .friends-management {
-      flex-grow: 1;
+      display: flex;
+      gap: 5px;
+      align-items: flex-start;
+      flex-direction: column;
+      width: 100%;
     }
-    img {
-      max-width: 50%;
+    .friends-list {
+      padding: unset;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 300px));
+      gap: 0px 10px;
+      width: 100%;
+    }
+    .friend-search {
+      margin-top: 10px;
+      grid-column: 1 / span 1;
+    }
+
+    .friend {
+      padding: 0px 0px 0px 10px;
+      list-style: none;
+      color: black;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      place-self: center stretch;
+      .name {
+        text-overflow: ellipsis;
+      }
     }
     @media screen and (max-width: $mobile-max-width) {
+      display: flex;
+      gap: 10px;
+      align-items: center;
       flex-direction: column;
-      img,
-      .friends-management {
+      .friends-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      img {
+        max-width: 100%;
+      }
+      .friend,
+      .friend-search {
         min-width: 100%;
       }
     }
   }
-}
-.friend-search {
-  &__input,
-  &__action {
-    width: 100%;
-  }
-}
-
-.friends-card__content,
-.friends-list {
-  padding-top: 0;
-}
-.text-justify {
-  text-align: justify;
 }
 </style>

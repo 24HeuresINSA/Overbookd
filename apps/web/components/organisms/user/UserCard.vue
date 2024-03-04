@@ -239,12 +239,40 @@ export default defineComponent({
 .user-card {
   &__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     column-gap: 10px;
     row-gap: 15px;
     > * {
       justify-self: center;
-      align-self: stretch;
+      align-self: center;
+    }
+    .picture {
+      grid-column: 1 / span 1;
+      grid-row: 1 / span 1;
+    }
+    .identity {
+      grid-column: 3 / span 1;
+      grid-row: 1 / span 1;
+    }
+    .team-and-stats {
+      grid-column: 2 / span 1;
+      grid-row-start: 1 / span 1;
+      .teams {
+        margin-bottom: 16px;
+      }
+    }
+    .personal-information {
+      grid-column: 3 / span 1;
+      grid-row: 2 / span 1;
+    }
+    .comment {
+      grid-column: 1 / span 2;
+      grid-row: 2 / span 1;
+    }
+    #friends {
+      grid-column: 1 / span 3;
+      grid-row: 3 / span 1;
+      min-width: 100%;
     }
     @media only screen and (max-width: $mobile-max-width) {
       display: flex;
