@@ -19,6 +19,7 @@ import {
   approvedByElecRejectedByMatos,
   approvedByMatosRejectedByHumainAndElec,
   onlyApprovedByMatos,
+  uninstallBarbecue,
 } from "../festival-task.test-util";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
@@ -46,6 +47,7 @@ describe("Prepare festival task instructions section", () => {
       guardJustDance,
       serveWaterOnJustDance,
       installBarbecue,
+      uninstallBarbecue,
       onlyApprovedByHumain,
       onlyApprovedByMatos,
       approvedByHumainRejectedByMatos,
@@ -595,5 +597,98 @@ describe("Prepare festival task instructions section", () => {
         }
       },
     );
+  });
+
+  describe("Reset review event after update", () => {
+    const updateGlobal = { global: "Update global instruction" };
+    const updateInCharge = { inCharge: "Update in charge instruction" };
+    const messageGlobal =
+      "Précédentes approbations réinitialisées par un changement sur le champ instructions";
+    const messageInCharge =
+      "Précédentes approbations réinitialisées par un changement sur le champ instructions des responsables";
+    describe("when updating IN REVIEW task with some approvals", () => {
+      it.each`
+        task                    | approver
+        ${onlyApprovedByHumain} | ${humain}
+        ${onlyApprovedByMatos}  | ${matos}
+      `(
+        "should indicate task is already approved by $approver",
+        async ({ task }) => {
+          expect(
+            async () =>
+              await prepare.updateInstructionsSection(
+                task.id,
+                updateGlobal,
+                noel,
+              ),
+          ).rejects.toThrow(AlreadyApprovedBy);
+        },
+      );
+    });
+    describe("when updating IN REVIEW task with non approvals", () => {
+      it.each`
+        task                     | update
+        ${guardJustDance}        | ${updateGlobal}
+        ${serveWaterOnJustDance} | ${updateInCharge}
+      `(
+        "should NOT add RESET_REVIEW key event to history",
+        async ({ task, update }) => {
+          const { history } = await prepare.updateInstructionsSection(
+            task.id,
+            update,
+            noel,
+          );
+          expect(history.at(-1)).not.toMatchObject({
+            action: RESET_REVIEW,
+            by: noel,
+          });
+        },
+      );
+    });
+    describe("when updating REFUSED task with some approvals", () => {
+      it.each`
+        task                                      | update            | message
+        ${approvedByElecRejectedByMatos}          | ${updateGlobal}   | ${messageGlobal}
+        ${approvedByMatosRejectedByHumainAndElec} | ${updateInCharge} | ${messageInCharge}
+      `(
+        "should add RESET_REVIEW key event to history",
+        async ({ task, update, message }) => {
+          const { history } = await prepare.updateInstructionsSection(
+            task.id,
+            update,
+            noel,
+          );
+          expect(history).toStrictEqual([
+            ...task.history,
+            {
+              action: RESET_REVIEW,
+              by: noel,
+              at: expect.any(Date),
+              description: message,
+            },
+          ]);
+        },
+      );
+    });
+    describe("when updating REFUSED task with non approvals", () => {
+      it.each`
+        task                 | update
+        ${installBarbecue}   | ${updateGlobal}
+        ${uninstallBarbecue} | ${updateGlobal}
+      `(
+        "should NOT add RESET_REVIEW key event to history",
+        async ({ task, update }) => {
+          const { history } = await prepare.updateInstructionsSection(
+            task.id,
+            update,
+            noel,
+          );
+          expect(history.at(-1)).not.toMatchObject({
+            action: RESET_REVIEW,
+            by: noel,
+          });
+        },
+      );
+    });
   });
 });
