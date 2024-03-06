@@ -1,3 +1,13 @@
+## [2.20.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.20.1...v2.20.2) (2024-03-06)
+
+
+### Bug Fixes
+
+* **festival-task:** don't reset approval on refused task without approval. [#1635](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1635) ([3a975f3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3a975f3e2a8d5ce1849c8f8a727eb8d77ecf1679))
+* **festival-task:** link inquiry drive [#1624](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1624) ([1f986b6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f986b69834d0ff68fbd209453e0d9a69057ebb1))
+* **profile:** better display for friends. [#1634](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1634) ([3c9c7cf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3c9c7cf4bdd106cc4b7c305a53eac3fc0b550a7a))
+* **registration:** better comment section explanation. [#1627](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1627) ([3578b3e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3578b3e29c95e61594f4d686e08876f72cb1bdda))
+
 ## [2.20.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.20.0...v2.20.1) (2024-02-29)
 
 
