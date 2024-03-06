@@ -3,7 +3,13 @@ import {
   BaseInquiryRequest,
   InquiryRequest,
 } from "../../common/inquiry-request";
-import { FestivalTask, Reviewable, Validated } from "../festival-task";
+import {
+  FestivalTask,
+  InReview,
+  Refused,
+  Reviewable,
+  Validated,
+} from "../festival-task";
 import { Volunteer } from "../sections/instructions";
 import { Contact } from "../sections/instructions";
 import { Mobilization, TeamMobilization } from "../sections/mobilizations";
@@ -529,12 +535,15 @@ export class PrepareFestivalTask {
     if (isDraft(task) || isRefused(task)) return true;
     if (isValidated(task)) return false;
 
-    const noneOfTheReviewersApproved =
+    return this.areNoneOfTheReviewersApproved(task);
+  }
+
+  private areNoneOfTheReviewersApproved(task: Refused | InReview) {
+    return (
       !this.isApprovedBy(humain, task) &&
       !this.isApprovedBy(matos, task) &&
-      !this.isApprovedBy(elec, task);
-
-    return noneOfTheReviewersApproved;
+      !this.isApprovedBy(elec, task)
+    );
   }
 
   private resetApproversReviewOnRefusedTask<T extends UpdatableFestivalTask>(
@@ -543,6 +552,7 @@ export class PrepareFestivalTask {
     reason: string,
   ): T {
     if (!isRefused<FestivalTask>(task)) return task;
+    if (this.areNoneOfTheReviewersApproved(task)) return task;
 
     const humain = this.resetApproval(task.reviews.humain);
     const matos = this.resetApproval(task.reviews.matos);
