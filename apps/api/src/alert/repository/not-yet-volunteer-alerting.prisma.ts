@@ -15,6 +15,6 @@ export class PrismaNotYetVolunteerAlerting implements NotYetVolunteerAlerting {
       },
       select: { registrationMembership: true },
     });
-    return !!user;
+    return user !== null;
   }
 }
