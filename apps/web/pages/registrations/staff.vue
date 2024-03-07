@@ -1,6 +1,6 @@
 <template>
   <div class="registrations">
-    <h1>Nouvelles inscriptions</h1>
+    <h1>Admissions organisateurs</h1>
     <RegistrationConfiguration class="registration-configuration" />
     <v-divider></v-divider>
     <v-data-table
