@@ -35,6 +35,9 @@ export default Vue.extend({
       this.fetchImage();
     },
   },
+  mounted() {
+    this.fetchImage();
+  },
   methods: {
     async fetchImage() {
       this.$accessor.catalogSignage.fetchSignageImage(this.signage);
