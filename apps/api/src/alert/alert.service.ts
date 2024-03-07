@@ -10,22 +10,20 @@ export type ProfilePictureAlerting = {
 export type FriendsAlerting = {
   for(id: User["id"]): Promise<boolean>;
 };
-export type HardAvailabilitiesAlerting = {
-  for(id: User["id"]): Promise<boolean>;
-};
-export type RegistreeAvailabilitiesAlerting = {
+export type NotYetVolunteerAlerting = {
   for(id: User["id"]): Promise<boolean>;
 };
 
+type Alerting = {
+  personalAccount: Readonly<PersonalAccountAlerting>;
+  contribution: Readonly<SettleAlerting>;
+  profilePicture: Readonly<ProfilePictureAlerting>;
+  friends: Readonly<FriendsAlerting>;
+  notYetVolunteer: Readonly<NotYetVolunteerAlerting>;
+};
+
 export class AlertService {
-  constructor(
-    private readonly personalAccountAlerting: PersonalAccountAlerting,
-    private readonly contributionAlerting: SettleAlerting,
-    private readonly profilePictureAlerting: ProfilePictureAlerting,
-    private readonly friendsAlerting: FriendsAlerting,
-    private readonly hardAvailabilitiesAlerting: HardAvailabilitiesAlerting,
-    private readonly registreeAvailabilitiesAlerting: RegistreeAvailabilitiesAlerting,
-  ) {}
+  constructor(private readonly alert: Alerting) {}
 
   async getMyAlerts(volunteer: JwtPayload): Promise<Alerts> {
     const [
@@ -33,23 +31,20 @@ export class AlertService {
       contribution,
       profilePicture,
       friends,
-      hardAvailabilities,
-      registreeAvailabilities,
+      notYetVolunteer,
     ] = await Promise.all([
-      this.personalAccountAlerting.for(volunteer.id),
-      this.contributionAlerting.for(volunteer.id),
-      this.profilePictureAlerting.for(volunteer.id),
-      this.friendsAlerting.for(volunteer.id),
-      this.hardAvailabilitiesAlerting.for(volunteer.id),
-      this.registreeAvailabilitiesAlerting.for(volunteer.id),
+      this.alert.personalAccount.for(volunteer.id),
+      this.alert.contribution.for(volunteer.id),
+      this.alert.profilePicture.for(volunteer.id),
+      this.alert.friends.for(volunteer.id),
+      this.alert.notYetVolunteer.for(volunteer.id),
     ]);
     return {
       personalAccount,
       contribution,
       profilePicture,
       friends,
-      hardAvailabilities,
-      registreeAvailabilities,
+      notYetVolunteer,
     };
   }
 }

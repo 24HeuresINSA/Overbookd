@@ -25,8 +25,5 @@ export class AlertsResponseDto implements Alerts {
   friends?: boolean;
 
   @ApiProperty({ required: false })
-  hardAvailabilities?: boolean;
-
-  @ApiProperty({ required: false })
-  registreeAvailabilities?: boolean;
+  notYetVolunteer?: boolean;
 }

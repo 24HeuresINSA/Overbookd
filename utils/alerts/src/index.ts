@@ -6,6 +6,5 @@ export type Alerts = {
   contribution?: IAlertAboutContribution;
   profilePicture?: boolean;
   friends?: boolean;
-  hardAvailabilities?: boolean;
-  registreeAvailabilities?: boolean;
+  notYetVolunteer?: boolean;
 };

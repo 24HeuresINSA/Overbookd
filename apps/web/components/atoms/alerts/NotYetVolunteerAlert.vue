@@ -1,20 +1,22 @@
 <template>
   <v-alert
-    icon="mdi-clock-alert"
-    color="error"
+    icon="mdi-clock"
     border="left"
     prominent
     dismissible
     @input="dismiss"
   >
-    <h2 class="summary">Tu n'as pas encore renseigné tes disponibilités 😠</h2>
+    <h2 class="summary">
+      Tu n'as pas encore été validé par les responsables bénévoles
+    </h2>
     <p class="catch-phrase">
-      Tu peux les ajouter sur
-      <nuxt-link to="/availabilities">mes disponibilités</nuxt-link> !
+      N'hésite pas à rajouter
+      <nuxt-link to="/availabilities">des disponibilités</nuxt-link> pour
+      augmenter tes chances !
     </p>
     <p class="details">
-      Il est impératif de mettre le plus de dispos possibles. Tu peux même te
-      faire excuser de cours pour certains TD et CM !
+      Plus on met de disponibilités et plus il est facile pour les responsables
+      bénévoles de faire un planning agréable pour tout le monde.
     </p>
   </v-alert>
 </template>
@@ -23,7 +25,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "HardAvailabilitiesAlert",
+  name: "NotYetVolunteerAlert",
   methods: {
     dismiss(): void {
       this.$emit("dismiss");

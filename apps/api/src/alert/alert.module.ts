@@ -10,8 +10,7 @@ import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
 import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
-import { PrismaHardAvailabilitiesAlerting } from "./repository/hard-availabilities-alerting.prisma";
-import { PrismaRegistreeAvailabilitiesAlerting } from "./repository/registree-availabilities-alerting.prisma";
+import { PrismaNotYetVolunteerAlerting } from "./repository/not-yet-volunteer-alerting.prisma";
 
 @Module({
   controllers: [AlertController],
@@ -58,15 +57,9 @@ import { PrismaRegistreeAvailabilitiesAlerting } from "./repository/registree-av
       inject: [PrismaService],
     },
     {
-      provide: PrismaHardAvailabilitiesAlerting,
+      provide: PrismaNotYetVolunteerAlerting,
       useFactory: (prisma: PrismaService) =>
-        new PrismaHardAvailabilitiesAlerting(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaRegistreeAvailabilitiesAlerting,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaRegistreeAvailabilitiesAlerting(prisma),
+        new PrismaNotYetVolunteerAlerting(prisma),
       inject: [PrismaService],
     },
     {
@@ -76,24 +69,21 @@ import { PrismaRegistreeAvailabilitiesAlerting } from "./repository/registree-av
         contribution: SettleAlerting,
         profilePicture: PrismaProfilePictureAlerting,
         friends: PrismaFriendsAlerting,
-        hardAvailabilities: PrismaHardAvailabilitiesAlerting,
-        registreeAvailabilities: PrismaRegistreeAvailabilitiesAlerting,
+        notYetVolunteer: PrismaNotYetVolunteerAlerting,
       ) =>
-        new AlertService(
+        new AlertService({
           personalAccount,
           contribution,
           profilePicture,
           friends,
-          hardAvailabilities,
-          registreeAvailabilities,
-        ),
+          notYetVolunteer,
+        }),
       inject: [
         PersonalAccountAlerting,
         SettleAlerting,
         PrismaProfilePictureAlerting,
         PrismaFriendsAlerting,
-        PrismaHardAvailabilitiesAlerting,
-        PrismaRegistreeAvailabilitiesAlerting,
+        PrismaNotYetVolunteerAlerting,
       ],
     },
   ],

@@ -11,15 +11,10 @@
       :alert="contributionAlert"
       @dismiss="dismiss('contribution')"
     />
-    <HardAvailabilitiesAlert
-      v-if="hardAvailabilitiesAlert"
-      id="hard-availabilities"
-      @dismiss="dismiss('hardAvailabilities')"
-    />
-    <RegistreeAvailabilitiesAlert
-      v-if="registreeAvailabilitiesAlert"
-      id="registree-availabilities"
-      @dismiss="dismiss('registreeAvailabilities')"
+    <NotYetVolunteerAlert
+      v-if="notYetVolunteerAlert"
+      id="not-yet-volunteer"
+      @dismiss="dismiss('notYetVolunteer')"
     />
     <ProfilePictureAlert
       v-if="profilePictureAlert"
@@ -43,8 +38,7 @@ import PersonalAccount from "~/components/atoms/alerts/PersonalAccount.vue";
 import Contribution from "~/components/atoms/alerts/Contribution.vue";
 import ProfilePictureAlert from "~/components/atoms/alerts/ProfilePictureAlert.vue";
 import FriendsAlert from "~/components/atoms/alerts/FriendsAlert.vue";
-import HardAvailabilitiesAlert from "~/components/atoms/alerts/HardAvailabilitiesAlert.vue";
-import RegistreeAvailabilitiesAlert from "~/components/atoms/alerts/RegistreeAvailabilitiesAlert.vue";
+import NotYetVolunteerAlert from "~/components/atoms/alerts/NotYetVolunteerAlert.vue";
 
 export default Vue.extend({
   name: "AlertListing",
@@ -53,8 +47,7 @@ export default Vue.extend({
     Contribution,
     ProfilePictureAlert,
     FriendsAlert,
-    HardAvailabilitiesAlert,
-    RegistreeAvailabilitiesAlert,
+    NotYetVolunteerAlert,
   },
   computed: {
     personalAccountAlert(): PersonalAccountAlert | undefined {
@@ -69,11 +62,8 @@ export default Vue.extend({
     friendsAlert(): boolean | undefined {
       return this.$accessor.alert.alerts.friends;
     },
-    hardAvailabilitiesAlert(): boolean | undefined {
-      return this.$accessor.alert.alerts.hardAvailabilities;
-    },
-    registreeAvailabilitiesAlert(): boolean | undefined {
-      return this.$accessor.alert.alerts.registreeAvailabilities;
+    notYetVolunteerAlert(): boolean | undefined {
+      return this.$accessor.alert.alerts.notYetVolunteer;
     },
   },
   methods: {
@@ -88,7 +78,7 @@ export default Vue.extend({
 #contribution,
 #profile-picture,
 #friends-alert,
-#registree-availabilities {
+#not-yet-volunteer {
   background-color: $yellow-24h;
   border-color: $yellow-24h;
   a {
