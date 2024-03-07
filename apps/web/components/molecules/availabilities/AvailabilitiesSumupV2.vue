@@ -20,13 +20,12 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import {
   Availabilities,
   AvailabilityDate,
-  AvailabilityErrorMessage,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -44,7 +43,7 @@ type AvailabilitiesSumupData = {
   charismaDelta: number;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "AvailabilitiesSumup",
   components: { OverCalendar },
   props: {
@@ -66,10 +65,10 @@ export default Vue.extend({
     charismaPeriods(): SavedCharismaPeriod[] {
       return this.$accessor.charismaPeriod.charismaPeriods ?? [];
     },
-    selectedAvailabilities(): Period[] {
+    selectedAvailabilities() {
       return this.availabilitiesAggregate.list;
     },
-    errors(): AvailabilityErrorMessage[] {
+    errors() {
       return this.availabilitiesAggregate.errors;
     },
     manifDate(): Date {
