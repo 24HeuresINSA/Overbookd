@@ -112,7 +112,7 @@ export default Vue.extend({
     },
     invalidForm(): boolean {
       const isNameValid = this.name.length >= nameMinLength;
-      const isTypeValid = !!this.type;
+      const isTypeValid = this.type !== undefined
       const isUploadValid = this.image ? !this.invalidImage : true;
 
       return !isNameValid || !isTypeValid || !isUploadValid;
