@@ -1,7 +1,7 @@
 import { PrismaService } from "../../prisma.service";
 import { User } from "@overbookd/user";
 import { NotYetVolunteerAlerting } from "../alert.service";
-// import { VOLUNTEER } from "@overbookd/registration";
+import { VOLUNTEER } from "@overbookd/registration";
 
 export class PrismaNotYetVolunteerAlerting implements NotYetVolunteerAlerting {
   constructor(private readonly prisma: PrismaService) {}
@@ -10,7 +10,7 @@ export class PrismaNotYetVolunteerAlerting implements NotYetVolunteerAlerting {
     const user = await this.prisma.user.findUnique({
       where: {
         id,
-        // registrationMembership: VOLUNTEER,
+        registrationMembership: VOLUNTEER,
         teams: { none: { team: { code: "benevole" } } },
       },
       select: { registrationMembership: true },
