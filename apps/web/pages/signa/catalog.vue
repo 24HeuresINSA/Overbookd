@@ -28,8 +28,8 @@
 <script lang="ts">
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import SignageListing from "~/components/organisms/logistic/SignageListing.vue";
-import SignageForm from "~/components/molecules/logistic/SignageForm.vue";
+import SignageListing from "~/components/organisms/signa/SignageListing.vue";
+import SignageForm from "~/components/molecules/signa/SignageForm.vue";
 import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 
 export default Vue.extend({

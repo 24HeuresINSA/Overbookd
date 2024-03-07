@@ -1,19 +1,18 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { Signage, SignageForm, SignageUpdateForm } from "@overbookd/signa";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { CatalogSignageRepository } from "~/repositories/catalog-signage.repository";
 import { updateItemToList } from "@overbookd/list";
 import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
-const signageRepository = RepoFactory.CatalogSignageRepository;
-
 interface State {
   signages: SignageWithPotentialImage[];
+  signage: SignageWithPotentialImage | null;
 }
 
 export const state = (): State => ({
   signages: [],
+  signage: null,
 });
 
 export const mutations = mutationTree(state, {
@@ -27,6 +26,7 @@ export const mutations = mutationTree(state, {
     const index = state.signages.findIndex((s) => s.id === signage.id);
     if (index < 0) return;
     state.signages = updateItemToList(state.signages, index, signage);
+    state.signage = signage;
   },
   DELETE_SIGNAGE(state, signage: SignageWithPotentialImage) {
     state.signages = state.signages.filter((s) => s.id !== signage.id);
@@ -39,33 +39,26 @@ export const actions = actionTree(
     async fetchSignages({ commit }): Promise<void> {
       const res = await safeCall<Signage[]>(
         this,
-        signageRepository.fetchSignages(this),
+        CatalogSignageRepository.fetchSignages(this),
       );
       if (!res) return;
       commit("SET_SIGNAGES", res.data);
     },
 
-    async fetchSignagesImages({ state, commit }): Promise<void> {
-      const signages = await Promise.all(
-        state.signages.map(async (signage) => {
-          const signageImage = await CatalogSignageRepository.getSignageImage(
-            this,
-            signage.id,
-          );
-          if (!signageImage) return signage;
-          return {
-            ...signage,
-            imageBlob: signageImage,
-          };
-        }),
+    async fetchSignageImage({ commit }, signage: Signage): Promise<void> {
+      const res = await CatalogSignageRepository.getSignageImage(
+        this,
+        signage.id,
       );
-      commit("SET_SIGNAGES", signages);
+      if (!res) return;
+      const signageWithImage = { ...signage, imageBlob: res };
+      commit("UPDATE_SIGNAGE", signageWithImage);
     },
 
     async createSignage({ commit }, signageForm: SignageForm): Promise<void> {
       const res = await safeCall<Signage>(
         this,
-        signageRepository.createSignage(this, signageForm),
+        CatalogSignageRepository.createSignage(this, signageForm),
         {
           successMessage: "La signalétique a été créé avec succès ✅",
           errorMessage: "Erreur lors de la création de la signalétique ❌",
@@ -79,7 +72,7 @@ export const actions = actionTree(
       const { id, ...signageForm } = form;
       const res = await safeCall<Signage>(
         this,
-        signageRepository.updateSignage(this, id, signageForm),
+        CatalogSignageRepository.updateSignage(this, id, signageForm),
         {
           successMessage: "La signalétique a été mis a jour avec succès ✅",
           errorMessage: "Erreur lors de la mise à jour de la signalétique ❌",
@@ -92,7 +85,7 @@ export const actions = actionTree(
     async deleteSignage({ commit }, signage: Signage): Promise<void> {
       const res = await safeCall(
         this,
-        signageRepository.deleteSignage(this, signage.id),
+        CatalogSignageRepository.deleteSignage(this, signage.id),
         {
           successMessage: `${signage.name} supprimé avec succès ✅`,
           errorMessage: `Erreur lors de la suppression de ${signage.name} ❌`,
@@ -110,14 +103,18 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = await safeCall(
         this,
-        signageRepository.uploadSignageImage(this, signageId, signageImage),
+        CatalogSignageRepository.uploadSignageImage(
+          this,
+          signageId,
+          signageImage,
+        ),
         {
           successMessage: `Image de la signalétique mise à jour avec succès ✅`,
           errorMessage: `Erreur lors de la mise à jour de l'image de la signalétique ❌`,
         },
       );
       if (!res) return;
-      const imageBlob = await signageRepository.getSignageImage(
+      const imageBlob = await CatalogSignageRepository.getSignageImage(
         this,
         signageId,
       );

@@ -26,8 +26,25 @@
             :items="signageTypes"
             :rules="[rules.typeRequired]"
           ></v-select>
+          <h3>Image pour la signalisation</h3>
+          <v-file-input
+            v-model="image"
+            :rules="[
+              fileRules.isImage,
+              fileRules.isImageSizeWithinLimit,
+              fileRules.isSupportedImageFile,
+            ]"
+            label="Photo de la Signa"
+            prepend-icon="mdi-camera"
+            accept="image/png, image/jpeg"
+            show-size
+          />
         </div>
-        <v-btn color="success" dark large @click="createOrUpdateSignage">
+        <v-btn
+          color="success"
+          :disabled="invalidForm"
+          @click="createOrUpdateSignage"
+        >
           <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>
           Sauvegarder la signalisation
         </v-btn>
@@ -38,7 +55,14 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { InputRulesData, minLength, required } from "~/utils/rules/input.rules";
+import {
+  InputRulesDataWithImage,
+  minLength,
+  required,
+  isImage,
+  isImageSizeWithinLimit,
+  isSupportedImageFile,
+} from "~/utils/rules/input.rules";
 import {
   Signage,
   SignageForm,
@@ -46,9 +70,10 @@ import {
   signageTypes,
 } from "@overbookd/signa";
 
-interface SignageFormData extends InputRulesData {
+interface SignageFormData extends InputRulesDataWithImage {
   name: string;
   type: SignageType;
+  image: File | null;
 }
 
 const nameMinLength = 3;
@@ -68,15 +93,32 @@ export default Vue.extend({
     return {
       name: this.signage.name,
       type: this.signage.type,
+      image: null,
       rules: {
         nameMinLength: minLength(nameMinLength),
         typeRequired: required,
       },
+      fileRules: {
+        isImage,
+        isImageSizeWithinLimit,
+        isSupportedImageFile,
+      },
     };
   },
+
   computed: {
     signageTypes(): SignageType[] {
       return Object.values(signageTypes);
+    },
+    invalidForm(): boolean {
+      const isNameValid = this.name.length >= nameMinLength;
+      const isTypeValid = this.type !== undefined;
+      const isUploadValid = this.image ? !this.invalidImage : true;
+
+      return !isNameValid || !isTypeValid || !isUploadValid;
+    },
+    invalidImage() {
+      return !Object.values(this.fileRules).every((rule) => rule(this.image));
     },
   },
   watch: {
@@ -93,16 +135,32 @@ export default Vue.extend({
         type: this.type,
       };
 
-      this.signage.id
-        ? this.$accessor.catalogSignage.updateSignage({
-            ...signage,
-            id: this.signage.id,
-          })
-        : this.$accessor.catalogSignage.createSignage(signage);
-
+      await this.upsertSignage(signage);
+      if (this.image) {
+        await this.updateImage(this.image);
+      }
       this.closeDialog();
       this.name = "";
       this.type = signageTypes.AFFICHE;
+    },
+
+    upsertSignage(signage: SignageForm) {
+      if (this.signage.id) {
+        return this.$accessor.catalogSignage.updateSignage({
+          ...signage,
+          id: this.signage.id,
+        });
+      }
+      return this.$accessor.catalogSignage.createSignage(signage);
+    },
+
+    updateImage(image: File) {
+      const signaImageForm = new FormData();
+      signaImageForm.append("file", image, image.name);
+      return this.$accessor.catalogSignage.uploadSignageImage({
+        signageId: this.signage.id,
+        signageImage: signaImageForm,
+      });
     },
     closeDialog(): void {
       this.$emit("close-dialog");
