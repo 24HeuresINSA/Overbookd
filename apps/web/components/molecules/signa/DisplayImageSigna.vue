@@ -22,9 +22,6 @@ export default Vue.extend({
       }),
     },
   },
-  data: () => ({
-    imageBlob: "",
-  }),
   computed: {
     type() {
       return this.$accessor.dialog.type;
@@ -37,9 +34,6 @@ export default Vue.extend({
     signage() {
       this.fetchImage();
     },
-  },
-  mounted() {
-    this.fetchImage();
   },
   methods: {
     async fetchImage() {

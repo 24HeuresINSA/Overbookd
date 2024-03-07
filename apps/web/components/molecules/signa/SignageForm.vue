@@ -118,11 +118,7 @@ export default Vue.extend({
       return !isNameValid || !isTypeValid || !isUploadValid;
     },
     invalidImage() {
-      return (
-        this.fileRules.isImage(this.image) !== true ||
-        this.fileRules.isImageSizeWithinLimit(this.image) !== true ||
-        this.fileRules.isSupportedImageFile(this.image) !== true
-      );
+      return !Object.values(this.fileRules).every((rule) => rule(this.image));
     },
   },
   watch: {
