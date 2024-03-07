@@ -30,3 +30,7 @@ export function formatPhoneLink(userPhone: string) {
   const phone = (userPhone ?? "").replace(/^0/, "");
   return `tel:+33${phone}`;
 }
+
+export function formatEmailLink(email: string) {
+  return `mailto:${email}`;
+}

@@ -76,7 +76,7 @@ function formatToEnrollableVolunteer(
     charisma: volunteer.charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,
-    comment: volunteer.comment,
+    comment: volunteer.comment === null ? undefined : volunteer.comment,
     birthdate: volunteer.birthdate,
   };
 }

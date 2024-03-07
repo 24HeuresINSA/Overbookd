@@ -33,7 +33,7 @@ export default Vue.extend({
       this.dismiss();
     },
     async move(): Promise<void> {
-      this.$router.push("/registrations");
+      this.$router.push("/registrations/staff");
       this.dismiss();
     },
     dismiss(): void {

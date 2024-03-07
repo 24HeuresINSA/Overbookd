@@ -17,6 +17,7 @@ export const SELECT_VOLUNTEER = {
   availabilities: { select: { start: true, end: true } },
   phone: true,
   birthdate: true,
+  comment: true,
 };
 
 export const NOT_VOLUNTEER_YET = {
@@ -36,7 +37,7 @@ export type DatabaseEnrollableVolunteer = DatabaseEnrollableAdherent & {
   availabilities: IProvidePeriod[];
   charisma: number;
   phone: string;
-  comment?: string;
+  comment: string | null;
   birthdate: Date;
 };
 
