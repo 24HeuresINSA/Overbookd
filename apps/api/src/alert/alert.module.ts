@@ -10,6 +10,7 @@ import { PrismaPermissions } from "./repository/permissions.prisma";
 import { PrismaContributions } from "./repository/contributions.prisma";
 import { PrismaProfilePictureAlerting } from "./repository/profile-picture-alerting.prisma";
 import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
+import { PrismaNotYetVolunteerAlerting } from "./repository/not-yet-volunteer-alerting.prisma";
 
 @Module({
   controllers: [AlertController],
@@ -56,24 +57,33 @@ import { PrismaFriendsAlerting } from "./repository/friends-alerting.prisma";
       inject: [PrismaService],
     },
     {
+      provide: PrismaNotYetVolunteerAlerting,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaNotYetVolunteerAlerting(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: AlertService,
       useFactory: (
         personalAccount: PersonalAccountAlerting,
         contribution: SettleAlerting,
         profilePicture: PrismaProfilePictureAlerting,
         friends: PrismaFriendsAlerting,
+        notYetVolunteer: PrismaNotYetVolunteerAlerting,
       ) =>
-        new AlertService(
+        new AlertService({
           personalAccount,
           contribution,
           profilePicture,
           friends,
-        ),
+          notYetVolunteer,
+        }),
       inject: [
         PersonalAccountAlerting,
         SettleAlerting,
         PrismaProfilePictureAlerting,
         PrismaFriendsAlerting,
+        PrismaNotYetVolunteerAlerting,
       ],
     },
   ],

@@ -6,4 +6,5 @@ export type Alerts = {
   contribution?: IAlertAboutContribution;
   profilePicture?: boolean;
   friends?: boolean;
+  notYetVolunteer?: boolean;
 };

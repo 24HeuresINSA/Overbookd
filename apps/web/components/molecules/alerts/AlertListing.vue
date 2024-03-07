@@ -11,6 +11,11 @@
       :alert="contributionAlert"
       @dismiss="dismiss('contribution')"
     />
+    <NotYetVolunteerAlert
+      v-if="notYetVolunteerAlert"
+      id="not-yet-volunteer"
+      @dismiss="dismiss('notYetVolunteer')"
+    />
     <ProfilePictureAlert
       v-if="profilePictureAlert"
       id="profile-picture"
@@ -33,6 +38,7 @@ import PersonalAccount from "~/components/atoms/alerts/PersonalAccount.vue";
 import Contribution from "~/components/atoms/alerts/Contribution.vue";
 import ProfilePictureAlert from "~/components/atoms/alerts/ProfilePictureAlert.vue";
 import FriendsAlert from "~/components/atoms/alerts/FriendsAlert.vue";
+import NotYetVolunteerAlert from "~/components/atoms/alerts/NotYetVolunteerAlert.vue";
 
 export default Vue.extend({
   name: "AlertListing",
@@ -41,6 +47,7 @@ export default Vue.extend({
     Contribution,
     ProfilePictureAlert,
     FriendsAlert,
+    NotYetVolunteerAlert,
   },
   computed: {
     personalAccountAlert(): PersonalAccountAlert | undefined {
@@ -55,6 +62,9 @@ export default Vue.extend({
     friendsAlert(): boolean | undefined {
       return this.$accessor.alert.alerts.friends;
     },
+    notYetVolunteerAlert(): boolean | undefined {
+      return this.$accessor.alert.alerts.notYetVolunteer;
+    },
   },
   methods: {
     dismiss(alert: keyof Alerts) {
@@ -67,7 +77,8 @@ export default Vue.extend({
 <style lang="scss">
 #contribution,
 #profile-picture,
-#friends-alert {
+#friends-alert,
+#not-yet-volunteer {
   background-color: $yellow-24h;
   border-color: $yellow-24h;
   a {

@@ -10,23 +10,41 @@ export type ProfilePictureAlerting = {
 export type FriendsAlerting = {
   for(id: User["id"]): Promise<boolean>;
 };
+export type NotYetVolunteerAlerting = {
+  for(id: User["id"]): Promise<boolean>;
+};
+
+type Alerting = {
+  personalAccount: Readonly<PersonalAccountAlerting>;
+  contribution: Readonly<SettleAlerting>;
+  profilePicture: Readonly<ProfilePictureAlerting>;
+  friends: Readonly<FriendsAlerting>;
+  notYetVolunteer: Readonly<NotYetVolunteerAlerting>;
+};
 
 export class AlertService {
-  constructor(
-    private readonly personalAccountAlerting: PersonalAccountAlerting,
-    private readonly contributionAlerting: SettleAlerting,
-    private readonly profilePictureAlerting: ProfilePictureAlerting,
-    private readonly friendsAlerting: FriendsAlerting,
-  ) {}
+  constructor(private readonly alert: Alerting) {}
 
   async getMyAlerts(volunteer: JwtPayload): Promise<Alerts> {
-    const [personalAccount, contribution, profilePicture, friends] =
-      await Promise.all([
-        this.personalAccountAlerting.for(volunteer.id),
-        this.contributionAlerting.for(volunteer.id),
-        this.profilePictureAlerting.for(volunteer.id),
-        this.friendsAlerting.for(volunteer.id),
-      ]);
-    return { personalAccount, contribution, profilePicture, friends };
+    const [
+      personalAccount,
+      contribution,
+      profilePicture,
+      friends,
+      notYetVolunteer,
+    ] = await Promise.all([
+      this.alert.personalAccount.for(volunteer.id),
+      this.alert.contribution.for(volunteer.id),
+      this.alert.profilePicture.for(volunteer.id),
+      this.alert.friends.for(volunteer.id),
+      this.alert.notYetVolunteer.for(volunteer.id),
+    ]);
+    return {
+      personalAccount,
+      contribution,
+      profilePicture,
+      friends,
+      notYetVolunteer,
+    };
   }
 }

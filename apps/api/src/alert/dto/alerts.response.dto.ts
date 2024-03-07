@@ -23,4 +23,7 @@ export class AlertsResponseDto implements Alerts {
 
   @ApiProperty({ required: false })
   friends?: boolean;
+
+  @ApiProperty({ required: false })
+  notYetVolunteer?: boolean;
 }
