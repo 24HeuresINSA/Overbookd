@@ -1,31 +1,40 @@
 <template>
-  <div class="alerts">
+  <div class="alerts" :class="{ multiple: multipleAlerts, expanded: expanded }">
     <PersonalAccount
       v-if="personalAccountAlert"
+      class="alert"
       :alert="personalAccountAlert"
       @dismiss="dismiss('personalAccount')"
     />
     <Contribution
       v-if="contributionAlert"
       id="contribution"
+      class="alert"
       :alert="contributionAlert"
       @dismiss="dismiss('contribution')"
     />
     <NotYetVolunteerAlert
       v-if="notYetVolunteerAlert"
       id="not-yet-volunteer"
+      class="alert"
       @dismiss="dismiss('notYetVolunteer')"
-    />
-    <ProfilePictureAlert
-      v-if="profilePictureAlert"
-      id="profile-picture"
-      @dismiss="dismiss('profilePicture')"
     />
     <FriendsAlert
       v-if="friendsAlert"
       id="friends-alert"
+      class="alert"
       @dismiss="dismiss('friends')"
     />
+    <ProfilePictureAlert
+      v-if="profilePictureAlert"
+      id="profile-picture"
+      class="alert"
+      @dismiss="dismiss('profilePicture')"
+    />
+    <v-btn id="expand-alerts" block color="primary" @click="toggleExpand">
+      <v-icon left>{{ toggleIcon }}</v-icon>
+      {{ toggleMessage }}
+    </v-btn>
   </div>
 </template>
 
@@ -40,6 +49,10 @@ import ProfilePictureAlert from "~/components/atoms/alerts/ProfilePictureAlert.v
 import FriendsAlert from "~/components/atoms/alerts/FriendsAlert.vue";
 import NotYetVolunteerAlert from "~/components/atoms/alerts/NotYetVolunteerAlert.vue";
 
+type AlertListingData = {
+  expanded: boolean;
+};
+
 export default Vue.extend({
   name: "AlertListing",
   components: {
@@ -49,6 +62,9 @@ export default Vue.extend({
     FriendsAlert,
     NotYetVolunteerAlert,
   },
+  data: (): AlertListingData => ({
+    expanded: false,
+  }),
   computed: {
     personalAccountAlert(): PersonalAccountAlert | undefined {
       return this.$accessor.alert.alerts.personalAccount;
@@ -65,16 +81,59 @@ export default Vue.extend({
     notYetVolunteerAlert(): boolean | undefined {
       return this.$accessor.alert.alerts.notYetVolunteer;
     },
+    multipleAlerts(): boolean {
+      const allAlerts = Object.values(this.$accessor.alert.alerts);
+      console.log(allAlerts);
+      const displayedAlerts = allAlerts.filter((alert) => alert !== false);
+      return displayedAlerts.length > 1;
+    },
+    toggleIcon(): string {
+      return this.expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand";
+    },
+    toggleMessage(): string {
+      return this.expanded ? "Une seule alerte" : "Toutes les alertes";
+    },
   },
   methods: {
     dismiss(alert: keyof Alerts) {
       this.$accessor.alert.dismiss(alert);
+    },
+    toggleExpand() {
+      this.expanded = !this.expanded;
     },
   },
 });
 </script>
 
 <style lang="scss">
+.alerts {
+  .alert:nth-of-type(n + 2) {
+    display: none;
+  }
+  #expand-alerts {
+    display: none;
+  }
+  &.multiple {
+    #expand-alerts {
+      display: unset;
+    }
+    .alert:first-of-type {
+      margin-bottom: 3px;
+    }
+    &.expanded {
+      .alert:nth-of-type(n + 2) {
+        display: block;
+      }
+      .alert:first-of-type {
+        margin-bottom: 16px;
+      }
+      .alert:last-of-type {
+        margin-bottom: 3px;
+      }
+    }
+  }
+}
+
 #contribution,
 #profile-picture,
 #friends-alert,
