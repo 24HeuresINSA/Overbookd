@@ -83,7 +83,6 @@ export default Vue.extend({
     },
     multipleAlerts(): boolean {
       const allAlerts = Object.values(this.$accessor.alert.alerts);
-      console.log(allAlerts);
       const displayedAlerts = allAlerts.filter((alert) => alert !== false);
       return displayedAlerts.length > 1;
     },

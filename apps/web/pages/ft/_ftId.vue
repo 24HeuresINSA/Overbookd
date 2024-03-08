@@ -26,10 +26,10 @@
     </FestivalEventSidebar>
     <v-container class="container ft">
       <FtGeneralCard id="general" />
-      <ParentFaCard id="fa" />
+      <ParentFaCard id="fa" @open:calendar="openCalendar" />
       <FtInquiryCard id="inquiry" />
       <InstructionsCard id="instructions" />
-      <MobilizationCard id="mobilization" />
+      <MobilizationCard id="mobilization" @open:calendar="openCalendar" />
       <FeedbackCard
         id="feedback"
         :festival-event="selectedTask"
@@ -44,6 +44,9 @@
         />
       </v-dialog>
     </v-container>
+    <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
+      <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
+    </v-dialog>
     <SnackNotificationContainer />
   </div>
 </template>
@@ -70,10 +73,15 @@ import ParentFaCard from "~/components/organisms/festival-event/festival-task/Pa
 import MobilizationCard from "~/components/organisms/festival-event/festival-task/MobilizationCard.vue";
 import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
+import { CalendarEvent } from "~/utils/models/calendar.model";
+import { IProvidePeriod } from "@overbookd/period";
+import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 
 type FestivalTaskDetailsData = {
   isRejectDialogOpen: boolean;
   reviewer?: Reviewer<"FT">;
+  isCalendarDialogOpen: boolean;
+  calendarMarker: Date;
 };
 
 export default defineComponent({
@@ -87,9 +95,12 @@ export default defineComponent({
     MobilizationCard,
     FeedbackCard,
     AskRejectReasonFormCard,
+    OverCalendar,
   },
   data: (): FestivalTaskDetailsData => ({
     isRejectDialogOpen: false,
+    isCalendarDialogOpen: false,
+    calendarMarker: new Date(),
   }),
   computed: {
     selectedTask(): FestivalTask {
@@ -108,6 +119,54 @@ export default defineComponent({
         this.$accessor.user.isMemberOf(team),
       );
     },
+    eventStartDate(): Date {
+      return this.$accessor.configuration.eventStartDate;
+    },
+    calendarStartDate(): Date {
+      const startTimestamps = this.selectedTask.mobilizations.map(({ start }) =>
+        start.getTime(),
+      );
+      if (startTimestamps.length === 0) return this.eventStartDate;
+
+      const minStart = Math.min(...startTimestamps);
+      return new Date(minStart);
+    },
+    allTimeWindows(): CalendarEvent[] {
+      const mobilizationEvents = this.selectedTask.mobilizations.map(
+        ({ start, end }: IProvidePeriod): CalendarEvent => ({
+          start,
+          end,
+          name: this.selectedTask.general.name,
+          timed: true,
+          color: "orange",
+        }),
+      );
+      const activityInquiryEvents =
+        this.selectedTask.festivalActivity.inquiry.timeWindows.map(
+          ({ start, end }): CalendarEvent => ({
+            start,
+            end,
+            name: "Créneau matos de la FA",
+            timed: true,
+            color: "grey",
+          }),
+        );
+      const activityTimeWindowEvents =
+        this.selectedTask.festivalActivity.timeWindows.map(
+          ({ start, end }): CalendarEvent => ({
+            start,
+            end,
+            name: this.selectedTask.festivalActivity.name,
+            timed: true,
+            color: "blue",
+          }),
+        );
+      return [
+        ...mobilizationEvents,
+        ...activityInquiryEvents,
+        ...activityTimeWindowEvents,
+      ];
+    },
   },
   async mounted() {
     await this.$accessor.festivalTask.fetchTask(this.ftId);
@@ -118,6 +177,7 @@ export default defineComponent({
       this.$router.push({ path: "/ft" });
     }
     document.title = `FT ${this.ftId} - ${this.selectedTask.general.name}`;
+    this.calendarMarker = this.calendarStartDate;
   },
   methods: {
     publishFeedback(content: string) {
@@ -162,6 +222,9 @@ export default defineComponent({
     },
     closeRejectDialog() {
       this.isRejectDialogOpen = false;
+    },
+    openCalendar() {
+      this.isCalendarDialogOpen = true;
     },
     rejected({ reason }: { reason: string }) {
       const team = this.reviewer;

@@ -18,13 +18,37 @@
         {{ festivalActivity.location?.name }}
       </span>
 
-      <h3>Déroulement de l'activité</h3>
+      <h3>
+        Déroulement de l'activité
+        <v-btn
+          fab
+          dark
+          small
+          class="calendar-btn"
+          color="primary"
+          @click="openCalendar"
+        >
+          <v-icon dark> mdi-calendar-blank </v-icon>
+        </v-btn>
+      </h3>
       <FaTimeWindowTable
         :time-windows="festivalActivity.timeWindows"
         disabled
       />
 
-      <h3>Demandes de matos</h3>
+      <h3>
+        Demandes de matos
+        <v-btn
+          fab
+          dark
+          small
+          class="calendar-btn"
+          color="primary"
+          @click="openCalendar"
+        >
+          <v-icon dark> mdi-calendar-blank </v-icon>
+        </v-btn>
+      </h3>
       <FaTimeWindowTable
         :time-windows="festivalActivity.inquiry.timeWindows"
         disabled
@@ -53,12 +77,18 @@ type ParentFaCardData = {
 export default defineComponent({
   name: "ParentFaCard",
   components: { FaTimeWindowTable, InquiryTable },
+  emits: ["open:calendar"],
   data: (): ParentFaCardData => ({
     MATOS,
   }),
   computed: {
     festivalActivity(): FestivalTask["festivalActivity"] {
       return this.$accessor.festivalTask.selectedTask.festivalActivity;
+    },
+  },
+  methods: {
+    openCalendar() {
+      this.$emit("open:calendar");
     },
   },
 });
@@ -82,5 +112,9 @@ export default defineComponent({
 h3 {
   font-size: 1.1rem;
   margin: 25px 0 10px 0;
+}
+
+.calendar-btn {
+  margin-left: 10px;
 }
 </style>
