@@ -1,3 +1,21 @@
+## [2.21.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.20.2...v2.21.0) (2024-03-08)
+
+
+### Features
+
+* **alerts:** add alerts about registrees and hards availabilities. [#1602](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1602) ([e9ccbfc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e9ccbfcef421584d839083636ce58cf2b3e9ef51))
+
+
+### Bug Fixes
+
+* **festival-task:** hide approve and reject buttons. [#1639](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1639) ([0bfd193](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0bfd1936c1cf827a7d3ef57bba52dbb71198a1f1))
+* **registration:** display volunteer details information. [#1628](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1628) ([0f97b8f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0f97b8fd3d29621780e178535ae5357d3e720cd1))
+
+
+### Refactor
+
+* **signa-catalog:** Display image on click [#1397](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1397) ([b32d431](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b32d431a3709e44fa7af516b4cd1cc4c1ca93ff4))
+
 ## [2.20.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.20.1...v2.20.2) (2024-03-06)
 
 
