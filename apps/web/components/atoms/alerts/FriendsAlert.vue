@@ -6,7 +6,7 @@
     dismissible
     @input="dismiss"
   >
-    <h2 class="summary">Profite du festival avec tes amis ! 🤩</h2>
+    <h2 class="summary">Profiter un max du festival 🤩</h2>
     <p class="catch-phrase">
       C'est quand même plus sympa
       <nuxt-link to="/profile#friends">avec ses amis</nuxt-link> non ? 😉

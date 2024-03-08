@@ -6,9 +6,7 @@
     dismissible
     @input="dismiss"
   >
-    <h2 class="summary">
-      Tu n'as pas encore été validé par les responsables bénévoles
-    </h2>
+    <h2 class="summary">Inscription pas encore validée</h2>
     <p class="catch-phrase">
       N'hésite pas à rajouter
       <nuxt-link to="/availabilities">des disponibilités</nuxt-link> pour
