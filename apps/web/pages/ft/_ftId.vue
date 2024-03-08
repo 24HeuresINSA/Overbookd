@@ -99,9 +99,14 @@ export default defineComponent({
       return +this.$route.params.ftId;
     },
     reviewers(): Reviewer<"FT">[] {
-      return this.selectedTask.festivalActivity.hasSupplyRequest
+      const potentialReviewer: Reviewer<"FT">[] = this.selectedTask
+        .festivalActivity.hasSupplyRequest
         ? [humain, matos, elec]
         : [humain, matos];
+
+      return potentialReviewer.filter((team) =>
+        this.$accessor.user.isMemberOf(team),
+      );
     },
   },
   async mounted() {
