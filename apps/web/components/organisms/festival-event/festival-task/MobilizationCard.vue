@@ -1,6 +1,18 @@
 <template>
   <v-card>
-    <v-card-title> Mobilisations </v-card-title>
+    <v-card-title>
+      Mobilisations
+      <v-btn
+        fab
+        dark
+        small
+        class="calendar-btn"
+        color="primary"
+        @click="openCalendar"
+      >
+        <v-icon dark> mdi-calendar-blank </v-icon>
+      </v-btn>
+    </v-card-title>
 
     <v-card-text>
       <MobilizationTable
@@ -21,6 +33,7 @@ import { AddMobilizationForm } from "@overbookd/http";
 export default defineComponent({
   name: "MobilizationCard",
   components: { MobilizationTable },
+  emits: ["open:calendar"],
   methods: {
     addMobilization(mobilization: AddMobilizationForm) {
       this.$accessor.festivalTask.addMobilization(mobilization);
@@ -37,6 +50,15 @@ export default defineComponent({
     removeMobilization(mobilization: Mobilization) {
       this.$accessor.festivalTask.removeMobilization(mobilization.id);
     },
+    openCalendar() {
+      this.$emit("open:calendar");
+    },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.calendar-btn {
+  margin-left: 10px;
+}
+</style>
