@@ -29,7 +29,7 @@ export interface MemberRepository {
 export class ForgetMember {
   constructor(private readonly members: MemberRepository) {}
 
-  async forgetMe({ email, password }: Credentials) {
+  async me({ email, password }: Credentials) {
     const [member, hasTasks, hasDebts, hasTransactions] = await Promise.all([
       this.members.authenticate({ email, password }),
       this.members.hasTasks(email),
@@ -47,7 +47,7 @@ export class ForgetMember {
     return strategy.init(strategyInitializer).forget();
   }
 
-  async forgetHim(email: string) {
+  async him(email: string) {
     const [hasTasks, hasDebts, hasTransactions, id] = await Promise.all([
       this.members.hasTasks(email),
       this.members.hasDebts(email),

@@ -24,13 +24,43 @@ import {
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
 import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { IProvidePeriod, OverDate } from "@overbookd/period";
+import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
+
+type Member = {
+  forget: Readonly<ForgetMember>;
+  register: Readonly<RegisterNewcomer>;
+};
+
+type Service = {
+  event: Readonly<DomainEventService>;
+  availability: Readonly<VolunteerAvailabilityService>;
+};
+
+const VOLUNTEER_BRIEFING_DATE = "2024-05-13";
+const VOLUNTEER_BRIEFING_START_HOUR = 18;
+const VOLUNTEER_BRIEFING_END_HOUR = 20;
+
+const VOLUNTEER_BRIEFING_START = OverDate.init({
+  date: VOLUNTEER_BRIEFING_DATE,
+  hour: VOLUNTEER_BRIEFING_START_HOUR,
+}).date;
+
+const VOLUNTEER_BRIEFING_END = OverDate.init({
+  date: VOLUNTEER_BRIEFING_DATE,
+  hour: VOLUNTEER_BRIEFING_END_HOUR,
+}).date;
+
+const VOLUNTEER_BRIEFING_PERIOD: IProvidePeriod = {
+  start: VOLUNTEER_BRIEFING_START,
+  end: VOLUNTEER_BRIEFING_END,
+};
 
 export class RegistrationService {
   constructor(
     private readonly enrollNewcomersRepository: EnrollNewcomersRepository,
-    private readonly registerNewcomer: RegisterNewcomer,
-    private readonly eventStore: DomainEventService,
-    private readonly forgetMember: ForgetMember,
+    private readonly member: Member,
+    private readonly service: Service,
   ) {}
 
   async register(
@@ -45,7 +75,7 @@ export class RegistrationService {
 
     const membership = this.getMembership(token);
 
-    const registree = await this.registerNewcomer.fromRegisterForm(
+    const registree = await this.member.register.fromRegisterForm(
       fulfilledRegistration,
       membership,
     );
@@ -61,14 +91,14 @@ export class RegistrationService {
     registree: NewcomerRegistered<Membership>,
   ) {
     if (isAdherentRegistered(registree)) {
-      return this.eventStore.publish({
+      return this.service.event.publish({
         type: ADHERENT_REGISTERED,
         data: registree,
       });
     }
 
     if (isVolunteerRegistered(registree)) {
-      return this.eventStore.publish({
+      return this.service.event.publish({
         type: VOLUNTEER_REGISTERED,
         data: registree,
       });
@@ -104,6 +134,15 @@ export class RegistrationService {
   }: EnrollNewcomersForm): Promise<void> {
     const newcomersToEnroll = EnrollNewcomers.with(newcomers).to(team);
     await this.enrollNewcomersRepository.enroll(newcomersToEnroll);
+    if (team !== "soft") return;
+
+    await Promise.all(
+      newcomersToEnroll.map(({ id }) =>
+        this.service.availability.addAvailabilities(id, [
+          VOLUNTEER_BRIEFING_PERIOD,
+        ]),
+      ),
+    );
   }
 
   async forgetMe(credentials: Credentials, token: string) {
@@ -118,11 +157,11 @@ export class RegistrationService {
       );
     }
 
-    await this.forgetMember.forgetMe(credentials);
+    await this.member.forget.me(credentials);
   }
 
   async forgetHim(email: string) {
-    return this.forgetMember.forgetHim(email);
+    return this.member.forget.him(email);
   }
 
   private checkForgetRequestValidity(token: string, email: string) {

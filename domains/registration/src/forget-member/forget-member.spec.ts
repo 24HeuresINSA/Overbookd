@@ -55,7 +55,7 @@ const withTransactionsMember: StoredMember = {
 };
 
 describe("Forget member", () => {
-  let forgetMember: ForgetMember;
+  let forget: ForgetMember;
   let memberRepository: InMemoryMemberRepository;
   beforeEach(() => {
     memberRepository = new InMemoryMemberRepository([
@@ -64,14 +64,14 @@ describe("Forget member", () => {
       withoutTransactionsMember,
       withTransactionsMember,
     ]);
-    forgetMember = new ForgetMember(memberRepository);
+    forget = new ForgetMember(memberRepository);
   });
   describe("when asking to forget me", () => {
     describe("when I submit a wrong password", () => {
       it("should indicate that we can't forget about member without the right password", async () => {
         expect(
           async () =>
-            await forgetMember.forgetMe({
+            await forget.me({
               email: withoutTransactionsMember.email,
               password: "qwertyui",
             }),
@@ -82,7 +82,7 @@ describe("Forget member", () => {
       it("should indicate that we can't forget about assigned member", async () => {
         expect(
           async () =>
-            await forgetMember.forgetMe({
+            await forget.me({
               email: withTaskMember.email,
               password: withTaskMember.password,
             }),
@@ -93,7 +93,7 @@ describe("Forget member", () => {
       it("should indicate that we can't forget about in debt member", async () => {
         expect(
           async () =>
-            await forgetMember.forgetMe({
+            await forget.me({
               email: inDebtMember.email,
               password: inDebtMember.password,
             }),
@@ -102,7 +102,7 @@ describe("Forget member", () => {
     });
     describe("when I don't have transactions", () => {
       it("should remove member data from storage", async () => {
-        await forgetMember.forgetMe({
+        await forget.me({
           email: withoutTransactionsMember.email,
           password: withoutTransactionsMember.password,
         });
@@ -113,7 +113,7 @@ describe("Forget member", () => {
     });
     describe("when I have transactions", () => {
       it("should anonymize member personal data", async () => {
-        const anonymizedMember = await forgetMember.forgetMe({
+        const anonymizedMember = await forget.me({
           email: withTransactionsMember.email,
           password: withTransactionsMember.password,
         });
@@ -132,28 +132,27 @@ describe("Forget member", () => {
     describe("when he has task assigned in futur", () => {
       it("should indicate that we can't forget about assigned member", async () => {
         expect(
-          async () => await forgetMember.forgetHim(withTaskMember.email),
+          async () => await forget.him(withTaskMember.email),
         ).rejects.toThrow(ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
       });
     });
     describe("when he is in debt", () => {
       it("should indicate that we can't forget about in debt member", async () => {
         expect(
-          async () => await forgetMember.forgetHim(inDebtMember.email),
+          async () => await forget.him(inDebtMember.email),
         ).rejects.toThrow(IN_DEBT_ERROR_MESSAGE);
       });
     });
     describe("when he has transactions", () => {
       it("should indicate that we can't forget about member with transactions", async () => {
         expect(
-          async () =>
-            await forgetMember.forgetHim(withTransactionsMember.email),
+          async () => await forget.him(withTransactionsMember.email),
         ).rejects.toThrow(ALREADY_HAVE_TRANSACTIONS);
       });
     });
     describe("when he doesn't have transactions", () => {
       it("should remove member data from storage", async () => {
-        await forgetMember.forgetHim(withoutTransactionsMember.email);
+        await forget.him(withoutTransactionsMember.email);
         expect(memberRepository.storedMembers).not.toContainEqual(
           withoutTransactionsMember,
         );
