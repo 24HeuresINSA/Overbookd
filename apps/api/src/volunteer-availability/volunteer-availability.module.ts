@@ -6,5 +6,6 @@ import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 @Module({
   controllers: [VolunteerAvailabilityController],
   providers: [VolunteerAvailabilityService, PrismaService],
+  exports: [VolunteerAvailabilityService],
 })
 export class VolunteerAvailabilityModule {}

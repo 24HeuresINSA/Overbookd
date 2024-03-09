@@ -7,7 +7,6 @@
       :expanded.sync="displayedVolunteers"
       :items-per-page="30"
       show-expand
-      show-select
       @click:row="openOrCloseVolunteerDetails"
     >
       <template #item.registeredAt="{ item }">
@@ -20,6 +19,13 @@
 
       <template #item.teams="{ item }">
         <TeamChip v-for="team of item.teams" :key="team" :team="team" />
+      </template>
+
+      <template #item.action="{ item }">
+        <v-btn color="success" small @click="enroll(item)">
+          <v-icon left> mdi-check </v-icon>
+          Enrôler
+        </v-btn>
       </template>
 
       <template #expanded-item="{ item }">
@@ -91,7 +97,6 @@ import AvailabilitiesSumupV2 from "~/components/molecules/availabilities/Availab
 
 type RegistrationsData = {
   headers: Header[];
-  selectedVolunteers: EnrollableVolunteer[];
   displayedVolunteers: EnrollableVolunteer[];
 };
 
@@ -100,7 +105,6 @@ export default defineComponent({
   components: { SnackNotificationContainer, TeamChip, AvailabilitiesSumupV2 },
   data: (): RegistrationsData => ({
     headers: [
-      { text: "", value: "data-table-select", sortable: false },
       { text: "Inscription", value: "registeredAt" },
       { text: "Nom", value: "name" },
       { text: "Charisme", value: "charisma" },
@@ -108,7 +112,6 @@ export default defineComponent({
       { text: "Action", value: "action", sortable: false },
       { text: "", value: "data-table-expand", sortable: false },
     ],
-    selectedVolunteers: [],
     displayedVolunteers: [],
   }),
   computed: {
@@ -139,6 +142,9 @@ export default defineComponent({
     },
     castToPeriods(periodProviders: IProvidePeriod[]): Period[] {
       return periodProviders.map((period) => Period.init(period));
+    },
+    enroll(volunteer: EnrollableVolunteer) {
+      this.$accessor.registration.enrollNewVolunteers([volunteer]);
     },
     formatPhoneLink,
     formatEmailLink,

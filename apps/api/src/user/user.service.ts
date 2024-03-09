@@ -190,7 +190,7 @@ export class UserService {
 
     if (!user) return;
 
-    return this.forgetMember.forgetHim(user.email);
+    return this.forgetMember.him(user.email);
   }
 
   async getVolunteerAssignmentStats(
