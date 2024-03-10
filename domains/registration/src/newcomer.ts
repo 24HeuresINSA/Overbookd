@@ -1,7 +1,11 @@
-import { TeamCode, Teams } from "./register-form";
+import { TEAM_CODES, Teams } from "./register-form";
 
-export function isJoinableTeams(teams: TeamCode[]): teams is Teams {
-  return teams.length <= 2;
+export function isJoinableTeams(teams: string[]): teams is Teams {
+  const maxTwoTeams = teams.length <= 2;
+  const onlyJoinableTeams = teams.every((team) =>
+    TEAM_CODES.some((code) => code === team),
+  );
+  return maxTwoTeams && onlyJoinableTeams;
 }
 
 export type Registree = {

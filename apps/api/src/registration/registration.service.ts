@@ -128,6 +128,12 @@ export class RegistrationService {
     return this.enrollNewcomersRepository.findEnrollableVolunteers();
   }
 
+  getVolunteer(
+    volunteerId: EnrollableVolunteer["id"],
+  ): Promise<EnrollableVolunteer> {
+    return this.enrollNewcomersRepository.findEnrollableVolunteer(volunteerId);
+  }
+
   async enrollNewcomers({
     newcomers,
     team,

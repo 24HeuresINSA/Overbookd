@@ -9,6 +9,7 @@ import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";
 import { castPeriods } from "~/utils/models/period.model";
+import { updateItemToList } from "@overbookd/list";
 
 type State = {
   adherents: EnrollableAdherent[];
@@ -54,6 +55,17 @@ export const mutations = mutationTree(state, {
   REMOVE_INVITE_NEW_ADHERENT_LINK(state) {
     state.inviteNewAdherentLink = undefined;
   },
+  UPDATE_VOLUNTEER(state, volunteer: EnrollableVolunteer) {
+    const volunteerIndex = state.volunteers.findIndex(
+      ({ id }) => id === volunteer.id,
+    );
+    if (volunteerIndex === -1) return;
+    state.volunteers = updateItemToList(
+      state.volunteers,
+      volunteerIndex,
+      volunteer,
+    );
+  },
 });
 
 export const actions = actionTree(
@@ -69,6 +81,16 @@ export const actions = actionTree(
       const res = await registrationRepo.getVolunteers(this);
       if (!res) return;
       commit("SET_VOLUNTEERS", castVolunteersWithDate(res.data));
+    },
+
+    async updateVolunteerInformation(
+      { commit },
+      volunteerId: EnrollableVolunteer["id"],
+    ) {
+      const res = await registrationRepo.getVolunteer(this, volunteerId);
+      if (!res) return;
+
+      commit("UPDATE_VOLUNTEER", castVolunteerWithDate(res.data));
     },
 
     async enrollNewAdherents({ commit }, adherents: EnrollableAdherent[]) {
@@ -170,10 +192,15 @@ function castAdherentsWithDate(
 function castVolunteersWithDate(
   volunteers: HttpStringified<EnrollableVolunteer[]>,
 ): EnrollableVolunteer[] {
-  return volunteers.map((volunteer) => ({
+  return volunteers.map(castVolunteerWithDate);
+}
+function castVolunteerWithDate(
+  volunteer: HttpStringified<EnrollableVolunteer>,
+): EnrollableVolunteer {
+  return {
     ...volunteer,
     registeredAt: new Date(volunteer.registeredAt),
     birthdate: new Date(volunteer.birthdate),
     availabilities: castPeriods(volunteer.availabilities),
-  }));
+  };
 }

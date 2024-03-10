@@ -25,6 +25,11 @@ type AvailabilitySelection = {
   date: InitOverDate;
 };
 
+type UpdateVolunteerAvailabilities = {
+  volunteerId: number;
+  availabilities: Period[];
+};
+
 export const mutations = mutationTree(state, {
   INIT_AVAILABILITIES(state, recorded: Period[]) {
     state.availabilities = Availabilities.init({ recorded });
@@ -91,16 +96,12 @@ export const actions = actionTree(
     },
 
     async overrideVolunteerAvailabilities(
-      { commit, state, dispatch, rootState },
-      userId: number,
+      { commit },
+      { volunteerId, availabilities }: UpdateVolunteerAvailabilities,
     ) {
       const res = await safeCall(
         this,
-        repo.overrideVolunteerAvailabilities(
-          this,
-          userId,
-          state.availabilities.list,
-        ),
+        repo.overrideVolunteerAvailabilities(this, volunteerId, availabilities),
         {
           successMessage: "Disponibilitiés sauvegardées 🥳",
           errorMessage: "Disponibilitiés non sauvegardées 😢",
@@ -108,10 +109,6 @@ export const actions = actionTree(
       );
       if (!res) return;
       commit("INIT_AVAILABILITIES", castPeriods(res.data));
-
-      dispatch("user/findUserById", rootState.user.selectedUser.id, {
-        root: true,
-      });
     },
 
     selectAvailability({ commit }, selected: AvailabilitySelection) {

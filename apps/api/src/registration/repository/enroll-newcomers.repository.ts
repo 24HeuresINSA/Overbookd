@@ -5,4 +5,7 @@ export interface EnrollNewcomersRepository {
   enroll: (newcomers: EnrolledNewcomer[]) => Promise<void>;
   findEnrollableAdherents: () => Promise<EnrollableAdherent[]>;
   findEnrollableVolunteers: () => Promise<EnrollableVolunteer[]>;
+  findEnrollableVolunteer: (
+    volunteerId: EnrollableVolunteer["id"],
+  ) => Promise<EnrollableVolunteer | null>;
 }
