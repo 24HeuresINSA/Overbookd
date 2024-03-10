@@ -83,7 +83,7 @@ export const actions = actionTree(
       commit("SET_VOLUNTEERS", castVolunteersWithDate(res.data));
     },
 
-    async updateVolunteerInformation(
+    async fetchVolunteerInformation(
       { commit },
       volunteerId: EnrollableVolunteer["id"],
     ) {

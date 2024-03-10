@@ -160,7 +160,7 @@ export default defineComponent({
           availabilities,
         },
       );
-      this.$accessor.registration.updateVolunteerInformation(volunteerId);
+      this.$accessor.registration.fetchVolunteerInformation(volunteerId);
     },
     formatPhoneLink,
     formatEmailLink,
