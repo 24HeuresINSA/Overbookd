@@ -6,6 +6,7 @@ import {
   HttpCode,
   Logger,
   Param,
+  ParseIntPipe,
   Post,
   UseFilters,
   UseGuards,
@@ -35,7 +36,7 @@ import {
 import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
 import { ENROLL_HARD, ENROLL_SOFT } from "@overbookd/permission";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
-import { EnrollableAdherent } from "@overbookd/http";
+import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("registration")
@@ -118,6 +119,21 @@ export class RegistrationController {
   })
   getEnrollableVolunteers(): Promise<EnrollableVolunteerResponseDto[]> {
     return this.registrationService.getVolunteers();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_SOFT)
+  @Get("volunteers/:volunteerId")
+  @ApiResponse({
+    status: 200,
+    description: "Get volunteer",
+    type: EnrollableVolunteerResponseDto,
+  })
+  getEnrollableVolunteer(
+    @Param("volunteerId", ParseIntPipe) volunteerId: EnrollableVolunteer["id"],
+  ): Promise<EnrollableVolunteerResponseDto> {
+    return this.registrationService.getVolunteer(volunteerId);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

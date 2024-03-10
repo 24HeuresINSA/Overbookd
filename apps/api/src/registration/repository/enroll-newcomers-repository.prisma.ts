@@ -2,7 +2,6 @@ import {
   ADHERENT,
   EnrolledNewcomer,
   Teams,
-  VOLUNTEER,
   isJoinableTeams,
 } from "@overbookd/registration";
 import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
@@ -13,6 +12,7 @@ import {
   SELECT_ADHERENT,
   NOT_VOLUNTEER_YET,
   DatabaseEnrollableVolunteer,
+  IS_ENROLLABLE_VOLUNTEER,
 } from "./enroll-newcomers.query";
 import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
 import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
@@ -54,17 +54,21 @@ export class PrismaEnrollNewcomersRepository
   async findEnrollableVolunteers(): Promise<EnrollableVolunteer[]> {
     const volunteers = await this.prisma.user.findMany({
       orderBy: { id: "desc" },
-      where: {
-        isDeleted: false,
-        OR: [
-          { registrationMembership: null },
-          { registrationMembership: VOLUNTEER },
-        ],
-        ...NOT_VOLUNTEER_YET,
-      },
+      where: IS_ENROLLABLE_VOLUNTEER,
       select: SELECT_VOLUNTEER,
     });
     return volunteers.map(formatToEnrollableVolunteer);
+  }
+
+  async findEnrollableVolunteer(
+    volunteerId: number,
+  ): Promise<EnrollableVolunteer | null> {
+    const volunteer = await this.prisma.user.findFirst({
+      where: { id: volunteerId, ...IS_ENROLLABLE_VOLUNTEER },
+      select: SELECT_VOLUNTEER,
+    });
+    if (!volunteer) return null;
+    return formatToEnrollableVolunteer(volunteer);
   }
 }
 

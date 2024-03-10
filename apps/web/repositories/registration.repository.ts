@@ -33,6 +33,15 @@ export class RegistrationRepository {
     );
   }
 
+  static getVolunteer(
+    context: Context,
+    volunteerId: EnrollableVolunteer["id"],
+  ) {
+    return context.$axios.get<HttpStringified<EnrollableVolunteer>>(
+      `${this.basePath}/volunteers/${volunteerId}`,
+    );
+  }
+
   static enrollNewVolunteers(context: Context, newcomers: NewcomerToEnroll[]) {
     return context.$axios.post<void>(`${this.basePath}/volunteers/enroll`, {
       newcomers,

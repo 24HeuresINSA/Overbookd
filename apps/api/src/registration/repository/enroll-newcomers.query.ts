@@ -1,4 +1,4 @@
-import { BENEVOLE_CODE, TeamCode } from "@overbookd/registration";
+import { BENEVOLE_CODE, VOLUNTEER } from "@overbookd/registration";
 import { SELECT_USER_TEAMS } from "../../user/user.query";
 import { IProvidePeriod } from "@overbookd/period";
 
@@ -24,6 +24,15 @@ export const NOT_VOLUNTEER_YET = {
   teams: { none: { team: { code: BENEVOLE_CODE } } },
 };
 
+export const IS_ENROLLABLE_VOLUNTEER = {
+  isDeleted: false,
+  OR: [
+    { registrationMembership: null },
+    { registrationMembership: VOLUNTEER } as const,
+  ],
+  ...NOT_VOLUNTEER_YET,
+};
+
 export type DatabaseEnrollableAdherent = {
   id: number;
   firstname: string;
@@ -41,4 +50,4 @@ export type DatabaseEnrollableVolunteer = DatabaseEnrollableAdherent & {
   birthdate: Date;
 };
 
-export type DatabaseTeamCode = { team: { code: TeamCode } };
+export type DatabaseTeamCode = { team: { code: string } };

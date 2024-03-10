@@ -25,27 +25,26 @@ import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import {
   Availabilities,
-  AvailabilityDate,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { isEndOfAvailabilityPeriod } from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
-import {
-  SavedCharismaPeriod,
-  getPeriodCharisma,
-} from "~/utils/models/charisma-period.model";
+import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
 
 type AvailabilitiesSumupData = {
   calendarMarker: Date;
   availabilitiesAggregate: Availabilities;
-  charismaDelta: number;
 };
 
 export default defineComponent({
   name: "AvailabilitiesSumup",
   components: { OverCalendar },
+  model: {
+    prop: "availabilities",
+    event: "update:availabilities",
+  },
   props: {
     availabilities: {
       type: Array as () => Period[],
@@ -56,10 +55,10 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ["update:availabilities"],
   data: (): AvailabilitiesSumupData => ({
     calendarMarker: new Date(),
     availabilitiesAggregate: Availabilities.init(),
-    charismaDelta: 0,
   }),
   computed: {
     charismaPeriods(): SavedCharismaPeriod[] {
@@ -118,7 +117,6 @@ export default defineComponent({
         selected,
         recorded,
       });
-      this.charismaDelta = 0;
     },
     isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
@@ -137,18 +135,16 @@ export default defineComponent({
     },
     selectAvailability(date: InitOverDate) {
       this.availabilitiesAggregate = this.availabilitiesAggregate.select(date);
-      const charisma = this.getAssociatedCharisma(date);
-      this.charismaDelta += charisma;
+      if (this.errors.length > 0) return;
+
+      this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
     unSelectAvailability(date: InitOverDate) {
       this.availabilitiesAggregate =
         this.availabilitiesAggregate.unselect(date);
-      const charisma = this.getAssociatedCharisma(date);
-      this.charismaDelta -= charisma;
-    },
-    getAssociatedCharisma(date: InitOverDate): number {
-      const { period } = AvailabilityDate.init(date);
-      return getPeriodCharisma(this.charismaPeriods, period);
+      if (this.errors.length > 0) return;
+
+      this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
   },
 });

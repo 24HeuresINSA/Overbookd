@@ -67,8 +67,12 @@
                 </span>
               </div>
               <AvailabilitiesSumupV2
+                :readonly="false"
                 :availabilities="castToPeriods(item.availabilities)"
-                readonly
+                @update:availabilities="
+                  (availabilities) =>
+                    updateVolunteerAvailabilities(item.id, availabilities)
+                "
               />
             </div>
           </div>
@@ -145,6 +149,18 @@ export default defineComponent({
     },
     enroll(volunteer: EnrollableVolunteer) {
       this.$accessor.registration.enrollNewVolunteers([volunteer]);
+    },
+    async updateVolunteerAvailabilities(
+      volunteerId: EnrollableVolunteer["id"],
+      availabilities: Period[],
+    ) {
+      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
+        {
+          volunteerId,
+          availabilities,
+        },
+      );
+      this.$accessor.registration.fetchVolunteerInformation(volunteerId);
     },
     formatPhoneLink,
     formatEmailLink,

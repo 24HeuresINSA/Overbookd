@@ -6,6 +6,16 @@ export const TECKOS_CODE = "teckos";
 export const TENDRESTIVAL_CODE = "tendrestival";
 export const CVL_CODE = "cvl";
 
+export const TEAM_CODES: TeamCode[] = [
+  BDE_CODE,
+  STRASBOURG_CODE,
+  KFET_CODE,
+  KARNA_CODE,
+  TECKOS_CODE,
+  TENDRESTIVAL_CODE,
+  CVL_CODE,
+];
+
 export type TeamCode =
   | typeof BDE_CODE
   | typeof STRASBOURG_CODE

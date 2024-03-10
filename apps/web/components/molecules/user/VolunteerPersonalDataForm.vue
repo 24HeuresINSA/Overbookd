@@ -258,9 +258,12 @@ export default Vue.extend({
     },
 
     async saveAvailabilities() {
+      const availabilities =
+        this.$accessor.volunteerAvailability.availabilities.list;
       await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        this.selectedVolunteer.id,
+        { volunteerId: this.selectedVolunteer.id, availabilities },
       );
+      this.$accessor.user.findUserById(this.selectedVolunteer.id);
       this.$emit("close-dialog");
     },
 
