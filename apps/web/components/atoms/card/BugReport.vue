@@ -3,7 +3,7 @@
     <v-card-title>Signaler un bug ou feature request</v-card-title>
     <v-card-text>
       <h4>
-        Pour signaler un bug veuillez envoyer un mail à <br />
+        Pour signaler un bug, envoie un mail à <br />
         <code>{{ bugReportEmail }}</code>
         <br />
         en précisant le problème rencontré et en joignant une capture d'écran.
