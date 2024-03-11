@@ -80,7 +80,7 @@
             v-model="email"
             prepend-icon="mdi-email-outline"
             label="Email"
-                        autocomplete="email"
+            autocomplete="email"
             inputmode="email"
             readonly
             hint="Pour changer ton email il faut passer par les responsables bénévoles ou le.a sécretaire général.e. 🙏"

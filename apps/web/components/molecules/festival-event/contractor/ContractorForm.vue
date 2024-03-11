@@ -31,8 +31,8 @@
       <v-text-field
         v-model="email"
         label="Email"
-                    autocomplete="email"
-            inputmode="email"
+        autocomplete="email"
+        inputmode="email"
         @keydown.enter="confirmContractor"
       />
       <v-text-field
