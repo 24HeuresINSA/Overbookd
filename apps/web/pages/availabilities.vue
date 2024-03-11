@@ -16,6 +16,10 @@
         <br />
         Les créneaux verts ne sont plus modifiables une fois sauvegardés.
       </p>
+      <v-alert icon="mdi-lightbulb-alert-outline" prominent text type="info">
+        <strong>Astuce</strong>: Tu peux sélectionner tous les créneaux d'une
+        journée en cliquant sur le chiffre de la date.
+      </v-alert>
       <h2>Mon Charisme : {{ charisma }} 😎</h2>
     </div>
     <AvailabilitiesStepper />
