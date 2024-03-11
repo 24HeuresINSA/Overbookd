@@ -115,6 +115,7 @@ export default defineComponent({
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+    min-width: 100%;
   }
 }
 </style>
