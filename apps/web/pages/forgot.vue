@@ -7,6 +7,7 @@
           <v-text-field
             v-model="email"
             label="email"
+            name="email"
             autocomplete="email"
             inputmode="email"
             type="text"
