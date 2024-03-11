@@ -1,3 +1,12 @@
+## [2.22.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.0...v2.22.1) (2024-03-11)
+
+
+### Bug Fixes
+
+* **profile:** add link to profile picture alert catch phrase. [#1648](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1648) ([307d6b4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/307d6b43f05625ff9e71efd606c88197866d2f53))
+* **registrations:** transformed soft message to singular [#1647](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1647) ([b1a7b2e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b1a7b2e1bc3673d719234ecf2abb718b4626f65d))
+* **volunteer-availability:** add helper text about entire day selection. [#1646](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1646) ([31a6612](https://gitlab.com/24-heures-insa/overbookd-mono/commit/31a6612fc979a6034414baed0c068ad3df6ebc9d))
+
 ## [2.22.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.21.0...v2.22.0) (2024-03-11)
 
 
