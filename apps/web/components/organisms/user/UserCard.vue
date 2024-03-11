@@ -80,6 +80,7 @@
             v-model="email"
             prepend-icon="mdi-email-outline"
             label="Email"
+            name="email"
             autocomplete="email"
             inputmode="email"
             readonly

@@ -62,7 +62,6 @@
                   <v-text-field
                     v-model="item.email"
                     label="Email"
-                    autocomplete="email"
                     inputmode="email"
                     readonly
                   ></v-text-field>

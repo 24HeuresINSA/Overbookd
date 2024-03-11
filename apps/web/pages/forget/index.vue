@@ -10,6 +10,7 @@
             <v-text-field
               v-model="email"
               label="Email*"
+              name="email"
               autocomplete="email"
               inputmode="email"
               required

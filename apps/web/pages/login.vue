@@ -14,6 +14,7 @@
           <v-text-field
             v-model="credentials.email"
             label="email"
+            name="email"
             autocomplete="email"
             inputmode="email"
             type="text"
