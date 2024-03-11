@@ -1,9 +1,9 @@
 .docker:
   stage: docker-build
   interruptible: true
-  image: docker:25.0.3
+  image: docker:25.0.4
   services:
-    - name: docker:25.0.3
+    - name: docker:25.0.4
       command: ["--experimental"]
   needs: []
 
