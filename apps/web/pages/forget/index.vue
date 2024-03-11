@@ -10,6 +10,8 @@
             <v-text-field
               v-model="email"
               label="Email*"
+              autocomplete="email"
+              inputmode="email"
               required
               :rules="[rules.required, rules.email, rules.insaEmail]"
             ></v-text-field>
