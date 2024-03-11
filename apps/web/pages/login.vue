@@ -14,6 +14,8 @@
           <v-text-field
             v-model="credentials.email"
             label="email"
+            autocomplete="email"
+            inputmode="email"
             type="text"
             required
             autofocus

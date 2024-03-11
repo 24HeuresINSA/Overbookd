@@ -7,6 +7,8 @@
           <v-text-field
             v-model="email"
             label="email"
+            autocomplete="email"
+            inputmode="email"
             type="text"
             required
             autofocus

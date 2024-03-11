@@ -53,6 +53,8 @@
       <v-text-field
         v-model="email"
         label="Email"
+        autocomplete="email"
+        inputmode="email"
         :rules="[rules.required, rules.email, rules.insaEmail]"
         persistent-hint
         :readonly="!canManageUsers"

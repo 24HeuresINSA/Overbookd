@@ -106,6 +106,8 @@
             <v-text-field
               v-model="email"
               label="Email*"
+              autocomplete="email"
+              inputmode="email"
               required
               hint="Pas d'adresse insa 🙏"
               :rules="[rules.required, rules.email, rules.insaEmail]"
