@@ -1,3 +1,20 @@
+## [2.22.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.21.0...v2.22.0) (2024-03-11)
+
+
+### Features
+
+* **registration:** allow availability update. [#1616](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1616) ([8ac75af](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8ac75af88daee67aaaf4f9ad1899241523cafd7b))
+* **registration:** enroll volunteers as soft. [#1617](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1617) ([2410075](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2410075cf945f599aa8ae6ae5f2a117f70100f31))
+
+
+### Bug Fixes
+
+* **festival-task:** display time windows on calendar. [#1619](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1619) ([f2be18c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f2be18c82a366467dad8fbeb3efd8a95a1a4a54a))
+* **profile:** allow user-facing camera usage to capture profile picture. [#1645](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1645) ([0d091cf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0d091cf4787fc74d3461f2270cd73acaf5deda9d))
+* **web:** add standard attributes to email fields. [#1644](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1644) ([21990c2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/21990c25f08deb1e7881e847dc9b052928e0f164))
+* **web:** autocomplete my email fields. [#1644](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1644) ([1c4ef54](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1c4ef5410019bb6bb9b3852e6184bdf2fbc81ea8))
+* **web:** write bug report on app. [#1643](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1643) ([3440229](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3440229840a399afbf395f9ff945fbbf2de94bac))
+
 ## [2.21.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.20.2...v2.21.0) (2024-03-08)
 
 
