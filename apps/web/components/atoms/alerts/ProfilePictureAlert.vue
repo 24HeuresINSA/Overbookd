@@ -7,12 +7,12 @@
     @input="dismiss"
   >
     <h2 class="summary">Pas de photo de profil 🥷</h2>
-    <p class="catch-phrase">Comment veux-tu qu'on te reconnaisse ?!</p>
+    <p class="catch-phrase">
+      Tu peux <nuxt-link to="/profile">y remédier</nuxt-link>.
+    </p>
     <p class="details">
-      Tu peux mettre à jour ta photo à tout moment sur
-      <nuxt-link to="/profile">ton profil</nuxt-link>. Avec une photo, il est
-      plus facile de se retrouver pendant le festival mais aussi à n'importe
-      quel évènement de l'asso.
+      Avec une photo, il est plus facile de se retrouver pendant le festival
+      mais aussi à n'importe quel évènement de l'asso.
     </p>
   </v-alert>
 </template>
