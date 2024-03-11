@@ -114,9 +114,9 @@ export const actions = actionTree(
         registrationRepo.enrollNewVolunteers(this, volunteers),
         {
           successMessage:
-            "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que softs ✅",
+            "Le nouvel arrivant sélectionné a bien été enrôlé en tant que soft ✅",
           errorMessage:
-            "Les nouveaux arrivants sélectionnés n'ont pas pu être enrôlés ❌",
+            "Le nouvel arrivant sélectionné n'a pas pu être enrôlé ❌",
         },
       );
       if (!res) return;
