@@ -10,6 +10,7 @@ import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";
 import { castPeriods } from "~/utils/models/period.model";
 import { updateItemToList } from "@overbookd/list";
+import { INVITE_STAFF_LINK } from "@overbookd/configuration";
 
 type State = {
   staffs: EnrollableStaff[];
@@ -19,9 +20,6 @@ type State = {
 
 const registrationRepo = RepoFactory.RegistrationRepository;
 const configurationRepo = RepoFactory.ConfigurationRepository;
-
-//TODO: update config key
-const INVITE_STAFF_LINK = "inviteNewAdherentLink";
 
 export const state = (): State => ({
   staffs: [],
@@ -132,22 +130,10 @@ export const actions = actionTree(
       commit("SET_INVITE_STAFF_LINK", link);
     },
 
-    async generateInviteStaffLink({ dispatch }) {
+    async generateInviteStaffLink({ commit }) {
       const res = await safeCall(this, registrationRepo.generateLink(this));
       if (!res) return;
-      dispatch("updateInviteStaffLink", new URL(res.data));
-    },
-
-    async updateInviteStaffLink({ commit }, link: URL) {
-      const res = await safeCall(
-        this,
-        configurationRepo.save(this, {
-          key: INVITE_STAFF_LINK,
-          value: link.href,
-        }),
-      );
-      if (!res) return;
-      commit("SET_INVITE_STAFF_LINK", link);
+      commit("SET_INVITE_STAFF_LINK", new URL(res.data));
     },
 
     async register(_, { token, form }: { token?: string; form: RegisterForm }) {

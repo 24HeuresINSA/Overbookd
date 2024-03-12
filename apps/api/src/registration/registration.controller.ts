@@ -70,7 +70,7 @@ export class RegistrationController {
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
   @Get("invite-staff-link")
-  generateStaffInvitationLink() {
+  generateStaffInvitationLink(): Promise<URL> {
     return this.registrationService.invite();
   }
 

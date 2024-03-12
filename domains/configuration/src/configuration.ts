@@ -8,3 +8,6 @@ export interface Configuration<
   key: string;
   value: T;
 }
+
+//TODO: update config key
+export const INVITE_STAFF_LINK = "inviteNewAdherentLink";

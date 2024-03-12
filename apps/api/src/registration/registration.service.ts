@@ -26,6 +26,12 @@ import {
 import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { IProvidePeriod, OverDate } from "@overbookd/period";
 import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
+import { Configurations } from "./repository/configurations.repository";
+
+type Repositories = {
+  enrollNewcomers: Readonly<EnrollNewcomersRepository>;
+  configurations: Readonly<Configurations>;
+};
 
 type Member = {
   forget: Readonly<ForgetMember>;
@@ -58,7 +64,7 @@ const VOLUNTEER_BRIEFING_PERIOD: IProvidePeriod = {
 
 export class RegistrationService {
   constructor(
-    private readonly enrollNewcomersRepository: EnrollNewcomersRepository,
+    private readonly repositories: Repositories,
     private readonly member: Member,
     private readonly service: Service,
   ) {}
@@ -114,24 +120,28 @@ export class RegistrationService {
     });
   }
 
-  invite(): URL {
+  async invite(): Promise<URL> {
     const domain = process.env.DOMAIN ?? "";
     const secret = jwtConstants.secret;
-    return InviteStaff.byLink({ domain, secret });
+    const link = InviteStaff.byLink({ domain, secret });
+    await this.repositories.configurations.saveInviteStaffLink(link.toString());
+    return link;
   }
 
   getStaffs(): Promise<EnrollableStaff[]> {
-    return this.enrollNewcomersRepository.findEnrollableStaffs();
+    return this.repositories.enrollNewcomers.findEnrollableStaffs();
   }
 
   getVolunteers(): Promise<EnrollableVolunteer[]> {
-    return this.enrollNewcomersRepository.findEnrollableVolunteers();
+    return this.repositories.enrollNewcomers.findEnrollableVolunteers();
   }
 
   getVolunteer(
     volunteerId: EnrollableVolunteer["id"],
   ): Promise<EnrollableVolunteer> {
-    return this.enrollNewcomersRepository.findEnrollableVolunteer(volunteerId);
+    return this.repositories.enrollNewcomers.findEnrollableVolunteer(
+      volunteerId,
+    );
   }
 
   async enrollNewcomers({
@@ -139,7 +149,7 @@ export class RegistrationService {
     team,
   }: EnrollNewcomersForm): Promise<void> {
     const newcomersToEnroll = EnrollNewcomers.with(newcomers).to(team);
-    await this.enrollNewcomersRepository.enroll(newcomersToEnroll);
+    await this.repositories.enrollNewcomers.enroll(newcomersToEnroll);
     if (team !== "soft") return;
 
     await Promise.all(
