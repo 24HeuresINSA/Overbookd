@@ -22,7 +22,6 @@ enum TransactionType {
 }
 
 enum RegistrationMembership {
-  ADHERENT
   VOLUNTEER
   STAFF
 
