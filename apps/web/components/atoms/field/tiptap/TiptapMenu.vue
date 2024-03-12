@@ -52,12 +52,6 @@ export default {
           isActive: () => this.editor.isActive("code"),
         },
         {
-          icon: "mark-pen-line",
-          title: "Highlight",
-          action: () => this.editor.chain().focus().toggleHighlight().run(),
-          isActive: () => this.editor.isActive("highlight"),
-        },
-        {
           type: "divider",
         },
         {
@@ -75,12 +69,6 @@ export default {
           isActive: () => this.editor.isActive("heading", { level: 2 }),
         },
         {
-          icon: "paragraph",
-          title: "Paragraph",
-          action: () => this.editor.chain().focus().setParagraph().run(),
-          isActive: () => this.editor.isActive("paragraph"),
-        },
-        {
           icon: "list-unordered",
           title: "Bullet List",
           action: () => this.editor.chain().focus().toggleBulletList().run(),
@@ -93,12 +81,6 @@ export default {
           isActive: () => this.editor.isActive("orderedList"),
         },
         {
-          icon: "list-check-2",
-          title: "Task List",
-          action: () => this.editor.chain().focus().toggleTaskList().run(),
-          isActive: () => this.editor.isActive("taskList"),
-        },
-        {
           icon: "code-box-line",
           title: "Code Block",
           action: () => this.editor.chain().focus().toggleCodeBlock().run(),
@@ -108,18 +90,9 @@ export default {
           type: "divider",
         },
         {
-          icon: "double-quotes-l",
-          title: "Blockquote",
-          action: () => this.editor.chain().focus().toggleBlockquote().run(),
-          isActive: () => this.editor.isActive("blockquote"),
-        },
-        {
           icon: "separator",
           title: "Horizontal Rule",
           action: () => this.editor.chain().focus().setHorizontalRule().run(),
-        },
-        {
-          type: "divider",
         },
         {
           icon: "text-wrap",
