@@ -139,6 +139,16 @@ describe("Approve festival task", () => {
       ).rejects.toThrow(new ShouldAssignDrive("FT"));
     });
   });
+  describe("when approving task even with not assigned to drive inquiries as humain", () => {
+    it("should approve task seamlessly", async () => {
+      const approval: Approval<"FT"> = { team: humain, reviewer: george };
+      const { reviews } = await review.approve(
+        withInvalidInquiries.id,
+        approval,
+      );
+      expect(reviews.humain).toBe(APPROVED);
+    });
+  });
   describe("when approving an already approved festival task", () => {
     it("should indicate task already approved", async () => {
       const approval: Approval<"FT"> = { team: humain, reviewer: george };
