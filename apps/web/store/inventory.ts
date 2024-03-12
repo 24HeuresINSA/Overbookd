@@ -6,9 +6,7 @@ import {
 } from "~/domain/inventory/inventory-record";
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
-import { RepoFactory } from "~/repositories/repo-factory";
-
-const inventoryRepository = RepoFactory.InventoryRepository;
+import { InventoryRepository } from "~/repositories/inventory.repository";
 
 export interface InventoryGroupedRecord {
   gear: Gear;
@@ -57,36 +55,39 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, mutations },
   {
-    async importInventory(context, records: InventoryRecord[]): Promise<void> {
+    async importInventory(
+      { commit },
+      records: InventoryRecord[],
+    ): Promise<void> {
       const res = await safeCall(
         this,
-        inventoryRepository.setupInventory(this, records),
+        InventoryRepository.setupInventory(this, records),
         {
           successMessage: "L'inventaire a ete reinitialise avec succes ✅",
           errorMessage: "Erreur lors de la reinitialisation de l'inventaire ❌",
         },
       );
       if (!res) return;
-      context.commit("SET_GROUPED_RECORDS", res.data);
+      commit("SET_GROUPED_RECORDS", res.data);
     },
 
-    async fetchGroupedRecords(context): Promise<void> {
+    async fetchGroupedRecords({ commit }): Promise<void> {
       const res = await safeCall(
         this,
-        inventoryRepository.getGroupedRecords(this),
+        InventoryRepository.getGroupedRecords(this),
       );
       if (!res) return;
-      context.commit("SET_GROUPED_RECORDS", res.data);
+      commit("SET_GROUPED_RECORDS", res.data);
     },
 
-    async fetchRecords(context, gearId: number): Promise<void> {
+    async fetchRecords({ commit }, gearId: number): Promise<void> {
       console.warn("fetching details for gear #", gearId);
       const res = await safeCall(
         this,
-        inventoryRepository.getRecords(this, gearId),
+        InventoryRepository.getRecords(this, gearId),
       );
       if (!res) return;
-      context.commit("UPDATE_GEAR_RECORDS", { records: res.data, gearId });
+      commit("UPDATE_GEAR_RECORDS", { records: res.data, gearId });
     },
   },
 );

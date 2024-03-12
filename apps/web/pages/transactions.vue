@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import { RepoFactory } from "~/repositories/repo-factory";
 import OverTransactions from "~/components/organisms/personal-account/OverTransactions.vue";
+import { TransactionRepository } from "~/repositories/transaction.repository";
 import { safeCall } from "~/utils/api/calls";
 import { formatUsername } from "~/utils/user/user.utils";
 
@@ -61,7 +61,7 @@ export default {
   async mounted() {
     const res = await safeCall(
       this.$store,
-      RepoFactory.TransactionRepository.getTransactions(this),
+      TransactionRepository.getTransactions(this),
     );
     if (res) {
       this.transactions = res.data;

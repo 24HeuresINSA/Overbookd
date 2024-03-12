@@ -5,7 +5,6 @@ import {
   QUARTER_IN_MS,
 } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriod } from "~/utils/models/period.model";
 import { Team } from "~/utils/models/team.model";
@@ -16,8 +15,7 @@ import {
   TimelineTimeWindow,
 } from "~/utils/models/timeline.model";
 import { HttpStringified } from "@overbookd/http";
-
-const timelineRepo = RepoFactory.TimelineRepository;
+import { TimelineRepository } from "~/repositories/timeline.repository";
 
 type WithName = {
   name: string;
@@ -95,7 +93,7 @@ export const actions = actionTree(
     async fetchEvents({ commit, getters }) {
       const res = await safeCall(
         this,
-        timelineRepo.getEvents(this, getters.period),
+        TimelineRepository.getEvents(this, getters.period),
       );
       if (!res) return;
       const events = castTimelineEventsWithDate(res.data);

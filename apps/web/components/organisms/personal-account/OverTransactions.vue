@@ -60,12 +60,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Money } from "~/utils/money/money";
 import { formatUsername } from "~/utils/user/user.utils";
 import { User } from "@overbookd/user";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
+import { TransactionRepository } from "~/repositories/transaction.repository";
 
 export default defineComponent({
   name: "OverTransactions",
@@ -102,10 +102,7 @@ export default defineComponent({
     async deleteTransaction(transactionId: string) {
       const deleteCall = await safeCall(
         this.$store,
-        RepoFactory.TransactionRepository.deleteTransaction(
-          this,
-          transactionId,
-        ),
+        TransactionRepository.deleteTransaction(this, transactionId),
       );
       if (deleteCall) {
         // update on screen

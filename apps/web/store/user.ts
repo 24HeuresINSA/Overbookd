@@ -1,6 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { updateItemToList } from "@overbookd/list";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
   MyUserInformationWithProfilePicture,
@@ -21,8 +20,7 @@ import {
 import { Permission } from "@overbookd/permission";
 import { Consumer } from "~/utils/models/user.model";
 import { PlanningTask } from "@overbookd/http";
-
-const userRepo = RepoFactory.UserRepository;
+import { UserRepository } from "~/repositories/user.repository";
 
 type UserDataWithPotentialyProfilePicture =
   | UserPersonalData
@@ -166,7 +164,10 @@ export const actions = actionTree(
   { state },
   {
     async setSelectedUser({ commit }, user: UserPersonalData) {
-      const res = await safeCall(this, userRepo.getUserFriends(this, user.id));
+      const res = await safeCall(
+        this,
+        UserRepository.getUserFriends(this, user.id),
+      );
       if (!res) return;
       commit("SET_SELECTED_USER_FRIENDS", res.data);
       commit("SET_SELECTED_USER", user);
@@ -177,7 +178,7 @@ export const actions = actionTree(
       await dispatch("setMyProfilePicture");
     },
     async fetchMyInformation({ commit }) {
-      const res = await safeCall(this, userRepo.getMyUser(this), {
+      const res = await safeCall(this, UserRepository.getMyUser(this), {
         errorMessage: "Session expirée 💨",
       });
       if (!res) return;
@@ -187,24 +188,24 @@ export const actions = actionTree(
       commit("SET_MY_USER", {});
     },
     async fetchUsers({ commit }) {
-      const res = await safeCall(this, userRepo.getAllUsers(this));
+      const res = await safeCall(this, UserRepository.getAllUsers(this));
       if (res) {
         commit("SET_USERS", res.data.map(castUserWithDate));
       }
     },
     async fetchVolunteers({ commit }) {
-      const res = await safeCall(this, userRepo.getVolunteers(this));
+      const res = await safeCall(this, UserRepository.getVolunteers(this));
       if (!res) return;
       const volunteers = res.data.map(castUserWithDate);
       commit("SET_VOLUNTEERS", volunteers);
     },
     async fetchAdherents({ commit }) {
-      const res = await safeCall(this, userRepo.getAdherents(this));
+      const res = await safeCall(this, UserRepository.getAdherents(this));
       if (!res) return;
       commit("SET_ADHERENTS", res.data);
     },
     async fetchFriends({ commit }) {
-      const res = await safeCall(this, userRepo.getFriends(this));
+      const res = await safeCall(this, UserRepository.getFriends(this));
       if (res) {
         commit("SET_FRIENDS", res.data);
       }
@@ -212,26 +213,34 @@ export const actions = actionTree(
     async fetchMyFriends({ commit, state }) {
       const res = await safeCall(
         this,
-        userRepo.getUserFriends(this, state.me.id),
+        UserRepository.getUserFriends(this, state.me.id),
       );
       if (res) {
         commit("SET_MY_FRIENDS", res.data);
       }
     },
     async addFriend({ commit }, friend: User) {
-      const res = await safeCall(this, userRepo.addFriend(this, friend.id), {
-        successMessage: `${friend.firstname} a été ajouté à tes amis 🎉`,
-        errorMessage: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
-      });
+      const res = await safeCall(
+        this,
+        UserRepository.addFriend(this, friend.id),
+        {
+          successMessage: `${friend.firstname} a été ajouté à tes amis 🎉`,
+          errorMessage: `${friend.firstname} n'a pas pu être ajouté à tes amis 😢`,
+        },
+      );
       if (res) {
         commit("ADD_MY_FRIEND", res.data);
       }
     },
     async removeFriend({ commit }, friend: User) {
-      const res = await safeCall(this, userRepo.removeFriend(this, friend.id), {
-        successMessage: `${friend.firstname} a été supprimé de tes amis`,
-        errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
-      });
+      const res = await safeCall(
+        this,
+        UserRepository.removeFriend(this, friend.id),
+        {
+          successMessage: `${friend.firstname} a été supprimé de tes amis`,
+          errorMessage: `${friend.firstname} n'a pas pu être supprimé de tes amis`,
+        },
+      );
       if (res) {
         commit("REMOVE_MY_FRIEND", friend);
       }
@@ -239,7 +248,7 @@ export const actions = actionTree(
     async fetchPersonalAccountConsumers({ commit }) {
       const res = await safeCall(
         this,
-        userRepo.getAllPersonalAccountConsumers(this),
+        UserRepository.getAllPersonalAccountConsumers(this),
       );
       if (!res) return;
 
@@ -252,7 +261,7 @@ export const actions = actionTree(
     ) {
       const res = await safeCall(
         this,
-        userRepo.updateUser(this, user.id, castToUserUpdateForm(user)),
+        UserRepository.updateUser(this, user.id, castToUserUpdateForm(user)),
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
@@ -267,7 +276,7 @@ export const actions = actionTree(
     async updateComment({ commit }, comment: string) {
       const res = await safeCall(
         this,
-        userRepo.updateMyProfile(this, { comment }),
+        UserRepository.updateMyProfile(this, { comment }),
         {
           successMessage: "Commentaire mis à jour ! 🎉",
           errorMessage: "Mince, le commentaire n'a pas pu être mis à jour 😢",
@@ -281,7 +290,7 @@ export const actions = actionTree(
     async updateMyProfile({ commit, state }, profile: Profile) {
       const res = await safeCall(
         this,
-        userRepo.updateMyProfile(this, profile),
+        UserRepository.updateMyProfile(this, profile),
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",
@@ -294,9 +303,13 @@ export const actions = actionTree(
     },
 
     async deleteUser({ commit }, userId: number) {
-      const res = await safeCall(this, userRepo.deleteUser(this, userId), {
-        successMessage: "Utilisateur supprimé ! 🎉",
-      });
+      const res = await safeCall(
+        this,
+        UserRepository.deleteUser(this, userId),
+        {
+          successMessage: "Utilisateur supprimé ! 🎉",
+        },
+      );
       if (!res) return;
       commit("REMOVE_USER", userId);
       commit("REMOVE_VOLUNTEER", userId);
@@ -305,7 +318,7 @@ export const actions = actionTree(
     async addTeamsToSelectedUser({ commit, state, dispatch }, teams: string[]) {
       const res = await safeCall(
         this,
-        userRepo.addTeamsToUser(this, state.selectedUser.id, teams),
+        UserRepository.addTeamsToUser(this, state.selectedUser.id, teams),
         { successMessage: "Equipe(s) ajoutée(s) ! 🎉" },
       );
       if (!res) return;
@@ -321,7 +334,7 @@ export const actions = actionTree(
     ) {
       const res = await safeCall(
         this,
-        userRepo.removeTeamFromUser(this, state.selectedUser.id, team),
+        UserRepository.removeTeamFromUser(this, state.selectedUser.id, team),
         { successMessage: "Equipe retirée ! 🎉" },
       );
       if (!res) return;
@@ -332,7 +345,7 @@ export const actions = actionTree(
     },
 
     async findUserById({ commit }, id: number) {
-      const res = await safeCall(this, userRepo.getUser(this, id));
+      const res = await safeCall(this, UserRepository.getUser(this, id));
       if (!res) return;
       commit("SET_SELECTED_USER", res.data);
     },
@@ -340,7 +353,7 @@ export const actions = actionTree(
     async getUserFtRequests({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        userRepo.getUserFtRequests(this, userId),
+        UserRepository.getUserFtRequests(this, userId),
       );
 
       if (!res) return;
@@ -351,7 +364,7 @@ export const actions = actionTree(
     async addProfilePicture({ commit }, profilePicture: FormData) {
       const res = await safeCall(
         this,
-        userRepo.addProfilePicture(this, profilePicture),
+        UserRepository.addProfilePicture(this, profilePicture),
         { successMessage: "Photo de profil mise à jour ! 🎉" },
       );
 
@@ -363,7 +376,7 @@ export const actions = actionTree(
       if (!user.profilePicture) return undefined;
       if (user.profilePictureBlob) return user.profilePictureBlob;
 
-      return userRepo.getProfilePicture(this, user.id);
+      return UserRepository.getProfilePicture(this, user.id);
     },
 
     async setMyProfilePicture({ commit, state, dispatch }) {
@@ -405,7 +418,7 @@ export const actions = actionTree(
     async getVolunteerTasks({ commit }, volunteerId: number) {
       const res = await safeCall(
         this,
-        userRepo.getMobilizationsVolunteerTakePartOf(this, volunteerId),
+        UserRepository.getMobilizationsVolunteerTakePartOf(this, volunteerId),
       );
 
       if (!res) return;
@@ -416,7 +429,7 @@ export const actions = actionTree(
     async getVolunteerAssignments({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        userRepo.getVolunteerAssignments(this, userId),
+        UserRepository.getVolunteerAssignments(this, userId),
       );
 
       if (!res) return;
@@ -427,7 +440,7 @@ export const actions = actionTree(
     async getVolunteerAssignmentStats({ commit }, userId: number) {
       const res = await safeCall(
         this,
-        userRepo.getVolunteerAssignmentStats(this, userId),
+        UserRepository.getVolunteerAssignmentStats(this, userId),
       );
 
       if (!res) return;

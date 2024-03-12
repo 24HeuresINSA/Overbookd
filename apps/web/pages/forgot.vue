@@ -30,8 +30,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { safeCall } from "~/utils/api/calls";
-import { RepoFactory } from "~/repositories/repo-factory";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
+import { AuthRepository } from "~/repositories/auth.repository";
 
 export default Vue.extend({
   name: "ForgotPassword",
@@ -47,7 +47,7 @@ export default Vue.extend({
     sendResetRequest: async function () {
       const res = await safeCall(
         this.$store,
-        RepoFactory.AuthRepository.requestResetPassword(this, {
+        AuthRepository.requestResetPassword(this, {
           email: this.email,
         }),
         {

@@ -4,7 +4,6 @@ import {
   AssignmentCandidate,
   TaskAssignment,
 } from "~/domain/timespan-assignment/timeSpanAssignment";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import {
   AssignmentModes,
@@ -29,6 +28,9 @@ import {
 } from "~/utils/models/user.model";
 import { HttpStringified } from "@overbookd/http";
 import { User } from "@overbookd/user";
+import { AssignmentRepository } from "~/repositories/assignment.repository";
+import { UserRepository } from "~/repositories/user.repository";
+import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 
 type AssignmentParameters = {
   volunteerId: number;
@@ -51,10 +53,6 @@ export type AssignmentStats = {
   lastname: string;
   stats: VolunteerAssignmentStat[];
 };
-
-const UserRepo = RepoFactory.UserRepository;
-const AssignmentRepo = RepoFactory.AssignmentRepository;
-const AvailabilityRepo = RepoFactory.VolunteerAvailabilityRepository;
 
 export const state = () => ({
   volunteers: [] as Volunteer[],
@@ -219,7 +217,10 @@ export const actions = actionTree(
     },
 
     async fetchVolunteers({ commit }) {
-      const res = await safeCall(this, AssignmentRepo.getVolunteers(this));
+      const res = await safeCall(
+        this,
+        AssignmentRepository.getVolunteers(this),
+      );
       if (!res) return;
       commit("SET_VOLUNTEERS", res.data);
     },
@@ -264,7 +265,10 @@ export const actions = actionTree(
     },
 
     async fetchFtsWithTimeSpans({ commit }) {
-      const res = await safeCall(this, AssignmentRepo.getFtWithTimeSpans(this));
+      const res = await safeCall(
+        this,
+        AssignmentRepository.getFtWithTimeSpans(this),
+      );
       if (!res) return;
       commit("SET_FTS", castFtsWithTimeSpansWithDate(res.data));
     },
@@ -272,7 +276,7 @@ export const actions = actionTree(
     async fetchTimeSpansWithStats({ commit }, ftId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getTimeSpansWithStats(this, ftId),
+        AssignmentRepository.getTimeSpansWithStats(this, ftId),
       );
       if (!res) return;
       const timeSpans = convertToTimeSpans(res.data);
@@ -282,7 +286,7 @@ export const actions = actionTree(
     async fetchTimeSpansForVolunteer({ commit }, volunteerId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getTimeSpansForVolunteer(this, volunteerId),
+        AssignmentRepository.getTimeSpansForVolunteer(this, volunteerId),
       );
       if (!res) return;
       commit("SET_TIMESPANS", castAvailableTimeSpansWithDate(res.data));
@@ -291,14 +295,14 @@ export const actions = actionTree(
     async fetchVolunteersForTimeSpan({ commit }, timeSpanId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getVolunteersForTimeSpan(this, timeSpanId),
+        AssignmentRepository.getVolunteersForTimeSpan(this, timeSpanId),
       );
       if (!res) return;
       commit("SET_VOLUNTEERS", res.data);
     },
 
     async fetchSelectedVolunteerFriends({ commit }, id: number) {
-      const res = await safeCall(this, UserRepo.getUserFriends(this, id));
+      const res = await safeCall(this, UserRepository.getUserFriends(this, id));
       if (!res) return;
       commit("SET_SELECTED_VOLUNTEER_FRIENDS", res.data);
     },
@@ -322,15 +326,24 @@ export const actions = actionTree(
     async retrieveVolunteerRelatedData({ commit, state }, volunteerId: number) {
       const [userRequestsRes, assignmentRes, availabilitiesRes, _tasks] =
         await Promise.all([
-          safeCall(this, UserRepo.getUserFtRequests(this, volunteerId)),
-          safeCall(this, UserRepo.getVolunteerAssignments(this, volunteerId)),
+          safeCall(this, UserRepository.getUserFtRequests(this, volunteerId)),
           safeCall(
             this,
-            AvailabilityRepo.getVolunteerAvailabilities(this, volunteerId),
+            UserRepository.getVolunteerAssignments(this, volunteerId),
           ),
           safeCall(
             this,
-            UserRepo.getMobilizationsVolunteerTakePartOf(this, volunteerId),
+            VolunteerAvailabilityRepository.getVolunteerAvailabilities(
+              this,
+              volunteerId,
+            ),
+          ),
+          safeCall(
+            this,
+            UserRepository.getMobilizationsVolunteerTakePartOf(
+              this,
+              volunteerId,
+            ),
           ),
         ]);
       const volunteerFriendsRes = await Promise.all(
@@ -338,7 +351,7 @@ export const actions = actionTree(
           ({ volunteer }) =>
             safeCall(
               this,
-              AssignmentRepo.getAvailableFriends(
+              AssignmentRepository.getAvailableFriends(
                 this,
                 volunteer.id,
                 state.selectedTimeSpan?.id ?? 0,
@@ -384,7 +397,7 @@ export const actions = actionTree(
       };
       const res = await safeCall(
         this,
-        AssignmentRepo.assign(this, bulkRequest),
+        AssignmentRepository.assign(this, bulkRequest),
         {
           successMessage: "Le bénévole a été affecté 🥳",
           errorMessage: "Le bénévole n'a pas pu être affecté 😢",
@@ -400,7 +413,7 @@ export const actions = actionTree(
       const assignments = state.taskAssignment.assignments;
       const assignmentsRes = await safeCall(
         this,
-        AssignmentRepo.assign(this, assignments),
+        AssignmentRepository.assign(this, assignments),
         {
           successMessage: "Les bénévoles ont été affectés 🥳",
           errorMessage:
@@ -425,7 +438,7 @@ export const actions = actionTree(
     ) {
       const res = await safeCall(
         this,
-        AssignmentRepo.unassign(this, timeSpanId, assigneeId),
+        AssignmentRepository.unassign(this, timeSpanId, assigneeId),
         {
           successMessage: "Le bénévole a été désaffecté 🥳",
           errorMessage: "Le bénévole n'a pas pu être désaffecté 😢",
@@ -469,7 +482,7 @@ export const actions = actionTree(
     async fetchTimeSpanDetails({ commit }, timeSpanId: number) {
       const res = await safeCall(
         this,
-        AssignmentRepo.getTimeSpanDetails(this, timeSpanId),
+        AssignmentRepository.getTimeSpanDetails(this, timeSpanId),
       );
       if (!res) return;
       const timeSpan = convertToTimeSpanWithAssignees(res.data);
@@ -502,7 +515,7 @@ export const actions = actionTree(
       const data = { timeSpanId, assigneeId, team };
       const res = await safeCall(
         this,
-        AssignmentRepo.updateAssignedTeam(this, data),
+        AssignmentRepository.updateAssignedTeam(this, data),
         {
           successMessage: "L'équipe affectée a été mise à jour 🥳",
           errorMessage: "L'équipe affectée n'a pas pu être mise à jour 😢",
@@ -516,7 +529,7 @@ export const actions = actionTree(
     },
 
     async fetchStats({ commit }) {
-      const res = await safeCall(this, AssignmentRepo.getStats(this));
+      const res = await safeCall(this, AssignmentRepository.getStats(this));
       if (!res) return;
       commit("SET_STATS", res.data);
     },

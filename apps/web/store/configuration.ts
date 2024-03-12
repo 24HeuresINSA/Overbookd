@@ -1,11 +1,9 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Configuration } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
-
-const configurationRepo = RepoFactory.ConfigurationRepository;
+import { ConfigurationRepository } from "~/repositories/configuration.repository";
 
 export const state = () => ({
   configurations: [] as Configuration[],
@@ -48,22 +46,29 @@ export const actions = actionTree(
   { state },
   {
     async fetchAll({ commit }) {
-      const res = await safeCall(this, configurationRepo.getAll(this));
+      const res = await safeCall(this, ConfigurationRepository.getAll(this));
       if (!res) return;
       commit("SET_ALL_CONFIG", res.data);
     },
 
     async fetch({ commit }, key: string) {
-      const res = await safeCall(this, configurationRepo.fetch(this, key));
+      const res = await safeCall(
+        this,
+        ConfigurationRepository.fetch(this, key),
+      );
       if (!res) return;
       commit("SET_CONFIG", res.data);
     },
 
     async save({ commit }, config: Configuration) {
-      const res = await safeCall(this, configurationRepo.save(this, config), {
-        successMessage: "La configuration a été sauvegardée avec succès ✅",
-        errorMessage: "Erreur lors de la sauvegarde de la configuration ❌",
-      });
+      const res = await safeCall(
+        this,
+        ConfigurationRepository.save(this, config),
+        {
+          successMessage: "La configuration a été sauvegardée avec succès ✅",
+          errorMessage: "Erreur lors de la sauvegarde de la configuration ❌",
+        },
+      );
       if (!res) return;
       commit("SET_CONFIG", res.data);
     },

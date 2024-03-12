@@ -5,7 +5,6 @@ import {
   QUARTER_IN_MS,
 } from "@overbookd/period";
 import { SlugifyService } from "@overbookd/slugify";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Volunteer } from "~/utils/models/need-help.model";
 import { castPeriod } from "~/utils/models/period.model";
@@ -13,6 +12,7 @@ import { Team } from "~/utils/models/team.model";
 import { castVolunteerTaskWithDate } from "~/utils/models/user.model";
 import { UserName } from "@overbookd/user";
 import { HttpStringified } from "@overbookd/http";
+import { NeedHelpRepository } from "~/repositories/need-help.repository";
 
 interface NeedHelpState {
   volunteers: Volunteer[];
@@ -34,8 +34,6 @@ function defaultPeriod() {
 
   return { start, end };
 }
-
-const repository = RepoFactory.NeedHelpRepository;
 
 export const state = (): NeedHelpState => ({
   volunteers: [],
@@ -82,7 +80,7 @@ export const actions = actionTree(
     async fetchVolunteers({ commit, getters }) {
       const res = await safeCall(
         this,
-        repository.getAvailableVolunteers(this, getters.period),
+        NeedHelpRepository.getAvailableVolunteers(this, getters.period),
       );
       if (!res) return;
       const volunteers = res.data.map(castVolunteerWithDate);

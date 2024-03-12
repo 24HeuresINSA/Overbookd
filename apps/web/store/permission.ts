@@ -1,12 +1,10 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
+import { PermissionRepository } from "~/repositories/permission.repository";
 import { safeCall } from "~/utils/api/calls";
 import {
   CreatePermissionForm,
   Permission,
 } from "~/utils/models/permission.model";
-
-const permissionRepo = RepoFactory.PermissionRepository;
 
 // The state types definitions
 interface State {
@@ -41,7 +39,10 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchPermissions({ commit }): Promise<void> {
-      const res = await safeCall(this, permissionRepo.getPermissions(this));
+      const res = await safeCall(
+        this,
+        PermissionRepository.getPermissions(this),
+      );
       if (!res) return;
       commit("SET_PERMISSIONS", res.data);
     },
@@ -51,7 +52,7 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = await safeCall(
         this,
-        permissionRepo.createPermission(this, payload),
+        PermissionRepository.createPermission(this, payload),
         { successMessage: "Permission créée ✅" },
       );
       if (!res) return;
@@ -63,7 +64,7 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = safeCall(
         this,
-        permissionRepo.updatePermission(this, payload),
+        PermissionRepository.updatePermission(this, payload),
       );
       if (!res) return;
       dispatch("fetchPermissions");
@@ -74,7 +75,7 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = await safeCall(
         this,
-        permissionRepo.removePermission(this, permissionId),
+        PermissionRepository.removePermission(this, permissionId),
       );
       if (!res) return;
       commit("REMOVE_PERMISSION", permissionId);
@@ -88,7 +89,11 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = await safeCall(
         this,
-        permissionRepo.linkPermissionToTeams(this, permissionId, teamCodes),
+        PermissionRepository.linkPermissionToTeams(
+          this,
+          permissionId,
+          teamCodes,
+        ),
       );
       if (!res) return;
       dispatch("fetchPermissions");

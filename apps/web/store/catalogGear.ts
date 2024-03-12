@@ -3,10 +3,8 @@ import { GearRepository } from "~/domain/inventory/gear.repository";
 import { InMemoryGearRepository } from "~/domain/inventory/inmemory-gear.repository";
 import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { GearSearchOptions } from "@overbookd/http";
-
-const gearRepository = RepoFactory.GearsRepository;
+import { GearsRepository } from "~/repositories/catalog.repository";
 
 interface State {
   gears: Gear[];
@@ -59,7 +57,7 @@ export const actions = actionTree(
     ): Promise<void> {
       const res = await safeCall<Gear[]>(
         this,
-        gearRepository.searchGears(this, gearSearchOptions),
+        GearsRepository.searchGears(this, gearSearchOptions),
       );
       if (!res) return;
       commit("SET_GEARS", res.data);
@@ -68,7 +66,7 @@ export const actions = actionTree(
     async createGear({ commit }, gearForm: GearForm): Promise<void> {
       const res = await safeCall<Gear>(
         this,
-        gearRepository.createGear(this, gearForm),
+        GearsRepository.createGear(this, gearForm),
         {
           successMessage: "Le matériel a été créé avec succès",
           errorMessage: "Erreur lors de la création du matériel",
@@ -82,7 +80,7 @@ export const actions = actionTree(
       const { id, ...gearForm } = form;
       const res = await safeCall<Gear>(
         this,
-        gearRepository.updateGear(this, id, gearForm),
+        GearsRepository.updateGear(this, id, gearForm),
         {
           successMessage: "Le matériel a été mis a jour avec succès",
           errorMessage: "Erreur lors de la mise à jour du matériel",
@@ -95,7 +93,7 @@ export const actions = actionTree(
     async deleteGear({ commit }, gear: Gear): Promise<void> {
       const res = await safeCall(
         this,
-        gearRepository.deleteGear(this, gear.id),
+        GearsRepository.deleteGear(this, gear.id),
         {
           successMessage: `${gear.name} supprimé avec succès`,
           errorMessage: `Erreur lors de la suppression de ${gear.name}`,
