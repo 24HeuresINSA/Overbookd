@@ -57,11 +57,11 @@ import { InputRulesData, required } from "~/utils/rules/input.rules";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "~/utils/models/team.model";
 
-type TeamFormData = extends InputRulesData {
+type TeamFormData = InputRulesData & {
   name?: string;
   color?: string;
   icon?: string;
-}
+};
 
 export default Vue.extend({
   name: "TeamForm",
