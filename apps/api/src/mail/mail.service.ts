@@ -199,7 +199,7 @@ export class MailService implements OnApplicationBootstrap {
       const mail = await this.mailerService.sendMail({
         to: email,
         subject: "Bienvenue sur Overbookd !",
-        template: `welcome-${membership}`,
+        template: `welcome-${membership.toLowerCase()}`,
         context: {
           email,
           firstname,
