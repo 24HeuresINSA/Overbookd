@@ -103,14 +103,14 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
       festivalActivity: FestivalActivityBuilder.fromDatabase(
         taskData.festivalActivity,
       ),
-      mobilizations: this.buildMobilizations(taskData.mobilizations),
-      inquiries: this.buildInquiries(taskData.inquiries),
+      mobilizations: this.formatMobilizations(taskData.mobilizations),
+      inquiries: this.formatInquiries(taskData.inquiries),
       feedbacks: taskData.feedbacks,
       history: this.buildHistory(taskData.events),
     };
   }
 
-  private static buildMobilizations(mobilizations: DatabaseMobilization[]) {
+  private static formatMobilizations(mobilizations: DatabaseMobilization[]) {
     return mobilizations.map((mobilization) => ({
       ...mobilization,
       volunteers: mobilization.volunteers.map(({ volunteer }) => volunteer),
@@ -121,11 +121,16 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
     }));
   }
 
-  private static buildInquiries(inquiries: DatabaseInquiryRequest[]) {
-    return inquiries.map((inquiry) => ({
-      ...inquiry,
-      name: inquiry.catalogItem.name,
-    }));
+  private static formatInquiries(inquiries: DatabaseInquiryRequest[]) {
+    return inquiries.map((inquiry) => {
+      const drive = inquiry.drive ? { drive: inquiry.drive } : {};
+      return {
+        slug: inquiry.slug,
+        name: inquiry.catalogItem.name,
+        quantity: inquiry.quantity,
+        ...drive,
+      };
+    });
   }
 
   private static buildHistory(events: DatabaseEvent[]) {

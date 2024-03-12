@@ -112,7 +112,8 @@ export class Review {
     if (this.isAlreadyApprovedBy(task, approval.team)) {
       throw new AlreadyApproved(task.id, approval.team, "FT");
     }
-    this.checkInquiryDriveAssignment(task);
+
+    if (approval.team === matos) this.checkInquiryDriveAssignment(task);
 
     const approved = Approve.from(task, approval);
     const saved = await this.tasks.save(approved);
