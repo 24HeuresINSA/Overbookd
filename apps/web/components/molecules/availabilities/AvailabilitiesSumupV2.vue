@@ -99,15 +99,13 @@ export default defineComponent({
       this.initAvailabilityState(availabilities);
     },
   },
-  mounted() {
-    this.calendarMarker = this.manifDate;
-    this.initAvailabilityState(this.availabilities);
-  },
-  async created() {
+  async mounted() {
     await Promise.all([
       this.$accessor.configuration.fetch("eventDate"),
       this.$accessor.charismaPeriod.fetchCharismaPeriods(),
     ]);
+    this.calendarMarker = this.manifDate;
+    this.initAvailabilityState(this.availabilities);
   },
   methods: {
     initAvailabilityState(availabilities: Period[]) {
