@@ -13,13 +13,10 @@ import {
   FestivalTaskReadyToReviewEvent,
   FestivalTaskRejectedEvent,
 } from "./festival-task";
-import {
-  AdherentRegisteredEvent,
-  VolunteerRegisteredEvent,
-} from "./registration";
+import { StaffRegisteredEvent, VolunteerRegisteredEvent } from "./registration";
 
 export type DomainEvent =
-  | AdherentRegisteredEvent
+  | StaffRegisteredEvent
   | VolunteerRegisteredEvent
   | FestivalActivityCreatedEvent
   | FestivalActivityReadyToReviewEvent

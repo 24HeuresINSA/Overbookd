@@ -20,23 +20,23 @@ export type Registree = {
   teams: Teams;
 };
 
-export const ADHERENT = "ADHERENT";
+export const STAFF = "STAFF";
 export const VOLUNTEER = "VOLUNTEER";
 
-export type Membership = typeof ADHERENT | typeof VOLUNTEER;
+export type Membership = typeof STAFF | typeof VOLUNTEER;
 type WithMembership<T extends Membership> = { membership: T };
 
 export type NewcomerRegistered<T extends Membership> = Registree &
   WithMembership<T>;
 
-export type AdherentRegistered = NewcomerRegistered<typeof ADHERENT>;
+export type StaffRegistered = NewcomerRegistered<typeof STAFF>;
 export type VolunteerRegistered = NewcomerRegistered<typeof VOLUNTEER>;
 export type MemberRegistered = NewcomerRegistered<Membership>;
 
-export function isAdherentRegistered(
+export function isStaffRegistered(
   registree: NewcomerRegistered<Membership>,
-): registree is AdherentRegistered {
-  return registree.membership === ADHERENT;
+): registree is StaffRegistered {
+  return registree.membership === STAFF;
 }
 
 export function isVolunteerRegistered(

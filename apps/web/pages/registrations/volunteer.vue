@@ -119,6 +119,9 @@ export default defineComponent({
     ],
     displayedVolunteers: [],
   }),
+  head: () => ({
+    title: "Admission bénévoles",
+  }),
   computed: {
     volunteersToEnroll(): EnrollableVolunteer[] {
       return this.$accessor.registration.volunteers;

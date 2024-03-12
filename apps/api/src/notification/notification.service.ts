@@ -5,7 +5,7 @@ import { RegisterNewcomer } from "@overbookd/registration";
 import { JwtService } from "@nestjs/jwt";
 import { JwtPayload } from "../authentication/entities/jwt-util.entity";
 import { ENROLL_HARD, Permission } from "@overbookd/permission";
-import { ADHERENT_REGISTERED, DomainEvent } from "@overbookd/domain-events";
+import { STAFF_REGISTERED, DomainEvent } from "@overbookd/domain-events";
 
 type AvailableNotification = {
   source: Observable<DomainEvent>;
@@ -32,11 +32,11 @@ export class NotificationService implements OnApplicationBootstrap {
   private logger = new Logger("NotificationService");
 
   onApplicationBootstrap() {
-    this.eventStore.adherentsRegistered.subscribe(async (event) => {
+    this.eventStore.staffsRegistered.subscribe(async (event) => {
       this.logger.debug(JSON.stringify(event));
-      const users = await this.register.notifyNewAdherentAwaits(event);
+      const users = await this.register.notifyNewStaffAwaits(event);
       const notifyees = users.map(({ id }) => id);
-      const logMessage = `Users ${notifyees} notified new adherent await validation`;
+      const logMessage = `Users ${notifyees} notified new staff await validation`;
       this.logger.log(logMessage);
     });
   }
@@ -60,7 +60,7 @@ export class NotificationService implements OnApplicationBootstrap {
     permissions: Permission[],
   ): Observable<DomainEvent>[] {
     const availableNotifications: AvailableNotification[] = [
-      this.adherentRegistered,
+      this.staffRegistered,
     ];
 
     return availableNotifications
@@ -68,8 +68,8 @@ export class NotificationService implements OnApplicationBootstrap {
       .map(({ source }) => source);
   }
 
-  private get adherentRegistered(): AvailableNotification {
-    const adherentRegistered = this.eventStore.listen(ADHERENT_REGISTERED);
-    return { source: adherentRegistered, permission: ENROLL_HARD };
+  private get staffRegistered(): AvailableNotification {
+    const staffRegistered = this.eventStore.listen(STAFF_REGISTERED);
+    return { source: staffRegistered, permission: ENROLL_HARD };
   }
 }

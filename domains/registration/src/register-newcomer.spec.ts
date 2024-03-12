@@ -16,7 +16,7 @@ import {
 } from "@overbookd/permission";
 import { InMemoryNotificationRepository } from "./notification-repository.inmemory";
 import { StoredNotifyee } from "./notification-repository.inmemory";
-import { ADHERENT, NewcomerRegistered, VOLUNTEER } from "./newcomer";
+import { STAFF, NewcomerRegistered, VOLUNTEER } from "./newcomer";
 
 const notifyees: StoredNotifyee[] = [
   { id: 100, permissions: [] },
@@ -35,7 +35,7 @@ const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA_CODE, TECKOS_CODE];
 const nickname = "Shagou";
 
-const firstNewComer: NewcomerRegistered<"adherent"> = {
+const firstNewComer: NewcomerRegistered<"STAFF"> = {
   id: 1,
   firstname,
   lastname,
@@ -45,7 +45,7 @@ const firstNewComer: NewcomerRegistered<"adherent"> = {
   teams,
   nickname,
   email,
-  membership: ADHERENT,
+  membership: STAFF,
 };
 
 const registerForm: FulfilledRegistration = {
@@ -77,7 +77,7 @@ describe("Register newcomer", () => {
     });
     describe.each`
       membership
-      ${ADHERENT}
+      ${STAFF}
       ${VOLUNTEER}
     `("when receiving a valid $membership registration", ({ membership }) => {
       it("should register the associated newcomer", async () => {
@@ -168,7 +168,7 @@ describe("Register newcomer", () => {
                     ...registerForm,
                     email: registerEmail,
                   },
-                  ADHERENT,
+                  STAFF,
                 ),
             ).rejects.toThrow(RegistrationError);
           },
@@ -187,10 +187,10 @@ describe("Register newcomer", () => {
         notificationRepository,
       );
     });
-    describe("when a new adherent has been registered", () => {
-      it("should generate a notification for 'can enroll adherent' users", async () => {
+    describe("when a new staff has been registered", () => {
+      it("should generate a notification for 'can enroll staff' users", async () => {
         const notifees =
-          await registerNewcomer.notifyNewAdherentAwaits(firstNewComer);
+          await registerNewcomer.notifyNewStaffAwaits(firstNewComer);
         expect(notifees).toHaveLength(1);
         expect(notifees).toEqual([{ id: 102 }]);
       });

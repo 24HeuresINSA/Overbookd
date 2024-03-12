@@ -1,9 +1,9 @@
-import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { EnrolledNewcomer } from "@overbookd/registration";
 
 export interface EnrollNewcomersRepository {
   enroll: (newcomers: EnrolledNewcomer[]) => Promise<void>;
-  findEnrollableAdherents: () => Promise<EnrollableAdherent[]>;
+  findEnrollableStaffs: () => Promise<EnrollableStaff[]>;
   findEnrollableVolunteers: () => Promise<EnrollableVolunteer[]>;
   findEnrollableVolunteer: (
     volunteerId: EnrollableVolunteer["id"],

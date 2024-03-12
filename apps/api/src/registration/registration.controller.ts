@@ -30,13 +30,13 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import {
-  EnrollableAdherentResponseDto,
+  EnrollableStaffResponseDto,
   EnrollableVolunteerResponseDto,
 } from "./dto/newcomer.response.dto";
 import { EnrollNewcomersRequestDto } from "./dto/enroll-newcomers.request.dto";
 import { ENROLL_HARD, ENROLL_SOFT } from "@overbookd/permission";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
-import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 
 @ApiBearerAuth()
 @ApiTags("registration")
@@ -66,39 +66,39 @@ export class RegistrationController {
     return this.registrationService.register(newcomer, token);
   }
 
-  @Get("invite-new-adherents-link")
+  @Get("invite-staff-link")
   @HttpCode(200)
-  generateNewAdherentsInvitationLink() {
+  generateStaffInvitationLink() {
     return this.registrationService.invite();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
-  @Get("adherents")
+  @Get("staffs")
   @ApiResponse({
     status: 200,
-    description: "Get all adherents",
-    type: EnrollableAdherentResponseDto,
+    description: "Get all staffs",
+    type: EnrollableStaffResponseDto,
     isArray: true,
   })
-  getEnrollableAdherents(): Promise<EnrollableAdherent[]> {
-    return this.registrationService.getAdherents();
+  getEnrollableStaffs(): Promise<EnrollableStaff[]> {
+    return this.registrationService.getStaffs();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
-  @Post("adherents/enroll")
+  @Post("staffs/enroll")
   @ApiBody({
-    description: "Adherents to enroll to a team",
+    description: "Staffs to enroll to a team",
     type: EnrollNewcomersRequestDto,
   })
   @ApiResponse({
     status: 201,
-    description: "Enroll adherents to a team",
+    description: "Enroll staffs to a team",
   })
-  enrollAdherents(
+  enrollStaffs(
     @Body() { newcomers }: EnrollNewcomersRequestDto,
   ): Promise<void> {
     return this.registrationService.enrollNewcomers({

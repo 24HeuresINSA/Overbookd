@@ -1,7 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { Teams } from "@overbookd/registration";
 
-export type EnrollableAdherent = {
+export type EnrollableStaff = {
   id: number;
   firstname: string;
   lastname: string;
@@ -10,7 +10,7 @@ export type EnrollableAdherent = {
   teams: Teams;
 };
 
-export type EnrollableVolunteer = EnrollableAdherent & {
+export type EnrollableVolunteer = EnrollableStaff & {
   charisma: number;
   mobilePhone: string;
   availabilities: IProvidePeriod[];

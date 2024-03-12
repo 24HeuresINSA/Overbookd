@@ -4,24 +4,24 @@ import { NewcomerRepository } from "./register-newcomer";
 import {
   NewcomerRegistered,
   Membership,
-  AdherentRegistered,
+  StaffRegistered,
   VolunteerRegistered,
 } from "./newcomer";
-import { isAdherentRegistered, isVolunteerRegistered } from "./newcomer";
+import { isStaffRegistered, isVolunteerRegistered } from "./newcomer";
 
 export class InMemoryNewcomerRepository implements NewcomerRepository {
   private idGenerator: Generator<number>;
 
   constructor(
-    private adherents: AdherentRegistered[] = [],
+    private staffs: StaffRegistered[] = [],
     private volunteers: VolunteerRegistered[] = [],
   ) {
-    this.idGenerator = numberGenerator(adherents.length + 1);
+    this.idGenerator = numberGenerator(staffs.length + 1);
   }
 
   isEmailUsed(email: string): Promise<boolean> {
     return Promise.resolve(
-      this.adherents.some((registree) => registree.email === email) ||
+      this.staffs.some((registree) => registree.email === email) ||
         this.volunteers.some((registree) => registree.email === email),
     );
   }
@@ -36,8 +36,8 @@ export class InMemoryNewcomerRepository implements NewcomerRepository {
       id: this.idGenerator.next().value,
       membership,
     };
-    if (isAdherentRegistered(registree)) {
-      this.adherents = [...this.adherents, registree];
+    if (isStaffRegistered(registree)) {
+      this.staffs = [...this.staffs, registree];
     }
     if (isVolunteerRegistered(registree)) {
       this.volunteers = [...this.volunteers, registree];
@@ -46,6 +46,6 @@ export class InMemoryNewcomerRepository implements NewcomerRepository {
   }
 
   get registrees(): NewcomerRegistered<Membership>[] {
-    return [...this.adherents, ...this.volunteers];
+    return [...this.staffs, ...this.volunteers];
   }
 }

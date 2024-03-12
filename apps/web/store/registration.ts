@@ -1,7 +1,7 @@
 import { RegisterForm } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import {
-  EnrollableAdherent,
+  EnrollableStaff,
   EnrollableVolunteer,
   HttpStringified,
 } from "@overbookd/http";
@@ -12,35 +12,34 @@ import { castPeriods } from "~/utils/models/period.model";
 import { updateItemToList } from "@overbookd/list";
 
 type State = {
-  adherents: EnrollableAdherent[];
+  staffs: EnrollableStaff[];
   volunteers: EnrollableVolunteer[];
-  inviteNewAdherentLink?: URL;
+  inviteStaffLink?: URL;
 };
 
 const registrationRepo = RepoFactory.RegistrationRepository;
 const configurationRepo = RepoFactory.ConfigurationRepository;
 
-const INVITE_NEW_ADHERENT_LINK = "inviteNewAdherentLink";
+//TODO: update config key
+const INVITE_STAFF_LINK = "inviteNewAdherentLink";
 
 export const state = (): State => ({
-  adherents: [],
+  staffs: [],
   volunteers: [],
-  inviteNewAdherentLink: undefined,
+  inviteStaffLink: undefined,
 });
 
 export const mutations = mutationTree(state, {
-  SET_ADHERENTS(state, adherents: EnrollableAdherent[]) {
-    state.adherents = adherents;
+  SET_STAFFS(state, staffs: EnrollableStaff[]) {
+    state.staffs = staffs;
   },
   SET_VOLUNTEERS(state, volunteers: EnrollableVolunteer[]) {
     state.volunteers = volunteers;
   },
-  REMOVE_ENROLLED_NEWCOMERS(state, enrolled: EnrollableAdherent[]) {
-    state.adherents = state.adherents.filter(
-      (adherent) =>
-        !enrolled.some(
-          (enrolledNewcomer) => enrolledNewcomer.id === adherent.id,
-        ),
+  REMOVE_ENROLLED_NEWCOMERS(state, enrolled: EnrollableStaff[]) {
+    state.staffs = state.staffs.filter(
+      (staff) =>
+        !enrolled.some((enrolledNewcomer) => enrolledNewcomer.id === staff.id),
     );
     state.volunteers = state.volunteers.filter(
       (volunteer) =>
@@ -49,11 +48,11 @@ export const mutations = mutationTree(state, {
         ),
     );
   },
-  SET_INVITE_NEW_ADHERENT_LINK(state, link: URL) {
-    state.inviteNewAdherentLink = link;
+  SET_INVITE_STAFF_LINK(state, link: URL) {
+    state.inviteStaffLink = link;
   },
-  REMOVE_INVITE_NEW_ADHERENT_LINK(state) {
-    state.inviteNewAdherentLink = undefined;
+  REMOVE_INVITE_STAFF_LINK(state) {
+    state.inviteStaffLink = undefined;
   },
   UPDATE_VOLUNTEER(state, volunteer: EnrollableVolunteer) {
     const volunteerIndex = state.volunteers.findIndex(
@@ -71,10 +70,10 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state },
   {
-    async getAdherents({ commit }) {
-      const res = await registrationRepo.getAdherents(this);
+    async getStaffs({ commit }) {
+      const res = await registrationRepo.getStaffs(this);
       if (!res) return;
-      commit("SET_ADHERENTS", castAdherentsWithDate(res.data));
+      commit("SET_STAFFS", castStaffsWithDate(res.data));
     },
 
     async getVolunteers({ commit }) {
@@ -93,10 +92,10 @@ export const actions = actionTree(
       commit("UPDATE_VOLUNTEER", castVolunteerWithDate(res.data));
     },
 
-    async enrollNewAdherents({ commit }, adherents: EnrollableAdherent[]) {
+    async enrollStaffs({ commit }, staffs: EnrollableStaff[]) {
       const res = await safeCall(
         this,
-        registrationRepo.enrollNewAdherents(this, adherents),
+        registrationRepo.enrollStaffs(this, staffs),
         {
           successMessage:
             "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
@@ -105,7 +104,7 @@ export const actions = actionTree(
         },
       );
       if (!res) return;
-      commit("REMOVE_ENROLLED_NEWCOMERS", adherents);
+      commit("REMOVE_ENROLLED_NEWCOMERS", staffs);
     },
 
     async enrollNewVolunteers({ commit }, volunteers: EnrollableVolunteer[]) {
@@ -123,32 +122,32 @@ export const actions = actionTree(
       commit("REMOVE_ENROLLED_NEWCOMERS", volunteers);
     },
 
-    async fetchInviteNewAdherentLink({ commit }) {
+    async fetchInviteStaffLink({ commit }) {
       const res = await safeCall(
         this,
-        configurationRepo.fetch(this, INVITE_NEW_ADHERENT_LINK),
+        configurationRepo.fetch(this, INVITE_STAFF_LINK),
       );
       if (!res || !res.data) return;
       const link = new URL(res.data.value.toString());
-      commit("SET_INVITE_NEW_ADHERENT_LINK", link);
+      commit("SET_INVITE_STAFF_LINK", link);
     },
 
-    async generateInviteNewAdherentLink({ dispatch }) {
+    async generateInviteStaffLink({ dispatch }) {
       const res = await safeCall(this, registrationRepo.generateLink(this));
       if (!res) return;
-      dispatch("updateInviteNewAdherentLink", new URL(res.data));
+      dispatch("updateInviteStaffLink", new URL(res.data));
     },
 
-    async updateInviteNewAdherentLink({ commit }, link: URL) {
+    async updateInviteStaffLink({ commit }, link: URL) {
       const res = await safeCall(
         this,
         configurationRepo.save(this, {
-          key: INVITE_NEW_ADHERENT_LINK,
+          key: INVITE_STAFF_LINK,
           value: link.href,
         }),
       );
       if (!res) return;
-      commit("SET_INVITE_NEW_ADHERENT_LINK", link);
+      commit("SET_INVITE_STAFF_LINK", link);
     },
 
     async register(_, { token, form }: { token?: string; form: RegisterForm }) {
@@ -175,17 +174,17 @@ export const actions = actionTree(
     async forgetHim({ dispatch }, email: string) {
       const res = await safeCall(this, registrationRepo.forgetHim(this, email));
       if (!res) return;
-      dispatch("getAdherents");
+      dispatch("getStaffs");
     },
   },
 );
 
-function castAdherentsWithDate(
-  adherents: HttpStringified<EnrollableAdherent[]>,
-): EnrollableAdherent[] {
-  return adherents.map((adherent) => ({
-    ...adherent,
-    registeredAt: new Date(adherent.registeredAt),
+function castStaffsWithDate(
+  staffs: HttpStringified<EnrollableStaff[]>,
+): EnrollableStaff[] {
+  return staffs.map((staff) => ({
+    ...staff,
+    registeredAt: new Date(staff.registeredAt),
   }));
 }
 

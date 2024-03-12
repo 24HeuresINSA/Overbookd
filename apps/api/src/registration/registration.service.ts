@@ -5,25 +5,25 @@ import {
   FulfilledRegistration,
   RegisterNewcomer,
   VOLUNTEER,
-  ADHERENT,
+  STAFF,
   EnrollNewcomers,
   Credentials,
   ForgetMember,
   Membership,
   NewcomerRegistered,
-  isAdherentRegistered,
+  isStaffRegistered,
   isVolunteerRegistered,
 } from "@overbookd/registration";
 import { jwtConstants } from "../authentication/constants";
-import { InviteNewAdherents } from "@overbookd/registration";
+import { InviteStaff } from "@overbookd/registration";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { EnrollNewcomersRepository } from "./repository/enroll-newcomers.repository";
 import { isString } from "class-validator";
 import {
-  ADHERENT_REGISTERED,
+  STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
-import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { IProvidePeriod, OverDate } from "@overbookd/period";
 import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
 
@@ -84,15 +84,15 @@ export class RegistrationService {
   }
 
   private getMembership(token?: string): Membership {
-    return token ? ADHERENT : VOLUNTEER;
+    return token ? STAFF : VOLUNTEER;
   }
 
   private publishNewcomerRegisteredEvent(
     registree: NewcomerRegistered<Membership>,
   ) {
-    if (isAdherentRegistered(registree)) {
+    if (isStaffRegistered(registree)) {
       return this.service.event.publish({
-        type: ADHERENT_REGISTERED,
+        type: STAFF_REGISTERED,
         data: registree,
       });
     }
@@ -108,7 +108,7 @@ export class RegistrationService {
   private checkInvitationValidity(token?: string) {
     if (!token) return true;
 
-    return InviteNewAdherents.isInvitationValid({
+    return InviteStaff.isInvitationValid({
       token,
       secret: jwtConstants.secret,
     });
@@ -117,11 +117,11 @@ export class RegistrationService {
   invite(): URL {
     const domain = process.env.DOMAIN ?? "";
     const secret = jwtConstants.secret;
-    return InviteNewAdherents.byLink({ domain, secret });
+    return InviteStaff.byLink({ domain, secret });
   }
 
-  getAdherents(): Promise<EnrollableAdherent[]> {
-    return this.enrollNewcomersRepository.findEnrollableAdherents();
+  getStaffs(): Promise<EnrollableStaff[]> {
+    return this.enrollNewcomersRepository.findEnrollableStaffs();
   }
 
   getVolunteers(): Promise<EnrollableVolunteer[]> {

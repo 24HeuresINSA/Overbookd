@@ -1,14 +1,14 @@
 <template>
   <div class="registration-configuration">
     <v-text-field
-      :value="registerNewAdherentLink?.href"
+      :value="inviteStaffLink?.href"
       outlined
       readonly
       placeholder="Pas de lien encore généré"
-      label="Lien d'invitation pour les futurs adhérents"
+      label="Lien d'invitation pour les futurs organisateurs"
       type="text"
-      :hint="expirationRegisterNewAdherentLinkDate"
-      :persistent-hint="hasRegisterNewAdherentLink"
+      :hint="expirationInviteStaffLinkDate"
+      :persistent-hint="hasInviteStaffLink"
     >
       <template #append>
         <v-tooltip bottom>
@@ -26,7 +26,7 @@
               right
               v-bind="attrs"
               v-on="on"
-              @click="refreshRegisterNewAdherentLink"
+              @click="refreshInviteStaffLink"
             >
               mdi-refresh
             </v-icon>
@@ -40,35 +40,33 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { InviteNewAdherents } from "@overbookd/registration";
+import { InviteStaff } from "@overbookd/registration";
 
 export default Vue.extend({
   name: "RegistrationConfiguration",
   computed: {
-    registerNewAdherentLink(): URL | undefined {
-      return this.$accessor.registration.inviteNewAdherentLink;
+    inviteStaffLink(): URL | undefined {
+      return this.$accessor.registration.inviteStaffLink;
     },
-    hasRegisterNewAdherentLink(): boolean {
-      return this.registerNewAdherentLink !== undefined;
+    hasInviteStaffLink(): boolean {
+      return this.inviteStaffLink !== undefined;
     },
-    expirationRegisterNewAdherentLinkDate(): string {
-      if (!this.registerNewAdherentLink) return "";
-      return InviteNewAdherents.isLinkExpired(this.registerNewAdherentLink);
+    expirationInviteStaffLinkDate(): string {
+      if (!this.inviteStaffLink) return "";
+      return InviteStaff.isLinkExpired(this.inviteStaffLink);
     },
   },
   mounted() {
-    this.$accessor.registration.fetchInviteNewAdherentLink();
+    this.$accessor.registration.fetchInviteStaffLink();
   },
   methods: {
     async copyToClipBoard() {
-      if (!this.registerNewAdherentLink?.toString()) return;
-      await navigator.clipboard.writeText(
-        this.registerNewAdherentLink.toString(),
-      );
+      if (!this.inviteStaffLink?.toString()) return;
+      await navigator.clipboard.writeText(this.inviteStaffLink.toString());
       this.$accessor.notif.pushNotification({ message: "Lien copié ✅" });
     },
-    refreshRegisterNewAdherentLink() {
-      this.$accessor.registration.generateInviteNewAdherentLink();
+    refreshInviteStaffLink() {
+      this.$accessor.registration.generateInviteStaffLink();
     },
   },
 });

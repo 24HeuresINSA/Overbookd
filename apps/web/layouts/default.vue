@@ -17,10 +17,7 @@
 import Vue from "vue";
 import Header from "./parts/header.vue";
 import SideNav from "./parts/side-nav.vue";
-import {
-  ADHERENT_REGISTERED,
-  addEventListener,
-} from "@overbookd/domain-events";
+import { STAFF_REGISTERED, addEventListener } from "@overbookd/domain-events";
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
@@ -72,7 +69,7 @@ export default Vue.extend({
   },
   mounted() {
     this.notificationSource = new EventSource(this.liveNotificationEndpoint);
-    addEventListener(this.notificationSource, ADHERENT_REGISTERED, () => {
+    addEventListener(this.notificationSource, STAFF_REGISTERED, () => {
       this.$accessor.notification.received();
     });
 
