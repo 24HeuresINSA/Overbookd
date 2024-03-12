@@ -1,35 +1,4 @@
-import { FtTimeWindow, FtTimeWindowSortFunction } from "../models/ft.model";
 import { TimeWindow as FaTimeWindow } from "@overbookd/festival-event";
-
-export type SortableFtTimeWindowHeader = "startDate" | "endDate";
-
-export function sortFtTimeWindowsOnStart(
-  timeWindows: FtTimeWindow[],
-  desc: boolean,
-): FtTimeWindow[] {
-  return timeWindows.sort((a, b) => {
-    const order = desc ? -1 : 1;
-    return (a.start.getTime() - b.start.getTime()) * order;
-  });
-}
-
-export function sortFtTimeWindowsOnEnd(
-  timeWindows: FtTimeWindow[],
-  desc: boolean,
-): FtTimeWindow[] {
-  return timeWindows.sort((a, b) => {
-    const order = desc ? -1 : 1;
-    return (a.end.getTime() - b.end.getTime()) * order;
-  });
-}
-
-export const ftTimeWindowsSorts = new Map<
-  SortableFtTimeWindowHeader,
-  FtTimeWindowSortFunction
->([
-  ["startDate", sortFtTimeWindowsOnStart],
-  ["endDate", sortFtTimeWindowsOnEnd],
-]);
 
 export type SortableFaTimeWindowHeader = "start" | "end";
 
