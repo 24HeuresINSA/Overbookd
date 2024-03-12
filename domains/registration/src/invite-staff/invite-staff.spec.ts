@@ -53,9 +53,7 @@ describe("Invite staff", () => {
     describe("when link is not a valid link", () => {
       it("should consider link as expired", () => {
         const invalidLink = new URL(`https://${domain}`);
-        expect(InviteStaff.isLinkExpired(invalidLink)).toBe(
-          LINK_EXPIRED,
-        );
+        expect(InviteStaff.isLinkExpired(invalidLink)).toBe(LINK_EXPIRED);
 
         const linkWithInvalidToken = new URL(
           `https://${domain}?${TOKEN}=vdtqfdqwda.adgqeugfkabd.fdaghuida`,
@@ -72,9 +70,7 @@ describe("Invite staff", () => {
         const expiredLink = new URL(
           `https://${domain}?${TOKEN}=${expiredToken}`,
         );
-        expect(InviteStaff.isLinkExpired(expiredLink)).toBe(
-          LINK_EXPIRED,
-        );
+        expect(InviteStaff.isLinkExpired(expiredLink)).toBe(LINK_EXPIRED);
       });
     });
   });

@@ -17,10 +17,7 @@
 import Vue from "vue";
 import Header from "./parts/header.vue";
 import SideNav from "./parts/side-nav.vue";
-import {
-  STAFF_REGISTERED,
-  addEventListener,
-} from "@overbookd/domain-events";
+import { STAFF_REGISTERED, addEventListener } from "@overbookd/domain-events";
 
 const AUTHORS = [
   "Hamza - Cookie 🍪",
