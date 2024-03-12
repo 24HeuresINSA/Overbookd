@@ -120,7 +120,12 @@ export class RegistrationService {
     });
   }
 
-  async invite(): Promise<URL> {
+  async getStaffInvitationLink(): Promise<URL | undefined> {
+    const link = await this.repositories.configurations.getInviteStaffLink();
+    return new URL(link);
+  }
+
+  async generateStaffInvitationLink(): Promise<URL> {
     const domain = process.env.DOMAIN ?? "";
     const secret = jwtConstants.secret;
     const link = InviteStaff.byLink({ domain, secret });
