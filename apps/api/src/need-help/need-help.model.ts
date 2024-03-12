@@ -1,7 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { VolunteerTask } from "../user/user.model";
 
-export interface Volunteer {
+export type Volunteer = {
   id: number;
   firstname: string;
   lastname: string;
@@ -9,4 +9,4 @@ export interface Volunteer {
   teams: string[];
   availabilities: IProvidePeriod[];
   tasks: VolunteerTask[];
-}
+};

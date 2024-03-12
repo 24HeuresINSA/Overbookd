@@ -3,27 +3,27 @@ import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../src/prisma.service";
 import { TimelineEvent, TimelineFt } from "./timeline.model";
 
-interface DatabaseFT {
+type DatabaseFT = {
   id: number;
   name: string;
   timeWindows: DatabaseTimeWindow[];
   hasPriority?: boolean;
-}
+};
 
 type DatabaseTimeSpan = IProvidePeriod & {
   id: number;
 };
 
-interface DatabaseTimeWindow extends IProvidePeriod {
+type DatabaseTimeWindow = IProvidePeriod & {
   timeSpans: DatabaseTimeSpan[];
-}
+};
 
-interface DatabaseTimeline {
+type DatabaseTimeline = {
   id: number;
   name: string;
   team: { code: string };
   fts: DatabaseFT[];
-}
+};
 
 @Injectable()
 export class TimelineService {

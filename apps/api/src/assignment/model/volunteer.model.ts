@@ -1,23 +1,23 @@
-interface BaseVolunteer {
+type BaseVolunteer = {
   id: number;
   firstname: string;
   lastname: string;
   charisma: number;
   comment?: string;
-}
+};
 
-export interface Volunteer extends BaseVolunteer {
+export type Volunteer = BaseVolunteer & {
   teams: string[];
   assignmentDuration: number;
-}
+};
 
-export interface AvailableVolunteer extends Volunteer {
+export type AvailableVolunteer = Volunteer & {
   friendAvailable: boolean;
   isRequestedOnSamePeriod: boolean;
   hasFriendAssigned: boolean;
-}
+};
 
-export interface DatabaseVolunteer extends BaseVolunteer {
+export type DatabaseVolunteer = BaseVolunteer & {
   teams: {
     team: {
       code: string;
@@ -34,9 +34,9 @@ export interface DatabaseVolunteer extends BaseVolunteer {
       end: Date;
     };
   }[];
-}
+};
 
-export interface DatabaseVolunteerWithFriendRequests extends DatabaseVolunteer {
+export type DatabaseVolunteerWithFriendRequests = DatabaseVolunteer & {
   friends: {
     requestor: {
       id: number;
@@ -47,4 +47,4 @@ export interface DatabaseVolunteerWithFriendRequests extends DatabaseVolunteer {
       id: number;
     };
   }[];
-}
+};

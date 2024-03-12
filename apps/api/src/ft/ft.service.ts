@@ -25,10 +25,11 @@ import {
 } from "./ft-types";
 import { ReviewerResponseDto } from "./dto/reviewer.response.dto";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-export interface SearchFt {
+
+export type SearchFt = {
   isDeleted: boolean;
   status?: FtStatus;
-}
+};
 
 type DataBaseTimeWindow = Omit<TimeWindow, "userRequests"> & {
   userRequests: DataBaseUserRequest[];

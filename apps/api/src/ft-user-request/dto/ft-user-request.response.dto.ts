@@ -2,12 +2,12 @@ import { ApiProperty } from "@nestjs/swagger";
 import { AlsoRequestedByFT, UserNameWithId } from "../../ft/ft-types";
 import { IProvidePeriod } from "@overbookd/period";
 
-export interface UserRequest {
+export type UserRequest = {
   user: UserNameWithId;
   alsoRequestedBy: AlsoRequestedByFT[];
   isAvailable: boolean;
   isAlreadyAssigned: boolean;
-}
+};
 
 export type DataBaseUserRequest = Pick<UserRequest, "user"> & {
   id: number;

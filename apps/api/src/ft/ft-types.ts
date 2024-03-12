@@ -28,7 +28,7 @@ export class TeamRequest {
   team: Team;
 }
 
-export interface TimeWindow {
+export type TimeWindow = {
   id: number;
   start: Date;
   end: Date;
@@ -36,24 +36,24 @@ export interface TimeWindow {
   userRequests: UserRequest[];
   teamRequests: TeamRequest[];
   timeSpans: TimeSpanBase[];
-}
+};
 
-export interface TimeSpan {
+export type TimeSpan = {
   timeWindowId: number;
   start: Date;
   end: Date;
   assignments: (UserRequestAssignment | TeamRequestAssignment)[];
-}
+};
 
-interface UserRequestAssignment {
+type UserRequestAssignment = {
   assigneeId: number;
   userRequestId: number;
-}
+};
 
-interface TeamRequestAssignment {
+type TeamRequestAssignment = {
   assigneeId: number;
   teamRequestId: number;
-}
+};
 
 export class Review {
   status: ReviewStatus;
@@ -74,7 +74,7 @@ export class MinimalFa {
   status: FestivalActivity["status"];
 }
 
-export interface CompleteFtResponse {
+export type CompleteFtResponse = {
   id: number;
   name: string;
   status: FtStatus;
@@ -89,7 +89,7 @@ export interface CompleteFtResponse {
   team: Team | null;
   userInCharge: UserNameWithId | null;
   fa: MinimalFa | null;
-}
+};
 
 export type LiteFtResponse = Pick<
   CompleteFtResponse,
@@ -102,11 +102,11 @@ export type LiteFtResponse = Pick<
   | "reviews"
   | "reviewer"
 >;
-export interface AlsoRequestedByFT {
+export type AlsoRequestedByFT = {
   id: number;
   name: string;
   period: IProvidePeriod;
-}
+};
 
 export type FtIdResponse = {
   id: number;

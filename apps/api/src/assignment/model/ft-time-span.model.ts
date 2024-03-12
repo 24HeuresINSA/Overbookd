@@ -1,17 +1,17 @@
 import { TaskCategory } from "@prisma/client";
 
-export interface RequestedTeam {
+export type RequestedTeam = {
   code: string;
   quantity: number;
   assignmentCount: number;
-}
-export interface DatabaseRequestedTeam {
+};
+export type DatabaseRequestedTeam = {
   teamCode: string;
   quantity: number;
   _count: {
     assignments: number;
   };
-}
+};
 
 export type TimeSpanBase = {
   id: number;
@@ -21,20 +21,20 @@ export type TimeSpanBase = {
 
 export type AssignmentAsTeamMember = { teamRequest: { teamCode: string } };
 
-export interface DatabaseTimeSpanWithAssignedTeamMembers extends TimeSpanBase {
+export type DatabaseTimeSpanWithAssignedTeamMembers = TimeSpanBase & {
   assignments: AssignmentAsTeamMember[];
-}
+};
 
-export interface TimeSpan extends TimeSpanBase {
+export type TimeSpan = TimeSpanBase & {
   requestedTeams: RequestedTeam[];
-}
+};
 
-export interface DatabaseTimeWindow {
+export type DatabaseTimeWindow = {
   teamRequests: DatabaseRequestedTeam[];
   timeSpans: DatabaseTimeSpanWithAssignedTeamMembers[];
-}
+};
 
-export interface DatabaseTimeSpanWithFt {
+export type DatabaseTimeSpanWithFt = {
   id: number;
   start: Date;
   end: Date;
@@ -51,7 +51,7 @@ export interface DatabaseTimeSpanWithFt {
     teamRequests: DatabaseRequestedTeam[];
   };
   assignments: AssignmentAsTeamMember[];
-}
+};
 
 type AssignedAsTeamMember = AssignmentAsTeamMember & {
   assignee: {
@@ -116,7 +116,7 @@ export type DatabaseTimeSpanWithAssignees = TimeSpanBase & {
   };
 };
 
-export interface DatabaseFtWithTimeSpans {
+export type DatabaseFtWithTimeSpans = {
   id: number;
   name: string;
   hasPriority: boolean;
@@ -130,14 +130,14 @@ export interface DatabaseFtWithTimeSpans {
     }[];
     teamRequests: DatabaseRequestedTeam[];
   }[];
-}
+};
 
-export interface SimplifiedFT {
+export type SimplifiedFT = {
   id: number;
   name: string;
   hasPriority: boolean;
   category: TaskCategory;
-}
+};
 
 export type TimeSpanWithFt = TimeSpan & {
   ft: SimplifiedFT;

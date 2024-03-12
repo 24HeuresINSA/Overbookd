@@ -1,5 +1,5 @@
 import { Inject } from "@nestjs/common";
-import { Gear } from "../catalog/interfaces";
+import { Gear } from "../catalog/types";
 import { SlugifyService } from "@overbookd/slugify";
 
 export type LiteInventoryRecord = Omit<InventoryRecord, "gear">;
@@ -20,15 +20,15 @@ export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
   return { quantity: record.quantity, storage: record.storage };
 }
 
-export interface GroupedRecordSearch {
+export type GroupedRecordSearch = {
   name?: string;
-}
+};
 
-export interface InventoryRepository {
+export type InventoryRepository = {
   searchGroupedRecords(gearSlug?: string): Promise<GroupedRecord[]>;
   resetRecords(records: InventoryRecord[]): Promise<GroupedRecord[]>;
   getRecords(gearId: number): Promise<InventoryRecord[]>;
-}
+};
 
 export class InventoryService {
   constructor(

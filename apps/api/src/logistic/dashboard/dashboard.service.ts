@@ -6,10 +6,10 @@ import {
 } from "@overbookd/http";
 import { Period } from "@overbookd/period";
 
-export interface DashboardGears {
+export type DashboardGears = {
   getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]>;
   getDetails(slug: string, period: Period): Promise<GearWithDetails>;
-}
+};
 
 @Injectable()
 export class DashboardService {

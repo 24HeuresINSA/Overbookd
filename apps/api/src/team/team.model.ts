@@ -5,8 +5,8 @@ export class Team {
   code: string;
 }
 
-export interface UpdateTeamForm {
+export type UpdateTeamForm = {
   name?: string;
   color?: string;
   icon?: string;
-}
+};

@@ -1,8 +1,8 @@
 import { Configuration } from "@overbookd/configuration";
 
-export interface ConfigurationValue {
+export type ConfigurationValue = {
   value: object | string | number | boolean;
-}
+};
 
 export class ConfigurationValueRepresentation implements ConfigurationValue {
   value: object | string | number | boolean;
