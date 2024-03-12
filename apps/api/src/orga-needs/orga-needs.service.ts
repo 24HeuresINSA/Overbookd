@@ -5,11 +5,11 @@ import { VolunteerAvailability } from "@prisma/client";
 import { getPeriodDuration } from "../utils/duration";
 import { BE_AFFECTED } from "@overbookd/permission";
 
-type OrgaNeedsRequest {
+type OrgaNeedsRequest = {
   start: Date;
   end: Date;
   teams: string[];
-}
+};
 
 export type OrgaNeedsResponse = {
   start: Date;
@@ -17,7 +17,7 @@ export type OrgaNeedsResponse = {
   assignedVolunteers: number;
   availableVolunteers: number;
   requestedVolunteers: number;
-}
+};
 
 const SELECT_REQUESTED_VOLUNTEERS = {
   start: true,
