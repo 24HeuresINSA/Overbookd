@@ -1,4 +1,4 @@
-import { AdherentRegistered } from "./newcomer";
+import { StaffRegistered } from "./newcomer";
 import {
   FilterNotifyees,
   NotificationRepository,
@@ -7,7 +7,7 @@ import {
 import { Permission } from "@overbookd/permission";
 
 type StoredNotification = {
-  event: AdherentRegistered;
+  event: StaffRegistered;
   notifyee: Notifyee;
 };
 
@@ -21,7 +21,7 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   private notifications: StoredNotification[] = [];
   constructor(private readonly notifyees: StoredNotifyee[]) {}
 
-  add(event: AdherentRegistered, clause: FilterNotifyees): Promise<Notifyee[]> {
+  add(event: StaffRegistered, clause: FilterNotifyees): Promise<Notifyee[]> {
     const matchingNotifyees = this.notifyees.filter(({ permissions }) =>
       permissions.includes(clause.permission),
     );

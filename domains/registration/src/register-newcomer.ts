@@ -6,7 +6,7 @@ import {
   RegistrationError,
 } from "./register-form";
 import {
-  AdherentRegistered,
+  StaffRegistered,
   Membership,
   NewcomerRegistered,
   VolunteerRegistered,
@@ -79,7 +79,7 @@ export class RegisterNewcomer {
     return this.newcomerRepository.save(fulfilledForm, membership);
   }
 
-  notifyNewAdherentAwaits(newcomer: AdherentRegistered): Promise<Notifyee[]> {
+  notifyNewStaffAwaits(newcomer: StaffRegistered): Promise<Notifyee[]> {
     return this.notificationRepository.add(newcomer, {
       permission: ENROLL_HARD,
     });

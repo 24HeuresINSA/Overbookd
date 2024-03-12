@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
 import { Teams } from "@overbookd/registration";
 import { PeriodDto } from "../../volunteer-availability/dto/period.dto";
 
-export class EnrollableAdherentResponseDto implements EnrollableAdherent {
+export class EnrollableStaffResponseDto implements EnrollableStaff {
   @ApiProperty({
     required: true,
     description: "The newcomer id",
@@ -49,7 +49,7 @@ export class EnrollableAdherentResponseDto implements EnrollableAdherent {
 }
 
 export class EnrollableVolunteerResponseDto
-  extends EnrollableAdherentResponseDto
+  extends EnrollableStaffResponseDto
   implements EnrollableVolunteer
 {
   @ApiProperty({ required: true })

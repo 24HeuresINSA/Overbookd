@@ -14,12 +14,12 @@ import {
   FestivalTaskRejectedEvent,
 } from "./festival-task";
 import {
-  AdherentRegisteredEvent,
+  StaffRegisteredEvent,
   VolunteerRegisteredEvent,
 } from "./registration";
 
 export type DomainEvent =
-  | AdherentRegisteredEvent
+  | StaffRegisteredEvent
   | VolunteerRegisteredEvent
   | FestivalActivityCreatedEvent
   | FestivalActivityReadyToReviewEvent

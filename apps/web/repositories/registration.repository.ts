@@ -5,7 +5,7 @@ import {
   RegisterForm,
 } from "@overbookd/registration";
 import {
-  EnrollableAdherent,
+  EnrollableStaff,
   EnrollableVolunteer,
   HttpStringified,
 } from "@overbookd/http";
@@ -15,14 +15,14 @@ type Context = { $axios: NuxtAxiosInstance };
 export class RegistrationRepository {
   private static readonly basePath = "registrations";
 
-  static getAdherents(context: Context) {
-    return context.$axios.get<HttpStringified<EnrollableAdherent[]>>(
-      `${this.basePath}/adherents`,
+  static getStaffs(context: Context) {
+    return context.$axios.get<HttpStringified<EnrollableStaff[]>>(
+      `${this.basePath}/staffs`,
     );
   }
 
-  static enrollNewAdherents(context: Context, newcomers: NewcomerToEnroll[]) {
-    return context.$axios.post<void>(`${this.basePath}/adherents/enroll`, {
+  static enrollStaffs(context: Context, newcomers: NewcomerToEnroll[]) {
+    return context.$axios.post<void>(`${this.basePath}/staffs/enroll`, {
       newcomers,
     });
   }
@@ -49,9 +49,7 @@ export class RegistrationRepository {
   }
 
   static generateLink(context: Context) {
-    return context.$axios.get<string>(
-      `${this.basePath}/invite-new-adherents-link`,
-    );
+    return context.$axios.get<string>(`${this.basePath}/invite-staff-link`);
   }
 
   static registerNewcomer(

@@ -19,13 +19,10 @@ import {
   FESTIVAL_TASK_REJECTED,
   FestivalTaskApproved,
   FESTIVAL_TASK_APPROVED,
-  ADHERENT_REGISTERED,
+  STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
-import {
-  AdherentRegistered,
-  VolunteerRegistered,
-} from "@overbookd/registration";
+import { StaffRegistered, VolunteerRegistered } from "@overbookd/registration";
 import { PastSharedMeal } from "@overbookd/personal-account";
 
 export class DomainEventService {
@@ -53,8 +50,8 @@ export class DomainEventService {
     this.$events.next(event);
   }
 
-  get adherentsRegistered(): Observable<AdherentRegistered> {
-    return this.listen(ADHERENT_REGISTERED).pipe(map(({ data }) => data));
+  get staffsRegistered(): Observable<StaffRegistered> {
+    return this.listen(STAFF_REGISTERED).pipe(map(({ data }) => data));
   }
 
   get volunteersRegistered(): Observable<VolunteerRegistered> {

@@ -19,7 +19,7 @@ type CheckInvitation = {
   secret: string;
 };
 
-export class InviteNewAdherents {
+export class InviteStaff {
   static byLink({ domain, secret }: LinkGeneration): URL {
     const baseUrl = new URL(`https://${domain}/register`);
     const token = jwt.sign({}, secret, { expiresIn: "30 days" });
@@ -34,10 +34,10 @@ export class InviteNewAdherents {
       const { exp } = jwtDecode<WithExpiration>(token ?? "");
       const expirationInMs = exp * ONE_SECOND_IN_MS;
 
-      if (InviteNewAdherents.isPast(expirationInMs)) return LINK_EXPIRED;
+      if (InviteStaff.isPast(expirationInMs)) return LINK_EXPIRED;
 
       const expirationDate =
-        InviteNewAdherents.formatDateWithExplicitMonthAndDay(expirationInMs);
+        InviteStaff.formatDateWithExplicitMonthAndDay(expirationInMs);
 
       return `Le lien expire le ${expirationDate}`;
     } catch {

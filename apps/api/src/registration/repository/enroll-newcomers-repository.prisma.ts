@@ -1,5 +1,5 @@
 import {
-  ADHERENT,
+  STAFF,
   EnrolledNewcomer,
   Teams,
   isJoinableTeams,
@@ -7,14 +7,14 @@ import {
 import { EnrollNewcomersRepository } from "./enroll-newcomers.repository";
 import { PrismaService } from "../../prisma.service";
 import {
-  DatabaseEnrollableAdherent as DatabaseEnrollableAdherent,
+  DatabaseEnrollableStaff as DatabaseEnrollableStaff,
   DatabaseTeamCode,
-  SELECT_ADHERENT,
+  SELECT_STAFF,
   NOT_VOLUNTEER_YET,
   DatabaseEnrollableVolunteer,
   IS_ENROLLABLE_VOLUNTEER,
 } from "./enroll-newcomers.query";
-import { EnrollableAdherent, EnrollableVolunteer } from "@overbookd/http";
+import { EnrollableStaff, EnrollableVolunteer } from "@overbookd/http";
 import { SELECT_VOLUNTEER } from "./enroll-newcomers.query";
 
 export class PrismaEnrollNewcomersRepository
@@ -38,17 +38,17 @@ export class PrismaEnrollNewcomersRepository
     await this.prisma.$transaction(allRequests);
   }
 
-  async findEnrollableAdherents(): Promise<EnrollableAdherent[]> {
-    const adherents = await this.prisma.user.findMany({
+  async findEnrollableStaffs(): Promise<EnrollableStaff[]> {
+    const staffs = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
         isDeleted: false,
-        registrationMembership: ADHERENT,
+        registrationMembership: STAFF,
         ...NOT_VOLUNTEER_YET,
       },
-      select: SELECT_ADHERENT,
+      select: SELECT_STAFF,
     });
-    return adherents.map(formatToEnrollableAdherent);
+    return staffs.map(formatToEnrollableStaff);
   }
 
   async findEnrollableVolunteers(): Promise<EnrollableVolunteer[]> {
@@ -76,7 +76,7 @@ function formatToEnrollableVolunteer(
   volunteer: DatabaseEnrollableVolunteer,
 ): EnrollableVolunteer {
   return {
-    ...formatToEnrollableAdherent(volunteer),
+    ...formatToEnrollableStaff(volunteer),
     charisma: volunteer.charisma,
     availabilities: volunteer.availabilities,
     mobilePhone: volunteer.phone,
@@ -85,16 +85,16 @@ function formatToEnrollableVolunteer(
   };
 }
 
-function formatToEnrollableAdherent(
-  adherent: DatabaseEnrollableAdherent,
-): EnrollableAdherent {
-  const teams = formatTeamsToJoinableTeams(adherent.teams);
+function formatToEnrollableStaff(
+  staff: DatabaseEnrollableStaff,
+): EnrollableStaff {
+  const teams = formatTeamsToJoinableTeams(staff.teams);
   return {
-    id: adherent.id,
-    firstname: adherent.firstname,
-    lastname: adherent.lastname,
-    email: adherent.email,
-    registeredAt: adherent.createdAt,
+    id: staff.id,
+    firstname: staff.firstname,
+    lastname: staff.lastname,
+    email: staff.email,
+    registeredAt: staff.createdAt,
     teams,
   };
 }

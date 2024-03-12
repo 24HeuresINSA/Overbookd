@@ -75,7 +75,7 @@ export class MailService implements OnApplicationBootstrap {
   private logger = new Logger("MailService");
 
   onApplicationBootstrap() {
-    this.eventStore.adherentsRegistered.subscribe((event) => {
+    this.eventStore.staffsRegistered.subscribe((event) => {
       this.logger.log("Send welcome-adherent mail");
       this.logger.debug(JSON.stringify(event));
       this.welcome(event);

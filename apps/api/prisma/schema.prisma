@@ -24,6 +24,7 @@ enum TransactionType {
 enum RegistrationMembership {
   ADHERENT
   VOLUNTEER
+  STAFF
 
   @@map("registration_membership")
 }

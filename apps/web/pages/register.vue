@@ -207,7 +207,7 @@ import {
   TeamCode,
   Teams,
   CVL_CODE,
-  InviteNewAdherents,
+  InviteStaff,
   LINK_EXPIRED,
 } from "@overbookd/registration";
 import {
@@ -278,7 +278,7 @@ export default Vue.extend({
       if (!this.token) return false;
 
       const currentUrl = new URL(window.location.href);
-      return InviteNewAdherents.isLinkExpired(currentUrl) === LINK_EXPIRED;
+      return InviteStaff.isLinkExpired(currentUrl) === LINK_EXPIRED;
     },
     isVolunteerRegistration(): boolean {
       return this.token === undefined;

@@ -1,10 +1,10 @@
 <template>
   <div class="registrations">
-    <h1>Admissions organisateurs</h1>
+    <h1>Admission organisateurs</h1>
     <RegistrationConfiguration class="registration-configuration" />
     <v-divider></v-divider>
     <v-data-table
-      v-model="selectedAdherents"
+      v-model="selectedStaffs"
       :headers="headers"
       :items="filteredNewcomers"
       :items-per-page="30"
@@ -50,7 +50,7 @@
       <v-spacer></v-spacer>
       <v-btn
         color="primary"
-        :disabled="noAdherentSelected"
+        :disabled="noStaffSelected"
         @click="enrollNewcomers"
       >
         Enrôler en tant que hard
@@ -72,16 +72,16 @@ import { Searchable } from "~/utils/search/search.utils";
 import RegistrationConfiguration from "~/components/molecules/registration/RegistrationConfiguration.vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
-import { EnrollableAdherent } from "@overbookd/http";
+import { EnrollableStaff } from "@overbookd/http";
 
 interface RegistrationsData {
   headers: Header[];
   last30DaysNewcomers: boolean;
   searchNewcomer: string;
-  selectedAdherents: EnrollableAdherent[];
+  selectedStaffs: EnrollableStaff[];
 }
 
-type Filter = (newcomer: Searchable<EnrollableAdherent>) => boolean;
+type Filter = (newcomer: Searchable<EnrollableStaff>) => boolean;
 
 export default Vue.extend({
   name: "RegistrationsHard",
@@ -101,21 +101,21 @@ export default Vue.extend({
     ],
     last30DaysNewcomers: true,
     searchNewcomer: "",
-    selectedAdherents: [],
+    selectedStaffs: [],
   }),
   head: () => ({
-    title: "Nouvelles inscriptions",
+    title: "Admission organisateurs",
   }),
   computed: {
-    searchableNewcomers(): Searchable<EnrollableAdherent>[] {
-      return this.$accessor.registration.adherents.map((newcomer) => ({
+    searchableNewcomers(): Searchable<EnrollableStaff>[] {
+      return this.$accessor.registration.staffs.map((newcomer) => ({
         ...newcomer,
         searchable: SlugifyService.apply(
           `${newcomer.firstname} ${newcomer.lastname}`,
         ),
       }));
     },
-    filteredNewcomers(): EnrollableAdherent[] {
+    filteredNewcomers(): EnrollableStaff[] {
       const search = SlugifyService.apply(this.searchNewcomer);
       const thirtyDaysAgo = Date.now() - 30 * ONE_DAY_IN_MS;
       return this.searchableNewcomers.filter((newcomer) => {
@@ -128,33 +128,33 @@ export default Vue.extend({
     joinableTeams(): JoinableTeam[] {
       return Object.values(joinableTeams);
     },
-    noAdherentSelected(): boolean {
-      return this.selectedAdherents.length === 0;
+    noStaffSelected(): boolean {
+      return this.selectedStaffs.length === 0;
     },
   },
   mounted() {
-    this.$accessor.registration.getAdherents();
+    this.$accessor.registration.getStaffs();
   },
   methods: {
     formatDate(date: Date): string {
       return formatLocalDate(date);
     },
     enrollNewcomers() {
-      this.$accessor.registration.enrollNewAdherents(this.selectedAdherents);
-      this.selectedAdherents = [];
+      this.$accessor.registration.enrollStaffs(this.selectedStaffs);
+      this.selectedStaffs = [];
     },
     toggleLast30DaysNewcomers() {
       this.last30DaysNewcomers = !this.last30DaysNewcomers;
     },
     isMatchingNameSearch(search: string): Filter {
-      return ({ searchable }: Searchable<EnrollableAdherent>) =>
+      return ({ searchable }: Searchable<EnrollableStaff>) =>
         searchable.includes(search);
     },
     forgetHim(email: string) {
       this.$accessor.registration.forgetHim(email);
     },
     isMatchingRegistrationDateLimit(dateLimit: number): Filter {
-      return ({ registeredAt }: EnrollableAdherent) => {
+      return ({ registeredAt }: EnrollableStaff) => {
         if (!this.last30DaysNewcomers) return true;
         return registeredAt.getTime() > dateLimit;
       };
