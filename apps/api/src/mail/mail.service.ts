@@ -15,6 +15,7 @@ import {
 } from "@overbookd/festival-event";
 import { Rejected, FestivalTaskRejected } from "@overbookd/domain-events";
 import { Profile } from "@overbookd/user";
+import { Membership } from "@overbookd/registration";
 
 type EmailResetPassword = {
   email: string;
@@ -25,7 +26,7 @@ type EmailResetPassword = {
 type WelcomeNewcomer = {
   email: string;
   firstname: string;
-  membership: string;
+  membership: Membership;
 };
 
 export type Member = Pick<
@@ -76,7 +77,7 @@ export class MailService implements OnApplicationBootstrap {
 
   onApplicationBootstrap() {
     this.eventStore.staffsRegistered.subscribe((event) => {
-      this.logger.log("Send welcome-adherent mail");
+      this.logger.log("Send welcome-staff mail");
       this.logger.debug(JSON.stringify(event));
       this.welcome(event);
     });
