@@ -26,7 +26,7 @@
       <RichEditor
         :data="instruction ?? ''"
         class="mb-6"
-        @change="updateInstruction"
+        @update:data="updateInstruction"
       />
     </v-card-text>
 

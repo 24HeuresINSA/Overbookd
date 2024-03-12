@@ -13,17 +13,34 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import StarterKit from "@tiptap/starter-kit";
 import { Editor, EditorContent } from "@tiptap/vue-2";
 
 import TiptapMenu from "./TiptapMenu.vue";
 
-export default {
+type LiteEditor = {
+  getHTML: () => string;
+  setEditable: (editable: boolean) => void;
+  commands: { setContent: (content: string) => void };
+  destroy: () => void;
+};
+
+type RichEditorData = {
+  delay?: ReturnType<typeof setTimeout>;
+  editor?: LiteEditor;
+};
+
+export default defineComponent({
   name: "RichEditor",
   components: {
     EditorContent,
     TiptapMenu,
+  },
+  model: {
+    prop: "data",
+    event: "update:data",
   },
   props: {
     data: {
@@ -35,22 +52,22 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      editor: null,
-    };
-  },
+  emits: ["update:data"],
+  data: (): RichEditorData => ({
+    delay: undefined,
+    editor: undefined,
+  }),
   computed: {
     emptyContent() {
-      const html = this.editor.getHTML();
+      const html = this.editor?.getHTML() ?? "";
       const textContent = html.replace(/<[^>]+>/g, "");
       return textContent.trim() === "";
     },
   },
   watch: {
     data() {
-      this.editor.commands.setContent(this.data ?? "");
-      this.editor.setEditable(!this.disabled);
+      this.editor?.commands.setContent(this.data ?? "");
+      this.editor?.setEditable(!this.disabled);
     },
   },
   mounted() {
@@ -58,18 +75,23 @@ export default {
       extensions: [StarterKit],
       content: this.data ?? "",
       editable: !this.disabled,
-      onBlur: () => this.update(),
+      onBlur: () => this.deferUpdate(),
     });
   },
   beforeUnmount() {
-    this.editor.destroy();
+    this.editor?.destroy();
   },
   methods: {
-    update() {
-      this.$emit("change", this.emptyContent ? "" : this.editor.getHTML());
+    update(content: string) {
+      this.$emit("update:data", content);
+    },
+    deferUpdate() {
+      const content = this.emptyContent ? "" : this.editor?.getHTML() ?? "";
+      if (this.delay) clearInterval(this.delay);
+      this.delay = setTimeout(() => this.update(content), 300);
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
