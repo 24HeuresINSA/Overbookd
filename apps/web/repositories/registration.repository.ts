@@ -49,7 +49,7 @@ export class RegistrationRepository {
   }
 
   static generateLink(context: Context) {
-    return context.$axios.get<string>(`${this.basePath}/invite-staff-link`);
+    return context.$axios.post<string>(`${this.basePath}/invite-staff-link`);
   }
 
   static registerNewcomer(

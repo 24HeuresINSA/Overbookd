@@ -29,7 +29,7 @@ import { VolunteerAvailabilityService } from "../volunteer-availability/voluntee
 import { Configurations } from "./repository/configurations.repository";
 
 type Repositories = {
-  enrollNewcomers: Readonly<EnrollNewcomersRepository>;
+  newcomers: Readonly<EnrollNewcomersRepository>;
   configurations: Readonly<Configurations>;
 };
 
@@ -129,19 +129,17 @@ export class RegistrationService {
   }
 
   getStaffs(): Promise<EnrollableStaff[]> {
-    return this.repositories.enrollNewcomers.findEnrollableStaffs();
+    return this.repositories.newcomers.findEnrollableStaffs();
   }
 
   getVolunteers(): Promise<EnrollableVolunteer[]> {
-    return this.repositories.enrollNewcomers.findEnrollableVolunteers();
+    return this.repositories.newcomers.findEnrollableVolunteers();
   }
 
   getVolunteer(
     volunteerId: EnrollableVolunteer["id"],
   ): Promise<EnrollableVolunteer> {
-    return this.repositories.enrollNewcomers.findEnrollableVolunteer(
-      volunteerId,
-    );
+    return this.repositories.newcomers.findEnrollableVolunteer(volunteerId);
   }
 
   async enrollNewcomers({
@@ -149,7 +147,7 @@ export class RegistrationService {
     team,
   }: EnrollNewcomersForm): Promise<void> {
     const newcomersToEnroll = EnrollNewcomers.with(newcomers).to(team);
-    await this.repositories.enrollNewcomers.enroll(newcomersToEnroll);
+    await this.repositories.newcomers.enroll(newcomersToEnroll);
     if (team !== "soft") return;
 
     await Promise.all(

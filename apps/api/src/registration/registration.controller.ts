@@ -69,7 +69,7 @@ export class RegistrationController {
   @UseGuards(JwtAuthGuard, PermissionsGuard)
   @ApiBearerAuth()
   @Permission(ENROLL_HARD)
-  @Get("invite-staff-link")
+  @Post("invite-staff-link")
   generateStaffInvitationLink(): Promise<URL> {
     return this.registrationService.invite();
   }

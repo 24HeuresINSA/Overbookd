@@ -65,7 +65,7 @@ import { PrismaConfigurations } from "./repository/configuration-repository.pris
     {
       provide: RegistrationService,
       useFactory: (
-        enrollNewcomers: PrismaEnrollNewcomersRepository,
+        newcomers: PrismaEnrollNewcomersRepository,
         configurations: PrismaConfigurations,
         register: RegisterNewcomer,
         event: DomainEventService,
@@ -73,7 +73,7 @@ import { PrismaConfigurations } from "./repository/configuration-repository.pris
         availability: VolunteerAvailabilityService,
       ) =>
         new RegistrationService(
-          { enrollNewcomers, configurations },
+          { newcomers, configurations },
           { register, forget },
           { event, availability },
         ),
