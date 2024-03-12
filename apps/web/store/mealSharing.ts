@@ -12,10 +12,10 @@ import { actionTree, mutationTree, getterTree } from "typed-vuex";
 import { MealSharingRepository } from "~/repositories/meal-sharing.repository";
 import { safeCall } from "~/utils/api/calls";
 
-interface MealSharingState {
+type MealSharingState = {
   sharedMeal?: SharedMeal;
   meals: SharedMeal[];
-}
+};
 
 export const state = (): MealSharingState => ({
   sharedMeal: undefined,

@@ -5,9 +5,9 @@ import {
 } from "./anonymous-member";
 import { MemberRepository } from "./forget-member";
 
-interface ForgetAboutMember {
+type ForgetAboutMember = {
   forget(): Promise<void | AnonymousMember>;
-}
+};
 
 type InitForgetAboutStrategy = {
   id: number;

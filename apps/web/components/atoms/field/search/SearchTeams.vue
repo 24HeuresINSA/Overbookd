@@ -35,9 +35,9 @@ import Vue from "vue";
 import TeamChip from "../../chip/TeamChip.vue";
 import { Team } from "~/utils/models/team.model";
 
-interface SearchTeamData {
+type SearchTeamData = {
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchTeams",

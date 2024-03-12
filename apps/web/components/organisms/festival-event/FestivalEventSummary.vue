@@ -20,11 +20,11 @@
 <script lang="ts">
 import Vue from "vue";
 
-interface SummaryItem {
+type SummaryItem = {
   id: string;
   text: string;
   icon: string;
-}
+};
 
 export default Vue.extend({
   name: "FestivalEventSummary",

@@ -45,7 +45,7 @@ import Vue from "vue";
 import { InventoryGroupedRecord } from "~/store/inventory";
 import { Header } from "~/utils/models/data-table.model";
 
-interface InventoryListingData {
+type InventoryListingData = {
   headers: Header[];
   details: InventoryGroupedRecord[];
 }

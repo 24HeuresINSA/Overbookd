@@ -24,7 +24,7 @@ import {
   VIEW_GEAR_DASHBOARD,
 } from "@overbookd/permission";
 
-export interface Page {
+export type Page = {
   icon: string;
   title: string;
   permission?: Permission;
@@ -32,7 +32,7 @@ export interface Page {
   description: string;
   mobileSupport: boolean;
   keywords: string[];
-}
+};
 
 export const pages: Page[] = [
   {

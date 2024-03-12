@@ -1,7 +1,7 @@
 import { IProvidePeriod } from "@overbookd/period";
 import { User } from "@overbookd/user";
 
-export interface CalendarEvent {
+export type CalendarEvent = {
   start: Date;
   end: Date;
   name: string;
@@ -9,7 +9,7 @@ export interface CalendarEvent {
   category?: string;
   color?: string;
   timed: true;
-}
+};
 
 export type CalendarUser = User & {
   teams: string[];

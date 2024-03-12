@@ -153,7 +153,7 @@ import {
 import { isDraftPreview } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 
-interface FaData {
+type FaData & {
   headers: Header[];
   isNewFaDialogOpen: boolean;
   isRemovalDialogOpen: boolean;

@@ -4,25 +4,25 @@ import { safeCall } from "~/utils/api/calls";
 import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import { SnackNotif } from "~/utils/models/notif.model";
 
-interface State {
+type State = {
   categories: Category[];
   categoryTree: CategoryTree[];
-}
+};
 
-export interface CategorySearchOptions {
+export type CategorySearchOptions = {
   name?: string;
   owner?: string;
-}
+};
 
-export interface CategoryForm {
+export type CategoryForm = {
   name: string;
   owner?: string;
   parent?: number;
-}
+};
 
-export interface CategoryUpdateForm extends CategoryForm {
+export type CategoryUpdateForm = CategoryForm & {
   id: number;
-}
+};
 
 export const state = (): State => ({
   categories: [],

@@ -105,7 +105,7 @@ import EditLocationCard from "~/components/molecules/signa/location/EditLocation
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { MANAGE_LOCATION } from "@overbookd/permission";
 
-interface LocationData {
+type LocationData = {
   headers: Header[];
   search: string;
   displayNewLocationDialog: boolean;

@@ -29,10 +29,10 @@ import {
 } from "@overbookd/contribution";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 
-interface ContributionRowData {
+type ContributionRowData = {
   amount: number;
   isAmountInvalid: boolean;
-}
+};
 
 export default Vue.extend({
   name: "ContributionRow",

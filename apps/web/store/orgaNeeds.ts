@@ -4,17 +4,17 @@ import { safeCall } from "~/utils/api/calls";
 import { HttpStringified } from "@overbookd/http";
 import { OrgaNeedsRepository } from "~/repositories/orga-needs.repository";
 
-export interface OrgaNeedsResponse {
+export type OrgaNeedsResponse = {
   start: Date;
   end: Date;
   assignedVolunteers: number;
   availableVolunteers: number;
   requestedVolunteers: number;
-}
+};
 
-interface State {
+type State = {
   stats: OrgaNeedsResponse[];
-}
+};
 
 export const state = (): State => ({
   stats: [],

@@ -1,11 +1,11 @@
 import { AxiosResponse } from "axios";
 import { SnackNotif } from "../models/notif.model";
 
-interface ActionMessage {
+type ActionMessage = {
   successMessage?: string;
   errorMessage?: string;
   messageDuration?: number;
-}
+};
 
 export async function safeCall<T>(
   store: Vue["$store"],

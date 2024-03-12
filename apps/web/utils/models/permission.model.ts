@@ -1,12 +1,12 @@
-export interface Permission {
+export type Permission = {
   id: number;
   name: string;
   description: string;
   teams: string[];
-}
+};
 
-export interface CreatePermissionForm {
+export type CreatePermissionForm = {
   id?: number;
   name: string;
   description?: string;
-}
+};

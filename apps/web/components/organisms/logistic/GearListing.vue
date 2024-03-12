@@ -65,7 +65,7 @@ import GearFilter from "../../molecules/logistic/GearFilter.vue";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { FilterGear } from "~/utils/models/filter-gear.model";
 
-interface GearListingData {
+type GearListingData = {
   headers: Header[];
   filter: FilterGear;
   loading: boolean;

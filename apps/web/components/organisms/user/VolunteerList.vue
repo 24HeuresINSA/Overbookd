@@ -57,7 +57,7 @@ import {
 } from "~/utils/user/user.utils";
 import { Team } from "~/utils/models/team.model";
 
-interface VolunteerListData {
+type VolunteerListData = {
   headers: Header[];
 }
 

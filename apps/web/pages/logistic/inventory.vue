@@ -13,9 +13,9 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 import InventoryImport from "~/components/organisms/logistic/InventoryImport.vue";
 import InventoryListing from "~/components/organisms/logistic/InventoryListing.vue";
 
-interface InventoryData {
+type InventoryData = {
   importing: boolean;
-}
+};
 
 export default Vue.extend({
   name: "Inventory",

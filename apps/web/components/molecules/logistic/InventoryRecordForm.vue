@@ -42,9 +42,9 @@ import { DisplayableManualInventoryRecordError } from "~/domain/inventory/manual
 import { Gear } from "~/utils/models/catalog.model";
 import { InputRulesData } from "~/utils/rules/input.rules";
 
-interface InventoryRecordFormData extends InputRulesData {
+type InventoryRecordFormData = InputRulesData & {
   gear?: Gear;
-}
+};
 
 export default Vue.extend({
   name: "InventoryRecordForm",

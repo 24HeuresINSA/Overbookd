@@ -49,7 +49,7 @@ import Vue from "vue";
 import { InputRulesData, isEmail, required } from "~/utils/rules/input.rules";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
-interface ForgetData extends InputRulesData {
+type ForgetData = InputRulesData & {
   password: string;
   email: string;
   confirm: boolean;

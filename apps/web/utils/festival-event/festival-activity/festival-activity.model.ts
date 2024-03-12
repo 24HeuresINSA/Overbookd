@@ -67,10 +67,10 @@ export const electricityConnectionLabels = new Map<
   [P17_125A_TETRA, "125A Tetra (P17 125A TETRA)"],
 ]);
 
-export interface ElectricityConnectionWithLabel {
+export type ElectricityConnectionWithLabel = {
   connection: ElectricityConnection;
   label: string;
-}
+};
 
 export function isDraftPreview(
   activity: PreviewFestivalActivity,

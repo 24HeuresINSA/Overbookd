@@ -65,7 +65,7 @@ type ActionItem = {
   value: string;
 };
 
-interface LocationMapEditorData {
+type LocationMapEditorData = {
   url: string;
   attribution: string;
   zoom: number;

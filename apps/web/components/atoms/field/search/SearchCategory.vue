@@ -35,10 +35,10 @@ import Vue from "vue";
 import { CategorySearchOptions } from "~/store/catalog";
 import { Category } from "~/utils/models/catalog.model";
 
-interface SearchCategoryData {
+type SearchCategoryData = {
   category?: Category;
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchCategory",

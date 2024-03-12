@@ -5,10 +5,10 @@ import { CatalogSignageRepository } from "~/repositories/catalog-signage.reposit
 import { updateItemToList } from "@overbookd/list";
 import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
-interface State {
+type State = {
   signages: SignageWithPotentialImage[];
   signage: SignageWithPotentialImage | null;
-}
+};
 
 export const state = (): State => ({
   signages: [],

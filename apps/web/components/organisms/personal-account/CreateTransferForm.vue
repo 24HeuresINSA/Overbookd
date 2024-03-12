@@ -38,7 +38,7 @@ import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 import { Consumer } from "~/utils/models/user.model";
 
-interface CreateTransferFormData {
+type CreateTransferFormData = {
   amount: number;
   payee: Consumer | null;
   context: string;

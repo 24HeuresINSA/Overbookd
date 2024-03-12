@@ -117,7 +117,7 @@ import { formatLocalDate } from "~/utils/date/date.utils";
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentField from "~/components/atoms/field/comment/CommentField.vue";
 
-interface UserCardData extends InputRulesData {
+type UserCardData = InputRulesData & {
   firstname: string;
   lastname: string;
   nickname?: string | null;
@@ -126,7 +126,7 @@ interface UserCardData extends InputRulesData {
   comment?: string | null;
   email: string;
   delay?: ReturnType<typeof setTimeout>;
-}
+};
 
 export default defineComponent({
   name: "UserCard",

@@ -307,12 +307,12 @@ export class TaskAssignment {
   }
 }
 
-interface ReplacementStrategy {
+type ReplacementStrategy = {
   findNewCandidate(
     lastCandidate: AssignmentCandidate,
     potentialCandidates: Volunteer[],
   ): AssignmentCandidate | undefined;
-}
+};
 
 class NextCandidateReplacementStrategy implements ReplacementStrategy {
   findNewCandidate(

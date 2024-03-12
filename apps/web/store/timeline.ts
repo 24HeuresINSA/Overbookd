@@ -21,13 +21,13 @@ type WithName = {
   name: string;
 };
 
-interface TimelineState {
+type TimelineState = {
   events: TimelineEvent[];
   start: Date;
   end: Date;
   search: string;
   teams: Team[];
-}
+};
 
 function defaultPeriod() {
   const currentDate = new Date();

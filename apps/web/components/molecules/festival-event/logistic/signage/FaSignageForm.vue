@@ -62,7 +62,7 @@ import { defineComponent } from "vue";
 import { Signage, PANNEAU, signageTypes } from "@overbookd/festival-event";
 import { isNumber, min } from "~/utils/rules/input.rules";
 
-interface SignageFormData {
+type SignageFormData = {
   type: Signage["type"];
   text: string;
   quantity: number;

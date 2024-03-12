@@ -44,7 +44,7 @@ import {
 import { formatUsername } from "~/utils/user/user.utils";
 import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabilities";
 
-interface CalendarItemWithTask extends CalendarEvent {
+type CalendarItemWithTask = CalendarEvent & {
   timeSpanId?: number;
   ft: { id: number; name: string };
 }

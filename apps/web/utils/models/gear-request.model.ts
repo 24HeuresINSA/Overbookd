@@ -2,20 +2,19 @@ import { IProvidePeriod } from "@overbookd/period";
 import { HttpStringified } from "@overbookd/http";
 import { Gear } from "./catalog.model";
 
-export interface BaseGearRequestCreation {
+export type BaseGearRequestCreation = {
   gearId: number;
   quantity: number;
-}
+};
 
-export interface ExistingPeriodGearRequestCreation
-  extends BaseGearRequestCreation {
+export type ExistingPeriodGearRequestCreation = BaseGearRequestCreation & {
   periodId: number;
-}
+};
 
-export interface NewPeriodGearRequestCreation extends BaseGearRequestCreation {
+export type NewPeriodGearRequestCreation = BaseGearRequestCreation & {
   start: Date;
   end: Date;
-}
+};
 
 export type GearRequestCreation =
   | NewPeriodGearRequestCreation
@@ -25,29 +24,29 @@ export type GearRequestUpdate = Partial<
   Omit<NewPeriodGearRequestCreation, "gearId">
 >;
 
-export interface Period extends IProvidePeriod {
+export type Period = IProvidePeriod & {
   id: number;
-}
+};
 
-export interface Seeker<T extends "FA" | "FT" = "FA" | "FT"> {
+export type Seeker<T extends "FA" | "FT" = "FA" | "FT"> = {
   type: T;
   id: number;
   name: string;
-}
+};
 
 export type EventSeeker = Seeker<"FA"> | Seeker<"FT">;
 
-export interface GearRequest<T extends "FA" | "FT" = "FA" | "FT"> {
+export type GearRequest<T extends "FA" | "FT" = "FA" | "FT"> = {
   rentalPeriod: Period;
   quantity: number;
   gear: Gear;
   seeker: Seeker<T>;
-}
+};
 
-export interface StoredGearRequest<T extends "FA" | "FT" = "FA" | "FT">
-  extends GearRequest<T> {
-  drive?: string;
-}
+export type StoredGearRequest<T extends "FA" | "FT" = "FA" | "FT"> =
+  GearRequest<T> & {
+    drive?: string;
+  };
 
 export function isFAStoredGearRequest(
   storedGearRequest: StoredGearRequest,
@@ -61,10 +60,10 @@ export function isFTStoredGearRequest(
   return storedGearRequest.seeker.type === "FT";
 }
 
-export interface GearRequestWithDrive<T extends "FA" | "FT" = "FA" | "FT">
-  extends GearRequest<T> {
-  drive: string;
-}
+export type GearRequestWithDrive<T extends "FA" | "FT" = "FA" | "FT"> =
+  GearRequest<T> & {
+    drive: string;
+  };
 
 export type EventGearRequest =
   | GearRequestWithDrive<"FA">

@@ -56,7 +56,7 @@ import Vue from "vue";
 import { OverDate, Period } from "@overbookd/period";
 import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/AvailabilitiesPickCalendar.vue";
 
-interface CalendarStep {
+type CalendarStep = {
   title: string;
   period: Period;
 }

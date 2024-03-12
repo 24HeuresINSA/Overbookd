@@ -28,9 +28,9 @@ import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { SlugifyService } from "@overbookd/slugify";
 
-interface SearchFriendData {
+type SearchFriendData = {
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchFriend",

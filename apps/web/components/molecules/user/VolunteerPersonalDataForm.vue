@@ -144,7 +144,7 @@ import {
   required,
 } from "~/utils/rules/input.rules";
 
-interface VolunteerPersonalDataFormData extends InputRulesData {
+type VolunteerPersonalDataFormData = InputRulesData & {
   nickname: string | null;
   phone: string;
   email: string;

@@ -5,7 +5,7 @@ export const AssignmentModes = {
   TASK_ORGA: "task-orga",
 };
 
-export interface Volunteer extends User {
+export type Volunteer = User & {
   charisma: number;
   comment?: string;
   teams: string[];
@@ -13,13 +13,13 @@ export interface Volunteer extends User {
   friendAvailable?: boolean;
   isRequestedOnSamePeriod?: boolean;
   hasFriendAssigned?: boolean;
-}
+};
 
-export interface UpdateAssignedTeam {
+export type UpdateAssignedTeam = {
   timeSpanId: number;
   assigneeId: number;
   team: string;
-}
+};
 
 export function getAssignmentModeFromRoute(url: string): string {
   const mode = url.split("/").at(-1);

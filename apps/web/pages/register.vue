@@ -224,7 +224,7 @@ import {
 } from "~/utils/rules/input.rules";
 import CommentField from "~/components/atoms/field/comment/CommentField.vue";
 
-interface RegisterData extends InputRulesData {
+type RegisterData = InputRulesData & {
   step: number;
   firstname: string;
   lastname: string;

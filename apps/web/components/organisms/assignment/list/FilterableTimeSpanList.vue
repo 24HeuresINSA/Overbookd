@@ -41,7 +41,7 @@ import { AssignmentCandidate } from "~/domain/timespan-assignment/timeSpanAssign
 import { Searchable } from "~/utils/search/search.utils";
 import { SlugifyService } from "@overbookd/slugify";
 
-interface FilterableTimeSpanListData {
+type FilterableTimeSpanListData = {
   teams: Team[];
   searchFtName: string;
   category: TaskCategory | TaskPriority | null;

@@ -70,11 +70,11 @@ import {
   signageTypes,
 } from "@overbookd/signa";
 
-interface SignageFormData extends InputRulesDataWithImage {
+type SignageFormData = InputRulesDataWithImage & {
   name: string;
   type: SignageType;
   image: File | null;
-}
+};
 
 const nameMinLength = 3;
 

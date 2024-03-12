@@ -19,21 +19,21 @@ export type UserPersonalDataWithProfilePicture = UserPersonalData &
 export type MyUserInformationWithProfilePicture = MyUserInformation &
   WithPotentialProfilePicture;
 
-export interface Task {
+export type Task = {
   id: number;
   name: string;
   status: FestivalTask["status"];
-}
+};
 
-export interface VolunteerTask extends IProvidePeriod {
+export type VolunteerTask = IProvidePeriod & {
   ft: Task;
   timeSpanId?: number;
-}
+};
 
-export interface VolunteerAssignmentStat {
+export type VolunteerAssignmentStat = {
   category: TaskCategory;
   duration: number;
-}
+};
 
 export function castToUserUpdateForm(user: UserPersonalData): UserUpdateForm {
   return {

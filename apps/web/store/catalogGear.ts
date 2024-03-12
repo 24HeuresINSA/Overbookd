@@ -6,20 +6,20 @@ import { Gear } from "~/utils/models/catalog.model";
 import { GearSearchOptions } from "@overbookd/http";
 import { GearsRepository } from "~/repositories/catalog.repository";
 
-interface State {
+type State = {
   gears: Gear[];
-}
+};
 
-export interface GearForm {
+export type GearForm = {
   name: string;
   category?: number;
   isPonctualUsage: boolean;
   isConsumable: boolean;
-}
+};
 
-interface GearUpdateForm extends GearForm {
+type GearUpdateForm = GearForm & {
   id: number;
-}
+};
 
 export const state = (): State => ({
   gears: [],

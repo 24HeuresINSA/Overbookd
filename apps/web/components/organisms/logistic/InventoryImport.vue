@@ -87,7 +87,7 @@ import {
 } from "~/domain/inventory/manual-inventory-record";
 import InventoryRecordForm from "../../molecules/logistic/InventoryRecordForm.vue";
 
-interface InventoryData {
+type InventoryData = {
   inventoryRecords: InventoryRecord[];
   inventoryImportErrors: ManualInventoryRecordError[];
   recordsHeaders: Header[];
@@ -96,7 +96,7 @@ interface InventoryData {
   selectedImportError?: DisplayableManualInventoryRecordError;
   selectedImportErrorIndex: number;
   isUpdateImportErrorDialogOpen: boolean;
-}
+};
 
 export default Vue.extend({
   name: "InventoryImport",

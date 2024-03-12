@@ -31,7 +31,7 @@ import { defineComponent } from "vue";
 import { SignageType, Signage } from "@overbookd/signa";
 import { SlugifyService } from "@overbookd/slugify";
 
-interface SearchSignageData {
+type SearchSignageData = {
   loading: boolean;
   search: string;
 }

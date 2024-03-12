@@ -34,7 +34,7 @@ import CreateTransferForm from "~/components/organisms/personal-account/CreateTr
 import { Money } from "~/utils/money/money";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 
-interface MyPersonalAccountData {
+type MyPersonalAccountData = {
   isTransferDialogOpen: boolean;
 }
 
