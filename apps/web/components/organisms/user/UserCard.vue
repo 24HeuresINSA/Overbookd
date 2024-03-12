@@ -84,7 +84,7 @@
             autocomplete="email"
             inputmode="email"
             readonly
-            hint="Pour changer ton email il faut passer par les responsables bénévoles ou le.a sécretaire général.e. 🙏"
+            hint="Pour changer ton email il faut passer par les responsables bénévoles ou le.a secrétaire général.e. 🙏"
             persistent-hint
             @input="defectSave"
           ></v-text-field>
