@@ -13,13 +13,13 @@ import {
   MemberRegistered,
 } from "./newcomer";
 
-export interface NewcomerRepository {
+export type NewcomerRepository = {
   isEmailUsed(email: string): Promise<boolean>;
   save: <T extends Membership>(
     fulfilledForm: FulfilledRegistration,
     membership: T,
   ) => Promise<NewcomerRegistered<T>>;
-}
+};
 
 export type FilterNotifyees = {
   permission: Permission;
@@ -29,9 +29,9 @@ export type Notifyee = {
   id: number;
 };
 
-export interface NotificationRepository {
+export type NotificationRepository = {
   add(event: MemberRegistered, clause: FilterNotifyees): Promise<Notifyee[]>;
-}
+};
 
 export class RegisterNewcomer {
   constructor(

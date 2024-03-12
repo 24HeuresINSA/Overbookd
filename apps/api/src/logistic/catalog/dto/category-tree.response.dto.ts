@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CategoryTree } from "../interfaces";
+import { CategoryTree } from "../types";
 import { CategoryResponseDto } from "./category.response.dto";
 
 export class CategoryTreeResponseDto extends CategoryResponseDto {

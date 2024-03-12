@@ -1,4 +1,4 @@
-import { Category, Team } from "./interfaces";
+import { Category, Team } from "./types";
 import {
   InMemoryCategoryRepository,
   InMemoryTeamRepository,

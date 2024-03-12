@@ -6,7 +6,7 @@ import {
   SearchCategory,
   Team,
   TeamRepository,
-} from "./interfaces";
+} from "./types";
 import { SlugifyService } from "@overbookd/slugify";
 
 export class CategoryNotFoundException extends NotFoundException {

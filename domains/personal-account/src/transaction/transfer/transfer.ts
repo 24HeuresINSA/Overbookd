@@ -31,13 +31,13 @@ export type TransferResponse = {
   to: TransferParticipant;
 };
 
-export interface MemberRepository {
+export type MemberRepository = {
   getById: (adherentId: number) => Promise<Member>;
-}
+};
 
-export interface TransferRepository {
+export type TransferRepository = {
   create: (transfer: TransferForm) => Promise<TransferResponse>;
-}
+};
 
 const MAX_TRANSFER_AMOUNT = ONE_EURO_IN_CENTS * 500;
 

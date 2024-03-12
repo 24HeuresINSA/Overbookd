@@ -5,7 +5,7 @@ import {
   CategoryRepository,
   Gear,
   GearRepository,
-} from "./interfaces";
+} from "./types";
 import { SlugifyService } from "@overbookd/slugify";
 
 export type GearForm = {

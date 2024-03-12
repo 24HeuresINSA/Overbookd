@@ -1,4 +1,4 @@
-export interface UserUpdateForm {
+export type UserUpdateForm = {
   firstname?: string;
   lastname?: string;
   nickname?: string | null;
@@ -8,4 +8,4 @@ export interface UserUpdateForm {
   comment?: string | null;
   profilePicture?: string;
   charisma?: number;
-}
+};

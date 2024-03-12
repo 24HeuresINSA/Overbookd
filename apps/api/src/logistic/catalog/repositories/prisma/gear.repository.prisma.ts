@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { GearReferenceCodeService } from "../../gear-reference-code.service";
 import { PrismaService } from "../../../../prisma.service";
-import { Gear, GearAlreadyExists, GearRepository } from "../../interfaces";
+import { Gear, GearAlreadyExists, GearRepository } from "../../types";
 import { GearSearchOptions } from "@overbookd/http";
 import { GearQueryBuilder } from "../../../common/gear.query";
 

@@ -1,10 +1,10 @@
 import { SignageType } from "./signage";
 
-export interface SignageForm {
+export type SignageForm = {
   name: string;
   type: SignageType;
-}
+};
 
-export interface SignageUpdateForm extends SignageForm {
+export type SignageUpdateForm = SignageForm & {
   id: number;
-}
+};

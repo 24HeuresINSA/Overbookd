@@ -27,12 +27,12 @@ export type PayContributionForm = {
   adherentId: number;
 };
 
-export interface ContributionRepository {
+export type ContributionRepository = {
   pay(contribution: Contribution): Promise<Contribution>;
   hasAlreadyPayed(adherentId: number, edition: number): Promise<boolean>;
   findAdherentsOutToDate(edition: number): Promise<Adherent[]>;
   isAllowedToPay(memberId: number): Promise<boolean>;
-}
+};
 
 export class PayContribution {
   constructor(private readonly contributions: ContributionRepository) {}

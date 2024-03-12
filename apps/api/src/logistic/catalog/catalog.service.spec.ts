@@ -1,5 +1,5 @@
 import { CatalogService } from "./catalog.service";
-import { Category, Gear } from "./interfaces";
+import { Category, Gear } from "./types";
 import {
   InMemoryCategoryRepository,
   InMemoryGearRepository,

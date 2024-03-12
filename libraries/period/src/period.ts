@@ -1,9 +1,9 @@
 import { Duration } from "./duration";
 
-export interface IProvidePeriod {
+export type IProvidePeriod = {
   start: Date;
   end: Date;
-}
+};
 
 export const END_BEFORE_START_ERROR_MESSAGE =
   "❌ La date de fin doit être après la date de début";

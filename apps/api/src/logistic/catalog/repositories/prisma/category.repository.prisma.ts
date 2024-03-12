@@ -6,7 +6,7 @@ import {
   CategoryRepository,
   CategoryTree,
   SearchCategory,
-} from "../../interfaces";
+} from "../../types";
 
 @Injectable()
 export class PrismaCategoryRepository implements CategoryRepository {

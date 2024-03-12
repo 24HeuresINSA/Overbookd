@@ -26,7 +26,7 @@ import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CatalogService } from "./catalog.service";
 import { GearFormRequestDto } from "./dto/gear-form.request.dto";
 import { GearResponseDto } from "./dto/gear.response.dto";
-import { Gear } from "./interfaces";
+import { Gear } from "./types";
 import { Permission } from "../../authentication/permissions-auth.decorator";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";

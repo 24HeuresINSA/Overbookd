@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../../prisma.service";
-import { Team, TeamRepository } from "../../interfaces";
+import { Team, TeamRepository } from "../../types";
 
 @Injectable()
 export class PrismaTeamRepository implements TeamRepository {
