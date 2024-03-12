@@ -1,3 +1,13 @@
+## [2.22.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.1...v2.22.2) (2024-03-12)
+
+
+### Bug Fixes
+
+* **festival-task:** generate error when approving task as matos without drive set. [#1649](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1649) ([1c4e254](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1c4e2542f4380f93746311dd3fc2b29f56e67f24))
+* **mail:** send welcome email. [#1653](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1653) ([ee545ed](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ee545ed576076f98a3d1efeace35a587059afdab))
+* **registration:** display alert on invalid link. [#1310](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1310) ([2fce0cc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2fce0cc72620f83ee97ab17a191f9b086ebdb2a9))
+* **registration:** init availabilities display on festival date week. [#1651](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1651) ([04661fb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/04661fb848e293e9fe0e7ef5180e1937273cec60))
+
 ## [2.22.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.0...v2.22.1) (2024-03-11)
 
 
