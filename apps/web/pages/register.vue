@@ -4,6 +4,27 @@
       src="https://www.24heures.org/wp-content/uploads/2022/01/img_24h_46e_photoorga.jpg"
       class="img-background"
     ></v-img>
+    <v-alert
+      v-if="isInvitationExpired"
+      icon="mdi-alert-octagon-outline"
+      prominent
+      type="error"
+      class="alert"
+    >
+      <p>
+        Le lien pour s'inscrire en tant qu'organisateur n'est pas valable.
+        <br />
+        Contacte
+        <a href="mailto:secretaire.general@24heures.org">
+          le.a secrétaire général.e.
+        </a>
+        pour recevoir un nouveau lien
+      </p>
+      <p>
+        Si tu veux t'inscrire en tant que bénévole sur le festival c'est par
+        <nuxt-link to="/register">ici</nuxt-link>
+      </p>
+    </v-alert>
     <v-card class="register-card">
       <v-img
         class="register-illustration"
@@ -15,7 +36,7 @@
       </v-img>
       <v-stepper v-model="step" vertical>
         <v-stepper-step :complete="step > 1" step="1" @click="step = 1">
-          Devenir Bénévole
+          Devenir {{ membership }}
           <small>Tout ce qu'il faut savoir sur le festival</small>
         </v-stepper-step>
 
@@ -186,6 +207,8 @@ import {
   TeamCode,
   Teams,
   CVL_CODE,
+  InviteNewAdherents,
+  LINK_EXPIRED,
 } from "@overbookd/registration";
 import {
   InputRulesData,
@@ -250,6 +273,12 @@ export default Vue.extend({
       if (Array.isArray(token)) return undefined;
 
       return token ?? undefined;
+    },
+    isInvitationExpired(): boolean {
+      if (!this.token) return false;
+
+      const currentUrl = new URL(window.location.href);
+      return InviteNewAdherents.isLinkExpired(currentUrl) === LINK_EXPIRED;
     },
     isVolunteerRegistration(): boolean {
       return this.token === undefined;
@@ -410,5 +439,8 @@ export default Vue.extend({
       gap: 0px;
     }
   }
+}
+.alert a {
+  color: $yellow-24h;
 }
 </style>
