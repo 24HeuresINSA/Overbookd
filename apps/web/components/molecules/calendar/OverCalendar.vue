@@ -35,7 +35,7 @@
         :ref="`calendar-${calendarType}`"
         :value="date"
         :type="calendarType"
-        :events="events"
+        :events="eventsWithHolyDays"
         :event-ripple="true"
         :weekdays="weekdays"
         @click:date="selectDate"
@@ -146,6 +146,7 @@ import {
   VuetifyCalendarType,
 } from "~/utils/calendar/vuetify-calendar";
 import { formatMonthWithYear } from "~/utils/date/date.utils";
+import { HolyDay } from "~/store/holyday";
 
 export default defineComponent({
   name: "OverCalendar",
@@ -190,6 +191,9 @@ export default defineComponent({
   },
   emits: ["update:date", "select:date"],
   computed: {
+    eventsWithHolyDays(): CalendarEvent[] {
+      return [...this.events, ...this.holyDayEvents];
+    },
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
     },
@@ -199,6 +203,16 @@ export default defineComponent({
     types(): VuetifyCalendarType[] {
       return ["day", "week"];
     },
+    holyDays(): HolyDay[] {
+      return this.$accessor.holyday.days;
+    },
+    holyDayEvents(): CalendarEvent[] {
+      return this.holyDays.map((holyDay) => ({
+        start: holyDay.date,
+        name: holyDay.name,
+        timed: true,
+      }));
+    },
   },
   watch: {
     hourToScrollTo() {
@@ -207,6 +221,11 @@ export default defineComponent({
       const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.scrollToTime(time);
     },
+  },
+  async mounted() {
+    if (this.holyDays.length === 0) {
+      await this.$accessor.holyday.fetchHolyDays();
+    }
   },
   methods: {
     isPartyHour(hour: number): boolean {
