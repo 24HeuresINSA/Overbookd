@@ -26,7 +26,7 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     fulfilledForm: FulfilledRegistration,
     registrationMembership: T,
   ): Promise<NewcomerRegistered<T>> {
-    const { mobilePhone, ...similarProperties } = fulfilledForm;
+    const { mobilePhone, password, ...similarProperties } = fulfilledForm;
     const teams = {
       createMany: {
         data: fulfilledForm.teams.map((team: TeamCode) => ({
@@ -38,7 +38,7 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
       ...similarProperties,
       teams,
       phone: mobilePhone,
-      password: await this.crypto.hash(fulfilledForm.password),
+      password: await this.crypto.hash(password),
       registrationMembership,
     };
     const { id } = await this.prisma.user.create({
@@ -46,6 +46,11 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
       select: { id: true },
     });
 
-    return { ...fulfilledForm, id, membership: registrationMembership };
+    return {
+      ...similarProperties,
+      id,
+      membership: registrationMembership,
+      mobilePhone,
+    };
   }
 }
