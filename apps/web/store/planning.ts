@@ -1,7 +1,7 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { User } from "@overbookd/user";
+import { UserRepository } from "~/repositories/user.repository";
 
 type VolunteerWithItPLanning = {
   volunteer: {
@@ -11,8 +11,6 @@ type VolunteerWithItPLanning = {
   };
   planningBase64Data: string;
 };
-
-const userRepo = RepoFactory.UserRepository;
 
 export type VolunteerPlanning = {
   volunteer: User;
@@ -43,13 +41,13 @@ export const actions = actionTree(
     async fetchSubscriptionLink({ commit }) {
       const res = await safeCall(
         this,
-        userRepo.getPlanningSubscriptionLink(this),
+        UserRepository.getPlanningSubscriptionLink(this),
       );
       if (!res) return;
       commit("SET_LINK", res.data.link);
     },
     async fetchMyPdfPlanning({ commit }) {
-      const res = await safeCall(this, userRepo.getMyPdfPlanning(this));
+      const res = await safeCall(this, UserRepository.getMyPdfPlanning(this));
       if (!res) return;
       commit("SET_PLANNING_DATA", res.data);
     },
@@ -61,7 +59,10 @@ export const actions = actionTree(
         const chunk = volunteers.slice(i, i + maxRequests);
         const plannings = await Promise.all(
           chunk.map(async ({ id, firstname, lastname }) => {
-            const res = await safeCall(this, userRepo.getPdfPlanning(this, id));
+            const res = await safeCall(
+              this,
+              UserRepository.getPdfPlanning(this, id),
+            );
             if (!res) return undefined;
             const volunteer = { firstname, lastname, id };
             const planningBase64Data = `${res.data}`;

@@ -142,11 +142,11 @@
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import BarrelsForm from "~/components/organisms/personal-account/BarrelsForm.vue";
 import { computeUnitPrice } from "~/domain/volunteer-consumption/drink-consumption";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
 import MoneyField from "~/components/atoms/field/money/MoneyField.vue";
 import { Money } from "~/utils/money/money";
+import { TransactionRepository } from "~/repositories/transaction.repository";
 
 const TRANSACTION_DEPOSIT = "DEPOSIT";
 const TRANSACTION_BARREL = "BARREL";
@@ -416,10 +416,7 @@ export default {
         return transaction;
       });
 
-      await RepoFactory.TransactionRepository.createTransactions(
-        this,
-        transactions,
-      );
+      await TransactionRepository.createTransactions(this, transactions);
 
       await Promise.all([
         this.$accessor.user.fetchPersonalAccountConsumers(),

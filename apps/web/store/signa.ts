@@ -1,10 +1,8 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { CreateLocation } from "~/utils/models/signa-location.model";
 import { SignaLocation } from "@overbookd/signa";
-
-const repo = RepoFactory.SignaLocationRepository;
+import { SignaLocationRepository } from "~/repositories/signa-location.repository";
 
 export const state = () => ({
   locations: [] as SignaLocation[],
@@ -28,7 +26,7 @@ export const actions = actionTree(
     async getAllSignaLocations({ commit }) {
       const signaLocations = await safeCall(
         this,
-        repo.getAllSignaLocations(this),
+        SignaLocationRepository.getAllSignaLocations(this),
         {
           errorMessage: "Erreur lors de la récupération des lieux de la signa.",
         },
@@ -39,7 +37,7 @@ export const actions = actionTree(
     async createLocation({ dispatch }, location: CreateLocation) {
       const res = await safeCall(
         this,
-        repo.createNewSignaLocation(this, location),
+        SignaLocationRepository.createNewSignaLocation(this, location),
         {
           successMessage: "Lieu ajouté 🥳",
           errorMessage: "Lieu non ajouté 😢",
@@ -51,7 +49,7 @@ export const actions = actionTree(
     async editLocation({ dispatch }, location: SignaLocation) {
       const res = await safeCall(
         this,
-        repo.updateSignaLocation(this, location),
+        SignaLocationRepository.updateSignaLocation(this, location),
         {
           successMessage: "Lieu modifié 🥳",
           errorMessage: "Lieu non modifié 😢",
@@ -63,7 +61,7 @@ export const actions = actionTree(
     async deleteLocation({ dispatch }, location: SignaLocation) {
       const res = await safeCall(
         this,
-        repo.deleteSignaLocation(this, location.id),
+        SignaLocationRepository.deleteSignaLocation(this, location.id),
         {
           successMessage: "Lieu supprimé 🥳",
           errorMessage: "Lieu non supprimé 😢",

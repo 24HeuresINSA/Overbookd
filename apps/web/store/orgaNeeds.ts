@@ -1,10 +1,8 @@
 import { actionTree, mutationTree } from "typed-vuex";
 import { IProvidePeriod } from "@overbookd/period";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { HttpStringified } from "@overbookd/http";
-
-const orgaNeedsRepo = RepoFactory.OrgaNeedsRepository;
+import { OrgaNeedsRepository } from "~/repositories/orga-needs.repository";
 
 export interface OrgaNeedsResponse {
   start: Date;
@@ -35,13 +33,16 @@ export type OrgaNeedsRequest = IProvidePeriod & {
 export const actions = actionTree(
   { state, mutations },
   {
-    async fetchStats(context, periodAndTeams: OrgaNeedsRequest): Promise<void> {
+    async fetchStats(
+      { commit },
+      periodAndTeams: OrgaNeedsRequest,
+    ): Promise<void> {
       const res = await safeCall(
         this,
-        orgaNeedsRepo.fetchStats(this, periodAndTeams),
+        OrgaNeedsRepository.fetchStats(this, periodAndTeams),
       );
       if (!res) return;
-      context.commit("SET_STATS", res.data);
+      commit("SET_STATS", res.data);
     },
   },
 );

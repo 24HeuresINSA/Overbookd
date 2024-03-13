@@ -1,9 +1,7 @@
 import { mutationTree, actionTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
+import { GearRequestRepository } from "~/repositories/gear-gequest.repository";
 import { safeCall } from "~/utils/api/calls";
 import { EventGearRequest } from "~/utils/models/gear-request.model";
-
-const gearRequestRepository = RepoFactory.GearRequestRepository;
 
 interface State {
   gearRequests: EventGearRequest[];
@@ -25,7 +23,7 @@ export const actions = actionTree(
     async fetchGearRequests({ commit }): Promise<void> {
       const res = await safeCall(
         this,
-        gearRequestRepository.getGearRequests(this),
+        GearRequestRepository.getGearRequests(this),
         {
           successMessage: "Demandes de matos chargees ✅",
           errorMessage: "Impossible de charger les demandes de matos ❌",

@@ -1,8 +1,6 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
+import { NotificationRepository } from "~/repositories/notification.repository";
 import { safeCall } from "~/utils/api/calls";
-
-const notificationRepository = RepoFactory.NotificationRepository;
 
 interface NotificationState {
   hasNotifications: boolean;
@@ -24,7 +22,7 @@ export const actions = actionTree(
     async fetchNotifications({ commit }) {
       const res = await safeCall(
         this,
-        notificationRepository.hasNotifications(this),
+        NotificationRepository.hasNotifications(this),
       );
       if (!res) return;
       commit("SET_NOTIFICATIONS", res.data.hasNotifications);
@@ -32,7 +30,7 @@ export const actions = actionTree(
     async readNotification({ commit }) {
       const res = await safeCall(
         this,
-        notificationRepository.readMyNotification(this),
+        NotificationRepository.readMyNotification(this),
       );
       if (!res) return;
       commit("SET_NOTIFICATIONS", false);

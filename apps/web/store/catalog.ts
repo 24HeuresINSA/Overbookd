@@ -1,10 +1,8 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
+import { CategoryRepository } from "~/repositories/catalog.repository";
 import { safeCall } from "~/utils/api/calls";
 import { Category, CategoryTree } from "~/utils/models/catalog.model";
 import { SnackNotif } from "~/utils/models/notif.model";
-
-const categoryRepository = RepoFactory.CategoryRepository;
 
 interface State {
   categories: Category[];
@@ -61,7 +59,7 @@ export const actions = actionTree(
     ): Promise<void> {
       const call = await safeCall<Category[]>(
         this,
-        categoryRepository.searchCategories(this, categorySerchOptions),
+        CategoryRepository.searchCategories(this, categorySerchOptions),
       );
       if (!call) return;
       context.commit("SET_CATEGORIES", call.data);
@@ -70,7 +68,7 @@ export const actions = actionTree(
     async fetchCategoryTree(context): Promise<void> {
       const call = await safeCall<CategoryTree[]>(
         this,
-        categoryRepository.getCategoryTree(this),
+        CategoryRepository.getCategoryTree(this),
       );
       if (!call) return;
       context.commit("SET_CATEGORY_TREE", call.data);
@@ -79,7 +77,7 @@ export const actions = actionTree(
     async createCategory(context, categoryForm: CategoryForm): Promise<void> {
       const call = await safeCall<Category>(
         this,
-        categoryRepository.createCategory(this, categoryForm),
+        CategoryRepository.createCategory(this, categoryForm),
         {
           successMessage: "La categorie a ete cree avec succes",
           errorMessage: "Erreur lors de la creation de la categorie",
@@ -92,7 +90,7 @@ export const actions = actionTree(
 
     async deleteCategory(context, category: Category): Promise<void> {
       try {
-        await categoryRepository.deleteCategory(this, category.id);
+        await CategoryRepository.deleteCategory(this, category.id);
         sendNotification(this, `${category.name} supprime`);
         context.commit("DELETE_CATEGORY", category);
         this.dispatch("catalog/fetchCategoryTree");
@@ -106,7 +104,7 @@ export const actions = actionTree(
       const { id, ...categoryForm } = form;
       const call = await safeCall<Category>(
         this,
-        categoryRepository.updateCategory(this, id, categoryForm),
+        CategoryRepository.updateCategory(this, id, categoryForm),
         {
           successMessage: "La categorie a ete mise a jour avec succes",
           errorMessage: "Erreur lors de la mise a jour de la categorie",
@@ -127,7 +125,7 @@ export const actions = actionTree(
       if (storedCategory) return storedCategory;
       const call = await safeCall<Category>(
         this,
-        categoryRepository.getCategory(this, categoryId),
+        CategoryRepository.getCategory(this, categoryId),
       );
       if (!call) return undefined;
       context.commit("ADD_CATEGORY", call.data);

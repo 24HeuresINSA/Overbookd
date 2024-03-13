@@ -6,10 +6,8 @@ import {
   CharismaPeriod,
   SavedCharismaPeriod,
 } from "~/utils/models/charisma-period.model";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
-
-const repo = RepoFactory.CharismaPeriodRepository;
+import { CharismaPeriodRepository } from "~/repositories/charisma-period.repository";
 
 export const state = () => ({
   charismaPeriods: [] as SavedCharismaPeriod[],
@@ -47,7 +45,10 @@ export const actions = actionTree(
   { state },
   {
     async fetchCharismaPeriods({ commit }) {
-      const res = await safeCall(this, repo.getCharismaPeriods(this));
+      const res = await safeCall(
+        this,
+        CharismaPeriodRepository.getCharismaPeriods(this),
+      );
       if (!res) return;
       commit("SET_CHARISMA_PERIODS", castCharismaPeriodsWithDate(res.data));
     },
@@ -55,7 +56,7 @@ export const actions = actionTree(
     async addCharismaPeriod({ commit }, charismaPeriod: CharismaPeriod) {
       const res = await safeCall(
         this,
-        repo.createCharismaPeriod(this, charismaPeriod),
+        CharismaPeriodRepository.createCharismaPeriod(this, charismaPeriod),
         {
           successMessage: "Période créée 🥳",
           errorMessage: "Période non créée 😢",
@@ -72,7 +73,11 @@ export const actions = actionTree(
       const { id, ...CharismaPeriodWithoutId } = charismaPeriod;
       const res = await safeCall(
         this,
-        repo.updateCharismaPeriod(this, id, CharismaPeriodWithoutId),
+        CharismaPeriodRepository.updateCharismaPeriod(
+          this,
+          id,
+          CharismaPeriodWithoutId,
+        ),
         {
           successMessage: "Période mise à jour 🥳",
           errorMessage: "Période non mise à jour 😢",
@@ -88,7 +93,7 @@ export const actions = actionTree(
     ) {
       const res = await safeCall(
         this,
-        repo.deleteCharismaPeriod(this, charismaPeriod.id),
+        CharismaPeriodRepository.deleteCharismaPeriod(this, charismaPeriod.id),
         {
           successMessage: "Période supprimée 🥳",
           errorMessage: "Période non supprimée 😢",

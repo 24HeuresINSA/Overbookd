@@ -1,5 +1,4 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { Team } from "~/utils/models/team.model";
 import { safeCall } from "~/utils/api/calls";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
@@ -7,8 +6,7 @@ import {
   requirableTeams,
   requirableTeamsExtended,
 } from "@overbookd/festival-event";
-
-const teamRepo = RepoFactory.TeamRepository;
+import { TeamRepository } from "~/repositories/team.repository";
 
 // The state types definitions
 interface State {
@@ -69,39 +67,39 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchTeams({ commit }): Promise<void> {
-      const res = await safeCall(this, teamRepo.getTeams(this));
+      const res = await safeCall(this, TeamRepository.getTeams(this));
       if (!res) return;
       commit("SET_TEAMS", res.data);
     },
 
     async fetchFaValidators({ commit }): Promise<void> {
-      const res = await safeCall(this, teamRepo.getFaValidators(this));
+      const res = await safeCall(this, TeamRepository.getFaValidators(this));
       if (!res) return;
       commit("SET_FA_VALIDATORS", res.data);
     },
 
     async fetchFtValidators({ commit }): Promise<void> {
-      const res = await safeCall(this, teamRepo.getFtValidators(this));
+      const res = await safeCall(this, TeamRepository.getFtValidators(this));
       if (!res) return;
       commit("SET_FT_VALIDATORS", res.data);
     },
 
     async createTeam({ dispatch }, team: Team): Promise<void> {
-      await safeCall(this, teamRepo.createTeam(this, team), {
+      await safeCall(this, TeamRepository.createTeam(this, team), {
         successMessage: "Equipe créée avec succès ✅",
       });
       await dispatch("fetchTeams");
     },
 
     async updateTeam({ dispatch }, team: Team): Promise<void> {
-      await safeCall(this, teamRepo.updateTeam(this, team), {
+      await safeCall(this, TeamRepository.updateTeam(this, team), {
         successMessage: "Equipe modifiée avec succès ✅",
       });
       await dispatch("fetchTeams");
     },
 
     async removeTeam({ dispatch }, { code }: Team): Promise<void> {
-      await safeCall(this, teamRepo.deleteTeam(this, code), {
+      await safeCall(this, TeamRepository.deleteTeam(this, code), {
         successMessage: "Equipe supprimée avec succès ✅",
       });
       await dispatch("fetchTeams");

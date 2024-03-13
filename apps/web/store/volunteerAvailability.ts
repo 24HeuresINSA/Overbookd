@@ -4,11 +4,11 @@ import {
   Availabilities,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { castPeriods } from "~/utils/models/period.model";
+import { VolunteerAvailabilityRepository } from "~/repositories/volunteer-availability.repository";
 
-const repo = RepoFactory.VolunteerAvailabilityRepository;
+const repo = VolunteerAvailabilityRepository;
 
 type VolunteerAvailabilityState = {
   availabilities: Availabilities;
