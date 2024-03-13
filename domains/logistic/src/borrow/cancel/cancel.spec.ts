@@ -4,12 +4,12 @@ import { CancelBorrow } from "./cancel";
 import { karnaBorrow } from "../borrow.test-utils";
 
 describe("Cancel borrow", () => {
-  describe("when a user cancel borrow from KARNA", async () => {
+  describe("when cancelling borrow from KARNA", async () => {
     const borrows = new InMemoryBorrows([karnaBorrow]);
     const cancel = new CancelBorrow(borrows);
     await cancel.apply(karnaBorrow.id);
 
-    it("should cancel it to the repository", () => {
+    it("should remove it from the repository", () => {
       expect(borrows.all).not.toContainEqual(karnaBorrow);
     });
   });

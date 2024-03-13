@@ -1,7 +1,7 @@
 import { Borrow } from "../borrow";
-import { BorrowsForUpdate } from "./update";
+import { BorrowsForPlan } from "./plan";
 
-export class InMemoryBorrows implements BorrowsForUpdate {
+export class InMemoryBorrows implements BorrowsForPlan {
   constructor(private borrows: Borrow[] = []) {}
 
   find(id: Borrow["id"]): Promise<Borrow | undefined> {
