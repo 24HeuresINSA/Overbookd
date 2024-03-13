@@ -6,7 +6,7 @@ describe("Create loan sheet", () => {
   describe("when a user create KARNA loan sheet", async () => {
     const loanSheets = new InMemoryLoanSheets();
     const create = new CreateLoanSheet(loanSheets);
-    const createdLoanSheet = create.for("KARNA");
+    const createdLoanSheet = await create.for("KARNA");
 
     it("should create KARNA loan sheet", () => {
       expect(createdLoanSheet.lender).toBe("KARNA");

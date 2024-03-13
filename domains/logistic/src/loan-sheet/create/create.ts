@@ -10,9 +10,9 @@ export class CreateLoanSheet {
 
   constructor(private readonly loanSheets: LoanSheetsForCreate) {}
 
-  for(lender: string): LoanSheet {
+  async for(lender: string): Promise<LoanSheet> {
     const loanSheet = { id: this.generateId(), lender };
-    this.loanSheets.add(loanSheet);
+    await this.loanSheets.add(loanSheet);
     return loanSheet;
   }
 
