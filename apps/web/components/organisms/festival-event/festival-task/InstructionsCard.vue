@@ -85,11 +85,15 @@
     </v-card>
 
     <v-dialog v-model="isInitInChargeDialogOpen" max-width="800">
-      <InitInChargeInstructionsCard @close-dialog="closeInitInChargeDialog" />
+      <InitInChargeInstructionsCard
+        @init="tryToInitInCharge"
+        @close-dialog="closeInitInChargeDialog"
+      />
     </v-dialog>
 
     <v-dialog v-model="isResetApprovalsDialogOpen" max-width="600">
       <ResetApprovalsCard
+        :label="resetApprovalsLabel"
         @reset="updateAfterApprovalsReset"
         @close-dialog="closeResetApprovalsDialog"
       />
@@ -115,6 +119,7 @@ import { User } from "@overbookd/user";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { shouldResetTaskApprovals } from "~/utils/festival-event/festival-task/festival-task.utils";
+import { UpdateInstructionsForm, InitInChargeForm } from "@overbookd/http";
 
 type InstructionsCardData = {
   contact: User | null;
@@ -122,7 +127,8 @@ type InstructionsCardData = {
   hasInChargeInstructions: boolean;
   isInitInChargeDialogOpen: boolean;
   isResetApprovalsDialogOpen: boolean;
-  updateAfterApprovalsReset: () => void;
+  formToUpdate: UpdateInstructionsForm | null;
+  formToInit: InitInChargeForm | null;
 };
 
 export default defineComponent({
@@ -138,9 +144,12 @@ export default defineComponent({
   data: (): InstructionsCardData => ({
     contact: null,
     hasInChargeInstructions: false,
+
     isInitInChargeDialogOpen: false,
     isResetApprovalsDialogOpen: false,
-    updateAfterApprovalsReset: () => {},
+    formToUpdate: null,
+    formToInit: null,
+
     contactHeaders: [
       { text: "Bénévole", value: "volunteer", sortable: false },
       { text: "Téléphone", value: "phone", sortable: false },
@@ -166,6 +175,15 @@ export default defineComponent({
     shouldResetApprovals(): boolean {
       return shouldResetTaskApprovals(this.selectedTask);
     },
+    resetApprovalsLabel(): string {
+      if (this.formToInit) {
+        return "L'initialisation des instructions des responsables";
+      }
+      if (this.formToUpdate) {
+        return "La modification des instructions";
+      }
+      return "La suppression des instructions des responsables";
+    },
   },
   watch: {
     selectedTaskId() {
@@ -188,36 +206,39 @@ export default defineComponent({
     },
     toggleInChargeInstructions() {
       this.hasInChargeInstructions = !this.hasInChargeInstructions;
-      if (!this.hasInChargeInstructions) return this.clearInCharge();
+      if (!this.hasInChargeInstructions) return this.tryToClearInCharge();
       if (!isDraft(this.selectedTask)) this.openInitInChargeDialog();
     },
+
     updateAppointment(appointment: SignaLocation) {
       const appointmentId = appointment.id;
       this.$accessor.festivalTask.updateInstructions({ appointmentId });
     },
+
     tryToUpdateGlobal(canBeEmpty: string) {
-      if (!this.shouldResetApprovals) {
-        return this.updateGlobal(canBeEmpty);
-      }
-      this.updateAfterApprovalsReset = () => this.updateGlobal(canBeEmpty);
+      if (!this.shouldResetApprovals) return this.updateGlobal(canBeEmpty);
+
+      this.formToUpdate = { global: canBeEmpty.trim() || null };
+      this.formToInit = null;
       this.openResetApprovalsDialog();
     },
     updateGlobal(canBeEmpty: string) {
       const global = canBeEmpty.trim() || null;
       this.$accessor.festivalTask.updateInstructions({ global });
     },
+
     tryToUpdateInChargeInstruction(canBeEmpty: string) {
-      if (!this.shouldResetApprovals) {
-        return this.updateGlobal(canBeEmpty);
-      }
-      this.updateAfterApprovalsReset = () =>
-        this.updateInChargeInstruction(canBeEmpty);
+      if (!this.shouldResetApprovals) return this.updateGlobal(canBeEmpty);
+
+      this.formToUpdate = { inCharge: canBeEmpty.trim() || null };
+      this.formToInit = null;
       this.openResetApprovalsDialog();
     },
     updateInChargeInstruction(canBeEmpty: string) {
       const inCharge = canBeEmpty.trim() || null;
       this.$accessor.festivalTask.updateInstructions({ inCharge });
     },
+
     addContact() {
       if (!this.contact) return;
       this.$accessor.festivalTask.addContact(this.contact.id);
@@ -225,14 +246,23 @@ export default defineComponent({
     removeContact(contact: User) {
       this.$accessor.festivalTask.removeContact(contact.id);
     },
+
     addInChargeVolunteer(volunteer: User) {
       this.$accessor.festivalTask.addInChargeVolunteer(volunteer.id);
     },
     removeInChargeVolunteer(volunteer: User) {
       this.$accessor.festivalTask.removeInChargeVolunteer(volunteer.id);
     },
-    clearInCharge() {
-      this.$accessor.festivalTask.clearInCharge();
+
+    async tryToInitInCharge(form: InitInChargeForm) {
+      if (!this.shouldResetApprovals) return this.initInCharge(form);
+
+      this.formToInit = form;
+      this.formToUpdate = null;
+      this.openResetApprovalsDialog();
+    },
+    async initInCharge(form: InitInChargeForm) {
+      await this.$accessor.festivalTask.initInCharge(form);
     },
     openInitInChargeDialog() {
       this.isInitInChargeDialogOpen = true;
@@ -241,12 +271,35 @@ export default defineComponent({
       this.checkActiveInChargeInstructions();
       this.isInitInChargeDialogOpen = false;
     },
+
+    async tryToClearInCharge() {
+      if (!this.shouldResetApprovals) return this.clearInCharge();
+
+      this.formToUpdate = null;
+      this.formToInit = null;
+      this.openResetApprovalsDialog();
+    },
+    async clearInCharge() {
+      await this.$accessor.festivalTask.clearInCharge();
+    },
+
+    async updateAfterApprovalsReset() {
+      if (this.formToInit) {
+        await this.initInCharge(this.formToInit);
+      } else if (this.formToUpdate) {
+        this.$accessor.festivalTask.updateInstructions(this.formToUpdate);
+      } else {
+        await this.clearInCharge();
+      }
+      this.closeResetApprovalsDialog();
+    },
     openResetApprovalsDialog() {
       this.isResetApprovalsDialogOpen = true;
     },
     closeResetApprovalsDialog() {
       this.isResetApprovalsDialogOpen = false;
-      this.updateAfterApprovalsReset = () => {};
+      this.formToUpdate = null;
+      this.formToInit = null;
     },
     formatUserNameWithNickname,
   },

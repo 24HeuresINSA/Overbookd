@@ -56,6 +56,7 @@ type InitInChargeInstructionsData = {
 export default defineComponent({
   name: "InitInChargeInstructionsCard",
   components: { RichEditor, SearchUsers },
+  emits: ["init", "close-dialog"],
   data: (): InitInChargeInstructionsData => ({
     volunteers: [],
     instruction: null,
@@ -70,15 +71,12 @@ export default defineComponent({
     },
   },
   methods: {
-    async init() {
+    init() {
       if (this.instruction === null || this.instruction.trim() === "") return;
       const volunteers = this.volunteers.map(({ id }) => id);
+      const form = { volunteers, instruction: this.instruction };
 
-      await this.$accessor.festivalTask.initInCharge({
-        volunteers,
-        instruction: this.instruction,
-      });
-      this.closeDialog();
+      this.$emit("init", form);
     },
     updateInstruction(canBeEmpty: string) {
       const instruction = canBeEmpty.trim() || null;

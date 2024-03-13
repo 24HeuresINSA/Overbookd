@@ -6,7 +6,7 @@
   >
     <template #title>Réinitialiation des validations</template>
     <template #statement>
-      Attention ! Modifier ce champ
+      Attention ! {{ label }}
       <strong>réinitialisera les validations déjà effectuées</strong>. Es-tu sûr
       de vouloir continuer ?
     </template>
@@ -23,6 +23,12 @@ import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue
 export default defineComponent({
   name: "ResetApprovalsCard",
   components: { ConfirmationMessage },
+  props: {
+    label: {
+      type: String,
+      default: "Modifier ce champ",
+    },
+  },
   emits: ["reset", "close-dialog"],
   methods: {
     reset() {
