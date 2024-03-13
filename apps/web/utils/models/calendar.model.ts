@@ -8,7 +8,7 @@ export type CalendarEvent = {
   link?: string;
   category?: string;
   color?: string;
-  timed: true;
+  timed: boolean;
 };
 
 export type CalendarUser = User & {

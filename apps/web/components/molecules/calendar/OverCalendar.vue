@@ -210,7 +210,8 @@ export default defineComponent({
       return this.holyDays.map((holyDay) => ({
         start: holyDay.date,
         name: holyDay.name,
-        timed: true,
+        timed: false,
+        color: "grey",
       }));
     },
   },
