@@ -117,7 +117,10 @@ export const actions = actionTree(
     },
 
     async fetchInviteStaffLink({ commit }) {
-      const res = await safeCall(this, RegistrationRepository.fetchStaffLink(this));
+      const res = await safeCall(
+        this,
+        RegistrationRepository.fetchStaffLink(this),
+      );
       if (!res) return;
       commit("SET_INVITE_STAFF_LINK", new URL(res.data));
     },
