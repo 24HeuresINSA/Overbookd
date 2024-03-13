@@ -248,7 +248,7 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
 export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   {
     ...friday08hto08h15,
-    stock: 0,
+    stock: -10,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
@@ -257,7 +257,7 @@ export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   },
   {
     ...friday08h15to08h30,
-    stock: 0,
+    stock: -10,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
@@ -266,7 +266,7 @@ export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   },
   {
     ...friday08h30to08h45,
-    stock: 0,
+    stock: -10,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
@@ -275,7 +275,7 @@ export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   },
   {
     ...friday08h45to09h,
-    stock: 0,
+    stock: -10,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
@@ -284,7 +284,7 @@ export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   },
   {
     ...friday09hto09h15,
-    stock: 0,
+    stock: -10,
     inquiry: 0,
     activities: [],
     tasks: [],
@@ -293,7 +293,7 @@ export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   },
   {
     ...friday09h15to09h30,
-    stock: 0,
+    stock: -10,
     inquiry: 0,
     activities: [],
     tasks: [],
@@ -306,7 +306,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
   [
     {
       ...friday08hto08h15,
-      stock: 5,
+      stock: -20,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
@@ -315,7 +315,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
     },
     {
       ...friday08h15to08h30,
-      stock: 5,
+      stock: -20,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
@@ -324,7 +324,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
     },
     {
       ...friday08h30to08h45,
-      stock: 5,
+      stock: -20,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
@@ -333,7 +333,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
     },
     {
       ...friday08h45to09h,
-      stock: 5,
+      stock: -20,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
@@ -342,7 +342,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
     },
     {
       ...friday09hto09h15,
-      stock: 5,
+      stock: -40,
       inquiry: 20,
       activities: [{ ...pcSecuActivity, quantity: 20 }],
       tasks: [],
@@ -351,7 +351,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
     },
     {
       ...friday09h15to09h30,
-      stock: 5,
+      stock: -40,
       inquiry: 20,
       activities: [{ ...pcSecuActivity, quantity: 20 }],
       tasks: [],
