@@ -1,12 +1,12 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  lea,
-} from "../festival-task.test-util";
+import { lea } from "../festival-task.test-util";
 import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
 import {
-  guardJustDance, presentEscapeGame, installBarbecue,
+  guardJustDance,
+  presentEscapeGame,
+  installBarbecue,
   onlyApprovedByHumain,
-  onlyApprovedByMatos
+  onlyApprovedByMatos,
 } from "../festival-task.fake";
 import { FestivalTaskNotFound } from "../festival-task.error";
 import { PrepareFestivalTask } from "./prepare";

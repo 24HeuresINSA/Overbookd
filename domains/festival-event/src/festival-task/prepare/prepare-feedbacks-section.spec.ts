@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalTask } from "./prepare";
-import {
-  lea,
-  noel,
-} from "../festival-task.test-util";
+import { lea, noel } from "../festival-task.test-util";
 import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
 import { presentEscapeGame } from "../festival-task.fake";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";

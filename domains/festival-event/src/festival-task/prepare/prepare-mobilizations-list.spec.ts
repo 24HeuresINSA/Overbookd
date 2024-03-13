@@ -32,20 +32,20 @@ import {
   friday10hfriday11hMobilization,
   friday9h,
 } from "../festival-task.test-util";
+import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
 import {
-  installEscapeGame,
-  uninstallEscapeGame
-} from "../festival-task.fake";
-import {
-  presentEscapeGame, guardEscapeGame, guardJustDance,
-  serveWaterOnJustDance, installBarbecue,
+  presentEscapeGame,
+  guardEscapeGame,
+  guardJustDance,
+  serveWaterOnJustDance,
+  installBarbecue,
   uninstallBarbecue,
   onlyApprovedByHumain,
   onlyApprovedByMatos,
   approvedByHumainRejectedByMatos,
   approvedByHumainAndElecRejectedByMatos,
   approvedByElecRejectedByMatos,
-  approvedByMatosRejectedByHumainAndElec
+  approvedByMatosRejectedByHumainAndElec,
 } from "../festival-task.fake";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";

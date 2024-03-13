@@ -1,12 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  lea,
-  noel,
-} from "../festival-task.test-util";
+import { lea, noel } from "../festival-task.test-util";
 import {
   guardEscapeGame,
   installPreventionVillage,
-  installJustDance, withNoAppointmentTask,
+  installJustDance,
+  withNoAppointmentTask,
   withNoGlobalInstructionsTask,
   withNoTeamTask,
   withNotAnyContactTask,
@@ -17,7 +15,7 @@ import {
   withSomeMobilizationsWithoutRequest,
   flashMobOnPreventionVillage,
   flashMobOnJustDance,
-  approvedByElecRejectedByMatos
+  approvedByElecRejectedByMatos,
 } from "../festival-task.fake";
 import { IN_REVIEW } from "../../common/status";
 import { READY_TO_REVIEW } from "../../common/action";

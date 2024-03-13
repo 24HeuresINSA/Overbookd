@@ -1,13 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import {
-  installEscapeGame,
-  uninstallEscapeGame
-} from "../festival-task.fake";
+import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
 import {
   presentEscapeGame,
   guardJustDance,
   installBarbecue,
-  onlyApprovedByHumain
+  onlyApprovedByHumain,
 } from "../festival-task.fake";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";

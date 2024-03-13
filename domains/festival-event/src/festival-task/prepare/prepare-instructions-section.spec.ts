@@ -10,14 +10,17 @@ import {
 } from "../festival-task.test-util";
 import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
 import {
-  installBarbecue, guardJustDance, presentEscapeGame,
-  serveWaterOnJustDance, onlyApprovedByHumain,
+  installBarbecue,
+  guardJustDance,
+  presentEscapeGame,
+  serveWaterOnJustDance,
+  onlyApprovedByHumain,
   approvedByHumainRejectedByMatos,
   approvedByHumainAndElecRejectedByMatos,
   approvedByElecRejectedByMatos,
   approvedByMatosRejectedByHumainAndElec,
   onlyApprovedByMatos,
-  uninstallBarbecue
+  uninstallBarbecue,
 } from "../festival-task.fake";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
