@@ -107,6 +107,9 @@ importers:
       '@overbookd/list':
         specifier: workspace:^
         version: link:../../libraries/list
+      '@overbookd/logistic':
+        specifier: workspace:^
+        version: link:../../domains/logistic
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period
@@ -303,6 +306,9 @@ importers:
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
+      '@overbookd/logistic':
+        specifier: workspace:*
+        version: link:../../domains/logistic
       '@overbookd/period':
         specifier: workspace:*
         version: link:../../libraries/period

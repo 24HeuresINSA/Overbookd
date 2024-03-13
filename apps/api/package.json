@@ -58,6 +58,7 @@
     "@overbookd/festival-event": "workspace:^",
     "@overbookd/http": "workspace:^",
     "@overbookd/list": "workspace:^",
+    "@overbookd/logistic": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/permission": "workspace:^",
     "@overbookd/personal-account": "workspace:^",

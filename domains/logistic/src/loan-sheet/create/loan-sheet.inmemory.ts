@@ -1,5 +1,5 @@
 import { LoanSheetsForCreate } from "./create";
-import { LoanSheet } from "../loan-sheet.model";
+import { LoanSheet } from "../loan-sheet";
 
 export class InMemoryLoanSheets implements LoanSheetsForCreate {
   constructor(private loanSheets: LoanSheet[] = []) {}

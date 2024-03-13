@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { LoanSheet } from "../loan-sheet.model";
+import { LoanSheet } from "../loan-sheet";
 
 export type LoanSheetsForCreate = {
   add(loanSheet: LoanSheet): Promise<LoanSheet>;
@@ -12,8 +12,7 @@ export class CreateLoanSheet {
 
   async for(lender: string): Promise<LoanSheet> {
     const loanSheet = { id: this.generateId(), lender };
-    await this.loanSheets.add(loanSheet);
-    return loanSheet;
+    return this.loanSheets.add(loanSheet);
   }
 
   private generateId(): number {
