@@ -4,7 +4,7 @@ import {
   Categorize,
   FestivalTask,
   ReadyToAssign,
-  STATIC,
+  STATIQUE,
   Validated,
 } from "../festival-task";
 import { READY_TO_ASSIGN } from "../../common/status";
@@ -102,8 +102,8 @@ describe("Enable assignment", () => {
   });
   describe.each`
     task        | instigator | categorize
-    ${guardPS1} | ${noel}    | ${{ category: STATIC, topPriority: true }}
-    ${guardPS2} | ${noel}    | ${{ category: STATIC, topPriority: true }}
+    ${guardPS1} | ${noel}    | ${{ category: STATIQUE, topPriority: true }}
+    ${guardPS2} | ${noel}    | ${{ category: STATIQUE, topPriority: true }}
   `(
     "when enabling assignment for validated festival task",
     ({ task, instigator, categorize }) => {

@@ -65,12 +65,21 @@ type MobilizationsWithConflicts = {
   mobilizations: ReviewableMobilization[];
 };
 
-export const STATIC = "STATIC";
+export const STATIQUE = "STATIQUE";
+const BAR = "BAR";
+const MANUTENTION = "MANUTENTION";
+const FUN = "FUN";
+const RELOU = "RELOU";
 
-type Category = typeof STATIC;
+type Category =
+  | typeof STATIQUE
+  | typeof BAR
+  | typeof MANUTENTION
+  | typeof FUN
+  | typeof RELOU;
 
 export type Categorize = {
-  category: Category;
+  category?: Category;
   topPriority: boolean;
 };
 
