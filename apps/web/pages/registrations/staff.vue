@@ -65,7 +65,7 @@
 import Vue from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import { Header } from "~/utils/models/data-table.model";
-import { JoinableTeam, joinableTeams } from "@overbookd/registration";
+import { JoinableTeam, STAFF, joinableTeams } from "@overbookd/registration";
 import { formatLocalDate } from "~/utils/date/date.utils";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
@@ -151,7 +151,7 @@ export default Vue.extend({
         searchable.includes(search);
     },
     forgetHim(email: string) {
-      this.$accessor.registration.forgetHimAsStaff(email);
+      this.$accessor.registration.forget({ membership: STAFF, email });
     },
     isMatchingRegistrationDateLimit(dateLimit: number): Filter {
       return ({ registeredAt }: EnrollableStaff) => {

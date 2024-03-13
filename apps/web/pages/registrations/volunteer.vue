@@ -68,6 +68,7 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { VOLUNTEER } from "@overbookd/registration";
 
 type RegistrationsData = {
   headers: Header[];
@@ -133,9 +134,10 @@ export default defineComponent({
     forgetVolunteer() {
       if (!this.volunteerToForget) return;
       this.openOrCloseVolunteerDetails(this.volunteerToForget);
-      this.$accessor.registration.forgetHimAsVolunteer(
-        this.volunteerToForget.email,
-      );
+      this.$accessor.registration.forget({
+        membership: VOLUNTEER,
+        email: this.volunteerToForget.email,
+      });
       this.volunteerToForget = null;
     },
     openForgetVolunteerDialog(volunteer: EnrollableVolunteer) {

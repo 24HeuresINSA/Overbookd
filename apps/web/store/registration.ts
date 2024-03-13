@@ -1,4 +1,4 @@
-import { RegisterForm } from "@overbookd/registration";
+import { Membership, RegisterForm, STAFF } from "@overbookd/registration";
 import { actionTree, mutationTree } from "typed-vuex";
 import {
   EnrollableStaff,
@@ -155,22 +155,16 @@ export const actions = actionTree(
       );
     },
 
-    async forgetHimAsStaff({ dispatch }, email: string) {
+    async forget(
+      { dispatch },
+      { membership, email }: { membership: Membership; email: string },
+    ) {
       const res = await safeCall(
         this,
         RegistrationRepository.forgetHim(this, email),
       );
       if (!res) return;
-      dispatch("getStaffs");
-    },
-
-    async forgetHimAsVolunteer({ dispatch }, email: string) {
-      const res = await safeCall(
-        this,
-        RegistrationRepository.forgetHim(this, email),
-      );
-      if (!res) return;
-      dispatch("getVolunteers");
+      membership === STAFF ? dispatch("getStaffs") : dispatch("getVolunteers");
     },
   },
 );
