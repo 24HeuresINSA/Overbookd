@@ -1,94 +1,11 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { guardPS1, guardPS2 } from "../festival-task.fake";
-import {
-  Categorize,
-  FestivalTask,
-  ReadyToAssign,
-  STATIQUE,
-  Validated,
-} from "../festival-task";
+import { barCashier, guardPS1, guardPS2 } from "../festival-task.fake";
+import { BAR, FUN, MANUTENTION, RELOU, STATIQUE } from "../festival-task";
 import { READY_TO_ASSIGN } from "../../common/status";
 import { ASSIGNMENT_STARTED } from "../../common/action";
 import { noel } from "../festival-task.test-util";
-import { Adherent } from "../../common/adherent";
-import { FestivalTaskKeyEvents } from "../festival-task.event";
-import {
-  ReadyToAssignWithoutConflicts,
-  ValidatedWithoutConflicts,
-} from "../volunteer-conflicts";
-import {
-  FestivalTaskNotFound,
-  FestivalTaskNotValidated,
-} from "../festival-task.error";
-import { isValidated } from "../../festival-event";
-import { updateItemToList } from "@overbookd/list";
-
-type FestivalTasksForEnableAssignment = {
-  findById(id: FestivalTask["id"]): Promise<ValidatedWithoutConflicts | null>;
-  save(task: ReadyToAssign): Promise<ReadyToAssignWithoutConflicts>;
-};
-
-class EnableAssignment {
-  constructor(
-    private readonly festivalTasks: FestivalTasksForEnableAssignment,
-  ) {}
-
-  async for(
-    ftId: FestivalTask["id"],
-    instigator: Adherent,
-    categorize: Categorize,
-  ) {
-    const task = await this.festivalTasks.findById(ftId);
-    if (!task) throw new FestivalTaskNotValidated(ftId);
-
-    const readyToAssign = ReadyToAssignFestivalTask.fromValidated(
-      task,
-      instigator,
-      categorize,
-    );
-
-    return this.festivalTasks.save(readyToAssign);
-  }
-}
-
-class InMemoryFestivalTasksForEnableAssignment
-  implements FestivalTasksForEnableAssignment
-{
-  constructor(private tasks: FestivalTask[]) {}
-  findById(id: FestivalTask["id"]): Promise<ValidatedWithoutConflicts | null> {
-    const task = this.tasks.find(
-      (task): task is ValidatedWithoutConflicts =>
-        task.id === id && isValidated<FestivalTask>(task),
-    );
-    return Promise.resolve(task ?? null);
-  }
-
-  save(task: ReadyToAssign): Promise<ReadyToAssignWithoutConflicts> {
-    const index = this.tasks.findIndex(({ id }) => id === task.id);
-    if (index === -1) throw new FestivalTaskNotFound(task.id);
-
-    this.tasks = updateItemToList(this.tasks, index, task);
-    return Promise.resolve(task);
-  }
-
-  get entries(): FestivalTask[] {
-    return this.tasks;
-  }
-}
-
-class ReadyToAssignFestivalTask {
-  static fromValidated(
-    task: Validated,
-    instigator: Adherent,
-    categorize: Categorize,
-  ): ReadyToAssign {
-    const history = [
-      ...task.history,
-      FestivalTaskKeyEvents.assignmentStarted(instigator),
-    ];
-    return { ...task, ...categorize, status: READY_TO_ASSIGN, history };
-  }
-}
+import { EnableAssignment } from "./enable-assignment";
+import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory";
 
 describe("Enable assignment", () => {
   let festivalTasks: InMemoryFestivalTasksForEnableAssignment;
@@ -97,13 +14,19 @@ describe("Enable assignment", () => {
     festivalTasks = new InMemoryFestivalTasksForEnableAssignment([
       guardPS1,
       guardPS2,
+      barCashier,
     ]);
     enableAssignment = new EnableAssignment(festivalTasks);
   });
   describe.each`
-    task        | instigator | categorize
-    ${guardPS1} | ${noel}    | ${{ category: STATIQUE, topPriority: true }}
-    ${guardPS2} | ${noel}    | ${{ category: STATIQUE, topPriority: true }}
+    task          | instigator | categorize
+    ${guardPS1}   | ${noel}    | ${{ category: STATIQUE, topPriority: true }}
+    ${guardPS2}   | ${noel}    | ${{ category: STATIQUE, topPriority: true }}
+    ${barCashier} | ${noel}    | ${{ category: RELOU, topPriority: true }}
+    ${barCashier} | ${noel}    | ${{ category: BAR, topPriority: false }}
+    ${barCashier} | ${noel}    | ${{ category: MANUTENTION, topPriority: true }}
+    ${barCashier} | ${noel}    | ${{ category: FUN, topPriority: false }}
+    ${barCashier} | ${noel}    | ${{ topPriority: true }}
   `(
     "when enabling assignment for validated festival task",
     ({ task, instigator, categorize }) => {

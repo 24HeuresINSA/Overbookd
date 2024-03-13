@@ -169,15 +169,19 @@ export const friday19h: BuildTimeWindow = {
   date: new Date("2024-05-17T19:00+02:00"),
   id: "28599420",
 };
-export const saturday7h: BuildTimeWindow = {
+export const saturday04h: BuildTimeWindow = {
+  date: new Date("2024-05-18T04:00+02:00"),
+  id: "28599960",
+};
+export const saturday07h: BuildTimeWindow = {
   date: new Date("2024-05-18T07:00+02:00"),
   id: "28600140",
 };
-export const saturday8h: BuildTimeWindow = {
+export const saturday08h: BuildTimeWindow = {
   date: new Date("2024-05-18T08:00+02:00"),
   id: "28600200",
 };
-export const saturday9h: BuildTimeWindow = {
+export const saturday09h: BuildTimeWindow = {
   date: new Date("2024-05-18T09:00+02:00"),
   id: "28600260",
 };
@@ -205,10 +209,15 @@ export const saturday20h: BuildTimeWindow = {
   date: new Date("2024-05-18T20:00+02:00"),
   id: "28600920",
 };
+export const sunday04h: BuildTimeWindow = {
+  date: new Date("2024-05-19T04:00+02:00"),
+  id: "28601400",
+};
 export const monday00h: BuildTimeWindow = {
   date: new Date("2024-05-20T00:00+02:00"),
   id: "28602600",
 };
+
 const monday01h: BuildTimeWindow = {
   date: new Date("2024-05-20T01:00+02:00"),
   id: "28602660",
@@ -220,7 +229,7 @@ export const noelAvailabilities: VolunteerAvailabilities = {
 };
 export const leaAvailabilities: VolunteerAvailabilities = {
   volunteer: lea,
-  availabilities: [{ start: saturday8h.date, end: saturday11h.date }],
+  availabilities: [{ start: saturday08h.date, end: saturday11h.date }],
 };
 
 export const friday10hfriday19h = TimeWindowFactory.create(
@@ -241,6 +250,8 @@ export const saturday10hsaturday19h = TimeWindowFactory.create(
 );
 const friday18hmonday00h = TimeWindowFactory.create(friday18h, monday00h);
 const friday17hmonday01h = TimeWindowFactory.create(friday17h, monday01h);
+const friday18hsaturday04h = TimeWindowFactory.create(friday18h, saturday04h);
+const saturday18hsunday04h = TimeWindowFactory.create(saturday18h, sunday04h);
 
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
@@ -254,7 +265,7 @@ export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
   volunteers: [{ ...noel, conflicts: { tasks: [], availability: false } }],
 });
 export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
-  start: saturday8h,
+  start: saturday08h,
   end: saturday11h,
   volunteers: [{ ...lea, conflicts: { tasks: [], availability: false } }],
 });
@@ -308,6 +319,11 @@ export const mdeHall: Location = {
 const noDedicated: Location = {
   id: 3,
   name: "No Dedicated Location",
+};
+
+const nextToManege: Location = {
+  id: 4,
+  name: "Next to manège",
 };
 
 export const ficelle = {
@@ -387,5 +403,18 @@ export const securityAccess: FestivalActivity = {
   inquiry: {
     timeWindows: [friday17hmonday01h],
     all: [trenteGilletsJaune],
+  },
+};
+
+export const barManege: FestivalActivity = {
+  id: 5,
+  name: "Bar Manège",
+  location: nextToManege,
+  status: VALIDATED,
+  hasSupplyRequest: false,
+  timeWindows: [friday18hsaturday04h, saturday18hsunday04h],
+  inquiry: {
+    timeWindows: [friday18hsaturday04h, saturday18hsunday04h],
+    all: [deuxTables],
   },
 };

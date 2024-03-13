@@ -36,6 +36,9 @@ import {
   preventionVillage,
   securityAccess,
   monday00h,
+  barManege,
+  saturday04h,
+  sunday04h,
 } from "./festival-task.test-util";
 import {
   InReviewWithConflicts,
@@ -572,4 +575,23 @@ export const guardPS2 = factory
     }).mobilization,
   ])
   .withInstructions({ global: "Guard PS2" })
+  .build();
+
+export const barCashier = factory
+  .validated("Bar cashier")
+  .withFestivalActivity(barManege)
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: friday18h,
+      end: saturday04h,
+      durationSplitInHour: 2,
+      teams: [{ count: 1, team: "confiance" }],
+    }).mobilization,
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: saturday18h,
+      end: sunday04h,
+      durationSplitInHour: 2,
+      teams: [{ count: 1, team: "confiance" }],
+    }).mobilization,
+  ])
   .build();

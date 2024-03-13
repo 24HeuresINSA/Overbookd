@@ -66,10 +66,10 @@ type MobilizationsWithConflicts = {
 };
 
 export const STATIQUE = "STATIQUE";
-const BAR = "BAR";
-const MANUTENTION = "MANUTENTION";
-const FUN = "FUN";
-const RELOU = "RELOU";
+export const BAR = "BAR";
+export const MANUTENTION = "MANUTENTION";
+export const FUN = "FUN";
+export const RELOU = "RELOU";
 
 type Category =
   | typeof STATIQUE
@@ -124,7 +124,7 @@ export type Refused = GenerateConflictUnion<BaseRefused>;
 export type Validated = GenerateConflictUnion<BaseValidated>;
 export type ReadyToAssign = GenerateConflictUnion<BaseReadyToAssign>;
 
-export type Reviewable = InReview | Refused | Validated | ReadyToAssign;
+export type Reviewable = InReview | Refused | Validated;
 
 export type FestivalTask = Draft | Reviewable;
 
@@ -149,18 +149,16 @@ export type PreviewDraft = {
 export type PreviewInReview = GeneratePreview<InReview>;
 export type PreviewRefused = GeneratePreview<Refused>;
 export type PreviewValidated = GeneratePreview<Validated>;
-export type PreviewReadyToAssign = GeneratePreview<ReadyToAssign>;
 
 export type PreviewReviewable =
   | PreviewInReview
   | PreviewRefused
-  | PreviewValidated
-  | PreviewReadyToAssign;
+  | PreviewValidated;
 
 export type Preview = PreviewDraft | PreviewReviewable;
 
 export function isReadyToReview(
-  task: FestivalTask,
-): task is Extract<FestivalTask, { status: typeof READY_TO_ASSIGN }> {
+  task: FestivalTask | ReadyToAssign,
+): task is ReadyToAssign {
   return task.status === READY_TO_ASSIGN;
 }
