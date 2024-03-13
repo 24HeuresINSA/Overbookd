@@ -466,6 +466,12 @@ importers:
         specifier: workspace:*
         version: link:../../libraries/slugify
 
+  domains/logistic:
+    dependencies:
+      '@overbookd/list':
+        specifier: workspace:*
+        version: link:../../libraries/list
+
   domains/permission: {}
 
   domains/personal-account:
