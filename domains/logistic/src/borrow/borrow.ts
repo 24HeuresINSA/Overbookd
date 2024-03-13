@@ -1,4 +1,4 @@
-export type LoanSheet = {
+export type Borrow = {
   id: number;
   lender: string;
 };

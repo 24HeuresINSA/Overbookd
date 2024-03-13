@@ -30,8 +30,8 @@
   },
   "keywords": [
     "logistic",
-    "loan-sheet",
-    "purchase-sheet"
+    "borrow",
+    "purchase"
   ],
   "engines": {
     "node": "20.11.0",
