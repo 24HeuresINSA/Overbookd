@@ -59,7 +59,6 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["forget-him"],
   computed: {
     availabilities(): Period[] {
       return this.volunteer.availabilities.map((period) => Period.init(period));
