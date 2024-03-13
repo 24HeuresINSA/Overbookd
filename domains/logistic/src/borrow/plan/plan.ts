@@ -9,7 +9,7 @@ export type BorrowsForPlan = {
 export class PlanBorrow {
   constructor(private readonly borrows: BorrowsForPlan) {}
 
-  async lender(id: Borrow["id"], lender: string): Promise<Borrow> {
+  async changeLender(id: Borrow["id"], lender: string): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
     return this.borrows.save({ id, lender });

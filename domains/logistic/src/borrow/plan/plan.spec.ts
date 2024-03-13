@@ -4,26 +4,24 @@ import { karnaBorrow } from "../borrow.test-utils";
 import { PlanBorrow } from "./plan";
 import { BorrowNotFound } from "../borrow.error";
 
-describe("Update borrow", () => {
-  describe("when updating borrow from KARNA name", async () => {
+describe("Plan borrow", () => {
+  describe("when changing lender", async () => {
     const borrows = new InMemoryBorrows([karnaBorrow]);
-    const update = new PlanBorrow(borrows);
-    await update.lender(karnaBorrow.id, "KLS");
+    const plan = new PlanBorrow(borrows);
+    await plan.changeLender(karnaBorrow.id, "KLS");
 
-    it("should update borrow name", () => {
-      const borrow = borrows.all.find((sheet) => sheet.id === karnaBorrow.id);
-      expect(borrow?.lender).toBe("KLS");
-    });
     it("should save it to the repository", () => {
       expect(borrows.all).toContainEqual({ id: karnaBorrow.id, lender: "KLS" });
     });
   });
   describe("when updating a borrow that does not exist", async () => {
     const borrows = new InMemoryBorrows();
-    const update = new PlanBorrow(borrows);
+    const plan = new PlanBorrow(borrows);
 
     it("should indicate that the borrow does not exist", () => {
-      expect(update.lender(100, "KLS")).rejects.toThrowError(BorrowNotFound);
+      expect(plan.changeLender(100, "KLS")).rejects.toThrowError(
+        BorrowNotFound,
+      );
     });
   });
 });
