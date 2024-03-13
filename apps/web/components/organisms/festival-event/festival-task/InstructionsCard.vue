@@ -177,12 +177,12 @@ export default defineComponent({
     },
     resetApprovalsLabel(): string {
       if (this.formToInit) {
-        return "L'initialisation des instructions des responsables";
+        return "Initialiser les instructions des responsables";
       }
       if (this.formToUpdate) {
-        return "La modification des instructions";
+        return "Modifier les instructions";
       }
-      return "La suppression des instructions des responsables";
+      return "Supprimer les instructions des responsables";
     },
   },
   watch: {
@@ -298,6 +298,7 @@ export default defineComponent({
     },
     closeResetApprovalsDialog() {
       this.isResetApprovalsDialogOpen = false;
+      this.isInitInChargeDialogOpen = false;
       this.formToUpdate = null;
       this.formToInit = null;
     },
