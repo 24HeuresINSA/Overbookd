@@ -59,7 +59,7 @@ import AvailabilitiesPickCalendar from "~/components/molecules/availabilities/Av
 type CalendarStep = {
   title: string;
   period: Period;
-}
+};
 
 export default Vue.extend({
   name: "AvailabilitiesStepper",

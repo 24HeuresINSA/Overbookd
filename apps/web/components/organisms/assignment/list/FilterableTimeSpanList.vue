@@ -45,7 +45,7 @@ type FilterableTimeSpanListData = {
   teams: Team[];
   searchFtName: string;
   category: TaskCategory | TaskPriority | null;
-}
+};
 
 export default Vue.extend({
   name: "FilterableTimeSpanList",

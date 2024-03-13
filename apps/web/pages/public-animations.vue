@@ -74,7 +74,7 @@ import { Period } from "@overbookd/period";
 
 type PublicAnimationsData = {
   headers: Header[];
-}
+};
 
 export default Vue.extend({
   name: "PublicAnimations",

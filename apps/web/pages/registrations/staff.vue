@@ -79,7 +79,7 @@ type RegistrationsData = {
   last30DaysNewcomers: boolean;
   searchNewcomer: string;
   selectedStaffs: EnrollableStaff[];
-}
+};
 
 type Filter = (newcomer: Searchable<EnrollableStaff>) => boolean;
 

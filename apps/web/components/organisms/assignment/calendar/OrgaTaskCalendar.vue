@@ -47,7 +47,7 @@ import { isItAvailableDuringThisHour } from "~/utils/availabilities/availabiliti
 type CalendarItemWithTask = CalendarEvent & {
   timeSpanId?: number;
   ft: { id: number; name: string };
-}
+};
 
 export default Vue.extend({
   name: "OrgaTaskCalendar",

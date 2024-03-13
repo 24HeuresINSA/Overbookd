@@ -236,7 +236,7 @@ type RegisterData = InputRulesData & {
   email: string;
   password: string;
   repeatPassword: string;
-}
+};
 
 export default Vue.extend({
   name: "Register",

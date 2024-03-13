@@ -74,7 +74,7 @@ type LocationMapEditorData = {
   editing: boolean;
   mouseLatlng: Coordinate;
   location: Location;
-}
+};
 
 const actions: ActionItem[] = [
   { key: POINT, value: "Point" },

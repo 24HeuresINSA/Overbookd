@@ -72,7 +72,7 @@ type GearListingData = {
   selectedGear?: Gear;
   isUpdateGearDialogOpen: boolean;
   isDeleteGearDialogOpen: boolean;
-}
+};
 
 export default Vue.extend({
   name: "GearListing",

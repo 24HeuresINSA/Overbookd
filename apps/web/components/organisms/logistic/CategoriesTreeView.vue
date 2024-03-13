@@ -53,7 +53,7 @@ type CategoryTreeViewData = {
   isCreateDialogOpen: boolean;
   isInformationDialogOpen: boolean;
   selectedCategory?: Category;
-}
+};
 
 export default Vue.extend({
   name: "CategoriesTreeView",

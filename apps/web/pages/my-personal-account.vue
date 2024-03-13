@@ -36,7 +36,7 @@ import SnackNotificationContainer from "~/components/molecules/snack/SnackNotifi
 
 type MyPersonalAccountData = {
   isTransferDialogOpen: boolean;
-}
+};
 
 export default defineComponent({
   name: "MyPersonalAccount",

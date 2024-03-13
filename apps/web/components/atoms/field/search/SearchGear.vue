@@ -41,7 +41,7 @@ import { Gear } from "~/utils/models/catalog.model";
 type SearchGearData = {
   gear?: Gear;
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchGear",

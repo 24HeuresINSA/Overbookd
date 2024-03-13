@@ -53,7 +53,7 @@ type ForgetData = InputRulesData & {
   password: string;
   email: string;
   confirm: boolean;
-}
+};
 
 export default Vue.extend({
   name: "Forget",

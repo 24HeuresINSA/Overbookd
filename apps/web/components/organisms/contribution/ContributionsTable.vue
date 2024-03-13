@@ -36,7 +36,7 @@ import { Searchable } from "~/utils/search/search.utils";
 type ContributionsTableData = {
   headers: Header[];
   search: string;
-}
+};
 
 export default Vue.extend({
   name: "ContributionsTable",

@@ -33,7 +33,7 @@ import { Team } from "~/utils/models/team.model";
 
 type SearchTeamData = {
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchTeam",

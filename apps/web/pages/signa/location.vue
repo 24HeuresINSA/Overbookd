@@ -113,7 +113,7 @@ type LocationData = {
   locationToDelete: SignaLocation | null;
   displayEditLocationDialog: boolean;
   displayDeleteLocationDialog: boolean;
-}
+};
 
 export default Vue.extend({
   name: "Location",

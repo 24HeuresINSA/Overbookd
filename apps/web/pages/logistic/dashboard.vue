@@ -35,7 +35,7 @@ type GearRecapData = {
   filter: FilterGear;
   start: Date;
   end: Date;
-}
+};
 
 export default Vue.extend({
   name: "GearRecap",

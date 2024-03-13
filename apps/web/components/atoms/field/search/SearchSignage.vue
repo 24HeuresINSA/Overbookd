@@ -34,7 +34,7 @@ import { SlugifyService } from "@overbookd/slugify";
 type SearchSignageData = {
   loading: boolean;
   search: string;
-}
+};
 
 export default defineComponent({
   name: "SearchSignage",

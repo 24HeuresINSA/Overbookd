@@ -59,7 +59,7 @@ import { Team } from "~/utils/models/team.model";
 
 type VolunteerListData = {
   headers: Header[];
-}
+};
 
 export default Vue.extend({
   name: "VolunteerInformation",

@@ -70,7 +70,7 @@ type ContractorFormData = {
   email: string | null;
   company: string | null;
   comment: string | null;
-}
+};
 
 export default defineComponent({
   name: "ContractorForm",

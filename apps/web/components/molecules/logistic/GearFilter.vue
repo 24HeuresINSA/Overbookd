@@ -33,7 +33,7 @@ import { FilterGear } from "~/utils/models/filter-gear.model";
 
 type GearFilterData = FilterGear & {
   delay?: ReturnType<typeof setTimeout>;
-}
+};
 
 export default Vue.extend({
   name: "GearFilter",

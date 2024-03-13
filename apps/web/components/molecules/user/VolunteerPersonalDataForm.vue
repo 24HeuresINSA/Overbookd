@@ -150,7 +150,7 @@ type VolunteerPersonalDataFormData = InputRulesData & {
   email: string;
   charisma: number;
   newTeam?: string;
-}
+};
 
 export default Vue.extend({
   name: "VolunteerPersonalDataForm",

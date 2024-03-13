@@ -97,7 +97,7 @@ type SignageListingData = {
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
   isDisplayImageSignageDialogOpen: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SignageListing",

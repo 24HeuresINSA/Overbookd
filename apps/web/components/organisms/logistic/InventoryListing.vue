@@ -48,7 +48,7 @@ import { Header } from "~/utils/models/data-table.model";
 type InventoryListingData = {
   headers: Header[];
   details: InventoryGroupedRecord[];
-}
+};
 export default Vue.extend({
   name: "InventoryListing",
   data: (): InventoryListingData => ({

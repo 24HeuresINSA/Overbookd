@@ -72,7 +72,7 @@ type SignageFormData = {
     number: (v: string) => boolean | string;
     min: (v: string) => boolean | string;
   };
-}
+};
 
 export default defineComponent({
   name: "FaSignageForm",

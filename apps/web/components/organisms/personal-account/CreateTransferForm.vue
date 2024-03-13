@@ -42,7 +42,7 @@ type CreateTransferFormData = {
   amount: number;
   payee: Consumer | null;
   context: string;
-}
+};
 
 export default defineComponent({
   name: "CreateTransferForm",

@@ -34,7 +34,7 @@ import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type FriendsCardData = {
   newFriend: User | null;
-}
+};
 
 type Image = {
   link: string;
