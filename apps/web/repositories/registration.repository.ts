@@ -53,7 +53,9 @@ export class RegistrationRepository {
   }
 
   static fetchStaffLink(context: Context) {
-    return context.$axios.get<string>(`${this.basePath}/invite-staff-link`);
+    return context.$axios.get<string | undefined>(
+      `${this.basePath}/invite-staff-link`,
+    );
   }
 
   static registerNewcomer(

@@ -122,7 +122,7 @@ export class RegistrationService {
 
   async getStaffInvitationLink(): Promise<URL | undefined> {
     const link = await this.repositories.configurations.getInviteStaffLink();
-    return new URL(link);
+    return link ? new URL(link) : undefined;
   }
 
   async generateStaffInvitationLink(): Promise<URL> {

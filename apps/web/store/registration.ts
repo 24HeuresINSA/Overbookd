@@ -121,7 +121,7 @@ export const actions = actionTree(
         this,
         RegistrationRepository.fetchStaffLink(this),
       );
-      if (!res) return;
+      if (!res?.data) return;
       commit("SET_INVITE_STAFF_LINK", new URL(res.data));
     },
 

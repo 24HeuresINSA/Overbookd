@@ -10,7 +10,7 @@ export class PrismaConfigurations implements Configurations {
     const configuration = await this.prisma.configuration.findUnique({
       where: { key: INVITE_STAFF_LINK },
     });
-    return JSON.stringify(configuration?.value);
+    return configuration?.value.toString();
   }
 
   async saveInviteStaffLink(value: string): Promise<void> {
