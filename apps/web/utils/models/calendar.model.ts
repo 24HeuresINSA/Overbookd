@@ -8,7 +8,15 @@ export type CalendarEvent = {
   link?: string;
   category?: string;
   color?: string;
-  timed: boolean;
+  timed: true;
+};
+
+export type DailyEvent = {
+  start: Date;
+  name: string;
+  link?: string;
+  color?: string;
+  timed: false;
 };
 
 export type CalendarUser = User & {

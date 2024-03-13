@@ -140,13 +140,13 @@
 import { defineComponent } from "vue";
 import { DateString, OverDate } from "@overbookd/period";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
 import {
   VuetifyCalendar,
   VuetifyCalendarType,
 } from "~/utils/calendar/vuetify-calendar";
 import { formatMonthWithYear } from "~/utils/date/date.utils";
-import { HolyDay } from "~/store/holyday";
+import { PublicHoliday } from "~/store/publicHoliday";
 
 export default defineComponent({
   name: "OverCalendar",
@@ -191,7 +191,7 @@ export default defineComponent({
   },
   emits: ["update:date", "select:date"],
   computed: {
-    eventsWithHolyDays(): CalendarEvent[] {
+    eventsWithHolyDays(): (CalendarEvent | DailyEvent)[] {
       return [...this.events, ...this.holyDayEvents];
     },
     isDarkTheme(): boolean {
@@ -203,10 +203,10 @@ export default defineComponent({
     types(): VuetifyCalendarType[] {
       return ["day", "week"];
     },
-    holyDays(): HolyDay[] {
-      return this.$accessor.holyday.days;
+    holyDays(): PublicHoliday[] {
+      return this.$accessor.publicHoliday.all;
     },
-    holyDayEvents(): CalendarEvent[] {
+    holyDayEvents(): DailyEvent[] {
       return this.holyDays.map((holyDay) => ({
         start: holyDay.date,
         name: holyDay.name,
@@ -225,7 +225,7 @@ export default defineComponent({
   },
   async mounted() {
     if (this.holyDays.length === 0) {
-      await this.$accessor.holyday.fetchHolyDays();
+      await this.$accessor.publicHoliday.fetchAll();
     }
   },
   methods: {

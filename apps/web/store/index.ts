@@ -32,7 +32,7 @@ import * as alert from "./alert";
 import * as personalAccount from "./personalAccount";
 import * as mealSharing from "./mealSharing";
 import * as logisticDashboard from "./logisticDashboard";
-import * as holyday from "./holyday";
+import * as publicHoliday from "./publicHoliday";
 
 export const state = () => ({});
 
@@ -81,6 +81,6 @@ export const accessorType = getAccessorType({
     personalAccount,
     mealSharing,
     logisticDashboard,
-    holyday,
+    publicHoliday,
   },
 });

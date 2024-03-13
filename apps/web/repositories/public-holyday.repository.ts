@@ -1,12 +1,12 @@
 import { isDateString } from "@overbookd/period";
-import { HolyDay } from "~/store/holyday";
+import { PublicHoliday } from "~/store/publicHoliday";
 
-type GouvHolyDay = {
+type FrenchGouvPublicHoliday = {
   [date: string]: string;
 };
 
-export class HolydayRepository {
-  static async fetchGouvHollyDays(): Promise<HolyDay[]> {
+export class FrenchGouvPublicHolidayRepository {
+  static async fetchPublicHolidays(): Promise<PublicHoliday[]> {
     const path = "https://calendrier.api.gouv.fr/jours-feries/metropole.json";
 
     const response = await fetch(path);
@@ -15,7 +15,7 @@ export class HolydayRepository {
         "❌ Impossible de récupérer les jours fériés de gouv.fr.",
       );
     }
-    const data: GouvHolyDay = await response.json();
+    const data: FrenchGouvPublicHoliday = await response.json();
 
     return Object.entries(data)
       .filter(([date]) => isDateString(date))
