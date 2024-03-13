@@ -2,7 +2,10 @@
   <v-card>
     <div class="volunteer-info">
       <div class="volunteer-info__personal-data">
-        <VolunteerPersonalDataForm @close-dialog="closeDialog" />
+        <VolunteerPersonalDataForm
+          @saved="volunteerUpdated"
+          @deleted="volunteerUpdated"
+        />
       </div>
       <div class="volunteer-info__availabilities">
         <AvailabilitiesSumup />
@@ -22,10 +25,10 @@ export default defineComponent({
     VolunteerPersonalDataForm,
     AvailabilitiesSumup,
   },
-  emits: ["close-dialog"],
+  emits: ["volunteer-updated"],
   methods: {
-    closeDialog() {
-      this.$emit("close-dialog");
+    volunteerUpdated() {
+      this.$emit("volunteer-updated");
     },
   },
 });

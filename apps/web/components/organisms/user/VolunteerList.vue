@@ -62,7 +62,7 @@ type VolunteerListData = {
 };
 
 export default Vue.extend({
-  name: "VolunteerInformation",
+  name: "VolunteerList",
   components: { TeamChip },
 
   props: {
