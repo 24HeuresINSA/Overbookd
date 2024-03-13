@@ -1,17 +1,17 @@
 import { describe, it, expect } from "vitest";
 import { InMemoryBorrows } from "./borrow.inmemory";
-import { karnaSheet } from "../borrow.test-utils";
+import { karnaBorrow } from "../borrow.test-utils";
 import { UpdateBorrow } from "./update";
 import { BorrowNotFound } from "../borrow.error";
 
 describe("Update borrow", () => {
   describe("when a user update borrow from KARNA", async () => {
-    const borrows = new InMemoryBorrows([karnaSheet]);
+    const borrows = new InMemoryBorrows([karnaBorrow]);
     const update = new UpdateBorrow(borrows);
-    await update.lender(karnaSheet.id, "KLS");
+    await update.lender(karnaBorrow.id, "KLS");
 
     it("should update it to the repository", () => {
-      const borrow = borrows.all.find((sheet) => sheet.id === karnaSheet.id);
+      const borrow = borrows.all.find((sheet) => sheet.id === karnaBorrow.id);
       expect(borrow?.lender).toBe("KLS");
     });
   });

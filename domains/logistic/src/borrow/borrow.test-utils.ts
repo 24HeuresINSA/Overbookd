@@ -1,6 +1,6 @@
 import { Borrow } from "./borrow";
 
-export const karnaSheet: Borrow = {
+export const karnaBorrow: Borrow = {
   id: 1,
   lender: "KARNA",
 };
