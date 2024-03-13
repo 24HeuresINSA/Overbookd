@@ -6,6 +6,10 @@ export type PublicHoliday = {
   name: string;
 };
 
+export type PublicHolidays = { all: () => Promise<PublicHoliday[]> };
+
+const publicHolidays: PublicHolidays = FrenchGovPublicHolidayRepository;
+
 type State = {
   all: PublicHoliday[];
 };
@@ -24,7 +28,7 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchAll({ commit }) {
-      const holidays = await FrenchGovPublicHolidayRepository.all();
+      const holidays = await publicHolidays.all();
       commit("SET_ALL_PUBLIC_HOLIDAYS", holidays);
     },
   },
