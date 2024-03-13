@@ -1,4 +1,4 @@
-import { GearDetails } from "@overbookd/http";
+import { ConsumableGearDetails, GearDetails } from "@overbookd/http";
 import {
   DatabaseGear,
   DatabaseActivityInquiry,
@@ -184,7 +184,6 @@ const emptyGearDetailsWithoutPeriod = {
   activities: [],
   tasks: [],
   inventory: 0,
-  stockDiscrepancy: 0,
 };
 
 export const gearWithNoInquiryForGraph: GearDetails[] = [
@@ -203,7 +202,6 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 25,
-    stockDiscrepancy: 15,
   },
   {
     ...friday08h15to08h30,
@@ -212,7 +210,6 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 25,
-    stockDiscrepancy: 15,
   },
   {
     ...friday08h30to08h45,
@@ -221,7 +218,6 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 25,
-    stockDiscrepancy: 15,
   },
   {
     ...friday08h45to09h,
@@ -230,7 +226,6 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 25,
-    stockDiscrepancy: 15,
   },
   {
     ...friday09hto09h15,
@@ -239,7 +234,6 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
     activities: [],
     tasks: [],
     inventory: 25,
-    stockDiscrepancy: 25,
   },
   {
     ...friday09h15to09h30,
@@ -248,11 +242,10 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
     activities: [],
     tasks: [],
     inventory: 25,
-    stockDiscrepancy: 25,
   },
 ];
 
-export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
+export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   {
     ...friday08hto08h15,
     stock: 0,
@@ -260,7 +253,7 @@ export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    stockDiscrepancy: -10,
+    consumed: 10,
   },
   {
     ...friday08h15to08h30,
@@ -269,7 +262,7 @@ export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    stockDiscrepancy: -10,
+    consumed: 10,
   },
   {
     ...friday08h30to08h45,
@@ -278,7 +271,7 @@ export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    stockDiscrepancy: -10,
+    consumed: 10,
   },
   {
     ...friday08h45to09h,
@@ -287,7 +280,7 @@ export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    stockDiscrepancy: -10,
+    consumed: 10,
   },
   {
     ...friday09hto09h15,
@@ -296,7 +289,7 @@ export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
     activities: [],
     tasks: [],
     inventory: 0,
-    stockDiscrepancy: -10,
+    consumed: 10,
   },
   {
     ...friday09h15to09h30,
@@ -305,11 +298,11 @@ export const consumableGearWithOneInquiryForGraph: GearDetails[] = [
     activities: [],
     tasks: [],
     inventory: 0,
-    stockDiscrepancy: -10,
+    consumed: 10,
   },
 ];
 
-export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDetails[] =
+export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: ConsumableGearDetails[] =
   [
     {
       ...friday08hto08h15,
@@ -318,7 +311,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDe
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      stockDiscrepancy: -20,
+      consumed: 25,
     },
     {
       ...friday08h15to08h30,
@@ -327,7 +320,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDe
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      stockDiscrepancy: -20,
+      consumed: 25,
     },
     {
       ...friday08h30to08h45,
@@ -336,7 +329,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDe
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      stockDiscrepancy: -20,
+      consumed: 25,
     },
     {
       ...friday08h45to09h,
@@ -345,7 +338,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDe
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      stockDiscrepancy: -20,
+      consumed: 25,
     },
     {
       ...friday09hto09h15,
@@ -354,7 +347,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDe
       activities: [{ ...pcSecuActivity, quantity: 20 }],
       tasks: [],
       inventory: 5,
-      stockDiscrepancy: -40,
+      consumed: 45,
     },
     {
       ...friday09h15to09h30,
@@ -363,7 +356,7 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: GearDe
       activities: [{ ...pcSecuActivity, quantity: 20 }],
       tasks: [],
       inventory: 5,
-      stockDiscrepancy: -40,
+      consumed: 45,
     },
   ];
 
@@ -376,7 +369,6 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       activities: [{ ...justeDanceActivity, quantity: 30 }],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 30,
-      stockDiscrepancy: -25,
     },
     {
       ...friday08h15to08h30,
@@ -385,7 +377,6 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       activities: [{ ...justeDanceActivity, quantity: 30 }],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 30,
-      stockDiscrepancy: -25,
     },
     {
       ...friday08h30to08h45,
@@ -394,7 +385,6 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       activities: [{ ...justeDanceActivity, quantity: 30 }],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 30,
-      stockDiscrepancy: -25,
     },
     {
       ...friday08h45to09h,
@@ -403,7 +393,6 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       activities: [{ ...justeDanceActivity, quantity: 30 }],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 30,
-      stockDiscrepancy: -25,
     },
     {
       ...friday09hto09h15,
@@ -412,7 +401,6 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       activities: [],
       tasks: [],
       inventory: 30,
-      stockDiscrepancy: 30,
     },
     {
       ...friday09h15to09h30,
@@ -421,6 +409,5 @@ export const gearWithTwoInquiriesAndTwoInventoryRecordsForGraph: GearDetails[] =
       activities: [],
       tasks: [],
       inventory: 30,
-      stockDiscrepancy: 30,
     },
   ];

@@ -47,8 +47,8 @@ describe("Summarize gear for graph", () => {
     ${"has no entries"}                                                | ${gearWithNoInquiry}                                   | ${friday08hto09h30} | ${gearWithNoInquiryForGraph}
     ${"has one inquiry and one inventory record"}                      | ${gearWithOneInquiryAndOneInventoryRecord}             | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordForGraph}
     ${"has two inquiries and two inventory records"}                   | ${gearWithTwoInquiryAndTwoInventoryRecord}             | ${friday08hto09h30} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForGraph}
-    ${"is consumable ans has one inquiry"}                             | ${consumableGearWithOneInquiry}                        | ${friday08hto09h30} | ${consumableGearWithOneInquiryForGraph}
-    ${"is consumable ans has two inquiries and one inventory records"} | ${consumableGearWithTwoInquiriesAndOneInventoryRecord} | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
+    ${"is consumable and has one inquiry"}                             | ${consumableGearWithOneInquiry}                        | ${friday08hto09h30} | ${consumableGearWithOneInquiryForGraph}
+    ${"is consumable and has two inquiries and one inventory records"} | ${consumableGearWithTwoInquiriesAndOneInventoryRecord} | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
   `("when gear $explaination", ({ gear, period, expectedData }) => {
     it(`should return gear for graph with ${expectedData.length} periods`, () => {
       const gearForGraph = DashboardGear.generateDetails(

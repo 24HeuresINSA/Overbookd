@@ -1,4 +1,8 @@
-import { GearDetails, GearPreview } from "@overbookd/http";
+import {
+  ConsumableGearDetails,
+  GearDetails,
+  GearPreview,
+} from "@overbookd/http";
 import {
   DatabaseActivityInquiry,
   DatabaseGear,
@@ -50,7 +54,8 @@ export class DashboardGear {
       };
     });
 
-    return DashboardGear.computeStockDiscrepancyOnDetails(gear, details);
+    if (!gear.isConsumable) return details;
+    return DashboardGear.computeConsumedOnDetails(gear, details);
   }
 
   private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
@@ -180,18 +185,11 @@ export class DashboardGear {
     }, []);
   }
 
-  private static computeStockDiscrepancyOnDetails(
+  private static computeConsumedOnDetails(
     gear: DatabaseGear,
-    details: Omit<GearDetails, "stockDiscrepancy">[],
-  ): GearDetails[] {
-    if (!gear.isConsumable) {
-      return details.map((detail) => {
-        const stockDiscrepancy = detail.stock - detail.inquiry;
-        return { ...detail, stockDiscrepancy };
-      });
-    }
-
-    let totalInquiryQuantity = 0;
+    details: Omit<ConsumableGearDetails, "consumed">[],
+  ): ConsumableGearDetails[] {
+    let totalConsumed = 0;
     let remainingActivities = gear.festivalActivityInquiries;
     let remainingTasks = gear.festivalTaskInquiries;
 
@@ -209,7 +207,7 @@ export class DashboardGear {
         (total, inquiry) => total + inquiry.quantity,
         0,
       );
-      totalInquiryQuantity += inquiryQuantity;
+      totalConsumed += inquiryQuantity;
 
       // remove processed inquiries from the remaining ones
       remainingActivities = remainingActivities.filter(
@@ -220,8 +218,7 @@ export class DashboardGear {
         (inquiry) => !tasks.some((task) => task.id === inquiry.ft.id),
       );
 
-      const stockDiscrepancy = detail.stock - totalInquiryQuantity;
-      return { ...detail, stockDiscrepancy };
+      return { ...detail, consumed: totalConsumed };
     });
   }
 }
