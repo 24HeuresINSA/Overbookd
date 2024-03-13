@@ -1,5 +1,5 @@
-export interface Field<T> {
+export type Field<T> = {
   value: T;
   isValid: boolean;
   reasons: string[];
-}
+};

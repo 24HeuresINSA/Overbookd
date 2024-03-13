@@ -10,10 +10,10 @@ export const signageTypes: Record<SignageType, SignageType> = {
 
 export type SignageType = typeof BACHE | typeof PANNEAU | typeof AFFICHE;
 
-export interface Signage {
+export type Signage = {
   id: number;
   name: string;
   slug: string;
   type: SignageType;
   image?: string;
-}
+};

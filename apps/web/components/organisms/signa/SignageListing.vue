@@ -89,7 +89,7 @@ import { WRITE_SIGNAGE_CATALOG } from "@overbookd/permission";
 import { SlugifyService } from "@overbookd/slugify";
 import { SignageWithPotentialImage } from "~/utils/models/catalog-signa.model";
 
-interface SignageListingData {
+type SignageListingData = {
   headers: Header[];
   searchName: string | null;
   searchType: SignageType | null;
@@ -97,7 +97,7 @@ interface SignageListingData {
   isUpdateSignageDialogOpen: boolean;
   isDeleteSignageDialogOpen: boolean;
   isDisplayImageSignageDialogOpen: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SignageListing",

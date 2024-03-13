@@ -52,12 +52,12 @@ import { Category, Gear } from "~/utils/models/catalog.model";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";
 import SearchCategory from "../../atoms/field/search/SearchCategory.vue";
 
-interface GearFormData extends InputRulesData {
+type GearFormData = InputRulesData & {
   name: string;
   category?: Category;
   isPonctualUsage: boolean;
   isConsumable: boolean;
-}
+};
 
 const nameMinLength = 3;
 

@@ -1,11 +1,11 @@
 import { updateItemToList } from "@overbookd/list";
 import { Gear } from "~/utils/models/catalog.model";
 
-export interface Record {
+export type Record = {
   gear: Gear;
   quantity: number;
   storage: string;
-}
+};
 
 export type LiteInventoryRecord = Omit<Record, "gear">;
 

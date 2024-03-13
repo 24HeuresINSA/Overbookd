@@ -24,11 +24,11 @@ export type Coordinate = {
 
 export type GeoJson = null | PointLocation | RoadLocation | AreaLocation;
 
-export interface SignaLocation<T extends GeoJson = GeoJson> {
+export type SignaLocation<T extends GeoJson = GeoJson> = {
   id: number;
   name: string;
   geoJson: T;
-}
+};
 
 export function isPointLocation(geoJson: GeoJson): geoJson is PointLocation {
   return geoJson?.type === POINT;

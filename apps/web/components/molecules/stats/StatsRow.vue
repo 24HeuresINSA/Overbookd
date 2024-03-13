@@ -55,10 +55,10 @@ import { StatsPayload } from "~/utils/models/stats.model";
 import { faStatusLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { ftStatusLabels } from "~/utils/festival-event/festival-task/festival-task.model";
 
-interface StatsRowData {
+type StatsRowData = {
   historyFA: Map<string, number>;
   historyFT: Map<string, number>;
-}
+};
 
 const validStatuses: string[] = [VALIDATED];
 

@@ -12,10 +12,10 @@ type AvailableNotification = {
   permission: Permission;
 };
 
-export interface NotificationRepository {
+export type NotificationRepository = {
   for(userId: number): Promise<Notifications>;
   readFrom(userId: number): Promise<void>;
-}
+};
 
 export type Notifications = {
   hasNotifications: boolean;

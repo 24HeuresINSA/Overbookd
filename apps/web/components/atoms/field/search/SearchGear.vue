@@ -38,10 +38,10 @@ import Vue from "vue";
 import { GearSearchOptions } from "@overbookd/http";
 import { Gear } from "~/utils/models/catalog.model";
 
-interface SearchGearData {
+type SearchGearData = {
   gear?: Gear;
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchGear",

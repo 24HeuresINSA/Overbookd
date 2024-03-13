@@ -72,9 +72,9 @@ import { Header } from "~/utils/models/data-table.model";
 import { TimeWindow } from "@overbookd/festival-event";
 import { Period } from "@overbookd/period";
 
-interface PublicAnimationsData {
+type PublicAnimationsData = {
   headers: Header[];
-}
+};
 
 export default Vue.extend({
   name: "PublicAnimations",

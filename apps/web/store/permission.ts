@@ -7,9 +7,9 @@ import {
 } from "~/utils/models/permission.model";
 
 // The state types definitions
-interface State {
+type State = {
   permissions: Permission[];
-}
+};
 
 export const state = (): State => ({
   permissions: [],

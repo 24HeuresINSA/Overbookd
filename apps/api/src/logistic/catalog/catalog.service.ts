@@ -1,11 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CategoryNotFoundException } from "./category.service";
-import {
-  Category,
-  CategoryRepository,
-  Gear,
-  GearRepository,
-} from "./interfaces";
+import { Category, CategoryRepository, Gear, GearRepository } from "./types";
 import { SlugifyService } from "@overbookd/slugify";
 
 export type GearForm = {

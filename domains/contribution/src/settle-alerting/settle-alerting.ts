@@ -2,18 +2,18 @@ import { PAY_CONTRIBUTION, Permission } from "@overbookd/permission";
 import { Edition } from "../edition";
 import { IAlertAboutContribution, SettleAlert } from "./settle-alert";
 
-export interface Permissions {
+export type Permissions = {
   mine(id: number): Promise<Permission[]>;
-}
+};
 
-export interface IDefineContribution {
+export type IDefineContribution = {
   adherentId: number;
   edition: number;
-}
+};
 
-export interface Contributions {
+export type Contributions = {
   mine(adherentId: number): Promise<IDefineContribution[]>;
-}
+};
 
 export class SettleAlerting {
   constructor(

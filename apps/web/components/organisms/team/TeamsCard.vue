@@ -70,13 +70,13 @@ import { Team } from "~/utils/models/team.model";
 import { Header } from "~/utils/models/data-table.model";
 import TeamForm from "~/components/molecules/team/TeamForm.vue";
 
-interface TeamsCardData {
+type TeamsCardData = {
   search: string;
   headers: Header[];
   selectedTeam: Team | null;
   isTeamDialogOpen: boolean;
   isDeleteConfirmationDialogOpen: boolean;
-}
+};
 
 export default Vue.extend({
   name: "TeamsCard",

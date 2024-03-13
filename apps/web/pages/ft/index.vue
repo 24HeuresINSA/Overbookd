@@ -116,14 +116,14 @@ import {
 import { isDraftPreview } from "~/utils/festival-event/festival-task/festival-task.model";
 import { getPreviewReviewStatus } from "~/utils/festival-event/festival-task/festival-task.utils";
 
-interface Data {
+type FtData = {
   headers: Header[];
   isNewFtDialogOpen: boolean;
   isRemovalDialogOpen: boolean;
   taskToRemove?: PreviewFestivalTask;
 
   filters: TaskFilters;
-}
+};
 
 export default Vue.extend({
   name: "Ft",
@@ -134,7 +134,7 @@ export default Vue.extend({
     TeamChip,
     FtFilter,
   },
-  data(): Data {
+  data(): FtData {
     return {
       headers: [
         { text: "Statut", value: "id" },

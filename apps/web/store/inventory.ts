@@ -8,15 +8,15 @@ import { safeCall } from "~/utils/api/calls";
 import { Gear } from "~/utils/models/catalog.model";
 import { InventoryRepository } from "~/repositories/inventory.repository";
 
-export interface InventoryGroupedRecord {
+export type InventoryGroupedRecord = {
   gear: Gear;
   quantity: number;
   records: LiteInventoryRecord[];
-}
+};
 
-interface State {
+type State = {
   groupedRecords: InventoryGroupedRecord[];
-}
+};
 
 export const state = (): State => ({
   groupedRecords: [],

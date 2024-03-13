@@ -40,50 +40,50 @@ export const TaskPriorities = {
 
 export type TaskPriority = keyof typeof TaskPriorities;
 
-export interface FtTimeSpanParameters {
+export type FtTimeSpanParameters = {
   hasPriority: boolean;
   category?: TaskCategory;
-}
+};
 
-export interface SimplifiedFT extends FtTimeSpanParameters {
+export type SimplifiedFT = FtTimeSpanParameters & {
   id: number;
   name: string;
-}
+};
 
-export interface RequestedTeam {
+export type RequestedTeam = {
   code: string;
   quantity: number;
   assignmentCount: number;
-}
+};
 
-export interface FtTimeSpan {
+export type FtTimeSpan = {
   id: number;
   start: Date;
   end: Date;
-}
+};
 
-export interface FtTimeSpanWithRequestedTeams extends FtTimeSpan {
+export type FtTimeSpanWithRequestedTeams = FtTimeSpan & {
   requestedTeams: RequestedTeam[];
-}
+};
 
-export interface FtTimeSpanEvent extends FtTimeSpan {
+export type FtTimeSpanEvent = FtTimeSpan & {
   name: string;
   color: string;
   timed: boolean;
-}
+};
 
-export interface AvailableTimeSpan extends FtTimeSpanWithRequestedTeams {
+export type AvailableTimeSpan = FtTimeSpanWithRequestedTeams & {
   ft: SimplifiedFT;
   hasFriendsAssigned: boolean;
-}
+};
 
-export interface TimeSpanAssignee extends User {
+export type TimeSpanAssignee = User & {
   teams: string[];
   assignedTeam: string;
   friends: User[];
-}
+};
 
-export interface TimeSpanWithAssignees extends FtTimeSpanWithRequestedTeams {
+export type TimeSpanWithAssignees = FtTimeSpanWithRequestedTeams & {
   ft: {
     id: number;
     name: string;
@@ -91,11 +91,11 @@ export interface TimeSpanWithAssignees extends FtTimeSpanWithRequestedTeams {
   };
   requiredVolunteers: User[];
   assignees: TimeSpanAssignee[];
-}
+};
 
-export interface FtWithTimeSpan extends SimplifiedFT {
+export type FtWithTimeSpan = SimplifiedFT & {
   timeSpans: FtTimeSpanWithRequestedTeams[];
-}
+};
 
 export function getRequiredTeamsInFt(ft: FtWithTimeSpan): string[] {
   const teams = ft.timeSpans.flatMap((timeSpan) =>

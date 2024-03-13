@@ -39,10 +39,10 @@ const AUTHORS = [
   "Luc - Q 🍑",
 ];
 
-interface LayoutData {
+type LayoutData = {
   notificationSource?: EventSource;
   isContentFlipped: boolean;
-}
+};
 
 export default Vue.extend({
   name: "ReworkdLayout",

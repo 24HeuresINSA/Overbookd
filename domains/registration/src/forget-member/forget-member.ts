@@ -16,7 +16,7 @@ export type Member = {
   id: number;
 };
 
-export interface MemberRepository {
+export type MemberRepository = {
   hasTasks(email: string): Promise<boolean>;
   hasDebts(email: string): Promise<boolean>;
   hasTransactions(email: string): Promise<boolean>;
@@ -24,7 +24,7 @@ export interface MemberRepository {
   anonymize(id: number, anonymous: AnonymousMember): Promise<AnonymousMember>;
   authenticate(credentials: Credentials): Promise<Member | null>;
   getId(email: string): Promise<number | null>;
-}
+};
 
 export class ForgetMember {
   constructor(private readonly members: MemberRepository) {}

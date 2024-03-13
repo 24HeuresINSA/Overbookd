@@ -46,11 +46,11 @@ import SearchCategoryVue from "../../atoms/field/search/SearchCategory.vue";
 import { InputRulesData, minLength } from "~/utils/rules/input.rules";
 import { Team } from "~/utils/models/team.model";
 
-interface CategoryFormData extends InputRulesData {
+type CategoryFormData = InputRulesData & {
   name: string;
   owner?: Pick<Team, "code" | "name">;
   parent?: Category;
-}
+};
 
 const nameMinLength = 3;
 

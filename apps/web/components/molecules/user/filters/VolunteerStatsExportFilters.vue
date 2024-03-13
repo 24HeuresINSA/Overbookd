@@ -26,10 +26,10 @@ import { VolunteerPlanning } from "~/store/planning";
 import { downloadPlanning } from "~/utils/planning/download";
 import { download } from "~/utils/file/file.utils";
 
-interface VolunteerStatsExportFiltersData {
+type VolunteerStatsExportFiltersData = {
   planningLoading: boolean;
   isStatsModeActive: boolean;
-}
+};
 
 export default Vue.extend({
   name: "VolunteerStatsExportFilters",

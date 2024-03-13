@@ -28,9 +28,9 @@ import { User } from "@overbookd/user";
 import { SlugifyService } from "@overbookd/slugify";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
-interface SearchUserData {
+type SearchUserData = {
   loading: boolean;
-}
+};
 
 export default defineComponent({
   name: "SearchUsers",

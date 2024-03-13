@@ -14,13 +14,13 @@ import { UserName } from "@overbookd/user";
 import { HttpStringified } from "@overbookd/http";
 import { NeedHelpRepository } from "~/repositories/need-help.repository";
 
-interface NeedHelpState {
+type NeedHelpState = {
   volunteers: Volunteer[];
   start: Date;
   end: Date;
   search: string;
   teams: Team[];
-}
+};
 
 function defaultPeriod() {
   const currentDate = new Date();

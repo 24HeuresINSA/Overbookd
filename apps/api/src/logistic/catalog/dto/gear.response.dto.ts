@@ -3,7 +3,7 @@ import {
   SimplifiedCategoryRepresentation,
   TeamRepresentation,
 } from "../../common/dto/gear-representation.dto";
-import { Gear, SimplifiedCategory, Team } from "../interfaces";
+import { Gear, SimplifiedCategory, Team } from "../types";
 
 export class GearResponseDto implements Gear {
   @ApiProperty({

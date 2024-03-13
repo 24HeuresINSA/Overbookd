@@ -8,9 +8,9 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { PersonalAccountRepository } from "~/repositories/personal-account.repository";
 import { safeCall } from "~/utils/api/calls";
 
-interface State {
+type State = {
   barrels: ConfiguredBarrel[];
-}
+};
 
 export const state = (): State => ({
   barrels: [],

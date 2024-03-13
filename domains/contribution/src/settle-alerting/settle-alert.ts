@@ -2,10 +2,10 @@ import { HAVE_TO_SETTLE_CONTRIBUTION } from "./settle-alerting.constant";
 
 export type Summary = typeof HAVE_TO_SETTLE_CONTRIBUTION;
 
-export interface IAlertAboutContribution {
+export type IAlertAboutContribution = {
   summary: Summary;
   edition: number;
-}
+};
 
 export class SettleAlert implements IAlertAboutContribution {
   readonly summary: Summary;

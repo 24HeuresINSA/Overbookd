@@ -1,8 +1,8 @@
-export interface UserAccess {
+export type UserAccess = {
   accessToken: string;
   refreshToken: string;
-}
+};
 
-export interface RefreshAccessRequest {
+export type RefreshAccessRequest = {
   refreshToken: string;
-}
+};

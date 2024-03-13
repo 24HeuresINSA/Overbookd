@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Gear } from "../../catalog/interfaces";
+import { Gear } from "../../catalog/types";
 import { GearRepresentation } from "../../common/dto/gear-representation.dto";
 import { InventoryRecord } from "../inventory.service";
 

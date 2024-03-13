@@ -2,9 +2,9 @@ import { JoinableTeam } from "./joinable-team";
 
 export const BENEVOLE_CODE = "benevole";
 
-export interface NewcomerToEnroll {
+export type NewcomerToEnroll = {
   id: number;
-}
+};
 
 type TeamsAfterEnrollment = [JoinableTeam, typeof BENEVOLE_CODE];
 

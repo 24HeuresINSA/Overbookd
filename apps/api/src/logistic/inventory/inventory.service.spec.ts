@@ -1,4 +1,4 @@
-import { Category, Gear } from "../catalog/interfaces";
+import { Category, Gear } from "../catalog/types";
 import {
   GroupedRecord,
   InventoryService,

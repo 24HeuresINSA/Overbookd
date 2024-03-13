@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Gear } from "../../catalog/interfaces";
+import { Gear } from "../../catalog/types";
 import { convertGearToApiContract } from "../../catalog/repositories/prisma/gear.repository.prisma";
 import {
   GroupedRecord,

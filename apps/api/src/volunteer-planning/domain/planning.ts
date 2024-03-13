@@ -3,13 +3,13 @@ import { JsonStoredTask, StoredTask } from "./storedTask";
 import { Task } from "./task.model";
 import { PlanningTask } from "@overbookd/http";
 
-export interface TaskRepository {
+export type TaskRepository = {
   getVolunteerTasksInChronologicalOrder(
     volunteerId: number,
   ): Promise<JsonStoredTask[]>;
 
   getVolunteerTasksHeIsPartOf(volunteerId: number): Promise<PlanningTask[]>;
-}
+};
 
 export class Planning {
   constructor(private readonly taskRepository: TaskRepository) {}

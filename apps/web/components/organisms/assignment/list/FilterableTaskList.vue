@@ -31,12 +31,12 @@ import { TaskPriorities } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 
-interface FilterableTaskListData {
+type FilterableTaskListData = {
   teams: Team[];
   searchFt: string;
   category: TaskCategory | TaskPriority | null;
   completed: boolean;
-}
+};
 
 export default Vue.extend({
   name: "FilterableTaskList",

@@ -25,7 +25,7 @@ import {
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
-import { Category, CategoryTree } from "./interfaces";
+import { Category, CategoryTree } from "./types";
 import { CategoryResponseDto } from "./dto/category.response.dto";
 import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
 import { CategorySearchRequestDto } from "./dto/category-search.request.dto";

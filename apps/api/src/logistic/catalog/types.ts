@@ -1,26 +1,26 @@
 import { BadRequestException } from "@nestjs/common";
 import { GearSearchOptions } from "@overbookd/http";
 
-export interface Category {
+export type Category = {
   id: number;
   name: string;
   path: string;
   owner?: Team;
   parent?: number;
-}
+};
 
 export type SimplifiedCategory = Omit<Category, "parent" | "owner">;
 
-export interface Team {
+export type Team = {
   code: string;
   name: string;
-}
+};
 
-export interface CategoryTree extends Category {
+export type CategoryTree = Category & {
   subCategories?: CategoryTree[];
-}
+};
 
-export interface Gear {
+export type Gear = {
   id: number;
   name: string;
   slug: string;
@@ -29,22 +29,22 @@ export interface Gear {
   code?: string;
   isPonctualUsage: boolean;
   isConsumable: boolean;
-}
+};
 
-export interface SearchCategory {
+export type SearchCategory = {
   name?: string;
   owner?: string;
-}
+};
 
-export interface GearRepository {
+export type GearRepository = {
   getGear(id: number): Promise<Gear>;
   addGear(gear: Omit<Gear, "id">): Promise<Gear | undefined>;
   updateGear(gear: Omit<Gear, "owner">): Promise<Gear | undefined>;
   removeGear(id: number): Promise<void>;
   searchGear(searchedGear: GearSearchOptions): Promise<Gear[]>;
-}
+};
 
-export interface CategoryRepository {
+export type CategoryRepository = {
   getCategory(id: number): Promise<Category | undefined>;
   getSubCategories(parentId: number): Promise<Category[] | undefined>;
   addCategory(category: Omit<Category, "id">): Promise<Category>;
@@ -53,11 +53,11 @@ export interface CategoryRepository {
   updateCategory(category: Category): Promise<Category | undefined>;
   getCategoryTrees(): Promise<CategoryTree[] | undefined>;
   searchCategory(searchedCategory: SearchCategory): Promise<Category[]>;
-}
+};
 
-export interface TeamRepository {
+export type TeamRepository = {
   getTeam(code: string): Promise<Team | undefined>;
-}
+};
 
 export class GearAlreadyExists extends BadRequestException {
   gear: Pick<Gear, "name">;

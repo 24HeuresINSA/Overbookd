@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional, IsString, MinLength } from "class-validator";
-import { SearchCategory } from "../interfaces";
+import { SearchCategory } from "../types";
 
 export class CategorySearchRequestDto implements SearchCategory {
   @ApiProperty({

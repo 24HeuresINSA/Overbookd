@@ -33,10 +33,10 @@ import { Adherent } from "@overbookd/contribution";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 
-interface ContributionsTableData {
+type ContributionsTableData = {
   headers: Header[];
   search: string;
-}
+};
 
 export default Vue.extend({
   name: "ContributionsTable",

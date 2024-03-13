@@ -22,9 +22,9 @@ import { defineComponent } from "vue";
 import { SignaLocation } from "@overbookd/signa";
 import LocationMapEditor from "./LocationMapEditor.vue";
 
-interface EditLocationCardData {
+type EditLocationCardData = {
   newLocation: SignaLocation;
-}
+};
 
 export default defineComponent({
   name: "EditLocationCard",

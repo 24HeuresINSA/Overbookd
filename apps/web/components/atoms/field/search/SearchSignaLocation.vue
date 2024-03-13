@@ -24,9 +24,9 @@
 import Vue from "vue";
 import { SignaLocation } from "@overbookd/signa";
 
-interface SearchLocationData {
+type SearchLocationData = {
   loading: boolean;
-}
+};
 
 export default Vue.extend({
   name: "SearchSignaLocation",

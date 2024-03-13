@@ -32,9 +32,9 @@ import SearchFriend from "~/components/atoms/field/search/SearchFriend.vue";
 import { User } from "@overbookd/user";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
-interface FriendsCardData {
+type FriendsCardData = {
   newFriend: User | null;
-}
+};
 
 type Image = {
   link: string;

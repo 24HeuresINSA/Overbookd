@@ -85,10 +85,10 @@ import TiptapMenuItem from "~/components/atoms/field/tiptap/TiptapMenuItem.vue";
 import { defaultCommitmentPresentation } from "@overbookd/registration";
 import TeamsCard from "~/components/organisms/team/TeamsCard.vue";
 
-interface ConfigurationData {
+type ConfigurationData = {
   dateEventStart: Date;
   registerFormDescription: string;
-}
+};
 
 export default Vue.extend({
   name: "Config",

@@ -74,12 +74,12 @@ import { ONE_DAY_IN_MS } from "@overbookd/period";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import { EnrollableStaff } from "@overbookd/http";
 
-interface RegistrationsData {
+type RegistrationsData = {
   headers: Header[];
   last30DaysNewcomers: boolean;
   searchNewcomer: string;
   selectedStaffs: EnrollableStaff[];
-}
+};
 
 type Filter = (newcomer: Searchable<EnrollableStaff>) => boolean;
 

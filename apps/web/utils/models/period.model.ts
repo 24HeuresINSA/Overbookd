@@ -1,9 +1,9 @@
 import { IProvidePeriod, Period } from "@overbookd/period";
 import { HttpStringified } from "@overbookd/http";
 
-export interface PeriodWithId extends IProvidePeriod {
+export type PeriodWithId = IProvidePeriod & {
   id: number;
-}
+};
 
 export function castPeriods(
   periods: HttpStringified<IProvidePeriod[]>,

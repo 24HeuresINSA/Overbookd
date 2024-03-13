@@ -23,9 +23,9 @@ import LocationMapEditor from "./LocationMapEditor.vue";
 import { CreateLocation } from "~/utils/models/signa-location.model";
 import { mapConfiguration } from "~/utils/models/signa-location.model";
 
-interface NewLocationCardDate {
+type NewLocationCardDate = {
   newLocation: CreateLocation;
-}
+};
 
 const defaultLocation: CreateLocation = {
   name: "",

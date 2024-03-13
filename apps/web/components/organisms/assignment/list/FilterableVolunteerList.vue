@@ -45,11 +45,11 @@ import { FtTimeSpan } from "~/utils/models/ft-time-span.model";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 
-interface FilterableVolunteerListData {
+type FilterableVolunteerListData = {
   teams: Team[];
   searchVolunteer: string;
   sort: number;
-}
+};
 
 export default Vue.extend({
   name: "FilterableVolunteerList",

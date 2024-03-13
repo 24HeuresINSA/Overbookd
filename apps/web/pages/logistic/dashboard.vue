@@ -31,11 +31,11 @@ import { GearSearchOptions } from "@overbookd/http";
 
 const FOUR_DAYS_IN_MS = 4 * ONE_DAY_IN_MS;
 
-interface GearRecapData {
+type GearRecapData = {
   filter: FilterGear;
   start: Date;
   end: Date;
-}
+};
 
 export default Vue.extend({
   name: "GearRecap",

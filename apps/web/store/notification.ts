@@ -2,9 +2,9 @@ import { actionTree, mutationTree } from "typed-vuex";
 import { NotificationRepository } from "~/repositories/notification.repository";
 import { safeCall } from "~/utils/api/calls";
 
-interface NotificationState {
+type NotificationState = {
   hasNotifications: boolean;
-}
+};
 
 export const state = (): NotificationState => ({
   hasNotifications: false,

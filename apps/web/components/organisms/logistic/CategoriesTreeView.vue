@@ -49,11 +49,11 @@ import CategoryDetails from "../../molecules/logistic/CategoryDetails.vue";
 import CategoryForm from "../../molecules/logistic/CategoryForm.vue";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
-interface CategoryTreeViewData {
+type CategoryTreeViewData = {
   isCreateDialogOpen: boolean;
   isInformationDialogOpen: boolean;
   selectedCategory?: Category;
-}
+};
 
 export default Vue.extend({
   name: "CategoriesTreeView",

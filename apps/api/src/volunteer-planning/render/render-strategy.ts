@@ -21,6 +21,6 @@ export class PlanningRenderStrategy {
   }
 }
 
-export interface RenderStrategy {
+export type RenderStrategy = {
   render(tasks: Task[], volunteer?: Volunteer): Promise<unknown>;
-}
+};

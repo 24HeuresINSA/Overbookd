@@ -46,7 +46,7 @@ import { Searchable } from "~/utils/search/search.utils";
 import { UserPersonalData } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 
-interface VolunteersData {
+type VolunteersData = {
   filters: {
     search: string;
     teams: Team[];
@@ -54,7 +54,7 @@ interface VolunteersData {
 
   isVolunteerInfoDialogOpen: boolean;
   isStatsModeActive: boolean;
-}
+};
 
 export default Vue.extend({
   name: "Volunteers",

@@ -16,10 +16,10 @@ export class VolunteerAssignmentDto implements VolunteerTask {
   end: Date;
 }
 
-export interface VolunteerAssignmentStat {
+export type VolunteerAssignmentStat = {
   category: TaskCategory;
   duration: number;
-}
+};
 
 export class VolunteerAssignmentStatResponseDto
   implements VolunteerAssignmentStat

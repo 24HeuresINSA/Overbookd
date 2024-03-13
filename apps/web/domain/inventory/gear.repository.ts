@@ -1,5 +1,5 @@
 import { Gear } from "~/utils/models/catalog.model";
 
-export interface GearRepository {
+export type GearRepository = {
   find(gearName: string): Promise<Gear | undefined>;
-}
+};

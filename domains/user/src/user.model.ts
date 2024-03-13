@@ -1,14 +1,14 @@
 import { Permission } from "@overbookd/permission";
 
-export interface UserName {
+export type UserName = {
   firstname: string;
   lastname: string;
   nickname?: string | null;
-}
+};
 
-export interface User extends UserName {
+export type User = UserName & {
   id: number;
-}
+};
 
 export type Profile = UserName & {
   email: string;
@@ -17,17 +17,17 @@ export type Profile = UserName & {
   comment: string | null;
 };
 
-export interface UserPersonalData extends User {
+export type UserPersonalData = User & {
   email: string;
   birthdate: Date;
   phone: string;
   comment?: string | null;
   charisma: number;
   teams: string[];
-}
+};
 
-export interface MyUserInformation extends UserPersonalData {
+export type MyUserInformation = UserPersonalData & {
   balance: number;
   permissions: Permission[];
   tasksCount: number;
-}
+};

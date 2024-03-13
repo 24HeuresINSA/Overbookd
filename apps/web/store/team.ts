@@ -9,11 +9,11 @@ import {
 import { TeamRepository } from "~/repositories/team.repository";
 
 // The state types definitions
-interface State {
+type State = {
   teams: Team[];
   faValidators: Team[];
   ftValidators: Team[];
-}
+};
 
 export const state = (): State => ({
   teams: [],

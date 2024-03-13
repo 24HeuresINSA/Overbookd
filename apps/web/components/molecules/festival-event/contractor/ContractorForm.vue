@@ -63,14 +63,14 @@
 import { defineComponent } from "vue";
 import { Contractor } from "@overbookd/festival-event";
 
-interface ContractorFormData {
+type ContractorFormData = {
   firstname: string;
   lastname: string;
   phone: string;
   email: string | null;
   company: string | null;
   comment: string | null;
-}
+};
 
 export default defineComponent({
   name: "ContractorForm",

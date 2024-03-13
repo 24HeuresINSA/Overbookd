@@ -96,11 +96,11 @@ export function isSupportedImageFile(value?: File | null): true | string {
   const isSupportedFile = !!value && extensions.includes(value.type);
   return isSupportedFile || message;
 }
-export interface InputRulesData {
+export type InputRulesData = {
   rules: Record<string, (value: string | null) => string | boolean>;
-}
+};
 
-export interface InputRulesDataWithImage {
+export type InputRulesDataWithImage = {
   rules: Record<string, (value: string | null) => string | boolean>;
   fileRules: Record<string, (value?: File | null) => string | boolean>;
-}
+};

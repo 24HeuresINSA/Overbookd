@@ -1,7 +1,7 @@
 import { Injectable, StreamableFile } from "@nestjs/common";
 import { Signage, SignageForm } from "@overbookd/signa";
 
-export interface CatalogSignageRepository {
+export type CatalogSignageRepository = {
   findAll(): Promise<Signage[]>;
   create(signage: SignageForm): Promise<Signage>;
   update(id: number, signage: SignageForm): Promise<Signage>;
@@ -9,7 +9,7 @@ export interface CatalogSignageRepository {
   uploadImage(id: number, image: string): Promise<Signage>;
   findSignageImage(id: number): Promise<string | null>;
   streamSignageImage(id: number): Promise<StreamableFile>;
-}
+};
 
 @Injectable()
 export class CatalogSignageService {

@@ -3,9 +3,9 @@ import { safeCall } from "~/utils/api/calls";
 import { Alerts } from "@overbookd/alerts";
 import { AlertRepository } from "~/repositories/alert.repository";
 
-interface AlertState {
+type AlertState = {
   alerts: Alerts;
-}
+};
 
 export const state = (): AlertState => ({
   alerts: {},

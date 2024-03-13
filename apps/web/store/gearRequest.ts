@@ -3,9 +3,9 @@ import { GearRequestRepository } from "~/repositories/gear-gequest.repository";
 import { safeCall } from "~/utils/api/calls";
 import { EventGearRequest } from "~/utils/models/gear-request.model";
 
-interface State {
+type State = {
   gearRequests: EventGearRequest[];
-}
+};
 
 export const state = (): State => ({
   gearRequests: [],

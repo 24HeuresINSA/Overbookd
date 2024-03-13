@@ -1,6 +1,6 @@
 import { Team } from "./team.model";
 
-export interface Gear {
+export type Gear = {
   id: number;
   name: string;
   isPonctualUsage: boolean;
@@ -13,9 +13,9 @@ export interface Gear {
     path: string;
   };
   code: string;
-}
+};
 
-interface BaseCategory {
+type BaseCategory = {
   id: number;
   name: string;
   path: string;
@@ -23,12 +23,12 @@ interface BaseCategory {
     code: string;
     name: string;
   };
-}
+};
 
-export interface CategoryTree extends BaseCategory {
+export type CategoryTree = BaseCategory & {
   subCategories?: CategoryTree[];
-}
+};
 
-export interface Category extends BaseCategory {
+export type Category = BaseCategory & {
   parent?: number;
-}
+};

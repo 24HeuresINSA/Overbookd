@@ -78,7 +78,7 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { isNumber, min } from "~/utils/rules/input.rules";
 
-interface ElectricityNeedData {
+type ElectricityNeedData = {
   connection: ElectricityConnection;
   device: string;
   power: number;
@@ -88,7 +88,7 @@ interface ElectricityNeedData {
     number: (v: string) => boolean | string;
     min: (v: string) => boolean | string;
   };
-}
+};
 
 export default defineComponent({
   name: "ElectricitySupplyForm",

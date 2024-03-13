@@ -1,4 +1,4 @@
-import { SimplifiedCategory } from "./interfaces";
+import { SimplifiedCategory } from "./types";
 
 export class GearReferenceCodeService {
   static computeGearCode(category: SimplifiedCategory, id: number): string {

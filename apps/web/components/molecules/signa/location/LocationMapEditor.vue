@@ -65,7 +65,7 @@ type ActionItem = {
   value: string;
 };
 
-interface LocationMapEditorData {
+type LocationMapEditorData = {
   url: string;
   attribution: string;
   zoom: number;
@@ -74,7 +74,7 @@ interface LocationMapEditorData {
   editing: boolean;
   mouseLatlng: Coordinate;
   location: Location;
-}
+};
 
 const actions: ActionItem[] = [
   { key: POINT, value: "Point" },
