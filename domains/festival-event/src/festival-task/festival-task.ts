@@ -1,6 +1,12 @@
 import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
-import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
+import {
+  DRAFT,
+  IN_REVIEW,
+  READY_TO_ASSIGN,
+  REFUSED,
+  VALIDATED,
+} from "../common/status";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
@@ -59,6 +65,15 @@ type MobilizationsWithConflicts = {
   mobilizations: ReviewableMobilization[];
 };
 
+export const STATIC = "STATIC";
+
+type Category = typeof STATIC;
+
+export type Categorize = {
+  category: Category;
+  topPriority: boolean;
+};
+
 type BaseReviewable = {
   id: number;
   general: General;
@@ -85,15 +100,22 @@ type BaseValidated = BaseReviewable & {
   reviews: ValidatedReviews<"FT">;
 };
 
+type BaseReadyToAssign = BaseReviewable &
+  Categorize & {
+    status: typeof READY_TO_ASSIGN;
+    reviews: ValidatedReviews<"FT">;
+  };
+
 type GenerateConflictUnion<
-  T extends BaseInReview | BaseRefused | BaseValidated,
+  T extends BaseInReview | BaseRefused | BaseValidated | BaseReadyToAssign,
 > = (T & MobilizationsWithConflicts) | (T & MobilizationsWithoutConflicts);
 
 export type InReview = GenerateConflictUnion<BaseInReview>;
 export type Refused = GenerateConflictUnion<BaseRefused>;
 export type Validated = GenerateConflictUnion<BaseValidated>;
+export type ReadyToAssign = GenerateConflictUnion<BaseReadyToAssign>;
 
-export type Reviewable = InReview | Refused | Validated;
+export type Reviewable = InReview | Refused | Validated | ReadyToAssign;
 
 export type FestivalTask = Draft | Reviewable;
 
@@ -118,10 +140,18 @@ export type PreviewDraft = {
 export type PreviewInReview = GeneratePreview<InReview>;
 export type PreviewRefused = GeneratePreview<Refused>;
 export type PreviewValidated = GeneratePreview<Validated>;
+export type PreviewReadyToAssign = GeneratePreview<ReadyToAssign>;
 
 export type PreviewReviewable =
   | PreviewInReview
   | PreviewRefused
-  | PreviewValidated;
+  | PreviewValidated
+  | PreviewReadyToAssign;
 
 export type Preview = PreviewDraft | PreviewReviewable;
+
+export function isReadyToReview(
+  task: FestivalTask,
+): task is Extract<FestivalTask, { status: typeof READY_TO_ASSIGN }> {
+  return task.status === READY_TO_ASSIGN;
+}

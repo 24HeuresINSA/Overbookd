@@ -3,12 +3,14 @@ import {
   deuxTables,
   troisMarteaux,
   george,
-  guardJustDance,
   lea,
   noel,
+} from "../festival-task.test-util";
+import {
+  guardJustDance,
   serveWaterOnJustDance,
   uninstallPreventionVillage,
-} from "../festival-task.test-util";
+} from "../festival-task.fake";
 import { Approval, elec, humain, matos } from "../../common/review";
 import { APPROVED, REJECTED } from "../../common/action";
 import { IN_REVIEW, REFUSED, VALIDATED } from "../../common/status";

@@ -3,8 +3,8 @@ import { FestivalTaskNotFound } from "../festival-task.error";
 import { ViewFestivalTask } from "./view";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PreviewDraft, Preview } from "../festival-task";
-import { installEscapeGame } from "../festival-task.test-util";
-import { uninstallEscapeGame } from "../festival-task.test-util";
+import { installEscapeGame } from "../festival-task.fake";
+import { uninstallEscapeGame } from "../festival-task.fake";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 

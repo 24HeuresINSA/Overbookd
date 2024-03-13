@@ -6,9 +6,11 @@ import {
 import {
   FestivalTask,
   InReview,
+  ReadyToAssign,
   Refused,
   Reviewable,
   Validated,
+  isReadyToReview,
 } from "../festival-task";
 import { Volunteer } from "../sections/instructions";
 import { Contact } from "../sections/instructions";
@@ -100,7 +102,7 @@ type UpdatedTask<Properties extends keyof FestivalTask> =
       [Property in Properties]: FestivalTask[Property];
     } & Omit<RefusedWithoutConflicts, Properties>);
 
-type UpdatableFestivalTask = Exclude<FestivalTask, Validated>;
+type UpdatableFestivalTask = Exclude<FestivalTask, Validated | ReadyToAssign>;
 
 export class PrepareFestivalTask {
   constructor(
@@ -115,7 +117,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -171,7 +173,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -189,7 +191,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -207,7 +209,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -225,7 +227,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -368,7 +370,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -388,7 +390,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -408,7 +410,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -431,7 +433,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
 
-    if (isValidated(task)) throw new Error();
+    if (isValidated(task) || isReadyToReview(task)) throw new Error();
     if (this.isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
@@ -533,7 +535,7 @@ export class PrepareFestivalTask {
     task: FestivalTask,
   ): task is UpdatableFestivalTask {
     if (isDraft(task) || isRefused(task)) return true;
-    if (isValidated(task)) return false;
+    if (isValidated(task) || isReadyToReview(task)) return false;
 
     return this.areNoneOfTheReviewersApproved(task);
   }

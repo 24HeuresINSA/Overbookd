@@ -10,15 +10,11 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 import {
-  installEscapeGame,
-  uninstallEscapeGame,
-  presentEscapeGame,
   friday11hfriday18hMobilization,
   saturday11hsaturday18hMobilization,
   noel,
   saturday19h,
   saturday10h,
-  guardEscapeGame,
   friday19h,
   saturday11h,
   friday18hsaturday10hMobilization,
@@ -32,20 +28,25 @@ import {
   saturday8h,
   leaAvailabilities,
   noelAvailabilities,
-  guardJustDance,
-  serveWaterOnJustDance,
   george,
-  installBarbecue,
+  friday10hfriday11hMobilization,
+  friday9h,
+} from "../festival-task.test-util";
+import {
+  installEscapeGame,
+  uninstallEscapeGame
+} from "../festival-task.fake";
+import {
+  presentEscapeGame, guardEscapeGame, guardJustDance,
+  serveWaterOnJustDance, installBarbecue,
   uninstallBarbecue,
   onlyApprovedByHumain,
   onlyApprovedByMatos,
   approvedByHumainRejectedByMatos,
   approvedByHumainAndElecRejectedByMatos,
   approvedByElecRejectedByMatos,
-  approvedByMatosRejectedByHumainAndElec,
-  friday10hfriday11hMobilization,
-  friday9h,
-} from "../festival-task.test-util";
+  approvedByMatosRejectedByHumainAndElec
+} from "../festival-task.fake";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";
 import {

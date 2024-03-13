@@ -8,12 +8,17 @@ import {
   InReview,
   Refused,
   Reviewable,
+  Validated,
 } from "./festival-task";
 import { FestivalTaskKeyEvents } from "./festival-task.event";
 import {
+  MobilizationBuilder,
   deuxTables,
   friday10hfriday19h,
+  friday11h,
   friday11hfriday18h,
+  friday17h,
+  george,
   humaGrass,
   lea,
   noel,
@@ -22,7 +27,7 @@ import {
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
 import { WithConflicts } from "./volunteer-conflicts";
 import { isDraft } from "../festival-event";
-import { REJECTED } from "../common/action";
+import { APPROVED, REJECTED } from "../common/action";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -30,10 +35,11 @@ type FestivalTaskSection =
   | Reviewable["reviews"]
   | WithConflicts["instructions"];
 
-type DraftWithConflicts = Extract<WithConflicts, Draft>;
-type InReviewWithConflicts = Extract<WithConflicts, InReview>;
-type RefusedWithConflicts = Extract<WithConflicts, Refused>;
-type ReviewableWithConflicts = Extract<WithConflicts, Reviewable>;
+export type DraftWithConflicts = Extract<WithConflicts, Draft>;
+export type InReviewWithConflicts = Extract<WithConflicts, InReview>;
+export type RefusedWithConflicts = Extract<WithConflicts, Refused>;
+export type ValidatedWithConflicts = Extract<WithConflicts, Validated>;
+export type ReviewableWithConflicts = Extract<WithConflicts, Reviewable>;
 
 class FestivalTaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
@@ -53,6 +59,12 @@ class FestivalTaskFactory {
   refused(name: string): FestivalTaskBuilder<RefusedWithConflicts> {
     const id = this.idGenerator.next().value;
     const task = defaultRefused(id, name);
+    return FestivalTaskBuilder.init(task);
+  }
+
+  validated(name: string): FestivalTaskBuilder<ValidatedWithConflicts> {
+    const id = this.idGenerator.next().value;
+    const task = defaultValidated(id, name);
     return FestivalTaskBuilder.init(task);
   }
 }
@@ -191,28 +203,16 @@ function defaultInReview(id: number, name: string): InReviewWithConflicts {
   return {
     id,
     status: IN_REVIEW,
-    general: {
-      name,
-      administrator: noel,
-      team: "plaizir",
-    },
+    general: defaultGeneral(name),
     festivalActivity: defaultActivity(name),
-    instructions: {
-      appointment: humaGrass,
-      contacts: [noelContact],
-      global: "Des instructions globales",
-      inCharge: {
-        instruction: null,
-        volunteers: [],
-      },
-    },
+    instructions: defaultInstructions(),
     history: [
       FestivalTaskKeyEvents.created(noel),
       FestivalTaskKeyEvents.readyToReview(noel),
     ],
     feedbacks: [],
     inquiries: [],
-    mobilizations: [],
+    mobilizations: defaultMobilizations(),
     reviews: {
       humain: REVIEWING,
       matos: REVIEWING,
@@ -220,6 +220,83 @@ function defaultInReview(id: number, name: string): InReviewWithConflicts {
     },
     reviewer: lea,
   };
+}
+
+function defaultRefused(id: number, name: string): RefusedWithConflicts {
+  return {
+    id,
+    status: REFUSED,
+    general: defaultGeneral(name),
+    festivalActivity: defaultActivity(name),
+    instructions: defaultInstructions(),
+    history: [
+      FestivalTaskKeyEvents.created(noel),
+      FestivalTaskKeyEvents.readyToReview(noel),
+      FestivalTaskKeyEvents.rejected(lea, "Trop de monde demandé"),
+    ],
+    feedbacks: [],
+    inquiries: [],
+    mobilizations: defaultMobilizations(),
+    reviews: {
+      humain: REJECTED,
+      matos: REVIEWING,
+      elec: NOT_ASKING_TO_REVIEW,
+    },
+    reviewer: lea,
+  };
+}
+
+function defaultValidated(id: number, name: string): ValidatedWithConflicts {
+  return {
+    id,
+    status: VALIDATED,
+    general: defaultGeneral(name),
+    festivalActivity: defaultActivity(name),
+    instructions: defaultInstructions(),
+    history: [
+      FestivalTaskKeyEvents.created(noel),
+      FestivalTaskKeyEvents.readyToReview(noel),
+      FestivalTaskKeyEvents.approved(lea),
+      FestivalTaskKeyEvents.approved(george),
+    ],
+    feedbacks: [],
+    inquiries: [],
+    mobilizations: defaultMobilizations(),
+    reviews: {
+      humain: APPROVED,
+      matos: APPROVED,
+      elec: NOT_ASKING_TO_REVIEW,
+    },
+    reviewer: lea,
+  };
+}
+
+function defaultInstructions(): Reviewable["instructions"] {
+  return {
+    appointment: humaGrass,
+    contacts: [noelContact],
+    global: "Des instructions globales",
+    inCharge: {
+      instruction: null,
+      volunteers: [],
+    },
+  };
+}
+
+function defaultMobilizations() {
+  return [
+    MobilizationBuilder.init<ReviewableWithConflicts>({
+      start: friday11h,
+      end: friday17h,
+      teams: [{ count: 3, team: "bénévole" }],
+      durationSplitInHour: 2,
+    }).mobilization,
+    MobilizationBuilder.init<ReviewableWithConflicts>({
+      start: friday11h,
+      end: friday17h,
+      teams: [{ count: 1, team: "conducteur" }],
+    }).mobilization,
+  ];
 }
 
 function defaultActivity(name: string): FestivalActivity {
@@ -237,38 +314,11 @@ function defaultActivity(name: string): FestivalActivity {
   };
 }
 
-function defaultRefused(id: number, name: string): RefusedWithConflicts {
+function defaultGeneral(name: string): Reviewable["general"] {
   return {
-    id,
-    status: REFUSED,
-    general: {
-      name,
-      administrator: noel,
-      team: "plaizir",
-    },
-    festivalActivity: defaultActivity(name),
-    instructions: {
-      appointment: humaGrass,
-      contacts: [noelContact],
-      global: "Des instructions globales",
-      inCharge: {
-        instruction: null,
-        volunteers: [],
-      },
-    },
-    history: [
-      FestivalTaskKeyEvents.created(noel),
-      FestivalTaskKeyEvents.readyToReview(noel),
-    ],
-    feedbacks: [],
-    inquiries: [],
-    mobilizations: [],
-    reviews: {
-      humain: REJECTED,
-      matos: REVIEWING,
-      elec: NOT_ASKING_TO_REVIEW,
-    },
-    reviewer: lea,
+    name,
+    administrator: noel,
+    team: "plaizir",
   };
 }
 

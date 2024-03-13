@@ -4,6 +4,7 @@ import {
   Draft,
   FestivalTask,
   InReview,
+  ReadyToAssign,
   Refused,
   Reviewable,
   Validated,
@@ -35,6 +36,10 @@ export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
 export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
 export type RefusedWithoutConflicts = Extract<WithoutConflicts, Refused>;
 export type ValidatedWithoutConflicts = Extract<WithoutConflicts, Validated>;
+export type ReadyToAssignWithoutConflicts = Extract<
+  WithoutConflicts,
+  ReadyToAssign
+>;
 export type ReviewableWithoutConflicts = Extract<WithoutConflicts, Reviewable>;
 
 export type DraftWithConflicts = Extract<WithConflicts, Draft>;

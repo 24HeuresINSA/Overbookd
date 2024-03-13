@@ -45,3 +45,9 @@ export class TeamAlreadyPartOfMobilization extends FestivalTaskError {
     super(message);
   }
 }
+
+export class FestivalTaskNotValidated extends FestivalTaskError {
+  constructor(ftId: FestivalTask["id"]) {
+    super(`❌ La fiche tâche #${ftId} n'est pas encore validée`);
+  }
+}

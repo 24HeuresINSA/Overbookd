@@ -1,5 +1,6 @@
 import {
   APPROVED,
+  ASSIGNMENT_STARTED,
   COMMENTED,
   CREATED,
   READY_TO_REVIEW,
@@ -14,7 +15,8 @@ type Action =
   | typeof READY_TO_REVIEW
   | typeof REJECTED
   | typeof APPROVED
-  | typeof RESET_REVIEW;
+  | typeof RESET_REVIEW
+  | typeof ASSIGNMENT_STARTED;
 
 export type KeyEvent = {
   action: Action;
@@ -52,6 +54,13 @@ export class FestivalTaskKeyEvents {
     const description = "FT approuvée";
 
     return { action: APPROVED, by, at, description };
+  }
+
+  static assignmentStarted(by: Adherent): KeyEvent {
+    const at = this.computeAt();
+    const description = "Affectation activée pour la FT";
+
+    return { action: ASSIGNMENT_STARTED, by, at, description };
   }
 
   private static computeAt() {
