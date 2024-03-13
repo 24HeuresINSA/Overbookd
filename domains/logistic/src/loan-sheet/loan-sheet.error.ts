@@ -1,6 +1,6 @@
 import { LoanSheet } from "./loan-sheet.model";
 
-export class LoanSheetError extends Error {}
+class LoanSheetError extends Error {}
 
 export class LoanSheetNotFound extends LoanSheetError {
   constructor(id: LoanSheet["id"]) {
