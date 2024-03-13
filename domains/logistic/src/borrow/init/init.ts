@@ -11,7 +11,12 @@ export class InitBorrow {
   constructor(private readonly borrows: BorrowsForInit) {}
 
   async for(lender: string): Promise<Borrow> {
-    const borrow = { id: this.generateId(), lender };
+    const borrow = {
+      id: this.generateId(),
+      lender,
+      gearsToTake: [],
+      gearsToReturn: [],
+    };
     return this.borrows.add(borrow);
   }
 

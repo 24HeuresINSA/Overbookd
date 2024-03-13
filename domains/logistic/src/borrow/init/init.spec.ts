@@ -17,5 +17,11 @@ describe("Init borrow", () => {
     it("should save it to the repository", () => {
       expect(borrows.all).toContainEqual(initializedBorrow);
     });
+    it("should generate emplty gears to take", () => {
+      expect(initializedBorrow.gearsToTake).toEqual([]);
+    });
+    it("should generate empty gears to return", () => {
+      expect(initializedBorrow.gearsToReturn).toEqual([]);
+    });
   });
 });
