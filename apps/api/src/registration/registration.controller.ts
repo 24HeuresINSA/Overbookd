@@ -66,10 +66,20 @@ export class RegistrationController {
     return this.registrationService.register(newcomer, token);
   }
 
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
   @Get("invite-staff-link")
-  @HttpCode(200)
-  generateStaffInvitationLink() {
-    return this.registrationService.invite();
+  getStaffInvitationLink(): Promise<URL> {
+    return this.registrationService.getStaffInvitationLink();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(ENROLL_HARD)
+  @Post("invite-staff-link")
+  generateStaffInvitationLink(): Promise<URL> {
+    return this.registrationService.generateStaffInvitationLink();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

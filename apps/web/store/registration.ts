@@ -5,23 +5,17 @@ import {
   EnrollableVolunteer,
   HttpStringified,
 } from "@overbookd/http";
-import { RepoFactory } from "~/repositories/repo-factory";
 import { safeCall } from "~/utils/api/calls";
 import { Credentials } from "@overbookd/registration";
 import { castPeriods } from "~/utils/models/period.model";
 import { updateItemToList } from "@overbookd/list";
+import { RegistrationRepository } from "~/repositories/registration.repository";
 
 type State = {
   staffs: EnrollableStaff[];
   volunteers: EnrollableVolunteer[];
   inviteStaffLink?: URL;
 };
-
-const registrationRepo = RepoFactory.RegistrationRepository;
-const configurationRepo = RepoFactory.ConfigurationRepository;
-
-//TODO: update config key
-const INVITE_STAFF_LINK = "inviteNewAdherentLink";
 
 export const state = (): State => ({
   staffs: [],
@@ -71,13 +65,13 @@ export const actions = actionTree(
   { state },
   {
     async getStaffs({ commit }) {
-      const res = await registrationRepo.getStaffs(this);
+      const res = await RegistrationRepository.getStaffs(this);
       if (!res) return;
       commit("SET_STAFFS", castStaffsWithDate(res.data));
     },
 
     async getVolunteers({ commit }) {
-      const res = await registrationRepo.getVolunteers(this);
+      const res = await RegistrationRepository.getVolunteers(this);
       if (!res) return;
       commit("SET_VOLUNTEERS", castVolunteersWithDate(res.data));
     },
@@ -86,7 +80,7 @@ export const actions = actionTree(
       { commit },
       volunteerId: EnrollableVolunteer["id"],
     ) {
-      const res = await registrationRepo.getVolunteer(this, volunteerId);
+      const res = await RegistrationRepository.getVolunteer(this, volunteerId);
       if (!res) return;
 
       commit("UPDATE_VOLUNTEER", castVolunteerWithDate(res.data));
@@ -95,7 +89,7 @@ export const actions = actionTree(
     async enrollStaffs({ commit }, staffs: EnrollableStaff[]) {
       const res = await safeCall(
         this,
-        registrationRepo.enrollStaffs(this, staffs),
+        RegistrationRepository.enrollStaffs(this, staffs),
         {
           successMessage:
             "Les nouveaux arrivants sélectionnés ont bien été enrôlés en tant que hards ✅",
@@ -110,7 +104,7 @@ export const actions = actionTree(
     async enrollNewVolunteers({ commit }, volunteers: EnrollableVolunteer[]) {
       const res = await safeCall(
         this,
-        registrationRepo.enrollNewVolunteers(this, volunteers),
+        RegistrationRepository.enrollNewVolunteers(this, volunteers),
         {
           successMessage:
             "Le nouvel arrivant sélectionné a bien été enrôlé en tant que soft ✅",
@@ -125,35 +119,25 @@ export const actions = actionTree(
     async fetchInviteStaffLink({ commit }) {
       const res = await safeCall(
         this,
-        configurationRepo.fetch(this, INVITE_STAFF_LINK),
+        RegistrationRepository.fetchStaffLink(this),
       );
-      if (!res || !res.data) return;
-      const link = new URL(res.data.value.toString());
-      commit("SET_INVITE_STAFF_LINK", link);
-    },
-
-    async generateInviteStaffLink({ dispatch }) {
-      const res = await safeCall(this, registrationRepo.generateLink(this));
       if (!res) return;
-      dispatch("updateInviteStaffLink", new URL(res.data));
+      commit("SET_INVITE_STAFF_LINK", new URL(res.data));
     },
 
-    async updateInviteStaffLink({ commit }, link: URL) {
+    async generateInviteStaffLink({ commit }) {
       const res = await safeCall(
         this,
-        configurationRepo.save(this, {
-          key: INVITE_STAFF_LINK,
-          value: link.href,
-        }),
+        RegistrationRepository.generateStaffLink(this),
       );
       if (!res) return;
-      commit("SET_INVITE_STAFF_LINK", link);
+      commit("SET_INVITE_STAFF_LINK", new URL(res.data));
     },
 
     async register(_, { token, form }: { token?: string; form: RegisterForm }) {
       return safeCall(
         this,
-        registrationRepo.registerNewcomer(this, form, token),
+        RegistrationRepository.registerNewcomer(this, form, token),
       );
     },
 
@@ -163,7 +147,7 @@ export const actions = actionTree(
     ) {
       await safeCall(
         this,
-        registrationRepo.forgetMe(this, credentials, token),
+        RegistrationRepository.forgetMe(this, credentials, token),
         {
           successMessage:
             "Les informations liées à ce compte sont supprimées 🗑️",
@@ -172,7 +156,10 @@ export const actions = actionTree(
     },
 
     async forgetHim({ dispatch }, email: string) {
-      const res = await safeCall(this, registrationRepo.forgetHim(this, email));
+      const res = await safeCall(
+        this,
+        RegistrationRepository.forgetHim(this, email),
+      );
       if (!res) return;
       dispatch("getStaffs");
     },

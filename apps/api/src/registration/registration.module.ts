@@ -14,6 +14,7 @@ import { ForgetMember } from "@overbookd/registration";
 import { PrismaNotificationRepository } from "./repository/notification-repository.prisma";
 import { VolunteerAvailabilityModule } from "../volunteer-availability/volunteer-availability.module";
 import { VolunteerAvailabilityService } from "../volunteer-availability/volunteer-availability.service";
+import { PrismaConfigurations } from "./repository/configuration-repository.prisma";
 
 @Module({
   controllers: [RegistrationController],
@@ -28,6 +29,11 @@ import { VolunteerAvailabilityService } from "../volunteer-availability/voluntee
       provide: PrismaEnrollNewcomersRepository,
       useFactory: (prisma: PrismaService) =>
         new PrismaEnrollNewcomersRepository(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaConfigurations,
+      useFactory: (prisma: PrismaService) => new PrismaConfigurations(prisma),
       inject: [PrismaService],
     },
     {
@@ -59,19 +65,21 @@ import { VolunteerAvailabilityService } from "../volunteer-availability/voluntee
     {
       provide: RegistrationService,
       useFactory: (
-        enrollNewcomers: PrismaEnrollNewcomersRepository,
+        newcomers: PrismaEnrollNewcomersRepository,
+        configurations: PrismaConfigurations,
         register: RegisterNewcomer,
         event: DomainEventService,
         forget: ForgetMember,
         availability: VolunteerAvailabilityService,
       ) =>
         new RegistrationService(
-          enrollNewcomers,
+          { newcomers, configurations },
           { register, forget },
           { event, availability },
         ),
       inject: [
         PrismaEnrollNewcomersRepository,
+        PrismaConfigurations,
         RegisterNewcomer,
         DomainEventService,
         ForgetMember,

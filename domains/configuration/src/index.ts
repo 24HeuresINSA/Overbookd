@@ -1,1 +1,1 @@
-export * from "./configuration";
+export type { Configuration } from "./configuration";

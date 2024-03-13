@@ -48,7 +48,11 @@ export class RegistrationRepository {
     });
   }
 
-  static generateLink(context: Context) {
+  static generateStaffLink(context: Context) {
+    return context.$axios.post<string>(`${this.basePath}/invite-staff-link`);
+  }
+
+  static fetchStaffLink(context: Context) {
     return context.$axios.get<string>(`${this.basePath}/invite-staff-link`);
   }
 
