@@ -10,7 +10,7 @@ export class DashboardGear {
   private constructor() {}
 
   public static generatePreview(gear: DatabaseGear): GearPreview {
-    const stockDiscrepancy = DashboardGear.computeStockDiscrepancyOn(gear);
+    const stockDiscrepancy = DashboardGear.computeMinStockDiscrepancyOn(gear);
     return {
       id: gear.id,
       name: gear.name,
@@ -26,11 +26,17 @@ export class DashboardGear {
   ): GearDetails[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
-    return periods.map(({ start, end }) => {
+    const details = periods.map(({ start, end }) => {
       const stock = DashboardGear.findStockByDate(gear);
       const inquiry = DashboardGear.findInquiryQuantityByDate(gear, start);
-      const activities = DashboardGear.findActivitiesByDate(gear, start);
-      const tasks = DashboardGear.findTasksByDate(gear, start);
+      const activities = DashboardGear.findActivitiesByDate(
+        gear.festivalActivityInquiries,
+        start,
+      );
+      const tasks = DashboardGear.findTasksByDate(
+        gear.festivalTaskInquiries,
+        start,
+      );
       const inventory = DashboardGear.findInventoryQuantity(gear);
 
       return {
@@ -43,9 +49,11 @@ export class DashboardGear {
         inventory,
       };
     });
+
+    return DashboardGear.computeStockDiscrepancyOnDetails(gear, details);
   }
 
-  private static computeStockDiscrepancyOn(gear: DatabaseGear): number {
+  private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
     const inquiryTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
@@ -137,10 +145,10 @@ export class DashboardGear {
   }
 
   private static findActivitiesByDate(
-    { festivalActivityInquiries }: DatabaseGear,
+    activities: DatabaseActivityInquiry[],
     start: Date,
   ): GearDetails["activities"] {
-    return festivalActivityInquiries.reduce((activities, inquiry) => {
+    return activities.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),
       );
@@ -155,10 +163,10 @@ export class DashboardGear {
   }
 
   private static findTasksByDate(
-    { festivalTaskInquiries }: DatabaseGear,
+    tasks: DatabaseTaskInquiry[],
     start: Date,
   ): GearDetails["tasks"] {
-    return festivalTaskInquiries.reduce((tasks, inquiry) => {
+    return tasks.reduce((tasks, inquiry) => {
       const isIncluded = inquiry.ft.mobilizations.some((period) =>
         Period.init(period).isIncluding(start),
       );
@@ -170,5 +178,50 @@ export class DashboardGear {
       const task = { id, name, quantity };
       return [...tasks, task];
     }, []);
+  }
+
+  private static computeStockDiscrepancyOnDetails(
+    gear: DatabaseGear,
+    details: Omit<GearDetails, "stockDiscrepancy">[],
+  ): GearDetails[] {
+    if (!gear.isConsumable) {
+      return details.map((detail) => {
+        const stockDiscrepancy = detail.stock - detail.inquiry;
+        return { ...detail, stockDiscrepancy };
+      });
+    }
+
+    let totalInquiryQuantity = 0;
+    let remainingActivities = gear.festivalActivityInquiries;
+    let remainingTasks = gear.festivalTaskInquiries;
+
+    return details.map((detail) => {
+      // find inquiries that have not yet been processed
+      const activities = DashboardGear.findActivitiesByDate(
+        remainingActivities,
+        detail.start,
+      );
+      const tasks = DashboardGear.findTasksByDate(remainingTasks, detail.start);
+      const inquiries = [...activities, ...tasks];
+
+      // compute total inquiry quantity
+      const inquiryQuantity = inquiries.reduce(
+        (total, inquiry) => total + inquiry.quantity,
+        0,
+      );
+      totalInquiryQuantity += inquiryQuantity;
+
+      // remove processed inquiries from the remaining ones
+      remainingActivities = remainingActivities.filter(
+        (inquiry) =>
+          !activities.some((activity) => activity.id === inquiry.fa.id),
+      );
+      remainingTasks = remainingTasks.filter(
+        (inquiry) => !tasks.some((task) => task.id === inquiry.ft.id),
+      );
+
+      const stockDiscrepancy = detail.stock - totalInquiryQuantity;
+      return { ...detail, stockDiscrepancy };
+    });
   }
 }

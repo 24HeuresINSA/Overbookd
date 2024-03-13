@@ -40,6 +40,9 @@ class GearDetailsResponseDto implements GearDetails {
 
   @ApiProperty({ type: Number })
   inventory: number;
+
+  @ApiProperty({ type: Number })
+  stockDiscrepancy: number;
 }
 
 export class GearWithDetailsResponseDto implements GearWithDetails {

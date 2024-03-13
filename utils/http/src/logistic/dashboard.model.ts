@@ -22,6 +22,7 @@ export type GearDetails = {
   activities: Inquiry[];
   tasks: Inquiry[];
   inventory: number;
+  stockDiscrepancy: number;
 };
 
 export type GearWithDetails = {
