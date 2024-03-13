@@ -1,14 +1,14 @@
 import { numberGenerator } from "@overbookd/list";
 import { Borrow } from "../borrow";
 
-export type BorrowsForCreate = {
+export type BorrowsForInit = {
   add(borrow: Borrow): Promise<Borrow>;
 };
 
-export class CreateBorrow {
+export class InitBorrow {
   private idGenerator: Generator<number> = numberGenerator(1);
 
-  constructor(private readonly borrows: BorrowsForCreate) {}
+  constructor(private readonly borrows: BorrowsForInit) {}
 
   async for(lender: string): Promise<Borrow> {
     const borrow = { id: this.generateId(), lender };

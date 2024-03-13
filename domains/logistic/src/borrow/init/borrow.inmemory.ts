@@ -1,7 +1,7 @@
 import { Borrow } from "../borrow";
-import { BorrowsForCreate } from "./create";
+import { BorrowsForInit } from "./init";
 
-export class InMemoryBorrows implements BorrowsForCreate {
+export class InMemoryBorrows implements BorrowsForInit {
   constructor(private borrows: Borrow[] = []) {}
 
   add(borrow: Borrow): Promise<Borrow> {
