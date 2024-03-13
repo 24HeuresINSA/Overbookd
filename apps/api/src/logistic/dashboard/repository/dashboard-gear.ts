@@ -99,7 +99,7 @@ export class DashboardGear {
   }
 
   private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {
-    // Date will be used in for purchase & loan sheets
+    // Date will be used in for purchases & borrows
     return DashboardGear.findInventoryQuantity(gear);
   }
 
