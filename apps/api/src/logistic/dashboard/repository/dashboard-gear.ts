@@ -61,10 +61,17 @@ export class DashboardGear {
   }
 
   private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
-    const inquiryTimeWindows = gear.festivalActivityInquiries
+    const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
-    const mergedTimeWindows = Period.mergeContiguous(inquiryTimeWindows);
+    const taskTimeWindows = gear.festivalTaskInquiries
+      .flatMap((inquiry) => inquiry.ft.mobilizations)
+      .map((period) => Period.init(period));
+    const inquiryTimeWindows = [...activityTimeWindows, ...taskTimeWindows];
+
+    const mergedTimeWindows = gear.isConsumable
+      ? inquiryTimeWindows
+      : Period.mergeContiguous(inquiryTimeWindows);
 
     const discrepancies = mergedTimeWindows.map((timeWindow) => {
       return DashboardGear.computeStockDiscrepancyByTimeWindowOn(
@@ -95,7 +102,10 @@ export class DashboardGear {
   ) {
     const stock = DashboardGear.findStockByDate(gear);
     const inquiry = DashboardGear.findInquiryQuantityByDate(gear, date);
-    return stock - inquiry;
+    const consumed = gear.isConsumable
+      ? DashboardGear.computeConsumedQuantityByDateOn(gear, date)
+      : 0;
+    return stock - (inquiry + consumed);
   }
 
   private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {

@@ -16,7 +16,7 @@
         <DateTimeField v-model="end" label="Fin" @change="updateSelectedGear" />
       </div>
     </div>
-    <DahsboardGearListing :start="start" :end="end" />
+    <DashboardGearListing :start="start" :end="end" />
   </div>
 </template>
 
@@ -24,7 +24,7 @@
 import Vue from "vue";
 import GearFilter from "../../components/molecules/logistic/GearFilter.vue";
 import { FilterGear } from "~/utils/models/filter-gear.model";
-import DahsboardGearListing from "~/components/organisms/logistic/DahsboardGearListing.vue";
+import DashboardGearListing from "~/components/organisms/logistic/DashboardGearListing.vue";
 import DateTimeField from "~/components/atoms/field/date/DateTimeField.vue";
 import { ONE_DAY_IN_MS } from "@overbookd/period";
 import { GearSearchOptions } from "@overbookd/http";
@@ -39,7 +39,7 @@ type GearRecapData = {
 
 export default Vue.extend({
   name: "GearRecap",
-  components: { GearFilter, DahsboardGearListing, DateTimeField },
+  components: { GearFilter, DashboardGearListing, DateTimeField },
   data(): GearRecapData {
     return {
       filter: {
