@@ -1,7 +1,7 @@
 import { LoanSheet } from "../loan-sheet.model";
-import { LoanSheetsForRemove } from "./remove";
+import { LoanSheetsForUpdate } from "./update";
 
-export class InMemoryLoanSheets implements LoanSheetsForRemove {
+export class InMemoryLoanSheets implements LoanSheetsForUpdate {
   constructor(private loanSheets: LoanSheet[] = []) {}
 
   find(id: LoanSheet["id"]): Promise<LoanSheet | undefined> {
@@ -10,11 +10,11 @@ export class InMemoryLoanSheets implements LoanSheetsForRemove {
     );
   }
 
-  remove(id: LoanSheet["id"]): Promise<void> {
-    this.loanSheets = this.loanSheets.filter(
-      (loanSheet) => loanSheet.id !== id,
+  save(loanSheet: LoanSheet): Promise<LoanSheet> {
+    this.loanSheets = this.loanSheets.map((ls) =>
+      ls.id === loanSheet.id ? loanSheet : ls,
     );
-    return Promise.resolve();
+    return Promise.resolve(loanSheet);
   }
 
   get all(): LoanSheet[] {

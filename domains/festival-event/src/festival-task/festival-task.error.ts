@@ -8,7 +8,7 @@ export class FestivalTaskError extends FestivalEventError {}
 
 export class FestivalTaskNotFound extends FestivalTaskError {
   constructor(ftId: FestivalTask["id"]) {
-    const message = `❌ La fiche tache #${ftId} n'a pas été trouvé`;
+    const message = `❌ La fiche tache #${ftId} n'a pas été trouvée`;
     super(message);
   }
 }
