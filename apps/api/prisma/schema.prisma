@@ -199,6 +199,8 @@ model CatalogGear {
   inventoryRecords          InventoryRecord[]                @relation()
   festivalActivityInquiries FestivalActivityInquiryRequest[] @relation("activity-inquiry-request-catalog")
   festivalTaskInquiries     FestivalTaskInquiryRequest[]     @relation("task-inquiry-request-catalog")
+  loanSheetGearArrivals     LoanSheetGearArrival[]
+  loanSheetGearReturns      LoanSheetGearReturn[]
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -881,4 +883,37 @@ model Shotgun {
 
   @@id([guestId, mealId])
   @@map("shotgun")
+}
+
+model LoanSheet {
+  id       Int                    @id @default(autoincrement())
+  lender   String                 @db.Text
+  arrivals LoanSheetGearArrival[]
+  returns  LoanSheetGearReturn[]
+
+  @@map("loan_sheet")
+}
+
+model LoanSheetGearArrival {
+  loanSheetId Int         @map("loan_sheet_id")
+  loanSheet   LoanSheet   @relation(fields: [loanSheetId], references: [id], onDelete: Cascade)
+  gearSlug    String      @map("gear_slug")
+  gear        CatalogGear @relation(fields: [gearSlug], references: [slug], onDelete: Cascade)
+  quantity    Int
+  availableAt DateTime    @map("available_at")
+
+  @@id([loanSheetId, gearSlug])
+  @@map("loan_sheet_gear_arrival")
+}
+
+model LoanSheetGearReturn {
+  loanSheetId   Int         @map("loan_sheet_id")
+  loanSheet     LoanSheet   @relation(fields: [loanSheetId], references: [id], onDelete: Cascade)
+  gearSlug      String      @map("gear_slug")
+  gear          CatalogGear @relation(fields: [gearSlug], references: [slug], onDelete: Cascade)
+  quantity      Int
+  unavailableAt DateTime    @map("unavailable_at")
+
+  @@id([loanSheetId, gearSlug])
+  @@map("loan_sheet_gear_return")
 }
