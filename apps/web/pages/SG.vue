@@ -416,10 +416,7 @@ export default {
         return transaction;
       });
 
-      await TransactionRepository.createTransactions(
-        this,
-        transactions,
-      );
+      await TransactionRepository.createTransactions(this, transactions);
 
       await Promise.all([
         this.$accessor.user.fetchPersonalAccountConsumers(),
