@@ -4,6 +4,7 @@
       :headers="headers"
       :items="selectedTask.mobilizations"
       :items-per-page="-1"
+      :custom-sort="sortMobilizations"
       disable-pagination
       hide-default-footer
     >
@@ -129,6 +130,10 @@ import {
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import { AddMobilizationForm } from "@overbookd/http";
+import {
+  SortablePeriodHeader,
+  periodsSorts,
+} from "~/utils/functions/sort-period";
 
 type MobilizationTableData = {
   headers: Header[];
@@ -155,9 +160,9 @@ export default defineComponent({
       { text: "Début", value: "start" },
       { text: "Fin", value: "end" },
       { text: "Découpage", value: "durationSplitInHour" },
-      { text: "Bénévoles requis", value: "volunteers" },
-      { text: "Equipes requises", value: "teams" },
-      { text: "Actions", value: "actions" },
+      { text: "Bénévoles requis", value: "volunteers", sortable: false },
+      { text: "Equipes requises", value: "teams", sortable: false },
+      { text: "Actions", value: "actions", sortable: false },
     ],
     isAddDialogOpen: false,
     isUpdateDialogOpen: false,
@@ -175,6 +180,19 @@ export default defineComponent({
     formatDateWithMinutes,
     formatDurationSplitInHour(duration: number | null): string {
       return duration ? `${duration}h` : "";
+    },
+    sortMobilizations(
+      mobilizations: Mobilization[],
+      sortsBy: SortablePeriodHeader[],
+      sortsDesc: boolean[],
+    ) {
+      const sortBy = sortsBy.at(0) ?? "start";
+      const sortFnc = periodsSorts.get(sortBy);
+
+      if (!sortFnc) return mobilizations;
+
+      const sortDesc = sortsDesc.at(0) ?? false;
+      return sortFnc(mobilizations, sortDesc);
     },
     addMobilization(mobilization: AddMobilizationForm) {
       this.$emit("add", mobilization);
@@ -261,3 +279,4 @@ export default defineComponent({
   }
 }
 </style>
+~/utils/functions/sort-period
