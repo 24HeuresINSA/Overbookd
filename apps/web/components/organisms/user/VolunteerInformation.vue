@@ -2,7 +2,7 @@
   <v-card>
     <div class="volunteer-info">
       <div class="volunteer-info__personal-data">
-        <VolunteerPersonalDataForm />
+        <VolunteerPersonalDataForm @close-dialog="closeDialog" />
       </div>
       <div class="volunteer-info__availabilities">
         <AvailabilitiesSumup />
@@ -12,15 +12,21 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import AvailabilitiesSumup from "~/components/molecules/availabilities/AvailabilitiesSumup.vue";
 import VolunteerPersonalDataForm from "~/components/molecules/user/VolunteerPersonalDataForm.vue";
 
-export default Vue.extend({
+export default defineComponent({
   name: "VolunteerInformation",
   components: {
     VolunteerPersonalDataForm,
     AvailabilitiesSumup,
+  },
+  emits: ["close-dialog"],
+  methods: {
+    closeDialog() {
+      this.$emit("close-dialog");
+    },
   },
 });
 </script>
