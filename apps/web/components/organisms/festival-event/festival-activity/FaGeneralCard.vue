@@ -59,7 +59,7 @@
           :data="general.description ?? ''"
           label="Description"
           class="mb-6"
-          @change="updateDescription"
+          @update:data="updateDescription"
         />
 
         <v-combobox

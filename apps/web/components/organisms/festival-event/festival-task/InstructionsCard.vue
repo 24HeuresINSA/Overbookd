@@ -11,11 +11,11 @@
           @change="updateAppointment"
         />
 
-        <v-label>Description globale</v-label>
+        <v-label>Instructions globale</v-label>
         <RichEditor
           :data="instructions.global ?? ''"
           class="mb-6"
-          @change="updateGlobal"
+          @update:data="updateGlobal"
         />
 
         <v-switch
@@ -37,7 +37,7 @@
           <RichEditor
             :data="instructions.inCharge.instruction ?? ''"
             class="mb-6"
-            @change="updateInChargeInstruction"
+            @update:data="updateInChargeInstruction"
           />
         </div>
 

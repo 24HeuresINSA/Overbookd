@@ -15,7 +15,7 @@
         <v-expansion-panel-content>
           <RichEditor
             :data="registerFormDescription"
-            @change="updateRegisterFormDescription($event)"
+            @update:data="updateRegisterFormDescription($event)"
           >
             <template #header>
               <div class="divider" />
