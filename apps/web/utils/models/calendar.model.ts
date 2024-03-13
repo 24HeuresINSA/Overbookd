@@ -3,7 +3,7 @@ import { User } from "@overbookd/user";
 
 export type CalendarEvent = {
   start: Date;
-  end?: Date;
+  end: Date;
   name: string;
   link?: string;
   category?: string;
@@ -14,7 +14,6 @@ export type CalendarEvent = {
 export type DailyEvent = {
   start: Date;
   name: string;
-  link?: string;
   color?: string;
   timed: false;
 };

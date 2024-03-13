@@ -5,8 +5,8 @@ type FrenchGouvPublicHoliday = {
   [date: string]: string;
 };
 
-export class FrenchGouvPublicHolidayRepository {
-  static async fetchPublicHolidays(): Promise<PublicHoliday[]> {
+export class FrenchGovPublicHolidayRepository {
+  static async all(): Promise<PublicHoliday[]> {
     const path = "https://calendrier.api.gouv.fr/jours-feries/metropole.json";
 
     const response = await fetch(path);

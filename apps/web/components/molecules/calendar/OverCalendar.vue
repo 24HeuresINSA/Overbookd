@@ -35,7 +35,7 @@
         :ref="`calendar-${calendarType}`"
         :value="date"
         :type="calendarType"
-        :events="eventsWithHolyDays"
+        :events="eventsWithPublicHolidays"
         :event-ripple="true"
         :weekdays="weekdays"
         @click:date="selectDate"
@@ -191,8 +191,8 @@ export default defineComponent({
   },
   emits: ["update:date", "select:date"],
   computed: {
-    eventsWithHolyDays(): (CalendarEvent | DailyEvent)[] {
-      return [...this.events, ...this.holyDayEvents];
+    eventsWithPublicHolidays(): (CalendarEvent | DailyEvent)[] {
+      return [...this.events, ...this.publicHolidayEvents];
     },
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
@@ -203,11 +203,11 @@ export default defineComponent({
     types(): VuetifyCalendarType[] {
       return ["day", "week"];
     },
-    holyDays(): PublicHoliday[] {
+    publicHolidays(): PublicHoliday[] {
       return this.$accessor.publicHoliday.all;
     },
-    holyDayEvents(): DailyEvent[] {
-      return this.holyDays.map((holyDay) => ({
+    publicHolidayEvents(): DailyEvent[] {
+      return this.publicHolidays.map((holyDay) => ({
         start: holyDay.date,
         name: holyDay.name,
         timed: false,
@@ -224,7 +224,7 @@ export default defineComponent({
     },
   },
   async mounted() {
-    if (this.holyDays.length === 0) {
+    if (this.publicHolidays.length === 0) {
       await this.$accessor.publicHoliday.fetchAll();
     }
   },

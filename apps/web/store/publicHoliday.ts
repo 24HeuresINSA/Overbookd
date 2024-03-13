@@ -1,5 +1,5 @@
 import { actionTree, mutationTree } from "typed-vuex";
-import { FrenchGouvPublicHolidayRepository } from "~/repositories/public-holyday.repository";
+import { FrenchGovPublicHolidayRepository } from "~/repositories/french-gov-public-holiday.repository";
 
 export type PublicHoliday = {
   date: Date;
@@ -24,8 +24,7 @@ export const actions = actionTree(
   { state, mutations },
   {
     async fetchAll({ commit }) {
-      const holidays =
-        await FrenchGouvPublicHolidayRepository.fetchPublicHolidays();
+      const holidays = await FrenchGovPublicHolidayRepository.all();
       commit("SET_ALL_PUBLIC_HOLIDAYS", holidays);
     },
   },
