@@ -279,4 +279,3 @@ export default defineComponent({
   }
 }
 </style>
-~/utils/functions/sort-period
