@@ -55,7 +55,12 @@ export class DashboardGear {
     });
 
     if (!gear.isConsumable) return details;
-    return DashboardGear.computeConsumedOnDetails(gear, details);
+
+    const detailsWithConsumed = DashboardGear.computeConsumedOnDetails(
+      gear,
+      details,
+    );
+    return DashboardGear.computeStockOnConsumableDetails(detailsWithConsumed);
   }
 
   private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
@@ -219,6 +224,15 @@ export class DashboardGear {
       );
 
       return { ...detail, consumed: totalConsumed };
+    });
+  }
+
+  private static computeStockOnConsumableDetails(
+    details: Omit<ConsumableGearDetails, "stock">[],
+  ): ConsumableGearDetails[] {
+    return details.map((detail) => {
+      const stock = detail.inventory - detail.consumed;
+      return { ...detail, stock };
     });
   }
 }
