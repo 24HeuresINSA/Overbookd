@@ -8,7 +8,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { GearDetails, GearDetailsInquiry } from "@overbookd/http";
+import {
+  ConsumableGearDetails,
+  GearDetails,
+  GearDetailsInquiry,
+} from "@overbookd/http";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 
 type Dataset = {
@@ -82,6 +86,18 @@ export default defineComponent({
         ...this.datasetOptions,
       };
     },
+    consumed(): Dataset {
+      const data = isConsumable(this.details)
+        ? this.details.map((stat) => stat.consumed)
+        : [];
+      return {
+        label: "Consommés",
+        data,
+        backgroundColor: "#0000ff30",
+        borderColor: "#0000ff",
+        ...this.datasetOptions,
+      };
+    },
     options(): unknown {
       const allDetails = this.details;
 
@@ -108,9 +124,14 @@ export default defineComponent({
   },
   watch: {
     details() {
+      const defaultDatasets = [this.stock, this.inquiries];
+      const datasets = isConsumable(this.details)
+        ? [this.stock, this.inquiries, this.consumed]
+        : defaultDatasets;
+
       this.courbs = {
         labels: this.labels,
-        datasets: [this.stock, this.inquiries],
+        datasets,
       };
     },
   },
@@ -163,5 +184,11 @@ function listInquirySources({
     ({ id, name, quantity }) => `${bullet} #${id}-${name}: ${quantity}`,
   );
   return [title, ...sourceListing].join("\n");
+}
+
+export function isConsumable(
+  inquiries: GearDetails[],
+): inquiries is ConsumableGearDetails[] {
+  return inquiries.every((inquiry) => Object.hasOwn(inquiry, "consumed"));
 }
 </script>

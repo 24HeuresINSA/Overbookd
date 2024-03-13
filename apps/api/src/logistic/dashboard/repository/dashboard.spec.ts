@@ -21,14 +21,17 @@ import { Period } from "@overbookd/period";
 
 describe("Summarize gear as preview", () => {
   describe.each`
-    explaination                                  | gear                                       | expectedStockDiscrepancy
-    ${"no entries"}                               | ${gearWithNoInquiry}                       | ${0}
-    ${"one inquiry only"}                         | ${gearWithOneInquiry}                      | ${-10}
-    ${"two inquiries only"}                       | ${gearWithTwoInquiries}                    | ${-20}
-    ${"one inquiry with two time windows"}        | ${gearWithOneInquiryWithTwoTimeWindows}    | ${-30}
-    ${"one inquiry with one inventory record"}    | ${gearWithOneInquiryAndOneInventoryRecord} | ${15}
-    ${"two inquiries with two inventory records"} | ${gearWithTwoInquiryAndTwoInventoryRecord} | ${-25}
-  `("when gear has $explaination", ({ gear, expectedStockDiscrepancy }) => {
+    explaination                                                          | gear                                                          | expectedStockDiscrepancy
+    ${"has no entries"}                                                   | ${gearWithNoInquiry}                                          | ${0}
+    ${"has one inquiry only"}                                             | ${gearWithOneInquiry}                                         | ${-10}
+    ${"has two inquiries only"}                                           | ${gearWithTwoInquiries}                                       | ${-25}
+    ${"has one inquiry with two time windows"}                            | ${gearWithOneInquiryWithTwoTimeWindows}                       | ${-30}
+    ${"has one inquiry with one inventory record"}                        | ${gearWithOneInquiryAndOneInventoryRecord}                    | ${15}
+    ${"has two inquiries with two inventory records"}                     | ${gearWithTwoInquiryAndTwoInventoryRecord}                    | ${-25}
+    ${"is consumable and has one inquiry"}                                | ${consumableGearWithOneInquiry}                               | ${-10}
+    ${"is consumable and has one inquiry with two activity time windows"} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindows} | ${-60}
+    ${"is consumable and has two inquiries and one inventory records"}    | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${-40}
+  `("when gear $explaination", ({ gear, expectedStockDiscrepancy }) => {
     it(`should return preview with ${expectedStockDiscrepancy} as stock discrepancy`, () => {
       const preview = DashboardGear.generatePreview(gear);
       const expectedPreview = {
