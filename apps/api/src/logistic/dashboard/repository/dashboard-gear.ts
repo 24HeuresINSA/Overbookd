@@ -1,8 +1,4 @@
-import {
-  ConsumableGearDetails,
-  GearDetails,
-  GearPreview,
-} from "@overbookd/http";
+import { GearDetails, GearPreview } from "@overbookd/http";
 import {
   DatabaseActivityInquiry,
   DatabaseGear,
@@ -30,8 +26,7 @@ export class DashboardGear {
   ): GearDetails[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
-    const details = periods.map(({ start, end }) => {
-      const stock = DashboardGear.findStockByDate(gear);
+    return periods.map(({ start, end }) => {
       const inquiry = DashboardGear.findInquiryQuantityByDate(gear, start);
       const activities = DashboardGear.findActivitiesByDate(
         gear.festivalActivityInquiries,
@@ -42,6 +37,15 @@ export class DashboardGear {
         start,
       );
       const inventory = DashboardGear.findInventoryQuantity(gear);
+      const consumed = gear.isConsumable
+        ? {
+            consumed: DashboardGear.computeConsumedQuantityByDateOn(
+              gear,
+              start,
+            ),
+          }
+        : {};
+      const stock = inventory - (consumed.consumed ?? 0);
 
       return {
         start,
@@ -51,16 +55,9 @@ export class DashboardGear {
         activities,
         tasks,
         inventory,
+        ...consumed,
       };
     });
-
-    if (!gear.isConsumable) return details;
-
-    const detailsWithConsumed = DashboardGear.computeConsumedOnDetails(
-      gear,
-      details,
-    );
-    return DashboardGear.computeStockOnConsumableDetails(detailsWithConsumed);
   }
 
   private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
@@ -190,49 +187,31 @@ export class DashboardGear {
     }, []);
   }
 
-  private static computeConsumedOnDetails(
+  private static computeConsumedQuantityByDateOn(
     gear: DatabaseGear,
-    details: Omit<ConsumableGearDetails, "consumed">[],
-  ): ConsumableGearDetails[] {
-    let totalConsumed = 0;
-    let remainingActivities = gear.festivalActivityInquiries;
-    let remainingTasks = gear.festivalTaskInquiries;
-
-    return details.map((detail) => {
-      // find inquiries that have not yet been processed
-      const activities = DashboardGear.findActivitiesByDate(
-        remainingActivities,
-        detail.start,
-      );
-      const tasks = DashboardGear.findTasksByDate(remainingTasks, detail.start);
-      const inquiries = [...activities, ...tasks];
-
-      // compute total inquiry quantity
-      const inquiryQuantity = inquiries.reduce(
-        (total, inquiry) => total + inquiry.quantity,
-        0,
-      );
-      totalConsumed += inquiryQuantity;
-
-      // remove processed inquiries from the remaining ones
-      remainingActivities = remainingActivities.filter(
-        (inquiry) =>
-          !activities.some((activity) => activity.id === inquiry.fa.id),
-      );
-      remainingTasks = remainingTasks.filter(
-        (inquiry) => !tasks.some((task) => task.id === inquiry.ft.id),
-      );
-
-      return { ...detail, consumed: totalConsumed };
-    });
-  }
-
-  private static computeStockOnConsumableDetails(
-    details: Omit<ConsumableGearDetails, "stock">[],
-  ): ConsumableGearDetails[] {
-    return details.map((detail) => {
-      const stock = detail.inventory - detail.consumed;
-      return { ...detail, stock };
-    });
+    date: Date,
+  ): number {
+    const faInquiries = gear.festivalActivityInquiries.flatMap(
+      ({ quantity, fa }) =>
+        fa.inquiryTimeWindows.map((period) => ({
+          quantity,
+          period: Period.init(period),
+        })),
+    );
+    const ftInquiries = gear.festivalTaskInquiries.flatMap(
+      ({ quantity, ft }) => {
+        const periods = Period.mergeContiguous(
+          ft.mobilizations.map((mobilization) => Period.init(mobilization)),
+        );
+        return periods.map((period) => ({ quantity, period }));
+      },
+    );
+    const pastInquiries = [...faInquiries, ...ftInquiries].filter(
+      ({ period: { end } }) => +end <= +date,
+    );
+    return pastInquiries.reduce(
+      (consumed, { quantity }) => consumed + quantity,
+      0,
+    );
   }
 }

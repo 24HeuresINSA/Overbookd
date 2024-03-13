@@ -22,6 +22,10 @@ export const friday08hto09h30 = {
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T09:30+02:00"),
 };
+const friday08hto08h30 = {
+  start: new Date("2024-05-17T08:00+02:00"),
+  end: new Date("2024-05-17T08:30+02:00"),
+};
 const friday08hto08h15 = {
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T08:15+02:00"),
@@ -86,6 +90,14 @@ const activityInquiryFromFriday08hto09hAnd10hto12h: DatabaseActivityInquiry = {
     inquiryTimeWindows: [friday08hto09h, friday10hto11h],
   },
 };
+const activityInquiryFromFriday08hto08h30And09hto09h15: DatabaseActivityInquiry =
+  {
+    quantity: 30,
+    fa: {
+      ...justeDanceActivity,
+      inquiryTimeWindows: [friday08hto08h30, friday09hto09h15],
+    },
+  };
 const taskInquiryFromFriday08hto09h: DatabaseTaskInquiry = {
   quantity: 25,
   ft: {
@@ -177,6 +189,18 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecord: DatabaseGear =
     festivalTaskInquiries: [taskInquiryFromFriday08hto09h],
     inventoryRecords: [inventoryRecordWith5Quantity],
   };
+export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindows: DatabaseGear =
+  {
+    id: 9,
+    name: "consumable gear with one inquiry with two same activity time windows",
+    slug: "consumable-gear-with-one-inquiry-with-two-same-activity-time-windows",
+    isConsumable: true,
+    festivalActivityInquiries: [
+      activityInquiryFromFriday08hto08h30And09hto09h15,
+    ],
+    festivalTaskInquiries: [],
+    inventoryRecords: [],
+  };
 
 const emptyGearDetailsWithoutPeriod = {
   stock: 0,
@@ -248,39 +272,39 @@ export const gearWithOneInquiryAndOneInventoryRecordForGraph: GearDetails[] = [
 export const consumableGearWithOneInquiryForGraph: ConsumableGearDetails[] = [
   {
     ...friday08hto08h15,
-    stock: -10,
+    stock: 0,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    consumed: 10,
+    consumed: 0,
   },
   {
     ...friday08h15to08h30,
-    stock: -10,
+    stock: 0,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    consumed: 10,
+    consumed: 0,
   },
   {
     ...friday08h30to08h45,
-    stock: -10,
+    stock: 0,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    consumed: 10,
+    consumed: 0,
   },
   {
     ...friday08h45to09h,
-    stock: -10,
+    stock: 0,
     inquiry: 10,
     activities: [{ ...escapeGameActivity, quantity: 10 }],
     tasks: [],
     inventory: 0,
-    consumed: 10,
+    consumed: 0,
   },
   {
     ...friday09hto09h15,
@@ -306,57 +330,114 @@ export const consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph: Consum
   [
     {
       ...friday08hto08h15,
-      stock: -20,
+      stock: 5,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      consumed: 25,
+      consumed: 0,
     },
     {
       ...friday08h15to08h30,
-      stock: -20,
+      stock: 5,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      consumed: 25,
+      consumed: 0,
     },
     {
       ...friday08h30to08h45,
-      stock: -20,
+      stock: 5,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      consumed: 25,
+      consumed: 0,
     },
     {
       ...friday08h45to09h,
-      stock: -20,
+      stock: 5,
       inquiry: 25,
       activities: [],
       tasks: [{ ...installEscapeGameTask, quantity: 25 }],
       inventory: 5,
-      consumed: 25,
+      consumed: 0,
     },
     {
       ...friday09hto09h15,
-      stock: -40,
+      stock: -20,
       inquiry: 20,
       activities: [{ ...pcSecuActivity, quantity: 20 }],
       tasks: [],
       inventory: 5,
-      consumed: 45,
+      consumed: 25,
     },
     {
       ...friday09h15to09h30,
-      stock: -40,
+      stock: -20,
       inquiry: 20,
       activities: [{ ...pcSecuActivity, quantity: 20 }],
       tasks: [],
       inventory: 5,
-      consumed: 45,
+      consumed: 25,
+    },
+  ];
+export const consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph: ConsumableGearDetails[] =
+  [
+    {
+      ...friday08hto08h15,
+      stock: 0,
+      inquiry: 30,
+      activities: [{ ...justeDanceActivity, quantity: 30 }],
+      tasks: [],
+      inventory: 0,
+      consumed: 0,
+    },
+    {
+      ...friday08h15to08h30,
+      stock: 0,
+      inquiry: 30,
+      activities: [{ ...justeDanceActivity, quantity: 30 }],
+      tasks: [],
+      inventory: 0,
+      consumed: 0,
+    },
+    {
+      ...friday08h30to08h45,
+      stock: -30,
+      inquiry: 0,
+      activities: [],
+      tasks: [],
+      inventory: 0,
+      consumed: 30,
+    },
+    {
+      ...friday08h45to09h,
+      stock: -30,
+      inquiry: 0,
+      activities: [],
+      tasks: [],
+      inventory: 0,
+      consumed: 30,
+    },
+    {
+      ...friday09hto09h15,
+      stock: -30,
+      inquiry: 30,
+      activities: [{ ...justeDanceActivity, quantity: 30 }],
+      tasks: [],
+      inventory: 0,
+      consumed: 30,
+    },
+    {
+      ...friday09h15to09h30,
+      stock: -60,
+      inquiry: 0,
+      activities: [],
+      tasks: [],
+      inventory: 0,
+      consumed: 60,
     },
   ];
 

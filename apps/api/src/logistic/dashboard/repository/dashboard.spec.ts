@@ -13,6 +13,8 @@ import {
   consumableGearWithOneInquiryForGraph,
   consumableGearWithTwoInquiriesAndOneInventoryRecord,
   gearWithTwoInquiriesAndTwoInventoryRecordsForGraph,
+  consumableGearWithOneInquiryWithTwoSameActivityTimeWindows,
+  consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/period";
@@ -43,12 +45,13 @@ describe("Summarize gear as preview", () => {
 
 describe("Summarize gear for graph", () => {
   describe.each`
-    explaination                                                       | gear                                                   | period              | expectedData
-    ${"has no entries"}                                                | ${gearWithNoInquiry}                                   | ${friday08hto09h30} | ${gearWithNoInquiryForGraph}
-    ${"has one inquiry and one inventory record"}                      | ${gearWithOneInquiryAndOneInventoryRecord}             | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordForGraph}
-    ${"has two inquiries and two inventory records"}                   | ${gearWithTwoInquiryAndTwoInventoryRecord}             | ${friday08hto09h30} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForGraph}
-    ${"is consumable and has one inquiry"}                             | ${consumableGearWithOneInquiry}                        | ${friday08hto09h30} | ${consumableGearWithOneInquiryForGraph}
-    ${"is consumable and has two inquiries and one inventory records"} | ${consumableGearWithTwoInquiriesAndOneInventoryRecord} | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
+    explaination                                                          | gear                                                          | period              | expectedData
+    ${"has no entries"}                                                   | ${gearWithNoInquiry}                                          | ${friday08hto09h30} | ${gearWithNoInquiryForGraph}
+    ${"has one inquiry and one inventory record"}                         | ${gearWithOneInquiryAndOneInventoryRecord}                    | ${friday08hto09h30} | ${gearWithOneInquiryAndOneInventoryRecordForGraph}
+    ${"has two inquiries and two inventory records"}                      | ${gearWithTwoInquiryAndTwoInventoryRecord}                    | ${friday08hto09h30} | ${gearWithTwoInquiriesAndTwoInventoryRecordsForGraph}
+    ${"is consumable and has one inquiry"}                                | ${consumableGearWithOneInquiry}                               | ${friday08hto09h30} | ${consumableGearWithOneInquiryForGraph}
+    ${"is consumable and has one inquiry with two activity time windows"} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindows} | ${friday08hto09h30} | ${consumableGearWithOneInquiryWithTwoSameActivityTimeWindowsForGraph}
+    ${"is consumable and has two inquiries and one inventory records"}    | ${consumableGearWithTwoInquiriesAndOneInventoryRecord}        | ${friday08hto09h30} | ${consumableGearWithTwoInquiriesAndOneInventoryRecordForGraph}
   `("when gear $explaination", ({ gear, period, expectedData }) => {
     it(`should return gear for graph with ${expectedData.length} periods`, () => {
       const gearForGraph = DashboardGear.generateDetails(
