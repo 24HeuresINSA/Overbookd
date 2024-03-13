@@ -192,11 +192,12 @@ export class DashboardGear {
     date: Date,
   ): number {
     const faInquiries = gear.festivalActivityInquiries.flatMap(
-      ({ quantity, fa }) =>
-        fa.inquiryTimeWindows.map((period) => ({
-          quantity,
-          period: Period.init(period),
-        })),
+      ({ quantity, fa }) => {
+        const periods = fa.inquiryTimeWindows.map((period) =>
+          Period.init(period),
+        );
+        return periods.map((period) => ({ quantity, period }));
+      },
     );
     const ftInquiries = gear.festivalTaskInquiries.flatMap(
       ({ quantity, ft }) => {
