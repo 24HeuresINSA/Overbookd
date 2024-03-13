@@ -155,13 +155,22 @@ export const actions = actionTree(
       );
     },
 
-    async forgetHim({ dispatch }, email: string) {
+    async forgetHimAsStaff({ dispatch }, email: string) {
       const res = await safeCall(
         this,
         RegistrationRepository.forgetHim(this, email),
       );
       if (!res) return;
       dispatch("getStaffs");
+    },
+
+    async forgetHimAsVolunteer({ dispatch }, email: string) {
+      const res = await safeCall(
+        this,
+        RegistrationRepository.forgetHim(this, email),
+      );
+      if (!res) return;
+      dispatch("getVolunteers");
     },
   },
 );

@@ -9,6 +9,7 @@
         rows="20"
         readonly
       ></v-textarea>
+      <v-btn text color="red" @click="openForgetHimDialog"> supprimer </v-btn>
     </div>
     <div class="contact-and-availabilities">
       <div class="contact">
@@ -40,6 +41,18 @@
         @update:availabilities="updateVolunteerAvailabilities"
       />
     </div>
+
+    <ConfirmationMessage
+      @confirm="forgetHim"
+      @close-dialog="closeForgetHimDialog"
+    >
+      <template #title>Supprimer un bénévole</template>
+      <template #statement>
+        Le bénévole <strong>{{ name }}</strong> sera supprimé DEFINITIVEMENT !!!
+        <br />
+        Sois bien sûr de toi avant de valider.
+      </template>
+    </ConfirmationMessage>
   </div>
 </template>
 
@@ -49,16 +62,26 @@ import { EnrollableVolunteer } from "@overbookd/http";
 import { Period } from "@overbookd/period";
 import { formatPhoneLink, formatEmailLink } from "~/utils/user/user.utils";
 import AvailabilitiesSumupV2 from "../availabilities/AvailabilitiesSumupV2.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { formatUserNameWithNickname } from "~/utils/user/user.utils";
+
+type VolunteerDetailsData = {
+  isForgetHimDialogOpen: boolean;
+};
 
 export default defineComponent({
   name: "VolunteerDetails",
-  components: { AvailabilitiesSumupV2 },
+  components: { AvailabilitiesSumupV2, ConfirmationMessage },
   props: {
     volunteer: {
       type: Object as () => EnrollableVolunteer,
       required: true,
     },
   },
+  emits: ["close-details"],
+  data: (): VolunteerDetailsData => ({
+    isForgetHimDialogOpen: false,
+  }),
   computed: {
     availabilities(): Period[] {
       return this.volunteer.availabilities.map((period) => Period.init(period));
@@ -68,6 +91,9 @@ export default defineComponent({
     },
     phoneLink(): string {
       return formatPhoneLink(this.volunteer.mobilePhone);
+    },
+    name(): string {
+      return formatUserNameWithNickname(this.volunteer);
     },
   },
   methods: {
@@ -80,6 +106,16 @@ export default defineComponent({
         },
       );
       this.$accessor.registration.fetchVolunteerInformation(volunteerId);
+    },
+    forgetHim() {
+      this.$accessor.registration.forgetHimAsVolunteer(this.volunteer.email);
+      this.$emit("close-details");
+    },
+    openForgetHimDialog() {
+      this.isForgetHimDialogOpen = true;
+    },
+    closeForgetHimDialog() {
+      this.isForgetHimDialogOpen = false;
     },
   },
 });

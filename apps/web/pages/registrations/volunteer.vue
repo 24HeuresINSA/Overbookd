@@ -30,7 +30,10 @@
 
       <template #expanded-item="{ item }">
         <td :colspan="headers.length">
-          <VolunteerDetails :volunteer="item" />
+          <VolunteerDetails
+            :volunteer="item"
+            @close-details="openOrCloseVolunteerDetails"
+          />
         </td>
       </template>
     </v-data-table>

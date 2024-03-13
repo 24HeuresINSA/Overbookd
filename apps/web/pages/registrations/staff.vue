@@ -151,7 +151,7 @@ export default Vue.extend({
         searchable.includes(search);
     },
     forgetHim(email: string) {
-      this.$accessor.registration.forgetHim(email);
+      this.$accessor.registration.forgetHimAsStaff(email);
     },
     isMatchingRegistrationDateLimit(dateLimit: number): Filter {
       return ({ registeredAt }: EnrollableStaff) => {
