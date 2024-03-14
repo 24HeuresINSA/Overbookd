@@ -244,7 +244,7 @@ const saturday11hsaturday18h = TimeWindowFactory.create(
   saturday11h,
   saturday18h,
 );
-export const saturday10hsaturday19h = TimeWindowFactory.create(
+const saturday10hsaturday19h = TimeWindowFactory.create(
   saturday10h,
   saturday19h,
 );

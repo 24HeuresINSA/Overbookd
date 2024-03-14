@@ -35,11 +35,11 @@ type FestivalTaskSection =
   | Reviewable["reviews"]
   | WithConflicts["instructions"];
 
-export type DraftWithConflicts = Extract<WithConflicts, Draft>;
+type DraftWithConflicts = Extract<WithConflicts, Draft>;
 export type InReviewWithConflicts = Extract<WithConflicts, InReview>;
-export type RefusedWithConflicts = Extract<WithConflicts, Refused>;
+type RefusedWithConflicts = Extract<WithConflicts, Refused>;
 export type ValidatedWithConflicts = Extract<WithConflicts, Validated>;
-export type ReviewableWithConflicts = Extract<WithConflicts, Reviewable>;
+type ReviewableWithConflicts = Extract<WithConflicts, Reviewable>;
 
 class FestivalTaskFactory {
   constructor(private readonly idGenerator: Generator<number>) {}
