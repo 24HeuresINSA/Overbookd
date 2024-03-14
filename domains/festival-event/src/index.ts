@@ -8,6 +8,7 @@ export {
   APPROVED,
   REJECTED,
   RESET_REVIEW,
+  ASSIGNMENT_STARTED,
 } from "./common/action";
 export type { Adherent } from "./common/adherent";
 export type { Feedback } from "./common/feedback";
