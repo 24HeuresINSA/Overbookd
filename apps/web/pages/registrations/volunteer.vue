@@ -27,7 +27,7 @@
           Enrôler
         </v-btn>
         <v-btn color="error" small @click="openForgetVolunteerDialog(item)">
-          <v-icon left> mdi-trash </v-icon>
+          <v-icon left> mdi-trash-can </v-icon>
           Supprimer
         </v-btn>
       </template>
