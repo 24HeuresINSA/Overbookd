@@ -1,3 +1,11 @@
+## [2.22.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.3...v2.22.4) (2024-03-14)
+
+
+### Bug Fixes
+
+* **festival-task:** sort mobilizations [#1671](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1671) ([af0c08f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/af0c08f057dfad0bedb67a9694c89e872703d121))
+* **registration:** allow to remove volunteer [#1655](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1655) ([7dbd1cf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7dbd1cf378de5dc56075aeeb9228f4cbef05eaf3))
+
 ## [2.22.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.2...v2.22.3) (2024-03-14)
 
 
