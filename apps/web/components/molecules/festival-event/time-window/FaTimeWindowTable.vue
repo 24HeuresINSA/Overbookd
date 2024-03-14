@@ -45,9 +45,9 @@ import { defineComponent } from "vue";
 import PeriodForm from "~/components/molecules/period/PeriodForm.vue";
 import { formatDateWithMinutes } from "~/utils/date/date.utils";
 import {
-  SortableFaTimeWindowHeader,
-  faTimeWindowsSorts,
-} from "~/utils/functions/time-window";
+  SortablePeriodHeader,
+  periodsSorts,
+} from "~/utils/functions/sort-period";
 import { FestivalActivity, TimeWindow } from "@overbookd/festival-event";
 import { Header } from "~/utils/models/data-table.model";
 import { IProvidePeriod } from "@overbookd/period";
@@ -106,11 +106,11 @@ export default defineComponent({
     },
     sortTimeWindows(
       timeWindows: TimeWindow[],
-      sortsBy: SortableFaTimeWindowHeader[],
+      sortsBy: SortablePeriodHeader[],
       sortsDesc: boolean[],
     ) {
       const sortBy = sortsBy.at(0) ?? "start";
-      const sortFnc = faTimeWindowsSorts.get(sortBy);
+      const sortFnc = periodsSorts.get(sortBy);
 
       if (!sortFnc) return timeWindows;
 
