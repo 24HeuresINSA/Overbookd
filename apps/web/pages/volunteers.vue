@@ -26,7 +26,7 @@
     </div>
 
     <v-dialog v-model="isVolunteerInfoDialogOpen">
-      <VolunteerInformation @close-dialog="closeVolunteerInfoDialog" />
+      <VolunteerInformation @updated="closeVolunteerInfoDialog" />
     </v-dialog>
 
     <SnackNotificationContainer />

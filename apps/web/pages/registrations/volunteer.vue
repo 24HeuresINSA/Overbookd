@@ -26,6 +26,10 @@
           <v-icon left> mdi-check </v-icon>
           Enrôler
         </v-btn>
+        <v-btn color="error" small @click="openForgetVolunteerDialog(item)">
+          <v-icon left> mdi-trash-can </v-icon>
+          Supprimer
+        </v-btn>
       </template>
 
       <template #expanded-item="{ item }">
@@ -34,6 +38,21 @@
         </td>
       </template>
     </v-data-table>
+
+    <v-dialog v-model="isForgetVolunteerDialogOpen" max-width="600">
+      <ConfirmationMessage
+        @confirm="forgetVolunteer"
+        @close-dialog="closeForgetVolunteerDialog"
+      >
+        <template #title>Supprimer un bénévole</template>
+        <template #statement>
+          Le bénévole <strong>{{ volunteerToForgetName }}</strong> sera supprimé
+          DEFINITIVEMENT !!!
+          <br />
+          Sois bien sûr de toi avant de valider.
+        </template>
+      </ConfirmationMessage>
+    </v-dialog>
     <SnackNotificationContainer />
   </div>
 </template>
@@ -48,15 +67,24 @@ import { formatLocalDate } from "~/utils/date/date.utils";
 import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
+import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
+import { VOLUNTEER } from "@overbookd/registration";
 
 type RegistrationsData = {
   headers: Header[];
   displayedVolunteers: EnrollableVolunteer[];
+  isForgetVolunteerDialogOpen: boolean;
+  volunteerToForget: EnrollableVolunteer | null;
 };
 
 export default defineComponent({
   name: "RegistrationsSoft",
-  components: { SnackNotificationContainer, TeamChip, VolunteerDetails },
+  components: {
+    SnackNotificationContainer,
+    TeamChip,
+    VolunteerDetails,
+    ConfirmationMessage,
+  },
   data: (): RegistrationsData => ({
     headers: [
       { text: "Inscription", value: "registeredAt" },
@@ -67,6 +95,8 @@ export default defineComponent({
       { text: "", value: "data-table-expand", sortable: false },
     ],
     displayedVolunteers: [],
+    isForgetVolunteerDialogOpen: false,
+    volunteerToForget: null,
   }),
   head: () => ({
     title: "Admission bénévoles",
@@ -74,6 +104,10 @@ export default defineComponent({
   computed: {
     volunteersToEnroll(): EnrollableVolunteer[] {
       return this.$accessor.registration.volunteers;
+    },
+    volunteerToForgetName(): string {
+      if (!this.volunteerToForget) return "";
+      return formatUserNameWithNickname(this.volunteerToForget);
     },
   },
   mounted() {
@@ -96,6 +130,23 @@ export default defineComponent({
         this.displayedVolunteers,
         volunteerIndex,
       );
+    },
+    forgetVolunteer() {
+      if (!this.volunteerToForget) return;
+      this.openOrCloseVolunteerDetails(this.volunteerToForget);
+      this.$accessor.registration.forget({
+        membership: VOLUNTEER,
+        email: this.volunteerToForget.email,
+      });
+      this.volunteerToForget = null;
+    },
+    openForgetVolunteerDialog(volunteer: EnrollableVolunteer) {
+      this.volunteerToForget = volunteer;
+      this.isForgetVolunteerDialogOpen = true;
+    },
+    closeForgetVolunteerDialog() {
+      this.isForgetVolunteerDialogOpen = false;
+      this.volunteerToForget = null;
     },
     enroll(volunteer: EnrollableVolunteer) {
       this.$accessor.registration.enrollNewVolunteers([volunteer]);

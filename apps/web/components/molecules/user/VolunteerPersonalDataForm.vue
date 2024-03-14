@@ -119,7 +119,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import TeamChip from "~/components/atoms/chip/TeamChip.vue";
 import ProfilePicture from "~/components/atoms/card/ProfilePicture.vue";
 import {
@@ -152,12 +152,13 @@ type VolunteerPersonalDataFormData = InputRulesData & {
   newTeam?: string;
 };
 
-export default Vue.extend({
+export default defineComponent({
   name: "VolunteerPersonalDataForm",
   components: {
     ProfilePicture,
     TeamChip,
   },
+  emits: ["saved", "deleted"],
   data(): VolunteerPersonalDataFormData {
     return {
       nickname: null,
@@ -256,6 +257,7 @@ export default Vue.extend({
 
     async savePersonalData() {
       await this.$accessor.user.updateUser(this.updatedVolunteer);
+      this.$emit("saved");
     },
 
     async saveAvailabilities() {
@@ -265,12 +267,12 @@ export default Vue.extend({
         { volunteerId: this.selectedVolunteer.id, availabilities },
       );
       this.$accessor.user.findUserById(this.selectedVolunteer.id);
-      this.$emit("close-dialog");
+      this.$emit("saved");
     },
 
     async deleteVolunteer() {
       await this.$accessor.user.deleteUser(this.selectedVolunteer.id);
-      this.$emit("close-dialog");
+      this.$emit("deleted");
     },
 
     formatUserName(user: User): string {
