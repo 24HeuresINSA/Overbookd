@@ -32,6 +32,7 @@ import {
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
   VIEW_GEAR_DASHBOARD,
+  MANAGE_PURCHASE_FORMS,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -140,6 +141,15 @@ export const permissions = [
   {
     name: WRITE_INVENTORY,
     description: "Peut éditer l'inventaire",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "matos" }, { teamCode: "elec" }],
+      },
+    },
+  },
+  {
+    name: MANAGE_PURCHASE_FORMS,
+    description: "Peut gérer les fiches achats",
     teams: {
       createMany: {
         data: [{ teamCode: "matos" }, { teamCode: "elec" }],
