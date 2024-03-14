@@ -11,6 +11,13 @@ export type CalendarEvent = {
   timed: true;
 };
 
+export type DailyEvent = {
+  start: Date;
+  name: string;
+  color?: string;
+  timed: false;
+};
+
 export type CalendarUser = User & {
   teams: string[];
   availabilities: IProvidePeriod[];

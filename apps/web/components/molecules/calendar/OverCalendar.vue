@@ -35,7 +35,7 @@
         :ref="`calendar-${calendarType}`"
         :value="date"
         :type="calendarType"
-        :events="events"
+        :events="eventsWithPublicHolidays"
         :event-ripple="true"
         :weekdays="weekdays"
         @click:date="selectDate"
@@ -140,12 +140,13 @@
 import { defineComponent } from "vue";
 import { DateString, OverDate } from "@overbookd/period";
 import { SHIFT_HOURS } from "@overbookd/volunteer-availability";
-import { CalendarEvent } from "~/utils/models/calendar.model";
+import { CalendarEvent, DailyEvent } from "~/utils/models/calendar.model";
 import {
   VuetifyCalendar,
   VuetifyCalendarType,
 } from "~/utils/calendar/vuetify-calendar";
 import { formatMonthWithYear } from "~/utils/date/date.utils";
+import { PublicHoliday } from "~/store/publicHoliday";
 
 export default defineComponent({
   name: "OverCalendar",
@@ -190,6 +191,9 @@ export default defineComponent({
   },
   emits: ["update:date", "select:date"],
   computed: {
+    eventsWithPublicHolidays(): (CalendarEvent | DailyEvent)[] {
+      return [...this.events, ...this.publicHolidayEvents];
+    },
     isDarkTheme(): boolean {
       return this.$accessor.theme.darkTheme;
     },
@@ -199,6 +203,17 @@ export default defineComponent({
     types(): VuetifyCalendarType[] {
       return ["day", "week"];
     },
+    publicHolidays(): PublicHoliday[] {
+      return this.$accessor.publicHoliday.all;
+    },
+    publicHolidayEvents(): DailyEvent[] {
+      return this.publicHolidays.map((holiday) => ({
+        start: holiday.date,
+        name: holiday.name,
+        timed: false,
+        color: "grey",
+      }));
+    },
   },
   watch: {
     hourToScrollTo() {
@@ -207,6 +222,11 @@ export default defineComponent({
       const calendar = this.$refs.calendar as unknown as VuetifyCalendar;
       if (calendar) calendar.scrollToTime(time);
     },
+  },
+  async mounted() {
+    if (this.publicHolidays.length === 0) {
+      await this.$accessor.publicHoliday.fetchAll();
+    }
   },
   methods: {
     isPartyHour(hour: number): boolean {
