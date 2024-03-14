@@ -1,3 +1,21 @@
+## [2.22.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.2...v2.22.3) (2024-03-14)
+
+
+### Bug Fixes
+
+* **calendar:** display public holidays on calendar [#1662](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1662) ([4467fb8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4467fb81abf4c4feb31b6c8365e91a39f804aaed))
+* **profile:** allow to select profile picture from gallery on mobile. [#1669](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1669) ([82feb46](https://gitlab.com/24-heures-insa/overbookd-mono/commit/82feb46664697cf5514ccf4971e915c3971820b3))
+* **registration:** staff invitation link fetch [#1652](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1652) ([d0d9ea0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d0d9ea0c520c77bc13ce2bba90658a92d7758b81))
+* **registration:** staff link generation with perm [#1652](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1652) ([c2150f7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c2150f79fa48fdcce8fd23fb9f38b087c8f3e985))
+* **rich-editor:** remove non-functional menu item [#1665](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1665) ([263fe32](https://gitlab.com/24-heures-insa/overbookd-mono/commit/263fe32187f63c3ea3f3c76cec3497c4fa792c72))
+* **web:** blink effect on rich editor when formated as header 1/2. [#1571](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1571) ([3ad18bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3ad18bb0d7b2c0bab44f4cde49b63faec9a6a33c))
+
+
+### Refactor
+
+* replace interfaces by types [#1666](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1666) ([256c76b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/256c76b8ce6e6ca60670562a259b7cdb6f357786))
+* **repo-factory:** remove it and use static repo [#1376](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1376) ([c5fa1ab](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c5fa1abaded956eb699c23c1c48c352d5fa3f4d1))
+
 ## [2.22.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.1...v2.22.2) (2024-03-12)
 
 
