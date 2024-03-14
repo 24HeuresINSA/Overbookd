@@ -4,7 +4,6 @@
       <v-card-text>
         <v-file-input
           v-model="profilePicture"
-          capture="user"
           :rules="rules"
           label="Photo de profil"
           prepend-icon="mdi-camera"
