@@ -42,17 +42,20 @@
       />
     </div>
 
-    <ConfirmationMessage
-      @confirm="forgetHim"
-      @close-dialog="closeForgetHimDialog"
-    >
-      <template #title>Supprimer un bénévole</template>
-      <template #statement>
-        Le bénévole <strong>{{ name }}</strong> sera supprimé DEFINITIVEMENT !!!
-        <br />
-        Sois bien sûr de toi avant de valider.
-      </template>
-    </ConfirmationMessage>
+    <v-dialog v-model="isForgetHimDialogOpen" max-width="600">
+      <ConfirmationMessage
+        @confirm="forgetHim"
+        @close-dialog="closeForgetHimDialog"
+      >
+        <template #title>Supprimer un bénévole</template>
+        <template #statement>
+          Le bénévole <strong>{{ name }}</strong> sera supprimé DEFINITIVEMENT
+          !!!
+          <br />
+          Sois bien sûr de toi avant de valider.
+        </template>
+      </ConfirmationMessage>
+    </v-dialog>
   </div>
 </template>
 
@@ -78,7 +81,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["close-details"],
+  emits: ["forget-him"],
   data: (): VolunteerDetailsData => ({
     isForgetHimDialogOpen: false,
   }),
@@ -108,8 +111,7 @@ export default defineComponent({
       this.$accessor.registration.fetchVolunteerInformation(volunteerId);
     },
     forgetHim() {
-      this.$accessor.registration.forgetHimAsVolunteer(this.volunteer.email);
-      this.$emit("close-details");
+      this.$emit("forget-him");
     },
     openForgetHimDialog() {
       this.isForgetHimDialogOpen = true;

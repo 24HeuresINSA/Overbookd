@@ -32,7 +32,7 @@
         <td :colspan="headers.length">
           <VolunteerDetails
             :volunteer="item"
-            @close-details="openOrCloseVolunteerDetails"
+            @forget-him="forgetVolunteer(item)"
           />
         </td>
       </template>
@@ -99,6 +99,10 @@ export default defineComponent({
         this.displayedVolunteers,
         volunteerIndex,
       );
+    },
+    forgetVolunteer(volunteer: EnrollableVolunteer) {
+      this.openOrCloseVolunteerDetails(volunteer);
+      this.$accessor.registration.forgetHimAsVolunteer(volunteer.email);
     },
     enroll(volunteer: EnrollableVolunteer) {
       this.$accessor.registration.enrollNewVolunteers([volunteer]);
