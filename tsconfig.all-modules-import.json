@@ -10,6 +10,7 @@
       "@overbookd/festival-event": ["./domains/festival-event/src"],
       "@overbookd/http": ["./utils/http/src"],
       "@overbookd/list": ["./libraries/list/src"],
+      "@overbookd/logistic": ["./domains/logistic/src"],
       "@overbookd/period": ["./libraries/period/src"],
       "@overbookd/permission": ["./domains/permission/src"],
       "@overbookd/personal-account": ["./domains/personal-account/src"],
