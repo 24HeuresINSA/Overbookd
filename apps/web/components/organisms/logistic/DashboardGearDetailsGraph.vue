@@ -189,6 +189,6 @@ function listInquirySources({
 export function isConsumable(
   inquiries: GearDetails[],
 ): inquiries is ConsumableGearDetails[] {
-  return inquiries.every((inquiry) => Object.hasOwn(inquiry, "consumed"));
+  return inquiries.some((inquiry) => Object.hasOwn(inquiry, "consumed"));
 }
 </script>
