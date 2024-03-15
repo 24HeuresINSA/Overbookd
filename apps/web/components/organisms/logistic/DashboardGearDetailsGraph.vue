@@ -126,7 +126,7 @@ export default defineComponent({
     details() {
       const defaultDatasets = [this.stock, this.inquiries];
       const datasets = isConsumable(this.details)
-        ? [this.stock, this.inquiries, this.consumed]
+        ? [...defaultDatasets, this.consumed]
         : defaultDatasets;
 
       this.courbs = {
