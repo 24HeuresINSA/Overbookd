@@ -31,6 +31,8 @@ export type { HttpStringified } from "./http-stringified";
 export type { OfferMeal } from "./shared-meal.model";
 export type {
   Inquiry,
+  BaseGearDetails,
+  ConsumableGearDetails,
   GearDetails,
   GearPreview,
   GearWithDetails,

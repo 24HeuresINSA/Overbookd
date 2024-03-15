@@ -14,7 +14,7 @@ export type Inquiry = {
   quantity: number;
 };
 
-export type GearDetails = {
+export type BaseGearDetails = {
   start: Date;
   end: Date;
   inquiry: number;
@@ -23,6 +23,12 @@ export type GearDetails = {
   tasks: Inquiry[];
   inventory: number;
 };
+
+export type ConsumableGearDetails = BaseGearDetails & {
+  consumed: number;
+};
+
+export type GearDetails = BaseGearDetails | ConsumableGearDetails;
 
 export type GearWithDetails = {
   name: string;

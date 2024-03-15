@@ -10,7 +10,7 @@ export class DashboardGear {
   private constructor() {}
 
   public static generatePreview(gear: DatabaseGear): GearPreview {
-    const stockDiscrepancy = DashboardGear.computeStockDiscrepancyOn(gear);
+    const stockDiscrepancy = DashboardGear.computeMinStockDiscrepancyOn(gear);
     return {
       id: gear.id,
       name: gear.name,
@@ -27,11 +27,25 @@ export class DashboardGear {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
     return periods.map(({ start, end }) => {
-      const stock = DashboardGear.findStockByDate(gear);
       const inquiry = DashboardGear.findInquiryQuantityByDate(gear, start);
-      const activities = DashboardGear.findActivitiesByDate(gear, start);
-      const tasks = DashboardGear.findTasksByDate(gear, start);
+      const activities = DashboardGear.findActivitiesByDate(
+        gear.festivalActivityInquiries,
+        start,
+      );
+      const tasks = DashboardGear.findTasksByDate(
+        gear.festivalTaskInquiries,
+        start,
+      );
       const inventory = DashboardGear.findInventoryQuantity(gear);
+      const consumed = gear.isConsumable
+        ? {
+            consumed: DashboardGear.computeConsumedQuantityByDateOn(
+              gear,
+              start,
+            ),
+          }
+        : {};
+      const stock = inventory - (consumed.consumed ?? 0);
 
       return {
         start,
@@ -41,11 +55,12 @@ export class DashboardGear {
         activities,
         tasks,
         inventory,
+        ...consumed,
       };
     });
   }
 
-  private static computeStockDiscrepancyOn(gear: DatabaseGear): number {
+  private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
     const inquiryTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
@@ -137,10 +152,10 @@ export class DashboardGear {
   }
 
   private static findActivitiesByDate(
-    { festivalActivityInquiries }: DatabaseGear,
+    activities: DatabaseActivityInquiry[],
     start: Date,
   ): GearDetails["activities"] {
-    return festivalActivityInquiries.reduce((activities, inquiry) => {
+    return activities.reduce((activities, inquiry) => {
       const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
         Period.init(period).isIncluding(start),
       );
@@ -155,10 +170,10 @@ export class DashboardGear {
   }
 
   private static findTasksByDate(
-    { festivalTaskInquiries }: DatabaseGear,
+    tasks: DatabaseTaskInquiry[],
     start: Date,
   ): GearDetails["tasks"] {
-    return festivalTaskInquiries.reduce((tasks, inquiry) => {
+    return tasks.reduce((tasks, inquiry) => {
       const isIncluded = inquiry.ft.mobilizations.some((period) =>
         Period.init(period).isIncluding(start),
       );
@@ -170,5 +185,34 @@ export class DashboardGear {
       const task = { id, name, quantity };
       return [...tasks, task];
     }, []);
+  }
+
+  private static computeConsumedQuantityByDateOn(
+    gear: DatabaseGear,
+    date: Date,
+  ): number {
+    const faInquiries = gear.festivalActivityInquiries.flatMap(
+      ({ quantity, fa }) => {
+        const periods = fa.inquiryTimeWindows.map((period) =>
+          Period.init(period),
+        );
+        return periods.map((period) => ({ quantity, period }));
+      },
+    );
+    const ftInquiries = gear.festivalTaskInquiries.flatMap(
+      ({ quantity, ft }) => {
+        const periods = Period.mergeContiguous(
+          ft.mobilizations.map((mobilization) => Period.init(mobilization)),
+        );
+        return periods.map((period) => ({ quantity, period }));
+      },
+    );
+    const pastInquiries = [...faInquiries, ...ftInquiries].filter(
+      ({ period: { end } }) => +end <= +date,
+    );
+    return pastInquiries.reduce(
+      (consumed, { quantity }) => consumed + quantity,
+      0,
+    );
   }
 }

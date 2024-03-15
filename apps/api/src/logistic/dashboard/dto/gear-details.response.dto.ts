@@ -1,6 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import { FestivalActivity } from "@overbookd/festival-event";
-import { Inquiry, GearDetails, GearWithDetails } from "@overbookd/http";
+import {
+  Inquiry,
+  GearDetails,
+  GearWithDetails,
+  BaseGearDetails,
+  ConsumableGearDetails,
+} from "@overbookd/http";
 
 class InquiryResponseDto implements Inquiry {
   @ApiProperty({ type: Number })
@@ -13,7 +19,7 @@ class InquiryResponseDto implements Inquiry {
   quantity: number;
 }
 
-class GearDetailsResponseDto implements GearDetails {
+class BaseGearDetailsResponseDto implements BaseGearDetails {
   @ApiProperty({ type: Date })
   start: Date;
 
@@ -40,6 +46,17 @@ class GearDetailsResponseDto implements GearDetails {
 
   @ApiProperty({ type: Number })
   inventory: number;
+
+  @ApiProperty({ type: Number })
+  stockDiscrepancy: number;
+}
+
+class ConsumableGearDetailsResponseDto
+  extends BaseGearDetailsResponseDto
+  implements ConsumableGearDetails
+{
+  @ApiProperty({ type: Number })
+  consumed: number;
 }
 
 export class GearWithDetailsResponseDto implements GearWithDetails {
@@ -49,6 +66,12 @@ export class GearWithDetailsResponseDto implements GearWithDetails {
   @ApiProperty({ type: String })
   slug: string;
 
-  @ApiProperty({ isArray: true, type: GearDetailsResponseDto })
+  @ApiProperty({
+    isArray: true,
+    oneOf: [
+      { $ref: getSchemaPath(BaseGearDetailsResponseDto) },
+      { $ref: getSchemaPath(ConsumableGearDetailsResponseDto) },
+    ],
+  })
   details: GearDetails[];
 }
