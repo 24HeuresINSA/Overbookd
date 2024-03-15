@@ -3,7 +3,7 @@ import { InitBorrow } from "./init";
 import { InMemoryBorrows } from "./borrow.inmemory";
 
 describe("Init borrow", () => {
-  describe("when a user initialize a borrow from KARNA", async () => {
+  describe("when initializing a borrow from KARNA", async () => {
     const borrows = new InMemoryBorrows();
     const init = new InitBorrow(borrows);
     const initializedBorrow = await init.for("KARNA");

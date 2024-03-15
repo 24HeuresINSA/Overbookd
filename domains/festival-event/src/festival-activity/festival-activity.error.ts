@@ -1,7 +1,7 @@
 import { FestivalEventError } from "../festival-event";
 
 function buildFestivalActivityNotFoundErrorMessage(id: number) {
-  return `❌ La fiche activité #${id} n'a pas été trouvé`;
+  return `❌ La fiche activité #${id} n'a pas été trouvée`;
 }
 
 const FREE_PASS_MUST_BE_POSITIVE_ERROR_MESSAGE =
