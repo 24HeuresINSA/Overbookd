@@ -69,7 +69,7 @@ export type FestivalTasksForPrepare = {
 };
 
 export type AddMobilization = Omit<
-  Mobilization<{ withConflicts: false }>,
+  Mobilization<{ withConflicts: false; withAssignments: false }>,
   "id"
 >;
 
