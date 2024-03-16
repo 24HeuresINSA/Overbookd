@@ -66,7 +66,7 @@ export class CreateFestivalTask {
     const created = await this.festivalTasks.add(festivalTask);
     const withConflicts = await this.festivalTaskTranslator.translate(created);
     if (!isDraft(withConflicts)) {
-      throw new FestivalTaskError("Impossible de creer en BROUILLON");
+      throw new FestivalTaskError("Impossible de créer en BROUILLON");
     }
 
     return withConflicts;
