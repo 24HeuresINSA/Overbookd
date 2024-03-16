@@ -31,12 +31,17 @@ class SplitablePeriod {
   }
 }
 
+const defaultOptions = {
+  withConflicts: false,
+  withAssignments: false,
+} as const;
+
 export class Mobilizations {
   private constructor(
-    private readonly mobilizations: Mobilization<{ withConflicts: false }>[],
+    private readonly mobilizations: Mobilization<typeof defaultOptions>[],
   ) {}
 
-  static build(mobilizations: Mobilization<{ withConflicts: false }>[]) {
+  static build(mobilizations: Mobilization<typeof defaultOptions>[]) {
     return new Mobilizations(mobilizations);
   }
 
@@ -132,7 +137,7 @@ export class Mobilizations {
 
   private retrieveMobilization(
     id: Mobilization["id"],
-  ): ListItem<Mobilization<{ withConflicts: false }>> {
+  ): ListItem<Mobilization<typeof defaultOptions>> {
     const index = this.mobilizations.findIndex(
       ({ id: currentId }) => currentId === id,
     );
@@ -141,17 +146,17 @@ export class Mobilizations {
     return { index, value };
   }
 
-  private has(mobilization: Mobilization<{ withConflicts: false }>) {
+  private has(mobilization: Mobilization<typeof defaultOptions>) {
     return this.mobilizations.some(({ id }) => id === mobilization.id);
   }
 
-  get json(): Mobilization<{ withConflicts: false }>[] {
+  get json(): Mobilization<typeof defaultOptions>[] {
     return [...this.mobilizations];
   }
 }
 class MobilizationFactory {
   private constructor(
-    private readonly mobilization: Mobilization<{ withConflicts: false }>,
+    private readonly mobilization: Mobilization<typeof defaultOptions>,
   ) {}
 
   static init(form: AddMobilization): MobilizationFactory {
@@ -162,7 +167,7 @@ class MobilizationFactory {
     return new MobilizationFactory({ ...form, id });
   }
 
-  static build(mobilization: Mobilization<{ withConflicts: false }>) {
+  static build(mobilization: Mobilization<typeof defaultOptions>) {
     return new MobilizationFactory(mobilization);
   }
 
@@ -232,7 +237,7 @@ class MobilizationFactory {
     return this.mobilization.volunteers.some(({ id }) => id === volunteer.id);
   }
 
-  get json(): Mobilization<{ withConflicts: false }> {
+  get json(): Mobilization<typeof defaultOptions> {
     return this.mobilization;
   }
 }
