@@ -44,7 +44,7 @@ export class EnableAssignment {
     if (!task) throw new FestivalTaskNotFound(ftId);
     if (isReadyToAssign(task)) {
       throw new FestivalTaskError(
-        "La tache est deja en affectation, ce n'est pas normal",
+        "La tâche est déjà en affectation, ce n'est pas normal",
       );
     }
     if (!isValidated(task)) throw new FestivalTaskNotValidated(ftId);
