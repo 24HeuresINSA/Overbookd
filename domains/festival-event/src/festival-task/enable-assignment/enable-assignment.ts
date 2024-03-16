@@ -2,25 +2,36 @@ import {
   Categorize,
   FestivalTask,
   ReadyToAssign,
-  Validated,
+  isReadyToAssign,
 } from "../festival-task";
 import { READY_TO_ASSIGN } from "../../common/status";
 import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {
+  FestivalTaskTranslator,
   ReadyToAssignWithoutConflicts,
-  ValidatedWithoutConflicts,
+  WithoutConflicts,
 } from "../volunteer-conflicts";
-import { FestivalTaskNotValidated } from "../festival-task.error";
+import {
+  FestivalTaskNotFound,
+  FestivalTaskNotValidated,
+  ReadyToAssignError,
+} from "../festival-task.error";
+
+import { isValidated } from "../../festival-event";
+import { ValidatedWithConflicts } from "../festival-task.factory";
 
 export type FestivalTasksForEnableAssignment = {
-  findById(id: FestivalTask["id"]): Promise<ValidatedWithoutConflicts | null>;
+  findById(
+    id: FestivalTask["id"],
+  ): Promise<WithoutConflicts | ReadyToAssignWithoutConflicts | null>;
   save(task: ReadyToAssign): Promise<ReadyToAssignWithoutConflicts>;
 };
 
 export class EnableAssignment {
   constructor(
     private readonly festivalTasks: FestivalTasksForEnableAssignment,
+    private readonly festivalTaskTranslator: FestivalTaskTranslator,
   ) {}
 
   async for(
@@ -29,10 +40,12 @@ export class EnableAssignment {
     categorize: Categorize,
   ) {
     const task = await this.festivalTasks.findById(ftId);
-    if (!task) throw new FestivalTaskNotValidated(ftId);
+    if (!task) throw new FestivalTaskNotFound(ftId);
+    if (isReadyToAssign(task)) throw new Error();
+    if (!isValidated(task)) throw new FestivalTaskNotValidated(ftId);
 
     const readyToAssign = ReadyToAssignFestivalTask.fromValidated(
-      task,
+      await this.festivalTaskTranslator.translate(task),
       instigator,
       categorize,
     );
@@ -43,14 +56,24 @@ export class EnableAssignment {
 
 class ReadyToAssignFestivalTask {
   static fromValidated(
-    task: Validated,
+    task: ValidatedWithConflicts,
     instigator: Adherent,
     categorize: Categorize,
   ): ReadyToAssign {
+    if (ReadyToAssignFestivalTask.hasUnavailableVolunteerRequired(task)) {
+      throw new ReadyToAssignError();
+    }
+
     const history = [
       ...task.history,
       FestivalTaskKeyEvents.assignmentStarted(instigator),
     ];
     return { ...task, ...categorize, status: READY_TO_ASSIGN, history };
+  }
+
+  private static hasUnavailableVolunteerRequired(task: ValidatedWithConflicts) {
+    return task.mobilizations.some(({ volunteers }) =>
+      volunteers.some(({ conflicts }) => conflicts.availability),
+    );
   }
 }

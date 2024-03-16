@@ -1,24 +1,18 @@
-import { FestivalTask, ReadyToAssign, isReadyToReview } from "../festival-task";
-import {
-  ReadyToAssignWithoutConflicts,
-  ValidatedWithoutConflicts,
-} from "../volunteer-conflicts";
+import { FestivalTask, ReadyToAssign } from "../festival-task";
+import { ReadyToAssignWithoutConflicts } from "../volunteer-conflicts";
 import { FestivalTaskNotFound } from "../festival-task.error";
-import { isValidated } from "../../festival-event";
 import { updateItemToList } from "@overbookd/list";
 import { FestivalTasksForEnableAssignment } from "./enable-assignment";
+import { WithoutConflicts } from "../volunteer-conflicts";
 
 export class InMemoryFestivalTasksForEnableAssignment
   implements FestivalTasksForEnableAssignment
 {
   constructor(private tasks: Array<FestivalTask | ReadyToAssign>) {}
-  findById(id: FestivalTask["id"]): Promise<ValidatedWithoutConflicts | null> {
-    const task = this.tasks.find(
-      (task): task is ValidatedWithoutConflicts =>
-        task.id === id &&
-        !isReadyToReview(task) &&
-        isValidated<FestivalTask>(task),
-    );
+  findById(
+    id: FestivalTask["id"],
+  ): Promise<WithoutConflicts | ReadyToAssignWithoutConflicts | null> {
+    const task = this.tasks.find((task) => task.id === id);
     return Promise.resolve(task ?? null);
   }
 

@@ -1,22 +1,44 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { barCashier, guardPS1, guardPS2 } from "../festival-task.fake";
+import {
+  barCashier,
+  flashMobOnJustDance,
+  guardPS1,
+  guardPS2,
+  installEscapeGame,
+  leadPressConference,
+  uninstallPreventionVillage,
+} from "../festival-task.fake";
 import { BAR, FUN, MANUTENTION, RELOU, STATIQUE } from "../festival-task";
 import { READY_TO_ASSIGN } from "../../common/status";
 import { ASSIGNMENT_STARTED } from "../../common/action";
 import { noel } from "../festival-task.test-util";
 import { EnableAssignment } from "./enable-assignment";
 import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory";
+import {
+  FestivalTaskNotFound,
+  FestivalTaskNotValidated,
+  ReadyToAssignError,
+} from "../festival-task.error";
+import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
+import { FestivalTaskTranslator } from "../volunteer-conflicts";
 
 describe("Enable assignment", () => {
   let festivalTasks: InMemoryFestivalTasksForEnableAssignment;
   let enableAssignment: EnableAssignment;
   beforeEach(() => {
-    festivalTasks = new InMemoryFestivalTasksForEnableAssignment([
+    const tasks = [
       guardPS1,
       guardPS2,
       barCashier,
-    ]);
-    enableAssignment = new EnableAssignment(festivalTasks);
+      installEscapeGame,
+      flashMobOnJustDance,
+      uninstallPreventionVillage,
+      leadPressConference,
+    ];
+    festivalTasks = new InMemoryFestivalTasksForEnableAssignment(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const translator = new FestivalTaskTranslator(volunteerConflicts);
+    enableAssignment = new EnableAssignment(festivalTasks, translator);
   });
   describe.each`
     task          | instigator | categorize
@@ -87,4 +109,50 @@ describe("Enable assignment", () => {
       });
     },
   );
+  describe("when trying to enable assignment on unknown festival task", () => {
+    it("should indicate festival task is not found", async () => {
+      expect(
+        async () =>
+          await enableAssignment.for(1000, noel, {
+            category: BAR,
+            topPriority: false,
+          }),
+      ).rejects.toThrow(FestivalTaskNotFound);
+    });
+  });
+  describe.each`
+    task                          | status
+    ${installEscapeGame}          | ${installEscapeGame.status}
+    ${flashMobOnJustDance}        | ${flashMobOnJustDance.status}
+    ${uninstallPreventionVillage} | ${uninstallPreventionVillage.status}
+  `("when trying to enable assignment on $status festival task", ({ task }) => {
+    it("should indicate festival task is not found", async () => {
+      expect(
+        async () =>
+          await enableAssignment.for(task.id, noel, {
+            category: BAR,
+            topPriority: false,
+          }),
+      ).rejects.toThrow(FestivalTaskNotValidated);
+    });
+  });
+  describe("when trying to enable assignment on festival task with at least on required volunteer that is not available", () => {
+    it("should indicate that all required volunteers as to be available during mobilizations", async () => {
+      const task = leadPressConference;
+      expect(
+        async () =>
+          await enableAssignment.for(task.id, noel, {
+            category: BAR,
+            topPriority: false,
+          }),
+      ).rejects.toThrow(ReadyToAssignError);
+      expect(
+        async () =>
+          await enableAssignment.for(task.id, noel, {
+            category: BAR,
+            topPriority: false,
+          }),
+      ).rejects.toThrow("Au moins un des bénévoles n'est pas disponible.");
+    });
+  });
 });

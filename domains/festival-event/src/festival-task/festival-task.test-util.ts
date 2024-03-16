@@ -145,6 +145,12 @@ export const george = {
   firstname: "George",
 };
 
+export const valery = {
+  id: 6,
+  lastname: "Gisc",
+  firstname: "Valery",
+};
+
 export const friday9h: BuildTimeWindow = {
   date: new Date("2024-05-17T09:00+02:00"),
   id: "28598820",
@@ -213,6 +219,14 @@ export const sunday04h: BuildTimeWindow = {
   date: new Date("2024-05-19T04:00+02:00"),
   id: "28601400",
 };
+export const sunday12h: BuildTimeWindow = {
+  date: new Date("2024-05-19T12:00+02:00"),
+  id: "28601880",
+};
+export const sunday16h: BuildTimeWindow = {
+  date: new Date("2024-05-19T16:00+02:00"),
+  id: "28602120",
+};
 export const monday00h: BuildTimeWindow = {
   date: new Date("2024-05-20T00:00+02:00"),
   id: "28602600",
@@ -252,6 +266,7 @@ const friday18hmonday00h = TimeWindowFactory.create(friday18h, monday00h);
 const friday17hmonday01h = TimeWindowFactory.create(friday17h, monday01h);
 const friday18hsaturday04h = TimeWindowFactory.create(friday18h, saturday04h);
 const saturday18hsunday04h = TimeWindowFactory.create(saturday18h, sunday04h);
+const sunday12hsunday16h = TimeWindowFactory.create(sunday12h, sunday16h);
 
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
@@ -324,6 +339,11 @@ const noDedicated: Location = {
 const nextToManege: Location = {
   id: 4,
   name: "Next to manège",
+};
+
+const headOfInsa: Location = {
+  id: 5,
+  name: "Head of INSA",
 };
 
 export const ficelle = {
@@ -416,5 +436,18 @@ export const barManege: FestivalActivity = {
   inquiry: {
     timeWindows: [friday18hsaturday04h, saturday18hsunday04h],
     all: [deuxTables],
+  },
+};
+
+export const pressConference: FestivalActivity = {
+  id: 6,
+  name: "Press conference",
+  location: headOfInsa,
+  status: VALIDATED,
+  hasSupplyRequest: true,
+  timeWindows: [sunday12hsunday16h],
+  inquiry: {
+    timeWindows: [],
+    all: [],
   },
 };

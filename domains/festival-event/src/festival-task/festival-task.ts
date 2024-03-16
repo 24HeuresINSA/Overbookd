@@ -157,7 +157,7 @@ export type PreviewReviewable =
 
 export type Preview = PreviewDraft | PreviewReviewable;
 
-export function isReadyToReview(
+export function isReadyToAssign(
   task: FestivalTask | ReadyToAssign,
 ): task is ReadyToAssign {
   return task.status === READY_TO_ASSIGN;

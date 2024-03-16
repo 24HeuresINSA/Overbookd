@@ -39,6 +39,10 @@ import {
   barManege,
   saturday04h,
   sunday04h,
+  pressConference,
+  sunday12h,
+  sunday16h,
+  valery,
 } from "./festival-task.test-util";
 import {
   InReviewWithConflicts,
@@ -592,6 +596,18 @@ export const barCashier = factory
       end: sunday04h,
       durationSplitInHour: 2,
       teams: [{ count: 1, team: "confiance" }],
+    }).mobilization,
+  ])
+  .build();
+
+export const leadPressConference = factory
+  .validated("Lead press conference")
+  .withFestivalActivity(pressConference)
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: sunday12h,
+      end: sunday16h,
+      volunteers: [{ ...valery, conflicts: { availability: true, tasks: [] } }],
     }).mobilization,
   ])
   .build();
