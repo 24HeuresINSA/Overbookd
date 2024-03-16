@@ -51,7 +51,7 @@ export type TeamMobilization = { count: number; team: string };
 type MobilizationVolunteer<Options extends MobilizationOptions> =
   Options["withConflicts"] extends true ? VolunteerWithConflicts : Volunteer;
 
-type SharedMobilization<Options extends MobilizationOptions> = TimeWindow & {
+type BaseMobilization<Options extends MobilizationOptions> = TimeWindow & {
   volunteers: MobilizationVolunteer<Options>[];
   teams: TeamMobilization[];
   durationSplitInHour: null | number;
@@ -62,10 +62,10 @@ export type Assignment = TimeWindow & { assignees: Volunteer[] };
 export type Mobilization<
   Options extends MobilizationOptions = typeof defaultMobilizationOptions,
 > = Options["withAssignments"] extends true
-  ? SharedMobilization<Options> & {
+  ? BaseMobilization<Options> & {
       assignments: Assignment[];
     }
-  : SharedMobilization<Options>;
+  : BaseMobilization<Options>;
 
 export type AtLeastOneVolunteer<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,
