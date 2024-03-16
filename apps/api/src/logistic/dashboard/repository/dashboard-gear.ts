@@ -4,7 +4,7 @@ import {
   DatabaseGear,
   DatabaseTaskInquiry,
 } from "./dashboard.model";
-import { Period, QUARTER_IN_MS } from "@overbookd/period";
+import { IProvidePeriod, Period, QUARTER_IN_MS } from "@overbookd/period";
 
 export class DashboardGear {
   private constructor() {}
@@ -26,45 +26,23 @@ export class DashboardGear {
   ): GearDetails[] {
     const periods = period.splitWithIntervalInMs(QUARTER_IN_MS);
 
-    return periods.map(({ start, end }) => {
-      const inquiry = DashboardGear.findInquiryQuantityByDate(gear, start);
-      const activities = DashboardGear.findActivitiesByDate(
-        gear.festivalActivityInquiries,
-        start,
-      );
-      const tasks = DashboardGear.findTasksByDate(
-        gear.festivalTaskInquiries,
-        start,
-      );
-      const inventory = DashboardGear.findInventoryQuantity(gear);
-      const consumed = gear.isConsumable
-        ? {
-            consumed: DashboardGear.computeConsumedQuantityByDateOn(
-              gear,
-              start,
-            ),
-          }
-        : {};
-      const stock = inventory - (consumed.consumed ?? 0);
-
-      return {
-        start,
-        end,
-        inquiry,
-        stock,
-        activities,
-        tasks,
-        inventory,
-        ...consumed,
-      };
+    return periods.map((period) => {
+      return DashboardGear.periodDetails(gear, period);
     });
   }
 
   private static computeMinStockDiscrepancyOn(gear: DatabaseGear): number {
-    const inquiryTimeWindows = gear.festivalActivityInquiries
+    const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
       .map((period) => Period.init(period));
-    const mergedTimeWindows = Period.mergeContiguous(inquiryTimeWindows);
+    const taskTimeWindows = gear.festivalTaskInquiries
+      .flatMap((inquiry) => inquiry.ft.mobilizations)
+      .map((period) => Period.init(period));
+    const inquiryTimeWindows = [...activityTimeWindows, ...taskTimeWindows];
+
+    const mergedTimeWindows = gear.isConsumable
+      ? inquiryTimeWindows
+      : Period.mergeContiguous(inquiryTimeWindows);
 
     const discrepancies = mergedTimeWindows.map((timeWindow) => {
       return DashboardGear.computeStockDiscrepancyByTimeWindowOn(
@@ -74,6 +52,119 @@ export class DashboardGear {
     });
 
     return discrepancies.length > 0 ? Math.min(...discrepancies) : 0;
+  }
+
+  private static periodDetails(gear: DatabaseGear, period: IProvidePeriod) {
+    const inventory = DashboardGear.findInventoryQuantity(gear);
+    if (!gear.isConsumable) {
+      return DashboardGear.gearPeriodDetails(gear, inventory, period);
+    }
+    return DashboardGear.consumablePeriodDetails(gear, inventory, period);
+  }
+
+  private static consumablePeriodDetails(
+    gear: DatabaseGear,
+    inventory: number,
+    { start, end }: IProvidePeriod,
+  ) {
+    const { inquiry, activities, tasks } =
+      DashboardGear.computeConsumableInquiries(gear, start);
+    const consumed = DashboardGear.computeConsumedQuantityByDateOn(gear, start);
+
+    const stock = inventory - consumed;
+
+    return {
+      start,
+      end,
+      inquiry,
+      stock,
+      activities,
+      tasks,
+      inventory,
+      consumed,
+    };
+  }
+
+  private static gearPeriodDetails(
+    gear: DatabaseGear,
+    inventory: number,
+    { end, start }: IProvidePeriod,
+  ) {
+    const { inquiry, tasks, activities } = DashboardGear.computeGearInquiries(
+      gear,
+      start,
+    );
+    const stock = inventory;
+    return { start, end, inquiry, stock, tasks, activities, inventory };
+  }
+
+  private static computeGearInquiries(gear: DatabaseGear, date: Date) {
+    const activities = DashboardGear.findActivitiesUsingGearAt(
+      gear.festivalActivityInquiries,
+      date,
+    );
+    const tasks = DashboardGear.findTasksUsingGearAt(
+      gear.festivalTaskInquiries,
+      date,
+    );
+    const inquiry = DashboardGear.computeInquiryQuantity(activities, tasks);
+    return { inquiry, tasks, activities };
+  }
+
+  private static computeConsumableInquiries(gear: DatabaseGear, date: Date) {
+    const activities = DashboardGear.findActivitiesTakingConsumableAt(
+      gear.festivalActivityInquiries,
+      date,
+    );
+    const tasks = DashboardGear.findTasksTakingConsumableAt(
+      gear.festivalTaskInquiries,
+      date,
+    );
+    const inquiry = DashboardGear.computeInquiryQuantity(activities, tasks);
+    return { inquiry, activities, tasks };
+  }
+
+  private static findActivitiesTakingConsumableAt(
+    activities: DatabaseActivityInquiry[],
+    date: Date,
+  ) {
+    return activities.reduce((activities, inquiry) => {
+      const isStartingAt = inquiry.fa.inquiryTimeWindows.some(
+        (period) => +period.start === +date,
+      );
+
+      if (!isStartingAt) return activities;
+
+      const { id, name } = inquiry.fa;
+      const { quantity } = inquiry;
+      const activity = { id, name, quantity };
+      return [...activities, activity];
+    }, []);
+  }
+
+  private static findTasksTakingConsumableAt(
+    tasks: DatabaseTaskInquiry[],
+    date: Date,
+  ) {
+    return tasks.reduce((tasks, inquiry) => {
+      const isStartingAt = inquiry.ft.mobilizations.some(
+        (period) => +period.start === +date,
+      );
+
+      if (!isStartingAt) return tasks;
+
+      const { id, name } = inquiry.ft;
+      const { quantity } = inquiry;
+      const task = { id, name, quantity };
+      return [...tasks, task];
+    }, []);
+  }
+
+  private static computeInquiryQuantity(
+    activities: GearDetails["activities"],
+    tasks: GearDetails["tasks"],
+  ) {
+    return sumQuantity([...activities, ...tasks]);
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(
@@ -94,8 +185,13 @@ export class DashboardGear {
     date: Date,
   ) {
     const stock = DashboardGear.findStockByDate(gear);
-    const inquiry = DashboardGear.findInquiryQuantityByDate(gear, date);
-    return stock - inquiry;
+    const { inquiry } = gear.isConsumable
+      ? DashboardGear.computeConsumableInquiries(gear, date)
+      : DashboardGear.computeGearInquiries(gear, date);
+    const consumed = gear.isConsumable
+      ? DashboardGear.computeConsumedQuantityByDateOn(gear, date)
+      : 0;
+    return stock - (inquiry + consumed);
   }
 
   private static findStockByDate(gear: DatabaseGear /*, date: Date*/): number {
@@ -104,54 +200,10 @@ export class DashboardGear {
   }
 
   private static findInventoryQuantity(gear: DatabaseGear): number {
-    return gear.inventoryRecords.reduce(
-      (total, { quantity }) => total + quantity,
-      0,
-    );
+    return sumQuantity(gear.inventoryRecords);
   }
 
-  private static findInquiryQuantityByDate(
-    { festivalActivityInquiries, festivalTaskInquiries }: DatabaseGear,
-    date: Date,
-  ): number {
-    const activityQuantity = DashboardGear.findActivityInquiryQuantityByDate(
-      festivalActivityInquiries,
-      date,
-    );
-    const taskQuantity = DashboardGear.findTaskInquiryQuantityByDate(
-      festivalTaskInquiries,
-      date,
-    );
-    return activityQuantity + taskQuantity;
-  }
-
-  private static findActivityInquiryQuantityByDate(
-    inquiries: DatabaseActivityInquiry[],
-    date: Date,
-  ): number {
-    return inquiries.reduce((total, inquiry) => {
-      const isIncluded = inquiry.fa.inquiryTimeWindows.some((period) =>
-        Period.init(period).isIncluding(date),
-      );
-
-      return isIncluded ? total + inquiry.quantity : total;
-    }, 0);
-  }
-
-  private static findTaskInquiryQuantityByDate(
-    inquiries: DatabaseTaskInquiry[],
-    date: Date,
-  ): number {
-    return inquiries.reduce((total, inquiry) => {
-      const isIncluded = inquiry.ft.mobilizations.some((period) =>
-        Period.init(period).isIncluding(date),
-      );
-
-      return isIncluded ? total + inquiry.quantity : total;
-    }, 0);
-  }
-
-  private static findActivitiesByDate(
+  private static findActivitiesUsingGearAt(
     activities: DatabaseActivityInquiry[],
     start: Date,
   ): GearDetails["activities"] {
@@ -169,7 +221,7 @@ export class DashboardGear {
     }, []);
   }
 
-  private static findTasksByDate(
+  private static findTasksUsingGearAt(
     tasks: DatabaseTaskInquiry[],
     start: Date,
   ): GearDetails["tasks"] {
@@ -208,11 +260,12 @@ export class DashboardGear {
       },
     );
     const pastInquiries = [...faInquiries, ...ftInquiries].filter(
-      ({ period: { end } }) => +end <= +date,
+      ({ period: { start } }) => +start < +date,
     );
-    return pastInquiries.reduce(
-      (consumed, { quantity }) => consumed + quantity,
-      0,
-    );
+    return sumQuantity(pastInquiries);
   }
+}
+
+function sumQuantity(list: { quantity: number }[]): number {
+  return list.reduce((count, { quantity }) => count + quantity, 0);
 }
