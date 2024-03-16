@@ -1,6 +1,9 @@
 import { Draft, FestivalTask, InReview, Refused } from "../festival-task";
 import { Adherent } from "../../common/adherent";
-import { FestivalTaskNotFound } from "../festival-task.error";
+import {
+  FestivalTaskError,
+  FestivalTaskNotFound,
+} from "../festival-task.error";
 import { Notifications } from "../../common/notifications";
 import {
   DraftWithoutConflicts,
@@ -75,7 +78,7 @@ export class AskForReview {
     const minReviewsCount = Math.min(...reviewers.map(({ count }) => count));
     const reviewer = reviewers.find(({ count }) => count === minReviewsCount);
 
-    if (!reviewer) throw new Error();
+    if (!reviewer) throw new FestivalTaskError("Aucun relecteur disponible");
 
     return reviewer.adherent;
   }

@@ -13,6 +13,7 @@ import {
   WithoutConflicts,
 } from "../volunteer-conflicts";
 import {
+  FestivalTaskError,
   FestivalTaskNotFound,
   FestivalTaskNotValidated,
   ReadyToAssignError,
@@ -41,7 +42,11 @@ export class EnableAssignment {
   ) {
     const task = await this.festivalTasks.findById(ftId);
     if (!task) throw new FestivalTaskNotFound(ftId);
-    if (isReadyToAssign(task)) throw new Error();
+    if (isReadyToAssign(task)) {
+      throw new FestivalTaskError(
+        "La tache est deja en affectation, ce n'est pas normal",
+      );
+    }
     if (!isValidated(task)) throw new FestivalTaskNotValidated(ftId);
 
     const readyToAssign = ReadyToAssignFestivalTask.fromValidated(

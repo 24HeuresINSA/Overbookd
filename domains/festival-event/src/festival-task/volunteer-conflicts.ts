@@ -11,6 +11,7 @@ import {
 } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts } from "./sections/mobilizations";
+import { FestivalTaskError } from "./festival-task.error";
 
 export type VolunteerAvailabilities = {
   volunteer: Volunteer;
@@ -63,7 +64,7 @@ export class FestivalTaskTranslator {
     );
     const translated = { ...task, mobilizations };
     if (!isWithConflicts<T>(translated)) {
-      throw new Error("Invalid Type");
+      throw new FestivalTaskError("Impossible de rajouter les conflits.");
     }
     return translated;
   }
