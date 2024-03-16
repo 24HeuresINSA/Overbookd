@@ -29,9 +29,15 @@ export const requirableTeams = [
 ] as const;
 export const requirableTeamsExtended = [...requirableTeams, soft] as const;
 
-type MobilizationOptions = { withConflicts: boolean };
+export type MobilizationOptions = {
+  withConflicts: boolean;
+  withAssignments: boolean;
+};
 
-const defaultMobilizationOptions = { withConflicts: true } as const;
+const defaultMobilizationOptions = {
+  withConflicts: true,
+  withAssignments: false,
+} as const;
 
 export type Conflicts = {
   tasks: FestivalTaskLink[];
@@ -45,13 +51,21 @@ export type TeamMobilization = { count: number; team: string };
 type MobilizationVolunteer<Options extends MobilizationOptions> =
   Options["withConflicts"] extends true ? VolunteerWithConflicts : Volunteer;
 
-export type Mobilization<
-  Options extends MobilizationOptions = typeof defaultMobilizationOptions,
-> = TimeWindow & {
+type BaseMobilization<Options extends MobilizationOptions> = TimeWindow & {
   volunteers: MobilizationVolunteer<Options>[];
   teams: TeamMobilization[];
   durationSplitInHour: null | number;
 };
+
+export type Assignment = TimeWindow & { assignees: Volunteer[] };
+
+export type Mobilization<
+  Options extends MobilizationOptions = typeof defaultMobilizationOptions,
+> = Options["withAssignments"] extends true
+  ? BaseMobilization<Options> & {
+      assignments: Assignment[];
+    }
+  : BaseMobilization<Options>;
 
 export type AtLeastOneVolunteer<Options extends MobilizationOptions> = Omit<
   Mobilization<Options>,

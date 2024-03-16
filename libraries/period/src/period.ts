@@ -145,4 +145,11 @@ export class Period {
     const endTimestamp = this.end.getTime();
     return Duration.ms(endTimestamp - startTimestamp);
   }
+
+  get id(): string {
+    const startMinutes = Duration.ms(this.start.getTime()).inMinutes;
+    const endMinutes = Duration.ms(this.end.getTime()).inMinutes;
+
+    return `${startMinutes}-${endMinutes}`;
+  }
 }

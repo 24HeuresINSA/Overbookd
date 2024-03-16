@@ -41,8 +41,10 @@ import {
   sunday04h,
   pressConference,
   sunday12h,
-  sunday16h,
   valery,
+  sunday11h,
+  sunday18h,
+  sunday14h,
 } from "./festival-task.test-util";
 import {
   InReviewWithConflicts,
@@ -606,8 +608,38 @@ export const leadPressConference = factory
   .withMobilizations([
     MobilizationBuilder.init<ValidatedWithConflicts>({
       start: sunday12h,
-      end: sunday16h,
+      end: sunday14h,
       volunteers: [{ ...valery, conflicts: { availability: true, tasks: [] } }],
+    }).mobilization,
+  ])
+  .build();
+
+export const preparePressConference = factory
+  .validated("Prepare press conference")
+  .withFestivalActivity(pressConference)
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: sunday11h,
+      end: sunday12h,
+      volunteers: [
+        { ...valery, conflicts: { tasks: [], availability: false } },
+      ],
+    }).mobilization,
+  ])
+  .build();
+
+export const cleanPressConference = factory
+  .validated("Clean press conference")
+  .withFestivalActivity(pressConference)
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: sunday14h,
+      end: sunday18h,
+      volunteers: [
+        { ...valery, conflicts: { tasks: [], availability: false } },
+      ],
+      teams: [{ count: 3, team: "bénévole" }],
+      durationSplitInHour: 2,
     }).mobilization,
   ])
   .build();

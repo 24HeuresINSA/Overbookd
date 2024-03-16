@@ -12,7 +12,8 @@ import { BaseMobilizationResponseDto } from "../base-mobilization.response.dto";
 
 export class MobilizationWithAtLeastOneVolunteerDto
   extends BaseMobilizationResponseDto
-  implements AtLeastOneVolunteer<{ withConflicts: true }>
+  implements
+    AtLeastOneVolunteer<{ withConflicts: true; withAssignments: false }>
 {
   @ApiProperty({ type: TeamMobilizationResponseDto, isArray: true })
   teams: TeamMobilization[];
@@ -23,7 +24,7 @@ export class MobilizationWithAtLeastOneVolunteerDto
 
 export class MobilizationWithAtLeastOneTeamDto
   extends BaseMobilizationResponseDto
-  implements AtLeastOneTeam<{ withConflicts: true }>
+  implements AtLeastOneTeam<{ withConflicts: true; withAssignments: false }>
 {
   @ApiProperty({ type: VolunteerWithConflictsResponseDto, isArray: true })
   volunteers: VolunteerWithConflicts[];

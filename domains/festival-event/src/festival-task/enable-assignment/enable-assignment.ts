@@ -21,6 +21,14 @@ import {
 
 import { isValidated } from "../../festival-event";
 import { ValidatedWithConflicts } from "../festival-task.factory";
+import {
+  Assignment,
+  ReviewableMobilization,
+  VolunteerWithConflicts,
+} from "../sections/mobilizations";
+import { Item } from "@overbookd/list";
+import { Period } from "@overbookd/period";
+import { Duration } from "@overbookd/period";
 
 export type FestivalTasksForEnableAssignment = {
   findById(
@@ -73,12 +81,69 @@ class ReadyToAssignFestivalTask {
       ...task.history,
       FestivalTaskKeyEvents.assignmentStarted(instigator),
     ];
-    return { ...task, ...categorize, status: READY_TO_ASSIGN, history };
+
+    const mobilizations = task.mobilizations.map((mobilization) =>
+      ReadyToAssignFestivalTask.generateAssignments(mobilization),
+    );
+
+    return {
+      ...task,
+      ...categorize,
+      status: READY_TO_ASSIGN,
+      history,
+      mobilizations,
+    };
+  }
+
+  private static generateAssignments(
+    mobilization: Item<ValidatedWithConflicts["mobilizations"]>,
+  ): Item<ReadyToAssign["mobilizations"]> {
+    const assignmentPeriods =
+      ReadyToAssignFestivalTask.generatePeriods(mobilization);
+
+    const assignments: Assignment[] = assignmentPeriods.map((period) =>
+      extractAssignment(mobilization, period),
+    );
+    return { ...mobilization, assignments };
+  }
+
+  private static generatePeriods(
+    mobilization: ReviewableMobilization<
+      { readonly withAssignments: false } & { withConflicts: true }
+    >,
+  ) {
+    const mobilizationPeriod = Period.init(mobilization);
+    if (mobilization.durationSplitInHour === null) return [mobilizationPeriod];
+
+    return mobilizationPeriod.splitWithIntervalInMs(
+      Duration.hours(mobilization.durationSplitInHour).inMilliseconds,
+    );
   }
 
   private static hasUnavailableVolunteerRequired(task: ValidatedWithConflicts) {
     return task.mobilizations.some(({ volunteers }) =>
-      volunteers.some(({ conflicts }) => conflicts.availability),
+      volunteers.some(({ conflicts }) => conflicts.availability === true),
     );
   }
+}
+
+function extractAssignment(
+  mobilization: Item<ValidatedWithConflicts["mobilizations"]>,
+  period: Period,
+): Assignment {
+  return {
+    start: period.start,
+    end: period.end,
+    id: period.id,
+    assignees: mobilization.volunteers.map(extractVolunteerData),
+  };
+}
+
+function extractVolunteerData(volunteer: VolunteerWithConflicts) {
+  return {
+    id: volunteer.id,
+    lastname: volunteer.lastname,
+    firstname: volunteer.firstname,
+    nickname: volunteer.nickname,
+  };
 }

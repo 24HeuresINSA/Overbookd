@@ -175,9 +175,29 @@ export const friday19h: BuildTimeWindow = {
   date: new Date("2024-05-17T19:00+02:00"),
   id: "28599420",
 };
+const friday20h: BuildTimeWindow = {
+  date: new Date("2024-05-17T20:00+02:00"),
+  id: "28599480",
+};
+const friday22h: BuildTimeWindow = {
+  date: new Date("2024-05-17T22:00+02:00"),
+  id: "28599600",
+};
+const saturday00h: BuildTimeWindow = {
+  date: new Date("2024-05-18T00:00+02:00"),
+  id: "28599720",
+};
+const saturday02h: BuildTimeWindow = {
+  date: new Date("2024-05-18T02:00+02:00"),
+  id: "28599840",
+};
 export const saturday04h: BuildTimeWindow = {
   date: new Date("2024-05-18T04:00+02:00"),
   id: "28599960",
+};
+const saturday06h: BuildTimeWindow = {
+  date: new Date("2024-05-18T06:00+02:00"),
+  id: "28600080",
 };
 export const saturday07h: BuildTimeWindow = {
   date: new Date("2024-05-18T07:00+02:00"),
@@ -203,6 +223,14 @@ export const saturday12h: BuildTimeWindow = {
   date: new Date("2024-05-18T12:00+02:00"),
   id: "28600440",
 };
+const saturday14h: BuildTimeWindow = {
+  date: new Date("2024-05-18T14:00+02:00"),
+  id: "28600560",
+};
+const saturday16h: BuildTimeWindow = {
+  date: new Date("2024-05-18T16:00+02:00"),
+  id: "28600680",
+};
 export const saturday18h: BuildTimeWindow = {
   date: new Date("2024-05-18T18:00+02:00"),
   id: "28600800",
@@ -215,17 +243,61 @@ export const saturday20h: BuildTimeWindow = {
   date: new Date("2024-05-18T20:00+02:00"),
   id: "28600920",
 };
+const saturday22h: BuildTimeWindow = {
+  date: new Date("2024-05-18T22:00+02:00"),
+  id: "28601040",
+};
+const sunday00h: BuildTimeWindow = {
+  date: new Date("2024-05-19T00:00+02:00"),
+  id: "28601160",
+};
+const sunday02h: BuildTimeWindow = {
+  date: new Date("2024-05-19T02:00+02:00"),
+  id: "28601280",
+};
 export const sunday04h: BuildTimeWindow = {
   date: new Date("2024-05-19T04:00+02:00"),
   id: "28601400",
+};
+const sunday06h: BuildTimeWindow = {
+  date: new Date("2024-05-19T06:00+02:00"),
+  id: "28601520",
+};
+const sunday08h: BuildTimeWindow = {
+  date: new Date("2024-05-19T08:00+02:00"),
+  id: "28601640",
+};
+const sunday10h: BuildTimeWindow = {
+  date: new Date("2024-05-19T10:00+02:00"),
+  id: "28601760",
+};
+export const sunday11h: BuildTimeWindow = {
+  date: new Date("2024-05-19T11:00+02:00"),
+  id: "28601820",
 };
 export const sunday12h: BuildTimeWindow = {
   date: new Date("2024-05-19T12:00+02:00"),
   id: "28601880",
 };
-export const sunday16h: BuildTimeWindow = {
+export const sunday14h: BuildTimeWindow = {
+  date: new Date("2024-05-19T14:00+02:00"),
+  id: "28602000",
+};
+const sunday16h: BuildTimeWindow = {
   date: new Date("2024-05-19T16:00+02:00"),
   id: "28602120",
+};
+export const sunday18h: BuildTimeWindow = {
+  date: new Date("2024-05-19T18:00+02:00"),
+  id: "28602240",
+};
+const sunday20h: BuildTimeWindow = {
+  date: new Date("2024-05-19T20:00+02:00"),
+  id: "28602360",
+};
+const sunday22h: BuildTimeWindow = {
+  date: new Date("2024-05-19T22:00+02:00"),
+  id: "28602480",
 };
 export const monday00h: BuildTimeWindow = {
   date: new Date("2024-05-20T00:00+02:00"),
@@ -267,6 +339,118 @@ const friday17hmonday01h = TimeWindowFactory.create(friday17h, monday01h);
 const friday18hsaturday04h = TimeWindowFactory.create(friday18h, saturday04h);
 const saturday18hsunday04h = TimeWindowFactory.create(saturday18h, sunday04h);
 const sunday12hsunday16h = TimeWindowFactory.create(sunday12h, sunday16h);
+export const friday18hfriday20h = TimeWindowFactory.create(
+  friday18h,
+  friday20h,
+);
+export const friday20hfriday22h = TimeWindowFactory.create(
+  friday20h,
+  friday22h,
+);
+export const friday22hsaturday00h = TimeWindowFactory.create(
+  friday22h,
+  saturday00h,
+);
+export const saturday00hsaturday02h = TimeWindowFactory.create(
+  saturday00h,
+  saturday02h,
+);
+export const saturday02hsaturday04h = TimeWindowFactory.create(
+  saturday02h,
+  saturday04h,
+);
+export const saturday04hsaturday06h = TimeWindowFactory.create(
+  saturday04h,
+  saturday06h,
+);
+export const saturday06hsaturday08h = TimeWindowFactory.create(
+  saturday06h,
+  saturday08h,
+);
+export const saturday08hsaturday10h = TimeWindowFactory.create(
+  saturday08h,
+  saturday10h,
+);
+export const saturday10hsaturday12h = TimeWindowFactory.create(
+  saturday10h,
+  saturday12h,
+);
+export const saturday12hsaturday14h = TimeWindowFactory.create(
+  saturday12h,
+  saturday14h,
+);
+export const saturday14hsaturday16h = TimeWindowFactory.create(
+  saturday14h,
+  saturday16h,
+);
+export const saturday16hsaturday18h = TimeWindowFactory.create(
+  saturday16h,
+  saturday18h,
+);
+export const saturday18hsaturday20h = TimeWindowFactory.create(
+  saturday18h,
+  saturday20h,
+);
+export const saturday20hsaturday22h = TimeWindowFactory.create(
+  saturday20h,
+  saturday22h,
+);
+export const saturday22hsunday00h = TimeWindowFactory.create(
+  saturday22h,
+  sunday00h,
+);
+export const sunday00hsunday02h = TimeWindowFactory.create(
+  sunday00h,
+  sunday02h,
+);
+export const sunday02hsunday04h = TimeWindowFactory.create(
+  sunday02h,
+  sunday04h,
+);
+export const sunday04hsunday06h = TimeWindowFactory.create(
+  sunday04h,
+  sunday06h,
+);
+export const sunday06hsunday08h = TimeWindowFactory.create(
+  sunday06h,
+  sunday08h,
+);
+export const sunday08hsunday10h = TimeWindowFactory.create(
+  sunday08h,
+  sunday10h,
+);
+export const sunday10hsunday12h = TimeWindowFactory.create(
+  sunday10h,
+  sunday12h,
+);
+export const sunday11hsunday12h = TimeWindowFactory.create(
+  sunday11h,
+  sunday12h,
+);
+export const sunday12hsunday14h = TimeWindowFactory.create(
+  sunday12h,
+  sunday14h,
+);
+export const sunday14hsunday16h = TimeWindowFactory.create(
+  sunday14h,
+  sunday16h,
+);
+export const sunday16hsunday18h = TimeWindowFactory.create(
+  sunday16h,
+  sunday18h,
+);
+export const sunday18hsunday20h = TimeWindowFactory.create(
+  sunday18h,
+  sunday20h,
+);
+export const sunday20hsunday22h = TimeWindowFactory.create(
+  sunday20h,
+  sunday22h,
+);
+export const sunday22hmonday00h = TimeWindowFactory.create(
+  sunday22h,
+  monday00h,
+);
 
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,

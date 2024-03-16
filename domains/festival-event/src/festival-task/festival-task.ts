@@ -12,7 +12,11 @@ import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
 import { KeyEvent } from "./festival-task.event";
 import { DraftGeneral, General } from "./sections/general";
-import { Mobilization, ReviewableMobilization } from "./sections/mobilizations";
+import {
+  Mobilization,
+  MobilizationOptions,
+  ReviewableMobilization,
+} from "./sections/mobilizations";
 import { DraftInstructions, Instructions } from "./sections/instructions";
 import {
   InReviewReviews,
@@ -50,19 +54,26 @@ type DraftWithConflicts = BaseDraft & {
 };
 
 type DraftWithoutConflicts = BaseDraft & {
-  mobilizations: Mobilization<{ withConflicts: false }>[];
+  mobilizations: Mobilization<{
+    withConflicts: false;
+    withAssignments: false;
+  }>[];
 };
 
 export type Draft = DraftWithConflicts | DraftWithoutConflicts;
 
-type MobilizationsWithoutConflicts = {
-  mobilizations: ReviewableMobilization<{
-    withConflicts: false;
-  }>[];
+type AssignmentsOptions = Pick<MobilizationOptions, "withAssignments">;
+
+const defaultAssignmentsOption = {
+  withAssignments: false,
+} as const;
+
+type MobilizationsWithoutConflicts<T extends AssignmentsOptions> = {
+  mobilizations: ReviewableMobilization<T & { withConflicts: false }>[];
 };
 
-type MobilizationsWithConflicts = {
-  mobilizations: ReviewableMobilization[];
+type MobilizationsWithConflicts<T extends AssignmentsOptions> = {
+  mobilizations: ReviewableMobilization<T & { withConflicts: true }>[];
 };
 
 export const STATIQUE = "STATIQUE";
@@ -117,12 +128,18 @@ type BaseReadyToAssign = BaseReviewable &
 
 type GenerateConflictUnion<
   T extends BaseInReview | BaseRefused | BaseValidated | BaseReadyToAssign,
-> = (T & MobilizationsWithConflicts) | (T & MobilizationsWithoutConflicts);
+  Options extends AssignmentsOptions = typeof defaultAssignmentsOption,
+> =
+  | (T & MobilizationsWithConflicts<Options>)
+  | (T & MobilizationsWithoutConflicts<Options>);
 
 export type InReview = GenerateConflictUnion<BaseInReview>;
 export type Refused = GenerateConflictUnion<BaseRefused>;
 export type Validated = GenerateConflictUnion<BaseValidated>;
-export type ReadyToAssign = GenerateConflictUnion<BaseReadyToAssign>;
+export type ReadyToAssign = GenerateConflictUnion<
+  BaseReadyToAssign,
+  { withAssignments: true }
+>;
 
 export type Reviewable = InReview | Refused | Validated;
 

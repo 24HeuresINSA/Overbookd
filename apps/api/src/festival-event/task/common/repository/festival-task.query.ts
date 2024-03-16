@@ -186,7 +186,10 @@ export class FestivalTaskQueryBuilder {
 
   private static upsertMobilizations(
     festivalTaskId: FestivalTask["id"],
-    mobilizations: Mobilization<{ withConflicts: false }>[],
+    mobilizations: Mobilization<{
+      withConflicts: false;
+      withAssignments: false;
+    }>[],
   ) {
     return {
       upsert: mobilizations.map((mobilization) => ({
@@ -287,7 +290,7 @@ function keyEventToHistory(
 }
 
 function databaseMobilisationForUpdate(
-  mobilization: Mobilization<{ withConflicts: false }>,
+  mobilization: Mobilization<{ withConflicts: false; withAssignments: false }>,
 ) {
   return {
     id: mobilization.id,
@@ -319,7 +322,7 @@ function databaseMobilisationForUpdate(
 }
 
 function databaseMobilizationForCreation(
-  mobilization: Mobilization<{ withConflicts: false }>,
+  mobilization: Mobilization<{ withConflicts: false; withAssignments: false }>,
 ) {
   return {
     id: mobilization.id,
