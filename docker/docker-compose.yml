@@ -8,6 +8,7 @@ networks:
 volumes:
   certs:
 
+
 services:
   certs-downloader:
     image: alpine
@@ -159,6 +160,39 @@ services:
         echo "Overbookd version passed: $$OVERBOOKD_VERSION"
         echo "============================================="
         pnpm --recursive --filter '@overbookd/web' run dev
+
+  new-web:
+    container_name: overbookd_new_web
+    user: ${MY_UID}:${MY_GID}
+    image: overbookd:dev
+    volumes:
+      - ../:/overbookd
+    environment:
+      - BASE_URL
+      - HOST=0.0.0.0
+    restart: unless-stopped
+    networks:
+      - traefik-public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dev-front-new.entrypoints=websecure"
+      - "traefik.http.services.dev-front-new.loadbalancer.server.port=3000"
+      - "traefik.http.routers.dev-front-new.rule=Host(`overbookd-next.${DOMAIN}`)"
+      - "traefik.http.routers.dev-front-new.tls=true"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cd /overbookd
+        export OVERBOOKD_VERSION=$$(jq '.version' package.json | tr -d '\"')
+        pnpm config set store-dir .pnpm-store
+        pnpm fetch
+        pnpm --recursive --filter '@overbookd/new-web...' install
+        pnpm --recursive --filter '@overbookd/new-web...' run build
+        echo "============================================="
+        echo "Overbookd version passed: $$OVERBOOKD_VERSION"
+        echo "============================================="
+        pnpm --recursive --filter '@overbookd/new-web' run dev
 
   bash:
     build:

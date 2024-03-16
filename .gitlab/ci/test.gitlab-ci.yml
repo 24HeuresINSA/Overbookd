@@ -105,3 +105,22 @@ overbookd/domains_unit_test:
     when: always
     reports:
       junit: domains/*/junit.xml
+
+overbookd/new-web_unit_test:
+  extends: .test
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/new-web/**/*
+        - pnpm-lock.yaml
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "@overbookd/new-web"
+  artifacts:
+    when: always
+    reports:
+      junit: apps/new-web/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: apps/new-web/coverage/cobertura-coverage.xml

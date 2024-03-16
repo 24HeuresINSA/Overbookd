@@ -31,6 +31,26 @@ overbookd/web_build:
     - when: never
   variables:
     PNPM_WORKSPACE: "@overbookd/web"
+  artifacts:
+    paths:
+      - web/.nuxt
+    expire_in: 1 hour
+
+overbookd/new_web_build:
+  extends: .build
+  needs: [install]
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - apps/new-web/**/*
+        - pnpm-lock.yaml
+    - when: never
+  variables:
+    PNPM_WORKSPACE: "@overbookd/new-web"
+  artifacts:
+    paths:
+      - new-web/.nuxt
+    expire_in: 1 hour
 
 overbookd/libraries_build:
   extends: .build
