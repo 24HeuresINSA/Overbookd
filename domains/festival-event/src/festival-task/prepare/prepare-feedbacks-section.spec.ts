@@ -1,12 +1,8 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { PrepareFestivalTask } from "./prepare";
-import {
-  installEscapeGame,
-  lea,
-  noel,
-  presentEscapeGame,
-  uninstallEscapeGame,
-} from "../festival-task.test-util";
+import { lea, noel } from "../festival-task.test-util";
+import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
+import { presentEscapeGame } from "../festival-task.fake";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";

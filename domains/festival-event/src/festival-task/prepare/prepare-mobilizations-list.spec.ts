@@ -10,15 +10,11 @@ import {
   TeamAlreadyPartOfMobilization,
 } from "../festival-task.error";
 import {
-  installEscapeGame,
-  uninstallEscapeGame,
-  presentEscapeGame,
   friday11hfriday18hMobilization,
   saturday11hsaturday18hMobilization,
   noel,
   saturday19h,
   saturday10h,
-  guardEscapeGame,
   friday19h,
   saturday11h,
   friday18hsaturday10hMobilization,
@@ -27,14 +23,21 @@ import {
   lea,
   saturday08hsaturday11hMobilization,
   saturday12h,
-  saturday9h,
-  saturday7h,
-  saturday8h,
+  saturday09h,
+  saturday07h,
+  saturday08h,
   leaAvailabilities,
   noelAvailabilities,
+  george,
+  friday10hfriday11hMobilization,
+  friday9h,
+} from "../festival-task.test-util";
+import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
+import {
+  presentEscapeGame,
+  guardEscapeGame,
   guardJustDance,
   serveWaterOnJustDance,
-  george,
   installBarbecue,
   uninstallBarbecue,
   onlyApprovedByHumain,
@@ -43,9 +46,7 @@ import {
   approvedByHumainAndElecRejectedByMatos,
   approvedByElecRejectedByMatos,
   approvedByMatosRejectedByHumainAndElec,
-  friday10hfriday11hMobilization,
-  friday9h,
-} from "../festival-task.test-util";
+} from "../festival-task.fake";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
 import { APPROVED, REJECTED, RESET_REVIEW } from "../../common/action";
 import {
@@ -128,11 +129,11 @@ describe("Prepare festival task mobilizations list", () => {
       );
       describe.each`
         indication                       | task                 | start          | end
-        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h}
-        ${"larger period"}               | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h}
-        ${"smaller period"}              | ${presentEscapeGame} | ${saturday9h}  | ${saturday10h}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday9h}
+        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h}
+        ${"larger period"}               | ${presentEscapeGame} | ${saturday07h} | ${saturday12h}
+        ${"smaller period"}              | ${presentEscapeGame} | ${saturday09h} | ${saturday10h}
+        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h}
+        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h}
         ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h}
       `(
         "when volunteer is requested on $indication on any mobilization",
@@ -172,7 +173,7 @@ describe("Prepare festival task mobilizations list", () => {
 
       describe.each`
         indication    | task                 | start          | end
-        ${"previous"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday8h}
+        ${"previous"} | ${presentEscapeGame} | ${saturday07h} | ${saturday08h}
         ${"next"}     | ${presentEscapeGame} | ${saturday11h} | ${saturday12h}
       `(
         "when volunteer is requested on contigous $indication period on any mobilization",
@@ -199,10 +200,10 @@ describe("Prepare festival task mobilizations list", () => {
 
       describe.each`
         indication                       | task                 | start          | end            | hasAvailabilityConflict
-        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday8h}  | ${saturday11h} | ${false}
-        ${"including period"}            | ${presentEscapeGame} | ${saturday9h}  | ${saturday10h} | ${false}
-        ${"overlapping period"}          | ${presentEscapeGame} | ${saturday7h}  | ${saturday12h} | ${true}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday7h}  | ${saturday10h} | ${true}
+        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h} | ${false}
+        ${"including period"}            | ${presentEscapeGame} | ${saturday09h} | ${saturday10h} | ${false}
+        ${"overlapping period"}          | ${presentEscapeGame} | ${saturday07h} | ${saturday12h} | ${true}
+        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h} | ${true}
         ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${true}
       `(
         "when volunteer is requested on any mobilization and available on $indication",

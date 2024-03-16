@@ -1,19 +1,13 @@
-import { VALIDATED } from "../common/status";
-import { FestivalActivity, InReview } from "./festival-task";
+import { Item } from "@overbookd/list";
+import { FestivalActivity } from "./festival-task";
+import { AddMobilization } from "./prepare/prepare";
 import { Contact } from "./sections/instructions";
 import { VolunteerWithConflicts } from "./sections/mobilizations";
-import { TimeWindow } from "../common/time-window";
-import { BACKLINE, InquiryRequest, MAGASIN } from "../common/inquiry-request";
-import { Location } from "../common/location";
-import { AddMobilization } from "./prepare/prepare";
 import { VolunteerAvailabilities, WithConflicts } from "./volunteer-conflicts";
-import { getFactory } from "./festival-task.factory";
-import { saturday11hToSaturday18h } from "../festival-activity/festival-activity.fake";
-import { Item } from "@overbookd/list";
-import { APPROVED, REJECTED } from "../common/action";
-import { REVIEWING } from "../common/review";
-
-const factory = getFactory();
+import { InquiryRequest } from "../common/inquiry-request";
+import { Location } from "../common/location";
+import { VALIDATED } from "../common/status";
+import { TimeWindow } from "../common/time-window";
 
 type BuildTimeWindow = {
   date: Date;
@@ -35,9 +29,7 @@ type InitMobilizationBuilder = Partial<
   volunteers?: VolunteerWithConflicts[];
 };
 
-type InReviewWithConflicts = Extract<WithConflicts, InReview>;
-
-class MobilizationBuilder<T extends WithConflicts> {
+export class MobilizationBuilder<T extends WithConflicts> {
   private constructor(readonly mobilization: Item<T["mobilizations"]>) {}
 
   static init<T extends WithConflicts>(
@@ -114,7 +106,7 @@ export const lea = {
 
 export const leaContact: Contact = { ...lea, phone: "0602030405" };
 
-const justDanceInstaller = {
+export const justDanceInstaller = {
   id: 3,
   lastname: "Dance",
   firstname: "Just",
@@ -126,23 +118,23 @@ const justDanceGuard = {
   firstname: "Just",
 };
 
-const justDanceInstallerContact: Contact = {
+export const justDanceInstallerContact: Contact = {
   ...justDanceInstaller,
   phone: "0603040506",
 };
 
-const justDanceInstallerBis = {
+export const justDanceInstallerBis = {
   id: 4,
   lastname: "Dance Bis",
   firstname: "Just",
 };
 
-const justDanceInstallerBisContact: Contact = {
+export const justDanceInstallerBisContact: Contact = {
   ...justDanceInstallerBis,
   phone: "0604050607",
 };
 
-const justDanceGuardContact: Contact = {
+export const justDanceGuardContact: Contact = {
   ...justDanceGuard,
   phone: "0605060708",
 };
@@ -153,19 +145,29 @@ export const george = {
   firstname: "George",
 };
 
+export const valery = {
+  id: 6,
+  lastname: "Gisc",
+  firstname: "Valery",
+};
+
 export const friday9h: BuildTimeWindow = {
   date: new Date("2024-05-17T09:00+02:00"),
   id: "28598820",
 };
-const friday10h: BuildTimeWindow = {
+export const friday10h: BuildTimeWindow = {
   date: new Date("2024-05-17T10:00+02:00"),
   id: "28598880",
 };
-const friday11h: BuildTimeWindow = {
+export const friday11h: BuildTimeWindow = {
   date: new Date("2024-05-17T11:00+02:00"),
   id: "28598940",
 };
-const friday18h: BuildTimeWindow = {
+export const friday17h: BuildTimeWindow = {
+  date: new Date("2024-05-17T17:00+02:00"),
+  id: "28599300",
+};
+export const friday18h: BuildTimeWindow = {
   date: new Date("2024-05-17T18:00+02:00"),
   id: "28599360",
 };
@@ -173,15 +175,19 @@ export const friday19h: BuildTimeWindow = {
   date: new Date("2024-05-17T19:00+02:00"),
   id: "28599420",
 };
-export const saturday7h: BuildTimeWindow = {
+export const saturday04h: BuildTimeWindow = {
+  date: new Date("2024-05-18T04:00+02:00"),
+  id: "28599960",
+};
+export const saturday07h: BuildTimeWindow = {
   date: new Date("2024-05-18T07:00+02:00"),
   id: "28600140",
 };
-export const saturday8h: BuildTimeWindow = {
+export const saturday08h: BuildTimeWindow = {
   date: new Date("2024-05-18T08:00+02:00"),
   id: "28600200",
 };
-export const saturday9h: BuildTimeWindow = {
+export const saturday09h: BuildTimeWindow = {
   date: new Date("2024-05-18T09:00+02:00"),
   id: "28600260",
 };
@@ -197,7 +203,7 @@ export const saturday12h: BuildTimeWindow = {
   date: new Date("2024-05-18T12:00+02:00"),
   id: "28600440",
 };
-const saturday18h: BuildTimeWindow = {
+export const saturday18h: BuildTimeWindow = {
   date: new Date("2024-05-18T18:00+02:00"),
   id: "28600800",
 };
@@ -205,9 +211,30 @@ export const saturday19h: BuildTimeWindow = {
   date: new Date("2024-05-18T19:00+02:00"),
   id: "28600860",
 };
-const saturday20h: BuildTimeWindow = {
+export const saturday20h: BuildTimeWindow = {
   date: new Date("2024-05-18T20:00+02:00"),
   id: "28600920",
+};
+export const sunday04h: BuildTimeWindow = {
+  date: new Date("2024-05-19T04:00+02:00"),
+  id: "28601400",
+};
+export const sunday12h: BuildTimeWindow = {
+  date: new Date("2024-05-19T12:00+02:00"),
+  id: "28601880",
+};
+export const sunday16h: BuildTimeWindow = {
+  date: new Date("2024-05-19T16:00+02:00"),
+  id: "28602120",
+};
+export const monday00h: BuildTimeWindow = {
+  date: new Date("2024-05-20T00:00+02:00"),
+  id: "28602600",
+};
+
+const monday01h: BuildTimeWindow = {
+  date: new Date("2024-05-20T01:00+02:00"),
+  id: "28602660",
 };
 
 export const noelAvailabilities: VolunteerAvailabilities = {
@@ -216,7 +243,7 @@ export const noelAvailabilities: VolunteerAvailabilities = {
 };
 export const leaAvailabilities: VolunteerAvailabilities = {
   volunteer: lea,
-  availabilities: [{ start: saturday8h.date, end: saturday11h.date }],
+  availabilities: [{ start: saturday08h.date, end: saturday11h.date }],
 };
 
 export const friday10hfriday19h = TimeWindowFactory.create(
@@ -227,10 +254,19 @@ export const friday11hfriday18h = TimeWindowFactory.create(
   friday11h,
   friday18h,
 );
+const saturday11hsaturday18h = TimeWindowFactory.create(
+  saturday11h,
+  saturday18h,
+);
 const saturday10hsaturday19h = TimeWindowFactory.create(
   saturday10h,
   saturday19h,
 );
+const friday18hmonday00h = TimeWindowFactory.create(friday18h, monday00h);
+const friday17hmonday01h = TimeWindowFactory.create(friday17h, monday01h);
+const friday18hsaturday04h = TimeWindowFactory.create(friday18h, saturday04h);
+const saturday18hsunday04h = TimeWindowFactory.create(saturday18h, sunday04h);
+const sunday12hsunday16h = TimeWindowFactory.create(sunday12h, sunday16h);
 
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
@@ -244,7 +280,7 @@ export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
   volunteers: [{ ...noel, conflicts: { tasks: [], availability: false } }],
 });
 export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
-  start: saturday8h,
+  start: saturday08h,
   end: saturday11h,
   volunteers: [{ ...lea, conflicts: { tasks: [], availability: false } }],
 });
@@ -266,6 +302,12 @@ export const friday18hsaturday10hMobilization = MobilizationBuilder.init({
 export const saturday11hsaturday18hMobilization = friday11hfriday18hMobilization
   .withStart(saturday11h)
   .withEnd(saturday18h);
+
+const trenteGilletsJaune: InquiryRequest = {
+  name: "Gillet Jaune",
+  slug: "gillet-jaune",
+  quantity: 30,
+};
 
 export const deuxTables: InquiryRequest = {
   name: "Table",
@@ -289,6 +331,21 @@ export const mdeHall: Location = {
   name: "MDE Hall",
 };
 
+const noDedicated: Location = {
+  id: 3,
+  name: "No Dedicated Location",
+};
+
+const nextToManege: Location = {
+  id: 4,
+  name: "Next to manège",
+};
+
+const headOfInsa: Location = {
+  id: 5,
+  name: "Head of INSA",
+};
+
 export const ficelle = {
   slug: "ficelle-en-metre",
   name: "ficelle (en metre)",
@@ -299,7 +356,7 @@ export const sacPoubelle = {
   name: "Sac Poubelle (rouleau)",
 };
 
-const chaise = {
+export const chaise = {
   slug: "chaise",
   name: "Chaise",
 };
@@ -317,7 +374,7 @@ export const escapeGame: FestivalActivity = {
   },
 };
 
-const barbecue: FestivalActivity = {
+export const barbecue: FestivalActivity = {
   id: 1,
   name: "Barbecue",
   location: humaGrass,
@@ -330,531 +387,67 @@ const barbecue: FestivalActivity = {
   },
 };
 
-export const installEscapeGame = factory
-  .draft("Install Escape Game")
-  .withFestivalActivity(escapeGame)
-  .build();
-
-export const uninstallEscapeGame = factory
-  .draft("Uninstall Escape Game")
-  .withFestivalActivity(escapeGame)
-  .withInstructions({
-    appointment: humaGrass,
-    contacts: [noelContact],
-    inCharge: {
-      volunteers: [lea],
-      instruction: null,
-    },
-  })
-  .withInquiries([{ ...sacPoubelle, quantity: 2 }])
-  .build();
-
-export const presentEscapeGame = factory
-  .draft("Present Escape Game")
-  .withGeneral({ team: "sport" })
-  .withFestivalActivity(escapeGame)
-  .withInstructions({
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([saturday11hsaturday18hMobilization.mobilization])
-  .build();
-
-export const guardEscapeGame = factory
-  .draft("Guard Escape Game")
-  .withGeneral({ team: "sports" })
-  .withFestivalActivity(escapeGame)
-  .withInstructions({
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([
-    friday18hsaturday10hMobilization.mobilization,
-    saturday08hsaturday11hMobilization.mobilization,
-  ])
-  .build();
-
-const justDance: FestivalActivity = {
+export const justDance: FestivalActivity = {
   id: 2,
   name: "Just Dance",
   location: humaGrass,
   status: VALIDATED,
   hasSupplyRequest: true,
-  timeWindows: [friday11hfriday18h, saturday11hToSaturday18h],
+  timeWindows: [friday11hfriday18h, saturday11hsaturday18h],
   inquiry: {
     timeWindows: [friday10hfriday19h, saturday10hsaturday19h],
     all: [deuxTables],
   },
 };
 
-export const installJustDance = factory
-  .draft("Install Just Dance")
-  .withGeneral({ team: "plaizir" })
-  .withFestivalActivity(justDance)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [justDanceInstallerContact, justDanceInstallerBisContact],
-    global: "Install just dance",
-    inCharge: {
-      volunteers: [justDanceInstaller, justDanceInstallerBis],
-      instruction: "Dedicated just dance installation",
-    },
-  })
-  .withMobilizations([
-    MobilizationBuilder.init({
-      start: friday10h,
-      end: friday11h,
-      volunteers: [
-        {
-          ...justDanceInstaller,
-          conflicts: { tasks: [], availability: true },
-        },
-      ],
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-    MobilizationBuilder.init({
-      start: saturday10h,
-      end: saturday11h,
-      volunteers: [
-        {
-          ...justDanceInstallerBis,
-          conflicts: { tasks: [], availability: true },
-        },
-      ],
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-  ])
-  .build();
-
-export const guardJustDance = factory
-  .inReview("Guard Just Dance")
-  .withGeneral({ team: "plaizir" })
-  .withFestivalActivity(justDance)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [justDanceGuardContact],
-    global: "Install just dance",
-  })
-  .withMobilizations([
-    MobilizationBuilder.init<InReviewWithConflicts>({
-      start: saturday11h,
-      end: saturday18h,
-      volunteers: [],
-      teams: [
-        { count: 2, team: "bénévole" },
-        { count: 1, team: "confiance" },
-      ],
-    }).mobilization,
-  ])
-  .withInquiries([{ ...chaise, quantity: 2 }])
-  .build();
-
-export const serveWaterOnJustDance = factory
-  .inReview("Serve water during Just Dance")
-  .withGeneral({ team: "plaizir" })
-  .withFestivalActivity(justDance)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [justDanceGuardContact, noelContact],
-    global: "Install just dance",
-    inCharge: {
-      volunteers: [noel, george],
-      instruction: "Some dedicated instruction",
-    },
-  })
-  .withMobilizations([
-    MobilizationBuilder.init<InReviewWithConflicts>({
-      start: friday11h,
-      end: friday18h,
-      volunteers: [],
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-    MobilizationBuilder.init<InReviewWithConflicts>({
-      start: saturday19h,
-      end: saturday20h,
-      volunteers: [
-        { ...noel, conflicts: { tasks: [], availability: true } },
-        { ...george, conflicts: { tasks: [], availability: true } },
-      ],
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-    MobilizationBuilder.init<InReviewWithConflicts>({
-      start: saturday18h,
-      end: saturday20h,
-      volunteers: [{ ...george, conflicts: { tasks: [], availability: true } }],
-      teams: [],
-    }).mobilization,
-  ])
-  .build();
-
-export const flashMobOnJustDance = factory
-  .refused("Flash Mob on Just Dance")
-  .withFestivalActivity(justDance)
-  .withReviews({ humain: REJECTED, elec: REJECTED })
-  .build();
-
-const preventionVillage: FestivalActivity = {
+export const preventionVillage: FestivalActivity = {
   id: 3,
   name: "Prevention Village",
   location: humaGrass,
   status: VALIDATED,
   hasSupplyRequest: false,
-  timeWindows: [friday11hfriday18h, saturday11hToSaturday18h],
+  timeWindows: [friday11hfriday18h, saturday11hsaturday18h],
   inquiry: {
     timeWindows: [friday10hfriday19h, saturday10hsaturday19h],
     all: [deuxTables],
   },
 };
 
-const twoVolunteersOnFriday10hToFriday11h = MobilizationBuilder.init({
-  start: friday10h,
-  end: friday11h,
-  teams: [{ count: 2, team: "bénévole" }],
-});
+export const securityAccess: FestivalActivity = {
+  id: 4,
+  name: "Security Access",
+  location: noDedicated,
+  status: VALIDATED,
+  hasSupplyRequest: false,
+  timeWindows: [friday18hmonday00h],
+  inquiry: {
+    timeWindows: [friday17hmonday01h],
+    all: [trenteGilletsJaune],
+  },
+};
 
-export const installPreventionVillage = factory
-  .draft("Install Prevention Village")
-  .withGeneral({ team: "dd" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: humaGrass,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([
-    twoVolunteersOnFriday10hToFriday11h.mobilization,
-    MobilizationBuilder.init({
-      start: saturday10h,
-      end: saturday11h,
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-  ])
-  .build();
+export const barManege: FestivalActivity = {
+  id: 5,
+  name: "Bar Manège",
+  location: nextToManege,
+  status: VALIDATED,
+  hasSupplyRequest: false,
+  timeWindows: [friday18hsaturday04h, saturday18hsunday04h],
+  inquiry: {
+    timeWindows: [friday18hsaturday04h, saturday18hsunday04h],
+    all: [deuxTables],
+  },
+};
 
-export const guardPreventionVillage = factory
-  .draft("Guard Prevention Village")
-  .withGeneral({ team: "dd" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: humaGrass,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-  })
-  .withMobilizations([
-    MobilizationBuilder.init({
-      start: friday11h,
-      end: friday18h,
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-    MobilizationBuilder.init({
-      start: saturday11h,
-      end: saturday18h,
-      teams: [{ count: 2, team: "bénévole" }],
-    }).mobilization,
-  ])
-  .build();
-
-export const uninstallPreventionVillage = factory
-  .inReview("Install Prevention Village")
-  .withFestivalActivity(preventionVillage)
-  .build();
-
-export const flashMobOnPreventionVillage = factory
-  .refused("Flash Mob on Prevention Village")
-  .withFestivalActivity(preventionVillage)
-  .withReviews({ humain: REJECTED })
-  .build();
-
-export const withNoTeamTask = factory
-  .draft("Task with NO TEAM")
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
-  .build();
-
-export const withNoAppointmentTask = factory
-  .draft("Task with NO APPOINTMENT")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: null,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
-  .build();
-
-export const withNoGlobalInstructionsTask = factory
-  .draft("Task with NO GLOBAL INSTRUCTIONS")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [noelContact],
-    global: null,
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
-  .build();
-
-export const withNotAnyContactTask = factory
-  .draft("Task with NOT ANY CONTACT")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
-  .build();
-
-export const withInChargeVolunteerButWithNotInChargeInstruction = factory
-  .draft("Task with IN CHARGE VOLUNTEER BUT NOT IN CHARGE INSTRUCTIONS")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: null,
-    },
-  })
-  .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
-  .build();
-
-export const withInChargeInstructionButWithNotInChargeVolunteer = factory
-  .draft("Task with IN CHARGE INSTRUCTIONS BUT NOT IN CHARGE VOLUNTEER")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([twoVolunteersOnFriday10hToFriday11h.mobilization])
-  .build();
-
-export const withoutAnyMobilization = factory
-  .draft("Task with NOT ANY MOBILIZATION")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([])
-  .build();
-
-export const withSomeMobilizationsWithoutRequest = factory
-  .draft("Task with SOME MOBILIZATIONS WITHOUT REQUEST")
-  .withGeneral({ team: "test" })
-  .withFestivalActivity(preventionVillage)
-  .withInstructions({
-    appointment: mdeHall,
-    contacts: [noelContact],
-    global: "Some instructions for everyone",
-    inCharge: {
-      volunteers: [noel],
-      instruction: "Some instructions for in charge only",
-    },
-  })
-  .withMobilizations([
-    twoVolunteersOnFriday10hToFriday11h.mobilization,
-    MobilizationBuilder.init({ start: friday11h, end: friday18h }).mobilization,
-  ])
-  .build();
-
-export const installBarbecue = factory
-  .refused("Install Barbecue")
-  .withFestivalActivity(barbecue)
-  .withInquiries([{ ...chaise, quantity: 2 }])
-  .withMobilizations([
-    MobilizationBuilder.init<InReviewWithConflicts>({
-      start: friday10h,
-      end: friday11h,
-      volunteers: [
-        { ...george, conflicts: { tasks: [], availability: false } },
-      ],
-      teams: [],
-    }).mobilization,
-    MobilizationBuilder.init<InReviewWithConflicts>({
-      start: friday10h,
-      end: friday18h,
-      volunteers: [],
-      teams: [{ count: 20, team: "vieux" }],
-    }).mobilization,
-  ])
-  .withReviews({
-    humain: REJECTED,
-    matos: REJECTED,
-    elec: REJECTED,
-  })
-  .build();
-
-const friday09hFriday10hInReviewMobilization =
-  MobilizationBuilder.init<InReviewWithConflicts>({
-    start: friday9h,
-    end: friday10h,
-    volunteers: [],
-    teams: [{ count: 5, team: "hard" }],
-  }).mobilization;
-
-const friday10hFriday18hInReviewMobilization =
-  MobilizationBuilder.init<InReviewWithConflicts>({
-    start: friday10h,
-    end: friday18h,
-    volunteers: [
-      { ...george, conflicts: { tasks: [], availability: false } },
-      { ...lea, conflicts: { tasks: [], availability: false } },
-    ],
-    teams: [
-      { count: 2, team: "vieux" },
-      { count: 5, team: "confiance" },
-    ],
-  }).mobilization;
-
-export const uninstallBarbecue = factory
-  .refused("Uninstall Barbecue")
-  .withFestivalActivity(barbecue)
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
-  .withReviews({
-    humain: REJECTED,
-    matos: REJECTED,
-    elec: REJECTED,
-  })
-  .build();
-
-export const onlyApprovedByMatos = factory
-  .inReview("Approved by matos")
-  .withReviews({ matos: APPROVED })
-  .withInquiries([
-    { ...deuxTables, drive: BACKLINE },
-    { ...troisMarteaux, drive: MAGASIN },
-  ])
-  .withInstructions({
-    contacts: [noelContact, justDanceInstallerContact],
-    inCharge: {
-      instruction: "Dedicated instruction",
-      volunteers: [noel, george],
-    },
-  })
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
-  .build();
-
-export const onlyApprovedByHumain = factory
-  .inReview("Approved by humain")
-  .withInstructions({
-    contacts: [noelContact, justDanceInstallerContact],
-    inCharge: {
-      instruction: "Dedicated instruction",
-      volunteers: [noel, george],
-    },
-  })
-  .withReviews({ humain: APPROVED })
-  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
-  .build();
-
-export const approvedByHumainRejectedByMatos = factory
-  .refused("Approved by humain rejected by matos")
-  .withInstructions({
-    contacts: [noelContact, justDanceInstallerContact],
-    inCharge: {
-      instruction: "Dedicated instruction",
-      volunteers: [noel, george],
-    },
-  })
-  .withReviews({ humain: APPROVED, matos: REJECTED })
-  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
-  .withMobilizations([
-    friday10hFriday18hInReviewMobilization,
-    friday09hFriday10hInReviewMobilization,
-  ])
-  .build();
-
-export const approvedByHumainAndElecRejectedByMatos = factory
-  .refused("Approved by humain and elec rejected by matos")
-  .withFestivalActivity(escapeGame)
-  .withInstructions({
-    contacts: [noelContact, justDanceInstallerContact],
-    inCharge: {
-      instruction: "Dedicated instruction",
-      volunteers: [noel, george],
-    },
-  })
-  .withReviews({ humain: APPROVED, elec: APPROVED, matos: REJECTED })
-  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
-  .build();
-
-export const approvedByElecRejectedByMatos = factory
-  .refused("Approved by elec rejected by matos")
-  .withFestivalActivity(escapeGame)
-  .withInstructions({
-    contacts: [noelContact, justDanceInstallerContact],
-    inCharge: {
-      instruction: null,
-      volunteers: [],
-    },
-  })
-  .withReviews({ humain: REVIEWING, elec: APPROVED, matos: REJECTED })
-  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
-  .build();
-
-export const approvedByMatosRejectedByHumainAndElec = factory
-  .refused("Approved by matos rejected by humain and elec")
-  .withFestivalActivity(escapeGame)
-  .withInstructions({
-    contacts: [noelContact, justDanceInstallerContact],
-    inCharge: {
-      instruction: "Dedicated instruction",
-      volunteers: [noel, george],
-    },
-  })
-  .withReviews({ humain: REJECTED, elec: REJECTED, matos: APPROVED })
-  .withInquiries([{ ...deuxTables, drive: BACKLINE }])
-  .withMobilizations([friday10hFriday18hInReviewMobilization])
-  .build();
+export const pressConference: FestivalActivity = {
+  id: 6,
+  name: "Press conference",
+  location: headOfInsa,
+  status: VALIDATED,
+  hasSupplyRequest: true,
+  timeWindows: [sunday12hsunday16h],
+  inquiry: {
+    timeWindows: [],
+    all: [],
+  },
+};

@@ -45,3 +45,23 @@ export class TeamAlreadyPartOfMobilization extends FestivalTaskError {
     super(message);
   }
 }
+
+export class FestivalTaskNotValidated extends FestivalTaskError {
+  constructor(ftId: FestivalTask["id"]) {
+    super(`❌ La fiche tâche #${ftId} n'est pas encore validée`);
+  }
+}
+
+const CANT_START_ASSIGNMENT_ERROR_MESSAGE =
+  "Impossible de démarrer l'affectation pour cette FT.";
+
+const AT_LEAST_ONE_VOLUNTEER_IS_NOT_AVAILABLE =
+  "Au moins un des bénévoles n'est pas disponible.";
+
+export class ReadyToAssignError extends FestivalTaskError {
+  constructor() {
+    const cantStartAssignment = `❌ ${CANT_START_ASSIGNMENT_ERROR_MESSAGE}`;
+    const message = `${cantStartAssignment}\n- ${AT_LEAST_ONE_VOLUNTEER_IS_NOT_AVAILABLE}`;
+    super(message);
+  }
+}

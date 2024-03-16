@@ -813,6 +813,7 @@ enum FestivalTaskEvent {
   REJECTED
   APPROVED
   RESET_REVIEW
+  ASSIGNMENT_STARTED
 
   @@map("festival_task_event")
 }

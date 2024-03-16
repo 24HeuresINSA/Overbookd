@@ -1,18 +1,19 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  installBarbecue,
   george,
-  guardJustDance,
   humaGrass,
-  installEscapeGame,
   lea,
   leaContact,
   noel,
   noelContact,
+  mdeHall,
+} from "../festival-task.test-util";
+import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
+import {
+  installBarbecue,
+  guardJustDance,
   presentEscapeGame,
   serveWaterOnJustDance,
-  uninstallEscapeGame,
-  mdeHall,
   onlyApprovedByHumain,
   approvedByHumainRejectedByMatos,
   approvedByHumainAndElecRejectedByMatos,
@@ -20,7 +21,7 @@ import {
   approvedByMatosRejectedByHumainAndElec,
   onlyApprovedByMatos,
   uninstallBarbecue,
-} from "../festival-task.test-util";
+} from "../festival-task.fake";
 import { PrepareFestivalTask } from "./prepare";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { FestivalTaskNotFound } from "../festival-task.error";

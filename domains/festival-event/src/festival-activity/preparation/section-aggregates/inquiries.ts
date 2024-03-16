@@ -14,6 +14,7 @@ import {
 import { AssignDrive } from "../../../common/inquiry-request";
 import { BARRIERES, ELEC, MATOS } from "../../sections/inquiry";
 import { WithAtLeastOneItem, updateItemToList } from "@overbookd/list";
+import { FestivalTaskError } from "../../../festival-task/festival-task.error";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {
@@ -222,7 +223,7 @@ class InquiryRequests<T extends MaybeWithOneItem<InquiryRequest>> {
     );
     const inquiry = this.inquiries.at(inquiryIndex);
     if (inquiryIndex === -1 || !inquiry) {
-      throw new Error();
+      throw new FestivalTaskError("Aucune demande de matos ne corresond");
     }
 
     const inquiries = updateItemToList(this.inquiries, inquiryIndex, {

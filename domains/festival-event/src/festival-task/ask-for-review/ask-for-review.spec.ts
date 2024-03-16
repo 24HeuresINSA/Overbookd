@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
+import { lea, noel } from "../festival-task.test-util";
 import {
   guardEscapeGame,
   installPreventionVillage,
   installJustDance,
-  lea,
-  noel,
   withNoAppointmentTask,
   withNoGlobalInstructionsTask,
   withNoTeamTask,
@@ -17,7 +16,7 @@ import {
   flashMobOnPreventionVillage,
   flashMobOnJustDance,
   approvedByElecRejectedByMatos,
-} from "../festival-task.test-util";
+} from "../festival-task.fake";
 import { IN_REVIEW } from "../../common/status";
 import { READY_TO_REVIEW } from "../../common/action";
 import { InMemoryNotifications } from "../../festival-activity/ask-for-review/notifications.inmemory";

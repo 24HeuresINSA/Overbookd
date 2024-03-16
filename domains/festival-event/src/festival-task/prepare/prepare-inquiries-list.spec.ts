@@ -1,19 +1,18 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
 import {
-  installEscapeGame,
-  uninstallEscapeGame,
   presentEscapeGame,
   guardJustDance,
   installBarbecue,
   onlyApprovedByHumain,
-} from "../festival-task.test-util";
+} from "../festival-task.fake";
 import { InMemoryFestivalTasks } from "./festival-tasks.inmemory";
 import { PrepareFestivalTask } from "./prepare";
 import { ficelle, sacPoubelle } from "../festival-task.test-util";
 import { GearAlreadyRequested } from "../festival-task.error";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory";
 import { FestivalTaskTranslator } from "../volunteer-conflicts";
-import { onlyApprovedByMatos } from "../festival-task.test-util";
+import { onlyApprovedByMatos } from "../festival-task.fake";
 import { APPROVED } from "../../common/action";
 import { REVIEWING } from "../../common/review";
 import { isDraft } from "../../festival-event";

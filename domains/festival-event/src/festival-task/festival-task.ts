@@ -1,6 +1,12 @@
 import { PreviewFestivalActivity } from "../festival-activity/festival-activity";
 import { Feedback } from "../common/feedback";
-import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
+import {
+  DRAFT,
+  IN_REVIEW,
+  READY_TO_ASSIGN,
+  REFUSED,
+  VALIDATED,
+} from "../common/status";
 import { TimeWindow } from "../common/time-window";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
@@ -59,6 +65,24 @@ type MobilizationsWithConflicts = {
   mobilizations: ReviewableMobilization[];
 };
 
+export const STATIQUE = "STATIQUE";
+export const BAR = "BAR";
+export const MANUTENTION = "MANUTENTION";
+export const FUN = "FUN";
+export const RELOU = "RELOU";
+
+type Category =
+  | typeof STATIQUE
+  | typeof BAR
+  | typeof MANUTENTION
+  | typeof FUN
+  | typeof RELOU;
+
+export type Categorize = {
+  category?: Category;
+  topPriority: boolean;
+};
+
 type BaseReviewable = {
   id: number;
   general: General;
@@ -85,13 +109,20 @@ type BaseValidated = BaseReviewable & {
   reviews: ValidatedReviews<"FT">;
 };
 
+type BaseReadyToAssign = BaseReviewable &
+  Categorize & {
+    status: typeof READY_TO_ASSIGN;
+    reviews: ValidatedReviews<"FT">;
+  };
+
 type GenerateConflictUnion<
-  T extends BaseInReview | BaseRefused | BaseValidated,
+  T extends BaseInReview | BaseRefused | BaseValidated | BaseReadyToAssign,
 > = (T & MobilizationsWithConflicts) | (T & MobilizationsWithoutConflicts);
 
 export type InReview = GenerateConflictUnion<BaseInReview>;
 export type Refused = GenerateConflictUnion<BaseRefused>;
 export type Validated = GenerateConflictUnion<BaseValidated>;
+export type ReadyToAssign = GenerateConflictUnion<BaseReadyToAssign>;
 
 export type Reviewable = InReview | Refused | Validated;
 
@@ -125,3 +156,9 @@ export type PreviewReviewable =
   | PreviewValidated;
 
 export type Preview = PreviewDraft | PreviewReviewable;
+
+export function isReadyToAssign(
+  task: FestivalTask | ReadyToAssign,
+): task is ReadyToAssign {
+  return task.status === READY_TO_ASSIGN;
+}

@@ -4,12 +4,14 @@ import {
   Draft,
   FestivalTask,
   InReview,
+  ReadyToAssign,
   Refused,
   Reviewable,
   Validated,
 } from "./festival-task";
 import { Volunteer } from "./sections/instructions";
 import { Conflicts } from "./sections/mobilizations";
+import { FestivalTaskError } from "./festival-task.error";
 
 export type VolunteerAvailabilities = {
   volunteer: Volunteer;
@@ -35,6 +37,10 @@ export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
 export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
 export type RefusedWithoutConflicts = Extract<WithoutConflicts, Refused>;
 export type ValidatedWithoutConflicts = Extract<WithoutConflicts, Validated>;
+export type ReadyToAssignWithoutConflicts = Exclude<
+  ReadyToAssign,
+  WithConflictsFilter
+>;
 export type ReviewableWithoutConflicts = Extract<WithoutConflicts, Reviewable>;
 
 export type DraftWithConflicts = Extract<WithConflicts, Draft>;
@@ -58,7 +64,7 @@ export class FestivalTaskTranslator {
     );
     const translated = { ...task, mobilizations };
     if (!isWithConflicts<T>(translated)) {
-      throw new Error("Invalid Type");
+      throw new FestivalTaskError("Impossible de rajouter les conflits.");
     }
     return translated;
   }

@@ -9,6 +9,7 @@ import {
   FestivalTaskTranslator,
 } from "../volunteer-conflicts";
 import { isDraft } from "../../festival-event";
+import { FestivalTaskError } from "../festival-task.error";
 
 const FT_420 = 420;
 
@@ -64,7 +65,9 @@ export class CreateFestivalTask {
 
     const created = await this.festivalTasks.add(festivalTask);
     const withConflicts = await this.festivalTaskTranslator.translate(created);
-    if (!isDraft(withConflicts)) throw new Error("");
+    if (!isDraft(withConflicts)) {
+      throw new FestivalTaskError("Impossible de créer en BROUILLON");
+    }
 
     return withConflicts;
   }
