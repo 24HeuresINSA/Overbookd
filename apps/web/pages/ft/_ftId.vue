@@ -45,6 +45,29 @@
       </v-dialog>
     </v-container>
     <v-dialog v-model="isCalendarDialogOpen" max-width="1000">
+      <div class="filters">
+        <v-btn
+          color="orange"
+          :outlined="!displayMobilizations"
+          @click="toggleDisplay('mobilizations')"
+        >
+          Mobilisations
+        </v-btn>
+        <v-btn
+          color="blue"
+          :outlined="!displayActivityTimeWindows"
+          @click="toggleDisplay('activity-time-windows')"
+        >
+          Créneaux Animation
+        </v-btn>
+        <v-btn
+          color="grey"
+          :outlined="!displayActivityInquiries"
+          @click="toggleDisplay('activity-inquiries')"
+        >
+          Créneaux Matos de l'Animation
+        </v-btn>
+      </div>
       <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
     </v-dialog>
     <SnackNotificationContainer />
@@ -77,11 +100,19 @@ import { CalendarEvent } from "~/utils/models/calendar.model";
 import { IProvidePeriod } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 
+type DisplayableEvent =
+  | "mobilizations"
+  | "activity-time-windows"
+  | "activity-inquiries";
+
 type FestivalTaskDetailsData = {
   isRejectDialogOpen: boolean;
   reviewer?: Reviewer<"FT">;
   isCalendarDialogOpen: boolean;
   calendarMarker: Date;
+  displayMobilizations: boolean;
+  displayActivityTimeWindows: boolean;
+  displayActivityInquiries: boolean;
 };
 
 export default defineComponent({
@@ -101,6 +132,9 @@ export default defineComponent({
     isRejectDialogOpen: false,
     isCalendarDialogOpen: false,
     calendarMarker: new Date(),
+    displayMobilizations: true,
+    displayActivityTimeWindows: true,
+    displayActivityInquiries: true,
   }),
   computed: {
     selectedTask(): FestivalTask {
@@ -132,35 +166,39 @@ export default defineComponent({
       return new Date(minStart);
     },
     allTimeWindows(): CalendarEvent[] {
-      const mobilizationEvents = this.selectedTask.mobilizations.map(
-        ({ start, end }: IProvidePeriod): CalendarEvent => ({
-          start,
-          end,
-          name: this.selectedTask.general.name,
-          timed: true,
-          color: "orange",
-        }),
-      );
-      const activityInquiryEvents =
-        this.selectedTask.festivalActivity.inquiry.timeWindows.map(
-          ({ start, end }): CalendarEvent => ({
-            start,
-            end,
-            name: "Créneau matos de la FA",
-            timed: true,
-            color: "grey",
-          }),
-        );
-      const activityTimeWindowEvents =
-        this.selectedTask.festivalActivity.timeWindows.map(
-          ({ start, end }): CalendarEvent => ({
-            start,
-            end,
-            name: this.selectedTask.festivalActivity.name,
-            timed: true,
-            color: "blue",
-          }),
-        );
+      const mobilizationEvents = this.displayMobilizations
+        ? this.selectedTask.mobilizations.map(
+            ({ start, end }: IProvidePeriod): CalendarEvent => ({
+              start,
+              end,
+              name: this.selectedTask.general.name,
+              timed: true,
+              color: "orange",
+            }),
+          )
+        : [];
+      const activityInquiryEvents = this.displayActivityInquiries
+        ? this.selectedTask.festivalActivity.inquiry.timeWindows.map(
+            ({ start, end }): CalendarEvent => ({
+              start,
+              end,
+              name: "Créneau matos de la FA",
+              timed: true,
+              color: "grey",
+            }),
+          )
+        : [];
+      const activityTimeWindowEvents = this.displayActivityTimeWindows
+        ? this.selectedTask.festivalActivity.timeWindows.map(
+            ({ start, end }): CalendarEvent => ({
+              start,
+              end,
+              name: this.selectedTask.festivalActivity.name,
+              timed: true,
+              color: "blue",
+            }),
+          )
+        : [];
       return [
         ...mobilizationEvents,
         ...activityInquiryEvents,
@@ -234,6 +272,18 @@ export default defineComponent({
     approved(team: Reviewer<"FT">) {
       this.$accessor.festivalTask.approve({ team });
     },
+    toggleDisplay(event: DisplayableEvent) {
+      switch (event) {
+        case "mobilizations":
+          this.displayMobilizations = !this.displayMobilizations;
+          break;
+        case "activity-time-windows":
+          this.displayActivityTimeWindows = !this.displayActivityTimeWindows;
+          break;
+        case "activity-inquiries":
+          this.displayActivityInquiries = !this.displayActivityInquiries;
+      }
+    },
   },
 });
 </script>
@@ -291,12 +341,28 @@ $sidebar-width: 350px;
     background-color: $validated-color;
   }
 }
+.filters {
+  padding: 10px 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  background-color: white;
+}
 
 @media only screen and (max-width: $mobile-max-width) {
   .ft-content {
     flex-direction: column;
     overflow-y: scroll;
     height: auto;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: center;
+    .v-btn {
+      width: 90%;
+    }
   }
 
   .sidebar {
