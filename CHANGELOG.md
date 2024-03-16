@@ -1,3 +1,20 @@
+## [2.22.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.4...v2.22.5) (2024-03-16)
+
+
+### Bug Fixes
+
+* **festival-task:** select event to display on calendar view. [#1658](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1658) ([fcbcb31](https://gitlab.com/24-heures-insa/overbookd-mono/commit/fcbcb313bd20b3e17cb75431edc39a87065e6adc))
+* **logistic-dashboard:** add consumed in preview and show it in details [#1677](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1677) ([99c8b38](https://gitlab.com/24-heures-insa/overbookd-mono/commit/99c8b383e13d4f2b109dfc51640b43722945fed8))
+* **logistic-dashboard:** update gear details according to consumable [#1677](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1677) ([6039c2d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6039c2de9adf55a82aad14447d4cb55c43882cd8))
+
+
+### Pre-Features
+
+* **festival-task:** enable assignment on validated tasks. [#1661](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1661) ([63c5605](https://gitlab.com/24-heures-insa/overbookd-mono/commit/63c56058ee43a7d770571e53daa9c30238d50cab))
+* **festival-task:** generate assignments when assignement starts on task. [#1687](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1687) ([f30455e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f30455e90af7382e0fd5bb9a65be2c403c6bd9cb))
+* **logistic-borrow:** add basic update & removal in domain [#1685](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1685) ([d4f156c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d4f156c886f422260e05af6fddd63e4ec8b4b348))
+* **logistic-borrow:** add initialisation in domain [#1683](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1683) ([a0d876b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a0d876bf4ce9c80b1aa0180c24ea778fd7d38b4a))
+
 ## [2.22.4](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.3...v2.22.4) (2024-03-14)
 
 
