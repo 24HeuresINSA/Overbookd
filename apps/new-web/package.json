@@ -1,0 +1,68 @@
+{
+  "name": "@overbookd/new-web",
+  "version": "3.0.0-rc.0",
+  "description": "Application web pour le logiciel de gestion du festival des 24 heures de l'INSA",
+  "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
+  "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
+  "license": "Apache-2.0",
+  "private": true,
+  "bugs": {
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono/-/issues/new",
+    "email": "contact-project+24-heures-insa-overbookd-mono-31598236-issue-@incoming.gitlab.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
+    "directory": "apps/web"
+  },
+  "scripts": {
+    "build": "nuxt build",
+    "build:ci": "CI=1 pnpm run build",
+    "dev": "nuxt dev",
+    "dev:host": "nuxt --hostname '0'",
+    "generate": "nuxt-ts generate",
+    "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\"",
+    "lint": "eslint --ext \".ts,.vue\" --ignore-path .gitignore . --fix",
+    "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
+    "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
+    "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
+    "start": "nuxt-ts start",
+    "test:unit": "echo 'No tests'",
+    "test:unit:ci": "echo 'No tests'",
+    "test:watch": "echo 'No tests'"
+  },
+  "dependencies": {
+    "@mdi/font": "7.4.47",
+    "@overbookd/alerts": "workspace:*",
+    "@overbookd/configuration": "workspace:*",
+    "@overbookd/contribution": "workspace:*",
+    "@overbookd/domain-events": "workspace:*",
+    "@overbookd/festival-event": "workspace:*",
+    "@overbookd/http": "workspace:*",
+    "@overbookd/list": "workspace:*",
+    "@overbookd/logistic": "workspace:*",
+    "@overbookd/period": "workspace:*",
+    "@overbookd/permission": "workspace:*",
+    "@overbookd/personal-account": "workspace:*",
+    "@overbookd/registration": "workspace:*",
+    "@overbookd/signa": "workspace:*",
+    "@overbookd/slugify": "workspace:*",
+    "@overbookd/user": "workspace:*",
+    "@overbookd/volunteer-availability": "workspace:*",
+    "chart.js": "4.4.1",
+    "jwt-decode": "3.1.2",
+    "pinia": "2.1.7",
+    "sass": "1.71.1",
+    "vue-chartjs": "5.3.0",
+    "vuetify": "3.5.6"
+  },
+  "devDependencies": {
+    "@nuxt/eslint-config": "0.2.0",
+    "@pinia/nuxt": "0.5.1",
+    "eslint-plugin-nuxt": "4.0.0",
+    "eslint-plugin-vue": "9.22.0",
+    "nuxt": "3.10.3",
+    "vue": "3.4.19",
+    "vue-router": "4.3.0"
+  }
+}
