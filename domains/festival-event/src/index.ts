@@ -209,7 +209,10 @@ export type {
   AddMobilization,
   UpdateMobilization,
 } from "./festival-task/prepare/prepare";
-export { PrepareFestivalTask } from "./festival-task/prepare/prepare";
+export {
+  PrepareFestivalTask,
+  extractApprovers,
+} from "./festival-task/prepare/prepare";
 export type { FestivalTasksForView } from "./festival-task/view/view";
 export { ViewFestivalTask } from "./festival-task/view/view";
 export type {

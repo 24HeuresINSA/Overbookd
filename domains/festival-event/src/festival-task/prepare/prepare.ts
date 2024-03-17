@@ -120,7 +120,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non gere");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -138,7 +138,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!this.canUpdateInstructions(task, update)) {
-      const approvers = this.extractApprovers(task);
+      const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
@@ -166,7 +166,7 @@ export class PrepareFestivalTask {
 
     return isUpdatingSharedFields
       ? this.hasReviewersAllowUpdate(task)
-      : !this.isApprovedBy(humain, task);
+      : !isApprovedBy(humain, task);
   }
 
   async addContact(
@@ -178,7 +178,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non gere");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -198,7 +198,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non gere");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -218,7 +218,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non gere");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -238,7 +238,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non géré");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -256,7 +256,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!this.hasReviewersAllowUpdate(task)) {
-      const approvers = this.extractApprovers(task);
+      const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
@@ -280,7 +280,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!this.hasReviewersAllowUpdate(task)) {
-      const approvers = this.extractApprovers(task);
+      const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
@@ -304,7 +304,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!this.hasReviewersAllowUpdate(task)) {
-      const approvers = this.extractApprovers(task);
+      const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
@@ -329,7 +329,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!this.hasReviewersAllowUpdate(task)) {
-      const approvers = this.extractApprovers(task);
+      const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
@@ -355,7 +355,7 @@ export class PrepareFestivalTask {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
     if (!this.hasReviewersAllowUpdate(task)) {
-      const approvers = this.extractApprovers(task);
+      const approvers = extractApprovers(task);
       throw new AlreadyApprovedBy(approvers, "FT");
     }
 
@@ -383,7 +383,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non gere");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -405,7 +405,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non géré");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -427,7 +427,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non géré");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -452,7 +452,7 @@ export class PrepareFestivalTask {
     if (isValidated(task) || isReadyToAssign(task)) {
       throw new FestivalTaskError("Cas non géré");
     }
-    if (this.isApprovedBy(humain, task)) {
+    if (isApprovedBy(humain, task)) {
       throw new AlreadyApprovedBy([humain], "FT");
     }
 
@@ -472,7 +472,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (this.isApprovedBy(matos, task)) {
+    if (isApprovedBy(matos, task)) {
       throw new AlreadyApprovedBy([matos], "FT");
     }
 
@@ -488,7 +488,7 @@ export class PrepareFestivalTask {
   ): Promise<WithConflicts> {
     const task = await this.festivalTasks.findById(taskId);
     if (!task) throw new FestivalTaskNotFound(taskId);
-    if (this.isApprovedBy(matos, task)) {
+    if (isApprovedBy(matos, task)) {
       throw new AlreadyApprovedBy([matos], "FT");
     }
 
@@ -529,26 +529,6 @@ export class PrepareFestivalTask {
     return this.festivalTaskTranslator.translate(updated);
   }
 
-  private isApprovedBy(reviewer: Reviewer<"FT">, task: FestivalTask): boolean {
-    if (isDraft(task)) return false;
-    switch (reviewer) {
-      case humain:
-        return task.reviews.humain === APPROVED;
-      case matos:
-        return task.reviews.matos === APPROVED;
-      case elec:
-        return task.reviews.elec === APPROVED;
-    }
-  }
-
-  private extractApprovers(task: Reviewable): Reviewer<"FT">[] {
-    const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
-    const approvers = reviewers.filter((reviewer) =>
-      this.isApprovedBy(reviewer, task),
-    );
-    return approvers;
-  }
-
   private hasReviewersAllowUpdate(
     task: FestivalTask,
   ): task is UpdatableFestivalTask {
@@ -560,9 +540,9 @@ export class PrepareFestivalTask {
 
   private areNoneOfTheReviewersApproved(task: Refused | InReview) {
     return (
-      !this.isApprovedBy(humain, task) &&
-      !this.isApprovedBy(matos, task) &&
-      !this.isApprovedBy(elec, task)
+      !isApprovedBy(humain, task) &&
+      !isApprovedBy(matos, task) &&
+      !isApprovedBy(elec, task)
     );
   }
 
@@ -591,6 +571,23 @@ export class PrepareFestivalTask {
   ): RejectionReviewStatus {
     return previous === APPROVED ? REVIEWING : previous;
   }
+}
+
+function isApprovedBy(reviewer: Reviewer<"FT">, task: FestivalTask): boolean {
+  if (isDraft(task)) return false;
+  switch (reviewer) {
+    case humain:
+      return task.reviews.humain === APPROVED;
+    case matos:
+      return task.reviews.matos === APPROVED;
+    case elec:
+      return task.reviews.elec === APPROVED;
+  }
+}
+
+export function extractApprovers(task: Reviewable): Reviewer<"FT">[] {
+  const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
+  return reviewers.filter((reviewer) => isApprovedBy(reviewer, task));
 }
 
 function checkValidity<
