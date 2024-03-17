@@ -52,7 +52,7 @@ export default defineComponent({
       default: false,
     },
   },
-  emits: ["update:data"],
+  emits: ["update:data", "focus"],
   data: (): RichEditorData => ({
     delay: undefined,
     editor: undefined,
@@ -76,6 +76,7 @@ export default defineComponent({
       content: this.data ?? "",
       editable: !this.disabled,
       onBlur: () => this.deferUpdate(),
+      onFocus: () => this.$emit("focus"),
     });
   },
   beforeUnmount() {
@@ -87,6 +88,7 @@ export default defineComponent({
     },
     deferUpdate() {
       const content = this.emptyContent ? "" : this.editor?.getHTML() ?? "";
+      if (content === this.data) return;
       if (this.delay) clearInterval(this.delay);
       this.delay = setTimeout(() => this.update(content), 300);
     },

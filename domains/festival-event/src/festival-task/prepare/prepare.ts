@@ -587,10 +587,7 @@ function isApprovedBy(reviewer: Reviewer<"FT">, task: FestivalTask): boolean {
 
 export function extractApprovers(task: Reviewable): Reviewer<"FT">[] {
   const reviewers: Reviewer<"FT">[] = [humain, matos, elec];
-  const approvers = reviewers.filter((reviewer) =>
-    isApprovedBy(reviewer, task),
-  );
-  return approvers;
+  return reviewers.filter((reviewer) => isApprovedBy(reviewer, task));
 }
 
 function checkValidity<

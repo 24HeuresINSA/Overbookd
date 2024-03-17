@@ -2,11 +2,11 @@
   <ConfirmationMessage
     confirm-color="success"
     @close-dialog="closeDialog"
-    @confirm="reset"
+    @confirm="confirm"
   >
     <template #title>Réinitialiation des validations</template>
     <template #statement>
-      Attention ! {{ label }}
+      Attention ! Modifier les instructions
       <strong>réinitialisera les validations déjà effectuées</strong>. Es-tu sûr
       de vouloir continuer ?
     </template>
@@ -23,16 +23,10 @@ import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue
 export default defineComponent({
   name: "ResetApprovalsCard",
   components: { ConfirmationMessage },
-  props: {
-    label: {
-      type: String,
-      default: "Modifier ce champ",
-    },
-  },
-  emits: ["reset", "close-dialog"],
+  emits: ["confirm", "close-dialog"],
   methods: {
-    reset() {
-      this.$emit("reset");
+    confirm() {
+      this.$emit("confirm");
     },
     closeDialog() {
       this.$emit("close-dialog");
