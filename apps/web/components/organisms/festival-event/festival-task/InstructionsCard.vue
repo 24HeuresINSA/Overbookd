@@ -181,7 +181,12 @@ export default defineComponent({
       this.hasApproveResetAlert = false;
     },
     isInitInChargeDialogOpen(value: boolean) {
-      if (!value) this.checkActiveInChargeInstructions();
+      if (value) return;
+      this.checkActiveInChargeInstructions();
+    },
+    isResetApprovalsDialogOpen(value: boolean) {
+      if (value) return;
+      this.checkActiveInChargeInstructions();
     },
   },
   mounted() {
@@ -197,7 +202,11 @@ export default defineComponent({
     },
     toggleInChargeInstructions() {
       this.hasInChargeInstructions = !this.hasInChargeInstructions;
-      if (!this.hasInChargeInstructions) return this.clearInCharge();
+      if (!this.hasInChargeInstructions) {
+        this.openResetApprovalsDialogIfNeeded();
+        if (this.isResetApprovalsDialogOpen) return;
+        return this.clearInCharge();
+      }
       if (!isDraft(this.selectedTask)) this.openInitInChargeDialog();
     },
 
@@ -233,6 +242,7 @@ export default defineComponent({
 
     async initInCharge(form: InitInChargeForm) {
       await this.$accessor.festivalTask.initInCharge(form);
+      this.closeInitInChargeDialog();
     },
     openInitInChargeDialog() {
       this.isInitInChargeDialogOpen = true;
@@ -252,13 +262,15 @@ export default defineComponent({
     },
     openResetApprovalsDialogIfNeeded() {
       if (!this.shouldResetApprovals || this.hasApproveResetAlert) return;
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
+      this.removeFocus();
       this.isResetApprovalsDialogOpen = true;
     },
     declineResetApprovalsDialog() {
       this.isResetApprovalsDialogOpen = false;
+    },
+    removeFocus() {
+      if (!(document.activeElement instanceof HTMLElement)) return;
+      document.activeElement.blur();
     },
     formatUserNameWithNickname,
   },
