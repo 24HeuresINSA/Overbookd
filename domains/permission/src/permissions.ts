@@ -40,7 +40,7 @@ export const MANAGE_CONTRIBUTIONS = "manage-contributions";
 export const PAY_CONTRIBUTION = "pay-contribution";
 export const OFFER_SHARED_MEAL = "offer-shared-meal";
 export const SHOTGUN_SHARED_MEAL = "shotgun-shared-meal";
-export const READ_PURCHASE_SHEETS = "read-purchase-sheets";
+export const READ_PURCHASE_SHEET = "read-purchase-sheet";
 export const WRITE_PURCHASE_SHEET = "write-purchase-sheet";
 
 const permissions = [
@@ -84,7 +84,7 @@ const permissions = [
   PAY_CONTRIBUTION,
   OFFER_SHARED_MEAL,
   SHOTGUN_SHARED_MEAL,
-  READ_PURCHASE_SHEETS,
+  READ_PURCHASE_SHEET,
   WRITE_PURCHASE_SHEET,
 ];
 

@@ -32,7 +32,7 @@ import {
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
   VIEW_GEAR_DASHBOARD,
-  READ_PURCHASE_SHEETS,
+  READ_PURCHASE_SHEET,
   WRITE_PURCHASE_SHEET,
 } from "@overbookd/permission";
 
@@ -149,7 +149,7 @@ export const permissions = [
     },
   },
   {
-    name: READ_PURCHASE_SHEETS,
+    name: READ_PURCHASE_SHEET,
     description: "Peut regarder les fiches achats",
     teams: {
       createMany: {
