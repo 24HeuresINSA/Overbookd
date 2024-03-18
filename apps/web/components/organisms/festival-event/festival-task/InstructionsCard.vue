@@ -217,8 +217,8 @@ export default defineComponent({
     },
 
     async addContact(contact: Contact | null) {
-      if (!contact) return;
-      await this.$accessor.festivalTask.addContact(contact.id);
+      if (contact === null) return;
+      this.$accessor.festivalTask.addContact(contact.id);
       this.contact = null;
     },
     removeContact(contact: User) {
