@@ -46,7 +46,7 @@
         <v-form class="contact-form">
           <SearchUser
             :value="contact"
-            :list="adherents"
+            :list="contacts"
             label="Orga à contacter pour les bénévoles en cas de problème"
             :boxed="false"
             class="contact-form__fields"
@@ -158,6 +158,13 @@ export default defineComponent({
     },
     adherents(): User[] {
       return this.$accessor.user.adherents;
+    },
+    contacts(): User[] {
+      return this.adherents.filter((adherent) => {
+        return !this.instructions.contacts.some(
+          (contact) => contact.id === adherent.id,
+        );
+      });
     },
     canAddContact(): boolean {
       return Boolean(this.contact);
