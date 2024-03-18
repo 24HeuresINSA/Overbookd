@@ -50,7 +50,7 @@
             label="Orga à contacter pour les bénévoles en cas de problème"
             :boxed="false"
             class="contact-form__fields"
-            @update="addContact"
+            @change="addContact"
           />
         </v-form>
 
