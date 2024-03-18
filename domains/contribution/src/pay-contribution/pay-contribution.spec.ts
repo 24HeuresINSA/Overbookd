@@ -1,15 +1,15 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { Member, PayContribution } from "./pay-contribution";
 import { EXPIRATION_DATE } from "./contribute";
-import { InMemoryContributionRepository } from "./contribution-repository.inmemory";
-import { Contribution } from "./contribute";
+import { InMemoryPayContributions } from "./pay-contributions.inmemory";
 import {
   HAS_ALREADY_PAYED_ERROR_MESSAGE,
-  INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
   NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE,
 } from "./pay-contribution.error";
 import { ONE_YEAR_IN_MS } from "@overbookd/period";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
+import { Contribution } from "../contribution";
+import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error";
 
 const lea: Member = {
   id: 1,
@@ -58,11 +58,11 @@ const contributions: Contribution[] = [
 
 describe("Pay contribution", () => {
   let payContribution: PayContribution;
-  let contributionRepository: InMemoryContributionRepository;
+  let contributionRepository: InMemoryPayContributions;
 
   describe("when adherent is paying his contribution", () => {
     beforeEach(() => {
-      contributionRepository = new InMemoryContributionRepository(
+      contributionRepository = new InMemoryPayContributions(
         contributions,
         adherents,
       );
@@ -156,7 +156,7 @@ describe("Pay contribution", () => {
 
   describe("when manager is looking for adherents with contribution out-to-date", () => {
     beforeEach(() => {
-      contributionRepository = new InMemoryContributionRepository(
+      contributionRepository = new InMemoryPayContributions(
         contributions,
         adherents,
       );

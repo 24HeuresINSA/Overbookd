@@ -1,13 +1,12 @@
 import { Permission } from "@overbookd/permission";
-import { Contribution, Contribute } from "./contribute";
-import {
-  HasAlreadyPayed,
-  InsufficientAmount,
-  NotAllowedToPay,
-} from "./pay-contribution.error";
+import { Contribute } from "./contribute";
+import { HasAlreadyPayed, NotAllowedToPay } from "./pay-contribution.error";
 import { Edition } from "../edition";
-
-export const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
+import {
+  Contribution,
+  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
+} from "../contribution";
+import { InsufficientAmount } from "../contribution.error";
 
 export type Adherent = {
   id: number;
@@ -27,7 +26,7 @@ export type PayContributionForm = {
   adherentId: number;
 };
 
-export type ContributionRepository = {
+export type PayContributions = {
   pay(contribution: Contribution): Promise<Contribution>;
   hasAlreadyPayed(adherentId: number, edition: number): Promise<boolean>;
   findAdherentsOutToDate(edition: number): Promise<Adherent[]>;
@@ -35,7 +34,7 @@ export type ContributionRepository = {
 };
 
 export class PayContribution {
-  constructor(private readonly contributions: ContributionRepository) {}
+  constructor(private readonly contributions: PayContributions) {}
 
   async for({
     adherentId,

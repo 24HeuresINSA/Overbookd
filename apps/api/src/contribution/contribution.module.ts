@@ -1,32 +1,45 @@
 import { Module } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { ContributionController } from "./contribution.controller";
-import { PrismaPayContributionRepository } from "./repository/pay-contribution-repository.prisma";
+import { PrismaPayContributions } from "./repository/pay-contributions.prisma";
 import { PrismaModule } from "../prisma.module";
 import { ContributionService } from "./contribution.service";
-import { PayContribution } from "@overbookd/contribution";
+import { EditContribution, PayContribution } from "@overbookd/contribution";
+import { PrismaEditContributions } from "./repository/edit-contributions.prisma";
 
 @Module({
   controllers: [ContributionController],
   providers: [
     {
-      provide: PrismaPayContributionRepository,
+      provide: PrismaPayContributions,
+      useFactory: (prisma: PrismaService) => new PrismaPayContributions(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaEditContributions,
       useFactory: (prisma: PrismaService) =>
-        new PrismaPayContributionRepository(prisma),
+        new PrismaEditContributions(prisma),
       inject: [PrismaService],
     },
     {
       provide: PayContribution,
-      useFactory: (
-        payContributionRepository: PrismaPayContributionRepository,
-      ) => new PayContribution(payContributionRepository),
-      inject: [PrismaPayContributionRepository],
+      useFactory: (payContributions: PrismaPayContributions) =>
+        new PayContribution(payContributions),
+      inject: [PrismaPayContributions],
+    },
+    {
+      provide: EditContribution,
+      useFactory: (editContributions: PrismaEditContributions) =>
+        new EditContribution(editContributions),
+      inject: [PrismaEditContributions],
     },
     {
       provide: ContributionService,
-      useFactory: (payContribution: PayContribution) =>
-        new ContributionService(payContribution),
-      inject: [PayContribution],
+      useFactory: (
+        payContribution: PayContribution,
+        editContributions: EditContribution,
+      ) => new ContributionService(payContribution, editContributions),
+      inject: [PayContribution, EditContribution],
     },
   ],
   imports: [PrismaModule],
