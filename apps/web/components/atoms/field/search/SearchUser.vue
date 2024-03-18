@@ -1,5 +1,6 @@
 <template>
   <v-autocomplete
+    :key="counter"
     :value="user"
     :items="users"
     :loading="loading"
@@ -30,6 +31,7 @@ import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
 type SearchUserData = {
   loading: boolean;
+  counter: number;
 };
 
 export default Vue.extend({
@@ -67,6 +69,7 @@ export default Vue.extend({
   data(): SearchUserData {
     return {
       loading: false,
+      counter: 0,
     };
   },
   computed: {
@@ -80,6 +83,7 @@ export default Vue.extend({
   },
   methods: {
     propagateEvent(user: UserPersonalData | null) {
+      this.counter += 1;
       this.$emit("change", user);
     },
     displayUsername(user: UserPersonalData): string {
