@@ -14,6 +14,7 @@
             :key="team"
             :team="team"
             with-name
+            :show-hidden="canManageUsers"
             :close="canManageUsers"
             @close="removeTeam"
           />
