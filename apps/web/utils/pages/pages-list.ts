@@ -22,6 +22,7 @@ import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
   VIEW_GEAR_DASHBOARD,
+  READ_PURCHASE_SHEET,
 } from "@overbookd/permission";
 
 export type Page = {
@@ -52,7 +53,7 @@ export const pages: Page[] = [
     keywords: ["profile", "photo", "commentaires"],
   },
   {
-    icon: "mdi-currency-usd",
+    icon: "mdi-account-cash",
     title: "Compte perso",
     permission: HAVE_PERSONAL_ACCOUNT,
     to: "/my-personal-account",
@@ -296,6 +297,15 @@ export const pages: Page[] = [
       "demandes-matos",
       "demandes-materiel",
     ],
+  },
+  {
+    icon: "mdi-cash-register",
+    title: "Fiches Achats",
+    permission: READ_PURCHASE_SHEET,
+    to: "/logistic/purchase-sheets",
+    description: "Permet de gérer les achats de matériel",
+    mobileSupport: false,
+    keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
   },
   {
     icon: "mdi-map-marker",
