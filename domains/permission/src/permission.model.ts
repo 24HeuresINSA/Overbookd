@@ -39,7 +39,8 @@ import {
   OFFER_SHARED_MEAL,
   SHOTGUN_SHARED_MEAL,
   VIEW_GEAR_DASHBOARD,
-  MANAGE_PURCHASE_SHEETS,
+  READ_PURCHASE_SHEETS,
+  WRITE_PURCHASE_SHEET,
 } from "./permissions";
 
 export type Permission =
@@ -83,4 +84,5 @@ export type Permission =
   | typeof PAY_CONTRIBUTION
   | typeof OFFER_SHARED_MEAL
   | typeof SHOTGUN_SHARED_MEAL
-  | typeof MANAGE_PURCHASE_SHEETS;
+  | typeof READ_PURCHASE_SHEETS
+  | typeof WRITE_PURCHASE_SHEET;

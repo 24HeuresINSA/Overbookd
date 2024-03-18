@@ -32,7 +32,8 @@ import {
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
   VIEW_GEAR_DASHBOARD,
-  MANAGE_PURCHASE_SHEETS,
+  READ_PURCHASE_SHEETS,
+  WRITE_PURCHASE_SHEET,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -148,8 +149,17 @@ export const permissions = [
     },
   },
   {
-    name: MANAGE_PURCHASE_SHEETS,
-    description: "Peut gérer les fiches achats",
+    name: READ_PURCHASE_SHEETS,
+    description: "Peut regarder les fiches achats",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "matos" }, { teamCode: "elec" }],
+      },
+    },
+  },
+  {
+    name: WRITE_PURCHASE_SHEET,
+    description: "Peut éditer les fiches achats",
     teams: {
       createMany: {
         data: [{ teamCode: "matos" }, { teamCode: "elec" }],

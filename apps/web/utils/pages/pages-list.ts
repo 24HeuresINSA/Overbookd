@@ -22,7 +22,7 @@ import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
   VIEW_GEAR_DASHBOARD,
-  MANAGE_PURCHASE_SHEETS,
+  READ_PURCHASE_SHEETS,
 } from "@overbookd/permission";
 
 export type Page = {
@@ -301,10 +301,9 @@ export const pages: Page[] = [
   {
     icon: "mdi-cash-register",
     title: "Fiches Achats",
-    permission: MANAGE_PURCHASE_SHEETS,
+    permission: READ_PURCHASE_SHEETS,
     to: "/logistic/purchase-sheets",
-    description:
-      "Permet de gérer les fiches achats pour les achats de matériel",
+    description: "Permet de gérer les achats de matériel",
     mobileSupport: false,
     keywords: ["fiches-achats", "achats", "materiel", "matos", "fiches"],
   },
