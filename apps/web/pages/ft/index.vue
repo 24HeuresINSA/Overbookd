@@ -1,6 +1,18 @@
 <template>
   <div class="task ft">
     <h1>Fiches Tâches</h1>
+    <div class="quick-filters">
+      <nuxt-link :to="`/ft?adherent=${me.id}`">
+        <v-btn outlined color="primary"> Mes FTs </v-btn>
+      </nuxt-link>
+      <nuxt-link
+        v-for="team in teamsWithTasks"
+        :key="team"
+        :to="`/ft?team=${team}`"
+      >
+        <v-btn outlined color="primary"> FTs de {{ team }} </v-btn>
+      </nuxt-link>
+    </div>
 
     <main>
       <FtFilter class="task__filtering" @update:filters="updateFilters" />
@@ -162,6 +174,14 @@ export default Vue.extend({
     tasks(): PreviewFestivalTask[] {
       return this.$accessor.festivalTask.tasks.forAll;
     },
+    teamsWithTasks(): Set<string> {
+      return this.tasks.reduce((teams: Set<string>, task) => {
+        const { team } = task;
+        if (team === null) return teams;
+        if (!this.me.teams.includes(team)) return teams;
+        return teams.add(team);
+      }, new Set<string>([]));
+    },
     searchableFts(): Searchable<PreviewFestivalTask>[] {
       return this.tasks.map((ft) => ({
         ...ft,
@@ -301,6 +321,12 @@ h1 {
 }
 
 .task {
+  .quick-filters {
+    padding: 0px 10px;
+    display: flex;
+    gap: 5px 10px;
+    flex-wrap: wrap;
+  }
   main {
     display: flex;
     padding: 10px 30px 10px 10px;
