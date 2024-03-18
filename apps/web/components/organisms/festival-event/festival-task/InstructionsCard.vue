@@ -45,23 +45,13 @@
 
         <v-form class="contact-form">
           <SearchUser
-            v-model="contact"
+            :value="contact"
             :list="adherents"
             label="Orga à contacter pour les bénévoles en cas de problème"
             :boxed="false"
             class="contact-form__fields"
-            @add="addContact"
-            @remove="removeContact"
+            @update="addContact"
           />
-          <v-btn
-            rounded
-            color="primary"
-            class="contact-form__btn"
-            :disabled="!canAddContact"
-            @click="addContact"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
         </v-form>
 
         <v-data-table
@@ -111,6 +101,7 @@ import SearchUsers from "~/components/atoms/field/search/SearchUsers.vue";
 import SearchUser from "~/components/atoms/field/search/SearchUser.vue";
 import SearchSignaLocation from "~/components/atoms/field/search/SearchSignaLocation.vue";
 import {
+  Contact,
   FestivalTask,
   FestivalTaskWithConflicts,
   isDraft,
@@ -225,9 +216,10 @@ export default defineComponent({
       this.$accessor.festivalTask.updateInstructions({ inCharge });
     },
 
-    addContact() {
-      if (!this.contact) return;
-      this.$accessor.festivalTask.addContact(this.contact.id);
+    async addContact(contact: Contact | null) {
+      if (!contact) return;
+      await this.$accessor.festivalTask.addContact(contact.id);
+      this.contact = null;
     },
     removeContact(contact: User) {
       this.$accessor.festivalTask.removeContact(contact.id);

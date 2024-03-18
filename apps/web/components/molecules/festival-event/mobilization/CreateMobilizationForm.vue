@@ -35,18 +35,11 @@
       </v-chip-group>
       <div class="mobilization-card__form">
         <SearchUser
-          v-model="volunteerToAdd"
+          :value="volunteerToAdd"
           :list="addableVolunteers"
           hide-details
+          @change="addVolunteer"
         />
-        <v-btn
-          class="mobilization-card__form-btn"
-          rounded
-          hide-details
-          @click="addVolunteer"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
       </div>
 
       <h3>Ajouter des bénévoles d'une équipe</h3>
@@ -221,9 +214,9 @@ export default defineComponent({
     removeTeam({ team }: TeamMobilization) {
       this.teams = this.teams.filter((t) => t.team !== team);
     },
-    addVolunteer() {
-      if (!this.volunteerToAdd || this.teamQuantity < 1) return;
-      this.volunteers = [...this.volunteers, this.volunteerToAdd];
+    addVolunteer(volunteer: Volunteer | null) {
+      if (volunteer === null) return;
+      this.volunteers = [...this.volunteers, volunteer];
       this.volunteerToAdd = null;
     },
     removeVolunteer(volunteerId: Volunteer["id"]) {
