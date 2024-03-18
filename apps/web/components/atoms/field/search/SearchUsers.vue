@@ -2,7 +2,6 @@
   <v-autocomplete
     :value="users"
     :items="userList"
-    :loading="loading"
     chips
     multiple
     item-value="id"
@@ -13,6 +12,7 @@
     :disabled="disabled"
     return-object
     :deletable-chips="deletableChips"
+    :search-input.sync="search"
     :filter="filterUsers"
     @change="propagateChange"
   >
@@ -28,8 +28,8 @@ import { User } from "@overbookd/user";
 import { SlugifyService } from "@overbookd/slugify";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 
-type SearchUserData = {
-  loading: boolean;
+type SearchUsersData = {
+  search: string;
 };
 
 export default defineComponent({
@@ -61,9 +61,9 @@ export default defineComponent({
     },
   },
   emits: ["add", "remove"],
-  data(): SearchUserData {
+  data(): SearchUsersData {
     return {
-      loading: false,
+      search: "",
     };
   },
   computed: {
@@ -82,6 +82,8 @@ export default defineComponent({
 
       addedUsers.forEach((addedUser) => this.propagateAdd(addedUser));
       removedUsers.forEach((removedUser) => this.propagateRemove(removedUser));
+
+      this.search = "";
     },
     propagateAdd(user: User) {
       this.$emit("add", user);
