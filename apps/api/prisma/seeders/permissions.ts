@@ -32,7 +32,7 @@ import {
   WRITE_INVENTORY,
   WRITE_SIGNAGE_CATALOG,
   VIEW_GEAR_DASHBOARD,
-  MANAGE_PURCHASE_FORMS,
+  MANAGE_PURCHASE_SHEETS,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -148,7 +148,7 @@ export const permissions = [
     },
   },
   {
-    name: MANAGE_PURCHASE_FORMS,
+    name: MANAGE_PURCHASE_SHEETS,
     description: "Peut gérer les fiches achats",
     teams: {
       createMany: {
