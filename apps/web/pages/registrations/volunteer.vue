@@ -18,7 +18,7 @@
           />
           <SearchTeam
             v-model="searchTeam"
-            :list="TEAM_CODES"
+            :list="searchableTeams"
             class="team"
             label="Rechercher par équipe"
             :boxed="false"
@@ -85,7 +85,7 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import { TeamCode, TEAM_CODES, VOLUNTEER } from "@overbookd/registration";
+import { TEAM_CODES, VOLUNTEER } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
 import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
@@ -98,7 +98,6 @@ type RegistrationsData = {
   volunteerToForget: EnrollableVolunteer | null;
   searchVolunteer: string;
   searchTeam: Team | null;
-  TEAM_CODES: TeamCode[];
 };
 
 type Filter = (newcomer: Searchable<EnrollableVolunteer>) => boolean;
@@ -126,12 +125,16 @@ export default defineComponent({
     volunteerToForget: null,
     searchVolunteer: "",
     searchTeam: null,
-    TEAM_CODES,
   }),
   head: () => ({
     title: "Admission bénévoles",
   }),
   computed: {
+    searchableTeams(): Team[] {
+      return TEAM_CODES.map((code) =>
+        this.$accessor.team.getTeamByCode(code),
+      ).filter((team) => team !== undefined) as Team[];
+    },
     volunteerToForgetName(): string {
       if (!this.volunteerToForget) return "";
       return formatUserNameWithNickname(this.volunteerToForget);
