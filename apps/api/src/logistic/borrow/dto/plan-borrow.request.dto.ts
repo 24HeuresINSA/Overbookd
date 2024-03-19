@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { PlanBorrowForm } from "@overbookd/logistic";
-import { IsDateString, IsOptional, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsOptional, IsString } from "class-validator";
 
 export class PlanBorrowRequestDto implements PlanBorrowForm {
   @ApiProperty({
@@ -17,7 +18,8 @@ export class PlanBorrowRequestDto implements PlanBorrowForm {
     description: "The date the gear is available",
     required: false,
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsOptional()
   availableOn: PlanBorrowForm["availableOn"];
 
@@ -26,7 +28,8 @@ export class PlanBorrowRequestDto implements PlanBorrowForm {
     description: "The date the gear is unavailable",
     required: false,
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsOptional()
   unavailableOn: PlanBorrowForm["unavailableOn"];
 }

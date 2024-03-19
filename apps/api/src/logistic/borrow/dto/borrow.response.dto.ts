@@ -25,6 +25,6 @@ export class BorrowResponseDto implements Borrow {
   @ApiProperty({})
   unavailableOn: Borrow["unavailableOn"];
 
-  @ApiProperty({ type: [GearRequestDto] })
+  @ApiProperty({ type: GearRequestDto, isArray: true })
   gears: Borrow["gears"];
 }

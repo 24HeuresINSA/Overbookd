@@ -7,7 +7,9 @@ export class PrismaViewBorrows implements BorrowsForView {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAll(): Promise<Borrow[]> {
-    const borrows = this.prisma.borrow.findMany({ select: SELECT_BORROW });
+    const borrows = await this.prisma.borrow.findMany({
+      select: SELECT_BORROW,
+    });
     return borrows.map(toBorrow);
   }
 

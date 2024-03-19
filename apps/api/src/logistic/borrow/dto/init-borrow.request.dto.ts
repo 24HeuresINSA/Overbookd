@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { InitBorrowForm } from "@overbookd/logistic";
-import { IsDateString, IsNotEmpty, IsString } from "class-validator";
+import { Type } from "class-transformer";
+import { IsDate, IsNotEmpty, IsString } from "class-validator";
 
 export class InitBorrowRequestDto implements InitBorrowForm {
   @ApiProperty({
@@ -15,7 +16,8 @@ export class InitBorrowRequestDto implements InitBorrowForm {
     type: Date,
     description: "The date the gear is available",
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   availableOn: InitBorrowForm["availableOn"];
 
@@ -23,7 +25,8 @@ export class InitBorrowRequestDto implements InitBorrowForm {
     type: Date,
     description: "The date the gear is unavailable",
   })
-  @IsDateString()
+  @IsDate()
+  @Type(() => Date)
   @IsNotEmpty()
   unavailableOn: InitBorrowForm["unavailableOn"];
 }

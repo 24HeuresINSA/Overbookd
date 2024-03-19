@@ -40,10 +40,8 @@ export const MANAGE_CONTRIBUTIONS = "manage-contributions";
 export const PAY_CONTRIBUTION = "pay-contribution";
 export const OFFER_SHARED_MEAL = "offer-shared-meal";
 export const SHOTGUN_SHARED_MEAL = "shotgun-shared-meal";
-export const READ_PURCHASE_SHEET = "read-purchase-sheet";
-export const WRITE_PURCHASE_SHEET = "write-purchase-sheet";
-export const READ_BORROW_SHEET = "read-borrow-sheet";
-export const WRITE_BORROW_SHEET = "write-borrow-sheet";
+export const PURCHASE_GEARS = "purchase-gears";
+export const BORROW_GEARS = "borrow-gears";
 
 const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -86,10 +84,8 @@ const permissions = [
   PAY_CONTRIBUTION,
   OFFER_SHARED_MEAL,
   SHOTGUN_SHARED_MEAL,
-  READ_PURCHASE_SHEET,
-  WRITE_PURCHASE_SHEET,
-  READ_BORROW_SHEET,
-  WRITE_BORROW_SHEET,
+  PURCHASE_GEARS,
+  BORROW_GEARS,
 ];
 
 export function isPermission(permission: string): permission is Permission {

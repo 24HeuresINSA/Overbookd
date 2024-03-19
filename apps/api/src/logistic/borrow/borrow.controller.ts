@@ -22,7 +22,7 @@ import {
 import { BorrowErrorFilter } from "./borrow.filter";
 import { BorrowService } from "./borrow.service";
 import { Permission } from "../../authentication/permissions-auth.decorator";
-import { READ_BORROW_SHEET, WRITE_BORROW_SHEET } from "@overbookd/permission";
+import { BORROW_GEARS } from "@overbookd/permission";
 import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { BorrowResponseDto } from "./dto/borrow.response.dto";
@@ -47,7 +47,7 @@ export class BorrowController {
   constructor(private readonly borrowService: BorrowService) {}
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_BORROW_SHEET)
+  @Permission(BORROW_GEARS)
   @Get()
   @ApiResponse({
     status: 200,
@@ -60,7 +60,7 @@ export class BorrowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(READ_BORROW_SHEET)
+  @Permission(BORROW_GEARS)
   @Get(":id")
   @ApiParam({
     name: "id",
@@ -77,7 +77,7 @@ export class BorrowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_BORROW_SHEET)
+  @Permission(BORROW_GEARS)
   @Post()
   @ApiBody({
     description: "Borrow to initialize",
@@ -93,7 +93,7 @@ export class BorrowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_BORROW_SHEET)
+  @Permission(BORROW_GEARS)
   @Patch(":id")
   @ApiParam({
     name: "id",
@@ -117,7 +117,7 @@ export class BorrowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_BORROW_SHEET)
+  @Permission(BORROW_GEARS)
   @Post(":id/gear-requests")
   @ApiParam({
     name: "id",
@@ -141,7 +141,7 @@ export class BorrowController {
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
-  @Permission(WRITE_BORROW_SHEET)
+  @Permission(BORROW_GEARS)
   @Delete(":id/gear-requests/:slug")
   @ApiParam({
     name: "id",
