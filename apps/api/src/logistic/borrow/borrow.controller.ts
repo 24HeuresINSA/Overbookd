@@ -27,9 +27,15 @@ import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { BorrowResponseDto } from "./dto/borrow.response.dto";
 import { InitBorrowRequestDto } from "./dto/init-borrow.request.dto";
-import { Borrow, GearRequest, InitBorrowForm } from "@overbookd/logistic";
+import {
+  Borrow,
+  GearRequest,
+  InitBorrowForm,
+  PlanBorrowForm,
+} from "@overbookd/logistic";
 import { AddGearRequestDto } from "./dto/add-gear.request.dto";
 import { AddBorrowGearRequestForm } from "@overbookd/http";
+import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("logistic/borrow")
@@ -95,8 +101,8 @@ export class BorrowController {
     description: "Borrow id to plan",
   })
   @ApiBody({
-    description: "Borrow to initialize",
-    type: InitBorrowRequestDto,
+    description: "Borrow to plan",
+    type: PlanBorrowRequestDto,
   })
   @ApiResponse({
     status: 200,
@@ -105,7 +111,7 @@ export class BorrowController {
   })
   planBorrow(
     @Param("id", ParseIntPipe) id: Borrow["id"],
-    @Body() borrow: InitBorrowForm,
+    @Body() borrow: PlanBorrowForm,
   ): Promise<Borrow> {
     return this.borrowService.planBorrow(id, borrow);
   }

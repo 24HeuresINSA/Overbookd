@@ -1,3 +1,5 @@
+import { Borrow } from "@overbookd/logistic";
+
 const SELECT_GEAR_REQUEST = {
   gear: {
     select: {
@@ -15,3 +17,30 @@ export const SELECT_BORROW = {
   unavailableOn: true,
   gears: { select: SELECT_GEAR_REQUEST },
 };
+
+type DatabaseBorrow = {
+  id: number;
+  lender: string;
+  availableOn: Date;
+  unavailableOn: Date;
+  gears: {
+    gear: {
+      slug: string;
+      name: string;
+    };
+    quantity: number;
+  }[];
+};
+
+export function toBorrow(borrow: DatabaseBorrow): Borrow {
+  return {
+    id: borrow.id,
+    lender: borrow.lender,
+    availableOn: borrow.availableOn,
+    unavailableOn: borrow.unavailableOn,
+    gears: borrow.gears.map((gear) => ({
+      ...gear.gear,
+      quantity: gear.quantity,
+    })),
+  };
+}
