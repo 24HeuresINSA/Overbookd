@@ -16,3 +16,10 @@ export class AvailableDateAfterUnavailableDate extends BorrowError {
     super(message);
   }
 }
+
+export class NotEnoughQuantity extends BorrowError {
+  constructor() {
+    const message = "❌ La quantité doit être au moins de 1";
+    super(message);
+  }
+}

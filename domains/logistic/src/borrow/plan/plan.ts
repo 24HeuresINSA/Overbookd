@@ -1,5 +1,9 @@
 import { Borrow, GearRequest } from "../borrow";
-import { BorrowNotFound } from "../borrow.error";
+import {
+  AvailableDateAfterUnavailableDate,
+  BorrowNotFound,
+  NotEnoughQuantity,
+} from "../borrow.error";
 
 type PlanBorrowForm = {
   lender?: Borrow["lender"];
@@ -18,12 +22,21 @@ export class PlanBorrow {
   async update(id: Borrow["id"], update: PlanBorrowForm): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
-    return this.borrows.save({ ...borrow, ...update });
+    const updated = { ...borrow, ...update };
+    console.log(updated);
+
+    if (updated.availableOn > updated.unavailableOn) {
+      throw new AvailableDateAfterUnavailableDate();
+    }
+
+    return this.borrows.save(updated);
   }
 
   async addGear(id: Borrow["id"], gear: GearRequest): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
+
+    if (gear.quantity < 1) throw new NotEnoughQuantity();
 
     const gearRequests = GearRequests.init(borrow.gears);
     const gears = gearRequests.add(gear).all;
