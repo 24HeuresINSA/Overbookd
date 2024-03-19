@@ -13,9 +13,16 @@
         <div class="filters">
           <v-text-field
             v-model="searchVolunteer"
-            label="Rechercher un nouvel inscrit"
+            label="Rechercher par nom"
             class="search"
-          ></v-text-field>
+          />
+          <SearchTeam
+            v-model="searchTeam"
+            :list="TEAM_CODES"
+            class="team"
+            label="Rechercher par équipe"
+            :boxed="false"
+          />
         </div>
       </template>
 
@@ -78,9 +85,11 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import { VOLUNTEER } from "@overbookd/registration";
+import { TeamCode, TEAM_CODES, VOLUNTEER } from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { Searchable } from "~/utils/search/search.utils";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import { Team } from "~/utils/models/team.model";
 
 type RegistrationsData = {
   headers: Header[];
@@ -88,6 +97,8 @@ type RegistrationsData = {
   isForgetVolunteerDialogOpen: boolean;
   volunteerToForget: EnrollableVolunteer | null;
   searchVolunteer: string;
+  searchTeam: Team | null;
+  TEAM_CODES: TeamCode[];
 };
 
 type Filter = (newcomer: Searchable<EnrollableVolunteer>) => boolean;
@@ -99,6 +110,7 @@ export default defineComponent({
     TeamChip,
     VolunteerDetails,
     ConfirmationMessage,
+    SearchTeam,
   },
   data: (): RegistrationsData => ({
     headers: [
@@ -113,6 +125,8 @@ export default defineComponent({
     isForgetVolunteerDialogOpen: false,
     volunteerToForget: null,
     searchVolunteer: "",
+    searchTeam: null,
+    TEAM_CODES,
   }),
   head: () => ({
     title: "Admission bénévoles",
@@ -133,7 +147,10 @@ export default defineComponent({
     filteredVolunteersToEnroll(): EnrollableVolunteer[] {
       const search = SlugifyService.apply(this.searchVolunteer);
       return this.searchableVolunteersToEnroll.filter((volunteer) => {
-        return this.isMatchingNameSearch(search)(volunteer);
+        return (
+          this.isMatchingNameSearch(search)(volunteer) &&
+          this.isMatchingTeam(this.searchTeam)(volunteer)
+        );
       });
     },
   },
@@ -181,6 +198,12 @@ export default defineComponent({
     isMatchingNameSearch(search: string): Filter {
       return ({ searchable }: Searchable<EnrollableVolunteer>) =>
         searchable.includes(search);
+    },
+    isMatchingTeam(team: Team | null): Filter {
+      return ({ teams }: Searchable<EnrollableVolunteer>) => {
+        if (!team) return true;
+        return (teams as string[]).includes(team.code);
+      };
     },
     formatUserNameWithNickname,
   },
