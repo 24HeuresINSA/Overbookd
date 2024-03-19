@@ -23,7 +23,6 @@ export class PlanBorrow {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
     const updated = { ...borrow, ...update };
-    console.log(updated);
 
     if (updated.availableOn > updated.unavailableOn) {
       throw new AvailableDateAfterUnavailableDate();
