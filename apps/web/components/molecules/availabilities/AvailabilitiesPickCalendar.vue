@@ -1,6 +1,6 @@
 <template>
   <OverCalendar
-    :date="date"
+    :date="centeredDate"
     :weekdays="weekdayNumbers"
     :disable-previous="disablePrevious"
     :disable-next="disableNext"
@@ -77,16 +77,17 @@ export default defineComponent({
   },
   emits: ["reach:period-end", "reach:period-start"],
   data: () => ({
-    date: new Date(),
+    centeredDate: new Date(),
   }),
   computed: {
     disablePrevious(): boolean {
       const isStartOfPeriod =
-        this.period.start.getTime() === this.date.getTime();
+        this.period.start.getTime() === this.centeredDate.getTime();
       return this.disablePreviousPeriod && isStartOfPeriod;
     },
     disableNext(): boolean {
-      const isEndOfPeriod = this.period.end.getTime() === this.date.getTime();
+      const isEndOfPeriod =
+        this.period.end.getTime() === this.centeredDate.getTime();
       return this.disableNextPeriod && isEndOfPeriod;
     },
     charismaPeriods(): SavedCharismaPeriod[] {
@@ -137,11 +138,11 @@ export default defineComponent({
   },
   watch: {
     period() {
-      this.date = this.period.start;
+      this.centeredDate = this.period.start;
     },
   },
   mounted() {
-    this.date = this.period.start;
+    this.centeredDate = this.period.start;
   },
   methods: {
     updateDate(date: string) {
@@ -153,7 +154,7 @@ export default defineComponent({
       if (nextDate.getTime() < this.period.start.getTime()) {
         return this.$emit("reach:period-start");
       }
-      this.date = nextDate;
+      this.centeredDate = nextDate;
     },
     isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
