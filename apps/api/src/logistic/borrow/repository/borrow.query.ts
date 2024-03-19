@@ -32,6 +32,31 @@ type DatabaseBorrow = {
   }[];
 };
 
+export class BorrowQueryBuilder {
+  static create({ lender, availableOn, unavailableOn }: Borrow) {
+    return { lender, availableOn, unavailableOn };
+  }
+
+  static update({ lender, availableOn, unavailableOn, gears }: Borrow) {
+    return {
+      lender,
+      availableOn,
+      unavailableOn,
+      gears: this.upsertGears(gears),
+    };
+  }
+
+  private static upsertGears(gears: Borrow["gears"]) {
+    return {
+      upsert: gears.map(({ slug, quantity }) => ({
+        where: { gearSlug: slug },
+        create: { gearSlug: slug, quantity },
+        update: { quantity },
+      })),
+    };
+  }
+}
+
 export function toBorrow(borrow: DatabaseBorrow): Borrow {
   return {
     id: borrow.id,

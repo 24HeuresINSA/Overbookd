@@ -1,6 +1,6 @@
 import { Borrow, BorrowsForPlan } from "@overbookd/logistic";
 import { PrismaService } from "../../../prisma.service";
-import { SELECT_BORROW, toBorrow } from "./borrow.query";
+import { BorrowQueryBuilder, SELECT_BORROW, toBorrow } from "./borrow.query";
 
 export class PrismaPlanBorrows implements BorrowsForPlan {
   constructor(private prisma: PrismaService) {}
@@ -17,7 +17,7 @@ export class PrismaPlanBorrows implements BorrowsForPlan {
   async save(borrow: Borrow): Promise<Borrow> {
     const saved = await this.prisma.borrow.update({
       where: { id: borrow.id },
-      data: borrow,
+      data: BorrowQueryBuilder.update(borrow),
       select: SELECT_BORROW,
     });
     return toBorrow(saved);
