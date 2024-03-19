@@ -2,13 +2,14 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { InMemoryBorrows } from "./borrow.inmemory";
 import {
   chaise,
+  table,
   karnaBorrow,
   monday21At10,
   saturday19At16,
 } from "../borrow.test-utils";
 import { PlanBorrow } from "./plan";
 import {
-  AvailableDateAfterUnavailableDate,
+  AlreadyAddedGear,
   BorrowNotFound,
   NotEnoughQuantity,
 } from "../borrow.error";
@@ -50,17 +51,6 @@ describe("Plan borrow", () => {
       );
     });
   });
-  describe("when planning a borrow with available date after unavailable date", () => {
-    it("should indicate that the available date must be before unavailable date", async () => {
-      await expect(
-        plan.update(karnaBorrow.id, {
-          availableOn: monday21At10,
-          unavailableOn: saturday19At16,
-        }),
-      ).rejects.toThrowError(AvailableDateAfterUnavailableDate);
-    });
-  });
-
   describe("when adding a gear request to a borrow", () => {
     it("should add the gear request to the borrow", async () => {
       const request = { ...chaise, quantity: 4 };
@@ -68,7 +58,6 @@ describe("Plan borrow", () => {
 
       expect(updated.gears).toContainEqual(request);
     });
-
     describe("when the quantity of the gear request is lower than 1", () => {
       it("should indicate that the quantity must be at least 1", async () => {
         const request = { ...chaise, quantity: 0 };
@@ -77,7 +66,14 @@ describe("Plan borrow", () => {
         ).rejects.toThrowError(NotEnoughQuantity);
       });
     });
-
+    describe("when adding an already added gear", () => {
+      it("should indicate that the gear is already added", async () => {
+        const request = { ...table, quantity: 10 };
+        await expect(
+          plan.addGear(karnaBorrow.id, request),
+        ).rejects.toThrowError(AlreadyAddedGear);
+      });
+    });
     describe("when the borrow does not exist", () => {
       it("should indicate that borrow does not exist", async () => {
         const request = { ...chaise, quantity: 4 };

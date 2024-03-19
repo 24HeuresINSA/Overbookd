@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { InitBorrow } from "./init";
 import { InMemoryBorrows } from "./borrow.inmemory";
-import { AvailableDateAfterUnavailableDate } from "../borrow.error";
 import { friday17At12, sunday20At10 } from "../borrow.test-utils";
 
 describe("Init borrow", () => {
@@ -32,18 +31,6 @@ describe("Init borrow", () => {
     });
     it("should generate empty gears", () => {
       expect(initializedBorrow.gears).toEqual([]);
-    });
-  });
-  describe("when initializing a borrow with available date after unavailable date", async () => {
-    const form = {
-      lender: "KARNA",
-      availableOn: sunday20At10,
-      unavailableOn: friday17At12,
-    };
-    it("should indicate that available date is after unavailable date", async () => {
-      await expect(init.apply(form)).rejects.toThrow(
-        AvailableDateAfterUnavailableDate,
-      );
     });
   });
 });

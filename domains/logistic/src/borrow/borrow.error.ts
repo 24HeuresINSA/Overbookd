@@ -1,4 +1,4 @@
-import { Borrow } from "./borrow";
+import { Borrow, GearRequest } from "./borrow";
 
 class BorrowError extends Error {}
 
@@ -9,17 +9,16 @@ export class BorrowNotFound extends BorrowError {
   }
 }
 
-export class AvailableDateAfterUnavailableDate extends BorrowError {
+export class NotEnoughQuantity extends BorrowError {
   constructor() {
-    const message =
-      "❌ La date de mise à disposition doit être avant la date de restitution";
+    const message = "❌ La quantité doit être au moins de 1";
     super(message);
   }
 }
 
-export class NotEnoughQuantity extends BorrowError {
-  constructor() {
-    const message = "❌ La quantité doit être au moins de 1";
+export class AlreadyAddedGear extends BorrowError {
+  constructor(name: GearRequest["name"]) {
+    const message = `❌ Le matos '${name}' a déjà été ajouté`;
     super(message);
   }
 }

@@ -6,7 +6,7 @@ export const chaise = {
   name: "Chaise",
 };
 
-const table = {
+export const table = {
   slug: "table",
   name: "table",
 };

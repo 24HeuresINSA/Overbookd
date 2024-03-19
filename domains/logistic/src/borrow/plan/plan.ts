@@ -1,6 +1,7 @@
+import { Period } from "@overbookd/period";
 import { Borrow, GearRequest } from "../borrow";
 import {
-  AvailableDateAfterUnavailableDate,
+  AlreadyAddedGear,
   BorrowNotFound,
   NotEnoughQuantity,
 } from "../borrow.error";
@@ -22,11 +23,9 @@ export class PlanBorrow {
   async update(id: Borrow["id"], update: PlanBorrowForm): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
-    const updated = { ...borrow, ...update };
 
-    if (updated.availableOn > updated.unavailableOn) {
-      throw new AvailableDateAfterUnavailableDate();
-    }
+    const updated = { ...borrow, ...update };
+    Period.init({ start: updated.availableOn, end: updated.unavailableOn });
 
     return this.borrows.save(updated);
   }
@@ -63,6 +62,8 @@ class GearRequests {
   }
 
   add(gear: GearRequest): GearRequests {
+    const existingGear = this.gears.some((g) => g.slug === gear.slug);
+    if (existingGear) throw new AlreadyAddedGear(gear.name);
     return new GearRequests([...this.gears, gear]);
   }
 
