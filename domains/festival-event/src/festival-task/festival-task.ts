@@ -141,7 +141,7 @@ export type ReadyToAssign = GenerateConflictUnion<
   { withAssignments: true }
 >;
 
-export type Reviewable = InReview | Refused | Validated;
+export type Reviewable = InReview | Refused | Validated | ReadyToAssign;
 
 export type FestivalTask = Draft | Reviewable;
 
@@ -166,16 +166,16 @@ export type PreviewDraft = {
 export type PreviewInReview = GeneratePreview<InReview>;
 export type PreviewRefused = GeneratePreview<Refused>;
 export type PreviewValidated = GeneratePreview<Validated>;
+export type PreviewReadyToAssign = GeneratePreview<ReadyToAssign>;
 
 export type PreviewReviewable =
   | PreviewInReview
   | PreviewRefused
-  | PreviewValidated;
+  | PreviewValidated
+  | PreviewReadyToAssign;
 
 export type Preview = PreviewDraft | PreviewReviewable;
 
-export function isReadyToAssign(
-  task: FestivalTask | ReadyToAssign,
-): task is ReadyToAssign {
+export function isReadyToAssign(task: FestivalTask): task is ReadyToAssign {
   return task.status === READY_TO_ASSIGN;
 }
