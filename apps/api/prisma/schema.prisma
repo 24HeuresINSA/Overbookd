@@ -930,11 +930,11 @@ model Shotgun {
 }
 
 model Borrow {
-  id                Int                 @id
-  lender            String              @db.Text
-  availableOn       DateTime            @map("available_on")
-  unavailableOn     DateTime            @map("unavailable_on")
-  BorrowGearRequest BorrowGearRequest[]
+  id            Int                 @id
+  lender        String              @db.Text
+  availableOn   DateTime            @map("available_on")
+  unavailableOn DateTime            @map("unavailable_on")
+  gears         BorrowGearRequest[]
 
   @@map("borrow")
 }
