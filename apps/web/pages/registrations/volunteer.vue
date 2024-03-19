@@ -1,14 +1,24 @@
 <template>
-  <div>
+  <div class="registrations">
     <h1>Admission bénévoles</h1>
     <v-data-table
       :headers="headers"
-      :items="volunteersToEnroll"
+      :items="filteredVolunteersToEnroll"
       :expanded.sync="displayedVolunteers"
       :items-per-page="30"
       show-expand
       @click:row="openOrCloseVolunteerDetails"
     >
+      <template #top>
+        <div class="filters">
+          <v-text-field
+            v-model="searchVolunteer"
+            label="Rechercher un nouvel inscrit"
+            class="search"
+          ></v-text-field>
+        </div>
+      </template>
+
       <template #item.registeredAt="{ item }">
         {{ formatDate(item.registeredAt) }}
       </template>
@@ -69,13 +79,18 @@ import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
 import { VOLUNTEER } from "@overbookd/registration";
+import { SlugifyService } from "@overbookd/slugify";
+import { Searchable } from "~/utils/search/search.utils";
 
 type RegistrationsData = {
   headers: Header[];
   displayedVolunteers: EnrollableVolunteer[];
   isForgetVolunteerDialogOpen: boolean;
   volunteerToForget: EnrollableVolunteer | null;
+  searchVolunteer: string;
 };
+
+type Filter = (newcomer: Searchable<EnrollableVolunteer>) => boolean;
 
 export default defineComponent({
   name: "RegistrationsSoft",
@@ -97,17 +112,29 @@ export default defineComponent({
     displayedVolunteers: [],
     isForgetVolunteerDialogOpen: false,
     volunteerToForget: null,
+    searchVolunteer: "",
   }),
   head: () => ({
     title: "Admission bénévoles",
   }),
   computed: {
-    volunteersToEnroll(): EnrollableVolunteer[] {
-      return this.$accessor.registration.volunteers;
-    },
     volunteerToForgetName(): string {
       if (!this.volunteerToForget) return "";
       return formatUserNameWithNickname(this.volunteerToForget);
+    },
+    searchableVolunteersToEnroll(): Searchable<EnrollableVolunteer>[] {
+      return this.$accessor.registration.volunteers.map((newcomer) => ({
+        ...newcomer,
+        searchable: SlugifyService.apply(
+          `${newcomer.firstname} ${newcomer.lastname}`,
+        ),
+      }));
+    },
+    filteredVolunteersToEnroll(): EnrollableVolunteer[] {
+      const search = SlugifyService.apply(this.searchVolunteer);
+      return this.searchableVolunteersToEnroll.filter((volunteer) => {
+        return this.isMatchingNameSearch(search)(volunteer);
+      });
     },
   },
   mounted() {
@@ -151,7 +178,26 @@ export default defineComponent({
     enroll(volunteer: EnrollableVolunteer) {
       this.$accessor.registration.enrollNewVolunteers([volunteer]);
     },
+    isMatchingNameSearch(search: string): Filter {
+      return ({ searchable }: Searchable<EnrollableVolunteer>) =>
+        searchable.includes(search);
+    },
     formatUserNameWithNickname,
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.registrations {
+  margin-left: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    margin-left: 0;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+  margin: 10px 20px;
+}
+</style>
