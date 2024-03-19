@@ -23,7 +23,7 @@ class CastBeforeAssignment {
   static withDate(reviewable: HttpStringified<BeforeAssignment>): Reviewable {
     return {
       ...reviewable,
-      festivalActivity: castActivityWithDate(reviewable.festivalActivity),
+      festivalActivity: activityWithDate(reviewable.festivalActivity),
       mobilizations: this.mobilizationsWithDate(reviewable.mobilizations),
       feedbacks: feedbacksWithDate(reviewable.feedbacks),
       history: historyWithDate(reviewable.history),
@@ -44,7 +44,7 @@ export class CastReadyToAssign {
   static withDate(reviewable: HttpStringified<ReadyToAssign>): ReadyToAssign {
     return {
       ...reviewable,
-      festivalActivity: castActivityWithDate(reviewable.festivalActivity),
+      festivalActivity: activityWithDate(reviewable.festivalActivity),
       mobilizations: this.mobilizationsWithDate(reviewable.mobilizations),
       feedbacks: feedbacksWithDate(reviewable.feedbacks),
       history: historyWithDate(reviewable.history),
@@ -65,7 +65,7 @@ export class CastReadyToAssign {
   }
 }
 
-function castActivityWithDate(
+function activityWithDate(
   festivalActivity: HttpStringified<Reviewable["festivalActivity"]>,
 ): Reviewable["festivalActivity"] {
   return {
