@@ -29,7 +29,6 @@ import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import {
   Availabilities,
-  AvailabilityDate,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -154,8 +153,7 @@ export default defineComponent({
       this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
     selectDay(dateString: DateString) {
-      const date = AvailabilityDate.init({ date: dateString, hour: 0 });
-      if (isAllDaySelected(this.availabilities)(date)) {
+      if (isAllDaySelected(this.availabilities)(dateString)) {
         return this.unSelectAvailabilities(dateString);
       }
 

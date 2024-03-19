@@ -54,9 +54,9 @@ export function isItAvailableDuringThisHour(
 
 export function isAllDaySelected(
   availabilities: Period[],
-): (date: AvailabilityDate) => boolean {
-  return (date: AvailabilityDate) => {
-    const start = date.date;
+): (date: DateString) => boolean {
+  return (date: DateString) => {
+    const start = AvailabilityDate.init({ date, hour: 0 }).date;
     const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
     const period = Period.init({ start, end: tomorrow });
     return availabilities.some((availability) => availability.includes(period));

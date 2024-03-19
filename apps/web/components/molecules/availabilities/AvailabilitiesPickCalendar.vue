@@ -183,8 +183,7 @@ export default defineComponent({
       this.selectAvailability({ date: dateString, hour });
     },
     selectDay(dateString: DateString) {
-      const date = AvailabilityDate.init({ date: dateString, hour: 0 });
-      if (isAllDaySelected(this.availabilities)(date)) {
+      if (isAllDaySelected(this.availabilities)(dateString)) {
         return this.unSelectAvailabilities(dateString);
       }
 
