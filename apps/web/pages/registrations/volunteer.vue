@@ -133,7 +133,7 @@ export default defineComponent({
     searchableTeams(): Team[] {
       return TEAM_CODES.map((code) =>
         this.$accessor.team.getTeamByCode(code),
-      ).filter((team) => team !== undefined) as Team[];
+      ).filter((team): team is Team => team !== undefined);
     },
     volunteerToForgetName(): string {
       if (!this.volunteerToForget) return "";
@@ -143,7 +143,7 @@ export default defineComponent({
       return this.$accessor.registration.volunteers.map((newcomer) => ({
         ...newcomer,
         searchable: SlugifyService.apply(
-          `${newcomer.firstname} ${newcomer.lastname}`,
+          `${newcomer.firstname} ${newcomer.lastname} ${newcomer.mobilePhone}`,
         ),
       }));
     },
@@ -205,7 +205,7 @@ export default defineComponent({
     isMatchingTeam(team: Team | null): Filter {
       return ({ teams }: Searchable<EnrollableVolunteer>) => {
         if (!team) return true;
-        return (teams as string[]).includes(team.code);
+        return teams.some((code) => code === team.code);
       };
     },
     formatUserNameWithNickname,
