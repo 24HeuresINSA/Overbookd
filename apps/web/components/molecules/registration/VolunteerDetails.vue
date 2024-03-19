@@ -129,4 +129,3 @@ export default defineComponent({
   }
 }
 </style>
-../availabilities/AvailabilitiesSumup.vue

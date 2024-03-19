@@ -35,13 +35,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import {
-  DateString,
-  Hour,
-  ONE_DAY_IN_MS,
-  OverDate,
-  Period,
-} from "@overbookd/period";
+import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import {
   AvailabilityDate,
   AvailabilityErrorMessage,
@@ -50,6 +44,7 @@ import {
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import {
   ALL_HOURS,
+  isAllDaySelected,
   isEndOfAvailabilityPeriod,
 } from "~/utils/availabilities/availabilities";
 import {
@@ -113,16 +108,6 @@ export default defineComponent({
       return (date: DateString, hour: Hour) => {
         const { period } = OverDate.init({ date, hour });
         return this.selectedAvailabilities.some((availability) =>
-          availability.includes(period),
-        );
-      };
-    },
-    isAllDaySelected(): (date: AvailabilityDate) => boolean {
-      return (date: AvailabilityDate) => {
-        const start = date.date;
-        const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
-        const period = Period.init({ start, end: tomorrow });
-        return this.availabilities.some((availability) =>
           availability.includes(period),
         );
       };
@@ -199,7 +184,7 @@ export default defineComponent({
     },
     selectDay(dateString: DateString) {
       const date = AvailabilityDate.init({ date: dateString, hour: 0 });
-      if (this.isAllDaySelected(date)) {
+      if (isAllDaySelected(this.availabilities)(date)) {
         return this.unSelectAvailabilities(dateString);
       }
 
@@ -218,9 +203,6 @@ export default defineComponent({
           this.selectAvailability(overDate);
         },
       );
-    },
-    getPeriodDurationInHours(hour: Hour): number {
-      return this.isPartyShift(hour) ? 1 : 2;
     },
     unSelectAvailability(date: InitOverDate) {
       const charisma = this.getAssociatedCharisma(date.date, date.hour);

@@ -1,6 +1,10 @@
 <template>
   <div>
-    <OverCalendar v-model="calendarMarker" :title="calendarTitle">
+    <OverCalendar
+      v-model="calendarMarker"
+      :title="calendarTitle"
+      @select:date="selectDay"
+    >
       <template #interval="{ date, hour }">
         <div
           v-if="isEndOfPeriod(hour)"
@@ -25,10 +29,15 @@ import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import {
   Availabilities,
+  AvailabilityDate,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
-import { isEndOfAvailabilityPeriod } from "~/utils/availabilities/availabilities";
+import {
+  ALL_HOURS,
+  isAllDaySelected,
+  isEndOfAvailabilityPeriod,
+} from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
 import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
@@ -143,6 +152,26 @@ export default defineComponent({
       if (this.errors.length > 0) return;
 
       this.$emit("update:availabilities", this.availabilitiesAggregate.list);
+    },
+    selectDay(dateString: DateString) {
+      const date = AvailabilityDate.init({ date: dateString, hour: 0 });
+      if (isAllDaySelected(this.availabilities)(date)) {
+        return this.unSelectAvailabilities(dateString);
+      }
+
+      this.selectAvailabilities(dateString);
+    },
+    selectAvailabilities(date: DateString) {
+      ALL_HOURS.filter((hour) => !this.isSelected(date, hour)).map((hour) => {
+        const overDate = { date, hour };
+        this.selectAvailability(overDate);
+      });
+    },
+    unSelectAvailabilities(date: DateString) {
+      ALL_HOURS.filter((hour) => this.isSelected(date, hour)).map((hour) => {
+        const overDate = { date, hour };
+        this.unSelectAvailability(overDate);
+      });
     },
   },
 });

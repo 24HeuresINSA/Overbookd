@@ -149,7 +149,7 @@ type VolunteerPersonalDataFormData = InputRulesData & {
   nickname: string | null;
   phone: string;
   email: string;
-  charisma: number;
+  charisma: string;
   newTeam?: string;
 };
 
@@ -165,7 +165,7 @@ export default defineComponent({
       nickname: null,
       phone: "",
       email: "",
-      charisma: 0,
+      charisma: "0",
       newTeam: undefined,
       rules: {
         required: required,
@@ -215,7 +215,7 @@ export default defineComponent({
         nickname: this.nickname ? this.nickname : null,
         phone: this.phone,
         email: this.email,
-        charisma: this.charisma,
+        charisma: +this.charisma,
       };
     },
   },
@@ -235,7 +235,7 @@ export default defineComponent({
       this.nickname = this.selectedVolunteer.nickname ?? null;
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
-      this.charisma = this.selectedVolunteer.charisma;
+      this.charisma = this.selectedVolunteer.charisma?.toString();
 
       if (this.selectedVolunteer.profilePictureBlob) return;
       await this.$accessor.user.setSelectedUserProfilePicture();
