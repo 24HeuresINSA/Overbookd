@@ -71,15 +71,15 @@
             :hour="hour"
             :minute="minute"
             :weekday="weekday"
-            :hasDay="hasDay"
-            :hasTime="hasTime"
+            :has-day="hasDay"
+            :has-time="hasTime"
             :past="past"
             :present="present"
             :future="future"
             :time="time"
-            :timeToY="timeToY"
-            :timeDelta="timeDelta"
-            :minutesToPixels="minutesToPixels"
+            :time-to-y="timeToY"
+            :time-delta="timeDelta"
+            :minutes-to-pixels="minutesToPixels"
             :week="week"
           ></slot>
           <div
@@ -112,17 +112,17 @@
           <slot
             name="event"
             :event="event"
-            :eventParsed="eventParsed"
+            :event-parsed="eventParsed"
             :day="day"
             :outside="outside"
             :start="start"
             :end="end"
             :timed="timed"
             :singleline="singleline"
-            :overlapsNoon="overlapsNoon"
-            :formatTime="formatTime"
-            :timeSummary="timeSummary"
-            :eventSummary="eventSummary"
+            :overlaps-noon="overlapsNoon"
+            :format-time="formatTime"
+            :time-summary="timeSummary"
+            :event-summary="eventSummary"
           >
             <nuxt-link :to="event.link ?? ''" class="calendar-event">
               <div class="default-event">

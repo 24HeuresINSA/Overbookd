@@ -2,7 +2,9 @@ import {
   DateString,
   Hour,
   IProvidePeriod,
+  ONE_DAY_IN_MS,
   OverDate,
+  Period,
   isHour,
 } from "@overbookd/period";
 import { AvailabilityDate } from "@overbookd/volunteer-availability";
@@ -48,4 +50,15 @@ export function isItAvailableDuringThisHour(
 ) {
   const overDate = OverDate.init({ date, hour });
   return overDate.isIncludedBy(availabilities);
+}
+
+export function isAllDaySelected(
+  availabilities: Period[],
+): (date: AvailabilityDate) => boolean {
+  return (date: AvailabilityDate) => {
+    const start = date.date;
+    const tomorrow = new Date(start.getTime() + ONE_DAY_IN_MS);
+    const period = Period.init({ start, end: tomorrow });
+    return availabilities.some((availability) => availability.includes(period));
+  };
 }

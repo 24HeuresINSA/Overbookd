@@ -1,4 +1,4 @@
-import { IProvidePeriod } from "@overbookd/period";
+import { Hour, IProvidePeriod } from "@overbookd/period";
 import { isPartyShift } from "../shift/shift";
 
 export function isSamePeriod(
@@ -9,6 +9,6 @@ export function isSamePeriod(
     period.end.getTime() === otherPeriod.end.getTime();
 }
 
-export function getPeriodDurationInHours(hour: number): number {
+export function getPeriodDurationInHours(hour: Hour): number {
   return isPartyShift(hour) ? 1 : 2;
 }

@@ -48,9 +48,6 @@ export default defineComponent({
       await this.fetchAvailabilities();
     },
   },
-  async mounted() {
-    await this.fetchAvailabilities();
-  },
   methods: {
     volunteerUpdated() {
       this.$emit("volunteer-updated");
