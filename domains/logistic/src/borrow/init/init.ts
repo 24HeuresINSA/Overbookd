@@ -2,10 +2,7 @@ import { numberGenerator } from "@overbookd/list";
 import { Borrow } from "../borrow";
 import { AvailableDateAfterUnavailableDate } from "../borrow.error";
 
-export type InitBorrowForm = Pick<
-  Borrow,
-  "lender" | "availableOn" | "unavailableOn"
->;
+type InitBorrowForm = Pick<Borrow, "lender" | "availableOn" | "unavailableOn">;
 
 export type BorrowsForInit = {
   add(borrow: Borrow): Promise<Borrow>;
