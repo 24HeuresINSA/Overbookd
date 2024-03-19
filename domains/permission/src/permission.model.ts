@@ -41,6 +41,8 @@ import {
   VIEW_GEAR_DASHBOARD,
   READ_PURCHASE_SHEET,
   WRITE_PURCHASE_SHEET,
+  READ_BORROW_SHEET,
+  WRITE_BORROW_SHEET,
 } from "./permissions";
 
 export type Permission =
@@ -85,4 +87,6 @@ export type Permission =
   | typeof OFFER_SHARED_MEAL
   | typeof SHOTGUN_SHARED_MEAL
   | typeof READ_PURCHASE_SHEET
-  | typeof WRITE_PURCHASE_SHEET;
+  | typeof WRITE_PURCHASE_SHEET
+  | typeof READ_BORROW_SHEET
+  | typeof WRITE_BORROW_SHEET;
