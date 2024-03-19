@@ -99,15 +99,6 @@
         changer les infos personnelles
       </v-btn>
       <v-btn
-        v-if="canManageAvailability"
-        text
-        color="warning"
-        class="availability-btn"
-        @click="saveAvailabilities"
-      >
-        changer les disponibilites
-      </v-btn>
-      <v-btn
         v-if="canManageUsers && !isMe"
         text
         color="red"
@@ -261,16 +252,6 @@ export default defineComponent({
       this.$emit("saved");
     },
 
-    async saveAvailabilities() {
-      const availabilities =
-        this.$accessor.volunteerAvailability.availabilities.list;
-      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
-        { volunteerId: this.selectedVolunteer.id, availabilities },
-      );
-      this.$accessor.user.findUserById(this.selectedVolunteer.id);
-      this.$emit("saved");
-    },
-
     async deleteVolunteer() {
       await this.$accessor.user.deleteUser(this.selectedVolunteer.id);
       this.$emit("deleted");
@@ -323,12 +304,6 @@ export default defineComponent({
   align-items: center;
   gap: 10px;
   margin-left: 10px;
-}
-
-.availability-btn {
-  @media only screen and(max-width: $mobile-max-width) {
-    display: none;
-  }
 }
 
 .friends {

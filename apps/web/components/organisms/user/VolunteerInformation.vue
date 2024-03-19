@@ -11,7 +11,7 @@
         <AvailabilitiesSumup
           :readonly="isReadonlyCalendar"
           :availabilities="availabilities"
-          @update:availabilities="updateAvailabilities"
+          @update:availabilities="updateVolunteerAvailabilities"
         />
       </div>
     </div>
@@ -31,7 +31,7 @@ export default defineComponent({
     VolunteerPersonalDataForm,
     AvailabilitiesSumup,
   },
-  emits: ["volunteer-updated"],
+  emits: ["updated"],
   computed: {
     selectedVolunteerId(): number {
       return this.$accessor.user.selectedUser.id;
@@ -50,16 +50,22 @@ export default defineComponent({
   },
   methods: {
     volunteerUpdated() {
-      this.$emit("volunteer-updated");
+      this.$emit("updated");
     },
     async fetchAvailabilities() {
       await this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
         this.selectedVolunteerId,
       );
     },
-    updateAvailabilities(availabilities: Period[]) {
-      this.$accessor.volunteerAvailability.setAvailabilities(availabilities);
-      this.$emit("volunteer-updated");
+    async updateVolunteerAvailabilities(availabilities: Period[]) {
+      await this.$accessor.volunteerAvailability.overrideVolunteerAvailabilities(
+        {
+          volunteerId: this.selectedVolunteerId,
+          availabilities,
+        },
+      );
+      this.$accessor.user.fetchMyInformation();
+      this.$emit("updated");
     },
   },
 });
