@@ -164,13 +164,13 @@ export default defineComponent({
     selectAvailabilities(date: DateString) {
       ALL_HOURS.filter((hour) => !this.isSelected(date, hour)).map((hour) => {
         const overDate = { date, hour };
-        this.selectAvailability(overDate);
+        this.availabilitiesAggregate.select(overDate);
       });
     },
     unSelectAvailabilities(date: DateString) {
       ALL_HOURS.filter((hour) => this.isSelected(date, hour)).map((hour) => {
         const overDate = { date, hour };
-        this.unSelectAvailability(overDate);
+        this.availabilitiesAggregate.unselect(overDate);
       });
     },
   },
