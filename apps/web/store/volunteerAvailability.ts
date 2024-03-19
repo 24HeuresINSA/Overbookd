@@ -111,6 +111,10 @@ export const actions = actionTree(
       commit("INIT_AVAILABILITIES", castPeriods(res.data));
     },
 
+    setAvailabilities({ commit }, availabilities: Period[]) {
+      commit("INIT_AVAILABILITIES", availabilities);
+    },
+
     selectAvailability({ commit }, selected: AvailabilitySelection) {
       commit("SELECT_AVAILABILITY", selected);
     },

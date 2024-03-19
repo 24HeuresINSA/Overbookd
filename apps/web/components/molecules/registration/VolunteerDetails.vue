@@ -34,7 +34,7 @@
           ></v-text-field>
         </span>
       </div>
-      <AvailabilitiesSumupV2
+      <AvailabilitiesSumup
         :readonly="false"
         :availabilities="availabilities"
         @update:availabilities="updateVolunteerAvailabilities"
@@ -48,11 +48,11 @@ import { defineComponent } from "vue";
 import { EnrollableVolunteer } from "@overbookd/http";
 import { Period } from "@overbookd/period";
 import { formatPhoneLink, formatEmailLink } from "~/utils/user/user.utils";
-import AvailabilitiesSumupV2 from "../availabilities/AvailabilitiesSumupV2.vue";
+import AvailabilitiesSumup from "../availabilities/AvailabilitiesSumup.vue";
 
 export default defineComponent({
   name: "VolunteerDetails",
-  components: { AvailabilitiesSumupV2 },
+  components: { AvailabilitiesSumup },
   props: {
     volunteer: {
       type: Object as () => EnrollableVolunteer,
@@ -129,3 +129,4 @@ export default defineComponent({
   }
 }
 </style>
+../availabilities/AvailabilitiesSumup.vue

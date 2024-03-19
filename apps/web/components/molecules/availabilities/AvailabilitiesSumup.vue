@@ -20,42 +20,55 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import { defineComponent } from "vue";
 import { DateString, Hour, OverDate, Period } from "@overbookd/period";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
-import { UserPersonalData } from "@overbookd/user";
 import {
-  AvailabilityDate,
-  AvailabilityErrorMessage,
+  Availabilities,
   InitOverDate,
 } from "@overbookd/volunteer-availability";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
 import { isEndOfAvailabilityPeriod } from "~/utils/availabilities/availabilities";
 import { formatDateWithExplicitMonth } from "~/utils/date/date.utils";
 import { isPartyShift } from "~/utils/shift/shift";
-import {
-  SavedCharismaPeriod,
-  getPeriodCharisma,
-} from "~/utils/models/charisma-period.model";
+import { SavedCharismaPeriod } from "~/utils/models/charisma-period.model";
 
-export default Vue.extend({
+type AvailabilitiesSumupData = {
+  calendarMarker: Date;
+  availabilitiesAggregate: Availabilities;
+};
+
+export default defineComponent({
   name: "AvailabilitiesSumup",
   components: { OverCalendar },
-  data: () => ({
+  model: {
+    prop: "availabilities",
+    event: "update:availabilities",
+  },
+  props: {
+    availabilities: {
+      type: Array as () => Period[],
+      default: () => [],
+    },
+    readonly: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  emits: ["update:availabilities"],
+  data: (): AvailabilitiesSumupData => ({
     calendarMarker: new Date(),
+    availabilitiesAggregate: Availabilities.init(),
   }),
   computed: {
     charismaPeriods(): SavedCharismaPeriod[] {
       return this.$accessor.charismaPeriod.charismaPeriods ?? [];
     },
-    selectedVolunteer(): UserPersonalData {
-      return this.$accessor.user.selectedUser;
+    selectedAvailabilities() {
+      return this.availabilitiesAggregate.list;
     },
-    selectedAvailabilities(): Period[] {
-      return this.$accessor.volunteerAvailability.availabilities.list;
-    },
-    errors(): AvailabilityErrorMessage[] {
-      return this.$accessor.volunteerAvailability.availabilities.errors;
+    errors() {
+      return this.availabilitiesAggregate.errors;
     },
     manifDate(): Date {
       return this.$accessor.configuration.eventStartDate;
@@ -78,30 +91,30 @@ export default Vue.extend({
       };
     },
     isReadonly(): boolean {
-      return !this.$accessor.user.can(AFFECT_VOLUNTEER);
+      return !this.$accessor.user.can(AFFECT_VOLUNTEER) || this.readonly;
     },
   },
   watch: {
-    selectedVolunteer() {
-      this.fetchAvailabilities();
+    availabilities(availabilities: Period[]) {
+      this.initAvailabilityState(availabilities);
     },
   },
-  mounted() {
-    this.calendarMarker = this.manifDate;
-  },
-  async created() {
-    await this.$accessor.configuration.fetch("eventDate");
+  async mounted() {
     await Promise.all([
-      this.fetchAvailabilities(),
+      this.$accessor.configuration.fetch("eventDate"),
       this.$accessor.charismaPeriod.fetchCharismaPeriods(),
     ]);
+    this.calendarMarker = this.manifDate;
+    this.initAvailabilityState(this.availabilities);
   },
   methods: {
-    fetchAvailabilities() {
-      if (!this.selectedVolunteer) return;
-      return this.$accessor.volunteerAvailability.fetchVolunteerAvailabilities(
-        this.selectedVolunteer.id,
-      );
+    initAvailabilityState(availabilities: Period[]) {
+      const selected = this.readonly ? [] : availabilities;
+      const recorded = this.readonly ? availabilities : [];
+      this.availabilitiesAggregate = Availabilities.init({
+        selected,
+        recorded,
+      });
     },
     isEndOfPeriod(hour: Hour): boolean {
       return isEndOfAvailabilityPeriod(hour);
@@ -119,22 +132,17 @@ export default Vue.extend({
       this.selectAvailability(selection);
     },
     selectAvailability(date: InitOverDate) {
-      const charisma = this.getAssociatedCharisma(date);
-      const selection = { date, charisma };
+      this.availabilitiesAggregate = this.availabilitiesAggregate.select(date);
+      if (this.errors.length > 0) return;
 
-      this.$accessor.volunteerAvailability.selectAvailability(selection);
+      this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
     unSelectAvailability(date: InitOverDate) {
-      const charisma = this.getAssociatedCharisma(date);
-      const selection = { date, charisma };
+      this.availabilitiesAggregate =
+        this.availabilitiesAggregate.unselect(date);
+      if (this.errors.length > 0) return;
 
-      this.$accessor.volunteerAvailability.removeRecordedAvailability(
-        selection,
-      );
-    },
-    getAssociatedCharisma(date: InitOverDate): number {
-      const { period } = AvailabilityDate.init(date);
-      return getPeriodCharisma(this.charismaPeriods, period);
+      this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
   },
 });
