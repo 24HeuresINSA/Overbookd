@@ -1,14 +1,31 @@
 <template>
-  <div>
+  <div class="registrations">
     <h1>Admission bénévoles</h1>
     <v-data-table
       :headers="headers"
-      :items="volunteersToEnroll"
+      :items="filteredVolunteersToEnroll"
       :expanded.sync="displayedVolunteers"
       :items-per-page="30"
       show-expand
       @click:row="openOrCloseVolunteerDetails"
     >
+      <template #top>
+        <div class="filters">
+          <v-text-field
+            v-model="searchVolunteer"
+            label="Rechercher par nom"
+            class="search"
+          />
+          <SearchTeam
+            v-model="searchTeam"
+            :list="searchableTeams"
+            class="team"
+            label="Rechercher par équipe"
+            :boxed="false"
+          />
+        </div>
+      </template>
+
       <template #item.registeredAt="{ item }">
         {{ formatDate(item.registeredAt) }}
       </template>
@@ -68,14 +85,22 @@ import { Header } from "~/utils/models/data-table.model";
 import { formatUserNameWithNickname } from "~/utils/user/user.utils";
 import VolunteerDetails from "~/components/molecules/registration/VolunteerDetails.vue";
 import ConfirmationMessage from "~/components/atoms/card/ConfirmationMessage.vue";
-import { VOLUNTEER } from "@overbookd/registration";
+import { TEAM_CODES, VOLUNTEER } from "@overbookd/registration";
+import { SlugifyService } from "@overbookd/slugify";
+import { Searchable } from "~/utils/search/search.utils";
+import SearchTeam from "~/components/atoms/field/search/SearchTeam.vue";
+import { Team } from "~/utils/models/team.model";
 
 type RegistrationsData = {
   headers: Header[];
   displayedVolunteers: EnrollableVolunteer[];
   isForgetVolunteerDialogOpen: boolean;
   volunteerToForget: EnrollableVolunteer | null;
+  searchVolunteer: string;
+  searchTeam: Team | null;
 };
+
+type Filter = (newcomer: Searchable<EnrollableVolunteer>) => boolean;
 
 export default defineComponent({
   name: "RegistrationsSoft",
@@ -84,6 +109,7 @@ export default defineComponent({
     TeamChip,
     VolunteerDetails,
     ConfirmationMessage,
+    SearchTeam,
   },
   data: (): RegistrationsData => ({
     headers: [
@@ -97,17 +123,38 @@ export default defineComponent({
     displayedVolunteers: [],
     isForgetVolunteerDialogOpen: false,
     volunteerToForget: null,
+    searchVolunteer: "",
+    searchTeam: null,
   }),
   head: () => ({
     title: "Admission bénévoles",
   }),
   computed: {
-    volunteersToEnroll(): EnrollableVolunteer[] {
-      return this.$accessor.registration.volunteers;
+    searchableTeams(): Team[] {
+      return TEAM_CODES.map((code) =>
+        this.$accessor.team.getTeamByCode(code),
+      ).filter((team): team is Team => team !== undefined);
     },
     volunteerToForgetName(): string {
       if (!this.volunteerToForget) return "";
       return formatUserNameWithNickname(this.volunteerToForget);
+    },
+    searchableVolunteersToEnroll(): Searchable<EnrollableVolunteer>[] {
+      return this.$accessor.registration.volunteers.map((newcomer) => ({
+        ...newcomer,
+        searchable: SlugifyService.apply(
+          `${newcomer.firstname} ${newcomer.lastname} ${newcomer.mobilePhone}`,
+        ),
+      }));
+    },
+    filteredVolunteersToEnroll(): EnrollableVolunteer[] {
+      const search = SlugifyService.apply(this.searchVolunteer);
+      return this.searchableVolunteersToEnroll.filter((volunteer) => {
+        return (
+          this.isMatchingNameSearch(search)(volunteer) &&
+          this.isMatchingTeam(this.searchTeam)(volunteer)
+        );
+      });
     },
   },
   mounted() {
@@ -151,7 +198,32 @@ export default defineComponent({
     enroll(volunteer: EnrollableVolunteer) {
       this.$accessor.registration.enrollNewVolunteers([volunteer]);
     },
+    isMatchingNameSearch(search: string): Filter {
+      return ({ searchable }: Searchable<EnrollableVolunteer>) =>
+        searchable.includes(search);
+    },
+    isMatchingTeam(team: Team | null): Filter {
+      return ({ teams }: Searchable<EnrollableVolunteer>) => {
+        if (!team) return true;
+        return teams.some((code) => code === team.code);
+      };
+    },
     formatUserNameWithNickname,
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.registrations {
+  margin-left: 10px;
+  @media screen and (max-width: $mobile-max-width) {
+    margin-left: 0;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 20px;
+  margin: 10px 20px;
+}
+</style>
