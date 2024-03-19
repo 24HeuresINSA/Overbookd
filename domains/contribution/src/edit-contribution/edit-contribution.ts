@@ -47,8 +47,7 @@ export class EditContribution {
       throw new InsufficientAmount();
     }
 
-    contribution.amount = amount;
-    return this.contributions.save(contribution);
+    return this.contributions.save({ ...contribution, amount });
   }
 
   async findAdherentsWithValidContribution(

@@ -15,10 +15,7 @@ export class PrismaEditContributions implements EditContributions {
     edition: Contribution["edition"],
   ): Promise<Contribution | null> {
     return this.prisma.contribution.findFirst({
-      where: {
-        adherentId,
-        edition,
-      },
+      where: { adherentId, edition },
     });
   }
 

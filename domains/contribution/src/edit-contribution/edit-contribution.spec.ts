@@ -7,6 +7,7 @@ import { InMemoryEditContributions } from "./edit-contribution.inmemory";
 import { Adherent, Contribution } from "../contribution";
 import { InsufficientAmount } from "../contribution.error";
 import { InMemoryAdherents } from "./adherents.inmemory";
+import { NotFoundContribution } from "./edit-contribution.error";
 
 const VALID_AMOUNT = 500;
 const INVALID_AMOUNT = 90;
@@ -79,7 +80,7 @@ describe("Edit contribution", () => {
     it("should indicate that the contribution does not exist", async () => {
       expect(
         async () => await edit.amount(200, CURRENT_EDITION, VALID_AMOUNT),
-      ).rejects.toThrow();
+      ).rejects.toThrow(NotFoundContribution);
     });
   });
 

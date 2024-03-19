@@ -1,4 +1,4 @@
-import { Contribution } from "../contribution";
+import { Contribution, areSameContributions } from "../contribution";
 import { EditContributions } from "./edit-contribution";
 import { NotFoundContribution } from "./edit-contribution.error";
 import { updateItemToList } from "@overbookd/list";
@@ -21,19 +21,15 @@ export class InMemoryEditContributions implements EditContributions {
     adherentId: Contribution["adherentId"],
     edition: Contribution["edition"],
   ): Promise<Contribution | null> {
-    const contribution = this.contributions.find(
-      (contribution) =>
-        contribution.adherentId === adherentId &&
-        contribution.edition === edition,
+    const contribution = this.contributions.find((contribution) =>
+      areSameContributions({ adherentId, edition }, contribution),
     );
     return Promise.resolve(contribution || null);
   }
 
   save(contribution: Contribution): Promise<Contribution> {
-    const contributionIndex = this.contributions.findIndex(
-      (toUpdate) =>
-        toUpdate.adherentId === contribution.adherentId &&
-        toUpdate.edition === contribution.edition,
+    const contributionIndex = this.contributions.findIndex((toUpdate) =>
+      areSameContributions(toUpdate, contribution),
     );
     if (contributionIndex == -1) throw new NotFoundContribution();
 
@@ -51,8 +47,7 @@ export class InMemoryEditContributions implements EditContributions {
   ): Promise<void> {
     this.contributions = this.contributions.filter(
       (contribution) =>
-        contribution.adherentId !== adherentId &&
-        contribution.edition !== edition,
+        !areSameContributions({ adherentId, edition }, contribution),
     );
     return Promise.resolve();
   }
