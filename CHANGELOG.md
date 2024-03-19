@@ -1,3 +1,21 @@
+## [2.22.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.5...v2.22.6) (2024-03-19)
+
+
+### Bug Fixes
+
+* **festival-task:** add contact on select. [#1692](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1692) ([50eebdb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/50eebdbdae322c0e3a57530eebb30b969186ea31))
+* **festival-task:** add dialog to confirm approvals reset on instructions update [#1630](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1630) ([2385193](https://gitlab.com/24-heures-insa/overbookd-mono/commit/23851936a0d39f1b134e9ce72506e7d42ad2de39))
+* **festival-task:** add quick filter on FT. [#1678](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1678) ([aad0a86](https://gitlab.com/24-heures-insa/overbookd-mono/commit/aad0a86fbd2d4f61c87a6883cce66cc948c5a936))
+* **festival-task:** auto add contact and volunteer on select. [#1692](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1692) ([5716ae9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5716ae976af019ac0fcdb240252c70c9a9a0b9ee))
+* **festival-task:** clean users search input after seletion [#1694](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1694) ([847bed2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/847bed2aadfe59c6eb3f1e9d28dbc7a8f26ba305))
+* **festival-task:** clear contact field after add. [#1692](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1692) ([eefa885](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eefa885dd0a98a0fec96b14b0e8b3255746c2b4e))
+* **web:** force autocomplete re-render after user selected. [#1698](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1698) ([09b8d8a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/09b8d8aa76ce7c1d76771f3d412811b3c5ca173f))
+
+
+### Pre-Features
+
+* **purchase-sheets:** setup the page and manage permissions [#1672](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1672) ([89e281a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/89e281af38d10b037808438dcaedd42e3027ca01))
+
 ## [2.22.5](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.4...v2.22.5) (2024-03-16)
 
 
