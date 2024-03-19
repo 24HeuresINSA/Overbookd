@@ -3,17 +3,11 @@ import { Contribute } from "./contribute";
 import { HasAlreadyPayed, NotAllowedToPay } from "./pay-contribution.error";
 import { Edition } from "../edition";
 import {
+  Adherent,
   Contribution,
   MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
 } from "../contribution";
 import { InsufficientAmount } from "../contribution.error";
-
-export type Adherent = {
-  id: number;
-  firstname: string;
-  lastname: string;
-  nickname?: string;
-};
 
 type WithPermission = {
   permissions: Permission[];

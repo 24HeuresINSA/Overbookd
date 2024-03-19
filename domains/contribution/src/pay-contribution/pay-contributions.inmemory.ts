@@ -1,6 +1,7 @@
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { Adherent, PayContributions, Member } from "./pay-contribution";
+import { PayContributions, Member } from "./pay-contribution";
 import {
+  Adherent,
   Contribution,
   ContributionIdentity,
   areSameContributions,

@@ -1,11 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { Contribution } from "@overbookd/contribution";
 import {
+  Adherent,
+  Contribution,
+  Edition,
   EditContribution,
   PayContribution,
   PayContributionForm,
+  AdherentWithContribution,
 } from "@overbookd/contribution";
-import { Adherent } from "@overbookd/contribution";
 
 @Injectable()
 export class ContributionService {
@@ -18,10 +20,11 @@ export class ContributionService {
     return this.payContribution.findAdherentsWithContributionOutToDate();
   }
 
-  async findValidContributionsOn(
-    edition: Contribution["edition"],
-  ): Promise<Contribution[]> {
-    return this.editAmount.findCurrentContributions(edition);
+  async findAdherentsWithValidContribution(): Promise<
+    AdherentWithContribution[]
+  > {
+    const edition = Edition.current;
+    return this.editAmount.findAdherentsWithValidContribution(edition);
   }
 
   async pay(contributionData: PayContributionForm): Promise<void> {

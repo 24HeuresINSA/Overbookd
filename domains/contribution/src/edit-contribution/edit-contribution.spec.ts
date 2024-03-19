@@ -1,14 +1,30 @@
 import { describe, it, expect } from "vitest";
-import { EditContribution } from "./edit-contribution";
+import {
+  AdherentWithContribution,
+  EditContribution,
+} from "./edit-contribution";
 import { InMemoryEditContributions } from "./edit-contribution.inmemory";
-import { Contribution } from "../contribution";
+import { Adherent, Contribution } from "../contribution";
 import { InsufficientAmount } from "../contribution.error";
+import { InMemoryAdherents } from "./adherents.inmemory";
 
 const VALID_AMOUNT = 500;
 const INVALID_AMOUNT = 90;
 const CURRENT_EDITION = 49;
 
-const noel: Contribution = {
+const noel: Adherent = {
+  id: 1,
+  firstname: "Noël",
+  lastname: "Ertsemud",
+};
+const lea: Adherent = {
+  id: 2,
+  firstname: "Léa",
+  lastname: "Mauyno",
+  nickname: "Shogosse",
+};
+
+const noelContrib: Contribution = {
   adherentId: 1,
   amount: 100,
   edition: CURRENT_EDITION,
@@ -16,7 +32,7 @@ const noel: Contribution = {
   expirationDate: new Date(2025, 9, 10),
 };
 
-const lea: Contribution = {
+const leaContrib: Contribution = {
   adherentId: 2,
   amount: 150,
   edition: CURRENT_EDITION - 1,
@@ -26,12 +42,13 @@ const lea: Contribution = {
 
 describe("Edit contribution", () => {
   describe("when editing amount of an existing contribution", () => {
-    const contributions = new InMemoryEditContributions([noel]);
-    const edit = new EditContribution(contributions);
+    const contributions = new InMemoryEditContributions([noelContrib]);
+    const adherents = new InMemoryAdherents([noel, lea]);
+    const edit = new EditContribution(contributions, adherents);
     describe("when new amount is at least than 100 cents", async () => {
       const contribution = await edit.amount(
-        noel.adherentId,
-        noel.edition,
+        noelContrib.adherentId,
+        noelContrib.edition,
         VALID_AMOUNT,
       );
       it("should update the amount", async () => {
@@ -45,7 +62,11 @@ describe("Edit contribution", () => {
       it("should indicate that the minimum amount is 100 cents", async () => {
         expect(
           async () =>
-            await edit.amount(noel.adherentId, noel.edition, INVALID_AMOUNT),
+            await edit.amount(
+              noelContrib.adherentId,
+              noelContrib.edition,
+              INVALID_AMOUNT,
+            ),
         ).rejects.toThrow(InsufficientAmount);
       });
     });
@@ -53,7 +74,8 @@ describe("Edit contribution", () => {
 
   describe("when editing amount of a non-existing contribution", () => {
     const contributions = new InMemoryEditContributions();
-    const edit = new EditContribution(contributions);
+    const adherents = new InMemoryAdherents([noel, lea]);
+    const edit = new EditContribution(contributions, adherents);
     it("should indicate that the contribution does not exist", async () => {
       expect(
         async () => await edit.amount(200, CURRENT_EDITION, VALID_AMOUNT),
@@ -61,24 +83,36 @@ describe("Edit contribution", () => {
     });
   });
 
-  describe("when looking for current contributions", () => {
-    const contributions = new InMemoryEditContributions([noel, lea]);
-    const edit = new EditContribution(contributions);
-    it("should return current contributions", async () => {
+  describe("when looking for adherents with valid contribution", () => {
+    const contributions = new InMemoryEditContributions([
+      noelContrib,
+      leaContrib,
+    ]);
+    const adherents = new InMemoryAdherents([noel, lea]);
+    const edit = new EditContribution(contributions, adherents);
+    it("should return adherents with valid contribution", async () => {
       const contributions =
-        await edit.findCurrentContributions(CURRENT_EDITION);
+        await edit.findAdherentsWithValidContribution(CURRENT_EDITION);
 
-      expect(contributions).toMatchObject([noel]);
+      const expectedNoel: AdherentWithContribution = {
+        ...noel,
+        amount: noelContrib.amount,
+      };
+      expect(contributions).toMatchObject([expectedNoel]);
     });
   });
 
   describe("when removing a contribution", () => {
-    const contributions = new InMemoryEditContributions([noel, lea]);
-    const edit = new EditContribution(contributions);
+    const contributions = new InMemoryEditContributions([
+      noelContrib,
+      leaContrib,
+    ]);
+    const adherents = new InMemoryAdherents([noel, lea]);
+    const edit = new EditContribution(contributions, adherents);
     it("should remove the contribution", async () => {
-      await edit.remove(noel.adherentId, noel.edition);
+      await edit.remove(noelContrib.adherentId, noelContrib.edition);
 
-      expect(contributions).not.toContain(noel);
+      expect(contributions).not.toContain(noelContrib);
     });
   });
 });

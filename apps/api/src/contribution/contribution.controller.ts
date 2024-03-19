@@ -24,12 +24,13 @@ import { JwtAuthGuard } from "../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../authentication/permissions-auth.guard";
 import { ContributionService } from "./contribution.service";
 import { PayContributionRequestDto } from "./dto/pay-contribution.request.dto";
-import { Adherent } from "@overbookd/contribution";
+import { Adherent, AdherentWithContribution } from "@overbookd/contribution";
 import { Permission } from "../authentication/permissions-auth.decorator";
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
 import { AdherentResponseDto } from "./dto/adherent.response.dto";
 import { ContributionErrorFilter } from "./contribution.filter";
 import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
+import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
 
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @ApiBearerAuth()
@@ -58,6 +59,21 @@ export class ContributionController {
   })
   findAdherentsWithContributionOutToDate(): Promise<Adherent[]> {
     return this.contributionService.findAdherentsWithContributionOutToDate();
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @ApiBearerAuth()
+  @Permission(MANAGE_CONTRIBUTIONS)
+  @Get("valid-adherents")
+  @ApiResponse({
+    status: 200,
+    description:
+      "List of adherents with valid contribution for the current edition",
+    type: AdherentWithContributionResponseDto,
+    isArray: true,
+  })
+  findAdherentsWithValidContribution(): Promise<AdherentWithContribution[]> {
+    return this.contributionService.findAdherentsWithValidContribution();
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)

@@ -6,6 +6,7 @@ import { PrismaModule } from "../prisma.module";
 import { ContributionService } from "./contribution.service";
 import { EditContribution, PayContribution } from "@overbookd/contribution";
 import { PrismaEditContributions } from "./repository/edit-contributions.prisma";
+import { PrismaAdherents } from "./repository/adherents.prisma";
 
 @Module({
   controllers: [ContributionController],
@@ -22,6 +23,11 @@ import { PrismaEditContributions } from "./repository/edit-contributions.prisma"
       inject: [PrismaService],
     },
     {
+      provide: PrismaAdherents,
+      useFactory: (prisma: PrismaService) => new PrismaAdherents(prisma),
+      inject: [PrismaService],
+    },
+    {
       provide: PayContribution,
       useFactory: (payContributions: PrismaPayContributions) =>
         new PayContribution(payContributions),
@@ -29,9 +35,11 @@ import { PrismaEditContributions } from "./repository/edit-contributions.prisma"
     },
     {
       provide: EditContribution,
-      useFactory: (editContributions: PrismaEditContributions) =>
-        new EditContribution(editContributions),
-      inject: [PrismaEditContributions],
+      useFactory: (
+        editContributions: PrismaEditContributions,
+        adherents: PrismaAdherents,
+      ) => new EditContribution(editContributions, adherents),
+      inject: [PrismaEditContributions, PrismaAdherents],
     },
     {
       provide: ContributionService,
