@@ -211,7 +211,7 @@ export default defineComponent({
         start: holiday.date,
         name: holiday.name,
         timed: false,
-        color: "grey",
+        color: "#B80037",
       }));
     },
   },
