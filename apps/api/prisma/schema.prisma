@@ -47,6 +47,7 @@ model User {
   updatedAt              DateTime                @updatedAt @map("updated_at")
   isDeleted              Boolean                 @default(false) @map("is_deleted")
   registrationMembership RegistrationMembership? @map("registration_membership")
+  note                   String?                 @db.Text
 
   preference Preference?
   teams      UserTeam[]

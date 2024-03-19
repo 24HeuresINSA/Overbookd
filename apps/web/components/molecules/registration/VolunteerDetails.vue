@@ -9,6 +9,12 @@
         rows="20"
         readonly
       ></v-textarea>
+      <v-textarea
+        :value="volunteer.note"
+        class="comment-input"
+        label="Note des humains"
+        rows="5"
+      ></v-textarea>
     </div>
     <div class="contact-and-availabilities">
       <div class="contact">
