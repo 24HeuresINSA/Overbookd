@@ -34,8 +34,8 @@ import {
   VIEW_GEAR_DASHBOARD,
   READ_PURCHASE_SHEET,
   WRITE_PURCHASE_SHEET,
-  READ_LOAN_SHEET,
-  WRITE_LOAN_SHEET,
+  READ_BORROW_SHEET,
+  WRITE_BORROW_SHEET,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -169,7 +169,7 @@ export const permissions = [
     },
   },
   {
-    name: READ_LOAN_SHEET,
+    name: READ_BORROW_SHEET,
     description: "Peut regarder les fiches emprunts",
     teams: {
       createMany: {
@@ -178,7 +178,7 @@ export const permissions = [
     },
   },
   {
-    name: WRITE_LOAN_SHEET,
+    name: WRITE_BORROW_SHEET,
     description: "Peut éditer les fiches emprunts",
     teams: {
       createMany: {

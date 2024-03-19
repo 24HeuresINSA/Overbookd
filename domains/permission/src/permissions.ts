@@ -42,8 +42,8 @@ export const OFFER_SHARED_MEAL = "offer-shared-meal";
 export const SHOTGUN_SHARED_MEAL = "shotgun-shared-meal";
 export const READ_PURCHASE_SHEET = "read-purchase-sheet";
 export const WRITE_PURCHASE_SHEET = "write-purchase-sheet";
-export const READ_LOAN_SHEET = "read-loan-sheet";
-export const WRITE_LOAN_SHEET = "write-loan-sheet";
+export const READ_BORROW_SHEET = "read-loan-sheet";
+export const WRITE_BORROW_SHEET = "write-loan-sheet";
 
 const permissions = [
   HAVE_PERSONAL_ACCOUNT,
@@ -88,8 +88,8 @@ const permissions = [
   SHOTGUN_SHARED_MEAL,
   READ_PURCHASE_SHEET,
   WRITE_PURCHASE_SHEET,
-  READ_LOAN_SHEET,
-  WRITE_LOAN_SHEET,
+  READ_BORROW_SHEET,
+  WRITE_BORROW_SHEET,
 ];
 
 export function isPermission(permission: string): permission is Permission {
