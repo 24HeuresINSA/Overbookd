@@ -1,7 +1,8 @@
 import {
   DRAFT,
-  FestivalActivity,
+  FestivalEvent,
   IN_REVIEW,
+  READY_TO_ASSIGN,
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event";
@@ -19,15 +20,14 @@ export type StatusColor =
   | typeof GREEN
   | typeof PURPLE;
 
-const statusColors = new Map<FestivalActivity["status"], StatusColor>([
+const statusColors = new Map<FestivalEvent["status"], StatusColor>([
   [DRAFT, GREY],
   [REFUSED, RED],
   [IN_REVIEW, ORANGE],
   [VALIDATED, GREEN],
+  [READY_TO_ASSIGN, PURPLE],
 ]);
 
-export function getColorByStatus(
-  status: FestivalActivity["status"],
-): StatusColor {
+export function getColorByStatus(status: FestivalEvent["status"]): StatusColor {
   return statusColors.get(status) || "grey";
 }

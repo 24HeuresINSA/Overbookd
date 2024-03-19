@@ -716,6 +716,7 @@ enum FestivalTaskStatus {
   IN_REVIEW
   REFUSED
   VALIDATED
+  READY_TO_ASSIGN
 
   @@map("festival_task_status")
 }

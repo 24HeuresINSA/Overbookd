@@ -47,7 +47,26 @@ import { LocationResponseDto } from "../../common/dto/location.response.dto";
 import { AdherentResponseDto } from "../../common/dto/adherent.response.dto";
 import { TimeWindowResponseDto } from "../../common/dto/time-window.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
-import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
+import {
+  InReviewFestivalTaskResponseDto,
+  ReadyToAssignFestivalTaskResponseDto,
+  RefusedFestivalTaskResponseDto,
+  ValidatedFestivalTaskResponseDto,
+} from "../common/dto/reviewable/reviewable-festival-task.response.dto";
+import {
+  AssignmentResponseDto,
+  MobilizationWithAtLeastOneTeamAndAssignmentsDto,
+  MobilizationWithAtLeastOneTeamDto,
+  MobilizationWithAtLeastOneVolunteerAndAssignmentsDto,
+  MobilizationWithAtLeastOneVolunteerDto,
+} from "../common/dto/reviewable/reviewable-mobilization.response.dto";
+import { VolunteerResponseDto } from "../../common/dto/volunteer.response.dto";
+import {
+  InReviewReviewsResponseDto,
+  RefusedReviewsResponseDto,
+  ValidatedReviewsResponseDto,
+} from "../common/dto/reviewable/reviews.response.dto";
+import { ReviewableInstructionsResponseDto } from "../common/dto/reviewable/reviewable-instructions.response.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -68,6 +87,18 @@ import { InReviewFestivalTaskResponseDto } from "../common/dto/reviewable/review
   UnassignedInquiryRequestResponseDto,
   AssignedInquiryRequestResponseDto,
   TimeWindowResponseDto,
+  ValidatedFestivalTaskResponseDto,
+  ReadyToAssignFestivalTaskResponseDto,
+  MobilizationWithAtLeastOneTeamAndAssignmentsDto,
+  MobilizationWithAtLeastOneTeamDto,
+  MobilizationWithAtLeastOneVolunteerAndAssignmentsDto,
+  MobilizationWithAtLeastOneVolunteerDto,
+  VolunteerResponseDto,
+  RefusedReviewsResponseDto,
+  ValidatedReviewsResponseDto,
+  InReviewReviewsResponseDto,
+  ReviewableInstructionsResponseDto,
+  AssignmentResponseDto,
 )
 @UseFilters(FestivalTaskErrorFilter, FestivalEventErrorFilter)
 @Controller("festival-tasks")
@@ -100,6 +131,9 @@ export class FestivalTaskOverviewController {
       oneOf: [
         { $ref: getSchemaPath(DraftFestivalTaskResponseDto) },
         { $ref: getSchemaPath(InReviewFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(RefusedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ValidatedFestivalTaskResponseDto) },
+        { $ref: getSchemaPath(ReadyToAssignFestivalTaskResponseDto) },
       ],
     },
   })

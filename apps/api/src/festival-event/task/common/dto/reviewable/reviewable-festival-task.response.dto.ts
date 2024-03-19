@@ -6,7 +6,14 @@ import {
   FestivalTaskRefused as Refused,
   FestivalTaskReviewable as Reviewable,
   FestivalTaskValidated as Validated,
+  FestivalTaskReadyToAssign as ReadyToAssign,
   VALIDATED,
+  READY_TO_ASSIGN,
+  BAR,
+  RELOU,
+  MANUTENTION,
+  FUN,
+  STATIQUE,
 } from "@overbookd/festival-event";
 import { ReviewableWithConflicts } from "@overbookd/http";
 import { ReviewableGeneralResponseDto } from "./reviewable-general.response.dto";
@@ -19,10 +26,13 @@ import {
 } from "../inquiry-request.response.dto";
 import {
   InReviewReviewsResponseDto,
+  RefusedReviewsResponseDto,
   ValidatedReviewsResponseDto,
 } from "./reviews.response.dto";
 import {
+  MobilizationWithAtLeastOneTeamAndAssignmentsDto,
   MobilizationWithAtLeastOneTeamDto,
+  MobilizationWithAtLeastOneVolunteerAndAssignmentsDto,
   MobilizationWithAtLeastOneVolunteerDto,
 } from "./reviewable-mobilization.response.dto";
 import { FeedbackResponseDto } from "../../../../common/dto/feedback.response.dto";
@@ -31,9 +41,13 @@ import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dt
 type InReviewWithConflicts = Extract<ReviewableWithConflicts, InReview>;
 type RefusedWithConflicts = Extract<ReviewableWithConflicts, Refused>;
 type ValidatedWithConflicts = Extract<ReviewableWithConflicts, Validated>;
+type ReadyToAssignWithConflicts = Extract<
+  ReviewableWithConflicts,
+  ReadyToAssign
+>;
 type BaseReviewableWithConflicts = Omit<
   ReviewableWithConflicts,
-  "status" | "reviews"
+  "status" | "reviews" | "mobilizations"
 >;
 
 class BaseReviewableWithConflictsResponseDto
@@ -85,16 +99,6 @@ class BaseReviewableWithConflictsResponseDto
   inquiries: Reviewable["inquiries"];
 
   @ApiProperty({
-    description: "The festival task mobilizations",
-    isArray: true,
-    oneOf: [
-      { $ref: getSchemaPath(MobilizationWithAtLeastOneVolunteerDto) },
-      { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
-    ],
-  })
-  mobilizations: ReviewableWithConflicts["mobilizations"];
-
-  @ApiProperty({
     description: "The festival task reviewer",
     type: AdherentResponseDto,
   })
@@ -113,6 +117,16 @@ export class InReviewFestivalTaskResponseDto
     type: InReviewReviewsResponseDto,
   })
   reviews: InReview["reviews"];
+
+  @ApiProperty({
+    description: "The festival task mobilizations",
+    isArray: true,
+    oneOf: [
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneVolunteerDto) },
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
+    ],
+  })
+  mobilizations: ReviewableWithConflicts["mobilizations"];
 }
 
 export class RefusedFestivalTaskResponseDto
@@ -124,9 +138,19 @@ export class RefusedFestivalTaskResponseDto
 
   @ApiProperty({
     description: "The festival task reviews",
-    type: InReviewReviewsResponseDto,
+    type: RefusedReviewsResponseDto,
   })
   reviews: Refused["reviews"];
+
+  @ApiProperty({
+    description: "The festival task mobilizations",
+    isArray: true,
+    oneOf: [
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneVolunteerDto) },
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
+    ],
+  })
+  mobilizations: ReviewableWithConflicts["mobilizations"];
 }
 
 export class ValidatedFestivalTaskResponseDto
@@ -141,4 +165,48 @@ export class ValidatedFestivalTaskResponseDto
     type: ValidatedReviewsResponseDto,
   })
   reviews: Validated["reviews"];
+
+  @ApiProperty({
+    description: "The festival task mobilizations",
+    isArray: true,
+    oneOf: [
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneVolunteerDto) },
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamDto) },
+    ],
+  })
+  mobilizations: ReviewableWithConflicts["mobilizations"];
+}
+
+export class ReadyToAssignFestivalTaskResponseDto
+  extends BaseReviewableWithConflictsResponseDto
+  implements ReadyToAssignWithConflicts
+{
+  @ApiProperty({ enum: [READY_TO_ASSIGN] })
+  status: ReadyToAssign["status"];
+
+  @ApiProperty({
+    description: "The festival task reviews",
+    type: ValidatedReviewsResponseDto,
+  })
+  reviews: ReadyToAssign["reviews"];
+
+  @ApiProperty({ enum: [BAR, RELOU, MANUTENTION, FUN, STATIQUE] })
+  category?: ReadyToAssign["category"];
+
+  @ApiProperty({ description: "Indicate task is top priority to assign" })
+  topPriority: ReadyToAssign["topPriority"];
+
+  @ApiProperty({
+    description: "The festival task mobilizations",
+    isArray: true,
+    oneOf: [
+      { $ref: getSchemaPath(MobilizationWithAtLeastOneTeamAndAssignmentsDto) },
+      {
+        $ref: getSchemaPath(
+          MobilizationWithAtLeastOneVolunteerAndAssignmentsDto,
+        ),
+      },
+    ],
+  })
+  mobilizations: ReadyToAssignWithConflicts["mobilizations"];
 }
