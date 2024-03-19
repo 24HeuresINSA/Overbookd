@@ -4,11 +4,15 @@ import {
   AtLeastOneVolunteer,
   TeamMobilization,
   VolunteerWithConflicts,
+  Assignment,
+  Volunteer,
 } from "@overbookd/festival-event";
 import { VolunteerWithConflictsResponseDto } from "../volunteer-with-conflicts.response.dto";
 import { TeamMobilizationResponseDto } from "../team-mobilization.response.dto";
 import { WithAtLeastOneItem } from "@overbookd/list";
 import { BaseMobilizationResponseDto } from "../base-mobilization.response.dto";
+import { TimeWindowResponseDto } from "../../../../common/dto/time-window.response.dto";
+import { VolunteerResponseDto } from "../../../../common/dto/volunteer.response.dto";
 
 export class MobilizationWithAtLeastOneVolunteerDto
   extends BaseMobilizationResponseDto
@@ -31,4 +35,29 @@ export class MobilizationWithAtLeastOneTeamDto
 
   @ApiProperty({ type: TeamMobilizationResponseDto, isArray: true })
   teams: WithAtLeastOneItem<TeamMobilization>;
+}
+
+export class AssignmentResponseDto
+  extends TimeWindowResponseDto
+  implements Assignment
+{
+  @ApiProperty({ type: VolunteerResponseDto, isArray: true })
+  assignees: Volunteer[];
+}
+
+export class MobilizationWithAtLeastOneTeamAndAssignmentsDto
+  extends MobilizationWithAtLeastOneTeamDto
+  implements AtLeastOneTeam<{ withConflicts: true; withAssignments: true }>
+{
+  @ApiProperty({ type: AssignmentResponseDto, isArray: true })
+  assignments: Assignment[];
+}
+
+export class MobilizationWithAtLeastOneVolunteerAndAssignmentsDto
+  extends MobilizationWithAtLeastOneVolunteerDto
+  implements
+    AtLeastOneVolunteer<{ withConflicts: true; withAssignments: true }>
+{
+  @ApiProperty({ type: AssignmentResponseDto, isArray: true })
+  assignments: Assignment[];
 }

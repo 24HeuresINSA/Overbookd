@@ -37,9 +37,9 @@ export type DraftWithoutConflicts = Extract<WithoutConflicts, Draft>;
 export type InReviewWithoutConflicts = Extract<WithoutConflicts, InReview>;
 export type RefusedWithoutConflicts = Extract<WithoutConflicts, Refused>;
 export type ValidatedWithoutConflicts = Extract<WithoutConflicts, Validated>;
-export type ReadyToAssignWithoutConflicts = Exclude<
-  ReadyToAssign,
-  WithConflictsFilter
+export type ReadyToAssignWithoutConflicts = Extract<
+  WithoutConflicts,
+  ReadyToAssign
 >;
 export type ReviewableWithoutConflicts = Extract<WithoutConflicts, Reviewable>;
 

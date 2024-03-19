@@ -9,7 +9,13 @@ import {
   ValidatedReviews,
 } from "../common/review";
 import { APPROVED, REJECTED } from "../common/action";
-import { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "../common/status";
+import {
+  DRAFT,
+  IN_REVIEW,
+  VALIDATED,
+  REFUSED,
+  READY_TO_ASSIGN,
+} from "../common/status";
 import { CREATED, COMMENTED, READY_TO_REVIEW } from "../common/action";
 import { Feedback } from "../common/feedback";
 
@@ -122,5 +128,10 @@ export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
 export type FestivalTaskChild = {
   id: number;
   name: string;
-  status: typeof DRAFT | typeof IN_REVIEW | typeof REFUSED | typeof VALIDATED;
+  status:
+    | typeof DRAFT
+    | typeof IN_REVIEW
+    | typeof REFUSED
+    | typeof VALIDATED
+    | typeof READY_TO_ASSIGN;
 };

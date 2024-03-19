@@ -31,9 +31,7 @@ import { Period } from "@overbookd/period";
 import { Duration } from "@overbookd/period";
 
 export type FestivalTasksForEnableAssignment = {
-  findById(
-    id: FestivalTask["id"],
-  ): Promise<WithoutConflicts | ReadyToAssignWithoutConflicts | null>;
+  findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null>;
   save(task: ReadyToAssign): Promise<ReadyToAssignWithoutConflicts>;
 };
 

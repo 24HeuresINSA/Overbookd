@@ -75,7 +75,13 @@ export type {
   RejectionReviewStatus,
   ReviewingStatus,
 } from "./common/review";
-export { DRAFT, IN_REVIEW, VALIDATED, REFUSED } from "./common/status";
+export {
+  DRAFT,
+  IN_REVIEW,
+  VALIDATED,
+  REFUSED,
+  READY_TO_ASSIGN,
+} from "./common/status";
 export type { TimeWindow } from "./common/time-window";
 
 //  **********************
@@ -221,13 +227,22 @@ export type {
   InReview as FestivalTaskInReview,
   Refused as FestivalTaskRefused,
   Validated as FestivalTaskValidated,
+  ReadyToAssign as FestivalTaskReadyToAssign,
   Reviewable as FestivalTaskReviewable,
   Preview as PreviewFestivalTask,
   PreviewDraft as PreviewFestivalTaskDraft,
   PreviewInReview as PreviewFestivalTaskInReview,
   PreviewRefused as PreviewFestivalTaskRefused,
   PreviewValidated as PreviewFestivalTaskValidated,
+  PreviewReadyToAssign as PreviewFestivalTaskReadyToAssign,
   PreviewReviewable as PreviewFestivalTaskReviewable,
+} from "./festival-task/festival-task";
+export {
+  STATIQUE,
+  FUN,
+  BAR,
+  RELOU,
+  MANUTENTION,
 } from "./festival-task/festival-task";
 export type {
   Volunteer,
@@ -244,6 +259,7 @@ export type {
   VolunteerWithConflicts,
   AtLeastOneVolunteer,
   AtLeastOneTeam,
+  Assignment,
 } from "./festival-task/sections/mobilizations";
 export {
   requirableTeams,

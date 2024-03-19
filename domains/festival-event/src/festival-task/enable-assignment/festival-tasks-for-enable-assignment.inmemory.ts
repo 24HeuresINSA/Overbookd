@@ -8,10 +8,8 @@ import { WithoutConflicts } from "../volunteer-conflicts";
 export class InMemoryFestivalTasksForEnableAssignment
   implements FestivalTasksForEnableAssignment
 {
-  constructor(private tasks: Array<FestivalTask | ReadyToAssign>) {}
-  findById(
-    id: FestivalTask["id"],
-  ): Promise<WithoutConflicts | ReadyToAssignWithoutConflicts | null> {
+  constructor(private tasks: FestivalTask[]) {}
+  findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null> {
     const task = this.tasks.find((task) => task.id === id);
     return Promise.resolve(task ?? null);
   }
@@ -24,7 +22,7 @@ export class InMemoryFestivalTasksForEnableAssignment
     return Promise.resolve(task);
   }
 
-  get entries(): Array<FestivalTask | ReadyToAssign> {
+  get entries(): FestivalTask[] {
     return this.tasks;
   }
 }
