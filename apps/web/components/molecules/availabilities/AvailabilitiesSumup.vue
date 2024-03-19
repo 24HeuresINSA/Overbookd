@@ -164,12 +164,14 @@ export default defineComponent({
         const overDate = { date, hour };
         this.availabilitiesAggregate.select(overDate);
       });
+      this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
     unSelectAvailabilities(date: DateString) {
       ALL_HOURS.filter((hour) => this.isSelected(date, hour)).map((hour) => {
         const overDate = { date, hour };
         this.availabilitiesAggregate.unselect(overDate);
       });
+      this.$emit("update:availabilities", this.availabilitiesAggregate.list);
     },
   },
 });
