@@ -1,5 +1,8 @@
 import { numberGenerator } from "@overbookd/list";
 import { Borrow } from "../borrow";
+import { Period } from "@overbookd/period";
+
+type InitBorrowForm = Pick<Borrow, "lender" | "availableOn" | "unavailableOn">;
 
 export type BorrowsForInit = {
   add(borrow: Borrow): Promise<Borrow>;
@@ -10,8 +13,13 @@ export class InitBorrow {
 
   constructor(private readonly borrows: BorrowsForInit) {}
 
-  async for(lender: string): Promise<Borrow> {
-    const borrow = { id: this.generateId(), lender };
+  async apply(form: InitBorrowForm): Promise<Borrow> {
+    Period.init({ start: form.availableOn, end: form.unavailableOn });
+    const borrow = {
+      ...form,
+      id: this.generateId(),
+      gears: [],
+    };
     return this.borrows.add(borrow);
   }
 
