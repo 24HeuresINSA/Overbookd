@@ -43,3 +43,4 @@ export { JSON, CSV, ICAL, PDF } from "./mime";
 export type { AvailabilityForm } from "./volunteer-availability";
 export type { Task as PlanningTask } from "./planning";
 export type { EnrollableStaff, EnrollableVolunteer } from "./registration";
+export type { EditAmountForm } from "./contribution";

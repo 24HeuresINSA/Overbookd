@@ -1,3 +1,4 @@
+import { Contribution } from "../contribution";
 import { BASE_EDITION, BASE_EDITION_ENDS, Edition } from "../edition";
 
 const AUGUST = 7;
@@ -5,17 +6,6 @@ const AUGUST = 7;
 export const EXPIRATION_DATE = {
   month: AUGUST,
   day: 31,
-};
-
-export type ContributionIdentity = {
-  adherentId: number;
-  edition: number;
-};
-
-export type Contribution = ContributionIdentity & {
-  amount: number;
-  paymentDate: Date;
-  expirationDate: Date;
 };
 
 export class Contribute {

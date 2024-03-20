@@ -1,7 +1,7 @@
 import {
   Adherent,
   Contribution,
-  ContributionRepository,
+  PayContributions,
 } from "@overbookd/contribution";
 import { PrismaService } from "../../prisma.service";
 import {
@@ -9,7 +9,7 @@ import {
   WHERE_CAN_PAY_CONTRIBUTION,
 } from "../contribution.query";
 
-export class PrismaPayContributionRepository implements ContributionRepository {
+export class PrismaPayContributions implements PayContributions {
   constructor(private readonly prisma: PrismaService) {}
 
   async findAdherentsOutToDate(edition: number): Promise<Adherent[]> {
