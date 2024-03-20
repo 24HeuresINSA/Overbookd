@@ -1,5 +1,11 @@
 import { numberGenerator } from "@overbookd/list";
 import { Borrow } from "../borrow";
+import { AvailableDateAfterUnavailableDate } from "../borrow.error";
+
+export type InitBorrowForm = Pick<
+  Borrow,
+  "lender" | "availableOn" | "unavailableOn"
+>;
 
 export type BorrowsForInit = {
   add(borrow: Borrow): Promise<Borrow>;
@@ -10,12 +16,14 @@ export class InitBorrow {
 
   constructor(private readonly borrows: BorrowsForInit) {}
 
-  async for(lender: string): Promise<Borrow> {
+  async apply(form: InitBorrowForm): Promise<Borrow> {
+    if (form.availableOn > form.unavailableOn) {
+      throw new AvailableDateAfterUnavailableDate();
+    }
     const borrow = {
       id: this.generateId(),
-      lender,
-      gearsToTake: [],
-      gearsToReturn: [],
+      ...form,
+      gears: [],
     };
     return this.borrows.add(borrow);
   }

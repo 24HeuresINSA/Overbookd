@@ -1,6 +1,12 @@
 import { Borrow, GearRequest } from "../borrow";
 import { BorrowNotFound } from "../borrow.error";
 
+type PlanBorrowForm = {
+  lender?: Borrow["lender"];
+  availableOn?: Borrow["availableOn"];
+  unavailableOn?: Borrow["unavailableOn"];
+};
+
 export type BorrowsForPlan = {
   find(id: Borrow["id"]): Promise<Borrow | undefined>;
   save(borrow: Borrow): Promise<Borrow>;
@@ -9,31 +15,31 @@ export type BorrowsForPlan = {
 export class PlanBorrow {
   constructor(private readonly borrows: BorrowsForPlan) {}
 
-  async changeLender(id: Borrow["id"], lender: string): Promise<Borrow> {
+  async update(id: Borrow["id"], update: PlanBorrowForm): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
-    return this.borrows.save({ ...borrow, lender });
+    return this.borrows.save({ ...borrow, ...update });
   }
 
-  async pickUpGear(id: Borrow["id"], gear: GearRequest): Promise<Borrow> {
+  async addGear(id: Borrow["id"], gear: GearRequest): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
 
-    const gearRequests = GearRequests.init(borrow.gearsToTake);
-    const gearsToTake = gearRequests.add(gear).all;
-    return this.borrows.save({ ...borrow, gearsToTake });
+    const gearRequests = GearRequests.init(borrow.gears);
+    const gears = gearRequests.add(gear).all;
+    return this.borrows.save({ ...borrow, gears });
   }
 
-  async cancelGearToPickUp(
+  async removeGear(
     id: Borrow["id"],
     gearSlug: GearRequest["slug"],
   ): Promise<Borrow> {
     const borrow = await this.borrows.find(id);
     if (!borrow) throw new BorrowNotFound(id);
 
-    const gearRequests = GearRequests.init(borrow.gearsToTake);
-    const gearsToTake = gearRequests.remove(gearSlug).all;
-    return this.borrows.save({ ...borrow, gearsToTake });
+    const gearRequests = GearRequests.init(borrow.gears);
+    const gears = gearRequests.remove(gearSlug).all;
+    return this.borrows.save({ ...borrow, gears });
   }
 }
 

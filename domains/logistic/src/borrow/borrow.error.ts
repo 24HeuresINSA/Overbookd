@@ -8,3 +8,11 @@ export class BorrowNotFound extends BorrowError {
     super(message);
   }
 }
+
+export class AvailableDateAfterUnavailableDate extends BorrowError {
+  constructor() {
+    const message =
+      "❌ La date de mise à disposition doit être avant la date de restitution";
+    super(message);
+  }
+}

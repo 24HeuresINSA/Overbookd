@@ -7,6 +7,7 @@ export type GearRequest = {
 export type Borrow = {
   id: number;
   lender: string;
-  gearsToTake: GearRequest[];
-  gearsToReturn: GearRequest[];
+  availableOn: Date;
+  unavailableOn: Date;
+  gears: GearRequest[];
 };
