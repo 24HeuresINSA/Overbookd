@@ -1,3 +1,18 @@
+## [2.22.7](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.6...v2.22.7) (2024-03-20)
+
+
+### Bug Fixes
+
+* **contribution:** edit contribution in api & domain [#1680](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1680) ([d28cae1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d28cae140a91e783754832f9ae8d334edfeb89b3))
+* **registration:** add volunteer research [#1702](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1702) ([8bb0c95](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8bb0c95e394d456d7a09833b9f72dcd9bc5a0f82))
+* **team:** manage benevole team in volunteer list [#1699](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1699) ([f6667bb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f6667bbab3363726d2ee1974a873b272c3972748))
+
+
+### Pre-Features
+
+* **borrow-sheet:** create two pages and add permissions [#1700](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1700) ([50c498f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/50c498f4f74b0aa53dbe9841804a00a3bef53dad))
+* **logistic-borrow:** borrow init & plan in domain [#1686](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1686) ([cae7d2c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/cae7d2cf9a43929c326834ad175a062e13f0c69d))
+
 ## [2.22.6](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v2.22.5...v2.22.6) (2024-03-19)
 
 
