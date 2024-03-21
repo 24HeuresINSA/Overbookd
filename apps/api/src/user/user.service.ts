@@ -141,7 +141,7 @@ export class UserService {
   }
 
   async getVolunteerAssignments(volunteerId: number): Promise<VolunteerTask[]> {
-    const assignments = await this.prisma.assignment.findMany({
+    const assignments = await this.prisma.oldAssignment.findMany({
       where: { assigneeId: volunteerId },
       select: SELECT_VOLUNTEER_ASSIGNMENTS,
     });
@@ -196,7 +196,7 @@ export class UserService {
   async getVolunteerAssignmentStats(
     volunteerId: number,
   ): Promise<VolunteerAssignmentStat[]> {
-    const assignments = await this.prisma.assignment.findMany({
+    const assignments = await this.prisma.oldAssignment.findMany({
       where: { assigneeId: volunteerId },
       select: SELECT_TIMESPAN_PERIOD_WITH_CATEGORY,
     });

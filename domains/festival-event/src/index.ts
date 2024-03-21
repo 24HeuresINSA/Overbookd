@@ -221,6 +221,8 @@ export {
 } from "./festival-task/prepare/prepare";
 export type { FestivalTasksForView } from "./festival-task/view/view";
 export { ViewFestivalTask } from "./festival-task/view/view";
+export { EnableAssignment } from "./festival-task/enable-assignment/enable-assignment";
+export type { FestivalTasksForEnableAssignment } from "./festival-task/enable-assignment/enable-assignment";
 export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
@@ -236,6 +238,7 @@ export type {
   PreviewValidated as PreviewFestivalTaskValidated,
   PreviewReadyToAssign as PreviewFestivalTaskReadyToAssign,
   PreviewReviewable as PreviewFestivalTaskReviewable,
+  Categorize,
 } from "./festival-task/festival-task";
 export {
   STATIQUE,
@@ -260,6 +263,7 @@ export type {
   AtLeastOneVolunteer,
   AtLeastOneTeam,
   Assignment,
+  MobilizationOptions,
 } from "./festival-task/sections/mobilizations";
 export {
   requirableTeams,
@@ -272,6 +276,7 @@ export type {
   WithoutConflicts as FestivalTaskWithoutConflicts,
   DraftWithoutConflicts,
   ReviewableWithoutConflicts,
+  ReadyToAssignWithoutConflicts,
 } from "./festival-task/volunteer-conflicts";
 export { FestivalTaskTranslator } from "./festival-task/volunteer-conflicts";
 export { Review as ReviewTask } from "./festival-task/review/review";

@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { FestivalTaskReviewService } from "./festival-task-review.service";
 import {
   AskForReviewTask,
+  EnableAssignment,
   PrepareFestivalTask,
   ReviewTask,
 } from "@overbookd/festival-event";
@@ -18,11 +19,12 @@ import { DomainEventService } from "../../../domain-event/domain-event.service";
         prepare: PrepareFestivalTask,
         askForReview: AskForReviewTask,
         review: ReviewTask,
+        enableAssignment: EnableAssignment,
         adherents: PrismaAdherents,
         eventStore: DomainEventService,
       ) =>
         new FestivalTaskReviewService(
-          { prepare, askForReview, review },
+          { prepare, askForReview, review, enableAssignment },
           { adherents },
           eventStore,
         ),
@@ -30,6 +32,7 @@ import { DomainEventService } from "../../../domain-event/domain-event.service";
         PrepareFestivalTask,
         AskForReviewTask,
         ReviewTask,
+        EnableAssignment,
         PrismaAdherents,
         DomainEventService,
       ],

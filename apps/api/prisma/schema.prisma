@@ -61,7 +61,7 @@ model User {
   friends          Friend[]                @relation("friend")
   ftsInReview      Ft[]                    @relation("reviewer")
 
-  assignments                  Assignment[]
+  assignments                  OldAssignment[]
   contributions                Contribution[]
   notifications                Notification[]
   festivalActivities           FestivalActivity[]
@@ -77,6 +77,7 @@ model User {
   festivalTaskInstigations  FestivalTaskHistory[]
   festivalTaskMobilizations FestivalTaskMobilizationVolunteer[]
   festivalTasksToReview     FestivalTask[]                      @relation("task-reviewer")
+  assigned                  Assignee[]
 
   @@map("user")
 }
@@ -305,20 +306,20 @@ model FtUserRequest {
   user            User         @relation(fields: [userId], references: [id])
   userId          Int          @map("user_id")
 
-  assignments Assignment[]
+  assignments OldAssignment[]
 
   @@unique([ftTimeWindowsId, userId])
   @@map("ft_user_request")
 }
 
 model FtTeamRequest {
-  id            Int          @id @default(autoincrement())
-  timeWindows   FtTimeWindow @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
-  timeWindowsId Int          @map("ft_time_window_id")
+  id            Int             @id @default(autoincrement())
+  timeWindows   FtTimeWindow    @relation(fields: [timeWindowsId], references: [id], onDelete: Cascade)
+  timeWindowsId Int             @map("ft_time_window_id")
   quantity      Int
-  team          Team         @relation(fields: [teamCode], references: [code], onDelete: Cascade)
-  teamCode      String       @map("team_code") @db.VarChar(20)
-  assignments   Assignment[]
+  team          Team            @relation(fields: [teamCode], references: [code], onDelete: Cascade)
+  teamCode      String          @map("team_code") @db.VarChar(20)
+  assignments   OldAssignment[]
 
   @@unique([timeWindowsId, teamCode])
   @@map("ft_team_request")
@@ -331,7 +332,7 @@ model FtTimeSpan {
   start        DateTime
   end          DateTime
 
-  assignments Assignment[]
+  assignments OldAssignment[]
 
   @@unique([timeWindowId, start, end])
   @@index([start(sort: Asc)])
@@ -340,7 +341,7 @@ model FtTimeSpan {
   @@map("ft_time_span")
 }
 
-model Assignment {
+model OldAssignment {
   id            Int            @id @default(autoincrement())
   timeSpanId    Int            @map("time_span_id")
   timeSpan      FtTimeSpan     @relation(fields: [timeSpanId], references: [id], onDelete: Cascade)
@@ -352,7 +353,7 @@ model Assignment {
   assigneeId    Int            @map("assignee_id")
 
   @@unique([timeSpanId, assigneeId])
-  @@map("assignment")
+  @@map("old_assignment")
 }
 
 enum ReviewStatus {
@@ -674,12 +675,22 @@ model FestivalActivityFeedback {
   @@map("festival_activity_feedback")
 }
 
+enum FestivalTaskCategory {
+  BAR
+  MANUTENTION
+  RELOU
+  STATIQUE
+  FUN
+}
+
 model FestivalTask {
-  id        Int                    @unique
-  status    FestivalTaskStatus
-  isDeleted Boolean                @default(false) @map("is_deleted")
-  feedbacks FestivalTaskFeedback[]
-  events    FestivalTaskHistory[]
+  id          Int                    @unique
+  status      FestivalTaskStatus
+  isDeleted   Boolean                @default(false) @map("is_deleted")
+  feedbacks   FestivalTaskFeedback[]
+  events      FestivalTaskHistory[]
+  category    FestivalTaskCategory?
+  topPriority Boolean?               @map("top_priority")
 
   // Review
   reviews    FestivalTaskReview[]
@@ -707,6 +718,8 @@ model FestivalTask {
   inquiries           FestivalTaskInquiryRequest[]
 
   mobilizations FestivalTaskMobilization[]
+  assignments   Assignment[]
+  assignees     Assignee[]
 
   @@map("festival_task")
 }
@@ -749,8 +762,10 @@ model FestivalTaskMobilization {
   teams               FestivalTaskMobilizationTeam[]
   durationSplitInHour Int?                                @map("duration_split_in_hour")
 
-  ftId Int          @map("ft_id")
-  ft   FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  ftId        Int          @map("ft_id")
+  ft          FestivalTask @relation(fields: [ftId], references: [id], onDelete: Cascade)
+  assignees   Assignee[]
+  assignments Assignment[]
 
   @@id([ftId, id])
   @@map("festival_task_mobilization")
@@ -777,6 +792,34 @@ model FestivalTaskMobilizationTeam {
 
   @@id([teamCode, mobilizationId, mobilizationftId])
   @@map("festival_task_mobilization_team")
+}
+
+model Assignment {
+  id             String
+  start          DateTime
+  end            DateTime
+  mobilization   FestivalTaskMobilization @relation(fields: [mobilizationId, festivalTaskId], references: [id, ftId], onDelete: Cascade)
+  mobilizationId String                   @map("mobilization_id")
+  festivalTask   FestivalTask             @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int                      @map("festival_task_id")
+  assignees      Assignee[]
+
+  @@id([id, mobilizationId, festivalTaskId])
+  @@map("assignment")
+}
+
+model Assignee {
+  assignment     Assignment               @relation(fields: [assignmentId, mobilizationId, festivalTaskId], references: [id, mobilizationId, festivalTaskId], onDelete: Cascade)
+  assignmentId   String                   @map("assignment_id")
+  mobilization   FestivalTaskMobilization @relation(fields: [mobilizationId, festivalTaskId], references: [id, ftId], onDelete: Cascade)
+  mobilizationId String                   @map("mobilization_id")
+  festivalTask   FestivalTask             @relation(fields: [festivalTaskId], references: [id], onDelete: Cascade)
+  festivalTaskId Int                      @map("festival_task_id")
+  personalData   User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         Int                      @map("user_id")
+
+  @@id([userId, assignmentId, mobilizationId, festivalTaskId])
+  @@map("assignee")
 }
 
 model FestivalTaskInquiryRequest {

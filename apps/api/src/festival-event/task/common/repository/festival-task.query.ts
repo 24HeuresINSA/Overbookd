@@ -8,6 +8,7 @@ import {
   FestivalTaskWithoutConflicts,
   FestivalTaskKeyEvent as KeyEvent,
   Mobilization,
+  ReadyToAssignWithoutConflicts,
   Reviewer,
   ReviewingStatus,
   Volunteer,
@@ -23,6 +24,7 @@ import { SELECT_INQUIRY_REQUEST } from "./inquiry.query";
 import { SELECT_FEEDBACKS } from "./feedback.query";
 import { SELECT_VOLUNTEER } from "../../../common/repository/volunteer.query";
 import { SELECT_LOCATION } from "../../../common/repository/location.query";
+import { Item } from "@overbookd/list";
 
 const SELECT_REVIEWS = {
   reviews: {
@@ -38,6 +40,8 @@ export const SELECT_FESTIVAL_TASK = {
   status: true,
   name: true,
   teamCode: true,
+  category: true,
+  topPriority: true,
   administrator: { select: SELECT_VOLUNTEER },
   appointment: { select: SELECT_LOCATION },
   festivalActivity: { select: SELECT_FESTIVAL_ACTIVITY },
@@ -121,14 +125,37 @@ export class FestivalTaskQueryBuilder {
     };
   }
 
+  static enableAssignment(task: ReadyToAssignWithoutConflicts) {
+    const { category, topPriority } = task;
+    const mobilizations = {
+      update: task.mobilizations.map((mobilization) => ({
+        where: { ftId_id: { ftId: task.id, id: mobilization.id } },
+        data: {
+          assignments: {
+            create: mobilization.assignments.map((assignment) => ({
+              start: assignment.start,
+              id: assignment.id,
+              end: assignment.end,
+              assignees: {
+                create: assignment.assignees.map((assignee) => ({
+                  userId: assignee.id,
+                })),
+              },
+            })),
+          },
+        },
+      })),
+    };
+    return {
+      category,
+      topPriority,
+      mobilizations,
+    };
+  }
+
   private static upsertReviews(task: FestivalTaskReviewable) {
     const reviews = Object.entries(task.reviews)
-      .filter(
-        (
-          entry,
-        ): entry is [Reviewer<"FT">, Exclude<ReviewingStatus, "APPROVED">] =>
-          true,
-      )
+      .filter((entry): entry is [Reviewer<"FT">, ReviewingStatus] => true)
       .map(([team, status]) => ({ team, status }));
 
     return {
@@ -290,7 +317,7 @@ function keyEventToHistory(
 }
 
 function databaseMobilisationForUpdate(
-  mobilization: Mobilization<{ withConflicts: false; withAssignments: false }>,
+  mobilization: Item<FestivalTaskWithoutConflicts["mobilizations"]>,
 ) {
   return {
     id: mobilization.id,
@@ -322,7 +349,7 @@ function databaseMobilisationForUpdate(
 }
 
 function databaseMobilizationForCreation(
-  mobilization: Mobilization<{ withConflicts: false; withAssignments: false }>,
+  mobilization: Item<FestivalTaskWithoutConflicts["mobilizations"]>,
 ) {
   return {
     id: mobilization.id,

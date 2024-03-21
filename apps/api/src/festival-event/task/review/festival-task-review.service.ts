@@ -1,6 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import {
   AskForReviewTask,
+  Categorize,
+  EnableAssignment,
   FestivalTask,
   FestivalTaskRefused,
   PrepareFestivalTask,
@@ -19,11 +21,13 @@ import {
 import { Adherents } from "../common/festival-task-common.model";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { TeamService } from "../../../team/team.service";
+import { ReadyToAssign } from "@overbookd/festival-event/src/festival-task/festival-task";
 
 type UseCases = {
   prepare: Readonly<PrepareFestivalTask>;
   askForReview: Readonly<AskForReviewTask>;
   review: Readonly<ReviewTask>;
+  enableAssignment: Readonly<EnableAssignment>;
 };
 
 type Repositories = {
@@ -97,5 +101,14 @@ export class FestivalTaskReviewService {
     this.eventStore.publish(event);
 
     return task;
+  }
+
+  async enableAssignment(
+    ftId: FestivalTask["id"],
+    user: JwtUtil,
+    categoryze: Categorize,
+  ): Promise<ReadyToAssign> {
+    const adherent = await this.repositories.adherents.findOne(user.id);
+    return this.useCases.enableAssignment.for(ftId, adherent, categoryze);
   }
 }

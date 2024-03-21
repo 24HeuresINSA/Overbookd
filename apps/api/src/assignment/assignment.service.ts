@@ -99,7 +99,7 @@ export class AssignmentService {
     );
     return this.prisma.$transaction(
       assignments.map((volunteerAssignment) =>
-        this.prisma.assignment.create({
+        this.prisma.oldAssignment.create({
           data: volunteerAssignment,
           select: SELECT_ASSIGNMENT,
         }),
@@ -126,7 +126,7 @@ export class AssignmentService {
     assigneeId: number,
     timeSpanId: number,
   ): Promise<void> {
-    await this.prisma.assignment.deleteMany({
+    await this.prisma.oldAssignment.deleteMany({
       where: {
         assigneeId,
         timeSpanId,
@@ -141,7 +141,7 @@ export class AssignmentService {
   ): Promise<Assignment> {
     const timeSpan = await this.retrieveTimeSpan(timeSpanId, teamCode);
     const teamRequestId = this.retrieveTeamRequestId(timeSpan, teamCode);
-    return this.prisma.assignment.update({
+    return this.prisma.oldAssignment.update({
       where: {
         timeSpanId_assigneeId: {
           timeSpanId,
