@@ -22,11 +22,16 @@ import {
   PreviewFestivalTaskReviewable,
   VALIDATED,
   isValidatedReviews,
+  ReadyToAssignWithoutConflicts,
+  READY_TO_ASSIGN,
+  PreviewFestivalTaskReadyToAssign,
+  Mobilization,
+  FestivalTaskReadyToAssign,
 } from "@overbookd/festival-event";
 import { DatabaseFestivalActivity } from "./festival-activity.query";
 import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { DatabaseEvent } from "./event.query";
-import { DatabaseMobilization } from "./mobilization.query";
+import { DatabaseAssignment, DatabaseMobilization } from "./mobilization.query";
 import { DatabaseInquiryRequest } from "./inquiry.query";
 
 type VisualizeFestivalTask<
@@ -43,10 +48,13 @@ type DatabaseReview = {
 };
 
 type FestivalTaskWithoutStatus = Omit<FestivalTaskWithoutConflicts, "status">;
+type ReadyToAssignWithoutStatus = Omit<ReadyToAssignWithoutConflicts, "status">;
 
 type DatabaseFestivalTask = {
   id: FestivalTask["id"];
   status: FestivalTask["status"];
+  category?: FestivalTaskReadyToAssign["category"];
+  topPriority?: FestivalTaskReadyToAssign["topPriority"];
   name: FestivalTask["general"]["name"];
   teamCode: FestivalTask["general"]["team"];
   administrator: FestivalTask["general"]["administrator"];
@@ -84,6 +92,7 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
       id: taskData.id,
       reviews: this.formatReviews(taskData.reviews),
       ...this.formatReviewer(taskData.reviewer),
+      ...this.formatCategorize(taskData),
       general: {
         name: taskData.name,
         administrator: taskData.administrator,
@@ -110,15 +119,33 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
     };
   }
 
+  private static formatCategorize(taskData: DatabaseFestivalTask) {
+    if (taskData.status !== READY_TO_ASSIGN) return {};
+    return { category: taskData.category, topPriority: taskData.topPriority };
+  }
+
   private static formatMobilizations(mobilizations: DatabaseMobilization[]) {
-    return mobilizations.map((mobilization) => ({
+    return mobilizations.map(({ assignments, ...mobilization }) => ({
       ...mobilization,
+      ...this.formatAssignments(assignments),
       volunteers: mobilization.volunteers.map(({ volunteer }) => volunteer),
       teams: mobilization.teams.map((team) => ({
         count: team.count,
         team: team.teamCode,
       })),
     }));
+  }
+
+  private static formatAssignments(assignments: DatabaseAssignment[]) {
+    if (assignments.length === 0) return {};
+    return {
+      assignments: assignments.map((assignment) => ({
+        id: assignment.id,
+        end: assignment.end,
+        start: assignment.start,
+        assignees: assignment.assignees.map(({ personalData }) => personalData),
+      })),
+    };
   }
 
   private static formatInquiries(inquiries: DatabaseInquiryRequest[]) {
@@ -252,4 +279,58 @@ export class ReviewableBuilder<T extends ReviewableWithoutConflicts>
   get festivalTask(): T {
     return this.task;
   }
+}
+
+export class ReadyToReviewBuilder
+  extends FestivalTaskBuilder<ReadyToAssignWithoutConflicts>
+  implements VisualizeFestivalTask<ReadyToAssignWithoutConflicts>
+{
+  static init(taskWithoutStatus: ReadyToAssignWithoutStatus) {
+    return new ReadyToReviewBuilder({
+      ...taskWithoutStatus,
+      status: READY_TO_ASSIGN,
+    });
+  }
+
+  static fromDatabase(
+    taskData: DatabaseFestivalTask,
+  ): VisualizeFestivalTask<ReadyToAssignWithoutConflicts> {
+    const taskWithoutStatus = this.buildTaskWithoutStatus(taskData);
+    if (!isReadyToAssignStructure(taskWithoutStatus)) throw new Error();
+    return this.init(taskWithoutStatus);
+  }
+
+  get preview(): PreviewFestivalTaskReadyToAssign {
+    return {
+      id: this.task.id,
+      name: this.task.general.name,
+      status: this.task.status,
+      administrator: this.task.general.administrator,
+      team: this.task.general.team,
+      reviews: this.task.reviews,
+      reviewer: this.task.reviewer,
+    };
+  }
+
+  get festivalTask(): ReadyToAssignWithoutConflicts {
+    return this.task;
+  }
+}
+
+function isReadyToAssignStructure(
+  task: FestivalTaskWithoutStatus,
+): task is ReadyToAssignWithoutStatus {
+  return (
+    InReviewSpecification.isSatisfiedBy(task) &&
+    isValidatedReviews(task.reviews) &&
+    task.mobilizations.every(hasAssignments)
+  );
+}
+
+function hasAssignments<Options extends { withConflicts: false }>(
+  mobilization:
+    | Mobilization<Options & { withAssignments: false }>
+    | Mobilization<Options & { withAssignments: true }>,
+): mobilization is Mobilization<Options & { withAssignments: true }> {
+  return Object.hasOwn(mobilization, "assignments");
 }

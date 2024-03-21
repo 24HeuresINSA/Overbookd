@@ -118,7 +118,7 @@ export class FtUserRequestService {
     ftId: number,
     { start, end }: IProvidePeriod,
   ) {
-    return this.prisma.assignment.findFirst({
+    return this.prisma.oldAssignment.findFirst({
       select: { assigneeId: true },
       where: {
         assigneeId: userId,

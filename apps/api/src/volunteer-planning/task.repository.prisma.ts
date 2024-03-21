@@ -87,7 +87,7 @@ export class PrismaTaskRepository implements TaskRepository {
       orderBy: { start: "asc" },
     });
     const taskIds = tasks.map(({ timeWindow }) => timeWindow.ft.id);
-    const assignments = await this.prisma.assignment.findMany({
+    const assignments = await this.prisma.oldAssignment.findMany({
       where: {
         timeSpan: { timeWindow: { ftId: { in: taskIds } } },
         NOT: { assigneeId: volunteerId },

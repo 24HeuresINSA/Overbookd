@@ -8,6 +8,7 @@ import { PrismaFestivalActivities } from "./repository/festival-activities.prism
 import {
   AskForReviewTask,
   CreateFestivalTask,
+  EnableAssignment,
   FestivalTaskTranslator,
   PrepareFestivalTask,
   ReviewTask,
@@ -22,6 +23,7 @@ import { PrismaReviewers } from "./repository/reviewers.prisma";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
 import { PrismaNotifications } from "../../common/repository/notifications.prisma";
 import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks.prisma";
+import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignment-festival-tasks.prisma";
 
 @Module({
   providers: [
@@ -162,6 +164,20 @@ import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks
       ) => new ReviewTask(festivalTasks, translator),
       inject: [PrismaFestivalTasksForReview, FestivalTaskTranslator],
     },
+    {
+      provide: PrimsaEnableAssignmentFestivalTasks,
+      useFactory: (prisma: PrismaService) =>
+        new PrimsaEnableAssignmentFestivalTasks(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: EnableAssignment,
+      useFactory: (
+        festivalTasks: PrimsaEnableAssignmentFestivalTasks,
+        translator: FestivalTaskTranslator,
+      ) => new EnableAssignment(festivalTasks, translator),
+      inject: [PrimsaEnableAssignmentFestivalTasks, FestivalTaskTranslator],
+    },
   ],
   imports: [PrismaModule],
   exports: [
@@ -175,6 +191,7 @@ import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks
     AskForReviewTask,
     PrismaRemoveFestivalTasks,
     ReviewTask,
+    EnableAssignment,
   ],
 })
 export class FestivalTaskCommonModule {}

@@ -19,8 +19,12 @@ import {
   ApiParam,
   getSchemaPath,
 } from "@nestjs/swagger";
-import { FestivalTask, FestivalTaskRefused } from "@overbookd/festival-event";
-import { VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
+import {
+  FestivalTask,
+  FestivalTaskReadyToAssign,
+  FestivalTaskRefused,
+} from "@overbookd/festival-event";
+import { AFFECT_VOLUNTEER, VALIDATE_FT, WRITE_FT } from "@overbookd/permission";
 import { RequestWithUserPayload } from "../../../app.controller";
 import { JwtAuthGuard } from "../../../authentication/jwt-auth.guard";
 import { Permission } from "../../../authentication/permissions-auth.decorator";
@@ -31,12 +35,14 @@ import { FestivalTaskErrorFilter } from "../common/festival-task-error.filter";
 import { DraftFestivalTaskResponseDto } from "../common/dto/draft/draft-festival-task.response.dto";
 import {
   InReviewFestivalTaskResponseDto,
+  ReadyToAssignFestivalTaskResponseDto,
   RefusedFestivalTaskResponseDto,
   ValidatedFestivalTaskResponseDto,
 } from "../common/dto/reviewable/reviewable-festival-task.response.dto";
 import { FestivalEventErrorFilter } from "../../common/festival-event-error.filter";
 import { JwtUtil } from "../../../authentication/entities/jwt-util.entity";
 import { ApproveRequestDto, RejectRequestDto } from "./dto/review.request.dto";
+import { CategorizeTaskRequestDto } from "./dto/categoryze.request.dto";
 
 @ApiBearerAuth()
 @ApiTags("festival-tasks")
@@ -164,5 +170,33 @@ export class FestivalTaskReviewController {
   ): Promise<FestivalTask> {
     const jwt = new JwtUtil(user);
     return this.reviewService.approve(faId, jwt, approve);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(AFFECT_VOLUNTEER)
+  @Post(":ftId/enable-assignment")
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Festival task",
+    type: ReadyToAssignFestivalTaskResponseDto,
+  })
+  @ApiBody({
+    description: "Festival task category",
+    type: CategorizeTaskRequestDto,
+  })
+  @ApiParam({
+    name: "ftId",
+    type: Number,
+    description: "Festival task id",
+    required: true,
+  })
+  enableAssignments(
+    @Param("ftId", ParseIntPipe) faId: FestivalTask["id"],
+    @Request() { user }: RequestWithUserPayload,
+    @Body() categorize: CategorizeTaskRequestDto,
+  ): Promise<FestivalTaskReadyToAssign> {
+    const jwt = new JwtUtil(user);
+    return this.reviewService.enableAssignment(faId, jwt, categorize);
   }
 }

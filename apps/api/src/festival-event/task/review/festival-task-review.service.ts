@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import {
   AskForReviewTask,
+  Categorize,
+  EnableAssignment,
   FestivalTask,
+  FestivalTaskReadyToAssign,
   FestivalTaskRefused,
   PrepareFestivalTask,
   ReviewTask,
@@ -24,6 +27,7 @@ type UseCases = {
   prepare: Readonly<PrepareFestivalTask>;
   askForReview: Readonly<AskForReviewTask>;
   review: Readonly<ReviewTask>;
+  enableAssignment: Readonly<EnableAssignment>;
 };
 
 type Repositories = {
@@ -97,5 +101,14 @@ export class FestivalTaskReviewService {
     this.eventStore.publish(event);
 
     return task;
+  }
+
+  async enableAssignment(
+    ftId: FestivalTask["id"],
+    user: JwtUtil,
+    categoryze: Categorize,
+  ): Promise<FestivalTaskReadyToAssign> {
+    const adherent = await this.repositories.adherents.findOne(user.id);
+    return this.useCases.enableAssignment.for(ftId, adherent, categoryze);
   }
 }
