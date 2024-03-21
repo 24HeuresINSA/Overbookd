@@ -116,8 +116,7 @@ import {
 import { formatLocalDate } from "~/utils/date/date.utils";
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentField from "~/components/atoms/field/comment/CommentField.vue";
-import { EVIL, EVIL_CHARISMA } from "~/utils/easter-egg/evil-charisma";
-import { COOL } from "~/utils/easter-egg/evil-charisma";
+import { EVIL, EVIL_CHARISMA, COOL } from "~/utils/easter-egg/evil-charisma";
 
 type UserCardData = InputRulesData & {
   firstname: string;
