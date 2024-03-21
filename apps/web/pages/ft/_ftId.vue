@@ -21,6 +21,14 @@
               Rejeter pour {{ team }}
             </v-btn>
           </div>
+          <v-btn
+            v-if="canEnableAssignment"
+            id="enable-assignment"
+            :disabled="cannotStartAssignment"
+            @click="openEnableAssignment"
+          >
+            Commencer l'affectation
+          </v-btn>
         </div>
       </template>
     </FestivalEventSidebar>
@@ -70,6 +78,12 @@
       </div>
       <OverCalendar v-model="calendarMarker" :events="allTimeWindows" />
     </v-dialog>
+    <v-dialog v-model="isEnableAssignmentOpen" width="600">
+      <CategorizeFormCard
+        @close-dialog="closeEnableAssignment"
+        @categorized="enableAssignment"
+      />
+    </v-dialog>
     <SnackNotificationContainer />
   </div>
 </template>
@@ -86,7 +100,10 @@ import {
   humain,
   isDraft,
   matos,
+  Categorize,
+  isValidated,
 } from "@overbookd/festival-event";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import FtGeneralCard from "~/components/organisms/festival-event/festival-task/FtGeneralCard.vue";
 import InstructionsCard from "~/components/organisms/festival-event/festival-task/InstructionsCard.vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
@@ -96,6 +113,7 @@ import ParentFaCard from "~/components/organisms/festival-event/festival-task/Pa
 import MobilizationCard from "~/components/organisms/festival-event/festival-task/MobilizationCard.vue";
 import FeedbackCard from "~/components/organisms/festival-event/FeedbackCard.vue";
 import AskRejectReasonFormCard from "~/components/molecules/festival-event/review/AskRejectReasonFormCard.vue";
+import CategorizeFormCard from "~/components/molecules/festival-event/review/CategorizeFormCard.vue";
 import { CalendarEvent } from "~/utils/models/calendar.model";
 import { IProvidePeriod } from "@overbookd/period";
 import OverCalendar from "~/components/molecules/calendar/OverCalendar.vue";
@@ -109,6 +127,7 @@ type FestivalTaskDetailsData = {
   isRejectDialogOpen: boolean;
   reviewer?: Reviewer<"FT">;
   isCalendarDialogOpen: boolean;
+  isEnableAssignmentOpen: boolean;
   calendarMarker: Date;
   displayMobilizations: boolean;
   displayActivityTimeWindows: boolean;
@@ -127,10 +146,12 @@ export default defineComponent({
     FeedbackCard,
     AskRejectReasonFormCard,
     OverCalendar,
+    CategorizeFormCard,
   },
   data: (): FestivalTaskDetailsData => ({
     isRejectDialogOpen: false,
     isCalendarDialogOpen: false,
+    isEnableAssignmentOpen: false,
     calendarMarker: new Date(),
     displayMobilizations: true,
     displayActivityTimeWindows: true,
@@ -204,6 +225,12 @@ export default defineComponent({
         ...activityInquiryEvents,
         ...activityTimeWindowEvents,
       ];
+    },
+    canEnableAssignment(): boolean {
+      return this.$accessor.user.can(AFFECT_VOLUNTEER);
+    },
+    cannotStartAssignment(): boolean {
+      return !isValidated(this.selectedTask);
     },
   },
   async mounted() {
@@ -284,6 +311,15 @@ export default defineComponent({
           this.displayActivityInquiries = !this.displayActivityInquiries;
       }
     },
+    openEnableAssignment() {
+      this.isEnableAssignmentOpen = true;
+    },
+    closeEnableAssignment() {
+      this.isEnableAssignmentOpen = false;
+    },
+    enableAssignment(categorize: Categorize) {
+      this.$accessor.festivalTask.enableAssignment(categorize);
+    },
   },
 });
 </script>
@@ -319,6 +355,13 @@ $sidebar-width: 350px;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+
+  #enable-assignment {
+    color: whitesmoke;
+    font-weight: bolder;
+    min-width: 100%;
+    background-color: $ready-color;
+  }
 }
 
 .team-review {

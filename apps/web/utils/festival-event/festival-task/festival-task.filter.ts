@@ -4,6 +4,7 @@ import {
   FestivalTask,
   IN_REVIEW,
   NOT_ASKING_TO_REVIEW,
+  READY_TO_ASSIGN,
   REFUSED,
   REJECTED,
   REVIEWING,
@@ -137,6 +138,8 @@ export function findStatus(status: string): FestivalTask["status"] | undefined {
       return REFUSED;
     case VALIDATED:
       return VALIDATED;
+    case READY_TO_ASSIGN:
+      return READY_TO_ASSIGN;
     case DRAFT:
     default:
       return DRAFT;

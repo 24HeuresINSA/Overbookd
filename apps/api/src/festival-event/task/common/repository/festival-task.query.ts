@@ -126,7 +126,7 @@ export class FestivalTaskQueryBuilder {
   }
 
   static enableAssignment(task: ReadyToAssignWithoutConflicts) {
-    const { category, topPriority } = task;
+    const { category, topPriority, status } = task;
     const mobilizations = {
       update: task.mobilizations.map((mobilization) => ({
         where: { ftId_id: { ftId: task.id, id: mobilization.id } },
@@ -146,10 +146,13 @@ export class FestivalTaskQueryBuilder {
         },
       })),
     };
+    const events = this.upsertHistory(task);
     return {
+      status,
       category,
       topPriority,
       mobilizations,
+      events,
     };
   }
 

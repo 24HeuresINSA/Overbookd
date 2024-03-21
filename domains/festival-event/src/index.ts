@@ -246,6 +246,7 @@ export {
   BAR,
   RELOU,
   MANUTENTION,
+  isReadyToAssign,
 } from "./festival-task/festival-task";
 export type {
   Volunteer,
@@ -291,4 +292,5 @@ export {
   isDraft,
   isInReview,
   isRefused,
+  isValidated,
 } from "./festival-event";

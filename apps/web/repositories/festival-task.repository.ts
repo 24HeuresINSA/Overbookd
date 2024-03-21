@@ -25,9 +25,16 @@ import {
   TeamMobilization,
   FestivalTaskWithConflicts,
   AssignDrive,
+  Categorize,
+  FestivalTaskReadyToAssign,
 } from "@overbookd/festival-event";
 
 type Context = { $axios: NuxtAxiosInstance };
+
+type ReadyToAssign = Extract<
+  FestivalTaskWithConflicts,
+  FestivalTaskReadyToAssign
+>;
 
 export class FestivalTaskRepository {
   private static readonly basePath = "festival-tasks";
@@ -301,6 +308,17 @@ export class FestivalTaskRepository {
     return context.$axios.post<HttpStringified<FestivalTaskWithConflicts>>(
       `${this.basePath}/${ftId}/approve`,
       approval,
+    );
+  }
+
+  static enableAssignment(
+    context: Context,
+    ftId: FestivalTaskWithConflicts["id"],
+    categorize: Categorize,
+  ) {
+    return context.$axios.post<HttpStringified<ReadyToAssign>>(
+      `${this.basePath}/${ftId}/enable-assignment`,
+      categorize,
     );
   }
 }

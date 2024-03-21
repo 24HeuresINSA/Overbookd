@@ -9,6 +9,7 @@ import {
   TeamMobilization,
   FestivalTaskWithConflicts,
   AssignDrive,
+  Categorize,
 } from "@overbookd/festival-event";
 import { actionTree, mutationTree } from "typed-vuex";
 import { safeCall } from "~/utils/api/calls";
@@ -441,6 +442,19 @@ export const actions = actionTree(
       const res = await safeCall(this, repo.approve(this, id, approval), {
         successMessage: `✅ FT approuvée par l'équipe ${approval.team}`,
       });
+      if (!res) return;
+
+      const task = castTaskWithDate(res.data);
+      commit("SET_SELECTED_TASK", task);
+    },
+
+    async enableAssignment({ state, commit }, categorize: Categorize) {
+      const id = state.selectedTask.id;
+      const res = await safeCall(
+        this,
+        repo.enableAssignment(this, id, categorize),
+        { successMessage: `✅ FT prete pour affectation` },
+      );
       if (!res) return;
 
       const task = castTaskWithDate(res.data);
