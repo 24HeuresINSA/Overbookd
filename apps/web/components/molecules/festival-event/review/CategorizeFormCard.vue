@@ -63,6 +63,7 @@ export default defineComponent({
         topPriority: this.topPriority,
       };
       this.$emit("categorized", categorize);
+      this.closeDialog();
     },
   },
 });
