@@ -28,7 +28,7 @@ import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { BorrowResponseDto } from "./dto/borrow.response.dto";
 import { InitBorrowRequestDto } from "./dto/init-borrow.request.dto";
-import { Borrow, GearRequest, PlanBorrowForm } from "@overbookd/logistic";
+import { Borrow, GearRequest } from "@overbookd/logistic";
 import { AddGearRequestDto } from "./dto/add-gear.request.dto";
 import { AddBorrowGearRequestForm } from "@overbookd/http";
 import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
@@ -107,7 +107,7 @@ export class BorrowController {
   })
   planBorrow(
     @Param("id", ParseIntPipe) id: Borrow["id"],
-    @Body() borrow: PlanBorrowForm,
+    @Body() borrow: PlanBorrowRequestDto,
   ): Promise<Borrow> {
     return this.borrowService.planBorrow(id, borrow);
   }

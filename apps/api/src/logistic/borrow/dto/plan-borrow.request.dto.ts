@@ -14,7 +14,7 @@ export class PlanBorrowRequestDto implements PlanBorrowForm {
   lender: PlanBorrowForm["lender"];
 
   @ApiProperty({
-    type: String,
+    type: Date,
     description: "The date the gear is available",
     required: false,
   })
@@ -24,7 +24,7 @@ export class PlanBorrowRequestDto implements PlanBorrowForm {
   availableOn: PlanBorrowForm["availableOn"];
 
   @ApiProperty({
-    type: String,
+    type: Date,
     description: "The date the gear is unavailable",
     required: false,
   })
