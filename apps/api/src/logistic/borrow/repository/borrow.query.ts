@@ -49,6 +49,10 @@ export class BorrowQueryBuilder {
         create: { gearSlug: slug, quantity },
         update: { quantity },
       })),
+      deleteMany: {
+        borrowId: id,
+        gearSlug: { notIn: gears.map(({ slug }) => slug) },
+      },
     };
   }
 }

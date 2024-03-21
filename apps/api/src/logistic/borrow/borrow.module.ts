@@ -5,9 +5,15 @@ import { PrismaService } from "../../prisma.service";
 import { InitBorrow, PlanBorrow } from "@overbookd/logistic";
 import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
 import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
-import { BorrowService, BorrowsForView, Gears } from "./borrow.service";
+import {
+  BorrowService,
+  BorrowsForRemove,
+  BorrowsForView,
+  Gears,
+} from "./borrow.service";
 import { PrismaGears } from "./repository/gears.prisma";
 import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
+import { PrismaRemoveBorrows } from "./repository/remove-borrows.prisma";
 
 @Module({
   controllers: [BorrowController],
@@ -20,6 +26,11 @@ import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
     {
       provide: PrismaViewBorrows,
       useFactory: (prisma: PrismaService) => new PrismaViewBorrows(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaRemoveBorrows,
+      useFactory: (prisma: PrismaService) => new PrismaRemoveBorrows(prisma),
       inject: [PrismaService],
     },
     {
@@ -48,9 +59,16 @@ import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
         init: InitBorrow,
         plan: PlanBorrow,
         views: BorrowsForView,
+        removes: BorrowsForRemove,
         gears: Gears,
-      ) => new BorrowService({ init, plan }, { views, gears }),
-      inject: [InitBorrow, PlanBorrow, PrismaViewBorrows, PrismaGears],
+      ) => new BorrowService({ init, plan }, { views, removes, gears }),
+      inject: [
+        InitBorrow,
+        PlanBorrow,
+        PrismaViewBorrows,
+        PrismaPlanBorrows,
+        PrismaGears,
+      ],
     },
   ],
   imports: [PrismaModule],
