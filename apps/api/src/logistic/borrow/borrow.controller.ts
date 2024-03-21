@@ -39,8 +39,8 @@ import { AddBorrowGearRequestForm } from "@overbookd/http";
 import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
 
 @ApiBearerAuth()
-@ApiTags("logistic/borrow")
-@Controller("logistic/borrow")
+@ApiTags("logistic/borrows")
+@Controller("logistic/borrows")
 @UseFilters(BorrowErrorFilter)
 @ApiBadRequestResponse({ description: "Request is not formated as expected" })
 @ApiForbiddenResponse({ description: "User can't access this resource" })
