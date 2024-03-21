@@ -4,15 +4,15 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
     <v-card-title class="categorize-card__title">
-      <h2>Commencer l'affecation</h2>
+      <h2>Commencer l'affectation</h2>
     </v-card-title>
     <v-card-subtitle>
-      <p>Avant de commencer l'affectation il faut categoriser la FT.</p>
+      <p>Avant de commencer l'affectation il faut catégoriser la FT.</p>
     </v-card-subtitle>
     <v-card-text>
       <v-select
         v-model="category"
-        label="Type de creneau"
+        label="Type de créneau"
         :items="categories"
         clearable
       />

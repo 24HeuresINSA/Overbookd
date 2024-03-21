@@ -453,7 +453,7 @@ export const actions = actionTree(
       const res = await safeCall(
         this,
         repo.enableAssignment(this, id, categorize),
-        { successMessage: `✅ FT prete pour affectation` },
+        { successMessage: `✅ FT prête pour affectation` },
       );
       if (!res) return;
 
