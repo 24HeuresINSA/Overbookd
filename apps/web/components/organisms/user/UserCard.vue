@@ -46,7 +46,7 @@
             ></TeamChip>
           </div>
           <p>
-            <v-icon>mdi-emoticon-cool-outline</v-icon>
+            <v-icon>{{ charismaIcon }}</v-icon>
             {{ me.charisma || 0 }} points de charisme
           </p>
           <p><v-icon>mdi-account-multiple</v-icon> {{ friends }} amis</p>
@@ -116,6 +116,7 @@ import {
 import { formatLocalDate } from "~/utils/date/date.utils";
 import FriendsCard from "~/components/molecules/friend/FriendsCard.vue";
 import CommentField from "~/components/atoms/field/comment/CommentField.vue";
+import { EVIL, EVIL_CHARISMA, COOL } from "~/utils/easter-egg/evil-charisma";
 
 type UserCardData = InputRulesData & {
   firstname: string;
@@ -162,6 +163,9 @@ export default defineComponent({
     },
     friends(): number {
       return this.$accessor.user.mFriends.length;
+    },
+    charismaIcon(): string {
+      return this.me.charisma === EVIL_CHARISMA ? EVIL.icon : COOL.icon;
     },
     isValid(): boolean {
       const isValidFirstname = this.rules.required(this.firstname) === true;

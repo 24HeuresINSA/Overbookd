@@ -20,7 +20,7 @@
         <strong>Astuce</strong>: Tu peux sélectionner tous les créneaux d'une
         journée en cliquant sur le chiffre de la date.
       </v-alert>
-      <h2>Mon Charisme : {{ charisma }} 😎</h2>
+      <h2>Mon Charisme : {{ charisma }} {{ charismaEmoji }}</h2>
     </div>
     <AvailabilitiesStepper />
     <SnackNotificationContainer />
@@ -31,6 +31,7 @@
 import Vue from "vue";
 import SnackNotificationContainer from "~/components/molecules/snack/SnackNotificationContainer.vue";
 import AvailabilitiesStepper from "~/components/organisms/availabilities/AvailabilitiesStepper.vue";
+import { EVIL_CHARISMA, EVIL, COOL } from "~/utils/easter-egg/evil-charisma";
 
 export default Vue.extend({
   name: "Availabilities",
@@ -44,6 +45,9 @@ export default Vue.extend({
     },
     charisma(): number {
       return this.$accessor.volunteerAvailability.currentCharisma ?? 0;
+    },
+    charismaEmoji(): string {
+      return this.charisma === EVIL_CHARISMA ? EVIL.emoji : COOL.emoji;
     },
   },
   async mounted() {
