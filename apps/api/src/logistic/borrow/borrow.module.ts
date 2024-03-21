@@ -66,7 +66,7 @@ import { PrismaRemoveBorrows } from "./repository/remove-borrows.prisma";
         InitBorrow,
         PlanBorrow,
         PrismaViewBorrows,
-        PrismaPlanBorrows,
+        PrismaRemoveBorrows,
         PrismaGears,
       ],
     },

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   ParseIntPipe,
   Patch,
@@ -114,6 +115,23 @@ export class BorrowController {
     @Body() borrow: PlanBorrowForm,
   ): Promise<Borrow> {
     return this.borrowService.planBorrow(id, borrow);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionsGuard)
+  @Permission(BORROW_GEARS)
+  @Delete(":id")
+  @HttpCode(204)
+  @ApiParam({
+    name: "id",
+    type: Number,
+    description: "Borrow id to remove",
+  })
+  @ApiResponse({
+    status: 204,
+    description: "Removed borrow",
+  })
+  removeBorrow(@Param("id", ParseIntPipe) id: Borrow["id"]): Promise<void> {
+    return this.borrowService.removeBorrow(id);
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
