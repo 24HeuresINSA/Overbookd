@@ -28,12 +28,7 @@ import { JwtAuthGuard } from "../../authentication/jwt-auth.guard";
 import { PermissionsGuard } from "../../authentication/permissions-auth.guard";
 import { BorrowResponseDto } from "./dto/borrow.response.dto";
 import { InitBorrowRequestDto } from "./dto/init-borrow.request.dto";
-import {
-  Borrow,
-  GearRequest,
-  InitBorrowForm,
-  PlanBorrowForm,
-} from "@overbookd/logistic";
+import { Borrow, GearRequest, PlanBorrowForm } from "@overbookd/logistic";
 import { AddGearRequestDto } from "./dto/add-gear.request.dto";
 import { AddBorrowGearRequestForm } from "@overbookd/http";
 import { PlanBorrowRequestDto } from "./dto/plan-borrow.request.dto";
@@ -89,7 +84,7 @@ export class BorrowController {
     description: "Initialized borrow",
     type: BorrowResponseDto,
   })
-  initBorrow(@Body() borrow: InitBorrowForm): Promise<Borrow> {
+  initBorrow(@Body() borrow: InitBorrowRequestDto): Promise<Borrow> {
     return this.borrowService.initBorrow(borrow);
   }
 
