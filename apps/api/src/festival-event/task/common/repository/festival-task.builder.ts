@@ -84,6 +84,8 @@ export class FestivalTaskBuilder<T extends FestivalTaskWithoutConflicts> {
       case REFUSED:
       case VALIDATED:
         return ReviewableBuilder.init(taskWithoutStatus);
+      case READY_TO_ASSIGN:
+        return ReadyToReviewBuilder.init(taskWithoutStatus);
     }
   }
 
@@ -285,7 +287,8 @@ export class ReadyToReviewBuilder
   extends FestivalTaskBuilder<ReadyToAssignWithoutConflicts>
   implements VisualizeFestivalTask<ReadyToAssignWithoutConflicts>
 {
-  static init(taskWithoutStatus: ReadyToAssignWithoutStatus) {
+  static init(taskWithoutStatus: FestivalTaskWithoutStatus) {
+    if (!isReadyToAssignStructure(taskWithoutStatus)) throw new Error();
     return new ReadyToReviewBuilder({
       ...taskWithoutStatus,
       status: READY_TO_ASSIGN,

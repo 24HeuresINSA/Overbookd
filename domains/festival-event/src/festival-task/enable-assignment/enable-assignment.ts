@@ -9,7 +9,7 @@ import { Adherent } from "../../common/adherent";
 import { FestivalTaskKeyEvents } from "../festival-task.event";
 import {
   FestivalTaskTranslator,
-  ReadtToAssignWithConflicts,
+  ReadyToAssignWithConflicts,
   ReadyToAssignWithoutConflicts,
   WithoutConflicts,
 } from "../volunteer-conflicts";
@@ -46,7 +46,7 @@ export class EnableAssignment {
     ftId: FestivalTask["id"],
     instigator: Adherent,
     categorize: Categorize,
-  ): Promise<ReadtToAssignWithConflicts> {
+  ): Promise<ReadyToAssignWithConflicts> {
     const task = await this.festivalTasks.findById(ftId);
     if (!task) throw new FestivalTaskNotFound(ftId);
     if (isReadyToAssign(task)) {

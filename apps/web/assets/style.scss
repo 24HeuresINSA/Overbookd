@@ -41,7 +41,8 @@
     }
   }
 
-  &.ready {
+  &.ready,
+  &.ready_to_assign {
     background-color: $ready-color;
     color: white;
 
