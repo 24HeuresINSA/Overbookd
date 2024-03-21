@@ -4,6 +4,7 @@ import {
   Categorize,
   EnableAssignment,
   FestivalTask,
+  FestivalTaskReadyToAssign,
   FestivalTaskRefused,
   PrepareFestivalTask,
   ReviewTask,
@@ -21,7 +22,6 @@ import {
 import { Adherents } from "../common/festival-task-common.model";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { TeamService } from "../../../team/team.service";
-import { ReadyToAssign } from "@overbookd/festival-event/src/festival-task/festival-task";
 
 type UseCases = {
   prepare: Readonly<PrepareFestivalTask>;
@@ -107,7 +107,7 @@ export class FestivalTaskReviewService {
     ftId: FestivalTask["id"],
     user: JwtUtil,
     categoryze: Categorize,
-  ): Promise<ReadyToAssign> {
+  ): Promise<FestivalTaskReadyToAssign> {
     const adherent = await this.repositories.adherents.findOne(user.id);
     return this.useCases.enableAssignment.for(ftId, adherent, categoryze);
   }
