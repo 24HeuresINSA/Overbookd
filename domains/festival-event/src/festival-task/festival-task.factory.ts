@@ -1,5 +1,11 @@
 import { numberGenerator } from "@overbookd/list";
-import { DRAFT, IN_REVIEW, REFUSED, VALIDATED } from "../common/status";
+import {
+  DRAFT,
+  IN_REVIEW,
+  READY_TO_ASSIGN,
+  REFUSED,
+  VALIDATED,
+} from "../common/status";
 import { isKeyOf } from "../is-key-of";
 import {
   Draft,
@@ -25,9 +31,13 @@ import {
   noelContact,
 } from "./festival-task.test-util";
 import { NOT_ASKING_TO_REVIEW, REVIEWING } from "../common/review";
-import { WithConflicts } from "./volunteer-conflicts";
+import {
+  ReadyToAssignWithConflicts,
+  WithConflicts,
+} from "./volunteer-conflicts";
 import { isDraft } from "../festival-event";
 import { APPROVED, REJECTED } from "../common/action";
+import { Assignments } from "./enable-assignment/enable-assignment";
 
 type FestivalTaskSection =
   | WithConflicts["general"]
@@ -65,6 +75,12 @@ class FestivalTaskFactory {
   validated(name: string): FestivalTaskBuilder<ValidatedWithConflicts> {
     const id = this.idGenerator.next().value;
     const task = defaultValidated(id, name);
+    return FestivalTaskBuilder.init(task);
+  }
+
+  readyToAssign(name: string): FestivalTaskBuilder<ReadyToAssignWithConflicts> {
+    const id = this.idGenerator.next().value;
+    const task = defaultReadyToAssign(id, name);
     return FestivalTaskBuilder.init(task);
   }
 }
@@ -262,6 +278,36 @@ function defaultValidated(id: number, name: string): ValidatedWithConflicts {
     feedbacks: [],
     inquiries: [],
     mobilizations: defaultMobilizations(),
+    reviews: {
+      humain: APPROVED,
+      matos: APPROVED,
+      elec: NOT_ASKING_TO_REVIEW,
+    },
+    reviewer: lea,
+  };
+}
+
+function defaultReadyToAssign(
+  id: number,
+  name: string,
+): ReadyToAssignWithConflicts {
+  return {
+    id,
+    topPriority: false,
+    status: READY_TO_ASSIGN,
+    general: defaultGeneral(name),
+    festivalActivity: defaultActivity(name),
+    instructions: defaultInstructions(),
+    history: [
+      FestivalTaskKeyEvents.created(noel),
+      FestivalTaskKeyEvents.readyToReview(noel),
+      FestivalTaskKeyEvents.approved(lea),
+      FestivalTaskKeyEvents.approved(george),
+      FestivalTaskKeyEvents.readyToReview(lea),
+    ],
+    feedbacks: [],
+    inquiries: [],
+    mobilizations: defaultMobilizations().map(Assignments.generate),
     reviews: {
       humain: APPROVED,
       matos: APPROVED,

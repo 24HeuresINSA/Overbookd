@@ -7,7 +7,7 @@ import {
 import { Volunteer } from "./sections/instructions";
 import { Conflicts, FestivalTaskLink } from "./sections/mobilizations";
 import { Mobilization } from "./sections/mobilizations";
-import { FestivalTask } from "./festival-task";
+import { FestivalTask, isReadyToAssign } from "./festival-task";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(
@@ -22,8 +22,9 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   ): Promise<Conflicts> {
     const tasks = await this.onTask(taskId, period, volunteerId);
     const availability = await this.onAvailability(period, volunteerId);
+    const assignments = await this.onAssignments(taskId, period, volunteerId);
 
-    const conflicts = { tasks, availability };
+    const conflicts = { tasks, availability, assignments };
     return Promise.resolve(conflicts);
   }
 
@@ -61,6 +62,33 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
       (availability) => Period.init(availability).includes(requestedPeriod),
     );
     return Promise.resolve(availabilities.length === 0);
+  }
+
+  private onAssignments(
+    taskId: FestivalTask["id"],
+    period: IProvidePeriod,
+    volunteerId: Volunteer["id"],
+  ): Promise<FestivalTaskLink[]> {
+    const requestPeriod = Period.init(period);
+    const tasks = this.tasks
+      .filter((task) => {
+        if (!isReadyToAssign(task)) return false;
+        const isSameTask = task.id === taskId;
+        if (isSameTask) return false;
+
+        return task.mobilizations.some((mobilization) =>
+          mobilization.assignments.some(({ start, end, assignees }) => {
+            const assignmentPeriod = Period.init({ start, end });
+            const isOverlapping = assignmentPeriod.isOverlapping(requestPeriod);
+            const isVolunteerAssigned = assignees.some(
+              ({ id }) => id === volunteerId,
+            );
+            return isOverlapping && isVolunteerAssigned;
+          }),
+        );
+      })
+      .map(({ id, general: { name } }) => ({ id, name }));
+    return Promise.resolve(tasks);
   }
 }
 

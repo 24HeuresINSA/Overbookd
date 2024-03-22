@@ -42,6 +42,7 @@ const defaultMobilizationOptions = {
 export type Conflicts = {
   tasks: FestivalTaskLink[];
   availability: boolean;
+  assignments: FestivalTaskLink[];
 };
 
 export type VolunteerWithConflicts = Volunteer & { conflicts: Conflicts };
@@ -52,8 +53,10 @@ type MobilizationVolunteer<Options extends MobilizationOptions> =
   Options["withConflicts"] extends true ? VolunteerWithConflicts : Volunteer;
 
 type BaseMobilization<Options extends MobilizationOptions> = TimeWindow & {
-  volunteers: MobilizationVolunteer<Options>[];
-  teams: TeamMobilization[];
+  volunteers:
+    | MobilizationVolunteer<Options>[]
+    | WithAtLeastOneItem<MobilizationVolunteer<Options>>;
+  teams: TeamMobilization[] | WithAtLeastOneItem<TeamMobilization>;
   durationSplitInHour: null | number;
 };
 
