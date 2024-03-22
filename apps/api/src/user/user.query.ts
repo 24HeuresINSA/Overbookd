@@ -16,6 +16,7 @@ const SELECT_USER = {
   comment: true,
   profilePicture: true,
   charisma: true,
+  note: true,
 };
 
 export const SELECT_USER_TEAMS = {

@@ -6,7 +6,6 @@ import {
   UserPersonalDataWithProfilePicture,
   VolunteerAssignmentStat,
   VolunteerTask,
-  castToUserUpdateForm,
   castUserWithDate,
   castVolunteerPlanningTasksWithDate,
   castVolunteerTaskWithDate,
@@ -16,6 +15,7 @@ import {
   Profile,
   User,
   UserPersonalData,
+  UserUpdateForm,
 } from "@overbookd/user";
 import { Permission } from "@overbookd/permission";
 import { Consumer } from "~/utils/models/user.model";
@@ -257,11 +257,11 @@ export const actions = actionTree(
     },
     async updateUser(
       { commit, state, dispatch },
-      user: UserPersonalData | UserPersonalDataWithProfilePicture,
+      { id, user }: { id: number; user: UserUpdateForm },
     ) {
       const res = await safeCall(
         this,
-        UserRepository.updateUser(this, user.id, castToUserUpdateForm(user)),
+        UserRepository.updateUser(this, id, user),
         {
           successMessage: "Profil mis à jour ! 🎉",
           errorMessage: "Mince, le profil n'a pas pu être mis à jour 😢",

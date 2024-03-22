@@ -1,11 +1,7 @@
 import { FestivalTask } from "@overbookd/festival-event";
 import { HttpStringified, PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/period";
-import {
-  MyUserInformation,
-  UserPersonalData,
-  UserUpdateForm,
-} from "@overbookd/user";
+import { MyUserInformation, UserPersonalData } from "@overbookd/user";
 import { TaskCategory } from "./ft-time-span.model";
 
 type WithPotentialProfilePicture = {
@@ -34,19 +30,6 @@ export type VolunteerAssignmentStat = {
   category: TaskCategory;
   duration: number;
 };
-
-export function castToUserUpdateForm(user: UserPersonalData): UserUpdateForm {
-  return {
-    firstname: user.firstname,
-    lastname: user.lastname,
-    nickname: user.nickname || null,
-    email: user.email,
-    birthdate: new Date(user.birthdate),
-    phone: user.phone,
-    comment: user.comment || null,
-    charisma: +user.charisma,
-  };
-}
 
 export function castUserWithDate(
   user: HttpStringified<UserPersonalData | MyUserInformation | Consumer>,

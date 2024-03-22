@@ -11,7 +11,7 @@ import {
   Patch,
   Post,
   Put,
-  Request as RequestDecorator,
+  Request,
   Res,
   StreamableFile,
   UploadedFile,
@@ -31,7 +31,7 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { randomUUID } from "crypto";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { diskStorage } from "multer";
 import { join } from "path";
 import { RequestWithUserPayload } from "../../src/app.controller";
@@ -109,8 +109,10 @@ export class UserController {
     type: UserPersonalDataResponseDto,
     isArray: true,
   })
-  getUsers(): Promise<UserPersonalData[]> {
-    return this.userService.getAll();
+  getUsers(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<UserPersonalData[]> {
+    return this.userService.getAll(new JwtUtil(user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -129,8 +131,10 @@ export class UserController {
     type: UserPersonalDataResponseDto,
     isArray: true,
   })
-  getVolunteers(): Promise<UserPersonalData[]> {
-    return this.userService.getVolunteers();
+  getVolunteers(
+    @Request() { user }: RequestWithUserPayload,
+  ): Promise<UserPersonalData[]> {
+    return this.userService.getVolunteers(new JwtUtil(user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -162,7 +166,7 @@ export class UserController {
     type: MyUserInformationResponseDto,
   })
   async getCurrentUser(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Request() req: RequestWithUserPayload,
   ): Promise<MyUserInformation | null> {
     return this.userService.getMyInformation(req.user);
   }
@@ -179,13 +183,13 @@ export class UserController {
   })
   @ApiProduces(JSON, ICAL, PDF)
   async getCurrentVolunteerPlanning(
-    @RequestDecorator() request: RequestWithUserPayload,
+    @Request() request: RequestWithUserPayload,
     @Res() response: Response,
   ): Promise<Task[]> {
     const volunteerId = request.user.userId ?? request.user.id;
     const format = request.headers.accept;
     try {
-      const planning = await this.formatPlanning(volunteerId, format);
+      const planning = await this.formatPlanning(volunteerId, format, request);
       response.setHeader("content-type", format);
       response.send(planning);
       return;
@@ -209,7 +213,7 @@ export class UserController {
     type: VolunteerSubscriptionPlanningResponseDto,
   })
   async getCurrentVolunteerSubscriptionPlanningLink(
-    @RequestDecorator() request: RequestWithUserPayload,
+    @Request() request: RequestWithUserPayload,
   ): Promise<PlanningSubscription> {
     const volunteerId = request.user.userId ?? request.user.id;
     return this.planningSubscription.subscribe(volunteerId);
@@ -228,7 +232,7 @@ export class UserController {
     type: UpdateProfileRequestDto,
   })
   async updateCurrentUser(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Request() req: RequestWithUserPayload,
     @Body() userData: UpdateProfileRequestDto,
   ): Promise<MyUserInformation | null> {
     return this.userService.updateMyInformation(req.user, userData);
@@ -259,8 +263,9 @@ export class UserController {
   })
   getUserById(
     @Param("id", ParseIntPipe) id: number,
+    @Request() { user }: RequestWithUserPayload,
   ): Promise<UserPersonalData> {
-    return this.userService.getById(id);
+    return this.userService.getById(id, new JwtUtil(user));
   }
 
   @UseGuards(JwtAuthGuard, PermissionsGuard)
@@ -324,12 +329,12 @@ export class UserController {
   @ApiProduces(JSON, ICAL, PDF)
   async getVolunteerPlanning(
     @Param("id", ParseIntPipe) volunteerId: number,
-    @RequestDecorator() request: Request,
+    @Request() request: RequestWithUserPayload,
     @Res() response: Response,
   ): Promise<TaskResponseDto[]> {
     const format = request.headers.accept;
     try {
-      const planning = await this.formatPlanning(volunteerId, format);
+      const planning = await this.formatPlanning(volunteerId, format, request);
       response.setHeader("content-type", format);
       response.send(planning);
       return;
@@ -342,10 +347,14 @@ export class UserController {
     }
   }
 
-  private async formatPlanning(volunteerId: number, format: string) {
+  private async formatPlanning(
+    volunteerId: number,
+    format: string,
+    request: RequestWithUserPayload,
+  ) {
     const [tasks, volunteer] = await Promise.all([
       this.planningService.getVolunteerPlanning(volunteerId),
-      this.getUserById(volunteerId),
+      this.getUserById(volunteerId, request),
     ]);
     const renderStrategy = PlanningRenderStrategy.get(format);
     return renderStrategy.render(tasks, {
@@ -385,9 +394,13 @@ export class UserController {
   updateUserById(
     @Param("id", ParseIntPipe) targetUserId: number,
     @Body() user: UpdateUserRequestDto,
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Request() req: RequestWithUserPayload,
   ): Promise<UserPersonalData> {
-    return this.userService.updateUser(targetUserId, user, req.user);
+    return this.userService.updateUser(
+      targetUserId,
+      user,
+      new JwtUtil(req.user),
+    );
   }
 
   @UseFilters(ForgetMemberErrorFilter)
@@ -430,7 +443,7 @@ export class UserController {
     type: FileUploadRequestDto,
   })
   defineProfilePicture(
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Request() req: RequestWithUserPayload,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<MyUserInformation> {
     return this.profilePictureService.updateProfilePicture(
@@ -470,7 +483,7 @@ export class UserController {
   async addTeamsToUser(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() teams: string[],
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Request() req: RequestWithUserPayload,
   ): Promise<string[]> {
     return this.teamService.addTeamsToUser(
       userId,
@@ -491,7 +504,7 @@ export class UserController {
   async removeTeamFromUser(
     @Param("userId", ParseIntPipe) userId: number,
     @Param("teamCode") teamCode: string,
-    @RequestDecorator() req: RequestWithUserPayload,
+    @Request() req: RequestWithUserPayload,
   ): Promise<void> {
     return this.teamService.removeTeamFromUser(
       userId,

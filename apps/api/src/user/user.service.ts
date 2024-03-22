@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import {
   JwtPayload,
   JwtUtil,
@@ -53,14 +53,13 @@ export class UserService {
     private prisma: PrismaService,
     private forgetMember: ForgetMember,
   ) {}
-  private logger = new Logger("UserService");
 
-  async getById(id: number): Promise<UserPersonalData | null> {
+  async getById(id: number, author: JwtUtil): Promise<UserPersonalData | null> {
     const user = await this.prisma.user.findUnique({
       where: { id },
       select: SELECT_USER_PERSONAL_DATA,
     });
-    return UserService.formatToPersonalData(user);
+    return UserService.formatToPersonalData(author, user);
   }
 
   async getMyInformation({ id }: JwtPayload): Promise<MyUserInformation> {
@@ -98,16 +97,16 @@ export class UserService {
     return UserService.formatToMyInformation(updatedUser);
   }
 
-  async getAll(): Promise<UserPersonalData[]> {
+  async getAll(author: JwtUtil): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: { isDeleted: false },
       select: SELECT_USER_PERSONAL_DATA,
     });
-    return users.map(UserService.formatToPersonalData);
+    return users.map((user) => UserService.formatToPersonalData(author, user));
   }
 
-  async getVolunteers(): Promise<UserPersonalData[]> {
+  async getVolunteers(author: JwtUtil): Promise<UserPersonalData[]> {
     const users = await this.prisma.user.findMany({
       orderBy: { id: "asc" },
       where: {
@@ -116,7 +115,7 @@ export class UserService {
       },
       select: SELECT_USER_PERSONAL_DATA,
     });
-    return users.map(UserService.formatToPersonalData);
+    return users.map((user) => UserService.formatToPersonalData(author, user));
   }
 
   getAdherents(): Promise<User[]> {
@@ -172,10 +171,8 @@ export class UserService {
   async updateUser(
     targetId: number,
     userData: UserUpdateForm,
-    authorInformation: JwtPayload,
+    author: JwtUtil,
   ): Promise<UserPersonalData> {
-    const author = new JwtUtil(authorInformation);
-
     if (!this.canUpdateUser(author, targetId)) {
       throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
     }
@@ -187,7 +184,7 @@ export class UserService {
       data: filteredPersonalData,
       where: { id: targetId },
     });
-    return UserService.formatToPersonalData(user);
+    return UserService.formatToPersonalData(author, user);
   }
 
   async deleteUser(id: number): Promise<void> {
@@ -230,11 +227,16 @@ export class UserService {
   }
 
   static formatToPersonalData(
-    user: DatabaseUserPersonalData,
+    author: JwtUtil,
+    data: DatabaseUserPersonalData,
   ): UserPersonalData {
-    const { teams, ...userWithoutTeams } = user;
+    const { teams, note, ...userWithoutTeams } = data;
+
+    const noteData = author.can(MANAGE_USERS) ? { note } : {};
+
     return {
       ...userWithoutTeams,
+      ...noteData,
       teams: extractTeamCodes(teams),
     };
   }

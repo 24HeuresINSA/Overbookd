@@ -76,6 +76,14 @@
         <p>{{ selectedVolunteer.comment ?? "Aucun commentaire" }}</p>
       </div>
 
+      <v-textarea
+        v-show="canManageUsers"
+        v-model="note"
+        class="comment-input"
+        label="Note des humains"
+        rows="3"
+      ></v-textarea>
+
       <div class="friends">
         <h3>Amis</h3>
         <div class="friends__list">
@@ -133,7 +141,7 @@ import {
   MANAGE_ADMINS,
   AFFECT_VOLUNTEER,
 } from "@overbookd/permission";
-import { MyUserInformation, User } from "@overbookd/user";
+import { MyUserInformation, User, UserUpdateForm } from "@overbookd/user";
 import { Team } from "~/utils/models/team.model";
 import { UserPersonalDataWithProfilePicture } from "~/utils/models/user.model";
 import {
@@ -151,6 +159,7 @@ type VolunteerPersonalDataFormData = InputRulesData & {
   email: string;
   charisma: number;
   newTeam?: string;
+  note?: string | null;
 };
 
 export default defineComponent({
@@ -167,6 +176,7 @@ export default defineComponent({
       email: "",
       charisma: 0,
       newTeam: undefined,
+      note: undefined,
       rules: {
         required: required,
         email: isEmail,
@@ -209,13 +219,15 @@ export default defineComponent({
       if (this.$accessor.user.can(MANAGE_ADMINS)) return teamsToAdd;
       return teamsToAdd.filter((team) => team.code !== "admin");
     },
-    updatedVolunteer(): UserPersonalDataWithProfilePicture {
+    updatedVolunteer(): UserUpdateForm {
+      const note =
+        this.note !== undefined ? { note: this.note?.trim() || null } : null;
       return {
-        ...this.selectedVolunteer,
         nickname: this.nickname ? this.nickname : null,
         phone: this.phone,
         email: this.email,
-        charisma: this.charisma,
+        charisma: +this.charisma,
+        ...note,
       };
     },
   },
@@ -236,6 +248,7 @@ export default defineComponent({
       this.phone = this.selectedVolunteer.phone;
       this.email = this.selectedVolunteer.email;
       this.charisma = this.selectedVolunteer.charisma;
+      this.note = this.selectedVolunteer.note;
 
       if (this.selectedVolunteer.profilePictureBlob) return;
       await this.$accessor.user.setSelectedUserProfilePicture();
@@ -257,7 +270,9 @@ export default defineComponent({
     },
 
     async savePersonalData() {
-      await this.$accessor.user.updateUser(this.updatedVolunteer);
+      const id = this.selectedVolunteer.id;
+      const user = this.updatedVolunteer;
+      await this.$accessor.user.updateUser({ id, user });
       this.$emit("saved");
     },
 

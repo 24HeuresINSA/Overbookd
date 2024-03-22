@@ -91,4 +91,12 @@ export class UpdateUserRequestDto implements UserUpdateForm {
   @IsNotEmpty()
   @IsNumber()
   charisma?: number;
+
+  @ApiProperty({
+    required: false,
+    description: "The user charisma points",
+  })
+  @IsOptional()
+  @IsString()
+  note?: string | null;
 }
