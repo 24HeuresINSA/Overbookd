@@ -99,27 +99,45 @@
     </v-dialog>
 
     <v-dialog v-model="isRemovalDialogOpen" max-width="600">
-      <ConfirmationMessage
-        confirm-color="error"
-        @close-dialog="closeRemovalDialog"
-        @confirm="removeFa"
-      >
-        <template #title>
-          Suppression de la FA #<strong>
-            {{ activityToRemove?.id }}
-          </strong>
-        </template>
-        <template #statement>
-          Tu es sur le point de supprimer la FA
-          <strong>{{ activityToRemove?.name }}</strong
-          >. Es-tu sûr de faire ça ?
-        </template>
-        <template #confirm-btn-content>
-          <v-icon left> mdi-delete </v-icon>Supprimer
-        </template>
-      </ConfirmationMessage>
+      <template v-if="!activityToRemove?.tasks">
+        <ConfirmationMessage
+          confirm-color="error"
+          @close-dialog="closeRemovalDialog"
+          @confirm="removeFa"
+        >
+          <template #title>
+            Suppression de la FA #<strong>{{ activityToRemove?.id }}</strong>
+          </template>
+          <template #statement>
+            Tu es sur le point de supprimer la FA
+            <strong>{{ activityToRemove?.general.name }}</strong
+            >. Es-tu sûr de faire ça ?
+          </template>
+          <template #confirm-btn-content>
+            <v-icon left>mdi-delete</v-icon>Supprimer
+          </template>
+        </ConfirmationMessage>
+      </template>
+      
+      <template v-else>
+        <ConfirmationMessage
+          confirm-color="error"
+          @close-dialog="closeRemovalDialog"
+        >
+          <template #title> Suppression impossible </template>
+          <template #statement>
+            La FA
+            <strong>{{ activityToRemove?.general.name }}</strong> est liée à des
+            tâches. Supprime d'abord les tâches suivantes :
+            <ul>
+              <li v-for="task in activityToRemove?.tasks" :key="task.id">
+                {{ task.name }}
+              </li>
+            </ul>
+          </template>
+        </ConfirmationMessage>
+      </template>
     </v-dialog>
-
     <SnackNotificationContainer />
   </div>
 </template>
@@ -157,7 +175,7 @@ type FaData = {
   headers: Header[];
   isNewFaDialogOpen: boolean;
   isRemovalDialogOpen: boolean;
-  activityToRemove?: PreviewFestivalActivity;
+  activityToRemove?: FestivalActivity;
   filters: ActivityFilters;
 };
 
@@ -367,8 +385,9 @@ export default defineComponent({
     closeNewFaDialog() {
       this.isNewFaDialogOpen = false;
     },
-    openRemovalDialog(fa: PreviewFestivalActivity) {
-      this.activityToRemove = fa;
+    async openRemovalDialog(fa: PreviewFestivalActivity) {
+      await this.$accessor.festivalActivity.fetchActivity(fa.id);
+      this.activityToRemove = this.$accessor.festivalActivity.selectedActivity;
       this.isRemovalDialogOpen = true;
     },
     closeRemovalDialog() {
