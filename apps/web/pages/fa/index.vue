@@ -131,7 +131,7 @@
             tâches. Supprime d'abord les tâches suivantes :
             <ul>
               <li v-for="task in activityToRemove?.tasks" :key="task.id">
-                {{ task.name }}
+                {{  task.id }} - {{ task.name }}
               </li>
             </ul>
           </template>
