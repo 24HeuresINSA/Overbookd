@@ -99,7 +99,7 @@
     </v-dialog>
 
     <v-dialog v-model="isRemovalDialogOpen" max-width="600">
-      <template v-if="!activityToRemove?.tasks">
+      <template v-if="activityToRemove?.tasks.length === 0">
         <ConfirmationMessage
           confirm-color="error"
           @close-dialog="closeRemovalDialog"
