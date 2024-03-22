@@ -20,6 +20,9 @@ class ConflictsDto implements Conflicts {
 
   @ApiProperty({})
   availability: boolean;
+
+  @ApiProperty({ type: FestivalTaskLinkDto, isArray: true })
+  assignments: FestivalTaskLink[];
 }
 
 export class VolunteerWithConflictsResponseDto

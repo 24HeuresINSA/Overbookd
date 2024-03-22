@@ -4,6 +4,7 @@ import {
   Volunteer,
   FestivalTaskLink,
   Conflicts,
+  READY_TO_ASSIGN,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/period";
 import { PrismaService } from "../../../../prisma.service";
@@ -18,7 +19,8 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
   ): Promise<Conflicts> {
     const tasks = await this.onTask(taskId, period, volunteerId);
     const availability = await this.onAvailability(period, volunteerId);
-    return { tasks, availability };
+    const assignments = await this.onAssignments(taskId, period, volunteerId);
+    return { tasks, availability, assignments };
   }
 
   private async onTask(
@@ -32,7 +34,10 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
         start: { lt: end },
         end: { gt: start },
         volunteers: { some: { volunteerId } },
-        NOT: { ft: { id: taskId }, start, end },
+        NOT: [
+          { ft: { id: taskId }, start, end },
+          { ft: { status: READY_TO_ASSIGN } },
+        ],
       },
       select: {
         ft: { select: { id: true, name: true } },
@@ -53,5 +58,25 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
       },
     });
     return availabilities === 0;
+  }
+
+  private async onAssignments(
+    taskId: FestivalTask["id"],
+    { start, end }: IProvidePeriod,
+    userId: Volunteer["id"],
+  ): Promise<FestivalTaskLink[]> {
+    const conflicts = await this.prisma.assignment.findMany({
+      where: {
+        festivalTask: { isDeleted: false },
+        start: { lt: end },
+        end: { gt: start },
+        assignees: { some: { userId } },
+        NOT: { festivalTask: { id: taskId } },
+      },
+      select: {
+        festivalTask: { select: { id: true, name: true } },
+      },
+    });
+    return conflicts.map(({ festivalTask }) => festivalTask);
   }
 }

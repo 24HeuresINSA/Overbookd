@@ -45,6 +45,9 @@ import {
   sunday11h,
   sunday18h,
   sunday14h,
+  saturday08h,
+  saturday12h,
+  gab,
 } from "./festival-task.test-util";
 import {
   InReviewWithConflicts,
@@ -126,7 +129,7 @@ export const installJustDance = factory
       volunteers: [
         {
           ...justDanceInstaller,
-          conflicts: { tasks: [], availability: true },
+          conflicts: { tasks: [], availability: true, assignments: [] },
         },
       ],
       teams: [{ count: 2, team: "bénévole" }],
@@ -137,7 +140,7 @@ export const installJustDance = factory
       volunteers: [
         {
           ...justDanceInstallerBis,
-          conflicts: { tasks: [], availability: true },
+          conflicts: { tasks: [], availability: true, assignments: [] },
         },
       ],
       teams: [{ count: 2, team: "bénévole" }],
@@ -192,15 +195,26 @@ export const serveWaterOnJustDance = factory
       start: saturday19h,
       end: saturday20h,
       volunteers: [
-        { ...noel, conflicts: { tasks: [], availability: true } },
-        { ...george, conflicts: { tasks: [], availability: true } },
+        {
+          ...noel,
+          conflicts: { tasks: [], availability: true, assignments: [] },
+        },
+        {
+          ...george,
+          conflicts: { tasks: [], availability: true, assignments: [] },
+        },
       ],
       teams: [{ count: 2, team: "bénévole" }],
     }).mobilization,
     MobilizationBuilder.init<InReviewWithConflicts>({
       start: saturday18h,
       end: saturday20h,
-      volunteers: [{ ...george, conflicts: { tasks: [], availability: true } }],
+      volunteers: [
+        {
+          ...george,
+          conflicts: { tasks: [], availability: true, assignments: [] },
+        },
+      ],
       teams: [],
     }).mobilization,
   ])
@@ -413,7 +427,10 @@ export const installBarbecue = factory
       start: friday10h,
       end: friday11h,
       volunteers: [
-        { ...george, conflicts: { tasks: [], availability: false } },
+        {
+          ...george,
+          conflicts: { tasks: [], availability: false, assignments: [] },
+        },
       ],
       teams: [],
     }).mobilization,
@@ -442,8 +459,14 @@ const friday10hFriday18hInReviewMobilization =
     start: friday10h,
     end: friday18h,
     volunteers: [
-      { ...george, conflicts: { tasks: [], availability: false } },
-      { ...lea, conflicts: { tasks: [], availability: false } },
+      {
+        ...george,
+        conflicts: { tasks: [], availability: false, assignments: [] },
+      },
+      {
+        ...lea,
+        conflicts: { tasks: [], availability: false, assignments: [] },
+      },
     ],
     teams: [
       { count: 2, team: "vieux" },
@@ -609,7 +632,12 @@ export const leadPressConference = factory
     MobilizationBuilder.init<ValidatedWithConflicts>({
       start: sunday12h,
       end: sunday14h,
-      volunteers: [{ ...valery, conflicts: { availability: true, tasks: [] } }],
+      volunteers: [
+        {
+          ...valery,
+          conflicts: { availability: true, tasks: [], assignments: [] },
+        },
+      ],
     }).mobilization,
   ])
   .build();
@@ -622,7 +650,10 @@ export const preparePressConference = factory
       start: sunday11h,
       end: sunday12h,
       volunteers: [
-        { ...valery, conflicts: { tasks: [], availability: false } },
+        {
+          ...valery,
+          conflicts: { tasks: [], availability: false, assignments: [] },
+        },
       ],
     }).mobilization,
   ])
@@ -636,10 +667,28 @@ export const cleanPressConference = factory
       start: sunday14h,
       end: sunday18h,
       volunteers: [
-        { ...valery, conflicts: { tasks: [], availability: false } },
+        {
+          ...valery,
+          conflicts: { tasks: [], availability: false, assignments: [] },
+        },
       ],
       teams: [{ count: 3, team: "bénévole" }],
       durationSplitInHour: 2,
     }).mobilization,
+  ])
+  .build();
+
+export const gabIsAssignedTo = factory
+  .readyToAssign("Drive to the moon")
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: saturday08h,
+      end: saturday12h,
+      teams: [
+        { count: 1, team: "conducteur" },
+        { count: 3, team: "benevoles" },
+      ],
+      durationSplitInHour: 2,
+    }).withAssignments([gab]).mobilization,
   ])
   .build();

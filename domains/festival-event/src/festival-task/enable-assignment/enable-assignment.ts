@@ -83,7 +83,7 @@ class ReadyToAssignFestivalTask {
     ];
 
     const mobilizations = task.mobilizations.map((mobilization) =>
-      ReadyToAssignFestivalTask.generateAssignments(mobilization),
+      Assignments.generate(mobilization),
     );
 
     return {
@@ -95,11 +95,18 @@ class ReadyToAssignFestivalTask {
     };
   }
 
-  private static generateAssignments(
+  private static hasUnavailableVolunteerRequired(task: ValidatedWithConflicts) {
+    return task.mobilizations.some(({ volunteers }) =>
+      volunteers.some(({ conflicts }) => conflicts.availability === true),
+    );
+  }
+}
+
+export class Assignments {
+  static generate(
     mobilization: Item<ValidatedWithConflicts["mobilizations"]>,
-  ): Item<ReadyToAssign["mobilizations"]> {
-    const assignmentPeriods =
-      ReadyToAssignFestivalTask.generatePeriods(mobilization);
+  ): Item<ReadyToAssignWithConflicts["mobilizations"]> {
+    const assignmentPeriods = Assignments.generatePeriods(mobilization);
 
     const assignments: Assignment[] = assignmentPeriods.map((period) =>
       extractAssignment(mobilization, period),
@@ -117,12 +124,6 @@ class ReadyToAssignFestivalTask {
 
     return mobilizationPeriod.splitWithIntervalInMs(
       Duration.hours(mobilization.durationSplitInHour).inMilliseconds,
-    );
-  }
-
-  private static hasUnavailableVolunteerRequired(task: ValidatedWithConflicts) {
-    return task.mobilizations.some(({ volunteers }) =>
-      volunteers.some(({ conflicts }) => conflicts.availability === true),
     );
   }
 }

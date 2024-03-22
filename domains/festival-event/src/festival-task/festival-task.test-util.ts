@@ -1,13 +1,19 @@
 import { Item } from "@overbookd/list";
 import { FestivalActivity } from "./festival-task";
 import { AddMobilization } from "./prepare/prepare";
-import { Contact } from "./sections/instructions";
+import { Contact, Volunteer } from "./sections/instructions";
 import { VolunteerWithConflicts } from "./sections/mobilizations";
-import { VolunteerAvailabilities, WithConflicts } from "./volunteer-conflicts";
+import {
+  ReadyToAssignWithConflicts,
+  VolunteerAvailabilities,
+  WithConflicts,
+} from "./volunteer-conflicts";
 import { InquiryRequest } from "../common/inquiry-request";
 import { Location } from "../common/location";
 import { VALIDATED } from "../common/status";
 import { TimeWindow } from "../common/time-window";
+import { ValidatedWithConflicts } from "./festival-task.factory";
+import { Assignments } from "./enable-assignment/enable-assignment";
 
 type BuildTimeWindow = {
   date: Date;
@@ -84,6 +90,31 @@ export class MobilizationBuilder<T extends WithConflicts> {
     return new MobilizationBuilder<T>({ ...this.mobilization, volunteers });
   }
 
+  withAssignments(customAssignees: Volunteer[]) {
+    if (!this.isReviewableMobilization) throw new Error();
+
+    const { assignments, ...rest } = Assignments.generate(
+      this.mobilization as Item<ValidatedWithConflicts["mobilizations"]>,
+    );
+    const mobilization = {
+      ...rest,
+      assignments: assignments.map(({ assignees, ...assignment }) => ({
+        ...assignment,
+        assignees: [...assignees, ...customAssignees],
+      })),
+    };
+
+    return new MobilizationBuilder<ReadyToAssignWithConflicts>(mobilization);
+  }
+
+  private isReviewableMobilization(
+    mobilization: Item<T["mobilizations"]>,
+  ): boolean {
+    const hasAtLeastOneTeam = mobilization.teams.length > 0;
+    const hasAtLeastOneVolunteer = mobilization.volunteers.length > 0;
+    return hasAtLeastOneTeam || hasAtLeastOneVolunteer;
+  }
+
   get form(): AddMobilization {
     const { id, ...form } = this.mobilization;
     return form;
@@ -149,6 +180,12 @@ export const valery = {
   id: 6,
   lastname: "Gisc",
   firstname: "Valery",
+};
+
+export const gab = {
+  id: 7,
+  lastname: "Riel",
+  firstname: "Gab",
 };
 
 export const friday9h: BuildTimeWindow = {
@@ -223,7 +260,7 @@ export const saturday12h: BuildTimeWindow = {
   date: new Date("2024-05-18T12:00+02:00"),
   id: "28600440",
 };
-const saturday14h: BuildTimeWindow = {
+export const saturday14h: BuildTimeWindow = {
   date: new Date("2024-05-18T14:00+02:00"),
   id: "28600560",
 };
@@ -455,18 +492,24 @@ export const sunday22hmonday00h = TimeWindowFactory.create(
 export const friday11hfriday18hMobilization = MobilizationBuilder.init({
   start: friday11h,
   end: friday18h,
-  volunteers: [{ ...noel, conflicts: { tasks: [], availability: false } }],
+  volunteers: [
+    { ...noel, conflicts: { tasks: [], availability: false, assignments: [] } },
+  ],
   teams: [{ count: 2, team: "bénévole" }],
 });
 export const saturday18hsaturday19hMobilization = MobilizationBuilder.init({
   start: saturday18h,
   end: saturday19h,
-  volunteers: [{ ...noel, conflicts: { tasks: [], availability: false } }],
+  volunteers: [
+    { ...noel, conflicts: { tasks: [], availability: false, assignments: [] } },
+  ],
 });
 export const saturday08hsaturday11hMobilization = MobilizationBuilder.init({
   start: saturday08h,
   end: saturday11h,
-  volunteers: [{ ...lea, conflicts: { tasks: [], availability: false } }],
+  volunteers: [
+    { ...lea, conflicts: { tasks: [], availability: false, assignments: [] } },
+  ],
 });
 export const friday10hfriday11hMobilization = MobilizationBuilder.init({
   start: friday10h,
@@ -486,6 +529,15 @@ export const friday18hsaturday10hMobilization = MobilizationBuilder.init({
 export const saturday11hsaturday18hMobilization = friday11hfriday18hMobilization
   .withStart(saturday11h)
   .withEnd(saturday18h);
+export const requestGabMobilization =
+  MobilizationBuilder.init<ValidatedWithConflicts>({
+    volunteers: [
+      {
+        ...gab,
+        conflicts: { availability: false, tasks: [], assignments: [] },
+      },
+    ],
+  });
 
 const trenteGilletsJaune: InquiryRequest = {
   name: "Gillet Jaune",

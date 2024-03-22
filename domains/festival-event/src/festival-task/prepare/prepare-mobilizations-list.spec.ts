@@ -31,8 +31,15 @@ import {
   george,
   friday10hfriday11hMobilization,
   friday9h,
+  requestGabMobilization,
+  gab,
+  saturday14h,
 } from "../festival-task.test-util";
-import { installEscapeGame, uninstallEscapeGame } from "../festival-task.fake";
+import {
+  gabIsAssignedTo,
+  installEscapeGame,
+  uninstallEscapeGame,
+} from "../festival-task.fake";
 import {
   presentEscapeGame,
   guardEscapeGame,
@@ -77,6 +84,7 @@ describe("Prepare festival task mobilizations list", () => {
       approvedByHumainAndElecRejectedByMatos,
       approvedByElecRejectedByMatos,
       approvedByMatosRejectedByHumainAndElec,
+      gabIsAssignedTo,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
@@ -167,6 +175,41 @@ describe("Prepare festival task mobilizations list", () => {
                 ),
               ),
             ).not.toContain(task.id);
+          });
+        },
+      );
+
+      describe.each`
+        indication                       | task                 | start          | end
+        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday12h}
+        ${"larger period"}               | ${presentEscapeGame} | ${saturday07h} | ${saturday14h}
+        ${"smaller period"}              | ${presentEscapeGame} | ${saturday09h} | ${saturday11h}
+        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h}
+        ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday11h} | ${saturday14h}
+      `(
+        "when volunteer is assigned on $indication on any assignment",
+        ({ task, start, end }) => {
+          it("should list tasks that are requesting the same volunteer at the same time", async () => {
+            const helper = requestGabMobilization.withStart(start).withEnd(end);
+            const { mobilizations } = await prepare.addMobilization(
+              task.id,
+              helper.form,
+              noel,
+            );
+            const mobilization = mobilizations.find(
+              (mobilization) => mobilization.id === helper.mobilization.id,
+            );
+            console.error(mobilization?.volunteers);
+            const volunteer = mobilization?.volunteers.find(
+              (volunteer) => volunteer.id === gab.id,
+            );
+            const assignedOn = [
+              {
+                id: gabIsAssignedTo.id,
+                name: gabIsAssignedTo.general.name,
+              },
+            ];
+            expect(volunteer?.conflicts.assignments).toEqual(assignedOn);
           });
         },
       );
@@ -520,8 +563,8 @@ describe("Prepare festival task mobilizations list", () => {
     describe("when volunteer is not yet part of the mobilization", () => {
       it.each`
         taskName                          | task                 | mobilization                          | volunteer
-        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ ...george, conflicts: { tasks: [], availability: true } }}
-        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ ...george, conflicts: { tasks: [], availability: true } }}
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ ...george, conflicts: { tasks: [], availability: true, assignments: [] } }}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ ...george, conflicts: { tasks: [], availability: true, assignments: [] } }}
       `(
         "should add volunteer to $taskName mobilization",
         async ({ task, mobilization, volunteer }) => {
@@ -559,7 +602,7 @@ describe("Prepare festival task mobilizations list", () => {
       it.each`
         taskName                              | task                     | mobilization                              | volunteerId | expectedMobilization
         ${presentEscapeGame.general.name}     | ${presentEscapeGame}     | ${presentEscapeGame.mobilizations[0]}     | ${noel.id}  | ${{ ...presentEscapeGame.mobilizations[0], volunteers: [] }}
-        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[1]} | ${noel.id}  | ${{ ...serveWaterOnJustDance.mobilizations[1], volunteers: [{ ...george, conflicts: { tasks: [], availability: true } }] }}
+        ${serveWaterOnJustDance.general.name} | ${serveWaterOnJustDance} | ${serveWaterOnJustDance.mobilizations[1]} | ${noel.id}  | ${{ ...serveWaterOnJustDance.mobilizations[1], volunteers: [{ ...george, conflicts: { tasks: [], availability: true, assignments: [] } }] }}
       `(
         "should remove it from $taskName mobilization volunteers list",
         async ({ task, mobilization, volunteerId, expectedMobilization }) => {
