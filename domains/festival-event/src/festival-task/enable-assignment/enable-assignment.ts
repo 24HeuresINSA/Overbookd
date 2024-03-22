@@ -97,7 +97,11 @@ class ReadyToAssignFestivalTask {
 
   private static hasUnavailableVolunteerRequired(task: ValidatedWithConflicts) {
     return task.mobilizations.some(({ volunteers }) =>
-      volunteers.some(({ conflicts }) => conflicts.availability === true),
+      volunteers.some(({ conflicts }) => {
+        const missingAvailability = conflicts.availability === true;
+        const alreadyAssigned = conflicts.assignments.length > 0;
+        return missingAvailability || alreadyAssigned;
+      }),
     );
   }
 }
