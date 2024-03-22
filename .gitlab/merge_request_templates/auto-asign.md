@@ -8,5 +8,5 @@ Provide description if needed
 Closes #issue
 
 /assign me
-/assign_reviewer @titouan-joseph @LeoMouyna @LeonDumestre @Alias01 @codecodecooooooode @Skyward67 @armynion @louischarnay @polo-diemunsch @PaulFloret
+/assign_reviewer @titouan-joseph @LeoMouyna @LeonDumestre @Alias01 @codecodecooooooode @Skyward67 @armynion @louischarnay @polo-diemunsch @PaulFloret @TristanDevin
 /unassign_reviewer me
