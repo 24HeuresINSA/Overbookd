@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content">
+  <div class="borrows-page">
     <h1>Fiches emprunts</h1>
     <v-data-table :headers="headers" :items="borrowItems"></v-data-table>
   </div>
@@ -9,13 +9,13 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "BorrowSheet",
+  name: "Borrows",
   data() {
     return {
       headers: [
-        { text: "Name", value: "name" },
-        { text: "Available Date", value: "availableDate" },
-        { text: "Return Date", value: "returnDate" },
+        { text: "Nom", value: "name" },
+        { text: "Date de disponibilité", value: "availableOn" },
+        { text: "Date de retour", value: "unavailableOn" },
       ],
       borrowItems: [],
     };
@@ -24,7 +24,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.page-content {
+.borrows-page {
   margin-left: 20px;
 }
 </style>
