@@ -37,7 +37,7 @@ const AUTHORS = [
   "Lucas - Conforama 🏪",
   "Adèle - Franck 🍷",
   "Luc - Q 🍑",
-  "Tristan - XL 📉"
+  "Tristan - XL 📉",
 ];
 
 type LayoutData = {
