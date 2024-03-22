@@ -22,7 +22,7 @@ import {
   HAVE_PERSONAL_ACCOUNT,
   SHOTGUN_SHARED_MEAL,
   VIEW_GEAR_DASHBOARD,
-  READ_PURCHASE_SHEET,
+  PURCHASE_GEARS,
 } from "@overbookd/permission";
 
 export type Page = {
@@ -301,7 +301,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-cash-register",
     title: "Fiches Achats",
-    permission: READ_PURCHASE_SHEET,
+    permission: PURCHASE_GEARS,
     to: "/logistic/purchase",
     description: "Permet de gérer les achats de matériel",
     mobileSupport: false,
@@ -310,7 +310,7 @@ export const pages: Page[] = [
   {
     icon: "mdi-store-clock",
     title: "Fiches emprunts",
-    permission: READ_PURCHASE_SHEET,
+    permission: PURCHASE_GEARS,
     to: "/logistic/borrow",
     description: "Permet de gérer les emprunts de matériel",
     mobileSupport: false,

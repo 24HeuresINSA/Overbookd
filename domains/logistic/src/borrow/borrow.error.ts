@@ -1,6 +1,6 @@
 import { Borrow, GearRequest } from "./borrow";
 
-class BorrowError extends Error {}
+export class BorrowError extends Error {}
 
 export class BorrowNotFound extends BorrowError {
   constructor(id: Borrow["id"]) {

@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/http",
-  "version": "1.0.123",
+  "version": "1.0.124",
   "description": "Utilitaire pour les requêtes HTTP",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -34,6 +34,7 @@
   ],
   "dependencies": {
     "@overbookd/festival-event": "workspace:^",
+    "@overbookd/logistic": "workspace:^",
     "@overbookd/period": "workspace:^",
     "@overbookd/personal-account": "workspace:^"
   },

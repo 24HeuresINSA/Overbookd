@@ -580,6 +580,9 @@ importers:
       '@overbookd/festival-event':
         specifier: workspace:^
         version: link:../../domains/festival-event
+      '@overbookd/logistic':
+        specifier: workspace:^
+        version: link:../../domains/logistic
       '@overbookd/period':
         specifier: workspace:^
         version: link:../../libraries/period

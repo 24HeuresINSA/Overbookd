@@ -6,7 +6,7 @@ import {
   NotEnoughQuantity,
 } from "../borrow.error";
 
-type PlanBorrowForm = {
+export type PlanBorrowForm = {
   lender?: Borrow["lender"];
   availableOn?: Borrow["availableOn"];
   unavailableOn?: Borrow["unavailableOn"];

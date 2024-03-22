@@ -200,6 +200,7 @@ model CatalogGear {
   inventoryRecords          InventoryRecord[]                @relation()
   festivalActivityInquiries FestivalActivityInquiryRequest[] @relation("activity-inquiry-request-catalog")
   festivalTaskInquiries     FestivalTaskInquiryRequest[]     @relation("task-inquiry-request-catalog")
+  borrows                   BorrowGearRequest[]
 
   @@index([isPonctualUsage])
   @@map("catalog_gear")
@@ -926,4 +927,25 @@ model Shotgun {
 
   @@id([guestId, mealId])
   @@map("shotgun")
+}
+
+model Borrow {
+  id            Int                 @id
+  lender        String              @db.Text
+  availableOn   DateTime            @map("available_on")
+  unavailableOn DateTime            @map("unavailable_on")
+  gears         BorrowGearRequest[]
+
+  @@map("borrow")
+}
+
+model BorrowGearRequest {
+  borrowId Int         @map("borrow_id")
+  borrow   Borrow      @relation(fields: [borrowId], references: [id])
+  gearSlug String      @map("gear_slug")
+  gear     CatalogGear @relation(fields: [gearSlug], references: [slug])
+  quantity Int
+
+  @@id([borrowId, gearSlug])
+  @@map("borrow_gear_request")
 }
