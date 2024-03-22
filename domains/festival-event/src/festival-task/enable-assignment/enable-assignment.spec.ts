@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   barCashier,
   cleanPressConference,
+  findTruck,
   flashMobOnJustDance,
+  gabIsAssignedTo,
   guardPS1,
   guardPS2,
   installEscapeGame,
@@ -17,11 +19,14 @@ import {
   friday18hfriday20h,
   friday20hfriday22h,
   friday22hsaturday00h,
+  gab,
+  monday00h,
   noel,
   saturday00hsaturday02h,
   saturday02hsaturday04h,
   saturday04hsaturday06h,
   saturday06hsaturday08h,
+  saturday08h,
   saturday08hsaturday10h,
   saturday10hsaturday12h,
   saturday12hsaturday14h,
@@ -124,6 +129,8 @@ describe("Enable assignment", () => {
       leadPressConference,
       preparePressConference,
       cleanPressConference,
+      gabIsAssignedTo,
+      findTruck,
     ];
     festivalTasks = new InMemoryFestivalTasksForEnableAssignment(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, [
@@ -133,6 +140,10 @@ describe("Enable assignment", () => {
           sunday11hsunday12h,
           { start: sunday14hsunday16h.start, end: sunday16hsunday18h.end },
         ],
+      },
+      {
+        volunteer: gab,
+        availabilities: [{ start: saturday08h.date, end: monday00h.date }],
       },
     ]);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
@@ -247,6 +258,25 @@ describe("Enable assignment", () => {
   describe("when trying to enable assignment on festival task with at least on required volunteer that is not available", () => {
     it("should indicate that all required volunteers as to be available during mobilizations", async () => {
       const task = leadPressConference;
+      expect(
+        async () =>
+          await enableAssignment.for(task.id, noel, {
+            category: BAR,
+            topPriority: false,
+          }),
+      ).rejects.toThrow(ReadyToAssignError);
+      expect(
+        async () =>
+          await enableAssignment.for(task.id, noel, {
+            category: BAR,
+            topPriority: false,
+          }),
+      ).rejects.toThrow("Au moins un des bénévoles n'est pas disponible.");
+    });
+  });
+  describe("when trying to enable assignment on festival task with at least on required volunteer that is assigned on another task", () => {
+    it("should indicate that all required volunteers as to be available during mobilizations", async () => {
+      const task = findTruck;
       expect(
         async () =>
           await enableAssignment.for(task.id, noel, {

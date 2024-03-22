@@ -48,6 +48,7 @@ import {
   saturday08h,
   saturday12h,
   gab,
+  saturday09h,
 } from "./festival-task.test-util";
 import {
   InReviewWithConflicts,
@@ -690,5 +691,27 @@ export const gabIsAssignedTo = factory
       ],
       durationSplitInHour: 2,
     }).withAssignments([gab]).mobilization,
+  ])
+  .build();
+
+export const findTruck = factory
+  .validated("Find the truck")
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: saturday08h,
+      end: saturday09h,
+      volunteers: [
+        {
+          ...gab,
+          conflicts: {
+            tasks: [],
+            availability: false,
+            assignments: [
+              { id: gabIsAssignedTo.id, name: gabIsAssignedTo.general.name },
+            ],
+          },
+        },
+      ],
+    }).mobilization,
   ])
   .build();
